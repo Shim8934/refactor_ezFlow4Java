@@ -1502,7 +1502,7 @@ form{display:inline;margin:0}
 	width:auto;
 	word-break:keep-all;
 	white-space:nowrap;
-	padding: 3px 10px 0px 10px;
+	padding: 0px 10px 0px 10px;
 	height: 30px;
 	background-color:white;
 	border:1px solid #bbbbbb;
@@ -2423,6 +2423,18 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .tree_appr_turn{ background-position:-130px -26px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 회람완료문서 */
 .tree_appr_department{ background-position:-156px -26px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 부서수신문서 */
 .tree_appr_receive{ background-position:-182px -26px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 회람수신문서 */
+.tree_appr_record1{background-position: 0px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물등록대장 */
+.tree_appr_record2{background-position: -26px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물배부대장 */
+.tree_appr_record3{background-position: -52px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물접수목록 */
+.tree_appr_record4{background-position: -78px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물발송목록 */
+.tree_appr_record5{background-position: -104px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물철등록부 */
+.tree_appr_record6{background-position: -130px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 종료연기신청 */
+.tree_appr_record7{background-position: -156px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 정리대상목록 */
+.tree_appr_record8{background-position: -182px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 인계목록 */
+.tree_appr_record9{background-position: -208px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 단위업무관리 */
+.tree_appr_record10{background-position: -234px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기록물철인계 */
+.tree_appr_record11{background-position: -260px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 종료연기승인 */
+.tree_appr_record12{background-position: -286px -234px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 편철확정 */
 
 .tree_pims_all{ background-position:-26px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 모든일정 */
 .tree_pims_individual{ background-position:-52px -52px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 개인일정 */
@@ -2481,6 +2493,15 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 
 .tree_admin_organization{ background-position:-78px -182px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 관리자 조직도 */
 .tree_admin_stats{ background-position:-104px -182px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 관리자 통계 */
+
+.tree_poll_all{background-position: -52px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 전체투표*/
+.tree_poll_ing{background-position: -78px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 진행투표*/
+.tree_poll_wait{background-position: -104px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 대기투표*/
+.tree_poll_ok{background-position: -130px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 완료투표*/
+.tree_memo_all{background-position: -156px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 모든메모*/
+.tree_memo_default{background-position: -182px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기본메모*/
+.tree_ladder_all{background-position: -208px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 전체사다리*/
+.tree_ladder_in{background-position: -234px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 참여사다리*/
 
 /* left LNB tree text */
 .lnb h2 .h2Title{font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif; font-size:13px; font-weight:bold; color:#393939; padding:0px 0px 0px 0px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; box-sizing:border-box;}
@@ -2753,6 +2774,17 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .nodata_bIconGray{background:#ebeef1;}
 
 .hidden_area{ margin:0px; padding:0px;}
+
+.timecheck_info{ margin:0px; padding:0px;}
+.timecheck_info .timeInfo{ position:absolute; top:55px; }
+.timecheck_info .timeInfo .timeInfoPic{ margin:5px 0px 0px 0px; padding:0px; border-radius:30px; height:48px; width:48px; border:1px solid #d0d5e2; float:left;}
+.timecheck_info .timeInfo .timeInfoPic img{border-radius:30px;}
+.timecheck_info .timeInfo .timeInfoText{ color:#393939; font-size:13px; margin-left:65px;}
+.timecheck_info .timeInfo .timeInfoText span{ display:block; margin-top:2px;}
+.timecheck_info .timeIcconDL{ margin:8px 5px 10px 0px; padding:0px 10px 0px 0px; float:left; overflow:hidden; height:30px; line-height:30px; border-radius:25px; background:#f7f9fd; border:1px solid #e7eaf1; box-sizing:border-box;}
+.timecheck_info .timeIcconDL .timeIconDT{ margin:0px; padding:0px; float:left; overflow:hidden;}
+.timecheck_info .timeIcconDL .timeIconDD{ margin:0px; padding:0px 4px 0px 10px; color:#393939; font-size:12px; float:right; line-height: 25px;}
+.timecheck_info .timeIcconDL .timeIconDD .timeCountR{ color:#ff3030; font-weight:bold; margin:0px; padding:0px 0px 0px 5px;}
 
 /* 장진혁 */
 h2, #menu span {font-size: 12px;}

@@ -1132,6 +1132,8 @@ LIMIT
 				LINEINFO.aprstate = '002'
 			AND
 				DOCINFO.docstate not in ('015')   
+			AND
+				DOCINFO.startdate between date_sub(now(), interval 1 YEAR) and now()				
 			ORDER BY
 				DOCINFO.startdate DESC
 			LIMIT
@@ -1227,6 +1229,8 @@ LIMIT
 				writerid = #userId#
 			AND
 				functiontype = '004'
+            AND 
+ 				startdate between date_sub(now(), interval 1 YEAR) and now()				
 			ORDER BY
 				startdate DESC
 			LIMIT
@@ -1294,6 +1298,8 @@ LIMIT
 				DOCINFO.docstate <> '017'
 			AND
 				DOCINFO.functiontype IS NOT NULL
+            AND 
+ 				DOCINFO.startdate between date_sub(now(), interval 1 YEAR) and now()				
 			ORDER BY
 				STARTDATE DESC
 			LIMIT

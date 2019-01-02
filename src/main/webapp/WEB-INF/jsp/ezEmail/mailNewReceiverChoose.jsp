@@ -31,7 +31,11 @@
 			}
 			.countColor {
 				color:#017BEC;
-			}			
+			}
+
+			.multiple-sortable-selected td{
+				color: #0684f9 !important;
+			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -67,7 +71,6 @@
 	        var userid = "${userInfo.id}";
 	        var deptid = "${userInfo.deptID}";
 	        var companyid = "${userInfo.companyID}";
-	        var userRollInfo = "${userInfo.rollInfo}";
 	        var susinTo = 0;
 	        var AddressTreeView = null;
 	        var UserAgentState = navigator.userAgent.toLowerCase();
@@ -178,13 +181,7 @@
 	                var objNode;
 	                createNodeInsert(xmlpara, objNode, "DATA");
 	                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
-	                
-	                if (userRollInfo.indexOf("c=1") != -1 && rulekind == "MANAGER") {
-	                	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
-	                } else {
-	                	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
-	                }
-	                
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
 	                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
 	                xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	                xmlHTTP.send(xmlpara);
@@ -209,6 +206,11 @@
 	            catch (ErrMsg) {
 	                alert(" TreeViewinitialize : " + ErrMsg.description);
 	            }
+	            
+	            if ("${useSharedMailbox}" == "YES") {
+	            	document.getElementById("sharedMailboxTabButton").style.display = "";
+	            }
+	            
 	            if (type == "config") {
 	                if (CrossYN())
 	                    document.getElementById("h1Title").textContent = strLang314 + " <spring:message code='ezEmail.t832' />";
@@ -266,22 +268,9 @@
 					remove_key_event();
 	
 	                document.getElementById("dept_select").style.display = "none";
-	                
-	                // 관리자>조직도 관리>부서추가>부서장 아이디 선택
-	                if (rulekind == "MANAGER") { 
-	                	document.title = "<spring:message code='ezEmail.jje17'/>";
-	                	document.getElementById("h1Title").innerHTML = "<spring:message code='ezEmail.jje17'/>";
-	                	document.getElementById("contactTabButton").style.display = "none";
-	                	document.getElementById("dlTabButton").style.display = "none";
-	                	
-	                }
 	            }
 	            else {
 	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
-	            }
-	            
-	            if ("${useSharedMailbox}" == "YES") {
-	            	document.getElementById("sharedMailboxTabButton").style.display = "";
 	            }
 	            
 	            // (수신자 설정 시 drag, drop으로 순서 조정)
@@ -600,7 +589,7 @@
 		        
 		        try {
 		            var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("GET", "/ezEmail/mailGetDistribution.do", false);
+		            xmlHTTP.open("POST", "/ezEmail/mailGetDistribution.do", false);
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
@@ -657,7 +646,7 @@
 		        
 		        try {
 		            var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("GET", "/ezEmail/getSharedMailboxList.do", false);
+		            xmlHTTP.open("POST", "/ezEmail/getSharedMailboxList.do", false);
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
@@ -1400,11 +1389,15 @@
 	            for (var i = 0; i < listContentArry.length; i++) {
 	            	if (keyword.value == "") {
 		            	for (var j = 0; j < 3; j++) {
-		            		document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+		            		if (document.getElementById(listContentArry[i]).childNodes[j]) {
+		            			document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+		            		}
 		            	}
 	            	} else {
 		            	for (var j = 0; j < 4; j++) {
-		            		document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+		            		if (document.getElementById(listContentArry[i]).childNodes[j]) {
+		            			document.getElementById(listContentArry[i]).childNodes[j].style.backgroundColor = m_strColorDefault;
+		            		}
 		            	}
 	            	}
 	            	
@@ -1643,7 +1636,7 @@
 				});
 	        }
 	        
-		    var m_strColorSelect = "#f1f8ff";
+		    var m_strColorSelect = "";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "";
 		    var p_ListOrderObject = null;

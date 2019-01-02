@@ -51,12 +51,12 @@ function CalendarView(pTagetID,chk_str) {
         tDiv.innerHTML = "";
         objElm.appendChild(tDiv);
 
-        if (sDate.getFullYear() > 1800 && sDate.getFullYear() <= 2101) {
-            if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 1)
-                memorialDays[1].day = 29;
-            else if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 2)
-                memorialDays[1].day = 30;
-        }
+//        if (sDate.getFullYear() > 1800 && sDate.getFullYear() <= 2101) {
+//            if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 1)
+//                memorialDays[1].day = 29;
+//            else if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 2)
+//                memorialDays[1].day = 30;
+//        }
 
         if (typeCal != 1) {
             var oTable = document.createElement("TABLE");
@@ -92,7 +92,7 @@ function CalendarView(pTagetID,chk_str) {
 
                     for (var i = 0; i < tempmemorial.length; i++) {
                         memorial = tempmemorial[i];
-                        if (uselang == "1") {
+                        if (primaryLang == "1") {
                             if (i == tempmemorial.length - 1)
                                 holidayname += memorial.name;
                             else
@@ -110,7 +110,7 @@ function CalendarView(pTagetID,chk_str) {
 
                     for (var i = 0; i < tempyearmemorial.length; i++) {
                         yearmemorial = tempyearmemorial[i];
-                        if (uselang == "1") {
+                        if (primaryLang == "1") {
                             if (i == tempyearmemorial.length - 1)
                                 holidayname2 += yearmemorial.name;
                             else
@@ -138,19 +138,23 @@ function CalendarView(pTagetID,chk_str) {
                     else
                         //dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
                     	dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
+                    //dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
 
 
                     var current_day = new Date(sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2));
-                    /*if (current_day.getDay() == "6")
-                        oTh.style.color = "rgb(0, 72, 149)";
-                    else if (current_day.getDay() == "0" || isholiday)
-                        oTh.style.color = "#ee1c25";
-*/
+                    if (current_day.getDay() == "0" || isholiday)
+                    	document.getElementById("calTitle").style.color = "#ee1c25";
+                    else if (current_day.getDay() == "6")
+                    	document.getElementById("calTitle").style.color = "rgb(0, 72, 149)";
+                    else
+                    	document.getElementById("calTitle").style.color = "black";
                 }
                 else
                     var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
             }
             else {
+            	document.getElementById("calTitle").style.color = "black"
+            	
                 oTable.className = "calendar_month_navi";
                 var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2);
             }
@@ -269,6 +273,7 @@ function CalendarView(pTagetID,chk_str) {
 
         }
         else {
+        	document.getElementById("calTitle").style.color = "black"
             /*var oTable = document.createElement("TABLE");
             oTable.className = "calendar_week_navi";
             oTable.setAttribute("cellpadding", "0");
@@ -638,7 +643,7 @@ function MonthData(oThisDate, TDIndex) {
 
     for (var i = 0; i < tempmemorial.length; i++) {
         memorial = tempmemorial[i];
-        if (uselang == "1") {
+        if (primaryLang == "1") {
             if (i == tempmemorial.length - 1)
                 holidayname += memorial.name;
             else
@@ -656,7 +661,7 @@ function MonthData(oThisDate, TDIndex) {
 
     for (var i = 0; i < tempyearmemorial.length; i++) {
         yearmemorial = tempyearmemorial[i];
-        if (uselang == "1") {
+        if (primaryLang == "1") {
             if (i == tempyearmemorial.length - 1)
                 holidayname2 += yearmemorial.name;
             else
@@ -1018,7 +1023,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
 
         for (var i = 0; i < tempmemorial.length; i++) {
             memorial = tempmemorial[i];
-            if (uselang == "1") {
+            if (primaryLang == "1") {
                 if (i == tempmemorial.length - 1)
                     holidayname += memorial.name;
                 else
@@ -1036,7 +1041,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
 
         for (var i = 0; i < tempyearmemorial.length; i++) {
             yearmemorial = tempyearmemorial[i];
-            if (uselang == "1") {
+            if (primaryLang == "1") {
                 if (i == tempyearmemorial.length - 1)
                     holidayname2 += yearmemorial.name;
                 else
@@ -1062,8 +1067,13 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
             weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "] " + holidayname + " (" + LunarDate2 + ")";
         else
             weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "] " + holidayname;
-        if (isholiday)
-            document.getElementById("list_Title" + pCnt).className += " sun";
+        if (isholiday) {
+        	if (document.getElementById("list_Title" + pCnt).className.indexOf('sat') > -1) {
+        		document.getElementById("list_Title" + pCnt).className = document.getElementById("list_Title" + pCnt).className.replace('sat','sun');
+        	} else {
+        		document.getElementById("list_Title" + pCnt).className += " sun";
+        	}
+        }
     }
     else
         var weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "]";

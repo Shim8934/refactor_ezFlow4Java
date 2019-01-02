@@ -250,14 +250,70 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		String cID = request.getParameter("COMPANYID");
 		StringBuilder returnXML = new StringBuilder();
+		String isRest = "normal";
 		
-		List<ScheGetHolidayVO> getHoliday = ezScheduleService.getTholiday(cID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
+		List<ScheGetHolidayVO> getHoliday = ezScheduleService.getTholiday(cID.trim(), userInfo.getCompanyID(), userInfo.getTenantId(), isRest);
 				
 		for (int i=0; i<getHoliday.size(); i++ ) {
 			returnXML.append(commonUtil.getQueryResult(getHoliday.get(i)));
 		}
 		
 		return "<DATA>" + returnXML.toString() + "</DATA>";
+	}
+	
+	/**
+	 * 일정관리 휴일 함수 호출 함수
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleGetHolidayJson.do", produces = "application/json; charset=utf-8")
+	@ResponseBody
+	public List<ScheGetHolidayVO> scheduleGetHolidayText(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		
+		logger.debug("============ scheduleGetHolidayText started ============");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		List<ScheGetHolidayVO> getHoliday = null;
+		String isRest = "normal";
+		String holidayType = request.getParameter("holidayType");
+		
+		if (holidayType.equals("a")) {
+			String cID = request.getParameter("COMPANYID");
+			getHoliday = ezScheduleService.getTholiday(cID.trim(), userInfo.getCompanyID(), userInfo.getTenantId(), isRest);
+		} else {
+			getHoliday = ezScheduleService.getTholiday("STATUTORY", userInfo.getCompanyID(), userInfo.getTenantId(), isRest);
+		}
+		
+		logger.debug("============ scheduleGetHolidayText ended ============");
+		
+		return getHoliday;
+	}
+	
+	/**
+	 * 일정관리 년도별 휴일 함수 호출 함수
+	 */
+	@RequestMapping(value = "/ezSchedule/scheduleGetHolidayJsonYear.do", produces = "application/json; charset=utf-8")
+	@ResponseBody
+	public List<ScheGetHolidayVO> scheduleGetHolidayYear(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		
+		logger.debug("============ scheduleGetHolidayYear started ============");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		List<ScheGetHolidayVO> getHoliday = null;
+		String isRest = "normal";
+		String holidayType = request.getParameter("holidayType");
+		String holidayYear = request.getParameter("holidayYear");		
+		String cID = request.getParameter("COMPANYID");
+		
+		if (holidayType.equals("a")) {
+			if (holidayYear.equals("ALL")) {
+				getHoliday = ezScheduleService.getTholiday(cID.trim(), userInfo.getCompanyID(), userInfo.getTenantId(), isRest);
+			} else {
+				getHoliday = ezScheduleService.getTholidayYear(cID.trim(), userInfo.getCompanyID(), userInfo.getTenantId(), isRest, holidayYear);
+			}
+		}
+		
+		logger.debug("============ scheduleGetHolidayYear ended ============");
+		
+		return getHoliday;
 	}
 	
 	/**

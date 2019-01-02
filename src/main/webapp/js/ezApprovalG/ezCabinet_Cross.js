@@ -128,6 +128,27 @@ function ezCabMunuCtl(MenuType, selRow) {
                     }
                 }
             }
+            
+            /**
+             * 연기신청에 따른 버튼 활성화비활성화
+             */
+            if (selRow.getAttribute("DATA8") == "Y") {
+            	if (typeof (tdReqDelayEndY) != "undefined" && typeof (tdReqDelayEndY) != "unknown") {
+            		document.getElementById("tdReqDelayEndY").style.display = "none";
+            	}
+            	
+            	if (typeof (tdCancelDelayEndY) != "undefined" && typeof (tdCancelDelayEndY) != "unknown") {
+            		document.getElementById("tdCancelDelayEndY").style.display = "";
+            	}
+            } else {
+            	if (typeof (tdReqDelayEndY) != "undefined" && typeof (tdReqDelayEndY) != "unknown") {
+            		document.getElementById("tdReqDelayEndY").style.display = "";
+            	}
+            	
+            	if (typeof (tdCancelDelayEndY) != "undefined" && typeof (tdCancelDelayEndY) != "unknown") {
+            		document.getElementById("tdCancelDelayEndY").style.display = "none";
+            	}
+            }
 
             if (typeof (tdViewCabHist) != "undefined" && typeof (tdViewCabHist) != "unknown") {
                 if (IsUserDeptRec() == "true")
@@ -1650,9 +1671,9 @@ function makePageSelPage(pTotalCnt) {
         }
 
         if (!isPeriodYear)
-            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>";
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>";
         else
-            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>&nbsp;/ " + period;
+            document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
     }
 
     strtext = "<div class='pagenavi'>";

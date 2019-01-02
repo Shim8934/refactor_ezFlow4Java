@@ -634,4 +634,18 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		logger.debug("deleteWebfolderLog end.");
 		
 	}
+
+	@Override
+	public void setMultiLoginType(String multiLoginType, int tenantID, String companyID, String editType) throws Exception {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("multiLoginType", multiLoginType);
+		paramMap.put("tenantID", tenantID);
+		paramMap.put("companyID", companyID);
+		
+		if(editType.equals("")) {
+			ezSystemAdminDAO.insertMultiLogintype(paramMap);
+		} else {
+			ezSystemAdminDAO.updateMultiLogintype(paramMap);
+		}
+	}
 }

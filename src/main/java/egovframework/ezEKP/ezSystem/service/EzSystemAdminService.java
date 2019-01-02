@@ -35,4 +35,5 @@ public interface EzSystemAdminService {
 	public void insertAccessId(int tenantID, String cn) throws Exception;
 	public ModuleSizeVO getModuleUsage(List<String> moduleNames, String realPath, LoginVO userInfo) throws Exception;
 	public void deleteWebfolderLog (int keepLogPeriod, int tenantID) throws Exception;
+	public void setMultiLoginType(String multiLoginType, int tenantID, String companyID, String editType) throws Exception;
 }

@@ -548,6 +548,8 @@ public class EzResourceController extends EgovFileMngUtil {
 			startDay = 7;
 		}
 		
+		String lunarUse = ezScheduleService.scheduleGetLunarUse(userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		model.addAttribute("childBrd", childBrd);
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("brdNm", brdNm);
@@ -559,7 +561,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("brdCount", brdCount);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("startDay", startDay);
-		model.addAttribute("lang", lang);		
+		model.addAttribute("lang", lang);
+		model.addAttribute("lunarUse", lunarUse);
 		
 		logger.debug("viewResList2 End");
 		return "/ezResource/resViewResList2";
@@ -816,14 +819,16 @@ public class EzResourceController extends EgovFileMngUtil {
 				JSONArray jArray = new JSONArray();
 
 				for (int i = 0; i < ownerListVO.size(); i++) {
-				        JSONObject data= new JSONObject();
-				        data.put("ownerId", ownerListVO.get(i).getCn());
-				        data.put("ownerDept", ownerListVO.get(i).getDepartment());
-				        data.put("ownerName", ownerListVO.get(i).getDisplayName());
-				        data.put("ownerName1", ownerListVO.get(i).getTitle());
-				        data.put("ownerDeptName", ownerListVO.get(i).getDescription());
-				        jArray.add(i, data);
-				 }
+			        JSONObject data= new JSONObject();
+			        
+			        data.put("ownerId", ownerListVO.get(i).getCn());
+			        data.put("ownerDept", ownerListVO.get(i).getDepartment());
+			        data.put("ownerName", ownerListVO.get(i).getDisplayName());
+			        data.put("ownerName1", ownerListVO.get(i).getTitle());
+			        data.put("ownerDeptName", ownerListVO.get(i).getDescription());
+			        
+			        jArray.add(i, data);
+				}
 				model.addAttribute("ownerList", jArray);
 			}
 			strBrdID = resBrd.getBrdID();
@@ -1121,6 +1126,7 @@ public class EzResourceController extends EgovFileMngUtil {
 				pAdminFg = "Y";
 			}
 		}
+		
 		/*if (req.getParameter("cuid") != null) {
 			cUserIDStr = req.getParameter("cuid");
 		}*/

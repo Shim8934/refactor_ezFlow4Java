@@ -8,6 +8,9 @@
 			<c:when test="${type == 'EMP'}">
 				<title><spring:message code='ezPersonal.t299'/></title>
 			</c:when>
+			<c:when test="${type == 'selDeptMaster'}">
+				<title><spring:message code='ezEmail.jje17'/></title>
+			</c:when>
 			<c:otherwise>
 				<title><spring:message code='ezPersonal.t401'/></title>
 			</c:otherwise>
@@ -56,6 +59,18 @@
 		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "${userInfo.deptID}");
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
+		            else if (type == "selDeptMaster") {
+		                createNodeInsert(xmlpara, objNode, "DATA");
+		            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
+		            	
+		            	if ("${userInfo.rollInfo}".indexOf("c=1") != -1) {
+		            		createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
+		            	} else {
+			                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+		            	}
+		            	
+		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+		            }
 		            else {
 		                createNodeInsert(xmlpara, objNode, "DATA");
 		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
@@ -63,7 +78,7 @@
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
 		            
-		            if (type == "EMP") {
+		            if (type == "EMP" || type == "selDeptMaster") {
 		            	createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 		            }
 		            
@@ -189,7 +204,7 @@
 		    }
 		    function search_click() {
 		    	if (specialChk(document.getElementById("keyword").value.trim())) {
-			    	alert("<spring:message code='ezResource.special' />");
+			    	alert("<spring:message code='ezResource.special' />");     
 			    	return;
 			    }
 		    	
@@ -260,7 +275,7 @@
 		            bSearch = true;
 		            
 		            var displayTrashDeptStr = "";
-		            if (type == "EMP") {
+		            if (type == "EMP" || type == "selDeptMaster") {
 		            	displayTrashDeptStr = "<DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT>";
 		            }
 		            
@@ -292,7 +307,7 @@
 		                    bSearch = true;
 		                    
 		                    var displayTrashDeptStr = "";
-				            if (type == "EMP") {
+				            if (type == "EMP" || type == "selDeptMaster") {
 				            	displayTrashDeptStr = "<DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT>";
 				            }
 		                    
@@ -310,7 +325,7 @@
 		            bSearch = true;
 		            
 		            var displayTrashDeptStr = "";
-		            if (type == "EMP") {
+		            if (type == "EMP" || type == "selDeptMaster") {
 		            	displayTrashDeptStr = "<DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT>";
 		            }
 		            
@@ -361,6 +376,8 @@
 		        if (length == 0) {
 		        	if (type == "EMP") {
 		        		alert("<spring:message code='ezPersonal.bhs01'/>");
+		        	} else if (type == "selDeptMaster") {
+		        		alert("<spring:message code='ezOrgan.kyj05'/>");
 		        	} else {
 			            alert("<spring:message code='ezPersonal.t65'/>");
 		        	}
@@ -369,6 +386,8 @@
 		        if (length > 1) {
 		        	if (type == "EMP") {
 		        		alert("<spring:message code='ezPersonal.bhs02'/>");
+		        	} else if (type == "selDeptMaster") {
+		        		alert("<spring:message code='ezOrgan.kyj06'/>");
 		        	} else {
 			            alert("<spring:message code='ezPersonal.t66'/>");
 		        	}
@@ -376,7 +395,7 @@
 		        }
 		        var selRow = tr[0];
 		        if ("${userInfo.id}" == selRow.getAttribute("DATA2")) {
-					if ("${type}" != "EMP") {
+					if (type != "EMP" && type != "selDeptMaster") {
 						alert("<spring:message code='ezPersonal.t16'/>");
 						return;
 					}
@@ -388,16 +407,22 @@
 		            }
 		        }
 		        if (ReturnFunction != null) {
-		            if (type == "EMP")
+		            if (type == "EMP") {
 		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.cells[1].textContent + ":" + selRow.cells[3].textContent + ":" + selRow.getAttribute("DATA3"));
-		            else
+		            } else if (type == "selDeptMaster") {
+		                ReturnFunction(selRow.getAttribute("DATA2"));
+		            } else {
 		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3"));
+		            }
 		        }
 		        else {
-		            if (type == "EMP")
+		            if (type == "EMP") {
 		                window.returnValue = selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.cells[1].textContent + ":" + selRow.cells[3].textContent + ":" + selRow.getAttribute("DATA3");
-		            else
+		            } else if (type == "selDeptMaster") {
+		                window.returnValue = selRow.getAttribute("DATA2");
+		            } else {
 		                window.returnValue = selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3");
+		            }
 		        }
 		        window.close();
 		    }
@@ -436,6 +461,9 @@
 		<c:choose>
 			<c:when test="${type == 'EMP'}">
 				<h1> <spring:message code='ezPersonal.t299'/></h1>
+			</c:when>
+			<c:when test="${type == 'selDeptMaster'}">
+				<h1> <spring:message code='ezEmail.jje17'/></h1>
 			</c:when>
 			<c:otherwise>
 				<h1>

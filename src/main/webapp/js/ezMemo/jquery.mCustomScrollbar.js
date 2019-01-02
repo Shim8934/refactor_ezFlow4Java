@@ -35,6 +35,7 @@ For production, use either the minified jquery.mCustomScrollbar.min.js script or
 the production-ready jquery.mCustomScrollbar.concat.min.js which contains the plugin 
 and dependencies (minified). 
 */
+!function(e){"function"==typeof define&&define.amd?define(["jquery"],e):"object"==typeof exports?module.exports=e:e(jQuery)}(function(e){var t,o,n=["wheel","mousewheel","DOMMouseScroll","MozMousePixelScroll"],l="onwheel"in document||document.documentMode>=9?["wheel"]:["mousewheel","DomMouseScroll","MozMousePixelScroll"];if(e.event.fixHooks)for(var i=n.length;i;)e.event.fixHooks[n[--i]]=e.event.mouseHooks;function s(n){var l,i,s,h=n||window.event,u=[].slice.call(arguments,1),a=0,r=0,d=0;return(n=e.event.fix(h)).type="mousewheel",h.wheelDelta&&(a=h.wheelDelta),h.detail&&(a=-1*h.detail),h.deltaY&&(a=d=-1*h.deltaY),h.deltaX&&(a=-1*(r=h.deltaX)),void 0!==h.wheelDeltaY&&(d=h.wheelDeltaY),void 0!==h.wheelDeltaX&&(r=-1*h.wheelDeltaX),l=Math.abs(a),(!t||l<t)&&(t=l),i=Math.max(Math.abs(d),Math.abs(r)),(!o||i<o)&&(o=i),s=a>0?"floor":"ceil",a=Math[s](a/t),r=Math[s](r/o),d=Math[s](d/o),u.unshift(n,a,r,d),(e.event.dispatch||e.event.handle).apply(this,u)}e.event.special.mousewheel={setup:function(){if(this.addEventListener)for(var e=l.length;e;)this.addEventListener(l[--e],s,!1);else this.onmousewheel=s},teardown:function(){if(this.removeEventListener)for(var e=l.length;e;)this.removeEventListener(l[--e],s,!1);else this.onmousewheel=null}},e.fn.extend({mousewheel:function(e){return e?this.bind("mousewheel",e):this.trigger("mousewheel")},unmousewheel:function(e){return this.unbind("mousewheel",e)}})});
 
 (function(factory){
 	if(typeof define==="function" && define.amd){
@@ -46,19 +47,20 @@ and dependencies (minified).
 	}
 }(function($){
 (function(init){
-	var _rjs=typeof define==="function" && define.amd, /* RequireJS */
-		_njs=typeof module !== "undefined" && module.exports, /* NodeJS */
-		_dlp=("https:"==document.location.protocol) ? "https:" : "http:", /* location protocol */
+	// 기존 script 다운로드 방식 -> 내부망 처리로 인해 외부 파일로 script import
+	/*	var _rjs=typeof define==="function" && define.amd,  RequireJS 
+		_njs=typeof module !== "undefined" && module.exports,  NodeJS 
+		_dlp=("https:"==document.location.protocol) ? "https:" : "http:",  location protocol 
 		_url="cdnjs.cloudflare.com/ajax/libs/jquery-mousewheel/3.1.13/jquery.mousewheel.min.js";
 	if(!_rjs){
 		if(_njs){
 			require("jquery-mousewheel")($);
 		}else{
-			/* load jquery-mousewheel plugin (via CDN) if it's not present or not loaded via RequireJS 
-			(works when mCustomScrollbar fn is called on window load) */
+			 load jquery-mousewheel plugin (via CDN) if it's not present or not loaded via RequireJS 
+			(works when mCustomScrollbar fn is called on window load) 
 			$.event.special.mousewheel || $("head").append(decodeURI("%3Cscript src="+_dlp+"//"+_url+"%3E%3C/script%3E"));
 		}
-	}
+	}*/
 	init();
 }(function(){
 	

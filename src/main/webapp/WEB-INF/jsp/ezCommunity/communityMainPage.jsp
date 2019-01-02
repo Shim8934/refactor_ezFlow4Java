@@ -202,7 +202,7 @@
                 else {
                 	 var dl = document.getElementById("newcomm");
 					 dl.className = "nodata_sIcon";
-					 dl.style.paddingTop = "50px";
+					 dl.style.paddingTop = "35px";
 					 
 					 var dt = document.createElement("DT");
 					 
@@ -269,10 +269,10 @@
                     document.getElementById("newcomm").appendChild(dl);
                 } */
                 
-                if( bestcoummunity.length <= 0 ){
+                /* if( bestcoummunity.length <= 0 ){
 	                conts = "<div style='height:170px; text-align:center;margin-top:5px;'><div><img style='margin-top:28px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
 					$("#newcomm").html(conts);
-                }
+                } */
 	        }
 
 	        /* 인기 커뮤니티 표출 */
@@ -322,7 +322,7 @@
                 else {
                	     var dl = document.getElementById("bestcomm");
 					 dl.className = "nodata_sIcon";
-					 dl.style.paddingTop = "50px";
+					 dl.style.paddingTop = "35px";
 					 
 					 var dt = document.createElement("DT");
 					 
@@ -389,10 +389,10 @@
                     document.getElementById("bestcomm").appendChild(dl);
                 } */
                 
-                if( bestcoummunity.length <= 0 ){
+                /* if( bestcoummunity.length <= 0 ){
 	                conts = "<div style='height:170px; text-align:center;margin-top:5px;'><div><img style='margin-top:28px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
 					$("#bestcomm").html(conts);
-                }
+                } */
 	        }
 
 	        function get_myCommunity() {
@@ -1718,8 +1718,13 @@
 
 	                var left = (width - wWeight) / 2;
 	                var top = (heigth - wHeight) / 2 - 30;
+	                
+	                /* 2018-12-24 김민성 - 커뮤니티 팝업 해상도 1600*900 이하 height 조절 */
+	                if(wHeight > heigth) {
+                    	wHeight = heigth-100;
+                    }
 
-	                var ret = window.open(url, code, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+	                var ret = window.open(url, code, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 	                
 	                try { ret.focus() } catch (e) { }
 	            }

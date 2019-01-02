@@ -3,14 +3,11 @@ package egovframework.ezEKP.ezSchedule.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -61,13 +58,32 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	private static final Logger logger = LoggerFactory.getLogger(EzScheduleServiceImpl.class);
 
 	@Override
-	public List<ScheGetHolidayVO> getTholiday(String companyId, String userCompany, int tenantId) throws Exception {
+	public List<ScheGetHolidayVO> getTholiday(String companyId, String userCompany, int tenantId, String isRest) throws Exception {
+		logger.debug("===== getTholiday Start =====");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_COMPANYID", companyId);
 		map.put("v_USERCOMPANY", userCompany);
 		map.put("v_TENANTID", tenantId);
+		map.put("isRest", isRest);
 		
-		return ezScheduleDAO.getTholiday(map);
+		List<ScheGetHolidayVO> List = ezScheduleDAO.getTholiday(map); 
+		logger.debug("===== getTholiday Ended =====");
+		return List;
+	}
+	
+	@Override
+	public List<ScheGetHolidayVO> getTholidayYear(String companyId,String userCompany, int tenantId, String isRest, String holidayYear) throws Exception {
+		logger.debug("===== getTholidayYear Start =====");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyId);
+		map.put("v_USERCOMPANY", userCompany);
+		map.put("v_TENANTID", tenantId);
+		map.put("isRest", isRest);
+		map.put("holidayYear", holidayYear);
+		
+		List<ScheGetHolidayVO> List = ezScheduleDAO.getTholidayYear(map); 
+		logger.debug("===== getTholidayYear Ended =====");
+		return List;
 	}
 
 	@Override
@@ -550,8 +566,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					info = svo.getRepetition().split("\\|");
 					
 					if (i+1 == resultCount && Integer.parseInt(info[0]) < 1){
-						if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+						if (svo.getEndDate().equals(svo.getRealEndDate())) {
+							if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
 							svoIndex.add(i);
+							}
 						}
 						break;
 					} else if (i+1 == resultCount) {
@@ -561,8 +579,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					svoIdAfter = svoAfter.getScheduleId();
 					
 					if (!svoId.equals(svoIdAfter) && Integer.parseInt(info[0]) < 1) {
-						if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
-							svoIndex.add(i);
+						if (svo.getEndDate().equals(svo.getRealEndDate())) {
+							if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+								svoIndex.add(i);
+							}
 						}
 					}
 				}
@@ -609,6 +629,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		innerVO.setEndDate(dateTime2);
 		innerVO.setDateType(newDateType + "");
 		innerVO.setRepeatCount(count);			
+		innerVO.setRealEndDate(vo.getEndDate());
 		
 		return innerVO; 
 	}

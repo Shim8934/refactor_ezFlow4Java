@@ -235,26 +235,15 @@ public class EzScheduleAdminController {
 		
 		String primary = userInfo.getPrimary();
 		
-		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
-		
-		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		
-		StringBuffer companyList = new StringBuffer();
-		
-		for (int i =0 ; i < list.size() ; i++) {
-			OrganDeptVO vo = list.get(i);
-			
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
-				resultList.add(vo);
-				companyList.append(vo.getCn()+","+vo.getDisplayName()+";");
-			}
-		}
+		String holidayType = request.getParameter("holidayType");
+		String companylist = request.getParameter("companylist");
 		
 		model.addAttribute("primary", primary);
-		model.addAttribute("list", resultList);
 		model.addAttribute("userCompany", userInfo.getCompanyID());
 		model.addAttribute("lang", userInfo.getLang());
-		model.addAttribute("companyList", companyList);
+		model.addAttribute("holidayType", holidayType);
+		model.addAttribute("companylist", companylist);
+		
 		
 		return "/admin/ezSchedule/scheduleAdminHolidayManage";
 	}
@@ -314,23 +303,28 @@ public class EzScheduleAdminController {
 		String date = request.getParameter("date");
 		String isRepeat = request.getParameter("isRepeat");
 		String isRest = request.getParameter("isRest");
-		String company = request.getParameter("company");		
-		StringBuilder companySel = new StringBuilder();
+		String holidayType = request.getParameter("holidayType");
 		
-		List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());		
-		
-		for (int k = 0; k < deptVOs.size(); k++) {
-			if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
-				if (deptVOs.get(k).getCn().equals(company)) {
-					option = " selected";
-				} else {
-					option = "";
+		if (holidayType.equals("a")) {
+			String company = request.getParameter("company");	
+			StringBuilder companySel = new StringBuilder();
+			
+			List<OrganDeptVO> deptVOs = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());		
+			
+			for (int k = 0; k < deptVOs.size(); k++) {
+				if (userInfo.getRollInfo().indexOf("c=1") > -1 || deptVOs.get(k).getCn().equals(userInfo.getCompanyID())) {
+					if (deptVOs.get(k).getCn().equals(company)) {
+						option = " selected";
+					} else {
+						option = "";
+					}
+					companySel.append("<option value='" + deptVOs.get(k).getCn() + "'" + option + ">" + deptVOs.get(k).getDisplayName() + "</option>");
 				}
-				companySel.append("<option value='" + deptVOs.get(k).getCn() + "'" + option + ">" + deptVOs.get(k).getDisplayName() + "</option>");
 			}
+			model.addAttribute("companySel", companySel);
 		}
+		
 		model.addAttribute("lang", userInfo.getLang());
-		model.addAttribute("companySel", companySel);
 		model.addAttribute("id", id);
 		model.addAttribute("name", name);
 		model.addAttribute("name2", name2);
@@ -338,6 +332,7 @@ public class EzScheduleAdminController {
 		model.addAttribute("date", date);
 		model.addAttribute("isRepeat", isRepeat);
 		model.addAttribute("isRest", isRest);
+		model.addAttribute("holidayType", holidayType);
 		
 		return "/admin/ezSchedule/scheduleAdminPopupHoliday";
 	}
@@ -506,6 +501,76 @@ public class EzScheduleAdminController {
 			return "1";
 		}
 		
+	}
+	
+	/**
+	 * 관리자 일정관리 기념일 등록 탭 페이지(게시판 참조)
+	 */
+	@RequestMapping(value="/admin/ezSchedule/scheduleAdminHolidayTab.do")
+	public String  scheduleAdminHolidayTab(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		
+		logger.debug("============ scheduleAdminHolidayTab started ============");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String primary = userInfo.getPrimary();
+		
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+		
+		StringBuffer companyList = new StringBuffer();
+		
+		for (int i =0 ; i < list.size() ; i++) {
+			OrganDeptVO vo = list.get(i);
+			
+			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+				companyList.append(vo.getCn()+","+vo.getDisplayName()+";");
+			}
+		}
+		
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("primary", primary);
+		model.addAttribute("list", resultList);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
+		model.addAttribute("list", resultList);
+		model.addAttribute("companyList", companyList);
+		
+		logger.debug("============ scheduleAdminHolidayTab ended ============");
+		
+		return "/admin/ezSchedule/scheduleAdminHolidyTabList";
+	}
+	
+	/**
+	 * 관리자 일정관리 기념일 등록 탭 페이지(게시판 참조)
+	 */
+	@RequestMapping(value="/admin/ezSchedule/scheduleAdminPopupHolidayRepeat.do")
+	public String  scheduleAdminPopupHolidayRepeat(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		
+		logger.debug("============ scheduleAdminPopupHolidayRepeat started ============");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		String primary = userInfo.getPrimary();
+		
+		
+		
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("primary", primary);
+		model.addAttribute("userCompany", userInfo.getCompanyID());
+		
+		logger.debug("============ scheduleAdminPopupHolidayRepeat ended ============");
+		
+		return "/admin/ezSchedule/scheduleAdminPopupHolidayRepeat";
 	}
 	
 }

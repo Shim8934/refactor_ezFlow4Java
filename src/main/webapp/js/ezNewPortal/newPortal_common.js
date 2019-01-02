@@ -167,9 +167,7 @@ function eventSetting(portletId, themeId) { //포틀릿 아이디별로 자바�
 			try {
 				openerCalendarMiniView = CalendarMiniView;
 				openerCalendarMiniDataSource = CalendarMiniDataSource;
-				
-				CalendarMiniView("CalendarMini");
-				CalendarMiniDataSource();
+				schedule_get_holiday();
 			    
 //				today();
 				
@@ -434,76 +432,89 @@ function setCountSetting(countName, count) {
 	case "poll" : 
 		if (count > 99) {
 			count = "99+";
-			$("#pollCount").attr("class", "iconCount");
+			document.getElementById("pollCount").classList.remove("iconCount_none");
+			document.getElementById("pollCount").classList.add("iconCount");
 		} else if (count == 0) {
-			$("#pollCount").attr("class", "iconCount_none");
+			document.getElementById("pollCount").classList.remove("iconCount");
+			document.getElementById("pollCount").classList.add("iconCount_none");
 		} else {
-			$("#pollCount").attr("class", "iconCount");
+			document.getElementById("pollCount").classList.remove("iconCount_none");
+			document.getElementById("pollCount").classList.add("iconCount");
 		}
-		
-		$("#pollCount").text(count);
+
+		document.getElementById("pollCount").textContent = count;
 		
 		break;
 	case "circular" :
 		if (count > 99) {
 			count = "99+";
-			$("#circularCount").attr("class", "iconCount");
+			document.getElementById("circularCount").classList.remove("iconCount_none");
+			document.getElementById("circularCount").classList.add("iconCount");
 		} else if (count == 0) {
-			$("#circularCount").attr("class", "iconCount_none");
+			document.getElementById("circularCount").classList.remove("iconCount");
+			document.getElementById("circularCount").classList.add("iconCount_none");
 		} else {
-			$("#circularCount").attr("class", "iconCount");
+			document.getElementById("circularCount").classList.remove("iconCount_none");
+			document.getElementById("circularCount").classList.add("iconCount");
 		}
-		
-		$("#circularCount").text(count);
+
+		document.getElementById("circularCount").textContent = count;
 		
 		break;
 	case "schedule" :  
 		if (count > 99) {
 			count = "99+";
-			$("#scheduleCount").attr("class", "iconCount");
+			document.getElementById("scheduleCount").classList.remove("iconCount_none");
+			document.getElementById("scheduleCount").classList.add("iconCount");
 		} else if (count == 0) {
-			$("#scheduleCount").attr("class", "iconCount_none");
+			document.getElementById("scheduleCount").classList.remove("iconCount");
+			document.getElementById("scheduleCount").classList.add("iconCount_none");
 		} else {
-			$("#scheduleCount").attr("class", "iconCount");
+			document.getElementById("scheduleCount").classList.remove("iconCount_none");
+			document.getElementById("scheduleCount").classList.add("iconCount");
 		}
-		
-		$("#scheduleCount").text(count);
+
+		document.getElementById("scheduleCount").textContent = count;
 		
 		break;
 	case "approval" :
 		if (count > 99) {
 			count = "99+";
-			$("#approvalCount").attr("class", "iconCount");
+			document.getElementById("approvalCount").classList.remove("iconCount_none");
+			document.getElementById("approvalCount").classList.add("iconCount");
 		} else if (count == 0) {
-			$("#approvalCount").attr("class", "iconCount_none");
+			document.getElementById("approvalCount").classList.remove("iconCount");
+			document.getElementById("approvalCount").classList.add("iconCount_none");
 		} else {
-			$("#approvalCount").attr("class", "iconCount");
+			document.getElementById("approvalCount").classList.remove("iconCount_none");
+			document.getElementById("approvalCount").classList.add("iconCount");
 		}
-		
-		$("#approvalCount").text(count);
+
+		document.getElementById("approvalCount").textContent = count;
 		
 		break;
 	case "unreadMail" :
 		if (count > 99) {
 			count = "99+";
-			$("#unreadMailCount").attr("class", "iconCount");
+			document.getElementById("unreadMailCount").classList.remove("iconCount_none");
+			document.getElementById("unreadMailCount").classList.add("iconCount");
 		} else if (count == 0) {
-			$("#unreadMailCount").attr("class", "iconCount_none");
+			document.getElementById("unreadMailCount").classList.remove("iconCount");
+			document.getElementById("unreadMailCount").classList.add("iconCount_none");
 		} else {
-			$("#unreadMailCount").attr("class", "iconCount");
+			document.getElementById("unreadMailCount").classList.remove("iconCount_none");
+			document.getElementById("unreadMailCount").classList.add("iconCount");
 		}
 		
-		$("#unreadMailCount").text(count);
+		document.getElementById("unreadMailCount").textContent = count;
 		
 		break;
 	}
 }
 
 //생일자 목록 month 세팅
-function getMonthlyBirthdayEmployees(event) {
-	if (event  != undefined) {
-		var isNext = event.data.isNext;
-		
+function getMonthlyBirthdayEmployees(isNext) {
+	if (isNext  != undefined) {
 		if (isNext) {
 			if (birthdayMonth === 12) {
 				birthdayMonth = 1;
@@ -778,18 +789,24 @@ function getHolidayList() {
 		async : true,
 		url : "/ezAttitude/getHolidayList.do",
 		data : {
-			//isRest : "rest"
+			isRest : "all"
 		},
 		success : function(result) {
 			for (var i = 0; i < result.holidayList.length; i++) {
+				var isSolar = "";
+				if (result.holidayList[i].isSolar == "1") {
+					isSolar = "1";
+				} else {
+					isSolar = "2";
+				}
 				if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
 					memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
 													  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
-													  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
+													  isSolar, result.holidayList[i].isRest == 1 ? true : false));
 				} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
 					yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
 															  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
-															  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
+															  result.holidayList[i].holidayDate.substring(8,10), isSolar,
 															  result.holidayList[i].isRest == 1 ? true : false));
 				}
 			}
@@ -873,12 +890,11 @@ function setAttiBtnHover() {
 }
 
 //메뉴 열기
-function quickMenuOpen(event) {
+function quickMenuOpen(menu) {
 	var url = "";
 	var location = "";
 	var option = " ";
-	var menu = event.data.menu;
-	
+	console.log(menu);
 	switch (menu) {
 		case "NewMail" : 
 			url = "/ezEmail/mailMain.do";
@@ -910,7 +926,7 @@ function quickMenuOpen(event) {
 			location = "main";
 			break;
 		case "Poll" :
-			url = "/ezBoard/boardMain.do?func=1";
+			url = "/ezQuestion/qstMain.do";
 			location = "main";
 			break;
 	    case "Circular":
@@ -967,11 +983,11 @@ function viewQuick() {
 }
 
 // 퀵메뉴
-function quickMenuOpenRight(event) {
+function quickMenuOpenRight(menu) {
 	var url = '';
 	var location = '';
 	var option = '';
-	var menu = event.data.menu;
+	//var menu = event.data.menu;
 	
 	var pheight = window.screen.availHeight;
 	var conHeight = pheight * 0.8;
@@ -1019,17 +1035,13 @@ function openForm() {
     var parameter = new Array();
     parameter[0] = "${userInfo.deptID}";
     parameter[1] = "A01000";
-
-    if ("${userApprovalG}" == ("YES")) {
-        url = "/ezApprovalG/getFormCont.do";
-    } else {
-        url = "/ezApproval/getFormCont.do";
-    }
+    
+    url = "/ezApprovalG/getFormCont.do";
     
     if (CrossYN()) {
         getformcont_cross_dialogArguments[0] = parameter;
         getformcont_cross_dialogArguments[1] = openForm_Complete;
-        var getFormCont_Cross = window.open(url, "/ezApproval/getFormCont.do", GetOpenWindowfeature(713, 570));
+        var getFormCont_Cross = window.open(url, "/ezApprovalG/getFormCont.do", GetOpenWindowfeature(713, 570));
         
         try { getFormCont_Cross.focus(); } catch (e) {}
     } else {
@@ -1086,4 +1098,49 @@ function openDraftUI() {
     openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
     
     openwindow(openLocation, "", 890, 620);
+}
+
+function schedule_get_holiday() {		        
+    $.ajax({
+		type : "POST",
+		dataType : "text",
+		async : true,
+		url : "/ezSchedule/scheduleGetHoliday.do",
+		data : {
+			COMPANYID  : "VIEW"		    			
+		},
+		success: function(text){
+			XmlNodeText = text;
+            XmlNode = loadXMLString(XmlNodeText);
+            
+            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
+                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
+                    var issolar;
+                    var holiday;
+                    
+                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
+                        issolar = "1";
+                    else
+                        issolar = "2";
+                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1")			                    	
+                        holiday = true;			                    
+                    else
+                        holiday = false;
+                    
+                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
+                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+                    } else {                   	
+                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
+                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+                    }
+                }
+            }			            
+            CalendarMiniView("CalendarMini");
+			CalendarMiniDataSource();
+		}		    		
+    });
 }

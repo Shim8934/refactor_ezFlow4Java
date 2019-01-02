@@ -757,7 +757,7 @@
 	        <%-- 2018-11-22 홍승비 - 그룹사게시판 옵션 사용 여부 표기 --%>
 	        <c:if test="${isAllGroupBoard == 'Y'}">
 		        <tr style="${style2}">
-		        	<th style="border-left:none; border-bottom:none;"><spring:message code ="ezCircular.t118" /> <spring:message code ="ezBoard.hsb05" /></th>
+		        	<th style="border-left:none; border-bottom:none;"><spring:message code ="ezCircular.t118" /> <spring:message code ="ezBoard.hsb005" /></th>
 					<td style="border-top:1px solid #dedede; vertical-align: bottom;"><input type="checkbox" name="allGroupBoard" id="allGroupBoard" disabled checked><spring:message code ="ezBoard.hsb03" /> <spring:message code ="ezBoard.hsb04" /></td>
 		        </tr>
 	        </c:if>

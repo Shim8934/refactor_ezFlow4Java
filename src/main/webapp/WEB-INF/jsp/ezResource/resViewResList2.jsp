@@ -71,8 +71,10 @@
 	    	var pChildBrd = "${childBrd}";
 		    var Mod = "";
 		    var pUse_Editor = "${useEditor}";
-		    var pStartday = "${startDay}";		    
-		    select_memorialDays("${lang}");
+		    var pStartday = "${startDay}";		
+		    var lunarUseFlag = "${lunarUseFlag}";
+		    var lunarUse = "${lunarUse}";
+		    /* select_memorialDays("${lang}"); */
 		    var dayView = "";
 		    
 	    	document.onselectstart = function () { return false; };
@@ -239,10 +241,13 @@
 	    	}
 
 	    	window.onresize = function () {
-	        	if (navigator.userAgent.indexOf("Chrome") > -1)
-		            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 110 + "px";
-		        else
-	    	        document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 130 + "px";
+	    		if(Mod == "WEEK") {
+		        	if (navigator.userAgent.indexOf("Chrome") > -1)
+			            document.getElementById("res_Div").style.height = document.documentElement.clientHeight - 185 + "px";
+			        else
+		    	        document.getElementById("res_Div").style.height = document.documentElement.clientHeight - 190 + "px";
+		        	scroll();
+	    		}
 	    	}
 
 	    	function btnAdd_Click() {
@@ -448,7 +453,7 @@
         	</tr>
         	<tr>
             	<td style="vertical-align:top;">
-                	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;overflow-y: auto;overflow-x:hidden;" >
+                	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;" >
                 		<table style="width:100%;">
                     		<tr>
                       			<td colspan="2" id='weekviewer' class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  -->

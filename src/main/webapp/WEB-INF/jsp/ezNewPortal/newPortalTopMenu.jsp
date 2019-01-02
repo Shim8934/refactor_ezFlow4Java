@@ -41,6 +41,11 @@
 	</head>
 	<body>
 		<header id="top"></header>
+		<c:if test="${useActiveX == 'YES'}">
+			<script type="text/javascript">ezIcd_ActiveX("i_icd2");</script>
+			<iframe id="if_Progress" src="/ezNewPortal/progress.do" style="display: none;"></iframe>
+		</c:if>
+
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
 		
 		<script type="text/javascript">
@@ -427,6 +432,7 @@
 				
 				// 드래그앤드롭
 				$('#toggleMenu').sortable({
+					scroll: false,
 					activate: function () {
 						$("li.ui-sortable-placeholder").css("visibility", "visible");
 						$("li.ui-sortable-placeholder").css("border-right", "1px dashed #898989");
@@ -673,6 +679,41 @@
 					"&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
 		}
 		
+		var officeBugPatch = function() {
+		}
+		
+		var finish_download = function() {
+			officeBugPatch();	
+		}
+		
+		var getObject = function() {
+			i_icd2.SetDocumentDisp(window.document);
+			i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/ezNewPortal/componentListTransfer.do";
+			i_icd2.CheckVersion();
+			var nCount = i_icd2.nNeedDownload;
+
+			if (nCount) {
+				if_Progress.StartOn();
+			} else {
+				finish_download();
+			}
+		}
+		
+		var setUseActiveX = function() {
+			var useActiveX = "<c:out value='${useActiveX}' />"
+			
+			if (useActiveX == 'YES') {
+				var userAgent = window.navigator.userAgent;
+				
+				if ((/msie/i.test(userAgent)) || (/rv:11.0/i.test(userAgent))) {
+					//한글기안기 사용일때는 ie9,10,11 전부 activeX 설치
+					if (userAgent.indexOf("Trident/5.0") > 0 || userAgent.indexOf("Trident/6.0") > 0 || userAgent.indexOf("Trident/7.0") > 0) {
+						getObject();
+					}
+				}
+			}
+		}
+		
  		var newPortalTopMenuFunc = function () {
  			newPortalTopMenu.menuListArr = JSON.parse('${menuList}');
 		
@@ -684,6 +725,7 @@
 			getNotiPopup();          // 팝업공지 불러오기
 			setExpandMenuListEvent();// 확장메뉴 이벤트 설정
 			setExpandMenuEvent();    // 확장메뉴 이벤트 설정
+			setUseActiveX();		 // activeX 설치 (useActiveX가 YES일때)
 			
 		}
  		

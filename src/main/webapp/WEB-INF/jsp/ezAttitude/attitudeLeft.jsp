@@ -92,7 +92,7 @@
 			setAttiBtnHover();
 			getAttitudeList();
 			getHolidayList();
-		    select_memorialDays(uselang);
+		    /* select_memorialDays(uselang); */
 		    
 		    document.getElementById('userAttitude').onclick();
 		    
@@ -152,14 +152,20 @@
 				},
 				success : function(result) {
 					for (var i = 0; i < result.holidayList.length; i++) {
+						var isSolar = "";
+						if (result.holidayList[i].isSolar == "1") {
+							isSolar = "1";
+						} else {
+							isSolar = "2";
+						}
 						if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
 							memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
 															  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
-															  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
+															  isSolar, result.holidayList[i].isRest == 1 ? true : false));
 						} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
 							yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
 																	  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
-																	  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
+																	  result.holidayList[i].holidayDate.substring(8,10), isSolar,
 																	  result.holidayList[i].isRest == 1 ? true : false));
 						}
 					}
@@ -398,14 +404,14 @@
 			    	alert("<spring:message code='ezAttitude.t175'/>");
 			    },
 			    success : function(result){
-			    	if (result == "0") {
+			    	if (result == "0") { 
 			    		result = "";
 			    	} else {
-			    		result = "("+ result +")";
+			    		result = "&nbsp;" + result;
 			    	}
 			    	try {
-						document.getElementsByClassName("attCount")[0].innerText = result;
-						document.getElementsByClassName("attCount")[1].innerText = result;
+						document.getElementsByClassName("attCount")[0].innerHTML = result;
+						document.getElementsByClassName("attCount")[1].innerHTML = result;
 					} catch (e) {	}
 			    }
 	    	})
@@ -448,7 +454,7 @@
                    	<c:if test="${attitudeAdminCheck == true}">
                    		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t7'/>
                    			<c:if test="${totalAtt != 0 }">
-								<span class="attCount">(${totalAtt})</span>
+								<span class="attCount">&nbsp;${totalAtt}</span>
 							</c:if>
                    		</span></li>
                     </c:if>

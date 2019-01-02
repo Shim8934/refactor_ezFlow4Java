@@ -45,12 +45,12 @@ function CalendarView(pTagetID) {
         tDiv.innerHTML = "";
         objElm.appendChild(tDiv);
 
-        if (sDate.getFullYear() > 1800 && sDate.getFullYear() <= 2101) {
+        /*if (sDate.getFullYear() > 1800 && sDate.getFullYear() <= 2101) {
             if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 1)
                 memorialDays[1].day = 29;
             else if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 2)
                 memorialDays[1].day = 30;
-        }
+        }*/
 
         if (typeCal != 1) {
             var oTable = document.createElement("TABLE");
@@ -127,22 +127,27 @@ function CalendarView(pTagetID) {
 
                     var dayText;
                     if (LunarUse)
-                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname + " (" + LunarDate + ")";
+                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) +  " (" + LunarDate + ")";
                     else
-                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
+                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
 
 
                     var current_day = new Date(sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2));
-                    /*if (current_day.getDay() == "0" || isholiday)
-                        oTh.style.color = "#ee1c25";
+                    
+                    if (current_day.getDay() == "0" || isholiday)
+                    	document.getElementById("calTitle").style.color = "#ee1c25";
                     else if (current_day.getDay() == "6")
-                        oTh.style.color = "rgb(0, 72, 149)";*/
+                    	document.getElementById("calTitle").style.color = "rgb(0, 72, 149)"
+                    else {
+                    	document.getElementById("calTitle").style.color = "black"
+                    };
 
                 }
                 else
                     var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
-            }
-            else {
+            } else {
+            	document.getElementById("calTitle").style.color = "black"
+            	
                 oTable.className = "calendar_month_navi";
                 var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2);
             }
@@ -255,6 +260,7 @@ function CalendarView(pTagetID) {
 
         }
         else {
+        	document.getElementById("calTitle").style.color = "black"
             /*var oTable = document.createElement("TABLE");
             oTable.className = "calendar_week_navi";
             oTable.setAttribute("cellpadding", "0");
