@@ -692,7 +692,7 @@
 
 						// 전체페이지 처리
 						var totCount = result.getElementsByTagName('TOTALCOUNT')[0].innerHTML;
-						totalPage = Math.ceil((totCount-1)/10);
+						totalPage = Math.ceil((totCount)/10);
 						if(totalPage == 0) {
 							totalPage = 1;
 						}
@@ -896,7 +896,7 @@
 				//if (CrossYN()) {
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = add_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(930, 550));
 			    try { OpenWin.focus(); } catch (e) { }
 				/* }else{
 				    var rtnValue;
@@ -952,7 +952,7 @@
 			    userinfo_dialogArguments = new Array();
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = info_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(930, 550));
 			    try { OpenWin.focus(); } catch (e) { }
 				/* }else{
 				    var rtnValue;
@@ -1722,7 +1722,7 @@
 
 						// 전체페이지 처리
 						var totCount = result.getElementsByTagName('TOTALCOUNT')[0].innerHTML;
-						totalPage = Math.ceil((totCount-1)/10);
+						totalPage = Math.ceil((totCount)/10);
 						if(totalPage == 0) {
 							totalPage = 1;
 						}
@@ -1891,6 +1891,7 @@
 						<option value="cn"><spring:message code='ezOrgan.t94' /></option>
 						<option value="description"><spring:message code='ezOrgan.t68' /></option>
 						<option value="title"><spring:message code='ezOrgan.t69' /></option>
+						<option value="extensionAttribute10"><spring:message code='ezOrgan.t1500' /></option>
 						<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
 						<option value="mobile"><spring:message code='ezOrgan.t96' /></option>
 						<option value="HomePhone"><spring:message code='ezOrgan.t97' /></option>
