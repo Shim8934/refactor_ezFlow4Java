@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<title>
-			전체 연차 등록/수정
+			총 연차 등록/수정
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
@@ -15,15 +15,36 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 	    <script type="text/javascript">	
 	    	var flagCheck = 'change';
-	    	var companyId = "<c:out value="${companyId}" />";
+	    	var companyId = "<c:out value="${vo.companyId}" />";
 	    	var changeReason = '';
-	    	var annualCnt = '';
-	    	var searchYear = opener.$("#searchYear").val();
+	    	var totalAnnualCnt = "<c:out value="${vo.totalAnnualCnt}" />";
+	    	var useAnnualCnt = "<c:out value="${vo.useAnnualCnt}" />";
+	    	var annualCnt = "";
+	    	var searchYear = "<c:out value="${vo.year}" />";
+	    	var userId = "<c:out value="${vo.userId}" />";
 	    
 	    	$(document).ready(function(){
-		    	$("input:text[name=annualCnt]").on("keyup", function() {
+		    	$("input:text[name=totalAnnualCnt]").on("keyup", function() {
 		    	    $(this).val($(this).val().replace(/[^0-9]/g,""));
 		    	});
+		    	
+		    	if(useAnnualCnt == null || useAnnualCnt == "") {
+		    		useAnnualCnt = 0;
+		    	}
+		    	
+		    	if(totalAnnualCnt == null || totalAnnualCnt == "") {
+		    		totalAnnualCnt = 0;
+		    	} else if(totalAnnualCnt % 1 == 0.5) {
+		    		$("input:checkbox[id='bancha']").prop('checked', true);
+		    		setBancha();
+		    		totalAnnualCnt = totalAnnualCnt - 0.5
+		    	}
+		    	
+		    	useAnnualCnt = Number(useAnnualCnt);
+		    	totalAnnualCnt = Number(totalAnnualCnt);
+		    	
+		    	$("#useAnnualCnt").html(useAnnualCnt);
+		    	$("#totalAnnualCnt").val(totalAnnualCnt);
    			});
 	    	
 	    	function setFlagCheck(){
@@ -39,9 +60,9 @@
 	    	}
 	    	
 	    	//전체 연차 등록/수정
-	    	function modifyAllAnnualCnt() {
+	    	function modifyPrsnAnnualCnt() {
 	    		changeReason = $("#changeReason").val();
-	    		annualCnt = $("#annualCnt").val();
+	    		annualCnt = $("#totalAnnualCnt").val();
 	    		if (annualCnt == "" || annualCnt == null) {
 	    			alert("연차수 입력");
 	    			return;
@@ -56,14 +77,15 @@
 
 				$.ajax({
 	   				type:"post",
-	   				url:"/admin/ezAttitude/changeAllAnnual.do",
+	   				url:"/admin/ezAttitude/changePrsnAnnual.do",
 	   				dataType : "text",
 	   				data:{
 	   					year : searchYear,
 	   					changeReason : changeReason,
 	   					companyId : companyId,
-	   					flagCheck : flagCheck,
-	   					annualCnt : annualCnt
+	   					annualCnt : annualCnt,
+	   					userId : userId,
+	   					flagCheck : flagCheck
 	   				},
 					success : function(resultStatus) {
 	            		if (resultStatus == "success") {
@@ -83,7 +105,7 @@
 	</head>
 	<body class="popup">
 	    <h1>
-	    	전체 연차 등록/수정
+	    	총 연차 등록/수정
 	    </h1>
 	    <div id="close">
             <ul>
@@ -92,20 +114,32 @@
         </div>
 	    <table class="content">
 	        <tr>
-	            <th style="width:200px; text-align:center" rowspan="2">총 연차수</th>
+	            <th style="width:200px; text-align:center">사원명</th>
 	            <td>
-	            	<input name="flagCheck" id="Radio1" type="radio" value="change" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="setFlagCheck();"/><label for="Radio1">&nbsp;총 연차수를 변경하기</label>
+	            	${vo.userName}
 	            </td>
 	        </tr>
 	        <tr>
+	            <th style="width:200px; text-align:center">직위</th>
 	            <td>
-					<input name="flagCheck" id="Radio2" type="radio" value="plus" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="setFlagCheck();"/><label for="Radio2">&nbsp;현재 총 연차수에서 더하기</label>
+	            	${vo.userTitle}
 	            </td>
 	        </tr>
 	        <tr>
-	        	<th style="width:200px; text-align:center">연차수</th>
+	            <th style="width:200px; text-align:center">사원명</th>
 	            <td>
-	            	<input id="annualCnt" name="annualCnt" type="text" style="width:30px;padding-bottom: 5px;" value="" maxlength="3">
+	            	${vo.userDeptName}
+	            </td>
+	        </tr>
+	        <tr>
+	            <th style="width:200px; text-align:center">사용 연차 수</th>
+	            <td id="useAnnualCnt">
+	            </td>
+	        </tr>
+	        <tr>
+	        	<th style="width:200px; text-align:center">총 연차수</th>
+	            <td>
+	            	<input id="totalAnnualCnt" name="totalAnnualCnt" type="text" style="width:30px;text-align:right;padding-bottom: 5px;" value="" maxlength="3">
 	            	<label id="banchaTxt"></label>일
 	            	<span style="width:100px;padding-right: 30px;"></span>
 	            	<input type="checkbox" id="bancha" name="bancha" onchange="setBancha();">
@@ -115,13 +149,13 @@
 	        <tr>
 	        	<th style="width:200px; text-align:center">수정사유</th>
 	            <td>
-	            	<input id="changeReason" name="changeReason" type="text" style="width:100%;text-align:right;padding-bottom: 5px;" value="">
+	            	<input id="changeReason" name="changeReason" type="text" style="width:100%;padding-bottom: 5px;" value="">
 	            </td>
 	        </tr>
 	    </table>
 	    <br/>
         <div class="btnposition btnpositionNew">
-	        <a class="imgbtn"><span onclick="modifyAllAnnualCnt();" ><spring:message code='ezAttitude.t16' /></span></a>
+	        <a class="imgbtn"><span onclick="modifyPrsnAnnualCnt();" ><spring:message code='ezAttitude.t16' /></span></a>
 	    </div>
 	</body>
 </html>

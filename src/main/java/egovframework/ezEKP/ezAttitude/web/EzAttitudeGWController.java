@@ -2078,16 +2078,18 @@ public class EzAttitudeGWController {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("changeUserId"));
 			
 			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("userId", request.getParameter("userId"));
+			map.put("changeUserId", request.getParameter("changeUserId"));
 			map.put("changeReason", request.getParameter("changeReason"));
 			map.put("flagCheck", request.getParameter("flagCheck"));
 			map.put("annualCnt", request.getParameter("annualCnt"));
 			map.put("year", request.getParameter("year"));
+			map.put("tenantId", info.getTenantId());
+			map.put("companyId", companyId);
 			
-			ezAttitudeService.changeAllAnnual(map, info.getTenantId(), companyId, info.getPrimary());
+			ezAttitudeService.changeAnnual(map);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2100,6 +2102,85 @@ public class EzAttitudeGWController {
 		}
 		
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/changeAllAnnual] ended.");
+		return result;
+	}
+	
+	
+	/**
+	 * G/W 근태관리 [POST] 연차현황 전체 등록/수정
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/changePrsnAnnual", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject changePrsnAnnual(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/changePrsnAnnual] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("changeUserId"));
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("userId", userId);
+			map.put("changeUserId", request.getParameter("changeUserId"));
+			map.put("tenantId", info.getTenantId());
+			map.put("companyId", request.getParameter("companyId"));
+			map.put("flagCheck", request.getParameter("flagCheck"));
+			map.put("changeReason", request.getParameter("changeReason"));
+			map.put("annualCnt", request.getParameter("annualCnt"));
+			map.put("year", request.getParameter("year"));
+			
+			ezAttitudeService.changeAnnual(map);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/changePrsnAnnual] ended.");
+		return result;
+	}
+	
+	
+	/**
+	 * G/W 근태관리 [GET] 연차현황 전체 등록/수정
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/modifyPrsnAnnualPop", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject modifyPrsnAnnualPop(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/modifyPrsnAnnualPop] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("userId", userId);
+			map.put("companyId", request.getParameter("companyId"));
+			map.put("tenantId", info.getTenantId());
+			map.put("year", request.getParameter("year"));
+			map.put("offsetMin", request.getParameter("offsetMin"));
+			
+			AttitudeAnnualVO vo = ezAttitudeService.getAnnualCnt(map);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/modifyPrsnAnnualPop] ended.");
 		return result;
 	}
 }

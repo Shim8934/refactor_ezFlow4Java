@@ -363,28 +363,33 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	}
     
     @SuppressWarnings("unchecked")
-    public int getAllAnnualCount(Map<String, Object> map) throws Exception {
-    	return (int) select("ezAttitudeAdminDAO.getAllAnnualCount", map);
+    public int getSimpleAnnualCnt(Map<String, Object> map) throws Exception {
+    	return (int) select("ezAttitudeAdminDAO.getSimpleAnnualCnt", map);
     }
     
     @SuppressWarnings("unchecked")
-    public void insertAllAnnualHistory(Map<String, Object> map) throws Exception {
-    	insert("ezAttitudeAdminDAO.insertAllAnnualHistory", map);
+    public void insertAnnualHistory(Map<String, Object> map) throws Exception {
+    	insert("ezAttitudeAdminDAO.insertAnnualHistory", map);
     }
     
     @SuppressWarnings("unchecked")
-    public void changeAllAnnualHistory(Map<String, Object> map) throws Exception {
-    	insert("ezAttitudeAdminDAO.changeAllAnnualHistory", map);
+    public void changeAnnualHistory(Map<String, Object> map) throws Exception {
+    	insert("ezAttitudeAdminDAO.changeAnnualHistory", map);
     }
     
     @SuppressWarnings("unchecked")
-    public void insertAllAnnual(Map<String, Object> map) throws Exception {
-    	insert("ezAttitudeAdminDAO.insertAllAnnual", map);
+    public void insertAnnual(Map<String, Object> map) throws Exception {
+    	insert("ezAttitudeAdminDAO.insertAnnual", map);
     }
     
     @SuppressWarnings("unchecked")
-    public void changeAllAnnual(Map<String, Object> map) throws Exception {
-    	update("ezAttitudeAdminDAO.changeAllAnnual", map);
+    public void changeAnnual(Map<String, Object> map) throws Exception {
+    	update("ezAttitudeAdminDAO.changeAnnual", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public AttitudeAnnualVO getAnnualCnt(Map<String, Object> map) throws Exception {
+    	return (AttitudeAnnualVO) select("ezAttitudeAdminDAO.getAnnualCnt", map);
     }
     
 }
