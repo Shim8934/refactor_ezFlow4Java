@@ -195,9 +195,9 @@
 		<table class="content">
 			<tr>
 		    	<th><spring:message code='ezOrgan.t291'/></th>
-		    	<td nowrap style="padding-right:70px"><input type="checkbox" value="c" id="Check1" disabled=true /></td>
+		    	<td nowrap style="padding-right:127px"><input type="checkbox" value="c" id="Check1" disabled=true /></td>
 		    	<th><spring:message code='ezOrgan.t292'/></th>
-		    	<td style="padding-right:90px" ><input type="checkbox" value="a" id="Check2" disabled=true /></td>
+		    	<td style="padding-right:127px" ><input type="checkbox" value="a" id="Check2" disabled=true /></td>
 		  	</tr>
 		  	<tr>
 		    	<th><spring:message code='ezOrgan.t293'/></th>

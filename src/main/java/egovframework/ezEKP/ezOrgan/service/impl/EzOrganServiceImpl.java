@@ -1219,6 +1219,9 @@ public class EzOrganServiceImpl implements EzOrganService {
                 case "TITLE":
                     bRet = true;
                     break;
+                case "EXTENSIONATTRIBUTE10":
+                    bRet = true;
+                    break;
             }
         }catch (Exception Ex){ }
         return bRet;

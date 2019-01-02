@@ -1605,7 +1605,8 @@
 					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 				AND 
 					A.TENANT_ID = #v_TENANT_ID#
-
+				AND
+					CN <> 'masteradmin'
 				UNION ALL
 
 				SELECT

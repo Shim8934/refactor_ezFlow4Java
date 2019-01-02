@@ -1690,7 +1690,8 @@
 					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
 				AND 
 					A.TENANT_ID = #v_TENANT_ID# $strSQLCom$
-
+				AND
+					CN <> 'masteradmin'
 				UNION ALL
 
 				SELECT
