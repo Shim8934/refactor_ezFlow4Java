@@ -313,7 +313,7 @@ function ApprovMappingSign(ret) {
         	signID = pSusinSN2 + "sign" + LastKyulSN;
             seumyungID = pSusinSN2 + "jikwe" + LastKyulSN;
             seumyungdateID = pSusinSN2 + "seumyungdate" + LastKyulSN;
-        	
+            
             var field = message.GetListItem(fields, seumyungdateID);
             if (field) {
                 setNodeText(field , s);
@@ -323,7 +323,7 @@ function ApprovMappingSign(ret) {
             if (field) {
                 setNodeText(field , getNodeText(field) + PositionText);
             }
-        	
+            
             var field = message.GetListItem(fields, signID);
             if (field) {
             	//전자결재 일반에는 대결없음
@@ -401,7 +401,7 @@ function ApprovMappingSign(ret) {
     		signID = pSusinSN2 + "sign" + pAprMemberSignSN;
             seumyungID = pSusinSN2 + "jikwe" + pAprMemberSignSN;
             seumyungdateID = pSusinSN2 + "seumyungdate" + pAprMemberSignSN;
-
+            
             var field = message.GetListItem(fields, seumyungdateID);
             if (field) {
                 setNodeText(field , s);
@@ -411,7 +411,7 @@ function ApprovMappingSign(ret) {
             if (field) {
                 setNodeText(field , getNodeText(field) + PositionText);
             }
-        	
+            
             var field = message.GetListItem(fields, signID);
             if (field) {
             	//전자결재 일반에는 대결없음
@@ -541,6 +541,7 @@ function ApprovMappingSign(ret) {
         if (field) {
             setNodeText(field , getNodeText(field) + PositionText); // '직위' 출력
         }
+        
         /**
          * 기안 작성시 결재자의 결재유형을 '대결'로 설정한 경우
          *  16 : 대결
@@ -2105,6 +2106,14 @@ function SReAprLineSingMapping(ret) {
             if (new RegExp(/Firefox/).test(navigator.userAgent))
                 field.innerHTML = "<br type='_moz'>";
         }
+        
+        fieldname = susinSN + "approdept" + i;
+        field = message.GetListItem(fields, fieldname);
+        if (field) {
+            setNodeText(field , " ");
+            if (new RegExp(/Firefox/).test(navigator.userAgent))
+                field.innerHTML = "<br type='_moz'>";
+        }
     }
     for (i = 1; i < 50; i++) {
         name = susinSN + "habyuidate" + i
@@ -2128,6 +2137,14 @@ function SReAprLineSingMapping(ret) {
                 }
 
                 fieldname = susinSN + "habyuipositon" + i;
+                field = message.GetListItem(fields, fieldname);
+                if (field) {
+                    setNodeText(field , " ");
+                    if (new RegExp(/Firefox/).test(navigator.userAgent))
+                        field.innerHTML = "<br type='_moz'>";
+                }
+                
+                fieldname = susinSN + "habyuiapprodept" + i;
                 field = message.GetListItem(fields, fieldname);
                 if (field) {
                     setNodeText(field , " ");
@@ -2208,7 +2225,12 @@ function SReAprLineSingMapping(ret) {
                     field = message.GetListItem(fields, fieldname)
                     if (field)
                         field.innerHTML = OrderName[i] + "<br>" + OrderReason[i];
-
+                    
+                    fieldname = susinSN + "approdept" + idx;
+                    field = message.GetListItem(fields, fieldname);
+                    if (field) {
+                    	setNodeText(field, OrderDept[i]);
+                    }
                     idx = idx + 1;
                     continue;
                 }
@@ -2231,6 +2253,12 @@ function SReAprLineSingMapping(ret) {
             if (field) {
                 field.innerHTML = OrderName[i];
             }
+            
+            fieldname = susinSN + "approdept" + idx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	setNodeText(field, OrderDept[i]);
+            }
             idx = idx + 1;
         }
 
@@ -2251,6 +2279,12 @@ function SReAprLineSingMapping(ret) {
             field = message.GetListItem(fields, fieldname);
             if (field) {
                 setNodeText(field , OrderJobtitle[i]);
+            }
+            
+            fieldname = susinSN + "habyuiapprodept" + hidx;
+            field = message.GetListItem(fields, fieldname);
+            if (field) {
+            	setNodeText(field , OrderDept[i]);
             }
             hidx = hidx + 1;
         }

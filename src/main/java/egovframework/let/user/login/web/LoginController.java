@@ -197,7 +197,6 @@ public class LoginController {
         	return "forward:/user/login/login.do";
         // 사용자 ID 혹은 사원번호가 발견된 경우
 		} else {
-			
 			resultVO.setIp(ClientUtil.getClientIP(request));
 			resultVO.setAgent(ClientUtil.getClientInfo(request, "agent"));
 			resultVO.setOs(ClientUtil.getClientInfo(request, "os"));
@@ -207,25 +206,9 @@ public class LoginController {
 			// 로그인 후 IP 주소 체크
         	boolean ipAddressChk = ipAccessCheck(resultVO);
         	logger.debug("ipAddressChk=" + ipAddressChk);
-        	// 2018.10.22 이석화 추가 - useSession row 유무 확인
-        	Map<String, Object> sessionParam = new HashMap<String, Object>();
-    		String confName = "useSession"; 
-    		sessionParam.put("tenantID", tenantId);
-    		sessionParam.put("confName", confName);
         	
-    		useSession = ezCommonService.getUseSession(sessionParam);
-    		// tenant_config 테이블에 useSession row 없으면 추가
-    		if (useSession == null || "".equals(useSession)) {
-    			String regdate = commonUtil.getTodayUTCTime("");
-        		sessionParam.put("property_value", "0");
-    			sessionParam.put("description", "세션 유지 시간. 단, 0이면 세션 사용 안함");
-    			sessionParam.put("config_name", "세션 유지 시간");
-    			sessionParam.put("regdate", regdate);
-    			sessionParam.put("config_type", "일반");
-    			
-    			ezCommonService.insertUseSession(sessionParam);
-    			useSession = ezCommonService.getUseSession(sessionParam);
-        	}
+        	// 2018.10.22 이석화 추가 - useSession row 유무 확인
+    		useSession = ezCommonService.getTenantConfig("useSession", tenantId);
         	
         	if (ipAddressChk == true) {
         		// 사용자 ID를 사용해 로그인하는 경우
@@ -342,6 +325,16 @@ public class LoginController {
 		
 		// 사용자가 입력한 암호가 맞는 경우
         if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+        	// 공유사서함 기능을 사용할 경우 공유사서함 계정으로의 로그인을 막는다.
+    		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+    		
+    		if (useSharedMailbox.equals("YES")) {
+    			if (deptId != null && deptId.startsWith("shared_mailbox_")) {
+    				logger.debug("Cannot login with shared mailbox account.");
+    				model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
+        	        return "forward:/user/login/login.do";
+    			}
+    		}
         	
         	// masteradmin의 암호로 로그인 가능하여 masteradmin 암호가 맞는 경우
         	// usermaster 테이블의 ip정보/loginCount는 업데이트하지 않고 접속 로그정보만 저장한다.
@@ -368,11 +361,15 @@ public class LoginController {
 	        	response.addCookie(cookieName);
 	        	
 	        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
-	        	if (Integer.parseInt(useSession) != 0) {
+	        	if (!useSession.equals("")) {
+	        		int sessionTime = Integer.parseInt(useSession);
 	        		
-	        		session = request.getSession(); 
-	        		session.setMaxInactiveInterval(Integer.parseInt(useSession)*60);	// 세션 유지 시간 설정
+	        		if (sessionTime != 0) {
+	        			session = request.getSession(); 
+	        			session.setMaxInactiveInterval(sessionTime * 60);	// 세션 유지 시간 설정
+	        		}
 	        	}
+	        	
 	        
 	        	return "redirect:/ezPortal/portalMain.do";
         		
@@ -404,9 +401,18 @@ public class LoginController {
     		            	cal.add(Calendar.DATE, realPeriod);
     		            	
     		            	baseDT = cal.getTime();
-    		            	Date lastDT = resultVO.getUpdateDT();
+    		            	Date passwordUpdateDT = resultVO.getPassword_updatedt();
+    		            	
+    		            	if (passwordUpdateDT == null) {
+    		            		passwordUpdateDT = resultVO.getUpdateDT();
+    		            	}
+    		            	
+    		            	logger.debug("passwordUpdateDT=" + passwordUpdateDT);
+    		            	logger.debug("baseDT=" + baseDT);
+    		            	
     		            	//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
-    		    			diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
+    		    			diff = EgovDateUtil.getDaysDiff(baseDT, passwordUpdateDT);
+    		    			logger.debug("diff=" + diff);
     		        	}	        	
     	        	}        	        	
     	        		        	
@@ -457,11 +463,16 @@ public class LoginController {
     		        	response.addCookie(cookieName);
     		        	
     		        	// 2018-10-22 이석화 - 세션이 0이면 세션 사용안함
-    		        	if (Integer.parseInt(useSession) != 0) {
-    		        		//세션 생성 - 일시적으로 주석처리 필요할때 사용
-	    		        	session = request.getSession();			// 세션 필요로 주석 해제
-	    		        	session.setMaxInactiveInterval(Integer.parseInt(useSession)*60);		// 세션의 유지 시간 설정
+    		        	if (!useSession.equals("")) {
+    		        		int sessionTime = Integer.parseInt(useSession);
+    		        		
+	    		        	if (sessionTime != 0) {
+	    		        		//세션 생성 - 일시적으로 주석처리 필요할때 사용
+		    		        	session = request.getSession();			// 세션 필요로 주석 해제
+		    		        	session.setMaxInactiveInterval(sessionTime * 60);		// 세션의 유지 시간 설정
+	    		        	}
     		        	}
+    		        	
     		        	return "redirect:/ezPortal/portalMain.do";
     		        	
     				}
@@ -561,15 +572,15 @@ public class LoginController {
     	} else { // useIPAccess 사용하면 IP, ID 체크
     		
     		String topID = loginVO.getCompanyID();
+    		String deptID = loginVO.getDeptID();
     		//String topID = loginVO.getRollInfo().indexOf("c=1") != -1 ? "Top" : loginVO.getCompanyID();
     		String clientIP[] = loginVO.getIp().split("\\.");
         	List<AccessIdVO> accessIdList = ezSystemAdminService.getAllAccessList(loginVO.getPrimary(), loginVO.getTenantId(), topID);
         	List<AccessIdVO> accessDeptList = ezSystemAdminService.getAllAccessListDept(loginVO.getPrimary(), loginVO.getTenantId(), topID);
         	List<IPBandVO> ipBandList = ezSystemAdminService.getAllIPBand(loginVO.getTenantId());
     		
-    		 
         	// ID 먼저 체크
-        	if (!(accessIdList.size() == 0 || accessIdList == null)) {
+        	if (!(accessIdList == null || accessIdList.size() == 0)) {
         		for (int i = 0; i < accessIdList.size(); i++) {
         			String getListId = accessIdList.get(i).getCn();
         			if (loginVO.getId().equals(getListId)) {
@@ -578,23 +589,23 @@ public class LoginController {
         			}
         		}
         	}
-        	
+
         	// 부서 체크
-        	if (!(accessDeptList.size() == 0 || accessDeptList == null)) {
+        	if (!(accessDeptList == null || accessDeptList.size() == 0)) {
         		for (int i = 0; i < accessDeptList.size(); i++) {
         			String getListDept = accessDeptList.get(i).getCn();
-        			if (topID.equals(getListDept)) {
+        			if (deptID.equals(getListDept) || topID.equals(getListDept)) {
         			logger.debug("dept checked");
         				return true;
         			}
         		}
         	}
-        	
+
         	// IP 대역 체크
         	boolean returnValue = false;
         	String getAccess = "NO";
         	int checkCnt = 0;
-        	if (!(ipBandList.size() == 0 || ipBandList == null)) {
+        	if (!(ipBandList == null || ipBandList.size() == 0)) {
         		for (int i = 0; i < ipBandList.size(); i++) {
         			getAccess = ipBandList.get(i).getAccess();
         			

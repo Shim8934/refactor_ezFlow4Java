@@ -69,6 +69,7 @@
                 createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
                 createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
+                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            xmlHTTP.send(xmlpara);
 	            recevieListview("MsgToList", "ListViewMsgTo");
@@ -136,6 +137,8 @@
         		document.getElementById("TextId").value = sharedMailboxInfo.shareId;
         		document.getElementById("TextName").value = sharedMailboxInfo.shareName;
 	        	document.getElementById("TextId").disabled = true;
+	        	document.getElementById("TextPassword").disabled = true;
+            	document.getElementById("TextPassword2").disabled = true;
 	        	
 	        	var userList = sharedMailboxInfo.userList;
 	        	var resultXml = "<LISTVIEWDATA><ROWS>";
@@ -342,12 +345,12 @@
 	        
 	        function search_click() {
 	        	p_ListOrderObject = null;
-	        	var searchKeyword = document.all("keyword").value.trim();
+	        	var searchKeyword = document.getElementById("keyword").value.trim();
 	        	
 	            if (searchKeyword == "") {
 	                alert("<spring:message code='ezEmail.t10' />");
-	                document.all("keyword").value = searchKeyword;
-	                document.all("keyword").focus();
+	                document.getElementById("keyword").value = searchKeyword;
+	                document.getElementById("keyword").focus();
 	                return;
 	            }
 				
@@ -357,7 +360,7 @@
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : true,
 		        	data : {
-		        		search : document.all("search_type").value + "::" + document.all("keyword").value, 
+		        		search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, 
 		        		cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value, 
 		        		prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department", 
 		        		type : "user"
@@ -394,23 +397,43 @@
 	        }
 	
 	        function OK_Click() {
-	            if (document.all("TextName").value.trim() == "") {
+	            if (document.getElementById("TextName").value.trim() == "") {
 	                alert("<spring:message code='ezEmail.sharedMailbox10' />");
-	                document.all("TextName").focus();
+	                document.getElementById("TextName").focus();
 	                return;
 	            }
 	            
-	            if (document.all("TextId").value.trim() == "") {
+	            if (document.getElementById("TextId").value.trim() == "") {
 	                alert("<spring:message code='ezEmail.sharedMailbox11' />");
-	                document.all("TextId").focus();
+	                document.getElementById("TextId").focus();
 	                return;
 	            }
 	            
 	            var regex=/^[a-z0-9_-]+$/;
 	            
-	            if (regex.test(document.all("TextId").value.trim()) === false) {
+	            if (regex.test(document.getElementById("TextId").value.trim()) === false) {
 	            	alert("<spring:message code='ezEmail.sharedMailbox12' />");
 	            	return;
+	            }
+	            
+	            if (shareId == "") {
+		            if (document.getElementById("TextPassword").value == "") {
+		            	alert("<spring:message code='ezOrgan.t229' />");
+		                document.getElementById("TextPassword").focus();
+		                return;
+		            }
+		            
+		            if (!CheckPassword(document.getElementById('TextPassword').value)) {
+						alert("<spring:message code='main.jjh04'/>");
+						document.getElementById('TextPassword').focus();
+						return;
+					}
+		            
+		            if (document.getElementById('TextPassword').value !== document.getElementById('TextPassword2').value){
+						alert("<spring:message code='ezOrgan.t230' />");
+						document.getElementById('TextPassword2').focus();
+						return;
+					}
 	            }
 	            
 	            var memberList = document.getElementById("ListViewMsgTo").children.item(0).children.item(1).children;
@@ -437,14 +460,14 @@
 					userList.push(userId + ":" + deletePermission + ":" + sendPermission);
 	            }
 	            
-	            var sharedMailboxInfo = {
-	            	"shareId" : document.all("TextId").value,
-	            	"shareName" : document.all("TextName").value,
-	            	"compId" : companyId,
-	            	"userList" : userList
-	            };
-	            
-	            if (shareId == document.all("TextId").value) {
+	            if (shareId != "") {
+	            	var sharedMailboxInfo = {
+    	            	"shareId" : document.getElementById("TextId").value.trim(),
+    	            	"shareName" : document.getElementById("TextName").value.trim(),
+    	            	"compId" : companyId,
+    	            	"userList" : userList
+    	            };
+	            	
 	            	$.ajax({
 			        	type : "POST",
 			        	contentType: "application/json",
@@ -474,6 +497,14 @@
 			        	}
 			        });
 	            } else {
+	            	var sharedMailboxInfo = {
+    	            	"shareId" : document.getElementById("TextId").value.trim(),
+    	            	"shareName" : document.getElementById("TextName").value.trim(),
+    	            	"password" : document.getElementById("TextPassword").value,
+    	            	"compId" : companyId,
+    	            	"userList" : userList
+    	            };
+	            	
 	            	$.ajax({
 			        	type : "POST",
 			        	contentType: "application/json",
@@ -1255,14 +1286,18 @@
 		<table class="content">
 			<tr>
 				<th><spring:message code='ezEmail.sharedMailbox18' /></th>
-				<td><input id="TextName" name="TextName" type="text" maxlength="24" class="txtClass" style="width:99%;"></td>
+				<td style="width:60%"><input id="TextName" name="TextName" type="text" maxlength="24" class="txtClass" style="width:100%"></td>
+				<th><spring:message code='ezEmail.lhm64' /></th>
+				<td style="width:40%"><input id="TextPassword" name="TextPassword" type="password" maxlength="24" class="txtClass" style="width:100%"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezEmail.sharedMailbox19' /></th>
-				<td>
+				<td style="width:60%">
 					<input id="TextId" name="TextId" type="text" maxlength="24" class="txtClass" style="ime-mode: disabled; width:40%;">
 					<span style="font-weight: bold;">@<c:out value="${mailDomain}"></c:out></span>
 				</td>
+				<th><spring:message code='ezEmail.lhm61' /></th>
+				<td style="width:40%"><input id="TextPassword2" name="TextPassword2" type="password" maxlength="24" class="txtClass" style="width:100%"></td>
 			</tr>
 		</table>
 		

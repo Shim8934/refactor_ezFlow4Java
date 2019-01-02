@@ -2,8 +2,8 @@
  * 초기 pointet-event set 메서드
  */
 function defaultPointer() {
-	$(".noteBlock").css("pointer-events", "none");
-	$("#open-memo").css("pointer-events", "auto");
+	$(".noteBlock").css("visibility", "hidden");
+	$("#open-memo").css("visibility", "visible");
 }
 
 /**
@@ -17,13 +17,14 @@ function setPanelPointer() {
 			setGadgetPosition();
 
 			defaultPointer();
-		}
+		},
+		scroll: false 
 	}).on("mouseup", function() {
-		$(".noteBlock").css("pointer-events", "none");
-		$("#open-memo").css("pointer-events", "auto");
-		$("#layer-popup").css("pointer-events", "auto");
+		$(".noteBlock").css("visibility", "hidden");
+		$("#open-memo").css("visibility", "visible");
+		$("#layer-popup").css("visibility", "visible");
 	}).on("mousedown", function() {
-		$(".noteBlock").css("pointer-events", "auto");
+		$(".noteBlock").css("visibility", "visible");
 	}).on("click", function(event) {
 		event.preventDefault();
 		if ("none" == ($("#layer-popup").css("display"))) {
@@ -35,18 +36,18 @@ function setPanelPointer() {
 	});
 
 	$('.memo_wrap').on("mouseup", function() {
-		$(".noteBlock").css("pointer-events", "none");
-		$("#open-memo").css("pointer-events", "auto");
-		$("#layer-popup ").css("pointer-events", "auto");
+		$(".noteBlock").css("visibility", "hidden");
+		$("#open-memo").css("visibility", "visible");
+		$("#layer-popup ").css("visibility", "visible");
 	}).on("mousedown", function() {
-		$(".noteBlock").css("pointer-events", "auto");
+		$(".noteBlock").css("visibility", "visible");
 	}).draggable({
 
 		containment : ".noteBlock",
 		stop : function() {
-			$(".noteBlock").css("pointer-events", "none");
-			$("#open-memo").css("pointer-events", "auto");
-			$("#layer-popup ").css("pointer-events", "auto");
+			$(".noteBlock").css("visibility", "hidden");
+			$("#open-memo").css("visibility", "visible");
+			$("#layer-popup ").css("visibility", "visible");
 
 			setLayerPosition();
 		}
@@ -111,6 +112,7 @@ function layerClose() {
     		$("#open-memo").css("display", "");
     	} else {
     		$("#open-memo").css("display", "none");
+    		setGadgetPositionResize();
     	}
     	
     });	
@@ -986,8 +988,14 @@ function browserResize() {
 		var doc = window.document;
 		// 브라우저 넓이
 		var w = window.innerWidth;
+		if(w < 340) {
+			w = 340;
+		}
 		// 브라우저 높이
 		var h = window.innerHeight;
+		if(h < 425) {
+			h = 425;
+		}
 		// memoListBox element
 		var mLBOX = doc.getElementById("mLBox");
 		// layer-popup element
@@ -1030,7 +1038,7 @@ function browserResize() {
 			mLBox.style.width = w + "px";
 			mLBox.style.height = (h - 130) + "px";
 			memoMain.style.width = w + "px";
-			memoMain.style.height = (h - 150) + "px";
+			memoMain.style.height = (h - 135) + "px";
 			popup.style.width = w + "px";
 			popup.style.height = (h - 45) + "px";
 			
@@ -1041,14 +1049,17 @@ function browserResize() {
 			 */
 			if(((w>popupLeft) && (w < popupLeft + popupWidth)) || ((h>popupTop) && (h < popupTop + popupHeight))){
 				mLBox.style.width = w + "px";
-				mLBox.style.height = (h - 130) + "px";
+				mLBox.style.height = (h - 120) + "px";
 				memoMain.style.width = w + "px";
-				memoMain.style.height = (h - 150) + "px";
+				memoMain.style.height = (h - 120) + "px";
 				popup.style.width = w + "px";
 				popup.style.height = (h - 45) + "px";
 				popup.style.left = "0px";
 				popup.style.top = "55px";
 			}
 		}
+		
+		// 빈메모 resize 이벤트 추가
+		emptyMemoResize();
 	}
 }

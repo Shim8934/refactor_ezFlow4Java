@@ -22,13 +22,13 @@ public interface EzStatisticsAdminService {
 	
 	public String getStatConnBrowser(StatApprVO statApprVO);
 	
-	public String getStatConnOS(StatApprVO statApprVO);
+	public String getStatConnOS(StatApprVO statApprVO) throws Exception;
 
 	public void dailyDocCountLog(StatApprVO statApprVO) throws Exception;
 
 	public void dailyFormCountLog(StatApprVO statApprVO) throws Exception;
 	
 	public Map<String, Object> getMailLogList(String tenantId, String pageNo, String pageSize, String mailLogType, String searchStartTime,
-				String searchEndTime, String searchField, String searchValue, String isPrimaryLang) throws Exception;
+				String searchEndTime, String searchField, String searchValue, String isPrimaryLang, String companyId) throws Exception;
 
 }

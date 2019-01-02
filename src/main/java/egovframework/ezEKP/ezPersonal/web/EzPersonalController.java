@@ -19,7 +19,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
@@ -45,6 +44,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.LocaleResolver;
@@ -781,29 +781,21 @@ public class EzPersonalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 메인 생일자 리스트 호출 Method
 	 */
-	@RequestMapping(value = "/ezPersonal/mainBirthUserList.do", produces = "text/xml;charset=utf-8")
-	@ResponseBody
-	public String mainBirthUserList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception{
+	@RequestMapping(value = "/ezPersonal/mainBirthUserList.do")
+	public String mainBirthUserList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, @RequestBody HashMap<String, Integer> paramMap, HttpServletRequest request) throws Exception{
 		logger.debug("mainBirthUserList started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		int month = paramMap.get("month");
+		logger.debug("month = " + month);
 		
-		String curMon = "";
-		
-		if (req.getParameter("mon") != null && !req.getParameter("mon").equals("")) {
-			curMon = req.getParameter("mon");
-			if (Integer.parseInt(curMon) < 10 && curMon.length() == 1) {
-				curMon = "0" + curMon;
-			}
-		} else {
-			Calendar cal = Calendar.getInstance();
-			curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
-		}
-		
-		String result = ezPersonalService.getBirthUserList(userInfo.getCompanyID(), curMon, userInfo.getTenantId());
+		List<OrganUserVO> list = ezPersonalService.getBirthUserList(userInfo.getCompanyID(), userInfo.getTenantId(), month, userInfo.getLang());
 
+		model.addAttribute("list", list);
+		
 		logger.debug("mainBirthUserList ended");
-		return result;
+		
+		return "json";
 	}
 	
 	/**
@@ -1686,11 +1678,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String userId = userInfo.getId();
 		String inputParams = "userId=" + userId;
 		String getResult = "";
-		String returnZero = "0";
 		logger.debug("inputParams=" + inputParams);
 		
 		JSONParser parser = new JSONParser();
-		JSONArray jsonArr = new JSONArray();
+		JSONArray jsonArr = null;
 		
 		String requestURL = "/ezTalkGate/getUserMobileDeviceList";
 		
@@ -1699,24 +1690,17 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		JSONObject resultObj = (JSONObject) parser.parse(getResult);
 		
-		if (!resultObj.get("data").equals("false")) {
+		if (!resultObj.get("data").equals("0")) {
 			jsonArr = (JSONArray) resultObj.get("data");
-			model.addAttribute("deviceInfo", jsonArr);
-		} else {
-			model.addAttribute("deviceInfo", returnZero);
 		}
 		
 		String adminOrder = ezCommonService.getUserConfigInfo(tenantId, userId, "adminOrderNotUsedMobileLogin");
 		String notUserMobileLogin = ezCommonService.getUserConfigInfo(tenantId, userId, "notUseMobileLogin");
 		
-		if (adminOrder.equals("")) {
-			adminOrder = returnZero;
-		}
+		adminOrder = adminOrder.equals("") ? "0" : adminOrder;
+		notUserMobileLogin = notUserMobileLogin.equals("") ? "0" : notUserMobileLogin;
 		
-		if (notUserMobileLogin.equals("")) {
-			notUserMobileLogin = returnZero;
-		}
-		
+		model.addAttribute("deviceInfo", jsonArr);
 		model.addAttribute("adminOrder", adminOrder);
 		model.addAttribute("notUserMobileLogin", notUserMobileLogin);
 		
@@ -1756,7 +1740,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		response.addHeader("customStatus", returnValue);
+		response.addHeader("Result", returnValue);
 		logger.debug("setMobileManaged ended. " + returnValue);
 	}
 	
@@ -1786,7 +1770,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		response.addHeader("customStatus", returnValue);
+		response.addHeader("Result", returnValue);
 		logger.debug("deleteMobileDeviceManaged ended.");
 	}
 	
@@ -1819,7 +1803,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			e.printStackTrace();
 		}
 		
-		response.addHeader("customStatus", returnValue);
+		response.addHeader("Result", returnValue);
 		logger.debug("setMobileDeviceInfo ended.");
 	}
 	
@@ -1840,5 +1824,32 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		logger.debug("checkDuplShareUser ended");
 		return rtnValue;
+	}
+	
+	/**
+	 * 2018-12-07 홍승비 - 포탈 환경설정 개인정보관리 사진정보만 가져오는 메서드
+	 */
+	@RequestMapping(value = "/ezPersonal/getUserPhoto.do", produces = "text/xml; charset=utf-8")
+	@ResponseBody
+	public String getLiteralPhoto(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, Locale locale) throws Exception {
+		logger.debug("getUserPhoto started");
+
+		userInfo = commonUtil.userInfo(loginCookie);	
+		String literalPhoto = "";
+		
+		String result = ezOrganService.getPropertyList(userInfo.getId(), "extensionAttribute2", userInfo.getPrimary(), userInfo.getTenantId());
+		Document xmlDom = commonUtil.convertStringToDocument(result);
+		
+		if (xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() == null || xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent().equals("")) {
+			literalPhoto = "<img id=myimg " + messageSource.getMessage("ezPersonal.i1",locale) + ">";
+		} else {
+			literalPhoto = "<img id=myimg SRC='/ezCommon/downloadAttach.do?filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + "/" + xmlDom.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent() + "' width=119 height=128>";
+		}
+		
+		model.addAttribute("literalPhoto", literalPhoto);
+		model.addAttribute("locale", userInfo.getLocale());
+		
+		logger.debug("getUserPhoto ended");
+		return literalPhoto;
 	}
 }

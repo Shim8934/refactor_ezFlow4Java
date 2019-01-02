@@ -69,6 +69,7 @@
 		    var pUse_Editor = "${useEditor}";
 		    var pStartday = "${startDay}";		    
 		    select_memorialDays("${lang}");
+		    var dayView = "";
 		    
 	    	document.onselectstart = function () { return false; };
 	    	
@@ -227,10 +228,13 @@
 	    	}
 
 	    	window.onresize = function () {
-	        	if (navigator.userAgent.indexOf("Chrome") > -1)
-		            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 110 + "px";
-		        else
-	    	        document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 130 + "px";
+	    		if(Mod == "WEEK") {
+		        	if (navigator.userAgent.indexOf("Chrome") > -1)
+			            document.getElementById("res_Div").style.height = document.documentElement.clientHeight - 185 + "px";
+			        else
+		    	        document.getElementById("res_Div").style.height = document.documentElement.clientHeight - 190 + "px";
+		        	scroll();
+	    		}
 	    	}
 
 	    	function btnAdd_Click() {
@@ -390,8 +394,8 @@
     			<li id="ToDaybtn"><span onClick="setweek_onload('TODAY');"><spring:message code="ezResource.t251" /></span></li>
     			<li id="Weekbtn"><span onClick="setweek_onload('WEEK');"><spring:message code="ezResource.t253" /></span></li>
     			<!-- 2018-06-05 구해안 허가,비허가 오른쪽으로 ui 수정 -->
-      			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
 				<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li>
+      			<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
   				</span>
   			</ul>
 		</div>
@@ -410,7 +414,7 @@
         	</tr>
         	<tr>
             	<td style="vertical-align:top;">
-                	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;overflow-y: auto;overflow-x:hidden;" >
+                	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;" >
                 		<table style="width:100%;">
                     		<tr id="weeklyline">
                 				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f0f6ff;">

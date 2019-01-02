@@ -105,6 +105,7 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    arr_userinfo[17]  = "${userInfo.primary}";
 		    var pCompanyID = "${userInfo.companyID}";
 		    var pUserID = arr_userinfo[1];
 		    var KuyjeType = "002";
@@ -148,7 +149,7 @@
 			var beforeDocID = "${beforeDocID}";
 			var addLastKyulJeYN = "${addLastKyulJeYN}";
 			var totalMemSN = "0";
-			var reuseTitleYN = "${reuseTitleYN}";
+			var apprReuseConfig = "${apprReuseConfig}";
 			var agreeResultType = "${agreeResultType}";
 			var curDocNum = "";
 			var isEditorComplete = false;
@@ -410,6 +411,12 @@
 		                        
 		                     	if (isUsed == "reuse") {
 			                		getDocInfo();
+			                		// 재사용이고 문서의 모든정보를 재사용 할시
+				                	if( apprReuseConfig != '1' ){
+				                		setAttachInfo(pDocID, "APR", lstAttachLink);
+				                		ClearDocCellInfo();
+				                		message.SetEditable(true);
+				                	}
 			                	}
 		                    }
 		                }
@@ -495,6 +502,10 @@
 			    			window.close();
 			    			return;
 				    	}
+		        		//재기안 시, 문서내 기안일자와 현재일자가 다른지 체크 추가
+		        		if (pDraftFlag == "REDRAFT") {
+		        			compareDocDateCurDate();
+		        		}
 		        	
 			        	var result = "";
 			        	
@@ -1291,21 +1302,26 @@
 		                DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
 		                drafterDeptid = arr_userinfo[4];
 		                getDraftInfo();
-		                if (pFormHref != "") {
-		                    if (pFormHref == "PC") {
-		                        pReadPC = true;
-		                    } else {
-		                        message.Set_EditorContentURL(pFormHref);
-		                    }
-		                    
-		                    if (beforeUrl != "") {
-	                            Insert_ReUse_Content();
-	                        }
-		                }
-		                else {
-		                    DraftFlag = "DRAFT";
-		                    pDraftFlag = "DRAFT";
-		                    message.Set_EditorContentURL(sihangURL);
+		                //재사용이고 문서의 모든정보를 재사용하는 옵션일때
+		                if (isUsed == "reuse" && apprReuseConfig != '1') {
+		                	message.Set_EditorContentURL(beforeUrl);
+		                } else {
+			                if (pFormHref != "") {
+			                    if (pFormHref == "PC") {
+			                        pReadPC = true;
+			                    } else {
+			                        message.Set_EditorContentURL(pFormHref);
+			                    }
+			                    
+			                    if (beforeUrl != "") {
+		                            Insert_ReUse_Content();
+		                        }
+			                }
+			                else {
+			                    DraftFlag = "DRAFT";
+			                    pDraftFlag = "DRAFT";
+			                    message.Set_EditorContentURL(sihangURL);
+			                }
 		                }
 		            }
 		        }

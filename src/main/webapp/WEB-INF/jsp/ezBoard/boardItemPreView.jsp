@@ -7,6 +7,7 @@
 	<head>
 		<title><spring:message code='ezBoard.t282'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/previewBoard.css')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
@@ -122,6 +123,9 @@
 		                document.getElementById("extensionAttribute" + (i + 6)).innerHTML = WriterValue;
 		            }
 		        }
+		        
+		        /* 2018-11-27 홍승비 - 미리보기 시 본문 div의 세로 리사이즈 추가 */
+				ResizeDiv();
 		    };
 		    function MakeXMLString(str) {
 		        str = ReplaceText(str, "&", "&amp;");
@@ -163,7 +167,7 @@
 		        document.getElementById('txtContent').style.fontSize = fontSize[curFontSize];
 		    }
 		    function ResizeDiv() {
-// 		        document.getElementById("ItemOverflow").style.width = document.body.clientWidth - 45 + "px";
+ 		        document.getElementById("ItemOverflow").style.height = (window.innerHeight - document.getElementById("topTable").clientHeight - 124) + "px";
 		    }
 		</script>
 	</head>
@@ -172,7 +176,7 @@
 			<tr>
 		    	<td style="vertical-align: top; height:20px">
 		    		<!-- 2018-02-01 김보미 - 테이블 컬럼 순서 조정 -->
-		    		<table class="content" style="width:100%;">
+		    		<table id="topTable" class="content" style="width:100%; height:100%;">
 						<!-- 게시자&부서 -->
 						<tr>
 							<th style="width:10%;"><spring:message code='ezBoard.t207'/></th> 
@@ -258,8 +262,8 @@
 		  </tr>
 		  <tr>
 			<td class="pad1">
-			<!-- 2018-02-02 김보미 - height:auto로 변경 -->
-		        <div id="ItemOverflow" class="viewbox" style="overflow: auto; padding:10px 10px 10px 10px; height:auto; width:auto; word-break: break-all;">
+			<%-- 2018-02-02 김보미 - height:auto로 변경 / 2018-11-27 홍승비 - min-height값 추가 --%>
+		        <div id="ItemOverflow" class="viewbox" style="overflow: auto; padding:10px 10px 10px 10px; height:auto; min-height:120px; width:auto; word-break: break-all;">
 		            <div id="txtContent" class="white" style="overflow-y:auto; height:100%; width: 100%"></div>
 		        </div>
 		    </td>
@@ -269,7 +273,7 @@
 			    <td style="height:20px">
 				    <table class="file">
 				        <tr>
-				          <th><spring:message code='ezBoard.t292'/></th>
+				          <th><spring:message code='ezBoard.t10025'/></th>
 				          <td style="padding-right:0px"><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;OVERFLOW: auto; HEIGHT: 58px; background-color:white; text-align:left"></div></td>
 				          <td id="ItemLevel" style="display:none"></td>
 				        </tr>

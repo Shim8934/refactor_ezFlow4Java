@@ -339,6 +339,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		insert ("EzCommonDAO.insertUseSession", map);
 	}
 	
+	public void addUserMasterPasswordUpdateDT() throws Exception {
+		try {
+			select("EzCommonDAO.checkUserMasterPasswordUpdateDT");
+		} catch (Exception e) {
+			logger.debug("tbl_usermaster PASSWORD_UPDATEDT column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addUserMasterPasswordUpdateDT");
+		}
+	}
+
 	public void addJobMasterJobID() throws Exception {
 		try {
 			select("EzCommonDAO.checkAddJobMasterJobID");
@@ -346,6 +356,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			logger.debug("tbl_addjobmaster jobid column doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.addAddJobMasterJobID");
+		}
+	}
+
+	public void createWebfolderToken() {
+		try {
+			select("EzCommonDAO.checkWebfolderToken");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_token doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblWebfolderToken");
 		}
 	}
 }

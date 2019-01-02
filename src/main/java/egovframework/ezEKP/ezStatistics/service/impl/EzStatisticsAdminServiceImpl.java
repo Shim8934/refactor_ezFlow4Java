@@ -300,19 +300,16 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 	}
 	
 	@Override
-	public String getStatConnOS(StatApprVO statApprVO) {
+	public String getStatConnOS(StatApprVO statApprVO) throws Exception {
 		String rtnValue = "";
-		
 		StringBuffer sb = new StringBuffer();
+		
+		List<StatConnVO> list = ezStatisticsAdminDAO.getConnOS(statApprVO);
+		
 		sb.append("<DATA>");
-		try {
-			List<StatConnVO> connVo = ezStatisticsAdminDAO.getConnOS(statApprVO);
-			for (int i = 0; i < connVo.size(); i++) {
-				sb.append(commonUtil.getQueryResult(connVo.get(i)));
-			}
-		}catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		
+		for (StatConnVO vo : list) {
+			sb.append(commonUtil.getQueryResult(vo));
 		}
 		
 		sb.append("</DATA>");
@@ -324,7 +321,7 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 
 	@Override
 	public Map<String, Object> getMailLogList(String tenantId, String pageNo, String pageSize, String mailLogType, String searchStartTime,
-			String searchEndTime, String searchField, String searchValue, String isPrimaryLang) throws Exception {
+			String searchEndTime, String searchField, String searchValue, String isPrimaryLang, String companyId) throws Exception {
 		logger.debug("getMailLogList started.");
 		
 		Map<String, Object> resultMap = new HashMap<String, Object>();
@@ -341,10 +338,11 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 		String searchFieldParam = "searchField=" + searchField;
 		String searchValueParam = "searchValue=" + URLEncoder.encode(searchValue, "UTF-8");
 		String isPrimaryLangParam = "isPrimaryLang=" + isPrimaryLang;
+		String companyIdParam = "companyId=" + companyId;
 		
 		String inputParams = tenantIdParam + "&" + pageNoParam + "&" + pageSizeParam + "&" + mailLogTypeParam + "&" +
 							 searchStartTimeParam + "&" + searchEndTimeParam + "&" + searchFieldParam + "&" +
-							 searchValueParam + "&" + isPrimaryLangParam ;
+							 searchValueParam + "&" + isPrimaryLangParam + "&" + companyIdParam;
 		logger.debug("inputParmas=" + inputParams);
 		
 		String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/getMailLogList";

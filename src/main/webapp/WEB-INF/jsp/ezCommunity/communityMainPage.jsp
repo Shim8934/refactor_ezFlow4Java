@@ -177,14 +177,14 @@
                     
                     var copName = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME");
 
-                    span2.innerHTML = copName + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />"+")";
+                    span2.innerHTML = MakeXMLString(copName) + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />"+")";
                     span2.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO").trim());
                     span2.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
                     span2.style.cursor = "pointer";
                     span2.onclick = function () { move_cop(this); };
 
                     var dd2 = document.createElement("DD");
-                    dd2.innerHTML = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBDESC");
+                    dd2.innerHTML = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBDESC"));
 
                     span.appendChild(img2);
                     dt.appendChild(img);
@@ -197,6 +197,11 @@
                     dl.appendChild(dd2);
 
                     document.getElementById("newcomm").appendChild(dl);
+                }
+                
+                if( bestcoummunity.length <= 0 ){
+	                conts = "<div style='height:170px; text-align:center;margin-top:5px;'><div><img style='margin-top:28px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
+					$("#newcomm").html(conts);
                 }
 	        }
 
@@ -236,7 +241,7 @@
                     
                     var copName = SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNAME");
                     
-                    span2.innerHTML = copName + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />" + ")";
+                    span2.innerHTML = MakeXMLString(copName) + " (" + SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_MEMBERCNT") + "<spring:message code = 'ezCommunity.t478' />" + ")";
                     span2.setAttribute("code", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBNO").trim());
                     span2.setAttribute("type", SelectSingleNodeValue(SelectNodes(xmldom, "DATA/ROW")[i], "C_CLUBCONFIRMTYPE"));
                     span2.style.cursor = "pointer";
@@ -257,7 +262,11 @@
 
                     document.getElementById("bestcomm").appendChild(dl);
                 }
-
+                
+                if( bestcoummunity.length <= 0 ){
+	                conts = "<div style='height:170px; text-align:center;margin-top:5px;'><div><img style='margin-top:28px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
+					$("#bestcomm").html(conts);
+                }
 	        }
 
 	        function get_myCommunity() {
@@ -288,6 +297,7 @@
                 
                 for (var i = 0; i < SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length; i++) {
                     var copno;
+                    var clubname;
 
                     if (i == 0 || SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim() != copno) {
                         copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim();
@@ -300,9 +310,11 @@
                         var dt = document.createElement("DT");
 
                         if (primary == "1") {
-                            dt.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME");
+                        	clubname = MakeXMLString(SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME"));
+                            dt.innerHTML = clubname;
                         } else {
-                            dt.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME2");
+                        	clubname = MakeXMLString(SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNAME2"));
+                            dt.innerHTML = clubname;
                         }
                         
                         var dd = document.createElement("DD");
@@ -377,6 +389,7 @@
                     var copno = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "C_CLUBNO").trim();
                     var gubun = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "GUBUN");
                     var writeDate = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITEDATE");
+                    var title = MakeXMLString(SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE"));
                     td.style.cursor = "pointer";
                     td.setAttribute("boardid", boardid);
                     td.setAttribute("itemid", itemid);
@@ -390,10 +403,10 @@
                     }
                     
                     if (primary == "1") {
-                        td.innerHTML += "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "TITLE") + "</div>";
+                        td.innerHTML += "<div style='overflow: hidden; text-overflow: ellipsis; display: inline-block; max-width: 90%;'>[" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "BOARDNAME") + "] " + title + "</div>";
                         /* 2018-05-07 홍승비 - 커뮤니티 메인 MY커뮤니티 새글에서 댓글 표시하기 */
                         if (SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") > 0) {
-                        	td.innerHTML += " <SPAN style='color:#c64200'; position: absolute;> [" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") + "]</SPAN><td style='width:20px;'></td>";
+                        	td.innerHTML += " <SPAN style='color:#c64200; position: absolute;'> [" + SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "ONELINECNT") + "]</SPAN><td style='width:20px;'></td>";
                         }
                         td2.className = "team";
                         td2.innerHTML = SelectSingleNodeValue(SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW")[i], "WRITERDEPTNAME");
@@ -656,6 +669,12 @@
                     ul.appendChild(li);
                 });
                 
+                if (list.length == 0) {
+                	var str = strLang88;
+                	document.getElementById("categorytab").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='text-align:center;'><img style='margin-top:160px' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>" + str + "</div></div>";
+                	document.getElementById("categorylist").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='text-align:center;'><img style='margin-top:160px' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>" + str + "</div></div>";
+                }
+                
                 document.getElementById("categorytab").appendChild(ul);
                 
                 //document.getElementById("tblPageRayer").style.display = "";
@@ -826,14 +845,14 @@
                     strong.onclick = function () { move_cop(this); };
                     
                     if (primary == "1") {
-                        strong.innerHTML = clubVO.c_ClubName;
+                        strong.innerHTML = MakeXMLString(clubVO.c_ClubName);
                     } else {
-                        strong.innerHTML = clubVO.c_ClubName2;
+                        strong.innerHTML = MakeXMLString(clubVO.c_ClubName2);
                     }
                     
                     dd.appendChild(strong);
                     var dd2 = document.createElement("DD");
-                    dd2.innerHTML = clubVO.c_ClubDesc;
+                    dd2.innerHTML = MakeXMLString(clubVO.c_ClubDesc);
 
                     var dd3 = document.createElement("DD");
                     
@@ -951,8 +970,6 @@
 			                
 			                document.getElementById("todaycop").appendChild(div);
 							
-							conts = "<div style='height:170px; text-align:center;margin-top:5px;'><div><img style='margin-top:28px;' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>"+strLang88+"</div></div></div>";							
-							$(".newCommunity_listLayout").html(conts);
 						}
 					}
 				});
@@ -1033,9 +1050,9 @@
                 var dt = document.createElement("DT");
                 
                 if(primary == "1") {
-                    dt.innerHTML = result["clubVO"]["c_ClubName"];
+                    dt.innerHTML = MakeXMLString(result["clubVO"]["c_ClubName"]);
                 } else {
-                    dt.innerHTML = result["clubVO"]["c_ClubName2"];
+                    dt.innerHTML = MakeXMLString(result["clubVO"]["c_ClubName2"]);
                 }
 
                 var dd = document.createElement("DD");
@@ -1291,8 +1308,13 @@
 
 	                var left = (width - wWeight) / 2;
 	                var top = (heigth - wHeight) / 2 - 30;
+	                
+	                /* 2018-12-24 김민성 - 커뮤니티 팝업 해상도 1600*900 이하 height 조절 */
+	                if(wHeight > heigth) {
+                    	wHeight = heigth-100;
+                    }
 
-	                var ret = window.open(url, code, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+	                var ret = window.open(url, code, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 	                
 	                try { ret.focus() } catch (e) { }
 	            }

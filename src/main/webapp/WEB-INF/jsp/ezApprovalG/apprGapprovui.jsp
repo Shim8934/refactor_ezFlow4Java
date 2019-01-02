@@ -109,6 +109,7 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    arr_userinfo[17]  = "${userInfo.primary}";
 		    var pCompanyID = "${userInfo.companyID}";
 		    var KuyjeType = "002";
 		    var signDateFormat = "${optSignDateFormat}";
@@ -615,7 +616,8 @@
 		            }
 		        }
 		        if (!isjunkyul) {
-		            if ("${approvalPWD}" != "N") {
+		            //if ("${approvalPWD}" != "N") {
+		            if (CheckUsePassword()) {
 		                chk_Passwd(pingUserID, btnApprove_chkpassword_Complete);
 		            }
 		            else
@@ -974,7 +976,8 @@
 		    function btnReject_onclick_Complete(Ans) {
 		        DivPopUpHidden();
 		        if (!Ans) return;
-		        if ("${approvalPWD}" != "N") {
+		        //if ("${approvalPWD}" != "N") {
+		        if (CheckUsePassword()) {
 		            chk_Passwd(pingUserID, btnReject_chkpassword_Complete);
 		        } else {
 		            openOpinionUI("BanSong", btnReject_option_Complete);
@@ -1068,7 +1071,8 @@
 		    function btnStay_onclick_Complete(Ans) {
 		        DivPopUpHidden();
 		        if (!Ans) return;
-		        if ("${approvalPWD}" != "N") {
+		        //if ("${approvalPWD}" != "N") {
+		        if (CheckUsePassword()) {
 		            chk_Passwd(pingUserID, btnStay_chkpassword_Complete);
 		        }
 		        else
@@ -1121,7 +1125,8 @@
 		    }
 		    function btnJunKyul_onclick()
 		    {
-		        if ("${approvalPWD}" != "N") {
+		        //if ("${approvalPWD}" != "N") {
+		        if (CheckUsePassword()) {
 		            var checkpass = chk_Passwd(pingUserID);
 		            if (checkpass == "False") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
@@ -1470,7 +1475,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
 		        
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1857,7 +1862,7 @@
 		        for (var i = 0; i < rows.length; i++) {
 		        	var dataNodes = GetChildNodes(rows[i]);
 			        objRow = createNodeAndAppandNode(xmlpara, objRoot, objRow, "ROW");
-					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[0], "VALUE").trim());
+					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim() + (SelectSingleNodeValue(dataNodes[2], "VALUE").trim() == "" ? "<spring:message code='ezApprovalG.lhj18'/>" : ""));
 					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTID", SelectSingleNodeValue(dataNodes[0], "DATA1").trim());
 					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTNAME", SelectSingleNodeValue(dataNodes[0], "DATA2").trim());
 					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "EXTRECEPTYN", SelectSingleNodeValue(dataNodes[0], "DATA3").trim());
@@ -1887,6 +1892,28 @@
 				        }
 			        }
 		        }
+		    }
+		    
+		    /* 2019-01-02 천성준 #14647
+		            결재암호 사용유무 조회 (Y / N)
+		    */
+		    function CheckUsePassword() {
+		    	var result = "";
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getApprovalPWD.do",
+		    		success: function(text) {
+		    			result = text;
+		    		}        			
+		    	});
+		    	
+		    	if (result != "N") {
+		    		return true;
+		    	} else {
+		    		return false;
+		    	}
 		    }
 		</script>
 	</head>

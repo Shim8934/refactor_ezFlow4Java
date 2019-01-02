@@ -275,7 +275,7 @@
 	            } catch (e) {
 	            }
 	            
-	            if (approvalFlag != 'G') {
+	            if (approvalFlag != 'G' &&  LoadSquery != 'usercontlist') {
 		            AddOption(sel_status, '<spring:message code="ezApprovalG.t1434"/>', 'H');
 		            AddOption(sel_status,'<spring:message code="ezApprovalG.t1422"/>', 'I');
 		            AddOption(sel_status, '<spring:message code="ezApprovalG.t1687"/>', 'N');
@@ -742,7 +742,8 @@
 		
 		        if (tr.getAttribute("DATA10") != "" && tr.getAttribute("DATA10") >= GetTodayDate()) {
 		            if (CheckAprLine(tr.getAttribute("DATA1")) == "TRUE") {
-		                if ("${approvalPWD}" != "N") {
+		                //if ("${approvalPWD}" != "N") {
+		                if (CheckUsePassword()) {
 		                    chk_Passwd(UserID);
 		                }
 		                else {
@@ -1559,6 +1560,28 @@
 		    function onSelect_Status() {
 		    	GetDocSearch();
 		    }
+		    
+		    /* 2019-01-02 천성준 #14647
+		            결재암호 사용유무 조회 (Y / N)
+		    */
+		    function CheckUsePassword() {
+		    	var result = "";
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getApprovalPWD.do",
+		    		success: function(text) {
+		    			result = text;
+		    		}        			
+		    	});
+		    	
+		    	if (result != "N") {
+		    		return true;
+		    	} else {
+		    		return false;
+		    	}
+		    }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1613,7 +1636,7 @@
 	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>
-		        	<c:if test = "${approvalFlag != 'G'}">
+		        	<c:if test = "${approvalFlag != 'G' && sQuery != 'usercontlist'}">
 		        		<div id="sel_status_div" style="display:inline;">
 						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
 							<option value="ALL"><spring:message code='ezPoll.t104'/></option>

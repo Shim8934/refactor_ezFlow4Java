@@ -79,6 +79,8 @@
         <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="30"/>
         <result property="boardID" 					column="BOARDID" 				columnIndex="31"/>
         <result property="docNo" 					column="DOCNO" 					columnIndex="32"/>
+		<result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="33"/>
+        <result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="34"/>
 	</resultMap>
 	
 	<resultMap id="getBrdGetItemInfoTemp" class="BoardListVO">
@@ -111,6 +113,8 @@
         <result property="extensionAttribute9" 		column="EXTENSIONATTRIBUTE9" 	columnIndex="27"/>
         <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="28"/>
         <result property="docNo" 					column="DOCNO" 					columnIndex="29"/>
+		<result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="30"/>
+		<result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="31"/>
 	</resultMap>
 	
 	<!-- baonk added -->
@@ -147,6 +151,8 @@
     			TBL_BOARD_NEWBOARD_ORDERINFO 
     		WHERE  
     			TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #v_COMPANYID#
     		AND
     			USERID = #v_USERID#
 		]]>
@@ -168,10 +174,10 @@
 	<insert id="EzBoardDAO.insertBoardNewBoardOrder" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_BOARD_NEWBOARD_ORDERINFO ( 
-				BOARDID, 								  USERID, 	  TABUSED, VIEWORDER, TENANT_ID 
+				BOARDID,   USERID, 	  TABUSED, VIEWORDER, TENANT_ID, COMPANYID 
 			)
             VALUES ( 
-            	'{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', #v_USERID#, 'Y', 	   0, 		  #v_TENANTID# 
+            	'{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}', #v_USERID#, 'Y', 	   0, 		  #v_TENANTID#,	#v_COMPANYID# 
             )
 		]]>
 	</insert>
@@ -179,31 +185,68 @@
 	<select id="EzBoardDAO.get_favoriteList" parameterClass="Map" resultClass="BoardMyFavoriteVO" remapResults="true">
 		<isEqual property="v_MODE" compareValue="ALL">
 			<![CDATA[
-				SELECT 
+				(SELECT 
 					BOARDID ,
 	                BOARDNAME ,
 	                BOARDNAME2 ,
-	                TABUSED 
+	                TABUSED,
+	                VIEWORDER
 	            FROM 
 	            	TBL_Board_MyBoards 
 	            WHERE  
 	            	TENANT_ID = #v_TENANTID#
+                AND
+                	(COMPANYID = #v_COMPANYID#	OR COMPANYID = '*')
 	            AND
-	            	(USERID = #v_USERID#
-	            	OR 
-	            	USERID = 'everyone')
+	            	USERID = #v_USERID#)
+	            	            	
+	            UNION
+	            
+	            (SELECT
+	            	*
+	            FROM
+		            (SELECT 
+						A.BOARDID ,
+		                A.BOARDNAME ,
+		                A.BOARDNAME2 ,
+		                B.TABUSED,
+		                B.VIEWORDER
+		            FROM
+		            	TBL_Board_MyBoards A
+					JOIN
+						TBL_BOARD_NEWBOARD_ORDERINFO B
+					ON
+						A.TENANT_ID = B.TENANT_ID
+	                WHERE
+	                	A.TENANT_ID = #v_TENANTID#
+	                AND
+	                (
+	                	(A.COMPANYID = #v_COMPANYID# 			AND 			B.COMPANYID = #v_COMPANYID#)
+	                	OR
+	                	(TRIM(A.COMPANYID) = ''			AND			B.COMPANYID = #v_COMPANYID#)
+	                )
+		            AND
+		            	A.USERID = 'everyone'
+		            AND
+	                	B.USERID = #v_USERID#
+	                ORDER BY
+						A.BOARDID ASC)
+				WHERE
+					rownum = 1)
+					
 	            ORDER BY 
 	            	VIEWORDER ASC
 			]]>
 		</isEqual>
 		<isEqual property="v_MODE" compareValue="USE">
 			<![CDATA[
-				SELECT 
+				(SELECT 
 					A.BOARDID ,
                     A.BOARDNAME ,
                     A.BOARDNAME2 ,
                     TABUSED ,
-                    B.GUBUN 
+                    B.GUBUN ,
+                    A.VIEWORDER
                 FROM 
                 	TBL_Board_MyBoards A
                 JOIN 
@@ -214,11 +257,58 @@
                 	A.TENANT_ID = B.TENANT_ID
                 WHERE
                 	A.TENANT_ID = #v_TENANTID#
-	            AND  
-                	( USERID = #v_USERID#
-                      OR USERID = 'everyone' )
-                AND 
-                	TABUSED = 'Y'
+				AND
+                	(B.COMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
+	            AND
+                	USERID = #v_USERID#
+                AND
+                	TABUSED = 'Y')
+                	
+				UNION  	
+                
+                (SELECT
+	            	*
+	            FROM	
+	                (SELECT 
+						A.BOARDID ,
+	                    A.BOARDNAME ,
+	                    A.BOARDNAME2 ,
+	                    C.TABUSED ,
+	                    B.GUBUN ,
+	                    C.VIEWORDER
+	                FROM 
+	                	TBL_Board_MyBoards A
+	                JOIN 
+	                	TBL_Board_BoardInfo B
+	                ON 
+	                	A.BoardID = B.BoardID
+	                AND
+	                	A.TENANT_ID = B.TENANT_ID
+					JOIN
+						TBL_BOARD_NEWBOARD_ORDERINFO C
+					ON
+						A.BoardID = B.BoardID
+					AND
+						A.TENANT_ID = C.TENANT_ID
+	                WHERE
+	                	A.TENANT_ID = #v_TENANTID#
+	                AND
+	                (
+	                	(A.COMPANYID = #v_COMPANYID# 			AND 			C.COMPANYID = #v_COMPANYID#)
+	                	OR
+	                	(TRIM(A.COMPANYID) = ''		AND			C.COMPANYID = #v_COMPANYID#)
+		            )
+		            AND
+	                	A.USERID = 'everyone'
+	                AND
+	                	C.USERID = #v_USERID#
+	                AND
+	                	C.TABUSED = 'Y'
+	                ORDER BY
+						A.BOARDID ASC)
+					WHERE
+						rownum = 1)
+				                	
                 ORDER BY 
                 	VIEWORDER ASC
 			]]>
@@ -281,7 +371,18 @@
                 WHERE
                 	TENANT_ID = #v_TENANTID#
                 AND 
-                	LISTTYPE = #v_LISTCODE#
+                ]]>
+                <isEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = '1'
+	                ]]>
+                </isEqual>
+                <isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = #v_LISTCODE#
+	                ]]>
+                </isNotEqual>
+			<![CDATA[
                 AND 
                 	VIEW_FG = 'Y' 
                 ORDER BY
@@ -303,7 +404,18 @@
                     WHERE 
                     	TENANT_ID = #v_TENANTID#
                     AND
-                    	LISTTYPE = #v_LISTCODE#
+                    ]]>
+                <isEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = '1'
+	                ]]>
+                </isEqual>
+                <isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = #v_LISTCODE#
+	                ]]>
+                </isNotEqual>
+				<![CDATA[
                     AND 
                     	VIEW_FG = 'Y' 
                     ORDER BY 
@@ -321,7 +433,18 @@
                     WHERE
                     	TENANT_ID = #v_TENANTID#
                     AND 
-                    	LISTTYPE = #v_LISTCODE# 
+				]]>
+                <isEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = '1'
+	                ]]>
+                </isEqual>
+                <isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+	                <![CDATA[
+	                	LISTTYPE = #v_LISTCODE#
+	                ]]>
+                </isNotEqual>
+				<![CDATA[ 
                     AND 
                     	VIEW_FG = 'Y' 
                     ORDER BY 
@@ -523,7 +646,8 @@
                   	   			BOARDID ,
                                 BOARDNAME ,
                                 BOARDNAME2,
-                                TENANT_ID 
+                                TENANT_ID,
+                                COMPANYID
                          	  FROM 
                          	  	TBL_Board_BoardInfo
                          	  WHERE
@@ -534,6 +658,8 @@
                        		A.BoardID = B.BOARDID
 		          	   WHERE
 		          	   		A.tenant_id = #v_TENANTID#
+						AND
+							(A.WritercompanyID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 		          	   AND  
 		          			A.WriterID = #v_PUSERID#
 		               AND 
@@ -566,7 +692,8 @@
                   	   			BOARDID ,
                                 BOARDNAME ,
                                 BOARDNAME2,
-                                TENANT_ID 
+                                TENANT_ID,
+                                COMPANYID
                          	  FROM 
                          	  	TBL_BOARD_BOARDINFO
                          	  WHERE
@@ -577,6 +704,8 @@
                        		A.BOARDID = B.BOARDID
 		          	   WHERE
 		          	   		A.TENANT_ID = #v_TENANTID#
+		          	   	AND
+		        			(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 		          	   AND  
 		          			A.WRITERID = #v_PUSERID#
 		               AND 
@@ -604,38 +733,51 @@
                   WHERE  
                   	TENANT_ID = #v_TENANTID#
                   AND
+                  	(COMPANYID = #v_COMPANYID#	OR COMPANYID = '*')
+                  AND
                   	UserID = #v_pUserID# ) B   
             ON 
             	A.TENANT_ID = B.TENANT_ID
             AND
             	A.BoardID = B.boardid
-            JOIN 
+            INNER JOIN 
                 TBL_Board_BoardInfo P   
            	ON 
-           		P.TENANT_ID = B.TENANT_ID
+           		A.TENANT_ID = P.TENANT_ID
            	AND
-           		P.BoardID = B.boardid
-       		LEFT JOIN
-                TBL_Board_Item_Read C  
-            ON 
-                A.itemid = C.itemid
-            AND
-                C.ReadDate > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5
-            AND
-                C.tenant_id = #v_TENANTID#
-            AND
-                C.userid = #v_pUserID#
-            WHERE  
-                C.itemid IS NULL  
-            AND 
-            	A.StartDate <= #nowDate#
-            AND 
-            	A.StartDate > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS')
-            AND 
-            	A.EndDate > #nowDate#
-            AND 
-            	( A.APPRFLAG = 'Y'
-                  OR A.APPRFLAG IS NULL )
+           		A.BOARDID = P.BOARDID
+			AND 
+			  	A.TENANT_ID = #v_TENANTID#
+			AND
+            	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
+            		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+          		AND
+					(A.APPRFLAG = 'Y' 
+					OR A.APPRFLAG IS NULL)
+				AND 
+					A.STARTDATE > TO_CHAR(TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5, 'YYYY-MM-DD HH24:MI:SS') 
+				AND 
+ 					A.STARTDATE <= #nowDate#
+				AND 
+					A.ENDDATE > #nowDate#
+				AND 
+					(NOT EXISTS
+								(SELECT 
+     								USERID 
+     							 FROM 
+     							 	TBL_BOARD_ITEM_READ S 
+     							 WHERE 
+     							 	S.TENANT_ID = A.TENANT_ID
+     							 AND
+     							 	S.BOARDID = A.BOARDID 
+     							 AND 
+     							 	S.ITEMID = A.ITEMID 
+     							 AND 
+     							 	S.TENANT_ID = #v_TENANTID#
+     							 AND
+     							 	S.USERID = #v_pUserID# 
+     							 AND 
+     							 	S.READDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') - 5))
 		]]>
 	</select>
 	
@@ -717,10 +859,10 @@
               			TENANT_ID = #tenantID#
               		AND
               			ITEMID = #itemID#
-			]]>
+				]]>
+			</isEmpty>
 		</isEmpty>
-	</isEmpty>
-	<isNotEmpty property="mode">
+		<isNotEmpty property="mode">
 			<isNotEmpty property="tempString">
 				<![CDATA[
 					SELECT 
@@ -773,17 +915,69 @@
 							USERDEPTNAME$lang$ AS USERDEPTNAME, 
 							USERCOMPANYNAME$lang$ AS USERCOMPANYNAME, 
 							NVL(USERTITLE$lang$, '') AS USERTITLE, 
-							TO_CHAR(READDATE, 'YYYY-MM-DD HH24:MI:SS') as READDATE
+							TO_CHAR(READDATE, 'YYYY-MM-DD HH24:MI:SS') as READDATE,
+							DEPTID
 					   	FROM 
-					   		TBL_Board_Item_Read 
-					   	WHERE 
-					   		tenant_id = #tenantID#
+					   		TBL_Board_Item_Read A
+						INNER JOIN
+						   (SELECT
+					   			T.*,
+					    		ROW_NUMBER() OVER (PARTITION BY T.CN ORDER BY ROWNUM) CNT
+					    	FROM
+						    	((SELECT
+									D.CN, D.DEPARTMENT as DEPTID,
+									D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+									D.TENANT_ID
+								FROM
+									TBL_USERMASTER D
+								WHERE
+									D.TENANT_ID = #tenantID#
+						]]>
+						<isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+							<![CDATA[
+								AND
+									D.PHYSICALDELIVERYOFFICENAME = #companyID#
+							]]>
+						</isNotEqual>
+						<![CDATA[
+								)
+									
+								UNION ALL
+								
+								(SELECT
+									B.cn, A2.DEPTID,
+									C.EXTENSIONATTRIBUTE2 as COMPANYID,
+									A2.TENANT_ID
+								FROM
+									TBL_USERMASTER B
+								INNER JOIN
+									TBL_ADDJOBMASTER A2
+								ON
+									A2.CN = B.CN
+								AND
+									A2.TENANT_ID = B.TENANT_ID
+								RIGHT JOIN
+									TBL_DEPTMASTER C
+								ON
+									A2.DEPTID = C.CN
+								AND
+									B.TENANT_ID = C.TENANT_ID
+								AND
+									C.EXTENSIONATTRIBUTE2 = #companyID#
+								WHERE
+									A2.TENANT_ID = #tenantID#)) T ) TR
+						ON
+							A.USERID = TR.CN
+						AND
+							A.TENANT_ID = TR.TENANT_ID
+					   	WHERE
+					   		A.tenant_id = #tenantID#
 					   	AND
-					   		BoardID = #boardID# 
-					   	AND 
-					   		ItemID =  #itemID#  
+					   		A.BoardID = #boardID#
 					   	AND
-					   		UserID NOT IN ( SELECT 
+					   		A.ItemID = #itemID# 
+					   	AND
+					   		UserID <> ( SELECT 
 					   							WRITERID 
 					   						FROM 
 					   							TBL_BOARD_ITEM 
@@ -791,8 +985,8 @@
 					   							TENANT_ID = #tenantID#
 					   						AND
 					   							ITEMID = #itemID# )
-					   	ORDER BY
-					   		ReadDate DESC
+				   	ORDER BY
+				   		ReadDate DESC
 				)A
 				WHERE
 			   		ROWNUM <= #start# + #perCount#
@@ -976,11 +1170,14 @@
 	      						BOARDID, 
 	      						BOARDNAME, 
 	      						BOARDNAME2,
-	      						TENANT_ID 
+	      						TENANT_ID,
+	      						COMPANYID
 	      					  FROM 
 	      					  	TBL_BOARD_MYBOARDS 
 	      					  WHERE   
 	      					  	TENANT_ID = #v_TENANTID#
+	      					  AND
+     					  		(COMPANYID = #v_COMPANYID#	OR COMPANYID = '*')
 	      					  AND
 	      					  	USERID = #v_PUSERID# ) B 
 	      			 	 ON 
@@ -992,9 +1189,15 @@
 	      				  ON 
 		      			  	A.TENANT_ID = P.TENANT_ID
 		      			  AND
+     			  			(A.WRITERCOMPANYID = P.COMPANYID OR TRIM(A.WRITERCOMPANYID) = ''
+     			  				OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
+		      			  AND
 	      			 	 	A.BOARDID = P.BOARDID
 		      			  AND 
 		      			  	A.TENANT_ID = #v_TENANTID#
+						  AND
+		     			  	(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(A.WRITERCOMPANYID) = ''
+		     			  		OR TRIM(P.COMPANYID) = '' OR P.COMPANYID IS NULL)
 		      			  AND
 		      			  	(A.APPRFLAG = 'Y' 
 		      			     OR A.APPRFLAG IS NULL)
@@ -1331,17 +1534,10 @@
 		              AND 
 		              	APPRFLAG = 'Y' 
 	              </isNotEmpty>
-	              <isNotEmpty property="v_TEMP">
-        			ORDER BY 
-        				A.ParentWriteDate, 
-        				A.WriteDate DESC
-       			</isNotEmpty>
-       			<isEmpty property="v_TEMP">
         			ORDER BY 
         				A.NotiNo ASC, 
         				A.ParentWriteDate DESC, 
         				A.WriteDate DESC
-       			</isEmpty>
 	              ) T1 
 	          WHERE 
 	          	ROWNUM_ <![CDATA[ <= ]]> #v_END# ) T2
@@ -1404,6 +1600,8 @@
 		            	 	A.BoardID = B.BoardID
 		                 WHERE
 		                 	A.TENANT_ID = #v_TENANTID#
+		                 AND
+  				  			(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 		                 AND  
 		                 	WRITERID = #v_PUSERID#
 		                 AND 
@@ -1414,6 +1612,9 @@
 		                 	extensionAttribute1 = '0'
 		                 AND 
 		                 	extensionAttribute2 = '1' 
+						AND
+		     			  	(A.APPRFLAG = 'Y' 
+		     			     OR A.APPRFLAG IS NULL)
 		                 ORDER BY
                  			A.WriteDate DESC ) T1
 		              WHERE ROWNUM_ <= #v_END# ) T2 
@@ -1555,6 +1756,8 @@
 	   				  	A.ITEMID = D.ITEMID
 	   				  WHERE
 	   				  	A.TENANT_ID = #v_TENANTID#
+					  AND
+  				  		(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 	   				  AND 
 	   				  	WRITERID = #v_PUSERID# 
 	   				  AND 
@@ -1645,6 +1848,8 @@
 	   				  	A.ITEMID = D.ITEMID
 	   				  WHERE
 	   				  	A.TENANT_ID = #v_TENANTID#
+	   				   AND
+  				  		(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 	   				  AND  
 	   				  	WRITERID = #v_PUSERID# ) T1 
 	   			  WHERE 
@@ -1729,6 +1934,8 @@
 		   			   		A.BOARDID = APPR.BOARDID
 		   			   WHERE
 		   			   		A.TENANT_ID = #v_TENANTID#
+						AND
+  				   			(B.COMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 		   			   AND 
 		   			   		STARTDATE <= #nowDate#
 		   			   AND 
@@ -2168,6 +2375,8 @@
 	   				  	A.BOARDID = I.BOARDID 					
 	   				  WHERE 
 	   				  	A.TENANT_ID = #v_TENANTID#
+					  AND
+						(A.WritercompanyID = #v_COMPANYID# OR TRIM(I.COMPANYID) = '' OR I.COMPANYID IS NULL)
 	   				  AND
 	   				  	A.WRITERID = #v_PUSERID#
 	   				  AND 
@@ -2260,6 +2469,8 @@
 	   					A.BOARDID = I.BOARDID 
 	   				 AND
 	   					A.TENANT_ID = #v_TENANTID#
+					 AND
+  						(A.WritercompanyID = #v_COMPANYID# OR TRIM(I.COMPANYID) = '' OR I.COMPANYID IS NULL)
 	   				 AND 
 	   					A.WRITERID = #v_PUSERID# 
 	   				 $v_PSUBQUERY$ ) T1 
@@ -2345,6 +2556,8 @@
 		   			   		A.BOARDID = APPR.BOARDID
 		   			   WHERE
 		   			   		A.TENANT_ID = #v_TENANTID#
+		   			   	AND
+ 				   			(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 		   			   AND 
 		   			   		STARTDATE <= #nowDate#
 		   			   AND 
@@ -2419,7 +2632,9 @@
 				ITEMID ,
             	WRITERID ,
 	            WRITERNAME$lang$ WRITERNAME ,
+	            WRITERDEPTID,
 	            WRITERDEPTNAME$lang$ WRITERDEPTNAME ,
+	            WRITERCOMPANYID,
 	            WRITERCOMPANYNAME$lang$ WRITERCOMPANYNAME,
 	            WRITEDATE ,
 	            PARENTWRITEDATE ,
@@ -2468,8 +2683,10 @@
 			SELECT 
 				ITEMID ,
 	            WRITERID ,
+	            WRITERDEPTID,
 	            WRITERNAME$lang$ WRITERNAME,
 	            WRITERDEPTNAME$lang$ WRITERDEPTNAME,
+	            WRITERCOMPANYID,
 	            WRITERCOMPANYNAME$lang$  WRITERCOMPANYNAME,
 	            WRITEDATE ,
 	            PARENTWRITEDATE ,
@@ -2517,6 +2734,8 @@
                   	TBL_Board_MyBoards
                   WHERE
                   	TENANT_ID = #v_TENANTID#
+				  AND
+                  	(COMPANYID = #v_COMPANYID#	OR COMPANYID = '*')
                   AND  
                   	UserID = #v_pUserID# ) B   
             ON 
@@ -2861,16 +3080,24 @@
 			SELECT 
 				COUNT(ITEMID)
 			FROM 
-				TBL_Board_Item
+				TBL_Board_Item A
+			INNER JOIN
+				TBL_BOARD_BOARDINFO B
+			ON 
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BoardID = B.BoardID
 			WHERE  
-				TENANT_ID = #v_TENANTID#
+				A.TENANT_ID = #v_TENANTID#
+			AND
+				(WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 			AND
 				WRITERID = #v_PUSERID# 
 			AND 
    				(
-   					(APPRFLAG <> 'C' AND APPRFLAG <> 'N')
+   					(A.APPRFLAG <> 'C' AND A.APPRFLAG <> 'N')
 		        		OR 
-        		  	APPRFLAG IS NULL
+        		  	A.APPRFLAG IS NULL
         		 )
 			AND 
 				StartDate < #nowDate# 
@@ -2883,9 +3110,17 @@
 			SELECT 
 				COUNT(ITEMID)
             FROM 
-            	TBL_Board_Item_temp 
+            	TBL_Board_Item_temp A
+            INNER JOIN
+            	TBL_BOARD_BOARDINFO B
+			ON 
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BoardID = B.BoardID
             WHERE  
-            	TENANT_ID = #v_TENANTID#
+            	A.TENANT_ID = #v_TENANTID#
+            AND
+            	(WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
             AND
             	WRITERID = #v_PUSERID#
 		]]>
@@ -3035,7 +3270,7 @@
                       AND 
                       	BOARDID = #boardId#
                       GROUP 
-                      	BY ITEMID,TENANT_ID ) D   
+                      	BY ITEMID, TENANT_ID ) D   
                 ON 
                 	A.TENANT_ID = D.TENANT_ID
                 AND
@@ -3076,7 +3311,7 @@
 		</isEqual>
 	</select>
 	
-	<select id="EzBoardDAO.getCheckItemID" parameterClass="Map" resultClass="Integer">
+	<select id="EzBoardDAO.getCheckItemID" parameterClass="Map" resultClass="Integer" remapResults="true">
 		<isNotEqual property="v_BOARDTYPE" compareValue="TEMP">
 			<![CDATA[
 				SELECT 
@@ -3151,9 +3386,17 @@
 			SELECT 
 				COUNT(ITEMID)  CNT
 			FROM 
-				TBL_Board_Item 
+				TBL_Board_Item A
+			INNER JOIN 
+				TBL_BOARD_BOARDINFO B
+			ON 
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BoardID = B.BoardID
        		WHERE  
-       			TENANT_ID = #v_TENANTID#
+       			A.TENANT_ID = #v_TENANTID#
+   			AND
+   				(WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
        		AND
        			WRITERID = #v_PUSERID#
             AND 
@@ -3164,6 +3407,9 @@
             	extensionAttribute1 = '0'
             AND 
             	EXTENSIONATTRIBUTE2 = '1' 
+			AND
+				(A.APPRFLAG = 'Y' 
+				OR A.APPRFLAG IS NULL)
 		]]>
 	</select>
 	
@@ -3172,9 +3418,17 @@
 			SELECT 
 				COUNT(ITEMID)
    			FROM 
-   				TBL_BOARD_ITEM A 
+   				TBL_BOARD_ITEM A
+   			INNER JOIN 
+				TBL_BOARD_BOARDINFO B
+			ON 
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BoardID = B.BoardID
    			WHERE 
-   				TENANT_ID = #v_TENANTID#
+   				A.TENANT_ID = #v_TENANTID#
+   			AND
+   				(WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
    			AND
    				WRITERID = #v_PUSERID#
    			AND 
@@ -3196,9 +3450,17 @@
 			SELECT 
 				COUNT(ITEMID)
    			FROM 
-   				TBL_BOARD_ITEM_TEMP A 
+   				TBL_BOARD_ITEM_TEMP A
+   			INNER JOIN 
+				TBL_BOARD_BOARDINFO B
+			ON 
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BoardID = B.BoardID
    			WHERE
-   				TENANT_ID = #v_TENANTID#
+   				A.TENANT_ID = #v_TENANTID#
+   			AND
+				(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
    			AND
    				WRITERID = #v_PUSERID#  
    			$v_PSUBQUERY$
@@ -3530,6 +3792,8 @@
 	        	extensionattribute1 = '0'
 	        AND 
 	        	extensionattribute2 = '1'
+	        AND
+				(APPRFLAG = 'Y' OR APPRFLAG IS NULL)
         ]]>
 	</select>
 	
@@ -3569,25 +3833,101 @@
 		]]>                
 	</select>
 	
-	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO">
-		<![CDATA[
-			SELECT 
-				REPLYID, 
-				$v_UserName$ AS USERNAME, 
-				USERID, 
-				CONTENT, 
-				TO_CHAR(WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')AS WRITEDATE
-	        FROM 
-	        	TBL_BOARD_ONELINEREPLY 
-	        WHERE  
-	        	tenant_id = #v_TENANTID#
-	        AND
-	       		boardid = #v_BoardID#
-			AND 
-				itemid = #v_ItemID#
-			ORDER BY 
-				writedate ASC
-		]]>                
+	<select id="EzBoardDAO.readOneLineReply" parameterClass="Map" resultClass="BoardLineReplyVO" remapResults="true">
+		<isNotEqual property="v_GUBUN" compareValue="2">
+			<![CDATA[
+				SELECT
+					A.REPLYID,
+					A.$v_UserName$ AS USERNAME,
+					A.USERID,
+					A.CONTENT,
+					TO_CHAR(A.WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')AS WRITEDATE,
+					DEPTID
+		        FROM
+		        	TBL_BOARD_ONELINEREPLY A
+		        INNER JOIN
+				   (SELECT
+				   		T.*,
+				    	ROW_NUMBER() OVER (PARTITION BY T.CN ORDER BY ROWNUM) CNT 
+					FROM
+						((SELECT
+							D.CN, D.DEPARTMENT as DEPTID,
+							D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+							D.TENANT_ID
+						FROM
+							TBL_USERMASTER D
+						WHERE
+							D.TENANT_ID = #v_TENANTID#
+					]]>
+				<isNotEqual property="v_isAllGroupBoard" compareValue="Y">
+					<![CDATA[
+						AND
+	                        D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+					]]>
+				</isNotEqual>
+				<![CDATA[
+						)
+						
+						UNION ALL
+						
+						(SELECT
+							B.cn, A2.DEPTID,
+							C.EXTENSIONATTRIBUTE2 as COMPANYID,
+							A2.TENANT_ID
+						FROM
+							TBL_USERMASTER B
+						INNER JOIN
+							TBL_ADDJOBMASTER A2
+						ON
+							A2.CN = B.CN
+						AND
+							A2.TENANT_ID = B.TENANT_ID
+						RIGHT JOIN
+							TBL_DEPTMASTER C
+						ON
+							A2.DEPTID = C.CN
+						AND
+							B.TENANT_ID = C.TENANT_ID
+						AND
+							C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#
+						WHERE
+							A2.TENANT_ID = #v_TENANTID#)) T ) TR
+				ON
+					A.USERID = TR.CN
+				AND
+					TR.CNT = 1
+				AND
+					A.TENANT_ID = TR.TENANT_ID
+		        WHERE
+		        	A.TENANT_ID = #v_TENANTID#
+		        AND
+		       		A.BOARDID = #v_BoardID#
+				AND 
+					A.ITEMID = #v_ItemID#
+				ORDER BY 
+					writedate ASC
+			]]>
+		</isNotEqual>
+		<isEqual property="v_GUBUN" compareValue="2">
+			<![CDATA[
+				SELECT 
+					REPLYID, 
+					$v_UserName$ AS USERNAME,
+					USERID,
+					CONTENT, 
+					TO_CHAR(WRITEDATE, 'YYYY-MM-DD HH24:MI:SS')AS WRITEDATE
+		        FROM 
+		        	TBL_BOARD_ONELINEREPLY 
+		        WHERE  
+		        	tenant_id = #v_TENANTID#
+		        AND
+		       		boardid = #v_BoardID#
+				AND 
+					itemid = #v_ItemID#
+				ORDER BY 
+					writedate ASC
+			]]>
+		</isEqual>
 	</select>
 	
 	<select id="EzBoardDAO.checkOneLineOwner" parameterClass="Map" resultClass="Integer">
@@ -3672,9 +4012,17 @@
 			SELECT 
 				COUNT(ITEMID)
 	        FROM 
-	        	TBL_BOARD_ITEM 
+	        	TBL_BOARD_ITEM A
+	        INNER JOIN 
+				TBL_BOARD_BOARDINFO B
+			ON 
+				A.TENANT_ID = B.TENANT_ID
+			AND
+				A.BoardID = B.BoardID
 	        WHERE  
-	        	tenant_id = #tenantID#
+	        	A.tenant_id = #tenantID#
+	        AND
+	        	(writercompanyid = #companyID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
 	        AND
 	        	writerid = #userID#
 	        AND 
@@ -3693,9 +4041,17 @@
 			ON 
 				A.tenant_id = B.tenant_id
 			AND
-				A.boardid = B.boardid	
+				A.boardid = B.boardid
+			INNER JOIN 
+				TBL_BOARD_BOARDINFO C
+			ON 
+				A.TENANT_ID = C.TENANT_ID
+			AND
+				A.BoardID = C.BoardID
 	        WHERE
 	        	A.tenant_id = #tenantID#
+	        AND
+	        	(B.writercompanyid = #companyID# OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
 	        AND 
 	        	A.appruserid = #id# 
 	        AND 
@@ -3718,9 +4074,17 @@
 			ON 
 				A.tenant_id = B.tenant_id
 			AND
-				A.boardid = B.boardid	
+				A.boardid = B.boardid
+			INNER JOIN 
+				TBL_BOARD_BOARDINFO C
+			ON 
+				A.TENANT_ID = C.TENANT_ID
+			AND
+				A.BoardID = C.BoardID
 	        WHERE
 	        	B.tenant_id = #v_TENANTID#
+	        AND
+				(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(C.COMPANYID) = '' OR C.COMPANYID IS NULL)
 	        AND 
 	        	B.appruserid = #v_PUSERID# 
 	        AND 
@@ -3996,6 +4360,8 @@
             WHERE  
             	TENANT_ID = #tenantID#
             AND
+		    	(COMPANYID = #companyID# OR TRIM(COMPANYID) = '' OR COMPANYID = '*')
+            AND
             	BOARDID = #boardID#
             AND 
             	( USERID = #userID#
@@ -4008,6 +4374,8 @@
 			DELETE FROM TBL_Board_MyBoards
 			WHERE  
 				TENANT_ID = #tenantID#
+			AND
+		    	(COMPANYID = #companyID# OR COMPANYID = '*')
 			AND
 				BOARDID = #boardID#
             AND 
@@ -4026,9 +4394,15 @@
 		        			  WHERE
 		        					TENANT_ID = #tenantID#
 		        			  AND  
-		        					BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' )
+		        					BOARDID = '{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}' 
+							  AND
+	        			  			(COMPANYID = #companyID#
+	        			  			OR
+	        			  			TRIM(COMPANYID) = ''))
 		    WHERE
 		    	TENANT_ID = #tenantID#
+		    AND
+		    	COMPANYID = #companyID#
 		    AND  
 		    	USERID = #userID#
 		]]>
@@ -4041,6 +4415,8 @@
           		TABUSED = #v_TABUSED#
           	WHERE
           		TENANT_ID = #v_TENANTID#
+          	AND
+		    	COMPANYID = #v_COMPANYID#
           	AND  
           		USERID = #v_USERID#
 		]]>
@@ -4173,10 +4549,10 @@
 	<insert id="EzBoardDAO.setAsRead" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_Board_Item_Read ( 
-				BoardID, 	  ItemID, 	   UserID, 		UserName, 	   UserDeptName, 	  UserCompanyName, 		UserTitle, 		UserName2, 		UserDeptName2, 		UserCompanyName2, 	   UserTitle2, 		ReadDate,  									 TENANT_ID 
+				BoardID, 	  ItemID, 	   UserID, 		UserName, 	   UserDeptName, 	  UserCompanyName, 		UserTitle, 		UserName2, 		UserDeptName2, 		UserCompanyName2, 	   UserTitle2, 		ReadDate,  	 TENANT_ID,	 COMPANYID 
 			)
         	VALUES ( 
-        		#v_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_TENANTID# 
+        		#v_pBoardID#, #v_pItemID#, #v_pUserID#, #v_pUserName#, #v_pUserDeptName#, #v_pUserCompanyName#, #v_pUserTitle#, #v_pUserName2#, #v_pUserDeptName2#, #v_pUserCompanyName2#, #v_pUserTitle2#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_TENANTID#, #v_COMPANYID# 
         	)
 		]]>
 	</insert>
@@ -4513,10 +4889,10 @@
 	<insert id="EzBoardDAO.saveOneLineReply" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_BOARD_ONELINEREPLY (
-				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,   									  content, 		password, 	  tenant_id
+				itemid, 	replyid, 	boardid, 	userid, 	username, 	username2, 	 writedate,     content, 		password, 	  tenant_id, companyid
 			)
         	VALUES (
-        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),	  #PCONTENT#,	#PPASSWORD# , #TENANTID#
+        	 	#PITEMID#,  #PREPLYID#, #PBOARDID#, #USERID#,   #USERNAME#, #USERNAME2#, TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'),	  #PCONTENT#,	#PPASSWORD# , #TENANTID#, #COMPANYID#
         	)
 		]]>
 	</insert>
@@ -4737,6 +5113,9 @@
                 TENANT_ID = #tenantID#
               AND
                 BOARDID = #boardId#
+			  AND
+              	(APPRFLAG = 'Y' 
+			     OR APPRFLAG IS NULL)
       ]]>
   </select>
   
@@ -4965,11 +5344,15 @@
 					ON 
 						A.TENANT_ID = I.TENANT_ID
 					AND
+						(I.COMPANYID = #v_pCompanyID# OR TRIM(I.COMPANYID ) = '' OR I.COMPANYID IS NULL)
+					AND
 						A.BOARDID = I.BOARDID
 					WHERE 
 						$v_PWHEREBOARD$
 					AND
 						A.TENANT_ID = #v_TENANTID#
+					AND
+   						(A.WRITERCOMPANYID = #v_pCompanyID# OR TRIM(A.WRITERCOMPANYID) = '' OR TRIM(I.COMPANYID ) = '' OR I.COMPANYID IS NULL)
 		]]>
 		<isEqual property="v_MODE" compareValue="1">
 			<![CDATA[ 
@@ -5036,6 +5419,8 @@
 				$v_PWHEREBOARD$ 
 			AND
 				A.TENANT_ID = #v_TENANTID#
+			AND
+				(I.COMPANYID = #v_pCompanyID# OR TRIM(I.COMPANYID ) = '' OR I.COMPANYID IS NULL)
 		]]>
 		<isEqual property="v_MODE" compareValue="1">
 			<![CDATA[ 
@@ -5083,4 +5468,3 @@
 	</select>
   
 </sqlMap>
-

@@ -22,6 +22,7 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<script type="text/javascript">
 			var lang = "${userInfo.lang}";
+			var pRepetitionFlag = 1; //0:매일, 1:매주, 2:매월, 3:매년 (매주가 default이므로 초기설정)
 			
 		    function windows_close() {
 		        window.close();
@@ -160,6 +161,21 @@
 		    	}		
 	    	});
 	    	
+	    	//#14117 천성준 - 반복예약 시, 시작일과 끝날짜의 날짜가 어긋나지 않게 로직추가 (ex. 끝날짜가 시작일보다 앞에있는경우, 시작일이 끝날짜보다 뒤에있는경우)
+	    	function timeChecker(mode) {
+	    		var ssDate = $("#Sdatepicker").datepicker().val();
+	        	var eeDate = $("#Edatepicker").datepicker().val();
+	        	
+	        	if (mode == "sDate") {
+		        	if (ssDate > eeDate) {
+		        		$("#Edatepicker").datepicker().val(ssDate);
+		        	} 
+	        	} else if (mode == "eDate") {
+		        	if (ssDate > eeDate) {
+		        		$("#Sdatepicker").datepicker().val(eeDate);
+		        	} 
+	        	}
+	    	}
 		</script>
 	</head>
 	<body class="popup">
@@ -337,7 +353,7 @@
 		    	<th align="right" rowspan="4">&nbsp;&nbsp;&nbsp;<spring:message code='ezTask.t65' />&nbsp;&nbsp;&nbsp;</th>
 		    	<td width="100%">
 		    		<span style="margin-left: 5px;" class="repeatRange"><spring:message code='ezTask.t121' /></span>
-		        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"/>
+		        	<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly" onchange="timeChecker('sDate')"/>
 		    	</td>
 		  	</tr>
 		  	<tr>
@@ -352,7 +368,7 @@
 		  	<tr>
 		    	<td>
 		    		<input id="EndTimeSet" type="radio" name="optRangeEnd" value="radiobutton" value="0"/><spring:message code='ezResource.t317' />
-		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly"/>
+		      		<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly" onchange="timeChecker('eDate')"/>
 		    	</td>
 		  	</tr>
 		</table>

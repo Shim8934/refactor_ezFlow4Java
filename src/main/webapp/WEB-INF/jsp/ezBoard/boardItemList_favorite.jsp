@@ -23,6 +23,9 @@
 	    .tabpart01UL li {
 	    	height:20px;
 	    	color:#777;
+			white-space: nowrap;
+		    text-overflow: ellipsis;
+		    overflow: hidden;
 	    }
 	    </style>
 	    <script type="text/javascript">
@@ -98,7 +101,10 @@
 						}
 						Tab1_SelectID = "overSpan";
 					}
-					document.getElementById("tabpart01UL").style.display = "none";	
+					/* 2018-12-04 홍승비- '...'탭이 없는 경우 접근 시 스크립트 에러 수정 */
+					if (document.getElementById("tabpart01UL") !== null) {
+						document.getElementById("tabpart01UL").style.display = "none";
+					}	
 				}
 	        }
 	        function GetMyBoardItem() {

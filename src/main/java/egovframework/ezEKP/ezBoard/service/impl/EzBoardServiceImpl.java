@@ -752,6 +752,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return ezBoardDAO.brdGetItemAttachmentInfo(map);
 	}
 	
+	/* 2018-11-22 홍승비 - 그룹사게시판에서는 조회자의 deptID를 가져오지 않도록 수정 */
 	@Override
 	public StringBuffer getReaderList(String boardID, String itemID, String userID, String lang, String companyID, int tenantID, int pageNum, int perCount, String offset) throws Exception {
 		logger.debug("getReaderList started");
@@ -772,6 +773,17 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("companyID", companyID);
 		map.put("start", startRowNum);
 		map.put("perCount", perCount);
+		
+		BoardPropertyVO boardProp = new BoardPropertyVO();
+		boardProp = getBoardProperty(boardID, tenantID);
+		
+		if (boardProp.getBoardGroupID() != null) {
+			BoardPropertyVO boardGroupProp = getBoardProperty(boardProp.getBoardGroupID(), tenantID);
+			
+			if (boardGroupProp.getGuBun() != null && boardGroupProp.getGuBun().equals("99")) {
+				map.put("v_isAllGroupBoard", "Y");
+			}
+		}
 		
 		List<BoardReadVO> readerList = ezBoardDAO.getReaderList(map);
 		
@@ -1112,6 +1124,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		map.put("v_TYPE", type);
 		map.put("v_START", start);
@@ -1676,6 +1689,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		map.put("v_PUSERID", userInfo.getId());
 		map.put("v_TENANTID", userInfo.getTenantId());
+		map.put("v_COMPANYID", userInfo.getCompanyID());
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
 
 		logger.debug("getMyNoticePostItemCount ended");
@@ -2165,6 +2179,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		return boardListVOs;
 	}
 
+	/* 2018-11-22 홍승비 - 그룹사게시판에서는 댓글 작성자의 deptID를 가져오지 않도록 수정 */
 	@Override
 	public List<BoardLineReplyVO> readOneLineReply(String boardID, String itemID, String userName, String gubun, String companyID, int tenantID) throws Exception {
 		logger.debug("readOneLineReply started");
@@ -2177,7 +2192,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_GUBUN", gubun);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
-
+		
+		BoardPropertyVO boardProp = new BoardPropertyVO();
+		boardProp = getBoardProperty(boardID, tenantID);
+		
+		if (boardProp.getBoardGroupID() != null) {
+			BoardPropertyVO boardGroupProp = getBoardProperty(boardProp.getBoardGroupID(), tenantID);
+			
+			if (boardGroupProp.getGuBun() != null && boardGroupProp.getGuBun().equals("99")) {
+				map.put("v_isAllGroupBoard", "Y");
+			}
+		}
+		
 		logger.debug("readOneLineReply ended");
 		return ezBoardDAO.readOneLineReply(map);
 	}
@@ -4114,6 +4140,22 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("getSearchApprBoardItemList ended");
 		return ezBoardDAO.getSearchApprBoardItemList(map);
+	}
+
+	@Override
+	public String getEzTalkGateNoticeBoardId(String companyID, int tenantID) throws Exception {
+		logger.debug("getEzTalkGateNoticeBoardId started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		ezBoardDAO.getEzTalkGateNoticeBoardId(map);
+		map.put("v_companyID", companyID);
+		map.put("v_tenantID", tenantID);
+		
+		String resultBoradID = ezBoardDAO.getEzTalkGateNoticeBoardId(map);
+		
+		logger.debug("getEzTalkGateNoticeBoardId ended.");
+		return resultBoradID;
 	}
 
 }

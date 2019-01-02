@@ -273,7 +273,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		for (int i = 0; i < circularAttachVOList.size(); i++) {
 			resultXML.append("<NODE>");
 			resultXML.append("<CircularFileId>" + circularAttachVOList.get(i).getCircularFileID() + "</CircularFileId>");
-			resultXML.append("<FileSize>" + commonUtil.byteCalculation(Long.toString(circularAttachVOList.get(i).getFileSize())) + "</FileSize>");
+			resultXML.append("<FileSize>" + commonUtil.getSizeWithUnit(circularAttachVOList.get(i).getFileSize()) + "</FileSize>");
 			resultXML.append("<FileName>" + commonUtil.cleanValue(circularAttachVOList.get(i).getFileName()) + "</FileName>");
 			resultXML.append("<FilePath>" + commonUtil.cleanValue(circularAttachVOList.get(i).getFilePath()) + "</FilePath>");
 			resultXML.append("<FileType>" + commonUtil.cleanValue(circularAttachVOList.get(i).getFilePath().split("\\.")[1]) + "</FileType>");
@@ -1105,7 +1105,7 @@ public class EzCircularController extends EgovFileMngUtil {
 		}
 		CircularListVO result = new CircularListVO();
 
-		if (user.get(0).getMemberID().equals("")) {	
+		if (!user.get(0).getMemberID().equals("")) {	
 			userMyID = user.get(0).getMemberID();
 			userMyName = user.get(0).getMemberName();
 			userMyName2 = user.get(0).getMemberName2();
@@ -1408,7 +1408,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	        		avo.setFileType(fileType);
 	        		avo.setFileEncodeName(URLEncoder.encode(avo.getFileName(),"UTF-8"));
 	        		
-	        		String fileSize = commonUtil.byteCalculation(Long.toString(avo.getFileSize()));
+	        		String fileSize = commonUtil.getSizeWithUnit(avo.getFileSize());
 	        		avo.setFileTranSize(fileSize);
 	        		
 	        		//2018-07-09 김보미 - filePath수정
@@ -2012,8 +2012,9 @@ public class EzCircularController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String circularIDList = request.getParameter("circularIDList");
+		String endDate = commonUtil.getTodayUTCTime("");
 		
-		ezCircularService.circularClose(circularIDList, userInfo.getTenantId());
+		ezCircularService.circularClose(circularIDList, userInfo.getTenantId(), endDate);
 		
 		logger.debug("circularClose ended");
 		

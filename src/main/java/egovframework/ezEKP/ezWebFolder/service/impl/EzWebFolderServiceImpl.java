@@ -1035,11 +1035,11 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 	
 	@Override
-	public String getMaxFileID(int tenantId) throws Exception {
+	public synchronized String getMaxFileID(int tenantId) throws Exception {
 		int currentMaxFileId = -1;
 		String result        = getFileSequence(tenantId);
-		currentMaxFileId     = result.equals("")        ? 1 : Integer.parseInt(result);
-		currentMaxFileId     = (currentMaxFileId == -1) ? 1 : (currentMaxFileId + 1);
+		currentMaxFileId     = result.equals("")        ? 10000000 : Integer.parseInt(result);
+		currentMaxFileId     = (currentMaxFileId == -1) ? 10000000 : (currentMaxFileId + 1);
 		return Integer.toString(currentMaxFileId);
 	}
 	

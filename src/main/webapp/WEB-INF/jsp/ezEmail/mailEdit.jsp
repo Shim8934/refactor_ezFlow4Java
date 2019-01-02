@@ -7,23 +7,33 @@
 	    <title><spring:message code='ezEmail.t660' /></title>
 	    <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/jquery-ui.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/jquery.ui.all.css')}" type="text/css" />
 		<c:if test="${useFromAddress == 'YES'}">
 		<style>
 			.selectbox { position: relative; width: 100%; /* 너비설정 */ border: 0px; /* 테두리 설정 */ z-index: 1; } 
 			.selectbox:before { /* 화살표 대체 */ content: ""; position: absolute; top: 50%; right: 15px; width: 0; height: 0; margin-top: -1px; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #333; } 
 			.selectbox label { position: absolute; top: 1px; /* 위치정렬 */ left: 5px; /* 위치정렬 */ color: #999; z-index: -1; /* IE8에서 label이 위치한 곳이 클릭되지 않는 것 해결 */ } 
 			.selectbox select { width: 100%; height: auto; /* 높이 초기화 */ line-height: normal; /* line-height 초기화 */ font-family: inherit; /* 폰트 상속 */ border: 0; opacity: 0; /* 숨기기 */ filter:alpha(opacity=0); /* IE8 숨기기 */ -webkit-appearance: none; /* 네이티브 외형 감추기 */ -moz-appearance: none; appearance: none; }
+			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding:0px;}
+			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
 		</style>
 		</c:if>
+		<style>
+			.ui-autocomplete { height: 200px; max-height: 200px; overflow-y: auto; overflow-x: hidden; padding : 0px}
+			#AutoCompleteResults .ui-state-focus { background: #f0f6ff;  border: none }
+		</style>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachMain_CK.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachItem_CK.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.9.1.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/string_component.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/encode_component.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/newMail_Cross.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachMain_CK.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/AttachItem_CK.js')}"></script>
         <c:if test="${isCrossBrowser != true}">
         <script type="text/javascript" src="${util.addVer('/js/Kaoni_ActiveX.js')}"></script>
         </c:if>  
@@ -203,6 +213,14 @@
 		            	$(this).siblings('label').text(select_name); 
 		            });
 	            </c:if>
+	            
+	         // 쓰기창에서 수신인 자동완성 기능 사용 유무
+	            <c:if test="${useMailAddrAutoComplete != 'YES'}">
+	            	$( "#MsgTo" ).autocomplete("disable");
+	            	$( "#MsgCC" ).autocomplete("disable");
+	            	$( "#MsgBCC" ).autocomplete("disable");
+	        	</c:if>
+	            
 			}
 			
 			var MailStatus = "NO";
@@ -213,6 +231,9 @@
 	        	} else {
 	        		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 160 + "PX";
 	        	}
+	        	
+	        	// resize시 autoComplete창이 계속 유지되어서 display 처리
+	        	$(".ui-autocomplete").css('display', 'none');
 		    }
 			
 		    window.onbeforeunload = function()
@@ -761,6 +782,273 @@
 		    function Letter_onClick() {
 		    	DivPopUpShow(583, 485, "/ezEmail/mailLetter.do");
 		    }
+		    
+		 // 20180628 자동완성창의 width 값 고정
+		    jQuery.ui.autocomplete.prototype._resizeMenu = function () {
+		    	var ul = this.menu.element;
+		    	ul.outerWidth(this.element.outerWidth());
+		    }
+		    
+			$(function() {
+				var widgetInst = $("#MsgTo").autocomplete({}).data('ui-autocomplete');
+				widgetInst._renderMenu = function(ul, items) {
+					var self = this;
+					ul.append("<li id='theadTr' onkeydown='keyEventNone(event)' style='background-color:#e9e9e9; border-bottom:1px solid #d1d1d1; height:22px; pointer-events: none;'><a><table class='width100percent' width='100%' height='100%' style='display:inline-table'><thead><tr>"
+					+ "<td style='width:20%; border:none; align:left'><spring:message code='ezAddress.t124' /></td>"
+					+ "<td style='width:20%; border:none; align:left'><spring:message code='ezApproval.t171' /></td>"
+					+ "<td style='width:15%; border:none; align:left'><spring:message code='ezPortal.t34' /></td>"
+					+ "<td style='max-width:45%; border:none; align:left'><spring:message code='ezEmail.t713' /></td>"
+					+ "</tr></thead></table></li></a>");
+					$.each( items, function( index, item ) {
+						self._renderItem( ul, item );
+					});
+				};
+				var widgetInst = $("#MsgCC").autocomplete({}).data('ui-autocomplete');
+				widgetInst._renderMenu = function(ul, items) {
+					var self = this;
+					ul.append("<li id='theadTr' onkeydown='keyEventNone(event)' style='background-color:#e9e9e9; border-bottom:1px solid #d1d1d1; height:22px; pointer-events: none;'><a><table class='width100percent' width='100%' height='100%' style='display:inline-table'><thead><tr>"
+					+ "<td style='width:20%; border:none; align:left'><spring:message code='ezAddress.t124' /></td>"
+					+ "<td style='width:20%; border:none; align:left'><spring:message code='ezApproval.t171' /></td>"
+					+ "<td style='width:15%; border:none; align:left'><spring:message code='ezPortal.t34' /></td>"
+					+ "<td style='max-width:45%; border:none; align:left'><spring:message code='ezEmail.t713' /></td>"
+					+ "</tr></thead></table></li></a>");
+					$.each( items, function( index, item ) {
+						self._renderItem( ul, item );
+					});
+				};
+				var widgetInst = $("#MsgBCC").autocomplete({}).data('ui-autocomplete');
+				widgetInst._renderMenu = function(ul, items) {
+					var self = this;
+					ul.append("<li id='theadTr' onkeydown='keyEventNone(event)' style='background-color:#e9e9e9; border-bottom:1px solid #d1d1d1; height:22px; pointer-events: none;'><a><table class='width100percent' width='100%' height='100%' style='display:inline-table'><thead><tr>"
+					+ "<td style='width:20%; border:none; align:left'><spring:message code='ezAddress.t124' /></td>"
+					+ "<td style='width:20%; border:none; align:left'><spring:message code='ezApproval.t171' /></td>"
+					+ "<td style='width:15%; border:none; align:left'><spring:message code='ezPortal.t34' /></td>"
+					+ "<td style='max-width:45%; border:none; align:left'><spring:message code='ezEmail.t713' /></td>"
+					+ "</tr></thead></table></li></a>");
+					$.each( items, function( index, item ) {
+						self._renderItem( ul, item );
+					});
+				};
+				var IsInsert_MsgTo = false;
+				$("#MsgTo").autocomplete(
+						{
+							source : function(request, response) {
+								$.ajax({
+									type : 'post',
+									url : "/ezEmail/autoCompleteList.do",
+									dataType : "json",
+									data : {
+										value : request.term
+									},
+									success : function(data) {
+										var susinList = data.susinList;
+										response($.map(susinList, function(ul, item) {
+											return {
+												label : ul.name + " " + ul.title + " "
+														+ ul.description + " "
+														+ "<" + ul.mail + ">",
+												value : ul.name,
+												email : ul.mail,
+												dept : ul.description,
+												title : ul.title,
+												type : ul.type,
+												href : ul.href
+											};
+										}));
+									}
+								});
+							},
+							minLength : 2,
+							selectFirst : true,
+							autoFocus : true,
+							select : function(event, ui) {
+								var addressType = "email";
+								var href = ""
+								if(ui.item.type == "G") {
+									addressType = "mailgroup";
+									href = ui.item.href;
+								}
+								
+								newElem = PrepareMailTag("0", addressType, ui.item.value,
+										ui.item.email, href);
+								IsInsert_MsgTo = CheckMailReceiver(newElem);
+								if (!IsInsert_MsgTo) {
+									MsgToGot.appendChild(newElem);
+									document.getElementById("MsgTo").value = "";
+									IsInsert_MsgTo = true;
+								}
+							},
+							focus : function(event, ui) {
+								return false;
+							},
+							close : function(event, ui) {
+								if (IsInsert_MsgTo)
+									document.getElementById("MsgTo").value = "";
+								IsInsert_MsgTo = false;
+							},
+							appendTo : "#AutoCompleteResults"
+						}).data("ui-autocomplete")._renderItem = function(ul, item) {
+					return $("<li style='border-bottom:1px solid #e8e8ef'>")
+							.data("ui-autocomplete-item", item)
+							.append(
+									"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+											+ item.value
+											+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+											+ item.dept
+											+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+											+ item.title
+											+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+											+ item.email + "</td></tr></table></a>")
+							.appendTo(ul);
+				};
+				var IsInsert_MsgCC = false;
+				$("#MsgCC").autocomplete(
+						{
+							source : function(request, response) {
+								$.ajax({
+									type : 'post',
+									url : "/ezEmail/autoCompleteList.do",
+									dataType : "json",
+									data : {
+										value : request.term
+									},
+									success : function(data) {
+										var susinList = data.susinList;
+										response($.map(susinList, function(ul, item) {
+											return {
+												label : ul.name + " " + ul.title + " "
+														+ ul.description + " "
+														+ "<" + ul.mail + ">",
+												value : ul.name,
+												email : ul.mail,
+												dept : ul.description,
+												title : ul.title,
+												type : ul.type,
+												href : ul.href
+											};
+										}));
+
+									}
+								});
+							},
+							minLength : 2,
+							selectFirst : true,
+							autoFocus : true,
+							select : function(event, ui) {
+								var addressType = "email";
+								var href = ""
+								if(ui.item.type == "G") {
+									addressType = "mailgroup";
+									href = ui.item.href;
+								}
+								
+								newElem = PrepareMailTag("1", addressType, ui.item.value,
+										ui.item.email, href);
+								IsInsert_MsgCC = CheckMailReceiver(newElem);
+								if (!IsInsert_MsgCC) {
+									MsgCCGot.appendChild(newElem);
+									document.getElementById("MsgCC").value = "";
+									IsInsert_MsgCC = true;
+								}
+							},
+							focus : function(event, ui) {
+								return false;
+							},
+							close : function(event, ui) {
+								if (IsInsert_MsgCC)
+									document.getElementById("MsgCC").value = "";
+								IsInsert_MsgCC = false;
+							},
+							appendTo : "#AutoCompleteResults"
+						}).data("ui-autocomplete")._renderItem = function(ul, item) {
+					return $("<li style='border-bottom:1px solid #e8e8ef'>")
+					.data("ui-autocomplete-item", item)
+					.append(
+							"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+									+ item.value
+									+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+									+ item.dept
+									+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+									+ item.title
+									+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+									+ item.email + "</td></tr></table></a>")
+					.appendTo(ul);
+				};
+				var IsInsert_MsgBCC = false;
+				$("#MsgBCC").autocomplete(
+						{
+							source : function(request, response) {
+								$.ajax({
+									type : 'post',
+									url : "/ezEmail/autoCompleteList.do",
+									dataType : "json",
+									data : {
+										value : request.term
+									},
+									success : function(data) {
+										var susinList = data.susinList;
+										response($.map(susinList, function(ul, item) {
+											return {
+												label : ul.name + " " + ul.title + " "
+														+ ul.description + " "
+														+ "<" + ul.mail + ">",
+												value : ul.name,
+												email : ul.mail,
+												dept : ul.description,
+												title : ul.title,
+												type : ul.type,
+												href : ul.href
+											};
+										}));
+
+									}
+								});
+							},
+							minLength : 2,
+							selectFirst : true,
+							autoFocus : true,
+							select : function(event, ui) {
+								var addressType = "email";
+								var href = ""
+								if(ui.item.type == "G") {
+									addressType = "mailgroup";
+									href = ui.item.href;
+								}
+								
+								newElem = PrepareMailTag("2", addressType, ui.item.value,
+										ui.item.email, href);
+								IsInsert_MsgBCC = CheckMailReceiver(newElem);
+								if (!IsInsert_MsgBCC) {
+									MsgBCCGot.appendChild(newElem);
+									document.getElementById("MsgBCC").value = "";
+									IsInsert_MsgBCC = true;
+								}
+							},
+							focus : function(event, ui) {
+								return false;
+							},
+							close : function(event, ui) {
+								if (IsInsert_MsgBCC)
+									document.getElementById("MsgBCC").value = "";
+								IsInsert_MsgBCC = false;
+							},
+							appendTo : "#AutoCompleteResults"
+						}).data("ui-autocomplete")._renderItem = function(ul, item) {
+					return $("<li style='border-bottom:1px solid #e8e8ef'>")
+					.data("ui-autocomplete-item", item)
+					.append(
+							"<a title='" + item.email + "'><table class='width100percent' width='100%' height='100%' style='display:inline-table;'><tr><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+									+ item.value
+									+ "</td><td style='width:20%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+									+ item.dept
+									+ "</td><td style='width:15%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+									+ item.title
+									+ "</td><td style='max-width:45%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden; display:inline-block;'>"
+									+ item.email + "</td></tr></table></a>")
+					.appendTo(ul);
+				};
+			})
+		    
 		</script>
         <c:if test="${isCrossBrowser != true}">
         <script language="javascript" for="EzHTTPTrans" event="AttachAddFile(filename)">  
@@ -851,7 +1139,7 @@
 		                <div style="font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe"/>
 		                <label for="toMe" style="margin-left:-3px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 		            </th>
-		            <td style="width:76%"><input type="text" name="MsgTo" id="MsgTo" onKeyPress="return on_keydown()" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="1" style="WIDTH:99%;ime-mode:active;"></td>
+		            <td style="width:76%"><input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="1" style="WIDTH:99%;ime-mode:active;"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
 		                <select id="SelectToAddress" style="WIDTH:100px" onchange="simple_select('TO',this)">
 		                </select>
@@ -865,7 +1153,7 @@
 		            <th rowspan="2"  ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('CC')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t594' /></span></a>
 		                <div onclick="MailBCCView(this);" style="cursor:pointer;" status="off" id="BccViewer"><img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span></div>
 		            </th>
-		            <td style="width:76%"><input type="text" name="MsgCC" id="MsgCC" onKeyPress="return on_keydown()" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="2" style="WIDTH:99%"></td>
+		            <td style="width:76%"><input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="2" style="WIDTH:99%"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
 		                <select id="SelectCcAddress" style="WIDTH:100px" onchange="simple_select('CC',this)">
 		                </select>
@@ -877,7 +1165,7 @@
 		          </tr>
 		          <tr id="MsgBCC_TR" style="display:none;">
 		            <th rowspan="2" ><a href="#" class="imgbtn"><span onClick="SelectReceiver_onClick('BCC')"><spring:message code='ezEmail.t562' /></span></a></th>
-		            <td style="width:76%"><input type="text" name="MsgBCC" id="MsgBCC"onKeyPress="return on_keydown()" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="3" style="WIDTH:99%"></td>
+		            <td style="width:76%"><input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="3" style="WIDTH:99%"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
 		                <select id="SelectBCCAddress" style="WIDTH:100px" onchange="simple_select('BCC',this)">
 		                </select>
@@ -974,6 +1262,7 @@
                 </c:if>                
 		  </table>
 		</div>
+		<div id="AutoCompleteResults"></div>
 		<div id="sendScreen" style="display:none;">
 		<div class="popup_noti">
 			<div class="popup_noti_title" style="height:10px;"><span class="tl"> </span>  <span class="tr"> </span></div>

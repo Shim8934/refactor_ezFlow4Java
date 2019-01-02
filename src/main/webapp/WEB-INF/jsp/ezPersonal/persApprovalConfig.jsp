@@ -196,7 +196,8 @@
 	<body>
 		<form id="Form1" method="post" >
 			<br />
-			<h2>▒&nbsp;<spring:message code='ezPersonal.t938'/></h2>			
+			<%-- <h2>▒&nbsp;<spring:message code='ezPersonal.t938'/></h2> --%>
+			<span class="txt">▒ <spring:message code='ezPersonal.t938' /></span>
 			<table class="content" style="width:450px;margin-top:10px">
 		    	<tr>
 		    		<th><spring:message code='ezPersonal.t513'/></th>

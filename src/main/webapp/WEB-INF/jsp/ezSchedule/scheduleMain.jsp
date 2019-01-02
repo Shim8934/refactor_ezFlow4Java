@@ -73,6 +73,7 @@
 		    var pStartday = "<c:out value='${startDay}'/>";
 		    var pUse_Editor = "<c:out value='${useEditor}'/>";
 		    var LunarUse = false;		    
+		    var primaryLang = "<c:out value='${userInfo.primary}'/>";		// 2018-12-26 김민성 - 일정관리 기념일 다국어 처리
 		    select_memorialDays(uselang);
 		    
 		    /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
@@ -310,46 +311,15 @@
 		                idSelect.options[lastindex] = newoption;
                     }
                 } */
-             	// 2018-06-08 구해안 공유 main에서 미사용으로 주석처리
-                /* if (sharexml != "") {	
-                    var sharexmldom = loadXMLString(sharexml);
-
-                    for (var i = 0; i < xmldom.getElementsByTagName("OWNERID").length; i++) {
-                        var lastindex = idSelect.length;
-                        var newoption = new Option("<spring:message code='ezSchedule.t205'/>" + " " + getNodeText(sharexmldom.getElementsByTagName("OWNERNAME")[i]), getNodeText(sharexmldom.getElementsByTagName("OWNERID")[i]));
-
-                        if (getNodeText(sharexmldom.getElementsByTagName("SHAREPERMISSION")[i]) == "R")
-                            newoption.onlyread = "1";
-
-                        idSelect.options[lastindex] = newoption;
-                    }
-                } */
-             	// 2018-06-08 구해안 그룹 main에서 미사용으로 주석처리
-		        /* if (idtype == "G") {
-		            idSelect.value = groupid;
-		        } else {
-		            if (idtype != "") {
-		                if (idtype == "6" || idtype == "8")
-		                    idSelect.value = "T";
-		                else
-		                    idSelect.value = idtype;
-		            }
-		        } */
+                //alert('windowonload_Complete2');
 		        
                 if (otherid != "") {
                     secretarySelect.value = otherid;
                 }
-		     	// 2018-06-08 구해안 비서 미사용으로 주석처리
-                /* var secretaryxmldom = loadXMLString(secretaryxml);
                 
-                for (var i = 0; i < secretaryxmldom.getElementsByTagName("USERID").length; i++) {
-                    var lastindex = secretarySelect.length;
-                    var newoption = new Option(getNodeText(secretaryxmldom.getElementsByTagName("USERNAME" + GetLangData("${userinfo.primary}"))[i]), getNodeText(secretaryxmldom.getElementsByTagName("USERID")[i]));
-                    secretarySelect.options[lastindex] = newoption;
-
-                    if (getNodeText(secretaryxmldom.getElementsByTagName("USERID")[i]) == otherid)
-                        secretarySelect.selectedIndex = lastindex;
-                }       */          
+                if (ret == "success" ) {
+	                parent.frames["left"].leftRefresh();
+                }
                 resize();
 		    }
 			
@@ -427,7 +397,7 @@
 		        } else {		        	
 		            var pheight = window.screen.availHeight;
 		            var pwidth = window.screen.availWidth;
-		            var pTop = (pheight - 660) / 2;
+		            var pTop = (pheight - 670) / 2;
 		            var pLeft = (pwidth - 790) / 2;
 		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
                                 "height = 670px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
@@ -911,9 +881,9 @@
 		    }
 
 		    function open_schedule(scheduleid) {
-		        var feature = GetOpenPosition(790, 660);
+		        var feature = GetOpenPosition(790, 670);
 		        window.open("/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleid), "",
-					"height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+					"height = 670px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 
 		    function ShowSchedule() {

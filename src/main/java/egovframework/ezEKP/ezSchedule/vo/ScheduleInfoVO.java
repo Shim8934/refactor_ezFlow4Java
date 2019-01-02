@@ -64,6 +64,16 @@ public class ScheduleInfoVO {
 	private String companyid;	
 
 	private int repeatCount;
+	
+	private String realEndDate;
+
+	public String getRealEndDate() {
+		return realEndDate;
+	}
+
+	public void setRealEndDate(String realEndDate) {
+		this.realEndDate = realEndDate;
+	}
 
 	/**
 	 * @return the scheduleId

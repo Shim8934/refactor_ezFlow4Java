@@ -124,18 +124,19 @@
 			} 
 			
 			if (disName1Chk && disName2Chk) {
-				var url = "/admin/ezEmail/setSignatureTemplate.do?displayname=" + encodeURIComponent(displayname) + "&displayname2=" + encodeURIComponent(displayname2) + "&content=" + encodeURIComponent(content);
+				var url = "/admin/ezEmail/setSignatureTemplate.do";
+				var params = "displayname=" + encodeURIComponent(displayname) + "&displayname2=" + encodeURIComponent(displayname2) + "&content=" + encodeURIComponent(content);
 				
 				if (type == "modify") {
-					url += "&signNo=" + signNo + "&type=" + type;
+				    params += "&signNo=" + signNo + "&type=" + type;
 				} else {
-					url += "&type=" + type;
+				    params += "&type=" + type;
 				}
 				
 				$.ajax({
 	        		type : "POST",
 	        		url : url,
-	        		datatype : 'json',
+	        		data : params,
 	        		error : function(data) {
 	        			alert("error");
 	        			console.log(data);
@@ -229,7 +230,7 @@
 	<body style="background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top">
 		<div id="close">
             <ul>
-                <li><span onclick="letterPopUpClose()"></span></li>
+                <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
 		<div id="leTop">

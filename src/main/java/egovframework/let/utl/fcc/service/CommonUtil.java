@@ -423,25 +423,25 @@ public class CommonUtil {
         boolean isCookie = false;     
         Cookie[] cookies = request.getCookies();
         
-        Map<String, Object> sessionParam = new HashMap<String, Object>();
         String serverName = request.getServerName();
+
         int tenantID;
-		try {
+
+        String useSession = null;
+        try {
 			tenantID = loginService.getTenantId(serverName);
 			
-			String confName = "useSession"; 
-    		sessionParam.put("confName", confName);
-			sessionParam.put("tenantID", tenantID);
+			useSession = ezCommonService.getTenantConfig("useSession", tenantID);
 		} catch (Exception e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		String useSession = ezCommonService.getUseSession(sessionParam);
+		
 		// 2018.10.22 이석화 변경 - 세션 0이면 세션 사용 안 함
-		if (useSession != null && !useSession.equals("0")) {
+		if (!useSession.equals("") && !useSession.equals("0")) {
 			/* session time을 위한 처리 주석 */	
 			/* 세션 사용 위해 주석 해제*/
 			HttpSession session = request.getSession(false);
+			
 			if (session != null) {
 		        if (cookies != null) {
 		            for (Cookie cookie : cookies) {
@@ -476,7 +476,6 @@ public class CommonUtil {
 	        	}
 	        } 
 		} else {
-			
 			if (cookies != null) {
 				for (Cookie cookie : cookies) {
 					if("loginCookie".equals(cookie.getName())){
@@ -1436,5 +1435,22 @@ public class CommonUtil {
 		}
 
 		return sb.toString();
+	}
+	
+	/**
+	 * returns a string containing size with a size unit(MB or KB or B) 
+	 */
+	public String getSizeWithUnit(double size) {		
+		String strSize;
+
+		if (size > 1024 * 1024) {
+			strSize = Math.floor(size / 1024 / 1024 * 10) / 10 + "MB";
+		} else if (size > 1024) {
+			strSize = (int)(size/1024) + "KB";
+		} else {
+			strSize = (int)size + "B";
+		}
+
+		return strSize;
 	}
 }

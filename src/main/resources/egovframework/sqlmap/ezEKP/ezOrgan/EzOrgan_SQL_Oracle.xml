@@ -76,7 +76,8 @@
 	
 	<resultMap id="userAddJobInfo" class="OrganUserVO">
 		<result property="title"								column="title" 							columnIndex="1"/>
-		<result property="displayName" 							column="displayName" 					columnIndex="2"/>		
+		<result property="displayName" 							column="displayName" 					columnIndex="2"/>	
+		<result property="company" 								column="company" 					columnIndex="3"/>			
 	</resultMap>
 	
 	<select id="EzOrganDAO.getPropertyValue_S1" parameterClass="Map" resultClass="String">
@@ -215,10 +216,27 @@
                				TBL_DEPTMASTER 
               			WHERE
               				EXTENSIONATTRIBUTE1 = #v_CN#
+        ]]>
+              			<isEmpty property="isOrgan">
+              				<![CDATA[
+		              			AND
+		              				EXTENSIONATTRIBUTE2 <> CN
+		              		]]>
+              			</isEmpty>
+              			
+              			<isEmpty property="displayTrashDept">
+              				<![CDATA[
+		              			AND
+		              				EXTENSIONATTRIBUTE1 NOT LIKE 'trash\_dept\_%' ESCAPE '\'
+		              			AND
+		              				CN NOT LIKE 'trash\_dept\_%' ESCAPE '\'
+		              		]]>
+              			</isEmpty>
+              			
               			AND
               				TENANT_ID = #v_TENANT_ID#	 ) A
         	ORDER BY A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
-		]]>
+		
 	</select> 
 
  	<select id="EzOrganDAO.getDeptSubTreeInfo" parameterClass="Map" resultMap="deptSubTreeInfo">
@@ -1194,7 +1212,17 @@
                 ELSE
                 	DISPLAYNAME2
                 END
-                	DISPLAYNAME  
+                	DISPLAYNAME  ,
+                	CASE
+               		#v_LANGDATA#
+                WHEN
+                	'1'
+                THEN
+                	EXTENSIONATTRIBUTE3
+                ELSE
+                	COMPNM2
+                END
+                	COMPANY   
         	FROM
         		TBL_ADDJOBMASTER A
         	JOIN
@@ -1292,33 +1320,74 @@
 	<select id="EzOrganDAO.getBirthUserList" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			SELECT
-				CN ,
-             	BIRTHTYPE ,
-             	BIRTH ,
-             	DISPLAYNAME ,
-             	DISPLAYNAME2 ,
-             	TITLE ,
-             	TITLE2 ,
-             	DESCRIPTION ,
-             	DESCRIPTION2 ,
-             	EXTENSIONATTRIBUTE2 
-      		FROM
-      			TBL_USERMASTER 
-      		WHERE
-      			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
-            AND 
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
-      		AND
-      			TENANT_ID = #v_TENANT_ID#
-      		AND
-      			NVL(BIRTH, ' ') <> ' '
+				*
+			FROM
+				(
+				SELECT
+					displayname$lang$ AS displayname, 
+					cn,
+					title$lang$ AS title,
+					birth,
+					birthtype
+				FROM
+					TBL_USERMASTER
+				WHERE
+					((birth LIKE CONCAT('%-', CONCAT(#month#, '-%')) AND birthtype = 'Y')
+				OR
+					(birth <> '' AND birthtype = 'N'))
+				AND
+					tenant_id = #tenantId#
+				AND
+					physicaldeliveryofficename = #companyId#
+				AND
+					cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
+					
+				UNION ALL
+				
+				SELECT
+					C.displayname$lang$ AS displayname, 
+					A.cn,
+					A.title$lang$ AS title,
+					C.birth,
+					C.birthtype AS birthtype
+				FROM
+					TBL_ADDJOBMASTER A
+				JOIN
+					TBL_DEPTMASTER B
+				ON
+					A.tenant_id = B.tenant_id
+				AND
+					A.deptid = B.cn
+				AND
+					B.extensionattribute2 = #companyId#
+				JOIN
+					TBL_USERMASTER C
+				ON
+					A.tenant_id = C.tenant_id
+				AND
+					A.cn = C.cn
+				WHERE
+					((C.birth LIKE CONCAT('%-', CONCAT(#month#, '-%')) AND C.birthtype = 'Y')
+				OR
+					(C.birth <> '' AND C.birthtype = 'N'))
+				AND
+					A.tenant_id = #tenantId#
+				AND
+					C.physicaldeliveryofficename <> #companyId#
+				AND
+					A.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
+				)
 			ORDER BY
-				substr(birth, 8, 10)
+				SUBSTR(birth, 8, 10)
 		]]>
 	</select>
 	
 	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
+			<isNotEqual property="class" compareValue="all">
+			SELECT * FROM(
+			</isNotEqual>
+
 			SELECT 
 				cn,
 				department as displayName,
@@ -1330,23 +1399,46 @@
             AND 
                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
             AND 
-            	DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+            	DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\' 
             AND 
-                A.TENANT_ID = #v_TENANT_ID#
-	    		 
-	      	UNION ALL
-	      		      	
-	      	SELECT 
-	      		A.cn,
-	      		deptid as displayName,
-	      		n'' as extensionAttribute15,
-	      		'user' as type
-	      	FROM	
-				TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
-            $strGyumjikForOracle$ 
-            AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
-            AND A.TENANT_ID = #v_TENANT_ID#
-				
+                A.TENANT_ID = #v_TENANT_ID# $strSQLCom$
+	    	<![CDATA[
+	           	AND
+	           		CN <> 'masteradmin'
+            ]]>
+	    	
+	    	<isNotEmpty property="companyId">
+		    	AND 
+		    		PHYSICALDELIVERYOFFICENAME IN 
+		    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId#)   
+	    	</isNotEmpty>	
+	    	
+	    	<isNotEqual property="noAddJob" compareValue="Y">  
+		      	UNION ALL
+		      		      	
+		      	SELECT 
+		      		A.cn,
+		      		deptid as displayName,
+		      		n'' as extensionAttribute15,
+		      		'user' as type
+		      	FROM	
+					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
+	            $strGyumjikForOracle$ 
+	            AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
+	            AND A.TENANT_ID = #v_TENANT_ID#
+				$strSQLAddjobCom$
+				<isNotEmpty property="companyId">
+			    	AND 
+			    		A.DEPTID IN 
+		    		(SELECT  CN     FROM    TBL_DEPTMASTER     WHERE      EXTENSIONATTRIBUTE2 = #companyId#) 
+		    	</isNotEmpty>
+		    	
+		    	<isNotEqual property="class" compareValue="all">
+            		) ORDER BY  displayname asc, TO_NUMBER(EXTENSIONATTRIBUTE15) ASC
+	            </isNotEqual>
+		    	
+    		</isNotEqual>
+	
 			<isEqual property="class" compareValue="all">
 				UNION ALL
 				
@@ -1360,7 +1452,14 @@
                 $strSQL$ 
                 AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
                 AND TENANT_ID = #v_TENANT_ID#
-			</isEqual>	      				
+                
+                <isNotEmpty property="companyId">
+	    		AND 
+	    			EXTENSIONATTRIBUTE2 = #companyId#
+		    	</isNotEmpty>
+			</isEqual>	  
+			
+			$strSize$    				
 	    </isEqual>
 	    <isEqual property="type" compareValue="G">
 	    	SELECT
@@ -1372,7 +1471,7 @@
 	    		TBL_DEPTMASTER 
             $strSQL$ 
             AND CN NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
-            AND TENANT_ID = #v_TENANT_ID#
+            AND TENANT_ID = #v_TENANT_ID# $strSQLCom$
 	    </isEqual>
 	</select>
 
@@ -1397,13 +1496,16 @@
 			             FROM  
 			             	TBL_USERMASTER A
                          $strSQL$
+                         $strSQLCom$
                          AND 
                              CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                                                
                          AND 
                          	DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
                          AND 
                              A.TENANT_ID = #v_TENANT_ID#
-			       
+			       		 AND
+		            		 CN <> 'masteradmin'
+		            		 
 					UNION ALL
 			            
 					SELECT
@@ -1420,6 +1522,7 @@
 						$strSQL$ 
 						AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' ESCAPE '\'
 						AND A.TENANT_ID = #v_TENANT_ID#
+						$strSQLAddjobCom$
 					)  A) B 
 					WHERE RNUM >= #startRow# AND RNUM < #endRow#
                ]]>

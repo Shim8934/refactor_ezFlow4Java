@@ -8,6 +8,9 @@
 			<c:when test="${type == 'EMP'}">
 				<title><spring:message code='ezPersonal.t299'/></title>
 			</c:when>
+			<c:when test="${type == 'selDeptMaster'}">
+				<title><spring:message code='ezEmail.jje17'/></title>
+			</c:when>
 			<c:otherwise>
 				<title><spring:message code='ezPersonal.t401'/></title>
 			</c:otherwise>
@@ -56,12 +59,29 @@
 		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "${userInfo.deptID}");
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
+		            else if (type == "selDeptMaster") {
+		                createNodeInsert(xmlpara, objNode, "DATA");
+		            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
+		            	
+		            	if ("${userInfo.rollInfo}".indexOf("c=1") != -1) {
+		            		createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
+		            	} else {
+			                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
+		            	}
+		            	
+		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+		            }
 		            else {
 		                createNodeInsert(xmlpara, objNode, "DATA");
 		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
 		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
+		            
+		            if (type == "EMP" || type == "selDeptMaster") {
+		            	createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
+		            }
+		            
 		            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 		            xmlHTTP.send(xmlpara);
 		
@@ -184,7 +204,7 @@
 		    }
 		    function search_click() {
 		    	if (specialChk(document.getElementById("keyword").value.trim())) {
-			    	alert("<spring:message code='ezResource.special' />");
+			    	alert("<spring:message code='ezResource.special' />");     
 			    	return;
 			    }
 		    	
@@ -253,8 +273,15 @@
 		        }
 		        else if (adCount == 1) {
 		            bSearch = true;
+		            
+		            var displayTrashDeptStr = "";
+		            if (type == "EMP" || type == "selDeptMaster") {
+		            	displayTrashDeptStr = "<DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT>";
+		            }
+		            
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+		            
+		            var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP>" + displayTrashDeptStr + "</DATA>";
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -278,8 +305,14 @@
 		
 		                if (rgParams["deptid"] != "") {
 		                    bSearch = true;
+		                    
+		                    var displayTrashDeptStr = "";
+				            if (type == "EMP" || type == "selDeptMaster") {
+				            	displayTrashDeptStr = "<DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT>";
+				            }
+		                    
 		                    g_xmlHTTP = createXMLHttpRequest();
-		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP>" + displayTrashDeptStr + "</DATA>";
 		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		                    g_xmlHTTP.send(strQuery);
@@ -290,8 +323,14 @@
 		    function deptsearch_click_Complete() {
 		        if (rgParams["deptid"] != "") {
 		            bSearch = true;
+		            
+		            var displayTrashDeptStr = "";
+		            if (type == "EMP" || type == "selDeptMaster") {
+		            	displayTrashDeptStr = "<DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT>";
+		            }
+		            
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP>" + displayTrashDeptStr + "</DATA>";
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -335,16 +374,28 @@
 		        var tr = listview.GetSelectedRows();
 		        var length = tr.length;
 		        if (length == 0) {
-		            alert("<spring:message code='ezPersonal.t65'/>");
+		        	if (type == "EMP") {
+		        		alert("<spring:message code='ezPersonal.bhs01'/>");
+		        	} else if (type == "selDeptMaster") {
+		        		alert("<spring:message code='ezOrgan.kyj05'/>");
+		        	} else {
+			            alert("<spring:message code='ezPersonal.t65'/>");
+		        	}
 		            return;
 		        }
 		        if (length > 1) {
-		            alert("<spring:message code='ezPersonal.t66'/>");
+		        	if (type == "EMP") {
+		        		alert("<spring:message code='ezPersonal.bhs02'/>");
+		        	} else if (type == "selDeptMaster") {
+		        		alert("<spring:message code='ezOrgan.kyj06'/>");
+		        	} else {
+			            alert("<spring:message code='ezPersonal.t66'/>");
+		        	}
 		            return;
 		        }
 		        var selRow = tr[0];
 		        if ("${userInfo.id}" == selRow.getAttribute("DATA2")) {
-					if ("${type}" != "EMP") {
+					if (type != "EMP" && type != "selDeptMaster") {
 						alert("<spring:message code='ezPersonal.t16'/>");
 						return;
 					}
@@ -356,16 +407,22 @@
 		            }
 		        }
 		        if (ReturnFunction != null) {
-		            if (type == "EMP")
+		            if (type == "EMP") {
 		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.cells[1].textContent + ":" + selRow.cells[3].textContent + ":" + selRow.getAttribute("DATA3"));
-		            else
+		            } else if (type == "selDeptMaster") {
+		                ReturnFunction(selRow.getAttribute("DATA2"));
+		            } else {
 		                ReturnFunction(selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3"));
+		            }
 		        }
 		        else {
-		            if (type == "EMP")
+		            if (type == "EMP") {
 		                window.returnValue = selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.cells[1].textContent + ":" + selRow.cells[3].textContent + ":" + selRow.getAttribute("DATA3");
-		            else
+		            } else if (type == "selDeptMaster") {
+		                window.returnValue = selRow.getAttribute("DATA2");
+		            } else {
 		                window.returnValue = selRow.getAttribute("DATA2") + ":" + selRow.cells[2].textContent + ":" + selRow.getAttribute("DATA3");
+		            }
 		        }
 		        window.close();
 		    }
@@ -404,6 +461,9 @@
 		<c:choose>
 			<c:when test="${type == 'EMP'}">
 				<h1> <spring:message code='ezPersonal.t299'/></h1>
+			</c:when>
+			<c:when test="${type == 'selDeptMaster'}">
+				<h1> <spring:message code='ezEmail.jje17'/></h1>
 			</c:when>
 			<c:otherwise>
 				<h1>

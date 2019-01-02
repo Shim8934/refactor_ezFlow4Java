@@ -237,7 +237,9 @@
 		                    
 		                    document.getElementById("PreviewRayerH").style.width = pMailPreWidthH + "px";
 		                    document.getElementById("PreContent_RayerH").style.width = pMailPreWidthH - 5 + "px";
-		                    document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+		                    if(document.getElementById("PreH_subject") != null) {
+		    		            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+		    	            }
 		                    
 		                    /* 좌우 리사이징 시 round로 인해 비율의 합이 100%가 되지 않아
 		                       오른쪽 끝에 여백이 발생하여 제거함
@@ -989,6 +991,8 @@
 						success : function() {
 							alert("<spring:message code='ezJournal.t138'/>");
 							setJournalList();
+							$("#Preview_ContentH").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
+							$("#Preview_ContentW").html("<span style='margin-top:50px;height:10px;display:inline-block;'><spring:message code='ezJournal.t91' /></span>");
 						},
 						error : function() {
 							alert("<spring:message code='ezJournal.t149'/>");
@@ -1329,7 +1333,9 @@
 	            document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
 // 	            document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
 	            document.getElementById("Preview_ContentH").style.height = (CurrentHeight - 55) + "px";
-	            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+	            if(document.getElementById("PreH_subject") != null) {
+		            document.getElementById("PreH_subject").style.width = (pMailPreWidthH - 185) + "px";
+	            }
 	            pMailListDiv_H = (pMailListWidthH / CurrenWidth) * 100;
 	            pMailPreVDiv_H = (pMailPreWidthH / CurrenWidth) * 100;
 

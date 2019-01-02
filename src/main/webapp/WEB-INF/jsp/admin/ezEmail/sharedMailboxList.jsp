@@ -278,6 +278,47 @@
 		            }
 		        }
 		    }
+		    
+			var inputpassword_dialogArguments = new Array();
+		    
+			function mod_password() {
+				var pUserList = new ListView();
+		        pUserList.LoadFromID("sharedMailbox");
+		        var selnode = pUserList.GetSelectedRows();
+		        
+		        if (selnode == "") {
+		            alert("<spring:message code='ezEmail.sharedMailbox20' />");
+		            return;
+		        }
+		        
+		        inputpassword_dialogArguments[0] = strLangSharedMailbox02;
+		        inputpassword_dialogArguments[1] = mod_password_Complete;
+		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));	
+		        try { OpenWin.focus(); } catch (e) { }
+			}
+			
+		    function mod_password_Complete(rtnValue) {
+		        if (typeof (rtnValue) != "undefined") {
+		        	var pUserList = new ListView();
+			        pUserList.LoadFromID("sharedMailbox");
+			        var selnode = pUserList.GetSelectedRows();
+			        var shareId = selnode[0].getAttribute("DATA1");
+			        
+		            $.ajax({
+		            	type : "POST",
+		            	dataType : "xml",
+		            	url : "/admin/ezOrgan/changePassword.do",
+		            	async : false,
+		            	data : {password : rtnValue, cn : shareId},
+		            	success : function(result) {
+		            		alert(strLangSharedMailbox03);
+		            	},
+		            	error : function() {
+		            		alert("<spring:message code='ezOrgan.t41' />");
+		            	}
+		            });
+	            }
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -305,6 +346,7 @@
 				<li><span onClick="addSharedMailbox()"><spring:message code='ezEmail.sharedMailbox03' /></span></li>
 		    	<li><span onClick="modSharedMailbox()"><spring:message code='ezEmail.sharedMailbox04' /></span></li>
 		      	<li><span onClick="delSharedMailbox()"><spring:message code='ezEmail.sharedMailbox05' /></span></li>
+		      	<li><span onClick="mod_password()"><spring:message code='ezOrgan.t231' /></span></li>
 		    </ul>
 		</div>
 		<script type="text/javascript">
@@ -318,7 +360,7 @@
 					</div>
 				</td>
 				<td style="vertical-align:top; border-bottom:0;">
-					<div style="margin-left:5px; width:300px; height:380px;">
+					<div style="margin-left:5px; width:500px; height:380px;">
 						<div id="sharedMailboxUser" style="width:100%; height:100%; padding:10px; overflow-y:auto; border-color:#dbdbda; border-width:1px; border-style:solid;"></div>
 					</div>
 				</td>

@@ -29,7 +29,6 @@ body {
 table {
     font-size: inherit;
     font-family: inherit;
-    border-collapse: collapse;
 }
 
 td,th {
@@ -92,4 +91,11 @@ th[kk_selected_td] {
     background-image: url(../images/selected.png) !important;
     background-color: transparent !important;
     background-repeat: repeat !important;
+}
+
+td[kk_selected_td] td,
+td[kk_selected_td] th,
+th[kk_selected_td] td,
+th[kk_selected_td] th{
+    background: inherit !important;
 }

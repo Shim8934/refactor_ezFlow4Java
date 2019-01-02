@@ -59,7 +59,11 @@
 	            else if (wPosition == 6)
 	                document.getElementById("selectPos").selectedIndex = 2;
 	        }
-			
+				        
+	        window.onresize = function () {
+        		document.getElementById("addPopEditor").style.height = document.documentElement.clientHeight - 293 + "PX";
+		    }
+	        
 		   $(function () {
 		        $("#Sdatepicker").datepicker({
 		            changeMonth: true,
@@ -353,7 +357,7 @@
   					</tr> 
   					<tr> 
     					<th><spring:message code = 'ezPersonal.t155' /></th> 
-   						<td style="padding:3px; height:325px">
+   						<td id="addPopEditor" style="padding:3px; height:405px">
     						<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0px; height:100%; width:100%; overflow:auto;border:none; margin-bottom:-3px;"></iframe>
     					</td> 
   					</tr>

@@ -5,7 +5,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 		<section  class="body_bg1">
 			<article class="portletbox birthbox ">
 				<div class="title">
@@ -39,7 +39,6 @@
     		</article>
 		</section>
 		
-		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 			var month = "${curMon}";
@@ -49,7 +48,6 @@
 	    	var EndCnt = 10;
 	    	var timer;
 	    	var xmlhttp;
-	    	window.onload = window_onload_NewBirth;
 	    	var strLang1_NewBirth = "<spring:message code='main.t00026'/>";
 	    	document.onselectstart = function () { return false; };
 	    	
@@ -77,72 +75,71 @@
 	    	
 	    	function getbirthUserList() {
 	    		window.clearTimeout(timer);
-	        	$.ajax({
-    	        	type : "POST",
-    	        	dataType : "text",
-    	        	url : "/ezPersonal/mainBirthUserList.do",
-    	        	data : {
-    	        		mon   : month, 
-    	        	},
-    	        	success : function(xml){		        		
-    	        		getbirthUserList_after(loadXMLString(xml));
-    	        	},
-    	        	error : function(error){
-    	        		console.log(error);	
-    	        	}
-	    	    });
+	    		
+	    		var request = new XMLHttpRequest();
+				request.open('POST', '/ezPersonal/mainBirthUserList.do', true);
+				request.setRequestHeader('content-type', 'application/json');
+				
+				request.onload = function() {
+					getbirthUserList_after(JSON.parse(request.responseText));
+				}
+				
+				var data = JSON.stringify({
+					month : month
+				});
+				
+				request.send(data);
 	    	}
 	    	
-	    	var userPrimary = "${userInfo.primary}";
+	    	var userPrimary = "${primary}";
 	    	
-	    	function getbirthUserList_after(xml) {
-		        if (xml == null) return;
+	    	function getbirthUserList_after(result) {
+		        if (result == null) {
+		        	return;
+		        }
 
-		        if (document.getElementById("userlist").innerHTML != "") document.getElementById("userlist").innerHTML = "";
-
-	    	    if (SelectSingleNodeNew(xml, "DATA/ROW") != null) {
-	        	    totalCnt = GetChildNodes(SelectSingleNodeNew(xml, "DATA")).length;
-	            	totalPage = Math.ceil(totalCnt / EndCnt);
-
-	            	document.getElementById("birthcont").style.display = "";
+		        if (document.getElementById("userlist").innerHTML != "") {
+		        	document.getElementById("userlist").innerHTML = "";
+		        }
+		        
+		        birthList = result.list;
+		        
+		        if (birthList.length != 0) {
+			        totalCnt = birthList.length;
+			        totalPage = Math.ceil(totalCnt / EndCnt);
+			        
+		        	document.getElementById("birthcont").style.display = "";
 	            	document.getElementById("nodata_NewBirth").style.display = "none";
-	            	
-	            	for (var i = 0; i < totalCnt; i++) {
-		                var cn = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "CN");
-	                    
-		                var birthType = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "BIRTHTYPE");
-	                    
-	    	            var birthDate = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "BIRTH");
-	                    
-	        	        var userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME");
+		        }
+		        
+		        birthList.forEach(function (item, index) {
+		        	var cn = item.cn;
+	                var birthType = item.birthType;
+    	            var birthDate = item.birth.substr(5, 10);
+        	        var userName = item.displayName;
+                	var userTitle = item.title;
+                    
+	                var _li = document.createElement("li");
+	                _li.style.display = "none";
+    	            _li.style.cursor = "pointer";
+        	        _li.onclick = new Function("OpenUserInfo('" + cn + "');");
+        	        
+            	    if (CrossYN())
+                	    _li.textContent = "[" + birthDate + "]" + userName + " " + userTitle;
+                	else
+                    	_li.innerText = "[" + birthDate + "]" + userName + " " + userTitle;
+            	    
+                	document.getElementById("userlist").appendChild(_li);
 
-	            	    if (userPrimary != "1")
-	                	    userName = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "DISPLAYNAME2");
-
-	                	var userTitle = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "TITLE");
-	                	
-	                	if (userPrimary != "1")
-		                    userTitle = SelectSingleNodeValue(SelectNodes(xml, "DATA/ROW")[i], "TITLE2");
-	                    
-		                var _li = document.createElement("li");
-		                _li.style.display = "none";
-	    	            _li.style.cursor = "pointer";
-	        	        _li.onclick = new Function("OpenUserInfo('" + cn + "');");
-	        	        
-	            	    if (CrossYN())
-	                	    _li.textContent = "[" + birthDate + "]" + userName + " " + userTitle;
-	                	else
-	                    	_li.innerText = "[" + birthDate + "]" + userName + " " + userTitle;
-	            	    
-	                	document.getElementById("userlist").appendChild(_li);
-
-	                	if (i >= (curPage * 10) && i < (curPage + 1) * 10) {
-		                    document.getElementById('userlist').getElementsByTagName('li')[i].style.display = 'block';
-	                	} else {
-	                    	document.getElementById('userlist').getElementsByTagName('li')[i].style.display = 'none';
-	                	}
-		            }
-		            curPage++;
+                	if (index >= (curPage * 10) && index < (curPage + 1) * 10) {
+	                    document.getElementById('userlist').getElementsByTagName('li')[index].style.display = 'block';
+                	} else {
+                    	document.getElementById('userlist').getElementsByTagName('li')[index].style.display = 'none';
+                	}
+		        });
+		        
+		        if (birthList.length != 0) {
+					curPage++;
 		            
 	    	        if (curPage >= totalPage) {
 	        	        curPage = 0;
@@ -151,10 +148,10 @@
 	            	if (totalCnt > EndCnt) {
 		                timer = window.setInterval("intervalList()", 5000);
 		            }
-	    	    } else {
-	            	document.getElementById("birthcont").style.display = "none";
+		        } else {
+		        	document.getElementById("birthcont").style.display = "none";
 	            	document.getElementById("nodata_NewBirth").style.display = "";
-	        	}
+		        }
 		    }
 
 		    function intervalList() {
@@ -209,8 +206,8 @@
 	        	
 	        	window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 	    	}
-
-	    	//window_onload_NewBirth();
+	    	
+	    	window_onload_NewBirth();
 		</script>
 	</head>
 </html>

@@ -592,6 +592,11 @@
 	            	getDocListjson(1);
 	            } else {
 	            	if(retVal[0] != "" && retVal[1] !="") {
+	            		totalPage = 1;
+	            		CurPage= 1;
+ 	            		makePageSelPage();
+						$("#listInfo").html(" &nbsp;[<spring:message code='main.t252'/><span style='color:#017BEC;'> "
+							+ '0' + " </span><spring:message code='ezSystem.kyj2'/>]")
 	            		alert("<spring:message code='ezApprovalG.t1788'/>");
 	            	}
 	            	$('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
@@ -787,9 +792,9 @@
 	        });
 		    
 		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 205;
-	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-	        		height = height - 30;
+	        	var height = document.documentElement.clientHeight - 235;
+	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") == -1) {
+	        		height = height - 20;
 	        	}
 	        	document.getElementById("contentlist").style.height = height + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";

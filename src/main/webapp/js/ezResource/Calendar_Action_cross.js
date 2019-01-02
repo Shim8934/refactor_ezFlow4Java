@@ -292,6 +292,16 @@ function tableListControl_Week()
         //맨처음 테이블을 시작하는 td에 넣어줄 텍스트
         var _mtable = document.createElement("TABLE");
         _mtable.setAttribute("class", "table_layout");
+        var _mtable2 = document.createElement("TABLE");
+        _mtable2.setAttribute("class", "table_layout");
+        var _mdiv = document.createElement("div"); 
+        _mdiv.setAttribute("id", "res_Div");
+        _mdiv.setAttribute("style", "overflow-y:auto;")
+        _mdiv.style.height = (document.getElementById("mainlistlayout").clientHeight - 75) + "px";
+        var _mthead = document.createElement("thead");
+        _mthead.setAttribute("id", "res_HEAD");
+        var _mtbody = document.createElement("tbody");
+        _mtbody.setAttribute("id", "res_BODY")
         var _mtr = document.createElement("TR");
         var _mth = document.createElement("th");
         var _mtd = document.createElement("TD");
@@ -364,11 +374,17 @@ function tableListControl_Week()
                             isholiday = true;
                             holidayName = memorial[k].name;
                         }
+                        else {
+                        	holidayName = memorial[k].name;
+                        }
                     }
                     for (var k = 0; k < yearmemorial.length; k++) {
                         if (yearmemorial[k].holiday) {
                             isholiday = true;
                             holidayName2 = yearmemorial[k].name;
+                        }
+                        else {
+                        	holidayName2 = yearmemorial[k].name;
                         }
                     }
                     if (isholiday) {
@@ -383,7 +399,16 @@ function tableListControl_Week()
                     	_mth.style.color = "#ee1c25";
                     }
                     else {
-                    	_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                    	// 2018-12-21 김민성 - 휴일아닌 기념일 표시
+                    	if(holidayName != "") {
+                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName + "]";
+                    	}
+                    	else if(holidayName2 != "") {
+                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName2 + "]";
+                    	}
+                    	else {
+                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                    	}
                     }
                 }                
                 //end
@@ -451,11 +476,17 @@ function tableListControl_Week()
                             isholiday = true;
                             holidayName = memorial[k].name;
                         }
+                        else {
+                        	holidayName = memorial[k].name;
+                        }
                     }
                     for (var k = 0; k < yearmemorial.length; k++) {
                         if (yearmemorial[k].holiday) {
                             isholiday = true;
                             holidayName2 = yearmemorial[k].name;
+                        }
+                        else {
+                        	holidayName2 = yearmemorial[k].name;
                         }
                     }
                     if (isholiday) {
@@ -470,7 +501,13 @@ function tableListControl_Week()
                     	_mth.style.color = "#ee1c25";
                     }
                     else {
-                    	_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                    	// 2018-12-21 김민성 - 휴일아닌 기념일 표시
+                    	if(holidayName != "") {
+                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName + "]";
+                    	}
+                    	else {
+                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                    	}
                     }
                 }                
                 //end
@@ -492,7 +529,8 @@ function tableListControl_Week()
         //배열에 저장된 값을 출력할때 쓸 변수
         b = 0;
         //_mtr.appendChild(_mth);
-        _mtable.appendChild(_mtr);
+        _mthead.appendChild(_mtr);
+        _mtable.appendChild(_mthead);
         var totalreult;
 
         //하위 자원의 갯수만큼
@@ -511,6 +549,9 @@ function tableListControl_Week()
             _mtd.onselectstart = function () { return false; };
             _mtd.setAttribute("ondblclick", "newSchedule_onclick(event)");
             //_mtd.ondblclick = new Function("newSchedule_onclick(event);");
+            if(k == 0) {
+            	_mtd.style.borderTop = "0px";
+            }
             if(title_name[k].split("/")[2] == "1")
                 _mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
             else
@@ -523,7 +564,7 @@ function tableListControl_Week()
                     if (i == 7) y = 0;
 
                     var _mtd2 = document.createElement("TD");
-                    _mtd2.style.width = "14.2%";
+                    //_mtd2.style.width = "14.2%";
                     if(weekdatename[i] == today) {								// 날짜가 오늘이면
                     	_mtd2.setAttribute("class", "weektd_02 today");
                     }
@@ -532,6 +573,9 @@ function tableListControl_Week()
                     }
                     _mtd2.verticalAlign = "top";
                     _mtd2.setAttribute("id", "Week_" + title_name[k].split("/")[0] + "_" + y);
+                    if(k == 0) {
+                    	_mtd2.style.borderTop = "0px";
+                    }
                     _mtr2.appendChild(_mtd2);
                     b++;
                 }
@@ -541,7 +585,7 @@ function tableListControl_Week()
                     if (i == 7) y = 0;
 
                     var _mtd2 = document.createElement("TD");
-                    _mtd2.style.width = "14.2%";
+                   // _mtd2.style.width = "14.2%";
                     if(weekdatename[i] == today) { 							// 날짜가 오늘이면
                     	_mtd2.setAttribute("class", "weektd_02 today");
                     }
@@ -550,15 +594,20 @@ function tableListControl_Week()
                     }
                     _mtd2.verticalAlign = "top";
                     _mtd2.setAttribute("id", "Week_" + title_name[k].split("/")[0] + "_" + y);
+                    if(k == 0) {
+                    	_mtd2.style.borderTop = "0px";
+                    }
                     _mtr2.appendChild(_mtd2);
                     b++;
                 }
             }
 
-            _mtable.appendChild(_mtr2);
+            _mtbody.appendChild(_mtr2);
             b = 0;
 
         }
+        _mtable2.appendChild(_mtbody);
+        _mdiv.appendChild(_mtable2);
 
         document.getElementById("tdCalViewCell").style.display = "none";
         document.getElementById("TD_CaseOfMonthView").style.display = "none";
@@ -575,9 +624,12 @@ function tableListControl_Week()
         else {
 
             if (document.getElementById("tdDateCalendarViewer").childNodes.length > 0)
-                document.getElementById("tdDateCalendarViewer").removeChild(document.getElementById("tdDateCalendarViewer").childNodes.item(0))
+            	for(var n = 0; n <= document.getElementById("tdDateCalendarViewer").childNodes.length; n++) {
+            		document.getElementById("tdDateCalendarViewer").removeChild(document.getElementById("tdDateCalendarViewer").childNodes.item(0));
+            	}
 
             document.getElementById("tdDateCalendarViewer").appendChild(_mtable);
+            document.getElementById("tdDateCalendarViewer").appendChild(_mdiv);
         }
 
         for (var j = 0; j < xmldom.getElementsByTagName("appointment").length; j++) {
@@ -715,6 +767,7 @@ function tableListControl_Week()
         }
         Mod = "WEEK";
         resource_text = "";
+        scroll();		// 2018-12-19 주보기 스크롤 처리
     }
     
 }
@@ -1009,8 +1062,11 @@ function tableListControl_today() {
         }
         else {
         	
-            if (document.getElementById("tdDateCalendarViewer").childNodes.length > 0)
-                document.getElementById("tdDateCalendarViewer").removeChild(document.getElementById("tdDateCalendarViewer").childNodes.item(0))
+            if (document.getElementById("tdDateCalendarViewer").childNodes.length > 0) {
+            	for(var n = 0; n <= document.getElementById("tdDateCalendarViewer").childNodes.length; n++) {
+            		document.getElementById("tdDateCalendarViewer").removeChild(document.getElementById("tdDateCalendarViewer").childNodes.item(0));
+            	}
+            }
 
             document.getElementById("tdDateCalendarViewer").appendChild(_Table);
         }
@@ -1575,7 +1631,7 @@ function showTooltip_MouseOver(obj, e) {
     var sSpan = document.createElement("SPAN");
     //sSpan.className = "width_16";
     sTd.appendChild(sSpan);
-    sTd.innerHTML += "<span>[" + strLang571 + "]</span><br /><span style='margin-top:2px;display:block;'>" + GetAttribute(obj,"owner_nm") +"</span>";
+    sTd.innerHTML += "<span>[" + strLang571 + "]</span><br /><span style='margin-top:2px;display:block;'>" + GetAttribute(obj,"owner_nm") + "(" + GetAttribute(obj,"dept_name") + ")" +"</span>";
     sTr.appendChild(sTd);
     sTable.appendChild(sTr);
     tTd.appendChild(sTable);
@@ -1701,4 +1757,26 @@ function ChangeTime(h, n) {
     }
 
     return reVal;
+}
+
+// 2018-12-19 김민성 - 자원관리 주보기 스크롤 처리
+function scroll() {
+	var BoardList_BODYHeight = document.getElementById("res_BODY").clientHeight;
+	var BoardListDivHeight = document.getElementById("res_Div").clientHeight;
+	
+	 if (BoardList_BODYHeight < BoardListDivHeight) {
+		if ($("#res_HEAD tr th#forScroll").length > 0) {
+			$("#res_HEAD tr th#forScroll").remove();
+		}
+	} else {
+		if ($("#res_HEAD tr th#forScroll").length < 1) {
+			
+			$("#res_HEAD tr").append("<th></th>");
+			
+				var lastTh = $("#res_HEAD tr th").last();
+				lastTh.attr("id", "forScroll");
+				lastTh.css("width", "16px");
+				//lastTh.css("border-bottom-width", "0px");
+		}
+	}
 }

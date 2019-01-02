@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezSystem.web;
 
 import java.net.InetAddress;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -12,10 +13,8 @@ import java.util.Properties;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -23,11 +22,17 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,7 +44,6 @@ import org.springframework.web.servlet.HandlerMapping;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
-import egovframework.ezEKP.ezEmail.vo.MailLetterBoxVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
@@ -47,7 +51,9 @@ import egovframework.ezEKP.ezSystem.util.EzSystemUtil;
 import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
 import egovframework.ezEKP.ezSystem.vo.ConnectionInfoVO;
 import egovframework.ezEKP.ezSystem.vo.IPBandVO;
+import egovframework.ezEKP.ezSystem.vo.ModuleSizeVO;
 import egovframework.ezEKP.ezSystem.vo.SysParamVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
@@ -78,6 +84,10 @@ public class EzSystemAdminController {
 	
 	@Resource
 	private EgovMessageSource egovMessageSource;
+	
+	/** LoginService */
+	@Resource(name = "loginService")
+    private LoginService loginService;
     
 	@RequestMapping(value="/admin/ezSystem/systemMain.do")
 	public String systemMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
@@ -110,9 +120,16 @@ public class EzSystemAdminController {
 			useIPAccessMenu = "NO";
 		}
 		
-		logger.debug("useIPAccessMenu=" + useIPAccessMenu);
+		String useModuleUsage = ezCommonService.getTenantConfig("useModuleUsage", userInfo.getTenantId());
+		if(userInfo == null || useModuleUsage == null || useModuleUsage.equals("")) {
+			useModuleUsage = "NO";
+		}
 		
 		model.addAttribute("useIPAccessMenu", useIPAccessMenu);
+		model.addAttribute("useModuleUsage", useModuleUsage);
+		
+		logger.debug("useIPAccessMenu=" + useIPAccessMenu);
+		
 		return "/ezSystem/systemLeftMenu";
 	}
 	
@@ -191,6 +208,7 @@ public class EzSystemAdminController {
 	@RequestMapping(value="/admin/ezSystem/updateSysParam.do", produces="application/json;charset=utf-8")
 	@ResponseBody
 	public String updateSysParam(@CookieValue("loginCookie") String loginCookie, Model model, @RequestBody List<Map<String, String>> list) throws Exception {
+		logger.debug("started updateSysParam controller.");
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
@@ -203,6 +221,7 @@ public class EzSystemAdminController {
 			return "{\"msg\":\"fail\"}";			
 		}
 		
+		logger.debug("ended updateSysParam controller.");
 		return "{\"msg\":\"success\"}";		
 	}
 	
@@ -241,8 +260,15 @@ public class EzSystemAdminController {
 				resultList.add(j++, vo);
 			}
 		}
+		
+		String isMasterAdmin = "";
+		if (userInfo.getRollInfo().indexOf("c=1") != -1) { // 전체관리자
+			isMasterAdmin = "y";
+		}
+		
 		model.addAttribute("list", resultList);
 		model.addAttribute("companyId", companyId);
+		model.addAttribute("isMasterAdmin", isMasterAdmin);
 		
 		logger.debug("ended systemLoginHistMain controller.");
 		
@@ -281,12 +307,17 @@ public class EzSystemAdminController {
 			startRow = -1;
 		}
 		
-		//String companyId = req.getParameter("companyId"); // 선택된 회사
+		/*
+		 * 2018.11.21 김수아
+		 * (전체관리자) 회사선택 후 선택한 회사의 로그인 히스토리가 나오도록 변경 
+		 */
+		String companyId = req.getParameter("companyId"); // 선택된 회사
+		
 		/*
 		 * 2017.07.26 강민석
 		 * 로그인 히스토리에는 자신의 회사만 나오도록 수정
 		 * */
-		String companyId = userInfo.getCompanyID();
+		//String companyId = userInfo.getCompanyID();
 		logger.debug("companyId : " + companyId);
 
 		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
@@ -890,22 +921,117 @@ public class EzSystemAdminController {
 	}
 	
 	@RequestMapping(value="/ezSystem/systemAddAccessList.do")
-	public String systemAddAccessList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String systemAddAccessList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("systemAddAccessList started");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		String topID = userInfo.getCompanyID();
+		String companyId = request.getParameter("companyId");
+		String adminChk = "false";
 		
 		if (userInfo.getRollInfo().indexOf("c=1") != -1) {
-			topID = "Top";
+			adminChk = "true";
+			
+			if (!topID.equals(companyId)){
+				topID = companyId;
+			} else {
+				topID = "Top";
+			}
 		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("topID", topID);
+		model.addAttribute("adminChk", adminChk);
+		
 		logger.debug("systemAddAccessList ended");
 		return "/ezSystem/systemAddAccessList";
 	}
 	
+	// 세션 있는지 확인 후 없으면 추가
+	// 2018-11-16일 추가
+	@RequestMapping(value="/admin/ezSystem/checkUseSession.do", produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String checkUseSession(Locale locale, @ModelAttribute("loginVO") LoginVO loginVO, HttpSession session, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
+		logger.debug("checkUseSession started");
+
+		String serverName = request.getServerName();
+        
+		int tenantId = loginService.getTenantId(serverName);
+		
+		String useSession = ezCommonService.getTenantConfig("useSession", tenantId);
+		
+		// tenant_config 테이블에 useSession row 없으면 추가
+		if (useSession.equals("")) {
+			
+			Map<String, Object> sessionParam = new HashMap<String, Object>();
+			
+			sessionParam.put("tenantID", tenantId);
+			sessionParam.put("confName", "useSession");
+    		sessionParam.put("property_value", "0");
+			sessionParam.put("description", "세션 유지 시간. 단, 0이면 세션 사용 안함");
+			sessionParam.put("config_name", "세션 유지 시간");
+			sessionParam.put("config_type", "일반");
+			
+			String regdate = commonUtil.getTodayUTCTime("");
+			
+			sessionParam.put("regdate", regdate);
+			
+			ezCommonService.insertUseSession(sessionParam);
+    	}
+		
+		logger.debug("checkUseSession ended");
+		return useSession;
+	}
 	
+	@RequestMapping(value = "/admin/ezSystem/systemModuleMonitor.do")
+	public String systemModuleMonitor(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		
+		model.addAttribute("packageType", packageType);
+		
+		return "/ezSystem/systemModuleMonitor";
+	}
+	
+	@RequestMapping(value = "/admin/ezSystem/getModuleMonitor.do")
+	public ResponseEntity<ModuleSizeVO> getModuleMonitor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("systemModuleMonitorOMS started");
+		
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+		
+		String useModuleUsage = ezCommonService.getTenantConfig("useModuleUsage", userInfo.getTenantId());
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		
+		ModuleSizeVO moduleSizeVO = null;
+		
+		if(userInfo != null) {
+			if(useModuleUsage != null && useModuleUsage.equalsIgnoreCase("yes")) {
+				List<String> moduleNames = null;
+				
+				switch (packageType) {
+				case CommonUtil.PT_STANDARD:
+					moduleNames = Arrays.asList("mail", "schedule", "board", "approval", "community", "resource");
+					break;
+				case CommonUtil.PT_BASIC:
+					moduleNames = Arrays.asList("mail", "schedule", "board");
+					break;
+				case CommonUtil.PT_MAIL:
+					moduleNames = Arrays.asList("mail");
+					break;
+				}
+				
+				String realPath = commonUtil.getRealPath(request);
+				
+				moduleSizeVO = ezSystemAdminService.getModuleUsage(moduleNames, realPath, userInfo);
+			}
+		}
+		
+		logger.debug("systemModuleMonitorOMS ended");
+		
+		return ResponseEntity.ok()
+				.contentType(new MediaType("application", "json", StandardCharsets.UTF_8))
+				.body(moduleSizeVO);
+	}
 
 }

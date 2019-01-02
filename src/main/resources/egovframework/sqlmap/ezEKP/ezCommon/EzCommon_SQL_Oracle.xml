@@ -440,16 +440,23 @@
 		 )
 	</statement>
 	
-	<select id="EzCommonDAO.getUseSession" parameterClass="Map" resultClass="String">
-		SELECT 
-			PROPERTY_VALUE value
-		FROM 
-			TBL_TENANT_CONFIG
-		WHERE 
-			TENANT_ID=#tenantID#
-		AND
-			PROPERTY_NAME = #confName#
+	<select id="EzCommonDAO.checkUserMasterPasswordUpdateDT" resultClass="String">
+		<![CDATA[
+			SELECT 
+				PASSWORD_UPDATEDT
+			FROM 
+				TBL_USERMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
 	</select>
+	
+	<statement id="EzCommonDAO.addUserMasterPasswordUpdateDT"> 
+		ALTER TABLE 
+			TBL_USERMASTER
+		ADD 
+			PASSWORD_UPDATEDT DATE DEFAULT NULL
+	</statement>
 	
 	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
 		INSERT INTO tbl_tenant_config
@@ -474,5 +481,28 @@
 			TBL_ADDJOBMASTER
 		ADD 
 			JOBID VARCHAR2(100) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderToken">
+		<![CDATA[
+			SELECT 
+			    userId
+			FROM 
+			    TBL_webfolder_token
+			where 
+			    ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblWebfolderToken"> 
+		CREATE TABLE tbl_webfolder_token (
+		  "USERID" varchar2(32) NOT NULL,
+		  "LTOKEN" varchar2(128) DEFAULT NULL,
+		  "REGDATA" date DEFAULT NULL,
+		  "COMPID" varchar2(32) DEFAULT NULL,
+		  "TENANTID" varchar2(45) NOT NULL,
+		  "DEVICE" varchar2(128) DEFAULT NULL,
+		  PRIMARY KEY ("USERID","TENANTID")
+		) 
 	</statement>
 </sqlMap>

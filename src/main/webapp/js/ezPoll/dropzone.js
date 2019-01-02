@@ -48,6 +48,21 @@ function onDrop(evt) {
     
     filesize += tempfilesize;
     fileupload();
+    
+    //같은 파일을 업로드 할 때, onchange 이벤트가 발생하지 않아 아래부분 추가. 2018-12-19 홍대표
+    if (CrossYN()) {
+    	
+    	if (navigator.userAgent.search('Trident') != -1) { //IE 11
+    		document.getElementById("file").type = "text";
+            document.getElementById("file").type = "file";
+    	} else {
+        	document.getElementById("file").value = "";
+    	}
+        
+    } else {
+        document.getElementById("file").type = "text";
+        document.getElementById("file").type = "file";
+    }
 }
 
 function fileUploadStart() {

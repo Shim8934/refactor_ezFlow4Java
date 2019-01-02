@@ -500,7 +500,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 								
 								String calcuDate = nsdf.format(newCal.getTime());
 								
-								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {
+								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0 && calcuDate.compareTo(vo.getStartDate().substring(0,10)) >= 0) {
 									//row 추가
 									if (!rList.contains(calcuDate)) {
 										ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
@@ -544,14 +544,16 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				svo = resultList.get(i);
 				svoId = svo.getScheduleId();
 				svoRepetition = svo.getRepetition();
-				if (svoRepetition.equals("") || svoRepetition == null) {
+				if (svoRepetition.equals("") || svoRepetition.equals(" ") || svoRepetition == null) {
 					continue;
 				} else {
 					info = svo.getRepetition().split("\\|");
 					
 					if (i+1 == resultCount && Integer.parseInt(info[0]) < 1){
-						if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+						if (svo.getEndDate().equals(svo.getRealEndDate())) {
+							if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
 							svoIndex.add(i);
+							}
 						}
 						break;
 					} else if (i+1 == resultCount) {
@@ -561,8 +563,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					svoIdAfter = svoAfter.getScheduleId();
 					
 					if (!svoId.equals(svoIdAfter) && Integer.parseInt(info[0]) < 1) {
-						if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
-							svoIndex.add(i);
+						if (svo.getEndDate().equals(svo.getRealEndDate())) {
+							if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+								svoIndex.add(i);
+							}
 						}
 					}
 				}
@@ -609,6 +613,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		innerVO.setEndDate(dateTime2);
 		innerVO.setDateType(newDateType + "");
 		innerVO.setRepeatCount(count);			
+		innerVO.setRealEndDate(vo.getEndDate());
 		
 		return innerVO; 
 	}
