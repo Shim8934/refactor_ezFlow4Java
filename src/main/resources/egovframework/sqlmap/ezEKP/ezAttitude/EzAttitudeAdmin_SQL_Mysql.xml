@@ -1472,7 +1472,7 @@
 		</isNotEmpty>
 	</select>
 
-	<select id="ezAttitudeAdminDAO.getAllAnnualCount" parameterClass="Map" resultClass="INTEGER">
+	<select id="ezAttitudeAdminDAO.getSimpleAnnualCnt" parameterClass="Map" resultClass="INTEGER">
 		<![CDATA[
 			SELECT
 				count(*)
@@ -1485,9 +1485,12 @@
 			AND
 				YEAR = #year#
 		]]>
+			<isNotEmpty prepend="AND" property="userId">
+				USER_ID = #userId#
+			</isNotEmpty>
 	</select>
 	
-	<insert id="ezAttitudeAdminDAO.insertAllAnnualHistory" parameterClass="Map">
+	<insert id="ezAttitudeAdminDAO.insertAnnualHistory" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO tbl_attitude_annual_history
 				(USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID, YEAR)
@@ -1497,7 +1500,7 @@
 				'$annualCnt$' AS CHANGE_ANNUAL_CNT,
 				'$changeReason$' AS CHANGE_REASON,
 				NOW() AS CHANGE_DATE,
-				'$userId$' AS CHANGE_USER_ID,
+				'$changeUserId$' AS CHANGE_USER_ID,
 				physicaldeliveryofficename AS COMPANY_ID,
 				TENANT_ID AS TENANT_ID,
 				'$year$' AS YEAR
@@ -1508,9 +1511,12 @@
 			AND
 				physicaldeliveryofficename = #companyId#
 		]]>
+			<isNotEmpty prepend="AND" property="userId">
+				CN = #userId#
+			</isNotEmpty>
 	</insert>
 	
-	<insert id="ezAttitudeAdminDAO.changeAllAnnualHistory" parameterClass="Map">
+	<insert id="ezAttitudeAdminDAO.changeAnnualHistory" parameterClass="Map">
 			INSERT INTO tbl_attitude_annual_history
 				(USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID, YEAR)
 			SELECT
@@ -1524,7 +1530,7 @@
 					</isEqual>
 				'$changeReason$' AS CHANGE_REASON,
 				NOW() AS CHANGE_DATE,
-				'$userId$' AS CHANGE_USER_ID,
+				'$changeUserId$' AS CHANGE_USER_ID,
 				COMPANY_ID AS COMPANY_ID,
 				TENANT_ID AS TENANT_ID,
 				YEAR AS YEAR
@@ -1536,9 +1542,12 @@
 				COMPANY_ID = #companyId#
 			AND
 				YEAR = #year#
+			<isNotEmpty prepend="AND" property="userId">
+				USER_ID = #userId#
+			</isNotEmpty>
 	</insert>
 	
-	<insert id="ezAttitudeAdminDAO.insertAllAnnual" parameterClass="Map">
+	<insert id="ezAttitudeAdminDAO.insertAnnual" parameterClass="Map">
 		<![CDATA[
 			INSERT INTO tbl_attitude_annual
 				(USER_ID, YEAR, TOTAL_ANNUAL_CNT, COMPANY_ID, TENANT_ID)
@@ -1555,9 +1564,12 @@
 			AND
 				physicaldeliveryofficename = #companyId#
 		]]>
+			<isNotEmpty prepend="AND" property="userId">
+				CN = #userId#
+			</isNotEmpty>
 	</insert>
 	
-	<insert id="ezAttitudeAdminDAO.changeAllAnnual" parameterClass="Map">
+	<insert id="ezAttitudeAdminDAO.changeAnnual" parameterClass="Map">
 			UPDATE tbl_attitude_annual
 				<isEqual property="flagCheck" compareValue="change">
 					SET TOTAL_ANNUAL_CNT = #annualCnt#
@@ -1571,6 +1583,9 @@
 				COMPANY_ID = #companyId#
 			AND
 				YEAR = #year#
+			<isNotEmpty prepend="AND" property="userId">
+				USER_ID = #userId#
+			</isNotEmpty>
 	</insert>
 	<select id="ezAttitudeAdminDAO.getUserAnnual" parameterClass="Map" resultClass="AdminAttitudeVO">
 		<![CDATA[
@@ -1642,6 +1657,73 @@
 			ORDER BY 
 				START_DATE
 		]]>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAnnualCnt" parameterClass="Map" resultClass="AttitudeAnnualVO">
+		<![CDATA[
+			SELECT 
+					A.CN AS userId,
+			    	A.DISPLAYNAME AS userName,
+			    	A.TITLE AS userTitle,
+			    	A.DESCRIPTION AS userDeptName,
+			    	A.PHYSICALDELIVERYOFFICENAME AS companyId,
+				    #year# AS year,
+				    ifnull(sum(
+							CASE
+							   WHEN C.TYPE_ID = 'A11' THEN to_days(C.END_DATE) - to_days(C.START_DATE)
+				               WHEN C.TYPE_ID = 'A12' THEN 0.5
+				               WHEN C.TYPE_ID = 'A13' THEN 0.5
+							   ELSE 0
+							END
+					), 0) AS useAnnualCnt,
+				    ifnull(B.TOTAL_ANNUAL_CNT, 0) AS totalAnnualCnt
+				FROM 
+					TBL_USERMASTER A
+				LEFT OUTER JOIN 
+					TBL_ATTITUDE_ANNUAL B
+				ON
+					(A.TENANT_ID = B.TENANT_ID 
+					AND
+					 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
+					AND
+					 A.CN = B.USER_ID
+					AND B.YEAR = #year#)
+				LEFT OUTER JOIN 
+					TBL_ATTITUDE C
+				ON
+					(A.TENANT_ID = C.TENANT_ID 
+					AND 
+					 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
+					AND
+					 A.CN = C.WRITER_ID
+					AND 
+					 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+					AND 
+					 (
+						   (
+							date_add(C.START_DATE, INTERVAL #offsetMin# minute) >= #searchStartTime#
+							AND date_add(C.START_DATE, INTERVAL #offsetMin# minute) <= #searchEndTime#
+							)
+						OR (
+							date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #searchStartTime#
+							AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) < #searchEndTime#
+							)
+						OR (
+							date_add(C.START_DATE, INTERVAL #offsetMin# minute) < #searchStartTime#
+							AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #searchEndTime#
+							)
+					  )
+					 )
+				WHERE
+					A.TENANT_ID = #tenantId#
+				AND 
+					A.PHYSICALDELIVERYOFFICENAME = #companyId#
+				AND			
+					A.CN = #userId#
+		]]>
+		
+		GROUP BY A.CN
+		
 	</select>
 	
 </sqlMap>

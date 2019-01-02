@@ -2463,27 +2463,37 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public void changeAllAnnual(Map<String, Object> map, int tenantId, String companyId, String primary) throws Exception {
-		LOGGER.debug("changeAllAnnual started");
-		
-		int result = 0;
-		
-		map.put("tenantId", tenantId);
-		map.put("companyId", companyId);
-		if (primary.equals("1")) {
-			primary = "";
-		}
-		map.put("primary", primary);
+	public void changeAnnual(Map<String, Object> map) throws Exception {
+		LOGGER.debug("changeAnnual started");
 
-		if(ezAttitudeDAO.getAllAnnualCount(map) == 0) {
-			ezAttitudeDAO.insertAllAnnualHistory(map);
-			ezAttitudeDAO.insertAllAnnual(map);
+		if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
+			ezAttitudeDAO.insertAnnualHistory(map);
+			ezAttitudeDAO.insertAnnual(map);
 		} else {
-			ezAttitudeDAO.changeAllAnnualHistory(map);
-			ezAttitudeDAO.changeAllAnnual(map);
+			ezAttitudeDAO.changeAnnualHistory(map);
+			ezAttitudeDAO.changeAnnual(map);
 		}
 		
-		LOGGER.debug("changeAllAnnual ended");
+		LOGGER.debug("changeAnnual ended");
+	}
+	
+	@Override
+	public AttitudeAnnualVO getAnnualCnt(Map<String, Object> map) throws Exception {
+		LOGGER.debug("getAnnualCnt started");
+
+		String year = (String) map.get("year");
+		
+		String searchStartTime = year + "-01-01 00:00:00";
+		String searchEndTime = year + "-12-31 23:59:59";
+		
+		map.put("searchStartTime", searchStartTime);
+		map.put("searchEndTime", searchEndTime);
+		
+		AttitudeAnnualVO result = ezAttitudeDAO.getAnnualCnt(map);
+		
+		LOGGER.debug("getAnnualCnt ended");
+		
+		return result;
 	}
 
 	@Override

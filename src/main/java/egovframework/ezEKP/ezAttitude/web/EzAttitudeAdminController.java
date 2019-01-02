@@ -2192,7 +2192,62 @@ public class EzAttitudeAdminController {
 	}
 	
 	/**
+<<<<<<< HEAD
 	 * 관리자 연차현황관리 조회
+=======
+	 * 연차현황관리 개인연차변경 화면
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/modifyPrsnAnnualPop.do")
+	public String modifyPrsnAnnualPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("modifyPrsnAnnualPop started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String userId = request.getParameter("userId");
+		String companyId = request.getParameter("companyId");
+		String year = request.getParameter("year");
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		
+		if (userId != null) {
+			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/modifyPrsnAnnualPop/";
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId)
+					.queryParam("userId", userId)
+					.queryParam("year", year)
+					.queryParam("offsetMin", offsetMin);
+			
+			RestTemplate rest = new RestTemplate();
+			
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			String status = resultBody.get("status").toString();
+			
+			JSONObject vo = new JSONObject();
+			if (status.equals("ok")) {		
+				vo = (JSONObject) resultBody.get("data");
+				
+				model.addAttribute("vo", vo);
+			}
+			
+		}
+		
+		LOGGER.debug("modifyPrsnAnnualPop ended.");
+		
+		return "/admin/ezAttitude/modifyPrsnAnnualPop";
+	}
+	
+	/**
+	 * 관리자 근태입력관리 조회
+>>>>>>> bcb942e2dc6127522562a82b30096cb5cfc3ac2c
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAnnualList.do", produces = "application/json;charset=utf-8")
 	@ResponseBody
@@ -2287,7 +2342,7 @@ public class EzAttitudeAdminController {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userInfo.getId())
+				.queryParam("changeUserId", userInfo.getId())
 				.queryParam("changeReason", changeReason)
 				.queryParam("flagCheck", flagCheck)
 				.queryParam("annualCnt", annualCnt)
@@ -2316,7 +2371,66 @@ public class EzAttitudeAdminController {
 		
 		return resultStatus;
 	}
-
+	
+	
+	/**
+	 * 근태관리 연차현황관리 전체연차 등록 ,수정
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/changePrsnAnnual.do")
+	@ResponseBody
+	public String changePrsnAnnual(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("changePrsnAnnual started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String companyId = request.getParameter("companyId");
+		String userId = request.getParameter("userId");
+		String changeReason = request.getParameter("changeReason");
+		String flagCheck = request.getParameter("flagCheck");
+		String annualCnt = request.getParameter("annualCnt");
+		String year = request.getParameter("year");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = "";
+		url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/changePrsnAnnual/";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("changeUserId", userInfo.getId())
+				.queryParam("changeReason", changeReason)
+				.queryParam("companyId", companyId)
+				.queryParam("annualCnt", annualCnt)
+				.queryParam("flagCheck", flagCheck)
+				.queryParam("year", year);
+		
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<?> result;
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
+		JSONObject resultBody = (JSONObject) result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		String resultStatus = "";
+		
+		if (status.equals("ok")) {
+			resultStatus = "success";
+		} else if (status.equals("failed")) {
+			resultStatus = "failed";
+		} else {
+			resultStatus = "error";
+		}
+		
+		LOGGER.debug("changePrsnAnnual ended.");
+		
+		return resultStatus;
+	}
+	
 	/**
 	 * 엑셀 출력
 	 */
