@@ -32,7 +32,7 @@
 				try {
 		            RetValue = parent.personpicture_cross_dialogArguments[0];
 		            ReturnFunction = parent.personpicture_cross_dialogArguments[1];
-		            userPhotoYN = parent.personpicture_cross_dialogArguments[2];
+		            userPhoto = parent.personpicture_cross_dialogArguments[2];
 		            if(userPhoto != ""){
 		            	if(CrossYN()){
 							preview.src = "";
@@ -56,7 +56,7 @@
 		            try {
 		                RetValue = opener.personpicture_cross_dialogArguments[0];
 		                ReturnFunction = opener.personpicture_cross_dialogArguments[1];
-		                userPhotoYN = opener.personpicture_cross_dialogArguments[2];
+		                userPhoto = opener.personpicture_cross_dialogArguments[2];
 		                if(userPhoto != ""){
 			            	if(CrossYN()){
 							    preview.src = "";
