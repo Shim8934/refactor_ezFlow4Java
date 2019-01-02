@@ -161,7 +161,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String primary   = common.getPrimary();
 			int tenantId     = common.getTenantId();
 
-			List<Map<String, Object>> folderList = service.getFolderTree(userId, deptId, compId, folderType, primary, tenantId);
+			List<Map<String, Object>> folderList = service.getFolderTree(userId, deptId, compId, folderType, primary, tenantId, "");
 
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
@@ -1195,5 +1195,57 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		
 		LOGGER.debug("webfolderLogin end.");
 		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezwebfolder/delete-user-alldata", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
+	public JSONObject deleteUserAllFileAndFolder(HttpServletRequest request, @RequestBody JSONObject jsonObject) {
+		JSONObject result = new JSONObject();
+		String serverName 	= orElse(request.getHeader("x-user-host"),"");
+		String fileList     = (String) orElse(jsonObject.get("fileList"), "");
+		String folderList   = (String) orElse(jsonObject.get("folderList"), "");
+		String userId       = (String) orElse(jsonObject.get("userId"), "");
+		String adminId   	= (String) orElse(jsonObject.get("adminId"), "");
+		
+		LOGGER.debug("deleteUserAllFileAndFolder Started.");
+		LOGGER.debug("userId : " + userId  + " || serverName : " + serverName);
+		String[] fileIDList = fileList.split(",");
+		String[] folderIDList = folderList.split(",");
+		String realPath = request.getServletContext().getRealPath("");
+		
+		if (serverName.equals("") || userId.equals("")) {
+			LOGGER.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			LoginVO userInfoAdmin = commonUtil.getUserForGw(adminId, serverName);
+			
+			String folderIdTypeU = service.folderIdByUserIdAndFolderType(userId, userInfo.getTenantId());
+			folderIDList[0] = folderIdTypeU;
+			
+			
+			if (!isWebfolderAdmin(userInfoAdmin)) {
+				result.put("status", "error");
+				result.put("code", 2);	
+				return result;
+			}
+			ezWebFolderService_m.permanetDeleteSelectedFiles(fileIDList, folderIDList, userInfo, realPath, "delete");
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		LOGGER.debug("filePermanetDelete ended");
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		
+		return result ;
 	}
 }

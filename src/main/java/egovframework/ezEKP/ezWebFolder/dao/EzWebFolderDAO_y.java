@@ -188,4 +188,9 @@ public class EzWebFolderDAO_y extends EgovAbstractDAO {
 	public int existsUserIdTokenCheck (Map<String, Object> map) {
 		return (int) select("EzWebFolderDAO_y.existsUserIdTokenCheck", map);
 	}
+	
+	// userId 로 필요한 folderType별 folderId 출력 
+	public String folderIdByUserIdAndFolderType (Map<String, Object> map) {
+		return (String) select("EzWebFolderDAO_y.folderIdByUserIdAndFolderType", map);
+	}
 }

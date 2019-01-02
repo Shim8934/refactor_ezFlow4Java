@@ -205,6 +205,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 	@Override
 	public FolderVO getFolderByFolderId(String folderId, String offset, int tenantId) throws Exception {
+		logger.debug("getFolderByFolderId " + folderId);
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
 		map.put("offset",   commonUtil.getMinuteUTC(offset));
@@ -1322,7 +1323,7 @@ public List<DuplicateInfoVO> getAllDuplicateInfo(String fileName, String targetF
 				// use status 부터 T로 바꾸고
 				updateFileUseStatus(userId, newFile.getFileId(), currentTimeUTC, tenantId);
 				// 영구삭제
-				ezWebFolderService_m.permanetDeleteSelectedFiles(new String[] {newFile.getFileId()}, new String[0], userInfo, realPath);
+				ezWebFolderService_m.permanetDeleteSelectedFiles(new String[] {newFile.getFileId()}, new String[0], userInfo, realPath, "");
 			}
 			
 			saveLog("WR", companyId, offset, userId, userName1, userName2, oldFile.getFileName(), oldFile.getFileSize(), oldFile.getFileExt(), oldFile.getFileTypeName(), tenantId);

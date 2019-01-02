@@ -96,18 +96,21 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		}
 	}
 
+	// 사용자 삭제시 그 사용자의 데이터 모두 삭제 위해 flag 추가 
 	@Override
 	public List<Map<String, Object>> getFolderTree(String userId,
 			String deptId, String compId, String folderType, String primary,
-			int tenantId) throws Exception {
+			int tenantId, String flag) throws Exception {
 		List<Map<String, Object>> folderTree = new ArrayList<Map<String, Object>>();
 		Map<String, Object> map = new HashMap<String, Object>();
 
+		LOGGER.debug("getFolderTree. userId :" + userId + ", folderType :" + folderType);
 		map.put("primary", primary);
 		map.put("tenantId", tenantId);
 
 		if (folderType.equals("U") || folderType.equals("")) {
 			map.put("userId", userId);
+			map.put("flag", flag);
 			List<Map<String, Object>> userFolderTree = ezWebFolderDAO_y
 					.getUserFolderTree(map);
 			folderTree.addAll(userFolderTree);
@@ -941,6 +944,18 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 	}
 
 	@Override
+	public String existsUserIdTokenCheck(String userId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		String result = "";
+		if (ezWebFolderDAO_y.existsUserIdTokenCheck(map) > 0 ) {
+			result = "exists";
+		}
+		return result;
+	}
+	
+	@Override
 	public String setAuthLoginTokenSql(String userId, String token, int tenantId, int device) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
@@ -965,6 +980,24 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		count = ezWebFolderDAO_y.existsTokenCheck(map);
 		
 		return count ;
+	}
+	
+	public void deleteToken(String userId,  int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		ezWebFolderDAO_y.deleteAuthLoginTokenSql(map);
+	}
+	
+	@Override
+	public String folderIdByUserIdAndFolderType(String userId, int tenantId) throws Exception {
+		Map<String, Object> map  = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		
+		String folderId = ezWebFolderDAO_y.folderIdByUserIdAndFolderType(map);
+		
+		return folderId ;
 	}
 
 }

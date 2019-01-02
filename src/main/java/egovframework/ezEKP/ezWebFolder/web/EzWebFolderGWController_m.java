@@ -1093,9 +1093,9 @@ public class EzWebFolderGWController_m {
 						trashCanPath = ezWebFolderService.getFolderPath(trashCanPath.split("\\|"), primary, tenantId);
 						trashCanPath = trashCanPath.substring(0, trashCanPath.length() - 1);
 						
-						if (trashCan.getTrashCanExt().equals("folder")) {
-							trashCanPath = trashCanPath.substring(0, trashCanPath.lastIndexOf("/"));
-						}
+//						if (trashCan.getTrashCanExt().equals("folder")) {
+//							trashCanPath = trashCanPath.substring(0, trashCanPath.lastIndexOf("/"));
+//						}
 						
 						trashCan.setTrashCanPath(trashCanPath);
 					} else {
@@ -1161,7 +1161,7 @@ public class EzWebFolderGWController_m {
 				}
 			}
 			
-			ezWebFolderService_m.permanetDeleteSelectedFiles(fileIDList, folderIDList, userInfo, realPath);
+			ezWebFolderService_m.permanetDeleteSelectedFiles(fileIDList, folderIDList, userInfo, realPath, "");
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -53,15 +53,15 @@ public interface EzWebFolderService_m {
 
 	String getFolderPath(String folderId, int tenantId) throws Exception;
 
-	void permanetDeleteSelectedFiles(String[] fileIDList,String[] folderIDList ,LoginVO userInfo, String realPath) throws Exception;
+	void permanetDeleteSelectedFiles(String[] fileIDList,String[] folderIDList ,LoginVO userInfo, String realPath, String flag) throws Exception;
 
 	int realFileDelete(FileVO fileVO, String realPath, LoginVO userInfo, String userName1, String userName2) throws Exception;
 	
-	int deleteFile(String fileId, int tenantId) throws Exception;
+	int deleteFile(String fileId, int tenantId, String Flag) throws Exception;
 
-	int deleteFolder(FolderVO folderVO) throws Exception;
+	int deleteFolder(FolderVO folderVO, String Flag) throws Exception;
 	
-	void deleteAllFilesInFolder(FolderVO folderVO, String companyId ,String realPath, LoginVO userInfo, String offset, int tenantId, String userId, String userName1, String userName2) throws Exception;
+	void deleteAllFilesInFolder(FolderVO folderVO, String companyId ,String realPath, LoginVO userInfo, String offset, int tenantId, String userId, String userName1, String userName2, String flag) throws Exception;
 
 	List<TrashCanVO> getFileByFolderId(String folderId, int tenantId, String userId) throws Exception;
 
@@ -108,5 +108,5 @@ public interface EzWebFolderService_m {
 	
 	void moveRenameFile(String fileId, String newName, String folderId, int tenantId, String timeUTC) throws Exception;
 
-	List<String> getAllFolderIdNotInFolder(String folderPath, String folderId) throws Exception;
+	List<String> getAllFolderIdNotInFolder(String folderPath, String folderId, String flag) throws Exception;
 }

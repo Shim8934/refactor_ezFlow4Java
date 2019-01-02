@@ -1426,9 +1426,10 @@
 				FILE_ID    = #fileId#
 			AND
 				TENANT_ID  = #tenantId#
-			AND 
-				USE_STATUS != 'Y'
 		]]>
+		<isNotEqual property="flag" compareValue="delete" prepend="AND">
+			USE_STATUS != 'Y'
+		</isNotEqual>
 	</delete>
 	
 	<delete id="EzWebFolderDAO_m.deleteFolder" parameterClass="Map" >
@@ -1440,9 +1441,10 @@
 				TENANT_ID = #tenantId# 
 			AND
 				FOLDER_ID = #folderId#
-			AND
-				USE_STATUS = 'T'
 		]]>
+		<isNotEqual property="flag" compareValue="delete" prepend="AND">
+			USE_STATUS = 'T'
+		</isNotEqual>
 	</delete>
 	
 	<select id="EzWebFolderDAO_m.selectAllFilesInFolder" parameterClass="Map" resultClass="String">
@@ -1460,8 +1462,10 @@
 				AND
 					TENANT_ID = #tenantId#
 			) AS d ON f.FOLDER_ID = d.FOLDER_ID AND f.TENANT_ID = d.TENANT_ID
+		<isNotEqual property="flag" compareValue="delete" >
 		WHERE
-			f.USE_STATUS = 'N';
+			f.USE_STATUS = 'N'
+		</isNotEqual>
 	</select>
 	
 	<select id="EzWebFolderDAO_m.getFolderByFolderPath"  parameterClass="Map" resultMap="trashCanVO">
@@ -1941,11 +1945,15 @@
 			   JOIN (
 				      SELECT FOLDER_PATH
 				      FROM TBL_WEBFOLDER_FOLDER
-				      WHERE USE_STATUS = 'T'
-				      AND FOLDER_PATH LIKE CONCAT(#folderPath# ,'%')
+				      WHERE FOLDER_PATH LIKE CONCAT(#folderPath# ,'%')
+	    ]]>
+	    <isNotEqual property="flag" compareValue="delete" prepend="AND">
+			USE_STATUS = 'T'
+		</isNotEqual>
+		<![CDATA[
 				      AND FOLDER_ID <> #folderId# 
 			      ) FP
 			   ON F2.FOLDER_PATH LIKE CONCAT(FP.FOLDER_PATH ,'%'))
-		    ]]>
+	    ]]>
 	</select>
 </sqlMap>
