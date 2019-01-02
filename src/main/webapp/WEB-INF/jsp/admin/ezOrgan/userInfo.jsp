@@ -133,11 +133,8 @@
 		            document.getElementById('btn_PhotoAdd').style.display = "none";
 		            document.getElementById('btn_PhotoDel').style.display = "none";
 		            
-		            getJobOptionInfo("001");
-		            getJobOptionInfo("002");
-                	titleChange();
-                	positionChange();
-		        }else{
+		            getJobInfoInit();
+		        } else {
 		            OrgUserID = RetValue[2];
 		            document.getElementById("DeptName").value = RetValue[1];
 		            document.getElementById("UserID").value = OrgUserID;
@@ -149,6 +146,8 @@
 		            document.getElementById("UserName").focus();
 		            document.getElementById("mailtitle").innerText = "<spring:message code='ezOrgan.t99' />";
 		            document.getElementById("mailcontext").style.display = "none";
+		            
+		            getJobInfoInit();
 	
 		            var xmlDom = createXmlDom();
 		            
@@ -182,23 +181,18 @@
 			                try {
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim() != "") {
 				                	pUserTitleID = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim();
-				                	getJobOptionInfo("001");
 				                	document.getElementById(pUserTitleID).selected = "true";
-				                } else {
-				                	getJobOptionInfo("001");
 				                }
-				                
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim() != "") {
 				                	pUserPositionID = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim();
-				                	getJobOptionInfo("002");
 				                	document.getElementById(pUserPositionID).selected = "true";
-				                } else {
-				                	getJobOptionInfo("002");
 				                }
-			                } catch(e) {}
+			                } catch(e) {
+			                	console.error(e.message);
+			                }
 			                
-		                	titleChange();
-		                	positionChange();
+			                titleChange();
+			                positionChange();
 			                
 			                if (SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == "Y" || SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == ""){
 			                    eval("birth_S").checked = true;
@@ -573,9 +567,17 @@
 					}
 				});
 		    }
-		    
+		    // 직위/직책 정보 init
+		    function getJobInfoInit() {
+		    	getJobOptionInfo("001");
+		    	getJobOptionInfo("002");
+		    	titleChange();
+		    	positionChange();
+		    }
+		    // 직위/직책 조회 (pType ==> 001:직위, 002:직책)
 		    function getJobOptionInfo(pType) {
-		    	var xmldom; 
+		    	var xmldom;
+		    	var _html = "";
 		    	
 		    	$.ajax({
 					type : "POST",
@@ -593,79 +595,67 @@
 					}
 				});
 		    	
-		    	var _select;
+	    		if (pType == "001") {
+	    			_html += "<select id='titleSelector' style='width:100%;height:25px;' onchange='titleChange()'>";
+	    		} else {
+	    			_html += "<select id='positionSelector' style='width:100%;height:25px;' onchange='positionChange()'>";
+	    		}
+	    		
+	    		// option (해당없음) 표출
+   				_html += "<option id='' nmval='' nmval2=''>(<spring:message code='ezApprovalG.t852' />)</option>";
+	    		
 		    	var oRows = SelectNodes(xmldom, "DATA/ROWS/ROW");
 		    	if (oRows.length > 0) {
-		    		if (pType == "001") {
-		    			_select = "<select id='titleSelector' style='width:100%;height:25px;' onchange='titleChange()'>";
+		    		for (var i = 0; i < oRows.length; i++) {
+		    			var pUseFlag	= SelectSingleNodeValueNew(oRows[i], "USEFLAG");
+		    			var pJobID 		= SelectSingleNodeValueNew(oRows[i], "JOBID");
+		    			var pJobName 	= SelectSingleNodeValueNew(oRows[i], "NAME1");
+		    			var pJobName2 	= SelectSingleNodeValueNew(oRows[i], "NAME2");
 		    			
-		    			for (var i = 0; i < oRows.length; i++) {
-		    				if (SelectSingleNodeValueNew(oRows[i], "USEFLAG") != "N" || SelectSingleNodeValueNew(oRows[i], "JOBID") == pUserTitleID) {
-				    			_select += "<option id='" + SelectSingleNodeValueNew(oRows[i], "JOBID") + "' nmval='" + SelectSingleNodeValueNew(oRows[i], "NAME1") + "' nmval2='" + SelectSingleNodeValueNew(oRows[i], "NAME2") + "'>";
-				    			
-				    			if ("${userPrimary}" == "1") {
-					    			_select += SelectSingleNodeValueNew(oRows[i], "NAME1");
-				    			} else {
-					    			_select += SelectSingleNodeValueNew(oRows[i], "NAME2");
-				    			}
-				    			_select += "</option>";
-		    				}
-			    		}
-		    			_select += "</select>";
-		    			
-		    			document.getElementById("JobTitleOption").innerHTML = _select;
-		    			
-		    		} else {
-		    			_select = "<select id='positionSelector' style='width:100%;height:25px;' onchange='positionChange()'>";
-		    			
-		    			for (var i = 0; i < oRows.length; i++) {
-		    				if (SelectSingleNodeValueNew(oRows[i], "USEFLAG") != "N" || SelectSingleNodeValueNew(oRows[i], "JOBID") == pUserPositionID) {
-				    			_select += "<option id='" + SelectSingleNodeValueNew(oRows[i], "JOBID") + "' nmval='" + SelectSingleNodeValueNew(oRows[i], "NAME1") + "' nmval2='" + SelectSingleNodeValueNew(oRows[i], "NAME2") + "'>";
-				    			
-				    			if ("${userPrimary}" == "1") {
-					    			_select += SelectSingleNodeValueNew(oRows[i], "NAME1");
-				    			} else {
-					    			_select += SelectSingleNodeValueNew(oRows[i], "NAME2");
-				    			}
-				    			_select += "</option>";
-		    				}
-			    		}
-		    			_select += "</select>";
-		    			
-		    			document.getElementById("JobPositionOption").innerHTML = _select;
+		    			if (pUseFlag != "N" || pJobID == pUserTitleID) {
+		    				_html += "<option id='" + pJobID + "' nmval='" + pJobName + "' nmval2='" + pJobName2 + "'>";
+		    				
+		    				if ("${userPrimary}" == "1") {
+		    					_html += pJobName;
+			    			} else {
+			    				_html += pJobName2;
+			    			}
+		    				_html += "</option>";
+		    			}
 		    		}
+		    		_html += "</select>";
 		    	} else {
-		    		if (pType == "001") {
-		    			document.getElementById("JobTitleOption").innerHTML = "<select id='titleSelector' style='width:100%;height:25px;'></select>";
-		    		} else {
-		    			document.getElementById("JobPositionOption").innerHTML = "<select id='positionSelector' style='width:100%;height:25px;'></select>";
-		    		}
+		    		_html += "</select>";
 		    	}
+		    	
+	    		if (pType == "001") {
+		    		document.getElementById("JobTitleOption").innerHTML = _html;
+	    		} else {
+		    		document.getElementById("JobPositionOption").innerHTML = _html;
+	    		}
 		    }
+		    
 		    function titleChange() {
-		    	var target = document.getElementById("titleSelector");
-		    	var option = target.options[target.options.selectedIndex];
-		    	if (typeof (option) != "undefined") {
-			    	jobTitleID = option.id;
-			    	jobTitleName = option.getAttribute("nmval");
-			    	jobTitleName2 = option.getAttribute("nmval2");
+		    	if ($("#titleSelector option:selected").length > 0) {
+		    		jobTitleID 		= $("#titleSelector option:selected").attr("id");
+		    		jobTitleName 	= $("#titleSelector option:selected").attr("nmval");
+		    		jobTitleName2 	= $("#titleSelector option:selected").attr("nmval2");
 		    	} else {
-			    	jobTitleID = "";
-			    	jobTitleName = "";
-			    	jobTitleName2 = "";
+		    		jobTitleID 		= "";
+			    	jobTitleName 	= "";
+			    	jobTitleName2 	= "";
 		    	}
 		    }
+		    
 		    function positionChange() {
-		    	var target = document.getElementById("positionSelector");
-		    	var option = target.options[target.options.selectedIndex];
-		    	if (typeof (option) != "undefined") {
-			    	jobPositionID = option.id;
-			    	jobPositionName = option.getAttribute("nmval");
-			    	jobPositionName2 = option.getAttribute("nmval2");
+		    	if ($("#positionSelector option:selected").length > 0) {
+		    		jobPositionID 		= $("#positionSelector option:selected").attr("id");
+		    		jobPositionName 	= $("#positionSelector option:selected").attr("nmval");
+		    		jobPositionName2 	= $("#positionSelector option:selected").attr("nmval2");
 		    	} else {
-			    	jobPositionID = "";
-			    	jobPositionName = "";
-			    	jobPositionName2 = "";
+		    		jobPositionID 		= "";
+		    		jobPositionName 	= "";
+		    		jobPositionName2 	= "";
 		    	}
 		    }
 		    
