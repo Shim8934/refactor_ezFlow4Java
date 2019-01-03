@@ -10,7 +10,8 @@ var SurveyCreate    = function() {
 	var resuseFlag  = null;
 	var questionFile = new SurveyFile("images");
 	var config       = {modify : "modify", required : "required", action : "action",}
-	var skipLogic      = 'N';
+	var skipLogic    = 'N';
+	var enterLogic   = 'N'; 
 		
 	// 셀렉트 박스에 들어갈 질문 유형 데이터 
 	/* 
@@ -276,6 +277,7 @@ var SurveyCreate    = function() {
 		document.getElementById("tab3").className = "select-tab";
 		lastStep = 3;
 		getSurveyPreview(lastStep);
+		enterLogic = 'Y';
 	}
 	
 	function gotoForthStep() {
@@ -983,6 +985,14 @@ var SurveyCreate    = function() {
 				pf = checkLogicNum(id, qstn, type);
 				result = pf == "success" ? addDrdwLogic(id, qstn) : "";
 				break;
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 8:
+				result = addCommonLogic(id, qstn);
+				break;
+				
 			}
 			
 			if (result == "success") {
@@ -994,6 +1004,7 @@ var SurveyCreate    = function() {
 					$("#thrdBtnGrp" + id).css("display", "");
 				}
 			}
+			console.log(qstnList);
 			
 		});
 		
@@ -1042,6 +1053,13 @@ var SurveyCreate    = function() {
 				break;
 			case 9:
 				showDrdwLogicForm(id, qstn);
+				break;
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 8:
+				showCommonLogicForm(id, qstn);
 				break;
 			}
 			$("#scndBtnGrp" + id).siblings().css("display", "none");
@@ -2208,22 +2226,22 @@ var SurveyCreate    = function() {
 		if (required == 1) {
 			qstnHeader += "<strong class='imptt'>*</strong>";
 		}
-		if (step == 3 && qstId < qstnList.length) {
-			if (qstnType == 1 || qstnType == 2 || qstnType == 7 || qstnType == 9) {
-				qstnHeader += "<span id='frstBtnGrp" + qstId + "' class='frstBtnGrp'>"
-				qstnHeader += "<img id='addLogic" + qstId + "' class='addLogic' src='/images/ezSurvey/shuffle.png'/>";
-				qstnHeader += "</span>"
-				
-				qstnHeader += "<span id='scndBtnGrp" + qstId + "' class='scndBtnGrp' style='display:none;'>"
-				qstnHeader += "<img id='saveLogic" + qstId + "' class='saveLogic' src='/images/ezSurvey/save.png'/>";
-				qstnHeader += "<img id='cancelLogic" + qstId + "' class='cancelLogic' src='/images/ezSurvey/cancel.png' />";
-				qstnHeader += "</span>"
-				
-				qstnHeader += "<span id='thrdBtnGrp" + qstId + "' class='thrdBtnGrp' style='display:none;'>"
-				qstnHeader += "<img id='mdfLogic" + qstId + "' class='mdfLogic' src='/images/ezSurvey/correct.png'/>";
-				qstnHeader += "<img id='delLogic" + qstId + "' class='delLogic' src='/images/ezSurvey/trash.png'/>";
-				qstnHeader += "</span>"
-			}
+		if (step == 3) {
+			//if (qstnType == 1 || qstnType == 2 || qstnType == 7 || qstnType == 9) {
+			qstnHeader += "<span id='frstBtnGrp" + qstId + "' class='frstBtnGrp'>"
+			qstnHeader += "<img id='addLogic" + qstId + "' class='addLogic' src='/images/ezSurvey/shuffle.png'/>";
+			qstnHeader += "</span>"
+			
+			qstnHeader += "<span id='scndBtnGrp" + qstId + "' class='scndBtnGrp' style='display:none;'>"
+			qstnHeader += "<img id='saveLogic" + qstId + "' class='saveLogic' src='/images/ezSurvey/save.png'/>";
+			qstnHeader += "<img id='cancelLogic" + qstId + "' class='cancelLogic' src='/images/ezSurvey/cancel.png' />";
+			qstnHeader += "</span>"
+			
+			qstnHeader += "<span id='thrdBtnGrp" + qstId + "' class='thrdBtnGrp' style='display:none;'>"
+			qstnHeader += "<img id='mdfLogic" + qstId + "' class='mdfLogic' src='/images/ezSurvey/correct.png'/>";
+			qstnHeader += "<img id='delLogic" + qstId + "' class='delLogic' src='/images/ezSurvey/trash.png'/>";
+			qstnHeader += "</span>"
+			//}
 		}
 		var questionAttach = "";
 
@@ -2260,17 +2278,25 @@ var SurveyCreate    = function() {
 				htmlOption += "<option value='" + qstnId + "'>" + qstnId + "</option>"; 
 			}
 		}
+		htmlOption += "<option value='0'>" + SurveyMessages.strLast + "</option>"; 
 		
 		switch(type) {
 		case 1 :
 		case 2 :
 			sltLogicForm(prevWrapper, htmlOption, thisQstn, id);
 			break;
-		case 7:
+		case 7 :
 			slidLogicForm(prevWrapper, htmlOption, thisQstn, id);
 			break;
-		case 9:
+		case 9 :
 			drdwLogicForm(prevWrapper, htmlOption, thisQstn, id);
+			break;
+		case 3 :
+		case 4 :
+		case 5 :
+		case 6 :
+		case 8 :
+			otherLogicForm(prevWrapper, htmlOption, thisQstn, id);
 			break;
 		}
 	}
@@ -2316,6 +2342,7 @@ var SurveyCreate    = function() {
 			}
 		}
 	}
+	
 	// slider 질문에 logic form 추가
 	function slidLogicForm(prevWrapper, htmlOption, question, qstnId) {
 		var id = "";
@@ -2366,6 +2393,26 @@ var SurveyCreate    = function() {
 			$("#slt" + id).val(logicNum).prop("selected", true).css("display", "none");
 			$("#sltVal" + id).text(logic).css("dispaly", "");
 		}
+	}
+	
+	// 나머지 질문(matrix, text, ranking 질문)에 logic form 추가
+	function otherLogicForm(prevWrapper, htmlOption, question, qstnId) {
+		var id = "";
+		
+		if (qstnId) {
+			id = qstnId;
+		}
+		var html = "";
+		html += "<div id='logic" + id + "' class='otherLogicArea'>";
+		html += "<img class='prevSlidArrow' src='/images/ezSurvey/arrow.png'>";
+		html += "<select class='logicSelect' name='slt" + id + "' id='slt" + id + "'>";
+		html += htmlOption;
+		html += "</select>";
+		html += "<span class='logicSpan' id='sltVal" + id + "'></span>";
+		html += "</div>";
+	
+		prevWrapper.append($(html)[0]);
+		
 	}
 	
 	// dropdown 질문에 logic form 추가
@@ -2436,7 +2483,16 @@ var SurveyCreate    = function() {
 			var logicNum = $("select[name=slt" + id  + i +"] option:selected").val();
 			// option 객체에 logic 추가
 			qstn.option[i]['logic'] = parseInt(logicNum);
-			logic = (logicNum != "") ? SurveyMessages.strQs + " " + logicNum : SurveyMessages.strNoLogic;
+			
+			if (logicNum != "" && logicNum != 0) {
+				logic = SurveyMessages.strQs + " " + logicNum;
+				
+			} else if (logicNum == 0) {
+				logic = SurveyMessages.strLast;
+				
+			} else {
+				logic = SurveyMessages.strNoLogic;
+			}
 
 			$("select[name=slt" + id + i + "]").css("display", "none");
 			$("#sltVal" + id + i).text(logic).css("display", "");
@@ -2473,7 +2529,12 @@ var SurveyCreate    = function() {
 				$("#slidLogicInput" + id).css("display", "none");
 				$("#LogicPoint" + id).text(inputVal).css("display", "");
 				
-				logic = SurveyMessages.strQs + " " + logicNum;
+				if (logicNum != 0) {
+					logic = SurveyMessages.strQs + " " + logicNum;
+					
+				} else {
+					logic = SurveyMessages.strLast; 
+				}
 				$("select[name=slt" + id + "]").css("display", "none");
 				$("#sltVal" + id).text(logic).css("display", "");
 				
@@ -2516,10 +2577,50 @@ var SurveyCreate    = function() {
 			var logicNum = $("select[name=slt" + id  + i +"] option:selected").val();
 			qstn.option[i]['logic'] = parseInt(logicNum);
 			
-			logic = (logicNum != "") ? SurveyMessages.strQs + " " + logicNum : SurveyMessages.strNoLogic;
+			if (logicNum != "" && logicNum != 0) {
+				logic = SurveyMessages.strQs + " " + logicNum;
+				
+			} else if (logicNum == 0) {
+				logic = SurveyMessages.strLast;
+				
+			} else {
+				logic = SurveyMessages.strNoLogic;
+			}
 			$("select[name=slt" + id + i + "]").css("display", "none");
 			$("#sltVal" + id + i).text(logic).css("display", "");
 		}
+		return "success";
+	}
+	
+	function showCommonLogicForm(id, qstn) {
+		var logicNum = qstn.option[0]['logic'];
+		
+		$("#sltVal" + id).css("display", "none");
+		$("#slt" + id).val(logicNum).prop("selected", true).css("display", "");
+		
+		return "success";
+	}
+	
+	// 나머지 질문 객체, ui에 로직 value 추가
+	function addCommonLogic(id, qstn) {
+		var logic = "";
+		var logicNum = $("select[name=slt" + id  + "] option:selected").val();
+		
+		// option 객체에 logic 추가
+		qstn.option[0]['logic'] = parseInt(logicNum);
+
+		if (logicNum != "" && logicNum != 0) {
+			logic = SurveyMessages.strQs + " " + logicNum;
+			
+		} else if (logicNum == 0) {
+			logic = SurveyMessages.strLast;
+			
+		} else {
+			logic = SurveyMessages.strNoLogic;
+		}
+		$("select[name=slt" + id + "]").css("display", "none");
+		$("#sltVal" + id).text(logic).css("display", "");
+		
 		return "success";
 	}
 	

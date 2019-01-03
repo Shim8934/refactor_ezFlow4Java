@@ -63,7 +63,6 @@
 						SurveyCreate.setQs(question[i]);
 					}
 					SurveyCreate.setQsForm(4);
-					
 				},
 				error : function(error) {
 					alert(SurveyMessages.strError);
