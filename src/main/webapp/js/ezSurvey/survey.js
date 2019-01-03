@@ -10,22 +10,12 @@ var SurveyCreate    = function() {
 	var resuseFlag  = null;
 	var questionFile = new SurveyFile("images");
 	var config       = {modify : "modify", required : "required", action : "action",}
+	// 로직 설정 단계를 건너뛰었는가 여부, 확인 클릭시 Y로 변경
 	var skipLogic    = 'N';
+	// 로직 설정 단계에 진입했었는가 여부, 진입한 적이 있으면 Y로 변경
 	var enterLogic   = 'N'; 
 		
 	// 셀렉트 박스에 들어갈 질문 유형 데이터 
-	/* 
-	var optionData = 
-		[{ text : SurveyMessages.strSlOne   , value: 1, selected: false, imageSrc: "/images/ezSurvey/oneselect.png"  },
-		 { text : SurveyMessages.strSlMtp   , value: 2, selected: false, imageSrc: "/images/ezSurvey/multiplesl.png" },
-		 { text : SurveyMessages.strTblOne  , value: 3, selected: false, imageSrc: "/images/ezSurvey/tblone.png"     },
-		 { text : SurveyMessages.strTblMtp  , value: 4, selected: false, imageSrc: "/images/ezSurvey/tblmultiple.png"},
-		 { text : SurveyMessages.strShortQs , value: 5, selected: false, imageSrc: "/images/ezSurvey/shorttext.png"  },
-		 { text : SurveyMessages.strLongQs  , value: 6, selected: false, imageSrc: "/images/ezSurvey/paragraph.png"  },
-		 { text : SurveyMessages.strSlider  , value: 7, selected: false, imageSrc: "/images/ezSurvey/slider.png"     },
-		 { text : SurveyMessages.strRanking , value: 8, selected: false, imageSrc: "/images/ezSurvey/ranking.png"    },
-		 { text : SurveyMessages.strDropdown, value: 9, selected: false, imageSrc: "/images/ezSurvey/dropdown.png"   }];
-	 */
 	var optionData = 
 		[{ text : SurveyMessages.strSlOne   , value: 1, selected: false, imageSrc: "/images/ezSurvey/qsType01.png"},
 		 { text : SurveyMessages.strSlMtp   , value: 2, selected: false, imageSrc: "/images/ezSurvey/qsType02.png"},
@@ -119,12 +109,7 @@ var SurveyCreate    = function() {
 		document.getElementById("selectTarget" ).addEventListener("change", toggleSelectTargetBttn, false);
 		document.getElementById("targetBttn"   ).addEventListener("click" , showSelectPopUp       , false);
 		document.getElementById("gotoFirstTab" ).addEventListener("click" , gotoFirstStep        , false);
-		/* 
-		document.getElementById("gotoSecondTab").addEventListener("click" , gotoSecondStep        , false);
-		document.getElementById("gotoThirdTab" ).addEventListener("click" , gotoThirdStep         , false);
-		document.getElementById("gotoForthTab" ).addEventListener("click" , gotoForthStep         , false);
-		document.getElementById("cancelSurvey1").addEventListener("click" , cancleThisSurvey      , false);
-		 */
+
 		var secondTab = document.getElementsByClassName("gotoSecondTab");
 		var thirdTab  = document.getElementsByClassName("gotoThirdTab");
 		var forthTab  = document.getElementsByClassName("gotoForthTab");
@@ -157,7 +142,7 @@ var SurveyCreate    = function() {
 	}
 	
 	function startUpload() {document.getElementById("fileBttn").click();}
-	function cancleThisSurvey() {/* Add function later */ 
+	function cancleThisSurvey() { 
 		surveyObj['infor'] = {};
 		surveyObj['questions'] = [];
 		window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
@@ -247,8 +232,11 @@ var SurveyCreate    = function() {
 		document.getElementById("tab1").className = "select-tab";
 		lastStep = 1;
 	}
-	
+////////////	
 	function gotoSecondStep() {
+		
+		console.log(enterLogic);
+		
 		var checkObj = prepareForStep2();
 		if (checkObj["error"]) {alert(checkObj["error"]); return;}
 
@@ -275,9 +263,9 @@ var SurveyCreate    = function() {
 		
 		$("div[id^=tab]").attr("class", "hidden-tab");
 		document.getElementById("tab3").className = "select-tab";
+		enterLogic = 'Y';
 		lastStep = 3;
 		getSurveyPreview(lastStep);
-		enterLogic = 'Y';
 	}
 	
 	function gotoForthStep() {
@@ -305,7 +293,8 @@ var SurveyCreate    = function() {
 			case 1: focusonQuestionTitleStep1(); 
 					toggleStep(spanElemt, crrSpan, tabIdx);
 					lastStep = 1; break;
-			case 2: checkObj = prepareForStep2();
+			case 2: if (enterLogic == 'Y') {deleteAllLogics();}	// 로직 설정 단계에 진입했는지 확인
+					checkObj = prepareForStep2();
 					if (checkObj["error"]) {alert(checkObj["error"]); return;}
 					toggleStep(spanElemt, crrSpan, tabIdx);
 					focusonQuestionTitleStep2();
@@ -314,6 +303,7 @@ var SurveyCreate    = function() {
 					if (checkObj["error"]) {alert(checkObj["error"]); return;}
 					toggleStep(spanElemt, crrSpan, tabIdx);
 					getSurveyPreview(tabIdx);
+					enterLogic = 'Y';
 					lastStep = 3; break;
 			case 4: checkObj = prepareForStep4();
 					if (checkObj["error"]) {alert(checkObj["error"]); return;}
@@ -448,6 +438,57 @@ var SurveyCreate    = function() {
 		}
 		
 		return returnObj;
+	}
+	// 분기 설정 이후 step2로 되돌아갈 시, 질문의 모든 로직 삭제
+	function deleteAllLogics() {
+		
+		var questionList = surveyObj.questions;
+		var questionLength = questionList.length;
+		var result = checkAllLogic(questionList, questionLength);
+
+		if (result == 'Y') {
+			if (confirm("질문 작성 단계로 이동시, 모든 분기가 초기화됩니다.") == true) {
+				for (var i = 0; i < questionLength; i++) {
+					var qstn = questionList[i];
+					var type = qstn.type;
+					var logicFlag = qstn.logicFlag;
+					
+					// 질문의 로직 번호 삭제
+					if (type == 1 || type == 2 || type == 9) {
+						var opt = qstn['option'];
+						var optLength = opt.length;
+						
+						for (var i = 0; i < optLength; i++) {
+							qstn.option[i]['logic'] = -1; 
+						}
+					} else {
+						qstn.option[0]['logic']  = -1;
+						
+						if (type == 7) {
+							qstn.sliderLogicPoint = -1;
+						}
+					}
+					
+					// logic flag 변경
+					qstn.logicFlag = 0;
+					
+				}
+			}
+		}
+	}
+	
+	function checkAllLogic(questions, length) {
+		var result = "";
+		
+		for (var i = 0; i < length; i++) {
+			var flag = questions[i].logicFlag;
+			if (flag == 1) {
+				result = 'Y';
+				break;
+			}
+		}
+		
+		return result;
 	}
 	
 	function toggleSelectTargetBttn() {
