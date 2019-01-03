@@ -448,6 +448,7 @@ var SurveyCreate    = function() {
 			if (confirm("질문 작성 단계로 이동시, 모든 분기가 초기화됩니다.") == true) {
 				for (var i = 0; i < questionLength; i++) {
 					var qstn = questionList[i];
+					var level = qstn.level;
 					var type = qstn.type;
 					var logicFlag = qstn.logicFlag;
 
@@ -469,11 +470,16 @@ var SurveyCreate    = function() {
 						}
 						// logic flag 변경
 						qstn.logicFlag = 0;
+						var id = level + 1;
+						if ($("#imptt" + id).length != 0) {
+							qstn['required'] = 0;
+						}
 					}
 					
 				}
 			}
 		}
+		console.log(questionList);
 	}
 	
 	function checkAllLogic(questions, length) {
@@ -993,12 +999,13 @@ var SurveyCreate    = function() {
 		
 		// 로직 폼 생성 버튼 이벤트
 		$(".prevQsArea").on("click", ".addLogic", function() {
-			var thisId = $(this).attr("id").replace("addLogic", "");
+			var id = $(this).attr("id").replace("addLogic", "");
 			
-			mkLogicForm(thisId);
+			mkLogicForm(id);
 			
-			$("#frstBtnGrp" + thisId).css("display", "none");
-			$("#scndBtnGrp" + thisId).css("display", "");
+			$("#frstBtnGrp" + id).css("display", "none");
+			$("#scndBtnGrp" + id).css("display", "");
+			$("#thrdBtnGrp" + id).css("display", "none");
 		});
 		
 		// 로직 저장 버튼 이벤트
@@ -1037,11 +1044,17 @@ var SurveyCreate    = function() {
 			
 			if (result == "success") {
 				var logicFlag = qstn['logicFlag'];
+				var required = qstn['required'];
 				
+				if (required == 0) {
+					required = 1;
+					addImptMark(id);
+				}
 				if (logicFlag == undefined || logicFlag == 0) {
 					qstn['logicFlag'] = 1;
 				}
-				$("#thrdBtnGrp" + id).siblings().css("display", "none");
+				$("#frstBtnGrp" + id).css("display", "none");
+				$("#scndBtnGrp" + id).css("display", "none");
 				$("#thrdBtnGrp" + id).css("display", "");
 			}
 			
@@ -1061,15 +1074,17 @@ var SurveyCreate    = function() {
 			if (logicFlag == 1) {
 				cnclLogicMdf(id, qstn, type);
 				
-				$("#thrdBtnGrp" + id).siblings().css("display", "none");
+				$("#frstBtnGrp" + id).css("display", "none");
+				$("#scndBtnGrp" + id).css("display", "none");
 				$("#thrdBtnGrp" + id).css("display", "");
 			
 			// 질문에 로직이 없는 경우
 			} else if (logicFlag == undefined || logicFlag == 0) {
 				dltLogicForm(type, id);
 				
-				$("#frstBtnGrp" + id).siblings().css("display", "none");
 				$("#frstBtnGrp" + id).css("display", "");
+				$("#scndBtnGrp" + id).css("display", "none");
+				$("#thrdBtnGrp" + id).css("display", "none");
 			}
 		});
 		
@@ -1101,8 +1116,9 @@ var SurveyCreate    = function() {
 				showOthersLogicForm(id, qstn);
 				break;
 			}
-			$("#scndBtnGrp" + id).siblings().css("display", "none");
+			$("#frstBtnGrp" + id).css("display", "none");
 			$("#scndBtnGrp" + id).css("display", "");
+			$("#thrdBtnGrp" + id).css("display", "none");
 		});
 		
 		
@@ -1148,8 +1164,14 @@ var SurveyCreate    = function() {
 			}
 			qstn.logicFlag = 0;
 			
-			$("#frstBtnGrp" + id).siblings().css("display", "none");
+			if ($("#imptt" + id).length != 0) {
+				qstn['required'] = 0;
+				$("#imptt" + id).remove(); 
+			}
+			
 			$("#frstBtnGrp" + id).css("display", "");
+			$("#scndBtnGrp" + id).css("display", "none");
+			$("#thrdBtnGrp" + id).css("display", "none");
 		});
 		
 		$(".quesBacgr").on("input", ".slider-range", function() {
@@ -1220,6 +1242,16 @@ var SurveyCreate    = function() {
 		});
 		
 		$(".quesBacgr").on("click", ".delImage", function() {questionFile.deleteFile(this);});
+	}
+	
+	function addImptMark(id) {
+		var wrapper = $("#prevQstn" + id);
+		var impttTag = "";
+
+		if (wrapper.find(".question-content").find(".imptt").length == 0) {
+			impttTag = $("<strong id='imptt" + id + "' class='imptt'>*</strong>");
+			wrapper.find(".question-content").find("span[id^=frstBtnGrp]").before(impttTag);
+		}
 	}
 	
 	// 아이디 변경을 위한 action체크
