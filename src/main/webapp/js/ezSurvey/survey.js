@@ -2296,7 +2296,7 @@ var SurveyCreate    = function() {
 		case 5 :
 		case 6 :
 		case 8 :
-			otherLogicForm(prevWrapper, htmlOption, thisQstn, id);
+			othersLogicForm(prevWrapper, htmlOption, thisQstn, id);
 			break;
 		}
 	}
@@ -2396,7 +2396,7 @@ var SurveyCreate    = function() {
 	}
 	
 	// 나머지 질문(matrix, text, ranking 질문)에 logic form 추가
-	function otherLogicForm(prevWrapper, htmlOption, question, qstnId) {
+	function othersLogicForm(prevWrapper, htmlOption, question, qstnId) {
 		var id = "";
 		var prevQsOpt = prevWrapper.find(".prevQsOpt");
 		
@@ -2404,14 +2404,14 @@ var SurveyCreate    = function() {
 			id = qstnId;
 		}
 		var html = "";
-		html += "<div id='logic" + id + "' class='otherLogicArea'>";
-		html += "<img class='prevSlidArrow' src='/images/ezSurvey/arrow.png'>";
+		html += "<div id='logic" + id + "' class='othersLogicArea'>";
+		html += "<img class='prevArrow' src='/images/ezSurvey/arrow.png'>";
 		html += "<select class='logicSelect' name='slt" + id + "' id='slt" + id + "'>";
 		html += htmlOption;
 		html += "</select>";
 		html += "<span class='logicSpan' id='sltVal" + id + "'></span>";
 		html += "</div>";
-	
+		
 		prevQsOpt.append($(html)[0]);
 		
 	}

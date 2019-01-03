@@ -436,6 +436,10 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwArrow {padding: 0px 30px;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow .logicSpan {font-size: 16px; margin-top: 2px;}
 
+.prevQsOpt .othersLogicArea {display: flex; padding-left: 15px;}
+.prevQsOpt .othersLogicArea .prevArrow {padding: 0px 30px;}
+.prevQsOpt .othersLogicArea .logicSpan {font-size: 16px; margin-top: 2px;}
+
 .user-mainDiv {display: none; align-items: center;}
 .user-listDiv {flex: 1; border: none; outline: none; padding: 0px 5px; max-height: 30px; height: 25px; line-height: 25px; overflow-y: auto;}
 .user-listDiv span {padding-right: 5px; font-size: 12px; word-break: break-all;}
