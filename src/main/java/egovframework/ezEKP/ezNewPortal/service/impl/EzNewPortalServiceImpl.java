@@ -968,6 +968,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			map.put("themeId", themeList.get(i).getThemeId());
 			map.put("portletUsed", portletUsed);
 			map.put("portletId", portletId);
+			map.put("isFixed", 0); // default 0
 			ezNewPortalDAO.updateThemePortletUsed(map);
 		}
 		
