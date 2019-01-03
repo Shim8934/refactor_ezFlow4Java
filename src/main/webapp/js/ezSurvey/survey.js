@@ -1755,7 +1755,9 @@ var SurveyCreate    = function() {
 	}
 	
 	function mkSliderQstn(question) {
+		console.log(question);
 		var options = question.option;
+		var sliderLogicPoint = question.sliderLogicPoint;
 		var qstnId = question.level;
 		var logic = options[0].logic;
 		var lowest  = options.filter(function(val) {return val["level"] == 0;})[0]["content"];
@@ -1766,7 +1768,7 @@ var SurveyCreate    = function() {
 		var low = $("<span>" + lowest + "</span>");
 		var input = $("<input type='range' class='slider-range' name='slider" + question["level"] + "' min='" + lowest + "' max='" + highest + "'/>");
 		var high = $("<span>" + highest + "</span>");
-		var output = $("<output for='slider" + question["level"] + "' class='slider-output' logic='" + logic + "'></output>");
+		var output = $("<output for='slider" + question["level"] + "' id='slider" + question["level"] + "' class='slider-output' logic='" + logic + "' logicPoint='" + sliderLogicPoint + "'></output>");
 
 		silderWrap.append(low);
 		silderWrap.append(input);
@@ -1807,16 +1809,17 @@ var SurveyCreate    = function() {
 	
 	function mkDropDownQstn(question) {
 		var options = question["option"];
+		var id = question["level"];
 		
 		var questionDropdown = $("<div class='question-dropdown'></div>");
 		var dropdownWrap = $("<div class='dropdown-wrap'></div>");
 		
-		var select = $("<select></select>");
+		var select = $("<select name='drdw" + id + "'></select>");
 		var defaultOpt = $("<option selected>" + SurveyMessages.strSelect + "</option>");
 		select.append(defaultOpt);
 		
 		for (var j = 0, len = options.length; j < len; j++) {
-			var opt = $("<option></option>");
+			var opt = $("<option value='" + options[j]["content"] + "' logic='" + options[j]["logic"] + "'></option>");
 			
 			opt[0].textContent = options[j]["content"];
 			select.append(opt);

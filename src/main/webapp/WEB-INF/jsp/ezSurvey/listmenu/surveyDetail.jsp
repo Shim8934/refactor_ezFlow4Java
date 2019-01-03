@@ -131,8 +131,30 @@
 				var id = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
 				var logicNum = $(this).attr("logic");
 				
-				console.log(id);
-				console.log(logicNum);
+			});
+			
+			$(".prevQsArea").on("click", ".optChk", function() {
+				var id = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
+				var logicNum = $(this).attr("logic");
+				
+			});
+			
+			$(".prevQsArea").on("change", ".dropdown-wrap", function() {
+				var id = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
+				var logic = $("select[name=drdw" + id + "] option:selected").attr("logic");
+				
+			});
+			
+			$(".prevQsArea").on("input", ".slider-range", function() {
+				var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
+				outputElmt.textContent = this.value;
+			}).trigger("change");
+			
+			$(".prevQsArea").on("change", ".slider-range", function() {
+				var id = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
+				var logic = $("#slider" + id).attr("logic");
+				var logicPoint = $("#slider" + id).attr("logicPoint");
+				
 			});
 		}
 		
