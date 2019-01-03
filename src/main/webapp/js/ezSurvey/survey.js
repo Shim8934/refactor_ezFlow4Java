@@ -2398,6 +2398,7 @@ var SurveyCreate    = function() {
 	// 나머지 질문(matrix, text, ranking 질문)에 logic form 추가
 	function otherLogicForm(prevWrapper, htmlOption, question, qstnId) {
 		var id = "";
+		var prevQsOpt = prevWrapper.find(".prevQsOpt");
 		
 		if (qstnId) {
 			id = qstnId;
@@ -2411,7 +2412,7 @@ var SurveyCreate    = function() {
 		html += "<span class='logicSpan' id='sltVal" + id + "'></span>";
 		html += "</div>";
 	
-		prevWrapper.append($(html)[0]);
+		prevQsOpt.append($(html)[0]);
 		
 	}
 	
