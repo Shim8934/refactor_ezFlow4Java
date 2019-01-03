@@ -990,7 +990,7 @@ var SurveyCreate    = function() {
 			case 5:
 			case 6:
 			case 8:
-				result = addCommonLogic(id, qstn);
+				result = addOthersLogic(id, qstn);
 				break;
 				
 			}
@@ -1059,7 +1059,7 @@ var SurveyCreate    = function() {
 			case 5:
 			case 6:
 			case 8:
-				showCommonLogicForm(id, qstn);
+				showOthersLogicForm(id, qstn);
 				break;
 			}
 			$("#scndBtnGrp" + id).siblings().css("display", "none");
@@ -2592,8 +2592,8 @@ var SurveyCreate    = function() {
 		}
 		return "success";
 	}
-	
-	function showCommonLogicForm(id, qstn) {
+	// 
+	function showOthersLogicForm(id, qstn) {
 		var logicNum = qstn.option[0]['logic'];
 		
 		$("#sltVal" + id).css("display", "none");
@@ -2603,7 +2603,7 @@ var SurveyCreate    = function() {
 	}
 	
 	// 나머지 질문 객체, ui에 로직 value 추가
-	function addCommonLogic(id, qstn) {
+	function addOthersLogic(id, qstn) {
 		var logic = "";
 		var logicNum = $("select[name=slt" + id  + "] option:selected").val();
 		
