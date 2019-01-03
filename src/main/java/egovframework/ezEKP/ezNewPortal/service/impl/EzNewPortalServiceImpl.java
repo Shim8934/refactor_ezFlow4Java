@@ -2042,6 +2042,45 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		return comMenuList;
 	};
 
+	public String isUseEzWorkspace(String companyId, int tenantId, String userId, String deptId) throws Exception {
+		LOGGER.debug("isUseEzWorkspace started.");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("userId", userId);
+		
+		String result = ezNewPortalDAO.isUseEzWorkspace(map);
+		
+		if(result != null) {
+			if(result.equalsIgnoreCase("0")) {
+				return "NO";
+			}
+			return "YES";
+		}
+
+		String deptPath = ezOrganService.getDeptPath(deptId, tenantId);
+		String[] deptArr = deptPath.split(",");
+		
+		for(int i=deptArr.length; i > 0; i--) {
+			map.put("userId", deptArr[i-1]);
+
+			// 존재하지 않으면 다음 for문 진행
+			// 존재하면 true, false 체크해서 처리.
+			result = ezNewPortalDAO.isUseEzWorkspace(map);
+			
+			if(result != null) {
+				if(result.equalsIgnoreCase("0")) {
+					return "NO";
+				}
+				return "YES";
+			}
+		}
+		
+		LOGGER.debug("isUseEzWorkspace ended.");
+		return "NO";
+	}
+	
 	@Override
 	public List<PersonalSliderImageVO> getSilderImages(String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getSilderImages started.");

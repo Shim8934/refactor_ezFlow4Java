@@ -2276,4 +2276,35 @@ ORDER BY
 		]]>
 	</iterate>
 </select>
+
+<select id="ezNewPortal.isUseEzWorkspace" parameterClass="Map" resultClass="String">
+<![CDATA[
+	SELECT 
+		auth.access_YN
+	FROM 
+		tbl_portal_menu_comp as comp
+	JOIN
+		tbl_portal_menu as menu
+	ON 
+		comp.menu_id = menu.menu_id
+	JOIN
+		tbl_portal_menu_auth as auth
+	ON
+		comp.tenant_id = auth.tenant_id
+	AND
+		comp.company_id = auth.company_id
+	AND
+		comp.menu_id = auth.menu_id
+	AND
+		comp.menu_used = true		
+	AND
+		comp.tenant_id = #tenantId#
+	AND
+		comp.company_id = #companyId#
+	AND
+		menu.menu_url like '%ezWorkspace%'
+	AND
+		user_id = #userId#
+]]>    
+</select>
 </sqlMap>

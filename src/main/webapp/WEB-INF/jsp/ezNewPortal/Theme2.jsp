@@ -168,11 +168,13 @@
                     	</c:choose>
                     </li>
                     <li>
-<!--                     <dl class="writebannerDL">
-                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner06.png" alt="협업"></dt>
-                            <dt>협업</dt>
-                            <dd>9</dd>
-                        </dl> -->
+					<c:if test="${useEzWorkspace eq 'YES' }">
+                    <dl class="writebannerDL" id="ezWorkspace">
+                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner06.png" alt="협업"></dt>
+                        <dt><spring:message code='ezNewPortal.pjg01' /></dt>
+                        <dd class="iconCount_none" id="workspaceCnt">0</dd>
+                    </dl>
+                	</c:if>                        
                     </li>
                 </ul>
             </article>
@@ -722,5 +724,21 @@
 		CalendarMiniDataSource("Top");
 	});
 </script>
+<!-- 협업 시작-->
+<c:if test="${useEzWorkspace eq 'YES' }">
+    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/Groupwareapi.js"></script>
+    <script type="text/javascript">
+	    var g_UserID = "${userId}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
+	    var WorkspaceUrl = "http://space.kaoni.com"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+	    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
+	    var feedListCount = 10;
+	    var g_bRayful = false;
+	    var g_bVisible = true; // 문서탭 선택 시 원문에 포함된 첨부파일 포함 여부 (false: 포함)	    
+	        
+    	ezWorkspaceData();
+    </script>		
+</c:if>	
+<!-- 협업 끝 -->	
 </body>	
 </html>
