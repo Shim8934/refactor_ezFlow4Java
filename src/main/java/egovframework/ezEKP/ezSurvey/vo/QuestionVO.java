@@ -9,7 +9,7 @@ public class QuestionVO {
 	private int tenantId;
 	private int type;
 	private String content;
-	private int level;
+	private long level;
 	private int useStatus;
 	private int required;
 	private int logicFlag;
@@ -68,27 +68,27 @@ public class QuestionVO {
 	public int getType() {
 		return type;
 	}
-
+	
 	public void setType(int type) {
 		this.type = type;
 	}
-
+	
 	public String getContent() {
 		return content;
 	}
-
+	
 	public void setContent(String content) {
 		this.content = content;
 	}
 	
-	public int getLevel() {
+	public long getLevel() {
 		return level;
 	}
-
-	public void setLevel(int level) {
+	
+	public void setLevel(long level) {
 		this.level = level;
 	}
-
+	
 	public int getUseStatus() {
 		return useStatus;
 	}
@@ -100,11 +100,11 @@ public class QuestionVO {
 	public int getRequired() {
 		return required;
 	}
-
+	
 	public void setRequired(int required) {
 		this.required = required;
 	}
-
+	
 	public int getLogicFlag() {
 		return logicFlag;
 	}

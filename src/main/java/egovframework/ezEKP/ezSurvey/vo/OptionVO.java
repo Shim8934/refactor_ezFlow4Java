@@ -10,7 +10,7 @@ public class OptionVO {
 	private String content;
 	private int level;
 	private int otherFlag;
-	private int logic;
+	private long logic;
 	private int rowLevel;
 	private int colLevel;
 	private AttachVO attach;
@@ -94,11 +94,11 @@ public class OptionVO {
 		this.otherFlag = otherFlag;
 	}
 	
-	public int getLogic() {
+	public long getLogic() {
 		return logic;
 	}
 	
-	public void setLogic(int logicNum) {
+	public void setLogic(long logicNum) {
 		this.logic = logicNum;
 	}
 	

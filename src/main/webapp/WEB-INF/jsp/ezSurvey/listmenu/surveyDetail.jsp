@@ -54,7 +54,10 @@
 	
 	<div class="detailBtns" style="text-align: right;">
 		<!-- <div id="" class=""><img src="/images/ezSurvey/prevstep.png"></div> -->
-		<div><button id="saveResult">결과 저장</button><button>취소</button></div>
+		<div>
+			<button id="saveResult">결과 저장</button>
+			<button>취소</button>
+		</div>
 	</div>
 	
 </body>
@@ -62,9 +65,9 @@
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/survey.js')} }"></script>
 <script type="text/javascript">
 	$(function() {
-		var survey = ${survey};
+		var survey   = ${survey};
 		var surveyId = survey.surveyId;
-
+		var logicmap = null;
 		getQuestions();
 		
 		function getQuestions() {
@@ -76,17 +79,50 @@
 				dataType: "JSON",
 				async: true,
 				success : function(data) {
-					var question = JSON.parse(JSON.stringify(data["questions"]));
+					var question  = JSON.parse(JSON.stringify(data["questions"]));
+					var firstpath = JSON.parse(JSON.stringify(data["firstpath"]));
+					
+					if (data["logicmap"]) {logicmap = JSON.parse(JSON.stringify(data["logicmap"]));}
 					
 					for (var i = 0; i < question.length; i++) {
 						SurveyCreate.setQs(question[i]);
 					}
+					
 					SurveyCreate.setQsForm(4);
+					
+					var listQstDiv = document.getElementsByClassName("prevQsWrapper");
+					for (var i = 0, len = listQstDiv.length; i < len; i++) {
+						var qstLevel = parseInt(listQstDiv[i].id.replace("prevQstn", ""));
+						if (firstpath.indexOf(qstLevel) == -1) {
+							listQstDiv[i].style.display = "none";
+						}
+					}
+					
+					console.log(JSON.stringify(data["logicmap"]));
 				},
 				error : function(error) {
 					alert(SurveyMessages.strError);
 				}
 			});
+		}
+		
+		function traverNode(nodeLevel, currentPath, totalPath) {
+			var nodeList = logicmap[nodeLevel];
+			currentPath.push(nodeLevel);
+			if (nodeList.length == 1) {
+				var nxtQst = parseInt(nodeList[0]);
+				if (nxtQst == 0) {
+					totalPath.push(currentPath);
+				}
+				else {
+					traverNode(nxtQst, currentPath, totalPath);
+				}
+			}
+			else {
+				for (var i = 0; i < nodeList.length; i++) {
+					
+				}
+			}
 		}
 		
 	});

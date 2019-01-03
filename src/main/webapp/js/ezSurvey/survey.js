@@ -125,13 +125,13 @@ var SurveyCreate    = function() {
 			forthTab[i].addEventListener("click",  gotoForthStep, false);
 		}
 		for (var i = 0; i < cancelSv1.length; i++) {
-			cancelSv1[i].addEventListener("click",  cancleThisSurvey, false);
+			cancelSv1[i].addEventListener("click",  cancelThisSurvey, false);
 		}
 		document.getElementById("public-slbox"  ).addEventListener("change", toggleDaysInput       , false);
 		document.getElementById("closeUserPanel").addEventListener("click",  toggleUserPreview     , false);
 		document.getElementById("saveSurvey"    ).addEventListener("click",  saveSurvey            , false);
 		
-		if (reuseSurvey == undefined) {
+		if (!surveyItem) {
 			// question input 및 img 생성
 			createQuestionDiv();
 			
@@ -142,7 +142,7 @@ var SurveyCreate    = function() {
 	}
 	
 	function startUpload() {document.getElementById("fileBttn").click();}
-	function cancleThisSurvey() { 
+	function cancelThisSurvey() { 
 		surveyObj['infor'] = {};
 		surveyObj['questions'] = [];
 		window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";

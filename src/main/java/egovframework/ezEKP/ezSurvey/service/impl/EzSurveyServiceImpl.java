@@ -18,9 +18,7 @@ import java.util.stream.Collectors;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.FileUtils;
-import org.apache.tools.ant.taskdefs.Apt.Option;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -642,6 +640,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	public JSONObject getSurveyQuestions(Long surveyId, String realPath, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
+		boolean logicFlag      = false;
+		Map<Long, List<Long>> logicMap = new HashMap<>();
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("tenantId",  tenantId);
 		map.put("companyId", userInfo.getCompanyID());
@@ -668,7 +668,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		attachs.removeAll(qstAttch);
 		
 		Map<Long, List<OptionVO>> mapOption = new HashMap<>();
-		ListIterator<OptionVO> optionIter = options.listIterator();
+		ListIterator<OptionVO> optionIter   = options.listIterator();
 		
 		while (optionIter.hasNext()) {
 			OptionVO option = optionIter.next();
@@ -691,8 +691,22 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			}
 		}
 		
+		//Check if survey has or hasn't logic branching
+		for (QuestionVO question : questions) {
+			if (question.getLogicFlag() == 1) {
+				logicFlag = true;
+				break;
+			}
+		}
+		
 		for (QuestionVO question : questions) {
 			question.setOption(mapOption.get(question.getQuestionId()));
+			
+			if (logicFlag) {
+				//Process question logic
+				List<Long> listQst = new ArrayList<>(processQuestionLogic(question, questions.size()));
+				logicMap.put(question.getLevel(), listQst);
+			}
 			
 			ListIterator<AttachVO> qsAtIter = qstAttch.listIterator();
 			while (qsAtIter.hasNext()) {
@@ -704,6 +718,36 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			}
 		}
 		
+		if (logicFlag) {
+			//Make logic path
+			List<List<Long>> logicPath = new ArrayList<>();
+			List<Long> currentPath     = new ArrayList<>();
+			
+			logger.debug(logicMap.toString());
+			
+			travelNode(1, logicPath, logicMap, currentPath);
+			
+			logger.debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+			for (int i = 0; i < logicPath.size(); i++) {
+				String test = logicPath.get(i).stream().map(Object::toString).collect(Collectors.joining(", "));
+				logger.debug("Logic Path " + (i + 1) + ": " + test);
+			}
+			logger.debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+			
+			//Find showable question list
+			List<Long> remainPath = logicPath.get(0).stream().map(elm -> new Long(elm)).collect(Collectors.toList());
+			for (int i = 1; i < logicPath.size(); i++) {
+				remainPath.retainAll(logicPath.get(i));
+			}
+			
+			logger.debug("+++++++++++++++++++++++++++++++++++++++++++++");
+			logger.debug("RemainPath: " + remainPath.stream().map(Object::toString).collect(Collectors.joining(", ")));
+			logger.debug("+++++++++++++++++++++++++++++++++++++++++++++");
+			
+			result.put("firstpath", remainPath);
+			result.put("logicmap" , logicMap);
+		}
+		
 		//long endTime   = System.nanoTime();
 		//long totalTime = endTime - startTime;
 		//logger.debug("TOTAL TIME: " + totalTime);
@@ -711,7 +755,48 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		result.put("questions", questions);
 		return result;
 	}
-
+	
+	private void travelNode(long qstLevel, List<List<Long>> logicPath, Map<Long, List<Long>> logicMap, List<Long> currentPath) {
+		List<Long> nodeList = logicMap.get(qstLevel);
+		currentPath.add(qstLevel);
+		
+		if (nodeList.size() == 1) {
+			long nxtQst = nodeList.get(0);
+			if (nxtQst == 0) {
+				logicPath.add(currentPath);
+			}
+			else {
+				travelNode(nxtQst, logicPath, logicMap, currentPath);
+			}
+		}
+		else {
+			for (long nextQsId : nodeList) {
+				List<Long> clonePath = currentPath.stream().map(elm -> new Long(elm)).collect(Collectors.toList());
+				travelNode(nextQsId, logicPath, logicMap, clonePath);
+			}
+		}
+	}
+	
+	private Set<Long> processQuestionLogic(QuestionVO question, int totalQs) {
+		Set<Long> setQuestionIds = new HashSet<>();
+		
+		for (OptionVO option : question.getOption()) {
+			if (option.getLogic() != -1) {
+				setQuestionIds.add(option.getLogic());
+			}
+			else {
+				if (question.getLevel() < totalQs) {
+					setQuestionIds.add(question.getLevel() + 1);
+				}
+				else {
+					setQuestionIds.add((long) 0);
+				}
+			}
+		}
+		
+		return setQuestionIds;
+	}
+	
 	private void cloneAttachFiles(List<AttachVO> attachs, String realPath, String dirPath) {
 		for (AttachVO attach : attachs) {
 			String fileName = attach.getFname();
