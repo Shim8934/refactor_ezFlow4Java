@@ -154,18 +154,23 @@
 				<c:if test="${cChk == '1'}">
 					<h2>
 						<span class="list_text" id="Organ" onClick="goPage(1)" ><spring:message code='main.t56' /></span>
+						<ul></ul>
 					</h2> 
 					<h2>
 						<span class="list_text" id="CheckAdmin" onClick="goPage(12)" ><spring:message code='main.t00062' /></span>
+						<ul></ul>
 					</h2> 
 					<h2>
 						<span class="list_text" id="Addjob" onClick="goPage(13)" ><spring:message code='main.t00063' /></span>
+						<ul></ul>
 					</h2> 
 					<h2>
 						<span class="list_text" id="JobInfo" onClick="goPage(31)"><spring:message code='ezOrgan.csj01' /></span>
+						<ul></ul>
 					</h2> 
 					<h2>
 						<span class="list_text" onClick="goPage(10)"><spring:message code='main.t377' /></span>
+						<ul></ul>
 					</h2>
 	  			</c:if>			
 

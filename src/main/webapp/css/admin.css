@@ -251,13 +251,20 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 
 /* ManageOrgan */
 .listview.organ {border-top: none;border-bottom:none;} 
-.OrganListView {border: 0px solid #ddd; Width: 375px; Height: 450px; overflow-x: hidden; BACKGROUND-COLOR: white;}
+.OrganListView {border: 0px solid #ddd; Width: 375px; Height: 470px; overflow-x: hidden; BACKGROUND-COLOR: white;}
 .pwd, .move {margin-left:15px; margin-top:3px;}
 .deptMaster {float:right;}
 .retire {margin-left:5px; margin-top:3px;}
 .imgbtn.search {margin-top:-1px;}
 .imgbtn.order {margin-top:2px;}
-.tblPageRayerOrgan {float:right; border: 1px solid #ddd; border-top:none; margin-top: -20px}
+.tblPageRayerOrgan {float:right; border: 1px solid #ddd; border-top:none; margin-top: -20px;display:none;}
 .listview.organ .mainlist_free tr th {padding:0px; visibility:hidden;}
 .organHeader {width:69%;overflow:hidden;float:right;border:1px solid rgb(221, 221, 221);border-top: none;border-bottom:none;}
 .organHeader .mainlist tr th {border-bottom:none;}
+.organSearchForm {overflow:hidden;padding:0;margin-bottom:11px;height:31px;border:1px solid #d2d2d2;border-right:0px;float:right}
+.organSearchTab {width:50px;border-right:1px solid #d2d2d2; float:left; background: #f8f8fa; padding:8px;}
+.organSearchContent {float:left; padding: 2px 2px 0px 2px;}
+.organSearchKeyword {width:100px; height:27px;}
+.organSearchEnter {width:50px;float:right;padding:4px;background:#f8f8fa;border:1px solid #d2d2d2;}
+label[for="listOpt1"] { position: relative; top: -4.5px;}
+label[for="listOpt2"] { position: relative; top: -4.5px;}

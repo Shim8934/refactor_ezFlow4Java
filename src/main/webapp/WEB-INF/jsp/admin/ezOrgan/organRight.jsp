@@ -50,7 +50,12 @@
 					companybutton3.style.display = "none";
 				}
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+				windowResize();
 			});
+
+			window.onresize = function(event) {
+				windowResize();
+			};
 
 			function Tree_setconfig(){
 			    var xmlHTTP = createXMLHttpRequest();
@@ -144,39 +149,67 @@
 			}			
 			
 			function displayUserList(DeptID){
+				var cellContent;
+				var typeContent;
 
+				if (listOpt1.checked == true){
+					cellContent = "extensionAttribute9;displayname;cn;description;title;extensionAttribute10";
+					typeContent = "userWithMasterAdmin";
+				}else{
+					cellContent = "displayname;extensionAttribute9";
+					typeContent = "group";
+				}
 				$.ajax({
 					type : "POST",
 					dataType : "text",
 					url : "/ezOrgan/getDeptMemberList.do",
 					data : {
 							deptID : DeptID,
-							cell : "extensionAttribute9;displayname;cn;description;title;extensionAttribute10",
+							cell : cellContent,
 							prop : "userType",
-							type : "userWithMasterAdmin"
+							type : typeContent
 					},
 					success : function(xml){
 						result=loadXMLString(xml);
 						var headerData = createXmlDom();
 
-						headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
+						if (listOpt1.checked == true){
+							headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
+							$("#maillist_user").css("display", "");
+							$("#maillist_dept").css("display", "none");
+						} else {
+							headerData = loadXMLString(listviewheader2.innerHTML.toUpperCase());
+							$("#maillist_user").css("display", "none");
+							$("#maillist_dept").css("display", "");
+						}
 
-						// 암호관리, 사원이동, 퇴직 cell append
-						var cnt = result.getElementsByTagName('ROWS')[0].childElementCount;
-						var i = 0;
-						for(i;i<cnt;i++) {
-							var cell1 = result.createElement("CELL");
-							var value1 = result.createElement("VALUE");
-							cell1.appendChild(value1);
-							var cell2 = result.createElement("CELL");
-							var value2 = result.createElement("VALUE");
-							cell2.appendChild(value2);
-							var cell3 = result.createElement("CELL");
-							var value3 = result.createElement("VALUE");
-							cell3.appendChild(value3);
-							result.getElementsByTagName("ROW")[i].appendChild(cell1);
-							result.getElementsByTagName("ROW")[i].appendChild(cell2);
-							result.getElementsByTagName("ROW")[i].appendChild(cell3);
+						if (listOpt1.checked == true) {
+							// 암호관리, 사원이동, 퇴직 cell append
+							var cnt = result.getElementsByTagName('ROWS')[0].childElementCount;
+							var i = 0;
+							for(i;i<cnt;i++) {
+								var cell1 = result.createElement("CELL");
+								var value1 = result.createElement("VALUE");
+								cell1.appendChild(value1);
+								var cell2 = result.createElement("CELL");
+								var value2 = result.createElement("VALUE");
+								cell2.appendChild(value2);
+								var cell3 = result.createElement("CELL");
+								var value3 = result.createElement("VALUE");
+								cell3.appendChild(value3);
+								result.getElementsByTagName("ROW")[i].appendChild(cell1);
+								result.getElementsByTagName("ROW")[i].appendChild(cell2);
+								result.getElementsByTagName("ROW")[i].appendChild(cell3);
+							}
+						} else {
+							var cnt = result.getElementsByTagName('ROWS')[0].childElementCount;
+							var i = 0;
+							for(i;i<cnt;i++) {
+								var cell1 = result.createElement("CELL");
+								var value1 = result.createElement("VALUE");
+								cell1.appendChild(value1);
+								result.getElementsByTagName("ROW")[i].prepend(cell1);
+							}
 						}
 
 				        if (CrossYN()) {
@@ -203,8 +236,9 @@
 						pUserList.SetHeightFree(true);
 						pUserList.DataSource(headerData);
 						pUserList.DataBind("OrganListView");
-						sawonDataParsing();
-						
+						if (listOpt1.checked == true) {
+							sawonDataParsing();
+						}
 						moveDisplay(false);
 					},
 					error : function(error){
@@ -718,6 +752,8 @@
 
 						var headerData = createXmlDom();
 						headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
+						$("#maillist_user").css("display", "");
+						$("#maillist_dept").css("display", "none");
 
 				        if (CrossYN()) {
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
@@ -776,11 +812,11 @@
 				var treeNode = new TreeNode();
 				treeNode.LoadFromID(nodeIdx.NodeID);
 
-				usermenu3.disabled = false;
+/* 				usermenu3.disabled = false;
 				usermenu4.disabled = false;
 				usermenu6.disabled = false;
 				usermenu7.disabled = false;
-				usermenu8.disabled = false;
+				usermenu8.disabled = false; */
 
 				try {
 					usermenu9.disabled = false;
@@ -843,12 +879,18 @@
 					}
 				}
 
+				if (listOpt1.checked == true){
+					pClass = "user";
+				} else {
+					pClass = "dept";
+				}
+				
 				$.ajax({
 					type : "POST",
 					dataType : "text",
 					url : "/admin/ezOrgan/saveOrderList.do",
 					async : false,
-					data : {cn : objNode, pClass : "user", userType : userType , deptId : DeptID},
+					data : {cn : objNode, pClass : pClass, userType : userType , deptId : DeptID},
 					success : function(result){
 						alert("<spring:message code='ezOrgan.t49' />");
 						getDeptFullTree(treeNode.GetNodeData("CN"));
@@ -1748,6 +1790,8 @@
 
 						var headerData = createXmlDom();
 						headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
+						$("#maillist_user").css("display", "");
+						$("#maillist_dept").css("display", "none");
 
 				        if (CrossYN()) {
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
@@ -1774,6 +1818,13 @@
 						alert("<spring:message code='ezOrgan.t59' />" + error);
 					}
 				});
+			}
+
+			var windowResize = function() {
+				var doc = window.document;
+				var height = window.innerHeight * 0.8 - 72;
+				doc.getElementById('TreeView').style.height = height + "px";
+				doc.getElementsByClassName('OrganListView')[0].style.height = (height -60) + "px";
 			}
 		</script>
 		<style>
@@ -1803,6 +1854,15 @@
 			</LISTVIEWDATA>
 		</xml>
 
+		<xml id="listviewheader2" style="display:none">
+			<LISTVIEWDATA>
+				<HEADERS>
+					<HEADER><WIDTH>4%</WIDTH></HEADER>
+					<HEADER><WIDTH>46%</WIDTH></HEADER>
+					<HEADER><WIDTH>50%</WIDTH></HEADER>
+				</HEADERS>
+			</LISTVIEWDATA>
+		</xml>
 		<h1>
 			<c:if test="${dotNetIntegration != 'YES'}">
 				<spring:message code='main.t56' />
@@ -1812,8 +1872,8 @@
 			</c:if>
 		</h1>
 
-		<div id="mainmenu" style="margin-top:-3px;">
-			<ul style="margin-top:15px">
+		<div id="mainmenu" class="organMainmenu">
+			<ul style="height:33px;">
 				<c:if test="${dotNetIntegration != 'YES'}">
 					<li id="companybutton3"><span onClick="check_info()">조직도정보</span></li>
 					<li id="companybutton1"><span onClick="add_company()"><spring:message code='ezOrgan.t76' /></span></li>
@@ -1826,8 +1886,7 @@
 					<c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>
 					<li id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></li>
 				</c:if>
-				<li id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
-				<li id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></li>
+				<%-- <li id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li> --%>
 				<c:if test="${useSyncServer == 'YES'}">			
 					<li id="usermenu24"><span onClick="syncOrganAccounts()"><spring:message code='ezOrgan.lhm5' /></span></li>
 				</c:if>
@@ -1840,38 +1899,43 @@
 				<c:if test="${useMobileManagemant == 'YES' }">
 					<li id="usermenu23"><span onClick="mobile_managed()"><spring:message code='ezPersonal.t998' /></span></li>
 				</c:if>
+				<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>
+				<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
+				<div class="organSearchEnter" >
+					<a class="imgbtn search" style="vertical-align:middle; width: 35px; ">
+						<span onClick="search_click()"><spring:message code='ezOrgan.t101' /></span>
+					</a>
+				</div>
+				<div class="organSearchForm">
+					<div class="organSearchTab"><span>검색대상</span></div>
+					<div class="organSearchContent">
+						<span>
+							<select id="search_type" style="width:100px; height:27px !important;line-height:normal !important;">
+								<option selected value="displayname"><spring:message code='ezOrgan.t67' /></option>
+								<option value="cn"><spring:message code='ezOrgan.t94' /></option>
+								<option value="description"><spring:message code='ezOrgan.t68' /></option>
+								<option value="title"><spring:message code='ezOrgan.t69' /></option>
+								<option value="extensionAttribute10"><spring:message code='ezOrgan.t1500' /></option>
+								<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
+								<option value="mobile"><spring:message code='ezOrgan.t96' /></option>
+								<option value="HomePhone"><spring:message code='ezOrgan.t97' /></option>
+								<option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98' /></option>
+								<option value="mail"><spring:message code='ezOrgan.t99' /></option>
+								<option value="streetAddress"><spring:message code='ezOrgan.t100' /></option>
+							</select>
+						</span>
+						<span><input id="keyword" class="organSearchKeyword" onKeyPress="search_press()"/></span>
+					</div>
+				</div>
 			</ul>
 		</div>
 
-		<div style="overflow:hidden;width:100%;padding:0;margin-bottom:10px;height:31px;border: 1px solid #d2d2d2;">
-			<div style="width:50px;border-right:1px solid #d2d2d2; float:left; background: #f8f8fa; padding:8px;"><span>검색대상</span></div>
-			<div style="float:left; padding: 5px 2px 0px 2px;">
-				<span>
-					<select id="search_type" style="WIDTH:100px; height:22px;">
-						<option selected value="displayname"><spring:message code='ezOrgan.t67' /></option>
-						<option value="cn"><spring:message code='ezOrgan.t94' /></option>
-						<option value="description"><spring:message code='ezOrgan.t68' /></option>
-						<option value="title"><spring:message code='ezOrgan.t69' /></option>
-						<option value="extensionAttribute10"><spring:message code='ezOrgan.t1500' /></option>
-						<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
-						<option value="mobile"><spring:message code='ezOrgan.t96' /></option>
-						<option value="HomePhone"><spring:message code='ezOrgan.t97' /></option>
-						<option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98' /></option>
-						<option value="mail"><spring:message code='ezOrgan.t99' /></option>
-						<option value="streetAddress"><spring:message code='ezOrgan.t100' /></option>
-					</select>
-				</span>
-				<span><input id="keyword" onKeyPress="search_press()" style="WIDTH:120px; height:22px;" /></span>
-			</div>
-			<div style="width:50px;float:right; padding: 6px;  background: #f8f8fa; border-left:1px solid #d2d2d2;"><a class="imgbtn search" style="vertical-align:middle; width: 35px; "><span onClick="search_click()"><spring:message code='ezOrgan.t101' /></span></a></div>
-		</div>
-
 		<div>
-			<div style="border: 1px solid #ddd; height: 510px; width: 30%;  overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
+			<div style="border: 1px solid #ddd; height: 530px; width: 30%;  overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
 			<div class="organHeader">
-	 		 	<table class="mainlist" style="width:100%;">
+	 		 	<table id="maillist_user" class="mainlist" style="width:100%;">
 					<tr class="header">
-						<th  width="4%"></th> 
+						<th width="4%"></th> 
 						<th width="20%"><spring:message code='ezOrgan.t67' /></th> 
 						<th >아이디</th>
 						<th  width="15%">부서</th> 
@@ -1880,6 +1944,13 @@
 						<th width="8%">암호관리</th>
 						<th width="8%">사원이동</th>
 						<th  width="7%">퇴직</th>
+					</tr>
+				</table>
+ 				<table id="maillist_dept" class="mainlist" style="width:100%;display:none;">
+					<tr class="header">
+						<th width="4%"></th>
+						<th width="46%"><spring:message code='ezOrgan.t70' /></th>
+						<th width="50%"><spring:message code='ezOrgan.t71' /></th>
 					</tr>
 				</table>
 			</div> 
