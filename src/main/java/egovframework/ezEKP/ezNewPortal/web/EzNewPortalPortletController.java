@@ -924,6 +924,22 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalMovieBoardPortlet End");
 		return "/ezNewPortal/portlets/movieBoardPortlet";
 	}
+	/**
+	 * 포틀릿 - 협업 포틀릿
+	 */
+	@RequestMapping(value="/ezNewPortal/ezWorkspacePortlet.do")
+	public String ezWorkspacePortlet(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("ezWorkspacePortlet Start");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String usedTheme = req.getParameter("usedTheme");
+		
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("usedTheme", usedTheme);
+		
+		logger.debug("ezWorkspacePortlet End");
+		return "/ezNewPortal/portlets/ezWorkspacePortlet";
+	}
 	
 	/**
 	 * 포틀릿 - 게시판 포틀릿

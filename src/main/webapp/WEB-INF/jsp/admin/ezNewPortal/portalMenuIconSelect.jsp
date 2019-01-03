@@ -27,6 +27,7 @@
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_workdiary"></span></div><input type="radio" name="selIcon"></div>
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_resource"></span></div><input type="radio" name="selIcon"></div>
 		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_board"></span></div><input type="radio" name="selIcon"></div>
+		<div class="menuIcon"><div><span class="icon_topmenu icon_nav_collaboration"></span></div><input type="radio" name="selIcon"></div>
 	</div>
 	<div id="addIcon" class="btnposition btnpositionNew">
 		<a class="imgbtn"><span><spring:message code='ezNewPortal.t058' /></span></a>
