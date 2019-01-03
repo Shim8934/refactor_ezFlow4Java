@@ -2698,6 +2698,9 @@ var SurveyCreate    = function() {
 		var wrapper = $("#prevQstn"+id);
 		var opt = "";
 		var optLength = "";
+		var valI = "";
+		var valJ = "";
+		var result = "";
 		
 		if (type == 1 || type == 2) {
 			opt = wrapper.find(".opt");
@@ -2707,30 +2710,35 @@ var SurveyCreate    = function() {
 			opt = wrapper.find(".drdwLogicRow");
 			optLength = opt.length;
 		}
+		
 		for (var i = 0; i < optLength; i++) {
 			var logicNum = $("select[name=slt" + id  + i +"] option:selected").val();
-
 			if (logicNum != "") {
-				if (i == 0) {
-					logicArr.push(logicNum);
-					
-				} else {
-					for (var j = 0; j < i; j++) {
-						if (logicArr[j] != logicNum) {
-							
-						} else {
-							if (confirm("이미 같은 번호가 존재합니다. 그대로 진행하시겠습니까?") == true) {
-								
-							} else {
-								return "fail";
-							}
-						}
-						
-					}
-					logicArr.push(logicNum);
-				}
+				logicArr.push(logicNum);
 			}
 		}
+		var arrLnegh = logicArr.length;
+		
+		for (var i = 0; i < arrLnegh; i++) {
+			valI = logicArr[i];
+			
+			for (var j = i+1; j < arrLnegh; j++) {
+				valJ = logicArr[j];
+				
+				if (valI == valJ) {
+					if (confirm(SurveyMessages.strSameNum) == true) {
+					result = 'Y';
+					break;
+					} else {
+						return "fail";
+					}
+				}
+			}
+			if (result == 'Y') {
+				break;
+			}
+		}
+		
 		return "success";
 	}
 	
