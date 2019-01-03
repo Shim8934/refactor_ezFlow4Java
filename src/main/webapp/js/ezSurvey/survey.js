@@ -1086,23 +1086,27 @@ var SurveyCreate    = function() {
 					qstn.option[i]['logic'] = -1; 
 					$("#logic" + id + i).remove();
 				}
-				
-			} else if (type == 7) {
-				qstn.option[0].logic  = -1;
-				qstn.sliderLogicPoint = -1;
-				$("#logic" + id).remove();
-				
-			} else if (type == 9) {
-				var row = prevWrapper.find(".drdwLogicRow");
-				var optLength = row.length;
-				
-				for (var i = 0; i < optLength; i++) {
-					qstn.option[i]['logic'] = -1; 
-					$("#logic" + id + i).remove();
+			
+			} else {
+				if (type == 7) {
+					qstn.option[0].logic  = -1;
+					qstn.sliderLogicPoint = -1;
+					
+				} else if (type == 9) {
+					var row = prevWrapper.find(".drdwLogicRow");
+					var optLength = row.length;
+					
+					for (var i = 0; i < optLength; i++) {
+						qstn.option[i]['logic'] = -1; 
+						$("#logic" + id + i).remove();
+					}
+					
+				} else {
+					qstn.option[0].logic  = -1;
 				}
+				
 				$("#logic" + id).remove();
 			}
-			
 			qstn.logicFlag = 0;
 			
 			$("#frstBtnGrp" + id).siblings().css("display", "none");
@@ -2636,7 +2640,7 @@ var SurveyCreate    = function() {
 				$("#logic" + id + i).remove();
 			}
 
-		} else if (type == 7 || type == 9) {
+		} else {
 			$("#logic" + id).remove();
 		}
 	}
@@ -2655,7 +2659,7 @@ var SurveyCreate    = function() {
 			$("select[name=slt" + id + "]").css("display", "none");
 			$("#sltVal" + id).text(logic).css("display", "");
 			
-		} else {
+		} else if (type == 1 || type == 2 || type == 9){
 			var wrapper = $("#prevQstn"+id);
 			var opt = "";
 			var optLength = "";
@@ -2677,6 +2681,13 @@ var SurveyCreate    = function() {
 				!isNaN(logicNum) ? $("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none") : $("#slt" + id + i).val('').prop("selected", true).css("display", "none");
 				$("#sltVal" + id + i).text(logic).css("display", "");
 			}
+		} else {
+			var logicNum = qstn.option[0]['logic'];
+			var logic = "";
+			
+			logic = SurveyMessages.strQs + " " + logicNum;
+			$("select[name=slt" + id + "]").css("display", "none");
+			$("#sltVal" + id).text(logic).css("display", "");
 		}
 		
 	}
