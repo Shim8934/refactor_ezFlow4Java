@@ -2286,31 +2286,31 @@ ORDER BY
 <select id="ezNewPortal.isUseEzWorkspace" parameterClass="Map" resultClass="String">
 <![CDATA[
 	SELECT 
-		auth.access_YN
+		tbl_portal_menu_auth.access_YN
 	FROM 
-		tbl_portal_menu_comp as comp
+		tbl_portal_menu_comp
 	JOIN
-		tbl_portal_menu as menu
+		tbl_portal_menu
 	ON 
-		comp.menu_id = menu.menu_id
+		tbl_portal_menu_comp.menu_id = tbl_portal_menu.menu_id
 	JOIN
-		tbl_portal_menu_auth as auth
+		tbl_portal_menu_auth
 	ON
-		comp.tenant_id = auth.tenant_id
+		tbl_portal_menu_comp.tenant_id = tbl_portal_menu_auth.tenant_id
 	AND
-		comp.company_id = auth.company_id
+		tbl_portal_menu_comp.company_id = tbl_portal_menu_auth.company_id
 	AND
-		comp.menu_id = auth.menu_id
+		tbl_portal_menu_comp.menu_id = tbl_portal_menu_auth.menu_id
 	AND
-		comp.menu_used = true		
+		tbl_portal_menu_comp.menu_used = 1		
 	AND
-		comp.tenant_id = #tenantId#
+		tbl_portal_menu_comp.tenant_id = #tenantId#
 	AND
-		comp.company_id = #companyId#
+		tbl_portal_menu_comp.company_id = #companyId#
 	AND
-		menu.menu_url like '%ezWorkspace%'
+		tbl_portal_menu.menu_url like '%ezWorkspace%'
 	AND
-		user_id = #userId#
+		tbl_portal_menu_auth.user_id = #userId#
 ]]>    
 </select>
 </sqlMap>
