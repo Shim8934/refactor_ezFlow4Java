@@ -572,6 +572,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 	public List<MenuInfoVO> getAllCompanyMenus(Map<String, Object> map) throws Exception {
 		return (List<MenuInfoVO>) list("ezNewPortal.getAllCompanyMenus", map);
 	}
+	
+	public String isUseEzWorkspace(Map<String, Object> map) throws Exception {
+		return (String) select("ezNewPortal.isUseEzWorkspace", map);
+	}
 
 	@SuppressWarnings("unchecked")
 	public List<PersonalSliderImageVO> getSilderImages(Map<String, Object> map) {
