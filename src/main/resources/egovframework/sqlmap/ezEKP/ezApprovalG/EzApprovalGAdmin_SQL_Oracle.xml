@@ -2765,11 +2765,13 @@
 		parameterClass="Map">
 		<![CDATA[
 			INSERT INTO TBL_ADMINRECEIPTGROUP_MAIN
-				(mainname,
+				(mainid,
+				mainname,
 				companyid,
 				tenant_id)
 			VALUES
-				(#v_MAINNAME#,
+				(SEQ_TBL_ADMINRECEIPTGROUP_MAIN.NEXTVAL,
+				#v_MAINNAME#,
 				#companyID#,
 				#tenantID#)
 		]]>
