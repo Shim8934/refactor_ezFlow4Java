@@ -1000,11 +1000,10 @@ var SurveyCreate    = function() {
 				
 				if (logicFlag == undefined || logicFlag == 0) {
 					qstn['logicFlag'] = 1;
-					$("#thrdBtnGrp" + id).siblings().css("display", "none");
-					$("#thrdBtnGrp" + id).css("display", "");
 				}
+				$("#thrdBtnGrp" + id).siblings().css("display", "none");
+				$("#thrdBtnGrp" + id).css("display", "");
 			}
-			console.log(qstnList);
 			
 		});
 		
