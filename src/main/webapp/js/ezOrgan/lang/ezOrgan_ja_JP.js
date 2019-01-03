@@ -34,3 +34,5 @@ var strLang535 = "データが存在しません。";
 var strLangLHM01 = "復職処理は元所属していた会社にのみ可能です。";
 var strLangLHM02 = "削除すると該当ユーザと関わりのあるデータは削除され、復元できなくなります。";
 var strLangLHM03 = "本当に削除してよろしいですか？";
+var strLangKHJ01 = "사원";
+var strLangKHJ02 = "명을 복구하시겠습니까?";
