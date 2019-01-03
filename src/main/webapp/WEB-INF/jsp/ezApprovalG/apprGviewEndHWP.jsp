@@ -54,6 +54,7 @@
 	        var pUserID = arr_userinfo[1];
 	        var pUse_Editor = "${useEditor}";
 			var ext = "hwp";
+			var orgCompanyID = "<c:out value='${orgCompanyID}' />";
 			
 	        window.onresize = function () {
 	            HwpCtrl.style.height = null;
