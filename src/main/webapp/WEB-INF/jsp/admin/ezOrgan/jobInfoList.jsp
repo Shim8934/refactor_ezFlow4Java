@@ -27,6 +27,8 @@
 		.preview_content {width: 97%; height: 630px; border: solid 0px green; display: inline-block; padding:10px;}
 		.preview_nodata {position: absolute; display: inline-block; width: 49%; vertical-align: middle; text-align: center; margin-top: 70px;}
 		.mainlist_free tr td:nth-child(5) {padding-left: 12px;}
+		#lvJobPositionList, #lvJobTitleList {min-width: 500px;}
+		#lvJobTitleUserList, #lvJobPositionUserList {min-width: 360px;}
 	</style>
 	<script type="text/javascript">
 		var Tab1_flag = true;
@@ -608,7 +610,7 @@
 		}
 	</script>
 </head>
-<body class="mainbody" style="overflow: hidden;">
+<body class="mainbody">
 	<h1>
 		<spring:message code='ezOrgan.csj01' />
 		<select class="companySelect" id="ListCompany" onChange="compChange()">
@@ -638,7 +640,7 @@
 	</script>
 	<div class="mainview">
 		<div class="listview" style="border: 0px;">
-			<div id="JobListView" style="height: 600px; width: 100%; overflow-y:auto;"></div>
+			<div id="JobListView" style="height: 658px; width: 100%; overflow-y:auto;"></div>
 		</div>
 	</div>
 	
@@ -686,19 +688,19 @@
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj04' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
-			<WIDTH>220</WIDTH>
+			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj04' />(<spring:message code='ezApprovalG.t1765'/>)</NAME>
-			<WIDTH>220</WIDTH>
+			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
-			<WIDTH>160</WIDTH>
+			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
-			<WIDTH>160</WIDTH>
+			<WIDTH></WIDTH>
 			</HEADER>
     	</HEADERS>
   	</LISTVIEWDATA>
@@ -708,17 +710,17 @@
 	   	<HEADERS>
      		<HEADER>
        		<NAME><spring:message code='ezOrgan.t218' /></NAME>
-			<WIDTH>190</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t67' /></NAME>
-			<WIDTH>190</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t69' /></NAME>
-			<WIDTH>190</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
@@ -744,19 +746,19 @@
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj17' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
-			<WIDTH>220</WIDTH>
+			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj17' />(<spring:message code='ezApprovalG.t1765'/>)</NAME>
-			<WIDTH>220</WIDTH>
+			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
-			<WIDTH>160</WIDTH>
+			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
-			<WIDTH>160</WIDTH>
+			<WIDTH></WIDTH>
 			</HEADER>
     	</HEADERS>
   	</LISTVIEWDATA>
@@ -766,17 +768,17 @@
 	   	<HEADERS>
      		<HEADER>
        		<NAME><spring:message code='ezOrgan.t218' /></NAME>
-			<WIDTH>190</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t67' /></NAME>
-			<WIDTH>190</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t1500' /></NAME>
-			<WIDTH>190</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>

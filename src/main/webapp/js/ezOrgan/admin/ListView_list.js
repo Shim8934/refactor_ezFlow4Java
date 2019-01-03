@@ -1232,13 +1232,17 @@ function tr_select(pRowID, pTableID, callbackFunc) {
 
     if (strAttribute == "true") {
         oSourceTr.setAttribute("selected", "false");
-        oSourceTr.firstElementChild.firstElementChild.checked = false;
+        if (oSourceTr.firstElementChild.firstElementChild) {
+            oSourceTr.firstElementChild.firstElementChild.checked = false;
+        }
         //oSourceTr.className = "";
         oSourceTr.style.backgroundColor = m_strColorDefault;
     }
     else {
         oSourceTr.setAttribute("selected", "true");
-        oSourceTr.firstElementChild.firstElementChild.checked = true;
+        if (oSourceTr.firstElementChild.firstElementChild) {
+        	oSourceTr.firstElementChild.firstElementChild.checked = true;
+        }
         //oSourceTr.className = "kt_li_tr";
         oSourceTr.style.backgroundColor =  m_strColorSelect;
     }
@@ -1277,7 +1281,11 @@ function tr_unselectedAll(pTableID) {
 
         if (objTr) {
             objTr.setAttribute("selected", false);
-            objTr.firstElementChild.firstElementChild.checked = false;
+            
+            if (objTr.firstElementChild.firstElementChild) {
+                objTr.firstElementChild.firstElementChild.checked = false;
+            }
+            
             objTr.className = "";
             objTr.style.backgroundColor =  m_strColorDefault;
         }
