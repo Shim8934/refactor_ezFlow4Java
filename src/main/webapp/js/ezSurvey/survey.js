@@ -1599,6 +1599,7 @@ var SurveyCreate    = function() {
 	}
 	
 	function mkMatrixQstn(question) {
+		var id       = question.level;
 		var inpType  = question.type == 3 ? "radio" : "checkbox";
 		var opts     = question["option"];
 		var col      = opts.filter(function(col) {return col["rowLevel"] == -1;});
@@ -1634,7 +1635,7 @@ var SurveyCreate    = function() {
 			
 			for (var j = 0; j < col.length; j++) {
 				inputTd = $("<td></td>");
-				Input = $("<input type='" + inpType + "'>");
+				Input = $("<input type='" + inpType + "' name='qstn" + id + "opt" + i + "'>");
 				Input.val("(" + row[i]["rowLevel"] + ", " + col[j]["colLevel"] + ")");
 				inputTd.append(Input);
 				bodyTr.append(inputTd);
@@ -1755,7 +1756,6 @@ var SurveyCreate    = function() {
 	}
 	
 	function mkSliderQstn(question) {
-		console.log(question);
 		var options = question.option;
 		var sliderLogicPoint = question.sliderLogicPoint;
 		var qstnId = question.level;
