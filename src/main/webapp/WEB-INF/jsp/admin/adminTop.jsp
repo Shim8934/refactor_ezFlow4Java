@@ -104,6 +104,10 @@
 				    case "menu30":
 				    	parent.frames["bottom"].location.href = "/admin/ezAttitude/attitudeMain.do";
 				    	break;
+					// 메일관리
+					case "menu31":
+						parent.frames["bottom"].location.href = "/admin/ezEmail/adminMailMain.do";
+						break;
 				}
 			}
 			
@@ -160,7 +164,8 @@
 		      				<li><span id="menu01" onClick="menu_change(70, event)"><spring:message code="main.t7" /></span></li>
                     	</c:if>
                     	
-		      			<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li>
+		      			<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t8" /></span></li>
+		      			<li><span id="menu31" onClick="menu_change(170, event)"><spring:message code="main.t78" /></span></li>
 		      			
 		      			<c:if test="${packageType != 'mail'}">      
 			      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="ezSchedule.t1010" /></span></li>

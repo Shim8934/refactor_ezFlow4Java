@@ -147,29 +147,58 @@
 	</head>
 	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
-			<div class="admin_left_title" title="<spring:message code='main.t8' />">
-				<spring:message code='main.t8' />
+			<div class="admin_left_title" title="<spring:message code='main.t78' />">
+				<spring:message code='main.t78' />
   			</div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<c:if test="${cChk == '1'}">
-					<h2>
-						<span class="list_text" id="Organ" onClick="goPage(1)" ><spring:message code='main.t56' /></span>
-					</h2> 
-					<h2>
-						<span class="list_text" id="CheckAdmin" onClick="goPage(12)" ><spring:message code='main.t00062' /></span>
-					</h2> 
-					<h2>
-						<span class="list_text" id="Addjob" onClick="goPage(13)" ><spring:message code='main.t00063' /></span>
-					</h2> 
-					<h2>
-						<span class="list_text" id="JobInfo" onClick="goPage(31)"><spring:message code='ezOrgan.csj01' /></span>
-					</h2> 
-					<h2>
-						<span class="list_text" onClick="goPage(10)"><spring:message code='main.t377' /></span>
-					</h2>
+				<h2>
+					<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
+				</h2>
+				<h2>
+					<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
+				</h2>
+				</c:if>
+				<c:if test="${cChk == '1'}">
+
+				<h2>
+					<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
+				</h2>  
+				
+				<h2>
+					<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
+				</h2>  
+				<c:if test="${useSharedMailbox == 'YES'}">
+		  			<h2>
+		  				<span onClick="goPage(33)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.sharedMailbox01' /></span>
+		    			<ul></ul>
+		  			</h2>
+	  			</c:if>
+ 
 	  			</c:if>			
 
+	  			<!-- 2018-02-20 재은 수정 (편지지 등록) -->
 	  			
+	  			<c:if test="${useLetter == 'YES'}">
+	  			<h2>
+					<span onClick="goPage(30)" style="display:inline-block;width:100%;"><spring:message code='main.t374' /></span>
+				    <ul></ul>
+				</h2>
+			    </c:if>
+	  			<!--							
+				<h2>
+					<span onClick="goPage(5)" style="display:inline-block;width:100%;"><spring:message code='main.t374' /></span>
+				    <ul></ul>
+				</h2>
+				-->
+				<!-- 편지지등록 끝 -->
+				<%-- <spring:message code='main.t58' /> --%>
+  				<c:if test="${useSignatureTemplate == 'YES'}">
+  					<h2>
+						<span onClick="goPage(32)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.jje05'/></span>
+			    		<ul></ul>
+					</h2>
+				</c:if>
 				<c:if test="${dotNetIntegration == 'YES'}">
 	            <h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="goPage(14)" ><spring:message code='main.kms1' /></span>
 	            <ul class="on"></ul>
