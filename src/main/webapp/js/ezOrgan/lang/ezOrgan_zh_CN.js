@@ -34,3 +34,5 @@ var strLang31 = "您不能指定一个完整的管理员权限。.";
 
 var strLang535 = "No Items";
 var strLangLHM01 = "Restoration to the other companies is not supported.";
+var strLangKHJ01 = "사원";
+var strLangKHJ02 = "명을 복구하시겠습니까?";

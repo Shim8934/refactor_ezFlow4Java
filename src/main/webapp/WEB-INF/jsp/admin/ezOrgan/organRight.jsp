@@ -204,6 +204,7 @@
 						pUserList.DataSource(headerData);
 						pUserList.DataBind("OrganListView");
 						sawonDataParsing();
+						
 						moveDisplay(false);
 					},
 					error : function(error){
@@ -1772,11 +1773,11 @@
 					error : function(error){
 						alert("<spring:message code='ezOrgan.t59' />" + error);
 					}
-		        });				
+				});
 			}
 		</script>
 		<style>
-		.OrganListView {width:100%;}
+			.OrganListView {width:100%;}
 		</style>
 	</head>
 	<body class="mainbody">
@@ -1786,62 +1787,22 @@
 			<input type="hidden" name="userSend" id="userSend" />
 		</form>
 
-		<xml id="listviewheader1" style="display:none">
+		<xml id="listviewheader1" style="display:none;">
 			<LISTVIEWDATA>
 				<HEADERS>
-					<HEADER>
-						<NAME></NAME>
-						<WIDTH>4%</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code='ezOrgan.t67' /></NAME>
-						<WIDTH>20%</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME>아이디</NAME>
-						<WIDTH></WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code='ezOrgan.t68' /></NAME>
-						<WIDTH>15%</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code='ezOrgan.t69' /></NAME>
-						<WIDTH>10%</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME>직책</NAME>
-						<WIDTH>10%</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME>암호관리</NAME>
-						<WIDTH>8%</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME>사원이동</NAME>
-						<WIDTH>8%</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME>퇴직</NAME>
-						<WIDTH>7%</WIDTH>
-					</HEADER>
+					<HEADER><WIDTH>4%</WIDTH></HEADER>
+					<HEADER><WIDTH>20%</WIDTH></HEADER>
+					<HEADER><WIDTH></WIDTH></HEADER>
+					<HEADER><WIDTH>15%</WIDTH></HEADER>
+					<HEADER><WIDTH>10%</WIDTH></HEADER>
+					<HEADER><WIDTH>10%</WIDTH></HEADER>
+					<HEADER><WIDTH>8%</WIDTH></HEADER>
+					<HEADER><WIDTH>8%</WIDTH></HEADER>
+					<HEADER><WIDTH>7%</WIDTH></HEADER>
 				</HEADERS>
 			</LISTVIEWDATA>
 		</xml>
-		<xml id="listviewheader2" style="display:none">
-			<LISTVIEWDATA>
-				<HEADERS>
-					<HEADER>
-						<NAME><spring:message code='ezOrgan.t70' /></NAME>
-						<WIDTH>70</WIDTH>
-					</HEADER>
-					<HEADER>
-						<NAME><spring:message code='ezOrgan.t71' /></NAME>
-						<WIDTH>30</WIDTH>
-					</HEADER>
-				</HEADERS>
-			</LISTVIEWDATA>
-		</xml>
+
 		<h1>
 			<c:if test="${dotNetIntegration != 'YES'}">
 				<spring:message code='main.t56' />
@@ -1907,7 +1868,21 @@
 
 		<div>
 			<div style="border: 1px solid #ddd; height: 510px; width: 30%;  overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
-					
+			<div class="organHeader">
+	 		 	<table class="mainlist" style="width:100%;">
+					<tr class="header">
+						<th  width="4%"></th> 
+						<th width="20%"><spring:message code='ezOrgan.t67' /></th> 
+						<th >아이디</th>
+						<th  width="15%">부서</th> 
+						<th width="10%">직위</th> 
+						<th  width="10%">직책</th>
+						<th width="8%">암호관리</th>
+						<th width="8%">사원이동</th>
+						<th  width="7%">퇴직</th>
+					</tr>
+				</table>
+			</div> 
 			<div class="listview organ" style="width:69%; float:right;">
 				<c:if test="${dotNetIntegration != 'YES'}">
 					<div id="OrganListView" class="OrganListView"></div>

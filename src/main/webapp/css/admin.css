@@ -250,11 +250,14 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 .employeeList {margin-left: 110px;}
 
 /* ManageOrgan */
-.listview.organ{border-bottom:none;} 
-.OrganListView {border: 0px solid #ddd; Width: 375px; Height: 482px; overflow-x: hidden; BACKGROUND-COLOR: white;}
+.listview.organ {border-top: none;border-bottom:none;} 
+.OrganListView {border: 0px solid #ddd; Width: 375px; Height: 450px; overflow-x: hidden; BACKGROUND-COLOR: white;}
 .pwd, .move {margin-left:15px; margin-top:3px;}
 .deptMaster {float:right;}
 .retire {margin-left:5px; margin-top:3px;}
-.imgbtn.search{margin-top:-1px;}
-.imgbtn.order{margin-top:2px;}
+.imgbtn.search {margin-top:-1px;}
+.imgbtn.order {margin-top:2px;}
 .tblPageRayerOrgan {float:right; border: 1px solid #ddd; border-top:none; margin-top: -20px}
+.listview.organ .mainlist_free tr th {padding:0px; visibility:hidden;}
+.organHeader {width:69%;overflow:hidden;float:right;border:1px solid rgb(221, 221, 221);border-top: none;border-bottom:none;}
+.organHeader .mainlist tr th {border-bottom:none;}
