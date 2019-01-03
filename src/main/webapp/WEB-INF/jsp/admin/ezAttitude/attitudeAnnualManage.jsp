@@ -154,6 +154,11 @@
 				window.open(url, "modifyPrsnAnnualPop", GetOpenWindowfeature(500, 300));
 	        }
 	    	
+	    	function annualHistoryPop(userId, year) {
+	        	var url = "/admin/ezAttitude/annualHistoryPop.do?year=" + year + "&userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
+				window.open(url, "annualHistoryPop", GetOpenWindowfeature(750, 300));
+	        }
+	    	
 	    	function getAnnualList() {
 	    		$.ajax({
 	    			data : "GET",
@@ -206,7 +211,7 @@
 		    			resultHtml += "<td>" + vo.totalAnnualCnt.split(".")[0] + "</td>";
 	    			}
 	    			resultHtml += "<td><a class='imgbtn'><span onclick='useAnnualHistory(this);'>내역 확인</span></a></td>";
-	    			resultHtml += "<td><a class='imgbtn'><span onclick=''>내역 확인</span></a></td>";
+	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"annualHistoryPop('" + vo.userId + "','" + vo.year + "')\">수정 내역 확인</span></a></td>";
 	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"modifyPrsnAnnualPop('" + vo.userId + "', '" + vo.userName + "','" + vo.year + "')\">수정</span></a></td></tr>";
 	    			
 	    			i++;

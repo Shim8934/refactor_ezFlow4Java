@@ -2244,6 +2244,55 @@ public class EzAttitudeAdminController {
 	}
 	
 	/**
+	 * 연차현황관리 개인연차변경 화면
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/annualHistoryPop.do")
+	public String annualHistoryPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("annualHistoryPop started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String userId = request.getParameter("userId");
+		String companyId = request.getParameter("companyId");
+		String year = request.getParameter("year");
+		
+		if (userId != null) {
+			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/annualHistoryPop/";
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId)
+					.queryParam("userId", userId)
+					.queryParam("year", year);
+			
+			RestTemplate rest = new RestTemplate();
+			
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			String status = resultBody.get("status").toString();
+			
+			JSONArray list = new JSONArray();
+			if (status.equals("ok")) {		
+				list = (JSONArray) resultBody.get("data");
+				
+				model.addAttribute("resultList", list);
+			}
+			
+		}
+		
+		LOGGER.debug("annualHistoryPop ended.");
+		
+		return "/admin/ezAttitude/annualHistoryPop";
+	}
+	
+	/**
 	 * 관리자 근태입력관리 조회
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAnnualList.do", produces = "application/json;charset=utf-8")
