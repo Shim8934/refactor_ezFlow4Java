@@ -144,7 +144,11 @@
 		    		},
 		    		success: function(text) {
 		    			alert("<spring:message code='ezSchedule.t4012' />");
-				        window.opener.schedule_get_holiday();				        
+		    			if (holidayType == "a") {
+					        window.opener.year_holiday();				        
+		    			} else {
+		    				window.opener.schedule_get_holiday();
+		    			}
 						window.close();
 		    		}	    		
 		        });

@@ -67,7 +67,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("isRest", isRest);
 		
 		List<ScheGetHolidayVO> List = ezScheduleDAO.getTholiday(map); 
-		
+		logger.debug("===== getTholiday Ended =====");
 		return List;
 	}
 	
@@ -82,7 +82,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("holidayYear", holidayYear);
 		
 		List<ScheGetHolidayVO> List = ezScheduleDAO.getTholidayYear(map); 
-		
+		logger.debug("===== getTholidayYear Ended =====");
 		return List;
 	}
 

@@ -559,6 +559,51 @@
         	schList.appendChild(li);
         });
 	}
+	
+	function schedule_get_holiday_top() {
+	    $.ajax({
+			type : "POST",
+			dataType : "text",
+			async : true,
+			url : "/ezSchedule/scheduleGetHoliday.do",
+			data : {
+				COMPANYID  : "VIEW"		    			
+			},
+			success: function(text){
+				XmlNodeText = text;
+	            XmlNode = loadXMLString(XmlNodeText);
+	            
+	            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
+	                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
+	                    var issolar;
+	                    var holiday;
+	                    
+	                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
+	                        issolar = "1";
+	                    else
+	                        issolar = "2";
+	                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1")			                    	
+	                        holiday = true;			                    
+	                    else
+	                        holiday = false;
+	                    
+	                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
+	                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+	                    } else {                   	
+	                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+	                    }
+	                }
+	            }			            
+	            CalendarMiniView("CalendarMini_Top");
+				CalendarMiniDataSource("Top");
+			}		    		
+	    });
+	}
  	
 	$(function() {
 		$("#featured").orbit();
@@ -720,8 +765,7 @@
 		
 		assembleScheduleList(pScheduleList);
 		
-		CalendarMiniView("CalendarMini_Top");
-		CalendarMiniDataSource("Top");
+		schedule_get_holiday_top(); // getholiday를 2번 부른다. 1번만 호출하도록 수정할 필요 있음.
 	});
 </script>
 <!-- 협업 시작-->
