@@ -463,3 +463,9 @@ input[type=range]::-ms-tooltip {display: none;}
 
 .svPurpose {width: auto; height: auto; padding: 15px 0px;}
 .svPurpose .ppContent {width: auto; height: auto; background-color:white; padding:15px 10px; border: 1px solid #d7d7d7;}
+
+.survey-bttn-wrp {float: right; padding: 10px 0px 20px;}
+.survey-bttn-wrp >img {height: 36px; width: 36px; cursor: pointer;}
+.survey-bttn-wrp >img + img {padding-left: 8px;}
+.infoBtns {float:right; height: 100%; display: flex; align-items: center;}
+.infoBtns >img {width: 32px;height: 32px; padding: 6px; cursor: pointer;}

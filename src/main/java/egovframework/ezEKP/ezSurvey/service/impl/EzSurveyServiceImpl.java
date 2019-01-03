@@ -42,6 +42,7 @@ import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyItemSearchVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyParticipantVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyVO;
+import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -57,6 +58,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@Resource(name = "EzSurveyDAO")
 	private EzSurveyDAO ezSurveyDAO;
+	
+	@Resource(name="loginService")
+	private LoginService loginService;
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
@@ -202,12 +206,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		if (mode == 1) { //delete, reuse check
 			if (otherSurvey.size() > 0) {
-				result.put("code", 3);
-				return result;
-			}
-		}
-		else if (mode == 2) { //participate check
-			if (otherSurvey.size() < listSurvey.size()) {
 				result.put("code", 3);
 				return result;
 			}
@@ -605,7 +603,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getItemInfoToReuse(Long surveyId, String realPath, LoginVO userInfo) throws Exception {
+	public JSONObject getItemInfo(Long surveyId, String mode, String realPath, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		//long startTime         = System.nanoTime(); //Only for test
@@ -627,6 +625,18 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		survey.setAttachList(surveyAttach);
 		survey.setUserList(listUsers);
 		result.put("survey", survey);
+		
+		if (mode.equals("normal")) {
+			LoginVO login = new LoginVO();
+			login.setId(survey.getCreatorId());
+			login.setDn("NOPASSWORD");
+			login.setTenantId(tenantId);
+			
+			LoginVO creator = loginService.selectUser(login);
+			creator.setDisplayName(userInfo.getPrimary().equals("1") ? userInfo.getDisplayName1() : userInfo.getDisplayName2());
+			
+			result.put("creator", creator);
+		}
 		
 		//long endTime   = System.nanoTime();
 		//long totalTime = endTime - startTime;
@@ -723,26 +733,25 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			List<List<Long>> logicPath = new ArrayList<>();
 			List<Long> currentPath     = new ArrayList<>();
 			
-			logger.debug(logicMap.toString());
-			
+			//Get all possible path
 			travelNode(1, logicPath, logicMap, currentPath);
 			
-			logger.debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+			/*logger.debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
 			for (int i = 0; i < logicPath.size(); i++) {
 				String test = logicPath.get(i).stream().map(Object::toString).collect(Collectors.joining(", "));
 				logger.debug("Logic Path " + (i + 1) + ": " + test);
 			}
-			logger.debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
+			logger.debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");*/
 			
-			//Find showable question list
+			//Find enable question list
 			List<Long> remainPath = logicPath.get(0).stream().map(elm -> new Long(elm)).collect(Collectors.toList());
 			for (int i = 1; i < logicPath.size(); i++) {
 				remainPath.retainAll(logicPath.get(i));
 			}
 			
-			logger.debug("+++++++++++++++++++++++++++++++++++++++++++++");
-			logger.debug("RemainPath: " + remainPath.stream().map(Object::toString).collect(Collectors.joining(", ")));
-			logger.debug("+++++++++++++++++++++++++++++++++++++++++++++");
+			//logger.debug("+++++++++++++++++++++++++++++++++++++++++++++");
+			//logger.debug("RemainPath: " + remainPath.stream().map(Object::toString).collect(Collectors.joining(", ")));
+			//logger.debug("+++++++++++++++++++++++++++++++++++++++++++++");
 			
 			result.put("firstpath", remainPath);
 			result.put("logicmap" , logicMap);

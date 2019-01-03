@@ -33,6 +33,7 @@
 				<li id="searchBttn"><a><span><spring:message code='ezSurvey.t20'/></span></a></li>
 				<li id="deleteBttn"><a><span><spring:message code='ezSurvey.t21'/></span></a></li>
 				<li id="reuseBttn" ><a><span><spring:message code='ezSurvey.t22'/></span></a></li>
+				<li id="modifyBttn"><a><span><spring:message code='ezSurvey.t78'/></span></a></li>
 				
 				<li id="right">
 					<img src="${config.previewMode == 'off' ? '/images/kr/cm/btn_onnoframe.gif'     : '/images/kr/cm/btn_noframe.gif'}"     class="btnimg survey" id="preViewNone"  >

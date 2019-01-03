@@ -38,6 +38,6 @@ public interface EzSurveyService {
 	JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, LoginVO userInfo) throws Exception;
 	JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String sqlQuery, String srchMode, String srchOption, String order, String column, LoginVO userInfo) throws Exception;
 	void deleteItems(List<Long> itemIdList, LoginVO userInfo) throws Exception;
-	JSONObject getItemInfoToReuse(Long surveyId, String realPath, LoginVO userInfo) throws Exception;
+	JSONObject getItemInfo(Long surveyId, String mode, String realPath, LoginVO userInfo) throws Exception;
 	JSONObject getSurveyQuestions(Long surveyId, String realPath, LoginVO userInfo) throws Exception;
 }
