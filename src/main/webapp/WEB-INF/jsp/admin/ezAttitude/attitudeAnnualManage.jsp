@@ -195,8 +195,16 @@
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.userDeptName + "</td>";
-	    			resultHtml += "<td>" + vo.useAnnualCnt + "</td>";
-	    			resultHtml += "<td>" + vo.totalAnnualCnt + "</td>";
+	    			if (Number(vo.useAnnualCnt.split(".")[1]) > 0) {
+		    			resultHtml += "<td>" + vo.useAnnualCnt + "</td>";
+	    			} else {
+		    			resultHtml += "<td>" + vo.useAnnualCnt.split(".")[0] + "</td>";
+	    			}
+	    			if (Number(vo.totalAnnualCnt.split(".")[1]) > 0) {
+		    			resultHtml += "<td>" + vo.totalAnnualCnt + "</td>";
+	    			} else {
+		    			resultHtml += "<td>" + vo.totalAnnualCnt.split(".")[0] + "</td>";
+	    			}
 	    			resultHtml += "<td><a class='imgbtn'><span onclick='useAnnualHistory(this);'>내역 확인</span></a></td>";
 	    			resultHtml += "<td><a class='imgbtn'><span onclick=''>내역 확인</span></a></td>";
 	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"modifyPrsnAnnualPop('" + vo.userId + "', '" + vo.userName + "','" + vo.year + "')\">수정</span></a></td></tr>";
@@ -277,7 +285,7 @@
 			function useAnnualHistory (obj) {
 				var searchYear = document.getElementById("searchYear").value;
 				var userId = $(obj).closest("tr").attr("userid");
-				var url = "/admin/ezAttitude/useAnnualHistoryPop.do?userId=" + userId + "&year" + searchYear + "&companyId=" + pCompanyId;
+				var url = "/admin/ezAttitude/useAnnualHistoryPop.do?userId=" + userId + "&year=" + searchYear + "&companyId=" + pCompanyId;
 				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(685, 500));
 			}
 	    </script>

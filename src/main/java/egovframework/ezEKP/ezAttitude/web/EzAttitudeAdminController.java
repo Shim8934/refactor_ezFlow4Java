@@ -2192,9 +2192,7 @@ public class EzAttitudeAdminController {
 	}
 	
 	/**
-<<<<<<< HEAD
 	 * 관리자 연차현황관리 조회
-=======
 	 * 연차현황관리 개인연차변경 화면
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/modifyPrsnAnnualPop.do")
@@ -2247,7 +2245,6 @@ public class EzAttitudeAdminController {
 	
 	/**
 	 * 관리자 근태입력관리 조회
->>>>>>> bcb942e2dc6127522562a82b30096cb5cfc3ac2c
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeAnnualList.do", produces = "application/json;charset=utf-8")
 	@ResponseBody
@@ -2530,12 +2527,13 @@ public class EzAttitudeAdminController {
 		
 		//header
 		row.createCell(0).setCellValue("NO");
-		row.createCell(1).setCellValue("userId");
-		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
-		row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
-		row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
-		row.createCell(5).setCellValue("사용연차 수");
-		row.createCell(6).setCellValue("총 연차 수");
+		row.createCell(1).setCellValue("년도");
+		row.createCell(2).setCellValue("사용자 ID");
+		row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
+		row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
+		row.createCell(5).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
+		row.createCell(6).setCellValue("사용연차 수");
+		row.createCell(7).setCellValue("총 연차 수");
 		row.getCell(0).setCellStyle(headerStyle);
 		row.getCell(1).setCellStyle(headerStyle);
 		row.getCell(2).setCellStyle(headerStyle);
@@ -2543,6 +2541,7 @@ public class EzAttitudeAdminController {
 		row.getCell(4).setCellStyle(headerStyle);
 		row.getCell(5).setCellStyle(headerStyle);
 		row.getCell(6).setCellStyle(headerStyle);
+		row.getCell(7).setCellStyle(headerStyle);
 		
 		//body
 		for (int i = 0 ; i < annualList.size(); i++) { 
@@ -2550,12 +2549,13 @@ public class EzAttitudeAdminController {
 			row = sheet.createRow(i + 1);
 			
 			row.createCell(0).setCellValue(i + 1);
-			row.createCell(1).setCellValue(vo.getUserId());
-			row.createCell(2).setCellValue(vo.getUserName());
-			row.createCell(3).setCellValue(vo.getUserTitle());
-			row.createCell(4).setCellValue(vo.getUserDeptName());
-			row.createCell(5).setCellValue(vo.getUseAnnualCnt());
-			row.createCell(6).setCellValue(vo.getTotalAnnualCnt());
+			row.createCell(1).setCellValue(vo.getYear());
+			row.createCell(2).setCellValue(vo.getUserId());
+			row.createCell(3).setCellValue(vo.getUserName());
+			row.createCell(4).setCellValue(vo.getUserTitle());
+			row.createCell(5).setCellValue(vo.getUserDeptName());
+			row.createCell(6).setCellValue(vo.getUseAnnualCnt());
+			row.createCell(7).setCellValue(vo.getTotalAnnualCnt());
 			
 			row.getCell(0).setCellStyle(bodyStyle);
 			row.getCell(1).setCellStyle(bodyStyle);
@@ -2564,6 +2564,7 @@ public class EzAttitudeAdminController {
 			row.getCell(4).setCellStyle(bodyStyle);
 			row.getCell(5).setCellStyle(bodyStyle);
 			row.getCell(6).setCellStyle(bodyStyle);
+			row.getCell(7).setCellStyle(bodyStyle);
 		}
 		//width 조정
 		sheet.autoSizeColumn(0);
@@ -2573,6 +2574,7 @@ public class EzAttitudeAdminController {
 		sheet.autoSizeColumn(4);
 		sheet.autoSizeColumn(5);
 		sheet.autoSizeColumn(6);
+		sheet.autoSizeColumn(7);
 		sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
 		sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
 		sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
@@ -2580,6 +2582,7 @@ public class EzAttitudeAdminController {
 		sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
 		sheet.setColumnWidth(5, (sheet.getColumnWidth(5)) + 512);
 		sheet.setColumnWidth(6, (sheet.getColumnWidth(6)) + 512);
+		sheet.setColumnWidth(7, (sheet.getColumnWidth(7)) + 512);
 			
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
@@ -2590,10 +2593,27 @@ public class EzAttitudeAdminController {
 		LOGGER.debug("excelAnnualListExport ended.");
 	}
 	
-	// 
 	@RequestMapping(value = "/admin/ezAttitude/useAnnualHistoryPop.do")
 	public String useAnnualHistoryPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LOGGER.debug("useAnnualHistoryPop started.");
+		//해당 사원 정보 (사원이름 직위 부서), 지각 수, 연차 수, 반차들 수, 연차 리스트
+		String userId = request.getParameter("userId");
+		String year = request.getParameter("year");
+		String companyId = request.getParameter("companyId");
+				
+		model.addAttribute("userId", userId);
+		model.addAttribute("year", year);
+		model.addAttribute("companyId", companyId);
+
+		
+		LOGGER.debug("useAnnualHistoryPop ended.");
+
+		return "/admin/ezAttitude/useAnnualHistoryPop";
+	}
+	
+	@RequestMapping(value = "/admin/ezAttitude/useAnnualHistoryList.do")
+	public String useAnnualHistoryList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("useAnnualHistoryList started.");
 		//해당 사원 정보 (사원이름 직위 부서), 지각 수, 연차 수, 반차들 수, 연차 리스트
 		String userId = request.getParameter("userId");
 		String year = request.getParameter("year");
@@ -2626,19 +2646,12 @@ public class EzAttitudeAdminController {
 			if (status.equals("ok")) {		
 				userAnnualList = (JSONArray) resultBody.get("data");
 				
-				model.addAttribute("userAnnualList", userAnnualList);
-				
-				JSONObject vo = (JSONObject) userAnnualList.get(0);
-				
-				model.addAttribute("userName", vo.get("userName"));
-				model.addAttribute("userTitle", vo.get("userTitle"));
-				model.addAttribute("userDeptName", vo.get("deptName"));
-				model.addAttribute("totalAnnualCnt", vo.get("totalAnnualCnt"));
+				model.addAttribute("list", userAnnualList);
 			}
 		}
 		
-		LOGGER.debug("useAnnualHistoryPop ended.");
-
-		return "/admin/ezAttitude/useAnnualHistoryPop";
+		LOGGER.debug("useAnnualHistoryList ended.");
+		
+		return "json";
 	}
 }

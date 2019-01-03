@@ -1601,8 +1601,8 @@
 			    A.DISPLAYNAME as userName,
 			    A.TITLE as userTitle,
 			    A.DESCRIPTION as deptName,
-			    C.START_DATE as startDate,
-			    C.END_DATE as endDate,
+			    date_add(C.START_DATE, INTERVAL #offsetMin# minute) as startDate,
+			    date_add(C.END_DATE, INTERVAL #offsetMin# minute) as endDate,
 			    C.TYPE_ID as typeId,
 			    D.TYPE_NAME as typeName,
 			    ifnull( 
