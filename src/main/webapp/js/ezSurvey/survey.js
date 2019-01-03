@@ -232,11 +232,9 @@ var SurveyCreate    = function() {
 		document.getElementById("tab1").className = "select-tab";
 		lastStep = 1;
 	}
-////////////	
+	
 	function gotoSecondStep() {
-		
-		console.log(enterLogic);
-		
+		if (enterLogic == 'Y') {deleteAllLogics();}	// 로직 설정 단계에 진입했는지 확인
 		var checkObj = prepareForStep2();
 		if (checkObj["error"]) {alert(checkObj["error"]); return;}
 
@@ -452,25 +450,26 @@ var SurveyCreate    = function() {
 					var qstn = questionList[i];
 					var type = qstn.type;
 					var logicFlag = qstn.logicFlag;
-					
-					// 질문의 로직 번호 삭제
-					if (type == 1 || type == 2 || type == 9) {
-						var opt = qstn['option'];
-						var optLength = opt.length;
-						
-						for (var i = 0; i < optLength; i++) {
-							qstn.option[i]['logic'] = -1; 
+
+					if (logicFlag == 1) {
+						// 질문의 로직 번호 삭제
+						if (type == 1 || type == 2 || type == 9) {
+							var opt = qstn['option'];
+							var optLength = opt.length;
+							
+							for (var j = 0; j < optLength; j++) {
+								qstn.option[j]['logic'] = -1; 
+							}
+						} else {
+							qstn.option[0]['logic']  = -1;
+							
+							if (type == 7) {
+								qstn.sliderLogicPoint = -1;
+							}
 						}
-					} else {
-						qstn.option[0]['logic']  = -1;
-						
-						if (type == 7) {
-							qstn.sliderLogicPoint = -1;
-						}
+						// logic flag 변경
+						qstn.logicFlag = 0;
 					}
-					
-					// logic flag 변경
-					qstn.logicFlag = 0;
 					
 				}
 			}
@@ -1731,7 +1730,6 @@ var SurveyCreate    = function() {
 	// 재사용시 질문 폼 생성
 	function reuseQstns(questions) {
 		var qstn = questions;
-		console.log(qstn);
 		var qstnLength = qstn.length;
 		
 		for (var i = 0; i < qstnLength; i++) {
