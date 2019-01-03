@@ -8,16 +8,11 @@
 		<title><spring:message code = 'ezCommunity.t28' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
-		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
-		
 		<style> 
-	        .pagetd{
+	        .pagetd {
 	        	padding-top:6px;
 	        }
-	        .pcol{
+	        .pcol {
 	        	padding-top:6px;
 	        }
 	        .right_point01 {
@@ -25,13 +20,19 @@
 		        color:#017bec;
 	        }
         </style>
-        
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
         <script type="text/javascript">
 	        var pKeyWord = "<c:out value = '${keyword}' />";
 	        var CurPage = "<c:out value = '${curPage}' />";
 		    var totalPage = "<c:out value = '${totalPage}' />";
 		    var totalCount = "<c:out value = '${keywordCount}' />";
 		    var pUse_Editor = "<c:out value = '${useEditor}' />";
+		    
+		    /* 2019-01-02 홍승비 - IE > 로딩 속도 개선용 DOM 로드 리스너 추가(IE8 이상 지원) */
+		    document.addEventListener("DOMContentLoaded", makePageSelPage);
 		    
 			function keyword_onkeydown(e) {
 			    if (!window.ActiveXObject) {
@@ -50,8 +51,7 @@
 			function refresh_onclick() {
 				window.location.reload(false);
 			}
-		</script>
-		<script type="text/javascript">		    
+			
 			function search() {
 				if (document.page.s_radio.value == "title" ) {
 					var strSearch = "sRadio=title&keyword=" + make_searchstring(document.page.keyword.value);
@@ -240,7 +240,7 @@
         </script>
 	</head>
 	
-	<body class="mainbody" onload = "makePageSelPage()">
+	<body class="mainbody">
 		<c:choose>
 			<c:when test="${bName == 'tbl_c_notice' }">
 				<h1><spring:message code='main.t272'/>&nbsp;<spring:message code='ezCommunity.t863'/><span id="mailBoxInfo"></span></h1>

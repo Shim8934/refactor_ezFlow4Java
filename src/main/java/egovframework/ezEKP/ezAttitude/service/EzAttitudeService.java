@@ -34,7 +34,7 @@ public interface EzAttitudeService {
 	
 	public List<AttitudeStatisVO> getAttitudeStatisticsList(String pidList, String deptIdList, String offset, String startDate, String endDate, int tenantId, String deptFlag) throws Exception;
 	
-	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, String statistics, int tenantId, String primary) throws Exception;
+	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, String statistics, String typeIdArr, int tenantId, String primary) throws Exception;
 	
 	public AttitudeFormVO getFormBody(String typeId, String companyId, int tenantId) throws Exception;
 	
@@ -132,10 +132,14 @@ public interface EzAttitudeService {
 
 	public List<AttitudeAuthorVO> getDeptUserList(int tenantId, String key, String value, String companyId, String lang) throws Exception;
 
-	public String getAttitudeAnnualListCount(String searchUserName,	String searchDeptName, String searchTitle, String searchYear, String offsetMin, String companyId, int tenantId);
+	public String getAttitudeAnnualListCount(String searchUserName,	String searchDeptName, String searchTitle, String searchYear, String offsetMin, String companyId, int tenantId) throws Exception;
 
-	public List<AttitudeAnnualVO> getAttitudeAnnualList(String searchUserName,String searchDeptName, String searchTitle, String searchYear,	String orderCell, String orderOption, String offsetMin, String pageNum, String listSize, String companyId, int tenantId, String primary);
+	public List<AttitudeAnnualVO> getAttitudeAnnualList(String searchUserName,String searchDeptName, String searchTitle, String searchYear,	String orderCell, String orderOption, String offsetMin, String pageNum, String listSize, String companyId, int tenantId, String primary) throws Exception;
 	
+//	public void changeAllAnnual(Map<String, Object> map, int tenantId, String companyId, String primary) throws Exception;
+
+	public List<AdminAttitudeVO> getUserAnnual(String userId, String primary, String offset, String year, String companyId, int tenantId) throws Exception;
+
 	public void changeAnnual(Map<String, Object> map) throws Exception;
 	
 	public AttitudeAnnualVO getAnnualCnt(Map<String, Object> map) throws Exception;

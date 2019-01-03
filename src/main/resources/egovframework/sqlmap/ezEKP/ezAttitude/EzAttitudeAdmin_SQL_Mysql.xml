@@ -299,6 +299,13 @@
 				TYPE_ID NOT IN ('A01', 'A03', 'A05')
 			]]>
 			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="typeIdArr">
+			<iterate prepend="TYPE_ID IN" property="typeIdArr" open="(" close=")" conjunction=",">
+			<![CDATA[
+				#typeIdArr[]#
+			]]>
+			</iterate>
+			</isNotEmpty>
 			AND
 				ISDEL = '0'
 	</select>
@@ -1449,7 +1456,7 @@
 				  )
 				 )
 			WHERE
-				A.TENANT_ID = 1
+				A.TENANT_ID = #tenantId#
 			AND 
 				A.PHYSICALDELIVERYOFFICENAME = #companyId#			
 		]]>
@@ -1600,6 +1607,77 @@
 				USER_ID = #userId#
 			</isNotEmpty>
 	</insert>
+	<select id="ezAttitudeAdminDAO.getUserAnnual" parameterClass="Map" resultClass="AdminAttitudeVO">
+		<![CDATA[
+			SELECT 
+				A.cn AS userId,
+			    A.DISPLAYNAME as userName,
+			    A.TITLE as userTitle,
+			    A.DESCRIPTION as deptName,
+			    C.START_DATE as startDate,
+			    C.END_DATE as endDate,
+			    C.TYPE_ID as typeId,
+			    D.TYPE_NAME as typeName,
+			    ifnull( 
+						CASE
+						   WHEN C.TYPE_ID = 'A11' THEN to_days(C.END_DATE) - to_days(C.START_DATE)
+			               WHEN C.TYPE_ID = 'A12' THEN 0.5
+			               WHEN C.TYPE_ID = 'A13' THEN 0.5
+						   ELSE 0
+						END
+				, 0) as annualCnt,
+			    ifnull(B.TOTAL_ANNUAL_CNT, 0) as totalAnnualCnt
+			FROM 
+				TBL_USERMASTER A
+			LEFT OUTER JOIN 
+				TBL_ATTITUDE_ANNUAL B
+			ON
+				(A.TENANT_ID = B.TENANT_ID 
+				AND
+				 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
+				AND
+				 A.CN = B.USER_ID
+				AND B.YEAR = #year#)
+			LEFT OUTER JOIN 
+				TBL_ATTITUDE C
+			ON
+				(A.TENANT_ID = C.TENANT_ID 
+				AND 
+				 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
+				AND
+				 A.CN = C.WRITER_ID
+				AND 
+				 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+				AND 
+				 (
+					   (
+						date_add(C.START_DATE, INTERVAL #offsetMin# minute) >= #startTime#
+						AND date_add(C.START_DATE, INTERVAL #offsetMin# minute) <= #endTime#
+						)
+					OR (
+						date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #startTime#
+						AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) < #endTime#
+						)
+					OR (
+						date_add(C.START_DATE, INTERVAL #offsetMin# minute) < #startTime#
+						AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #endTime#
+						)
+				  )
+				 )
+			LEFT OUTER JOIN 
+				TBL_ATTITUDE_TYPE D
+			ON 
+				(A.TENANT_ID = D.TENANT_ID AND A.PHYSICALDELIVERYOFFICENAME = D.COMPANY_ID AND C.TYPE_ID = D.TYPE_ID)
+			WHERE 
+				A.TENANT_ID = #tenantId#
+			AND 
+				A.PHYSICALDELIVERYOFFICENAME = #companyId#
+			AND 
+				A.cn = #userId#
+			ORDER BY 
+				START_DATE
+		]]>
+	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAnnualCnt" parameterClass="Map" resultClass="AttitudeAnnualVO">
 		<![CDATA[

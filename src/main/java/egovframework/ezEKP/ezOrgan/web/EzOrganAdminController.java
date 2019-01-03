@@ -1128,6 +1128,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					logger.debug("updateGroupDel rc=" + rc);							
 				}
+				
+				// 공유사서함 기능 사용 시 공유사서함의 공유자에서 해당 유저를 제외한다.
+				String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantID);
+	    		
+	    		if (useSharedMailbox.equals("YES")) {
+	    			rc = ezEmailService.deleteUserFromAllSharedMailbox(cn[i], tenantID);
+	    			
+	    			logger.debug("deleteUserFromAllSharedMailbox rc=" + rc);
+	    		}
 			}
 			// dhlee - end
 		}
@@ -1286,7 +1295,16 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							rc = ezEmailUserAdminService.updateGroupDel(dist, mailAddr);	
 							
 							logger.debug("updateGroupDel rc=" + rc);							
-						}						
+						}
+						
+						// 공유사서함 기능 사용 시 공유사서함의 공유자에서 해당 유저를 제외한다.
+						String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantID);
+			    		
+			    		if (useSharedMailbox.equals("YES")) {
+			    			rc = ezEmailService.deleteUserFromAllSharedMailbox(cn[i], tenantID);
+			    			
+			    			logger.debug("deleteUserFromAllSharedMailbox rc=" + rc);
+			    		}
 					} else {
 						logger.debug("retiring the user '" + mailAddr + "' failed.");
 						
@@ -3339,7 +3357,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-//		String cn = request.getParameter("cn");
 		String jobID = request.getParameter("jobID");
 		String type = request.getParameter("type");
 		String mode = request.getParameter("mode");
@@ -3355,7 +3372,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("type", type);
 		model.addAttribute("mode", mode);
 		model.addAttribute("jobID", jobID);
-//		model.addAttribute("cn", cn);
 
 		logger.debug("jobTitlePopupUI ended.");
 		return "admin/ezOrgan/jobTitlePopupUi";
@@ -3374,7 +3390,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 
-//		String cn = request.getParameter("cn");
 		String jobID = request.getParameter("jobID");
 		String type = request.getParameter("type");
 		String mode = request.getParameter("mode");
@@ -3428,7 +3443,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-//		String cn = request.getParameter("cn");
 		String jobID = request.getParameter("jobID");
 		String type = request.getParameter("type");
 		String companyID = request.getParameter("companyID");
@@ -3448,12 +3462,28 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-//		String cn = request.getParameter("cn");
 		String jobID = request.getParameter("jobID");
 		String type = request.getParameter("type");
 		String companyID = request.getParameter("companyID");
 		
-		String result = ezOrganAdminService.getTitleUserList(type, jobID, userInfo.getPrimary(), companyID, userInfo.getTenantId());
+		String pageSize = request.getParameter("pageSize");
+		String pageNum = request.getParameter("pageNum");
+		String searchType = request.getParameter("searchType");
+		String searchValue = request.getParameter("searchValue");
+
+		if (pageSize == null)
+			pageSize = "";
+		
+		if (pageNum == null)
+			pageNum = "";
+		
+		if (searchType == null)
+			searchType = "";
+		
+		if (searchValue == null)
+			searchValue = "";
+		
+		String result = ezOrganAdminService.getTitleUserList(type, jobID, pageSize, pageNum, searchType, searchValue, userInfo.getPrimary(), companyID, userInfo.getTenantId());
 		
 		logger.debug("jobTitleUserListView ended.");
 		return result;
@@ -3468,7 +3498,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-//		String cn = request.getParameter("cn");
 		String jobID = request.getParameter("jobID");
 		String type = request.getParameter("type");
 		String companyID = request.getParameter("companyID");
@@ -3488,7 +3517,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-//		String cn = request.getParameter("cn");
 		String jobID = request.getParameter("jobID");
 		String mode = request.getParameter("mode");
 		String displayName = request.getParameter("displayName");
@@ -3511,7 +3539,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-//		String cn = request.getParameter("cn");
 		String jobID = request.getParameter("jobID");
 		String type = request.getParameter("type");
 		String companyID = request.getParameter("companyID");
