@@ -450,7 +450,7 @@
 		        Permissions_List();
 		    }
 
-			function Permissions_Del(mode) {
+			function Permissions_Del(mode) {			
 
 				var dataList = new Array();
 				var dataList2 = new Array();
@@ -464,11 +464,11 @@
 					dataList4.push(this.parentElement.parentElement.getAttribute("DATA5"));
 				});
 
-				// 선택된 사원이 없을 경우
+				/* // 선택된 사원이 없을 경우
 				if (dataList.length == 0) {
 					alert(strLang13);
 					return;
-				}
+				} */
 
 				// 권한 전체삭제
 				var cData = "";
@@ -577,10 +577,35 @@
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
 		    
+		    var delete_confirm_cross_dialogArguments;
 		    function Choose_Del() {
-		    	
-		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do?", "chooseDeletege", 500, 170);
+		    	var dataList = new Array();
+				var dataList2 = new Array();
+				var dataList3 = new Array();
+				var dataList4 = new Array();
+
+				$("input[name='checks']:checked").each(function(){
+					dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
+					dataList2.push(this.parentElement.parentElement.getAttribute("DATA2"));
+					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
+					dataList4.push(this.parentElement.parentElement.getAttribute("DATA5"));
+				});
+
+				// 선택된 사원이 없을 경우
+				if (dataList.length == 0) {
+					alert(strLang13);
+					return;
+				}
+				
+		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do?", 
+		    			"chooseDeletege", 500, 170);
 		    }
+		    
+		    function choose_Del_complete(data) {
+		    	console.log(data);
+		    	Permissions_Del(data);
+		    }
+		    
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -642,7 +667,7 @@
 		        <ul style="margin-top:15px;">
 		            <li class="important"><span onClick="Permissions_Add()"><spring:message code='ezOrgan.mse3' /></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
+		            <%-- <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li> --%>
 		            <!-- <li><span class="icon16 icon16_delete" onClick="Permissions_Del('MOD')"></span></li> -->
 		            <li><span class="icon16 icon16_delete" onClick="Choose_Del()"></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
