@@ -22,6 +22,25 @@
 	
 <body class="mainbody srvey">
 
+	<div id="svInfoWrapper" class="svInfoWrapper">
+	<div id="wtInfoArea" class="wtInfoArea">
+		<div id="wtImgArea" class="wtImgArea">
+			<img id="wtImg" class="wtImg" alt="" src="" style="background-color: white;"/>
+		</div>
+		<div id="wtInfo" class="wtInfo">
+			<strong id="wtName" class="wtName" >작성자 이름</strong>
+			<strong id="wtTime" class="wtTime" >설문 작성 시간</strong>
+		</div>
+	</div>
+	
+	<div id="infoBtns" class="infoBtns" style="float:right;width: 220px;height: 100%;">
+		<img id="suvyMdf" class="suvyMdf" alt="" src="/images/ezSurvey/xBtn.png" style="width: 50px;height: 50px;padding: 10px;" />
+		<img id="suvyDlt" class="suvyDlt" alt="" src="/images/ezSurvey/xBtn.png" style="width: 50px;height: 50px;padding: 10px;" />
+		<img id="suvyInfo" class="suvyInfo" alt="" src="/images/ezSurvey/xBtn.png" style="width: 50px;height: 50px;padding: 10px;" />
+	</div>
+	
+	</div>
+
 	<div id="svTitle" class="svTitle">
 		<div class="sryFirst2"></div>
 		<span id="title" class="sryTxt">${survey.title}</span>
