@@ -137,6 +137,8 @@
         		document.getElementById("TextId").value = sharedMailboxInfo.shareId;
         		document.getElementById("TextName").value = sharedMailboxInfo.shareName;
 	        	document.getElementById("TextId").disabled = true;
+	        	document.getElementById("TextPassword").disabled = true;
+            	document.getElementById("TextPassword2").disabled = true;
 	        	
 	        	var userList = sharedMailboxInfo.userList;
 	        	var resultXml = "<LISTVIEWDATA><ROWS>";
@@ -1282,7 +1284,6 @@
 		</div>
 		
 		<table class="content">
-			<c:if test="${empty shareId}">
 			<tr>
 				<th><spring:message code='ezEmail.sharedMailbox18' /></th>
 				<td style="width:60%"><input id="TextName" name="TextName" type="text" maxlength="24" class="txtClass" style="width:100%"></td>
@@ -1298,20 +1299,6 @@
 				<th><spring:message code='ezEmail.lhm61' /></th>
 				<td style="width:40%"><input id="TextPassword2" name="TextPassword2" type="password" maxlength="24" class="txtClass" style="width:100%"></td>
 			</tr>
-			</c:if>
-			<c:if test="${not empty shareId}">
-			<tr>
-				<th><spring:message code='ezEmail.sharedMailbox18' /></th>
-				<td><input id="TextName" name="TextName" type="text" maxlength="24" class="txtClass" style="width:100%"></td>
-			</tr>
-			<tr>
-				<th><spring:message code='ezEmail.sharedMailbox19' /></th>
-				<td>
-					<input id="TextId" name="TextId" type="text" maxlength="24" class="txtClass" style="ime-mode: disabled; width:40%;">
-					<span style="font-weight: bold;">@<c:out value="${mailDomain}"></c:out></span>
-				</td>
-			</tr>
-			</c:if>
 		</table>
 		
 	    <table style="width:100%;margin-top:10px">
