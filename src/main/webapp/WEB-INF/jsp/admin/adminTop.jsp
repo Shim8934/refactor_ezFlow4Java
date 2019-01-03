@@ -146,9 +146,10 @@
 			</script>
         </c:if>
 		<form method="post">
-			<h1 title="logo"><spring:message code="ezBoard.t84" /></h1>
+			<%-- <h1 title="logo"><spring:message code="ezBoard.t84" /></h1> --%>
 			<div id="adminmenu">
-		    	<ul>		    		
+				<div class="adminTopTitle"><spring:message code="ezBoard.t84" /></div>
+		    	<ul style="padding-left:150px;">
                     <c:if test="${firstScreen_Mail == 'YES'}">
                     	<li><span id="menu10" onClick="menu_change(70, event)"><spring:message code="main.t22" /></span></li>
                     	<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li> 
@@ -169,7 +170,7 @@
 		      			
 		      			<c:if test="${packageType != 'mail'}">      
 			      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="ezSchedule.t1010" /></span></li>
-			      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="main.t12" /></span></li>
+			      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="ezBoard.t0006" /></span></li>
 		      			</c:if>
 		      			
 		      			<%-- 전자결재 --%>
