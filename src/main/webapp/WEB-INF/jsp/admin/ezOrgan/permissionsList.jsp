@@ -32,6 +32,7 @@
 			var pageSize = 15;
 			var BlockSize = 10;
 			var isAdmin = "<c:out value='${isAdmin}'/>";
+			var testObj = {};
 
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -375,6 +376,7 @@
 			
 			var Tab1_SelectID = "";
 		    function Tab1_MouserOver(obj) {
+		    	checkFlag = false;
 		        obj.className = "tabover";
 		    }
 		    
@@ -451,7 +453,7 @@
 		    }
 
 			function Permissions_Del(mode) {			
-
+ 
 				var dataList = new Array();
 				var dataList2 = new Array();
 				var dataList3 = new Array();
@@ -462,23 +464,24 @@
 					dataList2.push(this.parentElement.parentElement.getAttribute("DATA2"));
 					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
 					dataList4.push(this.parentElement.parentElement.getAttribute("DATA5"));
-				});
-
+				}); 
+				
+				
 				/* // 선택된 사원이 없을 경우
 				if (dataList.length == 0) {
 					alert(strLang13);
 					return;
 				} */
 
-				// 권한 전체삭제
+				/* // 권한 전체삭제
 				var cData = "";
 				if (mode == "ALL") {
 					cData = "["+dataList3+"]" + strLang19 + " " + "<spring:message code='ezAddress.t362' />" + strLang20;
 				} else {
 					cData = "["+dataList3+"]" + strLang19 + document.getElementById(clickTabID).innerText + " " + strLang20;
-				}
+				} */
 
-				if (confirm(cData)) {
+				//if (confirm(cData)) {
 					for (var i =0; i< dataList.length; i++) {
 						if (mode == "ALL") {
 							dataList2[i] = "";
@@ -517,7 +520,7 @@
 							alert(strLang15);
 						}
 					});
-				}
+				//}
 				CurPage = 1;
 				Permissions_List();
 			}
@@ -583,6 +586,7 @@
 				var dataList2 = new Array();
 				var dataList3 = new Array();
 				var dataList4 = new Array();
+				var types = document.getElementById(clickTabID).innerText;
 
 				$("input[name='checks']:checked").each(function(){
 					dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
@@ -590,6 +594,11 @@
 					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
 					dataList4.push(this.parentElement.parentElement.getAttribute("DATA5"));
 				});
+				
+				testObj.dataList = dataList;
+				testObj.dataList2 = dataList2;
+				testObj.dataList3 = dataList3;
+				testObj.dataList4 = dataList4;
 
 				// 선택된 사원이 없을 경우
 				if (dataList.length == 0) {
@@ -597,8 +606,7 @@
 					return;
 				}
 				
-		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do?", 
-		    			"chooseDeletege", 500, 170);
+		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do?type="+types,"chooseDeletege", 500, 170);
 		    }
 		    
 		    function choose_Del_complete(data) {
@@ -613,7 +621,7 @@
 			<LISTVIEWDATA>
 		    	<HEADERS>
 		    	    <HEADER>
-						<WIDTH>20</WIDTH>
+						<WIDTH>30</WIDTH>
 					</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t218' /></NAME>

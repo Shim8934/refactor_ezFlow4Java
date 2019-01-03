@@ -39,7 +39,9 @@
 		<h1><spring:message code ="ezPersonal.khj1" /></h1>
 
 		<!-- 빠른 링크 리스트 영역 -->
-		<ul id="mainlist"></ul>
+		<div class="admin_quicklink">
+			<ul id="mainlist"></ul>
+		</div>	
 		
 		<!-- 빠른 링크 추가 영역 -->
 		<xml id="listviewheader" style="display: none;"></xml>

@@ -348,11 +348,11 @@
 		                    oTd.appendChild(SubDIVTag);
 		                    oTr.appendChild(oTd);
 
-		                    var ImgPTag = document.createElement("DIV");
+		                    var ImgPTag = document.createElement("SPAN");
 		                    ImgPTag.setAttribute("id", "Cardlist_" + Cnt);
 		                    ImgPTag.onclick = function () { event_DeleteClick(this) };
-		                    ImgPTag.className = "topinfo";
-		                    ImgPTag.innerHTML = "<img src=\"/images/icon/btn_topBtn.png\" />";
+		                    ImgPTag.className = "icon16 icon16_delete";
+		                    //ImgPTag.innerHTML = "<img src=\"/images/icon/btn_topBtn.png\" />";
 
 		                    var oTd = document.createElement("TD");
 		                    oTd.appendChild(ImgPTag);
@@ -412,7 +412,7 @@
 		        var objRoot, objNode;
 		        createNodeInsert(xmlDom, objNode, "DATA");
 
-		        if (mode == "DEL") {
+		        /* if (mode == "DEL") {
 		        	if (obj != null && obj != "") {
 		        		_RowObject = obj;
 		        	}
@@ -453,14 +453,25 @@
 		            	 	return;	
 		            	}
 		            }
-		        } else {
+		        }  else { */
 		            var listview = new ListView();
+		            var dataList = new Array();
 		            listview.LoadFromID("lvAddJobList");
+		            
+		            $("input[name='checks']:checked").each(function(){
+						dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
+					});
+		            
+		         // 선택된 사원이 없을 경우
+					if (dataList.length == 0) {
+						alert("<spring:message code='ezOrgan.t9901' />");
+						return;
+					}
 
-		            if (listview.GetSelectedRows() == null || listview.GetSelectedRows() == "") {
+		            /* if (listview.GetSelectedRows() == null || listview.GetSelectedRows() == "") {
 		                alert("<spring:message code='ezOrgan.t9901' />");
 		                return;
-		            }
+		            } */
 		            
 		            if (confirm(strLang30)) {
 		                var inputElmt = document.getElementsByName("checks");
@@ -478,7 +489,7 @@
 		                window.location.reload(false);
 		                return;
 		            }
-		        }
+		        
 
 		        xmlHTTP.open("POST", "/admin/ezOrgan/saveSubTitle.do", false);
 		        xmlHTTP.send(xmlDom);
@@ -666,7 +677,8 @@
 				for (i; i < cnt; i++) {
 					var seq = acList.children[1].children[i].children[0].innerHTML;
 					var jinhangFlag = acList.children[1].children[i].children[5].innerHTML;
-					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq + "'></input>";
+					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq + "' onchange='inputFunc(event,"
+							+ seq + ")'></input>";
 				}
 			}
 
@@ -676,13 +688,74 @@
 				if (checkFlag) {
 					checkFlag = false;
 					$(".checks").prop("checked", false);
-					$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+					$("#lvAddJobList tr td").css("background-color", "rgb(255, 255, 255)");
 				} else {
 					checkFlag = true;
 					$(".checks").prop("checked", true);
-					$("#contentlist tr td").css("background-color", "rgb(241, 248, 255)");
+					$("#lvAddJobList tr td").css("background-color", "rgb(241, 248, 255)");
+				}
+				checkItems();
+			}
+			
+			var rowList = new Array();
+			function checkItems() {
+				rowList = [];
+				$("input:checkbox[name='checks']").each(function(){
+					if($(this).is(":checked")){
+						rowList.push(this.value);
+					}
+				});
+			}
+			
+			function inputFunc(event, itemseq) {
+				checkItems();
+				
+				$("#lvAddJobList tr td").css("background-color", "rgb(255, 255, 255)");
+
+				for (var i = 0; i < rowList.length; i++) {
+					var objID = $("#" + rowList[i])[0].parentNode.parentNode.id;
+					$("#" + objID + " td").css("background-color", "rgb(241, 248, 255)");
+					$("#" + rowList[i]).prop("checked", true);
 				}
 			}
+			
+			var itemseq;
+			
+			function UserAddjobList(obj) {
+				var className = window.event.target.getAttribute('class');
+				if(className === 'checks') {
+					return;
+				}
+
+				var doc = window.document;
+				itemseq = document.getElementById(obj).getAttribute("DATA1");
+				if(itemseq == "0") {
+					return;
+				}
+
+				if(checkFlag) {
+					if($("#"+itemseq).prop("checked")) {
+						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				} else {
+					$("#lvAddJobList tr td").css("background-color", "rgb(255, 255, 255)");
+					$(".checks").prop("checked",false);
+					if($("#" + itemseq).is(":checked")) {
+						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				}
+
+				checkItems();
+			}
+			
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -734,8 +807,9 @@
 		        <ul style="margin-top:15px">		            
 		            <li class="important"><span onClick="AddJob_Add()"><spring:message code='ezOrgan.mse3' /></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		            <li><span onClick="AddJob_Del('ALL', '')"><spring:message code='ezOrgan.t00016' /></span></li>
-		            <li><span class="icon16 icon16_delete" onClick="AddJob_Del('DEL', '')"></span></li>
+		            <%-- <li><span onClick="AddJob_Del('ALL', '')"><spring:message code='ezOrgan.t00016' /></span></li> --%>
+		            <li><span class="icon16 icon16_delete" onClick="AddJob_Del('ALL', '')"></span></li>
+		            <!-- <li><span class="icon16 icon16_delete" onClick="AddJob_Del('DEL', '')"></span></li> -->
 					<!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <li onClick="email_onclick()"><span class="icon16 icon16_mail_gray"></span></li>
 		        </ul>
