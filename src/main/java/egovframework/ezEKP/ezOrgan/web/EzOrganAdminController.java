@@ -2467,7 +2467,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         logger.debug("tenantID=" + tenantID + ",strLang=" + strLang + ",offset=" + offset);
 		
-		int pPageRow = 15;
+		int pPageRow = 20;
    		int pPage = (request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1);
    		String searchStartDate = (request.getParameter("searchStartDate") != null ? request.getParameter("searchStartDate") : "");
    		String searchEndDate = (request.getParameter("searchEndDate") != null ? request.getParameter("searchEndDate") : "");

@@ -18,6 +18,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<style>
+			.selectedTR td:not(:first-child), .unselectedTR td:not(:first-child) {overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
 			.selectedTR {background-color: #f1f8ff; cursor:pointer;}
 			.unselectedTR:hover {background-color: #f4f5f5; cursor:pointer;}
 		</style>
@@ -557,6 +558,7 @@
 						 }
 						 
 	    				$("#mainListBody").empty().append(html);
+						scroll();
 					 },
 					 error : function(error) {
 						 alert("<spring:message code='ezOrgan.0hun08' />");
@@ -570,13 +572,15 @@
 	        });
 		    
 		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 244;
-
-	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+		    	/* var height = document.documentElement.clientHeight - 244;
+		    	
+		    	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 	        		height = height - 30;
 	        	}
 	        	
 	        	document.getElementById("contentlist").style.height = height + "px";
+	        	 */
+	        	 document.getElementById("ListBody").style.height = (document.documentElement.clientHeight - 300) + "px"; 
 	        }
 		    
 		    $(function(){
@@ -600,7 +604,7 @@
 				var currentRow = event.currentTarget;
 				var crrClass   = currentRow.className;
 				
-				var tableList  = document.getElementById("retireUserList");
+				var tableList  = document.getElementById("mainListBody");
 				var length = tableList.rows.length;
 				
 				for (var i = 0; i < length; i++) {
@@ -623,6 +627,26 @@
 				}
 				else {
 					currentRow.className = "unselectedTR";
+				}
+			}
+			
+			function scroll() {
+				var headerWidth = document.getElementById("mainListHeader").clientWidth;
+				var bodyWidth   = document.getElementById("mainListBody").clientWidth;
+				var scrollWidth = headerWidth - bodyWidth;
+				
+				var scrollElmt = document.getElementById("forScroll");
+				if (scrollElmt) {
+					scrollElmt.parentNode.removeChild(scrollElmt);
+				}
+				
+				if (scrollWidth > 0) {
+					var headerTr = document.getElementById("mainListHeaderTr");
+					var thElmt   = document.createElement("th");
+					thElmt.setAttribute("id", "forScroll");
+					thElmt.style.width = "8px";
+					
+					headerTr.appendChild(thElmt);
 				}
 			}
 	    </script>
@@ -675,7 +699,7 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<div id="contentlist" style="width:100%; height: 653px; overflow: auto; margin-top:5px">
+		<%-- <div id="contentlist" style="width:100%; height: 653px; overflow: auto; margin-top:5px">
 			<div>
 				<table id="retireUserList" class="mainlist" style="width:100%">
 					<thead style> 
@@ -694,7 +718,30 @@
 			   		<tbody id="mainListBody" style="overflow: auto;"></tbody>
 				</table>
 			</div>		
+		</div> --%>
+		<div id="contentlist" style="width: 100%; margin-top: 5px; overflow: hidden;">
+			<div id="ListHeader">
+				<table id="mainListHeader" class="mainlist" style="width:100%">
+					<thead>
+						<tr id="mainListHeaderTr">
+							<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t68'/></th>
+							<th style="width: 15%;">아이디</th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t67'/></th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t69'/></th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t1500'/></th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t96'/></th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t313'/></th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+			
+			<div id="ListBody" style="height: 600px; overflow-y:auto;">
+				<table id="mainListBody" class="mainlist" style="width:100%;"></table>
+			</div>
 		</div>
+		
      	<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>
      	<span class="loading_layer" style="z-index:6000;position:absolute;top:350px;left:350px;display:none;" id="loadingLayer"><span class="right"><img src="/images/loading/loading.gif" width="24" height="24" ><spring:message code='ezEmail.t680' /></span></span>    
 <!--      	<br/> -->
