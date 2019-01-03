@@ -300,7 +300,8 @@
 		        	setMenuDisable("btnSend", false);
 		        	return;
 		        }
-		        if ("${approvalPWD}" != "N") {
+		        //if ("${approvalPWD}" != "N") {
+		        if (CheckUsePassword()) {
 		            var chkpass = chk_Passwd(pUserID, Send_ChkPassword);
 		        } else {
 		            btnSend_onclick_Complete();
@@ -427,7 +428,8 @@
 		    function Reject_OpenUI(Ans) {
 		        DivPopUpHidden();
 		        if (!Ans) return;
-		        if ("${approvalPWD}" != "N") {
+		        //if ("${approvalPWD}" != "N") {
+		        if (CheckUsePassword()) {
 		            chk_Passwd(pUserID, Reject_ChkPassword);
 		        }
 		        else {
@@ -1610,6 +1612,28 @@
 		        }
 		        return obj;
 		    }
+		    
+		    /* 2019-01-02 천성준 #14647
+			     결재암호 사용유무 조회 (Y / N)
+			*/
+			function CheckUsePassword() {
+				var result = "";
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/getApprovalPWD.do",
+					success: function(text) {
+						result = text;
+					}        			
+				});
+				
+				if (result != "N") {
+					return true;
+				} else {
+					return false;
+				}
+			}
 		</script>
 	</head>
 	<body class="popup"  style="overflow:hidden;height:100%;">

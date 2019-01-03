@@ -612,6 +612,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String docTitle = request.getParameter("title");
 		String susinAdmin = "";
         String pass = "";
+        String orgCompanyID = request.getParameter("orgCompanyID");
         
         userInfo = commonUtil.aprUserInfo(loginCookie);
 
@@ -682,6 +683,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("sendType", sendType);
 		model.addAttribute("pass", pass);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		LOGGER.debug("ezViewEnd_HWP ended");
 		
