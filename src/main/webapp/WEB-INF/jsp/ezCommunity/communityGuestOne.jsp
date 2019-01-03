@@ -431,7 +431,7 @@
 	  				<div style="margin-top:8px;">
 						<select name="s_radio" id ="s_radio" style="vertical-align: middle; height: 25px;margin-top:1px">
 							<option selected value="titleContent" ><spring:message code='ezCommunity.t585' /></option>
-							<option value="writer"><spring:message code='ezCommunity.t445' /></option>
+							<option value="writer"><spring:message code='ezCommunity.t138' /></option>
 						</select>
 						<input class="inputText" type="text" name="keyword" id ="keyword" onKeyDown="return keyword_onkeydown(event)" style="vertical-align: middle; width:200px">
 						<a class="imgbtn" style="vertical-align: middle;height:22px;margin:0px"><span onClick="search();" style="height:22px;line-height:22px"><spring:message code='ezCommunity.t31' /></span></a>
