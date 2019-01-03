@@ -59,6 +59,19 @@
 		<result property="statMonth" 				column="STAT_MONTH" 			columnIndex="3"/>
 	</resultMap>
 	
+	<resultMap class="java.util.HashMap" id="annualHistMap">
+		<result property="userId" 					column="USER_ID" 					columnIndex="1"/>
+		<result property="originAnnualCnt" 					column="ORIGIN_ANNUAL_CNT" 				columnIndex="2"/>
+		<result property="changeAnnualCnt" 				column="CHANGE_ANNUAL_CNT" 			columnIndex="3"/>
+		<result property="changeReason" 				column="CHANGE_REASON" 			columnIndex="4"/>
+		<result property="changeDate" 				column="CHANGE_DATE" 			columnIndex="5"/>
+		<result property="changeUserId" 				column="CHANGE_USER_ID" 			columnIndex="6"/>
+		<result property="changeUserName" 				column="CHANGE_USER_NAME" 			columnIndex="7"/>
+		<result property="companyId" 				column="COMPANY_ID" 			columnIndex="8"/>
+		<result property="tenantId" 				column="TENANT_ID" 			columnIndex="9"/>
+		<result property="year" 				column="YEAR" 			columnIndex="10"/>
+	</resultMap>
+	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
 		<![CDATA[
 			SELECT 
@@ -1653,6 +1666,32 @@
 		
 		GROUP BY A.CN
 		
+	</select>
+	
+	
+	<select id="ezAttitudeAdminDAO.getAnnualHistoryList" parameterClass="Map" resultMap="annualHistMap">
+		<![CDATA[
+			SELECT
+				USER_ID AS USER_ID,
+				ORIGIN_ANNUAL_CNT AS ORIGIN_ANNUAL_CNT,
+				CHANGE_ANNUAL_CNT AS CHANGE_ANNUAL_CNT,
+				CHANGE_REASON AS CHANGE_REASON,
+				DATE_FORMAT(CHANGE_DATE, '%Y-%m-%d %T') AS CHANGE_DATE,
+				CHANGE_USER_ID AS CHANGE_USER_ID,
+				(SELECT DISPLAYNAME FROM tbl_usermaster WHERE CN = CHANGE_USER_ID AND TENANT_ID = #tenantId#) AS CHANGE_USER_NAME,
+				COMPANY_ID AS COMPANY_ID,
+				TENANT_ID AS TENANT_ID,
+				YEAR AS YEAR
+			FROM
+				tbl_attitude_annual_history
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				USER_ID = #userId#
+			AND
+				YEAR = #year#
+			ORDER BY CHANGE_DATE DESC
+		]]>
 	</select>
 	
 </sqlMap>

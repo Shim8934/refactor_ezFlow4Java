@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezAttitude.web;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -2148,7 +2149,7 @@ public class EzAttitudeGWController {
 	
 	
 	/**
-	 * G/W 근태관리 [GET] 연차현황 전체 등록/수정
+	 * G/W 근태관리 [GET] 연차현황 개별 등록/수정
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/modifyPrsnAnnualPop", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject modifyPrsnAnnualPop(@PathVariable String userId, HttpServletRequest request) {
@@ -2181,6 +2182,43 @@ public class EzAttitudeGWController {
 		}
 		
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/modifyPrsnAnnualPop] ended.");
+		return result;
+	}
+	
+	
+	/**
+	 * G/W 근태관리 [GET] 연차현황 수정내역확인
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/annualHistoryPop", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject annualHistoryPop(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/annualHistoryPop] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("userId", userId);
+			map.put("companyId", request.getParameter("companyId"));
+			map.put("tenantId", info.getTenantId());
+			map.put("year", request.getParameter("year"));
+			
+			List<Map<String,Object>> resultList = ezAttitudeService.getAnnualHistoryList(map);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", resultList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/annualHistoryPop] ended.");
 		return result;
 	}
 }

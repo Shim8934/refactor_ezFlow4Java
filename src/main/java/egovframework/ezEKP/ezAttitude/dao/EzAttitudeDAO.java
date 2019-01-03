@@ -392,4 +392,9 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
     	return (AttitudeAnnualVO) select("ezAttitudeAdminDAO.getAnnualCnt", map);
     }
     
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Object>> getAnnualHistoryList(Map<String, Object> map) throws Exception {
+    	return (List<Map<String, Object>>) list("ezAttitudeAdminDAO.getAnnualHistoryList", map);
+    }
+    
 }

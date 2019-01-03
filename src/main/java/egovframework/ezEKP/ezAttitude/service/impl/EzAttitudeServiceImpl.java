@@ -2495,4 +2495,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		return result;
 	}
+
+	@Override
+	public List<Map<String, Object>> getAnnualHistoryList(Map<String, Object> map) throws Exception {
+		LOGGER.debug("getAnnualHistoryList started");
+		
+		List<Map<String, Object>> result = ezAttitudeDAO.getAnnualHistoryList(map);
+		
+		LOGGER.debug("getAnnualHistoryList ended");
+		
+		return result;
+	}
 }
