@@ -69,6 +69,7 @@
 		var surveyId = survey.surveyId;
 		var logicmap = null;
 		getQuestions();
+		userEvent();
 		
 		function getQuestions() {
 			$.ajax({
@@ -123,6 +124,16 @@
 					
 				}
 			}
+		}
+		
+		function userEvent() {
+			$(".prevQsArea").on("click", ".optRdo", function() {
+				var id = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
+				var logicNum = $(this).attr("logic");
+				
+				console.log(id);
+				console.log(logicNum);
+			});
 		}
 		
 	});
