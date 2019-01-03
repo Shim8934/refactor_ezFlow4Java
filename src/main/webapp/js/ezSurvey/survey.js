@@ -479,7 +479,6 @@ var SurveyCreate    = function() {
 				}
 			}
 		}
-		console.log(questionList);
 	}
 	
 	function checkAllLogic(questions, length) {
