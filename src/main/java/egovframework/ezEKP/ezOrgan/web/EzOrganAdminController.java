@@ -2467,7 +2467,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         
         logger.debug("tenantID=" + tenantID + ",strLang=" + strLang + ",offset=" + offset);
 		
-		int pPageRow = 15;
+		int pPageRow = 20;
    		int pPage = (request.getParameter("page") != null ? Integer.parseInt(request.getParameter("page")) : 1);
    		String searchStartDate = (request.getParameter("searchStartDate") != null ? request.getParameter("searchStartDate") : "");
    		String searchEndDate = (request.getParameter("searchEndDate") != null ? request.getParameter("searchEndDate") : "");
@@ -3772,7 +3772,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 권한관리 삭제 메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/chooseDeletege.do")
-	public String chooseDeletege(HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String chooseDeletege(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
+		
+		String userID = (request.getParameter("dataList") != null ? request.getParameter("dataList") : "");
+		
+		model.addAttribute("userID", userID);
+		
 		return "admin/ezOrgan/chooseDeletege";
 	}
 }
