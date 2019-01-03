@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezSurvey.web;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -603,9 +604,10 @@ public class EzSurveyGWController {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
 		String itemId     = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
+		String mode       = request.getParameter("mode")   != null ? request.getParameter("mode")   : "";
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || itemId: " + itemId);
+		logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || itemId: " + itemId + " || mode: " + mode);
 		
 		if (serverName.equals("") || itemId.equals("")|| userId.equals("")) {
 			logger.debug("Parameter error!");
@@ -615,10 +617,19 @@ public class EzSurveyGWController {
 		}
 		
 		try {
-			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			Long surveyId    = Long.parseLong(itemId);
-			String realPath  = request.getServletContext().getRealPath("");
-			result           = surveyService.getItemInfoToReuse(surveyId, realPath, userInfo);
+			LoginVO userInfo   = commonUtil.getUserForGw(userId, serverName);
+			Long surveyId      = Long.parseLong(itemId);
+			String realPath    = request.getServletContext().getRealPath("");
+			List<Long> items   = new ArrayList<>();
+			items.add(Long.parseLong(itemId));
+			int checkPri       = mode.equals("reuse") ? 1 : 2;
+			JSONObject check   = surveyService.checkPermission(items, checkPri, userInfo);
+			
+			if ((int)check.get("code") != 0) {
+				return check;
+			}
+			
+			result             = surveyService.getItemInfo(surveyId, mode, realPath, userInfo);
 			result.put("status", "ok");
 			result.put("code", 0);
 		}
