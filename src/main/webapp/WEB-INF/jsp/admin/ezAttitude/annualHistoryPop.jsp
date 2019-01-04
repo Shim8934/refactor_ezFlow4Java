@@ -27,6 +27,19 @@
 	    		text-overflow : ellipsis;
 	    		text-align:center;
 	    	}
+	    	.mainlist tr th.borderLeft {
+	    		border-left: 1px solid #e2e3e6;
+	    	}
+	    	.mainlist tr td.borderLeft {
+	    		border-left: 1px solid #e2e3e6;
+	    	}
+	    	.mainlist tr th.borderRight {
+	    		border-right: 1px solid #e2e3e6;
+	    	}
+	    	.mainlist tr td.borderRight {
+	    		border-right: 1px solid #e2e3e6;
+	    	}
+	    	
 	    </style>
 	    <script type="text/javascript">	
 	    	var flagCheck = 'change';
@@ -39,6 +52,12 @@
 		    	$("input:text[name=annualCnt]").on("keyup", function() {
 		    	    $(this).val($(this).val().replace(/[^0-9]/g,""));
 		    	});
+		    	
+		    	if ($("#contentlist tr").length > 6) { //스크롤이 생길 경우 처리
+		    		var addTh = "<th class='borderRight' style='width: 9px;'></th>";
+		    		$(".mainlist tr th:eq(4)").after(addTh);
+		    		$(".mainlist tr th:eq(4)").removeClass("borderRight");
+		    	}
    			});
 	    	
 	    	function setFlagCheck(){
@@ -105,49 +124,46 @@
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
-	    <table class="content">
-	    	<thead>
-		    	<tr style="background-color: rgb(255, 255, 255);">
-	         	   	<th style="width:17%;text-align:center;">변경일시</th>
-	            	<th style="width:15%;text-align:center;">기존 총 연차수</th>
-	            	<th style="width:15%;text-align:center;">변경 총 연차수</th>
-	            	<th style="text-align:center;">변경사유</th>
-	            	<th style="width:10%;text-align:center;">변경자</th>
-		    	</tr>
-	    	</thead>
-	    	<tbody>
-	    		<c:choose>
-		    		<c:when test="${not empty resultList }">
-				    	<c:forEach items="${resultList }" var="list">
-				        	<tr>
-				            	<td>
-				            		${list.changeDate}
-			        	    	</td>
-				            	<td>
-				            		${list.originAnnualCnt}일
-			        	    	</td>
-				            	<td>
-				            		${list.changeAnnualCnt}일
-			        	    	</td>
-				            	<td>
-				            		${list.changeReason}
-			        	    	</td>
-				            	<td>
-				            		${list.changeUserName}
-			        	    	</td>
-			       	 		</tr>
-				    	</c:forEach>
-		    		</c:when>
-		    		<c:otherwise>
-   						<tr id='List_TR_noItems' class='tr_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>
-		    		</c:otherwise>
-				</c:choose>
-	    	</tbody>
-	    </table>
-	    <br>
-	    <br>
-        <div class="btnposition btnpositionNew">
-	        <a class="imgbtn"><span onclick="modifyAllAnnualCnt();" ><spring:message code='ezAttitude.t16' /></span></a>
-	    </div>
+        <div style="width: 100%; height: 100%;">
+            <table class="mainlist" style="width: 100%;">
+                <tr>
+	         		<th class="borderLeft" style="width:17%;text-align:center;">변경일시</th>
+	            	<th class="borderLeft" style="width:15%;text-align:center;">기존 총 연차수</th>
+	            	<th class="borderLeft" style="width:15%;text-align:center;">변경 총 연차수</th>
+	            	<th class="borderLeft" style="width:43%;text-align:center;">변경사유</th>
+	            	<th class="borderLeft borderRight" style="width:10%;text-align:center;">변경자</th>
+                </tr>
+            </table>
+            <div id="contentlist" name="contentlist" style="height: 202px; overflow-y: auto;">
+                <table class="mainlist" style="width: 100%;">
+	                <c:choose>
+			    		<c:when test="${not empty resultList }">
+					    	<c:forEach items="${resultList }" var="list">
+					        	<tr>
+					            	<td class="borderLeft" style="width:17%;">
+					            		${list.changeDate}
+				        	    	</td>
+					            	<td class="borderLeft" style="width:15%;">
+					            		${list.originAnnualCnt}일
+				        	    	</td>
+					            	<td class="borderLeft" style="width:15%;">
+					            		${list.changeAnnualCnt}일
+				        	    	</td>
+					            	<td class="borderLeft" style="width:43%;">
+					            		${list.changeReason}
+				        	    	</td>
+					            	<td class="borderLeft borderRight" style="width:10%;">
+					            		${list.changeUserName}
+				        	    	</td>
+				       	 		</tr>
+					    	</c:forEach>
+			    		</c:when>
+			    		<c:otherwise>
+	   						<tr id='List_TR_noItems' class='tr_noItems'><td colspan='5' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>
+			    		</c:otherwise>
+					</c:choose>
+                </table>
+            </div>
+        </div>
 	</body>
 </html>
