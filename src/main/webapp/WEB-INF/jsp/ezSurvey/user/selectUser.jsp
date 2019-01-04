@@ -24,8 +24,8 @@
 							<td class="left-tdtbl">
 								<table class="infor-tbl">
 									<tr>
-										<th>전자 설문</th>
-										<td>전자 설문 대상자 설택</td>
+										<th><spring:message code="ezSurvey.t79"/></th>
+										<td><spring:message code="ezSurvey.t55"/></td>
 									</tr>
 								</table>
 								

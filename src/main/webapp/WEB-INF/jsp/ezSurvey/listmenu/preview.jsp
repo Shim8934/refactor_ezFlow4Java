@@ -16,18 +16,13 @@
 		<div class="survey-infrow-pv" id="public-cfdiv"></div>
 		<div class="survey-infrow-pv">
 			<span class="survey-bold"><spring:message code="ezSurvey.t46"/></span>
-			<span class="inf-survey" id="cf-anoynymous">기명</span>
+			<span class="inf-survey" id="cf-anoynymous"></span>
 			<span class="survey-bold"><spring:message code="ezSurvey.t49"/></span>
-			<span class="inf-survey" id="cf-multiple">비허용</span>
+			<span class="inf-survey" id="cf-multiple"></span>
 		</div>
 		<div class="survey-infrow-pv">
 			<span class="survey-bold"><spring:message code="ezSurvey.t52"/></span>
-			<div class="survey-user-pv" id="cf-userdiv">
-				<!-- <span class="inf-survey">전체</span> -->
-				<span class="inf-survey">응웬바오</span>
-				<span class="total-user">[총 12 명]</span>
-				<span class="user-more"></span>
-			</div>
+			<div class="survey-user-pv" id="cf-userdiv"></div>
 		</div>
 	</div>
 	

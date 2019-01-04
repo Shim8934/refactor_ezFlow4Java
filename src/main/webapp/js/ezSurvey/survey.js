@@ -2911,22 +2911,35 @@ var SurveyCreate     = function() {
 		
 		//attach list
 		if (qstInf["attach"] && qstInf["attach"].length > 0) {
-			var htmlStr = "";
-			
+			var ulElmt = document.getElementById("cf-attach");
 			for (var i = 0; i < qstInf["attach"].length; i++) {
-				var filename       = qstInf["attach"][i]["fname"];
-				var checkImageFile = questionFile.chImage(filename);
-				var imgSrc         = checkImageFile.isImage == true ? qstInf["attach"][i]["fpath"] : checkImageFile.urlImage;
+				var filename  = qstInf["attach"][i]["fname"];
+				var checkName = questionFile.chImage(filename);
+				var imgSrc    = checkName.isImage == true ? qstInf["attach"][i]["fpath"] : checkImageFile.urlImage;
+				var liElmt    = document.createElement("li");
+				var divWrp    = document.createElement("div");
+				var divImg    = document.createElement("div");
+				var imgElmt   = document.createElement("img");
+				var divInf    = document.createElement("div");
+				var spanTtl   = document.createElement("span");
+				var spanSz    = document.createElement("span");
 				
-				htmlStr += "<li><div class='attDivFile'>";
-				htmlStr += "<div class='attImgAva'><img src='" + imgSrc + "'></div>";
-				htmlStr += "<div class='attFileInf'>";
-				htmlStr += "<span title='" + filename + "'>" + filename + "</span>";
-				htmlStr += "<span>" + qstInf["attach"][i]["fsize"] + "</span>";
-				htmlStr += "</div></div></li>";
+				divWrp.className    = "attDivFile";
+				divImg.className    = "attImgAva";
+				divInf.className    = "attFileInf";
+				imgElmt.src         = imgSrc;
+				spanTtl.textContent = filename;
+				spanSz.textContent  = qstInf["attach"][i]["fsize"];
+				spanTtl.setAttribute("title", filename);
+				divImg.appendChild(imgElmt);
+				divInf.appendChild(spanTtl);
+				divInf.appendChild(spanSz);
+				divWrp.appendChild(divImg);
+				divWrp.appendChild(divInf);
+				liElmt.appendChild(divWrp);
+				ulElmt.appendChild(liElmt);
 			}
 			
-			document.getElementById("cf-attach").innerHTML        = htmlStr;
 			document.getElementById("surveyAttConfirm").className = "attach-zone"; //show attach list
 		}
 		else {

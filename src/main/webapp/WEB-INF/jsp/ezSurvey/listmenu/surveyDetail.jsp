@@ -22,23 +22,40 @@
 	
 <body class="mainbody srvey">
 	<div id="svInfoWrapper" class="svInfoWrapper">
-	<div id="wtInfoArea" class="wtInfoArea">
-		<div id="wtImgArea" class="wtImgArea">
-			<img id="wtImg" class="wtImg" src="${not empty creator.userFileUrl ? creator.userFileUrl : '/images/default_pic.jpg'}"/>
+		<div id="wtInfoArea" class="wtInfoArea">
+			<div id="wtImgArea" class="wtImgArea">
+				<img id="wtImg" class="wtImg" src="${not empty creator.userFileUrl ? creator.userFileUrl : '/images/default_pic.jpg'}"/>
+			</div>
+			<div id="wtInfo" class="wtInfo">
+				<strong id="wtName" class="wtName"><c:out value="${creator.displayName}"/></strong>
+				<strong id="wtTime" class="wtTime"><c:out value="${survey.createDate}"/></strong>
+			</div>
 		</div>
-		<div id="wtInfo" class="wtInfo">
-			<strong id="wtName" class="wtName"><c:out value="${creator.displayName}"/></strong>
-			<strong id="wtTime" class="wtTime"><c:out value="${survey.createDate}"/></strong>
+		
+		<div id="infoBtns" class="infoBtns">
+			<img id="suvyDlt"  class="suvyDlt"  src="/images/ezSurvey/delete2.png"/>
+			<img id="suvyInfo" class="suvyInfo" src="/images/ezSurvey/info.png"   />
+			<ul class="upage-ul">
+				<li>
+					<img src="/images/poll/numberOfSelect_1.png" class="voteIconImg_info" title="투표 가능 개수 : 1">
+					<span>투표 가능 개수 : 1</span>
+				</li>
+				<li>
+					<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg_info" title="투표 종료 전 결과보기">
+					<span>투표 종료 전 결과보기</span>
+				</li>
+				<li>
+					<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="기명 투표">
+					<span>기명 투표</span>
+				</li>
+				<li>
+					<img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="낙장불입 미적용">
+					<span>낙장불입 미적용</span>
+				</li>
+			</ul>
 		</div>
 	</div>
 	
-	<div id="infoBtns" class="infoBtns">
-		<img id="suvyDlt"  class="suvyDlt"  src="/images/ezSurvey/delete2.png"/>
-		<img id="suvyInfo" class="suvyInfo" src="/images/ezSurvey/info.png"   />
-	</div>
-	
-	</div>
-
 	<div id="svTitle" class="svTitle">
 		<div class="sryFirst2"></div>
 		<span id="title" class="sryTxt">${survey.title}</span>
@@ -46,6 +63,13 @@
 	
 	<div id="svPurpose" class="svPurpose">
 		<div id="ppContent" class="ppContent">${survey.purpose}</div>
+		<div class="attach-zone2 off" id="surveyAtt">
+			<div class="mainzone2">
+				<div class="fileList">
+					<ul class="user-pageul" id="attachUl"></ul>
+				</div>
+			</div>
+		</div>
 	</div>
 	
 	<div class="prevQsArea"></div>
@@ -59,13 +83,14 @@
 	
 </body>
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyFile.js')}"></script>
-<script type="text/javascript" src="${util.addVer('/js/ezSurvey/survey.js')} }"></script>
+<script type="text/javascript" src="${util.addVer('/js/ezSurvey/survey.js')}    "></script>
 <script type="text/javascript">
 	$(function() {
-		var survey     = ${survey};
-		var surveyId   = survey.surveyId;
-		var logicmap   = null;
-		var surveyPath = [];
+		var survey       = ${survey};
+		var surveyId     = survey.surveyId;
+		var logicmap     = null;
+		var surveyPath   = [];
+		var questionFile = new SurveyFile("images");
 		getQuestions();
 		userEvent();
 		
@@ -158,6 +183,7 @@
 		}
 		
 		function userEvent() {
+			showAttachList();
 			$(".prevQsArea").on("click", ".optRdo", function() {
 				var prId     = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
 				var logicNum = $(this).attr("logic");
@@ -197,8 +223,131 @@
 				
 				
 			});
+			
+			var delBttn   = document.getElementById("suvyDlt");
+			if (delBttn) {delBttn.onclick = function(e) {deleteFileConfirm();};}
+			
+			document.getElementById("suvyInfo").onclick   = function(e) {showSurveyInfo();}
+			document.getElementById("cancelBttn").onclick = function(e) {window.close();}
+			document.getElementById("saveResult").onclick = function(e) {saveSurveyResponses();}
 		}
 		
+		function showAttachList() {
+			console.log(survey);
+			var attachList = survey["attachList"];
+			if (attachList && attachList.length > 0) {
+				var ulElmt = document.getElementById("attachUl");
+				for (var i = 0; i < attachList.length; i++) {
+					var filename  = attachList[i]["fname"];
+					var checkName = questionFile.chImage(filename);
+					var imgSrc    = checkName.isImage == true ? attachList[i]["fpath"] : checkImageFile.urlImage;
+					var liElmt    = document.createElement("li");
+					var divWrp    = document.createElement("div");
+					var divImg    = document.createElement("div");
+					var imgElmt   = document.createElement("img");
+					var divInf    = document.createElement("div");
+					var spanTtl   = document.createElement("span");
+					var spanSz    = document.createElement("span");
+					
+					divWrp.className    = "attDivFile";
+					divImg.className    = "attImgAva";
+					divInf.className    = "attFileInf";
+					imgElmt.src         = imgSrc;
+					spanTtl.textContent = filename;
+					spanSz.textContent  = attachList[i]["fsize"];
+					spanTtl.setAttribute("title", filename);
+					divImg.appendChild(imgElmt);
+					divInf.appendChild(spanTtl);
+					divInf.appendChild(spanSz);
+					divWrp.appendChild(divImg);
+					divWrp.appendChild(divInf);
+					liElmt.appendChild(divWrp);
+					ulElmt.appendChild(liElmt);
+				}
+				
+				document.getElementById("surveyAtt").className = "attach-zone2";
+			}
+			else {
+				document.getElementById("surveyAtt").className = "attach-zone2 off";
+			}
+			
+			/* if (qstInf["attach"] && qstInf["attach"].length > 0) {
+				var htmlStr = "";
+				
+				for (var i = 0; i < qstInf["attach"].length; i++) {
+					var filename       = qstInf["attach"][i]["fname"];
+					var checkImageFile = questionFile.chImage(filename);
+					var imgSrc         = checkImageFile.isImage == true ? qstInf["attach"][i]["fpath"] : checkImageFile.urlImage;
+					
+					htmlStr += "<li><div class='attDivFile'>";
+					htmlStr += "<div class='attImgAva'><img src='" + imgSrc + "'></div>";
+					htmlStr += "<div class='attFileInf'>";
+					htmlStr += "<span title='" + filename + "'>" + filename + "</span>";
+					htmlStr += "<span>" + qstInf["attach"][i]["fsize"] + "</span>";
+					htmlStr += "</div></div></li>";
+				}
+				
+				document.getElementById("cf-attach").innerHTML        = htmlStr;
+				document.getElementById("surveyAttConfirm").className = "attach-zone"; //show attach list
+			}
+			else {
+				document.getElementById("surveyAttConfirm").className = "attach-zone off"; //hide attach list
+			} */
+		}
+		
+		function showSurveyInfo() {
+			
+		}
+		
+		function saveSurveyResponses() {
+			
+		}
+		
+		function deleteFileConfirm() {
+			var itemArr = [];
+			itemArr.push(surveyId);
+			
+			if (confirm(SurveyMessages.strDelete)) {
+				var url  = "/ezSurvey/deleteItems.do";
+				var data = {itemList : itemArr.toString()};
+				
+				makeAjaxCall(data, "GET", url, afterDeleteItem, null, true, null);
+			}
+		}
+		
+		function afterDeleteItem(data) {
+			var code = data.code;
+			switch(code) {
+				case 0 : afterDeleteSuccessfully()        ; break;
+				case 1 : alert(SurveyMessages.strParamErr); break;
+				case 2 : alert(SurveyMessages.strError)   ; break;
+				case 3 : alert(SurveyMessages.strPerm)    ; break;
+				default: alert(SurveyMessages.strError)   ; return;
+			}
+		}
+		
+		function afterDeleteSuccessfully() {
+			alert(SurveyMessages.strDel);
+			window.close();
+		}
+		
+		function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {
+			$.ajax({
+				type: ajaxType,
+				url: ajaxUrl,
+				data: ajaxData,
+				dataType: "JSON",
+				async: asyncMode != false ? true : false,
+				success : function(data) {
+					handleSuccess(data, moreParam);
+				},
+				error : function(error) {
+					if (handleError != null) {handleError();}
+					
+					alert(SurveyMessages.strError);
+				}
+			});
+		}
 	});
 </script>
 </html>
