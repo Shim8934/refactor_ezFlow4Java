@@ -138,6 +138,8 @@
 					if (data["firstpath"]) {
 						toggleQuestionList(JSON.parse(JSON.stringify(data["firstpath"])));
 					}
+					
+					console.log(JSON.parse(JSON.stringify(data["logicmap" ])));
 				},
 				error : function(error) {
 					alert(SurveyMessages.strError);
@@ -152,7 +154,9 @@
 			
 			//Get remain nodes
 			var mainNodes = totalPath[0];
+			console.log(totalPath[0]);
 			for (var i = 1; i < totalPath.length; i++) {
+				console.log(totalPath[i]);
 				mainNodes = mainNodes.filter(function(value) {if (-1 !== totalPath[i].indexOf(value)) {return value;}});
 			}
 			
@@ -216,7 +220,7 @@
 				}
 			});
 			
-			$(".prevQsArea").on("click", ".optChk", function() {
+			$(".prevQsArea").on("click", ".optChb", function() {
 				var id = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
 				var logicNum = $(this).attr("logic");
 				
