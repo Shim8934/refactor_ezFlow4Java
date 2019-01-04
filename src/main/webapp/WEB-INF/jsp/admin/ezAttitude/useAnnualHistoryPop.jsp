@@ -49,6 +49,12 @@
 	    				if (result.list[0].startDate != null && result.list[0].startDate != "") {
 		    				userAnnualListSet(result.list);
 	    				}
+	    				
+	    				//
+	    				if(result.list.length > 8) {
+	    		    		var addTh = "<th style='width: 9px;'></th>";
+	    		    		$(".mainlist tr th:eq(3)").after(addTh);
+	    				}
 	    			},
 	    			error : function() {
 	    				alert("<spring:message code='ezAttitude.t59'/>");
