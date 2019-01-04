@@ -134,6 +134,7 @@
 		            document.getElementById('btn_PhotoDel').style.display = "none";
 		            
 		            getJobInfoInit();
+		            
 		        } else {
 		            OrgUserID = RetValue[2];
 		            document.getElementById("DeptName").value = RetValue[1];
@@ -146,8 +147,6 @@
 		            document.getElementById("UserName").focus();
 		            document.getElementById("mailtitle").innerText = "<spring:message code='ezOrgan.t99' />";
 		            document.getElementById("mailcontext").style.display = "none";
-		            
-		            getJobInfoInit();
 	
 		            var xmlDom = createXmlDom();
 		            
@@ -182,11 +181,21 @@
 			                try {
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim() != "") {
 				                	pUserTitleID = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim();
+				                	getJobOptionInfo("001");
 				                	document.getElementById(pUserTitleID).selected = "true";
+				                } else {
+				                	getJobOptionInfo("001");
 				                }
+			                } catch(e) {
+			                	console.error(e.message);
+			                }
+			                try {
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim() != "") {
 				                	pUserPositionID = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim();
+				    		    	getJobOptionInfo("002");
 				                	document.getElementById(pUserPositionID).selected = "true";
+				                } else {
+				    		    	getJobOptionInfo("002");
 				                }
 			                } catch(e) {
 			                	console.error(e.message);
@@ -580,6 +589,7 @@
 		    function getJobOptionInfo(pType) {
 		    	var xmldom;
 		    	var _html = "";
+		    	var pUserJobID = "";
 		    	
 		    	$.ajax({
 					type : "POST",
@@ -599,8 +609,10 @@
 		    	
 	    		if (pType == "001") {
 	    			_html += "<select id='titleSelector' style='width:100%;height:25px;' onchange='titleChange()'>";
+	    			pUserJobID = pUserTitleID;
 	    		} else {
 	    			_html += "<select id='positionSelector' style='width:100%;height:25px;' onchange='positionChange()'>";
+	    			pUserJobID = pUserPositionID;
 	    		}
 	    		
 	    		// option (해당없음) 표출
@@ -614,7 +626,7 @@
 		    			var pJobName 	= SelectSingleNodeValueNew(oRows[i], "NAME1");
 		    			var pJobName2 	= SelectSingleNodeValueNew(oRows[i], "NAME2");
 		    			
-		    			if (pUseFlag != "N" || pJobID == pUserTitleID) {
+		    			if (pUseFlag != "N" || pJobID == pUserJobID) {
 		    				_html += "<option id='" + pJobID + "' nmval='" + pJobName + "' nmval2='" + pJobName2 + "'>";
 		    				
 		    				if ("${userPrimary}" == "1") {
