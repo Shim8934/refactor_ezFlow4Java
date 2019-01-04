@@ -117,8 +117,6 @@
 		getQuestions();
 		userEvent();
 		
-		$("#wtTime")[0].textContent = ("" + survey.createDate).substr(0,19);
-		
 		function getQuestions() {
 			$.ajax({
 				type: "GET",
