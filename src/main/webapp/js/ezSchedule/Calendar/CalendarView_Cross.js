@@ -1489,17 +1489,28 @@ function memorialDayCheck(solarDate, lunarDate) {
     var tempmemorialDays = new Array();
     for (i = 0; i < memorialDays.length; i++) {
         if (solarDate.getFullYear() > 1800 && solarDate.getFullYear() <= 2101) {
-            if (memorialDays[i].month == solarDate.getMonth() + 1 &&
-             memorialDays[i].day == solarDate.getDate() &&
-             memorialDays[i].solarLunar == 1) {
-                tempmemorialDays.push(memorialDays[i]);
-            }
-            if (memorialDays[i].month == lunarDate.month &&
-             memorialDays[i].day == lunarDate.day &&
-             memorialDays[i].solarLunar == 2 &&
-             !memorialDays[i].leapMonth) {
-                tempmemorialDays.push(memorialDays[i]);
-            }
+        	if (memorialDays[i].type == 'y') {
+        		var resultDate = changeRepetitionToDate(memorialDays[i].repetition);
+        		if (resultDate == solarDate && memorialDays[i].solarLunar == 1) {
+        			tempmemorialDays.push(memorialDays[i]);
+        		}
+        		
+        		if (resultDate == lunarDate && memorialDays[i].solarLunar == 2 && !memorialDays[i].leapMonth) {
+        			tempmemorialDays.push(memorialDays[i]);
+        		}
+        	} else {
+        		if (memorialDays[i].month == solarDate.getMonth() + 1 &&
+        				memorialDays[i].day == solarDate.getDate() &&
+        				memorialDays[i].solarLunar == 1) {
+        			tempmemorialDays.push(memorialDays[i]);
+        		}
+        		if (memorialDays[i].month == lunarDate.month &&
+        				memorialDays[i].day == lunarDate.day &&
+        				memorialDays[i].solarLunar == 2 &&
+        				!memorialDays[i].leapMonth) {
+        			tempmemorialDays.push(memorialDays[i]);
+        		}
+        	}
         }
     }
     return tempmemorialDays;
@@ -1512,19 +1523,30 @@ function yearmemorialDayCheck(solarDate, lunarDate) {
     var tempyearmemorialDays = new Array();
     for (i = 0; i < yearmemorialDays.length; i++) {
         if (solarDate.getFullYear() > 1800 && solarDate.getFullYear() <= 2101) {
-            if (yearmemorialDays[i].year == solarDate.getFullYear() &&
-            yearmemorialDays[i].month == solarDate.getMonth() + 1 &&
-             yearmemorialDays[i].day == solarDate.getDate() &&
-             yearmemorialDays[i].solarLunar == 1) {
-                tempyearmemorialDays.push(yearmemorialDays[i]);
-            }
-            if (yearmemorialDays[i].year == lunarDate.year &&
-            yearmemorialDays[i].month == lunarDate.month &&
-             yearmemorialDays[i].day == lunarDate.day &&
-             yearmemorialDays[i].solarLunar == 2 &&
-             !yearmemorialDays[i].leapMonth) {
-                tempyearmemorialDays.push(yearmemorialDays[i]);
-            }
+        	if (memorialDays[i].type == 'y') {
+        		var resultDate = changeRepetitionToDate(memorialDays[i].repetition);
+        		if (resultDate == solarDate && memorialDays[i].solarLunar == 1) {
+        			tempmemorialDays.push(memorialDays[i]);
+        		}
+        		
+        		if (resultDate == lunarDate && memorialDays[i].solarLunar == 2 && !memorialDays[i].leapMonth) {
+        			tempmemorialDays.push(memorialDays[i]);
+        		}
+        	} else {
+        		if (yearmemorialDays[i].year == solarDate.getFullYear() &&
+        				yearmemorialDays[i].month == solarDate.getMonth() + 1 &&
+        				yearmemorialDays[i].day == solarDate.getDate() &&
+        				yearmemorialDays[i].solarLunar == 1) {
+        			tempyearmemorialDays.push(yearmemorialDays[i]);
+        		}
+        		if (yearmemorialDays[i].year == lunarDate.year &&
+        				yearmemorialDays[i].month == lunarDate.month &&
+        				yearmemorialDays[i].day == lunarDate.day &&
+        				yearmemorialDays[i].solarLunar == 2 &&
+        				!yearmemorialDays[i].leapMonth) {
+        			tempyearmemorialDays.push(yearmemorialDays[i]);
+        		}
+        	}
         }
     }
     return tempyearmemorialDays;
@@ -2162,4 +2184,32 @@ function changeDateFormat(date) {
 	day  = day + " " + hour + ":" + Minu + "0:00";
 	
 	return day;
+}
+//- 주 - 요일을 - 일로 바꿔주는 함수
+function changeRepetitionToDate(repetition) {
+	var date = repetition.split('|');
+	var year = date[0];
+	var month = date[1]; 
+	var order = date[2];
+	var day  = date[3];
+	
+	var resultDate = changeDayToDate(year, month, order, day);
+	
+	return resultDate;
+}
+
+function changeDayToDate(year, month, order, day) {
+	//해당 년,월의 첫번째 날의 요일을 구한다.
+	var firstDate = new Date(year + '/' + month + '/01');
+	var firstDateDay = firstDate.getDay();
+	
+	if (day < firstDateDay) {
+		order = order - 1;
+	}
+	
+	var resultDay = (6 - firstDateDay) + (7 * (order - 1)) + (day - firstDateDay); 
+	
+	var resultDate = new Date(year + '/' + month + '/' + resultDay);
+		
+	return resultDate;
 }

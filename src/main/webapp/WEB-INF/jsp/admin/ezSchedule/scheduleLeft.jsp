@@ -70,7 +70,7 @@
   			<div class="admin_left_title" title="<spring:message code='ezSchedule.t14' />"><spring:message code='ezSchedule.t1010' /></div> 
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 	  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='ezSchedule.t36' /></span></h2>
-	  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code='ezSchedule.t4003' /></span></h2>
+	  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)">휴일관리</span></h2>
 	  			<c:if test="${lang != 3}">
 		  			<h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code='ezSchedule.t6000' /></span></h2>
 	  			</c:if>

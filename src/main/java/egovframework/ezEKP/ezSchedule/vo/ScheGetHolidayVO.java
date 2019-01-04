@@ -8,11 +8,11 @@ public class ScheGetHolidayVO {
 	/** 기념일 이름2*/
 	private String holidayName2;
 	/** 기념일 종류*/
-	private String holidayFlag;	 //2018-12-27 확인 후  삭제
+	private String holidayFlag;
 	/** 기념일 날짜*/
 	private String holidayDate;
 	/** 기념일 요일*/
-	private String holidayRepeat; //2018-12-27 확인 후  삭제
+	private String holidayRepeat;
 	/** 음력/양력 여부*/
 	private int isSolar;
 	/** 반복 여부*/
