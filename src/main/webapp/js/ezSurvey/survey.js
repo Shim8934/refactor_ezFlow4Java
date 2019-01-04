@@ -428,13 +428,14 @@ var SurveyCreate     = function() {
 				}
 			}
 		}
+		/* 기존의 미리보기 설문 목적 부분 수정으로 불필요 
 		var surveyPp   = document.getElementById("info-input-pp");
 		var ppContent = document.querySelectorAll("div[class=ppContent]");
 		
 		for (var i = 0; i < ppContent.length; i++) {
 			ppContent[i].textContent = surveyPp.value; 
 		}
-		
+		*/
 		return returnObj;
 	}
 	// 분기 설정 이후 step2로 되돌아갈 시, 질문의 모든 로직 삭제

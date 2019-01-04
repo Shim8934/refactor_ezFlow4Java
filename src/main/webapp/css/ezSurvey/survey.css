@@ -124,7 +124,7 @@
 .survey-otherinf {margin: 15px 0px 0px;}
 .survey-attach {height: 400px; border: 1px solid #ddd; background-color: #fff; margin-bottom: 20px;}
 .survey-dropzone {height: 326px; padding: 15px 15px 0px;}
-.attach-zone {height: 326px; padding : 15px; background: #fff;}
+.attach-zone {height: 326px; padding : 15px; background: #fff; border: 1px solid #d7d7d7; margin-bottom: 15px;}
 .mainzone {border: 1px dashed #ddd; height: 100%; box-sizing: border-box; overflow-y: auto;}
 .survey-attbttn {height: 56px;}
 .survey-attbttn >div {float: left; background-color: rgb(52, 152, 219); border-radius: 4px; height: 28px; line-height: 28px; margin: 14px 10px; padding: 0px 5px; font-size: 14px; color: #fff; cursor: pointer;}
@@ -460,10 +460,10 @@ input[type=range]::-ms-tooltip {display: none;}
 .svTitle {height: 70px; background-color: #fff; border: 1px solid #d7d7d7; display: flex;}
 .svTitle .sryFirst2 {width: 10px; background-color: rgba(0, 115, 230, 0.64);}
 .svTitle .sryTxt {height: 70px; line-height: 70px; padding: 0px 10px; font-weight: bold; font-size: 20px;}
-
+/* 기존의 미리보기 설문 목적 부분 수정으로 불필요
 .svPurpose {width: auto; height: auto; padding: 15px 0px;}
 .svPurpose .ppContent {width: auto; height: auto; background-color:white; padding:15px 10px; border: 1px solid #d7d7d7;}
-
+ */
 .survey-bttn-wrp {float: right; padding: 10px 0px 20px;}
 .survey-bttn-wrp >img {height: 36px; width: 36px; cursor: pointer;}
 .survey-bttn-wrp >img + img {padding-left: 8px;}

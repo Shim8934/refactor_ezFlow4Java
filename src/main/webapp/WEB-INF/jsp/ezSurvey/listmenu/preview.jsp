@@ -5,6 +5,7 @@
 	<div class="sryFirst2"></div>
 	<span class="sryTxt"><spring:message code='ezSurvey.t39'/></span>
 </div>
+<%-- 
 <div class="surveyinfo-wrap" id="surveyInfConfirm">
 	<div class="survey-purpose" id="cf-purpose"></div>
 	<div class="survey-otherinf">
@@ -56,7 +57,7 @@
 		</div>
 	</div>
 </div>
-
+ --%>
 <div class="prevQsArea"></div>
 
 <div class="navi-button">
