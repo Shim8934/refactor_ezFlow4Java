@@ -128,9 +128,14 @@
                     tempyear = selyear + 2;
 	            }
 	            
-	            if (selyear + 2 <= maxyear) {
+	            if (selyear + 2 <= maxyear || selyear + 1 <= maxyear) {
 	                document.getElementById("searchYear").innerHTML = "";
 	                for (var i = 0; i < 5; i++) {
+	                	if (tempyear > maxyear) {
+	                		tempyear--;
+	                		continue;
+	                	}
+	                
 	                    var option = document.createElement("OPTION");
 	                    option.value = tempyear;
 	                    option.innerHTML = tempyear;
@@ -284,17 +289,12 @@
 					alert("<spring:message code='ezAttitude.t56'/>");
 					return;
 				}
-    			searchYear = document.getElementById("searchYear").value;
-    			searchUserName = $("#searchUserName").val();
-    			searchDeptName = $("#searchDeptName").val();
-    			searchTitle = $("#searchTitle").val();
 				
 		    	exportExcelframe.location.href="/admin/ezAttitude/excelAnnualListExport.do?companyId=" + pCompanyId + "&searchYear=" + searchYear + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&orderCell=" + orderCell + "&orderOption=" + orderOption;
 		    	exportExcelframe.target="_blank";
 			}
 			
 			function useAnnualHistory (obj) {
-				var searchYear = document.getElementById("searchYear").value;
 				var userId = $(obj).closest("tr").attr("userid");
 				var url = "/admin/ezAttitude/useAnnualHistoryPop.do?userId=" + userId + "&year=" + searchYear + "&companyId=" + pCompanyId;
 				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(685, 500));
