@@ -26,7 +26,7 @@
 		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC; font-size: 11px;}
 		.preview_content {width: 97%; height: 630px; border: solid 0px green; display: inline-block; padding:10px;}
 		.preview_nodata {position: absolute; display: inline-block; width: 49%; vertical-align: middle; text-align: center; margin-top: 70px;}
-		.mainlist_free tr td:nth-child(5) {padding-left: 12px;}
+		.mainlist_free tr td:nth-child(4) {padding-left: 12px;}
 		#lvJobList {min-width: 400px;}
 		#lvJobUserList {min-width: 360px;}
 		.countColor {color:#017BEC;}
@@ -450,7 +450,7 @@
 			var table  = document.getElementById("lvJobList");
 			var length = table.rows.length;
 			for (var i = 1; i < length; i++) {
-				var useTd     = table.rows[i].cells[3];
+				var useTd     = table.rows[i].cells[4];
 				if (!useTd) { break; }
 				
 				var labelElmt = document.createElement("label");
@@ -634,22 +634,13 @@
 <body class="mainbody" style="overflow: hidden;">
 	<h1>
 		<spring:message code='ezOrgan.csj01' />
-		<select class="companySelect" id="ListCompany" onChange="compChange()">
+		<select class="companySelect" id="ListCompany" onChange="companyChange()">
 			<c:forEach var="item" items="${list}">
 				<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 			</c:forEach>
 		</select>
 	</h1>
 	<div id="mainmenu">
-		<span>
-			<b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			<select id="ListCompany" onChange="companyChange()">
-				<c:forEach var="item" items="${list}">
-					<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-				</c:forEach>
-			</select>
-			<br/><br/>
-		</span>
 		<ul>
 			<li class="important"><span onClick="BtnAction('Add')"><spring:message code = 'ezAddress.t173'/></span></li>
 			<li><span onClick="BtnAction('Mod')"><spring:message code = 'ezAddress.t174'/></span></li>
@@ -728,11 +719,11 @@
 			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
-			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
+			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
 			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
-			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
+			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
 			<WIDTH></WIDTH>
 			</HEADER>
     	</HEADERS>
@@ -786,11 +777,11 @@
 			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
-			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
+			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
 			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
-			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
+			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
 			<WIDTH></WIDTH>
 			</HEADER>
     	</HEADERS>
