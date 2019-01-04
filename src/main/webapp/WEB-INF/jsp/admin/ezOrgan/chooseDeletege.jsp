@@ -9,7 +9,8 @@
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 	    <style>
-	    	.contentList tr, td {border: 1px solid #ddd; border-collapse: collapse; margin: 0px 0px 15px 0px;}
+	    	.contentList {width:100%; margin: 0px 0px 15px 0px;}
+	    	.contentList tr td {border: 1px solid #ddd; border-collapse: collapse; vertical-align:top}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -38,8 +39,10 @@
 	    } 
 		function dataList_input() {
 			
-	    	document.getElementById("data1").innerHTML = data1;
-	    	document.getElementById("data2").innerHTML = data4;
+			
+	    	for (var i=0, j=0; i<data3.length, j<data4.length; i++, j++) {
+	    		$("#contentList").append("<tr><td>"+data3[i]+"</td><td>"+data4[j]+"</td></tr>");
+	    	}
 	    } 
 	    
 		function Schedule_Confirm(id) {
@@ -81,13 +84,9 @@
           		<li><span onclick="end_confirm()"></span></li>
         	</ul>
 	  	</div>
-	  	<table class="contentList" style="width:100%;">
-	  		<tr>
-	  			<td id="data1"></td>
-	  		</tr>
-	  		<tr>
-	  			<td id="data2"></td>
-	  		</tr>
+	  	<table class="contentList" id="contentList" style="width:30%;">
+	  		<th>이름</th>
+	  		<th>부서</th>
 	  	</table>
 		<table class="content" style="width:100%">
 			<tr>

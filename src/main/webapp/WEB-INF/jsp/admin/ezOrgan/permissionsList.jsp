@@ -435,7 +435,7 @@
 		        listview.LoadFromID("lvPermissionList");
 		        var Params = new Array();
 		        var result = "";
-		        
+		       
 		        if (CrossYN()) {
 		            permissions_check_dialogArguments[0] = Params;
 		            permissions_check_dialogArguments[1] = Permissions_Add_Complete;
@@ -608,7 +608,7 @@
 					return;
 				}
 				
-		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do","chooseDeletege", 700, 500);
+		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do","chooseDeletege", 800, 500);
 		    }
 		    
 		    function choose_Del_complete(data) {

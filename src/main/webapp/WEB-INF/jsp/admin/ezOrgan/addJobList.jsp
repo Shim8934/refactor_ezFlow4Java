@@ -823,9 +823,9 @@
 		    </div> 
 		    <table style="width:100%; border-collapse: separate;">
 		        <tr>
-		            <td style="width:750px">
-		                <div class="listview" style="Width:750px;">
-		                    <div id="AddJobListView" style="border: 0px solid #ddd; Width: 750px; Height:670px; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
+		            <td style="width:50%">
+		                <div class="listview" style="Width:100%;">
+		                    <div id="AddJobListView" style="border: 0px solid #ddd; Height:670px; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 		                    <div id="tblPageRayer" style="Width:100%;text-align:center;"></div>
 		                </div>
 		            </td>
