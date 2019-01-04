@@ -9014,7 +9014,8 @@ CREATE TABLE `tbl_schedule` (
   `CONTENTPATH` varchar(500) NOT NULL,
   `TENANT_ID` mediumint(5) NOT NULL,
   `companyid` varchar(40) DEFAULT NULL,
-  PRIMARY KEY (`SCHEDULEID`)
+  PRIMARY KEY (`SCHEDULEID`),
+  KEY `IDX_OWNERID` (`OWNERID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
