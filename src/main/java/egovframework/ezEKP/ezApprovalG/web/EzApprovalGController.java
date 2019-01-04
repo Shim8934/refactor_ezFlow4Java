@@ -1020,7 +1020,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("apprReuseConfig", apprReuseConfig);
 		model.addAttribute("nonElecRec", nonElecRec);
 		// FormBuilder
-		model.addAttribute("reformflag", ezApprovalGService.isReform(formURL) ? "Y" : "N");
+		if (docID == null || docID.isEmpty()) {
+			model.addAttribute("reformflag", ezApprovalGService.isReform(formURL) ? "Y" : "N");
+		} else {
+			model.addAttribute("reformflag", ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getCompanyID(), userInfo.getTenantId()).getReformFlag());
+		}
 		
 		logger.debug("draftui ended.");
 
