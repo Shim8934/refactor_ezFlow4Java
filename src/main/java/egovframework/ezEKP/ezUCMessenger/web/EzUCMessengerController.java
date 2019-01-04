@@ -156,20 +156,26 @@ public class EzUCMessengerController {
 		
 		// 사용자 ID 혹은 사원번호가 발견된 경우
 		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+			// 공유사서함 기능을 사용할 경우 공유사서함 계정으로의 로그인을 막는다.
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
 			
-			// 사용자 ID를 사용해 로그인하는 경우
-			if (id.equals(resultVO.getId())) {
-				orgId = id;
-				
-			// 사원번호를 사용해 로그인하는 경우
+			if (useSharedMailbox.equals("YES") && resultVO.getDeptID() != null && resultVO.getDeptID().startsWith("shared_mailbox_")) {
+				logger.debug("Cannot login with shared mailbox account.");
 			} else {
-				// Check if his/her tenant allows using employeeID to login
-				String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
-				logger.debug("useEmpNumberLogin=" + useEmpNumberLogin);
-				
-				// 사원번호를 사용한 로그인을 허용하는 경우
-				if (useEmpNumberLogin.equals("YES")) {
-					orgId = resultVO.getId();
+				// 사용자 ID를 사용해 로그인하는 경우
+				if (id.equals(resultVO.getId())) {
+					orgId = id;
+					
+				// 사원번호를 사용해 로그인하는 경우
+				} else {
+					// Check if his/her tenant allows using employeeID to login
+					String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
+					logger.debug("useEmpNumberLogin=" + useEmpNumberLogin);
+					
+					// 사원번호를 사용한 로그인을 허용하는 경우
+					if (useEmpNumberLogin.equals("YES")) {
+						orgId = resultVO.getId();
+					}
 				}
 			}
 		}
@@ -192,99 +198,20 @@ public class EzUCMessengerController {
 		
 		// 사용자 ID 혹은 사원번호가 발견된 경우
 		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
-			// 사용자 ID를 사용해 로그인하는 경우
-			if (id.equals(resultVO.getId())) {
-				
-				String useAD = ezCommonService.getTenantConfig("USE_AD", tenantId);
-				logger.debug("useAD=" + useAD);
-				
-	            // AD를 사용하는 경우(MASTERADMIN 제외)
-	            if (!id.equalsIgnoreCase("MASTERADMIN") && useAD.equalsIgnoreCase("YES")) {
-	            	String chkADpass = loginService.chkADAndUpdatePassword(id, pw, tenantId);	            	
-	            	
-	            	if (chkADpass.equalsIgnoreCase("TRUE")) {
-	            		isUserExists = true;
-	            		
-	            		String ip = ClientUtil.getClientIP(request);
-	            		String agent = ClientUtil.getClientInfo(request, "agent");
-	            		String os = ClientUtil.getClientInfo(request, "os");
-	            		String browser = "uc messenger";
-	            		logger.debug("ip=" + ip + ",agent=" + agent + ",os=" + os + ",browser=" + browser);
-	            		
-	    				loginVO.setIp(ip);
-	    				
-	    				//IP Address,  마지막 login시간 저장
-	    				loginService.updateUser(loginVO);
-	            		
-	            		//접속 로그정보 저장
-						resultVO.setIp(ip);
-						resultVO.setAgent(agent);
-						resultVO.setOs(os);
-						resultVO.setBrowser(browser);
-						resultVO.setTenantId(tenantId);
-		
-						if (resultVO.getTitle2() == null) {
-							resultVO.setTitle2("");
-						}
-						
-						loginService.insertLog(resultVO);
-	            	}
-	            	
-	            // AD를 사용하지 않는 경우
-	            } else {
-	            	String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
-	            	
-	        		loginVO.setId(id);
-	        		loginVO.setPassword(encryptedPw);
-	        		loginVO.setDn("PASSWORD");
-	        		
-	        		resultVO = loginService.selectUser(loginVO);
-	        		logger.debug("resultVO=" + resultVO);
-	        		
-	        		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
-	        			isUserExists = true;
-	        			
-	        			String ip = ClientUtil.getClientIP(request);
-	            		String agent = ClientUtil.getClientInfo(request, "agent");
-	            		String os = ClientUtil.getClientInfo(request, "os");
-	            		String browser = "uc messenger";
-	            		logger.debug("ip=" + ip + ",agent=" + agent + ",os=" + os + ",browser=" + browser);
-	            		
-	    				loginVO.setIp(ip);
-	    				
-	    				//IP Address,  마지막 login시간 저장
-	    				loginService.updateUser(loginVO);
-	            		
-	            		//접속 로그정보 저장
-						resultVO.setIp(ip);
-						resultVO.setAgent(agent);
-						resultVO.setOs(os);
-						resultVO.setBrowser(browser);
-						resultVO.setTenantId(tenantId);
-		
-						if (resultVO.getTitle2() == null) {
-							resultVO.setTitle2("");
-						}
-						
-						loginService.insertLog(resultVO);
-	        		}
-	            }
-				
-			// 사원번호를 사용해 로그인하는 경우
+			// 공유사서함 기능을 사용할 경우 공유사서함 계정으로의 로그인을 막는다.
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+			
+			if (useSharedMailbox.equals("YES") && resultVO.getDeptID() != null && resultVO.getDeptID().startsWith("shared_mailbox_")) {
+				logger.debug("Cannot login with shared mailbox account.");
 			} else {
-				
-				// Check if his/her tenant allows using employeeID to login
-				String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
-				logger.debug("useEmpNumberLogin=" + useEmpNumberLogin);
-				
-				// 사원번호를 사용한 로그인을 허용하는 경우
-				if (useEmpNumberLogin.equals("YES")) {
+				// 사용자 ID를 사용해 로그인하는 경우
+				if (id.equals(resultVO.getId())) {
 					
-					// 실제 사용자 ID를 사용한다.
-					id = resultVO.getId();
+					String useAD = ezCommonService.getTenantConfig("USE_AD", tenantId);
+					logger.debug("useAD=" + useAD);
 					
-					// AD를 사용하는 경우(MASTERADMIN 제외)
-					if (!id.equalsIgnoreCase("MASTERADMIN") && ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
+		            // AD를 사용하는 경우(MASTERADMIN 제외)
+		            if (!id.equalsIgnoreCase("MASTERADMIN") && useAD.equalsIgnoreCase("YES")) {
 		            	String chkADpass = loginService.chkADAndUpdatePassword(id, pw, tenantId);	            	
 		            	
 		            	if (chkADpass.equalsIgnoreCase("TRUE")) {
@@ -316,14 +243,14 @@ public class EzUCMessengerController {
 		            	}
 		            	
 		            // AD를 사용하지 않는 경우
-					} else {
-						String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
-						
-			        	loginVO.setId(id);
-			        	loginVO.setPassword(encryptedPw);
-			            loginVO.setDn("PASSWORD");
-			            
-			            resultVO = loginService.selectUser(loginVO);
+		            } else {
+		            	String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
+		            	
+		        		loginVO.setId(id);
+		        		loginVO.setPassword(encryptedPw);
+		        		loginVO.setDn("PASSWORD");
+		        		
+		        		resultVO = loginService.selectUser(loginVO);
 		        		logger.debug("resultVO=" + resultVO);
 		        		
 		        		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
@@ -353,6 +280,92 @@ public class EzUCMessengerController {
 							
 							loginService.insertLog(resultVO);
 		        		}
+		            }
+					
+				// 사원번호를 사용해 로그인하는 경우
+				} else {
+					
+					// Check if his/her tenant allows using employeeID to login
+					String useEmpNumberLogin = ezCommonService.getTenantConfig("UseEmpNumberLogin", tenantId);
+					logger.debug("useEmpNumberLogin=" + useEmpNumberLogin);
+					
+					// 사원번호를 사용한 로그인을 허용하는 경우
+					if (useEmpNumberLogin.equals("YES")) {
+						
+						// 실제 사용자 ID를 사용한다.
+						id = resultVO.getId();
+						
+						// AD를 사용하는 경우(MASTERADMIN 제외)
+						if (!id.equalsIgnoreCase("MASTERADMIN") && ezCommonService.getTenantConfig("USE_AD", tenantId).equalsIgnoreCase("YES")) {
+			            	String chkADpass = loginService.chkADAndUpdatePassword(id, pw, tenantId);	            	
+			            	
+			            	if (chkADpass.equalsIgnoreCase("TRUE")) {
+			            		isUserExists = true;
+			            		
+			            		String ip = ClientUtil.getClientIP(request);
+			            		String agent = ClientUtil.getClientInfo(request, "agent");
+			            		String os = ClientUtil.getClientInfo(request, "os");
+			            		String browser = "uc messenger";
+			            		logger.debug("ip=" + ip + ",agent=" + agent + ",os=" + os + ",browser=" + browser);
+			            		
+			    				loginVO.setIp(ip);
+			    				
+			    				//IP Address,  마지막 login시간 저장
+			    				loginService.updateUser(loginVO);
+			            		
+			            		//접속 로그정보 저장
+								resultVO.setIp(ip);
+								resultVO.setAgent(agent);
+								resultVO.setOs(os);
+								resultVO.setBrowser(browser);
+								resultVO.setTenantId(tenantId);
+				
+								if (resultVO.getTitle2() == null) {
+									resultVO.setTitle2("");
+								}
+								
+								loginService.insertLog(resultVO);
+			            	}
+			            	
+			            // AD를 사용하지 않는 경우
+						} else {
+							String encryptedPw = EgovFileScrty.encryptPassword(pw, id);
+							
+				        	loginVO.setId(id);
+				        	loginVO.setPassword(encryptedPw);
+				            loginVO.setDn("PASSWORD");
+				            
+				            resultVO = loginService.selectUser(loginVO);
+			        		logger.debug("resultVO=" + resultVO);
+			        		
+			        		if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) { 
+			        			isUserExists = true;
+			        			
+			        			String ip = ClientUtil.getClientIP(request);
+			            		String agent = ClientUtil.getClientInfo(request, "agent");
+			            		String os = ClientUtil.getClientInfo(request, "os");
+			            		String browser = "uc messenger";
+			            		logger.debug("ip=" + ip + ",agent=" + agent + ",os=" + os + ",browser=" + browser);
+			            		
+			    				loginVO.setIp(ip);
+			    				
+			    				//IP Address,  마지막 login시간 저장
+			    				loginService.updateUser(loginVO);
+			            		
+			            		//접속 로그정보 저장
+								resultVO.setIp(ip);
+								resultVO.setAgent(agent);
+								resultVO.setOs(os);
+								resultVO.setBrowser(browser);
+								resultVO.setTenantId(tenantId);
+				
+								if (resultVO.getTitle2() == null) {
+									resultVO.setTitle2("");
+								}
+								
+								loginService.insertLog(resultVO);
+			        		}
+						}
 					}
 				}
 			}

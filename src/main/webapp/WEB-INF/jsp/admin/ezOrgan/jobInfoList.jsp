@@ -33,10 +33,16 @@
 		var pSearchType = "";
 		var pSearchValue = "";
 		
-		var pLastClickRow;
-		
 		var pCompanyID = "${userInfo.companyID}";
 		var pCompanyNM = "${userInfo.companyName}";
+		
+		document.onselectstart = function () {
+            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
+                return false;
+            } else {
+                return true;
+            }
+        };
 		
 		$(document).ready(function() {
 			companyChange();
@@ -93,12 +99,20 @@
             var listview = new ListView();
             listview.SetID("lvJobList");
             listview.SetMulSelectable(false);
-            listview.SetRowOnClick("job_userList");
+            //listview.SetRowOnClick("job_userList");
+            listview.SetRowOnClick("job_userList_click");
             listview.SetSelectFlag(true);
             listview.SetRowOnDblClick("job_view");
             listview.SetHeightFree(true);
             listview.DataSource(headerData);
             listview.DataBind("jobListView");
+		}
+		
+		function job_userList_click() {
+			pCurPage = 1;
+			pSearchValue = "";
+			$("#searchValue").val("");
+			job_userList();
 		}
 		
 		/* (직위/직책) 사용중인 유저리스트 호출 */
@@ -119,12 +133,6 @@
 			if (oArrRows != 0) {
 				var pJobID = oArrRows[0].getAttribute("DATA1");
 				var pJobNM = oArrRows[0].firstChild.innerText;
-				
-				if (pLastClickRow != oArrRows[0]) {
-					pCurPage = 1;
-					pSearchValue = "";
-					$("#searchValue").val("");
-				}
 				
 				$.ajax({
 	            	type : "POST",
@@ -154,9 +162,9 @@
 			    if (oRows.length > 0) {
 			    	xmlRtn = xmlDom.documentElement.getElementsByTagName("ROWS")[0];
 			    	$(xmlRtn.getElementsByTagName("ROW")).each(function(index) {
-		            	if($(this).find("DATA5").text() == "ADDJOB") {
-		            		var orgPosition = $(this).find("CELL").eq(2).find("VALUE").text();
-		            		$(this).find("CELL").eq(2).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+		            	if($(this).find("DATA5").text() == "addJob") {
+		            		var orgPosition = $(this).find("CELL").eq(3).find("VALUE").text();
+		            		$(this).find("CELL").eq(3).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
 		            	}
 		            });
 			    	
@@ -166,8 +174,6 @@
 			    
 			    var _html = "<span>&nbsp;" + pJobNM + "-[" + "<span class='countColor'>" + pTotalCnt + "<spring:message code = 'main.t20000'/></span>]</span>";
 			    $("#jobTotalInfoRayer").html(_html);
-			    
-			    pLastClickRow = oArrRows[0];
 			}
 			
 			document.getElementById("jobUserListView").innerHTML = "";
@@ -292,22 +298,19 @@
 	        
 	        var oArrRows = listview.GetSelectedRows();
 	        if (oArrRows != 0) {
-	        	if (oArrRows[0].getAttribute("DATA5") != "ADDJOB") {
-					var args = new Array();
-						args[0] = oArrRows[0].getAttribute("DATA1");
-						args[1] = oArrRows[0].getAttribute("DATA2");
-						args[2] = oArrRows[0].getAttribute("DATA4");
-						args[3] = oArrRows[0].getAttribute("DATA3");
-						args[4] = pCompanyID;
-					
-				    userinfo_dialogArguments[0] = args;
-				    userinfo_dialogArguments[1] = info_user_complete;
-				    
-				    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
-				    try { OpenWin.focus(); } catch (e) { }
-	        	} else {
-	        		alert("<spring:message code='ezOrgan.psb02' />");
-	        	}
+				var args = new Array();
+					args[0] = oArrRows[0].getAttribute("DATA1");
+					args[1] = oArrRows[0].getAttribute("DATA2");
+					args[2] = oArrRows[0].getAttribute("DATA4");
+					args[3] = oArrRows[0].getAttribute("DATA3");
+					args[4] = pCompanyID;
+					args[5] = oArrRows[0].getAttribute("DATA5");
+				
+			    userinfo_dialogArguments[0] = args;
+			    userinfo_dialogArguments[1] = info_user_complete;
+			    
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
+			    try { OpenWin.focus(); } catch (e) { }
 	        }
 		}
 		
@@ -341,6 +344,7 @@
             		}
             	},
             	error : function(e) {
+            		rtnFlag = false;
             	}
             });
 			
@@ -538,7 +542,7 @@
 					<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;"></div>
 					<div id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px;">
 						<select id="searchType" style="height: 26px; width: 50px;"><option value="displayname"><spring:message code='main.t76' /></option></select>
-						<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px;">
+						<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px;">
 						<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.gif" style="width: 26px; height: 26px; margin-top:2px;" border="0" onClick="search()"></a>
 					</div>
 				</div>
@@ -586,6 +590,11 @@
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t67' /></NAME>
+			<WIDTH>100</WIDTH>
+			<STYLE>border-top:0px;</STYLE>
+			</HEADER>
+			<HEADER>
+			<NAME><spring:message code='ezOrgan.t68' /></NAME>
 			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
@@ -638,6 +647,11 @@
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t67' /></NAME>
+			<WIDTH>100</WIDTH>
+			<STYLE>border-top:0px;</STYLE>
+			</HEADER>
+			<HEADER>
+			<NAME><spring:message code='ezOrgan.t68' /></NAME>
 			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>

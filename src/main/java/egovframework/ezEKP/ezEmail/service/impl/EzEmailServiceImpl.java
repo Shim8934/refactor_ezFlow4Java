@@ -1033,7 +1033,38 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return returnValue;
 	}
-
+	
+	@Override
+	public int deleteIndividualAlias(String userId, int tenantID) throws Exception {
+		logger.debug("deleteIndividualAlias started.");
+		logger.debug("userId=" + userId + ",tenantID=" + tenantID);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+		String inputParams = "userId=" + URLEncoder.encode(userId + "@" + domain, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/setIndividualAlias";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		String resultCode = "Error";
+		int reasonCode = -100;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}
+		
+		logger.debug("deleteIndividualAlias ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		return reasonCode;
+	}
+	
 	@Override
 	public String checkIndividualAlias(String individualAlias,int  tenantId) throws Exception {
 		logger.debug("checkIndividualAlias started. individualAlias=" + individualAlias);
@@ -2454,6 +2485,38 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		logger.debug("getSharedMailboxPermissionInfo ended.");
 		return shareMailBoxPermissonInfo;
+	}
+	
+	@Override
+	public int deleteUserFromAllSharedMailbox(String userId, int tenantId) throws Exception {
+		logger.debug("deleteUserFromAllSharedMailbox started.");
+		logger.debug("userId=" + userId + ",tenantId=" + tenantId);
+		
+		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
+		String tenantIdParam = "tenantId=" + tenantId;
+		String inputParams = userIdParam + "&" + tenantIdParam;
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/deleteUserFromAllSharedMailbox";
+		String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("strJson=" + strJson);
+		
+		String resultCode = "Error";
+		int reasonCode = -100;
+		
+		if (strJson != null) {
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+	        
+			resultCode = (String)object.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)object.get("reasonCode")).intValue();
+			}
+		}
+		
+		logger.debug("deleteUserFromAllSharedMailbox ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		return reasonCode;
 	}
 	
 	@Override
