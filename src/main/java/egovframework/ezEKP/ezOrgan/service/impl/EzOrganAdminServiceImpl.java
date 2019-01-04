@@ -2072,4 +2072,9 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		return rtnVal.toString();
 	}
 
+	@Override
+	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception {
+		return ezOrganAdminDao.getAllUserCnList(tenantID);
+	}
+
 }

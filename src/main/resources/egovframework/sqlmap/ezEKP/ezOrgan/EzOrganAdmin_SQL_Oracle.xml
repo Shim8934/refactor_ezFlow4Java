@@ -67,6 +67,9 @@
 					<isEqual property="search_keycode" compareValue="userId">
 						CN LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
+					<isEqual property="search_keycode" compareValue="quota">
+						((MAILBOXUSAGE / MAILBOXQUOTA) * 100) >= #search_keyword#
+					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="searchStartDate" prepend="AND">
@@ -406,7 +409,10 @@
                         		' ' DISPLAYNAMEPRINTABLE  ,
                         		POSITIONCD ,
                         		BIRTH ,
-                        		BIRTHTYPE 
+                        		BIRTHTYPE ,
+                        		MAILBOXUSAGE,
+                        		MAILBOXQUOTA
+                        		
              FROM
              	TBL_USERMASTER 
              WHERE
@@ -5088,6 +5094,8 @@
 	  		<isNotNull property="info" prepend=","> <![CDATA[info = #info#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute7" prepend=","> <![CDATA[extensionAttribute7 = #extensionAttribute7#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute8" prepend=","> <![CDATA[extensionAttribute8 = #extensionAttribute8#]]></isNotNull>
+	  		<isNotNull property="mailboxUsage" prepend=","> <![CDATA[mailboxUsage = #mailboxUsage#]]></isNotNull>
+	  		<isNotNull property="mailboxQuota" prepend=","> <![CDATA[mailboxQuota = #mailboxQuota#]]></isNotNull>
 	  	</dynamic>
 	  	<![CDATA[
       		WHERE
