@@ -1327,6 +1327,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					// 로컬 시스템 계정을 삭제한다.
 					ezOrganAdminService.deleteDBData(cn[i], "user", tenantID);
 				} catch (Exception e) {
+					e.printStackTrace();
 					if (userExists == 1) { // 유효한 이메일 계정이었으면 복구 처리를 수행한다.
 						if (distributionList != null) {
 							for (String dist : distributionList) {
@@ -1342,7 +1343,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 						ezEmailUserAdminService.restoreUser(mailAddr);							
 					}
-					
 					result = "EMAIL_ERROR";
 					break;
 				}
