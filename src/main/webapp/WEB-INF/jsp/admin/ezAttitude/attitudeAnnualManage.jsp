@@ -25,6 +25,12 @@
 				background-color: #f8f8fa;
 			}
 			#searchTable td {padding: 8px 5px;}
+			.mainlist a {
+				background: none;
+			}
+			.mainlist a:hover {
+				border: 1px solid #8e8e8e;
+		
 	    </style>
 	    
 	    <script type="text/javascript">
