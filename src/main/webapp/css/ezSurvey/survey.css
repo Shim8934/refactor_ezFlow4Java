@@ -463,10 +463,10 @@ input[type=range]::-ms-tooltip {display: none;}
 .svTitle {height: 70px; background-color: #fff; border: 1px solid #d7d7d7; display: flex;}
 .svTitle .sryFirst2 {width: 10px; background-color: rgba(0, 115, 230, 0.64);}
 .svTitle .sryTxt {height: 70px; line-height: 70px; padding: 0px 10px; font-weight: bold; font-size: 20px;}
-/* 기존의 미리보기 설문 목적 부분 수정으로 불필요
+
 .svPurpose {width: auto; height: auto; padding: 15px 0px;}
 .svPurpose .ppContent {width: auto; height: auto; background-color:white; padding:15px 10px; border: 1px solid #d7d7d7;}
- */
+
 .survey-bttn-wrp {float: right; padding: 10px 0px 20px;}
 .survey-bttn-wrp >img {height: 36px; width: 36px; cursor: pointer;}
 .survey-bttn-wrp >img + img {padding-left: 8px;}

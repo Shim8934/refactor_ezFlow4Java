@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"  %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 <!DOCTYPE html>
 <html>
@@ -28,31 +29,33 @@
 			</div>
 			<div id="wtInfo" class="wtInfo">
 				<strong id="wtName" class="wtName"><c:out value="${creator.displayName}"/></strong>
-				<strong id="wtTime" class="wtTime"><c:out value="${survey.createDate}"/></strong>
+				<strong id="wtTime" class="wtTime"></strong>
 			</div>
 		</div>
 		
 		<div id="infoBtns" class="infoBtns">
 			<img id="suvyDlt"  class="suvyDlt"  src="/images/ezSurvey/delete2.png"/>
 			<img id="suvyInfo" class="suvyInfo" src="/images/ezSurvey/info.png"   />
-			<ul class="upage-ul">
+			
+			<ul id="upage-ul"class="upage-ul" style="display: none;">
 				<li>
-					<img src="/images/poll/numberOfSelect_1.png" class="voteIconImg_info" title="투표 가능 개수 : 1">
-					<span>투표 가능 개수 : 1</span>
+					<!-- <img src="/images/poll/numberOfSelect_1.png" class="voteIconImg_info" title="투표 가능 회수 : 1"> -->
+					<span id="isPublic">결과 공개여부</span>
 				</li>
 				<li>
-					<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg_info" title="투표 종료 전 결과보기">
-					<span>투표 종료 전 결과보기</span>
+					<!-- <img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg_info" title="투표 종료 전 결과보기"> -->
+					<span id="openDays">개시 일 수</span>
 				</li>
 				<li>
-					<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="기명 투표">
-					<span>기명 투표</span>
+					<!-- <img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="기명 투표"> -->
+					<span id="isAnonymous">기명 여부</span>
 				</li>
 				<li>
-					<img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="낙장불입 미적용">
-					<span>낙장불입 미적용</span>
+					<!-- <img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="낙장불입 미적용"> -->
+					<span id="isAgain">설문 참여 중복 허용 여부</span>
 				</li>
 			</ul>
+			
 		</div>
 	</div>
 	
@@ -93,6 +96,8 @@
 		var questionFile = new SurveyFile("images");
 		getQuestions();
 		userEvent();
+		
+		$("#wtTime")[0].textContent = ("" + survey.createDate).substr(0,19);
 		
 		function getQuestions() {
 			$.ajax({
@@ -296,7 +301,8 @@
 		}
 		
 		function showSurveyInfo() {
-			
+			var status = $(".upage-ul").css("display");
+			status == "none" ? $(".upage-ul").css("display", "") : $(".upage-ul").css("display", "none");
 		}
 		
 		function saveSurveyResponses() {
