@@ -65,8 +65,9 @@ var SurveyCreate     = function() {
 	
 	function initEvents(reuseSurvey) {
 		console.log(reuseSurvey);
-		surveyItem            = reuseSurvey ? reuseSurvey.surveyId   : null;
-		surveyObj["saveMode"] = reuseSurvey ? reuseSurvey.modifyFlag : 0;
+		surveyItem            = reuseSurvey     ? reuseSurvey.surveyId    : null;
+		var modifyFlag        = reuseSurvey     ? reuseSurvey.modifyFlag  : 0;
+		surveyObj["surveyId"] = modifyFlag == 1 ? reuseSurvey["surveyId"] : -1;
 		var fileDivElmt       = document.getElementById("fileDiv");
 		
 		$("#startDate").datepicker(datepickerSt);

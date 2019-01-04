@@ -505,6 +505,32 @@
 		]]>
 	</insert>
 	
+	<update id="EzSurveyDAO.updateSurveyItem">
+		update
+			tbl_survey
+		set
+			title              = #title#,
+			purpose            = #purpose#,
+			user_id            = #creatorId#,
+			create_date        = #createDate#,
+			start_date         = #startDate#,
+			end_date           = #endDate#,
+			user_name1         = #creatorName1#,
+			user_name2         = #creatorName2#,
+			use_status         = #useStatus#,
+			open_days          = #openDays#,
+			result_public_flag = #resultPublicFlag#,
+			anonymous_flag     = #anonymousFlag#,
+			multi_answer_flag  = #multiAnswerFlag#,
+			participate_flag   = #paritipateFlag#,
+			attach_flag        = #attachFlag#,
+			delete_user        = #deleteUser#,
+			update_user        = #updateUser#,
+			update_date        = #updateDate#
+		where
+			survey_id   = #surveyId# and tenant_id = #tenantId# and company_id = #companyId#
+	</update>
+	
 	<select id="EzSurveyDAO.getMaxSurveyId" resultClass="Long">
 		<![CDATA[select ifnull(max(survey_id) + 1, 1) from tbl_survey]]>
 	</select>
