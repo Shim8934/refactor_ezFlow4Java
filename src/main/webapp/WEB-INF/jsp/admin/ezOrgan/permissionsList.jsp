@@ -606,7 +606,7 @@
 					return;
 				}
 				
-		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do?type="+types,"chooseDeletege", 500, 170);
+		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do?type="+types,"chooseDeletege", 500, 500);
 		    }
 		    
 		    function choose_Del_complete(data) {

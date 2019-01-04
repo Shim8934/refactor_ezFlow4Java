@@ -298,7 +298,7 @@
 		        }
 		    } */
 		    
-		    function UserAddjobList() {
+		    function UserAddjobList(obj) {
 		        var listview = new ListView();
 		        listview.LoadFromID("lvAddJobList");		        
 		        
@@ -395,7 +395,40 @@
 		                    document.getElementById("AddJobList").appendChild(DivLayer);
 		                }	
 		        	}
-		        });		        
+		        });
+		        
+		        var className = window.event.target.getAttribute('class');
+				if(className === 'checks') {
+					return;
+				}
+
+				var doc = window.document;
+				itemseq = document.getElementById(obj).getAttribute("DATA1");
+				if(itemseq == "0") {
+					return;
+				}
+
+				if(checkFlag) {
+					if($("#"+itemseq).prop("checked")) {
+						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				} else {
+					$("#lvAddJobList tr td").css("background-color", "rgb(255, 255, 255)");
+					$(".checks").prop("checked",false);
+					if($("#" + itemseq).is(":checked")) {
+						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				}
+
+				checkItems();
 		    }
 		    
 		    function event_DeleteClick(obj) {
@@ -721,40 +754,6 @@
 			
 			var itemseq;
 			
-			function UserAddjobList(obj) {
-				var className = window.event.target.getAttribute('class');
-				if(className === 'checks') {
-					return;
-				}
-
-				var doc = window.document;
-				itemseq = document.getElementById(obj).getAttribute("DATA1");
-				if(itemseq == "0") {
-					return;
-				}
-
-				if(checkFlag) {
-					if($("#"+itemseq).prop("checked")) {
-						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
-						$("#" + itemseq).prop("checked", false);
-					} else {
-						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
-						$("#" + itemseq).prop("checked", true);
-					}
-				} else {
-					$("#lvAddJobList tr td").css("background-color", "rgb(255, 255, 255)");
-					$(".checks").prop("checked",false);
-					if($("#" + itemseq).is(":checked")) {
-						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
-						$("#" + itemseq).prop("checked", false);
-					} else {
-						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
-						$("#" + itemseq).prop("checked", true);
-					}
-				}
-
-				checkItems();
-			}
 			
 	    </script>
 	</head>
