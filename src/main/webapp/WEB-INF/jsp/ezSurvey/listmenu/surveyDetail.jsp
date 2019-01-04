@@ -40,19 +40,40 @@
 			<ul id="upage-ul"class="upage-ul" style="display: none;">
 				<li>
 					<!-- <img src="/images/poll/numberOfSelect_1.png" class="voteIconImg_info" title="투표 가능 회수 : 1"> -->
-					<span id="isPublic">결과 공개여부</span>
+					<c:choose>
+						<c:when test="${survey.resultPublicFlag eq 1}">
+							<span id="isPublic">공개</span>
+						</c:when>
+						<c:otherwise>
+							<span id="isPublic">비공개</span>
+						</c:otherwise>
+					</c:choose>
 				</li>
 				<li>
 					<!-- <img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg_info" title="투표 종료 전 결과보기"> -->
-					<span id="openDays">개시 일 수</span>
+					<span id="openDays">완료 후 개시 일수 : ${survey.openDays}</span>
 				</li>
 				<li>
 					<!-- <img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="기명 투표"> -->
-					<span id="isAnonymous">기명 여부</span>
+					<c:choose>
+						<c:when test="${survey.anonymousFlag eq 0}">
+							<span id="isAnonymous">기명</span>
+						</c:when>
+						<c:otherwise>
+							<span id="isAnonymous">무기명</span>
+						</c:otherwise>
+					</c:choose>
 				</li>
 				<li>
 					<!-- <img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="낙장불입 미적용"> -->
-					<span id="isAgain">설문 참여 중복 허용 여부</span>
+					<c:choose>
+						<c:when test="${survey.multiAnswerFlag eq 0}">
+							<span id="isAgain">중복 응답 불가</span>
+						</c:when>
+						<c:otherwise>
+							<span id="isAgain">중복 응답 가능</span>
+						</c:otherwise>
+					</c:choose>
 				</li>
 			</ul>
 			
