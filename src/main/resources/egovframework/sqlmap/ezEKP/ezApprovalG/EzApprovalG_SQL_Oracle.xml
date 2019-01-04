@@ -10633,42 +10633,29 @@
 <!-- 		{CALL EZSP_GETDOCINFO_YEAR(#v_PDOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getDocHrefYear" parameterClass="Map" resultClass="String">
-		SELECT 
-			CASE  WHEN NVL(HREF, ' ') = ' ' THEN 
-  			(
-	  			 SELECT 
-	  				HREF 
-	           	 FROM 
-	           	 	TBL_ENDAPRDOCINFO 
-	           	 WHERE  
-	           	 	DOCID = #v_PDOCID#
-	           	 AND 
-	           	 	TENANT_ID = #v_TENANTID#
-	           	 AND
-	           	 	COMPANYID = #companyID#) 
-           	ELSE
-           ( 
-	           	SELECT 
-	           		HREF
-	     		FROM 
-	     			TBL_APRDOCINFO 
-	    		WHERE  
-	    			DOCID = #v_PDOCID#
-	    		AND 
-	           	 	TENANT_ID = #v_TENANTID#
-	           	AND
-	           		COMPANYID = #companyID# )
-           END FROM(
-					SELECT 
-						HREF 
-     				FROM 
-     					TBL_APRDOCINFO
-     				WHERE  
-     					DOCID = #v_PDOCID#
-     				AND 
-           	 			TENANT_ID = #v_TENANTID#
-           	 		AND
-           	 			COMPANYID = #companyID#) 
+		SELECT
+		    href
+		FROM
+		    (
+		        select 
+		            href 
+		        from
+		            tbl_endaprdocinfo
+		        WHERE
+		             docid = #v_PDOCID#
+		         AND   tenant_id = #v_TENANTID#
+		         AND   companyid = #companyID#
+		    )
+		 where NOT EXISTS(
+		            SELECT
+		                href
+		            FROM
+		                tbl_aprdocinfo
+		            WHERE
+		                docid = #v_PDOCID#
+		                AND   tenant_id = #v_TENANTID#
+		                AND   companyid = #companyID#
+		  )
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getSepAttachSN" parameterClass="Map" resultClass="String"> -->
@@ -19183,10 +19170,10 @@
                     		TBL_CABINETCLASS.ExpirationYear < #accountYear#
 					]]>
 		  		  </isEqual>
-		  		  <isEqual property="listFlag" compareValue="10">
-		  		  		AND 
-		  		  			TBL_CABINETCLASS.ExpirationYear = #accountYear#
-		  		  </isEqual>
+<!-- 		  		  <isEqual property="listFlag" compareValue="10"> -->
+<!-- 		  		  		AND  -->
+<!-- 		  		  			TBL_CABINETCLASS.ExpirationYear = #accountYear# -->
+<!-- 		  		  </isEqual> -->
 		  		  <isEqual property="listFlag" compareValue="11">
 		  		  		AND 
 		  		  			TBL_CABINETCLASS.DelayEndYFlag = 'Y' 
