@@ -182,6 +182,7 @@ public class EzNewPortalGWController {
 			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
+			String useEzWorkspace = ezNewPortalService.isUseEzWorkspace(companyId, tenantId, userId, deptId);
 			
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
@@ -278,6 +279,11 @@ public class EzNewPortalGWController {
 				portletOrder.removeIf(vo -> (vo.getPortletId() == 14));
 			}
 			
+			// 협업 사용여부에 따라 제거 
+			if (useEzWorkspace.equals("NO")) {
+				portletOrder.removeIf(vo -> vo.getPortletUrl().contains("ezWorkspace"));
+			}
+
 			JSONObject data = new JSONObject();
 			data.put("portletOrder", portletOrder);
 
@@ -404,6 +410,7 @@ public class EzNewPortalGWController {
 			data.put("useAttitude", useAttitude);
 			data.put("useQuestion", useQuestion);
 			data.put("useCircular", useCircular);
+			data.put("useEzWorkspace", useEzWorkspace);
 			data.put("useMail", useMail);
 			data.put("useApproval", useApproval);
 			data.put("useSchedule", useSchedule);

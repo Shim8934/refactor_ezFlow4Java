@@ -170,11 +170,13 @@
                     	</c:choose>
                     </li>
                     <li>
-<!--                     <dl class="writebannerDL">
-                            <dt><img src="/images/ezNewPortal/theme2Img/writebanner06.png" alt="협업"></dt>
-                            <dt>협업</dt>
-                            <dd>9</dd>
-                        </dl> -->
+					<c:if test="${useEzWorkspace eq 'YES' }">
+                    <dl class="writebannerDL" id="ezWorkspace">
+                        <dt><img src="/images/ezNewPortal/theme2Img/writebanner06.png" alt="협업"></dt>
+                        <dt><spring:message code='ezNewPortal.pjg01' /></dt>
+                        <dd class="iconCount_none" id="workspaceCnt">0</dd>
+                    </dl>
+                	</c:if>                        
                     </li>
                 </ul>
             </article>
@@ -581,6 +583,51 @@
         	schList.appendChild(li);
         });
 	}
+	
+	function schedule_get_holiday_top() {
+	    $.ajax({
+			type : "POST",
+			dataType : "text",
+			async : true,
+			url : "/ezSchedule/scheduleGetHoliday.do",
+			data : {
+				COMPANYID  : "VIEW"		    			
+			},
+			success: function(text){
+				XmlNodeText = text;
+	            XmlNode = loadXMLString(XmlNodeText);
+	            
+	            for (var i = 0; i < SelectNodes(XmlNode, "DATA/ROW").length; i++) {
+	                if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
+	                    var issolar;
+	                    var holiday;
+	                    
+	                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
+	                        issolar = "1";
+	                    else
+	                        issolar = "2";
+	                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1")			                    	
+	                        holiday = true;			                    
+	                    else
+	                        holiday = false;
+	                    
+	                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
+	                        memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+	                    } else {                   	
+	                        yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
+	                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+	                    }
+	                }
+	            }			            
+	            CalendarMiniView("CalendarMini_Top");
+				CalendarMiniDataSource("Top");
+			}		    		
+	    });
+	}
  	
 	$(function() {
 		$("#featured").orbit();
@@ -742,9 +789,24 @@
 		
 		assembleScheduleList(pScheduleList);
 		
-		CalendarMiniView("CalendarMini_Top");
-		CalendarMiniDataSource("Top");
+		schedule_get_holiday_top(); // getholiday를 2번 부른다. 1번만 호출하도록 수정할 필요 있음.
 	});
 </script>
+<!-- 협업 시작-->
+<c:if test="${useEzWorkspace eq 'YES' }">
+    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/Groupwareapi.js"></script>
+    <script type="text/javascript">
+	    var g_UserID = "${userId}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
+	    var WorkspaceUrl = "http://space.kaoni.com"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+	    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
+	    var feedListCount = 10;
+	    var g_bRayful = false;
+	    var g_bVisible = true; // 문서탭 선택 시 원문에 포함된 첨부파일 포함 여부 (false: 포함)	    
+	        
+    	ezWorkspaceData();
+    </script>		
+</c:if>	
+<!-- 협업 끝 -->	
 </body>	
 </html>

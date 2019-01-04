@@ -19,11 +19,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.WebContentInterceptor;
 
@@ -102,11 +102,12 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 							cookie.setMaxAge(0);
 							cookie.setPath("/");
 							response.addCookie(cookie);
-							// 2018.10.22 이석화 추가 - 세션 제거 
-							request.getSession().invalidate();
 						}
 					}
 				}
+				
+				// 2018.10.22 이석화 추가 - 세션 제거 
+				request.getSession().invalidate();
 				
 				request.setAttribute("message", "oldBrowser");
 				RequestDispatcher dispatcher = request.getRequestDispatcher("/user/login/login.do");
@@ -116,6 +117,17 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
+		
+		if(!commonUtil.checkMultiLogin(request, response)) {
+			try {
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/user/login/actionLogoutWithRedirectUri.do?redirectUri=" + "/user/login/login.do&message=multiLoginNoti");
+				dispatcher.forward(request, response);
+				
+				return false;
+			} catch (Exception e) { 
+				e.printStackTrace();
+			}
+		} 
 		
 		if (commonUtil.isLoginCookieExists(request, response)) {
 			return true;

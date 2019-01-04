@@ -589,7 +589,7 @@
 		        
 		        try {
 		            var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("GET", "/ezEmail/mailGetDistribution.do", false);
+		            xmlHTTP.open("POST", "/ezEmail/mailGetDistribution.do", false);
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
@@ -646,7 +646,7 @@
 		        
 		        try {
 		            var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("GET", "/ezEmail/getSharedMailboxList.do", false);
+		            xmlHTTP.open("POST", "/ezEmail/getSharedMailboxList.do", false);
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {

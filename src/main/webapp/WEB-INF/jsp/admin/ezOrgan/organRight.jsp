@@ -33,6 +33,7 @@
 			var BlockSize = 10;
 			var pageNum = 1;
 			var PageSize = 15;
+			
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
 		            return false;
@@ -1232,7 +1233,7 @@
 	            	type : "POST",
 	            	dataType : "text",
 	            	url : "/admin/ezOrgan/syncOrganAccounts.do",
-	            	async : false,
+	            	async : true,
 	            	success : function(result) {
 	            		hideProgress();
 	            		

@@ -2020,43 +2020,43 @@
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
 			VALUES ('SA02', '0', 		'문서상태(DocState)',		'Doc. status',	'文書?分',		'文書?分',		'0',	'문서상태',	#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '001',		'품의',						'품의_EN',		'稟議',		'품의_ZH',		'1',	'품의',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '001',		'품의',						'Draft',		'稟議',		'품의_ZH',		'1',	'품의',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '002',		'협조',						'협조_EN',		'협조_JA',		'협조_ZH',		'1',	'협조',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '002',		'협조',						'Agreement(personal)',		'協力',		'협조_ZH',		'1',	'협조',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '003',		'감사',						'준법감시_EN',	'준법감시_JA',	'준법감시_ZH',	'0',	'준법감시',	#companyID#,	#tenantID#)
+			VALUES ('SA02', '003',		'감사',						'Audit',	'遵法監視',	'준법감시_ZH',	'0',	'준법감시',	#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '004',		'심사',						'심사_EN',		'심사_JA',		'심사_ZH',		'1',	'심사',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '004',		'심사',						'Request send',		'審査',		'심사_ZH',		'1',	'심사',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '011',		'수신',						'수신_EN',		'수신_JA',		'수신_ZH',		'1',	'수신',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '011',		'수신',						'Receipt',		'收件',		'수신_ZH',		'1',	'수신',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '012',		'협조/합의',				'기안문_EN',	'기안문_JA',	'기안문_ZH',	'1',	'기안문',	#companyID#,	#tenantID#)
+			VALUES ('SA02', '012',		'협조/합의',				'Draft',	'起案文',	'기안문_ZH',	'1',	'기안문',	#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '013',		'시행',						'시행_EN',		'시행_JA',		'시행_ZH',		'0',	'시행',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '013',		'시행',						'Enforcement',		'施行',		'시행_ZH',		'0',	'시행',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '014',		'감사(검사부)',				'감사_EN',		'감사_JA',		'감사_ZH',		'0',	'감사',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '014',		'감사(검사부)',				'Audit(dept.)',		'監査',		'감사_ZH',		'0',	'감사',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '015',		'공람',						'회람_EN',		'회람_JA',		'회람_ZH',		'0',	'회람',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '015',		'공람',						'Display',		'回覧',		'회람_ZH',		'0',	'회람',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '016',		'회람',						'회람_EN',		'회람_JA',		'회람_ZH',		'0',	'회람',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '016',		'회람',						'Circular',		'回覧',		'회람_ZH',		'0',	'회람',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '017',		'참조',						'참조_EN',		'참조_JA',		'참조_ZH',		'0',	'참조',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '017',		'참조',						'Reference',		'参照',		'참조_ZH',		'0',	'참조',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '018',		'사후감사',					'사후공람_EN',	'사후공람_JA',	'사후공람_ZH',	'0',	'사후공람',	#companyID#,	#tenantID#)
+			VALUES ('SA02', '018',		'사후감사',					'Public viewing(After-approval)',	'事後供覧',	'사후공람_ZH',	'0',	'사후공람',	#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '019',		'발송',					'발송_EN',		'발송_JA',		'발송_ZH',		'1',	'발송',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '019',		'발송',					'Sending',		'送信',		'발송_ZH',		'1',	'발송',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '020',		'신청',					'시행_EN',		'시행_JA',		'시행_ZH',		'0',	'시행',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '020',		'신청',					'Application',		'施行',		'시행_ZH',		'0',	'시행',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '022',		'대외문서접수',			'대외접수_EN',	'대외접수_JA',	'대외접수_ZH',	'0',	'대외접수',	#companyID#,	#tenantID#)
+			VALUES ('SA02', '022',		'대외문서접수',			'Receipt(outside)',	'対外受付',	'대외접수_ZH',	'0',	'대외접수',	#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '023',		'대외문서발송',			'대외발송_EN',	'대외발송_JA',	'대외발송_ZH',	'0',	'대외발송',	#companyID#,	#tenantID#)
+			VALUES ('SA02', '023',		'대외문서발송',			'Sending(outside)',	'対外送信',	'대외발송_ZH',	'0',	'대외발송',	#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '024',		'수신배부',					'배부_EN',		'배부_JA',		'배부_ZH',		'1',	'배부',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '024',		'수신배부',					'Distributed',		'配付',		'배부_ZH',		'1',	'배부',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '031',		'반송',						'반송_EN',		'반송_JA',		'반송_ZH',		'0',	'반송',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '031',		'반송',						'Rejection',		'差し戻し',		'반송_ZH',		'0',	'반송',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '032',		'회송',						'회송_EN',		'회송_JA',		'회송_ZH',		'0',	'회송',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '032',		'회송',						'Returning',		'回送',		'회송_ZH',		'0',	'회송',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
 			VALUES ('SA03','0  ','결재방법','결재방법',null,null,'0','결재방법',#companyID#, #tenantID# )
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
@@ -6046,6 +6046,19 @@
 		AND
 			TENANT_ID = #v_TENANTID#
 	</update>
+	<update id="EzOrganAdminDAO.updateTitle3" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ADDJOBMASTER
+			SET
+				TITLE = #v_DISPLAYNAME#,
+				TITLE2 = #v_DISPLAYNAME2#
+			WHERE
+				JOBID = #v_JOBID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
 	<delete id="EzOrganAdminDAO.deleteTitle" parameterClass="Map">
 	<![CDATA[
 		DELETE FROM
@@ -6061,56 +6074,125 @@
 	]]>
 	</delete>
 	<select id="EzOrganAdminDAO.selectTitleUserList" parameterClass="Map" resultClass="OrganUserVO" remapResults="true">
-		SELECT 
-			TBL_USERMASTER.CN,
-			TBL_USERMASTER.DISPLAYNAME,
-			TBL_USERMASTER.DISPLAYNAME2,
-			TBL_USERMASTER.DEPARTMENT,
-			TBL_USERMASTER.DESCRIPTION,
-			TBL_USERMASTER.DESCRIPTION2,
-			NVL(TBL_USERMASTER.TELEPHONENUMBER, ' ') AS TELEPHONENUMBER,
-			TBL_USER_JOBMASTER.DISPLAYNAME AS TITLE,
-			TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2
-		FROM 
-			TBL_USERMASTER
-		<isEqual property="v_TYPE" compareValue="001">
-		<![CDATA[
-			JOIN 
-				TBL_USER_JOBMASTER
-			ON 
-				TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
-			AND 
-				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
-			AND 
-				TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
-			WHERE
-				TBL_USER_JOBMASTER.TYPE = #v_TYPE#
-			AND
-				TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
-		]]>
-		</isEqual>
-		<isEqual property="v_TYPE" compareValue="002">
-		<![CDATA[
-			JOIN 
-				TBL_USER_JOBMASTER
-			ON 
-				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
-			AND 
-				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
-			AND 
-				TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
-			WHERE
-				TBL_USER_JOBMASTER.TYPE = #v_TYPE#
-			AND
-				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
-		]]>
-		</isEqual>
-			AND
-				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
-			AND
-				TBL_USERMASTER.TENANT_ID = #v_TENANTID#
-			AND 
-                TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+	SELECT * FROM (
+		SELECT * FROM (
+			SELECT 
+				ROWNUM,
+				A.CN,
+				A.DISPLAYNAME,
+				A.DISPLAYNAME2,
+				A.DEPARTMENT,
+				A.DESCRIPTION,
+				A.DESCRIPTION2,
+				A.TELEPHONENUMBER,
+				A.TITLE,
+				A.TITLE2,
+				A.USERTYPE
+			FROM (
+				SELECT 
+					TBL_USERMASTER.CN,
+					TBL_USERMASTER.DISPLAYNAME,
+					TBL_USERMASTER.DISPLAYNAME2,
+					TBL_USERMASTER.DEPARTMENT,
+					TBL_USERMASTER.DESCRIPTION,
+					TBL_USERMASTER.DESCRIPTION2,
+					NVL(TBL_USERMASTER.TELEPHONENUMBER, ' ') AS TELEPHONENUMBER,
+					TBL_USER_JOBMASTER.DISPLAYNAME AS TITLE,
+					TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2,
+					'user' AS USERTYPE
+				FROM 
+					TBL_USERMASTER
+				<isEqual property="v_TYPE" compareValue="001">
+				<![CDATA[
+					JOIN 
+						TBL_USER_JOBMASTER
+					ON 
+						TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
+					AND 
+						TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+					AND 
+						TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+					WHERE
+						TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+					AND
+						TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
+				]]>
+				</isEqual>
+				<isEqual property="v_TYPE" compareValue="002">
+				<![CDATA[
+					JOIN 
+						TBL_USER_JOBMASTER
+					ON 
+						TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
+					AND 
+						TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+					AND 
+						TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+					WHERE
+						TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+					AND
+						TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
+				]]>
+				</isEqual>
+					AND
+						TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+					AND
+						TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+					AND 
+		                TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+				<isEqual property="v_TYPE" compareValue="001">
+					UNION ALL
+					
+					SELECT
+						TBL_USERMASTER.CN,
+					    TBL_USERMASTER.DISPLAYNAME,
+					    TBL_USERMASTER.DISPLAYNAME2,
+					    TBL_ADDJOBMASTER.DEPTID AS DEPARTMENT,
+					    TBL_DEPTMASTER.DISPLAYNAME AS DESCRIPTION,
+					    TBL_DEPTMASTER.DISPLAYNAME2 AS DESCRIPTION2,
+					    NVL(TBL_USERMASTER.TELEPHONENUMBER, ' ') AS TELEPHONENUMBER,
+					    TBL_ADDJOBMASTER.TITLE,
+					    TBL_ADDJOBMASTER.TITLE2,
+					    'addJob' AS USERTYPE
+					FROM
+						TBL_USER_JOBMASTER
+					JOIN 
+						TBL_ADDJOBMASTER
+					ON
+						TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.JOBID
+					AND
+						TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+					JOIN
+						TBL_USERMASTER
+					ON
+						TBL_USERMASTER.CN = TBL_ADDJOBMASTER.CN
+					AND
+						TBL_USERMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+					JOIN
+						TBL_DEPTMASTER
+					ON
+						TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+					AND
+						TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
+					WHERE
+						TBL_USER_JOBMASTER.JOBID = #v_JOBID#
+					AND
+						TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
+				</isEqual>
+					) A
+				<isNotEmpty property="v_SUBQUERY">
+					$v_SUBQUERY$
+				</isNotEmpty>
+			<![CDATA[
+				) B
+				WHERE
+					ROWNUM <= (#v_PAGENUM# + #v_PAGESIZE#)
+					) X
+				 	WHERE
+				 		ROWNUM > (#v_PAGENUM#)
+			]]>
+				ORDER BY
+					USERTYPE, CN
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleListCnt" parameterClass="Map" resultClass="int" remapResults="true">
 		SELECT
@@ -6125,57 +6207,222 @@
 			TENANT_ID = #v_TENANTID#
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleUserListCnt" parameterClass="Map" resultClass="int" remapResults="true">
-		SELECT 
-			COUNT(*)
-		FROM 
-			TBL_USERMASTER
-	<isEqual property="v_TYPE" compareValue="001">
-	<![CDATA[
-		JOIN 
-			TBL_USER_JOBMASTER
-		ON 
-			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
-		AND 
-			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
-		AND 
-			TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
-		WHERE
-			TBL_USER_JOBMASTER.TYPE = #v_TYPE#
-		AND
-			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
-	]]>
-	</isEqual>
-	<isEqual property="v_TYPE" compareValue="002">
-	<![CDATA[
-		JOIN 
-			TBL_USER_JOBMASTER
-		ON 
-			TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
-		AND 
-			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
-		AND 
-			TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
-		WHERE
-			TBL_USER_JOBMASTER.TYPE = #v_TYPE#
-		AND
-			TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
-	]]>
-	</isEqual>
-		AND 
-			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
-		AND
-			TBL_USERMASTER.TENANT_ID = #v_TENANTID#
-		AND 
-            TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+		<isEqual property="v_TYPE" compareValue="001">
+			SELECT (
+				SELECT 
+					COUNT(*)
+				FROM
+					TBL_USERMASTER
+				JOIN
+					TBL_USER_JOBMASTER
+				ON 
+					TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
+				AND 
+					TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+				AND 
+					TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+				WHERE
+					TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+				AND
+					TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
+				AND 
+					TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+				AND
+					TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+				AND 
+		            TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+			)+(
+				SELECT
+					COUNT(*)
+				FROM
+					TBL_USER_JOBMASTER
+				JOIN 
+					TBL_ADDJOBMASTER
+				ON
+					TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.JOBID
+				AND
+					TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+				JOIN
+					TBL_USERMASTER
+				ON
+					TBL_USERMASTER.CN = TBL_ADDJOBMASTER.CN
+				AND
+					TBL_USERMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+				JOIN
+					TBL_DEPTMASTER
+				ON
+					TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+				AND
+					TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
+				WHERE
+					TBL_USER_JOBMASTER.JOBID = #v_JOBID#
+				AND
+					TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
+			) AS COUNT
+			FROM
+				DUAL
+		</isEqual>
+		<isEqual property="v_TYPE" compareValue="002">
+			SELECT 
+				COUNT(*)
+			FROM 
+				TBL_USERMASTER
+			JOIN 
+				TBL_USER_JOBMASTER
+			ON 
+				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
+			AND 
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+			AND 
+				TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+			AND
+				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
+			AND 
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+			AND
+				TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+			AND 
+	            TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+		</isEqual>
 	</select>
+	<select id="EzOrganAdminDAO.selectTitleUserListCnt2" parameterClass="Map" resultClass="int" remapResults="true">
+	SELECT COUNT(*) FROM (
+		SELECT * FROM (
+			SELECT 
+				ROWNUM,
+				A.CN,
+				A.DISPLAYNAME,
+				A.DISPLAYNAME2,
+				A.DEPARTMENT,
+				A.DESCRIPTION,
+				A.DESCRIPTION2,
+				A.TELEPHONENUMBER,
+				A.TITLE,
+				A.TITLE2,
+				A.USERTYPE
+			FROM (
+				SELECT 
+					TBL_USERMASTER.CN,
+					TBL_USERMASTER.DISPLAYNAME,
+					TBL_USERMASTER.DISPLAYNAME2,
+					TBL_USERMASTER.DEPARTMENT,
+					TBL_USERMASTER.DESCRIPTION,
+					TBL_USERMASTER.DESCRIPTION2,
+					NVL(TBL_USERMASTER.TELEPHONENUMBER, ' ') AS TELEPHONENUMBER,
+					TBL_USER_JOBMASTER.DISPLAYNAME AS TITLE,
+					TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2,
+					'user' AS USERTYPE
+				FROM 
+					TBL_USERMASTER
+				<isEqual property="v_TYPE" compareValue="001">
+				<![CDATA[
+					JOIN 
+						TBL_USER_JOBMASTER
+					ON 
+						TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
+					AND 
+						TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+					AND 
+						TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+					WHERE
+						TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+					AND
+						TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
+				]]>
+				</isEqual>
+				<isEqual property="v_TYPE" compareValue="002">
+				<![CDATA[
+					JOIN 
+						TBL_USER_JOBMASTER
+					ON 
+						TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
+					AND 
+						TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+					AND 
+						TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+					WHERE
+						TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+					AND
+						TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
+				]]>
+				</isEqual>
+					AND
+						TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+					AND
+						TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+					AND 
+		                TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+				<isEqual property="v_TYPE" compareValue="001">
+					UNION ALL
+					
+					SELECT
+						TBL_USERMASTER.CN,
+					    TBL_USERMASTER.DISPLAYNAME,
+					    TBL_USERMASTER.DISPLAYNAME2,
+					    TBL_ADDJOBMASTER.DEPTID AS DEPARTMENT,
+					    TBL_DEPTMASTER.DISPLAYNAME AS DESCRIPTION,
+					    TBL_DEPTMASTER.DISPLAYNAME2 AS DESCRIPTION2,
+					    NVL(TBL_USERMASTER.TELEPHONENUMBER, ' ') AS TELEPHONENUMBER,
+					    TBL_ADDJOBMASTER.TITLE,
+					    TBL_ADDJOBMASTER.TITLE2,
+					    'addJob' AS USERTYPE
+					FROM
+						TBL_USER_JOBMASTER
+					JOIN 
+						TBL_ADDJOBMASTER
+					ON
+						TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.JOBID
+					AND
+						TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+					JOIN
+						TBL_USERMASTER
+					ON
+						TBL_USERMASTER.CN = TBL_ADDJOBMASTER.CN
+					AND
+						TBL_USERMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+					JOIN
+						TBL_DEPTMASTER
+					ON
+						TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+					AND
+						TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
+					WHERE
+						TBL_USER_JOBMASTER.JOBID = #v_JOBID#
+					AND
+						TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
+				</isEqual>
+					) A
+				<isNotEmpty property="v_SUBQUERY">
+					$v_SUBQUERY$
+				</isNotEmpty>
+			<![CDATA[
+				) B
+				WHERE
+					ROWNUM <= (#v_PAGENUM# + #v_PAGESIZE#)
+					) X
+				 	WHERE
+				 		ROWNUM > (#v_PAGENUM#)
+			]]>
+	</select>
+	
 	<select id="EzOrganAdminDAO.selectTitleCnt" parameterClass="Map" resultClass="int" remapResults="true">
-	<![CDATA[
 		SELECT
 			COUNT(*)
 		FROM
 			TBL_USER_JOBMASTER
 		WHERE
-			JOBID = #v_JOBID#
+		<isEqual property="v_MODE" compareValue="Mod">
+		<![CDATA[
+			JOBID <> #v_JOBID#
+		AND
+		]]>
+		</isEqual>
+	<![CDATA[
+			(DISPLAYNAME = #v_DISPLAYNAME#
+		OR
+			DISPLAYNAME2 = #v_DISPLAYNAME2#)
 		AND
 			TYPE = #v_TYPE#
 		AND

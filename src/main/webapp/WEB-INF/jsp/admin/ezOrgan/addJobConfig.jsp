@@ -1105,7 +1105,7 @@
 			    	flag = true;
 			    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;' onchange='jobChange()'>";
 			    	for (i = 0; i < oRows.length; i++) {
-			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
+			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE") != "N") {
 				    		if (flag) {
 // 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
 // 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");

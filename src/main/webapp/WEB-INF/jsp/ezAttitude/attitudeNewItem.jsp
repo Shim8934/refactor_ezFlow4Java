@@ -61,7 +61,7 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 				form_change();
-				select_memorialDays(uselang);
+				/* select_memorialDays(uselang); */
 				setHoliday();
 				setTypeName();
 				setInputValue();
@@ -358,8 +358,21 @@
 						} else if (resultStatus == "success") {
 	            			alert("<spring:message code='ezAttitude.t155'/>");
 			        		try {
-				        		window.opener.getAttitudeMainList();
-				        		window.opener.parent.frames["left"].getAttitudeList();
+			    				var calType = "";
+			    				var btnOnNodes = window.opener.document.getElementsByClassName("on");
+			    				for (var i = 0; i < btnOnNodes.length; i++) {
+			    					if (btnOnNodes[i].getAttribute("id") != null && btnOnNodes[i].getAttribute("id") == "btnTableList") {
+			    						calType = btnOnNodes[i].getAttribute("id");
+			    						break;
+			    					}
+			    				}
+			    				
+			    				if (calType == "btnTableList") {
+			    					window.opener.getAttitudeTableList();
+			    				} else {
+			    					window.opener.getAttitudeMainList();
+			    					window.opener.parent.frames["left"].getAttitudeList();
+			    				}
 			        		} catch (e) {	}
 			        		
 			        		window.close();
@@ -383,14 +396,20 @@
 						holidayAttReg = result.attitudeConfigVO.closedDateAttitude;
 						closedDay = result.attitudeConfigVO.closedDay.split(",");
 						for (var i = 0; i < result.holidayList.length; i++) {
+						var isSolar = "";
+						if (result.holidayList[i].isSolar == "1") {
+							isSolar = "1";
+						} else {
+							isSolar = "2";
+						}
 							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
 								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
 																  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
-																  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
+																  isSolar, result.holidayList[i].isRest == 1 ? true : false));
 							} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
 								yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
 																		  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
-																		  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
+																		  result.holidayList[i].holidayDate.substring(8,10), isSolar,
 																		  result.holidayList[i].isRest == 1 ? true : false));
 							}
 						}

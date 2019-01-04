@@ -57,8 +57,9 @@
 	            }
 	        }
  
+	        /* 2018-12-28 홍승비 - 게시판그룹명 > div -> span 태그로 변경된 부분 id 찾도록 수정 */
 		    function BoardRedirect() {
-		        var spans = document.getElementById("TopBoard").getElementsByTagName("div");
+		        var spans = document.getElementById("TopBoard").getElementsByClassName("h2Title");
 		        for (var i = 0 ; i < spans.length ; i++) {
 		            if (spans[i].getAttribute("value") == RedirectBoardGroupID) {
 		                LoadTreeViewByPath(spans[i], RedirectBoardID, RedirectBoardGroupID);
@@ -66,10 +67,9 @@
 		        }
 		    }
 		    
+	        /* 2018-12-31 홍승비 - 하위게시판 찾는 코드 변경된 태그로 수정 */
 		    function LoadTreeViewByPath(pObjSpan, pBoardID, pBoardGroupID) {
-	            pObjSpan.parentElement.onclick();
-	            var TreeCtrl = getFirstChild(pObjSpan.parentElement);
-	            TreeCtrl.onclick();
+	            pObjSpan.onclick();
 
 	            var selectItem;
 	            var totalboard = "";
@@ -79,14 +79,16 @@
 	            }else{
 	                totalboard = getFirstChild(pObjSpan.parentElement.nextSibling.nextSibling)
 	            }
-
+	            
 	            var cnt = totalboard.children[0].getElementsByTagName("div").length;
 
 	            for (var i = 0; i < cnt; i++) {
+	            	
+	            	// 각 하위게시판의 div를 얻는다. (class -> node_div, node_select)
 	                if (RedirectBoardID == totalboard.children[0].getElementsByTagName("div")[i].getAttribute("data1")) {
 	                    selectItem = totalboard.children[0].getElementsByTagName("div")[i];
 	                    break;
-	                }else{
+	                } else { // 리다이렉트 게시판ID와 div의 게시판ID가 일치하지 않는 경우 -> 하위게시판을 확인
 	                    var parentNodeid = totalboard.children[0].getElementsByTagName("div")[i].id;
 	                    var imgtag = "imgNode_" + totalboard.children[0].getElementsByTagName("div")[i].id;
 	                    
@@ -98,7 +100,9 @@
 	                    cnt += rtnval
 	                }
 	            }
-	            selectItem.getElementsByTagName("span")[0].onclick();
+	            
+	            var spanLevel = parseInt(selectItem.getAttribute("nodelevel")) + 2;
+	            selectItem.getElementsByTagName("span")[spanLevel].onclick();
 	            var tempid = selectItem.id.split("_");
 	            var tempidlength = tempid.length;
 	            var clicknode = new Array();
@@ -106,37 +110,46 @@
 	            if (CrossYN()) {
 	                for (var i = 0; i < tempidlength; i++) {
 	                    if (selectItem.getAttribute("DATA3") != pBoardGroupID) {
-	                        if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1){
+	                        if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1) {
 	                            clicknode[i] = selectItem.id;
-	                        }else{
+	                        } else {
 	                            i--;
 	                        }
-	                        selectItem = selectItem.parentElement;
-	                    }else if(selectItem.getAttribute("DATA3") == pBoardGroupID) {
-	                        selectItem.childNodes[0].onclick();
+	                        // 다수의 태그가 부모로 존재 -> 반복해서 parentElement를 찾는다.
+	                        selectItem = selectItem.parentElement.parentElement.parentElement.parentElement;
+	                    } else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
+	                    	// isleaf 속성이 FALSE인 경우에만 트리 확장 아이콘 진행
+	                    	if (selectItem.getAttribute("isleaf") == "FALSE") {
+	                        	selectItem.childNodes[0].onclick();
+	                        }
 	                        var j = clicknode.length;
 	                        
-	                        for (var k = j; k > 0; k--) {
-	                            document.getElementById(clicknode[k - 1]).childNodes[k - 1].onclick();
+	                        // 목표 게시판까지 도달한 경우(k=1), 마지막 확장은 불필요하므로 건너뛴다.
+	                        for (var k = j; k > 1; k--) {
+	                        	var exLevel = parseInt(document.getElementById(clicknode[k - 1]).getAttribute("nodelevel"));
+	                            document.getElementById(clicknode[k - 1]).childNodes[exLevel].onclick();
 	                        }
 	                        return;
 	                    }
 	                }
-	            }else{
+	            } else {
 	                for (var i = 0; i < tempidlength; i++) {
 	                    if (selectItem.getAttribute("DATA3") != pBoardGroupID) {
-	                        if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1){
+	                        if (selectItem.id != null && selectItem.id != "0" && selectItem.id.indexOf("sub") == -1) {
 	                            clicknode[i] = selectItem.id;
-	                        }else{
+	                        } else {
 	                            i--;
 	                        }
-	                        selectItem = selectItem.parentElement;
-	                    }else if(selectItem.getAttribute("DATA3") == pBoardGroupID) {
-	                        selectItem.childNodes[0].click();
+	                        selectItem = selectItem.parentElement.parentElement.parentElement.parentElement;
+	                    } else if (selectItem.getAttribute("DATA3") == pBoardGroupID) {
+	                    	if (selectItem.getAttribute("isleaf") == "FALSE") {
+	                        	selectItem.childNodes[0].click();
+	                    	}
 	                        var j = clicknode.length;
 	                        
-	                        for (var k = j; k > 0; k--) {
-	                            document.getElementById(clicknode[k - 1]).childNodes[k - 1].click();
+	                        for (var k = j; k > 1; k--) {
+	                        	var exLevel = parseInt(document.getElementById(clicknode[k - 1]).getAttribute("nodelevel"));
+	                            document.getElementById(clicknode[k - 1]).childNodes[exLevel].click();
 	                        }
 	                        return;
 	                    }
@@ -331,12 +344,14 @@
 	                    break;
 	            }
 	        }
+	        
+	        /* 2018-12-28 홍승비 - '+/-' 아이콘 > img -> span 태그로 변경된 부분 id 찾도록 수정 */
 	        function SearchTreeViewByPath(imgtag, parentNodeid) {
-	            if (imgtag.indexOf("sub") == -1 && document.getElementById(imgtag).src.indexOf("plus") > -1) {
+	            if (imgtag.indexOf("sub") == -1 && document.getElementById(imgtag).className.indexOf("plus") > -1) {
 	                document.getElementById(imgtag).onclick();
 	                document.getElementById(imgtag).onclick();
 	                return 0;
-	            }else{
+	            } else {
 	                return document.getElementById(parentNodeid).childNodes.length;
 	            }
 	        }	   
@@ -355,6 +370,25 @@
 	        $( window ).resize(function() {
 	        	leftResize();
 	    	});
+	        
+	        /* 2018-12-28 홍승비 - 게시판그룹 열린 상태 유지하며 트리뷰를 갱신하는 기존 함수 추가 */
+	        function treeViewRefresh(obj, ID) {
+	        	var AccessLevel = "1";
+	            var rootBoardID = ID;
+	            SelectedBoardID = ID;
+	            SelectedBoardGroupID = ID;
+	            SelectedBoardParentBoardID = 'top';
+	            var num = obj.split("TreeCtrl");
+	            document.getElementById(obj + "obj").innerHTML = "";
+	            SetTreeConfig();
+	            var treeView = new TreeView();
+	            treeView.SetID("TreeView" + obj);
+	            treeView.SetRequestData("TreeCtrl_onNodeExpanded");
+	            treeView.SetNodeClick("TreeCtrl_onNodeClick");            
+	            treeView.DataSource(GetSubBoard(rootBoardID, "1"));
+	            treeView.DataBind(obj + "obj");
+	        }
+	        
 	    </script>
 	</head>
 	<body class="newLeft">

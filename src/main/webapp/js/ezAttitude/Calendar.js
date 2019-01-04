@@ -19,8 +19,13 @@ function CalendarView(pTargetID) {
 	getCalTitle(pTargetID);
 	
 	
-	getAttitudeMainList();
-	//CalViewSource(); //달력에 근태 데이터 뿌리면 되고
+	var btnType = $(".mainmenuTabUL li.on").attr("id");
+	if (btnType == "btnCalList" || btnType == undefined) {
+		getAttitudeMainList();
+		//CalViewSource(); //달력에 근태 데이터 뿌리면 되고
+	} else {
+		getAttitudeTableList();
+	}
 	
 	//month picker 호출함수    
     var WstartDate, WendDate; 

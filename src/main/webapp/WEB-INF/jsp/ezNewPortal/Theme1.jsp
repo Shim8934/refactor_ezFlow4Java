@@ -161,7 +161,14 @@
 							</c:otherwise>
 						</c:choose>
 					</div>
-					<div class="countingIcon02">
+					<c:choose>
+						<c:when test="${useEzWorkspace eq 'YES' }">
+							<div class="countingIcon02" style="width:258px;">
+						</c:when>
+						<c:otherwise>
+							<div class="countingIcon02">
+						</c:otherwise>
+					</c:choose>
 					<c:choose>
 						<c:when test="${useQuestion eq 'NO'}"> <!-- 전자설문 권한이 없을 때 disable 아이콘 나타남 -->
 							<dl id="Poll" class="icon_disabled">
@@ -192,6 +199,13 @@
                 			</dl>
 						</c:otherwise>
 					</c:choose>
+					<c:if test="${useEzWorkspace eq 'YES' }">
+                		<dl id="ezWorkspace"> 
+                    		<dt class="iconImg"><img src="/images/ezNewPortal/countingIcon04.png"></dt>
+                    		<dd class="iconText"><spring:message code='ezNewPortal.pjg01' /></dd>
+                    		<dd class="iconCount_none" id="workspaceCnt">0</dd>
+                		</dl>
+                	</c:if>
                 	</div>
 				</article>
 				<article class="birthday">
@@ -722,5 +736,21 @@
 		}
 	}
 	</script>
+<!-- 협업 시작-->
+<c:if test="${useEzWorkspace eq 'YES' }">
+    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/moment.min.js"></script>
+    <script type="text/javascript" src="http://space.kaoni.com/myoffice/ezWorkspace/Scripts/Groupwareapi.js"></script>
+    <script type="text/javascript">
+	    var g_UserID = "${userId}"; // GW 사용자 Id, 가온누리 Java버전엔 이미 선언되어 있음
+	    var WorkspaceUrl = "http://space.kaoni.com"; // 협업이 그룹웨어와 별도의 Url로 서비스 되는 경우에만 설정
+	    var g_bGroupwareUIType = false;  // 그룹웨어 UI 타입 => true: UIUX, false: Normal(예전 GW 화면)
+	    var feedListCount = 10;
+	    var g_bRayful = false;
+	    var g_bVisible = true; // 문서탭 선택 시 원문에 포함된 첨부파일 포함 여부 (false: 포함)	    
+	        
+    	ezWorkspaceData();
+    </script>		
+</c:if>	
+<!-- 협업 끝 -->	
 	</body>
 </html>
