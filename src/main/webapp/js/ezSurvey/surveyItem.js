@@ -614,7 +614,27 @@ var SurveyItem = function() {
 		var itemArr = getSelectedItems();
 		if (itemArr.length == 0) {alert(SurveyMessages.strItemErr) ; return;}
 		if (itemArr.length > 1)  {alert(SurveyMessages.strItemErr1); return;}
-		window.parent.frames["right"].location.href = "/ezSurvey/modifyItem.do?itemId=" + itemArr[0];
+		
+		var url  = "/ezSurvey/checkProcessingSurvey.do";
+		var data = {surveyId : itemArr[0]};
+		
+		makeAjaxCall(data, "GET", url, afterCheckItem, null, true, itemArr[0]);
+	}
+	
+	function afterCheckItem(data, itemId) {
+		var code = data.code;
+		switch(code) {
+			case 0 : afterCheckSuccessfully(itemId)    ; break;
+			case 1 : alert(SurveyMessages.strParamErr) ; break;
+			case 2 : alert(SurveyMessages.strError)    ; break;
+			case 3 : alert(SurveyMessages.strPerm)     ; break;
+			case 4 : alert(SurveyMessages.strModifying); break;
+			default: alert(SurveyMessages.strError)    ; return;
+		}
+	}
+	
+	function afterCheckSuccessfully(itemId) {
+		window.parent.frames["right"].location.href = "/ezSurvey/modifyItem.do?itemId=" + itemId;
 	}
 	
 	function getSelectedItems() {

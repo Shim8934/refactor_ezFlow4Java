@@ -228,7 +228,7 @@
 				
 			});
 			
-			var delBttn   = document.getElementById("suvyDlt");
+			var delBttn = document.getElementById("suvyDlt");
 			if (delBttn) {delBttn.onclick = function(e) {deleteFileConfirm();};}
 			
 			document.getElementById("suvyInfo").onclick   = function(e) {showSurveyInfo();}
@@ -237,7 +237,6 @@
 		}
 		
 		function showAttachList() {
-			console.log(survey);
 			var attachList = survey["attachList"];
 			if (attachList && attachList.length > 0) {
 				var ulElmt = document.getElementById("attachUl");
@@ -274,29 +273,6 @@
 			else {
 				document.getElementById("surveyAtt").className = "attach-zone2 off";
 			}
-			
-			/* if (qstInf["attach"] && qstInf["attach"].length > 0) {
-				var htmlStr = "";
-				
-				for (var i = 0; i < qstInf["attach"].length; i++) {
-					var filename       = qstInf["attach"][i]["fname"];
-					var checkImageFile = questionFile.chImage(filename);
-					var imgSrc         = checkImageFile.isImage == true ? qstInf["attach"][i]["fpath"] : checkImageFile.urlImage;
-					
-					htmlStr += "<li><div class='attDivFile'>";
-					htmlStr += "<div class='attImgAva'><img src='" + imgSrc + "'></div>";
-					htmlStr += "<div class='attFileInf'>";
-					htmlStr += "<span title='" + filename + "'>" + filename + "</span>";
-					htmlStr += "<span>" + qstInf["attach"][i]["fsize"] + "</span>";
-					htmlStr += "</div></div></li>";
-				}
-				
-				document.getElementById("cf-attach").innerHTML        = htmlStr;
-				document.getElementById("surveyAttConfirm").className = "attach-zone"; //show attach list
-			}
-			else {
-				document.getElementById("surveyAttConfirm").className = "attach-zone off"; //hide attach list
-			} */
 		}
 		
 		function showSurveyInfo() {

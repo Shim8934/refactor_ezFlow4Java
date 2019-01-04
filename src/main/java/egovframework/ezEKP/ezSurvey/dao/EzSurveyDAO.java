@@ -136,4 +136,24 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public List<AttachVO> getAllAttachForQsAndOpt(Map<String, Object> map) {
 		return (List<AttachVO>)list("EzSurveyDAO.getAllAttachForQsAndOpt", map);
 	}
+	
+	public void deleteSurveyQuestions(SurveyVO survey) {
+		delete("EzSurveyDAO.deleteSurveyQuestions", survey);
+	}
+	
+	public void deleteSurveyOptions(SurveyVO survey) {
+		delete("EzSurveyDAO.deleteSurveyOptions", survey);
+	}
+	
+	public void deleteSurveyAttach(SurveyVO survey) {
+		delete("EzSurveyDAO.deleteSurveyAttach", survey);
+	}
+	
+	public void deleteSurveyUsers(SurveyVO survey) {
+		delete("EzSurveyDAO.deleteSurveyUsers", survey);
+	}
+
+	public int checkProcessingSurvey(Map<String, Object> map) {
+		return (int)select("EzSurveyDAO.checkProcessingSurvey", map);
+	}
 }

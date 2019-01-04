@@ -171,7 +171,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 			return "ezSurvey/surveyAccessDenied";
 		}
 		
-		JSONObject surveyInf = surveyRestService.getSurveyInformation(request, user.getId(), itemId, "reuse");
+		JSONObject surveyInf = surveyRestService.getSurveyInformation(request, user.getId(), itemId, "modify");
 		
 		if (((Long)surveyInf.get("code")).intValue() == 0) {
 			JSONObject survey = (JSONObject)surveyInf.get("survey");
@@ -292,6 +292,26 @@ public class EzSurveyController extends EgovFileMngUtil {
 		}
 		
 		resultObj = surveyRestService.checkSurveyItems(request, user.getId(), itemList);
+		
+		logger.debug("jsonCheckItems end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezSurvey/checkProcessingSurvey.do")
+	@ResponseBody
+	public String jsonCheckProcessingSurvey(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonCheckItems start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		JSONObject resultObj = new JSONObject();
+		String itemId        = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		
+		if (itemId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = surveyRestService.checkProcessingSurvey(request, user.getId(), itemId);
 		
 		logger.debug("jsonCheckItems end");
 		return resultObj.toString();

@@ -79,6 +79,7 @@ var SurveyMessages = {
 	strColumn    : "열",
 	strRequired  : "필수 답변",
 	strModify    : "수정",
+	strModifying : "이미 설문이 진행되어 수정이 불가합니다.",
 	strOther     : "기타",
 	strCancel    : "취소",
 	strSaveTxt   : "저장",

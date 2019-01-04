@@ -71,6 +71,7 @@
 		<result property="multiAnswerFlag"  column="multi_answer_flag"   columnIndex="18"/>
 		<result property="paritipateFlag"   column="participate_flag"    columnIndex="19"/>
 		<result property="attachFlag"       column="attach_flag"         columnIndex="20"/>
+		<result property="modifyFlag"       column="modify_flag"         columnIndex="21"/>
 	</resultMap>
 	
 	<!-- AttachVO resultMap -->
@@ -495,12 +496,12 @@
 			insert into tbl_survey (
 				title,        purpose,     user_id,     create_date,        start_date,     end_date,          user_name1,
 				user_name2,   use_status,  open_days,   result_public_flag, anonymous_flag, multi_answer_flag, participate_flag,
-				attach_flag,  delete_user, update_user, update_date,        company_id,     tenant_id
+				attach_flag,  modify_flag, delete_user, update_user,        update_date,    company_id,        tenant_id
 			)
 			values (
 				#title#,        #purpose#,    #creatorId#,  #createDate#,       #startDate#,     #endDate#,         #creatorName1#,
 				#creatorName2#, #useStatus#,  #openDays#,   #resultPublicFlag#, #anonymousFlag#, #multiAnswerFlag#, #paritipateFlag#,
-				#attachFlag#,   #deleteUser#, #updateUser#, #updateDate#,       #companyId#,     #tenantId#
+				#attachFlag#,   #modifyFlag#, #deleteUser#, #updateUser#, #updateDate#,       #companyId#,     #tenantId#
 			)
 		]]>
 	</insert>
@@ -524,11 +525,12 @@
 			multi_answer_flag  = #multiAnswerFlag#,
 			participate_flag   = #paritipateFlag#,
 			attach_flag        = #attachFlag#,
+			modify_flag        = #modifyFlag#,
 			delete_user        = #deleteUser#,
 			update_user        = #updateUser#,
 			update_date        = #updateDate#
 		where
-			survey_id   = #surveyId# and tenant_id = #tenantId# and company_id = #companyId#
+			survey_id = #surveyId# and tenant_id = #tenantId# and company_id = #companyId#
 	</update>
 	
 	<select id="EzSurveyDAO.getMaxSurveyId" resultClass="Long">
@@ -582,7 +584,7 @@
 			)
 			values (
 				#surveyId#,      #type#,        #content#,            #level#,     #useStatus#,
-				#required#,  #logicFlag#,     #sliderLogicPoint#, #companyId#,  #tenantId#
+				#required#,    #logicFlag#,     #sliderLogicPoint#, #companyId#,  #tenantId#
 			)
 		]]>
 	</insert>
@@ -594,6 +596,10 @@
 	<select id="EzSurveyDAO.getAllQuestionsOfSurvey" resultMap="questionVO">
 		select * from tbl_survey_question where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId# order by levels asc
 	</select>
+	
+	<delete id="EzSurveyDAO.deleteSurveyQuestions" parameterClass="SurveyVO">
+		delete from tbl_survey_question where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
+	</delete>
 	
 	<!--***********************************************************************************
 	**                               Option item process                               **
@@ -620,6 +626,10 @@
 		select * from tbl_survey_option where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId# order by question_id asc, levels asc
 	</select>
 	
+	<delete id="EzSurveyDAO.deleteSurveyOptions" parameterClass="SurveyVO">
+		delete from tbl_survey_option where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
+	</delete>
+	
 	<!--***********************************************************************************
 	**                                Attach item process                                **
 	************************************************************************************-->
@@ -627,10 +637,10 @@
 	<insert id="EzSurveyDAO.saveAttachItem" parameterClass="AttachVO">
 		<![CDATA[
 			insert into tbl_survey_attachfile (
-				target_id,  target_type,  file_nm, file_size, file_path, company_id,  tenant_id
+				target_id,  survey_id,  target_type,  file_nm, file_size, file_path, company_id,  tenant_id
 			)
 			values (
-				#targetId#, #targetType#, #fname#, #fileSize#, #fpath#,  #companyId#, #tenantId#
+				#targetId#, #surveyId#, #targetType#, #fname#, #fileSize#, #fpath#,  #companyId#, #tenantId#
 			)
 		]]>
 	</insert>
@@ -654,6 +664,10 @@
 			) and company_id = #companyId# and tenant_id = #tenantId#
 		order by target_type desc, target_id asc
 	</select>
+	
+	<delete id="EzSurveyDAO.deleteSurveyAttach" parameterClass="SurveyVO">
+		delete from tbl_survey_attachfile where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
+	</delete>
 	
 	<!--***********************************************************************************
 	**                                Survey Users process                               **
@@ -690,6 +704,18 @@
 			tenant_id
 		from tbl_survey_participant 
 			where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
+	</select>
+	
+	<delete id="EzSurveyDAO.deleteSurveyUsers" parameterClass="SurveyVO">
+		delete from tbl_survey_participant where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
+	</delete>
+	
+	<!--***********************************************************************************
+	**                                Survey Response process                            **
+	************************************************************************************-->
+	
+	<select id="EzSurveyDAO.checkProcessingSurvey" resultClass="Integer">
+		select count(reponse_id) from tbl_survey_response where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
 	</select>
 	
 </sqlMap>

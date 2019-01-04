@@ -22,8 +22,9 @@ public interface EzSurveyService {
 	int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception;
 	List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int listcnt, String sqlQuery, String srchValue, int tenantId) throws Exception;
 	
-	//Check user permission
+	//Check user permission + survey status
 	JSONObject checkPermission(List<Long> surveyList, int mode, LoginVO userInfo) throws Exception;
+	JSONObject checkProcessing(String itemId, LoginVO userInfo) throws Exception;
 	
 	//User preview config functions
 	SurveyGeneralVO getUserPreviewConfig(String userId, String companyID, int tenantId) throws Exception;

@@ -399,7 +399,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				
 				//Add option attach file
 				if (optionAtt != null) {
-					saveAttachFile(realPath, optionAtt, maxOptionId, companyId, tenantId, "option", totalAttach);
+					saveAttachFile(realPath, optionAtt, maxOptionId, companyId, tenantId, "option", crrSurveyId, totalAttach);
 				}
 				
 				//Add option
@@ -429,7 +429,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			
 			//Add question attach file
 			if (questionAtt != null) {
-				saveAttachFile(realPath, questionAtt, maxQuestionId, companyId, tenantId, "question", totalAttach);
+				saveAttachFile(realPath, questionAtt, maxQuestionId, companyId, tenantId, "question", crrSurveyId, totalAttach);
 			}
 			
 			//Add question
@@ -440,7 +440,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		if (attchList != null && attchList.size() > 0) {
 			for (int i = 0; i < attchList.size(); i++) {
 				JSONObject surveyAtt = (JSONObject)attchList.get(i);
-				saveAttachFile(realPath, surveyAtt, crrSurveyId, companyId, tenantId, "survey", totalAttach);
+				saveAttachFile(realPath, surveyAtt, crrSurveyId, companyId, tenantId, "survey", crrSurveyId, totalAttach);
 			}
 			
 			survey.setAttachFlag(1);
@@ -484,11 +484,20 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		//Check modify/save mode
 		if (surveyId != -1) {
-			//Remove current information
-			//ezSurveyDAO.delete
+			//Remove current questions
+			ezSurveyDAO.deleteSurveyQuestions(survey);
+			
+			//Remove current options
+			ezSurveyDAO.deleteSurveyOptions(survey);
+			
+			//Remove current attach
+			ezSurveyDAO.deleteSurveyAttach(survey);
+			
+			//Remove current users
+			ezSurveyDAO.deleteSurveyUsers(survey);
 			
 			//Update survey
-			//ezSurveyDAO.updateSurveyItem(survey);
+			ezSurveyDAO.updateSurveyItem(survey);
 		}
 		else {
 			//Save survey
@@ -520,13 +529,14 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return result;
 	}
 	
-	private synchronized void saveAttachFile(String realPath, JSONObject attachObj, long targetId, String companyId, int tenantId, String targetType, List<AttachVO> totalAttach) {
+	private synchronized void saveAttachFile(String realPath, JSONObject attachObj, long targetId, String companyId, int tenantId, String targetType, long surveyId, List<AttachVO> totalAttach) {
 		String fileName = attachObj.get("fname").toString();
 		String filePath = attachObj.get("fpath").toString();
 		File attFile    = new File(realPath + filePath);
 		long fileSize   = attFile.length();
 		AttachVO attach = new AttachVO();
 		
+		attach.setSurveyId(surveyId);
 		attach.setCompanyId(companyId);
 		attach.setTenantId(tenantId);
 		attach.setTargetId(targetId);
@@ -669,6 +679,16 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			
 			result.put("creator", creator);
 		}
+		else if (mode.equals("modify")) {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date                  = new Date();
+			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+			survey.setModifyFlag(1);
+			survey.setUpdateDate(timeUTC);
+			survey.setUpdateUser(userInfo.getId());
+			
+			ezSurveyDAO.updateSurveyItem(survey);
+		}
 		
 		//long endTime   = System.nanoTime();
 		//long totalTime = endTime - startTime;
@@ -676,7 +696,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		return result;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject getSurveyQuestions(Long surveyId, String realPath, LoginVO userInfo) throws Exception {
@@ -856,6 +876,30 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject checkProcessing(String itemId, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId",  tenantId);
+		map.put("companyId", userInfo.getCompanyID());
+		map.put("surveyId",  itemId);
+		
+		int check = ezSurveyDAO.checkProcessingSurvey(map);
+		
+		if (check == 0) {
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		else {
+			result.put("status", "error");
+			result.put("code", 4);
+		}
+		
+		return result;
 	}
 	
 	
