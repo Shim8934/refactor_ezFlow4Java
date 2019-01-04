@@ -18,7 +18,7 @@
 	<style>
 		.mainview {margin-top: 5px; width:50%; float:left;}
 		.previewH {margin-top: 5px; width:50%; height: 690px; float:right; overflow: hidden;}
-		.previewmail_info {border-bottom: 1px solid #e5e5e5;}
+		.previewmail_info {border-bottom: 1px solid #e5e5e5; min-width: 300px;}
 		.previewmail_bar_h {display: inline-block; width: 5px; height: 690px;}
 		.preContent_RayerH {position: absolute; display: inline-block; width: 49%;}
 		.preview_header {padding: 0px; font-weight: bold; height: 11px; line-height: 11px;}
@@ -27,8 +27,8 @@
 		.preview_content {width: 97%; height: 630px; border: solid 0px green; display: inline-block; padding:10px;}
 		.preview_nodata {position: absolute; display: inline-block; width: 49%; vertical-align: middle; text-align: center; margin-top: 70px;}
 		.mainlist_free tr td:nth-child(5) {padding-left: 12px;}
-		#lvJobPositionList, #lvJobTitleList {min-width: 400px;}
-		#lvJobTitleUserList, #lvJobPositionUserList {min-width: 360px;}
+		#lvJobList {min-width: 400px;}
+		#lvJobUserList {min-width: 360px;}
 		.countColor {color:#017BEC;}
 	</style>
 	<script type="text/javascript">
@@ -143,7 +143,8 @@
 			var oArrRows = jobList.GetSelectedRows();
 			if (oArrRows != 0) {
 				var pJobID = oArrRows[0].getAttribute("DATA1");
-				var pJobNM = oArrRows[0].firstChild.innerText;
+				//var pJobNM = oArrRows[0].firstChild.innerText; //수정
+				var pJobNM = oArrRows[0].childNodes[1].textContent;
 				
 				$.ajax({
 	            	type : "POST",
@@ -186,9 +187,12 @@
 		            headerData.documentElement.appendChild(Node);
 			    }
 			    
-			    var _html = "<span>&nbsp;" + pJobNM + "-[" + "<span class='countColor'>" + pTotalCnt + "<spring:message code = 'main.t20000'/></span>]</span>";
-			    $("#jobTotalInfoRayer").html(_html);
-			
+			    //var _html = "<span>&nbsp;" + pJobNM + "-[" + "<span class='countColor'>" + pTotalCnt + "<spring:message code = 'main.t20000'/></span>]</span>";
+			    //$("#jobTotalInfoRayer").html(_html);
+				
+				document.getElementById("preview_title").innerHTML = pJobNM;
+				document.getElementById("preview_count").innerHTML = pTotalCnt;
+				
 				document.getElementById("jobUserListView").innerHTML = "";
 				
 				var listview = new ListView();
@@ -525,8 +529,10 @@
 		});
 		
 		function windowResize() {
-			var height = document.documentElement.clientHeight - 135;
-			document.getElementById("jobListView").style.height = height + "px";
+			var height = document.documentElement.clientHeight;
+			
+			document.getElementById("jobListView").style.height = (height - 225)+ "px";
+			document.getElementById("jobUserListView").style.height = (height - 273) + "px";
 		}
 		
 		$(function(){
@@ -665,7 +671,7 @@
 
 	<div class="mainview">
 		<div class="listview" style="border: 0px;">
-			<div id="jobListView" style="height: 658px; width: 100%; overflow-y:auto;"></div>
+			<div id="jobListView" style="height: 658px; width: 100%; overflow:auto;"></div>
 		</div>
 	</div>
 	
@@ -690,7 +696,7 @@
 			
 			<div class="preview_content">
 				<div class="listview" style="border-top: 1px solid #ddd; border-left: none; border-right: none; border-bottom: none;">
-					<div id="jobUserListView" style="height: 610px; width: 100%; overflow-y:auto;"></div>
+					<div id="jobUserListView" style="height: 610px; width: 100%; overflow: auto;"></div>
 				</div>
 				
 				<div id="jobUserListPageRayer" style="border-top: 0px;"></div>
@@ -805,7 +811,7 @@
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t68' /></NAME>
-			<WIDTH>100</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
