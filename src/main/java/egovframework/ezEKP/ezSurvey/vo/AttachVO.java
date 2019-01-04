@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezSurvey.vo;
 
 public class AttachVO {
 	private long   attachId;
+	private long   surveyId;
 	private long   targetId;
 	private String targetType;
 	private String fname;
@@ -72,5 +73,13 @@ public class AttachVO {
 	
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
+	}
+	
+	public long getSurveyId() {
+		return surveyId;
+	}
+	
+	public void setSurveyId(long surveyId) {
+		this.surveyId = surveyId;
 	}
 }

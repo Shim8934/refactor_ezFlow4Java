@@ -25,6 +25,7 @@ public class SurveyVO {
 	private int multiAnswerFlag;
 	private int paritipateFlag;
 	private int attachFlag;
+	private int modifyFlag;
 	private List<SurveyParticipantVO> userList;
 	private List<AttachVO> attachList;
 	
@@ -218,5 +219,13 @@ public class SurveyVO {
 	
 	public void setUserList(List<SurveyParticipantVO> userList) {
 		this.userList = userList;
+	}
+	
+	public int getModifyFlag() {
+		return modifyFlag;
+	}
+	
+	public void setModifyFlag(int modifyFlag) {
+		this.modifyFlag = modifyFlag;
 	}
 }
