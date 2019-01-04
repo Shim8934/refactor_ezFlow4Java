@@ -268,6 +268,20 @@ function datanameweek(year, month, day, contral)
 //주보기시...
 function tableListControl_Week()
 {
+	// 음력날짜 사용 기능 추가시에 사용
+	/*var tempyear = weektodate.getFullYear();
+    var LunarDateFull;
+    var LunarDate;
+    var LunarDate2;
+
+    if (tempyear > 1800 && tempyear <= 2101) {
+        var month = weektodate.getMonth() + 1;
+        LunarDate = lunarCalc(tempyear, month, weektodate.getDate(), 1);
+        var LunarDatemonth = LunarDate.month;
+        var LunarDateday = LunarDate.day;
+        LunarDate2 = LunarDatemonth + "." + LunarDateday;
+    }*/
+    
 	// 2018-10-17 김민성 - 자원관리 주보기 오늘 날짜 표시 위한 today 정보 추가
 	var today = datanameweek(weektodate.getFullYear(), weektodate.getMonth()+1, weektodate.getDate(), "ADD");		// 오늘 날짜
 	var dayname = new Array(strLang270, strLang271, strLang272, strLang273, strLang274, strLang275, strLang276);
@@ -349,6 +363,8 @@ function tableListControl_Week()
                 }
                 
                 _mth.style.verticalAlign = "middle";
+                _mth.style.overflow = "hidden";
+                _mth.style.textOverflow = "ellipsis";
                 _mth.onmouseover = new Function("onmouse_over_Week(this);");
                 _mth.onmouseout = new Function("onmouse_out_Week(this);");
                 _mth.ondblclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('','" + title_name[0].split("/")[0] + "','" + AddDate + "','" + AddDate + "','" + title_name[0].split("/")[1] + "');");               
@@ -369,46 +385,50 @@ function tableListControl_Week()
                     var isholiday = false;
                     var holidayName = "";
                     var holidayName2 = "";
-                    for (var k = 0; k < memorial.length; k++) {                    	
+                    
+                    for (var k = 0; k < memorial.length; k++) {      
+                    	if(k == memorial.length-1) {
+                        	holidayName += memorial[k].name;
+                        }
+                        else {
+                        		holidayName += memorial[k].name + ", ";
+                        }
                         if (memorial[k].holiday) {
                             isholiday = true;
-                            holidayName = memorial[k].name;
-                        }
-                        else {
-                        	holidayName = memorial[k].name;
                         }
                     }
+                    
                     for (var k = 0; k < yearmemorial.length; k++) {
+                    	if(k == yearmemorial.length-1) {
+                        	holidayName2 += yearmemorial[k].name;
+                        }
+                        else {
+                        	holidayName2 += yearmemorial[k].name + ", ";
+                        }
                         if (yearmemorial[k].holiday) {
                             isholiday = true;
-                            holidayName2 = yearmemorial[k].name;
-                        }
-                        else {
-                        	holidayName2 = yearmemorial[k].name;
                         }
                     }
+                    
+                    if(holidayName != "" && holidayName2 == "") {
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName;
+                	}
+                	else if(holidayName == "" && holidayName2 != "") {
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName2;
+                	}
+                	else if(holidayName != "" && holidayName2 != ""){
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName + ", " + holidayName2;
+                	}
+                	else {
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                	}
+                    
+                    /*if (LunarUse) {
+                    	_mth.innerHTML += " (" + LunarDate2 + ")";
+                    }*/
+                    
                     if (isholiday) {
-                        if (holidayName != "" && holidayName2 != "") {
-                        	holidayName = holidayName + ", " + holidayName2;
-                        }
-                        else if (holidayName == "" && holidayName2 != "") {
-                        	holidayName = holidayName2;                	
-                        }
-                    	
-                        _mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName + "]";
                     	_mth.style.color = "#ee1c25";
-                    }
-                    else {
-                    	// 2018-12-21 김민성 - 휴일아닌 기념일 표시
-                    	if(holidayName != "") {
-                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName + "]";
-                    	}
-                    	else if(holidayName2 != "") {
-                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName2 + "]";
-                    	}
-                    	else {
-                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
-                    	}
                     }
                 }                
                 //end
@@ -423,8 +443,8 @@ function tableListControl_Week()
             else if (i > endMonthday) {
                 //만약에 월의 날이 12월을 넘어간다면 1월부터과 년도 + 1
                 if ((sz_Month + 2) > 12) {
-                    var D_nowdate = datanameweek(sz_Year + 1, 1, nextmonthfirstday, "ADD");
-                    var D_nowdateTitle = datanameweek(sz_Year + 1, 1, nextmonthfirstday, "NO");
+                    var D_nowdate = datanameweek(sz_Year+1, 1, nextmonthfirstday, "ADD");
+                    var D_nowdateTitle = datanameweek(sz_Year+1, 1, nextmonthfirstday, "NO");
                 }
                     //그냥 마지막날보다 크다면 월 + 1 증가와 1일부터 시작 
                 else {
@@ -450,6 +470,8 @@ function tableListControl_Week()
                 }
 
                 _mth.style.verticalAlign = "middle";
+                _mth.style.overflow = "hidden";
+                _mth.style.textOverflow = "ellipsis";
                 _mth.onmouseover = new Function("onmouse_over_Week(this);");
                 _mth.onmouseout = new Function("onmouse_out_Week(this);");
                 _mth.ondblclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('','" + title_name[0].split("/")[0] + "','" + AddDate + "','" + AddDate + "','" + title_name[0].split("/")[1] + "');");
@@ -457,10 +479,9 @@ function tableListControl_Week()
                 //baonk added    	
                 var bnk_Date = D_nowdateTitle.split("/")[1];
                 var bnk_Month = D_nowdateTitle.split("/")[0]                
-                
 
-                if (sz_Year > 1800 && sz_Year <= 2101) {                	
-                    var oThisDate2 = new Date(sz_Year, bnk_Month - 1, bnk_Date);                                      
+                if (sz_Year > 1800 && sz_Year <= 2101) {    
+                    var oThisDate2 = new Date(D_nowdate.substring(0,4), bnk_Month - 1, bnk_Date);            // 2019-01-02 김민성 - 새로 년도 바뀔 때 처리                          
                     var month = oThisDate2.getMonth() + 1;
                     
                     LunarDate = lunarCalc(oThisDate2.getFullYear(), month, oThisDate2.getDate(), 1);
@@ -471,44 +492,52 @@ function tableListControl_Week()
                     var isholiday = false;
                     var holidayName = "";
                     var holidayName2 = "";
-                    for (var k = 0; k < memorial.length; k++) {                    	
+                    
+                    for (var k = 0; k < memorial.length; k++) {      
+                    	if(k == memorial.length-1) {
+                        	holidayName += memorial[k].name;
+                        }
+                        else {
+                        	holidayName += memorial[k].name + ", ";
+                        }
                         if (memorial[k].holiday) {
                             isholiday = true;
-                            holidayName = memorial[k].name;
-                        }
-                        else {
-                        	holidayName = memorial[k].name;
                         }
                     }
+                    
                     for (var k = 0; k < yearmemorial.length; k++) {
+                    	if(k == yearmemorial.length-1) {
+                        	holidayName2 += yearmemorial[k].name;
+                        }
+                        else {
+                        	holidayName2 += yearmemorial[k].name + ", ";
+                        }
                         if (yearmemorial[k].holiday) {
                             isholiday = true;
-                            holidayName2 = yearmemorial[k].name;
-                        }
-                        else {
-                        	holidayName2 = yearmemorial[k].name;
                         }
                     }
+                    
+                    if(holidayName != "" && holidayName2 == "") {
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName;
+                	}
+                	else if(holidayName == "" && holidayName2 != "") {
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName2;
+                	}
+                	else if(holidayName != "" && holidayName2 != ""){
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName + ", " + holidayName2;
+                	}
+                	else {
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                	}
+                    
+                    /*if (LunarUse) {
+                    	_mth.innerHTML += " (" + LunarDate2 + ")";
+                    }*/
+                    
                     if (isholiday) {
-                        if (holidayName != "" && holidayName2 != "") {
-                        	holidayName = holidayName + ", " + holidayName2;
-                        }
-                        else if (holidayName == "" && holidayName2 != "") {
-                        	holidayName = holidayName2;                	
-                        }
-                    	
-                    	_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName + "]";
                     	_mth.style.color = "#ee1c25";
                     }
-                    else {
-                    	// 2018-12-21 김민성 - 휴일아닌 기념일 표시
-                    	if(holidayName != "") {
-                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName + "]";
-                    	}
-                    	else {
-                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
-                    	}
-                    }
+                    
                 }                
                 //end
                 
@@ -967,14 +996,7 @@ function tableListControl_today() {
         var TodayDatename = datanameweek(sz_Year, sz_Month + 1, sz_Date, "YES");
 
         var current_day = new Date(TodayDatename);
-        if (current_day.getDay() == "6")
-            //document.getElementById("divViewHeader").style.color = "rgb(0, 72, 149)";
-        	document.getElementById("divViewHeader").style.color = "";
-        else if (current_day.getDay() == "0")
-            //document.getElementById("divViewHeader").style.color = "#ee1c25";
-        	document.getElementById("divViewHeader").style.color = "";
-        else
-            document.getElementById("divViewHeader").style.color = "";
+        
 
        //baonk added    
         if (current_day.getFullYear() > 1800 && current_day.getFullYear() <= 2101) {               	                                             
@@ -996,13 +1018,17 @@ function tableListControl_today() {
                     isholiday = true;                    
                 }
             }
-            if (isholiday) {            	
+            if (current_day.getDay() == "0" || isholiday)
             	document.getElementById("divViewHeader").style.color = "#ee1c25";
-            }
+            	//document.getElementById("divViewHeader").style.color = "";
+            else if (current_day.getDay() == "6")
+            	document.getElementById("divViewHeader").style.color = "rgb(0, 72, 149)";
+            	//document.getElementById("divViewHeader").style.color = "";
+            else
+                document.getElementById("divViewHeader").style.color = "black";
         }                
         //end
         
-
         setNodeText(document.getElementById("divViewHeader"),datanameweek(sz_Year, sz_Month + 1, sz_Date, "HEARDER"));
         var _Table = document.createElement("TABLE");
         _Table.setAttribute("class", "table_layout");

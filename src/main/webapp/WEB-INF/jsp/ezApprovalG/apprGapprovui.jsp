@@ -616,7 +616,8 @@
 		            }
 		        }
 		        if (!isjunkyul) {
-		            if ("${approvalPWD}" != "N") {
+		            //if ("${approvalPWD}" != "N") {
+		            if (CheckUsePassword()) {
 		                chk_Passwd(pingUserID, btnApprove_chkpassword_Complete);
 		            }
 		            else
@@ -975,7 +976,8 @@
 		    function btnReject_onclick_Complete(Ans) {
 		        DivPopUpHidden();
 		        if (!Ans) return;
-		        if ("${approvalPWD}" != "N") {
+		        //if ("${approvalPWD}" != "N") {
+		        if (CheckUsePassword()) {
 		            chk_Passwd(pingUserID, btnReject_chkpassword_Complete);
 		        } else {
 		            openOpinionUI("BanSong", btnReject_option_Complete);
@@ -1069,7 +1071,8 @@
 		    function btnStay_onclick_Complete(Ans) {
 		        DivPopUpHidden();
 		        if (!Ans) return;
-		        if ("${approvalPWD}" != "N") {
+		        //if ("${approvalPWD}" != "N") {
+		        if (CheckUsePassword()) {
 		            chk_Passwd(pingUserID, btnStay_chkpassword_Complete);
 		        }
 		        else
@@ -1122,7 +1125,8 @@
 		    }
 		    function btnJunKyul_onclick()
 		    {
-		        if ("${approvalPWD}" != "N") {
+		        //if ("${approvalPWD}" != "N") {
+		        if (CheckUsePassword()) {
 		            var checkpass = chk_Passwd(pingUserID);
 		            if (checkpass == "False") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
@@ -1891,6 +1895,28 @@
 				        }
 			        }
 		        }
+		    }
+		    
+		    /* 2019-01-02 천성준 #14647
+		            결재암호 사용유무 조회 (Y / N)
+		    */
+		    function CheckUsePassword() {
+		    	var result = "";
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getApprovalPWD.do",
+		    		success: function(text) {
+		    			result = text;
+		    		}        			
+		    	});
+		    	
+		    	if (result != "N") {
+		    		return true;
+		    	} else {
+		    		return false;
+		    	}
 		    }
 		</script>
 	</head>

@@ -1907,6 +1907,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		try {
 			ezOrganAdminDao.updateTitle(map);	//TBL_USER_JOBMASTER
 			ezOrganAdminDao.updateTitle2(map);	//TBL_USERMASTER
+			ezOrganAdminDao.updateTitle3(map);	//TBL_ADDJOBMASTER
 			rtnVal = "TRUE";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1946,7 +1947,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String getTitleUserList(String type, String jobID, String primary, String companyID, int tenantID) throws Exception {
+	public String getTitleUserList(String type, String jobID, String pageSize, String pageNum, String searchType, String searchValue, String primary, String companyID, int tenantID) throws Exception {
 		logger.debug("getTitleUserList started.");
 
 		StringBuffer rtnVal = new StringBuffer();
@@ -1957,30 +1958,51 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
+		if (!pageNum.equals("") && !pageSize.equals("")) {
+			pageNum = String.valueOf((Integer.parseInt(pageNum) * Integer.parseInt(pageSize)) - Integer.parseInt(pageSize));
+			map.put("v_PAGESIZE", pageSize);
+			map.put("v_PAGENUM", pageNum);
+		}
+		
+		if (!searchType.equals("") && !searchValue.equals("")) {
+			StringBuffer sb = new StringBuffer();
+			if (searchType.equals("displayname")) {
+				sb.append("DISPLAYNAME LIKE '%" + searchValue.trim() + "%'");
+			}
+			map.put("v_SUBQUERY", "WHERE " + sb.toString());
+		}
+		
 		List<OrganUserVO> userList = ezOrganAdminDao.getTitleUserList(map);
 		
-		rtnVal.append("<LISTVIEWDATA>");
-		rtnVal.append("<TOTALCNT>" + userList.size() + "</TOTALCNT>");
-		rtnVal.append("<ROWS>");
+		int totalCnt = ezOrganAdminDao.getTitleUserListCnt2(map);
 		
 		if (userList != null && userList.size() > 0) {
+			rtnVal.append("<LISTVIEWDATA>");
+			rtnVal.append("<TOTALCOUNT>" + totalCnt + "</TOTALCOUNT>");
+			rtnVal.append("<ROWS>");
 			for (int i = 0; i < userList.size(); i++) {
 				rtnVal.append("<ROW>");
 				rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getCn() +"]]></VALUE>");
 				rtnVal.append("<DATA1><![CDATA["+ userList.get(i).getDepartment() +"]]></DATA1>");
 				rtnVal.append("<DATA2><![CDATA["+ userList.get(i).getDescription() +"]]></DATA2>");
 				rtnVal.append("<DATA3><![CDATA["+ userList.get(i).getDescription2() +"]]></DATA3>");
-				rtnVal.append("<DATA4><![CDATA["+ userList.get(i).getCn() +"]]></DATA4></CELL>");
+				rtnVal.append("<DATA4><![CDATA["+ userList.get(i).getCn() +"]]></DATA4>");
+				rtnVal.append("<DATA5><![CDATA["+ userList.get(i).getUserType() +"]]></DATA5></CELL>");
 				if (primary.equals("1")) {
 					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getDisplayName() +"]]></VALUE></CELL>");
+					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getDescription() +"]]></VALUE></CELL>");
 					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getTitle() +"]]></VALUE></CELL>");
 				} else {
 					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getDisplayName2() +"]]></VALUE></CELL>");
+					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getDescription2() +"]]></VALUE></CELL>");
 					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getTitle2() +"]]></VALUE></CELL>");
 				}
 				rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getTelephoneNumber() +"]]></VALUE></CELL>");
 				rtnVal.append("</ROW>");
 			}
+			rtnVal.append("</ROWS></LISTVIEWDATA>");
+		} else {
+			rtnVal.append("<LISTVIEWDATA><TOTALCOUNT>0</TOTALCOUNT><ROWS></ROWS></LISTVIEWDATA>");
 		}
 		
 		rtnVal.append("</ROWS></LISTVIEWDATA>");

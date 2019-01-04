@@ -36,6 +36,8 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
+import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
+import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -61,6 +63,9 @@ public class EzAttitudeGWController {
 	
 	@Resource(name = "MOptionService")
 	private MOptionService mOptionService;
+	
+	@Resource(name = "EzScheduleService")
+	private EzScheduleService ezScheduleService;
 	
 	/**
 	 * G/W 근태관리 [GET] 개인, 부서, 부서+개인 근태조회
@@ -565,8 +570,9 @@ public class EzAttitudeGWController {
 			String isuse = request.getParameter("isuse");
 			String isAdmin = request.getParameter("isAdmin") == null ? "" : request.getParameter("isAdmin");
 			String statistics = request.getParameter("statistics") == null ? "" : request.getParameter("statistics");
+			String typeIdArr = request.getParameter("typeIdArr") == null ? "" : request.getParameter("typeIdArr");
 			
-			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId(), info.getPrimary());
+			List<AttitudeTypeVO> attitudeTypeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, typeIdArr, info.getTenantId(), info.getPrimary());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1118,8 +1124,9 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			int tenantId = info.getTenantId();
+			String cID = "VIEW";
 			
-			List<HolidayVO> holidayList = ezAttitudeService.getHolidayList(isRest, companyId, tenantId);
+			List<ScheGetHolidayVO> holidayList = ezScheduleService.getTholiday(cID, companyId, tenantId, isRest);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -1863,7 +1870,7 @@ public class EzAttitudeGWController {
 			List<ModApplHistoryVO> list = ezAttitudeService.getAttitudeHistoryList(searchUserName, searchDeptName, searchTitle, searchStartDate, searchEndDate, orderCell, orderOption, offset, pageNum, listSize, companyId, tenantID, searchDeptId, deptIdList, info.getPrimary());
 		
 			//구분 리스트
-			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, info.getTenantId(), info.getPrimary());
+			List<AttitudeTypeVO> typeList = ezAttitudeService.getAttitudeTypeList(companyId, isuse, isAdmin, statistics, "", info.getTenantId(), info.getPrimary());
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);

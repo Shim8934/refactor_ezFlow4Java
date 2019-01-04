@@ -54,8 +54,8 @@ public class EzConnController {
 	private EzCommonService ezCommonService;
 	
 	@RequestMapping(value={
-						"/ezConn/mailMain.do", "/ezConn/scheduleMain.do",
-						"/ezConn/admin/organMain.do", "/ezConn/admin/scheduleMain.do"
+						"/ezConn/mailMain.do", "/ezConn/scheduleMain.do", "/ezConn/scheduleWrite.do",
+						"/ezConn/admin/organMain.do", "/ezConn/admin/scheduleMain.do", "/ezConn/scheduleRead.do"
 						})
 	public void mailMain(
 					@RequestParam String id,
@@ -205,10 +205,18 @@ public class EzConnController {
 					resultPage = "/ezEmail/mailRead.do?URL=" + URLEncoder.encode(mailFullPath, "UTF-8");
 				} else if (requestUri.equals("/ezConn/scheduleMain.do")) {
 					resultPage = "/ezSchedule/scheduleIndex.do?funCode=2";
+				} else if (requestUri.equals("/ezConn/scheduleWrite.do")) {
+					resultPage = "/ezSchedule/scheduleWrite.do?defaultid=0";
 				} else if (requestUri.equals("/ezConn/admin/organMain.do")) {
 					resultPage = "/admin/ezOrgan/organMain.do";
 				} else if (requestUri.equals("/ezConn/admin/scheduleMain.do")) {
 					resultPage = "/admin/ezSchedule/scheduleMain.do";
+				} else if (requestUri.equals("/ezConn/scheduleRead.do")) {
+					String date = request.getParameter("date");
+					String repeatcount = request.getParameter("repeatcount"); // 일반일정 : 0 , 반복일정 : 반복회차
+					String scheduleid = request.getParameter("scheduleid");
+					
+					resultPage = "/ezSchedule/scheduleRead.do?id=" + scheduleid + "&date=" + date + "&repeatcount=" + repeatcount;
 				} else {				
 					String funCode = request.getParameter("funCode") != null ? request.getParameter("funCode") : "";
 					if(funCode.equalsIgnoreCase("")) {
@@ -318,8 +326,17 @@ public class EzConnController {
 		
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		
+		// 공유사서함 기능을 사용할 경우 공유사서함 계정으로의 로그인을 막는다.
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+		
+		if (useSharedMailbox.equals("YES")) {
+			if (resultVO != null && resultVO.getDeptID() != null && resultVO.getDeptID().startsWith("shared_mailbox_")) {
+				logger.debug("Cannot login with shared mailbox account.");
+				resultVO = null;
+			}
+		}
+		
 		logger.debug("resultVO=" + resultVO);
-				
 		logger.debug("getUserInfoById ended.");
 		
 		return resultVO;

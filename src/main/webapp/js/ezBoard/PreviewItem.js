@@ -1136,12 +1136,13 @@ function leftCountRf() {
 	    	}
 	    }
 	    
+	    /* 2018-12-31 홍승비 - 게시판명의 변경된 태그(div -> span)로 id 찾기 + 게시판 클릭 동작 변경 */
 	    for (var i = 0; i < h2.length; i++) {
 	        if (h2[i].className == "on") {
-	            pId = h2[i].getElementsByTagName("div")[0].id;
+	            pId = h2[i].getElementsByClassName("h2Title")[0].id;
 	            pId = pId.replace("TreeCtr", "TreeCtrl");
-	            pValue = h2[i].getElementsByTagName("div")[0].getAttribute("value");
-	            window.parent.frames["left"].TopBoard_onclick(pId, pValue);
+	            pValue = h2[i].getElementsByClassName("h2Title")[0].getAttribute("value");
+	            window.parent.frames["left"].treeViewRefresh(pId, pValue);
 	            window.parent.frames["left"].node_select(pNodeID, "", pTreeID, "");
 	            break;
 	        }
