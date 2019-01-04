@@ -84,7 +84,7 @@
           		<li><span onclick="end_confirm()"></span></li>
         	</ul>
 	  	</div>
-	  	<table class="contentList" id="contentList" style="width:30%;">
+	  	<table class="contentList" id="contentList" style="width:100%;">
 	  		<th>이름</th>
 	  		<th>부서</th>
 	  	</table>
