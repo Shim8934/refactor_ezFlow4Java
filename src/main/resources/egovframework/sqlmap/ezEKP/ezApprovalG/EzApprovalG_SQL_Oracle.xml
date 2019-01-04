@@ -19183,10 +19183,10 @@
                     		TBL_CABINETCLASS.ExpirationYear < #accountYear#
 					]]>
 		  		  </isEqual>
-		  		  <isEqual property="listFlag" compareValue="10">
-		  		  		AND 
-		  		  			TBL_CABINETCLASS.ExpirationYear = #accountYear#
-		  		  </isEqual>
+<!-- 		  		  <isEqual property="listFlag" compareValue="10"> -->
+<!-- 		  		  		AND  -->
+<!-- 		  		  			TBL_CABINETCLASS.ExpirationYear = #accountYear# -->
+<!-- 		  		  </isEqual> -->
 		  		  <isEqual property="listFlag" compareValue="11">
 		  		  		AND 
 		  		  			TBL_CABINETCLASS.DelayEndYFlag = 'Y' 
