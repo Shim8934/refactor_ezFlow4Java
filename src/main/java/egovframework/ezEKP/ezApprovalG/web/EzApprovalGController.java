@@ -1023,7 +1023,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (docID == null || docID.isEmpty()) {
 			model.addAttribute("reformflag", ezApprovalGService.isReform(formURL) ? "Y" : "N");
 		} else {
-			model.addAttribute("reformflag", ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getCompanyID(), userInfo.getTenantId()).getReformFlag());
+			model.addAttribute("reformflag", ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getCompanyID(), tenantID).getReformFlag());
 		}
 		
 		logger.debug("draftui ended.");
