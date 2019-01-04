@@ -33,6 +33,7 @@
 			var BlockSize = 10;
 			var isAdmin = "<c:out value='${isAdmin}'/>";
 			var testObj = {};
+			var type = "";
 
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -599,6 +600,7 @@
 				testObj.dataList2 = dataList2;
 				testObj.dataList3 = dataList3;
 				testObj.dataList4 = dataList4;
+				type = types;
 
 				// 선택된 사원이 없을 경우
 				if (dataList.length == 0) {
@@ -606,7 +608,7 @@
 					return;
 				}
 				
-		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do?type="+types,"chooseDeletege", 500, 500);
+		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do","chooseDeletege", 700, 500);
 		    }
 		    
 		    function choose_Del_complete(data) {
