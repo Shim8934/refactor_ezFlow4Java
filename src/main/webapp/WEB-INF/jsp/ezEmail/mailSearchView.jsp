@@ -143,6 +143,7 @@
 		    	}
 		        
 		        document.getElementById("resultTD").style.height = (document.documentElement.clientHeight - 300) + "px";
+		        makePageSelPage();
 		    }
 		    
 		    window.onresize = function () {

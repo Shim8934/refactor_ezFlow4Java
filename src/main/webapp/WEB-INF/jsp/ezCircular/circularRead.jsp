@@ -682,7 +682,7 @@
                             <th>
                                 <spring:message code='ezCircular.t108' />
                             </th>
-                            <td class="pos1">
+                            <td>
                                 <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 70px; border-top-width: 0px;" align="left">
                                     <c:forEach var="item" items="${attachList}" varStatus="status">
                                     	<div style="margin-top:3px;height:auto;">

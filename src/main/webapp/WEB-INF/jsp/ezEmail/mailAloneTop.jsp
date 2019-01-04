@@ -1593,7 +1593,7 @@
                         </c:if>
                         <li><img title="<spring:message code='ezPersonal.t210' />" style="cursor: pointer;" onclick='OpenWindow(event, "/ezPersonal/personSearch.do", "", "height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0")' src="/images/kr/main/person.png"></li>
                         <li><img title="<spring:message code='ezPersonal.t999900011' />" style="cursor: pointer;" onclick='OpenWindow(event, "/ezPortal/environmentMain.do", "main", "")' src="/images/kr/main/env.png"></li>
-						<li><img title="<spring:message code='main.t00037' />" style="cursor: pointer;" onclick='OpenWindow(event, "/ezPortal/help/help.do", "helpWindow", "height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0")' src="/images/kr/main/help.png"></li>
+						<li><img title="<spring:message code='main.t00037' />" style="cursor: pointer;" onclick='OpenWindow(event, "/ezNewPortal/help/index.do", "helpWindow", "height=800px,width=1560px, status = no, toolbar=no, menubar=no, location=no, resizable=0")' src="/images/kr/main/help.png"></li>
 						<li><img title="<spring:message code='ezPortal.t990043' />" style="cursor: pointer;" onclick='top.location.href = "/user/login/actionLogout.do"' src="/images/kr/main/logout.png"></li>
                     </ul>
                 </article>

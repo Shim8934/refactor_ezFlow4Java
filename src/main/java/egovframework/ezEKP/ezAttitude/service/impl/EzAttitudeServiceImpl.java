@@ -237,7 +237,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, String statistics, int tenantId, String primary) throws Exception {
+	public List<AttitudeTypeVO> getAttitudeTypeList(String companyId, String isuse, String isAdmin, String statistics, String typeIdArr, int tenantId, String primary) throws Exception {
 		LOGGER.debug("getAttitudeTypeList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -247,6 +247,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("isuse", isuse);
 		map.put("isAdmin", isAdmin);
 		map.put("statistics", statistics);
+		map.put("typeIdArr", (typeIdArr != "" ? typeIdArr.split(",") : ""));
 		if (primary.equals("1")) {
 			primary = "";
 		}
@@ -495,7 +496,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		
-		List<AttitudeTypeVO> list = getAttitudeTypeList(companyId, "", "1", "", tenantId, primary);
+		List<AttitudeTypeVO> list = getAttitudeTypeList(companyId, "", "1", "" , "", tenantId, primary);
 		
 		boolean result = false;
 		
@@ -1175,6 +1176,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		/*2018-05-08 이효진 holidayList 생성*/
 		//회사 기념일
 		List<HolidayVO> holidayList = getHolidayList("rest", companyId, tenantId);
+		//임시 저장
+		List<HolidayVO> tempHolidayList = new ArrayList<HolidayVO>();
 		//근태휴무일
 		AttitudeConfigVO attitudeConfig = getAttitudeConfig(tenantId, companyId);
 		String checkDay[] = attitudeConfig.getClosedDay().split(",");
@@ -1234,9 +1237,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 						HolidayVO vo2 = new HolidayVO();
 						vo2.setHolidayDate(vo1.getHolidayDate().replace(startYear, endYear));
 						
-						holidayList.add(vo2);
+						tempHolidayList.add(vo2);
 					}
 				}
+			}
+		}
+		
+		if (tempHolidayList != null) {
+			for (HolidayVO vo3 : tempHolidayList) {
+				holidayList.add(vo3);
 			}
 		}
 		

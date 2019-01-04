@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <!-- <html style="height: 99%;"> -->
 <html style="height: 99%;">
@@ -9,6 +11,8 @@
 	    <!-- <link rel="stylesheet" href="${util.addVer('/css/tab_over.css')}" type="text/css"> -->
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <style type="text/css">
 	    .tabpart01UL{
 	    	position:absolute;
@@ -32,6 +36,7 @@
 	        var userLang = "${userLang}";
 	        var xmlhttp = createXMLHttpRequest();
 	        var timer = null;
+	        var companylist = "<c:out value='${companyList}'/>"; //(ex. S907001,가온아이A;S907000,가온아이B;)
 	        
 			window.onresize = function () {
 				var delay = 100;
@@ -117,8 +122,8 @@
 	        	var tabId = "a"; // anniversary
 	        	var tabId2 = "s"; // statutory holiday 
 	        	//탭이름 message 처리
-	        	var tabName = "회사기념일";
-	        	var tabName2 = "법정공휴일";
+	        	var tabName = strLangKHA1;
+	        	var tabName2 = strLangKHA2;
 	        	
 	        	tabText += "<p id='FBoard_sub0'>";
 	        	tabText += "<span id='1tab0' divname='FBoard_div0' name='FBoard_div' data1=\'"+tabId+"\' data2=\'"+tabName+"\' data5='0' class='tabover'>"+tabName+"</span>";
@@ -180,7 +185,7 @@
 	        	
 	        	var SelectedTabID = obj.getAttribute("DATA1");
 	        	
-                document.getElementById("FBoard_ifrm").src = "/admin/ezSchedule/scheduleAdminHolidayManage.do?holidayType=" + SelectedTabID;
+                document.getElementById("FBoard_ifrm").src = "/admin/ezSchedule/scheduleAdminHolidayManage.do?holidayType=" + SelectedTabID + "&companylist=" + companylist;
 	            document.getElementById("curTabID").value = SelectedTabID;
 	        }
 	
@@ -232,16 +237,28 @@
 	                }
 	            }
 	        }
+	        
+	        function changeCompany() {
+	        	$('#FBoard_ifrm').get(0).contentWindow.schedule_get_holiday();
+	        }
 	    </script>
 	</head>
 	<!-- <body class="mainbody" style="height: 89%;"> -->
 	<body class="mainbody" style="height: 95%; overflow:hidden;margin-left:0px;margin-right:0px">
-	 <h1 style="margin-left:10px;"><spring:message code='ezSchedule.t4003' /></h1>
+	 <h1 style="margin-left:10px;margin-right:10px;"><spring:message code='ezSchedule.t4003' />
+	    <select class="companySelect" id="ListCompany" onchange="changeCompany()">
+	    	<c:forEach var="item" items="${list}">
+  				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+			</c:forEach>
+	    </select>
+	 </h1>
 		<div style="padding-left:10px;padding-right:10px">
 		    <!-- <h1><span id='mailBoxInfo'></span></h1> -->
 		    <div class="portlet_tabnew01">
 		        <div class="portlet_tabnew01_top" id="tab1"></div>
 		    </div>
+		    <%-- <c:if test="${holidayType eq 'a'}">
+			</c:if> --%>
 		</div>    
 	    <iframe id="FBoard_ifrm" style="width: 100%; height: 100%;" frameborder="0"></iframe>
 	</body>

@@ -109,7 +109,6 @@
 			</c:otherwise>
 		</c:choose>
 		<!-- 표준모듈 (2007.03.15) 수정: .NET Framework 2.0에서는 RegisterStartupScript 메서드 지원하지 않음. -->
-		${script1}
 		<div id="objectProgressDiv"></div>
 		<c:if test="${approvalFlag == 'G' && useHWP == 'YES'}">
 			<iframe id=if_Progress style="display:none" src="/ezPortal/progress.do"></iframe>
@@ -148,6 +147,10 @@
 			document.onselectstart = function () { return false; };
 			
 			var windowOnloadFunc = function() {
+				
+				/* 2018-12-27 홍승비 - 공지사항 팝업 동작 위치 수정 */
+				${script1}
+				
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
 			        document.body.style.MozUserSelect = 'none';
 			        document.body.style.WebkitUserSelect = 'none';

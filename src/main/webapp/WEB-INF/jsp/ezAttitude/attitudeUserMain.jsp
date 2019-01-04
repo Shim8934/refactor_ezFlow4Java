@@ -324,6 +324,12 @@
 		        	$("#popup").css("left", popupX);
 		        	$("#popupDay").css("left", popupDayX);
 		        });
+				
+				//리스트형 날짜 클릭시 근태작성창
+				$(document).on('dblclick', '#contentlist .mainlist tr td:nth-child(6n - 5)', function() {
+					pMode = "new";
+					attitudeNewItem(this);
+				});
 			});
 			
 			window.onload = function() {
@@ -544,21 +550,27 @@
 				$.ajax({
 					type : "POST",
 					dataType : "json",
-					async : true,
+					async : false,
 					url : "/ezAttitude/getHolidayList.do",
 					data : {
 						isRest : "all"
 					},
 					success : function(result) {
 						for (var i = 0; i < result.holidayList.length; i++) {
+						var issolar = "";
+						if (result.holidayList[i].isSolar == "1") {
+	                        issolar = "1";
+						} else {
+	                        issolar = "2";
+						}
 							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
 								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
 																  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
-																  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
+																  issolar, result.holidayList[i].isRest == 1 ? true : false));
 							} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
 								yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
 																		  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
-																		  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
+																		  result.holidayList[i].holidayDate.substring(8,10), issolar,
 																		  result.holidayList[i].isRest == 1 ? true : false));
 							}
 						}
@@ -1704,18 +1716,27 @@
 	    			if (j.length == 1) {
 	    				j = "0" + j
 	    			}
+					var oThisDate = new Date(year + "-" + month + "-" + j);
+	    			var memorialResult = setMemorial(oThisDate);
+	    			var isholiday = memorialResult[0];
+	    			var holidayname = memorialResult[1];
+	    			var holidayname2 = memorialResult[2];
 	    			
 	    			//토요일 일요일은 text색상이 다름.
 	    			var dayClass = "";
 	    			var dayIdx = new Date(year + "-" + month + "-" + j).getDay();
-	    			if (dayIdx == 6) {
-	    				dayClass = "sat";	
-	    			} else if (dayIdx == 0) {
+	    			if (dayIdx == 0 || isholiday) {
 	    				dayClass = "sun";
+	    			} else if (dayIdx == 6) {
+	    				dayClass = "sat";	
 	    			}
 	    			
 	    			if (year + "-" + month + "-" + j == today) {
-	    				dayClass = "today";
+	    				if (isholiday) {
+		    				dayClass = "today sun";
+	    				} else {
+	    					dayClass = "today";
+	    				}
 	    			}
 	    			
 	    			//음력
@@ -1734,9 +1755,9 @@
 	    			
 	    			tbodyHtml += "<tr class='" + dayClass + "' id='" + year + "-" + month + "-" + j + "'>";
 	    			if (LunarUse) {
-		    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ")</span></td>";//날짜
+    					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%;cursor:pointer' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ") </span></td>";//날짜
 	    			} else {
-		    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
+    					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%;cursor:pointer'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
 	    			}
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
 	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
@@ -1988,6 +2009,71 @@
 					});
 				}
 			}
+			
+			function setMemorial(oThisDate) {
+				var tempyear = oThisDate.getFullYear();
+				var lunarDate; // 음력 날짜를 저장하기 위한 변수
+				var lunarDate2; // 음력월.음력일 => 달력에 음력일을 표시해주기 위한 변수
+				if (tempyear > 1800 && tempyear <= 2101) { // 음력에 대한 날짜 제공은 1800 ~ 2101
+					lunarDate = lunarCalc(tempyear, oThisDate.getMonth() + 1, oThisDate.getDate(), 1);
+					
+					lunarDate2 = lunarDate.month + "." + lunarDate.day;
+					if (lunarDate.leapMonth) {
+						lunarDate2 = "윤" + lunarDate2;
+					}
+				}
+				
+				var tempmemorial = memorialDayCheck(oThisDate, lunarDate); // 날짜에 해당하는 휴일을 가져온다.
+				var tempyearmemorial = yearmemorialDayCheck(oThisDate, lunarDate);
+				
+				var isholiday = false;
+				var holidayname = "";
+				var holidayname2 = "";
+				
+				for (var i = 0; i < tempmemorial.length; i++) {
+			        memorial = tempmemorial[i];
+			        if (uselang == "1") {
+			            if (i == tempmemorial.length - 1) {
+			            	holidayname += memorial.name;
+			            } else {
+			            	holidayname += memorial.name + ", ";
+			            }
+			        } else {
+			            if (i == tempmemorial.length - 1) {
+			            	holidayname += memorial.name2;
+			            } else {
+			            	holidayname += memorial.name2 + ", ";
+			            }
+			        }
+			        if (memorial.holiday) {
+			        	isholiday = true;
+			        }
+			    }
+	
+			    for (var i = 0; i < tempyearmemorial.length; i++) {
+			        yearmemorial = tempyearmemorial[i];
+			        if (uselang == "1") {
+			            if (i == tempyearmemorial.length - 1) {
+			            	holidayname2 += yearmemorial.name;
+			            } else {
+			            	holidayname2 += yearmemorial.name + ", ";
+			            }
+			        } else {
+			            if (i == tempyearmemorial.length - 1) {
+			            	holidayname2 += yearmemorial.name2;
+			            } else {
+			            	holidayname2 += yearmemorial.name2 + ", ";
+			            }
+			        }
+			        if (yearmemorial.holiday) {
+			        	isholiday = true;
+			        }
+		    	}
+			    
+			    var result = [isholiday, holidayname, holidayname2];
+			    
+			    return result;
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0">
@@ -2049,31 +2135,37 @@
 		        	<dt class="timeInfoPic">
 		        		<c:choose>
 							<c:when test="${not empty userInfo.userFileUrl }">
-								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${userInfo.userFileUrl }" width="34px" height="34px">
+								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${userInfo.userFileUrl }" width="48px" height="48px">
 							</c:when>
 							<c:otherwise>
-								<img src="/images/kr/main/bestEmployee_pic_none.png" width="34px" height="34px">
+								<img src="/images/kr/main/bestEmployee_pic_none.png" width="48px" height="48px">
 							</c:otherwise>
 						</c:choose>
 		        	</dt>
-		            <dd class="timeInfoText"><span>${userInfo.displayName } ${userInfo.title } ㅣ ${userInfo.deptName }</span></dd>
+		            <dd class="timeInfoText"><span>${userInfo.displayName }</span><span>${userInfo.title }</span><span style="color:#aaa9a9">${userInfo.deptName }</span></dd>
 		        </dl>
 		        <dl class="timeIcconDL">
 		        	<dt class="timeIconDT"><img src="/images/ImgIcon/late_icon.png"></dt>
 		            <dd class="timeIconDD">지각 <span class="timeCountR" id="FA02">0</span></dd>
 		        </dl>
-		        <dl class="timeIcconDL">
-		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
-		            <dd class="timeIconDD">연차 <span class="timeCountR" id="FA11">0</span></dd>
-		        </dl>
-		        <dl class="timeIcconDL">
-		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
-		            <dd class="timeIconDD">오전반차 <span class="timeCountR" id="FA12">0</span></dd>
-		        </dl>
-		        <dl class="timeIcconDL">
-		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
-		            <dd class="timeIconDD">오후반차 <span class="timeCountR" id="FA13">0</span></dd>
-		        </dl>
+		        <c:if test="${A11typeInfo.isuse eq '1' }">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
+			            <dd class="timeIconDD">연차 <span class="timeCountR" id="FA11">0</span></dd>
+			        </dl>
+		        </c:if>
+		        <c:if test="${A12typeInfo.isuse eq '1' }">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
+			            <dd class="timeIconDD">오전반차 <span class="timeCountR" id="FA12">0</span></dd>
+			        </dl>
+			    </c:if>
+			    <c:if test="${A13typeInfo.isuse eq '1' }">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
+			            <dd class="timeIconDD">오후반차 <span class="timeCountR" id="FA13">0</span></dd>
+			        </dl>
+			    </c:if>
 		    </div>
 	    </c:if>
 		
@@ -2086,7 +2178,7 @@
 				<td style="vertical-align:top;">
 					<c:if test="${deptFlag != 'true'}">
 						<div style="vertical-align:top;width:0px;height:0px;overflow:hidden;" class="time_stats" id="attiStatis"></div>
-						<div id="slideBtn" style="position:absolute;top:171px;right:2px;"><img id="slideImg" onclick="javascript:slideTd()" src="/images/ImgIcon/slideLeft.png" /></div>
+						<div id="slideBtn" style="position:absolute;top:164px;right:2px;"><img id="slideImg" onclick="javascript:slideTd()" src="/images/ImgIcon/slideLeft.png" /></div>
 					</c:if>
 					<c:if test="${deptFlag == 'true'}">
 						<div style="vertical-align:top;" class="time_stats" id="attiStatis"></div>

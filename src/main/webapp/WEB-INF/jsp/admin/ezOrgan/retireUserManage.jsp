@@ -32,7 +32,6 @@
 			var strListInfo = "";
 			var CheckBoxArr = new Array();
 			var companyId = "${companyId}";
-			var changePassLength = 0;
 			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -167,7 +166,7 @@
 		            	            alert("<spring:message code='ezOrgan.t30' />")
 		            	        }
 		            			
-		    				    refresh_onclick();		            			
+		            	        retireUserList();		          // 2018-12-27 김민성 - 사원 삭제 후 refresh -> 리스트 조회로 변경  			
 		            	    }, 100);
 		            	},
 		            	error : function() {
@@ -178,7 +177,7 @@
 		            	    setTimeout(function() {
 		            			alert("<spring:message code='ezOrgan.t30' />");
 		            			
-		    				    refresh_onclick();		            			
+		            			retireUserList();		            			
 		            	    }, 100);
 		            	}
 		            });					
@@ -261,7 +260,7 @@
 			        	}
 			        });
 
-			        refresh_onclick();
+			        retireUserList();
 			    }
 			}
 			
@@ -269,14 +268,14 @@
 			
 			function mod_password() {
 			    funCheckBox('get');
+			    var length = CheckBoxArr.length;
 			    
-			    if (CheckBoxArr.length == 0) {
+			    if (length == 0) {
 			        alert("<spring:message code='ezOrgan.t39' />"); 
 			        return;
-			    } else {
-				    changePassLength = CheckBoxArr.length; 
 			    }
 			    
+		        inputpassword_dialogArguments[0] = length + "<spring:message code='ezOrgan.t40' />";
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
 		        var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 192));
 		        try { OpenWin.focus(); } catch (e) { }			    
@@ -293,7 +292,7 @@
 			        	if (i != length-1) {
 			        		data += ",";
 			        	}
-			        }		            
+			        }
 		            
 		            $.ajax({
 		            	type : "POST",
