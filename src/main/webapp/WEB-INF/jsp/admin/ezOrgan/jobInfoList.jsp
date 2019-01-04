@@ -27,7 +27,7 @@
 		.preview_content {width: 97%; height: 630px; border: solid 0px green; display: inline-block; padding:10px;}
 		.preview_nodata {position: absolute; display: inline-block; width: 49%; vertical-align: middle; text-align: center; margin-top: 70px;}
 		.mainlist_free tr td:nth-child(5) {padding-left: 12px;}
-		#lvJobPositionList, #lvJobTitleList {min-width: 500px;}
+		#lvJobPositionList, #lvJobTitleList {min-width: 400px;}
 		#lvJobTitleUserList, #lvJobPositionUserList {min-width: 360px;}
 	</style>
 	<script type="text/javascript">
@@ -608,9 +608,22 @@
 				});
 			}
 		}
+		
+		$(window).on("resize", function(){
+			windowResize();
+		});
+		
+		function windowResize() {
+			var height = document.documentElement.clientHeight - 135;
+			document.getElementById("JobListView").style.height = height + "px";
+		}
+		
+		$(function(){
+			windowResize();
+		});
 	</script>
 </head>
-<body class="mainbody">
+<body class="mainbody" style="overflow: hidden;">
 	<h1>
 		<spring:message code='ezOrgan.csj01' />
 		<select class="companySelect" id="ListCompany" onChange="compChange()">
