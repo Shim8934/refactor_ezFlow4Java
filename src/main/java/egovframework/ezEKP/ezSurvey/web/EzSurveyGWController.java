@@ -440,10 +440,11 @@ public class EzSurveyGWController {
 		
 		try {
 			JSONObject survey   = (JSONObject) jp.parse(surveyItem.toJSONString());
-			JSONObject infor    = survey.get("infor")     != null ? (JSONObject) survey.get("infor")    : null;
-			JSONArray questions = survey.get("questions") != null ? (JSONArray) survey.get("questions") : null;
-			String serverName   = request.getHeader("host-name") != null ? request.getHeader("host-name")         : "";
-			String userId       = surveyItem.get("userId")       != null ? surveyItem.get("userId").toString()    : "";
+			long surveyId       = survey.get("surveyId")         != null ? (Long)survey.get("surveyId")        : -1;
+			JSONObject infor    = survey.get("infor")            != null ? (JSONObject) survey.get("infor")    : null;
+			JSONArray questions = survey.get("questions")        != null ? (JSONArray) survey.get("questions") : null;
+			String serverName   = request.getHeader("host-name") != null ? request.getHeader("host-name")      : "";
+			String userId       = surveyItem.get("userId")       != null ? surveyItem.get("userId").toString() : "";
 			
 			logger.debug("ServerName: " + serverName + " || User id: " + userId + " || question list: " + questions.toJSONString() + " || survey information: " + infor.toJSONString());
 			
@@ -477,7 +478,7 @@ public class EzSurveyGWController {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = surveyService.saveSurveyItem(realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, userInfo);
+			result           = surveyService.saveSurveyItem(realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

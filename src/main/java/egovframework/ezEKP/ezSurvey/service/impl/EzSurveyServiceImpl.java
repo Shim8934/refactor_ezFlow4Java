@@ -313,25 +313,28 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public synchronized JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, LoginVO userInfo) throws Exception {
-		JSONObject result              = new JSONObject();
-		int tenantId                   = userInfo.getTenantId();
-		String companyId               = userInfo.getCompanyID();
-		String userId                  = userInfo.getId();
-		String offset                  = userInfo.getOffset();
-		String primary                 = userInfo.getPrimary();
-		SurveyVO survey                = new SurveyVO();
-		SurveyParticipantVO surveyUser = new SurveyParticipantVO();
-		SimpleDateFormat formatter     = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String timeUTC                 = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
-		String startDateUTC            = commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true);
-		String endDateUTC              =  commonUtil.getDateStringInUTC(endDate  + " 23:59:59", offset, true);
-		Map<String,Object> map         = new HashMap<String, Object>();
+	public synchronized JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, LoginVO userInfo) throws Exception {
+		JSONObject result = new JSONObject();
+		int tenantId                         = userInfo.getTenantId();
+		String companyId                     = userInfo.getCompanyID();
+		String userId                        = userInfo.getId();
+		String offset                        = userInfo.getOffset();
+		String primary                       = userInfo.getPrimary();
+		SurveyVO survey                      = new SurveyVO();
+		SimpleDateFormat formatter           = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeUTC                       = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
+		String startDateUTC                  = commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true);
+		String endDateUTC                    =  commonUtil.getDateStringInUTC(endDate  + " 23:59:59", offset, true);
+		List<AttachVO> totalAttach           = new ArrayList<>();
+		List<QuestionVO> totalQuestions      = new ArrayList<>();
+		List<OptionVO> totalOptions          = new ArrayList<>();
+		List<SurveyParticipantVO> totalUsers = new ArrayList<>();
+		Map<String,Object> map               = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId" , tenantId);
-		long maxSurveyId               = ezSurveyDAO.getMaxSurveyId(map);
-		long maxQuestionId             = ezSurveyDAO.getMaxQuestionId(map);
-		long maxOptionId               = ezSurveyDAO.getMaxOptionId(map);
+		long maxQuestionId                  = ezSurveyDAO.getMaxQuestionId(map);
+		long maxOptionId                    = ezSurveyDAO.getMaxOptionId(map);
+		long crrSurveyId                    = surveyId != -1 ? surveyId : ezSurveyDAO.getMaxSurveyId(map);
 		
 		survey.setTenantId(tenantId);
 		survey.setCompanyId(companyId);
@@ -378,7 +381,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				int logicNum         = optionObj.get("logic")     != null ? ((Long)optionObj.get("logic")).intValue()     : -1;
 				OptionVO option      = new OptionVO();
 				option.setQuestionId(maxQuestionId);
-				option.setSurveyId(maxSurveyId);
+				option.setSurveyId(crrSurveyId);
 				option.setQuestionType(questionType);
 				option.setContent(optionContent);
 				option.setLevel(optionLevel);
@@ -394,13 +397,13 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 					option.setColLevel(colLevel);
 				}
 				
-				//Save option attach file
+				//Add option attach file
 				if (optionAtt != null) {
-					saveAttachFile(realPath, optionAtt, maxOptionId, companyId, tenantId, "option");
+					saveAttachFile(realPath, optionAtt, maxOptionId, companyId, tenantId, "option", totalAttach);
 				}
 				
-				//Save option
-				ezSurveyDAO.saveOptionItem(option);
+				//Add option
+				totalOptions.add(option);
 			}
 			
 			String questionTitle = questionObj.get("content").toString();
@@ -408,7 +411,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			int questionOrder    = ((Long)questionObj.get("level")).intValue();
 			QuestionVO question  = new QuestionVO();
 			
-			question.setSurveyId(maxSurveyId);
+			question.setSurveyId(crrSurveyId);
 			question.setTenantId(tenantId);
 			question.setCompanyId(companyId);
 			question.setContent(questionTitle);
@@ -424,30 +427,31 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				}
 			}
 			
-			//Save question attach file
+			//Add question attach file
 			if (questionAtt != null) {
-				saveAttachFile(realPath, questionAtt, maxQuestionId, companyId, tenantId, "question");
+				saveAttachFile(realPath, questionAtt, maxQuestionId, companyId, tenantId, "question", totalAttach);
 			}
 			
-			//Save question
-			ezSurveyDAO.saveQuestionItem(question);
+			//Add question
+			totalQuestions.add(question);
 		}
 		
 		//Save survey attach list
 		if (attchList != null && attchList.size() > 0) {
 			for (int i = 0; i < attchList.size(); i++) {
 				JSONObject surveyAtt = (JSONObject)attchList.get(i);
-				saveAttachFile(realPath, surveyAtt, maxSurveyId, companyId, tenantId, "survey");
+				saveAttachFile(realPath, surveyAtt, crrSurveyId, companyId, tenantId, "survey", totalAttach);
 			}
 			
 			survey.setAttachFlag(1);
 		}
 		
-		//Save survey users
+		//Add survey users
 		if (userFlag == 1) {
 			for (int i = 0; i < users.size(); i++) {
-				JSONObject userObj = (JSONObject)users.get(i);
-				surveyUser.setSurveyId(maxSurveyId);
+				JSONObject userObj             = (JSONObject)users.get(i);
+				SurveyParticipantVO surveyUser = new SurveyParticipantVO();
+				surveyUser.setSurveyId(crrSurveyId);
 				surveyUser.setCompanyId(companyId);
 				surveyUser.setTenantId(tenantId);
 				surveyUser.setUserId(userObj.get("userId").toString());
@@ -458,13 +462,13 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				surveyUser.setDeptName1(userObj.get("deptName1").toString());
 				surveyUser.setDeptName2(userObj.get("deptName2").toString());
 				surveyUser.setEmail(userObj.get("email").toString());
-				
-				ezSurveyDAO.saveSurveyUsers(surveyUser);
+				totalUsers.add(surveyUser);
 			}
 		}
 		else {
-			OrganDeptVO company = ezOrganService.getDeptInfo(companyId, primary, tenantId);
-			surveyUser.setSurveyId(maxSurveyId);
+			OrganDeptVO company            = ezOrganService.getDeptInfo(companyId, primary, tenantId);
+			SurveyParticipantVO surveyUser = new SurveyParticipantVO();
+			surveyUser.setSurveyId(crrSurveyId);
 			surveyUser.setCompanyId(companyId);
 			surveyUser.setTenantId(tenantId);
 			surveyUser.setUserId(companyId);
@@ -475,19 +479,48 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			surveyUser.setDeptName1(company.getDisplayName1());
 			surveyUser.setDeptName2(company.getDisplayName2());
 			surveyUser.setEmail(company.getMail());
-			
-			ezSurveyDAO.saveSurveyUsers(surveyUser);
+			totalUsers.add(surveyUser);
 		}
 		
-		//Save survey
-		ezSurveyDAO.saveSurveyItem(survey);
+		//Check modify/save mode
+		if (surveyId != -1) {
+			//Remove current information
+			//ezSurveyDAO.delete
+			
+			//Update survey
+			//ezSurveyDAO.updateSurveyItem(survey);
+		}
+		else {
+			//Save survey
+			ezSurveyDAO.saveSurveyItem(survey);
+		}
+		
+		//Save attach
+		for (AttachVO attach : totalAttach) {
+			ezSurveyDAO.saveAttachItem(attach);
+		}
+		
+		//Save options
+		for (OptionVO option : totalOptions) {
+			ezSurveyDAO.saveOptionItem(option);
+		}
+		
+		//Save questions
+		for (QuestionVO question : totalQuestions) {
+			ezSurveyDAO.saveQuestionItem(question);
+		}
+		
+		//Save users
+		for (SurveyParticipantVO surveyUser : totalUsers) {
+			ezSurveyDAO.saveSurveyUsers(surveyUser);
+		}
 		
 		result.put("status", "ok");
 		result.put("code", 0);
 		return result;
 	}
 	
-	private synchronized void saveAttachFile(String realPath, JSONObject attachObj, long targetId, String companyId, int tenantId, String targetType) {
+	private synchronized void saveAttachFile(String realPath, JSONObject attachObj, long targetId, String companyId, int tenantId, String targetType, List<AttachVO> totalAttach) {
 		String fileName = attachObj.get("fname").toString();
 		String filePath = attachObj.get("fpath").toString();
 		File attFile    = new File(realPath + filePath);
@@ -502,8 +535,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		attach.setFileSize(fileSize);
 		attach.setFname(fileName);
 		
-		//Save attach
-		ezSurveyDAO.saveAttachItem(attach);
+		totalAttach.add(attach);
 	}
 	
 	@SuppressWarnings("unchecked")

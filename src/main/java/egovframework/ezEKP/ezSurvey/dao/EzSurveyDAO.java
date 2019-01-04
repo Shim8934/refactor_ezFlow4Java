@@ -69,6 +69,10 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		insert("EzSurveyDAO.saveSurveyItem", survey);
 	}
 	
+	public void updateSurveyItem(SurveyVO survey) {
+		update("EzSurveyDAO.updateSurveyItem", survey);
+	}
+	
 	public long getMaxSurveyId(Map<String, Object> map) {
 		return (long)select("EzSurveyDAO.getMaxSurveyId", map);
 	}
@@ -132,5 +136,4 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public List<AttachVO> getAllAttachForQsAndOpt(Map<String, Object> map) {
 		return (List<AttachVO>)list("EzSurveyDAO.getAllAttachForQsAndOpt", map);
 	}
-	
 }
