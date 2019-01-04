@@ -1570,13 +1570,16 @@ public class EzEmailAdminController {
 				// 저장 공간은 차지하지만 해당 계정이 사용되지는 않는다. 
 				
 				// 퇴직자 계정을 삭제한다.
-				ezEmailUserAdminService.removeUser(mailAddr);
+				rc = ezEmailUserAdminService.removeUser(mailAddr);
+				logger.debug("removeUser rc=" + rc);
 				
 				// 해당 사용자의 메일박스들을 모두 제거한다.
-				ezEmailUserAdminService.removeUserAllMailboxes(mailAddr);
+				rc = ezEmailUserAdminService.removeUserAllMailboxes(mailAddr);
+				logger.debug("removeUserAllMailboxes rc=" + rc);
 				
 				// 해당 사용자의 개인주소록 및 주소록 관련 설정을 모두 제거한다.
-				ezAddressService.removeUserAddress(mailAddr);
+				rc = ezAddressService.removeUserAddress(mailAddr);
+				logger.debug("removeUserAddress rc=" + rc);
 			}
 		
 		} catch (Exception e) {
