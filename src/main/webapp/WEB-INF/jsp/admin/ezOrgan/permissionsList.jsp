@@ -114,11 +114,16 @@
 		                listview.DataBind("AdminListView");
 		                
 		                var a = document.getElementById("lvPermissionList_TR_0");
-		                a.style.backgroundColor = "rgb(255, 255, 255)";
-		                a.setAttribute("selected", "false");
-		                $("#lvPermissionList_TR_0").mouseout(function(){
-		                	$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
-		                });
+		                
+		                if (a== "" || a == null) {
+		                	
+		                } else {
+		                	a.style.backgroundColor = "rgb(255, 255, 255)";
+		                	a.setAttribute("selected", "false");
+		                	$("#lvPermissionList_TR_0").mouseout(function(){
+		                		$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
+		                	});
+		                }
 		                checkbox_header();
 		                checkItems();
 		                makePageSelPage();
@@ -142,6 +147,10 @@
 				var i = 0;
 				for (i; i < cnt; i++) {
 					var seq = acList.children[1].children[i].children[0].innerHTML;
+					
+					if (seq == "데이터가 없습니다.") {
+						return;
+					}
 					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" 
 					+ seq 
 					+ "' value='" 
@@ -608,7 +617,7 @@
 					return;
 				}
 				
-		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do","chooseDeletege", 800, 500);
+		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do","chooseDeletege", 400, 300);
 		    }
 		    
 		    function choose_Del_complete(data) {
