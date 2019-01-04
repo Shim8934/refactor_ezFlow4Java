@@ -319,38 +319,14 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		//Update status for all sub folders
 		ezWebFolderDAO.updateSubFolderUseStatus(map);
 	}
-	
-//	@Override
-//	public List<FileVO> getDuplicateNameFiles(List<String> fileNames, String parentFolderId, String offset, int tenantId) throws Exception {
-//	Map<String, Object> sqlParams = new HashMap<>();
-//
-//	sqlParams.put("fileNames", fileNames);
-//	sqlParams.put("parentFolderId", parentFolderId);
-//	sqlParams.put("offset", offset);
-//		sqlParams.put("tenantId", tenantId);
-//
-//		return ezWebFolderDAO.getDuplicateNameFiles(sqlParams);
-//	}
-//	
-//	@Override
-//	public List<FolderVO> getDuplicateNameFolders(List<String> folderNames, String parentFolderId, String offset, int tenantId) throws Exception {
-//		Map<String, Object> sqlParams = new HashMap<>();
-//
-//	sqlParams.put("folderNames", folderNames);
-//	sqlParams.put("parentFolderId", parentFolderId);
-//	sqlParams.put("offset", offset);
-//	sqlParams.put("tenantId", tenantId);
-//
-//	return ezWebFolderDAO.getDuplicateNameFolders(sqlParams);
-//}
 
-@Override
-public List<DuplicateInfoVO> getAllDuplicateInfo(String fileName, String targetFolderId, String offset, int tenantId) throws Exception {
-	Map<String, Object> sqlParams = new HashMap<>();
-	
-	sqlParams.put("fileName", fileName);
-	sqlParams.put("targetFolderId", targetFolderId);
-	sqlParams.put("offset", offset);
+	@Override
+	public List<DuplicateInfoVO> getAllDuplicateInfo(String fileName, String targetFolderId, String offset, int tenantId) throws Exception {
+		Map<String, Object> sqlParams = new HashMap<>();
+		
+		sqlParams.put("fileName", fileName);
+		sqlParams.put("targetFolderId", targetFolderId);
+		sqlParams.put("offset", commonUtil.getMinuteUTC(offset));
 		sqlParams.put("tenantId", tenantId);
 		
 		return ezWebFolderDAO.getAllDuplicateInfo(sqlParams);
@@ -366,7 +342,7 @@ public List<DuplicateInfoVO> getAllDuplicateInfo(String fileName, String targetF
 		Map<String, Object> sqlParams = new HashMap<>();
 
 		sqlParams.put("targetFolderId", targetFolderId);
-		sqlParams.put("offset", offset);
+		sqlParams.put("offset", commonUtil.getMinuteUTC(offset));
 		sqlParams.put("tenantId", tenantId);
 		// nullable
 		sqlParams.put("newName", newName);

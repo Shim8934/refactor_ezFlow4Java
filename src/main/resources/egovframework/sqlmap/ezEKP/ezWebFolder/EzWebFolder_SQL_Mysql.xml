@@ -436,80 +436,6 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO.getDuplicateNameFiles" resultMap="fileVO2">
-		<![CDATA[
-			SELECT
-				f.FILE_ID,
-				f.FILE_NAME,
-				f.FILE_PATH,
-				f.FILE_SIZE,
-				f.TYPE_ID,
-				f.DOWN_COUNT,
-				f.FILE_EXT,
-				f.FOLDER_ID,
-				f.USE_STATUS,
-				f.CREATE_ID,
-				f.CREATE_NAME1,
-				f.CREATE_NAME2,
-				DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				f.UPDATE_ID,
-				DATE_ADD(f.UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
-				t.TYPE_ID AS FILETYPE_ID,
-				CASE WHEN t.TYPE_NAME IS NOT NULL THEN t.TYPE_NAME ELSE (SELECT TYPE_NAME FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_NAME,
-				CASE WHEN t.TYPE_ICON IS NOT NULL THEN t.TYPE_ICON ELSE (SELECT TYPE_ICON FROM TBL_WEBFOLDER_FILETYPE WHERE FILE_EXT = 'unknown' AND TENANT_ID = #tenantId#) END AS FILETYPE_ICON,
-				CONCAT(#originalPath#, f.FILE_NAME) AS FILE_POSITION,
-				'' AS FOLDER_NAME,
-				'' AS FOLDER_PATH,
-				f.DELETER_ID,
-				f.TENANT_ID
-			FROM
-				TBL_WEBFOLDER_FILE f LEFT JOIN TBL_WEBFOLDER_FILETYPE t ON f.FILE_EXT = t.FILE_EXT AND f.TENANT_ID = t.TENANT_ID
-			WHERE
-				f.FOLDER_ID = #parentFolderId#
-				AND f.USE_STATUS = 'Y'
-				AND f.TENANT_ID = #tenantId#
-				AND f.FILE_NAME IN
-		]]>
-		<iterate property="fileNames" open="(" close=")" conjunction=",">
-			#fileNames[]#
-		</iterate>
-	</select>
-	
-	<select id="EzWebFolderDAO.getDuplicateNameFolders" resultMap="folderVO">
-		<![CDATA[
-			SELECT
-				FOLDER_ID                                       AS FOLDER_ID,
-				FOLDER_NAME1                                    AS FOLDER_NAME1,
-				FOLDER_NAME2                                    AS FOLDER_NAME2,
-				FOLDER_TYPE                                     AS FOLDER_TYPE,
-				FOLDER_PATH                                     AS FOLDER_PATH,
-				FOLDER_STEP                                     AS FOLDER_STEP,
-				FOLDER_LEVEL                                    AS FOLDER_LEVEL,
-				FOLDER_UPPER                                    AS FOLDER_UPPER,
-				USE_STATUS                                      AS USE_STATUS,
-				OWNER_ID                                        AS OWNER_ID,
-				CREATE_ID                                       AS CREATE_ID,
-				DATE_ADD(CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
-				CREATE_NAME1                                    AS CREATE_NAME1,
-				CREATE_NAME2                                    AS CREATE_NAME2,
-				UPDATE_ID                                       AS UPDATE_ID,
-				DATE_ADD(UPDATE_DATE, INTERVAL #offset# MINUTE) AS UPDATE_DATE,
-				COMPANY_ID                                      AS COMPANY_ID,
-				DELETER_ID                                      AS DELETER_ID,
-				TENANT_ID                                       AS TENANT_ID
-			FROM
-				TBL_WEBFOLDER_FOLDER
-			WHERE
-				FOLDER_UPPER = #parentFolderId#
-				AND USE_STATUS = 'Y'
-				AND TENANT_ID = #tenantId#
-				AND FOLDER_NAME1 IN
-		]]>
-		<iterate property="folderNames" open="(" close=")" conjunction=",">
-			#folderNames[]#
-		</iterate>
-	</select>
-	
 	<select id="EzWebFolderDAO.getAllDuplicateInfo" resultClass="duplicateInfoVO">
 		SELECT
 			OLD.FOLDER_NAME1 AS FILENAME,
@@ -611,7 +537,7 @@
 			AND OLD.USE_STATUS = 'Y'
 		WHERE
 			NEW.FILE_ID = #originElementId#
-			AND NEW.TENANT_ID = #tenantId#;
+			AND NEW.TENANT_ID = #tenantId#
 	</select>
 	
 	<select id="EzWebFolderDAO.getAllDuplicateInfoForFolder" resultClass="duplicateInfoVO">
@@ -673,7 +599,7 @@
 			AND OLD.USE_STATUS = 'Y'
 		WHERE
 			NEW.FOLDER_ID = #originElementId#
-			AND NEW.TENANT_ID = #tenantId#;
+			AND NEW.TENANT_ID = #tenantId#
 	</select>
 	
 	<select id="EzWebFolderDAO.getAllFilesInFolder" resultMap="fileVO2">

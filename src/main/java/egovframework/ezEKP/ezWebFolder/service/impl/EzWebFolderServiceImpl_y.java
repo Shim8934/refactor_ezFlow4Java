@@ -864,7 +864,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		map.put("tenantId", tenantId);
 		map.put("comId", comId);
 		map.put("userId", userId);
-		map.put("offset", offset);
+		map.put("offset", commonUtil.getMinuteUTC(offset));
 		map.put("primary", primary);
 		
 		if (fldfile.equals("fld")) {
