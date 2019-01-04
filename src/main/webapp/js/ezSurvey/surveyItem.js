@@ -208,10 +208,12 @@ var SurveyItem = function() {
 		var delBttn   = document.getElementById("deleteBttn");
 		var reuseBttn = document.getElementById("reuseBttn");
 		var srchBttn  = document.getElementById("searchBttn");
-		if (addBttn)   {addBttn.firstElementChild.onclick   = function(e) {createNewSurvey()   ;};}
-		if (delBttn)   {delBttn.firstElementChild.onclick   = function(e) {deleteFileConfirm() ;};}
-		if (reuseBttn) {reuseBttn.firstElementChild.onclick = function(e) {reuseSurveyConfirm();};}
-		if (srchBttn)  {srchBttn.firstElementChild.onclick  = function(e) {toggleSearchPanel() ;};}
+		var modifyBttn  = document.getElementById("modifyBttn");
+		if (addBttn)    {addBttn.firstElementChild.onclick       = function(e) {createNewSurvey()    ;};}
+		if (delBttn)    {delBttn.firstElementChild.onclick       = function(e) {deleteFileConfirm()  ;};}
+		if (reuseBttn)  {reuseBttn.firstElementChild.onclick     = function(e) {reuseSurveyConfirm() ;};}
+		if (srchBttn)   {srchBttn.firstElementChild.onclick      = function(e) {toggleSearchPanel()  ;};}
+		if (modifyBttn) {modifyBttn.firstElementChild.onclick    = function(e) {modifySurveyConfirm();};}
 		
 		$("#Sdatepicker").datepicker(datepickerSt);
 		$("#Edatepicker").datepicker(datepickerSt);
@@ -605,7 +607,14 @@ var SurveyItem = function() {
 		var itemArr = getSelectedItems();
 		if (itemArr.length == 0) {alert(SurveyMessages.strItemErr) ; return;}
 		if (itemArr.length > 1)  {alert(SurveyMessages.strItemErr1); return;}
-		window.parent.frames["right"].location.href = "/ezSurvey/ReuseItem.do?itemId=" + itemArr[0];
+		window.parent.frames["right"].location.href = "/ezSurvey/reuseItem.do?itemId=" + itemArr[0];
+	}
+	
+	function modifySurveyConfirm() {
+		var itemArr = getSelectedItems();
+		if (itemArr.length == 0) {alert(SurveyMessages.strItemErr) ; return;}
+		if (itemArr.length > 1)  {alert(SurveyMessages.strItemErr1); return;}
+		window.parent.frames["right"].location.href = "/ezSurvey/modifyItem.do?itemId=" + itemArr[0];
 	}
 	
 	function getSelectedItems() {

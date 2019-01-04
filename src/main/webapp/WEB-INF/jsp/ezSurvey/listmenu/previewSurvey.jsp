@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"  %>
 
 <div id="svTitle" class="svTitle">
 	<div class="sryFirst2"></div>
@@ -68,6 +69,16 @@
 	<div>
 		<div id="gotoSecondTab" class="survey-infbttn gotoSecondTab"><img src="/images/ezSurvey/prevstep.png"></div>
 		<div id="gotoThirdTab" class="survey-infbttn gotoThirdTab"><img src="/images/ezSurvey/prevstep.png"></div>
+		<%-- 
+		<c:choose>
+			<c:when test="${not empty survey}">
+				<div id="modifySurvey" class="survey-infbttn"><img src="/images/ezSurvey/save.png"></div>
+			</c:when>
+			<c:otherwise>
+				<div id="saveSurvey" class="survey-infbttn"><img src="/images/ezSurvey/save.png"></div>
+			</c:otherwise>
+		</c:choose>
+		 --%>
 		<div id="saveSurvey" class="survey-infbttn"><img src="/images/ezSurvey/save.png"></div>
 		<div id="cancelSurvey1" class="survey-infbttn cancelSurvey1"><img src="/images/ezSurvey/cancel.png"  ></div>
 	</div>

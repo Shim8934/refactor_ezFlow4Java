@@ -7,7 +7,6 @@ var SurveyCreate     = function() {
 	var userWindow   = null;
 	var lastScrollY  = 0;
 	var scrolled     = true;
-	var resuseFlag   = null;
 	var questionFile = new SurveyFile("images");
 	var config       = {modify : "modify", required : "required", action : "action",}
 	// 로직 설정 단계를 건너뛰었는가 여부, 확인 클릭시 Y로 변경
@@ -66,8 +65,9 @@ var SurveyCreate     = function() {
 	
 	function initEvents(reuseSurvey) {
 		console.log(reuseSurvey);
-		surveyItem      = reuseSurvey ? reuseSurvey.surveyId : null;
-		var fileDivElmt = document.getElementById("fileDiv");
+		surveyItem            = reuseSurvey ? reuseSurvey.surveyId   : null;
+		surveyObj["saveMode"] = reuseSurvey ? reuseSurvey.modifyFlag : 0;
+		var fileDivElmt       = document.getElementById("fileDiv");
 		
 		$("#startDate").datepicker(datepickerSt);
 		$("#endDate").datepicker(datepickerSt);

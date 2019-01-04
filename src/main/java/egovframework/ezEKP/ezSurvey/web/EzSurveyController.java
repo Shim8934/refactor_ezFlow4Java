@@ -124,7 +124,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return "ezSurvey/listmenu/surveyCreate";
 	}
 	
-	@RequestMapping(value="/ezSurvey/ReuseItem.do")
+	@RequestMapping(value="/ezSurvey/reuseItem.do")
 	public String jspGetReuseSurveyPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetReuseSurveyPage started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -139,6 +139,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		if (((Long)surveyInf.get("code")).intValue() == 0) {
 			JSONObject survey = (JSONObject)surveyInf.get("survey");
+			survey.put("modifyFlag", 0);
 			model.addAttribute("survey", survey);
 		}
 		else {
@@ -156,6 +157,42 @@ public class EzSurveyController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("jspGetReuseSurveyPage ended");
+		return "ezSurvey/listmenu/surveyCreate";
+	}
+	
+	@RequestMapping(value="/ezSurvey/modifyItem.do")
+	public String jspGetModifySurveyPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetModifySurveyPage started");
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		String itemId      = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
+		
+		if (itemId.equals("")) {
+			model.addAttribute("reasonMessage", "ezSurvey.err1");
+			return "ezSurvey/surveyAccessDenied";
+		}
+		
+		JSONObject surveyInf = surveyRestService.getSurveyInformation(request, user.getId(), itemId, "reuse");
+		
+		if (((Long)surveyInf.get("code")).intValue() == 0) {
+			JSONObject survey = (JSONObject)surveyInf.get("survey");
+			survey.put("modifyFlag", 1);
+			model.addAttribute("survey", survey);
+		}
+		else {
+			int reasonCode = ((Long)surveyInf.get("code")).intValue();
+			String messageCode = "";
+			
+			switch(reasonCode) {
+				case 1: messageCode = "ezSurvey.err1"; break;
+				case 2: messageCode = "ezSurvey.err2"; break;
+				case 3: messageCode = "ezSurvey.err3"; break;
+			}
+			
+			model.addAttribute("reasonMessage", messageCode);
+			return "ezSurvey/surveyAccessDenied";
+		}
+		
+		logger.debug("jspGetModifySurveyPage ended");
 		return "ezSurvey/listmenu/surveyCreate";
 	}
 	
@@ -489,5 +526,4 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("jsonSaveUserConfig end");
 		return resultObj.toString();
 	}
-	
 }
