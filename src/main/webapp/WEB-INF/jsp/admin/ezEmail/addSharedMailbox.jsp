@@ -119,6 +119,8 @@
 	            }
 	            
 	            ChangeListView_onClick(getOrganListType());
+	            
+	            document.getElementById("TextName").focus();
 	        }
 	
 	        function MakeXMLString(pStr) {
@@ -1286,18 +1288,18 @@
 		<table class="content">
 			<tr>
 				<th><spring:message code='ezEmail.sharedMailbox18' /></th>
-				<td style="width:60%"><input id="TextName" name="TextName" type="text" maxlength="24" class="txtClass" style="width:100%"></td>
+				<td style="width:60%"><input id="TextName" name="TextName" type="text" maxlength="24" class="txtClass" tabindex="1" style="width:100%"></td>
 				<th><spring:message code='ezEmail.lhm64' /></th>
-				<td style="width:40%"><input id="TextPassword" name="TextPassword" type="password" maxlength="24" class="txtClass" style="width:100%"></td>
+				<td style="width:40%"><input id="TextPassword" name="TextPassword" type="password" maxlength="24" class="txtClass" tabindex="3" style="width:100%"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezEmail.sharedMailbox19' /></th>
 				<td style="width:60%">
-					<input id="TextId" name="TextId" type="text" maxlength="24" class="txtClass" style="ime-mode: disabled; width:40%;">
+					<input id="TextId" name="TextId" type="text" maxlength="24" class="txtClass" tabindex="2" style="ime-mode: disabled; width:40%;">
 					<span style="font-weight: bold;">@<c:out value="${mailDomain}"></c:out></span>
 				</td>
 				<th><spring:message code='ezEmail.lhm61' /></th>
-				<td style="width:40%"><input id="TextPassword2" name="TextPassword2" type="password" maxlength="24" class="txtClass" style="width:100%"></td>
+				<td style="width:40%"><input id="TextPassword2" name="TextPassword2" type="password" maxlength="24" class="txtClass" tabindex="4" style="width:100%"></td>
 			</tr>
 		</table>
 		
