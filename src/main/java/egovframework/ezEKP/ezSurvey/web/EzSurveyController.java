@@ -102,6 +102,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		}
 		
 		switch(mode) {
+			case "all"        : pageName = egovMessageSource.getMessage("ezSurvey.t80", locale); break;
 			case "processing" : pageName = egovMessageSource.getMessage("ezSurvey.t02", locale); break;
 			case "finish"     : pageName = egovMessageSource.getMessage("ezSurvey.t03", locale); break;
 			case "my"         : pageName = egovMessageSource.getMessage("ezSurvey.t04", locale); break;

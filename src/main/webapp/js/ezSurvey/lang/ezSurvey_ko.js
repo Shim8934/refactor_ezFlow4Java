@@ -39,6 +39,7 @@ var SurveyMessages = {
 	strEmployee  : "직원을 먼저 선택해주세요.",
 	strUpFolder  : "폴더는 업로드 할 수 없습니다.",
 	strSave      : "저장하였습니다.",
+	strSaveDraft : "임시 저장하였습니다.",
 	strQselect   : "질문 유형 선택",
 	strSlOne     : "단일선택",
 	strSlMtp     : "다중선택",
@@ -103,4 +104,7 @@ var SurveyMessages = {
 	strSaveAsk   : "설문을 저장하시겠습니까?",
 	strLast      : "설문완료",
 	strSameNum   : "이미 같은 번호가 존재합니다. 그대로 진행하시겠습니까?",
+	strProcess   : "진행중",
+	strFinish    : "완료",
+	strDraft     : "임시저장",
 }

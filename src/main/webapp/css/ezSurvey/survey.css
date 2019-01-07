@@ -35,10 +35,11 @@
 .surveyTbl th {cursor: pointer !important;}
 .surveyTbl .inputTh {width: 20px;}
 .inputTh >img {vertical-align: middle;}
+.surveyTbl .statusTh {width: 80px; text-align: center;}
 .surveyTbl .noTh   {width: 20px; text-align: center;}
-.surveyTbl .ttlTh  {width: 60%;}
-.surveyTbl .createTh {width: 20%;}
-.surveyTbl .endDateTh {width: 20%;}
+.surveyTbl .ttlTh  {width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.surveyTbl .createTh {width: 20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.surveyTbl .endDateTh {width: 20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .surveyTbl .statisTh, .surveyTbl .anoynmTh, .surveyTbl .publicTh, .surveyTbl .targetTh {width: 80px; text-align: center;}
 .spanName, .selectedNode {height: 22px; line-height: 22px; color: #000; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}
 .spanName:hover {color: #9b9b9b;}
@@ -481,3 +482,4 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li>img {vertical-align: top; width: 30px; margin: 0px 10px;}
 .upage-ul li>span {line-height: 30px;}
 
+.draft-survey {position: absolute; top: 76px; bottom: 0px; right: 10px; height: 40px; width: 40px; background-image: url(/images/ezSurvey/draft.png); background-size: 32px 32px; background-repeat: no-repeat; background-position: center; cursor: pointer;}

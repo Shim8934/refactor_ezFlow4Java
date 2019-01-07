@@ -100,7 +100,6 @@
 						<tr>
 							<th headers=""   class="inputTh"><input type="checkbox"></th>
 							<th headers="at" class="inputTh"><img src="/images/newAttach.gif"></th>
-							<th headers="st" class="inputTh"><img src="/images/ImgIcon/view-importance.gif"></th>
 							<th headers="tt" class="ttlTh"    ><spring:message code='ezSurvey.t23'/></th>
 							<th headers="ed" class="endDateTh"><spring:message code='ezSurvey.t29'/></th>
 							<th headers="ut" class="targetTh" ><spring:message code='ezSurvey.t30'/></th>
@@ -108,6 +107,7 @@
 							<th headers="pl" class="publicTh" ><spring:message code='ezSurvey.t31'/></th>
 							<th headers="an" class="anoynmTh" ><spring:message code='ezSurvey.t32'/></th>
 							<th headers=""   class="statisTh" ><spring:message code='ezSurvey.t33'/></th>
+							<th headers="st" class="statusTh" ><spring:message code='ezSurvey.t81'/></th>
 						</tr>
 					</table>
 				</div>
