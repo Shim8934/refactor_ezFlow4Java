@@ -313,7 +313,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public synchronized JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, LoginVO userInfo) throws Exception {
+	public synchronized JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int draftMode, LoginVO userInfo) throws Exception {
 		JSONObject result = new JSONObject();
 		int tenantId                         = userInfo.getTenantId();
 		String companyId                     = userInfo.getCompanyID();
@@ -334,8 +334,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("tenantId" , tenantId);
 		long maxQuestionId                  = ezSurveyDAO.getMaxQuestionId(map);
 		long maxOptionId                    = ezSurveyDAO.getMaxOptionId(map);
-		long crrSurveyId                    = surveyId != -1 ? surveyId : ezSurveyDAO.getMaxSurveyId(map);
+		long crrSurveyId                    = (surveyId != -1 && draftMode == 0) ? surveyId : ezSurveyDAO.getMaxSurveyId(map);
 		
+		survey.setSurveyId(crrSurveyId);
 		survey.setTenantId(tenantId);
 		survey.setCompanyId(companyId);
 		survey.setCreatorId(userId);
@@ -353,12 +354,13 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		survey.setUseStatus(useStatus);
 		survey.setStartDate(startDateUTC);
 		survey.setEndDate(endDateUTC);
+		survey.setDraftFlag(draftMode);
 		
 		if (publicFlag == 1) {
 			survey.setOpenDays(publicDays);
 		}
 		
-		//Save questions
+		//Add questions
 		for (int i = 0; i < questions.size(); i++, maxQuestionId++) {
 			JSONObject questionObj = (JSONObject)questions.get(i);
 			int requiredFlag       = ((Long)questionObj.get("required")).intValue();
@@ -366,7 +368,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			JSONObject questionAtt = (JSONObject)questionObj.get("attach");
 			JSONArray options      = (JSONArray)questionObj.get("option");
 			
-			if (options == null || options.size() == 0) {
+			if ((options == null || options.size() == 0) && draftMode == 0) {
 				result.put("status", "error");
 				result.put("code", 1);
 				return result;
@@ -380,6 +382,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				int otherFlag        = optionObj.get("otherFlag") != null ? ((Long)optionObj.get("otherFlag")).intValue() : 0;
 				int logicNum         = optionObj.get("logic")     != null ? ((Long)optionObj.get("logic")).intValue()     : -1;
 				OptionVO option      = new OptionVO();
+				option.setOptionId(maxOptionId);
 				option.setQuestionId(maxQuestionId);
 				option.setSurveyId(crrSurveyId);
 				option.setQuestionType(questionType);
@@ -411,6 +414,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			int questionOrder    = ((Long)questionObj.get("level")).intValue();
 			QuestionVO question  = new QuestionVO();
 			
+			question.setQuestionId(maxQuestionId);
 			question.setSurveyId(crrSurveyId);
 			question.setTenantId(tenantId);
 			question.setCompanyId(companyId);
@@ -436,7 +440,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			totalQuestions.add(question);
 		}
 		
-		//Save survey attach list
+		//Add survey attach list
 		if (attchList != null && attchList.size() > 0) {
 			for (int i = 0; i < attchList.size(); i++) {
 				JSONObject surveyAtt = (JSONObject)attchList.get(i);
@@ -483,7 +487,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		}
 		
 		//Check modify/save mode
-		if (surveyId != -1) {
+		if (surveyId != -1 && draftMode == 0) {
 			//Remove current questions
 			ezSurveyDAO.deleteSurveyQuestions(survey);
 			

@@ -103,6 +103,8 @@ var SurveyCreate     = function() {
 		addFileBttn.onclick     = function(e) {startUpload();};
 		var userMoreElmt        = document.querySelector("span[class='user-more']");
 		if (userMoreElmt) {userMoreElmt.onclick = function(e) {toggleUserPreview();};}
+		var draftBttn           = document.getElementById("draftBttn");
+		if (draftBttn) {draftBttn.onclick = function(e) {saveDraftSurvey();};}
 		
 		document.getElementById("userListDiv").onscroll = function(e) {scrollListOfUser(this);}
 		document.onselectstart = function() {return false;};
@@ -119,15 +121,19 @@ var SurveyCreate     = function() {
 		for (var i = 0; i < secondTab.length; i++) {
 			secondTab[i].addEventListener("click", gotoSecondStep, false);
 		}
+		
 		for (var i = 0; i < thirdTab.length; i++) {
 			thirdTab[i].addEventListener("click",  gotoThirdStep, false);
 		}
+		
 		for (var i = 0; i < forthTab.length; i++) {
 			forthTab[i].addEventListener("click",  gotoForthStep, false);
 		}
+		
 		for (var i = 0; i < cancelSv1.length; i++) {
 			cancelSv1[i].addEventListener("click",  cancelThisSurvey, false);
 		}
+		
 		document.getElementById("public-slbox"  ).addEventListener("change", toggleDaysInput       , false);
 		document.getElementById("closeUserPanel").addEventListener("click",  toggleUserPreview     , false);
 		document.getElementById("saveSurvey"    ).addEventListener("click",  saveSurvey            , false);
@@ -141,9 +147,32 @@ var SurveyCreate     = function() {
 			addOptEvent();
 		}
 		
-		if (surveyObj["surveyId"] != -1) {
+		if (surveyObj["surveyId"] && surveyObj["surveyId"] != -1) {
+			console.log("On before unload: " + surveyObj["surveyId"]);
 			window.addEventListener("beforeunload", function(e) {changeSurveyState();}, false);
 		}
+	}
+	
+	function saveDraftSurvey() {
+		//Check survey information
+		var returnObj = checkStep1();
+		if (returnObj["error"]) {alert(returnObj["error"]); return;}
+		surveyObj["draft"] = 1;
+		
+		$.ajax({
+			type: "POST",
+			url: "/ezSurvey/saveSurvey.do",
+			data: JSON.stringify(surveyObj),
+			contentType: "application/json; charset=utf-8",
+			dataType: "JSON",
+			async: false,
+			success : function(data) {
+				afterSaveDraftSuccessfully(data);
+			},
+			error : function(error) {
+				alert(SurveyMessages.strError);
+			}
+		});
 	}
 	
 	function changeSurveyState() {
@@ -227,12 +256,24 @@ var SurveyCreate     = function() {
 		console.log(JSON.stringify(surveyObj["infor"]["users"]));
 	}
 	
+	function afterSaveDraftSuccessfully(data) {
+		var code = data.code;
+		switch(code) {
+			case 0 : alert(SurveyMessages.strSaveDraft);
+					 window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=draft";
+					 break;
+			case 1 : alert(SurveyMessages.strParamErr) ; break;
+			case 2 : alert(SurveyMessages.strError)    ; break;
+			default: alert(SurveyMessages.strError)    ; return;
+		}
+	}
+	
 	function afterSaveSuccessfully(data) {
 		var code = data.code;
 		switch(code) {
 			case 0 : alert(SurveyMessages.strSave)    ;
-			         window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
-			         break;
+					 window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
+					 break;
 			case 1 : alert(SurveyMessages.strParamErr); break;
 			case 2 : alert(SurveyMessages.strError)   ; break;
 			default: alert(SurveyMessages.strError)   ; return;
@@ -255,7 +296,6 @@ var SurveyCreate     = function() {
 		if (enterLogic == 'Y') {deleteAllLogics();}	// 로직 설정 단계에 진입했는지 확인
 		var checkObj = prepareForStep2();
 		if (checkObj["error"]) {alert(checkObj["error"]); return;}
-
 		var listTabElmt          = document.getElementsByClassName("headpanel")[0].children;
 		listTabElmt[0].className = "crust";
 		listTabElmt[1].className = "crust selected";

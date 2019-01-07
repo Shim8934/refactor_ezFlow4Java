@@ -440,15 +440,16 @@ public class EzSurveyGWController {
 		
 		try {
 			JSONObject survey   = (JSONObject) jp.parse(surveyItem.toJSONString());
-			long surveyId       = survey.get("surveyId")         != null ? (Long)survey.get("surveyId")        : -1;
-			JSONObject infor    = survey.get("infor")            != null ? (JSONObject) survey.get("infor")    : null;
-			JSONArray questions = survey.get("questions")        != null ? (JSONArray) survey.get("questions") : null;
-			String serverName   = request.getHeader("host-name") != null ? request.getHeader("host-name")      : "";
-			String userId       = surveyItem.get("userId")       != null ? surveyItem.get("userId").toString() : "";
+			long surveyId       = survey.get("surveyId")         != null ? (Long)survey.get("surveyId")           : -1;
+			int draftMode       = survey.get("draft")            != null ? ((Long)survey.get("draft")).intValue() : 0;
+			JSONObject infor    = survey.get("infor")            != null ? (JSONObject) survey.get("infor")       : null;
+			JSONArray questions = survey.get("questions")        != null ? (JSONArray) survey.get("questions")    : null;
+			String serverName   = request.getHeader("host-name") != null ? request.getHeader("host-name")         : "";
+			String userId       = surveyItem.get("userId")       != null ? surveyItem.get("userId").toString()    : "";
 			
 			logger.debug("ServerName: " + serverName + " || User id: " + userId + " || question list: " + questions.toJSONString() + " || survey information: " + infor.toJSONString());
 			
-			if (serverName.equals("") || userId.equals("") || questions == null || questions.size() == 0 || infor == null || infor.toJSONString().equals("")) {
+			if (serverName.equals("") || userId.equals("") || ((questions == null || questions.size() == 0) && draftMode == 0) || infor == null || infor.toJSONString().equals("")) {
 				logger.debug("Parameter error!");
 				result.put("status", "error");
 				result.put("code", 1);
@@ -478,7 +479,7 @@ public class EzSurveyGWController {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = surveyService.saveSurveyItem(realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, userInfo);
+			result           = surveyService.saveSurveyItem(realPath, questions, title, purpose, startDate, endDate, publicFlag, anonymousFlag, multipleFlag, userFlag, publicDays, attchList, users, useStatus, surveyId, draftMode, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

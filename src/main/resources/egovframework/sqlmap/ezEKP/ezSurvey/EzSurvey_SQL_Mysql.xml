@@ -74,6 +74,7 @@
 		<result property="paritipateFlag"   column="participate_flag"    columnIndex="21"/>
 		<result property="attachFlag"       column="attach_flag"         columnIndex="22"/>
 		<result property="modifyFlag"       column="modify_flag"         columnIndex="23"/>
+		<result property="draftFlag"        column="draft_flag"          columnIndex="24"/>
 	</resultMap>
 	
 	<!-- AttachVO resultMap -->
@@ -161,7 +162,8 @@
 			multi_answer_flag,
 			participate_flag,
 			attach_flag,
-			modify_flag
+			modify_flag,
+			draft_flag
 		from tbl_survey
 	</sql>
 	
@@ -194,6 +196,7 @@
 			<isNotEmpty property="surveyIds" prepend=" and ">
 				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
 			</isNotEmpty>
+			and draft_flag = 0
 		</isEqual>
 		<isEqual property="pageMode" compareValue="finish" prepend=" and ">
 			<![CDATA[(end_date < #today#)]]>
@@ -201,12 +204,13 @@
 			<isNotEmpty property="surveyIds" prepend=" and ">
 				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
 			</isNotEmpty>
+			and draft_flag = 0
 		</isEqual>
 		<isEqual property="pageMode" compareValue="my" prepend=" and ">
-			user_id = #userId# and use_status = 1
+			user_id = #userId# and draft_flag = 0
 		</isEqual>
 		<isEqual property="pageMode" compareValue="draft" prepend=" and ">
-			user_id = #userId# and use_status = 3
+			user_id = #userId# and draft_flag = 1
 		</isEqual>
 	</sql>
 	
@@ -499,14 +503,14 @@
 	<insert id="EzSurveyDAO.saveSurveyItem" parameterClass="SurveyVO">
 		<![CDATA[
 			insert into tbl_survey (
-				title,        purpose,     user_id,     create_date,        start_date,     end_date,          user_name1,
+				survey_id,    title,       purpose,     user_id,    create_date,   start_date,     end_date,   user_name1,
 				user_name2,   use_status,  open_days,   result_public_flag, anonymous_flag, multi_answer_flag, participate_flag,
-				attach_flag,  modify_flag, delete_user, update_user,        update_date,    company_id,        tenant_id
+				attach_flag,  modify_flag, draft_flag,  delete_user, update_user,        update_date,    company_id,        tenant_id
 			)
 			values (
-				#title#,        #purpose#,    #creatorId#,  #createDate#,       #startDate#,     #endDate#,         #creatorName1#,
+				#surveyId#,     #title#,      #purpose#,    #creatorId#,  #createDate#,       #startDate#,     #endDate#,         #creatorName1#,
 				#creatorName2#, #useStatus#,  #openDays#,   #resultPublicFlag#, #anonymousFlag#, #multiAnswerFlag#, #paritipateFlag#,
-				#attachFlag#,   #modifyFlag#, #deleteUser#, #updateUser#, #updateDate#,       #companyId#,     #tenantId#
+				#attachFlag#,   #modifyFlag#, #draftFlag#,  #deleteUser#, #updateUser#, #updateDate#,       #companyId#,     #tenantId#
 			)
 		]]>
 	</insert>
@@ -531,6 +535,7 @@
 			participate_flag   = #paritipateFlag#,
 			attach_flag        = #attachFlag#,
 			modify_flag        = #modifyFlag#,
+			draft_flag         = #draftFlag#,
 			delete_user        = #deleteUser#,
 			update_user        = #updateUser#,
 			update_date        = #updateDate#
@@ -584,12 +589,12 @@
 	<insert id="EzSurveyDAO.saveQuestionItem" parameterClass="QuestionVO">
 		<![CDATA[
 			insert into tbl_survey_question (
-				survey_id,      question_type,  title,               levels,     use_status,
+				question_id,    survey_id,      question_type,       title,      levels,     use_status,
 				required_flag,  logic_flag,     slider_logic_point,  company_id, tenant_id
 			)
 			values (
-				#surveyId#,      #type#,        #content#,            #level#,     #useStatus#,
-				#required#,    #logicFlag#,     #sliderLogicPoint#, #companyId#,  #tenantId#
+				#questionId#,   #surveyId#,      #type#,             #content#,    #level#,     #useStatus#,
+				#required#,     #logicFlag#,     #sliderLogicPoint#, #companyId#,  #tenantId#
 			)
 		]]>
 	</insert>
@@ -613,12 +618,12 @@
 	<insert id="EzSurveyDAO.saveOptionItem" parameterClass="OptionVO">
 		<![CDATA[
 			insert into tbl_survey_option (
-				survey_id,  question_id,  question_type,  content,     levels,    other_flag,
-				logic_num,  row_level,    column_level,   company_id,  tenant_id
+				option_id,  survey_id,  question_id,  question_type,  content,     levels,
+				other_flag, logic_num,  row_level,    column_level,   company_id,  tenant_id
 			)
 			values (
-				#surveyId#,  #questionId#,  #questionType#,  #content#,    #level#,     #otherFlag#,
-				#logic#,     #rowLevel#,    #colLevel#,      #companyId#,  #tenantId#
+				#optionId#,  #surveyId#,  #questionId#,  #questionType#,  #content#,    #level#,
+				#otherFlag#, #logic#,     #rowLevel#,    #colLevel#,      #companyId#,  #tenantId#
 			)
 		]]>
 	</insert>

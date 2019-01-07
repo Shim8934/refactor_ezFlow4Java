@@ -480,3 +480,4 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li>img {vertical-align: top; width: 30px; margin: 0px 10px;}
 .upage-ul li>span {line-height: 30px;}
 
+.draft-survey {position: absolute; top: 76px; bottom: 0px; right: 10px; height: 40px; width: 40px; background-image: url(/images/ezSurvey/draft.png); background-size: 32px 32px; background-repeat: no-repeat; background-position: center; cursor: pointer;}

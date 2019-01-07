@@ -43,6 +43,7 @@
 				<span class="arrow"><span></span></span>
 			</span>
 		</div>
+		<c:if test="${empty survey or (not empty survey and survey.draftFlag == 0)}"><div class="draft-survey" id="draftBttn"></div></c:if>
 		
 		<div id="bodyPanel">
 			<div id="tab1" class="select-tab">

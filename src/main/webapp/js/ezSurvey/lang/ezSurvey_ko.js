@@ -39,6 +39,7 @@ var SurveyMessages = {
 	strEmployee  : "직원을 먼저 선택해주세요.",
 	strUpFolder  : "폴더는 업로드 할 수 없습니다.",
 	strSave      : "저장하였습니다.",
+	strSaveDraft : "임시 저장하였습니다.",
 	strQselect   : "질문 유형 선택",
 	strSlOne     : "단일선택",
 	strSlMtp     : "다중선택",
