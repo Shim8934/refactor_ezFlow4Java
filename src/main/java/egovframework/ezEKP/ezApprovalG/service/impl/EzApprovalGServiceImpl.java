@@ -2921,9 +2921,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (nList.item(k).getChildNodes().item(7).getTextContent().trim().equals("")) {
 				recDate = "NULL";
 			} else {
-				if (nList.item(k).getChildNodes().item(7).getTextContent().replace(messageSource.getMessage("ezApprovalG.t971", userInfo.getLocale()), "").trim() != nList.item(k).getChildNodes().item(7).getTextContent().trim()) {
+				if (!nList.item(k).getChildNodes().item(7).getTextContent().replace(messageSource.getMessage("ezApprovalG.t971", userInfo.getLocale()), "").trim().equals(nList.item(k).getChildNodes().item(7).getTextContent().trim())) {
 					recDate = "'" + nList.item(k).getChildNodes().item(7).getTextContent().replace(messageSource.getMessage("ezApprovalG.t971", userInfo.getLocale()), "").trim() + "AM'";
-				} else if (nList.item(k).getChildNodes().item(7).getTextContent().replace(messageSource.getMessage("ezApprovalG.t972", userInfo.getLocale()), "").trim() != nList.item(k).getChildNodes().item(7).getTextContent().trim()) {
+				} else if (!nList.item(k).getChildNodes().item(7).getTextContent().replace(messageSource.getMessage("ezApprovalG.t972", userInfo.getLocale()), "").trim().equals(nList.item(k).getChildNodes().item(7).getTextContent().trim())) {
 					recDate = "'" + nList.item(k).getChildNodes().item(7).getTextContent().replace(messageSource.getMessage("ezApprovalG.t972", userInfo.getLocale()), "").trim() + "PM'";
 				} else {
 					recDate = "'" + nList.item(k).getChildNodes().item(7).getTextContent().trim() + "'";
@@ -2933,9 +2933,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			if (nList.item(k).getChildNodes().item(6).getTextContent().trim().equals("")) {
 				procDate = "NULL";
 			} else {
-				if (nList.item(k).getChildNodes().item(6).getTextContent().replace(messageSource.getMessage("ezApprovalG.t971", userInfo.getLocale()), "").trim() != nList.item(k).getChildNodes().item(6).getTextContent().trim()) {
+				if (!nList.item(k).getChildNodes().item(6).getTextContent().replace(messageSource.getMessage("ezApprovalG.t971", userInfo.getLocale()), "").trim().equals(nList.item(k).getChildNodes().item(6).getTextContent().trim())) {
 					procDate = "'" + nList.item(k).getChildNodes().item(6).getTextContent().replace(messageSource.getMessage("ezApprovalG.t971", userInfo.getLocale()), "").trim() + "AM'";
-				} else if (nList.item(k).getChildNodes().item(6).getTextContent().replace(messageSource.getMessage("ezApprovalG.t972", userInfo.getLocale()), "").trim() != nList.item(k).getChildNodes().item(6).getTextContent().trim()) {
+				} else if (!nList.item(k).getChildNodes().item(6).getTextContent().replace(messageSource.getMessage("ezApprovalG.t972", userInfo.getLocale()), "").trim().equals(nList.item(k).getChildNodes().item(6).getTextContent().trim())) {
 					procDate = "'" + nList.item(k).getChildNodes().item(6).getTextContent().replace(messageSource.getMessage("ezApprovalG.t972", userInfo.getLocale()), "").trim() + "PM'";
 				} else {
 					procDate = "'" + nList.item(k).getChildNodes().item(6).getTextContent().trim() + "'";
