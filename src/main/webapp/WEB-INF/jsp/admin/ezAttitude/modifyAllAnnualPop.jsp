@@ -67,7 +67,7 @@
 	   				},
 					success : function(resultStatus) {
 	            		if (resultStatus == "success") {
-	   						opener.location.reload();
+	   						opener.getAnnualList();
 	   						window.close();
 	            		} else {
 	            			alert("<spring:message code='ezAttitude.t175' />");
@@ -115,7 +115,7 @@
 	        <tr>
 	        	<th style="width:200px; text-align:center">수정사유</th>
 	            <td>
-	            	<input id="changeReason" name="changeReason" type="text" style="width:100%;text-align:right;padding-bottom: 5px;" value="">
+	            	<input id="changeReason" name="changeReason" type="text" style="width:100%;padding-bottom: 5px;" value="">
 	            </td>
 	        </tr>
 	    </table>

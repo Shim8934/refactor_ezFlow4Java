@@ -89,7 +89,7 @@
 	   				},
 					success : function(resultStatus) {
 	            		if (resultStatus == "success") {
-	   						opener.location.reload();
+	   						opener.getAnnualList();
 	   						window.close();
 	            		} else {
 	            			alert("<spring:message code='ezAttitude.t175' />");

@@ -50,7 +50,7 @@
 		    				userAnnualListSet(result.list);
 	    				}
 	    				
-	    				//
+	    				//스크롤 생길시
 	    				if(result.list.length > 8) {
 	    		    		var addTh = "<th style='width: 9px;'></th>";
 	    		    		$(".mainlist tr th:eq(3)").after(addTh);
