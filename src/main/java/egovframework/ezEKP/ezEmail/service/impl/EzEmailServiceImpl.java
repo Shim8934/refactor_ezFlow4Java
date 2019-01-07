@@ -1036,7 +1036,38 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return returnValue;
 	}
-
+	
+	@Override
+	public int deleteIndividualAlias(String userId, int tenantID) throws Exception {
+		logger.debug("deleteIndividualAlias started.");
+		logger.debug("userId=" + userId + ",tenantID=" + tenantID);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+		String inputParams = "userId=" + URLEncoder.encode(userId + "@" + domain, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/setIndividualAlias";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		String resultCode = "Error";
+		int reasonCode = -100;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+			
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}
+		
+		logger.debug("deleteIndividualAlias ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		return reasonCode;
+	}
+	
 	@Override
 	public String checkIndividualAlias(String individualAlias,int  tenantId) throws Exception {
 		logger.debug("checkIndividualAlias started. individualAlias=" + individualAlias);

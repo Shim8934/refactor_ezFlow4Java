@@ -26,7 +26,6 @@
 	    		$.ajax({
 	    			data : "GET",
 	    			dataType : "json",
-	    			async : false,
 	    			url : "/admin/ezAttitude/useAnnualHistoryList.do",
 	    			data : {
 	    				companyId : companyId,
@@ -37,6 +36,9 @@
 	    				$("#userName").text(result.list[0].userName);
 	    				$("#userTitle").text(result.list[0].userTitle);
 	    				$("#userDept").text(result.list[0].deptName);
+	    				if (result.list[0].imgPath != null && result.list[0].imgPath != "") {
+		    				$("#userImage").attr("src","/admin/ezOrgan/getPersonalInfo.do?fileName=" + result.list[0].imgPath);
+	    				} 
 	    				var totalAnnualCnt = 0;
 		    			if (Number(result.list[0].totalAnnualCnt.split(".")[1]) > 0) {
 		    				totalAnnualCnt = result.list[0].totalAnnualCnt;
@@ -46,6 +48,12 @@
 	    				$("#totalAnnualCnt").text(totalAnnualCnt);
 	    				if (result.list[0].startDate != null && result.list[0].startDate != "") {
 		    				userAnnualListSet(result.list);
+	    				}
+	    				
+	    				//스크롤 생길시
+	    				if(result.list.length > 8) {
+	    		    		var addTh = "<th style='width: 9px;'></th>";
+	    		    		$(".mainlist tr th:eq(3)").after(addTh);
 	    				}
 	    			},
 	    			error : function() {
@@ -66,10 +74,10 @@
 	    		list.forEach(function(vo, index) {
 	    			html = "<tr>";
 		    		html += "<td style='width:35%'>";
-	    			if (vo.typeId == "A11") { //연차
+	    			if (vo.typeId === "A11") { //연차
 		    			html += vo.startDate.substr(0,10) + " ~ " + vo.endDate.substr(0,10);
 		    			annualCnt ++;
-	    			} else if (vo.typeId == "A12") { //오전반차
+	    			} else if (vo.typeId === "A12") { //오전반차
 		    			html += vo.startDate.substr(0,10);
 		    			morningCnt ++;
 	    			} else { //오후반차
@@ -78,7 +86,7 @@
 	    			}
 	    			html += "</td>";
 	    			html += "<td style='width:25%'>" + vo.typeName + "</td>";
-	    			html += "<td style='width:15%'>" + vo.annualCnt + "</td>";
+	    			html += "<td style='width:15%'>" + Number(vo.annualCnt) + "</td>";
 	    			//누적 연차 수
 	    			AccumCnt += Number(vo.annualCnt);
 	    			html += "<td style='width:15%'>" + AccumCnt + "</td>";
@@ -106,15 +114,7 @@
 			<div class="timecheck_info">
 		    	<dl class="timeInfo" style="position:static">
 		        	<dt class="timeInfoPic">	
-						<img src="/images/kr/main/bestEmployee_pic_none.png" width="48px" height="48px">
-<%-- 						<c:choose> --%>
-<%-- 							<c:when test="${not empty userInfo.userFileUrl }"> --%>
-<%-- 								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${userInfo.userFileUrl }" width="48px" height="48px"> --%>
-<%-- 							</c:when> --%>
-<%-- 							<c:otherwise> --%>
-<!-- 								<img src="/images/kr/main/bestEmployee_pic_none.png" width="48px" height="48px"> -->
-<%-- 							</c:otherwise> --%>
-<%-- 						</c:choose> --%>
+						<img id="userImage" src="/images/kr/main/bestEmployee_pic_none.png" width="48px" height="48px">
 		        	</dt>
 		            <dd class="timeInfoText"><span id="userName"></span><span id="userTitle"></span><span id="userDept" style="color:#aaa9a9"></span></dd>
 		        </dl>

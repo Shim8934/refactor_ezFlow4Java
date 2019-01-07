@@ -137,7 +137,7 @@ public class EzAttitudeController {
 		}
 		
 		//근태유형
-		url = gwServerUrl + " /rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudetypes";
+		url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudetypes";
 		
 		builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
@@ -656,7 +656,7 @@ public class EzAttitudeController {
 			model.addAttribute("attitudeConfigVO", attitudeConfigVO);
 			
 			//근태유형
-			url = gwServerUrl + " /rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudetypes";
+			url = gwServerUrl + "/rest/ezattitude/companies/" + userInfo.getCompanyID() + "/attitudetypes";
 			
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("userId", userInfo.getId())
