@@ -190,6 +190,9 @@
 				</isNotEmpty>
 			</isNotEmpty>
 		</isEqual>
+		<isEqual property="pageMode" compareValue="all" prepend=" and ">
+			draft_flag = 0
+		</isEqual>
 		<isEqual property="pageMode" compareValue="processing" prepend=" and ">
 			<![CDATA[(start_date <= #today# and end_date >= #today#)]]>
 			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1)</isEmpty>

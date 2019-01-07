@@ -15,6 +15,9 @@
 			<div class="left_survey"><span><spring:message code='ezSurvey.t01'/></span></div>
 			
 			<!-- 진행중 설문 -->
+			<h2 id="totalSurvey"><span><spring:message code='ezSurvey.t80'/></span></h2>
+			
+			<!-- 진행중 설문 -->
 			<h2 id="processingSurvey"><span><spring:message code='ezSurvey.t02'/></span></h2>
 			
 			<!-- 완료된 설문 -->
@@ -40,15 +43,17 @@
 				function setButtonEvents() {
 					document.onselectstart = function(e) {return false;}
 					/* initToggleList(document.getElementById("left"), "h2", "ul", "li"); */
+					document.getElementById("totalSurvey"     ).addEventListener("click", function(e) {getAllSurveyList()       ;});
 					document.getElementById("surveyConfig"    ).addEventListener("click", function(e) {getConfigPage()          ;});
 					document.getElementById("processingSurvey").addEventListener("click", function(e) {getProcessingSurveyList();});
 					document.getElementById("finishedSurvey"  ).addEventListener("click", function(e) {getFinishedSurveyPage()  ;});
 					document.getElementById("mySurvey"        ).addEventListener("click", function(e) {getMySurveyPage()        ;});
 					document.getElementById("draftSurvey"     ).addEventListener("click", function(e) {getDraftSurveyPage()     ;});
-					getProcessingSurveyList();
+					getAllSurveyList();
 				}
 				
 				function getConfigPage()           {window.parent.frames["right"].location.href = "/ezSurvey/surveyConfig.do";}
+				function getAllSurveyList()        {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=all";}
 				function getProcessingSurveyList() {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";}
 				function getFinishedSurveyPage()   {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=finish";}
 				function getMySurveyPage()         {window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=my";}

@@ -104,4 +104,7 @@ var SurveyMessages = {
 	strSaveAsk   : "설문을 저장하시겠습니까?",
 	strLast      : "설문완료",
 	strSameNum   : "이미 같은 번호가 존재합니다. 그대로 진행하시겠습니까?",
+	strProcess   : "진행중",
+	strFinish    : "완료",
+	strDraft     : "임시저장",
 }

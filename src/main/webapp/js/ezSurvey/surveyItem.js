@@ -456,36 +456,36 @@ var SurveyItem = function() {
 					tdElmt2.appendChild(imgAttch);
 				}
 				
-				if (itemList[i]["useStatus"] == 1) {
-					var imgStatus  = document.createElement("img");
-					imgStatus.src  = "/images/ImgIcon/view-importance.gif";
-					tdElmt3.appendChild(imgStatus);
+				tdElmt3.textContent  = itemList[i]["title"];
+				tdElmt4.textContent  = itemList[i]["endDate"].substring(0, 19);
+				tdElmt5.textContent  = itemList[i]["paritipateFlag"] == 0   ? SurveyMessages.strUser7    : SurveyMessages.strUser8;
+				tdElmt6.textContent  = itemList[i]["creatorName"];
+				tdElmt7.textContent  = itemList[i]["resultPublicFlag"] == 1 ? SurveyMessages.strPublic1  : SurveyMessages.strPublic2;
+				tdElmt8.textContent  = itemList[i]["anonymousFlag"]    == 1 ? SurveyMessages.strAnoynym1 : SurveyMessages.strAnoynym2;
+				tdElmt3.setAttribute("title", tdElmt3.textContent);
+				tdElmt4.setAttribute("title", tdElmt4.textContent);
+				tdElmt6.setAttribute("title", tdElmt6.textContent);
+				
+				if (itemList[i]["draftFlag"] == 1) {
+					tdElmt10.textContent = SurveyMessages.strDraft;
+				}
+				else if (itemList[i]["useStatus"] == 1) {
+					tdElmt10.textContent = SurveyMessages.strProcess;
 				}
 				else if (itemList[i]["useStatus"] == 2) {
-					var imgStatistic  = document.createElement("img");
-					imgStatistic.src  = "/images/ezSurvey/statistic.png";
-					tdElmt10.appendChild(imgStatistic);
+					tdElmt10.textContent = SurveyMessages.strFinish;
 				}
-				
-				tdElmt4.textContent  = itemList[i]["title"];
-				tdElmt5.textContent  = itemList[i]["endDate"].substring(0, 19);
-				tdElmt6.textContent  = itemList[i]["paritipateFlag"] == 0   ? SurveyMessages.strUser7    : SurveyMessages.strUser8;
-				tdElmt7.textContent  = itemList[i]["creatorName"];
-				tdElmt8.textContent  = itemList[i]["resultPublicFlag"] == 1 ? SurveyMessages.strPublic1  : SurveyMessages.strPublic2;
-				tdElmt9.textContent  = itemList[i]["anonymousFlag"]    == 1 ? SurveyMessages.strAnoynym1 : SurveyMessages.strAnoynym2;
-				tdElmt4.setAttribute("title", tdElmt4.textContent);
-				tdElmt7.setAttribute("title", tdElmt7.textContent);
 				
 				tdElmt1.className  = "inputTh";
 				tdElmt2.className  = "inputTh";
-				tdElmt3.className  = "inputTh";
-				tdElmt4.className  = "ttlTh";
-				tdElmt5.className  = "endDateTh";
-				tdElmt6.className  = "targetTh";
-				tdElmt7.className  = "createTh";
-				tdElmt8.className  = "publicTh";
-				tdElmt9.className  = "anoynmTh";
-				tdElmt10.className = "statisTh";
+				tdElmt3.className  = "ttlTh";
+				tdElmt4.className  = "endDateTh";
+				tdElmt5.className  = "targetTh";
+				tdElmt6.className  = "createTh";
+				tdElmt7.className  = "publicTh";
+				tdElmt8.className  = "anoynmTh";
+				tdElmt9.className  = "statisTh";
+				tdElmt10.className = "statusTh";
 				
 				trElmt.appendChild(tdElmt1);
 				trElmt.appendChild(tdElmt2);
@@ -497,6 +497,7 @@ var SurveyItem = function() {
 				trElmt.appendChild(tdElmt8);
 				trElmt.appendChild(tdElmt9);
 				trElmt.appendChild(tdElmt10);
+				
 				tableDataElmt.appendChild(trElmt);
 			}
 		}
