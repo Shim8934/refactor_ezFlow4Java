@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezAttitude.web;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,7 +9,14 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +26,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -25,6 +34,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
+import egovframework.ezEKP.ezAttitude.util.ExcelCellRef;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
@@ -2130,8 +2140,9 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/annual] ended.");
 		return result;
 	}
+	
 	/**
-	 * G/W 근태관리 [POST] 연차현황 전체 등록/수정
+	 * G/W 근태관리 [POST] 연차현황 개별 등록/수정
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/changePrsnAnnual", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject changePrsnAnnual(@PathVariable String userId, HttpServletRequest request) {
@@ -2168,6 +2179,89 @@ public class EzAttitudeGWController {
 		}
 		
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/changePrsnAnnual] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [POST] 연차현황 엑셀 일괄 등록
+	 */
+	@RequestMapping(value = "/rest/ezattitude/annualExcelUpload", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject annualExcelUpload(@RequestParam("data") String dataList, @RequestParam("files") List<MultipartFile> multiFileLists, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/annualExcelUpload] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			JSONParser jp          = new JSONParser();
+			JSONObject jsonObject  = (JSONObject) jp.parse(dataList);
+			
+			String serverName = request.getHeader("x-user-host");
+			String changeUserId = (String) jsonObject.get("changeUserId");
+			String companyId = (String) jsonObject.get("companyId");
+			String changeReason = (String) jsonObject.get("changeReason");
+			String flagCheck = (String) jsonObject.get("flagCheck");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, changeUserId);
+			
+			MultipartFile tempFile = multiFileLists.get(0);
+			
+			InputStream is = tempFile.getInputStream();
+			
+			Workbook wb = new HSSFWorkbook(is);
+			
+			Sheet sheet = wb.getSheetAt(0);
+			
+			int numOfRows = sheet.getPhysicalNumberOfRows();
+			int numOfCells = 0;
+			
+			Row row = null;
+	        Cell cell = null;
+	
+	        String cellName = "";
+	        
+	        Map<String, Object> map = null;
+	        List<Map<String, Object>> excelList = new ArrayList<Map<String, Object>>();
+	        List<String> outputColumns = new ArrayList<String>();
+	        String[] outputColumnsArray = {"A","B","C","D","E","F","G","H"};
+	        
+	        for(String ouputColumn : outputColumnsArray) {
+	            outputColumns.add(ouputColumn);
+	        }
+	        
+	        for(int rowIndex = 0; rowIndex < numOfRows; rowIndex++) {
+	            row = sheet.getRow(rowIndex);
+	            if(row != null) {
+	                numOfCells = row.getPhysicalNumberOfCells();
+	                map = new HashMap<String, Object>();
+	                for(int cellIndex = 0; cellIndex < numOfCells; cellIndex++) {
+	                    cell = row.getCell(cellIndex);
+	                    cellName = ExcelCellRef.getName(cell, cellIndex);
+	                    if(!outputColumns.contains(cellName) ) {
+	                        continue;
+	                    }
+	                    map.put(cellName, ExcelCellRef.getValue(cell));
+	                }
+	                excelList.add(map);
+	            }
+	        }
+	        
+	        Map<String, Object> excelTitle = excelList.get(0);
+	        
+	        wb.close();
+	        
+	        String resultMsg = ezAttitudeService.annualExcelUpload(excelList, changeUserId, companyId, info.getTenantId(), changeReason, flagCheck);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", resultMsg);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/annualExcelUpload] ended.");
 		return result;
 	}
 	

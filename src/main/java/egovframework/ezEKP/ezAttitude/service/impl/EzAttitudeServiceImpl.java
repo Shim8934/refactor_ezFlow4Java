@@ -25,6 +25,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
+import egovframework.ezEKP.ezAttitude.util.ExcelCellRef;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeApplicationVO;
@@ -2535,5 +2536,67 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAttitudeAnnualList ended.");
 		
 		return list;
+	}
+
+	@Override
+	public String annualExcelUpload(List<Map<String, Object>> excelList, String changeUserId, String companyId, int tenantId, String changeReason, String flagCheck) throws Exception {
+		LOGGER.debug("annualExcelUpload started");
+		
+		Map<String, Object> excelVo = null;
+		Map<String, Object> map1 = null;
+		Map<String, Object> map2 = null;
+		String year = null;
+		String userId = null;
+		String totalAnnualCnt = null;
+		int userCnt = 0;
+		
+		for(int i=1; i<excelList.size(); i++) {
+			
+			excelVo = excelList.get(i);
+			
+			year = (String) excelVo.get("B");
+			userId = (String) excelVo.get("C");
+			totalAnnualCnt = (String) excelVo.get("H");
+			
+			
+			if(!ExcelCellRef.nullCheck(ExcelCellRef.validateCheck(i+1, "년도", year, 8, "1"))) {
+				return ExcelCellRef.validateCheck(i+1, "년도", year, 8, "1");
+			}
+			if(!ExcelCellRef.nullCheck(ExcelCellRef.validateCheck(i+1, "사용자 ID", userId, 80, "2"))) {
+				return ExcelCellRef.validateCheck(i+1, "사용자 ID", userId, 80, "2");
+			}
+			if(!ExcelCellRef.nullCheck(ExcelCellRef.validateCheck(i+1, "총 연차수", totalAnnualCnt, 8, "3"))) {
+				return ExcelCellRef.validateCheck(i+1, "총 연차수", totalAnnualCnt, 8, "3");
+			}
+			
+			map1 = new HashMap<String, Object>();
+			map1.put("userId", userId);
+			map1.put("companyId", companyId);
+			map1.put("tenantId", tenantId);
+			userCnt = ezAttitudeDAO.getUserCnt(map1);
+			
+			if(userCnt == 0) {
+				return i+1 + "행의" + userId + "은(는) 존재하지 않는 사용자입니다.";
+			}
+		}
+		
+		for(int i=1; i<excelList.size(); i++) {
+			excelVo = excelList.get(i);
+			
+			map2 = new HashMap<String, Object>();
+			map2.put("year", excelVo.get("B"));
+			map2.put("userId", excelVo.get("C"));
+			map2.put("annualCnt", excelVo.get("H"));
+			map2.put("companyId", companyId);
+			map2.put("tenantId", tenantId);
+			map2.put("changeUserId", changeUserId);
+			map2.put("changeReason", changeReason);
+			map2.put("flagCheck", flagCheck);
+			
+			changeAnnual(map2);
+		}
+		
+		LOGGER.debug("annualExcelUpload started");
+		return "등록완료";
 	}
 }

@@ -159,6 +159,11 @@
 				window.open(url, "annualHistoryPop", GetOpenWindowfeature(750, 300));
 	        }
 	    	
+	    	function annualExcelUploadPop(userId, year) {
+	        	var url = "/admin/ezAttitude/annualExcelUploadPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
+				window.open(url, "annualExcelUploadPop", GetOpenWindowfeature(500, 200));
+	        }
+	    	
 	    	function getAnnualList() {
 	    		$.ajax({
 	    			data : "GET",
@@ -328,7 +333,7 @@
 						<a class="imgbtn"><span onclick="searchAnnualList('search');"><spring:message code='ezAttitude.t121' /></span></a>
 						<a class="imgbtn"><span onclick="searchAnnualList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
-						<a class="imgbtn"><span onclick="exportExcel();">엑셀로 등록</span></a>
+						<a class="imgbtn"><span onclick="annualExcelUploadPop();">엑셀로 등록</span></a>
 						<a class="imgbtn"><span onclick="modifyAllAnnualPop();">전체 연차 변경</span></a>
 						
 					</td>

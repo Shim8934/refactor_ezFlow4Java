@@ -1,10 +1,13 @@
 package egovframework.ezEKP.ezAttitude.web;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -16,25 +19,38 @@ import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.converter.HttpMessageConverter;
+import org.springframework.http.converter.ResourceHttpMessageConverter;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.HandlerMapping;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -44,6 +60,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezAttitude.util.ExcelCellRef;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
@@ -55,6 +72,10 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
+/**
+ * @author kaoni_dev1
+ *
+ */
 @Controller
 public class EzAttitudeAdminController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzAttitudeController.class);
@@ -2244,6 +2265,89 @@ public class EzAttitudeAdminController {
 	}
 	
 	/**
+	 * 연차현황관리 엑셀업로드팝업
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/annualExcelUploadPop.do")
+	public String annualExcelUploadPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		model.addAttribute("companyId", request.getParameter("companyId"));
+		return "/admin/ezAttitude/annualExcelUploadPop";
+	}
+	
+	/**
+	 * 연차현황관리 엑셀업로드
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/annualExcelUpload.do", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public JSONObject annualExcelUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception{
+		
+		LOGGER.debug("annualExcelUpload started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String companyId = request.getParameter("companyId");
+		String changeReason = request.getParameter("changeReason");
+		String flagCheck = request.getParameter("flagCheck");
+		
+		Map<String, MultipartFile> files = request.getFileMap();
+		MultipartFile tempFile =  files.get("excelFile");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = "";
+		url = gwServerUrl + "/rest/ezattitude/annualExcelUpload";
+		
+		SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+		requestFactory.setBufferRequestBody(false);
+		
+		RestTemplate restTemplate                       = new RestTemplate(requestFactory);
+		List<HttpMessageConverter<?>> messageConverters = restTemplate.getMessageConverters();
+		
+		for (int i = 0; i < messageConverters.size(); i++) {
+			HttpMessageConverter<?> messageConverter = messageConverters.get(i);
+			
+			if (messageConverter.getClass().equals(ResourceHttpMessageConverter.class)) {
+				messageConverters.set(i, new BnkResourceHttpMessageConverter());
+			}
+		}
+		
+		MultiValueMap<String, Object> map = new LinkedMultiValueMap<String, Object>();
+		JSONObject jsonObject             = new JSONObject();
+		
+		map.add("files", new MultipartFileResource(tempFile.getInputStream(), tempFile.getOriginalFilename()));
+		
+		jsonObject.put("changeUserId", userInfo.getId());
+		jsonObject.put("companyId", companyId);
+		jsonObject.put("changeReason", changeReason);
+		jsonObject.put("flagCheck", flagCheck);
+		
+		map.add("data", jsonObject);
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<MultiValueMap<String, Object>>(map, headers);
+		UriComponentsBuilder builder                     = UriComponentsBuilder.fromHttpUrl(url);
+		ResponseEntity<String> result                    = restTemplate.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp         = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		String resultStatus = "";
+		
+		if (status.equals("ok")) {
+			resultStatus = "success";
+		} else if (status.equals("failed")) {
+			resultStatus = "failed";
+		} else {
+			resultStatus = "error";
+		}
+		
+		LOGGER.debug("annualExcelUpload ended.");
+		
+		return resultBody;
+	}
+	
+	/**
 	 * 연차현황관리 개인연차변경 화면
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/annualHistoryPop.do")
@@ -2702,5 +2806,33 @@ public class EzAttitudeAdminController {
 		LOGGER.debug("useAnnualHistoryList ended.");
 		
 		return "json";
+	}
+	
+	private class MultipartFileResource extends InputStreamResource {
+		private String filename;
+		
+		public MultipartFileResource(InputStream inputStream, String filename) {
+			super(inputStream);
+			this.filename = filename;
+		}
+		
+		@Override
+		public String getFilename() {
+			return this.filename;
+		}
+		
+		@Override
+		public long contentLength() throws IOException {
+			return -1; // Prevent read the whole stream into memory
+		}
+	}
+	
+	private class BnkResourceHttpMessageConverter extends ResourceHttpMessageConverter {
+		@Override
+		protected Long getContentLength(org.springframework.core.io.Resource resource, MediaType contentType) throws IOException {
+			Long contentLength = super.getContentLength(resource, contentType);
+			
+			return contentLength == null || contentLength < 0 ? null : contentLength;
+		}
 	}
 }

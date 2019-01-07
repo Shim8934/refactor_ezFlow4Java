@@ -144,10 +144,5 @@
 				</c:choose>
 	    	</tbody>
 	    </table>
-	    <br>
-	    <br>
-        <div class="btnposition btnpositionNew">
-	        <a class="imgbtn"><span onclick="modifyAllAnnualCnt();" ><spring:message code='ezAttitude.t16' /></span></a>
-	    </div>
 	</body>
 </html>
