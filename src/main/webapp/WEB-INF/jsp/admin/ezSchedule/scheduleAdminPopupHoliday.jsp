@@ -195,6 +195,16 @@
 		        }
 		        window.document.all['divRecurPatterns'][idx].style.display = "";
 		    }
+		    
+		    function onlySolar(idx) {
+	            if (idx == '1') {
+	            	$('#lunarRadio').css('display','none');
+	            	$('#pickDate').prop("checked", true);
+	            	showMainPattern(0);
+	            } else {
+	            	$('#lunarRadio').css('display','');
+	            }
+		    }
 		</script>
 	</head>
 	<body class="popup" style="font-size:12px">
@@ -233,9 +243,9 @@
 		            <th style="width:200px; text-align:center">양력/음력</th>
 		            <td>
 		            	<span class="onlyUseKo">
-			                <input id="date" type="radio" name="date" checked style="margin:0px 0px 0px 4px" />
+			                <input id="date" type="radio" name="date" value="0" checked style="margin:0px 0px 0px 4px" onClick="onlySolar(0)" />
 			                <label for="date"><spring:message code='ezSchedule.t4000' /></label>
-			                <input id="date2" type="radio" name="date" style="margin:0px 0px 0px 4px" />
+			                <input id="date2" type="radio" name="date" value="1" style="margin:0px 0px 0px 4px" onClick="onlySolar(1)" />
 			                <label for="date2"><spring:message code='ezSchedule.t101' /></label>
 		            	</span>
 		            </td>
@@ -247,8 +257,10 @@
 		            <td>
 		            	<input id="pickDate" type="radio" name="pickDate" value="D" checked style="margin:0px 0px 0px 4px" onClick='showMainPattern(0);' />
 		                <label for="pickDate">특정일</label>
-		                <input id="pickDate2" type="radio" name="pickDate" value="Y" style="margin:0px 0px 0px 4px" onClick='showMainPattern(1);'/>
-		                <label for="pickDate2">특정요일</label>
+		                <span id="lunarRadio">
+			                <input id="pickDate2" type="radio" name="pickDate" value="Y" style="margin:0px 0px 0px 4px" onClick='showMainPattern(1);'/>
+			                <label for="pickDate2">특정요일</label>
+		                </span>
 		            </td>
 		        </tr>
 		        <tr>

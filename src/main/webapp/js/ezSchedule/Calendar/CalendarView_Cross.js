@@ -1489,15 +1489,11 @@ function memorialDayCheck(solarDate, lunarDate) {
     var tempmemorialDays = new Array();
     for (i = 0; i < memorialDays.length; i++) {
         if (solarDate.getFullYear() > 1800 && solarDate.getFullYear() <= 2101) {
-        	if (memorialDays[i].type == 'y') {
+        	if (memorialDays[i].type == 'Y') {
         		var resultDate = changeRepetitionToDate(memorialDays[i].repetition);
-        		if (resultDate == solarDate && memorialDays[i].solarLunar == 1) {
+        		if (resultDate.getMonth() == solarDate.getMonth() && resultDate.getDate() == solarDate.getDate() && memorialDays[i].solarLunar == 1) {
         			tempmemorialDays.push(memorialDays[i]);
-        		}
-        		
-        		if (resultDate == lunarDate && memorialDays[i].solarLunar == 2 && !memorialDays[i].leapMonth) {
-        			tempmemorialDays.push(memorialDays[i]);
-        		}
+        		}        		
         	} else {
         		if (memorialDays[i].month == solarDate.getMonth() + 1 &&
         				memorialDays[i].day == solarDate.getDate() &&
@@ -1523,15 +1519,11 @@ function yearmemorialDayCheck(solarDate, lunarDate) {
     var tempyearmemorialDays = new Array();
     for (i = 0; i < yearmemorialDays.length; i++) {
         if (solarDate.getFullYear() > 1800 && solarDate.getFullYear() <= 2101) {
-        	if (memorialDays[i].type == 'y') {
-        		var resultDate = changeRepetitionToDate(memorialDays[i].repetition);
-        		if (resultDate == solarDate && memorialDays[i].solarLunar == 1) {
-        			tempmemorialDays.push(memorialDays[i]);
-        		}
-        		
-        		if (resultDate == lunarDate && memorialDays[i].solarLunar == 2 && !memorialDays[i].leapMonth) {
-        			tempmemorialDays.push(memorialDays[i]);
-        		}
+        	if (yearmemorialDays[i].type == 'Y') {
+        		var resultDate = changeRepetitionToDate(yearmemorialDays[i].repetition);
+        		if (resultDate.getFullYear() == solarDate.getFullYear() && resultDate.getMonth() == solarDate.getMonth() && resultDate.getDate() == solarDate.getDate()  && yearmemorialDays[i].solarLunar == 1) {
+        			tempyearmemorialDays.push(yearmemorialDays[i]);
+        		}        		
         	} else {
         		if (yearmemorialDays[i].year == solarDate.getFullYear() &&
         				yearmemorialDays[i].month == solarDate.getMonth() + 1 &&
@@ -2204,10 +2196,10 @@ function changeDayToDate(year, month, order, day) {
 	var firstDateDay = firstDate.getDay();
 	
 	if (day < firstDateDay) {
-		order = order - 1;
+		order = parseInt(order) + 1;
 	}
 	
-	var resultDay = (6 - firstDateDay) + (7 * (order - 1)) + (day - firstDateDay); 
+	var resultDay = (order - 1) * 7 + (day - firstDateDay) + 1; 
 	
 	var resultDate = new Date(year + '/' + month + '/' + resultDay);
 		
