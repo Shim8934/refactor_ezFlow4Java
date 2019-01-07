@@ -226,6 +226,16 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 	}
 	
 	@Override
+	public JSONObject changeSurveyState(HttpServletRequest request, String userId, String itemId) throws Exception {
+		String url                = "/rest/ezsurvey/survey-item/state";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId",   userId);
+		param.put("surveyId", itemId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "put", null);
+		return resultBody;
+	}
+	
+	@Override
 	public JSONObject getSurveyInformation(HttpServletRequest request, String userId, String itemId, String mode) throws Exception {
 		String url                = "/rest/ezsurvey/survey-item/info";
 		Map<String, Object> param = new HashMap<String, Object>();
@@ -372,11 +382,4 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 			return contentLength == null || contentLength < 0 ? null : contentLength;
 		}
 	}
-	
-	@Override
-	public JSONObject changeSurveyState(HttpServletRequest request, String userId, String itemId) throws Exception {
-		// TODO Auto-generated method stub
-		return null;
-	}
-	
 }

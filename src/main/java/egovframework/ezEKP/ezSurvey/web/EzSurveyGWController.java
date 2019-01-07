@@ -600,7 +600,36 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	@RequestMapping(value="//rest/ezsurvey/survey-processing/check", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/rest/ezsurvey/survey-item/state", method= RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject changeSurveyState(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
+		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
+		String itemId     = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || itemId: " + itemId);
+		
+		if (serverName.equals("") || itemId.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			result           = surveyService.changeSurveyState(itemId, userInfo);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
+	@RequestMapping(value="/rest/ezsurvey/survey-processing/check", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject checkItems(Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
 		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
