@@ -132,7 +132,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		BoardMyFavoriteVO boardMyFavoriteVO = ezBoardDAO.getBoardNewBoardOrder(map);
 		
-		if (boardMyFavoriteVO != null && boardMyFavoriteVO.getBoardId() != null && !boardMyFavoriteVO.equals("")) {
+		/* 2019-01-07 홍승비 - boardMyFavoriteVO에 대한 !equals("") 비교조건 제거 */
+		if (boardMyFavoriteVO != null && boardMyFavoriteVO.getBoardId() != null) {
 			ezBoardDAO.updateMyBoard(boardMyFavoriteVO);
 		} else {
 			ezBoardDAO.insertBoardNewBoardOrder(map);
