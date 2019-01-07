@@ -2005,8 +2005,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			rtnVal.append("<LISTVIEWDATA><TOTALCOUNT>0</TOTALCOUNT><ROWS></ROWS></LISTVIEWDATA>");
 		}
 		
-		rtnVal.append("</ROWS></LISTVIEWDATA>");
-		
 		logger.debug("getTitleUserList ended.");
 		
 		return rtnVal.toString();

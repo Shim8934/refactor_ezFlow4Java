@@ -64,8 +64,6 @@
 			pCompanyID = $("#ListCompany option:selected").val();
 			pCompanyNM = $("#ListCompany option:selected").text();
 			
-			$("#jobTotalInfoRayer").html("");
-				
 			job_list();
 			job_userList();
 		}
@@ -186,12 +184,9 @@
 			    	Node = headerData.importNode(xmlRtn, true);
 		            headerData.documentElement.appendChild(Node);
 			    }
-			    
-			    //var _html = "<span>&nbsp;" + pJobNM + "-[" + "<span class='countColor'>" + pTotalCnt + "<spring:message code = 'main.t20000'/></span>]</span>";
-			    //$("#jobTotalInfoRayer").html(_html);
 				
-				document.getElementById("preview_title").innerHTML = pJobNM;
-				document.getElementById("preview_count").innerHTML = pTotalCnt;
+				document.getElementById("preview_title").textContent = pJobNM;
+				document.getElementById("preview_count").textContent = pTotalCnt;
 				
 				document.getElementById("jobUserListView").innerHTML = "";
 				
@@ -298,8 +293,6 @@
 			            		alert("<spring:message code = 'ezBoard.t55'/>");
 		            		}
 		            		
-		            		$("#jobTotalInfoRayer").html("");
-		            		
 		            		job_list();
 		            		job_userList();
 		            	},
@@ -392,7 +385,6 @@
 		
 		/* (직위/직책) 탭 이동 관련 이벤트 1 [리스트 변경] */
 		function ChangeTab(obj) {
-			$("#jobTotalInfoRayer").html("");
 			$("#searchValue").val("");
 			
 			pSearchValue = "";
