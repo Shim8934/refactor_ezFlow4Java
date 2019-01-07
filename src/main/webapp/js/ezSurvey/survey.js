@@ -2493,7 +2493,7 @@ var SurveyCreate     = function() {
 				prevQsOpt.append(body);
 				wrapper.append(prevQsOpt);
 				prevQsArea.append(wrapper);
-////				
+				
 				if (step == 3) {
 					if (question.logicFlag == 1) {
 						mkLogicForm(qstnId);
@@ -2643,7 +2643,16 @@ var SurveyCreate     = function() {
 				
 				logicNum = qstnOpt[i].logic;
 				
-				logic = (!isNaN(logicNum) && logicNum != -1) ? SurveyMessages.strQs + " " + logicNum : SurveyMessages.strNoLogic;
+				if (!isNaN(logicNum) && logicNum != -1 && logicNum != 0) {
+					logic = SurveyMessages.strQs + " " + logicNum;
+					
+				} else if (logicNum == 0) {
+					logic = SurveyMessages.strLast;
+					
+				} else {
+					logic = SurveyMessages.strNoLogic;
+				}
+				
 				$("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none");
 				$("#sltVal" + id + i).text(logic).css("dispaly", "");
 			}
@@ -2734,8 +2743,17 @@ var SurveyCreate     = function() {
 			
 			if (question.logicFlag == 1) {
 				logicNum = opt.logic;
-				logic = (!isNaN(logicNum) && logicNum != -1) ? SurveyMessages.strQs + " " + logicNum : SurveyMessages.strNoLogic; 
-
+				//logic = (!isNaN(logicNum) && logicNum != -1) ? SurveyMessages.strQs + " " + logicNum : SurveyMessages.strNoLogic; 
+				if (!isNaN(logicNum) && logicNum != -1 && logicNum != 0) {
+					logic = SurveyMessages.strQs + " " + logicNum;
+					
+				} else if (logicNum == 0) {
+					logic = SurveyMessages.strLast;
+					
+				} else {
+					logic = SurveyMessages.strNoLogic;
+				}
+				
 				$("#frstBtnGrp" + id).css("display", "none");
 				$("#thrdBtnGrp" + id).css("display", "");
 				
@@ -2867,11 +2885,11 @@ var SurveyCreate     = function() {
 			if (logicNum != "" && logicNum != 0) {
 				logic = SurveyMessages.strQs + " " + logicNum;
 				
-			} else if (logicNum == 0) {
-				logic = SurveyMessages.strLast;
+			} else if (logicNum == "") {
+				logic = SurveyMessages.strNoLogic;
 				
 			} else {
-				logic = SurveyMessages.strNoLogic;
+				logic = SurveyMessages.strLast;
 			}
 			$("select[name=slt" + id + i + "]").css("display", "none");
 			$("#sltVal" + id + i).text(logic).css("display", "");
@@ -2921,6 +2939,9 @@ var SurveyCreate     = function() {
 			
 			$("select[name=skip" + id + "]").css("display", "none");
 			$("#skipVal" + id).text(skip).css("display", "");
+			
+			$("#frstBtnGrp" + id).css("display", "none");
+			$("#skipThrdBtnGrp" + id).css("display", "");
 		}
 	}
 	
