@@ -536,17 +536,17 @@
 								html += "    </td>";
 								
 								if (lang == '' || lang == 1) {
-									html += "<td>" + (i.description != null ? i.description : " ") + "</td>";
 									html += "<td>" + (i.cn != null ? i.cn : " ") + "</td>";
 									html += "<td style='cursor:pointer' onclick=ShowUserInfo('" + i.cn + "')>" + i.displayName + "</td>";
+									html += "<td>" + (i.description != null ? i.description : " ") + "</td>";
 									html += "<td>" + (i.title  != null ? i.title : " ") + "</td>";
 									html += "<td>" + (i.extensionAttribute10  != null ? i.extensionAttribute10 : " ")+ "</td>";
 								} 
 								
 								else if (lang != '' || lang != 1) {
-									html += "<td>" + (i.description2 != null ? i.description2 : " ") + "</td>";
 									html += "<td>" + (i.cn != null ? i.cn : " ") + "</td>";
 									html += "<td style='cursor:pointer' onclick=ShowUserInfo('" + i.cn + "')>" + i.displayName2 + "</td>";
+									html += "<td>" + (i.description2 != null ? i.description2 : " ") + "</td>";
 									html += "<td>" + (i.title2  != null ? i.title2 : " ") + "</td>";
 									html += "<td>" + (i.extensionAttribute102  != null ? i.extensionAttribute102 : " ")+ "</td>";
 								}
@@ -676,12 +676,12 @@
 			<tr>
 				<th><spring:message code='ezStatistics.t1062'/></th>
 				<td>
-					<select id="searchKeycode" style="height:24px"> 
+					<select id="searchKeycode" style="height:24px; margin-top: 2px; vertical-align: middle;"> 
 						<option value="userName"><spring:message code='ezOrgan.t67'/></option>
 						<option value="deptName"><spring:message code='ezOrgan.t68'/></option>
 						<option value="userId"><spring:message code='ezOrgan.t218'/></option>
 					</select>
-					<input type="text" id="searchKeyword" style="width: 150px; margin-top: 2px; vertical-align: unset;" onKeyDown="return keyword_onkeydown(event)"/>
+					<input type="text" id="searchKeyword" style="width: 150px; margin-top: 2px; vertical-align: middle;" onKeyDown="return keyword_onkeydown(event)"/>
 					<a class="imgbtn imgbck" style="height:22px; margin-top: 2px;">
 						<span onclick="search();"><spring:message code='ezOrgan.t101'/></span>
 					</a>
@@ -691,8 +691,8 @@
 				<th><spring:message code='ezOrgan.0hun01'/></th>
 				<td>
 					<input type="checkbox" id="usepostdate" onclick="dateSearch()"><label for="usepostdate" style="margin-top: 2px; line-height: 26px;">검색기간 사용</label>
-					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: 2px; vertical-align: unset;" readonly="readonly" disabled/> ~ 
-					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: 2px; vertical-align: unset;" readonly="readonly" disabled/>
+					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: -1px;" readonly="readonly" disabled/> ~ 
+					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: -1px;" readonly="readonly" disabled/>
 				</td>
 			</tr>
 		</table>
@@ -725,9 +725,9 @@
 					<thead>
 						<tr id="mainListHeaderTr">
 							<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
-							<th style="width: 15%;"><spring:message code='ezOrgan.t68'/></th>
 							<th style="width: 15%;">아이디</th>
 							<th style="width: 15%;"><spring:message code='ezOrgan.t67'/></th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t68'/></th>
 							<th style="width: 15%;"><spring:message code='ezOrgan.t69'/></th>
 							<th style="width: 15%;"><spring:message code='ezOrgan.t1500'/></th>
 							<th style="width: 15%;"><spring:message code='ezOrgan.t96'/></th>
