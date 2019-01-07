@@ -24,7 +24,7 @@ public interface EzSurveyRestService {
 	public JSONObject deleteAttachFile(HttpServletRequest request, String userId, String filePath) throws Exception;
 	public void downloadAttachFile(HttpServletRequest request, HttpServletResponse response, String userId, String filePath, String fileName) throws Exception;
 	
-	//Survey item process(check, save, get, delete)
+	//Survey item process(check, save, get, delete, change state)
 	public JSONObject saveSurveyItem(HttpServletRequest request, JSONObject surveyItem) throws Exception;
 	public JSONObject getSurveyItems(HttpServletRequest request, String userId, String pageMode, String title, String creatorName, String startDate, String endDate, String column, String order, String srchMode, String srchOption, String listCntSize, String currentPage) throws Exception;
 	public JSONObject deleteItems(HttpServletRequest request, String userId, List<String> itemList) throws Exception;
@@ -32,4 +32,5 @@ public interface EzSurveyRestService {
 	public JSONObject getSurveyInformation(HttpServletRequest request, String userId, String itemId, String mode) throws Exception;
 	public JSONObject getSurveyQuestions(HttpServletRequest request, String userId, String itemId) throws Exception;
 	public JSONObject checkProcessingSurvey(HttpServletRequest request, String userId, String itemId) throws Exception;
+	public JSONObject changeSurveyState(HttpServletRequest request, String userId, String itemId) throws Exception;
 }

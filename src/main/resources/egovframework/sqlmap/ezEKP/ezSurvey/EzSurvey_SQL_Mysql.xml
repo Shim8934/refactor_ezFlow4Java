@@ -62,16 +62,18 @@
 		<result property="startDate"        column="start_date"          columnIndex="9" />
 		<result property="endDate"          column="end_date"            columnIndex="10"/>
 		<result property="creatorName"      column="user_name"           columnIndex="11"/>
-		<result property="deleteUser"       column="delete_user"         columnIndex="12"/>
-		<result property="updateUser"       column="update_user"         columnIndex="13"/>
-		<result property="useStatus"        column="use_status"          columnIndex="14"/>
-		<result property="openDays"         column="open_days"           columnIndex="15"/>
-		<result property="resultPublicFlag" column="result_public_flag"  columnIndex="16"/>
-		<result property="anonymousFlag"    column="anonymous_flag"      columnIndex="17"/>
-		<result property="multiAnswerFlag"  column="multi_answer_flag"   columnIndex="18"/>
-		<result property="paritipateFlag"   column="participate_flag"    columnIndex="19"/>
-		<result property="attachFlag"       column="attach_flag"         columnIndex="20"/>
-		<result property="modifyFlag"       column="modify_flag"         columnIndex="21"/>
+		<result property="creatorName1"     column="user_name1"          columnIndex="12"/>
+		<result property="creatorName2"     column="user_name2"          columnIndex="13"/>
+		<result property="deleteUser"       column="delete_user"         columnIndex="14"/>
+		<result property="updateUser"       column="update_user"         columnIndex="15"/>
+		<result property="useStatus"        column="use_status"          columnIndex="16"/>
+		<result property="openDays"         column="open_days"           columnIndex="17"/>
+		<result property="resultPublicFlag" column="result_public_flag"  columnIndex="18"/>
+		<result property="anonymousFlag"    column="anonymous_flag"      columnIndex="19"/>
+		<result property="multiAnswerFlag"  column="multi_answer_flag"   columnIndex="20"/>
+		<result property="paritipateFlag"   column="participate_flag"    columnIndex="21"/>
+		<result property="attachFlag"       column="attach_flag"         columnIndex="22"/>
+		<result property="modifyFlag"       column="modify_flag"         columnIndex="23"/>
 	</resultMap>
 	
 	<!-- AttachVO resultMap -->
@@ -148,6 +150,8 @@
 			date_add(start_date, interval #offset# minute)  as start_date,
 			date_add(end_date, interval #offset# minute)    as end_date,
 			case when #primary# = '1' then user_name1 else user_name2 end as user_name,
+			user_name1,
+			user_name2,
 			delete_user,
 			update_user,
 			use_status,
@@ -156,7 +160,8 @@
 			anonymous_flag,
 			multi_answer_flag,
 			participate_flag,
-			attach_flag
+			attach_flag,
+			modify_flag
 		from tbl_survey
 	</sql>
 	

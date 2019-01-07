@@ -373,4 +373,10 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		}
 	}
 	
+	@Override
+	public JSONObject changeSurveyState(HttpServletRequest request, String userId, String itemId) throws Exception {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
 }

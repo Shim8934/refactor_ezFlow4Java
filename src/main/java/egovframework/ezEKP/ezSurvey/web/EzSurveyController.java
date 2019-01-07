@@ -214,7 +214,6 @@ public class EzSurveyController extends EgovFileMngUtil {
 			JSONObject creator = (JSONObject)surveyInf.get("creator");
 			model.addAttribute("survey" , survey);
 			model.addAttribute("creator", creator);
-			logger.debug("" + survey);
 		}
 		else {
 			int reasonCode = ((Long)surveyInf.get("code")).intValue();
@@ -275,6 +274,26 @@ public class EzSurveyController extends EgovFileMngUtil {
 		resultObj = surveyRestService.getSurveyQuestions(request, user.getId(), itemId);
 		
 		logger.debug("jsonGetSurveyQuestions end");
+		return resultObj.toString();
+	}
+	
+	@RequestMapping(value="/ezSurvey/changeSurveyState.do")
+	@ResponseBody
+	public String jsonChangeSurveyState(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("jsonChangeSurveyState start");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		JSONObject resultObj = new JSONObject();
+		String itemId        = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		
+		if (itemId.equals("")) {
+			resultObj.put("code", 1);
+			resultObj.put("status", "error");
+			return resultObj.toString();
+		}
+		
+		resultObj = surveyRestService.changeSurveyState(request, user.getId(), itemId);
+		
+		logger.debug("jsonChangeSurveyState end");
 		return resultObj.toString();
 	}
 	
