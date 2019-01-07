@@ -902,6 +902,36 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject changeSurveyState(String itemId, LoginVO userInfo) throws Exception {
+		JSONObject result      = new JSONObject();
+		int tenantId           = userInfo.getTenantId();
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("tenantId",  tenantId);
+		map.put("companyId", userInfo.getCompanyID());
+		map.put("primary",   userInfo.getPrimary());
+		map.put("offset",    commonUtil.getMinuteUTC(userInfo.getOffset()));
+		map.put("userId",    userInfo.getId());
+		map.put("surveyId",  itemId);
+		
+		SurveyVO survey = ezSurveyDAO.getSurveyInfo(map);
+		
+		if (survey.getModifyFlag() == 1) {
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			Date date                  = new Date();
+			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+			survey.setModifyFlag(0);
+			survey.setUpdateDate(timeUTC);
+			survey.setUpdateUser(userInfo.getId());
+			ezSurveyDAO.updateSurveyItem(survey);
+		}
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+	
 	
 	
 	

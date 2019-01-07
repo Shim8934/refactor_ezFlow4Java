@@ -166,7 +166,7 @@
 	</sql>
 	
 	<sql id="surveyItemList">
-		where use_status = 1 and tenant_id = #tenantId#
+		where use_status = 1 and tenant_id = #tenantId# and modify_flag = 0
 		<isEqual property="searchMode" compareValue="1">
 			<isEqual property="searchOption" compareValue="title" prepend=" and ">
 				title like concat('%', concat(#title#, '%'))

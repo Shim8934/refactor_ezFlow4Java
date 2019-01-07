@@ -41,4 +41,5 @@ public interface EzSurveyService {
 	void deleteItems(List<Long> itemIdList, LoginVO userInfo) throws Exception;
 	JSONObject getItemInfo(Long surveyId, String mode, String realPath, LoginVO userInfo) throws Exception;
 	JSONObject getSurveyQuestions(Long surveyId, String realPath, LoginVO userInfo) throws Exception;
+	JSONObject changeSurveyState(String itemId, LoginVO userInfo) throws Exception;
 }

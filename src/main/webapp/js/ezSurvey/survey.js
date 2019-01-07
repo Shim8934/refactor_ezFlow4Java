@@ -142,18 +142,18 @@ var SurveyCreate     = function() {
 		}
 		
 		if (surveyObj["surveyId"] != -1) {
-			window.addEventListener("unload", function(e) {changeSurveyState(surveyObj["surveyId"]);}, false);
+			window.addEventListener("beforeunload", function(e) {changeSurveyState();}, false);
 		}
 	}
 	
-	function changeSurveyState(surveyId) {
+	function changeSurveyState() {
 		$.ajax({
-			type: "POST",
+			type: "GET",
 			url: "/ezSurvey/changeSurveyState.do",
-			data: {surveyId : surveyId},
+			data: {surveyId : surveyObj["surveyId"]},
 			contentType: "application/json; charset=utf-8",
 			dataType: "JSON",
-			async: false,
+			async: true,
 			success : function(data) {},
 			error : function(error) {}
 		});
