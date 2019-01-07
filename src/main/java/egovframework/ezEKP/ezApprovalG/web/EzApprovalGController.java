@@ -6084,7 +6084,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         
         if ( xmlDom.getDocumentElement().getChildNodes().getLength() > 22)
         {
-            if (xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent().trim() != "")
+            if (!xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent().trim().equals(""))
                 subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent();
         }
          result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftfrom, draftto, apprfrom,
