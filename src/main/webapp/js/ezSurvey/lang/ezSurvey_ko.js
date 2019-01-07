@@ -93,7 +93,7 @@ var SurveyMessages = {
 	strToday     : "오늘",
 	monthNames   : ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
 	dayNames     : ["일", "월", "화", "수", "목", "금", "토"],
-	strNoLogic   : "분기 없음",
+	strNoLogic   : "분기없음",
 	strchooseNum : "분기를 선택해 주세요.",
 	strBetweenNum: "최소값과 최대값 사이의 정수를 입력해 주세요.",
 	strQs		 : "질문",

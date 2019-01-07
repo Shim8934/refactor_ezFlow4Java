@@ -486,14 +486,6 @@ var SurveyCreate     = function() {
 				}
 			}
 		}
-		/* 기존의 미리보기 설문 목적 부분 수정으로 불필요 
-		var surveyPp   = document.getElementById("info-input-pp");
-		var ppContent = document.querySelectorAll("div[class=ppContent]");
-		
-		for (var i = 0; i < ppContent.length; i++) {
-			ppContent[i].textContent = surveyPp.value; 
-		}
-		*/
 		return returnObj;
 	}
 	// 분기 설정 이후 step2로 되돌아갈 시, 질문의 모든 로직 삭제
@@ -501,19 +493,19 @@ var SurveyCreate     = function() {
 		
 		var questionList = surveyObj.questions;
 		var questionLength = questionList.length;
-		var result = checkAllLogic(questionList, questionLength);
+		var result = checkAllLogicAndSkip(questionList, questionLength);
 
 		if (result == 'Y') {
-			if (confirm("질문 작성 단계로 이동시, 모든 분기가 초기화됩니다.") == true) {
+			if (confirm("질문 작성 단계로 이동시, 모든 분기와 건너뛰기가 초기화됩니다.") == true) {
 				for (var i = 0; i < questionLength; i++) {
 					var qstn = questionList[i];
 					var level = qstn.level;
 					var type = qstn.type;
 					var logicFlag = qstn.logicFlag;
-
+					var skipFlag = qstn.skipFlag;
 					if (logicFlag == 1) {
 						// 질문의 로직 번호 삭제
-						if (type == 1 || type == 2 || type == 9) {
+						if (type == 1 || type == 9) {
 							var opt = qstn['option'];
 							var optLength = opt.length;
 							
@@ -535,17 +527,29 @@ var SurveyCreate     = function() {
 						}
 					}
 					
+					if (skipFlag == 1) {
+						qstn['skipFlag'] = 0;
+						qstn['skip'] = -1;
+					}
+					
 				}
+				console.log(questionList);
 			}
 		}
 	}
 	
-	function checkAllLogic(questions, length) {
+	function checkAllLogicAndSkip(questions, length) {
 		var result = "";
 		
 		for (var i = 0; i < length; i++) {
-			var flag = questions[i].logicFlag;
-			if (flag == 1) {
+			var logicFlag = questions[i].logicFlag;
+			var skipFlag = questions[i].skipFlag;
+			
+			if (logicFlag == 1) {
+				result = 'Y';
+				break;
+			}
+			if (skipFlag == 1) {
 				result = 'Y';
 				break;
 			}
@@ -1089,16 +1093,6 @@ var SurveyCreate     = function() {
 				pf = checkLogicNum(id, qstn, type);
 				result = pf == "success" ? addDrdwLogic(id, qstn) : "";
 				break;
-				/*
-			case 2 :
-			case 3:
-			case 4:
-			case 5:
-			case 6:
-			case 8:
-				result = addOthersLogic(id, qstn);
-				break;
-				*/
 			}
 			
 			if (result == "success") {
@@ -1166,16 +1160,6 @@ var SurveyCreate     = function() {
 			case 9:
 				showDrdwLogicForm(id, qstn);
 				break;
-				/*
-			case 2 :
-			case 3:
-			case 4:
-			case 5:
-			case 6:
-			case 8:
-				showOthersLogicForm(id, qstn);
-				break;
-				*/
 			}
 			$("#frstBtnGrp" + id).css("display", "none");
 			$("#scndBtnGrp" + id).css("display", "");
@@ -1218,13 +1202,7 @@ var SurveyCreate     = function() {
 					}
 					
 				} 
-				/*
-				else {
-					qstn.option[0].logic  = -1;
-				}
-				
 				$("#logic" + id).remove();
-				*/
 			}
 			qstn.logicFlag = 0;
 			
@@ -1238,10 +1216,13 @@ var SurveyCreate     = function() {
 			$("#thrdBtnGrp" + id).css("display", "none");
 		});
 //		
-		// skip 추가 폼 생성 이벤트
+		// skip 폼 생성 이벤트
 		$(".prevQsArea").on("click", ".addSkip", function() {
-			console.log("스킵 추가");
 			var id = parseInt($(this).attr("id").replace("addSkip", ""));
+			
+			mkSkipForm(id);
+			
+			/*
 			var prevWrapper = $(this).parents(".prevQsWrapper");
 			var qstnContent = prevWrapper.find(".question-content");
 			var qstnList = SurveyCreate.getQs();
@@ -1259,22 +1240,22 @@ var SurveyCreate     = function() {
 			
 			var html = "";
 			html += "<span id='skip" + id + "' class='skipArea'>";
-			html += "<img class='prevArrow' src='/images/ezSurvey/arrow.png'>";
-			html += "<select class='skipSelect' name='skip" + id + "' id='skip" + id + "'>";
+			html += "<img class='skipArrow' src='/images/ezSurvey/arrow.png'>";
+			html += "<select class='skipSelect' name='skip" + id + "'>";
 			html += htmlOption;
 			html += "</select>";
 			html += "<span class='skipSpan' id='skipVal" + id + "'></span>";
 			html += "</span>";
 			
 			qstnContent.append($(html)[0]);
-			
+			*/
 			$("#frstBtnGrp" + id).css("display", "none");
 			$("#skipScndBtnGrp" + id).css("display", "");
 			$("#skipThrdBtnGrp" + id).css("display", "none");
 			
 		});
 		
-		// 스킵 저장 버튼 이벤트
+		// skip 저장 버튼 이벤트
 		$(".prevQsArea").on("click", ".saveSkip", function() {
 			var id = parseInt($(this).attr("id").replace("saveSkip", ""));
 			// 로직 flag 저장
@@ -1283,24 +1264,19 @@ var SurveyCreate     = function() {
 			var type = qstn.type;
 			var result = "";
 			var pf = "";
-			
-			
-			//addOthersLogic(id, qstn);
-			
 			var skip = "";
 			var skipNum = $("select[name=skip" + id  + "] option:selected").val();
 			
 			// option 객체에 logic 추가
-			
 			qstn['skipFlag'] = 1;
 			qstn['skip'] = parseInt(skipNum);
+			qstn['logicFlag'] = 0;
 
 			if (skipNum != "" && skipNum != 0) {
 				skip = SurveyMessages.strQs + " " + skipNum;
 				
 			} else if (skipNum == 0) {
 				skip = SurveyMessages.strLast;
-				
 			}
 			/*
 			else {
@@ -1324,7 +1300,6 @@ var SurveyCreate     = function() {
 				pf = checkLogicNum(id, qstn, type);
 				result = pf == "success" ? addDrdwLogic(id, qstn) : "";
 				break;
-				
 			case 2 :
 			case 3:
 			case 4:
@@ -1333,9 +1308,6 @@ var SurveyCreate     = function() {
 			case 8:
 				result = addOthersLogic(id, qstn);
 				break;
-				
-				
-				
 			}
 			*/
 			/*
@@ -1354,7 +1326,66 @@ var SurveyCreate     = function() {
 				$("#thrdBtnGrp" + id).css("display", "");
 			}
 			*/
+			
+			$("#frstBtnGrp" + id).css("display", "none");
+			$("#skipScndBtnGrp" + id).css("display", "none");
+			$("#skipThrdBtnGrp" + id).css("display", "");
 			console.log(qstnList);
+		});
+//		
+		// skip 취소 버튼 이벤트
+		$(".prevQsArea").on("click", ".cancelSkip", function() {
+			var id = $(this).attr("id").replace("cancelSkip", "");
+			var qstnList = SurveyCreate.getQs();
+			var qstn = qstnList[id - 1];
+			
+			if (qstn['skipFlag'] == 0) {
+				$("#skip" + id).remove();
+			} else {
+				var skip = "";
+				var skipNum = qstn['skip'];
+
+				if (skipNum != -1) {
+					skip = SurveyMessages.strQs + " " + skipNum;
+					$("#skipVal" + id).text(skip).css("display", "");
+				}
+				$("select[name=skip" + id + "]").css("display", "none");
+			}
+			
+			$("#frstBtnGrp" + id).css("display", "");
+			$("#skipScndBtnGrp" + id).css("display", "none");
+			$("#skipThrdBtnGrp" + id).css("display", "none");
+		});
+		
+		// skip 삭제 버튼 이벤트
+		$(".prevQsArea").on("click", ".delSkip", function() {
+			var id = $(this).attr("id").replace("delSkip", "");
+			var qstnList = SurveyCreate.getQs();
+			var qstn = qstnList[id - 1];
+
+			qstn['skipFlag'] = 0;
+			qstn['skip'] = -1;
+			$("#skip" + id).remove();
+			
+			$("#frstBtnGrp" + id).css("display", "");
+			$("#skipScndBtnGrp" + id).css("display", "none");
+			$("#skipThrdBtnGrp" + id).css("display", "none");
+			console.log(qstnList);
+		});
+		
+		$(".prevQsArea").on("click", ".mdfSkip", function() {
+			var id = $(this).attr("id").replace("mdfSkip", "");
+			var qstnList = SurveyCreate.getQs();
+			var qstn = qstnList[id - 1];
+			
+			if (qstn['skipFlag'] != 0) {
+				var skipNum = qstn['skip'];
+				!isNaN(skipNum) ? $("select[name=skip" + id + "]").val(skipNum).prop("selected", true).css("display", "") : "";  
+				$("#skipVal" + id).css("display", "none");
+			}
+			$("#frstBtnGrp" + id).css("display", "none");
+			$("#skipScndBtnGrp" + id).css("display", "");
+			$("#skipThrdBtnGrp" + id).css("display", "none");
 		});
 		
 		$(".quesBacgr").on("input", ".slider-range", function() {
@@ -1431,7 +1462,7 @@ var SurveyCreate     = function() {
 		var wrapper = $("#prevQstn" + id);
 		var impttTag = "";
 
-		if (wrapper.find(".question-content").find(".imptt").length == 0) {
+		if (wrapper.find(".question-header").find(".imptt").length == 0) {
 			impttTag = $("<strong id='imptt" + id + "' class='imptt'>*</strong>");
 			//wrapper.find(".question-content").find("span[id^=frstBtnGrp]").before(impttTag);
 			wrapper.find(".question-header").prepend(impttTag);
@@ -2462,9 +2493,13 @@ var SurveyCreate     = function() {
 				prevQsOpt.append(body);
 				wrapper.append(prevQsOpt);
 				prevQsArea.append(wrapper);
-				
-				if (step == 3 && question.logicFlag == 1) {
-					mkLogicForm(qstnId);
+////				
+				if (step == 3) {
+					if (question.logicFlag == 1) {
+						mkLogicForm(qstnId);
+					} else if (question.skipFlag == 1) {
+						mkSkipForm(qstnId)
+					}
 				}
 			}
 		}
@@ -2570,16 +2605,6 @@ var SurveyCreate     = function() {
 		case 9 :
 			drdwLogicForm(prevWrapper, htmlOption, thisQstn, id);
 			break;
-			/*
-		case 2 :
-		case 3 :
-		case 4 :
-		case 5 :
-		case 6 :
-		case 8 :
-			othersLogicForm(prevWrapper, htmlOption, thisQstn, id);
-			break;
-			*/
 		}
 	}
 	
@@ -2677,42 +2702,6 @@ var SurveyCreate     = function() {
 		}
 	}
 	
-	// skip form 추가
-	/*
-	function skipForm(prevWrapper, thisId) {
-		
-		var qstnList = SurveyCreate.getQs();
-		var htmlOption = "";
-		htmlOption += "<option value=''>" + SurveyMessages.strNoLogic + "</option>"; 
-		
-		for (var i = 0; i < qstnList.length; i++) {
-			var qstnId = qstnList[i]["level"];
-			if (qstnId > thisId) {
-				htmlOption += "<option value='" + qstnId + "'>" + qstnId + "</option>"; 
-			}
-		}
-		htmlOption += "<option value='0'>" + SurveyMessages.strLast + "</option>"; 
-		
-		var id = "";
-		var qstnContent = prevWrapper.find(".question-content");
-		
-		if (qstnId) {
-			id = thisId;
-		}
-		var html = "";
-		html += "<span id='skip" + id + "' class='skipArea'>";
-		html += "<img class='prevArrow' src='/images/ezSurvey/arrow.png'>";
-		html += "<select class='skipSelect' name='skip" + id + "' id='skip" + id + "'>";
-		html += htmlOption;
-		html += "</select>";
-		html += "<span class='skipSpan' id='skipVal" + id + "'></span>";
-		html += "</span>";
-		
-		//prevQsOpt.append($(html)[0]);
-		qstnContent.append($(html)[0]);
-		
-	}
-	*/
 	// dropdown 질문에 logic form 추가
 	function drdwLogicForm(prevWrapper, htmlOption, question, qstnId) {
 		var id = "";
@@ -2785,11 +2774,11 @@ var SurveyCreate     = function() {
 			if (logicNum != "" && logicNum != 0) {
 				logic = SurveyMessages.strQs + " " + logicNum;
 				
-			} else if (logicNum == 0) {
-				logic = SurveyMessages.strLast;
+			} else if (logicNum == "") {
+				logic = SurveyMessages.strNoLogic;
 				
 			} else {
-				logic = SurveyMessages.strNoLogic;
+				logic = SurveyMessages.strLast;
 			}
 
 			$("select[name=slt" + id + i + "]").css("display", "none");
@@ -2889,40 +2878,52 @@ var SurveyCreate     = function() {
 		}
 		return "success";
 	}
-	/*
-	function showOthersLogicForm(id, qstn) {
-		var logicNum = qstn.option[0]['logic'];
+	
+	function mkSkipForm(id) {
+		var prevWrapper = $("#prevQstn" + id);
+		var qstnContent = prevWrapper.find(".question-content");
+		var qstnList = SurveyCreate.getQs();
+		var qstn = qstnList[id-1];
+		var skipFlag = qstn['skipFlag'];
 		
-		$("#sltVal" + id).css("display", "none");
-		$("#slt" + id).val(logicNum).prop("selected", true).css("display", "");
+		var htmlOption = "";
+		htmlOption += "<option value=''>" + SurveyMessages.strNoLogic + "</option>"; 
 		
-		return "success";
-	}
-	*/
-	/*
-	// 나머지 질문 객체, ui에 로직 value 추가
-	function addOthersLogic(id, qstn) {
-		var logic = "";
-		var logicNum = $("select[name=slt" + id  + "] option:selected").val();
-		
-		// option 객체에 logic 추가
-		qstn.option[0]['logic'] = parseInt(logicNum);
-
-		if (logicNum != "" && logicNum != 0) {
-			logic = SurveyMessages.strQs + " " + logicNum;
-			
-		} else if (logicNum == 0) {
-			logic = SurveyMessages.strLast;
-			
-		} else {
-			logic = SurveyMessages.strNoLogic;
+		for (var i = 0; i < qstnList.length; i++) {
+			var qstnId = qstnList[i]["level"];
+			if (qstnId > id) {
+				htmlOption += "<option value='" + qstnId + "'>" + qstnId + "</option>"; 
+			}
 		}
-		$("select[name=slt" + id + "]").css("display", "none");
-		$("#sltVal" + id).text(logic).css("display", "");
+		htmlOption += "<option value='0'>" + SurveyMessages.strLast + "</option>"; 
 		
-		return "success";
+		var html = "";
+		html += "<span id='skip" + id + "' class='skipArea'>";
+		html += "<img class='skipArrow' src='/images/ezSurvey/arrow.png'>";
+		html += "<select class='skipSelect' name='skip" + id + "'>";
+		html += htmlOption;
+		html += "</select>";
+		html += "<span class='skipSpan' id='skipVal" + id + "'></span>";
+		html += "</span>";
+		
+		qstnContent.append($(html)[0]);
+		
+		if (skipFlag == 1) {
+			var skip = "";
+			var skipNum = qstn['skip'];
+
+			if (skipNum != "" && skipNum != 0) {
+				skip = SurveyMessages.strQs + " " + skipNum;
+				
+			} else if (skipNum == 0) {
+				skip = SurveyMessages.strLast;
+			}
+			
+			$("select[name=skip" + id + "]").css("display", "none");
+			$("#skipVal" + id).text(skip).css("display", "");
+		}
 	}
-	*/
+	
 	// 로직 폼 제거
 	function dltLogicForm(type, id) {
 		if (type == 1 || type == 2) {
