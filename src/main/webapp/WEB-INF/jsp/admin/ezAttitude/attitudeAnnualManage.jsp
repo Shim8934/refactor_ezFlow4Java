@@ -118,6 +118,7 @@
                 var selyear = "";
                 
 	            if (isfirst) {
+	            	searchYear = year;
 	                selyear = year;
 	                tempyear = year + 2;
 	                maxyear = year + 2;
