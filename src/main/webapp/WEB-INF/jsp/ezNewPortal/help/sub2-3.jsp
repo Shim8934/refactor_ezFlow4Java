@@ -70,7 +70,7 @@
 		<li>추가를 마치면 <b>[확인]</b> 버튼을 클릭합니다.</li>
 		<li>설정을 마치면 <b>[저장]</b> 버튼을 클릭합니다. </li>
 	</ol>
-	<img src="../../images/ezNewPortal/help/mail/.png" alt="" title="" />
+	<img src="../../images/ezNewPortal/help/mail/auto_forward.png" alt="" title="" />
 	
 	<h2> 자동분류 </h2>
 	<h3 class="sub_content"> 메일 자동분류를 설정하면, 새로 수신된 메일이 등록된 기준에 따라 자동분류가 됩니다. </h3>
@@ -85,7 +85,7 @@
 		<li>등록된 분류를 삭제하려면 분류이름을 선택 후 상단 <b>[삭제]</b> 버튼을 클릭합니다. </li>
 		<li>등록된 분류의 순서를 조정하려면 분류이름을 선택 후 상단 위, 아래로 버튼을 클릭하여 순서를 조정합니다. </li>
 	</ol>
-	<img src="../../images/ezNewPortal/help/mail/.png" alt="" title="" />
+	<img src="../../images/ezNewPortal/help/mail/auto_categorization.png" alt="" title="" />
 	
 	<h2> 자동삭제 </h2>
 	<h3 class="sub_content"> 편지함별로 자동삭제할 일자를 지정해두어, 메일용량관리를 편리하게 할 수 있습니다. </h3>
