@@ -19,7 +19,7 @@
 		.mainview {margin-top: 5px; width:50%; float:left;}
 		.previewH {margin-top: 5px; width:50%; height: 690px; float:right; overflow: hidden;}
 		.previewmail_info {border-bottom: 1px solid #e5e5e5; min-width: 300px;}
-		.previewmail_bar_h {display: inline-block; width: 5px; height: 690px;}
+		.previewmail_bar_h {display: inline-block; width: 5px; height: 100%;}
 		.preContent_RayerH {position: absolute; display: inline-block; width: 49%;}
 		.preview_header {padding: 0px; font-weight: bold; height: 11px; line-height: 11px;}
 		.preview_title {display: inline-block; margin-top: -6px; margin-left: 13px;}
@@ -64,8 +64,6 @@
 			pCompanyID = $("#ListCompany option:selected").val();
 			pCompanyNM = $("#ListCompany option:selected").text();
 			
-			$("#jobTotalInfoRayer").html("");
-				
 			job_list();
 			job_userList();
 		}
@@ -111,7 +109,7 @@
             listview.SetID("lvJobList");
             listview.SetMulSelectable(true);
             listview.SetRowOnClick("job_userList_click");
-            listview.SetSelectFlag(true);
+            listview.SetSelectFlag(false);
             listview.SetRowOnDblClick("job_view");
             listview.SetHeightFree(true);
             listview.DataSource(headerData);
@@ -143,7 +141,6 @@
 			var oArrRows = jobList.GetSelectedRows();
 			if (oArrRows != 0) {
 				var pJobID = oArrRows[0].getAttribute("DATA1");
-				//var pJobNM = oArrRows[0].firstChild.innerText; //수정
 				var pJobNM = oArrRows[0].childNodes[1].textContent;
 				
 				$.ajax({
@@ -186,12 +183,9 @@
 			    	Node = headerData.importNode(xmlRtn, true);
 		            headerData.documentElement.appendChild(Node);
 			    }
-			    
-			    //var _html = "<span>&nbsp;" + pJobNM + "-[" + "<span class='countColor'>" + pTotalCnt + "<spring:message code = 'main.t20000'/></span>]</span>";
-			    //$("#jobTotalInfoRayer").html(_html);
 				
-				document.getElementById("preview_title").innerHTML = pJobNM;
-				document.getElementById("preview_count").innerHTML = pTotalCnt;
+				document.getElementById("preview_title").textContent = pJobNM;
+				document.getElementById("preview_count").textContent = pTotalCnt;
 				
 				document.getElementById("jobUserListView").innerHTML = "";
 				
@@ -208,7 +202,13 @@
 			} else {
 				document.getElementById("PreContent_RayerH").style.display = "none";
 				document.getElementById("preview_nodata").style.display = "";
-				document.getElementById("nodata_title").textContent = "선택된 직책이 없습니다.";
+				
+				if (Tab1_SelectID == "001") {
+					document.getElementById("nodata_title").textContent = "<spring:message code = 'ezOrgan.khj01'/>";
+				}
+				else {
+					document.getElementById("nodata_title").textContent = "<spring:message code = 'ezOrgan.khj02'/>";
+				}
 			}
 		}
 		
@@ -247,9 +247,9 @@
 				// 수정의 경우 선택된 Row 가 하나 이상인지 확인
 				if (mode == "Mod" && jobIDList.length > 1) {
 					if (type == "001") {
-						alert("직위를 하나만 선택하세요.");
+						alert("<spring:message code = 'ezOrgan.khj03'/>");
 					} else if (type == "002") {
-						alert("직책을 하나만 선택하세요.");
+						alert("<spring:message code = 'ezOrgan.khj04'/>");
 					}
 					return;
 				}
@@ -297,8 +297,6 @@
 		            		} else {
 			            		alert("<spring:message code = 'ezBoard.t55'/>");
 		            		}
-		            		
-		            		$("#jobTotalInfoRayer").html("");
 		            		
 		            		job_list();
 		            		job_userList();
@@ -392,7 +390,6 @@
 		
 		/* (직위/직책) 탭 이동 관련 이벤트 1 [리스트 변경] */
 		function ChangeTab(obj) {
-			$("#jobTotalInfoRayer").html("");
 			$("#searchValue").val("");
 			
 			pSearchValue = "";
@@ -531,6 +528,7 @@
 		function windowResize() {
 			var height = document.documentElement.clientHeight;
 			
+			document.getElementById("previewH").style.height = (height - 200) + "px";
 			document.getElementById("jobListView").style.height = (height - 225)+ "px";
 			document.getElementById("jobUserListView").style.height = (height - 273) + "px";
 		}
@@ -666,7 +664,7 @@
 		</div>
 	</div>
 	
-	<div class="previewH">
+	<div id="previewH" class="previewH">
 		<div class="previewmail_bar_h"></div>
 		<div id="PreContent_RayerH" class="preContent_RayerH" style="display: none;">
 			<div class="previewmail">
