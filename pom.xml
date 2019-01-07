@@ -403,9 +403,9 @@
 		<dependency>
 			<groupId>kr.dogfoot.hwplib</groupId>
 			<artifactId>hwplib</artifactId>
-			<version>1.2</version>
+			<version>1.5</version>
 			<scope>system</scope>
-			<systemPath>${webappLib}/hwplib-1.2.jar</systemPath>
+			<systemPath>${webappLib}/hwplib-1.5.jar</systemPath>
 		</dependency>
 		
 		<dependency>
