@@ -580,7 +580,7 @@
 	        	
 	        	document.getElementById("contentlist").style.height = height + "px";
 	        	 */
-	        	 document.getElementById("ListBody").style.height = (document.documentElement.clientHeight - 300) + "px"; 
+	        	document.getElementById("ListBody").style.height = (document.documentElement.clientHeight - 300) + "px"; 
 	        }
 		    
 		    $(function(){
@@ -699,33 +699,14 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
-		<%-- <div id="contentlist" style="width:100%; height: 653px; overflow: auto; margin-top:5px">
-			<div>
-				<table id="retireUserList" class="mainlist" style="width:100%">
-					<thead style> 
-				    	<tr>
-				      		<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
-				      		<th style="width:200px;"><spring:message code='ezOrgan.t68'/></th>
-				      		<th style="width:200px;">아이디</th>
-				      		<th style="width:200px;"><spring:message code='ezOrgan.t67'/></th>
-				      		<th style="width:200px;"><spring:message code='ezOrgan.t69'/></th>
-				      		<th style="width:200px;"><spring:message code='ezOrgan.t1500'/></th>
-				      		<th style="width:200px;"><spring:message code='ezOrgan.t96'/></th>
-				      		<th style="width:200px;"><spring:message code='ezOrgan.t313'/></th>
-				   		</tr>
-			   		</thead>
-				   	<!-- list -->
-			   		<tbody id="mainListBody" style="overflow: auto;"></tbody>
-				</table>
-			</div>		
-		</div> --%>
+		
 		<div id="contentlist" style="width: 100%; margin-top: 5px; overflow: hidden;">
 			<div id="ListHeader">
 				<table id="mainListHeader" class="mainlist" style="width:100%">
 					<thead>
 						<tr id="mainListHeaderTr">
 							<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
-							<th style="width: 15%;">아이디</th>
+							<th style="width: 15%;"><spring:message code='ezOrgan.t218'/></th>
 							<th style="width: 15%;"><spring:message code='ezOrgan.t67'/></th>
 							<th style="width: 15%;"><spring:message code='ezOrgan.t68'/></th>
 							<th style="width: 15%;"><spring:message code='ezOrgan.t69'/></th>

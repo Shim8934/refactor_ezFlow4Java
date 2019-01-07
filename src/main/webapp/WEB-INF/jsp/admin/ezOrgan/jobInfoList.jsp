@@ -109,7 +109,7 @@
             listview.SetID("lvJobList");
             listview.SetMulSelectable(true);
             listview.SetRowOnClick("job_userList_click");
-            listview.SetSelectFlag(true);
+            listview.SetSelectFlag(false);
             listview.SetRowOnDblClick("job_view");
             listview.SetHeightFree(true);
             listview.DataSource(headerData);
@@ -141,7 +141,6 @@
 			var oArrRows = jobList.GetSelectedRows();
 			if (oArrRows != 0) {
 				var pJobID = oArrRows[0].getAttribute("DATA1");
-				//var pJobNM = oArrRows[0].firstChild.innerText; //수정
 				var pJobNM = oArrRows[0].childNodes[1].textContent;
 				
 				$.ajax({
@@ -203,7 +202,13 @@
 			} else {
 				document.getElementById("PreContent_RayerH").style.display = "none";
 				document.getElementById("preview_nodata").style.display = "";
-				document.getElementById("nodata_title").textContent = "선택된 직책이 없습니다.";
+				
+				if (Tab1_SelectID == "001") {
+					document.getElementById("nodata_title").textContent = "<spring:message code = 'ezOrgan.khj01'/>";
+				}
+				else {
+					document.getElementById("nodata_title").textContent = "<spring:message code = 'ezOrgan.khj02'/>";
+				}
 			}
 		}
 		
@@ -242,9 +247,9 @@
 				// 수정의 경우 선택된 Row 가 하나 이상인지 확인
 				if (mode == "Mod" && jobIDList.length > 1) {
 					if (type == "001") {
-						alert("직위를 하나만 선택하세요.");
+						alert("<spring:message code = 'ezOrgan.khj03'/>");
 					} else if (type == "002") {
-						alert("직책을 하나만 선택하세요.");
+						alert("<spring:message code = 'ezOrgan.khj04'/>");
 					}
 					return;
 				}
