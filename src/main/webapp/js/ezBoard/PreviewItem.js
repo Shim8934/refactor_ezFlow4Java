@@ -254,7 +254,7 @@ function PreviewRayerChange_photo(pGubun) {
             }
             document.getElementById("PreviewRayerH").style.width = "752px";
             if ($("body").attr("class") == "tabbody") {
-            	document.getElementById("MailListRayer").style.width = (CurrenWidth - 760-20) + "px";
+            	document.getElementById("MailListRayer").style.width = (CurrenWidth - 780) + "px";
             } else{
             	document.getElementById("MailListRayer").style.width = (CurrenWidth - 760) + "px";
             }
@@ -979,8 +979,8 @@ function Window_resize_photo() {
                 
                 document.getElementById("PreviewRayerH").style.width = "752px";
             	if ($("body").attr("class") == "tabbody") {
-                	document.getElementById("MailListRayer").style.width = (CurrenWidth - 760-20) + "px";
-                } else{
+                	document.getElementById("MailListRayer").style.width = (CurrenWidth - 780) + "px";
+                } else {
                 	document.getElementById("MailListRayer").style.width = (CurrenWidth - 760) + "px";
                 }
                 document.getElementById("PreContent_RayerH").style.width = "749px";
@@ -997,7 +997,6 @@ function Window_resize_photo() {
                 pPreviewShow_HOW = "H";
                 pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
                 pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
-                
             }
             else if (pPreviewShow_HOW.trim() == "OFF") {
                 document.getElementById("PreviewRayerW").style.display = "none";
