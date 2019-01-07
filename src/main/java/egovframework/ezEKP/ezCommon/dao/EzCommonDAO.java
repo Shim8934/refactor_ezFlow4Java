@@ -378,4 +378,14 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.createTblWebfolderToken");
 		}
 	}
+	
+	public void addUserMasterMailBoxQuota() {
+		try {
+			select("EzCommonDAO.checkUserMasterMailBoxQuota");
+		} catch (Exception e) {
+			logger.debug("tbl_usermaster mailBoxQuota doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addUserMasterMailBoxQuota");
+		}
+	}
 }

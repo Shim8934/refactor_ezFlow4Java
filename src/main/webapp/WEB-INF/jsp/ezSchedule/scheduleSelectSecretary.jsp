@@ -10,7 +10,7 @@
 	    <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />	    
 	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/lang/ezSchedule.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
