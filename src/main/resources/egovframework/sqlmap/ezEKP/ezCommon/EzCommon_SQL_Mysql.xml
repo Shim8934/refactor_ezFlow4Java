@@ -484,7 +484,6 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
 	
-<<<<<<< HEAD
 	<select id="EzCommonDAO.checkJmochaMailGenenalPreviewMailImage">
 		SELECT 
 			PREVIEW_MAIL_IMAGE
