@@ -1179,3 +1179,29 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 #theme3Body .weather{overflow:hidden}
 #theme3Body .weather_content{height:188px; padding:10px;background:#fff; margin:0px;}
 #theme3Body .weather_mini dl dd{float:left; width:50%; margin:0px; padding:0px; color:#000; font-size:15px; text-align:left;}
+
+
+
+
+/* collaborate */
+/* 20181002 collaborate */
+#theme1Body .collaborateBox {width: 933px; height: 320px; border: 1px solid #dcdcdc; box-sizing: border-box;}
+#theme1Body .collaborate_tab {float: left; width:24%; height: 320px; margin:0px; padding:0px; border-right:1px solid #e7e7e7; color:#555555; font-size:13px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
+#theme1Body .collaborate_tab li{height:38px; line-height:38px; padding:0px 10px; border-bottom:1px solid #e7e7e7; cursor: pointer;}
+#theme1Body .collaborate_tab li:hover {color:#FFF; background:#0470e4;}
+#theme1Body .collaborate_tab li.on {color:#FFF; background:#0470e4;}
+#theme1Body .collaborate_tab li span{display:inline-block; width:100%; padding:0px; background:url(../images/kr/main/collaborateTab_arrow.png) right center no-repeat; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+#theme1Body .collaborate_tab li:hover span{ background:url(../images/kr/main/collaborateTab_arrow_hover.png) right center no-repeat;}
+#theme1Body .collaborate_tab li.on span{background:url(../images/kr/main/collaborateTab_arrow_hover.png) right center no-repeat;}
+#theme1Body .collaborate_list {float:left; width:75%; height:186px; margin:0px; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
+#theme1Body .collaborate_listTab {height: 30px; margin:7px 13px 0px 13px; padding:0px; border-bottom:1px solid #e7e7e7; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
+#theme1Body .collaborate_listTab dt{float:left; margin:0px 6px 0px 0px; padding:3px 6px; font-size:13px; font-weight:bold; color:#999999; border:1px solid #d8d8d8; border-radius:3px;-webkit-border-radius:3px;-moz-border-radius:3px; cursor:pointer;}
+#theme1Body .collaborate_listTab dt.on{border:1px solid #0470e4; color:#000000;}
+#theme1Body .collaborate_listTab dt:hover{border:1px solid #0470e4; color:#000000;}
+#theme1Body .collaborate_list .listtype_txt{list-style:none; margin:13px; height:140px; overflow:hidden; padding:0px; font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
+#theme1Body .collaborate_list .listtype_txt li{overflow:hidden; margin-bottom:6px; padding:0px 0px 0px 8px; color:#555555; height:30px; line-height:28px; font-size:13px; cursor:pointer; background:url(../images/kr/main/collaborateList_point.png) 0px 15px no-repeat;}
+#theme1Body .collaborate_list .listtype_txt span{display:inline-block;}
+#theme1Body .collaborate_list .listtype_txt span.txt{float:left; width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
+#theme1Body .collaborate_list .listtype_txt span.team{float:right;}
+#theme1Body .collaborate_list .listtype_txt span.name{float:right; margin:0px 0px 0px 10px;}
+/* //20181002 collaborate */

@@ -517,6 +517,17 @@
 		]]>
 	</select>
 	
+	<select id="EzCommonDAO.checkUserMasterMailBoxQuota" resultClass="String">
+		<![CDATA[
+			SELECT
+				MAILBOXQUOTA, MAILBOXUSAGE
+			FROM
+				TBL_USERMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
 	<statement id="EzCommonDAO.addJmochaMailGenenalPreviewMailImage"> 
 		ALTER TABLE 
 			JMOCHA_MAIL_GENERAL
@@ -538,5 +549,14 @@
 			TBL_PORTAL_THEME_PORTLET
 		ADD 
 			IS_FIXED NUMBER(5,0) DEFAULT 0
+	</statement>
+	
+	<statement id="EzCommonDAO.addUserMasterMailBoxQuota">
+		ALTER TABLE
+			TBL_USERMASTER
+		ADD (
+			MAILBOXQUOTA VARCHAR(50) DEFAULT NULL,
+			MAILBOXUSAGE VARCHAR(50) DEFAULT NULL
+			)
 	</statement>
 </sqlMap>

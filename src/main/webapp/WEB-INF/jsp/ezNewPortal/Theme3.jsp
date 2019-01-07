@@ -315,10 +315,10 @@
 		//퀵메뉴 on/off 버튼
 		$("#quicklinkBtn").on('click', viewQuick);
 		//퀵메뉴 이동(오른쪽)
-		$("#quickMailwrite").on('click', {'menu' : 'mail'}, quickMenuOpenRight);
-		$("#quickApprovalwrite").on('click', {'menu' : 'appr'}, quickMenuOpenRight);
-		$("#quickSchedulewrite").on('click', {'menu' : 'schedule'}, quickMenuOpenRight);
-		$("#quickOrgan").on('click', {'menu' : 'organ'}, quickMenuOpenRight);
+		document.getElementById("quickMailwrite").addEventListener('click', function(){quickMenuOpenRight('mail');}, false);
+		document.getElementById("quickApprovalwrite").addEventListener('click', function(){quickMenuOpenRight('appr');}, false);
+		document.getElementById("quickSchedulewrite").addEventListener('click', function(){quickMenuOpenRight('schedule');}, false);
+		document.getElementById("quickOrgan").addEventListener('click', function(){quickMenuOpenRight('organ');}, false);
 		
 		//구해안 - 임시로 넣어둠
 		$("#portletEnv").on("click", viewPortletEnv);

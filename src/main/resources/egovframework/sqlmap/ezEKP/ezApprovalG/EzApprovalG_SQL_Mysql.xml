@@ -7866,7 +7866,7 @@
 	  	</isNotEmpty>
 	  	<isNotEmpty property="v_PYEAR">
 	  	 AND 
-	  			TBL_CABINETCLASS.PRODUCTIONYEAR = #v_PYEAR#
+	  			TBL_CABINETCLASS.EXPIRATIONYEAR >= #v_PYEAR#
 	  	</isNotEmpty>
 	  	<isEqual property="v_FLAG" compareValue="1">
 	  	<![CDATA[
