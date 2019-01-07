@@ -2282,7 +2282,7 @@ public class EzResourceController extends EgovFileMngUtil {
     	String accessName = resInfo.getOwnerNm(); 
     	
     	if (accessName.indexOf("(") > -1) {
-    		accessName = accessName.split("(")[0];
+    		accessName = accessName.split("\\(")[0];
     	}
     	
     	InternetAddress to = new InternetAddress();
