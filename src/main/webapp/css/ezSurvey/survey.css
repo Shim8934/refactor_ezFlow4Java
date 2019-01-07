@@ -356,13 +356,14 @@ input[type=range]::-ms-tooltip {display: none;}
 .usrQstnWrapper {box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.45);}
 .question-panel .mvBtn {margin: 0px auto; width: 32px; height: 16px; background-image: url(/images/ezSurvey/drag.png); background-repeat: no-repeat; background-size: 18px 18px; background-position: center; border: 1px solid #ddd; box-sizing: border-box; border-top: 0px; cursor: move;}
 .question-header {display: flex; height: 32px;}
-.question-header .question-content {flex: 1; line-height: 32px; font-size: 16px; font-weight: bold; padding-left: 15px; cursor: default;}
+.question-header .question-content {flex: 1; line-height: 32px; font-size: 16px; font-weight: bold; padding-left: 10px; cursor: default;}
 .question-header .tooltip-bttns {display: flex; padding: 0px 10px;}
+.question-header .imptt {color: rgba(255, 0, 0, 1); padding-left: 5px;}
+
 .tooltip-bttns span {width: 32px; height: 32px; background-repeat: no-repeat; background-size: 24px 24px; background-position: center; cursor: pointer;}
 .tooltip-bttns .modifyBtn {background-image: url('/images/ezSurvey/correct.png');}
 .tooltip-bttns .copyBtn {background-image: url('/images/ezSurvey/copy.png');}
 .tooltip-bttns .deleteBtn {background-image: url('/images/ezSurvey/trash.png');}
-.question-content .imptt {color: rgba(255, 0, 0, 1);}
 .question-opts, .question-paragraph, .question-shortanswer, .question-silder, .question-ranking, .question-dropdown {padding: 10px 35px 20px;}
 
 .question-opts .opt {width: 100%; height: 50px; display: flex; align-items: center;}
@@ -417,7 +418,7 @@ input[type=range]::-ms-tooltip {display: none;}
 
 .prevQsWrapper .question-attach {width: 100px; height: 100px; padding: 10px 35px;}
 .prevQsWrapper .qstnImg {width: auto; height: 100%;}
-.prevQsWrapper .question-header .question-content {line-height: 32px; font-size: 16px; font-weight: bold; padding-left: 15px; cursor: default;}
+.prevQsWrapper .question-header .question-content {line-height: 32px; font-size: 16px; font-weight: bold; padding-left: 10px; cursor: default;}
 .prevQsWrapper .question-header .addLogic {width: 20px; padding-left: 15px; margin-bottom: -3px; cursor: pointer;}
 .prevQsWrapper .question-header .saveLogic {width: 20px; padding-left: 15px; margin-bottom: -3px; cursor: pointer;}
 .prevQsWrapper .question-header .cancelLogic {width: 20px; padding-left: 15px; margin-bottom: -3px; cursor: pointer;}

@@ -1268,7 +1268,8 @@ var SurveyCreate     = function() {
 
 		if (wrapper.find(".question-content").find(".imptt").length == 0) {
 			impttTag = $("<strong id='imptt" + id + "' class='imptt'>*</strong>");
-			wrapper.find(".question-content").find("span[id^=frstBtnGrp]").before(impttTag);
+			//wrapper.find(".question-content").find("span[id^=frstBtnGrp]").before(impttTag);
+			wrapper.find(".question-header").prepend(impttTag);
 		}
 	}
 	
@@ -1729,6 +1730,7 @@ var SurveyCreate     = function() {
 		qstnWrapper.attr("id", "qstn" + qstId);
 		
 		var header       = makeQuestionHeaderPanel(question);
+		console.log(header);
 		var body         = "";
 		
 		switch(parseInt(qstnType)) {
@@ -1898,15 +1900,15 @@ var SurveyCreate     = function() {
 		var delSpan       = document.createElement("span");
 		
 		//question content process
-		divQsContent.textContent = qstId + ". " + content;
-		divQsContent.className   = "question-content";
-		
 		if (required == 1) {
 			var strongElmt         = document.createElement("strong");
 			strongElmt.className   = "imptt";
 			strongElmt.textContent = "*";
-			divQsContent.appendChild(strongElmt);
+			divHeader.appendChild(strongElmt);
 		}
+		
+		divQsContent.textContent = qstId + ". " + content;
+		divQsContent.className   = "question-content";
 		
 		//Tools div process
 		modSpan.className   = "modifyBtn";
@@ -2315,12 +2317,14 @@ var SurveyCreate     = function() {
 		var questionPanel = $("<div class='question-panel'></div>");
 		var questionHeader = $("<div class='question-header'></div>");
 		var questionContent = $("<div class='question-content'></div>");
+		var qstnHeader = "";
+		var imptt = "";
+		
+		if (required == 1) {
+			imptt += "<strong class='imptt'>*</strong>";
+		}
 		questionContent[0].textContent = qstId + ". " + content;
 		
-		var qstnHeader = "";
-		if (required == 1) {
-			qstnHeader += "<strong class='imptt'>*</strong>";
-		}
 		if (step == 3) {
 			//if (qstnType == 1 || qstnType == 2 || qstnType == 7 || qstnType == 9) {
 			qstnHeader += "<span id='frstBtnGrp" + qstId + "' class='frstBtnGrp'>"
@@ -2348,6 +2352,7 @@ var SurveyCreate     = function() {
 		}
 
 		questionContent.append(qstnHeader);
+		questionHeader.append(imptt);
 		questionHeader.append(questionContent);
 		questionPanel.append(questionHeader);
 		questionPanel.append(questionAttach);
