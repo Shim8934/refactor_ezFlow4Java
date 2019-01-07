@@ -300,6 +300,18 @@
 			return str;
 		}
 		
+		/* 2019-01-04 김민성 - 웹도움말 팝업창으로 변경 */
+		var helpDetail = function () {
+			var height = window.screen.availHeight;
+			var width = window.screen.availWidth;
+			var top = (height - 800) / 2;
+			var left = (width - 1560) / 2;
+			var url = '/ezNewPortal/help/index.do';
+			var option = 'height=800px,width=1560px,top=' + top + ',left = ' + left + 'status = no, toolbar=no, menubar=no, location=no, resizable=0';
+			
+			window.open(url, "", option);
+		}
+		
 		// 유틸메뉴 이벤트 모아둔 곳
 		var setUtilEvent = function () {
 			setEvent('logoUrl', '/ezNewPortal/newPortalPortalPage.do', 'main' ,'');
@@ -309,12 +321,13 @@
 			setEvent('util_employee_search', '/ezPersonal/personSearch.do', '' ,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0');
 			setEvent('util_set', '/ezPortal/environmentMain.do', 'main' ,'');
 			//setEvent('util_help', '/ezPortal/help/help.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
-			setEvent('util_help', '/ezNewPortal/help/index.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
+			//setEvent('util_help', '/ezNewPortal/help/index.do', 'helpWindow', 'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0');
 			setEvent('util_logout', '/user/login/actionLogout.do', 'top', '');
 			
+			document.getElementById("util_help").addEventListener('click', helpDetail );	
 			/* document.getElementById("util_frmae").addEventListener("click", viewPortletEnv); */
 		}
-		
+
 		/* //포틀릿 및 프레임 환경설정 열기
 		function viewPortletEnv() {
 			

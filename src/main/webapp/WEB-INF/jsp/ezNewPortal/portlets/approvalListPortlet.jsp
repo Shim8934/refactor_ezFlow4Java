@@ -348,6 +348,7 @@
 		                openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURIComponent(pArgument[0]);
 		                openLocation = openLocation + "&id=" + encodeURIComponent(pArgument[1]) + "&name=" + encodeURIComponent(pArgument[2]);
 		                openLocation = openLocation + "&deptID=" + encodeURIComponent(pArgument[3]) + "&allFlag=0" + "&docState=" + encodeURIComponent(pDocState);
+		                openLocation += "&orgCompanyID=" + encodeURIComponent(orgCompanyID);
 	            	} else {
 	            		var pAlertContent = "<spring:message code='ezNewPortal.t038' />";
 	                    alert(pAlertContent);
