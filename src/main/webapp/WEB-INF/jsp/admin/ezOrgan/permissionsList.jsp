@@ -554,23 +554,39 @@
 
 		    var email_onclick = function() {
 
-		        var listview = new ListView();
-		        listview.LoadFromID("lvPermissionList");
+		        /* var listview = new ListView();
+		        listview.LoadFromID("lvPermissionList"); */
+		        
+		        var dataList3 = new Array();
+				var dataList4 = new Array();
+				
+				$("input[name='checks']:checked").each(function(){
+					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
+					dataList4.push(this.parentElement.parentElement.getAttribute("DATA4"));
+				});
 
-		        if (listview.GetSelectedRows().length == 0) {
+		        /* if (listview.GetSelectedRows().length == 0) {
 		            alert(strLang13);
 		            return;
-		        }
+		        } */
+		        
+		     // 선택된 사원이 없을 경우
+				if (dataList3.length == 0) {
+					alert(strLang13);
+					return;
+				}
 
 		        var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
+		        var MsgTo = new Array();
 
-
-		        var MsgTo = "\"" + GetAttribute(listview.GetSelectedRows()[0],"DATA3") + "\" <" + GetAttribute(listview.GetSelectedRows()[0],"DATA4") + ">";
-
+		        for (var i =0; i<dataList3.length; i++) {
+			        MsgTo[i] = "\"" + dataList3[i]+ "\" <" +dataList4[i]+ ">";
+		        }
+		        console.log(MsgTo);
 		        /* 2017-01-02 이효민사원
 		        if (CrossYN() || pNoneActiveX == "YES") {
 		            window.open("/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW&msgTo=" + encodeURIComponent(MsgTo), "",
@@ -586,7 +602,7 @@
 		            }
 		        } */
 		        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(MsgTo), "",
-                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1"); 
 		    }
 		    
 		    function clearSearchVal () {

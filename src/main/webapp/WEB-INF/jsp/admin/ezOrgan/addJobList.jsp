@@ -662,20 +662,39 @@
 		    
 		    function email_onclick() {
 
-		        var listview = new ListView();
-		        listview.LoadFromID("lvAddJobList");
+		        /* var listview = new ListView();
+		        listview.LoadFromID("lvAddJobList"); */
 
-		        if (listview.GetSelectedRows().length == 0) {
+		        /* if (listview.GetSelectedRows().length == 0) {
 		            alert(strLang13);
 		            return;
-		        }
+		        } */
+		        
+		        var dataList3 = new Array();
+				var dataList4 = new Array();
+				
+				$("input[name='checks']:checked").each(function(){
+					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
+					dataList4.push(this.parentElement.parentElement.getAttribute("DATA4"));
+				});
+				
+				// 선택된 사원이 없을 경우
+				if (dataList3.length == 0) {
+					alert(strLang13);
+					return;
+				}
+				
 		        var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
+		        var MsgTo = new Array();
 
-		        var MsgTo = "\"" + GetAttribute(listview.GetSelectedRows()[0], "DATA3") + "\" <" + GetAttribute(listview.GetSelectedRows()[0], "DATA4") + ">";
+		        
+		        for (var i =0; i<dataList3.length; i++) {
+			        MsgTo[i] = "\"" + dataList3[i]+ "\" <" +dataList4[i]+ ">";
+		        }
 
 		        /* 2017-01-02 이효민사원
 		        if (CrossYN() || pNoneActiveX == "YES") {
@@ -821,10 +840,10 @@
 	                <p id="AddJob_sub1"><span divname="AddJob1" id="1tab1"><spring:message code='ezOrgan.t00017' /></span></p>               
 		        </div> --%>
 		    </div> 
-		    <table style="width:100%; border-collapse: separate;">
+		    <table style="width:100%; border-spacing: 10px;">
 		        <tr>
 		            <td style="width:50%">
-		                <div class="listview" style="Width:100%;">
+		                <div class="listview" style="Width:98%;">
 		                    <div id="AddJobListView" style="border: 0px solid #ddd; Height:670px; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 		                    <div id="tblPageRayer" style="Width:100%;text-align:center;"></div>
 		                </div>
