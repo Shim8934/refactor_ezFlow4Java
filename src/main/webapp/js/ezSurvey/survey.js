@@ -109,8 +109,8 @@ var SurveyCreate     = function() {
 		window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 		document.getElementById("selectTarget" ).addEventListener("change", toggleSelectTargetBttn, false);
 		document.getElementById("targetBttn"   ).addEventListener("click" , showSelectPopUp       , false);
-		document.getElementById("gotoFirstTab" ).addEventListener("click" , gotoFirstStep        , false);
-
+		document.getElementById("gotoFirstTab" ).addEventListener("click" , gotoFirstStep         , false);
+		
 		var secondTab = document.getElementsByClassName("gotoSecondTab");
 		var thirdTab  = document.getElementsByClassName("gotoThirdTab");
 		var forthTab  = document.getElementsByClassName("gotoForthTab");
@@ -140,6 +140,23 @@ var SurveyCreate     = function() {
 			createQuestionSelectBox();
 			addOptEvent();
 		}
+		
+		if (surveyObj["surveyId"] != -1) {
+			window.addEventListener("unload", function(e) {changeSurveyState(surveyObj["surveyId"]);}, false);
+		}
+	}
+	
+	function changeSurveyState(surveyId) {
+		$.ajax({
+			type: "POST",
+			url: "/ezSurvey/changeSurveyState.do",
+			data: {surveyId : surveyId},
+			contentType: "application/json; charset=utf-8",
+			dataType: "JSON",
+			async: false,
+			success : function(data) {},
+			error : function(error) {}
+		});
 	}
 	
 	function startUpload() {document.getElementById("fileBttn").click();}
