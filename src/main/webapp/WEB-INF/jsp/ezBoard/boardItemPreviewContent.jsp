@@ -156,6 +156,9 @@
 	            
 	            strAttach += "<div class='attachedfile' id='ifrmPreViewRayer' style='margin:-13px; margin-bottom:10px; margin-top:-8px; font-family:"+ fontfam +"'>";
 	
+	            /* 2019-01-03 홍승비 - 게시물 미리보기 > 첨부파일 영역 다국어 폰트 적용되도록 수정 */
+	            strAttach += "<div class='previewmail_addfile' id='ifrmPreViewRayer' style='margin-bottom:10px; font-family:<spring:message code='ezEmail.sjw01'/>'>";
+	
 	            var totalSize = 0;
 	            for (var j = 0; j < xmldomNodes.length; j++) {
 	                totalSize += parseInt(getNodeText(SelectSingleNode(xmldomNodes[j], "FileSize2")));

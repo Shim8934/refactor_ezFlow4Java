@@ -1199,14 +1199,15 @@ logger.debug("map.toString()" + map.toString());
 	
 	public String getRenderedTopMenuHTML (String topMenuID, String accessIDList, String mode, String skinNum, LoginVO userInfo, String theme, int tenantID) throws Exception {
 		logger.debug("getRenderedTopMenuHTML started");
-
-		if (mode.equals("view")) {
+		
+		// 20190104 조진호 - accessIDList가 항상 empty string으로 오기 때문에 필요 없는 부분이라 주석처리
+		/*if (mode.equals("view")) {
 			String cacheValue = checkCacheValue(topMenuID, getAccessList(userInfo), userInfo.getTenantId());
 			
 			if (cacheValue != null && !cacheValue.equals("")) {
 				return cacheValue;
 			}
-		}
+		}*/
 		
 		if (skinNum != null && !skinNum.equals("")) {
 			userInfo.setSkinNum(skinNum);
@@ -1309,9 +1310,10 @@ logger.debug("map.toString()" + map.toString());
 		String strPage = sb.toString();
 		sb = null;
 		
-		if (mode.equals("view")) {
+		// 20190104 조진호 - 항상 업데이트가 될 필요가 없기에 주석처리
+		/*if (mode.equals("view")) {
 			updateCacheValue(topMenuID, getAccessList(userInfo), strPage, userInfo.getTenantId());
-		}
+		}*/
 
 		logger.debug("getRenderedTopMenuHTML ended");
 		
@@ -2527,7 +2529,8 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 			userInfo.setTableViewOption(pTableViewOption);
 		}
 		
-		if (pMode.equals("view")) {
+		// 20190104 조진호 - getAccessList(userInfo)의 데이터가 ACCESSIDLIST와 상이하고, 없는 테이블(TBL_PORTAL_ACL)을 사용하여 주석처리
+		/*if (pMode.equals("view")) {
 			if (!checkViewRightBln(pPortalPageID, getAccessList(userInfo), userInfo.getTenantId())) {
 				return "<table width=100% height=100% border=0><tr><td align=center>" + egovMessageSource.getMessage("ezPortal.t286", userInfo.getLocale()) + "</td></tr></table>";
 			}
@@ -2537,7 +2540,7 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 			if (cacheValue != null && !cacheValue.trim().equals("")) {
 				return cacheValue;
 			}
-		}
+		}*/
 		
 		StringBuilder sb = new StringBuilder();
 		String pageWidth, pageHeight, pageColumnLength, pageColumnSplit;
@@ -2659,9 +2662,10 @@ logger.debug("sbSubSub.toString() : " + sbSubSub.toString());
 			sb.append("</div>");
 		}
 		
-		if (pMode.equals("view")) {
+		// 20190104 조진호 - 항상 업데이트가 될 필요가 없기에 주석처리
+		/*if (pMode.equals("view")) {
 			updateCacheValue(pPortalPageID, getAccessList(userInfo), sb.toString(), userInfo.getTenantId());
-		}
+		}*/
 		
 		logger.debug("sb="+sb.toString());
 		logger.debug("getRenderedPortalPageHTML ended");

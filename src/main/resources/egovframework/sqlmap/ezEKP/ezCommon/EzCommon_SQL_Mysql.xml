@@ -484,6 +484,7 @@
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
 	
+<<<<<<< HEAD
 	<select id="EzCommonDAO.checkJmochaMailGenenalPreviewMailImage">
 		SELECT 
 			PREVIEW_MAIL_IMAGE
@@ -509,10 +510,29 @@
 		]]>
 	</select>
 	
+	<select id="EzCommonDAO.checkUserMasterMailBoxQuota" resultClass="String">
+		<![CDATA[
+			SELECT
+				MAILBOXQUOTA, MAILBOXUSAGE
+			FROM
+				TBL_USERMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
 	<statement id="EzCommonDAO.addPortalThemePortletIsFixed"> 
 		ALTER TABLE 
 			TBL_PORTAL_THEME_PORTLET
 		ADD 
 			IS_FIXED INT DEFAULT 0
+	</statement>
+	
+	<statement id="EzCommonDAO.addUserMasterMailBoxQuota">
+		ALTER TABLE
+			TBL_USERMASTER
+		ADD (
+			MAILBOXQUOTA VARCHAR(50) DEFAULT NULL,
+			MAILBOXUSAGE VARCHAR(50) DEFAULT NULL
+			)
 	</statement>
 </sqlMap>
