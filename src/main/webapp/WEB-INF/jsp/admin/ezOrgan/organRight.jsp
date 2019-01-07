@@ -209,7 +209,9 @@
 								var cell1 = result.createElement("CELL");
 								var value1 = result.createElement("VALUE");
 								cell1.appendChild(value1);
-								result.getElementsByTagName("ROW")[i].prepend(cell1);
+								var theParent = result.getElementsByTagName("ROW")[i];
+								theParent.insertBefore(cell1, theParent.firstChild);
+								//result.getElementsByTagName("ROW")[i].prepend(cell1);
 							}
 						}
 
