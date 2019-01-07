@@ -19,7 +19,7 @@
 		.mainview {margin-top: 5px; width:50%; float:left;}
 		.previewH {margin-top: 5px; width:50%; height: 690px; float:right; overflow: hidden;}
 		.previewmail_info {border-bottom: 1px solid #e5e5e5; min-width: 300px;}
-		.previewmail_bar_h {display: inline-block; width: 5px; height: 690px;}
+		.previewmail_bar_h {display: inline-block; width: 5px; height: 100%;}
 		.preContent_RayerH {position: absolute; display: inline-block; width: 49%;}
 		.preview_header {padding: 0px; font-weight: bold; height: 11px; line-height: 11px;}
 		.preview_title {display: inline-block; margin-top: -6px; margin-left: 13px;}
@@ -523,6 +523,7 @@
 		function windowResize() {
 			var height = document.documentElement.clientHeight;
 			
+			document.getElementById("previewH").style.height = (height - 200) + "px";
 			document.getElementById("jobListView").style.height = (height - 225)+ "px";
 			document.getElementById("jobUserListView").style.height = (height - 273) + "px";
 		}
@@ -658,7 +659,7 @@
 		</div>
 	</div>
 	
-	<div class="previewH">
+	<div id="previewH" class="previewH">
 		<div class="previewmail_bar_h"></div>
 		<div id="PreContent_RayerH" class="preContent_RayerH" style="display: none;">
 			<div class="previewmail">
