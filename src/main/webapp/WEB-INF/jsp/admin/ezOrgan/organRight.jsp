@@ -202,7 +202,7 @@
 								result.getElementsByTagName("ROW")[i].appendChild(cell2);
 								result.getElementsByTagName("ROW")[i].appendChild(cell3);
 							}
-						} else {
+						} else { // empty 셀 삽입(width 4%)
 							var cnt = result.getElementsByTagName('ROWS')[0].childElementCount;
 							var i = 0;
 							for(i;i<cnt;i++) {
@@ -316,7 +316,7 @@
 				    
 				    try { OpenWin.focus(); } catch (e) { }
 				} else {
-                    var rtnValue = window.showModalDialog("/admin/ezOrgan/companyInfo.do", args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 270));
+                    var rtnValue = window.showModalDialog("/admin/ezOrgan/companyInfo.do", args, "dialogHeight:480px; dialogWidth:335px; scroll:no;status:no; help:no; edge:sunken" + GetShowModalPosition(335, 260));
 
 				    if (typeof (rtnValue) != "undefined") {
 				        alert("<spring:message code='ezOrgan.x0005' />");
@@ -1451,7 +1451,7 @@
 						async : false,
 						data : {password : rtnValue, cn : data},
 						success : function(result){
-							alert("비밀번호를 수정하였습니다.");
+							alert("<spring:message code='ezOrgan.hyh02' />");
 						},
 						error : function(){
 							alert("<spring:message code='ezOrgan.t41' />");
@@ -1503,7 +1503,7 @@
 					}
 
 					// 사원이동 confirm
-					if (!confirm("사원을 이동하시겠습니까?")){
+					if (!confirm("<spring:message code='ezOrgan.hyh04' />")){
 						return;
 					}
 
@@ -1523,7 +1523,7 @@
 							} else if (result == "DIFF_COMPANY") {
 								alert("<spring:message code='ezOrgan.lhm4' />");
 							} else {
-								alert("사원을 이동하였습니다.");
+								alert("<spring:message code='ezOrgan.hyh05' />");
 							}
 						},
 						error : function() {
@@ -1552,7 +1552,7 @@
 				}
 
 				var data = userID;
-				if (!confirm("사원을 퇴직 처리하겠습니까?")){
+				if (!confirm("<spring:message code='ezOrgan.hyh03' />")){
 					return;
 				}
 
@@ -1744,7 +1744,7 @@
 				pageNum = pageNum - 1;
 				pageChange();
 			}
-			
+
 			function pageChange() {
 				$.ajax({
 					type : "POST",
@@ -1827,6 +1827,17 @@
 				doc.getElementById('TreeView').style.height = height + "px";
 				doc.getElementsByClassName('OrganListView')[0].style.height = (height -60) + "px";
 			}
+
+			/*
+			 * 기존 Treeview '+' 클릭시 사이즈 조절 제외
+			 */
+			function TreeViewRequestData(pNodeID, pTreeID) {
+				var TreeIdx = pNodeID;
+				var treeNode = new TreeNode();
+				treeNode.LoadFromID(TreeIdx);
+				var deptID = treeNode.GetNodeData("CN");
+				GetDeptSubTreeInfo(deptID, TreeIdx);
+			}
 		</script>
 		<style>
 			.OrganListView {width:100%;}
@@ -1876,7 +1887,7 @@
 		<div id="mainmenu" class="organMainmenu">
 			<ul style="height:33px;">
 				<c:if test="${dotNetIntegration != 'YES'}">
-					<li id="companybutton3"><span onClick="check_info()">조직도정보</span></li>
+					<li id="companybutton3"><span onClick="check_info()"><spring:message code='ezOrgan.hyh06' /></span></li>
 					<li id="companybutton1"><span onClick="add_company()"><spring:message code='ezOrgan.t76' /></span></li>
 					<li><span onClick="add_dept()"><spring:message code='ezOrgan.t80' /></span></li>
 					<li><span onClick="add_user()"><spring:message code='ezOrgan.t84' /></span></li>
@@ -1908,7 +1919,7 @@
 					</a>
 				</div>
 				<div class="organSearchForm">
-					<div class="organSearchTab"><span>검색대상</span></div>
+					<div class="organSearchTab"><span><spring:message code='ezEmail.t642' /></span></div>
 					<div class="organSearchContent">
 						<span>
 							<select id="search_type" style="width:100px; height:27px !important;line-height:normal !important;">
@@ -1938,13 +1949,13 @@
 					<tr class="header">
 						<th width="4%"></th> 
 						<th width="20%"><spring:message code='ezOrgan.t67' /></th> 
-						<th >아이디</th>
-						<th  width="15%">부서</th> 
-						<th width="10%">직위</th> 
-						<th  width="10%">직책</th>
-						<th width="8%">암호관리</th>
-						<th width="8%">사원이동</th>
-						<th  width="7%">퇴직</th>
+						<th ><spring:message code='ezAttitude.t218' /></th>
+						<th  width="15%"><spring:message code='main.t75' /></th>
+						<th width="10%"><spring:message code='main.t77' /></th>
+						<th  width="10%"><spring:message code='ezOrgan.t1500' /></th>
+						<th width="8%"><spring:message code='ezOrgan.t90' /></</th>
+						<th width="8%"><spring:message code='ezOrgan.t86' /></th>
+						<th  width="7%"><spring:message code='ezOrgan.hyh01' /></th>
 					</tr>
 				</table>
  				<table id="maillist_dept" class="mainlist" style="width:100%;display:none;">
