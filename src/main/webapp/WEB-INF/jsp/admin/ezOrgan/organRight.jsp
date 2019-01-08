@@ -1275,6 +1275,8 @@
 		            			alert("<spring:message code='ezOrgan.t15' />");
 		            		} else if (result == "DIFF_COMPANY") {
 		            			alert("<spring:message code='ezOrgan.lhm4' />");
+		            		} else if (result == "HASGYUMJIK") {
+		            			alert("<spring:message code='ezOrgan.t15' />");
 		            		} else {
 		            			alert(length + "<spring:message code='ezOrgan.t16' />");
 		            		}
