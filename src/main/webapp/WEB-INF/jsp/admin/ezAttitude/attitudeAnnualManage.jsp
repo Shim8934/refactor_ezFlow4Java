@@ -30,7 +30,8 @@
 			}
 			.mainlist a:hover {
 				border: 1px solid #8e8e8e;
-		
+				background: white;
+			}
 	    </style>
 	    
 	    <script type="text/javascript">
