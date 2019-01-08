@@ -943,6 +943,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 		model.addAttribute("locale", userInfo.getLocale());
 		model.addAttribute("userPrimary", userInfo.getPrimary());
+		
 				
 		logger.debug("userInfo ended");
 		

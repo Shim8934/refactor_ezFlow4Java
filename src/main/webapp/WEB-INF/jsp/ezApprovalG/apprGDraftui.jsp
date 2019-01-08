@@ -915,10 +915,14 @@
 		        }
 		        
 		        var rtnval;
-		        if ((LastSignSN == 1 && totalMemSN == 0)|| DraftLastFlag)
-		            rtnval = getDocNumber(arr_userinfo[4], "", docNumZeroCnt);
-		        else
-		            rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);
+		        if ((LastSignSN == 1 && totalMemSN == 0)|| DraftLastFlag) {
+		            //rtnval = getDocNumber(arr_userinfo[4], "", docNumZeroCnt);
+		            rtnval = getDocNumberNew(arr_userinfo[4], "", docNumZeroCnt);
+		        }
+		        else {
+		            //rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);
+		            rtnval = getDocNumberNew(arr_userinfo[4], "be", docNumZeroCnt);
+		        }
 		
 		        if (!rtnval) {
 		            var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";

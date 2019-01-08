@@ -431,7 +431,7 @@
 		    }
 		    
 		    function btncallback_onclick() {
-	            var pMsg = "<spring:message code='ezApprovalG.t67'/>";
+	            var pMsg = "<spring:message code='ezApprovalG.t68'/>";
 	            var Ans = OpenInformationUI(pMsg, doCancel);
 	        }
 		    
@@ -561,7 +561,7 @@
 	        
 	        //2018-07-10 배현상, 강제회수 분기(btnforcecallback_onclick 생성)
 	        function btnforcecallback_onclick() {
-	        	var pMsg = "<spring:message code='ezApprovalG.t67'/>";
+	        	var pMsg = "<spring:message code='ezApprovalG.t68'/>";
 	        	var Ans = OpenInformationUI(pMsg, doForceCancel);
 	        }
 	        

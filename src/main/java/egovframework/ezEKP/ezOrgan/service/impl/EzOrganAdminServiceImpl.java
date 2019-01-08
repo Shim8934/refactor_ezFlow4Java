@@ -252,6 +252,20 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		if (parentCn.equals(cn)) {
 			result = "SAME";
 		} else {
+			// 2019-01-08 천성준 - 사원이동 시, 사원이 이동하려는 부서에 겸직이 되어있는지 체크하는 로직 추가 
+			List<OrganUserVO> userAddJobList = getUserAddJobList(cn, "1", tenantID);
+			if (userAddJobList != null && userAddJobList.size() > 0) {
+				String gyumJikDeptID = "";
+				for (int i = 0; i < userAddJobList.size(); i++) {
+					gyumJikDeptID = userAddJobList.get(i).getDepartment();
+					
+					if (gyumJikDeptID != null && parentCn.equals(gyumJikDeptID)) {
+						result = "HASGYUMJIK";
+						return result;
+					}
+				}
+			}
+			
 			OrganDeptVO parentDept = ezOrganService.getDeptInfo(parentCn, "1", tenantID);
 			String compId = "";
 			

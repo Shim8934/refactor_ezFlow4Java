@@ -3105,7 +3105,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		int tenantId     = loginVO.getTenantId();
 		
 		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		
 		String offSetMin = commonUtil.getMinuteUTC(offset);
 		String typeCal   = request.getParameter("typeCal");
@@ -3114,8 +3114,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String dropDay   = request.getParameter("dropDay");
 		
 		ScheduleInfoVO info  = ezScheduleService.getScheduleInfo(dragId, offSetMin, tenantId, companyId);
-		String infoStartTime = info.getStartDate().substring(10, 19);
-		String infoEndTime   = info.getEndDate().substring(10, 19);
+		String infoStartTime = info.getStartDate().substring(10, 16);
+		String infoEndTime   = info.getEndDate().substring(10, 16);
 		
 		//Check Permission
 		List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(loginVO.getId(), loginVO.getLang(), tenantId, companyId);
@@ -3179,7 +3179,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 				ezScheduleService.insertScheduleRepeDel(dragId, utcDelTime, tenantId, companyId);
 					
 				//일정데이터 복사
-				ezScheduleService.copySchedule(dragId, utcStartTime, utcEndTime, defaultPath, offset, tenantId, companyId);
+				ezScheduleService.copySchedule(dragId, utcStartTime, utcEndTime, defaultPath, offSetMin, tenantId, companyId);
 			}
 		}
 		else {
