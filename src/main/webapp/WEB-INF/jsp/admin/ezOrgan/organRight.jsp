@@ -619,77 +619,8 @@
 				}
 			}
 
-			function deptsearch_press(){			
-				if (window.event.keyCode == "13"){
-					deptsearch_click();
-				}
-			}
-			
-		    var rgParams = new Array();
-		    var checkname2_cross_dialogArguments = new Array();
-		    
-			function deptsearch_click(){
-				if ($.trim(document.getElementById("deptkeyword").value) == ""){
-					alert("<spring:message code='ezOrgan.t56' />");
-				    document.getElementById("deptkeyword").focus();
-					return;
-				}
-				
-				var xmlDOM = createXmlDom();
-				
-			    $.ajax({
-		        	type : "POST",
-		        	dataType : "text",
-		        	url : "/ezOrgan/getSearchList.do",
-		        	async : false,
-		        	data : {search : "displayname::" + document.getElementById("deptkeyword").value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group", adminOrgan : "y"},
-		        	success : function(result){	
-		        		xmlDOM = loadXMLString(result);
-		                adCount = xmlDOM.getElementsByTagName("ROW").length;
-		        	},
-		        	error : function(error){
-		        		alert("<spring:message code='ezOrgan.t60' />" + xmlHTTP.statusText);
-		        		xmlDOM = null;
-		        	}
-		        });		        	
-			    var ModalCheck = false;
-				if (adCount == 0){
-					alert("<spring:message code='ezOrgan.t61' />");
-					return;
-				}else if (adCount == 1){
-				    g_xmlHTTP = createXMLHttpRequest();
-				    var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
-				    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
-					g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-					g_xmlHTTP.send(strQuery);
-				}else{
-					rgParams["addrBook"] = xmlDOM;
-					rgParams["deptid"] = "";
-					
-					if (CrossYN()) {
-					    ModalCheck = true;
-					    checkname2_cross_dialogArguments[0] = rgParams;
-					    checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
-					    var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(600, 320));					    
-					    try { OpenWin.focus(); } catch (e) { }
-					}else{
-					    window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, "dialogHeight:340px; dialogWidth:598px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(600, 320));
-
-					    if (rgParams["deptid"] != "") {
-					        g_xmlHTTP = createXMLHttpRequest();
-					        // 20110412 사용자 추가시 필요 정보 추가처리.
-					        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";					        
-					        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
-					        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
-					        g_xmlHTTP.send(strQuery);
-					    }
-					}
-				}
-			    if(!ModalCheck){
-			        document.getElementById("deptkeyword").value = "";
-			    }
-			}
-			
+			var rgParams = new Array();
+			var checkname2_cross_dialogArguments = new Array();		
 		    function deptsearch_click_Complete() {
 		        if (rgParams["deptid"] != "") {
 		            g_xmlHTTP = createXMLHttpRequest();
@@ -698,7 +629,7 @@
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
 		        }
-		        document.getElementById("deptkeyword").value = "";
+		        //document.getElementById("deptkeyword").value = "";
 		    }
 
 			var searchWord = "";
@@ -711,85 +642,135 @@
 					return;
 				}
 
-				$.ajax({
-					type : "POST",
-					dataType : "text",
-					url : "/ezOrgan/getSearchList.do",
-					async : false,
-					data : {
-						search : search_type.value + "::" + keyword.value,
-						cell : "extensionAttribute9;displayName;cn;description;title;extensionAttribute10",
-						prop : "department",
-						type : "user",
-						page : pageNum,
-						adminOrgan : "y"
-					},
-					success : function(xml){
-						searchWord = keyword.value;
-						searchType = search_type.value;
-						result=loadXMLString(xml);
-						var listview = new ListView();
-						listview.LoadFromID("lvUserList");
-
-						// 전체페이지 처리
-						var totCount = result.getElementsByTagName('TOTALCOUNT')[0].innerHTML;
-						totalPage = Math.ceil((totCount)/10);
-						if(totalPage == 0) {
-							totalPage = 1;
+				if(search_type.value !== 'description') {
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						url : "/ezOrgan/getSearchList.do",
+						async : false,
+						data : {
+							search : search_type.value + "::" + keyword.value,
+							cell : "extensionAttribute9;displayName;cn;description;title;extensionAttribute10",
+							prop : "department",
+							type : "user",
+							page : pageNum,
+							adminOrgan : "y"
+						},
+						success : function(xml){
+							searchWord = keyword.value;
+							searchType = search_type.value;
+							result=loadXMLString(xml);
+							var listview = new ListView();
+							listview.LoadFromID("lvUserList");
+	
+							// 전체페이지 처리
+							var totCount = result.getElementsByTagName('TOTALCOUNT')[0].innerHTML;
+							totalPage = Math.ceil((totCount)/10);
+							if(totalPage == 0) {
+								totalPage = 1;
+							}
+	
+							// 암호관리, 사원이동, 퇴직 cell append
+							var cnt = result.getElementsByTagName('ROWS')[0].childElementCount;
+							var i = 0;
+							for(i;i<cnt;i++) {
+								var cell1 = result.createElement("CELL");
+								var value1 = result.createElement("VALUE");
+								cell1.appendChild(value1);
+								var cell2 = result.createElement("CELL");
+								var value2 = result.createElement("VALUE");
+								cell2.appendChild(value2);
+								var cell3 = result.createElement("CELL");
+								var value3 = result.createElement("VALUE");
+								cell3.appendChild(value3);
+								result.getElementsByTagName("ROW")[i].appendChild(cell1);
+								result.getElementsByTagName("ROW")[i].appendChild(cell2);
+								result.getElementsByTagName("ROW")[i].appendChild(cell3);
+							}
+	
+							var headerData = createXmlDom();
+							headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
+							$("#maillist_user").css("display", "");
+							$("#maillist_dept").css("display", "none");
+	
+					        if (CrossYN()) {
+					            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+					            var Node = headerData.importNode(xmlRtn, true);
+					            headerData.documentElement.appendChild(Node);
+					        }else{
+					            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+					            headerData.documentElement.appendChild(xmlRtn);
+					        }
+			                document.getElementById("OrganListView").innerHTML = "";
+	
+							var pUserList = new ListView();
+							pUserList.SetID("lvUserList");
+							pUserList.SetRowOnDblClick("info_user");
+							pUserList.SetSelectFlag(false);
+							pUserList.SetHeightFree(true);
+							pUserList.DataSource(headerData);
+							pUserList.DataBind("OrganListView");
+							sawonDataParsing();
+							moveDisplay(true);
+							makePageSelPage();
+						},
+						error : function(error){
+							alert("<spring:message code='ezOrgan.t59' />" + error);
 						}
-
-						// 암호관리, 사원이동, 퇴직 cell append
-						var cnt = result.getElementsByTagName('ROWS')[0].childElementCount;
-						var i = 0;
-						for(i;i<cnt;i++) {
-							var cell1 = result.createElement("CELL");
-							var value1 = result.createElement("VALUE");
-							cell1.appendChild(value1);
-							var cell2 = result.createElement("CELL");
-							var value2 = result.createElement("VALUE");
-							cell2.appendChild(value2);
-							var cell3 = result.createElement("CELL");
-							var value3 = result.createElement("VALUE");
-							cell3.appendChild(value3);
-							result.getElementsByTagName("ROW")[i].appendChild(cell1);
-							result.getElementsByTagName("ROW")[i].appendChild(cell2);
-							result.getElementsByTagName("ROW")[i].appendChild(cell3);
+					});
+				} else { // 부서검색
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						url : "/ezOrgan/getSearchList.do",
+						async : false,
+						data : {search : "displayname::" + keyword.value, cell : "extensionAttribute3;displayName;extensionAttribute9", prop : "", type : "group", adminOrgan : "y"},
+						success : function(result){	
+							xmlDOM = loadXMLString(result);
+							adCount = xmlDOM.getElementsByTagName("ROW").length;
+						},
+						error : function(error){
+							alert("<spring:message code='ezOrgan.t60' />" + xmlHTTP.statusText);
+							xmlDOM = null;
 						}
+					});	
 
-						var headerData = createXmlDom();
-						headerData = loadXMLString(listviewheader1.innerHTML.toUpperCase());
-						$("#maillist_user").css("display", "");
-						$("#maillist_dept").css("display", "none");
+					var ModalCheck = false;
+					if (adCount == 0){
+						alert("<spring:message code='ezOrgan.t61' />");
+						return;
+					} else if (adCount == 1){
+						g_xmlHTTP = createXMLHttpRequest();
+						var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+						g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+						g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+						g_xmlHTTP.send(strQuery);
+					} else{
+						rgParams["addrBook"] = xmlDOM;
+						rgParams["deptid"] = "";
 
-				        if (CrossYN()) {
-				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-				            var Node = headerData.importNode(xmlRtn, true);
-				            headerData.documentElement.appendChild(Node);
-				        }else{
-				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-				            headerData.documentElement.appendChild(xmlRtn);
-				        }
-		                document.getElementById("OrganListView").innerHTML = "";
+						if (CrossYN()) {
+							ModalCheck = true;
+							checkname2_cross_dialogArguments[0] = rgParams;
+							checkname2_cross_dialogArguments[1] = deptsearch_click_Complete;
+							var OpenWin = window.open("/admin/ezOrgan/checkName2.do", "checkName2_Cross", GetOpenWindowfeature(600, 320));
 
-						var pUserList = new ListView();
-						pUserList.SetID("lvUserList");
-						pUserList.SetRowOnDblClick("info_user");
-						pUserList.SetSelectFlag(false);
-						pUserList.SetHeightFree(true);
-						pUserList.DataSource(headerData);
-						pUserList.DataBind("OrganListView");
-						sawonDataParsing();
-						moveDisplay(true);
-						makePageSelPage();
-					},
-					error : function(error){
-						alert("<spring:message code='ezOrgan.t59' />" + error);
+							try { OpenWin.focus(); } catch (e) {}
+						}else{
+							window.showModalDialog("/admin/ezOrgan/checkName2.do", rgParams, "dialogHeight:340px; dialogWidth:598px; status:no;scroll:no; help:no; edge:sunken" + GetShowModalPosition(600, 320));
+							if (rgParams["deptid"] != "") {
+								g_xmlHTTP = createXMLHttpRequest();
+								// 20110412 사용자 추가시 필요 정보 추가처리.
+								var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
+								g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
+								g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
+								g_xmlHTTP.send(strQuery);
+							}
+						}
 					}
-		        });				
-				// [2006. 02. 10. 이민수] 검색을 완료하면 TextBox를 초기화하도록 변경
-				//keyword.value = "";
+				}
 			}
-		    
+
 		    function mail_manage(){
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
