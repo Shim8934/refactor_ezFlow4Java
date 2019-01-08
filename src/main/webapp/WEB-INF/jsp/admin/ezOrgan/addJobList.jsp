@@ -781,7 +781,7 @@
 			<LISTVIEWDATA>
 		    	<HEADERS>
 		    		<HEADER>
-						<WIDTH>20</WIDTH>
+						<WIDTH>5%</WIDTH>
 					</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t218' /></NAME>

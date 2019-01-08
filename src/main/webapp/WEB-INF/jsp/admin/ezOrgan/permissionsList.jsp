@@ -538,8 +538,10 @@
 						success : function(result){
 							if (mode == "ALL") {
 								alert(strLang21);
+								Permissions_List();
 							} else {
 								alert(strLang22);
+								Permissions_List();
 							}
 						},
 						error : function(){
@@ -547,9 +549,7 @@
 						}
 					});
 				//}
-				CurPage = 1;
-				//Permissions_List();
-				window.location.reload();
+				
 			}
 
 		    var email_onclick = function() {
@@ -642,7 +642,7 @@
 				testObj.dataList2 = dataList2;
 				testObj.dataList3 = dataList3;
 				testObj.dataList4 = dataList4;
-				type = types;
+				typeStyle = types;
 
 				// 선택된 사원이 없을 경우
 				if (dataList.length == 0) {
@@ -653,10 +653,10 @@
 		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do","chooseDeletege", 600, 200);
 		    }
 		    
-		    function choose_Del_complete(data) {
+		    /* function choose_Del_complete(data) {
 		    	console.log(data);
 		    	Permissions_Del(data);
-		    }
+		    } */
 		    
 	    </script>
 	</head>
