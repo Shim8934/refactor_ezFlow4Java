@@ -226,15 +226,15 @@
 			pagination.setAmount(result.totalRows);
 			pagination.build();
 			
-			if (folderUpp != 'root') {
+			if (folderUpp == 'root' & folderType == 'C') {
+				dragDropAreaElmt.ondragenter = null;
+				dragDropAreaElmt.ondragover  = null;
+				dragDropAreaElmt.ondragover  = null;
+			} else {
 				$('#upload').css('display','inline');
 				dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
 				dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
 				dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
-			} else {
-				dragDropAreaElmt.ondragenter = null;
-				dragDropAreaElmt.ondragover  = null;
-				dragDropAreaElmt.ondragover  = null;
 			}
 			
 			$('#tblFileList tr td').parent().remove();
