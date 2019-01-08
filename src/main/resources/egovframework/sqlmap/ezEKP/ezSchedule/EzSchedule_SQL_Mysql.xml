@@ -237,8 +237,7 @@
 	<!-- checked -->
 	<select id="EzScheduleDAO.getScheduleList" parameterClass="Map" resultMap="scheduleListVO">
 		<![CDATA[
-			select a.* from
-			(select 
+			select 
 				scheduleid,
 				parentid,
 				ownerid,
@@ -272,7 +271,7 @@
         	from 
         		tbl_schedule
        		where  
-       			ownerid in ($v_INDILIST$)
+       			(ownerid in ($v_INDILIST$)
             and 
             	(            		
             		(startdate >= #v_PSTARTDATE# and startdate <= #v_PENDDATE#) 
@@ -292,46 +291,14 @@
             	title like concat('%',REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
             ]]>
             </isNotEmpty>
-            <isNotEmpty property="v_PKEYWORD">and $v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')</isNotEmpty>            		
-        	order by startdate asc) a
-        	UNION
-        	<![CDATA[
-        	select b.* from
-        	(select 
-				scheduleid,
-				parentid,
-				ownerid,
-				ownername,
-				ownername2,
-				creatorid,
-				creatorname,
-				creatorname2,				
-				date_add(createdate, interval +#v_OFFSETMIN# minute) as createdate,
-				modifierid,
-				modifiername,
-				modifiername2,				
-				date_add(modifydate, interval +#v_OFFSETMIN# minute) as modifydate,
-				scheduletype,
-				importance,
-				hasattendant,
-				hasattach,
-				hascomment,
-				isreadonly,
-				ispublic,
-				datetype,				
-				date_add(startdate, interval +#v_OFFSETMIN# minute) as startdate,				
-				date_add(enddate, interval +#v_OFFSETMIN# minute) as enddate,
-				repetition,
-				repetitiondelete,
-				title,
-				location,
-				contentpath,
-				'' as groupname,
-				companyid
-        	from 
-        		tbl_schedule
-       		where  
-       			ownerid in ($v_PIDLIST$)
+            <isNotEmpty property="v_PKEYWORD">
+            and 
+            	$v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')
+            </isNotEmpty>
+            <![CDATA[
+        	)
+        	or  
+       			(ownerid in ($v_PIDLIST$)
        		and
         		companyid = #v_COMPANYID#        	     	
         	and 
@@ -384,7 +351,8 @@
             ]]>
             </isNotEmpty>
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')</isNotEmpty>            		
-        	order by startdate asc) b
+        		)
+          order by startdate asc
 	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.getMyGroupList" parameterClass="map" resultMap="scheduleGroupListVO">
