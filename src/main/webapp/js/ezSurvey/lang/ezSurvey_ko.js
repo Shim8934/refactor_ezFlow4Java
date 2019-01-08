@@ -73,6 +73,8 @@ var SurveyMessages = {
 	strMaxtrix1  : "최소 1개 이상의 행이 필요합니다.",
 	strMaxtrix2  : "최소 1개 이상의 열이 필요합니다.",
 	strOnlyImage : "이미지 파일 만 허용됩니다.",
+	strOnlyVideo : "동영상 파일 만 허용됩니다.",
+	strOnlyMusic : "음약 파일 만 허용됩니다.",
 	strOnlyOne   : "첨부파일은 1개만 추가 가능합니다.",
 	strOneOther  : "기타는 하나만 추가 가능합니다.",
 	strColumnLm  : "컬럼은 최대 10개까지 추가 가능합니다.",

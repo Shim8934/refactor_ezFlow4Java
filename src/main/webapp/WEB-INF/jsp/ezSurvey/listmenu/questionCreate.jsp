@@ -30,7 +30,6 @@
 	</div>
 </div>
 
-
 <div class="navi-button">
 	<div>
 		<div id="gotoFirstTab" class="survey-infbttn"><img src="/images/ezSurvey/prevstep.png"></div>

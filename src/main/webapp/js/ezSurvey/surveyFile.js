@@ -19,16 +19,28 @@ var SurveyFile = function() {
 			evt.preventDefault();
 		}
 		
-		function handleAllUpload(param) {
+		function handleAllUpload(param, uploadType) {
 			var uploadHandler = uploadType == "all" ? onStartUpload : onImagesUpload;
-			uploadHandler(param);
+			uploadHandler(param, uploadType);
 		}
 		
-		function onImagesUpload(fileElmt) {
+		function onImagesUpload(fileElmt, uploadType) {
 			var fileList  = fileElmt.files;
 			
 			if (fileList.length == 0) {return;}
-			if (fileList[0]["type"].split("/")[0] != "image") {alert(SurveyMessages.strOnlyImage); return;}
+			var fileType = fileList[0]["type"].split("/")[0];
+			
+			switch(uploadType) {
+				case "image": 
+					if (fileType != "image") {alert(SurveyMessages.strOnlyImage); return;}
+					break;
+				case "video": 
+					if (fileType != "video") {alert(SurveyMessages.strOnlyVideo); return;}
+					break;
+				case "music":
+					if (fileType != "audio") {alert(SurveyMessages.strOnlyMusic); return;}
+					break;
+			}
 			
 			fileupload(fileList[0], fileElmt);
 			fileElmt.value = null;
@@ -287,6 +299,8 @@ var SurveyFile = function() {
 			var fileName = fileObj.fname;
 			var fileSize = fileObj.fsize;
 			var filePath = fileObj.fpath;
+			var check    = isImage(fileName);
+			var imgSrc   = check.isImage == true ? filePath : check.urlImage;
 			
 			var li = $("<li></li>");
 			var attDivFile = $("<div class='attDivFile'></div>");
@@ -297,7 +311,7 @@ var SurveyFile = function() {
 			li.attr("fname", fileObj.fname);
 			li.attr("fsize", fileObj.fsize);
 			li.attr("path", fileObj.fpath);
-			realImg.attr("src", fileObj.fpath);
+			realImg.attr("src", imgSrc);
 			
 			attImgAva.append(realImg);
 			attDivFile.append(attImgAva);
