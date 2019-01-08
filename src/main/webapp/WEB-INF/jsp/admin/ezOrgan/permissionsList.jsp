@@ -112,10 +112,11 @@
 		                listview.SetHeightFree(true);
 		                listview.DataSource(headerData);
 		                listview.DataBind("AdminListView");
+		                checkbox_header();
 		                
 		                var a = document.getElementById("lvPermissionList_TR_0");
 		                
-		                if (a== "" || a == null) {
+		                if (a== null || a == "") {
 		                	
 		                } else {
 		                	a.style.backgroundColor = "rgb(255, 255, 255)";
@@ -124,15 +125,51 @@
 		                		$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
 		                	});
 		                }
-		                checkbox_header();
 		                checkItems();
 		                makePageSelPage();
+		                setFucntion();
 		        	},
 		        	error : function(error){
 		        	    alert("<spring:message code='ezOrgan.t2' />" + error);
 		        	}
 		        });		        
 		    }
+			
+			function Permissions_View(obj) {
+				var className = window.event.target.getAttribute('class');
+				if(className === 'checks') {
+					return;
+				}
+
+				var doc = window.document;
+				itemseq = document.getElementById(obj).getAttribute("DATA1");
+				if(itemseq == "0") {
+					return;
+				}
+
+				
+				if(checkFlag) {
+					if($("#"+itemseq).prop("checked")) {
+						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				} else {
+					$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+					$(".checks").prop("checked",false);
+					if($("#" + itemseq).is(":checked")) {
+						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				}
+
+				checkItems();
+			} 
 			
 			var cnt;
 			function checkbox_header() {
@@ -149,14 +186,15 @@
 					var seq = acList.children[1].children[i].children[0].innerHTML;
 					
 					if (seq == "데이터가 없습니다.") {
-						return;
+						
+					} else {
+						acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" 
+						+ seq 
+						+ "' value='" 
+						+ seq 
+						+ "' onchange='inputFunc(event,"
+						+ seq + ")'></input>";
 					}
-					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" 
-					+ seq 
-					+ "' value='" 
-					+ seq 
-					+ "' onchange='inputFunc(event,"
-					+ seq + ")'></input>";
 				} 
 			}
 			
@@ -198,40 +236,6 @@
 			
 			var itemseq;
 			
-			function Permissions_View(obj) {
-				var className = window.event.target.getAttribute('class');
-				if(className === 'checks') {
-					return;
-				}
-
-				var doc = window.document;
-				itemseq = document.getElementById(obj).getAttribute("DATA1");
-				if(itemseq == "0") {
-					return;
-				}
-
-				if(checkFlag) {
-					if($("#"+itemseq).prop("checked")) {
-						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
-						$("#" + itemseq).prop("checked", false);
-					} else {
-						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
-						$("#" + itemseq).prop("checked", true);
-					}
-				} else {
-					$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
-					$(".checks").prop("checked",false);
-					if($("#" + itemseq).is(":checked")) {
-						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
-						$("#" + itemseq).prop("checked", false);
-					} else {
-						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
-						$("#" + itemseq).prop("checked", true);
-					}
-				}
-
-				checkItems();
-			}
 			
 			function PermissionsDb_View() {
 				
@@ -383,10 +387,21 @@
 		        td_Create1(PagingHTML);
 		    }
 			
+			//추가, 삭제, 메일 버튼을 선택하는 함수
+			function setFucntion() {
+				var doc  = window.document;
+				var add  = doc.getElementById("add");
+				var del  = doc.getElementById("del");
+				var mail = doc.getElementById("email");
+				
+				add.addEventListener("click", Permissions_Add);
+				del.addEventListener("click", Choose_Del);
+				mail.addEventListener("click", email_onclick);
+			}
 			
 			var Tab1_SelectID = "";
 		    function Tab1_MouserOver(obj) {
-		    	checkFlag = false;
+		    	//checkFlag = false;
 		        obj.className = "tabover";
 		    }
 		    
@@ -416,6 +431,7 @@
 		        type = pSelectTab + "=1";
 
 		        CurPage = 1;
+		        checkFlag = false;
 		        clearSearchVal();
 		        Permissions_List();
 		    }
@@ -439,7 +455,7 @@
 		    }
 			
 			var permissions_check_dialogArguments = new Array();
-		    function Permissions_Add() {
+		    var Permissions_Add = function() {
 		        var listview = new ListView();
 		        listview.LoadFromID("lvPermissionList");
 		        var Params = new Array();
@@ -532,28 +548,45 @@
 					});
 				//}
 				CurPage = 1;
-				Permissions_List();
+				//Permissions_List();
+				window.location.reload();
 			}
 
-		    function email_onclick() {
+		    var email_onclick = function() {
 
-		        var listview = new ListView();
-		        listview.LoadFromID("lvPermissionList");
+		        /* var listview = new ListView();
+		        listview.LoadFromID("lvPermissionList"); */
+		        
+		        var dataList3 = new Array();
+				var dataList4 = new Array();
+				
+				$("input[name='checks']:checked").each(function(){
+					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
+					dataList4.push(this.parentElement.parentElement.getAttribute("DATA4"));
+				});
 
-		        if (listview.GetSelectedRows().length == 0) {
+		        /* if (listview.GetSelectedRows().length == 0) {
 		            alert(strLang13);
 		            return;
-		        }
+		        } */
+		        
+		     // 선택된 사원이 없을 경우
+				if (dataList3.length == 0) {
+					alert(strLang13);
+					return;
+				}
 
 		        var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
+		        var MsgTo = new Array();
 
-
-		        var MsgTo = "\"" + GetAttribute(listview.GetSelectedRows()[0],"DATA3") + "\" <" + GetAttribute(listview.GetSelectedRows()[0],"DATA4") + ">";
-
+		        for (var i =0; i<dataList3.length; i++) {
+			        MsgTo[i] = "\"" + dataList3[i]+ "\" <" +dataList4[i]+ ">";
+		        }
+		        console.log(MsgTo);
 		        /* 2017-01-02 이효민사원
 		        if (CrossYN() || pNoneActiveX == "YES") {
 		            window.open("/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW&msgTo=" + encodeURIComponent(MsgTo), "",
@@ -569,7 +602,7 @@
 		            }
 		        } */
 		        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(MsgTo), "",
-                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1"); 
 		    }
 		    
 		    function clearSearchVal () {
@@ -591,7 +624,7 @@
 	        }
 		    
 		    var delete_confirm_cross_dialogArguments;
-		    function Choose_Del() {
+		    var Choose_Del = function() {
 		    	var dataList = new Array();
 				var dataList2 = new Array();
 				var dataList3 = new Array();
@@ -617,7 +650,7 @@
 					return;
 				}
 				
-		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do","chooseDeletege", 400, 300);
+		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do","chooseDeletege", 600, 200);
 		    }
 		    
 		    function choose_Del_complete(data) {
@@ -684,13 +717,13 @@
 		    </h1>
 		    <div id="mainmenu">
 		        <ul style="margin-top:15px;">
-		            <li class="important"><span onClick="Permissions_Add()"><spring:message code='ezOrgan.mse3' /></span></li>
+		            <li class="important"><span id="add"><spring:message code='ezOrgan.mse3' /></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 		            <%-- <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li> --%>
 		            <!-- <li><span class="icon16 icon16_delete" onClick="Permissions_Del('MOD')"></span></li> -->
-		            <li><span class="icon16 icon16_delete" onClick="Choose_Del()"></span></li>
+		            <li><span class="icon16 icon16_delete" id="del"></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		            <li onClick="email_onclick()"><span class="icon16 icon16_mail_gray"></span></li>
+		            <li id="email"><span class="icon16 icon16_mail_gray"></span></li>
 		            <span style="float: right; font-weight: normal; color: black; clear:inherit;margin-left:1px">
 		            	<select id="searchType" style="width:80px;">
 							<option selected="" value="displayname"><spring:message code='ezOrgan.t67' /></option>

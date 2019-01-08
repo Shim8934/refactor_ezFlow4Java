@@ -1332,12 +1332,16 @@
 		                
 		                var a = document.getElementById("lvPermissionList_THEAD");
 		                var noclick = document.getElementById("lvPermissionList_TR_0");
-		                noclick.style.backgroundColor = "rgb(255, 255, 255)";
-		                noclick.setAttribute("selected", "false");
-		                $("#lvPermissionList_TR_0").mouseout(function(){
-		                	$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
-		                });
 		                
+		                if (noclick == null || noclick == "") {
+		                	a.style.display = "none";
+		                } else {
+			                noclick.style.backgroundColor = "rgb(255, 255, 255)";
+			                noclick.setAttribute("selected", "false");
+			                $("#lvPermissionList_TR_0").mouseout(function(){
+			                	$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
+		                });
+		                }
 		                a.style.display = "none";
 		               
 		                
