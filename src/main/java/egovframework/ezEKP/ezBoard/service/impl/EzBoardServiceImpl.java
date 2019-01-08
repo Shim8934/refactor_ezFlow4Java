@@ -132,7 +132,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		BoardMyFavoriteVO boardMyFavoriteVO = ezBoardDAO.getBoardNewBoardOrder(map);
 		
-		if (boardMyFavoriteVO != null && boardMyFavoriteVO.getBoardId() != null && !boardMyFavoriteVO.equals("")) {
+		/* 2019-01-07 홍승비 - boardMyFavoriteVO에 대한 !equals("") 비교조건 제거 */
+		if (boardMyFavoriteVO != null && boardMyFavoriteVO.getBoardId() != null) {
 			ezBoardDAO.updateMyBoard(boardMyFavoriteVO);
 		} else {
 			ezBoardDAO.insertBoardNewBoardOrder(map);
@@ -2192,6 +2193,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		/* 2019-01-07 홍승비 - 예약게시물 페이징 파라미터 누락 수정*/
+		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("v_PUSERID", userID);
 		map.put("lang", lang);
@@ -2199,6 +2202,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("rowCount", endRow - (startRow - 1));
+		map.put("limit", startRow - 1);
 		
 		List<BoardListVO> boardListVOs = ezBoardDAO.getReservedItemList(map);
 		

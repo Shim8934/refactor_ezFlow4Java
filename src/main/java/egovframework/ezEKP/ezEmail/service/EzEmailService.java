@@ -54,6 +54,7 @@ public interface EzEmailService {
 	public void setMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId, List<String> pMessageIds) throws Exception;
 	public List<String> getMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId) throws Exception;
 	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList) throws Exception;
+	public int deleteIndividualAlias(String userId, int tenantID) throws Exception;
 	public String checkIndividualAlias(String individualAlias, int tenantId) throws Exception;
 	public Map<String, String> getAliasAddressMap(List<String> addressList, int tenantId) throws Exception;
 	

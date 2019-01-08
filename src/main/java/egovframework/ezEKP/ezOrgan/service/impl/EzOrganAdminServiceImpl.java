@@ -2126,4 +2126,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("getAddJobCount ended");
 		return ezOrganAdminDao.getAddJobCount(map);
 	}
+
+	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception {
+		return ezOrganAdminDao.getAllUserCnList(tenantID);
+	}
 }
