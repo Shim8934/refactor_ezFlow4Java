@@ -7,15 +7,22 @@
 	<head>
 		<title><spring:message code="ezSurvey.t34"/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('ezSurvey.css', 'msg')                      }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezSurvey/survey.css')                 }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')                       }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezSurvey/jquery.qtip.css')            }">
 		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}   "></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js')     }   "></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/jquery.ddslick.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/jquery.qtip.js')}       "></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/cytoscape.min.js')}    "></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/dagre.js')}             "></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/cytoscape-dagre.js')}   "></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/cytoscape-qtip.js')}    "></script>
 		<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg')}              "></script>
 	</head>
 	
@@ -43,7 +50,7 @@
 				<span class="arrow"><span></span></span>
 			</span>
 		</div>
-		<c:if test="${empty survey or (not empty survey and survey.draftFlag == 0)}"><div class="draft-survey" id="draftBttn"></div></c:if>
+		<div class="draft-survey" id="draftBttn"></div>
 		
 		<div id="bodyPanel">
 			<div id="tab1" class="select-tab">

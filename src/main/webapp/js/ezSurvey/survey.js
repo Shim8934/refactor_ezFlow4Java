@@ -63,6 +63,8 @@ var SurveyCreate     = function() {
 		
 	$.datepicker.setDefaults($.datepicker.regional[SurveyMessages["strLocale"]]);
 	
+	var bnk = null;
+	
 	function initEvents(reuseSurvey) {
 		console.log(reuseSurvey);
 		surveyItem            = reuseSurvey     ? reuseSurvey.surveyId    : null;
@@ -359,6 +361,7 @@ var SurveyCreate     = function() {
 					if (checkObj["error"]) {alert(checkObj["error"]); return;}
 					toggleStep(spanElemt, crrSpan, tabIdx);
 					getSurveyPreview(tabIdx);
+					showLogicMap();
 					enterLogic = 'Y';
 					lastStep = 3; break;
 			case 4: checkObj = prepareForStep4();
@@ -759,6 +762,124 @@ var SurveyCreate     = function() {
 		addOptEvent();
 		
 	}
+	
+	function showLogicMap() {
+		if (!bnk) {
+			bnk = cytoscape({
+				container: document.getElementById("logicMap"),
+				boxSelectionEnabled: false,
+				ready: function(){},
+				style: [
+					{selector: 'node', css: {"content": "data(name)", "font-size": 10, "width" : 16,"height" : 16,}},
+					{selector: 'edge', css: {"target-arrow-shape": "triangle"}}
+				],
+				minZoom: 1,
+				maxZoom: 5,
+				wheelSensitivity: 1,
+			});
+		}
+		
+		var jsonElmt = createJsonElements();
+		bnk.elements().remove();
+		bnk.add(jsonElmt); 
+		bnk.layout({name: 'dagre',rankDir: 'LR',}).run();
+		bnk.resize();
+		bnk.fit();
+		bnk.center();
+		
+		bnk.elements().qtip({
+			content: {
+				 text: function(){
+					/*var divElmt  = document.createElement("div");
+					var divElmt1 = document.createElement("div");
+					var divElmt2 = document.createElement("div");
+					divElmt1.textContent = "Test1 => Question 1";
+					divElmt2.textContent = "Test1 => Question 9";
+					divElmt.appendChild(divElmt1);
+					divElmt.appendChild(divElmt2);
+					return divElmt;*/
+					return this.data("title");
+				}
+			 },
+			position: {
+				my: "top center",
+				at: "bottom center"
+			},
+			style: {
+				classes: "qtip-bootstrap",
+				tip: {width: 16,height: 8}
+			}
+		});
+	}
+	
+	function createJsonElements() {
+		var questions = surveyObj["questions"];
+		console.log(questions);
+		
+		var elements = {};
+		var nodes    = [];
+		var edges    = [];
+		
+		for (var i = 0; i < questions.length; i++) {
+			var node        = {};
+			var qsData      = {};
+			qsData["id"]    = questions[i]["level"];
+			qsData["name"]  = SurveyMessages.strQs + " " + questions[i]["level"];
+			qsData["title"] = questions[i]["content"];
+			node["data"]    = qsData;
+			nodes.push(node);
+			
+			if (questions[i]["skipFlag"] == 1) {
+				var skipQst = questions[i]["skip"];
+				if (skipQst) {
+					if (skipQst != 0) {
+						edges.push({data: {source : questions[i]["level"], target: skipQst}});
+					}
+				}
+				else {
+					if (questions[i]["level"] == questions.length) {
+						continue;
+					}
+					else {
+						edges.push({data: {source : questions[i]["level"], target: questions[i]["level"] + 1}});
+					}
+				}
+			}
+			else if (questions[i]["logicFlag"] == 1) {
+				var options = questions[i]["option"];
+				for (var j = 0; j < options.length; j++) {
+					var logicNum = options[j]["logic"];
+					var destQst  = -1;
+					
+					if (!logicNum || logicNum == -1 ) {
+						if (questions[i]["level"] == questions.length) {
+							continue;
+						}
+						else {
+							destQst = questions[i]["level"] + 1;
+						}
+					}
+					else {
+						destQst  = logicNum;
+					}
+					
+					var nlink = {source : questions[i]["level"], target: destQst};
+					edges.push({data: nlink});
+				}
+			}
+			else {
+				if (questions[i]["level"] < questions.length) {
+					edges.push({data: {source : questions[i]["level"], target: questions[i]["level"] + 1}});
+				}
+			}
+		}
+		
+		elements["nodes"] = nodes;
+		elements["edges"] = edges;
+		
+		return elements;
+	}
+	
 	function showSelectPopUp() {selectPopup = window.open("/ezSurvey/selectUsers.do", "selectUser", getOpenWindowfeature(964, 700));}
 	function getSurveyQuestions() {return surveyObj["questions"];}
 	function setSurveyQuestions(question) {surveyObj["questions"].push(question);}
@@ -1111,6 +1232,8 @@ var SurveyCreate     = function() {
 				$("#thrdBtnGrp" + id).css("display", "");
 			}
 			
+			console.log("Run in save logic");
+			showLogicMap();
 		});
 		
 		// 로직 취소 버튼 이벤트
@@ -1139,6 +1262,8 @@ var SurveyCreate     = function() {
 				$("#scndBtnGrp" + id).css("display", "none");
 				$("#thrdBtnGrp" + id).css("display", "none");
 			}
+			
+			showLogicMap();
 		});
 		
 		// 로직 수정 버튼 이벤트
@@ -1331,6 +1456,8 @@ var SurveyCreate     = function() {
 			$("#skipScndBtnGrp" + id).css("display", "none");
 			$("#skipThrdBtnGrp" + id).css("display", "");
 			console.log(qstnList);
+			
+			showLogicMap();
 		});
 //		
 		// skip 취소 버튼 이벤트
@@ -1355,6 +1482,7 @@ var SurveyCreate     = function() {
 			$("#frstBtnGrp" + id).css("display", "");
 			$("#skipScndBtnGrp" + id).css("display", "none");
 			$("#skipThrdBtnGrp" + id).css("display", "none");
+			showLogicMap();
 		});
 		
 		// skip 삭제 버튼 이벤트
@@ -1926,7 +2054,6 @@ var SurveyCreate     = function() {
 		qstnWrapper.attr("id", "qstn" + qstId);
 		
 		var header       = makeQuestionHeaderPanel(question);
-		console.log(header);
 		var body         = "";
 		
 		switch(parseInt(qstnType)) {

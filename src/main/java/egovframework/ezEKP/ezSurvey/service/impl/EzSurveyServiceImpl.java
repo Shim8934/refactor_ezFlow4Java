@@ -411,6 +411,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			
 			String questionTitle = questionObj.get("content").toString();
 			int questionLogic    = questionObj.get("logicFlag") != null ? ((Long)questionObj.get("logicFlag")).intValue() : 0;
+			int skipFlag         = questionObj.get("skipFlag")  != null ? ((Long)questionObj.get("skipFlag")).intValue()  : 0;
+			long questionSkip    = questionObj.get("skip")      != null ? ((Long)questionObj.get("skip"))                 : -1;
 			int questionOrder    = ((Long)questionObj.get("level")).intValue();
 			QuestionVO question  = new QuestionVO();
 			
@@ -424,6 +426,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			question.setUseStatus(1);
 			question.setLogicFlag(questionLogic);
 			question.setRequired(requiredFlag);
+			question.setSkip(questionSkip);
+			question.setSkipFlag(skipFlag);
 			
 			if (questionType == 7) {
 				if (questionObj.get("sliderLogicPoint") != null && questionLogic == 1) {
@@ -759,7 +763,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		//Check if survey has or hasn't logic branching
 		for (QuestionVO question : questions) {
-			if (question.getLogicFlag() == 1) {
+			if (question.getLogicFlag() == 1 || question.getSkipFlag() == 1) {
 				logicFlag = true;
 				break;
 			}
@@ -845,17 +849,30 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	private Set<Long> processQuestionLogic(QuestionVO question, int totalQs) {
 		Set<Long> setQuestionIds = new HashSet<>();
 		
-		for (OptionVO option : question.getOption()) {
-			if (option.getLogic() != -1) {
-				setQuestionIds.add(option.getLogic());
-			}
-			else {
-				if (question.getLevel() < totalQs) {
-					setQuestionIds.add(question.getLevel() + 1);
+		if (question.getSkipFlag() == 1) {
+			setQuestionIds.add(question.getSkip());
+		}
+		else if (question.getLogicFlag() == 1) {
+			for (OptionVO option : question.getOption()) {
+				if (option.getLogic() != -1) {
+					setQuestionIds.add(option.getLogic());
 				}
 				else {
-					setQuestionIds.add((long) 0);
+					if (question.getLevel() < totalQs) {
+						setQuestionIds.add(question.getLevel() + 1);
+					}
+					else {
+						setQuestionIds.add((long) 0);
+					}
 				}
+			}
+		}
+		else {
+			if (question.getLevel() < totalQs) {
+				setQuestionIds.add(question.getLevel() + 1);
+			}
+			else {
+				setQuestionIds.add((long) 0);
 			}
 		}
 		
