@@ -358,6 +358,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 .scalendar_mini td.sat{color:#46abfc;}
 .scalendar_mini td.gray{color:#8a8e9b;}
 .scalendar_mini td.today{color:#fff; background:#0470e4; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
+.scalendar_mini td.todaysun{ color:red; background:#0470e4; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 .scalendar_mini td.schedule{color:#333333; background:url(/images/ezNewPortal/theme3Img/scalendar_schedule_bg.png) center center no-repeat; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 .scalendar_mini td div {height:26px;line-height:26px; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 
@@ -1078,6 +1079,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:628px; z-index
 #theme3Body .scheduleDate .dayT{margin:0px; padding:5px 0px 0px 0px; font-size:13px; color:#333;}
 #theme3Body .scheduleDate .dayN{margin:0px; padding:0px; font-size:30px; font-weight:bold; color:#0470e4;}
 #theme3Body .scalendar_mini td.today{color:#333333; background:url(/images/ezNewPortal/theme3Img/scalendar_today_bg.png) center center no-repeat; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
+#theme3Body .scalendar_mini td.todaysun{color:red; background:url(/images/ezNewPortal/theme3Img/scalendar_today_bg.png) center center no-repeat; border-radius:20px; -webkit-border-radius:20px; -moz-border-radius:20px;}
 #theme3Body .sschedule_list {list-style:none;margin:0 0 0 0px;padding: 0px 0px 0px 0px;clear:both;overflow:hidden;border-top:1px solid #e7e7e7; height:203px; background: white}
 #theme3Body .sscheduleUL .scheduleLi .scheduleTime .Tdept_timeText{color:#333333; font-size:13px; margin:0px 0px 0px 8px;}
 #theme3Body .bookmark_content{background:#fff;}

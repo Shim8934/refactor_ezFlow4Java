@@ -1490,7 +1490,7 @@ function memorialDayCheck(solarDate, lunarDate) {
     for (i = 0; i < memorialDays.length; i++) {
         if (solarDate.getFullYear() > 1800 && solarDate.getFullYear() <= 2101) {
         	if (memorialDays[i].type == 'Y') {
-        		var resultDate = changeRepetitionToDate(memorialDays[i].repetition);
+        		var resultDate = changeRepetitionToDate(memorialDays[i].repetition, solarDate.getFullYear());
         		if (resultDate.getMonth() == solarDate.getMonth() && resultDate.getDate() == solarDate.getDate() && memorialDays[i].solarLunar == 1) {
         			tempmemorialDays.push(memorialDays[i]);
         		}        		
@@ -1520,7 +1520,7 @@ function yearmemorialDayCheck(solarDate, lunarDate) {
     for (i = 0; i < yearmemorialDays.length; i++) {
         if (solarDate.getFullYear() > 1800 && solarDate.getFullYear() <= 2101) {
         	if (yearmemorialDays[i].type == 'Y') {
-        		var resultDate = changeRepetitionToDate(yearmemorialDays[i].repetition);
+        		var resultDate = changeRepetitionToDate(yearmemorialDays[i].repetition, '');
         		if (resultDate.getFullYear() == solarDate.getFullYear() && resultDate.getMonth() == solarDate.getMonth() && resultDate.getDate() == solarDate.getDate()  && yearmemorialDays[i].solarLunar == 1) {
         			tempyearmemorialDays.push(yearmemorialDays[i]);
         		}        		
@@ -2178,9 +2178,12 @@ function changeDateFormat(date) {
 	return day;
 }
 //- 주 - 요일을 - 일로 바꿔주는 함수
-function changeRepetitionToDate(repetition) {
+function changeRepetitionToDate(repetition, solarYear) {
 	var date = repetition.split('|');
 	var year = date[0];
+	if (solarYear != null && solarYear != '') {
+		year = solarYear;
+	}
 	var month = date[1]; 
 	var order = date[2];
 	var day  = date[3];
@@ -2194,14 +2197,61 @@ function changeDayToDate(year, month, order, day) {
 	//해당 년,월의 첫번째 날의 요일을 구한다.
 	var firstDate = new Date(year + '/' + month + '/01');
 	var firstDateDay = firstDate.getDay();
+	var resultDay;
 	
 	if (day < firstDateDay) {
 		order = parseInt(order) + 1;
 	}
 	
-	var resultDay = (order - 1) * 7 + (day - firstDateDay) + 1; 
+	//order > 4는 마지막주일때 계산
+	if (order > 4) {
+		var lastDateDay = getLastDateDay(year, month, day, firstDate);
+		
+		var totalDate = getTotalDate(year, month);
+		
+		if (day <= lastDateDay) {
+			resultDay = totalDate + (day - lastDateDay);
+		} else {
+			resultDay = totalDate + (day - lastDateDay) - 7;
+		}
+	} else {
+		resultDay = (order - 1) * 7 + (day - firstDateDay) + 1; 
+	}
 	
 	var resultDate = new Date(year + '/' + month + '/' + resultDay);
 		
 	return resultDate;
+}
+
+// 이번달의 마지막일의 요일을 구하는 함수
+function getLastDateDay(year, month, day, firstDate) {
+	var firstDateDay = firstDate.getDay();
+	var temp_Date = firstDate.getDate();
+	var lastDay = firstDateDay; //시작요일을 저장하는 변수이다. 먼저 기본값으로 현재 요일을 저장한다.
+	
+	//먼저 당월에 대한 총 일수를 구한다. 위에서 선언한 메소드를 가지고 구한다.
+	var totalDate = getTotalDate(year, month);
+	lastDay = lastDay - 1;
+	for(temp_Date ; temp_Date <= totalDate ; temp_Date++) { //시작값:현지 일자, 끝값 : 당월 마지막일
+		lastDay++; // +1씩 증가
+		if(lastDay > 6) //요일은 0부터 6까지 있기 때문에 6을 초과하면 0으로 초기화 해준다.(한바퀴)
+		{
+			lastDay = 0;
+		}			
+	}
+	return lastDay;
+}
+
+function getTotalDate(year, month) {
+	if(month==4 || month==6 || month==9 || month==11) {
+		return 30;
+	} else if(month==2) {
+		if(year%4 == 0) { // 2월이면서 윤년일 때
+			return 29;
+		} else { // 2월이면서 윤년이 아닐 때
+			return 28;
+		}			
+	} else {
+		return 31;
+	}
 }

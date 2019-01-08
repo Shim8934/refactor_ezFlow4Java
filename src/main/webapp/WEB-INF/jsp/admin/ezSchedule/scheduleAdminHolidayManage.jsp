@@ -649,7 +649,7 @@
 		<%-- <h1><spring:message code='ezSchedule.t4003' /></h1> --%>
 		<form id="Form1" method="post">
 			<div id="mainmenu">				
-				<div style="width:750px">
+				<div style="width:800px">
 				    <ul style="margin-top: 15px;">
 				        <li class="important"><span onClick="add_holiday()">휴일추가</span></li>
 				        <li><span onClick="event_dbclick()">휴일수정</span></li>
@@ -660,10 +660,10 @@
 				    </ul>
 				</div>
 			</div>
-			<table id="Managetable" style="width: 750px; height: 500px;" border="0">
+			<table id="Managetable" style="width: 800px; height: 600px;" border="0">
 		        <tr>
 		            <td>
-		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 750px; height: 500px;">
+		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 800px; height: 600px;">
 		                    <table class="mainlist" style="width: 100%;">
 		                    	<tbody id="manage_HEAD">
 			                        <tr>
@@ -677,7 +677,7 @@
 			                        </tr>
 		                    	</tbody>
 		                    </table>
-		                    <div id="contentlist" name="contentlist" style="height: 468px; overflow-y: auto;">
+		                    <div id="contentlist" name="contentlist" style="height: 568px; overflow-y: auto;">
 		                        <table id="managelist_body" class="mainlist" style="width: 100%;">
 		                            <tr>
 		                                <td style="text-align: center;">

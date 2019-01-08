@@ -66,6 +66,7 @@
 		        	
 		        	var info = holidayRepeat.split("|");
 		        	
+		        	List_Year.value = info[0];
 			        list_Month2.value = info[1];
 					list_YearlyEach.value = info[2];
 					list_YearlyDay.value = info[3];
@@ -146,10 +147,17 @@
 		        	holidayRepeat = "";
 		        } else {
 			        var repetition = "";
-			        repetition += new Date().getFullYear();
-		        	repetition += "|" + list_Month2.value;
-					repetition += "|" + list_YearlyEach.value;
-					repetition += "|" + list_YearlyDay.value;
+			        if (document.getElementById("repeat").checked) {
+				        repetition += new Date().getFullYear(); 
+			        	repetition += "|" + list_Month2.value;
+						repetition += "|" + list_YearlyEach.value;
+						repetition += "|" + list_YearlyDay.value;
+			        } else {
+				        repetition += List_Year.value;
+			        	repetition += "|" + list_Month2.value;
+						repetition += "|" + list_YearlyEach.value;
+						repetition += "|" + list_YearlyDay.value;
+			        }
 					
 					holidayRepeat = repetition;
 					holidayDate = "0000-00-00 00:00:00";
@@ -194,6 +202,13 @@
 		            eAllPatterns[x].style.display = "none";
 		        }
 		        window.document.all['divRecurPatterns'][idx].style.display = "";
+		        
+		        if (idx == '1') {
+		        	var holidayYear = new Date().getFullYear(); 
+		        	makeSelectBox(holidayYear, '');
+		        } else {
+		        	$('#List_Year').css("display", "none");
+		        }
 		    }
 		    
 		    function onlySolar(idx) {
@@ -204,6 +219,42 @@
 	            } else {
 	            	$('#lunarRadio').css('display','');
 	            }
+		    }
+		    //년도 정보도 추가
+		    function makeSelectBox(holidayYear, type) {
+		    	var _html = "";
+		    	if (type != 'select') {
+		    		holidayYear = new Date().getFullYear(); 
+		    	}
+			    // <option></option>    
+		        try {
+		        	$('#List_Year').css("display", "");
+		        	for (var j = -10; j < 11; j++) {
+		        		if (j == 0) {
+			        		_html += "<option value='"+(parseInt(holidayYear)+j)+"' selected>"+(parseInt(holidayYear)+j)+"</option>";
+		        		} else {
+		        			_html += "<option value='"+(parseInt(holidayYear)+j)+"'>"+(parseInt(holidayYear)+j)+"</option>";
+		        		}
+		        		
+		        	}
+		        	document.getElementById("List_Year").innerHTML = _html;		        	
+		        } catch (e) {
+		        	$('#List_Year').css("display", "none");
+		            document.getElementById("List_Year").innerHTML = "";
+		        }
+		    }
+		    
+		    function makeSelect() {
+		    	var holidayYear = document.getElementById("List_Year")[document.getElementById("List_Year").selectedIndex].value;
+		    	makeSelectBox(holidayYear, 'select');
+		    }
+		    
+		    function isRepeatCheck() {
+		    	if (document.getElementById("repeat").checked) {
+		    		$('#List_Year').css("display", "none");
+		    	} else {
+		    		$('#List_Year').css("display", "");
+		    	}
 		    }
 		</script>
 	</head>
@@ -271,6 +322,7 @@
 		            </td>
 		            <td id='divRecurPatterns' style="display:none">
 		            	<div style="margin:5px 1px">	
+		            	<select name="select" id="List_Year" onchange="makeSelect()"></select>
 		            	<select name="select" id="list_Month2">
 							<option value="1"><spring:message code='ezSchedule.t382' /></option>
 							<option value="2"><spring:message code='ezSchedule.t383' /></option>
@@ -307,7 +359,7 @@
 		        <tr>
 		            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t4007' /></th>
 		            <td>
-		                <input id="repeat" type="checkbox" name="repeat" />
+		                <input id="repeat" type="checkbox" name="repeat" onchange="isRepeatCheck()"/>
 		            </td>
 		        </tr>
 		        <tr>

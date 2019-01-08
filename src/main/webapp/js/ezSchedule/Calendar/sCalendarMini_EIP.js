@@ -251,7 +251,7 @@ function GetTableMiniBodyObj() {
                 }
                 if (objTD.className != " gray" && isholiday) {
                 	if (objTD.className == "today") {
-                		objTD.className = "today sun";
+            			objTD.className = "todaysun";
                 	} else {
                 		objTD.className = " sun";
                 	}
@@ -333,9 +333,18 @@ function DayOnMouseClick(event) {
  
     //document.getElementById(event.getAttribute("id")).style.backgroundColor = "#f0f6ff";
     if (usedTheme == 3) {
-    	$("#"+event.getAttribute("id")).parent().addClass('schedule');
+    	if ($("#"+event.getAttribute("id")).parent().attr('class').indexOf('sun') > -1) {
+    		$("#"+event.getAttribute("id")).parent().addClass('schedule');
+    		$("#"+event.getAttribute("id")).parent().css("color","red");
+    	} else {
+    		$("#"+event.getAttribute("id")).parent().addClass('schedule');
+    	}
     } else {
-    	$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    	if ($("#"+event.getAttribute("id")).parent().attr('class').indexOf('sun') > -1) {
+    		$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","red");
+    	} else {
+    		$("#"+event.getAttribute("id")).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    	}
     }
 	//$("#"+event.getAttribute("id")).parent().css("border-radius","20px");
 	
