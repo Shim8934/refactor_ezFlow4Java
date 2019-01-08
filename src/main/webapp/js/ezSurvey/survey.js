@@ -84,6 +84,7 @@ var SurveyCreate     = function() {
 		else {
 			if (reuseSurvey["paritipateFlag"] == 1) {setSurveyUsers(reuseSurvey["userList"]);}
 			if (reuseSurvey["attachFlag"] == 1) {surveyFile.render(reuseSurvey["attachList"]);}
+			if (reuseSurvey["purpose"]) {surveyObj["infor"]["purpose"] = reuseSurvey["purpose"];}
 			getReuseQuestions();
 		}
 		
@@ -220,7 +221,10 @@ var SurveyCreate     = function() {
 		var surveyInfoWrap = document.querySelector("div[class='surveyinfo-wrap']");
 		var surveyAttWrap  = document.querySelector("div[class='survey-attach']");
 		var surveyTitle    = document.getElementById("info-input-ttl").value;
-		var surveyPurpose  = document.getElementById("info-input-pp").value;
+		var surveyPurpose  = document.getElementById("info-input-pp").contentWindow.GetEditorContent();
+		
+		console.log(surveyPurpose);
+		
 		var startDate      = document.getElementById("startDate").value;
 		var endDate        = document.getElementById("endDate").value;
 		var publicFlag     = 1 - document.getElementById("public-slbox").selectedIndex;
@@ -430,18 +434,21 @@ var SurveyCreate     = function() {
 	function checkStep1() {
 		var returnObj  = {};
 		var surveyTtl  = document.getElementById("info-input-ttl");
-		var surveyPp   = document.getElementById("info-input-pp");
+		var surveyPp   = document.getElementById("info-input-pp").contentWindow;
+		var ppContent  = surveyPp.GetBodyValue();
 		var sDate      = document.getElementById("startDate").value;
 		var eDate      = document.getElementById("endDate").value;
 		var publicFlag = 1 - document.getElementById("public-slbox").selectedIndex;
 		var userFlag   = document.getElementById("selectTarget").selectedIndex;
 		var userList   = surveyObj["infor"]["users"];
+		ppContent      = replaceAll(ppContent, '<p style="font-family:맑은 고딕;font-size:12px;"><br></p>', '');
+		var ttlValue   = replaceAll(surveyTtl.value, " ", "");
 		
-		if (!surveyTtl.value) {returnObj["error"] = SurveyMessages.strTitle  ; surveyTtl.focus(); return returnObj;}
-		if (!surveyPp.value)  {returnObj["error"] = SurveyMessages.strPurpose; surveyPp.focus() ; return returnObj;}
-		if (!sDate)           {returnObj["error"] = SurveyMessages.strSvDate3; return returnObj;}
-		if (!eDate)           {returnObj["error"] = SurveyMessages.strSvDate2; return returnObj;}
-		if (sDate > eDate)    {returnObj["error"] = SurveyMessages.strSvDate1; return returnObj;}
+		if (!ttlValue)     {returnObj["error"] = SurveyMessages.strTitle  ; surveyTtl.value = ""; surveyTtl.focus(); return returnObj;}
+		if (!ppContent)    {returnObj["error"] = SurveyMessages.strPurpose; surveyPp.focus() ; return returnObj;}
+		if (!sDate)        {returnObj["error"] = SurveyMessages.strSvDate3; return returnObj;}
+		if (!eDate)        {returnObj["error"] = SurveyMessages.strSvDate2; return returnObj;}
+		if (sDate > eDate) {returnObj["error"] = SurveyMessages.strSvDate1; return returnObj;}
 		
 		if (publicFlag == 1) {
 			var daysInput = document.querySelector("input[class='date-input']");
@@ -497,7 +504,7 @@ var SurveyCreate     = function() {
 		var questionList = surveyObj.questions;
 		var questionLength = questionList.length;
 		var result = checkAllLogicAndSkip(questionList, questionLength);
-
+		
 		if (result == 'Y') {
 			if (confirm("질문 작성 단계로 이동시, 모든 분기와 건너뛰기가 초기화됩니다.") == true) {
 				for (var i = 0; i < questionLength; i++) {
@@ -605,7 +612,7 @@ var SurveyCreate     = function() {
 	function toggleUserPreview() {
 		var userPanel = document.getElementById("userPanel");
 		if (userPanel.className == "userPanel off") {
-			addFogPanel();
+			addFogPanel(toggleUserPreview);
 			var position          = getPosition(466, 210);
 			userPanel.style.top   = position[0] + "px";
 			userPanel.style.right = position[1] + "px";
@@ -618,13 +625,13 @@ var SurveyCreate     = function() {
 		}
 	}
 	
-	function addFogPanel() {
+	function addFogPanel(togglePanel) {
 		var fogPanel                  = document.createElement("div");
 		fogPanel.className            = "rfogPanel";
 		var leftFogPanel              = document.createElement("div");
 		leftFogPanel.className        = "blockLeft";
-		fogPanel.onclick              = function(e) {toggleUserPreview();};
-		leftFogPanel.onclick          = function(e) {toggleUserPreview();};
+		fogPanel.onclick              = function(e) {togglePanel();};
+		leftFogPanel.onclick          = function(e) {togglePanel();};
 		var leftFrameBody             = window.parent.frames["left"].document.body;
 		var rightFrameBody            = window.parent.frames["right"].document.body;
 		leftFrameBody.style.overflow  = "hidden";
@@ -1037,11 +1044,11 @@ var SurveyCreate     = function() {
 			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
 			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
 			//$(this).parent().next().find(".qstnFile").click();
-			toggleSearchPanel();
+			toggleUrlPanel();
 		});
 		
 		$("#removeUrlPopup").click(function() {
-			toggleSearchPanel();
+			toggleUrlPanel();
 		})
 		// question 첨부파일 추가
 		$(".quesBacgr").on("change", ".qstnFile", function(e) {fileUpload(this);});
@@ -3215,7 +3222,7 @@ var SurveyCreate     = function() {
 	
 	function confirmSurveyInfo(qstInf) {
 		var surveyInfWrap = document.getElementById("surveyInfConfirm");
-		document.getElementById("cf-purpose").textContent    = qstInf["purpose"];
+		document.getElementById("cf-purpose").innerHTML      = qstInf["purpose"];
 		document.getElementById("cf-startDate").textContent  = qstInf["startDate"];
 		document.getElementById("cf-endDate").textContent    = qstInf["endDate"];
 		document.getElementById("cf-anoynymous").textContent = qstInf["anonymous"] == 0 ? SurveyMessages.strAnoynym1  : SurveyMessages.strAnoynym2;
@@ -3357,26 +3364,24 @@ var SurveyCreate     = function() {
 		return stUserType;
 	}
 	
-	function toggleSearchPanel() {
+	function toggleUrlPanel() {
 		var rightFrame  = window.parent.frames["right"].document;
-		var searchPanel = rightFrame.getElementById("searchPanel");
-		if (searchPanel.className == "searchPanel off") {
-			addFogPanel();
-			var position            = getPosition(466, 210);
-			searchPanel.style.top   = position[0] + "px";
-			searchPanel.style.right = position[1] + "px";
-			searchPanel.className   = "searchPanel";
+		var urlPanel    = rightFrame.getElementById("addURLPanel");
+		if (urlPanel.className == "searchPanel off") {
+			addFogPanel(toggleUrlPanel);
+			var position         = getPosition(466, 210);
+			urlPanel.style.top   = position[0] + "px";
+			urlPanel.style.right = position[1] + "px";
+			urlPanel.className   = "searchPanel";
 		}
 		else {
 			removeFogPanel();
-			searchPanel.className   = "searchPanel off";
+			urlPanel.className   = "searchPanel off";
 		}
 		
 		//Clear all fields
-		rightFrame.getElementById("Sdatepicker").value  = "";
-		rightFrame.getElementById("Edatepicker").value  = "";
-		rightFrame.getElementById("sCreatedUser").value = "";
-		rightFrame.getElementById("sSurveyTtl").value   = "";
+		rightFrame.getElementById("attfileName").value = "";
+		rightFrame.getElementById("attfileUrl").value  = "";
 	}
 	
 	function removeFogPanel() {
@@ -3392,16 +3397,28 @@ var SurveyCreate     = function() {
 		leftFrame.body.style.overflow = "auto";
 	}
 	
+	function replaceAll(str, find, replace) {return str.replace(new RegExp(find, 'g'), replace);}
+	
+	function getSurveyPurpose() {
+		var purpose = surveyObj["infor"]["purpose"] ? surveyObj["infor"]["purpose"] : "";
+		return purpose;
+	}
+	
 	return {
-		getUsers : getSurveyUsers,
-		setUsers : setSurveyUsers,
-		getQs    : getSurveyQuestions,
-		setQs    : setSurveyQuestions,
-		getInfo  : getSurveyInfo,
-		userMore : toggleUserPreview,
-		showUser : showUserInfoFromId,
-		start    : initEvents,
-		setQsForm: prevQstn,
-		convertQs: getReuseQuestions,
+		getUsers   : getSurveyUsers,
+		setUsers   : setSurveyUsers,
+		getQs      : getSurveyQuestions,
+		setQs      : setSurveyQuestions,
+		getInfo    : getSurveyInfo,
+		userMore   : toggleUserPreview,
+		showUser   : showUserInfoFromId,
+		start      : initEvents,
+		setQsForm  : prevQstn,
+		convertQs  : getReuseQuestions,
+		getPurpose : getSurveyPurpose
 	};
 }();
+
+function Editor_Complete() {
+	document.getElementById("info-input-pp").contentWindow.SetEditorContent(SurveyCreate.getPurpose());
+}

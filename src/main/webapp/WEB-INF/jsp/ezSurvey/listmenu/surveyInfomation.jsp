@@ -2,10 +2,10 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 
 <div class="surveyinfo-wrap">
-	<div>
+	<div class="survey-nminfo">
 		<div>
 			<input id="info-input-ttl" class="info-input-ttl" placeholder="<spring:message code='ezSurvey.t39'/>">
-			<input id="info-input-pp"  class="info-input-pp"  placeholder="<spring:message code='ezSurvey.t40'/>">
+			<%-- <input id="info-input-pp"  class="info-input-pp"  placeholder="<spring:message code='ezSurvey.t40'/>"> --%>
 		</div>
 		
 		<div class="survey-otherinf">
@@ -51,9 +51,26 @@
 			</div>
 		</div>
 	</div>
+	
+	<div id="helpTxt" class="uploadHelp off"><spring:message code='ezSurvey.t74'/></div>
+	<div class="survey-attach">
+		<div class="survey-dropzone">
+			<div class="mainzone" id="fileDiv">
+				<div class="fileList off">
+					<ul class="ulFiles"></ul>
+				</div>
+				<div class="divInform">
+					<span><spring:message code='ezSurvey.t72'/></span>
+					<span><spring:message code='ezSurvey.t73'/></span>
+				</div>
+			</div>
+		</div>
+		<div class="survey-attbttn"><div id="addFileBttn"><spring:message code="ezSurvey.t56"/></div></div>
+		<input type="file" id="fileBttn" multiple="multiple" class="hiddenBttn">
+	</div>
 </div>
 
-<div id="helpTxt" class="uploadHelp off"><spring:message code='ezSurvey.t74'/></div>
+<%-- <div id="helpTxt" class="uploadHelp off"><spring:message code='ezSurvey.t74'/></div>
 <div class="survey-attach">
 	<div class="survey-dropzone">
 		<div class="mainzone" id="fileDiv">
@@ -68,6 +85,10 @@
 	</div>
 	<div class="survey-attbttn"><div id="addFileBttn"><spring:message code="ezSurvey.t56"/></div></div>
 	<input type="file" id="fileBttn" multiple="multiple" class="hiddenBttn">
+</div> --%>
+
+<div class="survey-infpp-wrap" id="editorWrap">
+	<iframe id="info-input-pp" class="surey-frameeditor" name="info-input-pp" src="/ezEditor/selectEditor.do"></iframe>
 </div>
 
 <div class="navi-button">
