@@ -39,9 +39,7 @@
 		    	if (nFileSize > nMaxSize) {
 		    		alert("파일용량은 10mb를 초과할 수 없습니다.\n" + nFileSize + " byte");
 		    		objFile.outerHTML = objFile.outerHTML;
-		    	} else {
-		    		alert("파일용량\n" + nFileSize + " byte");
-		    	} 
+		    	}
 	    	}
 
 	    	function CheckuploadFileExt(objFile) {
@@ -49,7 +47,7 @@
 
 	    	 	var strExt = strFilePath.split('.').pop().toLowerCase();
 
-	    	 	if ($.inArray(strExt, ["xls", "xlsx"]) == -1) {
+	    	 	if ($.inArray(strExt, ["xls"]) == -1) {
 	    	  		alert("허용하지 않는 확장자");
 	    	  		objFile.outerHTML = objFile.outerHTML;
 	    	 	}
@@ -57,7 +55,7 @@
 
 	    	//전체 연차 등록/수정
 	    	function annualExcelUpload() {
-	    		if($("[name=excelFile]").val() == null) {
+	    		if($("[name=excelFile]").val() == null || $("[name=excelFile]").val() == "") {
 	                alert("파일을 먼저 선택해주세요.");
 	                return;
 	            }
@@ -102,7 +100,7 @@
         	<tr>
 	            <th style="width:100px; text-align:center">업로드 파일</th>
 	            <td>
-	        		<input name="excelFile" id="excelFile" type="file" style="width:100%;padding-bottom: 5px;" accept=".xls, .xlsx" onchange="CheckUploadFileSize(this); CheckuploadFileExt(this);">
+	        		<input name="excelFile" id="excelFile" type="file" style="width:100%;padding-bottom: 5px;" accept=".xls" onchange="CheckUploadFileSize(this); CheckuploadFileExt(this);">
 	            </td>
 	        </tr>
         	<tr>
