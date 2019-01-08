@@ -626,94 +626,102 @@
 	<select id="EzBoardDAO.getReservedItemList" parameterClass="Map" resultClass="BoardListVO">
 		<isEmpty property="v_PSORTBY">
 			<![CDATA[
-				SELECT 
-					* 
-           		FROM ( SELECT 
-           					A.ITEMID ,
-                         	A.STARTDATE ,
-                         	A.ENDDATE ,
-                         	A.TITLE ,
-                         	A.ATTACHMENTS ,
-                         	A.IMPORTANCE ,
-                         	B.BOARDID ,
-                         	CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
-                         	A.ABSTRACT ,
-                         	A.DOCNO 
-           			   FROM 
-           			   		TBL_Board_Item A
-                  	   JOIN 
-                  	   		( SELECT 
-                  	   			BOARDID ,
-                                BOARDNAME ,
-                                BOARDNAME2,
-                                TENANT_ID,
-                                COMPANYID
-                         	  FROM 
-                         	  	TBL_Board_BoardInfo
-                         	  WHERE
-                         	  	TENANT_ID = #v_TENANTID#  ) B   
-                       ON 
-                       		A.tenant_id = B.tenant_id
-                       AND
-                       		A.BoardID = B.BOARDID
-		          	   WHERE
-		          	   		A.tenant_id = #v_TENANTID#
-						AND
-							(A.WritercompanyID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
-		          	   AND  
-		          			A.WriterID = #v_PUSERID#
-		               AND 
-		                	A.StartDate > #nowDate#
-		           	   ORDER BY 
-		           			A.ParentWriteDate ASC )
-           		WHERE 
-           			ROWNUM <= #v_PENDROW#
+				SELECT
+					*
+				FROM
+					(SELECT 
+						* 
+	           		FROM ( SELECT 
+	           					Row_Number() OVER (ORDER BY A.ParentWriteDate ASC) AS RNUM,
+	           					A.ITEMID ,
+	                         	A.STARTDATE ,
+	                         	A.ENDDATE ,
+	                         	A.TITLE ,
+	                         	A.ATTACHMENTS ,
+	                         	A.IMPORTANCE ,
+	                         	B.BOARDID ,
+	                         	CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+	                         	A.ABSTRACT ,
+	                         	A.DOCNO 
+	           			   FROM 
+	           			   		TBL_Board_Item A
+	                  	   JOIN 
+	                  	   		( SELECT 
+	                  	   			BOARDID ,
+	                                BOARDNAME ,
+	                                BOARDNAME2,
+	                                TENANT_ID,
+	                                COMPANYID
+	                         	  FROM 
+	                         	  	TBL_Board_BoardInfo
+	                         	  WHERE
+	                         	  	TENANT_ID = #v_TENANTID#  ) B   
+	                       ON 
+	                       		A.tenant_id = B.tenant_id
+	                       AND
+	                       		A.BoardID = B.BOARDID
+			          	   WHERE
+			          	   		A.tenant_id = #v_TENANTID#
+							AND
+								(A.WritercompanyID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
+			          	   AND  
+			          			A.WriterID = #v_PUSERID#
+			               AND 
+			                	A.StartDate > #nowDate#) T1
+	           		WHERE 
+	           			RNUM <= #v_PENDROW#) T2
+	           	WHERE
+	           		RNUM >= #v_PSTARTROW#
 			]]>
 		</isEmpty>
 		<isNotEmpty property="v_PSORTBY">
 			<![CDATA[
-				SELECT 
-					* 
-           		FROM ( SELECT 
-           					A.ITEMID ,
-                         	A.STARTDATE ,
-                         	A.ENDDATE ,
-                         	A.TITLE ,
-                         	A.ATTACHMENTS ,
-                         	A.IMPORTANCE ,
-                         	B.BOARDID ,
-                         	CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
-                         	A.ABSTRACT ,
-                         	A.DocNo 
-           			   FROM 
-           			   		TBL_BOARD_ITEM A
-                  	   JOIN 
-                  	   		( SELECT 
-                  	   			BOARDID ,
-                                BOARDNAME ,
-                                BOARDNAME2,
-                                TENANT_ID,
-                                COMPANYID
-                         	  FROM 
-                         	  	TBL_BOARD_BOARDINFO
-                         	  WHERE
-                         	  	TENANT_ID = #v_TENANTID#  ) B   
-                       ON 
-                       		A.TENANT_ID = B.TENANT_ID
-                       AND
-                       		A.BOARDID = B.BOARDID
-		          	   WHERE
-		          	   		A.TENANT_ID = #v_TENANTID#
-		          	   	AND
-		        			(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
-		          	   AND  
-		          			A.WRITERID = #v_PUSERID#
-		               AND 
-		                	A.STARTDATE > #nowDate#
-		           	   ORDER BY 
-		           			$v_PSORTBY$)
-           		WHERE 
-           			ROWNUM <= #v_PENDROW#
+				SELECT
+					*
+				FROM
+					(SELECT 
+						* 
+	           		FROM ( SELECT
+	           					Row_Number() OVER (ORDER BY $v_PSORTBY$) AS RNUM,
+	           					A.ITEMID ,
+	                         	A.STARTDATE ,
+	                         	A.ENDDATE ,
+	                         	A.TITLE ,
+	                         	A.ATTACHMENTS ,
+	                         	A.IMPORTANCE ,
+	                         	B.BOARDID ,
+	                         	CASE WHEN (B.BOARDNAME$lang$ = '' OR B.BOARDNAME$lang$ IS NULL) THEN B.BOARDNAME ELSE B.BOARDNAME$lang$ END BOARDNAME,
+	                         	A.ABSTRACT ,
+	                         	A.DocNo 
+	           			   FROM 
+	           			   		TBL_BOARD_ITEM A
+	                  	   JOIN 
+	                  	   		( SELECT 
+	                  	   			BOARDID ,
+	                                BOARDNAME ,
+	                                BOARDNAME2,
+	                                TENANT_ID,
+	                                COMPANYID
+	                         	  FROM 
+	                         	  	TBL_BOARD_BOARDINFO
+	                         	  WHERE
+	                         	  	TENANT_ID = #v_TENANTID#  ) B   
+	                       ON 
+	                       		A.TENANT_ID = B.TENANT_ID
+	                       AND
+	                       		A.BOARDID = B.BOARDID
+			          	   WHERE
+			          	   		A.TENANT_ID = #v_TENANTID#
+			          	   	AND
+			        			(A.WRITERCOMPANYID = #v_COMPANYID# OR TRIM(B.COMPANYID) = '' OR B.COMPANYID IS NULL)
+			          	   AND  
+			          			A.WRITERID = #v_PUSERID#
+			               AND 
+			                	A.STARTDATE > #nowDate#) T1
+	           		WHERE 
+	           			RNUM <= #v_PENDROW#) T2
+	           	WHERE
+	           		RNUM >= #v_PSTARTROW#
 			]]>		
 		</isNotEmpty>
 	</select>

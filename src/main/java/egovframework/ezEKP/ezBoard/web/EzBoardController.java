@@ -6346,11 +6346,12 @@ public class EzBoardController extends EgovFileMngUtil{
 			reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getCompanyID(), userInfo.getTenantId());
 		}
 		
+		/* 2019-01-07 홍승비 - split의 정규식 표현 및 페이징 연산 수정 */
 		if (totalCount > 0) {
 			if (totalCount > boardInfo.getSs_board_maxRows()) {
 				String temp = String.valueOf(totalCount / boardInfo.getSs_board_maxRows());
 				if (temp.indexOf(".") != 0) {
-					totalPage = Integer.parseInt(temp.split(".")[0] + 1);
+					totalPage = Integer.parseInt(temp.split("\\.")[0]) + 1;
 				} else {
 					totalPage = Integer.parseInt(temp);
 				}
