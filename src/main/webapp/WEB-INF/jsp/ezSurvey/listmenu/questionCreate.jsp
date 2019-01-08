@@ -7,7 +7,29 @@
 </div>
 <div class="questions-wrap">
 	<div class="quesBacgr"></div>
+	
+	<div id="searchPanel" class="searchPanel off">
+		<div class="popupMenu searchDiv">
+			<div class="srchTtl"><spring:message code='ezSurvey.t25'/></div>
+			<div id="surveyClose" class="closeImgBttn"><ul><li><span></span></li></ul></div>
+			<table class="content searchtable">
+				<tr>
+					<th class="cabSearchTh"><spring:message code='ezSurvey.t82'/></th>
+					<td class="searchTblTd"><input id="sCreatedUser" type="text"></td>
+				</tr>
+				<tr>
+					<th class="cabSearchTh"><spring:message code='ezSurvey.t83'/></th>
+					<td class="searchTblTd"><input id="sSurveyTtl" type="text"></td>
+				</tr>
+			</table>
+			<div class="srchBttnDiv" id="searchDivBttn">
+				<a class="srchBttn"><span><spring:message code='ezSurvey.t84'/></span></a>
+				<a class="srchBttn" id="removeUrlPopup"><span><spring:message code='ezSurvey.t18'/></span></a>
+			</div>
+		</div>
+	</div>
 </div>
+
 
 <div class="navi-button">
 	<div>

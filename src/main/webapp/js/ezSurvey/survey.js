@@ -785,6 +785,9 @@ var SurveyCreate     = function() {
 		var qstnRow = $("<div class='qstnRow'></div>");
 		var questnTitle = $("<input class='questnTitle' value='" + qstContent + "' placeholder='" + SurveyMessages.strContent + "' />");
 		var atchImg = $("<img class='atchImg' src='/images/ezSurvey/attach.png' />");
+		var atchVdo = $("<img class='atchVdo' src='/images/ezSurvey/video.png' />");
+		var atchMsic = $("<img class='atchMsic' src='/images/ezSurvey/music.png' />");
+		var atchUrl = $("<img class='atchUrl' src='/images/ezSurvey/url.png' />");
 		var selectBox = $("<div class='selectBox'></div>");
 		var qstnFileInfo = $("<div class='qstnFileInfo'></div>");
 		var fileList = $("<div class='fileList'></div>");
@@ -793,6 +796,9 @@ var SurveyCreate     = function() {
 		
 		qstnRow.append(questnTitle);
 		qstnRow.append(atchImg);
+		qstnRow.append(atchVdo);
+		qstnRow.append(atchMsic);
+		qstnRow.append(atchUrl);
 		qstnRow.append(selectBox);
 		quesDiv.append(qstnRow);
 
@@ -894,6 +900,28 @@ var SurveyCreate     = function() {
 			$(this).parent().next().find(".qstnFile").click();
 		});
 		
+		$(".quesBacgr").on("click", ".atchVdo", function() {
+			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
+			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
+			$(this).parent().next().find(".qstnFile").click();
+		});
+		
+		$(".quesBacgr").on("click", ".atchMsic", function() {
+			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
+			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
+			$(this).parent().next().find(".qstnFile").click();
+		});
+		
+		$(".quesBacgr").on("click", ".atchUrl", function() {
+			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
+			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
+			//$(this).parent().next().find(".qstnFile").click();
+			toggleSearchPanel();
+		});
+		
+		$("#removeUrlPopup").click(function() {
+			toggleSearchPanel();
+		})
 		// question 첨부파일 추가
 		$(".quesBacgr").on("change", ".qstnFile", function(e) {fileUpload(this);});
 		
@@ -3199,6 +3227,41 @@ var SurveyCreate     = function() {
 		}
 		
 		return stUserType;
+	}
+	
+	function toggleSearchPanel() {
+		var rightFrame  = window.parent.frames["right"].document;
+		var searchPanel = rightFrame.getElementById("searchPanel");
+		if (searchPanel.className == "searchPanel off") {
+			addFogPanel();
+			var position            = getPosition(466, 210);
+			searchPanel.style.top   = position[0] + "px";
+			searchPanel.style.right = position[1] + "px";
+			searchPanel.className   = "searchPanel";
+		}
+		else {
+			removeFogPanel();
+			searchPanel.className   = "searchPanel off";
+		}
+		
+		//Clear all fields
+		rightFrame.getElementById("Sdatepicker").value  = "";
+		rightFrame.getElementById("Edatepicker").value  = "";
+		rightFrame.getElementById("sCreatedUser").value = "";
+		rightFrame.getElementById("sSurveyTtl").value   = "";
+	}
+	
+	function removeFogPanel() {
+		var leftFrame    = window.parent.frames["left"].document;
+		var rightFrame   = window.parent.frames["right"].document;
+		var fogPanel     = rightFrame.querySelector("div[class='rfogPanel']");
+		var leftFogPanel = leftFrame.querySelector("div[class='blockLeft']");
+		
+		if (fogPanel) {rightFrame.body.removeChild(fogPanel);}
+		if (leftFogPanel) {leftFrame.body.removeChild(leftFogPanel);}
+		if (rightFrame.getElementById("ui-datepicker-div")) {rightFrame.getElementById("ui-datepicker-div").style.display = "none";}
+		
+		leftFrame.body.style.overflow = "auto";
 	}
 	
 	return {

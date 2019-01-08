@@ -248,6 +248,9 @@ input::-ms-clear {display: none;}
 .quesDiv .qstnRow {display: flex; align-items: center;}
 .quesDiv .qstnRow .questnTitle {background-color: rgb(236, 239, 239); flex: 1; height: 50px; outline: 0px; padding: 0px 8px; font-size: 16px;}
 .quesDiv .qstnRow .atchImg {width: 40px; height: 40px; padding: 5px 10px; cursor: pointer;}
+.quesDiv .qstnRow .atchVdo {width: 40px; height: 40px; padding: 5px 10px; cursor: pointer;}
+.quesDiv .qstnRow .atchMsic {width: 40px; height: 40px; padding: 5px 10px; cursor: pointer;}
+.quesDiv .qstnRow .atchUrl {width: 40px; height: 40px; padding: 5px 10px; cursor: pointer;}
 
 .quesDiv .qstnRow .dd-container {width: 25%; height: 50px; border-radius: 10px; display: inline-block;}
 .quesDiv .qstnRow .dd-container .dd-select {height: 48px; border-radius: 5px; width: 100%;}

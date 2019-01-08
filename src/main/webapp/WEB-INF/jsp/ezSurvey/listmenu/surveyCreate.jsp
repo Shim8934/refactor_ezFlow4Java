@@ -68,6 +68,7 @@
 		</div>
 		
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyFile.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyItem.js')} }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/survey.js')} }"></script>
 		<c:choose>
 			<c:when test="${not empty survey}">

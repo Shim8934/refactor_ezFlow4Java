@@ -114,6 +114,11 @@
 		var logicmap     = null;
 		var surveyPath   = [];
 		var questionFile = new SurveyFile("images");
+		var resposeObj = {
+				surveyId : surveyId,
+				responses : []
+		};
+		
 		getQuestions();
 		userEvent();
 		
@@ -304,7 +309,131 @@
 		}
 		
 		function saveSurveyResponses() {
+			var qsWrappers = $(".prevQsArea").find(".prevQsWrapper");
+			console.log(qsWrappers);
+			for (var i = 0; i < qsWrappers.length; i++) {
+				var wrapper = qsWrappers[i];
+				var displayValue = wrapper.style.display;
+
+				if (displayValue != "none") {
+					var qstnId = wrapper.getAttribute("id");
+					var id = parseInt(qstnId.replace("prevQstn", ""));
+					var type = parseInt(wrapper.getAttribute("type"));
+					
+					
+					switch (type) {
+					case 1:
+						getSingleSltRespose(id, type);
+						break;
+					case 2:
+						getMultiSltRespose(id, type);
+						break;
+					case 3:
+						getSingleMtrRespose(id, type);
+						break;
+					case 4:
+						getMultiMtrRespose();
+						break;
+					case 5:
+						getShorTxtRespose();
+						break;
+					case 6:
+						getLongTxtRespose();
+						break;
+					case 7:
+						getSliderRespose();
+						break;
+					case 8:
+						geRankingRespose();
+						break;
+					case 9:
+						getDrdwRespose();
+						break;
+					}
+					
+				}
+			}
+		}
+		
+		function getSingleSltRespose(id, type) {
+			var obj = {};
+			var wrapper = $("#prevQstn" + id);
+			var optionLevel = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked").val();
+			var answer = [];
 			
+			answer.push(optionLevel);
+			
+			obj['questionLevel'] = id;
+			obj['optionLevels'] = answer;
+			obj['type'] = type;
+			resposeObj.responses.push(obj);
+			console.log(resposeObj.responses);
+		}
+		
+		function getMultiSltRespose(id, type) {
+			var obj = {};
+			var wrapper = $("#prevQstn" + id);
+			var boxes = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]");
+			var length = boxes.length;
+			var answer = [];
+			
+			for (var i = 0; i < length; i++) {
+				if (boxes[i].checked == true) {
+					var level = i;
+					var optionLevel = boxes[i].value;
+					console.log(optionLevel);
+					answer.push(optionLevel);
+				}
+			}
+			
+			obj['questionLevels'] = id;
+			obj['optionLevels'] = answer;
+			obj['type'] = type;
+			resposeObj.responses.push(obj);
+			console.log(resposeObj.responses);
+		}
+		
+		function getSingleMtrRespose(id, type) {
+			var obj = {};
+			var wrapper = $("#prevQstn" + id);
+			var trLength = wrapper.find("tbody").find("tr").length;
+
+			for (var i = 0; i < trLength; i++) {
+				var value = $("input[name = qstn" + id + "opt" + i + "]:checked").val();
+				console.log(value);
+				value.replace("(", "");
+				value.replace(")", "");
+				var arr = [];
+				var valArr = value.split(",");
+				
+				var row = valArr[0];
+				var col = valArr[1];
+				console.log(row);
+				console.log(col);
+			}
+			
+			
+			/* 
+			var boxes = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]");
+			var length = boxes.length;
+			var answer = [];
+			
+			for (var i = 0; i < length; i++) {
+				if (boxes[i].checked == true) {
+					var level = i;
+					var optionLevel = boxes[i].value;
+					console.log(optionLevel);
+					answer.push(optionLevel);
+				}
+			}
+			 */
+			/*  
+			obj['questionLevels'] = id;
+			obj['optionLevels'] = answer;
+			obj['type'] = type;
+			resposeObj.responses.push(obj);
+			console.log(resposeObj.responses);
+			 */
 		}
 		
 		function deleteFileConfirm() {
