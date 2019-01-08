@@ -2574,7 +2574,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				return ExcelCellRef.validateCheck(i+1, "사용자 ID", userId, 80, "2");
 			}
 			if(!ExcelCellRef.nullCheck(ExcelCellRef.validateCheck(i+1, "총 연차수", totalAnnualCnt, 8, "3"))) {
-				return ExcelCellRef.validateCheck(i+1, "총 연차수", totalAnnualCnt, 8, "3");
+				return ExcelCellRef.validateCheck(i+1, "총 연차수", totalAnnualCnt, 5, "3");
 			}
 			
 			map1 = new HashMap<String, Object>();

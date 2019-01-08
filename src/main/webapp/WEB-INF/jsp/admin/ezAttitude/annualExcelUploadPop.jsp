@@ -59,6 +59,10 @@
 	                alert("파일을 먼저 선택해주세요.");
 	                return;
 	            }
+	    		if($("[name=changeReason]").val() == null || $("[name=changeReason]").val() == "") {
+	                alert("수정사유를 입력해주세요.");
+	                return;
+	            }
 	    		
 	    		var form = $("#cForm")[0];
 	    		var formData = new FormData(form);
@@ -73,6 +77,8 @@
 					success : function(data) {
 	            		if (data.status+"" == "ok") {
 	            			alert(data.data+"");
+	            			opener.getAnnualList();
+	   						window.close();
 	            		} else {
 	            			alert("<spring:message code='ezAttitude.t175' />");
 	            		}
