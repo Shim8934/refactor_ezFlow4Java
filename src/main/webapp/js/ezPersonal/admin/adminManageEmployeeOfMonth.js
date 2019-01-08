@@ -48,32 +48,65 @@ function getEmployeeList(year) {
 		dataType : "JSON",
 		data : {year: selectedYear},
 		success : function(result) {
-			renderList(result.list);
+			renderList(result.list, selectedYear);
 		}
 	});
 }
 
-function renderList(result) {
+function renderList(result, selectedYear) {
 	var mainList = document.getElementById("mainlist");
+	var today = new Date();
+	var thisMonth = today.getMonth() + 1;
+	var thisYear = today.getFullYear();
 	
 	for (var month = 1; month < 13; month++) {
 		var liElmt         = document.createElement("li");
-		var empBttnDivElmt = document.createElement("div");
+		var monthElemt	   = document.createElement("p");
+		var empTopElemt    = document.createElement("dl");
+		var empBottomElemt = document.createElement("dl");
+		var titleElmt      = document.createElement("span");
+		
+		/*var empBttnDivElmt = document.createElement("div");
 		var empInfoDivElmt = document.createElement("div");
 		var empAddDivElmt  = document.createElement("div");
-		var titleElmt      = document.createElement("p");
+		*/
 		
-		liElmt.className = "employee";
-		empBttnDivElmt.className = "empBttn";
+		if (month === thisMonth && selectedYear == thisYear) {
+			liElmt.className = "employee_blue";
+		} else {
+			liElmt.className = "employee";
+		}
+		monthElemt.className = "month_num";
+		empTopElemt.className = "emTop";
+		empBottomElemt.className = "emBottom";
+		/*empBttnDivElmt.className = "empBttn";
 		empInfoDivElmt.className = "empInfo";
-		empAddDivElmt.className = "empAdd";
+		empAddDivElmt.className = "empAdd";*/
 		
-		titleElmt.textContent = month + strLangkhj26;
+		monthElemt.textContent =  month;
+		titleElmt.textContent = strLangkhj26;
+		
+		monthElemt.appendChild(titleElmt);
 		
 		result.forEach(function(item, index) {
 			if (month == item.term.substring(5)) {
-				var updBttnElmt   = document.createElement("img");
-				var delBttnElmt   = document.createElement("span");
+				//삭제 부분
+				var empDelElmt = document.createElement("p");
+				var empDelSpan = document.createElement("span");
+				//사원 사진
+				var topDtElmt = document.createElement("dt");
+				var topDdElmt = document.createElement("dd");
+				//사원 정보
+				var bottomCompElmt = document.createElement("dt");
+				var bottomDeptElmt = document.createElement("dt");
+				var bottomNameElmt = document.createElement("dd");
+				
+				//이미지
+				var empPicElmt = document.createElement("img");
+				var editElmt = document.createElement("img");
+				
+				/*var updBttnElmt   = document.createElement("img");*/
+				/*var delBttnElmt   = document.createElement("span");
 				var empImgDivElmt = document.createElement("div");
 				var dlElmt        = document.createElement("dl");
 				var dtElmt        = document.createElement("dt");
@@ -81,27 +114,53 @@ function renderList(result) {
 				var ddElmt1       = document.createElement("dd");
 				var ddElmt2       = document.createElement("dd");
 				var ddElmt3       = document.createElement("dd");
+				*/
+				empDelElmt.className = "emDelete";
+				empDelSpan.className = "sub_iconLNB tree_delete";
 				
-				delBttnElmt.className = "sub_iconLNB tree_delete";
-				empImgDivElmt.className = "empImg";
+				topDtElmt.className = "emPic";
+				topDdElmt.className = "emEdit";
 				
-				updBttnElmt.setAttribute("src", "/images/admin/slideUpdate.png");
-				delBttnElmt.setAttribute("src", "/images/admin/slideDelete.png");
+				bottomCompElmt.className = "emCompany";
+				bottomDeptElmt.className = "emTeam";
+				bottomNameElmt.className = "emName";
 				
-				updBttnElmt.addEventListener("click", function(event) {btn_modify(item.term);});
-				delBttnElmt.addEventListener("click", function(event) {btn_delete(item.term);});
+				//empImgDivElmt.className = "empImg";
 				
-				imgElmt.style.border = "1px solid #999";
-				imgElmt.setAttribute("src", item.filePath);
-				imgElmt.addEventListener("click", function(event) {OpenUserInfo(item.cn);});
+				/*updBttnElmt.setAttribute("src", "/images/admin/slideUpdate.png");*/
+				editElmt.src = "/images/admin/admin_employee_edit.png";
+				//empDelSpan.setAttribute("src", "/images/admin/slideDelete.png");
 				
-				ddElmt1.className = "empCompany"
-				ddElmt1.textContent = item.company;
-				ddElmt2.textContent = item.description;
-				ddElmt3.textContent = item.title + " " + item.displayName;
+				editElmt.addEventListener("click", function(event) {btn_modify(item.term);});
+				empDelSpan.addEventListener("click", function(event) {btn_delete(item.term);});
 				
-				empBttnDivElmt.appendChild(updBttnElmt);
-				empBttnDivElmt.appendChild(delBttnElmt);
+				/*imgElmt.style.border = "1px solid #999";*/
+				empPicElmt.setAttribute("src", item.filePath);
+				empPicElmt.style.width = "84px";
+				empPicElmt.style.height = "84px";
+				empPicElmt.addEventListener("click", function(event) {OpenUserInfo(item.cn);});
+				
+				/*ddElmt1.className = "empCompany"*/
+				bottomCompElmt.textContent = item.company;
+				bottomDeptElmt.textContent = item.description;
+				bottomNameElmt.textContent = item.title + ' "' + item.displayName + '"';
+				
+				empDelElmt.appendChild(empDelSpan);
+				topDtElmt.appendChild(empPicElmt);
+				topDdElmt.appendChild(editElmt);
+				
+				empTopElemt.appendChild(topDtElmt);
+				empTopElemt.appendChild(topDdElmt);
+				
+				empBottomElemt.appendChild(bottomCompElmt);
+				empBottomElemt.appendChild(bottomDeptElmt);
+				empBottomElemt.appendChild(bottomNameElmt);
+				
+				liElmt.appendChild(monthElemt);
+				liElmt.appendChild(empDelElmt);
+				liElmt.appendChild(empTopElemt);
+				liElmt.appendChild(empBottomElemt);
+				/*empBttnDivElmt.appendChild(delBttnElmt);
 				
 				dtElmt.appendChild(imgElmt);
 				dlElmt.appendChild(dtElmt);
@@ -114,39 +173,53 @@ function renderList(result) {
 				
 				liElmt.appendChild(empBttnDivElmt);
 				liElmt.appendChild(empInfoDivElmt);
-				liElmt.appendChild(empImgDivElmt);
+				liElmt.appendChild(empImgDivElmt);*/
 				
 				return false;
 			}
 		});
 		
-		var imgElmt  = liElmt.getElementsByClassName("empImg")[0];
+		var imgElmt  = liElmt.getElementsByClassName("emPic")[0];
+		
 		if (!imgElmt) {
 			var addBttnElmt    = document.createElement("img");
-			var dlElmt         = document.createElement("dl");
+			//var dlElmt         = document.createElement("dl");
 			var dtElmt         = document.createElement("dt");
-			var imgElmt        = document.createElement("img");
-			var ddElmt1        = document.createElement("dd");
-			var ddElmt2        = document.createElement("dd");
+			//var imgElmt        = document.createElement("img");
+			/*var ddElmt1        = document.createElement("dd");
+			var ddElmt2        = document.createElement("dd");*/
+			var textElmt	   = document.createElement("dt");
 			
-			ddElmt1.textContent = month + strLangkhj27;
-			ddElmt2.textContent = strLangkhj28;
+			/*ddElmt1.textContent = month + strLangkhj27;*/
+			textElmt.textContent = strLangkhj28;
 			
 			addBttnElmt.setAttribute("id", "add_" + month);
-			addBttnElmt.setAttribute("src", "/images/admin/slideAdd.png");
+			addBttnElmt.setAttribute("src", "/images/admin/addPlus.png");
 			addBttnElmt.addEventListener("click", function(event) {btn_add(this);});
-
+			
+			dtElmt.className = "emPic_add";
+			textElmt.className = "emAdd_text";
+			
 			dtElmt.appendChild(addBttnElmt);
-			dtElmt.appendChild(ddElmt1);
+			
+			empTopElemt.appendChild(dtElmt);
+			empBottomElemt.appendChild(textElmt);
+			
+			liElmt.appendChild(monthElemt);
+			liElmt.appendChild(empTopElemt);
+			liElmt.appendChild(empBottomElemt);
+			
+			/*dtElmt.appendChild(ddElmt1);
 			dtElmt.appendChild(ddElmt2);
-			dlElmt.appendChild(dtElmt);
+			dlElmt.appendChild(dtElmt);*/
 			
-			empInfoDivElmt.appendChild(titleElmt);
-			empAddDivElmt.appendChild(dlElmt);
+			/*empInfoDivElmt.appendChild(titleElmt);
+			empAddDivElmt.appendChild(dlElmt);*/
 			
-			liElmt.appendChild(empBttnDivElmt);
+			/*liElmt.appendChild(empBttnDivElmt);
 			liElmt.appendChild(empInfoDivElmt);
-			liElmt.appendChild(empAddDivElmt);
+			liElmt.appendChild(empAddDivElmt);*/
+			
 		}
 		
 		mainList.appendChild(liElmt);
