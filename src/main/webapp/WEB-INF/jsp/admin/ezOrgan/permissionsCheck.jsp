@@ -1196,6 +1196,10 @@
 	            		//TODO : 2016-05-03 장진혁과장 -- Email 전송메소드 구현 필요
 	            		//sendmail(GetAttribute(p_ListOrderObject, "_data2"), strLang18, AclText)
 	            		 alert(strLang14);
+	            	
+	            	if (ReturnFunction!=null) {
+	     	            ReturnFunction();
+	     	        }
 	            		window.close();
 	            	},
 	            	error : function(){
