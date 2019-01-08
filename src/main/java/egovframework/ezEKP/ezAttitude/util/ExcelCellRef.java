@@ -192,7 +192,7 @@ public class ExcelCellRef {
         		return String.valueOf(iRow)+"행 "+ titleStr+"은(는) 필수 입력값입니다.\n";
             }
         } else {
-            return "문서의 양식이 검증양식과 일치하지 않습니다.\n";
+            return "문서의 양식이 업로드 양식과 일치하지 않습니다.\n";
         }
 
         //입력최대크기
@@ -215,7 +215,7 @@ public class ExcelCellRef {
         		return String.valueOf(iRow)+"행 "+ titleStr+"은(는) 숫자만 입력할 수 있습니다.\n";
         	} else {
         		if(!annualCheck(checkStr)) {
-        			return String.valueOf(iRow)+"행 "+ titleStr+"은(는) 형식에 맞지 않습니다.\n";
+        			return String.valueOf(iRow)+"행 "+ titleStr+"은(는) 연차형식에 맞지 않습니다.\n";
         		}
         	}
         }

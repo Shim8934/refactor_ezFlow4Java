@@ -2190,6 +2190,7 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/annualExcelUpload] started.");
 		
 		JSONObject result = new JSONObject();
+		String resultMsg = "";
 		
 		try{
 			JSONParser jp          = new JSONParser();
@@ -2212,6 +2213,13 @@ public class EzAttitudeGWController {
 			Sheet sheet = wb.getSheetAt(0);
 			
 			int numOfRows = sheet.getPhysicalNumberOfRows();
+			if(numOfRows < 2) {
+				resultMsg = "문서의 양식이 업로드 양식과 일치하지 않습니다.\n";
+				result.put("status", "ok");
+				result.put("code", 0);
+				result.put("data", resultMsg);
+				return result;
+			}
 			int numOfCells = 0;
 			
 			Row row = null;
@@ -2233,13 +2241,20 @@ public class EzAttitudeGWController {
 	            if(row != null) {
 	                numOfCells = row.getPhysicalNumberOfCells();
 	                map = new HashMap<String, Object>();
+	                boolean emptyFlag = true;
 	                for(int cellIndex = 0; cellIndex < numOfCells; cellIndex++) {
 	                    cell = row.getCell(cellIndex);
 	                    cellName = ExcelCellRef.getName(cell, cellIndex);
 	                    if(!outputColumns.contains(cellName) ) {
 	                        continue;
 	                    }
+	                    if(!ExcelCellRef.getValue(cell).equals("")) {
+	                    	emptyFlag = false;
+	                    }
 	                    map.put(cellName, ExcelCellRef.getValue(cell));
+	                }
+	                if(emptyFlag) {
+	                	break;
 	                }
 	                excelList.add(map);
 	            }
@@ -2249,7 +2264,7 @@ public class EzAttitudeGWController {
 	        
 	        wb.close();
 	        
-	        String resultMsg = ezAttitudeService.annualExcelUpload(excelList, changeUserId, companyId, info.getTenantId(), changeReason, flagCheck);
+	        resultMsg = ezAttitudeService.annualExcelUpload(excelList, changeUserId, companyId, info.getTenantId(), changeReason, flagCheck);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

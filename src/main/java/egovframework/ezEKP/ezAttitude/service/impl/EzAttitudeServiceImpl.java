@@ -2584,7 +2584,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			userCnt = ezAttitudeDAO.getUserCnt(map1);
 			
 			if(userCnt == 0) {
-				return i+1 + "행의" + userId + "은(는) 존재하지 않는 사용자입니다.";
+				return i+1 + "행 " + userId + "은(는) 존재하지 않는 사용자입니다.";
 			}
 		}
 		
