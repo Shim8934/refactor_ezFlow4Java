@@ -1773,4 +1773,19 @@
 		]]>
 	</select>
 	
+	<select id="ezAttitudeAdminDAO.getUserCnt" parameterClass="Map" resultClass="INTEGER">
+		<![CDATA[
+			SELECT
+				count(*)
+			FROM
+				tbl_usermaster
+			WHERE
+				PHYSICALDELIVERYOFFICENAME = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				CN = #userId#
+		]]>
+	</select>
+	
 </sqlMap>
