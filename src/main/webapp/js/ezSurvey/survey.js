@@ -2038,8 +2038,9 @@ var SurveyCreate     = function() {
 			
 			for (var j = 0; j < col.length; j++) {
 				inputTd = $("<td></td>");
-				Input = $("<input type='" + inpType + "' name='qstn" + id + "opt" + i + "'>");
-				Input.val("(" + row[i]["rowLevel"] + ", " + col[j]["colLevel"] + ")");
+				Input = $("<input type='" + inpType + "' name='qstn" + id + "opt" + i + "' id='qstn" + id + "opt" + i + j + "'>");
+				//Input.val("(" + row[i]["rowLevel"] + ", " + col[j]["colLevel"] + ")");
+				Input.val(row[i]["rowLevel"] + "," + col[j]["colLevel"]);
 				inputTd.append(Input);
 				bodyTr.append(inputTd);
 			}
@@ -2615,7 +2616,7 @@ var SurveyCreate     = function() {
 		
 		var qstnList = SurveyCreate.getQs();
 
-		if (step == 3) {
+		if (step == 4) {
 			var qstInf   = SurveyCreate.getInfo();
 			confirmSurveyInfo(qstInf);
 		}

@@ -396,43 +396,41 @@
 			var obj = {};
 			var wrapper = $("#prevQstn" + id);
 			var trLength = wrapper.find("tbody").find("tr").length;
+			var answer = [];
 
 			for (var i = 0; i < trLength; i++) {
 				var value = $("input[name = qstn" + id + "opt" + i + "]:checked").val();
 				console.log(value);
-				value.replace("(", "");
-				value.replace(")", "");
-				var arr = [];
-				var valArr = value.split(",");
-				
-				var row = valArr[0];
-				var col = valArr[1];
-				console.log(row);
-				console.log(col);
+				answer.push(value);
 			}
 			
-			
-			/* 
-			var boxes = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]");
-			var length = boxes.length;
-			var answer = [];
-			
-			for (var i = 0; i < length; i++) {
-				if (boxes[i].checked == true) {
-					var level = i;
-					var optionLevel = boxes[i].value;
-					console.log(optionLevel);
-					answer.push(optionLevel);
-				}
-			}
-			 */
-			/*  
 			obj['questionLevels'] = id;
 			obj['optionLevels'] = answer;
 			obj['type'] = type;
 			resposeObj.responses.push(obj);
 			console.log(resposeObj.responses);
-			 */
+		}
+		
+		function getMultiMtrRespose(id, type) {
+			var obj = {};
+			var wrapper = $("#prevQstn" + id);
+			var rowLength = wrapper.find("tbody").find("tr").length;
+			var colLength = wrapper.find("thead").find("td").length;
+			var answer = [];
+
+			for (var i = 0; i < rowLength; i++) {
+				for (var j = 0; j < colLength; j++) {
+					var value = $("input[id = qstn" + id + "opt" + i + j + "]:checked").val();
+					console.log(value);
+					answer.push(value);
+				}
+			}
+			
+			obj['questionLevels'] = id;
+			obj['optionLevels'] = answer;
+			obj['type'] = type;
+			resposeObj.responses.push(obj);
+			console.log(resposeObj.responses);
 		}
 		
 		function deleteFileConfirm() {
