@@ -380,7 +380,7 @@
 	        }
 		</script>
 	</head>
-	<body class="mainbody" style="overflow:hidden; padding-right: 6px;">
+	<body class="mainbody" style="overflow-x:hidden; overflow-y:auto; padding-right: 6px;">
 		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
 		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
 		<div id="mainmenu" onload = "makePageSelPage()">
