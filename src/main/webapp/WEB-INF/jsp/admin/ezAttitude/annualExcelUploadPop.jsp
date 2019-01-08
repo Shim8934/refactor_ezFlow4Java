@@ -102,13 +102,13 @@
         	<tr>
 	            <th style="width:100px; text-align:center">업로드 파일</th>
 	            <td>
-	        		<input name="excelFile" id="excelFile" type="file" style="width:100%;text-align:right;padding-bottom: 5px;" accept=".xls, .xlsx" onchange="CheckUploadFileSize(this); CheckuploadFileExt(this);">
+	        		<input name="excelFile" id="excelFile" type="file" style="width:100%;padding-bottom: 5px;" accept=".xls, .xlsx" onchange="CheckUploadFileSize(this); CheckuploadFileExt(this);">
 	            </td>
 	        </tr>
         	<tr>
 	            <th style="width:100px; text-align:center">수정사유</th>
 	            <td>
-        			<input name="changeReason" id="changeReason" type="text"  style="width:100%;text-align:right;padding-bottom: 5px;" value="">
+        			<input name="changeReason" id="changeReason" type="text"  style="width:100%;text-align:left;padding-bottom: 5px;" value="">
 	            </td>
 	        </tr>
         </table>
