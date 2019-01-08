@@ -186,10 +186,27 @@ function btn_delete(itemId, event) {
 		contentType: "application/json",
 		success : function(result) {
 			if (result.result == "OK") {
-				window.location.reload();
+				//window.location.reload();
+				deleteSuccess(itemId);
 			}
 		}
 	});
+}
+
+function deleteSuccess(itemId) {
+	var deleteElmt = document.getElementById(itemId);
+	deleteElmt.parentNode.removeChild(deleteElmt);
+	
+	var linkChoice = document.getElementsByClassName("linkChoice");
+	var length = linkChoice.length;
+	for (var i = 0; i < length; i++) {
+		linkChoice[i].classList.remove("linkChoice");
+	}
+	
+	var detailElmt = document.getElementsByClassName("linkDetails")[0];
+	if (detailElmt) {
+		detailElmt.parentNode.removeChild(detailElmt);
+	}
 }
 
 function openLinkDetail(item, itemId) {
