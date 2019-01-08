@@ -127,9 +127,9 @@
         <div style="width: 100%; height: 100%;">
             <table class="mainlist" style="width: 100%;">
                 <tr>
-	         		<th class="borderLeft" style="width:17%;text-align:center;"><spring:message code='ezAttitude.t63' /></th>
-	            	<th class="borderLeft" style="width:15%;text-align:center;"><spring:message code='ezAttitude.t250' /></th>
-	            	<th class="borderLeft" style="width:15%;text-align:center;"><spring:message code='ezAttitude.t251' /></th>
+	         		<th class="borderLeft" style="width:19%;text-align:center;"><spring:message code='ezAttitude.t63' /></th>
+	            	<th class="borderLeft" style="width:14%;text-align:center;"><spring:message code='ezAttitude.t250' /></th>
+	            	<th class="borderLeft" style="width:14%;text-align:center;"><spring:message code='ezAttitude.t251' /></th>
 	            	<th class="borderLeft" style="width:43%;text-align:center;"><spring:message code='ezAttitude.t248' /></th>
 	            	<th class="borderLeft borderRight" style="width:10%;text-align:center;"><spring:message code='ezAttitude.t62' /></th>
                 </tr>
@@ -140,13 +140,13 @@
 			    		<c:when test="${not empty resultList }">
 					    	<c:forEach items="${resultList }" var="list">
 					        	<tr>
-					            	<td class="borderLeft" style="width:17%;">
+					            	<td class="borderLeft" style="width:19%;">
 					            		${list.changeDate}
 				        	    	</td>
-					            	<td class="borderLeft" style="width:15%;">
+					            	<td class="borderLeft" style="width:14%;">
 					            		${list.originAnnualCnt}<spring:message code='ezAttitude.t68' />
 				        	    	</td>
-					            	<td class="borderLeft" style="width:15%;">
+					            	<td class="borderLeft" style="width:14%;">
 					            		${list.changeAnnualCnt}<spring:message code='ezAttitude.t68' />
 				        	    	</td>
 					            	<td class="borderLeft" style="width:43%;">

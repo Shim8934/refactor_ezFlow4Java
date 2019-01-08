@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<title>
-			수정내역확인
+			<spring:message code='ezAttitude.t235' />
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
@@ -36,7 +36,7 @@
 	    		var nFileSize = objFile.files[0].size;
 
 		    	if (nFileSize > nMaxSize) {
-		    		alert("파일용량은 10mb를 초과할 수 없습니다.\n" + nFileSize + " byte");
+		    		alert("<spring:message code='ezAttitude.t261' />\n" + nFileSize + " byte");
 		    		objFile.outerHTML = objFile.outerHTML;
 		    	}
 	    	}
@@ -47,7 +47,7 @@
 	    	 	var strExt = strFilePath.split('.').pop().toLowerCase();
 
 	    	 	if ($.inArray(strExt, ["xls"]) == -1) {
-	    	  		alert("허용하지 않는 확장자");
+	    	  		alert("<spring:message code='ezAttitude.t260' />");
 	    	  		objFile.outerHTML = objFile.outerHTML;
 	    	 	}
 	    	}
@@ -55,11 +55,11 @@
 	    	//전체 연차 등록/수정
 	    	function annualExcelUpload() {
 	    		if($("[name=excelFile]").val() == null || $("[name=excelFile]").val() == "") {
-	                alert("파일을 먼저 선택해주세요.");
+	                alert("<spring:message code='ezAttitude.t259' />");
 	                return;
 	            }
 	    		if($("[name=changeReason]").val() == null || $("[name=changeReason]").val() == "") {
-	                alert("수정사유를 입력해주세요.");
+	                alert("<spring:message code='ezAttitude.t243' />");
 	                return;
 	            }
 	    		
@@ -92,7 +92,7 @@
 	</head>
 	<body class="popup">
 	    <h1>
-	    	수정내역확인
+	    	<spring:message code='ezAttitude.t235' />
 	    </h1>
 	    <div id="close">
             <ul>
@@ -101,15 +101,16 @@
         </div>
         <div>
        	<form name="cForm" id="cForm" method="post" onsubmit="return false;" enctype="multipart/form-data">
+       	<h2 style="font-weight: normal;font-size:12px;padding-bottom: 5px;">▒&nbsp;<spring:message code='ezAttitude.t258' /></h2>
         <table class="content">
         	<tr>
-	            <th style="width:100px; text-align:center">업로드 파일</th>
+	            <th style="width:100px; text-align:center"><spring:message code='ezAttitude.t257' /></th>
 	            <td>
 	        		<input name="excelFile" id="excelFile" type="file" style="width:100%;" accept=".xls" onchange="CheckUploadFileSize(this); CheckuploadFileExt(this);">
 	            </td>
 	        </tr>
         	<tr>
-	            <th style="width:100px; text-align:center">수정사유</th>
+	            <th style="width:100px; text-align:center"><spring:message code='ezAttitude.t248' /></th>
 	            <td>
         			<input name="changeReason" id="changeReason" type="text"  style="width:100%;text-align:left;padding-bottom: 5px;" value="">
 	            </td>

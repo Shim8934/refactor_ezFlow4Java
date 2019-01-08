@@ -173,7 +173,7 @@
 	    	
 	    	function annualExcelUploadPop(userId, year) {
 	        	var url = "/admin/ezAttitude/annualExcelUploadPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "annualExcelUploadPop", GetOpenWindowfeature(500, 175));
+				window.open(url, "annualExcelUploadPop", GetOpenWindowfeature(500, 205));
 	        }
 	    	
 	    	function getAnnualList() {
