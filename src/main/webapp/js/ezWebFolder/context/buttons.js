@@ -238,7 +238,7 @@ var buttons = (function() {
 						return;
 					}
 				} else {
-					if (folderId == "root" || targetPathLength[i] < 1) {
+					if (targetPathLength[i] < 1) {
 						alert(messages.strLang35);
 						return;
 					}
