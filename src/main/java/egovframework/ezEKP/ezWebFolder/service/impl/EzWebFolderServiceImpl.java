@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -52,6 +51,7 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
@@ -83,7 +83,10 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	
 	@Autowired
 	private EzWebFolderService_y ezWebFolderService_y;
-	
+
+	@Autowired
+	private EzWebfolderUtil webfolderUtil;
+
 	@Autowired
 	private EzCommonService ezCommonService;
 	
@@ -809,14 +812,14 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			fileSize[i]    = multiFileLists.get(i).getSize();
 			int dotPos     = pFileName[i].lastIndexOf(".");
 			String extend  = dotPos == -1 ? ".none" : pFileName[i].substring(dotPos + 1);
-			String newName = UUID.randomUUID().toString() + "." + extend;
+			String newName = webfolderUtil.generateFilePath(extend);
 			
 			if (extend.length() >= 10) {
-				extend = ".etc";
+				extend = "etc";
 			}
 			
 			if (useExtension.toLowerCase().contains(extend.toLowerCase()) || useExtension.equals("*")) {
-				writeUploadedFile(multiFileLists.get(i), newName, pDirPath);
+				writeUploadedFile(multiFileLists.get(i), pDirPath + newName);
 				FileTypeVO fileType = getFileTypeByFileExt(extend.toLowerCase(), tenantId);
 				
 				if (fileType == null) {
@@ -1357,7 +1360,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				String fileName = fileVO.getFileName();
 				int dotPos      = fileName.lastIndexOf(".");
 				String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
-				String newName  = UUID.randomUUID().toString() + "." + extend;
+				String newName  = webfolderUtil.generateFilePath(extend);
 				String newPath  = getWebFolderDirPath(userInfo.getTenantId()) + newName;
 				File srcFile    = new File(realPath + fileVO.getFilePath());
 				File destFile   = new File(realPath  + newPath);

@@ -1275,7 +1275,11 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				FileVO fileVO  = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 				// 확장자 붙여서 newFileName 완성
 				String newFileName = fileNameList[index];
-				newFileName += "." + fileVO.getFileExt();
+				
+				// 확장자가 없는 파일이 아니라면
+				if (!fileVO.getFileExt().equals(".none")) {
+					newFileName += "." + fileVO.getFileExt();
+				}
 				
 				// 중복된다면 continue
 				if (duplicateList.addAll(ezWebFolderService.getAllDuplicateInfo(newFileName, folderId, offset, tenantId))) {

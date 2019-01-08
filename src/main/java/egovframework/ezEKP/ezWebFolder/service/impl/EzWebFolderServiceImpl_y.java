@@ -24,6 +24,7 @@ import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_y;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -43,6 +44,9 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 	@Autowired
 	private EzWebFolderAdminService ezWebFolderAdminService;
+
+	@Autowired
+	private EzWebfolderUtil webfolderUtil;
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(EzWebFolderServiceImpl_y.class);
@@ -903,20 +907,20 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			
 			int dotPos     = fileName.lastIndexOf(".");
 			String extend  = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
-			String newName = UUID.randomUUID().toString() + "." + extend;
+			String newName = webfolderUtil.generateFilePath(extend);
 			path = commonUtil.getUploadPath("upload_webfolder.ROOT", tenantId) + commonUtil.separator; 
 			LOGGER.debug("new fileName is " + newName);
 			
 			Date date      = new Date();
 			// 실제 파일을 생성
-			writeUploadedFile(multiFileLists.get(i), newName, realPath+path);
+			writeUploadedFile(multiFileLists.get(i), realPath + path + newName);
 			
 			String timeUTC = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 			
 			fileSize[i]    = multiFileLists.get(i).getSize();
 			
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("filePath", path+newName);
+			map.put("filePath", path + newName);
 			map.put("userId", userId);
 			map.put("fileId", filevo.getFileId());
 			map.put("tenantId", tenantId);
@@ -927,8 +931,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			int updateResult = ezWebFolderDAO_y.updateFileRealData(map);
 			
 			// db 업데이트 성공시 기존 파일 delete
-			path = realPath + path;
-			File file = new File(path+fileName);
+			File file = new File(realPath + filevo.getFilePath());
 			if (file.exists() && file.isFile()) {
 				if (file.delete()) {
 					LOGGER.debug("delete success.");

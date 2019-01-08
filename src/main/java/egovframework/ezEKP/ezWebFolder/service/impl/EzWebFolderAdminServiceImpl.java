@@ -13,7 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
@@ -46,6 +45,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderAdminDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
+import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
@@ -71,6 +71,9 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	@Autowired
 	private EzOrganService ezOrganService;
 	
+	@Autowired
+	private EzWebfolderUtil webfolderUtil;
+
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
@@ -733,7 +736,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				String fileName = file.getFileName();
 				int dotPos      = fileName.lastIndexOf(".");
 				String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
-				String newName  = UUID.randomUUID().toString() + "." + extend;
+				String newName  = webfolderUtil.generateFilePath(extend);
 				String newPath  = ezWebFolderService.getWebFolderDirPath(userInfo.getTenantId()) + newName;
 				File srcFile    = new File(realPath + file.getFilePath());
 				File destFile   = new File(realPath  + newPath);
