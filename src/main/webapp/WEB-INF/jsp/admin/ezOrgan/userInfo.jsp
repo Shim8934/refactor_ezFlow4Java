@@ -706,11 +706,7 @@
 	            <li><span onclick="window.close()"></span></li>
 	        </ul>
 	    </div>
-	    <div class="portlet_tabpart01">
-	        <div class="portlet_tabpart01_top" id="tab1">
-	            <p><span id="1tab1" divname="Organ_div1"><spring:message code='ezOrgan.t274' /></span></p>
-	        </div>
-	    </div>
+
 	    <div style="margin-top:4px;margin-bottom:2px"><span style="color:red;"><spring:message code='ezOrgan.t00018' /></span></div>
 	    <table id="Tbl_UserInfo" class="content" style="width:800px">
 	        <tr>
