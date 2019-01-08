@@ -2552,7 +2552,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (docID != null && !docID.equals("")) {
 					String checkMode = "";
 					
-					if (docStatus.toCharArray().equals("TMP")) {
+					if (docStatus.toUpperCase().equals("TMP")) {
 						checkMode = "TMP";
 					} else {
 						checkMode = "REC";
@@ -4740,6 +4740,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			isNonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
 		}
 		
+		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("docID", docID);
 		model.addAttribute("orgDocID", orgDocID);
@@ -4759,6 +4761,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isReceived", isReceived);
 		model.addAttribute("isNonElecRec", isNonElecRec);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 
 		logger.debug("recevGSusin ended.");
 		

@@ -161,6 +161,7 @@
 	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", sepAttachCheckYN = "";
 	        var useReceiveDocNo = "${useReceiveDocNo}";
 	        var orgCompanyID = "<c:out value='${userInfo.companyID}'/>";
+	        var docNumZeroCnt = "${docNumZeroCnt}";
 	        
 	        window.onload = function () {
 	            try {
@@ -692,10 +693,14 @@
 	                    }
 	
 	                    var rtnval;
-	                    if (LastSignSN == 1 || DraftLastFlag)
-	                        rtnval = getDocNumber(arr_userinfo[4], "");
-	                    else
-	                        rtnval = getDocNumber(arr_userinfo[4], "be");
+	                    if (LastSignSN == 1 || DraftLastFlag) {
+	                        //rtnval = getDocNumber(arr_userinfo[4], "", docNumZeroCnt);
+	                        rtnval = getDocNumberNew(arr_userinfo[4], "", docNumZeroCnt);
+	                    }
+	                    else {
+	                        //rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);
+	                        rtnval = getDocNumberNew(arr_userinfo[4], "be", docNumZeroCnt);
+	                    }
 	
 	                    if (!rtnval) {
 	                        var pAlertContent = "[<spring:message code='ezApprovalG.t1384'/>";
