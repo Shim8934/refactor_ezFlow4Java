@@ -1000,22 +1000,23 @@ public class EzEmailAdminController {
 	 * 회원별 메일함 사용용량 및 총용량
 	 */
 	@RequestMapping(value = "/admin/ezEmail/mailQuotaList.do")
-	public String statisticsList_view(@CookieValue("loginCookie")String loginCookie, Model model) throws Exception {
+	public String showMailBoxQuotaManaged(@CookieValue("loginCookie")String loginCookie, Model model) throws Exception {
+		logger.debug("showMailBoxQuotaManage started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		
+	
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
+		int j = 0;
 		String companyId = userInfo.getCompanyID();
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		int j = 0;
 		
 		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-
+			OrganDeptVO vo = list.get(i);
+			
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(companyId)) {
 				resultList.add(j++, vo);
 			}
@@ -1023,16 +1024,18 @@ public class EzEmailAdminController {
 		
 		model.addAttribute("list", resultList);
 		model.addAttribute("companyId", companyId);
+
+		logger.debug("showMailBoxQuotaManage ended.");
 		
 		return "/admin/ezEmail/mailQuotaList";
 	}
 
-	@RequestMapping(value = "/admin/ezEmail/statistics_userList.do")
-	public String statisticsList( @CookieValue("loginCookie") String loginCookie, Model model,
-								  HttpServletRequest req,@RequestParam(required = false) String searchKeycode, 
-								  @RequestParam(required = false) String searchKeyword) throws Exception {
-
-		logger.debug("started statisticsList controller.");
+	@RequestMapping(value = "/admin/ezEmail/mailBoxQuotaManageList.do")
+	public String mailBoxQuotaManageList( @CookieValue("loginCookie") String loginCookie,
+			Model model, HttpServletRequest req,
+			@RequestParam(required = false) String searchKeycode,
+			@RequestParam(required = false) String searchKeyword) throws Exception {
+		logger.debug("mailBoxQuotaManageList started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -1057,9 +1060,7 @@ public class EzEmailAdminController {
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
-   		
 		int itemCnt = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, companyId);
-
 		int totalPage = itemCnt / maxItemPerPage;
 
 		if (itemCnt < 1) {
@@ -1073,17 +1074,10 @@ public class EzEmailAdminController {
 		currentPage = Math.min(currentPage, totalPage);
 
 		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
-		
+
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
 									    maxItemPerPage, searchKeycode, searchKeyword, companyId);
-		
-		IMAPAccess ia = null;
-		Locale locale = Locale.getDefault();
-		String password = jspw;
-		String domain = ezCommonService.getTenantConfig("DomainName",userInfo.getTenantId());
-		String mailServerAddress = config.getProperty("config.MailServerAddress");
-		String iMAPPort = config.getProperty("config.IMAPPort");
 		
 		// 각 사용자별로 처리한다.
 		for (OrganUserVO organUser : userCnList) {				
@@ -1097,28 +1091,12 @@ public class EzEmailAdminController {
 			quaList.add(1, displayname);
 			quaList.add(2, department);
 
-			try {
-				String email = userId + "@" + domain;
-				logger.debug("email=" + email);
-				
-				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
-	
-				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
-	
-				// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
-				long mailboxUsage = storageUsageAndLimit[0]; // KBs
-				long mailboxQuota = storageUsageAndLimit[1]; // KBs
+			String mailboxUsage = organUser.getMailboxUsage();
+			String mailboxQuota = organUser.getMailboxQuota();
 			
-				quaList.add(3, String.valueOf(mailboxUsage));
-				quaList.add(4, String.valueOf(mailboxQuota));
-				userList.add((ArrayList<String>) quaList);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (ia != null) {
-                    ia.close();
-                }
-            }
+			quaList.add(3, String.valueOf(mailboxUsage));
+			quaList.add(4, String.valueOf(mailboxQuota));
+			userList.add((ArrayList<String>) quaList);
 		}
 
 		model.addAttribute("userList", userList);
@@ -1128,7 +1106,7 @@ public class EzEmailAdminController {
 		model.addAttribute("searchKeyword", searchKeyword);
 		model.addAttribute("searchKeycode", searchKeycode);
 
-		logger.debug("ended statisticsList controller.");
+		logger.debug("mailBoxQuotaManageList ended.");
 
 		return "json";
 	}
@@ -1137,11 +1115,10 @@ public class EzEmailAdminController {
 	 * 엑셀 워크시트 생성 및 자동 다운로드 함수
 	 */
 	@RequestMapping(value = "/admin/ezEmail/statisticsListExcelExport.do")
-	public void MailQuotaExcelExport(@CookieValue("loginCookie") String loginCookie,Model model,
-			  						 HttpServletRequest request,String searchKeycode,String searchKeyword,
-			  						 HttpServletResponse response)throws Exception {
-		
-		logger.debug("MailQuotaExcelExport controller started.");
+	public void mailQuotaExcelExport(@CookieValue("loginCookie") String loginCookie, Model model,
+			HttpServletRequest request, String searchKeycode, String searchKeyword,
+			HttpServletResponse response) throws Exception {
+		logger.debug("mailQuotaExcelExport started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -1166,13 +1143,6 @@ public class EzEmailAdminController {
 		
 		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
 
-		IMAPAccess ia = null;
-		Locale locale = Locale.getDefault();
-		String password = jspw;
-		String domain = ezCommonService.getTenantConfig("DomainName",userInfo.getTenantId());
-		String mailServerAddress = config.getProperty("config.MailServerAddress");
-		String iMAPPort = config.getProperty("config.IMAPPort");
-		
 		// 각 사용자별로 처리한다.
 		for (OrganUserVO organUser : userCnList) {
 			List<String> quaList = new ArrayList<String>();
@@ -1185,27 +1155,12 @@ public class EzEmailAdminController {
 			quaList.add(1, displayname);
 			quaList.add(2, department);
 				
-			try {
-				String email = userId + "@" + domain;
-				
-				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
-
-				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
-	
-				// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
-				long mailboxUsage = storageUsageAndLimit[0]/1024; // KBs to MB
-				long mailboxQuota = storageUsageAndLimit[1]/1024; // KBs to MB
-					
-				quaList.add(3, String.valueOf(mailboxUsage));
-				quaList.add(4, String.valueOf(mailboxQuota));
-				userList.add((ArrayList<String>) quaList);
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if (ia != null) {
-					ia.close();
-				}
-			}
+			String mailboxUsage = organUser.getMailboxUsage();
+			String mailboxQuota = organUser.getMailboxQuota();
+			
+			quaList.add(3, String.valueOf(mailboxUsage));
+			quaList.add(4, String.valueOf(mailboxQuota));
+			userList.add((ArrayList<String>) quaList);
 		}
 		
 		/* 엑셀 만들기 */
@@ -1286,7 +1241,7 @@ public class EzEmailAdminController {
 		workbook.write(response.getOutputStream());
 		workbook.close();
 	
-		logger.debug("MailQuotaExcelExport controller ended.");
+		logger.debug("mailQuotaExcelExport controller ended.");
 	}
 	
 	/**
@@ -1570,13 +1525,16 @@ public class EzEmailAdminController {
 				// 저장 공간은 차지하지만 해당 계정이 사용되지는 않는다. 
 				
 				// 퇴직자 계정을 삭제한다.
-				ezEmailUserAdminService.removeUser(mailAddr);
+				rc = ezEmailUserAdminService.removeUser(mailAddr);
+				logger.debug("removeUser rc=" + rc);
 				
 				// 해당 사용자의 메일박스들을 모두 제거한다.
-				ezEmailUserAdminService.removeUserAllMailboxes(mailAddr);
+				rc = ezEmailUserAdminService.removeUserAllMailboxes(mailAddr);
+				logger.debug("removeUserAllMailboxes rc=" + rc);
 				
 				// 해당 사용자의 개인주소록 및 주소록 관련 설정을 모두 제거한다.
-				ezAddressService.removeUserAddress(mailAddr);
+				rc = ezAddressService.removeUserAddress(mailAddr);
+				logger.debug("removeUserAddress rc=" + rc);
 			}
 		
 		} catch (Exception e) {
@@ -1653,6 +1611,7 @@ public class EzEmailAdminController {
 	    	String shareId = (String)jsonObj.get("shareId");
 			String shareName = (String)jsonObj.get("shareName");
 			String compId = (String)jsonObj.get("compId");
+			String oriPass = (String)jsonObj.get("password");
 			JSONArray userList = (JSONArray)jsonObj.get("userList");
 			int userListSize = userList.size();
 			logger.debug("shareId=" + shareId + ",shareName=" + shareName + ",compId=" + compId + ",userListSize=" + userListSize);
@@ -1779,19 +1738,16 @@ public class EzEmailAdminController {
 			String mailAddr = shareId + "@" + domain;
 			
 			// 이메일 시스템에 계정을 생성한다.
-			// 비밀번호는 랜덤하게 설정한다.
-			String oriPass = UUID.randomUUID().toString().replace("-", "").substring(0, 12) + "!@#";
-			
 			int rc = ezEmailUserAdminService.addUser(mailAddr, oriPass);
 			logger.debug("addUser rc=" + rc);
 			
 			if (rc == 0) { // addUser 성공
-				// 해당 User가 속한 부서의 Group Email 주소에 User를 등록한다.					
-				String groupAddr = deptId + "@" + domain;					
+				// 해당 User가 속한 부서의 Group Email 주소에 User를 등록한다.
+				String groupAddr = deptId + "@" + domain;
 				rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 				logger.debug("updateGroupAdd rc=" + rc);
 				
-				if (rc == 0) { // updateGroup 성공												
+				if (rc == 0) { // updateGroup 성공
 					String bizmekaResult = "ERROR";
 					
 					// insertDBData_user 실패했을 경우 JMocha에서 계정 다시 삭제.

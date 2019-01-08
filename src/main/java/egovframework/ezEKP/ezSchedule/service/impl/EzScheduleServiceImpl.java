@@ -550,8 +550,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					info = svo.getRepetition().split("\\|");
 					
 					if (i+1 == resultCount && Integer.parseInt(info[0]) < 1){
-						if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+						if (svo.getEndDate().equals(svo.getRealEndDate())) {
+							if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
 							svoIndex.add(i);
+							}
 						}
 						break;
 					} else if (i+1 == resultCount) {
@@ -561,8 +563,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					svoIdAfter = svoAfter.getScheduleId();
 					
 					if (!svoId.equals(svoIdAfter) && Integer.parseInt(info[0]) < 1) {
-						if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
-							svoIndex.add(i);
+						if (svo.getEndDate().equals(svo.getRealEndDate())) {
+							if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+								svoIndex.add(i);
+							}
 						}
 					}
 				}
@@ -609,6 +613,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		innerVO.setEndDate(dateTime2);
 		innerVO.setDateType(newDateType + "");
 		innerVO.setRepeatCount(count);			
+		innerVO.setRealEndDate(vo.getEndDate());
 		
 		return innerVO; 
 	}
@@ -1265,9 +1270,9 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void copySchedule(String dragId, String startDate, String endDate, String defaultPath, String offset,int tenantId, String companyId) throws Exception {
+	public void copySchedule(String dragId, String startDate, String endDate, String defaultPath, String offSetMin, int tenantId, String companyId) throws Exception {
 		
-		ScheduleInfoVO info = getScheduleInfo(dragId, offset, tenantId, companyId);
+		ScheduleInfoVO info = getScheduleInfo(dragId, offSetMin, tenantId, companyId);
 		
 		String[] Repetition = info.getRepetition().split("\\|");
 		String dateType = Repetition[1].equals("0") ? "1" : "2"; //info[0]이면시간지정
@@ -1311,7 +1316,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		copyAttach(scheduleId, defaultPath, attachPath, attachList, tenantId);
 		
 		//Save attendList
-		List<AttendantListVO> attendList = getAttendantList(dragId, offset, tenantId, companyId);
+		List<AttendantListVO> attendList = getAttendantList(dragId, offSetMin, tenantId, companyId);
 		for (int i = 0; i < attendList.size(); i++) {
 			String attendantId = attendList.get(i).getAttendantId();
 			String attendantName = attendList.get(i).getAttendantName();

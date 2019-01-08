@@ -217,6 +217,9 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 		List<FileVO> filevo = new ArrayList<FileVO>();
 		
+		LOGGER.debug("searchExt:"+searchExt+",searchStartDate:"+searchStartDate+",searchEndDate:"+searchEndDate
+				+",searchCreateName:"+searchCreateName+",searchFileName:"+searchFileName);
+		
 		if (searchExt != "" || searchStartDate != "" || searchEndDate != ""
 				|| searchCreateName != "" || searchFileName != "") {
 			flag = "1";
@@ -582,7 +585,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		String result = ezWebFolderDAO_y.insertFolder(map);
 		LOGGER.debug("insert folderId is " + result);
 
-		if (result.equals(null)) {
+		if (result == null) {
 			result = "fail";
 		} 
 

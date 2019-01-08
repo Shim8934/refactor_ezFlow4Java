@@ -111,7 +111,7 @@ public interface EzOrganAdminService {
 	
 	public String deleteTitle(String type, String jobID, String companyID, int tenantID) throws Exception;
 	
-	public String getTitleUserList(String type, String jobID, String primary, String companyID, int tenantID) throws Exception;
+	public String getTitleUserList(String type, String jobID, String pageSize, String pageNum, String searchType, String searchValue, String primary, String companyID, int tenantID) throws Exception;
 	
 	public int getTitleListCnt(String type, String companyID, int tenantID) throws Exception;
 	
@@ -120,4 +120,6 @@ public interface EzOrganAdminService {
 	public int getTitleCnt(String type, String jobID, String mode, String displayName, String displayName2, String companyID, int tenantID) throws Exception;
 	
 	public String getJobOptionInfo(String type, String companyID, int tenantID) throws Exception;
+	
+	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception;
 }

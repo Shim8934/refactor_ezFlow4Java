@@ -128,6 +128,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         return (List<OrganUserVO>) list("EzOrganAdminDAO.userCnList", tenantID);
     }
     
+    public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception {
+    	return (List<OrganUserVO>) list("EzOrganAdminDAO.allUserList", tenantID);
+    }
+    
     // 퇴직자 포함하여 사용자 아이디 목록을 반환한다.
     public List<OrganUserVO> getUserCnList(int tenantID) throws Exception {
     	return getUserCnListForLocal(tenantID);       
@@ -136,7 +140,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     private int getUserCountForLocal(int tenantID) throws Exception {
         return (int) select("EzOrganAdminDAO.userCount", tenantID);
     }
-    	
 
     // 퇴직자 포함하여 사용자 아이디 개수를 반환한다.
     public int getUserCount(int tenantID) throws Exception {
@@ -776,7 +779,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             String param = "extensionAttribute7=" + URLEncoder.encode(vo.getExtensionAttribute7(), "UTF-8");
             inputParams += "&" + param;
         }
-
+        
         String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/updateUser";
         String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 
@@ -2119,6 +2122,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 		update("EzOrganAdminDAO.updateTitle2", map);
 	}
 	
+	public void updateTitle3(Map<String, Object> map) throws Exception {
+		update("EzOrganAdminDAO.updateTitle3", map);
+	}
+	
 	public void deleteTitle(Map<String, Object> map) throws Exception {
 		delete("EzOrganAdminDAO.deleteTitle", map);
 	}
@@ -2134,6 +2141,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	
 	public int getTitleUserListCnt(Map<String, Object> map) throws Exception {
 		return (int) select("EzOrganAdminDAO.selectTitleUserListCnt", map);
+	}
+	
+	public int getTitleUserListCnt2(Map<String, Object> map) throws Exception {
+		return (int) select("EzOrganAdminDAO.selectTitleUserListCnt2", map);
 	}
 	
 	public int getTitleCnt(Map<String, Object> map) throws Exception {

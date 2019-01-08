@@ -69,6 +69,9 @@
 					<isEqual property="search_keycode" compareValue="userId">
 						CN LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
+					<isEqual property="search_keycode" compareValue="quota">
+						((MAILBOXUSAGE / MAILBOXQUOTA) * 100) >= #search_keyword#
+					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="searchStartDate" prepend="AND">
@@ -403,7 +406,9 @@
                         		' ' DISPLAYNAMEPRINTABLE  ,
                         		POSITIONCD ,
                         		BIRTH ,
-                        		BIRTHTYPE 
+                        		BIRTHTYPE ,
+                        		MAILBOXUSAGE,
+                        		MAILBOXQUOTA
              FROM
              	TBL_USERMASTER 
              WHERE
@@ -509,7 +514,9 @@
 		                        ' ' DISPLAYNAMEPRINTABLE  ,
 		                        POSITIONCD ,
 		                        BIRTH ,
-		                        BIRTHTYPE 
+		                        BIRTHTYPE ,
+		                        MAILBOXQUOTA,
+		                        MAILBOXUSAGE
 		          FROM
 		          		TBL_USERMASTER
                   WHERE
@@ -1622,9 +1629,9 @@
 			('SA02', '001',		'품의',					'Draft',				'稟議',			'评价',			'1',	'품의',		#companyID#,	#tenantID#),
 			('SA02', '002',		'협조',					'Agreement(personal)',	'協力',			'合作',			'1',	'협조',		#companyID#,	#tenantID#),
 			('SA02', '003',		'감사',					'Audit',				'遵法監視',		'监督',			'0',	'준법감시',	#companyID#,	#tenantID#),
-			('SA02', '004',		'심사',					'심사_EN',				'심사_JA',		'심사_ZH',		'1',	'심사',		#companyID#,	#tenantID#),
+			('SA02', '004',		'심사',					'Request send',				'審査',		'심사_ZH',		'1',	'심사',		#companyID#,	#tenantID#),
 			('SA02', '011',		'수신',					'Receipt',				'受信',		'收件',		'1',	'수신',		#companyID#,	#tenantID#),
-			('SA02', '012',		'협조/합의',				'기안문_EN',				'기안문_JA',	'기안문_ZH',	'1',	'기안문',	#companyID#,	#tenantID#),
+			('SA02', '012',		'협조/합의',				'Draft',				'起案文',	'기안문_ZH',	'1',	'기안문',	#companyID#,	#tenantID#),
 			('SA02', '013',		'시행',					'Enforcement',			'施行',		'执行',		'0',	'시행',		#companyID#,	#tenantID#),
 			('SA02', '014',		'감사(검사부)',				'Audit(dept.)',			'監査',		'审查',		'0',	'감사',		#companyID#,	#tenantID#),
 			('SA02', '015',		'공람',					'Display',				'回覧',		'传阅',		'0',	'회람',		#companyID#,	#tenantID#),
@@ -1635,7 +1642,7 @@
 			('SA02', '020',		'신청',					'Application',			'施行',		'执行',		'0',	'시행',		#companyID#,	#tenantID#),
 			('SA02', '022',		'대외문서접수',				'Receipt(outside)',		'対外受付',	'对外接收',	'0',	'대외접수',	#companyID#,	#tenantID#),
 			('SA02', '023',		'대외문서발송',				'Sending(outside)',		'対外送信',	'对外发送',	'0',	'대외발송',	#companyID#,	#tenantID#),
-			('SA02', '024',		'수신배부',				'배부_EN',				'배부_JA',		'배부_ZH',		'1',	'배부',		#companyID#,	#tenantID#),
+			('SA02', '024',		'수신배부',				'Distributed',				'配付',		'배부_ZH',		'1',	'배부',		#companyID#,	#tenantID#),
 			('SA02', '031',		'반송',					'Rejection',			'差し戻し',	'退回',		'0',	'반송',		#companyID#,	#tenantID#),
 			('SA02', '032',		'회송',					'Returning',			'回送',	'退回',		'0',	'회송',		#companyID#,	#tenantID#),
            ('SA03','0  ','결재방법','결재방법',null,null,'0','결재방법',#companyID#, #tenantID# ),
@@ -3422,6 +3429,18 @@
 	    ]]>    		 				
 	</select>
 	
+	<select id="EzOrganAdminDAO.allUserList" parameterClass="int" resultMap="userCnList">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_USERMASTER a
+            WHERE
+				a.tenant_id = #tenantID#
+	    	ORDER BY cn
+	    ]]>
+	</select>
+
     <select id="EzOrganAdminDAO.userCount" parameterClass="int" resultClass="int">
         <![CDATA[
             SELECT 
@@ -3600,6 +3619,8 @@
 	  		<isNotNull property="info" prepend=","> <![CDATA[info = #info#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute7" prepend=","> <![CDATA[extensionAttribute7 = #extensionAttribute7#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute8" prepend=","> <![CDATA[extensionAttribute8 = #extensionAttribute8#]]></isNotNull>
+	  		<isNotNull property="mailboxUsage" prepend=","> <![CDATA[mailboxUsage = #mailboxUsage#]]></isNotNull>
+	  		<isNotNull property="mailboxQuota" prepend=","> <![CDATA[mailboxQuota = #mailboxQuota#]]></isNotNull>
 	  	</dynamic>
 	  	<![CDATA[
       		WHERE
@@ -3842,7 +3863,9 @@
 			CN,
 			displayName,
 			department,
-			description
+			description,
+			mailboxquota,
+			mailboxusage
 		FROM 
 	    	TBL_USERMASTER	
         WHERE 
@@ -4033,6 +4056,19 @@
 		AND
 			TENANT_ID = #v_TENANTID#
 	</update>
+	<update id="EzOrganAdminDAO.updateTitle3" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ADDJOBMASTER
+			SET
+				TITLE = #v_DISPLAYNAME#,
+				TITLE2 = #v_DISPLAYNAME2#
+			WHERE
+				JOBID = #v_JOBID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
 	<delete id="EzOrganAdminDAO.deleteTitle" parameterClass="Map">
 	<![CDATA[
 		DELETE FROM
@@ -4048,6 +4084,7 @@
 	]]>
 	</delete>
 	<select id="EzOrganAdminDAO.selectTitleUserList" parameterClass="Map" resultClass="OrganUserVO" remapResults="true">
+	SELECT * FROM (
 		SELECT 
 			TBL_USERMASTER.CN,
 			TBL_USERMASTER.DISPLAYNAME,
@@ -4057,7 +4094,8 @@
 			TBL_USERMASTER.DESCRIPTION2,
 			TBL_USERMASTER.TELEPHONENUMBER,
 			TBL_USER_JOBMASTER.DISPLAYNAME AS TITLE,
-			TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2
+			TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2,
+			'user' AS USERTYPE
 		FROM 
 			TBL_USERMASTER
 		<isEqual property="v_TYPE" compareValue="001">
@@ -4098,6 +4136,55 @@
 				TBL_USERMASTER.TENANT_ID = #v_TENANTID#
 			AND 
                 TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+		<isEqual property="v_TYPE" compareValue="001">
+			UNION ALL
+			
+			SELECT
+				TBL_USERMASTER.CN,
+			    TBL_USERMASTER.DISPLAYNAME,
+			    TBL_USERMASTER.DISPLAYNAME2,
+			    TBL_ADDJOBMASTER.DEPTID AS DEPARTMENT,
+			    TBL_DEPTMASTER.DISPLAYNAME AS DESCRIPTION,
+			    TBL_DEPTMASTER.DISPLAYNAME2 AS DESCRIPTION2,
+			    TBL_USERMASTER.TELEPHONENUMBER,
+			    TBL_ADDJOBMASTER.TITLE,
+			    TBL_ADDJOBMASTER.TITLE2,
+			    'addJob' AS USERTYPE
+			FROM
+				TBL_USER_JOBMASTER
+			JOIN 
+				TBL_ADDJOBMASTER
+			ON
+				TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.JOBID
+			AND
+				TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+			JOIN
+				TBL_USERMASTER
+			ON
+				TBL_USERMASTER.CN = TBL_ADDJOBMASTER.CN
+			AND
+				TBL_USERMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+			JOIN
+				TBL_DEPTMASTER
+			ON
+				TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+			AND
+				TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.JOBID = #v_JOBID#
+			AND
+				TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
+		</isEqual>
+		) AS A
+		<isNotEmpty property="v_SUBQUERY">
+			$v_SUBQUERY$
+		</isNotEmpty>
+			ORDER BY
+				USERTYPE, CN
+		<isNotEmpty property="v_PAGESIZE">
+			LIMIT
+				#v_PAGENUM#, #v_PAGESIZE#
+		</isNotEmpty>
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleListCnt" parameterClass="Map" resultClass="int" remapResults="true">
 		SELECT
@@ -4111,50 +4198,187 @@
 		AND
 			TENANT_ID = #v_TENANTID#
 	</select>
+	
 	<select id="EzOrganAdminDAO.selectTitleUserListCnt" parameterClass="Map" resultClass="int" remapResults="true">
+		<isEqual property="v_TYPE" compareValue="001">
+			SELECT (
+				SELECT 
+					COUNT(*)
+				FROM
+					TBL_USERMASTER
+				JOIN
+					TBL_USER_JOBMASTER
+				ON 
+					TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
+				AND 
+					TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+				AND 
+					TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+				WHERE
+					TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+				AND
+					TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
+				AND 
+					TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+				AND
+					TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+				AND 
+		            TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+			)+(
+				SELECT
+					COUNT(*)
+				FROM
+					TBL_USER_JOBMASTER
+				JOIN 
+					TBL_ADDJOBMASTER
+				ON
+					TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.JOBID
+				AND
+					TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+				JOIN
+					TBL_USERMASTER
+				ON
+					TBL_USERMASTER.CN = TBL_ADDJOBMASTER.CN
+				AND
+					TBL_USERMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+				JOIN
+					TBL_DEPTMASTER
+				ON
+					TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+				AND
+					TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
+				WHERE
+					TBL_USER_JOBMASTER.JOBID = #v_JOBID#
+				AND
+					TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
+			) AS COUNT
+			FROM
+				DUAL
+		</isEqual>
+		<isEqual property="v_TYPE" compareValue="002">
+			SELECT 
+				COUNT(*)
+			FROM 
+				TBL_USERMASTER
+			JOIN 
+				TBL_USER_JOBMASTER
+			ON 
+				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
+			AND 
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+			AND 
+				TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+			AND
+				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
+			AND 
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+			AND
+				TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+			AND 
+	            TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+		</isEqual>
+	</select>
+	<select id="EzOrganAdminDAO.selectTitleUserListCnt2" parameterClass="Map" resultClass="int" remapResults="true">
+		SELECT COUNT(*) 
+		FROM (
 		SELECT 
-			COUNT(*)
+			TBL_USERMASTER.CN,
+			TBL_USERMASTER.DISPLAYNAME,
+			TBL_USERMASTER.DISPLAYNAME2,
+			TBL_USERMASTER.DEPARTMENT,
+			TBL_USERMASTER.DESCRIPTION,
+			TBL_USERMASTER.DESCRIPTION2,
+			TBL_USERMASTER.TELEPHONENUMBER,
+			TBL_USER_JOBMASTER.DISPLAYNAME AS TITLE,
+			TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2,
+			'user' AS USERTYPE
 		FROM 
 			TBL_USERMASTER
-	<isEqual property="v_TYPE" compareValue="001">
-	<![CDATA[
-		JOIN 
-			TBL_USER_JOBMASTER
-		ON 
-			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
-		AND 
-			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
-		AND 
-			TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
-		WHERE
-			TBL_USER_JOBMASTER.TYPE = #v_TYPE#
-		AND
-			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
-	]]>
-	</isEqual>
-	<isEqual property="v_TYPE" compareValue="002">
-	<![CDATA[
-		JOIN 
-			TBL_USER_JOBMASTER
-		ON 
-			TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
-		AND 
-			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
-		AND 
-			TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
-		WHERE
-			TBL_USER_JOBMASTER.TYPE = #v_TYPE#
-		AND
-			TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
-	]]>
-	</isEqual>
-		AND 
-			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
-		AND
-			TBL_USERMASTER.TENANT_ID = #v_TENANTID#
-		AND 
-            TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+		<isEqual property="v_TYPE" compareValue="001">
+		<![CDATA[
+			JOIN 
+				TBL_USER_JOBMASTER
+			ON 
+				TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
+			AND 
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+			AND 
+				TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+			AND
+				TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
+		]]>
+		</isEqual>
+		<isEqual property="v_TYPE" compareValue="002">
+		<![CDATA[
+			JOIN 
+				TBL_USER_JOBMASTER
+			ON 
+				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
+			AND 
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+			AND 
+				TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+			AND
+				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
+		]]>
+		</isEqual>
+			AND
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+			AND
+				TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+			AND 
+                TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+		<isEqual property="v_TYPE" compareValue="001">
+			UNION ALL
+			
+			SELECT
+				TBL_USERMASTER.CN,
+			    TBL_USERMASTER.DISPLAYNAME,
+			    TBL_USERMASTER.DISPLAYNAME2,
+			    TBL_ADDJOBMASTER.DEPTID AS DEPARTMENT,
+			    TBL_DEPTMASTER.DISPLAYNAME AS DESCRIPTION,
+			    TBL_DEPTMASTER.DISPLAYNAME2 AS DESCRIPTION2,
+			    TBL_USERMASTER.TELEPHONENUMBER,
+			    TBL_ADDJOBMASTER.TITLE,
+			    TBL_ADDJOBMASTER.TITLE2,
+			    'addJob' AS USERTYPE
+			FROM
+				TBL_USER_JOBMASTER
+			JOIN 
+				TBL_ADDJOBMASTER
+			ON
+				TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.JOBID
+			AND
+				TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+			JOIN
+				TBL_USERMASTER
+			ON
+				TBL_USERMASTER.CN = TBL_ADDJOBMASTER.CN
+			AND
+				TBL_USERMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+			JOIN
+				TBL_DEPTMASTER
+			ON
+				TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+			AND
+				TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.JOBID = #v_JOBID#
+			AND
+				TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
+		</isEqual>
+		) AS A
+		<isNotEmpty property="v_SUBQUERY">
+			$v_SUBQUERY$
+		</isNotEmpty>
 	</select>
+	
 	<select id="EzOrganAdminDAO.selectTitleCnt" parameterClass="Map" resultClass="int" remapResults="true">
 		SELECT
 			COUNT(*)

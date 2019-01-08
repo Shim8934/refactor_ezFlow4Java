@@ -703,7 +703,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	@Override
-	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, String hasAttach, Model model) throws Exception {
+	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, Model model) throws Exception {
 		String strWriterFakeName = "";
 		String startDateTime = "";
 		logger.debug("newBoardItem started.");
@@ -756,10 +756,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                 	}
                 	
                 	
-                }
-
-                if (item.getAttachments() != null && item.getAttachments().length() > 0) {
-                	hasAttach = "YES";
                 }
 			}
 		}

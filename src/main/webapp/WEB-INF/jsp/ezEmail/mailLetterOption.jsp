@@ -61,6 +61,8 @@
 		        }
 		        
 		      	$('#Stimepicker').timepicker('setTime', NowDate);
+		      	$("#Stimepicker").keydown(function(event) {event.preventDefault();});
+		      	
 		    });
 		    
 		    $(function () {

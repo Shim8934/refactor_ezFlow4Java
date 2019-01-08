@@ -612,6 +612,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String docTitle = request.getParameter("title");
 		String susinAdmin = "";
         String pass = "";
+        String orgCompanyID = request.getParameter("orgCompanyID");
         
         userInfo = commonUtil.aprUserInfo(loginCookie);
 
@@ -682,6 +683,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("sendType", sendType);
 		model.addAttribute("pass", pass);
+		model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		LOGGER.debug("ezViewEnd_HWP ended");
 		
@@ -845,6 +847,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    String Use_ImgTagTOAttah_body = "N";
 	    String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 	    String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator;
+	    String orgCompanyID = request.getParameter("orgCompanyID");
 
 	    //회사아이디가 기관코드로 안돼있기때문에 지정해줘야됨
 	    String companyID = config.getProperty("config.companyNum");
@@ -859,6 +862,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    model.addAttribute("approvalRoot", approvalRoot);
 	    model.addAttribute("approvalPWD", approvalPWD);
 	    model.addAttribute("Use_ImgTagTOAttah_body", Use_ImgTagTOAttah_body);
+	    model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		LOGGER.debug("ezSimsaG_HWP ended");
 		
