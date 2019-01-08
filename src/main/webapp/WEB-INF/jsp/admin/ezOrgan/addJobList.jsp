@@ -58,6 +58,7 @@
 		    }
 		    
 		    function AddJob_List() {
+		    	var a = document.getElementById("previewmail").style.display = "none";
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
@@ -109,8 +110,7 @@
 		                /* totalCnt = listLeg;
                         totalPage = Math.ceil(new Number(totalCnt / pageSize)); */
                         
-		                var a = document.getElementById("previewmail");
-		                a.style.display = "none";
+		                
 		                //2018-12-28 문성업 -페이징 함수
 		                makePageSelPage();
 		        	},
@@ -404,7 +404,7 @@
 
 				var doc = window.document;
 				itemseq = document.getElementById(obj).getAttribute("DATA1");
-				if(itemseq == "0") {
+				if(itemseq == "0" || itemseq == null || itemseq == "") {
 					return;
 				}
 
@@ -517,7 +517,7 @@
 		                		createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
 		                	}
 		                }
-		                
+		                window.location.reload();
 		            } else {
 		                window.location.reload(false);
 		                return;

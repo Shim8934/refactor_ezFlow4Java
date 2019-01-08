@@ -769,6 +769,8 @@
         		var pparsingXML = "";
 	            var arrRows = getlistview.GetSelectedRows();
 	            var length = arrRows.length;
+	            var dataMatch = "";
+	            var pattern = new RegExp(delType);
 	            
 	            var addJob = GetAttribute(p_ListOrderObject, "_data19");
 	            
@@ -808,11 +810,13 @@
 	            		}
 	            	}
 	            	
-	            	for (var i=0; i < strData.length; i++) {
-		                if (strData[i] == delType) {
-		                	console.log("false");
-		                }
-		            } 
+	            	
+	            	dataMatch = pattern.exec(strData);
+	            	
+	            	//권한관리 type 데이터 값이 없을 때
+	            	if (dataMatch == null || dataMatch == "") {
+	            		strData += delType + "=0";
+	            	}
 	            	
 	            	        var extraInfo = new Object();
 			                var tempDelType = delType;
@@ -832,6 +836,7 @@
 			                
 			                extraArry.push(extraInfo);
 			                
+			                dataMatch = "";
 			                
 			                console.log(extraArry);
 			                pparsingXML2 = "";
