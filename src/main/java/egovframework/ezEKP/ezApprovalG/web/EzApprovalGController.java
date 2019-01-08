@@ -2552,7 +2552,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (docID != null && !docID.equals("")) {
 					String checkMode = "";
 					
-					if (docStatus.toCharArray().equals("TMP")) {
+					if (docStatus.toUpperCase().equals("TMP")) {
 						checkMode = "TMP";
 					} else {
 						checkMode = "REC";
