@@ -158,12 +158,12 @@
 	    	
 	    	function modifyAllAnnualPop() {
 	        	var url = "/admin/ezAttitude/modifyAllAnnualPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "modifyAllAnnualPop", GetOpenWindowfeature(500, 250));
+				window.open(url, "modifyAllAnnualPop", GetOpenWindowfeature(500, 234));
 	        }
 	    	
 	    	function modifyPrsnAnnualPop(userId, userName, year) {
 	        	var url = "/admin/ezAttitude/modifyPrsnAnnualPop.do?year=" + year + "&userName=" + userName + "&userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "modifyPrsnAnnualPop", GetOpenWindowfeature(500, 300));
+				window.open(url, "modifyPrsnAnnualPop", GetOpenWindowfeature(500, 294));
 	        }
 	    	
 	    	function annualHistoryPop(userId, year) {
@@ -173,7 +173,7 @@
 	    	
 	    	function annualExcelUploadPop(userId, year) {
 	        	var url = "/admin/ezAttitude/annualExcelUploadPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "annualExcelUploadPop", GetOpenWindowfeature(500, 200));
+				window.open(url, "annualExcelUploadPop", GetOpenWindowfeature(500, 175));
 	        }
 	    	
 	    	function getAnnualList() {

@@ -18,7 +18,6 @@
 				width:100%;
 				table-layout:fixed;
 				white-space:nowrap;
-				overflow:hidden;
 			}
 	    	table.content tr:not(.tr_noItems) td {
 	    		table-layout : fixed;
@@ -106,7 +105,7 @@
         	<tr>
 	            <th style="width:100px; text-align:center">업로드 파일</th>
 	            <td>
-	        		<input name="excelFile" id="excelFile" type="file" style="width:100%;padding-bottom: 5px;" accept=".xls" onchange="CheckUploadFileSize(this); CheckuploadFileExt(this);">
+	        		<input name="excelFile" id="excelFile" type="file" style="width:100%;" accept=".xls" onchange="CheckUploadFileSize(this); CheckuploadFileExt(this);">
 	            </td>
 	        </tr>
         	<tr>
