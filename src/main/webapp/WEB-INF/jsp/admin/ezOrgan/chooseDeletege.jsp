@@ -24,7 +24,7 @@
 		var data2 = window.opener.testObj.dataList2;
 		var data3 = window.opener.testObj.dataList3;
 		var data4 = window.opener.testObj.dataList4;
-		var type = window.opener.type;
+		var type = window.opener.typeStyle;
 		/*var data1 = new Array();
 		data1 = "<c:out value='${userID}'/>";
 		*/
@@ -65,7 +65,7 @@
 			if(checked == true) {
 			// 권한 전체삭제
 			try {
-				window.opener.choose_Del_complete(ReturnFunction);
+				window.opener.Permissions_Del(ReturnFunction);
 			} catch (e) {}
 			end_confirm();
 		}
