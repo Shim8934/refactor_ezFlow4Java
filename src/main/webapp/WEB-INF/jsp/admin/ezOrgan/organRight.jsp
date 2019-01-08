@@ -159,7 +159,7 @@
 					document.getElementsByClassName('organSearchEnter')[0].style.display = "";
 					document.getElementsByClassName('organSearchForm')[0].style.display = "";
 				}else{
-					cellContent = "displayname;extensionAttribute9";
+					cellContent = ";displayname;extensionAttribute9";
 					typeContent = "group";
 					document.getElementsByClassName('organSearchEnter')[0].style.display = "none";
 					document.getElementsByClassName('organSearchForm')[0].style.display = "none";
@@ -205,16 +205,6 @@
 								result.getElementsByTagName("ROW")[i].appendChild(cell1);
 								result.getElementsByTagName("ROW")[i].appendChild(cell2);
 								result.getElementsByTagName("ROW")[i].appendChild(cell3);
-							}
-						} else { // empty 셀 삽입(width 4%)
-							var cnt = result.getElementsByTagName('ROWS')[0].childElementCount;
-							var i = 0;
-							for(i;i<cnt;i++) {
-								var cell1 = result.createElement("CELL");
-								var value1 = result.createElement("VALUE");
-								cell1.appendChild(value1);
-								var theParent = result.getElementsByTagName("ROW")[i];
-								theParent.insertBefore(cell1, theParent.firstChild);
 							}
 						}
 
