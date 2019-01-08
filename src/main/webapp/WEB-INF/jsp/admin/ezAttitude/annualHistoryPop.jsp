@@ -20,7 +20,7 @@
 				white-space:nowrap;
 				overflow:hidden;
 			}
-	    	table.content tr:not(.tr_noItems) td {
+	    	table.mainlist tr:not(.tr_noItems) td {
 	    		table-layout : fixed;
 	    		overflow : hidden;
 	    		white-space : nowrap;
@@ -57,6 +57,11 @@
 		    		var addTh = "<th class='borderRight' style='width: 9px;'></th>";
 		    		$(".mainlist tr th:eq(4)").after(addTh);
 		    		$(".mainlist tr th:eq(4)").removeClass("borderRight");
+		    		
+		    		//ie일경우 #contentlist border-bottom : 1px solid #e2e3e6;
+		    		if (navigator.userAgent.toUpperCase().indexOf("CHROME") == -1) {
+		    			$("#contentlist").css("border-bottom","1px solid #e2e3e6");
+		    		}
 		    	}
    			});
 	    	
@@ -149,7 +154,7 @@
 					            	<td class="borderLeft" style="width:14%;">
 					            		${list.changeAnnualCnt}<spring:message code='ezAttitude.t68' />
 				        	    	</td>
-					            	<td class="borderLeft" style="width:43%;">
+					            	<td class="borderLeft" style="width:43%;text-align: left;padding-left: 10px;" title="${list.changeReason}">
 					            		${list.changeReason}
 				        	    	</td>
 					            	<td class="borderLeft borderRight" style="width:10%;">

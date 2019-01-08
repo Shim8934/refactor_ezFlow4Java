@@ -16,7 +16,6 @@
 	    		overflow : hidden;
 	    		white-space : nowrap;
 	    		text-overflow : ellipsis;
-	    		cursor : pointer;
 	    	}
 	    	tr.hover:hover {background:#eee; color:#fff;}
 			.selectTR {background-color: #f1f8ff;}
@@ -169,7 +168,7 @@
 	    	
 	    	function annualHistoryPop(userId, year) {
 	        	var url = "/admin/ezAttitude/annualHistoryPop.do?year=" + year + "&userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "annualHistoryPop", GetOpenWindowfeature(750, 300));
+				window.open(url, "annualHistoryPop", GetOpenWindowfeature(750, 309));
 	        }
 	    	
 	    	function annualExcelUploadPop(userId, year) {
