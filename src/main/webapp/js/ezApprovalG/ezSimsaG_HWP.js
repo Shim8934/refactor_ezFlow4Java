@@ -573,7 +573,10 @@ function makeXML(newDocID) {
 		
 		var regnumbercode;
 		regnumbercode = getNodeText(pDocInfoXML.documentElement.childNodes(32));
-		Nodes(0).setAttribute("regnumbercode", regnumbercode);
+		// regnumbercode 에 유통코드 붙이기 위해 추가  : 유통코드 + 일련번호
+		var relayRegnumberCode = companyID + regnumbercode.substring(regnumbercode.length - 6, regnumbercode.length);
+		
+		Nodes(0).setAttribute("regnumbercode", relayRegnumberCode);
     } else {
         setNodeText(Nodes(0) , "");
 		Nodes(0).setAttribute("regnumbercode", "");
@@ -588,18 +591,18 @@ function makeXML(newDocID) {
 
 	var Nodes = eNodes.selectNodes("foot/processinfo");
     if (HwpCtrl.CheckFieldExist("receiptnumber")) {
-		var tempNode2 = sihangXML.createNode(1,"receipt","");
-		Nodes(0).appendChild(tempNode2);
-
-		var tempNode3 = sihangXML.createNode(1,"number","");
-		tempNode2.appendChild(tempNode3);
-		setNodeText(tempNode3 , HwpCtrl.GetFieldText("receiptnumber"));
-
-		var tempNode3 = sihangXML.createNode(1,"date","");
-		tempNode2.appendChild(tempNode3);
-
-        if (HwpCtrl.CheckFieldExist("receiptdate")) {
-            setNodeText(tempNode3 , HwpCtrl.GetFieldText("receiptdate"));
+//		var tempNode2 = sihangXML.createNode(1,"receipt","");
+//		Nodes(0).appendChild(tempNode2);
+//
+//		var tempNode3 = sihangXML.createNode(1,"number","");
+//		tempNode2.appendChild(tempNode3);
+//		setNodeText(tempNode3 , HwpCtrl.GetFieldText("receiptnumber"));
+//
+//		var tempNode3 = sihangXML.createNode(1,"date","");
+//		tempNode2.appendChild(tempNode3);
+//
+//        if (HwpCtrl.CheckFieldExist("receiptdate")) {
+//            setNodeText(tempNode3 , HwpCtrl.GetFieldText("receiptdate"));
 		}
 	}
 

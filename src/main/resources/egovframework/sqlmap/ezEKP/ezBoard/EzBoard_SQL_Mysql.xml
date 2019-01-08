@@ -643,7 +643,7 @@
 		           	   ORDER BY 
 		           			A.ParentWriteDate ASC 
            			   LIMIT
-           			   		#v_PENDROW#
+           			   		#limit#, #rowCount#
 			]]>
 		</isEmpty>
 		<isNotEmpty property="v_PSORTBY">
@@ -687,7 +687,7 @@
 	      		ORDER BY 
 	      			$v_PSORTBY$
 	      		LIMIT
-	      			#v_PENDROW#
+	      			#limit#, #rowCount#
 			]]>
 		</isNotEmpty>
 	</select>

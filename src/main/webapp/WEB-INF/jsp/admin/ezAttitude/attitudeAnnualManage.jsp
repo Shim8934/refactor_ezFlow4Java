@@ -309,7 +309,7 @@
 	</head>
 	<body class="mainbody">
 	    <h1>
-	    	연차현황관리
+	    	<spring:message code='ezAttitude.t237' />
 	    	<select class="companySelect" name="ListCompany" id="ListCompany" onchange="company_change()">
 				<c:forEach var = "companyItem" items="${list }">
 					<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>
@@ -321,7 +321,7 @@
 	  	<table id="searchTable" style="width:100%;">
 			<tbody>
 				<tr>
-					<td style="width: 3%">년도</td>
+					<td style="width: 3%"><span><spring:message code='ezAttitude.t234' /></span></td>
 					<td style="width: 12%;">
 						<select name="searchYear" id="searchYear" onchange="makeoptionyear();" style="padding-right:50px;height:24px" ></select>
 					</td>
@@ -340,9 +340,8 @@
 						<a class="imgbtn"><span onclick="searchAnnualList('search');"><spring:message code='ezAttitude.t121' /></span></a>
 						<a class="imgbtn"><span onclick="searchAnnualList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
-						<a class="imgbtn"><span onclick="annualExcelUploadPop();">엑셀로 등록</span></a>
-						<a class="imgbtn"><span onclick="modifyAllAnnualPop();">전체 연차 변경</span></a>
-						
+						<a class="imgbtn"><span onclick="annualExcelUploadPop();"><spring:message code='ezAttitude.t235' /></span></a>
+						<a class="imgbtn"><span onclick="modifyAllAnnualPop();"><spring:message code='ezAttitude.t236' /></span></a>
 					</td>
 				</tr>
 			</tbody>
@@ -356,11 +355,11 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="useAnnualCnt">사용연차 수</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="totalAnnualCnt">총 연차 수</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname="">사용내역 확인</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname="">수정내역 확인</th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname="">수정</th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="useAnnualCnt"><spring:message code='ezAttitude.t238' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="totalAnnualCnt"><spring:message code='ezAttitude.t239' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname=""><spring:message code='ezAttitude.t240' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname=""><spring:message code='ezAttitude.t241' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname=""><spring:message code='ezAttitude.t163' /></th>
 					</tr>
 				</thead>
 				<tbody>
