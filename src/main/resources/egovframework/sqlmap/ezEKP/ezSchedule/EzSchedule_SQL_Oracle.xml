@@ -1403,8 +1403,8 @@
 				modifiername = #v_MODIFIERNAME#,
 				modifiername2 = #v_MODIFIERNAME2#,
 				modifydate = SYS_EXTRACT_UTC(SYSTIMESTAMP),
-				startdate = #v_STARTDATE#,
-				enddate = #v_ENDDATE#
+				startdate = TO_DATE(#v_STARTDATE#, 'yyyy-mm-dd hh24:mi'),
+				enddate = TO_DATE(#v_ENDDATE#, 'yyyy-mm-dd hh24:mi')
 			where
 				(scheduleid = #v_SCHEDULEID# or parentid = #v_SCHEDULEID#)
 			and
