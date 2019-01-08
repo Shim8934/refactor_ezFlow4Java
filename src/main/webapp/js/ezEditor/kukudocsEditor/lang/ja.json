@@ -732,6 +732,9 @@
     "invalidBrowserError" : "サポートされていないブラウザ。",
     "notSetCellLockNameError" : "ロック名が設定されていない。"
   },
+  "confirmMessage" : {
+    "newRemoveContentMessage" : "現在入力された内容が削除されます。\n続行しますか？"
+  },
   "processingMessage" : "変換中 ...",
   "paragraphInsert": "段落挿入",
   "licenseErrorMsg": "ライセンス期間が終了しました。\nライセンス管理者に連絡して期間を延長してください。"

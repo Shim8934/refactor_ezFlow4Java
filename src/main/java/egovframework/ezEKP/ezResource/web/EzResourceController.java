@@ -2231,10 +2231,6 @@ public class EzResourceController extends EgovFileMngUtil {
 	    	String emailAddress = resInfo.get(i).getMailAddress();
 	    	String accessName = resInfo.get(i).getOwnerNm();
 	    	
-	    	if (accessName.indexOf("(") > -1) {
-	    		accessName = accessName.split("(")[0];
-	    	}
-	    	
 	    	InternetAddress to = new InternetAddress();
 	    	to.setPersonal(accessName, "UTF-8");
 	    	to.setAddress(emailAddress);
@@ -2297,7 +2293,7 @@ public class EzResourceController extends EgovFileMngUtil {
     	String accessName = resInfo.getOwnerNm(); 
     	
     	if (accessName.indexOf("(") > -1) {
-    		accessName = accessName.split("(")[0];
+    		accessName = accessName.split("\\(")[0];
     	}
     	
     	InternetAddress to = new InternetAddress();
