@@ -418,6 +418,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .survey-user-pv .user-inf:hover, .user-field:hover {color: blue;}
 
 .prevQsArea {background-color: #fff; padding: 20px; min-height: 400px; border: 1px solid #d7d7d7; margin-bottom: 15px;}
+.navi-button.logic {padding-bottom: 320px !important;}
 .requiredInfo {font-size: 14px; color: red;}
 
 .prevQsWrapper .question-attach {width: 100px; height: 100px; padding: 10px 35px;}
@@ -495,3 +496,5 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li>span {line-height: 30px;}
 
 .draft-survey {position: absolute; top: 76px; bottom: 0px; right: 10px; height: 40px; width: 40px; background-image: url(/images/ezSurvey/draft.png); background-size: 32px 32px; background-repeat: no-repeat; background-position: center; cursor: pointer;}
+.logicMapWrap {height: 300px; left: 0px; right: 0px; bottom: 0px; margin: 10px; position: fixed; background: #dedede;}
+.logicTree {height: 300px; width: 100%;}
