@@ -69,6 +69,9 @@
 					<isEqual property="search_keycode" compareValue="userId">
 						CN LIKE CONCAT('%', #search_keyword#,'%')
 					</isEqual>
+					<isEqual property="search_keycode" compareValue="quota">
+						((MAILBOXUSAGE / MAILBOXQUOTA) * 100) >= #search_keyword#
+					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="searchStartDate" prepend="AND">
@@ -403,7 +406,9 @@
                         		' ' DISPLAYNAMEPRINTABLE  ,
                         		POSITIONCD ,
                         		BIRTH ,
-                        		BIRTHTYPE 
+                        		BIRTHTYPE ,
+                        		MAILBOXUSAGE,
+                        		MAILBOXQUOTA
              FROM
              	TBL_USERMASTER 
              WHERE
@@ -509,7 +514,9 @@
 		                        ' ' DISPLAYNAMEPRINTABLE  ,
 		                        POSITIONCD ,
 		                        BIRTH ,
-		                        BIRTHTYPE 
+		                        BIRTHTYPE ,
+		                        MAILBOXQUOTA,
+		                        MAILBOXUSAGE
 		          FROM
 		          		TBL_USERMASTER
                   WHERE
@@ -3713,6 +3720,18 @@
 	    ]]>    		 				
 	</select>
 	
+	<select id="EzOrganAdminDAO.allUserList" parameterClass="int" resultMap="userCnList">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_USERMASTER a
+            WHERE
+				a.tenant_id = #tenantID#
+	    	ORDER BY cn
+	    ]]>
+	</select>
+
     <select id="EzOrganAdminDAO.userCount" parameterClass="int" resultClass="int">
         <![CDATA[
             SELECT 
@@ -3891,6 +3910,8 @@
 	  		<isNotNull property="info" prepend=","> <![CDATA[info = #info#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute7" prepend=","> <![CDATA[extensionAttribute7 = #extensionAttribute7#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute8" prepend=","> <![CDATA[extensionAttribute8 = #extensionAttribute8#]]></isNotNull>
+	  		<isNotNull property="mailboxUsage" prepend=","> <![CDATA[mailboxUsage = #mailboxUsage#]]></isNotNull>
+	  		<isNotNull property="mailboxQuota" prepend=","> <![CDATA[mailboxQuota = #mailboxQuota#]]></isNotNull>
 	  	</dynamic>
 	  	<![CDATA[
       		WHERE
@@ -4133,7 +4154,9 @@
 			CN,
 			displayName,
 			department,
-			description
+			description,
+			mailboxquota,
+			mailboxusage
 		FROM 
 	    	TBL_USERMASTER	
         WHERE 
@@ -4363,7 +4386,7 @@
 			TBL_USERMASTER.TELEPHONENUMBER,
 			TBL_USER_JOBMASTER.DISPLAYNAME AS TITLE,
 			TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2,
-			'USER' AS USERTYPE
+			'user' AS USERTYPE
 		FROM 
 			TBL_USERMASTER
 		<isEqual property="v_TYPE" compareValue="001">
@@ -4417,7 +4440,7 @@
 			    TBL_USERMASTER.TELEPHONENUMBER,
 			    TBL_ADDJOBMASTER.TITLE,
 			    TBL_ADDJOBMASTER.TITLE2,
-			    'ADDJOB' AS USERTYPE
+			    'addJob' AS USERTYPE
 			FROM
 				TBL_USER_JOBMASTER
 			JOIN 
@@ -4561,7 +4584,7 @@
 			TBL_USERMASTER.TELEPHONENUMBER,
 			TBL_USER_JOBMASTER.DISPLAYNAME AS TITLE,
 			TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2,
-			'USER' AS USERTYPE
+			'user' AS USERTYPE
 		FROM 
 			TBL_USERMASTER
 		<isEqual property="v_TYPE" compareValue="001">
@@ -4615,7 +4638,7 @@
 			    TBL_USERMASTER.TELEPHONENUMBER,
 			    TBL_ADDJOBMASTER.TITLE,
 			    TBL_ADDJOBMASTER.TITLE2,
-			    'ADDJOB' AS USERTYPE
+			    'addJob' AS USERTYPE
 			FROM
 				TBL_USER_JOBMASTER
 			JOIN 

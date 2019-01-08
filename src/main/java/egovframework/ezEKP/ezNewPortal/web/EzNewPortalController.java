@@ -399,8 +399,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			model.addAttribute("useMail", data.get("useMail"));
 			model.addAttribute("useApproval", data.get("useApproval"));
 			model.addAttribute("useSchedule", data.get("useSchedule"));
+			model.addAttribute("useEzWorkspace", data.get("useEzWorkspace"));
 			model.addAttribute("lastLogin", data.get("lastLogin"));
 			model.addAttribute("userEmail", data.get("userEmail"));
+			model.addAttribute("userId", userId);
 			
 			String usedTheme = data.get("usedTheme").toString();
 			returnUrl += "Theme" + usedTheme;
@@ -706,5 +708,105 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		}
 		logger.debug("downloadServer="+result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI()))));
 		return result.toString().replace("DOWNLOADSERVER", request.getRequestURL().substring(0, request.getRequestURL().indexOf(request.getRequestURI())));
+	}
+	
+	/**
+	 * 2019-01-03 김민성
+	 * 포탈 - 웹가이드 메인 화면 호출 함수
+	 */
+	@RequestMapping(value = "/ezNewPortal/help/index.do")
+	public String help(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		logger.debug("help started");
+
+		/*String topMenuID = "";
+		
+		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").equals("")) {
+			topMenuID = req.getParameter("topMenuID");
+		}
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+				
+		model.addAttribute("lang", userInfo.getLang());
+		model.addAttribute("packageType", packageType);
+		model.addAttribute("topMenuID", topMenuID);*/
+		
+		logger.debug("help ended");
+		return "/ezNewPortal/help/index";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub1-1.do")
+	public String sub11(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub1-1";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub1-2.do")
+	public String sub12(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub1-2";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub2-1.do")
+	public String sub21(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub2-1";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub2-2.do")
+	public String sub22(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub2-2";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub2-3.do")
+	public String sub23(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub2-3";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub3-1.do")
+	public String sub31(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub3-1";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub3-2.do")
+	public String sub32(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub3-2";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub3-3.do")
+	public String sub33(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub3-3";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub4-1.do")
+	public String sub41(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub4-1";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub4-2.do")
+	public String sub42(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub4-2";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub4-3.do")
+	public String sub43(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub4-3";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub5-1.do")
+	public String sub51(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub5-1";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub5-2.do")
+	public String sub52(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub5-2";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub5-3.do")
+	public String sub53(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub5-3";
+	}
+	
+	@RequestMapping(value = "/ezNewPortal/help/sub6-1.do")
+	public String sub61(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
+		return "/ezNewPortal/help/sub6-1";
 	}
 }

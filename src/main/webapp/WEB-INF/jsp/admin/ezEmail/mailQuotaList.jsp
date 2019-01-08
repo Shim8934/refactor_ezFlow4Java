@@ -223,7 +223,7 @@
 		
 						saveExcel.location.href = pURL;
 					} else { 
-			    		var pURL = "/admin/ezEmail/statistics_userList.do";
+			    		var pURL = "/admin/ezEmail/mailBoxQuotaManageList.do";
 			    		 
 			    		$.ajax({
 			    			 url: pURL
@@ -231,7 +231,10 @@
 			    			,async: false
 			    			,dataType: 'json'
 			    			,data: {
-			    					'searchKeycode' : searchKeycode,'searchKeyword' : searchKeyword,'pageNum' : pageNum, 'companyId' : companyIdChk 
+			    					'searchKeycode' : searchKeycode,
+			    					'searchKeyword' : searchKeyword,
+			    					'pageNum' : pageNum,
+			    					'companyId' : companyIdChk
 			    				   }    
 			    			,success: function(res) {
 			    				var html = "";
@@ -284,11 +287,10 @@
 			    				
 			    				if (res.searchKeycode != null) {
 			    					var idx = parseInt(searchKeycode) - 1;
-				    				$('#searchKeycode option:eq(' + idx + ')').attr('selected','selected');
+				    				$('#searchKeycode option:eq(' + idx + ')').attr('selected', 'selected');
 			    				}
 			    				
 			    				$('#searchKeyword').val(res.searchKeyword);
-			    				
 			    			}
 			    			,error: function(err) {
 			    				alert(err);
@@ -362,19 +364,19 @@
 			  color: #828282;
 			  font-weight:bold;
 			}
-			#myBar_red{
+			#myBar_red {
 			  height: 10px;
 			  background-color: #ff1616;
 			}
-			#myBar_orange{
+			#myBar_orange {
 			  height: 10px;
 			  background-color: #ff7f00;
 			}
-			#myBar_yellow{
+			#myBar_yellow {
 			  height: 10px;
 			  background-color: #ffb600;
 			}
-			#myBar_green{
+			#myBar_green {
 			  height: 10px;
 			  background-color: #4CAF50;
 			}
@@ -391,6 +393,7 @@
 							<option value="userName"><spring:message code="ezStatistics.t1068"></spring:message></option> <!-- 이름 -->
 							<option value="deptName"><spring:message code="ezStatistics.t113"></spring:message></option> <!-- 부서 -->
 							<option value="userId"><spring:message code="ezOrgan.t218"></spring:message></option> <!-- cn -->
+							<option value="quota"><spring:message code="ezEmail.kyj20"/></option> <!-- 사용량(%) -->
 						</select>
 						<input type="text" id="searchKeyword" style="width: 150px; height:22px;" onKeyDown="return keyword_onkeydown(event)"/>
 						<a class="imgbtn" >

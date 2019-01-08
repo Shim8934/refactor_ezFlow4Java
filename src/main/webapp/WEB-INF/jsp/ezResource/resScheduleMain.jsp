@@ -182,23 +182,23 @@
 	        xmlhttp.send(xmlpara);
 	    }
 
+	    /* 2019-01-02 김민성 - ajax 데이터 중복 로드되는 현상 수정 */
 	    function event_schedule_get_lunaruse() {
-	       if (getLang == 3) {
-	    	   schedule_get_holiday();
-	       } else {
-		       if (xmlhttp == null || xmlhttp.readyState != 4)
-		            return;
-	
-		       if (xmlhttp.responseText == "0")
-		            LunarUse = true;
-		       else if (xmlhttp.responseText == "1")
-		            LunarUse = true;
-		       else 
-		        
-		       LunarUse = false;
-		    	   
-		       schedule_get_holiday();
-	       }
+	    	if (xmlhttp == null || xmlhttp.readyState != 4)
+	            return;
+	    	if (xmlhttp.status >= 200 && xmlhttp.status < 300) {
+		       if (getLang == 3) {
+		    	   schedule_get_holiday();
+		       } else {
+			       if (xmlhttp.responseText == "0" || xmlhttp.responseText == "1") {
+			            LunarUse = true;
+			       }
+			       else {
+			        	LunarUse = false;
+			       }
+			       schedule_get_holiday();
+		       }
+	    	}
 	    }
 	    
 	    var agent = navigator.userAgent.toLowerCase(); 

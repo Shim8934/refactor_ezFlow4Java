@@ -1982,9 +1982,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				rtnVal.append("<DATA5><![CDATA["+ userList.get(i).getUserType() +"]]></DATA5></CELL>");
 				if (primary.equals("1")) {
 					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getDisplayName() +"]]></VALUE></CELL>");
+					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getDescription() +"]]></VALUE></CELL>");
 					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getTitle() +"]]></VALUE></CELL>");
 				} else {
 					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getDisplayName2() +"]]></VALUE></CELL>");
+					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getDescription2() +"]]></VALUE></CELL>");
 					rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getTitle2() +"]]></VALUE></CELL>");
 				}
 				rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getTelephoneNumber() +"]]></VALUE></CELL>");
@@ -1993,7 +1995,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			
 			rtnVal.append("</ROWS></LISTVIEWDATA>");
 		} else {
-			rtnVal.append("<LISTVIEWDATA><ROWS></ROWS></LISTVIEWDATA>");
+			rtnVal.append("<LISTVIEWDATA><TOTALCOUNT>0</TOTALCOUNT><ROWS></ROWS></LISTVIEWDATA>");
 		}
 		
 		logger.debug("getTitleUserList ended.");
@@ -2081,6 +2083,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("getJobOptionInfo ended.");
 		return rtnVal.toString();
+	}
+
+	@Override
+	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception {
+		return ezOrganAdminDao.getAllUserCnList(tenantID);
 	}
 
 }

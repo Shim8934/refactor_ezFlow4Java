@@ -226,15 +226,18 @@
 			pagination.setAmount(result.totalRows);
 			pagination.build();
 			
-			if (folderUpp != 'root') {
-				$('#upload').css('display','inline');
-				dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
-				dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
-				dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
-			} else {
+			if (folderUpp == 'root' && folderType == 'C') {
+				$('#upload').css('display','none');
+				$('#newFolder').css('display','none');				
 				dragDropAreaElmt.ondragenter = null;
 				dragDropAreaElmt.ondragover  = null;
 				dragDropAreaElmt.ondragover  = null;
+			} else {
+				$('#upload').css('display','inline');
+				$('#newFolder').css('display','inline');				
+				dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
+				dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
+				dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
 			}
 			
 			$('#tblFileList tr td').parent().remove();

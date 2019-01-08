@@ -1176,6 +1176,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		/*2018-05-08 이효진 holidayList 생성*/
 		//회사 기념일
 		List<HolidayVO> holidayList = getHolidayList("rest", companyId, tenantId);
+		//임시 저장
+		List<HolidayVO> tempHolidayList = new ArrayList<HolidayVO>();
 		//근태휴무일
 		AttitudeConfigVO attitudeConfig = getAttitudeConfig(tenantId, companyId);
 		String checkDay[] = attitudeConfig.getClosedDay().split(",");
@@ -1235,9 +1237,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 						HolidayVO vo2 = new HolidayVO();
 						vo2.setHolidayDate(vo1.getHolidayDate().replace(startYear, endYear));
 						
-						holidayList.add(vo2);
+						tempHolidayList.add(vo2);
 					}
 				}
+			}
+		}
+		
+		if (tempHolidayList != null) {
+			for (HolidayVO vo3 : tempHolidayList) {
+				holidayList.add(vo3);
 			}
 		}
 		

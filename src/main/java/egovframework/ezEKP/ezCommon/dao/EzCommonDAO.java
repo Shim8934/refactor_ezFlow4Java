@@ -368,7 +368,7 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			update("EzCommonDAO.createTblWebfolderToken");
 		}
 	}
-
+	
 	public void addJmochaMailGenenalPreviewMailImage() {
 		try {
 			select("EzCommonDAO.checkJmochaMailGenenalPreviewMailImage");
@@ -386,6 +386,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			logger.debug("tbl_portal_theme_portlet isFixed column doesn't exist. creating the column...");
 			
 			update("EzCommonDAO.addPortalThemePortletIsFixed");
+		}
+	}
+	
+	public void addUserMasterMailBoxQuota() {
+		try {
+			select("EzCommonDAO.checkUserMasterMailBoxQuota");
+		} catch (Exception e) {
+			logger.debug("tbl_usermaster mailBoxQuota doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addUserMasterMailBoxQuota");
 		}
 	}
 }

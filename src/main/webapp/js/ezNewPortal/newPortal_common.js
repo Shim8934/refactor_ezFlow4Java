@@ -1100,6 +1100,56 @@ function openDraftUI() {
     openwindow(openLocation, "", 890, 620);
 }
 
+// 협업 관련 추가
+function ezWorkspaceData() {
+	    //협업 카운트
+	if (typeof (GetWorkspaceUserActLogCount) === "function") {
+	    GetWorkspaceUserActLogCount("workspaceCnt", 1);
+	}
+	    
+	var checkBrowser = function () {
+		var agent = navigator.userAgent.toLowerCase();
+		
+	  	if(agent.indexOf('msie') !== -1) {
+	   		return false;
+	   	} else {
+	   		return true;
+	   	}
+	};
+	   
+	// ie 10일 경우는 다르게 해야겠음.		
+	if(!checkBrowser()) {
+		$("#workspaceCnt").bind("DOMSubtreeModified", function() {
+		   	var workspaceCnt = document.getElementById("workspaceCnt").innerHTML * 1;
+		   	if(workspaceCnt > 0) {
+	 	    	document.getElementById("workspaceCnt").classList.remove('iconCount_none');
+		    	document.getElementById("workspaceCnt").classList.add('iconCount');
+		    }
+		});		    	
+	} else {
+		var target = document.getElementById('workspaceCnt');
+		   
+		var observer = new MutationObserver(function(mutations) {
+			mutations.forEach(function(mutation) {
+	  		    var workspaceCnt = mutation.target.innerHTML * 1;
+				if(workspaceCnt > 0) {
+		 		   	document.getElementById("workspaceCnt").classList.remove('iconCount_none');
+				   	document.getElementById("workspaceCnt").classList.add('iconCount');
+			    }
+			    observer.disconnect();
+			});    
+		});
+			
+		var config = { attributes: true, childList: true, characterData: true };
+		observer.observe(target, config);		    	
+	}
+	
+	document.getElementById('ezWorkspace').addEventListener('click', function() {
+		window.open("http://space.kaoni.com/myoffice/ezWorkspace/Account/SSO", "main", "");
+	});	
+
+}
+
 function schedule_get_holiday() {		        
     $.ajax({
 		type : "POST",

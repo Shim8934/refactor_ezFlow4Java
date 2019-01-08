@@ -569,7 +569,8 @@
 			    }
 			
 			    if (!isjunkyul) {
-			        if ("${approvalPWD}" != "N") {
+			        //if ("${approvalPWD}" != "N") {
+			        if (CheckUsePassword()) {
 			            var chkpass = chk_Passwd(pingUserID);
 			            if (chkpass == "False") {
 			                var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
@@ -810,7 +811,8 @@
 			        var Ans = OpenInformationUI(pInformationContent);
 			        if (!Ans) return;
 			        
-			        if ("${approvalPWD}" != "N") {
+			        //if ("${approvalPWD}" != "N") {
+			        if (CheckUsePassword()) {
 				        var chkpass = chk_Passwd(pingUserID);
 				        if (chkpass == "False") {
 				            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
@@ -866,7 +868,8 @@
 			        var Ans = OpenInformationUI(pInformationContent);
 			        if (!Ans) return;
 			        
-			        if ("${approvalPWD}" != "N") {
+			        //if ("${approvalPWD}" != "N") {
+			        if (CheckUsePassword()) {
 				        var chkpass = chk_Passwd(pingUserID);
 				        if (chkpass == "False") {
 				            var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
@@ -897,7 +900,8 @@
 			    }
 	
 			    function btnJunKyul_onclick() {
-			    	if ("${approvalPWD}" != "N") {
+			    	//if ("${approvalPWD}" != "N") {
+			    	if (CheckUsePassword()) {
 				        var checkpass = chk_Passwd(pingUserID);
 				
 				        if (checkpass == "False") {
@@ -1293,6 +1297,28 @@
 		    	    for(bytes=i=0; c=s.charCodeAt(i++); bytes += c >> 11? 3 : c >> 7 ? 2 : 1);
 		    	    return bytes;
 		    	}
+		    	
+		    	/* 2019-01-02 천성준 #14647
+			            결재암호 사용유무 조회 (Y / N)
+			    */
+		    	function CheckUsePassword() {
+			    	var result = "";
+			    	$.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/getApprovalPWD.do",
+			    		success: function(text) {
+			    			result = text;
+			    		}        			
+			    	});
+			    	
+			    	if (result != "N") {
+			    		return true;
+			    	} else {
+			    		return false;
+			    	}
+			    }
 	    </script>
 	</head>
 	<body class="popup" onbeforeunload="return window_onbeforeunload()" onload="javascript:window_onload()">

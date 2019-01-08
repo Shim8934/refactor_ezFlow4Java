@@ -592,7 +592,7 @@
             AND
                 A.TENANT_ID = B.TENANT_ID  
        		WHERE
-       			B.ACCESSID = #v_ACCESSID#
+       			B.ACCESSID IN (#userId#, #deptId#, #companyId#, 'everyone')
        		AND
        			A.TENANT_ID = #tenantID#
             AND

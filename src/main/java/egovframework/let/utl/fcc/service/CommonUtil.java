@@ -45,6 +45,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -154,7 +155,7 @@ public class CommonUtil {
     	logger.debug("init started.");
 
     	commonUtilInstance = this;
-    	loginUsers = new HashMap<String, String>();
+    	loginUsers = new ConcurrentHashMap<String, String>();
     	
     	logger.debug("init ended.");
     }
@@ -1593,23 +1594,26 @@ public class CommonUtil {
 					}
 				}
 				
-				
-				String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///");
-				
-				String userID = cookieInfo[1];
-				String companyID = cookieInfo[10];
-				String tenantID = cookieInfo[8];
-				String userInfo = userID + "_" + tenantID;
-				
-				useMultiLogin = ezCommonService.getCompanyConfig(Integer.parseInt(tenantID), companyID, "useMultiLogin");
-				
-				if(useMultiLogin.equalsIgnoreCase("NO")) {
-					if(loginUsers.containsKey(userInfo)) {
-						if(!loginUsers.get(userInfo).equals(multiLoginCookie.getValue())) {
-							result = false;
+				if(loginCookie != null && multiLoginCookie != null) {
+					String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///");
+					
+					String userID = cookieInfo[1];
+					String companyID = cookieInfo[10];
+					String tenantID = cookieInfo[8];
+					String userInfo = userID + "_" + tenantID;
+					
+					useMultiLogin = ezCommonService.getCompanyConfig(Integer.parseInt(tenantID), companyID, "useMultiLogin");
+					
+					if(useMultiLogin.equalsIgnoreCase("NO")) {
+						if(loginUsers.containsKey(userInfo)) {
+							if(!loginUsers.get(userInfo).equals(multiLoginCookie.getValue())) {
+								result = false;
+							}
 						}
-					}
-				} 
+					} 
+				} else {
+					result = false;
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
