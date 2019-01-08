@@ -807,6 +807,7 @@
 	            			console.log(deleteArry);
 	            		}
 	            	}
+	            	
 	            	        var extraInfo = new Object();
 			                var tempDelType = delType;
 			                var DelValue = tempDelType + "=1";
@@ -816,7 +817,13 @@
 			                } else {
 			                    tempDelType = tempDelType + "=0";
 			                }
-			                strData = strData.replace(tempDelType, DelValue);
+			                
+			                // 관리자가 기존 권한의 데이터 값이 없는 상태인지 체크
+			                if (strData != tempDelType) {
+			                	strData += DelValue;
+			                } else {
+			                	strData = strData.replace(tempDelType, DelValue);
+			                }
 			                
 			                extraInfo.data1 = strId;
 			                extraInfo.data2 = strData;
