@@ -25026,11 +25026,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 // 			content = beforeXmlConverter("<CONTENT>" + "<body style='font-family:굴림; font-Size:10px; font-style:oblique; font-weight:bolder; text-align:left; text-indent:50px; text-decoration: line-through;'><br/>ffff<br/>aaaa<div style='font-family:굴림; font-Size:10px; font-style:oblique; font-weight:bolder; text-align:left; text-indent:50px; text-decoration: line-through;'>dd</div><p><span style='font-weight:bold; font-style:italic; font-Size:10000px;'>dddd</span></p></body>" + "</CONTENT>");
 // 			content = beforeXmlConverter("<body style='font-family:굴림; font-size:10px; font-style:oblique; font-weight:bolder; text-align:left; text-indent:50px; text-decoration: line-through;'>aaaa<div style='font-family:굴림; font-size:10px; font-style:oblique; font-weight:bolder;'><div>ccc</div></div> <div><div style='font-family:굴림; font-weight:bolder;'>eeeeeee</div>fffff</div>bbb</body>");
 // 			content = beforeXmlConverter("<div  style='font-family:굴림; font-size:10px; font-style:oblique; font-weight:bolder; text-align:left; text-indent:50px; text-decoration: line-through;'><div>aaa</div>bbb</div>");
+			content = content.replace("\"", "");
  			content = beforeXmlConverter(content);
 
  		    // 전체 태그 처리시 순서에 따라 꼬이는 부분이 존재하기 때문에 선처리가 필요한 태그들에 대해 먼저 처리한다.
  		    // SPAN태그는 제거한다.(font-weight:bold > <B>, font-style:italic > <i>, text-decoration:underline > <u>)
 			org.jsoup.nodes.Document doc = Jsoup.parse(content);
+			
+			// class 제거 왜 클래스있는태그 사이즈를 이상하게 가져오지
+			int tagsWithClasses = doc.getElementsByAttribute("class").size();
+			for (int i = 0; i < tagsWithClasses; i++) {
+				doc.getElementsByAttribute("class").get(0).removeAttr("class");
+			}
+			
+			//센터정렬 없는 p태그 추가 hwp에서 html로 변환할 때 센터정렬값만 안가져와서 추가해줌
+			for (int i = 0; i < doc.getElementsByTag("p").size(); i++) {
+				String style = doc.getElementsByTag("p").get(i).attr("style").toString();
+				
+				if (style.indexOf("text-align") > -1) {
+					
+				} else {
+					 doc.getElementsByTag("p").get(i).attr("style", "text-align:center;" + style );
+				}
+			}
 			
 			String fontFamily = "";
 			String fontSize = "";
@@ -25099,24 +25117,29 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 		spanStyle += ";";
                 	}
                 	String parentSpanStyle = doc.getElementsByTag("span").get(i).parent().attr("style").toString();
+                	
+                	htmlStyle.append(parentSpanStyle);
 
                     // 상위태그가 P태그일 경우 P태그의 innerText와 span의 innerText가 동일할 경우 span의 Style을 P태그의 style로 입력한다.
-                    if (doc.getElementsByTag("span").get(i).parent().text() != null && !doc.getElementsByTag("span").get(i).parent().text().equals("") && doc.getElementsByTag("span").get(i).text() != null && !doc.getElementsByTag("span").get(i).equals("")) {
-                        if (doc.getElementsByTag("span").get(i).parent().text().trim() == doc.getElementsByTag("span").get(i).text().trim()) {
+                	if (doc.getElementsByTag("span").get(i).parent().text() != null && !doc.getElementsByTag("span").get(i).parent().text().equals("") 
+                    		&& doc.getElementsByTag("span").get(i).text() != null && !doc.getElementsByTag("span").get(i).equals("")) {
+                    	//여기가 동작을 안하네
+//                        if (doc.getElementsByTag("span").get(i).parent().text().trim().equals(doc.getElementsByTag("span").get(i).text().trim())) {
+                        if (doc.getElementsByTag("span").get(i).parent().nodeName().equals("p")) {
                         	if (spanStyle.indexOf("font-family") > -1) {
-                        		if (parentSpanStyle.indexOf("font-family") > -1) {
+                        		if (!(parentSpanStyle.indexOf("font-family") > -1)) {
                         			htmlStyle.append(spanStyle.substring(spanStyle.indexOf("font-family"), spanStyle.indexOf(";", spanStyle.indexOf("font-family"))+1));
                         		}
         					}
 
                             if (spanStyle.indexOf("font-size") > -1) {
-                        		if (parentSpanStyle.indexOf("font-size") > -1) {
+                        		if (!(parentSpanStyle.indexOf("font-size") > -1)) {
                         			htmlStyle.append(spanStyle.substring(spanStyle.indexOf("font-size"), spanStyle.indexOf(";", spanStyle.indexOf("font-size"))+1));
                                 }
                             }
 
                             if (spanStyle.indexOf("line-height") > -1) {
-                            	if (parentSpanStyle.indexOf("line-height") > -1) {
+                            	if (!(parentSpanStyle.indexOf("line-height") >   -1)) {
                         			htmlStyle.append(spanStyle.substring(spanStyle.indexOf("line-height"), spanStyle.indexOf(";", spanStyle.indexOf("line-height"))+1));
                                 }
                             }
@@ -25127,6 +25150,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 }
                 doc.getElementsByTag("span").get(i).html(strInnerHtml);
 			}
+			
+		    //span 태그 제거
+			doc.getElementsByTag("span").unwrap();
 		       
 			boolean hasBRTag = true;
 			 
@@ -25413,7 +25439,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 			String strRtnHtml = doc.getElementsByTag("body").get(0).outerHtml();
 			strRtnHtml = strRtnHtml.substring(0, strRtnHtml.lastIndexOf(">") + 1);
-			strRtnHtml = strRtnHtml.replace("&nbsp;", "&nbsp;&nbsp;");
+			//왜 &nbsp;를 두개 해놓은거지?
+			//strRtnHtml = strRtnHtml.replace("&nbsp;", "&nbsp;&nbsp;");
 			
 			String strRtnContent = "<DATA>" +
 		                "<RESULT>OK</RESULT>" +
@@ -25424,6 +25451,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} catch (Exception e) {
 /*			System.out.println(e.getMessage());
 			System.out.println(e.getStackTrace());*/
+			e.printStackTrace();
 			strErrorMsg = "Content 전처리 진행중 오류가 발생했습니다.";
 			return ReturnErrorContent(strErrorMsg);
 		}
@@ -25469,7 +25497,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		if (pStyle.indexOf("font-family") > -1) {
     		htmlStyle.append(element.attr("style").toString().substring(element.attr("style").toString().indexOf("font-family"), element.attr("style").toString().indexOf(";", element.attr("style").toString().indexOf("font-family"))+1));
 		} else {
-			htmlStyle.append("font-family : 굴립;");
+			htmlStyle.append("font-family : 굴림;");
 		}
 		
 	    switch (tagType.toLowerCase()) {

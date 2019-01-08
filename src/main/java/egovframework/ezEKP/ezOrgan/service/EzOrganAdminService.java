@@ -120,4 +120,6 @@ public interface EzOrganAdminService {
 	public int getTitleCnt(String type, String jobID, String mode, String displayName, String displayName2, String companyID, int tenantID) throws Exception;
 	
 	public String getJobOptionInfo(String type, String companyID, int tenantID) throws Exception;
+	
+	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception;
 }
