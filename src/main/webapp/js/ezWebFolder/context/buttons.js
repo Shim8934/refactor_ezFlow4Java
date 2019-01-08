@@ -244,10 +244,10 @@ var buttons = (function() {
 					}
 				}
 				
-				if (selectedCreatorId != userId) {
-					alert(messages.strLang37);
-					return;
-				}
+//				if (selectedCreatorId != userId) {
+//					alert(messages.strLang37);
+//					return;
+//				}
 			}
 			
 			var params = [];
