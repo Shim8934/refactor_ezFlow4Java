@@ -111,5 +111,5 @@ public interface EzScheduleService {
 
 	public void updateDragSchedule(String scheduleid, String userId, String displayName1, String displayName2, String utcStartTime, String utcEndTime, int tenantId, String companyID) throws Exception;
 
-	public void copySchedule(String dragDay, String startDate, String endDate, String defaultPath, String offset, int tenantId, String companyId) throws Exception;
+	public void copySchedule(String dragDay, String startDate, String endDate, String defaultPath, String offSetMin, int tenantId, String companyId) throws Exception;
 }

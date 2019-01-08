@@ -585,7 +585,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		String result = ezWebFolderDAO_y.insertFolder(map);
 		LOGGER.debug("insert folderId is " + result);
 
-		if (result.equals(null)) {
+		if (result == null) {
 			result = "fail";
 		} 
 
