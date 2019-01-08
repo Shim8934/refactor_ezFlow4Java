@@ -315,6 +315,7 @@
 			}
 			
 			function ShowUserInfo(UserID) {
+				event.stopPropagation();
 			    window.open("/admin/ezOrgan/retireUserInfo.do?id=" + UserID, "", "height=800px,width=530px,status=no,toolbar=no,menubar=no,location=no,resizable=0"+GetOpenPosition(530, 800));
 			}
 			
