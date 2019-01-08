@@ -156,9 +156,13 @@
 				if (listOpt1.checked == true){
 					cellContent = "extensionAttribute9;displayname;cn;description;title;extensionAttribute10";
 					typeContent = "userWithMasterAdmin";
+					document.getElementsByClassName('organSearchEnter')[0].style.display = "";
+					document.getElementsByClassName('organSearchForm')[0].style.display = "";
 				}else{
 					cellContent = "displayname;extensionAttribute9";
 					typeContent = "group";
+					document.getElementsByClassName('organSearchEnter')[0].style.display = "none";
+					document.getElementsByClassName('organSearchForm')[0].style.display = "none";
 				}
 				$.ajax({
 					type : "POST",
@@ -211,7 +215,6 @@
 								cell1.appendChild(value1);
 								var theParent = result.getElementsByTagName("ROW")[i];
 								theParent.insertBefore(cell1, theParent.firstChild);
-								//result.getElementsByTagName("ROW")[i].prepend(cell1);
 							}
 						}
 
@@ -1900,7 +1903,8 @@
 					<c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>
 					<li id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></li>
 				</c:if>
-				<%-- <li id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li> --%>
+				<li id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
+				<li id="usermenu7"><span onClick="mod_quota()"><spring:message code='main.t00045' /></span></li>
 				<c:if test="${useSyncServer == 'YES'}">			
 					<li id="usermenu24"><span onClick="syncOrganAccounts()"><spring:message code='ezOrgan.lhm5' /></span></li>
 				</c:if>
@@ -1925,9 +1929,9 @@
 					<div class="organSearchContent">
 						<span>
 							<select id="search_type" style="width:100px; height:27px !important;line-height:normal !important;">
-								<option selected value="displayname"><spring:message code='ezOrgan.t67' /></option>
+								<option selected value="description"><spring:message code='ezOrgan.t68' /></option>
+								<option value="displayname"><spring:message code='ezOrgan.t67' /></option>
 								<option value="cn"><spring:message code='ezOrgan.t94' /></option>
-								<option value="description"><spring:message code='ezOrgan.t68' /></option>
 								<option value="title"><spring:message code='ezOrgan.t69' /></option>
 								<option value="extensionAttribute10"><spring:message code='ezOrgan.t1500' /></option>
 								<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
