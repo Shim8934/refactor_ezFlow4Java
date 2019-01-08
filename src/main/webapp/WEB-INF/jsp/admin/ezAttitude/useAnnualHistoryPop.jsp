@@ -120,19 +120,19 @@
 		        </dl>
 		        <dl class="timeIcconDL">
 		        	<dt class="timeIconDT"><img src="/images/ImgIcon/late_icon.png"></dt>
-		            <dd class="timeIconDD">총 연차수 <span class="timeCountR" id="totalAnnualCnt">0</span></dd>
+		            <dd class="timeIconDD"><spring:message code='ezAttitude.t239' /><span class="timeCountR" id="totalAnnualCnt">0</span></dd>
 		        </dl>
 		        <dl class="timeIcconDL">
 		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
-		            <dd class="timeIconDD">연차 <span class="timeCountR" id="FA11">0</span></dd>
+		            <dd class="timeIconDD"><spring:message code='ezAttitude.t254' /><span class="timeCountR" id="FA11">0</span></dd>
 		        </dl>
 		        <dl class="timeIcconDL">
 		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
-		            <dd class="timeIconDD">오전반차 <span class="timeCountR" id="FA12">0</span></dd>
+		            <dd class="timeIconDD"><spring:message code='ezAttitude.t255' /> <span class="timeCountR" id="FA12">0</span></dd>
 		        </dl>
 		        <dl class="timeIcconDL">
 		        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
-		            <dd class="timeIconDD">오후반차 <span class="timeCountR" id="FA13">0</span></dd>
+		            <dd class="timeIconDD"><spring:message code='ezAttitude.t256' /> <span class="timeCountR" id="FA13">0</span></dd>
 		        </dl>
 		    </div>
 	    </table>
@@ -141,10 +141,10 @@
 		<div style="width: 100%; height: 100%;">
             <table class="mainlist" style="width: 100%;">
                 <tr>
-                    <th style="width: 35%; padding-left:15px;"><span>일자</span></th>
-                    <th style="width: 25%; "><span>휴가유형</span></th>
-                    <th style="width: 15%; "><span>금번 사용 연차수</span></th>
-                    <th style="width: 15%; "><span>누적 사용 연차 수</span></th>
+                    <th style="width: 35%; padding-left:15px;"><span><spring:message code='ezAttitude.t107' /></span></th>
+                    <th style="width: 25%; "><span><spring:message code='ezAttitude.t35' /></span></th>
+                    <th style="width: 15%; "><span><spring:message code='ezAttitude.t252' /></span></th>
+                    <th style="width: 15%; "><span><spring:message code='ezAttitude.t253' /></span></th>
                 </tr>
             </table>
             <div id="contentlist" name="contentlist" style="height: 235px; overflow-y: auto;">

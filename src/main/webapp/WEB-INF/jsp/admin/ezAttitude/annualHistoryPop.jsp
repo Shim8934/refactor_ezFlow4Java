@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<title>
-			수정내역확인
+			<spring:message code='ezAttitude.t241' />
 		</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
@@ -77,11 +77,11 @@
 	    		changeReason = $("#changeReason").val();
 	    		annualCnt = $("#annualCnt").val();
 	    		if (annualCnt == "" || annualCnt == null) {
-	    			alert("연차수 입력");
+	    			alert("<spring:message code='ezAttitude.t242' />");
 	    			return;
 	    		}
 	    		if (changeReason == "" || changeReason == null) {
-	    			alert("수정사유입력");
+	    			alert("<spring:message code='ezAttitude.t243' />");
 	    			return;
 	    		}
 	    		if($("input:checkbox[id='bancha']").is(":checked")) {
@@ -117,7 +117,7 @@
 	</head>
 	<body class="popup">
 	    <h1>
-	    	수정내역확인
+	    	<spring:message code='ezAttitude.t241' />
 	    </h1>
 	    <div id="close">
             <ul>
@@ -127,11 +127,11 @@
         <div style="width: 100%; height: 100%;">
             <table class="mainlist" style="width: 100%;">
                 <tr>
-	         		<th class="borderLeft" style="width:17%;text-align:center;">변경일시</th>
-	            	<th class="borderLeft" style="width:15%;text-align:center;">기존 총 연차수</th>
-	            	<th class="borderLeft" style="width:15%;text-align:center;">변경 총 연차수</th>
-	            	<th class="borderLeft" style="width:43%;text-align:center;">변경사유</th>
-	            	<th class="borderLeft borderRight" style="width:10%;text-align:center;">변경자</th>
+	         		<th class="borderLeft" style="width:17%;text-align:center;"><spring:message code='ezAttitude.t63' /></th>
+	            	<th class="borderLeft" style="width:15%;text-align:center;"><spring:message code='ezAttitude.t50' /></th>
+	            	<th class="borderLeft" style="width:15%;text-align:center;"><spring:message code='ezAttitude.t51' /></th>
+	            	<th class="borderLeft" style="width:43%;text-align:center;"><spring:message code='ezAttitude.t248' /></th>
+	            	<th class="borderLeft borderRight" style="width:10%;text-align:center;"><spring:message code='ezAttitude.t62' /></th>
                 </tr>
             </table>
             <div id="contentlist" name="contentlist" style="height: 202px; overflow-y: auto;">
@@ -144,10 +144,10 @@
 					            		${list.changeDate}
 				        	    	</td>
 					            	<td class="borderLeft" style="width:15%;">
-					            		${list.originAnnualCnt}일
+					            		${list.originAnnualCnt}<spring:message code='ezAttitude.t68' />
 				        	    	</td>
 					            	<td class="borderLeft" style="width:15%;">
-					            		${list.changeAnnualCnt}일
+					            		${list.changeAnnualCnt}<spring:message code='ezAttitude.t68' />
 				        	    	</td>
 					            	<td class="borderLeft" style="width:43%;">
 					            		${list.changeReason}

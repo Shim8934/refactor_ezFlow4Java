@@ -5,9 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>
-			전체 연차 등록/수정
-		</title>
+		<title><spring:message code='ezAttitude.t236' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -43,11 +41,11 @@
 	    		changeReason = $("#changeReason").val();
 	    		annualCnt = $("#annualCnt").val();
 	    		if (annualCnt == "" || annualCnt == null) {
-	    			alert("연차수 입력");
+	    			alert("<spring:message code='ezAttitude.t242' />");
 	    			return;
 	    		}
 	    		if (changeReason == "" || changeReason == null) {
-	    			alert("수정사유입력");
+	    			alert("<spring:message code='ezAttitude.t243' />");
 	    			return;
 	    		}
 	    		if($("input:checkbox[id='bancha']").is(":checked")) {
@@ -83,7 +81,7 @@
 	</head>
 	<body class="popup">
 	    <h1>
-	    	전체 연차 등록/수정
+	    	<spring:message code='ezAttitude.t236' />
 	    </h1>
 	    <div id="close">
             <ul>
@@ -92,28 +90,28 @@
         </div>
 	    <table class="content">
 	        <tr>
-	            <th style="width:200px; text-align:center" rowspan="2">총 연차수</th>
+	            <th style="width:200px; text-align:center" rowspan="2"><spring:message code='ezAttitude.t239' /></th>
 	            <td>
-	            	<input name="flagCheck" id="Radio1" type="radio" value="change" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="setFlagCheck();"/><label for="Radio1">&nbsp;총 연차수를 변경하기</label>
+	            	<input name="flagCheck" id="Radio1" type="radio" value="change" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="setFlagCheck();"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t244' /></label>
 	            </td>
 	        </tr>
 	        <tr>
 	            <td>
-					<input name="flagCheck" id="Radio2" type="radio" value="plus" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="setFlagCheck();"/><label for="Radio2">&nbsp;현재 총 연차수에서 더하기</label>
+					<input name="flagCheck" id="Radio2" type="radio" value="plus" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="setFlagCheck();"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.t245' /></label>
 	            </td>
 	        </tr>
 	        <tr>
-	        	<th style="width:200px; text-align:center">연차수</th>
+	        	<th style="width:200px; text-align:center"><spring:message code='ezAttitude.t246' /></th>
 	            <td>
 	            	<input id="annualCnt" name="annualCnt" type="text" style="width:30px;padding-bottom: 5px;" value="" maxlength="3">
-	            	<label id="banchaTxt"></label>일
+	            	<label id="banchaTxt"></label><spring:message code='ezAttitude.t68' />
 	            	<span style="width:100px;padding-right: 30px;"></span>
 	            	<input type="checkbox" id="bancha" name="bancha" onchange="setBancha();">
-	            	<label for="bancha">반차추가</label>
+	            	<label for="bancha"><spring:message code='ezAttitude.t247' /></label>
 	            </td>
 	        </tr>
 	        <tr>
-	        	<th style="width:200px; text-align:center">수정사유</th>
+	        	<th style="width:200px; text-align:center"><spring:message code='ezAttitude.t248' /></th>
 	            <td>
 	            	<input id="changeReason" name="changeReason" type="text" style="width:100%;padding-bottom: 5px;" value="">
 	            </td>

@@ -5,9 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>
-			총 연차 등록/수정
-		</title>
+		<title><spring:message code='ezAttitude.t249' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -64,11 +62,11 @@
 	    		changeReason = $("#changeReason").val();
 	    		annualCnt = $("#totalAnnualCnt").val();
 	    		if (annualCnt == "" || annualCnt == null) {
-	    			alert("연차수 입력");
+	    			alert("<spring:message code='ezAttitude.t242' />");
 	    			return;
 	    		}
 	    		if (changeReason == "" || changeReason == null) {
-	    			alert("수정사유입력");
+	    			alert("<spring:message code='ezAttitude.t243' />");
 	    			return;
 	    		}
 	    		if($("input:checkbox[id='bancha']").is(":checked")) {
@@ -105,7 +103,7 @@
 	</head>
 	<body class="popup">
 	    <h1>
-	    	총 연차 등록/수정
+	    	<spring:message code='ezAttitude.t249' />
 	    </h1>
 	    <div id="close">
             <ul>
@@ -114,40 +112,40 @@
         </div>
 	    <table class="content">
 	        <tr>
-	            <th style="width:200px; text-align:center">사원명</th>
+	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t10' /></th>
 	            <td>
 	            	${vo.userName}
 	            </td>
 	        </tr>
 	        <tr>
-	            <th style="width:200px; text-align:center">직위</th>
+	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t11' /></th>
 	            <td>
 	            	${vo.userTitle}
 	            </td>
 	        </tr>
 	        <tr>
-	            <th style="width:200px; text-align:center">사원명</th>
+	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t9' /></th>
 	            <td>
 	            	${vo.userDeptName}
 	            </td>
 	        </tr>
 	        <tr>
-	            <th style="width:200px; text-align:center">사용 연차 수</th>
+	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t238' /></th>
 	            <td id="useAnnualCnt">
 	            </td>
 	        </tr>
 	        <tr>
-	        	<th style="width:200px; text-align:center">총 연차수</th>
+	        	<th style="width:200px; text-align:center"><spring:message code='ezAttitude.t239' /></th>
 	            <td>
 	            	<input id="totalAnnualCnt" name="totalAnnualCnt" type="text" style="width:30px;text-align:right;padding-bottom: 5px;" value="" maxlength="3">
-	            	<label id="banchaTxt"></label>일
+	            	<label id="banchaTxt"></label><spring:message code='ezAttitude.t68' />
 	            	<span style="width:100px;padding-right: 30px;"></span>
 	            	<input type="checkbox" id="bancha" name="bancha" onchange="setBancha();">
-	            	<label for="bancha">반차추가</label>
+	            	<label for="bancha"><spring:message code='ezAttitude.t247' /></label>
 	            </td>
 	        </tr>
 	        <tr>
-	        	<th style="width:200px; text-align:center">수정사유</th>
+	        	<th style="width:200px; text-align:center"><spring:message code='ezAttitude.t248' /></th>
 	            <td>
 	            	<input id="changeReason" name="changeReason" type="text" style="width:100%;padding-bottom: 5px;" value="">
 	            </td>
