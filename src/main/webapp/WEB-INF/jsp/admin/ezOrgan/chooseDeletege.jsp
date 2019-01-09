@@ -14,33 +14,14 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/Controls/ListView_list.js')}"></script>	    
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
-		<script type="text/javascript" language="javascript">
+		<script type="text/javascript">
 		var ReturnFunction;
 		var data1 = window.opener.testObj.dataList;
 		var data2 = window.opener.testObj.dataList2;
 		var data3 = window.opener.testObj.dataList3;
 		var data4 = window.opener.testObj.dataList4;
-		var type = window.opener.typeStyle;
-		/*var data1 = new Array();
-		data1 = "<c:out value='${userID}'/>";
-		*/
-		window.onload = function () {
-	        try {
-	        	dataList_input();
-	        } catch (e) {
-	            try {
-	            	dataList_input();
-	            } catch (e) {}
-	        }
-	    } 
-		/* function dataList_input() {
-			
-			
-	    	for (var i=0, j=0; i<data3.length, j<data4.length; i++, j++) {
-	    		$("#contentList").append("<tr><td>"+data3[i]+"</td><td>"+data4[j]+"</td></tr>");
-	    	}
-	    }  */
-	    
+		var type = "<c:out value='${type}'/>";
+
 		function Schedule_Confirm(id) {
 			
 			if(radio1.checked) {
@@ -86,20 +67,20 @@
 	  	</table> -->
 		<table class="content" style="width:100%">
 			<tr>
-		    	<td colspan="3">
+		    	<td>
 		    		<input type="radio" id="radio1" name="radiobutton" value="radiobutton"  checked>
-		      		<label for="radio1"><spring:message code='ezOrgan.mse6' /></label>
+		      		<label for="radio1"><spring:message code='ezOrgan.mse6' arguments='${type}' /></label>
 		      	</td>
 		  	</tr>
 		  	<tr>
-		    	<td colspan="3">
+		    	<td>
 		    		<input type="radio" id="radio2" name="radiobutton" value="radiobutton" >
 		      		<label for="radio2"><spring:message code='ezOrgan.mse7' /></label>
 		      	</td>
 		  	</tr>  
 		</table>
 		<div class="btnposition btnpositionNew">
-		    <a class="imgbtn" id="ContactOutButton" onClick="Schedule_Confirm()" ><span>삭제</span></a>
+		    <a class="imgbtn" id="ContactOutButton" onClick="Schedule_Confirm()" ><span><spring:message code='ezOrgan.t142' /></span></a>
 		</div> 
 	</body>
 </html>

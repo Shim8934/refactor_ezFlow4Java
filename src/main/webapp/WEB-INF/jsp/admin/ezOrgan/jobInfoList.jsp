@@ -28,6 +28,7 @@
 		.preview_nodata {position: absolute; display: inline-block; width: 49%; vertical-align: middle; text-align: center; padding-top: 70px; border-top: 1px solid #e5e5e5;}
 		.mainlist_free tr td:nth-child(4) {padding-left: 12px;}
 		#lvJobList {min-width: 400px;}
+		#lvJobList tr th:nth-child(4), tr th:nth-child(5) {width: 15%;} 
 		#lvJobUserList {min-width: 360px;}
 		.countColor {color:#017BEC;}
 	</style>
@@ -346,7 +347,7 @@
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = info_user_complete;
 			    
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
 			    try { OpenWin.focus(); } catch (e) { }
 	        }
 		}
@@ -705,7 +706,7 @@
 	   	<HEADERS>
 			<HEADER>
 			<NAME></NAME>
-			<WIDTH>20</WIDTH>
+			<WIDTH>30</WIDTH>
 			<COLNAME>CHECKBOX</COLNAME>
 			</HEADER>
 			<HEADER>

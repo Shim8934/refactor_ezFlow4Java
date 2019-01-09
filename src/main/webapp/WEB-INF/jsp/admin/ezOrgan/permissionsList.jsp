@@ -108,7 +108,8 @@
 		                listview.SetID("lvPermissionList");
 		                listview.SetMulSelectable(false);
 		                listview.SetRowOnClick("Permissions_View");
-		                listview.SetRowOnDblClick("PermissionsDb_View");
+		                // 2019-01-09 황윤호 (권한관리 Db클릭 메서드 안쓰기로 함)
+		                //listview.SetRowOnDblClick("PermissionsDb_View");
 		                listview.SetHeightFree(true);
 		                listview.DataSource(headerData);
 		                listview.DataBind("AdminListView");
@@ -237,26 +238,6 @@
 			var itemseq;
 			
 			
-			function PermissionsDb_View() {
-				
-		        var listview = new ListView();
-		        listview.LoadFromID("lvPermissionList");
-
-		        if (listview.GetSelectedRows().length == 0) {
-		            alert(strLang13);
-		            return;
-		        }
-		        
-		        var id = listview.GetSelectedRows()[0].getAttribute("DATA1");
-
-		        if (CrossYN()) {
-		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?userID=" + encodeURI(id) + "&companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), "Permissions_Check", GetOpenWindowfeature(1000, 620));
-		            try { OpenWin.focus(); } catch (e) { }
-		        } else {
-		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?userID=" + encodeURI(id) + "&companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), "", "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(1000, 620));
-		        } 
-				
-		    }
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
 		    }
@@ -537,10 +518,8 @@
 						},
 						success : function(result){
 							if (mode == "ALL") {
-								alert(strLang21);
 								Permissions_List();
 							} else {
-								alert(strLang22);
 								Permissions_List();
 							}
 						},
@@ -650,7 +629,7 @@
 					return;
 				}
 				
-		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do","chooseDeletege", 600, 200);
+		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do?type=" + types,"chooseDeletege", 600, 200);
 		    }
 		    
 		    /* function choose_Del_complete(data) {
