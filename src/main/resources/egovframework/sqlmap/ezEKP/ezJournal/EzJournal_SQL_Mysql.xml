@@ -764,8 +764,6 @@
 			tbl_journal j 
 		inner join 
 			tbl_journal_form f on (j.form_id = f.form_id and j.tenant_id = f.tenant_id)
-		inner join 
-			tbl_journal_form_type ft on (f.type_id = ft.type_id and f.tenant_id = ft.tenant_id)
 		inner join
 			tbl_deptmaster d on (j.journal_dept = d.CN and d.TENANT_ID = j.tenant_id)
 		inner join 
@@ -775,9 +773,9 @@
 				tbl_journal_recv r on (r.journal_id = j.journal_id and j.tenant_id = r.tenant_id)
 		</isNotEmpty>
 		where 
-			j.tenant_id = #tenantId# and ft.company_id = #companyId#
+			j.tenant_id = #tenantId# and f.company_id = #companyId#
 		<isNotEmpty property="typeId">
-			and ft.type_id = #typeId#
+			and f.type_id = #typeId#
 		</isNotEmpty>
 		<isNotEmpty property="journalWriter">
 			and j.journal_writer = #journalWriter#
@@ -879,12 +877,6 @@
 				tbl_journal_recv r 
 			where
 				r.journal_id = j.journal_id and r.tenant_id = j.tenant_id and r.recieve_date is not null) as check_recv,
-			(select 
-				count(r.recieve_date) 
-			from 
-				tbl_journal_recv r 
-			where
-				r.journal_id = j.journal_id and r.tenant_id = j.tenant_id and r.user_id in (select CN from tbl_usermaster)) as check_recv,
 			ifnull(
 				(
 <!-- 				select  -->
