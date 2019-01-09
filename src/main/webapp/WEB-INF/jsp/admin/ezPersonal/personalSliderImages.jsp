@@ -22,7 +22,7 @@
 		  var ReturnFunction;
 		  var pNoneActiveX = "YES";
 		  
-			 document.onselectstart = function () {
+		  document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
 		        } else {
@@ -74,27 +74,35 @@
 		    		
 		    		sliderHTML += "<li class = 'sliderList' id = 'sliderList"+i+"' data = '"+sliderID+"' >";
 		    		sliderHTML += "<div class = 'slider-body' id= 'slider-body'>";
-		    		sliderHTML += "<div class='slider-head' id='slider-head'>";
-		    		sliderHTML += "<span class = 'cancelNewSliderBtn' id='cancelNewSliderBtn' data2 = '"+sliderID+"' onclick='deleteSlider(this)'>";
-			    	sliderHTML += "<img src='/images/admin/icon_delete.png'></span>";
-			    	sliderHTML += "<span class= 'addNewSliderBttn' id= 'addNewSliderBttn"+i+"' data3 = '"+sliderID+"' onclick='modifySlider(this)'>";
-			    	sliderHTML += "<img src='/images/admin/icon_modify.png' ></span>";
-		    		sliderHTML += "</div>";
-		    		sliderHTML += "<div class = 'slider-content'>";
-		    		sliderHTML += "<table class = 'sliderInfo'>";
-		    		sliderHTML += "<tr><td class ='sliderInfoTD'><spring:message code = 'ezPersonal.mse3' /></td>";
-		    		sliderHTML += "<td class ='sliderURL' id = 'sliderURL' data6 ='"+sliderURL+"'style='padding: 10px;'>"+sliderURL+"</td></tr>"
+		    		sliderHTML += "<dl class='slider-head' id='slider-head'>";
+		    		sliderHTML += "<dt class = 'sliderHDT' id='cancelNewSliderBtn' data2 = '"+sliderID+"' onclick='deleteSlider(this)'>";
+			    	sliderHTML += "<img src='/images/admin/delete_white.png'></span></dt>";
+			    	sliderHTML += "<dd class= 'sliderHDD' id= 'addNewSliderBttn"+i+"' data3 = '"+sliderID+"' onclick='modifySlider(this)'>";
+			    	sliderHTML += "<img src='/images/admin/editPen_white.png' ></span></dd>";
+		    		sliderHTML += "</dl>";
+		    		sliderHTML += "<dl class = 'slider-content'>";
+		    		sliderHTML += "<dt class = 'sliderCDT'>";
+		    		sliderHTML += "<span class='sliderTtit'>URL</span>";
+		    		sliderHTML += "<span class='sliderText'>";
+		    		sliderHTML += "<input id = 'sliderURL' data6 ='"+sliderURL+"' class='admin_input' type='text' value='" + sliderURL + "' readonly></span>";
+		    		sliderHTML += "</dt>";
+		    		sliderHTML += "<dt class='sliderCDT'><span class='sliderTtit'><spring:message code = 'ezPersonal.mse1' /></span>";
+		    		sliderHTML += "<span id='slideIsUse' class='sliderSwitch'><label class='switch'>";
+		    		/* sliderHTML += "<tr><td class ='sliderInfoTD'><spring:message code = 'ezPersonal.mse3' /></td>";
+		    		sliderHTML += "<td class ='sliderURL' id = 'sliderURL' data6 ='"+sliderURL+"'style='padding: 10px;'>"+sliderURL+"</td></tr>"*/
+		    		
 		    		if(sliderIsUse == 1){
-		    			sliderHTML += "<tr><td class ='sliderInfoTD'><spring:message code = 'ezPersonal.mse1' /></td><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' checked='checked' data7='"+sliderIsUse+"' onchange='toggleButton(this)'><span class='slider round'></label></td>";
+		    			sliderHTML += "<input type='checkbox' id='toggleButton' checked='checked' data7='"+sliderIsUse+"' onchange='toggleButton(this)'><span class='slider round'>";
 		    		}else {
-		    			sliderHTML += "<tr><td class ='sliderInfoTD'><spring:message code = 'ezPersonal.mse1' /></td><td class= 'slideIsUse' id='slideIsUse'><label class='switch'><input type='checkbox' id='toggleButton' data7='"+sliderIsUse+"' onchange='toggleButton(this)'><span class='slider round'></label></td>";
+		    			sliderHTML += "<input type='checkbox' id='toggleButton' data7='"+sliderIsUse+"' onchange='toggleButton(this)'><span class='slider round'>";
 		    		}
 		    		
-		    		sliderHTML += "</tr></table></div>";
+		    		sliderHTML += "</label></span></dt>";
+		    		sliderHTML += "</dl>";
 		    		sliderHTML += "<span class='slider-imagePage' data4 = '"+sliderImagePath+"'>";
 		    		sliderHTML += "<IMG src ="+sliderImagePath+" style='width:285px;height:515px'/>";
 		    		sliderHTML += "</span>";
-		    		sliderHTML += "</div></li>";
+		    		sliderHTML += "</li>";
 		    		document.getElementById("sliderContainer").innerHTML = sliderHTML;
 		    	}
 		    	
@@ -106,7 +114,7 @@
 		    	
 		    	//슬라이더 드래그앤드롭
 		    	$("#sliderContainer").sortable({
-		    		items: "li.sliderList",
+		    		items: "li.sliderList:not(#addSliderBody)",
 		    		start: function(event, ui) {
 		    			
 		    		},
@@ -119,7 +127,7 @@
 			//슬라이드 이미지 사용여부 토글 버튼
 		    function toggleButton(obj){
 		    	var sliderIsUse = obj.checked;
-		    	var sliderList = obj.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+		    	var sliderList = obj.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
 		    	var sliderID = sliderList.getAttribute("data");
 		    	var sliderHeader = sliderList.querySelector(".slider-header");
 		    	var picture = sliderList.querySelector(".imagePage");
@@ -183,110 +191,121 @@
 		    		}
 		    	}
 		    	
-		    	var liElmt   = document.createElement("li");
-		    	var divElmt  = document.createElement("div");
-		    	var divElmt2 = document.createElement("div");
-		    	var divElmt3 = document.createElement("div");
-		    	var aElmt    = document.createElement("a");
-		    	var spaElmt  = document.createElement("span");
-		    	var imgElmt  = document.createElement("img");
-		    	var tabElmt  = document.createElement("table");
+		    	var liElmt = document.createElement("li");
+		    	var divElmt  = document.createElement("div");// class : sliderModifyBody
+		    	var headerDlElmt   = document.createElement("dl"); //header
+		    	var contentDlElmt  = document.createElement("dl"); //content
+		    	var divElmt2 = document.createElement("div"); //class : addImageBtnModify
+		    	var addImgElmt = document.createElement("img");
 		    	
-		    	liElmt.className = "addsliderList";
-		    	liElmt.setAttribute("id", "addsliderList");
+		    	var	spanImgElmt = document.createElement("span"); //class : slider-imagePage
+		    	var previewImgElmt = document.createElement("img");
 		    	
-		    	divElmt.className = "slider-header";
-		    	divElmt.setAttribute("style", "color:#b1b1b1");
-		    	divElmt2.className = "slider-header-add";
+		    	///// header element
+		    	var dtElmt = document.createElement("dt");///back
+		    	var imgElmt = document.createElement("img"); //back image
+		    	var ddElmt = document.createElement("dd"); //save
+		    	var imgElmt2 = document.createElement("img"); //save image
 		    	
-		    	aElmt.className = "cancelNewSliderBtn";
-		    	aElmt.setAttribute("id", "cancelNewSliderBtn");
-		    	spaElmt.className = "addCancel";
+		    	liElmt.id = "addSliderBody";
+		    	divElmt.className = "sliderModifyBody";
+		    	headerDlElmt.className = "slider-header-modify";
+		    	contentDlElmt.className = "slider-content-modify";
+		    	divElmt2.className = "addImageBtnModify";
+		    	spanImgElmt.className = "slider-imagePage";
+		    	dtElmt.className = "sliderHDT";
+		    	ddElmt.className = "sliderHDD";
+		    	
+		    	imgElmt.src = "/images/admin/back_white.png";
+		    	imgElmt2.src = "/images/admin/save_white.png";
+		    	previewImgElmt.src = "";
+		    	
+		    	///// content element
+		    	var urlDT = document.createElement("dt"); //url input
+		    	var useDT = document.createElement("dt"); //사용 여부
+		    	var urlTit = document.createElement("span"); 
+		    	var urlTitText = document.createElement("span");
+		    	var urlInput = document.createElement("input");
+		    	var useTit = document.createElement("span");
+		    	var useSwitch = document.createElement("span");
+		    	var useSwitchLabel = document.createElement("label");
+		    	var useSwitchInput = document.createElement("input");
+		    	var useSwitchSpan = document.createElement("span");
+		    	
+		    	urlDT.className = "sliderCDT";
+		    	useDT.className = "sliderCDT";
+		    	urlTit.className = "sliderTtit";
+		    	urlTitText.className = "sliderText";
+		    	urlInput.className = "admin_input";
+		    	
+		    	useTit.className = "sliderTtit";
+		    	useSwitch.className = "sliderSwitch";
+		    	useSwitchLabel.className = "switch";
+		    	useSwitchSpan.className = "slider round";
+		    	
+		    	urlTit.innerText = "<spring:message code = 'ezPersonal.mse3' />";
+		    	
+		    	urlInput.setAttribute("id", "txtDisplayName3");
+		    	urlInput.setAttribute("type", "text");
+		    	urlInput.setAttribute("maxlength", 50);
+		    	urlInput.setAttribute("value", "");
+		    	
+		    	useTit.innerText = "<spring:message code = 'ezPersonal.mse1' />"; 
+		    	
+		    	useSwitchInput.setAttribute("type", "checkbox");
+		    	useSwitchInput.setAttribute("id", "slideIsUseAdd");
+		    	useSwitchInput.setAttribute("checked", "checked");
+		    	
+		    	imgElmt2.addEventListener("click", function(event) {btnSave_click();});
+		    	imgElmt.addEventListener("click", function(evnet) {addCancelModify(this);});
+		    	
+		    	//header 조합
+		    	dtElmt.appendChild(imgElmt);
+		    	ddElmt.appendChild(imgElmt2);
+		    	headerDlElmt.appendChild(dtElmt);
+		    	headerDlElmt.appendChild(ddElmt);
+		    	
+		    	//content 조합
+		    	//- url 조합
+		    	urlTitText.appendChild(urlInput);
+		    	urlDT.appendChild(urlTit);
+		    	urlDT.appendChild(urlTitText);
+		    	
+		    	//- 사용여부 조합
+		    	useSwitchLabel.appendChild(useSwitchInput);
+		    	useSwitchLabel.appendChild(useSwitchSpan);
+		    	useSwitch.appendChild(useSwitchLabel);
+		    	useDT.appendChild(useTit);
+		    	useDT.appendChild(useSwitch);
+		    	
+		    	//url, 사용여부 합침
+		    	contentDlElmt.appendChild(urlDT);
+		    	contentDlElmt.appendChild(useDT);
+		    	
+		    	//add image 통합
+		    	divElmt2.appendChild(addImgElmt);
+		    	spanImgElmt.appendChild(previewImgElmt);
+		    	
+		    	divElmt2.setAttribute("id", "addImage");
+		    	addImgElmt.addEventListener("click", function(event) {addImage();});
+		    	previewImgElmt.setAttribute("id", "UploadSliderImage");
+		    	previewImgElmt.style.display = "none"; 
+		    	previewImgElmt.addEventListener("load", function(event){imgdisplay();});
+		    	addImgElmt.setAttribute("src", "/images/admin/imagesPlus.png");
+
+		    	//div에 통합
+		    	divElmt.appendChild(spanImgElmt);
+		    	divElmt.appendChild(headerDlElmt);
+		    	divElmt.appendChild(contentDlElmt);
+		    	divElmt.appendChild(divElmt2);
 		    	
 		    	liElmt.appendChild(divElmt);
 		    	
-		    	divElmt.appendChild(divElmt2);
-		    	divElmt2.appendChild(aElmt);
-		    	aElmt.appendChild(spaElmt);
-		    	spaElmt.appendChild(imgElmt);
-		    	
-		    	imgElmt.setAttribute("src", "/images/admin/icon_cancel.png");
-		    	
-		    	divElmt3.className = "slider-content-add";
-		    	tabElmt.className = "sliderInfo";
-		    	divElmt.appendChild(divElmt3);
-		    	divElmt3.appendChild(tabElmt);
-		    	
-		    	var trElmt1 = document.createElement("tr");
-		    	var trElmt2 = document.createElement("tr");
-		    	var tdElmt1 = document.createElement("td");
-		    	var tdElmt2 = document.createElement("td");
-		    	var tdElmt3 = document.createElement("td");
-		    	var tdElmt4 = document.createElement("td");
-		    	var tdElmt5 = document.createElement("td");
-		    	var ipElmt1 = document.createElement("input");
-		    	var ipElmt2 = document.createElement("input");
-		    	var ipElmt3 = document.createElement("input");
-		    	var aElmt2  = document.createElement("a");
-		    	var lalElmt = document.createElement("label");
-		    	var spaElmt2  = document.createElement("span");
-		    	var aElmt3  = document.createElement("a");
-		    	var spaElmt3 = document.createElement("span");
-		    	var spaElmt4  = document.createElement("span");
-		    	
-		    	tdElmt1.className = "sliderInfoTDadd";
-		    	tdElmt1.innerText = "<spring:message code = 'ezPersonal.mse3' />";
-		    	ipElmt1.setAttribute("id", "txtDisplayName3");
-		    	ipElmt1.setAttribute("type", "text");
-		    	ipElmt1.setAttribute("maxlength", 50);
-		    	
-		    	tdElmt3.className = "sliderInfoTDadd";
-		    	tdElmt3.innerText = "<spring:message code = 'ezPersonal.mse1' />";
-		    	tdElmt4.className = "slideIsUse";
-		    	lalElmt.className = "switch";
-		    	ipElmt3.setAttribute("id", "slideIsUseAdd");
-		    	ipElmt3.setAttribute("type", "checkbox");
-		    	ipElmt3.setAttribute("checked", "checked");
-		    	spaElmt2.className = "slider round";
-		    	aElmt3.className = "imgbtn";
-		    	aElmt3.setAttribute("href", "#");
-		    	spaElmt4.addEventListener("click", function(event) {btnSave_click();});
-		    	spaElmt4.innerText = "<spring:message code = 'ezPersonal.t34' />";
-		    	
-		    	tabElmt.appendChild(trElmt1);
-		    	trElmt1.appendChild(tdElmt1);
-		    	trElmt1.appendChild(tdElmt2);
-		    	tdElmt2.appendChild(ipElmt1);
-		    	tabElmt.appendChild(trElmt2);
-		    	trElmt2.appendChild(tdElmt3);
-		    	trElmt2.appendChild(tdElmt4);
-		    	trElmt2.appendChild(tdElmt5);
-		    	tdElmt4.appendChild(lalElmt);
-		    	lalElmt.appendChild(ipElmt3);
-		    	lalElmt.appendChild(spaElmt2);
-		    	trElmt2.appendChild(tdElmt5);
-		    	tdElmt5.appendChild(aElmt3);
-		    	aElmt3.appendChild(spaElmt4);
-		    	
-		    	var imgElmt2 = document.createElement("img");
-		    	
-		    	aElmt2.className = "addImageBtn";
-		    	spaElmt3.className = "addImage";
-		    	spaElmt3.setAttribute("id", "addImage");
-		    	spaElmt3.innerText = "<spring:message code = 'ezPersonal.mse2' />";
-		    	spaElmt3.addEventListener("click", function(event) {addImage();});
-		    	imgElmt2.setAttribute("id", "UploadSliderImage");
-		    	imgElmt2.setAttribute("src", "");
-		    	imgElmt2.setAttribute("style", "width:285px;height:515px;display:none");
-		    	imgElmt2.addEventListener("load", function(event){imgdisplay();});
-		    	
-		    	divElmt.appendChild(aElmt2);
-		    	aElmt2.appendChild(spaElmt3);
-		    	divElmt.appendChild(imgElmt2);
-		    	
-		    	$("#addSlider").hide();
+		    	liElmt.style.display = "inline-block"; 
+		    	liElmt.style.margin = "10px 20px 20px 0px";
+				document.getElementById("addSlider").style.display = "none";
 		    	$("#sliderContainer").append(liElmt);
-		    	$(".cancelNewSliderBtn").on("click", addCancel);
+		    	
 		    } 
 		    //슬라이드 이미지 생성 취소
 		    var addCancel = function() {
@@ -424,17 +443,16 @@
 		    	var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("${uploadPortalPath}"));
 		    	var isUseCk = document.getElementById("slideIsUseAdd").checked;
 		    	var isUse = "";
-		    	console.log(isUseCk);
+		    	
 		    	if (isUseCk) {
 		    		isUse = 1;
 		    	} else {
 		    		isUse = 0;
 		    	}
-		    	console.log(isUse);
 
 		        var item;
 		        var mode;
-		        
+		        	guid = "{" +  GetGUID() + "}";
 		            item = guid;
 		            mode = "NEW";
 		            fileName = getNodeText(SelectNodes(xml, "ROOT/NODES/NODE/PFILENAME")[0]);
@@ -464,7 +482,9 @@
 				            if (ReturnFunction != null) {
 				                ReturnFunction();
 				            }
-				            window.location.reload();
+				            
+				            getSliderList();
+				            //window.location.reload();
 		        		} else {
 		        			alert("<spring:message code = 'ezPersonal.t192' />");
 		        		}
@@ -511,88 +531,102 @@
 		    	var url = sliderList.querySelector("#sliderURL").getAttribute("data6");
 		    	var sliderIsUse = sliderList.querySelector("#toggleButton").checked;
 		    	sliderList.querySelector("#slider-body").style.display = "none";
+		    	var imgUrl = sliderList.querySelector(".slider-imagePage").getAttribute('data4');
 		    	
-		    	var liElmt   = document.createElement("li");
-		    	var divElmt  = document.createElement("div");
-		    	var divElmt2 = document.createElement("div");
-		    	var divElmt3 = document.createElement("div");
-		    	var aElmt    = document.createElement("a");
-		    	var spaElmt  = document.createElement("span");
-		    	var imgElmt  = document.createElement("img");
-		    	var tabElmt  = document.createElement("table");
+		    	var divElmt  = document.createElement("div");// class : sliderModifyBody
+		    	var headerDlElmt   = document.createElement("dl"); //header
+		    	var contentDlElmt  = document.createElement("dl"); //content
+		    	var divElmt2 = document.createElement("div"); //class : addImageBtnModify
+		    	var addImgElmt = document.createElement("img");
 		    	
-		    	liElmt.className = "sliderListmodify";
-		    	liElmt.setAttribute("id", "sliderListmodify");
+		    	var	spanImgElmt = document.createElement("span"); //class : slider-imagePage
+		    	var previewImgElmt = document.createElement("img");
+		    	
+		    	///// header element
+		    	var dtElmt = document.createElement("dt");///back
+		    	var imgElmt = document.createElement("img"); //back image
+		    	var ddElmt = document.createElement("dd"); //save
+		    	var imgElmt2 = document.createElement("img"); //save image
 		    	
 		    	divElmt.className = "sliderModifyBody";
-		    	divElmt.setAttribute("style", "color:#b1b1b1");
-		    	divElmt2.className = "slider-header-modify";
+		    	headerDlElmt.className = "slider-header-modify";
+		    	contentDlElmt.className = "slider-content-modify";
+		    	divElmt2.className = "addImageBtnModify";
+		    	spanImgElmt.className = "slider-imagePage";
+		    	dtElmt.className = "sliderHDT";
+		    	ddElmt.className = "sliderHDD";
 		    	
-		    	aElmt.className = "cancelNewSliderBtnmodify";
-		    	aElmt.setAttribute("id", "cancelNewSliderBtnmodify");
-		    	spaElmt.className = "addCancel";
+		    	imgElmt.src = "/images/admin/back_white.png";
+		    	imgElmt2.src = "/images/admin/save_white.png";
+		    	previewImgElmt.src = imgUrl;
 		    	
-		    	liElmt.appendChild(divElmt);
+		    	///// content element
+		    	var urlDT = document.createElement("dt"); //url input
+		    	var useDT = document.createElement("dt"); //사용 여부
+		    	var urlTit = document.createElement("span"); 
+		    	var urlTitText = document.createElement("span");
+		    	var urlInput = document.createElement("input");
+		    	var useTit = document.createElement("span");
+		    	var useSwitch = document.createElement("span");
+		    	var useSwitchLabel = document.createElement("label");
+		    	var useSwitchInput = document.createElement("input");
+		    	var useSwitchSpan = document.createElement("span");
 		    	
-		    	divElmt.appendChild(divElmt2);
-		    	divElmt2.appendChild(aElmt);
-		    	aElmt.appendChild(spaElmt);
-		    	spaElmt.appendChild(imgElmt);
+		    	urlDT.className = "sliderCDT";
+		    	useDT.className = "sliderCDT";
+		    	urlTit.className = "sliderTtit";
+		    	urlTitText.className = "sliderText";
+		    	urlInput.className = "admin_input";
 		    	
-		    	imgElmt.setAttribute("src", "/images/admin/icon_cancel.png");
+		    	useTit.className = "sliderTtit";
+		    	useSwitch.className = "sliderSwitch";
+		    	useSwitchLabel.className = "switch";
+		    	useSwitchSpan.className = "slider round";
 		    	
-		    	divElmt3.className = "slider-content-modify";
-		    	tabElmt.className = "sliderInfo";
-		    	divElmt.appendChild(divElmt3);
-		    	divElmt3.appendChild(tabElmt);
+		    	urlTit.innerText = "<spring:message code = 'ezPersonal.mse3' />";
 		    	
-		    	var trElmt1 = document.createElement("tr");
-		    	var trElmt2 = document.createElement("tr");
-		    	var tdElmt1 = document.createElement("td");
-		    	var tdElmt2 = document.createElement("td");
-		    	var tdElmt3 = document.createElement("td");
-		    	var tdElmt4 = document.createElement("td");
-		    	var tdElmt5 = document.createElement("td");
-		    	var ipElmt1 = document.createElement("input");
-		    	var ipElmt2 = document.createElement("input");
-		    	var ipElmt3 = document.createElement("input");
-		    	var aElmt2  = document.createElement("a");
-		    	var lalElmt = document.createElement("label");
-		    	var spaElmt2  = document.createElement("span");
-		    	var aElmt3  = document.createElement("a");
-		    	var spaElmt3 = document.createElement("span");
-		    	var spaElmt4  = document.createElement("span");
+		    	urlInput.setAttribute("id", "txtDisplayName3");
+		    	urlInput.setAttribute("type", "text");
+		    	urlInput.setAttribute("maxlength", 50);
+		    	urlInput.setAttribute("value", url);
 		    	
-		    	tdElmt1.className = "sliderInfoTDadd";
-		    	tdElmt1.innerText = "<spring:message code = 'ezPersonal.mse3' />";
-		    	ipElmt1.setAttribute("id", "txtDisplayName3");
+		    	useTit.innerText = "<spring:message code = 'ezPersonal.mse1' />";
+		    	/* tdElmt1.className = "sliderInfoTDadd";
+		    	tdElmt1.innerText = "<spring:message code = 'ezPersonal.mse3' />"; */
+		    	/* ipElmt1.setAttribute("id", "txtDisplayName3");
 		    	ipElmt1.setAttribute("type", "text");
 		    	ipElmt1.setAttribute("maxlength", 50);
-		    	ipElmt1.setAttribute("value", url);
-		    	tdElmt3.className = "sliderInfoTDadd";
-		    	tdElmt3.innerText = "<spring:message code = 'ezPersonal.mse1' />";
+		    	ipElmt1.setAttribute("value", url); */
+		    	/* tdElmt3.className = "sliderInfoTDadd";
+		    	tdElmt3.innerText = "<spring:message code = 'ezPersonal.mse1' />"; */
+		    	
+		    	useSwitchInput.setAttribute("type", "checkbox");
+		    	useSwitchInput.setAttribute("id", "slideIsUseModify");
 		    	
 		    	if (sliderIsUse == true){
-		    		tdElmt4.className = "slideIsUse";
+		    		/* tdElmt4.className = "slideIsUse";
 		    		lalElmt.className = "switch";
 		    		ipElmt3.setAttribute("id", "slideIsUseModify");
-		    		ipElmt3.setAttribute("type", "checkbox");
-		    		ipElmt3.setAttribute("checked", "checked");
-		    		spaElmt2.className = "slider round";
+		    		ipElmt3.setAttribute("type", "checkbox"); */
+		    		useSwitchInput.setAttribute("checked", "checked");
+		    		/* spaElmt2.className = "slider round"; */
 		    	} else {
-		    		tdElmt4.className = "slideIsUse";
+		    		/* tdElmt4.className = "slideIsUse";
 		    		lalElmt.className = "switch";
-		    		ipElmt3.setAttribute("id", "slideIsUseModify");
-		    		ipElmt3.setAttribute("type", "checkbox");
-		    		spaElmt2.className = "slider round";
+		    		ipElmt3.setAttribute("id", "slideIsUseModify"); */
+		    		/* ipElmt3.setAttribute("type", "checkbox"); */
+		    		/* spaElmt2.className = "slider round"; */
 		    	}
-		    	aElmt3.className = "imgbtn";
-		    	aElmt3.setAttribute("href", "#");
-		    	aElmt3.setAttribute("data", sliderID);
-		    	spaElmt4.addEventListener("click", function(event) {btnSave_click_modify(this);});
-		    	spaElmt4.innerText = "<spring:message code = 'ezPersonal.t34' />";
 		    	
-		    	tabElmt.appendChild(trElmt1);
+		    	
+		    	/* aElmt3.className = "imgbtn";
+		    	aElmt3.setAttribute("href", "#");
+		    	aElmt3.setAttribute("data", sliderID); */
+		    	imgElmt2.addEventListener("click", function(event) {btnSave_click_modify(this);});
+		    	imgElmt.addEventListener("click", function(evnet) {addCancelModify(this);});
+		    	/* spaElmt4.innerText = "<spring:message code = 'ezPersonal.t34' />"; */
+		    	
+		    	/* tabElmt.appendChild(trElmt1);
 		    	trElmt1.appendChild(tdElmt1);
 		    	trElmt1.appendChild(tdElmt2);
 		    	tdElmt2.appendChild(ipElmt1);
@@ -605,31 +639,53 @@
 		    	lalElmt.appendChild(spaElmt2);
 		    	trElmt2.appendChild(tdElmt5);
 		    	tdElmt5.appendChild(aElmt3);
-		    	aElmt3.appendChild(spaElmt4);
+		    	aElmt3.appendChild(spaElmt4); */
 		    	
-		    	var imgElmt2 = document.createElement("img");
+		    	//header 조합
+		    	dtElmt.appendChild(imgElmt);
+		    	ddElmt.appendChild(imgElmt2);
+		    	headerDlElmt.appendChild(dtElmt);
+		    	headerDlElmt.appendChild(ddElmt);
 		    	
-		    	aElmt2.className = "addImageBtnModify";
-		    	spaElmt3.className = "addImage";
-		    	spaElmt3.setAttribute("id", "addImage");
-		    	spaElmt3.innerText = "<spring:message code = 'ezPersonal.mse2' />";
-		    	spaElmt3.addEventListener("click", function(event) {addImage();});
-		    	imgElmt2.setAttribute("id", "UploadSliderImage");
-		    	imgElmt2.setAttribute("src", "");
-		    	imgElmt2.setAttribute("style", "width:285px;height:515px;display:none");
-		    	imgElmt2.addEventListener("load", function(event){imgdisplay();});
+		    	//content 조합
+		    	//- url 조합
+		    	urlTitText.appendChild(urlInput);
+		    	urlDT.appendChild(urlTit);
+		    	urlDT.appendChild(urlTitText);
 		    	
-		    	divElmt.appendChild(aElmt2);
-		    	aElmt2.appendChild(spaElmt3);
-		    	divElmt.appendChild(imgElmt2);
+		    	//- 사용여부 조합
+		    	useSwitchLabel.appendChild(useSwitchInput);
+		    	useSwitchLabel.appendChild(useSwitchSpan);
+		    	useSwitch.appendChild(useSwitchLabel);
+		    	useDT.appendChild(useTit);
+		    	useDT.appendChild(useSwitch);
 		    	
-		    	sliderList.appendChild(liElmt);
-		    	$(".cancelNewSliderBtnmodify").on("click", addCancelModify);
+		    	//url, 사용여부 합침
+		    	contentDlElmt.appendChild(urlDT);
+		    	contentDlElmt.appendChild(useDT);
+		    	
+		    	//add image 통합
+		    	divElmt2.appendChild(addImgElmt);
+		    	spanImgElmt.appendChild(previewImgElmt);
+		    	
+		    	divElmt2.setAttribute("id", "addImage");
+		    	addImgElmt.addEventListener("click", function(event) {addImage();});
+		    	previewImgElmt.setAttribute("id", "UploadSliderImage");
+		    	addImgElmt.setAttribute("src", "/images/admin/imagesPlus.png");
+		    	addImgElmt.addEventListener("load", function(event){imgdisplay();});
+
+		    	//div에 통합
+		    	divElmt.appendChild(spanImgElmt);
+		    	divElmt.appendChild(headerDlElmt);
+		    	divElmt.appendChild(contentDlElmt);
+		    	divElmt.appendChild(divElmt2);
+		    	
+		    	sliderList.appendChild(divElmt);
 		    }
 		    
-		    function btnSave_click_modify(obj){
-		    	var sliderID = obj.parentNode.getAttribute("data");
-		    	/* if (specialChk(document.getElementById("txtDisplayName").value)) {
+		    function btnSave_click_modify(obj, event){
+		    	var sliderID = obj.parentNode.parentNode.parentNode.parentNode.getAttribute("data");
+		    	/* if (specialChk(document.getElementById("txtDisplayName").value) ) {
 			    	alert("<spring:message code='ezResource.special' />");
 			    	return;
 			    }
@@ -721,7 +777,7 @@
 		        	data : {sliderID : sliderID},
 		        	success : function(result) {
 		        		if (result == "OK") {
-		        			window.location.reload(false);
+		        			getSliderList();
 		        		} else {
 		        			alert("error");
 		        		}
@@ -755,6 +811,14 @@
 		    } 
 	
 		</script>
+		<style type="text/css">
+			.addSlider {display:inline-block;}
+			.addSlider div img {cursor:pointer;}
+			.sliderCDT .sliderSwitch {margin:5px 0px 0px 0px;}
+			.sliderModifyBody .slider-imagePage img {width:285px;height:515px;opacity:0.4;}
+			#addSliderBody div.sliderModifyBody {cursor:default;}
+			#addSliderBody div.sliderModifyBody .slider-header-modify {cursor:default;}
+		</style>
 	</head>
 	<body class = "mainbody">
 		<h1><spring:message code = 'ezPersonal.t20004' /></h1>
