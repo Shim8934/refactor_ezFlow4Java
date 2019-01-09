@@ -3806,11 +3806,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/chooseDeletege.do")
 	public String chooseDeletege(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
-		
-		String type = (request.getParameter("typeStyle") != null ? request.getParameter("type") : "");
-		
+
+		String type = (request.getParameter("type") != null ? request.getParameter("type") : "");
 		model.addAttribute("type", type);
-		
+
 		return "admin/ezOrgan/chooseDeletege";
 	}
 }
