@@ -547,7 +547,7 @@
 						#idList[].id#
 					</iterate>
 					WHERE FF.TENANT_ID = #tenantId# ) FP
-				ON folder.FOLDER_PATH LIKE  concat(FP.FOLDER_PATH , '%')
+				ON folder.FOLDER_PATH LIKE  concat(FP.FOLDER_PATH , '%') or folder.folder_id = #folderId#
 				JOIN TBL_WEBFOLDER_FILETYPE type 
 					ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#
 				left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 

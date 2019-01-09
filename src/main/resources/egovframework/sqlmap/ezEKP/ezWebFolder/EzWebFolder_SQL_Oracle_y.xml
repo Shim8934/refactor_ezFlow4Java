@@ -574,7 +574,7 @@
 						<iterate property="idList" open="(" close=")" conjunction=",">
 							#idList[].id#
 						</iterate>
-						WHERE FF.TENANT_ID = #tenantId# ) FP
+						WHERE FF.TENANT_ID = #tenantId# ) FP or folder.folder_id = #folderId#
 					ON folder.FOLDER_PATH LIKE  FP.FOLDER_PATH || '%'
 					JOIN TBL_WEBFOLDER_FILETYPE type 
 						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#
