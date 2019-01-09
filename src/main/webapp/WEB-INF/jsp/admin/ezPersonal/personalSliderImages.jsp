@@ -106,7 +106,7 @@
 		    		document.getElementById("sliderContainer").innerHTML = sliderHTML;
 		    	}
 		    	
-		    	sliderHTML += "<li class='addSlider' id='addSlider'><div style='margin-top:225px'><img src='/images/admin/slideAdd.png' ></img></div></li>";
+		    	sliderHTML += "<li class='addSlider' id='addSlider'><div style='width:285px;height:515px;border:1px dashed #aab2ba;'><img src='/images/admin/slideAdd.png' style='display:block;margin:0 auto;margin-top:225px;'></img></div></li>";
 		    	document.getElementById("sliderContainer").innerHTML = sliderHTML;
 		    	
 		    	//슬라이더 추가
@@ -302,7 +302,7 @@
 		    	liElmt.appendChild(divElmt);
 		    	
 		    	liElmt.style.display = "inline-block"; 
-		    	liElmt.style.margin = "10px 20px 20px 0px";
+		    	liElmt.className = "sliderList";
 				document.getElementById("addSlider").style.display = "none";
 		    	$("#sliderContainer").append(liElmt);
 		    	
@@ -435,11 +435,8 @@
 		        if (document.getElementById("UploadSliderImage").style.display == "none") {	
 		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
 		            return;
-		        } else if (document.getElementById("txtDisplayName3").value == "") {
-		            alert("<spring:message code = 'ezPersonal.mse4' />");
-		            return; 
 		        }
-		         
+		        
 		    	var displayName = "";
 		    	var displayName2 = "";
 		    	var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("${uploadPortalPath}"));
@@ -479,7 +476,7 @@
 		        	dataType : "text",
 		        	success : function (result) {
 		        		if (result == "OK") {
-		        			alert("<spring:message code = 'ezPersonal.t191' />");
+		        			//alert("<spring:message code = 'ezPersonal.t191' />");
 				            
 				            if (ReturnFunction != null) {
 				                ReturnFunction();
@@ -488,7 +485,7 @@
 				            getSliderList();
 				            //window.location.reload();
 		        		} else {
-		        			alert("<spring:message code = 'ezPersonal.t192' />");
+		        			//alert("<spring:message code = 'ezPersonal.t192' />");
 		        		}
 		        	}
 		        });
@@ -701,9 +698,6 @@
 		        if (document.getElementById("UploadSliderImage").style.display == "none") {	
 		            alert("<spring:message code = 'ezPersonal.t20000' /> ");
 		            return;
-		        } else if (document.getElementById("txtDisplayName3").value == "") {
-		            alert("<spring:message code = 'ezPersonal.mse4' />");
-		            return; 
 		        }
 		        
 		        var displayName = "";
@@ -739,7 +733,7 @@
 		        	dataType : "text",
 		        	success : function (result) {
 		        		if (result == "OK") {
-		        			alert("<spring:message code = 'ezPersonal.t191' />");
+		        			//alert("<spring:message code = 'ezPersonal.t191' />");
 				            
 				            if (ReturnFunction != null) {
 				                ReturnFunction();
@@ -748,7 +742,7 @@
 				            getSliderList();
 				            //window.location.reload();
 		        		} else {
-		        			alert("<spring:message code = 'ezPersonal.t192' />");
+		        			//alert("<spring:message code = 'ezPersonal.t192' />");
 		        		}
 		        	}
 		        });
@@ -781,7 +775,7 @@
 		        		if (result == "OK") {
 		        			getSliderList();
 		        		} else {
-		        			alert("error");
+		        			//alert("error");
 		        		}
 		        	}
 		        }); 
@@ -806,7 +800,7 @@
 		        	data : {sliderID : sliderId, isUse : isUse, mode : "U"},
 		        	success : function(result) {
 		        		if (result != "OK") {
-		        			alert(result);
+		        			//alert(result);
 		        		}
 		        	}
 		        });

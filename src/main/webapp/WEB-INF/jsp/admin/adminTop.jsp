@@ -160,10 +160,6 @@
 		      			<c:if test="${use_portal == 'YES' && packageType == 'standard'}">
 		      				<li><span id="menu10" onClick="menu_change(0, event)"><spring:message code="main.t22" /></span></li>
 		      			</c:if>
-		      					      
-                    	<c:if test="${packageType == 'standard'}">
-		      				<li><span id="menu01" onClick="menu_change(70, event)"><spring:message code="main.t7" /></span></li>
-                    	</c:if>
                     	
 		      			<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t8" /></span></li>
 		      			<li><span id="menu31" onClick="menu_change(170, event)"><spring:message code="main.t78" /></span></li>
