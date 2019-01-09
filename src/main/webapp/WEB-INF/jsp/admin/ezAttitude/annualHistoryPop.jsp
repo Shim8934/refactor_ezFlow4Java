@@ -57,12 +57,12 @@
 		    		var addTh = "<th class='borderRight' style='width: 9px;'></th>";
 		    		$(".mainlist tr th:eq(4)").after(addTh);
 		    		$(".mainlist tr th:eq(4)").removeClass("borderRight");
-		    		
-		    		//ie일경우 #contentlist border-bottom : 1px solid #e2e3e6;
-		    		if (navigator.userAgent.toUpperCase().indexOf("CHROME") == -1) {
-		    			$("#contentlist").css("border-bottom","1px solid #e2e3e6");
-		    		}
 		    	}
+		    	
+	    		//리스트가 10개이고 ie일경우 하단의 테이블 border가 보이지 않는 현상때문에 추가.
+	    		if ($("#contentlist tr").length == 10 && navigator.userAgent.toUpperCase().indexOf("CHROME") == -1) {
+	    			$("#contentlist").css("border-bottom","1px solid #e2e3e6");
+	    		}
    			});
 	    	
 	    	function setFlagCheck(){
@@ -139,7 +139,7 @@
 	            	<th class="borderLeft borderRight" style="width:10%;text-align:center;"><spring:message code='ezAttitude.t62' /></th>
                 </tr>
             </table>
-            <div id="contentlist" name="contentlist" style="height: 202px; overflow-y: auto;">
+            <div id="contentlist" name="contentlist" style="width: 100%;height: 202px; overflow-y: auto;">
                 <table class="mainlist" style="width: 100%;">
 	                <c:choose>
 			    		<c:when test="${not empty resultList }">
