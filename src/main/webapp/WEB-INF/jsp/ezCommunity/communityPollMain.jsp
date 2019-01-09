@@ -87,7 +87,7 @@
 		            alert("<spring:message code='ezCommunity.t431' />");
 		            return;
 		        } 
-		        window.location.href = "/ezCommunity/pollRes.do?code=" + code + "&pollManagerID=" + itemno + "&pollState=" + pollstate;
+		        window.location.href = "/ezCommunity/pollRes.do?code=" + code + "&pollManagerID=" + itemno + "&pollState=" + encodeURI(encodeURIComponent(pollstate));
 		    }
 		    
 		    function checkAll(obj) {

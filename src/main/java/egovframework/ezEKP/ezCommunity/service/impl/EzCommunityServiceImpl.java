@@ -7582,7 +7582,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 //			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + EgovDateUtil.getToday(""));
 			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + vo.getWriteDate());
 			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t119", locale) + userInfo.getDisplayName() + "(" + userInfo.getTitle() + ", "  + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
-			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", locale) + "<a onclick=\"" + "item_View_New_Community('" + boardID + "', '" + itemID + "', '" + communityID + "'); return false;" + "\" href=\"_blank\" target=\"_blank\">" + vo.getTitle() + "</a>");
+			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", locale) + "<a id='community_a' style='color:blue;text-decoration:underline;cursor:pointer;' onclick=\"" + "item_View_New_Community('" + boardID + "', '" + itemID + "', '" + communityID + "'); return false;" + "\" href=\"_blank\" target=\"_blank\">" + vo.getTitle() + "</a>");
         	bodyContent.append("</DIV>");
     		
         	InternetAddress from = new InternetAddress();
