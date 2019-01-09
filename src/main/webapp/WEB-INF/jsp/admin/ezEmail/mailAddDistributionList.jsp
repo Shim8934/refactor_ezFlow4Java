@@ -162,6 +162,8 @@
 	                if (xmlHTTP2.statusText == "OK") {
 	                    var result = loadXMLString(xmlHTTP2.responseText);
 	                    
+	                    document.getElementById("TextId").disabled = true;
+	                    
 	                    var mailNode = SelectNodes(result, "DATA/MAIL")[0];
 	                    var mail = getNodeText(mailNode);
 	                    document.getElementById("mailDomain").innerHTML = mail.substring(mail.indexOf("@"));
