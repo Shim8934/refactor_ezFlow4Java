@@ -99,14 +99,12 @@
 	
 	<div class="prevQsArea"></div>
 	
-	<c:if test="${empty mode}">
-		<div class="detailBtns" style="text-align: right;">
-			<div class="survey-bttn-wrp">
-				<img id="saveResult" src="/images/ezSurvey/save2.png"/>
-				<img id="cancelBttn" src="/images/ezSurvey/cancel2.png"/>
-			</div>
+	<div class="detailBtns" style="text-align: right;">
+		<div class="survey-bttn-wrp">
+			<img id="saveResult" src="/images/ezSurvey/save2.png"/>
+			<img id="cancelBttn" src="/images/ezSurvey/cancel2.png"/>
 		</div>
-	</c:if>
+	</div>
 	<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 </body>
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyFile.js')}"></script>
