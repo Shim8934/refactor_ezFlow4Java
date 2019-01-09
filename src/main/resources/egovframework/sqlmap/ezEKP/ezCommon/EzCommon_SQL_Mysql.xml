@@ -243,6 +243,50 @@
 		]]>
 	</update>
 	
+	<insert id="EzCommonDAO.insertMultiLoginUser" parameterClass="map">
+		INSERT INTO TBL_USER_MULTILOGIN (TENANT_ID, USER_ID, LOGIN_TIME)
+		VALUES (#tenantID#, #userID#, #loginTime#)
+	</insert>
+	
+	<update id="EzCommonDAO.updateMultiLoginUser" parameterClass="map">
+		UPDATE 
+			TBL_USER_MULTILOGIN
+		SET
+			LOGIN_TIME = #loginTime#
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID = #userID#
+	</update>
+	
+	<select id="EzCommonDAO.selectMultiLoginUser" parameterClass="map" resultClass="String">
+		SELECT
+			LOGIN_TIME
+		FROM
+			TBL_USER_MULTILOGIN
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID = #userID#
+	</select>
+	
+	<select id="EzCommonDAO.checkTblUserMultiLogin" resultClass="String">
+		SELECT
+			LOGIN_TIME
+		FROM
+			TBL_USER_MULTILOGIN
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserMultiLogin">
+		CREATE TABLE TBL_USER_MULTILOGIN (
+		    TENANT_ID MEDIUMINT(5),
+		    USER_ID VARCHAR(80),
+		    LOGIN_TIME VARCHAR(15) NOT NULL,
+		    PRIMARY KEY (USER_ID, TENANT_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+	
 	<select id="EzCommonDAO.checkJMochaDistributionMail" resultClass="String">
 		<![CDATA[
 			SELECT 

@@ -136,6 +136,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addJmochaMailGenenalPreviewMailImage();
     	ezCommonService.addPortalThemePortletIsFixed();
     	ezCommonService.addUserMasterMailBoxQuota();
+    	ezCommonService.createTblUserMultiLogin();
     	
     	logger.debug("init ended.");
     }
