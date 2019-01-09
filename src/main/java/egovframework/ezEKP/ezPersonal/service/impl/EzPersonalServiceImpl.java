@@ -340,14 +340,12 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 	}
 	
 	@Override
-	public List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu(String userId, String deptId, String companyId, int tenantID) throws Exception {
+	public List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu(String accessID, int tenantID) throws Exception {
 		logger.debug("getQuickLinkMenu started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
-		map.put("userId", userId);
-		map.put("deptId", deptId);
-		map.put("companyId", companyId);
+		map.put("v_ACCESSID", accessID);
 		map.put("tenantID", tenantID);
 
 		logger.debug("getQuickLinkMenu ended");
