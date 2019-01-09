@@ -73,6 +73,8 @@
 	            		if (resultStatus == "success") {
 	   						opener.getAnnualList();
 	   						window.close();
+	            		} else if (resultStatus == "dive") {
+	            			alert("<spring:message code='ezAttitude.t263' />");
 	            		} else {
 	            			alert("<spring:message code='ezAttitude.t175' />");
 	            		}

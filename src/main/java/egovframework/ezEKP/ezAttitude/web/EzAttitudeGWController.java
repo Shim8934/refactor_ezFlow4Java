@@ -20,6 +20,7 @@ import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -2101,6 +2102,11 @@ public class EzAttitudeGWController {
 			
 			result.put("status", "ok");
 			result.put("code", 0);
+			result.put("data", "");
+		} catch (DataIntegrityViolationException e) {
+			e.printStackTrace();
+			result.put("status", "dive");
+			result.put("code", 1);
 			result.put("data", "");
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -2513,6 +2513,8 @@ public class EzAttitudeAdminController {
 			resultStatus = "success";
 		} else if (status.equals("failed")) {
 			resultStatus = "failed";
+		} else if (status.equals("dive")) {
+			resultStatus = "dive";
 		} else {
 			resultStatus = "error";
 		}
