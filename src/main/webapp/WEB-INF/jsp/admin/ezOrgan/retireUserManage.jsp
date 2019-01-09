@@ -532,7 +532,7 @@
 						 } else {
 							 data.list.forEach(function(i,v){
 								html += "<tr class='unselectedTR' onclick='clickRow(event)' ondblclick=ShowUserInfo('" + i.cn + "')>";
-								html += "    <td width='20' style='padding:0'>";
+								html += "    <td width='30px'>";
 								html += "        <input type='checkbox' onclick='selectCheckBox()' name='chk' id='chk' value='" + i.cn + "'/>";
 								html += "    </td>";
 								
@@ -706,7 +706,7 @@
 				<table id="mainListHeader" class="mainlist" style="width:100%">
 					<thead>
 						<tr id="mainListHeaderTr">
-							<th style="padding:0;width:20px;"><input type='checkbox' name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
+							<th style="width: 30px;"><input type='checkbox' name="checkbox" id="checkAll" onclick="funCheckBox('set','a')" /></th>
 							<th style="width: 15%;"><spring:message code='ezOrgan.t218'/></th>
 							<th style="width: 15%;"><spring:message code='ezOrgan.t67'/></th>
 							<th style="width: 15%;"><spring:message code='ezOrgan.t68'/></th>
