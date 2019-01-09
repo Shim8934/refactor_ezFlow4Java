@@ -241,7 +241,7 @@
 			        	dataType : "text",
 			        	url : "/ezOrgan/getSearchList.do",
 			        	async : false,
-			        	data : {search : "cn::" + cn, cell : "company;description;displayname;title;telephonenumber;"+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute2', type : 'user', adminOrgan : "y", noAddJob : "Y"},
+			        	data : {search : "cn::" + cn, cell : "company;description;displayname;title;telephonenumber;"+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute1', type : 'user', adminOrgan : "y", noAddJob : "Y"},
 			        	success : function(xml){
 			        		result=loadXMLString(xml);
 			        		var headerData = createXmlDom();

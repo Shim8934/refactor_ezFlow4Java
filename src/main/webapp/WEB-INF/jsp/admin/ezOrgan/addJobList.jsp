@@ -782,6 +782,7 @@
 		    	<HEADERS>
 		    		<HEADER>
 						<WIDTH>5%</WIDTH>
+						<STYLE>border-top:0px;</STYLE>
 					</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t218' /></NAME>

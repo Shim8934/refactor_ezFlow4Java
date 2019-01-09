@@ -160,7 +160,8 @@
 					document.getElementsByClassName('organSearchForm')[0].style.display = "";
 				}else{
 					cellContent = ";displayname;extensionAttribute9";
-					typeContent = "group";
+					// typeContent값은 부서장을 넣어주기 위해 바꿔주었음 (기존 group)
+					typeContent = "groupDeptMaster";
 					document.getElementsByClassName('organSearchEnter')[0].style.display = "none";
 					document.getElementsByClassName('organSearchForm')[0].style.display = "none";
 				}
@@ -972,21 +973,8 @@
 			    userinfo_dialogArguments = new Array();
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = info_user_Complete;
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(930, 550));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
 			    try { OpenWin.focus(); } catch (e) { }
-				/* }else{
-				    var rtnValue;
-				    rtnValue = window.showModalDialog("/admin/ezOrgan/userInfo.do", args, "dialogHeight:500px; dialogWidth:830px; scroll:no;status:no; help:no; edge:sunken; resize:no" + GetShowModalPosition(830, 520));
-
-				    if (typeof (rtnValue) != "undefined") {
-				        alert("<spring:message code='ezOrgan.t11' />");
-				        displayUserList(treeNode.GetNodeData("CN"));
-
-				        if (trim(document.getElementById("keyword").value) != "") {
-				            search_click();
-				        }
-				    }
-				} */
 			}
 			
 		    function info_user_Complete(rtnValue) {
