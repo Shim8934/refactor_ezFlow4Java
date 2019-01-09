@@ -309,7 +309,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .sliderCDT{ margin:0px; padding:10px 15px;}
 .sliderCDT .sliderTtit{ margin:0px; padding:0px; display:inline-block; float:left; color:#fff; font-size:12px; font-weight:bold; width:28%; box-sizing:border-box; text-align:left; height:27px; line-height:27px;}
 .sliderCDT .sliderText{ margin:0px; padding:0px; display:inline-block; width:72%;}
-.sliderCDT .sliderText .admin_input{background: #00000052; border-radius:15px; border:none; color:#fff; padding:0px 0px 0px 10px;}
+.sliderCDT .sliderText .admin_input{background: rgba(0, 0, 0, 0.52); border-radius:15px; border:none; color:#fff; padding:0px 0px 0px 10px;}
 .sliderCDT .sliderSwitch{ margin:14px 0px 0px 0px; padding:0px; display:inline-block;}
 
 .sliderListmodify{ margin:10px 20px 20px 0px; padding:0px; background:#fff; position:relative; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); display:inline-block;}
