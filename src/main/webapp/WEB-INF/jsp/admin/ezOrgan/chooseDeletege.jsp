@@ -8,10 +8,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
-	    <style>
-	    	.contentList {width:100%; margin: 0px 0px 15px 0px;}
-	    	.contentList tr td {border: 1px solid #ddd; border-collapse: collapse; vertical-align:top}
-	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
@@ -92,13 +88,13 @@
 			<tr>
 		    	<td colspan="3">
 		    		<input type="radio" id="radio1" name="radiobutton" value="radiobutton"  checked>
-		      		<label for="radio1">해당 권한만 삭제</label>
+		      		<label for="radio1"><spring:message code='ezOrgan.mse6' /></label>
 		      	</td>
 		  	</tr>
 		  	<tr>
 		    	<td colspan="3">
 		    		<input type="radio" id="radio2" name="radiobutton" value="radiobutton" >
-		      		<label for="radio2">모든 권한 삭제</label>
+		      		<label for="radio2"><spring:message code='ezOrgan.mse7' /></label>
 		      	</td>
 		  	</tr>  
 		</table>

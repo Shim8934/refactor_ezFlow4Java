@@ -1365,7 +1365,7 @@
 		                
 		        	},
 		        	error : function(error){
-		        	    alert("부서 구성원을 가져오는중 오류가 발생했습니다. - 	" + error);
+		        	    alert("<spring:message code='ezOrgan.mse8'/>" + error);
 		        	}
 		        });		        
 		    }
