@@ -85,8 +85,9 @@
 		<result property="fname"            column="file_nm"               columnIndex="4"/>
 		<result property="fileSize"         column="file_size"             columnIndex="5"/>
 		<result property="fpath"            column="file_path"             columnIndex="6"/>
-		<result property="companyId"        column="company_id"            columnIndex="7"/>
-		<result property="tenantId"         column="tenant_id"             columnIndex="8"/>
+		<result property="furl"             column="file_url"              columnIndex="7"/>
+		<result property="companyId"        column="company_id"            columnIndex="8"/>
+		<result property="tenantId"         column="tenant_id"             columnIndex="9"/>
 	</resultMap>
 	
 	<!-- ParticipantVO resultMap -->
@@ -652,10 +653,10 @@
 	<insert id="EzSurveyDAO.saveAttachItem" parameterClass="AttachVO">
 		<![CDATA[
 			insert into tbl_survey_attachfile (
-				target_id,  survey_id,  target_type,  file_nm, file_size, file_path, company_id,  tenant_id
+				target_id,  survey_id,  target_type,  file_nm, file_size, file_path, file_url, company_id,  tenant_id
 			)
 			values (
-				#targetId#, #surveyId#, #targetType#, #fname#, #fileSize#, #fpath#,  #companyId#, #tenantId#
+				#targetId#, #surveyId#, #targetType#, #fname#, #fileSize#, #fpath#,  #furl#, #companyId#, #tenantId#
 			)
 		]]>
 	</insert>

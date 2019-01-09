@@ -6,10 +6,19 @@ public class AttachVO {
 	private long   targetId;
 	private String targetType;
 	private String fname;
+	private String furl;
 	private long   fileSize;
 	private String fpath;
 	private String companyId;
 	private int    tenantId;
+	
+	public String getFurl() {
+		return furl;
+	}
+	
+	public void setFurl(String furl) {
+		this.furl = furl;
+	}
 	
 	public long getAttachId() {
 		return attachId;

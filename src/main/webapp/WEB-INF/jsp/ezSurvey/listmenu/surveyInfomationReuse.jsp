@@ -72,7 +72,10 @@
 				</c:if>
 			</div>
 		</div>
-		<div class="survey-attbttn"><div id="addFileBttn"><spring:message code="ezSurvey.t56"/></div></div>
+		<div class="survey-attbttn">
+			<div id="addFileBttn"><spring:message code="ezSurvey.t56"/></div>
+			<div id="addUrlBttn" ><spring:message code="ezSurvey.t85"/></div>
+		</div>
 		<input type="file" id="fileBttn" multiple="multiple" class="hiddenBttn">
 	</div>
 </div>

@@ -55,7 +55,7 @@
 .closeImgBttn {position: absolute; right: 10px; top: 8px;}
 .closeImgBttn >ul {margin: 0px; padding: 0px; list-style: none;}
 .closeImgBttn >ul >li {display: block; float: left; margin: 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
-.closeImgBttn >ul >li >span {display: inline-block; width: 25px; height: 28px; background-image: url(/images/cancel.png); background-repeat: no-repeat; background-position: 4px 6px;}
+.closeImgBttn >ul >li >span {display: inline-block; width: 25px; height: 28px; background-image: url(/images/close_xBtn.png); background-repeat: no-repeat; background-position: 4px 6px;}
 .fileList .qstUl {margin: 0px; padding: 0px;}
 .fileList .optUl {margin: 0px; padding: 0px 40px;}
 .fileList .qstUl >li {position: relative; padding: 15px 15px 0px;}
@@ -125,12 +125,13 @@
 .survey-otherinf {margin: 15px 0px 0px;}
 .survey-attach {height: 243px; background-color: #fff;}
 .survey-dropzone {height: 197px;}
-.attach-zone {height: 326px; padding : 15px; background: #fff; border: 1px solid #d7d7d7; margin-bottom: 15px;}
-.attach-zone2 {height: 195px; background: #fff; border: 1px solid #d7d7d7; margin-top: 2px;}
+.attach-zone {height: 197px; padding : 15px; background: #fff; border: 1px solid #d7d7d7; margin-bottom: 15px;}
+.attach-zone2 {max-height: 195px; background: #fff; border: 1px solid #d7d7d7; margin-top: 2px; overflow-y: auto;}
 .mainzone2 {height: 100%; box-sizing: border-box; overflow-y: auto;}
 .mainzone {border: 1px dashed #ddd; height: 100%; box-sizing: border-box; overflow-y: auto;}
 .survey-attbttn {height: 56px;}
 .survey-attbttn >div {float: left; background-color: rgb(52, 152, 219); border-radius: 4px; height: 28px; line-height: 28px; margin: 14px 0px; padding: 0px 5px; font-size: 14px; color: #fff; cursor: pointer;}
+.survey-attbttn div + div {margin-left: 10px;}
 .survey-infbttn {float: left; width: 36px; height: 36px; margin-left: 10px; cursor: pointer;}
 .survey-infbttn >img {height: 100%; width: 100%;}
 .popup.survey-target {overflow: hidden;}
@@ -150,12 +151,14 @@ input::-ms-clear {display: none;}
 .user-pageul li:last-child {border-bottom: 0px !important;}
 .attDivFile {display: flex; width: 100%; height: 100%; cursor: pointer;}
 .attDivFile .attImgAva {height: 44px; width: 44px; min-width: 44px; margin: 10px;}
-.qstUl .attDivFile .attImgAva, .optUl .attDivFile .attImgAva {height: 80px; margin: 0px;}
+.qstUl .attDivFile .attImgAva, .optUl .attDivFile .attImgAva {height: 80px; width: 80px; margin: 0px;}
 .qstUl .attDivFile .attImgAva >img, .optUl .attDivFile .attImgAva >img {height: 100%; width: auto;}
 .attDivFile .attImgAva >img {height: 100%; width: 100%;}
 .attDivFile .attFileInf {display: flex; flex: 1; flex-flow: column; overflow: hidden; padding-top: 10px;}
 .attDivFile .attFileInf >span:first-child {padding: 6px 4px 4px 0px; max-height: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .attDivFile .attFileInf >span:last-child {padding: 2px 4px 4px 0px;}
+.attDivFile .attFileInf2 {font-size: 14px; align-items: center; display: flex; flex: 1; overflow: hidden; padding-left: 10px; padding-top: 0px; justify-content: left;}
+.ulFiles .attDivFile .attFileInf2, .user-pageul .attDivFile .attFileInf2 {padding-left: 0px !important;}
 
 .infor-tbl tr th {width: 50px;}
 .infor-tbl tr td {padding-left: 10px;}
@@ -372,8 +375,9 @@ input[type=range]::-ms-tooltip {display: none;}
 .question-opts .opt .optSpan {padding-left: 10px; font-size: 15px; line-height: 20px; cursor: default;}
 .question-opts .opt .optImg {width: 40px; height: 40px; padding-left: 10px;}
 .question-opts .opt .othInput {border-radius: 4px; height: 27px; outline: 0px; padding: 0px 5px; margin-left: 10px;}
-.question-panel .question-attach {width: 100px; height: 100px; padding: 10px 35px;}
-.question-attach .qstnImg {width: auto; height: 100%;}
+.question-panel .question-attach {max-height: 80px; padding: 10px 35px; display: flex; align-items: center;}
+.question-attach .qstnImg {width: auto; height: auto; max-height: 80px; cursor: pointer;}
+.question-attach >span {padding-left: 10px; overflow: hidden;}
 
 /* matrix */
 .mtrPart .rowArea, .mtrPart .colArea {padding-bottom: 20px; padding-left: 20px;}
@@ -421,8 +425,8 @@ input[type=range]::-ms-tooltip {display: none;}
 .navi-button.logic {padding-bottom: 320px !important;}
 .requiredInfo {font-size: 14px; color: red;}
 
-.prevQsWrapper .question-attach {width: 100px; height: 100px; padding: 10px 35px;}
-.prevQsWrapper .qstnImg {width: auto; height: 100%;}
+.prevQsWrapper .question-attach {max-height: 80px; padding: 10px 35px;}
+.prevQsWrapper .qstnImg {width: auto; height: auto; max-height: 80px; cursor: pointer;}
 .prevQsWrapper .question-header .question-content {line-height: 32px; font-size: 16px; font-weight: bold; padding-left: 10px; cursor: default;}
 .prevQsWrapper .question-header .addLogic {width: 20px; padding-left: 15px; margin-bottom: -3px; cursor: pointer;}
 .prevQsWrapper .question-header .saveLogic {width: 20px; padding-left: 15px; margin-bottom: -3px; cursor: pointer;}
@@ -480,7 +484,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .svTitle .sryTxt {height: 70px; line-height: 70px; padding: 0px 10px; font-weight: bold; font-size: 20px;}
 
 .svPurpose {width: auto; height: auto; padding: 15px 0px;}
-.svPurpose .ppContent {width: auto; height: auto; background-color:white; padding:15px 10px; border: 1px solid #d7d7d7;}
+.svPurpose .ppContent {width: auto; height: auto; background-color:white; padding: 10px; border: 1px solid #d7d7d7;}
 .ppContent p, .ppContent div, .ppContent td, .ppContent ul, .ppContent ol, .ppContent li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px; font-family: 'Gulim', 'arial', 'verdana' !important; font-size: 14px !important;}
 .ppContent table td  {text-indent: 0px }
 .ppContent blockquote {margin-top: 0px; margin-bottom: 0px;}
