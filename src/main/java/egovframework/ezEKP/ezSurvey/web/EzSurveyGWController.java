@@ -735,7 +735,43 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	
+	@RequestMapping(value="/rest/ezsurvey/response-item/save", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
+	public JSONObject saveResponseItem(@RequestBody JSONObject responseItem, HttpServletRequest request, Locale locale) throws Exception {
+		JSONObject result   = new JSONObject();
+		JSONParser jp       = new JSONParser();
+		
+		try {
+			JSONObject response  = (JSONObject) jp.parse(responseItem.toJSONString());
+			long surveyId        = response.get("surveyId")              != null ? (Long)response.get("surveyId")           : -1;
+			JSONArray responses  = (JSONArray) response.get("responses") != null ? (JSONArray) response.get("responses")    : null;
+			String serverName    = request.getHeader("host-name")        != null ? request.getHeader("host-name")           : "";
+			String userId        = responseItem.get("userId")            != null ? responseItem.get("userId").toString()    : "";
+			
+			logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || surveyId: " + surveyId);
+			
+			if (serverName.equals("") || userId.equals("") || (responses == null || responses.size() == 0)) {
+				logger.debug("Parameter error!");
+				result.put("status", "error");
+				result.put("code", 1);
+				return result;
+			}
+			
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			result           = surveyService.saveResponseItem(responses, surveyId, userInfo);
+
+			if ((int) result.get("code") == 1) {
+				result           = surveyService.saveRespondent(surveyId, userInfo);
+			}
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
 	
 	
 }

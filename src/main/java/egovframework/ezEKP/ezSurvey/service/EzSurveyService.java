@@ -42,4 +42,6 @@ public interface EzSurveyService {
 	JSONObject getItemInfo(Long surveyId, String mode, String realPath, LoginVO userInfo) throws Exception;
 	JSONObject getSurveyQuestions(Long surveyId, String realPath, LoginVO userInfo) throws Exception;
 	JSONObject changeSurveyState(String itemId, LoginVO userInfo) throws Exception;
+	JSONObject saveResponseItem(JSONArray responses, long surveyId, LoginVO userInfo) throws Exception;
+	JSONObject saveRespondent(long surveyId, LoginVO userInfo);
 }

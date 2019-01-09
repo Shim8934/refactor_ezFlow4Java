@@ -15,9 +15,11 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -27,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
+
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -36,6 +39,8 @@ import egovframework.ezEKP.ezSurvey.service.EzSurveyService;
 import egovframework.ezEKP.ezSurvey.vo.AttachVO;
 import egovframework.ezEKP.ezSurvey.vo.OptionVO;
 import egovframework.ezEKP.ezSurvey.vo.QuestionVO;
+import egovframework.ezEKP.ezSurvey.vo.RespondentVO;
+import egovframework.ezEKP.ezSurvey.vo.ResponseVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
@@ -952,39 +957,119 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		result.put("code", 0);
 		return result;
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+	@Override
+	public JSONObject saveResponseItem(JSONArray responses, long surveyId, LoginVO userInfo) throws Exception {
+		JSONObject result = new JSONObject();
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		for (int i = 0; i < responses.size(); i++) {
+			JSONObject responseObj = (JSONObject)responses.get(i);
+			int questionType       = ((Long)responseObj.get("type")).intValue();
+			JSONArray answers      = ((JSONArray)responseObj.get("answers"));
+			int questionLevel      = ((Long)responseObj.get("questionLevel")).intValue();
+			String companyId       = userInfo.getCompanyID();
+			int tenantId           = userInfo.getTenantId();
+			String userId          = userInfo.getId();
+			
+			if (responseObj == null || responseObj.size() == 0) {
+				result.put("status", "error");
+				result.put("code", 1);
+				return result;
+			}
+			
+			for (int j = 0; j < answers.size(); j++) {
+				JSONObject answerObject = (JSONObject) answers.get(j);
+				long responseId = ezSurveyDAO.getMaxResponseId(map);
+				
+				ResponseVO response = new ResponseVO();
+				response.setResponseId(responseId);
+				response.setSurveyId(surveyId);
+				response.setQuestionType(questionType);
+				response.setQuestionLevel(questionLevel);
+				response.setCompanyId(companyId);
+				response.setTenantId(tenantId);
+				response.setResponsorId(userId);
+				
+				switch (questionType) {
+				case 1:
+				case 2:
+				case 9:
+					int optionLevel = ((Long) answerObject.get("optionLevel")).intValue();
+					response.setOptionLevel(optionLevel);
+					ezSurveyDAO.saveSltResponseItem(response);
+					break;
+				case 3:
+				case 4:
+					int rowLevel = ((Long) answerObject.get("row")).intValue();
+					int colLevel = ((Long) answerObject.get("col")).intValue();
+					response.setRowLevel(rowLevel);
+					response.setColumnLevel(colLevel);
+					ezSurveyDAO.saveMtrResponseItem(response);
+					break;
+				case 5:
+				case 6:
+					String txt = (String) answerObject.get("texts");
+					response.setTexts(txt);
+					ezSurveyDAO.saveTxtResponseItem(response);
+					break;
+				case 7:
+					int sliderValue = ((Long) answerObject.get("sliderValue")).intValue();
+					response.setSliderValue(sliderValue);
+					ezSurveyDAO.saveSlidResponseItem(response);
+					break;
+				case 8:
+					int rankingLevel = ((Long) answerObject.get("rankingLevel")).intValue();
+					int rankingOptionLevel = ((Long) answerObject.get("rankingOptionLevel")).intValue();
+					response.setRankingLevel(rankingLevel);
+					response.setRankingOptionLevel(rankingOptionLevel);
+					ezSurveyDAO.saveRankingResponseItem(response);
+					break;
+				}
+			}
+			
+		}
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+
+	@Override
+	public JSONObject saveRespondent(long surveyId, LoginVO userInfo) {
+		JSONObject result = new JSONObject();
+		
+		String userId = userInfo.getId();
+		String userName1 = userInfo.getDisplayName1();
+		String userName2 = userInfo.getDisplayName2();
+		String email = userInfo.getEmail();
+		String deptId = userInfo.getDeptID();
+		String deptName1 = userInfo.getDeptName1();
+		String deptName2 = userInfo.getDeptName2();
+		String offset  = userInfo.getOffset();
+		SimpleDateFormat formatter           = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String timeUTC  = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
+		int tenantId       = userInfo.getTenantId();
+		String companyId   = userInfo.getCompanyID();
+		
+		RespondentVO respondent = new RespondentVO();
+		respondent.setSurveyId(surveyId);
+		respondent.setUserId(userId);
+		respondent.setUserName1(userName1);
+		respondent.setUserName2(userName2);
+		respondent.setEmail(email);
+		respondent.setDeptId(deptId);
+		respondent.setDeptName1(deptName1);
+		respondent.setDeptName2(deptName2);
+		respondent.setResponseDate(timeUTC);
+		respondent.setCompanyId(companyId);
+		respondent.setTenantId(tenantId);
+		
+		ezSurveyDAO.saveRespondent(respondent);
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
 	
 }

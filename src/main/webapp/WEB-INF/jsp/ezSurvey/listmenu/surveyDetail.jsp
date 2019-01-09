@@ -237,9 +237,6 @@
 				var id = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
 				var logic = $("select[name=drdw" + id + "] option:selected").attr("logic");
 				
-				if (logicNum && logicmap) {
-					processLogicNode(parseInt(id), parseInt(logicNum));
-				}
 			});
 			
 			$(".prevQsArea").on("input", ".slider-range", function() {
@@ -309,7 +306,7 @@
 		
 		function saveSurveyResponses() {
 			var qsWrappers = $(".prevQsArea").find(".prevQsWrapper");
-			console.log(qsWrappers);
+			
 			for (var i = 0; i < qsWrappers.length; i++) {
 				var wrapper = qsWrappers[i];
 				var displayValue = wrapper.style.display;
@@ -318,7 +315,6 @@
 					var qstnId = wrapper.getAttribute("id");
 					var id = parseInt(qstnId.replace("prevQstn", ""));
 					var type = parseInt(wrapper.getAttribute("type"));
-					
 					
 					switch (type) {
 					case 1:
@@ -331,106 +327,242 @@
 						getSingleMtrRespose(id, type);
 						break;
 					case 4:
-						getMultiMtrRespose();
+						getMultiMtrRespose(id, type);
 						break;
 					case 5:
-						getShorTxtRespose();
+						getTxtRespose(id, type);
 						break;
 					case 6:
-						getLongTxtRespose();
+						getTxtRespose(id, type);
 						break;
 					case 7:
-						getSliderRespose();
+						getSliderRespose(id, type);
 						break;
 					case 8:
-						geRankingRespose();
+						getRankingRespose(id, type);
 						break;
 					case 9:
-						getDrdwRespose();
+						getDrdwRespose(id, type);
 						break;
 					}
 					
 				}
+				
+			}
+			saveResponse();
+		}
+		
+		function saveResponse() {
+			//console.log(JSON.stringify(resposeObj));
+			
+			$.ajax({
+				type: "POST",
+				url: "/ezSurvey/saveResponse.do",
+				data: JSON.stringify(resposeObj),
+				contentType: "application/json; charset=utf-8",
+				dataType: "JSON",
+				async: false,
+				success : function(data) {
+					afterSaveSuccessfully(data);
+				},
+				error : function(error) {
+					alert(SurveyMessages.strError);
+				}
+			});
+			
+		}
+		
+		function afterSaveSuccessfully(data) {
+			var code = data.code;
+			switch(code) {
+				case 0 : alert(SurveyMessages.strSave)    ;
+						 window.close();
+						 break;
+				case 1 : alert(SurveyMessages.strParamErr); break;
+				case 2 : alert(SurveyMessages.strError)   ; break;
+				default: alert(SurveyMessages.strError)   ; return;
 			}
 		}
 		
 		function getSingleSltRespose(id, type) {
-			var obj = {};
-			var wrapper = $("#prevQstn" + id);
-			var optionLevel = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked").val();
+			var answerObj = {};
+			var optionLevel = {};
 			var answer = [];
-			
+			var wrapper = $("#prevQstn" + id);
+			var optLevel = parseInt(wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked").val());
+
+			optionLevel['optionLevel'] = optLevel;
 			answer.push(optionLevel);
 			
-			obj['questionLevel'] = id;
-			obj['optionLevels'] = answer;
-			obj['type'] = type;
-			resposeObj.responses.push(obj);
-			console.log(resposeObj.responses);
+			answerObj['answers'] = answer;
+			answerObj['type'] = type;
+			answerObj['questionLevel'] = id;
+			resposeObj.responses.push(answerObj);
+			//console.log(resposeObj.responses);
 		}
 		
 		function getMultiSltRespose(id, type) {
-			var obj = {};
-			var wrapper = $("#prevQstn" + id);
-			var boxes = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]");
-			var length = boxes.length;
+			var answerObj = {};
 			var answer = [];
+			var wrapper = $("#prevQstn" + id);
+			var checkBox = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]");
+			var length = checkBox.length;
 			
 			for (var i = 0; i < length; i++) {
-				if (boxes[i].checked == true) {
-					var level = i;
-					var optionLevel = boxes[i].value;
-					console.log(optionLevel);
+				if (checkBox[i].checked == true) {
+					var optLevel = parseInt(checkBox[i].value);
+					var optionLevel = {};
+					optionLevel['optionLevel'] = optLevel;
 					answer.push(optionLevel);
 				}
 			}
 			
-			obj['questionLevels'] = id;
-			obj['optionLevels'] = answer;
-			obj['type'] = type;
-			resposeObj.responses.push(obj);
-			console.log(resposeObj.responses);
+			answerObj['answers'] = answer;
+			answerObj['type'] = type;
+			answerObj['questionLevel'] = id;
+			resposeObj.responses.push(answerObj);
+			//console.log(resposeObj.responses);
 		}
 		
 		function getSingleMtrRespose(id, type) {
-			var obj = {};
+			var answerObj = {};
+			var answer = [];
 			var wrapper = $("#prevQstn" + id);
 			var trLength = wrapper.find("tbody").find("tr").length;
-			var answer = [];
 
 			for (var i = 0; i < trLength; i++) {
-				var value = $("input[name = qstn" + id + "opt" + i + "]:checked").val();
-				console.log(value);
-				answer.push(value);
-			}
-			
-			obj['questionLevels'] = id;
-			obj['optionLevels'] = answer;
-			obj['type'] = type;
-			resposeObj.responses.push(obj);
-			console.log(resposeObj.responses);
-		}
-		
-		function getMultiMtrRespose(id, type) {
-			var obj = {};
-			var wrapper = $("#prevQstn" + id);
-			var rowLength = wrapper.find("tbody").find("tr").length;
-			var colLength = wrapper.find("thead").find("td").length;
-			var answer = [];
-
-			for (var i = 0; i < rowLength; i++) {
-				for (var j = 0; j < colLength; j++) {
-					var value = $("input[id = qstn" + id + "opt" + i + j + "]:checked").val();
-					console.log(value);
-					answer.push(value);
+				var rowColObj = {};
+				var rowColLevels = $("input[name = qstn" + id + "opt" + i + "]:checked").val();
+				
+				if (rowColLevels != undefined) {
+					console.log(rowColLevels);
+					var rowColArray = rowColLevels.split(",");
+					var row = rowColArray[0];
+					var col = rowColArray[1];
+					
+					rowColObj['row'] = parseInt(row);
+					rowColObj['col'] = parseInt(col);
+					answer.push(rowColObj);
 				}
 			}
 			
-			obj['questionLevels'] = id;
-			obj['optionLevels'] = answer;
-			obj['type'] = type;
-			resposeObj.responses.push(obj);
-			console.log(resposeObj.responses);
+			answerObj['answers'] = answer;
+			answerObj['type'] = type;
+			answerObj['questionLevel'] = id;
+			resposeObj.responses.push(answerObj);
+			//console.log(resposeObj.responses);
+		}
+		
+		function getMultiMtrRespose(id, type) {
+			var answerObj = {};
+			var answer = [];
+			var wrapper = $("#prevQstn" + id);
+			var rowLength = wrapper.find("tbody").find("tr").length;
+			var colLength = wrapper.find("thead").find("td").length;
+
+			for (var i = 0; i < rowLength; i++) {
+				for (var j = 0; j < colLength; j++) {
+					var rowColObj = {};
+					var checkBox = $("input[id = qstn" + id + "opt" + i + j + "]");
+					
+					if (checkBox.prop("checked") == true) {
+						var rowColLevels = checkBox.val();
+						var rowColArray = rowColLevels.split(",");
+						var row = rowColArray[0];
+						var col = rowColArray[1];
+						
+						rowColObj['row'] = parseInt(row);
+						rowColObj['col'] = parseInt(col);
+						answer.push(rowColObj);
+					}
+				}
+			}
+			
+			answerObj['answers'] = answer;
+			answerObj['type'] = type;
+			answerObj['questionLevel'] = id;
+			resposeObj.responses.push(answerObj);
+			//console.log(resposeObj.responses);
+		}
+		
+		function getTxtRespose(id, type) {
+			var answerObj = {};
+			var txtObj = {};
+			var answer = [];
+			var wrapper = $("#prevQstn" + id);
+			var txtAnswer = "";
+			if (type == 5) {
+				txtAnswer = wrapper.find(".shortanswer").val();
+
+			} else if (type == 6) {
+				txtAnswer = wrapper.find(".paragraph").val();
+				
+			}
+			txtObj['texts'] = txtAnswer;
+			answer.push(txtObj);
+			
+			answerObj['answers'] = answer;
+			answerObj['type'] = type;
+			answerObj['questionLevel'] = id;
+			resposeObj.responses.push(answerObj);
+			//console.log(resposeObj.responses);
+		}
+		
+		function getSliderRespose(id, type) {
+			var answerObj = {};
+			var sliderObj = {};
+			var answer = [];
+			var wrapper = $("#prevQstn" + id);
+			var outputVal = $("#slider" + id).val();
+			
+			sliderObj['sliderValue'] = parseInt(outputVal);
+			answer.push(sliderObj);
+			
+			answerObj['answers'] = answer;
+			answerObj['type'] = type;
+			answerObj['questionLevel'] = id;
+			resposeObj.responses.push(answerObj);
+			//console.log(resposeObj.responses);
+		}
+		
+		function getRankingRespose(id, type) {
+			var answerObj = {};
+			var answer = [];
+			var wrapper = $("#prevQstn" + id);
+			var selectLengh = wrapper.find(".ranking-select").length;
+
+			for (var i = 0; i < selectLengh; i++) {
+				var rankingObj = {};
+				var rankNum = i + 1;
+				var optionLevel = $("select[name='slt" + id + i + "'] option:selected").val();
+				
+				rankingObj['rankingLevel'] = rankNum;
+				rankingObj['rankingOptionLevel'] = parseInt(optionLevel);
+				answer.push(rankingObj);
+			}
+			
+			answerObj['answers'] = answer;
+			answerObj['type'] = type;
+			answerObj['questionLevel'] = id;
+			resposeObj.responses.push(answerObj);
+			//console.log(resposeObj.responses);
+		}
+		
+		function getDrdwRespose(id, type) {
+			var answerObj = {};
+			var drdwObj = {};
+			var answer = [];
+			var wrapper = $("#prevQstn" + id);
+			var optLevel = $("select[name=drdw" + id + "] option:selected").val();
+			
+			drdwObj['optionLevel'] = parseInt(optLevel);
+			answer.push(drdwObj);
+			
+			answerObj['answers'] = answer;
+			answerObj['type'] = type;
+			answerObj['questionLevel'] = id;
+			resposeObj.responses.push(answerObj);
+			//console.log(resposeObj.responses);
 		}
 		
 		function deleteFileConfirm() {

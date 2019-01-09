@@ -2,10 +2,14 @@ package egovframework.ezEKP.ezSurvey.dao;
 
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.stereotype.Repository;
+
 import egovframework.ezEKP.ezSurvey.vo.AttachVO;
 import egovframework.ezEKP.ezSurvey.vo.OptionVO;
 import egovframework.ezEKP.ezSurvey.vo.QuestionVO;
+import egovframework.ezEKP.ezSurvey.vo.RespondentVO;
+import egovframework.ezEKP.ezSurvey.vo.ResponseVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO;
 import egovframework.ezEKP.ezSurvey.vo.SimpleUserVO;
 import egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO;
@@ -156,4 +160,33 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public int checkProcessingSurvey(Map<String, Object> map) {
 		return (int)select("EzSurveyDAO.checkProcessingSurvey", map);
 	}
+
+	public long getMaxResponseId(Map<String, Object> map) {
+		return (long)select("EzSurveyDAO.getMaxResponseId", map);
+	}
+
+	public void saveSltResponseItem(ResponseVO response) {
+		insert("EzSurveyDAO.saveSltResponseItem", response);
+	}
+
+	public void saveMtrResponseItem(ResponseVO response) {
+		insert("EzSurveyDAO.saveMtrResponseItem", response);
+	}
+
+	public void saveTxtResponseItem(ResponseVO response) {
+		insert("EzSurveyDAO.saveTxtResponseItem", response);
+	}
+
+	public void saveSlidResponseItem(ResponseVO response) {
+		insert("EzSurveyDAO.saveSlidResponseItem", response);
+	}
+
+	public void saveRankingResponseItem(ResponseVO response) {
+		insert("EzSurveyDAO.saveRankingResponseItem", response);
+	}
+
+	public void saveRespondent(RespondentVO respondent) {
+		insert("EzSurveyDAO.saveRespondent", respondent);
+	}
+
 }

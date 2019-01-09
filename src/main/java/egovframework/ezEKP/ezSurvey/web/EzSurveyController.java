@@ -566,4 +566,18 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("jsonSaveUserConfig end");
 		return resultObj.toString();
 	}
+	
+	@RequestMapping(value="/ezSurvey/saveResponse.do", method = RequestMethod.POST, produces="application/json;charset=utf-8")
+	@ResponseBody
+	public String jsonSaveResponse(@RequestBody JSONObject responseItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jsonSaveResponse started");
+		logger.debug("" + responseItem);
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		responseItem.put("userId", user.getId());
+		
+		JSONObject resultObj = surveyRestService.saveResponse(request, responseItem);
+		
+		logger.debug("jsonSaveResponse ended");
+		return resultObj.toString();
+	}
 }

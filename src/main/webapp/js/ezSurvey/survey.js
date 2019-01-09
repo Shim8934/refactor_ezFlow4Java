@@ -199,6 +199,8 @@ var SurveyCreate     = function() {
 	
 	function saveSurvey() {
 		if(confirm(SurveyMessages.strSaveAsk) == true) {
+			
+			console.log(JSON.stringify(surveyObj));
 			$.ajax({
 				type: "POST",
 				url: "/ezSurvey/saveSurvey.do",
@@ -493,7 +495,6 @@ var SurveyCreate     = function() {
 	}
 	// 분기 설정 이후 step2로 되돌아갈 시, 질문의 모든 로직 삭제
 	function deleteAllLogics() {
-		
 		var questionList = surveyObj.questions;
 		var questionLength = questionList.length;
 		var result = checkAllLogicAndSkip(questionList, questionLength);
@@ -536,7 +537,7 @@ var SurveyCreate     = function() {
 					}
 					
 				}
-				console.log(questionList);
+				//console.log(questionList);
 			}
 		}
 	}
@@ -2186,21 +2187,23 @@ var SurveyCreate     = function() {
 	
 	function mkRankingQstn(question) {
 		var options = question["option"];
+		var id = question["level"];
+		//console.log(options);
 		var questionRanking = $("<div class='question-ranking'>");
 		var rankingWrap = $("<div class='ranking-wrap'>");
 		var opt = "";
 		
-		var strSlct = "<select>";
-		strSlct    += "<option selected>" + SurveyMessages.strSelect + "</option>";
-		
-		for (var j = 0, len = options.length; j < len; j++) {
-			strSlct += "<option>" + options[j]["content"] + "</option>";
-		}
-		strSlct += "</select>";
-		
 		for (var i = 0, len = options.length; i < len; i++) {
 			var rankingSelect = $("<div class='ranking-select'></div>");
-			var rankOrder = $("<span class='rank-order'>" + (i + 1) + ".</span>");
+			var rankOrder = $("<span class='rank-order' id='rank-order" + (i + 1) + "'>" + (i + 1) + ".</span>");
+			
+			var strSlct = "<select name='slt" + id + i + "'>";
+			strSlct    += "<option selected>" + SurveyMessages.strSelect + "</option>";
+			
+			for (var j = 0, len = options.length; j < len; j++) {
+				strSlct += "<option value='" + options[j]['level'] + "'>" + options[j]["content"] + "</option>";
+			}
+			strSlct += "</select>";
 			
 			rankingSelect.append(rankOrder);
 			rankingSelect.append(strSlct);
@@ -2618,7 +2621,7 @@ var SurveyCreate     = function() {
 
 		if (step == 4) {
 			var qstInf   = SurveyCreate.getInfo();
-			confirmSurveyInfo(qstInf);
+			//confirmSurveyInfo(qstInf);
 		}
 		
 		if (qstnList.length != 0) {
@@ -3214,6 +3217,7 @@ var SurveyCreate     = function() {
 	}
 	
 	function confirmSurveyInfo(qstInf) {
+		console.log(qstInf);
 		var surveyInfWrap = document.getElementById("surveyInfConfirm");
 		document.getElementById("cf-purpose").textContent    = qstInf["purpose"];
 		document.getElementById("cf-startDate").textContent  = qstInf["startDate"];
