@@ -141,7 +141,7 @@ li {float:left;margin:10px;}
 .skinCloseBtn {cursor:pointer;font-size:25px;}
 
 .poll_list1 {display:inline-block; width:100%;font-size:12px;border-bottom:1px dashed rgb(229, 229, 229);height:36px;line-height:36px;}
-.question {background:#f2f2f2 0px 0px;margin-top:0px;height:60px;word-break:break-all;border:1px solid #ddd;overflow-y:hidden;width:auto;}
+.question {background:#f1f3f5 0px 0px;margin-top:0px;height:60px;word-break:break-all;border:1px solid #ddd;overflow-y:hidden;width:auto;}
 .question span {display: inline-block;font-size:13px;font-weight:bold;width:45%;margin:5px;}
 .box {OVERFLOW-X:hidden;padding:10px;overflow-y:auto;height:225px;width:413px;border-top:0px;border-collapse:collapse;empty-cells:show;margin-top:-5px;border:1px solid #ddd;}
 .Vnum {margin:0px 5px 0px 0px;padding:1px 6px;border-radius:25px;-webkit-border-radius:25px;font-size:13px;font-weight:bold;color:#fff;}
@@ -343,3 +343,4 @@ label[for="listOpt2"] { position: relative; top: -4.5px;}
 .admin_quicklink #AccessList {height:174px;overflow-y:auto;}
 .admin_quicklink #AccessList table td {border:0px;}
 .linkDetails {width:98%;margin:0px}
+#popupContentTb .box {background:#ffffff;}
