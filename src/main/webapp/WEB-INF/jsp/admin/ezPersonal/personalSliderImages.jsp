@@ -353,19 +353,21 @@
 		    function btn_attach(){
 		    	var extension = document.getElementById("file1").value.split('.');
 		    	console.log(extension);
-		        var check = false;
-		        check = compareExtension(check, extension[1]);
-		        
-		       if (!check) {
-		            alert("<spring:message code = 'ezPersonal.t206' />" + " <spring:message code = 'ezPersonal.t200' />");
-		            document.getElementById("file1").value = "";
-		        }
-		        
-		        var frm = document.getElementById('form');
-		        
-		        frm.action = "/admin/ezPersonal/saveSliderImage.do?mode=SLIDERIMAGE";
-		        frm.submit();
-		        
+		    	
+		    	if (extension.length >= 2) {
+			        var check = false;
+			        check = compareExtension(check, extension[1]);
+			        
+			       if (!check) {
+			            alert("<spring:message code = 'ezPersonal.t206' />" + " <spring:message code = 'ezPersonal.t200' />");
+			            document.getElementById("file1").value = "";
+			        }
+			        
+			        var frm = document.getElementById('form');
+			        
+			        frm.action = "/admin/ezPersonal/saveSliderImage.do?mode=SLIDERIMAGE";
+			        frm.submit();
+		    	}
 		        
 		        document.form.file1.value = ""; 
 		        
