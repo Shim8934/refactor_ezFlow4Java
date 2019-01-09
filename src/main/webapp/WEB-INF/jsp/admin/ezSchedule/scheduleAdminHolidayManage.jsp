@@ -266,8 +266,7 @@
 		                document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + strLang263 + "</td></tr></table>";
 		            }	
 		        } catch (e) {
-		        	//개발용 alert...끝나고 지우길 바람
-		        	alert('다음과 같은 에러가 발생했습니다: '+ e.message);
+		        	console.log('개발 끝나고 지우자  : '+ e.message);
 		            document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'>" + strLang263 + "</td></tr></table>";
 		        }
 		      	//음력 양력 숨기기
@@ -515,6 +514,8 @@
 		    	return rtnString;
 		    }
 		    
+		    // 등록되어 있는 년도만 표시되는 셀렉트박스 만드는 함수.
+		    // 현재는 선택한 년도 +- 10년이 표시된다
 		    /* function makeSelectBox(result) {
 		    	var _html = "";
 			    // <option></option>    
@@ -597,6 +598,7 @@
 		        
 		    }
 		    
+		    //선택한 년도(혹은 현재년도) +- 10년이 표시되는 셀렉트박스
 		    function makeSelectBox(holidayYear, type) {
 		    	var _html = "";
 		    	if (type != 'select') {
@@ -620,6 +622,7 @@
 		        }
 		    } 
 		    
+		    //스크롤 만들어주는 함수, 앞으로 다른 모듈에도 유용하게 쓰일거 같다
 		    function scroll() {
 		    	var BoardList_BODYHeight = document.getElementById("managelist_body").clientHeight;
 		    	var BoardListDivHeight = document.getElementById("Managetable").clientHeight;
@@ -651,8 +654,8 @@
 			<div id="mainmenu">				
 				<div style="width:800px">
 				    <ul style="margin-top: 15px;">
-				        <li class="important"><span onClick="add_holiday()">휴일추가</span></li>
-				        <li><span onClick="event_dbclick()">휴일수정</span></li>
+				        <li class="important"><span onClick="add_holiday()"><spring:message code='ezSchedule.t4004' /></span></li>
+				        <li><span onClick="event_dbclick()"><spring:message code='ezSchedule.t4005' /></span></li>
 				        <li><span class="icon16 icon16_delete" onClick="del_holiday()"></span></li>
 				        <c:if test="${holidayType eq 'a'}">
 					        <select id="ListYear" onchange="year_holiday()" style="float:right;"></select> 
@@ -660,10 +663,10 @@
 				    </ul>
 				</div>
 			</div>
-			<table id="Managetable" style="width: 800px; height: 600px;" border="0">
+			<table id="Managetable" style="width: 800px; height: 613px;" border="0">
 		        <tr>
 		            <td>
-		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 800px; height: 600px;">
+		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 800px; height: 613px;">
 		                    <table class="mainlist" style="width: 100%;">
 		                    	<tbody id="manage_HEAD">
 			                        <tr>
@@ -677,7 +680,7 @@
 			                        </tr>
 		                    	</tbody>
 		                    </table>
-		                    <div id="contentlist" name="contentlist" style="height: 568px; overflow-y: auto;">
+		                    <div id="contentlist" name="contentlist" style="height: 579px; overflow-y: auto;">
 		                        <table id="managelist_body" class="mainlist" style="width: 100%;">
 		                            <tr>
 		                                <td style="text-align: center;">

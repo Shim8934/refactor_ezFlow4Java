@@ -827,7 +827,11 @@ function clickDay(val01) {
     	$("#"+g_selTRID).parent().css("background-color", "").css("color", "");
     }
     
-	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+    if ($("#"+val01).parent().attr('class').indexOf('sun') > -1) {
+    	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","red");
+	} else {
+		$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+	}
 	
     g_selTRID = $("#"+val01).parent().parent().attr("id");
     g_selTDID = val01;
@@ -848,8 +852,11 @@ function clickDayTop(val01) {
 		$("#"+g_selTRIDTOP).parent().css("background-color", "").css("color", "");
 	}
 	
-    
-	$("#"+val01).parent().css("background","lightgray").css("border-radius","20px").css("color","black");
+	if ($("#"+val01).parent().attr('class').indexOf('sun') > -1) {
+    	$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","red");
+	} else {
+		$("#"+val01).parent().css("background","#f0f6ff").css("border-radius","20px").css("color","black");
+	}
 	
 	g_selTRIDTOP = $("#"+val01).parent().parent().attr("id");
 	g_selTDIDTOP = val01;

@@ -204,8 +204,13 @@
 		        window.document.all['divRecurPatterns'][idx].style.display = "";
 		        
 		        if (idx == '1') {
-		        	var holidayYear = new Date().getFullYear(); 
-		        	makeSelectBox(holidayYear, '');
+		        	if (document.getElementById("repeat").checked) {
+			    		$('#List_Year').css("display", "none");
+			    	} else {
+			    		$('#List_Year').css("display", "");
+			        	var holidayYear = new Date().getFullYear(); 
+			        	makeSelectBox(holidayYear, '');
+			    	}
 		        } else {
 		        	$('#List_Year').css("display", "none");
 		        }
@@ -290,10 +295,10 @@
 		            </td>
 		        </tr>
 		        <tr>
-		           <tr>
-		            <th style="width:200px; text-align:center">양력/음력</th>
+		           <tr class="onlyUseKo">
+		            <th style="width:200px; text-align:center"><spring:message code='ezSchedule.t4000' />/<spring:message code='ezSchedule.t101' /></th>
 		            <td>
-		            	<span class="onlyUseKo">
+		            	<span>
 			                <input id="date" type="radio" name="date" value="0" checked style="margin:0px 0px 0px 4px" onClick="onlySolar(0)" />
 			                <label for="date"><spring:message code='ezSchedule.t4000' /></label>
 			                <input id="date2" type="radio" name="date" value="1" style="margin:0px 0px 0px 4px" onClick="onlySolar(1)" />
@@ -307,10 +312,10 @@
 		            </th>
 		            <td>
 		            	<input id="pickDate" type="radio" name="pickDate" value="D" checked style="margin:0px 0px 0px 4px" onClick='showMainPattern(0);' />
-		                <label for="pickDate">특정일</label>
+		                <label for="pickDate"><spring:message code='ezSchedule.gha01' /></label>
 		                <span id="lunarRadio">
 			                <input id="pickDate2" type="radio" name="pickDate" value="Y" style="margin:0px 0px 0px 4px" onClick='showMainPattern(1);'/>
-			                <label for="pickDate2">특정요일</label>
+			                <label for="pickDate2"><spring:message code='ezSchedule.gha02' /></label>
 		                </span>
 		            </td>
 		        </tr>

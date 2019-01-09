@@ -67,7 +67,7 @@
 					isOpenUL = true;	
 				}
 				
-				var selectedNode = document.getElementById("curBoardID").value;
+				var selectedNode = document.getElementById("curTabID").value;
 				
 				document.getElementById("tab1").innerHTML = "";
 				widthCheck = false;
@@ -116,9 +116,10 @@
 	        var overCnt = 0;
 	        var widthCheck = false;
 	        var overCntText = '...';
-	        var tabText = "";
+	        
 	        function GetMyBoardItem_evnet(doNotRefresh) {
 	        	
+		        var tabText = "";
 	        	var tabId = "a"; // anniversary
 	        	var tabId2 = "s"; // statutory holiday 
 	        	//탭이름 message 처리
@@ -245,7 +246,7 @@
 	</head>
 	<!-- <body class="mainbody" style="height: 89%;"> -->
 	<body class="mainbody" style="height: 95%; overflow:hidden;margin-left:0px;margin-right:0px">
-	 <h1 style="margin-left:10px;margin-right:10px;">휴일관리
+	 <h1 style="margin-left:10px;margin-right:10px;"><spring:message code='ezSchedule.t4003' />
 	    <select class="companySelect" id="ListCompany" onchange="changeCompany()">
 	    	<c:forEach var="item" items="${list}">
   				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
