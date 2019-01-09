@@ -114,7 +114,7 @@
 		    	
 		    	//슬라이더 드래그앤드롭
 		    	$("#sliderContainer").sortable({
-		    		items: "li.sliderList",
+		    		items: "li.sliderList:not(#addSliderBody)",
 		    		start: function(event, ui) {
 		    			
 		    		},
@@ -207,6 +207,7 @@
 		    	var ddElmt = document.createElement("dd"); //save
 		    	var imgElmt2 = document.createElement("img"); //save image
 		    	
+		    	liElmt.id = "addSliderBody";
 		    	divElmt.className = "sliderModifyBody";
 		    	headerDlElmt.className = "slider-header-modify";
 		    	contentDlElmt.className = "slider-content-modify";
@@ -301,6 +302,7 @@
 		    	liElmt.appendChild(divElmt);
 		    	
 		    	liElmt.style.display = "inline-block"; 
+		    	liElmt.style.margin = "10px 20px 20px 0px";
 				document.getElementById("addSlider").style.display = "none";
 		    	$("#sliderContainer").append(liElmt);
 		    	
@@ -812,8 +814,11 @@
 		</script>
 		<style type="text/css">
 			.addSlider {display:inline-block;}
+			.addSlider div img {cursor:pointer;}
 			.sliderCDT .sliderSwitch {margin:5px 0px 0px 0px;}
 			.sliderModifyBody .slider-imagePage img {width:285px;height:515px;opacity:0.4;}
+			#addSliderBody div.sliderModifyBody {cursor:default;}
+			#addSliderBody div.sliderModifyBody .slider-header-modify {cursor:default;}
 		</style>
 	</head>
 	<body class = "mainbody">
