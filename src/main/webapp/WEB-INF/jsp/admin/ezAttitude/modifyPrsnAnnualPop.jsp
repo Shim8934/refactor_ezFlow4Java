@@ -65,6 +65,12 @@
 	    			alert("<spring:message code='ezAttitude.t242' />");
 	    			return;
 	    		}
+	    		if (annualCnt.length > 2) {
+	    			if (annualCnt.length != 3 || annualCnt.substr(0,1) != "0") {
+		    			alert("<spring:message code='ezAttitude.t263' />");
+		    			return;
+	    			}
+	    		}
 	    		if (changeReason == "" || changeReason == null) {
 	    			alert("<spring:message code='ezAttitude.t243' />");
 	    			return;
