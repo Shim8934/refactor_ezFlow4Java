@@ -85,21 +85,37 @@
 		                        var holidayID = result[i].holidayID;
 		                        var holidayName = result[i].holidayName;
 		                        var holidayName2 = result[i].holidayName2;
+		                        var holidayFlag = result[i].holidayFlag;
 		                        var holidayDate = result[i].holidayDate;
+		                        var holidayRepeat = result[i].holidayRepeat;
 		                        var isSolar = result[i].isSolar;
 		                        var isRepeat = result[i].isRepeat;
 		                        var isRest = result[i].isRest;
 		                        var isUse = result[i].isUse;
 		                        var useCompany = result[i].useCompany;
-		                        _html += "<tr style='cursor:pointer' id = '" + holidayID
-		                              + "'holidayname = '" + MakeXMLString(holidayName)
-		                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
-		                              + "'date = '" + holidayDate.substring(0,10)
-		                              + "'issolar = '" + isSolar
-		                              + "'isrepeat = '" + isRepeat
-		                              + "'isrest = '" + isRest
-		                              + "'company = '" + useCompany
-		                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
+		                        if (holidayDate) {
+			                        _html += "<tr style='cursor:pointer' id = '" + holidayID
+			                              + "'holidayname = '" + MakeXMLString(holidayName)
+			                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
+			                              + "'date = '" + holidayDate.substring(0,10)
+			                              + "'holidayFlag = '" + holidayFlag
+			                              + "'issolar = '" + isSolar
+			                              + "'isrepeat = '" + isRepeat
+			                              + "'isrest = '" + isRest
+			                              + "'company = '" + useCompany
+			                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
+		                            } else {
+		                            	 _html += "<tr style='cursor:pointer' id = '" + holidayID
+			                              + "'holidayname = '" + MakeXMLString(holidayName)
+			                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
+		                            	  + "'date = '" + holidayRepeat
+		                            	  + "'holidayFlag = '" + holidayFlag
+			                              + "'issolar = '" + isSolar
+			                              + "'isrepeat = '" + isRepeat
+			                              + "'isrest = '" + isRest
+			                              + "'company = '" + useCompany
+			                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";	
+		                            }
 		                           
 								
 		                        if (isUse == "1") {
@@ -120,16 +136,17 @@
 			                            _html += "<td style='width:15%;color:gray;' class='onlyUseKo'>" + "<spring:message code='ezSchedule.t101' />" + "</td>";
 		                        }
 								
-		                        /* if (holidayType == 'a') {
-		                        	 if (isRepeat == "1") {
-		                        		_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
-		                        	 } else {
-			                       		_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(0, 10) + "</td>";
-		                        	 }
+	                            /* _html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>"; */
+	                            if (!holidayFlag ||  holidayFlag == "" || holidayFlag == "D") {
+		                        	if (holidayDate) {
+			                        	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
+	                            	} 
 		                        } else {
-		                        	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
-		                        } */
-	                            	_html += "<td style='width:15%;color:gray;'>" + holidayDate.substring(5, 10) + "</td>";
+		                        	var info = holidayRepeat.split("|");
+		                        	var dateRepeatInfo = "";
+		                        	dateRepeatInfo = getMonthString(parseInt(info[1])) + " " + getOdinalString(parseInt(info[2])) + " " + getFullDaystring(parseInt(info[3]));
+		                        	_html += "<td style='width:15%;color:gray;'>" + dateRepeatInfo + "</td>";
+		                        }
 								
 		                        if (isRepeat == "1") {
 			                            _html += "<td style='width:10%;color:gray;'>Y</td>";
@@ -249,6 +266,7 @@
 		                document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'> " + strLang263 + "</td></tr></table>";
 		            }	
 		        } catch (e) {
+		        	console.log('개발 끝나고 지우자  : '+ e.message);
 		            document.getElementById("contentlist").innerHTML = "<table class='mainlist' style='width:100%;'><tr><td align='center'>" + strLang263 + "</td></tr></table>";
 		        }
 		      	//음력 양력 숨기기
@@ -318,9 +336,9 @@
 		        var pLeft = (pwidth - 450) / 2;
 		        
 		        if (holidayType == 'a') {
-			        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?holidayType="+holidayType+"&company="+parent.document.getElementById('ListCompany')[parent.document.getElementById('ListCompany').selectedIndex].value,"", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+			        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?holidayType="+holidayType+"&company="+parent.document.getElementById('ListCompany')[parent.document.getElementById('ListCompany').selectedIndex].value,"", "height = 360px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		        } else {
-		            window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?holidayType="+holidayType,"", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no"); 	
+		            window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?holidayType="+holidayType,"", "height = 360px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no"); 	
 		        }
 		    }
 	
@@ -337,14 +355,21 @@
 		        var id = _RowObject.id;
 		        var holidayname = _RowObject.getAttribute("holidayname");
 		        var holidayname2 = _RowObject.getAttribute("holidayname2");
-		        var holidaydate = _RowObject.getAttribute("date");
+		        var holidayFlag = _RowObject.getAttribute("holidayFlag");
+		        if (holidayFlag == 'D') {
+			        var holidaydate = _RowObject.getAttribute("date");
+			        var holidayRepeat = ""
+		        } else {
+		        	var holidayDate = "0000-00-00 00:00:00";
+		        	var holidayRepeat = _RowObject.getAttribute("date");
+		        }
 		        var issolar = _RowObject.getAttribute("issolar");
 		        var isrepeat = _RowObject.getAttribute("isrepeat");
 		        var isrest = _RowObject.getAttribute("isrest");
 		        var company = _RowObject.getAttribute("company");
 	
-		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?id=" + id + "&name=" + encodeURIComponent(holidayname) + "&name2=" + encodeURIComponent(holidayname2) + "&date=" + holidaydate + "&isSolar=" + issolar + "&isRepeat=" + isrepeat + "&isRest=" + isrest + "&company=" + company + "&holidayType="+holidayType
-		            , "", "height = 290px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
+		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?id=" + id + "&name=" + encodeURIComponent(holidayname) + "&name2=" + encodeURIComponent(holidayname2) + "&date=" + holidaydate + "&isSolar=" + issolar + "&isRepeat=" + isrepeat + "&isRest=" + isrest + "&company=" + company + "&holidayType="+holidayType + "&holidayFlag=" + holidayFlag + "&holidayRepeat=" + holidayRepeat
+		            , "", "height = 360px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		    }
 	
 		    function del_holiday() {
@@ -489,6 +514,8 @@
 		    	return rtnString;
 		    }
 		    
+		    // 등록되어 있는 년도만 표시되는 셀렉트박스 만드는 함수.
+		    // 현재는 선택한 년도 +- 10년이 표시된다
 		    /* function makeSelectBox(result) {
 		    	var _html = "";
 			    // <option></option>    
@@ -571,6 +598,7 @@
 		        
 		    }
 		    
+		    //선택한 년도(혹은 현재년도) +- 10년이 표시되는 셀렉트박스
 		    function makeSelectBox(holidayYear, type) {
 		    	var _html = "";
 		    	if (type != 'select') {
@@ -594,6 +622,7 @@
 		        }
 		    } 
 		    
+		    //스크롤 만들어주는 함수, 앞으로 다른 모듈에도 유용하게 쓰일거 같다
 		    function scroll() {
 		    	var BoardList_BODYHeight = document.getElementById("managelist_body").clientHeight;
 		    	var BoardListDivHeight = document.getElementById("Managetable").clientHeight;
@@ -623,7 +652,7 @@
 		<%-- <h1><spring:message code='ezSchedule.t4003' /></h1> --%>
 		<form id="Form1" method="post">
 			<div id="mainmenu">				
-				<div style="width:750px">
+				<div style="width:800px">
 				    <ul style="margin-top: 15px;">
 				        <li class="important"><span onClick="add_holiday()"><spring:message code='ezSchedule.t4004' /></span></li>
 				        <li><span onClick="event_dbclick()"><spring:message code='ezSchedule.t4005' /></span></li>
@@ -634,10 +663,10 @@
 				    </ul>
 				</div>
 			</div>
-			<table id="Managetable" style="width: 750px; height: 500px;" border="0">
+			<table id="Managetable" style="width: 800px; height: 545px;" border="0">
 		        <tr>
 		            <td>
-		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 750px; height: 500px;">
+		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 800px; height: 545px;">
 		                    <table class="mainlist" style="width: 100%;">
 		                    	<tbody id="manage_HEAD">
 			                        <tr>
@@ -651,7 +680,7 @@
 			                        </tr>
 		                    	</tbody>
 		                    </table>
-		                    <div id="contentlist" name="contentlist" style="height: 468px; overflow-y: auto;">
+		                    <div id="contentlist" name="contentlist" style="height: 511px; overflow-y: auto;">
 		                        <table id="managelist_body" class="mainlist" style="width: 100%;">
 		                            <tr>
 		                                <td style="text-align: center;">

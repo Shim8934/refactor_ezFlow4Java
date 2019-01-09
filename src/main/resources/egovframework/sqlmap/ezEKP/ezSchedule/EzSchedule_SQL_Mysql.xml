@@ -867,7 +867,9 @@
 						holidayid,
 		                holidayname,
 		                holidayname2,
+		                holidayflag,
 		                holidaydate,
+		                holidayrepeat,
 		                ifnull(issolar, '0') issolar,
 		                ifnull(isrepeat, '0') isrepeat,
 		                ifnull(isuse, '0') isuse,
@@ -887,7 +889,9 @@
 							holidayid,
 			                holidayname,
 			                holidayname2,
+			                holidayflag,
 			                holidaydate,
+			                holidayrepeat,
 			                ifnull(issolar, '0') issolar,
 			                ifnull(isrepeat, '0') isrepeat,
 			                ifnull(isuse, '0') isuse,
@@ -910,7 +914,9 @@
 								holidayid,
 				                holidayname,
 				                holidayname2,
+				                holidayflag,
 				                holidaydate,
+				                holidayrepeat,
 				                ifnull(issolar, '0') issolar,
 				                ifnull(isrepeat, '0') isrepeat,
 				                ifnull(isuse, '0') isuse,
@@ -934,7 +940,9 @@
 								holidayid,
 				                holidayname,
 				                holidayname2,
+				                holidayflag,
 				                holidaydate,
+				                holidayrepeat,
 				                ifnull(issolar, '0') issolar,
 				                ifnull(isrepeat, '0') isrepeat,
 				                ifnull(isuse, '0') isuse,
@@ -957,7 +965,9 @@
 			          		holidayid,
 			                holidayname,
 			                holidayname2,
+			                holidayflag,
 			                holidaydate,
+			                holidayrepeat,
 			                ifnull(issolar, '0') issolar,
 			                ifnull(isrepeat, '0') isrepeat,
 			                ifnull(isuse, '0') isuse,
@@ -970,7 +980,7 @@
 						and
 							tenant_id = #v_TENANTID#
 						order by
-							date_format(holidaydate,'%m%d'), issolar;
+							date_format(holidaydate,'%m%d'), issolar, substring(HOLIDAYREPEAT, 6);
 					]]>
             	</isEqual>
             	<isNotEqual property="v_COMPANYID" compareValue="STATUTORY">
@@ -979,7 +989,9 @@
 			          		holidayid,
 			                holidayname,
 			                holidayname2,
+			                holidayflag,
 			                holidaydate,
+			                holidayrepeat,
 			                ifnull(issolar, '0') issolar,
 			                ifnull(isrepeat, '0') isrepeat,
 			                ifnull(isuse, '0') isuse,
@@ -992,7 +1004,7 @@
 						and
 							tenant_id = #v_TENANTID#
 						order by
-							date_format(holidaydate,'%m%d'), issolar;
+							date_format(holidaydate,'%m%d'), issolar, substring(HOLIDAYREPEAT, 6);
 					]]>
             	</isNotEqual>
 			</isNotEqual>                       	
@@ -1005,7 +1017,9 @@
           		holidayid,
                 holidayname,
                 holidayname2,
+                holidayflag,
                 holidaydate,
+                holidayrepeat,
                 ifnull(issolar, '0') issolar,
                 ifnull(isrepeat, '0') isrepeat,
                 ifnull(isuse, '0') isuse,
@@ -1018,9 +1032,9 @@
 			and
 				tenant_id = #v_TENANTID#	
 			and
-				(date_format(holidaydate,'%Y') = #holidayYear# or isrepeat = 1)		
+				(date_format(holidaydate,'%Y') = #holidayYear# or isrepeat = 1 or holidayrepeat like concat(#holidayYear# , '%'))
 			order by
-				date_format(holidaydate,'%m%d'), issolar;
+				date_format(holidaydate,'%m%d'), issolar, substring(HOLIDAYREPEAT, 6);
 				
 		]]>
 	</select>

@@ -794,20 +794,40 @@ function getHolidayList() {
 		success : function(result) {
 			for (var i = 0; i < result.holidayList.length; i++) {
 				var isSolar = "";
+				var holidayFlag = "";
+				var repetition = "";
+				
 				if (result.holidayList[i].isSolar == "1") {
 					isSolar = "1";
 				} else {
 					isSolar = "2";
 				}
+				
+				if (result.holidayList[i].holidayDate == null) {
+					result.holidayList[i].holidayDate = '';
+				}
+				
+				if (result.holidayList[i].holidayRepeat == null) {
+					repetition = '';
+				} else {
+					repetition = result.holidayList[i].holidayRepeat;
+				}
+				
+				if (result.holidayList[i].holidayFlag == 'Y') {
+					holidayFlag = "Y";			                    
+                } else {
+                    holidayFlag = "D";
+                }
+				
 				if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
 					memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
 													  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
-													  isSolar, result.holidayList[i].isRest == 1 ? true : false));
+													  isSolar, result.holidayList[i].isRest == 1 ? true : false), holidayFlag, repetition);
 				} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
 					yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
 															  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
 															  result.holidayList[i].holidayDate.substring(8,10), isSolar,
-															  result.holidayList[i].isRest == 1 ? true : false));
+															  result.holidayList[i].isRest == 1 ? true : false), holidayFlag, repetition);
 				}
 			}
 			closedDay = result.attitudeConfigVO.closedDay.split(",");
@@ -1167,28 +1187,40 @@ function schedule_get_holiday() {
                 if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISUSE")[0].textContent == "1") {
                     var issolar;
                     var holiday;
+                    var holidayFlag;
                     
-                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1")
+                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISSOLAR")[0].textContent == "1") {
                         issolar = "1";
-                    else
+                    } else {
                         issolar = "2";
-                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1")			                    	
+                    }
+                    
+                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREST")[0].textContent == "1") {
                         holiday = true;			                    
-                    else
+                    } else {
                         holiday = false;
+                    }
+                    
+                    if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYFLAG")[0].textContent == "Y") {
+                        holidayFlag = "Y";			                    
+                    } else {
+                        holidayFlag = "D";
+                    }
+                    
+                    var repetition = GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYREPEAT")[0].textContent;	                    
                     
                     if (GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "ISREPEAT")[0].textContent == "1") {
                         memorialDays.push(new memorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
                             GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
-                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
                     } else {                   	
                         yearmemorialDays.push(new yearmemorialDay(GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME")[0].textContent, GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYNAME2")[0].textContent,
                             GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(0, 4),
                             GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(5, 7),
-                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday));
+                            GetElementsByTagName(SelectNodes(XmlNode, "DATA/ROW")[i], "HOLIDAYDATE")[0].textContent.substring(0, 10).substring(8, 10), issolar, holiday, holidayFlag, repetition));
                     }
                 }
-            }			            
+            }			  	            
             CalendarMiniView("CalendarMini");
 			CalendarMiniDataSource();
 		}		    		
