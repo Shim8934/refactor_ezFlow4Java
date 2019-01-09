@@ -103,7 +103,7 @@
 			<img id="cancelBttn" src="/images/ezSurvey/cancel2.png"/>
 		</div>
 	</div>
-	
+	<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 </body>
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyFile.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/survey.js')}    "></script>
@@ -138,7 +138,7 @@
 						SurveyCreate.setQs(question[i]);
 					}
 					
-					SurveyCreate.setQsForm(4);
+					SurveyCreate.setQsForm(0);
 					
 					if (data["firstpath"]) {
 						toggleQuestionList(JSON.parse(JSON.stringify(data["firstpath"])));
@@ -264,28 +264,39 @@
 			var attachList = survey["attachList"];
 			if (attachList && attachList.length > 0) {
 				var ulElmt = document.getElementById("attachUl");
+				ulElmt.innerHTML = "";
+				
 				for (var i = 0; i < attachList.length; i++) {
-					var filename  = attachList[i]["fname"];
-					var checkName = questionFile.chImage(filename);
-					var imgSrc    = checkName.isImage == true ? attachList[i]["fpath"] : checkImageFile.urlImage;
-					var liElmt    = document.createElement("li");
-					var divWrp    = document.createElement("div");
-					var divImg    = document.createElement("div");
-					var imgElmt   = document.createElement("img");
-					var divInf    = document.createElement("div");
-					var spanTtl   = document.createElement("span");
-					var spanSz    = document.createElement("span");
+					var filename     = attachList[i]["fname"];
+					var furl         = attachList[i]["furl"];
+					var liElmt       = document.createElement("li");
+					var divWrp       = document.createElement("div");
+					var divImg       = document.createElement("div");
+					var imgElmt      = document.createElement("img");
+					var divInf       = document.createElement("div");
+					divWrp.className = "attDivFile";
+					divImg.className = "attImgAva";
+					imgElmt.src      = questionFile.getImage(attachList[i])["imageSrc"];
 					
-					divWrp.className    = "attDivFile";
-					divImg.className    = "attImgAva";
-					divInf.className    = "attFileInf";
-					imgElmt.src         = imgSrc;
-					spanTtl.textContent = filename;
-					spanSz.textContent  = attachList[i]["fsize"];
-					spanTtl.setAttribute("title", filename);
+					if (furl) {
+						divInf.className    = "attFileInf2";
+						divInf.textContent  = attachList[i]["fname"];
+						divInf.setAttribute("title", attachList[i]["fname"]);
+						liElmt.onclick      = (function(url) {return function() {window.open(url);};})(furl);
+					}
+					else {
+						var spanTtl         = document.createElement("span");
+						var spanSz          = document.createElement("span");
+						spanTtl.textContent = filename;
+						spanSz.textContent  = questionFile.getSize(attachList[i]["fileSize"]);
+						spanTtl.setAttribute("title", filename);
+						divInf.className  = "attFileInf";
+						divInf.appendChild(spanTtl);
+						divInf.appendChild(spanSz);
+						liElmt.onclick      = (function(name, path) {return function() {questionFile.download(name, path);};})(attachList[i]["fname"], attachList[i]["fpath"]);
+					}
+					
 					divImg.appendChild(imgElmt);
-					divInf.appendChild(spanTtl);
-					divInf.appendChild(spanSz);
 					divWrp.appendChild(divImg);
 					divWrp.appendChild(divInf);
 					liElmt.appendChild(divWrp);

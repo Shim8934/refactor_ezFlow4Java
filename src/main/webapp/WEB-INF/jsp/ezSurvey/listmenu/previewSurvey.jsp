@@ -6,11 +6,7 @@
 	<div class="sryFirst2"></div>
 	<span class="sryTxt"><spring:message code='ezSurvey.t39'/></span>
 </div>
-<!-- 
-<div id="svPurpose" class="svPurpose">
-	<div id="ppContent" class="ppContent"></div>
-</div>
- -->
+
 <div class="surveyinfo-wrap" id="surveyInfConfirm">
 	<div class="survey-purpose" id="cf-purpose"></div>
 	<div class="survey-otherinf">
@@ -28,9 +24,8 @@
 		<div class="survey-infrow-pv">
 			<span class="survey-bold"><spring:message code="ezSurvey.t52"/></span>
 			<div class="survey-user-pv" id="cf-userdiv">
-				<!-- <span class="inf-survey">전체</span> -->
-				<span class="inf-survey">응웬바오</span>
-				<span class="total-user">[총 12 명]</span>
+				<span class="inf-survey"></span>
+				<span class="total-user"></span>
 				<span class="user-more"></span>
 			</div>
 		</div>

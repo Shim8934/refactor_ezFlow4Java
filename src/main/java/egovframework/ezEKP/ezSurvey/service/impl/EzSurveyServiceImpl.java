@@ -543,21 +543,27 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	}
 	
 	private synchronized void saveAttachFile(String realPath, JSONObject attachObj, long targetId, String companyId, int tenantId, String targetType, long surveyId, List<AttachVO> totalAttach) {
-		String fileName = attachObj.get("fname").toString();
-		String filePath = attachObj.get("fpath").toString();
-		File attFile    = new File(realPath + filePath);
-		long fileSize   = attFile.length();
 		AttachVO attach = new AttachVO();
+		String fileName = attachObj.get("fname").toString();
+		
+		if (attachObj.get("furl") != null) {
+			String fileUrl  = attachObj.get("furl").toString();
+			attach.setFurl(fileUrl);
+		}
+		else {
+			String filePath = attachObj.get("fpath").toString();
+			File attFile    = new File(realPath + filePath);
+			long fileSize   = attFile.length();
+			attach.setFpath(filePath);
+			attach.setFileSize(fileSize);
+		}
 		
 		attach.setSurveyId(surveyId);
 		attach.setCompanyId(companyId);
 		attach.setTenantId(tenantId);
 		attach.setTargetId(targetId);
 		attach.setTargetType(targetType);
-		attach.setFpath(filePath);
-		attach.setFileSize(fileSize);
 		attach.setFname(fileName);
-		
 		totalAttach.add(attach);
 	}
 	
@@ -886,6 +892,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	private void cloneAttachFiles(List<AttachVO> attachs, String realPath, String dirPath) {
 		for (AttachVO attach : attachs) {
+			if (attach.getFurl() != null) {
+				continue;
+			}
+			
 			String fileName = attach.getFname();
 			int dotPos      = fileName.lastIndexOf(".");
 			String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);

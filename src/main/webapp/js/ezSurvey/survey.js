@@ -84,6 +84,7 @@ var SurveyCreate     = function() {
 		else {
 			if (reuseSurvey["paritipateFlag"] == 1) {setSurveyUsers(reuseSurvey["userList"]);}
 			if (reuseSurvey["attachFlag"] == 1) {surveyFile.render(reuseSurvey["attachList"]);}
+			if (reuseSurvey["purpose"]) {surveyObj["infor"]["purpose"] = reuseSurvey["purpose"];}
 			getReuseQuestions();
 		}
 		
@@ -101,13 +102,14 @@ var SurveyCreate     = function() {
 		
 		var fileUploadBttn      = document.getElementById("fileBttn");
 		fileUploadBttn.onchange = function(e) {surveyFile.upload();};
-		var addFileBttn         = document.getElementById("addFileBttn");
-		addFileBttn.onclick     = function(e) {startUpload();};
 		var userMoreElmt        = document.querySelector("span[class='user-more']");
 		if (userMoreElmt) {userMoreElmt.onclick = function(e) {toggleUserPreview();};}
 		var draftBttn           = document.getElementById("draftBttn");
 		if (draftBttn) {draftBttn.onclick = function(e) {saveDraftSurvey();};}
 		
+		document.getElementById("addUrlClose").onclick  = function(e) {toggleUrlPanel();};
+		document.getElementById("addUrlBttn").onclick   = function(e) {toggleUrlPanel();};
+		document.getElementById("addFileBttn").onclick  = function(e) {startUpload();};
 		document.getElementById("userListDiv").onscroll = function(e) {scrollListOfUser(this);}
 		document.onselectstart = function() {return false;};
 		window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
@@ -136,9 +138,9 @@ var SurveyCreate     = function() {
 			cancelSv1[i].addEventListener("click",  cancelThisSurvey, false);
 		}
 		
-		document.getElementById("public-slbox"  ).addEventListener("change", toggleDaysInput       , false);
-		document.getElementById("closeUserPanel").addEventListener("click",  toggleUserPreview     , false);
-		document.getElementById("saveSurvey"    ).addEventListener("click",  saveSurvey            , false);
+		document.getElementById("public-slbox"  ).addEventListener("change", toggleDaysInput  , false);
+		document.getElementById("closeUserPanel").addEventListener("click",  toggleUserPreview, false);
+		document.getElementById("saveSurvey"    ).addEventListener("click",  saveSurvey       , false);
 		
 		if (!surveyItem) {
 			// question input 및 img 생성
@@ -150,7 +152,6 @@ var SurveyCreate     = function() {
 		}
 		
 		if (surveyObj["surveyId"] && surveyObj["surveyId"] != -1) {
-			console.log("On before unload: " + surveyObj["surveyId"]);
 			window.addEventListener("beforeunload", function(e) {changeSurveyState();}, false);
 		}
 	}
@@ -222,7 +223,7 @@ var SurveyCreate     = function() {
 		var surveyInfoWrap = document.querySelector("div[class='surveyinfo-wrap']");
 		var surveyAttWrap  = document.querySelector("div[class='survey-attach']");
 		var surveyTitle    = document.getElementById("info-input-ttl").value;
-		var surveyPurpose  = document.getElementById("info-input-pp").value;
+		var surveyPurpose  = document.getElementById("info-input-pp").contentWindow.GetEditorContent();
 		var startDate      = document.getElementById("startDate").value;
 		var endDate        = document.getElementById("endDate").value;
 		var publicFlag     = 1 - document.getElementById("public-slbox").selectedIndex;
@@ -248,11 +249,18 @@ var SurveyCreate     = function() {
 		
 		if (liFileList.length > 0) {
 			for (var i = 0, len = liFileList.length; i < len; i++) {
-				attachList.push({
-					fname : liFileList[i].getAttribute("fname"),
-					fsize : liFileList[i].getAttribute("fsize"),
-					fpath : liFileList[i].getAttribute("path"),
-				});
+				var fileName = liFileList[i].getAttribute("fname");
+				var filePath = liFileList[i].getAttribute("path");
+				var fileSize = liFileList[i].getAttribute("fsize");
+				var fileUrl  = liFileList[i].getAttribute("furl");
+				var attach   = {};
+				
+				if (fileName) {attach["fname"] = fileName;}
+				if (fileUrl)  {attach["furl"]  = fileUrl;}
+				if (fileSize) {attach["fsize"] = fileSize;}
+				if (filePath) {attach["fpath"] = filePath;}
+				
+				attachList.push(attach);
 			}
 		}
 		
@@ -432,18 +440,21 @@ var SurveyCreate     = function() {
 	function checkStep1() {
 		var returnObj  = {};
 		var surveyTtl  = document.getElementById("info-input-ttl");
-		var surveyPp   = document.getElementById("info-input-pp");
+		var surveyPp   = document.getElementById("info-input-pp").contentWindow;
+		var ppContent  = surveyPp.GetBodyValue();
 		var sDate      = document.getElementById("startDate").value;
 		var eDate      = document.getElementById("endDate").value;
 		var publicFlag = 1 - document.getElementById("public-slbox").selectedIndex;
 		var userFlag   = document.getElementById("selectTarget").selectedIndex;
 		var userList   = surveyObj["infor"]["users"];
+		ppContent      = replaceAll(ppContent, '<p style="font-family:맑은 고딕;font-size:12px;"><br></p>', '');
+		var ttlValue   = replaceAll(surveyTtl.value, " ", "");
 		
-		if (!surveyTtl.value) {returnObj["error"] = SurveyMessages.strTitle  ; surveyTtl.focus(); return returnObj;}
-		if (!surveyPp.value)  {returnObj["error"] = SurveyMessages.strPurpose; surveyPp.focus() ; return returnObj;}
-		if (!sDate)           {returnObj["error"] = SurveyMessages.strSvDate3; return returnObj;}
-		if (!eDate)           {returnObj["error"] = SurveyMessages.strSvDate2; return returnObj;}
-		if (sDate > eDate)    {returnObj["error"] = SurveyMessages.strSvDate1; return returnObj;}
+		if (!ttlValue)     {returnObj["error"] = SurveyMessages.strTitle  ; surveyTtl.value = ""; surveyTtl.focus(); return returnObj;}
+		if (!ppContent)    {returnObj["error"] = SurveyMessages.strPurpose; surveyPp.focus() ; return returnObj;}
+		if (!sDate)        {returnObj["error"] = SurveyMessages.strSvDate3; return returnObj;}
+		if (!eDate)        {returnObj["error"] = SurveyMessages.strSvDate2; return returnObj;}
+		if (sDate > eDate) {returnObj["error"] = SurveyMessages.strSvDate1; return returnObj;}
 		
 		if (publicFlag == 1) {
 			var daysInput = document.querySelector("input[class='date-input']");
@@ -498,7 +509,7 @@ var SurveyCreate     = function() {
 		var questionList = surveyObj.questions;
 		var questionLength = questionList.length;
 		var result = checkAllLogicAndSkip(questionList, questionLength);
-
+		
 		if (result == 'Y') {
 			if (confirm("질문 작성 단계로 이동시, 모든 분기와 건너뛰기가 초기화됩니다.") == true) {
 				for (var i = 0; i < questionLength; i++) {
@@ -533,11 +544,10 @@ var SurveyCreate     = function() {
 					
 					if (skipFlag == 1) {
 						qstn['skipFlag'] = 0;
-						qstn['skip'] = -1;
+						qstn['skip']     = -1;
 					}
 					
 				}
-				//console.log(questionList);
 			}
 		}
 	}
@@ -606,7 +616,7 @@ var SurveyCreate     = function() {
 	function toggleUserPreview() {
 		var userPanel = document.getElementById("userPanel");
 		if (userPanel.className == "userPanel off") {
-			addFogPanel();
+			addFogPanel(toggleUserPreview);
 			var position          = getPosition(466, 210);
 			userPanel.style.top   = position[0] + "px";
 			userPanel.style.right = position[1] + "px";
@@ -619,13 +629,13 @@ var SurveyCreate     = function() {
 		}
 	}
 	
-	function addFogPanel() {
+	function addFogPanel(togglePanel) {
 		var fogPanel                  = document.createElement("div");
 		fogPanel.className            = "rfogPanel";
 		var leftFogPanel              = document.createElement("div");
 		leftFogPanel.className        = "blockLeft";
-		fogPanel.onclick              = function(e) {toggleUserPreview();};
-		leftFogPanel.onclick          = function(e) {toggleUserPreview();};
+		fogPanel.onclick              = function(e) {togglePanel();};
+		leftFogPanel.onclick          = function(e) {togglePanel();};
 		var leftFrameBody             = window.parent.frames["left"].document.body;
 		var rightFrameBody            = window.parent.frames["right"].document.body;
 		leftFrameBody.style.overflow  = "hidden";
@@ -815,11 +825,9 @@ var SurveyCreate     = function() {
 	
 	function createJsonElements() {
 		var questions = surveyObj["questions"];
-		console.log(questions);
-		
-		var elements = {};
-		var nodes    = [];
-		var edges    = [];
+		var elements  = {};
+		var nodes     = [];
+		var edges     = [];
 		
 		for (var i = 0; i < questions.length; i++) {
 			var node        = {};
@@ -891,7 +899,6 @@ var SurveyCreate     = function() {
 	
 	// question input 및 img 생성
 	function createQuestionDiv(qstnWrapper, question) {
-		//var html       = "";
 		var qstId      = "";
 		var qstContent = "";
 		var qstAtt     = "";
@@ -902,19 +909,21 @@ var SurveyCreate     = function() {
 			qstAtt     = mkImgTag(question.attach);
 		}
 		
-		var wrapper = $("<div class='qstnWrapper' id='" + qstId + "'></div>");
-		var quesDiv = $("<div class='quesDiv'></div>");
-		var qstnRow = $("<div class='qstnRow'></div>");
-		var questnTitle = $("<input class='questnTitle' value='" + qstContent + "' placeholder='" + SurveyMessages.strContent + "' />");
-		var atchImg = $("<img class='atchImg' src='/images/ezSurvey/attach.png' />");
-		var atchVdo = $("<img class='atchVdo' src='/images/ezSurvey/video.png' />");
-		var atchMsic = $("<img class='atchMsic' src='/images/ezSurvey/music.png' />");
-		var atchUrl = $("<img class='atchUrl' src='/images/ezSurvey/url.png' />");
-		var selectBox = $("<div class='selectBox'></div>");
+		var wrapper      = $("<div class='qstnWrapper' id='" + qstId + "'></div>");
+		var quesDiv      = $("<div class='quesDiv'></div>");
+		var qstnRow      = $("<div class='qstnRow'></div>");
+		var questnTitle  = $("<input class='questnTitle' value='" + qstContent + "' placeholder='" + SurveyMessages.strContent + "' />");
+		var atchImg      = $("<img class='atchImg' src='/images/ezSurvey/attach.png'/>");
+		var atchVdo      = $("<img class='atchVdo' src='/images/ezSurvey/video.png' />");
+		var atchMsic     = $("<img class='atchMsic' src='/images/ezSurvey/music.png'/>");
+		var atchUrl      = $("<img class='atchUrl' src='/images/ezSurvey/link.png'  />");
+		var selectBox    = $("<div class='selectBox'></div>");
 		var qstnFileInfo = $("<div class='qstnFileInfo'></div>");
-		var fileList = $("<div class='fileList'></div>");
-		var qstUl = $("<ul class='qstUl'></ul>");
-		var qstnFile = $("<input type='file' class='qstnFile' accept='image/*'/>");
+		var fileList     = $("<div class='fileList'></div>");
+		var qstUl        = $("<ul class='qstUl'></ul>");
+		var qstnImgFile  = $("<input type='file' class='qstnImgFile' accept='image/*'/>");
+		var qstnAudFile  = $("<input type='file' class='qstnAudFile' accept='audio/*'/>");
+		var qstnVidFile  = $("<input type='file' class='qstnVidFile' accept='video/*'/>");
 		
 		qstnRow.append(questnTitle);
 		qstnRow.append(atchImg);
@@ -923,10 +932,12 @@ var SurveyCreate     = function() {
 		qstnRow.append(atchUrl);
 		qstnRow.append(selectBox);
 		quesDiv.append(qstnRow);
-
+		
 		qstUl.append(qstAtt);
 		fileList.append(qstUl);
-		fileList.append(qstnFile);
+		fileList.append(qstnImgFile);
+		fileList.append(qstnAudFile);
+		fileList.append(qstnVidFile);
 		qstnFileInfo.append(fileList);
 		
 		quesDiv.append(qstnFileInfo);
@@ -1019,33 +1030,33 @@ var SurveyCreate     = function() {
 		$(".quesBacgr").on("click", ".atchImg", function() {
 			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
 			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
-			$(this).parent().next().find(".qstnFile").click();
+			$(this).parent().next().find(".qstnImgFile").click();
 		});
 		
 		$(".quesBacgr").on("click", ".atchVdo", function() {
 			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
 			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
-			$(this).parent().next().find(".qstnFile").click();
+			$(this).parent().next().find(".qstnVidFile").click();
 		});
 		
 		$(".quesBacgr").on("click", ".atchMsic", function() {
 			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
 			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
-			$(this).parent().next().find(".qstnFile").click();
+			$(this).parent().next().find(".qstnAudFile").click();
 		});
 		
 		$(".quesBacgr").on("click", ".atchUrl", function() {
 			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
 			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
-			//$(this).parent().next().find(".qstnFile").click();
-			toggleSearchPanel();
+			
+			toggleUrlPanel($(this).parent().next().find(".fileList")[0]);
 		});
 		
-		$("#removeUrlPopup").click(function() {
-			toggleSearchPanel();
-		})
+		$("#removeUrlPopup").click(function() {toggleUrlPanel();})
 		// question 첨부파일 추가
-		$(".quesBacgr").on("change", ".qstnFile", function(e) {fileUpload(this);});
+		$(".quesBacgr").on("change", ".qstnImgFile", function(e) {fileUpload(this, "image");});
+		$(".quesBacgr").on("change", ".qstnVidFile", function(e) {fileUpload(this, "video");});
+		$(".quesBacgr").on("change", ".qstnAudFile", function(e) {fileUpload(this, "music");});
 		
 		$(".quesBacgr").on("click", ".addOpttions", function() {
 			var thisEl    = $(this).parents(".qstnForm");
@@ -1123,11 +1134,25 @@ var SurveyCreate     = function() {
 			var optArea = $(this).closest(".optArea");
 			var li      = optArea.find(".fileList").find("li");
 			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
-			optArea.find(".optionFile").click();
+			optArea.find(".optionImgFile").click();
+		});
+		$(".quesBacgr").on("click", ".attVideo", function() {
+			var optArea = $(this).closest(".optArea");
+			var li      = optArea.find(".fileList").find("li");
+			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
+			optArea.find(".optionVideoFile").click();
+		});
+		$(".quesBacgr").on("click", ".attMusic", function() {
+			var optArea = $(this).closest(".optArea");
+			var li      = optArea.find(".fileList").find("li");
+			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
+			optArea.find(".optionMusicFile").click();
 		});
 		
 		// 첨부파일 버튼 이벤트
-		$(".quesBacgr").on("change", ".optionFile", function (e) {fileUpload(this);});
+		$(".quesBacgr").on("change", ".optionImgFile"  , function (e) {fileUpload(this, "image");});
+		$(".quesBacgr").on("change", ".optionVideoFile", function (e) {fileUpload(this, "video");});
+		$(".quesBacgr").on("change", ".optionMusicFile", function (e) {fileUpload(this, "music");});
 		
 		// 질문 생성 폼의 취소 버튼 클릭
 		$(".quesBacgr").on("click", ".cancel", function() {
@@ -1261,7 +1286,6 @@ var SurveyCreate     = function() {
 				$("#thrdBtnGrp" + id).css("display", "");
 			}
 			
-			console.log("Run in save logic");
 			showLogicMap();
 		});
 		
@@ -1484,7 +1508,6 @@ var SurveyCreate     = function() {
 			$("#frstBtnGrp" + id).css("display", "none");
 			$("#skipScndBtnGrp" + id).css("display", "none");
 			$("#skipThrdBtnGrp" + id).css("display", "");
-			console.log(qstnList);
 			
 			showLogicMap();
 		});
@@ -1527,7 +1550,6 @@ var SurveyCreate     = function() {
 			$("#frstBtnGrp" + id).css("display", "");
 			$("#skipScndBtnGrp" + id).css("display", "none");
 			$("#skipThrdBtnGrp" + id).css("display", "none");
-			console.log(qstnList);
 		});
 		
 		$(".prevQsArea").on("click", ".mdfSkip", function() {
@@ -1774,8 +1796,9 @@ var SurveyCreate     = function() {
 			if (other) {
 				opt = mkOpt("other", other);
 				optionWrapper.append(opt);
-				}
-		} else {
+			}
+		}
+		else {
 			for (var i = 0; i < 2; i++) {
 				opt = mkOpt("opt");
 				optionWrapper.append(opt);
@@ -1921,9 +1944,7 @@ var SurveyCreate     = function() {
 	}
 	
 	// option 첨부파일 업로드
-	function fileUpload(thisEl) {
-		questionFile.upload(thisEl);
-	}
+	function fileUpload(thisEl, uploadMode) {questionFile.upload(thisEl, uploadMode);}
 	
 	// 설문 생성 폼 삭제
 	function rmQstnForm(wrapper) {
@@ -1938,16 +1959,16 @@ var SurveyCreate     = function() {
 		var options      = totalOptions.filter(function(opt) {return opt["otherFlag"] == 0;});
 		var others       = totalOptions.filter(function(opt) {return opt["otherFlag"] == 1;});
 		var other        = (others && others.length > 0) ? others[0] : null;
-		var qstnId     = question.level;
+		var qstnId       = question.level;
 		var qstnType     = question.type;
 		var questionOpts = $("<div class='question-opts'></div>");
-		var opt = "";
-		var optRdo = "";
-		var optChb = "";
-		var optAttach = "";
-		var optContent = "";
-		var span = "";
-		var othInput = "";
+		var opt          = "";
+		var optRdo       = "";
+		var optChb       = "";
+		var optAttach    = "";
+		var optContent   = "";
+		var span         = "";
+		var othInput     = "";
 		
 		// 보기
 		if (options) {
@@ -1957,16 +1978,19 @@ var SurveyCreate     = function() {
 				if (qstnType == 2) {
 					optChb = $("<input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + option.level + "' logic='" + option.logic + "' />");
 					opt.append(optChb);
-				} else {
+				}
+				else {
 					optRdo = $("<input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + option.level + "' logic='" + option.logic + "' />");
 					opt.append(optRdo);
 				}
-				optAttach = option["attach"] ? $("<img alt='' src='" + option["attach"].fpath + "' class='optImg'>") : "";
-				opt.append(optAttach);
+				
+				if (option["attach"]) {
+					optAttach = $("<img alt='' src='" + questionFile.getImage(option["attach"])["imageSrc"] + "' class='optImg'>");
+					opt.append(optAttach);
+				}
 				
 				optContent = option["content"] ? option["content"] : "";
-				
-				optSpan = $("<span class='optSpan'></span>");
+				optSpan    = $("<span class='optSpan'></span>");
 				optSpan[0].textContent = optContent;
 				opt.append(optSpan);
 				
@@ -1981,21 +2005,19 @@ var SurveyCreate     = function() {
 			if (qstnType == 2) {
 				optChb = $("<input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + option.logic + "' />");
 				opt.append(optChb);
-			} else {
+			}
+			else {
 				optRdo = $("<input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + option.logic + "' />");
 				opt.append(optRdo);
 			}
 			
-			optAttach = other["attach"] ? $("<img alt='' src='" + other["attach"].fpath + "' class='optImg'>") : "";
+			optAttach = other["attach"] ? $("<img alt='' src='" + questionFile.getImage(other["attach"])["imageSrc"] + "' class='optImg'>") : "";
 			opt.append(optAttach);
-			
 			optSpan = $("<span class='optSpan'></span>");
 			optSpan[0].textContent = other["content"];
 			opt.append(optSpan);
-			
 			othInput = $("<input class='othInput' type='text'/>");
 			opt.append(othInput);
-			
 			questionOpts.append(opt);
 		}
 		
@@ -2282,10 +2304,19 @@ var SurveyCreate     = function() {
 		if (qstnAtt) {
 			var attDiv       = document.createElement("div");
 			var attImg       = document.createElement("img");
-			attImg.src       = qstnAtt["fpath"];
+			var attachInf    = questionFile.getImage(qstnAtt);
+			attImg.src       = attachInf["imageSrc"];
 			attImg.className = "qstnImg";
 			attDiv.className = "question-attach";
 			attDiv.appendChild(attImg);
+			
+			if (attachInf["isImage"] == 0) {
+				var spanElmt         = document.createElement("span");
+				spanElmt.textContent = qstnAtt["fname"];
+				spanElmt.setAttribute("title", qstnAtt["fname"]);
+				attDiv.appendChild(spanElmt);
+			}
+			
 			divPanel.appendChild(attDiv);
 		}
 		
@@ -2491,11 +2522,18 @@ var SurveyCreate     = function() {
 				textInput = $("<input class='textInput' type='text' maxlength='40' placeholder='" + SurveyMessages.strContent + "'/>");
 			}
 		}
-		var attImg = $("<img src='/images/ezSurvey/attach.png' class='attImg'>");
-		var minsImg = $("<img src='/images/ezSurvey/minus.png' class='delImg'>");
+		
+		var attImg   = $("<img src='/images/ezSurvey/attach.png' class='attImg'  >");
+		/*var attVideo = $("<img src='/images/ezSurvey/video.png'  class='attVideo'>");
+		var attMusic = $("<img src='/images/ezSurvey/music.png'  class='attMusic'>");
+		var attLink  = $("<img src='/images/ezSurvey/link.png'   class='attLink' >");*/
+		var minsImg  = $("<img src='/images/ezSurvey/minus.png'  class='delImg'  >");
 		
 		option.append(textInput);
 		option.append(attImg);
+		/*option.append(attVideo);
+		option.append(attMusic);
+		option.append(attLink);*/
 		option.append(minsImg);
 		
 		var optFileInfo = $("<div class='optFileInfo'></div>");
@@ -2503,12 +2541,16 @@ var SurveyCreate     = function() {
 
 		if (optAtt) {attEl = mkImgTag(optAtt);}
 		
-		var optUl = $("<ul class='optUl'></ul>");
-		var optionFile = $("<input type='file' class='optionFile' accept='image/*'/>");
+		var optUl           = $("<ul class='optUl'></ul>");
+		var optionImgFile   = $("<input type='file' class='optionImgFile'   accept='image/*'/>");
+		/*var optionVideoFile = $("<input type='file' class='optionVideoFile' accept='video/*'/>");
+		var optionMusicFile = $("<input type='file' class='optionMusicFile' accept='audio/*'/>");*/
 		optUl.append(attEl);
 		
 		fileList.append(optUl);
-		fileList.append(optionFile);
+		fileList.append(optionImgFile);
+		/*fileList.append(optionVideoFile);
+		fileList.append(optionMusicFile);*/
 		
 		optFileInfo.append(fileList);
 		
@@ -2564,49 +2606,54 @@ var SurveyCreate     = function() {
 	function makeQuestionForm(questionType) {return $("<div class='qstnForm' questionType='" + questionType + "'>");}
 	
 	function makeTextQuestion(mainDivElmt, questionType, type, checkResult) {
-		var QuestionForm = makeQuestionForm(questionType);
+		var questionForm = makeQuestionForm(questionType);
 		var textQs = handleModifyTextQuesion(type, "make");
 		var addtional = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
-
-		QuestionForm.append(textQs);
-		QuestionForm.append(addtional);
-		mainDivElmt.append(QuestionForm);
+		
+		questionForm.append(textQs);
+		questionForm.append(addtional);
+		mainDivElmt.append(questionForm);
 	}
 	
 	function makeSliderQuestion(mainDivElmt, questionType, checkResult) {
-		var QuestionForm = makeQuestionForm(questionType);
+		var questionForm = makeQuestionForm(questionType);
 		var slider = handleModifySliderQuesion();
 		var addtional = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
-
-		QuestionForm.append(slider);
-		QuestionForm.append(addtional);
-		mainDivElmt.append(QuestionForm);
+		
+		questionForm.append(slider);
+		questionForm.append(addtional);
+		mainDivElmt.append(questionForm);
 	}
 	
 	function makeRankingQuestion(mainDivElmt, questionType, checkResult) {
-		var QuestionForm = makeQuestionForm(questionType);
-		var raking =  handleModifyRankDropDownQuesion("ranking");
-		var addtional = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
-
-		QuestionForm.append(raking);
-		QuestionForm.append(addtional);
-		mainDivElmt.append(QuestionForm);
+		var questionForm = makeQuestionForm(questionType);
+		var raking       =  handleModifyRankDropDownQuesion("ranking");
+		var addtional    = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+		questionForm.append(raking);
+		questionForm.append(addtional);
+		mainDivElmt.append(questionForm);
 	}
 	
 	function makeDropdownQuestion(mainDivElmt, questionType, checkResult) {
-		var QuestionForm = makeQuestionForm(questionType);
-		var drdw = handleModifyRankDropDownQuesion("dropdown");
-		var addtional = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
-
-		QuestionForm.append(drdw);
-		QuestionForm.append(addtional);
-		mainDivElmt.append(QuestionForm);
+		var questionForm = makeQuestionForm(questionType);
+		var drdw         = handleModifyRankDropDownQuesion("dropdown");
+		var addtional    = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+		questionForm.append(drdw);
+		questionForm.append(addtional);
+		mainDivElmt.append(questionForm);
 	}
 	
 	function getAttachFileInfo(elmtObj) {
 		var attchObj      = {};
 		attchObj["fname"] = elmtObj.getAttribute("fname");
-		attchObj["fpath"] = elmtObj.getAttribute("path");
+		
+		if (elmtObj.getAttribute("furl")) {
+			attchObj["furl"] = elmtObj.getAttribute("furl");
+		}
+		else {
+			attchObj["fpath"] = elmtObj.getAttribute("path");
+		}
+		
 		return attchObj;
 	}
 	
@@ -2618,10 +2665,15 @@ var SurveyCreate     = function() {
 		prevQsArea.html("");
 		
 		var qstnList = SurveyCreate.getQs();
-
+		
 		if (step == 4) {
+<<<<<<< HEAD
 			var qstInf   = SurveyCreate.getInfo();
 			//confirmSurveyInfo(qstInf);
+=======
+			var qstInf = SurveyCreate.getInfo();
+			confirmSurveyInfo(qstInf);
+>>>>>>> 324a93d37fba57a4df1e3710caf90eb236f315de
 		}
 		
 		if (qstnList.length != 0) {
@@ -2656,7 +2708,8 @@ var SurveyCreate     = function() {
 				if (step == 3) {
 					if (question.logicFlag == 1) {
 						mkLogicForm(qstnId);
-					} else if (question.skipFlag == 1) {
+					}
+					else if (question.skipFlag == 1) {
 						mkSkipForm(qstnId)
 					}
 				}
@@ -2666,22 +2719,19 @@ var SurveyCreate     = function() {
 	
 	// 미리보기 질문의 헤더
 	function prevQsHeader(question, qstnList, step) {
-		var qstId    = question.level;
-		var content  = question.content;
-		var qstnType = question.type;
-		var required = question.required;
-		var qstnAtt  = question.attach;
-		
-		var prevQsContent = $("<div class='prevQsContent'></div>");
-		var questionPanel = $("<div class='question-panel'></div>");
-		var questionHeader = $("<div class='question-header'></div>");
+		var qstId           = question.level;
+		var content         = question.content;
+		var qstnType        = question.type;
+		var required        = question.required;
+		var qstnAtt         = question.attach;
+		var prevQsContent   = $("<div class='prevQsContent'></div>");
+		var questionPanel   = $("<div class='question-panel'></div>");
+		var questionHeader  = $("<div class='question-header'></div>");
 		var questionContent = $("<div class='question-content'></div>");
-		var qstnHeader = "";
-		var imptt = "";
+		var qstnHeader      = "";
+		var questionAttach  = "";
+		var imptt           = required == 1 ? "<strong class='imptt'>*</strong>" : "";
 		
-		if (required == 1) {
-			imptt += "<strong class='imptt'>*</strong>";
-		}
 		questionContent[0].textContent = qstId + ". " + content;
 		
 		if (step == 3) {
@@ -2693,14 +2743,12 @@ var SurveyCreate     = function() {
 			qstnHeader += "<img id='saveSkip" + qstId + "' class='saveSkip' src='/images/ezSurvey/save.png'/>";
 			qstnHeader += "<img id='cancelSkip" + qstId + "' class='cancelSkip' src='/images/ezSurvey/cancel.png' />";
 			qstnHeader += "</span>"
-			
 			qstnHeader += "<span id='skipThrdBtnGrp" + qstId + "' class='skipThrdBtnGrp' style='display:none;'>"
 			qstnHeader += "<img id='mdfSkip" + qstId + "' class='mdfSkip' src='/images/ezSurvey/correct.png'/>";
 			qstnHeader += "<img id='delSkip" + qstId + "' class='delSkip' src='/images/ezSurvey/trash.png'/>";
 			qstnHeader += "</span>"
 			
 			if (qstnType == 1 || qstnType == 7 || qstnType == 9) {
-				
 				var addLogic = $("<img id='addLogic" + qstId + "' class='addLogic' src='/images/ezSurvey/shuffle.png'/>");
 				frstBtnGrp.append(addLogic);
 				
@@ -2708,29 +2756,46 @@ var SurveyCreate     = function() {
 				qstnHeader += "<img id='saveLogic" + qstId + "' class='saveLogic' src='/images/ezSurvey/save.png'/>";
 				qstnHeader += "<img id='cancelLogic" + qstId + "' class='cancelLogic' src='/images/ezSurvey/cancel.png' />";
 				qstnHeader += "</span>"
-					
 				qstnHeader += "<span id='thrdBtnGrp" + qstId + "' class='thrdBtnGrp' style='display:none;'>"
 				qstnHeader += "<img id='mdfLogic" + qstId + "' class='mdfLogic' src='/images/ezSurvey/correct.png'/>";
 				qstnHeader += "<img id='delLogic" + qstId + "' class='delLogic' src='/images/ezSurvey/trash.png'/>";
 				qstnHeader += "</span>"
 			}
 		}
-		var questionAttach = "";
-
+		
 		if (qstnAtt) {
-			questionAttach += "<div class='question-attach'>"
-			questionAttach += "<img alt='' src='" + qstnAtt.fpath + "' class='qstnImg'>";
-			questionAttach += "</div>"
+			questionAttach      = $("<div class='question-attach'></div>");
+			var attachInf       = questionFile.getImage(qstnAtt);
+			var imageElmt       = document.createElement("img");
+			imageElmt.src       = questionFile.getImage(qstnAtt)["imageSrc"];
+			imageElmt.className = "qstnImg";
 			
+			//Add events if in survey detail
+			if (step == 0) {
+				if (attachInf["isUrl"]) {
+					imageElmt.onclick = (function(url) {return function() {window.open(url);};})(qstnAtt["furl"]);
+				}
+				else {
+					imageElmt.onclick = (function(name, path) {return function() {questionFile.download(name, path);};})(qstnAtt["fname"], qstnAtt["fpath"]);
+				}
+			}
+			
+			questionAttach.append(imageElmt);
+			
+			if (attachInf["isImage"] == 0) {
+				var spanElmt         = document.createElement("span");
+				spanElmt.textContent = qstnAtt["fname"];
+				spanElmt.setAttribute("title", qstnAtt["fname"]);
+				questionAttach.append(spanElmt);
+			}
 		}
-
+		
 		questionContent.append(frstBtnGrp);
 		questionContent.append(qstnHeader);
 		questionHeader.append(imptt);
 		questionHeader.append(questionContent);
 		questionPanel.append(questionHeader);
 		questionPanel.append(questionAttach);
-		
 		prevQsContent.append(questionPanel);
 		
 		return prevQsContent;
@@ -3219,7 +3284,7 @@ var SurveyCreate     = function() {
 	function confirmSurveyInfo(qstInf) {
 		console.log(qstInf);
 		var surveyInfWrap = document.getElementById("surveyInfConfirm");
-		document.getElementById("cf-purpose").textContent    = qstInf["purpose"];
+		document.getElementById("cf-purpose").innerHTML      = qstInf["purpose"];
 		document.getElementById("cf-startDate").textContent  = qstInf["startDate"];
 		document.getElementById("cf-endDate").textContent    = qstInf["endDate"];
 		document.getElementById("cf-anoynymous").textContent = qstInf["anonymous"] == 0 ? SurveyMessages.strAnoynym1  : SurveyMessages.strAnoynym2;
@@ -3313,29 +3378,38 @@ var SurveyCreate     = function() {
 		
 		//attach list
 		if (qstInf["attach"] && qstInf["attach"].length > 0) {
-			var ulElmt = document.getElementById("cf-attach");
+			var ulElmt       = document.getElementById("cf-attach");
+			ulElmt.innerHTML = "";
+			
 			for (var i = 0; i < qstInf["attach"].length; i++) {
-				var filename  = qstInf["attach"][i]["fname"];
-				var checkName = questionFile.chImage(filename);
-				var imgSrc    = checkName.isImage == true ? qstInf["attach"][i]["fpath"] : checkImageFile.urlImage;
-				var liElmt    = document.createElement("li");
-				var divWrp    = document.createElement("div");
-				var divImg    = document.createElement("div");
-				var imgElmt   = document.createElement("img");
-				var divInf    = document.createElement("div");
-				var spanTtl   = document.createElement("span");
-				var spanSz    = document.createElement("span");
+				var filename     = qstInf["attach"][i]["fname"];
+				var furl         = qstInf["attach"][i]["furl"];
+				var liElmt       = document.createElement("li");
+				var divWrp       = document.createElement("div");
+				var divImg       = document.createElement("div");
+				var imgElmt      = document.createElement("img");
+				var divInf       = document.createElement("div");
+				divWrp.className = "attDivFile";
+				divImg.className = "attImgAva";
+				imgElmt.src      = questionFile.getImage(qstInf["attach"][i])["imageSrc"];
 				
-				divWrp.className    = "attDivFile";
-				divImg.className    = "attImgAva";
-				divInf.className    = "attFileInf";
-				imgElmt.src         = imgSrc;
-				spanTtl.textContent = filename;
-				spanSz.textContent  = qstInf["attach"][i]["fsize"];
-				spanTtl.setAttribute("title", filename);
+				if (furl) {
+					divInf.className   = "attFileInf2";
+					divInf.textContent = qstInf["attach"][i]["fname"];
+					divInf.setAttribute("title", qstInf["attach"][i]["fname"]);
+				}
+				else {
+					var spanTtl         = document.createElement("span");
+					var spanSz          = document.createElement("span");
+					spanTtl.textContent = filename;
+					spanSz.textContent  = questionFile.getSize(qstInf["attach"][i]["fsize"]);
+					spanTtl.setAttribute("title", filename);
+					divInf.className  = "attFileInf";
+					divInf.appendChild(spanTtl);
+					divInf.appendChild(spanSz);
+				}
+				
 				divImg.appendChild(imgElmt);
-				divInf.appendChild(spanTtl);
-				divInf.appendChild(spanSz);
 				divWrp.appendChild(divImg);
 				divWrp.appendChild(divInf);
 				liElmt.appendChild(divWrp);
@@ -3361,51 +3435,93 @@ var SurveyCreate     = function() {
 		return stUserType;
 	}
 	
-	function toggleSearchPanel() {
+	function checkUrl(str) {var pattern = new RegExp("^(http|https)://", "i"); return pattern.test(str);}
+	
+	function saveLinkAttach(elmt) {
+		var attachName = document.getElementById("attfileName");
+		var attachUrl  = document.getElementById("attfileUrl");
+		
+		if (!replaceAll(attachName.value, " ", "")) {alert(SurveyMessages.strURL1); attachName.focus(); return;}
+		if (!replaceAll(attachUrl.value, " ", ""))  {alert(SurveyMessages.strURL2); attachUrl.focus() ; return;}
+		if (!checkUrl(attachUrl.value))             {alert(SurveyMessages.strURL3); attachUrl.focus() ; return;}
+		var mainUlElmt = elmt ? elmt.querySelector("ul[class='qstUl']") : document.getElementById("fileDiv").querySelector("ul[class='ulFiles']");
+		
+		//Create liElmt for link
+		var liElmt               = document.createElement("li");
+		var divMainElmt          = document.createElement("div");
+		var divChildElmt1        = document.createElement("div");
+		var imgElmt              = document.createElement("img");
+		var delImgElmt           = document.createElement("img");
+		var divChildElmt2        = document.createElement("div");
+		var spanChild1           = document.createElement("span");
+		imgElmt.src              = "/images/ezSurvey/link.png";
+		delImgElmt.src           = "/images/ezSurvey/file_del.gif";
+		delImgElmt.addEventListener("click", function(e) {deleteUrlFile(e);}, false);
+		divChildElmt1.className  = "attImgAva";
+		divMainElmt.className    = "attDivFile";
+		divChildElmt2.className  = "attFileInf2";
+		divChildElmt2.textContent = attachName.value;
+		divChildElmt2.setAttribute("title", attachName.value);
+		divChildElmt1.appendChild(imgElmt);
+		divMainElmt.appendChild(divChildElmt1);
+		divMainElmt.appendChild(divChildElmt2);
+		liElmt.appendChild(divMainElmt);
+		liElmt.appendChild(delImgElmt);
+		liElmt.setAttribute("fname", attachName.value);
+		liElmt.setAttribute("furl", attachUrl.value);
+		mainUlElmt.appendChild(liElmt);
+		toggleUrlPanel();
+	}
+	
+	function deleteUrlFile(event) {
+		event.stopPropagation();
+		var liElmt = event.currentTarget.parentElement;
+		liElmt.parentElement.removeChild(liElmt);
+	}
+	
+	function toggleUrlPanel(elmt) {
 		var rightFrame  = window.parent.frames["right"].document;
-		var searchPanel = rightFrame.getElementById("searchPanel");
-		if (searchPanel.className == "searchPanel off") {
-			addFogPanel();
-			var position            = getPosition(466, 210);
-			searchPanel.style.top   = position[0] + "px";
-			searchPanel.style.right = position[1] + "px";
-			searchPanel.className   = "searchPanel";
+		var urlPanel    = rightFrame.getElementById("addURLPanel");
+		if (urlPanel.className == "searchPanel off") {
+			addFogPanel(toggleUrlPanel);
+			var position         = getPosition(466, 210);
+			urlPanel.style.top   = position[0] + "px";
+			urlPanel.style.right = position[1] + "px";
+			urlPanel.className   = "searchPanel";
+			document.getElementById("addUrlAttach").onclick = function(e) {saveLinkAttach(elmt);};
 		}
 		else {
 			removeFogPanel();
-			searchPanel.className   = "searchPanel off";
+			urlPanel.className   = "searchPanel off";
 		}
 		
 		//Clear all fields
-		rightFrame.getElementById("Sdatepicker").value  = "";
-		rightFrame.getElementById("Edatepicker").value  = "";
-		rightFrame.getElementById("sCreatedUser").value = "";
-		rightFrame.getElementById("sSurveyTtl").value   = "";
+		rightFrame.getElementById("attfileName").value = "";
+		rightFrame.getElementById("attfileUrl").value  = "";
 	}
 	
-	function removeFogPanel() {
-		var leftFrame    = window.parent.frames["left"].document;
-		var rightFrame   = window.parent.frames["right"].document;
-		var fogPanel     = rightFrame.querySelector("div[class='rfogPanel']");
-		var leftFogPanel = leftFrame.querySelector("div[class='blockLeft']");
-		
-		if (fogPanel) {rightFrame.body.removeChild(fogPanel);}
-		if (leftFogPanel) {leftFrame.body.removeChild(leftFogPanel);}
-		if (rightFrame.getElementById("ui-datepicker-div")) {rightFrame.getElementById("ui-datepicker-div").style.display = "none";}
-		
-		leftFrame.body.style.overflow = "auto";
+	function replaceAll(str, find, replace) {return str.replace(new RegExp(find, 'g'), replace);}
+	
+	function getSurveyPurpose() {
+		var purpose = surveyObj["infor"]["purpose"] ? surveyObj["infor"]["purpose"] : "";
+		return purpose;
 	}
 	
 	return {
-		getUsers : getSurveyUsers,
-		setUsers : setSurveyUsers,
-		getQs    : getSurveyQuestions,
-		setQs    : setSurveyQuestions,
-		getInfo  : getSurveyInfo,
-		userMore : toggleUserPreview,
-		showUser : showUserInfoFromId,
-		start    : initEvents,
-		setQsForm: prevQstn,
-		convertQs: getReuseQuestions,
+		getUsers   : getSurveyUsers,
+		setUsers   : setSurveyUsers,
+		getQs      : getSurveyQuestions,
+		setQs      : setSurveyQuestions,
+		getInfo    : getSurveyInfo,
+		userMore   : toggleUserPreview,
+		showUser   : showUserInfoFromId,
+		start      : initEvents,
+		setQsForm  : prevQstn,
+		convertQs  : getReuseQuestions,
+		getPurpose : getSurveyPurpose
 	};
 }();
+
+function Editor_Complete() {
+	document.getElementById("info-input-pp").contentWindow.SetEditorContent(SurveyCreate.getPurpose());
+}

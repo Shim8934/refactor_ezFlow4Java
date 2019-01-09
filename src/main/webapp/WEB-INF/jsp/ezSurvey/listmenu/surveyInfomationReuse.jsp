@@ -4,10 +4,10 @@
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"     %>
 
 <div class="surveyinfo-wrap">
-	<div>
+	<div class="survey-nminfo">
 		<div>
 			<input id="info-input-ttl" class="info-input-ttl" placeholder="<spring:message code='ezSurvey.t39'/>" value="${survey.title}">
-			<input id="info-input-pp"  class="info-input-pp"  placeholder="<spring:message code='ezSurvey.t40'/>" value="${survey.purpose}">
+			<%-- <input id="info-input-pp"  class="info-input-pp"  placeholder="<spring:message code='ezSurvey.t40'/>" value="${survey.purpose}"> --%>
 		</div>
 		
 		<div class="survey-otherinf">
@@ -56,9 +56,31 @@
 			</div>
 		</div>
 	</div>
+	
+	<div id="helpTxt" class="${survey.attachFlag == 0 ? 'uploadHelp off' : 'uploadHelp'}"><spring:message code='ezSurvey.t74'/></div>
+	<div class="survey-attach">
+		<div class="survey-dropzone">
+			<div class="mainzone" id="fileDiv">
+				<div class="fileList off">
+					<ul class="ulFiles"></ul>
+				</div>
+				<c:if test="${survey.attachFlag == 0}">
+					<div class="divInform">
+						<span><spring:message code='ezSurvey.t72'/></span>
+						<span><spring:message code='ezSurvey.t73'/></span>
+					</div>
+				</c:if>
+			</div>
+		</div>
+		<div class="survey-attbttn">
+			<div id="addFileBttn"><spring:message code="ezSurvey.t56"/></div>
+			<div id="addUrlBttn" ><spring:message code="ezSurvey.t85"/></div>
+		</div>
+		<input type="file" id="fileBttn" multiple="multiple" class="hiddenBttn">
+	</div>
 </div>
 
-<div id="helpTxt" class="${survey.attachFlag == 0 ? 'uploadHelp off' : 'uploadHelp'}"><spring:message code='ezSurvey.t74'/></div>
+<%-- <div id="helpTxt" class="${survey.attachFlag == 0 ? 'uploadHelp off' : 'uploadHelp'}"><spring:message code='ezSurvey.t74'/></div>
 <div class="survey-attach">
 	<div class="survey-dropzone">
 		<div class="mainzone" id="fileDiv">
@@ -75,6 +97,10 @@
 	</div>
 	<div class="survey-attbttn"><div id="addFileBttn"><spring:message code="ezSurvey.t56"/></div></div>
 	<input type="file" id="fileBttn" multiple="multiple" class="hiddenBttn">
+</div> --%>
+
+<div class="survey-infpp-wrap" id="editorWrap">
+	<iframe id="info-input-pp" class="surey-frameeditor" name="info-input-pp" src="/ezEditor/selectEditor.do"></iframe>
 </div>
 
 <div class="navi-button">

@@ -19,16 +19,28 @@ var SurveyFile = function() {
 			evt.preventDefault();
 		}
 		
-		function handleAllUpload(param) {
+		function handleAllUpload(param, uploadMode) {
 			var uploadHandler = uploadType == "all" ? onStartUpload : onImagesUpload;
-			uploadHandler(param);
+			uploadHandler(param, uploadMode);
 		}
 		
-		function onImagesUpload(fileElmt) {
+		function onImagesUpload(fileElmt, uploadMode) {
 			var fileList  = fileElmt.files;
 			
 			if (fileList.length == 0) {return;}
-			if (fileList[0]["type"].split("/")[0] != "image") {alert(SurveyMessages.strOnlyImage); return;}
+			var fileType = fileList[0]["type"].split("/")[0];
+			
+			switch(uploadMode) {
+				case "image": 
+					if (fileType != "image") {alert(SurveyMessages.strOnlyImage); return;}
+					break;
+				case "video": 
+					if (fileType != "video") {alert(SurveyMessages.strOnlyVideo); return;}
+					break;
+				case "music":
+					if (fileType != "audio") {alert(SurveyMessages.strOnlyMusic); return;}
+					break;
+			}
 			
 			fileupload(fileList[0], fileElmt);
 			fileElmt.value = null;
@@ -74,16 +86,25 @@ var SurveyFile = function() {
 			var divMainElmt   = document.createElement("div");
 			var divChildElmt1 = document.createElement("div");
 			var canvasElmt    = document.createElement("canvas");
+			var canvasSize    = fileElmt ? 80 : 40;
 			
-			canvasElmt.setAttribute("width" , "40");
-			canvasElmt.setAttribute("height", "40");
+			canvasElmt.setAttribute("width" , canvasSize);
+			canvasElmt.setAttribute("height", canvasSize);
 			divChildElmt1.className = "attImgAva";
 			divChildElmt1.appendChild(canvasElmt);
 			divMainElmt.className   = "attDivFile";
 			divMainElmt.appendChild(divChildElmt1);
 			
 			if (fileElmt) {
-				ulElmt                  = fileElmt.parentElement.firstElementChild;
+				ulElmt = fileElmt.parentElement.firstElementChild;
+				
+				if (!isImage(fileName)["isImage"]) {
+					var divNameInf          = document.createElement("div");
+					divNameInf.className    = "attFileInf2";
+					divNameInf.textContent  = fileName;
+					divNameInf.setAttribute("title", fileName);
+					divMainElmt.appendChild(divNameInf);
+				}
 			}
 			else {
 				var fileDivElmt         = document.getElementById("fileDiv");
@@ -119,6 +140,7 @@ var SurveyFile = function() {
 			var ctx       = canvasElmt.getContext("2d");
 			var cw        = ctx.canvas.width;
 			var ch        = ctx.canvas.height;
+			
 			ctx.fillStyle = fillColor;
 			ctx.fillText("0%", cw * 0.5 - lineWidth, ch * 0.5 + 3, cw);
 			
@@ -152,7 +174,7 @@ var SurveyFile = function() {
 							ctx.textAlign   = "center";
 							ctx.fillText(percent + "%", cw * 0.5, ch * 0.5 + 3, cw);
 							ctx.beginPath();
-							ctx.arc(20, 20, 18, start, diff/lineWidth + start, false);
+							ctx.arc(ch * 0.5, cw * 0.5, cw * 0.5 - 2, start, diff/lineWidth + start, false);
 							ctx.stroke();
 						}, true);
 					}
@@ -196,6 +218,12 @@ var SurveyFile = function() {
 			
 			divChildElmt1.removeChild(canvasElmt);
 			divChildElmt1.appendChild(imgElmt);
+		}
+		
+		function deleteUrlFile(imgObj, event) {
+			if (event) {event.stopPropagation();}
+			var liElmt = imgObj.parentElement;
+			liElmt.parentElement.removeChild(liElmt);
 		}
 		
 		function deleteFile(imgObj, event) {
@@ -284,26 +312,34 @@ var SurveyFile = function() {
 		}
 		
 		function mkImgTag(fileObj) {
-			var fileName = fileObj.fname;
-			var fileSize = fileObj.fsize;
-			var filePath = fileObj.fpath;
-			
-			var li = $("<li></li>");
+			var fileName   = fileObj["fname"];
+			var fileSize   = fileObj["fsize"];
+			var filePath   = fileObj["fpath"];
+			var fileUrl    = fileObj["furl"];
+			var attachInf  = getAttachInfor(fileObj);
+			var li         = $("<li></li>");
 			var attDivFile = $("<div class='attDivFile'></div>");
-			var attImgAva = $("<div class='attImgAva'></div>");
-			var realImg = $("<img />");
-			var delImg = $("<img class='delImage' src='/images/ezSurvey/file_del.gif' />");
-
-			li.attr("fname", fileObj.fname);
-			li.attr("fsize", fileObj.fsize);
-			li.attr("path", fileObj.fpath);
-			realImg.attr("src", fileObj.fpath);
+			var attImgAva  = $("<div class='attImgAva'></div>");
+			var realImg    = $("<img />");
+			var delImg     = $("<img class='delImage' src='/images/ezSurvey/file_del.gif'/>");
 			
+			if (fileName) {li.attr("fname", fileName);}
+			if (fileUrl)  {li.attr("furl" , fileUrl) ;}
+			if (fileSize) {li.attr("fsize", fileSize);}
+			if (filePath) {li.attr("path" , filePath);}
+			
+			realImg.attr("src", attachInf["imageSrc"]);
 			attImgAva.append(realImg);
 			attDivFile.append(attImgAva);
+			
+			if (attachInf["isImage"] == 0) {
+				var divInf = $("<div class='attFileInf2'>" + fileName + "</div>");
+				divInf.attr("title", fileName);
+				attDivFile.append(divInf);
+			}
+			
 			li.append(attDivFile);
 			li.append(delImg);
-
 			return li;
 		}
 		
@@ -314,28 +350,36 @@ var SurveyFile = function() {
 			mainZone.onclick = function(e) {return null;};
 			
 			for (var i = 0; i < attachList.length; i++) {
-				var liElmt = document.createElement("li");
-				var attDiv = document.createElement("div");
-				var avaDiv = document.createElement("div");
-				var attInf = document.createElement("div");
-				var delImg = document.createElement("img");
-				var attImg = document.createElement("img");
-				var sName  = document.createElement("span");
-				var sSize  = document.createElement("span");
-				var check  = isImage(attachList[i]["fname"]);
-				attImg.src = check.isImage == true ? attachList[i]["fpath"] : check.urlImage;
-				delImg.src = "/images/ezSurvey/file_del.gif";
+				var liElmt       = document.createElement("li");
+				var attDiv       = document.createElement("div");
+				var avaDiv       = document.createElement("div");
+				var attInf       = document.createElement("div");
+				var delImg       = document.createElement("img");
+				var attImg       = document.createElement("img");
+				var furl         = attachList[i]["furl"];
+				attImg.src       = getImageSrcForAttach(attachList[i]);
+				delImg.src       = "/images/ezSurvey/file_del.gif";
+				avaDiv.className = "attImgAva";
+				attDiv.className = "attDivFile";
 				
-				avaDiv.className  = "attImgAva";
-				attDiv.className  = "attDivFile";
-				attInf.className  = "attFileInf";
-				sSize.textContent = getFileSize(attachList[i]["fileSize"]);
-				sName.textContent = attachList[i]["fname"];
-				sName.setAttribute("title", sName.textContent);
-				delImg.addEventListener("click", function(e) {deleteFile(this, e);}, false);
+				if (furl) {
+					attInf.className   = "attFileInf2";
+					attInf.textContent = attachList[i]["fname"];
+					attInf.setAttribute("title", attachList[i]["fname"]);
+					delImg.addEventListener("click", function(e) {deleteUrlFile(this, e);}, false);
+				}
+				else {
+					var sName         = document.createElement("span");
+					var sSize         = document.createElement("span");
+					sSize.textContent = getFileSize(attachList[i]["fileSize"]);
+					sName.textContent = attachList[i]["fname"];
+					sName.setAttribute("title", sName.textContent);
+					attInf.className  = "attFileInf";
+					attInf.appendChild(sName);
+					attInf.appendChild(sSize);
+					delImg.addEventListener("click", function(e) {deleteFile(this, e);}, false);
+				}
 				
-				attInf.appendChild(sName);
-				attInf.appendChild(sSize);
 				avaDiv.appendChild(attImg);
 				attDiv.appendChild(avaDiv);
 				attDiv.appendChild(attInf);
@@ -348,14 +392,46 @@ var SurveyFile = function() {
 			}
 		}
 		
+		function downloadFile(fileName, filePath) {
+			var downloadUrl = "/ezSurvey/downloadAttachFile?filePath=" + encodeURIComponent(filePath) + "&fileName=" + encodeURIComponent(fileName);
+			var attachFrame = document.getElementById("attachFrame");
+			attachFrame.src = downloadUrl;
+		}
+		
+		function getAttachInfor(attach) {
+			var attachInf = {};
+			if (attach["furl"]) {
+				attachInf["imageSrc"] = "/images/ezSurvey/link.png";
+				attachInf["isImage"]  = 0;
+				attachInf["isUrl"]    = 1;
+			}
+			else {
+				attachInf["isUrl"] = 0;
+				var check          = isImage(attach["fname"]);
+				if (check.isImage == true) {
+					attachInf["isImage"]  = 1;
+					attachInf["imageSrc"] = attach["fpath"];
+				}
+				else {
+					attachInf["isImage"]  = 0;
+					attachInf["imageSrc"] = check.urlImage;
+				}
+			}
+			
+			return attachInf;
+		}
+		
 		return {
 			upload     : handleAllUpload,
 			dragEnter  : onDragEnter,
 			dragOver   : onDragOver,
+			getSize    : getFileSize,
 			deleteFile : deleteFile,
 			chImage    : isImage,
+			getImage   : getAttachInfor,
 			check      : checkUploadStatus,
 			mkImgTag   : mkImgTag,
+			download   : downloadFile,
 			render     : renderAttachList
 		};
 	}
