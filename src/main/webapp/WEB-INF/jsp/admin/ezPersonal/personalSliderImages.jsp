@@ -127,7 +127,7 @@
 			//슬라이드 이미지 사용여부 토글 버튼
 		    function toggleButton(obj){
 		    	var sliderIsUse = obj.checked;
-		    	var sliderList = obj.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
+		    	var sliderList = obj.parentNode.parentNode.parentNode.parentNode.parentNode.parentNode;
 		    	var sliderID = sliderList.getAttribute("data");
 		    	var sliderHeader = sliderList.querySelector(".slider-header");
 		    	var picture = sliderList.querySelector(".imagePage");
