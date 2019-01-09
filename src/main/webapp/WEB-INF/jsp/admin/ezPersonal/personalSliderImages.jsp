@@ -22,7 +22,7 @@
 		  var ReturnFunction;
 		  var pNoneActiveX = "YES";
 		  
-			 document.onselectstart = function () {
+		  document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
 		            return false;
 		        } else {
@@ -443,17 +443,16 @@
 		    	var SliderImgPath = UploadSliderImage.src.substr(UploadSliderImage.src.indexOf("${uploadPortalPath}"));
 		    	var isUseCk = document.getElementById("slideIsUseAdd").checked;
 		    	var isUse = "";
-		    	console.log(isUseCk);
+		    	
 		    	if (isUseCk) {
 		    		isUse = 1;
 		    	} else {
 		    		isUse = 0;
 		    	}
-		    	console.log(isUse);
 
 		        var item;
 		        var mode;
-		        
+		        	guid = "{" +  GetGUID() + "}";
 		            item = guid;
 		            mode = "NEW";
 		            fileName = getNodeText(SelectNodes(xml, "ROOT/NODES/NODE/PFILENAME")[0]);
