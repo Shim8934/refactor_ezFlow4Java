@@ -477,8 +477,8 @@ function setPreview(previewNum) {
 			previewmail_bar_h.style.float = "left";
 		} 
 		doc.getElementById("contentlist").style.height = conlistH + "px";
-		mainView.style.width = "60%";
-		previewH.style.width = "40%";
+		mainView.style.width = "calc(100% - 550px)";
+		previewH.style.width = "550px";
 		previewH.style.height = conlistH + 30 + "px";
 		previewH.style.display = "";
 		previewmail_bar_h.style.height = conlistH + 47 + "px";

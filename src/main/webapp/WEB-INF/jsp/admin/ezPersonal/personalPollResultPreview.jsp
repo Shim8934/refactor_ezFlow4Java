@@ -34,12 +34,6 @@
 						window.opener.close();
 					}
 				} catch (e) {}
-
-				//2018-07-26 김보미 - 크롬/ie 양 사이드 여백 상이한것 조정
-				var ua = navigator.userAgent;
-				if (ua.indexOf("Chrome") == -1) {
-					$("#popupContentTb").css("margin-left","2px");
-				}
 			}
 
 			function close_btn() {
@@ -57,7 +51,7 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow: hidden; background: none;">
-		<table id="popupContentTb">
+		<table id="popupContentTb" align="center" style="margin-top:25px;">
 			<tr>
 				<td>
 					<div class="question">
