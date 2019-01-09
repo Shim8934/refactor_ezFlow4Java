@@ -69,13 +69,15 @@ var SurveyItem = function() {
 			preContentW : "preContentW"
 		});
 		
-		switch(prevMode) {
+		var previewMode = pageMode == "draft" ? "off" : prevMode;
+		
+		switch(previewMode) {
 			case "w"   : surveyPreview.resizeByWidth()      ; break;
 			case "h"   : surveyPreview.resizeByHeight()     ; break;
 			case "off" : surveyPreview.resizeDestroy("init"); break;
 		}
 		
-		crrPreMode = prevMode;
+		crrPreMode = previewMode;
 	}
 	
 	function changePreview(mode) {
@@ -141,8 +143,8 @@ var SurveyItem = function() {
 	}
 	
 	function initEvents(height, width, prevMode, mode) {
-		setData(height, width, prevMode);
 		pageMode = mode;
+		setData(height, width, prevMode);
 		
 		//Initial page navigation
 		var naviMessages = {
@@ -167,7 +169,7 @@ var SurveyItem = function() {
 		surveyTable.setTableElement("tblSurveyList", "id");
 		surveyTable.setClickHandler(itemClickHandler);
 		surveyTable.setCallBack(searchCallBack);
-		surveyTable.setRenderFunct(renderCabinetTable);
+		surveyTable.setRenderFunct(renderTable);
 		
 		window.addEventListener("resize", function(e) {windowResize();}, false);
 		window.addEventListener("keydown", function(e) {keyPress(e);}, false);
@@ -181,9 +183,14 @@ var SurveyItem = function() {
 		var searchBttnElmt = document.getElementById("searchBttnSp");
 		searchBttnElmt.addEventListener("click", function(e) {startSimpleSearch();}, false);
 		
-		document.getElementById("preViewNone").addEventListener("click"  , function(e) {changePreview("off")  ;}, false);
-		document.getElementById("preViewBottom").addEventListener("click", function(e) {changePreview("h")    ;}, false);
-		document.getElementById("preViewleft").addEventListener("click"  , function(e) {changePreview("w")    ;}, false);
+		var previewNone   = document.getElementById("preViewNone");
+		var previewBottom = document.getElementById("preViewBottom");
+		var previewLeft   = document.getElementById("preViewleft");
+		
+		if (previewNone)   {previewNone.addEventListener("click"  , function(e) {changePreview("off");}, false);}
+		if (previewBottom) {previewBottom.addEventListener("click", function(e) {changePreview("h")  ;}, false);}
+		if (previewLeft)   {previewLeft.addEventListener("click"  , function(e) {changePreview("w")  ;}, false);}
+		
 		document.getElementById("sltView").addEventListener("click"      , function(e) {toggleOptionView(this);}, false);
 		document.getElementById("listcount").addEventListener("change"   , function(e) {startSearchSurvey("1");}, false);
 		
@@ -209,11 +216,11 @@ var SurveyItem = function() {
 		var reuseBttn = document.getElementById("reuseBttn");
 		var srchBttn  = document.getElementById("searchBttn");
 		var modifyBttn  = document.getElementById("modifyBttn");
-		if (addBttn)    {addBttn.firstElementChild.onclick       = function(e) {createNewSurvey()    ;};}
-		if (delBttn)    {delBttn.firstElementChild.onclick       = function(e) {deleteFileConfirm()  ;};}
-		if (reuseBttn)  {reuseBttn.firstElementChild.onclick     = function(e) {reuseSurveyConfirm() ;};}
-		if (srchBttn)   {srchBttn.firstElementChild.onclick      = function(e) {toggleSearchPanel()  ;};}
-		if (modifyBttn) {modifyBttn.firstElementChild.onclick    = function(e) {modifySurveyConfirm();};}
+		if (addBttn)    {addBttn.firstElementChild.onclick    = function(e) {createNewSurvey()    ;};}
+		if (delBttn)    {delBttn.firstElementChild.onclick    = function(e) {deleteFileConfirm()  ;};}
+		if (reuseBttn)  {reuseBttn.firstElementChild.onclick  = function(e) {reuseSurveyConfirm() ;};}
+		if (srchBttn)   {srchBttn.firstElementChild.onclick   = function(e) {toggleSearchPanel()  ;};}
+		if (modifyBttn) {modifyBttn.firstElementChild.onclick = function(e) {modifySurveyConfirm();};}
 		
 		$("#Sdatepicker").datepicker(datepickerSt);
 		$("#Edatepicker").datepicker(datepickerSt);
@@ -413,7 +420,7 @@ var SurveyItem = function() {
 		surveyNavi.init(data.currentPage, data.totalRows, data.totalPages);
 	}
 	
-	function renderCabinetTable(itemList, unselectClass, tableDataElmt, getCheckedFunct, clickRowFunct) {
+	function renderTable(itemList, unselectClass, tableDataElmt, getCheckedFunct, clickRowFunct) {
 		if (itemList == null || itemList.length == 0) {
 			var trElmt = document.createElement("tr");
 			var tdElmt = document.createElement("td");
@@ -440,8 +447,12 @@ var SurveyItem = function() {
 				var tdElmt9  = document.createElement("td");
 				var tdElmt10 = document.createElement("td");
 				
-				trElmt.setAttribute("class", unselectClass);
-				trElmt.setAttribute("role",  itemList[i]["surveyId"]);
+				trElmt.setAttribute("class"     , unselectClass);
+				trElmt.setAttribute("role"      , itemList[i]["surveyId"]);
+				trElmt.setAttribute("userName"  , itemList[i]["creatorName"]);
+				trElmt.setAttribute("userId"    , itemList[i]["creatorId"]);
+				trElmt.setAttribute("createDate", itemList[i]["startDate"].substring(0, 19));
+				trElmt.setAttribute("surveyTtl" , itemList[i]["title"]);
 				trElmt.onclick    = function(event) {clickRowFunct(event);};
 				trElmt.ondblclick = function(event) {itemDblClickHandler(this);};
 				
@@ -625,7 +636,7 @@ var SurveyItem = function() {
 	function afterCheckItem(data, itemId) {
 		var code = data.code;
 		switch(code) {
-			case 0 : afterCheckSuccessfully(itemId)    ; break;
+			case 0 : modifySurveyItem(itemId)          ; break;
 			case 1 : alert(SurveyMessages.strParamErr) ; break;
 			case 2 : alert(SurveyMessages.strError)    ; break;
 			case 3 : alert(SurveyMessages.strPerm)     ; break;
@@ -634,7 +645,7 @@ var SurveyItem = function() {
 		}
 	}
 	
-	function afterCheckSuccessfully(itemId) {
+	function modifySurveyItem(itemId) {
 		window.parent.frames["right"].location.href = "/ezSurvey/modifyItem.do?itemId=" + itemId;
 	}
 	
@@ -651,21 +662,25 @@ var SurveyItem = function() {
 	}
 	
 	function itemClickHandler(trObj) {
+		if (pageMode == "draft") {return;}
 		var itemId   = trObj.getAttribute("role");
 		var crrClass = trObj.className;
 		
 		if (crrClass == "bnkSurveySl") {
 			if (crrPreMode == "off") {return;}
 			
-			var url  = "/ezCabinet/getFileDetail.do";
-			var data = {itemId : itemId};
-			makeAjaxCall(data, "GET", url, afterGetItemInfo, null, true, null);
+			//Show survey information
+			showPreviewInfo(trObj);
 		}
 	}
 	
 	function itemDblClickHandler(trObj) {
-		var itemId   = trObj.getAttribute("role");
-		openSurveyDetail(itemId);
+		if (pageMode != "draft") {
+			openSurveyDetail(trObj.getAttribute("role"));
+		}
+		else {
+			modifySurveyItem(trObj.getAttribute("role"));
+		}
 	}
 	
 	function openSurveyDetail(itemId) {
@@ -682,11 +697,11 @@ var SurveyItem = function() {
 		var pSpanElmt1 = document.createElement("span");
 		var pSpanElmt2 = document.createElement("span");
 		
-		pElmt.className      = "cabPrevTitle";
-		spanElmt.className   = "cabPreDate";
-		dlElmt.className     = "cabPrevItem";
-		pSpanElmt1.className = "cabPrevIcon";
-		pSpanElmt2.className = "cabTitleTxt";
+		pElmt.className      = "prevTitle";
+		spanElmt.className   = "preDate";
+		dlElmt.className     = "prevItem";
+		pSpanElmt1.className = "prevIcon";
+		pSpanElmt2.className = "titleTxt";
 		
 		pElmt.appendChild(pSpanElmt1);
 		pElmt.appendChild(pSpanElmt2);
@@ -696,93 +711,41 @@ var SurveyItem = function() {
 		divElmt.appendChild(divChild);
 	}
 	
-	function afterGetItemInfo(data) {
-		var itemInfo    = data.fileDetail;
-		var itemType    = itemInfo["itemType"];
+	function showPreviewInfo(trObj) {
+		var createDate  = trObj.getAttribute("createDate");
+		var surveyTtl   = trObj.getAttribute("surveyTtl");
+		var surveyId    = trObj.getAttribute("role");
+		var creatorName = trObj.getAttribute("userName");
+		var creatorId   = trObj.getAttribute("userId");
+		
 		var divPrevId   = crrPreMode == "w" ? "previewHeaderW" : "previewHeaderH";
 		var divElmt     = document.getElementById(divPrevId);
 		var noDataSpan  = divElmt.querySelector("span[class='notSelected']");
 		
 		if (noDataSpan) {divElmt.removeChild(noDataSpan); generatePreviewElmt(divElmt);}
 		
-		var spanIcon    = divElmt.querySelector("span[class='cabPrevIcon']");
-		var spanSubject = divElmt.querySelector("span[class='cabTitleTxt']");
-		var spanDate    = divElmt.querySelector("span[class='cabPreDate']");
-		var dlElmt      = divElmt.querySelector("dl[class='cabPrevItem']");
-		var parentDiv   = divElmt.parentElement;
+		var spanIcon    = divElmt.querySelector("span[class='prevIcon']");
+		var spanSubject = divElmt.querySelector("span[class='titleTxt']");
+		var spanDate    = divElmt.querySelector("span[class='preDate']");
+		var dlElmt      = divElmt.querySelector("dl[class='prevItem']");
 		
-		spanIcon.onclick        = function(e) {openSurveyDetail(itemInfo["itemId"]);};
-		spanSubject.textContent = itemInfo["title"];
-		spanDate.textContent    = itemInfo["createdDate"].substring(0, 19);
-		spanSubject.setAttribute("title", itemInfo["title"]);
+		spanIcon.onclick        = function(e) {openSurveyDetail(surveyId);};
+		spanSubject.textContent = surveyTtl;
+		spanDate.textContent    = createDate;
+		spanSubject.setAttribute("title", surveyTtl);
 		
 		while(dlElmt.firstElementChild) {dlElmt.removeChild(dlElmt.firstElementChild);}
+		generateCreatorTitle(dlElmt, creatorName, creatorId);
 		
-		if (itemType != 0) {
-			var iframeId    = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
-			var prevId      = crrPreMode == "w" ? "itemContentW" : "itemContentH";
-			var prevCont    = document.getElementById(prevId);
-			if (prevCont) {parentDiv.removeChild(prevCont);}
-			
-			var ifameContent = document.getElementById(iframeId);
-			
-			if (!ifameContent) {
-				ifameContent           = document.createElement("iframe");
-				ifameContent.id        = iframeId;
-				ifameContent.className = "cabrlframe";
-				var fileDivId          = crrPreMode == "w" ? "itemContentW" : "itemContentH";
-				var fileDivElmt        = document.getElementById(fileDivId);
-				
-				if (fileDivElmt) {
-					parentDiv.replaceChild(ifameContent, fileDivElmt);
-				}
-				else {
-					parentDiv.appendChild(ifameContent);
-				}
-			}
-			
-			switch(itemType) {
-				case 1 : showMailPreview(data, dlElmt)     ; break;
-				case 2 : showApprovalPreview(data, dlElmt) ; break;
-				case 3 : showBoardPreview(data, dlElmt)    ; break;
-				case 4 : showSchedulePreview(data, dlElmt) ; break;
-				case 5 : showTodoPreview(data, dlElmt)     ; break;
-				case 6 : showOptionPreview(data, dlElmt)   ; break;
-				case 7 : showCommunityPreview(data, dlElmt); break;
-				case 8 : showAddressPreview(data, dlElmt)  ; break;
-				case 9 : showJournalPreview(data, dlElmt)  ; break;
-				case 10: showProjectPreview(data, dlElmt)  ; break;
-				case 11: showResourcePreview(data, dlElmt) ; break;
-			}
-			
-			ifameContent.addEventListener("load", function(e) {
-				var ifameContentWd = ifameContent.contentWindow || ifameContent.contentDocument;
-				ifameContentWd.addEventListener("mouseup", function(e) {closeViewPopupOutside(e);}, false);
-			}, false); 
-		}
-		else {
-			showGeneralItemPreview(data, dlElmt, itemInfo, parentDiv);
-		}
-	}
-	
-	function showGeneralItemPreview(data, dlElmt, itemInfo, parentDiv) {
-		var prevId       = crrPreMode == "w" ? "itemContentW" : "itemContentH";
-		var prevCont     = document.getElementById(prevId);
 		var iframeId     = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
 		var ifameContent = document.getElementById(iframeId);
 		
-		if (ifameContent) {parentDiv.removeChild(ifameContent);}
+		ifameContent.src = "/ezCabinet/surveyDetail.do?mode=view&itemId=" + surveyId;
 		
-		if (!prevCont) {
-			prevCont           = document.createElement("div");
-			prevCont.id        = prevId;
-			prevCont.className = prevId;
-			parentDiv.appendChild(prevCont);
-		}
-		
-		var attachList  = data.attachFileList;
-		generateCreatorTitle(dlElmt, itemInfo["creatorName"], itemInfo["creatorId"]);
-		generalItemContent(attachList, itemInfo["itemSize"]);
+		ifameContent.addEventListener("load", function(e) {
+			var ifameContentWd = ifameContent.contentWindow || ifameContent.contentDocument;
+			ifameContentWd.addEventListener("mouseup", function(e) {closeViewPopupOutside(e);}, false);
+		}, false);
 	}
 	
 	function generateCreatorTitle(dlElmt, creatorName, creatorId) {
@@ -798,75 +761,6 @@ var SurveyItem = function() {
 		dlElmt.appendChild(ddElmt);
 	}
 	
-	function generalItemContent(attachList, itemSize) {
-		var fileDivId      = crrPreMode == "w" ? "itemContentW" : "itemContentH";
-		var fileDivElmt    = document.getElementById(fileDivId);
-		
-		while (fileDivElmt.firstElementChild) {fileDivElmt.removeChild(fileDivElmt.firstElementChild);}
-		
-		var fileWrap       = document.createElement("div");
-		fileWrap.className = "cabWrapFile";
-		var fileList       = document.createElement("div");
-		fileList.className = "fileDetailDiv";
-		fileDivElmt.appendChild(fileWrap);
-		fileWrap.appendChild(fileList);
-		
-		if(attachList == null || attachList.length == 0) {
-			var divInform        = document.createElement("div");
-			divInform.className  = "divInform";
-			var spanElmt         = document.createElement("span");
-			spanElmt.className   = "nofile";
-			divInform.appendChild(spanElmt);
-			fileList.appendChild(divInform);
-		}
-		else {
-			var divfileListElmt       = document.createElement("div");
-			divfileListElmt.className = "fileList";
-			var ulElmt                = document.createElement("ul");
-			ulElmt.className          = "ulFiles";
-			fileList.appendChild(divfileListElmt);
-			divfileListElmt.appendChild(ulElmt);
-			
-			for (var i = 0, len = attachList.length; i < len; i++) {
-				var liElmt         = document.createElement("li");
-				var divMainElmt    = document.createElement("div");
-				var divChildElmt1  = document.createElement("div");
-				var divChildElmt2  = document.createElement("div");
-				var spanChild1     = document.createElement("span");
-				var spanChild2     = document.createElement("span");
-				var imgElmt        = document.createElement("img");
-				var fileName       = attachList[i]["fileName"];
-				var filePath       = attachList[i]["filePath"];
-				var fileSize       = attachList[i]["fileSize"];
-				var checkImageFile = isImage(fileName);
-				imgElmt.src        = checkImageFile.isImage == true ? filePath : checkImageFile.urlImage;
-				
-				divChildElmt1.className = "cabImgAva";
-				divChildElmt1.appendChild(imgElmt);
-				
-				spanChild1.textContent  = fileName;
-				spanChild2.textContent  = fileSize;
-				divChildElmt2.className = "cabFileInf";
-				divChildElmt2.appendChild(spanChild1);
-				divChildElmt2.appendChild(spanChild2);
-				
-				divMainElmt.className   = "cabDivFile";
-				divMainElmt.appendChild(divChildElmt1);
-				divMainElmt.appendChild(divChildElmt2);
-				
-				liElmt.onclick = (function(name, path) {return function() {downloadFileAttach(name, path);}; })(attachList[i]["fileName"], attachList[i]["filePath"]);
-				liElmt.appendChild(divMainElmt);
-				ulElmt.appendChild(liElmt);
-			}	
-		}
-	}
-	
-	function downloadFileAttach(fileName, filePath) {
-		var downloadUrl = "/ezCabinet/downloadAttachFile?filePath=" + encodeURIComponent(filePath) + "&fileName=" + encodeURIComponent(fileName);
-		var attachFrame = document.getElementById("attachFrame");
-		attachFrame.src = downloadUrl;
-	}
-	
 	function showUserInfoFromId(userId) {
 		var feature = "height=500px, width=420px, status=no, toolbar=no, menubar=no,location=no, resizable=1";
 		feature = feature + getOpenWindowfeature(420, 500);
@@ -878,8 +772,8 @@ var SurveyItem = function() {
 		if(userWindow) {userWindow.close();}
 	}
 	
-	function createNewSurvey()   {window.parent.frames["right"].location.href = "/ezSurvey/createSurvey.do";}
-	function getIframeContent()  {return documentCont;}
+	function createNewSurvey()  {window.parent.frames["right"].location.href = "/ezSurvey/createSurvey.do";}
+	function getIframeContent() {return documentCont;}
 	
 	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {
 		$.ajax({

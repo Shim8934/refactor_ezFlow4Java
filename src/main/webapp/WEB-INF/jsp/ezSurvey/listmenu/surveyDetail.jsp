@@ -33,12 +33,14 @@
 		</div>
 		
 		<div id="infoBtns" class="infoBtns">
-			<img id="suvyDlt"  class="suvyDlt"  src="/images/ezSurvey/delete2.png"/>
+			<c:if test="${empty mode and user == creator.id}">
+				<img id="suvyDlt" class="suvyDlt"  src="/images/ezSurvey/delete2.png"/>
+			</c:if>
+			
 			<img id="suvyInfo" class="suvyInfo" src="/images/ezSurvey/info.png"   />
 			
 			<ul id="upage-ul"class="upage-ul" style="display: none;">
 				<li>
-					<!-- <img src="/images/poll/numberOfSelect_1.png" class="voteIconImg_info" title="투표 가능 회수 : 1"> -->
 					<c:choose>
 						<c:when test="${survey.resultPublicFlag eq 1}">
 							<span id="isPublic">공개</span>
@@ -97,12 +99,14 @@
 	
 	<div class="prevQsArea"></div>
 	
-	<div class="detailBtns" style="text-align: right;">
-		<div class="survey-bttn-wrp">
-			<img id="saveResult" src="/images/ezSurvey/save2.png"/>
-			<img id="cancelBttn" src="/images/ezSurvey/cancel2.png"/>
+	<c:if test="${empty mode}">
+		<div class="detailBtns" style="text-align: right;">
+			<div class="survey-bttn-wrp">
+				<img id="saveResult" src="/images/ezSurvey/save2.png"/>
+				<img id="cancelBttn" src="/images/ezSurvey/cancel2.png"/>
+			</div>
 		</div>
-	</div>
+	</c:if>
 	<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 </body>
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyFile.js')}"></script>
@@ -256,8 +260,11 @@
 			if (delBttn) {delBttn.onclick = function(e) {deleteFileConfirm();};}
 			
 			document.getElementById("suvyInfo").onclick   = function(e) {showSurveyInfo();}
-			document.getElementById("cancelBttn").onclick = function(e) {window.close();}
-			document.getElementById("saveResult").onclick = function(e) {saveSurveyResponses();}
+			
+			var cancelBttn = document.getElementById("cancelBttn");
+			var saveResult = document.getElementById("saveResult");
+			if (cancelBttn) {cancelBttn.onclick = function(e) {window.close();};}
+			if (saveResult) {saveResult.onclick = function(e) {saveSurveyResponses();};}
 		}
 		
 		function showAttachList() {

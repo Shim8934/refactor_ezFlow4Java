@@ -135,16 +135,16 @@ var SurveyPreview = function() {
 			var prevContentId  = previewHElmt.style.display != 'none' ? _prevCntH : _prevCntW;
 			var preContentElmt = document.getElementById(prevContentId);
 			
-			if (preContentElmt.lastElementChild.id != "fogPanel") {
+			if (preContentElmt.lastElementChild.id != "bnkfogPanel") {
 				var fogPanel       = document.createElement("div");
-				fogPanel.className = "cabPanel";
-				fogPanel.id        = "fogPanel";
+				fogPanel.className = "bnkPanel";
+				fogPanel.id        = "bnkfogPanel";
 				preContentElmt.appendChild(fogPanel);
 			}
 		}
 		
 		function closePanel(event, ui) {
-			var fogPanel = document.getElementById("fogPanel");
+			var fogPanel = document.getElementById("bnkfogPanel");
 			if (fogPanel) {fogPanel.parentElement.removeChild(fogPanel);}
 		}
 		

@@ -319,7 +319,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	@SuppressWarnings("unchecked")
 	@Override
 	public synchronized JSONObject saveSurveyItem(String realPath, JSONArray questions, String title, String purpose, String startDate, String endDate, int publicFlag, int anonymousFlag, int multipleFlag, int userFlag, int publicDays, JSONArray attchList, JSONArray users, int useStatus, long surveyId, int draftMode, LoginVO userInfo) throws Exception {
-		JSONObject result = new JSONObject();
+		JSONObject result                    = new JSONObject();
 		int tenantId                         = userInfo.getTenantId();
 		String companyId                     = userInfo.getCompanyID();
 		String userId                        = userInfo.getId();
@@ -330,6 +330,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		String timeUTC                       = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
 		String startDateUTC                  = commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true);
 		String endDateUTC                    =  commonUtil.getDateStringInUTC(endDate  + " 23:59:59", offset, true);
+		
 		List<AttachVO> totalAttach           = new ArrayList<>();
 		List<QuestionVO> totalQuestions      = new ArrayList<>();
 		List<OptionVO> totalOptions          = new ArrayList<>();
@@ -337,9 +338,33 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		Map<String,Object> map               = new HashMap<String, Object>();
 		map.put("companyId", companyId);
 		map.put("tenantId" , tenantId);
+		long crrSurveyId                    = 0;
 		long maxQuestionId                  = ezSurveyDAO.getMaxQuestionId(map);
 		long maxOptionId                    = ezSurveyDAO.getMaxOptionId(map);
-		long crrSurveyId                    = (surveyId != -1 && draftMode == 0) ? surveyId : ezSurveyDAO.getMaxSurveyId(map);
+		
+		if (surveyId != -1) {
+			if (draftMode == 0) {
+				crrSurveyId = surveyId;
+			}
+			else {
+				//Check if current survey is draft survey or not
+				map.put("primary",   userInfo.getPrimary());
+				map.put("offset",    commonUtil.getMinuteUTC(userInfo.getOffset()));
+				map.put("userId",    userInfo.getId());
+				map.put("surveyId",  surveyId);
+				SurveyVO crrsurvey  = ezSurveyDAO.getSurveyInfo(map);
+				
+				if (crrsurvey.getDraftFlag() == 1) {
+					crrSurveyId = surveyId;
+				}
+				else {
+					crrSurveyId = ezSurveyDAO.getMaxSurveyId(map);
+				}
+			}
+		}
+		else {
+			crrSurveyId = ezSurveyDAO.getMaxSurveyId(map);
+		}
 		
 		survey.setSurveyId(crrSurveyId);
 		survey.setTenantId(tenantId);
@@ -496,24 +521,11 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		}
 		
 		//Check modify/save mode
-		if (surveyId != -1 && draftMode == 0) {
-			//Remove current questions
-			ezSurveyDAO.deleteSurveyQuestions(survey);
-			
-			//Remove current options
-			ezSurveyDAO.deleteSurveyOptions(survey);
-			
-			//Remove current attach
-			ezSurveyDAO.deleteSurveyAttach(survey);
-			
-			//Remove current users
-			ezSurveyDAO.deleteSurveyUsers(survey);
-			
-			//Update survey
-			ezSurveyDAO.updateSurveyItem(survey);
+		if (crrSurveyId == surveyId) {
+			cleanAndUpdateSurvey(survey);
 		}
 		else {
-			//Save survey
+			//Save new survey
 			ezSurveyDAO.saveSurveyItem(survey);
 		}
 		
@@ -542,6 +554,23 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return result;
 	}
 	
+	private void cleanAndUpdateSurvey(SurveyVO survey) {
+		//Remove current questions
+		ezSurveyDAO.deleteSurveyQuestions(survey);
+		
+		//Remove current options
+		ezSurveyDAO.deleteSurveyOptions(survey);
+		
+		//Remove current attach
+		ezSurveyDAO.deleteSurveyAttach(survey);
+		
+		//Remove current users
+		ezSurveyDAO.deleteSurveyUsers(survey);
+		
+		//Update survey
+		ezSurveyDAO.updateSurveyItem(survey);
+	}
+
 	private synchronized void saveAttachFile(String realPath, JSONObject attachObj, long targetId, String companyId, int tenantId, String targetType, long surveyId, List<AttachVO> totalAttach) {
 		AttachVO attach = new AttachVO();
 		String fileName = attachObj.get("fname").toString();
@@ -699,14 +728,17 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			result.put("creator", creator);
 		}
 		else if (mode.equals("modify")) {
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date date                  = new Date();
-			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
-			survey.setModifyFlag(1);
-			survey.setUpdateDate(timeUTC);
-			survey.setUpdateUser(userInfo.getId());
-			
-			ezSurveyDAO.updateSurveyItem(survey);
+			//Change modify status only if it's not draft survey
+			if (survey.getDraftFlag() == 0) {
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date date                  = new Date();
+				String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
+				survey.setModifyFlag(1);
+				survey.setUpdateDate(timeUTC);
+				survey.setUpdateUser(userInfo.getId());
+				
+				ezSurveyDAO.updateSurveyItem(survey);
+			}
 		}
 		
 		//long endTime   = System.nanoTime();
@@ -732,100 +764,92 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("surveyId",  surveyId);
 		
 		List<QuestionVO> questions = ezSurveyDAO.getAllQuestionsOfSurvey(map);
-		List<OptionVO>   options   = ezSurveyDAO.getAllOptionsOfSurvey(map);
-		List<Long> questionIds     = questions.stream().map(QuestionVO::getQuestionId).collect(Collectors.toList());
-		List<Long> optionIds       = options.stream().map(OptionVO::getOptionId).collect(Collectors.toList());
-		map.put("questionIds", questionIds);
-		map.put("optionIds"  , optionIds);
-		List<AttachVO> attachs     = ezSurveyDAO.getAllAttachForQsAndOpt(map);
 		
-		//Clone list of attach
-		cloneAttachFiles(attachs, realPath, getSurveyDirPath(tenantId));
-		
-		//long startTime = System.nanoTime();
-		
-		//Separate
-		List<AttachVO> qstAttch    = attachs.stream().filter(a -> a.getTargetType().equals("question")).collect(Collectors.toList());
-		attachs.removeAll(qstAttch);
-		
-		Map<Long, List<OptionVO>> mapOption = new HashMap<>();
-		ListIterator<OptionVO> optionIter   = options.listIterator();
-		
-		while (optionIter.hasNext()) {
-			OptionVO option = optionIter.next();
-			ListIterator<AttachVO> attIter = attachs.listIterator();
-			while (attIter.hasNext()) {
-				AttachVO attach = attIter.next();
-				if (attach.getTargetId() == option.getOptionId()) {
-					option.setAttach(attach);
-					attIter.remove();
+		if (questions != null && questions.size() > 0) {
+			List<OptionVO> options     = ezSurveyDAO.getAllOptionsOfSurvey(map);
+			List<Long> questionIds     = questions.stream().map(QuestionVO::getQuestionId).collect(Collectors.toList());
+			List<Long> optionIds       = options.stream().map(OptionVO::getOptionId).collect(Collectors.toList());
+			map.put("questionIds", questionIds);
+			map.put("optionIds"  , optionIds);
+			List<AttachVO> attachs     = ezSurveyDAO.getAllAttachForQsAndOpt(map);
+			
+			//Clone list of attach
+			cloneAttachFiles(attachs, realPath, getSurveyDirPath(tenantId));
+			
+			//long startTime = System.nanoTime();
+			
+			//Separate
+			List<AttachVO> qstAttch    = attachs.stream().filter(a -> a.getTargetType().equals("question")).collect(Collectors.toList());
+			attachs.removeAll(qstAttch);
+			
+			Map<Long, List<OptionVO>> mapOption = new HashMap<>();
+			ListIterator<OptionVO> optionIter   = options.listIterator();
+			
+			while (optionIter.hasNext()) {
+				OptionVO option = optionIter.next();
+				ListIterator<AttachVO> attIter = attachs.listIterator();
+				while (attIter.hasNext()) {
+					AttachVO attach = attIter.next();
+					if (attach.getTargetId() == option.getOptionId()) {
+						option.setAttach(attach);
+						attIter.remove();
+					}
+				}
+				
+				if (mapOption.containsKey(option.getQuestionId())) {
+					mapOption.get(option.getQuestionId()).add(option);
+				}
+				else {
+					List<OptionVO> qsOption = new ArrayList<>();
+					qsOption.add(option);
+					mapOption.put(option.getQuestionId(), qsOption);
 				}
 			}
 			
-			if (mapOption.containsKey(option.getQuestionId())) {
-				mapOption.get(option.getQuestionId()).add(option);
+			//Check if survey has or hasn't logic branching
+			for (QuestionVO question : questions) {
+				if (question.getLogicFlag() == 1 || question.getSkipFlag() == 1) {
+					logicFlag = true;
+					break;
+				}
 			}
-			else {
-				List<OptionVO> qsOption = new ArrayList<>();
-				qsOption.add(option);
-				mapOption.put(option.getQuestionId(), qsOption);
+			
+			for (QuestionVO question : questions) {
+				question.setOption(mapOption.get(question.getQuestionId()));
+				
+				if (logicFlag) {
+					//Process question logic
+					List<Long> listQst = new ArrayList<>(processQuestionLogic(question, questions.size()));
+					logicMap.put(question.getLevel(), listQst);
+				}
+				
+				ListIterator<AttachVO> qsAtIter = qstAttch.listIterator();
+				while (qsAtIter.hasNext()) {
+					AttachVO qsAttach = qsAtIter.next();
+					if (qsAttach.getTargetId() == question.getQuestionId()) {
+						question.setAttach(qsAttach);
+						qsAtIter.remove();
+					}
+				}
 			}
-		}
-		
-		//Check if survey has or hasn't logic branching
-		for (QuestionVO question : questions) {
-			if (question.getLogicFlag() == 1 || question.getSkipFlag() == 1) {
-				logicFlag = true;
-				break;
-			}
-		}
-		
-		for (QuestionVO question : questions) {
-			question.setOption(mapOption.get(question.getQuestionId()));
 			
 			if (logicFlag) {
-				//Process question logic
-				List<Long> listQst = new ArrayList<>(processQuestionLogic(question, questions.size()));
-				logicMap.put(question.getLevel(), listQst);
-			}
-			
-			ListIterator<AttachVO> qsAtIter = qstAttch.listIterator();
-			while (qsAtIter.hasNext()) {
-				AttachVO qsAttach = qsAtIter.next();
-				if (qsAttach.getTargetId() == question.getQuestionId()) {
-					question.setAttach(qsAttach);
-					qsAtIter.remove();
+				//Make logic path
+				List<List<Long>> logicPath = new ArrayList<>();
+				List<Long> currentPath     = new ArrayList<>();
+				
+				//Get all possible path
+				travelNode(1, logicPath, logicMap, currentPath);
+				
+				//Find enable question list
+				List<Long> remainPath = logicPath.get(0).stream().map(elm -> new Long(elm)).collect(Collectors.toList());
+				for (int i = 1; i < logicPath.size(); i++) {
+					remainPath.retainAll(logicPath.get(i));
 				}
+				
+				result.put("firstpath", remainPath);
+				result.put("logicmap" , logicMap);
 			}
-		}
-		
-		if (logicFlag) {
-			//Make logic path
-			List<List<Long>> logicPath = new ArrayList<>();
-			List<Long> currentPath     = new ArrayList<>();
-			
-			//Get all possible path
-			travelNode(1, logicPath, logicMap, currentPath);
-			
-			/*logger.debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");
-			for (int i = 0; i < logicPath.size(); i++) {
-				String test = logicPath.get(i).stream().map(Object::toString).collect(Collectors.joining(", "));
-				logger.debug("Logic Path " + (i + 1) + ": " + test);
-			}
-			logger.debug("%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%");*/
-			
-			//Find enable question list
-			List<Long> remainPath = logicPath.get(0).stream().map(elm -> new Long(elm)).collect(Collectors.toList());
-			for (int i = 1; i < logicPath.size(); i++) {
-				remainPath.retainAll(logicPath.get(i));
-			}
-			
-			//logger.debug("+++++++++++++++++++++++++++++++++++++++++++++");
-			//logger.debug("RemainPath: " + remainPath.stream().map(Object::toString).collect(Collectors.joining(", ")));
-			//logger.debug("+++++++++++++++++++++++++++++++++++++++++++++");
-			
-			result.put("firstpath", remainPath);
-			result.put("logicmap" , logicMap);
 		}
 		
 		//long endTime   = System.nanoTime();

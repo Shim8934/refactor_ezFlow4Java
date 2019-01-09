@@ -762,7 +762,12 @@ var SurveyCreate     = function() {
 	}
 	
 	function convertQuestions(data) {
-		surveyObj["questions"] = JSON.parse(JSON.stringify(data["questions"]));
+		if (data["questions"] && data["questions"].length > 0) {
+			surveyObj["questions"] = JSON.parse(JSON.stringify(data["questions"]));
+		}
+		else {
+			surveyObj["questions"] = [];
+		}
 		
 		reuseQstns(surveyObj["questions"]);
 		// question input 및 img 생성
@@ -771,7 +776,6 @@ var SurveyCreate     = function() {
 		// question selectBox 생성
 		createQuestionSelectBox();
 		addOptEvent();
-		
 	}
 	
 	function showLogicMap() {

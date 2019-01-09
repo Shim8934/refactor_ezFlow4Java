@@ -36,9 +36,11 @@
 				<li id="modifyBttn"><a><span><spring:message code='ezSurvey.t78'/></span></a></li>
 				
 				<li id="right">
+					<c:if test="${mode != 'draft'}">
 					<img src="${config.previewMode == 'off' ? '/images/kr/cm/btn_onnoframe.gif'     : '/images/kr/cm/btn_noframe.gif'}"     class="btnimg survey" id="preViewNone"  >
 					<img src="${config.previewMode == 'h'   ? '/images/kr/cm/btn_onbottomframe.gif' : '/images/kr/cm/btn_bottomframe.gif'}" class="btnimg survey" id="preViewBottom">
 					<img src="${config.previewMode == 'w'   ? '/images/kr/cm/btn_onleftframe.gif'   : '/images/kr/cm/btn_leftframe.gif'}"   class="btnimg survey" id="preViewleft"  >
+					</c:if>
 					<img src="/images/kr/cm/btn_arrow_down.gif" role="off" id="sltView">
 				</li>
 			</ul>
@@ -121,6 +123,9 @@
 						<div class="prevHeaderH" id="previewHeaderH">
 							<span class="notSelected"><spring:message code='ezSurvey.t28'/></span>
 						</div>
+						<div id="itemContentH" class="itemContentH">
+							<iframe id="mainContentIframeH" class="pr-frame"></iframe>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -130,6 +135,9 @@
 					<div>
 						<div class="prevHeaderW" id="previewHeaderW">
 							<span class="notSelected"><spring:message code='ezSurvey.t28'/></span>
+						</div>
+						<div id="itemContentW" class="itemContentW">
+							<iframe id="mainContentIframeW" class="pr-frame"></iframe>
 						</div>
 					</div>
 				</div>

@@ -447,7 +447,7 @@ public class EzSurveyGWController {
 			String serverName   = request.getHeader("host-name") != null ? request.getHeader("host-name")         : "";
 			String userId       = surveyItem.get("userId")       != null ? surveyItem.get("userId").toString()    : "";
 			
-			logger.debug("ServerName: " + serverName + " || User id: " + userId + " || question list: " + questions.toJSONString() + " || survey information: " + infor.toJSONString());
+			logger.debug("ServerName: " + serverName + " || survey id: " + surveyId + " || draft mode: " + draftMode + " || User id: " + userId + " || question list: " + questions.toJSONString() + " || survey information: " + infor.toJSONString());
 			
 			if (serverName.equals("") || userId.equals("") || ((questions == null || questions.size() == 0) && draftMode == 0) || infor == null || infor.toJSONString().equals("")) {
 				logger.debug("Parameter error!");
