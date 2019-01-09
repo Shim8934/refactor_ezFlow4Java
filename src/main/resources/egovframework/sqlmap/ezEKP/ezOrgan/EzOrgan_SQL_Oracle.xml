@@ -834,68 +834,164 @@
 	</select>
 
 	<select id="EzOrganDAO.getTBLDeptMaster" parameterClass="Map" resultClass="OrganDeptVO">
-		<![CDATA[
-			SELECT
-				CN ,
-             	CN DEPARTMENT  ,
-             	CASE 
-             		#v_LANGDATA#
-                WHEN
-                	'1'
-                THEN
-                	DISPLAYNAME
-                ELSE
-                	DISPLAYNAME2
-                END
-                	DISPLAYNAME  ,
-             	CASE
-             		#v_LANGDATA#
-                WHEN
-                	'1'
-                THEN
-                	DISPLAYNAME
-                ELSE
-                	DISPLAYNAME2
-                END
-                	DEPTNM  ,
-             	DISPLAYNAME DISPLAYNAME1  ,
-             	DISPLAYNAME2 ,
-             	MAIL ,
-             	EXTENSIONATTRIBUTE1 ,
-             	EXTENSIONATTRIBUTE2 ,
-             	CASE
-             		#v_LANGDATA#
-                WHEN
-                	'1'
-                THEN
-                	EXTENSIONATTRIBUTE3
-                ELSE
-                	COMPNM2
-                END
-                	EXTENSIONATTRIBUTE3  ,
-             	EXTENSIONATTRIBUTE4 ,
-             	EXTENSIONATTRIBUTE5 ,
-             	EXTENSIONATTRIBUTE6 ,
-             	EXTENSIONATTRIBUTE7 ,
-             	EXTENSIONATTRIBUTE8 ,
-             	EXTENSIONATTRIBUTE9 ,
-             	EXTENSIONATTRIBUTE10 ,
-             	EXTENSIONATTRIBUTE11 ,
-	            EXTENSIONATTRIBUTE12 ,
-	            EXTENSIONATTRIBUTE13 ,
-	            EXTENSIONATTRIBUTE14 ,
-	            EXTENSIONATTRIBUTE15 ,
-	            ADSPATH ,
-	            UPDATEDT ,
-	            'dept' TYPE ,
-	            TENANT_ID as tenantId
-			FROM
-	        	TBL_DEPTMASTER 
-	       WHERE
-	       		CN = #v_CN#
-	       AND
-	       		TENANT_ID = #v_TENANT_ID#		
-		]]>
+		<isEqual property="deptMaster" compareValue="group">
+			<![CDATA[
+				SELECT
+					CN ,
+	             	CN DEPARTMENT  ,
+	             	CASE 
+	             		#v_LANGDATA#
+	                WHEN
+	                	'1'
+	                THEN
+	                	DISPLAYNAME
+	                ELSE
+	                	DISPLAYNAME2
+	                END
+	                	DISPLAYNAME  ,
+	             	CASE
+	             		#v_LANGDATA#
+	                WHEN
+	                	'1'
+	                THEN
+	                	DISPLAYNAME
+	                ELSE
+	                	DISPLAYNAME2
+	                END
+	                	DEPTNM  ,
+	             	DISPLAYNAME DISPLAYNAME1  ,
+	             	DISPLAYNAME2 ,
+	             	MAIL ,
+	             	EXTENSIONATTRIBUTE1 ,
+	             	EXTENSIONATTRIBUTE2 ,
+	             	CASE
+	             		#v_LANGDATA#
+	                WHEN
+	                	'1'
+	                THEN
+	                	EXTENSIONATTRIBUTE3
+	                ELSE
+	                	COMPNM2
+	                END
+	                	EXTENSIONATTRIBUTE3  ,
+	             	EXTENSIONATTRIBUTE4 ,
+	             	EXTENSIONATTRIBUTE5 ,
+	             	EXTENSIONATTRIBUTE6 ,
+	             	EXTENSIONATTRIBUTE7 ,
+	             	EXTENSIONATTRIBUTE8 ,
+	             	CASE
+						EXTENSIONATTRIBUTE9
+					WHEN
+						''
+					THEN
+						EXTENSIONATTRIBUTE9
+					WHEN
+						null
+					THEN
+						EXTENSIONATTRIBUTE9
+					ELSE
+						(SELECT 
+						CASE
+							#v_LANGDATA#
+						WHEN
+							'1'
+						THEN
+							A.DISPLAYNAME
+						ELSE
+							A.DISPLAYNAME2
+						END DISPLAYNAME
+						FROM
+							TBL_USERMASTER A
+						INNER JOIN
+							TBL_DEPTMASTER B ON A.CN = B.EXTENSIONATTRIBUTE9
+						WHERE
+							B.CN = #v_CN#
+						AND
+							A.TENANT_ID = #v_TENANT_ID#	
+						) 
+					END EXTENSIONATTRIBUTE9 ,
+	             	EXTENSIONATTRIBUTE10 ,
+	             	EXTENSIONATTRIBUTE11 ,
+		            EXTENSIONATTRIBUTE12 ,
+		            EXTENSIONATTRIBUTE13 ,
+		            EXTENSIONATTRIBUTE14 ,
+		            EXTENSIONATTRIBUTE15 ,
+		            ADSPATH ,
+		            UPDATEDT ,
+		            'dept' TYPE ,
+		            TENANT_ID as tenantId
+				FROM
+		        	TBL_DEPTMASTER 
+		       WHERE
+		       		CN = #v_CN#
+		       AND
+		       		TENANT_ID = #v_TENANT_ID#		
+			]]>
+		</isEqual>
+		<isNotEqual property="deptMaster" compareValue="group">
+			<![CDATA[
+				SELECT
+					CN ,
+	             	CN DEPARTMENT  ,
+	             	CASE 
+	             		#v_LANGDATA#
+	                WHEN
+	                	'1'
+	                THEN
+	                	DISPLAYNAME
+	                ELSE
+	                	DISPLAYNAME2
+	                END
+	                	DISPLAYNAME  ,
+	             	CASE
+	             		#v_LANGDATA#
+	                WHEN
+	                	'1'
+	                THEN
+	                	DISPLAYNAME
+	                ELSE
+	                	DISPLAYNAME2
+	                END
+	                	DEPTNM  ,
+	             	DISPLAYNAME DISPLAYNAME1  ,
+	             	DISPLAYNAME2 ,
+	             	MAIL ,
+	             	EXTENSIONATTRIBUTE1 ,
+	             	EXTENSIONATTRIBUTE2 ,
+	             	CASE
+	             		#v_LANGDATA#
+	                WHEN
+	                	'1'
+	                THEN
+	                	EXTENSIONATTRIBUTE3
+	                ELSE
+	                	COMPNM2
+	                END
+	                	EXTENSIONATTRIBUTE3  ,
+	             	EXTENSIONATTRIBUTE4 ,
+	             	EXTENSIONATTRIBUTE5 ,
+	             	EXTENSIONATTRIBUTE6 ,
+	             	EXTENSIONATTRIBUTE7 ,
+	             	EXTENSIONATTRIBUTE8 ,
+	             	EXTENSIONATTRIBUTE9 ,
+	             	EXTENSIONATTRIBUTE10 ,
+	             	EXTENSIONATTRIBUTE11 ,
+		            EXTENSIONATTRIBUTE12 ,
+		            EXTENSIONATTRIBUTE13 ,
+		            EXTENSIONATTRIBUTE14 ,
+		            EXTENSIONATTRIBUTE15 ,
+		            ADSPATH ,
+		            UPDATEDT ,
+		            'dept' TYPE ,
+		            TENANT_ID as tenantId
+				FROM
+		        	TBL_DEPTMASTER 
+		       WHERE
+		       		CN = #v_CN#
+		       AND
+		       		TENANT_ID = #v_TENANT_ID#		
+			]]>
+		</isNotEqual>
 	</select>
 
 	<select id="EzOrganDAO.getTBLUserMaster" parameterClass="Map" resultMap="userInfo">

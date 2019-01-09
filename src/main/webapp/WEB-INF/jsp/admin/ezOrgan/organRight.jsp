@@ -160,7 +160,8 @@
 					document.getElementsByClassName('organSearchForm')[0].style.display = "";
 				}else{
 					cellContent = ";displayname;extensionAttribute9";
-					typeContent = "group";
+					// typeContent값은 부서장을 넣어주기 위해 바꿔주었음 (기존 group)
+					typeContent = "groupDeptMaster";
 					document.getElementsByClassName('organSearchEnter')[0].style.display = "none";
 					document.getElementsByClassName('organSearchForm')[0].style.display = "none";
 				}

@@ -368,7 +368,14 @@ public class EzOrganServiceImpl implements EzOrganService {
 	    logger.debug("getDeptMemberList started");
 	    logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
 	            + ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",tenantID=" + tenantID);
-	    
+		
+	    // 2019-01-09 황윤호
+		// 조직도 관리에서 부서장 column을 id -> name으로 바꿔주기 위해 사용
+		String deptMaster = "";
+		if(pClass != null && pClass.equals("groupDeptMaster")) {
+			pClass = "group";
+			deptMaster = "group";
+		}
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
@@ -406,9 +413,10 @@ public class EzOrganServiceImpl implements EzOrganService {
             	map1.put("v_CN", obj.getCn());
         		map1.put("v_LANGDATA", pLangCode);
         		map1.put("v_TENANT_ID", tenantID);
+        		map1.put("deptMaster", deptMaster);
         		                
         		// 자식 부서의 상세 정보를 가져온다.
-        		Object deptVO = ezOrganDAO.getTBLDeptMaster(map1);                
+        		Object deptVO = ezOrganDAO.getTBLDeptMaster(map1);
                 sb.append(commonUtil.getQueryResult(deptVO));
             }
             
@@ -436,10 +444,10 @@ public class EzOrganServiceImpl implements EzOrganService {
 	
 	@Override
 	public String getDeptMemberListPagination(String pDeptID, String pCellList, String pPropList, String pClass, String pLangCode, String pPage, int tenantID) throws Exception {
-        logger.debug("getDeptMemberListPagination started");
-        logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
-                + ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",pPage=" + pPage + ",tenantID=" + tenantID);
-	    		
+		logger.debug("getDeptMemberListPagination started");
+		logger.debug("pDeptID=" + pDeptID + ",pCellList=" + pCellList + ",pPropList=" + pPropList
+				+ ",pClass=" + pClass + ",pLangCode=" + pLangCode + ",pPage=" + pPage + ",tenantID=" + tenantID);
+
 		Map<String, Object> map = new HashMap<String, Object>();
 		Map<String, Object> map1 = new HashMap<String, Object>();
 		Map<String, Object> map2 = new HashMap<String, Object>();
@@ -483,7 +491,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         		map1.put("v_TENANT_ID", tenantID);
         		                
         		// 자식 부서의 상세 정보를 가져온다.
-        		Object userVO = ezOrganDAO.getTBLDeptMaster(map1);                
+        		Object userVO = ezOrganDAO.getTBLDeptMaster(map1);
                 sb.append(commonUtil.getQueryResult(userVO));
             }
             
