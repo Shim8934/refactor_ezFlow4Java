@@ -201,6 +201,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("jspGetSurveyDetail started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String itemId      = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
+		String mode        = request.getParameter("mode")   != null ? request.getParameter("mode")   : "";
 		
 		if (itemId.equals("")) {
 			model.addAttribute("reasonMessage", "ezSurvey.err1");
@@ -229,6 +230,8 @@ public class EzSurveyController extends EgovFileMngUtil {
 			return "ezSurvey/surveyAccessDenied";
 		}
 		
+		model.addAttribute("user", user.getId());
+		model.addAttribute("mode", mode);
 		logger.debug("jspGetSurveyDetail ended");
 		
 		return "ezSurvey/listmenu/surveyDetail";
