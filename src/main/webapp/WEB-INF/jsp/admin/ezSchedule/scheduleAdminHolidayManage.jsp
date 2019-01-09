@@ -663,10 +663,10 @@
 				    </ul>
 				</div>
 			</div>
-			<table id="Managetable" style="width: 800px; height: 613px;" border="0">
+			<table id="Managetable" style="width: 800px; height: 545px;" border="0">
 		        <tr>
 		            <td>
-		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 800px; height: 613px;">
+		                <div style="border: 1px solid #dbdbda; border-top:0px; width: 800px; height: 545px;">
 		                    <table class="mainlist" style="width: 100%;">
 		                    	<tbody id="manage_HEAD">
 			                        <tr>
@@ -680,7 +680,7 @@
 			                        </tr>
 		                    	</tbody>
 		                    </table>
-		                    <div id="contentlist" name="contentlist" style="height: 579px; overflow-y: auto;">
+		                    <div id="contentlist" name="contentlist" style="height: 511px; overflow-y: auto;">
 		                        <table id="managelist_body" class="mainlist" style="width: 100%;">
 		                            <tr>
 		                                <td style="text-align: center;">

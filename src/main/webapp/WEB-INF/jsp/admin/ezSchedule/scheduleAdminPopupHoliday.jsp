@@ -37,6 +37,11 @@
 		    var holidayFlag = "<c:out value='${holidayFlag}'/>";
 	
 		    window.onload = function () {
+		    	var List_Year = document.getElementById("List_Year");
+			    var list_Month2 = document.getElementById("list_Month2");
+			    var list_YearlyEach = document.getElementById("list_YearlyEach");
+			    var list_YearlyDay = document.getElementById("list_YearlyDay");
+		    	
 		        if (holidayid != "") {
 		            document.getElementById("add").style.display = "none";
 		            document.getElementById("mod").style.display = "";		            
@@ -67,6 +72,9 @@
 		        	var info = holidayRepeat.split("|");
 		        	
 		        	List_Year.value = info[0];
+		        	if (info[1].indexOf('0') == 0) {
+		        		info[1] = info[1].substring(1);
+		        	}
 			        list_Month2.value = info[1];
 					list_YearlyEach.value = info[2];
 					list_YearlyDay.value = info[3];
@@ -122,6 +130,16 @@
 		
 		    <%-- 2018-07-24 천성준 저장/수정시, 특수문자 입력 가능하게 --%>
 		    function save_holiday(type) {
+		    	var List_Year = document.getElementById("List_Year");
+			    var list_Month2 = document.getElementById("list_Month2");
+			    var list_Month3 = '';
+			    if (list_Month2.value.length == 1) {
+			    	list_Month3 = "0" + list_Month2.value;
+			    } else {
+			    	list_Month3 = list_Month2.value;
+			    }			    
+			    var list_YearlyEach = document.getElementById("list_YearlyEach");
+			    var list_YearlyDay = document.getElementById("list_YearlyDay");
 		    	var holidayName = document.getElementById("holidayname").value.trim();
 		    	var holidayName2 = document.getElementById("holidayname2").value.trim();
 		    	var companyID = "";
@@ -149,12 +167,12 @@
 			        var repetition = "";
 			        if (document.getElementById("repeat").checked) {
 				        repetition += new Date().getFullYear(); 
-			        	repetition += "|" + list_Month2.value;
+			        	repetition += "|" + list_Month3;
 						repetition += "|" + list_YearlyEach.value;
 						repetition += "|" + list_YearlyDay.value;
 			        } else {
 				        repetition += List_Year.value;
-			        	repetition += "|" + list_Month2.value;
+			        	repetition += "|" + list_Month3;
 						repetition += "|" + list_YearlyEach.value;
 						repetition += "|" + list_YearlyDay.value;
 			        }

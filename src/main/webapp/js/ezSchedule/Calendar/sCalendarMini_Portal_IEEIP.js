@@ -1991,6 +1991,10 @@ function getLastDateDay(year, month, day, firstDate) {
 }
 
 function getTotalDate(year, month) {
+	if(month.indexOf('0') == 0) {
+		 month = month.substring(1);
+	 }
+	
 	if(month==4 || month==6 || month==9 || month==11) {
 		return 30;
 	} else if(month==2) {
