@@ -227,7 +227,7 @@
 	    			} else {
 		    			resultHtml += "<td>" + vo.totalAnnualCnt.split(".")[0] + "</td>";
 	    			}
-	    			resultHtml += "<td><a class='imgbtn'><span onclick='useAnnualHistory(this);'>내역 확인</span></a></td>";
+	    			resultHtml += "<td><a class='imgbtn'><span onclick='useAnnualHistory(this);'>사용 내역 확인</span></a></td>";
 	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"annualHistoryPop('" + vo.userId + "','" + vo.year + "')\">수정 내역 확인</span></a></td>";
 	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"modifyPrsnAnnualPop('" + vo.userId + "', '" + vo.userName + "','" + vo.year + "')\">수정</span></a></td></tr>";
 	    			
@@ -357,9 +357,9 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="useAnnualCnt"><spring:message code='ezAttitude.t238' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="totalAnnualCnt"><spring:message code='ezAttitude.t239' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname=""><spring:message code='ezAttitude.t240' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname=""><spring:message code='ezAttitude.t241' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis;" colname=""><spring:message code='ezAttitude.t163' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t240' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t241' /></th>
+						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t163' /></th>
 					</tr>
 				</thead>
 				<tbody>

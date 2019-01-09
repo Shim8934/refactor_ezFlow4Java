@@ -113,7 +113,7 @@
 	    <table class="content">
 			<div class="timecheck_info">
 		    	<dl class="timeInfo" style="position:static">
-		        	<dt class="timeInfoPic">	
+		        	<dt class="timeInfoPic" style="margin: 0px;">	
 						<img id="userImage" src="/images/kr/main/bestEmployee_pic_none.png" width="48px" height="48px">
 		        	</dt>
 		            <dd class="timeInfoText"><span id="userName"></span><span id="userTitle"></span><span id="userDept" style="color:#aaa9a9"></span></dd>
