@@ -287,12 +287,20 @@ public class EzEmailAdminController {
 				.getParameter("name");
 		String useOcs = config.getProperty("config.USE_OCS");
 		String companyId = request.getParameter("companyId");
-
+		
+		int tenantId = auth.getTenantId();
+		String mailDomain = ezCommonService.getCompanyConfig(tenantId, companyId, "DomainName");
+		
+		if (mailDomain.equals("")) {
+			mailDomain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		}
+		
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("cn", cn);
 		model.addAttribute("textName", textName);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("companyId", companyId);
+		model.addAttribute("mailDomain", mailDomain);
 		
 		logger.debug("mailAddDistributionList ended.");
 
@@ -598,7 +606,7 @@ public class EzEmailAdminController {
 			logger.debug("response=" + response);
 
 			JSONArray resultArray = null;
-
+			String mail = null;
 			if (response != null) {
 				JSONParser jsonParser = new JSONParser();
 				JSONObject responseObj = (JSONObject) jsonParser
@@ -607,13 +615,15 @@ public class EzEmailAdminController {
 				String resultCode = (String) responseObj.get("resultCode");
 		
 				if (resultCode.equalsIgnoreCase("OK")) {
-					resultArray = (JSONArray) responseObj.get("result");
+					resultArray = (JSONArray)responseObj.get("result");
+					mail = (String)responseObj.get("mail");
 				}
 			}
 
 			StringBuilder sb = new StringBuilder();
 			sb.append("<DATA>");
-
+			sb.append("<MAIL>" + mail + "</MAIL>");
+			
 			for (int i = 0; i < resultArray.size(); i++) {
 				JSONObject address = (JSONObject) resultArray.get(i);
 				String pCn = (String) address.get("cn");
