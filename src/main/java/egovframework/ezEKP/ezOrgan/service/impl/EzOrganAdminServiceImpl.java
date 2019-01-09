@@ -155,7 +155,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
    		logger.debug("searchCompanyID=" + searchCompanyID );
-	    
+   		
+   		if (!searchStartDate.equals("")) {
+   			searchStartDate += " 00:00:00";
+   			searchEndDate += " 23:59:59";
+		}
    		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -588,6 +592,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
 	    logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
+   		
+   		if (!searchStartDate.equals("")) {
+   			searchStartDate += " 00:00:00";
+   			searchEndDate += " 23:59:59";
+		}
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		

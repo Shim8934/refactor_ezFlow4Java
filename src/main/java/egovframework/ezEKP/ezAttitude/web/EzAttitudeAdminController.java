@@ -2678,7 +2678,7 @@ public class EzAttitudeAdminController {
 		row = sheet.createRow(0);
 		
 		String pFileName = "";
-		pFileName = EgovDateUtil.getToday("-") +"_annualReport.xls";
+		pFileName = EgovDateUtil.getToday("-") +"_annualReport";
 		
 		//header
 		row.createCell(0).setCellValue("NO");
