@@ -280,7 +280,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 				StringBuilder bodyContent = new StringBuilder("");
 
 				bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 13px; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
-				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "&type=new', '', 'width=820, height=900')\">" + commonUtil.cleanValue(title) + "</span></br>");
+				bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='circular_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "&type=new', '', 'width=820, height=900')\">" + commonUtil.cleanValue(title) + "</span></br>");
 		    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
 		    	bodyContent.append("</div>");
 
@@ -530,7 +530,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 			String subject = egovMessageSource.getMessage("ezCircular.t172", userInfo.getLocale());
 			StringBuilder bodyContent = new StringBuilder("");
 			bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + ";\" name=\"urn:schemas:httpmail:textdescription\">");
-			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "&type=new', '', 'width=820, height=900')\">" + commonUtil.cleanValue(title) + "</span></br>");
+			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='circular_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "&type=new', '', 'width=820, height=900')\">" + commonUtil.cleanValue(title) + "</span></br>");
 	    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
 	    	bodyContent.append("</div>");
 
@@ -1507,7 +1507,7 @@ public class EzCircularServiceImpl implements EzCircularService {
     	
 			StringBuilder bodyContent = new StringBuilder("");
 			bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + ";\" name=\"urn:schemas:httpmail:textdescription\">");
-			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularVO.getCircularID() + "&type=new', '', 'width=820, height=900')\">" + commonUtil.cleanValue(circularVO.getTitle()) + "</span></br>");
+			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='circular_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularVO.getCircularID() + "&type=new', '', 'width=820, height=900')\">" + commonUtil.cleanValue(circularVO.getTitle()) + "</span></br>");
 			bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t164", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
 			bodyContent.append("</div>");
 			
@@ -1770,7 +1770,7 @@ public class EzCircularServiceImpl implements EzCircularService {
 		String subject = egovMessageSource.getMessage("ezCircular.t123", userInfo.getLocale());
     	StringBuilder bodyContent = new StringBuilder("");
     	bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + ";\" name=\"urn:schemas:httpmail:textdescription\">");
-    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "&type=new', '', 'width=820, height=900')\">" + commonUtil.cleanValue(circularVO.getTitle()) + "</span></br>");
+    	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='circular_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularID + "&type=new', '', 'width=820, height=900')\">" + commonUtil.cleanValue(circularVO.getTitle()) + "</span></br>");
     	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t164", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
     	bodyContent.append("</div>");
     	
