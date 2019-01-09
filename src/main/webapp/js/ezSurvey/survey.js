@@ -1397,40 +1397,13 @@ var SurveyCreate     = function() {
 			$("#scndBtnGrp" + id).css("display", "none");
 			$("#thrdBtnGrp" + id).css("display", "none");
 		});
-//		
+		
 		// skip 폼 생성 이벤트
 		$(".prevQsArea").on("click", ".addSkip", function() {
 			var id = parseInt($(this).attr("id").replace("addSkip", ""));
 			
 			mkSkipForm(id);
 			
-			/*
-			var prevWrapper = $(this).parents(".prevQsWrapper");
-			var qstnContent = prevWrapper.find(".question-content");
-			var qstnList = SurveyCreate.getQs();
-
-			var htmlOption = "";
-			htmlOption += "<option value=''>" + SurveyMessages.strNoLogic + "</option>"; 
-			
-			for (var i = 0; i < qstnList.length; i++) {
-				var qstnId = qstnList[i]["level"];
-				if (qstnId > id) {
-					htmlOption += "<option value='" + qstnId + "'>" + qstnId + "</option>"; 
-				}
-			}
-			htmlOption += "<option value='0'>" + SurveyMessages.strLast + "</option>"; 
-			
-			var html = "";
-			html += "<span id='skip" + id + "' class='skipArea'>";
-			html += "<img class='skipArrow' src='/images/ezSurvey/arrow.png'>";
-			html += "<select class='skipSelect' name='skip" + id + "'>";
-			html += htmlOption;
-			html += "</select>";
-			html += "<span class='skipSpan' id='skipVal" + id + "'></span>";
-			html += "</span>";
-			
-			qstnContent.append($(html)[0]);
-			*/
 			$("#frstBtnGrp" + id).css("display", "none");
 			$("#skipScndBtnGrp" + id).css("display", "");
 			$("#skipThrdBtnGrp" + id).css("display", "none");
@@ -1460,69 +1433,22 @@ var SurveyCreate     = function() {
 			} else if (skipNum == 0) {
 				skip = SurveyMessages.strLast;
 			}
-			/*
-			else {
-				skip = SurveyMessages.strNoLogic;
-			}
-			*/
 			$("select[name=skip" + id + "]").css("display", "none");
 			$("#skipVal" + id).text(skip).css("display", "");
-			
-			/*
-			// 로직 추가, ui 변경
-			switch(type) {
-			case 1 :
-				pf = checkLogicNum(id, qstn, type);
-				result = pf == "success" ? addSltLogic(id, qstn) : ""; 
-				break;
-			case 7:
-				result = addSlidLogic(id, qstn);
-				break;
-			case 9:
-				pf = checkLogicNum(id, qstn, type);
-				result = pf == "success" ? addDrdwLogic(id, qstn) : "";
-				break;
-			case 2 :
-			case 3:
-			case 4:
-			case 5:
-			case 6:
-			case 8:
-				result = addOthersLogic(id, qstn);
-				break;
-			}
-			*/
-			/*
-			if (result == "success") {
-				var logicFlag = qstn['logicFlag'];
-				var required = qstn['required'];
-				
-				if (required == 0) {
-					required = 1;
-				}
-				if (logicFlag == undefined || logicFlag == 0) {
-					qstn['logicFlag'] = 1;
-				}
-				$("#frstBtnGrp" + id).css("display", "none");
-				$("#scndBtnGrp" + id).css("display", "none");
-				$("#thrdBtnGrp" + id).css("display", "");
-			}
-			*/
-			
 			$("#frstBtnGrp" + id).css("display", "none");
 			$("#skipScndBtnGrp" + id).css("display", "none");
 			$("#skipThrdBtnGrp" + id).css("display", "");
 			
 			showLogicMap();
 		});
-//		
+		
 		// skip 취소 버튼 이벤트
 		$(".prevQsArea").on("click", ".cancelSkip", function() {
 			var id = $(this).attr("id").replace("cancelSkip", "");
 			var qstnList = SurveyCreate.getQs();
 			var qstn = qstnList[id - 1];
 			
-			if (qstn['skipFlag'] == 0) {
+			if (qstn['skipFlag'] == undefined || qstn['skipFlag'] == 0) {
 				$("#skip" + id).remove();
 			} else {
 				var skip = "";
