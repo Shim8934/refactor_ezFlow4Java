@@ -2667,13 +2667,8 @@ var SurveyCreate     = function() {
 		var qstnList = SurveyCreate.getQs();
 		
 		if (step == 4) {
-<<<<<<< HEAD
-			var qstInf   = SurveyCreate.getInfo();
-			//confirmSurveyInfo(qstInf);
-=======
 			var qstInf = SurveyCreate.getInfo();
 			confirmSurveyInfo(qstInf);
->>>>>>> 324a93d37fba57a4df1e3710caf90eb236f315de
 		}
 		
 		if (qstnList.length != 0) {
