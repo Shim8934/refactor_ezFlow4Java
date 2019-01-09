@@ -2142,7 +2142,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		String pollManagerID = request.getParameter("pollManagerID");
-		String pollState = request.getParameter("pollState");
+		String pollState = URLDecoder.decode(request.getParameter("pollState"), "utf-8");
 		
 		//TODO 2016-12-15 이효진 사용되지 않음
 //		int userLevel = ezCommunityService.pollResGet1(userInfo.getId(), code, tenantID);

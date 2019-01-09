@@ -1610,13 +1610,13 @@ function ClearDocCellInfo() {
         }
         
         //2018-09-27 김보미
-        if (AprState == "015") { //회송일 경우 수신처 결재칸도 비울것. 
+        if (AprState == "015" || isUsed == "reuse") { //회송이거나 재사용일 경우 수신처 결재칸도 비울것. 
         	susunSN = "1";
         	for (i = 1; i <= SignCount ; i++) {
         		fieldname = susunSN + "sign" + i;
         		field = message.GetListItem(fields, fieldname);
         		
-        		if (field.textContent != null && field.textContent != " " && field.textContent != "") { //서명이 있을 경우에만 값을 지운다.
+        		if (field.innerHTML != null && field.innerHTML != " " && field.innerHTML != "") { //서명이 있을 경우에만 값을 지운다.
         			if (field) {
         				field.textContent = " ";
         				if (new RegExp(/Firefox/).test(navigator.userAgent))
