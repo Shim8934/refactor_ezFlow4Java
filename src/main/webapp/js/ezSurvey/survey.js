@@ -1464,6 +1464,10 @@ var SurveyCreate     = function() {
 			
 			if (qstn['skipFlag'] == undefined || qstn['skipFlag'] == 0) {
 				$("#skip" + id).remove();
+				
+				$("#frstBtnGrp" + id).css("display", "");
+				$("#skipScndBtnGrp" + id).css("display", "none");
+				$("#skipThrdBtnGrp" + id).css("display", "none");
 			} else {
 				var skip = "";
 				var skipNum = qstn['skip'];
@@ -1473,11 +1477,12 @@ var SurveyCreate     = function() {
 					$("#skipVal" + id).text(skip).css("display", "");
 				}
 				$("select[name=skip" + id + "]").css("display", "none");
+				
+				$("#frstBtnGrp" + id).css("display", "none");
+				$("#skipScndBtnGrp" + id).css("display", "none");
+				$("#skipThrdBtnGrp" + id).css("display", "");
 			}
 			
-			$("#frstBtnGrp" + id).css("display", "");
-			$("#skipScndBtnGrp" + id).css("display", "none");
-			$("#skipThrdBtnGrp" + id).css("display", "none");
 		});
 		
 		// skip 삭제 버튼 이벤트
