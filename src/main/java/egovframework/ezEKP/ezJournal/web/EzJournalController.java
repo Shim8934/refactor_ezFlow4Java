@@ -1815,7 +1815,7 @@ public class EzJournalController extends EgovFileMngUtil {
 				String content = "<p>" + egovMessageSource.getMessage("ezJournal.t152") + "</p>";
 				
 				content += "<p></p>";
-				content += "<a href='#' target='' onclick='journalMailLink(" + journalId + ",1);'>" + journalTitle + "</a>";
+				content += "<a id='journal_a' href='#' target='' onclick='journalMailLink(" + journalId + ",1);'>" + journalTitle + "</a>";
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t153") + userInfo.getDisplayName() + "</p>";
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t154") + journalTitle + "</p>";
 				content += "<p>" + replyContent + "</p>";
@@ -1890,7 +1890,7 @@ public class EzJournalController extends EgovFileMngUtil {
 				
 				String content = "<p>" + egovMessageSource.getMessage("ezJournal.t156") + "</p>";
 				content += "<p></p>";
-				content += "<a href='#' target='' onclick='journalMailLink(" + journalId + ");'>" + journalTitle + "</a>";
+				content += "<a id='journal_a' href='#' target='' onclick='journalMailLink(" + journalId + ");'>" + journalTitle + "</a>";
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t157") + userInfo.getDisplayName() + "</p>";
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t154") + journalTitle + "</p>";
 				
