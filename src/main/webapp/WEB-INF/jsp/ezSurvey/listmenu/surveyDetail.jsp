@@ -353,16 +353,16 @@
 		
 		function saveSurveyResponses() {
 			var result = "";
-			result = checkDate();
+			//result = checkDate();
 
-			if (result != "") {
+			if (result != "false") {
 				var qsWrappers = $(".prevQsArea").find(".prevQsWrapper");
 				
 				for (var i = 0; i < qsWrappers.length; i++) {
 					var wrapper = qsWrappers[i];
-					var displayValue = wrapper.style.display;
+					var mask = wrapper.querySelector("div[class=mask]");
 	
-					if (displayValue != "none") {
+					if (mask == null) {
 						var qstnId = wrapper.getAttribute("id");
 						var id = parseInt(qstnId.replace("prevQstn", ""));
 						var type = parseInt(wrapper.getAttribute("type"));
@@ -407,7 +407,7 @@
 		
 		function saveResponse() {
 			console.log(JSON.stringify(resposeObj));
-			
+			/* 
 			$.ajax({
 				type: "POST",
 				url: "/ezSurvey/saveResponse.do",
@@ -422,7 +422,7 @@
 					alert(SurveyMessages.strError);
 				}
 			});
-			
+			 */
 		}
 		
 		function afterSaveSuccessfully(data) {
@@ -697,11 +697,11 @@
 			today = yyyy + "-" + MM + "-" + dd;
 			
 			if (startDate > today) {
-				alert("설문 기간이 아닙니다. 설문 가능 기간: " + startDate + "~" + endDate);
+				alert("설문 기간이 아닙니다. 설문 기간: " + startDate + "~" + endDate);
 				result = "false";
 			}
 			if (endDate < today) {
-				alert("설문 기간이 아닙니다. 설문 가능 기간: " + startDate + "~" + endDate);
+				alert("설문 기간이 아닙니다. 설문 기간: " + startDate + "~" + endDate);
 				result = "false";
 			}
 			
@@ -711,44 +711,110 @@
 		function checkRequired() {
 			var qsWrappers = $(".prevQsArea").find(".prevQsWrapper");
 			var arr = [];
+			var result = "";
 
 			for (var i = 0; i < qsWrappers.length; i++) {
-				var display = qsWrappers[i].style.display;
+				var maskCnt = qsWrappers[i].querySelector("div[class=mask]");
 				var required = qsWrappers[i].querySelector("strong[class='imptt']");
 				
-				if (display != "none" && required != null) {
+				if (maskCnt == null && required != null) {
 					var id = i + 1;
-					var type = qsWrappers[i].getAttribute("type");
+					var type = parseInt(qsWrappers[i].getAttribute("type"));
 					
 					switch(type) {
 					case 1 : 
 					case 2 :
-						checkSltResponse(id);
+						result = checkSltResponse(id);
 						break;
 					case 3 : 
 					case 4 :
-						checkMtrResponse(id, type);
+						result = checkMtrResponse(id, type);
+						break;
+					case 5 : 
+					case 6 :
+						result = checkTxtResponse(id, type);
+						break;
+					case 7 : 
+						result = checkSliderResponse(id);
+						break;
+					case 8 : 
+						result = checkRankingResponse(id);
+						break;
+					case 9 : 
+						result = checkDrdwResponse(id);
 						break;
 					}
 					
 				}
+				if (result == 0 || result == "") {
+					alert(id + "번 질문에 대한 답변이 완료되지 않았습니다.");
+					break;
+				}
+				if (result == 'break') {
+					break;
+				}
 			}
 			
 		}
-		
+		// 선택 질문 답변 유무 체크
 		function checkSltResponse(id) {
-			
 			var cnt = $("input[name^=qstn" + id+ "]:checked").length;
-			console.log(cnt);
-			
 			var wrapper = $("#prevQstn" + id);
 			var checkedCnt = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked").length;
-			if (checkedCnt == 0) {
-				alert(id + "번 질문은 필수 답변 질문입니다.");
+			return checkedCnt;
+		}
+		
+		// 행렬 질문 답변 유무 체크
+		function checkMtrResponse(id, type) {
+			var requiredCnt = $("#prevQstn" + id).find("tbody tr").length;
+			var checkedCnt = $("input[name^=qstn" + id + "opt]:checked").length;
+			var stop = "break";
+			 
+			if (type == 3 && checkedCnt < requiredCnt) {
+				alert(id + "번 질문: 최소" + requiredCnt + "개 선택 필수");
+				return stop;
+			}
+			
+			return checkedCnt;
+		}
+		
+		// 단답, 문장형 질문 답변 유무 체크
+		function checkTxtResponse(id, type) {
+			var wrapper = $("#prevQstn" + id);
+			var txtAnswer = "";
+			
+			if (type == 5) {
+				txtAnswer = wrapper.find(".shortanswer").val().trim();
+				
+			} else if (type == 6) {
+				txtAnswer = wrapper.find(".paragraph").val().trim();
+			}
+			return txtAnswer;
+		}
+		
+		// 슬라이더 질문 답변 유무 체크
+		function checkSliderResponse(id) {
+			var sliderValue = $("#slider" + id).val();
+			return sliderValue;
+		}
+		
+		// 순위 질문 답변 유무 체크
+		function checkRankingResponse(id) {
+			var length = $("#prevQstn" + id).find(".rank-order").length;
+			var result = "";
+			
+			for (var i = 0; i < length; i++) {
+				var optLevel = $("select[name^=ranking" + id + i + "]").val();
+				
+				if (optLevel == "") {
+					return result;
+				}
 			}
 		}
-		function checkMtrResponse(id, type) {
-			var wrapper = $("#prevQstn" + id);
+		// 드롭다운 질문 답변 유무 체크
+		function checkDrdwResponse(id) {
+			var selectedValue = $("select[name = drdw" + id + "]").val();
+			return selectedValue;
 		}
 	});
 </script>
