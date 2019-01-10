@@ -1256,6 +1256,27 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			
 			logger.debug("userExists=" + userExists);
 			
+			// 박예연 사용자 삭제시 웹폴더 개인 폴더들의 파일 데이터 삭제 추가 
+			JSONObject resultBody = null;
+			Map<String, Object> map = new HashMap<String, Object>();
+			try {
+				logger.debug("user delete webfolderData delete. start.");
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("userId", cn[i]);
+				jsonObj.put("adminId", userInfo.getId());
+				
+				resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/delete-user-alldata", 
+						null, request, "post", jsonObj);
+				
+				if (!resultBody.get("status").equals("ok")) {
+					logger.debug("webfolderDelete error. status is " + resultBody.get("status"));
+				}
+				logger.debug("user delete webfolderData delete. end.");
+			} catch(Exception e)  {
+				logger.debug("webfolderDelete error.");
+				e.printStackTrace();
+			}
+			
 			if (userExists == 0) { // 이메일 계정이 존재하지 않음.
 				// 로컬 시스템 계정을 삭제한다.
 				ezOrganAdminService.deleteDBData(cn[i], "user", tenantID);

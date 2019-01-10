@@ -337,6 +337,17 @@
 		)
 	</select>
 	
+	<delete id="EzSystemAdminDAO.deleteWebfolderLog" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_WEBFOLDER_LOG
+            WHERE
+            	TENANT_ID = #v_TENANT_ID#	
+            AND
+            	CREATE_DATE < sysdate - #v_KEEP_LOG_PERIOD#
+		]]>
+	</delete>
+	
 	<insert id="EzSystemAdminDAO.insertMultiLoginType" parameterClass="java.util.Map">
 		INSERT INTO
 			TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE)
@@ -356,4 +367,5 @@
 		AND
 			PROPERTY_NAME = 'useMultiLogin'
 	</update>
+
 </sqlMap>

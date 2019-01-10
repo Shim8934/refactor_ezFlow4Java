@@ -14,7 +14,7 @@ import egovframework.let.user.login.vo.LoginVO;
 public interface EzWebFolderService_y {
 	public void insertIfNotExistRootForder(String userId, String userName1, String userName2, String compId, List<Map<String, String>> permissionIdList, String offset, int tenantId) throws Exception;
 	
-	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId) throws Exception;
+	public List<Map<String, Object>> getFolderTree(String userId, String deptId, String compId, String folderType, String primary, int tenantId, String flag) throws Exception;
 	
 	// 파일리스트
 	List<FileVO> getFileList(String folderId, String userId, String deptId, int tenantId, String comId, String searchExt, String searchFileName, 
@@ -86,8 +86,14 @@ public interface EzWebFolderService_y {
 	
 	JSONObject fileUpdateOverwrite (List<MultipartFile> multiFileLists, JSONArray nameArray, LoginVO userInfo, String folderId ,JSONArray fileIdArray, String realPath, int tenantId) throws Exception;
 
+	public String existsUserIdTokenCheck(String userId, int tenantId) throws Exception;
+	
 	public String setAuthLoginTokenSql(String userId, String token, int tenantId, int device) throws Exception;
 
 	public int existsTokenCheck(String userId, String token,  int tenantId) throws Exception ;
+
+	public void deleteToken(String userId,  int tenantId) throws Exception ;
+	
+	public String folderIdByUserIdAndFolderType(String userId, int tenantId) throws Exception ;
 	
 }

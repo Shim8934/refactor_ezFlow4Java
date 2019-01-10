@@ -16,6 +16,7 @@ import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -28,8 +29,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tomcat.util.http.fileupload.IOUtils;
-import org.apache.tools.ant.util.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -235,6 +235,24 @@ public class EgovFileMngUtil extends EgovAbstractServiceImpl{
 		    }
 		}
     }
+
+	/**
+	 * 절대 경로로 첨부파일을 서버에 저장한다.
+	 *
+	 * @param multipartFile
+	 * @param filePath
+	 * @throws Exception
+	 */
+	protected void writeUploadedFile(MultipartFile multipartFile, String filePath) {
+		try (InputStream stream = multipartFile.getInputStream()) {
+			File file = new File(filePath);
+
+			file.getParentFile().mkdirs();
+			Files.copy(stream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+		} catch (Exception ex) {
+			LOGGER.debug("ex: {}", ex);
+		}
+	}
 
     /**
      * 서버의 파일을 다운로드한다.

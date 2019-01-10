@@ -39,6 +39,7 @@ import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
 import egovframework.ezEKP.ezWebFolder.vo.FolderVO;
 import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
@@ -160,7 +161,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String primary   = common.getPrimary();
 			int tenantId     = common.getTenantId();
 
-			List<Map<String, Object>> folderList = service.getFolderTree(userId, deptId, compId, folderType, primary, tenantId);
+			List<Map<String, Object>> folderList = service.getFolderTree(userId, deptId, compId, folderType, primary, tenantId, "");
 
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
@@ -187,7 +188,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String userId 				= (String) jsonObject.get("userId");
 
 		MCommonVO common;
-		try {
+		process: try {
 			common = mOptionService.commonInfoWeb(serverName, userId);
 			String folderUppId 			= (String) jsonObject.get("folderUppId");
 			String newFolderName1 		= (String) jsonObject.get("newFolderName1");
@@ -200,6 +201,30 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			Date date                  	= new Date();
 			String timeUTC             	= commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 			LOGGER.debug("timeUTC"+ timeUTC);
+			
+			String checkPermission = service.checkPermission(userId, deptId, comId, folderUppId, "D", tenantId);
+			
+			if ( checkPermission.equals("fail")) {
+				LOGGER.debug("checkPermission is fail. ");
+				jsonObj.put("status", "error");
+				jsonObj.put("code"	, 3);
+				LOGGER.debug("folderInsert method ended");
+				return jsonObj;
+			}
+			
+			// 추가되는 이름으로 중복되는 게 있는지 확인
+			List<DuplicateInfoVO> duplicateInfoList = ezWebFolderService.getAllDuplicateInfo(newFolderName1, folderUppId, offset, tenantId);
+			
+			if (duplicateInfoList.size() > 0) {
+				LOGGER.debug("Duplicate folder name: {}", newFolderName1);
+				
+				jsonObj.put("status", "error");
+				jsonObj.put("duplicateInfoArray", duplicateInfoList);
+				jsonObj.put("code", 8);
+				
+				break process;
+			}
+			
 			// foldervo 가지고 와서 상위의 폴더의 vo를 추린다. 
 			FolderVO foldervo= service.getFolderDetail(folderUppId, userId ,tenantId,comId);
 			
@@ -235,16 +260,42 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		String serverName 	= request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host") : "";
 		String userId 		= (String) jsonObject.get("userId");
 		MCommonVO common;
-		try {
+
+		process: try {
 			common = mOptionService.commonInfoWeb(serverName, userId);
 			String newFolderName1 		= (String) jsonObject.get("newFolderName1");
 			String newFolderName2 		= (String) jsonObject.get("newFolderName2");
 			int tenantId 				= common.getTenantId();
 			String comId 				= common.getCompanyId();
+			String deptId				= common.getDeptId();
 			String offset 				= common.getOffSet();
 			SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date                  	= new Date();
 			String timeUTC             	= commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+			String checkPermission = service.checkPermission(userId, deptId, comId, folderId, "D", tenantId);
+			
+			if ( checkPermission.equals("fail")) {
+				LOGGER.debug("checkPermission is fail. ");
+				jsonObj.put("status", "error");
+				jsonObj.put("code"	, 3);
+				LOGGER.debug("folderUpdate method ended");
+				return jsonObj;
+			}
+			
+			// 새 이름으로 중복되는 게 있는지 확인
+			FolderVO targetFolderVO = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+			List<DuplicateInfoVO> duplicateInfoList = ezWebFolderService.getAllDuplicateInfo(newFolderName1, targetFolderVO.getFolderUpper(), offset, tenantId);
+			
+			if (duplicateInfoList.size() > 0) {
+				LOGGER.debug("Duplicate folder name: {}", newFolderName1);
+				
+				jsonObj.put("status", "error");
+				jsonObj.put("duplicateInfoArray", duplicateInfoList);
+				jsonObj.put("code", 8);
+				
+				break process;
+			}
+			
 			service.updateFolder(folderId, tenantId, userId, comId, newFolderName1, newFolderName2, timeUTC);
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
@@ -253,6 +304,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			jsonObj.put("status", "error");
 			jsonObj.put("code", 2);
 		}
+
 		LOGGER.debug("folderUpdate ended");
 		return jsonObj;
 	}
@@ -273,6 +325,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			int tenantId = common.getTenantId();
 			String comId = common.getCompanyId();
 			String offset = common.getOffSet();
+			String deptId = common.getDeptId();
 			LOGGER.debug("folderId :" + folderId + ", serverName : "+ serverName + ", userId : " +userId + ", tenantId : " + tenantId
 					+ ", comId : " + comId + ", offset" + offset);
 			
@@ -282,6 +335,16 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				LOGGER.debug("Parameter error!");
 				result.put("status", "error");
 				result.put("code", 1);
+				return result;
+			}
+			
+			String checkPermission = service.checkPermission(userId, deptId, comId, folderId, "D", tenantId);
+			
+			if ( checkPermission.equals("fail")) {
+				LOGGER.debug("checkPermission is fail. ");
+				result.put("status", "error");
+				result.put("code"	, 3);
+				LOGGER.debug("folderCopy method ended");
 				return result;
 			}
 			
@@ -346,10 +409,16 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			}
 			
 			String realPath = request.getServletContext().getRealPath("");
-			ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, resmode, realPath, userInfo);
+			List<DuplicateInfoVO> duplicateList = ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, resmode, realPath, userInfo);
 			
-			result.put("status", "ok");
-			result.put("code", 0);
+			if (duplicateList.isEmpty()) {
+				result.put("status", "ok");
+				result.put("code", 0);
+			} else {
+				result.put("status", "ok");
+				result.put("code", 8);
+				result.put("duplicateInfoArray", duplicateList);
+			}
 		}catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "error");
@@ -387,6 +456,62 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				jsonObj.put("status", "error");
 				jsonObj.put("code", 4);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			jsonObj.put("status", "error");
+			jsonObj.put("code", 2);
+		}
+		LOGGER.debug("folderDelete ended");
+		return jsonObj;
+	}
+	
+	// 폴더 삭제 
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value ="/rest/ezwebfolder/folder-delete", method = RequestMethod.DELETE , produces = "application/json;charset=utf-8")
+	public JSONObject folderDelete2 ( HttpServletRequest request,@RequestBody JSONObject jsonObject) {
+		LOGGER.debug("folderDelete started");
+		JSONObject jsonObj 			= new JSONObject();
+		String serverName 			= request.getHeader("x-user-host")      != null ? request.getHeader("x-user-host") : "";
+		SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  	= new Date();
+		String userId 				= (String) jsonObject.get("userId");
+		String listFolderId   		= (String) jsonObject.get("folderId") != null ? (String) jsonObject.get("folderId") : "";
+		String[] folderIDList 		= listFolderId.split(",");
+		
+		LOGGER.debug((String)jsonObject.get("userId"));
+		MCommonVO common;
+		try {
+			common = mOptionService.commonInfoWeb(serverName, userId);
+			int tenantId 	= common.getTenantId();
+			String comId 	= common.getCompanyId();
+			String offset 	= common.getOffSet();
+			String deptId 	= common.getDeptId();
+			String timeUTC  = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+			String checkPermission = "";
+			
+			for ( int i = 0; i < folderIDList.length; i++ ) {
+				checkPermission = service.checkPermission(userId, deptId, comId, folderIDList[i], "D", tenantId);
+				
+				if ( checkPermission.equals("fail")) {
+					LOGGER.debug("checkPermission is fail. ");
+					jsonObj.put("status", "error");
+					jsonObj.put("code"	, 3);
+					LOGGER.debug("fileList method ended");
+					return jsonObj;
+				}
+			}
+			
+			for ( int i = 0; i < folderIDList.length; i++ ) {
+				int result = service.deleteSubFldAFile(folderIDList[i], tenantId, comId, userId, timeUTC);
+				if (result == 1) {
+					jsonObj.put("status", "ok");
+					jsonObj.put("code", 0);
+				} else if (result == 2) {
+					jsonObj.put("status", "error");
+					jsonObj.put("code", 4);
+				}
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			jsonObj.put("status", "error");
@@ -444,6 +569,16 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String offset = common.getOffSet();
 			String primary = common.getPrimary();
 			String comId = common.getCompanyId();
+			
+			String checkPermission = service.checkPermission(userId, deptId, comId, folderId, "D", tenantId);
+			
+			if ( checkPermission.equals("fail")) {
+				LOGGER.debug("checkPermission is fail. ");
+				jsonObj.put("status", "error");
+				jsonObj.put("code"	, 3);
+				LOGGER.debug("fileList method ended");
+				return jsonObj;
+			}
 			
 			// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
 			int usrListCnt = service.getUsrListCount(tenantId, userId);
@@ -529,17 +664,18 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
 						String[] fldPathArr = fldPath.split("\\|");
 						
-						if (folder.getFolderUpper().equals("root")) {
-							for (int i = rootPath.length; i < fldPathArr.length; i++) {
-								file_path += filePathMap.get(fldPathArr[i]) + "/";
-							}
-						} else {
+						if (file.getFileTypeName().equals("folder")) {
 							for (int i = rootPath.length; i < fldPathArr.length-1; i++) {
 								file_path += filePathMap.get(fldPathArr[i]) + "/";
 							}
+						} else {
+							for (int i = rootPath.length; i < fldPathArr.length; i++) {
+								file_path += filePathMap.get(fldPathArr[i]) + "/";
+							}
 						}
-						file_path = file_path.substring(0, file_path.length() - 1);
-						file.setFilePosition(file_path );
+						
+						file_path = file_path.substring(0, file_path.length()-1);
+						file.setFilePosition(file_path);
 					}
 				}
 			}
@@ -552,6 +688,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			data.put("createDate", fldDetail.getCreateDate());
 			data.put("updateDate", fldDetail.getUpdateDate());
 			data.put("folderName", fldDetail.getFolderName1());
+			data.put("userId", userId);
 			data.put("folderPath", folderPath2);
 			data.put("originalPath", originalPath);
 			data.put("fileList", fileList);
@@ -622,6 +759,16 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			String offset = common.getOffSet();
 			String primary = common.getPrimary();
 			String comId = common.getCompanyId();
+			
+			String checkPermission = service.checkPermission(userId, deptId, comId, folderId, "D", tenantId);
+			
+			if ( checkPermission.equals("fail")) {
+				LOGGER.debug("checkPermission is fail. ");
+				jsonObj.put("status", "error");
+				jsonObj.put("code"	, 3);
+				LOGGER.debug("fileList2 method ended");
+				return jsonObj;
+			}
 			
 			// 자신이 환경설정에 설정해놓은 listCount개수를 가져옴
 			int usrListCnt = service.getUsrListCount(tenantId, userId);
@@ -705,12 +852,12 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 						String fldPath      = file.getFolderPath().substring(1, file.getFolderPath().length() - 1);
 						String[] fldPathArr = fldPath.split("\\|");
 						
-						if (folder.getFolderUpper().equals("root")) {
-							for (int i = rootPath.length; i < fldPathArr.length; i++) {
+						if (file.getFileTypeName().equals("folder")) {
+							for (int i = rootPath.length; i < fldPathArr.length-1; i++) {
 								file_path += filePathMap.get(fldPathArr[i]) + "/";
 							}
 						} else {
-							for (int i = rootPath.length; i < fldPathArr.length-1; i++) {
+							for (int i = rootPath.length; i < fldPathArr.length; i++) {
 								file_path += filePathMap.get(fldPathArr[i]) + "/";
 							}
 						}
@@ -737,6 +884,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			data.put("totalPages", totalpages );
 			data.put("listCount", listCount );
 			data.put("currPage", currPage );
+			data.put("userId", userId);
 			
 			jsonObj.put("status", "ok");
 			jsonObj.put("code", 0);
@@ -801,7 +949,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 					LOGGER.debug("this folder conection is not permission ");
 					jsonObj.put("status", "error");
 					jsonObj.put("code"	, 3);
-					LOGGER.debug("fileList method Ended ");
+					LOGGER.debug("checkPermission method Ended ");
 					return jsonObj;
 				}
 				LOGGER.debug(checkResult);
@@ -1002,8 +1150,8 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	    	String pw = requestObject.get("pw") != null ? (String)requestObject.get("pw") : "";
 	    	int tenantId = 0;
 
-	    	System.out.println(webfolderUtil.encryptAES("yy9320"));
-	    	System.out.println(webfolderUtil.encryptAES("qkrdus93!"));
+	    	System.out.println(webfolderUtil.encryptAES("webfolder2"));
+	    	System.out.println(webfolderUtil.encryptAES("123qwe!!"));
 	    	
 	    	userId = webfolderUtil.decryptAES(userId);
 			pw = webfolderUtil.decryptAES(pw);
@@ -1047,5 +1195,57 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 		
 		LOGGER.debug("webfolderLogin end.");
 		return result;
+	}
+	
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/rest/ezwebfolder/delete-user-alldata", method= RequestMethod.POST,  produces="application/json;charset=utf-8")
+	public JSONObject deleteUserAllFileAndFolder(HttpServletRequest request, @RequestBody JSONObject jsonObject) {
+		JSONObject result = new JSONObject();
+		String serverName 	= orElse(request.getHeader("x-user-host"),"");
+		String fileList     = (String) orElse(jsonObject.get("fileList"), "");
+		String folderList   = (String) orElse(jsonObject.get("folderList"), "");
+		String userId       = (String) orElse(jsonObject.get("userId"), "");
+		String adminId   	= (String) orElse(jsonObject.get("adminId"), "");
+		
+		LOGGER.debug("deleteUserAllFileAndFolder Started.");
+		LOGGER.debug("userId : " + userId  + " || serverName : " + serverName);
+		String[] fileIDList = fileList.split(",");
+		String[] folderIDList = folderList.split(",");
+		String realPath = request.getServletContext().getRealPath("");
+		
+		if (serverName.equals("") || userId.equals("")) {
+			LOGGER.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			LoginVO userInfoAdmin = commonUtil.getUserForGw(adminId, serverName);
+			
+			String folderIdTypeU = service.folderIdByUserIdAndFolderType(userId, userInfo.getTenantId());
+			folderIDList[0] = folderIdTypeU;
+			
+			
+			if (!isWebfolderAdmin(userInfoAdmin)) {
+				result.put("status", "error");
+				result.put("code", 2);	
+				return result;
+			}
+			ezWebFolderService_m.permanetDeleteSelectedFiles(fileIDList, folderIDList, userInfo, realPath, "delete");
+		} catch (Exception e) {
+			e.printStackTrace();
+			
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		LOGGER.debug("filePermanetDelete ended");
+		
+		result.put("status", "ok");
+		result.put("code", 0);
+		
+		return result ;
 	}
 }

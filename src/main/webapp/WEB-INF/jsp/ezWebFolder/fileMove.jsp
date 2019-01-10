@@ -15,6 +15,7 @@
 	<script type="text/javascript">
 		var primary        = "<c:out value='${primary}'/>";
 		var fileList       = "<c:out value='${fileIdList}'/>";
+		var folderList     = "<c:out value='${folderIdList}'/>";
 		var selectedFolder = null;
 		var selectedLevel  = null;
 		var currentFolders = [];
@@ -282,6 +283,7 @@
 				url: "/ezWebFolder/moveFile.do",
 				data: {
 					"fileList" : fileList,
+					"folderList" : folderList,
 					"folderId" : selectedFolder,
 					"mode"     : "copy"
 				},
@@ -289,6 +291,19 @@
 				async: true,
 				success : function(data) {
 					var code = data.code;
+					
+					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 start
+					if (code == 0 || code == 8) {
+						if (data.folderErrorArray) {
+							alert("<spring:message code='ezWebFolder.t245' />");
+							
+							if (code == 0) {
+								afterSuccess();
+								return;
+							}
+						}
+					}
+					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 end
 					
 					switch(code) {
 						case 0: 
@@ -306,6 +321,15 @@
 							break;
 						case 4:
 							alert("<spring:message code='ezWebFolder.t250' />");
+							break;
+						case 8:
+							parent.duplicateFile.process({
+								workType: "copy",
+								infoArray: data.duplicateInfoArray, 
+								folderId: selectedFolder
+							});
+							
+							afterSuccess();
 							break;
 					}
 				},
@@ -338,6 +362,7 @@
 				url: "/ezWebFolder/moveFile.do",
 				data: {
 					"fileList"   : fileList,
+					"folderList" : folderList,
 					"folderId"   : selectedFolder,
 					"privileges" : mode,
 					"mode"       : "move"
@@ -346,6 +371,19 @@
 				async: true,
 				success : function(data) {
 					var code = data.code;
+					
+					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 start
+					if (code == 0 || code == 8) {
+						if (data.folderErrorArray) {
+							alert("<spring:message code='ezWebFolder.t245' />");
+							
+							if (code == 0) {
+								afterSuccess();
+								return;
+							}
+						}
+					}
+					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 end
 					
 					switch(code) {
 						case 0: 
@@ -363,6 +401,15 @@
 							break;
 						case 4:
 							alert("<spring:message code='ezWebFolder.t243' />");
+							break;
+						case 8:
+							parent.duplicateFile.process({
+								workType: "move",
+								infoArray: data.duplicateInfoArray, 
+								folderId: selectedFolder
+							});
+							
+							afterSuccess();
 							break;
 					}
 				},
