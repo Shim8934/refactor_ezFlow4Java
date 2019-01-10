@@ -1608,6 +1608,8 @@ public class CommonUtil {
 					if(useMultiLogin.equalsIgnoreCase("NO")) {
 						result = ezCommonService.matchMultiLoginTime(tenantID, userID, multiLoginCookie.getValue());
 					} 
+				} else {
+					return false;
 				}
 			}
 		} catch (Exception e) {
