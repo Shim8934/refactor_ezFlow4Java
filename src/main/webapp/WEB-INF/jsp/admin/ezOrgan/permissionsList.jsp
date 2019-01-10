@@ -201,16 +201,21 @@
 			
 			var checkFlag = false;
 			function checkboxHeaderClick() {
-				if (checkFlag) {
-					checkFlag = false;
-					$(".checks").prop("checked", false);
-					$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
-				} else {
-					checkFlag = true;
-					$(".checks").prop("checked", true);
-					$("#contentlist tr td").css("background-color", "rgb(241, 248, 255)");
+				var doc = window.document;
+				var acList = doc.getElementById("lvPermissionList");
+				// 데이터가 있을 경우에만
+				if(acList.children[1].children[0].id !== 'lvPermissionList_TR_noItems'){
+					if (checkFlag) {
+						checkFlag = false;
+						$(".checks").prop("checked", false);
+						$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+					} else {
+						checkFlag = true;
+						$(".checks").prop("checked", true);
+						$("#contentlist tr td").css("background-color", "rgb(241, 248, 255)");
+					}
+					checkItems();
 				}
-				checkItems();
 			}
 			
 			var rowList = new Array();

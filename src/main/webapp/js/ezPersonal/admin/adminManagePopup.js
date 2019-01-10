@@ -112,16 +112,22 @@ function checkbox_header() {
 //체크박스 헤더 클릭 method
 var checkFlag = false;
 function checkboxHeaderClick() {
-	if(checkFlag){
-		checkFlag = false;
-		$(".checks").prop("checked",false);
-		$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
-	}else {
-		checkFlag = true;
-		$(".checks").prop("checked",true);
-		$("#contentlist tr td").css("background-color", "rgb(241, 248, 255)");
+
+	var doc = window.document;
+	var acList = doc.getElementById("AccessListView");
+	// 데이터가 있을 경우에만
+	if(acList.children[1].children[0].id !== 'Link_TR_noItems'){
+		if(checkFlag){
+			checkFlag = false;
+			$(".checks").prop("checked",false);
+			$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+		}else {
+			checkFlag = true;
+			$(".checks").prop("checked",true);
+			$("#contentlist tr td").css("background-color", "rgb(241, 248, 255)");
+		}
+		checkItems();
 	}
-	checkItems();
 }
 
 //체크박스 itemseq 배열 조회 method
@@ -437,7 +443,7 @@ var del_popup = function () {
 		if (!confirm(strLanghyh13)){
 			return;
 		}
-		}
+	}
 
 	$.ajax({
 		type : "POST",
@@ -448,8 +454,11 @@ var del_popup = function () {
 		success : function (result) {
 			if (result == "OK") {
 				alert(strLanghyh15);
-				if((cnt - delCnt == 0) && pageNum > 1) {
-					pageNum = pageNum -1 ;
+				if((cnt - delCnt) == 0) {
+					if(pageNum > 1) {
+						pageNum = pageNum -1 ;
+					}
+					checkFlag = false;
 				}
 				itemseq=0;
 				showPreview(isPreview, 0);
