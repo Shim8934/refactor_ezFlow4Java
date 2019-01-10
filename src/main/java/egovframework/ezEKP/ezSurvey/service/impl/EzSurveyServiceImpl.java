@@ -1041,6 +1041,11 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 					case 2:
 					case 9:
 						int optionLevel = ((Long) answerObject.get("optionLevel")).intValue();
+						
+						if (answerObject.get("otherFlag") != null && ((Long) answerObject.get("otherFlag")).intValue() == 1) {
+							String otherValue = (String) answerObject.get("texts");
+							response.setTexts(otherValue);
+						}
 						response.setOptionLevel(optionLevel);
 						break;
 					case 3:

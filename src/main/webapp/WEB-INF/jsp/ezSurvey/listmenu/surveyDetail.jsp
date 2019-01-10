@@ -360,6 +360,7 @@
 			var periodResult = checkDate();
 			// 필수 답변에 응답 여부 체크
 			var requiredResult = checkRequired();
+			var responseResult = "success";
 
 			if (periodResult != "fail" && requiredResult != "fail") {
 				var qsWrappers = $(".prevQsArea").find(".prevQsWrapper");
@@ -375,10 +376,10 @@
 						
 						switch (type) {
 						case 1:
-							getSingleSltRespose(id, type);
+							responseResult = getSingleSltRespose(id, type);
 							break;
 						case 2:
-							getMultiSltRespose(id, type);
+							responseResult = getMultiSltRespose(id, type);
 							break;
 						case 3:
 							getSingleMtrRespose(id, type);
@@ -404,11 +405,15 @@
 						}
 						
 					}
-					
+					if (responseResult == 'fail') {
+						break;
+					}
 				}
-				saveResponse();
 			}
 			
+			if (periodResult != "fail" && requiredResult != "fail" && responseResult != "fail") {
+				saveResponse();
+			}
 		}
 		
 		function saveResponse() {
@@ -427,7 +432,6 @@
 						alert(SurveyMessages.strError);
 					}
 				});
-				
 			} else {
 				alert(SurveyMessages.strNoResponse);
 			}
@@ -449,25 +453,38 @@
 			var answerObj = {};
 			var optionLevel = {};
 			var answer = [];
+			var result = "success";
 			var wrapper = $("#prevQstn" + id);
-			var optLevel = parseInt(wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked").val());
+			var checkedBtn = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked");
+			var optLevel = parseInt(checkedBtn.val());
 			
 			if (!isNaN(optLevel)) {
+				if (checkedBtn.attr("otherFlag") == 1) {
+					var otherValue = $("#othInput" + id).val().trim();
+
+					if (otherValue != "") {
+						optionLevel['otherFlag'] = 1;
+						optionLevel['texts'] = otherValue;
+					} else {
+						result = "fail";
+						alert(id + SurveyMessages.writeOthers);
+					}
+				}
 				optionLevel['optionLevel'] = optLevel;
 				answer.push(optionLevel);
-				
 				answerObj['answers'] = answer;
 				answerObj['type'] = type;
 				answerObj['questionLevel'] = id;
 				resposeObj.responses.push(answerObj);
 			}
-			
+			return result;
 			//console.log(resposeObj.responses);
 		}
 		
 		function getMultiSltRespose(id, type) {
 			var answerObj = {};
 			var answer = [];
+			var result = "success";
 			var wrapper = $("#prevQstn" + id);
 			var checkBox = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]");
 			var length = checkBox.length;
@@ -478,6 +495,17 @@
 					var optionLevel = {};
 
 					if (!isNaN(optLevel)) {
+						if (checkBox[i].getAttribute('otherFlag') == 1) {
+							var otherValue = $("#othInput" + id).val().trim();
+
+							if (otherValue != "") {
+								optionLevel['otherFlag'] = 1;
+								optionLevel['texts'] = otherValue;
+							} else {
+								result = "fail";
+								alert(id + SurveyMessages.writeOthers);
+							}
+						}
 						optionLevel['optionLevel'] = optLevel;
 						answer.push(optionLevel);
 					}
@@ -490,6 +518,8 @@
 				answerObj['questionLevel'] = id;
 				resposeObj.responses.push(answerObj);
 			}
+			
+			return result;
 			//console.log(resposeObj.responses);
 		}
 		
@@ -732,7 +762,7 @@
 			var result = "success";
 			var qsWrappers = $(".prevQsArea").find(".prevQsWrapper");
 			var arr = [];
-			var checkResult = "";
+			var checkResult = "success";
 
 			for (var i = 0; i < qsWrappers.length; i++) {
 				var maskCnt = qsWrappers[i].querySelector("div[class=mask]");
@@ -785,7 +815,18 @@
 		function checkSltResponse(id) {
 			var cnt = $("input[name^=qstn" + id+ "]:checked").length;
 			var wrapper = $("#prevQstn" + id);
-			var checkedCnt = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked").length;
+			var checkedBtn = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked");
+			var checkedCnt = checkedBtn.length;
+			var flag = checkedBtn.attr('otherFlag');
+			var stop = "break";
+			
+			if (flag == 1) {
+				var otherInput = $("#othInput" + id).val().trim();
+				if (otherInput == "") {
+					alert(id + SurveyMessages.writeOthers);
+					return stop;
+				}
+			}
 			return checkedCnt;
 		}
 		

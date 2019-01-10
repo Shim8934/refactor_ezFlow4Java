@@ -118,5 +118,6 @@ var SurveyMessages = {
 	strnotComplete: "번 질문에 대한 답변이 완료되지 않았습니다.",
 	atLeast      : "번 질문: 최소",
 	requiredCnt  : "개 선택 필수",
+	writeOthers  : "번 질문의 기타 의견을 작성해 주세요.",
 	
 }

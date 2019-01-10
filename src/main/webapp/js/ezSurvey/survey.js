@@ -1917,7 +1917,7 @@ var SurveyCreate     = function() {
 		var optContent   = "";
 		var span         = "";
 		var othInput     = "";
-		
+		console.log(question);
 		// 보기
 		if (options) {
 			for (var i = 0; i < options.length; i++) {
@@ -1948,14 +1948,15 @@ var SurveyCreate     = function() {
 		
 		// 기타
 		if (other) {
+			console.log(other);
 			opt = $("<div class='opt'></div>");
 			
 			if (qstnType == 2) {
-				optChb = $("<input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + option.logic + "' />");
+				optChb = $("<input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + option.logic + "' otherFlag='" + other.otherFlag +"'/>");
 				opt.append(optChb);
 			}
 			else {
-				optRdo = $("<input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + option.logic + "' />");
+				optRdo = $("<input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + option.logic + "' otherFlag='" + other.otherFlag +"'/>");
 				opt.append(optRdo);
 			}
 			
@@ -1964,7 +1965,7 @@ var SurveyCreate     = function() {
 			optSpan = $("<span class='optSpan'></span>");
 			optSpan[0].textContent = other["content"];
 			opt.append(optSpan);
-			othInput = $("<input class='othInput' type='text'/>");
+			othInput = $("<input id='othInput" + qstnId + "' class='othInput' type='text'/>");
 			opt.append(othInput);
 			questionOpts.append(opt);
 		}
