@@ -17,6 +17,7 @@ var SurveyItem = function() {
 	var itemPopup      = null;
 	var documentCont   = null;
 	var userWindow     = null;
+	var statisticWd    = null;
 	var datepickerSt   = {
 		changeMonth    : true,
 		changeYear     : true,
@@ -477,6 +478,13 @@ var SurveyItem = function() {
 				tdElmt4.setAttribute("title", tdElmt4.textContent);
 				tdElmt6.setAttribute("title", tdElmt6.textContent);
 				
+				if (itemList[i]["responseFlag"] == 1) {
+					var statImg = document.createElement("img");
+					statImg.src = "/images/ezSurvey/statistic.png";
+					statImg.onclick = function(e) {openSurveyStatistic(e);}
+					tdElmt9.appendChild(statImg);
+				}
+				
 				if (itemList[i]["draftFlag"] == 1) {
 					tdElmt10.textContent = SurveyMessages.strDraft;
 				}
@@ -512,6 +520,14 @@ var SurveyItem = function() {
 				tableDataElmt.appendChild(trElmt);
 			}
 		}
+	}
+	
+	function openSurveyStatistic(event) {
+		event.stopPropagation();
+		var trElmt   = event.currentTarget.parentElement.parentElement;
+		var surveyId = trElmt.getAttribute("role");
+		if(statisticWd) {statisticWd.close();}
+		statisticWd  = window.open("/ezSurvey/showStatisticInfo.do?surveyId=" + surveyId, "statisticInfo", getOpenWindowfeature(780, 750));
 	}
 	
 	function onMainSearch() {
@@ -768,8 +784,9 @@ var SurveyItem = function() {
 	}
 	
 	function closeAllPopups() {
-		if(itemPopup)  {itemPopup.close();}
-		if(userWindow) {userWindow.close();}
+		if(itemPopup)   {itemPopup.close();}
+		if(userWindow)  {userWindow.close();}
+		if(statisticWd) {statisticWd.close();}
 	}
 	
 	function createNewSurvey()  {window.parent.frames["right"].location.href = "/ezSurvey/createSurvey.do";}

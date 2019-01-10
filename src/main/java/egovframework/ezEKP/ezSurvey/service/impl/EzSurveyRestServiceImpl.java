@@ -209,10 +209,11 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 	}
 	
 	@Override
-	public JSONObject checkSurveyItems(HttpServletRequest request, String userId, List<String> itemList) throws Exception {
+	public JSONObject checkSurveyItems(HttpServletRequest request, String userId, List<String> itemList, int mode) throws Exception {
 		String url                = "/rest/ezsurvey/survey-item/check";
 		Map<String, Object> param = new HashMap<String, Object>();
-		param.put("userId",   userId);
+		param.put("userId"  , userId);
+		param.put("mode"    , mode);
 		param.put("itemList", String.join(",", itemList));
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;

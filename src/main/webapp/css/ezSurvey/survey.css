@@ -43,6 +43,7 @@
 .surveyTbl .statisTh, .surveyTbl .anoynmTh, .surveyTbl .publicTh, .surveyTbl .targetTh {width: 80px; text-align: center;}
 .spanName, .selectedNode {height: 22px; line-height: 22px; color: #000; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}
 .spanName:hover {color: #9b9b9b;}
+.statisTh >img {width: 20px; height: 20px; vertical-align: middle;}
 .selectedNode {font-weight: bold;}
 .searchPanel, .userPanel, .logicPanel {z-index: 2000; position: fixed; border:1px solid #666; background-color: #fff;; border-radius: 5px; height: auto;}
 .searchPanel, .userPanel {width: 464px;}
@@ -274,15 +275,14 @@ input::-ms-clear {display: none;}
 .quesDiv .option_wrap .select_op li {height: 35px; vertical-align: middle;}
 .quesDiv .option_wrap .select_op li img {width: 30px; height: 30px;}
 
-.surveyCrtTt3 {height: 50px; width: 100%; background-color: #fff; border: 1px solid #d7d7d7; display: flex; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px;}
+.surveyCrtTt3 {height: 50px; width: 100%; background-color: #fff; display: flex; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px;}
 .surveyCrtTt3 .sryFirst2 {width: 10px; background-color: rgba(0, 115, 230, 0.64);}
-.surveyCrtTt3 .filler {flex-grow: 1;}
-.surveyCrtTt3 .sryTxt {height: 50px; line-height: 50px; padding: 0px 10px; font-weight: bold; font-size: 20px;}
+.surveyCrtTt3 .sryTxt {height: 50px; line-height: 50px; padding: 0px 10px; font-weight: bold; font-size: 20px; flex: 1;}
 .surveyCrtTt3 img {height: 40px; width:40px; margin-top: 5px; cursor: pointer;}
-.surveyCrtTt3 span {position: absolute; right: 9px; background-color: rgba(0, 115, 230, 0.64); color: #fff; border: 1px solid #d7d7d7; border-radius: 10px; font-size: 17px; cursor: pointer;}
+.surveyCrtTt3 span {position: absolute; right: 14px; top: 14px; background-color: rgba(0, 115, 230); color: #fff; border: 1px solid #d7d7d7; border-radius: 10px; font-size: 12px; padding: 4px; cursor: pointer;}
 
 .statBody {background-color: rgb(244, 245, 245); margin: 10px 10px 0px;}
-.statBody #contentsBox {margin-top: 20px; height: 500px; border: 1px solid #d7d7d7; background-color: #fff; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px;}
+.statBody #contentsBox {margin-top: 20px; height: 650px; border: 1px solid #d7d7d7; background-color: #fff; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px;}
 
 /* paragraph css */
 .qstnWrapper {width: 100%; margin: 0px; padding: 10px 0px;}

@@ -735,75 +735,35 @@
 	**                                Survey Response process                            **
 	************************************************************************************-->
 	
-	<select id="EzSurveyDAO.checkProcessingSurvey" resultClass="Integer">
-		select count(reponse_id) from tbl_survey_response where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#
-	</select>
-	
 	<select id="EzSurveyDAO.getMaxResponseId" resultClass="Long">
 		<![CDATA[select ifnull(max(response_id) + 1, 1) from tbl_survey_response]]>
 	</select>
 	
-	<insert id="EzSurveyDAO.saveSltResponseItem" parameterClass="ResponseVO">
+	<insert id="EzSurveyDAO.saveResponseItem" parameterClass="ResponseVO">
 		<![CDATA[
 			insert into tbl_survey_response (
-				response_id, survey_id, question_level, question_type, user_id, option_level, company_id, tenant_id
+				response_id, survey_id,   question_level, question_type,        user_id,      option_level, texts, 
+				row_level,   column_level, ranking_level, ranking_option_level, slider_value, company_id,   tenant_id
 			)
 			values (
-				#responseId#, #surveyId#, #questionLevel#, #questionType#, #responsorId#, #optionLevel#, #companyId#, #tenantId#
+				#responseId#, #surveyId#,    #questionLevel#, #questionType#,       #responsorId#, #optionLevel#, #texts#,
+				#rowLevel#,   #columnLevel#, #rankingLevel#,  #rankingOptionLevel#, #sliderValue#, #companyId#,   #tenantId#
 			)
 		]]>
 	</insert>
 	
-	<insert id="EzSurveyDAO.saveMtrResponseItem" parameterClass="ResponseVO">
-		<![CDATA[
-			insert into tbl_survey_response (
-				response_id, survey_id, question_level, question_type,  user_id, row_level, column_level, company_id, tenant_id
-			)
-			values (
-				#responseId#, #surveyId#, #questionLevel#, #questionType#, #responsorId#, #rowLevel#, #columnLevel#, #companyId#, #tenantId#
-			)
-		]]>
-	</insert>
-	<insert id="EzSurveyDAO.saveTxtResponseItem" parameterClass="ResponseVO">
-		<![CDATA[
-			insert into tbl_survey_response (
-				response_id, survey_id,  question_level,  question_type,  user_id, texts, company_id, tenant_id
-			)
-			values (
-				#responseId#, #surveyId#, #questionLevel#, #questionType#, #responsorId#, #texts#, #companyId#, #tenantId#
-			)
-		]]>
-	</insert>
 	
-	<insert id="EzSurveyDAO.saveSlidResponseItem" parameterClass="ResponseVO">
-		<![CDATA[
-			insert into tbl_survey_response (
-				response_id, survey_id,  question_level,  question_type,  user_id, slider_value, company_id, tenant_id
-			)
-			values (
-				#responseId#, #surveyId#, #questionLevel#, #questionType#, #responsorId#, #sliderValue#, #companyId#, #tenantId#
-			)
-		]]>
-	</insert>
-	
-	<insert id="EzSurveyDAO.saveRankingResponseItem" parameterClass="ResponseVO">
-		<![CDATA[
-			insert into tbl_survey_response (
-				response_id, survey_id,  question_level,  question_type,  user_id, ranking_level, ranking_option_level, company_id, tenant_id
-			)
-			values (
-				#responseId#, #surveyId#, #questionLevel#, #questionType#, #responsorId#, #rankingLevel#, #rankingOptionLevel#, #companyId#, #tenantId#
-			)
-		]]>
-	</insert>
+	<!--***********************************************************************************
+	**                                Survey Respondent process                          **
+	************************************************************************************-->
 	
 	<insert id="EzSurveyDAO.saveRespondent" parameterClass="RespondentVO">
 		<![CDATA[
 			insert into tbl_survey_respondent (
-				survey_id, user_id,  user_name1,  user_name2, email, dept_id, dept_name1, dept_name2, response_date, company_id, tenant_id
+				response_id,  survey_id,  user_id,  user_name1,  user_name2, email, dept_id, dept_name1, dept_name2, response_date, company_id, tenant_id
 			)
 			values (
-				#surveyId#, #userId#, #userName1#, #userName2#, #email#, #deptId#, #deptName1#, #deptName2#, #responseDate#, #companyId#, #tenantId#
+				#responseId#, #surveyId#, #userId#, #userName1#, #userName2#, #email#, #deptId#, #deptName1#, #deptName2#, #responseDate#, #companyId#, #tenantId#
 			)
 		]]>
 	</insert>

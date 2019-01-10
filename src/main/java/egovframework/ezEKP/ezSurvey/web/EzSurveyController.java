@@ -1,10 +1,8 @@
 package egovframework.ezEKP.ezSurvey.web;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +23,6 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,9 +54,6 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/surveyLeft.do")
 	public String jspGetSurveyLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		logger.debug("jspGetSurveyLeft started");
-		
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		
 		logger.debug("jspGetSurveyLeft ended");
 		return "ezSurvey/mainmenu/surveyLeft";
 	}
@@ -118,8 +112,6 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/createSurvey.do")
 	public String jspGetCreateSurveyPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCreateSurveyPage started");
-		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
-		
 		logger.debug("jspGetCreateSurveyPage ended");
 		return "ezSurvey/listmenu/surveyCreate";
 	}
@@ -237,11 +229,30 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return "ezSurvey/listmenu/surveyDetail";
 	}
 	
-	@RequestMapping(value="/ezSurvey/statisticsPage.do")
-	public String jspStatisticsPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("jspStatisticsPage started");
+	@RequestMapping(value="/ezSurvey/showStatisticInfo.do")
+	public String jspGetStatisticsPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("jspGetStatisticsPage started");
+		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
+		String itemId         = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		List<String> itemList = new ArrayList<>();
+		itemList.add(itemId);
+		JSONObject result = surveyRestService.checkSurveyItems(request, user.getId(), itemList, 0);
 		
-		logger.debug("jspStatisticsPage ended");
+		if (((Long)result.get("code")).intValue() != 0) {
+			int reasonCode = ((Long)result.get("code")).intValue();
+			String messageCode = "";
+			
+			switch(reasonCode) {
+				case 1: messageCode = "ezSurvey.err1"; break;
+				case 2: messageCode = "ezSurvey.err2"; break;
+				case 3: messageCode = "ezSurvey.err3"; break;
+			}
+			
+			model.addAttribute("reasonMessage", messageCode);
+			return "ezSurvey/surveyAccessDenied";
+		}
+		
+		logger.debug("jspGetStatisticsPage ended");
 		return "ezSurvey/listmenu/statistics";
 	}
 	
@@ -313,7 +324,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 			return resultObj.toString();
 		}
 		
-		resultObj = surveyRestService.checkSurveyItems(request, user.getId(), itemList);
+		resultObj = surveyRestService.checkSurveyItems(request, user.getId(), itemList, 1);
 		
 		logger.debug("jsonCheckItems end");
 		return resultObj.toString();
