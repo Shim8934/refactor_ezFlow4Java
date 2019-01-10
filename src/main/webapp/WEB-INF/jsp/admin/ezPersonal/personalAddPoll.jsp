@@ -418,6 +418,7 @@
 				if (startdate != "") {
 					SDate = new Date(startdate);
 					EDate = new Date(enddate);
+					$( "#Sdatepicker").datepicker( "option", "disabled", true );
 				} else {
 					SDate = new Date();
 					EDate = new Date();
