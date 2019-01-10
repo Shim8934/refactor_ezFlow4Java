@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -164,9 +165,85 @@ public class EzCommunityAdminController {
 	}
 	
 	/**
-	 * 커뮤니티 검색화면 호출함수
+	 * 개설된 커뮤니티 / 폐쇄한 커뮤니티 호출함수
+	 */
+	@RequestMapping(value = "/admin/ezCommunity/communityList.do")
+	public String communityList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("communityList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String lang      = userInfo.getLang();
+		String primary   = userInfo.getPrimary();
+		String companyId = userInfo.getCompanyID();
+		int tenantId     = userInfo.getTenantId();
+		
+		int pageSize       = 10;
+		int pageNum        = request.getParameter("pageNum") != null ? Integer.parseInt(request.getParameter("pageNum")) : 1;
+		String searchType  = request.getParameter("searchType") != null ? request.getParameter("searchType")   : "" ;
+		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
+		
+		logger.debug("pageNum=" + pageNum);
+		logger.debug("searchType=" + searchType + ",searchValue=" + searchValue);
+		
+		int totalCount = ezCommunityAdminService.aspSearchKeyGet2(commonUtil.getMultiData(lang, tenantId), searchType, searchValue, companyId, tenantId);
+		int totalPage  = 1;
+		
+		if (totalCount > 0) {
+			if (totalCount > pageSize) {
+				totalPage = totalCount / pageSize;
+				
+				if (totalCount % pageSize != 0) {
+					totalPage++;
+				}
+			}
+		}
+		
+		int iQueryCount = totalCount - (pageNum -1) * pageSize;
+		
+		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage + ",iQueryCount=" + iQueryCount);
+		logger.debug("iQueryCount=" + iQueryCount);
+		
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(primary, iQueryCount, searchType , searchValue, companyId, tenantId);
+		if (clubList.size() > 0) {
+			for(CommunityClubVO club : clubList) {
+				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), primary, companyId, tenantId));
+				club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), primary, "", "", companyId, tenantId));
+				club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), tenantId));
+			}
+		}
+		
+		model.addAttribute("clubList", clubList);
+		model.addAttribute("pageNum", pageNum);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("totalCount", totalCount);
+		
+		logger.debug("communityList endend.");
+		return "json";
+	}
+	
+	/**
+	 * 커뮤니티 페이지  호출함수
 	 */
 	@RequestMapping(value = "/admin/ezCommunity/searchKey.do")
+	public String searchKey(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		logger.debug("searchKey started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("idSpanValue", ezCommunityService.getCategory("", "", "", userInfo));
+		
+		logger.debug("searchKey endend.");
+		
+		return "/admin/ezCommunity/communitySearchKey";
+	}
+	
+	/**
+	 * 커뮤니티 검색화면 호출함수
+	 */
+	/*@RequestMapping(value = "/admin/ezCommunity/searchKey.do")
 	public String searchKey(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int curPage = 1, comNoPerPage = 10;
@@ -186,7 +263,7 @@ public class EzCommunityAdminController {
 			query = request.getParameter("query").replace("'",  "''");
 		}
 		
-		/* 관리자 > 커뮤니티검색화면 표출(총 n개 keywordCount) 시 companyID 조건 추가 */
+		 관리자 > 커뮤니티검색화면 표출(총 n개 keywordCount) 시 companyID 조건 추가 
 		int keywordCount = ezCommunityAdminService.aspSearchKeyGet2(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), select, query, userInfo.getCompanyID(), userInfo.getTenantId());
 		int totalPage = keywordCount / comNoPerPage;
 		
@@ -197,12 +274,14 @@ public class EzCommunityAdminController {
 		curPage = Math.min(curPage, totalPage);
 		int iQueryCount = keywordCount - (curPage -1) * 10;
 		
-		/* 관리자 > 커뮤니티검색화면 표출(하단 리스트) 시 companyID 조건 추가, deptID 가져오기 */
+		logger.debug("iQueryCount=" + iQueryCount);
+		
+		 관리자 > 커뮤니티검색화면 표출(하단 리스트) 시 companyID 조건 추가, deptID 가져오기 
 		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(userInfo.getPrimary(), iQueryCount, select , query, userInfo.getCompanyID(), userInfo.getTenantId());
 		if(clubList.size() > 0) {
 			// 이미 companyID로 걸러진 커뮤니티를 가지고 후작업
 			for(CommunityClubVO club : clubList) {
-				/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 겸직하는 userID 가져올때 companyID로 조건 추가 */
+				 2018-06-21 홍승비 - 관리자 > 커뮤니티 겸직하는 userID 가져올때 companyID로 조건 추가 
 				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId()));
 				//club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", " "));
 			}
@@ -219,7 +298,7 @@ public class EzCommunityAdminController {
 		model.addAttribute("totalCount", keywordCount);
 		
 		return "/admin/ezCommunity/communitySearchKey";
-	}
+	}*/
 	
 	/**
 	 * 커뮤니티 상세정보 수정화면 호출함수

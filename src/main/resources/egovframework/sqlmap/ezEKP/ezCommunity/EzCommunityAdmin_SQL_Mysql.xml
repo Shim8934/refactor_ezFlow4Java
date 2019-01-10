@@ -419,9 +419,12 @@
 			FROM
 				(SELECT
 					c_clubno,
+					c_memberCnt,
+					c_name,
 					CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END AS c_clubname,
+					c_ClubConfirmType,
+					c_clubGubun,
 					c_sysopid,
-					c_clubdesc,
 					c_regdate,
 					DEPTID
 				FROM
@@ -464,6 +467,12 @@
 					A.TENANT_ID = T.TENANT_ID
 				AND
 					A.COMPANYID = T.COMPANYID
+				INNER JOIN
+					TBL_C_CATEGORY E
+				ON
+					A.C_CATE_A = E.C_CODE
+				AND
+					A.TENANT_ID = E.TENANT_ID
 		]]>
 		
 		<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
@@ -505,6 +514,8 @@
 					AND
 						c_adminconfirm = 'Y'
 					AND
+						E.C_CAT = 'a'
+					AND
 						A.companyid = #companyID#
 					AND
 						A.tenant_id = #tenantID#
@@ -515,6 +526,8 @@
 				<![CDATA[
 					WHERE
 						c_adminconfirm = 'Y'
+					AND
+						E.C_CAT = 'a'
 					AND
 						A.companyid = #companyID#
 					AND
