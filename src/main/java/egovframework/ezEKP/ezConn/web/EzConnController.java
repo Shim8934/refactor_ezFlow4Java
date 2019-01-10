@@ -219,7 +219,7 @@ public class EzConnController {
 					
 					resultPage = "/ezSchedule/scheduleRead.do?id=" + scheduleid + "&date=" + date + "&repeatcount=" + repeatcount;
 				} else if (requestUri.equals("/ezConn/scheduleConfig.do")) {
-					resultPage = "ezSchedule/scheduleConfigMain.do?flag=schedule";
+					resultPage = "/ezSchedule/scheduleConfigMain.do?flag=schedule";
 				} else {																
 					String funCode = request.getParameter("funCode") != null ? request.getParameter("funCode") : "";
 					if(funCode.equalsIgnoreCase("")) {
