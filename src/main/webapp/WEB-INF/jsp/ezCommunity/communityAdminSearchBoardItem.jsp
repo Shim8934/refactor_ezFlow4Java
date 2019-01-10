@@ -233,7 +233,7 @@
 				url += "&searchStart=" + searchStart;
 				url += "&searchEnd=" + searchEnd;
 				url += "&code=" + code;
-				url += "&boardname=" + boardname;
+				url += "&boardname=" + encodeURIComponent(boardname);
 				url += "&gubun=" + gubun;
 				
 				window.location.href = url;
