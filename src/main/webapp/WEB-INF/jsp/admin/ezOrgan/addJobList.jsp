@@ -52,6 +52,7 @@
 	    	
 			$(document).ready(function() {
 				windowResize();
+				var a = document.getElementById("previewmail").style.display = "none";
 				AddJob_List();
 			});
 
@@ -64,7 +65,7 @@
 		    }
 		    
 		    function AddJob_List() {
-		    	var a = document.getElementById("previewmail").style.display = "none";
+		    	
 		        $.ajax({
 		        	type : "POST",
 		        	dataType : "text",
@@ -97,7 +98,6 @@
 		                }
 
 		                document.getElementById("AddJobListView").innerHTML = "";
-		                document.getElementById("AddJobList").innerHTML = "";
 
 		                var listview = new ListView();
 		                listview.SetID("lvAddJobList");
@@ -306,6 +306,12 @@
 		    } */
 		    
 		    function UserAddjobList(obj) {
+				// 체크박스 클릭
+				var className = window.event.target.getAttribute('class');
+				if(className === 'checks') {
+					return;
+				}
+
 		        var listview = new ListView();
 		        listview.LoadFromID("lvAddJobList");		        
 		        
@@ -403,11 +409,6 @@
 		                }	
 		        	}
 		        });
-		        
-		        var className = window.event.target.getAttribute('class');
-				if(className === 'checks') {
-					return;
-				}
 
 				var doc = window.document;
 				itemseq = document.getElementById(obj).getAttribute("DATA1");
@@ -569,6 +570,7 @@
 						rowList = [];
 					}
 					AddJob_List();
+					return;
 				}
 			}
 

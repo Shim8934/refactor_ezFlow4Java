@@ -861,11 +861,11 @@
 	            }
 	            
 	            try {
- 			    	window.opener.location.reload(true);
+ 			    	window.opener.AddJob_List();
+ 			    	window.close();
  			    } catch (e) {
+ 			    	window.close();
  			    }
-	            
-	            window.close();
 	        }
 		    
 		    var rgParams = new Array();
