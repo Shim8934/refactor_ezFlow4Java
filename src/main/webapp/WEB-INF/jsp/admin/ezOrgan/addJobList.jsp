@@ -768,16 +768,21 @@
 			// 체크박스 헤더 클릭 method
 			var checkFlag = false;
 			function checkboxHeaderClick() {
-				if (checkFlag) {
-					checkFlag = false;
-					$(".checks").prop("checked", false);
-					$("#lvAddJobList tr td").css("background-color", "rgb(255, 255, 255)");
-				} else {
-					checkFlag = true;
-					$(".checks").prop("checked", true);
-					$("#lvAddJobList tr td").css("background-color", "rgb(241, 248, 255)");
+				var doc = window.document;
+				var acList = doc.getElementById("lvAddJobList");
+				// 데이터가 있을 경우에만
+				if(acList.children[1].children[0].id !== 'lvAddJobList_TR_noItems'){
+					if (checkFlag) {
+						checkFlag = false;
+						$(".checks").prop("checked", false);
+						$("#lvAddJobList tr td").css("background-color", "rgb(255, 255, 255)");
+					} else {
+						checkFlag = true;
+						$(".checks").prop("checked", true);
+						$("#lvAddJobList tr td").css("background-color", "rgb(241, 248, 255)");
+					}
+					checkItems();
 				}
-				checkItems();
 			}
 			
 			var rowList = new Array();
@@ -840,12 +845,12 @@
 			<LISTVIEWDATA>
 		    	<HEADERS>
 		    		<HEADER>
-						<WIDTH>12</WIDTH>
+						<WIDTH>24</WIDTH>
 						<STYLE>border-top:0px;</STYLE>
 					</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t218' /></NAME>
-		        		<WIDTH>10%</WIDTH>
+		        		<WIDTH>29%</WIDTH>
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
@@ -860,7 +865,7 @@
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t68' /></NAME>
-		        		<WIDTH>20%</WIDTH>
+		        		<WIDTH>30%</WIDTH>
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
