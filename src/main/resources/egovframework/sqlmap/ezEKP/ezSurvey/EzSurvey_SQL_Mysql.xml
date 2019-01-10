@@ -358,8 +358,10 @@
 			ORDER BY
 				EXTENSIONATTRIBUTE15 ASC,
 				DISPLAYNAME ASC
-			LIMIT #startPoint#, #listCount#
 		]]>
+		<isGreaterThan property="listCount" compareValue="0">
+			LIMIT #startPoint#, #listCount#
+		</isGreaterThan>
 	</select>
 	
 	<select id="EzSurveyDAO.getTotalSearchMembers" resultClass="Integer">
@@ -756,6 +758,10 @@
 	<!--***********************************************************************************
 	**                                Survey Respondent process                          **
 	************************************************************************************-->
+	
+	<select id="EzSurveyDAO.getTotalRespondents" resultClass="Integer">
+		<![CDATA[select count(distinct user_id) from tbl_survey_respondent where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#]]>
+	</select>
 	
 	<insert id="EzSurveyDAO.saveRespondent" parameterClass="RespondentVO">
 		<![CDATA[

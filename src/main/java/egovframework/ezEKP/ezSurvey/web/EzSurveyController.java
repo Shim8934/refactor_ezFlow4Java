@@ -1,6 +1,5 @@
 package egovframework.ezEKP.ezSurvey.web;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -234,9 +233,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("jspGetStatisticsPage started");
 		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
 		String itemId         = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
-		List<String> itemList = new ArrayList<>();
-		itemList.add(itemId);
-		JSONObject result = surveyRestService.checkSurveyItems(request, user.getId(), itemList, 0);
+		JSONObject result = surveyRestService.getSurveyStatistic(request, user.getId(), itemId);
 		
 		if (((Long)result.get("code")).intValue() != 0) {
 			int reasonCode = ((Long)result.get("code")).intValue();
@@ -250,6 +247,10 @@ public class EzSurveyController extends EgovFileMngUtil {
 			
 			model.addAttribute("reasonMessage", messageCode);
 			return "ezSurvey/surveyAccessDenied";
+		}
+		else {
+			JSONObject statisticData = (JSONObject)result.get("data");
+			model.addAttribute("data", statisticData);
 		}
 		
 		logger.debug("jspGetStatisticsPage ended");
@@ -277,6 +278,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("jsonGetSurveyQuestions start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String itemId        = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		String logicMode     = request.getParameter("logic")    != null ? request.getParameter("logic")    : "";
 		JSONObject resultObj = new JSONObject();
 		
 		if (itemId.equals("")) {
@@ -285,7 +287,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 			return resultObj.toString();
 		}
 		
-		resultObj = surveyRestService.getSurveyQuestions(request, user.getId(), itemId);
+		resultObj = surveyRestService.getSurveyQuestions(request, user.getId(), itemId, logicMode);
 		
 		logger.debug("jsonGetSurveyQuestions end");
 		return resultObj.toString();

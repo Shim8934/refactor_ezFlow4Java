@@ -278,11 +278,11 @@ input::-ms-clear {display: none;}
 .surveyCrtTt3 {height: 50px; width: 100%; background-color: #fff; display: flex; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px;}
 .surveyCrtTt3 .sryFirst2 {width: 10px; background-color: rgba(0, 115, 230, 0.64);}
 .surveyCrtTt3 .sryTxt {height: 50px; line-height: 50px; padding: 0px 10px; font-weight: bold; font-size: 20px; flex: 1;}
-.surveyCrtTt3 img {height: 40px; width:40px; margin-top: 5px; cursor: pointer;}
-.surveyCrtTt3 span {position: absolute; right: 14px; top: 14px; background-color: rgba(0, 115, 230); color: #fff; border: 1px solid #d7d7d7; border-radius: 10px; font-size: 12px; padding: 4px; cursor: pointer;}
+.surveyCrtTt3 img {height: 32px; width: 32px; margin: 9px 10px; cursor: pointer;}
+.surveyCrtTt3 span {position: absolute; right: 14px; top: 14px; background-color: rgba(0, 115, 230); color: #fff; border: 1px solid #d7d7d7; border-radius: 50%; font-size: 12px; padding: 4px; cursor: pointer;}
 
 .statBody {background-color: rgb(244, 245, 245); margin: 10px 10px 0px;}
-.statBody #contentsBox {margin-top: 20px; height: 650px; border: 1px solid #d7d7d7; background-color: #fff; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px;}
+.statBody #contentsBox {margin-top: 20px; height: 650px; background-color: #fff;}
 
 /* paragraph css */
 .qstnWrapper {width: 100%; margin: 0px; padding: 10px 0px;}

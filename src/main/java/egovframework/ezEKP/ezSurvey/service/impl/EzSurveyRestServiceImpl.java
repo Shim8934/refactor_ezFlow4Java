@@ -7,10 +7,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.compress.utils.IOUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -38,7 +36,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.util.UriComponentsBuilder;
-
 import egovframework.ezEKP.ezSurvey.service.EzSurveyRestService;
 
 @Service
@@ -251,11 +248,12 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 	}
 	
 	@Override
-	public JSONObject getSurveyQuestions(HttpServletRequest request, String userId, String itemId) throws Exception {
+	public JSONObject getSurveyQuestions(HttpServletRequest request, String userId, String itemId, String logicMode) throws Exception {
 		String url                = "/rest/ezsurvey/survey-item/questions";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId", userId);
 		param.put("itemId", itemId);
+		param.put("logic" , logicMode);
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
@@ -386,13 +384,23 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 			return contentLength == null || contentLength < 0 ? null : contentLength;
 		}
 	}
-
+	
 	@Override
 	public JSONObject saveResponse(HttpServletRequest request, JSONObject responseItem) throws Exception {
 		String url            = "/rest/ezsurvey/response-item/save";
 		logger.debug(responseItem.toJSONString());
 		
 		JSONObject resultBody = getJsonResult(url, null, request, "put", responseItem);
+		return resultBody;
+	}
+	
+	@Override
+	public JSONObject getSurveyStatistic(HttpServletRequest request, String userId, String itemId) throws Exception {
+		String url                = "/rest/ezsurvey/survey-item/statistic";
+		Map<String, Object> param = new HashMap<String, Object>();
+		param.put("userId", userId);
+		param.put("itemId", itemId);
+		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
 }
