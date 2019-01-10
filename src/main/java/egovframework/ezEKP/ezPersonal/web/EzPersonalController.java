@@ -181,9 +181,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		/*	if (proxyInfo.split(":")[0].trim().equals("")) {
 				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
 			} else {
-				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split(":")[0], proxyInfo.split(":")[1], proxyInfo.split(":")[2], proxyInfo.split(":")[3]+":"+proxyInfo.split(":")[4].replace("/", ":"), proxyInfo.split(":")[5]+":"+proxyInfo.split(":")[6].replace("/", ":"), userInfo.getTenantId(), userInfo.getOffset());
+				result = ezOrganService.setProxyUserInfo(userInfo.getId(), p roxyInfo.split(":")[0], proxyInfo.split(":")[1], proxyInfo.split(":")[2], proxyInfo.split(":")[3]+":"+proxyInfo.split(":")[4].replace("/", ":"), proxyInfo.split(":")[5]+":"+proxyInfo.split(":")[6].replace("/", ":"), userInfo.getTenantId(), userInfo.getOffset());
 			}*/
-			if (proxyInfo.split("|")[0].trim().equals("")) {
+			if (proxyInfo.split("\\|")[0].trim().equals("")) {
 				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
 			} else {
 				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split("\\|")[0], proxyInfo.split("\\|")[1], proxyInfo.split("\\|")[2], proxyInfo.split("\\|")[3], proxyInfo.split("\\|")[4], userInfo.getTenantId(), userInfo.getOffset());

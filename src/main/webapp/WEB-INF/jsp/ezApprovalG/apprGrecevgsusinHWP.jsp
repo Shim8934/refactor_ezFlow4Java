@@ -121,6 +121,7 @@
 		    var dirPath = "${approvalRoot}";
 		    var useReceiveDocNo = "${useReceiveDocNo}";
 		    var orgCompanyID = "";
+		    var docNumZeroCnt = "${docNumZeroCnt}";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -667,7 +668,7 @@
 			
 			              var rtnval = true;
 			              //mht는 G일때만 수신채번하게 되잇는데
-			              rtnval = getRecvDocNumber(arr_userinfo[4]);
+			              rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 			              if (!rtnval) {
 			                  var pAlertContent = "[접수 문서번호]를 가져오지 못했습니다!";
 			                  OpenAlertUI(pAlertContent);

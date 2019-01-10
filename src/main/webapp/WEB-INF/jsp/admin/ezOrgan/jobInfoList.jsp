@@ -643,7 +643,7 @@
 		<ul>
 			<li class="important"><span onClick="BtnAction('Add')"><spring:message code = 'ezAddress.t173'/></span></li>
 			<li><span onClick="BtnAction('Mod')"><spring:message code = 'ezAddress.t174'/></span></li>
-			<li><span class="icon16 icon16_delete" onClick="BtnAction('Del')"><spring:message code = 'ezAddress.t175'/></span></li>
+			<li><span class="icon16 icon16_delete" onClick="BtnAction('Del')"></span></li>
 		</ul>
 	</div>
 	<script type="text/javascript">

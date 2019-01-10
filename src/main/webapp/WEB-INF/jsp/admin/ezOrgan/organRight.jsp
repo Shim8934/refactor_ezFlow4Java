@@ -1116,8 +1116,6 @@
 	        }
 		    
 		    var selectdept_cross_dialogArguments = new Array();
-		    
-
 		    function del_user(){
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");

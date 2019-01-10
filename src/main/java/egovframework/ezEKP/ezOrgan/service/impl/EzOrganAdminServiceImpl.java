@@ -161,7 +161,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
    		logger.debug("searchCompanyID=" + searchCompanyID );
-	    
+   		
+   		if (!searchStartDate.equals("")) {
+   			searchStartDate += " 00:00:00";
+   			searchEndDate += " 23:59:59";
+		}
    		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -258,6 +262,20 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		if (parentCn.equals(cn)) {
 			result = "SAME";
 		} else {
+			// 2019-01-08 천성준 - 사원이동 시, 사원이 이동하려는 부서에 겸직이 되어있는지 체크하는 로직 추가 
+			List<OrganUserVO> userAddJobList = getUserAddJobList(cn, "1", tenantID);
+			if (userAddJobList != null && userAddJobList.size() > 0) {
+				String gyumJikDeptID = "";
+				for (int i = 0; i < userAddJobList.size(); i++) {
+					gyumJikDeptID = userAddJobList.get(i).getDepartment();
+					
+					if (gyumJikDeptID != null && parentCn.equals(gyumJikDeptID)) {
+						result = "HASGYUMJIK";
+						return result;
+					}
+				}
+			}
+			
 			OrganDeptVO parentDept = ezOrganService.getDeptInfo(parentCn, "1", tenantID);
 			String compId = "";
 			
@@ -580,6 +598,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
 	    logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
+   		
+   		if (!searchStartDate.equals("")) {
+   			searchStartDate += " 00:00:00";
+   			searchEndDate += " 23:59:59";
+		}
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		

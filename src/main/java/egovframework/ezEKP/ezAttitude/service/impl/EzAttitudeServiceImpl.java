@@ -2107,7 +2107,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	            type = "G";
 	        }
 	
-	        if(page.equals(null) || page.equals("")){
+	        if(page == null || page.equals("")){
 	            page = "1";
 	        }
 	        

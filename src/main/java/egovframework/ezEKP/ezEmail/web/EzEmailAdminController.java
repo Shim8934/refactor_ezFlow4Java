@@ -1001,7 +1001,7 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezEmail/mailQuotaList.do")
 	public String showMailBoxQuotaManaged(@CookieValue("loginCookie")String loginCookie, Model model) throws Exception {
-		logger.debug("showMailBoxQuotaManage started.");
+		logger.debug("showMailBoxQuotaManaed started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 	
@@ -1025,7 +1025,7 @@ public class EzEmailAdminController {
 		model.addAttribute("list", resultList);
 		model.addAttribute("companyId", companyId);
 
-		logger.debug("showMailBoxQuotaManage ended.");
+		logger.debug("showMailBoxQuotaManaged ended.");
 		
 		return "/admin/ezEmail/mailQuotaList";
 	}

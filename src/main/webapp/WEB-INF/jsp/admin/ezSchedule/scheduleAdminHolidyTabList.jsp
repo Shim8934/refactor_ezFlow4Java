@@ -67,7 +67,7 @@
 					isOpenUL = true;	
 				}
 				
-				var selectedNode = document.getElementById("curBoardID").value;
+				var selectedNode = document.getElementById("curTabID").value;
 				
 				document.getElementById("tab1").innerHTML = "";
 				widthCheck = false;
@@ -116,9 +116,10 @@
 	        var overCnt = 0;
 	        var widthCheck = false;
 	        var overCntText = '...';
-	        var tabText = "";
+	        
 	        function GetMyBoardItem_evnet(doNotRefresh) {
 	        	
+		        var tabText = "";
 	        	var tabId = "a"; // anniversary
 	        	var tabId2 = "s"; // statutory holiday 
 	        	//탭이름 message 처리

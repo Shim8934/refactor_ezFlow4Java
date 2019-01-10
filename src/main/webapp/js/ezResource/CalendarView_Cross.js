@@ -1320,17 +1320,24 @@ function memorialDayCheck(solarDate, lunarDate) {
     var tempmemorialDays = new Array();
     for (i = 0; i < memorialDays.length; i++) {
         if (solarDate.getFullYear() > 1800 && solarDate.getFullYear() <= 2101) {
-            if (memorialDays[i].month == solarDate.getMonth() + 1 &&
-             memorialDays[i].day == solarDate.getDate() &&
-             memorialDays[i].solarLunar == 1) {
-                tempmemorialDays.push(memorialDays[i]);
-            }
-            if (memorialDays[i].month == lunarDate.month &&
-             memorialDays[i].day == lunarDate.day &&
-             memorialDays[i].solarLunar == 2 &&
-             !memorialDays[i].leapMonth) {
-                tempmemorialDays.push(memorialDays[i]);
-            }
+        	if (memorialDays[i].type == 'Y') {
+        		var resultDate = changeRepetitionToDate(memorialDays[i].repetition, solarDate.getFullYear());
+        		if (resultDate.getMonth() == solarDate.getMonth() && resultDate.getDate() == solarDate.getDate() && memorialDays[i].solarLunar == 1) {
+        			tempmemorialDays.push(memorialDays[i]);
+        		}        		
+        	} else {
+        		if (memorialDays[i].month == solarDate.getMonth() + 1 &&
+        				memorialDays[i].day == solarDate.getDate() &&
+        				memorialDays[i].solarLunar == 1) {
+        			tempmemorialDays.push(memorialDays[i]);
+        		}
+        		if (memorialDays[i].month == lunarDate.month &&
+        				memorialDays[i].day == lunarDate.day &&
+        				memorialDays[i].solarLunar == 2 &&
+        				!memorialDays[i].leapMonth) {
+        			tempmemorialDays.push(memorialDays[i]);
+        		}
+        	}
         }
     }
     return tempmemorialDays;
@@ -1343,19 +1350,26 @@ function yearmemorialDayCheck(solarDate, lunarDate) {
     var tempyearmemorialDays = new Array();
     for (i = 0; i < yearmemorialDays.length; i++) {
         if (solarDate.getFullYear() > 1800 && solarDate.getFullYear() <= 2101) {
-            if (yearmemorialDays[i].year == solarDate.getFullYear() &&
-            yearmemorialDays[i].month == solarDate.getMonth() + 1 &&
-             yearmemorialDays[i].day == solarDate.getDate() &&
-             yearmemorialDays[i].solarLunar == 1) {
-                tempyearmemorialDays.push(yearmemorialDays[i]);
-            }
-            if (yearmemorialDays[i].year == lunarDate.year &&
-            yearmemorialDays[i].month == lunarDate.month &&
-             yearmemorialDays[i].day == lunarDate.day &&
-             yearmemorialDays[i].solarLunar == 2 &&
-             !yearmemorialDays[i].leapMonth) {
-                tempyearmemorialDays.push(yearmemorialDays[i]);
-            }
+        	if (yearmemorialDays[i].type == 'Y') {
+        		var resultDate = changeRepetitionToDate(yearmemorialDays[i].repetition, '');
+        		if (resultDate.getFullYear() == solarDate.getFullYear() && resultDate.getMonth() == solarDate.getMonth() && resultDate.getDate() == solarDate.getDate()  && yearmemorialDays[i].solarLunar == 1) {
+        			tempyearmemorialDays.push(yearmemorialDays[i]);
+        		}        		
+        	} else {
+        		if (yearmemorialDays[i].year == solarDate.getFullYear() &&
+        				yearmemorialDays[i].month == solarDate.getMonth() + 1 &&
+        				yearmemorialDays[i].day == solarDate.getDate() &&
+        				yearmemorialDays[i].solarLunar == 1) {
+        			tempyearmemorialDays.push(yearmemorialDays[i]);
+        		}
+        		if (yearmemorialDays[i].year == lunarDate.year &&
+        				yearmemorialDays[i].month == lunarDate.month &&
+        				yearmemorialDays[i].day == lunarDate.day &&
+        				yearmemorialDays[i].solarLunar == 2 &&
+        				!yearmemorialDays[i].leapMonth) {
+        			tempyearmemorialDays.push(yearmemorialDays[i]);
+        		}
+        	}
         }
     }
     return tempyearmemorialDays;
@@ -1953,4 +1967,152 @@ function myDate(year, month, day, leapMonth) {
     this.month = month;
     this.day = day;
     this.leapMonth = leapMonth;
+}
+//- 주 - 요일을 - 일로 바꿔주는 함수
+function changeRepetitionToDate(repetition, solarYear) {
+	var date = repetition.split('|');
+	var year = date[0];
+	if (solarYear != null && solarYear != '') {
+		year = solarYear;
+	}
+	var month = date[1]; 
+	var order = date[2];
+	var day  = date[3];
+	
+	var resultDate = changeDayToDate(year, month, order, day);
+	
+	return resultDate;
+}
+
+function changeDayToDate(year, month, order, day) {
+	//해당 년,월의 첫번째 날의 요일을 구한다.
+	var firstDate = new Date(year + '/' + month + '/01');
+	var firstDateDay = firstDate.getDay();
+	var resultDay;
+	
+	if (day < firstDateDay) {
+		order = parseInt(order) + 1;
+	}
+	
+	//order > 4는 마지막주일때 계산
+	if (order > 4) {
+		var lastDateDay = getLastDateDay(year, month, day, firstDate);
+		
+		var totalDate = getTotalDate(year, month);
+		
+		if (day <= lastDateDay) {
+			resultDay = totalDate + (day - lastDateDay);
+		} else {
+			resultDay = totalDate + (day - lastDateDay) - 7;
+		}
+	} else {
+		resultDay = (order - 1) * 7 + (day - firstDateDay) + 1; 
+	}
+	
+	var resultDate = new Date(year + '/' + month + '/' + resultDay);
+		
+	return resultDate;
+}
+
+// 이번달의 마지막일의 요일을 구하는 함수
+function getLastDateDay(year, month, day, firstDate) {
+	var firstDateDay = firstDate.getDay();
+	var temp_Date = firstDate.getDate();
+	var lastDay = firstDateDay; //시작요일을 저장하는 변수이다. 먼저 기본값으로 현재 요일을 저장한다.
+	
+	//먼저 당월에 대한 총 일수를 구한다. 위에서 선언한 메소드를 가지고 구한다.
+	var totalDate = getTotalDate(year, month);
+	lastDay = lastDay - 1;
+	for(temp_Date ; temp_Date <= totalDate ; temp_Date++) { //시작값:현지 일자, 끝값 : 당월 마지막일
+		lastDay++; // +1씩 증가
+		if(lastDay > 6) //요일은 0부터 6까지 있기 때문에 6을 초과하면 0으로 초기화 해준다.(한바퀴)
+		{
+			lastDay = 0;
+		}			
+	}
+	return lastDay;
+}
+
+function getTotalDate(year, month) {
+	if(month.indexOf('0') == 0) {
+		 month = month.substring(1);
+	 }
+	
+	if(month==4 || month==6 || month==9 || month==11) {
+		return 30;
+	} else if(month==2) {
+		if(year%4 == 0) { // 2월이면서 윤년일 때
+			return 29;
+		} else { // 2월이면서 윤년이 아닐 때
+			return 28;
+		}			
+	} else {
+		return 31;
+	}
+}
+
+function OnDoubleClickAppointment(srcEl) {
+
+    //if (!event) event = window.event;
+    if (GetAttribute(srcEl,"command") == 'open') {
+        var szNum = GetAttribute(srcEl,"num");
+        var szPNum = GetAttribute(srcEl,"pnum");
+        var szOwnerID = GetAttribute(srcEl,"owner_id");
+        var szWriterID = GetAttribute(srcEl,"writer_id");
+        var szGroupFlag = GetAttribute(srcEl,"groupflag");
+        var szStart = new Date(GetAttribute(srcEl,"dtend"));
+        var szEnd = new Date(GetAttribute(srcEl,"dtend"));
+        var szInstancetype = GetAttribute(srcEl,"instancetype");
+        var szType, startDate, endDate, filename;
+
+        szType = "Master";
+        startDate = szStart.getFullYear() + "-" + parseInt(szStart.getMonth() + 1, 10) + "-" + szStart.getDate();
+        endDate = szEnd.getFullYear() + "-" + parseInt(szEnd.getMonth() + 1, 10) + "-" + szEnd.getDate();
+
+        if (parseInt(szGroupFlag) == 2 || parseInt(szGroupFlag) == 4) {
+            //메인화면에서 더블클릭하면 분기
+            filename = "Schedule_UnReg.asp";
+
+        } else {
+            filename = "scheduleRead.do";
+
+            // 반복자원예약에 대한 처리
+            if (parseInt(szInstancetype) == 1 || parseInt(szInstancetype) == 3) {
+                if (parseInt(szInstancetype) == 3) {
+                    szNum = szPNum;
+                    szOwnerID = szWriterID;
+                }
+            }
+        }
+        windowName = "";
+
+        if (CrossYN()) {
+            GetOpenWindow(filename + "?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate, "", 820, 700);
+
+        }
+        else {
+            var feature = GetOpenPosition(790, 420);
+            window.open(filename + "?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        }
+    }
+}
+
+function GetOpenPosition(popUpW, popUpH) {
+    //2011.07.28 FireFox는 ShowModalDialog() 호출시 화면 중앙에 뜨지 않아 top, left를 지정해 줘야한다.
+    var heigth = window.screen.availHeight;
+    var width = window.screen.availWidth;
+    var left = 0;
+    var top = 0;
+
+    var pleftpos;
+    pleftpos = parseInt(width) - popUpW;
+    heigth = parseInt(heigth) - popUpH;
+    width = parseInt(width) - pleftpos;
+
+    left = pleftpos / 2;
+    top = heigth / 2;
+
+    var feature = ",left=" + left + ",top=" + top;
+
+    return feature
 }

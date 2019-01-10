@@ -17,6 +17,11 @@
 	    	.mainlist thead tr {
 	    		height: 0px;
 	    	}
+	    	
+	    	.mainlist #MsgToList_THEAD #MsgToList_TH {
+	    		height: 0px;
+	    	}
+	    	
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;
 	    	}
