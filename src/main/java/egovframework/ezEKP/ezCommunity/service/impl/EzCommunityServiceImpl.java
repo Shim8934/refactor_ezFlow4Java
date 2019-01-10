@@ -2660,6 +2660,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setGubun(strProp.getGubun());
 			boardInfo.setUrl(strProp.getUrl());
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
+			/* 2019-01-10 홍승비 - 부모게시판ID 데이터 추가 */
+			boardInfo.setParentBoardID(strProp.getParentBoardID());
 		}
 		
 		if (boardInfo.getGubun() != null && boardInfo.getGubun().equals("3")) {
