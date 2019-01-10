@@ -907,14 +907,16 @@
 		]]>			
 	</select>
 	
-	<select id="EzScheduleDAO.getTholiday" parameterClass="Map" resultMap="scheGetHolidayVO">
+	<select id="EzScheduleDAO.getTholiday" parameterClass="Map" resultClass="scheGetHolidayVO">
 		<isEqual property="v_COMPANYID" compareValue="ALL">
 			<![CDATA[
 				SELECT 
 					HOLIDAYID,
 	                HOLIDAYNAME,
 	                HOLIDAYNAME2,
+	                HOLIDAYFLAG,
 	                HOLIDAYDATE,
+	                HOLIDAYREPEAT,
 	                NVL(ISSOLAR, '0') ISSOLAR,
 	                NVL(ISREPEAT, '0') ISREPEAT,
 	                NVL(ISUSE, '0') ISUSE,
@@ -928,12 +930,15 @@
 		</isEqual>
 		<isNotEqual property="v_COMPANYID" compareValue="ALL">
 	   		<isEqual property="v_COMPANYID" compareValue="VIEW">
+	   			<isEqual property="isRest" compareValue="all">
 	   			<![CDATA[
 					SELECT 
 						HOLIDAYID,
 		                HOLIDAYNAME,
 		                HOLIDAYNAME2,
+		                HOLIDAYFLAG,
 		                HOLIDAYDATE,
+		                HOLIDAYREPEAT,
 		                NVL(ISSOLAR, '0') ISSOLAR,
 		                NVL(ISREPEAT, '0') ISREPEAT,
 		                NVL(ISUSE, '0') ISUSE,
@@ -942,32 +947,142 @@
 		           	FROM 
 		           		TBL_HOLIDAYLIST 
 					WHERE  
-						(USECOMPANY = '1' OR USECOMPANY = #v_USERCOMPANY#)
+						(USECOMPANY = 'ALL' OR USECOMPANY = #v_USERCOMPANY#)
 					AND
 						TENANT_ID = #v_TENANTID#
-				]]>		                   
-			</isEqual>           
-            <isNotEqual property="v_COMPANYID" compareValue="VIEW">
-            	<![CDATA[
-		          	SELECT 
-		          		HOLIDAYID,
-		                HOLIDAYNAME,
-		                HOLIDAYNAME2,
-		                HOLIDAYDATE,
-		                NVL(ISSOLAR, '0') ISSOLAR,
-		                NVL(ISREPEAT, '0') ISREPEAT,
-		                NVL(ISUSE, '0') ISUSE,
-		                NVL(ISREST, '0') ISREST,
-		                USECOMPANY
-					FROM 
-						TBL_HOLIDAYLIST 
-					WHERE  
-						USECOMPANY = #v_COMPANYID#
 					AND
-						TENANT_ID = #v_TENANTID#	
-				]]>
+						ISUSE = 1
+				]]>		                   
+				</isEqual>
+				<isNotEqual property="isRest" compareValue="all">
+	   				<isEqual property="isRest" compareValue="rest">
+			   			<![CDATA[
+							SELECT 
+								HOLIDAYID,
+				                HOLIDAYNAME,
+				                HOLIDAYNAME2,
+				                HOLIDAYFLAG,
+				                HOLIDAYDATE,
+				                HOLIDAYREPEAT,
+				                NVL(ISSOLAR, '0') ISSOLAR,
+				                NVL(ISREPEAT, '0') ISREPEAT,
+				                NVL(ISUSE, '0') ISUSE,
+				                NVL(ISREST, '0') ISREST,
+				                USECOMPANY
+				           	FROM 
+				           		TBL_HOLIDAYLIST 
+							WHERE  
+								(USECOMPANY = 'ALL' OR USECOMPANY = #v_USERCOMPANY#)
+							AND
+								TENANT_ID = #v_TENANTID#
+							AND
+								ISUSE = 1
+							AND
+								ISREST = 1
+						]]>		                   
+	   				</isEqual>
+					<isEqual property="isRest" compareValue="normal">
+			   			<![CDATA[
+							SELECT 
+								HOLIDAYID,
+				                HOLIDAYNAME,
+				                HOLIDAYNAME2,
+				                HOLIDAYFLAG,
+				                HOLIDAYDATE,
+				                HOLIDAYREPEAT,
+				                NVL(ISSOLAR, '0') ISSOLAR,
+				                NVL(ISREPEAT, '0') ISREPEAT,
+				                NVL(ISUSE, '0') ISUSE,
+				                NVL(ISREST, '0') ISREST,
+				                USECOMPANY
+				           	FROM 
+				           		TBL_HOLIDAYLIST 
+							WHERE  
+								(USECOMPANY = 'ALL' OR USECOMPANY = #v_USERCOMPANY#)
+							AND
+								TENANT_ID = #v_TENANTID#							
+						]]>		                   
+	   				</isEqual>
+   				</isNotEqual>
+			</isEqual> 
+            <isNotEqual property="v_COMPANYID" compareValue="VIEW">
+            	<isEqual property="v_COMPANYID" compareValue="STATUTORY">
+            		<![CDATA[
+			          	SELECT 
+			          		HOLIDAYID,
+			                HOLIDAYNAME,
+			                HOLIDAYNAME2,
+			                HOLIDAYFLAG,
+			                HOLIDAYDATE,
+			                HOLIDAYREPEAT,
+			                NVL(ISSOLAR, '0') ISSOLAR,
+			                NVL(ISREPEAT, '0') ISREPEAT,
+			                NVL(ISUSE, '0') ISUSE,
+			                NVL(ISREST, '0') ISREST,
+			                USECOMPANY
+						FROM 
+							TBL_HOLIDAYLIST 
+						WHERE  
+							USECOMPANY = 'ALL'
+						AND
+							TENANT_ID = #v_TENANTID#
+						ORDER BY
+							TO_CHAR(HOLIDAYDATE,'YYYY'), ISSOLAR, SUBSTR(HOLIDAYREPEAT, 6)
+					]]>
+            	</isEqual>
+            	<isNotEqual property="v_COMPANYID" compareValue="STATUTORY">
+	            	<![CDATA[
+			          	SELECT 
+			          		HOLIDAYID,
+			                HOLIDAYNAME,
+			                HOLIDAYNAME2,
+			                HOLIDAYFLAG,
+			                HOLIDAYDATE,
+			                HOLIDAYREPEAT,
+			                NVL(ISSOLAR, '0') ISSOLAR,
+			                NVL(ISREPEAT, '0') ISREPEAT,
+			                NVL(ISUSE, '0') ISUSE,
+			                NVL(ISREST, '0') ISREST,
+			                USECOMPANY
+						FROM 
+							TBL_HOLIDAYLIST 
+						WHERE  
+							USECOMPANY = #v_COMPANYID#
+						AND
+							TENANT_ID = #v_TENANTID#
+						ORDER BY
+							TO_CHAR(HOLIDAYDATE,'YYYY'), ISSOLAR, SUBSTR(HOLIDAYREPEAT, 6)
+					]]>
+            	</isNotEqual>
 			</isNotEqual>                       	
 		</isNotEqual>			
+	</select>
+	
+	<select id="EzScheduleDAO.getTholidayYear" parameterClass="Map" resultClass="scheGetHolidayVO">
+		<![CDATA[
+			SELECT 
+          		HOLIDAYID,
+                HOLIDAYNAME,
+                HOLIDAYNAME2,
+                HOLIDAYFLAG,
+                HOLIDAYDATE,
+                HOLIDAYREPEAT,
+                NVL(ISSOLAR, '0') ISSOLAR,
+                NVL(ISREPEAT, '0') ISREPEAT,
+                NVL(ISUSE, '0') ISUSE,
+                NVL(ISREST, '0') ISREST,
+                USECOMPANY
+			FROM 
+				TBL_HOLIDAYLIST 
+			WHERE  
+				USECOMPANY = #v_COMPANYID#
+			AND
+				TENANT_ID = #v_TENANTID#	
+			AND
+				(TO_CHAR(HOLIDAYDATE,'YYYY') = #holidayYear# OR ISREPEAT = 1 OR HOLIDAYREPEAT LIKE #holidayYear# || '%')
+			ORDER BY
+				TO_CHAR(HOLIDAYDATE,'YYYY'), ISSOLAR, SUBSTR(HOLIDAYREPEAT, 6)
+		]]>
 	</select>
 	
 	<select id="EzScheduleDAO.getCurScheduleId" resultClass="int">
