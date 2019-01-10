@@ -1100,7 +1100,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			}
 			
 			JSONObject returnData = service.fileUpdateOverwrite( multiFileLists, nameArray, userInfo, folderId, fileIdArray, realPath, tenantId);
-			if (returnData.get("status") == "ok") {
+			if (returnData.get("status").equals("ok")) {
 				result.put("status", "ok");
 				result.put("code", 0);
 			} else {

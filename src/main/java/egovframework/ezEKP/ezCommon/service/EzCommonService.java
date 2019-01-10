@@ -59,6 +59,12 @@ public interface EzCommonService {
 	public void updateCompanyConfig(int tenantId, String companyId, String propertyName, String propertyValue) throws Exception;
 
 	public void deleteCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception;
+	
+	public void setMultiLoginUser(int tenantID, String userID, String loginTime) throws Exception;
+	
+	public boolean matchMultiLoginTime(int tenantID, String userID, String loginTime) throws Exception;
+	
+	public void createTblUserMultiLogin() throws Exception;
 
 	public void addMailToJMochaDistribution() throws Exception;
 	

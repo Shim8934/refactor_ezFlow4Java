@@ -745,7 +745,7 @@ public class LoginController {
     	}
     	
     	// 멀티로그인 옵션 관련 쿠키 (default : YES)
-    	String multiLoginUserInfo = userId + "_" + tenantId;
+//    	String multiLoginUserInfo = userId + "_" + tenantId;
     	String multiLoginTime = String.valueOf(System.currentTimeMillis());
     	
     	Cookie multiLoginCookieID = new Cookie("multiLoginCookie", multiLoginTime);
@@ -754,7 +754,7 @@ public class LoginController {
     	
     	String useMultiLogin = ezCommonService.getCompanyConfig(tenantId, companyID, "useMultiLogin");
     	if(useMultiLogin.equalsIgnoreCase("NO")) {
-    		commonUtil.setLoginUsers(multiLoginUserInfo, multiLoginTime);
+    		commonUtil.setLoginUsers(tenantId, userId, multiLoginTime);
      	}
     	// end
     }

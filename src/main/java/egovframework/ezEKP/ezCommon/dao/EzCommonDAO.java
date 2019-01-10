@@ -213,6 +213,24 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		insert("EzCommonDAO.insertUserConfigInfo", map);
 	}
 	
+	public void updateMultiLoginUser(Map<String, Object> map) throws Exception {
+		update("EzCommonDAO.updateMultiLoginUser", map);
+	}
+	
+	public String selectMultiLoginUser(Map<String, Object> map) throws Exception {
+		return (String) select("EzCommonDAO.selectMultiLoginUser", map);
+	}
+	
+	public void createTblUserMultiLogin() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblUserMultiLogin");
+		} catch (Exception e) {
+			logger.debug("tbl_user_multilogin doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblUserMultiLogin");
+		}
+	}
+	
 	public void createTblCompanyConfig() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblCompanyConfig");
@@ -237,6 +255,10 @@ public class EzCommonDAO extends EgovAbstractDAO{
 	
 	public int deleteCompanyConfig(Map<String, Object> map) throws Exception {
 		return delete("EzCommonDAO.deleteCompanyConfig", map);
+	}
+	
+	public void insertMultiLoginUser(Map<String, Object> map) throws Exception {
+		insert("EzCommonDAO.insertMultiLoginUser", map);
 	}
 
 	public void addMailToJMochaDistribution() throws Exception {
