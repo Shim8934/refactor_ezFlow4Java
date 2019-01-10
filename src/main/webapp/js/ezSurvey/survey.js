@@ -2191,7 +2191,7 @@ var SurveyCreate     = function() {
 		select.append(defaultOpt);
 		
 		for (var j = 0, len = options.length; j < len; j++) {
-			var opt = $("<option value='" + options[j]["content"] + "' logic='" + options[j]["logic"] + "'></option>");
+			var opt = $("<option value='" + options[j]["level"] + "' logic='" + options[j]["logic"] + "'></option>");
 			
 			opt[0].textContent = options[j]["content"];
 			select.append(opt);

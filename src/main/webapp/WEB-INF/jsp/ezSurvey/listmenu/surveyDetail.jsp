@@ -282,7 +282,7 @@
 					// 비교할 값
 					var neighborValue = $("select[name=ranking" + id + i + "]").val();
 					if (thisValue == neighborValue) {
-						alert("같은 값을 선택할 수 없습니다.");
+						alert(SurveyMessages.strNoSameRsps);
 						// 셀렉트 박스 값 초기화
 						$("select[name=ranking" + id + orders + "]").val("").prop("selected", true);
 					}
@@ -410,23 +410,25 @@
 		}
 		
 		function saveResponse() {
-			console.log(JSON.stringify(resposeObj));
-			/* 
-			$.ajax({
-				type: "POST",
-				url: "/ezSurvey/saveResponse.do",
-				data: JSON.stringify(resposeObj),
-				contentType: "application/json; charset=utf-8",
-				dataType: "JSON",
-				async: false,
-				success : function(data) {
-					afterSaveSuccessfully(data);
-				},
-				error : function(error) {
-					alert(SurveyMessages.strError);
-				}
-			});
-			 */
+			if (resposeObj.responses.length > 1) {
+				$.ajax({
+					type: "POST",
+					url: "/ezSurvey/saveResponse.do",
+					data: JSON.stringify(resposeObj),
+					contentType: "application/json; charset=utf-8",
+					dataType: "JSON",
+					async: false,
+					success : function(data) {
+						afterSaveSuccessfully(data);
+					},
+					error : function(error) {
+						alert(SurveyMessages.strError);
+					}
+				});
+				
+			} else {
+				alert(SurveyMessages.strNoResponse);
+			}
 		}
 		
 		function afterSaveSuccessfully(data) {
@@ -448,7 +450,7 @@
 			var wrapper = $("#prevQstn" + id);
 			var optLevel = parseInt(wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked").val());
 			
-			if (optLevel != undefined) {
+			if (!isNaN(optLevel)) {
 				optionLevel['optionLevel'] = optLevel;
 				answer.push(optionLevel);
 				
@@ -472,8 +474,11 @@
 				if (checkBox[i].checked == true) {
 					var optLevel = parseInt(checkBox[i].value);
 					var optionLevel = {};
-					optionLevel['optionLevel'] = optLevel;
-					answer.push(optionLevel);
+
+					if (!isNaN(optLevel)) {
+						optionLevel['optionLevel'] = optLevel;
+						answer.push(optionLevel);
+					}
 				}
 			}
 			
@@ -497,7 +502,6 @@
 				var rowColLevels = $("input[name = qstn" + id + "opt" + i + "]:checked").val();
 				
 				if (rowColLevels != undefined) {
-					console.log(rowColLevels);
 					var rowColArray = rowColLevels.split(",");
 					var row = rowColArray[0];
 					var col = rowColArray[1];
@@ -562,8 +566,11 @@
 				txtAnswer = wrapper.find(".paragraph").val();
 				
 			}
-			txtObj['texts'] = txtAnswer;
-			answer.push(txtObj);
+
+			if (txtAnswer != "") {
+				txtObj['texts'] = txtAnswer;
+				answer.push(txtObj);
+			}
 			
 			if (answer.length > 0) {
 				answerObj['answers'] = answer;
@@ -579,10 +586,12 @@
 			var sliderObj = {};
 			var answer = [];
 			var wrapper = $("#prevQstn" + id);
-			var outputVal = $("#slider" + id).val();
-			
-			sliderObj['sliderValue'] = parseInt(outputVal);
-			answer.push(sliderObj);
+			var outputVal = parseInt($("#slider" + id).val());
+
+			if (!isNaN(outputVal)) {
+				sliderObj['sliderValue'] = outputVal;
+				answer.push(sliderObj);
+			}
 			
 			if (answer.length > 0) {
 				answerObj['answers'] = answer;
@@ -603,10 +612,13 @@
 				var rankingObj = {};
 				var rankNum = i + 1;
 				var optionLevel = $("select[name='ranking" + id + i + "'] option:selected").val();
+
+				if (optionLevel != "") {
+					rankingObj['rankingLevel'] = rankNum;
+					rankingObj['rankingOptionLevel'] = parseInt(optionLevel);
+					answer.push(rankingObj);
+				}
 				
-				rankingObj['rankingLevel'] = rankNum;
-				rankingObj['rankingOptionLevel'] = parseInt(optionLevel);
-				answer.push(rankingObj);
 			}
 			
 			if (answer.length > 0) {
@@ -623,10 +635,12 @@
 			var drdwObj = {};
 			var answer = [];
 			var wrapper = $("#prevQstn" + id);
-			var optLevel = $("select[name=drdw" + id + "] option:selected").val();
+			var optLevel = parseInt($("select[name=drdw" + id + "] option:selected").val());
 			
-			drdwObj['optionLevel'] = parseInt(optLevel);
-			answer.push(drdwObj);
+			if (!isNaN(optLevel)) {
+				drdwObj['optionLevel'] = optLevel;
+				answer.push(drdwObj);
+			}
 			
 			if (answer.length > 0) {
 				answerObj['answers'] = answer;
@@ -701,11 +715,11 @@
 			today = yyyy + "-" + MM + "-" + dd;
 			
 			if (startDate > today) {
-				alert("설문 기간이 아닙니다. 설문 기간: " + startDate + "~" + endDate);
+				alert(SurveyMessages.strNotPeriod + startDate + "~" + endDate);
 				result = "false";
 			}
 			if (endDate < today) {
-				alert("설문 기간이 아닙니다. 설문 기간: " + startDate + "~" + endDate);
+				alert(SurveyMessages.strNotPeriod + startDate + "~" + endDate);
 				result = "false";
 			}
 			
@@ -751,7 +765,7 @@
 					
 				}
 				if (result == 0 || result == "") {
-					alert(id + "번 질문에 대한 답변이 완료되지 않았습니다.");
+					alert(id + SurveyMessages.strnotComplete);
 					break;
 				}
 				if (result == 'break') {
@@ -775,7 +789,7 @@
 			var stop = "break";
 			 
 			if (type == 3 && checkedCnt < requiredCnt) {
-				alert(id + "번 질문: 최소" + requiredCnt + "개 선택 필수");
+				alert(id + SurveyMessages.atLeast + requiredCnt + SurveyMessages.requiredCnt);
 				return stop;
 			}
 			

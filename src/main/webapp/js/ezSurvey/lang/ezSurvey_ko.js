@@ -112,4 +112,11 @@ var SurveyMessages = {
 	strProcess   : "진행중",
 	strFinish    : "완료",
 	strDraft     : "임시저장",
+	strNoSameRsps: "같은 값을 선택할 수 없습니다.",
+	strNoResponse: "질문에 응답해 주세요.",
+	strNotPeriod : "설문 기간이 아닙니다. 설문 기간: ",
+	strnotComplete: "번 질문에 대한 답변이 완료되지 않았습니다.",
+	atLeast      : "번 질문: 최소",
+	requiredCnt  : "개 선택 필수",
+	
 }
