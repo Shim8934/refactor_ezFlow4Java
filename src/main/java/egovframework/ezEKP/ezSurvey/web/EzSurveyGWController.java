@@ -574,11 +574,12 @@ public class EzSurveyGWController {
 	
 	@RequestMapping(value="/rest/ezsurvey/survey-item/check", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject checkItems(@RequestParam(value = "itemList") List<String> itemList, Locale locale, HttpServletRequest request) throws Exception {
-		String serverName = request.getHeader("host-name")     != null ? request.getHeader("host-name")     : "";
-		String userId     = request.getParameter("userId")     != null ? request.getParameter("userId")     : "";
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
+		String mode       = request.getParameter("mode")   != null ? request.getParameter("mode")   : "";
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || itemList: " + String.join(",", itemList));
+		logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || itemList: " + String.join(",", itemList) + " || mode: " + mode);
 		
 		if (serverName.equals("") || itemList.size() == 0 || userId.equals("")) {
 			logger.debug("Parameter error!");
@@ -590,7 +591,7 @@ public class EzSurveyGWController {
 		try {
 			LoginVO userInfo      = commonUtil.getUserForGw(userId, serverName);
 			List<Long> itemIdList = itemList.stream().map(Long::parseLong).collect(Collectors.toList());
-			result                = surveyService.checkPermission(itemIdList, 1, userInfo);
+			result                = surveyService.checkPermission(itemIdList, Integer.parseInt(mode), userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -631,7 +632,7 @@ public class EzSurveyGWController {
 	}
 	
 	@RequestMapping(value="/rest/ezsurvey/survey-processing/check", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject checkItems(Locale locale, HttpServletRequest request) throws Exception {
+	public JSONObject checkProcessingItem(Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
 		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
 		String itemId     = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
@@ -742,10 +743,10 @@ public class EzSurveyGWController {
 		
 		try {
 			JSONObject response  = (JSONObject) jp.parse(responseItem.toJSONString());
-			long surveyId        = response.get("surveyId")              != null ? (Long)response.get("surveyId")           : -1;
-			JSONArray responses  = (JSONArray) response.get("responses") != null ? (JSONArray) response.get("responses")    : null;
-			String serverName    = request.getHeader("host-name")        != null ? request.getHeader("host-name")           : "";
-			String userId        = responseItem.get("userId")            != null ? responseItem.get("userId").toString()    : "";
+			long surveyId        = response.get("surveyId")              != null ? (Long)response.get("surveyId")        : -1;
+			JSONArray responses  = (JSONArray) response.get("responses") != null ? (JSONArray) response.get("responses") : null;
+			String serverName    = request.getHeader("host-name")        != null ? request.getHeader("host-name")        : "";
+			String userId        = responseItem.get("userId")            != null ? responseItem.get("userId").toString() : "";
 			
 			logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || surveyId: " + surveyId);
 			
@@ -758,10 +759,6 @@ public class EzSurveyGWController {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			result           = surveyService.saveResponseItem(responses, surveyId, userInfo);
-
-			if ((int) result.get("code") == 1) {
-				result           = surveyService.saveRespondent(surveyId, userInfo);
-			}
 		}
 		
 		catch (Exception e) {
