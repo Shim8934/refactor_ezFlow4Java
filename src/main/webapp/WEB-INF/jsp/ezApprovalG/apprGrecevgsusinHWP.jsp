@@ -951,7 +951,7 @@
 			      parameter[4] = getNodeText(RECEIPTDEPTID);
 			
 			      var url = "/ezApprovalG/ezReceiveDistributeUI.do";
-			      var feature = "status:no;dialogWidth:1000px;dialogHeight:760px;edge:sunken;scroll:no"
+			      var feature = "status:no;dialogWidth:800px;dialogHeight:600px;edge:sunken;scroll:no"
 			      var ret = window.showModalDialog(url, parameter, feature);
 			      if (ret == "true") {
 			          var pAlertContent = "<spring:message code='ezApprovalG.t1419'/>";
