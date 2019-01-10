@@ -2149,8 +2149,8 @@ var SurveyCreate     = function() {
 			var rankingSelect = $("<div class='ranking-select'></div>");
 			var rankOrder = $("<span class='rank-order' id='rank-order" + (i + 1) + "'>" + (i + 1) + ".</span>");
 			
-			var strSlct = "<select name='slt" + id + i + "'>";
-			strSlct    += "<option selected>" + SurveyMessages.strSelect + "</option>";
+			var strSlct = "<select name='ranking" + id + i + "'>";
+			strSlct    += "<option value='' selected>" + SurveyMessages.strSelect + "</option>";
 			
 			for (var j = 0, len = options.length; j < len; j++) {
 				strSlct += "<option value='" + options[j]['level'] + "'>" + options[j]["content"] + "</option>";
@@ -2174,7 +2174,7 @@ var SurveyCreate     = function() {
 		var dropdownWrap = $("<div class='dropdown-wrap'></div>");
 		
 		var select = $("<select name='drdw" + id + "'></select>");
-		var defaultOpt = $("<option selected>" + SurveyMessages.strSelect + "</option>");
+		var defaultOpt = $("<option value='' selected>" + SurveyMessages.strSelect + "</option>");
 		select.append(defaultOpt);
 		
 		for (var j = 0, len = options.length; j < len; j++) {

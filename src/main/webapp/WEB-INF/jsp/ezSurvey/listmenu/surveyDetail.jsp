@@ -188,11 +188,24 @@
 			var listQstDiv = document.getElementsByClassName("prevQsWrapper");
 			for (var i = 0, len = listQstDiv.length; i < len; i++) {
 				var qstLevel = parseInt(listQstDiv[i].id.replace("prevQstn", ""));
+				
 				if (checkList.indexOf(qstLevel) == -1) {
-					listQstDiv[i].style.display = "none";
+					var checkMask = $("#mask" + qstLevel).length;
+					
+					if (checkMask == 0) {
+						var mask = $("<div class='mask' id='mask" + qstLevel + "'></div>");
+						var wrapper = $("#prevQstn" + qstLevel);
+						var height = wrapper.height();
+						var width = wrapper.width();
+						wrapper.prepend(mask);
+						
+						$("#mask" + qstLevel).css({"height": height, "width": width, "background-color": "gray", "opacity": "0.3", "position" : "absolute"})
+					}
+					//listQstDiv[i].style.display = "none";
 				}
 				else {
-					listQstDiv[i].style.display = "";
+					$("#prevQstn" + qstLevel).find("#mask" + qstLevel).remove();
+					//listQstDiv[i].style.display = "";
 				}
 			}
 		}
@@ -219,6 +232,7 @@
 		
 		function userEvent() {
 			showAttachList();
+			// 라디오 버튼 클릭 이벤트
 			$(".prevQsArea").on("click", ".optRdo", function() {
 				var prId     = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
 				var logicNum = $(this).attr("logic");
@@ -228,38 +242,55 @@
 				}
 			});
 			
-			$(".prevQsArea").on("click", ".optChb", function() {
-				var id = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
-				var logicNum = $(this).attr("logic");
-				
-				if (logicNum && logicmap) {
-					processLogicNode(parseInt(id), parseInt(logicNum));
-				}
-			});
-			
 			$(".prevQsArea").on("change", ".dropdown-wrap", function() {
 				var id = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
 				var logic = $("select[name=drdw" + id + "] option:selected").attr("logic");
 				
 			});
 			
+			// 슬라이드 질문 트리거
 			$(".prevQsArea").on("input", ".slider-range", function() {
 				var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
 				outputElmt.textContent = this.value;
 			}).trigger("change");
 			
+			// 슬라이드 질문 답변 표시
 			$(".prevQsArea").on("change", ".slider-range", function() {
 				var id = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
 				var logic = $("#slider" + id).attr("logic");
 				var logicPoint = $("#slider" + id).attr("logicPoint");
-				
+			});
+			
+			// ranking 셀렉트 박스 옵션 선택시 값 비교
+			$(".prevQsArea").on("change", "select[name^=ranking]", function() {
+				var length = $(this).parents(".ranking-wrap").find(".ranking-select").length;
+				var id = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
+				// 내가 선택한 값
+				var thisValue = $(this).val();
+				// 내가 선택한 셀렉트 박스의 순번
+				var orders = $(this).attr("name").replace("ranking" + id, "");
+				// 위 아래의 모든 셀렉트 박스 값과 비교
+				for (var i = 0; i < length; i++) {
+					// 내가 클릭한 셀렉트 박스는 비교 skip 
+					if (orders == i) {
+						continue;
+					}
+					// 비교할 값
+					var neighborValue = $("select[name=ranking" + id + i + "]").val();
+					if (thisValue == neighborValue) {
+						alert("같은 값을 선택할 수 없습니다.");
+						// 셀렉트 박스 값 초기화
+						$("select[name=ranking" + id + orders + "]").val("").prop("selected", true);
+					}
+					
+				}
 				
 			});
 			
 			var delBttn = document.getElementById("suvyDlt");
 			if (delBttn) {delBttn.onclick = function(e) {deleteFileConfirm();};}
 			
-			document.getElementById("suvyInfo").onclick   = function(e) {showSurveyInfo();}
+			document.getElementById("suvyInfo").onclick   = function(e) {showSurveyInfo(); checkRequired();}
 			
 			var cancelBttn = document.getElementById("cancelBttn");
 			var saveResult = document.getElementById("saveResult");
@@ -323,55 +354,61 @@
 		}
 		
 		function saveSurveyResponses() {
-			var qsWrappers = $(".prevQsArea").find(".prevQsWrapper");
-			
-			for (var i = 0; i < qsWrappers.length; i++) {
-				var wrapper = qsWrappers[i];
-				var displayValue = wrapper.style.display;
+			var result = "";
+			result = checkDate();
 
-				if (displayValue != "none") {
-					var qstnId = wrapper.getAttribute("id");
-					var id = parseInt(qstnId.replace("prevQstn", ""));
-					var type = parseInt(wrapper.getAttribute("type"));
-					
-					switch (type) {
-					case 1:
-						getSingleSltRespose(id, type);
-						break;
-					case 2:
-						getMultiSltRespose(id, type);
-						break;
-					case 3:
-						getSingleMtrRespose(id, type);
-						break;
-					case 4:
-						getMultiMtrRespose(id, type);
-						break;
-					case 5:
-						getTxtRespose(id, type);
-						break;
-					case 6:
-						getTxtRespose(id, type);
-						break;
-					case 7:
-						getSliderRespose(id, type);
-						break;
-					case 8:
-						getRankingRespose(id, type);
-						break;
-					case 9:
-						getDrdwRespose(id, type);
-						break;
+			if (result != "") {
+				var qsWrappers = $(".prevQsArea").find(".prevQsWrapper");
+				
+				for (var i = 0; i < qsWrappers.length; i++) {
+					var wrapper = qsWrappers[i];
+					var displayValue = wrapper.style.display;
+	
+					if (displayValue != "none") {
+						var qstnId = wrapper.getAttribute("id");
+						var id = parseInt(qstnId.replace("prevQstn", ""));
+						var type = parseInt(wrapper.getAttribute("type"));
+						
+						switch (type) {
+						case 1:
+							getSingleSltRespose(id, type);
+							break;
+						case 2:
+							getMultiSltRespose(id, type);
+							break;
+						case 3:
+							getSingleMtrRespose(id, type);
+							break;
+						case 4:
+							getMultiMtrRespose(id, type);
+							break;
+						case 5:
+							getTxtRespose(id, type);
+							break;
+						case 6:
+							getTxtRespose(id, type);
+							break;
+						case 7:
+							getSliderRespose(id, type);
+							break;
+						case 8:
+							getRankingRespose(id, type);
+							break;
+						case 9:
+							getDrdwRespose(id, type);
+							break;
+						}
+						
 					}
 					
 				}
-				
+				saveResponse();
 			}
-			saveResponse();
+			
 		}
 		
 		function saveResponse() {
-			//console.log(JSON.stringify(resposeObj));
+			console.log(JSON.stringify(resposeObj));
 			
 			$.ajax({
 				type: "POST",
@@ -409,13 +446,16 @@
 			var wrapper = $("#prevQstn" + id);
 			var optLevel = parseInt(wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked").val());
 
-			optionLevel['optionLevel'] = optLevel;
-			answer.push(optionLevel);
-			
-			answerObj['answers'] = answer;
-			answerObj['type'] = type;
-			answerObj['questionLevel'] = id;
-			resposeObj.responses.push(answerObj);
+			if (optLevel != undefined) {
+				optionLevel['optionLevel'] = optLevel;
+				answer.push(optionLevel);
+				
+				answerObj['answers'] = answer;
+				answerObj['type'] = type;
+				answerObj['questionLevel'] = id;
+				resposeObj.responses.push(answerObj);
+			}
+
 			//console.log(resposeObj.responses);
 		}
 		
@@ -434,11 +474,13 @@
 					answer.push(optionLevel);
 				}
 			}
-			
-			answerObj['answers'] = answer;
-			answerObj['type'] = type;
-			answerObj['questionLevel'] = id;
-			resposeObj.responses.push(answerObj);
+
+			if (answer.length > 0) {
+				answerObj['answers'] = answer;
+				answerObj['type'] = type;
+				answerObj['questionLevel'] = id;
+				resposeObj.responses.push(answerObj);
+			}
 			//console.log(resposeObj.responses);
 		}
 		
@@ -463,11 +505,12 @@
 					answer.push(rowColObj);
 				}
 			}
-			
-			answerObj['answers'] = answer;
-			answerObj['type'] = type;
-			answerObj['questionLevel'] = id;
-			resposeObj.responses.push(answerObj);
+			if (answer.length > 0) {
+				answerObj['answers'] = answer;
+				answerObj['type'] = type;
+				answerObj['questionLevel'] = id;
+				resposeObj.responses.push(answerObj);
+			}
 			//console.log(resposeObj.responses);
 		}
 		
@@ -495,11 +538,12 @@
 					}
 				}
 			}
-			
-			answerObj['answers'] = answer;
-			answerObj['type'] = type;
-			answerObj['questionLevel'] = id;
-			resposeObj.responses.push(answerObj);
+			if (answer.length > 0) {
+				answerObj['answers'] = answer;
+				answerObj['type'] = type;
+				answerObj['questionLevel'] = id;
+				resposeObj.responses.push(answerObj);
+			}
 			//console.log(resposeObj.responses);
 		}
 		
@@ -519,10 +563,12 @@
 			txtObj['texts'] = txtAnswer;
 			answer.push(txtObj);
 			
-			answerObj['answers'] = answer;
-			answerObj['type'] = type;
-			answerObj['questionLevel'] = id;
-			resposeObj.responses.push(answerObj);
+			if (answer.length > 0) {
+				answerObj['answers'] = answer;
+				answerObj['type'] = type;
+				answerObj['questionLevel'] = id;
+				resposeObj.responses.push(answerObj);
+			}
 			//console.log(resposeObj.responses);
 		}
 		
@@ -536,10 +582,12 @@
 			sliderObj['sliderValue'] = parseInt(outputVal);
 			answer.push(sliderObj);
 			
-			answerObj['answers'] = answer;
-			answerObj['type'] = type;
-			answerObj['questionLevel'] = id;
-			resposeObj.responses.push(answerObj);
+			if (answer.length > 0) {
+				answerObj['answers'] = answer;
+				answerObj['type'] = type;
+				answerObj['questionLevel'] = id;
+				resposeObj.responses.push(answerObj);
+			}
 			//console.log(resposeObj.responses);
 		}
 		
@@ -552,17 +600,19 @@
 			for (var i = 0; i < selectLengh; i++) {
 				var rankingObj = {};
 				var rankNum = i + 1;
-				var optionLevel = $("select[name='slt" + id + i + "'] option:selected").val();
+				var optionLevel = $("select[name='ranking" + id + i + "'] option:selected").val();
 				
 				rankingObj['rankingLevel'] = rankNum;
 				rankingObj['rankingOptionLevel'] = parseInt(optionLevel);
 				answer.push(rankingObj);
 			}
 			
-			answerObj['answers'] = answer;
-			answerObj['type'] = type;
-			answerObj['questionLevel'] = id;
-			resposeObj.responses.push(answerObj);
+			if (answer.length > 0) {
+				answerObj['answers'] = answer;
+				answerObj['type'] = type;
+				answerObj['questionLevel'] = id;
+				resposeObj.responses.push(answerObj);
+			}
 			//console.log(resposeObj.responses);
 		}
 		
@@ -576,10 +626,12 @@
 			drdwObj['optionLevel'] = parseInt(optLevel);
 			answer.push(drdwObj);
 			
-			answerObj['answers'] = answer;
-			answerObj['type'] = type;
-			answerObj['questionLevel'] = id;
-			resposeObj.responses.push(answerObj);
+			if (answer.length > 0) {
+				answerObj['answers'] = answer;
+				answerObj['type'] = type;
+				answerObj['questionLevel'] = id;
+				resposeObj.responses.push(answerObj);
+			}
 			//console.log(resposeObj.responses);
 		}
 		
@@ -627,6 +679,78 @@
 					alert(SurveyMessages.strError);
 				}
 			});
+		}
+		
+		function checkDate() {
+			var startDate = survey.startDate.substr(0, 10);
+			var endDate = survey.endDate.substr(0, 10);
+			var today = new Date();
+			var yyyy = today.getFullYear();
+			var MM = today.getMonth() + 1;
+			var dd = today.getDate();
+			var result = "";
+			
+			if (dd < 10) {
+				dd = '0' + dd;
+			}
+			if (MM < 10) {
+				MM = '0' + MM;
+			}
+			today = yyyy + "-" + MM + "-" + dd;
+			
+			if (startDate > today) {
+				alert("설문 기간이 아닙니다. 설문 가능 기간: " + startDate + "~" + endDate);
+				result = "false";
+			}
+			if (endDate < today) {
+				alert("설문 기간이 아닙니다. 설문 가능 기간: " + startDate + "~" + endDate);
+				result = "false";
+			}
+			
+			return result;
+		}
+		
+		function checkRequired() {
+			var qsWrappers = $(".prevQsArea").find(".prevQsWrapper");
+			var arr = [];
+
+			for (var i = 0; i < qsWrappers.length; i++) {
+				var display = qsWrappers[i].style.display;
+				var required = qsWrappers[i].querySelector("strong[class='imptt']");
+				
+				if (display != "none" && required != null) {
+					var id = i + 1;
+					var type = qsWrappers[i].getAttribute("type");
+					
+					switch(type) {
+					case 1 : 
+					case 2 :
+						checkSltResponse(id);
+						break;
+					case 3 : 
+					case 4 :
+						checkMtrResponse(id, type);
+						break;
+					}
+					
+				}
+			}
+			
+		}
+		
+		function checkSltResponse(id) {
+			
+			var cnt = $("input[name^=qstn" + id+ "]:checked").length;
+			console.log(cnt);
+			
+			var wrapper = $("#prevQstn" + id);
+			var checkedCnt = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked").length;
+			if (checkedCnt == 0) {
+				alert(id + "번 질문은 필수 답변 질문입니다.");
+			}
+		}
+		function checkMtrResponse(id, type) {
+			var wrapper = $("#prevQstn" + id);
 		}
 	});
 </script>
