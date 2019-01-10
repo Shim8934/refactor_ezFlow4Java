@@ -2132,7 +2132,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		String pollManagerID = request.getParameter("pollManagerID");
-		String pollState = request.getParameter("pollState");
+		String pollState = URLDecoder.decode(request.getParameter("pollState"), "utf-8");
 		
 		//TODO 2016-12-15 이효진 사용되지 않음
 //		int userLevel = ezCommunityService.pollResGet1(userInfo.getId(), code, tenantID);
@@ -4665,6 +4665,31 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("getItemViewNew ended.");
 		
 		return "<DATA>" + result + "</DATA>";
+	}
+	
+	/**
+	 * 2019-01-10 홍승비 - 커뮤니티 게시판 > 부모게시판ID 리턴하는 함수 추가
+	 */
+	@RequestMapping(value = "/ezCommunity/getParentBoardID.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getParentBoardID(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getParentBoardID started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String boardID = request.getParameter("boardID");
+		String result = "";
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		
+		if(boardInfo != null) {
+			if (boardInfo.getParentBoardID() != null && !boardInfo.getParentBoardID().equals("")) {
+				result = boardInfo.getParentBoardID();
+			}
+		}
+		
+		logger.debug("getParentBoardID ended.");
+		
+		return result;
 	}
 }
 

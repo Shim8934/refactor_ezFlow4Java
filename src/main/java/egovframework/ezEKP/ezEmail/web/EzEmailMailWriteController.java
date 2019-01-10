@@ -896,7 +896,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 							reStr = egovMessageSource.getMessage("ezEmail.t513", locale);
 						}
 						
-						if (!subject.startsWith(reStr)) {
+						if (!subject.startsWith(reStr + ":")) {
 							subject = reStr + ": " + subject;
 						}
 		        		

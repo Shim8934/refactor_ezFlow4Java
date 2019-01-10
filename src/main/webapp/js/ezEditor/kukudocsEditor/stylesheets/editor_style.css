@@ -99,3 +99,23 @@ th[kk_selected_td] td,
 th[kk_selected_td] th{
     background: inherit !important;
 }
+
+td[kk_none_border_visualize_left],
+td[kk_none_border_visualize_left] {
+    border-left : 1px dashed #e7e7e7 !important;
+}
+
+td[kk_none_border_visualize_right],
+td[kk_none_border_visualize_right] {
+    border-right : 1px dashed #e7e7e7 !important;
+}
+
+td[kk_none_border_visualize_top],
+td[kk_none_border_visualize_top] {
+    border-top : 1px dashed #e7e7e7 !important;
+}
+
+td[kk_none_border_visualize_bottom],
+td[kk_none_border_visualize_bottom] {
+    border-bottom : 1px dashed #e7e7e7 !important;
+}

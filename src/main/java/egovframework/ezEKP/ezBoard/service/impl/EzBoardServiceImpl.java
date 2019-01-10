@@ -720,7 +720,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			boardProp = getBoardProperty(ezBoardVO.getBoardId(), ezBoardVO.getTenantID());
 			
-			if (boardProp.getBoardGroupID() != null) {
+			if (boardProp != null && boardProp.getBoardGroupID() != null) {
 				BoardPropertyVO boardGroupProp = getBoardProperty(boardProp.getBoardGroupID(), ezBoardVO.getTenantID());
 				
 				if (boardGroupProp.getGuBun() != null && boardGroupProp.getGuBun().equals("99")) {
