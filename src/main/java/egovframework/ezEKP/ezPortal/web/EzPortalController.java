@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1965,35 +1966,47 @@ public class EzPortalController extends EgovFileMngUtil {
 //			reversePath += splitDeptPath[splitDeptPath.length - i - 1] + ",";
 //		}
 		
-//		String pAccessID = userInfo.getId() + "," + userInfo.getDeptID() + "," + userInfo.getCompanyID() + "," + "everyone";
+		String pAccessID = userInfo.getId() + "," + userInfo.getDeptID() + "," + userInfo.getCompanyID() + "," + "everyone";
 		
-		List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu = ezPersonalService.getQuickLinkMenu(userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId());
-		for (int k=0; k<getQuickLinkMenu.size(); k++) {
-			boolean TF = true;
-			if (getQuickLinkMenu.get(k) != null && getQuickLinkMenu.get(k).getView_Flag().equals("N")) {
-				noViewArrayID[noViewCnt] = getQuickLinkMenu.get(k).getQuickLinkID();
-				noViewCnt++;
-			} else {
-				for (int z=0; z < noViewCnt; z++) {
-					if (noViewArrayID != null && noViewArrayID[z].equals(getQuickLinkMenu.get(k).getQuickLinkID())) {
-						TF = false;
-						break;
+		for (int j=0; j<pAccessID.split("\\,").length; j++) {
+			List<PersonalGetQuickLinkMenuVO> getQuickLinkMenu = ezPersonalService.getQuickLinkMenu(pAccessID.split("\\,")[j].trim(), userInfo.getTenantId());
+			for (int k=0; k<getQuickLinkMenu.size(); k++) {
+				boolean TF = true;
+				if (getQuickLinkMenu.get(k) != null && getQuickLinkMenu.get(k).getView_Flag().equals("N")) {
+					noViewArrayID[noViewCnt] = getQuickLinkMenu.get(k).getQuickLinkID();
+					noViewCnt++;
+				} else {
+					for (int z=0; z < noViewCnt; z++) {
+						if (noViewArrayID != null && noViewArrayID[z].equals(getQuickLinkMenu.get(k).getQuickLinkID())) {
+							TF = false;
+							break;
+						}
 					}
-				}
-				
-				for (int i=0; i < cnt; i++) {
-					if (arrayID[i] != null && arrayID[i].equals(getQuickLinkMenu.get(k).getQuickLinkID())) {
-						TF = false;
-						break;
+					
+					for (int i=0; i < cnt; i++) {
+						if (arrayID[i] != null && arrayID[i].equals(getQuickLinkMenu.get(k).getQuickLinkID())) {
+							TF = false;
+							break;
+						}
 					}
-				}
-				
-				if (TF) {
-					arrayID[cnt] = getQuickLinkMenu.get(k).getQuickLinkID();
-					cnt ++;
-					result.append(commonUtil.getQueryResult(getQuickLinkMenu.get(k)));
+					
+					if (TF) {
+						arrayID[cnt] = getQuickLinkMenu.get(k).getQuickLinkID();
+						cnt ++;
+						realList.add(getQuickLinkMenu.get(k));
+					}
 				}
 			}
+		}
+		
+		Collections.sort(realList, new Comparator<PersonalGetQuickLinkMenuVO>() {
+		    public int compare(PersonalGetQuickLinkMenuVO o1, PersonalGetQuickLinkMenuVO o2) {
+		        return o2.getRegDate().compareTo(o1.getRegDate());
+		    }
+		});
+		
+		for (PersonalGetQuickLinkMenuVO personalGetQuickLinkMenuVO : realList) {
+			result.append(commonUtil.getQueryResult(personalGetQuickLinkMenuVO));
 		}
 		
 		int lastSize = 0;

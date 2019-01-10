@@ -1507,16 +1507,20 @@
 				    		bm_list.forEach(function(user, index) {
 				    			html += "<tr id='nameList" + index + "' name='nameList" + index + "' style='cursor:pointer' onmouseover='event_Mover(this)' onmouseout='event_Mout(this)'  onclick='event_click(this)' ondblclick='event_DBclick(this)'>";
 				    			html += "<td id='data1' style='width:5%'>" + (index + 1) + "</td>";
-				    			if(user.userId.substring(0, 14) != "anonyAttendant" && !user.mail) {
+				    			if(user.userId.substring(0, 14) == "anonyAttendant" && !user.mail) {
 				    				html += "<td id='data2' style='width:18%'></td>";
+				    				html += "<td id='data3' style='width:20%'></td>";
+				    				html += "<td id='data4' style='display:none;'></td>";
 				    			} else {
 				    				html += "<td id='data2' style='width:18%'>" + user.company + "</td>";
+				    				html += "<td id='data3' style='width:20%'>" + user.description + "</td>";
+				    				html += "<td id='data4' style='display:none;'>" + user.description2 + "</td>";
 				    			}
-				    			html += "<td id='data3' style='width:20%'>" + user.description + "</td>";
-				    			html += "<td id='data4' style='display:none;'>" + user.description2 + "</td>";
+				    			//html += "<td id='data3' style='width:20%'>" + user.description + "</td>";
+				    			//html += "<td id='data4' style='display:none;'>" + user.description2 + "</td>";
 				    			html += "<td id='data5' style='width:16%'>" + user.userName + "</td>";
 				    			html += "<td id='data6' style='width:41%'>" + user.mail + "</td>";
-				    			if(user.userId.substring(0, 14) != "anonyAttendant" && !user.mail) {
+				    			if(user.userId.substring(0, 14) == "anonyAttendant" && !user.mail) {
 				    				html += "<td id='data7' style='display:none'>anonyAttendant" + index + "</td>";
 				    			} else {
 					    			html += "<td id='data7' style='display:none'>" + user.userId + "</td>";
