@@ -292,7 +292,7 @@
 			var delBttn = document.getElementById("suvyDlt");
 			if (delBttn) {delBttn.onclick = function(e) {deleteFileConfirm();};}
 			
-			document.getElementById("suvyInfo").onclick   = function(e) {showSurveyInfo(); checkRequired();}
+			document.getElementById("suvyInfo").onclick   = function(e) {showSurveyInfo();}
 			
 			var cancelBttn = document.getElementById("cancelBttn");
 			var saveResult = document.getElementById("saveResult");
@@ -356,10 +356,12 @@
 		}
 		
 		function saveSurveyResponses() {
-			var result = "";
-			//result = checkDate();
+			// 설문 기간 체크
+			var periodResult = checkDate();
+			// 필수 답변에 응답 여부 체크
+			var requiredResult = checkRequired();
 
-			if (result != "false") {
+			if (periodResult != "fail" && requiredResult != "fail") {
 				var qsWrappers = $(".prevQsArea").find(".prevQsWrapper");
 				
 				for (var i = 0; i < qsWrappers.length; i++) {
@@ -704,7 +706,7 @@
 			var yyyy = today.getFullYear();
 			var MM = today.getMonth() + 1;
 			var dd = today.getDate();
-			var result = "";
+			var result = "success";
 			
 			if (dd < 10) {
 				dd = '0' + dd;
@@ -716,20 +718,21 @@
 			
 			if (startDate > today) {
 				alert(SurveyMessages.strNotPeriod + startDate + "~" + endDate);
-				result = "false";
+				result = "fail";
 			}
 			if (endDate < today) {
 				alert(SurveyMessages.strNotPeriod + startDate + "~" + endDate);
-				result = "false";
+				result = "fail";
 			}
 			
 			return result;
 		}
 		
 		function checkRequired() {
+			var result = "success";
 			var qsWrappers = $(".prevQsArea").find(".prevQsWrapper");
 			var arr = [];
-			var result = "";
+			var checkResult = "";
 
 			for (var i = 0; i < qsWrappers.length; i++) {
 				var maskCnt = qsWrappers[i].querySelector("div[class=mask]");
@@ -742,36 +745,40 @@
 					switch(type) {
 					case 1 : 
 					case 2 :
-						result = checkSltResponse(id);
+						checkResult = checkSltResponse(id);
 						break;
 					case 3 : 
 					case 4 :
-						result = checkMtrResponse(id, type);
+						checkResult = checkMtrResponse(id, type);
 						break;
 					case 5 : 
 					case 6 :
-						result = checkTxtResponse(id, type);
+						checkResult = checkTxtResponse(id, type);
 						break;
 					case 7 : 
-						result = checkSliderResponse(id);
+						checkResult = checkSliderResponse(id);
 						break;
 					case 8 : 
-						result = checkRankingResponse(id);
+						checkResult = checkRankingResponse(id);
 						break;
 					case 9 : 
-						result = checkDrdwResponse(id);
+						checkResult = checkDrdwResponse(id);
 						break;
 					}
 					
 				}
-				if (result == 0 || result == "") {
+				if (checkResult == 0 || checkResult == "") {
 					alert(id + SurveyMessages.strnotComplete);
+					result = "fail";
 					break;
 				}
-				if (result == 'break') {
+				if (checkResult == 'break') {
+					result = "fail";
 					break;
 				}
 			}
+			
+			return result;
 			
 		}
 		// 선택 질문 답변 유무 체크
