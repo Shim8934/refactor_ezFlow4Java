@@ -362,6 +362,26 @@
 		]]>			
     </select> 
     
+    <select id="EzPollDAO.getListOfUserForQst" resultClass="PollUserVO">
+        <![CDATA[
+                SELECT
+                        QST_ID as qstid,
+                        USER_ID as userid,
+                        TENANT_ID as tenantid,
+                        USER_TYPE as usertype,
+                        COMPANYID as companyid,
+                        DEPT_ID as deptid
+                FROM
+                        TBL_VOTE_USER_AND_QUESTION
+                WHERE
+                        TENANT_ID = #tenantID#
+                AND
+                        QST_ID    = #qst_id#
+                AND
+                        USER_TYPE = #type#
+        ]]>
+    </select>
+    
     <select id="EzPollDAO.checkTargetOfQst" resultClass="Integer">             
 		<![CDATA[
 			SELECT 

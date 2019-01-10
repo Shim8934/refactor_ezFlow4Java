@@ -96,7 +96,10 @@
 		                document.getElementById("periodblock").style.display = "";
 		                document.getElementById("repeatblock").style.display = "none";
 		                show_repetition_info();
-		            } 
+		            } else if(datetype == "2") {
+		            	document.getElementById("alldaycheck").checked = true;
+		            	allday_change();
+		            }
 
 		            if ($.trim(repetition) != "" && pattern == "1") {
 		                show_repetition_info();
@@ -204,6 +207,10 @@
 				var eHour = uploadEDate.substring(11, 13);
 				var eMin = uploadEDate.substring(14, 16);
 				
+				if(uploadEDate.substring(11, 16) == "00:00") {
+					eDay--;
+				}
+				
 		        var SDate = new Date();
 		        SDate.setFullYear(sYear, sMonth-1, sDay);
 		        SDate.setHours(sHour, sMin, 0, 0);
@@ -211,7 +218,6 @@
 		        var EDate = new Date();
 		        EDate.setFullYear(eYear, eMonth-1, eDay);
 		        EDate.setHours(eHour, eMin, 0, 0);
-		        
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
 		        $('#Stimepicker').timepicker();
