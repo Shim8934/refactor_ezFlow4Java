@@ -7,7 +7,7 @@
 		<title><spring:message code = 'ezApprovalG.t1267' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e3', 'msg')}" type="text/css">
+		<%-- <link rel="stylesheet" href="${util.addVer('ezApprovalG.e3', 'msg')}" type="text/css"> --%>
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th { border-top:0px }
@@ -307,15 +307,22 @@
 		</LISTVIEWDATA>
 	</xml>
 	<body class="mainbody">
-	    <h1><spring:message code = 'ezApprovalG.t1275' /></h1>
+	    <h1>
+	    	<spring:message code = 'ezApprovalG.t1275' />
+	    	<select id="ListCompany" class="companySelect" onChange="selectCompanyID()">
+	        	<c:forEach var="item" items="${list}">
+            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            	</c:forEach>
+		    </select>
+	    </h1>
 	    <div id="mainmenu">
 	        <ul>
-	            <b><spring:message code = 'ezApprovalG.t1276' /></b>
+	            <%-- <b><spring:message code = 'ezApprovalG.t1276' /></b>
 	            <select id="ListCompany" onChange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
-			    </select><br /><br />
+			    </select><br /><br /> --%>
 			    <li id="addbtn"><span onclick="return btnAdd_onclick()"><spring:message code = 'ezApprovalG.t1249' /></span></li>
 	            <li><span onclick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1277' /></span></li>	            
 	        </ul>

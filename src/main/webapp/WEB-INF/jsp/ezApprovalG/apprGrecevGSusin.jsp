@@ -127,6 +127,7 @@
 		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 		    var useReceiveDocNo = "${useReceiveDocNo}";
 			var wAprMemberSN = "1";
+			var docNumZeroCnt = "${docNumZeroCnt}";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -576,7 +577,7 @@
 		    function saveSuSinDocInfo() {
 		        var rtnval = true;
 		        if (approvalFlag == "G") {
-		        	rtnval = getRecvDocNumber(arr_userinfo[4]);
+		        	rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 		        }
 		        if (!rtnval) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t2101'/>";

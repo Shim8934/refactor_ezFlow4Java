@@ -1055,7 +1055,7 @@ public class EzOrganServiceImpl implements EzOrganService {
 	        	
 	        }
 	        
-	        if(page.equals(null) || page.equals("")){
+	        if (page == null || page.equals("")){
 	            page = "1";
 	        }
 	        

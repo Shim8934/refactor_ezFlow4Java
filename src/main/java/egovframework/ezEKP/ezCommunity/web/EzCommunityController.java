@@ -761,7 +761,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		String pItemID = "", pReservedItem = "", pUrl = "", pDocID = "", expireDays = "";
-		String hasAttach = "NO";
 		String uploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
@@ -792,7 +791,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
-		ezCommunityService.newBoardItem(item, boardInfo, userInfo, pItemID, pBoardID, pUrl, pMode, expireDays, hasAttach, model);
+		ezCommunityService.newBoardItem(item, boardInfo, userInfo, pItemID, pBoardID, pUrl, pMode, expireDays, model);
 		
 		model.addAttribute("editor", ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()));
 		model.addAttribute("pUploadFilePath", uploadFilePath);
@@ -805,7 +804,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("pUrl", pUrl);
 		model.addAttribute("pMode", pMode);
-		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("endDate", item.getEndDate());
@@ -2134,7 +2132,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		String pollManagerID = request.getParameter("pollManagerID");
-		String pollState = request.getParameter("pollState");
+		String pollState = URLDecoder.decode(request.getParameter("pollState"), "utf-8");
 		
 		//TODO 2016-12-15 이효진 사용되지 않음
 //		int userLevel = ezCommunityService.pollResGet1(userInfo.getId(), code, tenantID);

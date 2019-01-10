@@ -21,7 +21,7 @@ var memorialDays = Array(
 
 
 
-function yearmemorialDay(name, name2, year, month, day, solarLunar, holiday, type) {
+function yearmemorialDay(name, name2, year, month, day, solarLunar, holiday, type, repetition) {
     this.name = name;
     this.name2 = name2;
     this.year = year;
@@ -31,9 +31,10 @@ function yearmemorialDay(name, name2, year, month, day, solarLunar, holiday, typ
     this.holiday = holiday;
     this.type = type;
     this.techneer = true;
+    this.repetition = repetition;
 }
 
-function memorialDay(name, name2, month, day, solarLunar, holiday, type) {
+function memorialDay(name, name2, month, day, solarLunar, holiday, type, repetition) {
     this.name = name;
     this.name2 = name2;
     this.month = month;
@@ -42,5 +43,6 @@ function memorialDay(name, name2, month, day, solarLunar, holiday, type) {
     this.holiday = holiday;
     this.type = type;
     this.techneer = true;
+    this.repetition = repetition;
 }
 
