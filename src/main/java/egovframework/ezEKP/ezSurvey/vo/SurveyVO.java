@@ -27,6 +27,7 @@ public class SurveyVO {
 	private int attachFlag;
 	private int modifyFlag;
 	private int draftFlag;
+	private int responseFlag;
 	private List<SurveyParticipantVO> userList;
 	private List<AttachVO> attachList;
 	
@@ -236,5 +237,13 @@ public class SurveyVO {
 	
 	public void setDraftFlag(int draftFlag) {
 		this.draftFlag = draftFlag;
+	}
+	
+	public int getResponseFlag() {
+		return responseFlag;
+	}
+	
+	public void setResponseFlag(int responseFlag) {
+		this.responseFlag = responseFlag;
 	}
 }

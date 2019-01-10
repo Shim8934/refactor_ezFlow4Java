@@ -110,6 +110,8 @@ var SurveyCreate     = function() {
 		document.getElementById("addUrlClose").onclick  = function(e) {toggleUrlPanel();};
 		document.getElementById("addUrlBttn").onclick   = function(e) {toggleUrlPanel();};
 		document.getElementById("addFileBttn").onclick  = function(e) {startUpload();};
+		document.getElementById("closeLogicPl").onclick = function(e) {toggleLogicPanel();};
+		document.getElementById("showLogicMap").onclick = function(e) {toggleLogicPanel();};
 		document.getElementById("userListDiv").onscroll = function(e) {scrollListOfUser(this);}
 		document.onselectstart = function() {return false;};
 		window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
@@ -371,7 +373,6 @@ var SurveyCreate     = function() {
 					if (checkObj["error"]) {alert(checkObj["error"]); return;}
 					toggleStep(spanElemt, crrSpan, tabIdx);
 					getSurveyPreview(tabIdx);
-					showLogicMap();
 					enterLogic = 'Y';
 					lastStep = 3; break;
 			case 4: checkObj = prepareForStep4();
@@ -778,6 +779,22 @@ var SurveyCreate     = function() {
 		addOptEvent();
 	}
 	
+	function toggleLogicPanel() {
+		var userPanel = document.getElementById("logicPanel");
+		if (userPanel.className == "logicPanel off") {
+			addFogPanel(toggleLogicPanel);
+			var position          = getPosition(600, 640);
+			userPanel.style.top   = position[0] + "px";
+			userPanel.style.right = position[1] + "px";
+			userPanel.className   = "logicPanel";
+			showLogicMap();
+		}
+		else {
+			removeFogPanel();
+			userPanel.className   = "logicPanel off";
+		}
+	}
+	
 	function showLogicMap() {
 		if (!bnk) {
 			bnk = cytoscape({
@@ -795,9 +812,12 @@ var SurveyCreate     = function() {
 		}
 		
 		var jsonElmt = createJsonElements();
+		
+		console.log(jsonElmt);
+		
 		bnk.elements().remove();
 		bnk.add(jsonElmt); 
-		bnk.layout({name: 'dagre',rankDir: 'LR',}).run();
+		bnk.layout({name: 'dagre', rankDir: 'TB',}).run();
 		bnk.resize();
 		bnk.fit();
 		bnk.center();
@@ -844,7 +864,7 @@ var SurveyCreate     = function() {
 			
 			if (questions[i]["skipFlag"] == 1) {
 				var skipQst = questions[i]["skip"];
-				if (skipQst) {
+				if (!isNaN(skipQst)) {
 					if (skipQst != 0) {
 						edges.push({data: {source : questions[i]["level"], target: skipQst}});
 					}
@@ -1289,8 +1309,6 @@ var SurveyCreate     = function() {
 				$("#scndBtnGrp" + id).css("display", "none");
 				$("#thrdBtnGrp" + id).css("display", "");
 			}
-			
-			showLogicMap();
 		});
 		
 		// 로직 취소 버튼 이벤트
@@ -1319,8 +1337,6 @@ var SurveyCreate     = function() {
 				$("#scndBtnGrp" + id).css("display", "none");
 				$("#thrdBtnGrp" + id).css("display", "none");
 			}
-			
-			showLogicMap();
 		});
 		
 		// 로직 수정 버튼 이벤트
@@ -1438,8 +1454,6 @@ var SurveyCreate     = function() {
 			$("#frstBtnGrp" + id).css("display", "none");
 			$("#skipScndBtnGrp" + id).css("display", "none");
 			$("#skipThrdBtnGrp" + id).css("display", "");
-			
-			showLogicMap();
 		});
 		
 		// skip 취소 버튼 이벤트
@@ -1464,7 +1478,6 @@ var SurveyCreate     = function() {
 			$("#frstBtnGrp" + id).css("display", "");
 			$("#skipScndBtnGrp" + id).css("display", "none");
 			$("#skipThrdBtnGrp" + id).css("display", "none");
-			showLogicMap();
 		});
 		
 		// skip 삭제 버튼 이벤트

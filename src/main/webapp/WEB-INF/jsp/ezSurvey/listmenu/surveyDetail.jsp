@@ -232,18 +232,16 @@
 			showAttachList();
 			// 라디오 버튼 클릭 이벤트
 			$(".prevQsArea").on("click", ".optRdo", function() {
-				var prId     = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
-				var logicNum = $(this).attr("logic");
+				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
+				var logicNum = parseInt($(this).attr("logic"));
 				
-				if (logicNum && logicmap) {
-					processLogicNode(parseInt(prId), parseInt(logicNum));
-				}
+				if (logicNum && logicNum != -1 && logicmap) {processLogicNode(prId, logicNum);}
 			});
 			
 			$(".prevQsArea").on("change", ".dropdown-wrap", function() {
-				var id = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
-				var logic = $("select[name=drdw" + id + "] option:selected").attr("logic");
-				
+				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
+				var logicNum = parseInt($("select[name=drdw" + prId + "] option:selected").attr("logic"));
+				if (logicNum && logicNum != -1 && logicmap) {processLogicNode(prId, logicNum);}
 			});
 			
 			// 슬라이드 질문 트리거
@@ -254,9 +252,19 @@
 			
 			// 슬라이드 질문 답변 표시
 			$(".prevQsArea").on("change", ".slider-range", function() {
-				var id = $(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", "");
-				var logic = $("#slider" + id).attr("logic");
-				var logicPoint = $("#slider" + id).attr("logicPoint");
+				var prId       = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
+				var logicNum   = parseInt($("#slider" + prId).attr("logic"));
+				var logicPoint = parseInt($("#slider" + prId).attr("logicPoint"));
+				var currentVal = parseInt(this.value);
+				
+				if (logicNum && logicNum != -1 && logicmap) {
+					if (currentVal > logicPoint) {
+						processLogicNode(prId, logicNum);
+					}
+					else {
+						processLogicNode(prId, prId + 1);
+					}
+				}
 			});
 			
 			// ranking 셀렉트 박스 옵션 선택시 값 비교
@@ -270,9 +278,7 @@
 				// 위 아래의 모든 셀렉트 박스 값과 비교
 				for (var i = 0; i < length; i++) {
 					// 내가 클릭한 셀렉트 박스는 비교 skip 
-					if (orders == i) {
-						continue;
-					}
+					if (orders == i) {continue;}
 					// 비교할 값
 					var neighborValue = $("select[name=ranking" + id + i + "]").val();
 					if (thisValue == neighborValue) {
@@ -280,9 +286,7 @@
 						// 셀렉트 박스 값 초기화
 						$("select[name=ranking" + id + orders + "]").val("").prop("selected", true);
 					}
-					
 				}
-				
 			});
 			
 			var delBttn = document.getElementById("suvyDlt");
@@ -443,7 +447,7 @@
 			var answer = [];
 			var wrapper = $("#prevQstn" + id);
 			var optLevel = parseInt(wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked").val());
-
+			
 			if (optLevel != undefined) {
 				optionLevel['optionLevel'] = optLevel;
 				answer.push(optionLevel);
@@ -453,7 +457,7 @@
 				answerObj['questionLevel'] = id;
 				resposeObj.responses.push(answerObj);
 			}
-
+			
 			//console.log(resposeObj.responses);
 		}
 		
@@ -472,7 +476,7 @@
 					answer.push(optionLevel);
 				}
 			}
-
+			
 			if (answer.length > 0) {
 				answerObj['answers'] = answer;
 				answerObj['type'] = type;
@@ -487,7 +491,7 @@
 			var answer = [];
 			var wrapper = $("#prevQstn" + id);
 			var trLength = wrapper.find("tbody").find("tr").length;
-
+			
 			for (var i = 0; i < trLength; i++) {
 				var rowColObj = {};
 				var rowColLevels = $("input[name = qstn" + id + "opt" + i + "]:checked").val();
