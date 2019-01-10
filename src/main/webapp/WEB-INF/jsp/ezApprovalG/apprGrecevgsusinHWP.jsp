@@ -967,7 +967,7 @@
 			      parameter[2] = pAprState;
 			
 				  var url = "/ezApprovalG/ezReceiveAssignUI.do";
-			      var feature = "status:no;dialogWidth:600px;dialogHeight:380px;edge:sunken;scroll:no"
+			      var feature = "status:no;dialogWidth:800px;dialogHeight:600px;edge:sunken;scroll:no"
 			      var ret = window.showModalDialog(url, parameter, feature);
 			      if (ret == "OK") {
 			          var pAlertContent = "<spring:message code='ezApprovalG.t1420'/>";
