@@ -30,8 +30,9 @@ public interface EzSurveyRestService {
 	public JSONObject deleteItems(HttpServletRequest request, String userId, List<String> itemList) throws Exception;
 	public JSONObject checkSurveyItems(HttpServletRequest request, String userId, List<String> itemList, int mode) throws Exception;
 	public JSONObject getSurveyInformation(HttpServletRequest request, String userId, String itemId, String mode) throws Exception;
-	public JSONObject getSurveyQuestions(HttpServletRequest request, String userId, String itemId) throws Exception;
+	public JSONObject getSurveyQuestions(HttpServletRequest request, String userId, String itemId, String logicMode) throws Exception;
 	public JSONObject checkProcessingSurvey(HttpServletRequest request, String userId, String itemId) throws Exception;
 	public JSONObject changeSurveyState(HttpServletRequest request, String userId, String itemId) throws Exception;
 	public JSONObject saveResponse(HttpServletRequest request,JSONObject responseItem) throws Exception;
+	public JSONObject getSurveyStatistic(HttpServletRequest request, String userId, String itemId) throws Exception;
 }

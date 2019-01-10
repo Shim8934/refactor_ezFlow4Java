@@ -15,11 +15,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -29,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
-
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -750,10 +747,12 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getSurveyQuestions(Long surveyId, String realPath, LoginVO userInfo) throws Exception {
+	public JSONObject getSurveyQuestions(Long surveyId, String logicMode, String realPath, LoginVO userInfo) throws Exception {
 		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		boolean logicFlag      = false;
+		int logicCheck         = 1;
+		
 		Map<Long, List<Long>> logicMap = new HashMap<>();
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("tenantId",  tenantId);
@@ -762,7 +761,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("offset",    commonUtil.getMinuteUTC(userInfo.getOffset()));
 		map.put("userId",    userInfo.getId());
 		map.put("surveyId",  surveyId);
-		
 		List<QuestionVO> questions = ezSurveyDAO.getAllQuestionsOfSurvey(map);
 		
 		if (questions != null && questions.size() > 0) {
@@ -777,6 +775,26 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			cloneAttachFiles(attachs, realPath, getSurveyDirPath(tenantId));
 			
 			//long startTime = System.nanoTime();
+			
+			if (logicMode.equals("answer")) {
+				logicCheck = 2; //get options + answers
+			}
+			else if (logicMode.equals("logic")) {
+				logicCheck = 1; //get logic map
+			}
+			else {
+				logicCheck = 0; // get only options
+			}
+			
+			//Check if survey has or hasn't logic branching
+			if (logicCheck == 1) {
+				for (QuestionVO question : questions) {
+					if (question.getLogicFlag() == 1 || question.getSkipFlag() == 1) {
+						logicFlag = true;
+						break;
+					}
+				}
+			}
 			
 			//Separate
 			List<AttachVO> qstAttch    = attachs.stream().filter(a -> a.getTargetType().equals("question")).collect(Collectors.toList());
@@ -803,14 +821,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 					List<OptionVO> qsOption = new ArrayList<>();
 					qsOption.add(option);
 					mapOption.put(option.getQuestionId(), qsOption);
-				}
-			}
-			
-			//Check if survey has or hasn't logic branching
-			for (QuestionVO question : questions) {
-				if (question.getLogicFlag() == 1 || question.getSkipFlag() == 1) {
-					logicFlag = true;
-					break;
 				}
 			}
 			
@@ -1120,4 +1130,78 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		return respondent;
 	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public JSONObject getSurveyStatistic(Long surveyId, LoginVO userInfo) throws Exception {
+		JSONObject result               = new JSONObject();
+		JSONObject data                 = new JSONObject();
+		Map<String, Object> map         = new HashMap<String, Object>();
+		String primary                  = userInfo.getPrimary();
+		int tenantId                    = userInfo.getTenantId();
+		int totalUserCnt                = 0;
+		int totalRespondents            = 0;
+		map.put("primary",   primary);
+		map.put("offset",    commonUtil.getMinuteUTC(userInfo.getOffset()));
+		map.put("userId",    userInfo.getId());
+		map.put("tenantId",  tenantId);
+		map.put("companyId", userInfo.getCompanyID());
+		map.put("surveyId",  surveyId);
+		
+		//Get total users of the survey
+		List<SurveyParticipantVO> totalUsers = ezSurveyDAO.getSurveyUsers(map);
+		Set<SimpleUserVO> setUsers           = new HashSet<>();
+		List<String> deptList                = new ArrayList<>();
+		
+		for (SurveyParticipantVO user : totalUsers) {
+			if (user.getUserType().equals("comp")) {
+				deptList.clear();
+				setUsers.clear();
+				deptList.add(user.getDeptId());
+				break;
+			}
+			else if (user.getUserType().equals("dept")) {
+				deptList.add(user.getDeptId());
+			}
+			else {
+				SimpleUserVO simpleUser = new SimpleUserVO(user);
+				setUsers.add(simpleUser);
+			}
+		}
+		
+		for (String deptId : deptList) {
+			setUsers.addAll(getDeptMemberList(deptId, primary, 0, 0, tenantId));
+		}
+		
+		totalUserCnt     = setUsers.size();
+		totalRespondents = ezSurveyDAO.getTotalRespondents(map);
+		
+		data.put("usersCnt", totalUserCnt);
+		data.put("respondentCnt", totalRespondents);
+		
+		result.put("data", data);
+		result.put("status", "ok");
+		result.put("code", 0);
+		return result;
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }

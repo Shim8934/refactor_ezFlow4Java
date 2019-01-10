@@ -708,9 +708,10 @@ public class EzSurveyGWController {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
 		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
 		String itemId     = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
+		String logicMode  = request.getParameter("logic")  != null ? request.getParameter("logic")  : "";
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || itemId: " + itemId);
+		logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || itemId: " + itemId + " || logicMode: " + logicMode);
 		
 		if (serverName.equals("") || itemId.equals("")|| userId.equals("")) {
 			logger.debug("Parameter error!");
@@ -723,7 +724,7 @@ public class EzSurveyGWController {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			Long surveyId    = Long.parseLong(itemId);
 			String realPath  = request.getServletContext().getRealPath("");
-			result           = surveyService.getSurveyQuestions(surveyId, realPath, userInfo);
+			result           = surveyService.getSurveyQuestions(surveyId, logicMode, realPath, userInfo);
 			result.put("status", "ok");
 			result.put("code", 0);
 		}
@@ -770,5 +771,35 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
-	
+	@RequestMapping(value="/rest/ezsurvey/survey-item/statistic", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getSurveyStatistic(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
+		String itemId     = request.getParameter("itemId") != null ? request.getParameter("itemId") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || itemId: " + itemId);
+		
+		if (serverName.equals("") || itemId.equals("")|| userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			Long surveyId    = Long.parseLong(itemId);
+			result           = surveyService.getSurveyStatistic(surveyId, userInfo);
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
 }

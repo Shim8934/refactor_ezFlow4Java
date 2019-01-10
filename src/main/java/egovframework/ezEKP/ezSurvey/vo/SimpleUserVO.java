@@ -1,6 +1,9 @@
 package egovframework.ezEKP.ezSurvey.vo;
 
-public class SimpleUserVO {
+import java.io.Serializable;
+
+public class SimpleUserVO implements Serializable {
+	private static final long serialVersionUID = 180L;
 	private String userId;
 	private String userName;
 	private String userName1;
@@ -14,6 +17,15 @@ public class SimpleUserVO {
 	private String mail;
 	private String userImg;
 	private int    userType;
+	
+	public SimpleUserVO() {
+		
+	}
+	
+	public SimpleUserVO(SurveyParticipantVO participant) {
+		this.userId = participant.getUserId();
+		this.deptId = participant.getDeptId();
+	}
 	
 	public String getUserId() {
 		return userId;
@@ -117,5 +129,19 @@ public class SimpleUserVO {
 	
 	public void setDeptName2(String deptName2) {
 		this.deptName2 = deptName2;
+	}
+	
+	public boolean equals(Object object) {
+		if (object instanceof SimpleUserVO) {
+			SimpleUserVO obj = (SimpleUserVO) object;
+			return userId == obj.userId && deptId == obj.deptId;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public int hashCode() {
+		return 100 + userId.hashCode() + deptId.hashCode();
 	}
 }

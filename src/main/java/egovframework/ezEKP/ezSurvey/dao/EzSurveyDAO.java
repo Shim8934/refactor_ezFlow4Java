@@ -168,5 +168,9 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public void saveRespondent(RespondentVO respondent) {
 		insert("EzSurveyDAO.saveRespondent", respondent);
 	}
+	
+	public int getTotalRespondents(Map<String, Object> map) {
+		return (int)select("EzSurveyDAO.getTotalRespondents", map);
+	}
 
 }

@@ -128,7 +128,7 @@
 			$.ajax({
 				type: "GET",
 				url: "/ezSurvey/getSurveyQuestions.do",
-				data: {surveyId : surveyId},
+				data: {surveyId : surveyId, logic : "logic"},
 				contentType: "application/json; charset=utf-8",
 				dataType: "JSON",
 				async: true,
