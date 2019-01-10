@@ -162,7 +162,7 @@
 			        	dataType : "text",
 			        	url : "/ezOrgan/getSearchList.do",
 			        	async : false,
-			        	data : {search : "cn::" + cn, cell : "company;description;displayname;title;telephonenumber;"+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute2', type : 'user', adminOrgan : "y"},
+			        	data : {search : "cn::" + cn, cell : "company;description;displayname;title;telephonenumber;"+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype', type : 'user', adminOrgan : "y"},
 			        	success : function(xml){	
 			        		result=loadXMLString(xml);
 			        		var headerData = createXmlDom();
@@ -199,7 +199,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype", type : "user"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
@@ -523,6 +523,13 @@
 	                    Sub_TD1.style.textAlign = "left";
 	                    Sub_TD1.setAttribute("class", "name");
 	                    var pDisplayName = "";
+	                    
+	                    if( !pSeach && $(M_TR).attr("_DATA19" ) == "addJob"){
+		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
+		            	} else if( pSeach && $(M_TR).attr("_DATA19") == "addJob" ){
+		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
+		            	}
+	                    
 	                    if ("<c:out value='${use_ocs}'/>" == "YES") {
 	                        pDisplayName += "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>";
 	                    }
@@ -610,7 +617,14 @@
 	                            M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA4");
 	                        }
 	                        var M_TR_TD3 = document.createElement("TD");
-	                        M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        
+	                        var jobName = "";
+	                        if($(M_TR).attr("_DATA19") == "addJob"){
+			            		jobName += "<spring:message code='ezOrgan.psb03'/> ";
+			            	}	      
+	                        
+	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        M_TR_TD3.innerHTML = jobName;
 	                        M_TR_TD3.style.width = "80px";
 
 	                        var M_TR_TD4 = document.createElement("TD");
@@ -635,7 +649,13 @@
 	                        }
 	                        var M_TR_TD2 = document.createElement("TD");
 	                        M_TR_TD2.style.width = "80px";
-	                        M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        var jobName = "";
+	                        if($(M_TR).attr("_DATA19") == "addJob"){
+			            		jobName += "<spring:message code='ezOrgan.psb03'/> ";
+			            	}	      
+	                        
+	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        M_TR_TD2.innerHTML = jobName;
 
 	                        var M_TR_TD3 = document.createElement("TD");
 	                        M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
@@ -969,7 +989,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",		        	
 		        	data : {search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, cell : "company;description;displayname;title;telephonenumber;" + document.getElementById("search_type").value, 
-		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user", adminOrgan : "y"},
+		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype", type : "user", adminOrgan : "y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var usedefault;		                

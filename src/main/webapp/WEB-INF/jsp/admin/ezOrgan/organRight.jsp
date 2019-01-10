@@ -213,8 +213,8 @@
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
 				            $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
 				            	if($(this).find("DATA3").text() == "addJob"){
-				            		var orgPosition = $(this).find("CELL").eq(2).find("VALUE").text();
-				            		$(this).find("CELL").eq(2).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            		var orgPosition = $(this).find("CELL").eq(4).find("VALUE").text();
+				            		$(this).find("CELL").eq(4).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
 				            	}
 				            });
 				            var Node = headerData.importNode(xmlRtn, true);
@@ -642,7 +642,7 @@
 						data : {
 							search : search_type.value + "::" + keyword.value,
 							cell : "extensionAttribute9;displayName;cn;description;title;extensionAttribute10",
-							prop : "department",
+							prop : "department;usertype",
 							type : "user",
 							page : pageNum,
 							adminOrgan : "y"
@@ -686,6 +686,12 @@
 	
 					        if (CrossYN()) {
 					            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+					            $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
+					            	if($(this).find("DATA4").text() == "addJob"){
+					            		var orgPosition = $(this).find("CELL").eq(4).find("VALUE").text();
+					            		$(this).find("CELL").eq(4).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+					            	}
+					            });
 					            var Node = headerData.importNode(xmlRtn, true);
 					            headerData.documentElement.appendChild(Node);
 					        }else{
@@ -1757,7 +1763,7 @@
 						$("#maillist_dept").css("display", "none");
 
 				        if (CrossYN()) {
-				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];				            
 				            var Node = headerData.importNode(xmlRtn, true);
 				            headerData.documentElement.appendChild(Node);
 				        }else{
