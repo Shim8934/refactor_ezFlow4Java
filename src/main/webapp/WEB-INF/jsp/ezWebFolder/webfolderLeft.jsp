@@ -413,7 +413,7 @@
 	    <div id="folderMenuDiv" style="position:absolute;top:180px;z-index:6000;display:none;">
 		    <table cellpadding=2 cellspacing=1 border=0 style="width:130px;" class="popuplist">
 			    <tr>
-			        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="allFile();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/ImgIcon/icon-msg-read.gif" align="absmiddle" hspace="5"/>모든파일보기</span></td>
+			        <td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'" style="cursor:pointer;"><span onClick="allFile();HiddenFolderMenu();" style="font-size:12px;width:100%;display:inline-block;"><img src="/images/newAttach.gif" align="absmiddle" hspace="5"/>모든파일보기</span></td>
 			    </tr>
 		    </table>
 		</div>
