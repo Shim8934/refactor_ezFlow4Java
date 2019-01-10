@@ -41,6 +41,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DeadlockLoserDataAccessException;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -1359,10 +1360,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		String pre_loginTime = Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
 		
-		if("".equals(pre_loginTime)) {
-			ezCommonDAO.insertMultiLoginUser(map);
-		} else {
-			ezCommonDAO.updateMultiLoginUser(map);
+		try {
+			if("".equals(pre_loginTime)) {
+				ezCommonDAO.insertMultiLoginUser(map);
+			} else {
+				ezCommonDAO.updateMultiLoginUser(map);
+			}
+		} catch (DeadlockLoserDataAccessException e) {
+			//데드락이 발생하면 실패한 작업 다시 실행
+			
+			Thread.sleep(1000);
+			
+			if("".equals(pre_loginTime)) {
+				ezCommonDAO.insertMultiLoginUser(map);
+			} else {
+				ezCommonDAO.updateMultiLoginUser(map);
+			}
 		}
 		
 		logger.debug("insertMultiLoginUser ended");
