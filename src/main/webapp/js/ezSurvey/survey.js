@@ -2035,7 +2035,7 @@ var SurveyCreate     = function() {
 		var questionList = SurveyCreate.getQs();
 		
 		//Save common question information
-		if (!qstnContent) {alert(SurveyMessages.strQsContent); return;}
+		if (!qstnContent) {alert(SurveyMessages.strQs + " " + SurveyMessages.strContent); return;}
 		
 		question["content"]  = qstnContent;
 		var qstnForm         = qstnWrapper.find(".quesDiv").next();
