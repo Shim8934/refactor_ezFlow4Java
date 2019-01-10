@@ -110,7 +110,7 @@ li {float:left;margin:10px;}
 	height:41px;
 	line-height: 35px;
 	font-family: Malgun Gothic, malgun gothic;
-	padding:0px 14px;
+	padding:0px 15px;
 	vertical-align:middle;
 	cursor:pointer;
 	color:white;
@@ -272,14 +272,14 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 
 /* admin employee */
 .admin_employee{ margin:0px; padding:0px;}
-.calSlider {width: 97%;margin: 0px;border-top: 1px solid #666;border-bottom: 1px solid #d9d9d9;}
+.calSlider {width: 97%;margin: 0px; border-bottom: 1px solid #d9d9d9;}
 .slick-slide {margin: 0px 3px;color: #666;}
 .slick-slide img {width: 100% !important;}
 .slick-center {color: #3d8fea;font-weight: bold;border-bottom: 1px solid #3d8fea;}
 .slick-prev:before, .slick-next:before {color: black;}
 .yearDiv {height: 38px;}
-.yearSpan {text-align: center; font-size: 20px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; letter-spacing: -1px; line-height: 31px;}
-.admin_employeeList{ margin:0px; padding:0px; overflow:hidden; list-style:none;}
+.yearSpan {text-align: center; font-size: 20px; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; letter-spacing: -1px; line-height: 31px; margin-top: 6px;}
+.admin_employeeList{ margin-top:10px; padding:0px; overflow:hidden; list-style:none;}
 .admin_employeeList .employee{ margin:20px 20px 0px 0px; padding:0px; background:url(../images/admin/employee_bg.png) no-repeat left top; width:210px; height:262px; position:relative;}
 .admin_employeeList .employee_blue{ margin:20px 20px 0px 0px; padding:0px; background:url(../images/admin/employee_bg_blue.png) no-repeat left top; width:210px; height:262px; position:relative;}
 .admin_employeeList .month_num{ margin:0px; padding:5px 0px 0px 0px; text-align:center; font-size:24px; font-weight:bold; color:#fff;}
@@ -293,20 +293,19 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .admin_employeeList .emTop .emEdit{ position:absolute; right:60px; top:65px; background:#fff; border-radius:30px; border:1px solid #d7d7d7; width:22px; height:22px; box-sizing:border-box; text-align:center; cursor:pointer;}
 .admin_employeeList .emTop .emEdit img{ padding:5px 0px 0px 0px; margin:0px;}
 .admin_employeeList .emBottom{ margin:0px; padding:25px 0px 0px 0px; text-align:center;}
-.admin_employeeList .employee .emBottom .emCompany{ margin:0px; padding:0px; font-size:16px; color:#333;}
 .admin_employeeList .emBottom .emTeam{ margin:0px; padding:5px 0px 10px 0px; font-size:12px; color:#333;}
 .admin_employeeList .emBottom .emName{ margin:0px; padding:0px; font-size:16px; color:#333; font-weight:bold;}
 .admin_employeeList .emBottom .emAdd_text{ color:#666; margin:0px; padding:20px 0px 0px 0px;}
 
 /* admin slider images */
 #sliderContainer{ margin:0px; padding:0px 0px 0px 5px;}
-.sliderList{ margin:10px 20px 20px 0px; display:inline-block; background:#fff; box-sizing:border-box; position:relative; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
+.sliderList{ margin:10px 20px 20px 10px; display:inline-block; background:#fff; box-sizing:border-box; position:relative; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .slider-body{ margin:0px; padding:0px; position:relative; cursor:move; border:none; width:285px; height:515px; }
 .slider-head{ margin:0px; padding:0px; cursor:move; background: rgba(0, 0, 0, 0.5); width:285px; height:40px; position:absolute; top:0px;}
 .slider-head .sliderHDT{ margin:10px 10px 0px 15px; padding:0px; float:right; cursor:pointer;}
 .slider-head .sliderHDD{ margin:10px 0px 0px 0px; padding:0px; float:right; cursor:pointer;}
 .slider-content{ width:285px; height:115px; background: rgba(0, 0, 0, 0.5); position:absolute; bottom:0px; margin:0px; padding:0px;}
-.sliderCDT{ margin:0px; padding:10px 15px;}
+.sliderCDT{ margin-top:20px; padding:0px 15px;}
 .sliderCDT .sliderTtit{ margin:0px; padding:0px; display:inline-block; float:left; color:#fff; font-size:12px; font-weight:bold; width:28%; box-sizing:border-box; text-align:left; height:27px; line-height:27px;}
 .sliderCDT .sliderText{ margin:0px; padding:0px; display:inline-block; width:72%;}
 .sliderCDT .sliderText .admin_input{background: rgba(0, 0, 0, 0.52); border-radius:15px; border:none; color:#fff; padding:0px 0px 0px 10px;}

@@ -117,6 +117,7 @@ function renderList(result, selectedYear) {
 				*/
 				empDelElmt.className = "emDelete";
 				empDelSpan.className = "sub_iconLNB tree_delete";
+				empDelSpan.style.cursor = "pointer";
 				
 				topDtElmt.className = "emPic";
 				topDdElmt.className = "emEdit";
@@ -141,9 +142,9 @@ function renderList(result, selectedYear) {
 				empPicElmt.addEventListener("click", function(event) {OpenUserInfo(item.cn);});
 				
 				/*ddElmt1.className = "empCompany"*/
-				bottomCompElmt.textContent = item.company;
-				bottomDeptElmt.textContent = item.description;
-				bottomNameElmt.textContent = item.title + ' "' + item.displayName + '"';
+				bottomCompElmt.textContent = item.description;
+				bottomDeptElmt.textContent = item.title;
+				bottomNameElmt.textContent = '"' + item.displayName + '"';
 				
 				empDelElmt.appendChild(empDelSpan);
 				topDtElmt.appendChild(empPicElmt);
@@ -265,9 +266,9 @@ function btn_add_Complete(rtv) {
 		dataType : "text",
 		success : function (result) {
 			if (result != "OK") {
-				alert(strLangkhj29);
+				//alert(strLangkhj29);
 			} else {
-				alert(strLangkhj30);
+				//alert(strLangkhj30);
 				window.close();
 				//window.location.reload(false);
 				changeYear();
@@ -302,9 +303,9 @@ function btn_modify_Complete(rtv) {
 		dataType : "text",
 		success : function (result) {
 			if (result != "OK") {
-				alert(strLangkhj29);
+				//alert(strLangkhj29);
 			} else {
-				alert(strLangkhj30);
+				//alert(strLangkhj30);
 				window.close();
 				//window.location.reload(false);
 				changeYear();
@@ -323,9 +324,9 @@ function btn_delete(term) {
 			dataType : "text",
 			success : function (result) {
 				if (result != "OK") {
-					alert(strLangkhj31);
+					//alert(strLangkhj31);
 				} else {
-					alert(strLangkhj25);
+					//alert(strLangkhj25);
 					//window.location.reload(false);
 					changeYear();
 				}

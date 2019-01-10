@@ -36,6 +36,9 @@
 					<c:if test="${adminCheck eq true }">
 						<div id = "imgLogin" class='btnpositionJsp'><a class='imgbtn updateLogoBtn'><span><spring:message code='ezNewPortal.t058' /></span></a> <a class='imgbtn deleteLogoBtn'><span><spring:message code='ezNewPortal.t059' /></span></a></div>
 					</c:if>
+					<c:if test="${adminCheck eq false }">
+						<div class='btnpositionJsp'></div>
+					</c:if>
 					<ul>
 						<li class="logoTitle"><spring:message code='ezNewPortal.t060' /></li>
 						<li><spring:message code='ezNewPortal.t061' /></li>
@@ -138,11 +141,15 @@
 							document.getElementsByClassName("loginLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = logoUrl;
 							
 							if (!logoDefault) {
-								document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
-								document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
+								if (document.getElementById("imgLogin")) {
+									document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
+									document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
+								}
 							} else {
-								document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
-								document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
+								if (document.getElementById("imgLogin")) {
+									document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
+									document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
+								}
 							}
 							
 						} else if (logoType == "P") {
@@ -216,14 +223,17 @@
 	    				
 	    				if (logoType == "L") {
 	    					document.getElementsByClassName("loginLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = result;
-							document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
-							document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
+	    					
+	    					if (document.getElementById("imgLogin")) {
+								document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
+								document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
+	    					}
 	    				} else if (logoType == "P") {
 	    					document.getElementsByClassName("portalLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = result;
+	    					
 							document.getElementById("imgTop").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
 							document.getElementById("imgTop").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
 	    				}
-	    	
 	    			}
     			} else {
     				alert("<spring:message code = 'ezCommunity.lhj03' /> (jpg, png, bmp, jpeg, gif)");
