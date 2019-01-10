@@ -27,7 +27,8 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezOrgan.e1', 'msg')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" language="javascript">
+	    <link rel="stylesheet" href="${util.addVer('/css/admin.css')}">
+		<script type="text/javascript">
 			var pUse_Editor = "<c:out value='${use_editor}'/>";
 			var totalCnt = 0;
 			var CurPage = 1;
@@ -50,9 +51,14 @@
 	        var CardHeader3 = "<spring:message code='ezOrgan.t264' />";
 	    	
 			$(document).ready(function() {
+				windowResize();
 				AddJob_List();
-			});			
-			
+			});
+
+			$(window).on("resize", function(){
+				 windowResize();
+			});
+
 			function company_change() {
 		        AddJob_List();
 		    }
@@ -109,8 +115,9 @@
 		                
 		                /* totalCnt = listLeg;
                         totalPage = Math.ceil(new Number(totalCnt / pageSize)); */
-                        
-		                
+
+						rowListSelect();
+						checkItems();
 		                //2018-12-28 문성업 -페이징 함수
 		                makePageSelPage();
 		        	},
@@ -434,115 +441,137 @@
 		    function event_DeleteClick(obj) {
 		        AddJob_Del('DEL', obj);
 		    }
-		    
-		    var listContentArry = new Array();
-		    var listEventCheckbox = false;
-		    var _RowObject = null;		    
-		    function AddJob_Del(mode, obj) {
-		        var xmlHTTP = createXMLHttpRequest();
-		        var xmlDom = createXmlDom();
-		        var xmlPara = createXmlDom();
-		        var objRoot, objNode;
-		        createNodeInsert(xmlDom, objNode, "DATA");
 
-		        /* if (mode == "DEL") {
-		        	if (obj != null && obj != "") {
-		        		_RowObject = obj;
-		        	}
-		        	
-		            if (_RowObject == null || _RowObject == "") {
-		                alert("<spring:message code='ezOrgan.t196' />");
-		                return;
-		            } else {
-		            	if (confirm("<spring:message code='ezOrgan.pjg01' />")) {
-				            _RowObject = document.getElementById(_RowObject.id);
-		
-				            if (document.getElementById("AddJobList").childNodes.length == 1) {
-				                var listview = new ListView();
-				                listview.LoadFromID("lvAddJobList");
-				                for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
-				                    createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "data1"));
-				                    createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
-				                    createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
-				                    createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
-				                }
-				                mode = "";
-				            } else {
-				                for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
-				                    if (GetAttribute(_RowObject, "_DEPTID") == GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid")) {
-		                                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
-		                                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
-		                                createNodeAndInsertText(xmlDom, objNode, "TITLE", "");                              		                        
-					                    createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
-				                    } else {
-		                                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
-		                                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
-		                                createNodeAndInsertText(xmlDom, objNode, "TITLE", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t1") + ":" + GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t2"));		                        
-					                    createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
-				                    }
-				                }
-				            }		            		
-		            	} else {
-		            	 	return;	
-		            	}
-		            }
-		        }  else { */
-		            var listview = new ListView();
-		            var dataList = new Array();
-		            listview.LoadFromID("lvAddJobList");
-		            
-		            $("input[name='checks']:checked").each(function(){
+			var listContentArry = new Array();
+			var listEventCheckbox = false;
+			var _RowObject = null;		    
+			function AddJob_Del(mode, obj) {
+
+				var xmlHTTP = createXMLHttpRequest();
+				var xmlDom = createXmlDom();
+				var xmlPara = createXmlDom();
+				var objRoot, objNode;
+				createNodeInsert(xmlDom, objNode, "DATA");
+
+				// 오른쪽 프리뷰 겸직 개별 삭제
+				if (mode == "DEL") {
+					if (obj != null && obj != "") {
+						_RowObject = document.getElementById(obj.id);
+					}
+
+					if (confirm("<spring:message code='ezOrgan.pjg01' />")) {
+						if (document.getElementById("AddJobList").childNodes.length == 1) {
+							var listview = new ListView();
+							listview.LoadFromID("lvAddJobList");
+
+							for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
+								createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(listview.GetSelectedRows()[0], "data1"));
+								createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
+								createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
+								createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
+							}
+						} else {
+							for (var i = 0; i < document.getElementById("AddJobList").childNodes.length ; i++) {
+								if (GetAttribute(_RowObject, "_DEPTID") == GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid")) {
+									createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
+									createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
+									createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
+									createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
+								} else {
+									createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(_RowObject, "_CN"));
+									createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_deptid"));
+									createNodeAndInsertText(xmlDom, objNode, "TITLE", GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t1") + ":" + GetAttribute(document.getElementById("AddJobList").childNodes[i], "_t2"));		                        
+									createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
+								}
+							}
+						}
+					} else {
+						return;	
+					}
+				} else { // 왼쪽 리스트 겸직 삭제
+					var listview = new ListView();
+					var dataList = new Array();
+					listview.LoadFromID("lvAddJobList");
+
+					$("input[name='checks']:checked").each(function(){
 						dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
 					});
-		            
-		         // 선택된 사원이 없을 경우
+
+					// 선택된 사원이 없을 경우
 					if (dataList.length == 0) {
 						alert("<spring:message code='ezOrgan.t9901' />");
 						return;
 					}
 
-		            /* if (listview.GetSelectedRows() == null || listview.GetSelectedRows() == "") {
-		                alert("<spring:message code='ezOrgan.t9901' />");
-		                return;
-		            } */
-		            
-		            if (confirm(strLang30)) {
-		                var inputElmt = document.getElementsByName("checks");
-		                var length    = inputElmt.length;
-		                for (var i = 0; i < length; i++) {
-		                	if (inputElmt[i].checked) {
-		                		createNodeAndInsertText(xmlDom, objNode, "CN", inputElmt[i].getAttribute("id"));
-		                		createNodeAndInsertText(xmlDom, objNode, "DEPTID", "");
-		                		createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
-		                		createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
-		                	}
-		                }
-		                window.location.reload();
-		            } else {
-		                window.location.reload(false);
-		                return;
-		            }
-		        
+					if (confirm(strLang30)) {
+						var inputElmt = document.getElementsByName("checks");
+						var length    = inputElmt.length;
 
-		        xmlHTTP.open("POST", "/admin/ezOrgan/saveSubTitle.do", false);
-		        xmlHTTP.send(xmlDom);
+						for (var i = 0; i < length; i++) {
+							if (inputElmt[i].checked) {
+								createNodeAndInsertText(xmlDom, objNode, "CN", inputElmt[i].getAttribute("id"));
+								createNodeAndInsertText(xmlDom, objNode, "DEPTID", "");
+								createNodeAndInsertText(xmlDom, objNode, "TITLE", "");
+								createNodeAndInsertText(xmlDom, objNode, "JOBID", "");
+							}
+						}
+					} else {
+						return;
+					}
+				}
 
-		        if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-		            alert("<spring:message code='ezOrgan.t197' />");
-		            return;
-		        } else {
-		            alert("<spring:message code='ezOrgan.t198' />");
-		            _RowObject = null;
-		            
-		            if (mode == "DEL") {
-		                UserAddjobList();
-		            } else {
-		                window.location.reload(false);
-		            }
-		            return;
-		        }
-		    }
-		    
+				xmlHTTP.open("POST", "/admin/ezOrgan/saveSubTitle.do", false);
+				xmlHTTP.send(xmlDom);
+
+				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+					alert("<spring:message code='ezOrgan.t197' />");
+					return;
+				} else {
+					// 개별 dom 삭제
+					var doc = window.document;
+					if (mode == "DEL") {
+						var childObj = doc.getElementById(_RowObject.id);
+						var parentObj = doc.getElementById(_RowObject.parentElement.id);
+						var rowId = childObj.getAttribute('_cn');
+						parentObj.removeChild(childObj);
+
+						if(parentObj.childElementCount == 0) {
+							// 프리뷰창 디스플레이 변경
+							doc.getElementsByClassName('preview_nodata')[0].style.display = '';
+							doc.getElementsByClassName('previewmail')[0].style.display = 'none';
+
+							var leftList = doc.getElementById('lvAddJobList');
+							var lstCnt = leftList.children[1].childElementCount;
+							$("#" + rowId).prop("checked", false);
+							rowList = [];
+							checkItems();
+							if(lstCnt==1) {
+								checkFlag = false;
+								if(CurPage != 1) {
+									CurPage = CurPage -1;
+								}
+							}
+						}
+					} else {//
+						// 프리뷰창 디스플레이 변경
+						doc.getElementsByClassName('preview_nodata')[0].style.display = '';
+						doc.getElementsByClassName('previewmail')[0].style.display = 'none';
+						
+						var leftList = doc.getElementById('lvAddJobList');
+						var lstCnt = leftList.children[1].childElementCount;
+						var len = rowList.length
+						if(lstCnt-len == 0) {
+							checkFlag = false;
+							if(CurPage != 1) {
+								CurPage = CurPage -1;
+							}
+						}
+						rowList = [];
+					}
+					AddJob_List();
+				}
+			}
+
 		    function event_Cardlistclick(obj) {
 		        if (!listEventCheckbox) {
 		            if (!PressShiftKey && !PressCtrlKey && listContentArry.length > 0) {
@@ -634,7 +663,7 @@
 		    }
 		    
 		    function AddJob_Add_Complete() {
-		        window.location.reload(false);
+		    	AddJob_List();
 		    }
 		    
 		    function User_View() {
@@ -724,13 +753,15 @@
 				th.innerHTML = "<input type='checkbox' id = 'checkAll' onchange='checkboxHeaderClick()'></input>";
 
 				cnt = acList.children[1].childElementCount;
-
-				var i = 0;
-				for (i; i < cnt; i++) {
-					var seq = acList.children[1].children[i].children[0].innerHTML;
-					var jinhangFlag = acList.children[1].children[i].children[5].innerHTML;
-					acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq + "' onchange='inputFunc(event,"
-							+ seq + ")'></input>";
+				// 데이터가 있을 경우에만
+				if(acList.children[1].children[0].id !== 'lvAddJobList_TR_noItems'){
+					var i = 0;
+					for (i; i < cnt; i++) {
+						var seq = acList.children[1].children[i].children[0].innerHTML;
+						var jinhangFlag = acList.children[1].children[i].children[5].innerHTML;
+						acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" + seq + "' value='" + seq + "' onchange='inputFunc(event,"
+								+ seq + ")'></input>";
+					}
 				}
 			}
 
@@ -772,8 +803,36 @@
 			}
 			
 			var itemseq;
-			
-			
+
+			// 사이즈 조절
+			function windowResize() {
+				var doc = window.document;
+				var addJobListView = doc.getElementById("AddJobListView");
+				var height = doc.documentElement.clientHeight-170;
+				if(height>120) {
+					addJobListView.style.height = height + "px";
+				}
+			}
+
+			// 등록, 수정 , 삭제 후 rowSelect 선택 method
+			function rowListSelect() {
+				var len = rowList.length;
+				for (var i = 0; i < len; i++) {
+					var tempItemSeq = rowList.pop();
+					if (document.getElementById(tempItemSeq) != null) {
+						$("#" + tempItemSeq).prop("checked", true);
+						var tempID = $("#" + tempItemSeq)[0].parentNode.parentNode.id;
+						$("#" + tempID + " td").css("background-color",
+								"rgb(241, 248, 255)");
+					}
+				}
+
+				if (checkFlag) {
+					$("#checkAll").prop("checked", true);
+				} else {
+					$("#checkAll").prop("checked", false);
+				}
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -781,7 +840,7 @@
 			<LISTVIEWDATA>
 		    	<HEADERS>
 		    		<HEADER>
-						<WIDTH>5%</WIDTH>
+						<WIDTH>12</WIDTH>
 						<STYLE>border-top:0px;</STYLE>
 					</HEADER>
 		      		<HEADER>
@@ -844,12 +903,12 @@
 		    <table style="width:100%; border-spacing: 10px;">
 		        <tr>
 		            <td style="width:50%">
-		                <div class="listview" style="Width:99%;">
+		                <div class="listview addJob">
 		                    <div id="AddJobListView" style="border: 0px solid #ddd; Height:670px; overflow-x: auto; BACKGROUND-COLOR: white; overflow-y:auto; "></div>
 		                    <div id="tblPageRayer" style="Width:100%;text-align:center;"></div>
 		                </div>
 		            </td>
-		            <td style="vertical-align:top; border: 1px solid #ddd;">
+		            <td class="addJobPreviewTD">
 		                 <div id="preview_nodata" class="preview_nodata" style="margin-top: 70px;">
 			                  <dl class="nodata_sIcon">
 				              <dt><img src="/images/kr/main/noData_sIcon.png"></dt>

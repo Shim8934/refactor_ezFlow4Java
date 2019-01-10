@@ -644,7 +644,7 @@
 			<LISTVIEWDATA>
 		    	<HEADERS>
 		    	    <HEADER>
-						<WIDTH>5%</WIDTH>
+						<WIDTH>24</WIDTH>
 						<STYLE>border-top:0px;</STYLE>
 					</HEADER>
 		      		<HEADER>
@@ -659,7 +659,7 @@
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t69' /></NAME>
-		        		<WIDTH>10%</WIDTH>
+		        		<WIDTH>9%</WIDTH>
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
@@ -669,12 +669,12 @@
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t91' /></NAME>
-		        		<WIDTH>25%</WIDTH>
+		        		<WIDTH>20%</WIDTH>
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t95' /></NAME>
-		        		<WIDTH>10%</WIDTH>
+		        		<WIDTH>15%</WIDTH>
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>

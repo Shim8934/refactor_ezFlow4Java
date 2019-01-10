@@ -344,3 +344,7 @@ label[for="listOpt2"] { position: relative; top: -4.5px;}
 .admin_quicklink #AccessList table td {border:0px;}
 .linkDetails {width:98%;margin:0px}
 #popupContentTb .box {background:#ffffff;}
+
+/* Manage Addjob*/
+.listview.addJob {width:99%;border-left:none;border-bottom:none;}
+.addJobPreviewTD {vertical-align:top;border:1px solid #ddd;border-right:none;border-bottom:none;}
