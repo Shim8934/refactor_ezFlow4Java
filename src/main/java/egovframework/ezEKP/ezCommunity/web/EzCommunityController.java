@@ -4666,5 +4666,30 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		return "<DATA>" + result + "</DATA>";
 	}
+	
+	/**
+	 * 2019-01-10 홍승비 - 커뮤니티 게시판 > 부모게시판ID 리턴하는 함수 추가
+	 */
+	@RequestMapping(value = "/ezCommunity/getParentBoardID.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getParentBoardID(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getParentBoardID started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String boardID = request.getParameter("boardID");
+		String result = "";
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		
+		if(boardInfo != null) {
+			if (boardInfo.getParentBoardID() != null && !boardInfo.getParentBoardID().equals("")) {
+				result = boardInfo.getParentBoardID();
+			}
+		}
+		
+		logger.debug("getParentBoardID ended.");
+		
+		return result;
+	}
 }
 
