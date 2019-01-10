@@ -823,8 +823,9 @@ public class EzLadderServiceImpl implements EzLadderService {
 
 		String subject = egovMessageSource.getMessage("ezLadder.t096", userInfo.getLocale());	// 메일제목
 		StringBuilder bodyContent = new StringBuilder("");	// 메일 링크
-		bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: malgun gothic,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
-		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t003", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;\"><a href='/ezLadder/getLadderGame.do?ladderId=" + lad.getLadderId() + "'>" + commonUtil.cleanValue(lad.getTitle()) + "</a></span></br>");
+
+		bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t003", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;\"><a id='ladder_a' href='/ezLadder/getLadderGame.do?ladderId=" + lad.getLadderId() + "'>" + commonUtil.cleanValue(lad.getTitle()) + "</a></span></br>");
 		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t004", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
 		bodyContent.append("</div>");
 				
