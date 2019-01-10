@@ -14,7 +14,7 @@
 		<div id="left">
 			<div class="left_survey"><span><spring:message code='ezSurvey.t01'/></span></div>
 			
-			<!-- 진행중 설문 -->
+			<!-- 전체 설문 -->
 			<h2 id="totalSurvey"><span><spring:message code='ezSurvey.t80'/></span></h2>
 			
 			<!-- 진행중 설문 -->
