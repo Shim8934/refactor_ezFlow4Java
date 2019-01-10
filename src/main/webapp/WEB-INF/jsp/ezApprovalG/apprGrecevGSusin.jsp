@@ -863,7 +863,7 @@
 		        ezreceivedistributeui_cross_dialogArguments[0] = parameter;
 		        ezreceivedistributeui_cross_dialogArguments[1] = btnDistribute_onclick_Complete;
 		
-		        DivPopUpShow(1000, 760, "/ezApprovalG/ezReceiveDistributeUI.do");
+		        DivPopUpShow(800, 600, "/ezApprovalG/ezReceiveDistributeUI.do");
 		    }
 		    function btnDistribute_onclick_Complete(ret) {
 		        DivPopUpHidden();
