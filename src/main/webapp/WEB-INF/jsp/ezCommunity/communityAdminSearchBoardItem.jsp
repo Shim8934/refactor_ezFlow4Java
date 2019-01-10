@@ -225,6 +225,12 @@
 					return;
 				}
 				
+				/* 2019-01-10 홍승비 - 커뮤니티 게시판그룹 대상으로 검색 시 경고문구 발생하도록 수정 */
+				if (getParentBoardID(pBoardID) == "top") {
+					alert("<spring:message code = 'ezCommunity.t356' />");
+					return;
+				}
+				
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 				url += "&boardID=" + pBoardID;
 				url += "&title=" + encodeURIComponent(title);
@@ -549,7 +555,7 @@
 			        if (typeof (ret) != "undefined") {
 			            pBoardID = ret[0];
 			            txtBoardName.value = ret[2];
-			            GetboardInfo();
+			            getParentBoardID(pBoardID);
 			        }
 			    }
 			}
@@ -557,24 +563,27 @@
 			function SelectBoard_Complete(ret) {
 			    pBoardID = ret[0];
 			    txtBoardName.value = ret[2];
-			    GetboardInfo();
+			    getParentBoardID(pBoardID);
 			}
 			
-			function GetboardInfo() {
-			    var xmlhttp_boardInfo = createXMLHttpRequest();
-			    xmlhttp_boardInfo.open("POST", "/ezCommunity/getBoardInfo.do?boardID=" + pBoardID, false);
-			    xmlhttp_boardInfo.send();
-	
-			    if (xmlhttp_boardInfo.status == 200) {
-	                if(CrossYN()) {
-	                    gubun = GetElementsByTagName(xmlhttp_boardInfo.responseXML, "GUBUN")[0].textContent;
-	                } else {
-	                    gubun = GetElementsByTagName(xmlhttp_boardInfo.responseXML, "GUBUN")[0].text;
-	                }
-	            }
-	
-			    xmlhttp_boardInfo = null;
-			}
+			/* 2019-01-10 홍승비 - 커뮤니티 게시판정보 가져오는 함수 제거(컨트롤러에 구현 안됨), 게시판그룹여부 체크하는 함수 추가 */
+		    function getParentBoardID(pBoardID) {
+				var result = "";
+				
+		    	  $.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommunity/getParentBoardID.do",
+						data : {
+							boardID : pBoardID
+						},
+						success: function(text){
+							result = text;
+						}
+					});
+		    	  return result;
+		    }
 			
 			function OpenRightMenu(pIndex) {
 				if (pBoardID == "" && pIndex == 6) {
