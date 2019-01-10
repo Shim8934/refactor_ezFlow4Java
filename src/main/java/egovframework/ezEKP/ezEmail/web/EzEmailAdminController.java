@@ -662,15 +662,6 @@ public class EzEmailAdminController {
 			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
 					+ "&domain=" + URLEncoder.encode(domain, "UTF-8");
 
-			String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
-			
-			// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
-			if (!companyDomainName.isEmpty()) {
-				String email = cn + "@" + companyDomainName;
-				
-				inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
-			}
-			
 			logger.debug("inputParams=" + inputParams);
 			
 			String requestURL = config.getProperty("config.JGwServerURL")
