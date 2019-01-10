@@ -17,9 +17,9 @@
 		<div class="survey-infrow-pv" id="public-cfdiv"></div>
 		<div class="survey-infrow-pv">
 			<span class="survey-bold"><spring:message code="ezSurvey.t46"/></span>
-			<span class="inf-survey" id="cf-anoynymous">기명</span>
+			<span class="inf-survey" id="cf-anoynymous"></span>
 			<span class="survey-bold"><spring:message code="ezSurvey.t49"/></span>
-			<span class="inf-survey" id="cf-multiple">비허용</span>
+			<span class="inf-survey" id="cf-multiple"></span>
 		</div>
 		<div class="survey-infrow-pv">
 			<span class="survey-bold"><spring:message code="ezSurvey.t52"/></span>
@@ -63,18 +63,8 @@
 <div class="navi-button">
 	<div>
 		<div id="gotoSecondTab" class="survey-infbttn gotoSecondTab"><img src="/images/ezSurvey/prevstep.png"></div>
-		<div id="gotoThirdTab" class="survey-infbttn gotoThirdTab"><img src="/images/ezSurvey/prevstep.png"></div>
-		<%-- 
-		<c:choose>
-			<c:when test="${not empty survey}">
-				<div id="modifySurvey" class="survey-infbttn"><img src="/images/ezSurvey/save.png"></div>
-			</c:when>
-			<c:otherwise>
-				<div id="saveSurvey" class="survey-infbttn"><img src="/images/ezSurvey/save.png"></div>
-			</c:otherwise>
-		</c:choose>
-		 --%>
-		<div id="saveSurvey" class="survey-infbttn"><img src="/images/ezSurvey/save.png"></div>
+		<div id="gotoThirdTab"  class="survey-infbttn gotoThirdTab"><img src="/images/ezSurvey/prevstep.png"></div>
+		<div id="saveSurvey"    class="survey-infbttn"><img src="/images/ezSurvey/save.png"></div>
 		<div id="cancelSurvey1" class="survey-infbttn cancelSurvey1"><img src="/images/ezSurvey/cancel.png"  ></div>
 	</div>
 </div>
