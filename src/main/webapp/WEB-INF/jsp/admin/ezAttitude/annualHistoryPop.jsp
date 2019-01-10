@@ -149,10 +149,22 @@
 					            		${list.changeDate}
 				        	    	</td>
 					            	<td class="borderLeft" style="width:14%;">
-					            		${list.originAnnualCnt}<spring:message code='ezAttitude.t68' />
+					        	    	<c:set var="originAnnualLastCnt" value="${fn:split(list.originAnnualCnt,'.')[1]}" />
+					        	    	<c:if test="${originAnnualLastCnt == 0 }">
+					        	    		${fn:split(list.originAnnualCnt,'.')[0]}<spring:message code='ezAttitude.t68' />
+					        	    	</c:if>
+					        	    	<c:if test="${originAnnualLastCnt == 5 }">
+						            		${list.originAnnualCnt}<spring:message code='ezAttitude.t68' />
+					        	    	</c:if>
 				        	    	</td>
 					            	<td class="borderLeft" style="width:14%;">
-					            		${list.changeAnnualCnt}<spring:message code='ezAttitude.t68' />
+					        	    	<c:set var="changeAnnualLastCnt" value="${fn:split(list.changeAnnualCnt,'.')[1]}" />
+					        	    	<c:if test="${changeAnnualLastCnt == 0 }">
+					        	    		${fn:split(list.changeAnnualCnt,'.')[0]}<spring:message code='ezAttitude.t68' />
+					        	    	</c:if>
+					        	    	<c:if test="${changeAnnualLastCnt == 5 }">
+						            		${list.changeAnnualCnt}<spring:message code='ezAttitude.t68' />
+					        	    	</c:if>
 				        	    	</td>
 					            	<td class="borderLeft" style="width:43%;text-align: left;padding-left: 10px;" title="${list.changeReason}">
 					            		${list.changeReason}
