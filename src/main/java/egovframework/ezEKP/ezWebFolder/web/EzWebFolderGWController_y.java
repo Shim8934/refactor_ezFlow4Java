@@ -797,7 +797,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				checkType	= (String) checkList.get(i).get("checkType");
 				checkResult = service.checkPermission(userId, deptId, comId, checkId, checkType, tenantId);
 				
-				if (checkResult == "fail") {
+				if (checkResult.equals("fail")) {
 					LOGGER.debug("this folder conection is not permission ");
 					jsonObj.put("status", "error");
 					jsonObj.put("code"	, 3);
@@ -952,7 +952,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			}
 			
 			JSONObject returnData = service.fileUpdateOverwrite( multiFileLists, nameArray, userInfo, folderId, fileIdArray, realPath, tenantId);
-			if (returnData.get("status") == "ok") {
+			if (returnData.get("status").equals("ok")) {
 				result.put("status", "ok");
 				result.put("code", 0);
 			} else {

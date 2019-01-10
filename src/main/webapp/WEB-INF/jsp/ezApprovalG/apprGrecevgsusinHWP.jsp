@@ -121,6 +121,7 @@
 		    var dirPath = "${approvalRoot}";
 		    var useReceiveDocNo = "${useReceiveDocNo}";
 		    var orgCompanyID = "";
+		    var docNumZeroCnt = "${docNumZeroCnt}";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -667,7 +668,7 @@
 			
 			              var rtnval = true;
 			              //mht는 G일때만 수신채번하게 되잇는데
-			              rtnval = getRecvDocNumber(arr_userinfo[4]);
+			              rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 			              if (!rtnval) {
 			                  var pAlertContent = "[접수 문서번호]를 가져오지 못했습니다!";
 			                  OpenAlertUI(pAlertContent);
@@ -950,7 +951,7 @@
 			      parameter[4] = getNodeText(RECEIPTDEPTID);
 			
 			      var url = "/ezApprovalG/ezReceiveDistributeUI.do";
-			      var feature = "status:no;dialogWidth:1000px;dialogHeight:760px;edge:sunken;scroll:no"
+			      var feature = "status:no;dialogWidth:800px;dialogHeight:600px;edge:sunken;scroll:no"
 			      var ret = window.showModalDialog(url, parameter, feature);
 			      if (ret == "true") {
 			          var pAlertContent = "<spring:message code='ezApprovalG.t1419'/>";
@@ -966,7 +967,7 @@
 			      parameter[2] = pAprState;
 			
 				  var url = "/ezApprovalG/ezReceiveAssignUI.do";
-			      var feature = "status:no;dialogWidth:600px;dialogHeight:380px;edge:sunken;scroll:no"
+			      var feature = "status:no;dialogWidth:800px;dialogHeight:600px;edge:sunken;scroll:no"
 			      var ret = window.showModalDialog(url, parameter, feature);
 			      if (ret == "OK") {
 			          var pAlertContent = "<spring:message code='ezApprovalG.t1420'/>";
