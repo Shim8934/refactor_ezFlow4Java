@@ -1111,7 +1111,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 					case 1:
 					case 2:
 					case 9:
-						long optionId = (Long) answerObject.get("optionLevel");
+						long optionId = (Long) answerObject.get("optionId");
 						
 						if (answerObject.get("otherFlag") != null && ((Long) answerObject.get("otherFlag")).intValue() == 1) {
 							String otherValue = (String) answerObject.get("texts");
@@ -1128,7 +1128,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 						break;
 					case 5:
 					case 6:
+						long txtOptionId = (Long) answerObject.get("optionId");
 						String txt = (String) answerObject.get("texts");
+						response.setOptionId(txtOptionId);
 						response.setTexts(txt);
 						break;
 					case 7:
@@ -1137,9 +1139,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 						break;
 					case 8:
 						int rankingLevel = ((Long) answerObject.get("rankingLevel")).intValue();
-						int rankingOptionLevel = ((Long) answerObject.get("rankingOptionLevel")).intValue();
+						long rankingOptionId = (Long) answerObject.get("optionId");;
 						response.setRankingLevel(rankingLevel);
-						response.setRankingOptionLevel(rankingOptionLevel);
+						response.setOptionId(rankingOptionId);
 						break;
 				}
 				

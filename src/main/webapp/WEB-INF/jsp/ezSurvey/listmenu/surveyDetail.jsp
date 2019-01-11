@@ -417,7 +417,7 @@
 		}
 		
 		function saveResponse() {
-			//console.log(resposeObj.responses);
+			console.log(resposeObj.responses);
 			if (resposeObj.responses.length > 1) {
 				$.ajax({
 					type: "POST",
@@ -680,7 +680,7 @@
 			var optId = parseInt($("select[name=drdw" + id + "] option:selected").attr("optionid"));
 			
 			if (!isNaN(optId)) {
-				drdwObj['optId'] = optId;
+				drdwObj['optionId'] = optId;
 				answer.push(drdwObj);
 			}
 			
