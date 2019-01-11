@@ -78,6 +78,8 @@
 		<result property="modifyFlag"       column="modify_flag"         columnIndex="23"/>
 		<result property="draftFlag"        column="draft_flag"          columnIndex="24"/>
 		<result property="responseFlag"     column="response_flag"       columnIndex="25"/>
+		<result property="totalUser"        column="total_user"          columnIndex="26"/>
+		
 	</resultMap>
 	
 	<!-- AttachVO resultMap -->
@@ -134,14 +136,31 @@
 		<result property="surveyId"         column="survey_id"           columnIndex="2" />
 		<result property="questionId"       column="question_id"         columnIndex="3" />
 		<result property="questionType"     column="question_type"       columnIndex="4" />
-		<result property="content"          column="content"             columnIndex="5" />
-		<result property="level"            column="levels"              columnIndex="6" />
-		<result property="otherFlag"        column="other_flag"          columnIndex="7" />
-		<result property="logic"            column="logic_num"           columnIndex="8" />
-		<result property="rowLevel"         column="row_level"           columnIndex="9" />
-		<result property="colLevel"         column="column_level"        columnIndex="10"/>
-		<result property="companyId"        column="company_id"          columnIndex="11"/>
-		<result property="tenantId"         column="tenant_id"           columnIndex="12"/>
+		<result property="questionLevel"    column="question_level"      columnIndex="5" />
+		<result property="content"          column="content"             columnIndex="6" />
+		<result property="level"            column="levels"              columnIndex="7" />
+		<result property="otherFlag"        column="other_flag"          columnIndex="8" />
+		<result property="logic"            column="logic_num"           columnIndex="9" />
+		<result property="rowLevel"         column="row_level"           columnIndex="10"/>
+		<result property="colLevel"         column="column_level"        columnIndex="11"/>
+		<result property="companyId"        column="company_id"          columnIndex="12"/>
+		<result property="tenantId"         column="tenant_id"           columnIndex="13"/>
+	</resultMap>
+	
+	<!-- ResponseVO resultMap -->
+	<resultMap id="responseVO" class="ResponseVO">
+		<result property="responseId"          column="response_id"          columnIndex="1" />
+		<result property="surveyId"            column="survey_id"            columnIndex="2" />
+		<result property="questionLevel"       column="question_level"       columnIndex="3" />
+		<result property="questionType"        column="question_type"        columnIndex="4" />
+		<result property="responsorId"         column="user_id"              columnIndex="5" />
+		<result property="optionId"            column="option_id"            columnIndex="6" />
+		<result property="texts"               column="texts"                columnIndex="7" />
+		<result property="rowLevel"            column="row_level"            columnIndex="8" />
+		<result property="columnLevel"         column="column_level"         columnIndex="9" />
+		<result property="rankingLevel"        column="ranking_level"        columnIndex="10"/>
+		<result property="rankingOptionLevel"  column="ranking_option_level" columnIndex="11"/>
+		<result property="sliderValue"         column="slider_value"         columnIndex="12"/>
 	</resultMap>
 	
 	<sql id="surveySelect">
@@ -170,7 +189,8 @@
 			attach_flag,
 			modify_flag,
 			draft_flag,
-			response_flag
+			response_flag,
+			total_user
 		from tbl_survey
 	</sql>
 	
@@ -283,9 +303,37 @@
 					a.cn
 				from
 					tbl_addjobmaster b join tbl_usermaster a on a.cn = b.cn and a.tenant_id = b.tenant_id
-				where
-					b.deptid = #deptId# and b.tenant_id = #tenantId#
+				where b.deptid = #deptId# and b.tenant_id = #tenantId#  and a.cn not in (select cn from tbl_usermaster_retire where tenant_id = #tenantId#)
 			) aa
+		]]>
+	</select>
+	
+	
+	<select id="EzSurveyDAO.getAllMembersOfCompany" resultMap="deptMemberInfo">
+		<![CDATA[
+			SELECT
+				CN                                                                                                                           AS CN,
+				CASE WHEN #primary# = '1'THEN TITLE ELSE TITLE2 END                                                                          AS POSITION,
+				CASE WHEN #primary# = '1'THEN DISPLAYNAME ELSE DISPLAYNAME2 END                                                              AS DISPLAYNAME,
+				DISPLAYNAME                                                                                                                  AS DISPLAYNAME1,
+				DISPLAYNAME2                                                                                                                 AS DISPLAYNAME2,
+				DEPARTMENT                                                                                                                   AS DEPARTMENT,
+				CASE WHEN #primary# = '1'THEN DESCRIPTION ELSE DESCRIPTION2 END                                                              AS DEPARTMENTNAME,
+				DESCRIPTION                                                                                                                  AS DEPARTMENTNAME1,
+				DESCRIPTION2                                                                                                                 AS DEPARTMENTNAME2,
+				TELEPHONENUMBER                                                                                                              AS TELEPHONENUMBER,
+				MAIL                                                                                                                         AS MAIL,
+				EXTENSIONATTRIBUTE2                                                                                                          AS USERIMAGE
+			FROM
+				TBL_USERMASTER 
+			WHERE
+					PHYSICALDELIVERYOFFICENAME = #companyId#
+				AND
+					CN != 'masteradmin'
+				AND
+					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+				AND
+					TENANT_ID = #tenantId#
 		]]>
 	</select>
 	
@@ -322,7 +370,15 @@
 				FROM
 					TBL_USERMASTER 
 				WHERE
+		]]>
+		<isNotNull property="deptId">
 					DEPARTMENT = #deptId#
+		</isNotNull>
+		<isNull property="deptId">
+					DEPARTMENT IN <iterate property="deptList" open="(" close=")" conjunction=",">#deptList[]#</iterate>
+		</isNull>
+					
+		<![CDATA[
 				AND
 					CN != 'masteradmin'
 				AND
@@ -351,7 +407,16 @@
 				JOIN
 					TBL_USERMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
 				WHERE
+		]]>
+		<isNotNull property="deptId">
 					B.DEPTID = #deptId#
+		</isNotNull>
+		<isNull property="deptId">
+					B.DEPTID IN <iterate property="deptList" open="(" close=")" conjunction=",">#deptList[]#</iterate>
+		</isNull>
+		<![CDATA[
+				AND
+					A.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 				AND
 					B.TENANT_ID = #tenantId#
 			) AA
@@ -515,14 +580,14 @@
 	<insert id="EzSurveyDAO.saveSurveyItem" parameterClass="SurveyVO">
 		<![CDATA[
 			insert into tbl_survey (
-				survey_id,    title,       purpose,     user_id,    create_date,   start_date,     end_date,   user_name1,
-				user_name2,   use_status,  open_days,   result_public_flag, anonymous_flag, multi_answer_flag, participate_flag,
-				attach_flag,  modify_flag, draft_flag,  response_flag, delete_user, update_user, update_date,  company_id, tenant_id
+				survey_id,     title,         purpose,            user_id,        create_date,       start_date,        end_date,    user_name1,  user_name2,
+				use_status,    open_days,     result_public_flag, anonymous_flag, multi_answer_flag, participate_flag,  attach_flag,  modify_flag, draft_flag,
+				response_flag, delete_user,   update_user,        update_date,    total_user,        company_id,        tenant_id
 			)
 			values (
-				#surveyId#,     #title#,      #purpose#,    #creatorId#,  #createDate#,       #startDate#,     #endDate#,         #creatorName1#,
-				#creatorName2#, #useStatus#,  #openDays#,   #resultPublicFlag#, #anonymousFlag#, #multiAnswerFlag#, #paritipateFlag#,
-				#attachFlag#,   #modifyFlag#, #draftFlag#,  #responseFlag#, #deleteUser#, #updateUser#, #updateDate#,       #companyId#,     #tenantId#
+				#surveyId#,     #title#,      #purpose#,          #creatorId#,     #createDate#,      #startDate#,      #endDate#,      #creatorName1#, #creatorName2#,
+				#useStatus#,    #openDays#,   #resultPublicFlag#, #anonymousFlag#, #multiAnswerFlag#, #paritipateFlag#, #attachFlag#,   #modifyFlag#,   #draftFlag#,
+				#responseFlag#, #deleteUser#, #updateUser#,       #updateDate#,    #totalUser#,       #companyId#,      #tenantId#
 			)
 		]]>
 	</insert>
@@ -549,6 +614,7 @@
 			modify_flag        = #modifyFlag#,
 			draft_flag         = #draftFlag#,
 			response_flag      = #responseFlag#,
+			total_user         = #totalUser#,
 			delete_user        = #deleteUser#,
 			update_user        = #updateUser#,
 			update_date        = #updateDate#
@@ -631,12 +697,12 @@
 	<insert id="EzSurveyDAO.saveOptionItem" parameterClass="OptionVO">
 		<![CDATA[
 			insert into tbl_survey_option (
-				option_id,  survey_id,  question_id,  question_type,  content,     levels,
-				other_flag, logic_num,  row_level,    column_level,   company_id,  tenant_id
+				option_id,  survey_id,  question_id,  question_type,  question_level, content,
+				levels,     other_flag, logic_num,    row_level,      column_level,   company_id,  tenant_id
 			)
 			values (
-				#optionId#,  #surveyId#,  #questionId#,  #questionType#,  #content#,    #level#,
-				#otherFlag#, #logic#,     #rowLevel#,    #colLevel#,      #companyId#,  #tenantId#
+				#optionId#,  #surveyId#,  #questionId#,  #questionType#, #questionLevel#, #content#,
+				#level#,     #otherFlag#, #logic#,     #rowLevel#,    #colLevel#,      #companyId#,  #tenantId#
 			)
 		]]>
 	</insert>
@@ -744,15 +810,21 @@
 	<insert id="EzSurveyDAO.saveResponseItem" parameterClass="ResponseVO">
 		<![CDATA[
 			insert into tbl_survey_response (
-				response_id, survey_id,   question_level, question_type,        user_id,      option_level, texts, 
-				row_level,   column_level, ranking_level, ranking_option_level, slider_value, company_id,   tenant_id
+				response_id, survey_id, question_level, question_type,        user_id,      option_level, texts,
+				row_level,   option_id, ranking_level,  ranking_option_level, slider_value, company_id,   tenant_id
 			)
 			values (
 				#responseId#, #surveyId#,    #questionLevel#, #questionType#,       #responsorId#, #optionLevel#, #texts#,
-				#rowLevel#,   #columnLevel#, #rankingLevel#,  #rankingOptionLevel#, #sliderValue#, #companyId#,   #tenantId#
+				#rowLevel#,   #optionId#, #rankingLevel#,  #rankingOptionLevel#, #sliderValue#, #companyId#,   #tenantId#
 			)
 		]]>
 	</insert>
+	
+	<select id="EzSurveyDAO.getAllResponsesForSurvey" resultMap="responseVO">
+		<![CDATA[
+			select * from tbl_survey_response where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId# order by question_level asc, response_id asc
+		]]>
+	</select>
 	
 	
 	<!--***********************************************************************************
@@ -766,10 +838,10 @@
 	<insert id="EzSurveyDAO.saveRespondent" parameterClass="RespondentVO">
 		<![CDATA[
 			insert into tbl_survey_respondent (
-				response_id,  survey_id,  user_id,  user_name1,  user_name2, email, dept_id, dept_name1, dept_name2, response_date, company_id, tenant_id
+				response_id,  survey_id,  user_id,  user_name1,  user_name2, email, image, dept_id, dept_name1, dept_name2, response_date, company_id, tenant_id
 			)
 			values (
-				#responseId#, #surveyId#, #userId#, #userName1#, #userName2#, #email#, #deptId#, #deptName1#, #deptName2#, #responseDate#, #companyId#, #tenantId#
+				#responseId#, #surveyId#, #userId#, #userName1#, #userName2#, #email#, #image#, #deptId#, #deptName1#, #deptName2#, #responseDate#, #companyId#, #tenantId#
 			)
 		]]>
 	</insert>

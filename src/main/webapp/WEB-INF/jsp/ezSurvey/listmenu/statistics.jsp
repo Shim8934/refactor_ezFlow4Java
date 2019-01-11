@@ -28,16 +28,17 @@
 			window.onload       = function() {test();};
 			
 			function test() {
-				var values = [];
-				var lables = [];
-				var total  = parseInt(surveyStatistic["usersCnt"]) + parseInt(surveyStatistic["respondentCnt"]);
-				values.push(surveyStatistic["usersCnt"]);
-				values.push(surveyStatistic["respondentCnt"]);
-				lables.push(createChartStr(surveyStatistic["usersCnt"]     , SurveyMessages.strUser3));
-				lables.push(createChartStr(surveyStatistic["respondentCnt"], SurveyMessages.strUser3));
+				var values      = [];
+				var lables      = [];
+				var totalUsers  = parseInt(surveyStatistic["usersCnt"]);
+				var respondents = parseInt(surveyStatistic["respondentCnt"]);
+				values.push(totalUsers - respondents);
+				values.push(respondents);
+				lables.push(createChartStr(totalUsers - respondents, SurveyMessages.strUser3));
+				lables.push(createChartStr(respondents, SurveyMessages.strUser3));
 				
-				document.getElementById("totalUserCnt").innerHTML     = total;
-				document.getElementById("totalRespondents").innerHTML = SurveyMessages.strTotal + " " + total + SurveyMessages.strUser3;
+				document.getElementById("totalUserCnt").innerHTML     = totalUsers;
+				document.getElementById("totalRespondents").innerHTML = SurveyMessages.strTotal + " " + totalUsers + SurveyMessages.strUser3;
 				createPieChart(values, lables, "respondentPie", 1);
 			}
 			

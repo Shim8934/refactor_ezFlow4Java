@@ -7,12 +7,21 @@ public class RespondentVO {
 	private String userName1;
 	private String userName2;
 	private String email;
+	private String image;
 	private String deptId;
 	private String deptName1;
 	private String deptName2;
 	private String responseDate;
 	private String companyId;
 	private int tenantId;
+	
+	public String getImage() {
+		return image;
+	}
+	
+	public void setImage(String image) {
+		this.image = image;
+	}
 	
 	public long getResponseId() {
 		return responseId;

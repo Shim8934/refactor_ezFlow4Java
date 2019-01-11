@@ -28,8 +28,17 @@ public class SurveyVO {
 	private int modifyFlag;
 	private int draftFlag;
 	private int responseFlag;
+	private int totalUser;
 	private List<SurveyParticipantVO> userList;
 	private List<AttachVO> attachList;
+	
+	public int getTotalUser() {
+		return totalUser;
+	}
+	
+	public void setTotalUser(int totalUser) {
+		this.totalUser = totalUser;
+	}
 	
 	public long getSurveyId() {
 		return surveyId;

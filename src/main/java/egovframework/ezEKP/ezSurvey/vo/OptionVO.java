@@ -1,5 +1,7 @@
 package egovframework.ezEKP.ezSurvey.vo;
 
+import java.util.List;
+
 public class OptionVO {
 	private long optionId;
 	private long questionId;
@@ -7,6 +9,7 @@ public class OptionVO {
 	private String companyId;
 	private int tenantId;
 	private int questionType;
+	private long questionLevel;
 	private String content;
 	private int level;
 	private int otherFlag;
@@ -14,6 +17,23 @@ public class OptionVO {
 	private int rowLevel;
 	private int colLevel;
 	private AttachVO attach;
+	private List<ResponseVO> responses;
+	
+	public List<ResponseVO> getResponses() {
+		return responses;
+	}
+	
+	public void setResponses(List<ResponseVO> responses) {
+		this.responses = responses;
+	}
+	
+	public long getQuestionLevel() {
+		return questionLevel;
+	}
+	
+	public void setQuestionLevel(long questionLevel) {
+		this.questionLevel = questionLevel;
+	}
 	
 	public AttachVO getAttach() {
 		return attach;
