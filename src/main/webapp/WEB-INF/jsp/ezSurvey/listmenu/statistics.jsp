@@ -57,6 +57,33 @@
 				//Create question header here
 				var mainDivElmt   = document.getElementById("contentsBox");
 				var divElmt       = document.createElement("div");
+				divElmt.className = "response-wrap";
+				var questionType  = question["type"];
+				var options       = question["option"];
+				var responses     = [];
+				
+				//Get users for each question
+				if (questionType == 1 || questionType == 2 || questionType == 9) {
+					for (var i = 0; i < options.length; i++) {
+						if (options[i]["responses"]) {
+							responses = responses.concat(options[i]["responses"]);
+						}
+					}
+				}
+				else {
+					responses = question["responses"];
+				}
+				
+				console.log("Response");
+				console.log(responses);
+				
+				var userQuestion  = getUsersForQuestion(responses);
+				
+				console.log("Users");
+				console.log(userQuestion);
+				
+				var divHeader     = createHeaderDiv(question, userQuestion);
+				divElmt.appendChild(divHeader);
 				mainDivElmt.appendChild(divElmt);
 				
 				//Create question statistic for each type
@@ -66,13 +93,15 @@
 					case 1:
 					case 2:
 					case 9:
-						divElmt.className = "pieDiv";
-						var canvasElmt = document.createElement("canvas");
-						var canvasId   = "question" + question["level"];
+						var divChart       = document.createElement("div");
+						divChart.className = "pieDiv";
+						var canvasElmt     = document.createElement("canvas");
+						var canvasId       = "question" + question["level"];
 						canvasElmt.setAttribute("height", 240);
 						canvasElmt.setAttribute("width", 640);
 						canvasElmt.setAttribute("id", canvasId);
-						divElmt.appendChild(canvasElmt);
+						divChart.appendChild(canvasElmt);
+						divElmt.appendChild(divChart);
 						createQuestionPie(question, canvasId);
 						break;
 						 */
@@ -95,6 +124,34 @@
 					case 8:
 						break;
 				}
+			}
+			
+			function getUsersForQuestion(responses) {
+				if (!responses || responses.length == 0) {
+					return [];
+				}
+				else {
+					var userList = [];
+					for (var i = 0; i < responses.length; i++) {
+						if (!userList.includes(responses[i]["responsorId"])) {
+							userList.push(responses[i]);
+						}
+					}
+					
+					return userList;
+				}
+			}
+			
+			function createHeaderDiv(question, userList) {
+				var divElemt = document.createElement("div");
+				divElemt.className = "reponse-header";
+				var childDiv1 = document.createElement("div");
+				var childDiv2 = document.createElement("div");
+				childDiv1.textContent = question["level"] + "." + question["content"];
+				childDiv2.textContent = "응답자 " + userList.length;
+				divElemt.appendChild(childDiv1);
+				divElemt.appendChild(childDiv2);
+				return divElemt;
 			}
 			
 			function createQuestionPie(question, canvasId) {
