@@ -14,11 +14,9 @@
 		<style type="text/css">
 		</style>
 	</head>
-	<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg')}                 "></script>
-	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}      "></script>
-	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/raphael-min.js')}"></script>
-	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/g.raphael.js')}  "></script>
-	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/g.pie.js')}      "></script>
+	<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg')}                "></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}     "></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/bnkcharts.js')} "></script>
 	<body class="statBody">
 		<div class="surveyCrtTt3">
 			<div class="sryFirst2"></div>
@@ -31,8 +29,8 @@
 			<div id="surveyRespondents" style="height: 240px; position: relative; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;">
 				<div style="position: absolute; top: 0px; right: 0px; padding: 8px; font-size: 14px;" id="totalRespondents"></div>
 				<div id="respondentPie" style="height: 100%;"></div>
-				<div id="barChart"></div>
 			</div>
+			<div id="barChart" style="display: none; height: 460px; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;"></div>
 		</div>
 		
 		<script type="text/javascript">
@@ -44,8 +42,8 @@
 			var surveyStatistic   = ${data};
 			var questionStatistic = ${questions};
 			
-			console.log(surveyStatistic);
-			console.log(questionStatistic);
+			//console.log(surveyStatistic);
+			//console.log(questionStatistic);
 			
 			startStatistic(questionStatistic);
 			
@@ -87,77 +85,101 @@
 			}
 			
 			function createQuestionPie(question, divId) {
-				var options      = question["option"];
-				var optionValues = [];
-				var optionLabels = [];
-				var optionMores  = [];
+				var options = question["option"];
+				var data    = [];
+				var hasResp = false;
 				
 				for (var i = 0; i < options.length; i++) {
-					var responses = options[i]["responses"];
-					var responsesCnt = responses ? responses.length : 0;
-					optionValues.push(responsesCnt);
-					optionLabels.push(createChartStr(options[i]["content"], SurveyMessages.strUser3, responsesCnt));
-					optionMores.push({responses: responses});
+					var optResponse     = {};
+					var responses       = options[i]["responses"];
+					var responsesCnt    = 0;
+					if (responses && responses.length > 0) {
+						responsesCnt = responses.length;
+						hasResp      = true;
+					} 
+					
+					optResponse["name"] = options[i]["content"];
+					optResponse["y"]    = responsesCnt;
+					optResponse["more"] = options[i]["responses"];
+					data.push(optResponse);
 				}
 				
-				console.log(optionValues);
-				console.log(optionLabels);
-				
-				createPieChart(optionValues, optionLabels, divId, optionMores);
+				if (hasResp) {
+					console.log(data);
+					createPieChart(data, divId);
+				}
+				else {
+					//Show empty responses question image
+					var imgElmt = document.createElement("img");
+					imgElmt.src = "/images/ezSurvey/nores";
+					document.getElementById(divId).appendChild(imgElmt);
+				}
 			}
 			
 			function test() {
-				var values      = [];
-				var lables      = [];
+				var data        = [];
 				var totalUsers  = parseInt(surveyStatistic["usersCnt"]);
 				var respondents = parseInt(surveyStatistic["respondentCnt"]);
-				values.push(totalUsers - respondents);
-				values.push(respondents);
-				lables.push(createChartStr(totalUsers - respondents, SurveyMessages.strUser3, totalUsers - respondents));
-				lables.push(createChartStr(respondents, SurveyMessages.strUser3, respondents));
+				var notTakePart = totalUsers - respondents;
+				
+				data.push({
+					name : '참석한 사람 [' + respondents + SurveyMessages.strUser3 +']',
+					y    : respondents
+				});
+				
+				data.push({
+					name : '참석하 지않은 사람 [' + notTakePart + SurveyMessages.strUser3 +']',
+					y    : notTakePart
+				});
 				
 				document.getElementById("totalUserCnt").innerHTML     = totalUsers;
 				document.getElementById("totalRespondents").innerHTML = SurveyMessages.strTotal + " " + totalUsers + SurveyMessages.strUser3;
-				createPieChart(values, lables, "respondentPie", 1);
+				createPieChart(data, "respondentPie");
 			}
 			
-			function createPieChart(values, lables, elmtId, moreValues) {
-				var config = {legend: lables, legendpos: "east"};
-				if (values.length <= 30) {config["colors"] = colors;}
-				
-				var r   = Raphael(elmtId);
-				var pie = r.piechart(180, 120, 100, values, config);
-				
-				pie.hover(function () {
-					this.sector.stop();
-					if (this.sector.matrix.a < 1.05) {
-						this.sector.scale(1.1, 1.1, this.cx, this.cy);
-					}
-					
-					if (this.label) {
-						this.label[0].stop();
-						this.label[0].attr({ r: 10});
-						this.label[1].attr({ "font-weight": 800 });
-					}
-				}, function () {
-					this.sector.animate({ transform: 's1 1 ' + this.cx + ' ' + this.cy }, 500, "bounce");
-					if (this.label) {
-						this.label[0].animate({ r: 6}, 500, "bounce");
-						this.label[1].attr({ "font-weight": 400 });
-					}
+			function createPieChart(userData, elmtId) {
+				Highcharts.chart(elmtId, {
+					chart: {
+						plotBackgroundColor: null,
+						plotBorderWidth: null,
+						plotShadow: false,
+						type: 'pie'
+					},
+					title:{
+						text: null
+					},
+					tooltip: {
+						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+					},
+					legend: {
+						layout: 'vertical',
+						align: 'right',
+						verticalAlign: 'middle',
+						labelFormatter: function() {return this.name + " (" + this.percentage.toFixed(1) + "%)";},
+						itemMarginTop: 10,
+						itemMarginBottom: 10
+					},
+					plotOptions: {
+						pie: {
+							allowPointSelect: true,
+							cursor: 'pointer',
+							dataLabels: {enabled: true, align: 'left'},
+							showInLegend: true
+						},
+						/* series: {
+							point: {
+							events: {
+								legendItemClick: function () {return false;}}
+							}
+						} */
+					},
+					credits: {enabled: false},
+					series: [{
+						name: '',
+						colorByPoint: true,
+						data: userData
+					}]
 				});
-				
-				if (moreValues) {
-					for (var i = 0; i < values.length; i++) {
-						pie.series.items[i]["value"]["more"] = moreValues[i];
-						console.log(pie.series.items[i]["value"]);
-					}
-					
-					pie.click(function(){
-						console.log(this.value);
-						//showMoreDetail();
-					});
-				}
 			}
 			
 			function showMoreDetail() {
@@ -166,25 +188,5 @@
 			
 			function createChartStr(value, string, cnt) {return value + " - %%.%% [" + cnt + string + "]";}
 		})();
-		
-		$(function() {
-			Morris.Bar({
-				  element: 'barChart',
-				  data: [
-				    {x: '2011 Q1', y: 3, z: 2, a: 3},
-				    {x: '2011 Q2', y: 2, z: 0, a: 1},
-				    {x: '2011 Q3', y: 0, z: 2, a: 4},
-				    {x: '2011 Q4', y: 2, z: 4, a: 3}
-				  ],
-				  xkey: 'x',
-				  ykeys: ['y', 'z', 'a'],
-				  labels: ['Y', 'Z', 'A'],
-				  hoverCallback: function (index, options, content, row) {
-					  return "sin(" + row.x + ") = " + row.y + row.z + row.a;
-					}
-				}).on('click', function(i, row){
-				  console.log(i, row);
-				});
-		});
 	</script>
 </html>
