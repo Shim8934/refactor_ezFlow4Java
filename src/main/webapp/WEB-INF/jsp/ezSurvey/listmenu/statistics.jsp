@@ -30,7 +30,7 @@
 				<div style="position: absolute; top: 0px; right: 0px; padding: 8px; font-size: 14px;" id="totalRespondents"></div>
 				<div id="respondentPie" style="height: 100%;"></div>
 			</div>
-			<div id="barChart" style="display: none; height: 460px; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;"></div>
+			<div id="barChart" style=" height: 460px; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;"></div>
 		</div>
 		
 		<script type="text/javascript">
@@ -42,8 +42,8 @@
 			var surveyStatistic   = ${data};
 			var questionStatistic = ${questions};
 			
-			//console.log(surveyStatistic);
-			//console.log(questionStatistic);
+			console.log(surveyStatistic);
+			console.log(questionStatistic);
 			
 			startStatistic(questionStatistic);
 			
@@ -68,10 +68,12 @@
 					case 1:
 					case 2:
 						divElmt.className = "pieDiv";
-						createQuestionPie(question, divId);
+						//createQuestionPie(question, divId);
 						break;
 					case 3:
 					case 4:
+						divElmt.className = "barDiv";
+						createQuestionBar(question, divId);
 						break;
 					case 5:
 					case 6:
@@ -136,7 +138,7 @@
 				document.getElementById("totalRespondents").innerHTML = SurveyMessages.strTotal + " " + totalUsers + SurveyMessages.strUser3;
 				createPieChart(data, "respondentPie");
 			}
-			
+			/* 
 			function createPieChart(userData, elmtId) {
 				Highcharts.chart(elmtId, {
 					chart: {
@@ -166,12 +168,12 @@
 							dataLabels: {enabled: true, align: 'left'},
 							showInLegend: true
 						},
-						/* series: {
-							point: {
-							events: {
-								legendItemClick: function () {return false;}}
-							}
-						} */
+						// series: {
+						//	point: {
+						//	events: {
+						//		legendItemClick: function () {return false;}}
+						//	}
+						//}
 					},
 					credits: {enabled: false},
 					series: [{
@@ -180,6 +182,11 @@
 						data: userData
 					}]
 				});
+			}
+			 */
+			function createQuestionBar(question, divId) {
+				console.log(question);
+				console.log(divId);
 			}
 			
 			function showMoreDetail() {
