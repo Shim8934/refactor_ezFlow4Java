@@ -2023,11 +2023,12 @@ var SurveyCreate     = function() {
 			bodyTr.append(bodyTd);
 			
 			for (var j = 0; j < col.length; j++) {
-				var colNum = optsLength - row.length + j;
-				if (opts[colNum]['optionId'] != undefined) {
+				var colNum = optsLength - row.length - 1 + j;
+				var colOptionId = "";
+				
+				if (opts[colNum - 1]['optionId'] != undefined) {
 					colOptionId = opts[colNum]['optionId'];
 				}
-				
 				inputTd = $("<td></td>");
 				Input = $("<input type='" + inpType + "' name='qstn" + id + "opt" + i + "' id='qstn" + id + "opt" + i + j + "' OptionId='" + rowOptionId + "," + colOptionId +"'>");
 				Input.val(row[i]["rowLevel"] + "," + col[j]["colLevel"]);

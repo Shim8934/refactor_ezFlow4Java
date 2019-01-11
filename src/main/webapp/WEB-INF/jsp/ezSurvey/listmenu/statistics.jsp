@@ -19,6 +19,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/raphael-min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/g.raphael.js')}  "></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/g.pie.js')}      "></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/morris.min.js')} "></script>
 	<script type="text/javascript">
 		(function() {
 			var colors = ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5", "#ffdc89", "#90d4f7", "#71e096", "#f5a26f",
