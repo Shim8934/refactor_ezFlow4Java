@@ -663,8 +663,11 @@
 					return;
 				}
 				
-				var tenantId = "<c:out value='${question.tenantId}'/>";				
-				stompClient.send("/app/editVote", {}, JSON.stringify({'question': qstId, 'tenant': tenantId, 'user': curentUser, 'sessionid': sessionId}));
+				var logincookie = document.cookie.match(/loginCookie=.+?;/)[0].split("=")[1];
+				logincookie = logincookie.substr(0, logincookie.length-1);
+				
+				var tenantId = "<c:out value='${question.tenantId}'/>";
+				stompClient.send("/app/editVote", {}, JSON.stringify({'question': qstId, 'tenant': tenantId, 'user': curentUser, 'sessionid': sessionId, 'loginCookie': logincookie}));
 				
 				var params = "<c:out value='${params}'/>";
 				var searchStr = "<c:out value='${searchStr}'/>";
