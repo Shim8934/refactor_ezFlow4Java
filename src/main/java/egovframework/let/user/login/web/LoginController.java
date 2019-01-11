@@ -7,12 +7,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
-import javax.servlet.DispatcherType;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -130,7 +126,16 @@ public class LoginController {
 //        	return "redirect:/ezPortal/portalMain.do";
         	return "redirect:/ezNewPortal/newPortalMain.do"; 
     	}
-        	
+    	
+    	if(model.get("multiLoginFlag") == null) {
+    		Cookie tempMLCookie = new Cookie("multiLoginCookie", null);
+    		tempMLCookie.setMaxAge(0);
+    		tempMLCookie.setPath("/");
+    		response.addCookie(tempMLCookie);
+    	} else {
+    		model.addAttribute("message", "multiLoginNoti");
+    	}
+    	
     	String pbm = egovFileScrty.getPbm();
     	
     	//2018-11-05 유은정 - 포탈 개인화 관련 logo 추가
@@ -815,7 +820,6 @@ public class LoginController {
 	public String actionLogoutWithRedirectUri(
 //	public void actionLogoutWithRedirectUri(
 					@RequestParam("redirectUri") String redirectUri,
-					@RequestParam(required = false, defaultValue = "") String message,
 					HttpServletRequest request,
 					HttpServletResponse response,
 					RedirectAttributes rttr
@@ -826,7 +830,7 @@ public class LoginController {
     	
     	if (cookies != null) {
     		for (Cookie cookie : cookies) {
-    			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*")){
+    			if(!cookie.getName().equals("saveid") && !cookie.getName().matches("POPUP_.*") && !cookie.getName().equals("multiLoginCookie")){
     				cookie.setMaxAge(0);
     				cookie.setPath("/");
     				response.addCookie(cookie);
@@ -838,8 +842,9 @@ public class LoginController {
     	
     	request.getSession().invalidate();
     	
-    	if (!message.equals("")) {
-    		rttr.addFlashAttribute("message", message);
+    	if (request.getParameter("multiLoginFlag") != null) {
+//    		rttr.addFlashAttribute("message", message);
+    		rttr.addFlashAttribute("multiLoginFlag", request.getParameter("multiLoginFlag"));
     	}
     	
     	return "redirect:" + redirectUri;

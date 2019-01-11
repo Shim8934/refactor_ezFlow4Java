@@ -155,9 +155,12 @@
 		        form.submit();
 		    }
 		    
-		    function reloadLoginPage(message) {
-		    	var uri = "/user/login/login.do";
-		    	self.location.href = "/user/login/actionLogoutWithRedirectUri.do?redirectUri=" + uri + "&message=" + message;
+		    function reloadLoginPage(multiLoginFlag, uri) {
+		    	var parameter = "redirectUri=" + uri;
+		    	if(!!multiLoginFlag) {
+		    		parameter += "&multiLoginFlag=" + multiLoginFlag;
+		    	}
+		    	self.location.href = "/user/login/actionLogoutWithRedirectUri.do?" + parameter;
 		    }
 		</script>
 	</head>

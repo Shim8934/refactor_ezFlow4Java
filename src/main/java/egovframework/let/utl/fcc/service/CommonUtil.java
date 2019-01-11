@@ -45,11 +45,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,7 +78,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -1595,7 +1592,7 @@ public class CommonUtil {
 					}
 				}
 				
-				if(loginCookie != null && multiLoginCookie != null) {
+				if(loginCookie != null) {
 					String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///");
 					
 					String userID = cookieInfo[1];
@@ -1609,7 +1606,9 @@ public class CommonUtil {
 						result = ezCommonService.matchMultiLoginTime(tenantID, userID, multiLoginCookie.getValue());
 					} 
 				} else {
-					return false;
+					if(multiLoginCookie != null) {
+						result = false;
+					}
 				}
 			}
 		} catch (Exception e) {
