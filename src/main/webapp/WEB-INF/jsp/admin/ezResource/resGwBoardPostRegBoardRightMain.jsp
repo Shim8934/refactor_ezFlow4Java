@@ -69,7 +69,6 @@
 				    
 				    acllist.options[indexV].innerHTML = strVal;
 				}
-				console.log('')
 			}
 	
 	
