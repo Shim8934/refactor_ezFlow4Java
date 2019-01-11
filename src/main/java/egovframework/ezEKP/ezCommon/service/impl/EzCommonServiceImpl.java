@@ -1491,5 +1491,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addUserMasterMailBoxQuota() throws Exception {
 		ezCommonDAO.addUserMasterMailBoxQuota();
 	}
+
+	@Override
+	public void createPortalThemePortlet() throws Exception {
+		ezCommonDAO.createPortalThemePortlet();
+	}
 	
 }

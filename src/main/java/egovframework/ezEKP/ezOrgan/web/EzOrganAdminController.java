@@ -137,6 +137,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addPortalThemePortletIsFixed();
     	ezCommonService.addUserMasterMailBoxQuota();
     	ezCommonService.createTblUserMultiLogin();
+    	ezCommonService.createPortalThemePortlet();
     	
     	logger.debug("init ended.");
     }
