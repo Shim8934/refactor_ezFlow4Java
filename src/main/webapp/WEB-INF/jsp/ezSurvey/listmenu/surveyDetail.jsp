@@ -417,8 +417,7 @@
 		}
 		
 		function saveResponse() {
-			console.log(resposeObj.responses);
-			/* 
+			//console.log(resposeObj.responses);
 			if (resposeObj.responses.length > 1) {
 				$.ajax({
 					type: "POST",
@@ -437,7 +436,7 @@
 			} else {
 				alert(SurveyMessages.strNoResponse);
 			}
-			 */
+			
 		}
 		
 		function afterSaveSuccessfully(data) {
