@@ -538,7 +538,7 @@
 								
 								if (lang == '' || lang == 1) {
 									html += "<td>" + (i.cn != null ? i.cn : " ") + "</td>";
-									html += "<td style='cursor:pointer'" + i.displayName + "</td>";
+									html += "<td style='cursor:pointer'>" + i.displayName + "</td>";
 									html += "<td>" + (i.description != null ? i.description : " ") + "</td>";
 									html += "<td>" + (i.title  != null ? i.title : " ") + "</td>";
 									html += "<td>" + (i.extensionAttribute10  != null ? i.extensionAttribute10 : " ")+ "</td>";
@@ -546,7 +546,7 @@
 								
 								else if (lang != '' || lang != 1) {
 									html += "<td>" + (i.cn != null ? i.cn : " ") + "</td>";
-									html += "<td style='cursor:pointer'" + i.displayName2 + "</td>";
+									html += "<td style='cursor:pointer'>" + i.displayName2 + "</td>";
 									html += "<td>" + (i.description2 != null ? i.description2 : " ") + "</td>";
 									html += "<td>" + (i.title2  != null ? i.title2 : " ") + "</td>";
 									html += "<td>" + (i.extensionAttribute102  != null ? i.extensionAttribute102 : " ")+ "</td>";
