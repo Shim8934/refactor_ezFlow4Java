@@ -651,7 +651,7 @@
 					from tbl_webfolder_file f inner join (
 						select *
 						from tbl_webfolder_folder  
-						where folder_path like concat(#folderPath#, '%') and tenant_id = #tenantId# and folder_type = #folderType# ) 
+						where (folder_path like concat(#folderPath#, '%') or folder_id = #folderId#) and tenant_id = #tenantId# and folder_type = #folderType# ) 
 							folder on folder.folder_id  = f.folder_id
 					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id
 					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
@@ -770,8 +770,7 @@
 					from 
 						tbl_webfolder_folder 
 					where 
-							folder_path like concat(#folderPath# , '%') 
-						and folder_path <> #folderPath#
+							(folder_path like concat(#folderPath# , '%') or folder_id = #folderId#)
 						and tenant_id = #tenantId# 
 						and folder_type = #folderType# and use_status = 'Y'
 					) folder on f.folder_id = folder.folder_id
@@ -992,7 +991,7 @@
 					from 
 						tbl_webfolder_folder 
 					where 
-							folder_path like concat(#folderPath# , '%') 
+							folder_path like concat(#folderPath# , '%') or folder_id = #folderId#
 						and tenant_id = #tenantId# 
 						and folder_type = #folderType#
 						and use_status = 'Y'
