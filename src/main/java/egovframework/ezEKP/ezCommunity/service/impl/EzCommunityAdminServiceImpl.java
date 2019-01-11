@@ -421,8 +421,9 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 
 	@Override
-	public String admCommunityInfoEditOk(String lang, String cCateA, String cCateB, String cCateC, String clubName, String code, int tenantID) throws Exception {
+	public String admCommunityInfoEditOk(String lang, String cCateA, String cCateB, String cCateC, String clubName, String clubDesc, String code, int tenantID) throws Exception {
 		logger.debug("admCommunityInfoEditOk started.");
+		logger.debug("clubDesc=" + clubDesc);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", lang);
@@ -430,6 +431,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		map.put("v_C_CATE_B", cCateB);
 		map.put("v_C_CATE_C", cCateC);
 		map.put("v_C_CLUBNAME", clubName);
+		map.put("v_C_CLUBDESC", clubDesc);
 		map.put("v_CODE", code);
 		map.put("tenantID", tenantID);
 		

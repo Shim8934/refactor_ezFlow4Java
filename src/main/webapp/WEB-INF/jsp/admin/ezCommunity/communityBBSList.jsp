@@ -23,7 +23,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/common.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
         <script type="text/javascript">
 	        var pKeyWord = "<c:out value = '${keyword}' />";
 	        var CurPage = "<c:out value = '${curPage}' />";
@@ -55,11 +56,12 @@
 			function search() {
 				if (document.page.s_radio.value == "title" ) {
 					var strSearch = "sRadio=title&keyword=" + make_searchstring(document.page.keyword.value);
-				} else if (document.page.s_radio.value == "titleContent" ) {
-					var strSearch = "sRadio=titleContent&keyword=" + make_searchstring(document.page.keyword.value);
 				} else {
 					var strSearch = "sRadio=writer&keyword=" + make_searchstring(document.page.keyword.value);
 				}
+				/// else if (document.page.s_radio.value == "titleContent" ) {
+				//	var strSearch = "sRadio=titleContent&keyword=" + make_searchstring(document.page.keyword.value);
+				// } 
 				
 				strSearch = strSearch + "&code=" + "<c:out value = '${code}' />" + "&bName=" + "<c:out value = '${bName}' />" + "&key=" + make_searchstring(document.page.keyword.value);
 				window.location.href = "/admin/ezCommunity/bbsList.do" + "?" + encodeURI(strSearch);
@@ -237,6 +239,24 @@
 				url = "/admin/ezCommunity/bbsList.do?bName=<c:out value = '${bName}' />";
 				location.href = url;
 			}
+			
+			//페이지네이션 위치 고정
+			$(window).on("resize", function(){
+				windowResize();
+			});
+			
+			function windowResize() {
+				var height = document.documentElement.clientHeight - 172;
+				if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+					height = height - 30;
+				}
+					document.getElementById("contentlist").style.overflow = "auto";
+					document.getElementById("contentlist").style.height = height + "px";
+			}
+			
+			$(function(){
+				windowResize();
+			});
         </script>
 	</head>
 	
@@ -257,11 +277,11 @@
   			<ul>
 				<c:choose>
 					<c:when test="${bName == 'tbl_c_board' }">
-						<li class="important"><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t167' /></span></li>
+						<li class="important"><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t958' /></span></li>
 					</c:when>
 					
 					<c:when test="${fn:indexOf(rollInfo, 'k=1') > -1 && bName == 'tbl_c_notice'}">
-						<li class="important"><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t167' /></span></li>
+						<li class="important"><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t958' /></span></li>
 					</c:when>
 				</c:choose>
 				
@@ -276,27 +296,29 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 
-		<table class="content" style="height:35px">
+		<table class="content">
 			<form name="page">
 				<tr>
-					<th style="border:0px"><spring:message code = 'ezCommunity.t28' /></th>
-					<td style="border-left:0px; background: #f8f8fa;">
-						<select name="s_radio" style="vertical-align:middle">
+					<th><spring:message code = 'ezCommunity.t28' /></th>
+					<td>
+						<select name="s_radio" style="vertical-align: middle; height: 22px;">
 							<option value="title" selected><spring:message code = 'ezCommunity.t124' /></option>
-							<option value="titleContent"><spring:message code = 'ezCommunity.t169' /></option>
+							<%-- <option value="titleContent"><spring:message code = 'ezCommunity.t169' /></option> --%>
 							<option value="writer"><spring:message code = 'ezCommunity.t138' /></option>
 						</select>
 						
-						<input type="text" name="keyword" onKeyDown="return keyword_onkeydown(event)" style="width:200px;vertical-align:middle">
+						<input type="text" name="keyword" onKeyDown="return keyword_onkeydown(event)" style="width:200px; height: 22px; vertical-align:middle;">
 						<a class="imgbtn" style="vertical-align:middle"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>
 					</td>
 				</tr>
 			</form>
 		</table>
 		
-		<table class="mainlist" style="width:100%;margin-top:5px">
-			<span id="idSpan">${idSpanValue}</span>
-		</table>
+		<div id="contentlist">
+			<table class="mainlist" style="width:100%;margin-top:5px">
+				<span id="idSpan">${idSpanValue}</span>
+			</table>
+		</div>
 		
 		<div id="tblPageRayer"></div>
 	</body>

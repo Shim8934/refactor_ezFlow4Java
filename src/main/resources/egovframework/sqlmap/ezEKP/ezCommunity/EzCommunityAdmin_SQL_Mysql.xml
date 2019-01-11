@@ -651,6 +651,7 @@
 				c_cate_b = #v_C_CATE_B#,
 				c_cate_c = #v_C_CATE_C#,
 				c_clubname$v_USERINFO_LANG$ = #v_C_CLUBNAME#,
+				c_clubdesc = #v_C_CLUBDESC#,
 				isin = 2
 			WHERE
 				RTRIM(c_clubno) = #v_CODE#

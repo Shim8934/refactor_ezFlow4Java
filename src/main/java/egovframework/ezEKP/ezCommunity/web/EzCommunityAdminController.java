@@ -231,6 +231,10 @@ public class EzCommunityAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("idSpanValue", ezCommunityService.getCategory("", "", "", userInfo));
@@ -335,11 +339,14 @@ public class EzCommunityAdminController {
 		
 		String code = request.getParameter("code");
 		String clubName = request.getParameter("clubName");
+		String clubDesc = request.getParameter("clubDesc");
 		String cCateA = request.getParameter("cCateA");
 		String cCateB = request.getParameter("cCateB");
 		String cCateC = request.getParameter("cCateC");
 		
-		String result = ezCommunityAdminService.admCommunityInfoEditOk(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), cCateA, cCateB, cCateC, clubName, code, userInfo.getTenantId());
+		logger.debug("code=" + code + ",clubName=" + clubName + ",clubDesc=" + clubDesc + ",cCateA=" + cCateA + ",cCateB=" + cCateB + ",cCateC=" + cCateC);
+		
+		String result = ezCommunityAdminService.admCommunityInfoEditOk(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), cCateA, cCateB, cCateC, clubName, clubDesc, code, userInfo.getTenantId());
 		
 		logger.debug("admCommunityInfoEditOk ended.");
 		
