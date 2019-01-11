@@ -25,6 +25,7 @@
 						  "#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",
 						  "#d41e47", "#4c64ae", "#01539c", "#f05f7c", "#00b3ca", "#bd8139", "#d9c622", "#4a2431", "#d41e47", "#eb148d"];
 			var surveyStatistic = ${data};
+			console.log("데이터: " + surveyStatistic);
 			window.onload       = function() {test();};
 			
 			function test() {
@@ -99,9 +100,11 @@
 			<div id="surveyRespondents" style="height: 240px; position: relative; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;">
 				<div style="position: absolute; top: 0px; right: 0px; padding: 8px; font-size: 14px;" id="totalRespondents"></div>
 				<div id="respondentPie" style="height: 100%;"></div>
+				<div id="barChart"></div>
 			</div>
 		</div>
 	</body>
+	<script type="text/javascript" src="/js/ezSurvey/statistic/morris.min.js"> </script>
 		<script type="text/javascript">
 				/* function getSurveyStatistic() {
 				$.ajax({
@@ -131,5 +134,25 @@
 					default: alert(SurveyMessages.strError)    ; return;
 				}
 			} */
+$(function() {
+	Morris.Bar({
+		  element: 'barChart',
+		  data: [
+		    {x: '2011 Q1', y: 3, z: 2, a: 3},
+		    {x: '2011 Q2', y: 2, z: 0, a: 1},
+		    {x: '2011 Q3', y: 0, z: 2, a: 4},
+		    {x: '2011 Q4', y: 2, z: 4, a: 3}
+		  ],
+		  xkey: 'x',
+		  ykeys: ['y', 'z', 'a'],
+		  labels: ['Y', 'Z', 'A'],
+		  hoverCallback: function (index, options, content, row) {
+			  return "sin(" + row.x + ") = " + row.y + row.z + row.a;
+			}
+		}).on('click', function(i, row){
+		  console.log(i, row);
+		});
+
+});
 	</script>
 </html>

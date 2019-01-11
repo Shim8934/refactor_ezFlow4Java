@@ -417,6 +417,8 @@
 		}
 		
 		function saveResponse() {
+			console.log(resposeObj.responses);
+			/* 
 			if (resposeObj.responses.length > 1) {
 				$.ajax({
 					type: "POST",
@@ -435,6 +437,7 @@
 			} else {
 				alert(SurveyMessages.strNoResponse);
 			}
+			 */
 		}
 		
 		function afterSaveSuccessfully(data) {
@@ -451,27 +454,27 @@
 		
 		function getSingleSltRespose(id, type) {
 			var answerObj = {};
-			var optionLevel = {};
+			var optionId = {};
 			var answer = [];
 			var result = "success";
 			var wrapper = $("#prevQstn" + id);
 			var checkedBtn = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked");
-			var optLevel = parseInt(checkedBtn.val());
+			var optId = parseInt(checkedBtn.attr("optionid"));
 			
-			if (!isNaN(optLevel)) {
+			if (!isNaN(optId)) {
 				if (checkedBtn.attr("otherFlag") == 1) {
 					var otherValue = $("#othInput" + id).val().trim();
 
 					if (otherValue != "") {
-						optionLevel['otherFlag'] = 1;
-						optionLevel['texts'] = otherValue;
+						optionId['otherFlag'] = 1;
+						optionId['texts'] = otherValue;
 					} else {
 						result = "fail";
 						alert(id + SurveyMessages.writeOthers);
 					}
 				}
-				optionLevel['optionLevel'] = optLevel;
-				answer.push(optionLevel);
+				optionId['optionId'] = optId;
+				answer.push(optionId);
 				answerObj['answers'] = answer;
 				answerObj['type'] = type;
 				answerObj['questionLevel'] = id;
@@ -491,23 +494,24 @@
 			
 			for (var i = 0; i < length; i++) {
 				if (checkBox[i].checked == true) {
-					var optLevel = parseInt(checkBox[i].value);
-					var optionLevel = {};
+					//var optLevel = parseInt(checkBox[i].value);
+					var optId = parseInt(checkBox[i].getAttribute('optionid'));
+					var optionId = {};
 
-					if (!isNaN(optLevel)) {
+					if (!isNaN(optId)) {
 						if (checkBox[i].getAttribute('otherFlag') == 1) {
 							var otherValue = $("#othInput" + id).val().trim();
 
 							if (otherValue != "") {
-								optionLevel['otherFlag'] = 1;
-								optionLevel['texts'] = otherValue;
+								optionId['otherFlag'] = 1;
+								optionId['texts'] = otherValue;
 							} else {
 								result = "fail";
 								alert(id + SurveyMessages.writeOthers);
 							}
 						}
-						optionLevel['optionLevel'] = optLevel;
-						answer.push(optionLevel);
+						optionId['optionId'] = optId;
+						answer.push(optionId);
 					}
 				}
 			}
@@ -531,10 +535,10 @@
 			
 			for (var i = 0; i < trLength; i++) {
 				var rowColObj = {};
-				var rowColLevels = $("input[name = qstn" + id + "opt" + i + "]:checked").val();
+				var rowColIds = $("input[name = qstn" + id + "opt" + i + "]:checked").attr("optionid");
 				
-				if (rowColLevels != undefined) {
-					var rowColArray = rowColLevels.split(",");
+				if (rowColIds != undefined) {
+					var rowColArray = rowColIds.split(",");
 					var row = rowColArray[0];
 					var col = rowColArray[1];
 					
@@ -565,8 +569,8 @@
 					var checkBox = $("input[id = qstn" + id + "opt" + i + j + "]");
 					
 					if (checkBox.prop("checked") == true) {
-						var rowColLevels = checkBox.val();
-						var rowColArray = rowColLevels.split(",");
+						var rowColIds = checkBox.attr("optionid");
+						var rowColArray = rowColIds.split(",");
 						var row = rowColArray[0];
 						var col = rowColArray[1];
 						
@@ -591,16 +595,21 @@
 			var answer = [];
 			var wrapper = $("#prevQstn" + id);
 			var txtAnswer = "";
+			var optionId = "";
+			
 			if (type == 5) {
 				txtAnswer = wrapper.find(".shortanswer").val();
+				optionId = parseInt(wrapper.find(".shortanswer").attr("optionid"));
 
 			} else if (type == 6) {
 				txtAnswer = wrapper.find(".paragraph").val();
+				optionId = parseInt(wrapper.find(".paragraph").attr("optionid"));
 				
 			}
 
 			if (txtAnswer != "") {
 				txtObj['texts'] = txtAnswer;
+				txtObj['optionId'] = optionId;
 				answer.push(txtObj);
 			}
 			
@@ -619,9 +628,11 @@
 			var answer = [];
 			var wrapper = $("#prevQstn" + id);
 			var outputVal = parseInt($("#slider" + id).val());
-
+			var optionId = parseInt($("#slider" + id).attr("optionid"));
+			
 			if (!isNaN(outputVal)) {
 				sliderObj['sliderValue'] = outputVal;
+				sliderObj['optionId'] = optionId;
 				answer.push(sliderObj);
 			}
 			
@@ -643,11 +654,11 @@
 			for (var i = 0; i < selectLengh; i++) {
 				var rankingObj = {};
 				var rankNum = i + 1;
-				var optionLevel = $("select[name='ranking" + id + i + "'] option:selected").val();
+				var optionId = parseInt($("select[name='ranking" + id + i + "'] option:selected").attr("optionid"));
 
-				if (optionLevel != "") {
+				if (!isNaN(optionId)) {
 					rankingObj['rankingLevel'] = rankNum;
-					rankingObj['rankingOptionLevel'] = parseInt(optionLevel);
+					rankingObj['optionId'] = optionId;
 					answer.push(rankingObj);
 				}
 				
@@ -667,10 +678,10 @@
 			var drdwObj = {};
 			var answer = [];
 			var wrapper = $("#prevQstn" + id);
-			var optLevel = parseInt($("select[name=drdw" + id + "] option:selected").val());
+			var optId = parseInt($("select[name=drdw" + id + "] option:selected").attr("optionid"));
 			
-			if (!isNaN(optLevel)) {
-				drdwObj['optionLevel'] = optLevel;
+			if (!isNaN(optId)) {
+				drdwObj['optId'] = optId;
 				answer.push(drdwObj);
 			}
 			

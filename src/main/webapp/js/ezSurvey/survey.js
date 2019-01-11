@@ -1819,16 +1819,16 @@ var SurveyCreate     = function() {
 		return $(html);
 	}
 	
-	function handleModifyTextQuesion(type, mode) {
+	function handleModifyTextQuesion(type, mode, optionId) {
 		var className = mode == "make" ? type + "-wrap" : "question-" + type;
 		var textQstnDiv = $("<div class='" + className + "'>");
 		
 		if (type == "paragraph") {
-			var textarea = $("<textarea class='" + type +"' maxlength='500' placeholder='" + SurveyMessages.strContent + "'></textarea>");
+			var textarea = $("<textarea class='" + type +"' maxlength='500' placeholder='" + SurveyMessages.strContent + "' optionId = '" + optionId + "'></textarea>");
 			textQstnDiv.append(textarea);
 		}
 		else {
-			var input = $("<input class='" + type +"' maxlength='80' placeholder='" + SurveyMessages.strContent + "'/>");
+			var input = $("<input class='" + type +"' maxlength='80' placeholder='" + SurveyMessages.strContent + "' optionId = '" + optionId + "'/>");
 			textQstnDiv.append(input);
 		}
 		
@@ -1917,18 +1917,22 @@ var SurveyCreate     = function() {
 		var optContent   = "";
 		var span         = "";
 		var othInput     = "";
-		console.log(question);
 		// 보기
 		if (options) {
 			for (var i = 0; i < options.length; i++) {
 				var option = options[i];
+				var optionId = "";
+				
+				if (option['optionId'] != undefined) {
+					optionId = option['optionId'];
+				}
 				opt = $("<div class='opt' level='" + option.level + "'></div>");
 				if (qstnType == 2) {
-					optChb = $("<input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + option.level + "' logic='" + option.logic + "' />");
+					optChb = $("<input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + option.level + "' logic='" + option.logic + "' optionId='" + optionId + "' />");
 					opt.append(optChb);
 				}
 				else {
-					optRdo = $("<input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + option.level + "' logic='" + option.logic + "' />");
+					optRdo = $("<input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + option.level + "' logic='" + option.logic + "' optionId='" + optionId + "' />");
 					opt.append(optRdo);
 				}
 				
@@ -1948,15 +1952,20 @@ var SurveyCreate     = function() {
 		
 		// 기타
 		if (other) {
-			console.log(other);
+			var optionId = "";
+			
+			if (option['optionId'] != undefined) {
+				optionId = other['optionId'];
+			}
+			
 			opt = $("<div class='opt'></div>");
 			
 			if (qstnType == 2) {
-				optChb = $("<input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + option.logic + "' otherFlag='" + other.otherFlag +"'/>");
+				optChb = $("<input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + option.logic + "' otherFlag='" + other.otherFlag +"' optionId='" + optionId + "'/>");
 				opt.append(optChb);
 			}
 			else {
-				optRdo = $("<input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + option.logic + "' otherFlag='" + other.otherFlag +"'/>");
+				optRdo = $("<input class='optRdo' type='radio' name='qstn" + qstnId + "opt' value='" + other.level + "' logic='" + option.logic + "' otherFlag='" + other.otherFlag +"' optionId='" + optionId + "'/>");
 				opt.append(optRdo);
 			}
 			
@@ -1977,6 +1986,7 @@ var SurveyCreate     = function() {
 		var id       = question.level;
 		var inpType  = question.type == 3 ? "radio" : "checkbox";
 		var opts     = question["option"];
+		var optsLength = question["option"].length;
 		var col      = opts.filter(function(col) {return col["rowLevel"] == -1;});
 		var row      = opts.filter(function(row) {return row["colLevel"] == -1;});
 		
@@ -2002,6 +2012,10 @@ var SurveyCreate     = function() {
 		body = $("<tbody></body>");
 		
 		for (var i = 0; i < row.length; i++) {
+			var rowOptionId = "";
+			if (opts[i]['optionId'] != undefined) {
+				rowOptionId = opts[i]['optionId'];
+			}
 			bodyTr = $("<tr></tr>");
 			
 			bodyTd = $("<td></td>");
@@ -2009,9 +2023,13 @@ var SurveyCreate     = function() {
 			bodyTr.append(bodyTd);
 			
 			for (var j = 0; j < col.length; j++) {
+				var colNum = optsLength - row.length + j;
+				if (opts[colNum]['optionId'] != undefined) {
+					colOptionId = opts[colNum]['optionId'];
+				}
+				
 				inputTd = $("<td></td>");
-				Input = $("<input type='" + inpType + "' name='qstn" + id + "opt" + i + "' id='qstn" + id + "opt" + i + j + "'>");
-				//Input.val("(" + row[i]["rowLevel"] + ", " + col[j]["colLevel"] + ")");
+				Input = $("<input type='" + inpType + "' name='qstn" + id + "opt" + i + "' id='qstn" + id + "opt" + i + j + "' OptionId='" + rowOptionId + "," + colOptionId +"'>");
 				Input.val(row[i]["rowLevel"] + "," + col[j]["colLevel"]);
 				inputTd.append(Input);
 				bodyTr.append(inputTd);
@@ -2127,7 +2145,9 @@ var SurveyCreate     = function() {
 	}
 	
 	function mkTextQstn(question, type) {
-		var html = handleModifyTextQuesion(type, config["modify"]);
+		var optionId = question.option[0].optionId
+		
+		var html = handleModifyTextQuesion(type, config["modify"], optionId);
 		return html;
 	}
 	
@@ -2138,13 +2158,16 @@ var SurveyCreate     = function() {
 		var logic = options[0].logic;
 		var lowest  = options.filter(function(val) {return val["level"] == 0;})[0]["content"];
 		var highest = options.filter(function(val) {return val["level"] == 1;})[0]["content"];
-		
+		var optionId = "";
+		if (options[0]['optionId'] != undefined) {
+			optionId = options[0]['optionId'];
+		}
 		var questionSilder = $("<div class='question-silder'></div>");
 		var silderWrap = $("<div class='silder-wrap'></div>");
 		var low = $("<span>" + lowest + "</span>");
 		var input = $("<input type='range' class='slider-range' name='slider" + question["level"] + "' min='" + lowest + "' max='" + highest + "'/>");
 		var high = $("<span>" + highest + "</span>");
-		var output = $("<output for='slider" + question["level"] + "' id='slider" + question["level"] + "' class='slider-output' logic='" + logic + "' logicPoint='" + sliderLogicPoint + "'></output>");
+		var output = $("<output for='slider" + question["level"] + "' id='slider" + question["level"] + "' class='slider-output' logic='" + logic + "' logicPoint='" + sliderLogicPoint + "' optionId = '" + optionId + "'></output>");
 
 		silderWrap.append(low);
 		silderWrap.append(input);
@@ -2159,20 +2182,22 @@ var SurveyCreate     = function() {
 	function mkRankingQstn(question) {
 		var options = question["option"];
 		var id = question["level"];
-		//console.log(options);
 		var questionRanking = $("<div class='question-ranking'>");
 		var rankingWrap = $("<div class='ranking-wrap'>");
 		var opt = "";
+		var optionId = "";
 		
 		for (var i = 0, len = options.length; i < len; i++) {
 			var rankingSelect = $("<div class='ranking-select'></div>");
 			var rankOrder = $("<span class='rank-order' id='rank-order" + (i + 1) + "'>" + (i + 1) + ".</span>");
-			
 			var strSlct = "<select name='ranking" + id + i + "'>";
 			strSlct    += "<option value='' selected>" + SurveyMessages.strSelect + "</option>";
 			
 			for (var j = 0, len = options.length; j < len; j++) {
-				strSlct += "<option value='" + options[j]['level'] + "'>" + options[j]["content"] + "</option>";
+				if (options[j]['optionId'] != undefined) {
+					optionId = options[j]['optionId'];
+				}
+				strSlct += "<option value='" + options[j]['level'] + "' optionId='" + optionId + "'>" + options[j]["content"] + "</option>";
 			}
 			strSlct += "</select>";
 			
@@ -2188,7 +2213,6 @@ var SurveyCreate     = function() {
 	function mkDropDownQstn(question) {
 		var options = question["option"];
 		var id = question["level"];
-		
 		var questionDropdown = $("<div class='question-dropdown'></div>");
 		var dropdownWrap = $("<div class='dropdown-wrap'></div>");
 		
@@ -2197,7 +2221,11 @@ var SurveyCreate     = function() {
 		select.append(defaultOpt);
 		
 		for (var j = 0, len = options.length; j < len; j++) {
-			var opt = $("<option value='" + options[j]["level"] + "' logic='" + options[j]["logic"] + "'></option>");
+			var optionId = "";
+			if (options[j]['optionId'] != undefined) {
+				optionId = options[j]['optionId'];
+			}
+			var opt = $("<option value='" + options[j]["level"] + "' logic='" + options[j]["logic"] + "' optionId='" + optionId + "'></option>");
 			
 			opt[0].textContent = options[j]["content"];
 			select.append(opt);
