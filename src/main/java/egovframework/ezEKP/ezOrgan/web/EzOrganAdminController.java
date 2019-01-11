@@ -139,6 +139,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.createTblUserMultiLogin();
     	ezCommonService.addHolidayFlag();
     	ezCommonService.addHolidayRepeat();
+    	ezCommonService.createPortalThemePortlet();
     	
     	logger.debug("init ended.");
     }
@@ -3054,72 +3055,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("setUseDisablePop3Imap ended.");
 		
 		return returnValue;
-	}
-	
-	/**
-	 * 조직도 사원 추가, 수정시 직위,직책으로 공용배포그룹 생성 및 수정
-	 */
-	@RequestMapping(value="/admin/ezOrgan/mailSaveDistributionList.do")
-	@ResponseBody
-	public String mailSaveDistributionList(
-			@CookieValue("loginCookie") String loginCookie, Locale locale,
-			Model model,  HttpServletRequest request) throws Exception{
-		//관리자 권한체크
-		LoginVO auth = commonUtil.aprCheckAdmin(loginCookie);
-		if (auth == null) {
-			return "cmm/error/adminDenied";
-		}
-		
-		String memberId = request.getParameter("cn");
-		String jobTile = request.getParameter("jobTitle") == null ? "" : request.getParameter("jobTitle");
-		String jobPostion = request.getParameter("jobPosition") == null ? "" : request.getParameter("jobPosition");
-		
-		logger.debug("mailSaveDistributionList started.");
-		logger.debug("memberId=" + memberId + ", jobTile=" + jobTile +  ", jobPosition=" + jobPostion);
-		
-		int tenantID = auth.getTenantId();
-		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
-		String companyId = userInfo.getCompanyID();
-		String result = "ERROR";
-		
-		try {
-			
-			String userName = "";
-			
-			if (!jobTile.equals("")) {
-				userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile, companyId);
-				String jobTile2 = String.valueOf(UUID.randomUUID()).substring(0,8);
-				logger.debug("jobTitle UUID=" + jobTile2);
-				
-				 if (!userName.equals("")) {//직위 이름으로 공용 배포그룹 존재시
-					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobTile, userName, companyId, tenantID, memberId);
-				 } else {
-					 result = ezOrganAdminService.mailAddDistributionList(domain, jobTile, jobTile2, companyId, tenantID, memberId);
-				 }
-				 
-			}
-			
-			if (!jobPostion.equals("")) {
-				userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion, companyId);
-				String jobPostion2 = String.valueOf(UUID.randomUUID()).substring(0,8);
-				logger.debug("jobPostion2 UUID=" + jobPostion2);
-				 
-				 if (!userName.equals("")) {//직책 이름으로 공용 배포그룹 존재시
-					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobPostion, userName, companyId, tenantID, memberId);
-				 } else {
-					 result = ezOrganAdminService.mailAddDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, memberId);
-				 }
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		logger.debug("result=" + result);
-		logger.debug("mailSaveDistributionList ended.");
-		return result;
 	}
 	
 	/**

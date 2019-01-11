@@ -585,6 +585,15 @@
 				HOLIDAYFLAG
 			FROM
 				TBL_HOLIDAYLIST
+		]]>
+	</select>
+			
+	<select id="EzCommonDAO.checkPortalThemePortlet">
+		<![CDATA[
+			SELECT
+				theme_id
+			FROM 
+				TBL_PORTAL_THEME_PORTLET
 			LIMIT 1
 		]]>
 	</select>
@@ -611,5 +620,19 @@
 			TBL_HOLIDAYLIST
 		ADD 
 			HOLIDAYREPEAT VARCHAR(45) DEFAULT NULL
+	</statement>
+			
+	<statement id="EzCommonDAO.createTblPortalThemePortlet">
+		CREATE TABLE `tbl_portal_theme_portlet` (
+			`theme_id` int(11) NOT NULL,
+			`tenant_id` mediumint(9) NOT NULL DEFAULT '0',
+			`company_id` varchar(100) NOT NULL DEFAULT '',
+			`portlet_id` int(11) NOT NULL DEFAULT '0',
+			`portlet_used` int(11) DEFAULT NULL,
+			`portlet_order` int(11) DEFAULT NULL,
+			`menu_id` int(11) DEFAULT NULL,
+			`is_fixed` int(11) DEFAULT 0,
+			PRIMARY KEY (`theme_id`,`tenant_id`,`company_id`,`portlet_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 	</statement>
 </sqlMap>
