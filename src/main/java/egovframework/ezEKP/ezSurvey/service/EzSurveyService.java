@@ -18,7 +18,7 @@ public interface EzSurveyService {
 	SimpleDeptVO getSimpleCompany(String deptId, int level, String primary, int tenantId) throws Exception;
 	void getAllDepts(SimpleDeptVO sDept, String[] path, String primary, int tenantId, int order, int level) throws Exception;
 	int getTotalDeptMembers(String deptId, int tenantId) throws Exception;
-	List<SimpleUserVO> getDeptMemberList(String deptId, String primary, int startPoint, int listcnt, int tenantId) throws Exception;
+	List<SimpleUserVO> getDeptMemberList(String deptId, List<String> deptList, String primary, int startPoint, int listcnt, int tenantId) throws Exception;
 	int getTotalSearchMembers(String sqlQuery, String srchValue, int tenantId) throws Exception;
 	List<SimpleUserVO> getSearchMemberList(String primary, int startPoint, int listcnt, String sqlQuery, String srchValue, int tenantId) throws Exception;
 	
@@ -43,5 +43,5 @@ public interface EzSurveyService {
 	JSONObject getSurveyQuestions(Long surveyId, String logicMode, String realPath, LoginVO userInfo) throws Exception;
 	JSONObject changeSurveyState(String itemId, LoginVO userInfo) throws Exception;
 	JSONObject saveResponseItem(JSONArray responses, long surveyId, LoginVO userInfo) throws Exception;
-	JSONObject getSurveyStatistic(Long surveyId, LoginVO userInfo) throws Exception;
+	JSONObject getSurveyStatistic(Long surveyId, String realPath, LoginVO userInfo) throws Exception;
 }

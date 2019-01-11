@@ -161,7 +161,7 @@ public class EzSurveyGWController {
 			int totalUsers                 = surveyService.getTotalDeptMembers(deptId, tenantId);
 			int totalPages                 = (totalUsers + 49) / 50;
 			
-			List<SimpleUserVO> memberList = surveyService.getDeptMemberList(deptId, primary, startPoint, 50, tenantId);
+			List<SimpleUserVO> memberList = surveyService.getDeptMemberList(deptId, null, primary, startPoint, 50, tenantId);
 			
 			result.put("currentPage", currentPage);
 			result.put("totalPages",  totalPages);
@@ -790,7 +790,8 @@ public class EzSurveyGWController {
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			Long surveyId    = Long.parseLong(itemId);
-			result           = surveyService.getSurveyStatistic(surveyId, userInfo);
+			String realPath  = request.getServletContext().getRealPath("");
+			result           = surveyService.getSurveyStatistic(surveyId, realPath, userInfo);
 			result.put("status", "ok");
 			result.put("code", 0);
 		}

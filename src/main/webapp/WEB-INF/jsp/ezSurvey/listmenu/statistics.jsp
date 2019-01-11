@@ -24,21 +24,26 @@
 			var colors = ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5", "#ffdc89", "#90d4f7", "#71e096", "#f5a26f",
 						  "#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",
 						  "#d41e47", "#4c64ae", "#01539c", "#f05f7c", "#00b3ca", "#bd8139", "#d9c622", "#4a2431", "#d41e47", "#eb148d"];
-			var surveyStatistic = ${data};
-			console.log("데이터: " + surveyStatistic);
-			window.onload       = function() {test();};
+
+			var surveyStatistic   = ${data};
+			var questionStatistic = ${questions};
+			window.onload         = function() {test();};
+			
+			console.log(surveyStatistic);
+			console.log(questionStatistic);
 			
 			function test() {
-				var values = [];
-				var lables = [];
-				var total  = parseInt(surveyStatistic["usersCnt"]) + parseInt(surveyStatistic["respondentCnt"]);
-				values.push(surveyStatistic["usersCnt"]);
-				values.push(surveyStatistic["respondentCnt"]);
-				lables.push(createChartStr(surveyStatistic["usersCnt"]     , SurveyMessages.strUser3));
-				lables.push(createChartStr(surveyStatistic["respondentCnt"], SurveyMessages.strUser3));
+				var values      = [];
+				var lables      = [];
+				var totalUsers  = parseInt(surveyStatistic["usersCnt"]);
+				var respondents = parseInt(surveyStatistic["respondentCnt"]);
+				values.push(totalUsers - respondents);
+				values.push(respondents);
+				lables.push(createChartStr(totalUsers - respondents, SurveyMessages.strUser3));
+				lables.push(createChartStr(respondents, SurveyMessages.strUser3));
 				
-				document.getElementById("totalUserCnt").innerHTML     = total;
-				document.getElementById("totalRespondents").innerHTML = SurveyMessages.strTotal + " " + total + SurveyMessages.strUser3;
+				document.getElementById("totalUserCnt").innerHTML     = totalUsers;
+				document.getElementById("totalRespondents").innerHTML = SurveyMessages.strTotal + " " + totalUsers + SurveyMessages.strUser3;
 				createPieChart(values, lables, "respondentPie", 1);
 			}
 			

@@ -172,5 +172,13 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	public int getTotalRespondents(Map<String, Object> map) {
 		return (int)select("EzSurveyDAO.getTotalRespondents", map);
 	}
+	
+	public List<SimpleUserVO> getAllMembersOfCompany(Map<String, Object> map) {
+		return (List<SimpleUserVO>)list("EzSurveyDAO.getAllMembersOfCompany", map);
+	}
+	
+	public List<ResponseVO> getAllResponsesForSurvey(Map<String, Object> map) {
+		return (List<ResponseVO>)list("EzSurveyDAO.getAllResponsesForSurvey", map);
+	}
 
 }

@@ -3,10 +3,10 @@ package egovframework.ezEKP.ezSurvey.vo;
 public class ResponseVO {
 	private long responseId;
 	private long surveyId;
-	private int questionLevel;
+	private long questionLevel;
 	private int questionType;
 	private String responsorId;
-	private int optionLevel;
+	private long optionId;
 	private String texts;
 	private int rowLevel;
 	private int columnLevel;
@@ -32,11 +32,11 @@ public class ResponseVO {
 		this.surveyId = surveyId;
 	}
 	
-	public int getQuestionLevel() {
+	public long getQuestionLevel() {
 		return questionLevel;
 	}
 	
-	public void setQuestionLevel(int questionLevel) {
+	public void setQuestionLevel(long questionLevel) {
 		this.questionLevel = questionLevel;
 	}
 	
@@ -56,12 +56,12 @@ public class ResponseVO {
 		this.responsorId = responsorId;
 	}
 	
-	public int getOptionLevel() {
-		return optionLevel;
+	public long getOptionId() {
+		return optionId;
 	}
 	
-	public void setOptionLevel(int optionLevel) {
-		this.optionLevel = optionLevel;
+	public void setOptionId(long optionId) {
+		this.optionId = optionId;
 	}
 	
 	public String getTexts() {
