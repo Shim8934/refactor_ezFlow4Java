@@ -2021,7 +2021,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				sb.append("<img src=\"/images/i_master.gif\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" WIDTH=\"15\" HEIGHT=\"9\" hspace=\"2\" border=\"0\" align=\"absmiddle\">");
 			}
 			
-			sb.append("<a href=\"adminMemberListOk.do?code=" + code + "&mode=" + mode + "&cID=" + clubUser.getC_ID().trim() + "&cNm=encodeURIComponent(" + clubUser.getUserName() + ")&companyID=" + clubUser.getCompanyID().trim() + "\" valign=\"bottom\">");
+			sb.append("<a href=\"adminMemberListOk.do?code=" + code + "&mode=" + mode + "&cID=" + clubUser.getC_ID().trim() + "&cNm=" + URLEncoder.encode(clubUser.getUserName(), "utf-8") + "&companyID=" + clubUser.getCompanyID().trim() + "\" valign=\"bottom\">");
 			sb.append(clubUser.getUserName()+"</a>");
 			sb.append("</td>");
 			sb.append("<td class=\"white\">" + clubUser.getC_ID() + "</td>");
