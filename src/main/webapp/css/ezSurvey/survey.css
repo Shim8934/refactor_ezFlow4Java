@@ -281,8 +281,8 @@ input::-ms-clear {display: none;}
 .surveyCrtTt3 img {height: 32px; width: 32px; margin: 9px 10px; cursor: pointer;}
 .surveyCrtTt3 span {position: absolute; right: 14px; top: 14px; background-color: rgba(0, 115, 230); color: #fff; border: 1px solid #d7d7d7; border-radius: 50%; font-size: 12px; padding: 4px; cursor: pointer;}
 
-.statBody {background-color: rgb(244, 245, 245); margin: 10px 10px 0px;}
-.statBody #contentsBox {margin-top: 20px; height: 650px; background-color: #fff;}
+.statBody {background-color: rgb(244, 245, 245); padding: 10px 10px 0px;}
+.statBody #contentsBox {margin-top: 20px; min-height: 650px; background-color: #fff;}
 
 /* paragraph css */
 .qstnWrapper {width: 100%; margin: 0px; padding: 10px 0px;}
@@ -515,4 +515,8 @@ input[type=range]::-ms-tooltip {display: none;}
 .survey-nminfo {padding-bottom: 10px;}
 .survey-infpp-wrap {width: 100%; height: 350px; margin:0px 0px 15px 0px;}
 .surey-frameeditor {padding: 0px; height: 100%; width:100%; overflow: auto; border: 0px;}
+
+.pieDiv {height: 240px; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px; padding: 0px 20px;}
+
+
 
