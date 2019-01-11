@@ -19,18 +19,92 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/raphael-min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/g.raphael.js')}  "></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/g.pie.js')}      "></script>
-	<script type="text/javascript">
+	<body class="statBody">
+		<div class="surveyCrtTt3">
+			<div class="sryFirst2"></div>
+			<div class="sryTxt"><spring:message code='ezSurvey.t34'/></div>
+			<img src="/images/ezSurvey/partiCount.png">
+			<span id="totalUserCnt"></span>
+		</div>
+		
+		<div id="contentsBox">
+			<div id="surveyRespondents" style="height: 240px; position: relative; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;">
+				<div style="position: absolute; top: 0px; right: 0px; padding: 8px; font-size: 14px;" id="totalRespondents"></div>
+				<div id="respondentPie" style="height: 100%;"></div>
+				<div id="barChart"></div>
+			</div>
+		</div>
+		
+		<script type="text/javascript">
 		(function() {
 			var colors = ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5", "#ffdc89", "#90d4f7", "#71e096", "#f5a26f",
 						  "#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",
 						  "#d41e47", "#4c64ae", "#01539c", "#f05f7c", "#00b3ca", "#bd8139", "#d9c622", "#4a2431", "#d41e47", "#eb148d"];
-
+			
 			var surveyStatistic   = ${data};
 			var questionStatistic = ${questions};
-			window.onload         = function() {test();};
 			
 			console.log(surveyStatistic);
 			console.log(questionStatistic);
+			
+			startStatistic(questionStatistic);
+			
+			function startStatistic(questions) {
+				test();
+				for (var i = 0; i < questions.length; i++) {
+					showQuestionStatistic(questions[i]);
+				}
+			}
+			
+			function showQuestionStatistic(question) {
+				//Create question header here
+				var mainDivElmt   = document.getElementById("contentsBox");
+				var divElmt       = document.createElement("div");
+				var divId         = "question" + question["level"];
+				divElmt.setAttribute("id", divId);
+				mainDivElmt.appendChild(divElmt);
+				
+				//Create question statistic for each type
+				var questionType = parseInt(question["type"]);
+				switch(questionType) {
+					case 1:
+					case 2:
+						divElmt.className = "pieDiv";
+						createQuestionPie(question, divId);
+						break;
+					case 3:
+					case 4:
+						break;
+					case 5:
+					case 6:
+						break;
+					case 7:
+						break;
+					case 8:
+					case 9:
+						break;
+				}
+			}
+			
+			function createQuestionPie(question, divId) {
+				var options      = question["option"];
+				var optionValues = [];
+				var optionLabels = [];
+				var optionMores  = [];
+				
+				for (var i = 0; i < options.length; i++) {
+					var responses = options[i]["responses"];
+					var responsesCnt = responses ? responses.length : 0;
+					optionValues.push(responsesCnt);
+					optionLabels.push(createChartStr(options[i]["content"], SurveyMessages.strUser3, responsesCnt));
+					optionMores.push({responses: responses});
+				}
+				
+				console.log(optionValues);
+				console.log(optionLabels);
+				
+				createPieChart(optionValues, optionLabels, divId, optionMores);
+			}
 			
 			function test() {
 				var values      = [];
@@ -39,8 +113,8 @@
 				var respondents = parseInt(surveyStatistic["respondentCnt"]);
 				values.push(totalUsers - respondents);
 				values.push(respondents);
-				lables.push(createChartStr(totalUsers - respondents, SurveyMessages.strUser3));
-				lables.push(createChartStr(respondents, SurveyMessages.strUser3));
+				lables.push(createChartStr(totalUsers - respondents, SurveyMessages.strUser3, totalUsers - respondents));
+				lables.push(createChartStr(respondents, SurveyMessages.strUser3, respondents));
 				
 				document.getElementById("totalUserCnt").innerHTML     = totalUsers;
 				document.getElementById("totalRespondents").innerHTML = SurveyMessages.strTotal + " " + totalUsers + SurveyMessages.strUser3;
@@ -75,7 +149,7 @@
 				
 				if (moreValues) {
 					for (var i = 0; i < values.length; i++) {
-						pie.series.items[i]["value"]["test"] = {test1 : "aaa", test2 : "bbb"};
+						pie.series.items[i]["value"]["more"] = moreValues[i];
 						console.log(pie.series.items[i]["value"]);
 					}
 					
@@ -90,74 +164,27 @@
 				alert("Show more detail");
 			}
 			
-			function createChartStr(value, string) {return value + " - %%.%% [" + value + string + "]";}
+			function createChartStr(value, string, cnt) {return value + " - %%.%% [" + cnt + string + "]";}
 		})();
-	</script>
-	<body class="statBody">
-		<div class="surveyCrtTt3">
-			<div class="sryFirst2"></div>
-			<div class="sryTxt"><spring:message code='ezSurvey.t34'/></div>
-			<img src="/images/ezSurvey/partiCount.png">
-			<span id="totalUserCnt">15</span>
-		</div>
 		
-		<div id="contentsBox">
-			<div id="surveyRespondents" style="height: 240px; position: relative; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;">
-				<div style="position: absolute; top: 0px; right: 0px; padding: 8px; font-size: 14px;" id="totalRespondents"></div>
-				<div id="respondentPie" style="height: 100%;"></div>
-				<div id="barChart"></div>
-			</div>
-		</div>
-	</body>
-	<script type="text/javascript" src="/js/ezSurvey/statistic/morris.min.js"> </script>
-		<script type="text/javascript">
-				/* function getSurveyStatistic() {
-				$.ajax({
-					type: "POST",
-					url: "/ezSurvey/getSurveyStatistic.do",
-					data: {},
-					contentType: "application/json; charset=utf-8",
-					dataType: "JSON",
-					async: false,
-					success : function(data) {
-						afterGetSuccessfully(data);
-					},
-					error : function(error) {
-						alert(SurveyMessages.strError);
+		$(function() {
+			Morris.Bar({
+				  element: 'barChart',
+				  data: [
+				    {x: '2011 Q1', y: 3, z: 2, a: 3},
+				    {x: '2011 Q2', y: 2, z: 0, a: 1},
+				    {x: '2011 Q3', y: 0, z: 2, a: 4},
+				    {x: '2011 Q4', y: 2, z: 4, a: 3}
+				  ],
+				  xkey: 'x',
+				  ykeys: ['y', 'z', 'a'],
+				  labels: ['Y', 'Z', 'A'],
+				  hoverCallback: function (index, options, content, row) {
+					  return "sin(" + row.x + ") = " + row.y + row.z + row.a;
 					}
+				}).on('click', function(i, row){
+				  console.log(i, row);
 				});
-			}
-			
-			function afterGetSuccessfully(data) {
-				var code = data.code;
-				switch(code) {
-					case 0 : alert(SurveyMessages.strSaveDraft);
-							 window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=draft";
-							 break;
-					case 1 : alert(SurveyMessages.strParamErr) ; break;
-					case 2 : alert(SurveyMessages.strError)    ; break;
-					default: alert(SurveyMessages.strError)    ; return;
-				}
-			} */
-$(function() {
-	Morris.Bar({
-		  element: 'barChart',
-		  data: [
-		    {x: '2011 Q1', y: 3, z: 2, a: 3},
-		    {x: '2011 Q2', y: 2, z: 0, a: 1},
-		    {x: '2011 Q3', y: 0, z: 2, a: 4},
-		    {x: '2011 Q4', y: 2, z: 4, a: 3}
-		  ],
-		  xkey: 'x',
-		  ykeys: ['y', 'z', 'a'],
-		  labels: ['Y', 'Z', 'A'],
-		  hoverCallback: function (index, options, content, row) {
-			  return "sin(" + row.x + ") = " + row.y + row.z + row.a;
-			}
-		}).on('click', function(i, row){
-		  console.log(i, row);
 		});
-
-});
 	</script>
 </html>
