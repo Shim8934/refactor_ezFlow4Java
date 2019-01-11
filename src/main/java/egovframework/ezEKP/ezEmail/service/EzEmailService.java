@@ -111,4 +111,6 @@ public interface EzEmailService {
 	public void addSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception;
 	public void setSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception;
 	MailDistributionVO getDistributionSub(String userName, String subMail, String companyId, int tenantId) throws Exception;
+	public int addDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
+	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
 }
