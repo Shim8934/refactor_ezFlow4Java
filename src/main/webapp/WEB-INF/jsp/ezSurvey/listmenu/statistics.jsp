@@ -14,9 +14,9 @@
 		<style type="text/css">
 		</style>
 	</head>
-	<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg')}                "></script>
-	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}     "></script>
-	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/bnkcharts.js')} "></script>
+	<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg')}               "></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}    "></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/chart.min.js')}"></script>
 	<body class="statBody">
 		<div class="surveyCrtTt3">
 			<div class="sryFirst2"></div>
