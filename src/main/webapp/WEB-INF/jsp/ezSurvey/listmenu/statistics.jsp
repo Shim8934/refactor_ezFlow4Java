@@ -62,6 +62,7 @@
 				//Create question statistic for each type
 				var questionType = parseInt(question["type"]);
 				switch(questionType) {
+				/* 
 					case 1:
 					case 2:
 					case 9:
@@ -74,8 +75,17 @@
 						divElmt.appendChild(canvasElmt);
 						createQuestionPie(question, canvasId);
 						break;
+						 */
 					case 3:
 					case 4:
+						divElmt.className = "barDiv";
+						var canvasElmt = document.createElement("canvas");
+						var canvasId   = "question" + question["level"];
+						canvasElmt.setAttribute("height", 240);
+						canvasElmt.setAttribute("width", 640);
+						canvasElmt.setAttribute("id", canvasId);
+						divElmt.appendChild(canvasElmt);
+						createQuestionBar(question, canvasId);
 						break;
 					case 5:
 					case 6:
@@ -179,6 +189,60 @@
 				});
 				 
 				 $("#chartjs-legend").html(myPieChart.generateLegend());
+			}
+			
+			function createQuestionBar(question, canvasId) {
+				console.log(question.responses);
+				var response = question.responses;
+				var content = question.content;
+				var arr = [];
+				var data = [];
+				
+				
+				
+				for (var i = 0; i < response.length; i++) {
+					var rowId = response[i]['rowId'];
+					var columnId = response[i]['columnId'];
+				}
+				
+				var ctx = document.getElementById(canvasId);
+				var myChart = new Chart(ctx, {
+				    type: 'bar',
+				    data: {
+				        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+				        datasets: [{
+				            label: content,
+				            data: [12, 19, 3, 5, 2, 3],
+				            backgroundColor: [
+				                'rgba(255, 99, 132, 0.2)',
+				                'rgba(54, 162, 235, 0.2)',
+				                'rgba(255, 206, 86, 0.2)',
+				                'rgba(75, 192, 192, 0.2)',
+				                'rgba(153, 102, 255, 0.2)',
+				                'rgba(255, 159, 64, 0.2)'
+				            ],
+				            borderColor: [
+				                'rgba(255,99,132,1)',
+				                'rgba(54, 162, 235, 1)',
+				                'rgba(255, 206, 86, 1)',
+				                'rgba(75, 192, 192, 1)',
+				                'rgba(153, 102, 255, 1)',
+				                'rgba(255, 159, 64, 1)'
+				            ],
+				            borderWidth: 1
+				        }]
+				    },
+				    options: {
+				        scales: {
+				            yAxes: [{
+				                ticks: {
+				                    beginAtZero:true
+				                }
+				            }]
+				        }
+				    }
+				});
+				
 			}
 			
 			function showMoreDetail() {
