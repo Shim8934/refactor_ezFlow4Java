@@ -116,12 +116,13 @@
 			
 			function fnInit() {
 			    var message = document.loginForm.message.value;
+			    var multiLoginFlag = "<c:out value='${multiLoginFlag}' />";
 			    
 			    // 로그인 페이지가 로드된 프레임이 Top 프레임이 아니면 Top 프레임으로 로드시킨다.
                 if (top != self) {
                     //top.location.href = self.location.href;
                     //멀티 로그인 기능때문에 변경
-                    top.reloadLoginPage(message, self.location.href);
+                    top.reloadLoginPage(multiLoginFlag, self.location.href);
                     return;
                 }
 			    

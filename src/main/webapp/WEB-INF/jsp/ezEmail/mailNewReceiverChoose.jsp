@@ -1636,9 +1636,9 @@
 				});
 	        }
 	        
-		    var m_strColorSelect = "";
+		    var m_strColorSelect = "#f1f8ff";
 		    var m_strColorOver = "#f4f5f5";
-		    var m_strColorDefault = "";
+		    var m_strColorDefault = "#ffffff";
 		    var p_ListOrderObject = null;
 		    function event_listMover(obj) {
 		        for (var i = 0; i < listContentArry.length; i++) {

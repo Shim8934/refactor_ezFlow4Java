@@ -178,7 +178,7 @@
 			        }
 					
 					holidayRepeat = repetition;
-					holidayDate = "0000-00-00 00:00:00";
+					holidayDate = "1900-01-01";
 		        }
 		        
 		        

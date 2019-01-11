@@ -20,6 +20,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<!-- module -->
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/buttons.js')}"></script>
@@ -32,6 +33,10 @@
 			var isShareMode = true;
 			var isSubSearching = "N";
 			var strSuccess  = "<spring:message code='ezWebFolder.t27'/>";
+			var folderType = "S";
+			var inputNameDlg_cross_dialogArguments = new Array();
+			var parentId = folderId;
+			var userId = "${userId}";
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
@@ -306,6 +311,7 @@
 						$('#fileCopyBtn').css('display','none');
 						$('#hideShareBtn').css('display','none');
 						$('#hiddenShareListBtn').css('display','none');
+						$('#newFolder').css('display','');
 						
 						$('#fileDeleteBtn').css('display','');
 						$('#fileRenameBtn').css('display','');
@@ -315,6 +321,7 @@
 						$('#fileDeleteBtn').css('display','none');
 						$('#fileRenameBtn').css('display','none');
 						$('#fileMoveCopyBtn').css('display','none');
+						$('#newFolder').css('display','none');
 						
 						$('#fileCopyBtn').css('display','');
 						$('#hideShareBtn').css('display','');
@@ -324,6 +331,7 @@
 					$('#fileCopyBtn').css('display','none');
 					$('#hideShareBtn').css('display','none');
 					$('#hiddenShareListBtn').css('display','none');
+					$('#newFolder').css('display','');
 					
 					$('#uploadBtn').css('display','');
 					$('#fileDeleteBtn').css('display','');
@@ -526,6 +534,20 @@
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", resultJson["folderFileType"]);
+					row.setAttribute("targetPath", result[i]["folderPath"]);
+					
+					var functionType = ""
+					if (result[i]["folderType"]) {
+						row.setAttribute("targetFunction", result[i]["folderType"]);
+					}
+					
+					var creator = ""
+					if (!result[i]["creatorId"]) {
+						row.setAttribute("targetCreater", result[i]["createId"]);
+					} else {
+						row.setAttribute("targetCreater", result[i]["creatorId"]);
+					}
+					
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					inputElement = document.createElement("input");
@@ -713,6 +735,21 @@
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", isFolder ? "D" : "F");
+					row.setAttribute("targetCreater", result[i]["createId"]);
+					row.setAttribute("targetPath", result[i]["filePosition"]);
+					
+					var functionType = ""
+					if (result[i]["folderType"]) {
+						row.setAttribute("targetFunction", result[i]["folderType"]);
+					}
+					
+					var creator = ""
+					if (!result[i]["creatorId"]) {
+						row.setAttribute("targetCreater", result[i]["createId"]);
+					} else {
+						row.setAttribute("targetCreater", result[i]["creatorId"]);
+					}
+					
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					inputElement = document.createElement("input");
@@ -962,7 +999,8 @@
 				<ul>
 					<li class="important" onclick="buttons.fileDownload()"><span><spring:message code='ezWebFolder.t186'/></span></li>
 					<li class="important" id="uploadBtn" style="display:none;" onclick="buttons.fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
-					<li id="fileRenameBtn" style="display:none;"><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
+					<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
+					<li id="fileRenameBtn" style="display:none;"><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t508' /></span></a></li>
 					<li id="fileMoveCopyBtn" style="display:none;"><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
 					<li id="fileCopyBtn"><a onclick="buttons.fileCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t316'/></span></a></li>
 					<!-- <li><img src="/images/i_bar.gif"></li> -->

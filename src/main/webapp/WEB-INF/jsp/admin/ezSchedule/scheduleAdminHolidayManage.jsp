@@ -93,29 +93,17 @@
 		                        var isRest = result[i].isRest;
 		                        var isUse = result[i].isUse;
 		                        var useCompany = result[i].useCompany;
-		                        if (holidayDate) {
-			                        _html += "<tr style='cursor:pointer' id = '" + holidayID
+		                        	_html += "<tr style='cursor:pointer' id = '" + holidayID
 			                              + "'holidayname = '" + MakeXMLString(holidayName)
 			                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
-			                              + "'date = '" + holidayDate.substring(0,10)
-			                              + "'holidayFlag = '" + holidayFlag
+		                            	  + "'holidayFlag = '" + holidayFlag
+		                            	  + "'date = '" + holidayDate.substring(0,10)
+		                            	  + "'holidayRepeat = '" + holidayRepeat
 			                              + "'issolar = '" + isSolar
 			                              + "'isrepeat = '" + isRepeat
 			                              + "'isrest = '" + isRest
 			                              + "'company = '" + useCompany
 			                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
-		                            } else {
-		                            	 _html += "<tr style='cursor:pointer' id = '" + holidayID
-			                              + "'holidayname = '" + MakeXMLString(holidayName)
-			                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
-		                            	  + "'date = '" + holidayRepeat
-		                            	  + "'holidayFlag = '" + holidayFlag
-			                              + "'issolar = '" + isSolar
-			                              + "'isrepeat = '" + isRepeat
-			                              + "'isrest = '" + isRest
-			                              + "'company = '" + useCompany
-			                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";	
-		                            }
 		                           
 								
 		                        if (isUse == "1") {
@@ -356,19 +344,23 @@
 		        var holidayname = _RowObject.getAttribute("holidayname");
 		        var holidayname2 = _RowObject.getAttribute("holidayname2");
 		        var holidayFlag = _RowObject.getAttribute("holidayFlag");
+		        var holidaydate = '';
+		        var holidayRepeat = '';
+		        
 		        if (holidayFlag == 'D') {
-			        var holidaydate = _RowObject.getAttribute("date");
-			        var holidayRepeat = ""
+			        holidaydate = _RowObject.getAttribute("date");
+			        holidayRepeat = "";
 		        } else {
-		        	var holidayDate = "0000-00-00 00:00:00";
-		        	var holidayRepeat = _RowObject.getAttribute("date");
+		        	holidayDate = "0000-00-00 00:00:00";
+		        	holidayRepeat = _RowObject.getAttribute("holidayRepeat");
 		        }
+		        
 		        var issolar = _RowObject.getAttribute("issolar");
 		        var isrepeat = _RowObject.getAttribute("isrepeat");
 		        var isrest = _RowObject.getAttribute("isrest");
 		        var company = _RowObject.getAttribute("company");
 	
-		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?id=" + id + "&name=" + encodeURIComponent(holidayname) + "&name2=" + encodeURIComponent(holidayname2) + "&date=" + holidaydate + "&isSolar=" + issolar + "&isRepeat=" + isrepeat + "&isRest=" + isrest + "&company=" + company + "&holidayType="+holidayType + "&holidayFlag=" + holidayFlag + "&holidayRepeat=" + holidayRepeat
+		        window.open("/admin/ezSchedule/scheduleAdminPopupHoliday.do?id=" + id + "&name=" + encodeURIComponent(holidayname) + "&name2=" + encodeURIComponent(holidayname2) + "&date=" + holidaydate + "&isSolar=" + issolar + "&isRepeat=" + isrepeat + "&isRest=" + isrest + "&company=" + company + "&holidayType="+holidayType + "&holidayFlag=" + holidayFlag + "&holidayRepeat=" + encodeURIComponent(holidayRepeat)
 		            , "", "height = 360px, width = 460px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
 		    }
 	

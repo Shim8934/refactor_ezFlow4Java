@@ -292,12 +292,16 @@
 			    FOLDER_LEVEL AS FOLDERLEVEL,
 			    FOLDER_PATH	 AS FOLDERPATH
 	        FROM TBL_WEBFOLDER_FOLDER
-	        WHERE USE_STATUS = 'Y'
-	        AND FOLDER_TYPE = 'U'
+	        WHERE FOLDER_TYPE = 'U'
 	        AND TENANT_ID = #tenantId#
 	        AND OWNER_ID = #userId#
-	        ORDER BY SELECTED DESC, FOLDERNAME1
 		]]>
+			<isNotEqual property="flag" compareValue="delete">
+				AND USE_STATUS = 'Y'
+			</isNotEqual>
+		<![CDATA[	
+	        ORDER BY SELECTED DESC, FOLDERNAME1
+		]]>		
 	</select>
 	
 	<select id="EzWebFolderDAO_y.getDeptFolderTree" resultMap="folderTreeVO" parameterClass="Map">
@@ -449,7 +453,7 @@
 		</isNotEqual>
 			
 		<![CDATA[
-			ORDER BY FOLDER_SORT, CREATE_DATE DESC
+			ORDER BY FOLDER_SORT, UPDATE_DATE DESC
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -519,7 +523,7 @@
 		</isNotEqual>
 			
 		<![CDATA[
-			ORDER BY FOLDER_SORT, CREATE_DATE DESC
+			ORDER BY FOLDER_SORT, UPDATE_DATE DESC
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -543,7 +547,7 @@
 						#idList[].id#
 					</iterate>
 					WHERE FF.TENANT_ID = #tenantId# ) FP
-				ON folder.FOLDER_PATH LIKE  concat(FP.FOLDER_PATH , '%')
+				ON folder.FOLDER_PATH LIKE  concat(FP.FOLDER_PATH , '%') or folder.folder_id = #folderId#
 				JOIN TBL_WEBFOLDER_FILETYPE type 
 					ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#
 				left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
@@ -580,7 +584,7 @@
 			]]>
 		</isNotEqual>
 		<![CDATA[
-			ORDER BY FOLDER_SORT, CREATE_DATE DESC
+			ORDER BY FOLDER_SORT, UPDATE_DATE DESC
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -631,7 +635,97 @@
 			<include refid="searchAll"/>
 			<![CDATA[
 				
-			ORDER BY FOLDER_SORT, CREATE_DATE DESC
+			ORDER BY FOLDER_SORT, UPDATE_DATE DESC
+			LIMIT #pStart#, #pEnd#
+		]]>	
+	</select>
+	<select id="EzWebFolderDAO_y.searchFileList2" resultMap="fileVO" parameterClass="Map">   
+		<![CDATA[
+			SELECT DISTINCT
+					t.*	 
+			from 
+				(
+			]]>
+			<include refid="fileListSelect"/>
+				<![CDATA[
+					from tbl_webfolder_file f inner join (
+						select *
+						from tbl_webfolder_folder  
+						where (folder_path like concat(#folderPath#, '%') or folder_id = #folderId#) and tenant_id = #tenantId# and folder_type = #folderType# ) 
+							folder on folder.folder_id  = f.folder_id
+					inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id
+					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
+						and s.tenant_id = #tenantId# and s.target_type ='F'   
+					left outer join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
+					where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
+				]]>
+				<isEqual property="parentId" compareValue="root" > 
+		      	 	<isEqual property="folderType" compareValue="C" >
+					and 
+		                	if ( substring_index(substring_index(folder.folder_path,'|',3),'|',-1) in (
+		                	select distinct substring_index(substring_index(folder.folder_path,'|',3),'|',-1)
+		                	from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID
+		                	where folder.folder_level > 0   
+	                	AND 
+	                		u.user_id IN
+	   		
+						<iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+			         ), Folder_Type is not null , u.user_id in        
+				         <iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+						)
+		      	   </isEqual>  
+		         </isEqual> 
+				<include refid="fldSelect"/>
+				<![CDATA[
+				    from tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder' and folder.tenant_id = #tenantId#
+				    left outer join tbl_webfolder_favor s on folder.folder_id = s.target_id and s.user_id = #userId# 
+		            	and s.tenant_id = #tenantId# and s.target_type ='D' 
+		            left outer join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
+				    where 
+							folder.tenant_id = #tenantId# 
+						and
+							type.tenant_id = #tenantId#
+						and 
+							folder.FOLDER_TYPE = #folderType#
+		                and 
+		                	folder.USE_STATUS = 'Y'
+		                and 
+		                	folder.company_id = #comId#
+		                and 
+		                	folder_path <> #folderPath#		
+				]]>
+				<isEqual property="parentId" compareValue="root" > 
+		      	 	<isEqual property="folderType" compareValue="C" >
+						AND 
+		                	if ( substring_index(substring_index(folder.folder_path,'|',3),'|',-1) in (
+		                	select distinct substring_index(substring_index(folder.folder_path,'|',3),'|',-1)
+		                	from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID
+		                	where folder.folder_level > 0   
+	                	AND 
+	                		u.user_id IN
+	   		
+						<iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+			         	), Folder_Type is not null , u.user_id in        
+				        <iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+						)
+		      	   </isEqual>  
+		         </isEqual> 
+			<![CDATA[
+			) t 
+			where folder_path like concat(#folderPath#, '%')
+			]]>
+			<include refid="searchAll"/>
+			<![CDATA[
+				
+			ORDER BY FOLDER_SORT, UPDATE_DATE DESC
 			LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -660,7 +754,7 @@
 							#idList[].id#
 						</iterate>
 						WHERE FF.TENANT_ID = #tenantId# ) FP
-					ON folder.FOLDER_PATH LIKE  concat(FP.FOLDER_PATH , '%')
+					ON folder.FOLDER_PATH LIKE  concat(FP.FOLDER_PATH , '%') or folder.folder_id = #folderId#
 					JOIN TBL_WEBFOLDER_FILETYPE type 
 						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#
 					left outer join tbl_webfolder_favor s on f.file_id = s.target_id and s.user_id = #userId# 
@@ -676,8 +770,7 @@
 					from 
 						tbl_webfolder_folder 
 					where 
-							folder_path like concat(#folderPath# , '%') 
-						and folder_path <> #folderPath#
+							(folder_path like concat(#folderPath# , '%') or folder_id = #folderId#)
 						and tenant_id = #tenantId# 
 						and folder_type = #folderType# and use_status = 'Y'
 					) folder on f.folder_id = folder.folder_id
@@ -695,7 +788,7 @@
 			<include refid="searchAll"/>
 			<![CDATA[
 				
-				ORDER BY FOLDER_SORT,CREATE_DATE desc 
+				ORDER BY FOLDER_SORT,UPDATE_DATE desc 
 				LIMIT #pStart#, #pEnd#
 		]]>	
 	</select>
@@ -764,7 +857,7 @@
 	
 	<select id="EzWebFolderDAO_y.getFldToTalCount2" resultClass="Integer" parameterClass="Map">   
 			<![CDATA[
-	           	SELECT count(folder.folder_id) as cnt
+	           	SELECT count(distinct folder.folder_id) as cnt
 	            from 
 		            tbl_webfolder_filetype type inner JOIN  tbl_webfolder_folder folder ON type.TYPE_NAME = 'folder' 
 		            left outer join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
@@ -777,14 +870,24 @@
 	                and folder_path <> #folderPath#	
 			]]>
 			<isEqual property="parentId" compareValue="root" > 
-	      	 	<isEqual property="folderType" compareValue="C" >
-                	AND 
-                		u.user_id IN
-   		
-					<iterate property="idList" open="(" close=")" conjunction=",">
-						#idList[].id#
-					</iterate>
-	      	   </isEqual>  
+		      	<isEqual property="folderType" compareValue="C" >
+					and 
+		                	if ( substring_index(substring_index(folder.folder_path,'|',3),'|',-1) in (
+		                	select distinct substring_index(substring_index(folder.folder_path,'|',3),'|',-1)
+		                	from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID
+		                	where folder.folder_level > 0   
+	                	AND 
+	                		u.user_id IN
+	   		
+						<iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+			         ), Folder_Type is not null , u.user_id in        
+				         <iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+						)
+		      	   </isEqual>  
 	         </isEqual>  
 			<isEqual property = "flag" compareValue="1" prepend="AND">
 				<![CDATA[
@@ -865,6 +968,65 @@
 			]]>	
 		<include refid="searchAll"/>
 	</select>
+	<select id="EzWebFolderDAO_y.searchFileToTalCount2" resultClass="Integer" parameterClass="Map">   
+   		<![CDATA[
+			SELECT distinct count(*)
+			from 
+				(
+		   		SELECT DISTINCT
+						folder.FOLDER_NAME1    	AS FOLDER_NAME1,
+						f.FILE_ID 	  			AS FILE_ID,
+						f.FILE_NAME 	  		AS FILE_NAME,
+						f.FILE_EXT	  			AS FILE_EXT,
+						f.FOLDER_ID	  			AS FOLDER_ID,
+						f.USE_STATUS   			AS USE_STATUS,
+						if ( #primary# = '1' , f.CREATE_NAME1, f.CREATE_NAME2) AS CREATE_NAME1,
+						f.CREATE_NAME2 as CREATE_NAME2,
+						DATE_ADD(f.CREATE_DATE, INTERVAL #offset# MINUTE) AS CREATE_DATE,
+						f.TENANT_ID    			AS TENANT_ID,
+						type.TYPE_NAME 			AS TYPE_NAME    	   		
+				from tbl_webfolder_file f inner join (
+					select 
+						* 
+					from 
+						tbl_webfolder_folder 
+					where 
+							folder_path like concat(#folderPath# , '%') or folder_id = #folderId#
+						and tenant_id = #tenantId# 
+						and folder_type = #folderType#
+						and use_status = 'Y'
+					) folder on folder.folder_id  = f.folder_id
+						
+				inner join  tbl_webfolder_filetype type ON type.TYPE_ID = f.TYPE_ID  and type.tenant_id = f.tenant_id 
+				left outer join tbl_webfolder_folderuser u on folder.folder_id = u.folder_id
+				where f.tenant_id = #tenantId# and f.USE_STATUS = 'Y'
+			]]>	
+	        <isEqual property="parentId" compareValue="root" > 
+		      	<isEqual property="folderType" compareValue="C" >
+					and 
+		                	if ( substring_index(substring_index(folder.folder_path,'|',3),'|',-1) in (
+		                	select distinct substring_index(substring_index(folder.folder_path,'|',3),'|',-1)
+		                	from tbl_webfolder_folder folder left outer join tbl_webfolder_folderuser u on u.FOLDER_ID = folder.FOLDER_ID
+		                	where folder.folder_level > 0   
+	                	AND 
+	                		u.user_id IN
+	   		
+						<iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+			         ), Folder_Type is not null , u.user_id in        
+				         <iterate property="idList" open="(" close=")" conjunction=",">
+							#idList[].id#
+						</iterate>
+						)
+		      	   </isEqual>  
+	         </isEqual>  
+			<![CDATA[
+			) t
+			where 1=1
+			]]>	
+		<include refid="searchAll"/>
+	</select>
 		
 	<select id="EzWebFolderDAO_y.searchFileToTalCountR" resultClass="Integer" parameterClass="Map">   
 		<![CDATA[
@@ -901,7 +1063,7 @@
 							#idList[].id#
 						</iterate>
 						WHERE FF.TENANT_ID = #tenantId# ) FP
-					ON folder.FOLDER_PATH LIKE  concat(FP.FOLDER_PATH , '%')
+					ON folder.FOLDER_PATH LIKE  concat(FP.FOLDER_PATH , '%')  or folder.folder_id = #folderId#
 					JOIN TBL_WEBFOLDER_FILETYPE type 
 						ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#  
 				 WHERE f.USE_STATUS = 'Y'
@@ -979,7 +1141,7 @@
 						#idList[].id#
 					</iterate>
 					WHERE FF.TENANT_ID = #tenantId# and use_status='Y' ) FP
-				ON folder.FOLDER_PATH LIKE  CONCAT(FP.FOLDER_PATH , '%')
+				ON folder.FOLDER_PATH LIKE  CONCAT(FP.FOLDER_PATH , '%') or folder.folder_id = #folderId#
 				JOIN TBL_WEBFOLDER_FILETYPE type 
 					ON type.TYPE_ID = f.TYPE_ID AND type.TENANT_ID = #tenantId#  
 			 WHERE F.USE_STATUS = 'Y'
@@ -1427,6 +1589,20 @@
 				USERID = #userId#
 			AND 
 				TENANTID = #tenantId#
+		]]>
+	</select>
+	<select id="EzWebFolderDAO_y.folderIdByUserIdAndFolderType" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				FOLDER_ID 
+			FROM 
+				TBL_WEBFOLDER_FOLDER 
+			WHERE 
+				FOLDER_UPPER = 'root' 
+			AND 
+				OWNER_ID = #userId#
+			AND 
+				TENANT_ID = #tenantId#
 		]]>
 	</select>
 </sqlMap>

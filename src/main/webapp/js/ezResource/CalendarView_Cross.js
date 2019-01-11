@@ -2050,3 +2050,69 @@ function getTotalDate(year, month) {
 		return 31;
 	}
 }
+
+function OnDoubleClickAppointment(srcEl) {
+
+    //if (!event) event = window.event;
+    if (GetAttribute(srcEl,"command") == 'open') {
+        var szNum = GetAttribute(srcEl,"num");
+        var szPNum = GetAttribute(srcEl,"pnum");
+        var szOwnerID = GetAttribute(srcEl,"owner_id");
+        var szWriterID = GetAttribute(srcEl,"writer_id");
+        var szGroupFlag = GetAttribute(srcEl,"groupflag");
+        var szStart = new Date(GetAttribute(srcEl,"dtend"));
+        var szEnd = new Date(GetAttribute(srcEl,"dtend"));
+        var szInstancetype = GetAttribute(srcEl,"instancetype");
+        var szType, startDate, endDate, filename;
+
+        szType = "Master";
+        startDate = szStart.getFullYear() + "-" + parseInt(szStart.getMonth() + 1, 10) + "-" + szStart.getDate();
+        endDate = szEnd.getFullYear() + "-" + parseInt(szEnd.getMonth() + 1, 10) + "-" + szEnd.getDate();
+
+        if (parseInt(szGroupFlag) == 2 || parseInt(szGroupFlag) == 4) {
+            //메인화면에서 더블클릭하면 분기
+            filename = "Schedule_UnReg.asp";
+
+        } else {
+            filename = "scheduleRead.do";
+
+            // 반복자원예약에 대한 처리
+            if (parseInt(szInstancetype) == 1 || parseInt(szInstancetype) == 3) {
+                if (parseInt(szInstancetype) == 3) {
+                    szNum = szPNum;
+                    szOwnerID = szWriterID;
+                }
+            }
+        }
+        windowName = "";
+
+        if (CrossYN()) {
+            GetOpenWindow(filename + "?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate, "", 820, 700);
+
+        }
+        else {
+            var feature = GetOpenPosition(790, 420);
+            window.open(filename + "?cmd=mod&from=schedule&" + "num=" + szNum + "&ownerID=" + szOwnerID + "&type=" + szType + "&startDate=" + startDate + "&endDate=" + endDate, "", "width=770, height=700, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+        }
+    }
+}
+
+function GetOpenPosition(popUpW, popUpH) {
+    //2011.07.28 FireFox는 ShowModalDialog() 호출시 화면 중앙에 뜨지 않아 top, left를 지정해 줘야한다.
+    var heigth = window.screen.availHeight;
+    var width = window.screen.availWidth;
+    var left = 0;
+    var top = 0;
+
+    var pleftpos;
+    pleftpos = parseInt(width) - popUpW;
+    heigth = parseInt(heigth) - popUpH;
+    width = parseInt(width) - pleftpos;
+
+    left = pleftpos / 2;
+    top = heigth / 2;
+
+    var feature = ",left=" + left + ",top=" + top;
+
+    return feature
+}

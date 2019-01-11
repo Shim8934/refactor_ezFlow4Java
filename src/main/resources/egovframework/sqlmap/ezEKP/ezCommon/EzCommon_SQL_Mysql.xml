@@ -243,6 +243,50 @@
 		]]>
 	</update>
 	
+	<insert id="EzCommonDAO.insertMultiLoginUser" parameterClass="map">
+		INSERT INTO TBL_USER_MULTILOGIN (TENANT_ID, USER_ID, LOGIN_TIME)
+		VALUES (#tenantID#, #userID#, #loginTime#)
+	</insert>
+	
+	<update id="EzCommonDAO.updateMultiLoginUser" parameterClass="map">
+		UPDATE 
+			TBL_USER_MULTILOGIN
+		SET
+			LOGIN_TIME = #loginTime#
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID = #userID#
+	</update>
+	
+	<select id="EzCommonDAO.selectMultiLoginUser" parameterClass="map" resultClass="String">
+		SELECT
+			LOGIN_TIME
+		FROM
+			TBL_USER_MULTILOGIN
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID = #userID#
+	</select>
+	
+	<select id="EzCommonDAO.checkTblUserMultiLogin" resultClass="String">
+		SELECT
+			LOGIN_TIME
+		FROM
+			TBL_USER_MULTILOGIN
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserMultiLogin">
+		CREATE TABLE TBL_USER_MULTILOGIN (
+		    TENANT_ID MEDIUMINT(5),
+		    USER_ID VARCHAR(80),
+		    LOGIN_TIME VARCHAR(15) NOT NULL,
+		    PRIMARY KEY (USER_ID, TENANT_ID)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
+	
 	<select id="EzCommonDAO.checkJMochaDistributionMail" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -533,5 +577,69 @@
 			MAILBOXQUOTA VARCHAR(50) DEFAULT NULL,
 			MAILBOXUSAGE VARCHAR(50) DEFAULT NULL
 			)
+	</statement>
+	
+	<select id="EzCommonDAO.checkHolidayFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+					1 
+			FROM 
+					INFORMATION_SCHEMA.COLUMNS
+			WHERE 
+					TABLE_NAME = 'TBL_HOLIDAYLIST'
+			AND 
+					COLUMN_NAME = 'HOLIDAYFLAG';
+		]]>
+	</select>
+			
+	<select id="EzCommonDAO.checkPortalThemePortlet">
+		<![CDATA[
+			SELECT
+				theme_id
+			FROM 
+				TBL_PORTAL_THEME_PORTLET
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addHolidayFlag"> 
+		ALTER TABLE 
+			TBL_HOLIDAYLIST
+		ADD 
+			HOLIDAYFLAG VARCHAR(45) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkHolidayRepeat" resultClass="String">
+		<![CDATA[
+			SELECT 
+					1 
+			FROM 
+					INFORMATION_SCHEMA.COLUMNS
+			WHERE 
+					TABLE_NAME = 'TBL_HOLIDAYLIST'
+			AND 
+					COLUMN_NAME = 'HOLIDAYREPEAT';
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addHolidayRepeat"> 
+		ALTER TABLE 
+			TBL_HOLIDAYLIST
+		ADD 
+			HOLIDAYREPEAT VARCHAR(45) DEFAULT NULL
+	</statement>
+			
+	<statement id="EzCommonDAO.createTblPortalThemePortlet">
+		CREATE TABLE `tbl_portal_theme_portlet` (
+			`theme_id` int(11) NOT NULL,
+			`tenant_id` mediumint(9) NOT NULL DEFAULT '0',
+			`company_id` varchar(100) NOT NULL DEFAULT '',
+			`portlet_id` int(11) NOT NULL DEFAULT '0',
+			`portlet_used` int(11) DEFAULT NULL,
+			`portlet_order` int(11) DEFAULT NULL,
+			`menu_id` int(11) DEFAULT NULL,
+			`is_fixed` int(11) DEFAULT 0,
+			PRIMARY KEY (`theme_id`,`tenant_id`,`company_id`,`portlet_id`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 	</statement>
 </sqlMap>

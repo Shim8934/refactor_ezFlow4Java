@@ -26,6 +26,18 @@
 			    }else{
 			    	RetValue = window.dialogArguments;
 			    }
+			    
+			    if(approvalFlag === "G") {
+			    	var content = document.getElementsByClassName("content")[0];
+			    	var btnSpace = document.getElementsByClassName("btnpositionNew")[0];
+			    	
+			    	var windowHeight = window.outerHeight - window.innerHeight;
+			    	windowHeight += content.offsetTop;
+			    	windowHeight += content.offsetHeight + 10;
+			    	windowHeight += btnSpace.offsetHeight;
+			    	
+			    	window.resizeTo(window.outerWidth, windowHeight);
+			    }
 
 			    if(RetValue[1] == ""){
 					subtitle.innerText = "<spring:message code='ezOrgan.t80' />";

@@ -79,6 +79,9 @@
 			} else if (code == 7) {
 				alert("<spring:message code='ezWebFolder.t250'/>");
 				window.close();
+			} else if (code == 8) {
+				alert("<spring:message code='webfolder.duplicate.foldermanage.error'/>");
+				window.close();
 			} else {
 				alert("<spring:message code='ezWebFolder.t305'/>");
 				window.close();

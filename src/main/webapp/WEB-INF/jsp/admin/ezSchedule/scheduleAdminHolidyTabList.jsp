@@ -185,8 +185,8 @@
 	        function ChangeTab(obj) {
 	        	
 	        	var SelectedTabID = obj.getAttribute("DATA1");
-	        	
-                document.getElementById("FBoard_ifrm").src = "/admin/ezSchedule/scheduleAdminHolidayManage.do?holidayType=" + SelectedTabID + "&companylist=" + companylist;
+	        	//TO-DO get방식에 companyList 가 너무 길어서 추후 터질 우려가 있음. 줄여야한다
+                document.getElementById("FBoard_ifrm").src = "/admin/ezSchedule/scheduleAdminHolidayManage.do?holidayType=" + SelectedTabID + "&companylist=" + encodeURIComponent(companylist);
 	            document.getElementById("curTabID").value = SelectedTabID;
 	        }
 	

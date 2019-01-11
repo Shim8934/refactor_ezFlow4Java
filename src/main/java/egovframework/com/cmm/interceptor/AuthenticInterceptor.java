@@ -120,7 +120,8 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 		
 		if(!commonUtil.checkMultiLogin(request, response)) {
 			try {
-				RequestDispatcher dispatcher = request.getRequestDispatcher("/user/login/actionLogoutWithRedirectUri.do?redirectUri=" + "/user/login/login.do&message=multiLoginNoti");
+//				RequestDispatcher dispatcher = request.getRequestDispatcher("/user/login/actionLogoutWithRedirectUri.do?redirectUri=" + "/user/login/login.do&message=multiLoginNoti");
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/user/login/actionLogoutWithRedirectUri.do?redirectUri=" + "/user/login/login.do&multiLoginFlag=y");
 				dispatcher.forward(request, response);
 				
 				return false;

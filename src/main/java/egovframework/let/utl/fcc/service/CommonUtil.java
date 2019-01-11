@@ -45,11 +45,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -80,7 +78,6 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
-import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -148,14 +145,14 @@ public class CommonUtil {
 	private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 	private static CommonUtil commonUtilInstance;
 	
-	private static Map<String, String> loginUsers;
+//	private static Map<String, String> loginUsers;
 	
     @PostConstruct
 	public void init() throws Exception {
     	logger.debug("init started.");
 
     	commonUtilInstance = this;
-    	loginUsers = new ConcurrentHashMap<String, String>();
+//    	loginUsers = new ConcurrentHashMap<String, String>();
     	
     	logger.debug("init ended.");
     }
@@ -1572,8 +1569,9 @@ public class CommonUtil {
 		return strSize;
 	}
 	
-	public void setLoginUsers(String userInfo, String loginTime) {
-		loginUsers.put(userInfo, loginTime);
+	public void setLoginUsers(int tenantID, String userID, String loginTime) throws Exception {
+//		loginUsers.put(userInfo, loginTime);
+		ezCommonService.setMultiLoginUser(tenantID, userID, loginTime);
 	}
 	
 	public boolean checkMultiLogin(HttpServletRequest request, HttpServletResponse response) {
@@ -1594,25 +1592,23 @@ public class CommonUtil {
 					}
 				}
 				
-				if(loginCookie != null && multiLoginCookie != null) {
+				if(loginCookie != null) {
 					String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///");
 					
 					String userID = cookieInfo[1];
 					String companyID = cookieInfo[10];
-					String tenantID = cookieInfo[8];
-					String userInfo = userID + "_" + tenantID;
+					int tenantID = Integer.parseInt(cookieInfo[8]);
+//					String userInfo = userID + "_" + tenantID;
 					
-					useMultiLogin = ezCommonService.getCompanyConfig(Integer.parseInt(tenantID), companyID, "useMultiLogin");
+					useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
 					
 					if(useMultiLogin.equalsIgnoreCase("NO")) {
-						if(loginUsers.containsKey(userInfo)) {
-							if(!loginUsers.get(userInfo).equals(multiLoginCookie.getValue())) {
-								result = false;
-							}
-						}
+						result = ezCommonService.matchMultiLoginTime(tenantID, userID, multiLoginCookie.getValue());
 					} 
 				} else {
-					result = false;
+					if(multiLoginCookie != null) {
+						result = false;
+					}
 				}
 			}
 		} catch (Exception e) {

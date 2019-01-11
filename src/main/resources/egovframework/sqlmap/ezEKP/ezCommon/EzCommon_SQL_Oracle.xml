@@ -243,6 +243,51 @@
 		]]>
 	</update>
 	
+	<insert id="EzCommonDAO.insertMultiLoginUser" parameterClass="map">
+		INSERT INTO TBL_USER_MULTILOGIN (TENANT_ID, USER_ID, LOGIN_TIME)
+		VALUES (#tenantID#, #userID#, #loginTime#)
+	</insert>
+	
+	<update id="EzCommonDAO.updateMultiLoginUser" parameterClass="map">
+		UPDATE 
+			TBL_USER_MULTILOGIN
+		SET
+			LOGIN_TIME = #loginTime#
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID = #userID#
+	</update>
+	
+	<select id="EzCommonDAO.selectMultiLoginUser" parameterClass="map" resultClass="String">
+		SELECT
+			LOGIN_TIME
+		FROM
+			TBL_USER_MULTILOGIN
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID = #userID#
+	</select>
+	
+	<select id="EzCommonDAO.checkTblUserMultiLogin" resultClass="String">
+		SELECT
+			LOGIN_TIME
+		FROM
+			TBL_USER_MULTILOGIN
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserMultiLogin">
+		CREATE TABLE TBL_USER_MULTILOGIN (
+		    TENANT_ID NUMBER,
+		    USER_ID NVARCHAR2(40),
+		    LOGIN_TIME VARCHAR2(15) NOT NULL,
+		    CONSTRAINT "TBL_USER_MULTILOGIN_PK" PRIMARY KEY (USER_ID, TENANT_ID)
+		)
+	</statement>
+	
 	<select id="EzCommonDAO.checkJMochaDistributionMail" resultClass="String">
 		<![CDATA[
 			SELECT 
@@ -558,5 +603,30 @@
 			MAILBOXQUOTA VARCHAR(50) DEFAULT NULL,
 			MAILBOXUSAGE VARCHAR(50) DEFAULT NULL
 			)
+	</statement>
+	
+	<select id="EzCommonDAO.checkPortalThemePortlet" resultClass="String">
+		<![CDATA[
+			SELECT 
+				theme_id
+			FROM 
+				TBL_PORTAL_THEME_PORTLET
+			where 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblPortalThemePortlet">
+	CREATE TABLE TBL_PORTAL_THEME_PORTLET (	
+		"THEME_ID" NUMBER(11,0), 
+		"TENANT_ID" NUMBER(5,0), 
+		"COMPANY_ID" VARCHAR2(100), 
+		"PORTLET_ID" NUMBER(10,0), 
+		"PORTLET_USED" NUMBER(5,0), 
+		"PORTLET_ORDER" NUMBER(11,0), 
+		"MENU_ID" NUMBER(10,0),
+		"IS_FIXED" NUMBER(5,0) DEFAULT 0,
+		PRIMARY KEY ("THEME_ID","TENANT_ID", "COMPANY_ID", "PORTLET_ID")
+	)
 	</statement>
 </sqlMap>

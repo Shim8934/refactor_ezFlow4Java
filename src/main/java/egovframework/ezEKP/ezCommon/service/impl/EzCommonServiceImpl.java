@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -40,6 +41,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DeadlockLoserDataAccessException;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -1342,6 +1344,69 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		logger.debug("deleteCompanyConfig ended");
 	}
+	
+	@Override
+	public void setMultiLoginUser(int tenantID, String userID, String loginTime) throws Exception {
+		logger.debug("insertMultiLoginUser started");
+		
+		//멀티로그인 시간을 비교해서 이전 이용자가 없다면 인서트
+		//이전 이용자가 있다면 업데이트한다 
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("userID", userID);
+		map.put("loginTime", loginTime);
+		
+		String pre_loginTime = Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
+		
+		try {
+			if("".equals(pre_loginTime)) {
+				ezCommonDAO.insertMultiLoginUser(map);
+			} else {
+				ezCommonDAO.updateMultiLoginUser(map);
+			}
+		} catch (DeadlockLoserDataAccessException e) {
+			//데드락이 발생하면 실패한 작업 다시 실행
+			
+			Thread.sleep(1000);
+			
+			if("".equals(pre_loginTime)) {
+				ezCommonDAO.insertMultiLoginUser(map);
+			} else {
+				ezCommonDAO.updateMultiLoginUser(map);
+			}
+		}
+		
+		logger.debug("insertMultiLoginUser ended");
+	}
+	
+	@Override
+	public boolean matchMultiLoginTime(int tenantID, String userID, String loginTime) throws Exception {
+		logger.debug("matchMultiLoginTime started");
+		
+		// 멀티 로그인 시간을 비교해서 새로운 로그인 유저가 없다면 true 새로운 로그인 유저가 있다면 false
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("userID", userID);
+		
+		String pre_loginTime = Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
+		
+		logger.debug("matchMultiLoginTime ended");
+		
+		if(loginTime.equals(pre_loginTime)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public void createTblUserMultiLogin() throws Exception {
+		ezCommonDAO.createTblUserMultiLogin();
+	}
 
 	@Override
 	public void addMailToJMochaDistribution() throws Exception {
@@ -1426,5 +1491,19 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addUserMasterMailBoxQuota() throws Exception {
 		ezCommonDAO.addUserMasterMailBoxQuota();
 	}
+
+	@Override
+	public void addHolidayFlag() throws Exception {
+		ezCommonDAO.addHolidayFlag();
+	}
 	
+	@Override
+	public void createPortalThemePortlet() throws Exception {
+		ezCommonDAO.createPortalThemePortlet();
+	}
+	
+	@Override
+	public void addHolidayRepeat() throws Exception {
+		ezCommonDAO.addHolidayFlag();
+	}
 }

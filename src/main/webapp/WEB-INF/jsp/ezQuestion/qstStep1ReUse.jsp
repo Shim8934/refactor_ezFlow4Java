@@ -464,7 +464,7 @@
 	            </tr> 
 	            <tr> 
 	                <th><spring:message code="ezQuestion.t257" /></th> 
-	                <td><textarea name="txtContent" id="txtContent" style="WIDTH:100%;margin:2px 0px" rows="10" cols="" maxlength="127"><c:out value='${qstReuseQuestionVO.content}'/></textarea> </td> 
+	                <td><textarea name="txtContent" id="txtContent" style="WIDTH:100%; padding:0px; resize:none; overflow:auto; margin:2px 0px" rows="10" cols="" maxlength="127"><c:out value='${qstReuseQuestionVO.content}'/></textarea> </td> 
 	            </tr>
 	        </table> 
 	        <div class="btnpositionJsp">

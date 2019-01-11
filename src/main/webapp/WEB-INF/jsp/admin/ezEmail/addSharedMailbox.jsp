@@ -17,6 +17,11 @@
 	    	.mainlist thead tr {
 	    		height: 0px;
 	    	}
+	    	
+	    	.mainlist #MsgToList_THEAD #MsgToList_TH {
+	    		height: 0px;
+	    	}
+	    	
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;
 	    	}
@@ -138,6 +143,8 @@
 	        function initSharedMailboxInfo(sharedMailboxInfo) {
         		document.getElementById("TextId").value = sharedMailboxInfo.shareId;
         		document.getElementById("TextName").value = sharedMailboxInfo.shareName;
+        		var shareMail = sharedMailboxInfo.shareMail;
+        		document.getElementById("mailDomain").innerHTML = shareMail.substring(shareMail.indexOf("@"));
 	        	document.getElementById("TextId").disabled = true;
 	        	document.getElementById("TextPassword").disabled = true;
             	document.getElementById("TextPassword2").disabled = true;
@@ -1296,7 +1303,7 @@
 				<th><spring:message code='ezEmail.sharedMailbox19' /></th>
 				<td style="width:60%">
 					<input id="TextId" name="TextId" type="text" maxlength="24" class="txtClass" tabindex="2" style="ime-mode: disabled; width:40%;">
-					<span style="font-weight: bold;">@<c:out value="${mailDomain}"></c:out></span>
+					<span id="mailDomain" style="font-weight: bold;">@${mailDomain}</span>
 				</td>
 				<th><spring:message code='ezEmail.lhm61' /></th>
 				<td style="width:40%"><input id="TextPassword2" name="TextPassword2" type="password" maxlength="24" class="txtClass" tabindex="4" style="width:100%"></td>

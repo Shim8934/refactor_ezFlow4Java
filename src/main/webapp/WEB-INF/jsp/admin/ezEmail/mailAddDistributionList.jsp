@@ -22,6 +22,11 @@
 	    	.mainlist thead tr {
 	    		height: 0px;
 	    	}
+	    	
+	    	.mainlist #MsgToList_THEAD #MsgToList_TH {
+	    		height: 0px;
+	    	}
+	    	
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
 	    	}
@@ -161,12 +166,19 @@
 	            if (xmlHTTP2 != null && xmlHTTP2.readyState == 4) {
 	                if (xmlHTTP2.statusText == "OK") {
 	                    var result = loadXMLString(xmlHTTP2.responseText);
+	                    
+	                    document.getElementById("TextId").disabled = true;
+	                    
+	                    var mailNode = SelectNodes(result, "DATA/MAIL")[0];
+	                    var mail = getNodeText(mailNode);
+	                    document.getElementById("mailDomain").innerHTML = mail.substring(mail.indexOf("@"));
+	                    
 	                    var Resultxml = "";
 	                    pparsingXML2 = "";
 	                    pparsingXML = "";
 	                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                    var nodes = SelectNodes(result, "DATA/ROW");
-	
+	                    
 	                    for (var i = 0 ; i < nodes.length ; i++) {
 	                        if (getNodeText(GetChildNodes(nodes[i])[0]) == "distributionSub") {
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</DATA1>";
@@ -2637,7 +2649,8 @@
 		            <tr>
 		                <th><spring:message code='ezEmail.lhm09' /></th>
 		                <td>
-		                    <input name="TextId" type="text" id="TextId" maxlength="24" class="txtClass" style="width:100%;" value="${cn}">
+		                    <input name="TextId" type="text" id="TextId" maxlength="24" class="txtClass" style="width:40%;" value="${cn}">
+		                    <span id="mailDomain" style="width:60%; font-weight: bold;">@${mailDomain}</span>
 		                </td>
 		            </tr>
 		        </table>

@@ -37,7 +37,6 @@
 		            	folderName1 = parent.inputNameDlg_cross_dialogArguments[4];
 						folderName2 = parent.inputNameDlg_cross_dialogArguments[5];
 		                $('#txt_FolderName1').val(folderName1);
-		                $('#txt_FolderName2').val(folderName2);
 		            	$('#title').text("<spring:message code='ezWebFolder.t303'/>");
 		            	/* $('.txt').text("<spring:message code='ezWebFolder.t304' />"); */
 		            }
@@ -57,7 +56,6 @@
 	            var szInput1 = "";
 	            var szInput2 = "";
 	            szInput1 = txt_FolderName1.value;
-	            szInput2 = txt_FolderName2.value;
 	            szInput1 = ReplaceText(szInput1, " ", "");
 	            szInput2 = ReplaceText(szInput2, " ", "");
 	
@@ -66,28 +64,13 @@
 	                return;
 	            }
 	            
-	            if (szInput2 == "") {
-	                alert('<spring:message code='ezWebFolder.t315'/>');
-	                return;
-	            }
-	            
 	            var szCheckPermit1 = szInput1;
 	            var szCheckPermit2 = szInput2;
 	            
 	            szCheckPermit1 = ReplaceText(szInput1, "=", "");
 	            szCheckPermit2 = ReplaceText(szInput2, "=", "");
-	
-// 	            if (szInput != szCheckPermit) {
-// 	                alert("<spring:message code='ezEmail.t351' />");
-// 	                return;
-// 	            }
 
 				if (isValid(szCheckPermit1)) {
-					alert('<spring:message code='ezWebFolder.t211'/>');
-					return;
-				}
-				
-				if (isValid(szCheckPermit2)) {
 					alert('<spring:message code='ezWebFolder.t211'/>');
 					return;
 				}
@@ -99,8 +82,7 @@
 						url  : "/ezWebFolder/insertFolder.do",
 						data : { 
 							"folderId": folderUppId,
-							"newFolderName1": szCheckPermit1,
-							"newFolderName2": szCheckPermit2
+							"newFolderName1": szCheckPermit1
 						},
 						dataType: "JSON",
 						success : function (data) {
@@ -115,8 +97,7 @@
 						url  : "/ezWebFolder/updateFolder.do",
 						data : { 
 							"folderId": folderUppId,
-							"newFolderName1": szCheckPermit1,
-							"newFolderName2": szCheckPermit2
+							"newFolderName1": szCheckPermit1
 						},
 						dataType: "JSON",
 						success : function (data) {
@@ -149,8 +130,6 @@
 	    	<span id="ko_lang"><spring:message code='ezWebFolder.t226'/></span>
 	        <input id="txt_FolderName1" type="text" maxlength="50" onkeydown="folderName_onkeydown()" style="width: 60%;margin-top:3px;height:25px">
 	        <br>
-	    	<span id="ko_lang"><spring:message code='ezWebFolder.t227'/></span>
-	        <input id="txt_FolderName2" type="text" maxlength="50" onkeydown="folderName_onkeydown()" style="width: 60%;margin-top:3px;height:25px">
 	    </div>
 	    <div class="btnposition btnpositionNew">
 	        <a id="btn_ok" class="imgbtn" onclick="btn_ok_onclick()"><span><spring:message code='ezWebFolder.t116'/></span></a>

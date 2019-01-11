@@ -323,6 +323,10 @@
 					
 		        	$("#popup").css("left", popupX);
 		        	$("#popupDay").css("left", popupDayX);
+		        	
+		        	//테이블 리스트 resize조정.
+		        	var height = parseInt(document.documentElement.clientHeight - 235);
+		        	$("#contentlist").css("height", height +"px");
 		        });
 				
 				//리스트형 날짜 클릭시 근태작성창
@@ -1745,7 +1749,7 @@
 	    			//토요일 일요일은 text색상이 다름.
 	    			var dayClass = "";
 	    			var dayIdx = new Date(year + "-" + month + "-" + j).getDay();
-	    			if (dayIdx == 0 || isholiday) {
+	    			if (dayIdx == 0 || isholiday || (dayIdx != 6 && companyHoliday[dayIdx] == "1")) {
 	    				dayClass = "sun";
 	    			} else if (dayIdx == 6) {
 	    				dayClass = "sat";	

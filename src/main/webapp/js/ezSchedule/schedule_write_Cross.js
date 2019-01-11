@@ -694,14 +694,24 @@ function allday_change()
 	{
         document.getElementById("Stimepicker").style.display = "none";
         document.getElementById("Etimepicker").style.display = "none";
+        if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "00:00") {
+        	var EDate = $("#Edatepicker").val();
+        	var eYear = EDate.substring(0,4);
+        	var eMonth = EDate.substring(5,7);
+        	var eDay = EDate.substring(8,10);
+        	
+        	var EDate2 = new Date();
+	        EDate2.setFullYear(eYear, parseInt(eMonth)-1, parseInt(eDay)-1);
+	        $("#Edatepicker").datepicker('setDate', EDate2);
+        }
 	}
 	else
 	{
         document.getElementById("Stimepicker").style.display = "";
         document.getElementById("Etimepicker").style.display = "";
-        if ((!timeSelect && datetype == "1") || datetype == "") { //하루종일 일정일 때 시간
+        if ((!timeSelect && datetype == "1") || datetype == "" || datetype == "2") { //하루종일 일정일 때 시간
         	//2018-08-28 김보미 - 현재시간으로 설정
-        	if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "23:59") {
+        	if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "00:00") {
 	        	var now = new Date();
 	        	
 	        	//시작시간
@@ -732,6 +742,17 @@ function allday_change()
 	        	$('#Etimepicker').timepicker('setTime', endTime);
         	}
         }
+        /*else if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "00:00") {
+        //else if(scheduleid != "" && datetype == "2") {
+        	var EDate = $("#Edatepicker").val();
+        	var eYear = EDate.substring(0,4);
+        	var eMonth = EDate.substring(5,7);
+        	var eDay = EDate.substring(8,10);
+        	
+        	var EDate2 = new Date();
+	        EDate2.setFullYear(eYear, parseInt(eMonth)-1, parseInt(eDay)+1);
+	        $("#Edatepicker").datepicker('setDate', EDate2);
+        }*/
         else {
         	document.getElementById("alldaycheck").checked = true;
         	

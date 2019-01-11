@@ -7,9 +7,12 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">        
 	</head>
 	<script type="text/javascript">
-	    function reloadLoginPage(message) {
- 	    	var uri = "/user/login/login.do";
-	    	self.location.href = "/user/login/actionLogoutWithRedirectUri.do?redirectUri=" + uri + "&message=" + message;
+	    function reloadLoginPage(multiLoginFlag, uri) {
+	    	var parameter = "redirectUri=" + uri;
+	    	if(!!multiLoginFlag) {
+	    		parameter += "&multiLoginFlag=" + multiLoginFlag;
+	    	}
+	    	self.location.href = "/user/login/actionLogoutWithRedirectUri.do?" + parameter;
 	    }
 	</script>
 	<frameset rows="89,*" border="0" framespacing="0" frameborder="NO">

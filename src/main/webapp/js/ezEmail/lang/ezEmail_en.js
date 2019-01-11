@@ -286,6 +286,7 @@ var strLangLHM17 = "Would you like to send the mail without the recipient(s)?";
 var strLangLHM18 = "/blank_us.htm";
 var strLangLHM19 = "If you delete an e-mail security is also impossible to view the secure mail recipients. \nAre you sure you want to delete it?";
 var strLangLHM20 = "If you move a security e-mail will not be checked for secure mail and browsing security information. \nDo you want to go anyway?";
+var strLangLHM21 = "About Distribution Group";
 var strLangKMS01 = "";
 var strLangKMS02 = "The total size of attached file";
 var strLangKMS03 = "No mail.";
