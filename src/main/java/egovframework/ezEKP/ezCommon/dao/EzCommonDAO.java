@@ -420,4 +420,24 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			update("EzCommonDAO.addUserMasterMailBoxQuota");
 		}
 	}
+	
+	public void addHolidayFlag() {
+		try {
+			select("EzCommonDAO.checkHolidayFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_holidayList HolidayFlag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addHolidayFlag");
+		}
+	}
+	
+	public void addHolidayRepeat() {
+		try {
+			select("EzCommonDAO.checkHolidayRepeat");
+		} catch (Exception e) {
+			logger.debug("tbl_holidayList HolidayRepeat doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addHolidayRepeat");
+		}
+	}
 }

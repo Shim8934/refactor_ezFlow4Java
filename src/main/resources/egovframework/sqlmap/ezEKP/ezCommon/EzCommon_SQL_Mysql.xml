@@ -578,4 +578,38 @@
 			MAILBOXUSAGE VARCHAR(50) DEFAULT NULL
 			)
 	</statement>
+	
+	<select id="EzCommonDAO.checkHolidayFlag" resultClass="String">
+		<![CDATA[
+			SELECT
+				HOLIDAYFLAG
+			FROM
+				TBL_HOLIDAYLIST
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addHolidayFlag"> 
+		ALTER TABLE 
+			TBL_HOLIDAYLIST
+		ADD 
+			HOLIDAYFLAG VARCHAR(45) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkHolidayRepeat" resultClass="String">
+		<![CDATA[
+			SELECT
+				HOLIDAYREPEAT
+			FROM
+				TBL_HOLIDAYLIST
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addHolidayRepeat"> 
+		ALTER TABLE 
+			TBL_HOLIDAYLIST
+		ADD 
+			HOLIDAYREPEAT VARCHAR(45) DEFAULT NULL
+	</statement>
 </sqlMap>
