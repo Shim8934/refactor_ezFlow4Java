@@ -840,7 +840,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			
 			Map<Long, List<ResponseVO>> mapResponses = new HashMap<>();
 			if (logicCheck == 2 && responses != null && responses.size() > 0) {
-				ListIterator<ResponseVO> respIter   = responses.listIterator();
+				ListIterator<ResponseVO> respIter = responses.listIterator();
 				while (respIter.hasNext()) {
 					ResponseVO response = respIter.next();
 					if (mapResponses.containsKey(response.getOptionId())) {
@@ -879,7 +879,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				
 				//Add responses
 				if (logicCheck == 2) {
-					
+					if (mapResponses.containsKey(option.getOptionId())) {
+						option.setResponses(mapResponses.get(option.getOptionId()));
+					}
 				}
 			}
 			
@@ -1193,7 +1195,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getSurveyStatistic(Long surveyId, LoginVO userInfo) throws Exception {
+	public JSONObject getSurveyStatistic(Long surveyId, String realPath, LoginVO userInfo) throws Exception {
 		JSONObject result               = new JSONObject();
 		JSONObject data                 = new JSONObject();
 		Map<String, Object> map         = new HashMap<String, Object>();
@@ -1209,7 +1211,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		SurveyVO survey  = ezSurveyDAO.getSurveyInfo(map);
 		totalRespondents = ezSurveyDAO.getTotalRespondents(map);
-		
+		result           = getSurveyQuestions(surveyId, "answer", realPath, userInfo);
 		
 		data.put("survey"       , survey);
 		data.put("usersCnt"     , survey.getTotalUser());

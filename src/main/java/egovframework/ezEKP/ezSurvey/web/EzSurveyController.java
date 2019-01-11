@@ -19,6 +19,8 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezSurvey.service.EzSurveyRestService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import net.minidev.json.JSONArray;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -249,8 +251,10 @@ public class EzSurveyController extends EgovFileMngUtil {
 			return "ezSurvey/surveyAccessDenied";
 		}
 		else {
-			JSONObject statisticData = (JSONObject)result.get("data");
-			model.addAttribute("data", statisticData);
+			JSONObject surveyData  = (JSONObject)result.get("data");
+			JSONArray questionData = (JSONArray)result.get("questions");
+			model.addAttribute("data"     , surveyData);
+			model.addAttribute("questions", questionData);
 		}
 		
 		logger.debug("jspGetStatisticsPage ended");

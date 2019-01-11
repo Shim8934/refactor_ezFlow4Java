@@ -810,12 +810,12 @@
 	<insert id="EzSurveyDAO.saveResponseItem" parameterClass="ResponseVO">
 		<![CDATA[
 			insert into tbl_survey_response (
-				response_id, survey_id, question_level, question_type,        user_id,      option_level, texts,
-				row_level,   option_id, ranking_level,  ranking_option_level, slider_value, company_id,   tenant_id
+				response_id, survey_id, question_level, question_type,        user_id,      option_id,  texts,
+				row_level,   option_id, ranking_level,  ranking_option_level, slider_value, company_id, tenant_id
 			)
 			values (
-				#responseId#, #surveyId#,    #questionLevel#, #questionType#,       #responsorId#, #optionLevel#, #texts#,
-				#rowLevel#,   #optionId#, #rankingLevel#,  #rankingOptionLevel#, #sliderValue#, #companyId#,   #tenantId#
+				#responseId#, #surveyId#, #questionLevel#, #questionType#,       #responsorId#, #optionId#,  #texts#,
+				#rowLevel#,   #optionId#, #rankingLevel#,  #rankingOptionLevel#, #sliderValue#, #companyId#, #tenantId#
 			)
 		]]>
 	</insert>

@@ -790,7 +790,8 @@ public class EzSurveyGWController {
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			Long surveyId    = Long.parseLong(itemId);
-			result           = surveyService.getSurveyStatistic(surveyId, userInfo);
+			String realPath  = request.getServletContext().getRealPath("");
+			result           = surveyService.getSurveyStatistic(surveyId, realPath, userInfo);
 			result.put("status", "ok");
 			result.put("code", 0);
 		}

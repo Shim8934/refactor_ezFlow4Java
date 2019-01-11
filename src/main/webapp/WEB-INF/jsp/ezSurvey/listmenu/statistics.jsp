@@ -24,8 +24,12 @@
 			var colors = ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5", "#ffdc89", "#90d4f7", "#71e096", "#f5a26f",
 						  "#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",
 						  "#d41e47", "#4c64ae", "#01539c", "#f05f7c", "#00b3ca", "#bd8139", "#d9c622", "#4a2431", "#d41e47", "#eb148d"];
-			var surveyStatistic = ${data};
-			window.onload       = function() {test();};
+			var surveyStatistic   = ${data};
+			var questionStatistic = ${questions};
+			window.onload         = function() {test();};
+			
+			console.log(surveyStatistic);
+			console.log(questionStatistic);
 			
 			function test() {
 				var values      = [];
