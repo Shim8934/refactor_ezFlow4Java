@@ -129,6 +129,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addUserMasterPasswordUpdateDT();
     	ezCommonService.addJobMasterJobID();
     	ezCommonService.createWebfolderToken();
+    	ezCommonService.addUserMasterMailBoxQuota();
     	
     	logger.debug("init ended.");
     }
@@ -937,6 +938,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useZipCodeSearch", useZipCodeSearch);
 		model.addAttribute("locale", userInfo.getLocale());
 		model.addAttribute("userPrimary", userInfo.getPrimary());
+		
 				
 		logger.debug("userInfo ended");
 		
@@ -1122,6 +1124,15 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					
 					logger.debug("updateGroupDel rc=" + rc);							
 				}
+				
+				// 공유사서함 기능 사용 시 공유사서함의 공유자에서 해당 유저를 제외한다.
+				String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantID);
+	    		
+	    		if (useSharedMailbox.equals("YES")) {
+	    			rc = ezEmailService.deleteUserFromAllSharedMailbox(cn[i], tenantID);
+	    			
+	    			logger.debug("deleteUserFromAllSharedMailbox rc=" + rc);
+	    		}
 			}
 			// dhlee - end
 		}
@@ -1280,7 +1291,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 							rc = ezEmailUserAdminService.updateGroupDel(dist, mailAddr);	
 							
 							logger.debug("updateGroupDel rc=" + rc);							
-						}						
+						}
 					} else {
 						logger.debug("retiring the user '" + mailAddr + "' failed.");
 						
@@ -1312,6 +1323,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 					// 로컬 시스템 계정을 삭제한다.
 					ezOrganAdminService.deleteDBData(cn[i], "user", tenantID);
 				} catch (Exception e) {
+					e.printStackTrace();
 					if (userExists == 1) { // 유효한 이메일 계정이었으면 복구 처리를 수행한다.
 						if (distributionList != null) {
 							for (String dist : distributionList) {
@@ -1327,7 +1339,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 						ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 						ezEmailUserAdminService.restoreUser(mailAddr);							
 					}
-					
 					result = "EMAIL_ERROR";
 					break;
 				}
@@ -1338,11 +1349,25 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				// 퇴직자 계정을 삭제한다.
 				ezEmailUserAdminService.removeUser(mailAddr);
 				
-				// 해당 사용자의 메일박스들을 모두 제거한다.
-				ezEmailUserAdminService.removeUserAllMailboxes(mailAddr);
+				// 공유사서함 기능 사용 시 공유사서함의 공유자에서 해당 유저를 제외한다.
+				String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantID);
+	    		
+	    		if (useSharedMailbox.equals("YES")) {
+	    			rc = ezEmailService.deleteUserFromAllSharedMailbox(cn[i], tenantID);
+	    			logger.debug("deleteUserFromAllSharedMailbox rc=" + rc);
+	    		}
 				
+	    		// 해당 사용자의 alias 메일주소를 삭제한다.
+	    		rc = ezEmailService.deleteIndividualAlias(cn[i], tenantID);
+	    		logger.debug("deleteIndividualAlias rc=" + rc);
+	    		
+				// 해당 사용자의 메일박스들을 모두 제거한다.
+	    		rc = ezEmailUserAdminService.removeUserAllMailboxes(mailAddr);
+	    		logger.debug("removeUserAllMailboxes rc=" + rc);
+	    		
 				// 해당 사용자의 개인주소록 및 주소록 관련 설정을 모두 제거한다.
-				ezAddressService.removeUserAddress(mailAddr);
+	    		rc = ezAddressService.removeUserAddress(mailAddr);
+	    		logger.debug("removeUserAddress rc=" + rc);
 			}
 			// dhlee - end
 		}		
@@ -3000,72 +3025,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("setUseDisablePop3Imap ended.");
 		
 		return returnValue;
-	}
-	
-	/**
-	 * 조직도 사원 추가, 수정시 직위,직책으로 공용배포그룹 생성 및 수정
-	 */
-	@RequestMapping(value="/admin/ezOrgan/mailSaveDistributionList.do")
-	@ResponseBody
-	public String mailSaveDistributionList(
-			@CookieValue("loginCookie") String loginCookie, Locale locale,
-			Model model,  HttpServletRequest request) throws Exception{
-		//관리자 권한체크
-		LoginVO auth = commonUtil.aprCheckAdmin(loginCookie);
-		if (auth == null) {
-			return "cmm/error/adminDenied";
-		}
-		
-		String memberId = request.getParameter("cn");
-		String jobTile = request.getParameter("jobTitle") == null ? "" : request.getParameter("jobTitle");
-		String jobPostion = request.getParameter("jobPosition") == null ? "" : request.getParameter("jobPosition");
-		
-		logger.debug("mailSaveDistributionList started.");
-		logger.debug("memberId=" + memberId + ", jobTile=" + jobTile +  ", jobPosition=" + jobPostion);
-		
-		int tenantID = auth.getTenantId();
-		
-		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
-		String companyId = userInfo.getCompanyID();
-		String result = "ERROR";
-		
-		try {
-			
-			String userName = "";
-			
-			if (!jobTile.equals("")) {
-				userName = ezOrganAdminService.getDistributionUserName(tenantID, jobTile, companyId);
-				String jobTile2 = String.valueOf(UUID.randomUUID()).substring(0,8);
-				logger.debug("jobTitle UUID=" + jobTile2);
-				
-				 if (!userName.equals("")) {//직위 이름으로 공용 배포그룹 존재시
-					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobTile, userName, companyId, tenantID, memberId);
-				 } else {
-					 result = ezOrganAdminService.mailAddDistributionList(domain, jobTile, jobTile2, companyId, tenantID, memberId);
-				 }
-				 
-			}
-			
-			if (!jobPostion.equals("")) {
-				userName = ezOrganAdminService.getDistributionUserName(tenantID, jobPostion, companyId);
-				String jobPostion2 = String.valueOf(UUID.randomUUID()).substring(0,8);
-				logger.debug("jobPostion2 UUID=" + jobPostion2);
-				 
-				 if (!userName.equals("")) {//직책 이름으로 공용 배포그룹 존재시
-					 result = ezOrganAdminService.mailUpdateDistributionList(domain, jobPostion, userName, companyId, tenantID, memberId);
-				 } else {
-					 result = ezOrganAdminService.mailAddDistributionList(domain, jobPostion, jobPostion2, companyId, tenantID, memberId);
-				 }
-			}
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		
-		logger.debug("result=" + result);
-		logger.debug("mailSaveDistributionList ended.");
-		return result;
 	}
 	
 	/**

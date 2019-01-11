@@ -61,8 +61,9 @@
 			    window.open("/ezCommon/showPersonInfo.do?id=" + parameter, "", "height=460px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
 		    }
 
+			/* 2019-01-03 홍승비 - 컨트롤러에서 사용하지 않는 문자열 파라미터(brdNm) 제거 */
 		    function menuQstList() {
-	            var szUrl = "/ezQuestion/qstList.do?" + receve + "&brdNm=" + "<spring:message code='ezQuestion.t206' />" ;
+	            var szUrl = "/ezQuestion/qstList.do?" + receve ;
 			    window.location.href = szUrl;
 			}
 

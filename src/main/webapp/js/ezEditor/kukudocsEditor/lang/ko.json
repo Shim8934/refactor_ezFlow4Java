@@ -732,6 +732,9 @@
     "invalidBrowserError" : "지원하지 않는 브라우저 입니다.",
     "notSetCellLockNameError" : "잠금 이름이 설정되지 않았습니다."
   },
+  "confirmMessage" : {
+    "newRemoveContentMessage" : "현재 입력된 내용들이 제거됩니다.\n계속 진행하시겠습니까?"
+  },
   "processingMessage" : "변환 중 ...",
   "paragraphInsert": "문단 추가",
   "licenseErrorMsg": "라이선스 기간이 만료되었습니다. \n기간을 연장하려면 라이선스 관리자에게 문의하세요."

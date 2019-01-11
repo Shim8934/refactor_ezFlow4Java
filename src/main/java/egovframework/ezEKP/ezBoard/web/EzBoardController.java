@@ -6364,11 +6364,12 @@ public class EzBoardController extends EgovFileMngUtil{
 			reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getCompanyID(), userInfo.getTenantId());
 		}
 		
+		/* 2019-01-07 홍승비 - split의 정규식 표현 및 페이징 연산 수정 */
 		if (totalCount > 0) {
 			if (totalCount > boardInfo.getSs_board_maxRows()) {
 				String temp = String.valueOf(totalCount / boardInfo.getSs_board_maxRows());
 				if (temp.indexOf(".") != 0) {
-					totalPage = Integer.parseInt(temp.split(".")[0] + 1);
+					totalPage = Integer.parseInt(temp.split("\\.")[0]) + 1;
 				} else {
 					totalPage = Integer.parseInt(temp);
 				}
@@ -7033,7 +7034,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 		
 		String strURL = "Item_View_New('" + boardID + "','" + itemID + "','" + boardInfo.getGuBun() + "');";
-        strURL = "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
+        strURL = "<span id='board_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
 		
         String strDate = commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false); 
         strDate += "( " + userInfo.getOffset().split("\\|")[1] + " )";
@@ -7156,7 +7157,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		Document doc = commonUtil.convertStringToDocument(strXML);
 		String title = doc.getElementsByTagName("Title").item(0).getTextContent();
 		String strURL =  "javascript:Item_View_New('" + boardID + "','" + itemID + "');";
-        strURL = "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
+        strURL = "<span id='board_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
         
         StringBuilder bodyContent = new StringBuilder();
         
@@ -7210,7 +7211,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		// 게시판ID, 게시물ID로 어느 회사에서 쓴것인지 확인 -> 현재 자신의 companyID와 다르다면 alert 후 창 닫음
 		String strURL = "javascript:Item_View_APPR('" + boardID + "','" + itemID + "','" + gubun + "');";
-        strURL = "<a style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
+        strURL = "<a id='board_a' style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
         
         StringBuilder bodyContent = new StringBuilder();
         
@@ -7265,7 +7266,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			// 게시판ID, 게시물ID로 어느 회사에서 쓴것인지 확인 -> 현재 자신의 companyID와 다르다면 alert 후 창 닫음
 			String strURL = "javascript:Item_View_APPR('" + boardListVO.getBoardID() + "','" + tempItemID + "','" + boardListVO.getGuBun() + "');";
-	        strURL = "<a style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
+	        strURL = "<a id='board_a' style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
 	        
 	        StringBuilder bodyContent = new StringBuilder();
 	        

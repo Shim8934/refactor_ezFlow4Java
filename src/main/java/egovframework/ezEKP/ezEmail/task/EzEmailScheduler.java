@@ -109,6 +109,53 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
 	
+	@Scheduled(cron = "${config.cron.mailboxQuotaListUpdate}")
+	public void mailboxQuotaListUpdate() throws Exception {
+		logger.debug("mailboxQuotaListUpdate scheduler started.");
+		
+		if (!preScheduler("mailboxQuotaListUpdate")) {
+			logger.debug("mailboxQuotaListUpdate scheduler ended.");
+			return;
+		}
+		
+		int tenantID = 0;
+		String email = null;
+		IMAPAccess ia = null;
+		Locale locale = Locale.getDefault();
+		String password = jspw;
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+		String mailServerAddress = config.getProperty("config.MailServerAddress");
+		String iMAPPort = config.getProperty("config.IMAPPort");
+		
+		List<OrganUserVO> vo = ezOrganAdminService.getAllUserCnList(tenantID);
+		
+		for (OrganUserVO user : vo) {
+			
+			try {
+				String cn = user.getCn();
+				email = cn + "@" + domain;
+				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
+				
+				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+				
+				long mailboxUsage = storageUsageAndLimit[0];
+				long mailboxQuota = storageUsageAndLimit[1];
+				
+				ezOrganAdminService.updateProperty(cn, "mailboxusage", String.valueOf(mailboxUsage), "user", tenantID);
+				ezOrganAdminService.updateProperty(cn, "mailboxquota", String.valueOf(mailboxQuota), "user", tenantID);
+			} catch (Exception e) {
+				logger.debug("error. user=" + email);
+				e.printStackTrace();
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
+			}
+		}
+		
+		logger.debug("mailboxQuotaListUpdate scheduler ended.");
+	}
+	
 	/**
 	 * 관리자 - 자동삭제 
 	 */
@@ -122,9 +169,10 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			return;
 		}
 		
+		IMAPAccess ia = null;
+
 		try {
 			int tenantId = 0;
-			IMAPAccess ia = null;
 			String useAllUserOldMailDelete = ezCommonService.getTenantConfig("useAllUserOldMailDelete", tenantId);
 			String useAllUserOldMailDeletePeriod = ezCommonService.getTenantConfig("useAllUserOldMailDeletePeriod", tenantId);
 			
@@ -151,7 +199,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					logger.debug("userList size=" + userList.size() + ", userList=" + userList.toString());
 					
 					Locale locale = null;
-					String returnValue = null;
+					String returnValue = "OK";
 					
 					if (userList.size() > 0) {
 						for (String userEmail : userList) {
@@ -162,15 +210,17 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 							int result = ia.createFolder(folderPath);
 							
 							if (result == 0) {
-								returnValue = "OK";
 								result = ia.deleteFolder(folderPath);
+								logger.debug("user=" + userEmail + " temp mailbox create and delete success. result=" + result);
 								
 								if (result != 0) {
-									logger.debug("result=" + result);
+									logger.debug("temp mailbox delete error. result=" + result);
 									returnValue = "ERROR";
 								}
+								
 							} else if (result == 2) {
 								returnValue = "ALREADY_EXISTS";
+								logger.debug("temp mailbox create error. result=" + result);
 							}
 							
 							logger.debug("returnValue=" + returnValue);
@@ -180,6 +230,10 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
 		}
 		
 		logger.debug("deleteAllUserMail scheduler ended.");

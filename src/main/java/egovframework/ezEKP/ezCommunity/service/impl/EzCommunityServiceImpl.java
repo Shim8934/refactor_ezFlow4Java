@@ -703,7 +703,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	@Override
-	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, String hasAttach, Model model) throws Exception {
+	public void newBoardItem(CommunityBoardItemVO item, CommunityBoardPropertyVO boardInfo, LoginVO userInfo, String pItemID, String pBoardID, String pUrl, String pMode, String expireDays, Model model) throws Exception {
 		String strWriterFakeName = "";
 		String startDateTime = "";
 		logger.debug("newBoardItem started.");
@@ -756,10 +756,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
                 	}
                 	
                 	
-                }
-
-                if (item.getAttachments() != null && item.getAttachments().length() > 0) {
-                	hasAttach = "YES";
                 }
 			}
 		}
@@ -2025,7 +2021,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				sb.append("<img src=\"/images/i_master.gif\" alt=\"" + egovMessageSource.getMessage("ezCommunity.t513", userInfo.getLocale()) + "\" WIDTH=\"15\" HEIGHT=\"9\" hspace=\"2\" border=\"0\" align=\"absmiddle\">");
 			}
 			
-			sb.append("<a href=\"adminMemberListOk.do?code=" + code + "&mode=" + mode + "&cID=" + clubUser.getC_ID().trim() + "&cNm=encodeURIComponent(" + clubUser.getUserName() + ")&companyID=" + clubUser.getCompanyID().trim() + "\" valign=\"bottom\">");
+			sb.append("<a href=\"adminMemberListOk.do?code=" + code + "&mode=" + mode + "&cID=" + clubUser.getC_ID().trim() + "&cNm=" + URLEncoder.encode(clubUser.getUserName(), "utf-8") + "&companyID=" + clubUser.getCompanyID().trim() + "\" valign=\"bottom\">");
 			sb.append(clubUser.getUserName()+"</a>");
 			sb.append("</td>");
 			sb.append("<td class=\"white\">" + clubUser.getC_ID() + "</td>");
@@ -2664,6 +2660,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			boardInfo.setGubun(strProp.getGubun());
 			boardInfo.setUrl(strProp.getUrl());
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
+			/* 2019-01-10 홍승비 - 부모게시판ID 데이터 추가 */
+			boardInfo.setParentBoardID(strProp.getParentBoardID());
 		}
 		
 		if (boardInfo.getGubun() != null && boardInfo.getGubun().equals("3")) {
@@ -7586,7 +7584,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 //			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + EgovDateUtil.getToday(""));
 			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t118", locale) + vo.getWriteDate());
 			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t119", locale) + userInfo.getDisplayName() + "(" + userInfo.getTitle() + ", "  + userInfo.getDeptName() + ", " + userInfo.getCompanyName() + ")");
-			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", locale) + "<a onclick=\"" + "item_View_New_Community('" + boardID + "', '" + itemID + "', '" + communityID + "'); return false;" + "\" href=\"_blank\" target=\"_blank\">" + vo.getTitle() + "</a>");
+			bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezCommunity.t120", locale) + "<a id='community_a' style='color:blue;text-decoration:underline;cursor:pointer;' onclick=\"" + "item_View_New_Community('" + boardID + "', '" + itemID + "', '" + communityID + "'); return false;" + "\" href=\"_blank\" target=\"_blank\">" + vo.getTitle() + "</a>");
         	bodyContent.append("</DIV>");
     		
         	InternetAddress from = new InternetAddress();

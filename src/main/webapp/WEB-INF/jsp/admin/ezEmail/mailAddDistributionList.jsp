@@ -161,12 +161,19 @@
 	            if (xmlHTTP2 != null && xmlHTTP2.readyState == 4) {
 	                if (xmlHTTP2.statusText == "OK") {
 	                    var result = loadXMLString(xmlHTTP2.responseText);
+	                    
+	                    document.getElementById("TextId").disabled = true;
+	                    
+	                    var mailNode = SelectNodes(result, "DATA/MAIL")[0];
+	                    var mail = getNodeText(mailNode);
+	                    document.getElementById("mailDomain").innerHTML = mail.substring(mail.indexOf("@"));
+	                    
 	                    var Resultxml = "";
 	                    pparsingXML2 = "";
 	                    pparsingXML = "";
 	                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                    var nodes = SelectNodes(result, "DATA/ROW");
-	
+	                    
 	                    for (var i = 0 ; i < nodes.length ; i++) {
 	                        if (getNodeText(GetChildNodes(nodes[i])[0]) == "distributionSub") {
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</DATA1>";
@@ -2631,13 +2638,14 @@
 		            <tr>
 		                <th><spring:message code='ezEmail.t710' /></th>
 		                <td>
-		                    &nbsp;<input name="TextName" type="text" id="TextName" maxlength="24" class="txtClass" style="width:99%;" value="${textName}">
+		                    <input name="TextName" type="text" id="TextName" maxlength="24" class="txtClass" style="width:100%;" value="${textName}">
 		                </td>
 		            </tr>
 		            <tr>
 		                <th><spring:message code='ezEmail.lhm09' /></th>
 		                <td>
-		                    &nbsp;<input name="TextId" type="text" id="TextId" maxlength="24" class="txtClass" style="width:99%;" value="${cn}">
+		                    <input name="TextId" type="text" id="TextId" maxlength="24" class="txtClass" style="width:40%;" value="${cn}">
+		                    <span id="mailDomain" style="width:60%; font-weight: bold;">@${mailDomain}</span>
 		                </td>
 		            </tr>
 		        </table>

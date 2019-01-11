@@ -286,6 +286,7 @@ var strLangLHM17 = "このメールアドレス以外の宛先にメールを送
 var strLangLHM18 = "/blank_jp.htm";
 var strLangLHM19 = "暗号化メールを削除すると受信者も閲覧できなくなります。\n続行しますか？";
 var strLangLHM20 = "暗号化メールを移動すると\nメール閲覧および詳細情報の確認ができなくなります。\n続行しますか？";
+var strLangLHM21 = "共用配布グループ情報";
 var strLangKMS01 = "添付ファイルが";
 var strLangKMS02 = "添付フォイルのサイズが ";
 var strLangKMS03 = "メールがありません";
@@ -296,7 +297,6 @@ var strLangKMS07 = "ユーザによってアップロードがキャンセルさ
 var strLangKMS08 = "フォルダはアップロードすることができません。";
 var strLangKYJ03 = "スペースは入力できません。";
 var strLangLSD02 = "選択した部署に部署員が登録されていないため、宛先指定できません。";
-var strLangSharedMailbox01 = "共有メールボックス";
 var strLangJYH01 = "選択したメールがありません";
 
 /* 2018-07-03 홍승비 - 승인게시물, 커뮤니티 답변메일 companyID 관련 처리*/
@@ -306,6 +306,11 @@ var strLangHSB02 = "で照会できます。";
 /* 2018-11-22 이효진 주소록 등록, 수정 시 메시지 통일  번역 -> message property */
 var strLangLHJ01 = "部署の管理者のみ作成できます。";
 var strLangLHJ02 = "会社の管理者のみ作成できます。";
+
+var strLangSharedMailbox01 = "共有メールボックス";
+var strLangSharedMailbox02 = "パスワードを変更しますか?";
+var strLangSharedMailbox03 = "パスワードを変更しました。";
+
 
 function GetLocalTime(Offset , pDateTime)
 {

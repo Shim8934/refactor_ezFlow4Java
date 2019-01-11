@@ -54,6 +54,7 @@ public interface EzEmailService {
 	public void setMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId, List<String> pMessageIds) throws Exception;
 	public List<String> getMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId) throws Exception;
 	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList) throws Exception;
+	public int deleteIndividualAlias(String userId, int tenantID) throws Exception;
 	public String checkIndividualAlias(String individualAlias, int tenantId) throws Exception;
 	public Map<String, String> getAliasAddressMap(List<String> addressList, int tenantId) throws Exception;
 	
@@ -101,6 +102,8 @@ public interface EzEmailService {
 	public String delSharedMailboxAllUser(String shareId, int tenantId) throws Exception;
 	public String setSharedMailboxUsers(String shareId, JSONArray userList, int tenantId) throws Exception;
 	public List<MailSharedMailboxVO> getSharedMailboxSearchList(String companyId, int tenantId, String searchValue) throws Exception;
+	public MailSharedMailboxUserVO getSharedMailboxPermissionInfo(String shareId, int tenantId, String userId) throws Exception;
+	public int deleteUserFromAllSharedMailbox(String userId, int tenantId) throws Exception;
 	public JSONArray selectAllSignatureTemplate(String companyId, String tenantId) throws Exception;
 	public JSONArray selectSearchSignatureTemplate(String companyId, String tenantId, String search, String userLang) throws Exception;
 	public void deleteSignatureTemplate(String signNo) throws Exception;
@@ -108,5 +111,6 @@ public interface EzEmailService {
 	public void addSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception;
 	public void setSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception;
 	MailDistributionVO getDistributionSub(String userName, String subMail, String companyId, int tenantId) throws Exception;
-	public MailSharedMailboxUserVO getSharedMailboxPermissionInfo(String shareId, int tenantId, String userId) throws Exception;
+	public int addDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
+	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
 }

@@ -27,7 +27,6 @@
 		    var userinfo_dialogArguments = new Array();
 		    var useDisablePopImap = "";
 		    var deptTreeTopId = "${deptTreeTopId}";
-		    var changePassLength = 0;
 		    
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -662,7 +661,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department", type : "user", adminOrgan : "y"},
+		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department;usertype", type : "user", adminOrgan : "y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var listview = new ListView();
@@ -675,9 +674,18 @@
 				            headerData = loadXMLString(listviewheader2.innerHTML.toUpperCase());
 
 				        if (CrossYN()) {
-				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+				        	var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+				            $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
+				            	if($(this).find("DATA4").text() == "addJob"){
+				            		var orgPosition = $(this).find("CELL").eq(2).find("VALUE").text();
+				            		$(this).find("CELL").eq(2).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            	}
+				            });
 				            var Node = headerData.importNode(xmlRtn, true);
 				            headerData.documentElement.appendChild(Node);
+// 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+// 				            var Node = headerData.importNode(xmlRtn, true);
+// 				            headerData.documentElement.appendChild(Node);
 				        }else{
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
 				            headerData.documentElement.appendChild(xmlRtn);
@@ -995,7 +1003,7 @@
 	            if (agent.indexOf("chrome") != -1) {
 			        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=480px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(480, 210));
 	            } else {
-			        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=300px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(480, 210));
+			        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(480, 210));
 	            }
 		        
 		    }
@@ -1037,8 +1045,9 @@
 			function mod_password() {
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
-
-		        if (listview.GetSelectedRows().length == 0) {
+		        var length = listview.GetSelectedRows().length;
+		        
+		        if (length == 0) {
 					alert("<spring:message code='ezOrgan.t39' />");
 					return;
 				} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
@@ -1048,12 +1057,11 @@
 		    		alert("<spring:message code='ezOrgan.psb02' />");
 					return;
 			    }
-		        changePassLength = listview.GetSelectedRows().length;
 		        
-		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
+		        inputpassword_dialogArguments[0] = length + "<spring:message code='ezOrgan.t40' />";
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
 		        
-		      //크롬일때 alert창 크기때문에 크롬일때 구별
+		      	//크롬일때 alert창 크기때문에 크롬일때 구별
 	            var agent = navigator.userAgent.toLowerCase();
 	            if (agent.indexOf("chrome") != -1) {
 	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));	
@@ -1276,6 +1284,8 @@
 		            			alert("<spring:message code='ezOrgan.t15' />");
 		            		} else if (result == "DIFF_COMPANY") {
 		            			alert("<spring:message code='ezOrgan.lhm4' />");
+		            		} else if (result == "HASGYUMJIK") {
+		            			alert("<spring:message code='ezOrgan.t15' />");
 		            		} else {
 		            			alert(length + "<spring:message code='ezOrgan.t16' />");
 		            		}

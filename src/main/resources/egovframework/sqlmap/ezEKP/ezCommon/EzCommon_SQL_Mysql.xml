@@ -483,4 +483,23 @@
 		  PRIMARY KEY (`USERID`,`TENANTID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
+	
+	<select id="EzCommonDAO.checkUserMasterMailBoxQuota" resultClass="String">
+		<![CDATA[
+			SELECT
+				MAILBOXQUOTA, MAILBOXUSAGE
+			FROM
+				TBL_USERMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addUserMasterMailBoxQuota">
+		ALTER TABLE
+			TBL_USERMASTER
+		ADD (
+			MAILBOXQUOTA VARCHAR(50) DEFAULT NULL,
+			MAILBOXUSAGE VARCHAR(50) DEFAULT NULL
+			)
+	</statement>
 </sqlMap>

@@ -55,7 +55,8 @@ public class EzConnController {
 	
 	@RequestMapping(value={
 						"/ezConn/mailMain.do", "/ezConn/scheduleMain.do", "/ezConn/scheduleWrite.do",
-						"/ezConn/admin/organMain.do", "/ezConn/admin/scheduleMain.do", "/ezConn/scheduleRead.do"
+						"/ezConn/admin/organMain.do", "/ezConn/admin/scheduleMain.do", "/ezConn/scheduleRead.do",
+						"/ezConn/scheduleConfig.do", "/ezConn/mailConfig.do", "/ezConn/addressConfig.do"
 						})
 	public void mailMain(
 					@RequestParam String id,
@@ -154,7 +155,7 @@ public class EzConnController {
 					}
 				}
 								
-				loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response,"","");
+				loginController.createLoginCookie(resultVO.getId(), " ", " ", tenantId, request, response, resultVO.getDeptID(), resultVO.getCompanyID());
 				
 				// IE, Safari의 경우 기존 사이트에서 iframe으로 ezEKP를 연동할 경우
 				// 보안 문제로 쿠키 정보가 유실되는 현상이 발생해 다음 헤더를 추가함
@@ -199,6 +200,10 @@ public class EzConnController {
 					}					
 				} else if (cmd != null && cmd.equals("addressWrite")) {
 					resultPage = "/ezAddress/addressWrite.do";					
+				} else if (requestUri.equals("/ezConn/addressConfig.do")) {
+					resultPage = "/ezEmail/mailConfig.do?flag=address";					
+				} else if (requestUri.equals("/ezConn/mailConfig.do")) {
+					resultPage = "/ezEmail/mailConfig.do?flag=email";					
 				} else if (cmd != null && cmd.equals("mailRead")) {
 					String mailFullPath = request.getParameter("mailFullPath");
 					
@@ -217,6 +222,8 @@ public class EzConnController {
 					String scheduleid = request.getParameter("scheduleid");
 					
 					resultPage = "/ezSchedule/scheduleRead.do?id=" + scheduleid + "&date=" + date + "&repeatcount=" + repeatcount;
+				} else if (requestUri.equals("/ezConn/scheduleConfig.do")) {
+					resultPage = "/ezSchedule/scheduleConfigMain.do?flag=schedule";
 				} else {																
 					String funCode = request.getParameter("funCode") != null ? request.getParameter("funCode") : "";
 					if(funCode.equalsIgnoreCase("")) {
@@ -326,8 +333,17 @@ public class EzConnController {
 		
 		LoginVO resultVO = loginService.selectUser(loginVO);
 		
+		// 공유사서함 기능을 사용할 경우 공유사서함 계정으로의 로그인을 막는다.
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+		
+		if (useSharedMailbox.equals("YES")) {
+			if (resultVO != null && resultVO.getDeptID() != null && resultVO.getDeptID().startsWith("shared_mailbox_")) {
+				logger.debug("Cannot login with shared mailbox account.");
+				resultVO = null;
+			}
+		}
+		
 		logger.debug("resultVO=" + resultVO);
-				
 		logger.debug("getUserInfoById ended.");
 		
 		return resultVO;

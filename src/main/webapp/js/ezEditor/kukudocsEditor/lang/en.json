@@ -732,6 +732,9 @@
     "invalidBrowserError" : "Unsupported browser.",
     "notSetCellLockNameError" : "The lock name is not set."
   },
+  "confirmMessage" : {
+    "newRemoveContentMessage" : "This will remove the currently entered content.\nDo you want to proceed?"
+  },
   "processingMessage" : "Processing ...",
   "paragraphInsert": "Paragraph Insert",
   "licenseErrorMsg": "Your license term has expired. \nPlease contact your licensing administrator to extend the term."

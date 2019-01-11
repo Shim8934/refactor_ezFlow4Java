@@ -237,16 +237,16 @@ public class EzResourceController extends EgovFileMngUtil {
 				nodes.item(i).setTextContent("TRUE");
 				nodes1.item(i).removeChild((Node) nodes4.item(i));
 				
-				if(nodes2.item(0).getTextContent().equals("")) {
+				if(nodes2.item(0).getTextContent() == null || nodes2.item(0).getTextContent().equals("")) {
 					nodes2.item(0).setTextContent("<![CDATA[]]>");
 				}
-				if(nodes5.item(i).getTextContent().equals("")) {
+				if(nodes5.item(i).getTextContent() == null || nodes5.item(i).getTextContent().equals("")) {
 					nodes5.item(i).setTextContent("<![CDATA[]]>");
 				}
-				if(nodes6.item(i).getTextContent().equals("")) {
+				if(nodes6.item(i).getTextContent() == null || nodes6.item(i).getTextContent().equals("")) {
 					nodes6.item(i).setTextContent("<![CDATA[]]>");
 				}
-				if(nodes7.item(i).getTextContent().equals("")) {
+				if(nodes7.item(i).getTextContent() == null || nodes7.item(i).getTextContent().equals("")) {
 					nodes7.item(i).setTextContent("<![CDATA[]]>");
 				}
 				
@@ -2231,10 +2231,6 @@ public class EzResourceController extends EgovFileMngUtil {
 	    	String emailAddress = resInfo.get(i).getMailAddress();
 	    	String accessName = resInfo.get(i).getOwnerNm();
 	    	
-	    	if (accessName.indexOf("(") > -1) {
-	    		accessName = accessName.split("(")[0];
-	    	}
-	    	
 	    	InternetAddress to = new InternetAddress();
 	    	to.setPersonal(accessName, "UTF-8");
 	    	to.setAddress(emailAddress);
@@ -2297,7 +2293,7 @@ public class EzResourceController extends EgovFileMngUtil {
     	String accessName = resInfo.getOwnerNm(); 
     	
     	if (accessName.indexOf("(") > -1) {
-    		accessName = accessName.split("(")[0];
+    		accessName = accessName.split("\\(")[0];
     	}
     	
     	InternetAddress to = new InternetAddress();

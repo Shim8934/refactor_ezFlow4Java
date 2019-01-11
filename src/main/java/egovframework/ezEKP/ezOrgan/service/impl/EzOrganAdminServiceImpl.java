@@ -155,7 +155,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
         logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
    		logger.debug("searchCompanyID=" + searchCompanyID );
-	    
+   		
+   		if (!searchStartDate.equals("")) {
+   			searchStartDate += " 00:00:00";
+   			searchEndDate += " 23:59:59";
+		}
    		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -252,6 +256,20 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		if (parentCn.equals(cn)) {
 			result = "SAME";
 		} else {
+			// 2019-01-08 천성준 - 사원이동 시, 사원이 이동하려는 부서에 겸직이 되어있는지 체크하는 로직 추가 
+			List<OrganUserVO> userAddJobList = getUserAddJobList(cn, "1", tenantID);
+			if (userAddJobList != null && userAddJobList.size() > 0) {
+				String gyumJikDeptID = "";
+				for (int i = 0; i < userAddJobList.size(); i++) {
+					gyumJikDeptID = userAddJobList.get(i).getDepartment();
+					
+					if (gyumJikDeptID != null && parentCn.equals(gyumJikDeptID)) {
+						result = "HASGYUMJIK";
+						return result;
+					}
+				}
+			}
+			
 			OrganDeptVO parentDept = ezOrganService.getDeptInfo(parentCn, "1", tenantID);
 			String compId = "";
 			
@@ -574,6 +592,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    logger.debug("pPage=" + pPage + ",pPageRow=" + pPageRow + ",tenantID=" + tenantID);
 	    logger.debug("searchStartDate=" + searchStartDate + ",searchEndDate=" + searchEndDate);
    		logger.debug("searchKeycode=" + searchKeycode + ",searchKeyword=" + searchKeyword);
+   		
+   		if (!searchStartDate.equals("")) {
+   			searchStartDate += " 00:00:00";
+   			searchEndDate += " 23:59:59";
+		}
 	    
 		Map<String, Object> map = new HashMap<String, Object>();
 		
@@ -1348,434 +1371,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
     }	
     
 	@Override
-	public String mailAddDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception {
-		logger.debug("mailAddDistributionList started.");
-		logger.debug("domain=" + domain + ",job=" + job + ",job2=" + job2 + ",companyId=" + companyId + ",tenantID=" + tenantID + ",cn=" + cn);
-		
-		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
-		String result = "ERROR";
-		String bizmekaResult = "ERROR";
-		int reasonCode = -100;
-		List<String> memberList = null;
-		
-		if (useBizmekaSpambox.equals("YES")) {
-			String bizmekaAdminId = ezCommonService.getTenantConfig
-					("bizmekaAdminId", tenantID);
-			String bizmekaAdminPw = ezCommonService.getTenantConfig
-					("bizmekaAdminPw", tenantID);
-			String bizmekaCompanyId = ezCommonService.getTenantConfig
-					("BizmekaCompanyId", tenantID);
-			
-			bizmekaResult = ezEmailUtil.bizmekaAddDistributionList(
-					bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId,
-					job2, job, memberList);
-
-			logger.debug("bizmekaResult=" + bizmekaResult);
-
-			if (!bizmekaResult.equals("OK")) {
-				throw new Exception("bizmekaAddDistributionList failed");
-			}
-		}
-		
-		String inputParams = "companyId="
-				 + URLEncoder.encode(companyId, "UTF-8") + "&name="
-				 + URLEncoder.encode(job, "UTF-8") + "&id="
-				 + URLEncoder.encode(job2, "UTF-8") + "&domain="
-				 + URLEncoder.encode(domain, "UTF-8") + "&memberId="
-				 + URLEncoder.encode(cn, "UTF-8");
-		 
-		logger.debug("inputParams=" + inputParams);
-			 
-		String requestURL = config.getProperty("config.JGwServerURL")
-					 + "/jMochaAccess/setDistributionList";
-		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-			 
-		logger.debug("response=" + response);
-			 
-		if (response != null) {
-			 JSONParser jsonParser = new JSONParser();
-			 JSONObject responseObj = (JSONObject) jsonParser.parse(response);
-			 String resultCode = (String) responseObj.get("resultCode");
-			 if (resultCode.equals("OK")) {	
-					reasonCode = ((Long) responseObj.get("reasonCode"))
-							.intValue();
-				}
-		 }
-			 
-		if (reasonCode == 0) {
-			result = "OK";
-		} else if (reasonCode == -1) {
-				result = "GROUP_NAME";
-		} else if (reasonCode == -2) {
-				result = "GROUP_ID";
-		}
-			 
-		logger.debug("result= " + result);
-		logger.debug("mailAddDistributionList ended.");
-		
-		return result;
-	}
-
-	@Override
-	public String mailUpdateDistributionList(String domain, String job, String job2, String companyId, int tenantID,
-			String memberId) throws Exception {
-		logger.debug("mailUpdateDistributionList started.");
-		logger.debug("domain=" + domain + ",job=" + job + ",job2=" + job2 + ",companyId=" + companyId + ",tenantID=" + tenantID + ",memberId=" + memberId);
-		
-		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
-		String bizmekaResult = "ERROR";
-		String result = "ERROR";
-		List<String> memberList = new ArrayList<String>();
-		int reasonCode = -100;
-		String inputParams = "";
-		String requestURL = "" ;
-		String response = "" ;
-		String[] arrAddress = null;
-		
-		inputParams = "userName="
-			+ URLEncoder.encode(job2, "UTF-8") + "&domainName="
-			+ URLEncoder.encode(domain, "UTF-8");
-		
-		logger.debug("inputParams=" + inputParams);
-
-		 requestURL = config.getProperty("config.JGwServerURL")
-			+ "/jMochaAccess/getTargetAddress";
-		 response = ezEmailUtil.getWebServiceResult(requestURL,
-				inputParams);
-		
-		 logger.debug("response=" + response);
-		 
-		if (response != null) {
-			int isUser = -1;
-			JSONParser jsonParser = new JSONParser();
-			JSONObject responseObj = (JSONObject) jsonParser.parse(response);
-			String targetAddress = (String) responseObj.get("targetAddress");
-			String resultCode = (String) responseObj.get("resultCode");
-			
-			if (resultCode.equals("OK")) {
-				reasonCode = ((Long) responseObj.get("reasonCode"))
-						.intValue();
-				
-				if (reasonCode == 0) {
-					if (!targetAddress.equals("")) {
-						arrAddress = targetAddress.split(";");
-						
-						for (int i = 0 ; i < arrAddress.length ; i++) {
-							int idx = arrAddress[i].indexOf("@");
-							memberList.add(arrAddress[i].substring(0, idx));
-						}
-						
-						for (int i = 0; i < memberList.size() ; i++) {
-							if (memberList.get(i).equals(memberId)) {
-								isUser = 1;
-							} else {
-								isUser = -1;
-							}
-						}
-						
-						if (isUser == -1 && !memberId.equals("")) {
-							memberList.add(memberId);
-						}
-					} 
-				}
-			}
-		} 
-		
-		logger.debug("meberId=" + memberList.toString());
-		
-		if (useBizmekaSpambox.equals("YES")) {
-			String bizmekaAdminId = ezCommonService.getTenantConfig(
-					"bizmekaAdminId", tenantID);
-			String bizmekaAdminPw = ezCommonService.getTenantConfig(
-					"bizmekaAdminPw", tenantID);
-			String bizmekaCompanyId = ezCommonService.getTenantConfig(
-					"BizmekaCompanyId", tenantID);
-			
-			
-			bizmekaResult = ezEmailUtil.bizmekaEditDistributionList(
-					bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId,
-					job2, job, memberList);
-
-			logger.debug("bizmekaResult=" + bizmekaResult);
-
-			if (!bizmekaResult.equals("OK")) {
-				throw new Exception(
-						"bizmekaEditDistributionList failed");
-			}
-		}
-
-		 inputParams = "companyId="
-				+ URLEncoder.encode(companyId, "UTF-8") + "&cn="
-				+ URLEncoder.encode(job2, "UTF-8") + "&name="
-				+ URLEncoder.encode(job, "UTF-8") + "&id="
-				+ URLEncoder.encode(job2, "UTF-8") + "&domain="
-				+ URLEncoder.encode(domain, "UTF-8");
-		 
-		for (int i = 0; i < memberList.size(); i++) {
-			inputParams += "&memberId="
-					+ URLEncoder.encode(memberList.get(i), "UTF-8");
-		}
-		
-		logger.debug("inputParams=" + inputParams);
-
-		requestURL = config.getProperty("config.JGwServerURL")
-			+ "/jMochaAccess/updateDistributionList";
-		response = ezEmailUtil.getWebServiceResult(requestURL,
-			inputParams);
-
-		logger.debug("response=" + response);
-
-		if (response != null) {
-			JSONParser jsonParser = new JSONParser();
-			JSONObject responseObj = (JSONObject) jsonParser
-					.parse(response);
-
-			String resultCode = (String) responseObj.get("resultCode");
-			if (resultCode.equals("OK")) {
-				reasonCode = ((Long) responseObj.get("reasonCode"))
-						.intValue();
-			}
-		}
-		
-		if (reasonCode == 0) {
-			result = "OK";
-		} else if (reasonCode == -1) {
-			result = "GROUP_NAME";
-		} else if (reasonCode == -2) {
-			result = "GROUP_ID";
-		}
-		
-		logger.debug("result=" + result);
-		logger.debug("mailUpdateDistributionList ended.");
-		
-		return result;
-	}
-
-	@Override
-	public String getDistributionUserName (int tenantID,  String groupName, String companyId) throws Exception {
-		logger.debug("getDistributionUserName started.");
-		logger.debug("tenantId=" + tenantID + ",groupName=" + groupName);
-		
-		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
-		
-		String inputParams = "domainName=" + URLEncoder.encode(domain, "UTF-8") 
-							+"&groupName=" + URLEncoder.encode(groupName, "UTF-8")
-							+"&companyId=" + URLEncoder.encode(companyId, "UTF-8");
-		
-		logger.debug("inputParams=" + inputParams);
-
-		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionUserName";			
-		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
-		
-		logger.debug("response=" + response);
-
-		String resultCode = "Error";
-		int reasonCode = -100;
-		String userName = "";
-		
-		if (response != null) {
-			JSONParser jsonParser = new JSONParser();
-			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
-
-			resultCode = (String)responseObj.get("resultCode");		
-			
-			if (resultCode.equals("OK")) {
-				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
-				
-				if (reasonCode == 0) {
-					userName = (String) responseObj.get("userName");
-				}
-			}
-		}
-
-		logger.debug("resultCode=" + resultCode + ",reasonCode=" + reasonCode + ",userName=" + userName);
-		logger.debug("getDistributionUserName ended.");
-
-		return userName;
-	}
-	@Override
-	public String mailDelDistributionList (int tenantID ,String cn, String companyId) throws  Exception{
-		logger.debug("mailDelDistributionList started.");
-		logger.debug("tenantId=" + tenantID + ",cn=" + cn + ",companyId=" + companyId);
-		
-		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
-
-		String result = "ERROR";
-		String bizmekaResult = "ERROR";
-
-		try {
-			String useBizmekaSpambox = ezCommonService.getTenantConfig(
-					"UseBizmekaSpambox", tenantID);
-
-			if (useBizmekaSpambox.equals("YES")) {
-				String bizmekaAdminId = ezCommonService.getTenantConfig(
-						"bizmekaAdminId", tenantID);
-				String bizmekaAdminPw = ezCommonService.getTenantConfig(
-						"bizmekaAdminPw", tenantID);
-				String bizmekaCompanyId = ezCommonService.getTenantConfig(
-						"BizmekaCompanyId", tenantID);
-
-				bizmekaResult = ezEmailUtil.bizmekaDeleteDistributionList(
-						bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, cn);
-
-				logger.debug("bizmekaResult=" + bizmekaResult);
-
-				if (!bizmekaResult.equals("OK")) {
-					throw new Exception("bizmekaDeleteDistributionList failed");
-				}
-			}
-
-			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
-					+ "&domain=" + URLEncoder.encode(domain, "UTF-8");
-
-			String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
-			
-			// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
-			if (!companyDomainName.isEmpty()) {
-				String email = cn + "@" + companyDomainName;
-				
-				inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
-			}
-			
-			logger.debug("inputParams=" + inputParams);
-
-			String requestURL = config.getProperty("config.JGwServerURL")
-					+ "/jMochaAccess/deleteDistribution";
-			String response = ezEmailUtil.getWebServiceResult(requestURL,
-					inputParams);
-
-			logger.debug("response=" + response);
-
-			if (response != null) {
-				JSONParser jsonParser = new JSONParser();
-				JSONObject responseObj = (JSONObject) jsonParser
-						.parse(response);
-
-				result = (String) responseObj.get("resultCode");
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		logger.debug("result=" + result);
-		logger.debug("mailDelDistributionList ended.");
-
-		return result;
-	}
-
-	@Override
-	public String deleteTargetAddressUser(int tenantID, String groupName, String memberID, String companyID) throws Exception {
-		logger.debug("deleteTargetAddressUser started.");
-		logger.debug("tenantID=" + tenantID + ",groupName=" + groupName);
-
-		String userName = getDistributionUserName(tenantID, groupName, companyID);
-		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
-		String useBizmekaSpambox = ezCommonService.getTenantConfig(
-				"UseBizmekaSpambox", tenantID);
-		
-		String inputParams = "userName="
-				+ URLEncoder.encode(userName, "UTF-8") + "&domainName="
-				+ URLEncoder.encode(domain, "UTF-8");
-			
-			logger.debug("inputParams=" + inputParams);
-
-		String requestURL = config.getProperty("config.JGwServerURL")
-				+ "/jMochaAccess/getTargetAddress";
-		String response = ezEmailUtil.getWebServiceResult(requestURL,
-					inputParams);
-		List<String> memberList = null; 	
-		
-		if (response != null) {
-			JSONParser jsonParser = new JSONParser();
-			JSONObject resopnseObj = (JSONObject) jsonParser.parse(response);
-			String targetAddress = (String) resopnseObj.get("targetAddress");
-			
-			if (!targetAddress.equals("")) {
-				String[] arrAddress = targetAddress.split(";");
-				memberList = new ArrayList<String>();
-				
-				for (int i = 0 ; i < arrAddress.length ; i++) {
-					if (!arrAddress[i].equals(memberID + "@" + domain)) {
-						memberList.add(arrAddress[i]); //기존 공용배포그룹에 추가하는 유저
-					}
-				}
-			} 
-		} 
-		
-		if (useBizmekaSpambox.equals("YES")) {
-			String bizmekaAdminId = ezCommonService.getTenantConfig(
-					"bizmekaAdminId", tenantID);
-			String bizmekaAdminPw = ezCommonService.getTenantConfig(
-					"bizmekaAdminPw", tenantID);
-			String bizmekaCompanyId = ezCommonService.getTenantConfig(
-					"BizmekaCompanyId", tenantID);
-			
-			
-			String bizmekaResult = ezEmailUtil.bizmekaEditDistributionList(
-					bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId,
-					userName, groupName, memberList);
-
-			logger.debug("bizmekaResult=" + bizmekaResult);
-
-			if (!bizmekaResult.equals("OK")) {
-				throw new Exception(
-						"bizmekaEditDistributionList failed");
-			}
-		}
-
-		 inputParams = "companyId="
-				+ URLEncoder.encode(companyID, "UTF-8") + "&cn="
-				+ URLEncoder.encode(userName, "UTF-8") + "&name="
-				+ URLEncoder.encode(groupName, "UTF-8") + "&id="
-				+ URLEncoder.encode(userName, "UTF-8") + "&domain="
-				+ URLEncoder.encode(domain, "UTF-8");
-		 
-		for (int i = 0; i < memberList.size(); i++) {
-			inputParams += "&memberId="
-					+ URLEncoder.encode(memberList.get(i), "UTF-8");
-		}
-		
-		logger.debug("inputParams=" + inputParams);
-
-		requestURL = config.getProperty("config.JGwServerURL")
-			+ "/jMochaAccess/updateDistributionList";
-		response = ezEmailUtil.getWebServiceResult(requestURL,
-			inputParams);
-
-		logger.debug("response=" + response);
-
-		
-		int reasonCode = -100;
-		String result = "";
-		
-		if (response != null) {
-			JSONParser jsonParser = new JSONParser();
-			JSONObject responseObj = (JSONObject) jsonParser
-					.parse(response);
-
-			String resultCode = (String) responseObj.get("resultCode");
-			if (resultCode.equals("OK")) {
-				reasonCode  = ((Long) responseObj.get("reasonCode"))
-						.intValue();
-			}
-		}
-		
-		if (reasonCode == 0) {
-			result = "OK";
-		} else if (reasonCode == -1) {
-			result = "GROUP_NAME";
-		} else if (reasonCode == -2) {
-			result = "GROUP_ID";
-		}	
-			
-		logger.debug("result=" + result);
-		logger.debug("deleteTargetAddressUser ended.");
-		
-		return result;
-	}
-
-	@Override
 	public String setTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception {
 		logger.debug("setTitle started.");
 		
@@ -2072,6 +1667,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		logger.debug("getJobOptionInfo ended.");
 		return rtnVal.toString();
+	}
+
+	@Override
+	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception {
+		return ezOrganAdminDao.getAllUserCnList(tenantID);
 	}
 
 }

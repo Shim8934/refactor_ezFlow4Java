@@ -287,12 +287,20 @@ public class EzEmailAdminController {
 				.getParameter("name");
 		String useOcs = config.getProperty("config.USE_OCS");
 		String companyId = request.getParameter("companyId");
-
+		
+		int tenantId = auth.getTenantId();
+		String mailDomain = ezCommonService.getCompanyConfig(tenantId, companyId, "DomainName");
+		
+		if (mailDomain.equals("")) {
+			mailDomain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		}
+		
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("cn", cn);
 		model.addAttribute("textName", textName);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("companyId", companyId);
+		model.addAttribute("mailDomain", mailDomain);
 		
 		logger.debug("mailAddDistributionList ended.");
 
@@ -304,8 +312,7 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezEmail/mailSaveDistributionList.do", produces = "text/html;charset=utf-8")
 	@ResponseBody
-	public String mailSaveDistributionList(
-			@CookieValue("loginCookie") String loginCookie, Locale locale,
+	public String mailSaveDistributionList(@CookieValue("loginCookie") String loginCookie, Locale locale,
 			Model model, @RequestBody String bodyData) throws Exception {
 		logger.debug("mailSaveDistributionList started.");
 		logger.debug("bodyData=" + bodyData);
@@ -317,8 +324,7 @@ public class EzEmailAdminController {
 		}
 
 		Document doc = commonUtil.convertStringToDocument(bodyData);
-		String companyId = doc.getElementsByTagName("COMPID").item(0)
-				.getTextContent();
+		String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
 		String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
 		String name = doc.getElementsByTagName("NAME").item(0).getTextContent();
 		String id = doc.getElementsByTagName("ID").item(0).getTextContent();
@@ -330,34 +336,29 @@ public class EzEmailAdminController {
 		NodeList addressTypeList = doc.getElementsByTagName("ADDRESSTYPE");
 		NodeList directMailList = doc.getElementsByTagName("DIRECTMAIL");
 		NodeList directNameList = doc.getElementsByTagName("DIRECTNAME");
-
-		int tenantID = auth.getTenantId();
-		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
 		
 		int reasonCode = -100;
 		String result = "ERROR";
-		String bizmekaResult = "ERROR";
-		String inputParams = "";
-		String requestURL = "";
-		String response = "";
-		List<Map<String,String>> distributionSubList = null;
-		AddressVO addressInfo = null;
-		Map<String,String> distributionSubMap = null;
-				
+		
 		try {
-			String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");			
-			String useBizmekaSpambox = ezCommonService.getTenantConfig(
-					"UseBizmekaSpambox", tenantID);
-
-			distributionSubList = new ArrayList<Map<String,String>>();
+			String bizmekaResult = "ERROR";
+			int tenantID = auth.getTenantId();
+			String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", tenantID);
+			List<String> memberList = new ArrayList<String>();
+			List<Map<String,String>> distributionSubList = new ArrayList<Map<String,String>>();
+			Map<String,String> distributionSubMap = null;
 			
-			//주소록 distributionSubList에 추가
+			for (int i = 0; i < memberIdList.getLength(); i++) {
+				memberList.add(memberIdList.item(i).getTextContent());
+			}
+			
+			// 주소록 distributionSubList에 추가
 			for (int i = 0; i < addressTypeList.getLength(); i++) {
 				String addressType = addressTypeList.item(i).getTextContent();
 				
-				//주소록 타입이 그룹일 경우
+				// 주소록 타입이 그룹일 경우
 				if (addressType.equals("MAILGROUP")) {
-					addressInfo =  ezAddressService.getAddressInfo(tenantID, auth.getPrimary(), addressIdList.item(i).getTextContent());
+					AddressVO addressInfo =  ezAddressService.getAddressInfo(tenantID, auth.getPrimary(), addressIdList.item(i).getTextContent());
 					String address = addressInfo.getsMemo();
 				
 					if (address != null && !address.trim().equals("")) {
@@ -369,7 +370,7 @@ public class EzEmailAdminController {
 							String subName = subRows[0].replaceAll("\"", "");
 							
 							distributionSubMap.put("subName", subName);
-							distributionSubMap.put("subEmail", subRows[1].substring(0, subRows[1].length() -1));
+							distributionSubMap.put("subEmail", subRows[1].substring(0, subRows[1].length() - 1));
 							distributionSubList.add(distributionSubMap);
 						}
 					}					
@@ -381,7 +382,7 @@ public class EzEmailAdminController {
 				}
 			}
 			
-			//직접 입력 한 이름 distributionSubList에 추가
+			// 직접 입력 한 이름 distributionSubList에 추가
 			for (int i = 0; i < directMailList.getLength(); i++) {
 				if (directNameList.getLength() > 0) {
 					distributionSubMap = new HashMap<String, String>();
@@ -394,156 +395,37 @@ public class EzEmailAdminController {
 			// 새 공용배포그룹 등록하는 경우
 			if (cn == null || cn.equals("")) {
 				if (useBizmekaSpambox.equals("YES")) {
-					String bizmekaAdminId = ezCommonService.getTenantConfig(
-							"bizmekaAdminId", tenantID);
-					String bizmekaAdminPw = ezCommonService.getTenantConfig(
-							"bizmekaAdminPw", tenantID);
-					String bizmekaCompanyId = ezCommonService.getTenantConfig(
-							"BizmekaCompanyId", tenantID);
+					String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+					String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+					String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
 
-					List<String> memberList = new ArrayList<String>();
-
-					for (int i = 0; i < memberIdList.getLength(); i++) {
-						memberList.add(memberIdList.item(i).getTextContent());
-					}
-
-					bizmekaResult = ezEmailUtil.bizmekaAddDistributionList(
-							bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId,
-							id, name, memberList);
-
+					bizmekaResult = ezEmailUtil.bizmekaAddDistributionList(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, id, name, memberList);
 					logger.debug("bizmekaResult=" + bizmekaResult);
 
 					if (!bizmekaResult.equals("OK")) {
 						throw new Exception("bizmekaAddDistributionList failed");
 					}
 				}
-							
-				inputParams = "companyId="
-						+ URLEncoder.encode(companyId, "UTF-8") + "&name="
-						+ URLEncoder.encode(name, "UTF-8") + "&id="
-						+ URLEncoder.encode(id, "UTF-8") + "&domain="
-						+ URLEncoder.encode(domain, "UTF-8");
-				
-				// 공용배포그룹 맴버가 조직도 or 공용그룹인 경우
-				for (int i = 0; i < memberIdList.getLength(); i++) {
-					inputParams += "&memberId="
-							+ URLEncoder.encode(memberIdList.item(i)
-									.getTextContent(), "UTF-8");
-				}					
-								
-				// 공용배포그룹 멤버가 주소록 or 직접입력인 경우
-				for (int i = 0; i < distributionSubList.size(); i++) {
-					String subName = distributionSubList.get(i).get("subName");
-					String subEmail = distributionSubList.get(i).get("subEmail");
-					inputParams += "&subName=" + URLEncoder.encode(subName, "UTF-8") 
-								+ "&subEmail=" + URLEncoder.encode(subEmail, "UTF-8");
-				}
-				
-				// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
-				if (!companyDomainName.isEmpty()) {
-					String email = id + "@" + companyDomainName;
-					
-					inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
-				}
-				
-				logger.debug("inputParams=" + inputParams);
-				
-				requestURL = config.getProperty("config.JGwServerURL")
-						+ "/jMochaAccess/setDistributionList";
-				response = ezEmailUtil.getWebServiceResult(requestURL,
-						inputParams);
-				
-				logger.debug("response=" + response);
-				
-				if (response != null) {
-					JSONParser jsonParser = new JSONParser();
-					JSONObject responseObj = (JSONObject) jsonParser
-							.parse(response);
 
-					String resultCode = (String) responseObj.get("resultCode");
-					if (resultCode.equals("OK")) {
-						reasonCode = ((Long) responseObj.get("reasonCode"))
-								.intValue();
-					}
-				}									
+				reasonCode = ezEmailService.addDistributionList(id, name, memberList, distributionSubList, companyId, tenantID);
+				
 			// 기존 공용배포그룹을 수정하는 경우
 			} else {
 				if (useBizmekaSpambox.equals("YES")) {
-					String bizmekaAdminId = ezCommonService.getTenantConfig(
-							"bizmekaAdminId", tenantID);
-					String bizmekaAdminPw = ezCommonService.getTenantConfig(
-							"bizmekaAdminPw", tenantID);
-					String bizmekaCompanyId = ezCommonService.getTenantConfig(
-							"BizmekaCompanyId", tenantID);
+					String bizmekaAdminId = ezCommonService.getTenantConfig("bizmekaAdminId", tenantID);
+					String bizmekaAdminPw = ezCommonService.getTenantConfig("bizmekaAdminPw", tenantID);
+					String bizmekaCompanyId = ezCommonService.getTenantConfig("BizmekaCompanyId", tenantID);
 
-					List<String> memberList = new ArrayList<String>();
-
-					for (int i = 0; i < memberIdList.getLength(); i++) {
-						memberList.add(memberIdList.item(i).getTextContent());
-					}
-
-					bizmekaResult = ezEmailUtil.bizmekaEditDistributionList(
-							bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId,
-							id, name, memberList);
+					bizmekaResult = ezEmailUtil.bizmekaEditDistributionList(bizmekaAdminId, bizmekaAdminPw, bizmekaCompanyId, id, name, memberList);
 
 					logger.debug("bizmekaResult=" + bizmekaResult);
 
 					if (!bizmekaResult.equals("OK")) {
-						throw new Exception(
-								"bizmekaEditDistributionList failed");
+						throw new Exception("bizmekaEditDistributionList failed");
 					}
 				}
 								
-				inputParams = "companyId="
-						+ URLEncoder.encode(companyId, "UTF-8") + "&cn="
-						+ URLEncoder.encode(cn, "UTF-8") + "&name="
-						+ URLEncoder.encode(name, "UTF-8") + "&id="
-						+ URLEncoder.encode(id, "UTF-8") + "&domain="
-						+ URLEncoder.encode(domain, "UTF-8");
-				
-				// 공용배포그룹 맴버가 조직도 or 공용그룹인 경우
-				for (int i = 0; i < memberIdList.getLength(); i++) {
-					inputParams += "&memberId="
-							+ URLEncoder.encode(memberIdList.item(i)
-									.getTextContent(), "UTF-8");
-				}
-								
-				// 공용배포그룹 멤버가 주소록 or 직접입력인 경우
-				for (int i = 0; i < distributionSubList.size(); i++) {
-					String subName = distributionSubList.get(i).get("subName");
-					String subEmail = distributionSubList.get(i).get("subEmail");
-					
-					inputParams += "&subName=" + URLEncoder.encode(subName, "UTF-8") 
-								+ "&subEmail=" + URLEncoder.encode(subEmail, "UTF-8");
-				}
-				
-				// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
-				if (!companyDomainName.isEmpty()) {
-					String email = id + "@" + companyDomainName;
-					
-					inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
-				}
-				
-				logger.debug("inputParams=" + inputParams);
-
-				requestURL = config.getProperty("config.JGwServerURL")
-						+ "/jMochaAccess/updateDistributionList";
-				response = ezEmailUtil.getWebServiceResult(requestURL,
-						inputParams);
-
-				logger.debug("response=" + response);
-				
-				if (response != null) {
-					JSONParser jsonParser = new JSONParser();
-					JSONObject responseObj = (JSONObject) jsonParser
-							.parse(response);
-
-					String resultCode = (String) responseObj.get("resultCode");
-					if (resultCode.equals("OK")) {
-						reasonCode = ((Long) responseObj.get("reasonCode"))
-								.intValue();
-					}
-				}
+				reasonCode = ezEmailService.updateDistributionList(cn, name, memberList, distributionSubList, companyId, tenantID);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -557,9 +439,7 @@ public class EzEmailAdminController {
 			result = "GROUP_ID";
 		}
 
-		logger.debug("result=" + result);
-		logger.debug("mailSaveDistributionList ended.");
-
+		logger.debug("mailSaveDistributionList ended. result=" + result);
 		return result;
 	}
 
@@ -598,7 +478,7 @@ public class EzEmailAdminController {
 			logger.debug("response=" + response);
 
 			JSONArray resultArray = null;
-
+			String mail = null;
 			if (response != null) {
 				JSONParser jsonParser = new JSONParser();
 				JSONObject responseObj = (JSONObject) jsonParser
@@ -607,13 +487,15 @@ public class EzEmailAdminController {
 				String resultCode = (String) responseObj.get("resultCode");
 		
 				if (resultCode.equalsIgnoreCase("OK")) {
-					resultArray = (JSONArray) responseObj.get("result");
+					resultArray = (JSONArray)responseObj.get("result");
+					mail = (String)responseObj.get("mail");
 				}
 			}
 
 			StringBuilder sb = new StringBuilder();
 			sb.append("<DATA>");
-
+			sb.append("<MAIL>" + mail + "</MAIL>");
+			
 			for (int i = 0; i < resultArray.size(); i++) {
 				JSONObject address = (JSONObject) resultArray.get(i);
 				String pCn = (String) address.get("cn");
@@ -780,15 +662,6 @@ public class EzEmailAdminController {
 			String inputParams = "cn=" + URLEncoder.encode(cn, "UTF-8")
 					+ "&domain=" + URLEncoder.encode(domain, "UTF-8");
 
-			String companyDomainName = ezCommonService.getCompanyConfig(tenantID, companyId, "DomainName");
-			
-			// 회사별 이메일 도메인명이 설정되어 있으면 해당 도메인명을 기반으로 한 이메일 주소를 함께 전달한다.								
-			if (!companyDomainName.isEmpty()) {
-				String email = cn + "@" + companyDomainName;
-				
-				inputParams += "&email=" + URLEncoder.encode(email, "UTF-8");
-			}
-			
 			logger.debug("inputParams=" + inputParams);
 			
 			String requestURL = config.getProperty("config.JGwServerURL")
@@ -1000,22 +873,23 @@ public class EzEmailAdminController {
 	 * 회원별 메일함 사용용량 및 총용량
 	 */
 	@RequestMapping(value = "/admin/ezEmail/mailQuotaList.do")
-	public String statisticsList_view(@CookieValue("loginCookie")String loginCookie, Model model) throws Exception {
+	public String showMailBoxQuotaManaged(@CookieValue("loginCookie")String loginCookie, Model model) throws Exception {
+		logger.debug("showMailBoxQuotaManaed started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
-		
+	
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
+		int j = 0;
 		String companyId = userInfo.getCompanyID();
 		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
 		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
-		int j = 0;
 		
 		for (int i = 0; i < list.size(); i++) {
-			OrganDeptVO vo = list.get(i);			
-
+			OrganDeptVO vo = list.get(i);
+			
 			if (userInfo.getRollInfo().indexOf("c=1") > -1 || vo.getCn().equals(companyId)) {
 				resultList.add(j++, vo);
 			}
@@ -1023,16 +897,18 @@ public class EzEmailAdminController {
 		
 		model.addAttribute("list", resultList);
 		model.addAttribute("companyId", companyId);
+
+		logger.debug("showMailBoxQuotaManaged ended.");
 		
 		return "/admin/ezEmail/mailQuotaList";
 	}
 
-	@RequestMapping(value = "/admin/ezEmail/statistics_userList.do")
-	public String statisticsList( @CookieValue("loginCookie") String loginCookie, Model model,
-								  HttpServletRequest req,@RequestParam(required = false) String searchKeycode, 
-								  @RequestParam(required = false) String searchKeyword) throws Exception {
-
-		logger.debug("started statisticsList controller.");
+	@RequestMapping(value = "/admin/ezEmail/mailBoxQuotaManageList.do")
+	public String mailBoxQuotaManageList( @CookieValue("loginCookie") String loginCookie,
+			Model model, HttpServletRequest req,
+			@RequestParam(required = false) String searchKeycode,
+			@RequestParam(required = false) String searchKeyword) throws Exception {
+		logger.debug("mailBoxQuotaManageList started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -1057,9 +933,7 @@ public class EzEmailAdminController {
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
-   		
 		int itemCnt = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, companyId);
-
 		int totalPage = itemCnt / maxItemPerPage;
 
 		if (itemCnt < 1) {
@@ -1073,17 +947,10 @@ public class EzEmailAdminController {
 		currentPage = Math.min(currentPage, totalPage);
 
 		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
-		
+
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
 									    maxItemPerPage, searchKeycode, searchKeyword, companyId);
-		
-		IMAPAccess ia = null;
-		Locale locale = Locale.getDefault();
-		String password = jspw;
-		String domain = ezCommonService.getTenantConfig("DomainName",userInfo.getTenantId());
-		String mailServerAddress = config.getProperty("config.MailServerAddress");
-		String iMAPPort = config.getProperty("config.IMAPPort");
 		
 		// 각 사용자별로 처리한다.
 		for (OrganUserVO organUser : userCnList) {				
@@ -1097,28 +964,12 @@ public class EzEmailAdminController {
 			quaList.add(1, displayname);
 			quaList.add(2, department);
 
-			try {
-				String email = userId + "@" + domain;
-				logger.debug("email=" + email);
-				
-				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
-	
-				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
-	
-				// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
-				long mailboxUsage = storageUsageAndLimit[0]; // KBs
-				long mailboxQuota = storageUsageAndLimit[1]; // KBs
+			String mailboxUsage = organUser.getMailboxUsage();
+			String mailboxQuota = organUser.getMailboxQuota();
 			
-				quaList.add(3, String.valueOf(mailboxUsage));
-				quaList.add(4, String.valueOf(mailboxQuota));
-				userList.add((ArrayList<String>) quaList);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                if (ia != null) {
-                    ia.close();
-                }
-            }
+			quaList.add(3, String.valueOf(mailboxUsage));
+			quaList.add(4, String.valueOf(mailboxQuota));
+			userList.add((ArrayList<String>) quaList);
 		}
 
 		model.addAttribute("userList", userList);
@@ -1128,7 +979,7 @@ public class EzEmailAdminController {
 		model.addAttribute("searchKeyword", searchKeyword);
 		model.addAttribute("searchKeycode", searchKeycode);
 
-		logger.debug("ended statisticsList controller.");
+		logger.debug("mailBoxQuotaManageList ended.");
 
 		return "json";
 	}
@@ -1137,11 +988,10 @@ public class EzEmailAdminController {
 	 * 엑셀 워크시트 생성 및 자동 다운로드 함수
 	 */
 	@RequestMapping(value = "/admin/ezEmail/statisticsListExcelExport.do")
-	public void MailQuotaExcelExport(@CookieValue("loginCookie") String loginCookie,Model model,
-			  						 HttpServletRequest request,String searchKeycode,String searchKeyword,
-			  						 HttpServletResponse response)throws Exception {
-		
-		logger.debug("MailQuotaExcelExport controller started.");
+	public void mailQuotaExcelExport(@CookieValue("loginCookie") String loginCookie, Model model,
+			HttpServletRequest request, String searchKeycode, String searchKeyword,
+			HttpServletResponse response) throws Exception {
+		logger.debug("mailQuotaExcelExport started.");
 
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
@@ -1166,13 +1016,6 @@ public class EzEmailAdminController {
 		
 		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
 
-		IMAPAccess ia = null;
-		Locale locale = Locale.getDefault();
-		String password = jspw;
-		String domain = ezCommonService.getTenantConfig("DomainName",userInfo.getTenantId());
-		String mailServerAddress = config.getProperty("config.MailServerAddress");
-		String iMAPPort = config.getProperty("config.IMAPPort");
-		
 		// 각 사용자별로 처리한다.
 		for (OrganUserVO organUser : userCnList) {
 			List<String> quaList = new ArrayList<String>();
@@ -1185,27 +1028,12 @@ public class EzEmailAdminController {
 			quaList.add(1, displayname);
 			quaList.add(2, department);
 				
-			try {
-				String email = userId + "@" + domain;
-				
-				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
-
-				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
-	
-				// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
-				long mailboxUsage = storageUsageAndLimit[0]/1024; // KBs to MB
-				long mailboxQuota = storageUsageAndLimit[1]/1024; // KBs to MB
-					
-				quaList.add(3, String.valueOf(mailboxUsage));
-				quaList.add(4, String.valueOf(mailboxQuota));
-				userList.add((ArrayList<String>) quaList);
-			} catch (Exception e) {
-				e.printStackTrace();
-			} finally {
-				if (ia != null) {
-					ia.close();
-				}
-			}
+			String mailboxUsage = organUser.getMailboxUsage();
+			String mailboxQuota = organUser.getMailboxQuota();
+			
+			quaList.add(3, String.valueOf(mailboxUsage));
+			quaList.add(4, String.valueOf(mailboxQuota));
+			userList.add((ArrayList<String>) quaList);
 		}
 		
 		/* 엑셀 만들기 */
@@ -1286,7 +1114,7 @@ public class EzEmailAdminController {
 		workbook.write(response.getOutputStream());
 		workbook.close();
 	
-		logger.debug("MailQuotaExcelExport controller ended.");
+		logger.debug("mailQuotaExcelExport controller ended.");
 	}
 	
 	/**
@@ -1570,13 +1398,16 @@ public class EzEmailAdminController {
 				// 저장 공간은 차지하지만 해당 계정이 사용되지는 않는다. 
 				
 				// 퇴직자 계정을 삭제한다.
-				ezEmailUserAdminService.removeUser(mailAddr);
+				rc = ezEmailUserAdminService.removeUser(mailAddr);
+				logger.debug("removeUser rc=" + rc);
 				
 				// 해당 사용자의 메일박스들을 모두 제거한다.
-				ezEmailUserAdminService.removeUserAllMailboxes(mailAddr);
+				rc = ezEmailUserAdminService.removeUserAllMailboxes(mailAddr);
+				logger.debug("removeUserAllMailboxes rc=" + rc);
 				
 				// 해당 사용자의 개인주소록 및 주소록 관련 설정을 모두 제거한다.
-				ezAddressService.removeUserAddress(mailAddr);
+				rc = ezAddressService.removeUserAddress(mailAddr);
+				logger.debug("removeUserAddress rc=" + rc);
 			}
 		
 		} catch (Exception e) {
@@ -1653,6 +1484,7 @@ public class EzEmailAdminController {
 	    	String shareId = (String)jsonObj.get("shareId");
 			String shareName = (String)jsonObj.get("shareName");
 			String compId = (String)jsonObj.get("compId");
+			String oriPass = (String)jsonObj.get("password");
 			JSONArray userList = (JSONArray)jsonObj.get("userList");
 			int userListSize = userList.size();
 			logger.debug("shareId=" + shareId + ",shareName=" + shareName + ",compId=" + compId + ",userListSize=" + userListSize);
@@ -1779,19 +1611,16 @@ public class EzEmailAdminController {
 			String mailAddr = shareId + "@" + domain;
 			
 			// 이메일 시스템에 계정을 생성한다.
-			// 비밀번호는 랜덤하게 설정한다.
-			String oriPass = UUID.randomUUID().toString().replace("-", "").substring(0, 12) + "!@#";
-			
 			int rc = ezEmailUserAdminService.addUser(mailAddr, oriPass);
 			logger.debug("addUser rc=" + rc);
 			
 			if (rc == 0) { // addUser 성공
-				// 해당 User가 속한 부서의 Group Email 주소에 User를 등록한다.					
-				String groupAddr = deptId + "@" + domain;					
+				// 해당 User가 속한 부서의 Group Email 주소에 User를 등록한다.
+				String groupAddr = deptId + "@" + domain;
 				rc = ezEmailUserAdminService.updateGroupAdd(groupAddr, mailAddr);
 				logger.debug("updateGroupAdd rc=" + rc);
 				
-				if (rc == 0) { // updateGroup 성공												
+				if (rc == 0) { // updateGroup 성공
 					String bizmekaResult = "ERROR";
 					
 					// insertDBData_user 실패했을 경우 JMocha에서 계정 다시 삭제.

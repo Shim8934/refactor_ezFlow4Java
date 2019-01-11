@@ -121,6 +121,7 @@
 		    var dirPath = "${approvalRoot}";
 		    var useReceiveDocNo = "${useReceiveDocNo}";
 		    var orgCompanyID = "";
+		    var docNumZeroCnt = "${docNumZeroCnt}";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -587,7 +588,8 @@
 			            return;
 			        }
 			        else {
-			        	if ("${approvalPWD}" != "N") {
+			        	//if ("${approvalPWD}" != "N") {
+			        	if (CheckUsePassword()) {
 			                var chkpass = chk_Passwd();
 			                if (chkpass == "False") {
 			                    var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
@@ -666,7 +668,7 @@
 			
 			              var rtnval = true;
 			              //mht는 G일때만 수신채번하게 되잇는데
-			              rtnval = getRecvDocNumber(arr_userinfo[4]);
+			              rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 			              if (!rtnval) {
 			                  var pAlertContent = "[접수 문서번호]를 가져오지 못했습니다!";
 			                  OpenAlertUI(pAlertContent);
@@ -949,7 +951,7 @@
 			      parameter[4] = getNodeText(RECEIPTDEPTID);
 			
 			      var url = "/ezApprovalG/ezReceiveDistributeUI.do";
-			      var feature = "status:no;dialogWidth:1000px;dialogHeight:760px;edge:sunken;scroll:no"
+			      var feature = "status:no;dialogWidth:800px;dialogHeight:600px;edge:sunken;scroll:no"
 			      var ret = window.showModalDialog(url, parameter, feature);
 			      if (ret == "true") {
 			          var pAlertContent = "<spring:message code='ezApprovalG.t1419'/>";
@@ -965,7 +967,7 @@
 			      parameter[2] = pAprState;
 			
 				  var url = "/ezApprovalG/ezReceiveAssignUI.do";
-			      var feature = "status:no;dialogWidth:600px;dialogHeight:380px;edge:sunken;scroll:no"
+			      var feature = "status:no;dialogWidth:800px;dialogHeight:600px;edge:sunken;scroll:no"
 			      var ret = window.showModalDialog(url, parameter, feature);
 			      if (ret == "OK") {
 			          var pAlertContent = "<spring:message code='ezApprovalG.t1420'/>";
@@ -1537,6 +1539,28 @@
 					if (confirm("삭제하시겠습니까 ?")) {
 						RemoveSusinNonElecRecDoc(pDocID);
 					}
+				}
+			}
+			
+			/* 2019-01-02 천성준 #14647
+			     결재암호 사용유무 조회 (Y / N)
+			*/
+			function CheckUsePassword() {
+				var result = "";
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/getApprovalPWD.do",
+					success: function(text) {
+						result = text;
+					}        			
+				});
+				
+				if (result != "N") {
+					return true;
+				} else {
+					return false;
 				}
 			}
 		</script>

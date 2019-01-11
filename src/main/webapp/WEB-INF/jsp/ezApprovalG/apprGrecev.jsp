@@ -436,7 +436,8 @@
 		                    return;
 		                }
 		                else {
-		                    if ("${approvalPWD}" != "N") {
+		                    //if ("${approvalPWD}" != "N") {
+		                    if (CheckUsePassword()) {
 		                        chk_Passwd();
 		                    }
 		                    else {
@@ -734,7 +735,7 @@
 				parameter[2] = pAprState;					//결재상태
 			  
 				var url = "/ezApprovalG/ezReceiveAssignUI.do";
-				var feature = "status:no;dialogWidth:388px;dialogHeight:345px;edge:sunken;scroll:no";
+				var feature = "status:no;dialogWidth:800px;dialogHeight:600px;edge:sunken;scroll:no";
 				 	
 				feature =  feature + GetShowModalPosition(388, 345);
 				var ret = window.showModalDialog(url,parameter,feature);
@@ -976,6 +977,28 @@
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
 		    }
+		    
+		    /* 2019-01-02 천성준 #14647
+			     결재암호 사용유무 조회 (Y / N)
+			*/
+			function CheckUsePassword() {
+				var result = "";
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/getApprovalPWD.do",
+					success: function(text) {
+						result = text;
+					}        			
+				});
+				
+				if (result != "N") {
+					return true;
+				} else {
+					return false;
+				}
+			}
 		</script>
 	</head>
 	<body class="popup" style="height:100%">

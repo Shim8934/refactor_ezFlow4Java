@@ -71,6 +71,12 @@
 		    select_memorialDays("${lang}");
 		    var dayView = "";
 		    
+	    	 /* 2019-01-11 김민성 - 접근 권한 없는 경우 메시지 출력 수정 */
+		    if(pAdminFg == "") {
+		    	var msg = "<spring:message code='ezResource.t58' />";
+		        window.location.href = "/ezResource/nonResList.do?msg=" + msg;
+		    }
+	    	 
 	    	document.onselectstart = function () { return false; };
 	    	
 	    	//baonk added
@@ -380,7 +386,7 @@
 	        }
 		</script>
 	</head>
-	<body class="mainbody" style="overflow:hidden; padding-right: 6px;">
+	<body class="mainbody" style="overflow-x:hidden; overflow-y:auto; padding-right: 6px;">
 		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
 		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
 		<div id="mainmenu" onload = "makePageSelPage()">

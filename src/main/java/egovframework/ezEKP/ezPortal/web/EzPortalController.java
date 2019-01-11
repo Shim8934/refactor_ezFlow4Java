@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -1952,6 +1953,8 @@ public class EzPortalController extends EgovFileMngUtil {
 //			reversePath += splitDeptPath[splitDeptPath.length - i - 1] + ",";
 //		}
 		
+		List<PersonalGetQuickLinkMenuVO> resultQuickLinkMenuList = new ArrayList<PersonalGetQuickLinkMenuVO>();
+		
 		String pAccessID = userInfo.getId() + "," + userInfo.getDeptID() + "," + userInfo.getCompanyID() + "," + "everyone";
 		
 		for (int j=0; j<pAccessID.split("\\,").length; j++) {
@@ -1979,10 +1982,18 @@ public class EzPortalController extends EgovFileMngUtil {
 					if (TF) {
 						arrayID[cnt] = getQuickLinkMenu.get(k).getQuickLinkID();
 						cnt ++;
-						result.append(commonUtil.getQueryResult(getQuickLinkMenu.get(k)));
+						resultQuickLinkMenuList.add(getQuickLinkMenu.get(k));
 					}
 				}
 			}
+		}
+		Collections.sort(resultQuickLinkMenuList, new Comparator<PersonalGetQuickLinkMenuVO>() {
+		    public int compare(PersonalGetQuickLinkMenuVO o1, PersonalGetQuickLinkMenuVO o2) {
+		        return o2.getRegDate().compareTo(o1.getRegDate());
+		    }
+		});
+		for (PersonalGetQuickLinkMenuVO personalGetQuickLinkMenuVO : resultQuickLinkMenuList) {
+			result.append(commonUtil.getQueryResult(personalGetQuickLinkMenuVO));
 		}
 		result.append("</DATA>");
 		logger.debug("quickLinkXML="+result.toString());
