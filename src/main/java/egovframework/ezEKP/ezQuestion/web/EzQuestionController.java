@@ -3260,6 +3260,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String GubunNm2 = "";
 		String USER_POS2 = "", USER_DEPT_NM2 = "";
 		
+		/* 2019-01-11 홍승비 - 전자설문 정보수정 시 대상자 변경사항 적용되지 않는 오류 수정 */
+		ezQuestionService.callDeleteItemSeq(Integer.parseInt(doc.getElementsByTagName("BRDID").item(0).getTextContent()), Integer.parseInt(doc.getElementsByTagName("ITEMNO").item(0).getTextContent()), loginVO.getTenantId());
+		
 		
 		/* if(pItemNo.equals(""))  {
         	ezQuestionService.callGetItemSeq(Integer.parseInt(pBrdID));

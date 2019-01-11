@@ -72,11 +72,12 @@
         	}
         	
         	function close_onclick() {
-            	if (g_aChanged == true || g_bChanged == true)
+            	if (g_aChanged == true || g_bChanged == true) {
                 	if (confirm("<spring:message code='ezQuestion.t12' />")) {
                     	SetRange();
                     	return;
                 	}
+            	}
             	window.returnValue = "NO"
             	window.close();
         	}
