@@ -420,4 +420,14 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			update("EzCommonDAO.addUserMasterMailBoxQuota");
 		}
 	}
+	
+	public void createPortalThemePortlet() {
+		try {
+			select("EzCommonDAO.checkPortalThemePortlet");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme_portlet doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblPortalThemePortlet");
+		}
+	}
 }
