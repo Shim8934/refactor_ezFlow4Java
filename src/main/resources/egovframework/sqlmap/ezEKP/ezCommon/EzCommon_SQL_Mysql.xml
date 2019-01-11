@@ -581,10 +581,14 @@
 	
 	<select id="EzCommonDAO.checkHolidayFlag" resultClass="String">
 		<![CDATA[
-			SELECT
-				HOLIDAYFLAG
-			FROM
-				TBL_HOLIDAYLIST
+			SELECT 
+					1 
+			FROM 
+					INFORMATION_SCHEMA.COLUMNS
+			WHERE 
+					TABLE_NAME = 'TBL_HOLIDAYLIST'
+			AND 
+					COLUMN_NAME = 'HOLIDAYFLAG';
 		]]>
 	</select>
 			
@@ -607,11 +611,14 @@
 	
 	<select id="EzCommonDAO.checkHolidayRepeat" resultClass="String">
 		<![CDATA[
-			SELECT
-				HOLIDAYREPEAT
-			FROM
-				TBL_HOLIDAYLIST
-			LIMIT 1
+			SELECT 
+					1 
+			FROM 
+					INFORMATION_SCHEMA.COLUMNS
+			WHERE 
+					TABLE_NAME = 'TBL_HOLIDAYLIST'
+			AND 
+					COLUMN_NAME = 'HOLIDAYREPEAT';
 		]]>
 	</select>
 	
