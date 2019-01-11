@@ -156,8 +156,8 @@
 		<result property="responsorId"         column="user_id"              columnIndex="5" />
 		<result property="optionId"            column="option_id"            columnIndex="6" />
 		<result property="texts"               column="texts"                columnIndex="7" />
-		<result property="rowLevel"            column="row_level"            columnIndex="8" />
-		<result property="columnLevel"         column="column_level"         columnIndex="9" />
+		<result property="rowId"               column="row_id"               columnIndex="8" />
+		<result property="columnId"            column="column_id"            columnIndex="9" />
 		<result property="rankingLevel"        column="ranking_level"        columnIndex="10"/>
 		<result property="rankingOptionLevel"  column="ranking_option_level" columnIndex="11"/>
 		<result property="sliderValue"         column="slider_value"         columnIndex="12"/>
@@ -810,12 +810,12 @@
 	<insert id="EzSurveyDAO.saveResponseItem" parameterClass="ResponseVO">
 		<![CDATA[
 			insert into tbl_survey_response (
-				response_id, survey_id, question_level, question_type,        user_id,  texts,
-				row_level,   option_id, ranking_level, slider_value, company_id, tenant_id
+				response_id, survey_id, question_level, question_type, user_id, texts,
+				row_id, column_id, option_id, ranking_level, slider_value, company_id, tenant_id
 			)
 			values (
-				#responseId#, #surveyId#, #questionLevel#, #questionType#,       #responsorId#,  #texts#,
-				#rowLevel#,   #optionId#, #rankingLevel#, #sliderValue#, #companyId#, #tenantId#
+				#responseId#, #surveyId#, #questionLevel#, #questionType#, #responsorId#, #texts#,
+				#rowId#, #columnId#, #optionId#, #rankingLevel#, #sliderValue#, #companyId#, #tenantId#
 			)
 		]]>
 	</insert>

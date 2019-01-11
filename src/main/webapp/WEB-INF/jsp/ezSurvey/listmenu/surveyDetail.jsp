@@ -417,7 +417,7 @@
 		}
 		
 		function saveResponse() {
-			console.log(resposeObj.responses);
+			//console.log(resposeObj.responses);
 			if (resposeObj.responses.length > 1) {
 				$.ajax({
 					type: "POST",
@@ -541,8 +541,8 @@
 					var row = rowColArray[0];
 					var col = rowColArray[1];
 					
-					rowColObj['row'] = parseInt(row);
-					rowColObj['col'] = parseInt(col);
+					rowColObj['rowId'] = parseInt(row);
+					rowColObj['colId'] = parseInt(col);
 					answer.push(rowColObj);
 				}
 			}
@@ -573,8 +573,8 @@
 						var row = rowColArray[0];
 						var col = rowColArray[1];
 						
-						rowColObj['row'] = parseInt(row);
-						rowColObj['col'] = parseInt(col);
+						rowColObj['rowId'] = parseInt(row);
+						rowColObj['colId'] = parseInt(col);
 						answer.push(rowColObj);
 					}
 				}

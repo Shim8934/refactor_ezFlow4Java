@@ -8,8 +8,8 @@ public class ResponseVO {
 	private String responsorId;
 	private long optionId;
 	private String texts;
-	private int rowLevel;
-	private int columnLevel;
+	private int rowId;
+	private int columnId;
 	private int sliderValue;
 	private int rankingLevel;
 	private int rankingOptionLevel;
@@ -72,22 +72,22 @@ public class ResponseVO {
 		this.texts = texts;
 	}
 	
-	public int getRowLevel() {
-		return rowLevel;
+	public int getRowId() {
+		return rowId;
 	}
-	
-	public void setRowLevel(int rowLevel) {
-		this.rowLevel = rowLevel;
+
+	public void setRowId(int rowId) {
+		this.rowId = rowId;
 	}
-	
-	public int getColumnLevel() {
-		return columnLevel;
+
+	public int getColumnId() {
+		return columnId;
 	}
-	
-	public void setColumnLevel(int columnLevel) {
-		this.columnLevel = columnLevel;
+
+	public void setColumnId(int columnId) {
+		this.columnId = columnId;
 	}
-	
+
 	public int getSliderValue() {
 		return sliderValue;
 	}

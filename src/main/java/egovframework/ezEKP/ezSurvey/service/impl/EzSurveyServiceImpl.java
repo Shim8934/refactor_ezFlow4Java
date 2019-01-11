@@ -1121,10 +1121,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 						break;
 					case 3:
 					case 4:
-						int rowLevel = ((Long) answerObject.get("row")).intValue();
-						int colLevel = ((Long) answerObject.get("col")).intValue();
-						response.setRowLevel(rowLevel);
-						response.setColumnLevel(colLevel);
+						int rowId = ((Long) answerObject.get("rowId")).intValue();
+						int colId = ((Long) answerObject.get("colId")).intValue();
+						response.setRowId(rowId);
+						response.setColumnId(colId);
 						break;
 					case 5:
 					case 6:
