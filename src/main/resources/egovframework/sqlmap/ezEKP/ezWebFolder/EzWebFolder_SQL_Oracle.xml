@@ -11,6 +11,7 @@
 	<typeAlias  alias="webFolderSimpleUserVO"        type="egovframework.ezEKP.ezWebFolder.vo.SimpleUserVO"  />
 	<typeAlias  alias="OrganDeptVO"         type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"       />
 	<typeAlias  alias="EnvVO"               type="egovframework.ezEKP.ezWebFolder.vo.WebfolderEnvVO"/>
+	<typeAlias  alias="duplicateInfoVO"              type="egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO"/>
 	
 	<sql id="getAllFilesInFolderCont">
 		WHERE
@@ -433,6 +434,172 @@
 			AND
 				f.TENANT_ID = #tenantId#
 		]]>
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllDuplicateInfo" resultClass="duplicateInfoVO">
+		SELECT
+			OLD.FOLDER_NAME1 AS FILENAME,
+			'FILE' AS NEWTYPE,
+			'' AS NEWID,
+			'' AS NEWDATE,
+			'' AS NEWSIZE,
+			'DIRECTORY' AS OLDTYPE,
+			OLD.FOLDER_ID AS OLDID,
+			(OLD.UPDATE_DATE + #offset#/(24*60)) AS OLDDATE,
+			'-' AS OLDSIZE,
+			OLD.CREATE_ID as OLDOWNERID
+		FROM
+			TBL_WEBFOLDER_FOLDER OLD
+		WHERE
+			OLD.FOLDER_NAME1 = #fileName#
+			AND OLD.FOLDER_UPPER = #targetFolderId#
+			AND OLD.TENANT_ID = #tenantId#
+			AND OLD.USE_STATUS = 'Y'
+			
+		UNION
+		
+		SELECT
+			OLD.FILE_NAME AS FILENAME,
+			'FILE' AS NEWTYPE,
+			'' AS NEWID,
+			'' AS NEWDATE,
+			'' AS NEWSIZE,
+			'FILE' AS OLDTYPE,
+			OLD.FILE_ID AS OLDID,
+			(OLD.UPDATE_DATE + #offset#/(24*60)) AS OLDDATE,
+			TO_CHAR(OLD.FILE_SIZE) AS OLDSIZE,
+			OLD.CREATE_ID as OLDOWNERID
+		FROM
+			TBL_WEBFOLDER_FILE OLD
+		WHERE
+			OLD.FILE_NAME = #fileName#
+			AND OLD.FOLDER_ID = #targetFolderId#
+			AND OLD.TENANT_ID = #tenantId#
+			AND OLD.USE_STATUS = 'Y'
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllDuplicateInfoForFile" resultClass="duplicateInfoVO">
+		SELECT
+			NEW.FILE_NAME AS FILENAME,
+			'FILE' AS NEWTYPE,
+			NEW.FILE_ID AS NEWID,
+			(NEW.UPDATE_DATE + #offset#/(24*60)) AS NEWDATE,
+			NEW.FILE_SIZE AS NEWSIZE,
+			'DIRECTORY' AS OLDTYPE,
+			OLD.FOLDER_ID AS OLDID,
+			(OLD.UPDATE_DATE + #offset#/(24*60)) AS OLDDATE,
+			'-' AS OLDSIZE,
+			OLD.CREATE_ID as OLDOWNERID
+		FROM
+			TBL_WEBFOLDER_FILE NEW
+		INNER JOIN
+			TBL_WEBFOLDER_FOLDER OLD
+		ON
+		<isNotEmpty property="newName">
+			OLD.FOLDER_NAME1 = #newName#
+		</isNotEmpty>
+		<isEmpty property="newName">
+			NEW.FILE_NAME = OLD.FOLDER_NAME1
+		</isEmpty>
+			AND OLD.FOLDER_UPPER = #targetFolderId#
+			AND NEW.TENANT_ID = OLD.TENANT_ID
+			AND OLD.USE_STATUS = 'Y'
+		WHERE
+			NEW.FILE_ID = #originElementId#
+			AND NEW.TENANT_ID = #tenantId#
+			
+		UNION
+		
+		SELECT
+			NEW.FILE_NAME AS FILENAME,
+			'FILE' AS NEWTYPE,
+			NEW.FILE_ID AS NEWID,
+			(NEW.UPDATE_DATE + #offset#/(24*60)) AS NEWDATE,
+			NEW.FILE_SIZE AS NEWSIZE,
+			'FILE' AS OLDTYPE,
+			OLD.FILE_ID AS OLDID,
+			(OLD.UPDATE_DATE + #offset#/(24*60)) AS OLDDATE,
+			TO_CHAR(OLD.FILE_SIZE) AS OLDSIZE,
+			OLD.CREATE_ID as OLDOWNERID
+		FROM
+			TBL_WEBFOLDER_FILE NEW
+		INNER JOIN
+			TBL_WEBFOLDER_FILE OLD
+		ON
+		<isNotEmpty property="newName">
+			OLD.FILE_NAME = #newName#
+		</isNotEmpty>
+		<isEmpty property="newName">
+			NEW.FILE_NAME = OLD.FILE_NAME
+		</isEmpty>
+			AND OLD.FOLDER_ID = #targetFolderId#
+			AND NEW.TENANT_ID = OLD.TENANT_ID
+			AND OLD.USE_STATUS = 'Y'
+		WHERE
+			NEW.FILE_ID = #originElementId#
+			AND NEW.TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzWebFolderDAO.getAllDuplicateInfoForFolder" resultClass="duplicateInfoVO">
+		SELECT
+			NEW.FOLDER_NAME1 AS FILENAME,
+			'DIRECTORY' AS NEWTYPE,
+			NEW.FOLDER_ID AS NEWID,
+			(NEW.UPDATE_DATE + #offset#/(24*60)) AS NEWDATE,
+			'-' AS NEWSIZE,
+			'DIRECTORY' AS OLDTYPE,
+			OLD.FOLDER_ID AS OLDID,
+			(OLD.UPDATE_DATE + #offset#/(24*60)) AS OLDDATE,
+			'-' AS OLDSIZE,
+			OLD.CREATE_ID as OLDOWNERID
+		FROM
+			TBL_WEBFOLDER_FOLDER NEW
+		INNER JOIN
+			TBL_WEBFOLDER_FOLDER OLD
+		ON
+		<isNotEmpty property="newName">
+			OLD.FOLDER_NAME1 = #newName#
+		</isNotEmpty>
+		<isEmpty property="newName">
+			NEW.FOLDER_NAME1 = OLD.FOLDER_NAME1
+		</isEmpty>
+			AND OLD.FOLDER_UPPER = #targetFolderId#
+			AND NEW.TENANT_ID = OLD.TENANT_ID
+			AND OLD.USE_STATUS = 'Y'
+		WHERE
+			NEW.FOLDER_ID = #originElementId#
+			AND NEW.TENANT_ID = #tenantId#
+			
+		UNION
+		
+		SELECT
+			NEW.FOLDER_NAME1 AS FILENAME,
+			'DIRECTORY' AS NEWTYPE,
+			NEW.FOLDER_ID AS NEWID,
+			(NEW.UPDATE_DATE + #offset#/(24*60)) AS NEWDATE,
+			'-' AS NEWSIZE,
+			'FILE' AS OLDTYPE,
+			OLD.FILE_ID AS OLDID,
+			(OLD.UPDATE_DATE + #offset#/(24*60)) AS OLDDATE,
+			TO_CHAR(OLD.FILE_SIZE) AS OLDSIZE,
+			OLD.CREATE_ID as OLDOWNERID
+		FROM
+			TBL_WEBFOLDER_FOLDER NEW
+		INNER JOIN
+			TBL_WEBFOLDER_FILE OLD
+		ON
+		<isNotEmpty property="newName">
+			OLD.FILE_NAME = #newName#
+		</isNotEmpty>
+		<isEmpty property="newName">
+			NEW.FOLDER_NAME1 = OLD.FILE_NAME
+		</isEmpty>
+			AND OLD.FOLDER_ID = #targetFolderId#
+			AND NEW.TENANT_ID = OLD.TENANT_ID
+			AND OLD.USE_STATUS = 'Y'
+		WHERE
+			NEW.FOLDER_ID = #originElementId#
+			AND NEW.TENANT_ID = #tenantId#
 	</select>
 	
 	<select id="EzWebFolderDAO.getAllFilesInFolder" resultMap="fileVO2">

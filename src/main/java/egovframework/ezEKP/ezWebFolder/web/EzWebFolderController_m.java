@@ -23,10 +23,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
 import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -45,6 +48,7 @@ public class EzWebFolderController_m {
 	public String webfolderSharingList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
+		model.addAttribute("userId", userInfo.getId());
 		return "ezWebFolder/webfolderSharingList";
 	}
 	
@@ -75,6 +79,7 @@ public class EzWebFolderController_m {
 	public String webfolderSharedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		model.addAttribute("primary", userInfo.getLang());
+		model.addAttribute("userId", userInfo.getId());
 		return "ezWebFolder/webfolderSharedList";
 	}
 	
@@ -504,6 +509,10 @@ public class EzWebFolderController_m {
 		if (status.equals("ok")) {
 			model.addAttribute("status","ok");
 			model.addAttribute("code",code);
+			
+			if (resultBody.containsKey("duplicateInfoArray")) {
+				model.addAttribute("duplicateInfoArray", resultBody.get("duplicateInfoArray"));
+			}
 		}else {
 			model.addAttribute("reason", resultBody.get("reason").toString());
 			model.addAttribute("status","error");
@@ -518,6 +527,10 @@ public class EzWebFolderController_m {
 	@RequestMapping(value = "/ezWebFolder/favorite.do")
 	public String favor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse resp, Model model) throws Exception {
 		logger.debug("favorite started.");
+		LoginSimpleVO user	= commonUtil.userInfoSimple(loginCookie);
+		
+		model.addAttribute("userId",user.getId());
+		
 		logger.debug("favorite ended.");
 		return "ezWebFolder/webfolderFavorite";
 	}
@@ -598,8 +611,40 @@ public class EzWebFolderController_m {
 	 return "ezWebFolder/moveTrashCanManage";
 	}
 	
+	@RequestMapping(value = "/ezWebFolder/moveTrashCanForDuplicate.do", method = RequestMethod.POST)
+	public @ResponseBody JSONObject moveTrashCan(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
+			@RequestParam String id, @RequestParam Type type, @RequestParam(required = false) String folderId) throws Exception {
+		logger.debug("moveTrashCanForDuplicate started.");
+		
+		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
+		Map<String, Object> param = new HashMap<String, Object>();
+		
+		String overwritable = request.getParameter("overwritable");
+		String newName = request.getParameter("newName");
+		
+		boolean isFile = type == Type.FILE;
+		
+		if (overwritable != null) {
+			param.put("overwritable", overwritable);
+		}
+		
+		if (newName != null && isFile) {
+			param.put("fileNameList", newName);
+		}
+		
+		param.put(isFile ? "fileList" : "folderList", id);
+		param.put("userId", user.getId());
+		param.put("folderId", folderId);
+
+		JSONObject resultJson = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/move-TrashCan", param, request, "post", null);
+
+		logger.debug("result=" + resultJson);
+		logger.debug("moveTrashCanForDuplicate ended");
+		return resultJson;
+	}
+	
 	@RequestMapping(value="/ezWebFolder/moveTrashCan.do", method=RequestMethod.POST)
-	public String moveTrashCan (@CookieValue ("loginCookie")String loginCookie, HttpServletRequest request,
+	public @ResponseBody JSONObject moveTrashCan (@CookieValue ("loginCookie")String loginCookie, HttpServletRequest request,
 			HttpServletResponse response, Model model) throws Exception {
 		logger.debug("moveTrashCan started.");
 		
@@ -615,25 +660,11 @@ public class EzWebFolderController_m {
 		param.put("fileList", fileList);               
 		param.put("folderList", folderList);               
 		
-		JSONObject resultBody = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/move-TrashCan", param, request, "post", null);
+		JSONObject resultJson = commonUtil.getJsonFromWebFolderRestApi("/rest/ezwebfolder/move-TrashCan", param, request, "post", null);
 		
-		String status = resultBody.get("status").toString();
-		String code = resultBody.get("code").toString();
-		
-		model.addAttribute("status", status);
-		
-		if (status.equals("ok")) {
-			model.addAttribute("status","ok");
-			model.addAttribute("code", code);
-		}else {
-			model.addAttribute("reason", resultBody.get("reason").toString());
-			model.addAttribute("status","error");
-			model.addAttribute("code", code);
-		}
-			
-		logger.debug("status=" + status);
+		logger.debug("result=" + resultJson);
 		logger.debug("moveTrashCan ended");
-		return "json";		
+		return resultJson;		
 	}
 	
 	private <T> T orElse(T value, T other) {

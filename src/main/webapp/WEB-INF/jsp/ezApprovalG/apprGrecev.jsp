@@ -735,7 +735,7 @@
 				parameter[2] = pAprState;					//결재상태
 			  
 				var url = "/ezApprovalG/ezReceiveAssignUI.do";
-				var feature = "status:no;dialogWidth:388px;dialogHeight:345px;edge:sunken;scroll:no";
+				var feature = "status:no;dialogWidth:800px;dialogHeight:600px;edge:sunken;scroll:no";
 				 	
 				feature =  feature + GetShowModalPosition(388, 345);
 				var ret = window.showModalDialog(url,parameter,feature);

@@ -28,8 +28,25 @@ var messages = {
 	strLang27 : "명(팀)",
 	strLang28 : "공유를 추가했습니다.",
 	strLang29 : "공유를 수정했습니다.",
-	strLang30 : "파일의 소유자가 아닙니다.",
+	strLang30 : "파일 또는 폴더의 소유자가 아닙니다.",
 	strLang31 : "공유대상자가 없습니다. ",
 	strLang32 : "공유를 취소하시겠습니까?",
-	strLang33 : "공유를 취소했습니다."
+	strLang33 : "공유를 취소했습니다.",
+	strLang34 : "공유받은 폴더는 수정할 수 없습니다.",			// ezWebFolder.t327
+	strLang35 : "최상위 폴더는 수정할 수 없습니다.",			// ezWebFolder.t328
+	strLang36 : "관리자만 관리가 가능한 폴더입니다.",			// ezWebFolder.t329
+	strLang37 : "폴더 생성자가 아니면 폴더명을 수정 할 수 없습니다.",	// ezWebFolder.t258
+	strLang38 : "파일이나 폴더를 선택하세요.",
+	strLang39 : "하나의 파일 또는 폴더를 선택하세요.",
+	strLang40 : "폴더 생성자가 아니면 폴더를 삭제 할 수 없습니다.",
+	completeDuplicateJob : "작업을 완료했습니다.",
+	parameterError: "파라메터가 부족합니다.",
+	serverError: "에러가 발생했습니다.",
+	permissionError: "접근 권한이 없습니다.",
+	resultErrDuplicateRename : "중복되는 이름으로 변경할 수 없습니다.",
+	resultErrDuplicateCreate : "중복되는 이름으로 생성할 수 없습니다.",
+	successMoveFile: "파일 이동을 성공하셨습니다.",
+	successCopyFile: "파일 복사를 성공하셨습니다.",
+	outOfStorageSpaceForOneTime: "1회 업로드 용량을 초과하였습니다.",
+	outOfStorageSpace: "용량을 초과하였습니다."
 }

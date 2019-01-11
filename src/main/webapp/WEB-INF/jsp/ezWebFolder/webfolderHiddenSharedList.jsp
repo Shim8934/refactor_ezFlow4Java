@@ -22,6 +22,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 		<script type="text/javascript">
+			var folderType = "";
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
 				var reheight = document.documentElement.clientHeight - 240;
@@ -220,6 +221,19 @@
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", resultJson["folderFileType"]);
+					row.setAttribute("targetPath", result[i]["folderPath"]);
+					
+					var functionType = ""
+					if (result[i]["folderType"]) {
+						row.setAttribute("targetFunction", result[i]["folderType"]);
+					}
+					
+					var creator = ""
+					if (!result[i]["creatorId"]) {
+						row.setAttribute("targetCreater", result[i]["createId"]);
+					} else {
+						row.setAttribute("targetCreater", result[i]["creatorId"]);
+					}
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					inputElement = document.createElement("input");

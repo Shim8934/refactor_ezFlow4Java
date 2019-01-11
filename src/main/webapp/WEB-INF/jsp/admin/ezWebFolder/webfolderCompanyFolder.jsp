@@ -8,6 +8,7 @@
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezWebFolder.i1', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('ezWebFolder.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -415,6 +416,9 @@
 							case 3:
 								alert("<spring:message code='ezWebFolder.t300' />");
 								break;
+							case 8:
+								alert(messages.resultErrDuplicateCreate);
+								break;
 						}
 					},
 					error: function (xhr, status, e){
@@ -512,6 +516,9 @@
 								break;
 							case 3:
 								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+							case 8:
+								alert(messages.resultErrDuplicateRename);
 								break;
 						}
 					},

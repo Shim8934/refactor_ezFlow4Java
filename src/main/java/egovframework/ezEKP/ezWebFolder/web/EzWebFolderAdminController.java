@@ -985,7 +985,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		logger.debug("Current page: " + currPage + " || StartDate: " + startDate + " || EndDate: " + endDate + " || File ext: " + fileExt + " || File Name: " + fileName + " || User name: " + userName + " || File type: " + fileType + " || Folder Id: " + folderId + " || Column: " + column + " || Order: " + order + " || listCount: " + listCnt);
 		
 		String gwServerUrl  = config.getProperty("config.webFolderGwServerURL");
-		String url          = gwServerUrl + "/rest/ezwebfolderadmin/folders/" + folderId + "/file-list";
+		String url          = gwServerUrl + "/rest/ezwebfolderadmin/folders/" + folderId + "/file-list2";
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());

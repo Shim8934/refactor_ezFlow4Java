@@ -148,14 +148,14 @@ public class CommonUtil {
 	private static final Logger logger = LoggerFactory.getLogger(CommonUtil.class);
 	private static CommonUtil commonUtilInstance;
 	
-	private static Map<String, String> loginUsers;
+//	private static Map<String, String> loginUsers;
 	
     @PostConstruct
 	public void init() throws Exception {
     	logger.debug("init started.");
 
     	commonUtilInstance = this;
-    	loginUsers = new ConcurrentHashMap<String, String>();
+//    	loginUsers = new ConcurrentHashMap<String, String>();
     	
     	logger.debug("init ended.");
     }
@@ -1572,8 +1572,9 @@ public class CommonUtil {
 		return strSize;
 	}
 	
-	public void setLoginUsers(String userInfo, String loginTime) {
-		loginUsers.put(userInfo, loginTime);
+	public void setLoginUsers(int tenantID, String userID, String loginTime) throws Exception {
+//		loginUsers.put(userInfo, loginTime);
+		ezCommonService.setMultiLoginUser(tenantID, userID, loginTime);
 	}
 	
 	public boolean checkMultiLogin(HttpServletRequest request, HttpServletResponse response) {
@@ -1599,20 +1600,16 @@ public class CommonUtil {
 					
 					String userID = cookieInfo[1];
 					String companyID = cookieInfo[10];
-					String tenantID = cookieInfo[8];
-					String userInfo = userID + "_" + tenantID;
+					int tenantID = Integer.parseInt(cookieInfo[8]);
+//					String userInfo = userID + "_" + tenantID;
 					
-					useMultiLogin = ezCommonService.getCompanyConfig(Integer.parseInt(tenantID), companyID, "useMultiLogin");
+					useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
 					
 					if(useMultiLogin.equalsIgnoreCase("NO")) {
-						if(loginUsers.containsKey(userInfo)) {
-							if(!loginUsers.get(userInfo).equals(multiLoginCookie.getValue())) {
-								result = false;
-							}
-						}
+						result = ezCommonService.matchMultiLoginTime(tenantID, userID, multiLoginCookie.getValue());
 					} 
 				} else {
-					result = false;
+					return false;
 				}
 			}
 		} catch (Exception e) {
