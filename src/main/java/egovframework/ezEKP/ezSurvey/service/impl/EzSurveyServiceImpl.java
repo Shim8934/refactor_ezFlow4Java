@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -838,18 +837,21 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			List<AttachVO> qstAttch    = attachs.stream().filter(a -> a.getTargetType().equals("question")).collect(Collectors.toList());
 			attachs.removeAll(qstAttch);
 			
-			Map<Long, List<ResponseVO>> mapResponses = new HashMap<>();
+			Map<String, List<ResponseVO>> mapResponses = new HashMap<>();
 			if (logicCheck == 2 && responses != null && responses.size() > 0) {
 				ListIterator<ResponseVO> respIter = responses.listIterator();
 				while (respIter.hasNext()) {
 					ResponseVO response = respIter.next();
-					if (mapResponses.containsKey(response.getOptionId())) {
-						mapResponses.get(response.getOptionId()).add(response);
+					int qstType     = response.getQuestionType();
+					String checkKey = (qstType == 1 || qstType == 2 || qstType == 9) ? "opt" + response.getOptionId() : "qst" + response.getQuestionLevel();
+					
+					if (mapResponses.containsKey(checkKey)) {
+						mapResponses.get(checkKey).add(response);
 					}
 					else {
 						List<ResponseVO> optResponse = new ArrayList<>();
 						optResponse.add(response);
-						mapResponses.put(response.getOptionId(), optResponse);
+						mapResponses.put(checkKey, optResponse);
 					}
 				}
 			}
@@ -879,8 +881,12 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				
 				//Add responses
 				if (logicCheck == 2) {
-					if (mapResponses.containsKey(option.getOptionId())) {
-						option.setResponses(mapResponses.get(option.getOptionId()));
+					int qstType = option.getQuestionType();
+					if (qstType == 1 || qstType == 2 || qstType == 9) {
+						String optKey = "opt" + option.getOptionId();
+						if (mapResponses.containsKey(optKey)) {
+							option.setResponses(mapResponses.get(optKey));
+						}
 					}
 				}
 			}
@@ -900,6 +906,17 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 					if (qsAttach.getTargetId() == question.getQuestionId()) {
 						question.setAttach(qsAttach);
 						qsAtIter.remove();
+					}
+				}
+				
+				//Add responses
+				if (logicCheck == 2) {
+					int qstType = question.getType();
+					if (qstType != 1 && qstType != 2 && qstType != 9) {
+						String qstKey = "qst" + question.getLevel();
+						if (mapResponses.containsKey(qstKey)) {
+							question.setResponses(mapResponses.get(qstKey));
+						}
 					}
 				}
 			}

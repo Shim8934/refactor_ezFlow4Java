@@ -11,8 +11,7 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')                       }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
-		<style type="text/css">
-		</style>
+		<style type="text/css"></style>
 	</head>
 	<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg')}               "></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}    "></script>
@@ -28,7 +27,7 @@
 		<div id="contentsBox">
 			<div id="surveyRespondents" style="height: 240px; position: relative; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;">
 				<div style="position: absolute; top: 0px; right: 0px; padding: 8px; font-size: 14px;" id="totalRespondents"></div>
-				<div id="respondentPie" style="height: 100%;"></div>
+				<div style="padding: 0px 60px; box-sizing:border-box;"><canvas id="respondentPie"  height="240" width="640"></canvas></div>
 			</div>
 			<div id="barChart" style="display: none; height: 460px; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;"></div>
 		</div>
@@ -43,7 +42,7 @@
 			var questionStatistic = ${questions};
 			
 			//console.log(surveyStatistic);
-			//console.log(questionStatistic);
+			console.log(questionStatistic);
 			
 			startStatistic(questionStatistic);
 			
@@ -58,8 +57,6 @@
 				//Create question header here
 				var mainDivElmt   = document.getElementById("contentsBox");
 				var divElmt       = document.createElement("div");
-				var divId         = "question" + question["level"];
-				divElmt.setAttribute("id", divId);
 				mainDivElmt.appendChild(divElmt);
 				
 				//Create question statistic for each type
@@ -67,8 +64,15 @@
 				switch(questionType) {
 					case 1:
 					case 2:
+					case 9:
 						divElmt.className = "pieDiv";
-						createQuestionPie(question, divId);
+						var canvasElmt = document.createElement("canvas");
+						var canvasId   = "question" + question["level"];
+						canvasElmt.setAttribute("height", 240);
+						canvasElmt.setAttribute("width", 640);
+						canvasElmt.setAttribute("id", canvasId);
+						divElmt.appendChild(canvasElmt);
+						createQuestionPie(question, canvasId);
 						break;
 					case 3:
 					case 4:
@@ -79,107 +83,102 @@
 					case 7:
 						break;
 					case 8:
-					case 9:
 						break;
 				}
 			}
 			
-			function createQuestionPie(question, divId) {
+			function createQuestionPie(question, canvasId) {
 				var options = question["option"];
-				var data    = [];
+				var values  = [];
+				var labels  = [];
 				var hasResp = false;
 				
 				for (var i = 0; i < options.length; i++) {
-					var optResponse     = {};
 					var responses       = options[i]["responses"];
 					var responsesCnt    = 0;
+					var optionContent   = "";
+					
 					if (responses && responses.length > 0) {
 						responsesCnt = responses.length;
 						hasResp      = true;
 					} 
 					
-					optResponse["name"] = options[i]["content"];
-					optResponse["y"]    = responsesCnt;
-					optResponse["more"] = options[i]["responses"];
-					data.push(optResponse);
+					if (options[i]["content"].length > 50) {
+						optionContent = options[i]["content"].substring(0, 47) + "...";
+					}
+					else {
+						optionContent = options[i]["content"];
+					}
+					
+					values.push(responsesCnt);
+					labels.push(optionContent);
 				}
 				
 				if (hasResp) {
-					console.log(data);
-					createPieChart(data, divId);
+					createPieChart(labels, values, canvasId);
 				}
 				else {
 					//Show empty responses question image
-					var imgElmt = document.createElement("img");
-					imgElmt.src = "/images/ezSurvey/nores";
-					document.getElementById(divId).appendChild(imgElmt);
+					//var imgElmt = document.createElement("img");
+					//imgElmt.src = "/images/ezSurvey/nores";
+					//document.getElementById(divId).appendChild(imgElmt);
 				}
 			}
 			
 			function test() {
-				var data        = [];
+				var values      = [];
+				var lables      = [];
 				var totalUsers  = parseInt(surveyStatistic["usersCnt"]);
 				var respondents = parseInt(surveyStatistic["respondentCnt"]);
 				var notTakePart = totalUsers - respondents;
 				
-				data.push({
-					name : '참석한 사람 [' + respondents + SurveyMessages.strUser3 +']',
-					y    : respondents
-				});
-				
-				data.push({
-					name : '참석하 지않은 사람 [' + notTakePart + SurveyMessages.strUser3 +']',
-					y    : notTakePart
-				});
+				values.push(notTakePart);
+				values.push(respondents);
+				lables.push('참석한 사람 [' + respondents + SurveyMessages.strUser3 +']');
+				lables.push('참석하 지않은 사람 [' + notTakePart + SurveyMessages.strUser3 +']');
 				
 				document.getElementById("totalUserCnt").innerHTML     = totalUsers;
 				document.getElementById("totalRespondents").innerHTML = SurveyMessages.strTotal + " " + totalUsers + SurveyMessages.strUser3;
-				createPieChart(data, "respondentPie");
+				createPieChart(lables, values,  "respondentPie");
 			}
 			
-			function createPieChart(userData, elmtId) {
-				Highcharts.chart(elmtId, {
-					chart: {
-						plotBackgroundColor: null,
-						plotBorderWidth: null,
-						plotShadow: false,
-						type: 'pie'
+			function createPieChart(labels, values, elmtId) {
+				var ctx = document.getElementById(elmtId).getContext("2d");
+				var myPieChart = new Chart(ctx, {
+					type: 'pie',
+					data: {
+						labels: labels,
+						datasets: [{
+							borderWidth: 2,
+							hoverBorderWidth: 8,
+							backgroundColor: colors,
+							data: values
+						}]
 					},
-					title:{
-						text: null
-					},
-					tooltip: {
-						pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-					},
-					legend: {
-						layout: 'vertical',
-						align: 'right',
-						verticalAlign: 'middle',
-						labelFormatter: function() {return this.name + " (" + this.percentage.toFixed(1) + "%)";},
-						itemMarginTop: 10,
-						itemMarginBottom: 10
-					},
-					plotOptions: {
-						pie: {
-							allowPointSelect: true,
-							cursor: 'pointer',
-							dataLabels: {enabled: true, align: 'left'},
-							showInLegend: true
-						},
-						/* series: {
-							point: {
-							events: {
-								legendItemClick: function () {return false;}}
+					options: {
+						tooltips: {
+							callbacks: {
+								label: function(tooltipItem, data) {
+									var allData      = data.datasets[tooltipItem.datasetIndex].data;
+									var tooltipLabel = data.labels[tooltipItem.index];
+									var tooltipData  = allData[tooltipItem.index];
+									var total        = 0;
+									for (var i in allData) {
+										total += parseFloat(allData[i]);
+									}
+									var tooltipPercentage = ((tooltipData / total) * 100).toFixed(1);
+									return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
+								}
 							}
-						} */
-					},
-					credits: {enabled: false},
-					series: [{
-						name: '',
-						colorByPoint: true,
-						data: userData
-					}]
+						},
+						legend: {
+							position: 'right'
+						},
+						responsive: true,
+					}
 				});
+				 
+				 $("#chartjs-legend").html(myPieChart.generateLegend());
 			}
 			
 			function showMoreDetail() {

@@ -18,6 +18,15 @@ public class QuestionVO {
 	private int skipFlag;
 	private List<OptionVO> option;
 	private AttachVO attach;
+	private List<ResponseVO> responses;
+	
+	public List<ResponseVO> getResponses() {
+		return responses;
+	}
+	
+	public void setResponses(List<ResponseVO> responses) {
+		this.responses = responses;
+	}
 	
 	public AttachVO getAttach() {
 		return attach;
