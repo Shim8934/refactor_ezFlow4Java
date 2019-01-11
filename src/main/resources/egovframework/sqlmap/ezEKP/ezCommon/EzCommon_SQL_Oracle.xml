@@ -629,4 +629,44 @@
 		PRIMARY KEY ("THEME_ID","TENANT_ID", "COMPANY_ID", "PORTLET_ID")
 	)
 	</statement>
+	
+	<select id="EzCommonDAO.checkHolidayFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+					COLUMN_NAME 
+			FROM 
+					ALL_TAB_COLUMNS
+			WHERE 
+					TABLE_NAME = 'TBL_HOLIDAYLIST'
+			AND 
+					COLUMN_NAME = 'HOLIDAYFLAG'
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addHolidayFlag"> 
+		ALTER TABLE 
+			TBL_HOLIDAYLIST
+		ADD 
+			HOLIDAYFLAG VARCHAR(45) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkHolidayRepeat" resultClass="String">
+		<![CDATA[
+			SELECT 
+					COLUMN_NAME 
+			FROM 
+					ALL_TAB_COLUMNS
+			WHERE 
+					TABLE_NAME = 'TBL_HOLIDAYLIST'
+			AND 
+					COLUMN_NAME = 'HOLIDAYREPEAT'
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addHolidayRepeat"> 
+		ALTER TABLE 
+			TBL_HOLIDAYLIST
+		ADD 
+			HOLIDAYREPEAT VARCHAR(45) DEFAULT NULL
+	</statement>
 </sqlMap>

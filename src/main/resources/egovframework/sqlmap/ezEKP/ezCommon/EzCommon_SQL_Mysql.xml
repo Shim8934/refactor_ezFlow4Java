@@ -588,7 +588,7 @@
 			WHERE 
 					TABLE_NAME = 'TBL_HOLIDAYLIST'
 			AND 
-					COLUMN_NAME = 'HOLIDAYFLAG';
+					COLUMN_NAME = 'HOLIDAYFLAG'
 		]]>
 	</select>
 			
@@ -618,7 +618,7 @@
 			WHERE 
 					TABLE_NAME = 'TBL_HOLIDAYLIST'
 			AND 
-					COLUMN_NAME = 'HOLIDAYREPEAT';
+					COLUMN_NAME = 'HOLIDAYREPEAT'
 		]]>
 	</select>
 	
