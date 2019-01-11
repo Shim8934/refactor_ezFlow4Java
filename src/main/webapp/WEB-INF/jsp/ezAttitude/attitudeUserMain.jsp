@@ -1749,7 +1749,7 @@
 	    			//토요일 일요일은 text색상이 다름.
 	    			var dayClass = "";
 	    			var dayIdx = new Date(year + "-" + month + "-" + j).getDay();
-	    			if (dayIdx == 0 || isholiday) {
+	    			if (dayIdx == 0 || isholiday || (dayIdx != 6 && companyHoliday[dayIdx] == "1")) {
 	    				dayClass = "sun";
 	    			} else if (dayIdx == 6) {
 	    				dayClass = "sat";	
