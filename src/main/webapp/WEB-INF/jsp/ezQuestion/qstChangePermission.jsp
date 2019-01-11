@@ -441,7 +441,7 @@
             	<tr> <!----------- 설문 응답자 범위(전체/선정) --------------> 
 	                <th><spring:message code='ezQuestion.t250' /></th> 
     	            <td>
-        	            <select name="set_Target" id="set_Target" onchange="return set_Target_onchange()">
+        	            <select name="setTarget" id="set_Target" onchange="return set_Target_onchange()">
         	            	<c:choose> 
         	            		<c:when test="${qstUserPermissionVO.responseRange == '0'}">
                 	        		<option value="0" selected="selected"><spring:message code='ezQuestion.t251' /></option> 
