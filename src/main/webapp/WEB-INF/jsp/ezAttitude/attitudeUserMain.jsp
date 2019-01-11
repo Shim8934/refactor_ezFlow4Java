@@ -323,6 +323,10 @@
 					
 		        	$("#popup").css("left", popupX);
 		        	$("#popupDay").css("left", popupDayX);
+		        	
+		        	//테이블 리스트 resize조정.
+		        	var height = parseInt(document.documentElement.clientHeight - 235);
+		        	$("#contentlist").css("height", height +"px");
 		        });
 				
 				//리스트형 날짜 클릭시 근태작성창

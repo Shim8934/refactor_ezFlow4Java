@@ -139,6 +139,13 @@ var buttons = (function() {
 				return;
 			}
 			
+			if (folderType == "C") {
+				if (parentId == 'root' || selected.targetPath[0] < 2) {
+					alert(messages.strLang36);
+					return;
+				}
+			}
+			
 			var fileId = selected.files[0];
 			var selectedFolderId = selected.folders[0];
 			
@@ -176,11 +183,6 @@ var buttons = (function() {
 				if (folderType == "S") {
 					if (parentId == 'root' || targetPathLength[0] < 2) {
 						alert(messages.strLang34);
-						return;
-					}
-				} else if (folderType == "C") {
-					if (parentId == 'root' || targetPathLength[0] < 2) {
-						alert(messages.strLang36);
 						return;
 					}
 				} else {

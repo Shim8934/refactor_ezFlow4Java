@@ -99,6 +99,10 @@ public interface EzCommonService {
 	public void addUserMasterMailBoxQuota() throws Exception;
 
 	public void addPortalThemePortletIsFixed() throws Exception;
+
+	public void addHolidayFlag() throws Exception;
+	
+	public void addHolidayRepeat() throws Exception;
 	
 	public void createPortalThemePortlet() throws Exception;
 }
