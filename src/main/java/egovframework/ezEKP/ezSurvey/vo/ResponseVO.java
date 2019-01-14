@@ -13,8 +13,44 @@ public class ResponseVO {
 	private int sliderValue;
 	private int rankingLevel;
 	private int rankingOptionLevel;
+	private String responseDate;
+	private String image;
+	private String userName;
+	private String deptName;
 	private String companyId;
 	private int tenantId;
+	
+	public String getDeptName() {
+		return deptName;
+	}
+	
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
+	}
+	
+	public String getUserName() {
+		return userName;
+	}
+	
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+	
+	public String getResponseDate() {
+		return responseDate;
+	}
+	
+	public void setResponseDate(String responseDate) {
+		this.responseDate = responseDate;
+	}
+	
+	public String getImage() {
+		return image;
+	}
+	
+	public void setImage(String image) {
+		this.image = image;
+	}
 	
 	public long getResponseId() {
 		return responseId;

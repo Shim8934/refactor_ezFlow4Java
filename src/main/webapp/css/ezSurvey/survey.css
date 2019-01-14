@@ -45,12 +45,14 @@
 .spanName:hover {color: #9b9b9b;}
 .statisTh >img {width: 20px; height: 20px; vertical-align: middle;}
 .selectedNode {font-weight: bold;}
-.searchPanel, .userPanel, .logicPanel {z-index: 2000; position: fixed; border:1px solid #666; background-color: #fff;; border-radius: 5px; height: auto;}
+.searchPanel, .userPanel, .logicPanel, .respondentPanel, .textPanel {z-index: 2000; position: fixed; border:1px solid #666; background-color: #fff;; border-radius: 5px; height: auto;}
 .searchPanel, .userPanel {width: 464px;}
 .searchPanel h1 {margin-top: 0px !important;}
+.respondentPanel {height: 320px; width: 450px;}
+.textPanel {height: 480px; width: 640px;}
 .logicPanel {height: 640px; width: 600px;}
 .userPanel {height: 262px;}
-.hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off {display: none;}
+.hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off {display: none;}
 .uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
 .receiver_tltype01 >span {min-width: 45px;}
 .organImg {width: 18px; height: 18px; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
@@ -99,7 +101,7 @@
 .pr-frame {border: none; width: 100%; flex: 1; min-height: 0px; min-width: 0px;}
 .txtSpan {cursor: pointer;}
 .txtSpan:hover {color: #164aad !important; text-decoration: none !important;}
-.rfogPanel {width: 100%; height: 100000%; position: absolute; top: 0px; left: 0px; z-index: 1000; background: none rgba(0,0,0,0.5);}
+.rfogPanel {width: 100%; height: 100000%; position: absolute; top: 0px; left: 0px; z-index: 1000; background: none rgba(0,0,0,0.5); cursor: pointer;}
 .divPrevH {width: 100%; overflow: hidden; flex: 1; display: flex;}
 .mainPrevH {width: 100%; position: relative; padding-top: 5px;}
 .mainPrevH >div {height: 100%; display: flex; flex-flow: column;}
@@ -281,7 +283,7 @@ input::-ms-clear {display: none;}
 .surveyCrtTt3 img {height: 32px; width: 32px; margin: 9px 10px; cursor: pointer;}
 .surveyCrtTt3 span {position: absolute; right: 14px; top: 14px; background-color: rgba(0, 115, 230); color: #fff; border: 1px solid #d7d7d7; border-radius: 50%; font-size: 12px; padding: 4px; cursor: pointer;}
 
-.statBody {background-color: rgb(244, 245, 245); padding: 10px 10px 0px;}
+.statBody {background-color: rgb(244, 245, 245); padding: 10px;}
 .statBody #contentsBox {margin-top: 20px; min-height: 650px; background-color: #fff;}
 
 /* paragraph css */
@@ -517,6 +519,33 @@ input[type=range]::-ms-tooltip {display: none;}
 .surey-frameeditor {padding: 0px; height: 100%; width:100%; overflow: auto; border: 0px;}
 
 .pieDiv {padding: 0px 60px;}
-.response-wrap {box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px; padding: 10px;}
-
-
+.response-wrap {box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;}
+.response-usercnt {cursor: pointer;}
+.response-usercnt:hover {color: rgb(4, 112, 227);}
+.mainlist.users {width: 100%;}
+.usersTr {cursor: pointer;}
+.usersTr td >img {width: 30px; height: 30px;}
+.usersTr .mainTd {width: 50%;}
+.usersTr .respDate {width: 120px; min-width: 120px; white-space: nowrap;}
+.usersTr td:first-child {width: 30px;}
+.response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; word-break: break-word; display: flex; align-items: center; padding: 8px 44px 8px 10px; min-height: 40px; position: relative;}
+.response-header >div {position: absolute; right: 6px; top: 12px; background-color: #fff; color: rgba(0, 115, 230); border-radius: 50%; font-size: 12px; cursor: pointer; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
+.response-users {padding: 10px;}
+.response-users >ul {padding-left: 20px;}
+.no-data {text-align: center;}
+.no-data-img {padding: 20px 0px 10px;}
+.no-data-txt {padding: 10px 0px 20px; font-size: 13px; color: #c0c0c0; font-weight: bold;}
+.textDiv {padding: 0px 20px 15px;}
+.txt-response {display: flex; align-items: center;}
+.txt-response >img {width: 40px; height: 40px; min-width: 40px; cursor: pointer;}
+.txt-response >span {flex: 1; word-break: break-word; padding-left: 10px; line-height: 1.4;}
+.txt-respul {padding: 0px; list-style: none;}
+.txt-respul >li + li {padding-top: 10px; border-top: 1px dashed #ddd;}
+.txt-viewmore {padding: 4px 3px; margin-left: 8px; border: 1px solid #ddd; cursor: pointer;}
+.txt-viewmore:hover {color: rgb(4, 112, 227);; border-color: rgb(4, 112, 227);;}
+.div-txtanswer {max-height: 405px; overflow-y: auto; overflow-x: hidden;}
+.popup-title >span {color: red;}
+.other-wrap {padding: 15px 20px;}
+.other-header {padding: 10px 0px;}
+.other-header >span:first-child {color: red;}
+.user-wrapdiv {height: 246px;overflow-y: auto; overflow-x: hidden;}

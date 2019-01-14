@@ -118,5 +118,9 @@ var SurveyMessages = {
 	atLeast      : "번 질문: 최소",
 	requiredCnt  : "개 선택 필수",
 	writeOthers  : "번 질문의 기타 의견을 작성해 주세요.",
-	
+	strRespondent: "참여인원",
+	strTxtList1  : "답변 리스트",
+	strTxtList2  : "답변",
+	strOtherList1: "기타 리스트",
+	strOtherList2: "기타",
 }
