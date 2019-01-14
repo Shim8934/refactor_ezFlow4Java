@@ -129,9 +129,9 @@
 			SET 
 				HOLIDAYNAME = #v_HOLIDAYNAME#,
                 HOLIDAYNAME2 = #v_HOLIDAYNAME2#,
-                HOLIDAYFLAG = #V_HOLIDAYFLAG#,
-                HOLIDAYDATE = #V_HOLIDAYDATE#,
-                HOLIDAYREPEAT = #V_HOLIDAYREPEAT#,
+                HOLIDAYFLAG = #v_HOLIDAYFLAG#,
+                HOLIDAYDATE = #v_HOLIDAYDATE#,
+                HOLIDAYREPEAT = #v_HOLIDAYREPEAT#,
                 ISSOLAR = #v_ISSOLAR#,
                 ISREPEAT = #v_ISREPEAT#,
                 ISREST = #v_ISREST#,
