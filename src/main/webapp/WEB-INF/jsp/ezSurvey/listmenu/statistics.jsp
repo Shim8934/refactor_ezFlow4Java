@@ -347,8 +347,13 @@
 				divHeader.innerHTML = SurveyMessages.strAllUsers + " [<span>" + userList.length + " " + SurveyMessages.strUser3 + "</span>]";
 			}
 			
-			function showSelectedUsers(responseList) {
-				console.log(responseList);
+			function showSelectedUsers(questionId, optId) {
+				var option = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0]["option"][optId];
+				
+				if (!option["responses"] || option["responses"].length == 0) {
+					return;
+				}
+				
 				var dataFormat = {
 					userName  : "userName",
 					deptName  : "deptName",
@@ -357,7 +362,7 @@
 					userImage : "image"
 				};
 				
-				generateUserTable(dataFormat, responseList);
+				generateUserTable(dataFormat, option["responses"]);
 				togglePanel("respondentPanel", 450, 320);
 			}
 			
@@ -395,22 +400,12 @@
 				var options = question["option"];
 				var values  = [];
 				var labels  = [];
-				var mores   = [];
 				var others  = [];
 				
 				for (var i = 0; i < options.length; i++) {
 					var responses     = options[i]["responses"];
 					var otherFlag     = options[i]["otherFlag"];
 					var responsesCnt  = responses ? responses.length : 0;
-					var optionContent = "";
-					
-					
-					if (responses && responses.length > 0) {
-						mores.push(responses)
-					}
-					else {
-						mores.push(null);
-					}
 					
 					if (otherFlag == 1) {
 						others = responses;
@@ -420,7 +415,7 @@
 					labels.push(options[i]["content"]);
 				}
 				
-				createPieChart(labels, values, canvasId, divLegend, mores);
+				createPieChart(labels, values, canvasId, divLegend, question["questionId"]);
 				
 				if (others && others.length > 0) {
 					var wrapDivElmt       = document.createElement("div");
@@ -467,7 +462,7 @@
 				createPieChart(lables, values,  "respondentPie", legendDiv);
 			}
 			
-			function createPieChart(labels, values, elmtId, legendElmt, moreparams) {
+			function createPieChart(labels, values, elmtId, legendElmt, questionId) {
 				var ctx = document.getElementById(elmtId).getContext("2d");
 				var myPieChart = new Chart(ctx, {
 					type: 'pie',
@@ -479,7 +474,7 @@
 							backgroundColor: colors,
 							data: values
 						}],
-						mores : moreparams
+						question : questionId
 					},
 					options: {
 						tooltips: {
@@ -511,8 +506,8 @@
 								liElmt.appendChild(divElmt1);
 								liElmt.appendChild(divElmt2);
 								
-								if (chart.data["mores"] && chart.data["mores"][i] && chart.data["mores"][i].length > 0) {
-									liElmt.onclick = (function(responses) {return function() {showSelectedUsers(responses);};})(chart.data["mores"][i]);
+								if (chart.data["question"]) {
+									liElmt.onclick = (function(questionId, optId) {return function() {showSelectedUsers(questionId, optId);};})(chart.data["question"], i);
 								}
 								
 								ul.appendChild(liElmt);
@@ -525,9 +520,9 @@
 						},
 						onClick : function (evt, item) {
 							var itemIdx = item[0]["_index"];
-							var data    = myPieChart.data["mores"][itemIdx];
-							if (data && data.length > 0) {
-								showSelectedUsers(data);
+							var data    = myPieChart.data["question"];
+							if (data) {
+								showSelectedUsers(data, itemIdx);
 							}
 						},
 /* 						legend: {
