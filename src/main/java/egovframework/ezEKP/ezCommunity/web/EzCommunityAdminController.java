@@ -167,7 +167,10 @@ public class EzCommunityAdminController {
 		curPage = Math.min(curPage,  totalPage);
 		
 		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId(), userInfo.getCompanyID());
-		String idSpanValue = ezCommunityService.bbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
+		
+		//String idSpanValue = ezCommunityService.bbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
+		//번호 1,2,3 순서로 출력하기 위해
+		String idSpanValue = ezCommunityAdminService.adminBbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
@@ -361,7 +364,7 @@ public class EzCommunityAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String code = request.getParameter("code");
-
+		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		ezCommunityAdminService.commCloseAll(code, userInfo.getLocale(), userInfo.getTenantId());

@@ -17,11 +17,13 @@ import org.springframework.stereotype.Service;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityAdminDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityAdminService;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzCommunityAdminService")
@@ -491,5 +493,114 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		}
 		
 		logger.debug("createCommunityAdmitSendMail ended.");
+	}
+
+	@Override
+	public String adminBbsList(LoginVO userInfo, List<CommunityCBoardVO> cBoardList, String code, int curPage, String bName, int comNoPerPage) throws Exception {
+		StringBuilder strHTML = new StringBuilder();
+		int iColSpan = 5;
+		
+		if (bName.equals("tbl_c_clubpds") || bName.equals("tbl_c_clubpds1")) {
+			iColSpan = 6;
+		}
+		
+		strHTML.append("<tr>");
+		strHTML.append("<th width=\"60px\" >" + egovMessageSource.getMessage("ezCommunity.t32", userInfo.getLocale()) + "</th>");
+		strHTML.append("<th>" + egovMessageSource.getMessage("ezCommunity.t170", userInfo.getLocale()) + "</th>");
+		strHTML.append("<th width=\"70px\">" + egovMessageSource.getMessage("ezCommunity.t138", userInfo.getLocale()) + "</th>");
+		strHTML.append("<th width=\"90px\">" +  egovMessageSource.getMessage("ezCommunity.t171", userInfo.getLocale()) + "</th>");
+		
+		if (iColSpan == 6) {
+			strHTML.append("<th width=\"45px\">" + egovMessageSource.getMessage("ezCommunity.t172", userInfo.getLocale()) + "</th>");
+		}
+		
+		strHTML.append("<th width=\"60px\">" + egovMessageSource.getMessage("ezCommunity.t173", userInfo.getLocale()) + "</th>");
+		strHTML.append("</tr>");
+		
+		int iOutputCount = 1;
+		int iList = 0;
+		int itemNum = ((curPage - 1) * 10) + 1;
+//		String pURL = "";
+		
+		for (CommunityCBoardVO cBoard : cBoardList) {
+			iList++;
+			
+			if (iList <= (curPage - 1) * comNoPerPage) {
+				continue;
+			}
+			if ( iOutputCount > comNoPerPage) {
+				break;
+			}
+			
+			strHTML.append("<tr>");
+			strHTML.append("<td width=\"60px\">");
+			
+			if (!bName.equals("tbl_c_clubnotice") && !bName.equals("tbl_c_notice")) {
+				if (cBoard.getRe_Level() > 0) {
+					strHTML.append("<font color=\"#A4A4A4\">" + itemNum + "</font>");
+				} else {
+					strHTML.append(itemNum);
+				}
+			} else {
+				strHTML.append(itemNum);
+			}
+			
+			strHTML.append("</td>");
+			strHTML.append("<td class=\"t2\" onclick=btn_bbsView('" + cBoard.getNo() + "','" + bName + "') style=\"overflow: hidden; cursor: pointer; text-overflow: ellipsis;\" >");
+			strHTML.append("<nobr>");
+			
+			if (!bName.equals("tbl_c_clubnotice") && !bName.equals("tbl_c_notice")) {
+				if (cBoard.getRe_Level() > 0) {
+					 int wid = 10 * cBoard.getRe_Level();
+					 
+                     strHTML.append("<img src=\"/images/dum.gif\" width=\"" + wid + "\" height=\"1\" border=\"0\">"); 
+                     strHTML.append("<img src=\"/images/i_rep.gif\" alt border=\"0\" VALIGN=\"TOP\">"); 
+				}
+			}
+			
+			String nowDate = commonUtil.getTodayUTCTime("");
+			nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+
+			if (cBoard.getWriteDay().compareTo(nowDate) >= 0) {
+				strHTML.append("<img src=\"/images/i_new.gif\" alt border=\"0\">&nbsp;");
+			}
+			
+			strHTML.append(commonUtil.cleanValue(cBoard.getTitle().trim())+"</nobr></td>");
+			
+			if (userInfo.getPrimary().equals("1")) {
+				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName().trim() + "</td>");
+			} else {
+				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName2().trim() + "</td>");
+			}
+			
+			strHTML.append("<td class=\"t1\" width=\"90px\" >" + cBoard.getWriteDay().substring(0, 10) + "</td>");
+			 
+			/*String localPdsPath = "";*/
+			if (iColSpan == 6) {
+				//TODO 2016-04-26 이효진 사용하는 곳이 아직 없어서 주석처리
+				/*String file = cBoard.getCharFileName();
+				
+				if (bName.equals("c_clubpds")) {
+					localPdsPath = config.getProperty("upload_community.PDS");	
+				} else {
+					localPdsPath = config.getProperty("upload_community.PDS1");
+				}*/
+			
+				strHTML.append("<td class=\"t1\" >");
+				
+				if (cBoard.getCharFileName().equals("")) {
+					strHTML.append("<img src=\"/images/i_save01.gif\" width=\"12\" height=\"12\" border=\"0\">");
+				}
+				
+				strHTML.append("</td>");
+			}
+			
+			strHTML.append("<td class=\"t1\" width=\"60px\" >" + cBoard.getReadNum() + "</td>");
+			strHTML.append("</tr>");
+			
+			iOutputCount++;
+			itemNum++;
+		}
+		return strHTML.toString();
 	}
 }
