@@ -7,161 +7,80 @@
 <!-- 		{CALL EZSP_ASP_CLOSE_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityAdminDAO.aspCloseGet1Select1"				parameterClass="Map"		resultClass="CommunityCComCloseVO">
-		<isEqual property="v_S" compareValue="">
+		<![CDATA[
+			SELECT
+				DISTINCT A.c_clubno,
+				closestate,
+				D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
+				A.c_sysopid,
+				applicationdate
+			FROM
+				TBL_C_COMCLOSE A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				RTRIM(A.c_sysopid) = RTRIM(B.CN)
+			AND
+				A.tenant_id = B.tenant_id
+			INNER JOIN
+				TBL_C_CLUB D
+			ON
+				A.c_clubno = D.c_clubno
+			AND
+				A.tenant_id = D.tenant_id
+			WHERE
+		]]>
+		<isEqual property="v_S_RADIO" compareValue="USERNAME">
 			<![CDATA[
-				SELECT
-					DISTINCT A.c_clubno,
-					closestate,
-					D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
-					B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
-					A.c_sysopid,
-					applicationdate
-				FROM
-					TBL_C_COMCLOSE A
-				INNER JOIN
-					TBL_USERMASTER B
-				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.CN)
-				AND
-					A.tenant_id = B.tenant_id
-				INNER JOIN
-					TBL_C_CLUB D
-				ON
-					A.c_clubno = D.c_clubno
-				AND
-					A.tenant_id = D.tenant_id
-				WHERE
-			]]>
-			<isEqual property="v_S_RADIO" compareValue="USERNAME">
-				<![CDATA[
-					B.DISPLAYNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-				]]>
-			</isEqual>
-			<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
-				<![CDATA[
-					D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-				]]>
-			</isNotEqual>
-			<![CDATA[
-				AND
-					D.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					applicationdate DESC
+				B.DISPLAYNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			]]>
 		</isEqual>
-		
-		<isNotEqual property="v_S" compareValue="">
+		<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
 			<![CDATA[
-				SELECT
-					DISTINCT A.c_clubno,
-					closestate,
-					D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
-					B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
-					A.c_sysopid,
-					applicationdate
-				FROM
-					TBL_C_COMCLOSE A
-				INNER JOIN
-					TBL_USERMASTER B
-				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.CN)
-				AND
-					A.tenant_id = B.tenant_id
-				INNER JOIN
-					TBL_C_CLUB D
-				ON
-					A.c_clubno = D.c_clubno
-				AND
-					A.tenant_id = D.tenant_id
-				WHERE
-				]]>
-				<isEqual property="v_S_RADIO" compareValue="USERNAME">
-					<![CDATA[
-						B.DISPLAYNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-					]]>
-				</isEqual>
-				<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
-					<![CDATA[
-						D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-					]]>
-				</isNotEqual>
-			<![CDATA[
-				AND
-					D.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					$v_SORT1$ $v_SORT2$
+				D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			]]>
 		</isNotEqual>
+		<![CDATA[
+			AND
+				D.companyid = #companyID#
+			AND
+				A.tenant_id = #tenantID#
+			ORDER BY
+				applicationdate DESC
+		]]>
 	</select>
 	
 	<select id="EzCommunityAdminDAO.aspCloseGet1Select2"				parameterClass="Map"		resultClass="CommunityCComCloseVO">
-		<isEqual property="v_S" compareValue="">
-			<![CDATA[
-				SELECT
-					DISTINCT A.c_clubno,
-					closestate,
-					D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
-					B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
-					A.c_sysopid,
-					applicationdate
-				FROM
-					TBL_C_COMCLOSE A
-				INNER JOIN
-					TBL_USERMASTER B
-				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.CN)
-				AND
-					A.tenant_id = B.tenant_id
-				INNER JOIN
-					TBL_C_CLUB D
-				ON
-					A.c_clubno = D.c_clubno
-				AND
-					A.tenant_id = D.tenant_id
-				WHERE
-					D.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					applicationdate DESC
-			]]>
-		</isEqual>
-		
-		<isNotEqual property="v_S" compareValue="">
-			<![CDATA[
-				SELECT
-					DISTINCT A.c_clubno,
-					closestate,
-					D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
-					B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
-					A.c_sysopid,
-					applicationdate
-				FROM
-					TBL_C_COMCLOSE A
-				INNER JOIN
-					TBL_USERMASTER B
-				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.CN)
-				AND
-					A.tenant_id = B.tenant_id
-				INNER JOIN
-					TBL_C_CLUB D
-				ON
-					A.c_clubno = D.c_clubno
-				AND
-					A.tenant_id = D.tenant_id
-				WHERE
-					D.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					$v_SORT1$ $v_SORT2$
-			]]>
-		</isNotEqual>
+		<![CDATA[
+			SELECT
+				DISTINCT A.c_clubno,
+				closestate,
+				D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
+				A.c_sysopid,
+				applicationdate
+			FROM
+				TBL_C_COMCLOSE A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				RTRIM(A.c_sysopid) = RTRIM(B.CN)
+			AND
+				A.tenant_id = B.tenant_id
+			INNER JOIN
+				TBL_C_CLUB D
+			ON
+				A.c_clubno = D.c_clubno
+			AND
+				A.tenant_id = D.tenant_id
+			WHERE
+				D.companyid = #companyID#
+			AND
+				A.tenant_id = #tenantID#
+			ORDER BY
+				applicationdate DESC
+		]]>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspCloseComGet2"					parameterClass="Map"			resultClass="String"> -->
@@ -222,143 +141,71 @@
 <!-- 		{CALL EZSP_ASP_ADMIT_COM_GET1(#v_KEYWORD#, #v_S_RADIO#, #v_S#, #v_USERINFO_LANG#, #v_SORT1#, #v_SORT2#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
 	<select id="EzCommunityAdminDAO.aspAdmitComGet1Select1"				parameterClass="Map"		resultClass="CommunityClubVO">
-		<isEqual property="v_S" compareValue="">
-			<![CDATA[
-				SELECT
-					DISTINCT c_clubno,
-					c_clubname$v_USERINFO_LANG$ AS c_clubname,
-					IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
-					c_sysopid,
-					c_regdate
-				FROM
-					TBL_C_CLUB A
-				INNER JOIN
-					TBL_C_MEMBERINFO B
-				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.userid)
-				AND
-					A.tenant_id = B.tenant_id
-				LEFT OUTER JOIN
-					TBL_USERMASTER C
-				ON
-					RTRIM(A.c_sysopid) = C.CN
-				AND
-					A.tenant_id = C.tenant_id
-				WHERE
-					$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-				AND
-					A.c_adminconfirm = 'N'
-				AND
-					A.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					A.c_regdate DESC
-			]]>
-		</isEqual>
-		
-		<isNotEqual property="v_S" compareValue="">
-			<![CDATA[
-				SELECT
-					DISTINCT c_clubno,
-					c_clubname$v_USERINFO_LANG$ c_clubname,
-					IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
-					c_sysopid,
-					c_regdate
-				FROM
-					TBL_C_CLUB A
-				INNER JOIN
-					TBL_C_MEMBERINFO B
-				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.userid)
-				AND
-					A.tenant_id = B.tenant_id
-				LEFT OUTER JOIN
-					TBL_USERMASTER C
-				ON
-					A.c_sysopid = C.CN
-				AND
-					A.tenant_id = C.tenant_id
-				WHERE
-					$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-				AND
-					A.c_adminconfirm = 'N'
-				AND
-					A.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					$v_SORT1$ $v_SORT2$
-			]]>
-		</isNotEqual>
+		<![CDATA[
+			SELECT
+				DISTINCT c_clubno,
+				c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
+				c_sysopid,
+				c_regdate
+			FROM
+				TBL_C_CLUB A
+			INNER JOIN
+				TBL_C_MEMBERINFO B
+			ON
+				RTRIM(A.c_sysopid) = RTRIM(B.userid)
+			AND
+				A.tenant_id = B.tenant_id
+			LEFT OUTER JOIN
+				TBL_USERMASTER C
+			ON
+				RTRIM(A.c_sysopid) = C.CN
+			AND
+				A.tenant_id = C.tenant_id
+			WHERE
+				$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+			AND
+				A.c_adminconfirm = 'N'
+			AND
+				A.companyid = #companyID#
+			AND
+				A.tenant_id = #tenantID#
+			ORDER BY
+				A.c_regdate DESC
+		]]>
 	</select>
 	
 	<select id="EzCommunityAdminDAO.aspAdmitComGet1Select2"				parameterClass="Map"		resultClass="CommunityClubVO">
-		<isEqual property="v_S" compareValue="">
-			<![CDATA[
-				SELECT
-					DISTINCT c_clubno,
-					c_clubname$v_USERINFO_LANG$ AS c_clubname,
-					IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
-					c_sysopid,
-					c_regdate
-				FROM
-					TBL_C_CLUB A
-				INNER JOIN
-					TBL_C_MEMBERINFO B
-				ON
-					RTRIM(A.c_sysopid) = B.userid
-				AND
-					A.c_adminconfirm = 'N'
-				AND
-					A.tenant_id = B.tenant_id
-				LEFT OUTER JOIN
-					TBL_USERMASTER C
-				ON
-					RTRIM(A.c_sysopid) = C.CN
-				AND
-					A.tenant_id = C.tenant_id
-				WHERE
-					A.companyID = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					A.c_regdate DESC
-			]]>
-		</isEqual>
-		
-		<isNotEqual property="v_S" compareValue="">
-			<![CDATA[
-				SELECT
-					c_clubno,
-					c_clubname$v_USERINFO_LANG$ AS c_clubname,
-					IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
-					c_sysopid,
-					c_regdate
-				FROM
-					TBL_C_CLUB A
-				INNER JOIN
-					TBL_C_MEMBERINFO B
-				ON
-					RTRIM(A.c_sysopid) = RTRIM(B.userid)
-				AND
-					A.c_adminconfirm = 'N'
-				AND
-					A.tenant_id = B.tenant_id
-				LEFT OUTER JOIN
-					TBL_USERMASTER C
-				ON
-					A.c_sysopid = C.CN
-				AND
-					A.tenant_id = C.tenant_id
-				WHERE
-					A.companyID = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				ORDER BY
-					$v_SORT1$ $v_SORT2$
-			]]>
-		</isNotEqual>
+		<![CDATA[
+			SELECT
+				DISTINCT c_clubno,
+				c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
+				c_sysopid,
+				c_regdate
+			FROM
+				TBL_C_CLUB A
+			INNER JOIN
+				TBL_C_MEMBERINFO B
+			ON
+				RTRIM(A.c_sysopid) = B.userid
+			AND
+				A.c_adminconfirm = 'N'
+			AND
+				A.tenant_id = B.tenant_id
+			LEFT OUTER JOIN
+				TBL_USERMASTER C
+			ON
+				RTRIM(A.c_sysopid) = C.CN
+			AND
+				A.tenant_id = C.tenant_id
+			WHERE
+				A.companyID = #companyID#
+			AND
+				A.tenant_id = #tenantID#
+			ORDER BY
+				A.c_regdate DESC
+		]]>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspAdmitComGet2"					parameterClass="Map"			resultClass="String"> -->

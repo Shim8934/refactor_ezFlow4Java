@@ -46,7 +46,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	@Override
 	public int aspCloseComGet2(String keyword, String sRadio, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCloseComGet2 started.");
-		
+		logger.debug("v_S_RADIOL" + sRadio);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD",  keyword);
 		map.put("v_S_RADIO",  sRadio);
@@ -68,17 +68,14 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
 	@Override
-	public List<CommunityCComCloseVO> aspCloseComGet1(String keyword, String sRadio, String s, String lang, String sort1, String sort2, String companyID, int tenantID) throws Exception {
+	public List<CommunityCComCloseVO> aspCloseComGet1(String keyword, String sRadio, String lang, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCloseGet1 started.");
 		logger.debug("keyword=" + keyword + ", sRadio=" + sRadio);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD", keyword);
 		map.put("v_S_RADIO", sRadio);
-		map.put("v_S", s);
 		map.put("v_USERINFO_LANG", lang);
-		map.put("v_SORT1", sort1);
-		map.put("v_SORT2", sort2);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -217,16 +214,13 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) */
 	@Override
-	public List<CommunityClubVO> aspAdmitComGet1(String keyword, String sRadio, String s, String lang, String sort1, String sort2, String companyID, int tenantID) throws Exception {
+	public List<CommunityClubVO> aspAdmitComGet1(String keyword, String sRadio, String lang, String companyID, int tenantID) throws Exception {
 		logger.debug("aspAdmitComGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD", keyword);
 		map.put("v_S_RADIO", sRadio);
-		map.put("v_S", s);
 		map.put("v_USERINFO_LANG", lang);
-		map.put("v_SORT1", sort1);
-		map.put("v_SORT2", sort2);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -260,13 +254,13 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			}
 			
 			sb.append("<tr>");
-			sb.append("<td>" + (clubList.size() - ((curPage - 1) * comNoPerPage) - iOutputCount) + "</td>");
-			sb.append("<td style='width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;><nobr style='width:400px;overflow:hidden;text-overflow:ellipsis;'>");
+			sb.append("<td width='35px;'>" + (clubList.size() - ((curPage - 1) * comNoPerPage) - iOutputCount) + "</td>");
+			sb.append("<td style='width: 50%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;><nobr style='width:400px;overflow:hidden;text-overflow:ellipsis;'>");
 			sb.append("<a href=\"javascript:open_info('" + club.getC_ClubNo().trim() + "')\">" + commonUtil.cleanValue(club.getC_ClubName()) + "</a>");
 			sb.append("</nobr></td>");
-			sb.append("<td>" + commonUtil.cleanValue(club.getUserName()) + "(");
+			sb.append("<td style='width: 10%;'>" + commonUtil.cleanValue(club.getUserName()) + "(");
 			sb.append(commonUtil.cleanValue(club.getC_SysopID().trim()) + ")");
-			sb.append("<td>" + club.getC_RegDate().substring(0, 10) + "</td>");
+			sb.append("<td style='width: 10%;'>" + club.getC_RegDate().substring(0, 10) + "</td>");
 			sb.append("</tr>");
 			
 			iOutputCount++;

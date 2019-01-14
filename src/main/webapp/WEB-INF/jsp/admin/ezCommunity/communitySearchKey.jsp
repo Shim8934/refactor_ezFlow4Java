@@ -27,14 +27,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
-			var selectedTabId = "";
-			
-			var pCurPage     = 1;
-			var pTotalPage   = 0;
-			var pTotalCnt    = 0;
-			var pBlockSize   = 10;
-			
-			var categoryColor  = "";
+			var selectedTabId  = "";
+			var pCurPage       = 1;
+			var pTotalPage     = 0;
+			var pTotalCnt      = 0;
+			var pBlockSize     = 10;
 			var categoryColors = ["#ff6868", "#ff68c4", "#d668ff", "#a868ff", "#6f68ff", 
 								"#3d78ff", "#4d8fcc", "#0dbeff", "#6dabad", "#4dc689", 
 								"#81bc3d", "#ffc71e", "#ff8f1e", "#bd6438"];
@@ -236,7 +233,6 @@
 			}
 			
 			function makePageSelPage() {
-				
 				document.getElementById("tblPageRayer").innerHTML = "";
 				document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>";
 				

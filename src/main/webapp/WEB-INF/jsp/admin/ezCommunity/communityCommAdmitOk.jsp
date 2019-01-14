@@ -6,7 +6,7 @@
 	
 	//다른 브라우져에서 .item(1).을 못찾아서 수정
 	//window.opener.parent.frames.item(1).location.reload();
-	window.opener.parent.frames[1].location = "/admin/ezCommunity/admitCom.do";
+	window.opener.parent.frames[1].location = "/admin/ezCommunity/applicationList.do";
 	
 	self.close();
 </script>
