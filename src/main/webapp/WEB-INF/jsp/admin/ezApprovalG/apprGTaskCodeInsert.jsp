@@ -418,6 +418,28 @@
 			        }
 		        }
 		        
+		        if(approvalFlag == 'S'){
+		        	tempCode = 'ZZ' + tempCode;
+		        }
+		        var tempRet;
+		        $.ajax({
+			    	type : "POST",
+			    	url : "/admin/ezApprovalG/getTaskCodeDuplicate.do",
+			    	async : false,
+			    	data :{sCateCode : tempCode, companyID : companyID},
+			    	success : function(result) {
+			    		tempRet = result;
+			    	},
+			    	error : function() {
+			    		tempRet = "FALSE";
+			    	}
+			    });
+		        
+		        if (tempRet == "TRUE") {
+		            OpenAlertUI("<spring:message code = 'ezApprovalG.t737' />");
+		            return false;
+		        } 
+		        
 		        var gRtnVal = UpdateCode();
 		        if (gRtnVal == "TRUE") {
 		            if (ReturnFunction != null) {

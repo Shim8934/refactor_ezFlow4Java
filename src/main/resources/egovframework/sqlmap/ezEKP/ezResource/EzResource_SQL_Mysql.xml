@@ -1891,7 +1891,7 @@
 	<select id="EzResourceDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
 		<![CDATA[
 			SELECT
-				member_id, access_lvl 
+				member_id, min(access_lvl) as access_lvl 
       		FROM
       			TBL_RS_RESACL 
       		WHERE
@@ -1899,18 +1899,9 @@
       		AND
       			resid = #resID#
 			AND
-				IF((SELECT
-						COUNT(*)
-						FROM
-							TBL_RS_RESACL
-						WHERE
-			      			companyid = #companyID#
-			      		AND
-			      			resid = #resID#
-						AND
-							member_id = 'everyone'
-						AND
-                			TENANT_ID = #tenantID#) > 0, member_id = 'everyone', member_id = #memberID#)
+					( MEMBER_ID = #memberID#
+			OR
+					MEMBER_ID = 'everyone' )
             AND
                 TENANT_ID = #tenantID#
 		]]>
