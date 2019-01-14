@@ -123,7 +123,7 @@
 							createQuestionPie(question, divElmt);
 							break;
 						case 3:
-						case 4:
+						//case 4:
 							divElmt.className = "barDiv";
 							var canvasElmt = document.createElement("canvas");
 							var canvasId   = "question" + question["level"];
@@ -552,30 +552,52 @@
 			}
 			
 			function createQuestionBar(question, canvasId) {
-				//console.log(question);
 				var returnObj = "";
-				//console.log(question.responses);
 				var response = question.responses;
 				var content = question.content;
-				var dataSet = [];
+				var datasets = [];
 				
 				if (question['type'] == 3 || question['type'] == 4) {
 					returnObj = getMtrDataSet(question);
+					var labels = returnObj['rows'];
+
+					for (var i = 0; i < returnObj['rows'].length; i++) {
+						var row = returnObj['rows'][i];
+						var dataObj = {};
+						
+						dataObj['backgroundColor'] = colors[i];
+						dataObj['hoverBorderWidth'] = 8;
+						dataObj['borderWidth'] = 2;
+						dataObj['label'] = returnObj['cols'][i];
+						dataObj['data'] = returnObj[row];
+						datasets.push(dataObj);
+						//console.log(datasets);
+					}
 					
 				} else if(question['type'] == 7) {
 					returnObj = getSliderDataSet(question);
+					
+					//var ordersNum = returnObj['ordersNum'];
+					//console.log(ordersNum);
+					var labels = returnObj['label'];
+					//console.log(returnObj);
+					var dataObj = {};
+					//dataObj['backgroundColor'] = colors[ordersNum[0]];
+					dataObj['backgroundColor'] = colors;
+					dataObj['hoverBorderWidth'] = 8;
+					dataObj['borderWidth'] = 2;
+					dataObj['label'] = "value";
+					dataObj['data'] = returnObj['data'];
+					datasets.push(dataObj);
+					//console.log(datasets);
 				}
-				
-				console.log(returnObj);
 				
 				var ctx = document.getElementById(canvasId);
 				var myChart = new Chart(ctx, {
 				    type: 'bar',
 				    data: {
-				        labels: returnObj['label'],
-				        datasets: [{
-							data: returnObj['data']
-						}]
+				        labels: labels,
+				        datasets: datasets
 				    },
 				    options: {
 				        scales: {
@@ -587,7 +609,6 @@
 				        }
 				    }
 				});
-				
 			}
 			
 			function addFogPanel(togglePanel, elmtId) {
@@ -640,17 +661,12 @@
 			
 			function getMtrDataSet(question) {
 				var dataSet = [];
-				var returnObj = {};
-				
 				var rows = [];
-				var rowsOptionId = [];
-				
 				var cols = [];
+				var rowsOptionId = [];
 				var colsOptionId = [];
-				
 				var combinationsArr = [];
 				var combinationsObj = {};
-				
 				var options = question['option'];
 				var response = question['responses'];
 				// 행과 열의 이름, id 획득
@@ -670,70 +686,74 @@
 						colsOptionId.push(colOptionId);
 					} 
 				}
-				console.log(rowsOptionId);
-				console.log(colsOptionId);
-				
 				// 행열 조합 생성
 				for (var i = 0; i < rowsOptionId.length; i++) {
+					var arr = [];
+					var obj = {};
 					for (var j = 0; j < colsOptionId.length; j++) {
 						var name = String(rowsOptionId[i]) + "," +  String(colsOptionId[j]);
-						combinationsArr.push(name);
-						combinationsObj[name] = 0;
+						arr.push(name);
+						obj[String(name)] = 0;
 					}
+					combinationsArr.push(arr);
+					combinationsObj[rowsOptionId[i]] = obj;
 				}
-				// 해당되는 행열 조합의 개수 생성
+				
 				for (var i = 0; i < response.length; i++) {
 					var rowId = response[i]['rowId'];
 					var columnId = response[i]['columnId'];
 					var rowColCombination = String(rowId) + "," + String(columnId);
 					
 					for (var j = 0; j < combinationsArr.length; j++) {
-						if (combinationsArr[j] == rowColCombination) {
-							var cnt = combinationsObj[rowColCombination];
-							combinationsObj[rowColCombination] = cnt + 1;
+						var comArr =  combinationsArr[j];
+						
+						for (var k = 0; k < comArr.length; k++) {
+							if (comArr[k]== rowColCombination) {
+								var orders = comArr[k].split(",")[0];
+								var cnt = combinationsObj[orders][rowColCombination];
+								combinationsObj[orders][rowColCombination] = cnt + 1;
+							}
 						}
 					}
+					
 				}
 				
-				/*  
+				var datasets = [];
+				var data = {};
 				for (var i = 0; i < rowsOptionId.length; i++) {
-					for (var j = 0; j < combinationsArr.length; j++) {
-						
+					var arr = [];
+					for (var j = 0; j < colsOptionId.length; j++) {
+						var name = String(rowsOptionId[i]) + "," +  String(colsOptionId[j]);
+						var value = combinationsObj[rowsOptionId[i]][name];
+						arr.push(value);
 					}
+					data[rows[i]] = arr;
 				}
-				 */
-				returnObj['rows'] = rows;
-				returnObj['cols'] = cols;
-				
-				returnObj['combinationsArr'] = combinationsArr;
-				returnObj['combinationsObj'] = combinationsObj;
-				
-				return returnObj;
+				data['rows'] = rows;
+				data['cols'] = cols;
+				return data;
 			}
 			
 			function getSliderDataSet(question) {
-				//console.log(question);
-				//console.log(question.responses);
 				var responses = question['responses'];
 				var options = question['option'];
 				var start = parseInt(options[0]['content']);
 				var end = parseInt(options[1]['content']);
-				
-				var dataSet = [];
-				
+				var data = [];
 				var unit = [];
 				var unitObj = {};
 				var dataSet = {};
+				
 				for (var i = start; i < end + 1; i++) {
 					unit.push(i);
 					unitObj[i] = 0;
 				}
-				
-				for (var j = 0; j < responses.length; j++) {
-					var sliderVal = responses[j]['sliderValue'];
+				for (var i = 0; i < responses.length; i++) {
+					var sliderVal = responses[i]['sliderValue'];
 					
 					for (var j = 0; j < unit.length; j++) {
 						var unitVal = unit[j];
+						
 						if (sliderVal == unitVal) {
 							var oldVal = unitObj[sliderVal];
 							unitObj[sliderVal] = oldVal + 1;
@@ -741,19 +761,20 @@
 						
 					}
 				}
-				console.log("after");
-				console.log(unitObj);
 				
 				var dataArr = [];
+				var ordersNum = [];
 				for (var i = start; i < end + 1; i++) {
 					var value = unitObj[i];
 					dataArr.push(value);
+					if (value != 0) {
+						ordersNum.push(value);
+					}
 				}
-				dataSet['label'] = unit;
-				dataSet['data'] = dataArr;
-				console.log(dataSet);
-				
-				return dataSet;
+				data['label'] = unit;
+				data['data'] = dataArr;
+				//data['ordersNum'] = ordersNum;
+				return data;
 			}
 		})();
 	</script>
