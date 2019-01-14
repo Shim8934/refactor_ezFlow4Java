@@ -276,6 +276,10 @@
 		    	if (document.getElementById("repeat").checked) {
 		    		$('#List_Year').css("display", "none");
 		    	} else {
+		    		if (!document.getElementById("List_Year").value || document.getElementById("List_Year").value == '') {
+		    			var holidayYear = new Date().getFullYear();
+		    			makeSelectBox(holidayYear, 'select');
+		    		}
 		    		$('#List_Year').css("display", "");
 		    	}
 		    }
