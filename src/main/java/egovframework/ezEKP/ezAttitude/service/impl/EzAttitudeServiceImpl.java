@@ -1138,7 +1138,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("paging started.");
 		
-		if (listSize != "") {
+		if (!listSize.equals("")) {
 			int size = Integer.valueOf(listSize);
 			int limit = (Integer.valueOf(pageNum) - 1) * size;
 			
