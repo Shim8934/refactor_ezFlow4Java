@@ -42,7 +42,7 @@
 			var questionStatistic = ${questions};
 			
 			//console.log(surveyStatistic);
-			console.log(questionStatistic);
+			//console.log(questionStatistic);
 			
 			startStatistic(questionStatistic);
 			
@@ -74,13 +74,13 @@
 					responses = question["responses"];
 				}
 				
-				console.log("Response");
-				console.log(responses);
+				//console.log("Response");
+				//console.log(responses);
 				
 				var userQuestion  = getUsersForQuestion(responses);
 				
-				console.log("Users");
-				console.log(userQuestion);
+				//console.log("Users");
+				//console.log(userQuestion);
 				
 				var divHeader     = createHeaderDiv(question, userQuestion);
 				divElmt.appendChild(divHeader);
@@ -89,7 +89,6 @@
 				//Create question statistic for each type
 				var questionType = parseInt(question["type"]);
 				switch(questionType) {
-				/* 
 					case 1:
 					case 2:
 					case 9:
@@ -104,9 +103,9 @@
 						divElmt.appendChild(divChart);
 						createQuestionPie(question, canvasId);
 						break;
-						 */
 					case 3:
-					case 4:
+					//case 4:
+					case 7:
 						divElmt.className = "barDiv";
 						var canvasElmt = document.createElement("canvas");
 						var canvasId   = "question" + question["level"];
@@ -118,8 +117,6 @@
 						break;
 					case 5:
 					case 6:
-						break;
-					case 7:
 						break;
 					case 8:
 						break;
@@ -249,45 +246,28 @@
 			}
 			
 			function createQuestionBar(question, canvasId) {
-				console.log(question.responses);
-				var response = question.responses;
+				//console.log(question);
+				var returnObj = "";
 				var content = question.content;
-				var arr = [];
-				var data = [];
+				var dataSet = [];
 				
-				
-				
-				for (var i = 0; i < response.length; i++) {
-					var rowId = response[i]['rowId'];
-					var columnId = response[i]['columnId'];
+				if (question['type'] == 3 || question['type'] == 4) {
+					returnObj = getMtrDataSet(question);
+					
+				} else if(question['type'] == 7) {
+					returnObj = getSliderDataSet(question);
 				}
+				
+				console.log(returnObj);
 				
 				var ctx = document.getElementById(canvasId);
 				var myChart = new Chart(ctx, {
 				    type: 'bar',
 				    data: {
-				        labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+				        labels: returnObj['label'],
 				        datasets: [{
-				            label: content,
-				            data: [12, 19, 3, 5, 2, 3],
-				            backgroundColor: [
-				                'rgba(255, 99, 132, 0.2)',
-				                'rgba(54, 162, 235, 0.2)',
-				                'rgba(255, 206, 86, 0.2)',
-				                'rgba(75, 192, 192, 0.2)',
-				                'rgba(153, 102, 255, 0.2)',
-				                'rgba(255, 159, 64, 0.2)'
-				            ],
-				            borderColor: [
-				                'rgba(255,99,132,1)',
-				                'rgba(54, 162, 235, 1)',
-				                'rgba(255, 206, 86, 1)',
-				                'rgba(75, 192, 192, 1)',
-				                'rgba(153, 102, 255, 1)',
-				                'rgba(255, 159, 64, 1)'
-				            ],
-				            borderWidth: 1
-				        }]
+							data: returnObj['data']
+						}]
 				    },
 				    options: {
 				        scales: {
@@ -304,6 +284,124 @@
 			
 			function showMoreDetail() {
 				alert("Show more detail");
+			}
+			
+			function getMtrDataSet(question) {
+				var dataSet = [];
+				var returnObj = {};
+				
+				var rows = [];
+				var rowsOptionId = [];
+				
+				var cols = [];
+				var colsOptionId = [];
+				
+				var combinationsArr = [];
+				var combinationsObj = {};
+				
+				var options = question['option'];
+				var response = question['responses'];
+				// 행과 열의 이름, id 획득
+				for (var i = 0; i < options.length; i++) {
+					if (options[i]['colLevel'] == -1) {
+						var row = options[i]['content'];
+						var rowOptionId = options[i]['optionId'];
+						
+						rows.push(row);
+						rowsOptionId.push(rowOptionId);
+						
+					} else if (options[i]['rowLevel'] == -1) {
+						var col = options[i]['content'];
+						var colOptionId = options[i]['optionId'];
+						
+						cols.push(col);
+						colsOptionId.push(colOptionId);
+					} 
+				}
+				console.log(rowsOptionId);
+				console.log(colsOptionId);
+				
+				// 행열 조합 생성
+				for (var i = 0; i < rowsOptionId.length; i++) {
+					for (var j = 0; j < colsOptionId.length; j++) {
+						var name = String(rowsOptionId[i]) + "," +  String(colsOptionId[j]);
+						combinationsArr.push(name);
+						combinationsObj[name] = 0;
+					}
+				}
+				// 해당되는 행열 조합의 개수 생성
+				for (var i = 0; i < response.length; i++) {
+					var rowId = response[i]['rowId'];
+					var columnId = response[i]['columnId'];
+					var rowColCombination = String(rowId) + "," + String(columnId);
+					
+					for (var j = 0; j < combinationsArr.length; j++) {
+						if (combinationsArr[j] == rowColCombination) {
+							var cnt = combinationsObj[rowColCombination];
+							combinationsObj[rowColCombination] = cnt + 1;
+						}
+					}
+				}
+				
+				/*  
+				for (var i = 0; i < rowsOptionId.length; i++) {
+					for (var j = 0; j < combinationsArr.length; j++) {
+						
+					}
+				}
+				 */
+				returnObj['rows'] = rows;
+				returnObj['cols'] = cols;
+				
+				returnObj['combinationsArr'] = combinationsArr;
+				returnObj['combinationsObj'] = combinationsObj;
+				
+				return returnObj;
+			}
+			
+			function getSliderDataSet(question) {
+				//console.log(question);
+				//console.log(question.responses);
+				var responses = question['responses'];
+				var options = question['option'];
+				var start = parseInt(options[0]['content']);
+				var end = parseInt(options[1]['content']);
+				
+				var dataSet = [];
+				
+				var unit = [];
+				var unitObj = {};
+				var dataSet = {};
+				for (var i = start; i < end + 1; i++) {
+					unit.push(i);
+					unitObj[i] = 0;
+				}
+				
+				for (var j = 0; j < responses.length; j++) {
+					var sliderVal = responses[j]['sliderValue'];
+					
+					for (var j = 0; j < unit.length; j++) {
+						var unitVal = unit[j];
+						if (sliderVal == unitVal) {
+							var oldVal = unitObj[sliderVal];
+							unitObj[sliderVal] = oldVal + 1;
+						}
+						
+					}
+				}
+				console.log("after");
+				console.log(unitObj);
+				
+				var dataArr = [];
+				for (var i = start; i < end + 1; i++) {
+					var value = unitObj[i];
+					dataArr.push(value);
+				}
+				dataSet['label'] = unit;
+				dataSet['data'] = dataArr;
+				console.log(dataSet);
+				
+				return dataSet;
 			}
 			
 			function createChartStr(value, string, cnt) {return value + " - %%.%% [" + cnt + string + "]";}

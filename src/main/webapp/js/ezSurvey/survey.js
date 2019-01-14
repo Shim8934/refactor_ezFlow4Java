@@ -1983,6 +1983,7 @@ var SurveyCreate     = function() {
 	}
 	
 	function mkMatrixQstn(question) {
+		console.log(question);
 		var id       = question.level;
 		var inpType  = question.type == 3 ? "radio" : "checkbox";
 		var opts     = question["option"];
@@ -2023,7 +2024,7 @@ var SurveyCreate     = function() {
 			bodyTr.append(bodyTd);
 			
 			for (var j = 0; j < col.length; j++) {
-				var colNum = optsLength - row.length - 1 + j;
+				var colNum = optsLength - row.length + j;
 				var colOptionId = "";
 				
 				if (opts[colNum - 1]['optionId'] != undefined) {

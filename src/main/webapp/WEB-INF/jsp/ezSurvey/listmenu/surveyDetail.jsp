@@ -139,7 +139,8 @@
 					for (var i = 0; i < question.length; i++) {
 						SurveyCreate.setQs(question[i]);
 					}
-					
+					console.log("question");
+					console.log(question);
 					SurveyCreate.setQsForm(0);
 					
 					if (data["firstpath"]) {
