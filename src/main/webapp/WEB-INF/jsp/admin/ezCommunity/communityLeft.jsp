@@ -32,19 +32,16 @@
 				switch(idx)
 				{
 					case 1:
-						url = "/admin/ezCommunity/bbsList.do?bName=tbl_c_board";
+						url ="/admin/ezCommunity/searchKey.do";
+						getApplicationListCount();
 						break;
 					case 2:
-						url ="/admin/ezCommunity/searchKey.do?sRadio=C_ClubName&keyword=&key&pDivi=admin";
+						url = "/admin/ezCommunity/bbsList.do?bName=tbl_c_board";
+						getApplicationListCount();
 						break;
 					case 3:
-						url = "/admin/ezCommunity/closeCom.do";
-						break;
-					case 4:
-						url = "/admin/ezCommunity/admitCom.do" ;
-						break;
-					case 5:
 						url = "/admin/ezCommunity/applicationList.do";
+						getApplicationListCount();
 						break;
 				}				
 				window.open(url,"comm_main");
@@ -55,6 +52,7 @@
 		        $(".adminListBox").mCustomScrollbar({
 		    		theme : "dark"
 		    	});
+				getApplicationListCount();
 			});
 	        
 	        function leftResize(){
@@ -64,17 +62,27 @@
 	        $( window ).resize(function() {
 	        	leftResize();
 	    	});
+			
+			function getApplicationListCount() {
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : false,
+					url : "/admin/ezCommunity/getApplicationListCount.do",
+					success: function(result){
+						$("#listCount").html("&nbsp;" + result.count);
+					}
+				});
+			}
 		</script>
 	</head>
 	<body class="newLeft"> 
 		<div id="left" class="lnb" style="overflow: auto">
 			<div class="admin_left_title" title="Community"><spring:message code = 'ezCommunity.t1529' /></div>
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)">커뮤니티 관리</span></h2>
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(1)"><spring:message code='main.t272'/>&nbsp;<spring:message code='ezCommunity.t863'/></span></h2>
-				<%-- <h2><span style="display:inline-block;width:100%;" onClick="goPage(3)"><spring:message code = 'ezCommunity.t39' /></span></h2> --%>	
-				<%-- <h2><span style="display:inline-block;width:100%;" onClick="goPage(4)"><spring:message code = 'ezCommunity.t25' /></span></h2> --%>			
-				<h2><span style="display:inline-block;width:100%;" onClick="goPage(5)">커뮤니티 신청관리<span style="color: #017BEC;">&nbsp;${totalCount}</span></span></h2>
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(1)">커뮤니티 관리</span></h2>
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(2)"><spring:message code='main.t272'/>&nbsp;<spring:message code='ezCommunity.t863'/></span></h2>
+				<h2><span style="display:inline-block;width:100%;" onClick="goPage(3)">커뮤니티 신청관리<span id="listCount" style="color: #017BEC;"></span></span></h2>
 			</div>
 		</div>
 	</body>

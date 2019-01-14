@@ -56,28 +56,6 @@
 				window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
 			}
 			
-			/* function prevPage_onclick() {
-				newPage = parseInt(pCurPage) - 1;
-				
-				if(newPage > 0) {
-					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + encodeURIComponent('${query}') + "&page=" + newPage.toString();
-				}
-			}
-	
-			function nextPage_onclick() {
-				newPage = parseInt(pCurPage) + 1;
-				
-				if(newPage <= parseInt(pTotalPage)) {
-					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + encodeURIComponent('${query}') + "&page=" + newPage.toString();
-				}
-			} 
-	
-			function moveToPage(pCurPage) {
-	            if(parseInt(pCurPage) > 0 && parseInt(pCurPage) <= parseInt(pTotalPage)) {
-					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + encodeURIComponent('${query}') + "&page=" + pCurPage;
-				}
-			} */
-			
 			function get_search_CommunityInfo(e) {
 			    var kecode = e.keyCode;
 			    

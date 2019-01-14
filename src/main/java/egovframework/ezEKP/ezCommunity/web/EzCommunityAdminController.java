@@ -78,18 +78,28 @@ public class EzCommunityAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezCommunity/left.do")
 	public String left(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		return "/admin/ezCommunity/communityLeft";
+	}
+	
+	/**
+	 * 왼쪽 커뮤니티 신청 관리 카운트 호출함수
+	 */
+	@RequestMapping(value = "/admin/ezCommunity/getApplicationListCount.do")
+	public String getApplicationListCount(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("getApplicationListCount started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String companyId   = userInfo.getCompanyID();
-		int tenantId       = userInfo.getTenantId();
+		String companyId    = userInfo.getCompanyID();
+		int tenantId        = userInfo.getTenantId();
 		
 		int admitTotalCount = ezCommunityAdminService.aspAdmitComGet2("", "", companyId, tenantId);
 		int closeTotalCount = ezCommunityAdminService.aspCloseComGet2("", "", companyId, tenantId);
 		
-		model.addAttribute("totalCount", admitTotalCount + closeTotalCount);
+		model.addAttribute("count", admitTotalCount + closeTotalCount);
 		
-		return "/admin/ezCommunity/communityLeft";
+		logger.debug("getApplicationListCount started.");
+		return "json";
 	}
 	
 	/**
