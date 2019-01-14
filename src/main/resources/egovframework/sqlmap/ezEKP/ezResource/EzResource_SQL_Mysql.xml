@@ -1910,7 +1910,9 @@
 						AND
 							member_id = 'everyone'
 						AND
-                			TENANT_ID = #tenantID#) > 0, member_id = 'everyone', member_id = #memberID#)
+                			TENANT_ID = #tenantID#
+                		AND
+                			ACCESS_LVL = '1') > 0, member_id = 'everyone', member_id = #memberID#)
             AND
                 TENANT_ID = #tenantID#
 		]]>
