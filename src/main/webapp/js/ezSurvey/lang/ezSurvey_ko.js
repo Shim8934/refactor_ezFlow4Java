@@ -123,4 +123,9 @@ var SurveyMessages = {
 	strTxtList2  : "답변",
 	strOtherList1: "기타 리스트",
 	strOtherList2: "기타",
+	strJoin1     : "참석한 사람",
+	strJoin2     : "참석하 지않은 사람",
+	strViewAll   : "모두 보기",
+	strViewOther : "*기타",
+	strAllUsers  : "참여인원 리스트",
 }

@@ -25,15 +25,18 @@
 		</div>
 		
 		<div id="contentsBox">
-			<div id="surveyRespondents" style="height: 240px; position: relative; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;">
-				<div style="padding: 0px 20px; box-sizing:border-box;"><canvas id="respondentPie"  height="240" width="720"></canvas></div>
+			<div id="surveyRespondents" style="position: relative; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;">
+				<div style="padding: 0px 20px; box-sizing:border-box; display: flex;">
+					<div id="userLegendDiv" class="bnk-legend"></div>
+					<canvas id="respondentPie" height="240" width="240" style="height: 240px;"></canvas>
+				</div>
 			</div>
 			<div id="barChart" style="display: none; height: 460px; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;"></div>
 		</div>
 		
 		<div id="respondentPanel" class="respondentPanel off">
 			<div class="popup-header">
-				<div class="popup-title"><spring:message code='ezSurvey.t87'/></div>
+				<div class="popup-title" id="user-header"><spring:message code='ezSurvey.t87'/></div>
 				<div id="closeRespondentl" class="closeImgBttn"><ul><li><span></span></li></ul></div>
 			</div>
 			<div class="popup-body">
@@ -162,7 +165,7 @@
 				if (responses.length > 3) {
 					var spanUserCnt      = divText.parentElement.querySelector("span[class='response-usercnt']");
 					var viewMore         = document.createElement("span");
-					viewMore.textContent = "모두 보기";
+					viewMore.textContent = SurveyMessages.strViewOther;
 					viewMore.className   = "txt-viewmore";
 					viewMore.onclick     = function(e) {showAllTextResponse(question["questionId"]);};
 					spanUserCnt.parentElement.appendChild(viewMore);
@@ -193,7 +196,7 @@
 				var ulTxt           = document.getElementById("txtTable");
 				var divHeader       = document.getElementById("txt-header");
 				ulTxt.innerHTML     = "";
-				divHeader.innerHTML = SurveyMessages.strOtherList1 + " [<span>" + others.length + SurveyMessages.strOtherList2 + "</span>]";
+				divHeader.innerHTML = SurveyMessages.strOtherList1 + " [<span>" + others.length + " " + SurveyMessages.strOtherList2 + "</span>]";
 				
 				createTextList(others.length, others, ulTxt);
 				togglePanel("textPanel", 640, 480);
@@ -204,7 +207,7 @@
 				var ulTxt           = document.getElementById("txtTable");
 				var divHeader       = document.getElementById("txt-header");
 				ulTxt.innerHTML     = "";
-				divHeader.innerHTML = SurveyMessages.strTxtList1 + " [<span>" + responseList.length + SurveyMessages.strTxtList2 + "</span>]";
+				divHeader.innerHTML = SurveyMessages.strTxtList1 + " [<span>" + responseList.length + " " + SurveyMessages.strTxtList2 + "</span>]";
 				
 				createTextList(responseList.length, responseList, ulTxt);
 				togglePanel("textPanel", 640, 480);
@@ -305,10 +308,14 @@
 				}
 			}
 			
-			function createUserTableForQuestion(qstId) {
-				var userList        = questionStatistic.filter(function(qst) {return qst["questionId"] == qstId})[0]["users"];
+			function generateUserTable(dataFormat, userList) {
 				var tableUser       = document.getElementById("userTable");
 				tableUser.innerHTML = "";
+				var userId          = dataFormat["userId"];
+				var userImage       = dataFormat["userImage"];
+				var userName        = dataFormat["userName"];
+				var deptName        = dataFormat["deptName"];
+				var respDate        = dataFormat["respDate"];
 				
 				for (var i = 0; i < userList.length; i++) {
 					var trElmt  = document.createElement("tr");
@@ -317,17 +324,17 @@
 					var tdElmt3 = document.createElement("td");
 					var tdElmt4 = document.createElement("td");
 					var imgElmt = document.createElement("img");
-					imgElmt.src = userList[i]["userImage"] ? userList[i]["userImage"] : "/images/default_pic.jpg";
+					imgElmt.src = userList[i][userImage] ? userList[i][userImage] : "/images/default_pic.jpg";
 					tdElmt1.appendChild(imgElmt);
-					tdElmt2.textContent = userList[i]["userName"];
-					tdElmt3.textContent = userList[i]["deptName"];
-					tdElmt4.textContent = userList[i]["respDate"];
+					tdElmt2.textContent = userList[i][userName];
+					tdElmt3.textContent = userList[i][deptName];
+					tdElmt4.textContent = userList[i][respDate].substring(0, 19);
 					tdElmt2.className   = "mainTd";
 					tdElmt3.className   = "mainTd";
 					tdElmt4.className   = "respDate";
 					tdElmt2.setAttribute("title", tdElmt2.textContent);
 					tdElmt3.setAttribute("title", tdElmt3.textContent);
-					trElmt.onclick      =  (function(userId) {return function() {showUserInfoFromId(userId);};})(userList[i]["userId"]);
+					trElmt.onclick      =  (function(userId) {return function() {showUserInfoFromId(userId);};})(userList[i][userId]);
 					trElmt.className    = "usersTr";
 					trElmt.appendChild(tdElmt1);
 					trElmt.appendChild(tdElmt2);
@@ -335,6 +342,35 @@
 					trElmt.appendChild(tdElmt4);
 					tableUser.appendChild(trElmt);
 				}
+				
+				var divHeader       = document.getElementById("user-header");
+				divHeader.innerHTML = SurveyMessages.strAllUsers + " [<span>" + userList.length + " " + SurveyMessages.strUser3 + "</span>]";
+			}
+			
+			function showSelectedUsers(responseList) {
+				console.log(responseList);
+				var dataFormat = {
+					userName  : "userName",
+					deptName  : "deptName",
+					respDate  : "responseDate",
+					userId    : "responsorId",
+					userImage : "image"
+				};
+				
+				generateUserTable(dataFormat, responseList);
+				togglePanel("respondentPanel", 450, 320);
+			}
+			
+			function createUserTableForQuestion(qstId) {
+				var userList = questionStatistic.filter(function(qst) {return qst["questionId"] == qstId})[0]["users"];
+				var dataFormat = {
+					userName  : "userName",
+					deptName  : "deptName",
+					respDate  : "respDate",
+					userId    : "userId",
+					userImage : "userImage"
+				};
+				generateUserTable(dataFormat, userList);
 			}
 			
 			function showUserInfoFromId(userId) {
@@ -344,19 +380,22 @@
 			}
 			
 			function createQuestionPie(question, divElmt) {
-				var divChart       = document.createElement("div");
-				divChart.className = "pieDiv";
-				var canvasElmt     = document.createElement("canvas");
-				var canvasId       = "question" + question["level"];
+				var divChart        = document.createElement("div");
+				divChart.className  = "pieDiv";
+				var canvasElmt      = document.createElement("canvas");
+				var divLegend       = document.createElement("div");
+				var canvasId        = "question" + question["level"];
+				divLegend.className = "bnk-legend";
 				canvasElmt.setAttribute("height", 240);
-				canvasElmt.setAttribute("width", 640);
 				canvasElmt.setAttribute("id", canvasId);
+				divChart.appendChild(divLegend);
 				divChart.appendChild(canvasElmt);
 				divElmt.appendChild(divChart);
 				
 				var options = question["option"];
 				var values  = [];
 				var labels  = [];
+				var mores   = [];
 				var others  = [];
 				
 				for (var i = 0; i < options.length; i++) {
@@ -365,11 +404,12 @@
 					var responsesCnt  = responses ? responses.length : 0;
 					var optionContent = "";
 					
-					if (options[i]["content"].length > 50) {
-						optionContent = options[i]["content"].substring(0, 47) + "...";
+					
+					if (responses && responses.length > 0) {
+						mores.push(responses)
 					}
 					else {
-						optionContent = options[i]["content"];
+						mores.push(null);
 					}
 					
 					if (otherFlag == 1) {
@@ -377,19 +417,18 @@
 					}
 					
 					values.push(responsesCnt);
-					labels.push(optionContent);
+					labels.push(options[i]["content"]);
 				}
 				
-				createPieChart(labels, values, canvasId);
+				createPieChart(labels, values, canvasId, divLegend, mores);
 				
 				if (others && others.length > 0) {
-					console.log("Here!");
 					var wrapDivElmt       = document.createElement("div");
 					var otherHeader       = document.createElement("div");
 					var ulElmt            = document.createElement("ul");
 					var spanElmt1         = document.createElement("span");
 					otherHeader.className = "others-div";
-					spanElmt1.textContent = "*기타";
+					spanElmt1.textContent = SurveyMessages.strViewOther;
 					otherHeader.appendChild(spanElmt1);
 					ulElmt.className      = "txt-respul";
 					wrapDivElmt.className = "other-wrap";
@@ -398,7 +437,7 @@
 					
 					if (responses.length > 3) {
 						var viewMore         = document.createElement("span");
-						viewMore.textContent = "모두 보기";
+						viewMore.textContent = SurveyMessages.strViewAll;
 						viewMore.className   = "txt-viewmore";
 						viewMore.onclick     = function(e) {showAllMoreOthers(question["questionId"]);};
 						otherHeader.appendChild(viewMore);
@@ -417,17 +456,18 @@
 				var totalUsers  = parseInt(surveyStatistic["usersCnt"]);
 				var respondents = parseInt(surveyStatistic["respondentCnt"]);
 				var notTakePart = totalUsers - respondents;
+				var legendDiv   = document.getElementById("userLegendDiv");
 				
 				values.push(notTakePart);
 				values.push(respondents);
-				lables.push('참석한 사람 [' + respondents + SurveyMessages.strUser3 +']');
-				lables.push('참석하 지않은 사람 [' + notTakePart + SurveyMessages.strUser3 +']');
+				lables.push(SurveyMessages.strJoin1 + " [" + respondents + SurveyMessages.strUser3 + "]");
+				lables.push(SurveyMessages.strJoin2 + " [" + notTakePart + SurveyMessages.strUser3 + "]");
 				
 				document.getElementById("totalUserCnt").innerHTML = totalUsers;
-				createPieChart(lables, values,  "respondentPie");
+				createPieChart(lables, values,  "respondentPie", legendDiv);
 			}
 			
-			function createPieChart(labels, values, elmtId) {
+			function createPieChart(labels, values, elmtId, legendElmt, moreparams) {
 				var ctx = document.getElementById(elmtId).getContext("2d");
 				var myPieChart = new Chart(ctx, {
 					type: 'pie',
@@ -438,7 +478,8 @@
 							hoverBorderWidth: 8,
 							backgroundColor: colors,
 							data: values
-						}]
+						}],
+						mores : moreparams
 					},
 					options: {
 						tooltips: {
@@ -456,14 +497,58 @@
 								}
 							}
 						},
-						legend: {
-							position: 'right'
+						legendCallback: function(chart) {
+							var ul       = document.createElement("ul");
+							ul.className = "legend-ul";
+							for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
+								var liElmt   = document.createElement("li");
+								var divElmt1 = document.createElement("div");
+								var divElmt2 = document.createElement("div");
+								divElmt1.className   = "legend-circle";
+								divElmt2.className   = "legend-label";
+								divElmt2.textContent = chart.data.labels[i];
+								divElmt1.setAttribute("style", "background-color: " + chart.data.datasets[0].backgroundColor[i]);
+								liElmt.appendChild(divElmt1);
+								liElmt.appendChild(divElmt2);
+								
+								if (chart.data["mores"] && chart.data["mores"][i] && chart.data["mores"][i].length > 0) {
+									liElmt.onclick = (function(responses) {return function() {showSelectedUsers(responses);};})(chart.data["mores"][i]);
+								}
+								
+								ul.appendChild(liElmt);
+							}
+							
+							return ul;
 						},
-						responsive: true,
+						legend: {
+							display: false,
+						},
+						onClick : function (evt, item) {
+							var itemIdx = item[0]["_index"];
+							var data    = myPieChart.data["mores"][itemIdx];
+							if (data && data.length > 0) {
+								showSelectedUsers(data);
+							}
+						},
+/* 						legend: {
+							position: 'left',
+							onHover: function(e, legendItem) {
+								e.target.style.cursor = 'pointer';
+							}
+						}, */
+						hover: {
+							onHover: function(e) {
+								var point = this.getElementAtEvent(e);
+								if (point.length) e.target.style.cursor = 'pointer';
+								else e.target.style.cursor = 'default';
+							}
+						},
+						responsive: false,
 					}
 				});
-				 
-				 $("#chartjs-legend").html(myPieChart.generateLegend());
+				
+				//legendElmt.innerHTML = myPieChart.generateLegend();
+				legendElmt.appendChild(myPieChart.generateLegend());
 			}
 			
 			function createQuestionBar(question, canvasId) {
@@ -670,8 +755,6 @@
 				
 				return dataSet;
 			}
-			
-			function createChartStr(value, string, cnt) {return value + " - %%.%% [" + cnt + string + "]";}
 		})();
 	</script>
 </html>
