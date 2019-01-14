@@ -183,8 +183,9 @@
 		    	var preShow = "";
 		    	
 		    	for (var i = 0; i<preListlength; i++){
-		    		preFind = preList[i].querySelector(".sliderListmodify");
+		    		preFind = preList[i].querySelector(".sliderModifyBody");
 		    		preShow = preList[i].querySelector("#slider-body");
+		    		
 		    		if(preFind != null){
 		    			preFind.parentNode.removeChild(preFind);
 		    			preShow.style.display = "";
@@ -506,17 +507,22 @@
 		    //슬라이더 수정 함수
 		    function modifySlider(obj) {
 		    	var preList = $(".sliderList");
-		    	var addList = $(".addsliderList");
+		    	var addList = $("#addSliderBody");
 		    	var preListlength = preList.length;
 		    	var preFind = "";
 		    	var preShow = "";
 		    	
 		    	for (var i = 0; i<preListlength; i++){
-		    		preFind = preList[i].querySelector(".sliderListmodify");
+		    		preFind = preList[i].querySelector(".sliderModifyBody");
 		    		preShow = preList[i].querySelector("#slider-body");
+		    		
 		    		if(preFind != null){
 		    			preFind.parentNode.removeChild(preFind);
-		    			preShow.style.display = "";
+		    			
+		    			if (preShow != null) {
+		    				preShow.style.display = "";
+		    			}
+		    			
 		    		}
 		    	}
 		    	
