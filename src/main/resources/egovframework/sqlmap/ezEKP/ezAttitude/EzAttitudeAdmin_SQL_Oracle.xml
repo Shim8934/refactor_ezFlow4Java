@@ -1442,18 +1442,24 @@
 				AND
 				 B.YEAR = #searchYear#)
 			WHERE
-				A.TENANT_ID = 1
+				A.TENANT_ID = #tenantId#
 			AND 
 				A.PHYSICALDELIVERYOFFICENAME = #companyId#
 		]]>
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			A.description LIKE CONCAT '%' || #searchDeptName# || '%'
+			<![CDATA[
+				A.description LIKE '%' || #searchDeptName# || '%'
+			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			A.displayname LIKE CONCAT '%' || #searchUserName# || '%'
+			<![CDATA[
+				A.displayname LIKE '%' || #searchUserName# || '%'
+			]]>
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			A.title LIKE CONCAT '%' || #searchTitle# || '%'
+			<![CDATA[
+				A.title LIKE '%' || #searchTitle# || '%'
+			]]>
 		</isNotEmpty>
 	</select>
 	
@@ -1470,8 +1476,8 @@
 				SELECT 
 					A.CN AS userId,
 				    A.DISPLAYNAME AS userName,
-				    A.TITLE AS userTitle,
-				    A.DESCRIPTION AS userDeptName,
+				    NVL(A.TITLE, ' ') AS userTitle,
+				    NVL(A.DESCRIPTION, ' ') AS userDeptName,
 				    #searchYear# AS year,
 				    nvl(sum(
 							CASE
@@ -1506,16 +1512,16 @@
 					AND 
 					 (
 						   (
-							(C.START_DATE + INTERVAL #offsetMin# minute) >= #searchStartTime#
-							AND (C.START_DATE + INTERVAL #offsetMin# minute) <= #searchEndTime#
+							SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchStartTime#
+							AND SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) <= #searchEndTime#
 							)
 						OR (
-							(C.END_DATE + INTERVAL #offsetMin# minute) >= #searchStartTime#
-							AND (C.END_DATE + INTERVAL #offsetMin# minute) < #searchEndTime#
+							SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchStartTime#
+							AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #searchEndTime#
 							)
 						OR (
-							(C.START_DATE + INTERVAL #offsetMin# minute) < #searchStartTime#
-							AND (C.END_DATE + INTERVAL #offsetMin# minute) >= #searchEndTime#
+							SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #searchStartTime#
+							AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchEndTime#
 							)
 					  )
 					 )
@@ -1525,16 +1531,22 @@
 					A.PHYSICALDELIVERYOFFICENAME = #companyId#			
 			]]>
 			<isNotEmpty prepend="AND" property="searchDeptName">
-				A.description LIKE '%' || #searchDeptName# || '%'
+				<![CDATA[
+					A.description LIKE '%' || #searchDeptName# || '%'
+				]]>
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="searchUserName">
-				A.displayname LIKE '%' || #searchUserName# || '%'
+				<![CDATA[
+					A.displayname LIKE '%' || #searchUserName# || '%'
+				]]>
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="searchTitle">
-				A.title LIKE '%' || #searchTitle# || '%'
+				<![CDATA[
+					A.title LIKE '%' || #searchTitle# || '%'
+				]]>
 			</isNotEmpty>
 			
-			GROUP BY A.CN
+			GROUP BY A.CN, A.DISPLAYNAME, A.TITLE, A.DESCRIPTION, nvl(B.TOTAL_ANNUAL_CNT, 0)
 			
 			<isNotEmpty property="orderCell">
 				<![CDATA[
@@ -1609,15 +1621,16 @@
 	
 	<insert id="ezAttitudeAdminDAO.changeAnnualHistory" parameterClass="Map">
 			INSERT INTO tbl_attitude_annual_history
-				(USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID, YEAR)
+				(ANNUAL_HISTORY_ID, USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID, YEAR)
 			SELECT
+				SEQ_TBL_ATTITUDE_HISTORY.NEXTVAL AS ANNUAL_HISTORY_ID,
 				USER_ID AS USER_ID,
 				TOTAL_ANNUAL_CNT AS ORIGIN_ANNUAL_CNT,
 					<isEqual property="flagCheck" compareValue="change">
 						'$annualCnt$' AS CHANGE_ANNUAL_CNT,
 					</isEqual>
 					<isEqual property="flagCheck" compareValue="plus">
-						TOTAL_ANNUAL_CNT + TO_NUMBER(#annualCnt#, '00.0') AS CHANGE_ANNUAL_CNT,
+						TOTAL_ANNUAL_CNT + TO_NUMBER(#annualCnt#, '99.9') AS CHANGE_ANNUAL_CNT,
 					</isEqual>
 				'$changeReason$' AS CHANGE_REASON,
 				SYSDATE AS CHANGE_DATE,
@@ -1666,7 +1679,7 @@
 					SET TOTAL_ANNUAL_CNT = #annualCnt#
 				</isEqual>
 				<isEqual property="flagCheck" compareValue="plus">
-					SET TOTAL_ANNUAL_CNT = TOTAL_ANNUAL_CNT + TO_NUMBER(#annualCnt#, '00.0')
+					SET TOTAL_ANNUAL_CNT = TOTAL_ANNUAL_CNT + TO_NUMBER(#annualCnt#, '99.9')
 				</isEqual>
 			WHERE
 				TENANT_ID = #tenantId#
@@ -1687,8 +1700,8 @@
 			    A.TITLE as userTitle,
 			    A.DESCRIPTION as deptName,
 			    A.EXTENSIONATTRIBUTE2 as imgPath,
-			    (C.START_DATE + INTERVAL #offsetMin# minute) as startDate,
-			    (C.END_DATE + INTERVAL #offsetMin# minute) as endDate,
+			    C.START_DATE + #offsetMin# / (24 * 60) as startDate,
+			    C.END_DATE + #offsetMin# / (24 * 60) as endDate,
 			    C.TYPE_ID as typeId,
 			    D.TYPE_NAME as typeName,
 			    nvl( 
@@ -1724,16 +1737,16 @@
 				AND 
 				 (
 					   (
-						(C.START_DATE + INTERVAL #offsetMin# minute) >= #startTime#
-						AND (C.START_DATE + INTERVAL #offsetMin# minute) <= #endTime#
+						SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #startTime#
+						AND SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) <= #endTime#
 						)
 					OR (
-						(C.END_DATE + INTERVAL #offsetMin# minute) >= #startTime#
-						AND (C.END_DATE + INTERVAL #offsetMin# minute) < #endTime#
+						SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #startTime#
+						AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #endTime#
 						)
 					OR (
-						(C.START_DATE + INTERVAL #offsetMin# minute) < #startTime#
-						AND (C.END_DATE + INTERVAL #offsetMin# minute) >= #endTime#
+						SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #startTime#
+						AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #endTime#
 						)
 				  )
 				 )
@@ -1794,16 +1807,16 @@
 					AND 
 					 (
 						   (
-							(C.START_DATE + INTERVAL #offsetMin# minute) >= #searchStartTime#
-							AND (C.START_DATE + INTERVAL #offsetMin# minute) <= #searchEndTime#
+							SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchStartTime#
+							AND SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) <= #searchEndTime#
 							)
 						OR (
-							(C.END_DATE + INTERVAL #offsetMin# minute) >= #searchStartTime#
-							AND (C.END_DATE + INTERVAL #offsetMin# minute) < #searchEndTime#
+							SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchStartTime#
+							AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #searchEndTime#
 							)
 						OR (
-							(C.START_DATE + INTERVAL #offsetMin# minute) < #searchStartTime#
-							AND (C.END_DATE + INTERVAL #offsetMin# minute) >= #searchEndTime#
+							SUBSTR(TO_CHAR(C.START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) < #searchStartTime#
+							AND SUBSTR(TO_CHAR(C.END_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS'), 12, 5) >= #searchEndTime#
 							)
 					  )
 					 )
@@ -1815,7 +1828,7 @@
 					A.CN = #userId#
 		]]>
 		
-		GROUP BY A.CN
+		GROUP BY A.CN, A.DISPLAYNAME, A.TITLE, A.DESCRIPTION, A.PHYSICALDELIVERYOFFICENAME, nvl(B.TOTAL_ANNUAL_CNT, 0)
 		
 	</select>
 	
