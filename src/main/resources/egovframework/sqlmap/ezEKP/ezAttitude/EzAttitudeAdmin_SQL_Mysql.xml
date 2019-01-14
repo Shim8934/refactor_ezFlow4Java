@@ -1386,7 +1386,7 @@
 				AND
 				 B.YEAR = #searchYear#)
 			WHERE
-				A.TENANT_ID = 1
+				A.TENANT_ID = #tenantId#
 			AND 
 				A.PHYSICALDELIVERYOFFICENAME = #companyId#
 		]]>

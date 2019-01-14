@@ -156,6 +156,9 @@
 					        	    	<c:if test="${originAnnualLastCnt == 5 }">
 						            		${list.originAnnualCnt}<spring:message code='ezAttitude.t68' />
 					        	    	</c:if>
+					        	    	<c:if test="${originAnnualLastCnt == null }">
+						            		${list.originAnnualCnt}<spring:message code='ezAttitude.t68' />
+					        	    	</c:if>
 				        	    	</td>
 					            	<td class="borderLeft" style="width:14%;">
 					        	    	<c:set var="changeAnnualLastCnt" value="${fn:split(list.changeAnnualCnt,'.')[1]}" />
@@ -163,6 +166,9 @@
 					        	    		${fn:split(list.changeAnnualCnt,'.')[0]}<spring:message code='ezAttitude.t68' />
 					        	    	</c:if>
 					        	    	<c:if test="${changeAnnualLastCnt == 5 }">
+						            		${list.changeAnnualCnt}<spring:message code='ezAttitude.t68' />
+					        	    	</c:if>
+					        	    	<c:if test="${changeAnnualLastCnt == null }">
 						            		${list.changeAnnualCnt}<spring:message code='ezAttitude.t68' />
 					        	    	</c:if>
 				        	    	</td>
