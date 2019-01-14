@@ -269,6 +269,7 @@ public class MBoardGWController {
 			
 			// 현재 사용자의 부서 경로(자기ID+부서ID+회사ID 전부 ,로 나누어 붙인 문자열) 받아온다.
 			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
@@ -310,6 +311,7 @@ public class MBoardGWController {
 			data.put("boardItem", boardItem);
 			data.put("content", mhtContent);
 			data.put("boardInfo", boardInfo);
+			data.put("attachFileNameMaxLength", attachFileNameMaxLength);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -423,6 +425,7 @@ public class MBoardGWController {
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
+			String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", info.getTenantId());
 			
 			LOGGER.debug("deptPathCode = "+deptPathCode);
 			
@@ -430,6 +433,7 @@ public class MBoardGWController {
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
 
 			data.put("boardInfo", boardInfo);
+			data.put("attachFileNameMaxLength", attachFileNameMaxLength);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
