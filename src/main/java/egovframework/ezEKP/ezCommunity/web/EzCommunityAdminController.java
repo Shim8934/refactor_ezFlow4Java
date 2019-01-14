@@ -77,7 +77,18 @@ public class EzCommunityAdminController {
 	 * 왼쪽 메뉴화면 호출함수
 	 */
 	@RequestMapping(value = "/admin/ezCommunity/left.do")
-	public String left() throws Exception {
+	public String left(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String companyId   = userInfo.getCompanyID();
+		int tenantId       = userInfo.getTenantId();
+		
+		int admitTotalCount = ezCommunityAdminService.aspAdmitComGet2("", "", companyId, tenantId);
+		int closeTotalCount = ezCommunityAdminService.aspCloseComGet2("", "", companyId, tenantId);
+		
+		model.addAttribute("totalCount", admitTotalCount + closeTotalCount);
+		
 		return "/admin/ezCommunity/communityLeft";
 	}
 	
@@ -165,7 +176,29 @@ public class EzCommunityAdminController {
 	}
 	
 	/**
-	 * 개설된 커뮤니티 / 폐쇄한 커뮤니티 호출함수
+	 * 커뮤니티 관리 페이지  호출함수
+	 */
+	@RequestMapping(value = "/admin/ezCommunity/searchKey.do")
+	public String searchKey(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		logger.debug("searchKey started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("idSpanValue", ezCommunityService.getCategory("", "", "", userInfo));
+		
+		logger.debug("searchKey endend.");
+		
+		return "/admin/ezCommunity/communitySearchKey";
+	}
+	
+	/**
+	 * 개설된 커뮤니티 / 폐쇄한 커뮤니티 리스트 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezCommunity/communityList.do")
 	public String communityList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -223,88 +256,6 @@ public class EzCommunityAdminController {
 	}
 	
 	/**
-	 * 커뮤니티 페이지  호출함수
-	 */
-	@RequestMapping(value = "/admin/ezCommunity/searchKey.do")
-	public String searchKey(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
-		logger.debug("searchKey started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-			return "cmm/error/adminDenied";
-		}
-		
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
-		model.addAttribute("idSpanValue", ezCommunityService.getCategory("", "", "", userInfo));
-		
-		logger.debug("searchKey endend.");
-		
-		return "/admin/ezCommunity/communitySearchKey";
-	}
-	
-	/**
-	 * 커뮤니티 검색화면 호출함수
-	 */
-	/*@RequestMapping(value = "/admin/ezCommunity/searchKey.do")
-	public String searchKey(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		int curPage = 1, comNoPerPage = 10;
-		String select = "", query = "";
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-			return "cmm/error/adminDenied";
-		}
-		
-		if (request.getParameter("page") != null) {
-			curPage = Integer.parseInt(request.getParameter("page"));
-		}
-		if (request.getParameter("select") != null) {
-			select = request.getParameter("select");
-		}
-		if (request.getParameter("query") != null) {
-			query = request.getParameter("query").replace("'",  "''");
-		}
-		
-		 관리자 > 커뮤니티검색화면 표출(총 n개 keywordCount) 시 companyID 조건 추가 
-		int keywordCount = ezCommunityAdminService.aspSearchKeyGet2(commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), select, query, userInfo.getCompanyID(), userInfo.getTenantId());
-		int totalPage = keywordCount / comNoPerPage;
-		
-		if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
-			totalPage = totalPage + 1;
-		}
-		
-		curPage = Math.min(curPage, totalPage);
-		int iQueryCount = keywordCount - (curPage -1) * 10;
-		
-		logger.debug("iQueryCount=" + iQueryCount);
-		
-		 관리자 > 커뮤니티검색화면 표출(하단 리스트) 시 companyID 조건 추가, deptID 가져오기 
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(userInfo.getPrimary(), iQueryCount, select , query, userInfo.getCompanyID(), userInfo.getTenantId());
-		if(clubList.size() > 0) {
-			// 이미 companyID로 걸러진 커뮤니티를 가지고 후작업
-			for(CommunityClubVO club : clubList) {
-				 2018-06-21 홍승비 - 관리자 > 커뮤니티 겸직하는 userID 가져올때 companyID로 조건 추가 
-				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getTenantId()));
-				//club.setC_ClubDesc(club.getC_ClubDesc().replaceAll("<br>", " "));
-			}
-			model.addAttribute("clubList", clubList);
-		} else {
-			model.addAttribute("clubList", "");
-		}
-
-		
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
-		model.addAttribute("curPage", curPage);
-		model.addAttribute("totalPage", totalPage);
-		model.addAttribute("totalCount", keywordCount);
-		
-		return "/admin/ezCommunity/communitySearchKey";
-	}*/
-	
-	/**
 	 * 커뮤니티 상세정보 수정화면 호출함수
 	 */
 	@RequestMapping(value = "/admin/ezCommunity/admCommunityInfoEdit.do")
@@ -351,121 +302,6 @@ public class EzCommunityAdminController {
 		logger.debug("admCommunityInfoEditOk ended.");
 		
 		return result;
-	}
-	
-	/**
-	 * 폐쇄승인화면 호출함수
-	 */
-	@RequestMapping(value = "/admin/ezCommunity/closeCom.do")
-	public String closeCom (@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String code = "", keyword = "", sRadio = "", s = "", sort1 = "", sort2 = "";
-		int nowBlock = 0, curPage = 1 , comNoPerPage = 10;
-		int sc1 = 1, sc2 = 1, sc3 = 1, sc4 = 1;
-		int tenantID = userInfo.getTenantId();
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-			return "cmm/error/adminDenied";
-		}
-		
-		if (request.getParameter("code") != null) {
-			code = request.getParameter("code");
-		}
-		if (request.getParameter("keyword") != null) {
-			keyword = request.getParameter("keyword");
-		}
-		if (request.getParameter("sRadio") != null) {
-			sRadio = request.getParameter("sRadio");
-		}
-		if (request.getParameter("goToPage") != null) {
-			curPage = Integer.parseInt(request.getParameter("goToPage"));
-		}
-		if (request.getParameter("s") != null) {
-			s = request.getParameter("s");
-		}
-		if (request.getParameter("block") != null) {
-			nowBlock = Integer.parseInt(request.getParameter("block"));
-		}
-		
-		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), tenantID);
-		
-        if (!s.equals("")) {
-            String v = s.substring(1, 1);
-
-            switch (s.substring(0, 1)) {
-                case "1":
-                    sort1 = "C_ClubName" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
-                    
-                    if (v.equals("1")) {
-                        sc1 = 2;
-                    }
-                    
-                    break;
-                case "2":
-                    sort1 = "CompanyName";
-                    
-                    if (v.equals("1")) {
-                        sc2 = 2;
-                    }
-                    
-                    break;
-                case "3":
-                    sort1 = "ApplicationDate";
-                    
-                    if (v.equals("1")) {
-                        sc3 = 2;
-                    }
-                    
-                    break;
-                case "4":
-                    sort1 = "CloseState";
-                    
-                    if (v.equals("1")) {
-                        sc4 = 2;
-                    }
-                    
-                    break;
-            }
-            
-            if (v.equals("1")) {
-                sort2 = "asc";
-            } else {
-                sort2 = "desc";
-            }
-        }
-        
-        /* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(총 n개 카운트) */
-        int keywordCount = ezCommunityAdminService.aspCloseComGet2(keyword, sRadio, userInfo.getCompanyID(), tenantID);
-        int totalPage = keywordCount / comNoPerPage;
-        
-        /* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
-        List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), sort1, sort2, userInfo.getCompanyID(), tenantID);
-        
-        if ((totalPage * comNoPerPage) != keywordCount && (keywordCount % comNoPerPage) != 0) {
-        	totalPage = totalPage + 1;
-        }
-        
-        curPage = Math.min(curPage, totalPage);
-        // 화면에 리스트 나타내는 부분(companyID로 걸러진 커뮤니티 리스트 표출)
-        String idSpanValue = ezCommunityAdminService.communityCloseCom(clubList, curPage, comNoPerPage, userInfo);
-        
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
-		model.addAttribute("sysopCheck", sysopCheck);
-		model.addAttribute("code", code);
-		model.addAttribute("keyword", keyword);
-		model.addAttribute("sRadio", sRadio);
-		model.addAttribute("curPage", curPage);
-		model.addAttribute("nowBlock", nowBlock);
-		model.addAttribute("keywordCount", keywordCount);
-		model.addAttribute("totalPage", totalPage);
-		model.addAttribute("sc1", sc1);
-		model.addAttribute("sc2", sc2);
-		model.addAttribute("sc3", sc3);
-		model.addAttribute("sc4", sc4);
-		model.addAttribute("idSpanValue", idSpanValue);
-		
-		return "/admin/ezCommunity/communityCloseCom";
 	}
 	
 	/**
@@ -526,113 +362,6 @@ public class EzCommunityAdminController {
 	}
 	
 	/**
-	 * 신청승인화면 호출함수
-	 */
-	@RequestMapping(value = "/admin/ezCommunity/admitCom.do")
-	public String admitCom(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String code = "", sRadio = "", keyword = "", s = "", sort1 = "", sort2 = "";
-		int nowBlock = 0, curPage = 1 , comNoPerPage = 10;
-		int sc1 = 1, sc2 = 1, sc3 = 1, sc4 = 1;
-		int tenantID = userInfo.getTenantId();
-		
-		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
-			return "cmm/error/adminDenied";
-		}
-		
-		if (request.getParameter("code") != null) {
-			code = request.getParameter("code");
-		}
-		if (request.getParameter("keyword") != null) {
-			keyword = request.getParameter("keyword");
-		}
-		if (request.getParameter("sRadio") != null) {
-			sRadio = request.getParameter("sRadio");
-		}
-		if (request.getParameter("goToPage") != null) {
-			curPage = Integer.parseInt(request.getParameter("goToPage"));
-		}
-		if (request.getParameter("s") != null) {
-			s = request.getParameter("s");
-		}
-		if (request.getParameter("block") != null) {
-			nowBlock = Integer.parseInt(request.getParameter("block"));
-		}
-		
-		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), tenantID);
-		
-		if (!s.equals("")) {
-            String v = s.substring(1, 1);
-
-            switch (s.substring(0, 1)) {
-                case "1":
-                    sort1 = "C_ClubName" + commonUtil.getMultiData(userInfo.getLang(), tenantID);
-                    
-                    if (v.equals("1")) {
-                        sc1 = 2;
-                    }
-                    
-                    break;
-                case "2":
-                    sort1 = "CompanyName";
-                    
-                    if (v.equals("1")) {
-                        sc2 = 2;
-                    }
-                    
-                    break;
-                case "3":
-                    sort1 = "C_RegDate";
-                    
-                    if (v.equals("1")) {
-                        sc3 = 2;
-                    }
-                    
-                    break;
-            }
-            
-            if (v.equals("1")) {
-                sort2 = "asc";
-            } else {
-                sort2 = "desc";
-            }
-        }
-		
-		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(총 n개 카운트) */
-		int keywordCount = ezCommunityAdminService.aspAdmitComGet2(keyword, sRadio, userInfo.getCompanyID(), tenantID);
-		int totalPage = keywordCount / comNoPerPage;
-		
-		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) -> 사간겸직한 회원이 만든 커뮤니티는 겸직한 회사만큼 전부 표출됨(수정필요) */
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(keyword, sRadio, s, commonUtil.getMultiData(userInfo.getLang(), tenantID), sort1, sort2, userInfo.getCompanyID(), tenantID);
-		
-		if (totalPage * comNoPerPage != keywordCount && (keywordCount % comNoPerPage) != 0) {
-			totalPage = totalPage + 1;
-		}
-		
-		curPage = Math.min(curPage, totalPage);
-		
-		String idSpanValue = ezCommunityAdminService.admitCom(clubList, curPage, comNoPerPage);
-		
-		model.addAttribute("userInfo", userInfo);
-		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), tenantID));
-        model.addAttribute("sysopCheck", sysopCheck);
-		model.addAttribute("code", code);
-		model.addAttribute("keyword", keyword);
-		model.addAttribute("sRadio", sRadio);
-		model.addAttribute("curPage", curPage);
-		model.addAttribute("nowBlock", nowBlock);
-		model.addAttribute("keywordCount", keywordCount);
-		model.addAttribute("totalPage", totalPage);
-		model.addAttribute("sc1", sc1);
-		model.addAttribute("sc2", sc2);
-		model.addAttribute("sc3", sc3);
-		model.addAttribute("sc4", sc4);
-		model.addAttribute("idSpanValue", idSpanValue);
-		
-		return "/admin/ezCommunity/communityAdmitCom";
-	}
-	
-	/**
 	 * 승인신청 실행함수
 	 */
 	@RequestMapping(value = "/admin/ezCommunity/commAdmitOk.do")
@@ -662,5 +391,117 @@ public class EzCommunityAdminController {
 		model.addAttribute("diviTitle", diviTitle);
 		
 		return "/admin/ezCommunity/communityCommAdmitOk";
+	}
+	
+	/**
+	 * 커뮤니티 신청관리  페이지 호출 함수
+	*/
+	@RequestMapping(value = "/admin/ezCommunity/applicationList.do")
+	public String applicationList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		logger.debug("applicationList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("lang", commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("idSpanValue", ezCommunityService.getCategory("", "", "", userInfo));
+		
+		logger.debug("applicationList endend.");
+		
+		return "/admin/ezCommunity/communityApplicationList";
+	}
+	
+	/**
+	 * 신청 승인  리스트 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezCommunity/admitCom.do")
+	public String admitCom(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String lang        = userInfo.getLang();
+		String companyId   = userInfo.getCompanyID();
+		int tenantId       = userInfo.getTenantId();
+		
+		int pageSize       = 10;
+		int pageNum        = request.getParameter("pageNum") != null ? Integer.parseInt(request.getParameter("pageNum")) : 1;
+		String searchType  = request.getParameter("searchType") != null ? request.getParameter("searchType") : "" ;
+		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
+		String code        = request.getParameter("code") != null ? request.getParameter("code") : "" ; //언제쓰이는지?
+		
+		logger.debug("pageNum=" + pageNum);
+		logger.debug("searchType=" + searchType + ",searchValue=" + searchValue);
+		
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), companyId, tenantId);
+		
+		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(총 n개 카운트) */
+		int totalCount = ezCommunityAdminService.aspAdmitComGet2(searchValue, searchType, companyId, tenantId);
+		int totalPage = totalCount / pageSize;
+		
+		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
+		
+		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) -> 사간겸직한 회원이 만든 커뮤니티는 겸직한 회사만큼 전부 표출됨(수정필요) */
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
+		if ((totalPage * pageSize) != totalCount && (totalCount % pageSize) != 0) {
+			totalPage = totalPage + 1;
+		}
+		
+		pageNum = Math.min(pageNum, totalPage);
+		
+		model.addAttribute("clubList", clubList);
+		model.addAttribute("pageNum", pageNum);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("sysopCheck", sysopCheck);
+		
+		return "json";
+	}
+	
+	/**
+	 * 폐쇄 승인 리스트  호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezCommunity/closeCom.do")
+	public String closeCom (@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String lang        = userInfo.getLang();
+		String companyId   = userInfo.getCompanyID();
+		int tenantId       = userInfo.getTenantId();
+		
+		int pageSize       = 10;
+		int pageNum        = request.getParameter("pageNum") != null ? Integer.parseInt(request.getParameter("pageNum")) : 1;
+		String searchType  = request.getParameter("searchType") != null ? request.getParameter("searchType") : "" ;
+		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
+		String code        = request.getParameter("code") != null ? request.getParameter("code") : "" ; //언제쓰이는지?
+		
+		logger.debug("pageNum=" + pageNum);
+		logger.debug("searchType=" + searchType + ",searchValue=" + searchValue);
+		
+		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), companyId, tenantId);
+		
+		/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(총 n개 카운트) */
+		int totalCount = ezCommunityAdminService.aspCloseComGet2(searchValue, searchType, companyId, tenantId);
+		int totalPage = totalCount / pageSize;
+		
+		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
+		
+		/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
+		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
+		if ((totalPage * pageSize) != totalCount && (totalCount % pageSize) != 0) {
+			totalPage = totalPage + 1;
+		}
+		
+		pageNum = Math.min(pageNum, totalPage);
+		
+		model.addAttribute("clubList", clubList);
+		model.addAttribute("pageNum", pageNum);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("totalCount", totalCount);
+		model.addAttribute("sysopCheck", sysopCheck);
+		
+		return "json";
 	}
 }
