@@ -13,6 +13,7 @@
 	<typeAlias alias="AttitudeAuthorVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeAuthorVO"/>
 	<typeAlias alias="AttitudeStatisVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeStatisVO"/>
 	<typeAlias alias="ModApplHistoryVO" type="egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO"/>
+	<typeAlias alias="AttitudeAnnualVO" type="egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO"/>
 	
 	<resultMap id="attitudeConfig" class="AttitudeConfigVO">
 		<result property="companyId"				column="COMPANY_ID"				columnIndex="1"/>
@@ -56,6 +57,19 @@
 		<result property="count" 					column="COUNT" 					columnIndex="1"/>
 		<result property="typeId" 					column="TYPE_ID" 				columnIndex="2"/>
 		<result property="statMonth" 				column="STAT_MONTH" 			columnIndex="3"/>
+	</resultMap>
+	
+	<resultMap class="java.util.HashMap" id="annualHistMap">
+		<result property="userId" 					column="USER_ID" 					columnIndex="1"/>
+		<result property="originAnnualCnt" 					column="ORIGIN_ANNUAL_CNT" 				columnIndex="2"/>
+		<result property="changeAnnualCnt" 				column="CHANGE_ANNUAL_CNT" 			columnIndex="3"/>
+		<result property="changeReason" 				column="CHANGE_REASON" 			columnIndex="4"/>
+		<result property="changeDate" 				column="CHANGE_DATE" 			columnIndex="5"/>
+		<result property="changeUserId" 				column="CHANGE_USER_ID" 			columnIndex="6"/>
+		<result property="changeUserName" 				column="CHANGE_USER_NAME" 			columnIndex="7"/>
+		<result property="companyId" 				column="COMPANY_ID" 			columnIndex="8"/>
+		<result property="tenantId" 				column="TENANT_ID" 			columnIndex="9"/>
+		<result property="year" 				column="YEAR" 			columnIndex="10"/>
 	</resultMap>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
@@ -1409,6 +1423,441 @@
 		<iterate prepend="AND WRITER_DEPT_ID IN" property="deptIdList" open="(" close=")" conjunction=",">
 			#deptIdList[]#
 		</iterate>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeAnnualListCount" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				count(*)
+			FROM 
+				tbl_usermaster A
+			LEFT OUTER JOIN 
+				tbl_attitude_annual B
+			ON
+				(A.TENANT_ID = B.TENANT_ID 
+				AND
+				 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID
+				AND 
+				 A.CN = B.USER_ID 
+				AND
+				 B.YEAR = #searchYear#)
+			WHERE
+				A.TENANT_ID = 1
+			AND 
+				A.PHYSICALDELIVERYOFFICENAME = #companyId#
+		]]>
+		<isNotEmpty prepend="AND" property="searchDeptName">
+			A.description LIKE CONCAT '%' || #searchDeptName# || '%'
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+			A.displayname LIKE CONCAT '%' || #searchUserName# || '%'
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+			A.title LIKE CONCAT '%' || #searchTitle# || '%'
+		</isNotEmpty>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeAnnualList" parameterClass="Map" resultClass="AttitudeAnnualVO">
+		<![CDATA[
+		select
+			*
+		from
+			(SELECT
+				T1.*,
+				rownum AS RN
+				FROM
+					(
+				SELECT 
+					A.CN AS userId,
+				    A.DISPLAYNAME AS userName,
+				    A.TITLE AS userTitle,
+				    A.DESCRIPTION AS userDeptName,
+				    #searchYear# AS year,
+				    nvl(sum(
+							CASE
+							   WHEN C.TYPE_ID = 'A11' THEN TRUNC(C.END_DATE) - TRUNC(C.START_DATE)
+				               WHEN C.TYPE_ID = 'A12' THEN 0.5
+				               WHEN C.TYPE_ID = 'A13' THEN 0.5
+							   ELSE 0
+							END
+					), 0) AS useAnnualCnt,
+				    nvl(B.TOTAL_ANNUAL_CNT, 0) AS totalAnnualCnt
+				FROM 
+					TBL_USERMASTER A
+				LEFT OUTER JOIN 
+					TBL_ATTITUDE_ANNUAL B
+				ON
+					(A.TENANT_ID = B.TENANT_ID 
+					AND
+					 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
+					AND
+					 A.CN = B.USER_ID
+					AND B.YEAR = #searchYear#)
+				LEFT OUTER JOIN 
+					TBL_ATTITUDE C
+				ON
+					(A.TENANT_ID = C.TENANT_ID 
+					AND 
+					 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
+					AND
+					 A.CN = C.WRITER_ID
+					AND 
+					 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+					AND 
+					 (
+						   (
+							(C.START_DATE + INTERVAL #offsetMin# minute) >= #searchStartTime#
+							AND (C.START_DATE + INTERVAL #offsetMin# minute) <= #searchEndTime#
+							)
+						OR (
+							(C.END_DATE + INTERVAL #offsetMin# minute) >= #searchStartTime#
+							AND (C.END_DATE + INTERVAL #offsetMin# minute) < #searchEndTime#
+							)
+						OR (
+							(C.START_DATE + INTERVAL #offsetMin# minute) < #searchStartTime#
+							AND (C.END_DATE + INTERVAL #offsetMin# minute) >= #searchEndTime#
+							)
+					  )
+					 )
+				WHERE
+					A.TENANT_ID = #tenantId#
+				AND 
+					A.PHYSICALDELIVERYOFFICENAME = #companyId#			
+			]]>
+			<isNotEmpty prepend="AND" property="searchDeptName">
+				A.description LIKE '%' || #searchDeptName# || '%'
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="searchUserName">
+				A.displayname LIKE '%' || #searchUserName# || '%'
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="searchTitle">
+				A.title LIKE '%' || #searchTitle# || '%'
+			</isNotEmpty>
+			
+			GROUP BY A.CN
+			
+			<isNotEmpty property="orderCell">
+				<![CDATA[
+					ORDER BY
+						$orderCell$ $orderOption$
+				]]>
+			</isNotEmpty>
+			<isEmpty property="orderCell">
+				<![CDATA[
+					ORDER BY
+						userName
+				]]>
+			</isEmpty>	
+		<![CDATA[
+						) T1
+				)
+			]]>
+		<isNotEmpty property="startRow">
+			<![CDATA[
+				where
+					rn >= #startRow#
+				and
+					rn <= #endRow#
+			]]>
+		</isNotEmpty>
+	</select>
+
+	<select id="ezAttitudeAdminDAO.getSimpleAnnualCnt" parameterClass="Map" resultClass="INTEGER">
+		<![CDATA[
+			SELECT
+				count(*)
+			FROM
+				tbl_attitude_annual
+			WHERE
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				YEAR = #year#
+		]]>
+			<isNotEmpty prepend="AND" property="userId">
+				USER_ID = #userId#
+			</isNotEmpty>
+	</select>
+	
+	<insert id="ezAttitudeAdminDAO.insertAnnualHistory" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO tbl_attitude_annual_history
+				(ANNUAL_HISTORY_ID, USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID, YEAR)
+			SELECT
+				SEQ_TBL_ATTITUDE_HISTORY.NEXTVAL AS ANNUAL_HISTORY_ID,
+				CN AS USER_ID,
+				'0' AS ORIGIN_ANNUAL_CNT,
+				'$annualCnt$' AS CHANGE_ANNUAL_CNT,
+				'$changeReason$' AS CHANGE_REASON,
+				SYSDATE AS CHANGE_DATE,
+				'$changeUserId$' AS CHANGE_USER_ID,
+				physicaldeliveryofficename AS COMPANY_ID,
+				TENANT_ID AS TENANT_ID,
+				'$year$' AS YEAR
+			FROM
+				tbl_usermaster
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				physicaldeliveryofficename = #companyId#
+		]]>
+			<isNotEmpty prepend="AND" property="userId">
+				CN = #userId#
+			</isNotEmpty>
+	</insert>
+	
+	<insert id="ezAttitudeAdminDAO.changeAnnualHistory" parameterClass="Map">
+			INSERT INTO tbl_attitude_annual_history
+				(USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID, YEAR)
+			SELECT
+				USER_ID AS USER_ID,
+				TOTAL_ANNUAL_CNT AS ORIGIN_ANNUAL_CNT,
+					<isEqual property="flagCheck" compareValue="change">
+						'$annualCnt$' AS CHANGE_ANNUAL_CNT,
+					</isEqual>
+					<isEqual property="flagCheck" compareValue="plus">
+						TOTAL_ANNUAL_CNT + TO_NUMBER(#annualCnt#, '00.0') AS CHANGE_ANNUAL_CNT,
+					</isEqual>
+				'$changeReason$' AS CHANGE_REASON,
+				SYSDATE AS CHANGE_DATE,
+				'$changeUserId$' AS CHANGE_USER_ID,
+				COMPANY_ID AS COMPANY_ID,
+				TENANT_ID AS TENANT_ID,
+				YEAR AS YEAR
+			FROM
+				tbl_attitude_annual
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				COMPANY_ID = #companyId#
+			AND
+				YEAR = #year#
+			<isNotEmpty prepend="AND" property="userId">
+				USER_ID = #userId#
+			</isNotEmpty>
+	</insert>
+	
+	<insert id="ezAttitudeAdminDAO.insertAnnual" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO tbl_attitude_annual
+				(USER_ID, YEAR, TOTAL_ANNUAL_CNT, COMPANY_ID, TENANT_ID)
+			SELECT
+				CN AS USER_ID,
+				'$year$' AS YEAR,
+				'$annualCnt$' AS TOTAL_ANNUAL_CNT,
+				physicaldeliveryofficename AS COMPANY_ID,
+				TENANT_ID AS TENANT_ID
+			FROM
+				tbl_usermaster
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				physicaldeliveryofficename = #companyId#
+		]]>
+			<isNotEmpty prepend="AND" property="userId">
+				CN = #userId#
+			</isNotEmpty>
+	</insert>
+	
+	<insert id="ezAttitudeAdminDAO.changeAnnual" parameterClass="Map">
+			UPDATE tbl_attitude_annual
+				<isEqual property="flagCheck" compareValue="change">
+					SET TOTAL_ANNUAL_CNT = #annualCnt#
+				</isEqual>
+				<isEqual property="flagCheck" compareValue="plus">
+					SET TOTAL_ANNUAL_CNT = TOTAL_ANNUAL_CNT + TO_NUMBER(#annualCnt#, '00.0')
+				</isEqual>
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				COMPANY_ID = #companyId#
+			AND
+				YEAR = #year#
+			<isNotEmpty prepend="AND" property="userId">
+				USER_ID = #userId#
+			</isNotEmpty>
+	</insert>
+	
+	<select id="ezAttitudeAdminDAO.getUserAnnual" parameterClass="Map" resultClass="AdminAttitudeVO">
+		<![CDATA[
+			SELECT 
+				A.cn AS userId,
+			    A.DISPLAYNAME as userName,
+			    A.TITLE as userTitle,
+			    A.DESCRIPTION as deptName,
+			    A.EXTENSIONATTRIBUTE2 as imgPath,
+			    (C.START_DATE + INTERVAL #offsetMin# minute) as startDate,
+			    (C.END_DATE + INTERVAL #offsetMin# minute) as endDate,
+			    C.TYPE_ID as typeId,
+			    D.TYPE_NAME as typeName,
+			    nvl( 
+						CASE
+						   WHEN C.TYPE_ID = 'A11' THEN TRUNC(C.END_DATE) - TRUNC(C.START_DATE)
+			               WHEN C.TYPE_ID = 'A12' THEN 0.5
+			               WHEN C.TYPE_ID = 'A13' THEN 0.5
+						   ELSE 0
+						END
+				, 0) as annualCnt,
+			    nvl(B.TOTAL_ANNUAL_CNT, 0) as totalAnnualCnt
+			FROM 
+				TBL_USERMASTER A
+			LEFT OUTER JOIN 
+				TBL_ATTITUDE_ANNUAL B
+			ON
+				(A.TENANT_ID = B.TENANT_ID 
+				AND
+				 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
+				AND
+				 A.CN = B.USER_ID
+				AND B.YEAR = #year#)
+			LEFT OUTER JOIN 
+				TBL_ATTITUDE C
+			ON
+				(A.TENANT_ID = C.TENANT_ID 
+				AND 
+				 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
+				AND
+				 A.CN = C.WRITER_ID
+				AND 
+				 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+				AND 
+				 (
+					   (
+						(C.START_DATE + INTERVAL #offsetMin# minute) >= #startTime#
+						AND (C.START_DATE + INTERVAL #offsetMin# minute) <= #endTime#
+						)
+					OR (
+						(C.END_DATE + INTERVAL #offsetMin# minute) >= #startTime#
+						AND (C.END_DATE + INTERVAL #offsetMin# minute) < #endTime#
+						)
+					OR (
+						(C.START_DATE + INTERVAL #offsetMin# minute) < #startTime#
+						AND (C.END_DATE + INTERVAL #offsetMin# minute) >= #endTime#
+						)
+				  )
+				 )
+			LEFT OUTER JOIN 
+				TBL_ATTITUDE_TYPE D
+			ON 
+				(A.TENANT_ID = D.TENANT_ID AND A.PHYSICALDELIVERYOFFICENAME = D.COMPANY_ID AND C.TYPE_ID = D.TYPE_ID)
+			WHERE 
+				A.TENANT_ID = #tenantId#
+			AND 
+				A.PHYSICALDELIVERYOFFICENAME = #companyId#
+			AND 
+				A.cn = #userId#
+			ORDER BY 
+				START_DATE
+		]]>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getAnnualCnt" parameterClass="Map" resultClass="AttitudeAnnualVO">
+		<![CDATA[
+			SELECT 
+					A.CN AS userId,
+			    	A.DISPLAYNAME AS userName,
+			    	A.TITLE AS userTitle,
+			    	A.DESCRIPTION AS userDeptName,
+			    	A.PHYSICALDELIVERYOFFICENAME AS companyId,
+				    #year# AS year,
+				    nvl(sum(
+							CASE
+							   WHEN C.TYPE_ID = 'A11' THEN TRUNC(C.END_DATE) - TRUNC(C.START_DATE)
+				               WHEN C.TYPE_ID = 'A12' THEN 0.5
+				               WHEN C.TYPE_ID = 'A13' THEN 0.5
+							   ELSE 0
+							END
+					), 0) AS useAnnualCnt,
+				    nvl(B.TOTAL_ANNUAL_CNT, 0) AS totalAnnualCnt
+				FROM 
+					TBL_USERMASTER A
+				LEFT OUTER JOIN 
+					TBL_ATTITUDE_ANNUAL B
+				ON
+					(A.TENANT_ID = B.TENANT_ID 
+					AND
+					 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
+					AND
+					 A.CN = B.USER_ID
+					AND B.YEAR = #year#)
+				LEFT OUTER JOIN 
+					TBL_ATTITUDE C
+				ON
+					(A.TENANT_ID = C.TENANT_ID 
+					AND 
+					 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
+					AND
+					 A.CN = C.WRITER_ID
+					AND 
+					 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+					AND 
+					 (
+						   (
+							(C.START_DATE + INTERVAL #offsetMin# minute) >= #searchStartTime#
+							AND (C.START_DATE + INTERVAL #offsetMin# minute) <= #searchEndTime#
+							)
+						OR (
+							(C.END_DATE + INTERVAL #offsetMin# minute) >= #searchStartTime#
+							AND (C.END_DATE + INTERVAL #offsetMin# minute) < #searchEndTime#
+							)
+						OR (
+							(C.START_DATE + INTERVAL #offsetMin# minute) < #searchStartTime#
+							AND (C.END_DATE + INTERVAL #offsetMin# minute) >= #searchEndTime#
+							)
+					  )
+					 )
+				WHERE
+					A.TENANT_ID = #tenantId#
+				AND 
+					A.PHYSICALDELIVERYOFFICENAME = #companyId#
+				AND			
+					A.CN = #userId#
+		]]>
+		
+		GROUP BY A.CN
+		
+	</select>
+	
+	
+	<select id="ezAttitudeAdminDAO.getAnnualHistoryList" parameterClass="Map" resultMap="annualHistMap">
+		<![CDATA[
+			SELECT
+				USER_ID AS USER_ID,
+				ORIGIN_ANNUAL_CNT AS ORIGIN_ANNUAL_CNT,
+				CHANGE_ANNUAL_CNT AS CHANGE_ANNUAL_CNT,
+				CHANGE_REASON AS CHANGE_REASON,
+				TO_CHAR(CHANGE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
+				CHANGE_USER_ID AS CHANGE_USER_ID,
+				(SELECT DISPLAYNAME FROM tbl_usermaster WHERE CN = CHANGE_USER_ID AND TENANT_ID = #tenantId#) AS CHANGE_USER_NAME,
+				COMPANY_ID AS COMPANY_ID,
+				TENANT_ID AS TENANT_ID,
+				YEAR AS YEAR
+			FROM
+				tbl_attitude_annual_history
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				USER_ID = #userId#
+			AND
+				YEAR = #year#
+			ORDER BY CHANGE_DATE DESC
+		]]>
+	</select>
+	
+	<select id="ezAttitudeAdminDAO.getUserCnt" parameterClass="Map" resultClass="INTEGER">
+		<![CDATA[
+			SELECT
+				count(*)
+			FROM
+				tbl_usermaster
+			WHERE
+				PHYSICALDELIVERYOFFICENAME = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				CN = #userId#
+		]]>
 	</select>
 	
 </sqlMap>
