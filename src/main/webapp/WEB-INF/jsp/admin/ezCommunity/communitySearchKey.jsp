@@ -78,15 +78,14 @@
 					return;
 				}
 				
-				//window.location.href = "/admin/ezCommunity/searchKey.do?select=" + encodeURIComponent(strSelect) + "&query=" + encodeURIComponent(strQuery);
 				communityList();
 			}
 			
 			/* 2018-07-18 홍승비 - 관리자단 커뮤니티 마스터 사원정보 겸직에 대응 가능하도록 수정, 스크립트 오류 수정(.js import) */
-			function openinfo_userinfo(pCN, pDept) {
-			    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=438";
+			function openinfo_userinfo(obj) {
+				var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=438";
 			    feature = feature + GetOpenPosition(420, 438);
-			    window.open("/ezCommon/showPersonInfo.do?id=" + pCN + "&dept=" + pDept, "", feature);
+			    window.open("/ezCommon/showPersonInfo.do?id=" + obj.getAttribute("sysId") + "&dept=" + obj.getAttribute("deptId"), "", feature);
 			}
 			
 			// (개설된 커뮤니티 / 폐쇄한 커뮤니티 ) 탭 이동 관련 이벤트
@@ -187,7 +186,7 @@
 									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t67' /></td>";
 								}
 								
-								html += "<td style='width: 10%;'>" + item.userName + "</td>"; //마스터이름
+								html += "<td style='width: 10%;'><span sysId='"+ item.c_SysopID +"' deptId='" + item.deptID + "' onclick=openinfo_userinfo(this)>" + item.userName + "</span></td>"; //마스터이름
 								html += "<td style='width: 10%;'>"  + item.c_RegDate.substring(0, 10) + "</td>"; //생성일
 								html += "<td style='width: 60px;'><a class='imgbtn imgbck'><span onclick=''>폐쇄</span></a></td>";
 								html += "</tr>";
@@ -471,37 +470,6 @@
 			<script type="text/javascript">
 				Tab1_NewTabIni("tab1");
 			</script>
-			
-			<%-- <div id="contentlist" style="width:100%; overflow: auto; margin-top:5px;">
-				<div>
-					<table id="mainlist" class="mainlist" style="width:100%">
-						<tr>
-							<th style="width:70px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
-							<th style="width:250px;"><spring:message code = 'ezCommunity.t9991' /></th>
-							<th><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></th>
-							<th style="width:100px;"><spring:message code = 'ezCommunity.t33' /></th>
-							<th style="width:80px;"><spring:message code = 'ezCommunity.t78' /></th>
-						</tr>
-						<c:if test="${clubList ne null && clubList ne ''}">
-							<c:forEach var = "club" items = "${clubList }" varStatus="status">
-								<tr>
-									<td style="width:50px; height:23px"><c:out value='${totalCount - ((curPage -1) * 10) - status.index }' /></td>
-									<!--// 20100108 : 보안 처리, 관련 추가작업(XSS)-->
-									<td style="cursor:pointer; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><nobr ><c:out value = '${club.c_ClubName }' /></nobr></td>
-									<td style="cursor:pointer; width:300px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><c:out value = '${club.c_ClubDesc}' /></td>
-									<td style="cursor:pointer; width:80px" onClick="openinfo_userinfo('${club.c_SysopID}',  '${club.deptID}')"><c:out value = '${club.userName}' /></td>
-									<td style="width:80px"><c:out value = '${fn:substring(club.c_RegDate, 0, 10) }' /></td>
-								</tr>
-							</c:forEach>
-						</c:if>
-						<c:if test="${clubList eq null || clubList eq ''}">
-							<tr>
-								<td colspan="5" style="text-align:center;"><spring:message code = 'main.t00026' /></td>
-							</tr>
-						</c:if>
-					</table>
-				</div>
-			</div> --%>
 			
 			<div id="contentlist" style="width: 100%; overflow: auto; margin-top: 5px;">
 				<div id="ListHeader">
