@@ -2177,6 +2177,61 @@
                 return xmlpara;
             }
 	        
+	        var totalPage = "";
+            var pageNum = "";
+            function goToPageByNum(Value) {
+                page = Value;
+                makePageSelPage();
+                movePage(page);
+            }
+            function selbeforeBlock() {
+                var pageNum = parseInt(page);
+                pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+                goToPageByNum(pageNum);
+            }
+            function selbeforeBlock_one() {
+                var pageNum = parseInt(page);
+                if (parseInt(pageNum - 1) > 0)
+                    goToPageByNum(parseInt(pageNum - 1));
+                else
+                    return;
+            }
+            function selafterBlock() {
+                var pageNum = parseInt(page);
+                pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+                goToPageByNum(pageNum);
+            }
+            function selafterBlock_one() {
+                var pageNum = parseInt(page);
+                if (parseInt(pageNum + 1) <= totalPage)
+                    goToPageByNum(parseInt(pageNum + 1));
+                else
+                    return;
+            }
+            function movePage(newPage) {
+                if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
+                    page = newPage;
+                    if (addrsearh)
+                        AddrSearch_event();
+                    else
+                        address_selectnode("page");
+                }
+            }
+            function prevPage_onclick() {
+                newPage = parseInt(page) - 1;
+                if (newPage > 0) {
+                    page = newPage;
+                    address_selectnode("page");
+                }
+            }
+            function nextPage_onclick() {
+                newPage = parseInt(page) + 1;
+                if (newPage <= parseInt(totalPage)) {
+                    page = newPage;
+                    address_selectnode("page");
+                }
+            }
+            
 	        function td_Create1(strtext) {
                 document.getElementById("tblPageRayer").innerHTML = strtext;
             }
