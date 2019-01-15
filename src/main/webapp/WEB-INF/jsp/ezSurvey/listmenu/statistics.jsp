@@ -125,6 +125,10 @@
 							break;
 						case 3:
 						case 4:
+						case 7:
+						case 8:
+							createQuestionBar(question, divElmt);
+							/* 
 							divElmt.className = "barDiv";
 							var canvasElmt = document.createElement("canvas");
 							var canvasId   = "question" + question["level"];
@@ -133,6 +137,7 @@
 							canvasElmt.setAttribute("id", canvasId);
 							divElmt.appendChild(canvasElmt);
 							createQuestionBar(question, canvasId);
+							 */
 							break;
 						case 5:
 						case 6:
@@ -141,7 +146,7 @@
 							divElmt.appendChild(divText);
 							createTextQuestion(question, divText);
 							break;
-						case 7:
+							/* 
 							divElmt.className = "barDiv";
 							var canvasElmt = document.createElement("canvas");
 							var canvasId   = "question" + question["level"];
@@ -151,7 +156,6 @@
 							divElmt.appendChild(canvasElmt);
 							createQuestionBar(question, canvasId);
 							break;
-						case 8:
 							divElmt.className = "barDiv";
 							var canvasElmt = document.createElement("canvas");
 							var canvasId   = "question" + question["level"];
@@ -161,6 +165,7 @@
 							divElmt.appendChild(canvasElmt);
 							createQuestionBar(question, canvasId);
 							break;
+							 */
 					}
 				}
 			}
@@ -360,13 +365,21 @@
 				divHeader.innerHTML = SurveyMessages.strAllUsers + " [<span>" + userList.length + " " + SurveyMessages.strUser3 + "</span>]";
 			}
 			
-			function showSelectedUsers(questionId, optId) {
+			function showSelectedUsersForPie(questionId, optId) {
 				var option = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0]["option"][optId];
-				
+					
 				if (!option["responses"] || option["responses"].length == 0) {
 					return;
 				}
+					
+				showSelectedUsers(option["responses"]);
+			}
+			
+			function showSelectedUsersForBar() {
 				
+			}
+			
+			function showSelectedUsers(responses) {
 				var dataFormat = {
 					userName  : "userName",
 					deptName  : "deptName",
@@ -375,7 +388,7 @@
 					userImage : "image"
 				};
 				
-				generateUserTable(dataFormat, option["responses"]);
+				generateUserTable(dataFormat, responses);
 				togglePanel("respondentPanel", 450, 320);
 			}
 			
@@ -507,6 +520,8 @@
 							}
 						},
 						legendCallback: function(chart) {
+							console.log("chart");
+							console.log(chart);
 							var ul       = document.createElement("ul");
 							ul.className = "legend-ul";
 							for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
@@ -521,7 +536,7 @@
 								liElmt.appendChild(divElmt2);
 								
 								if (chart.data["question"]) {
-									liElmt.onclick = (function(questionId, optId) {return function() {showSelectedUsers(questionId, optId);};})(chart.data["question"], i);
+									liElmt.onclick = (function(questionId, optId) {return function() {showSelectedUsersForPie(questionId, optId);};})(chart.data["question"], i);
 								}
 								
 								ul.appendChild(liElmt);
@@ -536,7 +551,7 @@
 							var itemIdx = item[0]["_index"];
 							var data    = myPieChart.data["question"];
 							if (data) {
-								showSelectedUsers(data, itemIdx);
+								showSelectedUsersForPie(data, itemIdx);
 							}
 						},
 						hover: {
@@ -553,20 +568,56 @@
 				legendElmt.appendChild(myPieChart.generateLegend());
 			}
 			
-			function createQuestionBar(question, canvasId) {
+			function createQuestionBar(question, divElmt) {
+				
+				var divChart        = document.createElement("div");
+				divChart.className  = "pieDiv";
+				var canvasElmt      = document.createElement("canvas");
+				var divLegend       = document.createElement("div");
+				var canvasId        = "question" + question["level"];
+				var moreParam       = surveyStatistic["annoynymous"] == 0 ? question["questionId"] : null;
+				divLegend.className = "bnk-legend";
+				canvasElmt.setAttribute("height", 240);
+				canvasElmt.setAttribute("id", canvasId);
+				divChart.appendChild(divLegend);
+				divChart.appendChild(canvasElmt);
+				divElmt.appendChild(divChart);
+				
 				var returnObj = "";
 				var response = question.responses;
 				var content = question.content;
 				var dataSets = [];
 				var labels = "";
 				
-				if (question['type'] != 7) {
-					if (question['type'] == 3 || question['type'] == 4) {
-						returnObj = getMtrDataSet(question);
+				if (question['type'] == 3 || question['type'] == 4) {
+					returnObj = getMtrDataSet(question);
+				    labels = returnObj['labels'];
+				    
+					var dataSetArr = returnObj['dataSetArr'];
+					for (var i = 0; i < dataSetArr.length; i++) {
+						var dataObj = {};
 						
-					} else if (question['type'] == 8) {
-						returnObj = getRankingDataSet(question);
+						dataObj['backgroundColor'] = colors[i];
+						dataObj['hoverBorderWidth'] = 8;
+						dataObj['borderWidth'] = 2;
+						dataObj['label'] = dataSetArr[i]["label"];
+						dataObj['data'] = dataSetArr[i]["data"];
+						dataSets.push(dataObj);
 					}
+				} else if(question['type'] == 7) {
+					returnObj = getSliderDataSet(question);
+					labels = returnObj['labels'];
+					var dataSetArr = returnObj['dataSetArr'];
+					
+					var dataObj = {};
+					dataObj['backgroundColor'] = colors;
+					dataObj['hoverBorderWidth'] = 8;
+					dataObj['borderWidth'] = 2;
+					dataObj['data'] = dataSetArr;
+					dataSets.push(dataObj);
+					
+				} else if (question['type'] == 8) {
+					returnObj = getRankingDataSet(question);
 					labels = returnObj['labels'];
 					label = returnObj['label'];
 					
@@ -582,50 +633,128 @@
 						dataObj['data'] = valuesArr;
 						dataSets.push(dataObj);
 					}
-					
-				} else if(question['type'] == 7) {
-					returnObj = getSliderDataSet(question);
-					labels = returnObj['labels'];
-					var dataSetArr = returnObj['dataSetArr'];
-					/* 
-					for (var i = 0; i < dataSetArr.length; i++) {
-						var valuesArr = dataSetArr[i];
-						var dataObj = {};
-						
-						dataObj['backgroundColor'] = colors[i];
-						dataObj['hoverBorderWidth'] = 8;
-						dataObj['borderWidth'] = 2;
-						//dataObj['label'] = ;
-						dataObj['data'] = valuesArr;
-						dataSets.push(dataObj);
-					}
-					 */
-					var dataObj = {};
-					dataObj['backgroundColor'] = colors;
-					dataObj['hoverBorderWidth'] = 8;
-					dataObj['borderWidth'] = 2;
-					dataObj['data'] = dataSetArr;
-					dataSets.push(dataObj);
-				} 
-				
+				}
+				createBarChart(labels, dataSets, canvasId, divLegend, moreParam);
+			}
+			
+			function createBarChart(labels, dataSets, canvasId, legendElmt, questionId) {
 				var ctx = document.getElementById(canvasId);
-				var myChart = new Chart(ctx, {
+				var myBarChart = new Chart(ctx, {
 				    type: 'bar',
 				    data: {
 				        labels: labels,
-				        datasets: dataSets
+				        datasets: dataSets,
+					    question : questionId
 				    },
 				    options: {
-				        scales: {
-				            yAxes: [{
-				                ticks: {
-				                    beginAtZero:true
-				                }
-				            }]
-				        }
-				    }
+						tooltips: {
+							callbacks: {
+								label: function(tooltipItem, data) {
+									var allData      = data.datasets[tooltipItem.datasetIndex].data;
+									var tooltipLabel = data.labels[tooltipItem.index];
+									var tooltipData  = allData[tooltipItem.index];
+									var total        = 0;
+									for (var i in allData) {
+										total += parseFloat(allData[i]);
+									}
+									var tooltipPercentage = ((tooltipData / total) * 100).toFixed(1);
+									return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
+								}
+							}
+						},
+						legendCallback: function(chart) {
+							var ul       = document.createElement("ul");
+							ul.className = "legend-ul";
+							for (var i = 0; i < chart.data.datasets.length; i++) {
+								for (var j = 0; j < chart.data.datasets[i].data.length; j++) {
+									var liElmt   = document.createElement("li");
+									var divElmt1 = document.createElement("div");
+									var divElmt2 = document.createElement("div");
+									divElmt1.className   = "legend-circle";
+									divElmt2.className   = "legend-label";
+									divElmt2.textContent = chart.data.labels[i] + " - " + chart.data.datasets[j].label;
+									console.log(chart.data.datasets[j].backgroundColor);
+									divElmt1.setAttribute("style", "background-color: " + chart.data.datasets[j].backgroundColor);
+									liElmt.appendChild(divElmt1);
+									liElmt.appendChild(divElmt2);
+									/* 
+									if (chart.data["question"]) {
+										liElmt.onclick = (function(questionId, optId) {return function() {showSelectedUsers(questionId, optId);};})(chart.data["question"], i);
+									}
+									 */
+									ul.appendChild(liElmt);
+								}
+								
+							}
+							
+							return ul;
+							 
+						},
+						legend: {
+							display: false,
+						},
+						onClick : function (evt, item) {
+							var data    = myBarChart.data["question"];
+							if (data) {
+								var question = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0];
+								var type     = parseInt(question["type"]);
+								if (type == 7) {
+									var itemValue = parseInt(item[0]["_model"]["label"]);
+									var responses = question["responses"].filter(function(res) {return res["sliderValue"] == itemValue});
+									showSelectedUsers(responses);
+								}
+								else if (type == 3 || type == 4) {
+									var active = myBarChart.getElementAtEvent(evt);
+									
+									if (!active || active.length == 0) {return;}
+									
+									var columnIdx = active[0]["_datasetIndex"];
+									var crrItem   = item[columnIdx];
+									var rowIdx   = crrItem["_index"];
+									
+									var option = question["option"];
+									var columId = option.filter(function(opt) {return opt["colLevel"] == columnIdx})[0]["optionId"];
+									var rowId   = option.filter(function(opt) {return opt["rowLevel"] == rowIdx})[0]["optionId"];
+									
+									var responses = question["responses"].filter(function(res) {
+										return res["rowId"] == rowId && res["columnId"] == columId;
+									});
+									
+									showSelectedUsers(responses);
+								}
+								else if (type == 8) {
+									var active = myBarChart.getElementAtEvent(evt);
+									
+									if (!active || active.length == 0) {return;}
+									
+									var rankingIdx = active[0]['_datasetIndex'];
+									var crrItem   = item[rankingIdx];
+									var optionIdx   = crrItem["_index"];
+									
+									var option = question["option"];
+									var optionId = option.filter(function(opt) {return opt["level"] == optionIdx})[0]["optionId"];
+									var responses = question["responses"].filter(function(res) {
+										return res["rankingLevel"] == rankingIdx + 1 && res["optionId"] == optionId;
+									});
+									
+									showSelectedUsers(responses);
+								}
+							}
+						},
+						hover: {
+							onHover: function(e) {
+								var point = this.getElementAtEvent(e);
+								if (point.length) e.target.style.cursor = 'pointer';
+								else e.target.style.cursor = 'default';
+							}
+						},
+						responsive: false,
+					}
 				});
+				
+				legendElmt.appendChild(myBarChart.generateLegend());
 			}
+			
 			
 			function addFogPanel(togglePanel, elmtId) {
 				var fogPanel                 = document.createElement("div");
@@ -678,78 +807,43 @@
 			function getMtrDataSet(question) {
 				var options = question['option'];
 				var response = question['responses'];
-				var rows = [];
+ 				var rows = [];
 				var cols = [];
-				var rowsOptionId = [];
-				var colsOptionId = [];
-				var totalArr = [];
-				var totalObj = {};
+				var rowLabels = [];
 				var dataSetArr = [];
 				var dataSetObj = {};
 				
-				// 행과 열의 이름, id 획득
 				for (var i = 0; i < options.length; i++) {
 					if (options[i]['colLevel'] == -1) {
-						var row = options[i]['content'];
-						var rowOptionId = options[i]['optionId'];
-						
-						rows.push(row);
-						rowsOptionId.push(rowOptionId);
-						
-					} else if (options[i]['rowLevel'] == -1) {
-						var col = options[i]['content'];
-						var colOptionId = options[i]['optionId'];
-						
-						cols.push(col);
-						colsOptionId.push(colOptionId);
+						rows.push(options[i]);
+						rowLabels.push(options[i]["content"]);
+					}
+					else if (options[i]['rowLevel'] == -1) {
+						cols.push(options[i]);
 					} 
 				}
-				// 행열 조합 생성
-				for (var i = 0; i < rowsOptionId.length; i++) {
-					var rowColArr = [];
-					var rowColObj = {};
-					for (var j = 0; j < colsOptionId.length; j++) {
-						var name = String(rowsOptionId[i]) + "," +  String(colsOptionId[j]);
-						rowColArr.push(name);
-						rowColObj[String(name)] = 0;
-					}
-					totalArr.push(rowColArr);
-					totalObj[rowsOptionId[i]] = rowColObj;
-				}
 				
-				for (var i = 0; i < response.length; i++) {
-					var rowId = response[i]['rowId'];
-					var columnId = response[i]['columnId'];
-					var rowColId = String(rowId) + "," + String(columnId);
+				for (var i = 0; i < cols.length; i++) {
+					var dataset = {};
+					var colData = [];
+					var colId   = cols[i]["optionId"];
+					dataset["label"] = cols[i]["content"];
 					
-					for (var j = 0; j < totalArr.length; j++) {
-						var arrs =  totalArr[j];
-						
-						for (var k = 0; k < arrs.length; k++) {
-							if (arrs[k]== rowColId) {
-								var orders = arrs[k].split(",")[0];
-								var cnt = totalObj[orders][rowColId];
-								totalObj[orders][rowColId] = cnt + 1;
-							}
-						}
+					for (var j = 0; j < rows.length; j++) {
+						var rowId = rows[j]["optionId"];
+						var rowColRes = response.filter(function(res) {
+							return res["rowId"] == rowId && res["columnId"] == colId;
+						});
+						var rowColResCnt = rowColRes && rowColRes.length > 0 ? rowColRes.length : 0;
+						colData.push(rowColResCnt);
 					}
 					
+					dataset["data"] = colData;
+					dataSetArr.push(dataset);
 				}
-				
-				for (var i = 0; i < rowsOptionId.length; i++) {
-					var rowBaseArr = [];
-					for (var j = 0; j < colsOptionId.length; j++) {
-						var name = String(rowsOptionId[i]) + "," +  String(colsOptionId[j]);
-						var value = totalObj[rowsOptionId[i]][name];
-						rowBaseArr.push(value);
-					}
-					dataSetArr.push(rowBaseArr);
-				}
-				dataSetObj['labels'] = rows;
-				dataSetObj['label'] = cols;
+				 
+				dataSetObj['labels'] = rowLabels;
 				dataSetObj['dataSetArr'] = dataSetArr;
-				
-				console.log(dataSetObj);
 				return dataSetObj;
 			}
 			
@@ -782,16 +876,12 @@
 				
 				for (var i = start; i < end + 1; i++) {
 					var value = unitObj[i];
-					//var valueSetArr = [];
-					//valueSetArr.push(value);
-					//dataSetArr.push(valueSetArr);
 					dataSetArr.push(value);
 				}
 				
-				//dataSetObj['label'] = ;
 				dataSetObj['labels'] = unitArr;
 				dataSetObj['dataSetArr'] = dataSetArr;
-				console.log(dataSetObj);
+				
 				return dataSetObj;
 			}
 			
@@ -818,9 +908,9 @@
 					var optionId = options[i]['optionId'];
 					optionIdsArr.push(optionId);
 					rankArr.push(rank);
+					
 					var optionContent = options[i]['content'];
 					optionContentsArr.push(optionContent);
-					
 				}
 				
 				for (var i = 0; i < responses.length; i++) {
@@ -829,8 +919,7 @@
 					var oldVal = totalObj[rankingLevel][optionId];
 					totalObj[rankingLevel][optionId] = oldVal + 1;
 				}
-				//console.log(totalObj);
-				// 순위 기준으로 데이터 묶음
+				
 				for (var i = 0; i < rankArr.length; i++) {
 					var rank = i + 1;
 					var valueSetArr = [];
@@ -846,7 +935,7 @@
 				dataSetObj['dataSetArr'] = dataSetArr;
 				dataSetObj['label'] = optionContentsArr;
 				dataSetObj['labels'] = rankArr;
-				//console.log(dataSetArr);
+				
 				return dataSetObj;
 			}
 		})();
