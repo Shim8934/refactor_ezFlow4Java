@@ -1091,12 +1091,16 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		List<ResponseVO> totalResponses = new ArrayList<>();
 		List<RespondentVO> totalUsers   = new ArrayList<>();
 		long responseId                 = ezSurveyDAO.getMaxResponseId(map);
+		SimpleDateFormat formatter      = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                       = new Date();
+		String timeUTC                  = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
 		map.put("tenantId",  userInfo.getTenantId());
 		map.put("companyId", userInfo.getCompanyID());
 		map.put("primary",   userInfo.getPrimary());
 		map.put("offset",    commonUtil.getMinuteUTC(userInfo.getOffset()));
 		map.put("userId",    userInfo.getId());
 		map.put("surveyId",  surveyId);
+		SurveyVO survey = ezSurveyDAO.getSurveyInfo(map);
 		
 		for (int i = 0; i < responses.size(); i++) {
 			JSONObject responseObj = (JSONObject)responses.get(i);
@@ -1162,8 +1166,19 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 						break;
 				}
 				
-				totalUsers.add(addRespondent(surveyId, responseId, userInfo));
+				totalUsers.add(addRespondent(surveyId, responseId, timeUTC, userInfo));
 				totalResponses.add(response);
+			}
+		}
+		
+		//Check requirements
+		if (survey.getMultiAnswerFlag() == 0) {
+			int responseCnt = ezSurveyDAO.getUserResponseCntForSurvey(map);
+			
+			if (responseCnt > 0) {
+				result.put("status", "error");
+				result.put("code", 5);
+				return result;
 			}
 		}
 		
@@ -1177,12 +1192,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			ezSurveyDAO.saveRespondent(user);
 		}
 		
-		//Change survey response flag
-		SurveyVO survey = ezSurveyDAO.getSurveyInfo(map);
-		
 		if (survey.getResponseFlag() == 0) {
+			//Change survey response flag
 			survey.setResponseFlag(1);
-			//Update survey
+			survey.setUpdateDate(timeUTC);
 			ezSurveyDAO.updateSurveyItemFlag(survey);
 		}
 		
@@ -1191,10 +1204,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		return result;
 	}
 	
-	private RespondentVO addRespondent(long surveyId, long responseId, LoginVO userInfo) {
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(new Date()), userInfo.getOffset(), true);
-		RespondentVO respondent    = new RespondentVO();
+	private RespondentVO addRespondent(long surveyId, long responseId, String timeUTC, LoginVO userInfo) {
+		RespondentVO respondent = new RespondentVO();
 		respondent.setResponseId(responseId);
 		respondent.setSurveyId(surveyId);
 		respondent.setUserId(userInfo.getId());
@@ -1232,7 +1243,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		totalRespondents = ezSurveyDAO.getTotalRespondents(map);
 		result           = getSurveyQuestions(surveyId, "answer", realPath, userInfo);
 		
-		data.put("survey"       , survey);
+		data.put("annoynymous"  , survey.getAnonymousFlag());
 		data.put("usersCnt"     , survey.getTotalUser());
 		data.put("respondentCnt", totalRespondents);
 		
@@ -1250,22 +1261,4 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		return ezSurveyDAO.getAllMembersOfCompany(map);
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 }

@@ -78,10 +78,11 @@
 				document.getElementById("closeTxtResponse").onclick  = function(e) {togglePanel("textPanel");};
 				window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 				
-				test();
 				for (var i = 0; i < questions.length; i++) {
 					showQuestionStatistic(questions[i]);
 				}
+				
+				test();
 			}
 			
 			function showQuestionStatistic(question) {
@@ -173,7 +174,7 @@
 				if (responses.length > 3) {
 					var spanUserCnt      = divText.parentElement.querySelector("span[class='response-usercnt']");
 					var viewMore         = document.createElement("span");
-					viewMore.textContent = SurveyMessages.strViewOther;
+					viewMore.textContent = SurveyMessages.strViewAll;
 					viewMore.className   = "txt-viewmore";
 					viewMore.onclick     = function(e) {showAllTextResponse(question["questionId"]);};
 					spanUserCnt.parentElement.appendChild(viewMore);
@@ -186,13 +187,17 @@
 			function createTextList(respCnt, responses, ulElmt) {
 				for (var i = 0; i < respCnt; i++) {
 					var liResp          = document.createElement("li");
-					var userAva         = document.createElement("img");
 					var txtCont         = document.createElement("span");
-					userAva.src         = responses[i]["image"] ? responses[i]["image"] : "/images/default_pic.jpg";
-					userAva.onclick     = (function(userId) {return function() {showUserInfoFromId(userId);};})(responses[i]["responsorId"]);
+					
+					if (surveyStatistic["annoynymous"] == 0) {
+						var userAva     = document.createElement("img");
+						userAva.src     = responses[i]["image"] ? responses[i]["image"] : "/images/default_pic.jpg";
+						userAva.onclick = (function(userId) {return function() {showUserInfoFromId(userId);};})(responses[i]["responsorId"]);
+						liResp.appendChild(userAva);
+					}
+					
 					txtCont.textContent = responses[i]["texts"];
 					liResp.className    = "txt-response";
-					liResp.appendChild(userAva);
 					liResp.appendChild(txtCont);
 					ulElmt.appendChild(liResp);
 				}
@@ -249,11 +254,11 @@
 				for (var i = 0; i < responses.length; i++) {
 					if (!containUser(userList, responses[i]["responsorId"])) {
 						userList.push({
-							userId : responses[i]["responsorId"],
-							userName: responses[i]["userName"],
-							deptName: responses[i]["deptName"],
+							userId   : responses[i]["responsorId"],
+							userName : responses[i]["userName"],
+							deptName : responses[i]["deptName"],
 							userImage: responses[i]["image"],
-							respDate: responses[i]["responseDate"].substring(0, 19)
+							respDate : responses[i]["responseDate"].substring(0, 19)
 						});
 					}
 				}
@@ -279,8 +284,8 @@
 				divRespCnt.textContent = responsesCnt <= 999 ? responsesCnt : 999 + "+";
 				spanElmt.className     = "response-usercnt";
 				
-				if (totalCnt > 0) {
-					spanElmt.onclick  = (function(qstId) {return function() {showRespondentList(qstId);};})(question["questionId"]);
+				if (surveyStatistic["annoynymous"] == 0 && totalCnt > 0) {
+					spanElmt.onclick = (function(qstId) {return function() {showRespondentList(qstId);};})(question["questionId"]);
 				}
 				
 				liElmt.appendChild(spanElmt);
@@ -398,6 +403,7 @@
 				var canvasElmt      = document.createElement("canvas");
 				var divLegend       = document.createElement("div");
 				var canvasId        = "question" + question["level"];
+				var moreParam       = surveyStatistic["annoynymous"] == 0 ? question["questionId"] : null;
 				divLegend.className = "bnk-legend";
 				canvasElmt.setAttribute("height", 240);
 				canvasElmt.setAttribute("id", canvasId);
@@ -423,7 +429,7 @@
 					labels.push(options[i]["content"]);
 				}
 				
-				createPieChart(labels, values, canvasId, divLegend, question["questionId"]);
+				createPieChart(labels, values, canvasId, divLegend, moreParam);
 				
 				if (others && others.length > 0) {
 					var wrapDivElmt       = document.createElement("div");
@@ -533,12 +539,6 @@
 								showSelectedUsers(data, itemIdx);
 							}
 						},
-/* 						legend: {
-							position: 'left',
-							onHover: function(e, legendItem) {
-								e.target.style.cursor = 'pointer';
-							}
-						}, */
 						hover: {
 							onHover: function(e) {
 								var point = this.getElementAtEvent(e);
@@ -550,7 +550,6 @@
 					}
 				});
 				
-				//legendElmt.innerHTML = myPieChart.generateLegend();
 				legendElmt.appendChild(myPieChart.generateLegend());
 			}
 			

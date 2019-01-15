@@ -874,6 +874,9 @@
 		]]>
 	</select>
 	
+	<select id="EzSurveyDAO.getUserResponseCntForSurvey" resultClass="Integer">
+		<![CDATA[select count(response_id) from tbl_survey_response where user_id = #userId# and survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId#]]>
+	</select>
 	
 	<!--***********************************************************************************
 	**                                Survey Respondent process                          **
