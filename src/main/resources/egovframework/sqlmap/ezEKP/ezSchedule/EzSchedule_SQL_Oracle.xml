@@ -590,6 +590,8 @@
 	<![CDATA[
 	SELECT CC.*
 	FROM ( select A.memberid,
+		   E.GROUPNAME,
+		   E.DESCRIPTION,
            case #v_LANG#
 	       when '1' then A.memberName                 
 		   when '2' then A.memberName2
@@ -648,6 +650,8 @@
 					A.TENANT_ID = #v_TENANTID# AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#  AND B.physicaldeliveryofficename <> #v_COMPANYID# ) BB 
             	ON 
 				A.memberid = BB.cn 
+				JOIN TBL_SCHEDULEGROUP E
+				ON A.GROUPID = E.GROUPID
 				WHERE 
 				A.groupid = #v_GROUPID#
 				AND 
