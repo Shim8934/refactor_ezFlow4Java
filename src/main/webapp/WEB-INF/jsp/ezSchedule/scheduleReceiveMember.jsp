@@ -14,6 +14,7 @@
 		<script>
 			var parentwin = null;
 			var ReturnFunction;
+			var serverFlag = "<c:out value='${serverFlag}' />";
 			
 			window.onload = function () {
 			    try {
@@ -47,11 +48,17 @@
 			        return;
 			    }
 			    
+				var url = "/ezSchedule/scheduleAcceptMember.do";
+				
+				if (serverFlag == "dotNet") {
+					url = "http://dev.mail.kttelecop.co.kr/ezSchedule/scheduleAcceptMember.do";
+				}
+			    
 			    $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : false,
-					url : "/ezSchedule/scheduleAcceptMember.do",
+					url : url,
 					data : {						
 						status 	 : status,						
 						groupIdList : groupIdList
