@@ -5475,11 +5475,11 @@
 			]]>
 	</select>
 	
-	<update id="EzBoardDAO.brdUpdateDate" parameterClass="Map">
+	<update id="EzBoardDAO.modUpdateDate" parameterClass="Map">
 		<![CDATA[
 			UPDATE TBL_Board_Item
 		    SET 
-		    	UpdateDate = #writeDate#
+		    	UpdateDate = #updateDate#
 	   		WHERE  
 	   			TENANT_ID = #tenantID#
 	   		AND
