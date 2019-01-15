@@ -16,27 +16,38 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>		
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<style type="text/css">
-			#editBtn {
-				float: right;
-			}
-			
-			#editBtn img {
-				width: 19px;
-				height: 19px;
-				margin-right: 10px;
-				margin-top: 8px;
-				cursor: pointer;
-			}
-			
-			#editMenuBtn {
-				display: none;
-			}
-			
+			#editBtn {float: right;}
+			#editBtn img {width: 19px;height: 19px;margin-right: 10px;	margin-top: 8px;cursor: pointer;}
+			#editMenuBtn {display: none;}
 			.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
-			
 			#logoUrl {width:106px; height:42px;}
+			.popup_notice{height:100%;padding:20px;display:inline-block;position:absolute;}
+			.popup_type0{background:url(/images/admin/popup_bg01.png) #0078fe top right no-repeat;}
+			.popup_type1{background:url(/images/admin/popup_bg02.png) #ffb4b4 top right no-repeat;}
+			.popup_type2{background:url(/images/admin/popup_bg03.png) #ffd161 top right no-repeat;}
+			.popup_type3{background:url(/images/admin/popup_bg04.png) #CCC top right no-repeat;}
+			.popup_notice form{display:inline; margin:0px;}
+			.popup_notice .popup_noticeLayout{height:100%;}
 			
-			.icon_topmenu frame_set {}
+			.popup_notice .popup_noticeTitle{overflow:hidden; margin:0px 0px 20px 0px; padding:0px;font-family: 'malgun gothic', 'arial', 'verdana';}
+			.popup_notice .popup_noticeTitle dt{float:left; width:38px; height:38px; margin:0px 10px 0px 0px; padding:0px;}
+			.popup_notice .popup_noticeTitle dt.title_type0 { background:url(/images/admin/popup_title_icon01.png) no-repeat;}
+			.popup_notice .popup_noticeTitle dt.title_type1 { background:url(/images/admin/popup_title_icon02.png) no-repeat;}
+			.popup_notice .popup_noticeTitle dt.title_type2 { background:url(/images/admin/popup_title_icon03.png) no-repeat;}
+			.popup_notice .popup_noticeTitle dt.title_type3 { background:url(/images/admin/popup_title_icon04.png) no-repeat;}
+			.popup_notice .popup_noticeTitle dd{margin:5px 48px; padding:0px; font-size:16px; color:#333; line-height:26px;font-family: 'malgun gothic', 'arial', 'verdana';}
+			
+			.popup_notice .popup_noticeLayout .popup_noticeList{overflow:auto; max-height:360px; margin:0px; padding:20px; background:#FFF;}
+			.popup_notice .popup_noticeLayout .popup_noticeList p{margin:0px; padding:0px; line-height:18px; font-size:12px; font-family:'malgun gothic',"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+			.popup_notice .popup_noticeLayout .notice_btn{overflow:hidden; margin:14px 0px; padding:0px;}
+			.popup_notice .popup_noticeLayout .notice_btn p{display:inline-block; margin:0px; padding:0px; font-size:12px; color:#333; font-family:'malgun gothic',"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+			.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox{float:left; cursor:pointer;}
+			.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox .inp_noticeCheck{width:13px; height:13px; margin:-2px 0px 0px 0px; padding:0; vertical-align:middle; overflow:hidden;}
+			.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose{float:right; width:14px; height:14px; background:url(/images/admin/popup_close_icon02.png) no-repeat; cursor:pointer;}
+			.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose.close_type0 {background:url(/images/admin/popup_close_icon01.png) no-repeat;}
+			.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose.close_type1 {background:url(/images/admin/popup_close_icon02.png) no-repeat;}
+			.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose.close_type2 {background:url(/images/admin/popup_close_icon02.png) no-repeat;}
+			.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose.close_type3 {background:url(/images/admin/popup_close_icon02.png) no-repeat;}
 		</style>
 	</head>
 	<body>
@@ -47,7 +58,7 @@
 		</c:if>
 
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
-		
+		<div id="popupArea"></div>
 		<script type="text/javascript">
 		
 		var newPortalTopMenu = {
@@ -641,43 +652,59 @@
 		var getNotiPopup = function () {
 			var notiList = JSON.parse('${popupNotiList}');
 			
-			if (notiList != null || notiList.length != 0) {
+			if (notiList != null && notiList.length != 0) {
 				for (var i = 0; i < notiList.length; i++) {
 					var notiInfo = notiList[i];
-					
-					openNotiPopup(notiInfo.itemSeq, notiInfo.width, notiInfo.height, notiInfo.position);
+					var index = i;
+					openNotiPopup(notiInfo.itemSeq, notiInfo.width, notiInfo.height, notiInfo.position, index);
 				}
+				
+				document.getElementById("menu_toggle").style.display = "none";
+				var topMenuFull = document.getElementById('topMenuFull');
+				var topFrame = parent.document.getElementById('topFrame');
+				var bodyTag = document.getElementsByTagName('Body')[0];
+				
+				var screenHeight = screen.height;
+				topFrame.style.position = 'relative';
+				topFrame.style.minHeight = screenHeight+"px";
+				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+				
+				var popupArea = document.getElementById("popupArea");
+				popupArea.style.height = (screenHeight - 57) + "px";
+				popupArea.style.width = "100%";
+				showProgress("notice");
 			}
+			
 		}
 		
 		//위치 지정하여 팝업 열기 --- 팝업 공지사항
-		var openNotiPopup = function (popup_number, wWidth, wHeight, wPosition) {
+		var openNotiPopup = function (popup_number, wWidth, wHeight, wPosition, index) {
 		    var wVertical, wHorizontal;
 		    
 			if(wPosition == 0) {
-		        wVertical = Math.floor(screen.height/2) - (wHeight/2); 
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
+		        wVertical = Math.floor(screen.height/2) - (wHeight/2) + (index*10); 
+		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
 		    } else if(wPosition == 1) {
-		        wVertical = 100; 
-		        wHorizontal = 100;
+		        wVertical = 100 + (index*10); 
+		        wHorizontal = 100 + (index*10);
 		    } else if(wPosition == 2) {
-		        wVertical = screen.height - wHeight - 100; 
-		        wHorizontal = 100;
+		        wVertical = screen.height - wHeight - 100 + (index*10); 
+		        wHorizontal = 100 + (index*10);
 		    } else if(wPosition == 3) {
-		        wVertical = 100; 
-		        wHorizontal = screen.width - wWidth - 100;
+		        wVertical = 100 + (index*10); 
+		        wHorizontal = screen.width - wWidth - 100 + (index*10);
 		    } else if(wPosition == 4) {
-		        wVertical = screen.height - wHeight - 100; 
-		        wHorizontal = screen.width - wWidth - 100;
+		        wVertical = screen.height - wHeight - 100 + (index*10); 
+		        wHorizontal = screen.width - wWidth - 100 + (index*10);
 		    } else if(wPosition == 5) {
-		        wVertical = 100; 
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
+		        wVertical = 100 + (index*10); 
+		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
 		    } else if(wPosition == 6) {
-		        wVertical = screen.height - wHeight - 100; 
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
+		        wVertical = screen.height - wHeight - 100 - (index*10); 
+		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
 		    } else {
-		        wVertical = 0; 
-		        wHorizontal = 0;
+		        wVertical = 0 + (index*10); 
+		        wHorizontal = 0 + (index*10);
 		    }
 
 		    if(wVertical < 0)
@@ -688,9 +715,117 @@
 
 		    if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
 		        wHeight = eval(wHeight) - 60;
-
-		    window.open("/admin/ezPersonal/showPopup.do?itemSeq=" + popup_number + 
-					"&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+ 			
+		    var request = new XMLHttpRequest();
+		    request.open('POST', '/admin/ezPersonal/showLayerPopup.do');
+		    request.setRequestHeader('Content-Type', 'application/json');
+		    var resultHTML = "";
+		    
+		    request.onload = function () {
+		    	if (request.status >= 200 && request.status < 400) {
+		    		var result = JSON.parse(request.responseText);
+		    		var wHeight = result.height;
+		    		var wWidth = result.width;
+		    		var wLeft = result.horizontal;
+		    		var wTop = result.vertical;
+		    		
+		    		resultHTML += "<div id='popup" + popup_number + "' class='popup_notice popup_type" + result.skinValue + "'>";
+		    		resultHTML += "<form style='height:100%'>";
+		    		resultHTML += "<div class='popup_noticeLayout'>";
+		    		resultHTML += "<dl class='popup_noticeTitle'>";
+		    		resultHTML += "<dt class='title_type" + result.skinValue + "'></dt>";
+		    		resultHTML += "<dd>" + result.title + "</dd>";
+		    		resultHTML += "</dl>";
+		    		resultHTML += "<div class='popup_noticeList'>" + result.content + "</div>";
+		    		resultHTML += "<div class='notice_btn'><p class='btn_checkbox'>";
+		    		resultHTML += "<input type='checkbox' name='checkbox' class='inp_noticeCheck' id='inp_noticeCheck" + popup_number + "'/>";
+		    		resultHTML += "<label for='inp_noticeCheck'><spring:message code = 'ezPersonal.t267' /></label></p>";
+		    		resultHTML += '<p class="notice_btnClose close_type' + result.skinValue + '" id="closeBtn' + popup_number + '">&nbsp;</p>';
+		    		resultHTML += "</div></div></form></div>";
+		    		
+		    		$("#popupArea").append(resultHTML);
+		    		
+		    		document.getElementById("popup" + popup_number).style.height = wHeight + "px";
+		    		document.getElementById("popup" + popup_number).style.width = wWidth + "px";
+		    		document.getElementById("popup" + popup_number).style.left = wLeft + "px";
+		    		document.getElementById("popup" + popup_number).style.top = wTop + "px";
+		    		document.getElementById("popup" + popup_number).style.zIndex = index + 1;
+		    		document.getElementById("popup" + popup_number).addEventListener("click", changeZIndex);
+		    		document.getElementById("inp_noticeCheck" + popup_number).addEventListener("change", function() {
+		    			notice_close(popup_number, result.userId, "checkbox");
+		    		});
+		    		document.getElementById("closeBtn" + popup_number).addEventListener("click", function() {
+		    			notice_close(popup_number, result.userId, "btn");
+		    		});
+		    		
+					var popupContent = document.getElementById("popup" + popup_number).getElementsByClassName("popup_noticeList")[0];
+					popupContent.style.height = document.getElementById("popup" + popup_number).clientHeight - 175 + "px";
+					
+					$("#popup" + popup_number).draggable({
+						containment: "#popupArea",
+						cancel : ".popup_noticeList",
+						scroll: false 
+					});
+		    	}
+		    }
+		    
+		    var data = JSON.stringify({
+		    	height : wHeight,
+		    	width : wWidth,
+		        vertical : wVertical,
+		        horizontal : wHorizontal,
+		        itemSeq : popup_number
+			});
+			
+			request.send(data);
+		    /* window.open("/admin/ezPersonal/showPopup.do?itemSeq=" + popup_number + 
+					"&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0"); */
+		}
+		
+		var changeZIndex = function () {
+			var popupList = document.getElementsByClassName("popup_notice");
+			var popupListCount = popupList.length;
+			var popupId = this.id;
+			var popupZIndex = Number(this.style.zIndex);
+			
+			for (var i = 0; i < popupListCount; i++) {
+				var popup = popupList[i];
+				var compPopupZIndex = Number(popup.style.zIndex);
+				
+				if (popupZIndex < compPopupZIndex) {
+					popupZIndex = compPopupZIndex + 1;
+				}
+				
+			}
+			
+			this.style.zIndex = popupZIndex;
+		}
+		
+		var notice_close = function (popupId, userId, position) {
+			var isChecked = document.getElementById("inp_noticeCheck" + popupId).checked;
+			
+			if (isChecked) {
+				setCookie("POPUP_" + popupId + "_" + userId, "1", 1); 
+			}
+			
+			var popupList = document.getElementsByClassName("popup_notice");
+			
+			var popup = document.getElementById("popup" + popupId);
+			popup.parentNode.removeChild(popup);
+			
+			if (popupList.length < 1) {
+				hideProgress();
+				var topFrame = parent.document.getElementById('topFrame');
+				document.getElementsByTagName("body")[0].style.backgroundColor = "";
+				topFrame.style.position = "";
+			}
+			
+		}
+		
+		function setCookie(name, value, expiredays) {
+			var todayDate = new Date();
+			todayDate.setDate( todayDate.getDate() + expiredays );
+			document.cookie = name + "=" + encodeURIComponent( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
 		}
 		
 		var officeBugPatch = function() {
@@ -743,7 +878,14 @@
 			
 		}
  		
- 		var showProgress = function() {
+ 		var showProgress = function(position) {
+ 			
+ 			if (position == "notice") {
+ 				document.getElementById("progressPanel").style.height = "56px"; 
+ 			} else {
+ 				document.getElementById("progressPanel").style.height = "100%";
+ 			}
+ 			
 		    document.getElementById("progressPanel").style.display = "block";
 		    document.getElementById("progressPanel").style.opacity = 0.5;
 		    document.getElementById("progressPanel").style.background = "rgba(0,0,0,0.7)";

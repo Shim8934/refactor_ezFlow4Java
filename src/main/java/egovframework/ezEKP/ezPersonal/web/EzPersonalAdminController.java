@@ -1576,4 +1576,50 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("checkJoinPoll ended");
 		return msg;
 	}
+	
+	/**
+	 * 팝업공지 공지사항 공지사항 본문화면 호출 함수
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/showLayerPopup.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject showLayerPopup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody JSONObject jsonParam, PersonalPopupVO vo, Model model) throws Exception {
+		logger.debug("showLayerPopup started");
+		
+		JSONObject json = new JSONObject();
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String itemSeq = jsonParam.get("itemSeq").toString();
+		String title = "";
+		String flag = "";
+		
+		if (request.getParameter("flag") != null) {
+			flag = request.getParameter("flag");
+		}
+		
+		vo = ezPersonalAdminService.getPopupInfo(itemSeq, userInfo.getTenantId());
+		vo.setStartDate(commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false));
+		vo.setEndDate(commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false));
+		String content = vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
+		
+		
+		if (userInfo.getPrimary().equals("2") && !vo.getTitle2().equals("")) {
+			title = vo.getTitle2();
+		} else {
+			title = vo.getTitle();
+		}
+		
+		json.put("itemSeq", itemSeq);
+		json.put("title", title);
+		json.put("content", content);
+		json.put("height", jsonParam.get("height"));
+		json.put("width", jsonParam.get("width"));
+		json.put("vertical", jsonParam.get("vertical"));
+		json.put("horizontal", jsonParam.get("horizontal"));
+		json.put("flag", flag);
+		json.put("skinValue", vo.getSkinValue());
+		json.put("userId", userInfo.getId());
+		
+		logger.debug("showLayerPopup ended");
+		return json;
+	}
 }

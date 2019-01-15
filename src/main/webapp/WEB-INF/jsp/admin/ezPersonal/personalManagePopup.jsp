@@ -31,7 +31,7 @@
 			var strLang4 = "<spring:message code = 'ezPersonal.t223' />";
 
 			window.onload = function () {
-				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "선택된 공지사항이 없습니다.";
+				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "<spring:message code = 'ezPersonal.yej01' />";
 			}
 
 			document.onselectstart = function () {

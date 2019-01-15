@@ -308,7 +308,7 @@
 
 				var tmpStartDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
 				var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
-
+				
 				$.ajax({
 					type : "POST",
 					url : "/admin/ezPersonal/savePopup.do",
@@ -386,6 +386,16 @@
 				message.SetEditorContent("${personalPopupVO.content}");
 			}
 		</script>
+		<style type="text/css">
+			.popup_setting {display : inline-block; margin-top:3px; margin-right:3px;}
+			#wWidth, #wHeight {vertical-align : initial;width:50px;height:22px;margin-right:20px;}
+			#selectPos {vertical-align:initial; min-height:22px;}
+			.skinImages {}
+			.bg01 {background : url(/images/admin/popup_bg01.png) #0078fe top right no-repeat;}
+			.bg02 {background : url(/images/admin/popup_bg02.png) #ffb4b4 top right no-repeat;}
+			.bg03 {background : url(/images/admin/popup_bg03.png) #ffd161 top right no-repeat;}
+			.bg04 {background : url(/images/admin/popup_bg04.png) #CCC top right no-repeat;}
+		</style>
 	</head>
 	<body class = "popup">
 		<xmp id="sigBody" style="display:none;"><c:out value = '${personalPopupVO.content}' /></xmp>
@@ -399,14 +409,9 @@
 			<tr> 
 				<th><spring:message code = 'ezPersonal.t262' /></th>
 				<td>
-					<spring:message code = 'ezPersonal.t263' />
-					<input type="text" id=wWidth style="width:50px;height:22px;" value="<c:out value = '${personalPopupVO.width}' />"> &nbsp;&nbsp;&nbsp;&nbsp; <spring:message code = 'ezPersonal.t264' />
-					<input type="text" id=wHeight style="width:50px;height:22px;" value="<c:out value = '${personalPopupVO.height}' />">
-				</td> 
-			</tr> 
-			<tr> 
-				<th><spring:message code = 'ezPersonal.tt9' /></th>
-				<td>
+					<span class="popup_setting"><spring:message code = 'ezPersonal.t263' /></span>
+					<input type="text" id=wWidth value="<c:out value = '${personalPopupVO.width}' />"> <span class="popup_setting"><spring:message code = 'ezPersonal.t264' /></span>
+					<input type="text" id=wHeight value="<c:out value = '${personalPopupVO.height}' />"> <span class="popup_setting"><spring:message code = 'ezPersonal.tt9' /></span>
 					<select id="selectPos"> 
 						<option value="0"><spring:message code = 'ezPersonal.tt2' /></option>
 						<option value="5"><spring:message code = 'ezPersonal.tt3' /></option>
@@ -417,7 +422,14 @@
 						<option value="4"><spring:message code = 'ezPersonal.tt8' /></option>
 					</select>
 				</td> 
-			</tr> 
+			</tr>
+			<tr>
+				<th><spring:message code = 'ezPersonal.t265' /></th>
+				<td>
+					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
+					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+				</td>
+			</tr>
 			<tr> 
 				<th><spring:message code = 'ezPersonal.t154' /></th>
 				<td style="padding:0px">
@@ -433,61 +445,54 @@
 					</table>
 				</td> 
 			</tr>
-			<tr>
-				<th><spring:message code = 'ezPersonal.t265' /></th>
+			<tr style="display:none">
 				<td>
-					<input type="text" id="Sdatepicker" style="width:80px;text-align:center" readonly="readonly"> ~
-					<input type="text" id="Edatepicker" style="width:80px;text-align:center" readonly="readonly">
+					<input id='_T1' class='datepicker_time' readonly>
+					<IMG align="absmiddle" border="0" height="16" id="img_StartTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative" width="16">
+					<input id='_T2' class='datepicker_time' readonly>
+					<IMG align="absmiddle" border="0" height="16" id="img_EndTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative" width="16">
 				</td>
-				<tr style="display:none">
-					<td>
-						<input id='_T1' class='datepicker_time' readonly>
-						<IMG align="absmiddle" border="0" height="16" id="img_StartTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative" width="16">
-						<input id='_T2' class='datepicker_time' readonly>
-						<IMG align="absmiddle" border="0" height="16" id="img_EndTime" src="/images/arr_right.gif" style="CURSOR: hand; POSITION: relative" width="16">
-					</td>
-				</tr> 
-				<tr>
-					<th><spring:message code = 'ezPersonal.hyh16' /></th>
-					<td id="skinView" style="padding:3px; height:40px">
-						<ul class="skinList" id ="skinList">
-							<li>
-								<div class="skins" id="skin0">
-									<div class="skinImg">
-										<img src="/images/admin/first.png" class="skinImages">
-									</div>
-								</div>	
-							</li>
-							<li>
-								<div class="skins" id="skin1">
-									<div class="skinImg">
-										<img src="/images/admin/inuse_end.png" class="skinImages">
-									</div>
+			</tr> 
+			<tr>
+				<th><spring:message code = 'ezPersonal.hyh16' /></th>
+				<td id="skinView" style="padding:3px; height:40px">
+					<ul class="skinList" id ="skinList">
+						<li>
+							<div class="skins" id="skin0">
+								<div class="skinImg">
+									<span class="skinImages bg01"></span>
 								</div>
-							</li>
-							<li>
-								<div class="skins" id="skin2">
-									<div class="skinImg">
-										<img src="/images/admin/inuse.png" class="skinImages">
-									</div>
+							</div>	
+						</li>
+						<li>
+							<div class="skins" id="skin1">
+								<div class="skinImg">
+									<span class="skinImages bg02"></span>
 								</div>
-							</li>
-							<li>
-								<div class="skins" id="skin3">
-									<div class="skinImg">
-										<img src="/images/admin/icon_cancel.png" class="skinImages">
-									</div>
+							</div>
+						</li>
+						<li>
+							<div class="skins" id="skin2">
+								<div class="skinImg">
+									<span class="skinImages bg03"></span>
 								</div>
-							</li>
-						</ul>
-					</td>
-				</tr>
-				<tr>
-					<th><spring:message code = 'ezPersonal.t155' /></th>
-					<td id="addPopEditor" style="padding:3px; height:385px">
-						<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0px; height:100%; width:100%; overflow:auto;border:none; margin-bottom:-3px;"></iframe>
-					</td>
-				</tr>
+							</div>
+						</li>
+						<li>
+							<div class="skins" id="skin3">
+								<div class="skinImg">
+									<span class="skinImages bg04"></span>
+								</div>
+							</div>
+						</li>
+					</ul>
+				</td>
+			</tr>
+			<tr>
+				<th><spring:message code = 'ezPersonal.t155' /></th>
+				<td id="addPopEditor" style="padding:3px; height:350px">
+					<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0px; height:100%; width:100%; overflow:auto;border:none; margin-bottom:-3px;"></iframe>
+				</td>
 			</tr>
 		</table>
 		<div class="btnpositionNew">
