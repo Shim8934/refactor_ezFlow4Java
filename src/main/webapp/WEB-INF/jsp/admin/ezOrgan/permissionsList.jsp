@@ -186,7 +186,7 @@
 				for (i; i < cnt; i++) {
 					var seq = acList.children[1].children[i].children[0].innerHTML;
 					
-					if (seq == "데이터가 없습니다.") {
+					if (seq == "<spring:message code = 'ezOrgan.0hun07' />") {
 						
 					} else {
 						acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" 
