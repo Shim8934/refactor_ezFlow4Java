@@ -23,7 +23,6 @@
 			var pTotalPage    = 0;
 			var pTotalCnt     = 0;
 			var pBlockSize    = 10;
-			var pSearchType   = "";
 			
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -42,7 +41,6 @@
 			}
 			
 			function search() {
-				pSearchType = document.getElementById("searchType").value;
 				pCurPage    = 1;
 				applicationCommuList();
 			}
@@ -97,15 +95,12 @@
 			function ChangeTab(obj) {
 				document.getElementById("searchValue").value = "";
 				
-				pSearchType = "";
 				pCurPage = 1;
 				applicationCommuList();
 			}
 			
 			// (신청승인 / 폐쇄승인 ) 리스트 호출
 			function applicationCommuList() {
-				
-				pSearchType = (pSearchType != "" ? pSearchType + lang : pSearchType); 
 				var url = (selectedTabId == "admitCommu" ? "/admin/ezCommunity/admitCom.do" : "/admin/ezCommunity/closeCom.do");
 				
 				$.ajax({
@@ -116,7 +111,7 @@
 					data : 
 					{
 						pageNum     : pCurPage,
-						searchType  : pSearchType,
+						searchType  : document.getElementsByName("cCateA")[0].value,
 						searchValue : make_searchstring(document.getElementById("searchValue").value)
 					},
 					success : function (data) {
@@ -326,7 +321,18 @@
 	</head>
 <body class="mainbody">
 	<h1>커뮤니티 신청관리<span id="TitleInfo"></span></h1>
-	<table class="content">
+	
+	<div class="portlet_tabpart01">
+		<div class="portlet_tabpart01_top" id="tab1">
+			<p><span id="admitCommu">신청승인</span></p>
+			<p><span id="closeCommu">폐쇄승인</span></p>
+		</div>
+	</div>
+	<script type="text/javascript">
+		Tab1_NewTabIni("tab1");
+	</script>
+	
+	<table class="content" style="margin: 10px 0px;">
 		<tr>
 			<th>검색조건</th>
 			<td>
@@ -340,16 +346,6 @@
 			</td>
 		</tr>
 	</table>
-	<div class="portlet_tabpart01">
-		<div class="portlet_tabpart01_top" id="tab1">
-			<p><span id="admitCommu">신청승인</span></p>
-			<p><span id="closeCommu">폐쇄승인</span></p>
-		</div>
-	</div>
-	
-	<script type="text/javascript">
-		Tab1_NewTabIni("tab1");
-	</script>
 	
 	<div id="contentlist" style="width: 100%; overflow: auto; margin-top: 5px;">
 		<div id="ListHeader">

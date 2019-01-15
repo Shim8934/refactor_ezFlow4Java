@@ -30,18 +30,7 @@
 			AND
 				A.tenant_id = D.tenant_id
 			WHERE
-		]]>
-		<isEqual property="v_S_RADIO" compareValue="USERNAME">
-			<![CDATA[
-				B.DISPLAYNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-			]]>
-		</isEqual>
-		<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
-			<![CDATA[
-				D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-			]]>
-		</isNotEqual>
-		<![CDATA[
+				D.c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				D.companyid = #companyID#
 			AND
@@ -103,18 +92,7 @@
 			ON
 				TBL_C_CLUB.c_clubno = C1.c_clubno
 			WHERE
-			]]>
-			<isEqual property="v_S_RADIO" compareValue="USERNAME">
-				<![CDATA[
-					B.DISPLAYNAME LIKE CONCAT('%', #v_KEYWORD#, '%')
-				]]>
-			</isEqual>
-			<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
-				<![CDATA[
-					C1.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-				]]>
-			</isNotEqual>
-		<![CDATA[
+				C1.c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				TBL_C_CLUB.companyid = #companyID#
 			AND
@@ -163,7 +141,7 @@
 			AND
 				A.tenant_id = C.tenant_id
 			WHERE
-				$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+				c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				A.c_adminconfirm = 'N'
 			AND
@@ -231,7 +209,7 @@
 			AND
 				A.tenant_id = C.tenant_id
 			WHERE
-				$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+				c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				c_adminconfirm = 'N'
 			AND
@@ -320,44 +298,17 @@
 					A.C_CATE_A = E.C_CODE
 				AND
 					A.TENANT_ID = E.TENANT_ID
-		]]>
-		
-		<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
-			<![CDATA[
 				WHERE
 					c_clubno IN (SELECT
 									c_clubno
 								FROM
 									TBL_C_CLUB
 								WHERE
-									c_clubdesc LIKE CONCAT('%', #v_STRQUERY#, '%')
+									CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END LIKE CONCAT('%', #v_STRQUERY#, '%')
 								AND
 									companyid = #companyID#
 								AND
 									tenant_id = #tenantID#)
-				AND
-					c_adminconfirm = 'Y'
-				AND
-					A.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-			]]>
-		</isEqual>
-		
-		<isNotEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
-			<isEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
-				<![CDATA[
-					 WHERE
-					 	c_clubno IN (SELECT
-					 					c_clubno
-									FROM
-										TBL_C_CLUB
-									WHERE
-										CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END LIKE CONCAT('%', #v_STRQUERY#, '%')
-									AND
-										companyid = #companyID#
-									AND
-										tenant_id = #tenantID#)
 					AND
 						c_adminconfirm = 'Y'
 					AND
@@ -366,34 +317,16 @@
 						A.companyid = #companyID#
 					AND
 						A.tenant_id = #tenantID#
-				]]>
-			</isEqual>
-			
-			<isNotEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
-				<![CDATA[
-					WHERE
-						c_adminconfirm = 'Y'
-					AND
-						E.C_CAT = 'a'
-					AND
-						A.companyid = #companyID#
-					AND
-						A.tenant_id = #tenantID#
-				]]>
-			</isNotEqual>
-		</isNotEqual>
-		
-		<![CDATA[
 					GROUP BY
 						C_CLUBNO, C_SYSOPID
 					ORDER BY
 						c_regdate ASC
 					LIMIT
 						#v_IQUERYCOUNT#) T2
-				ORDER BY
-					c_regdate DESC
-				LIMIT
-					10
+					ORDER BY
+						c_regdate DESC
+					LIMIT
+						10
 		]]>
 	</select>
 	
@@ -406,60 +339,22 @@
 				IFNULL(COUNT(c_clubno), 0) 
 			FROM
 				TBL_C_CLUB
-		]]>
-		
-		<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
-			<![CDATA[
-				 WHERE
-				 	c_clubno IN (SELECT
-									c_clubno
-								FROM
-									TBL_C_CLUB
-								WHERE
-									c_clubdesc LIKE CONCAT('%', #v_STRQUERY#, '%')
-								AND
-									tenant_id = #tenantID#)
+			WHERE
+				c_clubno IN (SELECT
+								c_clubno
+							FROM
+								TBL_C_CLUB
+							WHERE
+								c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
+							AND
+								tenant_id = #tenantID#)
 				AND
 					c_adminconfirm = 'Y'
 				AND
 					companyid = #companyID#
 				AND
 					tenant_id = #tenantID#
-			]]>
-		</isEqual>
-		
-		<isNotEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
-			<isEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
-				<![CDATA[
-					WHERE
-						c_clubno IN (SELECT
-										c_clubno
-									FROM
-										TBL_C_CLUB
-									WHERE
-										c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
-									AND
-										tenant_id = #tenantID#)
-					AND
-						c_adminconfirm = 'Y'
-					AND
-						companyid = #companyID#
-					AND
-						tenant_id = #tenantID#
-				]]>
-			</isEqual>
-			
-			<isNotEqual property="v_STRSELECT" compareValue="PCOMMUNITYNAME">
-				<![CDATA[
-					WHERE
-						c_adminconfirm = 'Y'
-					AND
-						companyid = #companyID#
-					AND
-						tenant_id = #tenantID#
-				]]>
-			</isNotEqual>
-		</isNotEqual>
+		]]>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.admCommunityInfoEdit"			parameterClass="Map"			resultClass="CommunityClubVO"> -->
