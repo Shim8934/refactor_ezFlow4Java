@@ -24,7 +24,7 @@ public interface EzCommunityAdminService {
 	CommunityClubVO admCommunityInfoEdit(String lang, String code, int tenantID) throws Exception;
 	
 	/* 관리자 > 커뮤니티 폐쇄승인 표출(총 n개 카운트) 시 companyID 조건 추가 */
-	int aspCloseComGet2(String keyword, String sRadio, String companyID, int tenantID) throws Exception;
+	int aspCloseComGet2(String keyword, String sRadio, String multiData, String companyID, int tenantID) throws Exception;
 
 	String communityCloseCom(List<CommunityCComCloseVO> clubList, int curPage, int comNoPerPage, LoginVO userInfo) throws Exception;
 
@@ -33,7 +33,7 @@ public interface EzCommunityAdminService {
 	String aspCommInfoGet4(String code, int tenantID) throws Exception;
 	
 	/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(총 n개 카운트) */
-	int aspAdmitComGet2(String keyword, String sRadio, String companyID, int tenantID) throws Exception;
+	int aspAdmitComGet2(String keyword, String sRadio, String companyID, String multiData, int tenantID) throws Exception;
 
 	String admitCom(List<CommunityClubVO> clubList, int curPage, int comNoPerPage) throws Exception;
 	

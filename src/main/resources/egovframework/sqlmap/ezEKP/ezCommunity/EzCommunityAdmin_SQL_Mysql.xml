@@ -30,18 +30,7 @@
 			AND
 				A.tenant_id = D.tenant_id
 			WHERE
-		]]>
-		<isEqual property="v_S_RADIO" compareValue="USERNAME">
-			<![CDATA[
-				B.DISPLAYNAME$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-			]]>
-		</isEqual>
-		<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
-			<![CDATA[
-				D.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-			]]>
-		</isNotEqual>
-		<![CDATA[
+				D.c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				D.companyid = #companyID#
 			AND
@@ -103,18 +92,7 @@
 			ON
 				TBL_C_CLUB.c_clubno = C1.c_clubno
 			WHERE
-			]]>
-			<isEqual property="v_S_RADIO" compareValue="USERNAME">
-				<![CDATA[
-					B.DISPLAYNAME LIKE CONCAT('%', #v_KEYWORD#, '%')
-				]]>
-			</isEqual>
-			<isNotEqual property="v_S_RADIO" compareValue="USERNAME">
-				<![CDATA[
-					C1.$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-				]]>
-			</isNotEqual>
-		<![CDATA[
+				C1.c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				TBL_C_CLUB.companyid = #companyID#
 			AND
@@ -163,7 +141,7 @@
 			AND
 				A.tenant_id = C.tenant_id
 			WHERE
-				$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+				c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				A.c_adminconfirm = 'N'
 			AND
@@ -231,7 +209,7 @@
 			AND
 				A.tenant_id = C.tenant_id
 			WHERE
-				$v_S_RADIO$ LIKE CONCAT('%', #v_KEYWORD#, '%')
+				c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				c_adminconfirm = 'N'
 			AND
