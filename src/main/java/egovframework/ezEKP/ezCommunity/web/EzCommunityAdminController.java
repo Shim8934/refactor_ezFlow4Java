@@ -78,18 +78,28 @@ public class EzCommunityAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezCommunity/left.do")
 	public String left(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		return "/admin/ezCommunity/communityLeft";
+	}
+	
+	/**
+	 * 왼쪽 커뮤니티 신청 관리 카운트 호출함수
+	 */
+	@RequestMapping(value = "/admin/ezCommunity/getApplicationListCount.do")
+	public String getApplicationListCount(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		logger.debug("getApplicationListCount started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		String companyId   = userInfo.getCompanyID();
-		int tenantId       = userInfo.getTenantId();
+		String companyId    = userInfo.getCompanyID();
+		int tenantId        = userInfo.getTenantId();
 		
 		int admitTotalCount = ezCommunityAdminService.aspAdmitComGet2("", "", companyId, tenantId);
 		int closeTotalCount = ezCommunityAdminService.aspCloseComGet2("", "", companyId, tenantId);
 		
-		model.addAttribute("totalCount", admitTotalCount + closeTotalCount);
+		model.addAttribute("count", admitTotalCount + closeTotalCount);
 		
-		return "/admin/ezCommunity/communityLeft";
+		logger.debug("getApplicationListCount started.");
+		return "json";
 	}
 	
 	/**
@@ -157,7 +167,10 @@ public class EzCommunityAdminController {
 		curPage = Math.min(curPage,  totalPage);
 		
 		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId(), userInfo.getCompanyID());
-		String idSpanValue = ezCommunityService.bbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
+		
+		//String idSpanValue = ezCommunityService.bbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
+		//번호 1,2,3 순서로 출력하기 위해
+		String idSpanValue = ezCommunityAdminService.adminBbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useEditor", useEditor);
@@ -198,11 +211,11 @@ public class EzCommunityAdminController {
 	}
 	
 	/**
-	 * 개설된 커뮤니티 / 폐쇄한 커뮤니티 리스트 호출 함수
+	 * 개설된 커뮤니티  리스트  호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/communityList.do")
-	public String communityList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("communityList started.");
+	@RequestMapping(value = "/admin/ezCommunity/openCommunityList.do")
+	public String openCommunityList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("openCommunityList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -251,7 +264,7 @@ public class EzCommunityAdminController {
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("totalCount", totalCount);
 		
-		logger.debug("communityList endend.");
+		logger.debug("openCommunityList endend.");
 		return "json";
 	}
 	
@@ -351,7 +364,7 @@ public class EzCommunityAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String code = request.getParameter("code");
-
+		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		ezCommunityAdminService.commCloseAll(code, userInfo.getLocale(), userInfo.getTenantId());

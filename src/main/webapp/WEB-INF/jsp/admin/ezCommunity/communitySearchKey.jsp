@@ -16,6 +16,7 @@
 			text-align: center; background: #999; color: #ffffff; font-size: 12px;
 			border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px; display: inline-block;
 		}
+		.count {color: #ff6c00; margin: 0px 8px;}
 		#mainListBody tr:hover {background-color: #f4f5f5;}
 		#mainListBody tr td {overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor:pointer;}
 		
@@ -56,28 +57,6 @@
 				window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
 			}
 			
-			/* function prevPage_onclick() {
-				newPage = parseInt(pCurPage) - 1;
-				
-				if(newPage > 0) {
-					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + encodeURIComponent('${query}') + "&page=" + newPage.toString();
-				}
-			}
-	
-			function nextPage_onclick() {
-				newPage = parseInt(pCurPage) + 1;
-				
-				if(newPage <= parseInt(pTotalPage)) {
-					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + encodeURIComponent('${query}') + "&page=" + newPage.toString();
-				}
-			} 
-	
-			function moveToPage(pCurPage) {
-	            if(parseInt(pCurPage) > 0 && parseInt(pCurPage) <= parseInt(pTotalPage)) {
-					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + encodeURIComponent('${query}') + "&page=" + pCurPage;
-				}
-			} */
-			
 			function get_search_CommunityInfo(e) {
 			    var kecode = e.keyCode;
 			    
@@ -90,7 +69,6 @@
 			}
 			
 			function search_CommunityInfo() {
-				var strSelect = document.getElementById("QuerySelect").value;
 				var strQuery = document.getElementById("txt_SearchQuery").value;
 				
 				if(strQuery == "") {
@@ -100,15 +78,15 @@
 					return;
 				}
 				
-				//window.location.href = "/admin/ezCommunity/searchKey.do?select=" + encodeURIComponent(strSelect) + "&query=" + encodeURIComponent(strQuery);
+				pCurPage = 1;
 				communityList();
 			}
 			
 			/* 2018-07-18 홍승비 - 관리자단 커뮤니티 마스터 사원정보 겸직에 대응 가능하도록 수정, 스크립트 오류 수정(.js import) */
-			function openinfo_userinfo(pCN, pDept) {
-			    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=438";
+			function openinfo_userinfo(obj) {
+				var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=438";
 			    feature = feature + GetOpenPosition(420, 438);
-			    window.open("/ezCommon/showPersonInfo.do?id=" + pCN + "&dept=" + pDept, "", feature);
+			    window.open("/ezCommon/showPersonInfo.do?id=" + obj.getAttribute("sysId") + "&dept=" + obj.getAttribute("deptId"), "", feature);
 			}
 			
 			// (개설된 커뮤니티 / 폐쇄한 커뮤니티 ) 탭 이동 관련 이벤트
@@ -162,16 +140,26 @@
 			
 			// (개설된 커뮤니티 / 폐쇄한 커뮤니티 ) 리스트 호출
 			function communityList() {
+				if (selectedTabId == "openCommu") {
+					openCommunityList();
+				}
+				else {
+					closedCommunityList();
+				}
+			}
+			
+			// 개설된 커뮤니티  리스트 호출
+			function openCommunityList() {
 				$.ajax({
 					type : "POST",
 					dataType: "json",
-					url : "/admin/ezCommunity/communityList.do",
+					url : "/admin/ezCommunity/openCommunityList.do",
 					async : false,
 					data : 
 					{
 						type        : selectedTabId,
 						pageNum     : pCurPage,
-						searchType  : document.getElementById("QuerySelect").value,
+						searchType  : document.getElementsByName("cCateA")[0].value,
 						searchValue : document.getElementById("txt_SearchQuery").value 
 					},
 					success : function (data) {
@@ -192,8 +180,6 @@
 							data.clubList.forEach(function(item, index){
 								html += "<tr ondblclick=view_CommunityInfo('" + item.c_ClubNo  + "');>";
 								html += "<td style='width: 35px;'>" + itemNum + "</td>";
-								html += "<td style='width: 35px;'>" + item.c_MemberCnt +"</td>";
-								html += "<td style='width: 65px;'>" + item.itemCnt + "</td>";
 								html += "<td style='width: 90px;'>" + getCategoryName(item.c_name) + "</td>";
 								html += "<td style='width: 25%;'>" + item.c_ClubName + "</td>";
 								
@@ -209,8 +195,14 @@
 									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t67' /></td>";
 								}
 								
-								html += "<td style='width: 10%;'>" + item.userName + "</td>"; //마스터이름
+								html += "<td style='width: 10%;'><span sysId='"+ item.c_SysopID +"' deptId='" + item.deptID + "' onclick=openinfo_userinfo(this)>" + item.userName + "</span></td>"; //마스터이름
 								html += "<td style='width: 10%;'>"  + item.c_RegDate.substring(0, 10) + "</td>"; //생성일
+								html += "<td style='width: 65px;'>";
+								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconLineup.gif'></span>";
+								html +=     "<span class='count' style='margin-right: 8px;'>" + item.c_MemberCnt + "</span>";
+								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconPost.gif'></span>";
+								html +=     "<span class='count'>" + item.itemCnt + "</span>";
+								html += "</td>";
 								html += "<td style='width: 60px;'><a class='imgbtn imgbck'><span onclick=''>폐쇄</span></a></td>";
 								html += "</tr>";
 								
@@ -360,7 +352,7 @@
 			});
 			
 			function windowResize() {
-			var height = document.documentElement.clientHeight - 172;
+			var height = document.documentElement.clientHeight - 202;
 			if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 				height = height - 30;
 			}
@@ -461,7 +453,24 @@
 	<body class="mainbody" onload = "makePageSelPage()">
 		<h1>커뮤니티 관리<span id="TitleInfo"></span></h1>
 		<form name="adm_search_key" method="post" ID="Form1">
-	    	<table class="content">
+		
+			<%--<div class="page">
+			<img src="/images/page_previous.gif" width="15" height="16" align="absmiddle" id="td_Previous"  onClick="prevPage_onclick()">
+			<spring:message code = 'ezCommunity.t76' /><span>${ iTotalPage }</span>&nbsp;&nbsp;<spring:message code = 'ezCommunity.t77' />
+			<input type="text" id="txt_inputPageNum" style="WIDTH:35px" value='${ iPage }' onKeyDown="moveToPage()">
+			<img src="/images/page_next.gif" width="15" height="16" align="absmiddle" id="Img1"  onClick="nextPage_onclick()"></div>--%>
+			
+			<div class="portlet_tabpart01">
+				<div class="portlet_tabpart01_top" id="tab1">
+					<p><span id="openCommu">개설된 커뮤니티</span></p>
+					<p><span id="closeCommu">폐쇄한 커뮤니티</span></p>
+				</div>
+			</div>
+			<script type="text/javascript">
+				Tab1_NewTabIni("tab1");
+			</script>
+			
+			<table class="content" style="margin: 10px 0px;">
 				<tr>
 					<th>검색조건</th>
 					<td>
@@ -473,72 +482,24 @@
 						</select>
 						
 						<input name="text" type="text" style="WIDTH:200px; vertical-align:middle; height: 22px;" id="txt_SearchQuery" onKeyPress="return get_search_CommunityInfo(event)"> 
-						<a class="imgbtn" style="vertical-align: middle; margin-bottom:0px;"><span onClick="search_CommunityInfo()"><spring:message code = 'ezCommunity.t31' /></span></a>
+						<a class="imgbtn imgbck" style="vertical-align: middle; margin-bottom:0px;"><span onClick="search_CommunityInfo()"><spring:message code = 'ezCommunity.t31' /></span></a>
 			  		</td>
 				</tr>
 			</table>
-		
-			<%--<div class="page">
-			<img src="/images/page_previous.gif" width="15" height="16" align="absmiddle" id="td_Previous"  onClick="prevPage_onclick()">
-			<spring:message code = 'ezCommunity.t76' /><span>${ iTotalPage }</span>&nbsp;&nbsp;<spring:message code = 'ezCommunity.t77' />
-			<input type="text" id="txt_inputPageNum" style="WIDTH:35px" value='${ iPage }' onKeyDown="moveToPage()">
-			<img src="/images/page_next.gif" width="15" height="16" align="absmiddle" id="Img1"  onClick="nextPage_onclick()"></div>--%>
-			
-			<div class="portlet_tabpart01">
-				<div class="portlet_tabpart01_top" id="tab1">
-					<p><span id="tagsub1">개설된 커뮤니티</span></p>
-					<p><span id="tagsub2">폐쇄한 커뮤니티</span></p>
-				</div>
-			</div>
-			<script type="text/javascript">
-				Tab1_NewTabIni("tab1");
-			</script>
-			
-			<%-- <div id="contentlist" style="width:100%; overflow: auto; margin-top:5px;">
-				<div>
-					<table id="mainlist" class="mainlist" style="width:100%">
-						<tr>
-							<th style="width:70px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
-							<th style="width:250px;"><spring:message code = 'ezCommunity.t9991' /></th>
-							<th><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></th>
-							<th style="width:100px;"><spring:message code = 'ezCommunity.t33' /></th>
-							<th style="width:80px;"><spring:message code = 'ezCommunity.t78' /></th>
-						</tr>
-						<c:if test="${clubList ne null && clubList ne ''}">
-							<c:forEach var = "club" items = "${clubList }" varStatus="status">
-								<tr>
-									<td style="width:50px; height:23px"><c:out value='${totalCount - ((curPage -1) * 10) - status.index }' /></td>
-									<!--// 20100108 : 보안 처리, 관련 추가작업(XSS)-->
-									<td style="cursor:pointer; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><nobr ><c:out value = '${club.c_ClubName }' /></nobr></td>
-									<td style="cursor:pointer; width:300px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><c:out value = '${club.c_ClubDesc}' /></td>
-									<td style="cursor:pointer; width:80px" onClick="openinfo_userinfo('${club.c_SysopID}',  '${club.deptID}')"><c:out value = '${club.userName}' /></td>
-									<td style="width:80px"><c:out value = '${fn:substring(club.c_RegDate, 0, 10) }' /></td>
-								</tr>
-							</c:forEach>
-						</c:if>
-						<c:if test="${clubList eq null || clubList eq ''}">
-							<tr>
-								<td colspan="5" style="text-align:center;"><spring:message code = 'main.t00026' /></td>
-							</tr>
-						</c:if>
-					</table>
-				</div>
-			</div> --%>
 			
 			<div id="contentlist" style="width: 100%; overflow: auto; margin-top: 5px;">
 				<div id="ListHeader">
 					<table id="mainListHeader" class="mainlist" style="width: 100%">
 						<tr id="mainListHeaderTr">
 							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
-							<th style="width: 35px;">인원</th>
-							<th style="width: 65px;">게시갯수</th>
 							<th style="width: 90px;">카테고리</th>
 							<th style="width: 25%;"><spring:message code = 'ezCommunity.t9991' /></th>
 							<th style="width: 10%;">유형</th>
 							<th style="width: 10%;">공개여부</th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t78' /></th>
-							<th style="width: 60px;">폐쇄</th>
+							<th style="width: 65px;"></th>
+							<th style="width: 60px;"></th>
 						</tr>
 					</table>
 				</div>

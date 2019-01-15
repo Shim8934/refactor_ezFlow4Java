@@ -293,7 +293,7 @@
 			});
 			
 			function windowResize() {
-			var height = document.documentElement.clientHeight - 172;
+			var height = document.documentElement.clientHeight - 202;
 			if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
 				height = height - 30;
 			}
@@ -311,7 +311,7 @@
 					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=510,height=395";
 					feature = feature + GetOpenPosition(510, 395);
 				} else {
-					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=490,height=375";
+					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=490,height=390";
 					feature = feature + GetOpenPosition(490, 375);
 				}
 				

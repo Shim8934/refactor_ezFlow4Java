@@ -8,6 +8,7 @@
 <script type="text/javascript">
 	alert("<spring:message code = 'ezCommunity.t56' />");
 	
+	window.opener.parent.parent.frames[0].getApplicationListCount();
 	window.opener.parent.frames[1].location = "/admin/ezCommunity/applicationList.do?";
 	self.close();
 </script>
