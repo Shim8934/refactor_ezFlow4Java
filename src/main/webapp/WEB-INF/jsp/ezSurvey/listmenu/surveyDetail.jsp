@@ -415,7 +415,7 @@
 		}
 		
 		function saveResponse() {
-			if (resposeObj.responses.length > 1) {
+			if (resposeObj.responses.length > 0) {
 				$.ajax({
 					type: "POST",
 					url: "/ezSurvey/saveResponse.do",
@@ -433,6 +433,7 @@
 			}
 			else {
 				alert(SurveyMessages.strNoResponse);
+				resposeObj.responses = [];
 			}
 		}
 		
