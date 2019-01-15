@@ -5474,5 +5474,17 @@
 				$v_PSUBQUERY$
 			]]>
 	</select>
-  
+	
+	<update id="EzBoardDAO.modUpdateDate" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_Board_Item
+		    SET 
+		    	UpdateDate = #updateDate#
+	   		WHERE  
+	   			TENANT_ID = #tenantID#
+	   		AND
+	   			ItemID = #itemID#
+		]]>
+	</update>
+	
 </sqlMap>

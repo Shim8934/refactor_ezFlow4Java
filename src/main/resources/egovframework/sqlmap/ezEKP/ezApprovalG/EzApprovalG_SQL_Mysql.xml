@@ -4237,7 +4237,7 @@
 		    AND
 		    		COMPANYID = #companyID#
 		    ORDER BY 
-		    		CNAME ASC
+		    		CATEGORYCODE
 		</isEmpty>
 		<isNotEmpty property="approvalFlag">
 			SELECT 
@@ -4266,7 +4266,7 @@
 		    AND
 		    		B.COMPANYID = #companyID#
 		    ORDER BY 
-		    		B.CNAME ASC
+		    		CATEGORYCODE
 		</isNotEmpty>
 	</select>
 	
@@ -4292,7 +4292,7 @@
             AND
 		    		COMPANYID = #companyID#
         	ORDER BY 
-        			MCNAME ASC
+        			MCATEGORYCODE
 		</isEmpty>
 		<isNotEmpty property="approvalFlag">
 	 		SELECT 
@@ -4325,7 +4325,7 @@
             AND
 		    		B.COMPANYID = #companyID#
         	ORDER BY 
-        			MCNAME ASC
+        			MCATEGORYCODE
 		</isNotEmpty>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getTaskSubCategory" parameterClass="Map" resultClass="ApprGTaskVO"> -->
@@ -4352,7 +4352,7 @@
 	            AND	
 	            	COMPANYID = #companyID#   	
 	            ORDER BY 
-	           		SCNAME ASC
+	           		SUBCATEGORYCODE
 			</isEqual>
 			<isNotEqual property="v_STRLANG" compareValue="1">
 			   SELECT 
@@ -4373,7 +4373,7 @@
 	           AND	
 	               COMPANYID = #companyID#  
 	           ORDER BY 
-	           	   SCNAME ASC
+	           	   SUBCATEGORYCODE
 			</isNotEqual>
 		</isEmpty>
 		<isNotEmpty property="approvalFlag">
@@ -4396,7 +4396,7 @@
             AND	
             	COMPANYID = #companyID#   	
             ORDER BY 
-           		SCNAME ASC
+           		SUBCATEGORYCODE
 		</isNotEmpty>
 	</select>
 	

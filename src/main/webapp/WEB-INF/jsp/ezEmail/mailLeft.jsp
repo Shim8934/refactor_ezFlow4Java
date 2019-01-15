@@ -736,9 +736,11 @@
 		        document.getElementById("folderMenuDiv").style.left = EventMouseX + "px";
 		        document.getElementById("folderMenuDiv").style.top = EventMouseY + "px";
 		        document.getElementById("folderMenuDiv").style.display = "";
-		       
-		        if ( parent.frames["right"].document.getElementById("mailPanel").style.display == "none") {
-			        parent.frames["right"].document.getElementById("mailPanel").style.display = "";
+		        
+		        if (parent.frames["right"].document.getElementById("mailPanel")) {
+			        if ( parent.frames["right"].document.getElementById("mailPanel").style.display == "none") {
+				        parent.frames["right"].document.getElementById("mailPanel").style.display = "";
+			        }
 		        }
 		    }
 		    
@@ -746,8 +748,10 @@
 		    	document.getElementById("folderPanel").style.display = "none";
 		        document.getElementById("folderMenuDiv").style.display = "none";
 		    	
-		        if (parent.frames["right"].document.getElementById("mailPanel").style.display == "") {
-		        	parent.frames["right"].document.getElementById("mailPanel").style.display = "none";
+		        if (parent.frames["right"].document.getElementById("mailPanel")) {
+			        if (parent.frames["right"].document.getElementById("mailPanel").style.display == "") {
+			        	parent.frames["right"].document.getElementById("mailPanel").style.display = "none";
+			        }
 		        }
 		    }
 		    

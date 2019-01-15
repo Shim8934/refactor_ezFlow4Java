@@ -5,6 +5,7 @@
 	    <title><spring:message code='ezBoard.t1005'/></title>
 		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css">
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 		    var pBoardID = "";
 		    var pItemID = "";
@@ -73,12 +74,25 @@
 		        
 		        if (xmlhttp.responseText == "OK") {
 		            alert("<spring:message code='ezBoard.t1015'/>");
-		            if (CrossYN())
-		                ReturnFunction(xmlhttp.responseText);
-		            else {
-		                window.returnValue = xmlhttp.responseText;
-		                window.close();
-		            }
+		            
+		            /* 2019-01-15 홍승비 - 앨범수정 후 DB에 게시물 수정일자 업데이트 */
+                    $.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/modUpdateDate.do",
+						data : {
+							itemID  : pItemID
+						},
+						success : function(result) {
+						 	if (CrossYN()) {
+				                ReturnFunction(xmlhttp.responseText);
+						 	} else {
+				                window.returnValue = xmlhttp.responseText;
+				                window.close();
+				            }
+						}
+					}); 
 		        }
 		        else {
 		            alert("<spring:message code='ezBoard.t1016'/>");
