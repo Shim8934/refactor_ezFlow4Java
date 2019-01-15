@@ -520,8 +520,6 @@
 							}
 						},
 						legendCallback: function(chart) {
-							console.log("chart");
-							console.log(chart);
 							var ul       = document.createElement("ul");
 							ul.className = "legend-ul";
 							for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
@@ -665,37 +663,57 @@
 						legendCallback: function(chart) {
 							var ul       = document.createElement("ul");
 							ul.className = "legend-ul";
-							/* 
-							for (var i = 0; i < chart.data.datasets.length; i++) {
-								for (var j = 0; j < chart.data.datasets[i].data.length; j++) {
+							
+							var question = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0];
+							var type     = parseInt(question["type"]);
+							
+							if (type == 3 || type == 4 || type == 8) {
+								/* 
+								for (var i = 0; i < chart.data.datasets.length; i++) {
+									for (var j = 0; j < chart.data.datasets[i].data.length; j++) {
+										var liElmt   = document.createElement("li");
+										var divElmt1 = document.createElement("div");
+										var divElmt2 = document.createElement("div");
+										divElmt1.className   = "legend-circle";
+										divElmt2.className   = "legend-label";
+										divElmt2.textContent = chart.data.labels[i] + " - " + chart.data.datasets[j].label;
+										divElmt1.setAttribute("style", "background-color: " + chart.data.datasets[j].backgroundColor);
+										liElmt.appendChild(divElmt1);
+										liElmt.appendChild(divElmt2);
+										
+										ul.appendChild(liElmt);
+									}
+								}
+								 */
+								for (var j = 0; j < chart.data.datasets[0].data.length; j++) {
 									var liElmt   = document.createElement("li");
 									var divElmt1 = document.createElement("div");
 									var divElmt2 = document.createElement("div");
 									divElmt1.className   = "legend-circle";
 									divElmt2.className   = "legend-label";
-									divElmt2.textContent = chart.data.labels[i] + " - " + chart.data.datasets[j].label;
+									divElmt2.textContent = chart.data.datasets[j].label;
 									divElmt1.setAttribute("style", "background-color: " + chart.data.datasets[j].backgroundColor);
 									liElmt.appendChild(divElmt1);
 									liElmt.appendChild(divElmt2);
 									
 									ul.appendChild(liElmt);
 								}
-							}
-							 */
-							for (var j = 0; j < chart.data.datasets[0].data.length; j++) {
-								var liElmt   = document.createElement("li");
-								var divElmt1 = document.createElement("div");
-								var divElmt2 = document.createElement("div");
-								divElmt1.className   = "legend-circle";
-								divElmt2.className   = "legend-label";
-								divElmt2.textContent = chart.data.datasets[j].label;
-								divElmt1.setAttribute("style", "background-color: " + chart.data.datasets[j].backgroundColor);
-								liElmt.appendChild(divElmt1);
-								liElmt.appendChild(divElmt2);
 								
-								ul.appendChild(liElmt);
+							} else  if (type == 7) {
+								for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
+									var liElmt   = document.createElement("li");
+									var divElmt1 = document.createElement("div");
+									var divElmt2 = document.createElement("div");
+									divElmt1.className   = "legend-circle";
+									divElmt2.className   = "legend-label";
+									divElmt2.textContent = chart.data.labels[i];
+									divElmt1.setAttribute("style", "background-color: " + chart.data.datasets[0].backgroundColor[i]);
+									liElmt.appendChild(divElmt1);
+									liElmt.appendChild(divElmt2);
+									
+									ul.appendChild(liElmt);
+								}
 							}
-							
 							
 							return ul;
 							 
