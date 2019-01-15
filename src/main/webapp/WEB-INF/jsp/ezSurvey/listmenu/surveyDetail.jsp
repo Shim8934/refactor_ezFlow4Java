@@ -395,7 +395,7 @@
 							getSliderRespose(id, type);
 							break;
 						case 8:
-							getRankingRespose(id, type);
+							responseResult = getRankingRespose(id, type);
 							break;
 						case 9:
 							getDrdwRespose(id, type);
@@ -647,26 +647,35 @@
 			var answer = [];
 			var wrapper = $("#prevQstn" + id);
 			var selectLengh = wrapper.find(".ranking-select").length;
-
-			for (var i = 0; i < selectLengh; i++) {
-				var rankingObj = {};
-				var rankNum = i + 1;
-				var optionId = parseInt($("select[name='ranking" + id + i + "'] option:selected").attr("optionid"));
-
-				if (!isNaN(optionId)) {
-					rankingObj['rankingLevel'] = rankNum;
-					rankingObj['optionId'] = optionId;
-					answer.push(rankingObj);
+			var result = "success";
+			var checkResult = checkRankingResponse(id);
+			
+			if (checkResult == "") {
+				alert(id + SurveyMessages.strnotComplete);
+				result = "fail";
+			} else {
+				for (var i = 0; i < selectLengh; i++) {
+					var rankingObj = {};
+					var rankNum = i + 1;
+					var optionId = parseInt($("select[name='ranking" + id + i + "'] option:selected").attr("optionid"));
+	
+					if (!isNaN(optionId)) {
+						rankingObj['rankingLevel'] = rankNum;
+						rankingObj['optionId'] = optionId;
+						answer.push(rankingObj);
+					}
+					
+				}
+				
+				if (answer.length > 0) {
+					answerObj['answers'] = answer;
+					answerObj['type'] = type;
+					answerObj['questionLevel'] = id;
+					resposeObj.responses.push(answerObj);
 				}
 				
 			}
-			
-			if (answer.length > 0) {
-				answerObj['answers'] = answer;
-				answerObj['type'] = type;
-				answerObj['questionLevel'] = id;
-				resposeObj.responses.push(answerObj);
-			}
+			return result;
 		}
 		
 		function getDrdwRespose(id, type) {
