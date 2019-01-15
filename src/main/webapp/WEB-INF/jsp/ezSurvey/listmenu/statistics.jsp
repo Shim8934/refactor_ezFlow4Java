@@ -123,7 +123,7 @@
 							createQuestionPie(question, divElmt);
 							break;
 						case 3:
-						//case 4:
+						case 4:
 							divElmt.className = "barDiv";
 							var canvasElmt = document.createElement("canvas");
 							var canvasId   = "question" + question["level"];
@@ -151,6 +151,14 @@
 							createQuestionBar(question, canvasId);
 							break;
 						case 8:
+							divElmt.className = "barDiv";
+							var canvasElmt = document.createElement("canvas");
+							var canvasId   = "question" + question["level"];
+							canvasElmt.setAttribute("height", 240);
+							canvasElmt.setAttribute("width", 640);
+							canvasElmt.setAttribute("id", canvasId);
+							divElmt.appendChild(canvasElmt);
+							createQuestionBar(question, canvasId);
 							break;
 					}
 				}
@@ -550,49 +558,63 @@
 				var returnObj = "";
 				var response = question.responses;
 				var content = question.content;
-				var datasets = [];
+				var dataSets = [];
+				var labels = "";
 				
-				if (question['type'] == 3 || question['type'] == 4) {
-					returnObj = getMtrDataSet(question);
-					var labels = returnObj['rows'];
-
-					for (var i = 0; i < returnObj['rows'].length; i++) {
-						var row = returnObj['rows'][i];
+				if (question['type'] != 7) {
+					if (question['type'] == 3 || question['type'] == 4) {
+						returnObj = getMtrDataSet(question);
+						
+					} else if (question['type'] == 8) {
+						returnObj = getRankingDataSet(question);
+					}
+					labels = returnObj['labels'];
+					label = returnObj['label'];
+					
+					var dataSetArr = returnObj['dataSetArr'];
+					for (var i = 0; i < dataSetArr.length; i++) {
+						var valuesArr = dataSetArr[i];
 						var dataObj = {};
 						
 						dataObj['backgroundColor'] = colors[i];
 						dataObj['hoverBorderWidth'] = 8;
 						dataObj['borderWidth'] = 2;
-						dataObj['label'] = returnObj['cols'][i];
-						dataObj['data'] = returnObj[row];
-						datasets.push(dataObj);
-						//console.log(datasets);
+						dataObj['label'] = label[i];
+						dataObj['data'] = valuesArr;
+						dataSets.push(dataObj);
 					}
 					
 				} else if(question['type'] == 7) {
 					returnObj = getSliderDataSet(question);
-					
-					//var ordersNum = returnObj['ordersNum'];
-					//console.log(ordersNum);
-					var labels = returnObj['label'];
-					//console.log(returnObj);
+					labels = returnObj['labels'];
+					var dataSetArr = returnObj['dataSetArr'];
+					/* 
+					for (var i = 0; i < dataSetArr.length; i++) {
+						var valuesArr = dataSetArr[i];
+						var dataObj = {};
+						
+						dataObj['backgroundColor'] = colors[i];
+						dataObj['hoverBorderWidth'] = 8;
+						dataObj['borderWidth'] = 2;
+						//dataObj['label'] = ;
+						dataObj['data'] = valuesArr;
+						dataSets.push(dataObj);
+					}
+					 */
 					var dataObj = {};
-					//dataObj['backgroundColor'] = colors[ordersNum[0]];
 					dataObj['backgroundColor'] = colors;
 					dataObj['hoverBorderWidth'] = 8;
 					dataObj['borderWidth'] = 2;
-					dataObj['label'] = "value";
-					dataObj['data'] = returnObj['data'];
-					datasets.push(dataObj);
-					//console.log(datasets);
-				}
+					dataObj['data'] = dataSetArr;
+					dataSets.push(dataObj);
+				} 
 				
 				var ctx = document.getElementById(canvasId);
 				var myChart = new Chart(ctx, {
 				    type: 'bar',
 				    data: {
 				        labels: labels,
-				        datasets: datasets
+				        datasets: dataSets
 				    },
 				    options: {
 				        scales: {
@@ -655,15 +677,17 @@
 			}
 			
 			function getMtrDataSet(question) {
-				var dataSet = [];
+				var options = question['option'];
+				var response = question['responses'];
 				var rows = [];
 				var cols = [];
 				var rowsOptionId = [];
 				var colsOptionId = [];
-				var combinationsArr = [];
-				var combinationsObj = {};
-				var options = question['option'];
-				var response = question['responses'];
+				var totalArr = [];
+				var totalObj = {};
+				var dataSetArr = [];
+				var dataSetObj = {};
+				
 				// 행과 열의 이름, id 획득
 				for (var i = 0; i < options.length; i++) {
 					if (options[i]['colLevel'] == -1) {
@@ -683,50 +707,51 @@
 				}
 				// 행열 조합 생성
 				for (var i = 0; i < rowsOptionId.length; i++) {
-					var arr = [];
-					var obj = {};
+					var rowColArr = [];
+					var rowColObj = {};
 					for (var j = 0; j < colsOptionId.length; j++) {
 						var name = String(rowsOptionId[i]) + "," +  String(colsOptionId[j]);
-						arr.push(name);
-						obj[String(name)] = 0;
+						rowColArr.push(name);
+						rowColObj[String(name)] = 0;
 					}
-					combinationsArr.push(arr);
-					combinationsObj[rowsOptionId[i]] = obj;
+					totalArr.push(rowColArr);
+					totalObj[rowsOptionId[i]] = rowColObj;
 				}
 				
 				for (var i = 0; i < response.length; i++) {
 					var rowId = response[i]['rowId'];
 					var columnId = response[i]['columnId'];
-					var rowColCombination = String(rowId) + "," + String(columnId);
+					var rowColId = String(rowId) + "," + String(columnId);
 					
-					for (var j = 0; j < combinationsArr.length; j++) {
-						var comArr =  combinationsArr[j];
+					for (var j = 0; j < totalArr.length; j++) {
+						var arrs =  totalArr[j];
 						
-						for (var k = 0; k < comArr.length; k++) {
-							if (comArr[k]== rowColCombination) {
-								var orders = comArr[k].split(",")[0];
-								var cnt = combinationsObj[orders][rowColCombination];
-								combinationsObj[orders][rowColCombination] = cnt + 1;
+						for (var k = 0; k < arrs.length; k++) {
+							if (arrs[k]== rowColId) {
+								var orders = arrs[k].split(",")[0];
+								var cnt = totalObj[orders][rowColId];
+								totalObj[orders][rowColId] = cnt + 1;
 							}
 						}
 					}
 					
 				}
 				
-				var datasets = [];
-				var data = {};
 				for (var i = 0; i < rowsOptionId.length; i++) {
-					var arr = [];
+					var rowBaseArr = [];
 					for (var j = 0; j < colsOptionId.length; j++) {
 						var name = String(rowsOptionId[i]) + "," +  String(colsOptionId[j]);
-						var value = combinationsObj[rowsOptionId[i]][name];
-						arr.push(value);
+						var value = totalObj[rowsOptionId[i]][name];
+						rowBaseArr.push(value);
 					}
-					data[rows[i]] = arr;
+					dataSetArr.push(rowBaseArr);
 				}
-				data['rows'] = rows;
-				data['cols'] = cols;
-				return data;
+				dataSetObj['labels'] = rows;
+				dataSetObj['label'] = cols;
+				dataSetObj['dataSetArr'] = dataSetArr;
+				
+				console.log(dataSetObj);
+				return dataSetObj;
 			}
 			
 			function getSliderDataSet(question) {
@@ -734,42 +759,96 @@
 				var options = question['option'];
 				var start = parseInt(options[0]['content']);
 				var end = parseInt(options[1]['content']);
-				var data = [];
-				var unit = [];
+				var unitArr = [];
 				var unitObj = {};
-				var dataSet = {};
+				var dataSetArr = [];
+				var dataSetObj = {};
 				
 				for (var i = start; i < end + 1; i++) {
-					unit.push(i);
+					unitArr.push(i);
 					unitObj[i] = 0;
 				}
+				
 				for (var i = 0; i < responses.length; i++) {
 					var sliderVal = responses[i]['sliderValue'];
 					
-					for (var j = 0; j < unit.length; j++) {
-						var unitVal = unit[j];
-						
-						if (sliderVal == unitVal) {
-							var oldVal = unitObj[sliderVal];
-							unitObj[sliderVal] = oldVal + 1;
+					for (var j = 0; j < unitArr.length; j++) {
+						if (sliderVal == unitArr[j]) {
+							var oldVal = unitObj[unitArr[j]];
+							unitObj[unitArr[j]] = oldVal + 1;
 						}
 						
 					}
 				}
 				
-				var dataArr = [];
-				var ordersNum = [];
 				for (var i = start; i < end + 1; i++) {
 					var value = unitObj[i];
-					dataArr.push(value);
-					if (value != 0) {
-						ordersNum.push(value);
-					}
+					//var valueSetArr = [];
+					//valueSetArr.push(value);
+					//dataSetArr.push(valueSetArr);
+					dataSetArr.push(value);
 				}
-				data['label'] = unit;
-				data['data'] = dataArr;
-				//data['ordersNum'] = ordersNum;
-				return data;
+				
+				//dataSetObj['label'] = ;
+				dataSetObj['labels'] = unitArr;
+				dataSetObj['dataSetArr'] = dataSetArr;
+				console.log(dataSetObj);
+				return dataSetObj;
+			}
+			
+			function getRankingDataSet(question) {
+				var responses = question['responses'];
+				var options = question['option'];
+				var optionIdsArr = [];
+				var optionContentsArr = [];
+				var rankArr = [];
+				var totalObj = {};
+				var dataSetArr = [];
+				var dataSetObj = {};
+				
+				for (var i = 0; i < options.length; i++) {
+					var rank = i + 1;
+					var rankObj = {};
+					
+					for (var j = 0; j < options.length; j++) {
+						var optionoId = options[j]['optionId'];
+						rankObj[optionoId] = 0;
+					}
+					totalObj[rank] = rankObj;
+					
+					var optionId = options[i]['optionId'];
+					optionIdsArr.push(optionId);
+					rankArr.push(rank);
+					var optionContent = options[i]['content'];
+					optionContentsArr.push(optionContent);
+					
+				}
+				
+				for (var i = 0; i < responses.length; i++) {
+					var rankingLevel = responses[i]['rankingLevel'];
+					var optionId = responses[i]['optionId'];
+					var oldVal = totalObj[rankingLevel][optionId];
+					totalObj[rankingLevel][optionId] = oldVal + 1;
+				}
+				//console.log(totalObj);
+				// 순위 기준으로 데이터 묶음
+				for (var i = 0; i < rankArr.length; i++) {
+					var rank = i + 1;
+					var valueSetArr = [];
+					
+					for (var j = 0; j < optionIdsArr.length; j++) {
+						var value = totalObj[rank][optionIdsArr[j]];
+						valueSetArr.push(value);
+					}
+					dataSetArr.push(valueSetArr);
+				}
+				
+				dataSetObj['optionIdsArr'] = optionIdsArr;
+				dataSetObj['dataSetArr'] = dataSetArr;
+				dataSetObj['label'] = optionContentsArr;
+				dataSetObj['labels'] = rankArr;
+				//console.log(dataSetArr);
+				return dataSetObj;
 			}
 		})();
 	</script>
