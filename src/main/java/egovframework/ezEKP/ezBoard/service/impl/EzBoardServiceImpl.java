@@ -4251,5 +4251,21 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		logger.debug("getEzTalkGateNoticeBoardId ended.");
 		return resultBoradID;
 	}
+	
+	/* 2019-01-15 홍승비 - 게시물의 수정일(updateDate)만을 업데이트하는 메서드 */
+	@Override
+	public void modUpdateDate(String updateDate, String itemID, int tenantID) throws Exception {
+		logger.debug("modUpdateDate started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("updateDate", updateDate);
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+		
+		ezBoardDAO.modUpdateDate(map);
+		
+		logger.debug("modUpdateDate ended.");
+	}
 
 }
