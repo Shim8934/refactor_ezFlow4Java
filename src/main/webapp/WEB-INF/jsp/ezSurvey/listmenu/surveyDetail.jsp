@@ -139,15 +139,12 @@
 					for (var i = 0; i < question.length; i++) {
 						SurveyCreate.setQs(question[i]);
 					}
-					console.log("question");
-					console.log(question);
+					
 					SurveyCreate.setQsForm(0);
 					
 					if (data["firstpath"]) {
 						toggleQuestionList(JSON.parse(JSON.stringify(data["firstpath"])));
 					}
-					
-					//console.log(JSON.parse(JSON.stringify(data["logicmap" ])));
 				},
 				error : function(error) {
 					alert(SurveyMessages.strError);
@@ -418,7 +415,6 @@
 		}
 		
 		function saveResponse() {
-			//console.log(resposeObj.responses);
 			if (resposeObj.responses.length > 1) {
 				$.ajax({
 					type: "POST",
@@ -434,16 +430,17 @@
 						alert(SurveyMessages.strError);
 					}
 				});
-			} else {
+			}
+			else {
 				alert(SurveyMessages.strNoResponse);
 			}
-			
 		}
 		
 		function afterSaveSuccessfully(data) {
 			var code = data.code;
 			switch(code) {
 				case 0 : alert(SurveyMessages.strSave)    ;
+						 if (window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
 						 window.close();
 						 break;
 				case 1 : alert(SurveyMessages.strParamErr); break;
@@ -453,13 +450,13 @@
 		}
 		
 		function getSingleSltRespose(id, type) {
-			var answerObj = {};
-			var optionId = {};
-			var answer = [];
-			var result = "success";
-			var wrapper = $("#prevQstn" + id);
+			var answerObj  = {};
+			var optionId   = {};
+			var answer     = [];
+			var result     = "success";
+			var wrapper    = $("#prevQstn" + id);
 			var checkedBtn = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]:checked");
-			var optId = parseInt(checkedBtn.attr("optionid"));
+			var optId      = parseInt(checkedBtn.attr("optionid"));
 			
 			if (!isNaN(optId)) {
 				if (checkedBtn.attr("otherFlag") == 1) {
@@ -468,7 +465,8 @@
 					if (otherValue != "") {
 						optionId['otherFlag'] = 1;
 						optionId['texts'] = otherValue;
-					} else {
+					}
+					else {
 						result = "fail";
 						alert(id + SurveyMessages.writeOthers);
 					}
@@ -480,22 +478,22 @@
 				answerObj['questionLevel'] = id;
 				resposeObj.responses.push(answerObj);
 			}
+			
 			return result;
-			//console.log(resposeObj.responses);
 		}
 		
 		function getMultiSltRespose(id, type) {
 			var answerObj = {};
-			var answer = [];
-			var result = "success";
-			var wrapper = $("#prevQstn" + id);
-			var checkBox = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]");
-			var length = checkBox.length;
+			var answer    = [];
+			var result    = "success";
+			var wrapper   = $("#prevQstn" + id);
+			var checkBox  = wrapper.find(".prevQsOpt").find("input[name^=qstn" + id+ "]");
+			var length    = checkBox.length;
 			
 			for (var i = 0; i < length; i++) {
 				if (checkBox[i].checked == true) {
 					//var optLevel = parseInt(checkBox[i].value);
-					var optId = parseInt(checkBox[i].getAttribute('optionid'));
+					var optId    = parseInt(checkBox[i].getAttribute('optionid'));
 					var optionId = {};
 
 					if (!isNaN(optId)) {
@@ -504,8 +502,9 @@
 
 							if (otherValue != "") {
 								optionId['otherFlag'] = 1;
-								optionId['texts'] = otherValue;
-							} else {
+								optionId['texts']     = otherValue;
+							}
+							else {
 								result = "fail";
 								alert(id + SurveyMessages.writeOthers);
 							}
@@ -517,21 +516,20 @@
 			}
 			
 			if (answer.length > 0) {
-				answerObj['answers'] = answer;
-				answerObj['type'] = type;
+				answerObj['answers']       = answer;
+				answerObj['type']          = type;
 				answerObj['questionLevel'] = id;
 				resposeObj.responses.push(answerObj);
 			}
 			
 			return result;
-			//console.log(resposeObj.responses);
 		}
 		
 		function getSingleMtrRespose(id, type) {
 			var answerObj = {};
-			var answer = [];
-			var wrapper = $("#prevQstn" + id);
-			var trLength = wrapper.find("tbody").find("tr").length;
+			var answer    = [];
+			var wrapper   = $("#prevQstn" + id);
+			var trLength  = wrapper.find("tbody").find("tr").length;
 			
 			for (var i = 0; i < trLength; i++) {
 				var rowColObj = {};
@@ -547,32 +545,32 @@
 					answer.push(rowColObj);
 				}
 			}
+			
 			if (answer.length > 0) {
-				answerObj['answers'] = answer;
-				answerObj['type'] = type;
+				answerObj['answers']       = answer;
+				answerObj['type']          = type;
 				answerObj['questionLevel'] = id;
 				resposeObj.responses.push(answerObj);
 			}
-			//console.log(resposeObj.responses);
 		}
 		
 		function getMultiMtrRespose(id, type) {
 			var answerObj = {};
-			var answer = [];
-			var wrapper = $("#prevQstn" + id);
+			var answer    = [];
+			var wrapper   = $("#prevQstn" + id);
 			var rowLength = wrapper.find("tbody").find("tr").length;
 			var colLength = wrapper.find("thead").find("td").length;
-
+			
 			for (var i = 0; i < rowLength; i++) {
 				for (var j = 0; j < colLength; j++) {
 					var rowColObj = {};
 					var checkBox = $("input[id = qstn" + id + "opt" + i + j + "]");
 					
 					if (checkBox.prop("checked") == true) {
-						var rowColIds = checkBox.attr("optionid");
+						var rowColIds   = checkBox.attr("optionid");
 						var rowColArray = rowColIds.split(",");
-						var row = rowColArray[0];
-						var col = rowColArray[1];
+						var row         = rowColArray[0];
+						var col         = rowColArray[1];
 						
 						rowColObj['rowId'] = parseInt(row);
 						rowColObj['colId'] = parseInt(col);
@@ -580,33 +578,33 @@
 					}
 				}
 			}
+			
 			if (answer.length > 0) {
 				answerObj['answers'] = answer;
 				answerObj['type'] = type;
 				answerObj['questionLevel'] = id;
 				resposeObj.responses.push(answerObj);
 			}
-			//console.log(resposeObj.responses);
 		}
 		
 		function getTxtRespose(id, type) {
 			var answerObj = {};
-			var txtObj = {};
-			var answer = [];
-			var wrapper = $("#prevQstn" + id);
+			var txtObj    = {};
+			var answer    = [];
+			var wrapper   = $("#prevQstn" + id);
 			var txtAnswer = "";
-			var optionId = "";
+			var optionId  = "";
 			
 			if (type == 5) {
 				txtAnswer = wrapper.find(".shortanswer").val();
 				optionId = parseInt(wrapper.find(".shortanswer").attr("optionid"));
-
-			} else if (type == 6) {
+			}
+			else if (type == 6) {
 				txtAnswer = wrapper.find(".paragraph").val();
 				optionId = parseInt(wrapper.find(".paragraph").attr("optionid"));
 				
 			}
-
+			
 			if (txtAnswer != "") {
 				txtObj['texts'] = txtAnswer;
 				txtObj['optionId'] = optionId;
@@ -619,7 +617,6 @@
 				answerObj['questionLevel'] = id;
 				resposeObj.responses.push(answerObj);
 			}
-			//console.log(resposeObj.responses);
 		}
 		
 		function getSliderRespose(id, type) {
@@ -642,7 +639,6 @@
 				answerObj['questionLevel'] = id;
 				resposeObj.responses.push(answerObj);
 			}
-			//console.log(resposeObj.responses);
 		}
 		
 		function getRankingRespose(id, type) {
@@ -670,7 +666,6 @@
 				answerObj['questionLevel'] = id;
 				resposeObj.responses.push(answerObj);
 			}
-			//console.log(resposeObj.responses);
 		}
 		
 		function getDrdwRespose(id, type) {
@@ -691,7 +686,6 @@
 				answerObj['questionLevel'] = id;
 				resposeObj.responses.push(answerObj);
 			}
-			//console.log(resposeObj.responses);
 		}
 		
 		function deleteFileConfirm() {

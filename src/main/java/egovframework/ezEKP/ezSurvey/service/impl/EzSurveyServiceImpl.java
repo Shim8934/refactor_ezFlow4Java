@@ -333,7 +333,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		SimpleDateFormat formatter           = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String timeUTC                       = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
 		String startDateUTC                  = commonUtil.getDateStringInUTC(startDate + " 00:00:00", offset, true);
-		String endDateUTC                    =  commonUtil.getDateStringInUTC(endDate  + " 23:59:59", offset, true);
+		String endDateUTC                    = commonUtil.getDateStringInUTC(endDate   + " 23:59:59", offset, true);
 		Set<SimpleUserVO> setUsers           = new HashSet<>();
 		List<String> deptList                = new ArrayList<>();
 		List<AttachVO> totalAttach           = new ArrayList<>();
@@ -769,7 +769,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				survey.setUpdateDate(timeUTC);
 				survey.setUpdateUser(userInfo.getId());
 				
-				ezSurveyDAO.updateSurveyItem(survey);
+				ezSurveyDAO.updateSurveyItemFlag(survey);
 			}
 		}
 		
@@ -1075,7 +1075,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			survey.setModifyFlag(0);
 			survey.setUpdateDate(timeUTC);
 			survey.setUpdateUser(userInfo.getId());
-			ezSurveyDAO.updateSurveyItem(survey);
+			ezSurveyDAO.updateSurveyItemFlag(survey);
 		}
 		
 		result.put("status", "ok");
@@ -1085,7 +1085,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject saveResponseItem(JSONArray responses, long surveyId, LoginVO userInfo) throws Exception {
+	public synchronized JSONObject saveResponseItem(JSONArray responses, long surveyId, LoginVO userInfo) throws Exception {
 		JSONObject result               = new JSONObject();
 		Map<String, Object> map         = new HashMap<String, Object>();
 		List<ResponseVO> totalResponses = new ArrayList<>();
@@ -1183,7 +1183,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		if (survey.getResponseFlag() == 0) {
 			survey.setResponseFlag(1);
 			//Update survey
-			ezSurveyDAO.updateSurveyItem(survey);
+			ezSurveyDAO.updateSurveyItemFlag(survey);
 		}
 		
 		result.put("status", "ok");

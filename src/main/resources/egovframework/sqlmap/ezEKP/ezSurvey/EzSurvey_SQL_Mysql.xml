@@ -627,6 +627,27 @@
 			survey_id = #surveyId# and tenant_id = #tenantId# and company_id = #companyId#
 	</update>
 	
+	<update id="EzSurveyDAO.updateSurveyItemFlag">
+		update
+			tbl_survey
+		set
+			use_status         = #useStatus#,
+			open_days          = #openDays#,
+			result_public_flag = #resultPublicFlag#,
+			anonymous_flag     = #anonymousFlag#,
+			multi_answer_flag  = #multiAnswerFlag#,
+			participate_flag   = #paritipateFlag#,
+			attach_flag        = #attachFlag#,
+			modify_flag        = #modifyFlag#,
+			draft_flag         = #draftFlag#,
+			response_flag      = #responseFlag#,
+			delete_user        = #deleteUser#,
+			update_user        = #updateUser#,
+			update_date        = #updateDate#
+		where
+			survey_id = #surveyId# and tenant_id = #tenantId# and company_id = #companyId#
+	</update>
+	
 	<select id="EzSurveyDAO.getMaxSurveyId" resultClass="Long">
 		<![CDATA[select ifnull(max(survey_id) + 1, 1) from tbl_survey]]>
 	</select>

@@ -32,17 +32,24 @@
 				<li id="createBttn"><a><span><spring:message code='ezSurvey.t19'/></span></a></li>
 				<li id="searchBttn"><a><span><spring:message code='ezSurvey.t20'/></span></a></li>
 				<li id="deleteBttn"><a><span><spring:message code='ezSurvey.t21'/></span></a></li>
-				<li id="reuseBttn" ><a><span><spring:message code='ezSurvey.t22'/></span></a></li>
-				<li id="modifyBttn"><a><span><spring:message code='ezSurvey.t78'/></span></a></li>
-				
-				<li id="right">
-					<c:if test="${mode != 'draft'}">
-					<img src="${config.previewMode == 'off' ? '/images/kr/cm/btn_onnoframe.gif'     : '/images/kr/cm/btn_noframe.gif'}"     class="btnimg survey" id="preViewNone"  >
-					<img src="${config.previewMode == 'h'   ? '/images/kr/cm/btn_onbottomframe.gif' : '/images/kr/cm/btn_bottomframe.gif'}" class="btnimg survey" id="preViewBottom">
-					<img src="${config.previewMode == 'w'   ? '/images/kr/cm/btn_onleftframe.gif'   : '/images/kr/cm/btn_leftframe.gif'}"   class="btnimg survey" id="preViewleft"  >
-					</c:if>
-					<img src="/images/kr/cm/btn_arrow_down.gif" role="off" id="sltView">
-				</li>
+				<c:choose>
+					<c:when test="${mode != 'draft'}">
+						<li id="reuseBttn" ><a><span><spring:message code='ezSurvey.t22'/></span></a></li>
+						<li id="modifyBttn"><a><span><spring:message code='ezSurvey.t78'/></span></a></li>
+						<li id="right">
+							<img src="${config.previewMode == 'off' ? '/images/kr/cm/btn_onnoframe.gif'     : '/images/kr/cm/btn_noframe.gif'}"     class="btnimg survey" id="preViewNone"  >
+							<img src="${config.previewMode == 'h'   ? '/images/kr/cm/btn_onbottomframe.gif' : '/images/kr/cm/btn_bottomframe.gif'}" class="btnimg survey" id="preViewBottom">
+							<img src="${config.previewMode == 'w'   ? '/images/kr/cm/btn_onleftframe.gif'   : '/images/kr/cm/btn_leftframe.gif'}"   class="btnimg survey" id="preViewleft"  >
+							<img src="/images/kr/cm/btn_arrow_down.gif" role="off" id="sltView">
+						</li>
+					</c:when>
+					<c:otherwise>
+						<li id="modifyBttn"><a><span><spring:message code='ezSurvey.t78'/></span></a></li>
+						<li id="right">
+							<img src="/images/kr/cm/btn_arrow_down.gif" role="off" id="sltView">
+						</li>
+					</c:otherwise>
+				</c:choose>
 			</ul>
 		</div>
 		
@@ -159,7 +166,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyTable.js')    }"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyItem.js')     }"></script>
 		<script type="text/javascript">
-			SurveyItem.start("<c:out value='${config.contentHpercent}'/>", "<c:out value='${config.contentWpercent}'/>", "<c:out value='${config.previewMode}'/>", "<c:out value='${mode}'/>");
+			SurveyItem.start("<c:out value='${config.contentHpercent}'/>", "<c:out value='${config.contentWpercent}'/>", "<c:out value='${config.previewMode}'/>", "<c:out value='${mode}'/>", "<c:out value='${user}'/>");
 			</script>
 	</body>
 </html>

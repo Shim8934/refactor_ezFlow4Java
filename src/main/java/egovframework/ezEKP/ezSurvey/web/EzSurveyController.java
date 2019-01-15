@@ -105,6 +105,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		model.addAttribute("pageName", pageName);
 		model.addAttribute("mode"    , mode);
+		model.addAttribute("user"    , user.getId());
 		
 		logger.debug("jspGetSurveyList ended");
 		return "ezSurvey/listmenu/surveyList";
