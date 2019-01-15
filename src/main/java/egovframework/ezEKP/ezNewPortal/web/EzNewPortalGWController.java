@@ -1604,16 +1604,27 @@ public class EzNewPortalGWController {
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
+			String deptId = info.getDeptId();
+			
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
 			MenuInfoVO startPage = ezNewPortalService.getUserStartPage(userId, tenantId, companyId);
 			//LOGGER.debug("startMenuId : " + startPage.getMenuId());
-			
+
+			boolean memoAuth = ezNewPortalService.getCheckAuth(18, userId, deptId, companyId, tenantId);
 			String useMemo = "";
 			useMemo = ezCommonService.getTenantConfig("useMemo", info.getTenantId());
 			
 			if (useMemo == null || useMemo.equals("")) {
 				useMemo = "YES";
+			}
+			
+			if (useMemo.equals("YES")) {
+				if (memoAuth) {
+					useMemo = "YES";
+				} else if (!memoAuth) {
+					useMemo = "NO";
+				}
 			}
 			
 			LOGGER.debug("useMemo : " + useMemo);
