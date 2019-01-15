@@ -100,8 +100,8 @@ var SurveyMessages = {
 	strNoLogic   : "분기없음",
 	strchooseNum : "분기를 선택해 주세요.",
 	strBetweenNum: "최소값과 최대값 사이의 정수를 입력해 주세요.",
-	strQs		 : "질문",
-	strMore		 : "이상",
+	strQs        : "질문",
+	strMore      : "이상",
 	strLogic     : "분기를 설정해 주세요.",
 	strQsCount   : "분기 설정은 2개 이상의 질문 필요합니다.",
 	strSkipLogic : "분기 설정 단계를 생략 하시겠습니까?",
@@ -129,4 +129,5 @@ var SurveyMessages = {
 	strViewAll   : "모두 보기",
 	strViewOther : "*기타",
 	strAllUsers  : "참여인원 리스트",
+	strMultiple3 : "중복 응답이 불가한 설문입니다.",
 }

@@ -354,19 +354,18 @@
 		}
 		
 		function saveSurveyResponses() {
-			// 설문 기간 체크
-			var periodResult = checkDate();
+			var periodResult   = checkDate(); // 설문 기간 체크
 			// 필수 답변에 응답 여부 체크
 			var requiredResult = checkRequired();
 			var responseResult = "success";
-
+			
 			if (periodResult != "fail" && requiredResult != "fail") {
 				var qsWrappers = $(".prevQsArea").find(".prevQsWrapper");
 				
 				for (var i = 0; i < qsWrappers.length; i++) {
 					var wrapper = qsWrappers[i];
 					var mask = wrapper.querySelector("div[class=mask]");
-	
+					
 					if (mask == null) {
 						var qstnId = wrapper.getAttribute("id");
 						var id = parseInt(qstnId.replace("prevQstn", ""));
@@ -440,13 +439,14 @@
 		function afterSaveSuccessfully(data) {
 			var code = data.code;
 			switch(code) {
-				case 0 : alert(SurveyMessages.strSave)    ;
+				case 0 : alert(SurveyMessages.strSave)     ;
 						 if (window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
 						 window.close();
 						 break;
-				case 1 : alert(SurveyMessages.strParamErr); break;
-				case 2 : alert(SurveyMessages.strError)   ; break;
-				default: alert(SurveyMessages.strError)   ; return;
+				case 1 : alert(SurveyMessages.strParamErr) ; break;
+				case 2 : alert(SurveyMessages.strError)    ; break;
+				case 5 : alert(SurveyMessages.strMultiple3); break;
+				default: alert(SurveyMessages.strError)    ; return;
 			}
 		}
 		
@@ -462,7 +462,7 @@
 			if (!isNaN(optId)) {
 				if (checkedBtn.attr("otherFlag") == 1) {
 					var otherValue = $("#othInput" + id).val().trim();
-
+					
 					if (otherValue != "") {
 						optionId['otherFlag'] = 1;
 						optionId['texts'] = otherValue;
@@ -496,11 +496,11 @@
 					//var optLevel = parseInt(checkBox[i].value);
 					var optId    = parseInt(checkBox[i].getAttribute('optionid'));
 					var optionId = {};
-
+					
 					if (!isNaN(optId)) {
 						if (checkBox[i].getAttribute('otherFlag') == 1) {
 							var otherValue = $("#othInput" + id).val().trim();
-
+							
 							if (otherValue != "") {
 								optionId['otherFlag'] = 1;
 								optionId['texts']     = otherValue;
@@ -673,7 +673,6 @@
 					answerObj['questionLevel'] = id;
 					resposeObj.responses.push(answerObj);
 				}
-				
 			}
 			return result;
 		}
@@ -723,6 +722,7 @@
 		
 		function afterDeleteSuccessfully() {
 			alert(SurveyMessages.strDel);
+			if (window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
 			window.close();
 		}
 		
@@ -746,25 +746,23 @@
 		
 		function checkDate() {
 			var startDate = survey.startDate.substr(0, 10);
-			var endDate = survey.endDate.substr(0, 10);
-			var today = new Date();
-			var yyyy = today.getFullYear();
-			var MM = today.getMonth() + 1;
-			var dd = today.getDate();
-			var result = "success";
+			var endDate   = survey.endDate.substr(0, 10);
+			var today     = new Date();
+			var yyyy      = today.getFullYear();
+			var MM        = today.getMonth() + 1;
+			var dd        = today.getDate();
+			var result    = "success";
 			
-			if (dd < 10) {
-				dd = '0' + dd;
-			}
-			if (MM < 10) {
-				MM = '0' + MM;
-			}
+			if (dd < 10) {dd = '0' + dd;}
+			if (MM < 10) {MM = '0' + MM;}
+			
 			today = yyyy + "-" + MM + "-" + dd;
 			
 			if (startDate > today) {
 				alert(SurveyMessages.strNotPeriod + startDate + "~" + endDate);
 				result = "fail";
 			}
+			
 			if (endDate < today) {
 				alert(SurveyMessages.strNotPeriod + startDate + "~" + endDate);
 				result = "fail";
@@ -774,11 +772,11 @@
 		}
 		
 		function checkRequired() {
-			var result = "success";
-			var qsWrappers = $(".prevQsArea").find(".prevQsWrapper");
-			var arr = [];
+			var result      = "success";
+			var qsWrappers  = $(".prevQsArea").find(".prevQsWrapper");
+			var arr         = [];
 			var checkResult = "success";
-
+			
 			for (var i = 0; i < qsWrappers.length; i++) {
 				var maskCnt = qsWrappers[i].querySelector("div[class=mask]");
 				var required = qsWrappers[i].querySelector("strong[class='imptt']");

@@ -2,9 +2,7 @@ package egovframework.ezEKP.ezSurvey.dao;
 
 import java.util.List;
 import java.util.Map;
-
 import org.springframework.stereotype.Repository;
-
 import egovframework.ezEKP.ezSurvey.vo.AttachVO;
 import egovframework.ezEKP.ezSurvey.vo.OptionVO;
 import egovframework.ezEKP.ezSurvey.vo.QuestionVO;
@@ -183,6 +181,10 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 	
 	public List<ResponseVO> getAllResponsesForSurvey(Map<String, Object> map) {
 		return (List<ResponseVO>)list("EzSurveyDAO.getAllResponsesForSurvey", map);
+	}
+	
+	public int getUserResponseCntForSurvey(Map<String, Object> map) {
+		return (int)select("EzSurveyDAO.getUserResponseCntForSurvey", map);
 	}
 
 }

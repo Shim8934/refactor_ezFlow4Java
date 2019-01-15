@@ -413,7 +413,7 @@ var SurveyItem = function() {
 			case 0 : processData(data)                ; break;
 			case 1 : alert(SurveyMessages.strParamErr); break;
 			case 2 : alert(SurveyMessages.strError)   ; break;
-			default: alert(SurveyMessages.strError)   ; return; 
+			default: alert(SurveyMessages.strError)   ; return;
 		}
 	}
 	
@@ -424,7 +424,6 @@ var SurveyItem = function() {
 	}
 	
 	function renderTable(itemList, unselectClass, tableDataElmt, getCheckedFunct, clickRowFunct) {
-		console.log(itemList);
 		if (itemList == null || itemList.length == 0) {
 			var trElmt = document.createElement("tr");
 			var tdElmt = document.createElement("td");
