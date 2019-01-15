@@ -713,4 +713,8 @@ public class EzBoardDAO extends EgovAbstractDAO{
 		return (String) select("EzPortalDAO.getEzTalkGateNoticeBoardId", map);
 	}
 	
+	/* 2019-01-15 홍승비 - 수정일(updateDate)만을 업데이트하는 쿼리 추가 */
+	public void modUpdateDate(Map<String, Object> map) throws Exception {
+		update("EzBoardDAO.modUpdateDate", map);
+	}
 }
