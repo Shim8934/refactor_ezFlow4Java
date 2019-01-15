@@ -52,6 +52,8 @@ import org.w3c.dom.NodeList;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezQuestion.service.EzQuestionService;
 import egovframework.ezEKP.ezQuestion.vo.QstAddVO;
 import egovframework.ezEKP.ezQuestion.vo.QstAnswerVO;
@@ -99,6 +101,12 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 	@Resource(name="crypto") 
 	private EgovFileScrty egovFileScrty;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 
 	@Resource(name="EzQuestionService")
 	private EzQuestionService ezQuestionService;
@@ -3260,9 +3268,9 @@ public class EzQuestionController extends EgovFileMngUtil {
 		String GubunNm2 = "";
 		String USER_POS2 = "", USER_DEPT_NM2 = "";
 		
-		/* 2019-01-11 홍승비 - 전자설문 정보수정 시 대상자 변경사항 적용되지 않는 오류 수정 */
+		/* 2019-01-14 홍승비 - 전자설문 정보수정 시 대상자 변경사항 적용되지 않는 오류 수정 */
 		ezQuestionService.callDeleteItemSeq(Integer.parseInt(doc.getElementsByTagName("BRDID").item(0).getTextContent()), Integer.parseInt(doc.getElementsByTagName("ITEMNO").item(0).getTextContent()), loginVO.getTenantId());
-		
+		ezQuestionService.callDeletePollResponseper(Integer.parseInt(doc.getElementsByTagName("BRDID").item(0).getTextContent()), Integer.parseInt(doc.getElementsByTagName("ITEMNO").item(0).getTextContent()), loginVO.getTenantId());
 		
 		/* if(pItemNo.equals(""))  {
         	ezQuestionService.callGetItemSeq(Integer.parseInt(pBrdID));
@@ -3296,30 +3304,79 @@ public class EzQuestionController extends EgovFileMngUtil {
 			qstCompleteVO.setGubunNm(GubunNm);
 			qstCompleteVO.setGubunNm2(GubunNm2);
 			ezQuestionService.callCreateMother(qstCompleteVO, loginVO.getTenantId());
+			
+			// 부서에 속한 각 사원들의 정보 저장
+			String cellList = "department";
+            String propList = "department;mail;displayname;title;description;company;title";
+            String pClass = "all";
+            
+            String sXML = ezOrganService.getDeptMemberList(GubunID, cellList, propList, pClass, loginVO.getPrimary(), loginVO.getTenantId(), null);
+     		Document xmlDom = commonUtil.convertStringToDocument(sXML);
+     		
+ 			for(int j=0; j<xmlDom.getElementsByTagName("CELL").getLength(); j++) {
+ 				if(!xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent().equals("") && xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(1).getTextContent().equals("user")) {
+ 					String userID = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(2).getTextContent();
+ 					String userNm = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(10).getTextContent();
+ 					String userNm2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(11).getTextContent();
+ 					String userEmail = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
+ 					String deptID2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(3).getTextContent();
+ 					String deptNM = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(14).getTextContent();
+ 					String deptNM2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(15).getTextContent();
+ 					String userPos = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(18).getTextContent();
+ 					String userPos2 = xmlDom.getElementsByTagName("ROWS").item(0).getChildNodes().item(j).getChildNodes().item(0).getChildNodes().item(19).getTextContent();
+ 					QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
+ 					qstCompleteVO2.setGubunID(userID);
+ 					qstCompleteVO2.setGubunNm(userNm);
+ 					qstCompleteVO2.setGubunNm2(userNm2);
+ 					qstCompleteVO2.setGubunFg("1");
+                 	qstCompleteVO2.setStrBrdID(Integer.parseInt(doc.getElementsByTagName("BRDID").item(0).getTextContent()));
+                 	qstCompleteVO2.setItemNo(Integer.parseInt(doc.getElementsByTagName("ITEMNO").item(0).getTextContent()));
+                 	qstCompleteVO2.setUserID(userID);
+                 	qstCompleteVO2.setUserNm(userNm);
+                 	qstCompleteVO2.setUserNm2(userNm2);
+                 	qstCompleteVO2.setUserEmail(userEmail);
+                 	qstCompleteVO2.setUserDeptID(deptID2);
+                 	qstCompleteVO2.setUserDeptNm(deptNM);
+                 	qstCompleteVO2.setUserDeptNm2(deptNM2);
+                 	qstCompleteVO2.setUserPOS(userPos);
+                 	qstCompleteVO2.setUserPOS2(userPos2);
+                 	
+                 	ezQuestionService.callInsertPollResponseper(qstCompleteVO2, loginVO.getTenantId());                      
+ 				}
+ 			}
 		}
-		
-		ezQuestionService.callDeletePollResponseper(Integer.parseInt(doc.getElementsByTagName("BRDID").item(0).getTextContent()), Integer.parseInt(doc.getElementsByTagName("ITEMNO").item(0).getTextContent()), loginVO.getTenantId());
 		
 		int memberSize = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().getLength();
 		for(int i=0; i<memberSize; i++) {
 			GubunID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getTextContent();
 			GubunNm = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm").getTextContent();
 			GubunNm2 = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("nm2").getTextContent();
-			GubunFg = "1";
 			QstCompleteVO qstCompleteVO = new QstCompleteVO();
 			qstCompleteVO.setStrBrdID(Integer.parseInt(doc.getElementsByTagName("BRDID").item(0).getTextContent()));
 			qstCompleteVO.setItemNo(Integer.parseInt(doc.getElementsByTagName("ITEMNO").item(0).getTextContent()));
-			qstCompleteVO.setGubunFg(GubunFg);
+			qstCompleteVO.setGubunFg("1");
 			qstCompleteVO.setGubunID(GubunID);
 			qstCompleteVO.setGubunNm(GubunNm);
 			qstCompleteVO.setGubunNm2(GubunNm2);
 			ezQuestionService.callCreateMother(qstCompleteVO, loginVO.getTenantId());
 			
-			//String propList = "department;mail;displayname;title;description;company";
-			//OrganDeptVO pXML = ezOrganService.getPropertyList(GubunID, user.getPrimary());
-			
-			//ezOrgan 라이브러리 getPropertyList
-			//String pXML = _ezOrgan.GetPropertyList(GubunID, proplist, userinfo.primary);
+			// 정보 수정 시 누락되는 사원들의 정보 추가
+			String propList = "department;mail;displayName;title;description;company";
+        	String pXML = ezOrganAdminService.getPropertyList(GubunID, propList, loginVO.getPrimary(), loginVO.getTenantId());
+
+			Document infoXML = commonUtil.convertStringToDocument(pXML);
+     		
+			if(infoXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals("")) {
+				USER_DEPT_ID = "TOP";
+			} else {
+				USER_DEPT_ID = infoXML.getElementsByTagName("DEPARTMENT").item(0).getTextContent();
+			}
+     		
+			USER_EMAIL = infoXML.getElementsByTagName("MAIL").item(0).getTextContent();
+			USER_POS = infoXML.getElementsByTagName("TITLE1").item(0).getTextContent();
+			USER_POS2 = infoXML.getElementsByTagName("TITLE2").item(0).getTextContent();
+			USER_DEPT_NM = infoXML.getElementsByTagName("DESCRIPTION1").item(0).getTextContent();
+			USER_DEPT_NM2 = infoXML.getElementsByTagName("DESCRIPTION2").item(0).getTextContent();
 			
 			QstCompleteVO qstCompleteVO2 = new QstCompleteVO();
 			qstCompleteVO2.setStrBrdID(Integer.parseInt(doc.getElementsByTagName("BRDID").item(0).getTextContent()));
