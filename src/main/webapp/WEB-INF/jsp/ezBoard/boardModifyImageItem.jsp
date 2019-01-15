@@ -47,6 +47,7 @@
 		    <script type="text/javascript" src="${util.addVer('/js/ezBoard/AttachItem_CK.js')}"></script>
 	    </c:if>
 	    <script type="text/javascript" src="${util.addVer('ezBoard.e1', 'msg')}"></script> 
+	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
         <script type="text/javascript">
 	        var pListImagePath = "";
 	        var pListCount = "${listCount}";
@@ -183,8 +184,21 @@
 	
 	                if (xmlhttp.responseText == "OK") {
 	                    alert(strLang50);
-	                    window.opener.page_reload();
-	                    window.close();
+	                    
+	                    /* 2019-01-15 홍승비 - 사진수정 후 DB에 게시물 수정일자 업데이트 */
+	                     $.ajax({
+							type : "POST",
+							dataType : "text",
+							async : false,
+							url : "/ezBoard/modUpdateDate.do",
+							data : {
+								itemID  : pItemID
+							},
+							success : function(result) {
+								window.opener.page_reload();
+								window.close();
+							}
+						});
 	                }
 	                else {
 	                    alert(strLang51);
@@ -229,8 +243,20 @@
 
 	                    if (xmlhttp.responseText == "OK") {
 	                        alert(strLang50);
-	                        window.opener.page_reload();
-	                        window.close();
+	                        
+		                     $.ajax({
+								type : "POST",
+								dataType : "text",
+								async : false,
+								url : "/ezBoard/modUpdateDate.do",
+								data : {
+									itemID  : pItemID
+								},
+								success : function(result) {
+									window.opener.page_reload();
+									window.close();
+								}
+							});
 	                    }
 	                    else {
 	                        alert(strLang51);

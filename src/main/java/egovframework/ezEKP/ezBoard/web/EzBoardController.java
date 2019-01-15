@@ -8200,6 +8200,22 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		logger.debug("downloadAttachAll ended.");
 	}
+	
+	/**
+	 * 2019-01-15 홍승비 - 게시물의 수정일(updateDate)만을 업데이트
+	 * */
+	@RequestMapping(value = "/ezBoard/modUpdateDate.do")
+	@ResponseBody
+	public void modUpdateDate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("modUpdateDate started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String itemID = request.getParameter("itemID");
+		
+		ezBoardService.modUpdateDate(commonUtil.getTodayUTCTime(""), itemID, userInfo.getTenantId());
+		
+		logger.debug("modUpdateDate ended.");
+	}
 
 }
 
