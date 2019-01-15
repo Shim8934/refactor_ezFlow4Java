@@ -110,6 +110,7 @@ var SurveyMessages = {
 	strSameNum   : "이미 같은 번호가 존재합니다. 그대로 진행하시겠습니까?",
 	strProcess   : "진행중",
 	strFinish    : "완료",
+	strWaiting   : "대기",
 	strDraft     : "임시저장",
 	strNoSameRsps: "같은 값을 선택할 수 없습니다.",
 	strNoResponse: "질문에 응답해 주세요.",

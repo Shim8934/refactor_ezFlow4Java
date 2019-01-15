@@ -66,7 +66,6 @@ var SurveyCreate     = function() {
 	var bnk = null;
 	
 	function initEvents(reuseSurvey) {
-		console.log(reuseSurvey);
 		surveyItem            = reuseSurvey     ? reuseSurvey.surveyId    : null;
 		var modifyFlag        = reuseSurvey     ? reuseSurvey.modifyFlag  : 0;
 		surveyObj["surveyId"] = modifyFlag == 1 ? reuseSurvey["surveyId"] : -1;
@@ -202,8 +201,6 @@ var SurveyCreate     = function() {
 	
 	function saveSurvey() {
 		if(confirm(SurveyMessages.strSaveAsk) == true) {
-			
-			console.log(JSON.stringify(surveyObj));
 			$.ajax({
 				type: "POST",
 				url: "/ezSurvey/saveSurvey.do",
@@ -267,7 +264,6 @@ var SurveyCreate     = function() {
 		}
 		
 		surveyObj["infor"]["attach"] = attachList;
-		console.log(JSON.stringify(surveyObj["infor"]["users"]));
 	}
 	
 	function afterSaveDraftSuccessfully(data) {
@@ -812,8 +808,6 @@ var SurveyCreate     = function() {
 		}
 		
 		var jsonElmt = createJsonElements();
-		
-		console.log(jsonElmt);
 		
 		bnk.elements().remove();
 		bnk.add(jsonElmt); 
@@ -1983,18 +1977,17 @@ var SurveyCreate     = function() {
 	}
 	
 	function mkMatrixQstn(question) {
-		console.log(question);
-		var id       = question.level;
-		var inpType  = question.type == 3 ? "radio" : "checkbox";
-		var opts     = question["option"];
+		var id         = question.level;
+		var inpType    = question.type == 3 ? "radio" : "checkbox";
+		var opts       = question["option"];
 		var optsLength = question["option"].length;
-		var col      = opts.filter(function(col) {return col["rowLevel"] == -1;});
-		var row      = opts.filter(function(row) {return row["colLevel"] == -1;});
+		var col        = opts.filter(function(col) {return col["rowLevel"] == -1;});
+		var row        = opts.filter(function(row) {return row["colLevel"] == -1;});
 		
 		var questionOpts = $("<div class='question-opts'></div>");
-		var table = $("<table class='matrix'></table>");
-		var head = $("<thead></head>");
-		var headTr = $("<tr><td></td></tr>");
+		var table        = $("<table class='matrix'></table>");
+		var head         = $("<thead></head>");
+		var headTr       = $("<tr><td></td></tr>");
 		
 		var dynamicTd = "";
 		var body = "";
@@ -2008,6 +2001,7 @@ var SurveyCreate     = function() {
 			dynamicTd[0].textContent = col[i]["content"];
 			headTr.append(dynamicTd);
 		}
+		
 		head.append(headTr);
 		table.append(head);
 		body = $("<tbody></body>");
@@ -3207,20 +3201,20 @@ var SurveyCreate     = function() {
 	}
 	
 	function checkLogicNum(id, qstn, type) {
-		var logicArr = []; 
-		var wrapper = $("#prevQstn"+id);
-		var opt = "";
+		var logicArr  = []; 
+		var wrapper   = $("#prevQstn"+id);
+		var opt       = "";
 		var optLength = "";
-		var valI = "";
-		var valJ = "";
-		var result = "";
+		var valI      = "";
+		var valJ      = "";
+		var result    = "";
 		
 		if (type == 1 || type == 2) {
-			opt = wrapper.find(".opt");
+			opt       = wrapper.find(".opt");
 			optLength = opt.length;
-			
-		} else if (type == 9) {
-			opt = wrapper.find(".drdwLogicRow");
+		}
+		else if (type == 9) {
+			opt       = wrapper.find(".drdwLogicRow");
 			optLength = opt.length;
 		}
 		
@@ -3230,6 +3224,7 @@ var SurveyCreate     = function() {
 				logicArr.push(logicNum);
 			}
 		}
+		
 		var arrLnegh = logicArr.length;
 		
 		for (var i = 0; i < arrLnegh; i++) {
@@ -3240,9 +3235,10 @@ var SurveyCreate     = function() {
 				
 				if (valI == valJ) {
 					if (confirm(SurveyMessages.strSameNum) == true) {
-					result = 'Y';
-					break;
-					} else {
+						result = 'Y';
+						break;
+					}
+					else {
 						return "fail";
 					}
 				}
@@ -3256,7 +3252,6 @@ var SurveyCreate     = function() {
 	}
 	
 	function confirmSurveyInfo(qstInf) {
-		console.log(qstInf);
 		var surveyInfWrap = document.getElementById("surveyInfConfirm");
 		document.getElementById("cf-purpose").innerHTML      = qstInf["purpose"];
 		document.getElementById("cf-startDate").textContent  = qstInf["startDate"];

@@ -5,6 +5,7 @@ var SurveyItem = function() {
 	var surveyTable    = null;
 	var pageMode       = null;
 	var startTime      = null;
+	var currentUser    = null;
 	var searchMode     = "0"; //0: normal, 1: simple, 2: detail
 	var startDateStr   = "";
 	var endDateStr     = "";
@@ -143,8 +144,9 @@ var SurveyItem = function() {
 		}
 	}
 	
-	function initEvents(height, width, prevMode, mode) {
-		pageMode = mode;
+	function initEvents(height, width, prevMode, mode, crrUser) {
+		currentUser = crrUser;
+		pageMode    = mode;
 		setData(height, width, prevMode);
 		
 		//Initial page navigation
@@ -422,6 +424,7 @@ var SurveyItem = function() {
 	}
 	
 	function renderTable(itemList, unselectClass, tableDataElmt, getCheckedFunct, clickRowFunct) {
+		console.log(itemList);
 		if (itemList == null || itemList.length == 0) {
 			var trElmt = document.createElement("tr");
 			var tdElmt = document.createElement("td");
@@ -436,17 +439,21 @@ var SurveyItem = function() {
 		else {
 			var len = itemList.length;
 			for (var i = 0; i < len; i++) {
-				var trElmt   = document.createElement("tr");
-				var tdElmt1  = document.createElement("td");
-				var tdElmt2  = document.createElement("td");
-				var tdElmt3  = document.createElement("td");
-				var tdElmt4  = document.createElement("td");
-				var tdElmt5  = document.createElement("td");
-				var tdElmt6  = document.createElement("td");
-				var tdElmt7  = document.createElement("td");
-				var tdElmt8  = document.createElement("td");
-				var tdElmt9  = document.createElement("td");
-				var tdElmt10 = document.createElement("td");
+				var trElmt     = document.createElement("tr");
+				var tdElmt1    = document.createElement("td");
+				var tdElmt2    = document.createElement("td");
+				var tdElmt3    = document.createElement("td");
+				var tdElmt4    = document.createElement("td");
+				var tdElmt5    = document.createElement("td");
+				var tdElmt6    = document.createElement("td");
+				var tdElmt7    = document.createElement("td");
+				var tdElmt8    = document.createElement("td");
+				var tdElmt9    = document.createElement("td");
+				var tdElmt10   = document.createElement("td");
+				var endDateStr = itemList[i]["endDate"].substring(0, 10);
+				var today      = new Date();
+				var todayStr   = getStringFormatForDate(today);
+				var statusStr  = "";
 				
 				trElmt.setAttribute("class"     , unselectClass);
 				trElmt.setAttribute("role"      , itemList[i]["surveyId"]);
@@ -469,7 +476,7 @@ var SurveyItem = function() {
 				}
 				
 				tdElmt3.textContent  = itemList[i]["title"];
-				tdElmt4.textContent  = itemList[i]["endDate"].substring(0, 19);
+				tdElmt4.textContent  = endDateStr;
 				tdElmt5.textContent  = itemList[i]["paritipateFlag"] == 0   ? SurveyMessages.strUser7    : SurveyMessages.strUser8;
 				tdElmt6.textContent  = itemList[i]["creatorName"];
 				tdElmt7.textContent  = itemList[i]["resultPublicFlag"] == 1 ? SurveyMessages.strPublic1  : SurveyMessages.strPublic2;
@@ -478,33 +485,72 @@ var SurveyItem = function() {
 				tdElmt4.setAttribute("title", tdElmt4.textContent);
 				tdElmt6.setAttribute("title", tdElmt6.textContent);
 				
-				if (itemList[i]["responseFlag"] == 1) {
-					var statImg = document.createElement("img");
-					statImg.src = "/images/ezSurvey/statistic.png";
-					statImg.onclick = function(e) {openSurveyStatistic(e);}
-					tdElmt9.appendChild(statImg);
+				//Check statistic button
+				if (currentUser == itemList[i]["creatorId"]) {
+					if (itemList[i]["responseFlag"] == 1) {
+						var statImg     = document.createElement("img");
+						statImg.src     = "/images/ezSurvey/statistic.png";
+						statImg.onclick = function(e) {openSurveyStatistic(e);}
+						tdElmt9.appendChild(statImg);
+					}
+				}
+				else {
+					//if current user is not creator, check the result public flag and response flag
+					if (itemList[i]["resultPublicFlag"] == 1 && itemList[i]["responseFlag"] == 1) {
+						//Check public date
+						var openDays = parseInt(itemList[i]["openDays"]);
+						today.setDate(today.getDate() - openDays);
+						var dateStr  = getStringFormatForDate(today);
+						
+						if (todayStr >= endDateStr && todayStr <= dateStr) {
+							var statImg     = document.createElement("img");
+							statImg.src     = "/images/ezSurvey/statistic.png";
+							statImg.onclick = function(e) {openSurveyStatistic(e);}
+							tdElmt9.appendChild(statImg);
+						}
+					}
 				}
 				
 				if (itemList[i]["draftFlag"] == 1) {
-					tdElmt10.textContent = SurveyMessages.strDraft;
+					statusStr = SurveyMessages.strDraft;
 				}
-				else if (itemList[i]["useStatus"] == 1) {
-					tdElmt10.textContent = SurveyMessages.strProcess;
-				}
-				else if (itemList[i]["useStatus"] == 2) {
-					tdElmt10.textContent = SurveyMessages.strFinish;
+				else {
+					if (pageMode == "processing") {
+						statusStr = SurveyMessages.strProcess;
+					}
+					else if (pageMode == "finish") {
+						statusStr = SurveyMessages.strFinish;
+					}
+					else {
+						//Check time
+						var startDateStr = itemList[i]["startDate"].substring(0, 10);
+						
+						if (todayStr < startDateStr) {
+							//not started yet (대기)
+							statusStr = SurveyMessages.strWaiting;
+						}
+						else {
+							if (todayStr <= endDateStr) {
+								statusStr = SurveyMessages.strProcess;
+							}
+							else {
+								statusStr = SurveyMessages.strFinish;
+							}
+						}
+					}
 				}
 				
-				tdElmt1.className  = "inputTh";
-				tdElmt2.className  = "inputTh";
-				tdElmt3.className  = "ttlTh";
-				tdElmt4.className  = "endDateTh";
-				tdElmt5.className  = "targetTh";
-				tdElmt6.className  = "createTh";
-				tdElmt7.className  = "publicTh";
-				tdElmt8.className  = "anoynmTh";
-				tdElmt9.className  = "statisTh";
-				tdElmt10.className = "statusTh";
+				tdElmt10.textContent = statusStr;
+				tdElmt1.className    = "inputTh";
+				tdElmt2.className    = "inputTh";
+				tdElmt3.className    = "ttlTh";
+				tdElmt4.className    = "endDateTh";
+				tdElmt5.className    = "targetTh";
+				tdElmt6.className    = "createTh";
+				tdElmt7.className    = "publicTh";
+				tdElmt8.className    = "anoynmTh";
+				tdElmt9.className    = "statisTh";
+				tdElmt10.className   = "statusTh";
 				
 				trElmt.appendChild(tdElmt1);
 				trElmt.appendChild(tdElmt2);
@@ -520,6 +566,17 @@ var SurveyItem = function() {
 				tableDataElmt.appendChild(trElmt);
 			}
 		}
+	}
+	
+	function getStringFormatForDate(dateObj) {
+		var year  = dateObj.getFullYear();
+		var month = dateObj.getMonth() + 1;
+		var day   = dateObj.getDate();
+		
+		if (day < 10) {day = "0" + day;}
+		if (month < 10) {month = "0" + month;}
+		
+		return year + "-" + month + "-" + day;
 	}
 	
 	function openSurveyStatistic(event) {
