@@ -16,6 +16,7 @@
 			text-align: center; background: #999; color: #ffffff; font-size: 12px;
 			border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px; display: inline-block;
 		}
+		.count {color: #ff6c00; margin: 0px 8px;}
 		#mainListBody tr:hover {background-color: #f4f5f5;}
 		#mainListBody tr td {overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor:pointer;}
 		
@@ -68,7 +69,6 @@
 			}
 			
 			function search_CommunityInfo() {
-				var strSelect = document.getElementById("QuerySelect").value;
 				var strQuery = document.getElementById("txt_SearchQuery").value;
 				
 				if(strQuery == "") {
@@ -78,6 +78,7 @@
 					return;
 				}
 				
+				pCurPage = 1;
 				communityList();
 			}
 			
@@ -139,16 +140,26 @@
 			
 			// (개설된 커뮤니티 / 폐쇄한 커뮤니티 ) 리스트 호출
 			function communityList() {
+				if (selectedTabId == "openCommu") {
+					openCommunityList();
+				}
+				else {
+					closedCommunityList();
+				}
+			}
+			
+			// 개설된 커뮤니티  리스트 호출
+			function openCommunityList() {
 				$.ajax({
 					type : "POST",
 					dataType: "json",
-					url : "/admin/ezCommunity/communityList.do",
+					url : "/admin/ezCommunity/openCommunityList.do",
 					async : false,
 					data : 
 					{
 						type        : selectedTabId,
 						pageNum     : pCurPage,
-						searchType  : document.getElementById("QuerySelect").value,
+						searchType  : document.getElementsByName("cCateA")[0].value,
 						searchValue : document.getElementById("txt_SearchQuery").value 
 					},
 					success : function (data) {
@@ -169,8 +180,6 @@
 							data.clubList.forEach(function(item, index){
 								html += "<tr ondblclick=view_CommunityInfo('" + item.c_ClubNo  + "');>";
 								html += "<td style='width: 35px;'>" + itemNum + "</td>";
-								html += "<td style='width: 35px;'>" + item.c_MemberCnt +"</td>";
-								html += "<td style='width: 65px;'>" + item.itemCnt + "</td>";
 								html += "<td style='width: 90px;'>" + getCategoryName(item.c_name) + "</td>";
 								html += "<td style='width: 25%;'>" + item.c_ClubName + "</td>";
 								
@@ -188,6 +197,12 @@
 								
 								html += "<td style='width: 10%;'><span sysId='"+ item.c_SysopID +"' deptId='" + item.deptID + "' onclick=openinfo_userinfo(this)>" + item.userName + "</span></td>"; //마스터이름
 								html += "<td style='width: 10%;'>"  + item.c_RegDate.substring(0, 10) + "</td>"; //생성일
+								html += "<td style='width: 65px;'>";
+								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconLineup.gif'></span>";
+								html +=     "<span class='count' style='margin-right: 8px;'>" + item.c_MemberCnt + "</span>";
+								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconPost.gif'></span>";
+								html +=     "<span class='count'>" + item.itemCnt + "</span>";
+								html += "</td>";
 								html += "<td style='width: 60px;'><a class='imgbtn imgbck'><span onclick=''>폐쇄</span></a></td>";
 								html += "</tr>";
 								
@@ -438,7 +453,24 @@
 	<body class="mainbody" onload = "makePageSelPage()">
 		<h1>커뮤니티 관리<span id="TitleInfo"></span></h1>
 		<form name="adm_search_key" method="post" ID="Form1">
-	    	<table class="content">
+		
+			<%--<div class="page">
+			<img src="/images/page_previous.gif" width="15" height="16" align="absmiddle" id="td_Previous"  onClick="prevPage_onclick()">
+			<spring:message code = 'ezCommunity.t76' /><span>${ iTotalPage }</span>&nbsp;&nbsp;<spring:message code = 'ezCommunity.t77' />
+			<input type="text" id="txt_inputPageNum" style="WIDTH:35px" value='${ iPage }' onKeyDown="moveToPage()">
+			<img src="/images/page_next.gif" width="15" height="16" align="absmiddle" id="Img1"  onClick="nextPage_onclick()"></div>--%>
+			
+			<div class="portlet_tabpart01">
+				<div class="portlet_tabpart01_top" id="tab1">
+					<p><span id="openCommu">개설된 커뮤니티</span></p>
+					<p><span id="closeCommu">폐쇄한 커뮤니티</span></p>
+				</div>
+			</div>
+			<script type="text/javascript">
+				Tab1_NewTabIni("tab1");
+			</script>
+			
+			<table class="content" style="margin: 10px 0px;">
 				<tr>
 					<th>검색조건</th>
 					<td>
@@ -450,41 +482,24 @@
 						</select>
 						
 						<input name="text" type="text" style="WIDTH:200px; vertical-align:middle; height: 22px;" id="txt_SearchQuery" onKeyPress="return get_search_CommunityInfo(event)"> 
-						<a class="imgbtn" style="vertical-align: middle; margin-bottom:0px;"><span onClick="search_CommunityInfo()"><spring:message code = 'ezCommunity.t31' /></span></a>
+						<a class="imgbtn imgbck" style="vertical-align: middle; margin-bottom:0px;"><span onClick="search_CommunityInfo()"><spring:message code = 'ezCommunity.t31' /></span></a>
 			  		</td>
 				</tr>
 			</table>
-		
-			<%--<div class="page">
-			<img src="/images/page_previous.gif" width="15" height="16" align="absmiddle" id="td_Previous"  onClick="prevPage_onclick()">
-			<spring:message code = 'ezCommunity.t76' /><span>${ iTotalPage }</span>&nbsp;&nbsp;<spring:message code = 'ezCommunity.t77' />
-			<input type="text" id="txt_inputPageNum" style="WIDTH:35px" value='${ iPage }' onKeyDown="moveToPage()">
-			<img src="/images/page_next.gif" width="15" height="16" align="absmiddle" id="Img1"  onClick="nextPage_onclick()"></div>--%>
-			
-			<div class="portlet_tabpart01">
-				<div class="portlet_tabpart01_top" id="tab1">
-					<p><span id="tagsub1">개설된 커뮤니티</span></p>
-					<p><span id="tagsub2">폐쇄한 커뮤니티</span></p>
-				</div>
-			</div>
-			<script type="text/javascript">
-				Tab1_NewTabIni("tab1");
-			</script>
 			
 			<div id="contentlist" style="width: 100%; overflow: auto; margin-top: 5px;">
 				<div id="ListHeader">
 					<table id="mainListHeader" class="mainlist" style="width: 100%">
 						<tr id="mainListHeaderTr">
 							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
-							<th style="width: 35px;">인원</th>
-							<th style="width: 65px;">게시갯수</th>
 							<th style="width: 90px;">카테고리</th>
 							<th style="width: 25%;"><spring:message code = 'ezCommunity.t9991' /></th>
 							<th style="width: 10%;">유형</th>
 							<th style="width: 10%;">공개여부</th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t78' /></th>
-							<th style="width: 60px;">폐쇄</th>
+							<th style="width: 65px;"></th>
+							<th style="width: 60px;"></th>
 						</tr>
 					</table>
 				</div>

@@ -211,11 +211,11 @@ public class EzCommunityAdminController {
 	}
 	
 	/**
-	 * 개설된 커뮤니티 / 폐쇄한 커뮤니티 리스트 호출 함수
+	 * 개설된 커뮤니티  리스트  호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/communityList.do")
-	public String communityList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("communityList started.");
+	@RequestMapping(value = "/admin/ezCommunity/openCommunityList.do")
+	public String openCommunityList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("openCommunityList started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -264,7 +264,7 @@ public class EzCommunityAdminController {
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("totalCount", totalCount);
 		
-		logger.debug("communityList endend.");
+		logger.debug("openCommunityList endend.");
 		return "json";
 	}
 	
