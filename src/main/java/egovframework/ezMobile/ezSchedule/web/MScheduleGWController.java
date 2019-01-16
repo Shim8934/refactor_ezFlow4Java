@@ -36,6 +36,7 @@ import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
@@ -887,6 +888,40 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/board-schedules] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정(참석자) 초대 리스트
+	 */
+	@RequestMapping(value="/mobile/ezschedule/schedules/invitationList", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject mScheduleInvitationList(HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/invitationList] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			
+			String userId = info.getUserId();
+			int tenantId = info.getTenantId();
+			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
+			String companyId = info.getCompanyId();
+			
+			List<ScheduleReceiveListVO> rList = ezScheduleService.getReceiveList(userId, tenantId, offSetMin, companyId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", rList);
+		} catch (Exception e) {
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /ezschedule/schedules/invitationList] ended.");
 		
 		return result;
 	}
