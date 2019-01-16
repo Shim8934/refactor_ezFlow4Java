@@ -2012,21 +2012,20 @@ var SurveyCreate     = function() {
 				rowOptionId = opts[i]['optionId'];
 			}
 			bodyTr = $("<tr></tr>");
-			
 			bodyTd = $("<td></td>");
 			bodyTd[0].textContent = row[i]["content"];
 			bodyTr.append(bodyTd);
 			
-			for (var j = 0; j < col.length; j++) {
-				var colNum = optsLength - row.length + j;
+			var colNum = optsLength - col.length;
+			for (var j = colNum; j < optsLength; j++) {
 				var colOptionId = "";
 				
-				if (opts[colNum - 1]['optionId'] != undefined) {
-					colOptionId = opts[colNum - 1]['optionId'];
+				if (opts[colNum]['optionId'] != undefined) {
+					colOptionId = opts[colNum]['optionId'];
 				}
 				inputTd = $("<td></td>");
 				Input = $("<input type='" + inpType + "' name='qstn" + id + "opt" + i + "' id='qstn" + id + "opt" + i + j + "' OptionId='" + rowOptionId + "," + colOptionId +"'>");
-				Input.val(row[i]["rowLevel"] + "," + col[j]["colLevel"]);
+				Input.val(row[i]["rowLevel"] + "," + col[j - row.length]["colLevel"]);
 				inputTd.append(Input);
 				bodyTr.append(inputTd);
 			}
