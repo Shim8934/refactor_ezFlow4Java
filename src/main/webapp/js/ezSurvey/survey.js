@@ -2022,7 +2022,7 @@ var SurveyCreate     = function() {
 				var colOptionId = "";
 				
 				if (opts[colNum - 1]['optionId'] != undefined) {
-					colOptionId = opts[colNum]['optionId'];
+					colOptionId = opts[colNum - 1]['optionId'];
 				}
 				inputTd = $("<td></td>");
 				Input = $("<input type='" + inpType + "' name='qstn" + id + "opt" + i + "' id='qstn" + id + "opt" + i + j + "' OptionId='" + rowOptionId + "," + colOptionId +"'>");
