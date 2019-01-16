@@ -605,4 +605,45 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		}
 		return strHTML.toString();
 	}
+	
+	//2018-02-06 김혜정 - 폐쇄된 커뮤니티 갯수
+	@Override
+	public int getClosedCommuListCount(String lang, Locale locale, String searchValue, String companyId, int tenantId) throws Exception {
+		logger.debug("getClosedCommuListCount started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_PCLOSESTATE", egovMessageSource.getMessage("ezCommunity.t38", locale));
+		map.put("v_STRQUERY", searchValue);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		int result = ezCommunityAdminDAO.getClosedCommuListCount(map);
+		
+		logger.debug("getClosedCommuListCount ended.");
+		
+		return result;
+	}
+
+	//2018-02-06 김혜정 - 폐쇄된 커뮤니티 리스트
+	@Override
+	public List<CommunityCComCloseVO> getClosedCommuList(String primary, Locale locale, int pageNum, String searchValue, String companyId, int tenantId) throws Exception {
+		logger.debug("getClosedCommuList started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("primary", primary);
+		map.put("v_PCLOSESTATE", egovMessageSource.getMessage("ezCommunity.t38", locale));
+		map.put("v_STRQUERY", searchValue);
+		map.put("v_STARTROW", 10 * (pageNum - 1));
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		List<CommunityCComCloseVO> list = ezCommunityAdminDAO.getClosedCommuList(map);
+		logger.debug("primary: " + primary);
+		logger.debug("startRow: " + 10 * (pageNum - 1));
+		logger.debug("companyId", companyId);
+		logger.debug("getClosedCommuList ended.");
+		
+		return list;
+	}
 }

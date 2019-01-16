@@ -115,4 +115,13 @@ public class EzCommunityAdminDAO extends EgovAbstractDAO {
 	public void admCommunityInfoEditOk(Map<String, Object> map) throws Exception {
 		update("EzCommunityAdminDAO.admCommunityInfoEditOk", map);
 	}
+
+	public Integer getClosedCommuListCount(Map<String, Object> map) throws Exception {
+		return (Integer) select("EzCommunityAdminDAO.getClosedCommuListCount", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<CommunityCComCloseVO> getClosedCommuList(Map<String, Object> map) throws Exception {
+		return (List<CommunityCComCloseVO>) list("EzCommunityAdminDAO.getClosedCommuList", map);
+	}
 }

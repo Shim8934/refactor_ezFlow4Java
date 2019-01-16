@@ -54,4 +54,8 @@ public interface EzCommunityAdminService {
 	void createCommunityAdmitSendMail(String loginCookie, LoginVO userInfo, List<HashMap<String, Object>> recipientList, boolean isAdmit) throws Exception;
 
 	String adminBbsList(LoginVO userInfo, List<CommunityCBoardVO> cBoardList, String code, int curPage, String bName, int comNoPerPage) throws Exception;
+
+	int getClosedCommuListCount(String multiData, Locale locale, String searchValue, String companyId, int tenantId) throws Exception;
+
+	List<CommunityCComCloseVO> getClosedCommuList(String primary, Locale locale, int pageNum, String searchValue, String companyId, int tenantId) throws Exception;
 }

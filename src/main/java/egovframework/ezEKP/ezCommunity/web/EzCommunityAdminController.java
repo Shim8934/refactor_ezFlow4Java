@@ -251,7 +251,7 @@ public class EzCommunityAdminController {
 		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage + ",iQueryCount=" + iQueryCount);
 		logger.debug("iQueryCount=" + iQueryCount);
 		
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(primary, iQueryCount, searchType , searchValue, companyId, tenantId);
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(primary, iQueryCount, searchType, searchValue, companyId, tenantId);
 		if (clubList.size() > 0) {
 			for(CommunityClubVO club : clubList) {
 				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), primary, companyId, tenantId));
@@ -266,6 +266,58 @@ public class EzCommunityAdminController {
 		model.addAttribute("totalCount", totalCount);
 		
 		logger.debug("openCommunityList endend.");
+		return "json";
+	}
+	
+	/**
+	 * 폐쇄한 커뮤니티  리스트  호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezCommunity/closedCommunityList.do")
+	public String closedCommunityList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("closedCommunityList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String lang      = userInfo.getLang();
+		String primary   = userInfo.getPrimary();
+		String companyId = userInfo.getCompanyID();
+		int tenantId     = userInfo.getTenantId();
+		
+		int pageSize       = 10;
+		int pageNum        = request.getParameter("pageNum") != null ? Integer.parseInt(request.getParameter("pageNum")) : 1;
+		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
+		
+		logger.debug("pageNum=" + pageNum);
+		logger.debug("searchValue=" + searchValue);
+		
+		int totalCount = ezCommunityAdminService.getClosedCommuListCount(commonUtil.getMultiData(lang, tenantId), userInfo.getLocale(), searchValue, companyId, tenantId);
+		int totalPage  = 1;
+		
+		if (totalCount > 0) {
+			if (totalCount > pageSize) {
+				totalPage = totalCount / pageSize;
+				
+				if (totalCount % pageSize != 0) {
+					totalPage++;
+				}
+			}
+		}
+		
+		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
+		
+		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.getClosedCommuList(primary, userInfo.getLocale(), pageNum, searchValue, companyId, tenantId);
+		if (clubList.size() > 0) {
+			for(CommunityCComCloseVO club : clubList) {
+				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), primary, companyId, tenantId));
+			}
+		}
+		
+		model.addAttribute("clubList", clubList);
+		model.addAttribute("pageNum", pageNum);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("totalCount", totalCount);
+		
+		logger.debug("closedCommunityList endend.");
 		return "json";
 	}
 	
