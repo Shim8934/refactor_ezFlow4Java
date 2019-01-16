@@ -592,9 +592,9 @@
 	                return;
 	            }
 	            
-	            //var regex=/^([\w-]+(?:\.[\w-]+)*)$/;
-	            var regex=/^[a-zA-Z0-9_-]+$/;
-	            if(regex.test(document.all("TextId").value.trim()) === false) {
+	            var regex = /^[a-z0-9\_\-\.]+$/;
+	            
+	            if (!regex.test(document.all("TextId").value.trim())) {
 	            	alert("<spring:message code='ezEmail.lhm13' />");
 	            	return;
 	            }
@@ -2699,7 +2699,7 @@
 		            <tr>
 		                <th><spring:message code='ezEmail.lhm09' /></th>
 		                <td>
-		                    <input name="TextId" type="text" id="TextId" maxlength="24" class="txtClass" style="width:40%;" value="${cn}">
+		                    <input name="TextId" type="text" id="TextId" maxlength="20" class="txtClass" style="width:40%;" value="${cn}">
 		                    <span id="mailDomain" style="width:60%; font-weight: bold;">@${mailDomain}</span>
 		                </td>
 		            </tr>
