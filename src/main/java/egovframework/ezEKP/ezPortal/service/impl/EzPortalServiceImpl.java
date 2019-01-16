@@ -155,7 +155,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String temp = uID;
-		String parentTopMenuID = "";
+		String parentTopMenuID = null;
 		int count = 0;
 		
 		while (count < 10) {
@@ -164,15 +164,15 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			map.put("companyID", companyID);
 			parentTopMenuID = ezPortalDAO.topGetTopParentPageID(map);
 			
-			if (parentTopMenuID != null && parentTopMenuID.toLowerCase().trim().equals("top")) {
+			if (parentTopMenuID == null || parentTopMenuID.toLowerCase().trim().equals("top")) {
 				break;
 			}
+			
 			temp = parentTopMenuID;
 			count ++;
 		}
 
 		logger.debug("topGetTopParentPageID ended");
-		
 		return temp;
 	}
 	
@@ -1323,17 +1323,16 @@ logger.debug("map.toString()" + map.toString());
 		
 		int count = 0;
 		
-		strSQL = "SELECT * FROM TBL_TOPMENU_ITEMS  WHERE PageUID = '" + pTopMenuID + "' AND ColumnPos = " + pColumnIndex + " AND TENANT_ID = " + userInfo.getTenantId();
+		strSQL = "SELECT * FROM TBL_TOPMENU_ITEMS WHERE PageUID='" + pTopMenuID + "' AND ColumnPos=" + pColumnIndex + " AND TENANT_ID=" + userInfo.getTenantId();
 		
 		while (count < 10) {
 			parentTopMenuID = getParentUID(parentTopMenuID, userInfo.getTenantId(), userInfo.getCompanyID());
 			
-			if (parentTopMenuID.toLowerCase().trim().equals("top")) {
+			if (parentTopMenuID == null || parentTopMenuID.toLowerCase().trim().equals("top")) {
 				break;
 			}
 			
-			String param = String.valueOf(count);
-			strSQL += " UNION ALL SELECT * FROM TBL_TOPMENU_ITEMS  WHERE PageUID = '" + param + "' AND ColumnPos = " + parentTopMenuID + " AND TENANT_ID = " + userInfo.getTenantId();
+			strSQL += " UNION ALL SELECT * FROM TBL_TOPMENU_ITEMS WHERE PageUID='" + parentTopMenuID + "' AND ColumnPos=" + pColumnIndex + " AND TENANT_ID=" + userInfo.getTenantId();
 			count ++;
 		}
 		
@@ -1388,7 +1387,7 @@ logger.debug("map.toString()" + map.toString());
 		
 		int count = 0;
 		
-		strSQL = "SELECT * FROM TBL_TopMenu_Items  WHERE PageUID = '" + pTopMenuID + "' AND ColumnPos = " + pColumnIndex + " AND TENANT_ID = " + userInfo.getTenantId();
+		strSQL = "SELECT * FROM TBL_TopMenu_Items WHERE PageUID = '" + pTopMenuID + "' AND ColumnPos = " + pColumnIndex + " AND TENANT_ID = " + userInfo.getTenantId();
 		
 		while (count < 10) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -1399,12 +1398,11 @@ logger.debug("map.toString()" + map.toString());
 			
 			parentTopMenuID = ezPortalDAO.getParentUID(map);
 			
-			if (parentTopMenuID.toLowerCase().trim().equals("top")) {
+			if (parentTopMenuID == null || parentTopMenuID.toLowerCase().trim().equals("top")) {
 				break;
 			}
 			
-			String param = String.valueOf(count);
-			strSQL += " UNION ALL SELECT * FROM TBL_TopMenu_Items  WHERE PageUID = '" + param + "' AND ColumnPos = " + parentTopMenuID + " AND TENANT_ID = " + userInfo.getTenantId();
+			strSQL += " UNION ALL SELECT * FROM TBL_TopMenu_Items WHERE PageUID='" + parentTopMenuID + "' AND ColumnPos=" + pColumnIndex + " AND TENANT_ID=" + userInfo.getTenantId();
 			count ++;
 		}
 		
@@ -2721,23 +2719,17 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		logger.debug("getTopParentPageIDStr started");
 
 		String temp = pPortalPageID;
-		String parentPortalPageID = "";
-		String previousPageID = pPortalPageID;
+		String parentPortalPageID = null;
 		int count = 0;
 		
 		while (count < 10) {
 			parentPortalPageID = getTopParentPageID(temp, tenantID, companyID);
 			
-			if (parentPortalPageID != null && parentPortalPageID.toLowerCase().trim().equals("top")) {
+			if (parentPortalPageID == null || parentPortalPageID.toLowerCase().trim().equals("top")) {
 				break;
 			}
-			if (parentPortalPageID == null || parentPortalPageID.trim().equals("")) {
-				temp = previousPageID;
-				break;
-			} else {
-				previousPageID = temp;
-				temp = parentPortalPageID;
-			}
+			
+			temp = parentPortalPageID;
 			count++;
 		}
 
@@ -2756,25 +2748,23 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		String parentPortalPageID = pPortalPageID;
 		int count = 0;
 		
-		strSQL = "SELECT * FROM TBL_PORTALPAGE_ITEMS  WHERE PAGEUID = '"+pPortalPageID+"' AND COLUMNPOS = " + pColumnIndex +" AND TENANT_ID = " + userInfo.getTenantId();
+		strSQL = "SELECT * FROM TBL_PORTALPAGE_ITEMS WHERE PAGEUID='" + pPortalPageID + "' AND COLUMNPOS=" + pColumnIndex + " AND TENANT_ID=" + userInfo.getTenantId();
 		
 		while (count < 10) {
 			parentPortalPageID = getPortalParentUID(parentPortalPageID, userInfo.getTenantId(), userInfo.getCompanyID());
 			
-			if (parentPortalPageID != null && parentPortalPageID.toLowerCase().trim().equals("top")) {
+			if (parentPortalPageID == null || parentPortalPageID.toLowerCase().trim().equals("top")) {
 				break;
 			}
-			//String param = String.valueOf(count);
-			String param = parentPortalPageID;
-			strSQL += " UNION ALL SELECT * FROM TBL_PORTALPAGE_ITEMS  WHERE PAGEUID = '" + param + "' AND COLUMNPOS = " + pColumnIndex +" AND TENANT_ID = " + userInfo.getTenantId();
+			
+			strSQL += " UNION ALL SELECT * FROM TBL_PORTALPAGE_ITEMS WHERE PAGEUID='" + parentPortalPageID + "' AND COLUMNPOS=" + pColumnIndex + " AND TENANT_ID=" + userInfo.getTenantId();
 			count ++;
 		}
 		
-		if (userInfo.isRootPage() == true) {
+		if (userInfo.isRootPage()) {
 			result = getTBLPortalPageItemsT(strSQL);
 		} else {
 			result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageIDStr(pPortalPageID, userInfo.getTenantId(), userInfo.getCompanyID()));
-			
 		}
 		
 		if (result == null) {
@@ -2783,22 +2773,24 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		
 		boolean loadFlag = true;
 		
-		for (int i=0; i<result.size(); i++) {
-			int portletType = result.get(i).getPortletType();
-			String portletUID = result.get(i).getuID();
-			String portletPageUID = result.get(i).getPageUID();
-			String portletDisplayName = result.get(i).getDisplayName();
-			int portletWidth = result.get(i).getWidth();
-			int portletHeight = result.get(i).getHeight();
-			int portletCanRemove = result.get(i).getCanRemove();
-			int portletCanResize = result.get(i).getCanResize();
-			int portletCanReplace = result.get(i).getCanRemove();
-			int portletPaddingLeft = result.get(i).getLeftMargin();
-			int portletPaddingRight = result.get(i).getRightMargin();
-			int portletPaddingTop = result.get(i).getTopMargin();
-			int portletPaddingBottom = result.get(i).getBottomMargin();
-			String portletOwnerPageUID = result.get(i).getOwnerPageUID();
-			String portletMandatory = result.get(i).getMandatory();
+		for (int i = 0; i < result.size(); i++) {
+			PortalTBLPortalPageItemsVO vo = result.get(i);
+			
+			int portletType = vo.getPortletType();
+			String portletUID = vo.getuID();
+			String portletPageUID = vo.getPageUID();
+			String portletDisplayName = vo.getDisplayName();
+			int portletWidth = vo.getWidth();
+			int portletHeight = vo.getHeight();
+			int portletCanRemove = vo.getCanRemove();
+			int portletCanResize = vo.getCanResize();
+			int portletCanReplace = vo.getCanRemove();
+			int portletPaddingLeft = vo.getLeftMargin();
+			int portletPaddingRight = vo.getRightMargin();
+			int portletPaddingTop = vo.getTopMargin();
+			int portletPaddingBottom = vo.getBottomMargin();
+			String portletOwnerPageUID = vo.getOwnerPageUID();
+			String portletMandatory = vo.getMandatory();
 			String portletMoveURL = "";
 
 			if (pMode.equals("edit")) {
@@ -2906,17 +2898,21 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		String parentPortalPageID = pCallingPageID;
 		int count = 0;
 		   
-		strSQL = "SELECT * FROM TBL_PortalPage_Items  WHERE  TENANT_ID ='"+userInfo.getTenantId()+"' AND PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID, userInfo.getTenantId()) + "'" ;
+		strSQL = "SELECT * FROM TBL_PortalPage_Items WHERE TENANT_ID='" + userInfo.getTenantId() + "' AND PageUID='" + pPortalPageID + "' AND ColumnPos=" + pColumnIndex 
+				+ " AND OwnerPageUID='" + getItemLastPageID(pPortalPageID, userInfo.getTenantId()) + "'";
 		
 		while (count < 10) {
 			parentPortalPageID = getPortalParentUID(parentPortalPageID, userInfo.getTenantId(), userInfo.getCompanyID());
 			
-			String param = parentPortalPageID;
-			strSQL += " UNION ALL SELECT * FROM TBL_PortalPage_Items  WHERE TENANT_ID = '"+userInfo.getTenantId()+"' AND PageUID = '" + pPortalPageID + "' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + param +"'";
+			if (parentPortalPageID == null || parentPortalPageID.toLowerCase().trim().equals("top")) {
+				break;
+			}
+			
+			strSQL += " UNION ALL SELECT * FROM TBL_PortalPage_Items WHERE TENANT_ID='" + userInfo.getTenantId() + "' AND PageUID='" + pPortalPageID + "' AND ColumnPos=" + pColumnIndex + " AND OwnerPageUID='" + parentPortalPageID + "'";
 			count ++;
 		}
 		
-		if (userInfo.isRootPage() == true) {
+		if (userInfo.isRootPage()) {
 			result = getTBLPortalPageItemsT(strSQL);
 		} else {
 			result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageID(pPortalPageID, userInfo.getTenantId(), userInfo.getCompanyID()));
@@ -2928,21 +2924,23 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		
 		for (int i=0; i<result.size(); i++) {
 			String portletWidthStr = "";
-			int portletType = result.get(i).getPortletType();
-			String portletUID = result.get(i).getuID();
-			String portletPageUID = result.get(i).getPageUID();
-			String portletDisplayName = result.get(i).getDisplayName();
-			int portletWidth = result.get(i).getWidth();
-			int portletHeight = result.get(i).getHeight();
-			int portletCanRemove = result.get(i).getCanRemove();
-			int portletCanResize = result.get(i).getCanResize();
-			int portletCanReplace = result.get(i).getCanRemove();
-			int portletPaddingLeft = result.get(i).getLeftMargin();
-			int portletPaddingRight = result.get(i).getRightMargin();
-			int portletPaddingTop = result.get(i).getTopMargin();
-			int portletPaddingBottom = result.get(i).getBottomMargin();
-			String portletOwnerPageUID = result.get(i).getOwnerPageUID();
-			String portletMandatory = result.get(i).getMandatory();
+			PortalTBLPortalPageItemsVO vo = result.get(i);
+			
+			int portletType = vo.getPortletType();
+			String portletUID = vo.getuID();
+			String portletPageUID = vo.getPageUID();
+			String portletDisplayName = vo.getDisplayName();
+			int portletWidth = vo.getWidth();
+			int portletHeight = vo.getHeight();
+			int portletCanRemove = vo.getCanRemove();
+			int portletCanResize = vo.getCanResize();
+			int portletCanReplace = vo.getCanRemove();
+			int portletPaddingLeft = vo.getLeftMargin();
+			int portletPaddingRight = vo.getRightMargin();
+			int portletPaddingTop = vo.getTopMargin();
+			int portletPaddingBottom = vo.getBottomMargin();
+			String portletOwnerPageUID = vo.getOwnerPageUID();
+			String portletMandatory = vo.getMandatory();
 			String portletMoveURL = "";
 			
 			if (pMode.equals("edit")) {

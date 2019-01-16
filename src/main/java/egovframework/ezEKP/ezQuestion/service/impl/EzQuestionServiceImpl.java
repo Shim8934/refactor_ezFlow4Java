@@ -905,20 +905,28 @@ public class EzQuestionServiceImpl extends EgovFileMngUtil implements EzQuestion
 
 	@Override
 	public void callDeleteItemSeq(int brdID, int itemNo, int tenantID) throws Exception {
+		logger.debug("callDeleteItemSeq started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("tenantID", tenantID);
 		ezQuestionDAO.callDeleteItemSeq(map);
+		
+		logger.debug("callDeleteItemSeq ended.");
 	}
 
 	@Override
 	public void callDeletePollResponseper(int brdID, int itemNo, int tenantID) throws Exception {
+		logger.debug("callDeletePollResponseper started.");
+		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_pstrBrdID", brdID);
 		map.put("v_pItemNo", itemNo);
 		map.put("tenantID", tenantID);
 		ezQuestionDAO.callDeletePollResponseper(map);
+		
+		logger.debug("callDeletePollResponseper ended.");
 	}
 	@Override
 	public String analysisCount(String vItemNo, String vQuesNo, int tenantID) throws Exception {

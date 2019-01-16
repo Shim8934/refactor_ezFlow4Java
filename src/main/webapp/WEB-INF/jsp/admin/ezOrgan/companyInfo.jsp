@@ -67,23 +67,15 @@
 			    }
 			});
 			
-			function Check_ID(pValue){
-				for(var iCnt = 0 ; iCnt < pValue.length ; iCnt++){
-					if (pValue.charCodeAt(iCnt) >= 65 && pValue.charCodeAt(iCnt) <= 90) {
-						// A-Z
-					} else if (pValue.charCodeAt(iCnt) >= 97 && pValue.charCodeAt(iCnt) <= 122) {
-						// a-z
-					} else if (pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57) {
-						// 0-9
-					} else if (pValue.charCodeAt(iCnt) == 45) {
-		                // -
-		            } else if (pValue.charCodeAt(iCnt) == 95) {
-                        // _
-                    } else {
-						return false;
-					}
-				}				
-				return true;
+			function Check_ID(pValue, isAdd) {
+				// 인사연동 시 회사 ID에 대문자가 포함되어 있는 경우가 있어, 회사 추가 시에만 대문자를 넣지 못하도록 함.
+				var regex = /^[a-zA-Z0-9\_\-\.]+$/;
+				
+				if (isAdd) {
+					regex = /^[a-z0-9\_\-\.]+$/;
+				}
+				
+				return regex.test(pValue);
 			}
 
 			function OK_Click(){
@@ -97,7 +89,7 @@
 					return;
 				}
 				
-				if (!Check_ID(CompanyID.value)) {
+				if (!Check_ID(CompanyID.value, isAdd)) {
 					OpenAlertUI("<spring:message code='ezOrgan.t115'/>");
 					return;
 				}

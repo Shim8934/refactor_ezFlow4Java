@@ -1083,8 +1083,15 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
             map1.put("isPublic", vo.getIsPublic());
             map1.put("companyID", companyID);
             map1.put("tenantID", tenantID);
+            map1.put("lang", (userInfo.getLang().equals("1")) ? "" : userInfo.getLang());
+            if (approvalFlag.equals("S")) {
+    			map1.put("code1", "SA52");
+    		} else {
+    			map1.put("code1", "A52");
+    		}
             
             ezApprovalGAdminDAO.updateTaskCode(map1);
+            ezApprovalGAdminDAO.updateAutodoc(map1);
 		} else {
 			if (approvalFlag.equals("G")) {
 				String subSQL = setTaskHistory(vo.getTaskCode(), vo.getTaskName(), vo.getTaskName2(), egovMessageSource.getMessage("ezApprovalG.lhj07", userInfo.getLocale()), "New creation", "", "", "", companyID, userInfo.getTenantId());
@@ -1240,6 +1247,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			logger.debug("removeTaskCode1,2 started.");
 			ezApprovalGAdminDAO.removeTaskCode1(map1);
 			ezApprovalGAdminDAO.removeTaskCode2(map1);
+			ezApprovalGAdminDAO.removeAutoDoc(map1);
 			
 			logger.debug("removeTaskCode1,2 ended.");
 			logger.debug("removeTaskCode ended.");
