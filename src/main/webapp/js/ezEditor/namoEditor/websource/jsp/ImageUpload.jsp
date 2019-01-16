@@ -12,7 +12,7 @@
 <%@page import="org.apache.commons.codec.binary.Base64"%>
 <%@include file="Util.jsp"%>
 <%@include file="SecurityTool.jsp"%>
-<%@include file="Vaccine.jsp"%>
+<%--@include file="Vaccine.jsp"--%>
 <%@page import="javax.imageio.*"%>
 <%@page import="javax.imageio.stream.ImageInputStream"%>
 <%@page import="javax.imageio.stream.FileImageInputStream"%>
@@ -24,8 +24,9 @@ public Dimension getImageDim(final String path) {
     Iterator<ImageReader> iter = ImageIO.getImageReadersBySuffix(suffix);
     if (iter.hasNext()) {
         ImageReader reader = iter.next();
+		ImageInputStream stream = null;
         try {
-            ImageInputStream stream = new FileImageInputStream(new File(path));
+            stream = new FileImageInputStream(new File(path));
             reader.setInput(stream);
             int width = reader.getWidth(reader.getMinIndex());
             int height = reader.getHeight(reader.getMinIndex());
@@ -34,7 +35,12 @@ public Dimension getImageDim(final String path) {
             //System.out.println(e.getMessage());
 			return null;
         } finally {
-            reader.dispose();
+			try{
+				reader.dispose();
+				stream.close();
+			}catch(IOException ex){
+				return null;
+			}
         }
     } else {
         System.out.println("No reader found for given format: " + suffix);
@@ -65,18 +71,27 @@ private String getFileSuffix(final String path) {
 		}
 	}
 	*/
+	String messageText = "";
 	int maxSize = 5242880;
 	if(request.getParameter("imageSizeLimit") != null){
 		maxSize = Integer.parseInt(detectXSSEx(request.getParameter("imageSizeLimit")));
 	}
 	String defaultUPath = detectXSSEx(request.getParameter("defaultUPath"));
 	String imageUPath = detectXSSEx(request.getParameter("imageUPath"));
-	String imageUPathHost = "http://" + request.getHeader("host");
+
+	String protocol = "http://";
+	if(request.isSecure()){
+		protocol = "https://";
+	}
+
+	String imageUPathHost = protocol + detectXSSEx(request.getHeader("host"));
+
 	String imagePhysicalPath = "";
 	String useExternalServer = detectXSSEx(request.getParameter("useExternalServer"));
-	String strVaccinePath = "";
+	//2018-11-20[4.2.0.12]vaccine로직 주석(수정된 빌드로 나갈 때 추가)
+	//String strVaccinePath = "";
 %>
-<%@include file="VaccinePath.jsp"%>
+<%--@include file="VaccinePath.jsp"--%>
 <%@include file="ImagePath.jsp"%>
 <%
 	String imageModify = ""; 
@@ -112,6 +127,7 @@ private String getFileSuffix(final String path) {
 	String saveFolder = "";
 	String returnParam ="";
 	String ContextPath = request.getContextPath();
+	String tempFileName = "";
 	
 	ServletContext context = getServletConfig().getServletContext();
 
@@ -225,7 +241,12 @@ private String getFileSuffix(final String path) {
 		SaveSubFolder.setReadable(true);
 		SaveSubFolder.setWritable(false, true);
 
-		SaveSubFolder.mkdir();
+		boolean returnRes = SaveSubFolder.mkdir();
+		if(returnRes == false && !SaveSubFolder.exists()){
+			scriptValue = executeScript(response, "invalid_path", "" , useExternalServer, imageDomain, imageEditorFlag, checkPlugin);
+			response.getWriter().println(scriptValue);
+			return;
+		}
 	}
 	imagePhysicalPathsubFolder += "upload" + File.separator;
 	File DeleteTempFolder = null;
@@ -371,7 +392,13 @@ private String getFileSuffix(final String path) {
 						type = fileItem.getContentType();
 
 						try{
-							File uploadedFile=new File(realDir,filename);
+							tempFileName = filename;
+							File uploadedFile = new File(realDir + tempFileName);
+							if(uploadedFile.exists()){
+								tempFileName = fileNameTimeSetting() + filename.substring(filename.lastIndexOf(".")).toLowerCase();
+								uploadedFile = new File(realDir + tempFileName);
+							}
+							//File uploadedFile=new File(realDir,filename);
 							fileItem.write(uploadedFile);
 							fileItem.delete(); 
 							DeleteTempFolder = uploadedFile;
@@ -403,7 +430,7 @@ private String getFileSuffix(final String path) {
 				//fileTempName = encoder.encode(keyByte);
 				//라이브러리 추가 요함 -> https://commons.apache.org/proper/commons-codec/download_codec.cgi
 				byte[] encoded = Base64.encodeBase64(fileTempName.getBytes());
-				fileTempName = new String(encoded);
+				fileTempName = new String(encoded, "ISO-8859-1");
 
 				if (fileTempName.indexOf("/") != -1)
 					fileTempName = fileTempName.replaceAll("/", "==NamOSeSlaSH==");
@@ -412,8 +439,12 @@ private String getFileSuffix(final String path) {
 			String fileCheck =filename.substring(filename.lastIndexOf(".") + 1).toLowerCase();	
 			
 			if (!isImageValid(imageKind, fileCheck)) {
-				if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase(""))
-					tempFolderDelete(tempFileFolder);
+				if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase("")){
+					boolean returnRes = tempFolderDelete(tempFileFolder);
+					if(returnRes == false){
+						messageText = "delete fail";
+					}
+				}
 
 				scriptValue = executeScript(response, "invalid_image", getImageKind(imageKind), useExternalServer, imageDomain, imageEditorFlag, checkPlugin);
 				if(scriptValue != null){
@@ -434,12 +465,16 @@ private String getFileSuffix(final String path) {
 				//Image imgCheck = new ImageIcon(imagePhysicalPathsubFolder + filename).getImage();
 				//oriWidthCheck = imgCheck.getWidth(null);
 				//oriHeightCheck = imgCheck.getHeight(null);
-				Dimension ds = getImageDim(imagePhysicalPathsubFolder + filename);
+				Dimension ds = getImageDim(imagePhysicalPathsubFolder + tempFileName);
 				
 				if (ds == null) {
-					if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase(""))
-						tempFolderDelete(tempFileFolder);
+					if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase("")){
+						boolean returnRes = tempFolderDelete(tempFileFolder);
 
+						if(returnRes == false){
+							messageText = "delete fail";
+						}
+					}
 					scriptValue = executeScript(response, "fail_image", getImageKind(imageKind), useExternalServer, imageDomain, imageEditorFlag, checkPlugin);
 					response.getWriter().println(scriptValue);
 					return;
@@ -458,7 +493,12 @@ private String getFileSuffix(final String path) {
 						imageSaveSubFolder.setReadable(true);
 						imageSaveSubFolder.setWritable(false, true);
 
-						imageSaveSubFolder.mkdir();
+						boolean returnRes = imageSaveSubFolder.mkdir();
+						if(returnRes == false){
+							scriptValue = executeScript(response, "invalid_path", "" , useExternalServer, imageDomain, imageEditorFlag, checkPlugin);
+							response.getWriter().println(scriptValue);
+							return;
+						}
 					}
 					imagePhysicalPath += imageKindSubFolder + File.separator;
 				}
@@ -469,16 +509,25 @@ private String getFileSuffix(final String path) {
 					imageSaveSubFolder.setReadable(true);
 					imageSaveSubFolder.setWritable(false, true);
 
-					imageSaveSubFolder.mkdir();
+					boolean returnRes = imageSaveSubFolder.mkdir();
+					if(returnRes == false){
+						scriptValue = executeScript(response, "invalid_path", "" , useExternalServer, imageDomain, imageEditorFlag, checkPlugin);
+						response.getWriter().println(scriptValue);
+						return;
+					}
 				}
 				imagePhysicalPath += imageKindSubFolder + File.separator;
 
 				saveFolder = getChildDirectory(imagePhysicalPath, imageMaxCount); 
 				
 				if (saveFolder.equalsIgnoreCase("")) {	
-					if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase(""))
-						tempFolderDelete(tempFileFolder);
+					if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase("")){
+						boolean returnRes = tempFolderDelete(tempFileFolder);
 
+						if(returnRes == false){
+							messageText = "delete fail";
+						}
+					}
 					scriptValue = executeScript(response, "invalid_path", "", useExternalServer, imageDomain, imageEditorFlag, checkPlugin);
 					if(scriptValue != null){
 						response.getWriter().println(scriptValue);
@@ -514,12 +563,12 @@ private String getFileSuffix(final String path) {
 					//라이브러리 추가 요함 -> https://commons.apache.org/proper/commons-codec/download_codec.cgi
 					//imgLinkParams = java.net.URLEncoder.encode(urlFilePath + encoder.encode(keyByte).replaceAll("/", "==NamOSeSlaSH==") + enFileExt + "|" + imageUNameType);
 					byte[] encoded2 = Base64.encodeBase64(enFileName.getBytes());
-					enFileName = new String(encoded2);
+					enFileName = new String(encoded2, "ISO-8859-1");
 
-					imgLinkParams = java.net.URLEncoder.encode(urlFilePath + enFileName.replaceAll("/", "==NamOSeSlaSH==") + enFileExt + "|" + imageUNameType);
+					imgLinkParams =  URLEncoder.encode(urlFilePath + enFileName.replaceAll("/", "==NamOSeSlaSH==") + enFileExt + "|" + imageUNameType);
 					urlFilePath = imgLinkPathRename + imgLinkParams;
 				} else {
-					imgLinkParams = java.net.URLEncoder.encode(urlFilePath + filenamecheck + "|" + imageUNameType);
+					imgLinkParams =  URLEncoder.encode(urlFilePath + filenamecheck + "|" + imageUNameType);
 					urlFilePath = imgLinkPathRename + imgLinkParams;
 				}
 			} else {
@@ -620,7 +669,7 @@ private String getFileSuffix(final String path) {
 				int oriHeight = 0;
 				try {
 					//2012.06.05 [2.0.4.16->2.0.4.17] nkpark heap memory
-					Image img = new ImageIcon(imagePhysicalPathsubFolder + filename).getImage();
+					Image img = new ImageIcon(imagePhysicalPathsubFolder + tempFileName).getImage();
 					oriWidth = img.getWidth(null);
 					oriHeight = img.getHeight(null);
 				} catch(RuntimeException e) {
@@ -636,24 +685,42 @@ private String getFileSuffix(final String path) {
 			returnParam += "}";	
 			
 			String moveFilePath = imagePhysicalPath + File.separator + filenamecheck;
-			int check = fileCopy(imagePhysicalPathsubFolder + filename, moveFilePath);
+			int check = fileCopy(imagePhysicalPathsubFolder + tempFileName, moveFilePath);
 
 			if(DeleteTempFolder != null){
-				DeleteTempFolder.delete();
+				boolean returnRes = DeleteTempFolder.delete();
+				if(returnRes == false){
+					messageText = "delete fail";
+				}
 			}
 
 			if (check == 1) {
+
+				//2018-11-20[4.2.0.12]vaccine로직 주석(수정된 빌드로 나갈 때 추가)
+				/*
 				if (strVaccinePath.length() <= 0) {
 					strVaccinePath = imagePhysicalPath + "/../../../vse";
 				}
 
  				String strName = checkVirusFile (moveFilePath, imagePhysicalPath + File.separator, strVaccinePath);
+				*/
 
-				if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase(""))
-					tempFolderDelete(tempFileFolder);
-				if (SaveSubFolder.exists()){
-					SaveSubFolder.delete();
+				if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase("")){
+					boolean returnRes = tempFolderDelete(tempFileFolder);
+					if(returnRes == false){
+						messageText = "delete fail";
+					}
 				}
+				
+				if (SaveSubFolder.exists()){
+					boolean returnRes = SaveSubFolder.delete();
+					if(returnRes == false){
+						messageText = "delete fail";
+					}
+				}
+
+				//2018-11-20[4.2.0.12]vaccine로직 주석(수정된 빌드로 나갈 때 추가)
+				/*
 				if (strName.length() > 0) {
 					String msg = "found virus (";
 					msg += strName + ")";
@@ -663,6 +730,7 @@ private String getFileSuffix(final String path) {
 					}
 					return;
 				}
+				*/
 
 				if (imageEditorFlag.equalsIgnoreCase("flashPhoto")) {
 					scriptValue = "{";
@@ -685,8 +753,12 @@ private String getFileSuffix(final String path) {
 				
 				return;
 			} else {
-				if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase(""))
-					tempFolderDelete(tempFileFolder);
+				if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase("")){
+					boolean returnRes = tempFolderDelete(tempFileFolder);
+					if(returnRes == false){
+						messageText = "delete fail";
+					}
+				}
 
 				scriptValue = executeScript(response, "fileCopyFail", "", useExternalServer, imageDomain, imageEditorFlag, checkPlugin);	
 				if(scriptValue != null){
@@ -713,7 +785,7 @@ private String getFileSuffix(final String path) {
 		return;
     } catch (RuntimeException e) {	
 		
-		String messageText = "RuntimeException";
+		messageText += " RuntimeException";
 		messageText = "<System Error>" + messageText;
 		
 		scriptValue = executeScript(response, "", messageText, useExternalServer, imageDomain, imageEditorFlag, checkPlugin);
