@@ -2094,7 +2094,7 @@ public class EzAttitudeGWController {
 			map.put("tenantId", info.getTenantId());
 			map.put("companyId", companyId);
 			
-			ezAttitudeService.changeAnnual(map);
+			ezAttitudeService.changeAllAnnual(map);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

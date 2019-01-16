@@ -72,6 +72,12 @@
 		<result property="year" 				column="YEAR" 			columnIndex="10"/>
 	</resultMap>
 	
+	<resultMap class="java.util.HashMap" id="annualUserMap">
+		<result property="userId" 					column="USER_ID" 					columnIndex="1"/>
+		<result property="companyId" 					column="COMPANY_ID" 				columnIndex="2"/>
+		<result property="tenantId" 				column="TENANT_ID" 			columnIndex="3"/>
+	</resultMap>
+	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
 		<![CDATA[
 			SELECT 
@@ -1858,19 +1864,24 @@
 		]]>
 	</select>
 	
-	<select id="ezAttitudeAdminDAO.getUserCnt" parameterClass="Map" resultClass="INTEGER">
+	<select id="ezAttitudeAdminDAO.getUserList" parameterClass="Map" resultMap="annualUserMap">
 		<![CDATA[
 			SELECT
-				count(*)
+				CN AS USER_ID,
+				PHYSICALDELIVERYOFFICENAME AS COMPANY_ID,
+				TENANT_ID AS TENANT_ID
 			FROM
 				tbl_usermaster
 			WHERE
 				PHYSICALDELIVERYOFFICENAME = #companyId#
 			AND
 				TENANT_ID = #tenantId#
-			AND
+			]]>
+		<isNotEmpty prepend="AND" property="userId">
+			<![CDATA[
 				CN = #userId#
-		]]>
+			]]>
+		</isNotEmpty>
 	</select>
 	
 </sqlMap>

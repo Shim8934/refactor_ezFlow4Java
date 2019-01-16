@@ -147,4 +147,6 @@ public interface EzAttitudeService {
 	public AttitudeAnnualVO getAnnualCnt(Map<String, Object> map) throws Exception;
 	
 	public List<Map<String, Object>> getAnnualHistoryList(Map<String, Object> map) throws Exception;
+
+	void changeAllAnnual(Map<String, Object> map) throws Exception;
 }

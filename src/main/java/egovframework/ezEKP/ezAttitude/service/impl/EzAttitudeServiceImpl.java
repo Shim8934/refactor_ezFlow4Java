@@ -2473,9 +2473,35 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
+	public void changeAllAnnual(Map<String, Object> map) throws Exception {
+		LOGGER.debug("changeAllAnnual started");
+
+		List<Map<String, Object>> userList = ezAttitudeDAO.getUserList(map);
+		
+		String year = (String) map.get("year");
+		String annualCnt = (String) map.get("annualCnt");
+		String changeUserId = (String) map.get("changeUserId");
+		String changeReason = (String) map.get("changeReason");
+		String flagCheck = (String) map.get("flagCheck");
+		
+		if(userList != null) {
+			for(Map<String, Object> userMap : userList) {
+				userMap.put("year", year);
+				userMap.put("annualCnt", annualCnt);
+				userMap.put("changeUserId", changeUserId);
+				userMap.put("changeReason", changeReason);
+				userMap.put("flagCheck", flagCheck);
+				changeAnnual(userMap);
+			}
+		}
+		
+		LOGGER.debug("changeAllAnnual ended");
+	}
+	
+	@Override
 	public void changeAnnual(Map<String, Object> map) throws Exception {
 		LOGGER.debug("changeAnnual started");
-
+		
 		if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
 			ezAttitudeDAO.insertAnnualHistory(map);
 			ezAttitudeDAO.insertAnnual(map);
@@ -2581,7 +2607,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map1.put("userId", userId);
 			map1.put("companyId", companyId);
 			map1.put("tenantId", tenantId);
-			userCnt = ezAttitudeDAO.getUserCnt(map1);
+			if(ezAttitudeDAO.getUserList(map1) != null) {
+				userCnt = ezAttitudeDAO.getUserList(map1).size();
+			}
 			
 			if(userCnt == 0) {
 				return i+1 + "행 " + userId + "은(는) 존재하지 않는 사용자입니다.";
