@@ -2061,14 +2061,16 @@ var SurveyCreate     = function() {
 		if (qstnFObj) {question["attach"] = getAttachFileInfo(qstnFObj);}
 		
 		//Question order
-		var qstId         = qstnWrapper.attr("id") ? parseInt(qstnWrapper.attr("id")) : questionList.length + 1;
+		var qstId         = qstnWrapper.attr("id").replace("qstn", "") ? parseInt(qstnWrapper.attr("id").replace("qstn", "")) : questionList.length + 1;
 		question["level"] = qstId;
+		
 		//Set id
 		qstnWrapper.attr("id", "qstn" + qstId);
 		
 		var header       = makeQuestionHeaderPanel(question);
 		var body         = "";
-		
+		console.log("question");
+		console.log(question);
 		switch(parseInt(qstnType)) {
 			case 1  :
 			case 2  : var sltObj = mkSltObj(qstnForm);
@@ -2100,7 +2102,7 @@ var SurveyCreate     = function() {
 					  body = mkDropDownQstn(question); break;
 			default : alert(SurveyMessages.strError); return;
 		}
-		
+		console.log(question);
 		header.append(body[0]);
 		qstnWrapper.prepend(header);
 		rmQstnForm(qstnWrapper);
