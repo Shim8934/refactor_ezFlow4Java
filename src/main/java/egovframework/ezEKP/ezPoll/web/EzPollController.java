@@ -2088,8 +2088,9 @@ public class EzPollController extends EgovFileMngUtil {
 	}
 	
 	@MessageMapping("/editVote") 
-	public void editVote(JSONObject message, @CookieValue("loginCookie")String loginCookie) throws org.json.simple.parser.ParseException {
+	public void editVote(JSONObject message) throws org.json.simple.parser.ParseException {
 		logger.debug("Edit vote is running!");		
+		String loginCookie = (String) message.get("loginCookie");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int qstId = Integer.parseInt((String) message.get("question"));
 		int tenantId = Integer.parseInt((String)message.get("tenant"));	

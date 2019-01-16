@@ -23,7 +23,15 @@ public class PersonalGetQuickLinkMenuVO {
 	private String view_Flag;
 	/** */
 	private String size_;
+	/** */
+	private String regDate;
 	
+	public String getRegDate() {
+		return regDate;
+	}
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
 	public String getQuickLinkID() {
 		return quickLinkID;
 	}

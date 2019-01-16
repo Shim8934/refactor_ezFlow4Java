@@ -1932,7 +1932,7 @@ form{display:inline;margin:0}
 
 .select_themebox .on {position:relative ; background:url(../images/sub/sc_themebg2.gif) no-repeat;}
 .select_themebox .on dt { border:1px solid #ffffff;}
-.onimg { position:absolute; top:0px; left:0px; z-index:5; width:175px; height:140px; background:url(../images/sub/theme_overimg_kr.png) no-repeat; }
+.onimg { position:absolute; top:0px; left:0px; z-index:5; width:175px; height:140px; background:url(../images/sub/theme_overimg_jp.png) no-repeat; }
 
 
 .themelist_box { table-layout:fixed; font-family:Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;border:1px solid #dddada; width:100%;}

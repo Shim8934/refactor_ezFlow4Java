@@ -764,7 +764,7 @@ public class EzWebFolderGWController {
 			if ( webFlag.equals("")) {
 				// -> updateDate, filePath, fileExt, fileTypeId를 수정해야함
 				
-				if (fileExt == "") {
+				if (fileExt.equals("")) {
 					 updateFileName = newName;
 					 fileExt = "unknown";
 					 newFilePath = oldFilePath;

@@ -578,7 +578,8 @@
              	URL ,
              	REGUSERID ,
              	VIEW_FLAG ,
-             	SIZE_ 
+             	SIZE_ ,
+             	REGDATE
         	FROM
         		TBL_PS_QUICKLINK A
             JOIN
@@ -588,7 +589,7 @@
             AND
                 A.TENANT_ID = B.TENANT_ID  
        		WHERE
-       			B.ACCESSID IN (#userId#, #deptId#, #companyId#, 'everyone')
+       			B.ACCESSID = #v_ACCESSID#
        		AND
        			A.TENANT_ID = #tenantID#
             AND

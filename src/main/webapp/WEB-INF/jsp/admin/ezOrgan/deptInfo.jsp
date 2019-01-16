@@ -16,6 +16,7 @@
 			var ReturnFunction;
 			var RetValue;
 			var approvalFlag = "${approvalFlag}";
+			var isAdd = true;
 			
 			$(document).ready(function(){
 			    if (CrossYN()){
@@ -26,11 +27,24 @@
 			    }else{
 			    	RetValue = window.dialogArguments;
 			    }
+			    
+			    if(approvalFlag === "G") {
+			    	var content = document.getElementsByClassName("content")[0];
+			    	var btnSpace = document.getElementsByClassName("btnpositionNew")[0];
+			    	
+			    	var windowHeight = window.outerHeight - window.innerHeight;
+			    	windowHeight += content.offsetTop;
+			    	windowHeight += content.offsetHeight + 10;
+			    	windowHeight += btnSpace.offsetHeight;
+			    	
+			    	window.resizeTo(window.outerWidth, windowHeight);
+			    }
 
 			    if(RetValue[1] == ""){
 					subtitle.innerText = "<spring:message code='ezOrgan.t80' />";
 			        ParentID.value = RetValue[0];
 				}else{
+			    	isAdd = false;
 					subtitle.innerText = "<spring:message code='ezOrgan.t209' />";
 			        DeptID.value = RetValue[0];
 					DeptID.readOnly = true;
@@ -97,51 +111,38 @@
 			   }
 			});
 			
-			function Check_ID(pValue){
-				for(var iCnt = 0 ; iCnt < pValue.length ; iCnt++){
-					if (pValue.charCodeAt(iCnt) >= 65 && pValue.charCodeAt(iCnt) <= 90) {
-						// A-Z
-					} else if (pValue.charCodeAt(iCnt) >= 97 && pValue.charCodeAt(iCnt) <= 122) {
-						// a-z
-					} else if (pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57) {
-						// 0-9
-					} else if (pValue.charCodeAt(iCnt) == 45) {
-		                // -
-		            } else if (pValue.charCodeAt(iCnt) == 95) {
-                        // _
-                    } else {
-						return false;
-					}
-				}				
-				return true;
+			function Check_ID(pValue, isAdd) {
+				// 인사연동 시 부서 ID에 대문자가 포함되어 있는 경우가 있어, 부서 추가 시에만 대문자를 넣지 못하도록 함.
+				var regex = /^[a-zA-Z0-9\_\-\.]+$/;
+				
+				if (isAdd) {
+					regex = /^[a-z0-9\_\-\.]+$/;
+				}
+				
+				return regex.test(pValue);
 			}
 			
-			function OK_Click(){
-				if(RetValue[1] == ""){ //20181115 조진호 - 닷넷 그룹웨어 인사연동시 부서 ID에 대문자가 포함되어 있는경우가 있어서, 부서 정보 수정시에는 해당 체크를 하지 않도록 수정
-					for (var i = 0; i < document.getElementById("DeptID").value.length; i++) {
-		                if (document.getElementById("DeptID").value.charCodeAt(i) >= 65 && document.getElementById("DeptID").value.charCodeAt(i) <= 90) {
-		                	OpenAlertUI("<spring:message code='ezOrgan.x0003'/>");
-		                    return;
-		                }
-		            }
-				}
-				if (DeptID.value == ""){
+			function OK_Click() {
+				if (DeptID.value == "") {
                 	OpenAlertUI("<spring:message code='ezOrgan.t210'/>");
 					return;
-				}				
-				if (DeptID.value.length < 3){
+				}
+				
+				if (DeptID.value.length < 3) {
                 	OpenAlertUI("<spring:message code='ezOrgan.t211'/>");
 					return;
-				}				
-				if (!Check_ID(DeptID.value)){
+				}
+				
+				if (!Check_ID(DeptID.value, isAdd)) {
                 	OpenAlertUI("<spring:message code='ezOrgan.t212'/>");
 					return;
-				}				
-				if (DeptName.value.trim() == ""){
+				}
+				
+				if (DeptName.value.trim() == "") {
                 	OpenAlertUI("<spring:message code='ezOrgan.t213'/>");
 					return;
 				}
-												
+				
 				var parentCn;
 				var extensionattribute8 = "0";
 				/* 2017-12-29 장진혁 - 조직도에서 기본적으로 해당 부서를 수신처로 등록할 수 있게 수정 */
