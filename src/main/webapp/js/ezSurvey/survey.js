@@ -2020,8 +2020,8 @@ var SurveyCreate     = function() {
 			for (var j = colNum; j < optsLength; j++) {
 				var colOptionId = "";
 				
-				if (opts[colNum]['optionId'] != undefined) {
-					colOptionId = opts[colNum]['optionId'];
+				if (opts[j]['optionId'] != undefined) {
+					colOptionId = opts[j]['optionId'];
 				}
 				inputTd = $("<td></td>");
 				Input = $("<input type='" + inpType + "' name='qstn" + id + "opt" + i + "' id='qstn" + id + "opt" + i + j + "' OptionId='" + rowOptionId + "," + colOptionId +"'>");
