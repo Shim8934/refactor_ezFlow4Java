@@ -90,11 +90,12 @@ public class EzCommunityAdminController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String lang         = userInfo.getLang();
 		String companyId    = userInfo.getCompanyID();
 		int tenantId        = userInfo.getTenantId();
 		
-		int admitTotalCount = ezCommunityAdminService.aspAdmitComGet2("", "", companyId, tenantId);
-		int closeTotalCount = ezCommunityAdminService.aspCloseComGet2("", "", companyId, tenantId);
+		int admitTotalCount = ezCommunityAdminService.aspAdmitComGet2("", "", commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
+		int closeTotalCount = ezCommunityAdminService.aspCloseComGet2("", "", commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
 		
 		model.addAttribute("count", admitTotalCount + closeTotalCount);
 		
@@ -363,6 +364,7 @@ public class EzCommunityAdminController {
 	public String commCloseAll(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String type = request.getParameter("type");
 		String code = request.getParameter("code");
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
@@ -370,6 +372,10 @@ public class EzCommunityAdminController {
 		ezCommunityAdminService.commCloseAll(code, userInfo.getLocale(), userInfo.getTenantId());
 		
 		model.addAttribute("sysopCheck", sysopCheck);
+		
+		if (type.equals("listBtn")) {
+			return "json";
+		}
 		
 		return "/admin/ezCommunity/communityCommCloseAll";
 	}
@@ -382,6 +388,7 @@ public class EzCommunityAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String diviTitle = "";
 		
+		String type = request.getParameter("type");
 		String code = request.getParameter("code");
 		String pDivi = request.getParameter("pDivi");
 		
@@ -402,6 +409,10 @@ public class EzCommunityAdminController {
 		}
 		
 		model.addAttribute("diviTitle", diviTitle);
+		
+		if (type.equals("listBtn")) {
+			return "json";
+		}
 		
 		return "/admin/ezCommunity/communityCommAdmitOk";
 	}
@@ -451,11 +462,11 @@ public class EzCommunityAdminController {
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), companyId, tenantId);
 		
 		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(총 n개 카운트) */
-		int totalCount = ezCommunityAdminService.aspAdmitComGet2(searchValue, searchType, companyId, tenantId);
+		int totalCount = ezCommunityAdminService.aspAdmitComGet2(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
 		int totalPage = totalCount / pageSize;
 		
 		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
-		
+		logger.debug("lang=" + commonUtil.getMultiData(lang, tenantId));
 		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) -> 사간겸직한 회원이 만든 커뮤니티는 겸직한 회사만큼 전부 표출됨(수정필요) */
 		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
 		if ((totalPage * pageSize) != totalCount && (totalCount % pageSize) != 0) {
@@ -496,7 +507,7 @@ public class EzCommunityAdminController {
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), companyId, tenantId);
 		
 		/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(총 n개 카운트) */
-		int totalCount = ezCommunityAdminService.aspCloseComGet2(searchValue, searchType, companyId, tenantId);
+		int totalCount = ezCommunityAdminService.aspCloseComGet2(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
 		int totalPage = totalCount / pageSize;
 		
 		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);

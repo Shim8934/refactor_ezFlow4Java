@@ -70,7 +70,7 @@
 					async : false,
 					url : "/admin/ezCommunity/getApplicationListCount.do",
 					success: function(result){
-						$("#listCount").html("&nbsp;" + result.count);
+						$("#listCount").html("&nbsp;&nbsp;" + result.count);
 					}
 				});
 			}

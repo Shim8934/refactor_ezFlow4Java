@@ -203,7 +203,7 @@
 								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconPost.gif'></span>";
 								html +=     "<span class='count'>" + item.itemCnt + "</span>";
 								html += "</td>";
-								html += "<td style='width: 60px;'><a class='imgbtn imgbck'><span onclick=''>폐쇄</span></a></td>";
+								html += "<td style='width: 60px;'><a class='imgbtn imgbck'><span onclick=closeBtnClick('" + item.c_ClubNo + "')>폐쇄</span></a></td>";
 								html += "</tr>";
 								
 								itemNum++;
@@ -363,6 +363,35 @@
 			$(function(){
 				windowResize();
 			});
+			
+			// 개설된 커뮤니티 리스트 폐쇄 버튼 이벤트 메소드
+			function closeBtnClick(code) {
+				if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
+					$.ajax({
+						type : "POST",
+						dataType : "json",
+						url : "/admin/ezCommunity/commCloseAll.do",
+						async : false,
+						data : 
+							{
+								type : "listBtn",
+								code : code,
+							},
+						success : function(result) {
+							alert("<spring:message code = 'ezCommunity.t56' />");
+							
+							openCommunityList();
+							window.parent.parent.frames[0].getApplicationListCount();
+						},
+						error : function(e) {
+							console.log("error");
+						}
+					});
+				}
+				else {
+					alert("<spring:message code = 'ezCommunity.t62' />");
+				}
+			}
 			
 			// 카테고리 요소 생성
 			function getCategoryName(cateName) {

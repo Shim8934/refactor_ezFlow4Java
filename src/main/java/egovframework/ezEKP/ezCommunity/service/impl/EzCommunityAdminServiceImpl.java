@@ -46,12 +46,13 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityAdminServiceImpl.class);
 
 	@Override
-	public int aspCloseComGet2(String keyword, String sRadio, String companyID, int tenantID) throws Exception {
+	public int aspCloseComGet2(String keyword, String sRadio, String lang, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCloseComGet2 started.");
 		logger.debug("v_S_RADIOL" + sRadio);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD",  keyword);
 		map.put("v_S_RADIO",  sRadio);
+		map.put("v_USERINFO_LANG", lang);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -192,12 +193,13 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(총 n개 카운트) */
 	@Override
-	public int aspAdmitComGet2(String keyword, String sRadio, String companyID, int tenantID) throws Exception {
+	public int aspAdmitComGet2(String keyword, String sRadio, String lang, String companyID, int tenantID) throws Exception {
 		logger.debug("aspAdmitComGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD", keyword);
 		map.put("v_S_RADIO", sRadio);
+		map.put("v_USERINFO_LANG", lang);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
