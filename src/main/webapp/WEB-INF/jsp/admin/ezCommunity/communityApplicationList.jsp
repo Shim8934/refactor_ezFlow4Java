@@ -10,6 +10,11 @@
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
 		<style>
 		.idSpan select {vertical-align: middle; height: 22px; margin-left: 2px;}
+		.categorySpan {
+			height: 18px; margin: 0px; padding: 0px 6px; line-height: 18px;
+			text-align: center; background: #999; color: #ffffff; font-size: 12px;
+			border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px; display: inline-block;
+		}
 		#mainListBody tr:hover {background-color: #f4f5f5;}
 		#mainListBody tr td {overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor:pointer;}
 		</style>
@@ -23,6 +28,9 @@
 			var pTotalPage    = 0;
 			var pTotalCnt     = 0;
 			var pBlockSize    = 10;
+			var categoryColors = ["#ff6868", "#ff68c4", "#d668ff", "#a868ff", "#6f68ff", 
+								"#3d78ff", "#4d8fcc", "#0dbeff", "#6dabad", "#4dc689", 
+								"#81bc3d", "#ffc71e", "#ff8f1e", "#bd6438"];
 			
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -131,15 +139,34 @@
 							
 							data.clubList.forEach(function(item, index){
 								html += "<tr ondblclick=open_info('" + item.c_ClubNo + "')>";
-								html += "<td width='35px;'>" + itemNum +"</td>";
-								html += "<td width='50%;'>" + item.c_ClubName +"</td>";
-								html += "<td width='10%;'>" + item.userName +"</td>";
+								html += "<td style='width: 35px;'>" + itemNum +"</td>";
+								html += "<td style='width: 90px;'>" + getCategoryName(item.c_name) + "</td>";
+								html += "<td style='width: 25%;'>" + item.c_ClubName +"</td>";
+								
+								if (item.c_ClubConfirmType == "2") { //유형
+									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t13' /></td>";
+								} else {
+									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t14' /></td>";
+								}
+
+								if (item.c_ClubGubun == "2") { //공개여부
+									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t66' /></td>";
+								} else {
+									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t67' /></td>";
+								}
+								
+								html += "<td style='width: 10%;'>" + item.userName +"</td>";
 								
 								if (selectedTabId == "admitCommu") {
-									html += "<td width='10%;'>" + item.c_RegDate.substring(0, 10) +"</td>";
+									html += "<td style='width: 10%;'>" + item.c_RegDate.substring(0, 10) +"</td>";
+									html += "<td style='width: 80px;'>";
+									html +=     "<a class='imgbtn imgbck' style='margin-right: 3px;'><span onclick=''>승인</span></a>";
+									html +=     "<a class='imgbtn imgbck'><span onclick=''>거부</span></a>";
+									html += "</td>";
 								}
 								else {
-									html += "<td width='10%;'>" + item.applicationDate.substring(0, 10) +"</td>";
+									html += "<td style='width: 10%;'>" + item.applicationDate.substring(0, 10) +"</td>";
+									html += "<td style='width: 80px;'><a class='imgbtn imgbck'><span onclick=''>거부</span></a></td>";
 								}
 								
 								html += "</tr>";
@@ -317,6 +344,90 @@
 					comm = window.open("/admin/ezCommunity/commInfo.do?code=" + code + "&type=Del&title=" + encodeURI("<spring:message code = 'ezCommunity.t38' />") + "", "", feature);
 				}
 			}
+			
+			// 카테고리 요소 생성
+			function getCategoryName(cateName) {
+				var retVal = "";
+				
+				switch(cateName){
+					case "t1496":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1496' />";
+						break;
+					case "t1497":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[1] + "'><spring:message code = 'ezCommunity.t1497' />";
+						break;
+					case "t1498":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[2] + "'><spring:message code = 'ezCommunity.t1498' />";
+						break;
+					case "t1499":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[3] + "'><spring:message code = 'ezCommunity.t1499' />";
+						break;
+					case "t1500":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[4] + "'><spring:message code = 'ezCommunity.t1500' />";
+						break;
+					case "t1501":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[5] + "'><spring:message code = 'ezCommunity.t1501' />";
+						break;
+					case "t1502":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[6]  + "'><spring:message code = 'ezCommunity.t1502' />";
+						break;
+					case "t1503":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[7]  + "'><spring:message code = 'ezCommunity.t1503' />";
+						break;
+					case "t1504":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[8] + "'><spring:message code = 'ezCommunity.t1504' />";
+						break;
+					case "t1505":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[9] + "'><spring:message code = 'ezCommunity.t1505' />";
+						break;
+					case "t1506":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[10] + "'><spring:message code = 'ezCommunity.t1506' />";
+						break;
+					case "t1507":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[11] + "'><spring:message code = 'ezCommunity.t1507' />";
+						break;
+					case "t1508":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[12] + "'><spring:message code = 'ezCommunity.t1508' />";
+						break;
+					case "t1509":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1509' />";
+						break;
+					case "t1510":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1510' />";
+						break;
+					case "t1511":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1511' />";
+						break;
+					case "t1512":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1512' />";
+						break;
+					case "t1513":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1513' />";
+						break;
+					case "t1514":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1514' />";
+						break;
+					case "t1515":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1515' />";
+						break;
+					case "t1516":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1516' />";
+						break;
+					case "t1517":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1517' />";
+						break;
+					case "t1518":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1518' />";
+						break;
+					case "t1519":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1519' />";
+						break;
+				}
+				
+				retVal += "</span>";
+				
+				return retVal;
+			}
 		</script>
 	</head>
 <body class="mainbody">
@@ -342,7 +453,7 @@
 				</select>
 						
 				<input name="text" type="text" style="WIDTH:200px; vertical-align:middle; height: 22px;" id="searchValue" onkeydown="return keyword_onkeydown()"> 
-				<a class="imgbtn" style="vertical-align: middle; margin-bottom:0px;"><span onClick="search()"><spring:message code = 'ezCommunity.t31' /></span></a>
+				<a class="imgbtn imgbck" style="vertical-align: middle; margin-bottom:0px;"><span onClick="search()"><spring:message code = 'ezCommunity.t31' /></span></a>
 			</td>
 		</tr>
 	</table>
@@ -352,9 +463,13 @@
 			<table id="mainListHeader" class="mainlist" style="width: 100%">
 				<tr id="mainListHeaderTr">
 					<th style="width: 35px;"><spring:message code = 'ezCommunity.t32' /></th>
-					<th style="width: 50%;"><spring:message code = 'ezCommunity.t9991' /></th>
+					<th style="width: 90px;">카테고리</th>
+					<th style="width: 25%;"><spring:message code = 'ezCommunity.t9991' /></th>
+					<th style="width: 10%;">유형</th>
+					<th style="width: 10%;">공개여부</th>
 					<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
 					<th style="width: 10%;">신청일</th>
+					<th style="width: 80px;"></th>
 				</tr>
 			</table>
 		</div>

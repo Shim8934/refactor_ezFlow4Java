@@ -10,8 +10,11 @@
 		<![CDATA[
 			SELECT
 				DISTINCT A.c_clubno,
+				c_name,
 				closestate,
 				D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				c_clubConfirmType,
+				c_clubGubun,
 				B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
 				A.c_sysopid,
 				applicationdate
@@ -29,7 +32,15 @@
 				A.c_clubno = D.c_clubno
 			AND
 				A.tenant_id = D.tenant_id
+			INNER JOIN
+				TBL_C_CATEGORY E
+			ON
+				D.c_cate_a = E.c_code
+			AND
+				D.tenant_id = E.tenant_id
 			WHERE
+				E.c_cat = 'a'
+			AND
 				D.c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				D.companyid = #companyID#
@@ -44,8 +55,11 @@
 		<![CDATA[
 			SELECT
 				DISTINCT A.c_clubno,
+				c_name,
 				closestate,
 				D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				c_clubConfirmType,
+				c_clubGubun,
 				B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
 				A.c_sysopid,
 				applicationdate
@@ -63,7 +77,15 @@
 				A.c_clubno = D.c_clubno
 			AND
 				A.tenant_id = D.tenant_id
+			INNER JOIN
+				TBL_C_CATEGORY E
+			ON
+				D.c_cate_a = E.c_code
+			AND
+				D.tenant_id = E.tenant_id
 			WHERE
+				E.c_cat = 'a'
+			AND
 				D.companyid = #companyID#
 			AND
 				A.tenant_id = #tenantID#
@@ -122,7 +144,10 @@
 		<![CDATA[
 			SELECT
 				DISTINCT c_clubno,
+				c_name,
 				c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				c_clubConfirmType,
+				c_clubGubun,
 				IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
 				c_sysopid,
 				c_regdate
@@ -140,7 +165,15 @@
 				RTRIM(A.c_sysopid) = C.CN
 			AND
 				A.tenant_id = C.tenant_id
+			INNER JOIN
+				TBL_C_CATEGORY D
+			ON
+				A.c_cate_a = D.c_code
+			AND
+				A.tenant_id = D.tenant_id
 			WHERE
+				D.c_cat = 'a'
+			AND
 				c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				A.c_adminconfirm = 'N'
@@ -157,7 +190,10 @@
 		<![CDATA[
 			SELECT
 				DISTINCT c_clubno,
+				c_name,
 				c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				c_clubConfirmType,
+				c_clubGubun,
 				IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
 				c_sysopid,
 				c_regdate
@@ -177,7 +213,15 @@
 				RTRIM(A.c_sysopid) = C.CN
 			AND
 				A.tenant_id = C.tenant_id
+			INNER JOIN
+				TBL_C_CATEGORY D
+			ON
+				A.c_cate_a = D.c_code
+			AND
+				A.tenant_id = D.tenant_id
 			WHERE
+				D.c_cat = 'a'
+			AND
 				A.companyID = #companyID#
 			AND
 				A.tenant_id = #tenantID#
