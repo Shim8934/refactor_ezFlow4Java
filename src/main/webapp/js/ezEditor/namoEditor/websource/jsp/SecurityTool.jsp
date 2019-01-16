@@ -53,17 +53,21 @@
 
 		boolean bStatus = false;
 		java.util.Enumeration e = listXSS.elements();
-
-		while (e.hasMoreElements()) {
-			String r = (String)e.nextElement();
-			r = new String(getBase64Decode(r));
-			if (r.length() == 0)
-				continue;
-			
-			// r:Roll, s:String
-			if (compareRegex(r, s)) {
-				bStatus = true;
+		
+		try{
+			while (e.hasMoreElements()) {
+				String r = (String)e.nextElement();
+				r = new String(getBase64Decode(r), "ISO-8859-1");
+				if (r.length() == 0)
+					continue;
+				
+				// r:Roll, s:String
+				if (compareRegex(r, s)) {
+					bStatus = true;
+				}
 			}
+		}catch(UnsupportedEncodingException ex){
+	
 		}
 		return bStatus;
 	}

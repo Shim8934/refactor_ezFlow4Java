@@ -874,7 +874,7 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezEmail/mailQuotaList.do")
 	public String showMailBoxQuotaManaged(@CookieValue("loginCookie")String loginCookie, Model model) throws Exception {
-		logger.debug("showMailBoxQuotaManaed started.");
+		logger.debug("showMailBoxQuotaManaged started.");
 		
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 	
