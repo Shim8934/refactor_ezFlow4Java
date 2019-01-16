@@ -186,7 +186,7 @@
 	    	
 	    	function annualHistoryPop(userId, year) {
 	        	var url = "/admin/ezAttitude/annualHistoryPop.do?year=" + year + "&userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "annualHistoryPop", GetOpenWindowfeature(750, 309));
+				window.open(url, "annualHistoryPop", GetOpenWindowfeature(750, 510));
 	        }
 	    	
 	    	function annualExcelUploadPop(userId, year) {
@@ -251,7 +251,7 @@
 		    			resultHtml += vo.totalAnnualCnt.split(".")[0];
 	    			}
 	    			resultHtml += "</a></td>";
-	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"annualHistoryPop('" + vo.userId + "','" + vo.year + "')\">수정 내역 확인</span></a></td>";
+	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"annualHistoryPop('" + vo.userId + "','" + vo.year + "')\"><spring:message code='ezAttitude.t241' /></span></a></td>";
 	    			
 	    			i++;
 	    		});
@@ -377,9 +377,9 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="useAnnualCnt"><spring:message code='ezAttitude.t238' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="totalAnnualCnt"><spring:message code='ezAttitude.t239' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t241' /></th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="useAnnualCnt"><spring:message code='ezAttitude.t238' /></th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="totalAnnualCnt"><spring:message code='ezAttitude.t239' /></th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t241' /></th>
 					</tr>
 				</thead>
 				<tbody>

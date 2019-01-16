@@ -139,7 +139,7 @@
 	            	<th class="borderLeft borderRight" style="width:10%;text-align:center;"><spring:message code='ezAttitude.t62' /></th>
                 </tr>
             </table>
-            <div id="contentlist" name="contentlist" style="width: 100%;height: 202px; overflow-y: auto;">
+            <div id="contentlist" name="contentlist" style="width: 100%;height: 404px; overflow-y: auto;">
                 <table class="mainlist" style="width: 100%;">
 	                <c:choose>
 			    		<c:when test="${not empty resultList }">
