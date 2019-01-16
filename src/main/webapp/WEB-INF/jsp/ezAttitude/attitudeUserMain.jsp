@@ -334,6 +334,14 @@
 					pMode = "new";
 					attitudeNewItem(this);
 				});
+				
+				//개인근태일경우 표보기 크롬일경우 테이블 ui틀어짐 조정
+				if (deptFlag != "true") {
+					if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+						$("#attiTableListTB th:eq(5)").css("border-right-color","#e4e8ec");
+						$("#attiTableListTB th:eq(6)").css("width","12px");
+					}
+				}
 			});
 			
 			window.onload = function() {
@@ -2215,15 +2223,14 @@
 		<c:if test="${deptFlag != 'true'}">
 		<div id="attiTableListTB" style="width: 100%;">
 			<table class='mainlist' style='width: 100%;'>
-				<tr> 
-<!-- 				<th style='width:13%' colspan="2">날짜</th>  -->
+				<tr>
 					<th style='width:12%'><spring:message code='ezAttitude.t133'/></th>
 					<th style='width:12%'><spring:message code='ezAttitude.t232'/></th>
 					<th style='width:12%'><spring:message code='ezAttitude.t233'/></th> 
 					<th style='width:12%'><spring:message code='ezAttitude.t134'/></th>
 					<th style='width:20%'><spring:message code='ezAttitude.t149'/></th>
 					<th style="width:32%; border-right-color:transparent"><spring:message code='ezAttitude.t46'/></th>
-					<th style='width:7px;border-left:0px;'>&nbsp;</th>
+					<th style='width:8px;border-left:0px;'>&nbsp;</th>
 				</tr> 
 			</table>
 			

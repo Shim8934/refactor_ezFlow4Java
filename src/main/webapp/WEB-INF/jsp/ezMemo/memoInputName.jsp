@@ -103,7 +103,7 @@
 	        }
 	        
 	        function btn_cancel_onclick() {
-	            CancelFunction();
+	            window.close();
 	        }
 	        
 	        function folderName_onkeydown() {
