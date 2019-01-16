@@ -91,14 +91,14 @@
 		<div class="popup_noticeLayout">
 			<dl class="popup_noticeTitle">
 				<dt class="title_type${skinValue}"></dt>
-				<dd><c:out value='${title }'/></dd>
+				<dd class="name_type${skinValue }"><c:out value='${title }'/></dd>
 			</dl>
 			<div class='popup_noticeList'>${content }</div>
 				<c:if test = "${flag ne 'preview' }" >
 					<div class="notice_btn">
 						<p class="btn_checkbox">
 							<input type="checkbox" name="checkbox" class="inp_noticeCheck" id="inp_noticeCheck" onClick="closepopup()" /> 
-							<label for="inp_noticeCheck"><spring:message code = 'ezPersonal.t267' /></label></p>
+							<label class="name_type${skinValue }" for="inp_noticeCheck"><spring:message code = 'ezPersonal.t267' /></label></p>
 						<p class="notice_btnClose close_type${skinValue}"><span onclick=window.close() ></span></p>
 						</div>
 				</c:if> 

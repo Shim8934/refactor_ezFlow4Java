@@ -14,25 +14,33 @@
 .popup_type1{background:url(/images/admin/popup_bg02.png) #ffb4b4 top right no-repeat;}
 .popup_type2{background:url(/images/admin/popup_bg03.png) #ffd161 top right no-repeat;}
 .popup_type3{background:url(/images/admin/popup_bg04.png) #CCC top right no-repeat;}
+
+.popup_notice{height:100%;padding:20px;display:inline-block;position:absolute;}
+.popup_type0{background:url(/images/admin/popup_bg01.png) #0078fe top right no-repeat;}
+.popup_type1{background:url(/images/admin/popup_bg02.png) #ffb4b4 top right no-repeat;}
+.popup_type2{background:url(/images/admin/popup_bg03.png) #ffd161 top right no-repeat;}
+.popup_type3{background:url(/images/admin/popup_bg04.png) #CCC top right no-repeat;}
 .popup_notice form{display:inline; margin:0px;}
 .popup_notice .popup_noticeLayout{height:100%;}
 
-.popup_notice .popup_noticeTitle{overflow:hidden; margin:0px 0px 20px 0px; padding:0px;}
+.popup_notice .popup_noticeTitle{overflow:hidden; margin:0px 0px 20px 0px; padding:0px;font-family: 'malgun gothic', 'arial', 'verdana';}
 .popup_notice .popup_noticeTitle dt{float:left; width:38px; height:38px; margin:0px 10px 0px 0px; padding:0px;}
 .popup_notice .popup_noticeTitle dt.title_type0 { background:url(/images/admin/popup_title_icon01.png) no-repeat;}
 .popup_notice .popup_noticeTitle dt.title_type1 { background:url(/images/admin/popup_title_icon02.png) no-repeat;}
 .popup_notice .popup_noticeTitle dt.title_type2 { background:url(/images/admin/popup_title_icon03.png) no-repeat;}
 .popup_notice .popup_noticeTitle dt.title_type3 { background:url(/images/admin/popup_title_icon04.png) no-repeat;}
 .popup_notice .popup_noticeTitle dd{margin:5px 48px; padding:0px; font-size:16px; color:#333; line-height:26px;font-family: 'malgun gothic', 'arial', 'verdana';}
+.popup_notice .popup_noticeTitle dd.name_type0{color:#FFF;}
 
-.popup_notice .popup_noticeLayout .popup_noticeList{overflow:auto; max-height:360px; margin:0px; padding:20px; background:#FFF;}
-.popup_notice .popup_noticeLayout .popup_noticeList p{margin:0px; padding:0px; line-height:18px; font-size:12px; font-family:'malgun gothic',"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
-.popup_notice .popup_noticeLayout .notice_btn{overflow:hidden; margin:14px 0px; padding:0px;}
+.popup_notice .popup_noticeLayout .popup_noticeList{overflow:auto; margin:0px; padding:20px; background:#FFF; height:calc(100% - 126px);}
+.popup_notice .popup_noticeLayout .popup_noticeList p{margin:0px; padding:0px; line-height:18px; font-size:12px; font-family:'malgun gothic',"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;word-break:break-all; word-wrap: break-word;}
+.popup_notice .popup_noticeLayout .notice_btn{overflow:hidden; margin:14px 0px 0px 0px; padding:0px;height:24px;}
 .popup_notice .popup_noticeLayout .notice_btn p{display:inline-block; margin:0px; padding:0px; font-size:12px; color:#333; font-family:'malgun gothic',"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
-.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox{float:left; cursor:pointer;}
+.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox{float:left; cursor:pointer;padding:0px;}
+.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox label.name_type0{color:#FFF;}
 .popup_notice .popup_noticeLayout .notice_btn .btn_checkbox .inp_noticeCheck{width:13px; height:13px; margin:-2px 0px 0px 0px; padding:0; vertical-align:middle; overflow:hidden;}
-.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose{float:right; width:14px; height:14px; background:url(/images/admin/popup_close_icon02.png) no-repeat; cursor:pointer;}
-.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose.close_type0 {background:url(/images/admin/popup_close_icon01.png) no-repeat;}
-.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose.close_type1 {background:url(/images/admin/popup_close_icon02.png) no-repeat;}
-.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose.close_type2 {background:url(/images/admin/popup_close_icon02.png) no-repeat;}
-.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose.close_type3 {background:url(/images/admin/popup_close_icon02.png) no-repeat;}
+.popup_notice .notice_btnClose{width:24px; height:24px; background:url(/images/admin/noMenu.png) no-repeat; cursor:pointer;position:absolute;margin:0;right:-7px;background-color:white;top:-9px;border-radius:12px;}
+/* .popup_notice .notice_btnClose.close_type0 {background:url(/images/admin/noMenu.png) no-repeat;}
+.popup_notice .notice_btnClose.close_type1 {background:url(/images/admin/noMenu.png) no-repeat;}
+.popup_notice .notice_btnClose.close_type2 {background:url(/images/admin/noMenu.png) no-repeat;}
+.popup_notice .notice_btnClose.close_type3 {background:url(/images/admin/noMenu.png) no-repeat;} */

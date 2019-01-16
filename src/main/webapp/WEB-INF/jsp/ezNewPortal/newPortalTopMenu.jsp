@@ -21,33 +21,6 @@
 			#editMenuBtn {display: none;}
 			.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
 			#logoUrl {width:106px; height:42px;}
-			.popup_notice{height:100%;padding:20px;display:inline-block;position:absolute;}
-			.popup_type0{background:url(/images/admin/popup_bg01.png) #0078fe top right no-repeat;}
-			.popup_type1{background:url(/images/admin/popup_bg02.png) #ffb4b4 top right no-repeat;}
-			.popup_type2{background:url(/images/admin/popup_bg03.png) #ffd161 top right no-repeat;}
-			.popup_type3{background:url(/images/admin/popup_bg04.png) #CCC top right no-repeat;}
-			.popup_notice form{display:inline; margin:0px;}
-			.popup_notice .popup_noticeLayout{height:100%;}
-			
-			.popup_notice .popup_noticeTitle{overflow:hidden; margin:0px 0px 20px 0px; padding:0px;font-family: 'malgun gothic', 'arial', 'verdana';}
-			.popup_notice .popup_noticeTitle dt{float:left; width:38px; height:38px; margin:0px 10px 0px 0px; padding:0px;}
-			.popup_notice .popup_noticeTitle dt.title_type0 { background:url(/images/admin/popup_title_icon01.png) no-repeat;}
-			.popup_notice .popup_noticeTitle dt.title_type1 { background:url(/images/admin/popup_title_icon02.png) no-repeat;}
-			.popup_notice .popup_noticeTitle dt.title_type2 { background:url(/images/admin/popup_title_icon03.png) no-repeat;}
-			.popup_notice .popup_noticeTitle dt.title_type3 { background:url(/images/admin/popup_title_icon04.png) no-repeat;}
-			.popup_notice .popup_noticeTitle dd{margin:5px 48px; padding:0px; font-size:16px; color:#333; line-height:26px;font-family: 'malgun gothic', 'arial', 'verdana';}
-			
-			.popup_notice .popup_noticeLayout .popup_noticeList{overflow:auto; max-height:360px; margin:0px; padding:20px; background:#FFF;}
-			.popup_notice .popup_noticeLayout .popup_noticeList p{margin:0px; padding:0px; line-height:18px; font-size:12px; font-family:'malgun gothic',"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
-			.popup_notice .popup_noticeLayout .notice_btn{overflow:hidden; margin:14px 0px; padding:0px;}
-			.popup_notice .popup_noticeLayout .notice_btn p{display:inline-block; margin:0px; padding:0px; font-size:12px; color:#333; font-family:'malgun gothic',"돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
-			.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox{float:left; cursor:pointer;}
-			.popup_notice .popup_noticeLayout .notice_btn .btn_checkbox .inp_noticeCheck{width:13px; height:13px; margin:-2px 0px 0px 0px; padding:0; vertical-align:middle; overflow:hidden;}
-			.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose{float:right; width:14px; height:14px; background:url(/images/admin/popup_close_icon02.png) no-repeat; cursor:pointer;}
-			.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose.close_type0 {background:url(/images/admin/popup_close_icon01.png) no-repeat;}
-			.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose.close_type1 {background:url(/images/admin/popup_close_icon02.png) no-repeat;}
-			.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose.close_type2 {background:url(/images/admin/popup_close_icon02.png) no-repeat;}
-			.popup_notice .popup_noticeLayout .notice_btn .notice_btnClose.close_type3 {background:url(/images/admin/popup_close_icon02.png) no-repeat;}
 		</style>
 	</head>
 	<body>
@@ -437,8 +410,10 @@
 			var toggleMenu = document.getElementById('toggleMenu').children;
 			toggleMenu.forEach(function (item, index) {
 				var menuUrl = newPortalTopMenu.menuListObj['menu_' + item.id].menuUrl;
+				console.log(menuUrl);
 				item.addEventListener('click', function () {
 					subMenuClickEvent('off', menuUrl);
+					notice_all_close();
 					//window.open(menuUrl, 'main', '');
 				});
 			});				
@@ -658,21 +633,6 @@
 					var index = i;
 					openNotiPopup(notiInfo.itemSeq, notiInfo.width, notiInfo.height, notiInfo.position, index);
 				}
-				
-				document.getElementById("menu_toggle").style.display = "none";
-				var topMenuFull = document.getElementById('topMenuFull');
-				var topFrame = parent.document.getElementById('topFrame');
-				var bodyTag = document.getElementsByTagName('Body')[0];
-				
-				var screenHeight = screen.height;
-				topFrame.style.position = 'relative';
-				topFrame.style.minHeight = screenHeight+"px";
-				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
-				
-				var popupArea = document.getElementById("popupArea");
-				popupArea.style.height = (screenHeight - 57) + "px";
-				popupArea.style.width = "100%";
-				showProgress("notice");
 			}
 			
 		}
@@ -729,40 +689,97 @@
 		    		var wLeft = result.horizontal;
 		    		var wTop = result.vertical;
 		    		
-		    		resultHTML += "<div id='popup" + popup_number + "' class='popup_notice popup_type" + result.skinValue + "'>";
+		    		var popupDiv = document.createElement("div");
+		    		popupDiv.id = "popup" + popup_number
+		    		popupDiv.className = "popup_notice popup_type" + result.skinValue;
+		    		
+		    		var formElement = document.createElement("form");
+		    		formElement.style.height = "100%";
+		    		
+		    		var layoutDiv = document.createElement("div");
+		    		layoutDiv.className = "popup_noticeLayout";
+		    		
+		    		var titleDl = document.createElement("dl");
+		    		titleDl.className = "popup_noticeTitle";
+		    		
+		    		var titleDt = document.createElement("dt");
+		    		titleDt.className = "title_type" + result.skinValue;
+		    		
+		    		var titleDd = document.createElement("dd");
+		    		titleDd.className = "name_type" + result.skinValue;
+		    		titleDd.textContent = result.title;
+		    		
+		    		titleDl.appendChild(titleDt);
+		    		titleDl.appendChild(titleDd);
+		    		
+		    		var contentDiv = document.createElement("div");
+		    		contentDiv.className = "popup_noticeList";
+		    		contentDiv.innerHTML = result.content;
+		    		
+		    		var btnDiv = document.createElement("div");
+		    		btnDiv.className = "notice_btn";
+		    		
+		    		var btnPElem = document.createElement("p");
+		    		btnPElem.className = "btn_checkbox";
+		    		
+		    		var checkInput = document.createElement("input");
+		    		checkInput.type = "checkbox";
+		    		checkInput.setAttribute("name", "checkbox");
+		    		checkInput.className = "inp_noticeCheck";
+		    		checkInput.id = "inp_noticeCheck" + popup_number;
+		    		
+		    		var labelElem = document.createElement("label");
+		    		labelElem.className = "name_type" + result.skinValue;
+		    		labelElem.setAttribute("for", "inp_noticeCheck");
+		    		labelElem.textContent = "<spring:message code = 'ezPersonal.t267' />";
+		    		
+		    		var closePElem = document.createElement("p");
+		    		closePElem.className = "notice_btnClose close_type" + result.skinValue;
+		    		closePElem.id = "closeBtn" + popup_number;
+		    		
+		    		btnPElem.appendChild(checkInput);
+		    		btnPElem.appendChild(labelElem);
+		    		btnDiv.appendChild(btnPElem);
+		    		
+		    		layoutDiv.appendChild(titleDl);
+		    		layoutDiv.appendChild(contentDiv);
+		    		layoutDiv.appendChild(btnDiv);
+		    		formElement.appendChild(layoutDiv);
+		    		popupDiv.appendChild(closePElem);
+		    		popupDiv.appendChild(formElement);
+		    		/* resultHTML += "<div id='popup" + popup_number + "' class='popup_notice popup_type" + result.skinValue + "'>";
 		    		resultHTML += "<form style='height:100%'>";
 		    		resultHTML += "<div class='popup_noticeLayout'>";
 		    		resultHTML += "<dl class='popup_noticeTitle'>";
 		    		resultHTML += "<dt class='title_type" + result.skinValue + "'></dt>";
-		    		resultHTML += "<dd>" + result.title + "</dd>";
+		    		resultHTML += "<dd class='name_type" + result.skinValue + "'>" + result.title + "</dd>";
 		    		resultHTML += "</dl>";
 		    		resultHTML += "<div class='popup_noticeList'>" + result.content + "</div>";
 		    		resultHTML += "<div class='notice_btn'><p class='btn_checkbox'>";
 		    		resultHTML += "<input type='checkbox' name='checkbox' class='inp_noticeCheck' id='inp_noticeCheck" + popup_number + "'/>";
-		    		resultHTML += "<label for='inp_noticeCheck'><spring:message code = 'ezPersonal.t267' /></label></p>";
+		    		resultHTML += "<label class='name_type" + result.skinValue + "' for='inp_noticeCheck'><spring:message code = 'ezPersonal.t267' /></label></p>";
 		    		resultHTML += '<p class="notice_btnClose close_type' + result.skinValue + '" id="closeBtn' + popup_number + '">&nbsp;</p>';
 		    		resultHTML += "</div></div></form></div>";
+		    		 */
+		    		 
+		    		//document.getElementById("popupArea").appendChild(popupDiv);
+		    		parent.document.getElementsByTagName("body")[0].appendChild(popupDiv);
+		    		//$("#popupArea").append(resultHTML);
 		    		
-		    		$("#popupArea").append(resultHTML);
-		    		
-		    		document.getElementById("popup" + popup_number).style.height = wHeight + "px";
-		    		document.getElementById("popup" + popup_number).style.width = wWidth + "px";
-		    		document.getElementById("popup" + popup_number).style.left = wLeft + "px";
-		    		document.getElementById("popup" + popup_number).style.top = wTop + "px";
-		    		document.getElementById("popup" + popup_number).style.zIndex = index + 1;
-		    		document.getElementById("popup" + popup_number).addEventListener("click", changeZIndex);
-		    		document.getElementById("inp_noticeCheck" + popup_number).addEventListener("change", function() {
+		    		parent.document.getElementById("popup" + popup_number).style.height = wHeight + "px";
+		    		parent.document.getElementById("popup" + popup_number).style.width = wWidth + "px";
+		    		parent.document.getElementById("popup" + popup_number).style.left = wLeft + "px";
+		    		parent.document.getElementById("popup" + popup_number).style.top = wTop + "px";
+		    		parent.document.getElementById("popup" + popup_number).style.zIndex = index + 1;
+		    		parent.document.getElementById("popup" + popup_number).addEventListener("click", changeZIndex);
+		    		parent.document.getElementById("inp_noticeCheck" + popup_number).addEventListener("change", function() {
 		    			notice_close(popup_number, result.userId, "checkbox");
 		    		});
-		    		document.getElementById("closeBtn" + popup_number).addEventListener("click", function() {
+		    		parent.document.getElementById("closeBtn" + popup_number).addEventListener("click", function() {
 		    			notice_close(popup_number, result.userId, "btn");
 		    		});
-		    		
-					var popupContent = document.getElementById("popup" + popup_number).getElementsByClassName("popup_noticeList")[0];
-					popupContent.style.height = document.getElementById("popup" + popup_number).clientHeight - 175 + "px";
 					
-					$("#popup" + popup_number).draggable({
-						containment: "#popupArea",
+					parent.$("#popup" + popup_number).draggable({
 						cancel : ".popup_noticeList",
 						scroll: false 
 					});
@@ -783,7 +800,7 @@
 		}
 		
 		var changeZIndex = function () {
-			var popupList = document.getElementsByClassName("popup_notice");
+			var popupList = parent.document.getElementsByClassName("popup_notice");
 			var popupListCount = popupList.length;
 			var popupId = this.id;
 			var popupZIndex = Number(this.style.zIndex);
@@ -792,7 +809,7 @@
 				var popup = popupList[i];
 				var compPopupZIndex = Number(popup.style.zIndex);
 				
-				if (popupZIndex < compPopupZIndex) {
+				if (popupZIndex <= compPopupZIndex) {
 					popupZIndex = compPopupZIndex + 1;
 				}
 				
@@ -802,24 +819,29 @@
 		}
 		
 		var notice_close = function (popupId, userId, position) {
-			var isChecked = document.getElementById("inp_noticeCheck" + popupId).checked;
+			var isChecked = parent.document.getElementById("inp_noticeCheck" + popupId).checked;
 			
 			if (isChecked) {
 				setCookie("POPUP_" + popupId + "_" + userId, "1", 1); 
 			}
 			
-			var popupList = document.getElementsByClassName("popup_notice");
+			var popupList = parent.document.getElementsByClassName("popup_notice");
 			
-			var popup = document.getElementById("popup" + popupId);
+			var popup = parent.document.getElementById("popup" + popupId);
 			popup.parentNode.removeChild(popup);
 			
-			if (popupList.length < 1) {
-				hideProgress();
-				var topFrame = parent.document.getElementById('topFrame');
-				document.getElementsByTagName("body")[0].style.backgroundColor = "";
-				topFrame.style.position = "";
-			}
+		}
+		
+		var notice_all_close = function () {
+			var popupList = parent.document.getElementsByClassName("popup_notice");
+			var popupListCount = popupList.length;
 			
+			for (var i = 0; i < popupListCount; i++) {
+				var popupId = popupList[0].id; 
+				var popup = parent.document.getElementById(popupId);
+				
+				popup.parentNode.removeChild(popup);
+			}
 		}
 		
 		function setCookie(name, value, expiredays) {
