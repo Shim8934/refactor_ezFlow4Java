@@ -3813,4 +3813,70 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 
 		return "admin/ezOrgan/chooseDeletege";
 	}
+
+	/**
+	 * 조직도관리 겸직관리 겸직등록 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/addJobUserModify.do")	
+	public String addJobUserModify(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("addJobUserModify started.");
+
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		//관리자 권한 체크
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+		}
+
+		String topID = "";
+		String userID = (request.getParameter("userID") != null ? request.getParameter("userID") : "");
+		String userName = (request.getParameter("userName") != null ? request.getParameter("userName") : "");
+		String selCompany = (request.getParameter("companyID") != null ? request.getParameter("companyID") : "");
+		String primary = ezCommonService.getTenantConfig("LangPrimary" + user.getLang(), user.getTenantId());
+		String secondary = ezCommonService.getTenantConfig("LangSecondary" + user.getLang(), user.getTenantId());
+		String deptTreeTopId = "";
+
+		if (user.getRollInfo().indexOf("c=1") == -1) {
+			topID = user.getCompanyID();
+			deptTreeTopId = topID;
+		} else {
+			topID = "Top";
+			deptTreeTopId = topID + "/organ";
+		}
+
+		model.addAttribute("topID", topID);
+		model.addAttribute("use_ocs", "");
+		model.addAttribute("userID", userID);
+		model.addAttribute("userName", userName);
+		model.addAttribute("selCompany", selCompany);
+		model.addAttribute("primary", primary);
+		model.addAttribute("secondary", secondary);
+		model.addAttribute("userInfo", user);
+		model.addAttribute("deptTreeTopId", deptTreeTopId);
+
+		logger.debug("addJobUserModify ended.");
+
+		return "admin/ezOrgan/addJobUserModify";
+	}
+
+	/**
+	 * 조직도관리 겸직관리 겸직등록 화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezOrgan/addJobCompanyName.do", produces = "text/plain; charset=UTF-8")
+	@ResponseBody
+	public String addJobCompanyName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("addJobCompanyName started.");
+
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		//관리자 권한 체크
+		if (user.getRollInfo().indexOf("c=1") == -1 && user.getRollInfo().indexOf("k=1") == -1) {
+			return "cmm/error/adminDenied";
+			
+		}
+
+		String displayName = (request.getParameter("displayName") != null ? request.getParameter("displayName") : "");
+		String companyName = ezOrganAdminService.getCompanyName(displayName, user.getTenantId());
+		companyName = companyName + ":" + user.getPrimary();
+		logger.debug("addJobCompanyName ended.");
+		return companyName;
+	}
 }

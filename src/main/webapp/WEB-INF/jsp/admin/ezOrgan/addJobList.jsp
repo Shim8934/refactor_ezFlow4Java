@@ -18,7 +18,7 @@
 	    .mainlist_free tr th:first-child {
 	    		padding-left:10px;
 	    }
-	    .preview_info {background: #f1f3f5; margin: 0px; padding: 0px; overflow: hidden; border-bottom: 1px solid #e5e5e5; height: 36px; font-weight: bold;}
+	    .preview_info {background: #f1f3f5; margin: 0px; padding: 3px; overflow: hidden; border-bottom: 1px solid #e5e5e5; height: 36px; font-weight: bold;}
 	    .preview_title {display: inline-block;margin-top: -6px;margin-left: 13px;}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -304,12 +304,14 @@
 		            }
 		        }
 		    } */
-		    
+		    var flags = true;
 		    function UserAddjobList(obj) {
 				// 체크박스 클릭
-				var className = window.event.target.getAttribute('class');
-				if(className === 'checks') {
-					return;
+				if(flags) {
+					var className = window.event.target.getAttribute('class');
+					if(className === 'checks') {
+						return;
+					}
 				}
 
 		        var listview = new ListView();
@@ -415,7 +417,7 @@
 				if(itemseq == "0" || itemseq == null || itemseq == "") {
 					return;
 				}
-
+				flags = true;
 				if(checkFlag) {
 					if($("#"+itemseq).prop("checked")) {
 						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
@@ -668,7 +670,8 @@
 		    	AddJob_List();
 		    }
 		    
-		    function User_View() {
+		    var dbClickObj;
+		    function User_View(obj) {
 		        var listview = new ListView();
 		        listview.LoadFromID("lvAddJobList");
 
@@ -678,17 +681,16 @@
 		        }
 
 		        var id = listview.GetSelectedRows()[0].getAttribute("DATA1");
-		        
+		        var name = listview.GetSelectedRows()[0].getAttribute("DATA3");
+		        dbClickObj = obj;
+
 		      	//2016-04-25 장진혁과장 -- Cross 버전 선택 주석처리
-		        //if (CrossYN()) {		       
+		        //if (CrossYN()) {
+		        flags = false;
 	            addjob_config_dialogArguments = new Array();
 	            addjob_config_dialogArguments[1] = AddJob_Add_Complete;		            
-	            var OpenWin = window.open("/admin/ezOrgan/addJobConfig.do?userID=" + encodeURI(id) + "&companyID=" + document.getElementById("ListCompany").value, "AddJob_Config", GetOpenWindowfeature(970, 580));
+	            var OpenWin = window.open("/admin/ezOrgan/addJobUserModify.do?userID=" + encodeURI(id) + "&userName=" + encodeURI(name) + "&companyID=" + document.getElementById("ListCompany").value, "AddJob_Config", GetOpenWindowfeature(350, 570));
 	            try { OpenWin.focus(); } catch (e) { }
-		        /* } else {
-		            window.showModalDialog("Addjob_Config.aspx?userid=" + escape(id) + "&companyid=" + document.getElementById("ListCompany").value, "", "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(970, 580));
-		            window.location.reload(false);
-		        } */
 		    }
 		    
 		    function email_onclick() {

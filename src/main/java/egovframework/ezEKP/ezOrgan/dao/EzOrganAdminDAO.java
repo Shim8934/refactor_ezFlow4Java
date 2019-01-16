@@ -2190,4 +2190,8 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public void setAddJobCount(Map<String, Object> map) throws Exception{
 		update("EzOrganAdminDAO.getAddJobCount", map);
 	}
+
+	public String getCompanyName(Map<String, Object> map) throws Exception {
+		return (String) select ("EzOrganAdminDAO.getCompanyName", map);
+	}
 }

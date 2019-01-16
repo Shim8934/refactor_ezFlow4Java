@@ -4827,4 +4827,14 @@
        {CALL talk_SP_CONN_UPDATETHUMNAILPROFILE(#TENANT_ID#)}
      </procedure>
  
+ 	<select id="EzOrganAdminDAO.getCompanyName" parameterClass="map" resultClass="String">
+ 		SELECT
+ 			EXTENSIONATTRIBUTE3
+ 		FROM
+ 			TBL_DEPTMASTER
+ 		WHERE
+ 			TENANT_ID = #v_TENANT_ID#
+ 		AND
+ 			CN = #v_CN#
+ 	</select>
 </sqlMap>

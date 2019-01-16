@@ -2153,4 +2153,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception {
 		return ezOrganAdminDao.getAllUserCnList(tenantID);
 	}
+
+	@Override
+	public String getCompanyName(String displayName, int tenantID) throws Exception {
+		logger.debug("getCompanyName started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_CN", displayName);
+		map.put("v_TENANT_ID", tenantID);
+
+		String companyName = ezOrganAdminDao.getCompanyName(map);
+
+		logger.debug("getCompanyName ended");
+		return companyName;
+	}
 }

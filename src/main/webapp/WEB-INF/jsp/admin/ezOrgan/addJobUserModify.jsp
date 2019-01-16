@@ -39,6 +39,7 @@
 		<script type="text/javascript">
 			var topid = "<c:out value='${topID}'/>";
 		    var cn = "<c:out value='${userID}'/>";
+		    var userName = "<c:out value='${userName}'/>";
 		    var deptid = "<c:out value='${userInfo.deptID}'/>";
 		    var g_szAuthor = "";
 		    var g_senderinfo = "<c:out value='${userInfo.companyName1}'/>" + ", " + "<c:out value='${userInfo.deptName1}'/>" + ", " + "<c:out value='${userInfo.title1}'/>";
@@ -54,6 +55,7 @@
 		    var isfirst = true;
 		    var preObj = "";
 			var deptTreeTopId = "${deptTreeTopId}";
+			var objectTr = window.opener.dbClickObj;
 		    
 		    $(document).ready(function(){
 		    	try {
@@ -84,6 +86,7 @@
 		        ListTypeChangeIcon();
 		        
 		        ChangeListView_onClick(getOrganListType());
+		        Addjob_Check(cn);
 				
 		    });
 		    
@@ -726,176 +729,164 @@
 		        } 
 		        
 		        return ReceiveDocument;
-		    }
-		    
-		    function btn_Add_onclick() {
-		        var pparsingXML = "";
-		        var pparsingXML2 = "";
-		        var pAddFlag = false;
-		        
-		        if (p_ListOrderObject == null || p_ListOrderObject == "") {
-		            alert(strLang13);
-		            return;
-		        } else {
-		            var dept;
-		            
-		            if (CrossYN()) {
-		                dept = document.getElementById("TreeFrame").contentWindow.OK_Click().split(';');
-		            } else {
-		                dept = document.getElementById("TreeFrame").contentWindow.OK_Click().split(';');
-		            }		            
-		            if (dept[0] == "") {
-		                alert("<spring:message code='ezOrgan.t249' />");
-		                return;
-		            }
-		            
-// 		            var titleName = document.getElementById("txt_TitleName").value.trim();
-		            
- 					if (jobTitle.trim() == "") {
-// 						document.getElementById("txt_TitleName").focus();
-						alert("<spring:message code='ezOrgan.kyj07' />");
+			}
+
+			var board_alertArguments = new Array();
+			function btn_Add_onclick() {
+				board_alertArguments[1] = DivPopUpHidden;
+				var pparsingXML = "";
+				var pparsingXML2 = "";
+				var pAddFlag = false;
+				var dept;
+
+				if (CrossYN()) {
+					dept = document.getElementById("TreeFrame").contentWindow.OK_Click().split(';');
+				} else {
+					dept = document.getElementById("TreeFrame").contentWindow.OK_Click().split(';');
+				}
+
+				if (dept[0] == "") {
+					var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezOrgan.t249' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezOrgan.t249' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, url);
+					return;
+				}
+
+ 				if (jobTitle.trim() == "") {
+ 					var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezOrgan.kyj07' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezOrgan.kyj07' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, url);
+					return;
+				}
+
+ 				var listview = new ListView();
+ 				listview.LoadFromID("lvUserList");
+ 				var UserAddjoblistview = new ListView();
+ 				UserAddjoblistview.LoadFromID("lvAddjobList");
+ 				var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
+
+ 				if (!bFlag) {
+ 					var orgDeptId = getDeptId(cn);
+ 					bFlag = dept[0] == orgDeptId ? true : false;
+ 				}
+
+ 				if (bFlag) {
+					var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent(strLang25) + "&MESSAGE=" + encodeURIComponent(strLang25) + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, url);
+					return;
+					alert();
+				} else {
+					var compName = new Array();
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						url : "/admin/ezOrgan/addJobCompanyName.do",
+						async : false,
+						data : {displayName : dept[0]},
+						success : function(data){
+							compName = data.split(":");
+							}
+						});
+
+					pparsingXML2 = "";
+					pparsingXML = "";
+					pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
+					pparsingXML = pparsingXML + "<ROW><CELL>";
+					pparsingXML = pparsingXML + "<VALUE>" + userName;
+					pparsingXML = pparsingXML + "changeComTapString" + compName[0];
+					pparsingXML = pparsingXML + "changeDeptTapString" + MakeXMLString(dept[1]) + " (" ;
+					if(compName[1] === "1") {
+						pparsingXML = pparsingXML + MakeXMLString(jobTitle);
+					} else {
+						pparsingXML = pparsingXML + MakeXMLString(jobTitle2);
+					}
+					pparsingXML = pparsingXML + ")</VALUE>";
+					pparsingXML = pparsingXML + "<DATA1>" + MakeXMLString(dept[0]) + "</DATA1>";
+					pparsingXML = pparsingXML + "<DATA2>" + cn + "</DATA2>";
+					pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(jobTitle) + "</DATA3>";
+					pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(jobTitle2) + "</DATA4>";
+					pparsingXML = pparsingXML + "<DATA5>" + MakeXMLString(dept[1]) + "</DATA5>";
+					pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(jobID) + "</DATA6>";
+					pparsingXML = pparsingXML + "</CELL></ROW>";
+					pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+					Resultxml = loadXMLString(pparsingXML2);
+
+					var listview = new ListView();
+					listview.LoadFromID("lvAddjobList");
+					var MaxID = 0;
+					var InitTr = listview.GetDataRows();
+					var MaxCntNum = 0;
+
+					for (var j = 0  ; j < InitTr.length  ; j++) {
+						var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+
+						if (MaxID < curnum) {
+							MaxID = curnum;
+							MaxCntNum = j;
+						}
+					}
+					var objTr = listview.AddRow(InitTr.length);
+
+					if (MaxCntNum != 0) {
+						MaxCntNum = MaxCntNum + 1;
+					}
+					SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+					listview.AddDataRow(objTr, Resultxml);
+
+					var _tdlength = document.getElementById("lvAddjobList").getElementsByTagName("TD").length;
+					for (var y = 0; y < _tdlength; y++) {
+						document.getElementById("lvAddjobList").getElementsByTagName("TD")[y].style.textOverflow = "";
+						document.getElementById("lvAddjobList").getElementsByTagName("TD")[y].style.overflow = "";
+					}
+				}
+				document.getElementById('layer_popup').style.display = "none";
+			}
+
+			function OK_Click() {
+				board_alertArguments[1] = DivPopUpHidden;
+				var Addjoblistview = new ListView();
+				Addjoblistview.LoadFromID("lvAddjobList");
+				var AddjobText = "";
+				var xmlHTTP = createXMLHttpRequest();
+				var xmlDom = createXmlDom();
+				var xmlPara = createXmlDom();
+				var objRoot, objNode, subNode;
+				createNodeInsert(xmlDom, objNode, "DATA");
+
+				for (var i = 0; i < Addjoblistview.GetRowCount() ; i++) {
+					createNodeAndInsertText(xmlDom, objNode, "CN", cn);
+					createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(Addjoblistview.GetDataRows()[i], "data1"));
+					createNodeAndInsertText(xmlDom, objNode, "TITLE", GetAttribute(Addjoblistview.GetDataRows()[i], "data3") + ":" + GetAttribute(Addjoblistview.GetDataRows()[i], "data4"));
+					createNodeAndInsertText(xmlDom, objNode, "JOBID", GetAttribute(Addjoblistview.GetDataRows()[i], "data6"));
+					AddjobText = AddjobText + "- " + GetAttribute(Addjoblistview.GetDataRows()[i], "data5") + " (" + GetAttribute(Addjoblistview.GetDataRows()[i], "data3") + ":" + GetAttribute(Addjoblistview.GetDataRows()[i], "data4") + ")<BR>";
+				}
+
+				if (Addjoblistview.GetRowCount() == 0) {
+					var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezOrgan.t330' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezOrgan.t330' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+					DivPopUpShow(330, 205, url);
+					return;
+				}
+
+				xmlHTTP.open("POST", "/admin/ezOrgan/saveSubTitle.do", false);
+				xmlHTTP.send(xmlDom);
+				if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
+					if (xmlHTTP.responseText == "EXIST") {
+						var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezOrgan.t202' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezOrgan.t202' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+						DivPopUpShow(330, 205, url);
+						return;
+					} else {
+						var url = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezOrgan.t203' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezOrgan.t203' />") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
+						DivPopUpShow(330, 205, url);
 						return;
 					}
-						
-		            var listview = new ListView();
-		            listview.LoadFromID("lvUserList");
-		            var UserAddjoblistview = new ListView();
-		            UserAddjoblistview.LoadFromID("lvAddjobList");
-		            var bFlag = UserAddjoblistview.ExistRow("data1", dept[0]);
-		            
-		            if (!bFlag) {
-    		            var cn = GetAttribute(p_ListOrderObject, "_data2");
-    		            var orgDeptId = getDeptId(cn);
-    		            bFlag = dept[0] == orgDeptId ? true : false;
-		        	}
-		            
-		            if (bFlag) {
-		                alert(strLang25);
-// 		                pAddFlag = true;
-		            } else {
-		            	var compName = new Array();
-				        $.ajax({
-				        	type : "POST",
-				        	dataType : "text",
-				        	url : "/admin/ezOrgan/addJobCompanyName.do",
-				        	async : false,
-				        	data : {displayName : dept[0]},
-				        	success : function(data){
-				        		console.log(data);
-				        		compName = data.split(":");
-				        	}
-				        });
-		                pparsingXML2 = "";
-		                pparsingXML = "";
-		                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-		                pparsingXML = pparsingXML + "<ROW><CELL>";
-// 		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(dept[1]) + " (" + MakeXMLString(document.getElementById("txt_TitleName").value) + " : " + MakeXMLString(document.getElementById("txt_TitleName2").value) + ")</VALUE>";
- 		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(p_ListOrderObject, "_data11"));
- 		               	pparsingXML = pparsingXML + "changeComTapString" + compName[0];
- 		               	pparsingXML = pparsingXML + "changeDeptTapString" + MakeXMLString(dept[1]) + " (" ;
- 		               	if(compName[1] === "1") {
- 		               		pparsingXML = pparsingXML + MakeXMLString(jobTitle);
- 		               	} else {
- 		               		pparsingXML = pparsingXML + MakeXMLString(jobTitle2);
- 		               	}
- 		               	pparsingXML = pparsingXML + ")</VALUE>";
-		                pparsingXML = pparsingXML + "<DATA1>" + MakeXMLString(dept[0]) + "</DATA1>";
-		                pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(GetAttribute(p_ListOrderObject, "_data2")) + "</DATA2>";
-// 		                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(document.getElementById("txt_TitleName").value) + "</DATA3>";
-// 		                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(document.getElementById("txt_TitleName2").value) + "</DATA4>";
-		                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(jobTitle) + "</DATA3>";
-		                pparsingXML = pparsingXML + "<DATA4>" + MakeXMLString(jobTitle2) + "</DATA4>";
-		                pparsingXML = pparsingXML + "<DATA5>" + MakeXMLString(dept[1]) + "</DATA5>";
-		                pparsingXML = pparsingXML + "<DATA6>" + MakeXMLString(jobID) + "</DATA6>";
-		                pparsingXML = pparsingXML + "</CELL></ROW>";
-		                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-		                Resultxml = loadXMLString(pparsingXML2);
+				}
 
-		                var listview = new ListView();
-		                listview.LoadFromID("lvAddjobList");		                
-		                var MaxID = 0;
-		                var InitTr = listview.GetDataRows();
-		                var MaxCntNum = 0;
+				try {
+					window.opener.UserAddjobList(objectTr);
+					window.close();
+				} catch (e) {
+					window.close();
+				}
+			}
 
-		                for (var j = 0  ; j < InitTr.length  ; j++) {
-		                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-		                    
-		                    if (MaxID < curnum) {
-		                        MaxID = curnum;
-		                        MaxCntNum = j;
-		                    }
-		                }
-		                var objTr = listview.AddRow(InitTr.length);
-		                
-		                if (MaxCntNum != 0) {
-		                    MaxCntNum = MaxCntNum + 1;
-		                }
-		                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
-		                listview.AddDataRow(objTr, Resultxml);
-
-		                var _tdlength = document.getElementById("lvAddjobList").getElementsByTagName("TD").length;
-		                for (var y = 0; y < _tdlength; y++) {
-		                    document.getElementById("lvAddjobList").getElementsByTagName("TD")[y].style.textOverflow = "";
-		                    document.getElementById("lvAddjobList").getElementsByTagName("TD")[y].style.overflow = "";
-		                }
-		            }
-		        }
-		        document.getElementById('layer_popup').style.display = "none";
-// 		        document.getElementById("txt_TitleName").value = "";
-// 		        document.getElementById("txt_TitleName2").value = "";
-		    }
-		    
-		    function OK_Click() {
-	            var Addjoblistview = new ListView();
-	            Addjoblistview.LoadFromID("lvAddjobList");
-	            
-	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
-	                alert(strLang13);
-	                return;
-	            }
-
-	            var AddjobText = "";
-	            var xmlHTTP = createXMLHttpRequest();
-	            var xmlDom = createXmlDom();
-	            var xmlPara = createXmlDom();
-	            var objRoot, objNode, subNode;
-	            createNodeInsert(xmlDom, objNode, "DATA");
-	            
-	            for (var i = 0; i < Addjoblistview.GetRowCount() ; i++) {
-	                createNodeAndInsertText(xmlDom, objNode, "CN", GetAttribute(p_ListOrderObject, "_data2"));
-	                createNodeAndInsertText(xmlDom, objNode, "DEPTID", GetAttribute(Addjoblistview.GetDataRows()[i], "data1"));
-	                createNodeAndInsertText(xmlDom, objNode, "TITLE", GetAttribute(Addjoblistview.GetDataRows()[i], "data3") + ":" + GetAttribute(Addjoblistview.GetDataRows()[i], "data4"));
-	                createNodeAndInsertText(xmlDom, objNode, "JOBID", GetAttribute(Addjoblistview.GetDataRows()[i], "data6"));
-
-	                AddjobText = AddjobText + "- " + GetAttribute(Addjoblistview.GetDataRows()[i], "data5") + " (" + GetAttribute(Addjoblistview.GetDataRows()[i], "data3") + ":" + GetAttribute(Addjoblistview.GetDataRows()[i], "data4") + ")<BR>";
-	            }
-	            if (Addjoblistview.GetRowCount() == 0) {
-	                alert("<spring:message code='ezOrgan.t330' />");
-	                return;
-	            }
-	            xmlHTTP.open("POST", "/admin/ezOrgan/saveSubTitle.do", false);
-	            xmlHTTP.send(xmlDom);
-
-	            if (xmlHTTP.status != 200 || xmlHTTP.responseText != "OK") {
-	                if (xmlHTTP.responseText == "EXIST") {
-	                    alert("<spring:message code='ezOrgan.t202' />");
-	                } else {
-	                    alert("<spring:message code='ezOrgan.t203' />");
-	                }
-	            } else {
-	            	// TODO : 2016-04-26 장진혁과장 --senmail 관련 자바스크립트 구현 필요
-	                //sendmail(GetAttribute(p_ListOrderObject, "_data2"), strLang27, AddjobText);
-	                alert("<spring:message code='ezOrgan.t204' />");
-	            }
-	            
-	            try {
- 			    	window.opener.AddJob_List();
- 			    	window.close();
- 			    } catch (e) {
- 			    	window.close();
- 			    }
-	        }
-		    
 		    var rgParams = new Array();
 		    var checkname2_cross_dialogArguments = new Array();
 		    function deptsearch_click() {
@@ -1198,6 +1189,7 @@
 	    </script>
 	</head>
 	<body class="popup">
+		<h1><spring:message code='ezOrgan.hyh08' /></h1>
 	    <xml id="listviewheader" style="display:none">
 			<LISTVIEWDATA>
 				<HEADERS>
@@ -1216,11 +1208,6 @@
 				</HEADERS>
 			</LISTVIEWDATA>
 		</xml>	
-	    <div id="menu">
-	        <ul>
-	            <li><span onclick="OK_Click()"><spring:message code='ezOrgan.t167' /></span></li>
-	        </ul>
-	    </div>
 	    <div id="close">
 	        <ul>
 	            <li><span onclick="closeWindow()"></span></li>
@@ -1229,9 +1216,9 @@
 	    <script type="text/javascript">
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		</script>
-	    <table id="TreeViewTD" style="margin-top:25px;">
+	    <table id="TreeViewTD" style="margin-top:-5px;">
 	        <tr>
-	            <td>
+	            <td style="display:none;">
 	                <div class="portlet_tabpart03" style="background-color: #f8f8fa; margin: 0px; padding: 0px; border: 1px solid #eaeaea;">
 	                    <div class="portlet_tabpart03_top" id="tab1">
 	                        <table style="margin-top: 3px; width: 100%;">
@@ -1305,19 +1292,20 @@
 	                    </tr>
 	                </table>
 	            </td>        
-	            <td style="text-align:center; padding-left:3px;">
-	                <img src="../../../images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver()">
-	                <img src="../../../images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()">
-	            </td>
 	            <td style="vertical-align:top; padding-top:4px; padding-left:3px;">
 	                <table>
 	                    <tr>
 	                        <td>
-	                            <h2 id="Addjob" class="receiver_tltype01">
-	                                <span style="min-width: 45px;" id="AddjobStr"><spring:message code='ezOrgan.t205' /></span>
+	                            <h2 id="Addjob" class="receiver_tltype01" style="margin-bottom: -12px;border-bottom:none;">
+	                                <span style="min-width: 45px;" id="AddjobStr"><c:out value='${userName}'/><spring:message code='ezOrgan.hyh09' /><spring:message code='ezOrgan.t205' /></span>
+	                                <div id="mainmenu" style="float:right; margin-bottom: 0px !important;">
+	                            		<ul style="margin-top:-2px" class="on">		            
+								            <li class="important off"><span style="color:#0470e4;font-weight: normal;"onclick="InsertReceiver()"><spring:message code='ezOrgan.t141' /></span></li>  
+								        </ul>
+								    </div>
 	                            </h2>
-	                            <div class="receiver_borderbox">
-	                                <div id="UserAddJobList" style="width: 230px; Height: 476px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver()"></div>
+	                            <div class="receiver_borderbox" style="border-top: 1px solid #ddd; margin-top: 17px;">
+	                                <div id="UserAddJobList" style="width:324px;height:420px;overflow-x:auto;overflow-y:auto;" ondblclick="DeleteReceiver()"></div>
 	                            </div>
 	                        </td>
 	                    </tr>                    
@@ -1325,7 +1313,7 @@
 	            </td>
 	        </tr>
 	    </table>	
-	    <div id="layer_popup" style="border:1px; border-color:black; position:absolute;left:300px;top:100px;background-color:#ffffff; display:none">
+	    <div id="layer_popup" style="border:1px; border-color:black; position:absolute;left:14px;top:83px;background-color:#ffffff; display:none">
 	        <div class="popupwrap1">
 	            <div class="popupwrap2">                
 	                <h2> * <spring:message code='ezOrgan.t199' /> / <spring:message code='ezOrgan.t234' /></h2>
@@ -1343,14 +1331,6 @@
 	                    		<div id="JobTitleOption" style="width:225px;"></div>
 	                    	</td>
 	                    </tr>
-	                   <%--  <tr class="primary">
-	                        <th style="text-align:center"><c:out value='${primary}'/></th>
-	                        <td style="padding-left:1px;"><input id="txt_TitleName" type="text" style="width:98%" maxlength="50"></td>
-	                    </tr>
-	                    <tr class="secondary">
-	                        <th style="text-align:center"><c:out value='${secondary}'/></th>
-	                        <td style="padding-left:1px;"><input id="txt_TitleName2" type="text" style="width:98%" maxlength="50"></td>
-	                    </tr> --%>
 	                </table>
 	                <div class="btnposition" style="width:300px">
 	                <a id="btn_ok" class="imgbtn" onClick="btn_Add_onclick()"><span><spring:message code='ezOrgan.t110' /></span></a>
@@ -1358,6 +1338,13 @@
 	                </div> 
 	            </div>
 	        </div>
-	    </div>  	       
+	    </div>
+	    <div class="btnposition btnpositionNew">
+	        <a class="imgbtn" onclick="OK_Click()"><span><spring:message code='ezOrgan.t167' /></span></a>
+	    </div>
+	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="mailPanel">&nbsp;</div>
+		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
+	    	<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
+	    </div>
 	</body>	
 </html>
