@@ -11,7 +11,7 @@
 <%@page import="org.apache.commons.codec.binary.Base64"%>
 <%@include file="Util.jsp"%>
 <%@include file="SecurityTool.jsp"%>
-<%@include file="Vaccine.jsp"%>
+<%--@include file="Vaccine.jsp"--%>
 <%
 	
 	/*
@@ -22,16 +22,23 @@
 		}
 	}
 	*/
-	
+	String messageText = "";
 	int maxSize = Integer.parseInt(detectXSSEx(request.getParameter("fileSizeLimit")));
 	String defaultUPath = detectXSSEx(request.getParameter("defaultUPath"));
 	String imageUPath = detectXSSEx(request.getParameter("fileUPath"));
-	String fileUPathHost = "http://" + request.getHeader("host");
+
+	String protocol = "http://";
+	if(request.isSecure()){
+		protocol = "https://";
+	}
+	String fileUPathHost = protocol + detectXSSEx(request.getHeader("host"));
+
 	String imagePhysicalPath = "";
 	String useExternalServer =  detectXSSEx(request.getParameter("useExternalServer"));
-	String strVaccinePath = "";
+	//2018-11-20[4.2.0.12]vaccine로직 주석(수정된 빌드로 나갈 때 추가)
+	//String strVaccinePath = "";
 %>
-<%@include file="VaccinePath.jsp"%>
+<%--@include file="VaccinePath.jsp"--%>
 <%@include file="ImagePath.jsp"%>
 <%
 	String fileModify = ""; 
@@ -61,6 +68,7 @@
 	String returnParam ="";
 	String ContextPath = request.getContextPath();
 	String fileSize = "";
+	String tempFileName = "";
 	
 	ServletContext context = getServletConfig().getServletContext();
 
@@ -162,7 +170,12 @@
 		SaveSubFolder.setReadable(true);
 		SaveSubFolder.setWritable(false, true);
 
-		SaveSubFolder.mkdir();
+		boolean returnRes = SaveSubFolder.mkdir();
+		if(returnRes == false && !SaveSubFolder.exists()){
+			scriptValue = executeFileScript(response, "invalid_path", "", useExternalServer, fileDomain, fileEditorFlag, checkPlugin);
+			response.getWriter().println(scriptValue);
+			return;
+		}
 	}
 	filePhysicalPathsubFolder += "upload" + File.separator;
 	File DeleteTempFolder = null;
@@ -226,7 +239,7 @@
 						type = fileItem.getContentType();
 						
 						
-						if (filename.toLowerCase().endsWith(".jsp") || filename.toLowerCase().endsWith(".jspx") || filename.toLowerCase().endsWith(".js") || filename.toLowerCase().endsWith(".html") || filename.toLowerCase().endsWith(".htm")) {
+						if (filename.toLowerCase().indexOf(".jsp") != -1 || filename.toLowerCase().indexOf(".jspx") != -1 || filename.toLowerCase().indexOf(".js") != -1 || filename.toLowerCase().indexOf(".html") != -1 || filename.toLowerCase().indexOf(".htm") != -1) {
 							//scriptValue = executeFileScript(response, "fail_image", "", useExternalServer, fileDomain, fileEditorFlag, checkPlugin);
 							//scriptValue = executeFileScript(response, "invalid_file", "prohibited : jsp, js, html, htm", useExternalServer, fileDomain, fileEditorFlag, checkPlugin);
 							// [4.0.0.22] [한국인터넷진흥원 보안 취약점] 제한된 확장자 목록 alert에 보이지 않도록 처리
@@ -237,7 +250,13 @@
 						}
 
 						try{
-							File uploadedFile=new File(realDir,filename); 
+							tempFileName = filename;
+							File uploadedFile = new File(realDir + tempFileName);
+							if(uploadedFile.exists()){
+								tempFileName = fileNameTimeSetting();
+								uploadedFile = new File(realDir,tempFileName);
+							}
+							//File uploadedFile=new File(realDir,filename); 
 							fileItem.write(uploadedFile);
 							fileItem.delete(); 
 							DeleteTempFolder = uploadedFile;
@@ -263,7 +282,7 @@
 				//fileTempName = encoder.encode(keyByte);
 				//라이브러리 추가 요함 -> https://commons.apache.org/proper/commons-codec/download_codec.cgi
 				byte[] encoded = Base64.encodeBase64(fileTempName.getBytes());
-				fileTempName = new String(encoded);
+				fileTempName = new String(encoded, "ISO-8859-1");
 
 				if (fileTempName.indexOf("/") != -1)
 					fileTempName = fileTempName.replaceAll("/", "==NamOSeSlaSH=="); 
@@ -290,7 +309,12 @@
 						fileSaveSubFolder.setReadable(true);
 						fileSaveSubFolder.setWritable(false, true);
 
-						fileSaveSubFolder.mkdir();
+						boolean returnRes = fileSaveSubFolder.mkdir();
+						if(returnRes == false){
+							scriptValue = executeFileScript(response, "invalid_path", "", useExternalServer, fileDomain, fileEditorFlag, checkPlugin);
+							response.getWriter().println(scriptValue);
+							return;
+						}
 					}
 					imagePhysicalPath += fileKindSubFolder + File.separator;
 				}
@@ -301,15 +325,25 @@
 					fileSaveSubFolder.setReadable(true);
 					fileSaveSubFolder.setWritable(false, true);
 
-					fileSaveSubFolder.mkdir();
+					boolean returnRes = fileSaveSubFolder.mkdir();
+					if(returnRes == false){
+						scriptValue = executeFileScript(response, "invalid_path", "", useExternalServer, fileDomain, fileEditorFlag, checkPlugin);
+						response.getWriter().println(scriptValue);
+						return;
+					}
 				}
 				imagePhysicalPath += fileKindSubFolder + File.separator;
 
 				saveFolder = getChildDirectory(imagePhysicalPath, fileMaxCount); 
 				
 				if (saveFolder.equalsIgnoreCase("")) {	
-					if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase(""))
-						tempFolderDelete(tempFileFolder);
+					if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase("")){
+						boolean returnRes = tempFolderDelete(tempFileFolder);
+
+						if(returnRes == false){
+							messageText = "delete fail";
+						}
+					}
 
 					scriptValue = executeFileScript(response, "invalid_path", "", useExternalServer, fileDomain, fileEditorFlag, checkPlugin);
 					response.getWriter().println(scriptValue);
@@ -317,6 +351,9 @@
 				} else
 					imagePhysicalPath += saveFolder;	
 			}
+
+			realFileName = realFileName.replace('\\', ' ').trim();
+
 			String filenamecheck = checkFileUniqueName(realFileName, imagePhysicalPath, fileCheck);
 
 			String imgLinkParams = "";
@@ -361,24 +398,42 @@
 			returnParam += "}";	
 			
 			String moveFilePath = imagePhysicalPath + File.separator + filenamecheck;
-			int check = fileCopy(filePhysicalPathsubFolder + filename, moveFilePath);
+			int check = fileCopy(filePhysicalPathsubFolder + tempFileName, moveFilePath);
 
 			if(DeleteTempFolder != null){
-				DeleteTempFolder.delete();
+				boolean returnRes = DeleteTempFolder.delete();
+				if(returnRes == false){
+					messageText = "delete fail";
+				}
 			}
 
 			if (check == 1) {
+
+				//2018-11-20[4.2.0.12]vaccine로직 주석(수정된 빌드로 나갈 때 추가)
+				/*
 				if (strVaccinePath.length() <= 0) {
 					strVaccinePath = imagePhysicalPath + "/../../../vse";
 				}
  				String strName = checkVirusFile (moveFilePath, imagePhysicalPath + File.separator, strVaccinePath);
+				*/
 
-				if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase(""))
-					tempFolderDelete(tempFileFolder);
-				if (SaveSubFolder.exists()){
-					SaveSubFolder.delete();
+				if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase("")){
+					boolean returnRes = tempFolderDelete(tempFileFolder);
+
+					if(returnRes == false){
+						messageText = "delete fail";
+					}
 				}
-
+					
+				if (SaveSubFolder.exists()){
+					boolean returnRes = SaveSubFolder.delete();
+					if(returnRes == false){
+						messageText = "delete fail";
+					}
+				}
+				
+				//2018-11-20[4.2.0.12]vaccine로직 주석(수정된 빌드로 나갈 때 추가)
+				/*
 				if (strName.length() > 0) {
 					String msg = "found virus (";
 					msg += strName + ")";
@@ -386,14 +441,19 @@
 					response.getWriter().println(scriptValue);
 					return;
 				}
-
+				*/
 				
 				scriptValue = executeFileScript(response, "success", returnParam, useExternalServer, fileDomain, fileEditorFlag, checkPlugin);
 				response.getWriter().println(scriptValue);
 				return;
 			} else {
-				if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase(""))
-					tempFolderDelete(tempFileFolder);
+				if(uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase("")){
+					boolean returnRes = tempFolderDelete(tempFileFolder);
+
+					if(returnRes == false){
+						messageText = "delete fail";
+					}
+				}
 
 				scriptValue = executeFileScript(response, "fileCopyFail", "", useExternalServer, fileDomain, fileEditorFlag, checkPlugin);	
 				response.getWriter().println(scriptValue);
@@ -413,7 +473,7 @@
         response.getWriter().println(scriptValue);
 		return;
     } catch (RuntimeException e) {	
-		String messageText = "RuntimeException";
+		messageText += "RuntimeException";
 		messageText = "<System Error>" + messageText;
 		
 		scriptValue = executeFileScript(response, "", messageText, useExternalServer, fileDomain, fileEditorFlag, checkPlugin);

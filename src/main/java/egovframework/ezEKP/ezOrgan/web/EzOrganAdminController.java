@@ -917,7 +917,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		String primary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String secondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
 		
-		String checkID = config.getProperty("config.USE_CHECKUPSTR");
 		String useAddressOpenAPI = config.getProperty("config.USE_AddressOpenAPI");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", userInfo.getTenantId());
 		String useZipCodeSearch = ezCommonService.getTenantConfig("useZipCodeSearch", userInfo.getTenantId());
@@ -928,7 +927,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
-		model.addAttribute("checkID", checkID);
 		model.addAttribute("lang", lang);
 		model.addAttribute("useAddressOpenAPI", useAddressOpenAPI);
 		model.addAttribute("birthDay", "");
