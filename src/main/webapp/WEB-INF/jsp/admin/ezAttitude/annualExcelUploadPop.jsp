@@ -26,6 +26,12 @@
 	    		text-overflow : ellipsis;
 	    		text-align:center;
 	    	}
+	    	#loading-image {  
+				 position: absolute;  
+				 top: 50%;  
+				 left: 50%; 
+				 z-index: 100; 
+			 }
 	    </style>
 	    <script type="text/javascript">	
 	    	$(document).ready(function(){
@@ -51,6 +57,23 @@
 	    	  		objFile.outerHTML = objFile.outerHTML;
 	    	 	}
 	    	}
+	    	
+	    	function exportExcel() {
+	    		opener.exportExcel();
+	    	}
+	    	
+			function ShowMailProgress() {
+				var CurrenWidth = window.innerWidth;
+	        	
+			    document.getElementById("mailPanel").style.display = "";
+			    document.getElementById("MailProgress").style.top = "60px";
+			    document.getElementById("MailProgress").style.left = (CurrenWidth / 2) - 100 + "px";
+			    document.getElementById("MailProgress").style.display = "";
+			}
+			function HiddenMailProgress() {
+			    document.getElementById("mailPanel").style.display = "none";
+			    document.getElementById("MailProgress").style.display = "none";
+			}
 
 	    	//전체 연차 등록/수정
 	    	function annualExcelUpload() {
@@ -73,10 +96,14 @@
 	   				contentType: false,
 	   				data: formData,
 	   				dataType: "json",
+	   				beforeSend : function() {
+	   					ShowMailProgress();
+					},
 					success : function(data) {
 	            		if (data.status+"" == "ok") {
 	            			alert(data.data+"");
 	            			opener.getAnnualList();
+	            			HiddenMailProgress();
 	   						window.close();
 	            		} else {
 	            			alert("<spring:message code='ezAttitude.t175' />");
@@ -100,6 +127,7 @@
             </ul>
         </div>
         <div>
+        <a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
        	<form name="cForm" id="cForm" method="post" onsubmit="return false;" enctype="multipart/form-data">
        	<h2 style="font-weight: normal;font-size:12px;padding-bottom: 5px;">▒&nbsp;<spring:message code='ezAttitude.t258' /></h2>
         <table class="content">
@@ -123,5 +151,10 @@
         <div class="btnposition btnpositionNew">
 	        <a class="imgbtn"><span onclick="annualExcelUpload();" ><spring:message code='ezAttitude.t16' /></span></a>
 	    </div>
+        <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; display: none; z-index: 5000;" id="mailPanel"></div>
+	    <div style="width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;" id="MailProgress">
+            <img src="/images/email/progress_img.gif" style="padding-top:20px;">
+            <div id="progressNum" style="padding-top:10px;vertical-align: middle; font-weight: bold; font-size: 1.2em;"></div>
+        </div>
 	</body>
 </html>
