@@ -3476,9 +3476,11 @@ public class EzCommunityController extends EgovFileMngUtil{
                  //commName2 = commName2.Replace("\"", "\\\"");
 
                  String sysopID = clubVO.getC_SysopID().trim();
+                 // 2019-01-16 김헤정 companyId 추가
                  String companyName = userInfo.getCompanyName1();
+                 String companyId = userInfo.getCompanyID();
                  
-                 ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, commonUtil.getTodayUTCTime(""), reason, egovMessageSource.getMessage("ezCommunity.t483", userInfo.getLocale()), userInfo.getTenantId());
+                 ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, companyId, commonUtil.getTodayUTCTime(""), reason, egovMessageSource.getMessage("ezCommunity.t483", userInfo.getLocale()), userInfo.getTenantId());
                  
                  strXML = "<RETURN><VALUE>SuccessApplication</VALUE></RETURN>";
 			}

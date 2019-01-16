@@ -4998,7 +4998,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	}
 
 	@Override
-	public void adminCommCloseOkInsert(String code, String commName, String commName2, String sysopID, String companyName, String todayTime, String reason, String closeState, int tenantID) throws Exception {
+	public void adminCommCloseOkInsert(String code, String commName, String commName2, String sysopID, String companyName, String companyId, String todayTime, String reason, String closeState, int tenantID) throws Exception {
 		logger.debug("adminCommCloseOkInsert started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -5007,6 +5007,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		map.put("v_COMMNAME2", commName2);
 		map.put("v_SYSOPID", sysopID);
 		map.put("v_COMPANYNAME", companyName);
+		map.put("v_COMPANYID", companyId);
 		map.put("v_DATETIME_NOW", todayTime);
 		map.put("v_REASON", reason);
 		map.put("v_CLOSESTATE", closeState);

@@ -10,8 +10,11 @@
 		<![CDATA[
 			SELECT
 				DISTINCT A.c_clubno,
+				c_name,
 				closestate,
 				D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				c_clubConfirmType,
+				c_clubGubun,
 				B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
 				A.c_sysopid,
 				applicationdate
@@ -29,7 +32,15 @@
 				A.c_clubno = D.c_clubno
 			AND
 				A.tenant_id = D.tenant_id
+			INNER JOIN
+				TBL_C_CATEGORY E
+			ON
+				D.c_cate_a = E.c_code
+			AND
+				D.tenant_id = E.tenant_id
 			WHERE
+				E.c_cat = 'a'
+			AND
 				D.c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				D.companyid = #companyID#
@@ -37,6 +48,8 @@
 				A.tenant_id = #tenantID#
 			ORDER BY
 				applicationdate DESC
+			LIMIT
+				#v_STARTROW#, 10
 		]]>
 	</select>
 	
@@ -44,8 +57,11 @@
 		<![CDATA[
 			SELECT
 				DISTINCT A.c_clubno,
+				c_name,
 				closestate,
 				D.c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				c_clubConfirmType,
+				c_clubGubun,
 				B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
 				A.c_sysopid,
 				applicationdate
@@ -63,12 +79,22 @@
 				A.c_clubno = D.c_clubno
 			AND
 				A.tenant_id = D.tenant_id
+			INNER JOIN
+				TBL_C_CATEGORY E
+			ON
+				D.c_cate_a = E.c_code
+			AND
+				D.tenant_id = E.tenant_id
 			WHERE
+				E.c_cat = 'a'
+			AND
 				D.companyid = #companyID#
 			AND
 				A.tenant_id = #tenantID#
 			ORDER BY
 				applicationdate DESC
+			LIMIT
+				#v_STARTROW#, 10
 		]]>
 	</select>
 	
@@ -122,7 +148,10 @@
 		<![CDATA[
 			SELECT
 				DISTINCT c_clubno,
+				c_name,
 				c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				c_clubConfirmType,
+				c_clubGubun,
 				IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
 				c_sysopid,
 				c_regdate
@@ -140,7 +169,15 @@
 				RTRIM(A.c_sysopid) = C.CN
 			AND
 				A.tenant_id = C.tenant_id
+			INNER JOIN
+				TBL_C_CATEGORY D
+			ON
+				A.c_cate_a = D.c_code
+			AND
+				A.tenant_id = D.tenant_id
 			WHERE
+				D.c_cat = 'a'
+			AND
 				c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				A.c_adminconfirm = 'N'
@@ -150,6 +187,8 @@
 				A.tenant_id = #tenantID#
 			ORDER BY
 				A.c_regdate DESC
+			LIMIT
+				#v_STARTROW#, 10
 		]]>
 	</select>
 	
@@ -157,7 +196,10 @@
 		<![CDATA[
 			SELECT
 				DISTINCT c_clubno,
+				c_name,
 				c_clubname$v_USERINFO_LANG$ AS c_clubname,
+				c_clubConfirmType,
+				c_clubGubun,
 				IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
 				c_sysopid,
 				c_regdate
@@ -177,12 +219,22 @@
 				RTRIM(A.c_sysopid) = C.CN
 			AND
 				A.tenant_id = C.tenant_id
+			INNER JOIN
+				TBL_C_CATEGORY D
+			ON
+				A.c_cate_a = D.c_code
+			AND
+				A.tenant_id = D.tenant_id
 			WHERE
+				D.c_cat = 'a'
+			AND
 				A.companyID = #companyID#
 			AND
 				A.tenant_id = #tenantID#
 			ORDER BY
 				A.c_regdate DESC
+			LIMIT
+				#v_STARTROW#, 10
 		]]>
 	</select>
 	
@@ -658,4 +710,45 @@
 		]]>
 	</select>
 	
+	<select id="EzCommunityAdminDAO.getClosedCommuListCount"			parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				IFNULL(COUNT(c_clubno), 0)
+			FROM
+				TBL_C_COMCLOSE
+			WHERE
+				closestate = #v_PCLOSESTATE#
+			AND
+				c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
+			AND
+				companyid = #companyId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzCommunityAdminDAO.getClosedCommuList"					parameterClass="Map"		resultClass="CommunityCComCloseVO">
+		<![CDATA[
+			SELECT
+				c_clubno,
+				CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END AS c_clubname,
+				c_sysopid,
+				applicationdate,
+				closereason
+			FROM
+				TBL_C_COMCLOSE
+			WHERE
+				closestate = #v_PCLOSESTATE#
+			AND
+				CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END LIKE CONCAT('%', #v_STRQUERY#, '%')
+			AND
+				companyid = #companyId#
+			AND
+				tenant_id = #tenantId#
+			ORDER BY
+				applicationdate DESC
+			LIMIT
+				#v_STARTROW#, 10
+		]]>
+	</select>
 </sqlMap>

@@ -251,7 +251,7 @@ public class EzCommunityAdminController {
 		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage + ",iQueryCount=" + iQueryCount);
 		logger.debug("iQueryCount=" + iQueryCount);
 		
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(primary, iQueryCount, searchType , searchValue, companyId, tenantId);
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(primary, iQueryCount, searchType, searchValue, companyId, tenantId);
 		if (clubList.size() > 0) {
 			for(CommunityClubVO club : clubList) {
 				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), primary, companyId, tenantId));
@@ -266,6 +266,58 @@ public class EzCommunityAdminController {
 		model.addAttribute("totalCount", totalCount);
 		
 		logger.debug("openCommunityList endend.");
+		return "json";
+	}
+	
+	/**
+	 * 폐쇄한 커뮤니티  리스트  호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezCommunity/closedCommunityList.do")
+	public String closedCommunityList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("closedCommunityList started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String lang      = userInfo.getLang();
+		String primary   = userInfo.getPrimary();
+		String companyId = userInfo.getCompanyID();
+		int tenantId     = userInfo.getTenantId();
+		
+		int pageSize       = 10;
+		int pageNum        = request.getParameter("pageNum") != null ? Integer.parseInt(request.getParameter("pageNum")) : 1;
+		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
+		
+		logger.debug("pageNum=" + pageNum);
+		logger.debug("searchValue=" + searchValue);
+		
+		int totalCount = ezCommunityAdminService.getClosedCommuListCount(commonUtil.getMultiData(lang, tenantId), userInfo.getLocale(), searchValue, companyId, tenantId);
+		int totalPage  = 1;
+		
+		if (totalCount > 0) {
+			if (totalCount > pageSize) {
+				totalPage = totalCount / pageSize;
+				
+				if (totalCount % pageSize != 0) {
+					totalPage++;
+				}
+			}
+		}
+		
+		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
+		
+		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.getClosedCommuList(primary, userInfo.getLocale(), pageNum, searchValue, companyId, tenantId);
+		if (clubList.size() > 0) {
+			for(CommunityCComCloseVO club : clubList) {
+				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), primary, companyId, tenantId));
+			}
+		}
+		
+		model.addAttribute("clubList", clubList);
+		model.addAttribute("pageNum", pageNum);
+		model.addAttribute("totalPage", totalPage);
+		model.addAttribute("totalCount", totalCount);
+		
+		logger.debug("closedCommunityList endend.");
 		return "json";
 	}
 	
@@ -364,6 +416,7 @@ public class EzCommunityAdminController {
 	public String commCloseAll(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String type = request.getParameter("type");
 		String code = request.getParameter("code");
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
@@ -371,6 +424,10 @@ public class EzCommunityAdminController {
 		ezCommunityAdminService.commCloseAll(code, userInfo.getLocale(), userInfo.getTenantId());
 		
 		model.addAttribute("sysopCheck", sysopCheck);
+		
+		if (type.equals("listBtn")) {
+			return "json";
+		}
 		
 		return "/admin/ezCommunity/communityCommCloseAll";
 	}
@@ -383,6 +440,7 @@ public class EzCommunityAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String diviTitle = "";
 		
+		String type = request.getParameter("type");
 		String code = request.getParameter("code");
 		String pDivi = request.getParameter("pDivi");
 		
@@ -403,6 +461,10 @@ public class EzCommunityAdminController {
 		}
 		
 		model.addAttribute("diviTitle", diviTitle);
+		
+		if (type.equals("listBtn")) {
+			return "json";
+		}
 		
 		return "/admin/ezCommunity/communityCommAdmitOk";
 	}
@@ -453,17 +515,22 @@ public class EzCommunityAdminController {
 		
 		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(총 n개 카운트) */
 		int totalCount = ezCommunityAdminService.aspAdmitComGet2(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
-		int totalPage = totalCount / pageSize;
+		int totalPage = 1;
 		
-		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
-		logger.debug("lang=" + commonUtil.getMultiData(lang, tenantId));
-		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) -> 사간겸직한 회원이 만든 커뮤니티는 겸직한 회사만큼 전부 표출됨(수정필요) */
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
-		if ((totalPage * pageSize) != totalCount && (totalCount % pageSize) != 0) {
-			totalPage = totalPage + 1;
+		if (totalCount > 0) {
+			if (totalCount > pageSize) {
+				totalPage = totalCount / pageSize;
+				
+				if (totalCount % pageSize != 0) {
+					totalPage++;
+				}
+			}
 		}
 		
-		pageNum = Math.min(pageNum, totalPage);
+		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
+		
+		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) -> 사간겸직한 회원이 만든 커뮤니티는 겸직한 회사만큼 전부 표출됨(수정필요) */
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), pageNum, companyId, tenantId);
 		
 		model.addAttribute("clubList", clubList);
 		model.addAttribute("pageNum", pageNum);
@@ -498,17 +565,22 @@ public class EzCommunityAdminController {
 		
 		/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(총 n개 카운트) */
 		int totalCount = ezCommunityAdminService.aspCloseComGet2(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
-		int totalPage = totalCount / pageSize;
+		int totalPage = 1;
+		
+		if (totalCount > 0) {
+			if (totalCount > pageSize) {
+				totalPage = totalCount / pageSize;
+				
+				if (totalCount % pageSize != 0) {
+					totalPage++;
+				}
+			}
+		}
 		
 		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
 		
 		/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
-		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
-		if ((totalPage * pageSize) != totalCount && (totalCount % pageSize) != 0) {
-			totalPage = totalPage + 1;
-		}
-		
-		pageNum = Math.min(pageNum, totalPage);
+		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), pageNum, companyId, tenantId);
 		
 		model.addAttribute("clubList", clubList);
 		model.addAttribute("pageNum", pageNum);
