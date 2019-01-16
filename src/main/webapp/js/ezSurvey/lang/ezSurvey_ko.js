@@ -79,7 +79,7 @@ var SurveyMessages = {
 	strURL3      : "URL형식이 잘못 되었습니다. URL은 http[s]://로 시작합니다.",
 	strOnlyOne   : "하나의 첨부 파일만 추가 가능합니다.",
 	strOneOther  : "기타는 하나만 추가 가능합니다.",
-	strColumnLm  : "컬럼은 최대 10개까지 추가 가능합니다.",
+	strColumnLm  : "열은 최대 10개까지 추가 가능합니다.",
 	strRow       : "행",
 	strColumn    : "열",
 	strRequired  : "필수 답변",

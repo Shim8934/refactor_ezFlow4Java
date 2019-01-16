@@ -1130,8 +1130,7 @@ var SurveyCreate     = function() {
 		$(".quesBacgr").on("click", ".addCol", function() {
 			var cols = $(this).parents(".colArea").find(".cols");
 			var colLength = cols.find(".col").length;
-			
-			if (colLength > 10) {alert(SurveyMessages.strColumnLm); return;}
+			if (colLength == 10) {alert(SurveyMessages.strColumnLm); return;}
 			cols.append(mkRowCol("col"));
 		});
 		// matrix 행 삭제
