@@ -227,9 +227,9 @@
 	    			} else {
 		    			resultHtml += "<td>" + vo.totalAnnualCnt.split(".")[0] + "</td>";
 	    			}
-	    			resultHtml += "<td><a class='imgbtn'><span onclick='useAnnualHistory(this);'><spring:message code='ezAttitude.t240' /></span></a></td>";
-	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"annualHistoryPop('" + vo.userId + "','" + vo.year + "')\"><spring:message code='ezAttitude.t241' /></span></a></td>";
-	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"modifyPrsnAnnualPop('" + vo.userId + "', '" + vo.userName + "','" + vo.year + "')\"><spring:message code='ezAttitude.t163' /></span></a></td></tr>";
+	    			resultHtml += "<td><a class='imgbtn'><span onclick='useAnnualHistory(this);'>사용 내역 확인</span></a></td>";
+	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"annualHistoryPop('" + vo.userId + "','" + vo.year + "')\">수정 내역 확인</span></a></td>";
+	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"modifyPrsnAnnualPop('" + vo.userId + "', '" + vo.userName + "','" + vo.year + "')\">수정</span></a></td></tr>";
 	    			
 	    			i++;
 	    		});
