@@ -24,12 +24,20 @@
 				background-color: #f8f8fa;
 			}
 			#searchTable td {padding: 8px 5px;}
-			.mainlist a {
+			.mainlist a.imgbtn {
 				background: none;
 			}
-			.mainlist a:hover {
+			.mainlist a.imgbtn:hover {
 				border: 1px solid #8e8e8e;
 				background: white;
+			}
+			.mainlist a.link {
+				text-decoration: underline;
+			}
+			.mainlist a.link:hover {
+				font-weight: bold;
+				font-size: 1.1em;
+				text-decoration: none;
 			}
 	    </style>
 	    
@@ -96,6 +104,16 @@
 		    			getAnnualList();
 	    			}
 	    		});
+	    		
+	    		//사용연차수 링크 클릭시
+	    		$(document).on('click', '.mainlist .useAnnualCnt', function(){
+	    			useAnnualHistory(this);
+	    		})
+	    		$(document).on('click', '.mainlist .totalAnnualCnt', function(){
+	    			var userId = $(this).closest("tr").attr("userid");
+	    			var userName = $(this).closest("tr").children("td:eq(1)").text();
+	    			modifyPrsnAnnualPop(userId , userName , searchYear);
+	    		})
 	    	});
 			    
 		    $(window).on("resize", function(){
@@ -217,19 +235,23 @@
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.userDeptName + "</td>";
+	    			
+	    			resultHtml += "<td><a class='link useAnnualCnt'>";
 	    			if (Number(vo.useAnnualCnt.split(".")[1]) > 0) {
-		    			resultHtml += "<td>" + vo.useAnnualCnt + "</td>";
+	    				resultHtml += vo.useAnnualCnt;
 	    			} else {
-		    			resultHtml += "<td>" + vo.useAnnualCnt.split(".")[0] + "</td>";
+		    			resultHtml += vo.useAnnualCnt.split(".")[0];
 	    			}
+	    			resultHtml += "</a></td>";
+	    			
+	    			resultHtml += "<td><a class='link totalAnnualCnt'>";
 	    			if (Number(vo.totalAnnualCnt.split(".")[1]) > 0) {
-		    			resultHtml += "<td>" + vo.totalAnnualCnt + "</td>";
+		    			resultHtml += vo.totalAnnualCnt;
 	    			} else {
-		    			resultHtml += "<td>" + vo.totalAnnualCnt.split(".")[0] + "</td>";
+		    			resultHtml += vo.totalAnnualCnt.split(".")[0];
 	    			}
-	    			resultHtml += "<td><a class='imgbtn'><span onclick='useAnnualHistory(this);'>사용 내역 확인</span></a></td>";
+	    			resultHtml += "</a></td>";
 	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"annualHistoryPop('" + vo.userId + "','" + vo.year + "')\">수정 내역 확인</span></a></td>";
-	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"modifyPrsnAnnualPop('" + vo.userId + "', '" + vo.userName + "','" + vo.year + "')\">수정</span></a></td></tr>";
 	    			
 	    			i++;
 	    		});
@@ -357,9 +379,7 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="useAnnualCnt"><spring:message code='ezAttitude.t238' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="totalAnnualCnt"><spring:message code='ezAttitude.t239' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t240' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t241' /></th>
-						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t163' /></th>
 					</tr>
 				</thead>
 				<tbody>
