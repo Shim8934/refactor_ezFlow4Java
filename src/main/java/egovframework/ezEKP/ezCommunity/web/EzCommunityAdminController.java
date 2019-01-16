@@ -364,6 +364,7 @@ public class EzCommunityAdminController {
 	public String commCloseAll(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		String type = request.getParameter("type");
 		String code = request.getParameter("code");
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), userInfo.getCompanyID(), userInfo.getTenantId());
@@ -371,6 +372,10 @@ public class EzCommunityAdminController {
 		ezCommunityAdminService.commCloseAll(code, userInfo.getLocale(), userInfo.getTenantId());
 		
 		model.addAttribute("sysopCheck", sysopCheck);
+		
+		if (type.equals("listBtn")) {
+			return "json";
+		}
 		
 		return "/admin/ezCommunity/communityCommCloseAll";
 	}
@@ -383,6 +388,7 @@ public class EzCommunityAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String diviTitle = "";
 		
+		String type = request.getParameter("type");
 		String code = request.getParameter("code");
 		String pDivi = request.getParameter("pDivi");
 		
@@ -403,6 +409,10 @@ public class EzCommunityAdminController {
 		}
 		
 		model.addAttribute("diviTitle", diviTitle);
+		
+		if (type.equals("listBtn")) {
+			return "json";
+		}
 		
 		return "/admin/ezCommunity/communityCommAdmitOk";
 	}

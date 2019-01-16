@@ -160,13 +160,13 @@
 								if (selectedTabId == "admitCommu") {
 									html += "<td style='width: 10%;'>" + item.c_RegDate.substring(0, 10) +"</td>";
 									html += "<td style='width: 80px;'>";
-									html +=     "<a class='imgbtn imgbck' style='margin-right: 3px;'><span onclick=''>승인</span></a>";
-									html +=     "<a class='imgbtn imgbck'><span onclick=''>거부</span></a>";
+									html +=     "<a class='imgbtn imgbck' style='margin-right: 3px;'><span onclick=admitBtnClick('" + item.c_ClubNo + "')>승인</span></a>";
+									html +=     "<a class='imgbtn imgbck'><span onclick=admitRefusalBtnClick('" + item.c_ClubNo + "')>거부</span></a>";
 									html += "</td>";
 								}
 								else {
 									html += "<td style='width: 10%;'>" + item.applicationDate.substring(0, 10) +"</td>";
-									html += "<td style='width: 80px;'><a class='imgbtn imgbck'><span onclick=''>거부</span></a></td>";
+									html += "<td style='width: 80px;'><a class='imgbtn imgbck'><span onclick=closeBtnClick('" + item.c_ClubNo + "')>승인</span></a></td>";
 								}
 								
 								html += "</tr>";
@@ -342,6 +342,96 @@
 				}
 				else {
 					comm = window.open("/admin/ezCommunity/commInfo.do?code=" + code + "&type=Del&title=" + encodeURI("<spring:message code = 'ezCommunity.t38' />") + "", "", feature);
+				}
+			}
+			
+			// 신청승인 리스트 승인버튼 이벤트 메소드
+			function admitBtnClick(code) {
+				if (confirm("<spring:message code = 'ezCommunity.t61' />")) {
+					$.ajax({
+						type : "POST",
+						dataType : "json",
+						url : "/admin/ezCommunity/commAdmitOk.do",
+						async : false,
+						data : 
+							{
+								type : "listBtn",
+								code : code,
+								pDivi: "AdmitOK",
+							},
+						success : function(result) {
+							alert(result.diviTitle);
+							
+							applicationCommuList();
+							window.parent.parent.frames[0].getApplicationListCount();
+						},
+						error : function(e) {
+							console.log("error");
+						}
+					});
+				}
+				else {
+					alert("<spring:message code = 'ezCommunity.t62' />");
+				}
+			}
+			
+			// 신청승인 리스트 거부버튼 이벤트 메소드
+			function admitRefusalBtnClick(code) {
+				if (confirm("<spring:message code = 'ezCommunity.t63' />")) {
+					$.ajax({
+						type : "POST",
+						dataType : "json",
+						url : "/admin/ezCommunity/commAdmitOk.do",
+						async : false,
+						data : 
+							{
+								type : "listBtn",
+								code : code,
+								pDivi: "AdmitCancel",
+							},
+						success : function(result) {
+							alert(result.diviTitle);
+							
+							applicationCommuList();
+							window.parent.parent.frames[0].getApplicationListCount();
+						},
+						error : function(e) {
+							console.log("error");
+						}
+					});
+				}
+				else {
+					alert("<spring:message code = 'ezCommunity.t62' />");
+				}
+			}
+			
+			// 폐쇄승인 리스트 승인 버튼 이벤트 메소드
+			function closeBtnClick(code) {
+				if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
+					$.ajax({
+						type : "POST",
+						dataType : "json",
+						url : "/admin/ezCommunity/commCloseAll.do",
+						async : false,
+						data : 
+							{
+								type : "listBtn",
+								code : code,
+								pDivi: "AdmitCancel",
+							},
+						success : function(result) {
+							alert("<spring:message code = 'ezCommunity.t56' />");
+							
+							applicationCommuList();
+							window.parent.parent.frames[0].getApplicationListCount();
+						},
+						error : function(e) {
+							console.log("error");
+						}
+					});
+				}
+				else {
+					alert("<spring:message code = 'ezCommunity.t62' />");
 				}
 			}
 			

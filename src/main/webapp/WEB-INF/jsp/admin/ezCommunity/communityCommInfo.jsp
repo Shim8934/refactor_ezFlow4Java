@@ -29,7 +29,7 @@
 					var result = confirm("<spring:message code = 'ezCommunity.t59' />");
 					
 					if (result) {
-						window.location.href = "/admin/ezCommunity/commCloseAll.do?code=" + code;
+						window.location.href = "/admin/ezCommunity/commCloseAll.do?type=popUp&code=" + code;
 						
 					} else {
 						alert("<spring:message code = 'ezCommunity.t60' />");
@@ -40,7 +40,7 @@
 					var result = confirm("<spring:message code = 'ezCommunity.t61' />");
 					
 					if (result) {
-						window.location.href = "/admin/ezCommunity/commAdmitOk.do?code=" + code + "&pDivi=AdmitOK&name=" + encodeURIComponent('<c:out value = '${clubVO.c_ClubName}' />');
+						window.location.href = "/admin/ezCommunity/commAdmitOk.do?type=popUp&code=" + code + "&pDivi=AdmitOK&name=" + encodeURIComponent('<c:out value = '${clubVO.c_ClubName}' />');
 						
 					} else {
 						alert("<spring:message code = 'ezCommunity.t62' />");
@@ -56,7 +56,7 @@
 					var result = confirm("<spring:message code = 'ezCommunity.t63' />");
 				
 					if (result) {
-						window.location.href = "/admin/ezCommunity/commAdmitOk.do?code=" + code + "&pDivi=AdmitCancel";
+						window.location.href = "/admin/ezCommunity/commAdmitOk.do?type=popUp&code=" + code + "&pDivi=AdmitCancel";
 					} else {
 						alert("<spring:message code = 'ezCommunity.t62' />");
 						self.close();
