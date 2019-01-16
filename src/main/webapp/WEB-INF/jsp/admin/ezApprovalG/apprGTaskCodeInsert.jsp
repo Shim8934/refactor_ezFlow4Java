@@ -159,13 +159,13 @@
 	            	document.getElementById("tbTaskName2").value = SelectSingleNodeValue(TaskXml.documentElement, "TASKNAME2");
 	            	document.getElementById("tbTaskDesc").value = SelectSingleNodeValue(TaskXml.documentElement, "DESCRIPTION");
 
-	            	SelectOption(selKeepPeriod, SelectSingleNodeValue(TaskXml.documentElement, "KEEPINGPERIOD"));
+	            	$(selKeepPeriod).val(SelectSingleNodeValue(TaskXml.documentElement, "KEEPINGPERIOD"));
+	            	$(selKeepMethod).val(SelectSingleNodeValue(TaskXml.documentElement, "KEEPINGMETHOD"));
+	            	$(selKeepPlace).val(SelectSingleNodeValue(TaskXml.documentElement, "KEEPINGPLACE"));
+	            	$(securityLevel).val(SelectSingleNodeValue(TaskXml.documentElement, "ITEMSECURITY"));
 
 	            	document.getElementById("tbKPReason").value = SelectSingleNodeValue(TaskXml.documentElement, "KPREASON");
 
-	            	SelectOption(selKeepMethod, SelectSingleNodeValue(TaskXml.documentElement, "KEEPINGMETHOD"));
-	            	SelectOption(selKeepPlace, SelectSingleNodeValue(TaskXml.documentElement, "KEEPINGPLACE"));
-	            	SelectOption(securityLevel, SelectSingleNodeValue(TaskXml.documentElement, "ITEMSECURITY"));
 	            	SelectOption(isPublic, SelectSingleNodeValue(TaskXml.documentElement, "ISPUBLIC"));
 
 	            	var DispFlag = SelectSingleNodeValue(TaskXml.documentElement, "EXDISPLAYFREQUENCY");
@@ -435,7 +435,7 @@
 			    	}
 			    });
 		        
-		        if (tempRet == "TRUE") {
+		        if (tCheck == "ins" && tempRet == "TRUE") {
 		            OpenAlertUI("<spring:message code = 'ezApprovalG.t737' />");
 		            return false;
 		        } 
