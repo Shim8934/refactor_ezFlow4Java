@@ -416,8 +416,7 @@
 						data : 
 							{
 								type : "listBtn",
-								code : code,
-								pDivi: "AdmitCancel",
+								code : code
 							},
 						success : function(result) {
 							alert("<spring:message code = 'ezCommunity.t56' />");
