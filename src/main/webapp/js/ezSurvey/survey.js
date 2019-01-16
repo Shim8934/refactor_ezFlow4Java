@@ -2022,6 +2022,7 @@ var SurveyCreate     = function() {
 				if (opts[j]['optionId'] != undefined) {
 					colOptionId = opts[j]['optionId'];
 				}
+				
 				inputTd = $("<td></td>");
 				Input = $("<input type='" + inpType + "' name='qstn" + id + "opt" + i + "' id='qstn" + id + "opt" + i + j + "' OptionId='" + rowOptionId + "," + colOptionId +"'>");
 				Input.val(row[i]["rowLevel"] + "," + col[j - row.length]["colLevel"]);
@@ -2069,8 +2070,7 @@ var SurveyCreate     = function() {
 		
 		var header       = makeQuestionHeaderPanel(question);
 		var body         = "";
-		console.log("question");
-		console.log(question);
+		
 		switch(parseInt(qstnType)) {
 			case 1  :
 			case 2  : var sltObj = mkSltObj(qstnForm);
@@ -2102,7 +2102,7 @@ var SurveyCreate     = function() {
 					  body = mkDropDownQstn(question); break;
 			default : alert(SurveyMessages.strError); return;
 		}
-		console.log(question);
+		
 		header.append(body[0]);
 		qstnWrapper.prepend(header);
 		rmQstnForm(qstnWrapper);

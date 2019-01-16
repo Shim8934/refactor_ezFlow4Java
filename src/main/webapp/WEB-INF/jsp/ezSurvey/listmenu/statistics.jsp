@@ -20,18 +20,17 @@
 		<div class="surveyCrtTt3">
 			<div class="sryFirst2"></div>
 			<div class="sryTxt"><spring:message code='ezSurvey.t34'/></div>
-			<img src="/images/ezSurvey/partiCount.png">
+			<img src="/images/ezSurvey/partiCount.png" id="usersImgCnt">
 			<span id="totalUserCnt"></span>
 		</div>
 		
 		<div id="contentsBox">
-			<div id="surveyRespondents" style="position: relative; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;">
-				<div style="padding: 0px 20px; box-sizing:border-box; display: flex;">
+			<div id="surveyRespondents" class="respondents-div off">
+				<div class="pieDiv">
 					<div id="userLegendDiv" class="bnk-legend"></div>
-					<canvas id="respondentPie" height="240" width="240" style="height: 240px;"></canvas>
+					<canvas id="respondentPie" height="240"></canvas>
 				</div>
 			</div>
-			<div id="barChart" style="display: none; height: 460px; box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;"></div>
 		</div>
 		
 		<div id="respondentPanel" class="respondentPanel off">
@@ -69,20 +68,22 @@
 			var questionStatistic = ${questions};
 			
 			//console.log(surveyStatistic);
-			//console.log(questionStatistic);
+			console.log(questionStatistic);
 			
 			startStatistic(questionStatistic);
 			
 			function startStatistic(questions) {
-				document.getElementById("closeRespondentl").onclick  = function(e) {togglePanel("respondentPanel");};
-				document.getElementById("closeTxtResponse").onclick  = function(e) {togglePanel("textPanel");};
+				document.getElementById("usersImgCnt").onclick      = function(e) {toggleUserPanel();};
+				document.getElementById("totalUserCnt").onclick     = function(e) {toggleUserPanel();};
+				document.getElementById("closeRespondentl").onclick = function(e) {togglePanel("respondentPanel");};
+				document.getElementById("closeTxtResponse").onclick = function(e) {togglePanel("textPanel");};
 				window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 				
 				for (var i = 0; i < questions.length; i++) {
 					showQuestionStatistic(questions[i]);
 				}
 				
-				test();
+				showRespondentStatistic();
 			}
 			
 			function showQuestionStatistic(question) {
@@ -128,16 +129,6 @@
 						case 7:
 						case 8:
 							createQuestionBar(question, divElmt);
-							/* 
-							divElmt.className = "barDiv";
-							var canvasElmt = document.createElement("canvas");
-							var canvasId   = "question" + question["level"];
-							canvasElmt.setAttribute("height", 240);
-							canvasElmt.setAttribute("width", 640);
-							canvasElmt.setAttribute("id", canvasId);
-							divElmt.appendChild(canvasElmt);
-							createQuestionBar(question, canvasId);
-							 */
 							break;
 						case 5:
 						case 6:
@@ -146,26 +137,6 @@
 							divElmt.appendChild(divText);
 							createTextQuestion(question, divText);
 							break;
-							/* 
-							divElmt.className = "barDiv";
-							var canvasElmt = document.createElement("canvas");
-							var canvasId   = "question" + question["level"];
-							canvasElmt.setAttribute("height", 240);
-							canvasElmt.setAttribute("width", 640);
-							canvasElmt.setAttribute("id", canvasId);
-							divElmt.appendChild(canvasElmt);
-							createQuestionBar(question, canvasId);
-							break;
-							divElmt.className = "barDiv";
-							var canvasElmt = document.createElement("canvas");
-							var canvasId   = "question" + question["level"];
-							canvasElmt.setAttribute("height", 240);
-							canvasElmt.setAttribute("width", 640);
-							canvasElmt.setAttribute("id", canvasId);
-							divElmt.appendChild(canvasElmt);
-							createQuestionBar(question, canvasId);
-							break;
-							 */
 					}
 				}
 			}
@@ -375,10 +346,6 @@
 				showSelectedUsers(option["responses"]);
 			}
 			
-			function showSelectedUsersForBar() {
-				
-			}
-			
 			function showSelectedUsers(responses) {
 				var dataFormat = {
 					userName  : "userName",
@@ -472,7 +439,7 @@
 				}
 			}
 			
-			function test() {
+			function showRespondentStatistic() {
 				var values      = [];
 				var lables      = [];
 				var totalUsers  = parseInt(surveyStatistic["usersCnt"]);
@@ -484,8 +451,8 @@
 				values.push(respondents);
 				lables.push(SurveyMessages.strJoin1 + " [" + respondents + SurveyMessages.strUser3 + "]");
 				lables.push(SurveyMessages.strJoin2 + " [" + notTakePart + SurveyMessages.strUser3 + "]");
+				document.getElementById("totalUserCnt").innerHTML = surveyStatistic["usersCnt"];
 				
-				document.getElementById("totalUserCnt").innerHTML = totalUsers;
 				createPieChart(lables, values,  "respondentPie", legendDiv);
 			}
 			
@@ -520,27 +487,7 @@
 							}
 						},
 						legendCallback: function(chart) {
-							var ul       = document.createElement("ul");
-							ul.className = "legend-ul";
-							for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
-								var liElmt   = document.createElement("li");
-								var divElmt1 = document.createElement("div");
-								var divElmt2 = document.createElement("div");
-								divElmt1.className   = "legend-circle";
-								divElmt2.className   = "legend-label";
-								divElmt2.textContent = chart.data.labels[i];
-								divElmt1.setAttribute("style", "background-color: " + chart.data.datasets[0].backgroundColor[i]);
-								liElmt.appendChild(divElmt1);
-								liElmt.appendChild(divElmt2);
-								
-								if (chart.data["question"]) {
-									liElmt.onclick = (function(questionId, optId) {return function() {showSelectedUsersForPie(questionId, optId);};})(chart.data["question"], i);
-								}
-								
-								ul.appendChild(liElmt);
-							}
-							
-							return ul;
+							return createLegend(chart.data);
 						},
 						legend: {
 							display: false,
@@ -555,8 +502,7 @@
 						hover: {
 							onHover: function(e) {
 								var point = this.getElementAtEvent(e);
-								if (point.length) e.target.style.cursor = 'pointer';
-								else e.target.style.cursor = 'default';
+								e.target.style.cursor = point.length ? "pointer" : "default";
 							}
 						},
 						responsive: false,
@@ -567,162 +513,94 @@
 			}
 			
 			function createQuestionBar(question, divElmt) {
-				
 				var divChart        = document.createElement("div");
-				divChart.className  = "pieDiv";
+				var divWrap         = document.createElement("div");
+				divChart.className  = "chartWrapper";
 				var canvasElmt      = document.createElement("canvas");
-				var divLegend       = document.createElement("div");
 				var canvasId        = "question" + question["level"];
 				var moreParam       = surveyStatistic["annoynymous"] == 0 ? question["questionId"] : null;
-				divLegend.className = "bnk-legend";
-				canvasElmt.setAttribute("height", 240);
+				divWrap.className   = "chartAreaWrapper";
+				canvasElmt.setAttribute("height", 400);
 				canvasElmt.setAttribute("id", canvasId);
-				divChart.appendChild(divLegend);
-				divChart.appendChild(canvasElmt);
+				divWrap.appendChild(canvasElmt);
+				divChart.appendChild(divWrap);
 				divElmt.appendChild(divChart);
 				
-				var returnObj = "";
-				var response = question.responses;
-				var content = question.content;
-				var dataSets = [];
-				var labels = "";
+				var returnObj   = "";
+				var response    = question.responses;
+				var content     = question.content;
+				var dataSets    = [];
+				var labels      = "";
+				var canvasWidth = 0;
+				var legendFlag  = true;
 				
-				if (question['type'] == 3 || question['type'] == 4) {
+				if (question["type"] == 3 || question["type"] == 4) {
 					returnObj = getMtrDataSet(question);
-				    labels = returnObj['labels'];
-				    
-					var dataSetArr = returnObj['dataSetArr'];
-					for (var i = 0; i < dataSetArr.length; i++) {
-						var dataObj = {};
-						
-						dataObj['backgroundColor'] = colors[i];
-						dataObj['hoverBorderWidth'] = 8;
-						dataObj['borderWidth'] = 2;
-						dataObj['label'] = dataSetArr[i]["label"];
-						dataObj['data'] = dataSetArr[i]["data"];
-						dataSets.push(dataObj);
-					}
-				} else if(question['type'] == 7) {
-					returnObj = getSliderDataSet(question);
-					labels = returnObj['labels'];
-					var dataSetArr = returnObj['dataSetArr'];
-					
-					var dataObj = {};
-					dataObj['backgroundColor'] = colors;
-					dataObj['hoverBorderWidth'] = 8;
-					dataObj['borderWidth'] = 2;
-					dataObj['data'] = dataSetArr;
-					dataSets.push(dataObj);
-					
-				} else if (question['type'] == 8) {
-					returnObj = getRankingDataSet(question);
-					labels = returnObj['labels'];
-					label = returnObj['label'];
-					
-					var dataSetArr = returnObj['dataSetArr'];
-					for (var i = 0; i < dataSetArr.length; i++) {
-						var valuesArr = dataSetArr[i];
-						var dataObj = {};
-						
-						dataObj['backgroundColor'] = colors[i];
-						dataObj['hoverBorderWidth'] = 8;
-						dataObj['borderWidth'] = 2;
-						dataObj['label'] = label[i];
-						dataObj['data'] = valuesArr;
-						dataSets.push(dataObj);
-					}
+					labels    = returnObj["labels"];
+					dataSets  = returnObj["dataSetArr"];
+					canvasWidth = returnObj["width"];
 				}
-				createBarChart(labels, dataSets, canvasId, divLegend, moreParam);
+				else if (question["type"] == 7) {
+					returnObj   = getSliderDataSet(question);
+					labels      = returnObj["labels"];
+					legendFlag  = false;
+					var dataObj = {};
+					dataObj["backgroundColor"]  = colors;
+					dataObj["hoverBorderWidth"] = 8;
+					dataObj["borderWidth"]      = 2;
+					dataObj["data"]             = returnObj["dataSetArr"];
+					canvasWidth                 = returnObj["width"];
+					dataSets.push(dataObj);
+				}
+				else if (question["type"] == 8) {
+					returnObj   = getRankingDataSet(question);
+					labels      = returnObj["labels"];
+					dataSets    = returnObj["dataSetArr"];
+					canvasWidth = returnObj["width"];
+				}
+				
+				if (canvasWidth < divWrap.clientWidth) {
+					canvasElmt.setAttribute("width", divWrap.clientWidth);
+					divWrap.className = "chartAreaWrapper bnk-wrap";
+				}
+				else {
+					canvasElmt.setAttribute("width", canvasWidth);
+				}
+				
+				createBarChart(labels, dataSets, canvasId, moreParam, legendFlag);
 			}
 			
-			function createBarChart(labels, dataSets, canvasId, legendElmt, questionId) {
+			function createBarChart(labels, dataSets, canvasId, questionId, legendFlag) {
 				var ctx = document.getElementById(canvasId);
 				var myBarChart = new Chart(ctx, {
-				    type: 'bar',
-				    data: {
-				        labels: labels,
-				        datasets: dataSets,
-					    question : questionId
-				    },
-				    options: {
+					type: "bar",
+					data: {
+						labels: labels,
+						datasets: dataSets,
+						question : questionId
+					},
+					options: {
 						tooltips: {
 							callbacks: {
 								label: function(tooltipItem, data) {
-									var allData      = data.datasets[tooltipItem.datasetIndex].data;
-									var tooltipLabel = data.labels[tooltipItem.index];
-									var tooltipData  = allData[tooltipItem.index];
-									var total        = 0;
-									for (var i in allData) {
-										total += parseFloat(allData[i]);
-									}
-									var tooltipPercentage = ((tooltipData / total) * 100).toFixed(1);
-									return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
+									var dataIdx  = tooltipItem.datasetIndex;
+									var itemCnt  = data.datasets[dataIdx].data[tooltipItem.index];
+									var colLabel = data.datasets[dataIdx].label;
+									
+									return colLabel ? colLabel + ": " + itemCnt : itemCnt;
+								},
+								// remove title
+								title: function(tooltipItem, data) {
+									var itemIdx = tooltipItem[0]["index"];
+									return data.labels[itemIdx];
 								}
 							}
-						},
-						legendCallback: function(chart) {
-							var ul       = document.createElement("ul");
-							ul.className = "legend-ul";
-							
-							var question = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0];
-							var type     = parseInt(question["type"]);
-							
-							if (type == 3 || type == 4 || type == 8) {
-								/* 
-								for (var i = 0; i < chart.data.datasets.length; i++) {
-									for (var j = 0; j < chart.data.datasets[i].data.length; j++) {
-										var liElmt   = document.createElement("li");
-										var divElmt1 = document.createElement("div");
-										var divElmt2 = document.createElement("div");
-										divElmt1.className   = "legend-circle";
-										divElmt2.className   = "legend-label";
-										divElmt2.textContent = chart.data.labels[i] + " - " + chart.data.datasets[j].label;
-										divElmt1.setAttribute("style", "background-color: " + chart.data.datasets[j].backgroundColor);
-										liElmt.appendChild(divElmt1);
-										liElmt.appendChild(divElmt2);
-										
-										ul.appendChild(liElmt);
-									}
-								}
-								 */
-								for (var j = 0; j < chart.data.datasets[0].data.length; j++) {
-									var liElmt   = document.createElement("li");
-									var divElmt1 = document.createElement("div");
-									var divElmt2 = document.createElement("div");
-									divElmt1.className   = "legend-circle";
-									divElmt2.className   = "legend-label";
-									divElmt2.textContent = chart.data.datasets[j].label;
-									divElmt1.setAttribute("style", "background-color: " + chart.data.datasets[j].backgroundColor);
-									liElmt.appendChild(divElmt1);
-									liElmt.appendChild(divElmt2);
-									
-									ul.appendChild(liElmt);
-								}
-								
-							} else  if (type == 7) {
-								for (var i = 0; i < chart.data.datasets[0].data.length; i++) {
-									var liElmt   = document.createElement("li");
-									var divElmt1 = document.createElement("div");
-									var divElmt2 = document.createElement("div");
-									divElmt1.className   = "legend-circle";
-									divElmt2.className   = "legend-label";
-									divElmt2.textContent = chart.data.labels[i];
-									divElmt1.setAttribute("style", "background-color: " + chart.data.datasets[0].backgroundColor[i]);
-									liElmt.appendChild(divElmt1);
-									liElmt.appendChild(divElmt2);
-									
-									ul.appendChild(liElmt);
-								}
-							}
-							
-							return ul;
-							 
 						},
 						legend: {
-							display: false,
+							display: legendFlag,
 						},
 						onClick : function (evt, item) {
-							var data    = myBarChart.data["question"];
+							var data = myBarChart.data["question"];
 							if (data) {
 								var question = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0];
 								var type     = parseInt(question["type"]);
@@ -737,12 +615,10 @@
 									if (!active || active.length == 0) {return;}
 									
 									var columnIdx = active[0]["_datasetIndex"];
-									var crrItem   = item[columnIdx];
-									var rowIdx   = crrItem["_index"];
-									
-									var option = question["option"];
-									var columId = option.filter(function(opt) {return opt["colLevel"] == columnIdx})[0]["optionId"];
-									var rowId   = option.filter(function(opt) {return opt["rowLevel"] == rowIdx})[0]["optionId"];
+									var rowIdx    = item[columnIdx]["_index"];
+									var option    = question["option"];
+									var columId   = option.filter(function(opt) {return opt["colLevel"] == columnIdx})[0]["optionId"];
+									var rowId     = option.filter(function(opt) {return opt["rowLevel"] == rowIdx})[0]["optionId"];
 									
 									var responses = question["responses"].filter(function(res) {
 										return res["rowId"] == rowId && res["columnId"] == columId;
@@ -756,12 +632,11 @@
 									if (!active || active.length == 0) {return;}
 									
 									var rankingIdx = active[0]['_datasetIndex'];
-									var crrItem   = item[rankingIdx];
-									var optionIdx   = crrItem["_index"];
-									
-									var option = question["option"];
-									var optionId = option.filter(function(opt) {return opt["level"] == optionIdx})[0]["optionId"];
-									var responses = question["responses"].filter(function(res) {
+									var crrItem    = item[rankingIdx];
+									var optionIdx  = crrItem["_index"];
+									var option     = question["option"];
+									var optionId   = option.filter(function(opt) {return opt["level"] == optionIdx})[0]["optionId"];
+									var responses  = question["responses"].filter(function(res) {
 										return res["rankingLevel"] == rankingIdx + 1 && res["optionId"] == optionId;
 									});
 									
@@ -772,17 +647,56 @@
 						hover: {
 							onHover: function(e) {
 								var point = this.getElementAtEvent(e);
-								if (point.length) e.target.style.cursor = 'pointer';
-								else e.target.style.cursor = 'default';
+								e.target.style.cursor = point.length ? "pointer" : "default";
 							}
 						},
 						responsive: false,
+						maintainAspectRatio: false,
+						scales: {
+							xAxes: [{
+								ticks: {
+									autoSkip: false,
+									fontSize: 12
+								},
+								barThickness: 30,
+							}],
+							yAxes: [{
+								ticks: {
+									beginAtZero: true,
+									fontSize: 12
+								}
+							}]
+						}
 					}
 				});
-				
-				legendElmt.appendChild(myBarChart.generateLegend());
 			}
 			
+			function createLegend(data) {
+				var ul       = document.createElement("ul");
+				ul.className = "legend-ul";
+				var datasets = data["datasets"];
+				
+				for (var i = 0; i < datasets[0].data.length; i++) {
+					var liElmt           = document.createElement("li");
+					var divElmt1         = document.createElement("div");
+					var divElmt2         = document.createElement("div");
+					divElmt1.className   = "legend-circle";
+					divElmt2.className   = "legend-label";
+					divElmt2.textContent = data["labels"][i];
+					divElmt2.setAttribute("title", divElmt2.textContent);
+					divElmt1.setAttribute("style", "background-color: " + datasets[0].backgroundColor[i]);
+					liElmt.appendChild(divElmt1);
+					liElmt.appendChild(divElmt2);
+					
+					if (data["question"]) {
+						liElmt.onclick = (function(questionId, optId) {return function() {showSelectedUsersForPie(questionId, optId);};})(data["question"], i);
+					}
+					
+					ul.appendChild(liElmt);
+				}
+				
+				return ul;
+			}
 			
 			function addFogPanel(togglePanel, elmtId) {
 				var fogPanel                 = document.createElement("div");
@@ -828,143 +742,127 @@
 				return returnValue;
 			}
 			
-			function closeAllPopups() {
-				if(userWindow)  {userWindow.close();}
-			}
+			function closeAllPopups() {if(userWindow)  {userWindow.close();}}
 			
 			function getMtrDataSet(question) {
-				var options = question['option'];
-				var response = question['responses'];
- 				var rows = [];
-				var cols = [];
-				var rowLabels = [];
+				var options    = question["option"];
+				var responses  = question["responses"];
+ 				var rows       = [];
+				var cols       = [];
+				var rowLabels  = [];
 				var dataSetArr = [];
 				var dataSetObj = {};
 				
 				for (var i = 0; i < options.length; i++) {
-					if (options[i]['colLevel'] == -1) {
+					if (options[i]["colLevel"] == -1) {
 						rows.push(options[i]);
-						rowLabels.push(options[i]["content"]);
 					}
-					else if (options[i]['rowLevel'] == -1) {
+					else if (options[i]["rowLevel"] == -1) {
 						cols.push(options[i]);
-					} 
+					}
+				}
+				
+				rows.sort(function(rowA, rowB) {return rowA["rowLevel"] - rowB["rowLevel"]});
+				cols.sort(function(colA, colB) {return colA["colLevel"] - colA["colLevel"]});
+				
+				for (var j = 0; j < rows.length; j++) {
+					rowLabels.push(rows[j]["content"]);
 				}
 				
 				for (var i = 0; i < cols.length; i++) {
-					var dataset = {};
-					var colData = [];
-					var colId   = cols[i]["optionId"];
+					var dataset      = {};
+					var colData      = [];
+					var colId        = cols[i]["optionId"];
 					dataset["label"] = cols[i]["content"];
 					
 					for (var j = 0; j < rows.length; j++) {
-						var rowId = rows[j]["optionId"];
-						var rowColRes = response.filter(function(res) {
+						var rowId     = rows[j]["optionId"];
+						var rowColRes = responses.filter(function(res) {
 							return res["rowId"] == rowId && res["columnId"] == colId;
 						});
 						var rowColResCnt = rowColRes && rowColRes.length > 0 ? rowColRes.length : 0;
 						colData.push(rowColResCnt);
 					}
 					
-					dataset["data"] = colData;
+					dataset["data"]             = colData;
+					dataset["backgroundColor"]  = colors[i];
+					dataset["hoverBorderWidth"] = 8;
+					dataset["borderWidth"]      = 2;
 					dataSetArr.push(dataset);
 				}
 				 
-				dataSetObj['labels'] = rowLabels;
-				dataSetObj['dataSetArr'] = dataSetArr;
+				dataSetObj["labels"]     = rowLabels;
+				dataSetObj["dataSetArr"] = dataSetArr;
+				dataSetObj["width"]      = cols.length * rows.length * 40;
+				
 				return dataSetObj;
 			}
 			
 			function getSliderDataSet(question) {
-				var responses = question['responses'];
-				var options = question['option'];
-				var start = parseInt(options[0]['content']);
-				var end = parseInt(options[1]['content']);
-				var unitArr = [];
-				var unitObj = {};
+				var responses  = question['responses'];
+				var options    = question['option'];
+				var startPoint = parseInt(options[0]['content']);
+				var endPoint   = parseInt(options[1]['content']);
+				var unitArr    = [];
 				var dataSetArr = [];
 				var dataSetObj = {};
 				
-				for (var i = start; i < end + 1; i++) {
-					unitArr.push(i);
-					unitObj[i] = 0;
+				for (var i = startPoint; i < endPoint + 1; i++) {
+					unitArr.push(i + "");
+					var unitRes    = responses.filter(function(res) {return res["sliderValue"] == i;});
+					var unitResCnt = unitRes && unitRes.length > 0 ? unitRes.length : 0;
+					dataSetArr.push(unitResCnt);
 				}
 				
-				for (var i = 0; i < responses.length; i++) {
-					var sliderVal = responses[i]['sliderValue'];
-					
-					for (var j = 0; j < unitArr.length; j++) {
-						if (sliderVal == unitArr[j]) {
-							var oldVal = unitObj[unitArr[j]];
-							unitObj[unitArr[j]] = oldVal + 1;
-						}
-						
-					}
-				}
-				
-				for (var i = start; i < end + 1; i++) {
-					var value = unitObj[i];
-					dataSetArr.push(value);
-				}
-				
-				dataSetObj['labels'] = unitArr;
-				dataSetObj['dataSetArr'] = dataSetArr;
+				dataSetObj["labels"]     = unitArr;
+				dataSetObj["dataSetArr"] = dataSetArr;
+				dataSetObj["width"]      = (endPoint - startPoint + 1) * 40;
 				
 				return dataSetObj;
 			}
 			
 			function getRankingDataSet(question) {
-				var responses = question['responses'];
-				var options = question['option'];
-				var optionIdsArr = [];
-				var optionContentsArr = [];
-				var rankArr = [];
-				var totalObj = {};
+				var responses  = question["responses"];
+				var options    = question["option"];
+				var rowLabels  = [];
 				var dataSetArr = [];
 				var dataSetObj = {};
+				var optionLen  = options.length;
 				
-				for (var i = 0; i < options.length; i++) {
-					var rank = i + 1;
-					var rankObj = {};
+				for (var i = 0; i < optionLen; i++) {
+					var rank         = i + 1;
+					var dataset      = {};
+					var colData      = [];
+					dataset["label"] = options[i]["content"];
 					
-					for (var j = 0; j < options.length; j++) {
-						var optionoId = options[j]['optionId'];
-						rankObj[optionoId] = 0;
+					for (var j = 0; j < optionLen; j++) {
+						var rowId = options[j]["optionId"];
+						var rowColRes = responses.filter(function(res) {
+							return res["optionId"] == rowId && res["rankingLevel"] == rank;
+						});
+						var rowColResCnt = rowColRes && rowColRes.length > 0 ? rowColRes.length : 0;
+						colData.push(rowColResCnt);
 					}
-					totalObj[rank] = rankObj;
 					
-					var optionId = options[i]['optionId'];
-					optionIdsArr.push(optionId);
-					rankArr.push(rank);
-					
-					var optionContent = options[i]['content'];
-					optionContentsArr.push(optionContent);
+					dataset["data"]             = colData;
+					dataset["backgroundColor"]  = colors[i];
+					dataset["hoverBorderWidth"] = 8;
+					dataset["borderWidth"]      = 2;
+					rowLabels.push(rank + "");
+					dataSetArr.push(dataset);
 				}
 				
-				for (var i = 0; i < responses.length; i++) {
-					var rankingLevel = responses[i]['rankingLevel'];
-					var optionId = responses[i]['optionId'];
-					var oldVal = totalObj[rankingLevel][optionId];
-					totalObj[rankingLevel][optionId] = oldVal + 1;
-				}
-				
-				for (var i = 0; i < rankArr.length; i++) {
-					var rank = i + 1;
-					var valueSetArr = [];
-					
-					for (var j = 0; j < optionIdsArr.length; j++) {
-						var value = totalObj[rank][optionIdsArr[j]];
-						valueSetArr.push(value);
-					}
-					dataSetArr.push(valueSetArr);
-				}
-				
-				dataSetObj['optionIdsArr'] = optionIdsArr;
-				dataSetObj['dataSetArr'] = dataSetArr;
-				dataSetObj['label'] = optionContentsArr;
-				dataSetObj['labels'] = rankArr;
+				dataSetObj["labels"]     = rowLabels;
+				dataSetObj["dataSetArr"] = dataSetArr;
+				dataSetObj["width"]      = optionLen * optionLen * 40;
 				
 				return dataSetObj;
+			}
+			
+			function toggleUserPanel() {
+				var userPanel       = document.getElementById("surveyRespondents");
+				var crrClass        = userPanel.className;
+				userPanel.className = crrClass == "respondents-div off" ? "respondents-div" : "respondents-div off";
 			}
 		})();
 	</script>

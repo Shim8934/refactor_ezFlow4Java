@@ -52,7 +52,7 @@
 .textPanel {height: 480px; width: 640px;}
 .logicPanel {height: 640px; width: 600px;}
 .userPanel {height: 262px;}
-.hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off {display: none;}
+.hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off, .respondents-div.off {display: none;}
 .uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
 .receiver_tltype01 >span {min-width: 45px;}
 .organImg {width: 18px; height: 18px; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
@@ -281,10 +281,10 @@ input::-ms-clear {display: none;}
 .surveyCrtTt3 .sryFirst2 {width: 10px; background-color: rgba(0, 115, 230, 0.64);}
 .surveyCrtTt3 .sryTxt {height: 50px; line-height: 50px; padding: 0px 10px; font-weight: bold; font-size: 20px; flex: 1;}
 .surveyCrtTt3 img {height: 32px; width: 32px; margin: 9px 10px; cursor: pointer;}
-.surveyCrtTt3 span {position: absolute; right: 14px; top: 14px; background-color: rgba(0, 115, 230); color: #fff; border: 1px solid #d7d7d7; border-radius: 50%; font-size: 12px; padding: 4px; cursor: pointer;}
+.surveyCrtTt3 span {position: absolute; right: 14px; top: 14px; background-color: rgb(0, 115, 230); color: #fff; border: 1px solid #d7d7d7; border-radius: 50%; font-size: 12px; padding: 4px; cursor: pointer;}
 
 .statBody {background-color: rgb(244, 245, 245); padding: 10px;}
-.statBody #contentsBox {margin-top: 20px; min-height: 650px; background-color: #fff;}
+.statBody #contentsBox {margin-top: 20px; min-height: 650px;}
 
 /* paragraph css */
 .qstnWrapper {width: 100%; margin: 0px; padding: 10px 0px;}
@@ -381,9 +381,9 @@ input[type=range]::-ms-tooltip {display: none;}
 .question-opts, .question-paragraph, .question-shortanswer, .question-silder, .question-ranking, .question-dropdown {padding: 10px 35px 20px;}
 
 .question-opts .opt {width: 100%; height: 50px; display: flex; align-items: center;}
-.question-opts .opt >input[type='radio'], .question-opts .opt >input[type='checkbox'] {width: 20px; height: 20px; margin: 0px;}
-.question-opts .opt .optSpan {padding-left: 10px; font-size: 15px; line-height: 20px; cursor: default;}
-.question-opts .opt .optImg {width: 40px; height: 40px; padding-left: 10px;}
+.question-opts .opt >input[type='radio'], .question-opts .opt >input[type='checkbox'] {width: 20px; min-width: 20px; height: 20px; margin: 0px;}
+.question-opts .opt .optSpan {padding-left: 10px; font-size: 15px; line-height: 20px; cursor: default; word-break: break-word}
+.question-opts .opt .optImg {width: 40px; min-width: 40px; height: 40px; padding-left: 10px;}
 .question-opts .opt .othInput {border-radius: 4px; height: 27px; outline: 0px; padding: 0px 5px; margin-left: 10px;}
 .question-panel .question-attach {max-height: 80px; padding: 10px 35px; display: flex; align-items: center;}
 .question-attach .qstnImg {width: auto; height: auto; max-height: 80px; cursor: pointer;}
@@ -399,9 +399,9 @@ input[type=range]::-ms-tooltip {display: none;}
 .mtrPart .rowArea .rows .row .rowInput, .mtrPart .colArea .cols .col .colInput {width: 400px;}
 .mtrPart .rowArea .rows .row .delRow, .mtrPart .colArea .cols .col .delCol {width: 30px; height: 30px; cursor: pointer; padding-left: 20px;}
 
-.matrix {width: 70%; text-align: center;}
+.matrix {width: 100%; text-align: center; table-layout: fixed;}
 .matrix tr {height: 30px;}
-.matrix td {border: 1px solid rgba(204, 204, 204, 1); font-size: 14px;}
+.matrix td {border: 1px solid rgba(204, 204, 204, 1); font-size: 14px; word-break: break-word;}
 .matrix input {height: 15px; width: 15px;}
 
 
@@ -519,8 +519,11 @@ input[type=range]::-ms-tooltip {display: none;}
 .surey-frameeditor {padding: 0px; height: 100%; width:100%; overflow: auto; border: 0px;}
 
 .pieDiv {padding: 0px 20px; display: flex;}
+.barDiv {padding: 0px 20px 15px; display: flex;}
+/* .barDiv >canvas {flex: 1; min-height: 280px;} */
+.survey-canvaswrap {flex: 1; min-height: 280px;}
 .pieDiv >canvas {height: 240px;}
-.response-wrap {box-shadow: rgba(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px;}
+.response-wrap, .respondents-div {box-shadow: rgb(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px; background-color: #fff;}
 .response-usercnt {cursor: pointer;}
 .response-usercnt:hover {color: rgb(4, 112, 227);}
 .mainlist.users {width: 100%;}
@@ -530,7 +533,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .usersTr .respDate {width: 120px; min-width: 120px; white-space: nowrap; padding-right: 8px;}
 .usersTr td:first-child {width: 30px;}
 .response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; word-break: break-word; display: flex; align-items: center; padding: 8px 44px 8px 10px; min-height: 40px; position: relative;}
-.response-header >div {position: absolute; right: 6px; top: 12px; background-color: #fff; color: rgba(0, 115, 230); border-radius: 50%; font-size: 12px; cursor: pointer; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
+.response-header >div {position: absolute; right: 6px; top: 12px; background-color: #fff; color: rgb(0, 115, 230); border-radius: 50%; font-size: 12px; cursor: pointer; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
 .response-users {padding: 10px;}
 .response-users >ul {padding-left: 20px;}
 .no-data {text-align: center;}
@@ -543,7 +546,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .txt-respul {padding: 0px; list-style: none;}
 .txt-respul >li + li {padding-top: 10px; border-top: 1px dashed #ddd;}
 .txt-viewmore {padding: 4px 3px; margin-left: 8px; border: 1px solid #ddd; cursor: pointer;}
-.txt-viewmore:hover {color: rgb(4, 112, 227);; border-color: rgb(4, 112, 227);;}
+.txt-viewmore:hover {color: rgb(4, 112, 227);; border-color: rgb(4, 112, 227);}
 .div-txtanswer {max-height: 405px; overflow-y: auto; overflow-x: hidden;}
 .popup-title >span {color: red;}
 .other-wrap {padding: 15px 20px;}
@@ -553,8 +556,14 @@ input[type=range]::-ms-tooltip {display: none;}
 .legend-ul {padding: 20px 0px; list-style: none;}
 .legend-ul >li {display: flex; cursor: pointer;}
 .legend-ul .legend-circle {width: 30px; min-width: 30px; height: 15px;}
-.legend-label {flex: 1; padding-left: 6px; padding-right: 6px; word-break: break-word;}
+.legend-label {flex: 1; padding-left: 6px; padding-right: 6px; /* word-break: break-word; */overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
 .legend-label:hover {font-weight: bold;}
+.pieDiv .bnk-legend {width: 320px; min-width: 320px;}
+.barDiv .bnk-legend {width: 160px; min-width: 160px;}
+.legend-ul li + li {padding-top: 10px;}
 
-.bnk-legend {width: 320px; min-width: 320px;}
-.legend-ul li + li {padding-top: 10px};
+.chartWrapper {position: relative; padding: 0px 10px 15px;}
+.chartAreaWrapper {width: 100%; overflow-x: auto;}
+.chartAreaWrapper.bnk-wrap {overflow-x: hidden;}
+
+

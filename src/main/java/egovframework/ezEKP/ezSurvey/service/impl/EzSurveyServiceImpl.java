@@ -428,7 +428,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				option.setTenantId(tenantId);
 				option.setLogic(logicNum);
 				
-				
 				if (questionType == 3 || questionType == 4) {
 					int rowLevel = ((Long)optionObj.get("rowLevel")).intValue();
 					int colLevel = ((Long)optionObj.get("colLevel")).intValue();
