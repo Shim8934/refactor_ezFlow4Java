@@ -515,17 +515,22 @@ public class EzCommunityAdminController {
 		
 		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(총 n개 카운트) */
 		int totalCount = ezCommunityAdminService.aspAdmitComGet2(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
-		int totalPage = totalCount / pageSize;
+		int totalPage = 1;
 		
-		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
-		logger.debug("lang=" + commonUtil.getMultiData(lang, tenantId));
-		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) -> 사간겸직한 회원이 만든 커뮤니티는 겸직한 회사만큼 전부 표출됨(수정필요) */
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
-		if ((totalPage * pageSize) != totalCount && (totalCount % pageSize) != 0) {
-			totalPage = totalPage + 1;
+		if (totalCount > 0) {
+			if (totalCount > pageSize) {
+				totalPage = totalCount / pageSize;
+				
+				if (totalCount % pageSize != 0) {
+					totalPage++;
+				}
+			}
 		}
 		
-		pageNum = Math.min(pageNum, totalPage);
+		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
+		
+		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) -> 사간겸직한 회원이 만든 커뮤니티는 겸직한 회사만큼 전부 표출됨(수정필요) */
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), pageNum, companyId, tenantId);
 		
 		model.addAttribute("clubList", clubList);
 		model.addAttribute("pageNum", pageNum);
@@ -560,17 +565,22 @@ public class EzCommunityAdminController {
 		
 		/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(총 n개 카운트) */
 		int totalCount = ezCommunityAdminService.aspCloseComGet2(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
-		int totalPage = totalCount / pageSize;
+		int totalPage = 1;
+		
+		if (totalCount > 0) {
+			if (totalCount > pageSize) {
+				totalPage = totalCount / pageSize;
+				
+				if (totalCount % pageSize != 0) {
+					totalPage++;
+				}
+			}
+		}
 		
 		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
 		
 		/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
-		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
-		if ((totalPage * pageSize) != totalCount && (totalCount % pageSize) != 0) {
-			totalPage = totalPage + 1;
-		}
-		
-		pageNum = Math.min(pageNum, totalPage);
+		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), pageNum, companyId, tenantId);
 		
 		model.addAttribute("clubList", clubList);
 		model.addAttribute("pageNum", pageNum);

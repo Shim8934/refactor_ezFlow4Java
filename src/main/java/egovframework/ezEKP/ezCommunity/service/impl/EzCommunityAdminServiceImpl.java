@@ -71,7 +71,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
 	@Override
-	public List<CommunityCComCloseVO> aspCloseComGet1(String keyword, String sRadio, String lang, String companyID, int tenantID) throws Exception {
+	public List<CommunityCComCloseVO> aspCloseComGet1(String keyword, String sRadio, String lang, int pageNum, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCloseGet1 started.");
 		logger.debug("keyword=" + keyword + ", sRadio=" + sRadio);
 		
@@ -79,6 +79,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		map.put("v_KEYWORD", keyword);
 		map.put("v_S_RADIO", sRadio);
 		map.put("v_USERINFO_LANG", lang);
+		map.put("v_STARTROW", 10 * (pageNum - 1));
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -218,13 +219,14 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) */
 	@Override
-	public List<CommunityClubVO> aspAdmitComGet1(String keyword, String sRadio, String lang, String companyID, int tenantID) throws Exception {
+	public List<CommunityClubVO> aspAdmitComGet1(String keyword, String sRadio, String lang, int pageNum, String companyID, int tenantID) throws Exception {
 		logger.debug("aspAdmitComGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD", keyword);
 		map.put("v_S_RADIO", sRadio);
 		map.put("v_USERINFO_LANG", lang);
+		map.put("v_STARTROW", 10 * (pageNum - 1));
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
