@@ -136,18 +136,18 @@
 	            if (isfirst) {
 	            	searchYear = year;
 	                selyear = year;
-	                tempyear = year + 2;
-	                maxyear = year + 2;
+	                tempyear = year + 4;
+	                maxyear = year + 4;
 	                isfirst = false;
 	            }
 	            else {
 	                selyear = parseInt(document.getElementById("searchYear").value);
-                    tempyear = selyear + 2;
+                    tempyear = selyear + 4;
 	            }
 	            
-	            if (selyear + 2 <= maxyear || selyear + 1 <= maxyear) {
+	            if (selyear <= maxyear) {
 	                document.getElementById("searchYear").innerHTML = "";
-	                for (var i = 0; i < 5; i++) {
+	                for (var i = 0; i < 10; i++) {
 	                	if (tempyear > maxyear) {
 	                		tempyear--;
 	                		continue;
@@ -163,7 +163,7 @@
 	                    document.getElementById("searchYear").appendChild(option);
 	                    tempyear--;
 	                }
-	                tempyear = selyear + 2;
+	                tempyear = selyear + 4;
 	            }
 	        }
 			
