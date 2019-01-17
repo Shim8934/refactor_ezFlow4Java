@@ -982,7 +982,7 @@
 			            url += "?listType=DOC&cont=" + encodeURI(ContainerID) + "&PN=" +
 			                encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
 			                "&OO=" + encodeURI(OrderOption) + "&allFG=" + AllFG ;
-		        	} else 
+		        	} else {
 		        		var myApprFrom = condition[7];
 		        		var myApprTo = condition[8];
 		        		var apprFrom = condition[5];
