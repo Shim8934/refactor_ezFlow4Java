@@ -196,13 +196,13 @@
 								
 								html += "<td style='width: 10%;'><span sysId='"+ item.c_SysopID +"' deptId='" + item.deptID + "' onclick=openinfo_userinfo(this)>" + item.userName + "</span></td>"; //마스터이름
 								html += "<td style='width: 10%;'>"  + item.c_RegDate.substring(0, 10) + "</td>"; //생성일
-								html += "<td style='width: 65px;'>";
+								html += "<td style='width: 70px;'>";
 								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconLineup.gif'></span>";
 								html +=     "<span class='count' style='margin-right: 8px;'>" + item.c_MemberCnt + "</span>";
 								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconPost.gif'></span>";
 								html +=     "<span class='count'>" + item.itemCnt + "</span>";
 								html += "</td>";
-								html += "<td style='width: 60px;'><a class='imgbtn imgbck'><span onclick=closeBtnClick('" + item.c_ClubNo + "')>폐쇄</span></a></td>";
+								html += "<td style='width: 45px;'><a class='imgbtn imgbck'><span onclick=closeBtnClick('" + item.c_ClubNo + "')>폐쇄</span></a></td>";
 								html += "</tr>";
 								
 								itemNum++;
@@ -555,8 +555,8 @@
 			
 			<table class="content" style="margin: 10px 0px;">
 				<tr>
-					<th style="background-color: #f1f3f5; border: 1px solid #f1f3f5;">검색조건</th>
-					<td style="border: 1px solid #f1f3f5;">
+					<th style="background-color: #f1f3f5; border: 1px solid #e2e3e6;">검색조건</th>
+					<td style="border: 1px solid #e2e3e6;">
 						<span id="idSpan" class="idSpan">${idSpanValue}</span>
 						
 						<select id="QuerySelect" name="QuerySelect" style="vertical-align: middle; height: 22px;">
@@ -581,8 +581,8 @@
 							<th style="width: 10%;">공개여부</th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t78' /></th>
-							<th style="width: 65px;"></th>
-							<th style="width: 60px;"></th>
+							<th style="width: 70px;">커뮤니티 현황</th>
+							<th style="width: 45px;"></th>
 						</tr>
 					</table>
 					<table id="mainListHeader2" class="mainlist" style="width: 100%; display: none;">

@@ -542,8 +542,8 @@
 	
 	<table class="content" style="margin: 10px 0px;">
 		<tr>
-			<th style="background-color: #f1f3f5; border: 1px solid #f1f3f5;">검색조건</th>
-			<td style="border: 1px solid #f1f3f5;">
+			<th style="background-color: #f1f3f5; border: 1px solid #e2e3e6;">검색조건</th>
+			<td style="border: 1px solid #e2e3e6;">
 				<span id="idSpan" class="idSpan">${idSpanValue}</span>
 				<select id="searchType" name="QuerySelect" style="vertical-align: middle; height: 22px;">
 					<option selected value="C_ClubName"><spring:message code = 'ezCommunity.t9991' /></option>
