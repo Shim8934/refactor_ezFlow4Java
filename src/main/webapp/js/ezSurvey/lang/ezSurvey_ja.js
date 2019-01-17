@@ -115,7 +115,7 @@ var SurveyMessages = {
 	strNoSameRsps: "같은 값을 선택할 수 없습니다.",
 	strNoResponse: "질문에 응답해 주세요.",
 	strNotPeriod : "설문 기간이 아닙니다. 설문 기간: ",
-	strnotComplete: "번 질문에 대한 답변이 완료되지 않았습니다.",
+	strIncomplete: "번 질문에 대한 답변이 완료되지 않았습니다.",
 	atLeast      : "번 질문: 최소",
 	requiredCnt  : "개 선택 필수",
 	writeOthers  : "번 질문의 기타 의견을 작성해 주세요.",

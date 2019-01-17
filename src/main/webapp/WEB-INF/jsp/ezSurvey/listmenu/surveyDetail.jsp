@@ -279,7 +279,7 @@
 					if (orders == i) {continue;}
 					// 비교할 값
 					var neighborValue = $("select[name=ranking" + id + i + "]").val();
-					if (thisValue == neighborValue) {
+					if (thisValue != "" && thisValue == neighborValue) {
 						alert(SurveyMessages.strNoSameRsps);
 						// 셀렉트 박스 값 초기화
 						$("select[name=ranking" + id + orders + "]").val("").prop("selected", true);
@@ -648,11 +648,19 @@
 			var wrapper = $("#prevQstn" + id);
 			var selectLengh = wrapper.find(".ranking-select").length;
 			var result = "success";
-			var checkResult = checkRankingResponse(id);
+			var count = 0;
 			
-			if (checkResult == "") {
-				alert(id + SurveyMessages.strnotComplete);
-				result = "fail";
+			for (var i = 0; i < selectLengh; i++) {
+				var optLevel = $("select[name^=ranking" + id + i + "]").val();
+				if (optLevel != "") {
+					count++;
+				}
+				
+			}
+			if (count > 0 && count != selectLengh) {
+				alert(id + SurveyMessages.strIncomplete);
+				return "fail";
+				
 			} else {
 				for (var i = 0; i < selectLengh; i++) {
 					var rankingObj = {};
@@ -674,6 +682,7 @@
 					resposeObj.responses.push(answerObj);
 				}
 			}
+			
 			return result;
 		}
 		
@@ -811,7 +820,7 @@
 					
 				}
 				if (checkResult == 0 || checkResult == "") {
-					alert(id + SurveyMessages.strnotComplete);
+					alert(id + SurveyMessages.strIncomplete);
 					result = "fail";
 					break;
 				}
