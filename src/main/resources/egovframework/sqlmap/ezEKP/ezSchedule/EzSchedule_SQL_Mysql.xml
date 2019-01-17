@@ -237,8 +237,7 @@
 	<!-- checked -->
 	<select id="EzScheduleDAO.getScheduleList" parameterClass="Map" resultMap="scheduleListVO">
 		<![CDATA[
-			select a.* from
-			(select 
+			select 
 				scheduleid,
 				parentid,
 				ownerid,
@@ -272,12 +271,12 @@
         	from 
         		tbl_schedule
        		where  
-       			ownerid in ($v_INDILIST$)
+       			(ownerid in ($v_INDILIST$)
             and 
             	(            		
             		(startdate >= #v_PSTARTDATE# and startdate <= #v_PENDDATE#) 
             		or
-            		(ENDDATE >= #v_PSTARTDATE# and enddate < #v_PENDDATE#) 
+            		(ENDDATE > #v_PSTARTDATE# and enddate < #v_PENDDATE#) 
             		or
             		(startdate < #v_PSTARTDATE# and enddate >= #v_PENDDATE#) 
             		or 
@@ -292,46 +291,14 @@
             	title like concat('%',REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
             ]]>
             </isNotEmpty>
-            <isNotEmpty property="v_PKEYWORD">and $v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')</isNotEmpty>            		
-        	order by startdate asc) a
-        	UNION
-        	<![CDATA[
-        	select b.* from
-        	(select 
-				scheduleid,
-				parentid,
-				ownerid,
-				ownername,
-				ownername2,
-				creatorid,
-				creatorname,
-				creatorname2,				
-				date_add(createdate, interval +#v_OFFSETMIN# minute) as createdate,
-				modifierid,
-				modifiername,
-				modifiername2,				
-				date_add(modifydate, interval +#v_OFFSETMIN# minute) as modifydate,
-				scheduletype,
-				importance,
-				hasattendant,
-				hasattach,
-				hascomment,
-				isreadonly,
-				ispublic,
-				datetype,				
-				date_add(startdate, interval +#v_OFFSETMIN# minute) as startdate,				
-				date_add(enddate, interval +#v_OFFSETMIN# minute) as enddate,
-				repetition,
-				repetitiondelete,
-				title,
-				location,
-				contentpath,
-				'' as groupname,
-				companyid
-        	from 
-        		tbl_schedule
-       		where  
-       			ownerid in ($v_PIDLIST$)
+            <isNotEmpty property="v_PKEYWORD">
+            and 
+            	$v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')
+            </isNotEmpty>
+            <![CDATA[
+        	)
+        	or  
+       			(ownerid in ($v_PIDLIST$)
        		and
         		companyid = #v_COMPANYID#        	     	
         	and 
@@ -368,7 +335,7 @@
             	(            		
             		(startdate >= #v_PSTARTDATE# and startdate <= #v_PENDDATE#) 
             		or
-            		(ENDDATE >= #v_PSTARTDATE# and enddate < #v_PENDDATE#) 
+            		(ENDDATE > #v_PSTARTDATE# and enddate < #v_PENDDATE#) 
             		or
             		(startdate < #v_PSTARTDATE# and enddate >= #v_PENDDATE#) 
             		or 
@@ -384,7 +351,8 @@
             ]]>
             </isNotEmpty>
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')</isNotEmpty>            		
-        	order by startdate asc) b
+        		)
+          order by startdate asc
 	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.getMyGroupList" parameterClass="map" resultMap="scheduleGroupListVO">
@@ -578,6 +546,8 @@
 		<![CDATA[
 			 select 
 			 	A.memberid,
+			 	E.GROUPNAME,
+			 	E.DESCRIPTION,
              	case #v_LANG#
                     when '1' then A.memberName                 
         			when '2' then A.memberName2
@@ -626,7 +596,9 @@
 							WHERE  
 							A.TENANT_ID = #v_TENANTID# AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#) BB 
             	ON 
-				A.memberid = BB.cn 
+				A.memberid = BB.cn
+				JOIN TBL_SCHEDULEGROUP E
+				ON A.GROUPID = E.GROUPID
 				WHERE 
 				A.groupid = #v_GROUPID#
 				AND 
@@ -892,67 +864,183 @@
 		]]>			
 	</select>
 	<!-- checked -->
-	<select id="EzScheduleDAO.getTholiday" parameterClass="Map" resultMap="scheGetHolidayVO">
+	<select id="EzScheduleDAO.getTholiday" parameterClass="Map" resultClass="scheGetHolidayVO">
 		<isEqual property="v_COMPANYID" compareValue="ALL">
-			<![CDATA[
-				select 
-					holidayid,
-	                holidayname,
-	                holidayname2,
-	                holidaydate,
-	                ifnull(issolar, '0') issolar,
-	                ifnull(isrepeat, '0') isrepeat,
-	                ifnull(isuse, '0') isuse,
-	                ifnull(isrest, '0') isrest,
-	                usecompany
-	           	from 
-					tbl_holidaylist
-				where
-					tenant_id = #v_TENANTID#
-			]]>
-		</isEqual>
-		<isNotEqual property="v_COMPANYID" compareValue="ALL">
-	   		<isEqual property="v_COMPANYID" compareValue="VIEW">
-	   			<![CDATA[
+				<![CDATA[
 					select 
 						holidayid,
 		                holidayname,
 		                holidayname2,
+		                holidayflag,
 		                holidaydate,
+		                holidayrepeat,
 		                ifnull(issolar, '0') issolar,
 		                ifnull(isrepeat, '0') isrepeat,
 		                ifnull(isuse, '0') isuse,
 		                ifnull(isrest, '0') isrest,
 		                usecompany
 		           	from 
-		           		tbl_holidaylist 
-					where  
-						(usecompany = '1' or usecompany = #v_USERCOMPANY#)
-					and
+						tbl_holidaylist
+					where
 						tenant_id = #v_TENANTID#
-				]]>		                   
+				]]>
+		</isEqual>
+		<isNotEqual property="v_COMPANYID" compareValue="ALL">
+	   		<isEqual property="v_COMPANYID" compareValue="VIEW">
+	   			<isEqual property="isRest" compareValue="all">
+		   			<![CDATA[
+						select 
+							holidayid,
+			                holidayname,
+			                holidayname2,
+			                holidayflag,
+			                holidaydate,
+			                holidayrepeat,
+			                ifnull(issolar, '0') issolar,
+			                ifnull(isrepeat, '0') isrepeat,
+			                ifnull(isuse, '0') isuse,
+			                ifnull(isrest, '0') isrest,
+			                usecompany
+			           	from 
+			           		tbl_holidaylist 
+						where  
+							(usecompany = 'ALL' or usecompany = #v_USERCOMPANY#)
+						and
+							tenant_id = #v_TENANTID#
+						and
+							isuse = 1
+					]]>		                   
+	   			</isEqual>
+	   			<isNotEqual property="isRest" compareValue="all">
+	   				<isEqual property="isRest" compareValue="rest">
+			   			<![CDATA[
+							select 
+								holidayid,
+				                holidayname,
+				                holidayname2,
+				                holidayflag,
+				                holidaydate,
+				                holidayrepeat,
+				                ifnull(issolar, '0') issolar,
+				                ifnull(isrepeat, '0') isrepeat,
+				                ifnull(isuse, '0') isuse,
+				                ifnull(isrest, '0') isrest,
+				                usecompany
+				           	from 
+				           		tbl_holidaylist 
+							where  
+								(usecompany = 'ALL' or usecompany = #v_USERCOMPANY#)
+							and
+								tenant_id = #v_TENANTID#
+							and
+								isuse = 1
+							and
+								isrest = 1
+						]]>		                   
+	   				</isEqual>
+	   				<isEqual property="isRest" compareValue="normal">
+			   			<![CDATA[
+							select 
+								holidayid,
+				                holidayname,
+				                holidayname2,
+				                holidayflag,
+				                holidaydate,
+				                holidayrepeat,
+				                ifnull(issolar, '0') issolar,
+				                ifnull(isrepeat, '0') isrepeat,
+				                ifnull(isuse, '0') isuse,
+				                ifnull(isrest, '0') isrest,
+				                usecompany
+				           	from 
+				           		tbl_holidaylist 
+							where  
+								(usecompany = 'ALL' or usecompany = #v_USERCOMPANY#)
+							and
+								tenant_id = #v_TENANTID#							
+						]]>		                   
+	   				</isEqual>
+	   			</isNotEqual>
 			</isEqual>           
             <isNotEqual property="v_COMPANYID" compareValue="VIEW">
-            	<![CDATA[
-		          	select 
-		          		holidayid,
-		                holidayname,
-		                holidayname2,
-		                holidaydate,
-		                ifnull(issolar, '0') issolar,
-		                ifnull(isrepeat, '0') isrepeat,
-		                ifnull(isuse, '0') isuse,
-		                ifnull(isrest, '0') isrest,
-		                usecompany
-					from 
-						tbl_holidaylist 
-					where  
-						usecompany = #v_COMPANYID#
-					and
-						tenant_id = #v_TENANTID#	
-				]]>
+            	<isEqual property="v_COMPANYID" compareValue="STATUTORY">
+            		<![CDATA[
+			          	select 
+			          		holidayid,
+			                holidayname,
+			                holidayname2,
+			                holidayflag,
+			                holidaydate,
+			                holidayrepeat,
+			                ifnull(issolar, '0') issolar,
+			                ifnull(isrepeat, '0') isrepeat,
+			                ifnull(isuse, '0') isuse,
+			                ifnull(isrest, '0') isrest,
+			                usecompany
+						from 
+							tbl_holidaylist 
+						where  
+							usecompany = 'ALL'
+						and
+							tenant_id = #v_TENANTID#
+						order by
+							date_format(holidaydate,'%m%d'), issolar, substring(HOLIDAYREPEAT, 6);
+					]]>
+            	</isEqual>
+            	<isNotEqual property="v_COMPANYID" compareValue="STATUTORY">
+	            	<![CDATA[
+			          	select 
+			          		holidayid,
+			                holidayname,
+			                holidayname2,
+			                holidayflag,
+			                holidaydate,
+			                holidayrepeat,
+			                ifnull(issolar, '0') issolar,
+			                ifnull(isrepeat, '0') isrepeat,
+			                ifnull(isuse, '0') isuse,
+			                ifnull(isrest, '0') isrest,
+			                usecompany
+						from 
+							tbl_holidaylist 
+						where  
+							usecompany = #v_COMPANYID#
+						and
+							tenant_id = #v_TENANTID#
+						order by
+							date_format(holidaydate,'%m%d'), issolar, substring(HOLIDAYREPEAT, 6);
+					]]>
+            	</isNotEqual>
 			</isNotEqual>                       	
 		</isNotEqual>			
+	</select>
+	
+	<select id="EzScheduleDAO.getTholidayYear" parameterClass="Map" resultClass="scheGetHolidayVO">
+		<![CDATA[
+			select 
+          		holidayid,
+                holidayname,
+                holidayname2,
+                holidayflag,
+                holidaydate,
+                holidayrepeat,
+                ifnull(issolar, '0') issolar,
+                ifnull(isrepeat, '0') isrepeat,
+                ifnull(isuse, '0') isuse,
+                ifnull(isrest, '0') isrest,
+                usecompany
+			from 
+				tbl_holidaylist 
+			where  
+				usecompany = #v_COMPANYID#
+			and
+				tenant_id = #v_TENANTID#	
+			and
+				(date_format(holidaydate,'%Y') = #holidayYear# or isrepeat = 1 or holidayrepeat like concat(#holidayYear# , '%'))
+			order by
+				date_format(holidaydate,'%m%d'), issolar, substring(HOLIDAYREPEAT, 6);
+				
+		]]>
 	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.getCurScheduleId" resultClass="int">

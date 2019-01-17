@@ -141,18 +141,19 @@
 		</script>
 	</head>
 	<body class="mainbody">
-	    <h1><spring:message code = 'ezAttitude.t8' /></h1>
-	    <div id="mainmenu">
-			<span style="border: none;"><b><spring:message code='ezAttitude.t15' /> : </b></span>
-			<select name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
+	    <h1>
+	    	<spring:message code = 'ezAttitude.t8' />
+	    	<select class="companySelect" name="ListCompany" id="ListCompany" onchange="company_change()">
 				<c:forEach var="item" items="${list}">
-				<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
+					<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>
 				</c:forEach>
       		</select>
+	    </h1>
+	    <div id="mainmenu">
 		    <ul>
-		        <li><span onClick="author_add()"><spring:message code='ezAttitude.t187' /></span></li>
+		        <li class="important"><span onClick="author_add()"><spring:message code='ezAttitude.t187' /></span></li>
 		        <li><span onClick="author_modify()"><spring:message code='ezAttitude.t188' /></span></li>
-		        <li><span onClick="author_delete()"><spring:message code='ezAttitude.t189' /></span></li>
+		        <li><span class="icon16 icon16_delete" onClick="author_delete()"></span></li>
 		    </ul>
 		</div>
         <div style="width: 100%; height: 100%;">

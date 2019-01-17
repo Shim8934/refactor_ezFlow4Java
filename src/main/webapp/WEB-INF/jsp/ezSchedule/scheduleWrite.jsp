@@ -96,7 +96,10 @@
 		                document.getElementById("periodblock").style.display = "";
 		                document.getElementById("repeatblock").style.display = "none";
 		                show_repetition_info();
-		            } 
+		            } else if(datetype == "2") {
+		            	document.getElementById("alldaycheck").checked = true;
+		            	allday_change();
+		            }
 
 		            if ($.trim(repetition) != "" && pattern == "1") {
 		                show_repetition_info();
@@ -167,6 +170,16 @@
 		                break;
 		        }
 		    }
+		    
+		    window.onbeforeunload = function () {
+		        try {
+		    		window.opener.openerCalendarMiniView("CalendarMini");	    		
+		    		window.opener.openerCalendarMiniDataSource();
+		            window.opener.getScheduleList(window.opener.nowDay, "P");
+		    		window.opener.openerCalendarMiniView("CalendarMini_Top");	    		
+		    		window.opener.openerCalendarMiniDataSource("Top");
+		        } catch (e) { }
+		    }
 
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
@@ -174,7 +187,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -182,7 +195,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 
@@ -204,6 +217,10 @@
 				var eHour = uploadEDate.substring(11, 13);
 				var eMin = uploadEDate.substring(14, 16);
 				
+				if(uploadEDate.substring(11, 16) == "00:00") {
+					eDay--;
+				}
+				
 		        var SDate = new Date();
 		        SDate.setFullYear(sYear, sMonth-1, sDay);
 		        SDate.setHours(sHour, sMin, 0, 0);
@@ -211,7 +228,6 @@
 		        var EDate = new Date();
 		        EDate.setFullYear(eYear, eMonth-1, eDay);
 		        EDate.setHours(eHour, eMin, 0, 0);
-		        
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 		        $("#Sdatepicker").datepicker('setDate', SDate);
 		        $('#Stimepicker').timepicker();
@@ -485,7 +501,7 @@
 	                                <%-- <c:if test="${scheduleId == ''}">
 	                                	<li><span onclick="check_name()"><spring:message code='ezSchedule.t53'/></span></li>
 									</c:if> --%>
-	                                <li><span onclick="Print_onClick()"><spring:message code='ezSchedule.t217'/></span></li>
+	                                <li><span class="icon16 popup_icon16_print" onclick="Print_onClick()"></span></li>
 	                            </ul>
 	                            <ul style="float:right;margin-right:50px">        
 	                                <li id="menuTable" class="sel" style="background: none; border: none;">	
@@ -570,7 +586,7 @@
 	                            <div id="schedule2" style="display: none">
 	                                <table class="content">
 	                                    <tr id="repeateTR">
-	                                        <th><a href="#" class="imgbtn"><span onclick="config_repeat()"><spring:message code='ezSchedule.t367'/></span></a></th>
+	                                        <th><a class="imgbtn"><span onclick="config_repeat()"><spring:message code='ezSchedule.t367'/></span></a></th>
 	                                        <td class="pos1">
 	                                            <div id="repeatinfo" style="height: 100%; width: 100%; vertical-align: middle; display: table-cell;">&nbsp;</div>
 	                                        </td>
@@ -597,7 +613,7 @@
                                         </tr>
                                         </c:if>
                                         <tr id="receiverTr1">
-                                            <th rowspan="2"><a href="#" id="imgbutton" class="imgbtn"><span id="clickbtn" onclick="manage_attendant()"><spring:message code='ezSchedule.t364'/></span></a></th>
+                                            <th rowspan="2"><a id="imgbutton" class="imgbtn"><span id="clickbtn" onclick="manage_attendant()"><spring:message code='ezSchedule.t364'/></span></a></th>
                                             <td class="pos1">
                                                 <input name="Input" id="receiverinput" style="WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box;" onkeyup="return on_keydown(event)">
 											</td>
@@ -614,14 +630,14 @@
 	                            <div id="schedule3" style="display: none">
 	                                <table class="content">
                                         <tr ID="HolderWriteTr1">
-                                            <th><a href="#" id="resourcebutton" class="imgbtn"><span id="resourcebtn" onclick="manage_resource()"><spring:message code='ezSchedule.t1101'/></span></a></th>
+                                            <th><a id="resourcebutton" class="imgbtn"><span id="resourcebtn" onclick="manage_resource()"><spring:message code='ezSchedule.t1101'/></span></a></th>
                                             <td class="pos1">
                                                 <div id="resourcelist" style="height: 100%; width: 100%; vertical-align: middle; display: table-cell;"></div>
                                             </td>
                                             <td class="pos2"></td>
                                         </tr>
                                         <tr ID="HolderWriteTr2">
-                                            <th><a href="#" class="imgbtn"><span onclick="config_repeat_resource()"><spring:message code='ezSchedule.t1102'/></span></a></th>
+                                            <th><a class="imgbtn"><span onclick="config_repeat_resource()"><spring:message code='ezSchedule.t1102'/></span></a></th>
                                             <td class="pos1">
                                                 <div id="resourcerepeatinfo" style="height: 100%; width: 100%; vertical-align: middle; display: table-cell;">&nbsp;</div>
                                             </td>

@@ -8,6 +8,7 @@ public class FavoriteVO {
 	private String targetPath;
 	private String targetExt;
 	private long targetSize;
+	private String folderId;
 
 	private String creatorId;
 	private String creatorName;
@@ -15,6 +16,14 @@ public class FavoriteVO {
 
 	private String favoriteStatus;
 	private int tenantId;
+	
+	public String getFolderId() {
+		return folderId;
+	}
+	
+	public void setFolderId(String folderId) {
+		this.folderId = folderId;
+	}
 
 	public String getTargetId() {
 		return targetId;

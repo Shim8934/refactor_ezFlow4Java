@@ -20,7 +20,7 @@
 		}
 			
 		.selectTR{
-			background-color: #edf4fd;
+			background-color: #f1f8ff;
 		}
 	</style>
 	
@@ -411,7 +411,7 @@
 			<table class="" style="width: 650px;margin-top:5px; border: none;">
 				<tr>
 					<td class="box" style="min-width: 350px;">
-						<div id="treeview" style="height: 350px; width: 100%; overflow: auto;">
+						<div id="treeview" style="height: 350px; width: 100%; overflow-x: hidden; overflow-y: auto;">
 						</div>
 					</td>
 					<td style="min-width: 60px; border-top: none; border-bottom: none;">

@@ -2148,7 +2148,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	        calendar.add(Calendar.DATE, -1); 
 	        lastDayOfMonth = nsdf.format(calendar.getTime()) + " 23:59:59"; 		        
 	        result = getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID, companyID);			
-			result.remove(result.size() - 1);
+			//result.remove(result.size() - 1);
 			calendar.set(Calendar.DAY_OF_MONTH, 1);
 		}			
 		return result;

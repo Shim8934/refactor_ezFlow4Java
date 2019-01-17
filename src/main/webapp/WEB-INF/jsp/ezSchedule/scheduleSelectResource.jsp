@@ -9,7 +9,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('/css/style.css')}" type="text/css" />
-	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
+	    <%-- <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" /> --%>
 	    <style>
 	    	.mainlist tr th {
 	    		border-top:0px;
@@ -33,7 +34,7 @@
 		    var ReturnValue_NameEng = new Array();
 		    var pStartTime = "<c:out value='${startTime}'/>";
 		    var pEndTime = "<c:out value='${endTime}'/>";
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#f1f8ff";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var RetValue;
@@ -373,7 +374,7 @@
 	    	<tr>
 	        	<td>
 	                <h2><span id="menu01" ><spring:message code='ezSchedule.t1104' /></span></h2>
-	                <div class="box" style="height:300px;width:245px;overflow-x:auto;overflow-y:auto;" id="TreeView"></div>
+	                <div class="box" style="height:300px;width:245px;overflow-x: hidden; overflow-y: auto;" id="TreeView"></div>
 	            </td>
 	            <td style="width: 30px; text-align: center;">
                     <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;margin-top:22px" onclick="InsertReceiver()"><br/>

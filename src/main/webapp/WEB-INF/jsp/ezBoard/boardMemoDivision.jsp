@@ -56,7 +56,7 @@
 						$(obj).css("backgroundColor", "#FFFFFF");
 					} else {
 						$(obj).find("input").prop("checked", true);
-						$(obj).css("backgroundColor", "#edf4fd");
+						$(obj).css("backgroundColor", "#f1f8ff");
 					}
 				} else {
 					if (_RowObject != null) {
@@ -66,7 +66,7 @@
 	
 					_RowObject = obj;
 					$(obj).find("input").prop("checked", true);
-					$(obj).css("backgroundColor", "#edf4fd");
+					$(obj).css("backgroundColor", "#f1f8ff");
 				}
 	    	}
 	    	
@@ -74,7 +74,7 @@
 				// 전체 체크박스 선택, 해제
 				if ($("#checkboxAll").prop("checked") == true) {
 					$(".myCheckbox").prop("checked", true);
-					$("#memoFolderList tr").css("background", "#edf4fd");
+					$("#memoFolderList tr").css("background", "#f1f8ff");
 				} else {
 					$(".myCheckbox").prop("checked", false);
 					$("#memoFolderList tr").css("background", "#FFFFFF");
@@ -88,7 +88,7 @@
 					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#FFFFFF");
 				} else {
 					$(obj).prop("checked", true);
-					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#edf4fd");
+					$(obj).parent().parent("tr[id = '" + num + "']").css("backgroundColor", "#f1f8ff");
 				}
 	
 				event.stopPropagation();
@@ -221,9 +221,9 @@
      
 			<div id="mainmenu" style="width: 750px;">
 			    <ul>
-			        <li style=><span onClick="add_onclick()"><spring:message code='ezMemo.t0027' /></span></li>
+			        <li class="important"><span onClick="add_onclick()"><spring:message code='ezMemo.t0027' /></span></li>
 			        <%-- <li style=><span onClick="modify_onclick()"><spring:message code='ezMemo.t0028' /></span></li> --%>
-			        <li style=><span onClick="delete_onclick()"><spring:message code='ezMemo.t0029' /></span></li>
+			        <li><span class="icon16 icon16_delete" onClick="delete_onclick()"></span></li>
 			    </ul>
 			</div>
         	<table style="width: 450px; height: 385px;">

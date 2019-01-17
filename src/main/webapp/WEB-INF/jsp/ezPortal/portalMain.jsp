@@ -18,7 +18,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script><c:if test="${memoFlag eq 'YES'}">
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memoPortal.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mousewheel.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script></c:if>
 		<style>
@@ -168,8 +167,8 @@
 		</script>
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
-		<div style="height:56px;"><iframe src="${topUrl}" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;min-height:400px" frameborder="0"></iframe></div>
-		<iframe src="${mainUrl}" name="main" id="mainFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;height:100%;" frameborder="0"></iframe>
+		<div style="height:56px;"><iframe src="${topUrl}" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;min-height:260px;" frameborder="0"></iframe></div>
+		<iframe src="${mainUrl}" name="main" id="mainFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;height:100%;min-width:1280px" frameborder="0"></iframe>
 		<%-- <div style="height:${topHeight}px"><iframe src="${topUrl}" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe></div>
 		<iframe src="${mainUrl}" name="main" id="mainFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe> --%>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

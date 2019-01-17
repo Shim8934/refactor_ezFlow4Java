@@ -87,8 +87,6 @@ function manage_share_Complete(retVal) {
         case 1:
             if (typeof (retVal) != "undefined") {
 				if (retVal["id"].length != 0) {
-					g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-
 					if (g_share != null) {
 						for (var i = 0; i < g_share["email"].length; i++) {
 							if (retVal["email"][0] == g_share["email"][i]) {
@@ -102,6 +100,8 @@ function manage_share_Complete(retVal) {
 							}
 						}
 					}
+					
+					g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
 
 					if (primary == 1) {
 						setNodeText(document.getElementById("personlist"), retVal["name"][0] + " (" + retVal["deptname"][0] + ")");
@@ -755,7 +755,7 @@ function save_task() {
 			}				
 						
 	        parent.DivPopUpHidden();
-
+	        // left메뉴 카운트 업데이트
 	        if (mode == "1") {
 	        	parent.RefreshView();
 	        	parent.location.reload();
@@ -763,7 +763,13 @@ function save_task() {
 	        	parent.load_bodyhtml();
 				parent.getTaskAttachList();
 	        } else {
-	        	opener.location.reload();
+	        	try {
+	        		opener.getTaskList();
+	        	} catch(e) {
+	        		opener.parent.frames["left"].getTaskList();
+	        		window.close();
+	        	}
+	        	
 	        }
 	        
 	        //parent.taskReadJson();

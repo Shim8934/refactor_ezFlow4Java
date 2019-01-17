@@ -749,6 +749,11 @@ function SGetDraftAprLineInfo(ret) {
                         field = message.GetListItem(fields, fieldname);
                         if (field)
                             field.innerHTML = OrderName[i] + "<br>" + OrderReason[i];
+                        
+                        fieldname = susinSN + "approdept" + idx;
+                        field = message.GetListItem(fields, fieldname);
+                        if (field)
+                        	setNodeText(field , OrderDept[i]);
 
                         idx = idx + 1;
                         continue;
@@ -763,7 +768,13 @@ function SGetDraftAprLineInfo(ret) {
                 field = message.GetListItem(fields, fieldname);
                 if (field) {
                     setNodeText(field , OrderName[i]);
-                    idx = idx + 1;
+                }
+                
+                fieldname = susinSN + "approdept" + idx;
+                field = message.GetListItem(fields, fieldname);
+                if (field) {
+                	setNodeText(field , OrderDept[i]);
+                	idx = idx + 1;
                 }
             }
 

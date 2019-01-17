@@ -2018,38 +2018,26 @@
 	<select id="EzResourceDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
 		<![CDATA[
 			SELECT
-				member_id, access_lvl 
-      		FROM
-      			TBL_RS_RESACL 
-      		WHERE
-      			companyid = #companyID#
-      		AND
-      			resid = #resID#
-			AND
-				member_id =
-				(CASE
-                WHEN
-                	(SELECT
-						COUNT(*)
-						FROM
-							TBL_RS_RESACL
-						WHERE
-			      			companyid = #companyID#
-			      		AND
-			      			resid = #resID#
-						AND
-							member_id = 'everyone'
-						AND
-							access_lvl = '1'
-						AND
-                			TENANT_ID = #tenantID#) > 0
-               	THEN
-               		 'everyone'
-               	ELSE
-					#memberID#
-				END)
-            AND
-                TENANT_ID = #tenantID#
+				*
+			FROM
+			(	SELECT
+					member_id, access_lvl 
+	      		FROM
+	      			TBL_RS_RESACL 
+	      		WHERE
+	      			companyid = #companyID#
+	      		AND
+	      			resid = #resID#
+				AND
+					( MEMBER_ID = #memberID#
+				OR
+						MEMBER_ID = 'everyone' )
+	            AND
+	                TENANT_ID = #tenantID#
+	            ORDER BY
+	            	ACCESS_LVL	ASC)
+	         WHERE
+	         	ROWNUM = 1
 		]]>
 	</select>
   

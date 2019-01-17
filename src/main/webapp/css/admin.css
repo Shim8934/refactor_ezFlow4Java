@@ -1,4 +1,4 @@
-TD,input, text, div,select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: gulim, arial,verdana;}
+TD,input, text, div,select, textarea,a{FONT-SIZE: 9pt;COLOR: #393939;FONT-FAMILY: malgun gothic, arial,verdana;}
 input,SELECT{HEIGHT: 20px}
 .td{empty-cells:show}
 TEXTAREA{padding:5px}
@@ -31,10 +31,8 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 .pstitle{background-color: ECECEC;padding-left:10px;padding-right:10px;padding-top:5px;padding-bottom:5px;white-space: nowrap;word-break:keep-all;word-wrap:normal}
 .btnposition{padding-right:10px;text-align:right}
 
-.pmenu{FONT-SIZE: 9pt;FONT-FAMILY: gulim,arial,verdana;padding-left:8px;padding-right:6px; white-space: nowrap; text-align: center;vertical-align: middle;background-image:url(../images/pbar.gif);background-position:left;background-repeat:no-repeat;}
+.pmenu{FONT-SIZE: 9pt;FONT-FAMILY: malgun gothic,arial,verdana;padding-left:8px;padding-right:6px; white-space: nowrap; text-align: center;vertical-align: middle;background-image:url(../images/pbar.gif);background-position:left;background-repeat:no-repeat;}
 
-
-/* �Ʒ����ʹ� ���ֹ��� css - ������ ���������*/
 .rpad{PADDING-RIGHT: 20px;TEXT-ALIGN: right}
 .atitle_stat{PADDING-RIGHT: 0px;COLOR: #ffffff;HEIGHT: 25px;BACKGROUND-COLOR: #a5b8dd}
 .atitle_stat2{PADDING-RIGHT: 5px;PADDING-LEFT: 0px;COLOR: #ffffff;HEIGHT: 25px;BACKGROUND-COLOR: #ffffff}
@@ -51,7 +49,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 {
     FONT-SIZE: 9pt;
     COLOR: darkblue;
-    FONT-FAMILY: gulim, arial,verdana;
+    FONT-FAMILY: malgun gothic, arial,verdana;
     TEXT-DECORATION: underline;
     cursGroupor: help
 }
@@ -73,12 +71,12 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
     COLOR: black;
     PADDING-TOP: 5px;
     BORDER-BOTTOM: black 1px solid;
-    FONT-FAMILY: gulim, arial,verdana;
+    FONT-FAMILY: malgun gothic, arial,verdana;
 }
 
 
 /* admin top */
-.admin_top{margin:0;background:rgb(0, 72, 149);}
+.admin_top{margin:0;background: #687077;}
 .admin_top h1{
 	font-size:18px;
 	color: white;
@@ -86,7 +84,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 	height:46px;
 	line-height:46px; 
 	margin:0px;
-	font-family: Malgun Gothic, gulim;
+	font-family: Malgun Gothic, malgun gothic;
 	padding:0px 10px;}
 #adminmenu{
 	clear: both;
@@ -100,7 +98,7 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 	margin:0px;
 	padding:0 0 0 10px;
 	background:white;
-	border-top:1px solid rgb(0, 72, 149);
+	border-top: 1px solid #687077;
 	border-bottom:1px solid #ccc;
 	}
 #adminmenu li, #adminmenu li.off{
@@ -121,5 +119,5 @@ A.top:hover{COLOR: #22427f;TEXT-DECORATION: none}
 	line-height:29px;
 	font-size:13px;
 }
-#adminmenu li.on span{height:30px;line-height: 30px; color: rgb(0, 72, 149)}
+#adminmenu li.on span{height:30px;line-height: 30px;color: #2271ca;}
 .adminsub{background-color:#f5f5f5;height:25px}

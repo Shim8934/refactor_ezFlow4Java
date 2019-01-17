@@ -187,7 +187,7 @@ public class EzAddressController{
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String noneActiveX = "YES";
 		
-		String pFolderId = request.getParameter("folderid") == null ? "" : request.getParameter("folderid");
+		String pFolderId = request.getParameter("folderid") == null ? "normal" : request.getParameter("folderid");
 		String pFolderType = request.getParameter("type") == null ? "" : request.getParameter("type");
 		
 		boolean gyumJikChk = true;

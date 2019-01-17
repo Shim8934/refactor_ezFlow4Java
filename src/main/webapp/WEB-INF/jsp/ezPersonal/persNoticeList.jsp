@@ -65,7 +65,7 @@
 			    var strtext;
 			    var PagingHTML = "";
 			    document.getElementById("tblPageRayer").innerHTML = "";
-			    document.getElementById("mailBoxInfo").innerHTML = " &nbsp;[" + "<spring:message code='ezPersonal.t999900032'/>" + "<span style='color:#017BEC;'> " + TotalCount + " </span>" + "<spring:message code='ezPersonal.t999900033'/>" + "]";
+			    document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + TotalCount + "</span>";
 			    strtext = "<div class='pagenavi'>";
 			    PagingHTML += strtext;
 			    if (totalPage > 1 && pageNum != 1) {

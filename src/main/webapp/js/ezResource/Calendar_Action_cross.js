@@ -245,9 +245,9 @@ function datanameweek(year, month, day, contral)
     }
     else if(contral == "HEARDER")
     {
-        DateReslut = String(year) + strLang277 + " " + 
-        String(((month < 10) ? "0" + month : month)) + strLang279 + " " +
-        String(((day < 10) ? "0" + day : day)) + strLang278;
+        DateReslut = String(year) + "-" + 
+        String(((month < 10) ? "0" + month : month)) + "-" +
+        String(((day < 10) ? "0" + day : day));
     }
     else if (contral == "ADD")
     {
@@ -268,6 +268,20 @@ function datanameweek(year, month, day, contral)
 //주보기시...
 function tableListControl_Week()
 {
+	// 음력날짜 사용 기능 추가시에 사용
+	/*var tempyear = weektodate.getFullYear();
+    var LunarDateFull;
+    var LunarDate;
+    var LunarDate2;
+
+    if (tempyear > 1800 && tempyear <= 2101) {
+        var month = weektodate.getMonth() + 1;
+        LunarDate = lunarCalc(tempyear, month, weektodate.getDate(), 1);
+        var LunarDatemonth = LunarDate.month;
+        var LunarDateday = LunarDate.day;
+        LunarDate2 = LunarDatemonth + "." + LunarDateday;
+    }*/
+    
 	// 2018-10-17 김민성 - 자원관리 주보기 오늘 날짜 표시 위한 today 정보 추가
 	var today = datanameweek(weektodate.getFullYear(), weektodate.getMonth()+1, weektodate.getDate(), "ADD");		// 오늘 날짜
 	var dayname = new Array(strLang270, strLang271, strLang272, strLang273, strLang274, strLang275, strLang276);
@@ -349,6 +363,8 @@ function tableListControl_Week()
                 }
                 
                 _mth.style.verticalAlign = "middle";
+                _mth.style.overflow = "hidden";
+                _mth.style.textOverflow = "ellipsis";
                 _mth.onmouseover = new Function("onmouse_over_Week(this);");
                 _mth.onmouseout = new Function("onmouse_out_Week(this);");
                 _mth.ondblclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('','" + title_name[0].split("/")[0] + "','" + AddDate + "','" + AddDate + "','" + title_name[0].split("/")[1] + "');");               
@@ -369,46 +385,50 @@ function tableListControl_Week()
                     var isholiday = false;
                     var holidayName = "";
                     var holidayName2 = "";
-                    for (var k = 0; k < memorial.length; k++) {                    	
+                    
+                    for (var k = 0; k < memorial.length; k++) {      
+                    	if(k == memorial.length-1) {
+                        	holidayName += memorial[k].name;
+                        }
+                        else {
+                        		holidayName += memorial[k].name + ", ";
+                        }
                         if (memorial[k].holiday) {
                             isholiday = true;
-                            holidayName = memorial[k].name;
-                        }
-                        else {
-                        	holidayName = memorial[k].name;
                         }
                     }
+                    
                     for (var k = 0; k < yearmemorial.length; k++) {
+                    	if(k == yearmemorial.length-1) {
+                        	holidayName2 += yearmemorial[k].name;
+                        }
+                        else {
+                        	holidayName2 += yearmemorial[k].name + ", ";
+                        }
                         if (yearmemorial[k].holiday) {
                             isholiday = true;
-                            holidayName2 = yearmemorial[k].name;
-                        }
-                        else {
-                        	holidayName2 = yearmemorial[k].name;
                         }
                     }
+                    
+                    if(holidayName != "" && holidayName2 == "") {
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName;
+                	}
+                	else if(holidayName == "" && holidayName2 != "") {
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName2;
+                	}
+                	else if(holidayName != "" && holidayName2 != ""){
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName + ", " + holidayName2;
+                	}
+                	else {
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                	}
+                    
+                    /*if (LunarUse) {
+                    	_mth.innerHTML += " (" + LunarDate2 + ")";
+                    }*/
+                    
                     if (isholiday) {
-                        if (holidayName != "" && holidayName2 != "") {
-                        	holidayName = holidayName + ", " + holidayName2;
-                        }
-                        else if (holidayName == "" && holidayName2 != "") {
-                        	holidayName = holidayName2;                	
-                        }
-                    	
-                        _mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName + "]";
                     	_mth.style.color = "#ee1c25";
-                    }
-                    else {
-                    	// 2018-12-21 김민성 - 휴일아닌 기념일 표시
-                    	if(holidayName != "") {
-                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName + "]";
-                    	}
-                    	else if(holidayName2 != "") {
-                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName2 + "]";
-                    	}
-                    	else {
-                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
-                    	}
                     }
                 }                
                 //end
@@ -423,8 +443,8 @@ function tableListControl_Week()
             else if (i > endMonthday) {
                 //만약에 월의 날이 12월을 넘어간다면 1월부터과 년도 + 1
                 if ((sz_Month + 2) > 12) {
-                    var D_nowdate = datanameweek(sz_Year + 1, 1, nextmonthfirstday, "ADD");
-                    var D_nowdateTitle = datanameweek(sz_Year + 1, 1, nextmonthfirstday, "NO");
+                    var D_nowdate = datanameweek(sz_Year+1, 1, nextmonthfirstday, "ADD");
+                    var D_nowdateTitle = datanameweek(sz_Year+1, 1, nextmonthfirstday, "NO");
                 }
                     //그냥 마지막날보다 크다면 월 + 1 증가와 1일부터 시작 
                 else {
@@ -450,6 +470,8 @@ function tableListControl_Week()
                 }
 
                 _mth.style.verticalAlign = "middle";
+                _mth.style.overflow = "hidden";
+                _mth.style.textOverflow = "ellipsis";
                 _mth.onmouseover = new Function("onmouse_over_Week(this);");
                 _mth.onmouseout = new Function("onmouse_out_Week(this);");
                 _mth.ondblclick = new Function("idCalendarViewer_OnDoubleClickAppointment2('','" + title_name[0].split("/")[0] + "','" + AddDate + "','" + AddDate + "','" + title_name[0].split("/")[1] + "');");
@@ -457,10 +479,9 @@ function tableListControl_Week()
                 //baonk added    	
                 var bnk_Date = D_nowdateTitle.split("/")[1];
                 var bnk_Month = D_nowdateTitle.split("/")[0]                
-                
 
-                if (sz_Year > 1800 && sz_Year <= 2101) {                	
-                    var oThisDate2 = new Date(sz_Year, bnk_Month - 1, bnk_Date);                                      
+                if (sz_Year > 1800 && sz_Year <= 2101) {    
+                    var oThisDate2 = new Date(D_nowdate.substring(0,4), bnk_Month - 1, bnk_Date);            // 2019-01-02 김민성 - 새로 년도 바뀔 때 처리                          
                     var month = oThisDate2.getMonth() + 1;
                     
                     LunarDate = lunarCalc(oThisDate2.getFullYear(), month, oThisDate2.getDate(), 1);
@@ -471,44 +492,52 @@ function tableListControl_Week()
                     var isholiday = false;
                     var holidayName = "";
                     var holidayName2 = "";
-                    for (var k = 0; k < memorial.length; k++) {                    	
+                    
+                    for (var k = 0; k < memorial.length; k++) {      
+                    	if(k == memorial.length-1) {
+                        	holidayName += memorial[k].name;
+                        }
+                        else {
+                        	holidayName += memorial[k].name + ", ";
+                        }
                         if (memorial[k].holiday) {
                             isholiday = true;
-                            holidayName = memorial[k].name;
-                        }
-                        else {
-                        	holidayName = memorial[k].name;
                         }
                     }
+                    
                     for (var k = 0; k < yearmemorial.length; k++) {
+                    	if(k == yearmemorial.length-1) {
+                        	holidayName2 += yearmemorial[k].name;
+                        }
+                        else {
+                        	holidayName2 += yearmemorial[k].name + ", ";
+                        }
                         if (yearmemorial[k].holiday) {
                             isholiday = true;
-                            holidayName2 = yearmemorial[k].name;
-                        }
-                        else {
-                        	holidayName2 = yearmemorial[k].name;
                         }
                     }
+                    
+                    if(holidayName != "" && holidayName2 == "") {
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName;
+                	}
+                	else if(holidayName == "" && holidayName2 != "") {
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName2;
+                	}
+                	else if(holidayName != "" && holidayName2 != ""){
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "] " + holidayName + ", " + holidayName2;
+                	}
+                	else {
+                		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
+                	}
+                    
+                    /*if (LunarUse) {
+                    	_mth.innerHTML += " (" + LunarDate2 + ")";
+                    }*/
+                    
                     if (isholiday) {
-                        if (holidayName != "" && holidayName2 != "") {
-                        	holidayName = holidayName + ", " + holidayName2;
-                        }
-                        else if (holidayName == "" && holidayName2 != "") {
-                        	holidayName = holidayName2;                	
-                        }
-                    	
-                    	_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName + "]";
                     	_mth.style.color = "#ee1c25";
                     }
-                    else {
-                    	// 2018-12-21 김민성 - 휴일아닌 기념일 표시
-                    	if(holidayName != "") {
-                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]" + "[" + holidayName + "]";
-                    	}
-                    	else {
-                    		_mth.innerHTML = D_nowdateTitle + " [" + dayname[countdayname] + "]";
-                    	}
-                    }
+                    
                 }                
                 //end
                 
@@ -553,9 +582,10 @@ function tableListControl_Week()
             	_mtd.style.borderTop = "0px";
             }
             if(title_name[k].split("/")[2] == "1")
-                _mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+                //_mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+            	_mtd.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             else
-                _mtd.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif'  style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
+                _mtd.innerHTML = "<span class='sub_iconLNB tree_resource_standard' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             _mtr2.appendChild(_mtd);
             
             if (DefaultView == 0) { //일요일시작
@@ -966,12 +996,7 @@ function tableListControl_today() {
         var TodayDatename = datanameweek(sz_Year, sz_Month + 1, sz_Date, "YES");
 
         var current_day = new Date(TodayDatename);
-        if (current_day.getDay() == "6")
-            document.getElementById("divViewHeader").style.color = "rgb(0, 72, 149)";
-        else if (current_day.getDay() == "0")
-            document.getElementById("divViewHeader").style.color = "#ee1c25";
-        else
-            document.getElementById("divViewHeader").style.color = "";
+        
 
        //baonk added    
         if (current_day.getFullYear() > 1800 && current_day.getFullYear() <= 2101) {               	                                             
@@ -993,13 +1018,17 @@ function tableListControl_today() {
                     isholiday = true;                    
                 }
             }
-            if (isholiday) {            	
+            if (current_day.getDay() == "0" || isholiday)
             	document.getElementById("divViewHeader").style.color = "#ee1c25";
-            }
+            	//document.getElementById("divViewHeader").style.color = "";
+            else if (current_day.getDay() == "6")
+            	document.getElementById("divViewHeader").style.color = "rgb(0, 72, 149)";
+            	//document.getElementById("divViewHeader").style.color = "";
+            else
+                document.getElementById("divViewHeader").style.color = "black";
         }                
         //end
         
-
         setNodeText(document.getElementById("divViewHeader"),datanameweek(sz_Year, sz_Month + 1, sz_Date, "HEARDER"));
         var _Table = document.createElement("TABLE");
         _Table.setAttribute("class", "table_layout");
@@ -1040,9 +1069,11 @@ function tableListControl_today() {
             _TD.onselectstart = function () { return false; };
 
             if (title_name[k].split("/")[2] == "1")
-                _TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+                //_TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/calendar/icon_resource_ok.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1];
+            	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             else
-                _TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
+                //_TD.innerHTML = "<img onclick='showRes(" + title_name[k].split("/")[0] + ")' src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1];
+            	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_no' style='margin-top:0px' onclick='showRes(" + title_name[k].split("/")[0] + ")'></span>&nbsp;" + title_name[k].split("/")[1];
             
             _TD.style.verticalAlign = "middle";
             _Tr2.appendChild(_TD);
@@ -1235,9 +1266,11 @@ function tableListControl_today() {
                         _TD.onselectstart = function () { return false; };
 
                         if (title_name[k].split("/")[2] == "1")
-                            _TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                            //_TD.innerHTML = "<img src='/images/calendar/icon_resource_no.png'  style='vertical-align:bottom;margin-right:5px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                        	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_no' style='margin-top:0px'></span>&nbsp;" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
                         else
-                            _TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                            //_TD.innerHTML = "<img src='/images/OrganTree_cross/ic-Item.gif' style='vertical-align:bottom;margin-right:3px'>" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
+                        	_TD.innerHTML = "<span class='sub_iconLNB tree_resource_ok' style='margin-top:0px'></span>&nbsp;" + title_name[k].split("/")[1] + "[ " + strLang267 + " : " + getNodeText(xmldom.getElementsByTagName("owner_nm")[j]) + " ]";
                         
                         _TD.style.verticalAlign = "middle";
                         _Tr2.appendChild(_TD);
@@ -1514,7 +1547,7 @@ function showTooltip_MouseOver(obj, e) {
     tTable.setAttribute("border", "0");
     tTable.setAttribute("width", "100%");
     tTh.setAttribute("scope", "col");
-    tTh.style.background = "#edf4fd";
+    tTh.style.background = "#f1f8ff";
     tTh.style.border = "1px solid #d1ddec";
     setNodeText(tTh,GetAttribute(obj,"subject").split("&apos;").join("'"));
     tTr.appendChild(tTh);
@@ -1539,17 +1572,23 @@ function showTooltip_MouseOver(obj, e) {
     sTd.className = "individual";
 
     var sSpan = document.createElement("SPAN");
-    var _img = document.createElement("IMG");
+    //var _img = document.createElement("IMG");
     if (GetAttribute(obj,"approveFlag") == "1") {
-        _img.src = "/images/calendar/icon_resource_ok.png"
-        _img.style.verticalAlign = "bottom";
-        sSpan.appendChild(_img);
+        //_img.src = "/images/calendar/icon_resource_ok.png"
+        //_img.style.verticalAlign = "bottom";
+    	//sSpan.appendChild(_img);
+    	sSpan.className = "sub_iconLNB tree_resource_ok";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang307;
     } else {
-        _img.src = "/images/calendar/icon_resource_no.png"
-        _img.style.verticalAlign = "bottm";
-        sSpan.appendChild(_img);
+        //_img.src = "/images/calendar/icon_resource_no.png"
+        //_img.style.verticalAlign = "bottm";
+        //sSpan.appendChild(_img);
+    	sSpan.className = "sub_iconLNB tree_resource_no";
+    	sSpan.style.marginTop = "0px";
+    	sSpan.style.marginRight = "3px";
         sTd.appendChild(sSpan);
         sTd.innerHTML += strLang308;
     }
@@ -1585,14 +1624,15 @@ function showTooltip_MouseOver(obj, e) {
 
 
         var cTime1 = "";
-        try {
+        cTime1 = GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16);		// 2019-01-15 김민성 - 자원관리 예약 시간 조회 12시간->24시간제로 변경
+        /*try {
             if (GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16).split(" ").length > 1) {
                 cTime1 = ChangeTime(GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16).split(" ")[1].split(":")[0], GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16).split(" ")[1].split(":")[1]);
                 cTime1 = GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16).split(" ")[0] + " " + cTime1;
             }
         } catch (e) {
             cTime1 = GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16);
-        }
+        }*/
 
         sTd.innerHTML += "[" + strLang569 + "]<br />" + cTime1 + reFlag;
         sTr.appendChild(sTd);
@@ -1608,14 +1648,15 @@ function showTooltip_MouseOver(obj, e) {
         sTd.appendChild(sSpan);
 
         var cTime2 = "";
-        try {
+        cTime2 = GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16);		// 2019-01-15 김민성 - 자원관리 예약 시간 조회 12시간->24시간제로 변경
+        /*try {
             if (GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16).split(" ").length > 1) {
                 cTime2 = ChangeTime(GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16).split(" ")[1].split(":")[0], GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16).split(" ")[1].split(":")[1]);
                 cTime2 = GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16).split(" ")[0] + " " + cTime2;
             }
         } catch (e) {
             cTime2 = GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16);
-        }
+        }*/
 
         sTd.innerHTML += "[" + strLang570 + "]<br />" + cTime2 + reFlag;
         sTr.appendChild(sTd);

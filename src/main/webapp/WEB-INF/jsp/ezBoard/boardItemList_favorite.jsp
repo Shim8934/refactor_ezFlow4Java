@@ -99,12 +99,15 @@
 						if (document.getElementById("overSpan")) {
 							document.getElementById("overSpan").className = "tabon";
 						}
+						
 						Tab1_SelectID = "overSpan";
 					}
+					
 					/* 2018-12-04 홍승비- '...'탭이 없는 경우 접근 시 스크립트 에러 수정 */
-					if (document.getElementById("tabpart01UL") !== null) {
+					if (document.getElementById("tabpart01UL") !== null || document.getElementById("tabpart01UL")) {
 						document.getElementById("tabpart01UL").style.display = "none";
-					}	
+					}
+					
 				}
 	        }
 	        function GetMyBoardItem() {
@@ -306,11 +309,13 @@
 	            var SelectedBoardID = obj.getAttribute("DATA1");
 	            var chkPhotoBrd = obj.getAttribute("DATA5");
 	            
-	            if (chkPhotoBrd == 3)
+	            if (chkPhotoBrd == 3) {
 	                document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemListPhoto.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardType=" + chkPhotoBrd + "&adminType=y&buttonHidden=N";
-	            else if (chkPhotoBrd == 4)
+	            } else if (chkPhotoBrd == 4) {
 	                document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemListThumbnail.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardType=" + chkPhotoBrd + "&adminType=y&buttonHidden=N";
-	            else {
+	            } else if (chkPhotoBrd == 7) {
+	                document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemListMovie.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardType=" + chkPhotoBrd + "&adminType=y&buttonHidden=N";
+	            } else {
 	                if (SelectedBoardID == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
 	                    document.getElementById("FBoard_ifrm").src = "/ezBoard/boardItemList_new.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardType=N" + "&adminType=y&buttonHidden=N";
 	                }
@@ -375,8 +380,8 @@
 	<body class="mainbody" style="height: 95%; overflow:hidden;margin-left:0px;margin-right:0px">
 		<div style="padding-left:10px;padding-right:10px">
 		    <h1><span id='mailBoxInfo'></span></h1>
-		    <div class="portlet_tabpart01">
-		        <div class="portlet_tabpart01_top" id="tab1"></div>
+		    <div class="portlet_tabnew01">
+		        <div class="portlet_tabnew01_top" id="tab1"></div>
 		    </div>
 		</div>    
 	    <iframe id="FBoard_ifrm" style="width: 100%; height: 100%;" frameborder="0"></iframe>

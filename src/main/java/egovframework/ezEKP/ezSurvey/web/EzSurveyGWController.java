@@ -690,9 +690,7 @@ public class EzSurveyGWController {
 				return check;
 			}
 			
-			result             = surveyService.getItemInfo(surveyId, mode, realPath, userInfo);
-			result.put("status", "ok");
-			result.put("code", 0);
+			result = surveyService.getItemInfo(surveyId, mode, realPath, userInfo);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -725,8 +723,6 @@ public class EzSurveyGWController {
 			Long surveyId    = Long.parseLong(itemId);
 			String realPath  = request.getServletContext().getRealPath("");
 			result           = surveyService.getSurveyQuestions(surveyId, logicMode, realPath, userInfo);
-			result.put("status", "ok");
-			result.put("code", 0);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -792,8 +788,6 @@ public class EzSurveyGWController {
 			Long surveyId    = Long.parseLong(itemId);
 			String realPath  = request.getServletContext().getRealPath("");
 			result           = surveyService.getSurveyStatistic(surveyId, realPath, userInfo);
-			result.put("status", "ok");
-			result.put("code", 0);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

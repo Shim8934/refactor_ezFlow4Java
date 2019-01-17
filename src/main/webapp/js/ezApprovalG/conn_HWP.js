@@ -540,29 +540,29 @@ function setData(pobjXml, currTD) {
     rows = pobjXml.documentElement.childNodes
     if (rows.length > 0) {
         for (i = 0; i < rows.length; i++) {
-            row = rows(i).childNodes;
+            row = rows[i].childNodes;
 
             if (i > 0) {
-                rowBefore = rows(i - 1).childNodes;
-                if (GetAttribute(row(0),"name") != GetAttribute(rowBefore(0),"name"))
+                rowBefore = rows[i - 1].childNodes;
+                if (GetAttribute(row[0],"name") != GetAttribute(rowBefore[0],"name"))
                     tblRowIdx = 0;
             }
             if (GetDocumentElement(HwpCtrl, "tblinfo", true) != "") {
                 xmlTbl = loadXMLString(GetDocumentElement(HwpCtrl, "tblinfo", true));
                 tblinfoNodes = xmlTbl.documentElement.childNodes
 
-                fieldName = GetAttribute(row(0),"name")
+                fieldName = GetAttribute(row[0],"name")
                 if (!fieldName)
-                    fieldName = GetAttribute(row(0),"fname")
+                    fieldName = GetAttribute(row[0],"fname")
 
                 var breakFlag = false;
                 for (j = 0; j < tblinfoNodes.length; j++) {
-                    offset = tblinfoNodes(j).childNodes.length;
+                    offset = tblinfoNodes[j].childNodes.length;
 
                     for (k = 0; k < offset; k++) {
-                        tblid = GetAttribute(tblinfoNodes(j).childNodes(k),fieldName)
+                        tblid = GetAttribute(tblinfoNodes[j].childNodes[k],fieldName)
                         if (tblid) {
-                            tblid = tblinfoNodes(j);
+                            tblid = tblinfoNodes[j];
                             breakFlag = true;
                             break;
                         }
@@ -579,13 +579,13 @@ function setData(pobjXml, currTD) {
                     currTRidx = currTR.rowIndex;
 
                     for (k = 0; k < row.length; k++) {
-                        fieldName = GetAttribute(row(k),"name")
-                        if (!fieldName) fieldName = GetAttribute(row(k),"fname")
+                        fieldName = GetAttribute(row[k],"name")
+                        if (!fieldName) fieldName = GetAttribute(row[k],"fname")
 
                         cellidx = parseInt(GetAttribute(tblid,fieldName))
                         cellnode = currTR.cells(cellidx)
                         if (cellnode) {
-                        	cellnode.text = getNodeText(row(k));
+                        	cellnode.text = getNodeText(row[k]);
                         }
                     }
                 }
@@ -603,10 +603,10 @@ function setData(pobjXml, currTD) {
 
                     isinsTR = false;
                     pzFormProc.specialTableObject = tblObject
-                    currTR = tblObject.rows(tblRowIdx)
+                    currTR = tblObject.rows[tblRowIdx]
                     if (currTR) {
                         if (GetAttribute(currTR,"header")) {
-                            currTR = tblObject.rows(tblRowIdx + offset)
+                            currTR = tblObject.rows[tblRowIdx + offset]
                             if (currTR) {
                                 var k;
                                 for (k = tblObject.rows.length; k > (tblRowIdx + offset) ; k--) {
@@ -631,7 +631,7 @@ function setData(pobjXml, currTD) {
                         if (currTR) {
                             var idx
                             for (j = 0; j < offset; j++) {
-                                var newRow = tblObject.rows(tblRowIdx + offset + j);
+                                var newRow = tblObject.rows[tblRowIdx + offset + j];
                                 if (bgFlag)
                                     newRow.bgColor = color1;
                                 else
@@ -656,12 +656,12 @@ function setData(pobjXml, currTD) {
                     }
 
                     for (k = 0; k < row.length; k++) {
-                        fieldName = GetAttribute(row(k),"name")
-                        if (!fieldName) fieldName = GetAttribute(row(k),"fname")
+                        fieldName = GetAttribute(row[k],"name")
+                        if (!fieldName) fieldName = GetAttribute(row[k],"fname")
 
                         for (j = 0; j < offset; j++) {
-                            if (GetAttribute(tblid.childNodes(j),fieldName)) {
-                                cellidx = parseInt(GetAttribute(tblid.childNodes(j),fieldName))
+                            if (GetAttribute(tblid.childNodes[j],fieldName)) {
+                                cellidx = parseInt(GetAttribute(tblid.childNodes[j],fieldName))
                                 break;
                             }
                         }
@@ -669,7 +669,7 @@ function setData(pobjXml, currTD) {
                         currTR = tblObject.rows(tblRowIdx + j);
                         cellnode = currTR.cells(cellidx)
                         if (cellnode) {
-                        	cellnode.text = getNodeText(row(k));
+                        	cellnode.text = getNodeText(row[k]);
                         }
                     }
                     tblRowIdx = tblRowIdx + offset;

@@ -28,6 +28,11 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ScheGetHolidayVO> getTholidayYear(Map<String, Object> map){
+		return  (List<ScheGetHolidayVO>) list("EzScheduleDAO.getTholidayYear", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<ScheduleGroupListVO> getScheduleGroupList(Map<String, Object> map) throws Exception {
 		return (List<ScheduleGroupListVO>) list("EzScheduleDAO.getScheduleGroupList", map);
 	}

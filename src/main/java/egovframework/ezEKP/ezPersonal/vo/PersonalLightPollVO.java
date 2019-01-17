@@ -154,4 +154,17 @@ public class PersonalLightPollVO {
 	public void setCount(int count) {
 		this.count = count;
 	}
+	@Override
+	public String toString() {
+		return "PersonalLightPollVO [itemSeq=" + itemSeq + ", companyID="
+				+ companyID + ", startDate=" + startDate + ", endDate="
+				+ endDate + ", pollTitle=" + pollTitle + ", pollTitle2="
+				+ pollTitle2 + ", pollSelectionCount=" + pollSelectionCount
+				+ ", answer1=" + answer1 + ", answer2=" + answer2
+				+ ", answer3=" + answer3 + ", answer4=" + answer4
+				+ ", answer5=" + answer5 + ", answer6=" + answer6
+				+ ", answer7=" + answer7 + ", answer8=" + answer8
+				+ ", answer9=" + answer9 + ", answer10=" + answer10
+				+ ", result=" + result + ", count=" + count + "]";
+	}
 }

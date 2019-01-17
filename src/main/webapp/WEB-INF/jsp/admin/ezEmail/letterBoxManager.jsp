@@ -28,8 +28,8 @@
 	    <h1 style="padding: 5px"> </h1>
 	    <div id="mainmenu">
 		    <ul class="on">
-		        <li><span onclick="addLetterBox()"><spring:message code='ezEmail.letter17'/></span></li>
-		        <li><span onclick="deleteLetterBox()"><spring:message code='ezEmail.letter18'/></span></li>
+		        <li class="important"><span onclick="addLetterBox()"><spring:message code='ezEmail.letter17'/></span></li>
+		        <li><span class="icon16 icon16_delete" onclick="deleteLetterBox()"></span></li>
 		    </ul>
 		</div>
 		<div id="letterContentDiv" style="width:639px;">

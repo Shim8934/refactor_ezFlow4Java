@@ -35,7 +35,7 @@
 
 			function optAclLvl_Click(objthis){
 				if (acllist.selectedIndex < 0) return;
-				
+
 				var indexV			= acllist.selectedIndex;
 				var strMember_nam;// = CrossYN() ? acllist.options[indexV].getAttribute("Member_nam") : acllist.options[indexV].Member_nam;
 				if (CrossYN()) {
@@ -46,9 +46,9 @@
 				        strMember_nam = acllist.options[indexV].Member_nam;
 				    }
 				}
-	
+
 				var AccLvl = objthis.value ;
-	
+
 				if (AccLvl == "1"){
 					strVal = strMember_nam + " - (<spring:message code="ezResource.t104" />";
 					
@@ -57,7 +57,7 @@
 				        acllist.options[indexV].Access_lvl = AccLvl;
 				    } catch (e) {}
 				    
-					acllist.options[indexV].text = strVal;
+				    acllist.options[indexV].innerHTML = strVal;
 	
 				}else{
 					strVal = strMember_nam + " - (<spring:message code="ezResource.t105" />";
@@ -67,7 +67,7 @@
 				        acllist.options[indexV].Access_lvl = AccLvl;
 				    } catch (e) {}
 				    
-					acllist.options[indexV].text = strVal;
+				    acllist.options[indexV].innerHTML = strVal;
 				}
 			}
 	
@@ -105,8 +105,8 @@
 		<br>
 		<div id="mainmenu">
 			<ul>
-				<li><span onClick="return cmdAdd_onclick()"><spring:message code="ezResource.t110" /></span></li>
-				<li><span onClick="return cmdDel_onclick()"><spring:message code="ezResource.t65" /></span></li>
+				<li class="important"><span onClick="return cmdAdd_onclick()"><spring:message code="ezResource.t110" /></span></li>
+				<li><span class="icon16 icon16_delete" onClick="return cmdDel_onclick()"></span></li>
 			</ul>
 		</div>
 		<script type="text/javascript">

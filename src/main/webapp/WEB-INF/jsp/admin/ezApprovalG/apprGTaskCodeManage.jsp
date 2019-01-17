@@ -14,7 +14,6 @@
 		</c:choose>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e3', 'msg')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th {
@@ -716,23 +715,23 @@
 			<ul>		        
 		        <c:choose>
 		        	<c:when test="${approvalFlag == 'S'}">
-		        		<li><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApproval.t708' /></span></li>
+		        		<li class="important"><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApproval.t708' /></span></li>
 						<li><span onClick="return btnEditTree_onclick()"><spring:message code = 'ezApproval.t709' /></span></li>
 						<li><span onClick="return btnDelTree_onclick()"><spring:message code = 'ezApproval.t710' /></span></li>
 						<!-- <li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li> -->
-						<li><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApprovalG.t795' /></span></li>
+						<li class="important"><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApprovalG.t795' /></span></li>
 						<li><span onClick="return btnEditItem_onclick()"><spring:message code = 'ezApprovalG.t796' /></span></li>
 						<li><span onClick="return btnDelItem_onclick()"><spring:message code = 'ezApprovalG.t797' /></span></li>
 		        	</c:when>
 		        	<c:otherwise>
-		        		<li><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApprovalG.t790' /></span></li>
+		        		<li class="important"><span onClick="return btnAddTree_onclick()"><spring:message code = 'ezApprovalG.t790' /></span></li>
 						<li><span onClick="return btnEditTree_onclick()"><spring:message code = 'ezApprovalG.t791' /></span></li>
 						<li><span onClick="return btnDelTree_onclick()"><spring:message code = 'ezApprovalG.t792' /></span></li>
 						<!-- <li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li> -->
 						<li><span onClick="return btnViewTaskInfo_onclick()"><spring:message code = 'ezApprovalG.t793' /></span></li>
 						<li><span onClick="return btnViewTaskHistoryInfo_onclick()"><spring:message code = 'ezApprovalG.t794' /></span></li>
 						<!-- <li style="background:none;"><img src="/images/i_bar.gif" style="vertical-align:middle"></li> -->
-						<li><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApprovalG.t795' /></span></li>
+						<li class="important"><span onClick="return btnAddItem_onclick()"><spring:message code = 'ezApprovalG.t795' /></span></li>
 						<li><span onClick="return btnEditItem_onclick()"><spring:message code = 'ezApprovalG.t796' /></span></li>
 						<li><span onClick="return btnDelItem_onclick()"><spring:message code = 'ezApprovalG.t797' /></span></li>
 						<li><span onClick="return btnConItem_onclick()"><spring:message code = 'ezApprovalG.t798' /></span></li>
@@ -743,7 +742,7 @@
 		<table>
 			<tr>
 				<td>
-					<div style="border:#ddd 1px solid; overflow-y:auto; overflow-x:auto; width:220px;height:400px; background-color:#ffffff"  id="TreeView"></div>
+					<div style="border:#ddd 1px solid; overflow-x: hidden; overflow-y: auto; width:220px;height:400px; background-color:#ffffff"  id="TreeView"></div>
 				</td>
 				<td style="padding-left:5px">
 					<h2 id="descript" style="display:none"></h2>

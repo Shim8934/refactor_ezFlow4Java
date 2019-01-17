@@ -51,25 +51,25 @@ function CalendarView(pTagetID,chk_str) {
         tDiv.innerHTML = "";
         objElm.appendChild(tDiv);
 
-        if (sDate.getFullYear() > 1800 && sDate.getFullYear() <= 2101) {
-            if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 1)
-                memorialDays[1].day = 29;
-            else if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 2)
-                memorialDays[1].day = 30;
-        }
+//        if (sDate.getFullYear() > 1800 && sDate.getFullYear() <= 2101) {
+//            if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 1)
+//                memorialDays[1].day = 29;
+//            else if (lunarMonthTable[sDate.getFullYear() - 1 - 1799][11] == 2)
+//                memorialDays[1].day = 30;
+//        }
 
         if (typeCal != 1) {
             var oTable = document.createElement("TABLE");
             var oTBody = document.createElement("TBODY");
             var oTr = document.createElement("TR");
-            var oTh = document.createElement("TH");
+            //var oTh = document.createElement("TH");
             oTable.setAttribute("cellpadding", "0");
             oTable.setAttribute("cellspacing", "0");
             oTable.setAttribute("border", "0");
             oTable.setAttribute("width", "100%");
-            oTh.setAttribute("id", "calTitle");
-            oTh.style.fontSize = "15px";
-            oTh.colSpan = "2";
+            //oTh.setAttribute("id", "calTitle");
+            //oTh.style.fontSize = "15px";
+            //oTh.colSpan = "2";
             if (typeCal == 2) {
                 var tempyear = sDate.getFullYear();
                 var tempmemorial;
@@ -133,49 +133,52 @@ function CalendarView(pTagetID,chk_str) {
 
                     var dayText;
                     if (LunarUse)
-                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname + " (" + LunarDate + ")";
+                        //dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname + " (" + LunarDate + ")";
+                    	dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " (" + LunarDate + ")";
                     else
-                        dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
+                        //dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
+                    	dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2) + " " + holidayname;
+                    //dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
 
 
                     var current_day = new Date(sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2));
-                    if (current_day.getDay() == "6")
-                        oTh.style.color = "rgb(0, 72, 149)";
-                    else if (current_day.getDay() == "0" || isholiday)
-                        oTh.style.color = "#ee1c25";
-
+                    if (current_day.getDay() == "0" || isholiday)
+                    	document.getElementById("calTitle").style.color = "#ee1c25";
+                    else if (current_day.getDay() == "6")
+                    	document.getElementById("calTitle").style.color = "rgb(0, 72, 149)";
+                    else
+                    	document.getElementById("calTitle").style.color = "black";
                 }
                 else
                     var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
             }
             else {
+            	document.getElementById("calTitle").style.color = "black"
+            	
                 oTable.className = "calendar_month_navi";
                 var dayText = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2);
             }
+            
+            var uploadSDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
 
             var mSpan = document.createElement("SPAN");
-            mSpan.className = "btn_prev";
-            var mImg = document.createElement("IMG");
-            mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_prev.gif");
-            mImg.setAttribute("border", "0");
-            // 2018-06-07 구해안 mini에서 호출하는 날짜 이동 함수 지우고 직접 생성
-            /* if (typeCal == 0)
-                mImg.setAttribute("onclick", "parent.frames[\"left\"].preMonth()");
-            else
-                mImg.setAttribute("onclick", "parent.frames[\"left\"].preDay()"); */
+            mSpan.className = "icon16 calendarleft";
+            
+            // 2018-06-07 구해안 mini에서 호출하는 날짜 이동 함수 지우고 직접 생성 
             if (typeCal == 0)
-                mImg.setAttribute("onclick", "preMonth()");
+            	mSpan.setAttribute("onclick", "preMonth()");
             else
-                mImg.setAttribute("onclick", "preDay()");
-
-            mSpan.appendChild(mImg);
-            oTh.appendChild(mSpan);
+            	mSpan.setAttribute("onclick", "preDay()");
+            
+            $("#preM").html("");
+            $("#preM").append(mSpan);
 
             /*2018-06-04 구해안 dayText 대신에 DatePicker 시작*/            
             
             var oText = document.createTextNode(" "+dayText +" ");            
             
-            oTh.appendChild(oText);           
+            $("#calTitle").html("");
+            $("#calTitle").append(oText);
             
             var uploadSDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
             var datePick = document.createElement("INPUT");
@@ -184,30 +187,20 @@ function CalendarView(pTagetID,chk_str) {
             datePick.setAttribute("class", "datePick");
             datePick.setAttribute("value", uploadSDate);
             
-            oTh.appendChild(datePick);
+            $("#calTitle").append(datePick);
             
             /*2018-06-04 구해안 dayText 대신에 DatePicker 끝*/
-            var kSpan = document.createElement("SPAN");
-            kSpan.setAttribute("width", "10px");
-            oTh.appendChild(kSpan);
             var mSpan = document.createElement("SPAN");
-            mSpan.className = "btn_next";
-            var mImg = document.createElement("IMG");
-            mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_next.gif");
-            mImg.setAttribute("border", "0");
+            mSpan.className = "icon16 calendarright";
+
             // 2018-06-07 구해안 mini에서 호출하는 날짜 이동 함수 지우고 직접 생성
-            /* if (typeCal == 0)
-                mImg.setAttribute("onclick", "parent.frames[\"left\"].nextMonth()");
-            else
-                mImg.setAttribute("onclick", "parent.frames[\"left\"].nextDay()"); */
             if (typeCal == 0)
-                mImg.setAttribute("onclick", "nextMonth()");
+            	mSpan.setAttribute("onclick", "nextMonth()");
             else
-                mImg.setAttribute("onclick", "nextDay()");
+            	mSpan.setAttribute("onclick", "nextDay()");
             
-            mSpan.appendChild(mImg);
-            oTh.appendChild(mSpan);
-            oTBody.appendChild(oTh);
+            $("#preN").html("");
+            $("#preN").append(mSpan);
 
             if (typeCal == 2) {
                 var oTr = document.createElement("TR");
@@ -280,7 +273,8 @@ function CalendarView(pTagetID,chk_str) {
 
         }
         else {
-            var oTable = document.createElement("TABLE");
+        	document.getElementById("calTitle").style.color = "black"
+            /*var oTable = document.createElement("TABLE");
             oTable.className = "calendar_week_navi";
             oTable.setAttribute("cellpadding", "0");
             oTable.setAttribute("cellspacing", "0");
@@ -294,7 +288,7 @@ function CalendarView(pTagetID,chk_str) {
             objTr.appendChild(objTd);
             oTbody.appendChild(objTr);
             oTable.appendChild(oTbody);
-            objElm.appendChild(oTable);
+            objElm.appendChild(oTable);*/
 
             var oTBody = GetWeekTopObj();
             objElm.appendChild(oTBody);
@@ -371,7 +365,7 @@ function CalendarView(pTagetID,chk_str) {
     		changeYear: true,
     		autoSize: true,
     		showOn: "both",
-    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+    		buttonImage: "/images/ImgIcon/calendar-month.png",
     		buttonImageOnly: true,
     		dateFormat: 'yy-mm-dd',
     		showMonthAfterYear: true, 
@@ -409,7 +403,7 @@ function CalendarView(pTagetID,chk_str) {
     		changeYear: true,
     		autoSize: true,
     		showOn: "both",
-    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+    		buttonImage: "/images/ImgIcon/calendar-month.png",
     		buttonImageOnly: true,
     		dateFormat: 'yy-mm-dd',
     		showMonthAfterYear: true, 
@@ -442,30 +436,29 @@ function CalendarView(pTagetID,chk_str) {
     	 $(document).on('mousemove', '.ui-datepicker-calendar tr', function() { $(this).find('td a').addClass('ui-state-hover'); }); 
 	     $(document).on('mouseleave', '.ui-datepicker-calendar tr', function() { $(this).find('td a').removeClass('ui-state-hover'); });
     }else{   
-    		chk_str = parent.frames["left"].document.getElementById("chk_str").value;
-            $(".datePick").monthpicker({
-            	showOn: "both",
-        		buttonImage: "/images/ImgIcon/calendar-month.gif",
-        		buttonImageOnly: true,
-        		onSelect: function (dateText, inst) {
-        			var iMonth = parseInt($('.datePick').val().substring(5,7),10)-1;
-        			var iYear = $('.datePick').val().substring(0,4);
-        			var iDay = $('.datePick').val().substring(8,10);
-        			
-        			var beforeMonth = leadingZeros((sDate.getMonth() + 1), 2) - 1; 	   
-        			var beforeYear = sDate.getFullYear();
-        			
-        			sDate.setFullYear(iYear, iMonth, iDay); 
-        			if(typeCal == 0){    		   
-        				if(iYear == beforeYear && iMonth == beforeMonth){
-        					return;   			   
-        				}else CalendarView("Calendar");
-        			}else{
-        				CalendarView("Calendar");
-        			}
-        		}
-            });               
- 
+		chk_str = parent.frames["left"].document.getElementById("chk_str").value;
+        $(".datePick").monthpicker({
+        	showOn: "both",
+    		buttonImage: "/images/ImgIcon/calendar-month.png",
+    		buttonImageOnly: true,
+    		onSelect: function (dateText, inst) {
+    			var iMonth = parseInt($('.datePick').val().substring(5,7),10)-1;
+    			var iYear = $('.datePick').val().substring(0,4);
+    			var iDay = $('.datePick').val().substring(8,10);
+    			
+    			var beforeMonth = leadingZeros((sDate.getMonth() + 1), 2) - 1; 	   
+    			var beforeYear = sDate.getFullYear();
+    			
+    			sDate.setFullYear(iYear, iMonth, iDay); 
+    			if(typeCal == 0){    		   
+    				if(iYear == beforeYear && iMonth == beforeMonth){
+    					return;   			   
+    				}else CalendarView("Calendar");
+    			}else{
+    				CalendarView("Calendar");
+    			}
+    		}
+        });
     }
     //2018-11-05 김혜정 월보기화면에서 드래그앤드롭을 위해 추가
     $("td[id^='index_']").droppable({
@@ -786,7 +779,7 @@ function MultiSelectItems(obj, event) {
 
         for (var i = 0; i <= 41; i++) {
             if (StartIdex <= i && Endidex >= i)
-                document.getElementById("index_" + i).style.backgroundColor = "#edf4fd";
+                document.getElementById("index_" + i).style.backgroundColor = "#f1f8ff";
             else
                 document.getElementById("index_" + i).style.backgroundColor = "";
         }
@@ -801,7 +794,7 @@ function MultiSelectEnd(obj, event) {
         DragEndItemID = "";
         return;
     }
-    obj.style.backgroundColor = "#edf4fd";
+    obj.style.backgroundColor = "#f1f8ff";
     Write();
 }
 function Write() {
@@ -927,16 +920,8 @@ function GetWeekBodyObj() {
     var oText = document.createTextNode(" " + startYear + "-" + leadingZeros((startMonth + 1), 2) + "-" + leadingZeros(startDate, 2) + " ~ " + endYear + "-" + leadingZeros((endMonth + 1), 2) + "-" + leadingZeros(endDate, 2) + " ");
 
     var mSpan = document.createElement("SPAN");
-    mSpan.className = "btn_prev";
-    var mImg = document.createElement("IMG");
-    mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_prev.gif");
-    mImg.setAttribute("border", "0");
-    //2018-06-07 구해안 mini에서 호출하는 날짜 이동 함수 지우고 직접 생성
-    mImg.setAttribute("onclick", "preWeek()");
-    mSpan.appendChild(mImg);
-    document.getElementById("list_Top").appendChild(mSpan);
-
-    document.getElementById("list_Top").appendChild(oText);
+    mSpan.className = "icon16 calendarleft";
+    mSpan.setAttribute("onclick", "preWeek()");
     
     //2018-06-12 구해안 week 달력생성
     var uploadSDate = sDate.getFullYear() + "-" + leadingZeros((sDate.getMonth() + 1), 2) + "-" + leadingZeros(sDate.getDate(), 2);
@@ -946,18 +931,20 @@ function GetWeekBodyObj() {
     datePick.setAttribute("class", "datePick");
     datePick.setAttribute("value", uploadSDate);
     
-    document.getElementById("list_Top").appendChild(datePick);
-
-    var mSpan = document.createElement("SPAN");
-    mSpan.className = "btn_next";
-    var mImg = document.createElement("IMG");
-    mImg.setAttribute("src", "/images/calendar/btn_calendar_mini_next.gif");
-    mImg.setAttribute("border", "0");
-    //2018-06-07 구해안 mini에서 호출하는 날짜 이동 함수 지우고 직접 생성
-    mImg.setAttribute("onclick", "nextWeek()");
-    mSpan.appendChild(mImg);
-    document.getElementById("list_Top").appendChild(mSpan);
-
+    var mSpan2 = document.createElement("SPAN");
+    mSpan2.className = "icon16 calendarright";
+    mSpan2.setAttribute("onclick", "nextWeek()");
+    
+    $("#preM").html("");
+    $("#preM").append(mSpan);
+    
+    $("#calTitle").html("");
+    $("#calTitle").append(oText);
+    $("#calTitle").append(datePick);
+    
+    $("#preN").html("");
+    $("#preN").append(mSpan2);
+    
     for (var k = 0; k < 24; k++) {
         var dTable = document.createElement("TABLE")
         var dTbody = document.createElement("TBODY");
@@ -986,8 +973,6 @@ function GetWeekBodyObj() {
         oTD.appendChild(dTable);
     }
     oTr.appendChild(oTD);
-
-
     
     for (var j = 0; j < 7; j++) {
         var objTD = WeekData(startOfWeek, dayOfWeeks.split(";")[j], j);
@@ -1082,8 +1067,13 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
             weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "] " + holidayname + " (" + LunarDate2 + ")";
         else
             weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "] " + holidayname;
-        if (isholiday)
-            document.getElementById("list_Title" + pCnt).className += " sun";
+        if (isholiday) {
+        	if (document.getElementById("list_Title" + pCnt).className.indexOf('sat') > -1) {
+        		document.getElementById("list_Title" + pCnt).className = document.getElementById("list_Title" + pCnt).className.replace('sat','sun');
+        	} else {
+        		document.getElementById("list_Title" + pCnt).className += " sun";
+        	}
+        }
     }
     else
         var weekData = leadingZeros((startOfWeek.getMonth() + 1), 2) + "-" + leadingZeros(startOfWeek.getDate(), 2) + " [" + dayOfWeek + "]";
@@ -1499,17 +1489,24 @@ function memorialDayCheck(solarDate, lunarDate) {
     var tempmemorialDays = new Array();
     for (i = 0; i < memorialDays.length; i++) {
         if (solarDate.getFullYear() > 1800 && solarDate.getFullYear() <= 2101) {
-            if (memorialDays[i].month == solarDate.getMonth() + 1 &&
-             memorialDays[i].day == solarDate.getDate() &&
-             memorialDays[i].solarLunar == 1) {
-                tempmemorialDays.push(memorialDays[i]);
-            }
-            if (memorialDays[i].month == lunarDate.month &&
-             memorialDays[i].day == lunarDate.day &&
-             memorialDays[i].solarLunar == 2 &&
-             !memorialDays[i].leapMonth) {
-                tempmemorialDays.push(memorialDays[i]);
-            }
+        	if (memorialDays[i].type == 'Y') {
+        		var resultDate = changeRepetitionToDate(memorialDays[i].repetition, solarDate.getFullYear());
+        		if (resultDate.getMonth() == solarDate.getMonth() && resultDate.getDate() == solarDate.getDate() && memorialDays[i].solarLunar == 1) {
+        			tempmemorialDays.push(memorialDays[i]);
+        		}        		
+        	} else {
+        		if (memorialDays[i].month == solarDate.getMonth() + 1 &&
+        				memorialDays[i].day == solarDate.getDate() &&
+        				memorialDays[i].solarLunar == 1) {
+        			tempmemorialDays.push(memorialDays[i]);
+        		}
+        		if (memorialDays[i].month == lunarDate.month &&
+        				memorialDays[i].day == lunarDate.day &&
+        				memorialDays[i].solarLunar == 2 &&
+        				!memorialDays[i].leapMonth) {
+        			tempmemorialDays.push(memorialDays[i]);
+        		}
+        	}
         }
     }
     return tempmemorialDays;
@@ -1522,19 +1519,26 @@ function yearmemorialDayCheck(solarDate, lunarDate) {
     var tempyearmemorialDays = new Array();
     for (i = 0; i < yearmemorialDays.length; i++) {
         if (solarDate.getFullYear() > 1800 && solarDate.getFullYear() <= 2101) {
-            if (yearmemorialDays[i].year == solarDate.getFullYear() &&
-            yearmemorialDays[i].month == solarDate.getMonth() + 1 &&
-             yearmemorialDays[i].day == solarDate.getDate() &&
-             yearmemorialDays[i].solarLunar == 1) {
-                tempyearmemorialDays.push(yearmemorialDays[i]);
-            }
-            if (yearmemorialDays[i].year == lunarDate.year &&
-            yearmemorialDays[i].month == lunarDate.month &&
-             yearmemorialDays[i].day == lunarDate.day &&
-             yearmemorialDays[i].solarLunar == 2 &&
-             !yearmemorialDays[i].leapMonth) {
-                tempyearmemorialDays.push(yearmemorialDays[i]);
-            }
+        	if (yearmemorialDays[i].type == 'Y') {
+        		var resultDate = changeRepetitionToDate(yearmemorialDays[i].repetition, '');
+        		if (resultDate.getFullYear() == solarDate.getFullYear() && resultDate.getMonth() == solarDate.getMonth() && resultDate.getDate() == solarDate.getDate()  && yearmemorialDays[i].solarLunar == 1) {
+        			tempyearmemorialDays.push(yearmemorialDays[i]);
+        		}        		
+        	} else {
+        		if (yearmemorialDays[i].year == solarDate.getFullYear() &&
+        				yearmemorialDays[i].month == solarDate.getMonth() + 1 &&
+        				yearmemorialDays[i].day == solarDate.getDate() &&
+        				yearmemorialDays[i].solarLunar == 1) {
+        			tempyearmemorialDays.push(yearmemorialDays[i]);
+        		}
+        		if (yearmemorialDays[i].year == lunarDate.year &&
+        				yearmemorialDays[i].month == lunarDate.month &&
+        				yearmemorialDays[i].day == lunarDate.day &&
+        				yearmemorialDays[i].solarLunar == 2 &&
+        				!yearmemorialDays[i].leapMonth) {
+        			tempyearmemorialDays.push(yearmemorialDays[i]);
+        		}
+        	}
         }
     }
     return tempyearmemorialDays;
@@ -2172,4 +2176,92 @@ function changeDateFormat(date) {
 	day  = day + " " + hour + ":" + Minu + "0:00";
 	
 	return day;
+}
+//- 주 - 요일을 - 일로 바꿔주는 함수
+function changeRepetitionToDate(repetition, solarYear) {
+	var date = repetition.split('|');
+	var year = date[0];
+	if (solarYear != null && solarYear != '') {
+		year = solarYear;
+	}
+	var month = date[1]; 
+	var order = date[2];
+	var day  = date[3];
+	
+	var resultDate = changeDayToDate(year, month, order, day);
+	
+	return resultDate;
+}
+
+function changeDayToDate(year, month, order, day) {
+	//해당 년,월의 첫번째 날의 요일을 구한다.
+	var firstDate = new Date(year + '/' + month + '/01');
+	var firstDateDay = firstDate.getDay();
+	var resultDay;
+	
+	if (day < firstDateDay) {
+		order = parseInt(order) + 1;
+		if (order == 5) {
+			resultDay = (order - 1) * 7 + (day - firstDateDay) + 1;
+			var resultDate = new Date(year + '/' + month + '/' + resultDay);
+			
+			return resultDate;
+		}
+	}
+	
+	//order > 4는 마지막주일때 계산
+	if (order > 4) {
+		var lastDateDay = getLastDateDay(year, month, day, firstDate);
+		
+		var totalDate = getTotalDate(year, month);
+		
+		if (day <= lastDateDay) {
+			resultDay = totalDate + (day - lastDateDay);
+		} else {
+			resultDay = totalDate + (day - lastDateDay) - 7;
+		}
+	} else {
+		resultDay = (order - 1) * 7 + (day - firstDateDay) + 1; 
+	}
+	
+	var resultDate = new Date(year + '/' + month + '/' + resultDay);
+		
+	return resultDate;
+}
+
+// 이번달의 마지막일의 요일을 구하는 함수
+function getLastDateDay(year, month, day, firstDate) {
+	var firstDateDay = firstDate.getDay();
+	var temp_Date = firstDate.getDate();
+	var lastDay = firstDateDay; //시작요일을 저장하는 변수이다. 먼저 기본값으로 현재 요일을 저장한다.
+	
+	//먼저 당월에 대한 총 일수를 구한다. 위에서 선언한 메소드를 가지고 구한다.
+	var totalDate = getTotalDate(year, month);
+	lastDay = lastDay - 1;
+	for(temp_Date ; temp_Date <= totalDate ; temp_Date++) { //시작값:현지 일자, 끝값 : 당월 마지막일
+		lastDay++; // +1씩 증가
+		if(lastDay > 6) //요일은 0부터 6까지 있기 때문에 6을 초과하면 0으로 초기화 해준다.(한바퀴)
+		{
+			lastDay = 0;
+		}			
+	}
+	return lastDay;
+}
+
+function getTotalDate(year, month) {
+	 if(month.indexOf('0') == 0) {
+		 month = month.substring(1);
+	 }
+	
+	if(month==4 || month==6 || month==9 || month==11) {
+		return 30;
+	} else if(month==2) {
+		if(year%4 == 0) { // 2월이면서 윤년일 때
+			return 29;
+		} else { // 2월이면서 윤년이 아닐 때
+			return 28;
+		}			
+	} else {
+		return 31;
+	}
 }

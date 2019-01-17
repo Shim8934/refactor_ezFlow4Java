@@ -58,7 +58,7 @@ var pagination = (function() {
 		startButtonPage = 1 + buttonOverCount * pageButtonSize;
 		endButtonPage = Math.min(totalPage, startButtonPage + pageButtonSize - 1);
 		
-		document.getElementById("mailBoxInfo").innerHTML = " - [" + messages.strLang10 + "<span style='color:#017BEC;'> " + itemAmount + " </span>" + messages.strLang11 + "]";
+		document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span style='color:#017BEC;'>" + itemAmount + "</span>";
 		
 		if (currentPage == 1) {
 			pagingHTML += "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
@@ -147,7 +147,7 @@ function makePageSelPage(){
 	var pageNum = currentPage == 0 ? 1 : currentPage;
 	
 	document.getElementById("tblPageRayer").innerHTML = "";
-	document.getElementById("mailBoxInfo").innerHTML = " - [" + messages.strLang10 + "<span style='color:#017BEC;'> " + totalRows + " </span>" + messages.strLang11 + "]";
+	document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span style='color:#017BEC;'>" + totalRows + "</span>";
 	
 	if (totalPages > 1 && pageNum != 1) {
 		pagingHTML += "<span class='btnimg' onClick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif'></span>";

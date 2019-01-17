@@ -428,12 +428,6 @@ public class EzCommonController extends EgovFileMngUtil{
 				literalDisplayName = email;
 				literalPhoto = "<IMG SRC='" + egovMessageSource.getMessage("main.e14", locale) + "' width=119 height=128>";
 			} else {
-				
-//        		if (xmldom.getElementsByTagName(email) == null) {
-//        			infoXML = ezOrganService.getSearchLikeByEmail(id);
-//        			xmldom = commonUtil.convertStringToDocument(infoXML);
-//        		}
-				
 				if (!pDeptID.equals("") && !xmldom.getElementsByTagName("DEPARTMENT").item(0).getTextContent().equals(pDeptID)) {
 					String infoXML2 = ezOrganService.getUserAddjobInfo(id, pDeptID, loginVO.getPrimary(), loginVO.getTenantId());
 					

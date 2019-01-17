@@ -75,7 +75,7 @@
         treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
         
         /* 2018-10-10 홍승비 - boardLeft.jsp에서 하위게시판 ellipsis 부분 가져옴 */
-        var node = document.getElementById(TreeIdx);
+        /* var node = document.getElementById(TreeIdx);
         var title2 = node.getElementsByClassName("node_div");
         var nodeLevel = title2[0].getAttribute("nodelevel");
         if(nodeLevel > 9) {
@@ -87,7 +87,7 @@
         	title3[0].style.width = 362 - 18*nodeLevel +'px';
         	title3[0].style.textOverflow = 'ellipsis';
         	title3[0].style.overflow = 'hidden';
-        }
+        } */
     }
  	
     function SetTreeConfig() {

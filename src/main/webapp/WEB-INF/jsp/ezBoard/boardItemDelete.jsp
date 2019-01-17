@@ -13,7 +13,7 @@
 	    <script type="text/javascript">
 	        var ImageCount = "${imageCount}";
 	        var BoardID = "${boardID}";
-	
+			var ItemID = "${itemID}";
 	        var ImageID = "";
 	        var DelCount = 0;
 	        var ImageFilePath = "";
@@ -68,8 +68,21 @@
 	
 	            if (resultText == "OK") {
 	                alert("<spring:message code='ezBoard.t1019'/>");
-	                window.opener.page_reload();
-	                window.close();
+	                
+	                /* 2019-01-15 홍승비 - 사진삭제 후 DB에 게시물 수정일자 업데이트 */
+                    $.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/modUpdateDate.do",
+						data : {
+							itemID  : ItemID
+						},
+						success : function(result) {
+							window.opener.page_reload();
+							window.close();
+						}
+					});
 	            }
 	            else
 	                alert("<spring:message code='ezBoard.t1020'/>");

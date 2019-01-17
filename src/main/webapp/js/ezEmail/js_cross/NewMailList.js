@@ -10,7 +10,7 @@ var GetList_HTTP;
 var GetList_HTTP_SUB;
 var GetListInfo_HeaderObject;
 var GetListInfo_ContentObject;
-var m_strColorSelect = "#edf4fd";
+var m_strColorSelect = "#f1f8ff";
 var m_strColorOver = "#f4f5f5";
 var m_strColorDefault = "#ffffff";
 var m_strColorOpened = "#fafafa";
@@ -460,10 +460,8 @@ function MakeListInfoHTML(ConentObject) {
             				if (useShowSystemCountry == "YES") {
             					
             					var _img = document.createElement("img");
-            					_img.style.width = "18px";
-            					_img.style.height = "18px";
-            					_img.style.verticalAlign = "bottom";
-            					_img.style.padding = "0px 0px 1px 0px";
+            					_img.style.verticalAlign = "middle";
+            					_img.style.padding = "0px 0px 3px 0px";
             					
             					if (p_countryCode == "unknown") {
             						p_countryCode = "qm";
@@ -475,10 +473,8 @@ function MakeListInfoHTML(ConentObject) {
             					// 본인국가 표시 안함 
             					if ( p_countryCode != systemCountryCode.toLowerCase() ) {
             						var _img = document.createElement("img");
-            						_img.style.width = "18px";
-            						_img.style.height = "18px";
-            						_img.style.verticalAlign = "bottom";
-            						_img.style.padding = "0px 0px 1px 0px";
+            						_img.style.verticalAlign = "middle";
+            						_img.style.padding = "0px 0px 3px 0px";
             						
             						if (p_countryCode == "unknown") {
             							p_countryCode = "qm";
@@ -1277,9 +1273,9 @@ function makePageSelPage() {
     var pageNum = parseInt(document.getElementById("MailList").getAttribute("curPage"));
     
     if (searchMode) {
-    	document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang156 + "<span id='pSearchListCount' style='color:#017BEC;'> " + pSearchListCount + " </span>" + strLang157 + "]";
+    	document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span id='pSearchListCount' style='color:#017BEC;'>" + pSearchListCount + "</span>";
     } else {
-    	document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang255 + "<span id='folderUnreadCount' style='color:#017BEC;'> " + pFolderUnReadCount + " </span>" + strLang257 + " / " + strLang256 + "<span id='folderTotalCount' style='color:#017BEC;'> " + pFolderTotalCount + " </span>" + strLang257 + "</b>]";
+    	document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span id='folderUnreadCount' style='color:#017BEC;'>" + pFolderUnReadCount + " </span> / <span id='folderTotalCount'>" + pFolderTotalCount + " </span></b>";
     }
     
     if (totalPage > 1 && pageNum != 1) {

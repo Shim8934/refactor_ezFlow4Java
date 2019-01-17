@@ -72,6 +72,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
 		JSONObject resultObj = surveyRestService.getUserPreviewConfig(request, user.getId());
+		logger.debug(resultObj.toJSONString());
 		
 		if (resultObj.get("status").toString().equals("ok")) {
 			JSONObject userConfig = (JSONObject)resultObj.get("config");
@@ -236,16 +237,18 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("jspGetStatisticsPage started");
 		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
 		String itemId         = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
-		JSONObject result = surveyRestService.getSurveyStatistic(request, user.getId(), itemId);
+		JSONObject result     = surveyRestService.getSurveyStatistic(request, user.getId(), itemId);
 		
 		if (((Long)result.get("code")).intValue() != 0) {
-			int reasonCode = ((Long)result.get("code")).intValue();
+			int reasonCode     = ((Long)result.get("code")).intValue();
 			String messageCode = "";
 			
 			switch(reasonCode) {
 				case 1: messageCode = "ezSurvey.err1"; break;
 				case 2: messageCode = "ezSurvey.err2"; break;
 				case 3: messageCode = "ezSurvey.err3"; break;
+				case 6: messageCode = "ezSurvey.err6"; break;
+				case 7: messageCode = "ezSurvey.err7"; break;
 			}
 			
 			model.addAttribute("reasonMessage", messageCode);

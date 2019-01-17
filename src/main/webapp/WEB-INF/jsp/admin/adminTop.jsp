@@ -21,13 +21,14 @@
 			    <c:if test="${packageType == 'standard' && firstScreen_Mail == 'NO'}">
 				//일단 게시판으로 이동하게 만듬 2016-02-16 장진혁
 				//메인화면 포탈로 설정 2016-10-04 지정석
-					window.open("/admin/ezPortal/portalMain.do", "bottom");
+//					window.open("/admin/ezPortal/portalMain.do", "bottom");
+ 					window.open("/admin/ezNewPortal/portalMain.do", "bottom");
 				</c:if>
 				<c:if test="${use_portal != 'YES'}">
 					window.open("/admin/ezPersonal/personalMain.do", "bottom");
 				</c:if>
 				
-				<c:if test="${useHWP == 'YES' && approvalFlag == 'G'}">
+				<c:if test="${useActiveX == 'YES'}">
 					var userAgent = window.navigator.userAgent;
 					
 					if ((/msie/i.test(userAgent)) || (/rv:11.0/i.test(userAgent))) {
@@ -65,7 +66,8 @@
 					    parent.frames["bottom"].location.href = "/ezStatistics/statisticsMain.do";				
 						break;
 					case "menu10":		
-					    parent.frames["bottom"].location.href = "/admin/ezPortal/portalMain.do";
+// 					    parent.frames["bottom"].location.href = "/admin/ezPortal/portalMain.do";
+ 					    parent.frames["bottom"].location.href = "/admin/ezNewPortal/portalMain.do";
 						break;								
 					case "menu12":		
 					    parent.frames["bottom"].location.href = "/admin/ezResource/resourceMain.do";
@@ -134,7 +136,7 @@
 		</script>
 	</head>
 	<body class="admin_top" onload="javascript:window_onload()">
-		<c:if test="${useHWP == 'YES' && approvalFlag == 'G'}">
+		<c:if test="${useActiveX == 'YES'}">
 			<script type="text/javascript">
 				ezIcd_ActiveX("i_icd2");
 			</script>
@@ -174,7 +176,9 @@
 		      				
                     	<c:if test="${packageType == 'standard'}">
 							<%-- 커뮤니티 --%>
+							<c:if test="${use_community == 'YES'}">
 		      				<li><span id="menu07" onClick="menu_change(630, event)"><spring:message code="main.t1006" /></span></li>
+		      				</c:if>
 							<%-- 자원관리 --%>
 		      				<li><span id="menu12" onClick="menu_change(690, event)"><spring:message code="main.t28" /></span></li>
 							<%-- 업무일지 --%>
@@ -205,7 +209,7 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("adminmenu"), "ul", "li", "0");
 		</script>
-		<c:if test="${useHWP == 'YES' && approvalFlag == 'G'}">
+		<c:if test="${useActiveX == 'YES'}">
 			<iframe id=if_Progress style="display:none" src="/admin/ezApprovalG/progressAdmin.do?"></iframe>
 		</c:if>
 	</body>

@@ -114,6 +114,27 @@ public class OrganUserVO {
 	/** 수동으로 추가한 사원 구분(Y/N) */
 	private String manualFlag;
 	
+	/** 메일박스 사용용량 */
+	private String mailboxUsage;
+	/** 메일박스 총용량 */
+	private String mailboxQuota;
+	
+	public String getMailboxUsage() {
+		return mailboxUsage;
+	}
+
+	public void setMailboxUsage(String mailboxUsage) {
+		this.mailboxUsage = mailboxUsage;
+	}
+
+	public String getMailboxQuota() {
+		return mailboxQuota;
+	}
+
+	public void setMailboxQuota(String mailboxQuota) {
+		this.mailboxQuota = mailboxQuota;
+	}
+
 	public String getCn() {
 		return cn;
 	}

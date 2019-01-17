@@ -256,9 +256,7 @@ function makePageSelPage() {
 
 	document.getElementById("tblPageRayer").innerHTML = "";
 	if(document.getElementById("mailBoxInfo") !== null) {
-		document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang8
-		+ "<span style='color:#017BEC;'> " + totalLadder + " </span>"
-		+ strLang9 + "]";
+		document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span style='color:#017BEC;'>" + totalLadder + "</span>";
 	}
 
 	if (totalPage > 1 && pageNum != 1) {

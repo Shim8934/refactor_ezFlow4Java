@@ -7,7 +7,15 @@
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('main.e15', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
+		<style>
+			#mCSB_1_container {
+				margin-right: 0px;
+			} 
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		
 		<script type="text/javascript">
 // 		어디서 쓰는지
@@ -56,45 +64,44 @@
 			    }
 				parent.frames["right"].location.href = url;
 			}
+			
+			$(document).ready(function() {
+				leftResize();
+		        $(".adminListBox").mCustomScrollbar({
+		    		theme : "dark"
+		    	});
+			});
+	        
+	        function leftResize(){
+	        	$(".adminListBox").height(window.innerHeight-58);
+	        }
+	        
+	        $( window ).resize(function() {
+	        	leftResize();
+	    	});
 		</script>
 	</head>
-	<body class="leftbody" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
-		<div id="left">
-			<div class="left_admin" title="<spring:message code = 'main.t7' />"><img src="/images/admin/first.png" width="13px" height="13px"/>&nbsp;<spring:message code = 'main.t7' /></div>   
+	<body class="newLeft">
+		<div id="left" class="lnb" style="overflow: auto">
+			<div class="admin_left_title" title="<spring:message code = 'main.t7' />"><spring:message code = 'main.t7' /></div>   
 		  	<%-- <h2>
 		  		 <span onClick="goPage(1)" style="display:inline-block;width:100%"><spring:message code = 'main.t65' /></span>
 		    	<ul></ul> <!-- 공지사항 사용안함 -->
 			</h2> --%>
 			
-			<h2><span onClick="goPage(8)" style="display:inline-block;width:100%">Quick Link</span>
-				<ul></ul>
-			</h2>
-		  
-		  	<h2 style="display: ${(pollFlag != 'YES') ? 'block' : 'none'};"><span onClick="goPage(3)" style="display:inline-block;width:100%">Quick Poll</span>
-		    	<ul></ul>
-			</h2>
-			
-		  	<h2><span onClick="goPage(4)" style="display:inline-block;width:100%"><spring:message code = 'main.t67' /></span>
-		    	<ul></ul>
-		  	</h2>
-		  	
-		  	<h2><span onClick="goPage(7)" style="display:inline-block;width:100%;"><spring:message code = 'main.t68' /></span>
-		  		<ul></ul>
-		  	</h2>
-		  	
-		  	<h2><span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code = 'main.t10000' /></span>
-		  		<ul></ul>
-		  	</h2>
-		  	
+			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
+				<h2><span onClick="goPage(8)" style="display:inline-block;width:100%">Quick Link</span></h2>
+<%-- 			  	<h2 style="display: ${(pollFlag != 'YES') ? 'block' : 'none'};"><span onClick="goPage(3)" style="display:inline-block;width:100%">Quick Poll</span></h2> --%>
+			  	<h2 style="display: 'block';"><span onClick="goPage(3)" style="display:inline-block;width:100%">Quick Poll</span></h2>
+			  	<h2><span onClick="goPage(4)" style="display:inline-block;width:100%"><spring:message code = 'main.t67' /></span></h2>
+			  	<h2><span onClick="goPage(7)" style="display:inline-block;width:100%;"><spring:message code = 'main.t68' /></span></h2>
+			  	<h2><span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code = 'main.t10000' /></span></h2>
+		  	</div>
 		  	<%-- <c:if test="${useKMS == 'YES' }">
 				<h2><span onClick="goPage(5)" style="display:inline-block;width:100%"><spring:message code = 'main.t68' /></span>
 					<ul></ul>
 				</h2>
 			</c:if> --%>
 		</div>
-		
-		<script type="text/javascript">
-			initToggleList(document.getElementById("left"), "h2", "ul", "li");
-		</script>
 	</body>
 </html>

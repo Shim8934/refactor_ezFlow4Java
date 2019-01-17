@@ -644,27 +644,34 @@
 		
 		<c:choose>
 			<c:when test="${approvalFlag == 'S' }">
-				<h1><spring:message code = 'ezApprovalG.t1463' /></h1>
+				<h1>
+					<spring:message code = 'ezApprovalG.t1463' />
+					<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
+			        	<c:forEach var="item" items="${list}">
+		            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+		            	</c:forEach>
+				    </select>
+				</h1>
 			</c:when>
 			<c:otherwise>
-				<h1><spring:message code = 'ezApprovalG.t1612' /></h1>
+				<h1>
+					<spring:message code = 'ezApprovalG.t1612' />
+					<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
+			        	<c:forEach var="item" items="${list}">
+		            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+		            	</c:forEach>
+				    </select>
+				</h1>
 			</c:otherwise>
 		</c:choose>
-		<div id="mainmenu">    
-		    <span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			    <select id="ListCompany" onChange="selectCompanyID()">
-		        	<c:forEach var="item" items="${list}">
-	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-	            	</c:forEach>
-			    </select><br /><br />
-		    </span>
+		<div id="mainmenu">
 		    <ul>
-		        <li id="btnInsFcont"><span onclick="return btnInsFcont_onclick()"><spring:message code = 'ezApprovalG.t1623' /></span></li>
+		        <li class="important" id="btnInsFcont"><span onclick="return btnInsFcont_onclick()"><spring:message code = 'ezApprovalG.t1623' /></span></li>
 		        <li id="btnUpFcont"><span onclick="return btnUpFcont_onclick()"><spring:message code = 'ezApprovalG.t1627' /></span></li>
 		        <li id="btnDelFcont"><span onclick="return btnDelFcont_onclick()"><spring:message code = 'ezApprovalG.t1628' /></span></li>
 		        <!-- <li style="background: none;"><img src="/images/i_bar.gif" style="vertical-align: middle"></li> -->
-		        <li id="btnInsForm1"><span onclick="return btnInsForm_onclick('MHT')"><spring:message code = 'ezApprovalG.t1667' /></span></li>
-            	<li id="btnInsForm2" <c:if test="${useHWP != 'YES'}">style = 'display:none;'</c:if>><span onclick="return btnInsForm_onclick('HWP')">HWP <spring:message code = 'ezApprovalG.t1667' /></span></li>
+		        <li class="important" id="btnInsForm1"><span onclick="return btnInsForm_onclick('MHT')"><spring:message code = 'ezApprovalG.t1667' /></span></li>
+            	<li class="important" id="btnInsForm2" <c:if test="${useHWP != 'YES'}">style = 'display:none;'</c:if>><span onclick="return btnInsForm_onclick('HWP')">HWP <spring:message code = 'ezApprovalG.t1667' /></span></li>
 		        <li id="btnUpForm"><span onclick="return UpdateForm()"><spring:message code = 'ezApprovalG.t1668' /></span></li>
 		        <li id="btnDelForm"><span onclick="return DelForm()"><spring:message code = 'ezApprovalG.t1619' /></span></li>
 				<li id="btnModeForm"><span onclick="return MoveForm()"><spring:message code = 'ezApprovalG.t25000' /></span></li>
@@ -672,16 +679,16 @@
 		        <li id="btnFormListView" style="display: none;"><span onclick="return btnFormListView_onclick()"><spring:message code = 'ezApprovalG.t1252' /></span></li>
 			</ul>
 		</div>
-		<table class="content" style="width:1000px">
+		<table class="content" style="width:1000px;height:33px">
 			<tr>
-		    	<th><spring:message code = 'ezApprovalG.t1540' /></th>
-		    	<td style="border:0px">
+		    	<th style="border:0px"><spring:message code = 'ezApprovalG.t1540' /></th>
+		    	<td style="border:0px;background-color: #f8f8fa;">
 		    		<select name="select" style="WIDTH:200px;" onchange="return select_onchange()" id="FromList">
 		        		<option value="000" selected><spring:message code = 'ezApprovalG.t1541' /></option>
 		        		${docType}
 		      		</select>
 		      	</td>
-				<td style="white-space: nowrap;border:0px">
+				<td style="white-space: nowrap;border:0px;background-color: #f8f8fa;">
 					<select id="searchoption" style="height:22px; margin-top: 3px;">
 						<option value="1"><spring:message code = 'ezApprovalG.t442' /></option>
 						<option value="2"><spring:message code = 'ezApprovalG.t598' /></option>

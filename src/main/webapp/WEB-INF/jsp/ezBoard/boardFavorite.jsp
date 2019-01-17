@@ -173,9 +173,9 @@
                 	_RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
             	}
             	_RowObject = obj;
-            	obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
-            	obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
-            	obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
+            	obj.childNodes.item(0).style.backgroundColor = "#f1f8ff";
+            	obj.childNodes.item(1).style.backgroundColor = "#f1f8ff";
+            	obj.childNodes.item(2).style.backgroundColor = "#f1f8ff";
         	}
         	function swapNodes(item1, item2) {
             	var itemtmp = item1.cloneNode(1);
@@ -296,8 +296,8 @@
 	<body style="margin-left: 10px; margin-right: 10px;">
 		<br/>
     	<span class="txt">▒ 
-        	<img src="/images/ImgIcon/prev.gif" style="height: 16px; margin-top: -3px; vertical-align: middle; text-align: center;" />
-        	<img src="/images/ImgIcon/next.gif" align="absmiddle" style="height: 16px; margin-top: -3px;" />
+        	<img src="/images/ImgIcon/prev.gif" style="height: 16px; vertical-align: middle; text-align: center;" />
+        	<img src="/images/ImgIcon/next.gif" align="absmiddle" style="height: 16px; margin-top: 3px;" />
         	: <spring:message code="ezBoard.t00015" />
     	</span>
     	<br />    	
@@ -305,10 +305,10 @@
     	<div id="mainmenu">
         	<ul id="tb_Parent">
             	<li>
-                	<span onclick="favorite_Delete();"><spring:message code="ezBoard.t89" /></span>
+                	<span class="icon16 icon16_delete" onclick="favorite_Delete();"></span>
             	</li>
             	<li>
-                	<span onclick="favorite_reload()"><spring:message code="ezBoard.t205" /></span>
+                	<span class="icon16 icon16_refresh" onclick="favorite_reload()"></span>
             	</li>
             	<li>
                 	<span onclick="Priority_UP()">

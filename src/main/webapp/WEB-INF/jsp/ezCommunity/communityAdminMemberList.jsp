@@ -122,14 +122,14 @@
 		        		<input type="radio" name="flag" value="name" checked style="margin:0px 0px -2px 3px">
 		        		<label style="vertical-align:middle"><spring:message code = 'ezCommunity.t509' /></label>
 		        		<input style="height:22px" name="ser" id ="ser" type="text">
-		        		<a class="imgbtn" style="vertical-align: middle;margin-top:2px"><span onClick="sendit()"><spring:message code = 'ezCommunity.t31' /></span></a>
+		        		<a class="imgbtn imgbck" style="vertical-align: middle;margin-top:2px"><span onClick="sendit()"><spring:message code = 'ezCommunity.t31' /></span></a>
 		        	</td>
 		    	</tr>
 		  	</table>
 		</form>		
 		<br>		
-		<div class="subtxt">
-			<spring:message code = 'ezCommunity.t510' /><span class="point"><c:out value = '${postCount}' /></span><spring:message code = 'ezCommunity.t511' />
+		<div>
+			▒ <spring:message code = 'ezCommunity.t510' /><span class="point"><c:out value = '${postCount}' /></span><spring:message code = 'ezCommunity.t511' />
 		</div>
 		
 		<table class="mainlist" style ="width:100%;margin-top:5px">

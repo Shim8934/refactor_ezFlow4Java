@@ -163,7 +163,7 @@
 			        } else {
 			        	strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
 			        }
-			        strHTML += "<tr id='TreeArea' ><td><div class='tree' id='TreeCtrl" + i.toString() + "' style='display:none;width:300px;overflow-x:hidden;'></div></td></tr>";
+			        strHTML += "<tr id='TreeArea' ><td><div class='tree' id='TreeCtrl" + i.toString() + "' style='display:none;width:300px;overflow:hidden;'></div></td></tr>";
 			    }
 			    strHTML += "</table>";
 

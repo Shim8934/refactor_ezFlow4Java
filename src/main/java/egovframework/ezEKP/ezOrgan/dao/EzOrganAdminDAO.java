@@ -128,6 +128,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         return (List<OrganUserVO>) list("EzOrganAdminDAO.userCnList", tenantID);
     }
     
+    public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception {
+    	return (List<OrganUserVO>) list("EzOrganAdminDAO.allUserList", tenantID);
+    }
+    
     // 퇴직자 포함하여 사용자 아이디 목록을 반환한다.
     public List<OrganUserVO> getUserCnList(int tenantID) throws Exception {
     	return getUserCnListForLocal(tenantID);       
@@ -136,7 +140,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     private int getUserCountForLocal(int tenantID) throws Exception {
         return (int) select("EzOrganAdminDAO.userCount", tenantID);
     }
-    	
 
     // 퇴직자 포함하여 사용자 아이디 개수를 반환한다.
     public int getUserCount(int tenantID) throws Exception {
@@ -776,7 +779,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             String param = "extensionAttribute7=" + URLEncoder.encode(vo.getExtensionAttribute7(), "UTF-8");
             inputParams += "&" + param;
         }
-
+        
         String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/updateUser";
         String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 
@@ -1368,6 +1371,38 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     }
     public void insertCompanyInfo_I22(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I22", map);
+    }
+    
+    public void insertCompanyInfo_I23(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I23", map);
+    }
+    
+    public void insertCompanyInfo_I24(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I24", map);
+    }
+    
+    public void insertCompanyInfo_I25(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I25", map);
+    }
+    
+    public void insertCompanyInfo_I26(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I26", map);
+    }
+    
+    public void insertCompanyInfo_I27(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I27", map);
+    }
+    
+    public void insertCompanyInfo_I28(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I28", map);
+    }
+    
+    public void insertCompanyInfo_I29(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I29", map);
+    }
+    
+    public void insertCompanyInfo_I30(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I30", map);
     }
     
     public void insertCompanyInfo_IKMS(Map<String, Object> map) throws Exception {

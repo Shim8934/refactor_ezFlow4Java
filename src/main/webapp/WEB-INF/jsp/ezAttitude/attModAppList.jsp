@@ -30,7 +30,7 @@
 	    		cursor : pointer;
 	    }
     	tr.hover:hover {background:#eee; color:#fff;}
-		.selectTR {background-color: #edf4fd;}
+		.selectTR {background-color: #f1f8ff;}
 		#searchTable {
 			border-top: 1px solid #e8e8e8;
 			border-left: 1px solid #e8e8e8;
@@ -53,7 +53,7 @@
 		var g_timezone 		  = "${userTimeSet}";
 		var offsetMin 		  = "${offsetMin}";
 		var type 			  = "all";
-		var m_strColorSelect = "#edf4fd";
+		var m_strColorSelect = "#f1f8ff";
 		var m_strColorOver = "#f4f5f5";
 		var m_strColorDefault = "#ffffff";
 		var authFlag = "${authFlag}";
@@ -96,7 +96,7 @@
 	            changeYear: true,
 	            autoSize: true,
 	            showOn: "both",
-	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImage: "/images/ImgIcon/calendar-month.png",
 	            buttonImageOnly: true
 	        });
 	        $("#Edatepicker").datepicker({
@@ -104,7 +104,7 @@
 	            changeYear: true,
 	            autoSize: true,
 	            showOn: "both",
-	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImage: "/images/ImgIcon/calendar-month.png",
 	            buttonImageOnly: true
 	        });
 	        var NowDate = utcDate2(offsetMin);
@@ -450,18 +450,18 @@
 		    	totalPages = data.totalPages;
 		    	makePageSelPage();
 		    	
-		    	infoStr += " [<spring:message code='ezAttitude.t76'/> <span style='color:#017BEC;'>" + data.totalAtt;
+		    	infoStr += "&nbsp;&nbsp;<span style='color:#017BEC;'>" + data.totalAtt;
 		    	
 		    	if (data.startDate != "" && data.endDate != "") {
-		    		infoStr += "</span> <spring:message code='ezAttitude.t78'/>";
-	    			infoStr += ' - ' + data.startDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/>" + 
+		    		infoStr += "</span>";
+	    			infoStr += ' / ' + data.startDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/>" + 
 			    	data.startDate.substring(5,7) + "<spring:message code='ezAttitude.t67'/>" + 
 			    	data.startDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/>~";
 			    	infoStr += data.endDate.substring(0,4) + "<spring:message code='ezAttitude.t66'/>" + 
 			    	data.endDate.substring(5,7) + "<spring:message code='ezAttitude.t67'/>" + 
 			    	data.endDate.substring(8,10) + "<spring:message code='ezAttitude.t68'/>]</span>";	
 		    	} else {
-		    		infoStr += "</span> <spring:message code='ezAttitude.t78'/>]";
+		    		infoStr += "</span>";
 		    	}
 		    	
 		    	$("#mailBoxInfo").html(infoStr);
@@ -543,7 +543,7 @@
 	            changeYear: true,
 	            autoSize: true,
 	            showOn: "both",
-	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImage: "/images/ImgIcon/calendar-month.png",
 	            buttonImageOnly: true
 	        });
 	        $("#Edatepicker").datepicker({
@@ -551,7 +551,7 @@
 	            changeYear: true,
 	            autoSize: true,
 	            showOn: "both",
-	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImage: "/images/ImgIcon/calendar-month.png",
 	            buttonImageOnly: true
 	        });
 	        var NowDate = utcDate2(offsetMin);
@@ -938,11 +938,11 @@
 		<h1><spring:message code='ezAttitude.t166' /><span id="mailBoxInfo"></span></h1>
         <div id="mainmenu">
         <ul id="tb_Parent">
-			<li><span onClick="attList_del()"><spring:message code='ezAttitude.t164'/></span></li>
 		    <li id="reply"><span onClick="get_excelAtt_list()"><spring:message code='ezAttitude.t145'/></span></li>
-	        <li><span onClick="att_search('refresh')"><spring:message code='ezAttitude.t122'/></span></li>
-	        <li id="search"><span onClick="search_popup()"><spring:message code='ezAttitude.t121'/></span></li>
-			<li id="right">
+		    <li id="search"><span class="icon16 icon16_search" onClick="search_popup()"></span></li>
+		    <li onClick="attList_del()"><span class="icon16 icon16_delete"></span></li>
+	        <li onClick="att_search('refresh')"><span class="icon16 icon16_refresh"></span></li>
+			<li id="right" style="margin-right:5px">
 				<span style="float:right;font-weight:normal;color:black;border: none;box-shadow:none;">
 					<input name="searchCheck" id="Radio1" type="radio" value="all" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t124'/></label>
 					<input name="searchCheck" id="Radio2" type="radio" value="0" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="type_change()"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.t209'/></label>

@@ -110,7 +110,7 @@
 		    		changeYear: true,
 		    		autoSize: true,
 		    		showOn: "both",
-		    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		    		buttonImage: "/images/ImgIcon/calendar-month.png",
 		    		buttonImageOnly: true,
 		    		maxDate: 0,
 		    		onSelect: function(selected) {
@@ -124,7 +124,7 @@
 		    		changeYear: true,
 		    		autoSize: true,
 		    		showOn: "both",
-		    		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		    		buttonImage: "/images/ImgIcon/calendar-month.png",
 		    		buttonImageOnly: true,
 		    		maxDate: 0,
 		    		onSelect: function(selected) {
@@ -194,9 +194,7 @@
 				var strtext;
 				var PagingHTML = "";
 				document.getElementById("tblPageRayer").innerHTML = "";
-				document.getElementById("listInfo").innerHTML = " &nbsp;["
-						+ strLang7 + "<span style='color:#017BEC;'> "
-						+ totalCount + " </span>" + strLang8 + "]";
+				document.getElementById("listInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
 				strtext = "<div class='pagenavi'>";
 				PagingHTML += strtext;
 				var pageNum = CurPage;

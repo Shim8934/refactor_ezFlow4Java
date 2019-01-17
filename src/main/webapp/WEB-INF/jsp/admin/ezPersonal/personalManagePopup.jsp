@@ -230,16 +230,17 @@
 		</xml>
 		
 	    <form method="post">
-			<h1><spring:message code = 'ezPersonal.t266' /></h1>
-			<div id="mainmenu">
-				<span><b><spring:message code='ezEmail.t59' /></b></span>
-				<SELECT id="ListCompany" name="ListCompany" onChange="company_change()">
+			<h1>
+				<spring:message code = 'ezPersonal.t266' />
+				<SELECT class="companySelect" id="ListCompany" name="ListCompany" onChange="company_change()">
 		        	<c:forEach var="item" items="${list}">
 						<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 	        	</SELECT>
+			</h1>
+			<div id="mainmenu">
 				<ul style="margin-top:15px">	            	
-	                <li><span onClick="add_popup()"><spring:message code = 'ezPersonal.t158' /></span></li>
+	                <li class="important"><span onClick="add_popup()"><spring:message code = 'ezPersonal.t158' /></span></li>
 	            </ul>
 		  	</div>
 			<script type="text/javascript">

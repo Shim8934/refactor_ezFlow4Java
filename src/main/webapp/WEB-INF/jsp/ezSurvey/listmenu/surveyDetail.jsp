@@ -14,10 +14,10 @@
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 	<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
 	
-	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}   "></script>
-	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js')     }   "></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js'   )}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.js'        )}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/jquery.ddslick.min.js')}"></script>
-	<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg')}              "></script>
+	<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg'              )}"></script>
 </head>
 	
 <body class="mainbody srvey">

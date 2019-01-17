@@ -761,7 +761,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		String pItemID = "", pReservedItem = "", pUrl = "", pDocID = "", expireDays = "";
-		String hasAttach = "NO";
 		String uploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
@@ -792,7 +791,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
-		ezCommunityService.newBoardItem(item, boardInfo, userInfo, pItemID, pBoardID, pUrl, pMode, expireDays, hasAttach, model);
+		ezCommunityService.newBoardItem(item, boardInfo, userInfo, pItemID, pBoardID, pUrl, pMode, expireDays, model);
 		
 		model.addAttribute("editor", ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()));
 		model.addAttribute("pUploadFilePath", uploadFilePath);
@@ -805,7 +804,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("pUrl", pUrl);
 		model.addAttribute("pMode", pMode);
-		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("endDate", item.getEndDate());
@@ -1549,7 +1547,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			titleName = ezCommunityService.getBoardTitleName(bName, code, userInfo.getTenantId());
 		}
 
-		keywordCount = ezCommunityService.bbsListGet1(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId());
+		keywordCount = ezCommunityService.bbsListGet1(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId());
 		totalPage = keywordCount / comNoPerPage;
 		
 		if (keywordCount % comNoPerPage != 0) {
@@ -1557,7 +1555,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		curPage = Math.min(curPage, totalPage);
-		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId());
+		List<CommunityCBoardVO> cBoardList = ezCommunityService.bbsListGet2(bName, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId(), userInfo.getCompanyID());
 		
 		String strHTML = ezCommunityService.bbsList(userInfo, cBoardList, code, curPage, bName, comNoPerPage);
 
@@ -2134,7 +2132,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		String pollManagerID = request.getParameter("pollManagerID");
-		String pollState = request.getParameter("pollState");
+		String pollState = URLDecoder.decode(request.getParameter("pollState"), "utf-8");
 		
 		//TODO 2016-12-15 이효진 사용되지 않음
 //		int userLevel = ezCommunityService.pollResGet1(userInfo.getId(), code, tenantID);
@@ -2294,7 +2292,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		int keywordCount = ezCommunityService.commViewMemberGet2(code, userInfo.getPrimary(), keyword, sRadio, userInfo.getTenantId());
+		int keywordCount = ezCommunityService.commViewMemberGet2(code, userInfo.getPrimary(), keyword, sRadio, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		int comNoPerPage = 10;
         int totalPage = keywordCount / comNoPerPage;
@@ -2332,7 +2330,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String code = request.getParameter("code");
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		// 2018-06-29 김보미 - 커뮤니티 회원수 수정
-		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 		CommunityMemberInfoVO member = ezCommunityService.commOutGet(club.getC_SysopID().trim(), club.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		String sysopName = member.getUserName();
@@ -2495,16 +2493,17 @@ public class EzCommunityController extends EgovFileMngUtil{
 			name1 = member.getUserName();
 		}
 
+		// 2018-11-12 김민성 - 안쓰는 카테고리 주석처리
 		int pPermitCount = ezCommunityService.adminMemPermitGet1(code, userInfo.getTenantId());
 		String cCateA = ezCommunityService.adminBasicGet1(code, userInfo.getTenantId());
-		String cCateB = ezCommunityService.adminBasicGet2(code, userInfo.getTenantId());
+		//String cCateB = ezCommunityService.adminBasicGet2(code, userInfo.getTenantId());
 		
 		model.addAttribute("code", code);
 		model.addAttribute("club", club);
 		model.addAttribute("name1", name1);
 		model.addAttribute("pPermitCount", pPermitCount);
 		model.addAttribute("c_cate_a", (cCateA == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateA, userInfo.getLocale()));
-		model.addAttribute("c_cate_b", (cCateB == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateB, userInfo.getLocale()));
+		//model.addAttribute("c_cate_b", (cCateB == null) ? "" : egovMessageSource.getMessage("ezCommunity."+cCateB, userInfo.getLocale()));
 		model.addAttribute("lang_Primary", langPrimary);
 		model.addAttribute("lang_Secondary", langSecondary);
 		
@@ -3419,7 +3418,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO club = ezCommunityService.aspCommInfoGet1(code, userInfo.getTenantId());
 		
 		// 2018-07-03 김보미 - 커뮤니티 회원수 수정
-		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+		club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo().trim(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 		
 		/* 겸직사원의 커뮤니티 선택 시 companyID로 조건 추가 */
 		CommunityMemberInfoVO member = ezCommunityService.aspCommInfoGet2(userInfo.getPrimary(), club.getC_SysopID().trim(), userInfo.getCompanyID(), userInfo.getTenantId());
@@ -3499,6 +3498,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
 		int totalPage = ezCommunityService.mainPage(userInfo);
+		String bName = "tbl_c_board";
 		
 		/* 2018-05-17 홍승비 - 새 글에 new 표시 추가 */
 		String pastDate = commonUtil.getTodayUTCTime("");
@@ -3507,10 +3507,18 @@ public class EzCommunityController extends EgovFileMngUtil{
 		pastDate = EgovDateUtil.addYMDtoDayTime(pastDate.substring(0, 10), pastDate.substring(11, 16), 0, 0, 0, 0, Integer.parseInt(commonUtil.getMinuteUTC(userInfo.getOffset())), "yyyy-MM-dd HH:mm:");
 		pastDate = pastDate.concat(commonUtil.getTodayUTCTime("").substring(17,19));
 		
+		/* 2018-11-12 김민성 - 커뮤니티 공지사항 추가 */
+		List<CommunityCBoardVO> cNoticeList = ezCommunityService.bbsListGet2(bName, userInfo.getPrimary(), "", "", userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		for(CommunityCBoardVO noticeList : cNoticeList) {
+			noticeList.setTitle(commonUtil.cleanValue(noticeList.getTitle()));
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("pastDate", pastDate);
+		model.addAttribute("cNoticeList", cNoticeList);
 		
 		logger.debug("mainPage ended.");
 		
@@ -3898,7 +3906,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		CommunityClubVO club = ezCommunityService.todayCopGet2(num, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (club != null) {
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 			
 			if (!club.getC_Cate_A().equals("0")){
 				cCatecAName = ezCommunityService.todayCopGet3(club.getC_Cate_A(), "A", userInfo.getTenantId());
@@ -3988,8 +3996,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		// 18-05-08 김민성 - 커뮤니티 회원수 수정
 		for (CommunityClubVO club : clubList) {
-			// 이미 companyID로 걸러진 커뮤니티를 가져와 후작업하므로, 쿼리에 companyID를 줄 필요는 없다.(동일 테넌트에서 C_CLUBNO로 구분 가능하므로)
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		
@@ -4036,9 +4043,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 				clubList.get(0).setCopCnt(clubCopCnt.get(0).getCopCnt());
 			}
 			
-			// 이미 companyID로 걸러진 커뮤니티를 가져와 후작업하므로, 쿼리에 companyID를 줄 필요는 없다.(동일 테넌트에서 C_CLUBNO로 구분 가능하므로)
 			// 18-05-08 김민성 - 커뮤니티 회원수 수정
-			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getTenantId()));
+			club.setC_MemberCnt(ezCommunityService.commViewMemberGet2(club.getC_ClubNo(), userInfo.getPrimary(), "", "", userInfo.getCompanyID(), userInfo.getTenantId()));
 			club.setItemCnt(ezCommunityService.categoryListItemCntGet(club.getC_ClubNo(), userInfo.getTenantId()));
 		}
 		
@@ -4667,6 +4673,31 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("getItemViewNew ended.");
 		
 		return "<DATA>" + result + "</DATA>";
+	}
+	
+	/**
+	 * 2019-01-10 홍승비 - 커뮤니티 게시판 > 부모게시판ID 리턴하는 함수 추가
+	 */
+	@RequestMapping(value = "/ezCommunity/getParentBoardID.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getParentBoardID(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getParentBoardID started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String boardID = request.getParameter("boardID");
+		String result = "";
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		
+		if(boardInfo != null) {
+			if (boardInfo.getParentBoardID() != null && !boardInfo.getParentBoardID().equals("")) {
+				result = boardInfo.getParentBoardID();
+			}
+		}
+		
+		logger.debug("getParentBoardID ended.");
+		
+		return result;
 	}
 }
 

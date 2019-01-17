@@ -71,7 +71,7 @@
 	                    else if (window.clipboardData) {
 	                    	text = window.clipboardData.getData('Text');
 							
-	                    	const selection = window.getSelection();
+	                    	var selection = window.getSelection();
 
 							if (!selection.rangeCount) return false;
 							

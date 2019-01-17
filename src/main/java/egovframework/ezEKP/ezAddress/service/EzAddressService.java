@@ -46,7 +46,7 @@ public interface EzAddressService {
 	public void copyFolder(int tenantId, String pFolderId, String pNewParentId, String pNewOwnerId, String pNewFolderType, String pCreatorId, String pCreatorName, String pCreatorName2) throws Exception;
 	public List<SimpleAddressVO> getSimpleAddress(int tenantId, String userId) throws Exception;
 	public void setSimpleAddress(int tenantId, String pUserId, String pMailList) throws Exception;
-	public void removeUserAddress(String userEmailAddress) throws Exception;
+	public int removeUserAddress(String userEmailAddress) throws Exception;
 	
 	public Map<String, Object> getAddressZipCodeList(String pSido, String pKeyword, int pPage) throws Exception;
 }

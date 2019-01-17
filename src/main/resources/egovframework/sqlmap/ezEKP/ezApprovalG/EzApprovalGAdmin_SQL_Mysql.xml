@@ -1778,6 +1778,47 @@
 		</isEqual>
 	</insert>
 	
+	<update id="EzApprovalGAdminDAO.updateAutoDoc" parameterClass="Map">
+		UPDATE 
+			TBL_AUTODOCNUM_ITEM
+		SET
+			ITEMNAME = #v_TASKNAME#,
+			KEEPPERIOD = (SELECT 
+							SUBSTRING_INDEX(SUBSTRING_INDEX(NAME$lang$, ';', 2), ';', -1) AS NAME
+						FROM 
+							TBL_CODELIST 
+						WHERE 
+							tenant_id = #tenantID#
+						AND
+							companyid = #companyID#
+						AND
+							code1 = 'SA52'
+						AND
+							substring_index(NAME$lang$, ';', -1) = #v_KEEPINGPERIOD#),
+			KEEPPERIODCODE = #v_KEEPINGPERIOD#,
+			SECURITYLEVEL = #itemSecurity#,
+			ISPUBLIC = #isPublic#
+		WHERE
+			ITEMCODE = #v_TASKCODE#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+	</update>
+	
+	<update id="EzApprovalGAdminDAO.removeAutoDoc" parameterClass="Map">
+		UPDATE 
+			TBL_AUTODOCNUM_ITEM
+		SET
+			USEFLAG = 'N'
+		WHERE
+			ITEMCODE = #taskCode#
+		AND
+			COMPANYID = #companyID#
+		AND
+			TENANT_ID = #tenantID#
+	</update>
+	
 	<insert id="EzApprovalGAdminDAO.setAutoDocNum" parameterClass="Map">
 		<selectKey keyProperty="id" resultClass="String">
 			SELECT 
@@ -1866,7 +1907,7 @@
 			AND
 				containertypeid = #v_CONTTYPEID#
 			AND
-				containerowndepid = (SELECT containerowndepid FROM TBL_CONTAINER WHERE containerID = #v_DEPTID# AND tenant_id = #tenantID#)
+				containerowndepid = (SELECT containerowndepid FROM TBL_CONTAINER WHERE containerID = #v_DEPTID# AND companyid = #companyID# AND tenant_id = #tenantID#)
 		]]>
 	</select>
 
