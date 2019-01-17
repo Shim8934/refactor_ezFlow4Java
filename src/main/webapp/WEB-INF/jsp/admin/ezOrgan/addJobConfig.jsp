@@ -375,6 +375,9 @@
 	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA5>";
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA5>";
+	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA6>";
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("JOBID")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA6>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "</CELL></ROW>";
 	                    }
 	                    LISTVIEWDATA = LISTVIEWDATA + "</ROWS></LISTVIEWDATA>";
