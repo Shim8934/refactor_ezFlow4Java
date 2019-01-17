@@ -285,9 +285,11 @@
 					</c:when>
 				</c:choose>
 				
+				<%-- 목록 버튼 안보이게 주석처리
 				<c:if test="${keyword != '' }">
 					<li><span onclick="btn_list('${bName}')"><spring:message code = 'ezCommunity.t168' /></span></li>
 				</c:if>
+				 --%>
 				
   			</ul>
 		</div>

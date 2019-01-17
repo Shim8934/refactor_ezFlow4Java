@@ -534,9 +534,8 @@
 			
 		</script>
 	</head>
-	<body class="mainbody" onload = "makePageSelPage()">
+	<body class="mainbody">
 		<h1>커뮤니티 관리<span id="TitleInfo"></span></h1>
-		<form name="adm_search_key" method="post" ID="Form1">
 		
 			<%--<div class="page">
 			<img src="/images/page_previous.gif" width="15" height="16" align="absmiddle" id="td_Previous"  onClick="prevPage_onclick()">
@@ -602,6 +601,6 @@
 			</div>
 			
 			<div id="tblPageRayer"></div>
-		</form>
+		
 	</body>
 </html>
