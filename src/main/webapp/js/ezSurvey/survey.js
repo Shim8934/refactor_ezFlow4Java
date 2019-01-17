@@ -3217,6 +3217,7 @@ var SurveyCreate     = function() {
 		var valI      = "";
 		var valJ      = "";
 		var result    = "";
+		var emptyCount = 0;
 		
 		if (type == 1 || type == 2) {
 			opt       = wrapper.find(".opt");
@@ -3231,7 +3232,14 @@ var SurveyCreate     = function() {
 			var logicNum = $("select[name=slt" + id  + i +"] option:selected").val();
 			if (logicNum != "") {
 				logicArr.push(logicNum);
+			} else {
+				emptyCount++;
 			}
+		}
+		
+		if (emptyCount == optLength) {
+			alert(SurveyMessages.strLogic);
+			return "fail";
 		}
 		
 		var arrLnegh = logicArr.length;
