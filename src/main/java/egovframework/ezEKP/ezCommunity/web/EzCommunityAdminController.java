@@ -532,11 +532,15 @@ public class EzCommunityAdminController {
 		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) -> 사간겸직한 회원이 만든 커뮤니티는 겸직한 회사만큼 전부 표출됨(수정필요) */
 		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), pageNum, companyId, tenantId);
 		
+		/* 2019-01-17 김혜정 - 관리자 > 폐쇄승인 커뮤니티 카운트  추가 */ 
+		int tabCount = ezCommunityAdminService.aspCloseComGet2("", "", commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
+		
 		model.addAttribute("clubList", clubList);
 		model.addAttribute("pageNum", pageNum);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("sysopCheck", sysopCheck);
+		model.addAttribute("tabCount", tabCount);
 		
 		return "json";
 	}
@@ -582,11 +586,15 @@ public class EzCommunityAdminController {
 		/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
 		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), pageNum, companyId, tenantId);
 		
+		/* 2019-01-17 김혜정 - 관리자 > 신청승인 커뮤니티 카운트  추가 */ 
+		int tabCount = ezCommunityAdminService.aspAdmitComGet2("", "", commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
+		
 		model.addAttribute("clubList", clubList);
 		model.addAttribute("pageNum", pageNum);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("totalCount", totalCount);
 		model.addAttribute("sysopCheck", sysopCheck);
+		model.addAttribute("tabCount", tabCount);
 		
 		return "json";
 	}
