@@ -641,11 +641,26 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		map.put("tenantId", tenantId);
 		
 		List<CommunityCComCloseVO> list = ezCommunityAdminDAO.getClosedCommuList(map);
-		logger.debug("primary: " + primary);
-		logger.debug("startRow: " + 10 * (pageNum - 1));
-		logger.debug("companyId", companyId);
+		
 		logger.debug("getClosedCommuList ended.");
 		
 		return list;
+	}
+
+	//2019-01-17 김헤정 - 폐쇄된 커뮤니티 리스트 상세정보
+	@Override
+	public CommunityCComCloseVO closeCommunityInfo(String lang, String code, String companyId, int tenantId) throws Exception {
+		logger.debug("closeCommunityInfo ended.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_CODE", code);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		CommunityCComCloseVO vo = ezCommunityAdminDAO.closeCommunityInfo(map);
+		
+		logger.debug("closeCommunityInfo ended.");
+		return vo;
 	}
 }

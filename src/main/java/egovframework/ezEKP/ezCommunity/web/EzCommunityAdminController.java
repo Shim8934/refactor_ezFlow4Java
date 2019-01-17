@@ -371,6 +371,31 @@ public class EzCommunityAdminController {
 	}
 	
 	/**
+	 * 폐쇄한 커뮤니티 상세정보 수정 호출함수
+	 */
+	@RequestMapping(value = "/admin/ezCommunity/closeCommunityInfo.do")
+	public String closeCommunityInfo(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		logger.debug("commInfo started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String lang        = userInfo.getLang();
+		String companyId   = userInfo.getCompanyID();
+		int tenantId       = userInfo.getTenantId();
+		
+		String code = request.getParameter("code");
+		
+		CommunityCComCloseVO club = ezCommunityAdminService.closeCommunityInfo(commonUtil.getMultiData(lang, tenantId), code, companyId, tenantId);
+		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), companyId, tenantId));
+		club.setC_ClubName(commonUtil.cleanValue(club.getC_ClubName()));
+		
+		model.addAttribute("club", club);
+		
+		logger.debug("commInfo started.");
+		
+		return "/admin/ezCommunity/closeCommunityInfo";
+	}
+	
+	/**
 	 * 승인/폐쇄신청 커뮤니티 정보화면 호출함수
 	 */
 	@RequestMapping(value = "/admin/ezCommunity/commInfo.do")
