@@ -1213,9 +1213,6 @@
 	            <li><span onclick="closeWindow()"></span></li>
 	        </ul>
 	    </div>
-	    <script type="text/javascript">
-			selToggleList(document.getElementById("menu"), "ul", "li", "0");
-		</script>
 	    <table id="TreeViewTD" style="margin-top:-5px;">
 	        <tr>
 	            <td style="display:none;">

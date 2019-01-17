@@ -1624,14 +1624,15 @@ function showTooltip_MouseOver(obj, e) {
 
 
         var cTime1 = "";
-        try {
+        cTime1 = GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16);		// 2019-01-15 김민성 - 자원관리 예약 시간 조회 12시간->24시간제로 변경
+        /*try {
             if (GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16).split(" ").length > 1) {
                 cTime1 = ChangeTime(GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16).split(" ")[1].split(":")[0], GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16).split(" ")[1].split(":")[1]);
                 cTime1 = GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16).split(" ")[0] + " " + cTime1;
             }
         } catch (e) {
             cTime1 = GetAttribute(obj,"dtstart").replace('T', ' ').substring(0, 16);
-        }
+        }*/
 
         sTd.innerHTML += "[" + strLang569 + "]<br />" + cTime1 + reFlag;
         sTr.appendChild(sTd);
@@ -1647,14 +1648,15 @@ function showTooltip_MouseOver(obj, e) {
         sTd.appendChild(sSpan);
 
         var cTime2 = "";
-        try {
+        cTime2 = GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16);		// 2019-01-15 김민성 - 자원관리 예약 시간 조회 12시간->24시간제로 변경
+        /*try {
             if (GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16).split(" ").length > 1) {
                 cTime2 = ChangeTime(GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16).split(" ")[1].split(":")[0], GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16).split(" ")[1].split(":")[1]);
                 cTime2 = GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16).split(" ")[0] + " " + cTime2;
             }
         } catch (e) {
             cTime2 = GetAttribute(obj,"dtend").replace('T', ' ').substring(0, 16);
-        }
+        }*/
 
         sTd.innerHTML += "[" + strLang570 + "]<br />" + cTime2 + reFlag;
         sTr.appendChild(sTd);

@@ -21,6 +21,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 	<!-- module -->
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/buttons.js')}"></script>
@@ -40,11 +41,16 @@
 		var pEnd =10;
 		var folderId = "${folderId}";
 		var folderType = "${folderType}";
+		var allFileFlag = "${allFileFlag}";
 		var resultErr1 = "<spring:message code='ezWebFolder.t306'/>";
 		var resultErr2 = "<spring:message code='ezWebFolder.t305'/>";
 		var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
 		var resultErr4 = "<spring:message code='ezWebFolder.t249'/>";
 		var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
+		var functionType = "";
+		var inputNameDlg_cross_dialogArguments = new Array();
+		var parentId = "${parentId}";
+		var userId = "";
 		
 		// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 		window.onresize = function () {
@@ -65,7 +71,10 @@
 		
 		window.onload = function() {
 			closeAllPopup();
-			$('#upload').css('display','none');
+			if (allFileFlag == "all") {
+				$('#upload').css('display','none');
+				$('#newFolder').css('display','none');
+			}
 			getFileList(folderId);
 			
 			searchContext.setSearchStartEventHandler(function() {
@@ -174,7 +183,8 @@
 					 "searchCreateName" : searchRequirement.creatorName,
 					 "searchFileType" 	: searchContext.getFileType(),
 					 "searchStartDate" 	: searchRequirement.startDate,
-					 "searchEndDate" 	: searchRequirement.endDate
+					 "searchEndDate" 	: searchRequirement.endDate,
+					 "allFileFlag"		: allFileFlag
 					},
 				dataType: "JSON",
 				success : function (data) {
@@ -183,7 +193,6 @@
 				},
 				error : function(error) {
 					hideProgress();
-// 					alert(messages.strLang7 + error);
 				}
 			});
 		}
@@ -201,6 +210,7 @@
 					return;
 				}
 			}
+			userId = data.data.userId;
 			var result = data.data;
 			
 			var fileCnt = result.fileCnt;
@@ -216,19 +226,23 @@
 			pagination.setAmount(result.totalRows);
 			pagination.build();
 			
-			if (folderUpp != 'root') {
-				$('#upload').css('display','inline');
-				dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
-				dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
-				dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
-			} else {
+			if (folderUpp == 'root' && folderType == 'C') {
+				$('#upload').css('display','none');
+				$('#newFolder').css('display','none');				
 				dragDropAreaElmt.ondragenter = null;
 				dragDropAreaElmt.ondragover  = null;
 				dragDropAreaElmt.ondragover  = null;
+			} else {
+				$('#upload').css('display','inline');
+				$('#newFolder').css('display','inline');				
+				dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
+				dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
+				dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
 			}
 			
 			$('#tblFileList tr td').parent().remove();
 			renderData(filelist);
+			parentId = data.data.folderUpp;
 			
 			namePath(folderPath, originalPath);
 			document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; " + messages.strLang15 + " <span style='color:#017BEC;'>" + fldCnt +" </span>"
@@ -277,32 +291,35 @@
 				detailName.appendChild(divName);
 				nameTag.appendChild(detailName);
 				
+				/* root 폴더 업로드기능이 적용되지 않았을 시 name path 
 				if(length == 1) {
-					/* detailName = document.createElement("div");
-					/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 및 꺽새 추가 */
-					//detailName.textContent =  " > " + messages.strLang17 + " "; // 모든파일
-					//detailName.setAttribute("style", "font-size:15px;");
-					//nameTag.appendChild(detailName);
 					var divSeparator = document.createElement("div");
 					divSeparator.setAttribute("class", "separator");
 					divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
 					nameTag.appendChild(divSeparator);
 				}
 				
-				/* 2018-05-07 장진혁 - 이미지 태그 안씀 */
-				/* var imgElmt = document.createElement("img");
-				imgElmt.setAttribute("style", "height: 14px; width: 14px; display: inline-block; margin: 0px 6px;");
-				imgElmt.src = "/images/webfolder/arrow2.png"; */
-				
 				if (i != length - 1) {
-/* 					detailName = document.createElement("span");
-					detailName.textContent = " > ";
-					nameTag.appendChild(detailName); */
 					var divSeparator = document.createElement("div");
 					divSeparator.textContent = " > ";
 					divSeparator.setAttribute("class", "separator");
 					nameTag.appendChild(divSeparator);
-				}	
+				}
+				*/
+				
+				if (allFileFlag == "all") {
+					var divSeparator = document.createElement("div");
+					divSeparator.setAttribute("class", "separator");
+					divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
+					nameTag.appendChild(divSeparator);
+				} else {
+					var divSeparator = document.createElement("div");
+					if (i != length - 1) {
+						divSeparator.textContent = " > ";
+					}
+					divSeparator.setAttribute("class", "separator");
+					nameTag.appendChild(divSeparator);
+				}
 			}
 		}
 		
@@ -362,6 +379,19 @@
 					trElmt.setAttribute("class", "bnkWebFolder");
 					trElmt.setAttribute("targetId", result[i]["fileId"]);
 					trElmt.setAttribute("targetType", result[i]["fileTypeName"] == 'folder' ? 'D' : 'F');
+					trElmt.setAttribute("targetCreater", result[i]["createId"]);
+					trElmt.setAttribute("targetPath", result[i]["filePosition"]);
+					
+					if (result[i]["targetType"]) {
+						trElmt.setAttribute("targetFunction", resultJson["folderType"]);
+					}
+					
+					var creator = ""
+					if (!result[i]["creatorId"]) {
+						trElmt.setAttribute("targetCreater", result[i]["createId"]);
+					} else {
+						trElmt.setAttribute("targetCreater", result[i]["creatorId"]);
+					}
 					trElmt.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					if (result[i]["fileTypeName"] != 'folder') {
@@ -392,6 +422,7 @@
 						faImgElmt.src = "/images/ImgIcon/icon-flag.gif";
 						trElmt.setAttribute("favorite", "");
 					}
+					
 					faImgElmt.style.height  = "14px";
 					faImgElmt.style.width  	= "14px";
 					
@@ -404,18 +435,15 @@
 					
 					tdElmt4.textContent = result[i]["fileName"];
 					tdElmt4.setAttribute("title", result[i]["fileName"]);
+					
 					if(result[i]["typeId"] == "folder") {
 						tdElmt5.textContent = ' - ';
 					}else {
 						tdElmt5.textContent = getFileSize(result[i]["fileSize"]);
 					}
-// 					if (primary == "1") {
-						tdElmt6.textContent = result[i]["createName1"];
-// 					}
-// 					else {
-// 						tdElmt6.textContent = result[i]["createName2"];
-// 					}
 					
+					tdElmt6.textContent = result[i]["createName1"];
+					tdElmt6.setAttribute("value",result[i]["createId"]);
 					tdElmt7.textContent = result[i]["createDate"].substring(0, 10);
 					tdElmt8.textContent = result[i]["updateDate"].substring(0, 10);
 					tdElmt9.textContent = result[i]["filePosition"];
@@ -548,10 +576,7 @@
 	    function optionView(obj) {
 	   		 if (obj.getAttribute("mode") == "off") {
 	   	        document.getElementById("layer_Viewpopup").style.left = document.documentElement.clientWidth - 260 + "px";
-//	    	        if(pAdminType == "y")
-	   	            document.getElementById("layer_Viewpopup").style.top = "130px";
-//	    	        else
-//	    	            document.getElementById("layer_Viewpopup").style.top = "100px";
+   	            document.getElementById("layer_Viewpopup").style.top = "130px";
 	   	        document.getElementById("layer_Viewpopup").style.display = "";
 	   	        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
 	   	        obj.setAttribute("mode", "on");
@@ -615,6 +640,7 @@
         function hideProgress() {
         	document.getElementById("progressPanel").style.display = "none";
         }
+        
     </script>
 </head>
 <body class="mainbody" style="padding-bottom:10px;">
@@ -627,7 +653,8 @@
 			<ul>
 				<li class="important"><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186' /></span></li>
 				<li class="important" id="upload"><span onclick="buttons.fileUpload()"><spring:message code='ezWebFolder.t187' /></span></li>
-				<li><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t273' /></span></li>
+				<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
+				<li><span onclick="buttons.fileRename()"><spring:message code='ezWebFolder.t508' /></span></li>
 				<li><span onclick="buttons.fileMoveAndCopy()"><spring:message code='ezWebFolder.t275' /></span></li>
 				<li><span onclick="shareContext.addShareView()"><spring:message code='ezWebFolder.t254' /></span></li>			
 				<!-- <li><img src="/images/i_bar.gif" /></li> -->

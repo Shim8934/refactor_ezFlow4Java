@@ -20,18 +20,23 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 		<!-- module -->
-		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/buttons.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/search.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/share.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
 		<script type="text/javascript">
 			var folderId = "";
 			var isShareMode = true;
 			var isSubSearching = "N";
 			var strSuccess  = "<spring:message code='ezWebFolder.t27'/>";
+			var folderType = "S";
+			var inputNameDlg_cross_dialogArguments = new Array();
+			var parentId = folderId;
+			var userId = "${userId}";
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
@@ -285,6 +290,7 @@
 						renderList2(result.fileList);
 						setNamePath(result.folderPath, result.originalPath);
 						setMailBoxInfo(result.fldCnt, result.fileCnt);
+						
 					},
 					error : function(error) {
 						hideProgress();
@@ -299,11 +305,13 @@
 						$('#uploadBtn').css('display','none');
 						$('#modifyShareBtn').css('display','none');
 						$('#deleteShareBtn').css('display','none');
+						$('#newFolder').css('display','');
 						
 						$('#addShareBtn').css('display','');
 					} else {
 						$('#uploadBtn').css('display','none');
 						$('#addShareBtn').css('display','none');
+						$('#newFolder').css('display','none');
 						
 						$('#modifyShareBtn').css('display','');
 						$('#deleteShareBtn').css('display','');
@@ -311,6 +319,7 @@
 				} else {
 					$('#modifyShareBtn').css('display','none');
 					$('#deleteShareBtn').css('display','none');
+					$('#newFolder').css('display','');
 					
 					$('#uploadBtn').css('display','');
 					$('#addShareBtn').css('display','');
@@ -417,6 +426,7 @@
 					$('.wfFileShareMember').css('display','none');
 					$('.wfFileShareDate2').css('display','none');
 					$('.wfFileShareDate').css('display','');
+					$('#newFolder').css('display','');
 				} else {
 // 					$('#updateDateHeader').css('display','none');
 // 					$('#sharerHeader').css('display','');
@@ -424,6 +434,7 @@
 					$('.wfFileShareDate').css('display','none');
 					$('.wfFileShareMember').css('display','');
 					$('.wfFileShareDate2').css('display','');
+					$('#newFolder').css('display','none');
 				}		
 				if (result == null || result.length == 0) {
 					var row = document.createElement("tr");
@@ -510,6 +521,20 @@
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", resultJson["folderFileType"]);
+					row.setAttribute("targetPath", result[i]["folderPath"]);
+					
+					var functionType = ""
+					if (result[i]["folderType"]) {
+						row.setAttribute("targetFunction", result[i]["folderType"]);
+					}
+					
+					var creator = ""
+					if (!result[i]["creatorId"]) {
+						row.setAttribute("targetCreater", result[i]["createId"]);
+					} else {
+						row.setAttribute("targetCreater", result[i]["creatorId"]);
+					}
+					
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					inputElement = document.createElement("input");
@@ -698,6 +723,19 @@
 					row.setAttribute("class", "bnkWebFolder");
 					row.setAttribute("targetId", resultJson["fileId"]);
 					row.setAttribute("targetType", isFolder ? "D" : "F");
+					row.setAttribute("targetPath", result[i]["filePosition"]);
+					
+					var functionType = ""
+					if (result[i]["folderType"]) {
+						row.setAttribute("targetFunction", result[i]["folderType"]);
+					}
+					
+					var creator = ""
+					if (!result[i]["creatorId"]) {
+						row.setAttribute("targetCreater", result[i]["createId"]);
+					} else {
+						row.setAttribute("targetCreater", result[i]["creatorId"]);
+					}
 					row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 					
 					inputElement = document.createElement("input");
@@ -957,6 +995,7 @@
 				alert(messages.strLang33);
 				refreshView();
 			}
+			
 		</script>
 	</head>
 	<body class="mainbody">
@@ -974,7 +1013,8 @@
 				<ul>
 					<li class="important"><span onclick="buttons.fileDownload()"><spring:message code='ezWebFolder.t186'/></span></li>
 					<li class="important" id="uploadBtn" onclick="buttons.fileUpload()"><span><spring:message code='ezWebFolder.t187'/></span></li>
-					<li><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t273'/></span></a></li>
+					<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
+					<li><a onclick="buttons.fileRename()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t508'/></span></a></li>
 					<li><a onclick="buttons.fileMoveAndCopy()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t275'/></span></a></li>
 					<!-- <li><img src="/images/i_bar.gif"></li> -->
 					<li id="addShareBtn" style="display:none"><a onclick="shareContext.addShareView()" style="margin-top: 3px;"><span><spring:message code='ezWebFolder.t254'/></span></a></li>

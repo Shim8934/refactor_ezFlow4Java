@@ -1341,11 +1341,12 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdName = resBrdVO.getBrdNm2();
 		}
 		
-		startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-		endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+		// 2019-01-15 김민성 - 자원관리 - 자원관리 예약 시간 조회 12시간->24시간제로 변경
+		//startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd hh:mm:ss", "");
+		//endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd hh:mm:ss", "");
 
-		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
-		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
+		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd hh:mm:ss", "yyyy-M-d H:mm", "");
+		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd hh:mm:ss", "yyyy-M-d H:mm", "");
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("editor", editor);

@@ -225,12 +225,14 @@
 		    		url : "/ezSchedule/scheduleDelGroup.do",
 		    		success: function(text){
 		    			alert(count + "<spring:message code='ezSchedule.t256' />");
-			            window.location.reload(false);		    				    			
+			            window.location.reload(false);
 		    		},
 		    		error: function(err){
 		    			alert("<spring:message code='ezSchedule.t255' />");
 		    		}
 		        });
+		        
+		        parent.frames["left"].groupRefresh();
 		    }
 					
 		    function show_groupinfo() {

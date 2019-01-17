@@ -58,20 +58,10 @@
 	            	buttonImageOnly: true
 	        	});
 	        	
-	        	if (uploadSDate.split(" ")[0].split("-")[1] == 1) {
-	        		tempSMonth = 11;
-	        	} else {
-	        		tempSMonth = uploadSDate.split(" ")[0].split("-")[1] - 1;
-	        	}
-	        	
-	        	if (uploadEDate.split(" ")[0].split("-")[1] == 1) {
-	        		tempEMonth = 11;
-	        	} else {
-	        		tempEMonth = uploadEDate.split(" ")[0].split("-")[1] - 1;
-	        	}
-	        	
-	        	var NowDate = new Date(uploadSDate.split(" ")[0].split("-")[0], tempSMonth, uploadSDate.split(" ")[0].split("-")[2]);
-	        	var NowDate2 = new Date(uploadEDate.split(" ")[0].split("-")[0], tempEMonth, uploadEDate.split(" ")[0].split("-")[2]);
+	        	var uploadSDateSplit = uploadSDate.split(" ")[0].split("-");
+	        	var uploadEDateSplit = uploadEDate.split(" ")[0].split("-");
+	        	var NowDate = new Date(uploadSDateSplit[0], uploadSDateSplit[1]-1, uploadSDateSplit[2]);
+	        	var NowDate2 = new Date(uploadEDateSplit[0], uploadEDateSplit[1]-1, uploadEDateSplit[2]);
 	        	
 	        	$("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
 	        	$("#Sdatepicker").datepicker('setDate', NowDate);
@@ -451,7 +441,7 @@
             	<tr> <!----------- 설문 응답자 범위(전체/선정) --------------> 
 	                <th><spring:message code='ezQuestion.t250' /></th> 
     	            <td>
-        	            <select style="WIDTH: 100px; FONT-FAMILY: '<spring:message code='ezQuestion.t105' />'" onchange="return set_Target_onchange()" name="set_Target" id="set_Target">
+        	            <select name="setTarget" id="set_Target" onchange="return set_Target_onchange()">
         	            	<c:choose> 
         	            		<c:when test="${qstUserPermissionVO.responseRange == '0'}">
                 	        		<option value="0" selected="selected"><spring:message code='ezQuestion.t251' /></option> 
@@ -464,7 +454,7 @@
                         	</c:choose>
                     	</select> 
                     	<c:if test="${resultYN != 'true' }">
-                    		<a id="aLinkbtn" class="imgbtn"> <span id="aLink" onclick='menu_SelectRange()'> <spring:message code='ezQuestion.t253'/></span></a>
+                    		<a id="aLinkbtn" class="imgbtn imgbck"> <span id="aLink" onclick='menu_SelectRange()'> <spring:message code='ezQuestion.t253'/></span></a>
                     	</c:if>
                     	
                 	</td> 
@@ -475,7 +465,7 @@
         	    </tr>
             	<tr>    <!----------- 설문취지 ------------------> 
 	                <th><spring:message code='ezQuestion.t257' /></th> 
-    	            <td><textarea name="txtContent" id="txtContent" style="WIDTH: 100%; FONT-FAMILY: '<spring:message code='ezQuestion.t105' />';margin:2px 0px" rows="10" cols=""><c:out value = '${qstUserPollItemVO.content}' /></textarea></td> 
+    	            <td><textarea name="txtContent" id="txtContent" style="WIDTH: 100%; padding:0px; resize:none; overflow:auto; margin:2px 0px" rows="10" cols="" maxlength="127"><c:out value = '${qstUserPollItemVO.content}' /></textarea></td> 
         	    </tr> 
         	</table> 
         	<div class="btnpositionJsp">
@@ -496,7 +486,7 @@
             	<input type="hidden" name="item_no2" id="item_no2" value="${qstUserPollItemVO.itemNo}" />        
             	<input type="hidden" name="hidEndDate" id="hidEndDate" value="${pollEndDate}" />
             	<input type="hidden" name="hidTarget" id="hidTarget" value="${qstUserPermissionVO.responseRange}" /> 
-            	<input type="hidden" name="select_YN" id="select_YN" />
+            	<input type="hidden" name="selectYN" id="select_YN" />
             	<input type="hidden" name="RangeXMLStr" id="RangeXMLStr" value="${rangeXML }" />
         	</div>
 		</form> 

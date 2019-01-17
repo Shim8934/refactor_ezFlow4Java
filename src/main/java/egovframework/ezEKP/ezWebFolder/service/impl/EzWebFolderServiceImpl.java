@@ -4,6 +4,10 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,30 +15,31 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Locale;
+import java.util.ListIterator;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.zip.ZipEntry;
-
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -45,6 +50,10 @@ import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
+import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO;
+import egovframework.ezEKP.ezWebFolder.vo.DuplicateInfoVO.Type;
 import egovframework.ezEKP.ezWebFolder.vo.FileLogVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileTypeVO;
 import egovframework.ezEKP.ezWebFolder.vo.FileVO;
@@ -73,6 +82,12 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	private EzWebFolderService_m ezWebFolderService_m;
 	
 	@Autowired
+	private EzWebFolderService_y ezWebFolderService_y;
+
+	@Autowired
+	private EzWebfolderUtil webfolderUtil;
+
+	@Autowired
 	private EzCommonService ezCommonService;
 	
 	@Autowired
@@ -80,6 +95,9 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private ServletContext servletContext;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderServiceImpl.class);
 	
@@ -169,6 +187,17 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		map.put("tenantId", tenantId);
 		ezWebFolderDAO.moveFile(map);
 	}
+	
+	@Override
+	public void moveRenameFile(String fileId, String folderId, String newFileName, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fileId",   fileId);
+		map.put("folderId", folderId);
+		map.put("newFileName", newFileName);
+		map.put("tenantId", tenantId);
+		
+		ezWebFolderDAO.moveRenameFile(map);
+	}
 
 	@Override
 	public String getFileLogSequence(int tenantId) throws Exception {
@@ -179,6 +208,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 
 	@Override
 	public FolderVO getFolderByFolderId(String folderId, String offset, int tenantId) throws Exception {
+		logger.debug("getFolderByFolderId " + folderId);
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("folderId", folderId);
 		map.put("offset",   commonUtil.getMinuteUTC(offset));
@@ -291,6 +321,41 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		ezWebFolderDAO.updateFolderUseStatus(map);
 		//Update status for all sub folders
 		ezWebFolderDAO.updateSubFolderUseStatus(map);
+	}
+
+	@Override
+	public List<DuplicateInfoVO> getAllDuplicateInfo(String fileName, String targetFolderId, String offset, int tenantId) throws Exception {
+		Map<String, Object> sqlParams = new HashMap<>();
+		
+		sqlParams.put("fileName", fileName);
+		sqlParams.put("targetFolderId", targetFolderId);
+		sqlParams.put("offset", commonUtil.getMinuteUTC(offset));
+		sqlParams.put("tenantId", tenantId);
+		
+		return ezWebFolderDAO.getAllDuplicateInfo(sqlParams);
+	}
+	
+	@Override
+	public List<DuplicateInfoVO> getAllDuplicateInfo(DuplicateInfoVO.Type originElementType, String originElementId, String targetFolderId, String offset, int tenantId) throws Exception {
+		return getAllDuplicateInfoForRename(originElementType, originElementId, null, targetFolderId, offset, tenantId);
+	}
+
+	@Override
+	public List<DuplicateInfoVO> getAllDuplicateInfoForRename(DuplicateInfoVO.Type originElementType, String originElementId, String newName, String targetFolderId, String offset, int tenantId) throws Exception {
+		Map<String, Object> sqlParams = new HashMap<>();
+
+		sqlParams.put("targetFolderId", targetFolderId);
+		sqlParams.put("offset", commonUtil.getMinuteUTC(offset));
+		sqlParams.put("tenantId", tenantId);
+		// nullable
+		sqlParams.put("newName", newName);
+		sqlParams.put("originElementId", originElementId);
+
+		if (originElementType == DuplicateInfoVO.Type.FILE) {
+			return ezWebFolderDAO.getAllDuplicateInfoForFile(sqlParams);
+		}
+
+		return ezWebFolderDAO.getAllDuplicateInfoForFolder(sqlParams);
 	}
 
 	@Override
@@ -716,7 +781,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		folderPath                 = folderPath.substring(1, folderPath.length() - 1);
 		String originalPath        = getFolderPath(folderPath.split("\\|"), userInfo.getPrimary(), tenantId);
 		
-		if (((JSONObject)nameArray.get(0)).get("originalFilename") != null && StringUtils.isNotBlank((String) ((JSONObject)nameArray.get(0)).get("originalFilename"))) {
+		if (StringUtils.isNotBlank((String) ((JSONObject)nameArray.get(0)).get("originalFilename"))) {
 			for (int i = 0; i < cnt; i++) {
 				String _pFileName = (String)((JSONObject)nameArray.get(i)).get("originalFilename");
 				
@@ -747,14 +812,14 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			fileSize[i]    = multiFileLists.get(i).getSize();
 			int dotPos     = pFileName[i].lastIndexOf(".");
 			String extend  = dotPos == -1 ? ".none" : pFileName[i].substring(dotPos + 1);
-			String newName = UUID.randomUUID().toString() + "." + extend;
+			String newName = webfolderUtil.generateFilePath(extend);
 			
 			if (extend.length() >= 10) {
-				extend = ".etc";
+				extend = "etc";
 			}
 			
-			if (useExtension.toLowerCase().indexOf(extend.toLowerCase()) != -1 || useExtension.equals("*")) {
-				writeUploadedFile(multiFileLists.get(i), newName, pDirPath);
+			if (useExtension.toLowerCase().contains(extend.toLowerCase()) || useExtension.equals("*")) {
+				writeUploadedFile(multiFileLists.get(i), pDirPath + newName);
 				FileTypeVO fileType = getFileTypeByFileExt(extend.toLowerCase(), tenantId);
 				
 				if (fileType == null) {
@@ -1030,6 +1095,34 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		}
 	}
 	
+	@Override
+	public void deleteSelectedFilesFolders (String[] fileIDList, String[] folderIDList ,LoginVO userInfo) throws Exception {
+		String userName1 = userInfo.getDisplayName1();
+		String userName2 = userInfo.getDisplayName2();
+		String companyId = userInfo.getCompanyID();
+		int tenantId     = userInfo.getTenantId();
+		String offset    = userInfo.getOffset();
+		String userId    = userInfo.getId();
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date                  = new Date();
+		String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		
+		if (!fileIDList[0].equals("-1")) {
+			for (int i = 0; i < fileIDList.length; i++) {
+				FileVO fileVO = getFileByFileId(fileIDList[i], offset, tenantId);
+				
+				//ezWebFolderService.deleteFileByFileId(fileIDList[i], loginSimpleVO.getTenantId());
+				updateFileUseStatus(userId, fileIDList[i], timeUTC, tenantId);
+				saveLog("R", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
+			}
+		}
+		if (!folderIDList[0].equals("-1")) {
+			for ( int i = 0; i < folderIDList.length; i++ ) {
+				ezWebFolderService_y.deleteSubFldAFile(folderIDList[i], tenantId, companyId, userId, timeUTC);
+			}
+		}
+	}
+	
 	public String getWebFolderDirPath(int tenantId) {
 		return commonUtil.getUploadPath("upload_webfolder.ROOT", tenantId) + commonUtil.separator;
 	}
@@ -1091,61 +1184,152 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		return Integer.toString(currentMaxLogId);
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, Locale locale, String realPath, LoginVO userInfo) throws Exception {
-		String[] fileArr  = fileList.split(",");
-		String userName1  = userInfo.getDisplayName1();
-		String userName2  = userInfo.getDisplayName2();
-		String companyId  = userInfo.getCompanyID();
-		String userId     = userInfo.getId();
-		String offset     = userInfo.getOffset();
-		String primary    = userInfo.getPrimary();
-		int tenantId      = userInfo.getTenantId();
-		JSONObject result = new JSONObject();
-		int totalFiles    = fileArr.length;
-		fileList          = "'" + fileList + "'";
-		fileList          = fileList.replace(",", "','");
+	public JSONObject moveFiles(String folderId, String fileList, String mode, String privileges, LoginVO userInfo, boolean isOverwritable) throws Exception {
+		// 기존 파일 이동
+		return moveFiles(folderId, fileList, null, mode, privileges, userInfo, isOverwritable);
+	}
+	
+	@Override
+	public JSONObject moveFiles(String folderId, String fileListStr, List<String> nameList, String mode, String privileges, LoginVO userInfo, boolean isOverwritable) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+
+		String userName1 = userInfo.getDisplayName1();
+		String userName2 = userInfo.getDisplayName2();
+		String companyId = userInfo.getCompanyID();
+		String userId = userInfo.getId();
+		String offset = userInfo.getOffset();
+		String primary = userInfo.getPrimary();
+		int tenantId = userInfo.getTenantId();
+		String filesForQuery = ("'" + fileListStr + "'").replace(",", "','");
 		
-		if (fileArr.length == 0) {
+		String realPath = servletContext.getRealPath("");
+		
+		// id 배열에서 vo 리스트로 변경
+		String[] fileIdArray = fileListStr.split(",");
+		List<FileVO> fileList = new ArrayList<>(fileIdArray.length);
+		
+		for (String fileId : fileIdArray) {
+			fileList.add(getFileByFileId(fileId, offset, tenantId));
+		}
+		
+		int totalFiles = fileList.size();
+		boolean useRename = nameList != null;
+		
+		// nameList 변수는 널 허용이지만, nameList 크기랑 fileIdList 크기가 다르면 파라미터 에러 반환
+		if (totalFiles == 0 || (useRename && totalFiles != nameList.size())) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
-			return result;
+			
+			return new JSONObject(result);
 		}
 		
-		if (mode.equals("move")) {
-			//Check privileges
-			if (!privileges.equals("normal")) {
-				//move files
-				for (String fileId : fileArr) {
-					FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
-					moveFile(fileId, folderId, tenantId);
-					saveLog("MV", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
-				}
+		// 파일 중복 처리
+		List<DuplicateInfoVO> duplicateList = new ArrayList<>();
+		List<DuplicateInfoVO> overwriteList = new ArrayList<>();
+
+		boolean isMove = mode.equals("move");
+		
+		// move 타입이고, 어드민이 아닐 때 자기 파일인지 확인
+		if (isMove && privileges.equals("normal") && checkFilesOwner(userId, filesForQuery, tenantId) != totalFiles) {
+			logger.debug("Privileges!");
+			result.put("status", "error");
+			result.put("code", 4);
+			
+			return new JSONObject(result);
+		}
+		
+		// 중복되지 않은 정상 파일 리스트
+		List<FileVO> normalFileList = new ArrayList<>(fileList);
+		ListIterator<FileVO> normalFileIterator = normalFileList.listIterator();
+		
+		// 반복문을 돌면서 중복되는 파일을 걸러냄
+		while (normalFileIterator.hasNext()) {
+			int index = normalFileIterator.nextIndex();
+			FileVO file = normalFileIterator.next();
+			
+			// 이름바꾸기를 사용한다면 새 이름으로 설정해줌
+			if (useRename) {
+				// 확장자 붙이기
+				file.setFileName(nameList.get(index) +  "." + file.getFileExt());
 			}
-			else {
-				int count = checkFilesOwner(userId, fileList, tenantId);
-				
-				if (totalFiles == count) {
-					//move files
-					for (String fileId : fileArr) {
-						FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
-						moveFile(fileId, folderId, tenantId);
-						saveLog("MV", companyId, offset, userId, userName1, userName2, fileVO.getFileName(), fileVO.getFileSize(), fileVO.getFileExt(), fileVO.getFileTypeName(), tenantId);
-					}
+			
+			// 새 이름(useRename)이나, 기존 이름으로 중복 정보를 쿼리
+			Optional<DuplicateInfoVO> firstInfo = getAllDuplicateInfoForRename(Type.FILE, file.getFileId(), file.getFileName(), folderId, offset, tenantId)
+					.stream()
+					.findFirst();
+
+			// 중복되는 게 있다면
+			if (firstInfo.isPresent()) {
+				DuplicateInfoVO info = firstInfo.get();
+				// 파일 리스트에서 삭제
+				normalFileIterator.remove();
+
+				// 덮어쓰기가 가능한 파일은 덮어쓰기 리스트에 추가
+				if (isOverwritable && info.isAllFiles()) {
+					overwriteList.add(info);
 				} else {
-					logger.debug("Privileges!");
-					result.put("status", "error");
-					result.put("code", 4);
-					return result;
+					// 중복 리스트에 추가
+					duplicateList.add(info);
 				}
 			}
 		}
-		else {
+		
+		// 덮어쓰기 파일은 따로 처리
+		for (DuplicateInfoVO info : overwriteList) {
+			FileVO newFile = getFileByFileId(info.getNewId(), offset, tenantId);
+			FileVO oldFile = getFileByFileId(info.getOldId(), offset, tenantId);
+			
+			// update_date 업데이트
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String currentTimeUTC = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
+			
+			oldFile.setUpdateDate(currentTimeUTC);
+
+			// db 부터 업데이트
+			updateFileName(oldFile.getFileId(), oldFile.getFileName(), currentTimeUTC, tenantId);
+			
+			// nio gazuaaaaa!!!!!
+			Path sourcePath = Paths.get(servletContext.getRealPath(newFile.getFilePath()));
+			Path destPath = Paths.get(servletContext.getRealPath(oldFile.getFilePath()));
+
+			// copy file
+			Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
+			
+			// move 라면 원본 파일 삭제
+			if (isMove) {
+				// use status 부터 T로 바꾸고
+				updateFileUseStatus(userId, newFile.getFileId(), currentTimeUTC, tenantId);
+				// 영구삭제
+				ezWebFolderService_m.permanetDeleteSelectedFiles(new String[] {newFile.getFileId()}, new String[0], userInfo, realPath, "");
+			}
+			
+			saveLog("WR", companyId, offset, userId, userName1, userName2, oldFile.getFileName(), oldFile.getFileSize(), oldFile.getFileExt(), oldFile.getFileTypeName(), tenantId);
+		}
+		
+		// 중복되지 않은 정상 파일에 대한  move 또는 copy 작업
+		if (isMove) {
+			for (FileVO file : normalFileList) {
+				if (useRename) {
+					// 새 이름으로 이동
+					moveRenameFile(file.getFileId(), folderId, file.getFileName(), tenantId);
+				} else {
+					// 기존 이름으로 이동
+					moveFile(file.getFileId(), folderId, tenantId);
+				}
+				
+				saveLog("MV", companyId, offset, userId, userName1, userName2, file.getFileName(), file.getFileSize(), file.getFileExt(), file.getFileTypeName(), tenantId);
+			}
+		} else if (fileList.size() > 0) {
+			// 중복된게 있으면 filesForQuery 갱신
+			if (duplicateList.size() > 0) {
+				filesForQuery = "'" + String.join("', '", fileList.stream().map(FileVO::getFileName).toArray(String[]::new)) + "'";
+			}
+			
 			//copy files
 			//Check upload conditions
-			double totalUploadSize      = getTotalFilesSize(fileList, tenantId);
+			double totalUploadSize = getTotalFilesSize(filesForQuery, tenantId);
 			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
 			
 			double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
@@ -1155,15 +1339,15 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				logger.debug("Not enough storage to move/copy these files!");
 				result.put("status", "error");
 				result.put("code", 4);
-				return result;
+				
+				return new JSONObject(result);
 			}
 			
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			Date date                  = new Date();
 			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 			
-			for (String fileId : fileArr) {
-				FileVO fileVO = getFileByFileId(fileId, offset, tenantId);
+			for (FileVO fileVO : normalFileList) {
 				fileVO.setFolderId(folderId);
 				fileVO.setFileId(getMaxFileID(tenantId));
 				fileVO.setCreateDate(timeUTC);
@@ -1176,7 +1360,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				String fileName = fileVO.getFileName();
 				int dotPos      = fileName.lastIndexOf(".");
 				String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
-				String newName  = UUID.randomUUID().toString() + "." + extend;
+				String newName  = webfolderUtil.generateFilePath(extend);
 				String newPath  = getWebFolderDirPath(userInfo.getTenantId()) + newName;
 				File srcFile    = new File(realPath + fileVO.getFilePath());
 				File destFile   = new File(realPath  + newPath);
@@ -1192,10 +1376,89 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			}
 		}
 		
+		if (isOverwritable || duplicateList.isEmpty()) {
+			result.put("code", 0);
+		} else {
+			result.put("code", 8);
+			result.put("duplicateInfoArray", duplicateList);
+		}
+		
+		result.put("status", "ok");
+		
+		return new JSONObject(result);
+	}
+	
+
+	@Override
+	public JSONObject moveFolders(String folderList, String destFolderId, String mode, String privileges, LoginVO userInfo) throws Exception {
+		Map<String, Object> result = new HashMap<>();
+		List<DuplicateInfoVO> duplicateInfoList = new ArrayList<>();
+		List<Object> errorList = new ArrayList<>();
+
 		result.put("status", "ok");
 		result.put("code", 0);
-		
-		return result;
+
+		if (folderList == null || folderList.isEmpty()) {
+			return new JSONObject(result);
+		}
+
+		String[] folderIdList = folderList.split(",");
+
+		String offset = userInfo.getOffset();
+		int tenantId = userInfo.getTenantId();
+		int code;
+
+		forStatement: for (String folderId : folderIdList) {
+			// 이미 중복된 이름의 폴더라면 중복 리스트에 넣기 및 건너뛰기
+			if (duplicateInfoList.addAll(getAllDuplicateInfo(Type.DIRECTORY, folderId, destFolderId, offset, tenantId))) {
+				continue;
+			}
+
+			FolderVO folder = getFolderByFolderId(folderId, offset, tenantId);
+
+			process: {
+				FolderVO destFolder = getFolderByFolderId(destFolderId, offset, tenantId);
+
+				// 같은 폴더인지는 js 단에서 처리하니까 상관 없을듯
+				// Check copy/move conditions
+				// if (folder.getFolderUpper().equals(destFolderId)) {
+				// code = 4;
+				// break trial;
+				// }
+
+				int pos = destFolder.getFolderPath().indexOf(folder.getFolderPath());
+
+				if (pos != -1) {
+					code = 5;
+					break process;
+				}
+
+				String realPath = servletContext.getRealPath("");
+				ezWebFolderAdminService.moveCompanyFolder(folder, destFolder, mode, realPath, userInfo);
+
+				continue forStatement;
+			}
+
+			// 에러 처리
+			Map<String, Object> errorMap = new HashMap<>();
+
+			errorMap.put("folder", folder);
+			errorMap.put("status", "error");
+			errorMap.put("code", code);
+
+			errorList.add(errorMap);
+		}
+
+		if (errorList.size() > 0) {
+			result.put("folderErrorArray", errorList);
+		}
+
+		if (duplicateInfoList.size() > 0) {
+			result.put("duplicateInfoArray", duplicateInfoList);
+			result.put("code", 8);
+		}
+
+		return new JSONObject(result);
 	}
 
 	@Override

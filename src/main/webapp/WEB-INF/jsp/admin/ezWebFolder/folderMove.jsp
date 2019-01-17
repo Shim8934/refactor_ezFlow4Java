@@ -271,6 +271,9 @@
 				case 7:
 					alert("<spring:message code='ezWebFolder.t250'/>");
 					break;
+				case 8:
+					alert("<spring:message code='webfolder.duplicate.foldermanage.error'/>");
+					break;
 			}
 		}
 		
