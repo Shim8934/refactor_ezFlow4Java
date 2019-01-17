@@ -167,7 +167,9 @@
 		            var reStartMinute = reStartDate.split(" ")[1].split(":")[1];
 		            var reEndMinute = reEndDate.split(" ")[1].split(":")[1];
 	
-		            if (Number(reStartHour) < 12) {
+		            if (Number(reStartHour) == 0)
+	                    reStartHour = 12;
+		            /* if (Number(reStartHour) < 12) {
 		                repeatinfo += "" + strLang246 + " ";
 	
 		                if (Number(reStartHour) == 0)
@@ -178,11 +180,13 @@
 	
 		                if (Number(reStartHour) > 12)
 		                    reStartHour = Number(reStartHour) - 12;
-		            }
+		            } */
 	
 		            repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";
 	
-		            if (Number(reEndHour) < 12) {
+		            if (Number(reEndHour) == 0)
+	                    reEndHour = 12;
+		            /* if (Number(reEndHour) < 12) {
 		                repeatinfo += "" + strLang246 + " ";
 	
 		                if (Number(reEndHour) == 0)
@@ -193,7 +197,7 @@
 	
 		                if (Number(reEndHour) > 12)
 		                    reEndHour = Number(reEndHour) - 12;
-		            }
+		            } */
 	
 		            repeatinfo += reEndHour + ":" + reEndMinute;
 		        }
