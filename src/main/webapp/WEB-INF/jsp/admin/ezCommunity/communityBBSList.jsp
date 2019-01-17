@@ -285,9 +285,11 @@
 					</c:when>
 				</c:choose>
 				
+				<%-- 목록 버튼 안보이게 주석처리
 				<c:if test="${keyword != '' }">
 					<li><span onclick="btn_list('${bName}')"><spring:message code = 'ezCommunity.t168' /></span></li>
 				</c:if>
+				 --%>
 				
   			</ul>
 		</div>
@@ -299,8 +301,8 @@
 		<table class="content">
 			<form name="page">
 				<tr>
-					<th style="background-color: #f1f3f5; border: 1px solid #f1f3f5;"><spring:message code = 'ezCommunity.t28' /></th>
-					<td style="border: 1px solid #f1f3f5;">
+					<th style="background-color: #f1f3f5; border: 1px solid #e2e3e6;"><spring:message code = 'ezCommunity.t28' /></th>
+					<td style="border: 1px solid #e2e3e6;">
 						<select name="s_radio" style="vertical-align: middle; height: 22px;">
 							<option value="title" selected><spring:message code = 'ezCommunity.t124' /></option>
 							<%-- <option value="titleContent"><spring:message code = 'ezCommunity.t169' /></option> --%>
@@ -315,7 +317,7 @@
 		</table>
 		
 		<div id="contentlist">
-			<table class="mainlist" style="width:100%;margin-top:5px">
+			<table class="mainlist" style="width:100%;margin-top: 10px">
 				<span id="idSpan">${idSpanValue}</span>
 			</table>
 		</div>
