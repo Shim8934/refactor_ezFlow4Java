@@ -381,11 +381,8 @@
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA5>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA6>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DISPLAYNAME")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("JOBID")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA6>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA7>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("COMPANY")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA7>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "</CELL></ROW>";
 	                    }
 	                    LISTVIEWDATA = LISTVIEWDATA + "</ROWS></LISTVIEWDATA>";

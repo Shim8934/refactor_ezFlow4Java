@@ -378,11 +378,8 @@
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA5>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA6>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DISPLAYNAME")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("JOBID")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA6>";
-	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA7>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("COMPANY")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA7>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "</CELL></ROW>";
 	                    }
 	                    LISTVIEWDATA = LISTVIEWDATA + "</ROWS></LISTVIEWDATA>";
@@ -748,11 +745,9 @@
 		                alert("<spring:message code='ezOrgan.t249' />");
 		                return;
 		            }
-		            
-// 		            var titleName = document.getElementById("txt_TitleName").value.trim();
+
 		            
  					if (jobTitle.trim() == "") {
-// 						document.getElementById("txt_TitleName").focus();
 						alert("<spring:message code='ezOrgan.kyj07' />");
 						return;
 					}
@@ -771,7 +766,6 @@
 		            
 		            if (bFlag) {
 		                alert(strLang25);
-// 		                pAddFlag = true;
 		            } else {
 		            	var compName = new Array();
 				        $.ajax({
@@ -781,7 +775,6 @@
 				        	async : false,
 				        	data : {displayName : dept[0]},
 				        	success : function(data){
-				        		console.log(data);
 				        		compName = data.split(":");
 				        	}
 				        });
