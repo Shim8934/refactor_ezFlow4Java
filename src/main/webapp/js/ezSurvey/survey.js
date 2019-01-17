@@ -2638,7 +2638,6 @@ var SurveyCreate     = function() {
 		prevQsArea.html("");
 		
 		var qstnList = SurveyCreate.getQs();
-		
 		if (step == 4) {
 			var qstInf = SurveyCreate.getInfo();
 			confirmSurveyInfo(qstInf);

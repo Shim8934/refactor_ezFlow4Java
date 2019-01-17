@@ -738,7 +738,7 @@
 	</select>
 	
 	<select id="EzSurveyDAO.getAllOptionsOfSurvey" resultMap="optionVO">
-		select * from tbl_survey_option where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId# order by question_id asc, levels asc
+		select * from tbl_survey_option where survey_id = #surveyId# and company_id = #companyId# and tenant_id = #tenantId# order by question_id asc, levels asc, column_level asc, row_level asc 
 	</select>
 	
 	<delete id="EzSurveyDAO.deleteSurveyOptions" parameterClass="SurveyVO">
