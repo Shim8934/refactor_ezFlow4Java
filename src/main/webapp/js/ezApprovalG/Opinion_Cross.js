@@ -252,7 +252,7 @@ function CheckOpinionExist() {
             btn_OpinionAdd.textContent = strLang389;
         }
         else {
-        	document.getElementById("bbtn_OpinionCancel").style.display = "";
+//        	document.getElementById("bbtn_OpinionCancel").style.display = "";
             for (var i = 0 ; i < pTotalRowsLen ; i++) {
                 if (pUserID == trim_Cross(GetAttribute(pTotalRows[i], "DATA2"))) {
                 	document.getElementById("btn_OpinionAdd").textContent = strLang390;
