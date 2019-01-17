@@ -36,8 +36,6 @@
 			}
 			.mainlist a.link:hover {
 				font-weight: bold;
-				font-size: 1.1em;
-				text-decoration: none;
 			}
 	    </style>
 	    
@@ -325,7 +323,7 @@
 			function useAnnualHistory (obj) {
 				var userId = $(obj).closest("tr").attr("userid");
 				var url = "/admin/ezAttitude/useAnnualHistoryPop.do?userId=" + userId + "&year=" + searchYear + "&companyId=" + pCompanyId;
-				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(685, 500));
+				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(665, 535));
 			}
 	    </script>
 	</head>
