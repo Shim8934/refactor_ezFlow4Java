@@ -471,6 +471,8 @@
 			
 			//검색 버튼 클릭시 이벤트
 		    function search() {
+				CurPage = 1;
+				
 				if ($('#startDatepicker').val() == "" && $('#endDatepicker').val() == "" && $('#searchKeyword').val() == "") {
  					alert("<spring:message code='ezOrgan.0hun04' />");
  					return ;
