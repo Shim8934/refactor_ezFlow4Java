@@ -1,8 +1,8 @@
 .skinList {margin-left:-38px;list-style:none;}
 .skinList li {float:left;margin:5px;}
-.skins {position:relative;width:110px;height:44px;text-align:center;border:1px solid #cecece;cursor:pointer;}
+.skins {position:relative;width:110px;height:44px;text-align:center;border:2px solid #cecece;cursor:pointer;}
 .skinImages {display:inline-block;position:relative;width:100%;height:100%; border:1px solid #cecece;}
-.checked {background-color:#edf7ff;border:1px solid #2196f3;}
+.checked {background-color:#edf7ff;border:2px solid #2196f3;}
 .skinPopup {width:500px;height:500px;position:absolute;background:rgba(0,0,0,0.4);border-radius:30px;top:100px;left:150px;}
 .skinDivTop {display:inline-block;float:right;width:40px;margin-top:15px;}
 .skinPopImg {width:400px;height:400px;position:relative;top:50px;left:45px;}
@@ -15,7 +15,7 @@
 .popup_type2{background:url(/images/admin/popup_bg03.png) #ffd161 top right no-repeat;}
 .popup_type3{background:url(/images/admin/popup_bg04.png) #CCC top right no-repeat;}
 
-.popup_notice{height:100%;padding:20px;display:inline-block;position:absolute;}
+.popup_notice{height:100%;padding:20px;}
 .popup_type0{background:url(/images/admin/popup_bg01.png) #0078fe top right no-repeat;}
 .popup_type1{background:url(/images/admin/popup_bg02.png) #ffb4b4 top right no-repeat;}
 .popup_type2{background:url(/images/admin/popup_bg03.png) #ffd161 top right no-repeat;}
@@ -39,7 +39,7 @@
 .popup_notice .popup_noticeLayout .notice_btn .btn_checkbox{float:left; cursor:pointer;padding:0px;}
 .popup_notice .popup_noticeLayout .notice_btn .btn_checkbox label.name_type0{color:#FFF;}
 .popup_notice .popup_noticeLayout .notice_btn .btn_checkbox .inp_noticeCheck{width:13px; height:13px; margin:-2px 0px 0px 0px; padding:0; vertical-align:middle; overflow:hidden;}
-.popup_notice .notice_btnClose{width:24px; height:24px; background:url(/images/admin/noMenu.png) no-repeat; cursor:pointer;position:absolute;margin:0;right:-7px;background-color:white;top:-9px;border-radius:12px;}
+.popup_notice .notice_btnClose{width:30px; height:30px; background:url(/images/webfolder/close.png) no-repeat; cursor:pointer;position:absolute;margin:0;right:-11px;top:-8px;border-radius:12px;}
 /* .popup_notice .notice_btnClose.close_type0 {background:url(/images/admin/noMenu.png) no-repeat;}
 .popup_notice .notice_btnClose.close_type1 {background:url(/images/admin/noMenu.png) no-repeat;}
 .popup_notice .notice_btnClose.close_type2 {background:url(/images/admin/noMenu.png) no-repeat;}

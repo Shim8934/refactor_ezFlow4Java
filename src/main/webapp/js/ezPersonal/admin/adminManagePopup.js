@@ -367,12 +367,12 @@ var add_popup = function() {
 
 	if (browserIE) {
 		if(pNoneActiveX == "YES") {
-			window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=650,width=820,top=" + pTop + ",left=" + pLeft, "");
+			window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=660,width=637,top=" + pTop + ",left=" + pLeft, "");
 		} else {
-			window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=650,width=820,top=" + pTop + ",left=" + pLeft, "");
+			window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=660,width=637,top=" + pTop + ",left=" + pLeft, "");
 		}
 	} else {
-		window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=650,width=820,top=" + pTop + ",left=" + pLeft, "");
+		window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&flag=add", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=660,width=637,top=" + pTop + ",left=" + pLeft, "");
 	}
 }
 
@@ -404,9 +404,9 @@ var mod_popup = function() {
 	var compid = document.getElementById("ListCompany").value;
 
 	if (CrossYN()) {
-		window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popupList + "&flag=mod", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=730,width=820,top=" + pTop + ",left=" + pLeft, "");
+		window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popupList + "&flag=mod", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=660,width=637,top=" + pTop + ",left=" + pLeft, "");
 	} else {
-		window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popupList + "&flag=mod", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=730,width=820,top=" + pTop + ",left=" + pLeft, "");
+		window.open("/admin/ezPersonal/addPopupCK.do?companyID=" + compid + "&itemSeq=" + popupList + "&flag=mod", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=660,width=637,top=" + pTop + ",left=" + pLeft, "");
 	} 
 	popupList = "";
 }
@@ -551,7 +551,10 @@ function setPreview(previewNum) {
 	var PreviewRayerH = doc.getElementById("PreviewRayerH");
 	var contentlistH = doc.getElementById("contentlist");
 	var previewmail_bar_h = doc.getElementById("previewmail_bar_h");
-
+	var porContent_RayerH = doc.getElementById("PreContent_RayerH");
+	var frameDiv = doc.getElementById("frameDiv");
+	var preview_area = doc.getElementById("preview_area");
+	
 	switch(previewNum) {
 	case 0 :
 		previewH.style.display = "none";
@@ -562,20 +565,24 @@ function setPreview(previewNum) {
 		if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
 			previewmail_bar_h.style.float = "left";
 		} 
+		
 		doc.getElementById("contentlist").style.height = conlistH + "px";
-		mainView.style.width = "60%";
-		previewH.style.width = "40%";
+		mainView.style.width = "63%";
+		previewH.style.width = "37%";
 		previewH.style.height = conlistH + 47 + "px";
 		previewH.style.display = "";
 		previewmail_bar_h.style.height = conlistH + 47 + "px";
 		PreviewRayerH.style.display = "";
-		//if(itemseq!=0) {
-		doc.getElementById("ifrmPreViewH").style.display = "";
-		//}
+		
+		/*doc.getElementById("ifrmPreViewH").style.display = "";
 		doc.getElementById("ifrmPreViewH").style.height = conlistH + 47 + "px";
 		if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
 			doc.getElementById("ifrmPreViewH").style.height = conH + 20 + "px";
-		} 
+		} */
+		
+		porContent_RayerH.style.height = conlistH + 47 + "px";
+		frameDiv.style.height = conlistH - 5 + "px";
+		preview_area.style.height = conlistH - 5 + "px";
 		break;
 	}
 
@@ -590,24 +597,31 @@ function showPreview(isPreview, itemseq) {
 	var doc = window.document;
 
 	if(itemseq == 0) {
-		doc.getElementById('Preview_HeaderH').style.display ="none";
-		doc.getElementById("ifrmPreViewH").style.display = "none";
+		doc.getElementById('Preview_HeaderH').style.visibility ="hidden";
+		//doc.getElementById("ifrmPreViewH").style.display = "none";
+		doc.getElementById("ifrmPreViewH").style.height = "96%";
+		doc.getElementById("ifrmPreViewH").style.width = "600px";
+		doc.getElementById("ifrmPreViewH").src = "/blank_kr.htm";
+		
+		setTimeout(function(){
+			ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = strLanghyh9
+		}, 500);
 	} else {
 		if(isPreview == 2) {
 			// 세로 모드
 			var itemSeqTitle = $("#"+itemseq)[0].parentNode.parentNode.children[2].innerHTML;
 			var itemSeqSDate = $("#"+itemseq)[0].parentNode.parentNode.children[3].innerHTML;
-			doc.getElementById('Preview_HeaderH').style.display ="inline-block";
+			doc.getElementById('Preview_HeaderH').style.visibility ="";
 			doc.getElementById('Preview_HeaderH').title = itemSeqTitle;
 			doc.getElementById('PreH_sub_subject').innerHTML = itemSeqTitle;
 			doc.getElementById('PreH_date').innerHTML = itemSeqSDate;
 			PrevViewFormH.itemSeq.value = itemseq;
 			PrevViewFormH.submit();
 			var conlistH = conH
-			doc.getElementById("ifrmPreViewH").style.height = conlistH + 11 + "px";
+			/*doc.getElementById("").style.height = conlistH + 11 + "px";
 			if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
 				doc.getElementById("ifrmPreViewH").style.height = conH - 20 + "px";
-			} 
+			}*/ 
 		} 
 	}
 }
@@ -765,17 +779,20 @@ function windowResize() {
 	if(isPreview == 0) {
 		doc.getElementById("contentlist").style.height = height + "px";
 		doc.getElementById("contentlist").style.overflow = "auto";
-		if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
+		/*if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
 			doc.getElementById("ifrmPreViewH").style.height = conH - 20 + "px";
-		}
+		}*/
 	} else if ( isPreview == 2) {
 		doc.getElementById("contentlist").style.height = height + "px";
 		doc.getElementById("contentlist").style.overflow = "auto";
 		doc.getElementById("previewH").style.height = height + 41 + "px";
 		doc.getElementById("previewmail_bar_h").style.height = height + 47 + "px";
-		doc.getElementById("ifrmPreViewH").style.height = height + 11 + "px";
+		doc.getElementById("PreContent_RayerH").style.height = height + 47 + "px";
+		doc.getElementById("frameDiv").style.height = height - 5 + "px";
+		doc.getElementById("preview_area").style.height = height - 5 + "px";
+		/*doc.getElementById("ifrmPreViewH").style.height = height + 11 + "px";
 		if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
 			doc.getElementById("ifrmPreViewH").style.height = conH - 20 + "px";
-		}
+		}*/
 	}
 }

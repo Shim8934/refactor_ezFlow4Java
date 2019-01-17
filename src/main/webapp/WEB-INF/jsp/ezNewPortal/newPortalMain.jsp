@@ -35,6 +35,8 @@
 	 			padding:2px 2px;
 	 			border:1px solid #ffffff;
 			}
+			
+			.popup_notice{height:100%;padding:20px;display:inline-block;position:absolute;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";

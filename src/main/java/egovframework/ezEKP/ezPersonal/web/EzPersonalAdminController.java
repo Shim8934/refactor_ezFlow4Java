@@ -852,8 +852,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			// &quot의 경우 FE에서 string을 감쌀 때 쌍따옴표를 사용하고 있기 때문에 따옴표로 변경
 			vo.setContent(vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\'").replace("&apos;", "\'"));
 		} else {
-			vo.setWidth(300);
-			vo.setHeight(350);
+			vo.setWidth(600);
+			vo.setHeight(600);
 		}
 		
 		model.addAttribute("langPrimary", langPrimary);
@@ -944,6 +944,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("user", userInfo.getId());
 		model.addAttribute("flag", flag);
 		model.addAttribute("skinValue", vo.getSkinValue());
+		model.addAttribute("wHeight", vo.getHeight());
+		model.addAttribute("wWidth", vo.getWidth());
 		
 		logger.debug("showPopup ended");
 		return "admin/ezPersonal/personalShowPopup";

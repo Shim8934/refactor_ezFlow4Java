@@ -458,7 +458,7 @@
 				<td id="skinView" style="padding:3px; height:40px">
 					<ul class="skinList" id ="skinList">
 						<li>
-							<div class="skins" id="skin0">
+							<div class="skins checked" id="skin0">
 								<div class="skinImg">
 									<span class="skinImages bg01"></span>
 								</div>
@@ -490,7 +490,7 @@
 			</tr>
 			<tr>
 				<th><spring:message code = 'ezPersonal.t155' /></th>
-				<td id="addPopEditor" style="padding:3px; height:350px">
+				<td id="addPopEditor" style="padding:3px; height:355px">
 					<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0px; height:100%; width:100%; overflow:auto;border:none; margin-bottom:-3px;"></iframe>
 				</td>
 			</tr>

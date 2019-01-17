@@ -26,6 +26,7 @@
 				margin-bottom:8px;
 				line-height:36px;
 		    }
+		    .popup_notice .notice_btnClose {right:8px;top:8px;}
 		</style>
 		
 		<script type="text/javascript">
@@ -34,7 +35,12 @@
 			var skinValue = "<c:out value = '${skinValue}' />";
 			
 			window.onload = function () {
-				//setPopupSkin(); 
+				var parentElement = parent.document.getElementById("ifrmPreViewH");
+				
+				if (parentElement != null) {
+					parentElement.style.height = "<c:out value = '${wHeight}'/>px";
+					parentElement.style.width = "<c:out value = '${wWidth}'/>px";
+				}
 			}
 			
 			$(document).ready(function() {
@@ -87,6 +93,9 @@
 	</head>
 	<body class = "popup_notice popup_type${skinValue}">
 		<!--  popup 해더 사이즈 : 33px;	bottom 사이즈 : 49px;본문 내용 위아래 여백 : 54px;	총 height 사이즈 : 136px; -->
+		<c:if test = "${flag ne 'preview' }" >
+			<p class="notice_btnClose close_type${skinValue}" onclick='window.close()' ><span ></span></p>
+		</c:if> 
 		<form style="height:100%;">
 		<div class="popup_noticeLayout">
 			<dl class="popup_noticeTitle">
@@ -99,7 +108,6 @@
 						<p class="btn_checkbox">
 							<input type="checkbox" name="checkbox" class="inp_noticeCheck" id="inp_noticeCheck" onClick="closepopup()" /> 
 							<label class="name_type${skinValue }" for="inp_noticeCheck"><spring:message code = 'ezPersonal.t267' /></label></p>
-						<p class="notice_btnClose close_type${skinValue}"><span onclick=window.close() ></span></p>
 						</div>
 				</c:if> 
 		</div>

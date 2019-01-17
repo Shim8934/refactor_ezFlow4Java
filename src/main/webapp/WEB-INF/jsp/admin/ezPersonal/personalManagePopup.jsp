@@ -52,7 +52,7 @@
 
 				getPopupConfig();
 				makelist();
-				setFucntion()
+				setFucntion();
 				windowResize();
 			});
 
@@ -60,6 +60,9 @@
 				windowResize();
 			});
 		</script>
+		<style type="text/css">
+			#frameDiv {overflow:auto;}
+		</style>
 	</head>
 	<body class = "mainbody">
 		<xml id="listviewheader" style ="display:none">
@@ -122,7 +125,7 @@
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			</script>
 
-			<div class="mainView" id="mainView" style="width:60%;float:left">
+			<div class="mainView" id="mainView" style="width:63%;float:left">
 				<div id="contentlist" style="width:100%; overflow: auto;">
 					<table class="mainlist" style="width:100%;">
 						<div id=AccessList style ="width:100%;"></div>
@@ -132,16 +135,16 @@
 				<div id="tblPageRayer"></div>
 			</div>
 			
-			<div class="previewH" id="previewH" style="width:40%; float:right;">
-				<span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top;  margin-left:0px;">
-					<span id="previewmail_bar_h" class="previewmail_bar_h" style="display: inline-block; border: 1px solid #e5e5e5; border-top:0px !important; border-bottom:0px !important;">
+			<div class="previewH" id="previewH" style="width:37%; overflow:auto;">
+				<div id="PreviewRayerH" style="border:0px solid red; height:100%; overflow:hidden; vertical-align:top;  margin-left:0px;">
+					<span id="previewmail_bar_h" class="previewmail_bar_h" style="display: inline-block; border: 1px solid #e5e5e5; border-top:0px !important; border-bottom:0px !important;float:left;">
 						<p class="hbar_dotted" style="width:5px">
 						</p>
 					</span>
-					<span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue; width:39%;">
-						<span style="width: 100%; height: 100px; display: block;">
+					<div id="PreContent_RayerH" style="position: absolute; border: 0px solid blue; width:620px;display:inline-block;height:100%;">
+						<div id="preview_area" style="width: 100%; display: block;">
 							<span class="previewmail_info" style="display: block; width: 100%; border-top: 1px solid #e8e8e8; ">
-								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
+								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; visibility:hidden;">
 									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 10px 0px 0px 0px; height: 36px; line-height: 37px;">
 										<span class="icon_btn" style="margin-left:13px;"><span onclick="showPopupPage();" style="cursor: pointer; padding-right: 5px;">
 											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" style="position:absolute; margin-top:-6px;" class="title_blodtxt"></span></span>
@@ -149,10 +152,12 @@
 									</p>
 								</div>
 							</span>
-							<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 97%; height: 100%; border: solid 0px green; display: inline-block; padding:10px;"></iframe>
-						</span>
-					</span>
-				</span>
+							<div id="frameDiv">
+								<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="border: solid 0px green; padding:10px;width:600px;height:96%;"></iframe>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</form>
 		

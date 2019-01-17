@@ -90,6 +90,7 @@
 					//window.open(menuUrl, 'main', '');
 					// 클릭하면 창닫기.
 					subMenuClickEvent('off', menuUrl);
+					notice_all_close();
 				});
 			});
 			
@@ -410,7 +411,7 @@
 			var toggleMenu = document.getElementById('toggleMenu').children;
 			toggleMenu.forEach(function (item, index) {
 				var menuUrl = newPortalTopMenu.menuListObj['menu_' + item.id].menuUrl;
-				console.log(menuUrl);
+				
 				item.addEventListener('click', function () {
 					subMenuClickEvent('off', menuUrl);
 					notice_all_close();
@@ -626,12 +627,39 @@
 		
 		var getNotiPopup = function () {
 			var notiList = JSON.parse('${popupNotiList}');
+			var position0Count = 0;
+			var position1Count = 0;
+			var position2Count = 0;
+			var position3Count = 0;
+			var position4Count = 0;
+			var position5Count = 0;
 			
 			if (notiList != null && notiList.length != 0) {
 				for (var i = 0; i < notiList.length; i++) {
 					var notiInfo = notiList[i];
-					var index = i;
+					var index = 0;
+					var wPosition = notiInfo.position;
+					
+					if (wPosition == 0) {
+						index = ++position0Count;
+					} else if (wPosition == 1) {
+						index = ++position1Count;
+					} else if (wPosition == 2) {
+						index = ++position2Count;
+					} else if (wPosition == 3) {
+						index = ++position3Count;
+					} else if (wPosition == 4) {
+						index = ++position4Count;
+					} else if (wPosition == 5) {
+						index = ++position5Count;
+					} else if (wPosition == 6) {
+						index = ++position6Count;
+					} else {
+						idex = i;
+					}
+					
 					openNotiPopup(notiInfo.itemSeq, notiInfo.width, notiInfo.height, notiInfo.position, index);
+					
 				}
 			}
 			
@@ -642,25 +670,25 @@
 		    var wVertical, wHorizontal;
 		    
 			if(wPosition == 0) {
-		        wVertical = Math.floor(screen.height/2) - (wHeight/2) + (index*10); 
+		        wVertical = Math.floor(parent.window.innerHeight/2) - (wHeight/2) - 56 + (index*10); 
 		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
 		    } else if(wPosition == 1) {
 		        wVertical = 100 + (index*10); 
 		        wHorizontal = 100 + (index*10);
 		    } else if(wPosition == 2) {
-		        wVertical = screen.height - wHeight - 100 + (index*10); 
+		        wVertical = parent.window.innerHeight - wHeight - 100 + (index*10); 
 		        wHorizontal = 100 + (index*10);
 		    } else if(wPosition == 3) {
 		        wVertical = 100 + (index*10); 
 		        wHorizontal = screen.width - wWidth - 100 + (index*10);
 		    } else if(wPosition == 4) {
-		        wVertical = screen.height - wHeight - 100 + (index*10); 
+		        wVertical = parent.window.innerHeight - wHeight - 100 + (index*10); 
 		        wHorizontal = screen.width - wWidth - 100 + (index*10);
 		    } else if(wPosition == 5) {
 		        wVertical = 100 + (index*10); 
 		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
 		    } else if(wPosition == 6) {
-		        wVertical = screen.height - wHeight - 100 - (index*10); 
+		        wVertical = parent.window.innerHeight - wHeight - 100 - (index*10); 
 		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
 		    } else {
 		        wVertical = 0 + (index*10); 
@@ -766,8 +794,8 @@
 		    		parent.document.getElementsByTagName("body")[0].appendChild(popupDiv);
 		    		//$("#popupArea").append(resultHTML);
 		    		
-		    		parent.document.getElementById("popup" + popup_number).style.height = wHeight + "px";
-		    		parent.document.getElementById("popup" + popup_number).style.width = wWidth + "px";
+		    		parent.document.getElementById("popup" + popup_number).style.height = wHeight - 40 + "px";
+		    		parent.document.getElementById("popup" + popup_number).style.width = wWidth - 40 + "px";
 		    		parent.document.getElementById("popup" + popup_number).style.left = wLeft + "px";
 		    		parent.document.getElementById("popup" + popup_number).style.top = wTop + "px";
 		    		parent.document.getElementById("popup" + popup_number).style.zIndex = index + 1;
@@ -780,6 +808,7 @@
 		    		});
 					
 					parent.$("#popup" + popup_number).draggable({
+						containment : "body",
 						cancel : ".popup_noticeList",
 						scroll: false 
 					});
@@ -834,7 +863,6 @@
 		
 		var notice_all_close = function () {
 			var popupList = parent.document.getElementsByClassName("popup_notice");
-			var popupListCount = popupList.length;
 			
 			for (var i = 0; i < popupListCount; i++) {
 				var popupId = popupList[0].id; 
