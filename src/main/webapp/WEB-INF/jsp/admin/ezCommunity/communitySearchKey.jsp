@@ -556,8 +556,8 @@
 			
 			<table class="content" style="margin: 10px 0px;">
 				<tr>
-					<th>검색조건</th>
-					<td>
+					<th style="background-color: #f1f3f5; border: 1px solid #f1f3f5;">검색조건</th>
+					<td style="border: 1px solid #f1f3f5;">
 						<span id="idSpan" class="idSpan">${idSpanValue}</span>
 						
 						<select id="QuerySelect" name="QuerySelect" style="vertical-align: middle; height: 22px;">
