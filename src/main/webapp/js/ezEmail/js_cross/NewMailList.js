@@ -919,7 +919,9 @@ function GetListInfo(HeaderObject, ContentObject) {
     GetList_HTTP.send(xmlpara);
     GetListInfo_HeaderObject = HeaderObject;
     GetListInfo_ContentObject = ContentObject;
-    ShowMailProgress();
+    if (!importExportMode) {
+    	ShowMailProgress();
+    }
 }
 var p_ListorderType_SUB;
 var p_ListOrderby_SUB;
@@ -972,7 +974,10 @@ function GetListInfo_SUB(HeaderObject, ContentObject) {
     GetList_HTTP_SUB.send(xmlpara);
     GetListInfo_HeaderObject = HeaderObject;
     GetListInfo_ContentObject = ContentObject;
-    ShowMailProgress();
+    
+    if (!importExportMode) {
+    	ShowMailProgress();
+    }
 }
 
 function GetListIevent_ongetxmlcomplete() {
@@ -1003,7 +1008,9 @@ function GetListIevent_ongetxmlcomplete() {
             
             isScrollMailList();
             
-            HiddenMailProgress();
+            if (!importExportMode) {
+            	HiddenMailProgress();
+            }
            /* if (typeof (searchMode) != "undefined") {
             	searchMode = false;
             }*/
@@ -1050,7 +1057,9 @@ function GetListIevent_ongetxmlcomplete_SUB() {
     if (GetList_HTTP_SUB != null && GetList_HTTP_SUB.readyState == 4) {
         if (GetList_HTTP_SUB.status >= 200 && GetList_HTTP_SUB.status < 300) {
             MakeListInfoHTML_SUB(GetListInfo_HeaderObject, GetListInfo_ContentObject);
-            HiddenMailProgress();
+            if (!importExportMode) {
+            	HiddenMailProgress();
+            }
             try { p_ListorderValue = pGroupListClickObject.getAttribute("mode"); } catch (e) { }
             GetList_HTTP_SUB = null;
         }
