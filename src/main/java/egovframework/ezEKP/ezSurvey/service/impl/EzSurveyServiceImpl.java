@@ -599,6 +599,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		ezSurveyDAO.deleteSurveyUsers(survey);
 		
 		//Update survey
+		survey.setUpdateMode(0);
 		ezSurveyDAO.updateSurveyItem(survey);
 	}
 	
@@ -767,8 +768,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				survey.setModifyFlag(1);
 				survey.setUpdateDate(timeUTC);
 				survey.setUpdateUser(userInfo.getId());
+				survey.setUpdateMode(1);
 				
-				ezSurveyDAO.updateSurveyItemFlag(survey);
+				ezSurveyDAO.updateSurveyItem(survey);
 			}
 		}
 		
@@ -1074,7 +1076,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			survey.setModifyFlag(0);
 			survey.setUpdateDate(timeUTC);
 			survey.setUpdateUser(userInfo.getId());
-			ezSurveyDAO.updateSurveyItemFlag(survey);
+			survey.setUpdateMode(1);
+			ezSurveyDAO.updateSurveyItem(survey);
 		}
 		
 		result.put("status", "ok");
@@ -1194,8 +1197,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		if (survey.getResponseFlag() == 0) {
 			//Change survey response flag
 			survey.setResponseFlag(1);
-			survey.setUpdateDate(timeUTC);
-			ezSurveyDAO.updateSurveyItemFlag(survey);
+			survey.setUpdateMode(2);
+			ezSurveyDAO.updateSurveyItem(survey);
 		}
 		
 		result.put("status", "ok");

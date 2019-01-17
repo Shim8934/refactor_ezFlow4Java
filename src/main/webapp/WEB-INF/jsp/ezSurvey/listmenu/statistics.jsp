@@ -67,9 +67,6 @@
 			var surveyStatistic   = ${data};
 			var questionStatistic = ${questions};
 			
-			//console.log(surveyStatistic);
-			console.log(questionStatistic);
-			
 			startStatistic(questionStatistic);
 			
 			function startStatistic(questions) {
@@ -745,13 +742,14 @@
 			function closeAllPopups() {if(userWindow)  {userWindow.close();}}
 			
 			function getMtrDataSet(question) {
-				var options    = question["option"];
-				var responses  = question["responses"];
- 				var rows       = [];
-				var cols       = [];
-				var rowLabels  = [];
-				var dataSetArr = [];
-				var dataSetObj = {};
+				var options     = question["option"];
+				var responses   = question["responses"];
+ 				var rows        = [];
+				var cols        = [];
+				var rowLabels   = [];
+				var dataSetArr  = [];
+				var dataSetObj  = {};
+				var maxLabelLen = 0;
 				
 				for (var i = 0; i < options.length; i++) {
 					if (options[i]["colLevel"] == -1) {
@@ -766,6 +764,10 @@
 				cols.sort(function(colA, colB) {return colA["colLevel"] - colA["colLevel"]});
 				
 				for (var j = 0; j < rows.length; j++) {
+					if (rows[j]["content"].length > maxLabelLen) {
+						maxLabelLen = rows[j]["content"].length;
+					}
+					
 					rowLabels.push(rows[j]["content"]);
 				}
 				
@@ -790,50 +792,63 @@
 					dataset["borderWidth"]      = 2;
 					dataSetArr.push(dataset);
 				}
-				 
+				
+				var minLabelWidth        = maxLabelLen * 10 > cols.length * 40 ? maxLabelLen * 10 : cols.length * 40;
 				dataSetObj["labels"]     = rowLabels;
 				dataSetObj["dataSetArr"] = dataSetArr;
-				dataSetObj["width"]      = cols.length * rows.length * 40;
+				dataSetObj["width"]      = minLabelWidth * rows.length;
 				
 				return dataSetObj;
 			}
 			
 			function getSliderDataSet(question) {
-				var responses  = question['responses'];
-				var options    = question['option'];
-				var startPoint = parseInt(options[0]['content']);
-				var endPoint   = parseInt(options[1]['content']);
-				var unitArr    = [];
-				var dataSetArr = [];
-				var dataSetObj = {};
+				var responses   = question['responses'];
+				var options     = question['option'];
+				var startPoint  = parseInt(options[0]['content']);
+				var endPoint    = parseInt(options[1]['content']);
+				var unitArr     = [];
+				var dataSetArr  = [];
+				var dataSetObj  = {};
+				var maxLabelLen = 0;
 				
 				for (var i = startPoint; i < endPoint + 1; i++) {
-					unitArr.push(i + "");
+					var unitlabel = i + "";
+					if (unitlabel.length > maxLabelLen) {
+						maxLabelLen = unitlabel.length;
+					}
+					unitArr.push(unitlabel);
 					var unitRes    = responses.filter(function(res) {return res["sliderValue"] == i;});
 					var unitResCnt = unitRes && unitRes.length > 0 ? unitRes.length : 0;
 					dataSetArr.push(unitResCnt);
 				}
 				
+				var minLabelWidth        = maxLabelLen * 10 > 40 ? maxLabelLen * 10 : 40;
 				dataSetObj["labels"]     = unitArr;
 				dataSetObj["dataSetArr"] = dataSetArr;
-				dataSetObj["width"]      = (endPoint - startPoint + 1) * 40;
+				dataSetObj["width"]      = (endPoint - startPoint + 1) * minLabelWidth;
 				
 				return dataSetObj;
 			}
 			
 			function getRankingDataSet(question) {
-				var responses  = question["responses"];
-				var options    = question["option"];
-				var rowLabels  = [];
-				var dataSetArr = [];
-				var dataSetObj = {};
-				var optionLen  = options.length;
+				var responses   = question["responses"];
+				var options     = question["option"];
+				var rowLabels   = [];
+				var dataSetArr  = [];
+				var dataSetObj  = {};
+				var optionLen   = options.length;
+				var maxLabelLen = 0;
 				
 				for (var i = 0; i < optionLen; i++) {
 					var rank         = i + 1;
+					var rankLabel    = rank + "";
 					var dataset      = {};
 					var colData      = [];
 					dataset["label"] = options[i]["content"];
+					
+					if (rankLabel.length > maxLabelLen) {
+						maxLabelLen = rankLabel.length;
+					}
 					
 					for (var j = 0; j < optionLen; j++) {
 						var rowId = options[j]["optionId"];
@@ -848,13 +863,14 @@
 					dataset["backgroundColor"]  = colors[i];
 					dataset["hoverBorderWidth"] = 8;
 					dataset["borderWidth"]      = 2;
-					rowLabels.push(rank + "");
+					rowLabels.push(rankLabel);
 					dataSetArr.push(dataset);
 				}
 				
+				var minLabelWidth        = maxLabelLen * 10 > optionLen * 40 ? maxLabelLen * 10 : optionLen * 40;
 				dataSetObj["labels"]     = rowLabels;
 				dataSetObj["dataSetArr"] = dataSetArr;
-				dataSetObj["width"]      = optionLen * optionLen * 40;
+				dataSetObj["width"]      = optionLen * minLabelWidth;
 				
 				return dataSetObj;
 			}
