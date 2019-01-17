@@ -29,8 +29,17 @@ public class SurveyVO {
 	private int draftFlag;
 	private int responseFlag;
 	private int totalUser;
+	private int updateMode;
 	private List<SurveyParticipantVO> userList;
 	private List<AttachVO> attachList;
+	
+	public int getUpdateMode() {
+		return updateMode;
+	}
+	
+	public void setUpdateMode(int updateMode) {
+		this.updateMode = updateMode;
+	}
 	
 	public int getTotalUser() {
 		return totalUser;

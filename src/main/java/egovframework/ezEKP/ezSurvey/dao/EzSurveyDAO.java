@@ -75,10 +75,6 @@ public class EzSurveyDAO extends EgovAbstractDAO {
 		update("EzSurveyDAO.updateSurveyItem", survey);
 	}
 	
-	public void updateSurveyItemFlag(SurveyVO survey) {
-		update("EzSurveyDAO.updateSurveyItemFlag", survey);
-	}
-	
 	public long getMaxSurveyId(Map<String, Object> map) {
 		return (long)select("EzSurveyDAO.getMaxSurveyId", map);
 	}
