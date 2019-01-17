@@ -854,15 +854,7 @@
 		
 		// 행렬 질문 답변 유무 체크
 		function checkMtrResponse(id, type) {
-			var requiredCnt = $("#prevQstn" + id).find("tbody tr").length;
 			var checkedCnt = $("input[name^=qstn" + id + "opt]:checked").length;
-			var stop = "break";
-			 
-			if (type == 3 && checkedCnt < requiredCnt) {
-				alert(id + SurveyMessages.atLeast + requiredCnt + SurveyMessages.requiredCnt);
-				return stop;
-			}
-			
 			return checkedCnt;
 		}
 		
