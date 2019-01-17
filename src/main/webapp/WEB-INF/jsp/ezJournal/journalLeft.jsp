@@ -63,18 +63,16 @@
 	        }
 	        
 	        function writejournal() {
-	        	var tID;
+	        	var tID = window.parent.frames["right"].typeId;
 	        	
-	        	<c:if test="${not empty typeList }">
-    				<c:forEach var="item" items="${typeList}" begin="0" end="0">
-    					tID = "${item.journaltypeId}";
-    				</c:forEach>    			
-	        	
-					var feature = GetOpenPosition(820, 850);
-					var Openwin = window.open("/ezJournal/journalWrite.do?typeId=" + tID + "&mode=new", "", "width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
-					
-					Openwin.focus();
-				</c:if>	
+	        	if(!tID){
+	  				tID = "ezJournal.t05";
+	        	}
+        	
+				var feature = GetOpenPosition(820, 850);
+				var Openwin = window.open("/ezJournal/journalWrite.do?typeId=" + tID + "&mode=new", "", "width=820, height=850, status=no, toolbar=no, menubar=no, location=no, resizable=1" + feature);
+				
+				Openwin.focus();
 			}
 	        
 	        function openFolder(val01) {

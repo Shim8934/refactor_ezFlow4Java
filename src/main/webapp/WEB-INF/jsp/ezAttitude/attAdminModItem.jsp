@@ -337,7 +337,7 @@
 		        		} else if (result == "success"){
 			        		alert("<spring:message code='ezAttitude.t155'/>");
 			        		try {
-			        			window.opener.getList();
+			        			window.opener.getAttitudeCheckList();
 			        		} catch (e) {
 			        			window.opener.getAttitudeMainList();
 			        		}

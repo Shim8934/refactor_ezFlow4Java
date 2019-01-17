@@ -120,7 +120,17 @@
 			}
 			
 			function closePop() {
-				window.parent.frames["right"].closeAllPopups();
+				var rightWindow = window.parent.frames["right"];
+				var duplicateFile = rightWindow.duplicateFile;
+				
+				if (duplicateFile && duplicateFile.isProcessing()) {
+					duplicateFile.onClosePopup({
+						code: "SKIP",
+						looping: false
+					});
+				}
+				
+				rightWindow.closeAllPopups();
 			}
 		</script>
 	</head>

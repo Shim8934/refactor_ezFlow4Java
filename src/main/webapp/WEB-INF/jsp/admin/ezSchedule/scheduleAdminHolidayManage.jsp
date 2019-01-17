@@ -93,29 +93,17 @@
 		                        var isRest = result[i].isRest;
 		                        var isUse = result[i].isUse;
 		                        var useCompany = result[i].useCompany;
-		                        if (holidayDate) {
-			                        _html += "<tr style='cursor:pointer' id = '" + holidayID
+		                        	_html += "<tr style='cursor:pointer' id = '" + holidayID
 			                              + "'holidayname = '" + MakeXMLString(holidayName)
 			                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
-			                              + "'date = '" + holidayDate.substring(0,10)
-			                              + "'holidayFlag = '" + holidayFlag
+		                            	  + "'holidayFlag = '" + holidayFlag
+		                            	  + "'date = '" + holidayDate.substring(0,10)
+		                            	  + "'holidayRepeat = '" + holidayRepeat
 			                              + "'issolar = '" + isSolar
 			                              + "'isrepeat = '" + isRepeat
 			                              + "'isrest = '" + isRest
 			                              + "'company = '" + useCompany
 			                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";
-		                            } else {
-		                            	 _html += "<tr style='cursor:pointer' id = '" + holidayID
-			                              + "'holidayname = '" + MakeXMLString(holidayName)
-			                              + "'holidayname2 = '" + MakeXMLString(holidayName2)
-		                            	  + "'date = '" + holidayRepeat
-		                            	  + "'holidayFlag = '" + holidayFlag
-			                              + "'issolar = '" + isSolar
-			                              + "'isrepeat = '" + isRepeat
-			                              + "'isrest = '" + isRest
-			                              + "'company = '" + useCompany
-			                              + "' onmouseover='event_Mover(this);' onmouseout='event_Mout(this);' onclick='event_click(this);' ondblclick='event_dbclick(this);'>";	
-		                            }
 		                           
 								
 		                        if (isUse == "1") {
@@ -364,7 +352,7 @@
 			        holidayRepeat = "";
 		        } else {
 		        	holidayDate = "0000-00-00 00:00:00";
-		        	holidayRepeat = _RowObject.getAttribute("date");
+		        	holidayRepeat = _RowObject.getAttribute("holidayRepeat");
 		        }
 		        
 		        var issolar = _RowObject.getAttribute("issolar");

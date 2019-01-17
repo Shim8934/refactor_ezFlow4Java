@@ -100,6 +100,10 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		return (long) select("EzSystemAdminDAO.selectModuleSize", paramMap);
 	}
 	
+	public void deleteWebfolderLog(Map<String, Object> map) throws Exception {
+        delete("EzSystemAdminDAO.deleteWebfolderLog", map);
+    }
+
 	public void insertMultiLogintype(Map<String, Object> paramMap) throws Exception {
 		insert("EzSystemAdminDAO.insertMultiLoginType", paramMap);
 	}
@@ -107,4 +111,5 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public void updateMultiLogintype(Map<String, Object> paramMap) throws Exception {
 		insert("EzSystemAdminDAO.updateMultiLoginType", paramMap);
 	}
+
 }

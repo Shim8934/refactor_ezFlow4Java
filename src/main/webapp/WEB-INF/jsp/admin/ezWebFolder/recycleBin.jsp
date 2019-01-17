@@ -22,6 +22,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 	<script type="text/javascript">
 		var lang      = ${lang};
 		var strErr    = "<spring:message code = 'ezWebFolder.t107'/>";
@@ -416,6 +417,8 @@
 						alert("<spring:message code = 'ezWebFolder.t289'/>");
 					} else if (data.code == "4") {
 						alert("<spring:message code = 'ezWebFolder.t290'/>");
+					} else if (data.code == "8") {
+						alert("<spring:message code = 'webfolder.duplicate.restore.error'/>");
 					}
 				},
 				error : function(error) {

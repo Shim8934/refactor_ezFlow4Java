@@ -122,9 +122,15 @@
             			alert(data.reason);
             		} else if (data.code == 2) {
 	            		alert("<spring:message code='ezWebFolder.t285'/>");
-					}else if (data.code == 3) {
+					} else if (data.code == 3) {
 						alert("<spring:message code='ezWebFolder.t28'/>");
-					} 
+					} else if (data.code == 8) {
+						opener.duplicateFile.process({
+							workType: "trashMove",
+							infoArray: data.duplicateInfoArray,
+							folderId: folderId
+						});
+					}
             	},
             	error : function(error) {
             		alert(messages.strLang7 + error);

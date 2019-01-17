@@ -170,7 +170,7 @@
 <html>
 <head>
 <title>Namo CrossEditor : Admin</title>
-	<script type="text/javascript">var pe_vV="pe_LO"; </script>
+	<script type="text/javascript">var pe_vV="pe_NH"; </script>
 	<script type="text/javascript" src="../../lib/jquery-1.7.2.min.js"> </script>
 	<script type="text/javascript">var ce$=namo$.noConflict(true); </script>
 	<script type="text/javascript" src="../manage_common.js"> </script>
@@ -186,40 +186,40 @@
 
 <%@include file = "../include/top.html"%>
 
-<form method="post" id="adminSetForm" name="adminSetForm" action="manager_proc.jsp" onsubmit="return pe_bq();">
+<form method="post" id="adminSetForm" name="adminSetForm" action="manager_proc.jsp" onsubmit="return pe_W();">
 
 
 
-<div id="pe_ayG">
-	<table class="pe_uj">
+<div id="pe_avE">
+	<table class="pe_tK">
 		<tr>
-			<td class="pe_hW">
+			<td class="pe_ik">
 
 				<table id="Info">
 					<tr>
 						<td style="padding:0 0 0 10px;height:30px;text-align:left">
-						<font style="font-size:14pt;color:#3e77c1;font-weight:bold;text-decoration:none;"><span id="pe_DN"></span></font></td>
-						<td id="InfoText"><span id="pe_wc"></span></td>
+						<font style="font-size:14pt;color:#3e77c1;font-weight:bold;text-decoration:none;"><span id="pe_BQ"></span></font></td>
+						<td id="InfoText"><span id="pe_wt"></span></td>
 					</tr>
 					<tr>
-						<td colspan="2"><img id="pe_DI" src="../images/title_line.jpg" alt="" /></td>
+						<td colspan="2"><img id="pe_Dm" src="../images/title_line.jpg" alt="" /></td>
 					</tr>
 				</table>
 
-				<table class="pe_nM">
+				<table class="pe_oE">
 					<tr>
-						<td class="pe_awT">				
+						<td class="pe_avx">				
 							<ul>
-								<li class="pe_km pe_Kg"><input type="button" id="setting_base" value="" style="width:110px;height:28px;" class="pe_vb pe_fZ" /></li>
-								<li class="pe_km"><input type="button" id="setting_edit" value="" style="width:110px;height:28px;" class="pe_vb pe_fZ" /></li>
-								<li class="pe_km"><input type="button" id="setting_view" value="" style="width:110px;height:28px;" class="pe_vb pe_fZ" /></li>
-								<li class="pe_km"><input type="button" id="setting_ab" value="" style="width:110px;height:28px;" class="pe_vb pe_fZ" /></li>
+								<li class="pe_ln pe_Me"><input type="button" id="setting_base" value="" style="width:110px;height:28px;" class="pe_tw pe_hI" /></li>
+								<li class="pe_ln"><input type="button" id="setting_edit" value="" style="width:110px;height:28px;" class="pe_tw pe_hI" /></li>
+								<li class="pe_ln"><input type="button" id="setting_view" value="" style="width:110px;height:28px;" class="pe_tw pe_hI" /></li>
+								<li class="pe_ln"><input type="button" id="setting_ab" value="" style="width:110px;height:28px;" class="pe_tw pe_hI" /></li>
 							</ul>
 						
 						</td>
 					</tr>
 					<tr>
-						<td class="pe_lR pe_jt"><font style="font-size:9pt;color:#FF9F4B;font-weight:bold;"><span id="pe_ET"></span></font></td>
+						<td class="pe_mO pe_hL"><font style="font-size:9pt;color:#FF9F4B;font-weight:bold;"><span id="pe_Ja"></span></font></td>
 					</tr>
 				</table>
 
@@ -227,20 +227,20 @@
 		</tr>
 		
 		<tr>
-			<td class="pe_hW">
-				<div id="pe_aek">
-					<table class="pe_rJ">
+			<td class="pe_ik">
+				<div id="pe_acY">
+					<table class="pe_vb">
 						<tr>
 							<td>
-								<table class="pe_dS"><tr><td class="pe_hv" colspan="3"></td></tr>
+								<table class="pe_eG"><tr><td class="pe_hB" colspan="3"></td></tr>
 								</table>
 							 
-								<table class="pe_dS">
+								<table class="pe_eG">
 								
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_BY"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_BJ"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='WebServerOS' id='WebServerOS' class="inputSelectStyle">
 												<option value=''></option>
 												<option value='WINDOW' <% if(settingValue.get("WebServerOS").equals("WINDOW")) out.println("selected=\"selected\"");%>>WINDOW</option>
@@ -251,13 +251,13 @@
 									</tr>
 									
 									<tr>
-										<td class = "pe_eI" colspan="3"></td>
+										<td class = "pe_fa" colspan="3"></td>
 									</tr>
 
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_CF"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_BG"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='WebServerInfo' id='WebServerInfo' class="inputSelectStyle">
 												<option value=''></option>
 												<option value='IIS' <% if(settingValue.get("WebServerInfo").equals("IIS")) out.println("selected=\"selected\"");%>>IIS</option>
@@ -273,13 +273,13 @@
 									</tr>
 									
 									<tr>
-										<td class = "pe_eI" colspan="3"></td>
+										<td class = "pe_fa" colspan="3"></td>
 									</tr>
 									
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Bc"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_BH"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='WebLanguage' id='WebLanguage' class="inputSelectStyle">
 												<option value=''></option>
 												<option value='ASP' <% if(settingValue.get("WebLanguage").equals("ASP")) out.println("selected=\"selected\"");%>>ASP</option>
@@ -292,49 +292,49 @@
 									</tr>
 									
 									<tr>
-										<td class = "pe_eI" colspan="3"></td>
+										<td class = "pe_fa" colspan="3"></td>
 									</tr>
 									
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_yt"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
-											<input type="text" id="ImageSavePath" class="pe_kY" name="ImageSavePath" value="<%=settingValue.get("ImageSavePath")%>" /> ex) http:// www.mysite.com/image
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_zF"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
+											<input type="text" id="ImageSavePath" class="pe_jR" name="ImageSavePath" value="<%=settingValue.get("ImageSavePath")%>" /> ex) http:// www.mysite.com/image
 										</td>
 									</tr>
 									
 									<tr>
-										<td class = "pe_eI" colspan="3"></td>
+										<td class = "pe_fa" colspan="3"></td>
 									</tr>
 
 									<% if (settingValue.get("UploadFileNameType") != null){ %>
 									
-									<div id="pe_ahg">
+									<div id="pe_afc">
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Bl"></span></b></td>
-										<td class="pe_fn"></td>
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Ev"></span></b></td>
+										<td class="pe_eH"></td>
 										<td >
-											<table class="pe_dS">
+											<table class="pe_eG">
 												<tr>
-													<td class="pe_el"> &nbsp;&nbsp;
-														<input type="radio" name="encodingStyle" id="pe_QW" value="real" /><span id="pe_DE"></span>
+													<td class="pe_fN"> &nbsp;&nbsp;
+														<input type="radio" name="encodingStyle" id="pe_Qf" value="real" /><span id="pe_EC"></span>
 														<input type="hidden" id="UploadFileNameType" name="UploadFileNameType" value="" />
 													</td>
 												</tr>
 												<tr>
-													<td class = "pe_eI" colspan="3"></td>
+													<td class = "pe_fa" colspan="3"></td>
 												</tr>
 												<tr>
-													<td class="pe_el"> &nbsp;&nbsp;
-													<input type="radio" name="encodingStyle" id="pe_abX" value="trans" /><span id="pe_Dz"></span>
+													<td class="pe_fN"> &nbsp;&nbsp;
+													<input type="radio" name="encodingStyle" id="pe_afk" value="trans" /><span id="pe_EE"></span>
 													</td>
 												</tr>
 												<tr>
-													<td class = "pe_eI" colspan="3"></td>
+													<td class = "pe_fa" colspan="3"></td>
 												</tr>
 												<tr>
-													<td class="pe_el"> &nbsp;&nbsp;
-														<input type="radio" name="encodingStyle" id="pe_adJ" value="random" /><span id="pe_GH"></span>
+													<td class="pe_fN"> &nbsp;&nbsp;
+														<input type="radio" name="encodingStyle" id="pe_adT" value="random" /><span id="pe_Fy"></span>
 													</td>
 												</tr>
 											</table>
@@ -342,45 +342,45 @@
 									</tr>
 
 									<tr>
-										<td class = "pe_eI" colspan="3"></td>
+										<td class = "pe_fa" colspan="3"></td>
 									</tr>
 									</div>
 
 									<% } %>
 
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Hd"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el"> &nbsp;
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Go"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN"> &nbsp;
 											<input type="hidden" id="UploadFileSubDir" name ="UploadFileSubDir" value="<%=settingValue.get("UploadFileSubDir")%>" />
-											<input type="radio" id="pe_HO" name="pe_aam" value="true" /><label for="pe_HO"><span id="pe_HP"></span></label>&nbsp;&nbsp;
-											<input type="radio" id="pe_GT" name="pe_aam" value="false" /><label for="pe_GT"><span id="pe_Iy"></span></label>
+											<input type="radio" id="pe_Ju" name="pe_VQ" value="true" /><label for="pe_Ju"><span id="pe_Ir"></span></label>&nbsp;&nbsp;
+											<input type="radio" id="pe_JT" name="pe_VQ" value="false" /><label for="pe_JT"><span id="pe_Io"></span></label>
 										</td>
 									</tr>
 
 									<tr>
-										<td class = "pe_eI" colspan="3"></td>
+										<td class = "pe_fa" colspan="3"></td>
 									</tr>
 
 									
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_AA"></span></b></td>
-										<td class="pe_fn"></td>
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_zZ"></span></b></td>
+										<td class="pe_eH"></td>
 										<td >
-											<table class="pe_dS">
+											<table class="pe_eG">
 												<tr>
-													<td >&nbsp;&nbsp;<span id="pe_zf"></span></td>
-													<td class="pe_fn"></td>
-													<td class="pe_el"><input type="text" id="Width" name="Width" class="pe_mt" maxlength="10" value="<%=settingValue.get("Width")%>" />
+													<td >&nbsp;&nbsp;<span id="pe_zN"></span></td>
+													<td class="pe_eH"></td>
+													<td class="pe_fN"><input type="text" id="Width" name="Width" class="pe_nK" maxlength="10" value="<%=settingValue.get("Width")%>" />
 													px</td>
 												</tr>
 												<tr>
-													<td class = "pe_eI" colspan="3"></td>
+													<td class = "pe_fa" colspan="3"></td>
 												</tr>
 												<tr>
-													<td >&nbsp;&nbsp;<span id="pe_zX"></span></td>
-													<td class="pe_fn"></td>
-													<td class="pe_el"><input type="text" id="Height" name="Height" class="pe_mt" maxlength="10" value="<%=settingValue.get("Height")%>" /> px
+													<td >&nbsp;&nbsp;<span id="pe_zt"></span></td>
+													<td class="pe_eH"></td>
+													<td class="pe_fN"><input type="text" id="Height" name="Height" class="pe_nK" maxlength="10" value="<%=settingValue.get("Height")%>" /> px
 													</td>
 												</tr>	
 											</table>
@@ -388,26 +388,26 @@
 									</tr>
 								</table>
 
-								<table class="pe_dS"><tr><td class="pe_hv" colspan="3"></td></tr>
+								<table class="pe_eG"><tr><td class="pe_hB" colspan="3"></td></tr>
 								</table>
 											
 							</td>
 						</tr>
 						<tr>
-							<td class="pe_lR pe_jt"><font style="font-size:9pt;color:#FF9F4B;font-weight:bold;"><span id="pe_GF"></span></font></td>
+							<td class="pe_mO pe_hL"><font style="font-size:9pt;color:#FF9F4B;font-weight:bold;"><span id="pe_Hm"></span></font></td>
 						</tr>
 
 						<tr>
 							<td>
 						
-								<table class="pe_dS"><tr><td class="pe_hv" colspan="3"></td></tr>
+								<table class="pe_eG"><tr><td class="pe_hB" colspan="3"></td></tr>
 								</table>
 
-								<table class="pe_dS">
+								<table class="pe_eG">
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_GQ"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_FP"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='SetFocus' id='SetFocus' class="inputSelectStyle">
 												<option value='true' <% if(settingValue.get("SetFocus").equals("true")) out.println("selected=\"selected\"");%>>true</option>
 												<option value='false' <% if(settingValue.get("SetFocus").equals("false")) out.println("selected=\"selected\"");%>>false</option>
@@ -415,12 +415,12 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_GD"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_FL"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='LineHeight' id='LineHeight' class="inputSelectStyle">
 												<option value=''></option>
 												<option value='100%' <% if(settingValue.get("LineHeight").equals("100%")) out.println("selected=\"selected\"");%>>100%</option>
@@ -433,12 +433,12 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Ij"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Gs"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='UnloadWarning' id='UnloadWarning' class="inputSelectStyle">
 												<option value='false' <% if(settingValue.get("UnloadWarning").equals("false")) out.println("selected=\"selected\"");%>>false</option>
 												<option value='true' <% if(settingValue.get("UnloadWarning").equals("true")) out.println("selected=\"selected\"");%>>true</option>
@@ -446,12 +446,12 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_HG"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_FU"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='SetDebug' id='SetDebug' class="inputSelectStyle">
 												<option value='false' <% if(settingValue.get("SetDebug").equals("false")) out.println("selected=\"selected\"");%>>false</option>
 												<option value='true' <% if(settingValue.get("SetDebug").equals("true")) out.println("selected=\"selected\"");%>>true</option>
@@ -459,12 +459,12 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Fb"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_IX"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='HTMLTabByTableLock' id='HTMLTabByTableLock' class="inputSelectStyle">
 												<option value='false' <% if(settingValue.get("HTMLTabByTableLock").equals("false")) out.println("selected=\"selected\"");%>>false</option>
 												<option value='true' <% if(settingValue.get("HTMLTabByTableLock").equals("true")) out.println("selected=\"selected\"");%>>true</option>
@@ -472,12 +472,12 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Fy"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_IL"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='HTMLTabContents' id='HTMLTabContents' class="inputSelectStyle">
 												<option value='html' <% if(settingValue.get("HTMLTabContents").equals("html")) out.println("selected=\"selected\"");%>>html</option>
 												<option value='body' <% if(settingValue.get("HTMLTabContents").equals("body")) out.println("selected=\"selected\"");%>>body</option>
@@ -485,12 +485,12 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_ER"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_HF"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='AllowContentScript' id='AllowContentScript' class="inputSelectStyle">
 												<option value='true' <% if(settingValue.get("AllowContentScript").equals("true")) out.println("selected=\"selected\"");%>>true</option>
 												<option value='false' <% if(settingValue.get("AllowContentScript").equals("false")) out.println("selected=\"selected\"");%>>false</option>
@@ -498,12 +498,12 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_FA"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Hn"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='AllowContentIframe' id='AllowContentIframe' class="inputSelectStyle">
 												<option value='true' <% if(settingValue.get("AllowContentIframe").equals("true")) out.println("selected=\"selected\"");%>>true</option>
 												<option value='false' <% if(settingValue.get("AllowContentIframe").equals("false")) out.println("selected=\"selected\"");%>>false</option>
@@ -511,12 +511,12 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_FV"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Hy"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='CharSet' id='CharSet' class="inputSelectStyle">
 												<option value=''></option>
 												<option value='auto' <% if(settingValue.get("CharSet").equals("auto")) out.println("selected=\"selected\"");%>></option>
@@ -536,24 +536,24 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Bv"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
-											<input type="text" id="DocBaseURL" name="DocBaseURL" class="pe_kY" value="<%=settingValue.get("DocBaseURL")%>" /> ex) http://www.mysite.com/doc.html 
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Bv"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
+											<input type="text" id="DocBaseURL" name="DocBaseURL" class="pe_jR" value="<%=settingValue.get("DocBaseURL")%>" /> ex) http://www.mysite.com/doc.html 
 										</td>
 									</tr>
 									
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Kt"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_LK"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='ResizeBar' id='ResizeBar' class="inputSelectStyle">
 												<option value='true' <% if(settingValue.get("ResizeBar").equals("true")) out.println("selected=\"selected\"");%>>true</option>
 												<option value='false' <% if(settingValue.get("ResizeBar").equals("false")) out.println("selected=\"selected\"");%>>false</option>
@@ -561,14 +561,14 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 
 
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_LX"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Lp"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='Menu' id='Menu' class="inputSelectStyle">
 												<option value='true' <% if(settingValue.get("Menu").equals("true")) out.println("selected=\"selected\"");%>>true</option>
 												<option value='false' <% if(settingValue.get("Menu").equals("false")) out.println("selected=\"selected\"");%>>false</option>
@@ -576,12 +576,12 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Kl"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Ji"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='QuickMenu' id='QuickMenu' class="inputSelectStyle">
 												<option value='true' <% if(settingValue.get("QuickMenu").equals("true")) out.println("selected=\"selected\"");%>>true</option>
 												<option value='false' <% if(settingValue.get("QuickMenu").equals("false")) out.println("selected=\"selected\"");%>>false</option>
@@ -589,14 +589,14 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 
 
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_xe"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_xE"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='ServerUrl' id='ServerUrl' class="inputSelectStyle">
 												<option value='' <% if(settingValue.get("ServerUrl").equals("")) out.println("selected=\"selected\"");%>></option>
 												<option value='1' <% if(settingValue.get("ServerUrl").equals("1")) out.println("selected=\"selected\"");%>>domain</option>
@@ -606,13 +606,13 @@
 									</tr>
 								
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Ng"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Jz"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='DisplayLoadingBar' id='DisplayLoadingBar' class="inputSelectStyle">
 												<option value='true' <% if(settingValue.get("DisplayLoadingBar").equals("true")) out.println("selected=\"selected\"");%>>true</option>
 												<option value='false' <% if(settingValue.get("DisplayLoadingBar").equals("false")) out.println("selected=\"selected\"");%>>false</option>
@@ -620,25 +620,25 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Np"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
-											<input type="number" min="0" max="60" style="ime-mode:disabled;" id="AutoSavePeriod" name="AutoSavePeriod" class="pe_kY" value="<%=settingValue.get("AutoSavePeriod")%>" /><b><span id="pe_Hb"></span></b>&nbsp;&nbsp;<span id="pe_NA"></span>
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_IM"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
+											<input type="number" min="0" max="60" style="ime-mode:disabled;" id="AutoSavePeriod" name="AutoSavePeriod" class="pe_jR" value="<%=settingValue.get("AutoSavePeriod")%>" /><b><span id="pe_HP"></span></b>&nbsp;&nbsp;<span id="pe_Lc"></span>
 										</td>
 									</tr>
 									
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_NH"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_LS"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='HideAddImageCheckbox' id='HideAddImageCheckbox' class="inputSelectStyle">
 												<option value='true' <% if(settingValue.get("HideAddImageCheckbox").equals("true")) out.println("selected=\"selected\"");%>>true</option>
 												<option value='false' <% if(settingValue.get("HideAddImageCheckbox").equals("false") || settingValue.get("HideAddImageCheckbox").equals("")) out.println("selected=\"selected\"");%>>false</option>
@@ -646,7 +646,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									
 								</table>
@@ -656,90 +656,90 @@
 							</td>
 						</tr> 						
 						<tr>
-							<td class="pe_lR pe_jt"><font style="font-size:9pt;color:#FF9F4B;font-weight:bold;"><span id="pe_Fs"></span></font></td>
+							<td class="pe_mO pe_hL"><font style="font-size:9pt;color:#FF9F4B;font-weight:bold;"><span id="pe_Hg"></span></font></td>
 						</tr>
 
 						<tr>
 							<td>
-								<table class="pe_dS"><tr><td class="pe_hv" colspan="3"></td></tr>
+								<table class="pe_eG"><tr><td class="pe_hB" colspan="3"></td></tr>
 								</table>
 								
-								<table class="pe_dS">
+								<table class="pe_eG">
 
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_wg"><span id="pe_yl"></span></b></td>
-										<td class="pe_fn"></td>
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_vE"><span id="pe_yF"></span></b></td>
+										<td class="pe_eH"></td>
 										<td>
-											<table class="pe_dS">
+											<table class="pe_eG">
 												<input type="hidden" name="UploadImageFileExtBlockList" value="<%=settingValue.get("UploadImageFileExtBlockList")%>" />
 												<tr>
-													<td class="pe_el"><input type="checkbox" id="UploadImageFileExtBlockListChecked" <%=settingValue.get("UploadImageFileExtBlockListChecked")%>/><span id="pe_ow"></span></td>
+													<td class="pe_fN"><input type="checkbox" id="UploadImageFileExtBlockListChecked" <%=settingValue.get("UploadImageFileExtBlockListChecked")%>/><span id="pe_oD"></span></td>
 												</tr>
 												<tr>
-													<td class="pe_el"><textarea id="UploadImageFileExtBlockListTextarea" cols="70" rows="2"><%=settingValue.get("UploadImageFileExtBlockListTextarea")%></textarea><br /><span id="pe_zI"></span></td>
+													<td class="pe_fN"><textarea id="UploadImageFileExtBlockListTextarea" cols="70" rows="2"><%=settingValue.get("UploadImageFileExtBlockListTextarea")%></textarea><br /><span id="pe_AE"></span></td>
 												</tr>	
 											</table>
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_wg"></span></b></td>
-										<td class="pe_fn"></td>
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_vE"></span></b></td>
+										<td class="pe_eH"></td>
 										<td>
-											<table class="pe_dS">
+											<table class="pe_eG">
 												<input type="hidden" name="UploadFileExtBlockList" value="<%=settingValue.get("UploadFileExtBlockList")%>" />
 												<tr>
-													<td class="pe_el"><input type="checkbox" id="UploadFileExtBlockListChecked" <%=settingValue.get("UploadFileExtBlockListChecked")%>/><span id="pe_ow"></span></td>
+													<td class="pe_fN"><input type="checkbox" id="UploadFileExtBlockListChecked" <%=settingValue.get("UploadFileExtBlockListChecked")%>/><span id="pe_oD"></span></td>
 												</tr>
 												<tr>
-													<td class="pe_el"><textarea id="UploadFileExtBlockListTextarea" cols="70" rows="2"><%=settingValue.get("UploadFileExtBlockListTextarea")%></textarea><br /><span id="pe_zI"></span></td>
+													<td class="pe_fN"><textarea id="UploadFileExtBlockListTextarea" cols="70" rows="2"><%=settingValue.get("UploadFileExtBlockListTextarea")%></textarea><br /><span id="pe_AE"></span></td>
 												</tr>	
 											</table>
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_GI"></span></b></td>
-										<td class="pe_fn"></td>
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_HW"></span></b></td>
+										<td class="pe_eH"></td>
 										<td >
-											<table class="pe_dS">
+											<table class="pe_eG">
 												<input type="hidden" name="AttributeBlockList" value="<%=settingValue.get("AttributeBlockList")%>" />
 												<tr>
-													<td class="pe_el"><input type="checkbox" id="AttributeBlockListChecked" <%=settingValue.get("AttributeBlockListChecked")%>/><span id="pe_ow"></span></td>
+													<td class="pe_fN"><input type="checkbox" id="AttributeBlockListChecked" <%=settingValue.get("AttributeBlockListChecked")%>/><span id="pe_oD"></span></td>
 												</tr>
 												<tr>
-													<td class="pe_el"><textarea id="AttributeBlockListTextarea" cols="70" rows="2"><%=settingValue.get("AttributeBlockListTextarea") %></textarea><br /><span id="pe_wz"></span></td>
+													<td class="pe_fN"><textarea id="AttributeBlockListTextarea" cols="70" rows="2"><%=settingValue.get("AttributeBlockListTextarea") %></textarea><br /><span id="pe_tO"></span></td>
 												</tr>	
 											</table>
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Hu"></span></b></td>
-										<td class="pe_fn"></td>
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_GA"></span></b></td>
+										<td class="pe_eH"></td>
 										<td >
-											<table class="pe_dS">
+											<table class="pe_eG">
 												<input type="hidden" name="TagBlockList" value="<%=settingValue.get("TagBlockList")%>" />
 												<tr>
-													<td class="pe_el"><input type="checkbox" id="TagBlockListChecked" <%=settingValue.get("TagBlockListChecked")%>/><span id="pe_ow"></span></td>
+													<td class="pe_fN"><input type="checkbox" id="TagBlockListChecked" <%=settingValue.get("TagBlockListChecked")%>/><span id="pe_oD"></span></td>
 												</tr>
 												<tr>
-													<td class="pe_el"><textarea id="TagBlockListTextarea" cols="70" rows="2"><%=settingValue.get("TagBlockListTextarea") %></textarea><br /><span id="pe_wz"></span></td>
+													<td class="pe_fN"><textarea id="TagBlockListTextarea" cols="70" rows="2"><%=settingValue.get("TagBlockListTextarea") %></textarea><br /><span id="pe_tO"></span></td>
 												</tr>	
 											</table>
 										</td>
 									</tr>
 
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 								</table>
 								
@@ -751,30 +751,30 @@
 
 					</tr> 						
 						<tr>
-							<td class="pe_lR pe_jt"><font style="font-size:9pt;color:#FF9F4B;font-weight:bold;"><span id="pe_HF"></span></font></td>
+							<td class="pe_mO pe_hL"><font style="font-size:9pt;color:#FF9F4B;font-weight:bold;"><span id="pe_Gz"></span></font></td>
 						</tr>
 
 						<tr>
 							<td>
-								<table class="pe_dS"><tr><td class="pe_hv" colspan="3"></td></tr>
+								<table class="pe_eG"><tr><td class="pe_hB" colspan="3"></td></tr>
 								</table>
 								
-								<table class="pe_dS" >
+								<table class="pe_eG" >
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Ip"></span></b></td>
-										<td class="pe_fn"></td>
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Gv"></span></b></td>
+										<td class="pe_eH"></td>
 										<td>
-											<table class="pe_dS">
+											<table class="pe_eG">
 												<input type="hidden" name="Template" id="Template" value="<%=settingValue.get("Template")%>" />
 												<tr>
-													<td class="pe_el"><input type="button" id="pe_aEh" value="+" onClick="pe_W(this)"/></td>
-													<td class="pe_el">&nbsp;</td>
-													<td class="pe_el">&nbsp;</td>
+													<td class="pe_fN"><input type="button" id="pe_aMl" value="+" onClick="pe_O(this)"/></td>
+													<td class="pe_fN">&nbsp;</td>
+													<td class="pe_fN">&nbsp;</td>
 												</tr>
 												<tr style="background-color:#B2EBF4;">
-													<td class="pe_el"><b>Title</b></td>
-													<td class="pe_el"><b>URL</b></td>
-													<td class="pe_el"><b>Encoding</b></td>
+													<td class="pe_fN"><b>Title</b></td>
+													<td class="pe_fN"><b>URL</b></td>
+													<td class="pe_fN"><b>Encoding</b></td>
 												</tr>
 						
 											<%	
@@ -794,9 +794,9 @@
 
 													%>
 														<tr>
-															<td><input type="text"  name="pe_abo"  value="<%=templateName %>" style="width:100px"/></td>
-															<td><input type="text"  name="pe_agQ"  value="<%=templateUrl %>" style="width:320px"/></td>
-															<td><input type="text"  name="pe_ahk"  value="<%=templateEncoding %>" style="width:90px"/><input type="button" value="-" onclick="pe_f(this)"/></td>
+															<td><input type="text"  name="pe_VX"  value="<%=templateName %>" style="width:100px"/></td>
+															<td><input type="text"  name="pe_afW"  value="<%=templateUrl %>" style="width:320px"/></td>
+															<td><input type="text"  name="pe_ahD"  value="<%=templateEncoding %>" style="width:90px"/><input type="button" value="-" onclick="pe_J(this)"/></td>
 						
 														</tr>
 													<% 
@@ -811,7 +811,7 @@
 
 
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 								</table>
 								
@@ -829,28 +829,28 @@
 		
 
 		<tr>
-			<td class="pe_hW">
-				<div id="pe_abs">
-					<table class="pe_rJ">
+			<td class="pe_ik">
+				<div id="pe_acw">
+					<table class="pe_vb">
 						<tr>
 							<td>
-								<table class="pe_dS"><tr><td class="pe_hv" colspan="3"></td></tr>
+								<table class="pe_eG"><tr><td class="pe_hB" colspan="3"></td></tr>
 								</table>
 								
-								<table class="pe_dS">
+								<table class="pe_eG">
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Gr"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Hj"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<table>
 											<tr>
 											<td>
-											<input type="text" id="pe_Yx" class="color{hash:true,valueElement:'FontColor',pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black'}" style="width:20px;"></td>
+											<input type="text" id="pe_Vf" class="color{hash:true,valueElement:'FontColor',pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black'}" style="width:20px;"></td>
 											<td><input id="FontColor" name="FontColor" value="<%=settingValue.get("FontColor") %>"></td>
 											<td style="padding-left:0px">
 											<ul style="width:140px;">
-											<li class="pe_io">
-											<input type="button" class="pe_iT pe_fZ" value="default" style="width:80px;height:26px;" onclick="document.getElementById('pe_Yx').color.fromString('#000000');">
+											<li class="pe_iT">
+											<input type="button" class="pe_ic pe_hI" value="default" style="width:80px;height:26px;" onclick="document.getElementById('pe_Vf').color.fromString('#000000');">
 											</li>
 											</ul></td>
 											</tr>
@@ -858,104 +858,104 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Fu"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_IY"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 										<textarea name="FontSizeList" id="FontSizeList" cols="70" rows="2"><%=settingValue.get("FontSizeList") %></textarea></td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Gk"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_FT"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 										<textarea name="LineHeightList" id="LineHeightList" cols="70" rows="2"><%=settingValue.get("LineHeightList") %></textarea>
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_FM"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Fb"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<input type="text" id="IndentPaddingValue" name="IndentPaddingValue" class="inputStyleChange" maxlength="3" value="<%=settingValue.get("IndentPaddingValue") %>" style="width:30px;" /> px 
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
 										<input type="hidden" name="ReturnKeyActionBR">
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_FX"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el"><input type="checkbox" id="ReturnKeyActionBRChecked" <%=settingValue.get("ReturnKeyActionBRChecked")%>/><label for="ReturnKeyActionBR"><span id="pe_GJ"></span></label></td>
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_GJ"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN"><input type="checkbox" id="ReturnKeyActionBRChecked" <%=settingValue.get("ReturnKeyActionBRChecked")%>/><label for="ReturnKeyActionBR"><span id="pe_Fz"></span></label></td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Nv"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_JK"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<input type="text" id="DefaultFont" name="DefaultFont" class="inputStyleChange" maxlength="30" value="<%=settingValue.get("DefaultFont") %>" style="width:170px;" /> 
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_NJ"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_JG"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<input type="text" id="DefaultFontSize" name="DefaultFontSize" class="inputStyleChange" maxlength="5" value="<%=settingValue.get("DefaultFontSize") %>" style="width:30px;" />
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Ja"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Oh"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<input type="text" id="Placeholder" name="Placeholder" class="inputStyleChange" maxlength="200" value="<%=settingValue.get("Placeholder") %>" style="width:443px;" /> 
 										</td>
 									</tr>
 
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 
 
 								</table>
 
 
-								<table class="pe_dS">
+								<table class="pe_eG">
 									<tr>
-										<td class="pe_lR pe_jt"><font style="font-size:9pt;color:#FF9F4B;font-weight:bold;"><span id="pe_yl"></span></font></td>
+										<td class="pe_mO pe_hL"><font style="font-size:9pt;color:#FF9F4B;font-weight:bold;"><span id="pe_yF"></span></font></td>
 									</tr>
 
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_FJ"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Iv"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<table>
 											<tr>
 											<td>
-											<input type="text" id="pe_Yp" class="color{hash:true,valueElement:'ImgLineColor',pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black'}" style="width:20px;"></td>
+											<input type="text" id="pe_WB" class="color{hash:true,valueElement:'ImgLineColor',pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black'}" style="width:20px;"></td>
 											<td><input id="ImgLineColor" name="ImgLineColor" value="<%=settingValue.get("ImgLineColor") %>"></td>
 											<td style="padding-left:0px">
 											<ul style="width:140px;">
-											<li class="pe_io">
-											<input type="button" class="pe_iT pe_fZ" value="default" style="width:80px;height:26px;" onclick="document.getElementById('pe_Yp').color.fromString('#000000');">
+											<li class="pe_iT">
+											<input type="button" class="pe_ic pe_hI" value="default" style="width:80px;height:26px;" onclick="document.getElementById('pe_WB').color.fromString('#000000');">
 											</li>
 											</ul></td>
 											</tr>
@@ -963,33 +963,33 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 								</table>
 
 
 
-								<table class="pe_dS">				
+								<table class="pe_eG">				
 									<tr>
-										<td class="pe_lR pe_jt"><font style="font-size:9pt;color:#FF9F4B;font-weight:bold;"><span id="pe_HQ"></span></font></td>
+										<td class="pe_mO pe_hL"><font style="font-size:9pt;color:#FF9F4B;font-weight:bold;"><span id="pe_GB"></span></font></td>
 									</tr>
 
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_HC"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_ET"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<table>
 											<tr>
 											<td>
-											<input type="text" id="pe_aaU" class="color{hash:true,valueElement:'TableLineColor',pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black'}" style="width:20px;"></td>
+											<input type="text" id="pe_Vh" class="color{hash:true,valueElement:'TableLineColor',pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black'}" style="width:20px;"></td>
 											<td><input id="TableLineColor" name="TableLineColor" value="<%=settingValue.get("TableLineColor") %>"></td>
 											<td style="padding-left:0px">
 											<ul style="width:140px;">
-											<li class="pe_io">
-											<input type="button" class="pe_iT pe_fZ" value="default" style="width:80px;height:26px;" onclick="document.getElementById('pe_aaU').color.fromString('#000000');">
+											<li class="pe_iT">
+											<input type="button" class="pe_ic pe_hI" value="default" style="width:80px;height:26px;" onclick="document.getElementById('pe_Vh').color.fromString('#000000');">
 											</li>
 											</ul></td>
 											</tr>
@@ -997,21 +997,21 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Iw"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Fk"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<table>
 											<tr>
 											<td>
-											<input type="text" id="pe_aaK" class="color{hash:true,valueElement:'TableBGColor',pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black'}" style="width:20px;"></td>
+											<input type="text" id="pe_Vd" class="color{hash:true,valueElement:'TableBGColor',pickerFaceColor:'transparent',pickerFace:3,pickerBorder:0,pickerInsetColor:'black'}" style="width:20px;"></td>
 											<td><input id="TableBGColor" name="TableBGColor" value="<%=settingValue.get("TableBGColor") %>"></td>
 											<td style="padding-left:0px">
 											<ul style="width:140px;">
-											<li class="pe_io">
-											<input type="button" class="pe_iT pe_fZ" value="default" style="width:80px;height:26px;" onclick="document.getElementById('pe_aaK').color.fromString('#FFFFFF');">
+											<li class="pe_iT">
+											<input type="button" class="pe_ic pe_hI" value="default" style="width:80px;height:26px;" onclick="document.getElementById('pe_Vd').color.fromString('#FFFFFF');">
 											</li>
 											</ul></td>
 											</tr>
@@ -1019,7 +1019,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 								</table>
 
@@ -1035,124 +1035,124 @@
 		
 		
 		<tr>
-			<td class="pe_hW">
-				<div id="pe_abU">
-					<table class="pe_rJ">
+			<td class="pe_ik">
+				<div id="pe_adu">
+					<table class="pe_vb">
 						<tr>
 							<td>
-								<table class="pe_dS"><tr><td class="pe_hv" colspan="3"></td></tr>
+								<table class="pe_eG"><tr><td class="pe_hB" colspan="3"></td></tr>
 								</table>
 								 
-								<table class="pe_dS">
+								<table class="pe_eG">
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_HY"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_FW"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<% out.println(skinDirectory(fileRealFolder, (String)settingValue.get("Skin"))); %>
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Ke"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Kl"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<% out.println(iconColorSelect((String)settingValue.get("IconColor"))); %>
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Cm"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
-											<input type="text" id="Css" name="Css" class="pe_kY" value="<%=settingValue.get("Css")%>" />  ex) http://www.mysite.com/common.css 
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_DG"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
+											<input type="text" id="Css" name="Css" class="pe_jR" value="<%=settingValue.get("Css")%>" />  ex) http://www.mysite.com/common.css 
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_GP"></span></b>
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Gd"></span></b>
 											<input type="hidden" id="UserSkinColor" name="UserSkinColor" value="<%=settingValue.get("UserSkinColor")%>" />
 										</td>
 											
-										<td class="pe_fn"></td>
+										<td class="pe_eH"></td>
 										<td >
-											<table class="pe_dS">
+											<table class="pe_eG">
 												<tr>
-													<td class="pe_tD">&nbsp;&nbsp;<span id="pe_EZ"></span></td>
-													<td class="pe_fn"></td>
-													<td class="pe_el">
-														<input type="text" id="outlinecolor" name="outlinecolor" class="pe_sx" value="" />  ex) #000000 or black 
+													<td class="pe_tL">&nbsp;&nbsp;<span id="pe_FE"></span></td>
+													<td class="pe_eH"></td>
+													<td class="pe_fN">
+														<input type="text" id="outlinecolor" name="outlinecolor" class="pe_ug" value="" />  ex) #000000 or black 
 													</td>
 												</tr>
 												<tr>
-													<td class="pe_eI" colspan="3"></td>
+													<td class="pe_fa" colspan="3"></td>
 												</tr>
 												
 												<tr>
-													<td class="pe_tD">&nbsp;&nbsp;<span id="pe_Fc"></span></td>
-													<td class="pe_fn"></td>
-													<td class="pe_el">
-														<input type="text" id="innerlineColor" name="innerlineColor" class="pe_sx" value="" />
+													<td class="pe_tL">&nbsp;&nbsp;<span id="pe_Iw"></span></td>
+													<td class="pe_eH"></td>
+													<td class="pe_fN">
+														<input type="text" id="innerlineColor" name="innerlineColor" class="pe_ug" value="" />
 													</td>
 												</tr>
 												<tr>
-													<td class="pe_eI" colspan="3"></td>
+													<td class="pe_fa" colspan="3"></td>
 												</tr>
 												<tr>
-													<td class="pe_tD">&nbsp;&nbsp;<span id="pe_Gl"></span></td>
-													<td class="pe_fn"></td>
-													<td class="pe_el">
-														<input type="text" id="skinfontColor" name="skinfontColor" class="pe_sx" value="" />
+													<td class="pe_tL">&nbsp;&nbsp;<span id="pe_HZ"></span></td>
+													<td class="pe_eH"></td>
+													<td class="pe_fN">
+														<input type="text" id="skinfontColor" name="skinfontColor" class="pe_ug" value="" />
 													</td>
 												</tr>
 												<tr>
-													<td class="pe_eI" colspan="3"></td>
+													<td class="pe_fa" colspan="3"></td>
 												</tr>
 												<tr>
-													<td class="pe_tD">&nbsp;&nbsp;<span id="pe_HS"></span></td>
-													<td class="pe_fn"></td>
-													<td class="pe_el">
-														<input type="text" id="toolbarBackgroundColor" name="toolbarBackgroundColor" class="pe_sx" value="" />
+													<td class="pe_tL">&nbsp;&nbsp;<span id="pe_Gr"></span></td>
+													<td class="pe_eH"></td>
+													<td class="pe_fN">
+														<input type="text" id="toolbarBackgroundColor" name="toolbarBackgroundColor" class="pe_ug" value="" />
 													</td>
 												</tr>
 											</table>
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Ft"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_HT"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<input type="hidden" id="CreateTab" name ="CreateTab" value="<%=settingValue.get("CreateTab")%>" />
-											<input type="checkbox" id="pe_Bz" name="pe_uH" value="0" /><label for="pe_Bz"><span id="wysiwyg"></span></label>&nbsp;&nbsp;
-											<input type="checkbox" id="pe_Bi" name="pe_uH" value="1" /><label for="pe_Bi"><span id="html"></span></label>&nbsp;&nbsp;
-											<input type="checkbox" id="pe_Bq" name="pe_uH" value="2" /><label for="pe_Bq"><span id="preview"></span></label>
+											<input type="checkbox" id="pe_CE" name="pe_wV" value="0" /><label for="pe_CE"><span id="wysiwyg"></span></label>&nbsp;&nbsp;
+											<input type="checkbox" id="pe_Df" name="pe_wV" value="1" /><label for="pe_Df"><span id="html"></span></label>&nbsp;&nbsp;
+											<input type="checkbox" id="pe_Cq" name="pe_wV" value="2" /><label for="pe_Cq"><span id="preview"></span></label>
 										</td>
 									</tr>
 								</table>
 									
-								<table class="pe_dS"><tr><td class="pe_hv" colspan="3"></td></tr>
+								<table class="pe_eG"><tr><td class="pe_hB" colspan="3"></td></tr>
 								</table>
 							</td>
 						</tr>
 
 						<tr>
-							<td class="pe_lR pe_jt"><font style="font-size:9pt;color:#FF9F4B;font-weight:bold;"><span id="pe_Hi"></span></font></td>
+							<td class="pe_mO pe_hL"><font style="font-size:9pt;color:#FF9F4B;font-weight:bold;"><span id="pe_EQ"></span></font></td>
 						</tr>
 						<tr>
 							<td>
-								<table class="pe_dS"><tr><td class="pe_hv" colspan="3"></td></tr>
+								<table class="pe_eG"><tr><td class="pe_hB" colspan="3"></td></tr>
 								</table>
 									
-								<table class="pe_dS">
+								<table class="pe_eG">
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Hx"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Fv"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<select name='UserToolbar' id='UserToolbar' class="inputSelectStyle">
 												<option value='false' <% if(settingValue.get("UserToolbar").equals("false")) out.println("selected=\"selected\"");%>>false</option>
 												<option value='true' <% if(settingValue.get("UserToolbar").equals("true")) out.println("selected=\"selected\"");%>>true</option>
@@ -1173,7 +1173,7 @@
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 										
 								</table>	
@@ -1181,75 +1181,75 @@
 						</tr>			
 					</table>
 
-					<div id="pe_TW">
-						<table class="pe_nM">
+					<div id="pe_SD">
+						<table class="pe_oE">
 							<tr>
 								<td>
-									<table class="pe_dS">
+									<table class="pe_eG">
 										<tr>
-											<td class="pe_eI" colspan="5"></td>
+											<td class="pe_fa" colspan="5"></td>
 										</tr>
 										<tr>
-											<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_GN"></span></b></td>
-											<td class="pe_fn"></td>
+											<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Id"></span></b></td>
+											<td class="pe_eH"></td>
 											<td>
-												<table class="pe_dS">
+												<table class="pe_eG">
 													<tr>
-														<td class="pe_wh" >&nbsp;&nbsp;<span id="pe_Is"></span></td>
-														<td class="pe_fn"></td>
-														<td class="pe_el">
-															<input type="text" id="AdminPageUserMenuIdInput" name="AdminPageUserMenuIdInput" class="pe_kY" value="" /> 
+														<td class="pe_tz" >&nbsp;&nbsp;<span id="pe_Gu"></span></td>
+														<td class="pe_eH"></td>
+														<td class="pe_fN">
+															<input type="text" id="AdminPageUserMenuIdInput" name="AdminPageUserMenuIdInput" class="pe_jR" value="" /> 
 														</td>
 													</tr>
 													<tr>
-														<td class="pe_eI" colspan="3"></td>
+														<td class="pe_fa" colspan="3"></td>
 													</tr>
 													<tr>
-														<td class="pe_wh">&nbsp;&nbsp;<span id="pe_Ik"></span></td>
-														<td class="pe_fn"></td>
-														<td class="pe_el">
-															<input type="radio" name="AdminPageUserMenuPlayKindRadio" id="pe_IV" value="function" /><label for="pe_IV"><span id="pe_HR"></span></label>&nbsp;&nbsp;<input type="radio" name="AdminPageUserMenuPlayKindRadio" id="pe_JR" value="plugin" /><label for="pe_JR"><span id="pe_GS"></span></label>
+														<td class="pe_tz">&nbsp;&nbsp;<span id="pe_Gw"></span></td>
+														<td class="pe_eH"></td>
+														<td class="pe_fN">
+															<input type="radio" name="AdminPageUserMenuPlayKindRadio" id="pe_Ny" value="function" /><label for="pe_Ny"><span id="pe_Fs"></span></label>&nbsp;&nbsp;<input type="radio" name="AdminPageUserMenuPlayKindRadio" id="pe_NA" value="plugin" /><label for="pe_NA"><span id="pe_FO"></span></label>
 														</td>
 													</tr>
 													<tr>
-														<td class="pe_eI" colspan="3"></td>
+														<td class="pe_fa" colspan="3"></td>
 													</tr>
 													<tr>
-														<td class="pe_wh">&nbsp;&nbsp;<span id="pe_HK"></span></td>
-														<td class="pe_fn"></td>
-														<td class="pe_el" height="50px">
-															<input type="text" id="AdminPageUserMenuButtonImgPathInput" name="AdminPageUserMenuButtonImgPathInput" class="pe_kY" value="" />
+														<td class="pe_tz">&nbsp;&nbsp;<span id="pe_Gn"></span></td>
+														<td class="pe_eH"></td>
+														<td class="pe_fN" height="50px">
+															<input type="text" id="AdminPageUserMenuButtonImgPathInput" name="AdminPageUserMenuButtonImgPathInput" class="pe_jR" value="" />
 															<br/>ex) http://www.mysite.com/image/MenuIcon.jpg
 														</td>
 													</tr>
 													<tr>
-														<td class="pe_eI" colspan="3"></td>
+														<td class="pe_fa" colspan="3"></td>
 													</tr>
 													<tr>
-														<td class="pe_wh">&nbsp;&nbsp;<span id="pe_Ht"></span></td>
-														<td class="pe_fn"></td>
-														<td class="pe_el">	
-															<input type="text" id="AdminPageUserMenuTitleInput" name="AdminPageUserMenuTitleInput" class="pe_kY" value="" />
+														<td class="pe_tz">&nbsp;&nbsp;<span id="pe_Gi"></span></td>
+														<td class="pe_eH"></td>
+														<td class="pe_fN">	
+															<input type="text" id="AdminPageUserMenuTitleInput" name="AdminPageUserMenuTitleInput" class="pe_jR" value="" />
 														</td>
 													</tr>
 												</table>
 											</td>
-											<td class="pe_fn"></td>
-											<td style="text-align:center;vertical-align:middle;"><input type="button" id="pe_zP" value="" class="" style="width:60px;height:60px;"/>
+											<td class="pe_eH"></td>
+											<td style="text-align:center;vertical-align:middle;"><input type="button" id="pe_zy" value="" class="" style="width:60px;height:60px;"/>
 											</td>
 										</tr>
 										<tr>
-											<td class="pe_eI" colspan="5"></td>
+											<td class="pe_fa" colspan="5"></td>
 										</tr>
 										<tr>
-											<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Im"></span></b></td>
-											<td class="pe_fn"></td>
-											<td class="pe_el" colspan="2">
-												<div id="pe_atN">&nbsp;</div>
+											<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Fi"></span></b></td>
+											<td class="pe_eH"></td>
+											<td class="pe_fN" colspan="2">
+												<div id="pe_axy">&nbsp;</div>
 											</td>
 										</tr>
 										<tr>
-											<td class="pe_eI" colspan="5"></td>
+											<td class="pe_fa" colspan="5"></td>
 										</tr>
 									</table>	
 								</td>		
@@ -1257,40 +1257,40 @@
 						</table>
 					</div>
 		
-					<div id = "pe_dS">
+					<div id = "pe_eG">
 						
-						<table class="pe_nM">	
+						<table class="pe_oE">	
 							<tr>
-								<td id="pe_Rx" class="pe_jt">
+								<td id="pe_PQ" class="pe_hL">
 									
 									<table>
 										<tr>
-											<td id="pe_avi">
-												<span id="pe_Ff"></span>: <br>
-												<div id="pe_aig" >
-													<span id="pe_vn"></span> <br> 
-													<span id="pe_CZ"></span><br>
-													<span id="pe_xq"></span><br>
+											<td id="pe_ayz">
+												<span id="pe_HH"></span>: <br>
+												<div id="pe_alv" >
+													<span id="pe_wl"></span> <br> 
+													<span id="pe_EL"></span><br>
+													<span id="pe_xX"></span><br>
 												</div>
 											</td>
-											<td id="pe_avR">
-											<span id="pe_Gb"></span>:<br>
-												<div id="pe_aaP" ></div>
+											<td id="pe_azw">
+											<span id="pe_FJ"></span>:<br>
+												<div id="pe_Wh" ></div>
 											</td> 
 											<td valign="bottom">
 												<ul style="margin:0 auto;width:340px;">
-													<li class="pe_io">
-														<input type="button" id="spacebar" value="" class="pe_iT pe_fZ" style="width:80px;height:26px;" />
+													<li class="pe_iT">
+														<input type="button" id="spacebar" value="" class="pe_ic pe_hI" style="width:80px;height:26px;" />
 													</li>
-													<li class="pe_io"><input type="button" id="space" value="" class="pe_iT pe_fZ" style="width:68px;height:26px;"></li>
-													<li class="pe_io"><input type="button" id="enter" value="" class="pe_iT pe_fZ" style="width:66px;height:26px;"></li>
+													<li class="pe_iT"><input type="button" id="space" value="" class="pe_ic pe_hI" style="width:68px;height:26px;"></li>
+													<li class="pe_iT"><input type="button" id="enter" value="" class="pe_ic pe_hI" style="width:66px;height:26px;"></li>
 												</ul>
 											</td>
 										</tr>
 										<tr>
 											<td colspan="3">
 												<br />
-												<span id="pe_Ga"></span>
+												<span id="pe_HA"></span>
 											</td>
 										</tr>	
 									</table>							
@@ -1298,21 +1298,21 @@
 							</tr>
 							<tr>
 								<td>
-									<table class="pe_dS">
-										<tr><td class="pe_hv" colspan="3"></td></tr>
+									<table class="pe_eG">
+										<tr><td class="pe_hB" colspan="3"></td></tr>
 									</table>
 								</td>
 							</tr>
 						</table>	
 				
-						<table id="pe_ks" class="pe_nM">
+						<table id="pe_kQ" class="pe_oE">
 							
 							<tr>
-								<td id="pe_Rx" class="pe_jt">
+								<td id="pe_PQ" class="pe_hL">
 									<span id="preview"></span>:<br>
-									<div id="pe_agr"></div>
+									<div id="pe_afA"></div>
 									<br />
-									<span id="pe_Gw"></span>
+									<span id="pe_Hs"></span>
 								</td>
 							</tr>
 						</table>
@@ -1327,37 +1327,37 @@
 			</td>
 		</tr>
 		<tr>
-			<td class="pe_hW">
-				<div id="pe_acb">
-					<table class="pe_rJ">
+			<td class="pe_ik">
+				<div id="pe_adg">
+					<table class="pe_vb">
 						<tr>
 							<td>
-								<table class="pe_dS"><tr><td class="pe_hv" colspan="3"></td></tr>
+								<table class="pe_eG"><tr><td class="pe_hB" colspan="3"></td></tr>
 								</table>
 								 
-								<table class="pe_dS">
+								<table class="pe_eG">
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_EY"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
-											<input type="text" id="DocTitle" name="DocTitle" class="pe_kY" value="<%=settingValue.get("DocTitle")%>" />
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_HR"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
+											<input type="text" id="DocTitle" name="DocTitle" class="pe_jR" value="<%=settingValue.get("DocTitle")%>" />
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 									<tr>
-										<td class="pe_fo">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_FQ"></span></b></td>
-										<td class="pe_fn"></td>
-										<td class="pe_el">
+										<td class="pe_fH">&nbsp;&nbsp;&nbsp;&nbsp;<b><span id="pe_Jj"></span></b></td>
+										<td class="pe_eH"></td>
+										<td class="pe_fN">
 											<input type="hidden" id="AccessibilityOption" name ="AccessibilityOption" value="<%=settingValue.get("AccessibilityOption")%>" />
-											<input type="radio" id="pe_MA" name="pe_Dq" value="0" /><label for="pe_MA"><span id="pe_FI"></span></label>&nbsp;&nbsp;
-											<input type="radio" id="pe_Nc" name="pe_Dq" value="1" /><label for="pe_Nc"><span id="pe_Go"></span></label>&nbsp;&nbsp;
-											<input type="radio" id="pe_Om" name="pe_Dq" value="2" /><label for="pe_Om"><span id="pe_ES"></span></label>
+											<input type="radio" id="pe_ML" name="pe_Db" value="0" /><label for="pe_ML"><span id="pe_Je"></span></label>&nbsp;&nbsp;
+											<input type="radio" id="pe_Op" name="pe_Db" value="1" /><label for="pe_Op"><span id="pe_Jq"></span></label>&nbsp;&nbsp;
+											<input type="radio" id="pe_Ob" name="pe_Db" value="2" /><label for="pe_Ob"><span id="pe_Hc"></span></label>
 										</td>
 									</tr>
 									<tr>
-										<td class="pe_eI" colspan="3"></td>
+										<td class="pe_fa" colspan="3"></td>
 									</tr>
 								</table>
 							</td>
@@ -1368,14 +1368,14 @@
 		</tr>
 </table>
 
-<table class="pe_uj">
-	<tr id="pe_Pr">
-		<td id="pe_Pc">
+<table class="pe_tK">
+	<tr id="pe_Ty">
+		<td id="pe_Ue">
 			<ul style="margin:0 auto;width:170px;">
-				<li class="pe_io">
-					<input type="submit" id="pe_Ll" value="" class="pe_iT pe_fZ" style="width:66px;height:26px;" />
+				<li class="pe_iT">
+					<input type="submit" id="pe_Jc" value="" class="pe_ic pe_hI" style="width:66px;height:26px;" />
 				</li>
-				<li class="pe_io"><input type="button" id="pe_AK" value="" class="pe_iT pe_fZ" style="width:66px;height:26px;"></li>
+				<li class="pe_iT"><input type="button" id="pe_Ac" value="" class="pe_ic pe_hI" style="width:66px;height:26px;"></li>
 			</ul>
 		</td>
 	</tr>

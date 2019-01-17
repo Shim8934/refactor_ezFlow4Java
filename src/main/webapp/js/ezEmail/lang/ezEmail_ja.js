@@ -286,6 +286,7 @@ var strLangLHM17 = "このメールアドレス以外の宛先にメールを送
 var strLangLHM18 = "/blank_jp.htm";
 var strLangLHM19 = "暗号化メールを削除すると受信者も閲覧できなくなります。\n続行しますか？";
 var strLangLHM20 = "暗号化メールを移動すると\nメール閲覧および詳細情報の確認ができなくなります。\n続行しますか？";
+var strLangLHM21 = "共用配布グループ情報";
 var strLangKMS01 = "添付ファイルが";
 var strLangKMS02 = "添付フォイルのサイズが ";
 var strLangKMS03 = "メールがありません";

@@ -77,21 +77,21 @@
 				<spring:message code='main.t8' />
   			</div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-					<h2>
-						<span class="list_text" id="Organ" onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
-					</h2> 
-					<h2>
-						<span class="list_text" id="CheckAdmin" onClick="goPage(12)" style="display:inline-block;width:100%;"><spring:message code='main.t00062' /></span>
-					</h2> 
-					<h2>
-						<span class="list_text" id="Addjob" onClick="goPage(13)" style="display:inline-block;width:100%;"><spring:message code='main.t00063' /></span>
-					</h2> 
-					<h2>
-						<span class="list_text" id="JobInfo" onClick="goPage(31)" style="display:inline-block;width:100%;"><spring:message code='ezOrgan.csj01' /></span>
-					</h2> 
-					<h2>
-						<span class="list_text" onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
-					</h2>
+				<h2>
+					<span class="list_text" id="Organ" onClick="goPage(1)" style="display:inline-block;width:100%;"><spring:message code='main.t56' /></span>
+				</h2> 
+				<h2>
+					<span class="list_text" id="CheckAdmin" onClick="goPage(12)" style="display:inline-block;width:100%;"><spring:message code='main.t00062' /></span>
+				</h2> 
+				<h2>
+					<span class="list_text" id="Addjob" onClick="goPage(13)" style="display:inline-block;width:100%;"><spring:message code='main.t00063' /></span>
+				</h2> 
+				<h2>
+					<span class="list_text" id="JobInfo" onClick="goPage(31)" style="display:inline-block;width:100%;"><spring:message code='ezOrgan.csj01' /></span>
+				</h2> 
+				<h2>
+					<span class="list_text" onClick="goPage(10)" style="display:inline-block;width:100%;"><spring:message code='main.t377' /></span>
+				</h2>
 	  		</div>			
 		</div>
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;background:none rgba(0,0,0,0.5);display:none;" id="progressPanel">&nbsp;</div>

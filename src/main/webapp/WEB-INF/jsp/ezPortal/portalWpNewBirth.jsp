@@ -42,10 +42,10 @@
 	    	}
 	    	
 	    	function getbirthUserList() {
-	    		window.clearTimeout(timer);
+	    		window.clearInterval(timer);
 	    		
 	    		var request = new XMLHttpRequest();
-				request.open('POST', '/ezPersonal/mainBirthUserList.do', true);
+				request.open('POST', '/ezPersonal/mainBirthUserList.do', false);
 				request.setRequestHeader('content-type', 'application/json');
 				
 				request.onload = function() {
