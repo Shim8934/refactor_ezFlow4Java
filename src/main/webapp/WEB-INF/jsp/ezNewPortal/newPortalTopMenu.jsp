@@ -791,7 +791,7 @@
 		    		 */
 		    		 
 		    		//document.getElementById("popupArea").appendChild(popupDiv);
-		    		parent.document.getElementsByTagName("body")[0].appendChild(popupDiv);
+		    		parent.document.getElementById("noticePopupArea").appendChild(popupDiv);
 		    		//$("#popupArea").append(resultHTML);
 		    		
 		    		parent.document.getElementById("popup" + popup_number).style.height = wHeight - 40 + "px";
@@ -863,6 +863,7 @@
 		
 		var notice_all_close = function () {
 			var popupList = parent.document.getElementsByClassName("popup_notice");
+			var popupListCount = popupList.length;
 			
 			for (var i = 0; i < popupListCount; i++) {
 				var popupId = popupList[0].id; 

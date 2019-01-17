@@ -494,6 +494,13 @@
 							}
 							
 							eventSetting(portletId, usedTheme);
+							
+							var portletPlus = document.getElementById(portletId + "Portlet").querySelector(".portletPlus");
+							
+							if (portletPlus != null) {
+								portletPlus.addEventListener("click", notice_all_close);
+							}
+							
 						}
 					});
 				}(portletId, portletUrl, portletName));
