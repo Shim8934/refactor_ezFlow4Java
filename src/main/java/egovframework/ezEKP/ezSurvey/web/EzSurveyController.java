@@ -72,6 +72,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		
 		JSONObject resultObj = surveyRestService.getUserPreviewConfig(request, user.getId());
+		logger.debug(resultObj.toJSONString());
 		
 		if (resultObj.get("status").toString().equals("ok")) {
 			JSONObject userConfig = (JSONObject)resultObj.get("config");
@@ -240,8 +241,6 @@ public class EzSurveyController extends EgovFileMngUtil {
 		
 		if (((Long)result.get("code")).intValue() != 0) {
 			int reasonCode     = ((Long)result.get("code")).intValue();
-			logger.debug("CODE :::::::::::::::::" + reasonCode);
-			
 			String messageCode = "";
 			
 			switch(reasonCode) {
