@@ -187,7 +187,7 @@ function getfieldValue(pfield) {
     }
     return rtnVal;
 }
-function getRecvDocNumber(pDeptID) {
+function getRecvDocNumber(pDeptID, docNumZeroCnt) {
     try {
         var fields = message.GetFieldsList();
         var name, docnumber;
@@ -219,7 +219,8 @@ function getRecvDocNumber(pDeptID) {
 		            var DeptSymbol = arr_userinfo[5];
 		            var SN = getNodeText(GetChildNodes(result)[0]);
 		            
-		            pDocNo = DeptSymbol + "-" + SN;
+		            //2019-01-08 천성준 - 접수번호 채번 시, 채번길이 설정이 안먹혀서 주석
+		            //pDocNo = DeptSymbol + "-" + SN; 
 		            
 		            var tempNumString = SN;
 		            var templen = tempNumString.length;
@@ -229,6 +230,18 @@ function getRecvDocNumber(pDeptID) {
 		            }
 		            
 		            pDocNumCode = pDeptID + tempNumString;
+		            
+		            //2019-01-08 천성준 - 접수번호 채번 시, 채번길이 설정한 값만큼 앞에 0을 붙여주는 로직 추가
+		            tempNumString = SN;
+					if (tempNumString < Math.pow(10, docNumZeroCnt)) {
+	        			for (var i = 0; i < docNumZeroCnt-SN.length; i++) {
+	        				tempNumString = "0" + tempNumString;
+	        			}
+	        			pDocNo = DeptSymbol + "-" + tempNumString;
+	        		} else {
+	        			pDocNo = DeptSymbol + "-" + tempNumString;
+	        		}
+					
 		            SaveFile();
 		            
 		            return true;
@@ -250,8 +263,9 @@ function getRecvDocNumber(pDeptID) {
 			            
 			            return false;
 			        } else {
-			            field.textContent = fractionsymbol + SN;
-			            pDocNo = fractionsymbol + SN;
+			        	//2019-01-08 천성준 - 접수번호 채번 시, 채번길이 설정이 안먹혀서 주석
+			            //field.textContent = fractionsymbol + SN;
+			            //pDocNo = fractionsymbol + SN;
 			            
 			            var tempNumString = SN;
 			            var templen = tempNumString.length;
@@ -261,6 +275,20 @@ function getRecvDocNumber(pDeptID) {
 			            }
 			            
 			            pDocNumCode = pDeptID + tempNumString;
+			            
+			            //2019-01-08 천성준 - 접수번호 채번 시, 채번길이 설정한 값만큼 앞에 0을 붙여주는 로직 추가
+			            tempNumString = SN;
+	    				if (tempNumString < Math.pow(10, docNumZeroCnt)) {
+	            			for (var i = 0; i < docNumZeroCnt-SN.length; i++) {
+	            				tempNumString = "0" + tempNumString;
+	            			}
+	            			field.textContent = fractionsymbol + tempNumString;
+	            			pDocNo = fractionsymbol + tempNumString;
+	            		} else {
+	            			field.textContent = fractionsymbol + tempNumString;
+	            			pDocNo = fractionsymbol + tempNumString;
+	            		}
+			            
 			            SaveFile();
 			            
 			            return true;

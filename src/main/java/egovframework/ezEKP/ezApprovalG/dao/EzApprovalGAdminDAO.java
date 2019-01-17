@@ -518,4 +518,12 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 	public void insertDelDoc(Map<String, Object> map) throws Exception {
 		insert("EzApprovalGAdmin.insertDelDoc", map);
 	}
+
+	public void updateAutodoc(Map<String, Object> map) {
+		update("EzApprovalGAdminDAO.updateAutoDoc", map);
+	}
+
+	public void removeAutoDoc(Map<String, Object> map) {
+		update("EzApprovalGAdminDAO.removeAutoDoc", map);
+	}
 }

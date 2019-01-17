@@ -1173,7 +1173,7 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
 function OpenReceiveDistributeUI(pCurSelRow) {
     var parameter = pCurSelRow;
     var url = "/ezApprovalG/ezReceiveDistributeUI.do";
-    var feature = "status:no;dialogWidth:1000px;dialogHeight:740px;edge:sunken;scroll:no";
+    var feature = "status:no;dialogWidth:800px;dialogHeight:600px;edge:sunken;scroll:no";
     feature = feature + GetShowModalPosition(453, 410);
     var ret = window.showModalDialog(url, parameter, feature);
 
@@ -1701,37 +1701,41 @@ function makePageSelPage() {
         period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
     }
     //document.getElementById("presentcell").innerHTML = " - " + localValue;
-    document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
+    document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
 
     try {
     	if (ViewLeftCount == "YES" && ($("#sel_status option:selected").val() == "ALL" || $("#sel_status option:selected").val() == undefined)) {
+    		if (pTotalCnt == "0") {    			
+    			pTotalCnt = "";
+    		}
+    		
     		switch (pListTypeValue) {
     		case "1":
-    			parent.frames["left"].document.getElementById("count1").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count1").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "2":
-    			parent.frames["left"].document.getElementById("count3").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count3").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "3":
-    			parent.frames["left"].document.getElementById("count2").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count2").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "4":
-    			parent.frames["left"].document.getElementById("count4").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count4").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "6":
-    			parent.frames["left"].document.getElementById("count6").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count6").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "7":
-    			parent.frames["left"].document.getElementById("count7").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count7").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "21":
-    			parent.frames["left"].document.getElementById("count21").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count21").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "99":
-    			parent.frames["left"].document.getElementById("count99").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count99").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "11":
-    			parent.frames["left"].document.getElementById("count11").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count11").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		}
     	}
@@ -2065,7 +2069,7 @@ function setbuttonenable() {
         document.getElementById("tbtnSimsa").style.display = "none";
         
 		if (approvalFlag == "G") {
-			if(pListTypeValue == "4") {
+			if(pListTypeValue == "4" && useHWP == 'YES') {
 				document.getElementById("tbtnNonElecRec").style.display = "";
 			}
 		}

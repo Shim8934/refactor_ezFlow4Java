@@ -11,6 +11,7 @@
 	    <script type = "text/javascript">
 	        var pUse_Editor = "${userEditor}";
 	        var pNoneActiveX = "${noneActiveX}";
+	        var flag = "<c:out value='${flag}' />";
 	        
 	        window.onload = window_onload;
 	        document.onselectstart = function () { return false; };
@@ -22,9 +23,18 @@
 	                document.body.style.oUserSelect = 'none';
 	                document.body.style.UserSelect = 'none';
 	            }
-	            document.getElementById("1tab1").setAttribute("class", "tabon");
-	            Tab1_SelectID = "1tab1";
-	            ChangeTab(document.getElementById("1tab1"));
+	            
+	            // 메일환경설정
+	            if(flag === "email") {
+	            	document.getElementById("1tab1").setAttribute("class", "tabon");
+		            Tab1_SelectID = "1tab1";
+		            ChangeTab(document.getElementById("1tab1"));	
+	            } else { // 주소록 환경설정
+	            	document.getElementById("1tab2").setAttribute("class", "tabon");
+		            Tab1_SelectID = "1tab2";
+		            ChangeTab(document.getElementById("1tab2"));	
+	            }
+	            
 	            window_resize();
 	        }
 	        window.onresize = window_resize;
@@ -104,19 +114,32 @@
 	    <title><spring:message code='ezEmail.t904' /></title>
 	</head>
 	<body class="mainbody" style="min-width: 835px">
-	    <h1><spring:message code='ezEmail.t10010' /></h1>
+		<c:choose>
+			<c:when test="${flag eq 'email'}">
+		    	<h1><spring:message code='ezEmail.t10010' /></h1>
+		    </c:when>
+		    <c:otherwise>
+				<h1><spring:message code='ezAddress.hyh001' /></h1>
+		    </c:otherwise>
+	    </c:choose>
 	        <div class="portlet_tabpart01">
 		        <div class="portlet_tabpart01_top" id="tab1">
-	                    <p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezEmail.t177' /></span></p>
-	                    <p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezEmail.t99000041' /></span></p>
-	                    <c:if test="${useOnlyInnerMail != 'YES'}">
-	                    <p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezEmail.t238' /></span></p>
-	                    </c:if>
-	                    <p id = "MailEnv_sub4"><span divname="MailEnv_div4" id="1tab4"><spring:message code='ezEmail.t137' /></span></p>
-	                    <p id = "MailEnv_sub5"><span divname="MailEnv_div5" id="1tab5"><spring:message code='ezEmail.t146' /></span></p>
-	                    <p id = "MailEnv_sub6"><span divname="MailEnv_div6" id="1tab6"><spring:message code='ezEmail.t117' /></span></p>
-	                    <p id = "MailEnv_sub7"><span divname="MailEnv_div7" id="1tab7"><spring:message code='ezEmail.t283' /></span></p>
-	                    <p id = "MailEnv_sub8"><span divname="MailEnv_div8" id="1tab8"><spring:message code='ezEmail.t203' /></span></p>
+		        	<c:choose>
+						<c:when test="${flag eq 'email'}">
+					    	<p id = "MailEnv_sub1"><span divname="MailEnv_div1" id="1tab1"><spring:message code='ezEmail.t177' /></span></p>
+		                    <c:if test="${useOnlyInnerMail != 'YES'}">
+		                    <p id = "MailEnv_sub3"><span divname="MailEnv_div3" id="1tab3"><spring:message code='ezEmail.t238' /></span></p>
+		                    </c:if>
+		                    <p id = "MailEnv_sub4"><span divname="MailEnv_div4" id="1tab4"><spring:message code='ezEmail.t137' /></span></p>
+		                    <p id = "MailEnv_sub5"><span divname="MailEnv_div5" id="1tab5"><spring:message code='ezEmail.t146' /></span></p>
+		                    <p id = "MailEnv_sub6"><span divname="MailEnv_div6" id="1tab6"><spring:message code='ezEmail.t117' /></span></p>
+		                    <p id = "MailEnv_sub7"><span divname="MailEnv_div7" id="1tab7"><spring:message code='ezEmail.t283' /></span></p>
+		                    <p id = "MailEnv_sub8"><span divname="MailEnv_div8" id="1tab8"><spring:message code='ezEmail.t203' /></span></p>
+					    </c:when>
+					    <c:otherwise>
+							<p id = "MailEnv_sub2"><span divname="MailEnv_div2" id="1tab2"><spring:message code='ezEmail.t99000041' /></span></p>
+					    </c:otherwise>
+				    </c:choose>
 	            </div>
 	        </div>
 	        <iframe id = "MailEnv_ifrm" style ="width:100%;height:100%;" frameborder="0" ></iframe>

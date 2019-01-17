@@ -205,12 +205,12 @@
 			      	<div id="menu">
 						<ul id="menuTable">
 							<li class="sel">
-								<h1><spring:message code = 'ezCommunity.t982' /></h1>
+								<h1 style="margin-top:-4px;"><spring:message code = 'ezCommunity.t982' /></h1>
 							</li>
 						</ul>
-						<ul style="float: right; margin-right: 50px">
+						<ul style="float: right; margin-right: 40px">
 							<li id="menuTable" style="background: none; border: none;">
-								<span onclick="beforePrint()"><spring:message code = 'ezCommunity.t981' /></span>
+								<span class="icon16 popup_icon16_print" onclick="beforePrint()"></span>
 							</li>
 						</ul>
 					</div>

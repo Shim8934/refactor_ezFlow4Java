@@ -45,7 +45,7 @@
 		        _popObj.style.backgroundColor = "#ffffff";
 		    }
 		    _popObj = obj;
-		    obj.style.backgroundColor = "#edf4fd";
+		    obj.style.backgroundColor = "#f1f8ff";
 		}
 		function MakeXMLString(pStr) {
 	        pStr = ReplaceText(pStr, "&", "&amp;");

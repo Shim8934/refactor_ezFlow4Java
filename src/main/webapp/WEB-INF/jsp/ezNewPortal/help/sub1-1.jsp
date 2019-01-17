@@ -1,0 +1,71 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<!DOCTYPE html><html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<link rel="stylesheet" href="${util.addVer('/css/ezNewPortal/webguide.css')}">
+<title><spring:message code='main.t00037' /></title>
+</head>
+<body class="main_frame" id="top_main">
+    <div class="btn_top"><a href="#" title="top">TOP</a></div>
+    <!--breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="#">< 뒤로</a></li>
+        <li><a href="/ezNewPortal/help/sub1-1.do">&#8226; 맨앞으로 돌아가기</a></li>
+        <li class="btn_print "><a href="javascript: window.print();">인쇄</a></li>
+    </ul>
+    <!--title -->
+    <h3 class="contents_title">포탈</h3>
+	<h4 class="sub_title"> 테마마다 화면 구성이 다르며 사용자별로 포틀릿 여부를 설정할 수 있습니다. </h4>
+
+    <!--내용시작 -->
+    <h2> 포탈화면 </h2>
+	<h3 class="sub_content"> 그룹웨어 로그인 후 가장 먼저 보여지는 페이지이며 모든 메뉴의 요약 내용 확인이 가능한 화면입니다. </h3>
+	<img src="../../images/ezNewPortal/help/portal/view.png" alt="포탈화면" title="포탈화면" />
+	
+	<h2> 테마선택 </h2>
+	<h3 class="sub_content"> 3개의 테마 중 선택하여 사용할 수 있습니다. </h3>
+	<ol class="content">
+		<li>환경설정에서 개인설정>테마설정을 클릭합니다. </li>
+		<li>3가지 테마 중 한 가지를 선택하여 <b>[기본 테마 선택]</b> 버튼을 클릭합니다. </li>
+	</ol>
+	<h4 class="explan"> ※ 기본 테마로 선택하게 되면 "적용 중인 테마" 문구가 나타납니다. </h4>
+	<h4 class="explan"> ※ 기본 테마는 관리자가 설정할 수 있습니다. </h4>
+	<img src="../../images/ezNewPortal/help/portal/theme.png" alt="테마선택" title="테마선택" />
+	
+	<h2> 테마1 </h2>
+	<h3 class="sub_content"> 고정 포틀릿이 좌우에 있는 테마입니다. </h3>
+	<img src="../../images/ezNewPortal/help/portal/theme1.png" alt="테마1" title="테마1" />
+	
+	<h2> 테마2 </h2>
+	<h3 class="sub_content"> 고정 포틀릿이 상단에 있는 테마입니다. </h3>
+	<img src="../../images/ezNewPortal/help/portal/theme2.png" alt="테마2" title="테마2" />
+	
+	<h2> 테마3 </h2>
+	<h3 class="sub_content"> 고정 포틀릿이 없는 테마입니다. </h3>
+	<img src="../../images/ezNewPortal/help/portal/theme3.png" alt="테마3" title="테마3" />
+	
+	<h2> 화면 프레임 설정 </h2>
+	<h3 class="sub_content"> 테마별로 표시되는 포틀릿의 개수와 기본영역의 위치를 설정할 수 있습니다. </h3>
+	<ol class="content">
+		<li>기본영역의 포틀릿설정 아이콘을 클릭합니다. </li>
+		<li>포틀릿 설정 팝업창에서 사용할 화면 프레임을 선택합니다. </li>
+		<li>화면 프레임 선택 후 <b>[저장]</b> 버튼을 클릭합니다. </li>
+	</ol>
+	<h4 class="explan"> ※ 테마3의 경우 기본영역이 없습니다. </h4>
+	<img src="../../images/ezNewPortal/help/portal/frame_set.png" alt="프레임 설정" title="프레임 설정" />
+	
+	<h2> 포틀릿 설정 </h2>
+	<h3 class="sub_content"> 관리자가 설정한 포틀릿을 개인별로 사용 여부를 설정할 수 있습니다. </h3>
+	<ol class="content">
+		<li>기본영역의 포틀릿설정 아이콘을 클릭합니다. </li>
+		<li>화면에 보일 포틀릿을 스위치 버튼을 이용하여 선택합니다. </li>
+		<li>설정을 마치면 <b>[저장]</b> 버튼을 클릭합니다. </li>
+	</ol>
+	<h4 class="explan"> ※ 관리자가 사용안함으로 설정한 포틀릿은 표시되지 않습니다. </h4>
+	<img src="../../images/ezNewPortal/help/portal/portlet_set.png" alt="포틀릿 설정" title="포틀릿 설정" />
+
+    <!--내용끝 -->
+</body>
+</html>

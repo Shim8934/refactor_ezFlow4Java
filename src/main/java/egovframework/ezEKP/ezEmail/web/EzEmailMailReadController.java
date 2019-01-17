@@ -3,7 +3,6 @@ package egovframework.ezEKP.ezEmail.web;
 import java.io.File;
 import java.io.FileFilter;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -75,10 +74,12 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureReaderVO;
 import egovframework.ezEKP.ezEmail.vo.MailSecureVO;
 import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -132,6 +133,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	
 	@Resource(name = "loginService")
     private LoginService loginService;
+	
+	@Resource(name = "EzOrganService")
+	private EzOrganService ezOrganService;
 	
 	/**
 	 * 메일 읽기화면 호출 함수
@@ -753,6 +757,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         	memoFlag = "NO";
         }
         
+        // 20181219 김수아 : 첨부파일 이미지 미리보기 사용자 컨피그
+        MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+        String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
+        
         model.addAttribute("htmlBody", htmlBody);
 		model.addAttribute("pAttachListHtml", bodyInfoList.get(1));
 		model.addAttribute("pAttachListHtmlSub", pAttachListHtmlSub);
@@ -765,6 +773,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("Name", userInfo.getDisplayName());	
 		model.addAttribute("Id", userInfo.getId());
 		model.addAttribute("memoFlag", memoFlag);
+		model.addAttribute("previewImageListHtml", bodyInfoList.get(5)); //이미지 미리보기 
+		
+		model.addAttribute("previewMailImage", previewMailImage);
 		
 		logger.debug("readMailContent ended.");
 		
@@ -1584,6 +1595,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		int unread = 0;
 		int importance = 1;
 		IMAPAccess ia = null;
+		String fromId = "";
+		String senderProfileImageName = "";
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -1837,6 +1850,40 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
+		if (fromEmail != null && !fromEmail.equals("")) {
+			if (fromEmail.contains("@")) {
+				fromId = ezOrganService.getCNByEmail(fromEmail, loginInfo.getTenantId());
+				
+				//email이 alias 메일이어서 id를 못가져왔을 경우
+				//alias mail인지 check후 원래 이메일 주소에서 id를 가져온다.
+				if (fromId == null || fromId.equals("")) {
+					List<String> aliasAddress = new ArrayList<String>();
+					aliasAddress.add(fromEmail);
+					Map<String, String> targetAddress = ezEmailService.getAliasAddressMap(aliasAddress, loginInfo.getTenantId());
+					
+					if (targetAddress != null) {
+						String resultTargetAddress = targetAddress.get(fromEmail);
+						logger.debug("resultAddress=" + resultTargetAddress);
+						
+						if (resultTargetAddress != null) {
+							int atSignPos = resultTargetAddress.indexOf("@");
+							if (atSignPos != -1) {
+								fromId = resultTargetAddress.substring(0, atSignPos);
+								logger.debug("fromId=" + fromId);
+							}
+						}
+						
+					}
+				}
+				
+				senderProfileImageName = ezOrganService.getPropertyValue(fromId, "EXTENSIONATTRIBUTE2", loginInfo.getTenantId());
+				logger.debug("senderProfileImageName=" + senderProfileImageName);
+				if (senderProfileImageName == null) {
+					senderProfileImageName = "";
+				}
+			}
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
 		sb.append("<UNREAD><![CDATA[" + unread + "]]></UNREAD>");
@@ -1854,6 +1901,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		sb.append("<SENSITIVITY><![CDATA[" + "Normal" + "]]></SENSITIVITY>");
 		sb.append("<HASEMBEDED><![CDATA[" + 0 + "]]></HASEMBEDED>");
 		sb.append("<ITEMID><![CDATA[" + url + "]]></ITEMID>");
+		sb.append("<SENDERPROFILEIMAGENAME><![CDATA[" + senderProfileImageName + "]]></SENDERPROFILEIMAGENAME>");
 		sb.append("<CONTENTCLASS><![CDATA[" + "]]></CONTENTCLASS>");
 		sb.append("</DATA>");
 
@@ -1956,7 +2004,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
     					double size = Double.parseDouble(bodyInfoList.get(2));
     					String strSize = ezEmailUtil.getSizeWithUnit(size);
-    					pAttachListHtmlSub = " - <b>" + bodyInfoList.get(3) + egovMessageSource.getMessage("ezEmail.t180", locale) + "</b>(" + strSize + ")";
+    					pAttachListHtmlSub = " <span class='cblue'>" + bodyInfoList.get(3) + "</span> (" + strSize + ")";
     	
     					if (!folderPath.equals(ezEmailUtil.getSentFolderId(locale))) {
                             String[] messageIds = message.getHeader("Message-ID");
@@ -2044,7 +2092,11 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         } else {
         	memoFlag = "NO";
         }
-		
+
+        // 20181219 김수아 : 첨부파일 이미지 미리보기 사용자 컨피그
+        MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(userInfo.getTenantId(), userInfo.getId()).get(0);
+        String previewMailImage = mailGeneralVO.getPreviewMailImage() == null ? "Y" : mailGeneralVO.getPreviewMailImage();
+        
 		logger.debug("readMailContent ended.");
 		model.addAttribute("url", url);
 		model.addAttribute("htmlBody", htmlBody);
@@ -2053,6 +2105,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		model.addAttribute("isAttach", bodyInfoList.get(4));
 		model.addAttribute("sentDateMsg", sentDateMsg); // 전달, 회신 시 보낸 시간 
 		model.addAttribute("memoFlag", memoFlag);
+		model.addAttribute("previewImageListHtml", bodyInfoList.get(5)); //이미지 미리보기 
+		model.addAttribute("previewMailImage", previewMailImage);
 		
 		logger.debug("previewContent ended.");
 		
@@ -4103,5 +4157,141 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		logger.debug("getMailAddressList ended.");
 		return new JSONObject(result).toString();
+	}
+	
+	/**
+	 * 메일 첨부파일 브라우저로 읽기
+	 */
+	@RequestMapping(value="/ezEmail/readAttachIamge.do")
+	public void readAttachIamge(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, HttpServletResponse response) throws Exception{
+		logger.debug("readAttachIamge started.");
+		
+		// get user credentials
+		List<String> userInfo = commonUtil.getUserIdAndPassword(loginCookie);
+		String password  = userInfo.get(1);
+		
+		LoginVO loginInfo = commonUtil.userInfo(loginCookie);
+		String domainName = ezCommonService.getTenantConfig("DomainName", loginInfo.getTenantId());
+		String userEmail = loginInfo.getId() + "@" + domainName;
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", loginInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(loginInfo.getId(), shareId, loginInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("downloadAttach ended.");
+					
+					return;
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
+		}
+		
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
+		
+		// retrieve the passed in parameters
+		String folderPath = request.getParameter("folderPath");
+		String strUid = request.getParameter("uid");
+		long uid = strUid != null ? Long.parseLong(strUid) : 0;
+		String filename = request.getParameter("filename");
+		logger.debug("folderPath=" + folderPath + ",uid=" + uid + ",filename=" + filename);
+		
+		if (folderPath == null || strUid == null || filename == null) {
+			logger.debug("readAttachIamge illegal arguments.");
+			return;
+		}
+		
+		String strIndex = request.getParameter("index");
+		int index = -1;
+		
+		if (strIndex != null) {
+			index = Integer.parseInt(strIndex);
+		}
+		logger.debug("index=" + index);
+		
+		IMAPAccess ia = null;
+		try {
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userEmail, password, egovMessageSource, locale, ezEmailUtil);
+	
+			Folder f = ia.getFolder(folderPath);
+			
+			if (f == null || !f.exists()) {
+				logger.error("Folder not found. folderPath=" + folderPath);
+			} else {
+				f.open(Folder.READ_ONLY);
+				Message message = null;
+				if(f.isOpen() && f instanceof IMAPFolder){
+					message = ((IMAPFolder)f).getMessageByUID(uid);
+				}
+				
+				if (message == null) {
+					logger.error("Message not found. uid=" + uid);
+				} else {
+					Part part = null;
+					
+					if (index == -1) {
+						part = message;
+					}
+					else {
+						part = ezEmailUtil.getAttachPart(message, index);
+					}
+					
+					if (part == null) {
+						logger.error("AttachPart not found. AttachPartIndex=" + index);
+					} else {
+						response.setContentType(part.getContentType());
+						
+						filename = CommonUtil.getEncodedFileNameForDownload(request.getHeader("User-Agent"), filename);						
+						
+						String nfcFilename = commonUtil.normalizeFileName(filename);
+						
+						response.addHeader("content-disposition", "inline; filename=\"" + nfcFilename + "\"");
+						logger.debug("content-disposition=" + "inline; filename=\"" + nfcFilename + "\"");
+						
+						InputStream input = null;
+						OutputStream output = null;
+						
+						try {
+							input = part.getInputStream();
+							output = response.getOutputStream();
+							
+							byte[] buffer = new byte[4096];
+							int byteRead;
+							
+							while ((byteRead = input.read(buffer)) != -1) {
+								output.write(buffer, 0, byteRead);
+							}
+						} catch(IOException e) {
+						} finally {
+							if (ia != null) {
+								ia.close();
+							}
+							if (input != null) {
+								try { input.close(); } catch (IOException e1) {}
+							}
+							if (output != null) {
+								try { output.flush(); } catch (IOException e1) {}
+								try { output.close(); } catch (IOException e1) {}
+							}
+						}
+						
+					}
+				}
+			}
+		} catch (MessagingException e) {
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		logger.debug("readAttachIamge ended.");
 	}
 }

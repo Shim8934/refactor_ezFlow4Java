@@ -295,7 +295,7 @@
 	            g_xmlHTTP = null;
 	        }
 	    }
-	    var m_strColorSelect = "#edf4fd";
+	    var m_strColorSelect = "#e4e8ec";
 	    var m_strColorOver = "#f4f5f5";
 	    var m_strColorDefault = "#ffffff";
 	    var p_ListOrderObject = null;
@@ -992,7 +992,7 @@
                                             </td>
                                             <td>
                                                 <div style="float: right; margin-right: 5px;">
-                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezPortal.t47'/></span></a>
+                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezPortal.t47'/></span></a>
                                                 </div>
                                             </td>
                                         </tr>
@@ -1002,7 +1002,7 @@
                             <table style="margin-top: 3px;">
                                 <tr>
                                     <td class="box">
-                                        <div style="width: 220px; height: 465px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+                                        <div style="width: 220px; height: 465px; overflow-x: hidden; overflow-y: auto;" id="TreeView"></div>
                                     </td>
                                     <td></td>
                                     <td class="listview" style="width: 426px" id="orglistView">

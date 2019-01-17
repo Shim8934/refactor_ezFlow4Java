@@ -69,6 +69,28 @@ public class EzLadderController {
 	private SimpMessagingTemplate template;
 	
 	/**
+	 * 사다리게임 메인 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezLadder/ladderMainPage.do")
+	public String qstMain() throws Exception{
+		logger.debug("ladderMainPage Start");
+		
+		logger.debug("ladderMainPage End");
+		return "/ezLadder/ladderMainPage";
+	}
+	
+	/**
+	 * 사다리게임 레프트 메뉴 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezLadder/ladderLeft.do")
+	public String qstLeft() throws Exception{
+		logger.debug("ladderLeft Start");
+		
+		logger.debug("ladderLeft End");
+		return "/ezLadder/ladderLeft";
+	}
+	
+	/**
 	 * 사다리 게임 호출
 	 * */
 	@RequestMapping(value = "/ezLadder/ladderMain.do")

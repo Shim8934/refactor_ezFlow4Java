@@ -530,13 +530,24 @@
 	        }
 	        return str_temp;
 	    }
+	    
+	    function btn_cancel() {
+	    	window.close();
+	    }
 	    </script>
 		<style>
 	    	.mainlist tr th {border-top:0px}
 	    </style>
 	</head>
-	<body class="popup" style="margin-left: 0px; margin-top: 0px">
-	    <h1 style="height: 30px;"><spring:message code='ezApprovalG.t711'/></h1>
+	<!-- <body class="popup" style="margin-left: 0px; margin-top: 0px"> -->
+	<body class="popup">
+		<div id="close">
+            <ul>
+                <li><span id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName" onclick="btn_cancel()"></span></li>
+            </ul>
+        </div>
+		<%-- <h1 style="height: 30px;"><spring:message code='ezApprovalG.t711'/></h1> --%>
+	    <h1 id="h1Title"><spring:message code='ezApprovalG.t711'/></h1>
 	    <div id="close">
             <ul>
                 <li><span onclick="return cmdCancel_onclick()"></span></li>

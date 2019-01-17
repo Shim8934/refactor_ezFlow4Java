@@ -791,8 +791,8 @@ public class EzApprovalGRelayScheduler {
 		String text = "";
 		
 		while(true){
-			text = br.readLine();
-			if(text == null) break;
+			if(br.readLine() == null) break;
+			text += br.readLine();
 		}
 		br.close();
 		try {

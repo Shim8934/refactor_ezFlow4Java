@@ -86,6 +86,7 @@
         var pUse_Editor = "${useEditor}";
         var approvalRoot = "${approvalRoot}";
         var ext = "hwp";
+        var orgCompanyID = "<c:out value='${orgCompanyID}' />";
         
         function btnPrint_onclick() {
             HwpCtrl.PrintDocument("", true);

@@ -10,7 +10,8 @@
         else
             document.getElementById("layer_Viewpopup").style.top = "100px";
         document.getElementById("layer_Viewpopup").style.display = "";
-        obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+        //obj.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+        obj.setAttribute("class", "icon16 btn_onarrow_down");
         obj.setAttribute("mode", "on");
     }
     else {
@@ -20,7 +21,8 @@
 function MailOptionHidden() {
     document.getElementById("layer_Viewpopup").style.display = "none";
     document.getElementById("maillistoptiondiv").setAttribute("mode", "off");
-    document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");    
+    //document.getElementById("maillistoptiondiv").setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+    document.getElementById("maillistoptiondiv").setAttribute("class", "icon16 btn_arrow_down");
 }
 //레이어팝업 바깥쪽 클릭시 레이어팝업 꺼지게 2018-02-22 강민수92
 function MailOptionHiddenOutside(e) {
@@ -37,9 +39,11 @@ function PreviewRayerChange(pGubun) {
     if (selobj != null && pGubun != "NONE" && selobj.childNodes.length != 0)
         ItemPreviewRead(selobj);
 
-    if (pGubun == "OFF")
-        pGubun = "NONE";
-    if (clickPreviweType == "PHOTO") {
+    if (pGubun == "OFF") {
+    	pGubun = "NONE";
+    }
+    
+    if (clickPreviweType == "PHOTO" || clickPreviweType == "MOVIE") {
         if (document.documentElement.clientWidth < 1300) {
             PreviewRayerChange_photo("NONE");
         }
@@ -253,7 +257,7 @@ function PreviewRayerChange_photo(pGubun) {
             }
             document.getElementById("PreviewRayerH").style.width = "752px";
             if ($("body").attr("class") == "tabbody") {
-            	document.getElementById("MailListRayer").style.width = (CurrenWidth - 760-20) + "px";
+            	document.getElementById("MailListRayer").style.width = (CurrenWidth - 780) + "px";
             } else{
             	document.getElementById("MailListRayer").style.width = (CurrenWidth - 760) + "px";
             }
@@ -283,16 +287,18 @@ function PreviewRayerChange_photo(pGubun) {
         isPreviewChange = false;
         MailOptionHidden();
         PreviewMode_ChangeBtn();
-        /*if (SetConfig)
-            Set_BoardConfig();*/
-
+        
+        /* 2019-01-03 홍승비 - 포토/썸네일게시판에서 미리보기 유형 설정 시 저장되도록 주석 제거 */
+        if (SetConfig) {
+        	Set_BoardConfig();
+        }
         scroll();
     } catch (e) { }
 }
 
 function PreviewMode_ChangeBtn() {
     try {
-    document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_noframe.gif");
+    /*document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_noframe.gif");
     if (document.getElementById("PreViewBottom") != null)
         document.getElementById("PreViewBottom").setAttribute("src", "/images/kr/cm/btn_bottomframe.gif");
     document.getElementById("PreViewleft").setAttribute("src", "/images/kr/cm/btn_leftframe.gif");
@@ -303,7 +309,29 @@ function PreviewMode_ChangeBtn() {
             document.getElementById("PreViewBottom").setAttribute("src", "/images/kr/cm/btn_onbottomframe.gif");
     }
     else
-        document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_onnoframe.gif");
+        document.getElementById("PreViewNone").setAttribute("src", "/images/kr/cm/btn_onnoframe.gif");*/
+    	
+    	document.getElementById("PreViewNone").className = "icon16 btn_noframe";
+    	
+    	if (document.getElementById("PreViewBottom")) {
+    		document.getElementById("PreViewBottom").className = "icon16 btn_bottomframe";
+    	}
+    	
+    	if (document.getElementById("PreViewleft")) {
+    		document.getElementById("PreViewleft").className = "icon16 btn_leftframe";
+    	}
+    	
+    	if (pPreviewShow_HOW == "H") {
+    		if (document.getElementById("PreViewleft")) {
+    			document.getElementById("PreViewleft").className = "icon16 btn_onleftframe";
+    		}
+    	} else if (pPreviewShow_HOW == "W") {
+    		if (document.getElementById("PreViewBottom")) {
+    			document.getElementById("PreViewBottom").className = "icon16 btn_onbottomframe";
+    		}
+    	} else {
+            document.getElementById("PreViewNone").className = "icon16 btn_onnoframe";
+    	}
     } catch (e) { }
 }
 
@@ -333,7 +361,7 @@ function ItemPreviewRead(obj) {
         document.getElementById('spn_title' + obj.id.split('_')[2]).style.fontWeight = "normal";
         //document.getElementById('spn_content' + obj.id.split('_')[2]).style.fontWeight = "normal"; // 게시판 > 썸네일게시판  > PreViewH사용시 스크립트오류 발생시킨부분 주석
     }
-    if (previewType == "PHOTO" || (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4")) {
+    if (previewType == "PHOTO" || previewType == "MOVIE" || (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4" || obj.getAttribute("DATA10") == "7")) {
         clickPreviweType = "PHOTO";
         if (document.getElementById("previewmail_bar_h") != null)
             document.getElementById("previewmail_bar_h").style.cursor = "default";
@@ -369,6 +397,7 @@ var WriterName;
 var WriterDeptName;
 var WriterCompanyName;
 var ContentLocation;
+var UserIMG;
 
 function event_ItemPreviewRead_photo() {
     if (xmlhttp != null && xmlhttp.readyState == 4) {
@@ -388,6 +417,8 @@ function event_ItemPreviewRead_photo() {
             var WriteDate = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriteDate");
             var Title = SelectSingleNodeValueNew(xmldom, "NODES/NODE/Title");
             var ContentLocation = SelectSingleNodeValueNew(xmldom, "NODES/NODE/ContentLocation");
+            var GuBun = SelectSingleNodeValueNew(xmldom, "NODES/NODE/GUBUN");
+            var UserIMG =  SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/UserIMG");
 
             if (pPreviewShow_HOW.trim() == "W") {
                 PreviewRayerChange_photo("H");
@@ -403,6 +434,14 @@ function event_ItemPreviewRead_photo() {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "none";
             }
+            
+            if (document.getElementById("userImgH") != null) {
+            	document.getElementById("userImgH").src = UserIMG;
+            }
+            if (document.getElementById("userImgW") != null) {
+            	document.getElementById("userImgW").src = UserIMG;
+            }
+            
             var pOCS = "";
             if (USE_OCS == "YES") {
                 if ((BroswerAndNonActiveXCheck() == "IE")) {
@@ -430,11 +469,19 @@ function event_ItemPreviewRead_photo() {
             document.getElementById("PreH_MailReceiver").innerHTML = pOCS;
             setNodeText(document.getElementById("PreH_date"), WriteDate);
             var fullPath = "/ezBoard/boardAttachDown.do?filepath=" + javaURLEncode(ContentLocation);
-            if (location.href.toLowerCase().indexOf('temp') > -1)
-                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
-            else
-                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=GENERAL";
-
+            
+            /* 20118-11-07 홍승비 - 동영상게시물 미리보기 분기 추가 */
+            if (GuBun == "7") {
+            	 if (location.href.toLowerCase().indexOf('temp') > -1)
+ 	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewMovieContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
+ 	            else
+ 	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewMovieContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=GENERAL";
+            } else {
+	            if (location.href.toLowerCase().indexOf('temp') > -1)
+	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=TEMP";
+	            else
+	                document.getElementById('ifrmPreViewH_photo').src = "/ezBoard/boardItemPreViewPhotoContent.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1") + "&mode=" + pMode + "&location=GENERAL";
+            }
         }
     }
 }
@@ -462,6 +509,7 @@ function event_ItemPreviewRead() {
             WriteDate = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/WriteDate");
             Title = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/Title");
             ContentLocation = SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/ContentLocation");
+            UserIMG =  SelectSingleNodeValueNew(xmlhttp.responseXML, "NODES/NODE/UserIMG");
            
             if (pPreviewShow_HOW.trim() == "W") {
                 document.getElementById("Preview_HeaderW").style.display = "";
@@ -476,6 +524,13 @@ function event_ItemPreviewRead() {
             else {
                 document.getElementById("Preview_HeaderW").style.display = "none";
                 document.getElementById("Preview_HeaderH").style.display = "none";
+            }
+            
+            if (document.getElementById("userImgH") != null) {
+            	document.getElementById("userImgH").src = UserIMG;
+            }
+            if (document.getElementById("userImgW") != null) {
+            	document.getElementById("userImgW").src = UserIMG;
             }
         }
     }
@@ -567,7 +622,7 @@ function event_downContent(result, result2) {
 }
 
 function PreviewH_onMouserDown(e) {
-    if (clickPreviweType == "PHOTO") {
+    if (clickPreviweType == "PHOTO" || clickPreviweType == "MOVIE") {
         return;
     }
 
@@ -588,7 +643,7 @@ function PreviewH_onMouserDown(e) {
     PreviewH_Move = true;
 }
 function PreviewW_onMouserDown(e) {
-    if (clickPreviweType == "PHOTO") {
+    if (clickPreviweType == "PHOTO" ||  clickPreviweType == "MOVIE") {
         return;
     }
 
@@ -618,7 +673,7 @@ function PreviewW_onMouserDown(e) {
 }
 
 function MailPreviewEnd(e) {
-    if (clickPreviweType == "PHOTO")
+    if (clickPreviweType == "PHOTO" ||  clickPreviweType == "MOVIE")
         return;
 
     if (PreviewW_Move || PreviewH_Move) {
@@ -688,7 +743,7 @@ function MailPreviewEnd(e) {
     }
 }
 function MailPreviewResize(e) {
-    if (clickPreviweType == "PHOTO")
+    if (clickPreviweType == "PHOTO" ||  clickPreviweType == "MOVIE")
         return;
 
     if (PreviewH_Move) {
@@ -752,15 +807,18 @@ function MailReadOpen() {
     
 
     if (previewType == "PHOTO" || (selobj.getAttribute("DATA10") == "3" || selobj.getAttribute("DATA10") == "4")) {
-    	if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
-	    	var height = 789;
-	    } else {
-	    	var height = 785;
-	    }
-        pTop = (pheight - 789) / 2;
-        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height +",width=765,top=" + pTop + ",left=" + pLeft, "");
-    }
-    else {
+		if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
+				var height = 789;
+		} else {
+				var height = 785;
+		}
+		
+		pTop = (pheight - 789) / 2;
+		window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height +",width=765,top=" + pTop + ",left=" + pLeft, "");
+    } else if (previewType == "MOVIE" || selobj.getAttribute("DATA10") == "7" ) {
+    	 pTop = (pheight - 679) / 2;
+         window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=765,top=" + pTop + ",left=" + pLeft, "");
+    } else {
         window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + selobj.getAttribute("DATA2") + "&boardID=" + selobj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
     }
 }
@@ -803,7 +861,7 @@ function ReplaceText(orgStr, findStr, replaceStr) {
     return (orgStr.replace(re, replaceStr));
 }
 function Window_resize() {
-    if (clickPreviweType == "PHOTO") {
+    if (clickPreviweType == "PHOTO" || clickPreviweType == "MOVIE") {
         Window_resize_photo();
         return;
     }
@@ -951,10 +1009,8 @@ function Window_resize_photo() {
                 if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
                     pMailListDiv_H = 50; pMailPreVDiv_H = 50;
                 }
-                document.getElementById("MailListRayer").style.display = "inline-block";
-                document.getElementById("PreviewRayerW").style.display = "none";
-                document.getElementById("PreviewRayerH").style.display = "inline-block";
                 
+                /* 2019-01-03 홍승비 - 포토/썸네일게시판 리사이즈 시 미리보기 영역 수정 */
                 if (parent.document.getElementById("tab1")) {
     				CurrenWidth = document.documentElement.clientWidth + 7;
     			} else {
@@ -963,27 +1019,36 @@ function Window_resize_photo() {
                 CurrentHeight = document.documentElement.clientHeight - 110;
                 pMailListWidthH = parseInt(CurrenWidth * (pMailListDiv_H / 100));
                 pMailPreWidthH = parseInt(CurrenWidth * (pMailPreVDiv_H / 100)) - 3;
-
-                if (pMailListWidthH <= parseInt(CurrenWidth * 0.40)) {
-                    var ChangeListWidthDiv = parseInt(CurrenWidth * 0.40) - pMailListWidthH;
-                    pMailListWidthH = parseInt(CurrenWidth * 0.40);
-                    pMailPreWidthH = pMailPreWidthH - ChangeListWidthDiv;
+                
+                document.getElementById("MailListRayer").style.display = "inline-block";
+                document.getElementById("PreviewRayerW").style.display = "none";
+                document.getElementById("PreviewRayerH").style.display = "inline-block";
+                
+                if (CurrenWidth < (pMailListWidthH + pMailPreWidthH)) {
+                    if (pMailListWidthH > parseInt(CurrenWidth * 0.40)) {
+                        pMailListWidthH = pMailListWidthH - ((pMailListWidthH + pMailPreWidthH) - CurrenWidth);
+                    } else {
+                        pMailPreWidthH = pMailPreWidthH - ((pMailListWidthH + pMailPreWidthH) - CurrenWidth);
+                    }
                 }
+                
+                document.getElementById("PreviewRayerH").style.width = "752px";
+            	if ($("body").attr("class") == "tabbody") {
+                	document.getElementById("MailListRayer").style.width = (CurrenWidth - 780) + "px";
+                } else {
+                	document.getElementById("MailListRayer").style.width = (CurrenWidth - 760) + "px";
+                }
+                document.getElementById("PreContent_RayerH").style.width = "749px";
+                
                 document.getElementById("ResizeBarH").style.height = CurrentHeight + "px";
                 document.getElementById("ResizeBarW").style.width = CurrenWidth + "px";
-                document.getElementById("MailListRayer").style.height = CurrentHeight + 200 + "px";
+                document.getElementById("MailListRayer").style.height = CurrentHeight + "px";
                 document.getElementById("PreviewRayerH").style.height = CurrentHeight + "px";
-                document.getElementById("MailListRayer").style.width = pMailListWidthH + "px";
-                if (navigator.userAgent.indexOf('Firefox') != -1) {
-                    document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
-                } else
-                    document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
-                	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
-
-                document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
-                document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
-                document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 80) + "px";
+                
+                document.getElementById("divList").style.height = (CurrentHeight - 62) + "px";
+            	document.getElementById("BoardList_BODY").style.height = (CurrentHeight - 100) + "px";
+                document.getElementById("ifrmPreViewH_photo").style.height = (CurrentHeight - 60) + "px";
+                
                 pPreviewShow_HOW = "H";
                 pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);
                 pMailPreVDiv_H = Math.round((pMailPreWidthH / CurrenWidth) * 100);
@@ -1082,12 +1147,13 @@ function leftCountRf() {
 	    	}
 	    }
 	    
+	    /* 2018-12-31 홍승비 - 게시판명의 변경된 태그(div -> span)로 id 찾기 + 게시판 클릭 동작 변경 */
 	    for (var i = 0; i < h2.length; i++) {
 	        if (h2[i].className == "on") {
-	            pId = h2[i].getElementsByTagName("div")[0].id;
+	            pId = h2[i].getElementsByClassName("h2Title")[0].id;
 	            pId = pId.replace("TreeCtr", "TreeCtrl");
-	            pValue = h2[i].getElementsByTagName("div")[0].getAttribute("value");
-	            window.parent.frames["left"].TopBoard_onclick(pId, pValue);
+	            pValue = h2[i].getElementsByClassName("h2Title")[0].getAttribute("value");
+	            window.parent.frames["left"].treeViewRefresh(pId, pValue);
 	            window.parent.frames["left"].node_select(pNodeID, "", pTreeID, "");
 	            break;
 	        }

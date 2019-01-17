@@ -1,0 +1,79 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib uri="http://www.springframework.org/tags" prefix="spring"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+	<article class="vote box_shadow">
+		<div class="layDiv voteLay">
+			<dl class="portlet_title sortablePortlet">
+				<dt class="portletText">
+					<c:out value="${portletName }" />
+					(<c:out value='${voteCount }' />)
+				</dt>
+				<dd class="portletPlus" id="votePlus">
+					<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+				</dd>
+			</dl>
+			<c:choose>
+				<c:when test="${voteCount ne 0 }">
+					<div class="vote_contents">
+					<p class="voteTitle">
+						"<c:out value="${title }" />"
+					</p>
+					<p class="voteBtn votePortlet" id="V<c:out value='${qstId }'/>">참여</p>
+					<ul class="voteList">
+						<c:forEach items="${pollAnswer }" var="poll" varStatus="status">
+							<c:if test="${status.index lt 4 }">
+								<li class="voteList_0${status.index + 1 }">
+									<div class="voteT">
+										<span class="Vnum">${status.index + 1 }</span> <span class="Vtext"><c:out value='${poll.content}'/></span>
+									</div>
+									<div class="percent" id="percent${status.index + 1 }">
+										<c:choose>
+										<c:when test="${pollAnswerCount eq 0 }">
+											<c:out value='0%'/>
+										</c:when>
+										<c:otherwise>
+											<fmt:parseNumber value="${(poll.votesNumber / pollAnswerCount) * 100}" integerOnly="true" />%
+										</c:otherwise>
+										</c:choose>
+									</div>
+									<div class="voteGraph" id="divGraph${status.index + 1 }">
+										<c:choose>
+										<c:when test="${pollAnswerCount eq 0 }">
+											<span id="graph${status.index + 1 }" style="width : 0%"></span>
+										</c:when>
+										<c:otherwise>
+											<span id="graph${status.index + 1 }" style="width : ${(poll.votesNumber / pollAnswerCount) * 100}%"></span>
+										</c:otherwise>
+										</c:choose>
+									</div>
+								</li>
+							</c:if>
+						</c:forEach>
+					</ul>
+					</div>
+				</c:when>
+				<c:otherwise>
+					<ul class="portlet_list">
+						<dl class="nodata">
+							<dt>
+								<img src="/images/ezNewPortal/nodata.png">
+							</dt>
+							<dd>
+								"<spring:message code='main.t00026' />"
+							</dd>
+						</dl>
+					</ul>
+				</c:otherwise>
+			</c:choose>
+		</div>
+	</article>
+</body>
+</html>

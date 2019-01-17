@@ -45,7 +45,7 @@
 			        yearRange: sYear+":"+eYear,  
 			        //autoSize: true,
 			        showOn: "button",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			    $("#txtBirth").datepicker("option", "dateFormat", "yy-mm-dd");
@@ -134,6 +134,7 @@
 		            document.getElementById('btn_PhotoDel').style.display = "none";
 		            
 		            getJobInfoInit();
+		            
 		        } else {
 		            OrgUserID = RetValue[2];
 		            document.getElementById("DeptName").value = RetValue[1];
@@ -146,8 +147,6 @@
 		            document.getElementById("UserName").focus();
 		            document.getElementById("mailtitle").innerText = "<spring:message code='ezOrgan.t99' />";
 		            document.getElementById("mailcontext").style.display = "none";
-		            
-		            getJobInfoInit();
 	
 		            var xmlDom = createXmlDom();
 		            
@@ -182,11 +181,21 @@
 			                try {
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim() != "") {
 				                	pUserTitleID = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim();
+				                	getJobOptionInfo("001");
 				                	document.getElementById(pUserTitleID).selected = "true";
+				                } else {
+				                	getJobOptionInfo("001");
 				                }
+			                } catch(e) {
+			                	console.error(e.message);
+			                }
+			                try {
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim() != "") {
 				                	pUserPositionID = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim();
+				    		    	getJobOptionInfo("002");
 				                	document.getElementById(pUserPositionID).selected = "true";
+				                } else {
+				    		    	getJobOptionInfo("002");
 				                }
 			                } catch(e) {
 			                	console.error(e.message);
@@ -293,32 +302,12 @@
 		            }
 		        }
 		    }
+		    
 		    function Check_ID(pValue) {
-		        for (var iCnt = 0 ; iCnt < pValue.length ; iCnt++) {
-		            if (pValue.charCodeAt(iCnt) >= 65 && pValue.charCodeAt(iCnt) <= 90) {
-		                // A-Z
-		            }
-		            else if (pValue.charCodeAt(iCnt) >= 97 && pValue.charCodeAt(iCnt) <= 122) {
-		                // a-z
-		            }
-		            else if (pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57) {
-		                // 0-9
-		            }
-		            else if (pValue.charCodeAt(iCnt) == 45) {
-		                // -
-		            }
-		            else if (pValue.charCodeAt(iCnt) == 46) {
-		                // .
-		            }
-                    else if (pValue.charCodeAt(iCnt) == 95) {
-                        // _
-                    }		            
-		            else {
-		                return false;
-		            }
-		        }
-		        return true;
-		    }
+				var regex = /^[a-z0-9\_\-\.]+$/;
+				
+				return regex.test(pValue);
+			}
 		    
 			function showProgress() {
 			    document.getElementById("progressPanel").style.display = "";
@@ -338,15 +327,6 @@
 		        if (document.getElementById("UserID").value == "") {
 		            alert("<spring:message code='ezOrgan.t253' />");
 		            return;
-		        }
-		        // 2009.11.10 - 아이디 대문자 체크
-		        if ("<c:out value='${checkID}'/>" == "YES") {
-		            for (i = 0; i < document.getElementById("UserID").value.length; i++) {
-		                if (document.getElementById("UserID").value.charCodeAt(i) >= 65 && document.getElementById("UserID").value.charCodeAt(i) <= 90) {
-		                    alert("<spring:message code='ezOrgan.t308' />");
-		                    return;
-		                }
-		            }
 		        }
 		        if (document.getElementById("UserID").value.length < 3) {
 		            alert("<spring:message code='ezOrgan.t254' />");
@@ -580,6 +560,7 @@
 		    function getJobOptionInfo(pType) {
 		    	var xmldom;
 		    	var _html = "";
+		    	var pUserJobID = "";
 		    	
 		    	$.ajax({
 					type : "POST",
@@ -599,8 +580,10 @@
 		    	
 	    		if (pType == "001") {
 	    			_html += "<select id='titleSelector' style='width:100%;height:25px;' onchange='titleChange()'>";
+	    			pUserJobID = pUserTitleID;
 	    		} else {
 	    			_html += "<select id='positionSelector' style='width:100%;height:25px;' onchange='positionChange()'>";
+	    			pUserJobID = pUserPositionID;
 	    		}
 	    		
 	    		// option (해당없음) 표출
@@ -614,7 +597,7 @@
 		    			var pJobName 	= SelectSingleNodeValueNew(oRows[i], "NAME1");
 		    			var pJobName2 	= SelectSingleNodeValueNew(oRows[i], "NAME2");
 		    			
-		    			if (pUseFlag != "N" || pJobID == pUserTitleID) {
+		    			if (pUseFlag != "N" || pJobID == pUserJobID) {
 		    				_html += "<option id='" + pJobID + "' nmval='" + pJobName + "' nmval2='" + pJobName2 + "'>";
 		    				
 		    				if ("${userPrimary}" == "1") {

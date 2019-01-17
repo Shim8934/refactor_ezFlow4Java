@@ -16,7 +16,6 @@
 				display: inline-block;
 			}
 			.node_div span {
-				width:266px;
 				overflow:hidden;
 				text-overflow:ellipsis;
 			}
@@ -160,7 +159,7 @@
 			        } else {
 			        	strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
 			        }
-			        strHTML += "<tr id='TreeArea' ><td><div class='tree' id='TreeCtrl" + i.toString() + "' style='display:none;width:300px;overflow-x:hidden;'></div></td></tr>";
+			        strHTML += "<tr id='TreeArea' ><td><div class='tree' id='TreeCtrl" + i.toString() + "' style='display:none;width:300px;overflow:hidden;'></div></td></tr>";
 			    }
 			    strHTML += "</table>";
 
@@ -249,7 +248,7 @@
 			    treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
 			    
 			    /* 2018-08-06 홍승비 - boardLeft.jsp에서 하위게시판 ellipsis 부분 가져옴 */
-		        var node = document.getElementById(TreeIdx);
+		        /* var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
 		        if(nodeLevel > 9) {
@@ -261,7 +260,7 @@
 		        	title3[0].style.width = 266 - 18*nodeLevel +'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
-		        }
+		        } */
 			}			
 	    </script>
 	</head>

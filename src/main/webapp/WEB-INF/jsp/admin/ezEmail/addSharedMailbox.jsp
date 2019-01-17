@@ -17,6 +17,11 @@
 	    	.mainlist thead tr {
 	    		height: 0px;
 	    	}
+	    	
+	    	.mainlist #MsgToList_THEAD #MsgToList_TH {
+	    		height: 0px;
+	    	}
+	    	
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;
 	    	}
@@ -119,6 +124,8 @@
 	            }
 	            
 	            ChangeListView_onClick(getOrganListType());
+	            
+	            document.getElementById("TextName").focus();
 	        }
 	
 	        function MakeXMLString(pStr) {
@@ -136,6 +143,8 @@
 	        function initSharedMailboxInfo(sharedMailboxInfo) {
         		document.getElementById("TextId").value = sharedMailboxInfo.shareId;
         		document.getElementById("TextName").value = sharedMailboxInfo.shareName;
+        		var shareMail = sharedMailboxInfo.shareMail;
+        		document.getElementById("mailDomain").innerHTML = shareMail.substring(shareMail.indexOf("@"));
 	        	document.getElementById("TextId").disabled = true;
 	        	document.getElementById("TextPassword").disabled = true;
             	document.getElementById("TextPassword2").disabled = true;
@@ -409,7 +418,7 @@
 	                return;
 	            }
 	            
-	            var regex=/^[a-z0-9_-]+$/;
+	            var regex=/^[a-z0-9\_\-\.]+$/;
 	            
 	            if (regex.test(document.getElementById("TextId").value.trim()) === false) {
 	            	alert("<spring:message code='ezEmail.sharedMailbox12' />");
@@ -1286,18 +1295,18 @@
 		<table class="content">
 			<tr>
 				<th><spring:message code='ezEmail.sharedMailbox18' /></th>
-				<td style="width:60%"><input id="TextName" name="TextName" type="text" maxlength="24" class="txtClass" style="width:100%"></td>
+				<td style="width:60%"><input id="TextName" name="TextName" type="text" maxlength="24" class="txtClass" tabindex="1" style="width:100%"></td>
 				<th><spring:message code='ezEmail.lhm64' /></th>
-				<td style="width:40%"><input id="TextPassword" name="TextPassword" type="password" maxlength="24" class="txtClass" style="width:100%"></td>
+				<td style="width:40%"><input id="TextPassword" name="TextPassword" type="password" maxlength="24" class="txtClass" tabindex="3" style="width:100%"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezEmail.sharedMailbox19' /></th>
 				<td style="width:60%">
-					<input id="TextId" name="TextId" type="text" maxlength="24" class="txtClass" style="ime-mode: disabled; width:40%;">
-					<span style="font-weight: bold;">@<c:out value="${mailDomain}"></c:out></span>
+					<input id="TextId" name="TextId" type="text" maxlength="20" class="txtClass" tabindex="2" style="ime-mode: disabled; width:40%;">
+					<span id="mailDomain" style="font-weight: bold;">@${mailDomain}</span>
 				</td>
 				<th><spring:message code='ezEmail.lhm61' /></th>
-				<td style="width:40%"><input id="TextPassword2" name="TextPassword2" type="password" maxlength="24" class="txtClass" style="width:100%"></td>
+				<td style="width:40%"><input id="TextPassword2" name="TextPassword2" type="password" maxlength="24" class="txtClass" tabindex="4" style="width:100%"></td>
 			</tr>
 		</table>
 		
@@ -1338,7 +1347,7 @@
 	                                            </td>
 	                                            <td>
 	                                                <div style="float: right; margin-right: 5px; position: relative;">
-	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
+	                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                        </tr>
@@ -1348,7 +1357,7 @@
 	                            <table style="margin-top: 3px;">
 	                                <tr>
 	                                    <td class="box" style="border-right:0px">
-	                                        <div style="width: 220px; height: 445px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
+	                                        <div style="width: 220px; height: 445px; overflow-x: hidden; overflow-y: auto;" id="TreeView"></div>
 	                                    </td>
 	                                    <td></td>
 	                                    <td class="listview" style="width: 432px" id="orglistView">

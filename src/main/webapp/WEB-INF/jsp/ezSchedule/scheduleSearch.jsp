@@ -64,7 +64,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -72,7 +72,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        var SDate;
@@ -193,7 +193,7 @@
 			
 		    function onmouseOver(elem) {
 		        elem.style.color = "blue";
-		        elem.style.backgroundColor = "#edf4fd";
+		        elem.style.backgroundColor = "#f1f8ff";
 		    }
 		
 		    function onmouseOut(elem) {
@@ -234,7 +234,7 @@
 		          			<option value="title" <c:if test="${filter eq 'title' }">selected</c:if>><spring:message code='ezSchedule.t272'/></option> 
 		          			<option value="location" <c:if test="${filter eq 'location' }">selected</c:if>><spring:message code='ezSchedule.t273'/></option> 
 		        		</select> 
-		        		<input type="text" id="keyword" size="21" value="<c:out value="${keyword}"/>" onkeypress="return search_keypress(event)" style="height:22px" /> 
+		        		<input type="text" id="keyword" size="21" value="<c:out value="${keyword}"/>" onkeypress="return search_keypress(event)" style="height:22px;vertical-align: auto" /> 
 		        		<a class="imgbtn imgbck"><span onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
 		        	</td> 
 		    	</tr> 

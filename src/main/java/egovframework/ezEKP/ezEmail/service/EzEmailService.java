@@ -54,6 +54,7 @@ public interface EzEmailService {
 	public void setMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId, List<String> pMessageIds) throws Exception;
 	public List<String> getMailPOP3List(int tenantId, String pUserId, String pPop3Server, String pPop3UserId) throws Exception;
 	public String setIndividualAlias(String userId, int tenantID, String primaryMail, List<String> individualAliasList) throws Exception;
+	public int deleteIndividualAlias(String userId, int tenantID) throws Exception;
 	public String checkIndividualAlias(String individualAlias, int tenantId) throws Exception;
 	public Map<String, String> getAliasAddressMap(List<String> addressList, int tenantId) throws Exception;
 	
@@ -110,4 +111,6 @@ public interface EzEmailService {
 	public void addSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception;
 	public void setSignatureTemplate(MailSignatureTemplateVO signTemplate) throws Exception;
 	MailDistributionVO getDistributionSub(String userName, String subMail, String companyId, int tenantId) throws Exception;
+	public int addDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
+	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
 }

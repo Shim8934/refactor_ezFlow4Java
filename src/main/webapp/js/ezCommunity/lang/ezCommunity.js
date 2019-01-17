@@ -38,7 +38,7 @@ var strLang80 = "이전"
 var strLang81 = "다음"
 var strLang82 = "총 "
 var strLang83 = "개"
-var strLang535 = "데이터가 없습니다.";
+var strLang535 = "\"데이터가 없습니다\"";
 var strLang5351 = "명";
 
 /* 2017-11-01 장진혁 */

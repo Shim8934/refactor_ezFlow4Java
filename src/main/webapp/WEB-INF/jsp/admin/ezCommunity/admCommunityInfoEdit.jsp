@@ -54,7 +54,8 @@
 				xSelB = document.frmCommunityBasicInfo.cCateB[document.frmCommunityBasicInfo.cCateB.selectedIndex].value;
 				xSelC = document.frmCommunityBasicInfo.cCateC[document.frmCommunityBasicInfo.cCateC.selectedIndex].value;
 				
-				if (selA == 0 && selB == 0 && selC == 0) {
+				if (selA == 0) {
+				//if (selA == 0 && selB == 0 && selC == 0) {
 					//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
 					//OpenAlertUI("<spring:message code = 'ezCommunity.t4' />");
 					alert("<spring:message code = 'ezCommunity.t4' />");

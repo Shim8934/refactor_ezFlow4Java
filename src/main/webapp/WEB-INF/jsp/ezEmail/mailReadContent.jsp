@@ -444,6 +444,7 @@
 			     			"width" : "100%",
 			     		    "padding" : "0px 0px 0px 10px",
 			     			"margin" : "0px",
+			     			"font-family" : "malgun gothic",
 			     			"font-size" : "12px",
 			     			"color" : "#333"
 				    	});
@@ -486,5 +487,11 @@
 	      		</tr>
 	    	</table>	
 	  	</div> 
+	  	<c:if test="${previewMailImage == 'Y' && previewImageListHtml != ''}">
+		  	<div class="previewmail_addImage" style="margin-bottom:10px;font-family:<spring:message code='main.t246' />">
+				<p class="title"><spring:message code='ezEmail.0hun05' /></p>
+				<div class="previewIamgelist" id="PreviewAttachList">${previewImageListHtml}</p>
+			</div>
+	  	</c:if>
 	</body>
 </html>

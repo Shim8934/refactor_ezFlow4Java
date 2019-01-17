@@ -90,11 +90,11 @@
 			result_sc = "<script>window.document.location.href='update_check.jsp';</script>";
 		}
 		else{
-			result_sc = "<script>alert(NamoSELang.pe_xl);history.back();</script>";
+			result_sc = "<script>alert(NamoSELang.pe_xQ);history.back();</script>";
 		}
 	}
 	else{
-		result_sc = "<script>alert(NamoSELang.pe_Jl);history.back();</script>";
+		result_sc = "<script>alert(NamoSELang.pe_Ki);history.back();</script>";
 	}
 
 %>

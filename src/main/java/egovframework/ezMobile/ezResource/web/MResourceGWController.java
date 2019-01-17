@@ -915,7 +915,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	        
 	        StringBuilder bodyContent = new StringBuilder();
 
-	        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
+	        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: malgun gothic,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
 	        
 	        if (userInfo.getPrimary().equals("1")) {
 	        	bodyContent.append(userInfo.getDisplayName() +"[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
@@ -937,10 +937,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	for(int i=0; i<resInfo.size(); i++) {
 		    	String emailAddress = resInfo.get(i).getMailAddress();
 		    	String accessName = resInfo.get(i).getOwnerNm();
-		    	
-		    	if (accessName.indexOf("(") > -1) {
-		    		accessName = accessName.split("(")[0];
-		    	}
 		    	
 		    	InternetAddress to = new InternetAddress();
 		    	to.setPersonal(accessName, "UTF-8");

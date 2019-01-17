@@ -19,6 +19,7 @@ import java.security.PrivateKey;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -410,6 +411,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("relayG_type", relayG_type);
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("companyList", companyList);
+		model.addAttribute("useHWP", ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId()));
 		
 		logger.debug("aprManage ended.");
 		
@@ -1272,7 +1274,24 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 의견얼러트 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/ezAprOpinion.do")
-	public String ezAprOpinion(){
+	public String ezAprOpinion(HttpServletRequest req, Model model){
+		
+		if (req.getParameter("type") != null) {
+			String type = req.getParameter("type");
+			model.addAttribute("type", type);
+		}
+		
+		if (req.getParameter("formURL") != null) {
+			String formURL = req.getParameter("formURL");
+			model.addAttribute("formURL", formURL);
+		}
+		
+		if (req.getParameter("formDocType") != null) {
+			String formDocType = req.getParameter("formDocType");
+			model.addAttribute("formDocType", formDocType);
+		}
+		
+		
 		return "ezApprovalG/apprGezAprOpinion";
 	}
 	
@@ -2552,7 +2571,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (docID != null && !docID.equals("")) {
 					String checkMode = "";
 					
-					if (docStatus.toCharArray().equals("TMP")) {
+					if (docStatus.toUpperCase().equals("TMP")) {
 						checkMode = "TMP";
 					} else {
 						checkMode = "REC";
@@ -4174,7 +4193,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo.setRealPath(commonUtil.getRealPath(request));
 		
-		if (xmlDom.getElementsByTagName("ORGCOMPANYID") != null && !xmlDom.getElementsByTagName("ORGCOMPANYID").equals(userInfo.getCompanyID()) ) {
+		if (xmlDom.getElementsByTagName("ORGCOMPANYID") != null && !xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent().equals(userInfo.getCompanyID()) ) {
 			userInfo.setCompanyID(xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
 		}
 		
@@ -4203,7 +4222,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo.setRealPath(commonUtil.getRealPath(request));
 		
-		if (xmlDom.getElementsByTagName("ORGCOMPANYID") != null && !xmlDom.getElementsByTagName("ORGCOMPANYID").equals(userInfo.getCompanyID()) ) {
+		if (xmlDom.getElementsByTagName("ORGCOMPANYID") != null && !xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent().equals(userInfo.getCompanyID()) ) {
 			userInfo.setCompanyID(xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
 		}
 		
@@ -4232,7 +4251,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		userInfo.setRealPath(commonUtil.getRealPath(request));
 		
-		if (xmlDom.getElementsByTagName("ORGCOMPANYID") != null && !xmlDom.getElementsByTagName("ORGCOMPANYID").equals(userInfo.getCompanyID()) ) {
+		if (xmlDom.getElementsByTagName("ORGCOMPANYID") != null && !xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent().equals(userInfo.getCompanyID()) ) {
 			userInfo.setCompanyID(xmlDom.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
 		}
 		
@@ -4740,6 +4759,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			isNonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
 		}
 		
+		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
+		
 		model.addAttribute("crossEditor", crossEditor);
 		model.addAttribute("docID", docID);
 		model.addAttribute("orgDocID", orgDocID);
@@ -4759,6 +4780,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("isReceived", isReceived);
 		model.addAttribute("isNonElecRec", isNonElecRec);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 
 		logger.debug("recevGSusin ended.");
 		
@@ -6084,7 +6106,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
         
         if ( xmlDom.getDocumentElement().getChildNodes().getLength() > 22)
         {
-            if (xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent().trim() != "")
+            if (!xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent().trim().equals(""))
                 subQuery = subQuery + " AND " + xmlDom.getDocumentElement().getChildNodes().item(22).getTextContent();
         }
          result = ezApprovalGService.getSearchDocListS(containerID, userID, subQuery, docNumber, docTitle, drafter, formID, draftfrom, draftto, apprfrom,
@@ -7203,6 +7225,51 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("getPortletAprDocList ended");
 
 		return result;
+	}
+	
+	/**
+	 * 전자결재G 포틀릿 결재리스트 표출 Method - 수정버전
+	 * 박종균
+	 */
+	@RequestMapping(value = "/ezApprovalG/getPortletAprList.do")
+	@ResponseBody
+	public Object getPortletAprList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramData, LoginVO userInfo) throws Exception{
+		logger.debug("getPortletAprList is started");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String imgPath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + "/";
+		String lang = userInfo.getLang().equalsIgnoreCase("1") ? "" : userInfo.getLang();
+		
+		logger.debug("paramData : " + paramData.toString());
+		paramData.put("tenantID", userInfo.getTenantId());                         
+		paramData.put("approvalFlag", approvalFlag);
+		paramData.put("imgPath", imgPath);
+		paramData.put("lang", lang);
+		
+		Map<String, Object> portletList = ezApprovalGService.getPortletAprList(paramData, userInfo.getOffset());
+		logger.debug("getPortletAprList is ended");
+		
+		logger.debug("portletList : " + portletList.toString());
+
+		return portletList;
+	}
+	
+	/**
+	 * 전자결재 포틀릿 결재할 문서 시간 표시 Method
+	 * */
+	@RequestMapping(value = "/ezApprovalG/getPortletApprGapTime.do")
+	@ResponseBody
+	public Object getPortletApprGapTime(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramData, LoginVO userInfo) throws Exception {
+		logger.debug("getPortletApprGapTime is started.");
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		paramData.put("tenantID", userInfo.getTenantId());     
+		
+		Map<String, Object> ret = ezApprovalGService.getPortletApprGapTime(paramData);
+		logger.debug("ret.toString() " + ret.toString());
+		logger.debug("getPortletApprGapTime is ended.");
+		return ret;
 	}
 
 	/**
@@ -8613,9 +8680,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("getUseZipCodeSearchInApr ended.");
 		
 		return result;
-	}
-	
-	
+	}	
 	/*
 	 * 2018-05-14 강민수92 문서의 확장자 체크
 	 */
@@ -8778,3 +8843,4 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return retValue;
 	}
 }
+

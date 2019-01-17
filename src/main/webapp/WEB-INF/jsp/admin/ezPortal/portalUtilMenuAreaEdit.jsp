@@ -63,10 +63,10 @@
 				
 				// 선택된 개체가 없는 경우
 				if( g_SelectedObj == null ) {
-				    pObj.style.backgroundColor = "#edf4fd";
+				    pObj.style.backgroundColor = "#e4e8ec";
 					g_SelectedObj = pObj;
 				} else {
-				    pObj.style.backgroundColor = "#edf4fd";
+				    pObj.style.backgroundColor = "#e4e8ec";
 					
 					if (pObj != g_SelectedObj) g_SelectedObj.style.backgroundColor = "#FFFFFF";
 					g_SelectedObj = pObj;

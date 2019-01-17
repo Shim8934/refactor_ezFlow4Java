@@ -167,7 +167,7 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang23 + "<span style='color:#017BEC;'> " + totalCnt + " </span>" + strLang24 + "]";
+		        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span style='color:#017BEC;'>" + totalCnt + "</span>";
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
@@ -497,23 +497,22 @@
 		</xml>
 	
 	    <form id="Form1" method="post">
-		    <h1><spring:message code='ezOrgan.t00005' /><span id="mailBoxInfo"></span></h1>
-		    <div id="mainmenu">
-			    <span><b><spring:message code='ezOrgan.t00006' /> : </b></span>    		           
-	            <select id="ListCompany" onchange="company_change()">
+		    <h1>
+		    	<spring:message code='ezOrgan.t00005' /><span id="mailBoxInfo"></span>
+		    	<select class="companySelect" id="ListCompany" onchange="company_change()">
 	            	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 	            </select>
-	            
+		    </h1>
+		    <div id="mainmenu">
 		        <ul style="margin-top:15px;">
-		            <li><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
+		            <li class="important"><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		            <li><span onClick="Permissions_Del('MOD')"><spring:message code='ezOrgan.t00008' /></span></li>
 		            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
+		            <li><span class="icon16 icon16_delete" onClick="Permissions_Del('MOD')"></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		            <li><span onClick="email_onclick()"><spring:message code='ezOrgan.t00010' /></span></li>
-		            
+		            <li onClick="email_onclick()"><span class="icon16 icon16_mail_gray"></span></li>
 		            <span style="float: right; font-weight: normal; color: black; clear:inherit;margin-left:1px">
 		            	<select id="searchType" style="width:80px;">
 							<option selected="" value="displayname"><spring:message code='ezOrgan.t67' /></option>
@@ -526,7 +525,7 @@
 						</select>
 						
 						<input id="searchValue" onkeypress="if(event.keyCode==13) {searchList(); return false;}" onfocus="clearSearchVal();" style="height: 29px;border: 1px solid #cbcbcb; border-right:0px;">
-						<a href="#" style="float: right"><img src="/images/bsearch_new.gif" border="0" onclick="searchList()" style="height:29px;"></a>
+						<a style="float: right"><img src="/images/bsearch_new.gif" border="0" onclick="searchList()" style="height:29px;"></a>
 		            </span>
 		        </ul>
 		    </div>
@@ -562,7 +561,7 @@
 			        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div>
 			    </div>
 			</div>
-		    <div id="tblPageRayer" style="Width:100%;text-align:center;margin-top:10px"></div>
+		    <div id="tblPageRayer" style="Width:100%;text-align:center;"></div>
 		</form>         
 	</body>
 	<script type="text/javascript">

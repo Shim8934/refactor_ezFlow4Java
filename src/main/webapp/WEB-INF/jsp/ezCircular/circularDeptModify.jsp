@@ -116,7 +116,7 @@
 	            <th style="width:200px; text-align:center"><spring:message code='ezCircular.t34' /></th>
 	            <td>
 	            	<input type="hidden" name="Input" id="receiverinput" style="WIDTH: 30%;-moz-box-sizing:border-box;box-sizing:border-box;" onkeyup="return _on_keydown(event)">
-	                <a href="#" id="imgbutton" class="imgbtn imgbck"><span id="clickbtn" onclick="_manage_attendant()"><spring:message code='ezCircular.t39' /></span></a>
+	                <a id="imgbutton" class="imgbtn imgbck"><span id="clickbtn" onclick="_manage_attendant()"><spring:message code='ezCircular.t39' /></span></a>
 	            </td>
 	        </tr>
 	        <tr>

@@ -777,7 +777,7 @@
     		<tr> 
         		<td valign="top">
             		<h2><spring:message code='ezPoll.t223' /></h2>
-            		<div id="TreeView" class="listview"></div>
+            		<div id="TreeView" class="listview" style="overflow-x: hidden; overflow-y: auto;"></div>
         		</td>
         		<td class="middleTd">
             		<div><img class="midArrowImg" src="/images/arr_right.gif" onclick="add_dept()"></div>

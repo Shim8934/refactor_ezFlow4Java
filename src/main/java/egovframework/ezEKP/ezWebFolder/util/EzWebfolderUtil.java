@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezWebFolder.util;
 
 import java.util.Base64;
+import java.util.UUID;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
@@ -45,4 +46,24 @@ public class EzWebfolderUtil {
         return new String(decryptedData, "UTF-8");
     }
 	
+	/**
+	 * UUID 랜덤 생성으로 앞 두 글자로 폴더를 만들어서 해쉬 구조의 파일 경로로 반환
+	 * 
+	 * @param extension
+	 *            파일 확장자 (nullable)
+	 * @return 3/1/313cf7f1-dd64-45d7-b9e6-c405e6a2a35f
+	 */
+	public String generateFilePath(String extension) {
+		String result = UUID.randomUUID().toString();
+
+		result = result.charAt(0) + "/" + result.charAt(1) + "/" + result;
+
+		// .none 확장자일 때 확장자 안 붙임
+		// 이유: 확장자가 없는 파일이 업로드 될 때 .none 으로 데이터베이스 FILE_EXT 컬럼에 들어감
+		if (extension == null || extension.trim().isEmpty() || extension.equals(".none")) {
+			return result;
+		}
+
+		return result + "." + extension;
+	}
 }

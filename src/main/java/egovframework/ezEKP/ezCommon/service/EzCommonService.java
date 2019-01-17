@@ -59,6 +59,12 @@ public interface EzCommonService {
 	public void updateCompanyConfig(int tenantId, String companyId, String propertyName, String propertyValue) throws Exception;
 
 	public void deleteCompanyConfig(int tenantId, String companyId, String propertyName) throws Exception;
+	
+	public void setMultiLoginUser(int tenantID, String userID, String loginTime) throws Exception;
+	
+	public boolean matchMultiLoginTime(int tenantID, String userID, String loginTime) throws Exception;
+	
+	public void createTblUserMultiLogin() throws Exception;
 
 	public void addMailToJMochaDistribution() throws Exception;
 	
@@ -85,8 +91,19 @@ public interface EzCommonService {
 	public void addJobMasterJobID() throws Exception;
 
 	public void createWebfolderToken() throws Exception;
+	
+	public void addJmochaMailGenenalPreviewMailImage() throws Exception;
 
 	public void addUserMasterPasswordUpdateDT() throws Exception;
+	
+	public void addUserMasterMailBoxQuota() throws Exception;
 
+	public void addPortalThemePortletIsFixed() throws Exception;
+
+	public void addHolidayFlag() throws Exception;
+	
+	public void addHolidayRepeat() throws Exception;
+	
+	public void createPortalThemePortlet() throws Exception;
 }
 
