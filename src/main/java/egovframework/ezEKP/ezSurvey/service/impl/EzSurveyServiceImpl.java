@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -774,6 +775,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			}
 		}
 		
+		result.put("status", "ok");
+		result.put("code", 0);
 		//long endTime   = System.nanoTime();
 		//long totalTime = endTime - startTime;
 		//logger.debug("TOTAL TIME: " + totalTime);
@@ -946,6 +949,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		//logger.debug("TOTAL TIME: " + totalTime);
 		
 		result.put("questions", questions);
+		result.put("status", "ok");
+		result.put("code", 0);
 		return result;
 	}
 	
@@ -1242,6 +1247,34 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("surveyId",  surveyId);
 		
 		SurveyVO survey  = ezSurveyDAO.getSurveyInfo(map);
+		
+		if (!survey.getCreatorId().equals(userInfo.getId())) {
+			//Check public date
+			if (survey.getResultPublicFlag() == 0) {
+				result.put("status", "error");
+				result.put("code", 6);
+				return result;
+			}
+			else {
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				String todayStr            = formatter.format(new Date());
+				String endDateStr          = survey.getEndDate().substring(0, 10);
+				int openDays               = survey.getOpenDays();
+				Date today                 = formatter.parse(todayStr);
+				Date endDate               = formatter.parse(endDateStr);
+				Calendar calendar          = Calendar.getInstance();
+				calendar.setTime(endDate); 
+				calendar.add(Calendar.DATE, openDays);
+				Date endPublicDate         = calendar.getTime();
+				
+				if (today.compareTo(endDate) < 0 || today.compareTo(endPublicDate) > 0) {
+					result.put("status", "error");
+					result.put("code", 7);
+					return result;
+				}
+			}
+		}
+		
 		totalRespondents = ezSurveyDAO.getTotalRespondents(map);
 		result           = getSurveyQuestions(surveyId, "answer", realPath, userInfo);
 		
