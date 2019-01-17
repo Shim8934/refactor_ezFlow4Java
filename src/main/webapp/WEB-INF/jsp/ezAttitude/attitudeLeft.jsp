@@ -370,13 +370,16 @@
 	    		case 2:
 	    			window.open("/ezAttitude/attitudeDeptMain.do", "right");
 	    			break;
-	    		case 3: // 나의수정신청
+	    		case 3:
+	    			window.open("/ezAttitude/attitudeUserAnnual.do", "right");
+	    			break;
+	    		case 4: // 나의수정신청
 	    			window.open("/ezAttitude/attModAppList.do", "right");
 	    			break;
-	    		case 4:	// 신청관리현황
+	    		case 5:	// 신청관리현황
 	    			window.open("/ezAttitude/manageAttModAppList.do", "right");
 	    			break;
-	    		case 5:	// 근태정보관리
+	    		case 6:	// 근태정보관리
 	    			window.open("/ezAttitude/attitudeManage.do", "right");
 	    			break;
 	    	}
@@ -465,14 +468,15 @@
 		        <ul class="lnbUL">
                    	<li><span class="sub_iconLNB tree_workTime_individual"></span><span class="list_text" id="userAttitude" onclick="functionFlag(1)"><spring:message code='ezAttitude.t143'/></span></li>
                    	<li><span class="sub_iconLNB tree_workTime_department"></span><span class="list_text" id="deptAttitude" onclick="functionFlag(2)"><spring:message code='ezAttitude.t144'/></span></li>
+                   	<li><span class="sub_iconLNB tree_workTime_individual"></span><span class="list_text" id="userAnnual" onclick="functionFlag(3)">개인연차관리</span></li>
 		        </ul>
 		        <h2 class="on">
 		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t7'/></span>
 		        </h2>
 		        <ul class="lnbUL">
-               		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(3)"><spring:message code='ezAttitude.t166'/></span></li>
+               		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t166'/></span></li>
                    	<c:if test="${attitudeAdminCheck == true}">
-                   		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(4)"><spring:message code='ezAttitude.t7'/>
+                   		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t7'/>
                    			<c:if test="${totalAtt != 0 }">
 								<span class="attCount">&nbsp;${totalAtt}</span>
 							</c:if>
@@ -481,7 +485,7 @@
 		        </ul>
 		        <c:if test="${attitudeAdminCheck == true}">
 			        <ul class="lnbUL">
-                  		<li><span class="sub_iconLNB tree_workTimeset"></span><span class="list_text" onclick="functionFlag(5)"><spring:message code='ezAttitude.t73'/></span></li>
+                  		<li><span class="sub_iconLNB tree_workTimeset"></span><span class="list_text" onclick="functionFlag(6)"><spring:message code='ezAttitude.t73'/></span></li>
 					</ul>
 				</c:if>
 			</div>

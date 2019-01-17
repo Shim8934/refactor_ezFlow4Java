@@ -3338,4 +3338,61 @@ public class EzAttitudeController {
 		
 		return "/ezAttitude/attitudeModHistory";
 	}
+	
+	@RequestMapping(value = "/ezAttitude/attitudeUserAnnual.do")
+	public String attitudeUserAnnual(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("attitudeUserAnnual started.");
+		
+		LOGGER.debug("attitudeUserAnnual ended.");
+
+		return "/ezAttitude/attitudeUserAnnual";
+	}
+	
+	@RequestMapping(value = "/ezAttitude/getUserAnnualList.do")
+	public String getUserAnnualList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("getUserAnnualList started.");
+		//해당 사원 정보 (사원이름 직위 부서), 지각 수, 연차 수, 반차들 수, 연차 리스트
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		
+		String year = request.getParameter("year");
+		
+		if (userId != null) {
+			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/annual";
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId)
+					.queryParam("year", year)
+					.queryParam("userId", userId);
+			
+			RestTemplate rest = new RestTemplate();
+			
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			String status = resultBody.get("status").toString();
+			
+			JSONArray userAnnualList = new JSONArray();
+			if (status.equals("ok")) {		
+				userAnnualList = (JSONArray) resultBody.get("data");
+				
+				model.addAttribute("list", userAnnualList);
+			}
+		}
+		
+		LOGGER.debug("getUserAnnualList ended.");
+		
+		return "json";
+	}
 }

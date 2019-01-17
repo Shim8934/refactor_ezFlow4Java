@@ -1,0 +1,181 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title></title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
+		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
+		<style>
+			dl {
+				display: inline-block;
+			}
+			.timecheck_info .timeInfo {
+				float: left;
+				position: static;
+				margin-right: 20px;
+				margin-top: 20px;
+			}
+			.countDL {
+				margin: 0px;
+			}
+		</style>	
+	    <script type="text/javascript">
+	    	var date = new Date()
+        	var year = date.getFullYear();
+	    	var companyId = "<c:out value="${companyId}" />";
+	    	var userId = "<c:out value="${userId}" />";
+	    	var userDeptId;
+	    	var userDeptName;
+	    
+	    	$(document).ready(function() {
+	    		getUserAnnualList();
+   			});
+	    	
+	    	function getUserAnnualList() {
+	    		$.ajax({
+	    			data : "GET",
+	    			dataType : "json",
+	    			url : "/ezAttitude/getUserAnnualList.do",
+	    			data : {
+	   					year : year
+    				},
+	    			success : function(result){
+	    				$("#userName").text(result.list[0].userName);
+	    				$("#userTitle").text(result.list[0].userTitle);
+	    				$("#userDept").text(result.list[0].deptName);
+	    				if (result.list[0].imgPath != null && result.list[0].imgPath != "") {
+		    				$("#userImage").attr("src","/admin/ezOrgan/getPersonalInfo.do?fileName=" + result.list[0].imgPath);
+	    				} 
+	    				var totalAnnualCnt = 0;
+		    			if (Number(result.list[0].totalAnnualCnt.split(".")[1]) > 0) {
+		    				totalAnnualCnt = result.list[0].totalAnnualCnt;
+		    			} else {
+		    				totalAnnualCnt = result.list[0].totalAnnualCnt.split(".")[0];
+		    			}
+	    				$("#totalAnnualCnt").text(totalAnnualCnt);
+	    				if (result.list[0].startDate != null && result.list[0].startDate != "") {
+		    				userAnnualListSet(result.list);
+	    				}
+	    				
+	    				//스크롤 생길시
+	    				if(result.list.length > 10) {
+	    		    		var addTh = "<th style='width: 9px;'></th>";
+	    		    		$(".mainlist tr th:eq(2)").after(addTh);
+	    				}
+	    			},
+	    			error : function() {
+	    				alert("<spring:message code='ezAttitude.t59'/>");
+	    			}
+	    		});
+	    	}
+	    	
+	    	function userAnnualListSet(list) {
+	    		var html = "";
+	    		var accumCnt = 0;
+	    		var annualCnt = 0;//연차 수
+	    		var morningCnt = 0;//오전반차 수
+	    		var afternoonCnt = 0;//오후반차 수
+	    		
+	    		$("#contentlist .mainlist tbody").html("");
+	    		
+	    		list.forEach(function(vo, index) {
+	    			html = "<tr>";
+		    		html += "<td style='width:35%'>";
+	    			if (vo.typeId === "A11") { //연차
+		    			html += vo.startDate.substr(0,10) + " ~ " + vo.endDate.substr(0,10);
+		    			annualCnt ++;
+	    			} else if (vo.typeId === "A12") { //오전반차
+		    			html += vo.startDate.substr(0,10);
+		    			morningCnt ++;
+	    			} else { //오후반차
+	    				html += vo.startDate.substr(0,10);
+	    				afternoonCnt ++;
+	    			}
+	    			html += "</td>";
+	    			html += "<td style='width:25%'>" + vo.typeName + "</td>";
+	    			html += "<td style='width:15%'>" + Number(vo.annualCnt) + "</td>";
+	    			html += "</tr>";
+		    		$("#contentlist .mainlist tbody").after(html);
+		    		
+	    			//누적 연차 수
+	    			accumCnt += Number(vo.annualCnt);
+	    		});
+	    		
+	    		$("#accumCnt").text(accumCnt);
+	    		$("#remainCnt").text(Number($("#totalAnnualCnt").text()) - accumCnt);	    		
+	    		
+	    		$("#FA11").text(annualCnt);
+	    		$("#FA12").text(morningCnt);
+	    		$("#FA13").text(afternoonCnt);
+	    	}
+	    	
+		</script>
+	</head>
+	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0">
+	    <h1>
+	    	개인연차관리
+	    </h1>
+<!-- 	    <table class="content"> -->
+			<div class="timecheck_info">
+		    	<dl class="timeInfo">
+		        	<dt class="timeInfoPic" style="margin: 0px;">	
+						<img id="userImage" src="/images/kr/main/bestEmployee_pic_none.png" width="48px" height="48px">
+		        	</dt>
+		            <dd class="timeInfoText"><span id="userName"></span><span id="userTitle"></span><span id="userDept" style="color:#aaa9a9"></span></dd>
+		        </dl>
+			     <dl class="countDL">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
+			            <dd class="timeIconDD"><spring:message code='ezAttitude.t239' /><span class="timeCountR" id="totalAnnualCnt">0</span></dd>
+			        </dl>
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
+			            <dd class="timeIconDD"><spring:message code='ezAttitude.t238' /><span class="timeCountR" id="accumCnt">0</span></dd>
+			        </dl>
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
+			            <dd class="timeIconDD"><spring:message code='ezAttitude.t253' /><span class="timeCountR" id="remainCnt">0</span></dd>
+			        </dl>
+			     </dl>
+		        <dl class="countDL">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
+			            <dd class="timeIconDD"><spring:message code='ezAttitude.t254' /><span class="timeCountR" id="FA11">0</span></dd>
+			        </dl>
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
+			            <dd class="timeIconDD"><spring:message code='ezAttitude.t255' /> <span class="timeCountR" id="FA12">0</span></dd>
+			        </dl>
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
+			            <dd class="timeIconDD"><spring:message code='ezAttitude.t256' /> <span class="timeCountR" id="FA13">0</span></dd>
+			        </dl>
+			     </dl>
+		    </div>
+<!-- 	    </table> -->
+	    <!-- 리스트 -->
+		<div style="width: 100%; height: 100%;">
+            <table class="mainlist" style="width: 100%;">
+                <tr>
+                    <th style="width: 35%; padding-left:15px;"><span><spring:message code='ezAttitude.t107' /></span></th>
+                    <th style="width: 25%; "><span><spring:message code='ezAttitude.t35' /></span></th>
+                    <th style="width: 15%; "><span><spring:message code='ezAttitude.t252' /></span></th>
+                </tr>
+            </table>
+            <div id="contentlist" name="contentlist" style="height: 320px; overflow-y: auto;">
+                <table class="mainlist" style="width: 100%;">
+                    <tr>
+                        <td colspan="4" style="text-align: center;"><spring:message code='ezAttitude.t130' /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+	</body>
+</html>
+
