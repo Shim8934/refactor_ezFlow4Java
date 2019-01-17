@@ -157,7 +157,6 @@
 					async : false,
 					data : 
 					{
-						type        : selectedTabId,
 						pageNum     : pCurPage,
 						searchType  : document.getElementsByName("cCateA")[0].value,
 						searchValue : document.getElementById("txt_SearchQuery").value 
@@ -171,7 +170,7 @@
 						
 						if (pTotalCnt < 1) {
 							html += "<tr>";
-							html += "    <td colspan='5' style='text-align:center;'><spring:message code = 'main.t00026' /></td>"
+							html += "    <td colspan='9' style='text-align:center;'><spring:message code = 'main.t00026' /></td>"
 							html += "</tr>";
 						}
 						else {
@@ -210,7 +209,63 @@
 							});
 						}
 						
+						$("#idSpan").css("display", "");
+						$("#mainListHeader1").css("display", "");
+						$("#mainListHeader2").css("display", "none");
 						$("#mainListBody").empty().append(html);
+						
+						makePageSelPage();
+					},
+					error : function(e) {
+						console.log("error");
+					}
+				});
+			}
+			
+			function closedCommunityList() {
+				$.ajax({
+					type : "POST",
+					dataType: "json",
+					url : "/admin/ezCommunity/closedCommunityList.do",
+					async : false,
+					data :
+					{
+						pageNum     : pCurPage,
+						searchValue : document.getElementById("txt_SearchQuery").value
+					},
+					success : function (data) {
+						pCurPage   = data.pageNum;
+						pTotalPage = data.totalPage;
+						pTotalCnt  = data.totalCount;
+						
+						var html = "";
+						
+						if (pTotalCnt < 1) {
+							html += "<tr>";
+							html += "    <td colspan='5' style='text-align:center;'><spring:message code = 'main.t00026' /></td>"
+							html += "</tr>";
+						}
+						else {
+							var itemNum = ((pCurPage - 1) * 10) + 1 ;
+							
+							data.clubList.forEach(function(item, index){
+								html += "<tr>";
+								html += "<td style='width: 35px;'>" + itemNum + "</td>";
+								html += "<td style='width: 25%;'>" + item.c_ClubName + "</td>";
+								html += "<td style='width: 50%;'>" + item.closeReason + "</td>"; //폐쇄사유
+								html += "<td style='width: 10%;'>" + item.applicationDate.substring(0, 10) + "</td>"; //신청일
+								html += "<td style='width: 10%;'>" + item.userName + "</td>"; //마스터이름
+								html += "</tr>";
+								
+								itemNum++;
+							});
+						}
+						
+						$("#idSpan").css("display", "none");
+						$("#mainListHeader1").css("display", "none");
+						$("#mainListHeader2").css("display", "");
+						$("#mainListBody").empty().append(html);
+						
 						makePageSelPage();
 					},
 					error : function(e) {
@@ -366,7 +421,7 @@
 			
 			// 개설된 커뮤니티 리스트 폐쇄 버튼 이벤트 메소드
 			function closeBtnClick(code) {
-				if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
+				/* if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
 					$.ajax({
 						type : "POST",
 						dataType : "json",
@@ -390,7 +445,7 @@
 				}
 				else {
 					alert("<spring:message code = 'ezCommunity.t62' />");
-				}
+				} */
 			}
 			
 			// 카테고리 요소 생성
@@ -501,8 +556,8 @@
 			
 			<table class="content" style="margin: 10px 0px;">
 				<tr>
-					<th>검색조건</th>
-					<td>
+					<th style="background-color: #f1f3f5; border: 1px solid #f1f3f5;">검색조건</th>
+					<td style="border: 1px solid #f1f3f5;">
 						<span id="idSpan" class="idSpan">${idSpanValue}</span>
 						
 						<select id="QuerySelect" name="QuerySelect" style="vertical-align: middle; height: 22px;">
@@ -518,7 +573,7 @@
 			
 			<div id="contentlist" style="width: 100%; overflow: auto; margin-top: 5px;">
 				<div id="ListHeader">
-					<table id="mainListHeader" class="mainlist" style="width: 100%">
+					<table id="mainListHeader1" class="mainlist" style="width: 100%">
 						<tr id="mainListHeaderTr">
 							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
 							<th style="width: 90px;">카테고리</th>
@@ -529,6 +584,15 @@
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t78' /></th>
 							<th style="width: 65px;"></th>
 							<th style="width: 60px;"></th>
+						</tr>
+					</table>
+					<table id="mainListHeader2" class="mainlist" style="width: 100%; display: none;">
+						<tr id="mainListHeaderTr">
+							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
+							<th style="width: 25%;"><spring:message code = 'ezCommunity.t9991' /></th>
+							<th style="width: 50%;">페쇄사유</th>
+							<th style="width: 10%;">신청일</th>
+							<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
 						</tr>
 					</table>
 				</div>

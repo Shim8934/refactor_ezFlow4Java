@@ -48,6 +48,8 @@
 				A.tenant_id = #tenantID#
 			ORDER BY
 				applicationdate DESC
+			LIMIT
+				#v_STARTROW#, 10
 		]]>
 	</select>
 	
@@ -91,6 +93,8 @@
 				A.tenant_id = #tenantID#
 			ORDER BY
 				applicationdate DESC
+			LIMIT
+				#v_STARTROW#, 10
 		]]>
 	</select>
 	
@@ -183,6 +187,8 @@
 				A.tenant_id = #tenantID#
 			ORDER BY
 				A.c_regdate DESC
+			LIMIT
+				#v_STARTROW#, 10
 		]]>
 	</select>
 	
@@ -227,6 +233,8 @@
 				A.tenant_id = #tenantID#
 			ORDER BY
 				A.c_regdate DESC
+			LIMIT
+				#v_STARTROW#, 10
 		]]>
 	</select>
 	
@@ -702,4 +710,45 @@
 		]]>
 	</select>
 	
+	<select id="EzCommunityAdminDAO.getClosedCommuListCount"			parameterClass="Map"		resultClass="Integer">
+		<![CDATA[
+			SELECT
+				IFNULL(COUNT(c_clubno), 0)
+			FROM
+				TBL_C_COMCLOSE
+			WHERE
+				closestate = #v_PCLOSESTATE#
+			AND
+				c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
+			AND
+				companyid = #companyId#
+			AND
+				tenant_id = #tenantId#
+		]]>
+	</select>
+	
+	<select id="EzCommunityAdminDAO.getClosedCommuList"					parameterClass="Map"		resultClass="CommunityCComCloseVO">
+		<![CDATA[
+			SELECT
+				c_clubno,
+				CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END AS c_clubname,
+				c_sysopid,
+				applicationdate,
+				closereason
+			FROM
+				TBL_C_COMCLOSE
+			WHERE
+				closestate = #v_PCLOSESTATE#
+			AND
+				CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END LIKE CONCAT('%', #v_STRQUERY#, '%')
+			AND
+				companyid = #companyId#
+			AND
+				tenant_id = #tenantId#
+			ORDER BY
+				applicationdate DESC
+			LIMIT
+				#v_STARTROW#, 10
+		]]>
+	</select>
 </sqlMap>

@@ -900,12 +900,12 @@ public class EzJournalServiceImpl implements EzJournalService {
 //			formThisHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");
 //			formThisHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
 			formThisHtml.append("<p><img style='width:14px;height:14px;vertical-align:middle;margin-left:5px' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA; font-family: Malgun Gothic; font-size: 13px;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
-			formThisHtml.append("<p></p>" + thisContent.trim() + "<p></p><p></p>");
+			formThisHtml.append("<p><br/></p>" + thisContent.trim() + "<p><br/></p>");
 			
 //			formNextHtml.append("<p><span style='color: #004a87'>" + journal.getJournalTitle().trim() + "</span></p>");   
 //			formNextHtml.append("<p><img style='width:16px;height:16px;vertical-align:bottom;' src='/images/ImgIcon/icon_partapproval.gif'>" + journal.getJournalTitle().trim() + "</span></p>");
 			formNextHtml.append("<p><img style='width:14px;height:14px;vertical-align:middle;margin-left:5px' src='/images/ImgIcon/addon.png'>&nbsp;<span style='color: #58ACFA; font-family: Malgun Gothic; font-size: 13px;'>" + commonUtil.cleanValue(journal.getJournalTitle().trim()) + "</span></p>");
-			formNextHtml.append("<p></p>" + nextContent.trim() + "<p></p><p></p>");
+			formNextHtml.append("<p><br/></p>" + nextContent.trim() + "<p><br/></p>");
 		}
 		
 		formThis.append(formThisHtml.toString());

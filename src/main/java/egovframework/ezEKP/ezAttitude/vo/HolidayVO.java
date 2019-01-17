@@ -19,6 +19,10 @@ public class HolidayVO {
 	private int isUse;
 	/** 사용 회사*/
 	private String useCompany;
+	/** D:date(날짜) , Y:요일 */
+	private String holidayFlag;
+	/** 반복주기 */
+	private String holidayRepeat;
 	
 	public int getHolidayID() {
 		return holidayId;
@@ -73,5 +77,23 @@ public class HolidayVO {
 	}
 	public void setUseCompany(String useCompany) {
 		this.useCompany = useCompany;
+	}
+	public int getHolidayId() {
+		return holidayId;
+	}
+	public void setHolidayId(int holidayId) {
+		this.holidayId = holidayId;
+	}
+	public String getHolidayFlag() {
+		return holidayFlag;
+	}
+	public void setHolidayFlag(String holidayFlag) {
+		this.holidayFlag = holidayFlag;
+	}
+	public String getHolidayRepeat() {
+		return holidayRepeat;
+	}
+	public void setHolidayRepeat(String holidayRepeat) {
+		this.holidayRepeat = holidayRepeat;
 	}
 }

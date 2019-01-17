@@ -91,16 +91,6 @@ public interface EzOrganAdminService {
 	
 	public int getUserCount(int tenantID,String keycode,String keyword,String companyId) throws Exception;
 	
-	public String mailAddDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception;
-	
-	public String mailUpdateDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception;
-	
-	public String getDistributionUserName (int tenantID, String groupName, String companyId) throws Exception;
-
-	public String mailDelDistributionList(int tenantID, String cn, String companyId) throws Exception;
-	
-	public String deleteTargetAddressUser (int tenantID, String groupName, String memberID, String companyID) throws Exception;
-	
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String mCondition) throws Exception;
 	
 	public String setTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception;
@@ -128,4 +118,6 @@ public interface EzOrganAdminService {
 	public int getAddJobCount(String companyID, int tenantId, String strLang) throws Exception;
 
 	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception;
+
+	public String getCompanyName(String displayName, int tenantID) throws Exception;
 }

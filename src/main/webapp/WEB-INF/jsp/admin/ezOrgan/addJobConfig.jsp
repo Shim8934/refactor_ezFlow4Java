@@ -357,8 +357,10 @@
 	                    for (var i = 0; i < xmlDom.documentElement.getElementsByTagName("ROW").length; i++) {
 	                        LISTVIEWDATA = LISTVIEWDATA + "<ROW><CELL>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "<VALUE>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + " (" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE")[i])) + ")";
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DISPLAYNAME")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "changeComTapString" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("COMPANY")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "changeDeptTapString" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + " (" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE")[i])+ ")");
 	                        LISTVIEWDATA = LISTVIEWDATA + "</VALUE>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA1>";
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DEPARTMENT")[i]));
@@ -375,6 +377,9 @@
 	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA5>";
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
 	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA5>";
+	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA6>";
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("JOBID")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "</DATA6>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "</CELL></ROW>";
 	                    }
 	                    LISTVIEWDATA = LISTVIEWDATA + "</ROWS></LISTVIEWDATA>";
@@ -740,11 +745,9 @@
 		                alert("<spring:message code='ezOrgan.t249' />");
 		                return;
 		            }
-		            
-// 		            var titleName = document.getElementById("txt_TitleName").value.trim();
+
 		            
  					if (jobTitle.trim() == "") {
-// 						document.getElementById("txt_TitleName").focus();
 						alert("<spring:message code='ezOrgan.kyj07' />");
 						return;
 					}
@@ -763,14 +766,32 @@
 		            
 		            if (bFlag) {
 		                alert(strLang25);
-		                pAddFlag = true;
 		            } else {
+		            	var compName = new Array();
+				        $.ajax({
+				        	type : "POST",
+				        	dataType : "text",
+				        	url : "/admin/ezOrgan/addJobCompanyName.do",
+				        	async : false,
+				        	data : {displayName : dept[0]},
+				        	success : function(data){
+				        		compName = data.split(":");
+				        	}
+				        });
 		                pparsingXML2 = "";
 		                pparsingXML = "";
 		                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 		                pparsingXML = pparsingXML + "<ROW><CELL>";
 // 		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(dept[1]) + " (" + MakeXMLString(document.getElementById("txt_TitleName").value) + " : " + MakeXMLString(document.getElementById("txt_TitleName2").value) + ")</VALUE>";
- 		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(dept[1]) + " (" + MakeXMLString(jobTitle) + " : " + MakeXMLString(jobTitle2) + ")</VALUE>";
+ 		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(p_ListOrderObject, "_data11"));
+ 		               	pparsingXML = pparsingXML + "changeComTapString" + compName[0];
+ 		               	pparsingXML = pparsingXML + "changeDeptTapString" + MakeXMLString(dept[1]) + " (" ;
+ 		               	if(compName[1] === "1") {
+ 		               		pparsingXML = pparsingXML + MakeXMLString(jobTitle);
+ 		               	} else {
+ 		               		pparsingXML = pparsingXML + MakeXMLString(jobTitle2);
+ 		               	}
+ 		               	pparsingXML = pparsingXML + ")</VALUE>";
 		                pparsingXML = pparsingXML + "<DATA1>" + MakeXMLString(dept[0]) + "</DATA1>";
 		                pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(GetAttribute(p_ListOrderObject, "_data2")) + "</DATA2>";
 // 		                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(document.getElementById("txt_TitleName").value) + "</DATA3>";

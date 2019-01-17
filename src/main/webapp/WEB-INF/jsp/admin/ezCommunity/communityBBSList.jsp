@@ -299,8 +299,8 @@
 		<table class="content">
 			<form name="page">
 				<tr>
-					<th><spring:message code = 'ezCommunity.t28' /></th>
-					<td>
+					<th style="background-color: #f1f3f5; border: 1px solid #f1f3f5;"><spring:message code = 'ezCommunity.t28' /></th>
+					<td style="border: 1px solid #f1f3f5;">
 						<select name="s_radio" style="vertical-align: middle; height: 22px;">
 							<option value="title" selected><spring:message code = 'ezCommunity.t124' /></option>
 							<%-- <option value="titleContent"><spring:message code = 'ezCommunity.t169' /></option> --%>

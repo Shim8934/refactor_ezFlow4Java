@@ -13,6 +13,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminFile.js')}"></script>
@@ -133,9 +134,10 @@
 		<div id="mainmenu2" style="position: relative; margin-left: 5px;">
 			<ul>
 				<li id=""><a><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-				<c:if test="${level != '0'}">
+				<!-- root에서 파일업로드 되도록하려면 아래를 주석  -->
+<%-- 				<c:if test="${level != '0'}"> --%>
 					<li id="uploadBttn"><a><span><spring:message code='ezWebFolder.t187'/></span></a></li>
-				</c:if>
+<%-- 				</c:if> --%>
 				<li id=""><a><span><spring:message code='ezWebFolder.t117'/></span></a></li>
 				<li id=""><a><span><spring:message code='ezWebFolder.t118'/></span></a></li>
 				<li id=""><a><span><spring:message code='ezWebFolder.t120'/></span></a></li>

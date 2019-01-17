@@ -127,6 +127,15 @@
 						pTotalPage = data.totalPage;
 						pTotalCnt  = data.totalCount;
 						
+						if (selectedTabId == "admitCommu") {
+							document.getElementById("admitCommu").innerHTML = "신청승인&nbsp;&nbsp;" + "<span style='border: 0px; margin: 0px; padding: 0px; color: #017BEC; font-weight: bold; float: right;'>" + pTotalCnt + "</span>";
+							document.getElementById("closeCommu").innerHTML = "폐쇄승인&nbsp;&nbsp;" + "<span style='border: 0px; margin: 0px; padding: 0px; color: #017BEC; font-weight: bold; float: right;'>" + data.tabCount + "</span>";
+						}
+						else {
+							document.getElementById("admitCommu").innerHTML = "신청승인&nbsp;&nbsp;" + "<span style='border: 0px; margin: 0px; padding: 0px; color: #017BEC; font-weight: bold; float: right;'>" + data.tabCount + "</span>";
+							document.getElementById("closeCommu").innerHTML = "폐쇄승인&nbsp;&nbsp;" + "<span style='border: 0px; margin: 0px; padding: 0px; color: #017BEC; font-weight: bold; float: right;'>" + pTotalCnt + "</span>";
+						}
+						
 						var html = "";
 						
 						if (pTotalCnt < 1) {
@@ -191,7 +200,6 @@
 			
 			function makePageSelPage() {
 				document.getElementById("tblPageRayer").innerHTML = "";
-				document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>";
 				
 				var strtext = "<div class='pagenavi'>";
 				var PagingHTML = "";
@@ -520,7 +528,7 @@
 		</script>
 	</head>
 <body class="mainbody">
-	<h1>커뮤니티 신청관리<span id="TitleInfo"></span></h1>
+	<h1>커뮤니티 신청관리</h1>
 	
 	<div class="portlet_tabpart01">
 		<div class="portlet_tabpart01_top" id="tab1">
@@ -534,8 +542,8 @@
 	
 	<table class="content" style="margin: 10px 0px;">
 		<tr>
-			<th>검색조건</th>
-			<td>
+			<th style="background-color: #f1f3f5; border: 1px solid #f1f3f5;">검색조건</th>
+			<td style="border: 1px solid #f1f3f5;">
 				<span id="idSpan" class="idSpan">${idSpanValue}</span>
 				<select id="searchType" name="QuerySelect" style="vertical-align: middle; height: 22px;">
 					<option selected value="C_ClubName"><spring:message code = 'ezCommunity.t9991' /></option>

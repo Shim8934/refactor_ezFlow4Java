@@ -985,25 +985,16 @@ public class EzAttitudeGWController {
 			
 			List<String> deptIdList = new ArrayList<>();
 			
-//			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
-//				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("a1=1") == -1) {
-//					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "", info.getPrimary());
-//					
-//					for (AttitudeAuthorVO vo : authDeptlist) {
-//						if (vo.getAuthType().equals("M")) {
-//							deptIdList.add(vo.getDeptId());
-//						}
-//					}
-//				}
-//			}
-			
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
-
-			for (AttitudeAuthorVO vo : authDeptlist) {
-				if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
-					deptIdList.add(vo.getDeptId());
+			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
+				
+				for (AttitudeAuthorVO vo : authDeptlist) {
+					if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
+						deptIdList.add(vo.getDeptId());
+					}
 				}
 			}
+			
 			
 			if (deptid.equals("ALL")) {
 				deptid = "";
@@ -1356,11 +1347,13 @@ public class EzAttitudeGWController {
 			
 			List<String> deptIdList = new ArrayList<>();
 
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
-
-			for (AttitudeAuthorVO vo : authDeptlist) {
-				if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
-					deptIdList.add(vo.getDeptId());
+			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
+				
+				for (AttitudeAuthorVO vo : authDeptlist) {
+					if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
+						deptIdList.add(vo.getDeptId());
+					}
 				}
 			}
 			
@@ -1422,13 +1415,14 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
 			List<String> deptIdList = new ArrayList<>();
-			
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
-			
-			for (AttitudeAuthorVO vo : authDeptlist) {
-				if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
-					deptIdList.add(vo.getDeptId());
-				}
+			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
+				
+				for (AttitudeAuthorVO vo : authDeptlist) {
+					if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
+						deptIdList.add(vo.getDeptId());
+					}
+				}				
 			}
 			
 			if (searchDeptId.equals("ALL")) {
@@ -1854,12 +1848,14 @@ public class EzAttitudeGWController {
 			
 			List<String> deptIdList = new ArrayList<>();
 			
-			List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
-
-			for (AttitudeAuthorVO vo : authDeptlist) {
-				if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
-					deptIdList.add(vo.getDeptId());
-				}
+			if (!isAdmin.equals("Y") && searchDeptId.equals("ALL")) {
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
+				
+				for (AttitudeAuthorVO vo : authDeptlist) {
+					if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
+						deptIdList.add(vo.getDeptId());
+					}
+				}				
 			}
 			
 			if (searchDeptId.equals("ALL")) {

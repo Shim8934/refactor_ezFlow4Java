@@ -164,7 +164,8 @@
 			inputNameDlg_cross_dialogArguments[3] = functionType;
 			inputNameDlg_cross_dialogArguments[4] = folderName1;
 			inputNameDlg_cross_dialogArguments[5] = folderName2;
-			DivPopUpShow(330, 170, "/ezWebFolder/inputNameDlg.do");
+			DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=0");
+			functionType = "";
 		}
 
 		function update_onclick() {
@@ -211,7 +212,8 @@
 			inputNameDlg_cross_dialogArguments[3] = functionType;
 			inputNameDlg_cross_dialogArguments[4] = folderName1;
 			inputNameDlg_cross_dialogArguments[5] = folderName2;
-			DivPopUpShow(330, 170, "/ezWebFolder/inputNameDlg.do");
+			DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?fileId=0");
+			functionType = "";
 		}
 
 		function delete_onclick() {
@@ -360,6 +362,13 @@
 			folderType = type;
 			$('input:radio[name=treeType]:input[value=' + folderType + ']').prop("checked", true);
         	add_onclick_Complete('');
+		}
+		function refreshView() {
+			// 파일과 같은 function타게 하기 위해 생성
+		}
+		
+		function closeAllPopup() {
+			add_onclick_Complete();
 		}
 	</script>
 </head>
