@@ -297,6 +297,12 @@
 							}
 							
 							eventSetting(portletId, usedTheme);
+							
+							var portletPlus = document.getElementById(portletId + "Portlet").querySelector(".portletPlus");
+							
+							if (portletPlus != null) {
+								portletPlus.addEventListener("click", notice_all_close);
+							}
 						},
 						error : function() {
 							var nonePage = "<article class='box_shadow'></article>"

@@ -27,6 +27,7 @@
 				line-height:36px;
 		    }
 		    .popup_notice .notice_btnClose {right:8px;top:8px;}
+		    .empty_btn {height:44px;}
 		</style>
 		
 		<script type="text/javascript">
@@ -93,9 +94,6 @@
 	</head>
 	<body class = "popup_notice popup_type${skinValue}">
 		<!--  popup 해더 사이즈 : 33px;	bottom 사이즈 : 49px;본문 내용 위아래 여백 : 54px;	총 height 사이즈 : 136px; -->
-		<c:if test = "${flag ne 'preview' }" >
-			<p class="notice_btnClose close_type${skinValue}" onclick='window.close()' ><span ></span></p>
-		</c:if> 
 		<form style="height:100%;">
 		<div class="popup_noticeLayout">
 			<dl class="popup_noticeTitle">
@@ -103,13 +101,8 @@
 				<dd class="name_type${skinValue }"><c:out value='${title }'/></dd>
 			</dl>
 			<div class='popup_noticeList'>${content }</div>
-				<c:if test = "${flag ne 'preview' }" >
-					<div class="notice_btn">
-						<p class="btn_checkbox">
-							<input type="checkbox" name="checkbox" class="inp_noticeCheck" id="inp_noticeCheck" onClick="closepopup()" /> 
-							<label class="name_type${skinValue }" for="inp_noticeCheck"><spring:message code = 'ezPersonal.t267' /></label></p>
-						</div>
-				</c:if> 
+			<div class="empty_btn">
+			</div>
 		</div>
 		</form>
 		<!--  //popup -->
