@@ -1420,8 +1420,9 @@ var SurveyCreate     = function() {
 		// skip 폼 생성 이벤트
 		$(".prevQsArea").on("click", ".addSkip", function() {
 			var id = parseInt($(this).attr("id").replace("addSkip", ""));
+			var mode = "skip";
 			
-			mkSkipForm(id);
+			mkSkipForm(id, mode);
 			
 			$("#frstBtnGrp" + id).css("display", "none");
 			$("#skipScndBtnGrp" + id).css("display", "");
@@ -1441,6 +1442,10 @@ var SurveyCreate     = function() {
 			var skip = "";
 			var skipNum = $("select[name=skip" + id  + "] option:selected").val();
 			
+			if (skipNum == "") {
+				alert(SurveyMessages.strChooseNext);
+				return;
+			}
 			// option 객체에 logic 추가
 			qstn['skipFlag'] = 1;
 			qstn['skip'] = parseInt(skipNum);
@@ -3098,7 +3103,7 @@ var SurveyCreate     = function() {
 		return "success";
 	}
 	
-	function mkSkipForm(id) {
+	function mkSkipForm(id, mode) {
 		var prevWrapper = $("#prevQstn" + id);
 		var qstnContent = prevWrapper.find(".question-content");
 		var qstnList = SurveyCreate.getQs();
@@ -3106,7 +3111,12 @@ var SurveyCreate     = function() {
 		var skipFlag = qstn['skipFlag'];
 		
 		var htmlOption = "";
-		htmlOption += "<option value=''>" + SurveyMessages.strNoLogic + "</option>"; 
+		if (mode == "skip") {
+			htmlOption += "<option value=''>" + SurveyMessages.strQs + " "+ SurveyMessages.strChoice + "</option>"; 
+			
+		} else {
+			htmlOption += "<option value=''>" + SurveyMessages.strNoLogic + "</option>"; 
+		}
 		
 		for (var i = 0; i < qstnList.length; i++) {
 			var qstnId = qstnList[i]["level"];
@@ -3217,6 +3227,7 @@ var SurveyCreate     = function() {
 		var valI      = "";
 		var valJ      = "";
 		var result    = "";
+		var emptyCount = 0;
 		
 		if (type == 1 || type == 2) {
 			opt       = wrapper.find(".opt");
@@ -3231,7 +3242,14 @@ var SurveyCreate     = function() {
 			var logicNum = $("select[name=slt" + id  + i +"] option:selected").val();
 			if (logicNum != "") {
 				logicArr.push(logicNum);
+			} else {
+				emptyCount++;
 			}
+		}
+		
+		if (emptyCount == optLength) {
+			alert(SurveyMessages.strLogic);
+			return "fail";
 		}
 		
 		var arrLnegh = logicArr.length;

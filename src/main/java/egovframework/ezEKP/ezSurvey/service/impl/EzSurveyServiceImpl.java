@@ -955,22 +955,27 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	}
 	
 	private void travelNode(long qstLevel, List<List<Long>> logicPath, Map<Long, List<Long>> logicMap, List<Long> currentPath) {
-		List<Long> nodeList = logicMap.get(qstLevel);
-		currentPath.add(qstLevel);
-		
-		if (nodeList.size() == 1) {
-			long nxtQst = nodeList.get(0);
-			if (nxtQst == 0) {
-				logicPath.add(currentPath);
-			}
-			else {
-				travelNode(nxtQst, logicPath, logicMap, currentPath);
-			}
+		if (qstLevel == 0) {
+			logicPath.add(currentPath);
 		}
 		else {
-			for (long nextQsId : nodeList) {
-				List<Long> clonePath = currentPath.stream().map(elm -> new Long(elm)).collect(Collectors.toList());
-				travelNode(nextQsId, logicPath, logicMap, clonePath);
+			List<Long> nodeList = logicMap.get(qstLevel);
+			currentPath.add(qstLevel);
+			
+			if (nodeList.size() == 1) {
+				long nxtQst = nodeList.get(0);
+				if (nxtQst == 0) {
+					logicPath.add(currentPath);
+				}
+				else {
+					travelNode(nxtQst, logicPath, logicMap, currentPath);
+				}
+			}
+			else {
+				for (long nextQsId : nodeList) {
+					List<Long> clonePath = currentPath.stream().map(elm -> new Long(elm)).collect(Collectors.toList());
+					travelNode(nextQsId, logicPath, logicMap, clonePath);
+				}
 			}
 		}
 	}

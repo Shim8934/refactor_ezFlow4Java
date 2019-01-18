@@ -207,21 +207,26 @@
 		}
 		
 		function traverNode(nodeLevel, currentPath, totalPath) {
-			var nodeList = logicmap[nodeLevel];
-			currentPath.push(parseInt(nodeLevel));
-			if (nodeList.length == 1) {
-				var nxtQst = parseInt(nodeList[0]);
-				if (nxtQst == 0) {
-					totalPath.push(currentPath);
-				}
-				else {
-					traverNode(nxtQst, currentPath, totalPath);
-				}
+			if (nodeLevel == 0) {
+				totalPath.push(currentPath);
 			}
 			else {
-				for (var i = 0; i < nodeList.length; i++) {
-					var clonePath = currentPath.slice(0);
-					traverNode(parseInt(nodeList[i]), clonePath, totalPath);
+				var nodeList = logicmap[nodeLevel];
+				currentPath.push(parseInt(nodeLevel));
+				if (nodeList.length == 1) {
+					var nxtQst = parseInt(nodeList[0]);
+					if (nxtQst == 0) {
+						totalPath.push(currentPath);
+					}
+					else {
+						traverNode(nxtQst, currentPath, totalPath);
+					}
+				}
+				else {
+					for (var i = 0; i < nodeList.length; i++) {
+						var clonePath = currentPath.slice(0);
+						traverNode(parseInt(nodeList[i]), clonePath, totalPath);
+					}
 				}
 			}
 		}

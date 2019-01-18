@@ -130,4 +130,6 @@ var SurveyMessages = {
 	strViewOther : "*기타",
 	strAllUsers  : "참여인원 리스트",
 	strMultiple3 : "중복 응답이 불가한 설문입니다.",
+	strChooseNext: "이동할 질문 번호를 선택해 주세요.",
+	strChoice    : "선택",
 }
