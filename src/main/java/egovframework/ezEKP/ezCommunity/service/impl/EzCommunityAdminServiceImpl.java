@@ -663,4 +663,29 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		logger.debug("closeCommunityInfo ended.");
 		return vo;
 	}
+	
+	//2019-01-18 김혜정 - 커뮤니티 관리자 > 폐쇄 실행
+	@Override
+	public void adminCommCloseAll(String code, String reason, Locale locale, int tenantId) throws Exception {
+		logger.debug("adminCommCloseAll started.");
+		
+		aspCommCloseAllDel(code, tenantId);
+		aspAdminCommCloseAllUpdate(code, locale, reason, tenantId);
+		
+		logger.debug("adminCommCloseAll ended.");
+	}
+	
+	private void aspAdminCommCloseAllUpdate(String code, Locale locale, String reason, int tenantId) throws Exception {
+		logger.debug("aspAdminCommCloseAllUpdate started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CODE", code);
+		map.put("v_REASON", reason);
+		map.put("v_PCLOSESTATE", egovMessageSource.getMessage("ezCommunity.t38", locale));
+		map.put("tenantID", tenantId);
+		
+		ezCommunityAdminDAO.aspAdminCommCloseAllUpdate(map);
+		
+		logger.debug("aspAdminCommCloseAllUpdate ended.");
+	}
 }

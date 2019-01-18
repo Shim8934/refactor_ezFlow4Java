@@ -431,19 +431,18 @@
 			
 			// 개설된 커뮤니티 리스트 폐쇄 버튼 이벤트 메소드
 			function closeBtnClick(code) {
-				/* if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
+				if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
 					$.ajax({
 						type : "POST",
 						dataType : "json",
-						url : "/admin/ezCommunity/commCloseAll.do",
+						url : "/admin/ezCommunity/commAdminCloseAll.do",
 						async : false,
-						data : 
-							{
-								type : "listBtn",
-								code : code,
-							},
+						data : {code : code},
 						success : function(result) {
 							alert("<spring:message code = 'ezCommunity.t56' />");
+							
+							document.getElementById("txt_SearchQuery").value = "";
+							document.getElementsByName("cCateA")[0].value = "0";
 							
 							openCommunityList();
 							window.parent.parent.frames[0].getApplicationListCount();
@@ -455,7 +454,7 @@
 				}
 				else {
 					alert("<spring:message code = 'ezCommunity.t62' />");
-				} */
+				}
 			}
 			
 			// 카테고리 요소 생성

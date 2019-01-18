@@ -128,4 +128,8 @@ public class EzCommunityAdminDAO extends EgovAbstractDAO {
 	public CommunityCComCloseVO closeCommunityInfo(Map<String, Object> map) throws Exception {
 		return (CommunityCComCloseVO) select("EzCommunityAdminDAO.closeCommunityInfo", map);
 	}
+
+	public void aspAdminCommCloseAllUpdate(Map<String, Object> map) throws Exception {
+		update("EzCommunityAdminDAO.aspAdminCommCloseAllUpdate", map);
+	}
 }
