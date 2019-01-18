@@ -307,7 +307,7 @@
 			var top = (height - 800) / 2;
 			var left = (width - 1560) / 2;
 			var url = '/ezNewPortal/help/index.do';
-			var option = 'height=800px,width=1560px,top=' + top + ',left = ' + left + 'status = no, toolbar=no, menubar=no, location=no, resizable=0';
+			var option = 'height=800px,width=1560px,top=' + top + ',left = ' + left + 'status = no, toolbar=no, menubar=no, location=no, resizable=1';
 			
 			window.open(url, "", option);
 		}
@@ -411,12 +411,15 @@
 			} else {
 				menuList = orderData;
 			}
-			
 			var str = '';
 			var toggleMenu = document.getElementById('toggleMenu');
 			toggleMenu.innerHTML = '';
 
-			menuList.forEach(function (item, index) {				
+			menuList.forEach(function (item, index) {
+				// 컨텍스트메뉴와 연동하기 위함.
+				if(item.menuUrl.indexOf('ezMemo') > -1 && item.menuUsed) {
+					parent.useMemoContextMenu = true;
+				}
 				str += '<li id="'+item.menuId+'" data-companyorder='+ item.companyOrder +'><dl class="full_menu_toggleDL"><dt><span class="'+ item.iconUrl +'"></span></dt><dd>'+ ConvertCharToEntityReference(item.menuName) +'</dd></dl></li>';
 			});
 
@@ -522,7 +525,7 @@
 						newPortalTopMenu.menuListArr = result.menuList; 
 						// 메뉴 리스트 다시 덮어씌우기
 						setMainMenuList(result.menuList);
-						setExpandMenuList(result.menuList); 
+						setExpandMenuList(result.menuList);
 						subMenuClickEvent('off');
 					} else {
 						console.error(xhr.responseText);
