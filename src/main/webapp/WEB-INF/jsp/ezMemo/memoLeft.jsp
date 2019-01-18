@@ -69,7 +69,7 @@
 		    	var folderId = $(elem).attr("folderId");
 		    	var folderName = $(elem).attr("folderName");
 		    	
-	        	window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8&folderId="+folderId+"&folderName="+folderName+"&configView="+configView;
+	        	window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8&folderId="+folderId+"&folderName="+encodeURI(encodeURIComponent(folderName))+"&configView="+configView;
 		    	configView = false;
 		    }
 		    
