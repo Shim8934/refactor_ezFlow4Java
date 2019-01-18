@@ -42,15 +42,24 @@
 				E.c_cat = 'a'
 			AND
 				D.c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-			AND
-				D.companyid = #companyID#
-			AND
-				A.tenant_id = #tenantID#
-			ORDER BY
-				applicationdate DESC
-			LIMIT
-				#v_STARTROW#, 10
+				
 		]]>
+		<isNotEqual property="v_S_RADIO" compareValue="0">
+			<![CDATA[
+				AND
+					E.c_code = #v_S_RADIO#
+			]]>
+		</isNotEqual>
+			<![CDATA[
+				AND
+					D.companyid = #companyID#
+				AND
+					A.tenant_id = #tenantID#
+				ORDER BY
+					applicationdate DESC
+				LIMIT
+					#v_STARTROW#, 10
+			]]>
 	</select>
 	
 	<select id="EzCommunityAdminDAO.aspCloseGet1Select2"				parameterClass="Map"		resultClass="CommunityCComCloseVO">
@@ -117,13 +126,29 @@
 				TBL_C_CLUB
 			ON
 				TBL_C_CLUB.c_clubno = C1.c_clubno
+			INNER JOIN
+				TBL_C_CATEGORY D
+			ON
+				TBL_C_CLUB.c_cate_a = D.c_code
+			AND
+				TBL_C_CLUB.tenant_id = D.tenant_id
 			WHERE
+				D.c_cat = 'a'
+			AND
 				C1.c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
-			AND
-				TBL_C_CLUB.companyid = #companyID#
-			AND
-				C1.tenant_id = #tenantID#
-		]]>
+			]]>
+			<isNotEqual property="v_S_RADIO" compareValue="0">
+				<![CDATA[
+					AND
+						D.c_code = #v_S_RADIO#
+				]]>
+			</isNotEqual>
+				<![CDATA[
+					AND
+						TBL_C_CLUB.companyid = #companyID#
+					AND
+						C1.tenant_id = #tenantID#
+				]]>
 	</select>
 	
 	<select id="EzCommunityAdminDAO.aspCloseComGet2Select2"				parameterClass="Map"		resultClass="Integer">
@@ -181,15 +206,23 @@
 				c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				A.c_adminconfirm = 'N'
-			AND
-				A.companyid = #companyID#
-			AND
-				A.tenant_id = #tenantID#
-			ORDER BY
-				A.c_regdate DESC
-			LIMIT
-				#v_STARTROW#, 10
 		]]>
+		<isNotEqual property="v_S_RADIO" compareValue="0">
+			<![CDATA[
+				AND
+					D.c_code = #v_S_RADIO#
+			]]>
+		</isNotEqual>
+			<![CDATA[
+				AND
+					A.companyid = #companyID#
+				AND
+					A.tenant_id = #tenantID#
+				ORDER BY
+					A.c_regdate DESC
+				LIMIT
+					#v_STARTROW#, 10
+			]]>
 	</select>
 	
 	<select id="EzCommunityAdminDAO.aspAdmitComGet1Select2"				parameterClass="Map"		resultClass="CommunityClubVO">
@@ -260,15 +293,31 @@
 				TRIM(A.c_sysopid) = C.CN
 			AND
 				A.tenant_id = C.tenant_id
+			INNER JOIN
+				TBL_C_CATEGORY D
+			ON
+				A.c_cate_a = D.c_code
+			AND
+				A.tenant_id = D.tenant_id
 			WHERE
+				D.c_cat = 'a'
+			AND
 				c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_KEYWORD#, '%')
 			AND
 				c_adminconfirm = 'N'
-			AND
-				A.companyid = #companyID#
-			AND
-				A.tenant_id = #tenantID#
 		]]>
+		<isNotEqual property="v_S_RADIO" compareValue="0">
+			<![CDATA[
+				AND
+					D.c_code = #v_S_RADIO#
+			]]>
+		</isNotEqual>
+			<![CDATA[
+				AND
+					A.companyid = #companyID#
+				AND
+					A.tenant_id = #tenantID#
+			]]>
 	</select>
 	
 	<select id="EzCommunityAdminDAO.aspAdmitComGet2Select2"				parameterClass="Map"		resultClass="Integer">
