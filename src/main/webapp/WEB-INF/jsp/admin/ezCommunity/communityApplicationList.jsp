@@ -102,6 +102,7 @@
 			
 			function ChangeTab(obj) {
 				document.getElementById("searchValue").value = "";
+				document.getElementsByName("cCateA")[0].value = "0";
 				
 				pCurPage = 1;
 				applicationCommuList();

@@ -57,6 +57,14 @@
 				window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
 			}
 			
+			function view_closeCommunityInfo(pcode) {
+				var pheight = window.screen.availHeight;
+				var pwidth = window.screen.availWidth;
+				var pTop = (pheight - 295) / 2;
+				var pLeft = (pwidth - 480) / 2; 
+				window.open("/admin/ezCommunity/closeCommunityInfo.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=295,width=480,top=" + pTop + ",left=" + pLeft, "");
+			}
+			
 			function get_search_CommunityInfo(e) {
 			    var kecode = e.keyCode;
 			    
@@ -134,6 +142,8 @@
 			
 			function ChangeTab(obj) {
 				document.getElementById("txt_SearchQuery").value = "";
+				document.getElementsByName("cCateA")[0].value = "0";
+				
 				pCurPage = 1;
 				communityList();
 			}
@@ -249,7 +259,7 @@
 							var itemNum = ((pCurPage - 1) * 10) + 1 ;
 							
 							data.clubList.forEach(function(item, index){
-								html += "<tr>";
+								html += "<tr ondblclick=view_closeCommunityInfo('" + item.c_ClubNo  + "');>";
 								html += "<td style='width: 35px;'>" + itemNum + "</td>";
 								html += "<td style='width: 25%;'>" + item.c_ClubName + "</td>";
 								html += "<td style='width: 50%;'>" + item.closeReason + "</td>"; //폐쇄사유

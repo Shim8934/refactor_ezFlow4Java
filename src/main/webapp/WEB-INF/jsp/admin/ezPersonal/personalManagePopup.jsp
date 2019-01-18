@@ -125,7 +125,7 @@
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			</script>
 
-			<div class="mainView" id="mainView" style="width:63%;float:left">
+			<div class="mainView" id="mainView" style="width:calc(100% - 625px); float:left">
 				<div id="contentlist" style="width:100%; overflow: auto;">
 					<table class="mainlist" style="width:100%;">
 						<div id=AccessList style ="width:100%;"></div>
@@ -135,7 +135,7 @@
 				<div id="tblPageRayer"></div>
 			</div>
 			
-			<div class="previewH" id="previewH" style="width:37%; overflow:auto;">
+			<div class="previewH" id="previewH" style="width:625px; overflow:auto;">
 				<div id="PreviewRayerH" style="border:0px solid red; height:100%; overflow:hidden; vertical-align:top;  margin-left:0px;">
 					<span id="previewmail_bar_h" class="previewmail_bar_h" style="display: inline-block; border: 1px solid #e5e5e5; border-top:0px !important; border-bottom:0px !important;float:left;">
 						<p class="hbar_dotted" style="width:5px">

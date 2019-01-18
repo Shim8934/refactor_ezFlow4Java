@@ -124,4 +124,8 @@ public class EzCommunityAdminDAO extends EgovAbstractDAO {
 	public List<CommunityCComCloseVO> getClosedCommuList(Map<String, Object> map) throws Exception {
 		return (List<CommunityCComCloseVO>) list("EzCommunityAdminDAO.getClosedCommuList", map);
 	}
+
+	public CommunityCComCloseVO closeCommunityInfo(Map<String, Object> map) throws Exception {
+		return (CommunityCComCloseVO) select("EzCommunityAdminDAO.closeCommunityInfo", map);
+	}
 }

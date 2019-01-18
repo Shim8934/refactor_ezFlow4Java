@@ -58,4 +58,6 @@ public interface EzCommunityAdminService {
 	int getClosedCommuListCount(String multiData, Locale locale, String searchValue, String companyId, int tenantId) throws Exception;
 
 	List<CommunityCComCloseVO> getClosedCommuList(String primary, Locale locale, int pageNum, String searchValue, String companyId, int tenantId) throws Exception;
+
+	CommunityCComCloseVO closeCommunityInfo(String multiData, String code, String companyId, int tenantId) throws Exception;
 }
