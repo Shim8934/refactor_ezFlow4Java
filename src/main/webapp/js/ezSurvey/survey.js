@@ -423,8 +423,8 @@ var SurveyCreate     = function() {
 			if (returnObj["error"]) {return returnObj;}
 			returnObj = checkStep2();
 			if (returnObj["error"]) {return returnObj;}
-			returnObj = checkQsCount();
-			if (returnObj["error"]) {return returnObj;}
+			//returnObj = checkQsCount();
+			//if (returnObj["error"]) {return returnObj;}
 		}
 		
 		document.querySelector("div[class='quesDiv']").querySelector("input[class='questnTitle']").focus();
@@ -488,15 +488,15 @@ var SurveyCreate     = function() {
 		
 		return returnObj;
 	}
-	
+	/*
 	function checkQsCount() {
 		var returnObj    = {};
 		var questionList = getSurveyQuestions();
 		
-		if (questionList.length == 1) {returnObj["error"] = SurveyMessages.strQsCount; return returnObj;}
+		if (questionList.length < 1) {returnObj["error"] = SurveyMessages.strQsCount; return returnObj;}
 		return returnObj;
 	}
-	
+	*/
 	function checkStep3() {
 		var returnObj = {};
 		

@@ -103,7 +103,7 @@ var SurveyMessages = {
 	strQs        : "질문",
 	strMore      : "이상",
 	strLogic     : "분기를 설정해 주세요.",
-	strQsCount   : "분기 설정은 2개 이상의 질문 필요합니다.",
+	//strQsCount   : "분기 설정은 2개 이상의 질문 필요합니다.",
 	strSkipLogic : "분기 설정 단계를 생략 하시겠습니까?",
 	strSaveAsk   : "설문을 저장하시겠습니까?",
 	strLast      : "설문완료",
