@@ -159,12 +159,11 @@
 		<result property="rowId"               column="row_id"               columnIndex="8" />
 		<result property="columnId"            column="column_id"            columnIndex="9" />
 		<result property="rankingLevel"        column="ranking_level"        columnIndex="10"/>
-		<result property="rankingOptionLevel"  column="ranking_option_level" columnIndex="11"/>
-		<result property="sliderValue"         column="slider_value"         columnIndex="12"/>
-		<result property="image"               column="image"                columnIndex="13"/>
-		<result property="responseDate"        column="response_date"        columnIndex="14"/>
-		<result property="userName"            column="user_name"            columnIndex="15"/>
-		<result property="deptName"            column="dept_name"            columnIndex="16"/>
+		<result property="sliderValue"         column="slider_value"         columnIndex="11"/>
+		<result property="image"               column="image"                columnIndex="12"/>
+		<result property="responseDate"        column="response_date"        columnIndex="13"/>
+		<result property="userName"            column="user_name"            columnIndex="14"/>
+		<result property="deptName"            column="dept_name"            columnIndex="15"/>
 		
 	</resultMap>
 	
@@ -865,7 +864,6 @@
 								r.row_id,
 								r.column_id,
 								r.ranking_level,
-								r.ranking_option_level,
 								r.slider_value,
 								d.image,
 								date_add(d.response_date, interval #offset# minute) as response_date,
