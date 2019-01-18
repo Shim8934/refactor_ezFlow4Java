@@ -381,6 +381,7 @@ SELECT
     quicklinkname2, 
     quicklinkname3, 
     linktype, 
+    linktypeurl,
     url,
     quicksize
 FROM (
@@ -392,7 +393,8 @@ FROM (
 		    Q.quicklinkname, 
 		    Q.quicklinkname2, 
 		    Q.quicklinkname3, 
-		    Q.linktype, 
+		    Q.linktype,
+		    Q.linktypeurl, 
 		    Q.url,
 		    Q.size_ as quicksize,
 		    NVL(U.view_flag, NVL(DEPT.view_flag, NVL(COMP.view_flag, NVL(EVERY.view_flag, 'N')))) as viewflag
