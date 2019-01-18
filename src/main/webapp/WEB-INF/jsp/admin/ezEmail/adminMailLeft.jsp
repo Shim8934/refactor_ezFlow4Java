@@ -139,16 +139,12 @@
 				<h2>
 					<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
 				</h2>
-				</c:if>
-				<c:if test="${cChk == '1'}">
 				<h2>
 					<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
 				</h2>
 				<h2>
 					<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
 				</h2>  
-				</c:if>
-				<c:if test="${cChk == '1' || kChk == '1'}">
 				<h2>
 					<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
 				</h2>  
@@ -158,7 +154,6 @@
 						<ul></ul>
 					</h2>
 				</c:if>
-
 				</c:if>
 
 				<!-- 2018-02-20 재은 수정 (편지지 등록) -->
