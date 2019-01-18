@@ -1213,11 +1213,17 @@
 		        	data1.push(totalArry[i].data1);
 			        data2.push(totalArry[i].data2);
 		        }
-		        
-		        console.log("1: "+data1+"|| 2: "+data2);
-		        
-		        jQuery.ajaxSettings.traditional = true; 
-		        
+
+				if(data1.length == 0 || data2.length == 0) {
+					if(document.getElementById('lvPermissionList').children[1].childElementCount == 0) {
+						alert("등록할 사원을 선택해주세요.");
+						return;
+					}
+					alert(strLang14);
+					window.close();
+					return;
+		        }
+				jQuery.ajaxSettings.traditional = true; 
 		        $.ajax({
 	            	type : "POST",
 	            	dataType : "text",
@@ -1225,8 +1231,6 @@
 	            	async : false,
 	            	data : {parentCn : "", cn : data1, extensionAttribute1 : data2},
 	            	success : function(result){
-	            		//TODO : 2016-05-03 장진혁과장 -- Email 전송메소드 구현 필요
-	            		//sendmail(GetAttribute(p_ListOrderObject, "_data2"), strLang18, AclText)
 	            		 alert(strLang14);
 	            	
 	            	if (ReturnFunction!=null) {
