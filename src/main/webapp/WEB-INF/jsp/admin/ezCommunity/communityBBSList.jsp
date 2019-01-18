@@ -316,8 +316,8 @@
 			</form>
 		</table>
 		
-		<div id="contentlist">
-			<table class="mainlist" style="width:100%;margin-top: 10px">
+		<div id="contentlist" style="margin-top: 10px;">
+			<table class="mainlist" style="width:100%;">
 				<span id="idSpan">${idSpanValue}</span>
 			</table>
 		</div>
