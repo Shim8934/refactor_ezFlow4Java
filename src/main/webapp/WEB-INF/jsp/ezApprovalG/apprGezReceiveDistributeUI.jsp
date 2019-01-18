@@ -1403,40 +1403,41 @@
                 <li><span onclick="return btnCancel_onclick()"></span></li>
             </ul>
         </div>
+	    <%-- 2019-01-10 천성준 - [배부부서]라는 최상단의 탭인데 하나밖에 없는데 쓸모가 있을까 하여 주석처리함
 	    <div class="portlet_tabpart02" style="margin-bottom:10px">
 	        <div class="portlet_tabpart02_top" id="tab1">
 	            <p id="showAprLine"><span divname="Lineinfo" id="1tab1" class="tabover"><spring:message code='ezApprovalG.t427'/></span></p>
 	        </div>
-	    </div>
+	    </div> 
+	    --%>
 	    <table>
 	        <tr>
 	            <td style="vertical-align: top;">
-	                <div class="portlet_tabpart01" style="margin-top: 3px; text-align: right;">
+	                <div class="portlet_tabpart01" style="margin-top: 0px; text-align: right;">
 	                    <div class="portlet_tabpart01_top" id="tab3">
 	                        <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
 	                        <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
 	                    </div>
 	                </div>
 	                <div id="Organ">
-	                    <div style="overflow-x: hidden; overflow-y: auto; height: 550px; width: 395px; background-color: #FFFFFF; border: 1px solid #ddd;border-top:0px" id="TreeView"></div>
+	                    <div style="overflow-x: hidden; overflow-y: auto; height: 455px; width: 380px; background-color: #FFFFFF; border: 1px solid #ddd;border-top:0px" id="TreeView"></div>
 	                </div>
 	                <!-- 즐겨찾기 -->
-	                <div id="ReceptTemp" style="display: none; padding-left: 5px">
+	                <div id="ReceptTemp" style="display: none;">
 	                    <table>
 	                        <tr>
-	                            <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
+	                            <td style="background-color: #f8f8f8; padding: 3px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                <h2 class="h2_dot"><spring:message code='ezApprovalG.G0003'/></h2>
 	                                <div class="border_gray">
-	                                    <div id="RecSaveList" style="border: 0px; Width: 388px; Height: 237px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
-	                                    </div>
+	                                    <div id="RecSaveList" style="border: 0px; Width: 380px; Height: 200px; OVERFLOW: AUTO;"></div>
 	                                </div>
 	                            </td>
 	                        </tr>
 	                        <tr>
 	                            <td style="background-color: transparent; text-align: center; height: 30px;">
-	                                <table class="content" style="margin-bottom: 5px; width: 100%;">
+	                                <table class="content" style="margin-bottom: 3px; width: 100%;">
 	                                    <tr>
-	                                        <td style="text-align: center; padding-top:1.5px;">
+	                                        <td style="text-align: center; padding-top:3px;">
 	                                            <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
 	                                            <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
 	                                            <a class="imgbtn imgbck"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
@@ -1448,15 +1449,9 @@
 	                        <tr>
 	                            <td style="vertical-align: top;">
 	                                <div class="border_gray">
-	                                    <div id="RecSaveDetail" style="Width: 388px; Height: 237px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
-	                                    </div>
+	                                    <div id="RecSaveDetail" style="Width: 380px; Height: 181px; OVERFLOW: AUTO; border: 0px;"></div>
 	                                </div>
 	                            </td>
-	                        </tr>
-	                    </table>
-	                    <table style="width: 100%;">
-	                        <tr>
-	                            <td style="text-align: left; height: 30px;">
 	                        </tr>
 	                    </table>
 	                </div>
@@ -1470,13 +1465,13 @@
 	                </div>
 	            </td>
 	            <td style="vertical-align: top;">
-	                <h2 class="h2_dot" style="padding-top:6px;padding-bottom:3px;float:left"><spring:message code='ezApprovalG.t432'/></h2>
+	                <h2 class="h2_dot" style="padding-top:3px;padding-bottom:3px;float:left"><spring:message code='ezApprovalG.t432'/></h2>
 	                <div style="float:right;">
-	                    <a class="imgbtn imgbck" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
+	                    <a class="imgbtn imgbck" style="margin-top: 3px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
 	                </div>
 	                <div style="clear:both"></div>
 	                <div class="listview">
-	                    <div id="APRLINE1" style="border: 0; Width: 550px; Height: 550px; overflow: auto;"></div>
+	                    <div id="APRLINE1" style="border: 0; Width: 370px; Height: 455px; overflow: auto;"></div>
 	                </div>
 	            </td>
 	        </tr>

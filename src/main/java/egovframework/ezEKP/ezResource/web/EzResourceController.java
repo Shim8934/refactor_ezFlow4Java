@@ -233,16 +233,16 @@ public class EzResourceController extends EgovFileMngUtil {
 				nodes.item(i).setTextContent("TRUE");
 				nodes1.item(i).removeChild((Node) nodes4.item(i));
 				
-				if(nodes2.item(0).getTextContent().equals("")) {
+				if(nodes2.item(0).getTextContent() == null || nodes2.item(0).getTextContent().equals("")) {
 					nodes2.item(0).setTextContent("<![CDATA[]]>");
 				}
-				if(nodes5.item(i).getTextContent().equals("")) {
+				if(nodes5.item(i).getTextContent() == null || nodes5.item(i).getTextContent().equals("")) {
 					nodes5.item(i).setTextContent("<![CDATA[]]>");
 				}
-				if(nodes6.item(i).getTextContent().equals("")) {
+				if(nodes6.item(i).getTextContent() == null || nodes6.item(i).getTextContent().equals("")) {
 					nodes6.item(i).setTextContent("<![CDATA[]]>");
 				}
-				if(nodes7.item(i).getTextContent().equals("")) {
+				if(nodes7.item(i).getTextContent() == null || nodes7.item(i).getTextContent().equals("")) {
 					nodes7.item(i).setTextContent("<![CDATA[]]>");
 				}
 				
@@ -1341,11 +1341,12 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdName = resBrdVO.getBrdNm2();
 		}
 		
-		startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-		endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+		// 2019-01-15 김민성 - 자원관리 - 자원관리 예약 시간 조회 12시간->24시간제로 변경
+		//startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd hh:mm:ss", "");
+		//endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd hh:mm:ss", "");
 
-		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
-		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
+		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd hh:mm:ss", "yyyy-M-d H:mm", "");
+		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd hh:mm:ss", "yyyy-M-d H:mm", "");
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("editor", editor);
@@ -2226,10 +2227,6 @@ public class EzResourceController extends EgovFileMngUtil {
 	    	String emailAddress = resInfo.get(i).getMailAddress();
 	    	String accessName = resInfo.get(i).getOwnerNm();
 	    	
-	    	if (accessName.indexOf("(") > -1) {
-	    		accessName = accessName.split("(")[0];
-	    	}
-	    	
 	    	InternetAddress to = new InternetAddress();
 	    	to.setPersonal(accessName, "UTF-8");
 	    	to.setAddress(emailAddress);
@@ -2292,7 +2289,7 @@ public class EzResourceController extends EgovFileMngUtil {
     	String accessName = resInfo.getOwnerNm(); 
     	
     	if (accessName.indexOf("(") > -1) {
-    		accessName = accessName.split("(")[0];
+    		accessName = accessName.split("\\(")[0];
     	}
     	
     	InternetAddress to = new InternetAddress();

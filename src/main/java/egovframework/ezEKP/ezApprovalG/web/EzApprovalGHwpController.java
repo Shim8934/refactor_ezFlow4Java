@@ -116,6 +116,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
+		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("hwpToolbar", hwpToolbar);
@@ -141,6 +142,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("isHWP", "Y");
 		model.addAttribute("nonElecRec", nonElecRec);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		
 		LOGGER.debug("draftuiHWP ended");
 		
@@ -256,7 +258,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         String optisSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
         String optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
         String optjunKyukInfo = ezApprovalGService.getOptionInfo("A32", "001", userInfo, "CODE");
-             
+        String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
+        
         String nonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
         if (!nonElecRec.equals("")) {
         	model.addAttribute("nonElecRec", nonElecRec);
@@ -284,6 +287,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         model.addAttribute("isHWP", "Y");
         model.addAttribute("useReceiveDocNo", useReceiveDocNo);
         model.addAttribute("orgCompanyID", orgCompanyID);
+        model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
         
 		LOGGER.debug("approvuiHWP ended");
 		
@@ -759,6 +763,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		
 		// 비전자문서 구분 값  (return >> "Y" = TRUE, "" = FALSE)
 		String isNonElecRec = ezApprovalGService.checkNonElecRec(orgDocID, userInfo.getCompanyID(), userInfo.getTenantId());
+
+		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		model.addAttribute("optSignDateFormat", optSignDateFormat);
 		model.addAttribute("optIsSplit", optIsSplit);
@@ -777,6 +783,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		model.addAttribute("isNonElecRec", isNonElecRec);
 		model.addAttribute("approvalRoot", approvalRoot);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+		model.addAttribute("docNumZeroCnt", Integer.parseInt(docNumZeroCnt));
 		
 		LOGGER.debug("ezRecevGSusinHWP ended");
 		
@@ -847,6 +854,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    String Use_ImgTagTOAttah_body = "N";
 	    String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 	    String approvalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator;
+	    String orgCompanyID = request.getParameter("orgCompanyID");
 
 	    //회사아이디가 기관코드로 안돼있기때문에 지정해줘야됨
 	    String companyID = config.getProperty("config.companyNum");
@@ -861,6 +869,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    model.addAttribute("approvalRoot", approvalRoot);
 	    model.addAttribute("approvalPWD", approvalPWD);
 	    model.addAttribute("Use_ImgTagTOAttah_body", Use_ImgTagTOAttah_body);
+	    model.addAttribute("orgCompanyID", orgCompanyID);
 		
 		LOGGER.debug("ezSimsaG_HWP ended");
 		

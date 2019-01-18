@@ -385,7 +385,7 @@ public class EzJournalAdminController {
 		String status = "";
 		logger.debug("formId:" + formId);
 		// formId가 있으면 수정, 없으면 신규등록
-		if (formId != null && formId.trim() != "") {
+		if (formId != null && !formId.trim().equals("")) {
 			param.put("formId", formId);
 			restUrl = "/rest/ezjournal/types/" + typeId + "/forms/" + formId;
 			result = commonUtil.getJsonFromRestApi(restUrl, null, request, "put", param);

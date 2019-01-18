@@ -127,6 +127,7 @@
 		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 		    var useReceiveDocNo = "${useReceiveDocNo}";
 			var wAprMemberSN = "1";
+			var docNumZeroCnt = "${docNumZeroCnt}";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -576,7 +577,7 @@
 		    function saveSuSinDocInfo() {
 		        var rtnval = true;
 		        if (approvalFlag == "G") {
-		        	rtnval = getRecvDocNumber(arr_userinfo[4]);
+		        	rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 		        }
 		        if (!rtnval) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t2101'/>";
@@ -862,7 +863,7 @@
 		        ezreceivedistributeui_cross_dialogArguments[0] = parameter;
 		        ezreceivedistributeui_cross_dialogArguments[1] = btnDistribute_onclick_Complete;
 		
-		        DivPopUpShow(1000, 760, "/ezApprovalG/ezReceiveDistributeUI.do");
+		        DivPopUpShow(800, 600, "/ezApprovalG/ezReceiveDistributeUI.do");
 		    }
 		    function btnDistribute_onclick_Complete(ret) {
 		        DivPopUpHidden();
@@ -894,7 +895,7 @@
 		        ezreceiveassignui_cross_dialogArguments[0] = parameter;
 		        ezreceiveassignui_cross_dialogArguments[1] = btnAssign_onclick_Complete;
 		
-		        DivPopUpShow(605, 375, "/ezApprovalG/ezReceiveAssignUI.do"); //460
+		        DivPopUpShow(800, 600, "/ezApprovalG/ezReceiveAssignUI.do"); //460
 		    }
 		
 		    function btnAssign_onclick_Complete(ret) {

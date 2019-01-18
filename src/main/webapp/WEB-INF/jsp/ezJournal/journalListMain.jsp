@@ -812,7 +812,7 @@
 
 // 						document.getElementById("divList").style.overflow = "auto";
 						document.getElementById("PreviewRayerH").style.width = (pMailPreWidthH - 70) + "px";
-						document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 10) + "px";
+						document.getElementById("PreContent_RayerH").style.width = (pMailPreWidthH - 5) + "px";
 // 						document.getElementById("ifrmPreViewH").style.height = (CurrentHeight - 68) + "px";
 						pPreviewShow_HOW = "H";
 						pMailListDiv_H = Math.round((pMailListWidthH / CurrenWidth) * 100);

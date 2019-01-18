@@ -22,7 +22,8 @@
 <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
-<!-- module --> 
+<!-- module -->
+<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/row-selector.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/favorite.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/buttons.js')}"></script>
@@ -31,12 +32,21 @@
 <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 <script type="text/javascript">
 	"use strict";
+	var folderType = "";
+	var userId = "${userId}";
+	var folderId = "";
+	var inputNameDlg_cross_dialogArguments = new Array();
+	var parentId = "";
+	
 	var context = (function() {
 		var isFavoriteMode = false;
 		
 		var currentFolderId = 0;
 		var currentFolderType = "";
 		
+		var inputNameDlg_cross_dialogArguments = new Array();
+// 		var parentId = folderId;
+
 		// event listener
 		var onListTypeChangeEvent = function(isFavoriteMode) {};
 		
@@ -66,6 +76,7 @@
 		};
 		
 		var setList = function(folderId, folderType, isAsync) {
+			window.folderId = folderId;
 			currentFolderId = folderId;
 			
 			if (isFavoriteMode) {
@@ -246,6 +257,8 @@
         };
         
         $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+        var folderId = context.getfolderId;
+        
 	});
 	
 	function initDomElement() {
@@ -313,6 +326,7 @@
 				hideProgress();
 			}
 		})
+		
 	}
 
 	function loadList(folderId, folderType, isAsync) {
@@ -386,6 +400,7 @@
 				renderList(data.fileList, true);
 				setNamePath(data.folderPath, data.originalPath);
 				setMailBoxInfo(data.fldCnt, data.fileCnt);
+				window.folderType = folderType;
 			},
 			error: function(error) {
 				hideProgress();
@@ -548,6 +563,18 @@
 			row.setAttribute("class", "bnkWebFolder");
 			row.setAttribute("targetId", resultJson[columnMap.id]);
 			row.setAttribute("targetPath", resultJson[columnMap.path]);
+			
+			var functionType = ""
+			if (result[i]["targetType"]) {
+				functionType = splitTargetType(result[i]["targetType"]);
+				row.setAttribute("targetFunction", functionType);
+			}
+			var creator = ""
+			if (!result[i]["creatorId"]) {
+				row.setAttribute("targetCreater", result[i]["createId"]);
+			} else {
+				row.setAttribute("targetCreater", result[i]["creatorId"]);
+			}
 			row.addEventListener("click", function(event) {rowContext.onRowClick(event, this);});
 			
 			if (!isFromFolder && isFolder) {
@@ -749,78 +776,6 @@
 		context.refreshList(true);
 	}
 	
-	// fileupload 함수 가로채기
-	fileupload = function() {
-		var progress_bar_id = '#progress-wrp';
-		var fd = new FormData();
-		fd.append("folderId", context.getFolderId());
-		
-		for (var i = 0; i < file.length; i++) {
-			fd.append("fileToUpload", file[i]);
-		}
-		
-		$.ajax({
-			url: "/ezWebFolder/uploadFile.do",
-			type: "POST",
-			data: fd,
-			contentType: false,
-			dataType: "JSON",
-			cache: false,
-			processData: false,
-			xhr: function() {
-				//upload Progress
-				document.getElementById('progress-wrp').style.display = "";
-				var xhr = $.ajaxSettings.xhr();
-				if (xhr.upload) {
-					xhr.upload.addEventListener('progress', function(event) {
-						var percent = 0;
-						var position = event.loaded || event.position;
-						var total = event.total;
-						if (event.lengthComputable) {
-							percent = Math.ceil(position / total * 100);
-						}
-						//update progressbar
-						$(progress_bar_id + " .progress-bar").css("width", +percent + "%");
-						$(progress_bar_id + " .status").text(percent == 100 ? percent + "%  -  Processing..." : percent + "%");
-					}, true);
-				}
-				return xhr;
-			},
-			mimeType: "multipart/form-data",
-			success: function(data) {
-				var code = data.code;
-				
-				switch(code) {
-					case 0: 
-						context.refreshList(true);
-						break;
-					case 1:
-						alert("<spring:message code='ezWebFolder.t306'/>");
-						break;
-					case 2:
-						alert("<spring:message code='ezWebFolder.t305'/>");
-						break;
-					case 3:
-						alert("<spring:message code='ezWebFolder.t300'/>");
-						break;
-					case 4:
-						alert("<spring:message code='ezWebFolder.t249'/>");
-						break;
-					case 5:
-						alert("<spring:message code='ezWebFolder.t250'/>");
-						break;
-				}
-			},
-			error: function(error) {
-				alert(strErr);
-			}
-		}).complete(function(res) {
-			$(progress_bar_id + " .progress-bar").css("width", "0%");
-			$(progress_bar_id + " .status").text("0%");
-			document.getElementById('progress-wrp').style.display = "none";
-		});
-	};
-	
 	function onFileTypeChange(value) {
 		searchContext.setFileType(value);
 		pagination.setPage(1);
@@ -854,6 +809,51 @@
 		blockLeft.style.height = "100%";
 		blockLeft.style.display = "none";
 	}
+	
+	function splitTargetType(data) {
+		var jbString = data;
+		var jbSplit = jbString.split('_');
+		return jbSplit[1];
+	}
+	
+	function getSelectedFoldersAndFiles() {
+		var selectedRows = rowContext.getSelectedRows();
+		var selectedLength = selectedRows.length;
+		
+		if (selectedLength <= 0) {
+			alert(messages.strLang5);
+			return undefined;
+		}
+		
+		var files  = [];
+		var folders = [];
+		var creater = [];
+		var targetFunction = [];
+		var targetPath = [];
+		var rowInfo;
+		
+		for (var i = 0; i < selectedLength; i++) {
+			rowInfo = rowContext.getRowInfo(selectedRows[i]);
+			
+			if (rowInfo.type === 'D') {
+				folders.push(rowInfo.id);
+				creater.push(rowInfo.creator);
+				targetFunction.push(rowInfo.targetFunction);
+				functionType = targetFunction[0];
+				targetPath.push(getPathSplit(rowInfo.targetPath).length);
+			} else {
+				files.push(rowInfo.id);
+			}
+		}
+		
+		return {
+			folders : folders,
+			files : files,
+			creater : creater,
+			targetFunction : targetFunction ,
+			targetPath : targetPath
+		}
+	}
 </script>
 </head>
 <body class="mainbody" favoritemode>
@@ -868,6 +868,7 @@
 			<ul>
 				<li favoritemenu onclick="buttons.fileDownload()" class="important"><span><spring:message code='ezWebFolder.t186'/></span></li>
 				<li id="upload" onclick="buttons.fileUpload()" class="important"><span><spring:message code='ezWebFolder.t187'/></span></li>
+				<li id ="newFolder"><span onclick="buttons.newFolder()"><spring:message code='ezWebFolder.t255' /></span></li>
 				<li favoritemenu onclick="buttons.fileRename()"><span><spring:message code='ezWebFolder.t273'/></span></li>
 				<li onclick="buttons.fileMoveAndCopy()"><span><spring:message code='ezWebFolder.t275'/></span></li>
 				<li onclick="shareContext.addShareView()"><span><spring:message code='ezWebFolder.t254'/></span></li>			

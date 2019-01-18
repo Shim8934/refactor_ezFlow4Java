@@ -15,6 +15,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Properties;
 import java.util.TimeZone;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -70,6 +71,7 @@ import com.sun.org.apache.xml.internal.security.utils.Base64;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
@@ -131,6 +133,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 	
 	@Resource(name="EzPortalService")
 	private EzPortalService ezPortalService;
+	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
+	
+	@Autowired
+	private Properties config;
 	
 	/**
 	 * 일정관리 인덱스화면 호출함수
@@ -910,17 +918,22 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezSchedule/scheduleAddMember.do", produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public void scheduleAddMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+	public void scheduleAddMember(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleAddMember started ============");
 		
-		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		loginVO = commonUtil.userInfo(loginCookie);
 		
 		String groupId = request.getParameter("groupID");
 		String memberList = request.getParameter("memberList");
+		String displayName = request.getParameter("displayName");
+		String displayName2 = request.getParameter("displayName2");
 
 		JSONParser parser = new JSONParser();
 		JSONArray jsonArray = (JSONArray)parser.parse(memberList);
+		
+		String dotNetTotalNotification = ezCommonService.getTenantConfig("dotNetTotalNotification", loginVO.getTenantId());
+	    logger.debug("dotNetTotalNotification=" + dotNetTotalNotification);
 		
 		for(int i = 0; i < jsonArray.size(); i++) {
 			JSONObject obj = (JSONObject) jsonArray.get(i);
@@ -928,8 +941,59 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String memberId = (String) obj.get("memberID");
 			String memberName = (String) obj.get("memberName1");
 			String memberName2 = (String) obj.get("memberName2");
+			String groupName = (String) obj.get("groupName");
+			String description = (String) obj.get("description");
 			
-			ezScheduleService.insertScheduleGroupMember(groupId, memberId, memberName, memberName2, loginSimpleVO.getTenantId());
+			ezScheduleService.insertScheduleGroupMember(groupId, memberId, memberName, memberName2, loginVO.getTenantId());
+			
+			//KT텔레캅 통합알람 푸쉬 코드
+		    if(dotNetTotalNotification.equalsIgnoreCase("yes")) {
+		    	try {
+		    		String resultCode = "";
+		    		String serverFlag = "dotNet";
+		    		//String serverDomain = config.getProperty("");
+		    		String serverDomain = "http://dev.mail.kttelecop.co.kr";
+		    		
+					String groupMemberIdParam = "userId=" + URLEncoder.encode(memberId, "UTF-8");
+					String mainTypeParam = "type=" + URLEncoder.encode("schedule", "UTF-8");
+					String subTypeParam = "subType=" + URLEncoder.encode("attendant", "UTF-8");
+					String senderIdParam = "senderId=" + URLEncoder.encode(loginVO.getId(), "UTF-8");
+					String senderNameParam = "";
+					if (loginVO.getLang().equals("1")) {
+				    	 senderNameParam = "senderName=" + URLEncoder.encode(displayName, "UTF-8");
+				     } else { 
+				    	 senderNameParam = "senderName=" + URLEncoder.encode(displayName2, "UTF-8");
+				     }
+					String subjectParam = "subject=" + URLEncoder.encode("["+groupName+"] " + description, "UTF-8");
+					String etcDataParam = "etcData=";
+					String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezSchedule/scheduleReceiveMember.do?serverFlag="+serverFlag, "UTF-8");
+					String mobileLinkURLParam = "mobileLinkURL=" + URLEncoder.encode("/Schedule/schedule_receive_member.aspx", "UTF-8");
+					String viewTypeParam = "viewType=" + URLEncoder.encode("layer", "UTF-8");
+					String viewWidthParam = "viewWidth=" + URLEncoder.encode("730", "UTF-8");
+					String viewHeightParam = "viewHeight=" + URLEncoder.encode("370", "UTF-8");
+					
+					String inputParams = groupMemberIdParam + "&" + mainTypeParam + "&" + subTypeParam + "&" + senderIdParam + "&";
+						   inputParams += senderNameParam + "&" + subjectParam + "&" + etcDataParam + "&" + linkURLParam + "&";
+						   inputParams += mobileLinkURLParam + "&" + viewTypeParam + "&" + viewWidthParam + "&" + viewHeightParam; 
+
+					logger.debug("inputParams=" + inputParams);
+
+					String requestURL = config.getProperty("config.JGwServerURL") + "/ezTalkGate/addNotificationETC";
+					String webServiceResultResponse = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+					logger.debug("response=" + webServiceResultResponse);
+
+					if (webServiceResultResponse != null) {
+						JSONParser jsonParser = new JSONParser();
+						JSONObject responseObj = (JSONObject)jsonParser.parse(webServiceResultResponse);
+
+						resultCode = (String)responseObj.get("resultCode");
+						logger.debug("resultCode=" + resultCode);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		    }
 		}
 	}
 	
@@ -975,11 +1039,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value="/ezSchedule/scheduleSaveGroup.do")
 	@ResponseBody
-	public void scheduleSaveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginSimpleVO loginSimpleVO) throws Exception {
+	public void scheduleSaveGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleSaveGroup started ============");
 		
-		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
+		loginVO = commonUtil.userInfo(loginCookie);
 		
 		String gUID = UUID.randomUUID().toString().toUpperCase();		
 		String groupName = request.getParameter("groupName");
@@ -988,10 +1052,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String displayName2 = request.getParameter("displayName2");		
 		String memberList = request.getParameter("memberList");
 		
-		ezScheduleService.insertScheduleGroup(gUID, loginSimpleVO.getId(), displayName, displayName2, groupName, description, loginSimpleVO.getTenantId() ,loginSimpleVO.getCompanyID());
+		ezScheduleService.insertScheduleGroup(gUID, loginVO.getId(), displayName, displayName2, groupName, description, loginVO.getTenantId() ,loginVO.getCompanyID());
 
 		JSONParser parser = new JSONParser();
 		JSONArray jsonArray = (JSONArray)parser.parse(memberList);
+		
+		//KT텔레캅 통합알람 푸쉬 코드
+	    String dotNetTotalNotification = ezCommonService.getTenantConfig("dotNetTotalNotification", loginVO.getTenantId());
+	    logger.debug("dotNetTotalNotification=" + dotNetTotalNotification);
 		
 		for(int i = 0; i < jsonArray.size(); i++) {
 			JSONObject obj = (JSONObject) jsonArray.get(i);
@@ -1000,7 +1068,56 @@ public class EzScheduleController extends EgovFileMngUtil {
 			String memberName = (String) obj.get("memberName1");
 			String memberName2 = (String) obj.get("memberName2");
 			
-			ezScheduleService.insertScheduleGroupMember(gUID, memberId, memberName, memberName2, loginSimpleVO.getTenantId());
+			ezScheduleService.insertScheduleGroupMember(gUID, memberId, memberName, memberName2, loginVO.getTenantId());
+			
+			//KT텔레캅 통합알람 푸쉬 코드
+		    if(dotNetTotalNotification.equalsIgnoreCase("yes")) {
+		    	try {
+		    		String resultCode = "";
+		    		String serverFlag = "dotNet";
+		    		//String serverDomain = config.getProperty("");
+		    		String serverDomain = "http://dev.mail.kttelecop.co.kr";
+		    		
+					String groupMemberIdParam = "userId=" + URLEncoder.encode(memberId, "UTF-8");
+					String mainTypeParam = "type=" + URLEncoder.encode("schedule", "UTF-8");
+					String subTypeParam = "subType=" + URLEncoder.encode("attendant", "UTF-8");
+					String senderIdParam = "senderId=" + URLEncoder.encode(loginVO.getId(), "UTF-8");
+					String senderNameParam = "";
+					if (loginVO.getLang().equals("1")) {
+				    	 senderNameParam = "senderName=" + URLEncoder.encode(displayName, "UTF-8");
+				     } else { 
+				    	 senderNameParam = "senderName=" + URLEncoder.encode(displayName2, "UTF-8");
+				     }
+					String subjectParam = "subject=" + URLEncoder.encode("["+groupName+"] " + description, "UTF-8");
+					String etcDataParam = "etcData=";
+					String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezSchedule/scheduleReceiveMember.do?serverFlag="+serverFlag, "UTF-8");
+					String mobileLinkURLParam = "mobileLinkURL=" + URLEncoder.encode("/Schedule/schedule_receive_member.aspx", "UTF-8");
+					String viewTypeParam = "viewType=" + URLEncoder.encode("layer", "UTF-8");
+					String viewWidthParam = "viewWidth=" + URLEncoder.encode("730", "UTF-8");
+					String viewHeightParam = "viewHeight=" + URLEncoder.encode("370", "UTF-8");
+					
+					String inputParams = groupMemberIdParam + "&" + mainTypeParam + "&" + subTypeParam + "&" + senderIdParam + "&";
+						   inputParams += senderNameParam + "&" + subjectParam + "&" + etcDataParam + "&" + linkURLParam + "&";
+						   inputParams += mobileLinkURLParam + "&" + viewTypeParam + "&" + viewWidthParam + "&" + viewHeightParam; 
+
+					logger.debug("inputParams=" + inputParams);
+
+					String requestURL = config.getProperty("config.JGwServerURL") + "/ezTalkGate/addNotificationETC";
+					String webServiceResultResponse = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+					logger.debug("response=" + webServiceResultResponse);
+
+					if (webServiceResultResponse != null) {
+						JSONParser jsonParser = new JSONParser();
+						JSONObject responseObj = (JSONObject)jsonParser.parse(webServiceResultResponse);
+
+						resultCode = (String)responseObj.get("resultCode");
+						logger.debug("resultCode=" + resultCode);
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+		    }
 		}
 	}
 	
@@ -1905,8 +2022,65 @@ public class EzScheduleController extends EgovFileMngUtil {
         	result = ezScheduleService.updateSchedule(scheduleid, creatorid, creatorname, creatorname2, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, defaultPath, loginVO.getTenantId(), loginVO.getCompanyID());
         }
 	    
-	    //2018-08-01 구해안 반복설정 날짜 체크
+	    //KT텔레캅 통합알람 푸쉬 코드
+	    String dotNetTotalNotification = ezCommonService.getTenantConfig("dotNetTotalNotification", loginVO.getTenantId());
+	    logger.debug("dotNetTotalNotification=" + dotNetTotalNotification);
+	    String serverFlag = "dotNet";
+		//String serverDomain = config.getProperty("");
+		String serverDomain = "http://dev.mail.kttelecop.co.kr";
 	    
+	    if (attendantId != null) {
+			for (int i=0; i < attendantId.getLength(); i++) {								
+				String v_attendantId = attendantId.item(i).getTextContent();				
+				String v_attendantName = attendantName.item(i).getTextContent();
+				String v_attendantName2 = attendantName2.item(i).getTextContent();
+				
+			    if(dotNetTotalNotification.equalsIgnoreCase("yes")) {
+			    	try {
+			    		String resultCode = "";
+			    		
+						String attendantIdParam = "userId=" + URLEncoder.encode(v_attendantId, "UTF-8");
+						String mainTypeParam = "type=" + URLEncoder.encode("schedule", "UTF-8");
+						String subTypeParam = "subType=" + URLEncoder.encode("attendant", "UTF-8");
+						String senderIdParam = "senderId=" + URLEncoder.encode(loginVO.getId(), "UTF-8");
+						String senderNameParam = "";
+						if (loginVO.getLang().equals("1")) {
+					    	 senderNameParam = "senderName=" + URLEncoder.encode(v_attendantName, "UTF-8");
+					     } else {
+					    	 senderNameParam = "senderName=" + URLEncoder.encode(v_attendantName2, "UTF-8");
+					     }
+						String subjectParam = "subject=" + URLEncoder.encode(title, "UTF-8");
+						String etcDataParam = "etcData=";
+						String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezSchedule/scheduleReceiveAttendant.do?serverFlag=" + serverFlag, "UTF-8");
+						String mobileLinkURLParam = "mobileLinkURL=" + URLEncoder.encode("/Schedule/schedule_receive_attendant.aspx", "UTF-8");
+						String viewTypeParam = "viewType=" + URLEncoder.encode("layer", "UTF-8");
+						String viewWidthParam = "viewWidth=" + URLEncoder.encode("730", "UTF-8");
+						String viewHeightParam = "viewHeight=" + URLEncoder.encode("370", "UTF-8");
+						
+						String inputParams = attendantIdParam + "&" + mainTypeParam + "&" + subTypeParam + "&" + senderIdParam + "&";
+							   inputParams += senderNameParam + "&" + subjectParam + "&" + etcDataParam + "&" + linkURLParam + "&";
+							   inputParams += mobileLinkURLParam + "&" + viewTypeParam + "&" + viewWidthParam + "&" + viewHeightParam; 
+
+						logger.debug("inputParams=" + inputParams);
+
+						String requestURL = config.getProperty("config.JGwServerURL") + "/ezTalkGate/addNotificationETC";
+						String webServiceResultResponse = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+						logger.debug("response=" + webServiceResultResponse);
+
+						if (webServiceResultResponse != null) {
+							JSONParser jsonParser = new JSONParser();
+							JSONObject responseObj = (JSONObject)jsonParser.parse(webServiceResultResponse);
+
+							resultCode = (String)responseObj.get("resultCode");
+							logger.debug("resultCode=" + resultCode);
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+			    }
+			}
+		}				    
         
         return Integer.toString(result);
 	}
@@ -2400,11 +2574,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		loginVO = commonUtil.userInfo(loginCookie);
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+		String serverFlag = request.getParameter("serverFlag");
 		
 		List<ScheduleReceiveListVO> rList = ezScheduleService.getReceiveList(loginVO.getId(), loginVO.getTenantId(), offSetMin, loginVO.getCompanyID());
 		
 		model.addAttribute("receiveList", rList);
 		model.addAttribute("userInfo", loginVO);
+		model.addAttribute("serverFlag", serverFlag);
 		
 		return "ezSchedule/scheduleReceiveAttendant";
 	}
@@ -2440,11 +2616,13 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		loginVO = commonUtil.userInfo(loginCookie);
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
+		String serverFlag = request.getParameter("serverFlag");
 				
 		List<ScheduleGroupListVO> iList = ezScheduleService.getInviteScheduleGroupList(loginVO.getId(), loginVO.getTenantId(), offSetMin, loginVO.getCompanyID());
 		
 		model.addAttribute("receiveList", iList);
 		model.addAttribute("userInfo", loginVO);
+		model.addAttribute("serverFlag", serverFlag);
 		
 		return "ezSchedule/scheduleReceiveMember";
 	}
@@ -3168,7 +3346,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		int tenantId     = loginVO.getTenantId();
 		
 		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:SS");
+		SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 		
 		String offSetMin = commonUtil.getMinuteUTC(offset);
 		String typeCal   = request.getParameter("typeCal");
@@ -3177,8 +3355,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 		String dropDay   = request.getParameter("dropDay");
 		
 		ScheduleInfoVO info  = ezScheduleService.getScheduleInfo(dragId, offSetMin, tenantId, companyId);
-		String infoStartTime = info.getStartDate().substring(10, 19);
-		String infoEndTime   = info.getEndDate().substring(10, 19);
+		String infoStartTime = info.getStartDate().substring(10, 16);
+		String infoEndTime   = info.getEndDate().substring(10, 16);
 		
 		//Check Permission
 		List<ScheduleSecretaryVO> tList = ezScheduleService.getPublicScheduleSec(loginVO.getId(), loginVO.getLang(), tenantId, companyId);
@@ -3242,7 +3420,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 				ezScheduleService.insertScheduleRepeDel(dragId, utcDelTime, tenantId, companyId);
 					
 				//일정데이터 복사
-				ezScheduleService.copySchedule(dragId, utcStartTime, utcEndTime, defaultPath, offset, tenantId, companyId);
+				ezScheduleService.copySchedule(dragId, utcStartTime, utcEndTime, defaultPath, offSetMin, tenantId, companyId);
 			}
 		}
 		else {

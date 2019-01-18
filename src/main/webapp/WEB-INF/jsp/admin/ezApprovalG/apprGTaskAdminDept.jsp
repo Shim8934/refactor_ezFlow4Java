@@ -7,7 +7,7 @@
 		<title><spring:message code = 'ezApprovalG.t713' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e3', 'msg')}" type="text/css">
+		<%-- <link rel="stylesheet" href="${util.addVer('ezApprovalG.e3', 'msg')}" type="text/css"> --%>
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.mainlist tr th { border-top:0px }
@@ -64,7 +64,7 @@
 		    var UserLang = "<c:out value = '${userInfo.lang} '/>";
 		    var ext = "";
 		    $(document).ready(function(){
-		        document.getElementById("SCompID").value = CompanyID;
+		        document.getElementById("ListCompany").value = CompanyID;
 		        OrganID = CompanyID;
 		        PageSize = -1;
 		        Block_Size = 10;
@@ -195,23 +195,30 @@
 		    }
 	
 		    function selectCompanyID() {
-		        if (CompanyID != document.getElementById("SCompID").value) {
-		            CompanyID = document.getElementById("SCompID").value + "/other";
+		        if (CompanyID != document.getElementById("ListCompany").value) {
+		            CompanyID = document.getElementById("ListCompany").value + "/other";
 		            TreeViewinitialize("", CompanyID, "", "<c:out value='${serverName}'/>");
 		        }
 		    }
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code = 'ezApprovalG.t713' /></h1>		
+		<h1>
+			<spring:message code = 'ezApprovalG.t713' />
+			<SELECT id="ListCompany" name="SCompID" class="companySelect" onChange="selectCompanyID()">
+	        	<c:forEach var="item" items="${list}">
+            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            	</c:forEach>
+	        </SELECT>
+		</h1>		
 		<div id="mainmenu">
   			<ul>
-      			<b><spring:message code = 'ezApprovalG.t1276' /></b>
+      			<%-- <b><spring:message code = 'ezApprovalG.t1276' /></b>
 		        <SELECT id="SCompID" name="SCompID" onChange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
-		        </SELECT><br /><br />
+		        </SELECT><br /><br /> --%>
 		   		<li id=UpdateClass style="display:none" ><span onClick="return ReceiveTaskResult()" ><spring:message code = 'ezApprovalG.t714' /></span></li>
 			   	<li id=ViewTaskCode><span onClick="return btnViewTask_onclick()" ><spring:message code = 'ezApprovalG.t715' /></span></li>
 			   	<li id=ViewTaskCode><span onClick="return btnViewTaskHistoryInfo_onclick()" ><spring:message code = 'ezApprovalG.t716' /></span></li>

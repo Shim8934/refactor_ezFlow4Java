@@ -67,6 +67,9 @@
 					<isEqual property="search_keycode" compareValue="userId">
 						CN LIKE '%' || #search_keyword# || '%' ESCAPE '\'
 					</isEqual>
+					<isEqual property="search_keycode" compareValue="quota">
+						((MAILBOXUSAGE / MAILBOXQUOTA) * 100) >= #search_keyword#
+					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
 		<isNotEmpty property="searchStartDate" prepend="AND">
@@ -406,7 +409,10 @@
                         		' ' DISPLAYNAMEPRINTABLE  ,
                         		POSITIONCD ,
                         		BIRTH ,
-                        		BIRTHTYPE 
+                        		BIRTHTYPE ,
+                        		MAILBOXUSAGE,
+                        		MAILBOXQUOTA
+                        		
              FROM
              	TBL_USERMASTER 
              WHERE
@@ -1846,7 +1852,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A03','011','부서순차합의','1','부서순차협조','Sequential agreement(dept.)','部署順次合意','顺序协议(部门)',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('A03','012','부서병렬합의','1','부서병렬협조','Parallel agreement(dept.)','個人並列合意','并行的协议(部门)',#tenantID#, #companyID#)
+			VALUES ('A03','012','부서병렬합의','1','부서병렬협조','Parallel agreement(dept.)','部署並列合意','并行的协议(部门)',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A03','013','사전감사','0','감사','Pre-audit','監査','审查',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -2080,7 +2086,7 @@
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
 			VALUES ('SA03','011','부서순차합의','Sequential agreement(dept.)','部署順次合意','顺序协议(部门)','1','부서순차협조',#companyID#, #tenantID# )
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA03','012','부서병렬합의','Parallel agreement(dept.)','個人並列合意','并行的协议(部门)','1','부서병렬협조',#companyID#, #tenantID# )
+			VALUES ('SA03','012','부서병렬합의','Parallel agreement(dept.)','部署並列合意','并行的协议(部门)','1','부서병렬협조',#companyID#, #tenantID# )
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
 			VALUES ('SA03','013','사전감사','Pre-audit','監査','审查','0','감사',#companyID#, #tenantID# )
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
@@ -5604,6 +5610,8 @@
 	  		<isNotNull property="info" prepend=","> <![CDATA[info = #info#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute7" prepend=","> <![CDATA[extensionAttribute7 = #extensionAttribute7#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute8" prepend=","> <![CDATA[extensionAttribute8 = #extensionAttribute8#]]></isNotNull>
+	  		<isNotNull property="mailboxUsage" prepend=","> <![CDATA[mailboxUsage = #mailboxUsage#]]></isNotNull>
+	  		<isNotNull property="mailboxQuota" prepend=","> <![CDATA[mailboxQuota = #mailboxQuota#]]></isNotNull>
 	  	</dynamic>
 	  	<![CDATA[
       		WHERE

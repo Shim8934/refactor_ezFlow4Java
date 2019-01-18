@@ -22,6 +22,11 @@
 	    	.mainlist thead tr {
 	    		height: 0px;
 	    	}
+	    	
+	    	.mainlist #MsgToList_THEAD #MsgToList_TH {
+	    		height: 0px;
+	    	}
+	    	
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;	    		
 	    	}
@@ -161,12 +166,19 @@
 	            if (xmlHTTP2 != null && xmlHTTP2.readyState == 4) {
 	                if (xmlHTTP2.statusText == "OK") {
 	                    var result = loadXMLString(xmlHTTP2.responseText);
+	                    
+	                    document.getElementById("TextId").disabled = true;
+	                    
+	                    var mailNode = SelectNodes(result, "DATA/MAIL")[0];
+	                    var mail = getNodeText(mailNode);
+	                    document.getElementById("mailDomain").innerHTML = mail.substring(mail.indexOf("@"));
+	                    
 	                    var Resultxml = "";
 	                    pparsingXML2 = "";
 	                    pparsingXML = "";
 	                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                    var nodes = SelectNodes(result, "DATA/ROW");
-	
+	                    
 	                    for (var i = 0 ; i < nodes.length ; i++) {
 	                        if (getNodeText(GetChildNodes(nodes[i])[0]) == "distributionSub") {
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</DATA1>";
@@ -585,9 +597,9 @@
 	                return;
 	            }
 	            
-	            //var regex=/^([\w-]+(?:\.[\w-]+)*)$/;
-	            var regex=/^[a-zA-Z0-9_-]+$/;
-	            if(regex.test(document.all("TextId").value.trim()) === false) {
+	            var regex = /^[a-z0-9\_\-\.]+$/;
+	            
+	            if (!regex.test(document.all("TextId").value.trim())) {
 	            	alert("<spring:message code='ezEmail.lhm13' />");
 	            	return;
 	            }
@@ -2170,6 +2182,61 @@
                 return xmlpara;
             }
 	        
+	        var totalPage = "";
+            var pageNum = "";
+            function goToPageByNum(Value) {
+                page = Value;
+                makePageSelPage();
+                movePage(page);
+            }
+            function selbeforeBlock() {
+                var pageNum = parseInt(page);
+                pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+                goToPageByNum(pageNum);
+            }
+            function selbeforeBlock_one() {
+                var pageNum = parseInt(page);
+                if (parseInt(pageNum - 1) > 0)
+                    goToPageByNum(parseInt(pageNum - 1));
+                else
+                    return;
+            }
+            function selafterBlock() {
+                var pageNum = parseInt(page);
+                pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+                goToPageByNum(pageNum);
+            }
+            function selafterBlock_one() {
+                var pageNum = parseInt(page);
+                if (parseInt(pageNum + 1) <= totalPage)
+                    goToPageByNum(parseInt(pageNum + 1));
+                else
+                    return;
+            }
+            function movePage(newPage) {
+                if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
+                    page = newPage;
+                    if (addrsearh)
+                        AddrSearch_event();
+                    else
+                        address_selectnode("page");
+                }
+            }
+            function prevPage_onclick() {
+                newPage = parseInt(page) - 1;
+                if (newPage > 0) {
+                    page = newPage;
+                    address_selectnode("page");
+                }
+            }
+            function nextPage_onclick() {
+                newPage = parseInt(page) + 1;
+                if (newPage <= parseInt(totalPage)) {
+                    page = newPage;
+                    address_selectnode("page");
+                }
+            }
+            
 	        function td_Create1(strtext) {
                 document.getElementById("tblPageRayer").innerHTML = strtext;
             }
@@ -2637,7 +2704,8 @@
 		            <tr>
 		                <th><spring:message code='ezEmail.lhm09' /></th>
 		                <td>
-		                    <input name="TextId" type="text" id="TextId" maxlength="24" class="txtClass" style="width:100%;" value="${cn}">
+		                    <input name="TextId" type="text" id="TextId" maxlength="20" class="txtClass" style="width:40%;" value="${cn}">
+		                    <span id="mailDomain" style="width:60%; font-weight: bold;">@${mailDomain}</span>
 		                </td>
 		            </tr>
 		        </table>

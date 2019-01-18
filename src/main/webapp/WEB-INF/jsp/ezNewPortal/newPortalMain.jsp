@@ -97,9 +97,19 @@
 		        form.submit();
 		    }
 		    
-		    function reloadLoginPage(message) {
-		    	var uri = "/user/login/login.do";
-		    	self.location.href = "/user/login/actionLogoutWithRedirectUri.do?redirectUri=" + uri + "&message=" + message;
+		    function reloadLoginPage(multiLoginFlag, url) {
+		    	var frm = "";
+		    	
+		    	frm = "<form action='" + url + "' method='post' style='display:none;' id='reloadLogin' onsubmit='return false;'>";
+		    	if(!!multiLoginFlag) {
+		    		frm += "<input type='hidden' name='multiLoginFlag' value='" + multiLoginFlag + "'>";
+		    	}
+		    	frm += "</form>";
+		    	
+		    	var wrapper = document.createElement("div");
+		    	wrapper.innerHTML = frm;
+		    	document.body.appendChild(wrapper);
+		    	document.getElementById("reloadLogin").submit();
 		    }
 		</script>
 	</head>

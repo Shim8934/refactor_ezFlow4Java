@@ -12,8 +12,10 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -109,6 +111,53 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Resource(name="crypto") 
     private EgovFileScrty egovFileScrty;
 	
+	@Scheduled(cron = "${config.cron.mailboxQuotaListUpdate}")
+	public void mailboxQuotaListUpdate() throws Exception {
+		logger.debug("mailboxQuotaListUpdate scheduler started.");
+		
+		if (!preScheduler("mailboxQuotaListUpdate")) {
+			logger.debug("mailboxQuotaListUpdate scheduler ended.");
+			return;
+		}
+		
+		int tenantID = 0;
+		String email = null;
+		IMAPAccess ia = null;
+		Locale locale = Locale.getDefault();
+		String password = jspw;
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+		String mailServerAddress = config.getProperty("config.MailServerAddress");
+		String iMAPPort = config.getProperty("config.IMAPPort");
+		
+		List<OrganUserVO> vo = ezOrganAdminService.getAllUserCnList(tenantID);
+		
+		for (OrganUserVO user : vo) {
+			
+			try {
+				String cn = user.getCn();
+				email = cn + "@" + domain;
+				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
+				
+				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+				
+				long mailboxUsage = storageUsageAndLimit[0];
+				long mailboxQuota = storageUsageAndLimit[1];
+				
+				ezOrganAdminService.updateProperty(cn, "mailboxusage", String.valueOf(mailboxUsage), "user", tenantID);
+				ezOrganAdminService.updateProperty(cn, "mailboxquota", String.valueOf(mailboxQuota), "user", tenantID);
+			} catch (Exception e) {
+				logger.debug("error. user=" + email);
+				e.printStackTrace();
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
+			}
+		}
+		
+		logger.debug("mailboxQuotaListUpdate scheduler ended.");
+	}
+	
 	/**
 	 * 관리자 - 자동삭제 
 	 */
@@ -122,9 +171,10 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			return;
 		}
 		
+		IMAPAccess ia = null;
+
 		try {
 			int tenantId = 0;
-			IMAPAccess ia = null;
 			String useAllUserOldMailDelete = ezCommonService.getTenantConfig("useAllUserOldMailDelete", tenantId);
 			String useAllUserOldMailDeletePeriod = ezCommonService.getTenantConfig("useAllUserOldMailDeletePeriod", tenantId);
 			
@@ -151,7 +201,7 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					logger.debug("userList size=" + userList.size() + ", userList=" + userList.toString());
 					
 					Locale locale = null;
-					String returnValue = null;
+					String returnValue = "OK";
 					
 					if (userList.size() > 0) {
 						for (String userEmail : userList) {
@@ -162,15 +212,17 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 							int result = ia.createFolder(folderPath);
 							
 							if (result == 0) {
-								returnValue = "OK";
 								result = ia.deleteFolder(folderPath);
+								logger.debug("user=" + userEmail + " temp mailbox create and delete success. result=" + result);
 								
 								if (result != 0) {
-									logger.debug("result=" + result);
+									logger.debug("temp mailbox delete error. result=" + result);
 									returnValue = "ERROR";
 								}
+								
 							} else if (result == 2) {
 								returnValue = "ALREADY_EXISTS";
+								logger.debug("temp mailbox create error. result=" + result);
 							}
 							
 							logger.debug("returnValue=" + returnValue);
@@ -180,6 +232,10 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
 		}
 		
 		logger.debug("deleteAllUserMail scheduler ended.");
@@ -637,6 +693,14 @@ public class EzEmailScheduler extends EgovFileMngUtil {
             	e.printStackTrace();
             }
             
+            try {
+            	// 보존 기간이 지난 웹폴더 파일 로그를 삭제한다.
+            	ezSystemAdminService.deleteWebfolderLog(keepLogPeriodNum, tenant.getTenantId());
+            } catch (Exception e) { 
+            	logger.debug("deleteWebfolderLog delete fail. ");
+            	e.printStackTrace();
+            }
+            
             // 메일 건수, 크기 등 통계 현황을 통계 테이블에 저장하는 API를 호출한다.
             // 보존 기간이 지난 메일 수발신 로그를 삭제하는 기능도 수행한다.
             String requestURL = config.getProperty("config.JGwServerURL") + "/ezEmailAccess/processMailStatLogs";
@@ -806,46 +870,106 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 			ex.printStackTrace();
 		}
 		
-		// using system locale
-		Locale locale = Locale.getDefault();
+		if (emailArray.isEmpty()) {
+			logger.debug("broadcastQuotaWarning end.");
+			return;
+		}
+		
+		// sender
+		InternetAddress from = new InternetAddress("postmaster@localhost");
+		// domain cache map
+		Map<String, Double[]> domainDefaultQuotaCache = new HashMap<>();
+		Map<String, String> domainContentCache = new HashMap<>();
+		Map<String, String> domainSubjectCache = new HashMap<>();
+		Map<String, Locale> domainLocaleCache = new HashMap<>();
+		// system locale
+		Locale systemLocale = Locale.getDefault();
 		// mail access info
 		String mailServerAddress = config.getProperty("config.MailServerAddress");
 		String imapPort = config.getProperty("config.IMAPPort");
-		
-		// message info
-		InternetAddress from = new InternetAddress("postmaster@localhost");		
-		String fontFamily = egovMessageSource.getMessage("ezEmail.sjw01", locale);
-		String subject = egovMessageSource.getMessage("ezEmail.sjw02", locale);
-		String suggestion = egovMessageSource.getMessage("ezEmail.sjw03", locale);
-		
-		String fontStyle = String.format("style='font-family: %s; font-size: %spx;'", fontFamily, 13);
 		
 		// process mailQuota
 		for (String userEmail : emailArray) {
 			
 			try {
+				String domainName = userEmail.substring(userEmail.indexOf("@") + 1, userEmail.length());
 				// user quota info
 				Double[] userQuotaData = ezEmailUtil.getUserQuota(userEmail);
+				String content;
+				String subject;
+				Locale locale;
 				
-				if (userQuotaData[0] == null) {
-					String domainName = userEmail.substring(userEmail.indexOf("@") + 1, userEmail.length());
-					userQuotaData = ezEmailUtil.getDefaultQuota(domainName);
+				if (domainLocaleCache.containsKey(domainName)) {
+					userQuotaData = ezEmailUtil.getUserQuota(userEmail);
+					
+					content = domainContentCache.get(domainName);
+					subject = domainSubjectCache.get(domainName);
+					locale = domainLocaleCache.get(domainName);
+				} else {
+					int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
+					String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+					
+					switch (primaryLang) {
+					case "1":
+						locale = Locale.KOREA;
+						break;
+					case "2":
+						locale = Locale.US;
+						break;
+					case "3":
+						locale = Locale.JAPAN;
+						break;
+					default:
+						locale = systemLocale;
+					}
+					
+					// message info
+					subject = egovMessageSource.getMessage("ezEmail.sjw02", locale);
+					String fontFamily = egovMessageSource.getMessage("ezEmail.sjw01", locale);
+					String suggestion = egovMessageSource.getMessage("ezEmail.sjw03", locale);
+					
+					String fontStyle = String.format("style='font-family: %s; font-size: %spx;'", fontFamily, 13);
+					
+					// content
+					StringBuilder contentBuilder = new StringBuilder();
+					contentBuilder.append(String.format("<span %s>%s</span><br/><br/>", fontStyle, subject));
+					contentBuilder.append("<table cellspacing='0;'>")
+						.append("	<tbody>")
+						.append("		<tr>")
+						.append("			<td style='background-color:#FFCC00;width:%dpx;border-left-style:solid;border-top-style:solid;border-bottom-style:solid;border-color:black;border-width:1'><font color='#000000' size='2' face='Tahoma'>%s</font></td>")
+						.append("			<td style='background-color:#ffffff;width:%dpx;border-right-style:solid;border-top-style:solid;border-bottom-style:solid;border-color:black;border-width:1'>&nbsp;</td>")
+						.append("			<td><span " + fontStyle + "><b>%s</b></span></td>")
+						.append("		</tr>")
+						.append("	</tbody>")
+						.append("</table>");
+					contentBuilder.append(String.format("<br/><span %s>%s</span><br/>", fontStyle, suggestion));
+					content = contentBuilder.toString();
+					
+					// cache
+					domainDefaultQuotaCache.put(domainName, ezEmailUtil.getDefaultQuota(domainName));
+					domainContentCache.put(domainName, content);
+					domainLocaleCache.put(domainName, locale);
+				}
+				
+				if (userQuotaData == null) {
+					userQuotaData = domainDefaultQuotaCache.get(domainName);
 				}
 				
 				IMAPAccess imapAccess = IMAPAccess.getInstance(mailServerAddress, imapPort, userEmail, jspw, egovMessageSource, 
 														locale, ezEmailUtil);
 				
 				// KB
-				long mailboxUsage = imapAccess.getStorageUsageAndLimit()[0];
-				long mailboxQuota = imapAccess.getStorageUsageAndLimit()[1];
+				long[] storageData = imapAccess.getStorageUsageAndLimit();
+				long mailboxUsage = storageData[0];
+				long mailboxQuota = storageData[1];
 				// MB to KB
 				double mailboxWarning = userQuotaData[1] * 1024;
 				
 				logger.debug("============");
-				logger.debug(String.format("user: %s", userEmail));
-				logger.debug(String.format("quota max: %s", mailboxQuota));
-				logger.debug(String.format("quota used: %s", mailboxUsage));
-				logger.debug(String.format("quota warning: %s", mailboxWarning));
+				logger.debug("user: {}", userEmail);
+				logger.debug("quota max: {}", mailboxQuota);
+				logger.debug("quota used: {}", mailboxUsage);
+				logger.debug("quota warning: {}", mailboxWarning);
 				
 				// 메일함 용량이 경고 발생 용량보다 작으면 continue
 				if (mailboxUsage < mailboxWarning) {
@@ -856,27 +980,16 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				int progressWidth = 200;
 				
 				int usedPercent = (int) ((progressWidth / (float) mailboxQuota) * mailboxUsage);
-	            int unusedPercent = progressWidth - usedPercent;
+				int unusedPercent = progressWidth - usedPercent;
 				
-	            logger.debug(String.format("used percent: %s", usedPercent));
-	            logger.debug(String.format("unused percent: %s", unusedPercent));
-	            logger.debug("============");
-	            
-	            // content
-	            StringBuilder content = new StringBuilder();
-	            content.append(String.format("<span %s>%s</span><br/><br/>", fontStyle, subject));
-	            content.append("<table cellspacing='0;'>")
-	            	.append("	<tbody>")
-	            	.append("		<tr>")
-	            	.append("			<td style='background-color:#FFCC00;width:" + usedPercent + "px;border-left-style:solid;border-top-style:solid;border-bottom-style:solid;border-color:black;border-width:1'><font color='#000000' size='2' face='Tahoma'>" + humanReadableByteCount(mailboxUsage * 1024) + "</font></td>")
-	            	.append("			<td style='background-color:#ffffff;width:" + unusedPercent + "px;border-right-style:solid;border-top-style:solid;border-bottom-style:solid;border-color:black;border-width:1'>&nbsp;</td>")
-	            	.append("			<td><span " + fontStyle + "><b>" + humanReadableByteCount(mailboxQuota * 1024) + "</b></span></td>")
-	            	.append("		</tr>")
-	            	.append("	</tbody>")
-	            	.append("</table>");
-	            content.append(String.format("<br/><span %s>%s</span><br/>", fontStyle, suggestion));
+				logger.debug("used percent: {}", usedPercent);
+				logger.debug("unused percent: {}", unusedPercent);
+				logger.debug("============");
 				
-	            // send mail
+				// make personalized content
+				content = String.format(content, usedPercent, humanReadableByteCount(mailboxUsage * 1024), unusedPercent, humanReadableByteCount(mailboxQuota * 1024));
+				
+				// send mail
 				ezEmailService.sendMail(userEmail, jspw, null, from, new InternetAddress[]{ new InternetAddress(userEmail) }, null, null, subject, content.toString(), false, EmailImportance.HIGH);
 			} catch (Exception ex) {
 				ex.printStackTrace();

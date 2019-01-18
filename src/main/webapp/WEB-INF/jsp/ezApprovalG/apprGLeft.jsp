@@ -1223,6 +1223,7 @@
 			        </h2>
 			        <ul class="lnbUL off" id="personUL">
 			        	<div class="tree onlytree" id="divUserContTree"></div>
+						<h3><span id="MNGUSERCONT"  onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
 			        </ul>
 		        </c:if>
 		        <c:if test="${approvalFlag eq 'G'}">

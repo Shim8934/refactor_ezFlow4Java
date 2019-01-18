@@ -703,7 +703,8 @@
 			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7) || pAprLineType == strAprType4 || totalMemSN > 0) {
 			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
 			                    var rtnval;
-			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+			                    //rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+			                    rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
 			                    if (!rtnval) {
 			                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
 			                        OpenAlertUI(pAlertContent);
@@ -718,7 +719,8 @@
 			            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
 			                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 			                    var rtnval;
-			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+			                    //rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+			                    rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
 			                    if (!rtnval) {
 			                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
 			                        OpenAlertUI(pAlertContent);
@@ -739,8 +741,8 @@
 				            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
 				                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 				                    var rtnval;
-				                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
-				                    
+				                    //rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+				                    rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
 				                    if (!rtnval) {
 				                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
 				                        OpenAlertUI(pAlertContent);

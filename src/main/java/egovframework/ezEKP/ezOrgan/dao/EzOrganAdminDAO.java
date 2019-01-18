@@ -128,6 +128,10 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
         return (List<OrganUserVO>) list("EzOrganAdminDAO.userCnList", tenantID);
     }
     
+    public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception {
+    	return (List<OrganUserVO>) list("EzOrganAdminDAO.allUserList", tenantID);
+    }
+    
     // 퇴직자 포함하여 사용자 아이디 목록을 반환한다.
     public List<OrganUserVO> getUserCnList(int tenantID) throws Exception {
     	return getUserCnListForLocal(tenantID);       
@@ -136,7 +140,6 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     private int getUserCountForLocal(int tenantID) throws Exception {
         return (int) select("EzOrganAdminDAO.userCount", tenantID);
     }
-    	
 
     // 퇴직자 포함하여 사용자 아이디 개수를 반환한다.
     public int getUserCount(int tenantID) throws Exception {
@@ -776,7 +779,7 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
             String param = "extensionAttribute7=" + URLEncoder.encode(vo.getExtensionAttribute7(), "UTF-8");
             inputParams += "&" + param;
         }
-
+        
         String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/updateUser";
         String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
 

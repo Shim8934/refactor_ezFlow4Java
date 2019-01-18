@@ -67,7 +67,7 @@
 					isOpenUL = true;	
 				}
 				
-				var selectedNode = document.getElementById("curBoardID").value;
+				var selectedNode = document.getElementById("curTabID").value;
 				
 				document.getElementById("tab1").innerHTML = "";
 				widthCheck = false;
@@ -116,9 +116,10 @@
 	        var overCnt = 0;
 	        var widthCheck = false;
 	        var overCntText = '...';
-	        var tabText = "";
+	        
 	        function GetMyBoardItem_evnet(doNotRefresh) {
 	        	
+		        var tabText = "";
 	        	var tabId = "a"; // anniversary
 	        	var tabId2 = "s"; // statutory holiday 
 	        	//탭이름 message 처리
@@ -184,8 +185,8 @@
 	        function ChangeTab(obj) {
 	        	
 	        	var SelectedTabID = obj.getAttribute("DATA1");
-	        	
-                document.getElementById("FBoard_ifrm").src = "/admin/ezSchedule/scheduleAdminHolidayManage.do?holidayType=" + SelectedTabID + "&companylist=" + companylist;
+	        	//TO-DO get방식에 companyList 가 너무 길어서 추후 터질 우려가 있음. 줄여야한다
+                document.getElementById("FBoard_ifrm").src = "/admin/ezSchedule/scheduleAdminHolidayManage.do?holidayType=" + SelectedTabID + "&companylist=" + encodeURIComponent(companylist);
 	            document.getElementById("curTabID").value = SelectedTabID;
 	        }
 	

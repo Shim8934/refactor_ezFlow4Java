@@ -298,7 +298,7 @@
 
 		        switch (v_data) {
 		            case 2:		// Schedule
-		            	$('#IDClick').css('pointer-events','');		            
+		            	$('.lnbUL:eq(0)').css('pointer-events','');
 		                window.open("/ezSchedule/scheduleMain.do?funCode=2", "right");
 		                break;
 
@@ -311,7 +311,7 @@
 				            $(this).prop('checked',true);			            
 				        });
 		            	$('#select-all').prop('checked',true);
-		            	$('#IDClick').css('pointer-events','none');
+		            	$('.lnbUL:eq(0)').css('pointer-events','none');
 		                window.open("/ezSchedule/scheduleManageGroup.do", "right")
 		                break;
 
@@ -320,7 +320,7 @@
 				            $(this).prop('checked',true);			            
 				        });
 		            	$('#select-all').prop('checked',true);
-		            	$('#IDClick').css('pointer-events','none');
+		            	$('.lnbUL:eq(0)').css('pointer-events','none');
 		                window.open("/ezSchedule/scheduleSearch.do", "right")
 		                break;
 
@@ -333,7 +333,7 @@
 				            $(this).prop('checked',true);			            
 				        });
 		            	$('#select-all').prop('checked',true);
-		            	$('#IDClick').css('pointer-events','none');
+		            	$('.lnbUL:eq(0)').css('pointer-events','none');
 		                window.open("/ezSchedule/schedulePublicSearch.do", "right");
 		                break;
 		            case 11:		// Search public calendar
@@ -341,7 +341,7 @@
 				            $(this).prop('checked',true);			            
 				        });
 		            	$('#select-all').prop('checked',true);
-		            	$('#IDClick').css('pointer-events','none');
+		            	$('.lnbUL:eq(0)').css('pointer-events','none');
 		                window.open("/ezSchedule/scheduleConfigMain.do?flag=schedule", "right");
 		                break;
 		        }
@@ -393,7 +393,7 @@
 		        <ul class="lnbUL">
 		        	<li>
 			    		<!-- 2018-07-11 구해안 left 체크박스 label에 title 삽입 -->
-			    		<span class="sub_iconLNB tree_manage" onClick="Function_Flag(5)"></span>
+			    		<span class="sub_iconLNB tree_manage" onClick="Function_Flag(5)" style="pointer-events:auto"></span>
 			    		<label class="IDcontainer" onchange="chk_all()">
 							<input type="checkbox" checked="checked" name="select-all" id="select-all" value="chkAllFalse" style="left:0px">
 					  		<span class="checkmark" style="background:rgb(125, 125, 125);"></span>

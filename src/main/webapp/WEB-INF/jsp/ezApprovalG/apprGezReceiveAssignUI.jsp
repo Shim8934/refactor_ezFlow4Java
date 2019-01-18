@@ -375,18 +375,18 @@
 	    <table style="margin-top: -15px;">
 	        <tr>
 	            <td style="vertical-align: top;">
-	                <h2 style="margin-top:7px;"><spring:message code='ezApprovalG.t232'/></h2>
-	                <div class="box" style="overflow-x: hidden; overflow-y: auto; height: 242px; width: 200px" id="TreeView"></div>
+	                <h2 class="h2_dot" style="margin-top:7px;"><spring:message code='ezApprovalG.t232'/></h2>
+	                <div class="box" style="overflow-x: hidden; overflow-y: auto; height: 470px; width: 380px" id="TreeView"></div>
 	            </td>
 	            <td style="vertical-align: top;padding-left:10px;">
-	                <h2 style="margin-top:7px;float:left"><spring:message code='ezApprovalG.t233'/></h2>
+	                <h2 class="h2_dot" style="margin-top:7px;float:left"><spring:message code='ezApprovalG.t233'/></h2>
 	                <div style="float:right;margin-top:6px;vertical-align: top">
 	                	<input type="text" id="textUser" name="textUser" style="width: 130px;height:21px;border:1px solid #aaa" value="" onkeypress="return textUser_onkeypress()" tabindex="1"><a class="imgbtn imgbck" style="margin-left:5px;"><span id="btn_searchUser" onkeypress="return btn_searchUser_onclick()" onclick="return btn_searchUser_onclick()"><spring:message code='ezApprovalG.t234'/></span></a>
 	                </div>
 	                <div style="clear:both"></div>
 	                <div class="listview">
 
-	                    <div id="OrganListView" style="border: 0; Width: 370px; Height: 244px; overflow: auto;"></div>
+	                    <div id="OrganListView" style="border: 0; Width: 385px; Height: 472px; overflow: auto;"></div>
 
 	                </div>	                
 	            </td>
