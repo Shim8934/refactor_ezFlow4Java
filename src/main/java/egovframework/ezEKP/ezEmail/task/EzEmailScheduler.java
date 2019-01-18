@@ -1066,6 +1066,9 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 				//set SchedulerServer
 				String server = config.getProperty("config.SchedulerServer");
 				
+				// 클러스터 환경에서 dead lock을 피하기 위해 각 서버 번호(초) 만큼 sleep한다.
+				Thread.sleep(Integer.parseInt(server) * 1000);
+				
 				String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/setSchedulerServer";
 				
 				String schedulerParam = "scheduler=" + URLEncoder.encode(scheduler, "UTF-8");
