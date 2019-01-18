@@ -479,7 +479,7 @@ var SurveyItem = function() {
 				tdElmt5.textContent  = itemList[i]["paritipateFlag"] == 0   ? SurveyMessages.strUser7    : SurveyMessages.strUser8;
 				tdElmt6.textContent  = itemList[i]["creatorName"];
 				tdElmt7.textContent  = itemList[i]["resultPublicFlag"] == 1 ? SurveyMessages.strPublic1  : SurveyMessages.strPublic2;
-				tdElmt8.textContent  = itemList[i]["anonymousFlag"]    == 1 ? SurveyMessages.strAnoynym1 : SurveyMessages.strAnoynym2;
+				tdElmt8.textContent  = itemList[i]["anonymousFlag"]    == 0 ? SurveyMessages.strAnoynym1 : SurveyMessages.strAnoynym2;
 				tdElmt3.setAttribute("title", tdElmt3.textContent);
 				tdElmt4.setAttribute("title", tdElmt4.textContent);
 				tdElmt6.setAttribute("title", tdElmt6.textContent);

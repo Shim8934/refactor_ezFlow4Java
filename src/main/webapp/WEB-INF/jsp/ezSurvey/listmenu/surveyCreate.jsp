@@ -27,30 +27,30 @@
 	</head>
 	
 	<body class="mainbody srvey">
-		<div class="surveyCrtTtl">
-			<div class="sryFirst"></div>
-			<div class="sryTxt"><spring:message code='ezSurvey.t34'/></div>
-		</div>
+		<h1 class="sryTxt"><spring:message code='ezSurvey.t34'/></h1>
 		
-		<div class="headpanel">
-			<span class="crust selected">
-				<a class="crumb"><span><spring:message code='ezSurvey.t35'/></span></a>
-				<span class="arrow"><span></span></span>
-			</span>
-			<span class="crust">
-				<a class="crumb"><span><spring:message code='ezSurvey.t36'/></span></a>
-				<span class="arrow"><span></span></span>
-			</span>
-			<span class="crust">
-				<a class="crumb"><span><spring:message code='ezSurvey.t37'/></span></a>
-				<span class="arrow"><span></span></span>
-			</span>
-			<span class="crust">
-				<a class="crumb"><span><spring:message code='ezSurvey.t77'/></span></a>
-				<span class="arrow"><span></span></span>
-			</span>
+		<div class="surveyBtn">
+			<div class="headpanel">
+				<span class="crust selected">
+					<a class="crumb"><span class="crust_info"></span><span><spring:message code='ezSurvey.t35'/></span></a>
+					<span class="arrow"><span></span></span>
+				</span>
+				<span class="crust">
+					<a class="crumb"><span class="crust_write"></span><span><spring:message code='ezSurvey.t36'/></span></a>
+					<span class="arrow"><span></span></span>
+				</span>
+				<span class="crust">
+					<a class="crumb"><span class="crust_logic"></span><span><spring:message code='ezSurvey.t37'/></span></a>
+					<span class="arrow"><span></span></span>
+				</span>
+				<span class="crust">
+					<a class="crumb"><span class="crust_check"></span><span><spring:message code='ezSurvey.t77'/></span></a>
+					<span class="arrow"><span></span></span>
+				</span>
+			</div>
+			
+			<div class="draft-survey" id="draftBttn"><span>임시 저장</span></div>
 		</div>
-		<div class="draft-survey" id="draftBttn"></div>
 		
 		<div id="bodyPanel">
 			<div id="tab1" class="select-tab">

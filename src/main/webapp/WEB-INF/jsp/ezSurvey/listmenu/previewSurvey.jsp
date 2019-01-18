@@ -7,7 +7,7 @@
 	<span class="sryTxt"><spring:message code='ezSurvey.t39'/></span>
 </div>
 
-<div class="surveyinfo-wrap" id="surveyInfConfirm">
+<div class="surveyinfo-wrapcf" id="surveyInfConfirm">
 	<div class="survey-purpose" id="cf-purpose"></div>
 	<div class="survey-otherinf">
 		<div class="survey-infrow-pv">
@@ -51,20 +51,23 @@
 </div>
 
 <div class="attach-zone off" id="surveyAttConfirm">
-	<div class="mainzone">
-		<div class="fileList">
-			<ul class="ulFiles" id="cf-attach"></ul>
+	<div>
+		<div class="mainzone">
+			<div class="fileList">
+				<ul class="ulFiles" id="cf-attach"></ul>
+			</div>
 		</div>
 	</div>
 </div>
 
+
 <div class="prevQsArea"></div>
 
-<div class="navi-button">
-	<div>
-		<div id="gotoSecondTab" class="survey-infbttn gotoSecondTab"><img src="/images/ezSurvey/prevstep.png"></div>
-		<div id="gotoThirdTab"  class="survey-infbttn gotoThirdTab" ><img src="/images/ezSurvey/prevstep.png"></div>
-		<div id="saveSurvey"    class="survey-infbttn"              ><img src="/images/ezSurvey/save.png"    ></div>
-		<div id="cancelSurvey1" class="survey-infbttn cancelSurvey1"><img src="/images/ezSurvey/cancel.png"  ></div>
+<div class="survey-bttn-panel">
+	<div class="btnpositionSurvey">
+		<a class="imgbtnSurvey gotoFirstTab"><span><spring:message code='ezSurvey.t91'/></span></a>
+		<a class="imgbtnSurvey gotoThirdTab"><span><spring:message code='ezSurvey.t92'/></span></a>
+		<a class="imgbtnSurvey imgbtnSurvey_save" id="saveSurvey"><span><spring:message code='ezSurvey.t90'/></span></a>
+		<a class="imgbtnSurvey cancelSurvey"><span><spring:message code='ezSurvey.t18'/></span></a>
 	</div>
 </div>

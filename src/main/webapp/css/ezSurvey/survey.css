@@ -9,7 +9,7 @@
 .surveySelectConf {width: 50px;}
 .content.config {width: 680px; margin-top: 5px;}
 .tabIfrm {width: 100%; height: 100%; border: none;}
-.mainbody.srvey {background-color: rgb(244, 245, 245) !important; margin: 10px 10px 0px !important;}
+.mainbody.srvey {margin: 10px 10px 0px !important;}
 .surveyCrtTtl {height: 50px; background-color: #fff; box-shadow: rgba(0, 0, 0, 0.69) 0px 3px 10px 0px; display: flex;}
 .surveyCrtTtl .sryFirst {width: 10px; background-color: rgba(211, 84, 0, 0.64);}
 .surveyCrtTtl .sryTxt {height: 50px; line-height: 50px; padding: 0px 10px; font-weight: bold; font-size: 20px;}
@@ -53,7 +53,6 @@
 .logicPanel {height: 640px; width: 600px;}
 .userPanel {height: 262px;}
 .hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off, .respondents-div.off {display: none;}
-.uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
 .receiver_tltype01 >span {min-width: 45px;}
 .organImg {width: 18px; height: 18px; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
 .org-minus, .org-plus {width: 18px; height: 18px; cursor: pointer;}
@@ -68,7 +67,6 @@
 .qstUl >li >img {position: absolute; top: 15px; left: 15px; cursor: pointer;}
 .optUl >li >img {position: absolute; top: 10px; left: 10px; cursor: pointer;}
 .left-tdtbl {width: 664px;}
-.target-wrapper {border: 1px solid #ddd; width: 600px; height: 27px; box-sizing: border-box; display: flex; align-items: center;}
 
 .searchtable {border-collapse: collapse; width:100%; margin-bottom: 15px;}
 .searchtable .layerHeader >img {vertical-align: middle; padding-bottom: 1px; width: 16px;}
@@ -121,55 +119,9 @@
 .prevItem .ddRes {padding: 0px 0px 2px 70px !important;}
 .zoomDiv {text-align: left; padding: 5px; margin: 0px; line-height: 0px;}
 .zoomDiv >img {cursor: pointer;}
-.survey-infrow, .survey-infrow-pv {display: flex; font-family: HanSans, Gulim; margin: 5px 0px; align-items: center;}
-.survey-infrow select {outline: none;}
-.survey-infrow >span, .survey-infrow-pv >span {margin: 0px 10px; line-height: 32px; font-size: 14px;}
-.survey-infrow >span:first-child, .survey-infrow-pv >span:first-child {margin-left: 0px !important; min-width: 80px;}
-.survey-infrow .target-select {border-radius: 3px; outline: none; background-color: rgba(204, 204, 204, 0.46); padding: 0px 5px; font-size: 13px; line-height: 27px; cursor: pointer; margin: 0px 10px; border: 1px solid #ddd;}
-.user-mainDiv.on {display: flex;}
-.survey-infrow .date-input {width: 60px; outline: 0px; border: 1px solid #ddd; padding-left: 5px;}
-.survey-infrow input, .survey-infrow select, .survey-infrow .target-select {height: 27px;}
-.surveyinfo-wrap {border: 1px solid #d7d7d7; padding: 20px 40px; background-color: #fff; margin-bottom: 15px;}
 .info-input-ttl, .info-input-pp { line-height: 40px; font-weight: 600; height: 40px; border: none; outline: 0px; border-bottom: 1px solid #ddd; width: 100%;}
 .info-input-ttl {font-size: 20px;}
 .info-input-pp {font-size: 16px;}
-.survey-otherinf {margin: 15px 0px 0px;}
-.survey-attach {height: 243px; background-color: #fff;}
-.survey-dropzone {height: 197px;}
-.attach-zone {height: 197px; padding : 15px; background: #fff; border: 1px solid #d7d7d7; margin-bottom: 15px;}
-.attach-zone2 {max-height: 195px; background: #fff; border: 1px solid #d7d7d7; margin-top: 2px; overflow-y: auto;}
-.mainzone2 {height: 100%; box-sizing: border-box; overflow-y: auto;}
-.mainzone {border: 1px dashed #ddd; height: 100%; box-sizing: border-box; overflow-y: auto;}
-.survey-attbttn {height: 56px;}
-.survey-attbttn >div {float: left; background-color: rgb(52, 152, 219); border-radius: 4px; height: 28px; line-height: 28px; margin: 14px 0px; padding: 0px 5px; font-size: 14px; color: #fff; cursor: pointer;}
-.survey-attbttn div + div {margin-left: 10px;}
-.survey-infbttn {float: left; width: 36px; height: 36px; margin-left: 10px; cursor: pointer;}
-.survey-infbttn >img {height: 100%; width: 100%;}
-.popup.survey-target {overflow: hidden;}
-.survey-target .target-slt {width:100%;}
-.navi-button {height: 40px; padding-bottom: 15px;}
-.navi-button >div {float: left;}
-input::-ms-clear {display: none;}
-
-.divInform {width: 100%; height: 100%; min-height: 60px; display: flex; flex-flow: column; justify-content: center; align-items: center; cursor: pointer;}
-.divInform .nofile {line-height: 60px;}
-.divInform span + span {margin-top: 5px;}
-.fileList {width: 100%; height: auto;}
-.ulFiles, .user-pageul {margin: 0px; padding: 0px; list-style: none;}
-.ulFiles li, .user-pageul li {float: left; width: 100%; min-width: 100%; height: 65px; position: relative; border-bottom: 1px dashed #ddd; box-sizing: border-box;}
-.ulFiles li >img, .user-pageul li >img {position: absolute; top: 2.5px; right: 2.5px; cursor: pointer;}
-.ulFiles li:lastChild {padding-bottom: 5px;}
-.user-pageul li:last-child {border-bottom: 0px !important;}
-.attDivFile {display: flex; width: 100%; height: 100%; cursor: pointer;}
-.attDivFile .attImgAva {height: 44px; width: 44px; min-width: 44px; margin: 10px;}
-.qstUl .attDivFile .attImgAva, .optUl .attDivFile .attImgAva {height: 80px; width: 80px; margin: 0px;}
-.qstUl .attDivFile .attImgAva >img, .optUl .attDivFile .attImgAva >img {height: 100%; width: auto;}
-.attDivFile .attImgAva >img {height: 100%; width: 100%;}
-.attDivFile .attFileInf {display: flex; flex: 1; flex-flow: column; overflow: hidden; padding-top: 10px;}
-.attDivFile .attFileInf >span:first-child {padding: 6px 4px 4px 0px; max-height: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
-.attDivFile .attFileInf >span:last-child {padding: 2px 4px 4px 0px;}
-.attDivFile .attFileInf2 {font-size: 14px; align-items: center; display: flex; flex: 1; overflow: hidden; padding-left: 10px; padding-top: 0px; justify-content: left;}
-.ulFiles .attDivFile .attFileInf2, .user-pageul .attDivFile .attFileInf2 {padding-left: 0px !important;}
 
 .infor-tbl tr th {width: 50px;}
 .infor-tbl tr td {padding-left: 10px;}
@@ -237,17 +189,6 @@ input::-ms-clear {display: none;}
 .dd-option-image, .dd-selected-image {height: 24px; width: 24px;}
 .dd-option-text, .dd-selected-text {cursor: pointer;}
 
-.headpanel {height: 40px; margin: 15px 0px 1px;}
-.headpanel >span:first-child {border-left: 1px solid #d7d7d7 !important;}
-.headpanel .crust a.crumb>span {display: block; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; max-width: 100%; font-size: 16px; font-weight: bold;}
-.headpanel .crust:hover a.crumb, .headpanel .crust.selected a.crumb {background-color: rgb(230, 126, 34); color: #fff;}
-.headpanel .crust a.crumb {cursor: pointer; font-weight: bold; text-decoration: none; background-color: #fff; padding: 0px 8px 0px 25px; margin-bottom: -1px; border-bottom: 1px solid #d7d7d7; outline: 0px; -moz-outline-style: 0 none; display: block; line-height: 40px; overflow: hidden; _border-bottom: none; height: 40px;}
-.headpanel .crust {display: block; float: left; position: relative; zoom: 1; max-width: 50%; clear: none; border: 1px solid #d7d7d7; border-left: none; border-right: none; border-bottom: none;}
-.headpanel .crust .arrow {border: 20px solid transparent; border-right: 1px none black; border-left-color: #d7d7d7; display: block; position: absolute; right: -20px; top: 0px; z-index: 50; width: 0px; height: 0px; cursor: pointer;}
-.headpanel .crust .arrow span {border: 20px solid transparent; border-right: 1px none black; border-left-color: #fafafa; display: block; position: absolute; left: -21px; top: -20px; z-index: 51; white-space: nowrap; overflow: hidden; text-indent: 9999px; width: 0px; height: 0px;}
-.headpanel .crust:hover .arrow span, .headpanel .crust.selected .arrow span {border-left-color: rgb(230, 126, 34);}
-
-/* 2018.11.21 추가 */
 .surveyCrtTt2 {height: 50px; background-color: #fff; border: 1px solid #d7d7d7; display: flex;}
 .surveyCrtTt2 .sryFirst2 {width: 10px; background-color: rgba(0, 115, 230, 0.64);}
 .surveyCrtTt2 .filler {flex-grow: 1;}
@@ -268,7 +209,7 @@ input::-ms-clear {display: none;}
 .quesDiv .qstnRow .dd-container .dd-options {border-radius: 10px; right: 0px; width: 540px !important; border-bottom: none !important;}
 .quesDiv .qstnRow .dd-container .dd-options >li {display: block; float:left; width: 33.33%;}
 .quesDiv .qstnRow .dd-container .dd-option {height: 25px; line-height: 25px; text-align: left;}
-/* .quesDiv .optionBox {padding-top: 5px; } */
+.quesDiv .optionBox {padding-top: 5px; }
 .quesDiv .qstnAtt .qstnFileInfo .fileList ul {width: 100%; margin-left: -39px;}
 .quesDiv .qstnAtt .qstnFileInfo .fileList ul .attFileInf {text-align: left;}
 
@@ -286,12 +227,10 @@ input::-ms-clear {display: none;}
 .statBody {background-color: rgb(244, 245, 245); padding: 10px;}
 .statBody #contentsBox {margin-top: 20px; min-height: 650px;}
 
-/* paragraph css */
 .qstnWrapper {width: 100%; margin: 0px; padding: 10px 0px;}
 .paragraph-wrap, .question-paragraph {height: 120px;}
 .paragraph {padding: 6px 12px; width: 100%; height: 100%; background: #fff; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; resize: none; font-size: 14px; line-height: 20px; outline: 0px;}
 
-/* slider css */
 .silder-wrap {display: flex; padding: 10px 0px; align-items: center;}
 .slider-lw, .slider-up {width: 32px; min-width: 32px; padding: 0px 5px; height: 32px; outline: 0px; border-radius: 50%;}
 .slider-main, .slider-range {-webkit-appearance: none; border: 1px solid white; flex: 1; cursor: pointer; margin: 0px 10px; padding: 0px;}
@@ -310,7 +249,6 @@ input[type=range]:focus::-ms-fill-upper {background: rgb(224, 224, 224);}
 input[type=range]::-ms-tooltip {display: none;}
 .slider-output {display: block; height: 30px; text-align: center; width: 100%; font-size: 2em; font-family: 'Advent Pro', sans-serif; color: rgba(132, 206, 66, 1);}
 
-/* ranking css */
 .delOption {width: 30px; height: 30px; cursor: pointer; background-repeat: no-repeat; background-size: 30px 30px; background-position: center; background-image: url('/images/ezSurvey/minus.png');}
 .ranking-select, .dropdown-select {display: flex; align-items: center;}
 .ranking-select + .ranking-select, .dropdown-select + .dropdown-select {margin-top: 10px;}
@@ -318,14 +256,12 @@ input[type=range]::-ms-tooltip {display: none;}
 .ranking-select .textInput, .dropdown-select .textInput {width: 500px; margin: 0px 8px;}
 .ranking-select .rank-order {width: 30px; height: 30px; font-size: 14px; text-align: center; line-height: 30px;}
 .ranking-select >select, .dropdown-wrap select {height: 27px; outline: 0px; padding-left: 5px; font-size: 14px;}
-.ranking-select >select:focus, .dropdown-wrap select:focus, .searchTblTd input[type='text']:focus, .othInput:focus, .topSearchSpan >select:focus, .questnTitle:focus, .survey-infrow input:focus, .survey-infrow select:focus {border-color:#66afe9; outline: 0px; -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6); box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
+.ranking-select >select:focus, .dropdown-wrap select:focus, .searchTblTd input[type='text']:focus, .othInput:focus, .topSearchSpan >select:focus, .questnTitle:focus, .date-input:focus {border-color:#66afe9; outline: 0px; -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6); box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
 .textInput:focus, .info-input-ttl:focus, .info-input-pp:focus {border-bottom: 1px solid #03a9f4 !important;}
 
-/* short-answer css */
-.shortanswer-wrap {/* user-select: none; pointer-events: none; */}
+.shortanswer-wrap {user-select: none; pointer-events: none;}
 .shortanswer {font-size: 14px; height: 40px; width: 500px; padding: 0px 10px; outline: none;}
 
-/* 2018.11.22 추가 */
 #surveyListBody {height: 400px;}
 .surveyTbody {width: 100%; text-algin: center;}
 .surveyTbody .inputTd {width: 20px;}
@@ -336,12 +272,10 @@ input[type=range]::-ms-tooltip {display: none;}
 .surveyTbody .endDateTd {width: 20%;}
 .surveyTbody .statisTd, .surveyTbody .anoynmTd, .surveyTbody .publicTd, .surveyTbody .targetTd {width: 80px; text-align: center;}
 
-/* 단일선택 폼 css */
 .questions-wrap {background-color: #fff; padding: 20px 20px 240px; min-height: 400px; border: 1px solid #d7d7d7; margin-bottom: 15px;}
 .quesBacgr {width: 1000px; margin: 0px auto;}
 .quesBacgr ul {list-style: none;}
 
-/* 추가 */ 
 .quesBacgr .qstnForm {width:100%; height:50%; padding-top: 15px;}
 .qstnForm .optPart + .optPart {padding-top: 10px;}
 .quesBacgr .qstnForm .optPart .optArea .optAtt .optionFile {display: none;}
@@ -366,7 +300,6 @@ input[type=range]::-ms-tooltip {display: none;}
 .additionalPart .btns {text-align: right;}
 .optFileInfo .attFileInf {text-align: left;}
 
-/* 2018.11.28 단일선택 사용자 폼 css */
 .usrQstnWrapper {box-shadow: 0px 2px 10px 0px rgba(0, 0, 0, 0.45);}
 .question-panel .mvBtn {margin: 0px auto; width: 32px; height: 16px; background-image: url(/images/ezSurvey/drag.png); background-repeat: no-repeat; background-size: 18px 18px; background-position: center; border: 1px solid #ddd; box-sizing: border-box; border-top: 0px; cursor: move;}
 .question-header {display: flex; height: 32px;}
@@ -389,7 +322,6 @@ input[type=range]::-ms-tooltip {display: none;}
 .question-attach .qstnImg {width: auto; height: auto; max-height: 80px; cursor: pointer;}
 .question-attach >span {padding-left: 10px; overflow: hidden;}
 
-/* matrix */
 .mtrPart .rowArea, .mtrPart .colArea {padding-bottom: 20px; padding-left: 20px;}
 .mtrPart .rowArea .rName, .mtrPart .colArea .cName {float: left; width: 10%;}
 .mtrPart .rowArea .rName span, .mtrPart .colArea .cName span {font-size: 13px;}
@@ -403,12 +335,6 @@ input[type=range]::-ms-tooltip {display: none;}
 .matrix tr {height: 30px;}
 .matrix td {border: 1px solid rgba(204, 204, 204, 1); font-size: 14px; word-break: break-word;}
 .matrix input {height: 15px; width: 15px;}
-
-
-/* preview.jsp */
-.survey-purpose p, .survey-purpose div, .survey-purpose td, .survey-purpose ul, .survey-purpose ol, .survey-purpose li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px; font-family: 'Gulim', 'arial', 'verdana' !important; font-size: 14px !important;}
-.survey-purpose table td  {text-indent: 0px }
-.survey-purpose blockquote {margin-top: 0px; margin-bottom: 0px;}
 
 .inf-survey {font-size: 13px !important; color: blue;}
 .survey-bold {font-weight: bold;}
@@ -427,9 +353,6 @@ input[type=range]::-ms-tooltip {display: none;}
 .popup-title {font-size: 11pt; font-weight: bold;color: black; height: 44px; margin-left: 1px; line-height: 46px; padding-left: 10px;}
 .popup-body {padding: 15px;}
 .popup-wrapdiv {max-height: 156px; overflow-y: auto; overflow-x: hidden;}
-.survey-user-pv em {padding: 0px 2px;}
-.survey-user-pv .user-inf {font-size: 13px !important; color: #333; cursor: pointer;}
-.survey-user-pv .user-inf:hover, .user-field:hover {color: blue;}
 
 .prevQsArea {background-color: #fff; padding: 20px; min-height: 400px; border: 1px solid #d7d7d7; margin-bottom: 15px;}
 .requiredInfo {font-size: 14px; color: red;}
@@ -471,7 +394,6 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsOpt .othersLogicArea .prevArrow {padding: 0px 30px;}
 .prevQsOpt .othersLogicArea .logicSpan {font-size: 16px; margin-top: 2px;}
 
-.user-mainDiv {display: none; align-items: center;}
 .user-listDiv {flex: 1; border: none; outline: none; padding: 0px 5px; max-height: 30px; height: 25px; line-height: 25px; overflow-y: auto;}
 .user-listDiv span {padding-right: 5px; font-size: 12px; word-break: break-all;}
 .user-listDiv span >u {cursor: pointer; color: #333; text-decoration: underline; line-height: 20px;}
@@ -511,16 +433,19 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li>img {vertical-align: top; width: 30px; margin: 0px 10px;}
 .upage-ul li>span {line-height: 30px;}
 
-.draft-survey {position: absolute; top: 76px; bottom: 0px; right: 10px; height: 40px; width: 40px; background-image: url(/images/ezSurvey/draft.png); background-size: 32px 32px; background-repeat: no-repeat; background-position: center; cursor: pointer;}
 .logicMapWrap {height: 565px; padding: 5px;}
 .logicTree {height: 100%; width: 100%;}
-.survey-nminfo {padding-bottom: 10px;}
+
 .survey-infpp-wrap {width: 100%; height: 350px; margin:0px 0px 15px 0px;}
 .surey-frameeditor {padding: 0px; height: 100%; width:100%; overflow: auto; border: 0px;}
 
+/* survey draft button */
+.draft-survey {cursor: pointer; display:block; float:right; padding: 0px 5px; line-height:46px; font-size:12px; color:#2196f3; font-weight:bold; border:1px solid #62aaf9; border-bottom:1px solid #0470e4; font-family:Malgun Gothic, Arial, Helvetica, sans-serif; box-sizing:border-box;}
+
+/*** survey statistic part start ***/
 .pieDiv {padding: 0px 20px; display: flex;}
 .barDiv {padding: 0px 20px 15px; display: flex;}
-/* .barDiv >canvas {flex: 1; min-height: 280px;} */
+.barDiv >canvas {flex: 1; min-height: 280px;}
 .survey-canvaswrap {flex: 1; min-height: 280px;}
 .pieDiv >canvas {height: 240px;}
 .response-wrap, .respondents-div {box-shadow: rgb(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px; background-color: #fff;}
@@ -556,7 +481,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .legend-ul {padding: 20px 0px; list-style: none;}
 .legend-ul >li {display: flex; cursor: pointer;}
 .legend-ul .legend-circle {width: 30px; min-width: 30px; height: 15px;}
-.legend-label {flex: 1; padding-left: 6px; padding-right: 6px; /* word-break: break-word; */overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.legend-label {flex: 1; padding-left: 6px; padding-right: 6px; word-break: break-word;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
 .legend-label:hover {font-weight: bold;}
 .pieDiv .bnk-legend {width: 320px; min-width: 320px;}
 .barDiv .bnk-legend {width: 160px; min-width: 160px;}
@@ -565,5 +490,132 @@ input[type=range]::-ms-tooltip {display: none;}
 .chartWrapper {position: relative; padding: 0px 10px 15px;}
 .chartAreaWrapper {width: 100%; overflow-x: auto;}
 .chartAreaWrapper.bnk-wrap {overflow-x: hidden;}
+/*** survey statistic part end ***/
+
+/*** survey tab start ***/
+.surveyBtn{overflow:hidden; margin:10px 0px 10px 0px;}
+.headpanel{float:left; height:48px; margin:0px; padding:0px;}
+.headpanel .crust {float:left; position:relative; clear:none; display:block; zoom:1; max-width:50%; margin:0px; padding:0px; border:1px solid #c5c5c5; border-left:none; border-right:none; border-bottom:none;}
+.headpanel .crust:last-child a.crumb{border-right:1px solid #c5c5c5;}
+.headpanel >span:first-child {border-left: 1px solid #c5c5c5 !important;}
+.headpanel .crust a.crumb>span {display:inline-block; vertical-align:middle; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; max-width:100%; font-size:14px;}
+.headpanel .crust:hover a.crumb, .headpanel .crust.selected a.crumb {background:#3d8fea; color:#fff;}
+.headpanel .crust a.crumb {overflow: hidden; display:block; height:46px; line-height:45px; margin:0px; padding:0px 8px 0px 28px; background:#fff; border-bottom:1px solid #c5c5c5; _border-bottom:none; text-decoration:none; outline:0px; -moz-outline-style:0 none; cursor:pointer;}
+.headpanel .crust:first-child a.crumb{padding:0px 8px 0px 18px;}
+.headpanel .crust .arrow {border: 24px solid transparent; border-right: 1px none black; border-left-color:#c5c5c5; display: block; position: absolute; right:-22px; top:-1px; z-index: 50; width: 0px; height: 0px; cursor: pointer;}
+.headpanel .crust .arrow span {border: 24px solid transparent; border-right: 1px none black; border-left-color: #fff; display: block; position: absolute; left:-25px; top:-24px; z-index: 51; white-space: nowrap; overflow: hidden; text-indent: 9999px; width: 0px; height: 0px;}
+.headpanel .crust:hover .arrow span, .headpanel .crust.selected .arrow span {border-left-color:#3d8fea;}
+.headpanel .crust a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress01.png) no-repeat;}
+.headpanel .crust a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress02.png) no-repeat;}
+.headpanel .crust a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress03.png) no-repeat;}
+.headpanel .crust a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress04.png) no-repeat;}
+.headpanel .crust:hover a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress01_on.png) #3d8fea no-repeat;}
+.headpanel .crust:hover a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress02_on.png) #3d8fea no-repeat;}
+.headpanel .crust:hover a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress03_on.png) #3d8fea no-repeat;}
+.headpanel .crust:hover a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress04_on.png) #3d8fea no-repeat;}
+.headpanel .crust.selected a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress01_on.png) #3d8fea no-repeat;}
+.headpanel .crust.selected a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress02_on.png) #3d8fea no-repeat;}
+.headpanel .crust.selected a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress03_on.png) #3d8fea no-repeat;}
+.headpanel .crust.selected a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress04_on.png) #3d8fea no-repeat;}
+/*** survey tab end ***/
+
+/**** survey information table start ****/
+.survey-nminfo {margin:0px 0px 10px 0px;}
+.surveyTitle{width:100%; margin:0px; padding:0px; line-height: 20px;}
+.info-input-ttl, .info-input-pp {width:100%; margin:0px; padding:0px 10px; height:48px; line-height:48px; background:#edf7ff; border:1px solid #2196f3;}
+.info-input-ttl {font-size:16px; font-weight:bold; color:#333;}
+.info-input-pp {font-size:14px;}
+.textInput:focus, .info-input-ttl:focus, .info-input-pp:focus {border:1px solid #2196f3 !important;}
+.surveyContent{margin:0px 0px 10px 0px; padding:0px;}
+.content.surveyContent {width: 100%; table-layout: fixed;}
+.inf-spanTxt {margin:0px 10px 0px 0px;}
+.left-Th {width: 80px !important;}
+.right-Td {width: 50% !important;}
+.date-input {width: 100px; outline: 0px; border: 1px solid #ddd; padding-left: 5px;}
+.srchDate {width: 100px !important; text-align: center; padding: 0px 5px;}
+
+/* select respondent part */
+.survey-flexdiv {display: flex;}
+.imgbtn.inf-surveyimg {margin: 0px 5px 0px 0px;}
+.user-mainDiv.on {flex: 1; display: flex; align-items: center;}
+.user-mainDiv {display: none;}
+.target-wrapper {flex: 1; border: 1px solid #ddd; height: 27px; box-sizing: border-box; display: flex; align-items: center;}
+
+/**** survey information table end****/
+
+/**** survey attach part start ****/
+.survey-otherinf {margin: -1px 0px 0px 0px;}
+.survey-dropzone {max-height: 130px; border: 1px solid #ddd; overflow-y: auto; overflow-x: hidden; min-height: 67px; box-sizing: border-box;}
+.attach-zone {padding : 15px; background: #fff; border: 1px solid #d7d7d7; margin-bottom: 15px; }
+.attach-zone >div {max-height: 130px; overflow-y: auto; overflow-x: hidden;}
+.attach-zone2 {max-height: 195px; background: #fff; border: 1px solid #d7d7d7; margin-top: 2px; overflow-y: auto;}
+.survey-attach {background-color: #fff; margin-bottom: 10px;}
+.mainzone {height: 100%; box-sizing: border-box; overflow-y: auto;}
+.mainzone2 {height: 100%; box-sizing: border-box; overflow-y: auto;}
+input::-ms-clear {display: none;}
+.divInform {width: 100%; height: 100%; min-height: 60px; display: flex; flex-flow: column; justify-content: center; align-items: center; cursor: pointer;}
+.divInform .nofile {line-height: 60px;}
+.divInform span + span {margin-top: 5px;}
+.fileList {width: 100%; height: auto;}
+.ulFiles, .user-pageul {margin: 0px; padding: 0px; list-style: none;}
+.ulFiles li, .user-pageul li {float: left; width: 100%; min-width: 100%; height: 65px; position: relative; border-bottom: 1px dashed #ddd; box-sizing: border-box;}
+.ulFiles li >img, .user-pageul li >img {position: absolute; top: 2.5px; right: 2.5px; cursor: pointer;}
+.ulFiles li:lastChild {padding-bottom: 5px;}
+.user-pageul li:last-child {border-bottom: 0px !important;}
+.fileList .qstUl {margin: 0px; padding: 0px;}
+.fileList .optUl {margin: 0px; padding: 0px 40px;}
+.fileList .qstUl >li {position: relative; padding: 15px 15px 0px;}
+.fileList .optUl >li {position: relative; padding: 10px 10px 0px;}
+.qstUl >li >img {position: absolute; top: 15px; left: 15px; cursor: pointer;}
+.optUl >li >img {position: absolute; top: 10px; left: 10px; cursor: pointer;}
+.attDivFile {display: flex; width: 100%; height: 100%; cursor: pointer;}
+.attDivFile .attImgAva {height: 44px; width: 44px; min-width: 44px; margin: 10px;}
+.qstUl .attDivFile .attImgAva, .optUl .attDivFile .attImgAva {height: 80px; width: 80px; margin: 0px;}
+.qstUl .attDivFile .attImgAva >img, .optUl .attDivFile .attImgAva >img {height: 100%; width: auto;}
+.attDivFile .attImgAva >img {height: 100%; width: 100%;}
+.attDivFile .attFileInf {display: flex; flex: 1; flex-flow: column; overflow: hidden; padding-top: 10px;}
+.attDivFile .attFileInf >span:first-child {padding: 6px 4px 4px 0px; max-height: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.attDivFile .attFileInf >span:last-child {padding: 2px 4px 4px 0px;}
+.attDivFile .attFileInf2 {font-size: 14px; align-items: center; display: flex; flex: 1; overflow: hidden; padding-left: 10px; padding-top: 0px; justify-content: left;}
+.ulFiles .attDivFile .attFileInf2, .user-pageul .attDivFile .attFileInf2 {padding-left: 0px !important;}
+.uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
+.attach-bttn-div {display:block; overflow:hidden; white-space:nowrap; margin:5px 0px;}
+/**** survey attach part end ****/
+
+/**** survey information confirm part start ****/
+.surveyinfo-wrapcf {border: 1px solid #d7d7d7; border-top: 0px; padding: 20px 40px; background-color: #fff; margin-bottom: 15px;}
+.survey-purpose p, .survey-purpose div, .survey-purpose td, .survey-purpose ul, .survey-purpose ol, .survey-purpose li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px; font-family: 'Gulim', 'arial', 'verdana' !important; font-size: 14px !important;}
+.survey-purpose table td  {text-indent: 0px }
+.survey-purpose blockquote {margin-top: 0px; margin-bottom: 0px;}
+.survey-infrow, .survey-infrow-pv {display: flex; font-family: HanSans, Gulim; margin: 5px 0px; align-items: center;}
+.survey-infrow select {outline: none;}
+.survey-infrow >span, .survey-infrow-pv >span {margin: 0px 10px; line-height: 32px; font-size: 14px;}
+.survey-infrow >span:first-child, .survey-infrow-pv >span:first-child {margin-left: 0px !important; min-width: 80px;}
+.survey-infrow .target-select {border-radius: 3px; outline: none; background-color: rgba(204, 204, 204, 0.46); padding: 0px 5px; font-size: 13px; line-height: 27px; cursor: pointer; margin: 0px 10px; border: 1px solid #ddd;}
+.user-mainDiv.on {display: flex;}
+.survey-infrow .date-input {width: 60px; outline: 0px; border: 1px solid #ddd; padding-left: 5px;}
+.survey-infrow input, .survey-infrow select, .survey-infrow .target-select {height: 27px;}
+.survey-user-pv em {padding: 0px 2px;}
+.survey-user-pv .user-inf {font-size: 13px !important; color: #333; cursor: pointer;}
+.survey-user-pv .user-inf:hover, .user-field:hover {color: blue;}
+/**** survey information confirm part end ****/
+
+/* survey button panel */
+.survey-bttn-panel {width:100%; text-align: center;}
+.btnpositionSurvey{margin:20px 0px; padding:7px; text-align:center;}
+.imgbtnSurvey{white-space:nowrap; display:inline-block; background-repeat: no-repeat; padding-left:20px; vertical-align: top; cursor: pointer; margin-bottom: 2px; background-color: white; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height:30px;}
+.imgbtnSurvey span{display: inline-block; background-repeat: no-repeat; height: 30px; padding-right:20px; font: 14px malgun gothic; letter-spacing: -1; vertical-align: top; line-height: 30px; height: 30px; line-height: 30px; font-weight: bold; font-size: 14px; color: #000;}
+.imgbtnSurvey_save{border:1px solid #62aaf9; box-shadow: 0px 2px 0px 0px rgba(98, 170, 249, 0.8);}
+.imgbtnSurvey_save span{color:#0470e4;}
+
+
+
+
+
+
+
+
+
+
 
 

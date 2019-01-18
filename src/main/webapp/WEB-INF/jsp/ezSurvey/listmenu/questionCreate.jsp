@@ -8,11 +8,11 @@
 
 <div class="questions-wrap"><div class="quesBacgr"></div></div>
 
-<div class="navi-button">
-	<div>
-		<div id="gotoFirstTab" class="survey-infbttn"               ><img src="/images/ezSurvey/prevstep.png"></div>
-		<div id="gotoThirdTab" class="survey-infbttn gotoThirdTab"  ><img src="/images/ezSurvey/nextstep.png"></div>
-		<div id="gotoForthTab" class="survey-infbttn gotoForthTab"  ><img src="/images/ezSurvey/nextstep.png"></div>
-		<div id="cancelSurvey1" class="survey-infbttn cancelSurvey1"><img src="/images/ezSurvey/cancel.png"  ></div>
+<div class="survey-bttn-panel">
+	<div class="btnpositionSurvey">
+		<a id="gotoFirstTab" class="imgbtnSurvey gotoFirstTab"><span><spring:message code='ezSurvey.t91'/></span></a>
+		<a id="gotoThirdTab" class="imgbtnSurvey gotoThirdTab"><span><spring:message code='ezSurvey.t92'/></span></a>
+		<a id="gotoForthTab" class="imgbtnSurvey imgbtnSurvey_save gotoForthTab"><span><spring:message code='ezSurvey.t37'/></span></a>
+		<a id="cancelSurvey1" class="imgbtnSurvey cancelSurvey"><span><spring:message code='ezSurvey.t18'/></span></a>
 	</div>
 </div>

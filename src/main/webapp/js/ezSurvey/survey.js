@@ -87,6 +87,7 @@ var SurveyCreate     = function() {
 			getReuseQuestions();
 		}
 		
+		window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 		fileDivElmt.addEventListener("dragenter", function(e) {surveyFile.dragEnter(e);}, false);
 		fileDivElmt.addEventListener("dragover" , function(e) {surveyFile.dragOver(e);} , false);
 		fileDivElmt.addEventListener("drop"     , function(e) {surveyFile.upload(e);}   , false);
@@ -113,33 +114,44 @@ var SurveyCreate     = function() {
 		document.getElementById("showLogicMap").onclick = function(e) {toggleLogicPanel();};
 		document.getElementById("userListDiv").onscroll = function(e) {scrollListOfUser(this);}
 		document.onselectstart = function() {return false;};
-		window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
-		document.getElementById("selectTarget" ).addEventListener("change", toggleSelectTargetBttn, false);
-		document.getElementById("targetBttn"   ).addEventListener("click" , showSelectPopUp       , false);
-		document.getElementById("gotoFirstTab" ).addEventListener("click" , gotoFirstStep         , false);
+		var targetSpanList     = document.getElementsByName("targetSpan");
+		var publicSpanList     = document.getElementsByName("publicSpan");
 		
+		for (var i = 0, len = targetSpanList.length; i < len; i++) {
+			targetSpanList[i].onchange = function(e) {toggleSelectTargetBttn(this)};
+		}
+		
+		for (var i = 0, len = publicSpanList.length; i < len; i++) {
+			publicSpanList[i].onchange = function(e) {toggleDaysInput(this)};
+		}
+		
+		var firstTab  = document.getElementsByClassName("gotoFirstTab");
 		var secondTab = document.getElementsByClassName("gotoSecondTab");
 		var thirdTab  = document.getElementsByClassName("gotoThirdTab");
 		var forthTab  = document.getElementsByClassName("gotoForthTab");
-		var cancelSv1 = document.getElementsByClassName("cancelSurvey1");
+		var cancelSv  = document.getElementsByClassName("cancelSurvey");
 		
-		for (var i = 0; i < secondTab.length; i++) {
+		for (var i = 0, len = firstTab.length; i < len; i++) {
+			firstTab[i].addEventListener("click", gotoFirstStep, false);
+		}
+		
+		for (var i = 0, len = secondTab.length; i < len; i++) {
 			secondTab[i].addEventListener("click", gotoSecondStep, false);
 		}
 		
-		for (var i = 0; i < thirdTab.length; i++) {
-			thirdTab[i].addEventListener("click",  gotoThirdStep, false);
+		for (var i = 0, len = thirdTab.length; i < len; i++) {
+			thirdTab[i].addEventListener("click", gotoThirdStep, false);
 		}
 		
-		for (var i = 0; i < forthTab.length; i++) {
-			forthTab[i].addEventListener("click",  gotoForthStep, false);
+		for (var i = 0, len = forthTab.length; i < len; i++) {
+			forthTab[i].addEventListener("click", gotoForthStep, false);
 		}
 		
-		for (var i = 0; i < cancelSv1.length; i++) {
-			cancelSv1[i].addEventListener("click",  cancelThisSurvey, false);
+		for (var i = 0, len = cancelSv.length; i < len; i++) {
+			cancelSv[i].addEventListener("click", cancelThisSurvey, false);
 		}
 		
-		document.getElementById("public-slbox"  ).addEventListener("change", toggleDaysInput  , false);
+		document.getElementById("targetBttn"    ).addEventListener("click" , showSelectPopUp  , false);
 		document.getElementById("closeUserPanel").addEventListener("click",  toggleUserPreview, false);
 		document.getElementById("saveSurvey"    ).addEventListener("click",  saveSurvey       , false);
 		
@@ -225,10 +237,10 @@ var SurveyCreate     = function() {
 		var surveyPurpose  = document.getElementById("info-input-pp").contentWindow.GetEditorContent();
 		var startDate      = document.getElementById("startDate").value;
 		var endDate        = document.getElementById("endDate").value;
-		var publicFlag     = 1 - document.getElementById("public-slbox").selectedIndex;
-		var anonymousFlag  = document.getElementById("anonymous-slbox").selectedIndex;
-		var multipleFlag   = document.getElementById("multiple-slbox").selectedIndex;
-		var userFlag       = document.getElementById("selectTarget").selectedIndex;
+		var publicFlag     = parseInt(document.querySelector('input[name="publicSpan"]:checked').value);
+		var anonymousFlag  = parseInt(document.querySelector('input[name="anonymousSpan"]:checked').value);
+		var multipleFlag   = parseInt(document.querySelector('input[name="multipleSpan"]:checked').value);
+		var userFlag       = parseInt(document.querySelector('input[name="targetSpan"]:checked').value);
 		var liFileList     = surveyAttWrap.querySelector("ul[class='ulFiles']").children;
 		var attachList     = [];
 		
@@ -441,8 +453,8 @@ var SurveyCreate     = function() {
 		var ppContent  = surveyPp.GetBodyValue();
 		var sDate      = document.getElementById("startDate").value;
 		var eDate      = document.getElementById("endDate").value;
-		var publicFlag = 1 - document.getElementById("public-slbox").selectedIndex;
-		var userFlag   = document.getElementById("selectTarget").selectedIndex;
+		var publicFlag = parseInt(document.querySelector('input[name="publicSpan"]:checked').value);
+		var userFlag   = parseInt(document.querySelector('input[name="targetSpan"]:checked').value);
 		var userList   = surveyObj["infor"]["users"];
 		ppContent      = replaceAll(ppContent, '<p style="font-family:맑은 고딕;font-size:12px;"><br></p>', '');
 		var ttlValue   = replaceAll(surveyTtl.value, " ", "");
@@ -569,17 +581,15 @@ var SurveyCreate     = function() {
 		return result;
 	}
 	
-	function toggleSelectTargetBttn() {
-		var sltBoxElmt = document.getElementById("selectTarget");
-		var divUserWrp = document.getElementById("userWrapDiv");
-		var sltedIdx   = sltBoxElmt.selectedIndex;
+	function toggleSelectTargetBttn(inputElmt) {
+		var sltedIdx = inputElmt.getAttribute("value");
 		
 		if (sltedIdx == 0) {
-			divUserWrp.className        = "user-mainDiv";
+			document.getElementById("userWrapDiv").setAttribute("class", "user-mainDiv");
 			surveyObj["infor"]["users"] = null;
 		}
 		else {
-			divUserWrp.className = "user-mainDiv on";
+			document.getElementById("userWrapDiv").setAttribute("class", "user-mainDiv on");
 		}
 	}
 	
@@ -596,11 +606,11 @@ var SurveyCreate     = function() {
 		return feature;
 	}
 	
-	function toggleDaysInput() {
-		var slxIdx    = document.getElementById("public-slbox").selectedIndex;
+	function toggleDaysInput(inputElmt) {
+		var slxIdx    = inputElmt.getAttribute("value");
 		var inputElmt = document.querySelector("input[class='date-input']");
 		
-		if (slxIdx == 1) {
+		if (slxIdx == 0) {
 			inputElmt.value    = "";
 			inputElmt.disabled = true;
 		}
