@@ -71,10 +71,10 @@
 			
 			<c:choose>
 				<c:when test="${type == 'Del' }">
-					<h1 id="popUpTitle" style="height:45px;">폐쇄 승인</h1>
+					<h1 id="popUpTitle" style="height:45px;"><spring:message code = 'ezCommunity.t39' /></h1>
 				</c:when>
 				<c:otherwise>
-					<h1 id="popUpTitle" style="height:45px;">신청 승인 / 거부</h1>
+					<h1 id="popUpTitle" style="height:45px;"><spring:message code = 'ezCommunity.t25' /> / <spring:message code = 'ezCommunity.t44' /></h1>
 				</c:otherwise>
 			</c:choose>
 	   		<div id="close">

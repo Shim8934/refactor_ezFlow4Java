@@ -212,7 +212,7 @@
 								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconPost.gif'></span>";
 								html +=     "<span class='count'>" + item.itemCnt + "</span>";
 								html += "</td>";
-								html += "<td style='width: 45px;'><a class='imgbtn imgbck'><span onclick=closeBtnClick('" + item.c_ClubNo + "')>폐쇄</span></a></td>";
+								html += "<td style='width: 45px;'><a class='imgbtn imgbck' style='padding: 1px 12px 1px 12px;'><span class='icon16 icon16_delete' style='margin: 0px; padding: 0px;' onclick=closeBtnClick('" + item.c_ClubNo + "')></span></a></td>";
 								html += "</tr>";
 								
 								itemNum++;
@@ -544,7 +544,7 @@
 		</script>
 	</head>
 	<body class="mainbody">
-		<h1>커뮤니티 관리<span id="TitleInfo"></span></h1>
+		<h1><spring:message code = 'ezCommunity.khj02' /><span id="TitleInfo"></span></h1>
 		
 			<%--<div class="page">
 			<img src="/images/page_previous.gif" width="15" height="16" align="absmiddle" id="td_Previous"  onClick="prevPage_onclick()">
@@ -554,8 +554,8 @@
 			
 			<div class="portlet_tabpart01">
 				<div class="portlet_tabpart01_top" id="tab1">
-					<p><span id="openCommu">개설된 커뮤니티</span></p>
-					<p><span id="closeCommu">폐쇄한 커뮤니티</span></p>
+					<p><span id="openCommu"><spring:message code = 'ezCommunity.khj03' /></span></p>
+					<p><span id="closeCommu"><spring:message code = 'ezCommunity.khj04' /></span></p>
 				</div>
 			</div>
 			<script type="text/javascript">
@@ -564,7 +564,7 @@
 			
 			<table class="content" style="margin: 10px 0px;">
 				<tr>
-					<th style="background-color: #f1f3f5; border: 1px solid #e2e3e6;">검색조건</th>
+					<th style="background-color: #f1f3f5; border: 1px solid #e2e3e6;"><spring:message code = 'ezCommunity.t1431' /></th>
 					<td style="border: 1px solid #e2e3e6;">
 						<span id="idSpan" class="idSpan">${idSpanValue}</span>
 						
@@ -584,13 +584,13 @@
 					<table id="mainListHeader1" class="mainlist" style="width: 100%">
 						<tr id="mainListHeaderTr">
 							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
-							<th style="width: 90px;">카테고리</th>
+							<th style="width: 90px;"><spring:message code ='ezCommunity.t11' /></th>
 							<th style="width: 25%;"><spring:message code = 'ezCommunity.t9991' /></th>
-							<th style="width: 10%;">유형</th>
-							<th style="width: 10%;">공개여부</th>
+							<th style="width: 10%;"><spring:message code = 'ezCommunity.t65' /></th>
+							<th style="width: 10%;"><spring:message code = 'ezCommunity.t15' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t78' /></th>
-							<th style="width: 70px;">커뮤니티 현황</th>
+							<th style="width: 70px;"><spring:message code = 'ezCommunity.khj05' /></th>
 							<th style="width: 45px;"></th>
 						</tr>
 					</table>
@@ -598,8 +598,8 @@
 						<tr id="mainListHeaderTr">
 							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
 							<th style="width: 25%;"><spring:message code = 'ezCommunity.t9991' /></th>
-							<th style="width: 50%;">페쇄사유</th>
-							<th style="width: 10%;">신청일</th>
+							<th style="width: 50%;"><spring:message code = 'ezCommunity.t71' /></th>
+							<th style="width: 10%;"><spring:message code = 'ezCommunity.t550' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
 						</tr>
 					</table>

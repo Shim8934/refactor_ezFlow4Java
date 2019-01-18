@@ -129,12 +129,12 @@
 						pTotalCnt  = data.totalCount;
 						
 						if (selectedTabId == "admitCommu") {
-							document.getElementById("admitCommu").innerHTML = "신청승인&nbsp;&nbsp;" + "<span style='border: 0px; margin: 0px; padding: 0px; color: #017BEC; font-weight: bold; float: right;'>" + pTotalCnt + "</span>";
-							document.getElementById("closeCommu").innerHTML = "폐쇄승인&nbsp;&nbsp;" + "<span style='border: 0px; margin: 0px; padding: 0px; color: #017BEC; font-weight: bold; float: right;'>" + data.tabCount + "</span>";
+							document.getElementById("admitCommu").innerHTML = "<spring:message code = 'ezCommunity.t25' />&nbsp;&nbsp;" + "<span style='border: 0px; margin: 0px; padding: 0px; color: #017BEC; font-weight: bold; float: right;'>" + pTotalCnt + "</span>";
+							document.getElementById("closeCommu").innerHTML = "<spring:message code = 'ezCommunity.t39' />&nbsp;&nbsp;" + "<span style='border: 0px; margin: 0px; padding: 0px; color: #017BEC; font-weight: bold; float: right;'>" + data.tabCount + "</span>";
 						}
 						else {
-							document.getElementById("admitCommu").innerHTML = "신청승인&nbsp;&nbsp;" + "<span style='border: 0px; margin: 0px; padding: 0px; color: #017BEC; font-weight: bold; float: right;'>" + data.tabCount + "</span>";
-							document.getElementById("closeCommu").innerHTML = "폐쇄승인&nbsp;&nbsp;" + "<span style='border: 0px; margin: 0px; padding: 0px; color: #017BEC; font-weight: bold; float: right;'>" + pTotalCnt + "</span>";
+							document.getElementById("admitCommu").innerHTML = "<spring:message code = 'ezCommunity.t25' />&nbsp;&nbsp;" + "<span style='border: 0px; margin: 0px; padding: 0px; color: #017BEC; font-weight: bold; float: right;'>" + data.tabCount + "</span>";
+							document.getElementById("closeCommu").innerHTML = "<spring:message code = 'ezCommunity.t39' />&nbsp;&nbsp;" + "<span style='border: 0px; margin: 0px; padding: 0px; color: #017BEC; font-weight: bold; float: right;'>" + pTotalCnt + "</span>";
 						}
 						
 						var html = "";
@@ -170,13 +170,13 @@
 								if (selectedTabId == "admitCommu") {
 									html += "<td style='width: 10%;'>" + item.c_RegDate.substring(0, 10) +"</td>";
 									html += "<td style='width: 80px;'>";
-									html +=     "<a class='imgbtn imgbck' style='margin-right: 3px;'><span onclick=admitBtnClick('" + item.c_ClubNo + "')>승인</span></a>";
-									html +=     "<a class='imgbtn imgbck'><span onclick=admitRefusalBtnClick('" + item.c_ClubNo + "')>거부</span></a>";
+									html +=     "<a class='imgbtn imgbck' style='margin-right: 3px;'><span onclick=admitBtnClick('" + item.c_ClubNo + "')><spring:message code = 'ezCommunity.t46' /></span></a>";
+									html +=     "<a class='imgbtn imgbck'><span onclick=admitRefusalBtnClick('" + item.c_ClubNo + "')><spring:message code = 'ezCommunity.t44' /></span></a>";
 									html += "</td>";
 								}
 								else {
 									html += "<td style='width: 10%;'>" + item.applicationDate.substring(0, 10) +"</td>";
-									html += "<td style='width: 80px;'><a class='imgbtn imgbck'><span onclick=closeBtnClick('" + item.c_ClubNo + "')>승인</span></a></td>";
+									html += "<td style='width: 80px;'><a class='imgbtn imgbck'><span onclick=closeBtnClick('" + item.c_ClubNo + "')><spring:message code = 'ezCommunity.t46' /></span></a></td>";
 								}
 								
 								html += "</tr>";
@@ -529,12 +529,12 @@
 		</script>
 	</head>
 <body class="mainbody">
-	<h1>커뮤니티 신청관리</h1>
+	<h1><spring:message code = 'ezCommunity.khj06' /></h1>
 	
 	<div class="portlet_tabpart01">
 		<div class="portlet_tabpart01_top" id="tab1">
-			<p><span id="admitCommu">신청승인</span></p>
-			<p><span id="closeCommu">폐쇄승인</span></p>
+			<p><span id="admitCommu"><spring:message code = 'ezCommunity.t25' /></span></p>
+			<p><span id="closeCommu"><spring:message code = 'ezCommunity.t39' /></span></p>
 		</div>
 	</div>
 	<script type="text/javascript">
@@ -543,7 +543,7 @@
 	
 	<table class="content" style="margin: 10px 0px;">
 		<tr>
-			<th style="background-color: #f1f3f5; border: 1px solid #e2e3e6;">검색조건</th>
+			<th style="background-color: #f1f3f5; border: 1px solid #e2e3e6;"><spring:message code = 'ezCommunity.t1431' /></th>
 			<td style="border: 1px solid #e2e3e6;">
 				<span id="idSpan" class="idSpan">${idSpanValue}</span>
 				<select id="searchType" name="QuerySelect" style="vertical-align: middle; height: 22px;">
@@ -561,12 +561,12 @@
 			<table id="mainListHeader" class="mainlist" style="width: 100%">
 				<tr id="mainListHeaderTr">
 					<th style="width: 35px;"><spring:message code = 'ezCommunity.t32' /></th>
-					<th style="width: 90px;">카테고리</th>
+					<th style="width: 90px;"><spring:message code = 'ezCommunity.t11' /></th>
 					<th style="width: 25%;"><spring:message code = 'ezCommunity.t9991' /></th>
-					<th style="width: 10%;">유형</th>
-					<th style="width: 10%;">공개여부</th>
+					<th style="width: 10%;"><spring:message code = 'ezCommunity.t65' /></th>
+					<th style="width: 10%;"><spring:message code = 'ezCommunity.t15' /></th>
 					<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
-					<th style="width: 10%;">신청일</th>
+					<th style="width: 10%;"><spring:message code = 'ezCommunity.t550' /></th>
 					<th style="width: 80px;"></th>
 				</tr>
 			</table>

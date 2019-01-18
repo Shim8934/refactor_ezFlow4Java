@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code = 'ezCommunity.t46' /></title>
+		<title><spring:message code = 'ezCommunity.t1' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
 	</head>
@@ -24,7 +24,7 @@
 				<td><c:out value = '${club.c_ClubName}' /></td>
 			</tr>
 			<tr>
-				<th>신청일</th>
+				<th><spring:message code = 'ezCommunity.t550' /></th>
 				<td><c:out value = '${fn:substring(club.applicationDate, 0, 10)}' /></td>
 			</tr>
 			<tr height="100%">
