@@ -415,28 +415,13 @@
 					AND
 						c_adminconfirm = 'Y'
 		]]>
-		<isEqual property="v_STRSELECT" compareValue="0">
-			<![CDATA[
-				AND
-					A.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-				GROUP BY
-					C_CLUBNO, C_SYSOPID
-				ORDER BY
-					c_regdate ASC
-				LIMIT
-					#v_IQUERYCOUNT#) T2
-				ORDER BY
-					c_regdate DESC
-				LIMIT
-					10
-			]]>
-		</isEqual>
 		<isNotEqual property="v_STRSELECT" compareValue="0">
 			<![CDATA[
 				AND
 					E.c_code = #v_STRSELECT#
+			]]>
+		</isNotEqual>
+			<![CDATA[
 				AND
 					A.companyid = #companyID#
 				AND
@@ -452,7 +437,6 @@
 				LIMIT
 					10
 			]]>
-		</isNotEqual>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspSearchKeyGet2"				parameterClass="Map"			resultClass="Integer"> -->
@@ -484,24 +468,18 @@
 				AND
 					c_adminconfirm = 'Y'
 		]]>
-		<isEqual property="v_STRSELECT" compareValue="0">
-			<![CDATA[
-				AND
-					A.companyid = #companyID#
-				AND
-					A.tenant_id = #tenantID#
-			]]>
-		</isEqual>
 		<isNotEqual property="v_STRSELECT" compareValue="0">
 			<![CDATA[
 				AND
 					B.c_code = #v_STRSELECT#
+			]]>
+		</isNotEqual>
+			<![CDATA[
 				AND
 					A.companyid = #companyID#
 				AND
 					A.tenant_id = #tenantID#
 			]]>
-		</isNotEqual>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.admCommunityInfoEdit"			parameterClass="Map"			resultClass="CommunityClubVO"> -->
