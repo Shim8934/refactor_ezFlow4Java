@@ -386,7 +386,6 @@ public class EzCommunityAdminController {
 		
 		CommunityCComCloseVO club = ezCommunityAdminService.closeCommunityInfo(commonUtil.getMultiData(lang, tenantId), code, companyId, tenantId);
 		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), companyId, tenantId));
-		club.setC_ClubName(commonUtil.cleanValue(club.getC_ClubName()));
 		
 		model.addAttribute("club", club);
 		
@@ -435,7 +434,7 @@ public class EzCommunityAdminController {
 	}
 	
 	/**
-	 * 폐쇄신청 실행함수
+	 * 커뮤니티 신청 관리 > 폐쇄신청 실행함수
 	 */
 	@RequestMapping(value = "/admin/ezCommunity/commCloseAll.do")
 	public String commCloseAll(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
@@ -455,6 +454,36 @@ public class EzCommunityAdminController {
 		}
 		
 		return "/admin/ezCommunity/communityCommCloseAll";
+	}
+	
+	/**
+	 * 커뮤니티 관리 > 폐쇄 실행함수
+	 */
+	@RequestMapping(value = "/admin/ezCommunity/commAdminCloseAll.do")
+	public String commAdminCloseAll(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String companyId   = userInfo.getCompanyID();
+		String companyName = userInfo.getCompanyName1();
+		int tenantId       = userInfo.getTenantId();
+		
+		String code = request.getParameter("code");
+		
+		CommunityCComCloseVO closeVO = ezCommunityService.adminCommCloseOkGet1(code, tenantId);
+		CommunityClubVO clubVO       = ezCommunityService.adminCommCloseOkGet2(code, tenantId);
+		
+		if (closeVO != null) {
+			ezCommunityAdminService.adminCommCloseAll(code, egovMessageSource.getMessage("ezCommunity.khj01", userInfo.getLocale()), userInfo.getLocale(), tenantId);
+		} else {
+			String commName   = clubVO.getC_ClubName();
+			String commName2  = clubVO.getC_ClubName2();
+			String sysopID    = clubVO.getC_SysopID();
+			
+			ezCommunityService.adminCommCloseOkInsert(code, commName, commName2, sysopID, companyName, companyId, commonUtil.getTodayUTCTime(""), egovMessageSource.getMessage("ezCommunity.khj01", userInfo.getLocale()), egovMessageSource.getMessage("ezCommunity.t38", userInfo.getLocale()), tenantId);
+			ezCommunityAdminService.commCloseAll(code, userInfo.getLocale(), tenantId);
+		}
+		
+		return "json";
 	}
 	
 	/**

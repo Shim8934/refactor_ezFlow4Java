@@ -845,4 +845,18 @@
 				applicationdate DESC
 		]]>
 	</select>
+	
+	<update id="EzCommunityAdminDAO.aspAdminCommCloseAllUpdate"				parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_C_COMCLOSE
+			SET
+				closestate = #v_PCLOSESTATE#,
+				closereason = #v_REASON#
+			WHERE
+				RTRIM(c_clubno) = #v_CODE#
+			AND
+				tenant_id = #tenantID#
+		]]>
+	</update>
 </sqlMap>
