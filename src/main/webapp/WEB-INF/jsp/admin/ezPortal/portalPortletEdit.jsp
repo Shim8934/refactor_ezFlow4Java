@@ -1189,7 +1189,7 @@
 				${paramHtml}
 			</table>
 			<table id="toggle_tbl2_2" class="content" style="display:none">
-				<c:if test="${pMoveURL == '/ezPortal/wpNewBoard.do' || pMoveURL == '/ezPortal/wpNewPhoto.do'}">
+				<c:if test="${pMoveURL != '/ezPortal/wpNewBoard.do' && pMoveURL != '/ezPortal/wpNewPhoto.do'}">
 	  				<tr>
 	    				<th width="85" ><spring:message code='ezPortal.t117'/></th>
 	    				<td><input type="text" id="newParamName" style="width:99%;margin-left:2px"></td>
@@ -1213,6 +1213,8 @@
 	      					</table>
 	      				</td>
 	  				</tr>
+  				</c:if>
+				<c:if test="${pMoveURL == '/ezPortal/wpNewBoard.do' || pMoveURL == '/ezPortal/wpNewPhoto.do'}">
   					<tr>
 	    				<th width="85" ><spring:message code='ezBoard.jjh05'/></th>
 	    					<td>
