@@ -149,8 +149,17 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 조직도관리 메인화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezOrgan/organMain.do")
-	public String organMain() throws Exception{        
-		return "admin/ezOrgan/organMain";
+	public String organMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+		logger.debug("organMain started.");
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("organMain accessDenied.");
+			return "cmm/error/adminDenied";
+		} else {
+			logger.debug("organMain ended.");
+			return "admin/ezOrgan/organMain";
+		}
 	}
 	
 	/**

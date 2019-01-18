@@ -512,14 +512,17 @@ function showPreview(isPreview, itemseq) {
 
 	// row 선택 X
 	if(itemseq == 0) {
-		doc.getElementById('Preview_HeaderH').style.display ="none";
-		doc.getElementById("ifrmPreViewH").style.display = "none";
+		doc.getElementById('Preview_HeaderH').style.visibility ="hidden";
+		doc.getElementById("ifrmPreViewH").src = "/blank_kr.htm";
+		setTimeout(function(){
+			ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = strLanghyh2;
+		}, 500);
 	} else { // row 선택
 		if(isPreview == 2) {
 			// 세로 모드
 			var itemSeqTitle = $("#"+itemseq)[0].parentNode.parentNode.children[2].innerHTML;
 			var itemSeqSDate = $("#"+itemseq)[0].parentNode.parentNode.children[3].innerHTML;
-			doc.getElementById('Preview_HeaderH').style.display ="inline-block";
+			doc.getElementById('Preview_HeaderH').style.visibility ="";
 			doc.getElementById('Preview_HeaderH').title = itemSeqTitle;
 			doc.getElementById('PreH_sub_subject').innerHTML = itemSeqTitle;
 			doc.getElementById('PreH_date').innerHTML = itemSeqSDate;

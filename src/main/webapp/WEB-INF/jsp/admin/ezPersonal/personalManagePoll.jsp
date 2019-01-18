@@ -32,7 +32,7 @@
 			var strLang5 = "<spring:message code = 'ezQuestion.t312' />";
 
 			window.onload = function () {
-				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = "선택된 설문이 없습니다.";
+				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = strLanghyh2;
 			}
 
 			document.onselectstart = function () {
@@ -137,7 +137,7 @@
 					<span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue; width:550px;">
 						<span style="width: 100%; height: 100px; display: block;">
 							<span class="previewmail_info" style="display: block; width: 100%; border-top: 1px solid #e8e8e8; ">
-								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
+								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; visibility: hidden;">
 									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 6px 0px 1px 0px; height: 24px; line-height: 35px;">
 										<span class="icon_btn" style="margin-left:8px;"><span onclick="showPollPage();" style="cursor: pointer; padding-right: 5px;">
 											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" style="position:absolute; margin-top:-6px;" class="title_blodtxt"></span></span>

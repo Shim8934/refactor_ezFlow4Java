@@ -2239,8 +2239,17 @@ public class EzEmailAdminController {
 	 * 조직도관리 메인화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezEmail/adminMailMain.do")
-	public String organMain() throws Exception{        
-		return "admin/ezEmail/adminMailMain";
+	public String organMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+		logger.debug("adminMailMain started.");
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("portalMain accessDenied.");
+			return "cmm/error/adminDenied";
+		} else {
+			logger.debug("adminMailMain ended.");
+			return "admin/ezEmail/adminMailMain";
+		}
 	}
 	
 	/**
@@ -2251,9 +2260,14 @@ public class EzEmailAdminController {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());
 		String cChk = "0";
+		String kChk = "0";
 		
 		if (user.getRollInfo().indexOf("c=1") != -1) { // 전체 관리자
 			cChk = "1";
+		}
+		
+		if (user.getRollInfo().indexOf("k=1") != -1) { // 회사 관리자
+			kChk = "1";
 		}
 		
 		// set useLetter
@@ -2278,6 +2292,7 @@ public class EzEmailAdminController {
 		model.addAttribute("useSignatureTemplate", useSignatureTemplate);
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
 		model.addAttribute("cChk", cChk);
+		model.addAttribute("kChk", kChk);
 		
 		return "admin/ezEmail/adminMailLeft";
 	}

@@ -135,20 +135,20 @@
 				<spring:message code='main.t78' />
   			</div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
-				<c:if test="${cChk == '1'}">
+				<c:if test="${cChk == '1' || kChk == '1'}">
 				<h2>
 					<span onClick="goPage(22)" style="display:inline-block;width:100%;"><spring:message code="ezEmail.lsd01" /></span>
 				</h2>
+				</c:if>
+				<c:if test="${cChk == '1'}">
 				<h2>
 					<span onClick="goPage(9)" style="display:inline-block;width:100%;"><spring:message code='main.t00027' /></span>
 				</h2>
-				</c:if>
-				<c:if test="${cChk == '1'}">
-
 				<h2>
 					<span onClick="goPage(3)" style="display:inline-block;width:100%;"><spring:message code='main.t58' /></span>
 				</h2>  
-				
+				</c:if>
+				<c:if test="${cChk == '1' || kChk == '1'}">
 				<h2>
 					<span onClick="goPage(2)" style="display:inline-block;width:100%;"><spring:message code='main.t57' /></span>
 				</h2>  
