@@ -351,6 +351,8 @@
 				AND
 					A.TENANT_ID = E.TENANT_ID
 				WHERE
+					E.C_CAT = 'a'
+				AND
 					c_clubno IN (SELECT
 									c_clubno
 								FROM
@@ -363,23 +365,45 @@
 									tenant_id = #tenantID#)
 					AND
 						c_adminconfirm = 'Y'
-					AND
-						E.C_CAT = 'a'
-					AND
-						A.companyid = #companyID#
-					AND
-						A.tenant_id = #tenantID#
-					GROUP BY
-						C_CLUBNO, C_SYSOPID
-					ORDER BY
-						c_regdate ASC
-					LIMIT
-						#v_IQUERYCOUNT#) T2
-					ORDER BY
-						c_regdate DESC
-					LIMIT
-						10
 		]]>
+		<isEqual property="v_STRSELECT" compareValue="0">
+			<![CDATA[
+				AND
+					A.companyid = #companyID#
+				AND
+					A.tenant_id = #tenantID#
+				GROUP BY
+					C_CLUBNO, C_SYSOPID
+				ORDER BY
+					c_regdate ASC
+				LIMIT
+					#v_IQUERYCOUNT#) T2
+				ORDER BY
+					c_regdate DESC
+				LIMIT
+					10
+			]]>
+		</isEqual>
+		<isNotEqual property="v_STRSELECT" compareValue="0">
+			<![CDATA[
+				AND
+					E.c_code = #v_STRSELECT#
+				AND
+					A.companyid = #companyID#
+				AND
+					A.tenant_id = #tenantID#
+				GROUP BY
+					C_CLUBNO, C_SYSOPID
+				ORDER BY
+					c_regdate ASC
+				LIMIT
+					#v_IQUERYCOUNT#) T2
+				ORDER BY
+					c_regdate DESC
+				LIMIT
+					10
+			]]>
+		</isNotEqual>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.aspSearchKeyGet2"				parameterClass="Map"			resultClass="Integer"> -->
@@ -390,8 +414,16 @@
 			SELECT
 				IFNULL(COUNT(c_clubno), 0) 
 			FROM
-				TBL_C_CLUB
+				TBL_C_CLUB A
+			INNER JOIN
+				TBL_C_CATEGORY B
+			ON
+				A.c_cate_a = B.c_code
+			AND
+				A.tenant_id = B.tenant_id
 			WHERE
+				B.c_cat = 'a'
+			AND
 				c_clubno IN (SELECT
 								c_clubno
 							FROM
@@ -402,11 +434,25 @@
 								tenant_id = #tenantID#)
 				AND
 					c_adminconfirm = 'Y'
-				AND
-					companyid = #companyID#
-				AND
-					tenant_id = #tenantID#
 		]]>
+		<isEqual property="v_STRSELECT" compareValue="0">
+			<![CDATA[
+				AND
+					A.companyid = #companyID#
+				AND
+					A.tenant_id = #tenantID#
+			]]>
+		</isEqual>
+		<isNotEqual property="v_STRSELECT" compareValue="0">
+			<![CDATA[
+				AND
+					B.c_code = #v_STRSELECT#
+				AND
+					A.companyid = #companyID#
+				AND
+					A.tenant_id = #tenantID#
+			]]>
+		</isNotEqual>
 	</select>
 	
 <!-- 	<procedure id="EzCommunityAdminDAO.admCommunityInfoEdit"			parameterClass="Map"			resultClass="CommunityClubVO"> -->

@@ -354,7 +354,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", lang);
-		map.put("v_STRSELECT", select.toUpperCase());
+		map.put("v_STRSELECT", select);
 		map.put("v_STRQUERY", query);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
@@ -374,7 +374,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("primary", primary);
 		map.put("v_IQUERYCOUNT", iQueryCount);
-		map.put("v_STRSELECT", select.toUpperCase());
+		map.put("v_STRSELECT", select);
 		map.put("v_STRQUERY", query);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);

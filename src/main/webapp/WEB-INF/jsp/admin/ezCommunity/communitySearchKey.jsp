@@ -142,6 +142,8 @@
 			
 			function ChangeTab(obj) {
 				document.getElementById("txt_SearchQuery").value = "";
+				document.getElementsByName("cCateA")[0].value = "0";
+				
 				pCurPage = 1;
 				communityList();
 			}
