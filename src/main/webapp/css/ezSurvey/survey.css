@@ -31,13 +31,6 @@
 .user-listDiv span >img {width: 10px; height: 10px; cursor: pointer;}
 
 /* survey detail page start */
-.svInfoWrapper {height: 70px; display: flex;}
-.svInfoWrapper .wtInfoArea {height: 100%; overflow: hidden; display: flex; flex: 1;}
-.svInfoWrapper .wtInfoArea .wtImgArea {float: left;height: 50px; padding: 10px; width: 50px;}
-.svInfoWrapper .wtInfoArea img {width: 50px; height: 50px;}
-.svInfoWrapper .wtInfoArea .wtInfo {float: left; width: auto; height: 50px; padding: 10px;}
-.svInfoWrapper .wtInfoArea .wtInfo .wtName {height: 50%; font-size: 17px; color: rgba(0, 115, 230, 0.64); float: left; width: 100%;}
-.svInfoWrapper .wtInfoArea .wtInfo .wtTime {height: 50%; font-size: 17px; width: 100%; float: left; white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
 .survey-bttn-wrp {float: right; padding: 10px 0px 20px;}
 .survey-bttn-wrp >img {height: 36px; width: 36px; cursor: pointer;}
 .survey-bttn-wrp >img + img {padding-left: 8px;}
@@ -49,6 +42,7 @@
 .upage-ul li {float: left; list-style: none; width: 200px; padding: 0px 10px; margin: 6px 0px 0px 0px;}
 .upage-ul li>img {vertical-align: top; width: 30px; margin: 0px 10px;}
 .upage-ul li>span {line-height: 30px;}
+.survey-detail #menu {margin-bottom: 20px;}
 
 /* respondent select page part */
 .receiver_tltype01 >span {min-width: 45px;}
@@ -205,7 +199,7 @@
 .barDiv >canvas {flex: 1; min-height: 280px;}
 .survey-canvaswrap {flex: 1; min-height: 280px;}
 .pieDiv >canvas {height: 240px;}
-.response-wrap, .respondents-div {box-shadow: rgb(0, 0, 0, 0.69) 0px 1px 5px 0px; margin-bottom: 10px; background-color: #fff;}
+.response-wrap, .respondents-div {border: 1px solid #ddd; margin-bottom: 10px; background-color: #fff;}
 .response-usercnt {cursor: pointer;}
 .response-usercnt:hover {color: rgb(4, 112, 227);}
 .mainlist.users {width: 100%;}
@@ -281,7 +275,13 @@
 .logicPanel {height: 640px; width: 600px;}
 .userPanel {height: 262px;}
 .hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off, .respondents-div.off {display: none;}
-
+.surveydetail-header {padding-left: 10px;}
+.surveydetail-header ul {padding: 0px; margin: 0px; list-style: none;}
+.surveydetail-header ul li {display: block; float: left; margin: 0 3px 0 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
+.surveydetail-header span {display: inline-block; background: white; border-top: 1px solid #c7c7c7; border-left: 1px solid #c7c7c7; border-right: 1px solid #c7c7c7; border-bottom: 1px solid #909193; height: 25px; padding: 0px 8px 2px 8px; line-height: 25px; font-size: 12px; color: #393939;}
+.header-wrapper {background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top; margin: 0px; padding: 0px; height: 44px; display: flex; align-items: center;}
+.surveydetail-body{overflow-y: auto; overflow-x: hidden; height: 690px; padding: 15px 10px;}
+.surveystatistic-body{overflow-y: auto; overflow-x: hidden; height: 690px; padding: 15px 10px;}
 /*** survey title ***/
 .survey-title {margin: 0px; padding: 0px 10px; height: 48px; line-height: 48px; background: #edf7ff; border: 1px solid #2196f3; font-size: 16px; font-weight: bold; color: #333;}
 
@@ -320,7 +320,8 @@
 .info-input-pp {font-size:14px;}
 .textInput:focus, .info-input-ttl:focus, .info-input-pp:focus {border:1px solid #2196f3 !important;}
 .surveyContent{margin:0px 0px 10px 0px; padding:0px;}
-.content.surveyContent {width: 100%; table-layout: fixed;}
+.content.surveyContent, .content.surveyDtl {width: 100%; table-layout: fixed;}
+.content.surveyDtl {margin: 0px; padding: 0px;}
 .inf-spanTxt {margin:0px 10px 0px 0px;}
 .left-Th {width: 80px !important;}
 .right-Td {width: 50% !important;}
@@ -344,6 +345,7 @@
 .ppContent table td  {text-indent: 0px }
 .ppContent blockquote {margin-top: 0px; margin-bottom: 0px;}
 .surveyinfopp-wrap{max-height: 350px; overflow: auto; margin: 0px 0px 10px 0px; padding: 10px; border: 1px solid #ddd;}
+.surveyBody {overflow: hidden;}
 /**** survey information table end****/
 
 /**** survey attach part start ****/
@@ -351,7 +353,7 @@
 .survey-dropzone {max-height: 130px; border: 1px solid #ddd; overflow-y: auto; overflow-x: hidden; min-height: 67px; box-sizing: border-box;}
 .attach-zone {padding : 15px; background: #fff; border: 1px solid #d7d7d7; margin-bottom: 15px; }
 .attach-zone >div {max-height: 130px; overflow-y: auto; overflow-x: hidden;}
-.attach-zone2 {max-height: 195px; background: #fff; border: 1px solid #d7d7d7; margin-top: 2px; overflow-y: auto;}
+.attach-zone2 {max-height: 195px; background: #fff; border: 1px solid #d7d7d7; overflow-y: auto; margin-top: 10px;}
 .survey-attach {background-color: #fff; margin-bottom: 10px;}
 .mainzone {height: 100%; box-sizing: border-box; overflow-y: auto;}
 .mainzone2 {height: 100%; box-sizing: border-box; overflow-y: auto;}

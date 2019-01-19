@@ -16,43 +16,54 @@
 	<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg'               )}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js'    )}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/chart.min.js')}"></script>
-	<body class="statBody">
-		<div>
-			<div class="survey-title"></div>
-			<img src="/images/ezSurvey/partiCount.png" id="usersImgCnt">
-			<span id="totalUserCnt"></span>
+	<body class="surveyBody">
+		<div class="header-wrapper">
+			<div class="surveydetail-header">
+				<ul class="on">	
+					<li class="off"><span id="showRespondedUsers"><spring:message code="ezSurvey.t95"/></span></li>
+				</ul>
+			</div>
+			<div id="close"><ul><li><span id="cancelBttn"></span></li></ul></div>
 		</div>
-		
-		<div id="contentsBox">
-			<div id="surveyRespondents" class="respondents-div off">
-				<div class="pieDiv">
-					<div id="userLegendDiv" class="bnk-legend"></div>
-					<canvas id="respondentPie" height="240"></canvas>
+		<div class="surveystatistic-body">
+			<div class="surveyinfo-wrap">
+				<div class="survey-nminfo">
+					<div class="survey-title"><c:out value="${data.title}"/></div>
 				</div>
 			</div>
-		</div>
-		
-		<div id="respondentPanel" class="respondentPanel off">
-			<div class="popup-header">
-				<div class="popup-title" id="user-header"><spring:message code='ezSurvey.t87'/></div>
-				<div id="closeRespondentl" class="closeImgBttn"><ul><li><span></span></li></ul></div>
-			</div>
-			<div class="popup-body">
-				<div class="user-wrapdiv">
-					<table class="mainlist users" id="userTable">
-					</table>
+			
+			<div id="contentsBox">
+				<div id="surveyRespondents" class="respondents-div off">
+					<div class="response-header"><spring:message code="ezSurvey.t95"/><div id="totalUserCnt"></div></div>
+					<div class="pieDiv">
+						<div id="userLegendDiv" class="bnk-legend"></div>
+						<canvas id="respondentPie" height="240"></canvas>
+					</div>
 				</div>
 			</div>
-		</div>
-		
-		<div id="textPanel" class="textPanel off">
-			<div class="popup-header">
-				<div class="popup-title" id="txt-header"><spring:message code='ezSurvey.t88'/></div>
-				<div id="closeTxtResponse" class="closeImgBttn"><ul><li><span></span></li></ul></div>
+			
+			<div id="respondentPanel" class="respondentPanel off">
+				<div class="popup-header">
+					<div class="popup-title" id="user-header"><spring:message code='ezSurvey.t87'/></div>
+					<div id="closeRespondentl" class="closeImgBttn"><ul><li><span></span></li></ul></div>
+				</div>
+				<div class="popup-body">
+					<div class="user-wrapdiv">
+						<table class="mainlist users" id="userTable">
+						</table>
+					</div>
+				</div>
 			</div>
-			<div class="popup-body">
-				<div class="div-txtanswer">
-					<ul id="txtTable" class="txt-respul"></ul>
+			
+			<div id="textPanel" class="textPanel off">
+				<div class="popup-header">
+					<div class="popup-title" id="txt-header"><spring:message code='ezSurvey.t88'/></div>
+					<div id="closeTxtResponse" class="closeImgBttn"><ul><li><span></span></li></ul></div>
+				</div>
+				<div class="popup-body">
+					<div class="div-txtanswer">
+						<ul id="txtTable" class="txt-respul"></ul>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -69,10 +80,9 @@
 			startStatistic(questionStatistic);
 			
 			function startStatistic(questions) {
-				document.getElementById("usersImgCnt").onclick      = function(e) {toggleUserPanel();};
-				document.getElementById("totalUserCnt").onclick     = function(e) {toggleUserPanel();};
-				document.getElementById("closeRespondentl").onclick = function(e) {togglePanel("respondentPanel");};
-				document.getElementById("closeTxtResponse").onclick = function(e) {togglePanel("textPanel");};
+				document.getElementById("showRespondedUsers").onclick = function(e) {toggleUserPanel();};
+				document.getElementById("closeRespondentl").onclick   = function(e) {togglePanel("respondentPanel");};
+				document.getElementById("closeTxtResponse").onclick   = function(e) {togglePanel("textPanel");};
 				window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 				
 				for (var i = 0; i < questions.length; i++) {

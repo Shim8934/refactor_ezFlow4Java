@@ -13,7 +13,7 @@
 		<div class="survey-purpose" id="cf-purpose"></div>
 	</div>
 	<div class="survey-otherinf">
-		<table class="content surveyContent" style="width:100%;">
+		<table class="content surveyContent">
 			<tr>
 				<th class="left-Th"><spring:message code="ezSurvey.t38"/></th> <%-- start date && end date setting --%>
 				<td class="right-Td">

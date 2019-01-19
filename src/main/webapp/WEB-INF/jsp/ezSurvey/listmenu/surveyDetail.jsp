@@ -20,89 +20,90 @@
 	<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg'              )}"></script>
 </head>
 	
-<body class="mainbody srvey">
-	<div id="svInfoWrapper" class="svInfoWrapper">
-		<div id="wtInfoArea" class="wtInfoArea">
-			<div id="wtImgArea" class="wtImgArea">
-				<img id="wtImg" class="wtImg" src="${not empty creator.userFileUrl ? creator.userFileUrl : '/images/default_pic.jpg'}"/>
-			</div>
-			<div id="wtInfo" class="wtInfo">
-				<strong id="wtName" class="wtName"><c:out value="${creator.displayName}"/></strong>
-				<strong id="wtTime" class="wtTime"><c:out value="${fn:substring(survey.createDate, 0, 19)}"/></strong>
-			</div>
-		</div>
-		
-		<div id="infoBtns" class="infoBtns">
-			<c:if test="${empty mode and user == creator.id}">
-				<img id="suvyDlt" class="suvyDlt"  src="/images/ezSurvey/delete2.png"/>
-			</c:if>
-			
-			<img id="suvyInfo" class="suvyInfo" src="/images/ezSurvey/info.png"   />
-			
-			<ul id="upage-ul"class="upage-ul" style="display: none;">
-				<li>
-					<c:choose>
-						<c:when test="${survey.resultPublicFlag eq 1}">
-							<span id="isPublic">공개</span>
-						</c:when>
-						<c:otherwise>
-							<span id="isPublic">비공개</span>
-						</c:otherwise>
-					</c:choose>
-				</li>
-				<li>
-					<!-- <img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg_info" title="투표 종료 전 결과보기"> -->
-					<span id="openDays">완료 후 개시 일수 : ${survey.openDays}</span>
-				</li>
-				<li>
-					<!-- <img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="기명 투표"> -->
-					<c:choose>
-						<c:when test="${survey.anonymousFlag eq 0}">
-							<span id="isAnonymous">기명</span>
-						</c:when>
-						<c:otherwise>
-							<span id="isAnonymous">무기명</span>
-						</c:otherwise>
-					</c:choose>
-				</li>
-				<li>
-					<!-- <img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="낙장불입 미적용"> -->
-					<c:choose>
-						<c:when test="${survey.multiAnswerFlag eq 0}">
-							<span id="isAgain">중복 응답 불가</span>
-						</c:when>
-						<c:otherwise>
-							<span id="isAgain">중복 응답 가능</span>
-						</c:otherwise>
-					</c:choose>
-				</li>
+<body class="surveyBody">
+	<div class="header-wrapper">
+		<div class="surveydetail-header">
+			<ul class="on">	
+				<li class="off"><span id="saveResult"><spring:message code="ezSurvey.t17"/></span></li>
+				<c:if test="${empty mode and user == creator.id}">
+					<li class="off"><span id="suvyDlt"><spring:message code="ezSurvey.t21"/></span></li>
+				</c:if>
 			</ul>
-			
 		</div>
+		<c:if test="${empty mode}">
+			<div id="close"><ul><li><span id="cancelBttn"></span></li></ul></div>
+		</c:if>
 	</div>
 	
-	<div id="svTitle" class="survey-title">${survey.title}</div>
-	
-	<div id="svPurpose" class="svPurpose">
-		<div id="ppContent" class="ppContent">${survey.purpose}</div>
-		<div class="attach-zone2 off" id="surveyAtt">
-			<div class="mainzone2">
-				<div class="fileList">
-					<ul class="user-pageul" id="attachUl"></ul>
+	<div class="surveydetail-body">
+		<div id="svTitle" class="survey-title">${survey.title}</div>
+		
+		<div id="svPurpose" class="svPurpose">
+			<div id="ppContent" class="ppContent">${survey.purpose}</div>
+			<div class="survey-otherinf">
+				<table class="content surveyDtl">
+					<tr>
+						<th class="left-Th"><spring:message code="ezSurvey.t24"/></th> <%-- creator name setting --%>
+						<td class="right-Td">
+							<div class="surveyinf-divcf"><c:out value="${survey.creatorName}"/></div>
+						</td>
+						<th class="left-Th"><spring:message code="ezSurvey.t94"/></th> <%-- create date setting --%>
+						<td class="right-Td">
+							<div class="surveyinf-divcf"><c:out value="${fn:substring(survey.createDate, 0, 19)}"/></div>
+						</td>
+					</tr>
+					<tr>
+						<th class="left-Th"><spring:message code="ezSurvey.t38"/></th> <%-- start date && end date setting --%>
+						<td class="right-Td">
+							<div class="surveyinf-divcf">
+								<span id="cf-startDate"><c:out value="${fn:substring(survey.startDate, 0, 10)}"/></span>
+								<img class="ui-datepicker-trigger" src="/images/ezSurvey/calendar-month.png">
+								&nbsp;~&nbsp;
+								<span id="cf-endDate"><c:out value="${fn:substring(survey.endDate, 0, 10)}"/></span>
+								<img class="ui-datepicker-trigger" src="/images/ezSurvey/calendar-month.png">
+							</div>
+						</td>
+						<th class="left-Th"><spring:message code="ezSurvey.t46"/></th> <%-- anonymous setting --%>
+						<td class="right-Td">
+							<div id="cf-anoynymous" class="surveyinf-divcf"><spring:message code="${survey.anonymousFlag == 1 ? 'ezSurvey.t48' : 'ezSurvey.t47'}"/></div>
+						</td>
+					</tr>
+					<tr>
+						<th class="left-Th"><spring:message code="ezSurvey.t52"/></th> <%-- respondent setting --%>
+						<td class="right-Td">
+							<div id="cf-userdiv" class="surveyinf-divcf flex-cf"><spring:message code="${survey.paritipateFlag == 1 ? 'ezSurvey.t54' : 'ezSurvey.t53'}"/></div>
+						</td>
+						<th class="left-Th"><spring:message code="ezSurvey.t49"/></th> <%-- multiple select setting --%>
+						<td class="right-Td">
+							<div id="cf-multiple" class="surveyinf-divcf"><spring:message code="${survey.multiAnswerFlag == 1 ? 'ezSurvey.t51' : 'ezSurvey.t50'}"/></div>
+						</td>
+					</tr>
+					<tr>
+						<th class="left-Th"><spring:message code="ezSurvey.t41"/></th> <%-- public setting --%>
+						<td class="right-Td">
+							<div id="public-cfdiv" class="surveyinf-divcf"><spring:message code="${survey.resultPublicFlag == 1 ? 'ezSurvey.t42' : 'ezSurvey.t43'}"/></div>
+						</td>
+						<th class="left-Th"><spring:message code="ezSurvey.t44"/></th> <%-- open public result days setting --%>
+						<td class="right-Td">
+							<c:if test="${survey.resultPublicFlag == 1}">
+								<div id="public-days" class="surveyinf-divcf"><c:out value="${survey.openDays}"/>&nbsp;<spring:message code="ezSurvey.t45"/></div>
+							</c:if>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div class="attach-zone2 off" id="surveyAtt">
+				<div class="mainzone2">
+					<div class="fileList">
+						<ul class="user-pageul" id="attachUl"></ul>
+					</div>
 				</div>
 			</div>
 		</div>
+		
+		<div class="prevQsArea"></div>
+		<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 	</div>
-	
-	<div class="prevQsArea"></div>
-	
-	<div class="detailBtns" style="text-align: right;">
-		<div class="survey-bttn-wrp">
-			<img id="saveResult" src="/images/ezSurvey/save2.png"/>
-			<img id="cancelBttn" src="/images/ezSurvey/cancel2.png"/>
-		</div>
-	</div>
-	<iframe name="attachFrame" id="attachFrame" style="display: none;"></iframe>
 </body>
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/surveyFile.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezSurvey/survey.js')}    "></script>
@@ -292,8 +293,6 @@
 			var delBttn = document.getElementById("suvyDlt");
 			if (delBttn) {delBttn.onclick = function(e) {deleteFileConfirm();};}
 			
-			document.getElementById("suvyInfo").onclick   = function(e) {showSurveyInfo();}
-			
 			var cancelBttn = document.getElementById("cancelBttn");
 			var saveResult = document.getElementById("saveResult");
 			if (cancelBttn) {cancelBttn.onclick = function(e) {window.close();};}
@@ -348,11 +347,6 @@
 			else {
 				document.getElementById("surveyAtt").className = "attach-zone2 off";
 			}
-		}
-		
-		function showSurveyInfo() {
-			var status = $(".upage-ul").css("display");
-			status == "none" ? $(".upage-ul").css("display", "") : $(".upage-ul").css("display", "none");
 		}
 		
 		function saveSurveyResponses() {
@@ -442,8 +436,7 @@
 			var code = data.code;
 			switch(code) {
 				case 0 : alert(SurveyMessages.strSave)     ;
-						 if (window.opener.SurveyItem) {window.opener.SurveyItem.reload();}
-						 window.close();
+						 if (window.opener.SurveyItem) {window.opener.SurveyItem.reload(); window.close();}
 						 break;
 				case 1 : alert(SurveyMessages.strParamErr) ; break;
 				case 2 : alert(SurveyMessages.strError)    ; break;

@@ -1286,6 +1286,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		data.put("annoynymous"  , survey.getAnonymousFlag());
 		data.put("usersCnt"     , survey.getTotalUser());
 		data.put("respondentCnt", totalRespondents);
+		data.put("title"        , survey.getTitle());
 		
 		result.put("data", data);
 		result.put("status", "ok");
