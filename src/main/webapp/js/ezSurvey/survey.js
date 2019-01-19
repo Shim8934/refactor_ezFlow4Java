@@ -472,7 +472,7 @@ var SurveyCreate     = function() {
 		
 		if (userFlag == 1 && !userList) {returnObj["error"] = SurveyMessages.strUser1; return returnObj;}
 		
-		var surveyttlList = document.querySelectorAll("span[class='sryTxt']");
+		var surveyttlList = document.querySelectorAll("div[class='survey-title']");
 		for (var i = 0, len = surveyttlList.length; i < len; i++) {
 			surveyttlList[i].textContent = surveyTtl.value;
 		}
@@ -941,10 +941,12 @@ var SurveyCreate     = function() {
 		var quesDiv      = $("<div class='quesDiv'></div>");
 		var qstnRow      = $("<div class='qstnRow'></div>");
 		var questnTitle  = $("<input class='questnTitle' value='" + qstContent + "' placeholder='" + SurveyMessages.strContent + "' />");
-		var atchImg      = $("<img class='atchImg' src='/images/ezSurvey/attach.png'/>");
-		var atchVdo      = $("<img class='atchVdo' src='/images/ezSurvey/video.png' />");
-		var atchMsic     = $("<img class='atchMsic' src='/images/ezSurvey/music.png'/>");
-		var atchUrl      = $("<img class='atchUrl' src='/images/ezSurvey/link.png'  />");
+		var ulToolTip    = $("<ul class='survey_atchBtn'></ul>");
+		var liAttImg     = $("<li class='off atchLiImg'><span class='survey_icon atchImg'></span></li>");
+		var liAttVdo     = $("<li class='off atchLiVdo'><span class='survey_icon atchVdo'></span></li>");
+		var liAttMsic    = $("<li class='off atchLiMsic'><span class='survey_icon atchMsic'></span></li>");
+		var liAttUrl     = $("<li class='off atchLiUrl'><span class='survey_icon atchUrl'></span></li>");
+		var divRequired  = $("<div class='required'><input type='checkbox'><label>" + SurveyMessages.strRequired + "</label></div>");
 		var selectBox    = $("<div class='selectBox'></div>");
 		var qstnFileInfo = $("<div class='qstnFileInfo'></div>");
 		var fileList     = $("<div class='fileList'></div>");
@@ -953,11 +955,14 @@ var SurveyCreate     = function() {
 		var qstnAudFile  = $("<input type='file' class='qstnAudFile' accept='audio/*'/>");
 		var qstnVidFile  = $("<input type='file' class='qstnVidFile' accept='video/*'/>");
 		
+		ulToolTip.append(liAttImg);
+		ulToolTip.append(liAttVdo);
+		ulToolTip.append(liAttMsic);
+		ulToolTip.append(liAttUrl);
+		
 		qstnRow.append(questnTitle);
-		qstnRow.append(atchImg);
-		qstnRow.append(atchVdo);
-		qstnRow.append(atchMsic);
-		qstnRow.append(atchUrl);
+		qstnRow.append(divRequired);
+		qstnRow.append(ulToolTip);
 		qstnRow.append(selectBox);
 		quesDiv.append(qstnRow);
 		
@@ -1033,7 +1038,7 @@ var SurveyCreate     = function() {
 	function makeSelectQuestion(grandParent, questionType, checkResult) {
 		var QuestionForm = makeQuestionForm(questionType);
 		var slt = handleModifySelectQuestion();
-		var addtional = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+		var addtional = mkAddtionalPart(checkResult[config["action"]]);
 
 		QuestionForm.append(slt);
 		QuestionForm.append(addtional);
@@ -1045,7 +1050,7 @@ var SurveyCreate     = function() {
 	function makeMatrixQuestion(grandParent, questionType, checkResult) {
 		var QuestionForm = makeQuestionForm(questionType);
 		var mtr = handleModifyMatrixQuestion();
-		var addtional = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+		var addtional = mkAddtionalPart(checkResult[config["action"]]);
 		
 		QuestionForm.append(mtr);
 		QuestionForm.append(addtional);
@@ -1054,34 +1059,40 @@ var SurveyCreate     = function() {
 	
 	// 버튼 이벤트
 	function addOptEvent() {
+		// question required button click
+		$(".quesBacgr").on("click", ".required", function() {
+			var inputElmt = this.querySelector("input[type='checkbox']");
+			var crrState  = inputElmt.checked;
+			inputElmt.checked = crrState ? false : true;
+		});
+		
 		// question 첨부파일 트리거
-		$(".quesBacgr").on("click", ".atchImg", function() {
+		$(".quesBacgr").on("click", ".atchLiImg", function() {
 			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
 			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
-			$(this).parent().next().find(".qstnImgFile").click();
+			$(this).parent().parent().next().find(".qstnImgFile").click();
 		});
 		
-		$(".quesBacgr").on("click", ".atchVdo", function() {
+		$(".quesBacgr").on("click", ".atchLiVdo", function() {
 			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
 			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
-			$(this).parent().next().find(".qstnVidFile").click();
+			$(this).parent().parent().next().find(".qstnVidFile").click();
 		});
 		
-		$(".quesBacgr").on("click", ".atchMsic", function() {
+		$(".quesBacgr").on("click", ".atchLiMsic", function() {
 			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
 			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
-			$(this).parent().next().find(".qstnAudFile").click();
+			$(this).parent().parent().next().find(".qstnAudFile").click();
 		});
 		
-		$(".quesBacgr").on("click", ".atchUrl", function() {
+		$(".quesBacgr").on("click", ".atchLiUrl", function() {
 			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
 			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
 			
-			toggleUrlPanel($(this).parent().next().find(".fileList")[0]);
+			toggleUrlPanel($(this).parent().parent().next().find(".fileList")[0]);
 		});
 		
 		$("#removeUrlPopup").click(function() {toggleUrlPanel();})
-		// question 첨부파일 추가
 		$(".quesBacgr").on("change", ".qstnImgFile", function(e) {fileUpload(this, "image");});
 		$(".quesBacgr").on("change", ".qstnVidFile", function(e) {fileUpload(this, "video");});
 		$(".quesBacgr").on("change", ".qstnAudFile", function(e) {fileUpload(this, "music");});
@@ -1101,6 +1112,13 @@ var SurveyCreate     = function() {
 			
 			if (optCnt <= 2) {alert(SurveyMessages.strOptErr); return;}
 			thisElmt.parents("." + classType + "-select").remove();
+			
+			//Update order of spanElement
+			var spanList = qstForm[0].querySelectorAll("span[class='" + classType + "-order']");
+			
+			for (var i = 0, len = spanList.length; i < len; i++) {
+				spanList[i].textContent = i + 1;
+			}
 		});
 		
 		// 보기 추가
@@ -1333,7 +1351,8 @@ var SurveyCreate     = function() {
 				$("#thrdBtnGrp" + id).css("display", "");
 			
 			// 질문에 로직이 없는 경우
-			} else if (logicFlag == undefined || logicFlag == 0) {
+			}
+			else if (logicFlag == undefined || logicFlag == 0) {
 				dltLogicForm(type, id);
 				
 				$("#frstBtnGrp" + id).css("display", "");
@@ -1476,14 +1495,19 @@ var SurveyCreate     = function() {
 				$("#frstBtnGrp" + id).css("display", "");
 				$("#skipScndBtnGrp" + id).css("display", "none");
 				$("#skipThrdBtnGrp" + id).css("display", "none");
-			} else {
+			}
+			else {
 				var skip = "";
 				var skipNum = qstn['skip'];
-
-				if (skipNum != -1) {
+				
+				if (skipNum == 0) {
+					$("#skipVal" + id).text(SurveyMessages.strLast).css("display", "");
+				}
+				else if (skipNum != -1) {
 					skip = SurveyMessages.strQs + " " + skipNum;
 					$("#skipVal" + id).text(skip).css("display", "");
 				}
+				
 				$("select[name=skip" + id + "]").css("display", "none");
 				
 				$("#frstBtnGrp" + id).css("display", "none");
@@ -1707,10 +1731,13 @@ var SurveyCreate     = function() {
 	}
 	// 생성된 질문을 붙일 부분과 질문 유형을 파라미터로 받아 질문 영역 생성
 	function handleModifyQuestion(qstnWrapper, question, mode) {
-		var qstType = question.type;
-		var body = "";
-		var additional = "";
-		var QuestionForm = makeQuestionForm(qstType);
+		var qstType       = question.type;
+		var body          = "";
+		var additional    = "";
+		var questionForm  = makeQuestionForm(qstType);
+		var hiddenWrapeer = qstnWrapper.next();
+		
+		handleRequiredQuestion(hiddenWrapeer, question.required);
 		
 		switch(parseInt(qstType)) {
 			case 1  :
@@ -1724,12 +1751,20 @@ var SurveyCreate     = function() {
 			case 9  : body = handleModifyRankDropDownQuesion("dropdown", question); break;
 			default : alert(SurveyMessages.strError)                               ; return;
 		}
-		additional = mkAddtionalPart(mode, question.required);
-
-		QuestionForm.append(body);
-		QuestionForm.append(additional);
-		qstnWrapper.next().append(QuestionForm);
+		
+		additional = mkAddtionalPart(mode);
+		
+		questionForm.append(body);
+		questionForm.append(additional);
+		hiddenWrapeer.append(questionForm);
 	}
+	
+	function handleRequiredQuestion(qstnWrapper, required) {
+		var qstnArea      = qstnWrapper.find(".quesDiv");
+		var inputElmt     = qstnArea.find(".required").find("input[type='checkbox']")[0];
+		inputElmt.checked = required ? true : false;
+	}
+	
 	// 수정시 새로 생성하는 선택질문
 	function handleModifySelectQuestion(question) {
 		var optionWrapper = $("<div class='optionWrapper'></div>");
@@ -1761,18 +1796,70 @@ var SurveyCreate     = function() {
 			}
 		}
 		
-		var htmlTxt = "<div class='addBtns'>";
-		htmlTxt += "<button class='addOpt'>" + SurveyMessages.strAdd + "</button>";
-		htmlTxt += "<button class='addOther'>" + SurveyMessages.strAddOther + "</button>";
-		htmlTxt += "</div>";
-		
+		var htmlTxt = "<ul class='survey_atchBtn srvyAddBtn'>";
+		htmlTxt    += "<li class='off addOpt'><span class='survey_icon srvyAddFile'></span></li>";
+		htmlTxt    += "<li class='off addOther'><span class='survey_text'>" + SurveyMessages.strAddOther + "</span></li>";
+		htmlTxt    += "</ul>";
 		optionWrapper.append(htmlTxt);
 		
 		return optionWrapper;
 	}
 	
+	/*function createMatrixTable(mode, colRowStr, bttnClass, colRow) {
+		var html      = "<table cellpadding='0' cellspacing='0' border='0'>";
+		var bttnClass = mode == "row" ? "addRow" : "addCol";
+		html += "<tr><th rowspan='0'>" + colRowStr + "</th><td>";
+		
+		if (colRow) {
+			html  += mkRowCol(mode, colRow[0]);
+			html  += "</td></tr>";
+			
+			if (colRow.length > 1) {
+				for (var i = 1; i < row.length; i++) {
+					html += "<tr><td>";
+					html += mkRowCol(mode, colRow[i]);
+					html  += "</td></tr>";
+				}
+			}
+		}
+		else {
+			html  += mkRowCol(mode);
+			html  += "</td></tr>";
+			html  += "<tr><td>";
+			html  += mkRowCol(mode);
+			html  += "</td></tr>";
+		}
+		
+		//Add add button
+		html += "<tr><td>";
+		html += "<ul class='survey_atchBtn srvyAddBtn'>";
+		html += "<li class='off " + bttnClass + "'><span class='survey_icon srvyAddFile'></span></li>";
+		html += "</ul></td></tr></table>";
+		
+		return html;
+	}*/
+	
 	// 수정시 새로 생성하는 행렬질문 
 	function handleModifyMatrixQuestion(question) {
+/*		var html = "";
+		var row  = null;
+		var col  = null;
+		
+		if (question) {
+			var options = question["option"];
+			row         = options.filter(function(row) {return row["colLevel"] == -1;});
+			col         = options.filter(function(col) {return col["rowLevel"] == -1;});
+		}
+		
+		html += "<div class='mtrPart'>";
+		html += "<div class='rowArea'>";
+		html += createMatrixTable("row", SurveyMessages.strRow, "addRow", row);
+		html += "</div>";
+		html += "<div class='colArea'>";
+		html += createMatrixTable("col", SurveyMessages.strColumn, "addCol", col);
+		
+		return $(html);*/
+		
 		var html = "";
 		var row  = null;
 		var col  = null;
@@ -1782,11 +1869,13 @@ var SurveyCreate     = function() {
 			row         = options.filter(function(row) {return row["colLevel"] == -1;});
 			col         = options.filter(function(col) {return col["rowLevel"] == -1;});
 		}
+		
 		html += "<div class='mtrPart'>";
 		html += "<div class='rowArea'>";
 		html += "<div class='rName'>";
 		html += "<span>" + SurveyMessages.strRow + "</span>";
 		html += "</div>";
+		html += "<div class='colrow-wrap'>";
 		html += "<div class='rows'>";
 		
 		if (row) {
@@ -1799,14 +1888,18 @@ var SurveyCreate     = function() {
 				html += mkRowCol("row");
 			}
 		}
+		
 		html += "</div>";
 		html += "<div class='rowBtn'>";
-		html += "<button class='addRow'>" + SurveyMessages.strAdd + "</button>";
-		html += "</div></div>";
+		html += "<ul class='survey_atchBtn srvyAddBtn'>";
+		html += "<li class='off addRow'><span class='survey_icon srvyAddFile'></span></li>";
+		html += "</ul></div></div></div>";
+		
 		html += "<div class='colArea'>";
 		html += "<div class='cName'>";
 		html += "<span>" + SurveyMessages.strColumn + "</span>";
 		html += "</div>";
+		html += "<div class='colrow-wrap'>";
 		html += "<div class='cols'>";
 		
 		if (col) {
@@ -1819,10 +1912,12 @@ var SurveyCreate     = function() {
 				html += mkRowCol("col");
 			}
 		}
+		
 		html += "</div>";
 		html += "<div class='colBtn'>";
-		html += "<button class='addCol'>" + SurveyMessages.strAdd + "</button>";
-		html += "</div></div></div>";
+		html += "<ul class='survey_atchBtn srvyAddBtn'>";
+		html += "<li class='off addCol'><span class='survey_icon srvyAddFile'></span></li>";
+		html += "</ul></div></div></div></div>";
 		
 		return $(html);
 	}
@@ -1885,9 +1980,8 @@ var SurveyCreate     = function() {
 			}
 		}
 		
-		var htmlTxt = "<div class='addBtns'>";
-		htmlTxt += "<button class='addOpttions'>" + SurveyMessages.strAdd + "</button>";
-		htmlTxt += "</div>";
+		//Add add button
+		var htmlTxt = "<ul class='survey_atchBtn srvyAddBtn'><li class='off addOpttions'><span class='survey_icon srvyAddFile'></span></li></ul>";
 		wrap.append($(htmlTxt));
 		
 		return wrap;
@@ -2066,10 +2160,10 @@ var SurveyCreate     = function() {
 		if (!qstnContent) {alert(SurveyMessages.strQs + " " + SurveyMessages.strContent); return;}
 		
 		question["content"]  = qstnContent;
-		var qstnForm         = qstnWrapper.find(".quesDiv").next();
+		var qstnForm         = qstnArea.next();
 		var qstnType         = qstnForm.attr("questiontype");
 		question["type"]     = parseInt(qstnType);
-		var rqrd             = qstnForm.find(".additionalPart").find("input[name='checkbox']");
+		var rqrd             = qstnArea.find(".required").find("input[type='checkbox']");
 		question[config["required"]] = rqrd.is(":checked") == true ? 1 : 0;
 		
 		//Check question attach files
@@ -2191,17 +2285,17 @@ var SurveyCreate     = function() {
 	}
 	
 	function mkRankingQstn(question) {
-		var options = question["option"];
-		var id = question["level"];
+		var options         = question["option"];
+		var id              = question["level"];
 		var questionRanking = $("<div class='question-ranking'>");
-		var rankingWrap = $("<div class='ranking-wrap'>");
-		var opt = "";
-		var optionId = "";
+		var rankingWrap     = $("<div class='ranking-wrap'>");
+		var opt             = "";
+		var optionId        = "";
 		
 		for (var i = 0, len = options.length; i < len; i++) {
 			var rankingSelect = $("<div class='ranking-select'></div>");
 			var rankOrder = $("<span class='rank-order' id='rank-order" + (i + 1) + "'>" + (i + 1) + ".</span>");
-			var strSlct = "<select name='ranking" + id + i + "'>";
+			var strSlct = "<select name='ranking" + id + i + "' class='srvySelect'>";
 			strSlct    += "<option value='' selected>" + SurveyMessages.strSelect + "</option>";
 			
 			for (var j = 0, len = options.length; j < len; j++) {
@@ -2216,19 +2310,19 @@ var SurveyCreate     = function() {
 			rankingSelect.append(strSlct);
 			rankingWrap.append(rankingSelect);
 		}
+		
 		questionRanking.append(rankingWrap);
 		
 		return questionRanking;
 	}
 	
 	function mkDropDownQstn(question) {
-		var options = question["option"];
-		var id = question["level"];
+		var options          = question["option"];
+		var id               = question["level"];
 		var questionDropdown = $("<div class='question-dropdown'></div>");
-		var dropdownWrap = $("<div class='dropdown-wrap'></div>");
-		
-		var select = $("<select name='drdw" + id + "'></select>");
-		var defaultOpt = $("<option value='' selected>" + SurveyMessages.strSelect + "</option>");
+		var dropdownWrap     = $("<div class='dropdown-wrap'></div>");
+		var select           = $("<select name='drdw" + id + "' class='srvySelect'></select>");
+		var defaultOpt       = $("<option value='' selected>" + SurveyMessages.strSelect + "</option>");
 		select.append(defaultOpt);
 		
 		for (var j = 0, len = options.length; j < len; j++) {
@@ -2241,28 +2335,29 @@ var SurveyCreate     = function() {
 			opt[0].textContent = options[j]["content"];
 			select.append(opt);
 		}
+		
 		dropdownWrap.append(select);
 		questionDropdown.append(dropdownWrap);
 		
 		return questionDropdown;
 	}
 	
-	// 질문 헤더 생성
 	function makeQuestionHeaderPanel(question) {
-		var qstId         = question.level;
-		var content       = question.content;
-		var qstnType      = question.type;
-		var required      = question.required;
-		var qstnAtt       = question.attach;
-		var wrapDiv       = document.createElement("div");
-		var divPanel      = document.createElement("div");
-		var moveBttn      = document.createElement("div");
-		var divHeader     = document.createElement("div");
-		var divQsContent  = document.createElement("div");
-		var divTools      = document.createElement("div");
-		var modSpan       = document.createElement("span");
-		var copSpan       = document.createElement("span");
-		var delSpan       = document.createElement("span");
+		var qstId          = question.level;
+		var content        = question.content;
+		var qstnType       = question.type;
+		var required       = question.required;
+		var qstnAtt        = question.attach;
+		var wrapDiv        = document.createElement("div");
+		var divPanel       = document.createElement("div");
+		var moveBttn       = document.createElement("ul");
+		var divHeader      = document.createElement("div");
+		var divQsContent   = document.createElement("div");
+		var divTools       = document.createElement("div");
+		var modSpan        = document.createElement("span");
+		var copSpan        = document.createElement("span");
+		var delSpan        = document.createElement("span");
+		moveBttn.innerHTML = "<li class='off'><span class='survey_icon srvyDrag'></span></li>";
 		
 		//question content process
 		if (required == 1) {
@@ -2308,7 +2403,7 @@ var SurveyCreate     = function() {
 			divPanel.appendChild(attDiv);
 		}
 		
-		moveBttn.className = "mvBtn";
+		moveBttn.className = "survey_atchBtn mvBtn";
 		divPanel.className = "question-panel";
 		wrapDiv.className  = "usrQstnWrapper";
 		wrapDiv.setAttribute("qstnType", qstnType);
@@ -2469,14 +2564,12 @@ var SurveyCreate     = function() {
 	
 	// make ranking/dropdown options
 	function mkOptions(type, order, content) {
-		var options = $("<div class='" + type + "-select'></div>");
-		var span = $("<span class='" + type + "-order'>" + order + "</span>");
+		var options   = $("<div class='" + type + "-select'></div>");
+		var span      = $("<span class='" + type + "-order'>" + order + "</span>");
+		var contents  = $("<input class='textInput' type='text' value='" + content + "' placeholder='" + SurveyMessages.strContent + "'/>");
+		var delOption = $("<ul class='survey_atchBtn'><li class='off delOption'><span class='survey_icon srvyDel'></span></li></ul>");
 		options.append(span);
-		
-		var contents = $("<input class='textInput' type='text' value='" + content + "' placeholder='" + SurveyMessages.strContent + "'/>");
 		options.append(contents);
-		
-		var delOption = $("<span class='delOption'></span>");
 		options.append(delOption);
 		
 		return options;
@@ -2484,12 +2577,12 @@ var SurveyCreate     = function() {
 	
 	// selection 질문의 보기 생성
 	function mkOpt(type, options) {
-		var optAtt = "";
-		var attEl  = "";
-		var opt = "";
+		var optAtt    = "";
+		var attEl     = "";
+		var opt       = "";
 		var textInput = "";
-		var optArea = $("<div class='optArea'></div>");
-		var option = $("<div class='option'></div>");
+		var optArea   = $("<div class='optArea'></div>");
+		var option    = $("<div class='option'></div>");
 		
 		if (type == "other") {
 			opt = $("<div class='other'></div>");
@@ -2499,52 +2592,42 @@ var SurveyCreate     = function() {
 			else {
 				textInput = $("<input class='textInput' type='text' maxlength='40' placeholder='" + SurveyMessages.strOther + "'>");
 			}
-		} else {
+		}
+		else {
 			opt = $("<div class='optPart'></div>");
 			if (options) {
 				textInput = $("<input class='textInput' type='text' value='" + options["content"] + "' maxlength='40' placeholder='" + SurveyMessages.strContent + "' />");
 				optAtt = options["attach"];
-				
 			}
 			else {
 				textInput = $("<input class='textInput' type='text' maxlength='40' placeholder='" + SurveyMessages.strContent + "'/>");
 			}
 		}
 		
-		var attImg   = $("<img src='/images/ezSurvey/attach.png' class='attImg'  >");
-		/*var attVideo = $("<img src='/images/ezSurvey/video.png'  class='attVideo'>");
-		var attMusic = $("<img src='/images/ezSurvey/music.png'  class='attMusic'>");
-		var attLink  = $("<img src='/images/ezSurvey/link.png'   class='attLink' >");*/
-		var minsImg  = $("<img src='/images/ezSurvey/minus.png'  class='delImg'  >");
+		//Add attach and delete buttons
+		var ulBttns  = $("<ul class='survey_atchBtn'></ul>");
+		var liAttch  = $("<li class='off attImg'><span class='survey_icon atchImg'></span></li>");
+		var liDel    = $("<li class='off delImg'><span class='survey_icon srvyDel'></span></li>");
 		
+		ulBttns.append(liAttch);
+		ulBttns.append(liDel);
 		option.append(textInput);
-		option.append(attImg);
-		/*option.append(attVideo);
-		option.append(attMusic);
-		option.append(attLink);*/
-		option.append(minsImg);
+		option.append(ulBttns);
 		
 		var optFileInfo = $("<div class='optFileInfo'></div>");
 		var fileList = $("<div class='fileList'></div>");
 
 		if (optAtt) {attEl = mkImgTag(optAtt);}
 		
-		var optUl           = $("<ul class='optUl'></ul>");
-		var optionImgFile   = $("<input type='file' class='optionImgFile'   accept='image/*'/>");
-		/*var optionVideoFile = $("<input type='file' class='optionVideoFile' accept='video/*'/>");
-		var optionMusicFile = $("<input type='file' class='optionMusicFile' accept='audio/*'/>");*/
+		var optUl         = $("<ul class='optUl'></ul>");
+		var optionImgFile = $("<input type='file' class='optionImgFile'   accept='image/*'/>");
 		optUl.append(attEl);
 		
 		fileList.append(optUl);
 		fileList.append(optionImgFile);
-		/*fileList.append(optionVideoFile);
-		fileList.append(optionMusicFile);*/
-		
 		optFileInfo.append(fileList);
-		
 		optArea.append(option);
 		optArea.append(optFileInfo);
-		
 		opt.append(optArea);
 		
 		return opt;
@@ -2561,33 +2644,27 @@ var SurveyCreate     = function() {
 			content = elment["content"];
 		}
 		
-		var html = "<div class='" + type + "' level='" + level + "'>";
+		var html  = "<div class='" + type + "' level='" + level + "'>";
 			html += "<input class='" + type + "Input' maxlength='33' value='" + content + "'>";
-			html += "<img alt='' src='/images/ezSurvey/minus.png' class='" + elClass + "' style='width: 30px;height: 30px; cursor: pointer;'>";
+			html += "<ul class='survey_atchBtn'><li class='off " + elClass + "'><span class='survey_icon srvyDel'></span></li></ul>";
 			html += "</div>";
-			
 		return html;
 	}
 	
-	// 필수, 저장, 수정, 취소 버튼 생성
-	function mkAddtionalPart(action, required) {
-		var html = "<div class='additionalPart'>";
-			html += "<div class='required'>";
-			html += required == 1 ? "<input type='checkbox' name='checkbox' checked='checked'>" : "<input type='checkbox' name='checkbox'>";
-			html += "<strong>" + SurveyMessages.strRequired + "</strong>";
-			html += "</div>";
-			html += "<div class='btns'>";
+	function mkAddtionalPart(action) {
+		var html = "<div class='survey-bttn-panel'>";
+		html    += "<ul class='survey_qsbtn'>";
 			
 		if (action == config["modify"]) {
-			html += "<button class='modify'>" + SurveyMessages.strModify + "</button>";
-			html += "<button class='mdfCancel'>" + SurveyMessages.strCancel + "</button>";
+			html += "<li class='modify'><span>" + SurveyMessages.strModify + "</span></li>";
+			html += "<li class='mdfCancel'><span>" + SurveyMessages.strCancel + "</span></li>";
 		}
 		else {
-			html += "<button class='save'>" + SurveyMessages.strSaveTxt + "</button>";
-			html += "<button class='cancel'>" + SurveyMessages.strCancel + "</button>";
+			html += "<li class='save'><span>" + SurveyMessages.strSaveTxt + "</span></li>";
+			html += "<li class='cancel'><span>" + SurveyMessages.strCancel + "</span></li>";
 		}
 		
-		html += "</div>";
+		html += "</ul></div>";
 		return $(html);
 	}
 	
@@ -2596,7 +2673,7 @@ var SurveyCreate     = function() {
 	function makeTextQuestion(mainDivElmt, questionType, type, checkResult) {
 		var questionForm = makeQuestionForm(questionType);
 		var textQs = handleModifyTextQuesion(type, "make");
-		var addtional = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+		var addtional = mkAddtionalPart(checkResult[config["action"]]);
 		
 		questionForm.append(textQs);
 		questionForm.append(addtional);
@@ -2606,7 +2683,7 @@ var SurveyCreate     = function() {
 	function makeSliderQuestion(mainDivElmt, questionType, checkResult) {
 		var questionForm = makeQuestionForm(questionType);
 		var slider = handleModifySliderQuesion();
-		var addtional = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+		var addtional = mkAddtionalPart(checkResult[config["action"]]);
 		
 		questionForm.append(slider);
 		questionForm.append(addtional);
@@ -2616,7 +2693,7 @@ var SurveyCreate     = function() {
 	function makeRankingQuestion(mainDivElmt, questionType, checkResult) {
 		var questionForm = makeQuestionForm(questionType);
 		var raking       =  handleModifyRankDropDownQuesion("ranking");
-		var addtional    = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+		var addtional    = mkAddtionalPart(checkResult[config["action"]]);
 		questionForm.append(raking);
 		questionForm.append(addtional);
 		mainDivElmt.append(questionForm);
@@ -2625,7 +2702,7 @@ var SurveyCreate     = function() {
 	function makeDropdownQuestion(mainDivElmt, questionType, checkResult) {
 		var questionForm = makeQuestionForm(questionType);
 		var drdw         = handleModifyRankDropDownQuesion("dropdown");
-		var addtional    = mkAddtionalPart(checkResult[config["action"]], checkResult[config["required"]]);
+		var addtional    = mkAddtionalPart(checkResult[config["action"]]);
 		questionForm.append(drdw);
 		questionForm.append(addtional);
 		mainDivElmt.append(questionForm);
@@ -2717,31 +2794,31 @@ var SurveyCreate     = function() {
 		questionContent[0].textContent = qstId + ". " + content;
 		
 		if (step == 3) {
-			var frstBtnGrp = $("<span id='frstBtnGrp" + qstId + "' class='frstBtnGrp'></span>");
-			var addSkip = $("<img id='addSkip" + qstId + "' class='addSkip' src='/images/ezSurvey/skip.png'/>");
+			var frstBtnGrp = $("<ul id='frstBtnGrp" + qstId + "' class='srvyLogicbtn survey_atchBtn frstBtnGrp'></ul>");
+			var addSkip = $("<li id='addSkip" + qstId + "' class='off addSkip'><span class='survey_icon logicSkip'></span></li>");
 			frstBtnGrp.append(addSkip);
 			
-			qstnHeader += "<span id='skipScndBtnGrp" + qstId + "' class='skipScndBtnGrp' style='display:none;'>"
-			qstnHeader += "<img id='saveSkip" + qstId + "' class='saveSkip' src='/images/ezSurvey/save.png'/>";
-			qstnHeader += "<img id='cancelSkip" + qstId + "' class='cancelSkip' src='/images/ezSurvey/cancel.png' />";
-			qstnHeader += "</span>"
-			qstnHeader += "<span id='skipThrdBtnGrp" + qstId + "' class='skipThrdBtnGrp' style='display:none;'>"
-			qstnHeader += "<img id='mdfSkip" + qstId + "' class='mdfSkip' src='/images/ezSurvey/correct.png'/>";
-			qstnHeader += "<img id='delSkip" + qstId + "' class='delSkip' src='/images/ezSurvey/trash.png'/>";
-			qstnHeader += "</span>"
+			qstnHeader += "<ul id='skipScndBtnGrp" + qstId + "' class='srvyLogicbtn survey_atchBtn skipScndBtnGrp' style='display:none;'>"
+			qstnHeader += "<li id='saveSkip" + qstId + "' class='off saveSkip'><span class='survey_text'>" + SurveyMessages.strSaveTxt + "</span></li>";
+			qstnHeader += "<li id='cancelSkip" + qstId + "' class='off cancelSkip'><span class='survey_icon logicCancel'></span></li>";
+			qstnHeader += "</ul>";
+			qstnHeader += "<ul id='skipThrdBtnGrp" + qstId + "' class='srvyLogicbtn survey_atchBtn skipThrdBtnGrp' style='display:none;'>"
+			qstnHeader += "<li id='mdfSkip" + qstId + "' class='off mdfSkip'><span class='survey_text'>" + SurveyMessages.strModify + "</span></li>";
+			qstnHeader += "<li id='delSkip" + qstId + "' class='off delSkip'><span class='survey_icon logicDel'></span></li>";
+			qstnHeader += "</ul>";
 			
 			if (qstnType == 1 || qstnType == 7 || qstnType == 9) {
-				var addLogic = $("<img id='addLogic" + qstId + "' class='addLogic' src='/images/ezSurvey/shuffle.png'/>");
+				var addLogic = $("<li id='addLogic" + qstId + "' class='off addLogic'><span class='survey_icon logicShuffle'></span></li>");
 				frstBtnGrp.append(addLogic);
 				
-				qstnHeader += "<span id='scndBtnGrp" + qstId + "' class='scndBtnGrp' style='display:none;'>"
-				qstnHeader += "<img id='saveLogic" + qstId + "' class='saveLogic' src='/images/ezSurvey/save.png'/>";
-				qstnHeader += "<img id='cancelLogic" + qstId + "' class='cancelLogic' src='/images/ezSurvey/cancel.png' />";
-				qstnHeader += "</span>"
-				qstnHeader += "<span id='thrdBtnGrp" + qstId + "' class='thrdBtnGrp' style='display:none;'>"
-				qstnHeader += "<img id='mdfLogic" + qstId + "' class='mdfLogic' src='/images/ezSurvey/correct.png'/>";
-				qstnHeader += "<img id='delLogic" + qstId + "' class='delLogic' src='/images/ezSurvey/trash.png'/>";
-				qstnHeader += "</span>"
+				qstnHeader += "<ul id='scndBtnGrp" + qstId + "' class='srvyLogicbtn survey_atchBtn scndBtnGrp' style='display:none;'>"
+				qstnHeader += "<li id='saveLogic" + qstId + "' class='off saveLogic'><span class='survey_text'>" + SurveyMessages.strSaveTxt + "</span></li>";
+				qstnHeader += "<li id='cancelLogic" + qstId + "' class='off cancelLogic'><span class='survey_icon logicCancel'></span></li>";
+				qstnHeader += "</ul>";
+				qstnHeader += "<ul id='thrdBtnGrp" + qstId + "' class='srvyLogicbtn survey_atchBtn thrdBtnGrp' style='display:none;'>"
+				qstnHeader += "<li id='mdfLogic" + qstId + "' class='off mdfLogic'><span class='survey_text'>" + SurveyMessages.strModify + "</span></li>";
+				qstnHeader += "<li id='delLogic" + qstId + "' class='off delLogic'><span class='survey_icon logicDel'></span></li>";
+				qstnHeader += "</ul>";
 			}
 		}
 		
@@ -3124,6 +3201,7 @@ var SurveyCreate     = function() {
 				htmlOption += "<option value='" + qstnId + "'>" + qstnId + "</option>"; 
 			}
 		}
+		
 		htmlOption += "<option value='0'>" + SurveyMessages.strLast + "</option>"; 
 		
 		var html = "";
@@ -3172,21 +3250,38 @@ var SurveyCreate     = function() {
 		}
 	}
 	
+	function getLogicMessageFromLogicNum(logicNum) {
+		var logic = "";
+		
+		if (isNaN(logicNum) || logicNum == -1) {
+			logic = SurveyMessages.strNoLogic;
+		}
+		else {
+			if (logicNum == 0 ) {
+				logic = SurveyMessages.strLast;
+			}
+			else {
+				logic = SurveyMessages.strQs + " " + logicNum;
+			}
+		}
+		
+		return logic;
+	}
+	
 	// 기존의 logicNum 나타냄
 	function cnclLogicMdf(id, qstn, type) {
 		if (type == 7) {
 			var inputVal = qstn['sliderLogicPoint'];
 			var logicNum = qstn.option[0]['logic'];
-			var logic = "";
+			var logic    = getLogicMessageFromLogicNum(logicNum);
 			
 			$("#slidLogicInput" + id).val(inputVal).css("display", "none");
 			$("#LogicPoint" + id).text(inputVal).css("display", "");
-			
-			logic = SurveyMessages.strQs + " " + logicNum;
 			$("select[name=slt" + id + "]").css("display", "none");
 			$("#sltVal" + id).text(logic).css("display", "");
 			
-		} else if (type == 1 || type == 2 || type == 9){
+		}
+		else if (type == 1 || type == 2 || type == 9){
 			var wrapper = $("#prevQstn"+id);
 			var opt = "";
 			var optLength = "";
@@ -3195,28 +3290,26 @@ var SurveyCreate     = function() {
 				opt = wrapper.find(".opt");
 				optLength = opt.length;
 				
-			} else if (type == 9) {
+			}
+			else if (type == 9) {
 				opt = wrapper.find(".drdwLogicRow");
 				optLength = opt.length;
 			}
 			
 			for (var i = 0; i < optLength; i++) {
-				var logic = "";
 				var logicNum = qstn.option[i]['logic'];
-				logic = (logicNum != "") ? SurveyMessages.strQs + " " + logicNum : SurveyMessages.strNoLogic;
-
+				var logic    = getLogicMessageFromLogicNum(logicNum);
+				
 				!isNaN(logicNum) ? $("#slt" + id + i).val(logicNum).prop("selected", true).css("display", "none") : $("#slt" + id + i).val('').prop("selected", true).css("display", "none");
 				$("#sltVal" + id + i).text(logic).css("display", "");
 			}
-		} else {
+		}
+		else {
 			var logicNum = qstn.option[0]['logic'];
-			var logic = "";
-			
-			logic = SurveyMessages.strQs + " " + logicNum;
+			var logic    = getLogicMessageFromLogicNum(logicNum);
 			$("select[name=slt" + id + "]").css("display", "none");
 			$("#sltVal" + id).text(logic).css("display", "");
 		}
-		
 	}
 	
 	function checkLogicNum(id, qstn, type) {
@@ -3287,20 +3380,17 @@ var SurveyCreate     = function() {
 		document.getElementById("cf-multiple").textContent   = qstInf["multiple"]  == 0 ? SurveyMessages.strMultiple1 : SurveyMessages.strMultiple2;
 		
 		var surveyUserElmt = document.getElementById("cf-userdiv");
-		var publicStr      = "<span class='survey-bold'>" + SurveyMessages.strPublic3 + "</span>";
 		
 		if (qstInf["public"] == 1) {
-			publicStr += "<span class='inf-survey'>"  + SurveyMessages.strPublic1 + "</span>";
-			publicStr += "<span class='survey-bold'>" + SurveyMessages.strPublic4 + "</span>";
-			publicStr += "<span class='inf-survey'>" + qstInf["publicDays"] + "</span>";
-			publicStr += "<span class='survey-bold survey-pass'>" + SurveyMessages.strPublic5 + "</span>";
+			document.getElementById("public-cfdiv").innerHTML = SurveyMessages.strPublic1;
+			document.getElementById("public-days").innerHTML  = qstInf["publicDays"] + " " + SurveyMessages.strPublic5;
 		}
 		else {
-			publicStr += "<span class='inf-survey'>" + SurveyMessages.strPublic2 + "</span>";
+			document.getElementById("public-cfdiv").innerHTML = SurveyMessages.strPublic2;
+			document.getElementById("public-days").innerHTML  = "";
 		}
 		
-		document.getElementById("public-cfdiv").innerHTML = publicStr;
-		surveyUserElmt.innerHTML                          = "";
+		surveyUserElmt.innerHTML = "";
 		
 		if (qstInf["userflag"] == 0) {
 			surveyUserElmt.innerHTML = "<span class='inf-survey'> " + SurveyMessages.strUser2 + "</span>";

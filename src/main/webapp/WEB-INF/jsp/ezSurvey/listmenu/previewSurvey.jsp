@@ -2,33 +2,45 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core"  %>
 
-<div id="svTitle" class="svTitle">
-	<div class="sryFirst2"></div>
-	<span class="sryTxt"><spring:message code='ezSurvey.t39'/></span>
+<div class="surveyinfo-wrap">
+	<div class="survey-nminfo">
+		<div id="svTitle" class="survey-title"></div>
+	</div>
 </div>
 
-<div class="surveyinfo-wrapcf" id="surveyInfConfirm">
-	<div class="survey-purpose" id="cf-purpose"></div>
+<div class="surveyinfo-wrap" id="surveyInfConfirm">
+	<div class="surveyinfopp-wrap">
+		<div class="survey-purpose" id="cf-purpose"></div>
+	</div>
 	<div class="survey-otherinf">
-		<div class="survey-infrow-pv">
-			<span class="survey-bold"><spring:message code="ezSurvey.t38"/></span>
-			<span class="inf-survey" id="cf-startDate"></span><span class="survey-pass">~</span><span class="inf-survey" id="cf-endDate"></span>
-		</div>
-		<div class="survey-infrow-pv" id="public-cfdiv"></div>
-		<div class="survey-infrow-pv">
-			<span class="survey-bold"><spring:message code="ezSurvey.t46"/></span>
-			<span class="inf-survey" id="cf-anoynymous"></span>
-			<span class="survey-bold"><spring:message code="ezSurvey.t49"/></span>
-			<span class="inf-survey" id="cf-multiple"></span>
-		</div>
-		<div class="survey-infrow-pv">
-			<span class="survey-bold"><spring:message code="ezSurvey.t52"/></span>
-			<div class="survey-user-pv" id="cf-userdiv">
-				<span class="inf-survey"></span>
-				<span class="total-user"></span>
-				<span class="user-more"></span>
-			</div>
-		</div>
+		<table class="content surveyContent" style="width:100%;">
+			<tr>
+				<th class="left-Th"><spring:message code="ezSurvey.t38"/></th> <%-- start date && end date setting --%>
+				<td class="right-Td">
+					<div class="surveyinf-divcf">
+						<span id="cf-startDate"></span>
+						<img class="ui-datepicker-trigger" src="/images/ezSurvey/calendar-month.png">
+						&nbsp;~&nbsp;
+						<span id="cf-endDate"></span>
+						<img class="ui-datepicker-trigger" src="/images/ezSurvey/calendar-month.png">
+					</div>
+				</td>
+				<th class="left-Th"><spring:message code="ezSurvey.t46"/></th> <%-- anonymous setting --%>
+				<td class="right-Td"><div id="cf-anoynymous" class="surveyinf-divcf"></div></td>
+			</tr>
+			<tr>
+				<th class="left-Th"><spring:message code="ezSurvey.t52"/></th> <%-- respondent setting --%>
+				<td class="right-Td"><div id="cf-userdiv" class="surveyinf-divcf flex-cf"></div></td>
+				<th class="left-Th"><spring:message code="ezSurvey.t49"/></th> <%-- multiple select setting --%>
+				<td class="right-Td"><div id="cf-multiple" class="surveyinf-divcf"></div></td>
+			</tr>
+			<tr>
+				<th class="left-Th"><spring:message code="ezSurvey.t41"/></th> <%-- public setting --%>
+				<td class="right-Td"><div id="public-cfdiv" class="surveyinf-divcf"></div></td>
+				<th class="left-Th"><spring:message code="ezSurvey.t44"/></th> <%-- open public result days setting --%>
+				<td class="right-Td"><div id="public-days" class="surveyinf-divcf"></div></td>
+			</tr>
+		</table>
 	</div>
 	
 	<div id="userPanel" class="userPanel off">

@@ -81,10 +81,7 @@
 		</div>
 	</div>
 	
-	<div id="svTitle" class="svTitle">
-		<div class="sryFirst2"></div>
-		<span id="title" class="sryTxt">${survey.title}</span>
-	</div>
+	<div id="svTitle" class="survey-title">${survey.title}</div>
 	
 	<div id="svPurpose" class="svPurpose">
 		<div id="ppContent" class="ppContent">${survey.purpose}</div>

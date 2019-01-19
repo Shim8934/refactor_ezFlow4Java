@@ -17,9 +17,8 @@
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js'    )}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/chart.min.js')}"></script>
 	<body class="statBody">
-		<div class="surveyCrtTt3">
-			<div class="sryFirst2"></div>
-			<div class="sryTxt"><spring:message code='ezSurvey.t34'/></div>
+		<div>
+			<div class="survey-title"></div>
 			<img src="/images/ezSurvey/partiCount.png" id="usersImgCnt">
 			<span id="totalUserCnt"></span>
 		</div>

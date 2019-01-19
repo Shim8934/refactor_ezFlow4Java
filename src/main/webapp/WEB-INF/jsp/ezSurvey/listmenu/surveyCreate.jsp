@@ -27,7 +27,7 @@
 	</head>
 	
 	<body class="mainbody srvey">
-		<h1 class="sryTxt"><spring:message code='ezSurvey.t34'/></h1>
+		<h1><spring:message code='ezSurvey.t34'/></h1>
 		
 		<div class="surveyBtn">
 			<div class="headpanel">
