@@ -35,7 +35,7 @@
 		</c:if>
 	</div>
 	
-	<div class="surveydetail-body">
+	<div class="surveydetail-body" id="mainSurveyBody">
 		<div id="svTitle" class="survey-title">${survey.title}</div>
 		
 		<div id="svPurpose" class="svPurpose">
@@ -115,11 +115,10 @@
 		var surveyPath   = [];
 		var questionFile = new SurveyFile("images");
 		var resposeObj = {
-				surveyId : surveyId,
-				responses : []
+			surveyId : surveyId,
+			responses : []
 		};
 		
-		getQuestions();
 		userEvent();
 		
 		function getQuestions() {
@@ -195,11 +194,9 @@
 						
 						$("#mask" + qstLevel).css({"height": height, "width": width, "background-color": "gray", "opacity": "0.3", "position" : "absolute"})
 					}
-					//listQstDiv[i].style.display = "none";
 				}
 				else {
 					$("#prevQstn" + qstLevel).find("#mask" + qstLevel).remove();
-					//listQstDiv[i].style.display = "";
 				}
 			}
 		}
@@ -229,8 +226,18 @@
 			}
 		}
 		
+		function setBodyHeight() {
+			var wdHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+			document.getElementById("mainSurveyBody").style.height = (wdHeight - 74) + "px";
+		}
+		
 		function userEvent() {
+			getQuestions();
 			showAttachList();
+			setBodyHeight();
+			window.addEventListener("load", function(e) {setBodyHeight();}, false);
+			window.addEventListener("resize", function(e) {setBodyHeight();}, false);
+			
 			// 라디오 버튼 클릭 이벤트
 			$(".prevQsArea").on("click", ".optRdo", function() {
 				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
@@ -436,6 +443,7 @@
 			var code = data.code;
 			switch(code) {
 				case 0 : alert(SurveyMessages.strSave)     ;
+						 resposeObj.responses = [];
 						 if (window.opener.SurveyItem) {window.opener.SurveyItem.reload(); window.close();}
 						 break;
 				case 1 : alert(SurveyMessages.strParamErr) ; break;
@@ -661,7 +669,7 @@
 					var rankingObj = {};
 					var rankNum = i + 1;
 					var optionId = parseInt($("select[name='ranking" + id + i + "'] option:selected").attr("optionid"));
-	
+					
 					if (!isNaN(optionId)) {
 						rankingObj['rankingLevel'] = rankNum;
 						rankingObj['optionId'] = optionId;

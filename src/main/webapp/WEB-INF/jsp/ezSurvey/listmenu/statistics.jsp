@@ -25,7 +25,7 @@
 			</div>
 			<div id="close"><ul><li><span id="cancelBttn"></span></li></ul></div>
 		</div>
-		<div class="surveystatistic-body">
+		<div class="surveydetail-body" id="mainSurveyBody">
 			<div class="surveyinfo-wrap">
 				<div class="survey-nminfo">
 					<div class="survey-title"><c:out value="${data.title}"/></div>
@@ -80,6 +80,9 @@
 			startStatistic(questionStatistic);
 			
 			function startStatistic(questions) {
+				setBodyHeight();
+				window.addEventListener("load", function(e) {setBodyHeight();}, false);
+				window.addEventListener("resize", function(e) {setBodyHeight();}, false);
 				document.getElementById("showRespondedUsers").onclick = function(e) {toggleUserPanel();};
 				document.getElementById("closeRespondentl").onclick   = function(e) {togglePanel("respondentPanel");};
 				document.getElementById("closeTxtResponse").onclick   = function(e) {togglePanel("textPanel");};
@@ -90,6 +93,11 @@
 				}
 				
 				showRespondentStatistic();
+			}
+			
+			function setBodyHeight() {
+				var wdHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+				document.getElementById("mainSurveyBody").style.height = (wdHeight - 74) + "px";
 			}
 			
 			function showQuestionStatistic(question) {
@@ -127,13 +135,13 @@
 					switch(questionType) {
 						case 1:
 						case 2:
-						case 9:
+						case 9: 
 							createQuestionPie(question, divElmt);
 							break;
 						case 3:
 						case 4:
 						case 7:
-						case 8:
+						case 8: 
 							createQuestionBar(question, divElmt);
 							break;
 						case 5:

@@ -29,7 +29,6 @@
 		
 		<div id="mainmenu">
 			<ul>
-				<li id="createBttn"><a><span><spring:message code='ezSurvey.t19'/></span></a></li>
 				<li id="searchBttn"><a><span class="icon16 icon16_search"></span></a></li>
 				<li id="deleteBttn"><a><span class="icon16 icon16_delete"></span></a></li>
 				<c:choose>

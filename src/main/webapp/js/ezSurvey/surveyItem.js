@@ -214,12 +214,11 @@ var SurveyItem = function() {
 		listBttns[1].onclick    = function(e) {onMainSearch();};
 		listBttns[2].onclick    = function(e) {toggleSearchPanel();};
 		
-		var addBttn   = document.getElementById("createBttn");
 		var delBttn   = document.getElementById("deleteBttn");
 		var reuseBttn = document.getElementById("reuseBttn");
 		var srchBttn  = document.getElementById("searchBttn");
 		var modifyBttn  = document.getElementById("modifyBttn");
-		if (addBttn)    {addBttn.firstElementChild.onclick    = function(e) {createNewSurvey()    ;};}
+		
 		if (delBttn)    {delBttn.firstElementChild.onclick    = function(e) {deleteFileConfirm()  ;};}
 		if (reuseBttn)  {reuseBttn.firstElementChild.onclick  = function(e) {reuseSurveyConfirm() ;};}
 		if (srchBttn)   {srchBttn.firstElementChild.onclick   = function(e) {toggleSearchPanel()  ;};}
@@ -845,7 +844,6 @@ var SurveyItem = function() {
 		if(statisticWd) {statisticWd.close();}
 	}
 	
-	function createNewSurvey()  {window.parent.frames["right"].location.href = "/ezSurvey/createSurvey.do";}
 	function getIframeContent() {return documentCont;}
 	
 	function makeAjaxCall(ajaxData, ajaxType, ajaxUrl, handleSuccess, handleError, asyncMode, moreParam) {
