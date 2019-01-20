@@ -11,7 +11,7 @@
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/jquery.mCustomScrollbar.css')}" type="text/css">
 	</head>
 	
-	<body class="newLeft">
+	<body class="newLeft over-fl">
 		<div id="left" class="lnb" style="overflow: auto">
 			<div class="left_title" title="<spring:message code='ezSurvey.t01'/>">
 				<spring:message code='ezSurvey.t01'/>
