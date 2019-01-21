@@ -140,6 +140,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addHolidayFlag();
     	ezCommonService.addHolidayRepeat();
     	ezCommonService.createPortalThemePortlet();
+    	ezCommonService.insertPortalThemePortletInitdata();
     	
     	logger.debug("init ended.");
     }
