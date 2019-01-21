@@ -105,5 +105,7 @@ public interface EzCommonService {
 	public void addHolidayRepeat() throws Exception;
 	
 	public void createPortalThemePortlet() throws Exception;
+
+	public void insertPortalThemePortletInitdata() throws Exception;
 }
 
