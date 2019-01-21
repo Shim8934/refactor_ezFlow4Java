@@ -2829,20 +2829,21 @@ h2, #menu span {font-size: 12px;}
 .survey-bttn-wrp >img + img {padding-left: 8px;}
 .infoBtns {height: 100%; display: flex; align-items: center; min-width: 0px;}
 .infoBtns >img {width: 32px;height: 32px; padding: 6px; cursor: pointer;}
-.upage-ul {float: right; padding: 0px 7px 3px 0px; position: absolute; top: 75px; right: 9px; width: 214px; background: white; border-radius: 10px; border: 1px solid #cccccc;}
-.upage-ul:before {content: ''; position: absolute; border-bottom: 14px solid #fff; border-right: 8px solid transparent; border-left: 8px solid transparent; top: -10px; right: 9px; z-index: 2;}
-.upage-ul:after {content: ''; position: absolute; border-style: solid; border-width: 0px 7px 12px 7px; border-color: #ccc transparent; display: block; width: 0; z-index: 1; top: -12px; right: 10px;}
-.upage-ul li {float: left; list-style: none; width: 200px; padding: 0px 10px; margin: 6px 0px 0px 0px;}
-.upage-ul li>img {vertical-align: top; width: 30px; margin: 0px 10px;}
-.upage-ul li>span {line-height: 30px;}
-.survey-detail #menu {margin-bottom: 20px;}
 
-.upage-ul {float: right; padding: 0px 7px 3px 0px; position: absolute; top: 75px; right: 9px; width: 214px; background: white; border-radius: 10px; border: 1px solid #cccccc;}
-.upage-ul:before {content: ''; position: absolute; border-bottom: 14px solid #fff; border-right: 8px solid transparent; border-left: 8px solid transparent; top: -10px; right: 9px; z-index: 2;}
+/* survey info Bttn */
+.srvyTitle_info{display:inline-block; float:right; cursor:pointer;}
+.srvyTitle_info img{vertical-align:middle; margin:-2px 0px 0px 0px;}
+.upage-ul {float:right; position:absolute; z-index:1000; top:104px; right:30px; width:160px; padding:0px 18px 8px 18px; background:#fff; border-radius: 10px; border: 1px solid #cccccc;}
+.upage-ul:before {content: ''; position: absolute; border-bottom: 14px solid #fff; border-right: 8px solid transparent; border-left: 8px solid transparent; top: -12px; right: 10px; z-index: 2;}
 .upage-ul:after {content: ''; position: absolute; border-style: solid; border-width: 0px 7px 12px 7px; border-color: #ccc transparent; display: block; width: 0; z-index: 1; top: -12px; right: 10px;}
-.upage-ul li {float: left; list-style: none; width: 200px; padding: 0px 10px; margin: 6px 0px 0px 0px;}
+.upage-ul li {float: left; list-style: none; width:140px; padding: 0px 10px; margin: 6px 0px 0px 0px;}
 .upage-ul li>img {vertical-align: top; width: 30px; margin: 0px 10px;}
 .upage-ul li>span {line-height: 30px;}
+.upage-ul li .srvyInfo{background:url(/images/ezSurvey/icon_survey.png) no-repeat !important; background-color:transparent !important; vertical-align:top !important; overflow: hidden;}
+.upage-ul li .srvyInfo01{display:inline-block; width:16px; height:16px; background-position:0px -110px !important; margin:6px 8px 0px 0px; cursor:pointer;}
+.upage-ul li .srvyInfo02{display:inline-block; width:16px; height:16px; background-position:-16px -110px !important; margin:6px 8px 0px 0px; cursor:pointer;}
+.upage-ul li .srvyInfo03{display:inline-block; width:16px; height:16px; background-position:-32px -110px !important; margin:6px 8px 0px 0px; cursor:pointer;}
+.upage-ul li .srvyInfo04{display:inline-block; width:16px; height:16px; background-position:-48px -110px !important; margin:6px 8px 0px 0px; cursor:pointer;}
 
 /* respondent select page part */
 .receiver_tltype01 >span {min-width: 45px;}
@@ -3075,7 +3076,7 @@ h2, #menu span {font-size: 12px;}
 .textPanel {height: 480px; width: 640px;}
 .logicPanel {height: 640px; width: 600px;}
 .userPanel {height: 262px;}
-.hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off, .respondents-div.off {display: none;}
+.hiddenBttn, .hidden-tab, .searchPanel.off, .upage-ul.off, .uploadHelp.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off, .respondents-div.off {display: none;}
 .surveydetail-header {padding-left: 10px;}
 .surveydetail-header ul {padding: 0px; margin: 0px; list-style: none;}
 .surveydetail-header ul li {display: block; float: left; margin: 0 3px 0 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}

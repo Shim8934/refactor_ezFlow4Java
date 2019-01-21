@@ -34,47 +34,15 @@
 		</c:if>
 	</div>
 	
-	<ul id="upage-ul"class="upage-ul" style="display: none;">
-		<li>
-			<c:choose>
-				<c:when test="${survey.resultPublicFlag eq 1}">
-					<span id="isPublic">공개</span>
-				</c:when>
-				<c:otherwise>
-					<span id="isPublic">비공개</span>
-				</c:otherwise>
-			</c:choose>
-		</li>
-		<li>
-			<img src="/images/poll/seeResultBeforeVote_On.png" class="voteIconImg_info" title="투표 종료 전 결과보기">
-			<span id="openDays">완료 후 개시 일수 : ${survey.openDays}</span>
-		</li>
-		<li>
-			<img src="/images/poll/anonymousVote_Off.png" class="voteIconImg_info" title="기명 투표">
-			<c:choose>
-				<c:when test="${survey.anonymousFlag eq 0}">
-					<span id="isAnonymous">기명</span>
-				</c:when>
-				<c:otherwise>
-					<span id="isAnonymous">무기명</span>
-				</c:otherwise>
-			</c:choose>
-		</li>
-		<li>
-			<img src="/images/poll/selOnlyOnce_Off.png" class="voteIconImg_info" title="낙장불입 미적용">
-			<c:choose>
-				<c:when test="${survey.multiAnswerFlag eq 0}">
-					<span id="isAgain">중복 응답 불가</span>
-				</c:when>
-				<c:otherwise>
-					<span id="isAgain">중복 응답 가능</span>
-				</c:otherwise>
-			</c:choose>
-		</li>
+	<ul id="upage-ul" class="upage-ul off">
+		<li><span class="srvyInfo srvyInfo01"></span><span>기명 여부 : <span></span>기명</span></li>
+		<li><span class="srvyInfo srvyInfo02"></span><span>대상자 설정 : <span></span>전체</span></li>
+		<li><span class="srvyInfo srvyInfo03"></span><span>조사 결과 :</span><span>공개</span></li>
+		<li><span class="srvyInfo srvyInfo04"></span><span>설문 종료후 : </span><span>0 일간</span></li>
 	</ul>
 	
 	<div class="surveydetail-body" id="mainSurveyBody">
-		<div id="svTitle" class="survey-title">${survey.title}</div>
+		<div id="svTitle" class="survey-title">${survey.title} <span class="srvyTitle_info" id="surveyInfBttn"><img src="/images/ezSurvey/srvyTitle_info.png"></span></div>
 		
 		<div id="svPurpose" class="svPurpose">
 			<div id="ppContent" class="ppContent">${survey.purpose}</div>
@@ -265,6 +233,12 @@
 			}
 		}
 		
+		function toggelSurveyInformation() {
+			var ulInf    = document.getElementById("upage-ul");
+			var crrClass = ulInf.className;
+			ulInf.className = crrClass == "upage-ul" ? "upage-ul off" : "upage-ul";
+		}
+		
 		function setBodyHeight() {
 			var wdHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 			document.getElementById("mainSurveyBody").style.height = (wdHeight - 74) + "px";
@@ -276,6 +250,7 @@
 			setBodyHeight();
 			window.addEventListener("load", function(e) {setBodyHeight();}, false);
 			window.addEventListener("resize", function(e) {setBodyHeight();}, false);
+			document.getElementById("surveyInfBttn").onclick = function(e) {toggelSurveyInformation();};
 			
 			// 라디오 버튼 클릭 이벤트
 			$(".prevQsArea").on("click", ".optRdo", function() {
