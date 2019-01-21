@@ -489,7 +489,7 @@ var SurveyItem = function() {
 				if (currentUser == itemList[i]["creatorId"]) {
 					if (itemList[i]["responseFlag"] == 1) {
 						var statImg     = document.createElement("img");
-						statImg.src     = "/images/ezSurvey/statistic.png";
+						statImg.src     = "/images/ezSurvey/survey_result.png";
 						statImg.onclick = function(e) {openSurveyStatistic(e);}
 						tdElmt9.appendChild(statImg);
 					}
@@ -504,7 +504,7 @@ var SurveyItem = function() {
 						
 						if (todayStr >= endDateStr && todayStr <= dateStr) {
 							var statImg     = document.createElement("img");
-							statImg.src     = "/images/ezSurvey/statistic.png";
+							statImg.src     = "/images/ezSurvey/survey_result.png";
 							statImg.onclick = function(e) {openSurveyStatistic(e);}
 							tdElmt9.appendChild(statImg);
 						}
