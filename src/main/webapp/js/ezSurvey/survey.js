@@ -2464,6 +2464,7 @@ var SurveyCreate     = function() {
 		if (!isValid(lowestValue))       {sliderObj.error = "strSlider1"; return sliderObj;}
 		if (!isValid(highestValue))      {sliderObj.error = "strSlider2"; return sliderObj;}
 		if (lowestValue >= highestValue) {sliderObj.error = "strSlider3"; return sliderObj;}
+		if (highestValue > 30000)        {sliderObj.error = "strSlider4"; return sliderObj;}
 		
 		var option = [];
 		option.push({content : lowestValue, level : 0});
