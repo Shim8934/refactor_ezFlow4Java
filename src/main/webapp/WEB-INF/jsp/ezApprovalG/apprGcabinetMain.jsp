@@ -1059,8 +1059,8 @@
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-		            feature = feature + GetShowModalPosition(330, 205);
+		            var feature = "status:no;dialogWidth:350px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		            feature = feature + GetShowModalPosition(350, 205);
 		            var RtnVal = window.showModalDialog(url, parameter, feature);
 		        }
 		        return RtnVal;

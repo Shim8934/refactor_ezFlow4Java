@@ -202,6 +202,7 @@
 			    		}, success: function() {
 			    			memoFoldersInfo();
 			    			parent.parent.parent.parent.memoFoldersInfo("delete");
+			    			window.parent.parent.frames["left"].memoFolderList();
 			    		}, error: function(err) {
 			    			alert("<spring:message code='ezMemo.t0045' />");
 			    		}

@@ -100,6 +100,7 @@
 					}
 				});
 				opener.memoFoldersInfo();
+				window.opener.parent.parent.frames["left"].memoFolderList();
 	        }
 	        
 	        function btn_cancel_onclick() {

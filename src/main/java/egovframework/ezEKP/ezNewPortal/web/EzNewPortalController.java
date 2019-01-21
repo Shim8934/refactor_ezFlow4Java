@@ -126,6 +126,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		
 		model.addAttribute("useMemo", useMemo);
 		model.addAttribute("mainUrl", returnUrl);
+		model.addAttribute("userDeptId", userInfo.getDeptID());
 		logger.debug("returnUrl : " + returnUrl);
 		logger.debug("portalMain End");
 		return "/ezNewPortal/newPortalMain";
