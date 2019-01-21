@@ -863,6 +863,9 @@
 				}
 				
 				var minLabelWidth        = maxLabelLen * 10 > 40 ? maxLabelLen * 10 : 40;
+				
+				console.log("Min label width: " + minLabelWidth);
+				
 				dataSetObj["labels"]     = unitArr;
 				dataSetObj["dataSetArr"] = dataSetArr;
 				dataSetObj["width"]      = (endPoint - startPoint + 1) * minLabelWidth;
