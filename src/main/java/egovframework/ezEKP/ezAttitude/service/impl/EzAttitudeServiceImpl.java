@@ -2730,4 +2730,20 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("annualExcelUpload started");
 		return "등록완료";
 	}
+	
+	@Override
+	public Map<String, Object> getMonthlyAnnualList(String userId, String offset, String startDate, String endDate, int tenantId) throws Exception {
+		LOGGER.debug("getMonthlyAnnualList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
+		map.put("userId", userId);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("getMonthlyAnnualList ended");
+		return ezAttitudeDAO.getMonthlyAnnualList(map);
+	}
 }

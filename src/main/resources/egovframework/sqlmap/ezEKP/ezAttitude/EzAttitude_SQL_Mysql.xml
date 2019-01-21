@@ -148,6 +148,11 @@
 		<result  property="writerDeptName"		column="DESCRIPTION"			columnIndex="19"/>
 	</resultMap>
 	
+	<resultMap class="java.util.HashMap" id="monthlyAnnualMap">
+		<result property="annualCount" 					column="ANNUAL_COUNT" 					columnIndex="1"/>
+		<result property="month" 					column="MONTH" 				columnIndex="2"/>
+	</resultMap>
+	
 	<select id="ezAttitudeDAO.getAttitudeList" parameterClass="Map" resultMap="attitude" remapResults="true">
 		<![CDATA[
 			SELECT * FROM (
@@ -1763,5 +1768,43 @@
 			limit 
 				1
 		</isEmpty>
+	</select>
+	
+	<select id="ezAttitudeDAO.getMonthlyAnnualList" parameterClass="Map" resultMap="monthlyAnnualMap">
+		<![CDATA[
+			SELECT IFNULL((SUM(to_days(
+								IF(
+									date_add(END_DATE, INTERVAL +#offsetMin# minute) > #endDate#, 
+			                        #endDate#, 
+			                        date_add(IFNULL(END_DATE, START_DATE), INTERVAL +#offsetMin# minute)
+								   )
+							   ) 
+					   -
+					   to_days(
+								IF(
+									date_add(START_DATE, INTERVAL +#offsetMin# minute) < #startDate#, 
+			                        #startDate#, 
+			                        date_add(START_DATE, INTERVAL +#offsetMin# minute)
+								   )
+							   )
+						) + COUNT(TYPE_ID)), 0) AS ANNUAL_COUNT,
+						MONTH(#startDate#) AS MONTH
+			FROM   
+				jmocha.tbl_attitude
+			WHERE
+				WRITER_ID = #userId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				TYPE_ID IN ('A11', 'A12', 'A13')
+			AND    
+				(
+					(START_DATE >= #startDate# and START_DATE <= #endDate#) 
+					or
+					(END_DATE >= #startDate# and END_DATE < #endDate#) 
+					or
+					(START_DATE < #startDate# and END_DATE >= #endDate#)
+				)
+		]]>
 	</select>
 </sqlMap>

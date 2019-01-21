@@ -12,8 +12,74 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	
 		<style>
+			#attiStatis table td {
+				color : #777;
+				font-size : 13px;
+				text-align : center;
+				border : 1px solid #dedede;
+			}
+			.statsP {
+				text-align: left;
+    			border: 0px;
+    			text-decoration: none;
+    			font-weight: normal;
+    			color: #333;
+    			font-size: 12px;
+    			border-top: 1px solid #e2e3e6;
+    			border-bottom: 1px solid #e2e3e6;
+    			background-color: #f1f3f5;
+    			height: 23px;
+    			margin-top: 0px;
+  				margin-bottom: 0px;
+    			padding-top: 8px;
+    			padding-bottom: 8px;
+    			padding-left: 4px;
+    			height: 17px;
+    			width: 151px;
+			}
 			dl {
 				display: inline-block;
+			}
+			.time_stats .statsUL {
+				border-left: 1px solid #eaeaea;
+				margin: 0px 0px 0px 0px;
+    			padding: 0px 0px;
+    			list-style: none;
+    			box-sizing: border-box;
+			}
+			.time_stats .statsUL li .statsDL {
+			    margin: 0px;
+			    padding: 5px 10px;
+			    overflow: hidden;
+			    /* border-bottom: 1px solid #f1f1f1; */
+			    box-sizing: border-box;
+			    height: 31px;
+			}
+			.time_stats .statsUL li .statsDL dt {
+			    margin: 0px;
+			    float: left;
+			    font-family: malgun gothic, Meiryo UI;
+			    font-size: 12px;
+			    color: #000;
+			    padding: 4px 0px 0px 21px;
+			}
+			.time_stats .statsUL li .statsDL dd {
+			    margin: 0px;
+			    padding: 2px 5px;
+			    float: right;
+			    font-size: 12px;
+			    color: #0470e4;
+			    font-family: malgun gothic, Meiryo UI;
+			    font-weight: bold;
+			    height: 21px;
+			    line-height: 21px;
+			    box-sizing: border-box;
+			    /* background: rgb(243, 245, 247); */
+			    /* border: 1px solid #c8ccd0; */
+			    border-radius: 25px;
+			    -webkit-border-radius: 25px;
+			    -moz-border-radius: 20px;
+			    cursor: pointer;
 			}
 			.timecheck_info .timeInfo {
 				float: left;
@@ -44,7 +110,6 @@
    			var src = "";
 	    
 	    	$(document).ready(function() {
-	    		
 	    		//헤더 클릭 시 정렬
 	    		$(document).on('click', '.mainlist th', function(){
 	    			if ($(this).attr("colname") != "") {
@@ -67,8 +132,8 @@
 	    			}
 		    		makeoptionyear();	    		
 	    		});
-	    		
-	    		makeoptionyear();	    		
+	    		getMonthlyAnnualList();
+	    		makeoptionyear();
    			});
 	    	
 	    	//년도 selectBox
@@ -149,7 +214,7 @@
 	    		
 	    		$("#contentlist .mainlist tr").remove();
 	    		
-	    		if (list.length > 1) {
+	    		if (list.length > 0) {
 		    		list.forEach(function(vo, index) {
 		    			var content = $.trim($("<p></p>").html(vo.content).text());
 		    			html = "<tr id='" + vo.attitudeId + "'>";
@@ -190,6 +255,59 @@
 	    		$("#FA12").text(morningCnt);
 	    		$("#FA13").text(afternoonCnt);
 	    	}
+	    	
+	    	/**
+			* [개인근태현황, 부서근태현황] 근태유형 메소드
+			*/
+			function getMonthlyAnnualList() {
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/getMonthlyAnnualList.do",
+					data : {
+						year : year
+					},
+					success : function(result) {
+						getMonthlyAnnualList_After(result);
+					}
+				})
+			}
+	    	
+	    	/**
+			* [개인근태현황, 부서근태현황] 통계바 메소드
+			*/
+			function getMonthlyAnnualList_After(result) {
+				//, "height":$("#attiCalendar").css("height")
+				var objDiv = $("<div></div>").addClass("time_stats");
+				var objP = $("<p></p>").addClass("statsP").text("월별통계");
+				var objUl = $("<ul></ul>").addClass("statsUL");
+				var objLi = $("<li></li>");
+				var objDl = "";
+				var objDt = "";
+				var objDd = "";
+				
+				objDiv.append(objP);
+				for (var i = 0; i < result.length; i++) {
+					objDl = $("<dl></dl>").addClass("statsDL");
+					objDt = $("<dt></dt>");
+					
+					objDt.html($("<div style='width:70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + result[i].month + "'></div>").html(result[i].month + "월"));
+					objDd = $("<dd></dd>")
+					 .text(result[i].annualCount + "일")
+					 .attr("id", result[i].month)
+					
+					objDl.append(objDt);
+					objDl.append(objDd);
+					objLi.append(objDl);
+				}
+				
+				objUl.append(objLi);
+				$("#attiStatis").append(objP);
+				$("#attiStatis").append(objUl);
+				
+			}
+	    	
 	    	
 		</script>
 	</head>
@@ -244,24 +362,33 @@
 		    </div>
 <!-- 	    </table> -->
 	    <!-- 리스트 -->
-		<div style="width: 100%; height: 100%;">
-            <table class="mainlist" style="width: 100%;">
-                <tr>
-                    <th style="width: 60px;"><span>NO.</span></th>
-                    <th style="width: 25%; padding-left:15px; cursor: pointer;" colname="START_DATE"><span><spring:message code='ezAttitude.t107' /></span></th>
-                    <th style="width: 15%; cursor: pointer;" colname="TYPE_NAME"><span><spring:message code='ezAttitude.t35' /></span></th>
-                    <th style="width: 12%; cursor: pointer;" colname="annualCnt"><span><spring:message code='ezAttitude.t252' /></span></th>
-                    <th style="width: 44%;"><span>내용</span></th>
-                </tr>
-            </table>
-            <div id="contentlist" name="contentlist" style="height: 520px; overflow-y: auto;">
-                <table class="mainlist" style="width: 100%;">
-                    <tr>
-                        <td colspan="5" style="text-align: center;"><spring:message code='ezAttitude.t130' /></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
+	    <table>
+			<tr>
+				<td style="vertical-align:top; width:100%;">
+			        <div style="width: 100%; height: 100%;">
+			            <table class="mainlist" style="width: 100%;">
+			                <tr>
+			                    <th style="width: 60px;"><span>NO.</span></th>
+			                    <th style="width: 25%; padding-left:15px; cursor: pointer;" colname="START_DATE"><span><spring:message code='ezAttitude.t107' /></span></th>
+			                    <th style="width: 15%; cursor: pointer;" colname="TYPE_NAME"><span><spring:message code='ezAttitude.t35' /></span></th>
+			                    <th style="width: 12%; cursor: pointer;" colname="annualCnt"><span><spring:message code='ezAttitude.t252' /></span></th>
+			                    <th style="width: 44%;"><span>내용</span></th>
+			                </tr>
+			            </table>
+			            <div id="contentlist" name="contentlist" style="height: 520px; overflow-y: auto;">
+			                <table class="mainlist" style="width: 100%;">
+			                    <tr>
+			                        <td colspan="5" style="text-align: center;"><spring:message code='ezAttitude.t130' /></td>
+			                    </tr>
+			                </table>
+			            </div>
+			        </div>
+				</td>
+				<td style="vertical-align:top;white-space: normal;">
+					<div style="vertical-align:top;" class="time_stats" id="attiStatis"></div>
+				</td>
+			</tr>
+		</table>
 	</body>
 </html>
 

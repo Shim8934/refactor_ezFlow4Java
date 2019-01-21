@@ -3399,4 +3399,53 @@ public class EzAttitudeController {
 		
 		return "json";
 	}
+	
+	/**
+	 * 근태통계 리스트
+	 */
+	@RequestMapping(value = "/ezAttitude/getMonthlyAnnualList.do")
+	@ResponseBody
+	public JSONArray getMonthlyAnnualList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/getMonthlyAnnualList started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		String userOffset = userInfo.getOffset();
+		String year = request.getParameter("year");
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/monthlyAnnual";
+		
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId)
+				.queryParam("companyId", companyId)
+				.queryParam("offset", userOffset)
+				.queryParam("year", year);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONArray list = new JSONArray();
+		if (status.equals("ok")) {
+			list = (JSONArray) resultBody.get("data");
+		}
+		
+		LOGGER.debug("/ezAttitude/getMonthlyAnnualList ended");
+		return list;
+	}
 }

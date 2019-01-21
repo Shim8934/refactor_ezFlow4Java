@@ -406,4 +406,9 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
     	return (List<Map<String, Object>>) list("ezAttitudeAdminDAO.getUserList", map);
     }
     
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getMonthlyAnnualList(Map<String, Object> map) throws Exception {
+    	return (Map<String, Object>) select("ezAttitudeDAO.getMonthlyAnnualList", map);
+    }
+    
 }
