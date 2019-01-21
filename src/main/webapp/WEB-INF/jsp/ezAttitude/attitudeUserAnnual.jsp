@@ -24,6 +24,11 @@
 			.countDL {
 				margin: 0px;
 			}
+			.mainlist th, td{
+			    overflow: hidden;
+			    text-overflow: ellipsis;
+			    white-space: nowrap;
+			}
 		</style>	
 	    <script type="text/javascript">
 	    	var date = new Date()
@@ -117,7 +122,8 @@
 	    		
 	    		if (list.length > 1) {
 		    		list.forEach(function(vo, index) {
-		    			html = "<tr>";
+		    			var content = $.trim($("<p></p>").html(vo.content).text());
+		    			html = "<tr id='" + vo.attitudeId + "'>";
 			    		html += "<td style='width:60px'>" + i + "</td>";
 			    		html += "<td style='width:25%'>";
 		    			if (vo.typeId === "A11") { //연차
@@ -133,7 +139,7 @@
 		    			html += "</td>";
 		    			html += "<td style='width:15%'>" + vo.typeName + "</td>";
 		    			html += "<td style='width:12%'>" + Number(vo.annualCnt) + "</td>";
-		    			html += "<td style=''>" + "내용" + "</td>";
+		    			html += "<td style='width:44%'>" + content + "</td>";
 		    			html += "</tr>";
 			    		$("#contentlist .mainlist tbody").after(html);
 			    		
@@ -216,7 +222,7 @@
                     <th style="width: 25%; padding-left:15px;"><span><spring:message code='ezAttitude.t107' /></span></th>
                     <th style="width: 15%; "><span><spring:message code='ezAttitude.t35' /></span></th>
                     <th style="width: 12%; "><span><spring:message code='ezAttitude.t252' /></span></th>
-                    <th><span>내용</span></th>
+                    <th style="width: 44%; "><span>내용</span></th>
                 </tr>
             </table>
             <div id="contentlist" name="contentlist" style="height: 520px; overflow-y: auto;">

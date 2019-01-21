@@ -39,10 +39,12 @@ public class AdminAttitudeVO {
 	private String userTitle;
 	/** 유저 이메일*/
 	private String userEmail;
-	/** 휴가일 수 (근태연차현황관리에서 사용) */
+	/** 휴가일 수 (관리자 연차현황관리에서 사용) */
 	private String annualCnt;
-	/** 총 휴가일 수 (근태연차현황관리에서 사용) */
+	/** 총 휴가일 수 (관리자 연차현황관리에서 사용) */
 	private String totalAnnualCnt;
+	/** 근태 내용 (사용자 근태연차현황에서 사용)*/
+	private String content;
 	
 	public String getTypeName() {
 		return typeName;
@@ -188,5 +190,11 @@ public class AdminAttitudeVO {
 	}
 	public void setTotalAnnualCnt(String totalAnnualCnt) {
 		this.totalAnnualCnt = totalAnnualCnt;
+	}
+	public String getContent() {
+		return content;
+	}
+	public void setContent(String content) {
+		this.content = content;
 	}
 }
