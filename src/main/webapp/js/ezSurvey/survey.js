@@ -2298,7 +2298,7 @@ var SurveyCreate     = function() {
 		
 		for (var i = 0, len = options.length; i < len; i++) {
 			var rankingSelect = $("<div class='ranking-select'></div>");
-			var rankOrder = $("<span class='rank-order' id='rank-order" + (i + 1) + "'>" + (i + 1) + ".</span>");
+			var rankOrder = $("<span class='rank-order' id='rank-order" + (i + 1) + "'>" + (i + 1) + "</span>");
 			var strSlct = "<select name='ranking" + id + i + "' class='srvySelect'>";
 			strSlct    += "<option value='' selected>" + SurveyMessages.strSelect + "</option>";
 			

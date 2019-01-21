@@ -469,7 +469,24 @@
 				createPieChart(lables, values,  "respondentPie", legendDiv);
 			}
 			
+			function createRandomColor() {
+				var r = Math.floor(Math.random() * 255);
+				var g = Math.floor(Math.random() * 255);
+				var b = Math.floor(Math.random() * 255);
+				return "rgb(" + r + "," + g + "," + b + ")";
+			}
+			
+			function checkColorForData(valen) {
+				if (valen > colors.length) {
+					for (var i = colors.length; i < valen; i++) {
+						colors.push(createRandomColor());
+					}
+				}
+			}
+			
 			function createPieChart(labels, values, elmtId, legendElmt, questionId) {
+				checkColorForData(values.length);
+				
 				var ctx = document.getElementById(elmtId).getContext("2d");
 				var myPieChart = new Chart(ctx, {
 					type: 'pie',
@@ -584,6 +601,8 @@
 			}
 			
 			function createBarChart(labels, dataSets, canvasId, questionId, legendFlag) {
+				checkColorForData(dataSets[0]["data"].length);
+				
 				var ctx = document.getElementById(canvasId);
 				var myBarChart = new Chart(ctx, {
 					type: "bar",
