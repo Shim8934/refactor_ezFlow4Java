@@ -18,14 +18,17 @@
 				text-align : center;
 				border : 1px solid #dedede;
 			}
+			#attiStatis {
+				border : 1px solid #dedede;
+			}
 			.statsP {
-				text-align: left;
+				text-align: center;
     			border: 0px;
     			text-decoration: none;
     			font-weight: normal;
     			color: #333;
     			font-size: 12px;
-    			border-top: 1px solid #e2e3e6;
+/*     			border-top: 1px solid #e2e3e6; */
     			border-bottom: 1px solid #e2e3e6;
     			background-color: #f1f3f5;
     			height: 23px;
@@ -41,7 +44,7 @@
 				display: inline-block;
 			}
 			.time_stats .statsUL {
-				border-left: 1px solid #eaeaea;
+/* 				border-left: 1px solid #eaeaea; */
 				margin: 0px 0px 0px 0px;
     			padding: 0px 0px;
     			list-style: none;
@@ -88,7 +91,7 @@
 				margin-top: 20px;
 			}
 			.countDL {
-				margin: 0px;
+				margin: 35px 0px 0px 0px;
 			}
 			.mainlist th, td{
 			    overflow: hidden;
@@ -105,14 +108,39 @@
 	    	var userDeptId;
 	    	var userDeptName;
 	    	var yearLength = 10;
+	    	var orderCell = ""; //정렬 명
+	    	var orderOption = ""; //정렬 형식(ASC, DESC)
+   			var src = "";
 	    
 	    	$(document).ready(function() {
+	    		//헤더 클릭 시 정렬
+	    		$(document).on('click', '.mainlist th', function(){
+	    			if ($(this).attr("colname") != "") {
+	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
+	    					src = "";
+	    					orderOption = "";
+	    					orderCell = $(this).attr("colname");
+	    				}
+	    			
+		    			if (orderOption == "" || orderOption == "DESC") {
+		    				src = '/images/etc/view-sortup.gif';
+		    				orderOption = "ASC";
+		    			} else {
+		    				src = '/images/etc/view-sortdown.gif';
+		    				orderOption = "DESC";
+		    			}
+		    			
+		    			$(".mainlist th").find("img").remove();
+		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+	    			}
+		    		makeoptionyear();	    		
+	    		});
 	    		getMonthlyAnnualList();
 	    		makeoptionyear();
    			});
 	    	
 	    	//년도 selectBox
-	    	function makeoptionyear () {
+	    	function makeoptionyear() {
 	            var tempyear = year;
 	    		
 	    		if ($("#searchYear").val() != null && $("#searchYear").val() != "") {
@@ -146,7 +174,9 @@
 	    			dataType : "json",
 	    			url : "/ezAttitude/getUserAnnualList.do",
 	    			data : {
-	   					year : selyear
+	   					year : selyear,
+	   					orderCell : orderCell,
+	   					orderOption : orderOption
     				},
 	    			success : function(result) {
 	    				$("#userName").text(result.list[0].userName);
@@ -292,6 +322,33 @@
 		    	exportExcelframe.target="_blank";
 			}
 	    	
+			function slideTd() {
+				if ($("#slideImg").attr("src") == "/images/ImgIcon/slideLeft.png") {
+					$("#attiStatis").css("height", "");
+					
+					$("#attiStatis").animate({
+						width: "151px"
+					}, 500);
+					
+					$("#slideBtn").animate({
+						right: "147px"
+					}, 500, function(){
+						$("#slideImg").attr("src", "/images/ImgIcon/slideRight.png");
+					});
+				} else {
+					$("#attiStatis").animate({
+						width: "0px"
+					}, 500, function(){
+						$("#attiStatis").css("height", "0px");
+					});
+					
+					$("#slideBtn").animate({
+						right: "2px"
+					}, 500, function(){
+						$("#slideImg").attr("src", "/images/ImgIcon/slideLeft.png");
+					});
+				}
+			}
 	    	
 		</script>
 	</head>
@@ -349,14 +406,14 @@
 	    <table>
 			<tr>
 				<td style="vertical-align:top; width:100%;">
-					<div style="width: 100%; height: 100%;">
+			        <div style="width: 100%; height: 100%;">
 			            <table class="mainlist" style="width: 100%;">
 			                <tr>
 			                    <th style="width: 60px;"><span>NO.</span></th>
-			                    <th style="width: 25%; padding-left:15px;"><span><spring:message code='ezAttitude.t107' /></span></th>
-			                    <th style="width: 15%; "><span><spring:message code='ezAttitude.t35' /></span></th>
-			                    <th style="width: 12%; "><span><spring:message code='ezAttitude.t252' /></span></th>
-			                    <th style="width: 44%; "><span>내용</span></th>
+			                    <th style="width: 25%; padding-left:15px; cursor: pointer;" colname="START_DATE"><span><spring:message code='ezAttitude.t107' /></span></th>
+			                    <th style="width: 15%; cursor: pointer;" colname="TYPE_NAME"><span><spring:message code='ezAttitude.t35' /></span></th>
+			                    <th style="width: 12%; cursor: pointer;" colname="annualCnt"><span><spring:message code='ezAttitude.t252' /></span></th>
+			                    <th style="width: 44%;"><span>내용</span></th>
 			                </tr>
 			            </table>
 			            <div id="contentlist" name="contentlist" style="height: 520px; overflow-y: auto;">
@@ -369,7 +426,8 @@
 			        </div>
 				</td>
 				<td style="vertical-align:top;white-space: normal;">
-					<div style="vertical-align:top;" class="time_stats" id="attiStatis"></div>
+					<div style="vertical-align:top;width:0px;height:0px;overflow:hidden;" class="time_stats" id="attiStatis"></div>
+					<div id="slideBtn" style="position:absolute;top:164px;right:2px;"><img id="slideImg" onclick="javascript:slideTd()" src="/images/ImgIcon/slideLeft.png"></div>
 				</td>
 			</tr>
 		</table>

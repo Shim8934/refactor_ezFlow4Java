@@ -3360,6 +3360,8 @@ public class EzAttitudeController {
 		String companyId = userInfo.getCompanyID();
 		
 		String year = request.getParameter("year");
+		String orderCell = request.getParameter("orderCell");
+		String orderOption = request.getParameter("orderOption");
 		
 		if (userId != null) {
 			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -3373,6 +3375,8 @@ public class EzAttitudeController {
 			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", companyId)
 					.queryParam("year", year)
+					.queryParam("orderCell", orderCell)
+					.queryParam("orderOption", orderOption)
 					.queryParam("userId", userId);
 			
 			RestTemplate rest = new RestTemplate();

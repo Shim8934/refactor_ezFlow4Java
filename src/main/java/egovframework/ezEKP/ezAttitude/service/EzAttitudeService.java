@@ -138,7 +138,7 @@ public interface EzAttitudeService {
 	
 //	public void changeAllAnnual(Map<String, Object> map, int tenantId, String companyId, String primary) throws Exception;
 
-	public List<AdminAttitudeVO> getUserAnnual(String userId, String primary, String offset, String year, String companyId, int tenantId) throws Exception;
+	public List<AdminAttitudeVO> getUserAnnual(String userId, String primary, String offset, String year, String orderCell, String orderOption, String companyId, int tenantId) throws Exception;
 
 	public void changeAnnual(Map<String, Object> map) throws Exception;
 	

@@ -2125,10 +2125,12 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
 			String year = request.getParameter("year");
+			String orderCell = request.getParameter("orderCell");
+			String orderOption = request.getParameter("orderOption");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			List<AdminAttitudeVO> list = ezAttitudeService.getUserAnnual(userId, info.getPrimary(), info.getOffSet(), year, companyId, info.getTenantId());
+			List<AdminAttitudeVO> list = ezAttitudeService.getUserAnnual(userId, info.getPrimary(), info.getOffSet(), year, orderCell, orderOption, companyId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);

@@ -1683,9 +1683,19 @@
 				A.PHYSICALDELIVERYOFFICENAME = #companyId#
 			AND 
 				A.cn = #userId#
-			ORDER BY 
-				START_DATE
 		]]>
+		<isNotEmpty property="orderCell">
+			<![CDATA[
+				ORDER BY
+					$orderCell$ $orderOption$
+			]]>
+		</isNotEmpty>
+		<isEmpty property="orderCell">
+			<![CDATA[
+				ORDER BY
+					START_DATE
+			]]>
+		</isEmpty>	
 	</select>
 	
 	<select id="ezAttitudeAdminDAO.getAnnualCnt" parameterClass="Map" resultClass="AttitudeAnnualVO">

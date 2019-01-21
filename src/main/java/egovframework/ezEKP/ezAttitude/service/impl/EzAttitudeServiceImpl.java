@@ -2637,7 +2637,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AdminAttitudeVO> getUserAnnual(String userId, String primary, String offset, String year, String companyId, int tenantId) throws Exception {
+	public List<AdminAttitudeVO> getUserAnnual(String userId, String primary, String offset, String year, String orderCell, String orderOption, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeAnnualList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2649,6 +2649,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("year", year);
+		map.put("orderCell", orderCell);
+		map.put("orderOption", orderOption);
 		map.put("startTime", startTime);
 		map.put("endTime", endTime);
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
