@@ -287,13 +287,13 @@
 
 /*** survey tab start ***/
 .surveyBtn{overflow:hidden; margin:10px 0px 10px 0px;}
-.headpanel{float:left; height:48px; margin:0px; padding:0px;}
+.headpanel{float:left; height:48px; margin:0px; padding:0px; display: flex;}
 .headpanel .crust {float:left; position:relative; clear:none; display:block; zoom:1; max-width:50%; margin:0px; padding:0px; border:1px solid #c5c5c5; border-left:none; border-right:none; border-bottom:none;}
 .headpanel .crust:last-child a.crumb{border-right:1px solid #c5c5c5;}
 .headpanel >span:first-child {border-left: 1px solid #c5c5c5 !important;}
 .headpanel .crust a.crumb>span {display:inline-block; vertical-align:middle; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; max-width:100%; font-size:14px;}
 .headpanel .crust:hover a.crumb, .headpanel .crust.selected a.crumb {background:#3d8fea; color:#fff;}
-.headpanel .crust a.crumb {overflow: hidden; display:block; height:46px; line-height:45px; margin:0px; padding:0px 8px 0px 28px; background:#fff; border-bottom:1px solid #c5c5c5; _border-bottom:none; text-decoration:none; outline:0px; -moz-outline-style:0 none; cursor:pointer;}
+.headpanel .crust a.crumb {overflow: hidden; display:block; height:46px; line-height:45px; margin:0px; padding:0px 8px 0px 28px; background:#fff; border-bottom:1px solid #c5c5c5; _border-bottom:none; text-decoration:none; outline:0px; -moz-outline-style:0 none; cursor:pointer; display: flex; align-items: center;}
 .headpanel .crust:first-child a.crumb{padding:0px 8px 0px 18px;}
 .headpanel .crust .arrow {border: 24px solid transparent; border-right: 1px none black; border-left-color:#c5c5c5; display: block; position: absolute; right:-22px; top:-1px; z-index: 50; width: 0px; height: 0px; cursor: pointer;}
 .headpanel .crust .arrow span {border: 24px solid transparent; border-right: 1px none black; border-left-color: #fff; display: block; position: absolute; left:-25px; top:-24px; z-index: 51; white-space: nowrap; overflow: hidden; text-indent: 9999px; width: 0px; height: 0px;}
