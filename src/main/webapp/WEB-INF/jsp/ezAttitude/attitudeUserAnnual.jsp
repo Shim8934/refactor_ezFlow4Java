@@ -39,13 +39,40 @@
 	    	var userDeptId;
 	    	var userDeptName;
 	    	var yearLength = 10;
+	    	var orderCell = ""; //정렬 명
+	    	var orderOption = ""; //정렬 형식(ASC, DESC)
+   			var src = "";
 	    
 	    	$(document).ready(function() {
-	    		makeoptionyear();
+	    		
+	    		//헤더 클릭 시 정렬
+	    		$(document).on('click', '.mainlist th', function(){
+	    			if ($(this).attr("colname") != "") {
+	    				if (!$(this).find("img").length) { // 새로운 th를 클릭한 경우
+	    					src = "";
+	    					orderOption = "";
+	    					orderCell = $(this).attr("colname");
+	    				}
+	    			
+		    			if (orderOption == "" || orderOption == "DESC") {
+		    				src = '/images/etc/view-sortup.gif';
+		    				orderOption = "ASC";
+		    			} else {
+		    				src = '/images/etc/view-sortdown.gif';
+		    				orderOption = "DESC";
+		    			}
+		    			
+		    			$(".mainlist th").find("img").remove();
+		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
+	    			}
+		    		makeoptionyear();	    		
+	    		});
+	    		
+	    		makeoptionyear();	    		
    			});
 	    	
 	    	//년도 selectBox
-	    	function makeoptionyear () {
+	    	function makeoptionyear() {
 	            var tempyear = year;
 	    		
 	    		if ($("#searchYear").val() != null && $("#searchYear").val() != "") {
@@ -79,7 +106,9 @@
 	    			dataType : "json",
 	    			url : "/ezAttitude/getUserAnnualList.do",
 	    			data : {
-	   					year : selyear
+	   					year : selyear,
+	   					orderCell : orderCell,
+	   					orderOption : orderOption
     				},
 	    			success : function(result) {
 	    				$("#userName").text(result.list[0].userName);
@@ -219,10 +248,10 @@
             <table class="mainlist" style="width: 100%;">
                 <tr>
                     <th style="width: 60px;"><span>NO.</span></th>
-                    <th style="width: 25%; padding-left:15px;"><span><spring:message code='ezAttitude.t107' /></span></th>
-                    <th style="width: 15%; "><span><spring:message code='ezAttitude.t35' /></span></th>
-                    <th style="width: 12%; "><span><spring:message code='ezAttitude.t252' /></span></th>
-                    <th style="width: 44%; "><span>내용</span></th>
+                    <th style="width: 25%; padding-left:15px; cursor: pointer;" colname="START_DATE"><span><spring:message code='ezAttitude.t107' /></span></th>
+                    <th style="width: 15%; cursor: pointer;" colname="TYPE_NAME"><span><spring:message code='ezAttitude.t35' /></span></th>
+                    <th style="width: 12%; cursor: pointer;" colname="annualCnt"><span><spring:message code='ezAttitude.t252' /></span></th>
+                    <th style="width: 44%;"><span>내용</span></th>
                 </tr>
             </table>
             <div id="contentlist" name="contentlist" style="height: 520px; overflow-y: auto;">
