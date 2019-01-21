@@ -925,6 +925,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -968,6 +969,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -991,7 +993,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		try {
 			LOGGER.debug("userId : " + userId);
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			int tenantId = info.getTenantId();
 			String[] scheduleIdList = (String[]) jsonParam.get("scheduleIdList");
@@ -1011,6 +1013,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "ok");
 			result.put("code", 0);			
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1032,7 +1035,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			int tenantId = info.getTenantId();
 			String[] groupIdList = (String[]) jsonParam.get("groupIdList");
@@ -1051,6 +1054,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
