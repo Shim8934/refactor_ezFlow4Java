@@ -468,7 +468,7 @@
 		        <ul class="lnbUL">
                    	<li><span class="sub_iconLNB tree_workTime_individual"></span><span class="list_text" id="userAttitude" onclick="functionFlag(1)"><spring:message code='ezAttitude.t143'/></span></li>
                    	<li><span class="sub_iconLNB tree_workTime_department"></span><span class="list_text" id="deptAttitude" onclick="functionFlag(2)"><spring:message code='ezAttitude.t144'/></span></li>
-                   	<li><span class="sub_iconLNB tree_workTime_individual"></span><span class="list_text" id="userAnnual" onclick="functionFlag(3)">개인연차관리</span></li>
+                   	<li><span class="sub_iconLNB tree_workTime_individual"></span><span class="list_text" id="userAnnual" onclick="functionFlag(3)">개인연차현황</span></li>
 		        </ul>
 		        <h2 class="on">
 		            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezAttitude.t7'/></span>
