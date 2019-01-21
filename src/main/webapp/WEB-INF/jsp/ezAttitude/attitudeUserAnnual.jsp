@@ -343,22 +343,23 @@
 		    </div>
 <!-- 	    </table> -->
 	    <!-- 리스트 -->
-<<<<<<< HEAD
 	    <table>
 			<tr>
 				<td style="vertical-align:top; width:100%;">
 					<div style="width: 100%; height: 100%;">
 			            <table class="mainlist" style="width: 100%;">
 			                <tr>
-			                    <th style="width: 35%; padding-left:15px;"><span><spring:message code='ezAttitude.t107' /></span></th>
-			                    <th style="width: 25%; "><span><spring:message code='ezAttitude.t35' /></span></th>
-			                    <th style="width: 15%; "><span><spring:message code='ezAttitude.t252' /></span></th>
+			                    <th style="width: 60px;"><span>NO.</span></th>
+			                    <th style="width: 25%; padding-left:15px;"><span><spring:message code='ezAttitude.t107' /></span></th>
+			                    <th style="width: 15%; "><span><spring:message code='ezAttitude.t35' /></span></th>
+			                    <th style="width: 12%; "><span><spring:message code='ezAttitude.t252' /></span></th>
+			                    <th style="width: 44%; "><span>내용</span></th>
 			                </tr>
 			            </table>
-			            <div id="contentlist" name="contentlist" style="height: 320px; overflow-y: auto;">
+			            <div id="contentlist" name="contentlist" style="height: 520px; overflow-y: auto;">
 			                <table class="mainlist" style="width: 100%;">
 			                    <tr>
-			                        <td colspan="4" style="text-align: center;"><spring:message code='ezAttitude.t130' /></td>
+			                        <td colspan="5" style="text-align: center;"><spring:message code='ezAttitude.t130' /></td>
 			                    </tr>
 			                </table>
 			            </div>
@@ -369,26 +370,6 @@
 				</td>
 			</tr>
 		</table>
-=======
-		<div style="width: 100%; height: 100%;">
-            <table class="mainlist" style="width: 100%;">
-                <tr>
-                    <th style="width: 60px;"><span>NO.</span></th>
-                    <th style="width: 25%; padding-left:15px;"><span><spring:message code='ezAttitude.t107' /></span></th>
-                    <th style="width: 15%; "><span><spring:message code='ezAttitude.t35' /></span></th>
-                    <th style="width: 12%; "><span><spring:message code='ezAttitude.t252' /></span></th>
-                    <th style="width: 44%; "><span>내용</span></th>
-                </tr>
-            </table>
-            <div id="contentlist" name="contentlist" style="height: 520px; overflow-y: auto;">
-                <table class="mainlist" style="width: 100%;">
-                    <tr>
-                        <td colspan="5" style="text-align: center;"><spring:message code='ezAttitude.t130' /></td>
-                    </tr>
-                </table>
-            </div>
-        </div>
->>>>>>> a70500198f1bd01cf71fb54b6e95b9abd0414969
 	</body>
 </html>
 
