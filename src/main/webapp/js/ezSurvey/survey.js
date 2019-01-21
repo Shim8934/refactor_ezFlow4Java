@@ -1701,7 +1701,7 @@ var SurveyCreate     = function() {
 			default : alert(SurveyMessages.strError)            ; return;
 		}
 		
-		header.append(body[0]);
+		header.appendChild(body[0]);
 		qstnWrapper.append(header);
 	}
 	// 첨부파일의 x버튼 클릭
@@ -2043,7 +2043,7 @@ var SurveyCreate     = function() {
 				}
 				
 				if (option["attach"]) {
-					optAttach = $("<img alt='' src='" + questionFile.getImage(option["attach"])["imageSrc"] + "' class='optImg'>");
+					optAttach = $("<img alt='' src='" + questionFile.getImage(option["attach"])["imageSrc"] + "' class='optImg' />");
 					opt.append(optAttach);
 				}
 				
@@ -2216,7 +2216,7 @@ var SurveyCreate     = function() {
 			default : alert(SurveyMessages.strError); return;
 		}
 		
-		header.append(body[0]);
+		header.appendChild(body[0]);
 		qstnWrapper.prepend(header);
 		rmQstnForm(qstnWrapper);
 		
