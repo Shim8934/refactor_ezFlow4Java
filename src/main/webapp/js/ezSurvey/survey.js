@@ -2922,7 +2922,7 @@ var SurveyCreate     = function() {
 			html += "</div>";
 			
 			var opt = opts[i];
-			opt.append($(html)[0]);
+			opt.appendChild($(html)[0]);
 			
 			if (question.logicFlag == 1) {
 				$("#frstBtnGrp" + id).css("display", "none");
