@@ -214,7 +214,7 @@
 			function getMonthlyAnnualList_After(result) {
 				//, "height":$("#attiCalendar").css("height")
 				var objDiv = $("<div></div>").addClass("time_stats");
-				var objP = $("<p></p>").addClass("statsP").text("<spring:message code='ezAttitude.t171'/>");
+				var objP = $("<p></p>").addClass("statsP").text("월별통계");
 				var objUl = $("<ul></ul>").addClass("statsUL");
 				var objLi = $("<li></li>");
 				var objDl = "";
