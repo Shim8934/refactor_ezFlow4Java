@@ -996,7 +996,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			int tenantId = info.getTenantId();
-			String[] scheduleIdList = (String[]) jsonParam.get("scheduleIdList");
+			String[] scheduleIdList = jsonParam.get("scheduleIdList").toString().split(",");
 			String displayName = jsonParam.get("displayName").toString();
 			String displayName2 = jsonParam.get("displayName2").toString();
 			String status = jsonParam.get("status").toString();
@@ -1038,7 +1038,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			int tenantId = info.getTenantId();
-			String[] groupIdList = (String[]) jsonParam.get("groupIdList");
+			String[] groupIdList = jsonParam.get("groupIdList").toString().split(",");
 			String status = jsonParam.get("status").toString();
 			
 			for (String groupId : groupIdList) {
