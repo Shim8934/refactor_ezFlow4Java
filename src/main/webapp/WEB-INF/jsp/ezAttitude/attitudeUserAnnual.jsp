@@ -18,7 +18,7 @@
 				text-align : center;
 				border : 1px solid #dedede;
 			}
-			p {
+			.statsP {
 				text-align: left;
     			border: 0px;
     			text-decoration: none;
@@ -37,23 +37,15 @@
     			height: 17px;
     			width: 151px;
 			}
+			dl {
+				display: inline-block;
+			}
 			.time_stats .statsUL {
 				border-left: 1px solid #eaeaea;
 				margin: 0px 0px 0px 0px;
     			padding: 0px 0px;
     			list-style: none;
     			box-sizing: border-box;
-			}
-			.time_stats .statsUL li .statsDL {
-    			margin: 0px;
-    			padding: 5px 10px;
-    			overflow: hidden;
-    			/* border-bottom: 1px solid #f1f1f1; */
-    			box-sizing: border-box;
-    			height: 31px;
-			}
-			dl {
-				display: inline-block;
 			}
 			.time_stats .statsUL li .statsDL {
 			    margin: 0px;
@@ -195,7 +187,7 @@
 	    		
 	    		$("#contentlist .mainlist tr").remove();
 	    		
-	    		if (list.length > 1) {
+	    		if (list.length > 0) {
 		    		list.forEach(function(vo, index) {
 		    			var content = $.trim($("<p></p>").html(vo.content).text());
 		    			html = "<tr id='" + vo.attitudeId + "'>";
@@ -365,7 +357,7 @@
 			            </div>
 			        </div>
 				</td>
-				<td style="vertical-align:top;">
+				<td style="vertical-align:top;white-space: normal;">
 					<div style="vertical-align:top;" class="time_stats" id="attiStatis"></div>
 				</td>
 			</tr>
