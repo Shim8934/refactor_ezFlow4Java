@@ -450,4 +450,14 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			update("EzCommonDAO.createTblPortalThemePortlet");
 		}
 	}
+	
+	public void addJournalFormDelFlag() {
+		try {
+			select("EzCommonDAO.checkJournalFormDelFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_journal_form JournalFormDelFlag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addJournalFormDelFlag");
+		}
+	}
 }
