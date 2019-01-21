@@ -7,7 +7,6 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezSurvey.css', 'msg'                    )}" type="text/css">
-		<link rel="stylesheet" href="${util.addVer('/css/ezSurvey/survey.css'               )}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/jquery.mCustomScrollbar.css')}" type="text/css">
 	</head>
 	

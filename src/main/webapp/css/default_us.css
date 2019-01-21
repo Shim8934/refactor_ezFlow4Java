@@ -2320,3 +2320,641 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 /* 20180731_운영자에게 메일 보내기 기능 추가 */
 #left h4{width:155px; margin:0px auto; border:1px solid #e0e0e0; padding:8px 15px; text-align:left; font-weight:normal; background:url('/images/kr/left/icon_adminMail.gif') no-repeat 12px 10px; cursor:pointer;}
 #left h4 span{padding:0px 0px 0px 20px; line-height:18px;}
+
+/* 20190116 전자설문 */
+/* survey right and left frame part */
+.surveyList {overflow:hidden; padding-right: 0;}
+.overY {overflow-y: hidden !important;}
+.surveyConfig {margin: 0px 10px;}
+.surveyConfig .surveyBttn {width: 680px; text-align: center;}
+.surveyConfig .surveyBttn a.imgbtn {box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
+.surveyConfig .surveyBttn a.imgbtn span {height: 24px; line-height: 24px; font-weight: bold; font-size: 12px; color: #000;}
+.surveyPrevMode {width: 100px;}
+.surveySelectConf {width: 50px;}
+.content.config {width: 680px; margin-top: 5px;}
+.tabIfrm {width: 100%; height: 100%; border: none;}
+.mainbody.srvey {margin: 10px 10px 0px !important;}
+.newLeft.over-fl {overflow: hidden !important;}
+
+/* respondent confirm panel part */
+.inf-survey {font-size: 13px !important;}
+.survey-bold {font-weight: bold;}
+.survey-user-pv {display: flex; align-items: center; margin: 0px 10px;}
+.survey-user-pv .inf-survey {line-height: 32px;}
+.user-more {margin: 4px; width: 20px; height: 20px; background-image: url('/images/ezSurvey/more.png'); background-repeat: no-repeat; background-size: 14px 14px; background-position: center; border-radius: 50%; border: 1px solid #aeaeae; cursor: pointer;}
+.total-user {color: red; font-size: 13px; margin-left: 5px;}
+.survey-pass {margin: 0px !important;}
+.surveyinf-divcf {padding-left: 5px;}
+.surveyinf-divcf.flex-cf {display: flex; align-items: center;}
+
+.user-listDiv {flex: 1; border: none; outline: none; padding: 0px 5px; max-height: 30px; height: 25px; line-height: 25px; overflow-y: auto;}
+.user-listDiv span {padding-right: 5px; font-size: 12px; word-break: break-all;}
+.user-listDiv span >u {cursor: pointer; color: #333; text-decoration: underline; line-height: 20px;}
+.user-listDiv span:hover >u {text-decoration:none; text-shadow: 1px 1px 1px #ccc;}
+.user-listDiv span >em {padding-right: 5px; font-style: normal;}
+.user-listDiv span >img {width: 10px; height: 10px; cursor: pointer;}
+
+/* survey detail page start */
+.survey-bttn-wrp {float: right; padding: 10px 0px 20px;}
+.survey-bttn-wrp >img {height: 36px; width: 36px; cursor: pointer;}
+.survey-bttn-wrp >img + img {padding-left: 8px;}
+.infoBtns {height: 100%; display: flex; align-items: center; min-width: 0px;}
+.infoBtns >img {width: 32px;height: 32px; padding: 6px; cursor: pointer;}
+.upage-ul {float: right; padding: 0px 7px 3px 0px; position: absolute; top: 75px; right: 9px; width: 214px; background: white; border-radius: 10px; border: 1px solid #cccccc;}
+.upage-ul:before {content: ''; position: absolute; border-bottom: 14px solid #fff; border-right: 8px solid transparent; border-left: 8px solid transparent; top: -10px; right: 9px; z-index: 2;}
+.upage-ul:after {content: ''; position: absolute; border-style: solid; border-width: 0px 7px 12px 7px; border-color: #ccc transparent; display: block; width: 0; z-index: 1; top: -12px; right: 10px;}
+.upage-ul li {float: left; list-style: none; width: 200px; padding: 0px 10px; margin: 6px 0px 0px 0px;}
+.upage-ul li>img {vertical-align: top; width: 30px; margin: 0px 10px;}
+.upage-ul li>span {line-height: 30px;}
+.survey-detail #menu {margin-bottom: 20px;}
+
+/* respondent select page part */
+.receiver_tltype01 >span {min-width: 45px;}
+.infor-tbl tr th {width: 50px;}
+.infor-tbl tr td {padding-left: 10px;}
+.infor-tbl {width: 100%; border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0px; border-collapse: collapse; table-layout: fixed;}
+.infor-tbl tr td, .infor-tbl tr th {border: 1px solid #ddd;}
+.infor-tbl {padding: 0px 5px; background: #fff; height: 29px; word-break: break-all;}
+.infor-searchPanel {background-color: #f8f8fa; margin-top: 15px; border: 1px solid #eaeaea; margin: 10px 0px 0px 0px; padding: 0px; clear: both; overflow: hidden; z-index: 1;}
+.inforsub-searchPanel {border-bottom: 0px; height:26px; list-style: none; margin: 0px; padding: 0px;}
+.inf-searchTbl {margin-top: 3px; width: 100%;}
+.inf-searchTbl tr td:nth-child(1) >div {margin-left: 5px;}
+.inf-searchTbl tr td:nth-child(1) >div >input[type='text'] {width: 130px; margin: 0px; height: 21px; padding-left: 5px;}
+.inf-searchTbl tr td:nth-child(2) >div {float: right; margin-right: 5px; position: relative;}
+.organ-tbl {margin-top: 3px;}
+.organ-tbl .listview {width: 440px; border-top: none !important;}
+.organ-tbl tr td:first-child {border-right: 0px;}
+.bnkCabSelect, .bnkSurveySl {background-color: #e9f1ff; cursor: pointer;}
+.bnkCabNormal:hover, .bnkSurveyNor:hover {background-color: #f4f5f5; cursor: pointer;}
+.bnkCabSelect2, .bnkCabNormal2 {cursor: pointer;}
+.bnkCabSelect2 .imgCabDivMain, .bnkCabSelect2 .txtCabTd {background-color: #e9f1ff;}
+.bnkCabNormal2:hover .imgCabDivMain {background-color: #f4f5f5;}
+.imgCabDivMain {display: flex; height: 99px; border: 1px solid #ddd; margin-top: 5px;}
+.imgCabDivMain >div:first-child {height: 99px; width: 99px; display: flex; align-items: center; min-width: 99px; justify-content: center;}
+.imgCabDivMain >div:last-child  {display: flex; align-items: center;}
+.cabColor {color: #017BEC !important;}
+.organ-deptTbl {table-layout: fixed; width: 100%;  border: 0 none !important; font-family: Gulim, Verdana, Arial, Helvetica, sans-serif; font-size: 12px; border-spacing: 0; border-collapse: collapse;}
+.organ-deptTbl tr th{text-align: left; border: 0px; text-decoration: none; color: #777; font-size: 12px; line-height: 19px; padding: 4px 4px 0px; white-space: normal; background-color: white; border-top: 1px solid #ddd; border-bottom: 1px solid #eaeaea;}
+.organ-deptTbl tr th >span:nth-child(1) {font-weight: normal; margin-top: 2px; width: 300px; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; display: inline-block; vertical-align: bottom;}
+.organ-deptTbl tr th >span:nth-child(1) >img {vertical-align: middle; margin-right: 3px;}
+.organ-deptTbl tr th >span:nth-child(2) {float: right; position: relative;}
+.organ-txtList {vertical-align: top; height: 441px; overflow: auto; width: 440px;}
+.organ-txtList .mainlist {width: 100%;}
+.organ-txtList .mainlist tr:first-child td {color: #333; background-color: #f8f8fa;}
+.organ-txtList .mainlist tr:first-child td:nth-child(1){width: 150px;}
+.organ-txtList .mainlist tr:first-child td:nth-child(2){width: 130px;}
+.organ-txtList .mainlist tr:not(first-child) td:nth-child(1) {overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 150px;}
+.organ-txtList .mainlist tr:not(first-child) td:nth-child(2) {width: 80px;}
+.organ-subTbl {margin-top: 5px !important; margin-right: auto !important; margin-left: auto !important; border: none !important; font-size: 12px; table-layout: fixed; width: 400px;}
+.organ-subTbl td {border: 0px !important; padding: 0px;}
+.organ-subTbl .pic {width: 90px; height: 90px; border: 1px solid #cfcfcf!important; overflow: hidden; background: url(/images/noperson.png) center; background-repeat: no-repeat;}
+.organ-subTbl .trCabTxt, .organ-subTbl .txtCabTd, .mainlist .imgCabTd {display: none;}
+.organ-subTbl .pic img {border: none !important;}
+.organ-subTbl .pic img {width: 90px; height: 90px;}
+.selectDeptNm span {color: #666;}
+.pgshare {height: 47px; min-height: 47px;}
+.slt-userBttn {width: 30px; text-align: center;}
+.slt-userBttn >img {width: 16px; height: 16px; margin: 2px 0px; border: 0px; cursor: pointer;}
+.slt-listDiv {border-left: 1px solid #ddd; border-right: 1px solid #ddd; border-bottom: 1px solid #ddd; border-top: 1px solid #ddd; margin-top: 10px;}
+.slt-listDiv >div{width: 100%; overflow-x: auto; overflow-y: auto;}
+.slt-listDiv >div {height: 554px;}
+.slt-listDiv .mainlist {width: 100%;}
+.slt-listDiv .mainlist tr:not(first-child) td:first-child {overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.left-tdtbl {width: 664px;}
+.surveyTtlInf {font-weight: normal; color: #666;}
+.surveyTtlInf >span {color: #017BEC !important; font-weight: bold !important;}
+.topSearchSpan {float: right; font-weight: normal; color: black;}
+.topSearchSpan >select {height: 27px; margin-right: 0px; border: 1px solid #cbcbcb; min-width:80px; outline: 0px;}
+.topSearchSpan >input[type='text'] {width: 150px; ime-mode: active; height: 27px; border: 1px solid #cbcbcb; border-right: 0px; vertical-align: top; outline: 0px; padding: 0px 3px;}
+.topSearchSpan >a {float: right;}
+.topSearchSpan >a img {border: none; cursor: pointer;}
+.btnimg.survey {width: 22px; height: 20px;}
+
+/* survey list and survey preview */
+.surveyTbl {width: 100%; text-algin: center;}
+.surveyTbl th {cursor: pointer !important;}
+.surveyTbl .inputTh {width: 20px;}
+.inputTh >img {vertical-align: middle;}
+.surveyTbl .statusTh {width: 80px; text-align: center;}
+.surveyTbl .noTh   {width: 20px; text-align: center;}
+.surveyTbl .ttlTh  {width: 60%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.surveyTbl .createTh {width: 20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.surveyTbl .endDateTh {width: 20%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.surveyTbl .statisTh, .surveyTbl .anoynmTh, .surveyTbl .publicTh, .surveyTbl .targetTh {width: 80px; text-align: center;}
+.spanName, .selectedNode {height: 22px; line-height: 22px; color: #000; padding-top: 1px; font-size: 12px; vertical-align: top; cursor: pointer; background-image: none; background-attachment: scroll; background-repeat: repeat; background-position-x: 0%; background-position-y: 0%; background-color: transparent; margin-left: 2px; white-space: pre;}
+.spanName:hover {color: #9b9b9b;}
+.statisTh >img {width: 20px; height: 20px; vertical-align: middle;}
+.tableDataDiv {overflow-y: auto; overflow-x: hidden;}
+
+.itemContentH, .itemContentW {overflow: auto; flex: 1; display: flex; flex-flow: column;}
+.pr-frame {border: none; width: 100%; flex: 1; min-height: 0px; min-width: 0px;}
+.txtSpan {cursor: pointer;}
+.txtSpan:hover {color: #164aad !important; text-decoration: none !important;}
+.divPrevH {width: 100%; overflow: hidden; flex: 1; display: flex;}
+.mainPrevH {width: 100%; position: relative; padding-top: 5px;}
+.mainPrevH >div {height: 100%; display: flex; flex-flow: column;}
+.prevHeaderW >div, .prevHeaderH >div {background-color: #f8f8fa; border-bottom: solid 1px #e8e8e8; position: relative;}
+.prevHeaderW >span, .prevHeaderH >span {margin-top: 50px;height: 10px; display: inline-block; text-align: center; width: 100%;}
+.prevHeaderW {border-top: 1px solid #ddd;}
+.divPrevW {height: 100%; overflow: hidden; vertical-align: top; flex: 1; display: flex; margin-left: 5px;}
+.mainPrevW {height: 100%; width: 100%; position: relative;}
+.mainPrevW >div {width: 100%; height: 100%; display: flex; flex-flow: column;}
+.prevTitle {width: 100%; color: #333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px; clear: both; padding: 0px; height: 36px; line-height: 36px; display: flex;}
+.prevTitle .prevIcon {background-image: url('/images/kr/cm/btn_newpopup.gif'); background-repeat: no-repeat; background-position: center left; margin-left: 14px; padding-right: 5px; display: inline-block; float: left; cursor: pointer; height: 100%; width: 27px;}
+.prevTitle .titleTxt {height: 100%; color: #333; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: inline-block; flex: 1;}
+.preDate {display: inline-block; width: 150px; font-size: 12px; color: #333; text-align: center;}
+.prevItem {margin: 0px; padding: 4px 10px 2px 14px; font-size: 12px; color: #666;}
+.prevItem dt {font-weight: normal; margin: 0px 10px 0px 0px; line-height: 18px; padding: 0px 0px 2px 0px; color: #919293;}
+.prevItem dd {margin: -19px 0px 0px 0px; padding: 0px 0px 2px 60px; line-height: 18px; word-break: break-all;}
+.prevItem .ddRes {padding: 0px 0px 2px 70px !important;}
+.zoomDiv {text-align: left; padding: 5px; margin: 0px; line-height: 0px;}
+.zoomDiv >img {cursor: pointer;}
+.viewPopupMain {width:150px; position: absolute; background-color:#fff; z-index: 2500;}
+.viewPopupMain .popupwrap1 {background-color:#fff; border: 1px solid #666a64; padding: 0px; margin: 0px; position: relative;}
+.viewPopupMain .popupwrap2 {border: 2px solid #e5e5e5; padding: 10px;}
+.ui-resizable-e, .ui-resizable-s {border: 1px solid #ddd; background-repeat: no-repeat;}
+.ui-resizable-e {background-image: url('/images/prevview_hbar_dotted.gif'); width: 5px !important; background-position: center;}
+.ui-resizable-s {background-image: url('/images/prevview_bar_dotted.gif'); height: 5px !important; background-position: center -2px;}
+.list_element.survey {width: 100%; border-spacing: 0px; border-collapse: collapse; border:none;}
+.list_element.survey select {width: 40px; height: 20px;}
+.surveycol {width: 80px;}
+.surveyTitle {line-height: 20px;}
+
+/* tree part */
+.organImg {width: 18px; height: 18px; user-drag: none; user-select: none; -moz-user-select: none; -webkit-user-drag: none; -webkit-user-select: none; -ms-user-select: none;}
+.org-minus, .org-plus {width: 18px; height: 18px; cursor: pointer;}
+.selectedNode {font-weight: bold;}
+.bnkOrgTree {width: 220px; height: 518px; overflow-x: auto; overflow-y: auto; white-space: nowrap;}
+
+/* click order part */
+.spanDown, .spanUp {cursor:pointer; border-radius: 50%; text-align: center; line-height: 14px; margin-top: -1px; position: relative; width: 14px; height: 14px; display: inline-block; vertical-align: middle; margin-left: 2px; box-sizing: border-box;}
+.spanDown:before   {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 5px 4px 0px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
+.spanUp:before     {display: inline-block; content: ""; transition: transform .15s linear; font-size: 23px; color: #aeaeae; border-color: #333 transparent; border-style: solid; border-width: 0px 4px 5px; position: absolute; top: 50%; left: 50%; margin-left: -4px; margin-top: -2px;}
+
+/* loading process part */
+.loadingPanel {width: 100%; height: 100%; position: absolute; top: 0px; left: 0px; display: none; z-index: 5000;}
+.loadingProgress {width: 200px; height: 110px; border-radius: 8px; text-align: center; vertical-align: middle; z-index: 9000; position: absolute; top: 400px; left: 726.5px; display: none;}
+.loadingProgress >img {padding-top: 20px;}
+.loadingProgress >div {padding-top: 10px; vertical-align: middle; font-weight: bold; font-size: 1.2em;}
+.loadingPanel.on, .loadingProgress.on {display: block;}
+
+/* survey search panel part */
+.searchtable {border-collapse: collapse; width:100%; margin-bottom: 15px;}
+.searchtable .layerHeader >img {vertical-align: middle; padding-bottom: 1px; width: 16px;}
+.searchTblTd {border:1px solid #b6b6b6; background-color:#fff;}
+.searchTblTd input[type='text'] {height: 23px; width: 100%; outline: 0px; padding: 0px 5px;}
+.searchTblTd .srchDate {width: 100px !important; text-align: center;}
+.searchTblTd >div {display: flex; align-items: center;}
+.searchTblTd .searchName {flex: 1; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; padding-left: 5px;}
+.searchDiv .srchTtl{font-size: 11pt; font-weight: bold;color: black; height: 44px; margin-left: 1px; margin-bottom: 8px; line-height: 36px;}
+.srchBttnDiv {text-align: center; margin: -9px; margin-top: 10px; padding: 7px; border-top: 1px solid #eee; background-color: #fcfcfc;}
+.srchBttn {white-space: nowrap; display: inline-block; background-repeat: no-repeat; padding-left: 12px; vertical-align: top; cursor: pointer; margin-bottom: 2px; border: 1px solid #ccc; border-radius: 2px; background-color: white; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height: 24px;}
+.srchBttn span {background-repeat: no-repeat; height: 20px; padding-right: 12px; font: 12px gulim; letter-spacing: -1; vertical-align: top; height: 24px; line-height: 24px; font-weight: solid; font-size: 12px; color: #000;}
+.srchDate {width: 100px !important; text-align: center; padding: 0px 5px;}
+
+/* survey draft button */
+.draft-survey {cursor: pointer; display:block; float:right; padding: 0px 5px; line-height:46px; font-size:12px; color:#2196f3; font-weight:bold; border:1px solid #62aaf9; border-bottom:1px solid #0470e4; font-family:Malgun Gothic, Arial, Helvetica, sans-serif; box-sizing:border-box;}
+
+/*** survey statistic part start ***/
+.statBody {background-color: rgb(244, 245, 245); padding: 10px;}
+.statBody #contentsBox {margin-top: 20px; min-height: 650px;}
+.pieDiv {padding: 0px 20px; display: flex;}
+.barDiv {padding: 0px 20px 15px; display: flex;}
+.barDiv >canvas {flex: 1; min-height: 280px;}
+.survey-canvaswrap {flex: 1; min-height: 280px;}
+.pieDiv >canvas {height: 240px;}
+.response-wrap, .respondents-div {border: 1px solid #ddd; margin-bottom: 10px; background-color: #fff;}
+.response-usercnt {cursor: pointer;}
+.response-usercnt:hover {color: rgb(4, 112, 227);}
+.mainlist.users {width: 100%;}
+.usersTr {cursor: pointer;}
+.usersTr td >img {width: 30px; height: 30px;}
+.usersTr .mainTd {width: 50%;}
+.usersTr .respDate {width: 120px; min-width: 120px; white-space: nowrap; padding-right: 8px;}
+.usersTr td:first-child {width: 30px;}
+.response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; word-break: break-word; display: flex; align-items: center; padding: 8px 44px 8px 10px; min-height: 40px; position: relative;}
+.response-header >div {position: absolute; right: 6px; top: 12px; background-color: #fff; color: rgb(0, 115, 230); border-radius: 50%; font-size: 12px; cursor: pointer; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
+.response-users {padding: 10px;}
+.response-users >ul {padding-left: 20px;}
+.no-data {text-align: center;}
+.no-data-img {padding: 20px 0px 10px;}
+.no-data-txt {padding: 10px 0px 20px; font-size: 13px; color: #c0c0c0; font-weight: bold;}
+.textDiv {padding: 0px 20px 15px;}
+.txt-response {display: flex; align-items: center; min-height: 30px;}
+.txt-response >img {width: 40px; height: 40px; min-width: 40px; cursor: pointer; margin-right: 10px;}
+.txt-response >span {flex: 1; word-break: break-word; line-height: 1.4; color: #e04343;}
+.txt-respul {padding: 0px; list-style: none;}
+.txt-respul >li + li {padding-top: 10px; border-top: 1px dashed #ddd;}
+.txt-viewmore {padding: 4px 3px; margin-left: 8px; border: 1px solid #ddd; cursor: pointer;}
+.txt-viewmore:hover {color: rgb(4, 112, 227);; border-color: rgb(4, 112, 227);}
+.div-txtanswer {max-height: 405px; overflow-y: auto; overflow-x: hidden;}
+.popup-title >span {color: red;}
+.other-wrap {padding: 15px 20px;}
+.other-header {padding: 10px 0px;}
+.other-header >span:first-child {color: red;}
+.user-wrapdiv {height: 246px;overflow-y: auto; overflow-x: hidden;}
+.legend-ul {padding: 20px 0px; list-style: none;}
+.legend-ul >li {display: flex; cursor: pointer;}
+.legend-ul .legend-circle {width: 30px; min-width: 30px; height: 15px;}
+.legend-label {flex: 1; padding-left: 6px; padding-right: 6px; word-break: break-word;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.legend-label:hover {font-weight: bold;}
+.pieDiv .bnk-legend {width: 320px; min-width: 320px;}
+.barDiv .bnk-legend {width: 160px; min-width: 160px;}
+.legend-ul li + li {padding-top: 10px;}
+
+.chartWrapper {position: relative; padding: 0px 10px 15px;}
+.chartAreaWrapper {width: 100%; overflow-x: auto;}
+.chartAreaWrapper.bnk-wrap {overflow-x: hidden;}
+/*** survey statistic part end ***/
+
+/* popup part */
+.popupMenu {background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top; margin: 0px; padding: 5px 10px 10px;}
+.popupMenu.searchDiv {border-radius: 5px;}
+.popupMenu .srchBttnDiv2 {margin: 0px 0px 0px -10px; margin-top: 10px; height: 28px !important; background: none; border: none; border-top: 1px solid #eee; padding: 7px 0px; background-color: #fcfcfc; position: fixed; text-align: center; bottom: 0px; width: 100%;}
+.closeImgBttn {position: absolute; right: 10px; top: 8px;}
+.closeImgBttn >ul {margin: 0px; padding: 0px; list-style: none;}
+.closeImgBttn >ul >li {display: block; float: left; margin: 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
+.closeImgBttn >ul >li >span {display: inline-block; width: 25px; height: 28px; background-image: url(/images/close_xBtn.png); background-repeat: no-repeat; background-position: 4px 6px;}
+.user-tbl {width: 100%; border-right: 1px solid #ddd !important; border-left: 1px solid #ddd !important;}
+.user-tbl tr th, .user-tbl tr td {padding-left: 12px !important;}
+.center-field {text-align: center !important;}
+.right-field {padding-right: 32px !important;}
+.user-field2 {width: 75%;}
+.user-field  {cursor: pointer !important; width: 75%;}
+.popup-header {background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top; height: 44px; border-top-left-radius: 5px; border-top-right-radius: 5px;}
+.popup-title {font-size: 11pt; font-weight: bold;color: black; height: 44px; margin-left: 1px; line-height: 46px; padding-left: 10px;}
+.popup-body {padding: 15px;}
+.popup-wrapdiv {max-height: 156px; overflow-y: auto; overflow-x: hidden;}
+.logicMapWrap {height: 565px; padding: 5px;}
+.logicTree {height: 100%; width: 100%;}
+.searchPanel, .userPanel, .logicPanel {z-index: 2000; position: fixed; border:1px solid #666; background-color: #fff;; border-radius: 5px; height: auto;}
+.searchPanel, .userPanel {width: 464px;}
+.searchPanel h1 {margin-top: 0px !important;}
+.logicPanel {height: 640px; width: 600px;}
+.userPanel {height: 262px;}
+.bnkPanel {position: absolute; top: 0px; left: 0px; botom: 0px; right: 0px; height: 100%; width: 100%; background: transparent; cursor: pointer;}
+.blockLeft {cursor: pointer;}
+.rfogPanel {width: 100%; height: 100000%; position: absolute; top: 0px; left: 0px; z-index: 1000; background: none rgba(0,0,0,0.5); cursor: pointer;}
+.respondentPanel {height: 320px; width: 450px;}
+.textPanel {height: 480px; width: 640px;}
+.logicPanel {height: 640px; width: 600px;}
+.userPanel {height: 262px;}
+.hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off, .respondents-div.off {display: none;}
+.surveydetail-header {padding-left: 10px;}
+.surveydetail-header ul {padding: 0px; margin: 0px; list-style: none;}
+.surveydetail-header ul li {display: block; float: left; margin: 0 3px 0 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
+.surveydetail-header span {display: inline-block; background: white; border-top: 1px solid #c7c7c7; border-left: 1px solid #c7c7c7; border-right: 1px solid #c7c7c7; border-bottom: 1px solid #909193; height: 25px; padding: 0px 8px 2px 8px; line-height: 25px; font-size: 12px; color: #393939;}
+.header-wrapper {background: url(/images/kr/cm/popup_bg.gif) #ffffff repeat-x left top; margin: 0px; padding: 0px; height: 44px; display: flex; align-items: center;}
+.surveydetail-body{overflow-y: auto; overflow-x: hidden; padding: 15px 10px;}
+/*** survey title ***/
+.survey-title {margin: 0px; padding: 0px 10px; height: 48px; line-height: 48px; background: #edf7ff; border: 1px solid #2196f3; font-size: 16px; font-weight: bold; color: #333;}
+
+/*** survey tab start ***/
+.surveyBtn{overflow:hidden; margin:10px 0px 10px 0px;}
+.headpanel{float:left; height:48px; margin:0px; padding:0px; display: flex;}
+.headpanel .crust {float:left; position:relative; clear:none; display:block; zoom:1; max-width:50%; margin:0px; padding:0px; border:1px solid #c5c5c5; border-left:none; border-right:none; border-bottom:none;}
+.headpanel .crust:last-child a.crumb{border-right:1px solid #c5c5c5;}
+.headpanel >span:first-child {border-left: 1px solid #c5c5c5 !important;}
+.headpanel .crust a.crumb>span {display:inline-block; vertical-align:middle; text-overflow:ellipsis; white-space:nowrap; overflow:hidden; max-width:100%; font-size:14px;}
+.headpanel .crust:hover a.crumb, .headpanel .crust.selected a.crumb {background:#3d8fea; color:#fff;}
+.headpanel .crust a.crumb {overflow: hidden; display:block; height:46px; line-height:45px; margin:0px; padding:0px 8px 0px 28px; background:#fff; border-bottom:1px solid #c5c5c5; _border-bottom:none; text-decoration:none; outline:0px; -moz-outline-style:0 none; cursor:pointer; display: flex; align-items: center;}
+.headpanel .crust:first-child a.crumb{padding:0px 8px 0px 18px;}
+.headpanel .crust .arrow {border: 24px solid transparent; border-right: 1px none black; border-left-color:#c5c5c5; display: block; position: absolute; right:-22px; top:-1px; z-index: 50; width: 0px; height: 0px; cursor: pointer;}
+.headpanel .crust .arrow span {border: 24px solid transparent; border-right: 1px none black; border-left-color: #fff; display: block; position: absolute; left:-25px; top:-24px; z-index: 51; white-space: nowrap; overflow: hidden; text-indent: 9999px; width: 0px; height: 0px;}
+.headpanel .crust:hover .arrow span, .headpanel .crust.selected .arrow span {border-left-color:#3d8fea;}
+.headpanel .crust a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress01.png) no-repeat;}
+.headpanel .crust a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress02.png) no-repeat;}
+.headpanel .crust a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress03.png) no-repeat;}
+.headpanel .crust a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress04.png) no-repeat;}
+.headpanel .crust:hover a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress01_on.png) #3d8fea no-repeat;}
+.headpanel .crust:hover a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress02_on.png) #3d8fea no-repeat;}
+.headpanel .crust:hover a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress03_on.png) #3d8fea no-repeat;}
+.headpanel .crust:hover a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress04_on.png) #3d8fea no-repeat;}
+.headpanel .crust.selected a .crust_info{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress01_on.png) #3d8fea no-repeat;}
+.headpanel .crust.selected a .crust_write{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress02_on.png) #3d8fea no-repeat;}
+.headpanel .crust.selected a .crust_logic{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress03_on.png) #3d8fea no-repeat;}
+.headpanel .crust.selected a .crust_check{width:16px; height:16px; margin:0px 5px 0px 0px; background:url(/images/ezSurvey/survey_progress04_on.png) #3d8fea no-repeat;}
+/*** survey tab end ***/
+
+/**** survey information table start ****/
+.survey-nminfo {margin:0px 0px 10px 0px;}
+.surveyTitle{width:100%; margin:0px; padding:0px; line-height: 20px;}
+.info-input-ttl, .info-input-pp {width:100%; margin:0px; padding:0px 10px; height:48px; line-height:48px; background:#edf7ff; border:1px solid #2196f3;}
+.info-input-ttl {font-size:16px; font-weight:bold; color:#333;}
+.info-input-pp {font-size:14px;}
+.textInput:focus, .info-input-ttl:focus, .info-input-pp:focus {border:1px solid #2196f3 !important;}
+.surveyContent{margin:0px 0px 10px 0px; padding:0px;}
+.content.surveyContent, .content.surveyDtl {width: 100%; table-layout: fixed;}
+.content.surveyDtl {margin: 0px; padding: 0px;}
+.inf-spanTxt {margin:0px 10px 0px 0px;}
+.left-Th {width: 80px !important;}
+.right-Td {width: 50% !important;}
+.date-input {width: 100px; outline: 0px; border: 1px solid #ddd; padding-left: 5px;}
+.srchDate {width: 100px !important; text-align: center; padding: 0px 5px;}
+
+/* select respondent part */
+.survey-flexdiv {display: flex;}
+.imgbtn.inf-surveyimg {margin: 0px 5px 0px 0px;}
+.user-mainDiv.on {flex: 1; display: flex; align-items: center;}
+.user-mainDiv {display: none;}
+.target-wrapper {flex: 1; border: 1px solid #ddd; height: 27px; box-sizing: border-box; display: flex; align-items: center;}
+
+/* survey purpose editor part */
+.survey-infpp-wrap {width: 100%; height: 350px; margin:0px 0px 15px 0px;}
+.surey-frameeditor {padding: 0px; height: 100%; width:100%; overflow: auto; border: 0px;}
+.svPurpose {width: auto; height: auto; padding: 15px 0px;}
+.svPurpose .ppContent {width: auto; height: auto; background-color:white; padding: 10px; border: 1px solid #d7d7d7; overflow: auto;}
+.ppContent img {max-width: 100%;}
+.ppContent p, .ppContent div, .ppContent td, .ppContent ul, .ppContent ol, .ppContent li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px; font-family: 'Gulim', 'arial', 'verdana' !important; font-size: 14px !important;}
+.ppContent table td  {text-indent: 0px }
+.ppContent blockquote {margin-top: 0px; margin-bottom: 0px;}
+.surveyinfopp-wrap{max-height: 350px; overflow: auto; margin: 0px 0px 10px 0px; padding: 10px; border: 1px solid #ddd;}
+.surveyBody {overflow: hidden;}
+/**** survey information table end****/
+
+/**** survey attach part start ****/
+.survey-otherinf {margin: -1px 0px 0px 0px;}
+.survey-dropzone {max-height: 130px; border: 1px solid #ddd; overflow-y: auto; overflow-x: hidden; min-height: 67px; box-sizing: border-box;}
+.attach-zone {padding : 15px; background: #fff; border: 1px solid #d7d7d7; margin-bottom: 15px; }
+.attach-zone >div {max-height: 130px; overflow-y: auto; overflow-x: hidden;}
+.attach-zone2 {max-height: 195px; background: #fff; border: 1px solid #d7d7d7; overflow-y: auto; margin-top: 10px;}
+.survey-attach {background-color: #fff; margin-bottom: 10px;}
+.mainzone {height: 100%; box-sizing: border-box; overflow-y: auto;}
+.mainzone2 {height: 100%; box-sizing: border-box; overflow-y: auto;}
+input::-ms-clear {display: none;}
+.divInform {width: 100%; height: 100%; min-height: 60px; display: flex; flex-flow: column; justify-content: center; align-items: center; cursor: pointer;}
+.divInform .nofile {line-height: 60px;}
+.divInform span + span {margin-top: 5px;}
+.fileList {width: 100%; height: auto;}
+.ulFiles, .user-pageul {margin: 0px; padding: 0px; list-style: none;}
+.ulFiles li, .user-pageul li {float: left; width: 100%; min-width: 100%; height: 65px; position: relative; border-bottom: 1px dashed #ddd; box-sizing: border-box;}
+.ulFiles li >img, .user-pageul li >img {position: absolute; top: 2.5px; right: 2.5px; cursor: pointer;}
+.ulFiles li:lastChild {padding-bottom: 5px;}
+.user-pageul li:last-child {border-bottom: 0px !important;}
+.fileList .qstUl {margin: 0px; padding: 0px;}
+.fileList .optUl {margin: 0px; padding: 0px 40px;}
+.fileList .qstUl >li {position: relative; padding: 15px 15px 0px;}
+.fileList .optUl >li {position: relative; padding: 10px 10px 0px;}
+.qstUl >li >img {position: absolute; top: 15px; left: 15px; cursor: pointer;}
+.optUl >li >img {position: absolute; top: 10px; left: 10px; cursor: pointer;}
+.attDivFile {display: flex; width: 100%; height: 100%; cursor: pointer;}
+.attDivFile .attImgAva {height: 44px; width: 44px; min-width: 44px; margin: 10px;}
+.qstUl .attDivFile .attImgAva, .optUl .attDivFile .attImgAva {height: 80px; width: 80px; margin: 0px;}
+.qstUl .attDivFile .attImgAva >img, .optUl .attDivFile .attImgAva >img {height: 100%; width: auto;}
+.attDivFile .attImgAva >img {height: 100%; width: 100%;}
+.attDivFile .attFileInf {display: flex; flex: 1; flex-flow: column; overflow: hidden; padding-top: 10px;}
+.attDivFile .attFileInf >span:first-child {padding: 6px 4px 4px 0px; max-height: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
+.attDivFile .attFileInf >span:last-child {padding: 2px 4px 4px 0px;}
+.attDivFile .attFileInf2 {font-size: 14px; align-items: center; display: flex; flex: 1; overflow: hidden; padding-left: 10px; padding-top: 0px; justify-content: left;}
+.ulFiles .attDivFile .attFileInf2, .user-pageul .attDivFile .attFileInf2 {padding-left: 0px !important;}
+.uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
+.attach-bttn-div {display:block; overflow:hidden; white-space:nowrap; margin:5px 0px;}
+/**** survey attach part end ****/
+
+/**** survey information confirm part start ****/
+.surveyinfo-wrapcf {border: 1px solid #d7d7d7; border-top: 0px; padding: 20px 40px; background-color: #fff; margin-bottom: 15px;}
+.survey-purpose {overflow: auto;}
+.survey-purpose img {max-width: 100%;}
+.survey-purpose p, .survey-purpose div, .survey-purpose td, .survey-purpose ul, .survey-purpose ol, .survey-purpose li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px; font-family: 'Gulim', 'arial', 'verdana' !important; font-size: 14px !important;}
+.survey-purpose table td  {text-indent: 0px }
+.survey-purpose blockquote {margin-top: 0px; margin-bottom: 0px;}
+.survey-infrow, .survey-infrow-pv {display: flex; font-family: HanSans, Gulim; margin: 5px 0px; align-items: center;}
+.survey-infrow select {outline: none;}
+.survey-infrow >span, .survey-infrow-pv >span {margin: 0px 10px; line-height: 32px; font-size: 14px;}
+.survey-infrow >span:first-child, .survey-infrow-pv >span:first-child {margin-left: 0px !important; min-width: 80px;}
+.survey-infrow .target-select {border-radius: 3px; outline: none; background-color: rgba(204, 204, 204, 0.46); padding: 0px 5px; font-size: 13px; line-height: 27px; cursor: pointer; margin: 0px 10px; border: 1px solid #ddd;}
+.user-mainDiv.on {display: flex;}
+.survey-infrow .date-input {width: 60px; outline: 0px; border: 1px solid #ddd; padding-left: 5px;}
+.survey-infrow input, .survey-infrow select, .survey-infrow .target-select {height: 27px;}
+.survey-user-pv em {padding: 0px 2px;}
+.survey-user-pv .user-inf {font-size: 13px !important; color: #333; cursor: pointer;}
+.survey-user-pv .user-inf:hover, .user-field:hover {color: blue;}
+/**** survey information confirm part end ****/
+
+/**** survey button panel start ****/
+.survey-bttn-panel {width:100%; text-align: center;}
+.btnpositionSurvey{margin:20px 0px; padding:7px; text-align:center;}
+.imgbtnSurvey{white-space:nowrap; display:inline-block; background-repeat: no-repeat; padding-left:20px; vertical-align: top; cursor: pointer; margin-bottom: 2px; background-color: white; box-shadow: 0px 2px 0px 0px rgba(0, 0, 0, 0.1); border: 1px solid #c3c3c3; height:30px;}
+.imgbtnSurvey span{display: inline-block; background-repeat: no-repeat; height: 30px; padding-right:20px; font: 14px malgun gothic; letter-spacing: -1; vertical-align: top; line-height: 30px; height: 30px; line-height: 30px; font-weight: bold; font-size: 14px; color: #000;}
+.imgbtnSurvey_save{border:1px solid #62aaf9; box-shadow: 0px 2px 0px 0px rgba(98, 170, 249, 0.8);}
+.imgbtnSurvey_save span{color:#0470e4;}
+/**** survey button panel end ****/
+
+/**** survey question panel start ****/
+.questions-wrap {margin:0px 0px 10px 0px; padding:0px 0px 240px; min-height: 200px;}
+.quesBacgr {margin: 0px auto;}
+.quesBacgr ul {list-style: none;}
+.quesBacgr .qstnForm {width:calc(100% - 40px); height:50%; padding:10px 20px;}
+.qstnWrapper {width:calc(100% - 2px); margin:0px 0px 10px 0px; padding:0px; border:1px solid #ddd;}
+.qstnForm {padding:10px 20px;}
+
+/* question and option attach part */
+.fileList .qstUl {margin: 0px; padding: 0px;}
+.fileList .optUl {margin: 0px; padding: 0px 40px;}
+.fileList .qstUl >li {position: relative; padding: 15px 15px 0px;}
+.fileList .optUl >li {position: relative; padding: 10px 10px 0px;}
+.qstUl >li >img {position: absolute; top: 15px; left: 15px; cursor: pointer;}
+.optUl >li >img {position: absolute; top: 10px; left: 10px; cursor: pointer;}
+
+/* tooltip buttons part */
+.tooltip-bttns span {width: 32px; height: 32px; background-repeat: no-repeat; background-size: 24px 24px; background-position: center; cursor: pointer;}
+.tooltip-bttns .modifyBtn {background-image: url('/images/ezSurvey/correct.png');}
+.tooltip-bttns .copyBtn {background-image: url('/images/ezSurvey/copy.png');}
+.tooltip-bttns .deleteBtn {background-image: url('/images/ezSurvey/trash.png');}
+
+/* select && multiple select question */
+.questnTitle:focus {border:none !important; border-bottom: 1px solid #03a9f4 !important; font-size:14px; font-weight:bold; color:#1f1f1f !important; outline:none !important; webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6); box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);}
+.qstnForm .other {padding-top: 10px;}
+.qstnForm .optPart + .optPart {padding-top: 10px;}
+.quesBacgr .qstnForm .optPart .optArea .optAtt .optionFile {display: none;}
+.option .textInput, .ranking-select .textInput, .dropdown-select .textInput {width:100%; height:40px; line-height:40px; margin:0px 10px 0px 0px; padding:0px 10px; font-size:12px; color:#333; border-width:0px 0px 1px; border-style:dotted; border-color:#c3c3c3; outline: none;}
+.option .textInput {float:left; width:calc(100% - 76px); margin-right: 10px;}
+.option .fileInput {width: 0px;opacity: 0;display: none;}
+.optArea .optFileInfo {margin-left: 23px;}
+.optArea .optFileInfo ul {margin-left: -32px;}
+.optionImgFile, .optionVideoFile, .optionMusicFile {display: none;}
+.optFileInfo .attFileInf {text-align: left;}
+
+/* additional part */
+.additionalPart .btns {text-align: right;}
+
+/* survey question type selectbox */
+.quesDiv {margin:0px; padding:0px; background:#f1f6fb; padding:20px; text-align:center; align-items:center; justify-content:center;}
+.quesDiv .qstnRow {display: flex; align-items: center;}
+.quesDiv .qstnRow .questnTitle {flex: 1; margin:0px 10px 0px 0px; padding:10px; font-size:14px; color:#1f1f1f; background:none; border:none; border-bottom:1px solid #c5c5c5;}
+.quesDiv .qstnRow .questnTitle.focus{border-bottom:1px solid #2196f3;}
+.quesDiv .qstnRow >img {width: 36px; height: 36px; padding: 5px; cursor: pointer;}
+.quesDiv .qstnRow .required{margin:0px 10px 0px 0px; font-size:14px; color:#333;}
+.quesDiv .qstnRow .required input{vertical-align:middle;}
+.quesDiv .qstnRow .dd-container {width: 25%; height: 40px; display: inline-block; margin-left: 8px; border:1px solid #c7c7c7;}
+.quesDiv .qstnRow .dd-container .dd-select {height: 40px; width: 100%; position:relative; cursor:pointer; border: none;}
+.quesDiv .qstnRow .dd-container .dd-options {display:none; list-style:none; overflow:auto; position:absolute; right:-1px; top: 44px; width:540px !important; z-index:2000; margin:0px 0px 0px 0px; padding:0; background:#fff; border:solid 1px #c7c7c7; border-bottom:none;}
+.quesDiv .qstnRow .dd-container .dd-options >li {display: block; float:left; width: 33.33%;}
+.quesDiv .qstnRow .dd-container .dd-option {display:block; overflow:hidden; height:25px; line-height:25px; padding:10px 20px; color:#333; text-align:left; border-bottom:solid 1px #ddd; text-decoration:none; cursor:pointer; -webkit-transition: all 0.25s ease-in-out; -moz-transition: all 0.25s ease-in-out;-o-transition: all 0.25s ease-in-out;-ms-transition: all 0.25s ease-in-out;}
+.quesDiv .qstnRow .dd-container .dd-desc { color:#aaa; display:block; overflow: hidden; font-weight:normal; line-height: 1.4em; }
+.quesDiv .qstnRow .dd-container .dd-selected{overflow:hidden; display:block; line-height:40px;}
+.quesDiv .qstnRow .dd-container .dd-pointer{ width:0; height:0; position:absolute; right:10px; top:50%; margin-top:-3px;}
+.quesDiv .qstnRow .dd-container .dd-pointer-down{ border:solid 5px transparent; border-top:solid 5px #000; }
+.quesDiv .qstnRow .dd-container .dd-pointer-up{border:solid 5px transparent !important; border-bottom:solid 5px #000 !important; margin-top:-8px;}
+.quesDiv .qstnRow .dd-container .dd-option{  }
+.quesDiv .qstnRow .dd-container .dd-option:hover{ background:#f3f3f3; color:#000;}
+.quesDiv .qstnRow .dd-container .dd-selected-description-truncated { text-overflow: ellipsis; white-space:nowrap; }
+.quesDiv .qstnRow .dd-container .dd-option-selected { background:#f6f6f6; }
+.quesDiv .qstnRow .dd-container .dd-option-image, .dd-selected-image {vertical-align:middle; margin-right:20px; max-width:64px;}
+.quesDiv .qstnRow .dd-container .dd-image-right { float:right; margin-right:15px; margin-left:5px;}
+.quesDiv .qstnRow .dd-container .dd-container{ position:relative;}
+.quesDiv .qstnRow .dd-container .dd-selected-text {font-size:14px; font-weight:normal; color:#333;}
+.quesDiv .qstnAtt .qstnFileInfo .fileList ul {width: 100%; margin-left: -39px;}
+.quesDiv .qstnAtt .qstnFileInfo .fileList ul .attFileInf {text-align: left;}
+.quesDiv .option_wrap {width: 20%; border-radius: 10px; margin-right:155px; float: right; border: 1px solid #d7d7d7; height: 0px; display:none;}
+.quesDiv .option_wrap .select_op  {text-align: left; padding-left: 0px; list-style: none;}
+.quesDiv .option_wrap .select_op li {height: 35px; vertical-align: middle;}
+.quesDiv .option_wrap .select_op li img {width: 30px; height: 30px;}
+
+.dd-option-image, .dd-selected-image {height: 24px; width: 24px;}
+.dd-option-text, .dd-selected-text {cursor: pointer;}
+
+/* attach file ul list */
+.survey_atchBtn{overflow:hidden; padding:0; margin:0; height:40px;}
+.survey_atchBtn li, .survey_atchBtn li.off{display:block; float:left; height:38px; margin:0px 3px 0px 0px; padding:0px; color:#393939; background:#fff; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
+.survey_atchBtn li span .survey_atchBtn li span.off{display: block; float: left; padding: 0px 4px; font-size:12px; font-family:Malgun Gothic, Arial, Helvetica, sans-serif; line-height:28px; box-sizing:border-box;}
+.survey_atchBtn li span.survey_icon{margin-left:6px; margin-right:6px;}
+.survey_text{padding:0px 4px; line-height:38px; font-size:12px; color:#333;}
+.survey_icon{background:url(/images/ezSurvey/icon_survey.png) no-repeat !important; background-color:transparent !important; vertical-align:top !important; overflow: hidden;}
+.atchImg{background-position:0px 0px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
+.atchVdo{background-position:-16px 0px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
+.atchMsic{background-position:-32px 0px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
+.atchUrl{background-position:-48px 0px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
+.srvyDel{background-position:-48px -78px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
+.survey_atchBtn li.on:hover{color:rgb(4, 112, 227); border-color: rgb(4, 112, 227); background:#f1f8ff;}
+.survey_atchBtn li:hover{color:rgb(4, 112, 227); border-color: rgb(4, 112, 227); background:#f1f8ff;}
+.srvyAddBtn{margin:10px 0px 0px 0px;}
+.srvyAddFile{background-position:-64px -78px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
+
+/* required checkbox label*/
+.required{margin:0px 10px 0px 0px; padding:0px;}
+.required input[type="checkbox"] {display:none;}.required label{cursor:pointer;}
+.required input[type="checkbox"] + label::before{content: ' '; display: inline-block;width:16px; height:14px; background:url(/images/ezSurvey/srvyBg_check.png); vertical-align:middle; margin:-2px 5px 0px 0px; cursor:pointer;}
+.required input[type="checkbox"]:checked + label::before {background:url(/images/ezSurvey/srvyBg_check.png) 16px 0px;}
+
+/* 수정, 취소 버튼 */
+.survey_qsbtn{overflow:hidden; margin:20px 0px 10px 0px; padding:0px; height:40px;}
+.survey_qsbtn li{display:inline-block; width:52px; height:38px; line-height:38px; margin:0px 3px 0px 0px; padding:0px; color:#393939; font-size:12px; font-weight:bold; border:1px solid #c7c7c7; border-bottom:1px solid #909193; cursor:pointer;}
+.survey_qsbtn li.modify, .survey_qsbtn li.save {color:#0470e4; border:1px solid #2196f3; border-bottom:1px solid #0470e4;}
+.survey_qsbtn li:hover{background:#f1f8ff; border:1px solid #2196f3; border-bottom:1px solid #0470e4; color:#0470e4;}
+.survey_qsbtn li span{display:inline-block; padding:0px 4px;}
+
+/* drag and drop button */
+.question-panel .mvBtn {background: url(/images/ezSurvey/drag.png) no-repeat; width:30px; height:39px; margin:0px auto;}
+.mvBtn li, .mvBtn li.off{border-top:0px; cursor:move;}
+.question-panel .mvBtn span{width:16px; height:16px; margin:10px 0px 0px 0px; background-position:-64px 0px !important; display:inline-block;}
+.mvBtn li:hover{border-color: rgb(199,199,199) !important; border-bottom: 1px solid #909193 !important;}
+
+/* question header panel */
+.question-panel{background:#f1f6fb;}
+.question-header {display:flex; padding:0px 0px 20px 0px;}
+.question-header .question-content {flex:1; padding:0px 20px; cursor: default; font-size:14px;}
+.question-header .tooltip-bttns {display: flex; padding: 0px 10px;}
+.question-header .imptt {color: rgba(255, 0, 0, 1); padding-left: 20px; margin-right: -15px; font-size: 16px;}
+.question-panel .question-attach {max-height: 80px; padding: 10px 35px; display: flex; align-items: center;}
+.question-attach .qstnImg {width: auto; height: auto; max-height: 80px; cursor: pointer;}
+.question-attach >span {padding-left: 10px; overflow: hidden;}
+
+/* matrix table */
+.mtrPart .rowArea .rName, .mtrPart .colArea .cName {width: 48px; background: #f1f3f5; border-right: 1px solid #ddd; text-align: center; padding-top: 18px;}
+.mtrPart .rowArea .rName span, .mtrPart .colArea .cName span {font-size: 13px;}
+.mtrPart .colrow-wrap {flex: 1;}
+.mtrPart .rowArea .rows .row, .mtrPart .colArea .cols .col, .mtrPart .rowBtn, .mtrPart .colBtn {display: flex; height: 40px; padding: 6px 10px 8px 10px;}
+.mtrPart .rowArea .rows .row .rowInput, .mtrPart .colArea .cols .col .colInput {float: left; width: calc(100% - 43px); height: 40px; line-height: 40px; margin: 0px 10px 0px 0px; padding: 0px 10px; font-size: 12px; color: #333; border: none; border-bottom: 1px dotted #ddd;}
+.mtrPart {overflow:hidden;}
+.mtrPart .srvyAddBtn{margin:0px;}
+.mtrPart .rowArea, .mtrPart .colArea {width:calc(50% - 12px); float:left; border:1px solid #ddd; margin: 0px 10px 0px 0px; display: flex;}
+.mtrPart .survey_atchBtn{float: left;}
+
+.matrix {width: 100%; text-align: center; table-layout: fixed;}
+.matrix tr {height: 30px;}
+.matrix thead td{background:#f1f3f5; border: 1px solid rgba(204, 204, 204, 1); font-size: 12px; color:#333; word-break: break-word;}
+.matrix tbody th {background:#f1f3f5; font-size: 12px; font-weight:normal; color:#333; word-break: break-word;}
+.matrix tbody td {border: 1px solid #ddd; font-size: 12px; color:#333; word-break: break-word;}
+.matrix input {height:14px; width:14px;}
+
+/* short answer part */
+.shortanswer {width:100%; height:40px; padding:0px 10px; border:1px solid #ddd; font-size:12px; color:#333; outline: none;}
+
+/* paragraph part */
+.paragraph-wrap, .question-paragraph {height: 120px;}
+.paragraph {width:100%; height:100%; padding:10px; line-height:18px; font-size:12px; color:#333; background:#fff; border:1px solid #ddd; box-sizing:border-box; resize:none; outline:0px;}
+
+/* slider part */
+.silder-wrap {display:flex; padding:10px 0px; align-items:center;}
+.silder-wrap span{width:28px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
+.slider-lw, .slider-up {width:50px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
+.slider-main, .slider-range {-webkit-appearance: none; border: 1px solid white; flex: 1; cursor:pointer; margin: 0px 10px; padding: 0px;}
+input[type=range]::-webkit-slider-runnable-track {width: 100%;  height:16px; background:#f3f3f3; border: none; border-radius: 12px;}
+input[type=range]::-webkit-slider-thumb {-webkit-appearance: none; border: none; width:26px; height:26px; border-radius: 50%; background:#2196f3; margin-top: -5px;}
+input[type=range]:focus {outline: 0px;}
+input[type=range]:focus::-webkit-slider-runnable-track {background:#f3f3f3;}
+input[type=range]::-moz-range-track {width: 100%; height:16px; background:#f3f3f3; border: none; border-radius: 12px;}
+input[type=range]::-moz-range-thumb {border: none; width:26px; height:26px; border-radius: 50%; background:#2196f3;}
+input[type=range]:-moz-focusring {outline: 1px solid white; outline-offset: -1px;}
+input[type=range]::-ms-track {width: 100%; height:16px; background: transparent; border-color: transparent; border-width: 6px 0px; color: transparent;}
+input[type=range]::-ms-fill-upper, input[type=range]::-ms-fill-lower {background: #ddd; border-radius: 10px;}
+input[type=range]::-ms-thumb {border: none; width:26px; height:26px; border-radius: 50%; background:#2196f3;}
+input[type=range]:focus::-ms-fill-lower {background:#f3f3f3;}
+input[type=range]:focus::-ms-fill-upper {background:#f3f3f3;}
+input[type=range]::-ms-tooltip {display: none;}
+.slider-output {display: block; height: 30px; text-align: center; width: 100%; font-size: 2em; font-family: 'Advent Pro', sans-serif; color: rgba(132, 206, 66, 1);}
+
+/* ranking and dropdown part */
+.delOption {width: 30px; height: 30px; cursor: pointer; background-repeat: no-repeat; background-size: 30px 30px; background-position: center; background-image: url('/images/ezSurvey/minus.png');}
+.ranking-select, .dropdown-select {display: flex; align-items: center;}
+.ranking-select + .ranking-select, .dropdown-select + .dropdown-select {margin-top: 10px;}
+.ranking-order, .dropdown-order {width:34px; height:22px; line-height:22px; margin:0px 10px 0px 0px; font-size:12px; color:#333; text-align:center; background:#fff; border:1px solid #2196f3; border-radius:22px;}
+.ranking-select .rank-order {width:36px; height:22px; line-height:22px; margin:0px 10px 0px 0px; font-size:16px; color:#2196f3; text-align:center; border:1px solid #2196f3; border-radius:22px;}
+.ranking-select >select, .dropdown-wrap select {width:100%; height:34px; padding:0px 10px; font-size:12px; color:#333; border:1px solid #ddd; outline:0px;}
+.ranking-select >select:focus, .dropdown-wrap select:focus, .searchTblTd input[type='text']:focus, .othInput:focus, .topSearchSpan >select:focus, .questnTitle:focus, .survey-infrow input:focus, .survey-infrow select:focus {border-color:#66afe9; outline: 0px; -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6); box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
+.textInput:focus, .info-input-ttl:focus, .info-input-pp:focus {border-bottom: 1px solid #03a9f4 !important;}
+.srvySelect{min-height:20px; -webkit-appearance: none; border:1px solid #ddd; margin: 0; padding: .1em .1em; background: url(/images/ezSurvey/srvySelect.gif) #fff no-repeat right 16px center;}
+
+/* question confirm part */
+.prevQsWrapper .qstnImg {width: auto; height: auto; max-height: 80px; cursor: pointer;}
+.question-opts, .question-paragraph, .question-shortanswer, .question-silder, .question-ranking, .question-dropdown {padding:10px 20px;}
+.question-opts .opt {width: 100%; display: flex; margin:10px 0px; align-items: center;}
+.question-opts .opt >input[type='radio'], .question-opts .opt >input[type='checkbox'] {width: 14px; height: 14px; margin:1px 0px 0px 0px; vertical-align:middle;}
+.question-opts .opt .optSpan {line-height:20px; font-size:12px; padding:0px 10px; cursor: default;}
+.question-opts .opt .optImg {width: 40px; height: 40px; padding-left: 10px;}
+.question-opts .opt .othInput {border-radius: 4px; height: 27px; outline: 0px; padding: 0px 5px; margin-left: 10px;}
+/**** survey question panel end ****/
+
+/* survey information, questions and logic confirm part */
+.prevQsWrapper{margin:0px 0px 10px 0px; border:1px solid #ddd;}
+.prevQsContent{padding:10px; background:#f1f6fb;}
+.prevQsWrapper .question-header .question-content {overflow:hidden; height:40px; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all;}
+.prevQsWrapper .question-header .imptt {line-height: 40px;}
+.srvyLogicbtn{display:inline-flex; margin:0px 0px 0px 10px;}
+.logicSkip{background-position:0px -94px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
+.logicShuffle{background-position:-16px -94px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
+.logicCancel{background-position:-80px -78px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
+.logicArrow{background-position:-32px -94px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:default;}
+.logicDel{background-position:-32px -78px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
+.survey_atchBtn li.srvyLogicArrow{background:none; border:1px solid #f1f6fb; cursor:default;}
+
+.prevQsOpt .sltLogicArea {display: flex;}
+.prevQsOpt .sltLogicArea .prevSltArrow {padding: 0px 30px;}
+.prevQsOpt .sltLogicArea .logicSpan {font-size: 16px; margin-top: 2px;}
+.prevQsOpt .slidLogicArea {display: flex; align-items: center; justify-content: center; padding-bottom: 10px;}
+.prevQsOpt .slidLogicArea .prevSlidSpan {padding-top: 6px; padding-left: 15px;}
+.prevQsOpt .slidLogicArea .prevSlidArrow {padding: 0px 30px;}
+.prevQsOpt .slidLogicArea .prevSlidInput {height: 32px; width: 70px; padding: 0px 5px;}
+.prevQsOpt .slidLogicArea .logicSpan {font-size: 14px; padding-left: 5px;}
+.prevQsOpt .drdwLogicArea {padding-left: 35px; padding-bottom: 30px;}
+.prevQsOpt .drdwLogicArea .drdwLogicRow {display: flex; padding: 10px 0px;}
+.prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwSpan {font-size: 16px; padding-top: 3px;}
+.prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwArrow {padding: 0px 30px;}
+.prevQsOpt .drdwLogicArea .drdwLogicRow .logicSpan {font-size: 16px; margin-top: 2px;}
+.prevQsOpt .othersLogicArea {display: flex; padding-left: 15px;}
+.prevQsOpt .othersLogicArea .prevArrow {padding: 0px 30px;}
+.prevQsOpt .othersLogicArea .logicSpan {font-size: 16px; margin-top: 2px;}
+.skipSelect, .logicSelect {height: 34px; padding: 0px 10px; font-size: 12px; color: #333; border: 1px solid #ddd; outline: 0px; min-width: 120px; -webkit-appearance: none; border: 1px solid #ddd; margin: 0; background: url(/images/ezSurvey/srvySelect.gif) #fff no-repeat right 16px center;}
+.prevQsWrapper .skipArrow {vertical-align: middle; padding: 0px 10px;}
+.prevQsWrapper .skipSpan {font-size: 16px; margin-top: 2px; font-weight: normal;}
