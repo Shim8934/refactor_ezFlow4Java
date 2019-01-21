@@ -129,6 +129,7 @@
 				contentType: "application/json; charset=utf-8",
 				dataType: "JSON",
 				async: true,
+				cache: false,
 				success : function(data) {
 					var question  = JSON.parse(JSON.stringify(data["questions"]));
 					if (data["logicmap"]) {logicmap = JSON.parse(JSON.stringify(data["logicmap" ]));}
@@ -425,6 +426,7 @@
 					contentType: "application/json; charset=utf-8",
 					dataType: "JSON",
 					async: false,
+					cache: false,
 					success : function(data) {
 						afterSaveSuccessfully(data);
 					},
@@ -745,6 +747,7 @@
 				data: ajaxData,
 				dataType: "JSON",
 				async: asyncMode != false ? true : false,
+				cache: false,
 				success : function(data) {
 					handleSuccess(data, moreParam);
 				},

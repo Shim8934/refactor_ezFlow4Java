@@ -238,6 +238,7 @@ var SurveyFile = function() {
 				data: {"filePath" : filePath},
 				dataType: "JSON",
 				async: false,
+				cache: false,
 				success : function(data) {
 					var code = data.code;
 					

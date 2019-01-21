@@ -318,6 +318,7 @@ var SurveyItem = function() {
 	function searchCallBack() {
 		var crrPage = surveyNavi.get().currentPage;
 		crrPage     = crrPage ? crrPage : 1;
+		
 		startSearchSurvey(crrPage);
 	}
 	
@@ -366,6 +367,7 @@ var SurveyItem = function() {
 			},
 			dataType: "JSON",
 			async: false,
+			cache: false,
 			success : function(data) {
 				checkingData(data);
 			},
@@ -853,6 +855,7 @@ var SurveyItem = function() {
 			data: ajaxData,
 			dataType: "JSON",
 			async: asyncMode != false ? true : false,
+			cache: false,
 			success : function(data) {
 				handleSuccess(data, moreParam);
 			},

@@ -182,6 +182,7 @@ var SurveyCreate     = function() {
 			contentType: "application/json; charset=utf-8",
 			dataType: "JSON",
 			async: false,
+			cache: false,
 			success : function(data) {
 				afterSaveDraftSuccessfully(data);
 			},
@@ -198,7 +199,8 @@ var SurveyCreate     = function() {
 			data: {surveyId : surveyObj["surveyId"]},
 			contentType: "application/json; charset=utf-8",
 			dataType: "JSON",
-			async: true,
+			async: false,
+			cache: false,
 			success : function(data) {},
 			error : function(error) {}
 		});
@@ -220,6 +222,7 @@ var SurveyCreate     = function() {
 				contentType: "application/json; charset=utf-8",
 				dataType: "JSON",
 				async: false,
+				cache: false,
 				success : function(data) {
 					afterSaveSuccessfully(data);
 				},
@@ -749,6 +752,7 @@ var SurveyCreate     = function() {
 			contentType: "application/json; charset=utf-8",
 			dataType: "JSON",
 			async: true,
+			cache: false,
 			success : function(data) {
 				afterGetSurveyQuestions(data);
 			},

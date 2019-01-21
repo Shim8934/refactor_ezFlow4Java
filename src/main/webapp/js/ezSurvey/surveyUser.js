@@ -135,6 +135,7 @@
 			data: data,
 			dataType: "JSON",
 			async: true,
+			cache: false,
 			success : function(data) {
 				var result = data.memberList;
 				surveyNavi.init(data.currentPage, data.memberCount, data.totalPages);
@@ -340,6 +341,7 @@
 			dataType: "text",
 			url: "/ezOrgan/setListType.do",
 			async: false,
+			cache: false,
 			data: {listType : pListType},
 			success: function(result) {}
 		});
