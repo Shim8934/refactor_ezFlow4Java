@@ -1625,6 +1625,8 @@
 			    date_add(C.END_DATE, INTERVAL #offsetMin# minute) as endDate,
 			    C.TYPE_ID as typeId,
 			    D.TYPE_NAME as typeName,
+			    C.ATTITUDE_ID as attitudeId,
+			    C.CONTENT as content,
 			    ifnull( 
 						CASE
 						   WHEN C.TYPE_ID = 'A11' THEN to_days(C.END_DATE) - to_days(C.START_DATE)

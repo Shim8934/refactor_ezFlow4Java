@@ -98,19 +98,55 @@
 			.countDL {
 				margin: 0px;
 			}
+			.mainlist th, td{
+			    overflow: hidden;
+			    text-overflow: ellipsis;
+			    white-space: nowrap;
+			}
 		</style>	
 	    <script type="text/javascript">
 	    	var date = new Date()
-        	var year = date.getFullYear();
+        	var year = date.getFullYear(); //현재년도
+        	var selyear = year; //선택한 년도
 	    	var companyId = "<c:out value="${companyId}" />";
 	    	var userId = "<c:out value="${userId}" />";
 	    	var userDeptId;
 	    	var userDeptName;
+	    	var yearLength = 10;
 	    
 	    	$(document).ready(function() {
-	    		getUserAnnualList();
 	    		getMonthlyAnnualList();
+	    		makeoptionyear();
    			});
+	    	
+	    	//년도 selectBox
+	    	function makeoptionyear () {
+	            var tempyear = year;
+	    		
+	    		if ($("#searchYear").val() != null && $("#searchYear").val() != "") {
+	    			selyear = Number($("#searchYear").val());
+	    			tempyear = (selyear + 4 > year) ? year : selyear + 4;
+	    		}
+                
+	    		if (tempyear <= year || selyear == year) {
+		    		//초기화
+		    		$("#searchYear").html("");
+		    		
+		    		var optionHtml = "";
+	                for (var i = 0; i < yearLength; i++) {
+	                	optionHtml += "<option value='" + tempyear + "'>";
+	                	optionHtml += tempyear + "</option>";
+	                	
+	                	tempyear--;
+	                }
+	                
+	                $("#searchYear").html(optionHtml);
+	                $("#searchYear").val(selyear);
+	    		}
+	    		
+	    		//리스트
+	    		getUserAnnualList();
+	    	}
 	    	
 	    	function getUserAnnualList() {
 	    		$.ajax({
@@ -118,9 +154,9 @@
 	    			dataType : "json",
 	    			url : "/ezAttitude/getUserAnnualList.do",
 	    			data : {
-	   					year : year
+	   					year : selyear
     				},
-	    			success : function(result){
+	    			success : function(result) {
 	    				$("#userName").text(result.list[0].userName);
 	    				$("#userTitle").text(result.list[0].userTitle);
 	    				$("#userDept").text(result.list[0].deptName);
@@ -134,14 +170,13 @@
 		    				totalAnnualCnt = result.list[0].totalAnnualCnt.split(".")[0];
 		    			}
 	    				$("#totalAnnualCnt").text(totalAnnualCnt);
-	    				if (result.list[0].startDate != null && result.list[0].startDate != "") {
-		    				userAnnualListSet(result.list);
-	    				}
+	    				
+	    				userAnnualListSet(result.list);
 	    				
 	    				//스크롤 생길시
-	    				if(result.list.length > 10) {
+	    				if(result.list.length > 15) {
 	    		    		var addTh = "<th style='width: 9px;'></th>";
-	    		    		$(".mainlist tr th:eq(2)").after(addTh);
+	    		    		$(".mainlist tr th:eq(4)").after(addTh);
 	    				}
 	    			},
 	    			error : function() {
@@ -156,31 +191,43 @@
 	    		var annualCnt = 0;//연차 수
 	    		var morningCnt = 0;//오전반차 수
 	    		var afternoonCnt = 0;//오후반차 수
+	    		var i = 1; //NO
 	    		
-	    		$("#contentlist .mainlist tbody").html("");
+	    		$("#contentlist .mainlist tr").remove();
 	    		
-	    		list.forEach(function(vo, index) {
-	    			html = "<tr>";
-		    		html += "<td style='width:35%'>";
-	    			if (vo.typeId === "A11") { //연차
-		    			html += vo.startDate.substr(0,10) + " ~ " + vo.endDate.substr(0,10);
-		    			annualCnt ++;
-	    			} else if (vo.typeId === "A12") { //오전반차
-		    			html += vo.startDate.substr(0,10);
-		    			morningCnt ++;
-	    			} else { //오후반차
-	    				html += vo.startDate.substr(0,10);
-	    				afternoonCnt ++;
-	    			}
-	    			html += "</td>";
-	    			html += "<td style='width:25%'>" + vo.typeName + "</td>";
-	    			html += "<td style='width:15%'>" + Number(vo.annualCnt) + "</td>";
-	    			html += "</tr>";
-		    		$("#contentlist .mainlist tbody").after(html);
-		    		
-	    			//누적 연차 수
-	    			accumCnt += Number(vo.annualCnt);
-	    		});
+	    		if (list.length > 1) {
+		    		list.forEach(function(vo, index) {
+		    			var content = $.trim($("<p></p>").html(vo.content).text());
+		    			html = "<tr id='" + vo.attitudeId + "'>";
+			    		html += "<td style='width:60px'>" + i + "</td>";
+			    		html += "<td style='width:25%'>";
+		    			if (vo.typeId === "A11") { //연차
+			    			html += vo.startDate.substr(0,10) + " ~ " + vo.endDate.substr(0,10);
+			    			annualCnt ++;
+		    			} else if (vo.typeId === "A12") { //오전반차
+			    			html += vo.startDate.substr(0,10);
+			    			morningCnt ++;
+		    			} else { //오후반차
+		    				html += vo.startDate.substr(0,10);
+		    				afternoonCnt ++;
+		    			}
+		    			html += "</td>";
+		    			html += "<td style='width:15%'>" + vo.typeName + "</td>";
+		    			html += "<td style='width:12%'>" + Number(vo.annualCnt) + "</td>";
+		    			html += "<td style='width:44%'>" + content + "</td>";
+		    			html += "</tr>";
+			    		$("#contentlist .mainlist tbody").after(html);
+			    		
+		    			//누적 연차 수
+		    			accumCnt += Number(vo.annualCnt);
+		    			i++;
+		    		});
+	    		} else {
+		    			html = "<tr>";
+			    		html += "<td colspan='5' style='text-align: center'><spring:message code='ezAttitude.t130' /></td>";
+		    			html += "</tr>";
+			    		$("#contentlist .mainlist tbody").html(html);
+	    		}
 	    		
 	    		$("#accumCnt").text(accumCnt);
 	    		$("#remainCnt").text(Number($("#totalAnnualCnt").text()) - accumCnt);	    		
@@ -247,7 +294,7 @@
 	</head>
 	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0">
 	    <h1>
-	    	개인연차관리
+	    	개인연차현황
 	    </h1>
 <!-- 	    <table class="content"> -->
 			<div class="timecheck_info">
@@ -286,8 +333,17 @@
 			        </dl>
 			     </dl>
 		    </div>
+		    <div id="mainmenu">
+			    <ul id="tb_Parent">
+			    	<li>
+				    	<select id="searchYear" onchange="makeoptionyear();" style="padding-right:50px;height:24px">
+				    	</select>			    	
+			    	</li>
+			    	<li id="reply"><span onclick="get_excelAtt_list()">엑셀다운로드</span></li>
+		    </div>
 <!-- 	    </table> -->
 	    <!-- 리스트 -->
+<<<<<<< HEAD
 	    <table>
 			<tr>
 				<td style="vertical-align:top; width:100%;">
@@ -313,6 +369,26 @@
 				</td>
 			</tr>
 		</table>
+=======
+		<div style="width: 100%; height: 100%;">
+            <table class="mainlist" style="width: 100%;">
+                <tr>
+                    <th style="width: 60px;"><span>NO.</span></th>
+                    <th style="width: 25%; padding-left:15px;"><span><spring:message code='ezAttitude.t107' /></span></th>
+                    <th style="width: 15%; "><span><spring:message code='ezAttitude.t35' /></span></th>
+                    <th style="width: 12%; "><span><spring:message code='ezAttitude.t252' /></span></th>
+                    <th style="width: 44%; "><span>내용</span></th>
+                </tr>
+            </table>
+            <div id="contentlist" name="contentlist" style="height: 520px; overflow-y: auto;">
+                <table class="mainlist" style="width: 100%;">
+                    <tr>
+                        <td colspan="5" style="text-align: center;"><spring:message code='ezAttitude.t130' /></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+>>>>>>> a70500198f1bd01cf71fb54b6e95b9abd0414969
 	</body>
 </html>
 
