@@ -149,4 +149,6 @@ public interface EzAttitudeService {
 	public List<Map<String, Object>> getAnnualHistoryList(Map<String, Object> map) throws Exception;
 
 	void changeAllAnnual(Map<String, Object> map) throws Exception;
+
+	public Map<String, Object> getMonthlyAnnualList(String userId, String offset, String startDate, String endDate, int tenantId) throws Exception;
 }

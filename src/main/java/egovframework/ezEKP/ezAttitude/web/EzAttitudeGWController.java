@@ -2356,4 +2356,56 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/annualHistoryPop] ended.");
 		return result;
 	}
+	
+	
+	/**
+	 * G/W 근태관리 [GET] 개인 월별 근태 통계
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/monthlyAnnual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getMonthlyAnnualList(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/monthlyAnnual] started.");
+		
+		JSONObject result = new JSONObject();
+		try{
+			String serverName = request.getHeader("x-user-host");
+			String offset = request.getParameter("offset");
+			String year = request.getParameter("year");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			List<Map<String, Object>> resultList = new ArrayList<Map<String,Object>>();
+			
+			for(int i = 1; i <= 12; i++) {
+				
+				String date = null;
+				
+				if(i <= 9) {
+					date = year + "-0" + i;
+				} else {
+					date = year + "-" + i;
+				}
+				
+				Calendar cal = Calendar.getInstance();
+				cal.set(Integer.valueOf(date.substring(0, 4)), Integer.valueOf(date.substring(5)) - 1, 1);
+				
+				String startDate = date + "-01 00:00:00";
+				String endDate = date + "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
+				
+				Map<String, Object> resultMap = ezAttitudeService.getMonthlyAnnualList(userId, offset, startDate, endDate, info.getTenantId());
+				
+				resultList.add(resultMap);
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", resultList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/monthlyAnnual] ended.");
+		return result;
+	}
 }
