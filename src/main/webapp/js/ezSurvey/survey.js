@@ -1105,6 +1105,9 @@ var SurveyCreate     = function() {
 			var thisEl    = $(this).parents(".qstnForm");
 			var classType = parseInt(thisEl.attr("questiontype")) == 8 ? "ranking" : "dropdown";
 			var optCnt    = thisEl.find(".textInput").length;
+			
+			if (classType == "ranking" && optCnt == 25) {alert(SurveyMessages.strRnkOpt); return;}
+			
 			thisEl.find("." + classType + "-select").last().after(mkOptions(classType, optCnt + 1, ""));
 		});
 		

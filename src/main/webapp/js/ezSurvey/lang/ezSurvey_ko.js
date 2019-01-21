@@ -132,4 +132,5 @@ var SurveyMessages = {
 	strMultiple3 : "중복 응답이 불가한 설문입니다.",
 	strChooseNext: "이동할 질문 번호를 선택해 주세요.",
 	strChoice    : "선택",
+	strRnkOpt    : "옵션은 최대 25개까지 추가 가능합니다.",
 }

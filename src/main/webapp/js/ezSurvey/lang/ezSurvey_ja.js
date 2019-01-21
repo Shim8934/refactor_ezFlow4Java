@@ -130,4 +130,5 @@ var SurveyMessages = {
 	strViewOther : "*기타",
 	strAllUsers  : "참여인원 리스트",
 	strMultiple3 : "중복 응답이 불가한 설문입니다.",
+	strRnkOpt    : "옵션은 최대 25개까지 추가 가능합니다.",
 }

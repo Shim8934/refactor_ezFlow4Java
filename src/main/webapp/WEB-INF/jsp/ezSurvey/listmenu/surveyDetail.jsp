@@ -34,7 +34,7 @@
 		</c:if>
 	</div>
 	
-	<ul id="upage-ul"class="upage-ul" style="/* display: none; */">
+	<ul id="upage-ul"class="upage-ul" style="display: none;">
 		<li>
 			<c:choose>
 				<c:when test="${survey.resultPublicFlag eq 1}">
