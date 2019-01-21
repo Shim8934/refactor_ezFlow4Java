@@ -153,7 +153,7 @@
 					}
 				}
 			}
-		</script>						
+		</script>
 	</head>
 	<body>
 		<div class="layDIV">
@@ -215,8 +215,8 @@
   							<p class="qusetion">
    								<span class="btn_blue" onclick="vote_poll()"><span><spring:message code='main.t2001' /></span></span><span title="<c:out value='${qstTitle}'/>" style="margin-left:3px; text-overflow: ellipsis;"><c:out value='${qstTitle}'/></span>
     						</p>
-      						<c:forEach var="_option" items="${listOptions}" varStatus="loop">     
-      							<div class="poll_list1"> 								    
+      						<c:forEach var="_option" items="${listOptions}" varStatus="loop">
+      							<div class="poll_list1">
 		               				<div style="display: inline-block; width: 100%; font-size: 12px; ">
 		               					<div style="float:left; display: block;">${loop.index + 1}. </div>
 		               					<div class="Pt_QstOptTitleDiv" title="<c:out value ="${_option.content}" />"><c:out value ="${_option.content}" /></div>
@@ -226,7 +226,7 @@
 		               							<div id="info<c:out value ="${_option.ansId}" />" class="Pt_QstInfoDiv">&nbsp${_option.votesNumber}<spring:message code = 'ezPoll.t166'/>/</div>
 		               						</c:when>
 		               						<c:otherwise>
-		               							<div id="info<c:out value ="${_option.ansId}" />" class="Pt_QstInfoDivOff">&nbsp${_option.votesNumber}<spring:message code = 'ezPoll.t166'/>/</div>		               							
+		               							<div id="info<c:out value ="${_option.ansId}" />" class="Pt_QstInfoDivOff">&nbsp${_option.votesNumber}<spring:message code = 'ezPoll.t166'/>/</div>
 		               						</c:otherwise>
 		               					</c:choose>
 		               					
@@ -235,30 +235,30 @@
 	               					<c:choose>
 	               						<c:when test="${seeResultBefore == 1}">
 			               					<div class="graphbar1" id="divGraph<c:out value ="${_option.ansId}" />">
-				               					<p id="graph<c:out value ="${_option.ansId}" />" class="gx_bar11" ></p>           					
-				               				</div>				               				
+				               					<p id="graph<c:out value ="${_option.ansId}" />" class="gx_bar11" ></p>
+				               				</div>
 	               						</c:when>
 	               						<c:otherwise>
 	               							<div class="graphbar1" style="display: none;" id="divGraph<c:out value ="${_option.ansId}" />">
-				               					<p id="graph<c:out value ="${_option.ansId}" />" class="gx_bar11" ></p>           					
+				               					<p id="graph<c:out value ="${_option.ansId}" />" class="gx_bar11" ></p>
 				               				</div>
 		               						<div id="space<c:out value ="${_option.ansId}" />" style="display: inline-block;"></div>
 	               						</c:otherwise>
-	               					</c:choose>		               				
+	               					</c:choose>
 
-		               				<script type="text/javascript">		               					
+		               				<script type="text/javascript">
 			               					var voteNum = ${_option.votesNumber};
-			               					var optionID = ${_option.ansId};		               					
-			               					votesArr.push([optionID, voteNum]);	  
+			               					var optionID = ${_option.ansId};
+			               					votesArr.push([optionID, voteNum]);
 			               					totalVotes = totalVotes + voteNum;
-			               			</script>  	
-			               		</div>              		             		         			              			
+			               			</script>
+			               		</div>
       						</c:forEach>
   						</c:when>
   						<c:otherwise>
     						<div class="nodata_portlet">
 	    						<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>
-    							<p><spring:message code='main.t261' /></p>
+    							<p><spring:message code='main.t00026' /></p>
     						</div>
   						</c:otherwise>
   					</c:choose>

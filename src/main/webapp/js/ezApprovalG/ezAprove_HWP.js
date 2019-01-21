@@ -605,9 +605,9 @@ function SaveApproveInfo(pApproveFlag)
 	var g_SepAttachLVXml = "";
 	g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
 	if (!g_SepAttachLVXml)
-	    createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", "");
+	    createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
 	else
-	    createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", GetSepAttParamXml(g_SepAttachLVXml));
+	    createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", GetSepAttParamXml(g_SepAttachLVXml));
 
 
 	createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
