@@ -18,14 +18,17 @@
 				text-align : center;
 				border : 1px solid #dedede;
 			}
+			#attiStatis {
+				border : 1px solid #dedede;
+			}
 			.statsP {
-				text-align: left;
+				text-align: center;
     			border: 0px;
     			text-decoration: none;
     			font-weight: normal;
     			color: #333;
     			font-size: 12px;
-    			border-top: 1px solid #e2e3e6;
+/*     			border-top: 1px solid #e2e3e6; */
     			border-bottom: 1px solid #e2e3e6;
     			background-color: #f1f3f5;
     			height: 23px;
@@ -41,7 +44,7 @@
 				display: inline-block;
 			}
 			.time_stats .statsUL {
-				border-left: 1px solid #eaeaea;
+/* 				border-left: 1px solid #eaeaea; */
 				margin: 0px 0px 0px 0px;
     			padding: 0px 0px;
     			list-style: none;
@@ -88,7 +91,7 @@
 				margin-top: 20px;
 			}
 			.countDL {
-				margin: 0px;
+				margin: 35px 0px 0px 0px;
 			}
 			.mainlist th, td{
 			    overflow: hidden;
@@ -308,6 +311,33 @@
 				
 			}
 	    	
+			function slideTd() {
+				if ($("#slideImg").attr("src") == "/images/ImgIcon/slideLeft.png") {
+					$("#attiStatis").css("height", "");
+					
+					$("#attiStatis").animate({
+						width: "151px"
+					}, 500);
+					
+					$("#slideBtn").animate({
+						right: "147px"
+					}, 500, function(){
+						$("#slideImg").attr("src", "/images/ImgIcon/slideRight.png");
+					});
+				} else {
+					$("#attiStatis").animate({
+						width: "0px"
+					}, 500, function(){
+						$("#attiStatis").css("height", "0px");
+					});
+					
+					$("#slideBtn").animate({
+						right: "2px"
+					}, 500, function(){
+						$("#slideImg").attr("src", "/images/ImgIcon/slideLeft.png");
+					});
+				}
+			}
 	    	
 		</script>
 	</head>
@@ -385,7 +415,8 @@
 			        </div>
 				</td>
 				<td style="vertical-align:top;white-space: normal;">
-					<div style="vertical-align:top;" class="time_stats" id="attiStatis"></div>
+					<div style="vertical-align:top;width:0px;height:0px;overflow:hidden;" class="time_stats" id="attiStatis"></div>
+					<div id="slideBtn" style="position:absolute;top:164px;right:2px;"><img id="slideImg" onclick="javascript:slideTd()" src="/images/ImgIcon/slideLeft.png"></div>
 				</td>
 			</tr>
 		</table>
