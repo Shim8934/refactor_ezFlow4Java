@@ -49,6 +49,7 @@ import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
+import egovframework.ezEKP.ezAttitude.vo.AttitudeAnnualVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
@@ -3443,5 +3444,138 @@ public class EzAttitudeController {
 		
 		LOGGER.debug("/ezAttitude/getMonthlyAnnualList ended");
 		return list;
+	}
+	
+	/**
+	 * 엑셀 출력
+	 */
+	@RequestMapping(value = "/ezAttitude/excelUserAnnualExport.do")
+	public void excelUserAnnualExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
+		LOGGER.debug("excelAnnualListExport started."); 
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		
+		String year = request.getParameter("year");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/annual";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("year", year)
+				.queryParam("userId", userId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONArray data = new JSONArray();
+		
+		List<AdminAttitudeVO> annualList = new ArrayList<AdminAttitudeVO>();
+
+		Gson gson = new Gson();
+		if(status.equals("ok")){
+			data = (JSONArray) resultBody.get("data");
+			annualList = gson.fromJson(data.toString(), new TypeToken<List<AdminAttitudeVO>>(){}.getType()) ;
+		}
+		
+		HSSFWorkbook workbook = new HSSFWorkbook();
+		HSSFSheet sheet;
+		  
+		HSSFCellStyle headerStyle= workbook.createCellStyle();
+		headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+		headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+		headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		  
+		HSSFCellStyle bodyStyle= workbook.createCellStyle();
+		bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+		bodyStyle.setAlignment(HSSFCellStyle.ALIGN_LEFT);
+		
+		HSSFFont font = workbook.createFont();
+		font.setBoldweight((short) font.BOLDWEIGHT_BOLD);
+		headerStyle.setFont(font);
+		
+		Row row;
+		      
+		sheet = workbook.createSheet("report");
+		row = sheet.createRow(0);
+		
+		String pFileName = "";
+		pFileName = EgovDateUtil.getToday("-") +"_annualReport";
+		
+		//header
+		row.createCell(0).setCellValue("NO");
+		row.createCell(1).setCellValue("일자");
+		row.createCell(2).setCellValue("휴가유형");
+		row.createCell(3).setCellValue("금번 사용 연차수");
+		row.createCell(4).setCellValue("내용");
+		row.getCell(0).setCellStyle(headerStyle);
+		row.getCell(1).setCellStyle(headerStyle);
+		row.getCell(2).setCellStyle(headerStyle);
+		row.getCell(3).setCellStyle(headerStyle);
+		row.getCell(4).setCellStyle(headerStyle);
+		
+		//body
+		for (int i = 0 ; i < annualList.size(); i++) { 
+			AdminAttitudeVO vo = annualList.get(i);
+			row = sheet.createRow(i + 1);
+			
+			String content = "";
+			
+			row.createCell(0).setCellValue(i + 1);
+			row.createCell(1).setCellValue((vo.getStartDate() == null ? "" : vo.getStartDate().substring(0, 10)) + (vo.getEndDate() == null ? "" : " ~ " + vo.getEndDate().substring(0, 10)));
+			row.createCell(2).setCellValue(vo.getTypeName());
+			row.createCell(3).setCellValue(vo.getAnnualCnt());
+			if(vo.getContent() != null && vo.getContent().substring(0, 2).equalsIgnoreCase("<p")) {
+				content = vo.getContent().substring(vo.getContent().indexOf(">") + 1, vo.getContent().lastIndexOf("<"));
+				content = content.replace("<br>", "\n").replace("&nbsp;", " ");
+			}
+				
+			row.createCell(4).setCellValue(content);
+			
+			row.getCell(0).setCellStyle(bodyStyle);
+			row.getCell(1).setCellStyle(bodyStyle);
+			row.getCell(2).setCellStyle(bodyStyle);
+			row.getCell(3).setCellStyle(bodyStyle);
+			row.getCell(4).setCellStyle(bodyStyle);
+		}
+		//width 조정
+		sheet.autoSizeColumn(0);
+		sheet.autoSizeColumn(1);
+		sheet.autoSizeColumn(2);
+		sheet.autoSizeColumn(3);
+		sheet.autoSizeColumn(4);
+		sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
+		sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
+		sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
+		sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
+		sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
+			
+		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+		workbook.write(response.getOutputStream());
+		
+		workbook.close();
+		
+		LOGGER.debug("excelAnnualListExport ended.");
 	}
 }

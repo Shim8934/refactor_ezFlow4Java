@@ -239,7 +239,7 @@
 					async : true,
 					url : "/ezAttitude/getMonthlyAnnualList.do",
 					data : {
-						year : year
+						year : selyear
 					},
 					success : function(result) {
 						getMonthlyAnnualList_After(result);
@@ -279,6 +279,17 @@
 				$("#attiStatis").append(objP);
 				$("#attiStatis").append(objUl);
 				
+			}
+	    	
+			//엑셀 다운로드
+			function exportExcel() {
+				if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
+					alert("<spring:message code='ezAttitude.t56'/>");
+					return;
+				}
+				
+		    	exportExcelframe.location.href="/ezAttitude/excelUserAnnualExport.do?year=" + selyear;
+		    	exportExcelframe.target="_blank";
 			}
 	    	
 	    	
@@ -331,7 +342,7 @@
 				    	<select id="searchYear" onchange="makeoptionyear();" style="padding-right:50px;height:24px">
 				    	</select>			    	
 			    	</li>
-			    	<li id="reply"><span onclick="get_excelAtt_list()">엑셀다운로드</span></li>
+			    	<li id="reply"><span onclick="exportExcel()">엑셀다운로드</span></li>
 		    </div>
 <!-- 	    </table> -->
 	    <!-- 리스트 -->
@@ -362,6 +373,7 @@
 				</td>
 			</tr>
 		</table>
+		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>
 	</body>
 </html>
 
