@@ -56,7 +56,7 @@
 			    overflow: hidden;
 			    /* border-bottom: 1px solid #f1f1f1; */
 			    box-sizing: border-box;
-			    height: 31px;
+			    height: 40px;
 			}
 			.time_stats .statsUL li .statsDL dt {
 			    margin: 0px;
