@@ -605,6 +605,13 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			iOutputCount++;
 			itemNum++;
 		}
+		
+		if (cBoardList.size() == 0) {
+			strHTML.append("<tr>");
+			strHTML.append("<td colspan='5' style='text-align:center;'>" + egovMessageSource.getMessage("main.t00026", userInfo.getLocale()) + "</td>");
+			strHTML.append("</tr>");
+		}
+		
 		return strHTML.toString();
 	}
 	
