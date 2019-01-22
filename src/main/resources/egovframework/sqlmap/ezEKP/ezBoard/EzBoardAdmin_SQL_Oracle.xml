@@ -1360,9 +1360,14 @@
 		]]>
 		<isEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
-	     		VALUES ( 
-	     			#v_BOARDGROUPID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 		  1, 	   'top', 		  'false', 	 #v_TENANTID#, #v_COMPANYID#
-	     		)
+	   			SELECT
+	   				#v_BOARDGROUPID#, 'Top', DISPLAYNAME, DISPLAYNAME2, 1, 		  1, 	   'top', 		  'false', 	 #v_TENANTID#, 'Top'
+	   			FROM
+	   				TBL_DEPTMASTER
+	   			WHERE
+	   				CN = 'Top'
+	   			AND
+	   				TENANT_ID = #v_TENANTID#
 			]]>
 		</isEqual>
 		<isNotEqual property="isAllGroupBoard" compareValue="Y">
@@ -1407,9 +1412,14 @@
 		]]>
 		<isEqual property="isAllGroupBoard" compareValue="Y">
 			<![CDATA[
-	     		VALUES ( 
-	     			#v_BOARDID#, #v_ACCESSID#, #v_ACCESSNAME#, #v_ACCESSNAME2#, 1, 		 1, 	  #v_PARENTBOARDID#, 	'false', 	'true', 	 'true',	 'true', 	'true',   'true',    'true', 	 #v_TENANTID#, #v_COMPANYID#
-	     		)
+	     		SELECT
+					#v_BOARDID#,  'Top',  DISPLAYNAME,  DISPLAYNAME2,   1, 		 1, 	  #v_PARENTBOARDID#, 	'false', 	'true', 	 'true',	 'true', 	'true',   'true',    'true', 	 #v_TENANTID#,  'Top'
+	   			FROM
+	   				TBL_DEPTMASTER
+	   			WHERE
+	   				CN = 'Top'
+	   			AND
+	   				TENANT_ID = #v_TENANTID#
 			]]>
 		</isEqual>
 		<isNotEqual property="isAllGroupBoard" compareValue="Y">
