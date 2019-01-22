@@ -151,7 +151,7 @@
 								html += "<tr ondblclick=open_info('" + item.c_ClubNo + "')>";
 								html += "<td style='width: 35px;'>" + itemNum +"</td>";
 								html += "<td style='width: 90px;'>" + getCategoryName(item.c_name) + "</td>";
-								html += "<td style='width: 25%;'>" + item.c_ClubName +"</td>";
+								html += "<td style='width: 25%;'>" + MakeXMLString(item.c_ClubName) +"</td>";
 								
 								if (item.c_ClubConfirmType == "2") { //유형
 									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t13' /></td>";

@@ -190,7 +190,7 @@
 								html += "<tr ondblclick=view_CommunityInfo('" + item.c_ClubNo  + "');>";
 								html += "<td style='width: 35px;'>" + itemNum + "</td>";
 								html += "<td style='width: 90px;'>" + getCategoryName(item.c_name) + "</td>";
-								html += "<td style='width: 25%;'>" + item.c_ClubName + "</td>";
+								html += "<td style='width: 25%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
 								
 								if (item.c_ClubConfirmType == "2") { //유형
 									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t13' /></td>";
@@ -261,8 +261,8 @@
 							data.clubList.forEach(function(item, index){
 								html += "<tr ondblclick=view_closeCommunityInfo('" + item.c_ClubNo  + "');>";
 								html += "<td style='width: 35px;'>" + itemNum + "</td>";
-								html += "<td style='width: 25%;'>" + item.c_ClubName + "</td>";
-								html += "<td style='width: 50%;'>" + item.closeReason + "</td>"; //폐쇄사유
+								html += "<td style='width: 25%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
+								html += "<td style='width: 50%;'>" + MakeXMLString(item.closeReason) + "</td>"; //폐쇄사유
 								html += "<td style='width: 10%;'>" + item.applicationDate.substring(0, 10) + "</td>"; //신청일
 								html += "<td style='width: 10%;'>" + item.userName + "</td>"; //마스터이름
 								html += "</tr>";
