@@ -168,14 +168,14 @@
 								html += "<td style='width: 10%;'>" + item.userName +"</td>";
 								
 								if (selectedTabId == "admitCommu") {
-									html += "<td style='width: 10%;'>" + item.c_RegDate.substring(0, 10) +"</td>";
+									html += "<td style='width: 5%;'>" + item.c_RegDate.substring(0, 10) +"</td>";
 									html += "<td style='width: 80px;'>";
 									html +=     "<a class='imgbtn imgbck' style='margin-right: 3px;'><span onclick=admitBtnClick('" + item.c_ClubNo + "')><spring:message code = 'ezCommunity.t46' /></span></a>";
 									html +=     "<a class='imgbtn imgbck'><span onclick=admitRefusalBtnClick('" + item.c_ClubNo + "')><spring:message code = 'ezCommunity.t44' /></span></a>";
 									html += "</td>";
 								}
 								else {
-									html += "<td style='width: 10%;'>" + item.applicationDate.substring(0, 10) +"</td>";
+									html += "<td style='width: 5%;'>" + item.applicationDate.substring(0, 10) +"</td>";
 									html += "<td style='width: 80px;'><a class='imgbtn imgbck'><span onclick=closeBtnClick('" + item.c_ClubNo + "')><spring:message code = 'ezCommunity.t46' /></span></a></td>";
 								}
 								
@@ -390,9 +390,6 @@
 							}
 						});
 					}
-					else {
-						alert("<spring:message code = 'ezCommunity.t62' />");
-					}
 				}, 100);
 			}
 			
@@ -424,9 +421,6 @@
 							}
 						});
 					}
-					else {
-						alert("<spring:message code = 'ezCommunity.t62' />");
-					}
 				}, 100);
 			}
 			
@@ -453,9 +447,6 @@
 							console.log("error");
 						}
 					});
-				}
-				else {
-					alert("<spring:message code = 'ezCommunity.t62' />");
 				}
 			}
 			
@@ -582,7 +573,7 @@
 					<th style="width: 10%;"><spring:message code = 'ezCommunity.t65' /></th>
 					<th style="width: 10%;"><spring:message code = 'ezCommunity.t15' /></th>
 					<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
-					<th style="width: 10%;"><spring:message code = 'ezCommunity.t550' /></th>
+					<th style="width: 5%;"><spring:message code = 'ezCommunity.t550' /></th>
 					<th style="width: 80px;"></th>
 				</tr>
 			</table>

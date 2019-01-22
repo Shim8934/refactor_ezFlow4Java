@@ -212,7 +212,7 @@
 								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconPost.gif'></span>";
 								html +=     "<span class='count'>" + item.itemCnt + "</span>";
 								html += "</td>";
-								html += "<td style='width: 45px;'><a class='imgbtn imgbck' style='padding: 1px 12px 1px 12px;'><span class='icon16 icon16_delete' style='margin: 0px; padding: 0px;' onclick=closeBtnClick('" + item.c_ClubNo + "')></span></a></td>";
+								html += "<td style='width: 45px;'><span class='icon16 icon16_delete' style='margin: 0px; padding: 0px;' onclick=closeBtnClick('" + item.c_ClubNo + "')></span></td>";
 								html += "</tr>";
 								
 								itemNum++;
@@ -263,8 +263,8 @@
 								html += "<td style='width: 35px;'>" + itemNum + "</td>";
 								html += "<td style='width: 25%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
 								html += "<td style='width: 50%;'>" + MakeXMLString(item.closeReason) + "</td>"; //폐쇄사유
-								html += "<td style='width: 10%;'>" + item.applicationDate.substring(0, 10) + "</td>"; //신청일
 								html += "<td style='width: 10%;'>" + item.userName + "</td>"; //마스터이름
+								html += "<td style='width: 10%;'>" + item.applicationDate.substring(0, 10) + "</td>"; //신청일
 								html += "</tr>";
 								
 								itemNum++;
@@ -599,8 +599,8 @@
 							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
 							<th style="width: 25%;"><spring:message code = 'ezCommunity.t9991' /></th>
 							<th style="width: 50%;"><spring:message code = 'ezCommunity.t71' /></th>
-							<th style="width: 10%;"><spring:message code = 'ezCommunity.t550' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
+							<th style="width: 10%;"><spring:message code = 'ezCommunity.t550' /></th>
 						</tr>
 					</table>
 				</div>

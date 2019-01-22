@@ -32,7 +32,7 @@
 						window.location.href = "/admin/ezCommunity/commCloseAll.do?type=popUp&code=" + code;
 						
 					} else {
-						alert("<spring:message code = 'ezCommunity.t60' />");
+						//alert("<spring:message code = 'ezCommunity.t60' />");
 						self.close();
 					}
 					
@@ -43,7 +43,7 @@
 						window.location.href = "/admin/ezCommunity/commAdmitOk.do?type=popUp&code=" + code + "&pDivi=AdmitOK&name=" + encodeURIComponent('<c:out value = '${clubVO.c_ClubName}' />');
 						
 					} else {
-						alert("<spring:message code = 'ezCommunity.t62' />");
+						//alert("<spring:message code = 'ezCommunity.t62' />");
 						self.close();
 					}
 				}
@@ -58,7 +58,7 @@
 					if (result) {
 						window.location.href = "/admin/ezCommunity/commAdmitOk.do?type=popUp&code=" + code + "&pDivi=AdmitCancel";
 					} else {
-						alert("<spring:message code = 'ezCommunity.t62' />");
+						//alert("<spring:message code = 'ezCommunity.t62' />");
 						self.close();
 					}
 				}
