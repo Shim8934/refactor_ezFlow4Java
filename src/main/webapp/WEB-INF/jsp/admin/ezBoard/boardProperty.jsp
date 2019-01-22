@@ -41,9 +41,8 @@
 	    	};
         
 			$(document).ready(function(){
-				if ("${use_portal}" != "YES") {
-	                $("#trPortlet").css("display","none");
-				}
+				$("#trPortlet").css("display","none");
+
 	            if (portlet == "Y") {
 	                $("#chkPortletBoard").prop("checked",true);
 	            }
