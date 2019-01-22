@@ -247,7 +247,7 @@
 		    			i++;
 		    		});
 	    		} else {
-		    			html = "<tr>";
+		    			html = "<tr id='List_TR_noItems'>";
 			    		html += "<td colspan='5' style='text-align: center'><spring:message code='ezAttitude.t130' /></td>";
 		    			html += "</tr>";
 			    		$("#contentlist .mainlist tbody").html(html);
@@ -320,7 +320,7 @@
 	    	
 			//엑셀 다운로드
 			function exportExcel() {
-				if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
+				if ($('#contentlist table.mainlist tr').eq(0).attr('id') == 'List_TR_noItems') {
 					alert("<spring:message code='ezAttitude.t56'/>");
 					return;
 				}
@@ -329,6 +329,7 @@
 		    	exportExcelframe.target="_blank";
 			}
 	    	
+			//월별 통계바 슬라이드 이벤트
 			function slideTd() {
 				if ($("#slideImg").attr("src") == "/images/ImgIcon/slideLeft.png") {
 					$("#attiStatis").css("height", "");
@@ -363,7 +364,6 @@
 	    <h1>
 	    	개인연차현황
 	    </h1>
-<!-- 	    <table class="content"> -->
 			<div class="timecheck_info">
 		    	<dl class="timeInfo">
 		        	<dt class="timeInfoPic" style="margin: 0px;">	
@@ -408,7 +408,6 @@
 			    	</li>
 			    	<li id="reply"><span onclick="exportExcel()">엑셀다운로드</span></li>
 		    </div>
-<!-- 	    </table> -->
 	    <!-- 리스트 -->
 	    <table>
 			<tr>
@@ -425,9 +424,7 @@
 			            </table>
 			            <div id="contentlist" name="contentlist" style="height: 520px; overflow-y: auto;">
 			                <table class="mainlist" style="width: 100%;">
-			                    <tr>
-			                        <td colspan="5" style="text-align: center;"><spring:message code='ezAttitude.t130' /></td>
-			                    </tr>
+			                	<tbody></tbody>
 			                </table>
 			            </div>
 			        </div>
