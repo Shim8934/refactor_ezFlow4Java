@@ -1787,7 +1787,17 @@
 			                        date_add(START_DATE, INTERVAL +#offsetMin# minute)
 								   )
 							   )
-						) + COUNT(TYPE_ID)), 0) AS ANNUAL_COUNT,
+						)
+						+
+						SUM(
+							CASE
+							   WHEN TYPE_ID = 'A11' THEN 1
+				               WHEN TYPE_ID = 'A12' THEN 0.5
+				               WHEN TYPE_ID = 'A13' THEN 0.5
+							   ELSE 0
+							END
+						)
+						), 0) AS ANNUAL_COUNT,
 						MONTH(#startDate#) AS MONTH
 			FROM   
 				jmocha.tbl_attitude

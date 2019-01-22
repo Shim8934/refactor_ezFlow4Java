@@ -82,7 +82,6 @@
 			    border-radius: 25px;
 			    -webkit-border-radius: 25px;
 			    -moz-border-radius: 20px;
-			    cursor: pointer;
 			}
 			.timecheck_info .timeInfo {
 				float: left;
@@ -135,7 +134,6 @@
 	    			}
 		    		makeoptionyear();	    		
 	    		});
-	    		getMonthlyAnnualList();
 	    		makeoptionyear();
    			});
 	    	
@@ -166,6 +164,7 @@
 	    		
 	    		//리스트
 	    		getUserAnnualList();
+	    		getMonthlyAnnualList();
 	    	}
 	    	
 	    	function getUserAnnualList() {
@@ -283,6 +282,7 @@
 			function getMonthlyAnnualList_After(result) {
 				//, "height":$("#attiCalendar").css("height")
 				var objDiv = $("<div></div>").addClass("time_stats");
+				$("#attiStatis").html("");
 				var objP = $("<p></p>").addClass("statsP").text("월별통계");
 				var objUl = $("<ul></ul>").addClass("statsUL");
 				var objLi = $("<li></li>");
