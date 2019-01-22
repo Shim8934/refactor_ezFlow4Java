@@ -642,6 +642,7 @@
 			PRIMARY KEY (`theme_id`,`tenant_id`,`company_id`,`portlet_id`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 	</statement>
+	
 	<select id="EzCommonDAO.checkJournalFormDelFlag" resultClass="String">
 			SELECT
 				form_del_flag

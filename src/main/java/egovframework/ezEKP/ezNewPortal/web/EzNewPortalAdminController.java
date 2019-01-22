@@ -314,13 +314,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		String url = "/rest/admin/ezPortal/themes/" + paramMap.get("themeId") + "/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
-				
-		String status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			
-		}
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 		
 		LOGGER.debug("updateThemeInfo ended.");
 	}
@@ -452,14 +446,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		String url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
-		
-		String status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			
-		}
-		
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
+
 		//메뉴권한수정
 		jsonParam = new JSONObject();
 		jsonParam.put("menuAuths", paramMap.get("menuAuths"));
@@ -467,13 +455,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/authorities/companies/" + paramMap.get("companyId");
 		
-		resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
-		
-		status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			
-		}
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 		
 		LOGGER.debug("updateMenu ended.");
 	}
@@ -500,13 +482,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		String url = "/rest/admin/ezPortal/menus/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "post", jsonParam);
-		
-		String status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			
-		}
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "post", jsonParam);
 		
 		LOGGER.debug("insertMenu ended.");
 	}
@@ -525,14 +501,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		String url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "delete", null);
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "delete", null);
 		
-		String status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			
-		}
-
 		LOGGER.debug("deleteMenu ended.");
 	}
 	
@@ -555,13 +525,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		String url = "/rest/admin/ezPortal/menus/order/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
-		
-		String status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			
-		}
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 		
 		LOGGER.debug("updateMenuOrder ended.");
 	}
@@ -815,8 +779,6 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		String portletId = paramMap.get("portletId").toString();
 		String companyId = paramMap.get("companyId").toString();
 		String url = "/rest/admin/ezPortal/portlets/" + portletId + "/companies/" + companyId;
-		System.out.println(portletId);
-		System.out.println(companyId);
 		
 		paramMap.put("userId", userInfo.getId());		
 		
@@ -1339,14 +1301,8 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			type = "put";
 		}
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, type, null);
-				
-		String status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			
-		}
-		
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, type, null);
+
 		LOGGER.debug("saveSlideImages ended.");
 		
 		return "json";
@@ -1406,12 +1362,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		String url = "/rest/admin/ezportal/slideimages/" + paramMap.get("slideId") + "/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "delete", null);
-		
-		String status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-		}
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "delete", null);
 		
 		LOGGER.debug("deleteSlideImage ended.");
 	}
@@ -1435,13 +1386,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		
 		String url = "/rest/admin/ezPortal/slideimages/order/companies/" + paramMap.get("companyId");
 		
-		JSONObject resultBody = commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
-		
-		String status = resultBody.get("status").toString();
-		
-		if (status.equals("ok")) {
-			
-		}
+		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, param, request, "patch", jsonParam);
 		
 		LOGGER.debug("updateSlideOrder ended.");
 	}

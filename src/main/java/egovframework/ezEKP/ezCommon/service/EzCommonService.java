@@ -106,8 +106,9 @@ public interface EzCommonService {
 	
 	public void createPortalThemePortlet() throws Exception;
 	
-	public void addJournalFormDelFlag() throws Exception;
-
 	public void insertPortalThemePortletInitdata() throws Exception;
+	
+	public void addJournalFormDelFlag() throws Exception;
+	
 }
 
