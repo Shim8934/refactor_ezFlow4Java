@@ -2954,7 +2954,7 @@ INSERT INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAM
 INSERT INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval, 'A19', 'Top', 0, '경조', 'congratulation and condolence leave', '1', 'refresh', 'A05', 9);
 INSERT INTO TBL_ATTITUDE_TYPE ("ORDER", TYPE_ID, COMPANY_ID, TENANT_ID, TYPE_NAME, TYPE_NAME2, ISUSE, IMG_PATH, PARENT_ID, FORM_ID) VALUES (SEQ_TBL_ATTITUDE_TYPE.nextval, 'A20', 'Top', 0, '병가', 'sick leave', '1', 'refresh', 'A05', 9);
 
---nonElecRec initData
+-- nonElecRec initData
 Insert into TBL_FORMINFO (FORMCONTID,FORMID,FORMNAME,FORMNAME2,FORMDOCTYPE,FORMDESCRIPTION,FORMFILELOCATION,FORMCONNFLAG,FORMORDER,TENANT_ID,COMPANYID,FORMDRAFTALLFLAG) values ('2018000000','2018000000','비전자문서양식','비전자문서양식','003','비전자문서양식','/fileroot/0/files/upload_approvalG/Top/form/2018000000.hwp','N',null,0,'Top','1');
 
 -- 날씨 도시 데이터
@@ -2985,7 +2985,7 @@ INSERT INTO tbl_weather (SN,CITYCODE,CITYNAME,DISPLAYCITYNAME,PRIMARYLANG,CURREN
 INSERT INTO tbl_weather (SN,CITYCODE,CITYNAME,DISPLAYCITYNAME,PRIMARYLANG,CURRENTWEATHER,TODAYWEATHER) VALUES ('14','2130658','Aomori-shi','青森市','3',NULL,NULL);
 INSERT INTO tbl_weather (SN,CITYCODE,CITYNAME,DISPLAYCITYNAME,PRIMARYLANG,CURRENTWEATHER,TODAYWEATHER) VALUES ('2','6697514','Asahi','旭市','3',NULL,NULL);
 
---포탈 개인화
+-- 포탈 개인화
 INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_content) VALUES (1, 'Theme1', '왼쪽 혹은 오른쪽에 사용자 관련 정보가 있는 디자인의 테마입니다.');
 INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_content) VALUES (2, 'Theme2', '위쪽에 사용자 관련 정보가 있는 디자인의 테마입니다.');
 INSERT INTO TBL_PORTAL_THEME (theme_id, theme_name, theme_content) VALUES (3, 'Theme3', '기본 정보관련 영역이 없이 포틀릿에 집중할 수 있는 테마 입니다.');
@@ -3038,7 +3038,7 @@ INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, 
 INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order) VALUES (47, 4, '/ezNewPortal/movieBoardPortlet.do', 'G', 17);
 INSERT INTO TBL_PORTAL_PORTLET (portlet_id, menu_id, portlet_url, portlet_type, default_order) VALUES (49, 0, '/ezNewPortal/countPortlet.do', 'G', 19);
 
---Top이 회사인 이닛데이터
+-- Top이 회사인 이닛데이터
 INSERT INTO TBL_PORTAL_THEME_COMP (COMPANY_ID, TENANT_ID, THEME_ID, THEME_USED, THEME_DEFAULT) VALUES ('Top', 0, 1, 1, 1);
 INSERT INTO TBL_PORTAL_THEME_COMP (COMPANY_ID, TENANT_ID, THEME_ID, THEME_USED, THEME_DEFAULT) VALUES ('Top', 0, 2, 1, 0);
 INSERT INTO TBL_PORTAL_THEME_COMP (COMPANY_ID, TENANT_ID, THEME_ID, THEME_USED, THEME_DEFAULT) VALUES ('Top', 0, 3, 1, 0);

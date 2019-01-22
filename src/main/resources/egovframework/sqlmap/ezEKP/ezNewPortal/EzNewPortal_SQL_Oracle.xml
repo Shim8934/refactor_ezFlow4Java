@@ -2333,7 +2333,7 @@ ORDER BY
 		AND
 			B.company_id IS NULL
 		AND 
-			A.cn NOT LIKE 'shared_mailbox%';
+			A.cn NOT LIKE 'shared_mailbox%'
 	]]>
 </select>
 </sqlMap>

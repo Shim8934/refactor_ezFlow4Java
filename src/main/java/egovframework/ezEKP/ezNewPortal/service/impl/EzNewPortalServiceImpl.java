@@ -571,7 +571,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		LOGGER.debug("updatePortletOrderUser started.");
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		List<Integer> portletIdList = new ArrayList<Integer>();
+		//List<Integer> portletIdList = new ArrayList<Integer>();
 	
 		//포틀릿 순서 업데이트 (없으면 insert)
 		for (Object item : portletOrder) {
@@ -587,8 +587,8 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				map.put("portletUsed", 1);
 				ezNewPortalDAO.updatePortletOrderUser(map);
 				
-				int portletId = Integer.parseInt(portlet.get("portletId").toString());
-				portletIdList.add(portletId);
+				/*int portletId = Integer.parseInt(portlet.get("portletId").toString());
+				portletIdList.add(portletId);*/
 			}
 		}
 				
@@ -674,7 +674,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		int birthCount = 0;
 		
-		if (birthdayList.isEmpty() || birthdayList == null) {
+		if (birthdayList == null || birthdayList.isEmpty()) {
 			birthCount = 0;
 		} else {
 			birthCount = birthdayList.size();
@@ -1823,10 +1823,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 			
 			cityCodeList = ezNewPortalDAO.getCityCodeList(primaryLang);
 			
+			StringBuffer buffer = new StringBuffer();
+			
 			for (String str : cityCodeList) {
-				cityCode += str + ",";
+				buffer.append(str + ",");
 			}
 			
+			cityCode = buffer.toString();
 			cityCode = cityCode.substring(0, cityCode.length() - 1);
 			
 			url = new URL("http://api.openweathermap.org/data/2.5/group?" + "id=" + cityCode + "&units=metric" + "&appid=" + weatherKeyList.get(i));
