@@ -1422,4 +1422,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.addUserMasterMailBoxQuota();
 	}
 	
+	@Override
+	public void addJournalFormDelFlag() throws Exception {
+		ezCommonDAO.addJournalFormDelFlag();
+	}
+	
 }
