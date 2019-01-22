@@ -19,16 +19,6 @@ var messages = {
 	strLang18 : "메일쓰기",
 	strLang19 : "기안하기",
 	strLang20 : "일정작성",
-	strLang21 : "직원찾기",
+	strLang21 : "직원조회",
 	strLang22 : "메모작성",
-/*	strLang18 : "Write e-mail",
-	strLang19 : "To draft",
-	strLang20 : "New Schedule",
-	strLang21 : "Organization chart",
-	strLang22 : "Add memo",*/
-/*	strLang18 : "メール作成",
-	strLang19 : "起案する",
-	strLang20 : "スケジュール作成",
-	strLang21 : "組織図",
-	strLang22 : "メモを追加",	*/	
 }
