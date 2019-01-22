@@ -358,6 +358,8 @@
 			}
 			
 			function showSelectedUsers(responses) {
+				if (!responses || responses.length == 0) {return;}
+				
 				var dataFormat = {
 					userName  : "userName",
 					deptName  : "deptName",
@@ -581,7 +583,7 @@
 					var question = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0];
 					var type     = parseInt(question["type"]);
 					if (type == 7) {
-						var indexVal  = info["legendIndex"];
+						var indexVal  = info["index"];
 						var itemValue = parseInt(labels[indexVal]);
 						var responses = question["responses"].filter(function(res) {return res["sliderValue"] == itemValue});
 						
