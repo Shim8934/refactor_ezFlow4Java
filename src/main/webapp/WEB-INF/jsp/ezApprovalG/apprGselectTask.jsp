@@ -314,7 +314,7 @@
 		    <td style="padding-left:5px; vertical-align:top;" >
 		     <h2 class="h2_dot" style="font-weight: normal;">
 		     	<spring:message code='ezApprovalG.t1040'/>
-		     	<span style="margin-left: 190px;">
+		     	<span style="margin-left: 189px;">
 		     		<a class="imgbtn imgbck"><span onClick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t111'/></span></a>
 		     	</span>
 		     </h2>
