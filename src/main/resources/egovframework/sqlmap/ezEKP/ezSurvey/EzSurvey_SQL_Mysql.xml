@@ -4,7 +4,7 @@
 <sqlMap namespace="ezSurvey">
 	<typeAlias alias="SurveySimpleDeptVO" type="egovframework.ezEKP.ezSurvey.vo.SimpleDeptVO"        />
 	<typeAlias alias="SurveySimpleUserVO" type="egovframework.ezEKP.ezSurvey.vo.SimpleUserVO"        />
-	<typeAlias alias="UserConfigVO"       type="egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO"     />
+	<typeAlias alias="SurveyConfigVO"       type="egovframework.ezEKP.ezSurvey.vo.SurveyGeneralVO"     />
 	<typeAlias alias="SurveyVO"           type="egovframework.ezEKP.ezSurvey.vo.SurveyVO"            />
 	<typeAlias alias="QuestionVO"         type="egovframework.ezEKP.ezSurvey.vo.QuestionVO"          />
 	<typeAlias alias="OptionVO"           type="egovframework.ezEKP.ezSurvey.vo.OptionVO"            />
@@ -25,7 +25,7 @@
 	</resultMap>
 	
 	<!-- UserConfig resultMap -->
-	<resultMap id="userConfigVO" class="UserConfigVO">
+	<resultMap id="userConfigVO" class="SurveyConfigVO">
 		<result property="userId"            column="user_id"                columnIndex="1"/>
 		<result property="companyId"         column="company_id"             columnIndex="2"/>
 		<result property="listCount"         column="list_count"             columnIndex="3"/>
