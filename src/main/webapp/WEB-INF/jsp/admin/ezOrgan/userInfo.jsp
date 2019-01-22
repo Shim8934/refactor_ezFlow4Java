@@ -302,32 +302,12 @@
 		            }
 		        }
 		    }
+		    
 		    function Check_ID(pValue) {
-		        for (var iCnt = 0 ; iCnt < pValue.length ; iCnt++) {
-		            if (pValue.charCodeAt(iCnt) >= 65 && pValue.charCodeAt(iCnt) <= 90) {
-		                // A-Z
-		            }
-		            else if (pValue.charCodeAt(iCnt) >= 97 && pValue.charCodeAt(iCnt) <= 122) {
-		                // a-z
-		            }
-		            else if (pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57) {
-		                // 0-9
-		            }
-		            else if (pValue.charCodeAt(iCnt) == 45) {
-		                // -
-		            }
-		            else if (pValue.charCodeAt(iCnt) == 46) {
-		                // .
-		            }
-                    else if (pValue.charCodeAt(iCnt) == 95) {
-                        // _
-                    }		            
-		            else {
-		                return false;
-		            }
-		        }
-		        return true;
-		    }
+				var regex = /^[a-z0-9\_\-\.]+$/;
+				
+				return regex.test(pValue);
+			}
 		    
 			function showProgress() {
 			    document.getElementById("progressPanel").style.display = "";
@@ -347,15 +327,6 @@
 		        if (document.getElementById("UserID").value == "") {
 		            alert("<spring:message code='ezOrgan.t253' />");
 		            return;
-		        }
-		        // 2009.11.10 - 아이디 대문자 체크
-		        if ("<c:out value='${checkID}'/>" == "YES") {
-		            for (i = 0; i < document.getElementById("UserID").value.length; i++) {
-		                if (document.getElementById("UserID").value.charCodeAt(i) >= 65 && document.getElementById("UserID").value.charCodeAt(i) <= 90) {
-		                    alert("<spring:message code='ezOrgan.t308' />");
-		                    return;
-		                }
-		            }
 		        }
 		        if (document.getElementById("UserID").value.length < 3) {
 		            alert("<spring:message code='ezOrgan.t254' />");

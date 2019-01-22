@@ -24399,7 +24399,7 @@
    	</select>
    	
    	<select id="EzApprovalG.getCodeContainer" parameterClass="Map" resultClass="ApprGTaskVO">
-   		<isEqual property="v_LANGTYPE" compareValue="1">
+   		<isEqual property="primaryLang" compareValue="1">
    		<![CDATA[
    			SELECT 
    				tbl_taskcode.taskname, keepingperiod , tbl_taskcode.taskcode
@@ -24447,7 +24447,7 @@
            		TBL_EXPENDAPRDOCINFO.taskcode 
           ]]>
    		</isEqual>
-   	 	<isNotEqual property="v_LANGTYPE" compareValue="1">
+   	 	<isNotEqual property="primaryLang" compareValue="1">
    	 	<![CDATA[
    	 		SELECT 
    				tbl_taskcode.taskname2 taskname, keepingperiod, TBl_EXPENDAPRDOCINFO.taskcode

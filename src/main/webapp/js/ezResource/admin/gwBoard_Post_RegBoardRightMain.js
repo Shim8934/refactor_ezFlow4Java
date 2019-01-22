@@ -151,6 +151,11 @@ function SetAddACLList(objAddList) {
 			objUserList.options[User_Cnt] = AddUser;
 
 		}
+		else {
+			setTimeout(function() {
+				alert(strLangkmsr01);
+			}, 200);
+		}
 	}
 }
 

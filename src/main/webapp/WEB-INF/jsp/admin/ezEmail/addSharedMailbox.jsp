@@ -418,7 +418,7 @@
 	                return;
 	            }
 	            
-	            var regex=/^[a-z0-9_-]+$/;
+	            var regex=/^[a-z0-9\_\-\.]+$/;
 	            
 	            if (regex.test(document.getElementById("TextId").value.trim()) === false) {
 	            	alert("<spring:message code='ezEmail.sharedMailbox12' />");
@@ -1302,7 +1302,7 @@
 			<tr>
 				<th><spring:message code='ezEmail.sharedMailbox19' /></th>
 				<td style="width:60%">
-					<input id="TextId" name="TextId" type="text" maxlength="24" class="txtClass" tabindex="2" style="ime-mode: disabled; width:40%;">
+					<input id="TextId" name="TextId" type="text" maxlength="20" class="txtClass" tabindex="2" style="ime-mode: disabled; width:40%;">
 					<span id="mailDomain" style="font-weight: bold;">@${mailDomain}</span>
 				</td>
 				<th><spring:message code='ezEmail.lhm61' /></th>

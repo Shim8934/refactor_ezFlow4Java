@@ -662,7 +662,7 @@ public class EzNewPortalGWController {
 			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
-
+			
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
 			}
@@ -750,7 +750,7 @@ public class EzNewPortalGWController {
 			if (useCommunity.equals("NO")) {
 				menuList.removeIf(vo -> (vo.getMenuId() == 5));
 			}
-			
+
 			data.put("menuList", menuList);
 			/**
 			 * 3) 유틸메뉴 - 관리자 권한의 유무 - DB에서 가져오지 말고 그냥 다 출력
@@ -1098,7 +1098,7 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			//int page = Integer.parseInt(request.getParameter("page"));
 			int page = Integer.parseInt(request.getParameter("page"));
-			int limit = 5; // 한 페이지에 뿌려지는 리스트 개수 // 다르게 처리할 수 있는 방법 찾아보기
+			int limit = 6; // 한 페이지에 뿌려지는 리스트 개수 // 다르게 처리할 수 있는 방법 찾아보기
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
 			String deptId = info.getDeptId();

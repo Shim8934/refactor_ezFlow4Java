@@ -92,6 +92,7 @@
  	        var orgCompanyID = "";
  	       	var ext;
  	        var pListTypeValue;
+ 	        var isSearch = false;
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -577,6 +578,7 @@
 		    }
 		
 		    function SearchCondi_onclick_Complete(returnvalue) {
+		    	isSearch = true;
 	    	   for(var i =0; i < returnvalue.length; i++) {
 					if (returnvalue[i] == null) {
 						returnvalue[i] = "";
@@ -981,6 +983,43 @@
 			                encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
 			                "&OO=" + encodeURI(OrderOption) + "&allFG=" + AllFG ;
 		        	} else {
+		        		var myApprFrom = condition[7];
+		        		var myApprTo = condition[8];
+		        		var apprFrom = condition[5];
+	        			var apprTo = condition[6];
+	        			var draftFrom = condition[3];
+	        			var draftTo = condition[4];
+	        			
+		        		if(condition[7] != "" && condition[6] == "") {
+		        			condition[15] = condition[7].substring(0,4);
+		        			condition[16] = condition[7].substring(5,7);
+		        			condition[17] = condition[7].substring(8,10);
+		        			
+		        			condition[18] = condition[8].substring(0,4);
+		        			condition[19] = condition[8].substring(5,7);
+		        			condition[20] = condition[8].substring(8,10);
+		        		}
+		        		
+		        		if(condition[6] != "" && condition[7] == "") {
+		        			condition[9] = condition[5].substring(0,4);
+		        			condition[10] = condition[5].substring(5,7);
+		        			condition[11] = condition[5].substring(8,10);
+		        			
+		        			condition[12] = condition[6].substring(0,4);
+		        			condition[13] = condition[6].substring(5,7);
+		        			condition[14] = condition[6].substring(8,10);
+		        		}
+		        		
+		        		if(condition[4] != "" && condition[5] == "") {
+		        			condition[3] = draftFrom.substring(0,4);
+		        			condition[4] = draftFrom.substring(5,7);
+		        			condition[5] = draftFrom.substring(8,10);
+		        			
+		        			condition[6] = draftTo.substring(0,4);
+		        			condition[7] = draftTo.substring(5,7);
+		        			condition[8] = draftTo.substring(8,10);
+		        		} 
+		        		
 		                url += "?listType=SEARCH&P0=" + encodeURI(condition[0]) + "&P1=" +
 		                encodeURI(condition[1]) + "&P2=" + encodeURI(condition[2]) + "&P3=" + encodeURI(condition[3]) +
 		                "&P4=" + encodeURI(condition[4]) + "&P5=" + encodeURI(condition[5]) + "&P6=" + encodeURI(condition[6]) +
@@ -992,7 +1031,18 @@
 		                "&P22=" + encodeURI(condition[22]) + "&P23=" + encodeURI(condition[23]) + "&P24=" + encodeURI(ContainerID) +
 		                "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
 		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition)+ "&allFG=" + AllFG ;
-		             }
+		            
+		                for(var i=3; i<=20; i++) {
+		                	condition[i] = "";
+		                }
+		                
+		                condition[7] = myApprFrom;
+		        		condition[8] = myApprTo;
+		        		condition[5] = apprFrom;
+	        			condition[6] = apprTo;
+	        			condition[3] = draftFrom;
+	        			condition[4] = draftTo;
+		        	}
 		        	window.frames["saveExcel"].location.href = url;
                 }
 		    }
@@ -1138,7 +1188,7 @@
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
 	
-		        if (document.getElementById("sel_year").value.toLowerCase() == "all") {
+		        if (document.getElementById("sel_year").value.toLowerCase() == "all" && isSearch == false) {
 		        	var nowyear = nowDate.substring(0,4);
 		            var nowmonth = parseInt(nowDate.substring(5,7));
 		            var nowday = parseInt(nowDate.substring(8,10)); 
@@ -1260,6 +1310,8 @@
 		        }
 		        PagingHTML += "</div>";
 		        td_Create1(PagingHTML);
+		        
+		        isSearch = false;
 		    }
 		    function goToPageByNum(Value) {
 		        curpage = Value;

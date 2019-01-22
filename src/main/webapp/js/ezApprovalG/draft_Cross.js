@@ -1616,7 +1616,7 @@ function ClearDocCellInfo() {
         		fieldname = susunSN + "sign" + i;
         		field = message.GetListItem(fields, fieldname);
         		
-        		if (field.innerHTML != null && field.innerHTML != " " && field.innerHTML != "") { //서명이 있을 경우에만 값을 지운다.
+        		if (field && field.innerHTML != null && field.innerHTML != " " && field.innerHTML != "") { //서명이 있을 경우에만 값을 지운다.
         			if (field) {
         				field.textContent = " ";
         				if (new RegExp(/Firefox/).test(navigator.userAgent))

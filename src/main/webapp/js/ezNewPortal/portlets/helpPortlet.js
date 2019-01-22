@@ -6,7 +6,7 @@ var helpPortletLoadFunc = function () {
 		var top = (height - 800) / 2;
 		var left = (width - 1560) / 2;
 		var url = '/ezNewPortal/help/index.do';
-		var option = 'height=800px,width=1560px,top=' + top + ',left = ' + left + 'status = no, toolbar=no, menubar=no, location=no, resizable=0';
+		var option = 'height=800px,width=1560px,top=' + top + ',left = ' + left + 'status = no, toolbar=no, menubar=no, location=no';
 		
 		window.open(url, "", option);
 	}

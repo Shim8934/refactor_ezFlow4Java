@@ -122,8 +122,10 @@
                 if (top != self) {
                     //top.location.href = self.location.href;
                     //멀티 로그인 기능때문에 변경
-                    top.reloadLoginPage(multiLoginFlag, self.location.href);
+                    top.reloadLoginPage(multiLoginFlag, document.URL);
                     return;
+                } else {
+               		history.pushState(null, null, "login.do");
                 }
 			    
 			    if(message == "oldBrowser"){

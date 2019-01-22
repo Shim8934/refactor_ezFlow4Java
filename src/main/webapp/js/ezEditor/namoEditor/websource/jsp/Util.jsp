@@ -124,7 +124,10 @@ public String getChildDirectory(String path, String maxCount)
 			dirNew.setReadable(true);
 			dirNew.setWritable(false, true);
 
-			dirNew.mkdir();
+			boolean returnRes = dirNew.mkdir();
+			if(returnRes == false){
+				return "";
+			}
 		}
 	}
 
@@ -159,7 +162,10 @@ public String getChildDirectory(String path, String maxCount)
 			dir4.setReadable(true);
 			dir4.setWritable(false, true);
 
-			dir4.mkdir();
+			boolean returnRes = dir4.mkdir();
+			if(returnRes == false){
+				return "";
+			}
 		}
 	}
 	return childName;
@@ -271,7 +277,7 @@ public String getEditorAuth(String filename, String conn, String conval)
 //			str += data;
 //		}
 
-		br.read(buffer,0,1024);
+		int returnRes = br.read(buffer,0,1024);
 
 //		for (char c : buffer)
 //        {
@@ -281,14 +287,16 @@ public String getEditorAuth(String filename, String conn, String conval)
 //            }
 //        }
 //       }
-
-		for (int i=0; buffer.length>i; i++)
-        {
-			if(buffer[i] != (char)0)
-            {
-               str += buffer[i];
-            }
-        }
+		
+		if(returnRes > 0){
+			for (int i=0; buffer.length>i; i++)
+			{
+				if(buffer[i] != (char)0)
+				{
+				   str += buffer[i];
+				}
+			}
+		}
 
 		if (str.equalsIgnoreCase("valid")){
 			result = "true";
@@ -330,22 +338,28 @@ public String createEncodeEditorKey(String genkey)
 	//byte[] keyByte = genkey.getBytes();
 	//String base64_encodeText = encoder.encode(keyByte);
 	//라이브러리 추가 요함 -> https://commons.apache.org/proper/commons-codec/download_codec.cgi
-	byte[] encoded = Base64.encodeBase64(genkey.getBytes());
-	String base64_encodeText = new String(encoded);
-	
-	int str_length = base64_encodeText.length();
-	String strLeft = base64_encodeText.substring(0,str_length/2);
-	String strRight = base64_encodeText.substring(str_length/2,str_length);
+	try{
+		byte[] encoded = Base64.encodeBase64(genkey.getBytes());
+		String base64_encodeText = new String(encoded, "ISO-8859-1");
+		
+		int str_length = base64_encodeText.length();
+		String strLeft = base64_encodeText.substring(0,str_length/2);
+		String strRight = base64_encodeText.substring(str_length/2,str_length);
 
-	int strLeft_length = strLeft.length();
-	String strLeftSubLeft = strLeft.substring(0,strLeft_length/2);
-	String strLeftSubRight = strLeft.substring(strLeft_length/2,strLeft_length);
+		int strLeft_length = strLeft.length();
+		String strLeftSubLeft = strLeft.substring(0,strLeft_length/2);
+		String strLeftSubRight = strLeft.substring(strLeft_length/2,strLeft_length);
 
-	int strRight_length = strRight.length();
-	String strRightSubLeft = strRight.substring(0,strRight_length/2);
-	String strRightSubRight = strRight.substring(strRight_length/2,strRight_length);
+		int strRight_length = strRight.length();
+		String strRightSubLeft = strRight.substring(0,strRight_length/2);
+		String strRightSubRight = strRight.substring(strRight_length/2,strRight_length);
+		
+		genkey = strLeftSubLeft + strRightSubLeft + strRightSubRight + strLeftSubRight;
+
+		
+	}catch(UnsupportedEncodingException e){
 	
-	genkey = strLeftSubLeft + strRightSubLeft + strRightSubRight + strLeftSubRight;
+	}
 
 	return genkey;
 }
@@ -434,7 +448,9 @@ public String executeFileScript(HttpServletResponse response, String result, Str
 				param = "'" + result + "'";
 		}
 		
-
+		//2018-11-20[4.2.0.12]보안취약점 불필요한 코드 주석
+		result_sc = param;
+		/*
 		if (checkPlugin.equalsIgnoreCase("false")) {
 			// 20141118 image drag&drop event
 			result_sc = param;
@@ -454,6 +470,8 @@ public String executeFileScript(HttpServletResponse response, String result, Str
 			result_sc += userDomain;
 			result_sc += " parent.window.setInsertFile(" + param + ");</script>";
 		}
+		*/
+		result_sc = param;
 	}
 
 	return result_sc;
@@ -508,6 +526,9 @@ public String executeScript(HttpServletResponse response, String result, String 
 				param = "'" + result + "'";
 		}
 
+		//2018-11-20[4.2.0.12]보안취약점 불필요한 코드 주석
+		result_sc = param;
+		/*
 		if (checkPlugin.equalsIgnoreCase("false")) {
 			// 20141118 image drag&drop event
 			result_sc = param;
@@ -527,6 +548,7 @@ public String executeScript(HttpServletResponse response, String result, String 
 			result_sc += userDomain;
 			result_sc += " parent.window.setInsertImageFile(" + param + ");</script>";
 		}
+		*/
 	}
 
 	return result_sc;
@@ -884,20 +906,25 @@ public String tempFolderCreate(String path)
 		tempSubFolder.setReadable(true);
 		tempSubFolder.setWritable(false, true);
 
-		tempSubFolder.mkdir();
+		boolean returnRes = tempSubFolder.mkdir();
+		if(returnRes == false){
+			return "";
+		}
 	}
 
 	return path;
 }
 
-public void tempFolderDelete(String path)
+public boolean tempFolderDelete(String path)
 {
+	boolean returnRes = true;
 	synchronized(this){
 		File tempFolder = new File(path);
 		if(tempFolder.exists()){
-			tempFolder.delete();
+			returnRes = tempFolder.delete();
 		}
 	}
+	return returnRes;
 }
  
 

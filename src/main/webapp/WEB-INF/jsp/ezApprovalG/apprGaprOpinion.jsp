@@ -133,6 +133,7 @@
 		            ChkFlag = true;
 		            AddOpinionContent(Opstate, OpContent);
 		            g_OpinionModifyFlagAdd = false;
+		            document.getElementById("bbtn_OpinionCancel").style.display = "";
 		        }
 		        catch (e) {
 		            alert("btn_OpinionAdd ::" + e.description);
