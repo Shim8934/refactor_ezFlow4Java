@@ -19,7 +19,18 @@
 			<div class="btn_writeBox">
 				<p class="btn_write01" id="createBttn"><span class="sub_iconLNB tree_write"></span><spring:message code='ezSurvey.t19'/></p>
 			</div>
+			
 			<div class="surveyList">
+				<ul class="lnbUL">
+				    <li id="totalSurvey"><span class="sub_iconLNB tree_srvy_all"></span><span class="list_text"><spring:message code='ezSurvey.t80'/></span></li>
+				    <li id="processingSurvey"><span class="sub_iconLNB tree_srvy_ing"></span><span class="list_text"><spring:message code='ezSurvey.t02'/></span></li>
+				    <li id="finishedSurvey"><span class="sub_iconLNB tree_srvy_ok"></span><span class="list_text"><spring:message code='ezSurvey.t03'/></span></li>
+				    <li id="mySurvey"><span class="sub_iconLNB tree_srvy_my"></span><span class="list_text"><spring:message code='ezSurvey.t04'/></span></li>
+				    <li id="draftSurvey"><span class="sub_iconLNB tree_srvy_draft"></span><span class="list_text"><spring:message code='ezSurvey.t05'/></span></li>
+				</ul>
+			</div>
+			
+			<%-- 
 				<!-- 전체 설문 -->
 				<h2 id="totalSurvey"><span><spring:message code='ezSurvey.t80'/></span></h2>
 				
@@ -34,7 +45,7 @@
 				
 				<!-- 임시 보관함 -->
 				<h2 id="draftSurvey"><span><spring:message code='ezSurvey.t05'/></span></h2>
-			</div>
+			 --%>
 		</div>
 		
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js'                   )}"></script>
