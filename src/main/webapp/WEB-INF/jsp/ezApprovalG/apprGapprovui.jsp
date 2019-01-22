@@ -1123,6 +1123,9 @@
 		            else {
 		                process_AfterApprove("3");
 		            }
+		        } else if (ret == "cancel") {
+		            var pAlertContent = "<spring:message code='ezApprovalG.t392'/>";
+		            OpenAlertUI(pAlertContent);
 		        }
 		    }
 		    function btnJunKyul_onclick()

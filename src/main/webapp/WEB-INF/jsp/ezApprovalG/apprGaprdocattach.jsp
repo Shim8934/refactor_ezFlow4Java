@@ -129,6 +129,9 @@
 	                        selRow = listview.GetSelectedRows()[count1 - 1];
 	                        listview.DeleteRow(GetAttribute(selRow, "id"));
 	                    }
+	                    if (listview.GetDataRows().length == 0){
+	                    	$("#lvTDoc tbody").append("<tr id='lvTDocList_TR_noItems'><td align='center' colspan='1'>" + strLang944 + "</td></tr>");
+	                    }
 	                }
 	                else
 	                    alert("<spring:message code='ezApprovalG.t360'/>");
