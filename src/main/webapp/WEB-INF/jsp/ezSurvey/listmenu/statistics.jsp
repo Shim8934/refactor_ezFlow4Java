@@ -552,6 +552,8 @@
 					divWrap.className = "chartAreaWrapper bnk-wrap";
 				}
 				
+				if (maxYValue == 0) {maxYValue = 2;}
+				
 				createBnkBarChart(labels, dataSets, divId, divWidth, legendFlag, maxYValue,moreParam);
 			}
 			
