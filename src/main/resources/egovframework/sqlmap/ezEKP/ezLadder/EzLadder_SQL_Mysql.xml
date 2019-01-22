@@ -1327,7 +1327,7 @@
 		GROUP BY 
 			LADDERBMID
 		ORDER BY 
-			B.LADDERBMID DESC;
+			B.LADDERBMID DESC
 	</select>
 	
 	<select id="EzLadderDAO.selectLadderBMUserList" parameterClass="LadderBmUserVO" resultClass="LadderBmUserVO">

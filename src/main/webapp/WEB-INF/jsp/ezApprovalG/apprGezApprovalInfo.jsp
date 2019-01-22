@@ -99,6 +99,7 @@
 	        }
 	       
 	        var linealt17 = "<spring:message code='ezApprovalG.t1178'/>";
+	        var linealt18 = "<spring:message code='ezApprovalG.kmsg02'/>"
 	        var Cabinet1 = "<spring:message code='ezApprovalG.t379'/>";
 	        var Cabinet2 = "<spring:message code='ezApprovalG.t572'/>";
 	        var Cabinet3 = "<spring:message code='ezApprovalG.t573'/>";

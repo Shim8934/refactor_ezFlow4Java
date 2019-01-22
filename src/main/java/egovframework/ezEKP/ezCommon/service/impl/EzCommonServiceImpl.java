@@ -1507,12 +1507,13 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.addHolidayFlag();
 	}
 	
-	public void addJournalFormDelFlag() throws Exception {
-		ezCommonDAO.addJournalFormDelFlag();
-	}
-	
 	@Override
 	public void insertPortalThemePortletInitdata() throws Exception {
 		ezCommonDAO.insertPortalThemePortletInitdata();
+	}
+	
+	@Override
+	public void addJournalFormDelFlag() throws Exception {
+		ezCommonDAO.addJournalFormDelFlag();
 	}
 }
