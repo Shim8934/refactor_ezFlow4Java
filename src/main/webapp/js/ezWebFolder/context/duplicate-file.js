@@ -457,14 +457,14 @@ var duplicateFile = (function() {
 		var url = "/ezWebFolder/fileDuplicateConfirm.do?";
 		var currentInfo = current.info;
 		
-		url += "fileName=" + currentInfo.fileName;
-		url += "&newType=" + currentInfo.newType;
-		url += "&newDate=" + currentInfo.newDate;
-		url += "&newSize=" + currentInfo.newSize;
-		url += "&oldType=" + currentInfo.oldType;
-		url += "&oldDate=" + currentInfo.oldDate;
-		url += "&oldSize=" + currentInfo.oldSize;
-		url += "&oldOwnerId=" + currentInfo.oldOwnerId;
+		url += "fileName=" + encodeURIComponent(currentInfo.fileName);
+		url += "&newType=" + encodeURIComponent(currentInfo.newType);
+		url += "&newDate=" + encodeURIComponent(currentInfo.newDate);
+		url += "&newSize=" + encodeURIComponent(currentInfo.newSize);
+		url += "&oldType=" + encodeURIComponent(currentInfo.oldType);
+		url += "&oldDate=" + encodeURIComponent(currentInfo.oldDate);
+		url += "&oldSize=" + encodeURIComponent(currentInfo.oldSize);
+		url += "&oldOwnerId=" + encodeURIComponent(currentInfo.oldOwnerId);
 		
 		// 기존 팝업이 닫히는거 기다리기
 		setTimeout((function(height) {
