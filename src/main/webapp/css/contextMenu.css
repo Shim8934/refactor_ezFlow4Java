@@ -103,15 +103,15 @@
 	display: flex;	
 	justify-content: center;
 	align-items: center;
-	height:33%;
+	height:36%;
 }
 
 .quickMenuMiddle_memo {
 	display: flex;	
 	justify-content: space-between;
 	width: 83%;
-/* 	margin-top: -7px; */
-	margin-left:25px;
+	margin-top: -7px;
+	margin-left:23px;
 	height:35%;
 }
 
