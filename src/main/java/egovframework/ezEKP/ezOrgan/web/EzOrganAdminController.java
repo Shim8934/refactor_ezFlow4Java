@@ -130,6 +130,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addJobMasterJobID();
     	ezCommonService.createWebfolderToken();
     	ezCommonService.addUserMasterMailBoxQuota();
+    	ezCommonService.addJournalFormDelFlag();
     	
     	logger.debug("init ended.");
     }

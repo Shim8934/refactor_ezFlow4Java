@@ -199,7 +199,7 @@ public class EzJournalDAO extends EgovAbstractDAO{
 	 * @return
 	 */
 	public void deleteJournalForm(Map<String, Object> map) {
-		delete("deleteJournalForm", map);
+		update("deleteJournalForm", map);
 	}
 
 	/**
