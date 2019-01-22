@@ -628,7 +628,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	 */
 	@RequestMapping(value="/ezNewPortal/getCommunityPermit.do")
 	@ResponseBody
-	public String CommunityPermit(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
+	public String communityPermit(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model, Locale locale) throws Exception {
 		logger.debug("get_favoriteList started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -688,10 +688,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		json = json.replaceAll("var exView = ", "");
 		json = json.substring(0, json.lastIndexOf(",")) + json.substring(json.lastIndexOf(",") + 1);
 
-		ObjectMapper mapper = new ObjectMapper();
+		/*ObjectMapper mapper = new ObjectMapper();
 		HashMap<String, Object> map2 = mapper.readValue(json, HashMap.class);
 		ArrayList<Map<String, Object>> list = (ArrayList<Map<String, Object>>) map2.get("리스트");
-		String exchangeRate = (String) list.get(0).get("송금_전신환보내실때");
+		String exchangeRate = (String) list.get(0).get("송금_전신환보내실때");*/
 		
 		return "/ezNewPortal/portlets/currencyPortlet";
 	}
