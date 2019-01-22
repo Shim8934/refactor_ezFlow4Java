@@ -3438,7 +3438,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li {float: left; list-style: none; width:140px; padding: 0px 10px; margin: 6px 0px 0px 0px;}
 .upage-ul li>img {vertical-align: top; width: 30px; margin: 0px 10px;}
 .upage-ul li>span {line-height: 30px;}
-.upage-ul li .srvyInfo{background:url(../images/ImgIcon/icon_survey.png) no-repeat !important; background-color:transparent !important; vertical-align:top !important; overflow: hidden;}
+.upage-ul li .srvyInfo{background:url(../images/ezSurvey/icon_survey.png) no-repeat !important; background-color:transparent !important; vertical-align:top !important; overflow: hidden;}
 .upage-ul li .srvyInfo01{display:inline-block; width:16px; height:16px; background-position:0px -110px !important; margin:6px 8px 0px 0px; cursor:pointer;}
 .upage-ul li .srvyInfo02{display:inline-block; width:16px; height:16px; background-position:-16px -110px !important; margin:6px 8px 0px 0px; cursor:pointer;}
 .upage-ul li .srvyInfo03{display:inline-block; width:16px; height:16px; background-position:-32px -110px !important; margin:6px 8px 0px 0px; cursor:pointer;}

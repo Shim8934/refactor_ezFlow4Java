@@ -1159,6 +1159,9 @@ var SurveyCreate     = function() {
 		
 		// matrix 행 추가
 		$(".quesBacgr").on("click", ".addRow", function() {
+			var rows = $(this).parents(".rowArea").find(".rows");
+			var rowLength = rows.find(".row").length;
+			if (rowLength == 50) {alert(SurveyMessages.strRowLm); return;}
 			$(this).parents(".rowArea").find(".rows").append(mkRowCol("row"));
 		});
 		// matrix 열 추가
@@ -1172,7 +1175,6 @@ var SurveyCreate     = function() {
 		$(".quesBacgr").on("click", ".delRow", function(e) {
 			var lowLength = $(this).closest(".rows").find(".row").length;
 			if (lowLength <= 1) {alert(SurveyMessages.strMaxtrix1); return;}
-			if (lowLength == 50) {alert(SurveyMessages.strRowLm); return;}
 			$(this).closest(".row").remove();
 		});
 		// matrix 열 삭제

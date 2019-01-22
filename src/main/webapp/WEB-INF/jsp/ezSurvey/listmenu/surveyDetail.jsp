@@ -34,11 +34,22 @@
 		</c:if>
 	</div>
 	
-	<ul id="upage-ul" class="upage-ul off">
-		<li><span class="srvyInfo srvyInfo01"></span><span>기명 여부 : <span></span>기명</span></li>
-		<li><span class="srvyInfo srvyInfo02"></span><span>대상자 설정 : <span></span>전체</span></li>
-		<li><span class="srvyInfo srvyInfo03"></span><span>조사 결과 :</span><span>공개</span></li>
-		<li><span class="srvyInfo srvyInfo04"></span><span>설문 종료후 : </span><span>0 일간</span></li>
+	<ul id="upage-ul" class="upage-ul off" style="display: none;">
+		<li><span class="srvyInfo srvyInfo01"></span><span><spring:message code="ezSurvey.t32" /> : </span>
+			
+			<span><spring:message code="${survey.anonymousFlag == 1 ? 'ezSurvey.t48' : 'ezSurvey.t47'}"/></span>
+		</li>
+		<li><span class="srvyInfo srvyInfo02"></span><span><spring:message code="ezSurvey.t52" /> : </span>
+			<span><spring:message code="${survey.paritipateFlag == 1 ? 'ezSurvey.t54' : 'ezSurvey.t53'}"/></span>
+		</li>
+		<li><span class="srvyInfo srvyInfo03"></span><span><spring:message code="ezSurvey.t41" /> : </span>
+			<span><spring:message code="${survey.resultPublicFlag == 1 ? 'ezSurvey.t42' : 'ezSurvey.t43'}"/></span>
+		</li>
+		<c:if test="${survey.resultPublicFlag == 1}">
+			<li><span class="srvyInfo srvyInfo04"></span><span><spring:message code="ezSurvey.t96" /> : </span>
+				<span><spring:message code="ezSurvey.t97"/><c:out value=" ${survey.openDays}"/> <spring:message code="ezSurvey.t45"/></span>
+			</li>
+		</c:if>
 	</ul>
 	
 	<div class="surveydetail-body" id="mainSurveyBody">
@@ -69,31 +80,9 @@
 								<img class="ui-datepicker-trigger" src="/images/ezSurvey/calendar-month.png">
 							</div>
 						</td>
-						<th class="left-Th"><spring:message code="ezSurvey.t46"/></th> <%-- anonymous setting --%>
-						<td class="right-Td">
-							<div id="cf-anoynymous" class="surveyinf-divcf"><spring:message code="${survey.anonymousFlag == 1 ? 'ezSurvey.t48' : 'ezSurvey.t47'}"/></div>
-						</td>
-					</tr>
-					<tr>
-						<th class="left-Th"><spring:message code="ezSurvey.t52"/></th> <%-- respondent setting --%>
-						<td class="right-Td">
-							<div id="cf-userdiv" class="surveyinf-divcf flex-cf"><spring:message code="${survey.paritipateFlag == 1 ? 'ezSurvey.t54' : 'ezSurvey.t53'}"/></div>
-						</td>
 						<th class="left-Th"><spring:message code="ezSurvey.t49"/></th> <%-- multiple select setting --%>
 						<td class="right-Td">
 							<div id="cf-multiple" class="surveyinf-divcf"><spring:message code="${survey.multiAnswerFlag == 1 ? 'ezSurvey.t51' : 'ezSurvey.t50'}"/></div>
-						</td>
-					</tr>
-					<tr>
-						<th class="left-Th"><spring:message code="ezSurvey.t41"/></th> <%-- public setting --%>
-						<td class="right-Td">
-							<div id="public-cfdiv" class="surveyinf-divcf"><spring:message code="${survey.resultPublicFlag == 1 ? 'ezSurvey.t42' : 'ezSurvey.t43'}"/></div>
-						</td>
-						<th class="left-Th"><spring:message code="ezSurvey.t44"/></th> <%-- open public result days setting --%>
-						<td class="right-Td">
-							<c:if test="${survey.resultPublicFlag == 1}">
-								<div id="public-days" class="surveyinf-divcf"><c:out value="${survey.openDays}"/>&nbsp;<spring:message code="ezSurvey.t45"/></div>
-							</c:if>
 						</td>
 					</tr>
 				</table>
@@ -126,7 +115,7 @@
 		};
 		
 		userEvent();
-		
+		console.log(survey);
 		function getQuestions() {
 			$.ajax({
 				type: "GET",
@@ -310,6 +299,17 @@
 					}
 				}
 			});
+			
+			$("#surveyInfBttn").click(function() {
+				var infoElmt = $("#upage-ul");
+				var status = infoElmt.css("display");
+				
+				if (status == "none") {
+					infoElmt.show();
+				} else {
+					infoElmt.hide();
+				}
+			})
 			
 			var delBttn = document.getElementById("suvyDlt");
 			if (delBttn) {delBttn.onclick = function(e) {deleteFileConfirm();};}
