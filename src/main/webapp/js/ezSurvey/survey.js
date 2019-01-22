@@ -453,7 +453,7 @@ var SurveyCreate     = function() {
 		var returnObj  = {};
 		var surveyTtl  = document.getElementById("info-input-ttl");
 		var surveyPp   = document.getElementById("info-input-pp").contentWindow;
-		var ppContent  = surveyPp.GetBodyValue();
+		var ppContent  = surveyPp.GetEditorContent();
 		var sDate      = document.getElementById("startDate").value;
 		var eDate      = document.getElementById("endDate").value;
 		var publicFlag = parseInt(document.querySelector('input[name="publicSpan"]:checked').value);
