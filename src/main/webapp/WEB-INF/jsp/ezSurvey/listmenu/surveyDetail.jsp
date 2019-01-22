@@ -115,7 +115,7 @@
 		};
 		
 		userEvent();
-		console.log(survey);
+		
 		function getQuestions() {
 			$.ajax({
 				type: "GET",
