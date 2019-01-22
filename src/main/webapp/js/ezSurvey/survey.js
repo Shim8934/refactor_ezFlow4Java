@@ -2478,6 +2478,7 @@ var SurveyCreate     = function() {
 		var highestValue = highestInput ? parseInt(highestInput.value) : -1;
 		
 		//Check slider requirements
+		console.log(lowestValue);
 		if (!isValid(lowestValue))       {sliderObj.error = "strSlider1"; return sliderObj;}
 		if (!isValid(highestValue))      {sliderObj.error = "strSlider2"; return sliderObj;}
 		if (lowestValue >= highestValue) {sliderObj.error = "strSlider3"; return sliderObj;}
