@@ -451,21 +451,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		ezBoardAdminDAO.createBoardGroup(map);
 		
-		/* 2018-10-17 홍승비 - 그룹사게시판(그룹) 생성 시, 모든 회사에 '접근'권한을 부여한다. */
-		if (boardPropertyVO.getGuBun().equals("99")) {
-			List<BoardPropertyVO> companyList= ezBoardAdminDAO.getCompanyList(map);
-			for (int i=0; i < companyList.size(); i++) {
-				map.put("v_ACCESSID", companyList.get(i).getAccessID());
-				map.put("v_ACCESSNAME", companyList.get(i).getAccessName());
-				map.put("v_ACCESSNAME2", companyList.get(i).getAccessName2());
-				map.put("v_COMPANYID", companyList.get(i).getAccessID());
-				
-				ezBoardAdminDAO.createBoardGroup2(map);
-			}			
-		}
-		else {
-			ezBoardAdminDAO.createBoardGroup2(map);
-		}
+		/* 2019-01-22 홍승비 - 그룹사게시판(그룹) 생성 시, 최상위 회사(Top)에만 '접근'권한을 부여한다. */
+		ezBoardAdminDAO.createBoardGroup2(map);
 		
 		trunkBoard(boardPropertyVO.getTenantID());
 
@@ -494,20 +481,8 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		ezBoardAdminDAO.createBoard_I(map);
 		
-		if (boardPropertyVO.getIsAllGroupBoard().equals("Y")) {
-			List<BoardPropertyVO> companyList= ezBoardAdminDAO.getCompanyList(map);
-			for (int i=0; i < companyList.size(); i++) {
-				map.put("v_ACCESSID", companyList.get(i).getAccessID());
-				map.put("v_ACCESSNAME", companyList.get(i).getAccessName());
-				map.put("v_ACCESSNAME2", companyList.get(i).getAccessName2());
-				map.put("v_COMPANYID", companyList.get(i).getAccessID());
-				
-				ezBoardAdminDAO.createBoard_I2(map);
-			}
-		}
-		else {
-			ezBoardAdminDAO.createBoard_I2(map);
-		}
+		/* 2019-01-22 홍승비 - 그룹사게시판의 하위게시판 생성 시, 최상위 회사(Top)에만 '접근'권한을 부여한다. */
+		ezBoardAdminDAO.createBoard_I2(map);
 		
 		String boardTreePath = getBoardTreePath(boardPropertyVO.getBoardID(), boardPropertyVO.getTenantID());
 		map.put("boardTreePath", boardTreePath);
