@@ -488,14 +488,14 @@ function setPreview(previewNum) {
 		doc.getElementById("contentlist").style.height = conlistH + "px";
 		mainView.style.width = "calc(100% - 550px)";
 		previewH.style.width = "550px";
-		previewH.style.height = conlistH + 30 + "px";
+		previewH.style.height = conlistH + 10 + "px";
 		previewH.style.display = "";
 		previewmail_bar_h.style.height = conlistH + 47 + "px";
 		PreviewRayerH.style.display = "";
 		if(itemseq!=0) {
 			doc.getElementById("ifrmPreViewH").style.display = "";
 		}
-		doc.getElementById("ifrmPreViewH").style.height = conlistH + 30 + "px";
+		doc.getElementById("ifrmPreViewH").style.height = conlistH + 9 + "px";
 		break;
 	}
 
@@ -530,7 +530,7 @@ function showPreview(isPreview, itemseq) {
 			PrevViewFormH.submit();
 			if(itemseq!=0) {
 				if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
-					doc.getElementById("ifrmPreViewH").style.height = conH + "px";
+					doc.getElementById("ifrmPreViewH").style.height = conH - 21 + "px";
 				} 
 			}
 		}
@@ -699,9 +699,9 @@ function windowResize() {
 		doc.getElementById("contentlist").style.overflow = "auto";
 		doc.getElementById("previewH").style.height = height + 30 + "px";
 		doc.getElementById("previewmail_bar_h").style.height = height + 47 + "px";
-		doc.getElementById("ifrmPreViewH").style.height = height + 30 + "px";
+		doc.getElementById("ifrmPreViewH").style.height = height + 9 + "px";
 		if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
-			doc.getElementById("ifrmPreViewH").style.height = conH + "px";
+			doc.getElementById("ifrmPreViewH").style.height = conH - 21 + "px";
 		} 
 	}
 }
