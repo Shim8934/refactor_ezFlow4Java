@@ -60,71 +60,73 @@
 	box-sizing:border-box; 
 	background: #000000; 
 	opacity:0.7; 
-	cursor:pointer; 
+/* 	cursor:pointer; */ 
 	border-radius:135px; 
 	-webkit-border-radius:135px; 
 	-moz-border-radius:135px;
 	box-shadow: 0px 4px 5px 2px rgba(0, 0, 0, 0.35);
 }
+
 .quickMenuBtn {
-	display:flex;	
-	flex-direction: column;
+/* 	display:flex;	
+	flex-direction: column; */
 	height:100%;
-	justify-content: space-around;
+/* 	justify-content: space-around; */
 	align-items: center;
 }
-
-/* .quickMenuBtn span {
-	height: 33%;
-} */
-
-/* .quickMenuBtn span img{
-	width: 35px;
-	height: 35px;
-} */
 
 .quickMenuTop {
 	display: flex;	
 	justify-content: center;
 	align-items: center;
+	height:33%;
 }
 
 .quickMenuMiddle {
 	display: flex;	
 	justify-content: space-between;
 	align-items: center;
-	width: 90%;
+	width: 85%;
+	margin-left:20px;
+	margin-top:-3px;
+	height:40%;	
 }
 
 .quickMenuBottom {
 	display: flex;	
 	justify-content: center;
 	align-items: center;
+	height:25%;
 }
 
 .quickMenuTop_memo {
 	display: flex;	
 	justify-content: center;
 	align-items: center;
+	height:33%;
 }
 
 .quickMenuMiddle_memo {
 	display: flex;	
 	justify-content: space-between;
 	width: 83%;
-	margin-top: -7px;
+/* 	margin-top: -7px; */
+	margin-left:25px;
+	height:35%;
 }
 
 .quickMenuBottom_memo {
 	display: flex;	
 	justify-content: space-between;
 	width: 58%;
+	margin-left:55px;
 }
 
 
 .quickMenuBtnDiv {
 	display: flex;
-	flex-direction: column;	
+	flex-direction: column;
+	cursor:pointer;	
 }
 
 .quickMenuBtnDiv span {
@@ -137,7 +139,7 @@
 	justify-content: center;
 }
 
-.quickMenuBtnDiv span:hover {
+.quickMenuBtnDiv:hover span{
 	color: #3398fe;
 	font-weight:600;
 }

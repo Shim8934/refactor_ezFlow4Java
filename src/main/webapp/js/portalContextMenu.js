@@ -465,8 +465,6 @@ var checkContextMenuPosition = function () {
 			top: tmpTop,
 			left: tmpLeft,
 		}, 100 , function() {
-			//contextMenuBtn.style.top = tmpTop;
-			//contextMenuBtn.style.left = tmpLeft;
 			setRightAndBottom();
 			moveContextMenu();
 		});		
@@ -504,15 +502,6 @@ var setContextMenuEvent = function () {
 		event.preventDefault();
 		setQuickMenuBtn();
 		checkContextMenuPosition();
-		// 이쪽을 비동기 이후로 처리하면 나으려나
-//		document.getElementById('popupMenuBtn').style.visibility = 'visible';
-//		
-//		if(!contextMenuObject.popupMenu) {
-//			setPopupMenuPosition();
-//			handlePopupMenuBtn('on');
-//			return;
-//		}
-//		handlePopupMenuBtn('off');
 	});	
 }
 
