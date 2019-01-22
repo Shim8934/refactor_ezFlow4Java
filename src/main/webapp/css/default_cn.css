@@ -3156,11 +3156,11 @@ input::-ms-clear {display: none;}
 .divInform .nofile {line-height: 60px;}
 .divInform span + span {margin-top: 5px;}
 .fileList {width: 100%; height: auto;}
-.ulFiles, .font-family:Malgun Gothic, Arial, Helvetica, sans-serif; {margin: 0px; padding: 0px; list-style: none;}
-.ulFiles li, .font-family:Malgun Gothic, Arial, Helvetica, sans-serif; li {float: left; width: 100%; min-width: 100%; height: 65px; position: relative; border-bottom: 1px dashed #ddd; box-sizing: border-box;}
-.ulFiles li >img, .font-family:Malgun Gothic, Arial, Helvetica, sans-serif; li >img {position: absolute; top: 2.5px; right: 2.5px; cursor: pointer;}
+.ulFiles, .user-pageul {margin: 0px; padding: 0px; list-style: none;}
+.ulFiles li, .user-pageul li {float: left; width: 100%; min-width: 100%; height: 65px; position: relative; border-bottom: 1px dashed #ddd; box-sizing: border-box;}
+.ulFiles li >img, .user-pageul li >img {position: absolute; top: 2.5px; right: 2.5px; cursor: pointer;}
 .ulFiles li:lastChild {padding-bottom: 5px;}
-.font-family:Malgun Gothic, Arial, Helvetica, sans-serif; li:last-child {border-bottom: 0px !important;}
+.user-pageul li:last-child {border-bottom: 0px !important;}
 .fileList .qstUl {margin: 0px; padding: 0px;}
 .fileList .optUl {margin: 0px; padding: 0px 40px;}
 .fileList .qstUl >li {position: relative; padding: 15px 15px 0px;}
@@ -3176,7 +3176,7 @@ input::-ms-clear {display: none;}
 .attDivFile .attFileInf >span:first-child {padding: 6px 4px 4px 0px; max-height: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .attDivFile .attFileInf >span:last-child {padding: 2px 4px 4px 0px;}
 .attDivFile .attFileInf2 {font-size: 14px; align-items: center; display: flex; flex: 1; overflow: hidden; padding-left: 10px; padding-top: 0px; justify-content: left;}
-.ulFiles .attDivFile .attFileInf2, .font-family:Malgun Gothic, Arial, Helvetica, sans-serif; .attDivFile .attFileInf2 {padding-left: 0px !important;}
+.ulFiles .attDivFile .attFileInf2, .user-pageul .attDivFile .attFileInf2 {padding-left: 0px !important;}
 .uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
 .attach-bttn-div {display:block; overflow:hidden; white-space:nowrap; margin:5px 0px;}
 /**** survey attach part end ****/
