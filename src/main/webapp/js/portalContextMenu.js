@@ -12,11 +12,13 @@ animatePopupBtn.from('#popupMenuBtn', 0.45, {
 }, 0, 0); 
 
 animatePopupBtn.eventCallback('onStart', function() {
+	document.getElementById('contextMenuBtn').style.background = '#3398fe';
 	document.getElementById('contextMenuBtn').style.opacity = '1';
 });
 
 animatePopupBtn.eventCallback('onReverseComplete', function () {
-	document.getElementById('contextMenuBtn').style.opacity = '0.4';
+	document.getElementById('contextMenuBtn').style.opacity = '0.7';
+	document.getElementById('contextMenuBtn').style.background = '#0470e4';
 })
 
 var contextMenuObject = {
@@ -224,11 +226,33 @@ var handleQuickMenuOpen = function (menu) {
 	if(menu!=='appr' && menu!=='memo') window.open(url, location, option);
 }
 
+var setImageName = function (type) {
+	var span = document.createElement('span');
+	var textContent;
+
+	if(type === 'mail') {
+		textContent = messages.strLang18;
+	} else if(type ===  'appr') {
+		textContent = messages.strLang19;
+	} else if(type === 'schedule') {
+		textContent = messages.strLang20;
+	} else if(type === 'organ') {
+		textContent = messages.strLang21;
+	} else if(type === 'memo') {
+		textContent = messages.strLang22;
+	}
+	span.textContent = textContent;
+	span.className = 'image-name';	
+	
+	return span;
+}
+
 var setImageElement = function (parent, imgsrc, type) {
+	var imageWrap = document.createElement('div');
 	var imageElement = document.createElement('img');
 	imageElement.src = imgsrc;
 	imageElement.dataset.type = type;
-	
+	setImageName(type);
 	if(type !== 'memo') {
 		imageElement.addEventListener('click', function () {
 			handleQuickMenuOpen(type);
@@ -249,16 +273,23 @@ var setImageElement = function (parent, imgsrc, type) {
 		});
 	}
 	
-	parent.appendChild(imageElement);
+	imageWrap.appendChild(imageElement);
+	
+	var buttonDiv = document.createElement('div');
+	buttonDiv.className = 'quickMenuBtnDiv';
+	buttonDiv.appendChild(imageWrap);
+	buttonDiv.appendChild(setImageName(type));
+	
+	parent.appendChild(buttonDiv);
 }
 
 var setQuickMenuBtnImg = function () {
 	
 	var menuBtnImg = 
-		['/images/ezNewPortal/quick01.png', 
-		 '/images/ezNewPortal/quick02.png', 
-		 '/images/ezNewPortal/quick03.png', 
-		 '/images/ezNewPortal/quick04.png'];
+		['/images/contextmenu/mail.png',  // 메일
+		 '/images/contextmenu/approval.png',  // 결재
+		 '/images/contextmenu/schedule.png',  // 일정
+		 '/images/contextmenu/organ.png']; // 조직도
 	
 	var menuBtnSpans = document.getElementById('quickMenuBtn').childNodes;
 	
@@ -271,7 +302,7 @@ var setQuickMenuBtnImg = function () {
 		} else if(btnSpan.className.indexOf('quickMenuBottom') > -1) {
 			setImageElement(btnSpan, menuBtnImg[3], 'organ');
 			if (contextMenuObject.memoFlag === 'YES') {
-				setImageElement(btnSpan, '/images/ezMemo/memoBtn_icon.png', 'memo');
+				setImageElement(btnSpan, '/images/contextmenu/memo.png', 'memo'); // 메모
 			}
 		}
 	});

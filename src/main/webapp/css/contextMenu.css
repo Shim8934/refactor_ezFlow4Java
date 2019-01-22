@@ -18,12 +18,12 @@
 	width:72px; 
 	height:72px; 
 	box-sizing:border-box; 
-	background:rgb(0, 0, 0); 
+	background:#0470e4; 
 	cursor:pointer; 
 	border-radius:45px; 
 	-webkit-border-radius:45px; 
 	-moz-border-radius:45px;
-	opacity: 0.4;
+	opacity: 0.7;
 }
 
 /* .contextMenuBtn:hover {
@@ -38,7 +38,7 @@
     height: 100%;
 }
 
-.contextMenu span {
+/* .contextMenu span {
 	border-radius: 5px;
 	margin-bottom: 4px;
 	margin-top: 4px;
@@ -46,39 +46,42 @@
     height: 4px;
     background: white;
     display: block;	
-}
+} */
 	
 .popupMenuBtn{ 
 	position:absolute; 
 	bottom:10px; 
 	right:10px; 
 	text-align:center; 
-	width:255px; 
-	height:255px; 
+ 	width:255px; 
+	height:255px;
+/* 	width:235px; 
+	height:235px;  */
 	box-sizing:border-box; 
-	background:rgb(0, 0, 0); 
-	opacity:0.4; 
+	background: #000000; 
+	opacity:0.7; 
 	cursor:pointer; 
-	border-radius:125px; 
-	-webkit-border-radius:125px; 
-	-moz-border-radius:125px;
+	border-radius:135px; 
+	-webkit-border-radius:135px; 
+	-moz-border-radius:135px;
+	box-shadow: 0px 4px 5px 2px rgba(0, 0, 0, 0.35);
 }
 .quickMenuBtn {
 	display:flex;	
 	flex-direction: column;
 	height:100%;
-	justify-content: center;
+	justify-content: space-around;
 	align-items: center;
 }
 
-.quickMenuBtn span {
+/* .quickMenuBtn span {
 	height: 33%;
-}
+} */
 
-.quickMenuBtn span img{
+/* .quickMenuBtn span img{
 	width: 35px;
 	height: 35px;
-}
+} */
 
 .quickMenuTop {
 	display: flex;	
@@ -90,7 +93,7 @@
 	display: flex;	
 	justify-content: space-between;
 	align-items: center;
-	width: 92%;
+	width: 90%;
 }
 
 .quickMenuBottom {
@@ -108,14 +111,33 @@
 .quickMenuMiddle_memo {
 	display: flex;	
 	justify-content: space-between;
-	/* align-items: center; */
-	width: 92%;
+	width: 83%;
 	margin-top: -7px;
 }
 
 .quickMenuBottom_memo {
 	display: flex;	
 	justify-content: space-between;
-	/* align-items: center; */
-	width: 65%;
+	width: 58%;
+}
+
+
+.quickMenuBtnDiv {
+	display: flex;
+	flex-direction: column;	
+}
+
+.quickMenuBtnDiv span {
+	color: white;
+	max-width: 55px;
+}
+
+.quickMenuBtnDiv div {
+	display: flex;
+	justify-content: center;
+}
+
+.quickMenuBtnDiv span:hover {
+	color: #3398fe;
+	font-weight:600;
 }

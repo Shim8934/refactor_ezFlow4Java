@@ -126,9 +126,7 @@
   		<div id="contextMenuBlock" class="contextMenuBlock">
 			<div id="contextMenuBtn" class="contextMenuBtn" style="display: block;visibility:hidden;">
 				<div class="contextMenu">
-					<span></span>
-					<span></span>
-					<span></span>
+					<img src="/images/contextmenu/menu.png" />
 				</div>
 			</div>
 			<div id="popupMenuBtn" class="popupMenuBtn" style="display: block;visibility:hidden;">
@@ -175,6 +173,7 @@
 	<!-- 컨텍스트 메뉴 관련 시작 -->
 	<script type="text/javascript" src="${util.addVer('/js/TweenMax.min.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/portalContextMenu.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
   	<script type="text/javascript">
 
 		createContextMenu("${userDeptId}");
