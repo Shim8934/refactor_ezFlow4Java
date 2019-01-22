@@ -337,7 +337,10 @@
 			});
 			
 			// 커뮤니티 정보 팝업 메소드
+			var infoPopup;
 			function open_info(code) {
+				closeInfoPopup();
+				
 				if (CrossYN() && new RegExp(/Chrome/).test(navigator.userAgent)) {
 					var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=auto,resizable=0,width=510,height=395";
 					feature = feature + GetOpenPosition(510, 395);
@@ -347,71 +350,84 @@
 				}
 				
 				if (selectedTabId == "admitCommu") {
-					comm = window.open("/admin/ezCommunity/commInfo.do?code=" + code + "&type=New&title=" + encodeURI("<spring:message code = 'ezCommunity.t24' />") + "", "", feature);
+					infoPopup = window.open("/admin/ezCommunity/commInfo.do?code=" + code + "&type=New&title=" + encodeURI("<spring:message code = 'ezCommunity.t24' />") + "", "", feature);
 				}
 				else {
-					comm = window.open("/admin/ezCommunity/commInfo.do?code=" + code + "&type=Del&title=" + encodeURI("<spring:message code = 'ezCommunity.t38' />") + "", "", feature);
+					infoPopup = window.open("/admin/ezCommunity/commInfo.do?code=" + code + "&type=Del&title=" + encodeURI("<spring:message code = 'ezCommunity.t38' />") + "", "", feature);
 				}
+			}
+			
+			// 커뮤니티 정보 팝업 닫기 메소드
+			function closeInfoPopup() {
+				if (infoPopup) { infoPopup.close(); }
 			}
 			
 			// 신청승인 리스트 승인버튼 이벤트 메소드
 			function admitBtnClick(code) {
-				if (confirm("<spring:message code = 'ezCommunity.t61' />")) {
-					$.ajax({
-						type : "POST",
-						dataType : "json",
-						url : "/admin/ezCommunity/commAdmitOk.do",
-						async : false,
-						data : 
-							{
-								type : "listBtn",
-								code : code,
-								pDivi: "AdmitOK",
+				closeInfoPopup();
+				
+				setTimeout(function() {
+					if (confirm("<spring:message code = 'ezCommunity.t61' />")) {
+						$.ajax({
+							type : "POST",
+							dataType : "json",
+							url : "/admin/ezCommunity/commAdmitOk.do",
+							async : false,
+							data : 
+								{
+									type : "listBtn",
+									code : code,
+									pDivi: "AdmitOK",
+								},
+							success : function(result) {
+								alert(result.diviTitle);
+								
+								applicationCommuList();
+								window.parent.parent.frames[0].getApplicationListCount();
 							},
-						success : function(result) {
-							alert(result.diviTitle);
-							
-							applicationCommuList();
-							window.parent.parent.frames[0].getApplicationListCount();
-						},
-						error : function(e) {
-							console.log("error");
-						}
-					});
-				}
-				else {
-					alert("<spring:message code = 'ezCommunity.t62' />");
-				}
+							error : function(e) {
+								console.log("error");
+							}
+						});
+					}
+					else {
+						alert("<spring:message code = 'ezCommunity.t62' />");
+					}
+				}, 100);
 			}
 			
 			// 신청승인 리스트 거부버튼 이벤트 메소드
 			function admitRefusalBtnClick(code) {
-				if (confirm("<spring:message code = 'ezCommunity.t63' />")) {
-					$.ajax({
-						type : "POST",
-						dataType : "json",
-						url : "/admin/ezCommunity/commAdmitOk.do",
-						async : false,
-						data : 
-							{
-								type : "listBtn",
-								code : code,
-								pDivi: "AdmitCancel",
+				closeInfoPopup();
+				
+				setTimeout(function() {
+					if (confirm("<spring:message code = 'ezCommunity.t63' />")) {
+						$.ajax({
+							type : "POST",
+							dataType : "json",
+							url : "/admin/ezCommunity/commAdmitOk.do",
+							async : false,
+							data : 
+								{
+									type : "listBtn",
+									code : code,
+									pDivi: "AdmitCancel",
+								},
+							success : function(result) {
+								alert(result.diviTitle);
+								
+								applicationCommuList();
+								window.parent.parent.frames[0].getApplicationListCount();
 							},
-						success : function(result) {
-							alert(result.diviTitle);
-							
-							applicationCommuList();
-							window.parent.parent.frames[0].getApplicationListCount();
-						},
-						error : function(e) {
-							console.log("error");
-						}
-					});
-				}
-				else {
-					alert("<spring:message code = 'ezCommunity.t62' />");
-				}
+							error : function(e) {
+								console.log("error");
+							}
+						});
+					}
+					else {
+						alert("<spring:message code = 'ezCommunity.t62' />");
+					}
+				}, 100);
 			}
 			
 			// 폐쇄승인 리스트 승인 버튼 이벤트 메소드
