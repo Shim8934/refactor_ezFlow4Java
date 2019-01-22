@@ -3550,7 +3550,7 @@ public class EzAttitudeController {
 			row.createCell(1).setCellValue((vo.getStartDate() == null ? "" : vo.getStartDate().substring(0, 10)) + (vo.getEndDate() == null ? "" : " ~ " + vo.getEndDate().substring(0, 10)));
 			row.createCell(2).setCellValue(vo.getTypeName());
 			row.createCell(3).setCellValue(vo.getAnnualCnt());
-			if(vo.getContent() != null && vo.getContent().substring(0, 2).equalsIgnoreCase("<p")) {
+			if(vo.getContent() != null && !vo.getContent().equals("") && vo.getContent().substring(0, 2).equalsIgnoreCase("<p")) {
 				content = vo.getContent().substring(vo.getContent().indexOf(">") + 1, vo.getContent().lastIndexOf("<"));
 				content = content.replace("<br>", "\n").replace("&nbsp;", " ");
 			}
@@ -3573,7 +3573,7 @@ public class EzAttitudeController {
 		sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
 		sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
 		sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
-		sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
+//		sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512); //내용은 길어질 수 있으므로 하지 않는다. 최댓값을 넘을 경우 에러나기 때문
 			
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
 		workbook.write(response.getOutputStream());
