@@ -358,6 +358,8 @@
 			}
 			
 			function showSelectedUsers(responses) {
+				if (!responses || responses.length == 0) {return;}
+				
 				var dataFormat = {
 					userName  : "userName",
 					deptName  : "deptName",
