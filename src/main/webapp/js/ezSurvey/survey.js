@@ -1172,6 +1172,7 @@ var SurveyCreate     = function() {
 		$(".quesBacgr").on("click", ".delRow", function(e) {
 			var lowLength = $(this).closest(".rows").find(".row").length;
 			if (lowLength <= 1) {alert(SurveyMessages.strMaxtrix1); return;}
+			if (lowLength == 50) {alert(SurveyMessages.strRowLm); return;}
 			$(this).closest(".row").remove();
 		});
 		// matrix 열 삭제

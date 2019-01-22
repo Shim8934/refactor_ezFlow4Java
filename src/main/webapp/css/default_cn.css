@@ -2988,7 +2988,7 @@ h2, #menu span {font-size: 12px;}
 /*** survey statistic part start ***/
 .statBody {background-color: rgb(244, 245, 245); padding: 10px;}
 .statBody #contentsBox {margin-top: 20px; min-height: 650px;}
-.pieDiv {padding: 0px 20px; display: flex;}
+.pieDiv {/* padding: 0px 20px; display: flex; */}
 .barDiv {padding: 0px 20px 15px; display: flex;}
 .barDiv >canvas {flex: 1; min-height: 280px;}
 .survey-canvaswrap {flex: 1; min-height: 280px;}
@@ -3033,7 +3033,7 @@ h2, #menu span {font-size: 12px;}
 .legend-ul li + li {padding-top: 10px;}
 
 .chartWrapper {position: relative; padding: 0px 10px 15px;}
-.chartAreaWrapper {width: 100%; overflow-x: auto;}
+.chartAreaWrapper {width: 100%; overflow-x: auto; overflow-y: hidden;}
 .chartAreaWrapper.bnk-wrap {overflow-x: hidden;}
 /*** survey statistic part end ***/
 

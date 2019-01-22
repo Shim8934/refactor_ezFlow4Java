@@ -10,11 +10,15 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/jquery-ui.css')                       }">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/dateControls/demos.css')        }">
-		<style type="text/css"></style>
+		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/ezSurvey/tui-chart.min.css')          }">
 	</head>
-	<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg'               )}"></script>
-	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js'    )}"></script>
-	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/chart.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('ezSurvey.lang', 'msg'                   )}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js'        )}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/bnk-core.js'     )}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/bnk-2.js'        )}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/bnk-1.js'        )}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/tui-chart.min.js')}"></script>
+	
 	<body class="surveyBody">
 		<div class="header-wrapper">
 			<div class="surveydetail-header">
@@ -35,8 +39,7 @@
 				<div id="surveyRespondents" class="respondents-div off">
 					<div class="response-header"><spring:message code="ezSurvey.t95"/><div id="totalUserCnt"></div></div>
 					<div class="pieDiv">
-						<div id="userLegendDiv" class="bnk-legend"></div>
-						<canvas id="respondentPie" height="240"></canvas>
+						<div id="respondentPie"></div>
 					</div>
 				</div>
 			</div>
@@ -69,15 +72,6 @@
 		
 		<script type="text/javascript">
 		(function() {
-			/* var colors = ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5", "#ffdc89", "#90d4f7", "#71e096", "#f5a26f",
-						  "#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",
-						  "#d41e47", "#4c64ae", "#01539c", "#f05f7c", "#00b3ca", "#bd8139", "#d9c622", "#4a2431", "#d41e47", "#eb148d"]; */
-			var colors = ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5", "#ffdc89", "#90d4f7", "#71e096", "#f5a26f",
-						  "#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",
-						  "#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",
-						  "#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",
-						  "#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",
-						  "#d41e47", "#4c64ae", "#01539c", "#f05f7c", "#00b3ca", "#bd8139", "#d9c622", "#4a2431", "#d41e47", "#eb148d"];
 			var userWindow        = null;
 			var surveyStatistic   = ${data};
 			var questionStatistic = ${questions};
@@ -96,8 +90,6 @@
 				for (var i = 0; i < questions.length; i++) {
 					showQuestionStatistic(questions[i]);
 				}
-				
-				showRespondentStatistic();
 			}
 			
 			function setBodyHeight() {
@@ -399,21 +391,16 @@
 			function createQuestionPie(question, divElmt) {
 				var divChart        = document.createElement("div");
 				divChart.className  = "pieDiv";
-				var canvasElmt      = document.createElement("canvas");
-				var divLegend       = document.createElement("div");
-				var canvasId        = "question" + question["level"];
+				var divId           = "question" + question["level"];
 				var moreParam       = surveyStatistic["annoynymous"] == 0 ? question["questionId"] : null;
-				divLegend.className = "bnk-legend";
-				canvasElmt.setAttribute("height", 240);
-				canvasElmt.setAttribute("id", canvasId);
-				divChart.appendChild(divLegend);
-				divChart.appendChild(canvasElmt);
+				divChart.setAttribute("id", divId);
 				divElmt.appendChild(divChart);
 				
 				var options = question["option"];
 				var values  = [];
 				var labels  = [];
 				var others  = [];
+				var dataset = [];
 				
 				for (var i = 0; i < options.length; i++) {
 					var responses     = options[i]["responses"];
@@ -424,11 +411,13 @@
 						others = responses;
 					}
 					
-					values.push(responsesCnt);
-					labels.push(options[i]["content"]);
+					dataset.push({
+						name: options[i]["content"],
+						data: responsesCnt
+					});
 				}
 				
-				createPieChart(labels, values, canvasId, divLegend, moreParam);
+				createPieChart(dataset, divId, moreParam);
 				
 				if (others && others.length > 0) {
 					var wrapDivElmt       = document.createElement("div");
@@ -459,106 +448,65 @@
 			}
 			
 			function showRespondentStatistic() {
-				var values      = [];
-				var lables      = [];
+				var data        = [];
 				var totalUsers  = parseInt(surveyStatistic["usersCnt"]);
 				var respondents = parseInt(surveyStatistic["respondentCnt"]);
 				var notTakePart = totalUsers - respondents;
-				var legendDiv   = document.getElementById("userLegendDiv");
 				
-				values.push(notTakePart);
-				values.push(respondents);
-				lables.push(SurveyMessages.strJoin1 + " [" + respondents + SurveyMessages.strUser3 + "]");
-				lables.push(SurveyMessages.strJoin2 + " [" + notTakePart + SurveyMessages.strUser3 + "]");
-				document.getElementById("totalUserCnt").innerHTML = surveyStatistic["usersCnt"];
+				data.push({
+					name : SurveyMessages.strJoin2 + " [" + notTakePart + SurveyMessages.strUser3 + "]",
+					data : notTakePart
+				});
 				
-				createPieChart(lables, values,  "respondentPie", legendDiv);
+				data.push({
+					name : SurveyMessages.strJoin1 + " [" + respondents + SurveyMessages.strUser3 + "]",
+					data : respondents
+				});
+				
+				document.getElementById("totalUserCnt").innerHTML  = surveyStatistic["usersCnt"];
+				document.getElementById("respondentPie").innerHTML = "";
+				
+				createPieChart(data,  "respondentPie");
 			}
 			
-			function createRandomColor() {
-				var r = Math.floor(Math.random() * 255);
-				var g = Math.floor(Math.random() * 255);
-				var b = Math.floor(Math.random() * 255);
-				return "rgb(" + r + "," + g + "," + b + ")";
-			}
-			
-			function checkColorForData(valen) {
-				if (valen > colors.length) {
-					for (var i = colors.length; i < valen; i++) {
-						colors.push(createRandomColor());
-					}
-				}
-			}
-			
-			function createPieChart(labels, values, elmtId, legendElmt, questionId) {
-				checkColorForData(values.length);
+			function createPieChart(dataset, elmtId, questionId) {
+				var container = document.getElementById(elmtId);
+				var data = {series: dataset};
 				
-				var ctx = document.getElementById(elmtId).getContext("2d");
-				var myPieChart = new Chart(ctx, {
-					type: 'pie',
-					data: {
-						labels: labels,
-						datasets: [{
-							borderWidth: 2,
-							hoverBorderWidth: 8,
-							backgroundColor: colors,
-							data: values
-						}],
-						question : questionId
-					},
-					options: {
-						tooltips: {
-							callbacks: {
-								label: function(tooltipItem, data) {
-									var allData      = data.datasets[tooltipItem.datasetIndex].data;
-									var tooltipLabel = data.labels[tooltipItem.index];
-									var tooltipData  = allData[tooltipItem.index];
-									var total        = 0;
-									for (var i in allData) {
-										total += parseFloat(allData[i]);
-									}
-									var tooltipPercentage = ((tooltipData / total) * 100).toFixed(1);
-									return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
-								}
-							}
-						},
-						legendCallback: function(chart) {
-							return createLegend(chart.data);
-						},
-						legend: {
-							display: false,
-						},
-						onClick : function (evt, item) {
-							var itemIdx = item[0]["_index"];
-							var data    = myPieChart.data["question"];
-							if (data) {
-								showSelectedUsersForPie(data, itemIdx);
-							}
-						},
-						hover: {
-							onHover: function(e) {
-								var point = this.getElementAtEvent(e);
-								e.target.style.cursor = point.length ? "pointer" : "default";
-							}
-						},
-						responsive: false,
+				var options = {
+					chart: {width: 600, height: 360},
+					tooltip: {},
+					legend: {align : 'left',},
+					chartExportMenu: {visible : false},
+					usageStatistics: false
+				};
+				
+				var piechart = tui.chart.pieChart(container, data, options);
+				piechart.on('selectSeries', function(info) {
+					var question = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0];
+					if (questionId) {
+						var itemIdx = info["legendIndex"];
+						showSelectedUsersForPie(questionId, itemIdx);
 					}
 				});
 				
-				legendElmt.appendChild(myPieChart.generateLegend());
+				piechart.on('selectLegend', function(info) {
+					var question = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0];
+					if (question) {
+						var itemIdx = info["index"];
+						showSelectedUsersForPie(questionId, itemIdx);
+					}
+				});
 			}
 			
 			function createQuestionBar(question, divElmt) {
 				var divChart        = document.createElement("div");
 				var divWrap         = document.createElement("div");
 				divChart.className  = "chartWrapper";
-				var canvasElmt      = document.createElement("canvas");
-				var canvasId        = "question" + question["level"];
+				var divId           = "question" + question["level"];
 				var moreParam       = surveyStatistic["annoynymous"] == 0 ? question["questionId"] : null;
 				divWrap.className   = "chartAreaWrapper";
-				canvasElmt.setAttribute("height", 400);
-				canvasElmt.setAttribute("id", canvasId);
-				divWrap.appendChild(canvasElmt);
+				divWrap.setAttribute("id", divId);
 				divChart.appendChild(divWrap);
 				divElmt.appendChild(divChart);
 				
@@ -567,172 +515,105 @@
 				var content     = question.content;
 				var dataSets    = [];
 				var labels      = "";
-				var canvasWidth = 0;
+				var divWidth    = 0;
 				var legendFlag  = true;
+				var maxYValue   = 0;
 				
 				if (question["type"] == 3 || question["type"] == 4) {
 					returnObj = getMtrDataSet(question);
 					labels    = returnObj["labels"];
 					dataSets  = returnObj["dataSetArr"];
-					canvasWidth = returnObj["width"];
+					divWidth  = returnObj["width"];
+					maxYValue = returnObj["maxY"];
 				}
 				else if (question["type"] == 7) {
-					returnObj   = getSliderDataSet(question);
-					labels      = returnObj["labels"];
-					legendFlag  = false;
-					var dataObj = {};
-					dataObj["backgroundColor"]  = colors;
-					dataObj["hoverBorderWidth"] = 8;
-					dataObj["borderWidth"]      = 2;
-					dataObj["data"]             = returnObj["dataSetArr"];
-					canvasWidth                 = returnObj["width"];
+					returnObj       = getSliderDataSet(question);
+					labels          = returnObj["labels"];
+					legendFlag      = false;
+					maxYValue       = returnObj["maxY"];
+					var dataObj     = {};
+					dataObj["data"] = returnObj["dataSetArr"];
+					dataObj["name"] = SurveyMessages.strSliderCnt;
+					divWidth        = returnObj["width"];
 					dataSets.push(dataObj);
 				}
 				else if (question["type"] == 8) {
 					returnObj   = getRankingDataSet(question);
 					labels      = returnObj["labels"];
 					dataSets    = returnObj["dataSetArr"];
-					canvasWidth = returnObj["width"];
+					divWidth    = returnObj["width"];
+					maxYValue   = returnObj["maxY"];
 				}
 				
-				if (canvasWidth < divWrap.clientWidth) {
-					canvasElmt.setAttribute("width", divWrap.clientWidth);
+				if (divWidth < divWrap.clientWidth) {
+					divWidth = divWrap.clientWidth;
 					divWrap.className = "chartAreaWrapper bnk-wrap";
 				}
-				else {
-					canvasElmt.setAttribute("width", canvasWidth);
-				}
 				
-				createBarChart(labels, dataSets, canvasId, moreParam, legendFlag);
+				createBnkBarChart(labels, dataSets, divId, divWidth, legendFlag, maxYValue,moreParam);
 			}
 			
-			function createBarChart(labels, dataSets, canvasId, questionId, legendFlag) {
-				checkColorForData(dataSets[0]["data"].length);
-				var ctx = document.getElementById(canvasId);
-				var myBarChart = new Chart(ctx, {
-					type: "bar",
-					data: {
-						labels: labels,
-						datasets: dataSets,
-						question : questionId
+			function createBnkBarChart(labels, dataSets, divId, chartWidth, legendFlag, maxYValue, questionId) {
+				var divElmt = document.getElementById(divId);
+				var data = {
+					categories: labels,
+					series: dataSets,
+					questionId: questionId
+				};
+				
+				var options = {
+					chart: {
+						width: chartWidth,
+						height: 400,
+						format: '1,000'
 					},
-					options: {
-						tooltips: {
-							callbacks: {
-								label: function(tooltipItem, data) {
-									var dataIdx  = tooltipItem.datasetIndex;
-									var itemCnt  = data.datasets[dataIdx].data[tooltipItem.index];
-									var colLabel = data.datasets[dataIdx].label;
-									
-									return colLabel ? colLabel + ": " + itemCnt : itemCnt;
-								},
-								// remove title
-								title: function(tooltipItem, data) {
-									var itemIdx = tooltipItem[0]["index"];
-									return data.labels[itemIdx];
-								}
-							}
-						},
-						legend: {
-							display: legendFlag,
-						},
-						onClick : function (evt, item) {
-							var data = myBarChart.data["question"];
-							if (data) {
-								var question = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0];
-								var type     = parseInt(question["type"]);
-								if (type == 7) {
-									var itemValue = parseInt(item[0]["_model"]["label"]);
-									var responses = question["responses"].filter(function(res) {return res["sliderValue"] == itemValue});
-									showSelectedUsers(responses);
-								}
-								else if (type == 3 || type == 4) {
-									var active = myBarChart.getElementAtEvent(evt);
-									
-									if (!active || active.length == 0) {return;}
-									
-									var columnIdx = active[0]["_datasetIndex"];
-									var rowIdx    = item[columnIdx]["_index"];
-									var option    = question["option"];
-									var columId   = option.filter(function(opt) {return opt["colLevel"] == columnIdx})[0]["optionId"];
-									var rowId     = option.filter(function(opt) {return opt["rowLevel"] == rowIdx})[0]["optionId"];
-									
-									var responses = question["responses"].filter(function(res) {
-										return res["rowId"] == rowId && res["columnId"] == columId;
-									});
-									
-									showSelectedUsers(responses);
-								}
-								else if (type == 8) {
-									var active = myBarChart.getElementAtEvent(evt);
-									
-									if (!active || active.length == 0) {return;}
-									
-									var rankingIdx = active[0]['_datasetIndex'];
-									var crrItem    = item[rankingIdx];
-									var optionIdx  = crrItem["_index"];
-									var option     = question["option"];
-									var optionId   = option.filter(function(opt) {return opt["level"] == optionIdx})[0]["optionId"];
-									var responses  = question["responses"].filter(function(res) {
-										return res["rankingLevel"] == rankingIdx + 1 && res["optionId"] == optionId;
-									});
-									
-									showSelectedUsers(responses);
-								}
-							}
-						},
-						hover: {
-							onHover: function(e) {
-								var point = this.getElementAtEvent(e);
-								e.target.style.cursor = point.length ? "pointer" : "default";
-							}
-						},
-						responsive: false,
-						maintainAspectRatio: false,
-						scales: {
-							xAxes: [{
-								ticks: {
-									autoSkip: false,
-									fontSize: 12
-								},
-								barThickness: 30,
-							}],
-							yAxes: [{
-								ticks: {
-									beginAtZero: true,
-									fontSize: 12
-								}
-							}]
+					
+					yAxis: {title: '', min: 0, max: maxYValue},
+					xAxis: {title: 'x'},
+					legend: {align: 'top', visible: legendFlag},
+					series: {barWidth : 40},
+					chartExportMenu: {visible : false},
+					usageStatistics: false
+				};
+				
+				var chart = tui.chart.columnChart(divElmt, data, options);
+				chart.on('selectSeries', function(info) {
+					var question = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0];
+					var type     = parseInt(question["type"]);
+					if (type == 7) {
+						var indexVal  = info["legendIndex"];
+						var itemValue = parseInt(labels[indexVal]);
+						var responses = question["responses"].filter(function(res) {return res["sliderValue"] == itemValue});
+						
+						if (responses && responses.length > 0) {
+							showSelectedUsers(responses);
 						}
 					}
-				});
-			}
-			
-			function createLegend(data) {
-				var ul       = document.createElement("ul");
-				ul.className = "legend-ul";
-				var datasets = data["datasets"];
-				
-				for (var i = 0; i < datasets[0].data.length; i++) {
-					var liElmt           = document.createElement("li");
-					var divElmt1         = document.createElement("div");
-					var divElmt2         = document.createElement("div");
-					divElmt1.className   = "legend-circle";
-					divElmt2.className   = "legend-label";
-					divElmt2.textContent = data["labels"][i];
-					divElmt2.setAttribute("title", divElmt2.textContent);
-					divElmt1.setAttribute("style", "background-color: " + datasets[0].backgroundColor[i]);
-					liElmt.appendChild(divElmt1);
-					liElmt.appendChild(divElmt2);
-					
-					if (data["question"]) {
-						liElmt.onclick = (function(questionId, optId) {return function() {showSelectedUsersForPie(questionId, optId);};})(data["question"], i);
+					else if (type == 3 || type == 4) {
+						var columnIdx = parseInt(info["legendIndex"]);
+						var rowIdx    = parseInt(info["index"]);
+						var option    = question["option"];
+						var columId   = option.filter(function(opt) {return opt["colLevel"] == columnIdx})[0]["optionId"];
+						var rowId     = option.filter(function(opt) {return opt["rowLevel"] == rowIdx})[0]["optionId"];
+						
+						var responses = question["responses"].filter(function(res) {
+							return res["rowId"] == rowId && res["columnId"] == columId;
+						});
+						
+						showSelectedUsers(responses);
 					}
-					
-					ul.appendChild(liElmt);
-				}
-				
-				return ul;
+					else if (type == 8) {
+						var rankingIdx = parseInt(info["index"]);
+						var optionIdx  = parseInt(info["legendIndex"]);
+						var option     = question["option"];
+						var optionId   = option.filter(function(opt) {return opt["level"] == optionIdx})[0]["optionId"];
+						var responses  = question["responses"].filter(function(res) {
+							return res["rankingLevel"] == rankingIdx + 1 && res["optionId"] == optionId;
+						});
+						
+						showSelectedUsers(responses);
+					}
+				});
 			}
 			
 			function addFogPanel(togglePanel, elmtId) {
@@ -790,6 +671,7 @@
 				var dataSetArr  = [];
 				var dataSetObj  = {};
 				var maxLabelLen = 0;
+				var maxYValue   = 0;
 				
 				for (var i = 0; i < options.length; i++) {
 					if (options[i]["colLevel"] == -1) {
@@ -815,7 +697,7 @@
 					var dataset      = {};
 					var colData      = [];
 					var colId        = cols[i]["optionId"];
-					dataset["label"] = cols[i]["content"];
+					dataset["name"]  = cols[i]["content"];
 					
 					for (var j = 0; j < rows.length; j++) {
 						var rowId     = rows[j]["optionId"];
@@ -823,20 +705,21 @@
 							return res["rowId"] == rowId && res["columnId"] == colId;
 						});
 						var rowColResCnt = rowColRes && rowColRes.length > 0 ? rowColRes.length : 0;
+						
+						if (maxYValue < rowColResCnt) {maxYValue = rowColResCnt;}
+						
 						colData.push(rowColResCnt);
 					}
 					
-					dataset["data"]             = colData;
-					dataset["backgroundColor"]  = colors[i];
-					dataset["hoverBorderWidth"] = 8;
-					dataset["borderWidth"]      = 2;
+					dataset["data"] = colData;
 					dataSetArr.push(dataset);
 				}
 				
-				var minLabelWidth        = maxLabelLen * 10 > cols.length * 40 ? maxLabelLen * 10 : cols.length * 40;
+				var minLabelWidth        = maxLabelLen * 12 > cols.length * 40 ? maxLabelLen * 12 : cols.length * 40;
 				dataSetObj["labels"]     = rowLabels;
 				dataSetObj["dataSetArr"] = dataSetArr;
 				dataSetObj["width"]      = minLabelWidth * rows.length;
+				dataSetObj["maxY"]       = maxYValue;
 				
 				return dataSetObj;
 			}
@@ -850,6 +733,7 @@
 				var dataSetArr  = [];
 				var dataSetObj  = {};
 				var maxLabelLen = 0;
+				var maxYValue   = 0;
 				
 				for (var i = startPoint; i < endPoint + 1; i++) {
 					var unitlabel = i + "";
@@ -859,16 +743,18 @@
 					unitArr.push(unitlabel);
 					var unitRes    = responses.filter(function(res) {return res["sliderValue"] == i;});
 					var unitResCnt = unitRes && unitRes.length > 0 ? unitRes.length : 0;
+					
+					if (maxYValue < unitResCnt) {maxYValue = unitResCnt;}
+					
 					dataSetArr.push(unitResCnt);
 				}
 				
-				var minLabelWidth        = maxLabelLen * 10 > 40 ? maxLabelLen * 10 : 40;
-				
-				console.log("Min label width: " + minLabelWidth);
+				var minLabelWidth        = maxLabelLen * 12 > 40 ? maxLabelLen * 12 : 40;
 				
 				dataSetObj["labels"]     = unitArr;
 				dataSetObj["dataSetArr"] = dataSetArr;
 				dataSetObj["width"]      = (endPoint - startPoint + 1) * minLabelWidth;
+				dataSetObj["maxY"]       = maxYValue;
 				
 				return dataSetObj;
 			}
@@ -881,13 +767,14 @@
 				var dataSetObj  = {};
 				var optionLen   = options.length;
 				var maxLabelLen = 0;
+				var maxYValue   = 0;
 				
 				for (var i = 0; i < optionLen; i++) {
 					var rank         = i + 1;
 					var rankLabel    = rank + "";
 					var dataset      = {};
 					var colData      = [];
-					dataset["label"] = options[i]["content"];
+					dataset["name"]  = options[i]["content"];
 					
 					if (rankLabel.length > maxLabelLen) {
 						maxLabelLen = rankLabel.length;
@@ -900,20 +787,20 @@
 						});
 						var rowColResCnt = rowColRes && rowColRes.length > 0 ? rowColRes.length : 0;
 						colData.push(rowColResCnt);
+						
+						if (maxYValue < rowColResCnt) {maxYValue = rowColResCnt;}
 					}
 					
-					dataset["data"]             = colData;
-					dataset["backgroundColor"]  = colors[i];
-					dataset["hoverBorderWidth"] = 8;
-					dataset["borderWidth"]      = 2;
+					dataset["data"] = colData;
 					rowLabels.push(rankLabel);
 					dataSetArr.push(dataset);
 				}
 				
-				var minLabelWidth        = maxLabelLen * 10 > optionLen * 40 ? maxLabelLen * 10 : optionLen * 40;
+				var minLabelWidth        = maxLabelLen * 12 > optionLen * 40 ? maxLabelLen * 12 : optionLen * 40;
 				dataSetObj["labels"]     = rowLabels;
 				dataSetObj["dataSetArr"] = dataSetArr;
 				dataSetObj["width"]      = optionLen * minLabelWidth;
+				dataSetObj["maxY"]       = maxYValue;
 				
 				return dataSetObj;
 			}
@@ -921,7 +808,14 @@
 			function toggleUserPanel() {
 				var userPanel       = document.getElementById("surveyRespondents");
 				var crrClass        = userPanel.className;
-				userPanel.className = crrClass == "respondents-div off" ? "respondents-div" : "respondents-div off";
+				
+				if (crrClass == "respondents-div off") {
+					userPanel.className = "respondents-div";
+					showRespondentStatistic();
+				}
+				else {
+					userPanel.className = "respondents-div off";
+				}
 			}
 		})();
 	</script>

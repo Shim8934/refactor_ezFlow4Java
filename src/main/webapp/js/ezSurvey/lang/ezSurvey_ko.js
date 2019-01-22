@@ -68,7 +68,7 @@ var SurveyMessages = {
 	strSlider1   : "왼쪽 최소값을 입력하세요.",
 	strSlider2   : "오른쪽 최대값을 입력하세요.",
 	strSlider3   : "최소값을 최대값보다 작게 지정하세요.",
-	strSlider4   : "최대값은 500까지 입력 가능합니다.",
+	strSlider4   : "최대값은 9999까지 입력 가능합니다.",
 	strOptErr    : "최소 2개 이상의 보기가 필요합니다.",
 	strMaxtrix1  : "최소 1개 이상의 행이 필요합니다.",
 	strMaxtrix2  : "최소 1개 이상의 열이 필요합니다.",
@@ -81,6 +81,7 @@ var SurveyMessages = {
 	strOnlyOne   : "하나의 첨부 파일만 추가 가능합니다.",
 	strOneOther  : "기타는 하나만 추가 가능합니다.",
 	strColumnLm  : "열은 최대 10개까지 추가 가능합니다.",
+	strRowLm     : "행은 최대 50개까지 추가 가능합니다.",
 	strRow       : "행",
 	strColumn    : "열",
 	strRequired  : "필수 답변",
@@ -134,4 +135,5 @@ var SurveyMessages = {
 	strChooseNext: "이동할 질문 번호를 선택해 주세요.",
 	strChoice    : "선택",
 	strRnkOpt    : "옵션은 최대 25개까지 추가 가능합니다.",
+	strSliderCnt : "선택한 갯수",
 }
