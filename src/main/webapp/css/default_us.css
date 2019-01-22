@@ -3132,7 +3132,7 @@ h2, #menu span {font-size: 12px;}
 /* survey purpose editor part */
 .survey-infpp-wrap {width: 100%; height: 350px; margin:0px 0px 15px 0px;}
 .surey-frameeditor {padding: 0px; height: 100%; width:100%; overflow: auto; border: 0px;}
-.svPurpose {width: auto; height: auto;}
+.svPurpose {width: auto; height: auto; margin:0px 0px 10px 0px;}
 .svPurpose .ppContent {width: auto; height: auto; background-color:white; padding: 10px; border: 1px solid #d7d7d7; overflow: auto;}
 .ppContent img {max-width: 100%;}
 .ppContent p, .ppContent div, .ppContent td, .ppContent ul, .ppContent ol, .ppContent li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px; font-family:Malgun Gothic, Arial, Helvetica, sans-serif; font-size: 14px !important;}
@@ -3156,11 +3156,11 @@ input::-ms-clear {display: none;}
 .divInform .nofile {line-height: 60px;}
 .divInform span + span {margin-top: 5px;}
 .fileList {width: 100%; height: auto;}
-.ulFiles, .user-pageul {margin: 0px; padding: 0px; list-style: none;}
-.ulFiles li, .user-pageul li {float: left; width: 100%; min-width: 100%; height: 65px; position: relative; border-bottom: 1px dashed #ddd; box-sizing: border-box;}
-.ulFiles li >img, .user-pageul li >img {position: absolute; top: 2.5px; right: 2.5px; cursor: pointer;}
+.ulFiles, .font-family:Malgun Gothic, Arial, Helvetica, sans-serif; {margin: 0px; padding: 0px; list-style: none;}
+.ulFiles li, .font-family:Malgun Gothic, Arial, Helvetica, sans-serif; li {float: left; width: 100%; min-width: 100%; height: 65px; position: relative; border-bottom: 1px dashed #ddd; box-sizing: border-box;}
+.ulFiles li >img, .font-family:Malgun Gothic, Arial, Helvetica, sans-serif; li >img {position: absolute; top: 2.5px; right: 2.5px; cursor: pointer;}
 .ulFiles li:lastChild {padding-bottom: 5px;}
-.user-pageul li:last-child {border-bottom: 0px !important;}
+.font-family:Malgun Gothic, Arial, Helvetica, sans-serif; li:last-child {border-bottom: 0px !important;}
 .fileList .qstUl {margin: 0px; padding: 0px;}
 .fileList .optUl {margin: 0px; padding: 0px 40px;}
 .fileList .qstUl >li {position: relative; padding: 15px 15px 0px;}
@@ -3176,7 +3176,7 @@ input::-ms-clear {display: none;}
 .attDivFile .attFileInf >span:first-child {padding: 6px 4px 4px 0px; max-height: 34px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;}
 .attDivFile .attFileInf >span:last-child {padding: 2px 4px 4px 0px;}
 .attDivFile .attFileInf2 {font-size: 14px; align-items: center; display: flex; flex: 1; overflow: hidden; padding-left: 10px; padding-top: 0px; justify-content: left;}
-.ulFiles .attDivFile .attFileInf2, .user-pageul .attDivFile .attFileInf2 {padding-left: 0px !important;}
+.ulFiles .attDivFile .attFileInf2, .font-family:Malgun Gothic, Arial, Helvetica, sans-serif; .attDivFile .attFileInf2 {padding-left: 0px !important;}
 .uploadHelp {height: 27px; box-sizing: border-box; background: rgb(253, 254, 193); border-top: 1px solid rgb(233, 234, 148); border-left: 1px solid rgb(233, 234, 148); border-right: 1px solid rgb(233, 234, 148); line-height: 27px; width: 100%; padding: 0px 0px 0px 10px; margin: 0px; font-family: Gulim; font-size: 12px; color: rgb(51, 51, 51);}
 .attach-bttn-div {display:block; overflow:hidden; white-space:nowrap; margin:5px 0px;}
 /**** survey attach part end ****/
@@ -3227,10 +3227,10 @@ input::-ms-clear {display: none;}
 .optUl >li >img {position: absolute; top: 10px; left: 10px; cursor: pointer;}
 
 /* tooltip buttons part */
-.tooltip-bttns span {width: 32px; height: 32px; background-repeat: no-repeat; background-size: 24px 24px; background-position: center; cursor: pointer;}
-.tooltip-bttns .modifyBtn {background-image: url('/images/ezSurvey/correct.png');}
-.tooltip-bttns .copyBtn {background-image: url('/images/ezSurvey/copy.png');}
-.tooltip-bttns .deleteBtn {background-image: url('/images/ezSurvey/trash.png');}
+.tooltip-bttns .modifyBtn {display:inline-block; width:16px; height:16px; margin:11px 0px; background-position:0px -78px !important;}
+.tooltip-bttns .copyBtn {display:inline-block; width:16px; height:16px; margin:11px 0px; background-position:-16px -78px !important;}
+.tooltip-bttns .deleteBtn {display:inline-block; width:16px; height:16px; margin:11px 0px; background-position:-32px -78px !important;}
+
 
 /* select && multiple select question */
 .questnTitle:focus {border:none !important; border-bottom: 1px solid #03a9f4 !important; font-size:14px; font-weight:bold; color:#1f1f1f !important; outline:none !important; webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6); box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);}
@@ -3257,7 +3257,7 @@ input::-ms-clear {display: none;}
 .quesDiv .qstnRow .required{margin:0px 10px 0px 0px; font-size:14px; color:#333;}
 .quesDiv .qstnRow .required input{vertical-align:middle;}
 .quesDiv .qstnRow .dd-container {width: 25%; height: 40px; display: inline-block; margin-left: 8px; border:1px solid #c7c7c7;}
-.quesDiv .qstnRow .dd-container .dd-select {height: 40px; width: 100%; position:relative; cursor:pointer; border: none;}
+.quesDiv .qstnRow .dd-container .dd-select {height: 40px; width: 100%; position:relative; cursor:pointer; border: none; background:#fff !important;}
 .quesDiv .qstnRow .dd-container .dd-options {display:none; list-style:none; overflow:auto; position:absolute; right:-1px; top: 44px; width:540px !important; z-index:2000; margin:0px 0px 0px 0px; padding:0; background:#fff; border:solid 1px #c7c7c7; border-bottom:none;}
 .quesDiv .qstnRow .dd-container .dd-options >li {display: block; float:left; width: 33.33%;}
 .quesDiv .qstnRow .dd-container .dd-option {display:block; overflow:hidden; height:25px; line-height:25px; padding:10px 20px; color:#333; text-align:left; border-bottom:solid 1px #ddd; text-decoration:none; cursor:pointer; -webkit-transition: all 0.25s ease-in-out; -moz-transition: all 0.25s ease-in-out;-o-transition: all 0.25s ease-in-out;-ms-transition: all 0.25s ease-in-out;}
@@ -3315,10 +3315,10 @@ input::-ms-clear {display: none;}
 .survey_qsbtn li span{display:inline-block; padding:0px 4px;}
 
 /* drag and drop button */
-.question-panel .mvBtn {background: url(/images/ezSurvey/drag.png) no-repeat; width:30px; height:39px; margin:0px auto;}
+.question-panel .mvBtn {width:30px; height:39px; margin:0px auto;}
 .mvBtn li, .mvBtn li.off{border-top:0px; cursor:move;}
-.question-panel .mvBtn span{width:16px; height:16px; margin:10px 0px 0px 0px; background-position:-64px 0px !important; display:inline-block;}
-.mvBtn li:hover{border-color: rgb(199,199,199) !important; border-bottom: 1px solid #909193 !important;}
+.question-panel .mvBtn span{display:inline-block; width:16px; height:16px; margin:10px 6px 0px 6px; background-position:-64px 0px !important;}
+.mvBtn li:hover{background-color:rgb(255,255,255); border-color: rgb(199,199,199) !important; border-bottom: 1px solid #909193 !important;}
 
 /* question header panel */
 .question-panel{background:#f1f6fb;}
@@ -3432,13 +3432,13 @@ input[type=range]::-ms-tooltip {display: none;}
 /* survey Info Btn */
 .srvyTitle_info{display:inline-block; float:right; cursor:pointer;}
 .srvyTitle_info img{vertical-align:middle; margin:-2px 0px 0px 0px;}
-.upage-ul {float:right; position:absolute; z-index:1000; top:104px; right:30px; width:160px; padding:0px 18px 8px 18px; background:#fff; border-radius: 10px; border: 1px solid #cccccc;}
+.upage-ul {float:right; position:absolute; z-index:1000; top:104px; right:13px; width:160px; padding:0px 18px 8px 18px; background:#fff; border-radius: 10px; border: 1px solid #cccccc;}
 .upage-ul:before {content: ''; position: absolute; border-bottom: 14px solid #fff; border-right: 8px solid transparent; border-left: 8px solid transparent; top: -12px; right: 10px; z-index: 2;}
 .upage-ul:after {content: ''; position: absolute; border-style: solid; border-width: 0px 7px 12px 7px; border-color: #ccc transparent; display: block; width: 0; z-index: 1; top: -12px; right: 10px;}
 .upage-ul li {float: left; list-style: none; width:140px; padding: 0px 10px; margin: 6px 0px 0px 0px;}
 .upage-ul li>img {vertical-align: top; width: 30px; margin: 0px 10px;}
 .upage-ul li>span {line-height: 30px;}
-.upage-ul li .srvyInfo{background:url(../images/ImgIcon/icon_survey.png) no-repeat !important; background-color:transparent !important; vertical-align:top !important; overflow: hidden;}
+.upage-ul li .srvyInfo{background:url(../images/ezSurvey/icon_survey.png) no-repeat !important; background-color:transparent !important; vertical-align:top !important; overflow: hidden;}
 .upage-ul li .srvyInfo01{display:inline-block; width:16px; height:16px; background-position:0px -110px !important; margin:6px 8px 0px 0px; cursor:pointer;}
 .upage-ul li .srvyInfo02{display:inline-block; width:16px; height:16px; background-position:-16px -110px !important; margin:6px 8px 0px 0px; cursor:pointer;}
 .upage-ul li .srvyInfo03{display:inline-block; width:16px; height:16px; background-position:-32px -110px !important; margin:6px 8px 0px 0px; cursor:pointer;}

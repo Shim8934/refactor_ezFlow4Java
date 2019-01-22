@@ -2364,9 +2364,28 @@ var SurveyCreate     = function() {
 		var divHeader      = document.createElement("div");
 		var divQsContent   = document.createElement("div");
 		var divTools       = document.createElement("div");
-		var modSpan        = document.createElement("span");
-		var copSpan        = document.createElement("span");
-		var delSpan        = document.createElement("span");
+		var atchBtnUl      = document.createElement("ul");
+		
+		for (var i = 0; i < 3; i++) {
+			var btnLi = document.createElement("li");
+			var btnSpan = document.createElement("span");
+			btnLi.className = "off";
+			
+			switch (i) {
+			case 0 :
+				btnSpan.className = "survey_icon modifyBtn";
+				break;
+			case 1 : 
+				btnSpan.className = "survey_icon copyBtn";
+				break;
+			case 2 : 
+				btnSpan.className = "survey_icon deleteBtn";
+				break;
+			}
+			
+			btnLi.appendChild(btnSpan);
+			atchBtnUl.appendChild(btnLi);
+		}
 		moveBttn.innerHTML = "<li class='off'><span class='survey_icon srvyDrag'></span></li>";
 		
 		//question content process
@@ -2376,19 +2395,14 @@ var SurveyCreate     = function() {
 			strongElmt.textContent = "*";
 			divHeader.appendChild(strongElmt);
 		}
-		
 		divQsContent.textContent = qstId + ". " + content;
 		divQsContent.className   = "question-content";
 		
 		//Tools div process
-		modSpan.className   = "modifyBtn";
-		copSpan.className   = "copyBtn";
-		delSpan.className   = "deleteBtn";
+		atchBtnUl.className  = "survey_atchBtn";
 		divTools.className  = "tooltip-bttns";
 		divHeader.className = "question-header";
-		divTools.appendChild(modSpan);
-		divTools.appendChild(copSpan);
-		divTools.appendChild(delSpan);
+		divTools.appendChild(atchBtnUl);
 		divHeader.appendChild(divQsContent);
 		divHeader.appendChild(divTools);
 		divPanel.appendChild(moveBttn);
