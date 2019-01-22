@@ -133,8 +133,9 @@
 		    			$(".mainlist th").find("img").remove();
 		    			$(this).append("<img src='" + src + "' align='absmiddle'/>");
 	    			}
-		    		makeoptionyear();	    		
+	    			getUserAnnualList();	    		
 	    		});
+	    		
 	    		getMonthlyAnnualList();
 	    		makeoptionyear();
    			});
@@ -166,8 +167,11 @@
 	    		
 	    		//리스트
 	    		getUserAnnualList();
+	    		//통계
+	    		getMonthlyAnnualList();
 	    	}
 	    	
+	    	//연차 리스트
 	    	function getUserAnnualList() {
 	    		$.ajax({
 	    			data : "GET",
@@ -217,7 +221,7 @@
 	    		
 	    		$("#contentlist .mainlist tr").remove();
 	    		
-	    		if (list.length > 0) {
+	    		if (Number(list[0].annualCnt) > 0) {
 		    		list.forEach(function(vo, index) {
 		    			var content = $.trim($("<p></p>").html(vo.content).text());
 		    			html = "<tr id='" + vo.attitudeId + "'>";
@@ -260,7 +264,7 @@
 	    	}
 	    	
 	    	/**
-			* [개인근태현황, 부서근태현황] 근태유형 메소드
+			* 월별 통계
 			*/
 			function getMonthlyAnnualList() {
 				$.ajax({
@@ -278,9 +282,14 @@
 			}
 	    	
 	    	/**
-			* [개인근태현황, 부서근태현황] 통계바 메소드
+			* 월별 통계바 메소드
 			*/
 			function getMonthlyAnnualList_After(result) {
+	    		//초기화
+	    		$(".statsP").remove();
+	    		$(".statsUL").remove();
+	    		
+	    		
 				//, "height":$("#attiCalendar").css("height")
 				var objDiv = $("<div></div>").addClass("time_stats");
 				var objP = $("<p></p>").addClass("statsP").text("월별통계");
@@ -307,8 +316,7 @@
 				
 				objUl.append(objLi);
 				$("#attiStatis").append(objP);
-				$("#attiStatis").append(objUl);
-				
+				$("#attiStatis").append(objUl);				
 			}
 	    	
 			//엑셀 다운로드
