@@ -26980,6 +26980,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
+	public boolean isReformTempDoc(String docSN, String companyId, int tenantId) throws Exception {
+		String[] splitInfo = docSN.split("@");
+
+		if (splitInfo.length != 2) {
+			return false;
+		}
+
+		Map<String, Object> parameterMap = new HashMap<>();
+		parameterMap.put("ownerId", splitInfo[0]);
+		parameterMap.put("sn", splitInfo[1]);
+		parameterMap.put("companyId", companyId);
+		parameterMap.put("tenantId", tenantId);
+
+		String reformFlag = ezApprovalGDAO.getReformFlagForTempDoc(parameterMap);
+		
+		return "Y".equalsIgnoreCase(reformFlag);
+	}
+
+	@Override
 	public ApprGFormVO getReformInfoApprovalDocument(String docId, String companyId, int tenantId) throws Exception {
 		Map<String, Object> parameterMap = new HashMap<>();
 		parameterMap.put("docId", docId);

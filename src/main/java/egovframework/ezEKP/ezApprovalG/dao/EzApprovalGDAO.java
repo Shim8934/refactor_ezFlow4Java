@@ -3053,6 +3053,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (String) select("EzApprovalG.getReformFlag", map);
 	}
 	
+	public String getReformFlagForTempDoc(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getReformFlagForTempDoc", map);
+	}
+	
 	public ApprGFormVO getReformInfoForApprovalDocument(Map<String, Object> map) throws Exception {
 		return (ApprGFormVO) select("EzApprovalG.getReformInfoForApprovalDocument", map);
 	}
