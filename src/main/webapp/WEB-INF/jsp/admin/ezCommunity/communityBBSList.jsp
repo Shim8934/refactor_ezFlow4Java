@@ -19,6 +19,7 @@
 		        font:bold;
 		        color:#017bec;
 	        }
+			.mainlist tr:hover {background-color: #f4f5f5;}
         </style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
