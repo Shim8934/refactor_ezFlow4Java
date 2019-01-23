@@ -475,7 +475,7 @@ var duplicateFile = (function() {
 		})(currentInfo.newType === "FILE" ? 300 : 200), 0);
 	}
 
-	var process = function(params) {
+	var process = function(params, callerIsPopup) {
 		// 아직 끝나지 않았을 때 메소드 진입 막기
 		if (isProcessing()) {
 			throw new Error("other processing is in progress.");
@@ -487,6 +487,11 @@ var duplicateFile = (function() {
 				throw new Error("'" + property + "' property is required.");
 			}
 		});
+		
+		// 만약 팝업에서 해당 함수를 실행했다면 얕은 복사 (IE 에서 팝업이 닫히면 레퍼런스가 없어져서 버그 생김)
+		if (callerIsPopup) {
+			params = JSON.parse(JSON.stringify(params));
+		}
 		
 		infoQueue = Array.prototype.slice.call(params.infoArray);
 		// pop 메소드를 사용하기 위해서 스택 구조에서 큐 형태로 만듦
