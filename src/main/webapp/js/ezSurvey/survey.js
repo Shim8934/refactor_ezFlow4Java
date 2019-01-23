@@ -318,7 +318,7 @@ var SurveyCreate     = function() {
 	}
 	
 	function gotoSecondStep() {
-		if (enterLogic == 'Y') {deleteAllLogics();}	// 로직 설정 단계에 진입했는지 확인
+		if (enterLogic == 'Y') {deleteAllLogics(); return;}	// 로직 설정 단계에 진입했는지 확인
 		var checkObj = prepareForStep2();
 		if (checkObj["error"]) {alert(checkObj["error"]); return;}
 		var listTabElmt          = document.getElementsByClassName("headpanel")[0].children;
@@ -374,7 +374,7 @@ var SurveyCreate     = function() {
 			case 1: focusonQuestionTitleStep1(); 
 					toggleStep(spanElemt, crrSpan, tabIdx);
 					lastStep = 1; break;
-			case 2: if (enterLogic == 'Y') {deleteAllLogics();}	// 로직 설정 단계에 진입했는지 확인
+			case 2: if (enterLogic == 'Y') {deleteAllLogics(); return;}	// 로직 설정 단계에 진입했는지 확인
 					checkObj = prepareForStep2();
 					if (checkObj["error"]) {alert(checkObj["error"]); return;}
 					toggleStep(spanElemt, crrSpan, tabIdx);
@@ -523,7 +523,7 @@ var SurveyCreate     = function() {
 		var result = checkAllLogicAndSkip(questionList, questionLength);
 		
 		if (result == 'Y') {
-			if (confirm("질문 작성 단계로 이동시, 모든 분기와 건너뛰기가 초기화됩니다.") == true) {
+			if (confirm(SurveyMessages.strBack) == true) {
 				for (var i = 0; i < questionLength; i++) {
 					var qstn = questionList[i];
 					var level = qstn.level;
