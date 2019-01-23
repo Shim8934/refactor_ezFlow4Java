@@ -49,20 +49,26 @@
 				communityList();
 			});
 			
+			var infoPopup;
 			function view_CommunityInfo(pcode) {
- 				var pheight = window.screen.availHeight;
+				closeInfoPopup();
+				
+				var pheight = window.screen.availHeight;
 				var pwidth = window.screen.availWidth;
 				var pTop = (pheight - 430) / 2;
 				var pLeft = (pwidth - 500) / 2; 
-				window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
+				
+				if (selectedTabId == "openCommu") {
+					infoPopup = window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
+				}
+				else {
+					infoPopup = window.open("/admin/ezCommunity/closeCommunityInfo.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=295,width=480,top=" + pTop + ",left=" + pLeft, "");
+				}
 			}
 			
-			function view_closeCommunityInfo(pcode) {
-				var pheight = window.screen.availHeight;
-				var pwidth = window.screen.availWidth;
-				var pTop = (pheight - 295) / 2;
-				var pLeft = (pwidth - 480) / 2; 
-				window.open("/admin/ezCommunity/closeCommunityInfo.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=295,width=480,top=" + pTop + ",left=" + pLeft, "");
+			// 커뮤니티 정보 팝업 닫기 메소드
+			function closeInfoPopup() {
+				if (infoPopup) { infoPopup.close(); }
 			}
 			
 			function get_search_CommunityInfo(e) {
@@ -189,8 +195,8 @@
 							data.clubList.forEach(function(item, index){
 								html += "<tr ondblclick=view_CommunityInfo('" + item.c_ClubNo  + "');>";
 								html += "<td style='width: 35px;'>" + itemNum + "</td>";
-								html += "<td style='width: 90px;'>" + getCategoryName(item.c_name) + "</td>";
-								html += "<td style='width: 25%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
+								html += "<td style='width: 100px;'>" + getCategorySpan(item.c_name) + "</td>";
+								html += "<td style='width: 38%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
 								
 								if (item.c_ClubConfirmType == "2") { //유형
 									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t13' /></td>";
@@ -212,7 +218,7 @@
 								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconPost.gif'></span>";
 								html +=     "<span class='count'>" + item.itemCnt + "</span>";
 								html += "</td>";
-								html += "<td style='width: 45px;'><span class='icon16 icon16_delete' style='margin: 0px; padding: 0px;' onclick=closeBtnClick('" + item.c_ClubNo + "')></span></td>";
+								html += "<td style='width: 45px;'><span class='icon16 icon16_delete' style='margin: 0px 0px 0px 15px; padding: 0px;' onclick=closeBtnClick('" + item.c_ClubNo + "')></span></td>";
 								html += "</tr>";
 								
 								itemNum++;
@@ -259,9 +265,9 @@
 							var itemNum = ((pCurPage - 1) * 10) + 1 ;
 							
 							data.clubList.forEach(function(item, index){
-								html += "<tr ondblclick=view_closeCommunityInfo('" + item.c_ClubNo  + "');>";
+								html += "<tr ondblclick=view_CommunityInfo('" + item.c_ClubNo  + "');>";
 								html += "<td style='width: 35px;'>" + itemNum + "</td>";
-								html += "<td style='width: 25%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
+								html += "<td style='width: 29%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
 								html += "<td style='width: 50%;'>" + MakeXMLString(item.closeReason) + "</td>"; //폐쇄사유
 								html += "<td style='width: 10%;'>" + item.userName + "</td>"; //마스터이름
 								html += "<td style='width: 10%;'>" + item.applicationDate.substring(0, 10) + "</td>"; //신청일
@@ -431,31 +437,35 @@
 			
 			// 개설된 커뮤니티 리스트 폐쇄 버튼 이벤트 메소드
 			function closeBtnClick(code) {
-				if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
-					$.ajax({
-						type : "POST",
-						dataType : "json",
-						url : "/admin/ezCommunity/commAdminCloseAll.do",
-						async : false,
-						data : {code : code},
-						success : function(result) {
-							alert("<spring:message code = 'ezCommunity.t56' />");
-							
-							document.getElementById("txt_SearchQuery").value = "";
-							document.getElementsByName("cCateA")[0].value = "0";
-							
-							openCommunityList();
-							window.parent.parent.frames[0].getApplicationListCount();
-						},
-						error : function(e) {
-							console.log("error");
-						}
-					});
-				}
+				closeInfoPopup();
+				
+				setTimeout(function() {
+					if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
+						$.ajax({
+							type : "POST",
+							dataType : "json",
+							url : "/admin/ezCommunity/commAdminCloseAll.do",
+							async : false,
+							data : {code : code},
+							success : function(result) {
+								alert("<spring:message code = 'ezCommunity.t56' />");
+								
+								document.getElementById("txt_SearchQuery").value = "";
+								document.getElementsByName("cCateA")[0].value = "0";
+								
+								openCommunityList();
+								window.parent.parent.frames[0].getApplicationListCount();
+							},
+							error : function(e) {
+								console.log("error");
+							}
+						});
+					}
+				}, 100);
 			}
 			
 			// 카테고리 요소 생성
-			function getCategoryName(cateName) {
+			function getCategorySpan(cateName) {
 				var retVal = "";
 				
 				switch(cateName){
@@ -537,7 +547,6 @@
 				
 				return retVal;
 			}
-			
 		</script>
 	</head>
 	<body class="mainbody">
@@ -581,8 +590,8 @@
 					<table id="mainListHeader1" class="mainlist" style="width: 100%">
 						<tr id="mainListHeaderTr">
 							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
-							<th style="width: 90px;"><spring:message code ='ezCommunity.t11' /></th>
-							<th style="width: 25%;"><spring:message code = 'ezCommunity.t9991' /></th>
+							<th style="width: 100px;"><spring:message code ='ezCommunity.t11' /></th>
+							<th style="width: 38%;"><spring:message code = 'ezCommunity.t9991' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t65' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t15' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
@@ -594,7 +603,7 @@
 					<table id="mainListHeader2" class="mainlist" style="width: 100%; display: none;">
 						<tr id="mainListHeaderTr">
 							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
-							<th style="width: 25%;"><spring:message code = 'ezCommunity.t9991' /></th>
+							<th style="width: 29%;"><spring:message code = 'ezCommunity.t9991' /></th>
 							<th style="width: 50%;"><spring:message code = 'ezCommunity.t71' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t550' /></th>

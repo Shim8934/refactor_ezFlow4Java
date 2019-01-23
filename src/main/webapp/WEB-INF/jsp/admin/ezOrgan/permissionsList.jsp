@@ -31,11 +31,11 @@
 			var totalPage = 0;
 			var pageSize = 15;
 			var BlockSize = 10;
-			var isAdmin = "<c:out value='${isAdmin}'/>";
+			var isAdmin = ${isAdmin};
 			var testObj = {};
 			var type = "";
 
-	        document.onselectstart = function () {
+			document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
 	            else
@@ -48,20 +48,20 @@
 	        var type = "c=1";
 	    	
 			$(document).ready(function() {
-			    if (isAdmin) {
-			    	type = 'c=1';
-			        Permissions_List();
-			    } else {
-		            document.getElementById("Permission_sub1").style.display = "none";
-		            document.getElementById("1tab2").click();
-		            type = 'k=1';
-		            Permissions_List();			        
-			    }
-			    
-			    //2018-08-06 김보미 - 페이지 위치 고정
-			    windowResize();
+				if (isAdmin) {
+					type = 'c=1';
+					Permissions_List();
+				} else {
+					document.getElementById("Permission_sub1").style.display = "none";
+					document.getElementById("1tab2").click();
+					type = 'k=1';
+					Permissions_List();
+				}
+
+				//2018-08-06 김보미 - 페이지 위치 고정
+				windowResize();
 			});
-			
+
 			function searchList() {
 				CurPage = 1;
 				Permissions_List();
