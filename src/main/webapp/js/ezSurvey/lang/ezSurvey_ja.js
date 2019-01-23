@@ -77,7 +77,7 @@ var SurveyMessages = {
 	strOnlyMusic : "음약 파일만 허용됩니다.",
 	strURL1      : "파일 이름을 입력해주세요.",
 	strURL2      : "파일 URL을 입력해주세요.",
-	strURL3      : "URL형식이 잘못 되었습니다. URL은 http[s]://로 시작합니다.",
+	strURL3      : "URL에 http[s]://를 포함시켜 주세요.",
 	strOnlyOne   : "하나의 첨부 파일만 추가 가능합니다.",
 	strOneOther  : "기타는 하나만 추가 가능합니다.",
 	strColumnLm  : "컬럼은 최대 10개까지 추가 가능합니다.",
