@@ -1059,8 +1059,8 @@
 		            try { OpenWin.focus(); } catch (e) { }
 		        }
 		        else {
-		            var feature = "status:no;dialogWidth:330px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
-		            feature = feature + GetShowModalPosition(330, 205);
+		            var feature = "status:no;dialogWidth:350px;dialogHeight:205px;help:no;scroll:no;edge:sunken";
+		            feature = feature + GetShowModalPosition(350, 205);
 		            var RtnVal = window.showModalDialog(url, parameter, feature);
 		        }
 		        return RtnVal;
@@ -1311,7 +1311,7 @@
 		        ezreceivedistributeui_cross_dialogArguments[0] = parameter;
 		        ezreceivedistributeui_cross_dialogArguments[1] = btnBaeBu_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "ezReceiveDistributeUI_Cross", GetOpenWindowfeature(1000, 760));
+		        var OpenWin = window.open(url, "ezReceiveDistributeUI_Cross", GetOpenWindowfeature(800, 600));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		

@@ -100,10 +100,11 @@
 					}
 				});
 				opener.memoFoldersInfo();
+				window.opener.parent.parent.frames["left"].memoFolderList();
 	        }
 	        
 	        function btn_cancel_onclick() {
-	            CancelFunction();
+	            window.close();
 	        }
 	        
 	        function folderName_onkeydown() {

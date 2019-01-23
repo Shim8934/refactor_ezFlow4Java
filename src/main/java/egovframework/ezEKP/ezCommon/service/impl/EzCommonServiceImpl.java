@@ -1491,5 +1491,29 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addUserMasterMailBoxQuota() throws Exception {
 		ezCommonDAO.addUserMasterMailBoxQuota();
 	}
+
+	@Override
+	public void addHolidayFlag() throws Exception {
+		ezCommonDAO.addHolidayFlag();
+	}
 	
+	@Override
+	public void createPortalThemePortlet() throws Exception {
+		ezCommonDAO.createPortalThemePortlet();
+	}
+	
+	@Override
+	public void addHolidayRepeat() throws Exception {
+		ezCommonDAO.addHolidayFlag();
+	}
+	
+	@Override
+	public void insertPortalThemePortletInitdata() throws Exception {
+		ezCommonDAO.insertPortalThemePortletInitdata();
+	}
+	
+	@Override
+	public void addJournalFormDelFlag() throws Exception {
+		ezCommonDAO.addJournalFormDelFlag();
+	}
 }

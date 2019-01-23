@@ -1119,6 +1119,12 @@ function changeDayToDate(year, month, order, day) {
 	
 	if (day < firstDateDay) {
 		order = parseInt(order) + 1;
+		if (order == 5) {
+			resultDay = (order - 1) * 7 + (day - firstDateDay) + 1;
+			var resultDate = new Date(year + '/' + month + '/' + resultDay);
+			
+			return resultDate;
+		}
 	}
 	
 	//order > 4는 마지막주일때 계산

@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezMemo.web;
 
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -23,7 +24,6 @@ import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginSimpleVO;
-import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
 /** 
@@ -125,7 +125,7 @@ public class EzMemoController {
 		}
 		
 		if (request.getParameter("folderName") != null) {
-			folderName = request.getParameter("folderName");
+			folderName = URLDecoder.decode(request.getParameter("folderName"), "utf-8");
 		}
 		
 		if (request.getParameter("configView") != null) {

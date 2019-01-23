@@ -100,5 +100,15 @@ public interface EzCommonService {
 
 	public void addPortalThemePortletIsFixed() throws Exception;
 
+	public void addHolidayFlag() throws Exception;
+	
+	public void addHolidayRepeat() throws Exception;
+	
+	public void createPortalThemePortlet() throws Exception;
+
+	public void insertPortalThemePortletInitdata() throws Exception;
+	
+	public void addJournalFormDelFlag() throws Exception;
+	
 }
 

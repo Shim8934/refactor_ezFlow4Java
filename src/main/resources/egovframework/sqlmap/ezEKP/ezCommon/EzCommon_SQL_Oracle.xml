@@ -604,4 +604,88 @@
 			MAILBOXUSAGE VARCHAR(50) DEFAULT NULL
 			)
 	</statement>
+	
+	<select id="EzCommonDAO.checkPortalThemePortlet" resultClass="String">
+		<![CDATA[
+			SELECT 
+				theme_id
+			FROM 
+				TBL_PORTAL_THEME_PORTLET
+			where 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblPortalThemePortlet">
+	CREATE TABLE TBL_PORTAL_THEME_PORTLET (	
+		"THEME_ID" NUMBER(11,0), 
+		"TENANT_ID" NUMBER(5,0), 
+		"COMPANY_ID" VARCHAR2(100), 
+		"PORTLET_ID" NUMBER(10,0), 
+		"PORTLET_USED" NUMBER(5,0), 
+		"PORTLET_ORDER" NUMBER(11,0), 
+		"MENU_ID" NUMBER(10,0),
+		"IS_FIXED" NUMBER(5,0) DEFAULT 0,
+		PRIMARY KEY ("THEME_ID","TENANT_ID", "COMPANY_ID", "PORTLET_ID")
+	)
+	</statement>
+	
+	<select id="EzCommonDAO.checkHolidayFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+					COLUMN_NAME 
+			FROM 
+					ALL_TAB_COLUMNS
+			WHERE 
+					TABLE_NAME = 'TBL_HOLIDAYLIST'
+			AND 
+					COLUMN_NAME = 'HOLIDAYFLAG'
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addHolidayFlag"> 
+		ALTER TABLE 
+			TBL_HOLIDAYLIST
+		ADD 
+			HOLIDAYFLAG VARCHAR2(45) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkHolidayRepeat" resultClass="String">
+		<![CDATA[
+			SELECT 
+					COLUMN_NAME 
+			FROM 
+					ALL_TAB_COLUMNS
+			WHERE 
+					TABLE_NAME = 'TBL_HOLIDAYLIST'
+			AND 
+					COLUMN_NAME = 'HOLIDAYREPEAT'
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addHolidayRepeat"> 
+		ALTER TABLE 
+			TBL_HOLIDAYLIST
+		ADD 
+			HOLIDAYREPEAT VARCHAR2(45) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkJournalFormDelFlag" resultClass="String">
+		<![CDATA[
+			SELECT
+				form_del_flag
+			FROM
+				TBL_JOURNAL_FORM
+			where
+				rownum <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addJournalFormDelFlag">
+		ALTER TABLE
+			TBL_JOURNAL_FORM
+		ADD (
+			form_del_flag VARCHAR(10) DEFAULT NULL
+			)
+	</statement>
 </sqlMap>

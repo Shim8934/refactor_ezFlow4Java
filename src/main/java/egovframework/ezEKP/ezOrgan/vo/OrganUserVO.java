@@ -118,7 +118,17 @@ public class OrganUserVO {
 	private String mailboxUsage;
 	/** 메일박스 총용량 */
 	private String mailboxQuota;
-	
+	/** 직위 */
+	private String jobID;
+
+	public String getJobID() {
+		return jobID;
+	}
+
+	public void setJobID(String jobID) {
+		this.jobID = jobID;
+	}
+
 	public String getMailboxUsage() {
 		return mailboxUsage;
 	}

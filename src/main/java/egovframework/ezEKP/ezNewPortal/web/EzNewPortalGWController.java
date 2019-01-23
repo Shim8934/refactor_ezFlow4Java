@@ -634,7 +634,7 @@ public class EzNewPortalGWController {
 			 */
 			String logoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, logoType);
 			
-			if (logoUrl == null || logoUrl == "") {
+			if (logoUrl == null || logoUrl.equals("")) {
 				logoUrl = "/files/upload_portal/Top/Logo/logo.gif";
 			} else {
 				logoUrl = commonUtil.getUploadPath("upload_newPortal.ROOT", tenantId) + commonUtil.separator + "uploadFile" + commonUtil.separator + logoUrl;
@@ -662,7 +662,7 @@ public class EzNewPortalGWController {
 			String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", tenantId);
 			String useEzPMS = ezCommonService.getTenantConfig("USE_ezPMS", tenantId);
 			String useCommunity = ezCommonService.getTenantConfig("USE_COMMUNITY", tenantId);
-
+			
 			if (useAttitude == null || useAttitude.equals("")) {
 				useAttitude = "NO";
 			}
@@ -750,7 +750,7 @@ public class EzNewPortalGWController {
 			if (useCommunity.equals("NO")) {
 				menuList.removeIf(vo -> (vo.getMenuId() == 5));
 			}
-			
+
 			data.put("menuList", menuList);
 			/**
 			 * 3) 유틸메뉴 - 관리자 권한의 유무 - DB에서 가져오지 말고 그냥 다 출력
@@ -1098,7 +1098,7 @@ public class EzNewPortalGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			//int page = Integer.parseInt(request.getParameter("page"));
 			int page = Integer.parseInt(request.getParameter("page"));
-			int limit = 5; // 한 페이지에 뿌려지는 리스트 개수 // 다르게 처리할 수 있는 방법 찾아보기
+			int limit = 6; // 한 페이지에 뿌려지는 리스트 개수 // 다르게 처리할 수 있는 방법 찾아보기
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
 			String deptId = info.getDeptId();
@@ -1527,7 +1527,7 @@ public class EzNewPortalGWController {
 					}
 				}
 
-				if (indiListSub.equals("") || indiListSub == null) {
+				if (indiListSub == null || indiListSub.equals("")) {
 					indiListSub = ",\'\'";
 				} else {
 					indiListSub = indiListSub.substring(0, indiListSub.length() - 1);
@@ -1535,7 +1535,7 @@ public class EzNewPortalGWController {
 
 				indiList += indiListSub;
 
-				if (pidListSub.equals("") || pidListSub == null) {
+				if (pidListSub == null || pidListSub.equals("")) {
 					pidListSub = ",\'\'";
 				} else {
 					pidListSub = pidListSub.substring(0, pidListSub.length() - 1);
@@ -1604,16 +1604,27 @@ public class EzNewPortalGWController {
 			String companyId = info.getCompanyId();
 			int tenantId = info.getTenantId();
 			JSONObject data = new JSONObject();
+			String deptId = info.getDeptId();
+			
 			LOGGER.debug("userId : " + userId + ", companyId : " + companyId + ", tenantId : " + tenantId);
 			
 			MenuInfoVO startPage = ezNewPortalService.getUserStartPage(userId, tenantId, companyId);
 			//LOGGER.debug("startMenuId : " + startPage.getMenuId());
-			
+
+			boolean memoAuth = ezNewPortalService.getCheckAuth(18, userId, deptId, companyId, tenantId);
 			String useMemo = "";
 			useMemo = ezCommonService.getTenantConfig("useMemo", info.getTenantId());
 			
 			if (useMemo == null || useMemo.equals("")) {
 				useMemo = "YES";
+			}
+			
+			if (useMemo.equals("YES")) {
+				if (memoAuth) {
+					useMemo = "YES";
+				} else {
+					useMemo = "NO";
+				}
 			}
 			
 			LOGGER.debug("useMemo : " + useMemo);
@@ -2620,7 +2631,7 @@ public class EzNewPortalGWController {
 				portalLogoUrl = ezNewPortalService.getPortalLogoInfo(companyId, tenantId, "P");
 			}
 			
-			if (loginLogoUrl == null || loginLogoUrl == "") {
+			if (loginLogoUrl == null || loginLogoUrl.equals("")) {
 				loginLogoUrl = "/images/kr/login/logo.gif";
 				loginLogoUrlDefault = true;
 			} else {
@@ -2628,7 +2639,7 @@ public class EzNewPortalGWController {
 				loginLogoUrlDefault = false;
 			}
 			
-			if (portalLogoUrl == null || portalLogoUrl == "") {
+			if (portalLogoUrl == null || portalLogoUrl.equals("")) {
 				portalLogoUrl = "/files/upload_portal/Top/Logo/logo.gif";
 				portalLogoUrlDefault = true;
 			} else {
@@ -2910,7 +2921,7 @@ public class EzNewPortalGWController {
 	 */
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezPortal/portlets/community/permits", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject CommunityPermit(HttpServletRequest request) throws Exception {
+	public JSONObject communityPermit(HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCommunityPortlet started.");
 		JSONObject result = new JSONObject();
 
@@ -3425,9 +3436,9 @@ public class EzNewPortalGWController {
 			String offSetMin = commonUtil.getMinuteUTC(offset);
 
 			
-			String startDate = (request.getParameter("STARTDATE") == null || request.getParameter("STARTDATE") == "") ? request.getParameter("selectDate") : request.getParameter("STARTDATE");
-			String endDate = (request.getParameter("ENDDATE") == null || request.getParameter("ENDDATE") == "") ? request.getParameter("selectDate") : request.getParameter("ENDDATE");
-			String idList = (request.getParameter("IDLIST") == null || request.getParameter("IDLIST") == "") ? "T" : request.getParameter("IDLIST");
+			String startDate = (request.getParameter("STARTDATE") == null || request.getParameter("STARTDATE").equals("")) ? request.getParameter("selectDate") : request.getParameter("STARTDATE");
+			String endDate = (request.getParameter("ENDDATE") == null || request.getParameter("ENDDATE").equals("")) ? request.getParameter("selectDate") : request.getParameter("ENDDATE");
+			String idList = (request.getParameter("IDLIST") == null || request.getParameter("IDLIST").equals("")) ? "T" : request.getParameter("IDLIST");
 			
 			String indiList = "";
 			String pidList = "";
@@ -3522,7 +3533,7 @@ public class EzNewPortalGWController {
 						}*/
 					}
 				
-				if(indiListSub.equals("") || indiListSub == null){
+				if(indiListSub == null || indiListSub.equals("")){
 					indiListSub = ",\'\'";
 				}else{				
 					indiListSub = indiListSub.substring(0, indiListSub.length()-1);
@@ -3530,7 +3541,7 @@ public class EzNewPortalGWController {
 				
 				indiList += indiListSub;
 				
-				if(pidListSub.equals("") || pidListSub == null){
+				if(pidListSub == null || pidListSub.equals("")){
 					pidListSub = ",\'\'";
 				}else{				
 					pidListSub = pidListSub.substring(0, pidListSub.length()-1);
@@ -3605,13 +3616,16 @@ public class EzNewPortalGWController {
 			
 			String todayHours = "";
 			
+			StringBuffer buffer = new StringBuffer();
 			
 			for (int i = 0; i < todayArr.length; i++) {
 				String TodayDate = todayArr[i].split(";")[2];
 				String TodayDateUTC = commonUtil.getDateStringInUTC(TodayDate, info.getOffset(), false);
 				
-				todayHours += TodayDateUTC.substring(11, 13) + ";";
+				buffer.append(TodayDateUTC.substring(11, 13) + ";");
 			}
+			
+			todayHours = buffer.toString();
 			
 			data.put("todayHours", todayHours.substring(0, todayHours.length() - 1));
 			
@@ -3929,17 +3943,21 @@ public class EzNewPortalGWController {
 				List<ScheduleGroupListVO> gList = ezScheduleService.getScheduleGroupList(userId, tenantId, companyId);
 
 				indiList = "'" + userId + "'";
-
+				
+				StringBuffer buffer = new StringBuffer();
+				
 				if (tList != null && tList.size() > 0) {
 					for (int i = 0; i < tList.size(); i++) {
 						if (i == 0) {
-							indiListSub += ",";
+							buffer.append(",");
 						}
 						ScheduleSecretaryVO schedule = tList.get(i);
-						indiListSub += "\'" + schedule.getSecId() + "\',";
+						buffer.append("\'" + schedule.getSecId() + "\',");
 					}
 				}
-
+				
+				indiListSub = buffer.toString();
+				
 				pidList = "'" + deptId + "'," + "'" + companyId + "'";
 
 				if (dList != null && dList.size() > 0) {
@@ -3978,7 +3996,7 @@ public class EzNewPortalGWController {
 					}
 				}
 
-				if (indiListSub.equals("") || indiListSub == null) {
+				if (indiListSub == null || indiListSub.equals("")) {
 					indiListSub = ",\'\'";
 				} else {
 					indiListSub = indiListSub.substring(0, indiListSub.length() - 1);
@@ -3986,7 +4004,7 @@ public class EzNewPortalGWController {
 
 				indiList += indiListSub;
 
-				if (pidListSub.equals("") || pidListSub == null) {
+				if (pidListSub == null || pidListSub.equals("")) {
 					pidListSub = ",\'\'";
 				} else {
 					pidListSub = pidListSub.substring(0, pidListSub.length() - 1);

@@ -15,6 +15,7 @@
 			var parentwin = null;
 			var RetValue;
 			var ReturnFunction;
+			var serverFlag = "<c:out value='${serverFlag}' />";
 			
 			window.onload = function () {
 			    try {
@@ -49,11 +50,17 @@
 					return;
 				}		
 				
+				var url = "/ezSchedule/scheduleAcceptAttendant.do";
+				
+				if (serverFlag == "dotNet") {
+					url = "http://dev.mail.kttelecop.co.kr/ezSchedule/scheduleAcceptAttendant.do";
+				}
+				
 				$.ajax({
 					type : "POST",
 					dataType : "text",
 					async : false,
-					url : "/ezSchedule/scheduleAcceptAttendant.do",
+					url : url,
 					data : {						
 						status 	 : status,
 						displayName : "${userInfo.displayName1}",
@@ -123,7 +130,7 @@
 	            </ul>
 	        </div> 
 	
-	        <div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:295px"> 
+	        <div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:270px"> 
 	            <table class="popuplist" style="WIDTH: 100%">
 	                <tr>
 	                    <th style="white-space:nowrap; width:20px"><spring:message code='ezSchedule.t190' /></th> 

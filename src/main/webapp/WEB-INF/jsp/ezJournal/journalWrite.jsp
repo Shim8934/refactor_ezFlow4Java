@@ -613,7 +613,7 @@
 	                    <ul>
 	                    	<c:choose>
 	                    		<c:when test="${mode eq 'reuse'}">
-			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t73' /></span></li>
+			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t26' /></span></li>
 			                        <li><span onclick="btn_TempSave('reuse')"><spring:message code='ezJournal.t74' /></span></li>
 	                    		</c:when>
 	                    		<c:when test="${mode eq 'modify'}">

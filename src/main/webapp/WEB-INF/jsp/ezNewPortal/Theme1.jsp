@@ -235,6 +235,24 @@
 				<p class="linkBtn_close" id="linkBtn_open"><img id="quicklinkBtn" src="/images/ezNewPortal/linkBtn_open.png"></p>
 				<div class="aside_quick">
 					<p class="quickmenu_title"><spring:message code='ezNewPortal.t020' /></p>
+					<ul class="quickmenu" id="quickmenu">
+<%-- 						<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt"><spring:message code='ezNewPortal.t021' /></span></li>
+						<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt"><spring:message code='ezNewPortal.t022' /></span></li>
+						<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt"><spring:message code='ezNewPortal.t023' /></span></li>
+						<li id="quickOrgan"><span class="icon"><img src="/images/ezNewPortal/quick04.png"></span><span class="txt"><spring:message code='ezNewPortal.t024' /></span></li>
+						<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt"><spring:message code='ezNewPortal.t021' /></span></li>
+						<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt"><spring:message code='ezNewPortal.t022' /></span></li>
+						<li id="quickSchedulewrite"><span class="icon"><img src="/images/ezNewPortal/quick03.png"></span><span class="txt"><spring:message code='ezNewPortal.t023' /></span></li> --%>
+					</ul>				
+				</div>
+				<div class="aside_link">
+					<div class="linkBtn">
+						<p class="btnLay" id="btnLay">
+						</p>
+					</div>
+				</div>				
+<%-- 				<div class="aside_quick">
+					<p class="quickmenu_title"><spring:message code='ezNewPortal.t020' /></p>
 					<ul class="quickmenu">
 						<li id="quickMailwrite"><span class="icon"><img src="/images/ezNewPortal/quick01.png"></span><span class="txt"><spring:message code='ezNewPortal.t021' /></span></li>
 						<li id="quickApprovalwrite"><span class="icon"><img src="/images/ezNewPortal/quick02.png"></span><span class="txt"><spring:message code='ezNewPortal.t022' /></span></li>
@@ -250,7 +268,7 @@
 						<p class="btnLay" id="btnLay">
 						</p>
 					</div>
-				</div>
+				</div> --%>
 			</aside>
 		</div>
 		<section class="section_main">
@@ -326,26 +344,33 @@
 		sectionLeft[0].style.minHeight = "1133px";
 	}
  	
- 	// 퀵링크 셋팅
+ 	// 퀵링크 셋팅 
  	var setQuickLinkList = function (data) {
  		var quickList = data.quickLinkList;
  		var totalCnt = data.totalPageCnt;
- 		
  		quickLinkPage.total = totalCnt;
  		
- 		var quickUl = document.getElementById('QuickUl');
+ 		var quickMenu = document.getElementById('quickmenu');
  		
- 		// 현재 리스트를 갖고 있는 경우 삭제 후 진행
- 		while (quickUl.hasChildNodes()) {
- 			quickUl.removeChild(quickUl.firstChild);
+ 		while(quickMenu.hasChildNodes()) {
+ 			quickMenu.removeChild(quickMenu.firstChild);	
  		}
  		
-		quickList.forEach(function (item, index) {
-			var li = document.createElement('li');
-			li.classList.add('linkText');
-			li.textContent = item.quickLinkName;
-			
-			// 이벤트 등록
+ 		quickList.forEach(function (item, index) {
+ 			var li = document.createElement('li');
+ 			var spanIcon = document.createElement('span');
+ 			spanIcon.classList.add('icon');
+ 			
+ 			var img = document.createElement('img');
+ 			img.src = item.linkTypeUrl;
+ 			spanIcon.appendChild(img);
+ 			
+ 			var spanText = document.createElement('span');
+ 			spanText.classList.add('txt');
+ 			spanText.textContent = item.quickLinkName;
+ 			
+ 			li.appendChild(spanIcon);
+ 			li.appendChild(spanText);
 			li.addEventListener('click', function(){
 				// size가 FULL인 경우 vs 아닌 경우
 				if(item.size === 'FULL') {
@@ -357,10 +382,12 @@
 					var option = 'width='+sizeArr[0]+'px,height='+sizeArr[1]+'px, left='+popupX+', top='+popupY+', status = no, toolbar=no, menubar=no,location=no, resizable=0';
 					window.open(item.url, '_blank', option);
 				}
-			});
-			
-			quickUl.appendChild(li);
-		});
+			}); 			
+ 			
+ 			quickMenu.appendChild(li);
+ 		});
+ 		
+ 		
 		
 		// 퀵링크 페이지 					
 		var btnLay = document.getElementById('btnLay');
@@ -418,7 +445,7 @@
 				getQuickLink();
 			});
 		}
-		
+		 		
  	}
  	
  	var getQuickLink = function () {
@@ -541,10 +568,10 @@
 		document.getElementById("quicklinkBtn").addEventListener('click', viewQuick);
 		
 		//퀵메뉴 이동(오른쪽)
-		document.getElementById("quickMailwrite").addEventListener('click', function(){quickMenuOpenRight('mail');}, false);
-		document.getElementById("quickApprovalwrite").addEventListener('click', function(){quickMenuOpenRight('appr');}, false);
-		document.getElementById("quickSchedulewrite").addEventListener('click', function(){quickMenuOpenRight('schedule');}, false);
-		document.getElementById("quickOrgan").addEventListener('click', function(){quickMenuOpenRight('organ');}, false);
+// 		document.getElementById("quickMailwrite").addEventListener('click', function(){quickMenuOpenRight('mail');}, false);
+// 		document.getElementById("quickApprovalwrite").addEventListener('click', function(){quickMenuOpenRight('appr');}, false);
+// 		document.getElementById("quickSchedulewrite").addEventListener('click', function(){quickMenuOpenRight('schedule');}, false);
+// 		document.getElementById("quickOrgan").addEventListener('click', function(){quickMenuOpenRight('organ');}, false);
 
 		// 프레임에 따라 퀵링크 위치 변경
 		if(frameId === 'Frame2' || frameId === 'Frame4' ) {

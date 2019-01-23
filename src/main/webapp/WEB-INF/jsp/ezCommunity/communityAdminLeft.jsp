@@ -68,6 +68,26 @@
 			    makeTree();
 			})
 			
+			function applyEllipsis() {
+	        	
+	        	//nodelevel 값을 가져와서 처리한다.
+	        	$(".node_div").each(function(index, element){
+	        		var nodelevel = $(element).attr("nodelevel");
+	        		var title = $(element).attr("nodename");
+	        		var nodeId = $(element).attr("id");
+	        		
+	        		$("#spn_"+nodeId).attr("title", title);
+	        		
+	        		if (nodelevel > 0) {
+	        			var customWidth = 135 - (18 * nodelevel);
+	        			if (customWidth < 0) {
+	        				customWidth = 0;
+	        			}
+	        			$("#spn_"+nodeId).css("width", customWidth+"px");
+	        		}
+	        	});
+	        }	
+			
 			function change(sdata) {  
 				if (colorflg != false) {
 					beforeThis.style.color ="#202020";

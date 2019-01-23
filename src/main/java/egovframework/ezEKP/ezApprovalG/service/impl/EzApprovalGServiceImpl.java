@@ -11954,14 +11954,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				subSQL = doDocComplete(docID, "", "", "", dirPath, userInfo.getDeptID(), "", companyID, lang, userInfo, curDocNum, "");
 				
-				if (subSQL.toUpperCase() == "FALSE") {
+				if (subSQL.toUpperCase().equals("FALSE")) {
 					rtnVal = false;
 				}
 			}
 			
 			if (rtnVal) {
 				subSQL = updateBebu(docID, companyID, userInfo.getDeptID(), tenantID); 
-				if (subSQL.toUpperCase() == "FALSE") {
+				if (subSQL.toUpperCase().equals("FALSE")) {
 					return "<RESULT>TRUE</RESULT>";
 				} 
 			} else {
@@ -23449,13 +23449,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String lang, String approvalFlag) throws Exception {
+	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String primaryLang, String approvalFlag, String lang) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_LANGTYPE", lang);
 		map.put("v_TENANTID", tenantId);
 		map.put("companyID", companyID);
 		map.put("v_DEPTID", deptID);
 		map.put("approvalFlag", approvalFlag);
+		map.put("primaryLang", primaryLang);
 		
 		logger.debug("lang : "+lang+"/ tenantid : "+tenantId+"/ companyid : "+companyID +"/ deptdi : "+deptID +"/ approvalFlag : "+approvalFlag);
 		
@@ -25122,7 +25123,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
                     // 상위태그가 P태그일 경우 P태그의 innerText와 span의 innerText가 동일할 경우 span의 Style을 P태그의 style로 입력한다.
                 	if (doc.getElementsByTag("span").get(i).parent().text() != null && !doc.getElementsByTag("span").get(i).parent().text().equals("") 
-                    		&& doc.getElementsByTag("span").get(i).text() != null && !doc.getElementsByTag("span").get(i).equals("")) {
+                    		&& doc.getElementsByTag("span").get(i).text() != null && !doc.getElementsByTag("span").get(i).text().equals("")) {
                     	//여기가 동작을 안하네
 //                        if (doc.getElementsByTag("span").get(i).parent().text().trim().equals(doc.getElementsByTag("span").get(i).text().trim())) {
                         if (doc.getElementsByTag("span").get(i).parent().nodeName().equals("p")) {

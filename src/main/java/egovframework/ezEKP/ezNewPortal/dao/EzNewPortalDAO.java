@@ -24,6 +24,7 @@ import egovframework.ezEKP.ezNewPortal.vo.PortletNameInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.ThemeInfoVO;
 import egovframework.ezEKP.ezNewPortal.vo.UserPortalSettingVO;
 import egovframework.ezEKP.ezNewPortal.vo.WeatherVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
 import egovframework.ezEKP.ezPoll.vo.PollAnswerVO;
@@ -604,5 +605,10 @@ public class EzNewPortalDAO extends EgovAbstractDAO {
 
 	public void updateSlideOrder(Map<String, Object> map) {
 		update("ezNewPortal.updateSlideOrder", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<OrganDeptVO> getInitCompanyList() {
+		return (List<OrganDeptVO>) list("ezNewPortal.getInitCompanyList");
 	}
 }

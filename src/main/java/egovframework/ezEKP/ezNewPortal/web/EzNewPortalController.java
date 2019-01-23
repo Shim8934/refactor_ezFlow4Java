@@ -126,6 +126,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		
 		model.addAttribute("useMemo", useMemo);
 		model.addAttribute("mainUrl", returnUrl);
+		model.addAttribute("userDeptId", userInfo.getDeptID());
 		logger.debug("returnUrl : " + returnUrl);
 		logger.debug("portalMain End");
 		return "/ezNewPortal/newPortalMain";
@@ -165,7 +166,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 				
 				if (cookies != null) {
 					for (int j=0; j<cookies.length; j++) {
-						if (cookies[j].getName().equals("POPUP_" + itemSeq + "_" + userId)) {
+						Cookie cookie = cookies[j];
+						String cookieName = cookie.getName();
+						
+						if (cookieName.equals("POPUP_" + itemSeq + "_" + userId)) {
 							cookieValue = cookies[j].getValue();
 						}
 					}
