@@ -2603,7 +2603,7 @@ var SurveyCreate     = function() {
 	function mkOptions(type, order, content) {
 		var options   = $("<div class='" + type + "-select'></div>");
 		var span      = $("<span class='" + type + "-order'>" + order + "</span>");
-		var contents  = $("<input class='textInput' type='text' value='" + content + "' maxlength='250' placeholder='" + SurveyMessages.strContent + "'/>");
+		var contents  = $("<input class='textInput' type='text' value='" + content + "' maxlength='115' placeholder='" + SurveyMessages.strContent + "'/>");
 		var delOption = $("<ul class='survey_atchBtn'><li class='off delOption'><span class='survey_icon srvyDel'></span></li></ul>");
 		options.append(span);
 		options.append(contents);
