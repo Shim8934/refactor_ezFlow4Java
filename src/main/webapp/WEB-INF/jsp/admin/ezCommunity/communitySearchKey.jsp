@@ -49,20 +49,26 @@
 				communityList();
 			});
 			
+			var infoPopup;
 			function view_CommunityInfo(pcode) {
- 				var pheight = window.screen.availHeight;
+				closeInfoPopup();
+				
+				var pheight = window.screen.availHeight;
 				var pwidth = window.screen.availWidth;
 				var pTop = (pheight - 430) / 2;
 				var pLeft = (pwidth - 500) / 2; 
-				window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
+				
+				if (selectedTabId == "openCommu") {
+					infoPopup = window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
+				}
+				else {
+					infoPopup = window.open("/admin/ezCommunity/closeCommunityInfo.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=295,width=480,top=" + pTop + ",left=" + pLeft, "");
+				}
 			}
 			
-			function view_closeCommunityInfo(pcode) {
-				var pheight = window.screen.availHeight;
-				var pwidth = window.screen.availWidth;
-				var pTop = (pheight - 295) / 2;
-				var pLeft = (pwidth - 480) / 2; 
-				window.open("/admin/ezCommunity/closeCommunityInfo.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=295,width=480,top=" + pTop + ",left=" + pLeft, "");
+			// 커뮤니티 정보 팝업 닫기 메소드
+			function closeInfoPopup() {
+				if (infoPopup) { infoPopup.close(); }
 			}
 			
 			function get_search_CommunityInfo(e) {
@@ -189,7 +195,7 @@
 							data.clubList.forEach(function(item, index){
 								html += "<tr ondblclick=view_CommunityInfo('" + item.c_ClubNo  + "');>";
 								html += "<td style='width: 35px;'>" + itemNum + "</td>";
-								html += "<td style='width: 100px;'>" + getCategoryName(item.c_name) + "</td>";
+								html += "<td style='width: 100px;'>" + getCategorySpan(item.c_name) + "</td>";
 								html += "<td style='width: 38%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
 								
 								if (item.c_ClubConfirmType == "2") { //유형
@@ -259,7 +265,7 @@
 							var itemNum = ((pCurPage - 1) * 10) + 1 ;
 							
 							data.clubList.forEach(function(item, index){
-								html += "<tr ondblclick=view_closeCommunityInfo('" + item.c_ClubNo  + "');>";
+								html += "<tr ondblclick=view_CommunityInfo('" + item.c_ClubNo  + "');>";
 								html += "<td style='width: 35px;'>" + itemNum + "</td>";
 								html += "<td style='width: 29%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
 								html += "<td style='width: 50%;'>" + MakeXMLString(item.closeReason) + "</td>"; //폐쇄사유
@@ -431,31 +437,35 @@
 			
 			// 개설된 커뮤니티 리스트 폐쇄 버튼 이벤트 메소드
 			function closeBtnClick(code) {
-				if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
-					$.ajax({
-						type : "POST",
-						dataType : "json",
-						url : "/admin/ezCommunity/commAdminCloseAll.do",
-						async : false,
-						data : {code : code},
-						success : function(result) {
-							alert("<spring:message code = 'ezCommunity.t56' />");
-							
-							document.getElementById("txt_SearchQuery").value = "";
-							document.getElementsByName("cCateA")[0].value = "0";
-							
-							openCommunityList();
-							window.parent.parent.frames[0].getApplicationListCount();
-						},
-						error : function(e) {
-							console.log("error");
-						}
-					});
-				}
+				closeInfoPopup();
+				
+				setTimeout(function() {
+					if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
+						$.ajax({
+							type : "POST",
+							dataType : "json",
+							url : "/admin/ezCommunity/commAdminCloseAll.do",
+							async : false,
+							data : {code : code},
+							success : function(result) {
+								alert("<spring:message code = 'ezCommunity.t56' />");
+								
+								document.getElementById("txt_SearchQuery").value = "";
+								document.getElementsByName("cCateA")[0].value = "0";
+								
+								openCommunityList();
+								window.parent.parent.frames[0].getApplicationListCount();
+							},
+							error : function(e) {
+								console.log("error");
+							}
+						});
+					}
+				}, 100);
 			}
 			
 			// 카테고리 요소 생성
-			function getCategoryName(cateName) {
+			function getCategorySpan(cateName) {
 				var retVal = "";
 				
 				switch(cateName){
@@ -537,7 +547,6 @@
 				
 				return retVal;
 			}
-			
 		</script>
 	</head>
 	<body class="mainbody">

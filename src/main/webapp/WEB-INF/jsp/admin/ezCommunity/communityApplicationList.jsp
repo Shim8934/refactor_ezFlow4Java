@@ -150,7 +150,7 @@
 							data.clubList.forEach(function(item, index){
 								html += "<tr ondblclick=open_info('" + item.c_ClubNo + "')>";
 								html += "<td style='width: 35px;'>" + itemNum +"</td>";
-								html += "<td style='width: 105px;'>" + getCategoryName(item.c_name) + "</td>";
+								html += "<td style='width: 105px;'>" + getCategorySpan(item.c_name) + "</td>";
 								html += "<td style='width: 43%;'>" + MakeXMLString(item.c_ClubName) +"</td>";
 								
 								if (item.c_ClubConfirmType == "2") { //유형
@@ -451,7 +451,7 @@
 			}
 			
 			// 카테고리 요소 생성
-			function getCategoryName(cateName) {
+			function getCategorySpan(cateName) {
 				var retVal = "";
 				
 				switch(cateName){
