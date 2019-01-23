@@ -681,7 +681,7 @@ var strLang1027 ="コメントを修正しました。";
 var strLang1028 ="年";
 var strLang1029 ="月";
 var strLang1030 ="日";
-var strLang1031 ="匿名?示板またはフォト?示板またはURLリンク?示板にはメ?ル/決裁文書を?示することができません。";
+var strLang1031 ="匿名示板またはフォト示板またはURLリンク示板にはメル/決裁文書を示することができません。";
 
 // DocType : 문서형태 A01
 var strDocType4 = "004";
