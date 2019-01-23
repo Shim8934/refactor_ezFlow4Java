@@ -536,7 +536,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 				break;
 			}
 			
-			strHTML.append("<tr>");
+			strHTML.append("<tr ondblclick=btn_bbsView('" + cBoard.getNo() + "','" + bName + "')>");
 			strHTML.append("<td width=\"60px\">");
 			
 			if (!bName.equals("tbl_c_clubnotice") && !bName.equals("tbl_c_notice")) {
@@ -550,7 +550,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			}
 			
 			strHTML.append("</td>");
-			strHTML.append("<td class=\"t2\" onclick=btn_bbsView('" + cBoard.getNo() + "','" + bName + "') style=\"overflow: hidden; cursor: pointer; text-overflow: ellipsis;\" >");
+			strHTML.append("<td class=\"t2\" style=\"overflow: hidden; cursor: pointer; text-overflow: ellipsis;\" >");
 			strHTML.append("<nobr>");
 			
 			if (!bName.equals("tbl_c_clubnotice") && !bName.equals("tbl_c_notice")) {

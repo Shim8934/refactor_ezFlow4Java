@@ -452,9 +452,6 @@
 						}
 					});
 				}
-				else {
-					alert("<spring:message code = 'ezCommunity.t62' />");
-				}
 			}
 			
 			// 카테고리 요소 생성
