@@ -2318,7 +2318,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				resultList.add(j++, vo);
 			}
 		}
-		        	
+
 		model.addAttribute("use_editor", use_editor);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
