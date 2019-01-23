@@ -671,11 +671,14 @@
 	</statement>
 	
 	<select id="EzCommonDAO.checkJournalFormDelFlag" resultClass="String">
+		<![CDATA[
 			SELECT
 				form_del_flag
 			FROM
 				TBL_JOURNAL_FORM
-			LIMIT 1
+			where
+				rownum <= 1
+		]]>
 	</select>
 	
 	<statement id="EzCommonDAO.addJournalFormDelFlag">
