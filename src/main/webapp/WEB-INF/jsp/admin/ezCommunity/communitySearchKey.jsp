@@ -45,9 +45,9 @@
 				}
 			};	
 			
-			$(document).ready(function() {
+			window.onload = function () {
 				communityList();
-			});
+			};
 			
 			var infoPopup;
 			function view_CommunityInfo(pcode) {
@@ -195,7 +195,7 @@
 							data.clubList.forEach(function(item, index){
 								html += "<tr ondblclick=view_CommunityInfo('" + item.c_ClubNo  + "');>";
 								html += "<td style='width: 35px;'>" + itemNum + "</td>";
-								html += "<td style='width: 100px;'>" + getCategorySpan(item.c_name) + "</td>";
+								html += "<td style='width: 105px;'>" + getCategorySpan(item.c_name) + "</td>";
 								html += "<td style='width: 38%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
 								
 								if (item.c_ClubConfirmType == "2") { //유형
@@ -212,7 +212,7 @@
 								
 								html += "<td style='width: 10%;'><span sysId='"+ item.c_SysopID +"' deptId='" + item.deptID + "' onclick=openinfo_userinfo(this)>" + item.userName + "</span></td>"; //마스터이름
 								html += "<td style='width: 10%;'>"  + item.c_RegDate.substring(0, 10) + "</td>"; //생성일
-								html += "<td style='width: 70px;'>";
+								html += "<td style='width: 85px;'>";
 								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconLineup.gif'></span>";
 								html +=     "<span class='count' style='margin-right: 8px;'>" + item.c_MemberCnt + "</span>";
 								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconPost.gif'></span>";
@@ -231,6 +231,7 @@
 						$("#mainListBody").empty().append(html);
 						
 						makePageSelPage();
+						scroll();
 					},
 					error : function(e) {
 						console.log("error");
@@ -283,6 +284,7 @@
 						$("#mainListBody").empty().append(html);
 						
 						makePageSelPage();
+						scroll();
 					},
 					error : function(e) {
 						console.log("error");
@@ -423,17 +425,52 @@
 			});
 			
 			function windowResize() {
-			var height = document.documentElement.clientHeight - 202;
-			if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-				height = height - 30;
-			}
-				document.getElementById("contentlist").style.height = height + "px";
-				document.getElementById("contentlist").style.overflow = "auto";
+				/* var height = document.documentElement.clientHeight - 202;
+				if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+					height = height - 30;
+				}
+					document.getElementById("contentlist").style.height = height + "px";
+					document.getElementById("contentlist").style.overflow = "auto"; */
+				
+				document.getElementById("ListBody").style.height = (document.documentElement.clientHeight - 250) + "px"; 
+				scroll();
 			}
 			
 			$(function(){
 				windowResize();
 			});
+			
+			// 페이지 스크롤 메소드
+			function scroll() {
+				var headerElmt;
+				var headerTrElmt;
+				
+				if (selectedTabId == "openCommu") {
+					headerElmt = document.getElementById("mainListHeader1");
+					headerTrElmt = document.getElementById("mainListHeaderTr1");
+				}
+				else {
+					headerElmt   = document.getElementById("mainListHeader2");
+					headerTrElmt = document.getElementById("mainListHeaderTr2");
+				}
+				
+				var headerWidth = headerElmt.clientWidth;
+				var bodyWidth   = document.getElementById("mainListBody").clientWidth;
+				var scrollWidth = headerWidth - bodyWidth;
+				
+				var scrollElmt = document.getElementById("forScroll");
+				if (scrollElmt) {
+					scrollElmt.parentNode.removeChild(scrollElmt);
+				}
+				
+				if (scrollWidth > 0) {
+					var thElmt   = document.createElement("th");
+					thElmt.setAttribute("id", "forScroll");
+					thElmt.style.width = "8px";
+					
+					headerTrElmt.appendChild(thElmt);
+				}
+			}
 			
 			// 개설된 커뮤니티 리스트 폐쇄 버튼 이벤트 메소드
 			function closeBtnClick(code) {
@@ -588,20 +625,20 @@
 			<div id="contentlist" style="width: 100%; overflow: auto; margin-top: 5px;">
 				<div id="ListHeader">
 					<table id="mainListHeader1" class="mainlist" style="width: 100%">
-						<tr id="mainListHeaderTr">
+						<tr id="mainListHeaderTr1">
 							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
-							<th style="width: 100px;"><spring:message code ='ezCommunity.t11' /></th>
+							<th style="width: 105px;"><spring:message code ='ezCommunity.t11' /></th>
 							<th style="width: 38%;"><spring:message code = 'ezCommunity.t9991' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t65' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t15' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t78' /></th>
-							<th style="width: 70px;"><spring:message code = 'ezCommunity.khj05' /></th>
+							<th style="width: 85px;"><spring:message code = 'ezCommunity.khj05' /></th>
 							<th style="width: 45px;"></th>
 						</tr>
 					</table>
 					<table id="mainListHeader2" class="mainlist" style="width: 100%; display: none;">
-						<tr id="mainListHeaderTr">
+						<tr id="mainListHeaderTr2">
 							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
 							<th style="width: 29%;"><spring:message code = 'ezCommunity.t9991' /></th>
 							<th style="width: 50%;"><spring:message code = 'ezCommunity.t71' /></th>
@@ -610,7 +647,7 @@
 						</tr>
 					</table>
 				</div>
-				<div id="ListBody">
+				<div id="ListBody" style="height: 341px; overflow-y: auto;">
 					<table id="mainListBody" class="mainlist" style="width: 100%"></table>
 				</div>
 			</div>

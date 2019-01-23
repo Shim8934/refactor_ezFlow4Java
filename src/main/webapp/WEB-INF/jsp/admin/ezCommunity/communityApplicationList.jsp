@@ -53,9 +53,9 @@
 				applicationCommuList();
 			}
 			
-			$(document).ready(function() {
+			window.onload = function () {
 				applicationCommuList();
-			});
+			};
 			
 			// (신청승인 / 폐쇄승인 ) 탭 이동 관련 이벤트
 			function Tab1_NewTabIni(pTabNodeID) {
@@ -186,7 +186,9 @@
 						}
 						
 						$("#mainListBody").empty().append(html);
+						
 						makePageSelPage();
+						scroll();
 					},
 					error : function(e) {
 						console.log("error");
@@ -323,13 +325,37 @@
 				windowResize();
 			});
 			
-			function windowResize() {
-			var height = document.documentElement.clientHeight - 202;
-			if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-				height = height - 30;
+			// 페이지 스크롤 메소드
+			function scroll() {
+				var headerWidth = document.getElementById("mainListHeader").clientWidth;
+				var bodyWidth   = document.getElementById("mainListBody").clientWidth;
+				var scrollWidth = headerWidth - bodyWidth;
+				
+				var scrollElmt = document.getElementById("forScroll");
+				if (scrollElmt) {
+					scrollElmt.parentNode.removeChild(scrollElmt);
+				}
+				
+				if (scrollWidth > 0) {
+					var headerTr = document.getElementById("mainListHeaderTr");
+					var thElmt   = document.createElement("th");
+					thElmt.setAttribute("id", "forScroll");
+					thElmt.style.width = "8px";
+					
+					headerTr.appendChild(thElmt);
+				}
 			}
-				document.getElementById("contentlist").style.height = height + "px";
-				document.getElementById("contentlist").style.overflow = "auto";
+			
+			function windowResize() {
+				/* var height = document.documentElement.clientHeight - 202;
+				if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+					height = height - 30;
+				}
+					document.getElementById("contentlist").style.height = height + "px";
+					document.getElementById("contentlist").style.overflow = "auto"; */
+				
+				document.getElementById("ListBody").style.height = (document.documentElement.clientHeight - 250) + "px"; 
+				scroll();
 			}
 			
 			$(function(){
@@ -563,7 +589,7 @@
 		</tr>
 	</table>
 	
-	<div id="contentlist" style="width: 100%; overflow: auto; margin-top: 5px;">
+	<div id="contentlist" style="width: 100%; overflow: hidden; margin-top: 5px;">
 		<div id="ListHeader">
 			<table id="mainListHeader" class="mainlist" style="width: 100%">
 				<tr id="mainListHeaderTr">
@@ -578,7 +604,7 @@
 				</tr>
 			</table>
 		</div>
-		<div id="ListBody">
+		<div id="ListBody" style="height: 341px; overflow-y: auto;">
 			<table id="mainListBody" class="mainlist" style="width: 100%"></table>
 		</div>
 	</div>
