@@ -222,7 +222,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		else {
 			if (otherSurvey.size() > 0) {
 				List<Long> listOtherSurveyId  = otherSurvey.stream().map(SurveyVO::getSurveyId).collect(Collectors.toList());
-				List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo);
+				List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
 				
 				if (!listReceivedSurvey.containsAll(listOtherSurveyId)) {
 					result.put("code", 3);
@@ -668,7 +668,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		List<SurveyVO> itemList     = new ArrayList<>();
 		
 		if (pageMode.equals("processing") || pageMode.equals("finish")) {
-			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo);
+			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
 			SimpleDateFormat formatter    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String timeUTC                = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
 			searchVO.setSurveyIds(listReceivedSurvey);
@@ -708,12 +708,17 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		ezSurveyDAO.deleteItems(map);
 	}
 	
-	private List<Long> getUserReceivedSurveyList(LoginVO userInfo) {
+	private List<Long> getUserReceivedSurveyList(LoginVO userInfo, long surveyId) {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("tenantId",  userInfo.getTenantId());
 		map.put("deptId",    userInfo.getDeptID());
 		map.put("companyId", userInfo.getCompanyID());
 		map.put("userId",    userInfo.getId());
+		
+		if (surveyId != 0) {
+			map.put("surveyId", surveyId);
+		}
+		
 		List<String> userDeptList = ezSurveyDAO.getUserDepartmentIdList(map);
 		map.put("deptList", userDeptList);
 		List<Long> result         = ezSurveyDAO.getReceivedSurveyList(map);
@@ -1114,6 +1119,25 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		map.put("surveyId",  surveyId);
 		SurveyVO survey = ezSurveyDAO.getSurveyInfo(map);
 		
+		//Check requirements
+		List<Long> checkReceivedSurvey = getUserReceivedSurveyList(userInfo, surveyId);
+		
+		if (checkReceivedSurvey == null || checkReceivedSurvey.size() == 0) {
+			result.put("status", "error");
+			result.put("code", 6);
+			return result;
+		}
+		
+		if (survey.getMultiAnswerFlag() == 0) {
+			int responseCnt = ezSurveyDAO.getUserResponseCntForSurvey(map);
+			
+			if (responseCnt > 0) {
+				result.put("status", "error");
+				result.put("code", 5);
+				return result;
+			}
+		}
+		
 		for (int i = 0; i < responses.size(); i++) {
 			JSONObject responseObj = (JSONObject)responses.get(i);
 			int questionType       = ((Long)responseObj.get("type")).intValue();
@@ -1180,17 +1204,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				
 				totalUsers.add(addRespondent(surveyId, responseId, timeUTC, userInfo));
 				totalResponses.add(response);
-			}
-		}
-		
-		//Check requirements
-		if (survey.getMultiAnswerFlag() == 0) {
-			int responseCnt = ezSurveyDAO.getUserResponseCntForSurvey(map);
-			
-			if (responseCnt > 0) {
-				result.put("status", "error");
-				result.put("code", 5);
-				return result;
 			}
 		}
 		

@@ -132,4 +132,5 @@ var SurveyMessages = {
 	strRnkOpt    : "옵션은 최대 25개까지 추가 가능합니다.",
 	strSliderCnt : "선택한 인원",
 	strBack      : "질문 작성 단계로 이동시, 모든 분기와 건너뛰기가 초기화됩니다.",
+	strNotResp   : "설문 대상자가 아닙니다.",
 }
