@@ -1272,6 +1272,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
+	public void createReformFlagColumn() throws Exception {
+		ezCommonDAO.createReformFlagColumn();
+	}
+	
+	@Override
 	public String getCompanyConfig(int tenantID, String companyID, String property) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
         map.put("property", property.toUpperCase());
@@ -1510,5 +1515,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void insertPortalThemePortletInitdata() throws Exception {
 		ezCommonDAO.insertPortalThemePortletInitdata();
+	}
+	
+	@Override
+	public void addJournalFormDelFlag() throws Exception {
+		ezCommonDAO.addJournalFormDelFlag();
 	}
 }

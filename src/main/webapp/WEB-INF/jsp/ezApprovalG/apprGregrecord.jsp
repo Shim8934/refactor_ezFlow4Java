@@ -518,10 +518,10 @@
 		<td style="width: 50%;">
 			<table style="width:100%; border-bottom: 0px; border-right: 0px;" class="content">
 				<tr>
-					<th style="border-bottom: 0px; padding-right:30px;"><spring:message code='ezApprovalG.t1063'/></th>
+					<th style="border-bottom: 0px; padding-right:29px;"><spring:message code='ezApprovalG.t1063'/></th>
        				<td style="border-bottom: 0px; border-right: 0px;">
        				<span id="tdCabinetName">&nbsp;</span>
-       				<a class="imgbtn imgbck" style="position: absolute; top: 77px; left: 441px;"><span onClick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a>
+       				<a class="imgbtn imgbck" style="position: absolute; top: 74px; left: 441px;"><span onClick="return btnChangeCabinet_onclick()"><spring:message code='ezApprovalG.t1064'/></span></a>
        				</td>
 				</tr>
 			</table>

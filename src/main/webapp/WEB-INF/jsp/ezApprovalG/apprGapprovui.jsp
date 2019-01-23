@@ -1123,6 +1123,9 @@
 		            else {
 		                process_AfterApprove("3");
 		            }
+		        } else if (ret == "cancel") {
+		            var pAlertContent = "<spring:message code='ezApprovalG.t392'/>";
+		            OpenAlertUI(pAlertContent);
 		        }
 		    }
 		    function btnJunKyul_onclick()
@@ -1706,7 +1709,6 @@
 		        message.SetEditable(false);
 		        chkBtnConfirm("2");
 		        modeflag = true;
-		
 		    }
 		    function btnSave_onclick() {
 		        var pDocID_ = "", pDocTitle_ = "";
@@ -1955,7 +1957,7 @@
 		  </tr>
 		  <tr>
 		      <td style="vertical-align:top;height:90%;">
-		        <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="approvUIcontent.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+		        <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="approvUIcontent.do<c:if test="${isReform}">?isReform=${isReform}&formId=${formId}</c:if>" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		          
 		    </td>
 		  </tr>

@@ -52,6 +52,8 @@ public interface EzCommonService {
 	
 	public void createTblCompanyConfig() throws Exception;
 	
+	public void createReformFlagColumn() throws Exception;
+	
 	public String getCompanyConfig(int tenantID, String companyID, String property) throws Exception;
 
 	public void insertCompanyConfig(int tenantId, String companyId, String propertyName, String propertyValue) throws Exception;
@@ -107,5 +109,8 @@ public interface EzCommonService {
 	public void createPortalThemePortlet() throws Exception;
 
 	public void insertPortalThemePortletInitdata() throws Exception;
+	
+	public void addJournalFormDelFlag() throws Exception;
+	
 }
 

@@ -10787,42 +10787,33 @@
 	</select>
 		
 	<select id="EzApprovalG.getDocHrefYear" parameterClass="Map" resultClass="String">
-		SELECT 
-			CASE  WHEN HREF = ' ' THEN 
-  			(
-	  			 SELECT 
-	  				HREF 
-	           	 FROM 
-	           	 	TBL_ENDAPRDOCINFO 
-	           	 WHERE  
-	           	 	DOCID = #v_PDOCID#
-	           	 AND 
-	           	 	TENANT_ID = #v_TENANTID#
-	           	 AND
-	           	 	COMPANYID = #companyID#) 
-           	ELSE
-           ( 
-	           	SELECT 
-	           		HREF
-	     		FROM 
-	     			TBL_APRDOCINFO 
-	    		WHERE  
-	    			DOCID = #v_PDOCID#
-	    		AND 
-	           	 	TENANT_ID = #v_TENANTID#
-	           	AND
-	           	 	COMPANYID = #companyID# )
-           END FROM(
-					SELECT 
-						IFNULL(HREF, ' ') HREF
-     				FROM 
-     					TBL_APRDOCINFO
-     				WHERE  
-     					DOCID = #v_PDOCID#
-     				AND 
-           	 			TENANT_ID = #v_TENANTID#
-           	 		AND
-	           	 		COMPANYID = #companyID#) A
+		SELECT
+		  A.HREF
+		FROM 
+		(
+		  SELECT
+		  	HREF
+		  FROM
+		  	TBL_APRDOCINFO
+		  WHERE
+		  	DOCID = #v_PDOCID#
+		  AND
+		  	TENANT_ID = #v_TENANTID#
+		  AND
+		  	COMPANYID = #companyID#
+		UNION ALL
+		  SELECT
+		  	HREF
+		  FROM
+		  	TBL_ENDAPRDOCINFO
+		  WHERE
+		  	DOCID = #v_PDOCID#
+		  AND
+		  	TENANT_ID = #v_TENANTID#
+		  AND
+		  	COMPANYID = #companyID#
+		) A
+		LIMIT 1
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getSepAttachSN" parameterClass="Map" resultClass="String"> -->
@@ -27264,6 +27255,57 @@
 			TBL_ENDATTACHINFO
 		WHERE
 			ATTACHFILEHREF = #href#
+	</select>
+	
+	<select id="EzApprovalG.getReformFlag" parameterClass="Map" resultClass="String">
+		SELECT
+			REFORMFLAG
+		FROM
+			TBL_FORMINFO
+		WHERE
+			FORMID = #formId#
+			AND COMPANYID = #companyId#
+			AND TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzApprovalG.getReformFlagForTempDoc" parameterClass="Map" resultClass="String">
+		SELECT
+			FORM.REFORMFLAG
+		FROM
+			TBL_TMPAPRDOCINFO TMP
+		INNER JOIN
+			TBL_FORMINFO FORM
+		ON
+			TMP.COMPANYID = FORM.COMPANYID
+			AND TMP.TENANT_ID = FORM.TENANT_ID
+			AND TMP.FORMID = FORM.FORMID
+		WHERE
+			TMP.OWNERID = #ownerId#
+			AND TMP.SN = #sn#
+			AND TMP.COMPANYID = #companyId#
+			AND TMP.TENANT_ID = #tenantId#
+	</select>
+	
+	<select id="EzApprovalG.getReformInfoForApprovalDocument" parameterClass="Map" resultClass="ApprGFormVO">
+		SELECT
+			FORMINFO.FORMID,
+			FORMINFO.REFORMFLAG
+		FROM
+			(SELECT DOCID, COMPANYID, TENANT_ID, FORMID
+			FROM TBL_APRDOCINFO
+				UNION
+			SELECT DOCID, COMPANYID, TENANT_ID, FORMID
+			FROM TBL_ENDAPRDOCINFO) DOCINFO
+		JOIN
+			TBL_FORMINFO FORMINFO
+		ON
+			FORMINFO.FORMID = DOCINFO.FORMID
+			AND FORMINFO.COMPANYID = DOCINFO.COMPANYID
+			AND FORMINFO.TENANT_ID = DOCINFO.TENANT_ID
+		WHERE
+			DOCINFO.DOCID = #docId#
+			AND DOCINFO.COMPANYID = #companyId#
+			AND DOCINFO.TENANT_ID = #tenantId#
 	</select>
 	
 	<select id="EzApprovalG.getAllCompanyList" parameterClass="map" resultMap="PortalTopOtherCompanyAddJobMap">

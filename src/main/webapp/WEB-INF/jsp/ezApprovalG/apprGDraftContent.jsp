@@ -56,6 +56,8 @@
 	        var pEditor = "${editor}";
 	        var isConDoc = false;
 	        var isEditor = false;
+	        var isReform = parent.reformFlag === "Y";
+	        
 	        window.onload = function () {
 	            try {
 	                parent.DocumentComplete();
@@ -310,7 +312,9 @@
 	                                document.getElementById("body").innerHTML = "";
 	                            }
 	                        }
-	                        Conent_contentEditable(document.getElementById('div_Content'));
+	                        if (parent.isUsed != "reuse"){
+		                        Conent_contentEditable(document.getElementById('div_Content'));
+	                        }
 	                        var SelectRows = document.getElementById('div_Content').getElementsByTagName("SELECT");
 	                        for (var i = 0; i < SelectRows.length; i++) {
 	                            SelectRows.item(i).onchange = function () { SelectOnchange(this); };
@@ -338,7 +342,13 @@
 	                            div_BODY.innerHTML = BODYTag.innerHTML;
 	                        }
 	                        if (document.getElementById("body") != null) {
-	                            if (BODYTag.getAttribute("editor") == null) {
+	                        	if (isReform) {
+	                        		try {
+	                        			Conent_contentEditable(document.getElementById('body'));
+	                        			BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/reform/draftHtml.do?formID=" + parent.pFormID + "' frameborder='0'></iframe>";
+	                                } catch (e) { }
+	                        	}
+	                        	else if (BODYTag.getAttribute("editor") == null) {
 	                                isEditor = true;
 	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectApprovalEditor.do?type=APPROVALG&height=" + EditorHeight + "&isUsed=${isUsed}' frameborder='0'></ifrmae>";
 	                            }
@@ -404,7 +414,11 @@
 	                        parent.modifiOrgBody = BODYTag.innerHTML;
 	                    }
 	                    if (document.getElementById("body") != null) {
-	                        if (BODYTag.getAttribute("editor") == null) {
+	                    	if (isReform) {
+	                    		Conent_contentEditable(document.getElementById('body'));
+	                    		BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/reform/draftHtml.do?formID=" + parent.pFormID + "' frameborder='0'></iframe>";
+	                    	}
+	                    	else if (BODYTag.getAttribute("editor") == null) {
 	                            isEditor = true;
 	                            BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px;" +
 	                                                "height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectApprovalEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
@@ -556,6 +570,18 @@
 	                if (inputRows.item(i).disabled)
 	                    inputRows.item(i).disabled = false;
 	            }
+
+				var textAreaElements = HtmlObject.getElementsByTagName("textarea");
+				var element;
+
+				for (var i = 0; i < textAreaElements.length; i++) {
+					element = textAreaElements[i];
+
+					if (element.disabled) {
+						element.disabled = false;
+					}
+				}
+
 	            return HtmlObject;
 	        }
 	        
@@ -625,8 +651,15 @@
 	                BODY.appendChild(Doc_ContentHtml);
 	                HTML.appendChild(BODY);
 	
-	                var EditorContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body") == null
-	                                             ? "" : document.getElementById("body").innerHTML;
+	                var EditorContent = "";
+	                
+	                if (isReform) {
+	                	EditorContent = GetBodyHTML();
+	                } else {
+	                	EditorContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body") == null
+                                ? "" : document.getElementById("body").innerHTML;
+	                }
+	                
 	                div_BODY.innerHTML = EditorContent;
 	                if(!isEditor)
 	                    EditorContent = Get_HtmlBody(EditorContent);
@@ -679,6 +712,25 @@
 	
 	        function GetBodyHTML() {
 	            try {
+	            	if (isReform) {
+	            		var documentCloneNode = iframe_content.document.cloneNode(true);
+	            		var datepickerDivElement = documentCloneNode.getElementById("ui-datepicker-div");
+	            		
+	            		if (datepickerDivElement != null) {
+	            			datepickerDivElement.parentNode.removeChild(datepickerDivElement);
+	            		}
+	            		
+	            		// reform inner editor
+	            		var reformEditor = iframe_content.iframe_content_reform;
+	            		
+	            		if (reformEditor) {
+		            		// set editor content to innerHTML
+		            		documentCloneNode.getElementById("reform-editor").innerHTML = reformEditor.GetEditorContent();	
+	            		}
+	            		
+	            		return documentCloneNode.body.innerHTML;
+	            	}
+	            	
 	                return iframe_content.GetEditorContent();
 	            } catch (e) {
 	                return null;
@@ -744,8 +796,15 @@
 	
 	        function Editor_Complete() {
 	            try {
-	                iframe_content.SetEditorContent(div_BODY.innerHTML);
-// 	                iframe_content.SetEditorContent();
+
+	            	if (!isReform) {
+				iframe_content.SetEditorContent(div_BODY.innerHTML);
+	            		// iframe_content.SetEditorContent();
+	            	} else if (parent.pDraftFlag == "REDRAFT") {
+	            		iframe_content.document.body.innerHTML = div_BODY.innerHTML;
+	            	}
+
+	                
 	                if (isConDoc) {
 	                    parent.Conn_Initial();
 	                }

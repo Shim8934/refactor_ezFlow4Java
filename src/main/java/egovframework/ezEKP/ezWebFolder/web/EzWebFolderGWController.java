@@ -2273,12 +2273,23 @@ public class EzWebFolderGWController {
 			return result;
 		}
 		
-		try {
+		process: try {
 			LoginVO userInfo           = commonUtil.getUserForGw(userId, serverName);
 			String userName1           = userInfo.getDisplayName1();
 			String userName2           = userInfo.getDisplayName2();
 			int tenantId               = userInfo.getTenantId();
 			String offset              = userInfo.getOffset();
+			
+			List<DuplicateInfoVO> duplicateList = new ArrayList<>();
+			
+			if (duplicateList.addAll(ezWebFolderService.getAllDuplicateInfo(folderName, pFolderId, offset, tenantId))) {
+				result.put("status", "ok");
+				result.put("code", 8);
+				result.put("duplicateInfoArray", duplicateList);
+				
+				break process;
+			}
+			
 			FolderVO parentFolder      = ezWebFolderService.getFolderByFolderId(pFolderId, offset, tenantId);
 			FolderVO folder            = new FolderVO();
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -2350,28 +2361,43 @@ public class EzWebFolderGWController {
 			LoginVO userInfo           = commonUtil.getUserForGw(userId, serverName);
 			int tenantId               = userInfo.getTenantId();
 			String offset              = userInfo.getOffset();
+			
+			List<DuplicateInfoVO> duplicateList = new ArrayList<>();
 			FolderVO folder            = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			Date date                  = new Date();
-			String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 			
-			// TODO: 현재 query상에서 .S 형태로 돌아와서 해놓은것이지만 다른 형식으로 돌아올때에는 수정필요함.
-			SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss.S");						// db에서 가져온 folder의 timeUTC를 적용한 -9시간
-		    Date date1 = formatter2.parse(folder.getCreateDate());												// folder의 creatreDate를 가져와서 date방식으로 format
-		
-		    SimpleDateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					// 우리가 지원하는 형식으로 다시 포맷
-		    String timeUTCCreate	   = commonUtil.getDateStringInUTC(targetDateFormat.format(date1), offset, true);	// timeUTC 적용
+			if (duplicateList.addAll(ezWebFolderService.getAllDuplicateInfo(folderName, folder.getFolderUpper(), offset, tenantId))) {
+				if (duplicateList.size() == 1 && duplicateList.get(0).getOldId().equals(folderId)) {
+					duplicateList.clear();
+				}
+			}
 			
-			folder.setFolderName1(folderName);
-			folder.setFolderName2(folderName2);
-			folder.setUpdateId(userId);
-			folder.setUpdateDate(timeUTC);
-			folder.setCreateDate(timeUTCCreate);
+			if (duplicateList.isEmpty()) {
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				Date date                  = new Date();
+				String timeUTC             = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+				
+				// TODO: 현재 query상에서 .S 형태로 돌아와서 해놓은것이지만 다른 형식으로 돌아올때에는 수정필요함.
+				SimpleDateFormat formatter2 = new SimpleDateFormat("yyyy-MM-DD HH:mm:ss.S");						// db에서 가져온 folder의 timeUTC를 적용한 -9시간
+			    Date date1 = formatter2.parse(folder.getCreateDate());												// folder의 creatreDate를 가져와서 date방식으로 format
 			
-			ezWebFolderAdminService.insertFolder(folder);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
+			    SimpleDateFormat targetDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");					// 우리가 지원하는 형식으로 다시 포맷
+			    String timeUTCCreate	   = commonUtil.getDateStringInUTC(targetDateFormat.format(date1), offset, true);	// timeUTC 적용
+				
+				folder.setFolderName1(folderName);
+				folder.setFolderName2(folderName2);
+				folder.setUpdateId(userId);
+				folder.setUpdateDate(timeUTC);
+				folder.setCreateDate(timeUTCCreate);
+				
+				ezWebFolderAdminService.insertFolder(folder);
+				
+				result.put("status", "ok");
+				result.put("code", 0);
+			} else {
+				result.put("status", "ok");
+				result.put("code", 8);
+				result.put("duplicateInfoArray", duplicateList);
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();

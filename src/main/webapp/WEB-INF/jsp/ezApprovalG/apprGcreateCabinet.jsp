@@ -152,7 +152,7 @@
 		    }
 		</SCRIPT>
 	</head>
-	<body style="background-color:#FFFFFF;margin-left:0px;margin-top:0px;" class="popup">
+	<body style="background-color:#FFFFFF;margin-left:10px;margin-top:3px;" class="popup">
 <!-- 		<OBJECT classid=clsid:35609FBF-EE92-472F-B72A-599B70D21F9E  -->
 <!-- 				id=behave1 -->
 <!-- 				style="HEIGHT: 0px; WIDTH: 0px;display:none;"></OBJECT> -->
