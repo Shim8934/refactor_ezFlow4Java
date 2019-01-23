@@ -2839,6 +2839,7 @@ h2, #menu span {font-size: 12px;}
 .survey-detail #menu {margin-bottom: 20px;}
 
 /* respondent select page part */
+.survey-target .target-slt {width:100%;}
 .receiver_tltype01 >span {min-width: 45px;}
 .infor-tbl tr th {width: 50px;}
 .infor-tbl tr td {padding-left: 10px;}

@@ -17,7 +17,7 @@
 		<table class="target-slt">
 			<tr>
 				<td>
-					<table id="TreeViewTD">
+					<table class="target-slt">
 						<tr>
 							<!-- left -->
 							<td class="left-tdtbl">
