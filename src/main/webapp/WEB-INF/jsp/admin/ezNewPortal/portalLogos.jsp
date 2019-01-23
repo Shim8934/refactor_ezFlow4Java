@@ -137,12 +137,16 @@
 							
 							document.getElementsByClassName("loginLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = logoUrl;
 							
-							if (!logoDefault) {
-								document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
-								document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
-							} else {
-								document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
-								document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
+							var adminCheck = "${adminCheck}";
+							
+							if (adminCheck == "true") {
+								if (!logoDefault) {
+									document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
+									document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
+								} else {
+									document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
+									document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
+								}
 							}
 							
 						} else if (logoType == "P") {

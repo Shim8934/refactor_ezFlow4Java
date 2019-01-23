@@ -305,6 +305,8 @@
 				a.company_id = #companyId#
 			and
 				a.tenant_id = #tenantId#
+			and
+				a.form_del_flag is null
 			order by a.form_id desc, d.DISPLAYNAME$lang$ asc
 		]]>
 	</select>
@@ -330,6 +332,8 @@
 					a.tenant_id = #tenantId#	
 				and
 					a.company_id = #companyId#
+				and
+					form_del_flag is null
 			]]>
 		</isEmpty>
 		<isNotEmpty property="deptId">
@@ -355,6 +359,8 @@
 					a.tenant_id = #tenantId#
 				and
 					a.company_id = #companyId#
+				and
+					a.form_del_flag is null
 				order by orderNo, form_id
 			]]>
 		</isNotEmpty>
@@ -693,16 +699,18 @@
 	</delete>
 
 	<!-- 양식 삭제 -->
-	<delete id="deleteJournalForm" parameterClass="map">
-		delete from
+	<update id="deleteJournalForm" parameterClass="map">
+		update
 			tbl_journal_form
+		set
+			form_del_flag = 'Y'
 		where
 			form_id = #formId#
 		and
 			company_id = #companyId#
 		and
 			tenant_id = #tenantId#
-	</delete>
+	</update>
 
 	<!-- 사원의 열람권한을 저장하는 쿼리 -->
 	<insert id="insertAuthDept" parameterClass="Map">

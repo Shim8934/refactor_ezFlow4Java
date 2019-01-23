@@ -1511,4 +1511,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void insertPortalThemePortletInitdata() throws Exception {
 		ezCommonDAO.insertPortalThemePortletInitdata();
 	}
+	
+	@Override
+	public void addJournalFormDelFlag() throws Exception {
+		ezCommonDAO.addJournalFormDelFlag();
+	}
 }

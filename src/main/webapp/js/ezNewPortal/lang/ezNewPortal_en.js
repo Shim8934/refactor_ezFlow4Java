@@ -15,5 +15,10 @@ var messages = {
 	strLang14 : "You do not have permission on that bulletin.",
 	strLang15 : "JAN;FEB;MAR;APR;MAY;JUN;JUL;AUG;SEP;OCT;NOV;DEC",
 	strLang16 : "HWP is not supported.",
-	strLang17 : "There is no designated bulletin boards."
+	strLang17 : "There is no designated bulletin boards.",
+	strLang18 : "메일쓰기",
+	strLang19 : "기안하기",
+	strLang20 : "일정작성",
+	strLang21 : "직원찾기",
+	strLang22 : "메모작성",	
 }
