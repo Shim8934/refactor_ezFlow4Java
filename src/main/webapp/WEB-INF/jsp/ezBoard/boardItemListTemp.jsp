@@ -951,13 +951,13 @@
 	</head>
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	    <h1><spring:message code='ezBoard.t10030'/><span id="mailBoxInfo"></span>
-	        <span style="float:right;font-weight:normal;color:black;">
+	        <span class="searchForm">
 	         	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 					<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 		    	</select>
-			  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	          <a style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+			  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+	          <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search('quick')"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">

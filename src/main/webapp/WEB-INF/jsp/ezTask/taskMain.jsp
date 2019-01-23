@@ -1041,18 +1041,18 @@
 		</div>
 	
 		<h1><span id="presentcell"></span><span id="mailBoxInfo"></span>
-		    <span style="float:right;font-weight:normal;color:black;">
+		    <span class="searchForm">
 		    <!-- 2018-07-17 구해안 라디오박스 검색창 select box로 변경 및 스타일 다른 모듈과 같도록 수정-->
-		    <select id="formId" name="searchCheck" style="width:80px; height:27px; border-color: #c8c8c8;">
-		    	<option id="Radio2" value="title"><spring:message code='ezTask.t118' /></option>
-		    	<option id="Radio1" value="personName"><spring:message code='ezTask.t2005' /></option>
-		    	<option id="Radio3" value="creatorname"><spring:message code='ezTask.t162' /></option>
-		    	<option id="Radio4" value="memo"><spring:message code='ezTask.t170' /></option>
-		    </select>
+			    <select id="formId" name="searchCheck" style="width:80px; height:27px; border-color: #c8c8c8;">
+			    	<option id="Radio2" value="title"><spring:message code='ezTask.t118' /></option>
+			    	<option id="Radio1" value="personName"><spring:message code='ezTask.t2005' /></option>
+			    	<option id="Radio3" value="creatorname"><spring:message code='ezTask.t162' /></option>
+			    	<option id="Radio4" value="memo"><spring:message code='ezTask.t170' /></option>
+			    </select>
 		         <%--  <input name="searchCheck" id="Radio2" type="radio" value="title" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio2" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t118' /></label>
 		          <input name="searchCheck" id="Radio1" type="radio" value="personName"  style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle "><label for="Radio1" style="vertical-align:middle">&nbsp;<spring:message code='ezTask.t2005' /></label> --%>				  
-				  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		          <a style="float:right;"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
+				  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+		          <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search()"></a>
 		    </span>
 		</h1>
 		
@@ -1072,19 +1072,19 @@
 				<li onClick="RefreshView()"><span class="icon16 icon16_refresh"></span></li>
 
 				<!-- 완료 -->
-				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;padding-right: 20px;">
+				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;padding-right: 7px;">
 					<input name="check" id="checkRadio1" type="radio" value="finish" onClick="selectTab(1)" style="width:13px;height:13px;vertical-align:middle ">
 					<label for="checkRadio1" style="vertical-align:middle"><spring:message code='ezTask.t9001' /></label>
 				</li>
 
 				<!-- 진행중 -->
-				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;">
+				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;margin-right:5px">
 					<input name="check" id="checkRadio2" type="radio" value="ongoing" checked onClick="selectTab(2)" style="width:13px;height:13px;vertical-align:middle ">
 					<label for="checkRadio2" style="vertical-align:middle"><spring:message code='ezTask.t98' /></label>
 				</li>
 
 				<!-- 전체보기 -->
-				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;">
+				<li id="right" class="sort_radio" style="float:right;font-weight:normal;color:black;margin-right:5px">
 					<input name="check" id="checkRadio3" type="radio" value="all" onClick="selectTab(3)" style="width:13px;height:13px;vertical-align:middle ">
 					<label for="checkRadio3" style="vertical-align:middle"><spring:message code='ezTask.jsh07' /></label>
 				</li>
