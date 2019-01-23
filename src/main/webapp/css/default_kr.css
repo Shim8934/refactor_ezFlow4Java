@@ -3033,7 +3033,7 @@ h2, #menu span {font-size: 12px;}
 .legend-ul li + li {padding-top: 10px;}
 
 .chartWrapper {position: relative; padding: 0px 10px 15px;}
-.chartAreaWrapper {width: 100%; overflow-x: auto;}
+.chartAreaWrapper {width: 100%; overflow-x: auto; overflow-y: hidden;}
 .chartAreaWrapper.bnk-wrap {overflow-x: hidden;}
 /*** survey statistic part end ***/
 

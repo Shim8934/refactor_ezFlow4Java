@@ -478,7 +478,7 @@
 				var options = {
 					chart: {width: 600, height: 360},
 					tooltip: {},
-					legend: {align : 'left',},
+					legend: {align : 'left', showCheckbox : false},
 					chartExportMenu: {visible : false},
 					usageStatistics: false
 				};
@@ -574,7 +574,7 @@
 					
 					yAxis: {title: '', min: 0, max: maxYValue},
 					xAxis: {title: 'x'},
-					legend: {align: 'top', visible: legendFlag},
+					legend: {align: 'top', showCheckbox: false, visible: legendFlag},
 					series: {barWidth : 40},
 					chartExportMenu: {visible : false},
 					usageStatistics: false
@@ -583,39 +583,42 @@
 				var chart = tui.chart.columnChart(divElmt, data, options);
 				chart.on('selectSeries', function(info) {
 					var question = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0];
-					var type     = parseInt(question["type"]);
-					if (type == 7) {
-						var indexVal  = info["index"];
-						var itemValue = parseInt(labels[indexVal]);
-						var responses = question["responses"].filter(function(res) {return res["sliderValue"] == itemValue});
-						
-						if (responses && responses.length > 0) {
+					
+					if (question) {
+						var type     = parseInt(question["type"]);
+						if (type == 7) {
+							var indexVal  = info["index"];
+							var itemValue = parseInt(labels[indexVal]);
+							var responses = question["responses"].filter(function(res) {return res["sliderValue"] == itemValue});
+							
+							if (responses && responses.length > 0) {
+								showSelectedUsers(responses);
+							}
+						}
+						else if (type == 3 || type == 4) {
+							var columnIdx = parseInt(info["legendIndex"]);
+							var rowIdx    = parseInt(info["index"]);
+							var option    = question["option"];
+							var columId   = option.filter(function(opt) {return opt["colLevel"] == columnIdx})[0]["optionId"];
+							var rowId     = option.filter(function(opt) {return opt["rowLevel"] == rowIdx})[0]["optionId"];
+							
+							var responses = question["responses"].filter(function(res) {
+								return res["rowId"] == rowId && res["columnId"] == columId;
+							});
+							
 							showSelectedUsers(responses);
 						}
-					}
-					else if (type == 3 || type == 4) {
-						var columnIdx = parseInt(info["legendIndex"]);
-						var rowIdx    = parseInt(info["index"]);
-						var option    = question["option"];
-						var columId   = option.filter(function(opt) {return opt["colLevel"] == columnIdx})[0]["optionId"];
-						var rowId     = option.filter(function(opt) {return opt["rowLevel"] == rowIdx})[0]["optionId"];
-						
-						var responses = question["responses"].filter(function(res) {
-							return res["rowId"] == rowId && res["columnId"] == columId;
-						});
-						
-						showSelectedUsers(responses);
-					}
-					else if (type == 8) {
-						var rankingIdx = parseInt(info["index"]);
-						var optionIdx  = parseInt(info["legendIndex"]);
-						var option     = question["option"];
-						var optionId   = option.filter(function(opt) {return opt["level"] == optionIdx})[0]["optionId"];
-						var responses  = question["responses"].filter(function(res) {
-							return res["rankingLevel"] == rankingIdx + 1 && res["optionId"] == optionId;
-						});
-						
-						showSelectedUsers(responses);
+						else if (type == 8) {
+							var rankingIdx = parseInt(info["index"]);
+							var optionIdx  = parseInt(info["legendIndex"]);
+							var option     = question["option"];
+							var optionId   = option.filter(function(opt) {return opt["level"] == optionIdx})[0]["optionId"];
+							var responses  = question["responses"].filter(function(res) {
+								return res["rankingLevel"] == rankingIdx + 1 && res["optionId"] == optionId;
+							});
+							
+							showSelectedUsers(responses);
+						}
 					}
 				});
 			}
