@@ -944,7 +944,7 @@ var SurveyCreate     = function() {
 		var wrapper      = $("<div class='qstnWrapper' id='" + qstId + "'></div>");
 		var quesDiv      = $("<div class='quesDiv'></div>");
 		var qstnRow      = $("<div class='qstnRow'></div>");
-		var questnTitle  = $("<input class='questnTitle' value='" + qstContent + "' placeholder='" + SurveyMessages.strContent + "' />");
+		var questnTitle  = $("<input class='questnTitle' value='" + qstContent + "' maxLength='250' placeholder='" + SurveyMessages.strContent + "' />");
 		var ulToolTip    = $("<ul class='survey_atchBtn'></ul>");
 		var liAttImg     = $("<li class='off atchLiImg'><span class='survey_icon atchImg'></span></li>");
 		var liAttVdo     = $("<li class='off atchLiVdo'><span class='survey_icon atchVdo'></span></li>");
