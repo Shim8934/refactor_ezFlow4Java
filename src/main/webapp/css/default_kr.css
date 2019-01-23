@@ -3114,7 +3114,7 @@ h2, #menu span {font-size: 12px;}
 .info-input-pp {font-size:14px;}
 .textInput:focus, .info-input-ttl:focus, .info-input-pp:focus {border:1px solid #2196f3 !important;}
 .surveyContent{margin:0px 0px 10px 0px; padding:0px;}
-.content.surveyContent, .content.surveyDtl {width: 100%; table-layout: fixed;}
+.content.surveyContent, .content.surveyDtl {width: 100%; table-layout: fixed; margin-top: 10px;}
 .content.surveyDtl {margin: 0px; padding: 0px;}
 .inf-spanTxt {margin:0px 10px 0px 0px;}
 .left-Th {width: 80px !important;}
