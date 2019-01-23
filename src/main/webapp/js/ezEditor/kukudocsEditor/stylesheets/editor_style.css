@@ -3,35 +3,33 @@
 html {
     width: auto !important;
     height: auto !important;
-    margin: 0 !important;
+    margin: 0px !important;
     padding-top: 10px !important;
     padding-left: 10px !important;
 }
 
 body {
-    word-Wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
     cursor: text;
     font-family: 굴림;
     font-size: 12pt;
     overflow-y: auto !important;
     overflow-x: auto !important;
-    margin-top: -10 !important;
-    margin-left: -10 !important;
-    margin-right: 0 !important;
-    margin-bottom: 0 !important;
+    margin-top: -10px !important;
+    margin-left: -10px !important;
+    margin-right: 0px !important;
+    margin-bottom: 0px !important;
     padding-top: 10px !important;
     padding-left: 10px !important;
     padding-right: 10px !important;
-    padding-bottom: 0 !important;
+    padding-bottom: 0px !important;
     height: 100% !important;
 }
 
 table {
     font-size: inherit;
     font-family: inherit;
-}
-
-td,th {
 }
 
 p {
@@ -50,12 +48,13 @@ hr {
     cursor : move;
 }
 
-/*font, span {background:rgba(255,255,255,0)}*/
-/*font:only-child,*/
-/*span:only-child {line-height: inherit;}*/
-font:empty:before,
-span:empty:before {content:'\200B'}
-br:only-child:before {content:'\200B'}
+hr:after {
+    content:'\200B';
+    display: block;
+    height: 0px;
+    width: 0px;
+    overflow: hidden;
+}
 
 a[filedata="kk_type_file"]:after {
     content: "💾";
