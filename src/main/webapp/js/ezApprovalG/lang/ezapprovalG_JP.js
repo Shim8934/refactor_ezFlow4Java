@@ -255,7 +255,7 @@ var strLang397 = "閉じる"
 var strLang400 = "修正することができません。"
 var strLang401 = "コメントを選択してください。"
 var strLang402 = "コメントを入力してください。"
-var strLang405 = "差し戻しコメント"
+var strLang405 = "回送コメント"
 var strLang406 = "コメント内容を削除してよろしいですか？"
 var strLang407 = "취소"
 var strLang408 = "削除することができません。"
@@ -529,7 +529,7 @@ var strLang734 = "분리첨부 쪽수"
 var strLang735 = "분리첨부 등록 구분"
 var strLang736 = "시청각기록물 내용 요약"
 var strLang737 = "시청각기록물 형태코드"
-var strLang740 = "差し戻しに失敗しました。."
+var strLang740 = "回送に失敗しました。."
 var strLang741 = "文書を差し戻し処理しました。"
 // ezViewHWP\ezSimsaG_HWP.js
 // ezViewWord\ezAprovUI.js
@@ -613,8 +613,8 @@ var strLang865 = "로 변경하여 주십시오."
 var strLang870 = "문서를 선택해주십시오."
 var strLang871 = "処理日時"
 var strLang872 = "문서 삭제에 실패 하였습니다."
-var strLang878 = "差し戻ししました。"
-var strLang879 = "差し戻し"
+var strLang878 = "回送しました。"
+var strLang879 = "回送"
 var strLang880 = "コメント情報"
 var strLang888 = "공람문서"
 var strLang891 = "決裁文書をキャンセルしました。 "
@@ -813,7 +813,7 @@ var strOpinionType6 = "006";
 var strLangOpinionType1 = "一般";
 var strLangOpinionType2 = "差し戻し";
 var strLangOpinionType3 = "保留意見";
-var strLangOpinionType4 = "引き戻し";
+var strLangOpinionType4 = "回送";
 
 // 2011.06.17 추가
 
@@ -847,7 +847,7 @@ var strLang1111 = "[決裁文書の引き戻し通知]";
 var strLang1112 = "[受信文書の到着通知]";
 var strLang1113 = "[代理決裁者指定の通知]";
 var strLang1114 = "[起案文書の差し戻し通知]";
-var strLang1115 = "[受発信文書の差し戻し通知]";
+var strLang1115 = "[受発信文書の回送通知]";
 var strLang1116 = "[決裁完了の通知]";
 var strLang1117 = "[受信部署の決裁完了の通知]";
 var strLang1118 = "[施行文の到着通知]";
