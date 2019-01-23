@@ -48,7 +48,7 @@
 	        var type = "c=1";
 	    	
 			$(document).ready(function() {
-				if (isAdmin === "true") {
+				if (isAdmin) {
 					type = 'c=1';
 					Permissions_List();
 				} else {
