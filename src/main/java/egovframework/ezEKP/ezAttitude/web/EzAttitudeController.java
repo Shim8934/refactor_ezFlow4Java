@@ -3461,6 +3461,7 @@ public class EzAttitudeController {
 		
 		String userId = userInfo.getId();
 		String companyId = userInfo.getCompanyID();
+		Locale locale = userInfo.getLocale();
 		
 		String year = request.getParameter("year");
 		
@@ -3529,9 +3530,9 @@ public class EzAttitudeController {
 		
 		//header
 		row.createCell(0).setCellValue("NO");
-		row.createCell(1).setCellValue("일자");
-		row.createCell(2).setCellValue("휴가유형");
-		row.createCell(3).setCellValue("금번 사용 연차수");
+		row.createCell(1).setCellValue(egovMessageSource.getMessage("ezAttitude.t107", locale));
+		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t35", locale));
+		row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t252", locale));
 		row.createCell(4).setCellValue("내용");
 		row.getCell(0).setCellStyle(headerStyle);
 		row.getCell(1).setCellStyle(headerStyle);
