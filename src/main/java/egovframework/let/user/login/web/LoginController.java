@@ -127,13 +127,15 @@ public class LoginController {
         	return "redirect:/ezNewPortal/newPortalMain.do"; 
     	}
     	
-    	if(model.get("multiLoginFlag") == null) {
-    		Cookie tempMLCookie = new Cookie("multiLoginCookie", null);
-    		tempMLCookie.setMaxAge(0);
-    		tempMLCookie.setPath("/");
-    		response.addCookie(tempMLCookie);
-    	} else {
+    	if(model.get("multiLoginFlag") != null || request.getParameter("multiLoginFlag") != null) {
     		model.addAttribute("message", "multiLoginNoti");
+    		
+    		if(model.get("multiLoginFlag") == null) {
+    			Cookie tempMLCookie = new Cookie("multiLoginCookie", null);
+        		tempMLCookie.setMaxAge(0);
+        		tempMLCookie.setPath("/");
+        		response.addCookie(tempMLCookie);
+    		}
     	}
     	
     	String pbm = egovFileScrty.getPbm();

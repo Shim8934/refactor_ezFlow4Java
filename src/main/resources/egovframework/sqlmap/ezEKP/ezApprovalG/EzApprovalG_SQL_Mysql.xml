@@ -10787,42 +10787,33 @@
 	</select>
 		
 	<select id="EzApprovalG.getDocHrefYear" parameterClass="Map" resultClass="String">
-		SELECT 
-			CASE  WHEN HREF = ' ' THEN 
-  			(
-	  			 SELECT 
-	  				HREF 
-	           	 FROM 
-	           	 	TBL_ENDAPRDOCINFO 
-	           	 WHERE  
-	           	 	DOCID = #v_PDOCID#
-	           	 AND 
-	           	 	TENANT_ID = #v_TENANTID#
-	           	 AND
-	           	 	COMPANYID = #companyID#) 
-           	ELSE
-           ( 
-	           	SELECT 
-	           		HREF
-	     		FROM 
-	     			TBL_APRDOCINFO 
-	    		WHERE  
-	    			DOCID = #v_PDOCID#
-	    		AND 
-	           	 	TENANT_ID = #v_TENANTID#
-	           	AND
-	           	 	COMPANYID = #companyID# )
-           END FROM(
-					SELECT 
-						IFNULL(HREF, ' ') HREF
-     				FROM 
-     					TBL_APRDOCINFO
-     				WHERE  
-     					DOCID = #v_PDOCID#
-     				AND 
-           	 			TENANT_ID = #v_TENANTID#
-           	 		AND
-	           	 		COMPANYID = #companyID#) A
+		SELECT
+		  A.HREF
+		FROM 
+		(
+		  SELECT
+		  	HREF
+		  FROM
+		  	TBL_APRDOCINFO
+		  WHERE
+		  	DOCID = #v_PDOCID#
+		  AND
+		  	TENANT_ID = #v_TENANTID#
+		  AND
+		  	COMPANYID = #companyID#
+		UNION ALL
+		  SELECT
+		  	HREF
+		  FROM
+		  	TBL_ENDAPRDOCINFO
+		  WHERE
+		  	DOCID = #v_PDOCID#
+		  AND
+		  	TENANT_ID = #v_TENANTID#
+		  AND
+		  	COMPANYID = #companyID#
+		) A
+		LIMIT 1
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getSepAttachSN" parameterClass="Map" resultClass="String"> -->
@@ -24399,7 +24390,7 @@
    	</select>
    	
    	<select id="EzApprovalG.getCodeContainer" parameterClass="Map" resultClass="ApprGTaskVO">
-   		<isEqual property="v_LANGTYPE" compareValue="1">
+   		<isEqual property="primaryLang" compareValue="1">
    		<![CDATA[
    			SELECT 
    				tbl_taskcode.taskname, keepingperiod , tbl_taskcode.taskcode
@@ -24447,7 +24438,7 @@
            		TBL_EXPENDAPRDOCINFO.taskcode 
           ]]>
    		</isEqual>
-   	 	<isNotEqual property="v_LANGTYPE" compareValue="1">
+   	 	<isNotEqual property="primaryLang" compareValue="1">
    	 	<![CDATA[
    	 		SELECT 
    				tbl_taskcode.taskname2 taskname, keepingperiod, TBl_EXPENDAPRDOCINFO.taskcode

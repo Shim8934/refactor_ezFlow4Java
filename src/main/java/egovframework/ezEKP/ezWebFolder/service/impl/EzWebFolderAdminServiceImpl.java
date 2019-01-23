@@ -360,7 +360,11 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		FolderVO folder            = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 		
 		if (duplicateList.addAll(ezWebFolderService.getAllDuplicateInfo(folderName, folder.getFolderUpper(), offset, tenantId))) {
-			return duplicateList;
+			if (duplicateList.size() == 1 && duplicateList.get(0).getOldId().equals(folderId)) {
+				duplicateList.clear();
+			} else {
+				return duplicateList;
+			}
 		}
 		
 		String folderPath          = folder.getFolderPath();

@@ -669,4 +669,23 @@
 		ADD 
 			HOLIDAYREPEAT VARCHAR2(45) DEFAULT NULL
 	</statement>
+	
+	<select id="EzCommonDAO.checkJournalFormDelFlag" resultClass="String">
+		<![CDATA[
+			SELECT
+				form_del_flag
+			FROM
+				TBL_JOURNAL_FORM
+			where
+				rownum <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addJournalFormDelFlag">
+		ALTER TABLE
+			TBL_JOURNAL_FORM
+		ADD (
+			form_del_flag VARCHAR(10) DEFAULT NULL
+			)
+	</statement>
 </sqlMap>

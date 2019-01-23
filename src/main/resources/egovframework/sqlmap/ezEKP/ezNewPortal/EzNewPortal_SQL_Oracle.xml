@@ -20,6 +20,7 @@
 <typeAlias alias="FrameInfoVO" type="egovframework.ezEKP.ezNewPortal.vo.FrameInfoVO"/>
 <typeAlias alias="WeatherVO" type="egovframework.ezEKP.ezNewPortal.vo.WeatherVO"/>
 <typeAlias alias="BoardListVO" type="egovframework.ezEKP.ezBoard.vo.BoardListVO"/>
+<typeAlias alias="OrganDeptVO" type="egovframework.ezEKP.ezOrgan.vo.OrganDeptVO"/>
 
 <resultMap class="PollQuestionVO" id="PollQuestionVO">
 <result property="qstId" 					column="ID" />
@@ -381,6 +382,7 @@ SELECT
     quicklinkname2, 
     quicklinkname3, 
     linktype, 
+    linktypeurl,
     url,
     quicksize
 FROM (
@@ -392,7 +394,8 @@ FROM (
 		    Q.quicklinkname, 
 		    Q.quicklinkname2, 
 		    Q.quicklinkname3, 
-		    Q.linktype, 
+		    Q.linktype,
+		    Q.linktypeurl, 
 		    Q.url,
 		    Q.size_ as quicksize,
 		    NVL(U.view_flag, NVL(DEPT.view_flag, NVL(COMP.view_flag, NVL(EVERY.view_flag, 'N')))) as viewflag
@@ -2312,5 +2315,25 @@ ORDER BY
 	AND
 		tbl_portal_menu_auth.user_id = #userId#
 ]]>    
+</select>
+
+<select id="ezNewPortal.getInitCompanyList" resultClass="OrganDeptVO">
+	<![CDATA[
+		SELECT 
+			A.cn, 
+			A.tenant_id AS tenantId 
+		FROM
+			TBL_DEPTMASTER A 
+		LEFT JOIN
+			TBL_PORTAL_THEME_PORTLET B
+		ON
+			A.cn = B.company_id
+		WHERE
+			A.cn = A.dept_cd_path
+		AND
+			B.company_id IS NULL
+		AND 
+			A.cn NOT LIKE 'shared_mailbox%'
+	]]>
 </select>
 </sqlMap>

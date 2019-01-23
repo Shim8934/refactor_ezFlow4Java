@@ -15,6 +15,9 @@ import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezCommon.vo.ApprovPWDVO;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezNewPortal.dao.EzNewPortalDAO;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
+import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.user.login.vo.TenantServerNameVO;
 import egovframework.let.user.login.vo.TenantVO;
@@ -30,6 +33,13 @@ public class EzCommonDAO extends EgovAbstractDAO{
 
     @Autowired
     private EzEmailUtil ezEmailUtil;
+    
+    //2019.01.21 유은정 - 동적 테이블 생성시 초기데이터 삽입 관련 추가
+    @Autowired
+    private EzOrganAdminDAO ezOrganAdminDAO;
+    
+    @Autowired
+    private EzNewPortalDAO ezNewPortalDAO;
     
 	public ApprovPWDVO getApprovPWD(LoginVO userInfo) throws Exception {
 		return (ApprovPWDVO) select("EzCommonDAO.getApprovPWD", userInfo);
@@ -448,6 +458,42 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			logger.debug("tbl_portal_theme_portlet doesn't exist. creating the table...");
 			
 			update("EzCommonDAO.createTblPortalThemePortlet");
+		}
+	}
+
+	public void insertPortalThemePortletInitdata() {
+		// TODO Auto-generated method stub
+
+		//insert init data
+		List<OrganDeptVO> initList = ezNewPortalDAO.getInitCompanyList();
+		
+		if (initList != null ) {
+			int initListCount = initList.size();
+			
+			for (int i = 0; i < initListCount; i++) {
+				int tenantId = initList.get(i).getTenantId();
+				String companyId = initList.get(i).getCn();
+				
+				Map<String, Object> map = new HashMap<String, Object>();
+				map.put("tenantID", tenantId);
+				map.put("companyID", companyId);
+				
+				try {
+					ezOrganAdminDAO.insertCompanyInfo_I30(map);
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+	}
+	
+	public void addJournalFormDelFlag() {
+		try {
+			select("EzCommonDAO.checkJournalFormDelFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_journal_form JournalFormDelFlag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addJournalFormDelFlag");
 		}
 	}
 }
