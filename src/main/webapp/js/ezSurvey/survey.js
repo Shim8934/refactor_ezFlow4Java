@@ -318,7 +318,7 @@ var SurveyCreate     = function() {
 	}
 	
 	function gotoSecondStep() {
-		if (enterLogic == 'Y') {deleteAllLogics(); return;}	// 로직 설정 단계에 진입했는지 확인
+		if (enterLogic == 'Y') {deleteAllLogics();}	// 로직 설정 단계에 진입했는지 확인
 		var checkObj = prepareForStep2();
 		if (checkObj["error"]) {alert(checkObj["error"]); return;}
 		var listTabElmt          = document.getElementsByClassName("headpanel")[0].children;
@@ -374,7 +374,7 @@ var SurveyCreate     = function() {
 			case 1: focusonQuestionTitleStep1(); 
 					toggleStep(spanElemt, crrSpan, tabIdx);
 					lastStep = 1; break;
-			case 2: if (enterLogic == 'Y') {deleteAllLogics(); return;}	// 로직 설정 단계에 진입했는지 확인
+			case 2: if (enterLogic == 'Y') {deleteAllLogics();}	// 로직 설정 단계에 진입했는지 확인
 					checkObj = prepareForStep2();
 					if (checkObj["error"]) {alert(checkObj["error"]); return;}
 					toggleStep(spanElemt, crrSpan, tabIdx);
@@ -2592,7 +2592,7 @@ var SurveyCreate     = function() {
 	function mkOptions(type, order, content) {
 		var options   = $("<div class='" + type + "-select'></div>");
 		var span      = $("<span class='" + type + "-order'>" + order + "</span>");
-		var contents  = $("<input class='textInput' type='text' value='" + content + "' placeholder='" + SurveyMessages.strContent + "'/>");
+		var contents  = $("<input class='textInput' type='text' value='" + content + "' maxlength='250' placeholder='" + SurveyMessages.strContent + "'/>");
 		var delOption = $("<ul class='survey_atchBtn'><li class='off delOption'><span class='survey_icon srvyDel'></span></li></ul>");
 		options.append(span);
 		options.append(contents);
@@ -2613,20 +2613,20 @@ var SurveyCreate     = function() {
 		if (type == "other") {
 			opt = $("<div class='other'></div>");
 			if (options) {
-				textInput = $("<input class='textInput' type='text' value='" + options["content"] + "' maxlength='40' placeholder='" + SurveyMessages.strOther + "'/>");
+				textInput = $("<input class='textInput' type='text' value='" + options["content"] + "' maxlength='250' placeholder='" + SurveyMessages.strOther + "'/>");
 			}
 			else {
-				textInput = $("<input class='textInput' type='text' maxlength='40' placeholder='" + SurveyMessages.strOther + "'>");
+				textInput = $("<input class='textInput' type='text' maxLength='250' placeholder='" + SurveyMessages.strOther + "'>");
 			}
 		}
 		else {
 			opt = $("<div class='optPart'></div>");
 			if (options) {
-				textInput = $("<input class='textInput' type='text' value='" + options["content"] + "' maxlength='40' placeholder='" + SurveyMessages.strContent + "' />");
+				textInput = $("<input class='textInput' type='text' value='" + options["content"] + "' maxlength='250' placeholder='" + SurveyMessages.strContent + "' />");
 				optAtt = options["attach"];
 			}
 			else {
-				textInput = $("<input class='textInput' type='text' maxlength='40' placeholder='" + SurveyMessages.strContent + "'/>");
+				textInput = $("<input class='textInput' type='text' maxlength='250' placeholder='" + SurveyMessages.strContent + "'/>");
 			}
 		}
 		

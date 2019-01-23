@@ -3399,7 +3399,7 @@ input[type=range]::-ms-tooltip {display: none;}
 /* survey information, questions and logic confirm part */
 .prevQsWrapper{margin:0px 0px 10px 0px; border:1px solid #ddd; position: relative;}
 .prevQsContent{padding:10px; background:#f1f6fb;}
-.prevQsWrapper .question-header .question-content {overflow:hidden; height:40px; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all;}
+.prevQsWrapper .question-header .question-content {overflow:hidden; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all;}
 .prevQsWrapper .question-header .imptt {line-height: 40px;}
 .srvyLogicbtn{display:inline-flex; margin:0px 0px 0px 10px;}
 .logicSkip{background-position:0px -94px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}
@@ -3411,20 +3411,20 @@ input[type=range]::-ms-tooltip {display: none;}
 
 .prevQsOpt .sltLogicArea {display: flex;}
 .prevQsOpt .sltLogicArea .prevSltArrow {padding: 0px 30px;}
-.prevQsOpt .sltLogicArea .logicSpan {font-size: 16px; margin-top: 2px;}
+.prevQsOpt .sltLogicArea .logicSpan {font-size: 16px; margin-top: 2px; width: 65px;}
 .prevQsOpt .slidLogicArea {display: flex; align-items: center; justify-content: center; padding-bottom: 10px;}
 .prevQsOpt .slidLogicArea .prevSlidSpan {padding-top: 6px; padding-left: 15px;}
 .prevQsOpt .slidLogicArea .prevSlidArrow {padding: 0px 30px;}
 .prevQsOpt .slidLogicArea .prevSlidInput {height: 32px; width: 70px; padding: 0px 5px;}
-.prevQsOpt .slidLogicArea .logicSpan {font-size: 14px; padding-left: 5px;}
+.prevQsOpt .slidLogicArea .logicSpan {font-size: 14px; padding-left: 5px; width: 65px;}
 .prevQsOpt .drdwLogicArea {padding-left: 35px; padding-bottom: 30px;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow {display: flex; padding: 10px 0px;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwSpan {font-size: 16px; padding-top: 3px;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwArrow {padding: 0px 30px;}
-.prevQsOpt .drdwLogicArea .drdwLogicRow .logicSpan {font-size: 16px; margin-top: 2px;}
+.prevQsOpt .drdwLogicArea .drdwLogicRow .logicSpan {font-size: 16px; margin-top: 2px; width: 65px;}
 .prevQsOpt .othersLogicArea {display: flex; padding-left: 15px;}
 .prevQsOpt .othersLogicArea .prevArrow {padding: 0px 30px;}
-.prevQsOpt .othersLogicArea .logicSpan {font-size: 16px; margin-top: 2px;}
+.prevQsOpt .othersLogicArea .logicSpan {font-size: 16px; margin-top: 2px; width: 65px;}
 .skipSelect, .logicSelect {height: 34px; padding: 0px 10px; font-size: 12px; color: #333; border: 1px solid #ddd; outline: 0px; min-width: 120px; -webkit-appearance: none; border: 1px solid #ddd; margin: 0; background: url(/images/ezSurvey/srvySelect.gif) #fff no-repeat right 16px center;}
 .prevQsWrapper .skipArrow {vertical-align: middle; padding: 0px 10px;}
 .prevQsWrapper .skipSpan {font-size: 16px; margin-top: 2px; font-weight: normal;}
