@@ -90,5 +90,7 @@ public interface EzCommonService {
 	
 	public void addUserMasterMailBoxQuota() throws Exception;
 
+	public void addJournalFormDelFlag() throws Exception;
+
 }
 
