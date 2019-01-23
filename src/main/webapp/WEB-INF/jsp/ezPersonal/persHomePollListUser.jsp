@@ -159,7 +159,7 @@
 	</head>
 	<body class="popup"> 
 		<form method="post"> 
-			<h1>Quick Poll<span id="mailBoxInfo"></span></h1>
+			<h1><spring:message code='main.t2000' /><span id="mailBoxInfo"></span></h1>
 			<div id="close"><ul><li><span onClick="window.close()"></span></li></ul></div>
   			<table> 
     			<tr> 
