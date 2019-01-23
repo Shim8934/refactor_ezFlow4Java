@@ -7,9 +7,9 @@
 
 <div class="survey-bttn-panel">
 	<div class="btnpositionSurvey">
-		<a id="gotoFirstTab" class="imgbtnSurvey gotoFirstTab"><span><spring:message code='ezSurvey.t91'/></span></a>
-		<a id="gotoThirdTab" class="imgbtnSurvey gotoThirdTab"><span><spring:message code='ezSurvey.t92'/></span></a>
-		<a id="gotoForthTab" class="imgbtnSurvey imgbtnSurvey_save gotoForthTab"><span><spring:message code='ezSurvey.t37'/></span></a>
+		<a id="gotoFirstTab" class="imgbtnSurvey gotoFirstTab"><span><spring:message code='ezSurvey.t92'/></span></a>
+		<a id="gotoThirdTab" class="imgbtnSurvey imgbtnSurvey_save gotoThirdTab"><span><spring:message code='ezSurvey.t89'/></span></a>
+		<a id="gotoForthTab" class="imgbtnSurvey imgbtnSurvey_save gotoForthTab"><span><spring:message code='ezSurvey.t98'/></span></a>
 		<a id="cancelSurvey1" class="imgbtnSurvey cancelSurvey"><span><spring:message code='ezSurvey.t18'/></span></a>
 	</div>
 </div>
