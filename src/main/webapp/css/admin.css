@@ -360,9 +360,14 @@ label[for="listOpt2"] { position: relative; top: -4.5px;}
 .concurrentUL .concurrentLI:hover .conlistDL .conlistIcon{ border:1px solid #3d8fea;} 
 .concurrentUL .concurrentLI .conlistDL{ margin:0px; padding:0px 30px 0px 15px; float:left;}
 .concurrentUL .concurrentLI .conlistDL .conlistIcon{ margin:14px 8px 0px 0px; padding:0px; width:36px; height:36px; border:1px solid #dddddd; border-radius:30px; -webkit-border-radius:30px; -moz-border-radius:30px; box-sizing:border-box; text-align:center; float:left;}
-.concurrentUL .concurrentLI .conlistDL .conlistIcon img{ padding:6px 0px 0px 0px;}
+.concurrentUL .concurrentLI .conlistDL .conlistIcon img{ padding:6px 0px 0px 0px; margin-bottom:10px; margin-left:2px;}
 .concurrentUL .concurrentLI .conlistDL .conlistText{ margin:0px; padding:0px; float:left; font-size:14px; font-weight:bold; color:#333;}
 .concurrentUL .concurrentLI .conDelete{ margin:0px; padding:17px 0px 0px 0px; box-sizing:border-box; float:right; width:45px; height:67px; background:#fafafa; border-left:1px solid #e5e5e5; text-align:center;}
 
+.concurrentUL .concurrentLI.selectTR { background:#edf7ff;}
+.concurrentUL .concurrentLI.selectTR .conlistDL .conlistIcon { border:1px solid #3d8fea;}
+
 /* adminTop */
 .adminTopTitle {cursor:pointer;}
+.concurrentUL .concurrentLI .conlistDL {width:calc(28% - 45px);}
+.concurrentUL .concurrentLI .conlistDL .conlistText {max-width:calc(100% - 45px); white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}

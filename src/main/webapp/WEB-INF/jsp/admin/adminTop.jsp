@@ -12,6 +12,9 @@
 			var useHWP = "${useHWP}";
 			function window_onload(){
 				process();
+				document.getElementById("adminTopTitle").addEventListener("click", function() {
+					parent.frames["bottom"].location.href = "/admin/ezNewPortal/portalMain.do";
+				});
 			}
 			
 			function process() {
@@ -148,7 +151,7 @@
 		<form method="post">
 			<%-- <h1 title="logo"><spring:message code="ezBoard.t84" /></h1> --%>
 			<div id="adminmenu">
-				<div class="adminTopTitle"><spring:message code="ezBoard.t84" /></div>
+				<div class="adminTopTitle" id="adminTopTitle"><spring:message code="ezBoard.t84" /></div>
 		    	<ul style="padding-left:150px;">
                     <c:if test="${firstScreen_Mail == 'YES'}">
                     	<li><span id="menu10" onClick="menu_change(70, event)"><spring:message code="main.t22" /></span></li>

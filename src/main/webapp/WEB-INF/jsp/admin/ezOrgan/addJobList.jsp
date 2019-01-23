@@ -326,9 +326,99 @@
 		        		result=loadXMLString(xml);
 		        		document.getElementById("AddJobList").innerHTML = "";
 		                var UserAddJobList = SelectNodes(result, "DATA/ROW");
+		               
+		                //2019.01.23 유은정 디자인 변경
+		                var ulElement = document.createElement("ul");
+		                ulElement.className = "concurrentUL";
 		                
 		                for (var Cnt = 0; Cnt < UserAddJobList.length; Cnt++) {
-		                    var DivLayer = document.createElement("DIV");
+		                	var liElement = document.createElement("li");
+		                	var companyElement = document.createElement("dl");
+		                	var deptElement = document.createElement("dl");
+		                	var jobNameElement = document.createElement("dl");
+		                	
+		                	var companyDt = document.createElement("dt");
+		                	var companyImg = document.createElement("img");
+		                	var companyDd = document.createElement("dd");
+		                	
+		                	var deptDt = document.createElement("dt");
+		                	var deptImg = document.createElement("img");
+		                	var deptDd = document.createElement("dd");
+		                	
+		                	var jobNameDt = document.createElement("dt");
+		                	var jobNameImg = document.createElement("img");
+		                	var jobNameDd = document.createElement("dd");
+		                	
+		                	var deleteElement = document.createElement("p");
+		                	var deleteSpan = document.createElement("span");
+		                	
+		                	liElement.id = "Cardlist_" + Cnt;
+		                	liElement.setAttribute("_CN", getNodeText(SelectNodes(UserAddJobList[0], "CN")[Cnt]));
+		                	liElement.setAttribute("_DEPTID", getNodeText(SelectNodes(UserAddJobList[0], "DEPARTMENT")[Cnt]));
+		                	liElement.setAttribute("_T1", getNodeText(SelectNodes(UserAddJobList[0], "TITLE1")[Cnt]));
+		                	liElement.setAttribute("_T2", getNodeText(SelectNodes(UserAddJobList[0], "TITLE2")[Cnt]));
+		                	liElement.onclick = function () { event_Cardlistclick(this); };
+		                	liElement.onselectstart = function () { return false; };
+		                	liElement.className = "concurrentLI";
+		                	
+		                	companyElement.className = "conlistDL";
+		                	deptElement.className = "conlistDL";
+		                	jobNameElement.className = "conlistDL";
+		                	
+		                	companyDt.className = "conlistIcon";
+		                	deptDt.className = "conlistIcon";
+		                	jobNameDt.className = "conlistIcon";
+		                	
+		                	companyImg.src = "/images/admin/admin_company.png";
+		                	deptImg.src = "/images/admin/admin_team.png";
+		                	jobNameImg.src = "/images/admin/admin_user.png";
+		                	
+		                	companyDd.className = "conlistText";
+		                	deptDd.className = "conlistText";
+		                	jobNameDd.className = "conlistText";
+		                	
+		                	
+							deleteElement.className = "conDelete";
+		                	deleteElement.setAttribute("id", "Cardlist_" + Cnt);
+		                	deleteElement.onclick = function () { event_DeleteClick(this) };
+		                	deleteSpan.className = "icon16 icon16_delete";
+		                	console.log(UserAddJobList[0]);
+		                	companyDd.textContent = getNodeText(SelectNodes(UserAddJobList[0], "COMPANY")[Cnt]);
+		                	
+		                    if (CrossYN()) {
+		                    	deptDd.textContent = getNodeText(SelectNodes(UserAddJobList[0], "DESCRIPTION")[Cnt])
+		                    } else {
+		                    	deptDd.innerText = getNodeText(SelectNodes(UserAddJobList[0], "DESCRIPTION")[Cnt])
+		                    }
+		                    
+		                    jobNameDd.textContent = getNodeText(SelectNodes(UserAddJobList[0], "DISPLAYNAME")[Cnt]) + " (" + getNodeText(SelectNodes(UserAddJobList[0], "TITLE")[Cnt]) + ")";
+		                    
+		                    //company
+		                    companyDt.appendChild(companyImg);
+		                    companyElement.appendChild(companyDt);
+		                    companyElement.appendChild(companyDd);
+		                    
+		                    //dept
+		                    deptDt.appendChild(deptImg);
+		                    deptElement.appendChild(deptDt);
+		                    deptElement.appendChild(deptDd);
+		                    
+		                    //userName + title
+		                    jobNameDt.appendChild(jobNameImg);
+		                    jobNameElement.appendChild(jobNameDt);
+		                    jobNameElement.appendChild(jobNameDd);
+		                    
+		                    //delete
+		                    deleteElement.appendChild(deleteSpan);
+		                    
+		                    //li로 합치기
+		                    liElement.appendChild(companyElement);
+		                    liElement.appendChild(deptElement);
+		                    liElement.appendChild(jobNameElement);
+		                    liElement.appendChild(deleteElement);
+		                    
+		                    document.getElementById("AddJobList").appendChild(liElement);
+		                    /* var DivLayer = document.createElement("DIV");
 		                    DivLayer.setAttribute("id", "Cardlist_" + Cnt);                    
 		                    DivLayer.className = "address_boxlist";
 		                    DivLayer.style.cursor = "pointer";
@@ -384,16 +474,16 @@
 		                    var UITag3 = document.createElement("li");
 		                    UITag3.innerHTML = "<span class=\"point_txt\">" + getNodeText(SelectNodes(UserAddJobList[0], "DISPLAYNAME")[Cnt]) + " (" + getNodeText(SelectNodes(UserAddJobList[0], "TITLE")[Cnt]) + ")</span>";                    
 
-		                    /* var EndDiv = document.createElement("DIV");
-		                    EndDiv.className = "shadow"; */
+		                    var EndDiv = document.createElement("DIV");
+		                    EndDiv.className = "shadow";
 
 		                    DivLayer.appendChild(SubDivLayer);
-		                    /* DivLayer.appendChild(EndDiv); */
+		                    DivLayer.appendChild(EndDiv);
 		                    SubDivLayer.appendChild(oTable);
 
 		                    SubDivLayer.appendChild(ULTag);
 		                    ULTag.appendChild(UITag1);
-		                    ULTag.appendChild(UITag3);
+		                    ULTag.appendChild(UITag3); */
 		                    
 		                    var a = document.getElementById("preview_nodata");
 		                    a.style.display = "none";
@@ -407,7 +497,7 @@
 		                    
 		                    document.getElementById("preview_title").textContent = headerTitle;
 		                    document.getElementById("preview_title2").textContent = headerTitle2 +"<spring:message code='ezOrgan.mse4' />";
-		                    document.getElementById("AddJobList").appendChild(DivLayer);
+		                    /* document.getElementById("AddJobList").appendChild(DivLayer); */
 		                }	
 		        	}
 		        });
@@ -577,7 +667,25 @@
 			}
 
 		    function event_Cardlistclick(obj) {
-		        if (!listEventCheckbox) {
+		    	var selectList = document.getElementsByClassName("selectTR");
+	    		var className = "selectTR";
+	    		
+		    	HTMLCollection.prototype.forEach = Array.prototype.forEach;
+		    	selectList.forEach(function(item, index) {
+		    		if (item.classList) {
+		    			item.classList.remove(className);
+		    		} else {
+		    			item.className = item.className.replace(new RegExp('(^|\\b)' + className.split(' ').join('|') + '(\\b|$)', 'gi'), ' ');
+		    		}
+		    	});
+		    	
+		    	if (obj.classList) {
+		    		obj.classList.add(className);
+		    	} else {
+		    		obj.className += ' ' + className;		    		
+		    	}
+		    			
+		        /* if (!listEventCheckbox) {
 		            if (!PressShiftKey && !PressCtrlKey && listContentArry.length > 0) {
 		                for (var Cnt = 0 ; Cnt < listContentArry.length; Cnt++) {
 		                    _RowObject = document.getElementById(listContentArry[Cnt]);
@@ -646,7 +754,7 @@
 		            }
 		        } else {
 		            listEventCheckbox = false;
-		        }
+		        } */
 		    }
 		    
 		    var addjob_config_dialogArguments = new Array();
@@ -933,8 +1041,8 @@
 						</p>
 		              </div>
 		              </div>
-		                 <div id="AddJobList" style="height:100%; width:450px; padding: 20px 10px 0px 10px;">
-		                </div>
+		                 <ul class="concurrentUL" id="AddJobList">
+		                </ul>
 		              </div> 
 		            </td>
 		        </tr>

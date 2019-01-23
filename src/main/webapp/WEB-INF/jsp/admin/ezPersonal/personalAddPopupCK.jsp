@@ -154,6 +154,30 @@
 					var skinDom = doc.getElementById('skin' + skinValue);
 					skinDom.classList.remove('unchecked');	
 					skinDom.classList.add('checked');
+					var isDefaultDiv = doc.createElement("div");
+					var isDefaultImg = doc.createElement("img");
+					
+					isDefaultDiv.className = "isDefault";
+					isDefaultImg.src = "/images/admin/themeDefault.png";
+					
+					isDefaultDiv.append(isDefaultImg);
+					
+					skinDom.append(isDefaultDiv);
+				} else {
+					skinObjs[0].classList.remove("unchecked");
+					skinObjs[0].classList.add("checked");
+					
+					var isDefaultDiv = doc.createElement("div");
+					var isDefaultImg = doc.createElement("img");
+					
+					isDefaultDiv.className = "isDefault";
+					isDefaultImg.src = "/images/admin/themeDefault.png";
+					
+					isDefaultDiv.append(isDefaultImg);
+					
+					var firstSkin = skinObjs[0].id;
+					
+					document.getElementById(firstSkin).append(isDefaultDiv);
 				}
 			}
 
@@ -163,12 +187,24 @@
 				var skinDom = doc.getElementById('skin' + skinValue);
 				skinDom.classList.remove('checked');
 				skinDom.classList.add('unchecked');
+				var isDefault = skinDom.getElementsByClassName("isDefault");
 				
+				skinDom.removeChild(isDefault[0]);
 				skinValue = this.id.substring(4);
 
 				skinDom = doc.getElementById('skin' + skinValue);
 				skinDom.classList.remove('unchecked');
 				skinDom.classList.add('checked');
+
+				var isDefaultDiv = doc.createElement("div");
+				var isDefaultImg = doc.createElement("img");
+				
+				isDefaultDiv.className = "isDefault";
+				isDefaultImg.src = "/images/admin/themeDefault.png";
+				
+				isDefaultDiv.append(isDefaultImg);
+				
+				skinDom.append(isDefaultDiv);
 			}
 
 
@@ -458,7 +494,7 @@
 				<td id="skinView" style="padding:3px; height:40px">
 					<ul class="skinList" id ="skinList">
 						<li>
-							<div class="skins checked" id="skin0">
+							<div class="skins" id="skin0">
 								<div class="skinImg">
 									<span class="skinImages bg01"></span>
 								</div>

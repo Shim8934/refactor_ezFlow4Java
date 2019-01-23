@@ -36,7 +36,6 @@
 	 			border:1px solid #ffffff;
 			}
 			
-			.popup_notice{height:100%;padding:20px;display:inline-block;position:absolute;visibility:visible;}
 			#noticePopupArea {visibility:hidden;position:absolute;top:0;left:0;}
     	</style>
 		<script type="text/javascript">
