@@ -26,6 +26,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script>
 	    
 		<script type="text/javascript" >
 	        var items = "${resultCount}";
@@ -49,6 +50,7 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 		        
+		        memoFolderList();
 		        memoClick($(".node_selected"));
 		
 		        leftResize();
@@ -69,7 +71,7 @@
 		    	var folderId = $(elem).attr("folderId");
 		    	var folderName = $(elem).attr("folderName");
 		    	
-	        	window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8&folderId="+folderId+"&folderName="+folderName+"&configView="+configView;
+	        	window.parent.frames["right"].location.href = "/ezMemo/memoMain.do?brdID=8&folderId="+folderId+"&folderName="+encodeURI(encodeURIComponent(folderName))+"&configView="+configView;
 		    	configView = false;
 		    }
 		    
@@ -94,6 +96,57 @@
 	        $( window ).resize(function() {
 	        	leftResize();
         	});
+	        
+	        function memoFolderList() {
+	        	$.ajax({
+	        		type : "GET",
+	            	dataType : "JSON",
+	            	async : false,
+	            	url : "/ezMemo/getMemoFoldersInfo.do",
+	            	success : function(result) {
+	            		var folders = result.folders;
+	            		
+	            		var defaultMemo = document.getElementById("memoListUL");
+	            		$( "#memoListUL" ).empty();
+            			
+	            		var li = document.createElement("LI");
+	            		
+	            		var span1 = document.createElement("SPAN");
+	            		span1.setAttribute("class", "sub_iconLNB tree_memo_all");
+	            		
+	            		var span2 = document.createElement("SPAN");
+	            		span2.setAttribute("class", "node_selected");
+	            		span2.setAttribute("onclick", "memoClick(this);");
+	            		span2.setAttribute("folderId", "0");
+	            		span2.setAttribute("folderName", strLangMemo20);
+	            		span2.innerHTML = strLangMemo20;
+	            		
+	            		li.appendChild(span1);
+	            		li.appendChild(span2);
+	            		defaultMemo.appendChild(li);
+	            		
+	            		for(var i=0; i<folders.length; i++) {
+	            			var li2 = document.createElement("LI");
+	            			li2.setAttribute("class", "memo");
+	            			
+	            			var span3 = document.createElement("SPAN");
+	            			span3.setAttribute("class", "sub_iconLNB tree_memo_default");
+	            			
+	            			var span4 = document.createElement("SPAN");
+	            			span4.setAttribute("class", "node_normal");
+	            			span4.setAttribute("onclick", "memoClick(this)");
+	            			span4.setAttribute("folderId", folders[i].folder_id);
+	            			span4.setAttribute("folderName", folders[i].folder_name);
+	            			span4.innerHTML = folders[i].folder_name;
+	            			
+	            			li2.appendChild(span3);
+	            			li2.appendChild(span4);
+	            			defaultMemo.appendChild(li2);
+	            		}
+	            	}
+	        	});
+	        	
+	        }
 		    
 	 
 	    </script>
@@ -108,11 +161,11 @@
 	        	<p class="btn_write01" onclick="memoWrite();"><span class="sub_iconLNB tree_write"></span><spring:message code="ezMemo.t0014" /></p>
 	        </div>
 	        <div class="boardListBox" style="overflow:hidden; padding-right: 0;">
-	        	<ul class="lnbUL">
-	        		<li class="memo"><span class="sub_iconLNB tree_memo_all"></span><span class="node_selected" onclick="memoClick(this);" folderId="0" folderName="<spring:message code="ezMemo.t0064"/>"><spring:message code="ezMemo.t0064"/></span></li>
-	        		<c:forEach items="${folders }" var="folder">
+	        	<ul id="memoListUL" class="lnbUL">
+	        		<%-- <li class="memo"><span class="sub_iconLNB tree_memo_all"></span><span class="node_selected" onclick="memoClick(this);" folderId="0" folderName="<spring:message code="ezMemo.t0064"/>"><spring:message code="ezMemo.t0064"/></span></li> --%>
+					<%-- <c:forEach items="${folders }" var="folder">
 		        		<li class="memo"><span class="sub_iconLNB tree_memo_default"></span><span class="node_normal" onclick="memoClick(this);" folderId="${folder.folder_id}" folderName="${folder.folder_name}"><c:out value="${folder.folder_name}"></c:out></span></li>
-	        		</c:forEach>
+	        		</c:forEach> --%>
 				</ul>	
 			</div>	        
 	    </div>

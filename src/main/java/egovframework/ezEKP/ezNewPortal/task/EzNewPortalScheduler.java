@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 
 @Component
-public class ezNewPortalScheduler {
-	private static final Logger logger = LoggerFactory.getLogger(ezNewPortalScheduler.class);
+public class EzNewPortalScheduler {
+	private static final Logger logger = LoggerFactory.getLogger(EzNewPortalScheduler.class);
 	
 	@Autowired
 	private Properties config;

@@ -129,7 +129,7 @@
 							workType: "trashMove",
 							infoArray: data.duplicateInfoArray,
 							folderId: folderId
-						});
+						}, true);
 					}
             	},
             	error : function(error) {

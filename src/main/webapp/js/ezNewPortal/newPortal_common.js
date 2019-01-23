@@ -1003,122 +1003,122 @@ function viewQuick() {
 }
 
 // 퀵메뉴
-function quickMenuOpenRight(menu) {
-	var url = '';
-	var location = '';
-	var option = '';
-	//var menu = event.data.menu;
-	
-	var pheight = window.screen.availHeight;
-	var conHeight = pheight * 0.8;
-	var pwidth = window.screen.availWidth;
-	var conWidth = pwidth * 0.8;			
-			
-	if (conWidth > 890) conWidth = 890;
-		        
-	var pTop = (pheight - conHeight) / 2;
-	var pLeft = (pwidth - 890) / 2;			
-
-	switch (menu) {
-		case 'mail':    
-		    url = '/ezEmail/mailWrite.do?cmd=NEW';
-			location = '';
-			option = 'top='+pTop+', left='+pLeft+', height='+conHeight+', width='+conWidth+', status=no, toolbar=no, menubar=no, location=no, resizable=1';
-			break;
-		case 'appr':
-			openForm();
-			break;
-		case 'schedule':		
-			url = '/ezSchedule/scheduleWrite.do?defaultid=0';
-			location = '';
-			pTop = (pheight - 819) / 2;
-			pLeft = (pwidth - 890) / 2;	
-			option = 'top='+pTop+', left='+pLeft+ ',height='+ '802' +', width='+'890'+', status=no, toolbar=no, menubar=no, location=no, resizable=1';			
-			break;
-		case 'organ':
-			url = '/ezPersonal/personSearch.do';
-			pTop = (pheight - 659) / 2;
-			pLeft = (pwidth - 715) / 2;	
-			option = 'top='+pTop+', left='+pLeft+ ',height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0';			
-			break;
-	}
-	
-	if(menu!=='appr') window.open(url, location, option);
-}
-
-var formURL = "";
-var formDocType = "";
-var getformcont_cross_dialogArguments = new Array();
-var url = "";
-
-function openForm() {
-    var parameter = new Array();
-    parameter[0] = "${userInfo.deptID}";
-    parameter[1] = "A01000";
-    
-    url = "/ezApprovalG/getFormCont.do";
-    
-    if (CrossYN()) {
-        getformcont_cross_dialogArguments[0] = parameter;
-        getformcont_cross_dialogArguments[1] = openForm_Complete;
-        var getFormCont_Cross = window.open(url, "/ezApprovalG/getFormCont.do", GetOpenWindowfeature(713, 570));
-        
-        try { getFormCont_Cross.focus(); } catch (e) {}
-    } else {
-        var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
-        var ret = window.showModalDialog(url, parameter, feature);
-        formURL = ret[0];
-        formDocType = ret[1];
-        
-        if (formURL != "cancel") {
-            openDraftUI(formURL, formDocType);
-        }
-    }
-}
-
-function openForm_Complete(ret) {
-    formURL = ret[0];
-    formDocType = ret[1];
-
-    if (formURL != "cancel") {
-        openDraftUI();
-    }
-}
-
-function openDraftUI() {
-    var pArgument = new Array();
-    var gb = "";
-    
-    if ("${userApprovalG}" == ("YES"))
-        gb = "G";
-    
-	pArgument[0] = "${userInfo.id}";
-    pArgument[1] = formURL;
-    pArgument[2] = "DRAFT";
-    pArgument[3] = formDocType;
-    pArgument[4] = "0"
-    pArgument[5] = ""
-    pArgument[6] = ""
-    pArgument[7] = "";
-
-    var openLocation = "";
-    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
-        if (!isIE()) {
-            alert(messages.strLang16);
-            return;
-        } else {
-           var openLocation = "/ezApprovalG/draftuiHWP.do";
-        }
-    } else {
-        var openLocation = "/ezApprovalG/draftui.do";
-    }
-    
-    openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
-    openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
-    openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
-    
-    openwindow(openLocation, "", 890, 620);
-}
+//function quickMenuOpenRight(menu) {
+//	var url = '';
+//	var location = '';
+//	var option = '';
+//	//var menu = event.data.menu;
+//	
+//	var pheight = window.screen.availHeight;
+//	var conHeight = pheight * 0.8;
+//	var pwidth = window.screen.availWidth;
+//	var conWidth = pwidth * 0.8;			
+//			
+//	if (conWidth > 890) conWidth = 890;
+//		        
+//	var pTop = (pheight - conHeight) / 2;
+//	var pLeft = (pwidth - 890) / 2;			
+//
+//	switch (menu) {
+//		case 'mail':    
+//		    url = '/ezEmail/mailWrite.do?cmd=NEW';
+//			location = '';
+//			option = 'top='+pTop+', left='+pLeft+', height='+conHeight+', width='+conWidth+', status=no, toolbar=no, menubar=no, location=no, resizable=1';
+//			break;
+//		case 'appr':
+//			openForm();
+//			break;
+//		case 'schedule':		
+//			url = '/ezSchedule/scheduleWrite.do?defaultid=0';
+//			location = '';
+//			pTop = (pheight - 819) / 2;
+//			pLeft = (pwidth - 890) / 2;	
+//			option = 'top='+pTop+', left='+pLeft+ ',height='+ '802' +', width='+'890'+', status=no, toolbar=no, menubar=no, location=no, resizable=1';			
+//			break;
+//		case 'organ':
+//			url = '/ezPersonal/personSearch.do';
+//			pTop = (pheight - 659) / 2;
+//			pLeft = (pwidth - 715) / 2;	
+//			option = 'top='+pTop+', left='+pLeft+ ',height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0';			
+//			break;
+//	}
+//	
+//	if(menu!=='appr') window.open(url, location, option);
+//}
+//
+//var formURL = "";
+//var formDocType = "";
+//var getformcont_cross_dialogArguments = new Array();
+//var url = "";
+//
+//function openForm() {
+//    var parameter = new Array();
+//    parameter[0] = "${userInfo.deptID}";
+//    parameter[1] = "A01000";
+//    
+//    url = "/ezApprovalG/getFormCont.do";
+//    
+//    if (CrossYN()) {
+//        getformcont_cross_dialogArguments[0] = parameter;
+//        getformcont_cross_dialogArguments[1] = openForm_Complete;
+//        var getFormCont_Cross = window.open(url, "/ezApprovalG/getFormCont.do", GetOpenWindowfeature(713, 570));
+//        
+//        try { getFormCont_Cross.focus(); } catch (e) {}
+//    } else {
+//        var feature = "status:no;dialogWidth:713px;dialogHeight:570px;edge:sunken;scroll:no";
+//        var ret = window.showModalDialog(url, parameter, feature);
+//        formURL = ret[0];
+//        formDocType = ret[1];
+//        
+//        if (formURL != "cancel") {
+//            openDraftUI(formURL, formDocType);
+//        }
+//    }
+//}
+//
+//function openForm_Complete(ret) {
+//    formURL = ret[0];
+//    formDocType = ret[1];
+//
+//    if (formURL != "cancel") {
+//        openDraftUI();
+//    }
+//}
+//
+//function openDraftUI() {
+//    var pArgument = new Array();
+//    var gb = "";
+//    
+//    if ("${userApprovalG}" == ("YES"))
+//        gb = "G";
+//    
+//	pArgument[0] = "${userInfo.id}";
+//    pArgument[1] = formURL;
+//    pArgument[2] = "DRAFT";
+//    pArgument[3] = formDocType;
+//    pArgument[4] = "0"
+//    pArgument[5] = ""
+//    pArgument[6] = ""
+//    pArgument[7] = "";
+//
+//    var openLocation = "";
+//    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
+//        if (!isIE()) {
+//            alert(messages.strLang16);
+//            return;
+//        } else {
+//           var openLocation = "/ezApprovalG/draftuiHWP.do";
+//        }
+//    } else {
+//        var openLocation = "/ezApprovalG/draftui.do";
+//    }
+//    
+//    openLocation = openLocation + "?formURL=" + escape(pArgument[1]) + "&draftFlag=" + escape(pArgument[2]) + "&formDocType=" + escape(pArgument[3]);
+//    openLocation = openLocation + "&susinSN=" + escape(pArgument[4]) + "&docState=" + escape(pArgument[5]) + "&listType=1" + "&aprState=" + escape(pArgument[6]);
+//    openLocation = openLocation + "&isTmpDoc=" + escape(pArgument[7]);
+//    
+//    openwindow(openLocation, "", 890, 620);
+//}
 
 // 협업 관련 추가
 function ezWorkspaceData() {

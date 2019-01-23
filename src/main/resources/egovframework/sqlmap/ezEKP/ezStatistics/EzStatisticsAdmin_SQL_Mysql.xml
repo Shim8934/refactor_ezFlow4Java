@@ -704,7 +704,7 @@
            	      	  DATE_FORMAT(date_add(CONNECTTIME,interval+#offSet# hour), '%H') ) A
         	ORDER BY 
         		A.DATE,
-           	    A.DAY ;
+           	    A.DAY 
 		]]>
 	</select>
 	
@@ -738,7 +738,7 @@
       		GROUP BY 
       			CONNECTBROWSER
         	ORDER BY 
-        		COUNT(SEQUENCE)  DESC ;
+        		COUNT(SEQUENCE)  DESC 
 		]]>
 	</select>
 	
@@ -814,7 +814,7 @@
                 TENANT_ID = #tenantID#
         	ORDER BY 
         		TYPE DESC,
-                CONNECTCNT DESC ;
+                CONNECTCNT DESC 
 		]]>
 	</select>
 	

@@ -568,7 +568,7 @@
 .jstree-default-small .jstree-node {
   min-height: 18px;
   line-height: 18px;
-  /* margin-left: 10px; */
+  margin-left: 10px;
 /*   min-width: 18px; */
 }
 .jstree-default-small .jstree-anchor {

@@ -7,12 +7,20 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">        
 	</head>
 	<script type="text/javascript">
-	    function reloadLoginPage(multiLoginFlag, uri) {
-	    	var parameter = "redirectUri=" + uri;
+	    function reloadLoginPage(multiLoginFlag, url) {
+	    	var frm = "";
+	    	
+	    	frm = "<form action='" + url + "' method='post' style='display:none;' id='reloadLogin' onsubmit='return false;'>";
 	    	if(!!multiLoginFlag) {
-	    		parameter += "&multiLoginFlag=" + multiLoginFlag;
+	    		frm += "<input type='hidden' name='multiLoginFlag' value='" + multiLoginFlag + "'>";
 	    	}
-	    	self.location.href = "/user/login/actionLogoutWithRedirectUri.do?" + parameter;
+	    	frm += "</form>";
+	    	
+	    	var wrapper = document.createElement("div");
+	    	wrapper.innerHTML = frm;
+	    	document.body.appendChild(wrapper);
+	    	document.getElementById("reloadLogin").submit();
+	    	
 	    }
 	</script>
 	<frameset rows="42,*" border="0" framespacing="0" frameborder="NO">

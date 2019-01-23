@@ -137,16 +137,14 @@
 						var logoDefault = result[i].logoDefault;
 						
 						if (logoType == "L") {
+							var adminCheck = "${adminCheck}";
 							
 							document.getElementsByClassName("loginLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = logoUrl;
-							
-							if (!logoDefault) {
-								if (document.getElementById("imgLogin")) {
+							if (adminCheck == "true") {
+								if (!logoDefault) {
 									document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
 									document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
-								}
-							} else {
-								if (document.getElementById("imgLogin")) {
+								} else {
 									document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t058' />";
 									document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "none";
 								}

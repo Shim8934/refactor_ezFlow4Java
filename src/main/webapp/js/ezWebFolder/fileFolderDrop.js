@@ -79,8 +79,12 @@ function fileupload() {
 							
 							duplicateInfo.fileObject = fileObj;
 							// not supported safari
-							duplicateInfo.newDate = fileObj.lastModified;
+							duplicateInfo.newDate = fileObj.lastModified || fileObj.lastModifiedDate;
 							duplicateInfo.newSize = fileObj.size;
+							
+							if (duplicateInfo.newDate instanceof Date) {
+								duplicateInfo.newDate = duplicateInfo.newDate.getTime();
+							}
 						}
 					});
 					

@@ -15,5 +15,10 @@ var messages = {
 	strLang14 : "権限がありません。",
 	strLang15 : "日曜日;月曜日;火曜日;水曜日;木曜日;金曜日;土曜日",
 	strLang16 : "HWP is not supported.",
-	strLang17 : "지정된 게시판이 없습니다."
+	strLang17 : "지정된 게시판이 없습니다.",
+	strLang18 : "메일쓰기",
+	strLang19 : "기안하기",
+	strLang20 : "일정작성",
+	strLang21 : "직원찾기",
+	strLang22 : "메모작성",	
 }

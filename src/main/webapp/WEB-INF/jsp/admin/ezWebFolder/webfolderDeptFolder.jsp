@@ -373,6 +373,9 @@
 							case 3:
 								alert("<spring:message code='ezWebFolder.t300' />");
 								break;
+							case 8:
+								alert(messages.resultErrDuplicateCreate);
+								break;
 						}
 					},
 					error: function (xhr, status, e){
@@ -465,6 +468,9 @@
 								break;
 							case 3:
 								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+							case 8:
+								alert(messages.resultErrDuplicateRename);
 								break;
 						}
 					},
