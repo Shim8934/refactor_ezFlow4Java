@@ -693,7 +693,7 @@
 			<tr>
 				<th><spring:message code='ezOrgan.0hun01'/></th>
 				<td>
-					<input type="checkbox" id="usepostdate" onclick="dateSearch()"><label for="usepostdate" style="margin-top: 2px; line-height: 26px;">검색기간 사용</label>
+					<input type="checkbox" id="usepostdate" onclick="dateSearch()"><label for="usepostdate" style="margin-top: 2px; line-height: 26px;"><spring:message code='ezEmail.t654'/></label>
 					<input type="text" id="startDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: -1px;" readonly="readonly" disabled/> ~ 
 					<input type="text" id="endDatepicker" class="hasDatapicker" style="width: 80px; text-align: center; margin-top: -1px;" readonly="readonly" disabled/>
 				</td>
