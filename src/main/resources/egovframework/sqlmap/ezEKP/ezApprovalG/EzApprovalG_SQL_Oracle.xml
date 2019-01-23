@@ -10634,28 +10634,33 @@
 <!-- 	</procedure> -->
 	<select id="EzApprovalG.getDocHrefYear" parameterClass="Map" resultClass="String">
 		SELECT
-		    href
-		FROM
-		    (
-		        select 
-		            href 
-		        from
-		            tbl_endaprdocinfo
-		        WHERE
-		             docid = #v_PDOCID#
-		         AND   tenant_id = #v_TENANTID#
-		         AND   companyid = #companyID#
-		    )
-		 where NOT EXISTS(
-		            SELECT
-		                href
-		            FROM
-		                tbl_aprdocinfo
-		            WHERE
-		                docid = #v_PDOCID#
-		                AND   tenant_id = #v_TENANTID#
-		                AND   companyid = #companyID#
-		  )
+		  A.HREF
+		FROM 
+		(
+		  SELECT
+		  	HREF
+		  FROM
+		  	TBL_APRDOCINFO
+		  WHERE
+		  	DOCID = #v_PDOCID#
+		  AND
+		  	TENANT_ID = #v_TENANTID#
+		  AND
+		  	COMPANYID = #companyID#
+		UNION ALL
+		  SELECT
+		  	HREF
+		  FROM
+		  	TBL_ENDAPRDOCINFO
+		  WHERE
+		  	DOCID = #v_PDOCID#
+		  AND
+		  	TENANT_ID = #v_TENANTID#
+		  AND
+		  	COMPANYID = #companyID#
+		) A
+		WHERE
+			ROWNUM = 1
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getSepAttachSN" parameterClass="Map" resultClass="String"> -->

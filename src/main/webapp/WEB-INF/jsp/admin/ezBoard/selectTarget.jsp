@@ -32,15 +32,18 @@
 		    var primary = "<c:out value='${primary}'/>";
 		    var ReturnFunction;
 		    var RetValue;
+		    var isAllGroupBoard;
 		    
 		    window.onload = function () {
 				try {
 					RetValue = parent.selecttarget_dialogArguments[0];
 		            ReturnFunction = parent.selecttarget_dialogArguments[1];
+		            isAllGroupBoard = parent.selecttarget_dialogArguments[2];
 		        } catch (e) {
 		            try {
 		            	RetValue = opener.selecttarget_dialogArguments[0];
 		                ReturnFunction = opener.selecttarget_dialogArguments[1];
+		                isAllGroupBoard = opener.selecttarget_dialogArguments[2];
 		            } catch (e) {
 		            }
 		        }
@@ -75,7 +78,12 @@
 		        listview5.DataBind("OrganListView");
 
 		        applyCurrentData();
-
+		        
+		        /* 2019-01-22 홍승비 - 전체관리자가 그룹사게시판의 권한 설정하는 경우, 전체 조직도 표출 */
+		        if (isAllGroupBoard == "Y") {
+		        	topid += "/organ";
+		        }
+		        
 		        g_xmlHTTP = createXMLHttpRequest();
 		        var strQuery = "<DATA><DEPTID>" + "${deptID}" + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);

@@ -10611,42 +10611,33 @@
 	</select>
 		
 	<select id="EzApprovalG.getDocHrefYear" parameterClass="Map" resultClass="String">
-		SELECT 
-			CASE  WHEN HREF = ' ' THEN 
-  			(
-	  			 SELECT 
-	  				HREF 
-	           	 FROM 
-	           	 	TBL_ENDAPRDOCINFO 
-	           	 WHERE  
-	           	 	DOCID = #v_PDOCID#
-	           	 AND 
-	           	 	TENANT_ID = #v_TENANTID#
-	           	 AND
-	           	 	COMPANYID = #companyID#) 
-           	ELSE
-           ( 
-	           	SELECT 
-	           		HREF
-	     		FROM 
-	     			TBL_APRDOCINFO 
-	    		WHERE  
-	    			DOCID = #v_PDOCID#
-	    		AND 
-	           	 	TENANT_ID = #v_TENANTID#
-	           	AND
-	           	 	COMPANYID = #companyID# )
-           END FROM(
-					SELECT 
-						IFNULL(HREF, ' ') HREF
-     				FROM 
-     					TBL_APRDOCINFO
-     				WHERE  
-     					DOCID = #v_PDOCID#
-     				AND 
-           	 			TENANT_ID = #v_TENANTID#
-           	 		AND
-	           	 		COMPANYID = #companyID#) A
+		SELECT
+		  A.HREF
+		FROM 
+		(
+		  SELECT
+		  	HREF
+		  FROM
+		  	TBL_APRDOCINFO
+		  WHERE
+		  	DOCID = #v_PDOCID#
+		  AND
+		  	TENANT_ID = #v_TENANTID#
+		  AND
+		  	COMPANYID = #companyID#
+		UNION ALL
+		  SELECT
+		  	HREF
+		  FROM
+		  	TBL_ENDAPRDOCINFO
+		  WHERE
+		  	DOCID = #v_PDOCID#
+		  AND
+		  	TENANT_ID = #v_TENANTID#
+		  AND
+		  	COMPANYID = #companyID#
+		) A
+		LIMIT 1
 	</select>
 	
 <!-- 	<procedure id="EzApprovalG.getSepAttachSN" parameterClass="Map" resultClass="String"> -->

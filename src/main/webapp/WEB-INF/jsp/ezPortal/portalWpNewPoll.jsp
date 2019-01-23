@@ -23,7 +23,7 @@
   						<c:otherwise>	  						
     						<div class="nodata_portlet">
 	    						<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>
-    							<p><spring:message code='main.t260' /></p>
+    							<p><spring:message code='main.t00026' /></p>
     						</div>
   						</c:otherwise>
   					</c:choose>
