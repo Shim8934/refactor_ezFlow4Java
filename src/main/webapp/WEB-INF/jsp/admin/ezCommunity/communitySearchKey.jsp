@@ -261,7 +261,7 @@
 							data.clubList.forEach(function(item, index){
 								html += "<tr ondblclick=view_closeCommunityInfo('" + item.c_ClubNo  + "');>";
 								html += "<td style='width: 35px;'>" + itemNum + "</td>";
-								html += "<td style='width: 25%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
+								html += "<td style='width: 29%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
 								html += "<td style='width: 50%;'>" + MakeXMLString(item.closeReason) + "</td>"; //폐쇄사유
 								html += "<td style='width: 10%;'>" + item.userName + "</td>"; //마스터이름
 								html += "<td style='width: 10%;'>" + item.applicationDate.substring(0, 10) + "</td>"; //신청일
@@ -594,7 +594,7 @@
 					<table id="mainListHeader2" class="mainlist" style="width: 100%; display: none;">
 						<tr id="mainListHeaderTr">
 							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
-							<th style="width: 25%;"><spring:message code = 'ezCommunity.t9991' /></th>
+							<th style="width: 29%;"><spring:message code = 'ezCommunity.t9991' /></th>
 							<th style="width: 50%;"><spring:message code = 'ezCommunity.t71' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t550' /></th>

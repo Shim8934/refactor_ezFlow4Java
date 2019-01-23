@@ -150,8 +150,8 @@
 							data.clubList.forEach(function(item, index){
 								html += "<tr ondblclick=open_info('" + item.c_ClubNo + "')>";
 								html += "<td style='width: 35px;'>" + itemNum +"</td>";
-								html += "<td style='width: 90px;'>" + getCategoryName(item.c_name) + "</td>";
-								html += "<td style='width: 25%;'>" + MakeXMLString(item.c_ClubName) +"</td>";
+								html += "<td style='width: 105px;'>" + getCategoryName(item.c_name) + "</td>";
+								html += "<td style='width: 43%;'>" + MakeXMLString(item.c_ClubName) +"</td>";
 								
 								if (item.c_ClubConfirmType == "2") { //유형
 									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t13' /></td>";
@@ -168,15 +168,15 @@
 								html += "<td style='width: 10%;'>" + item.userName +"</td>";
 								
 								if (selectedTabId == "admitCommu") {
-									html += "<td style='width: 5%;'>" + item.c_RegDate.substring(0, 10) +"</td>";
-									html += "<td style='width: 80px;'>";
+									html += "<td style='width: 7%;'>" + item.c_RegDate.substring(0, 10) +"</td>";
+									html += "<td style='width: 100px;'>";
 									html +=     "<a class='imgbtn imgbck' style='margin-right: 3px;'><span onclick=admitBtnClick('" + item.c_ClubNo + "')><spring:message code = 'ezCommunity.t46' /></span></a>";
 									html +=     "<a class='imgbtn imgbck'><span onclick=admitRefusalBtnClick('" + item.c_ClubNo + "')><spring:message code = 'ezCommunity.t44' /></span></a>";
 									html += "</td>";
 								}
 								else {
-									html += "<td style='width: 5%;'>" + item.applicationDate.substring(0, 10) +"</td>";
-									html += "<td style='width: 80px;'><a class='imgbtn imgbck'><span onclick=closeBtnClick('" + item.c_ClubNo + "')><spring:message code = 'ezCommunity.t46' /></span></a></td>";
+									html += "<td style='width: 7%;'>" + item.applicationDate.substring(0, 10) +"</td>";
+									html += "<td style='width: 100px;'><a class='imgbtn imgbck'><span onclick=closeBtnClick('" + item.c_ClubNo + "')><spring:message code = 'ezCommunity.t46' /></span></a></td>";
 								}
 								
 								html += "</tr>";
@@ -568,13 +568,13 @@
 			<table id="mainListHeader" class="mainlist" style="width: 100%">
 				<tr id="mainListHeaderTr">
 					<th style="width: 35px;"><spring:message code = 'ezCommunity.t32' /></th>
-					<th style="width: 90px;"><spring:message code = 'ezCommunity.t11' /></th>
-					<th style="width: 25%;"><spring:message code = 'ezCommunity.t9991' /></th>
+					<th style="width: 105px;"><spring:message code = 'ezCommunity.t11' /></th>
+					<th style="width: 43%;"><spring:message code = 'ezCommunity.t9991' /></th>
 					<th style="width: 10%;"><spring:message code = 'ezCommunity.t65' /></th>
 					<th style="width: 10%;"><spring:message code = 'ezCommunity.t15' /></th>
 					<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
-					<th style="width: 5%;"><spring:message code = 'ezCommunity.t550' /></th>
-					<th style="width: 80px;"></th>
+					<th style="width: 7%;"><spring:message code = 'ezCommunity.t550' /></th>
+					<th style="width: 100px;"></th>
 				</tr>
 			</table>
 		</div>
