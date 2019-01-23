@@ -164,11 +164,7 @@
 				            
 							/* 2019-01-22 홍승비 - 게시물 수정, 임시저장 시 첨부파일의 경로 전체가 특문 치환되는 오류 수정 */
 				            for (var i = 0; i < objAttachNodes.length; i++) {
-					            var attachFileStr = getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]);
-					            var filePath = attachFileStr.substring(0, attachFileStr.lastIndexOf("/") + 1);
-								var fileName = attachFileStr.substring(attachFileStr.lastIndexOf("/") + 1, attachFileStr.length);
-								
-				                attachxml += filePath + fileName.replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "") + "|";
+								 attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + "|";
 				            }
 			            }
 			        }

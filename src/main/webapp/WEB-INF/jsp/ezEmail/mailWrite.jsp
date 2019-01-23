@@ -986,23 +986,8 @@
 	        
 	        g_originalHTML = message.GetEditorContent();
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
-	        
-	        mailSignInnerHtml();
 	    }
 
-		// 180517 : 메일 mailsign div에 메일을 작성 후 서명 등록 또는 변경 시 본문 사라지는 현상 수정
-	    function mailSignInnerHtml() {
-			if (mailsel == 0 && gg_cmd != "RESEND") {
-				if (pUse_Editor == "KUKUDOCS") {
-					setTimeout(function() {
-							message.EditorElementSetHtml("MailSign", "");
-					}, 300);
-				} else {
-					message.EditorElementSetHtml("MailSign", "");
-				}
-			}
-	    }
-	
 	    function getJournalToMail(){
 	    	var journal;
 	    	$.ajax ({
@@ -1676,12 +1661,6 @@
 	    function keyEventNone(e) {
 	    	e.preventDefault();
 	    }
-	    /* 
-	    $(document).on("click", "#MailSign", function() {
-	    	if (mailsel == 0) {
-				message.EditorElementSetHtml("MailSign", "");
-			}
-	    }) */
 	    
 	    // 20180628 자동완성창의 width 값 고정
 	    jQuery.ui.autocomplete.prototype._resizeMenu = function () {
