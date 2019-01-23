@@ -955,7 +955,7 @@ var SurveyCreate     = function() {
 		var wrapper      = $("<div class='qstnWrapper' id='" + qstId + "'></div>");
 		var quesDiv      = $("<div class='quesDiv'></div>");
 		var qstnRow      = $("<div class='qstnRow'></div>");
-		var questnTitle  = $("<input class='questnTitle' value='" + qstContent + "' maxLength='250' placeholder='" + SurveyMessages.strContent + "' />");
+		var questnTitle  = $("<input class='questnTitle' value='" + qstContent + "' maxLength='250' placeholder='" + SurveyMessages.strQsContent + "' />");
 		var ulToolTip    = $("<ul class='survey_atchBtn'></ul>");
 		var liAttImg     = $("<li class='off atchLiImg'><span class='survey_icon atchImg'></span></li>");
 		var liAttVdo     = $("<li class='off atchLiVdo'><span class='survey_icon atchVdo'></span></li>");
@@ -1948,11 +1948,11 @@ var SurveyCreate     = function() {
 		var textQstnDiv = $("<div class='" + className + "'>");
 		
 		if (type == "paragraph") {
-			var textarea = $("<textarea class='" + type +"' maxlength='500' placeholder='" + SurveyMessages.strContent + "' optionId = '" + optionId + "'></textarea>");
+			var textarea = $("<textarea class='" + type +"' maxlength='500' placeholder='" + SurveyMessages.strTxtContent + "' optionId = '" + optionId + "'></textarea>");
 			textQstnDiv.append(textarea);
 		}
 		else {
-			var input = $("<input class='" + type +"' maxlength='80' placeholder='" + SurveyMessages.strContent + "' optionId = '" + optionId + "'/>");
+			var input = $("<input class='" + type +"' maxlength='80' placeholder='" + SurveyMessages.strTxtContent + "' optionId = '" + optionId + "'/>");
 			textQstnDiv.append(input);
 		}
 		

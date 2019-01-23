@@ -64,7 +64,7 @@ var SurveyMessages = {
 	strPerm      : "권한이 없습니다.",
 	strDel       : "삭제 되었습니다.",
 	strCreator   : "작&nbsp;성&nbsp;자",
-	strContent   : "내용을 입력해주세요.",
+	strContent   : "보기를 입력해 주세요.",
 	strSlider1   : "좌측 최소값이 유효하지 않습니다.",
 	strSlider2   : "우측 최대값이 유효하지 않습니다.",
 	strSlider3   : "최소값을 최대값보다 작게 지정하세요.",
@@ -132,4 +132,6 @@ var SurveyMessages = {
 	strRnkOpt    : "옵션은 최대 25개까지 추가 가능합니다.",
 	strSliderCnt : "선택한 인원",
 	strBack      : "질문 작성 단계로 이동시, 모든 분기와 건너뛰기가 초기화됩니다.",
+	strQsContent : "질문을 입력해 주세요.",
+	strTxtContent: "내용을 작성해 주세요.",
 }
