@@ -671,18 +671,25 @@
 	</statement>
 	
 	<select id="EzCommonDAO.checkJournalFormDelFlag" resultClass="String">
-			SELECT
-				form_del_flag
+		<![CDATA[
+        SELECT
+        	FORM_DEL_FLAG
+        FROM (
+            SELECT
+				ROWNUM AS RNUM, FORM_DEL_FLAG
 			FROM
 				TBL_JOURNAL_FORM
-			LIMIT 1
+            )
+        WHERE
+        	RNUM <= 1
+		]]>
 	</select>
 	
 	<statement id="EzCommonDAO.addJournalFormDelFlag">
 		ALTER TABLE
 			TBL_JOURNAL_FORM
 		ADD (
-			form_del_flag VARCHAR(10) DEFAULT NULL
+			form_del_flag VARCHAR2(10) DEFAULT NULL
 			)
 	</statement>
 </sqlMap>
