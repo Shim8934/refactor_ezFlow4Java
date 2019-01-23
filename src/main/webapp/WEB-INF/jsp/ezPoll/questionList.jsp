@@ -479,7 +479,7 @@
 			</c:when>
 		</c:choose>
 			<span id="mailBoxInfo"></span>
-			<span style="float: right; font-weight:normal;color:black;">
+			<span class="searchForm">
 				<select id="selectType">
 					<c:if test="${mode1 != 'wri'}">
 						<option name="searchCheck" id="radio1" value="sub" selected> <span><spring:message code="ezPoll.t106"/></span>
@@ -492,8 +492,8 @@
 				</select>
 					<!-- <input type="text" name="searchInput" id="searchInput" style="height:25px; padding:0px 6px; border:1px solid #d0d0d0;" > -->					
 					<%-- <a class="pollImgbtn" onClick="menu_Search()" ><span style="height: 23px;"><spring:message code="ezPoll.t227"/></span></a> --%>
-					<input type="text" name="searchInput" id="searchInput" onkeypress="check_key(event);" value="<c:out value='${strSearch1}'/>">
-					<a style="float:right"><img src="/images/bsearch_new.gif" border="0" onclick="menu_Search()"></a>
+					<input type="text" class="searchinputBox" name="searchInput" id="searchInput" onkeypress="check_key(event);" value="<c:out value='${strSearch1}'/>">
+					<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onclick="menu_Search()"></a>
 			</span>
 		</h1>
 		<div id="mainmenu">

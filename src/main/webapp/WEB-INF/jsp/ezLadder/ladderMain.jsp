@@ -98,15 +98,15 @@
 				</c:when>
 			</c:choose>			
 			<span id="mailBoxInfo"></span>
-			<span style="float: right; font-weight:normal;color:black;">
+			<span class="searchForm">
 				<select id="searchOption" style="height:27px; border-color: #c8c8c8">
 				  <option value="title" <c:if test = "${searchSelect eq 'title' }" >selected="selected"</c:if>><spring:message code="ezLadder.t003"/></option>
 				  <option value="kind" <c:if test = "${searchSelect eq 'kind' }" >selected="selected"</c:if>><spring:message code="ezLadder.t002"/></option>
 				  <option value="writer" <c:if test = "${searchSelect eq 'writer' }" >selected="selected"</c:if>><spring:message code="ezLadder.t004"/></option>
 				  <option value="participant" <c:if test = "${searchSelect eq 'participant' }" >selected="selected"</c:if>><spring:message code="ezLadder.t013"/></option>
 				</select>
-				<a style="float:right"><img src="/images/bsearch_new.gif" border="0" onclick="searchLadder()" ></a>
-				<input type="text" name="searchInput" id="searchInput" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;margin-left:5px;float:right" value="<c:out value='${searchInput}'/>">								
+				<input type="text" class="searchinputBox" name="searchInput" id="searchInput" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;margin-left:5px;float:right" value="<c:out value='${searchInput}'/>">
+				<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onclick="searchLadder()" ></a>
 				<select id="ladderType" style="height: 27px; width:150px; margin-left:5px; float:right;">
 				  <option value="0" <c:if test = "${searchInput eq '0' }" >selected="selected"</c:if>><spring:message code="ezLadder.t101"/></option>
 				  <option value="1" <c:if test = "${searchInput eq '1' }" >selected="selected"</c:if>><spring:message code="ezLadder.t102"/></option>
