@@ -1,13 +1,15 @@
 .skinList {margin-left:-38px;list-style:none;}
 .skinList li {float:left;margin:5px;}
-.skins {position:relative;width:110px;height:44px;text-align:center;border:2px solid #cecece;cursor:pointer;}
+.skins {position:relative;width:110px;height:44px;text-align:center;border:1px solid #cecece;cursor:pointer;}
 .skinImages {display:inline-block;position:relative;width:100%;height:100%; border:1px solid #cecece;}
-.checked {background-color:#edf7ff;border:2px solid #2196f3;}
+/* .checked {background-color:#edf7ff;border:1px solid #2196f3;} */
 .skinPopup {width:500px;height:500px;position:absolute;background:rgba(0,0,0,0.4);border-radius:30px;top:100px;left:150px;}
 .skinDivTop {display:inline-block;float:right;width:40px;margin-top:15px;}
 .skinPopImg {width:400px;height:400px;position:relative;top:50px;left:45px;}
 .skinCloseBtn {cursor:pointer;font-size:25px;}
 .skinImg {width:98%;height:95%;}
+.isDefault {position:absolute; background:rgba(0,0,0,0.3);width:110px; height:44px; top:0px;}
+.isDefault img {margin-top:7px; width:27px; height:27px;}
 
 .popup_notice{height:100%;padding:20px;}
 .popup_type0{background:url(/images/admin/popup_bg01.png) #0078fe top right no-repeat;border:1px solid #0053b3;}
