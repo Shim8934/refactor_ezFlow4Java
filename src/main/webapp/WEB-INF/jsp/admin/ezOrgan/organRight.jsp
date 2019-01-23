@@ -52,8 +52,9 @@
 				}
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 				windowResize();
+				functionSetting();
 			});
-
+			
 			window.onresize = function(event) {
 				windowResize();
 			};
@@ -156,14 +157,12 @@
 				if (listOpt1.checked == true){
 					cellContent = "extensionAttribute9;displayname;cn;description;title;extensionAttribute10";
 					typeContent = "userWithMasterAdmin";
-					document.getElementsByClassName('organSearchEnter')[0].style.display = "";
-					document.getElementsByClassName('organSearchForm')[0].style.display = "";
+					document.getElementsByClassName('searchForm')[0].style.display = "";
 				}else{
 					cellContent = ";displayname;extensionAttribute9";
 					// typeContent값은 부서장을 넣어주기 위해 바꿔주었음 (기존 group)
 					typeContent = "groupDeptMaster";
-					document.getElementsByClassName('organSearchEnter')[0].style.display = "none";
-					document.getElementsByClassName('organSearchForm')[0].style.display = "none";
+					document.getElementsByClassName('searchForm')[0].style.display = "none";
 				}
 				$.ajax({
 					type : "POST",
@@ -1793,7 +1792,7 @@
 				var doc = window.document;
 				var height = window.innerHeight * 0.8 - 72;
 				doc.getElementById('TreeView').style.height = height + "px";
-				doc.getElementsByClassName('OrganListView')[0].style.height = (height -60) + "px";
+				doc.getElementsByClassName('OrganListView')[0].style.height = (height -63) + "px";
 			}
 
 			/*
@@ -1806,6 +1805,19 @@
 				var deptID = treeNode.GetNodeData("CN");
 				GetDeptSubTreeInfo(deptID, TreeIdx);
 			}
+			
+			//2019.01.23 유은정 버튼 동작 추가
+			function functionSetting() {
+				//move up
+				var upBtn = document.getElementById("upBtn");
+				var downBtn = document.getElementById("downBtn");
+				var saveBtn = document.getElementById("saveBtn");
+				
+				upBtn.addEventListener("click", MoveUp_onclick);
+				downBtn.addEventListener("click", MoveDown_onclick);
+				saveBtn.addEventListener("click", MoveConfirm_onclick);
+			}
+			
 		</script>
 		<style>
 			.OrganListView {width:100%;}
@@ -1850,15 +1862,34 @@
 			<c:if test="${dotNetIntegration == 'YES'}">
 				<spring:message code='main.t24' />
 			</c:if>
+			<span class="searchForm">
+				<select id="search_type" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
+					<option selected value="description"><spring:message code='ezOrgan.t68' /></option>
+					<option value="displayname"><spring:message code='ezOrgan.t67' /></option>
+					<option value="cn"><spring:message code='ezOrgan.t94' /></option>
+					<option value="title"><spring:message code='ezOrgan.t69' /></option>
+					<option value="extensionAttribute10"><spring:message code='ezOrgan.t1500' /></option>
+					<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
+					<option value="mobile"><spring:message code='ezOrgan.t96' /></option>
+					<option value="HomePhone"><spring:message code='ezOrgan.t97' /></option>
+					<option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98' /></option>
+					<option value="mail"><spring:message code='ezOrgan.t99' /></option>
+					<option value="streetAddress"><spring:message code='ezOrgan.t100' /></option>
+				</select>
+				<input id="keyword" class="organSearchKeyword" onKeyPress="search_press()" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;"/>
+				<a class=searchBtn>
+					<img src="/images/bsearch_new2.gif" onClick="search_click()" border="0">
+				</a>
+			</span>
 		</h1>
 
 		<div id="mainmenu" class="organMainmenu">
 			<ul style="height:33px;">
 				<c:if test="${dotNetIntegration != 'YES'}">
-					<li id="companybutton3"><span onClick="check_info()"><spring:message code='ezOrgan.hyh06' /></span></li>
-					<li id="companybutton1"><span onClick="add_company()"><spring:message code='ezOrgan.t76' /></span></li>
-					<li><span onClick="add_dept()"><spring:message code='ezOrgan.t80' /></span></li>
-					<li><span onClick="add_user()"><spring:message code='ezOrgan.t84' /></span></li>
+					<li id="companybutton3" class="important"><span onClick="check_info()"><spring:message code='ezOrgan.hyh06' /></span></li>
+					<li id="companybutton1" class="important"><span onClick="add_company()"><spring:message code='ezOrgan.t76' /></span></li>
+					<li class="important"><span onClick="add_dept()"><spring:message code='ezOrgan.t80' /></span></li>
+					<li class="important"><span onClick="add_user()"><spring:message code='ezOrgan.t84' /></span></li>
 					<li id="companybutton2"><span onClick="del_company()"><spring:message code='ezOrgan.t78' /></span></li>
 					<li id="usermenu10"><span onClick="del_dept()"><spring:message code='ezOrgan.t81' /></span></li>
 					<li id="usermenu8"><span onClick="mov_dept()"><spring:message code='ezOrgan.t82' /></span></li>
@@ -1880,34 +1911,12 @@
 				<c:if test="${useMobileManagemant == 'YES' }">
 					<li id="usermenu23"><span onClick="mobile_managed()"><spring:message code='ezPersonal.t998' /></span></li>
 				</c:if>
-				<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>
-				<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
-				<div class="organSearchEnter" >
-					<a class="imgbtn search" style="vertical-align:middle; width: 35px; ">
-						<span onClick="search_click()"><spring:message code='ezOrgan.t101' /></span>
-					</a>
-				</div>
-				<div class="organSearchForm">
-					<div class="organSearchTab"><span><spring:message code='ezEmail.t642' /></span></div>
-					<div class="organSearchContent">
-						<span>
-							<select id="search_type" style="width:100px; height:27px !important;line-height:normal !important;">
-								<option selected value="description"><spring:message code='ezOrgan.t68' /></option>
-								<option value="displayname"><spring:message code='ezOrgan.t67' /></option>
-								<option value="cn"><spring:message code='ezOrgan.t94' /></option>
-								<option value="title"><spring:message code='ezOrgan.t69' /></option>
-								<option value="extensionAttribute10"><spring:message code='ezOrgan.t1500' /></option>
-								<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
-								<option value="mobile"><spring:message code='ezOrgan.t96' /></option>
-								<option value="HomePhone"><spring:message code='ezOrgan.t97' /></option>
-								<option value="facsimileTelephoneNumber"><spring:message code='ezOrgan.t98' /></option>
-								<option value="mail"><spring:message code='ezOrgan.t99' /></option>
-								<option value="streetAddress"><spring:message code='ezOrgan.t100' /></option>
-							</select>
-						</span>
-						<span><input id="keyword" class="organSearchKeyword" onKeyPress="search_press()"/></span>
-					</div>
-				</div>
+				<dl class="organList">
+					<dt class="organListDT">
+						<input type="radio" name="listOpt" id="listOpt1" value="muser" onClick="Change_List()" checked /><label for="listOpt1" style="cursor:pointer;"><spring:message code='ezOrgan.t74' /></label>
+						<input type="radio" name="listOpt" id="listOpt2" value="mgroup" onClick="Change_List()" /><label for="listOpt2" style="cursor:pointer;"><spring:message code='ezOrgan.t75' /></label>
+					</dt>
+				</dl>
 			</ul>
 		</div>
 
@@ -1946,9 +1955,12 @@
 		</div>	
 		<c:if test="${dotNetIntegration != 'YES'}">
 			<div class="moveWrap" style="width:69%; vertical-align:middle; text-align:center; float:right; border: 1px solid #ddd;background-color: #f8f8fa;">
-				<img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
+				<span class="upBtn" id="upBtn"><img src="/images/admin/arrowUp.png"/></span>
+				<span class="downBtn" id="downBtn"><img src="/images/admin/arrowDown.png"/></span>
+				<span class="saveBtn" id="saveBtn" name="MoveConfirm"><img src="/images/admin/saveBtn.png"/></span>
+				<%-- <img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
 				<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
-				<a class="imgbtn order" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a>
+				<a class="imgbtn order" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a> --%>
 			</div>
 			
 		</c:if>
