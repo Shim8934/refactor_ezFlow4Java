@@ -318,18 +318,22 @@ var SurveyCreate     = function() {
 	}
 	
 	function gotoSecondStep() {
-		if (enterLogic == 'Y') {deleteAllLogics();}	// 로직 설정 단계에 진입했는지 확인
-		var checkObj = prepareForStep2();
-		if (checkObj["error"]) {alert(checkObj["error"]); return;}
-		var listTabElmt          = document.getElementsByClassName("headpanel")[0].children;
-		listTabElmt[0].className = "crust";
-		listTabElmt[1].className = "crust selected";
-		listTabElmt[2].className = "crust";
-		listTabElmt[3].className = "crust";
-		
-		$("div[id^=tab]").attr("class", "hidden-tab");
-		document.getElementById("tab2").className = "select-tab";
-		lastStep = 2;
+		var backFlag = "";
+		if (enterLogic == 'Y') {backFlag = deleteAllLogics();}	// 로직 설정 단계에 진입했는지 확인
+
+		if (backFlag != 'N') {
+			var checkObj = prepareForStep2();
+			if (checkObj["error"]) {alert(checkObj["error"]); return;}
+			var listTabElmt          = document.getElementsByClassName("headpanel")[0].children;
+			listTabElmt[0].className = "crust";
+			listTabElmt[1].className = "crust selected";
+			listTabElmt[2].className = "crust";
+			listTabElmt[3].className = "crust";
+			
+			$("div[id^=tab]").attr("class", "hidden-tab");
+			document.getElementById("tab2").className = "select-tab";
+			lastStep = 2;
+		}
 	}
 	
 	function gotoThirdStep() {
@@ -369,12 +373,15 @@ var SurveyCreate     = function() {
 		var crrSpan = document.querySelector("span[class='crust selected']");
 		if (crrSpan == spanElemt) {return;}
 		var checkObj = null;
-		
+		var backFlag = "";
 		switch(parseInt(tabIdx)) {
 			case 1: focusonQuestionTitleStep1(); 
 					toggleStep(spanElemt, crrSpan, tabIdx);
 					lastStep = 1; break;
-			case 2: if (enterLogic == 'Y') {deleteAllLogics();}	// 로직 설정 단계에 진입했는지 확인
+			case 2: if (enterLogic == 'Y') {
+						backFlag = deleteAllLogics();
+						if (backFlag == 'N') {break;}
+					}	// 로직 설정 단계에 진입했는지 확인
 					checkObj = prepareForStep2();
 					if (checkObj["error"]) {alert(checkObj["error"]); return;}
 					toggleStep(spanElemt, crrSpan, tabIdx);
@@ -521,6 +528,7 @@ var SurveyCreate     = function() {
 		var questionList = surveyObj.questions;
 		var questionLength = questionList.length;
 		var result = checkAllLogicAndSkip(questionList, questionLength);
+		var backFlag = 'Y';
 		
 		if (result == 'Y') {
 			if (confirm(SurveyMessages.strBack) == true) {
@@ -560,7 +568,10 @@ var SurveyCreate     = function() {
 					}
 					
 				}
+			} else {
+				backFlag = 'N';
 			}
+			return backFlag;
 		}
 	}
 	
