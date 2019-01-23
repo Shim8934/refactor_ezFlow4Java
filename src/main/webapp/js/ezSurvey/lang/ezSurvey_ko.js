@@ -136,4 +136,5 @@ var SurveyMessages = {
 	strBack      : "질문 작성 단계로 이동시, 모든 분기와 건너뛰기가 초기화됩니다.",
 	strQsContent : "질문을 입력해 주세요.",
 	strTxtContent: "내용을 작성해 주세요.",
+	strNotResp   : "설문 대상자가 아닙니다.",
 }

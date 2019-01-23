@@ -464,6 +464,7 @@
 				case 1 : alert(SurveyMessages.strParamErr) ; break;
 				case 2 : alert(SurveyMessages.strError)    ; break;
 				case 5 : alert(SurveyMessages.strMultiple3); break;
+				case 6 : alert(SurveyMessages.strNotResp)  ; break;
 				default: alert(SurveyMessages.strError)    ; return;
 			}
 		}
@@ -675,11 +676,13 @@
 				}
 				
 			}
+			
 			if (count > 0 && count != selectLengh) {
 				alert(id + SurveyMessages.strIncomplete);
 				return "fail";
 				
-			} else {
+			}
+			else {
 				for (var i = 0; i < selectLengh; i++) {
 					var rankingObj = {};
 					var rankNum = i + 1;
