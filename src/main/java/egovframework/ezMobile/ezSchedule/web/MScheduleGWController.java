@@ -925,6 +925,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -968,6 +969,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -991,10 +993,10 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		try {
 			LOGGER.debug("userId : " + userId);
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			int tenantId = info.getTenantId();
-			String[] scheduleIdList = (String[]) jsonParam.get("scheduleIdList");
+			String[] scheduleIdList = jsonParam.get("scheduleIdList").toString().split(",");
 			String displayName = jsonParam.get("displayName").toString();
 			String displayName2 = jsonParam.get("displayName2").toString();
 			String status = jsonParam.get("status").toString();
@@ -1011,6 +1013,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("status", "ok");
 			result.put("code", 0);			
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1032,10 +1035,10 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		
 		try {
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
 			int tenantId = info.getTenantId();
-			String[] groupIdList = (String[]) jsonParam.get("groupIdList");
+			String[] groupIdList = jsonParam.get("groupIdList").toString().split(",");
 			String status = jsonParam.get("status").toString();
 			
 			for (String groupId : groupIdList) {
@@ -1051,6 +1054,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
