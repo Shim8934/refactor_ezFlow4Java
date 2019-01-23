@@ -189,8 +189,8 @@
 							data.clubList.forEach(function(item, index){
 								html += "<tr ondblclick=view_CommunityInfo('" + item.c_ClubNo  + "');>";
 								html += "<td style='width: 35px;'>" + itemNum + "</td>";
-								html += "<td style='width: 90px;'>" + getCategoryName(item.c_name) + "</td>";
-								html += "<td style='width: 25%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
+								html += "<td style='width: 100px;'>" + getCategoryName(item.c_name) + "</td>";
+								html += "<td style='width: 38%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
 								
 								if (item.c_ClubConfirmType == "2") { //유형
 									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t13' /></td>";
@@ -212,7 +212,7 @@
 								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconPost.gif'></span>";
 								html +=     "<span class='count'>" + item.itemCnt + "</span>";
 								html += "</td>";
-								html += "<td style='width: 45px;'><span class='icon16 icon16_delete' style='margin: 0px; padding: 0px;' onclick=closeBtnClick('" + item.c_ClubNo + "')></span></td>";
+								html += "<td style='width: 45px;'><span class='icon16 icon16_delete' style='margin: 0px 0px 0px 15px; padding: 0px;' onclick=closeBtnClick('" + item.c_ClubNo + "')></span></td>";
 								html += "</tr>";
 								
 								itemNum++;
@@ -581,8 +581,8 @@
 					<table id="mainListHeader1" class="mainlist" style="width: 100%">
 						<tr id="mainListHeaderTr">
 							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
-							<th style="width: 90px;"><spring:message code ='ezCommunity.t11' /></th>
-							<th style="width: 25%;"><spring:message code = 'ezCommunity.t9991' /></th>
+							<th style="width: 100px;"><spring:message code ='ezCommunity.t11' /></th>
+							<th style="width: 38%;"><spring:message code = 'ezCommunity.t9991' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t65' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t15' /></th>
 							<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
