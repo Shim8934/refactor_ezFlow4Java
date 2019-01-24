@@ -27,6 +27,7 @@
 			var modeCheck = "<c:out value='${mode}' />";
 			var searchSelect = "<c:out value='${searchSelect}' />";
 			var searchInput = "<c:out value='${searchInput}' />";
+			var searchingVal = "<c:out value='${searching}' />";
 			var searchOption = "off";
 			var allData = [];
 			var id = "<c:out value='${id}' />";
@@ -62,16 +63,19 @@
 				$(".div_scroll").css("height", win_height + "px");
 			}
 			// 사다리 종류 드롭박스
+			var initFlag = false;
 			function checkSearchOption() {
 				if($("#searchOption option:selected").val()==='kind') {
 					$("#searchInput").css("display", "none");
-					$("#searchInput").val("");
 					$("#ladderType").css("display", "block");
 				} else {
 					$("#ladderType").css("display", "none");
-					$("#searchInput").val("");
+					if(!initFlag) {
+						$("#searchInput").val(searchingVal);
+					}
 					$("#searchInput").css("display", "block");
 				} 
+				initFlag = true;
 			}
 		
 		</script>

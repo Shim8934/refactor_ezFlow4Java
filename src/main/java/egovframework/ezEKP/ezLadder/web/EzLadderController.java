@@ -94,7 +94,7 @@ public class EzLadderController {
 	 * 사다리 게임 호출
 	 * */
 	@RequestMapping(value = "/ezLadder/ladderMain.do")
-	public String ladderMain(String mode, String currPage, String searchSelect, String searchInput, String sort, String sortFlag, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
+	public String ladderMain(String mode, String currPage, String searchSelect, String searchInput, String sort, String sortFlag, String searching, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("ladderMain started.");
 		
 		String brdID = "7";
@@ -106,6 +106,7 @@ public class EzLadderController {
 		currPage = currPage != null ? currPage : "1";
 		searchSelect = searchSelect != null ? searchSelect : "";
 		searchInput = searchInput != null ? searchInput : "";
+		searching = searching != null ? searching : "";
 		sort = sort != null ? sort : "basic";
 		sortFlag = sortFlag != null ? sortFlag : "desc";
 	
@@ -157,6 +158,7 @@ public class EzLadderController {
 			model.addAttribute("mode", mode);
 			model.addAttribute("searchSelect", searchSelect);
 			model.addAttribute("searchInput", searchInput);
+			model.addAttribute("searching", searching);
 			model.addAttribute("sort", sort);
 			model.addAttribute("sortFlag", sortFlag);
 			model.addAttribute("brdID", brdID);
