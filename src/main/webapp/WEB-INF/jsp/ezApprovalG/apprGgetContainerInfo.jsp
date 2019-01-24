@@ -989,6 +989,10 @@
 	        			var apprTo = condition[6];
 	        			var draftFrom = condition[3];
 	        			var draftTo = condition[4];
+	        			var searchStatus = $("#sel_status").val();
+	        			if(searchStatus && searchStatus != "ALL"){
+	        				subCondition += "PROCESSYN = '" + searchStatus + "'";
+	        			}
 	        			
 		        		if(condition[7] != "" && condition[6] == "") {
 		        			condition[15] = condition[7].substring(0,4);
