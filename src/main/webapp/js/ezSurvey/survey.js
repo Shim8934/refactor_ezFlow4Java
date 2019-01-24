@@ -997,7 +997,6 @@ var SurveyCreate     = function() {
 		}
 		else {
 			$(".quesBacgr").append(wrapper);
-			console.log(questnTitle);
 			questnTitle.focus();
 		}
 	}
