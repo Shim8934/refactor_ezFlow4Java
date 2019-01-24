@@ -18928,9 +18928,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		map.put("v_ORDEROPTION2", orderOption2);
-		map.put("v_ORDEROPTION2LENGTH", orderOption2.length());
+		map.put("v_ORDEROPTIONLENGTH2", orderOption2.length());
 		if (orderOption2.length() > 0 ) {
-			map.put("v_ORDEROPTION2VALUE", orderOption2.substring(0, orderOption2.trim().length()).toLowerCase());
+			map.put("v_ORDEROPTIONVALUE2", orderOption2.substring(0, orderOption2.trim().length()).toLowerCase());
 		}
 		map.put("approvalFlag", approvalFlag);
 		map.put("v_LANGTYPE", langType);
