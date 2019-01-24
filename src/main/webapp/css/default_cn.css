@@ -3376,7 +3376,7 @@ input[type=range]::-ms-thumb {border: none; width:26px; height:26px; border-radi
 input[type=range]:focus::-ms-fill-lower {background:#f3f3f3;}
 input[type=range]:focus::-ms-fill-upper {background:#f3f3f3;}
 input[type=range]::-ms-tooltip {display: none;}
-.slider-output {display: block; height: 30px; text-align: center; width: 100%; font-size: 2em; font-family: 'Advent Pro', sans-serif; color: rgba(132, 206, 66, 1);}
+.slider-output {display: block; height: 30px; text-align: center; width: 100%; font-size: 1.5em; font-family: 'Advent Pro', sans-serif; color: rgba(132, 206, 66, 1);}
 
 /* ranking and dropdown part */
 .delOption {width: 30px; height: 30px; cursor: pointer; background-repeat: no-repeat; background-size: 30px 30px; background-position: center; background-image: url('/images/ezSurvey/minus.png');}
