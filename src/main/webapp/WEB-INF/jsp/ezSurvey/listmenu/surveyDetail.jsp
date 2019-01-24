@@ -431,8 +431,6 @@
 		}
 		
 		function saveResponse() {
-			console.log(resposeObj.responses);
-			/* 
 			if (resposeObj.responses.length > 0) {
 				$.ajax({
 					type: "POST",
@@ -454,7 +452,6 @@
 				alert(SurveyMessages.strNoResponse);
 				resposeObj.responses = [];
 			}
-			 */
 		}
 		
 		function afterSaveSuccessfully(data) {
