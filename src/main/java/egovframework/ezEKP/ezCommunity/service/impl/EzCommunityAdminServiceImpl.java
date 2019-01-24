@@ -71,7 +71,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
 	@Override
-	public List<CommunityCComCloseVO> aspCloseComGet1(String keyword, String sRadio, String lang, int pageNum, String companyID, int tenantID) throws Exception {
+	public List<CommunityCComCloseVO> aspCloseComGet1(String keyword, String sRadio, String lang, int pageNum, String offSetMin, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCloseGet1 started.");
 		logger.debug("keyword=" + keyword + ", sRadio=" + sRadio);
 		
@@ -80,6 +80,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		map.put("v_S_RADIO", sRadio);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_STARTROW", 10 * (pageNum - 1));
+		map.put("v_OFFSETMIN", offSetMin);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -219,7 +220,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) */
 	@Override
-	public List<CommunityClubVO> aspAdmitComGet1(String keyword, String sRadio, String lang, int pageNum, String companyID, int tenantID) throws Exception {
+	public List<CommunityClubVO> aspAdmitComGet1(String keyword, String sRadio, String lang, int pageNum, String offSetMin, String companyID, int tenantID) throws Exception {
 		logger.debug("aspAdmitComGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -227,6 +228,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		map.put("v_S_RADIO", sRadio);
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_STARTROW", 10 * (pageNum - 1));
+		map.put("v_OFFSETMIN", offSetMin);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -368,7 +370,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/* 관리자 > 커뮤니티검색화면 표출(하단 리스트) 시 companyID 조건 추가, deptID 가져오기 */
 	@Override
-	public List<CommunityClubVO> aspSearchKeyGet1(String primary, int iQueryCount, String select, String query, String companyID, int tenantID) throws Exception {
+	public List<CommunityClubVO> aspSearchKeyGet1(String primary, int iQueryCount, String select, String query, String offSetMin, String companyID, int tenantID) throws Exception {
 		logger.debug("aspSearchKeyGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -376,6 +378,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		map.put("v_IQUERYCOUNT", iQueryCount);
 		map.put("v_STRSELECT", select);
 		map.put("v_STRQUERY", query);
+		map.put("v_OFFSETMIN", offSetMin);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -636,7 +639,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	//2018-02-06 김혜정 - 폐쇄된 커뮤니티 리스트
 	@Override
-	public List<CommunityCComCloseVO> getClosedCommuList(String primary, Locale locale, int pageNum, String searchValue, String companyId, int tenantId) throws Exception {
+	public List<CommunityCComCloseVO> getClosedCommuList(String primary, Locale locale, int pageNum, String searchValue, String offSetMin, String companyId, int tenantId) throws Exception {
 		logger.debug("getClosedCommuList started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -644,6 +647,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		map.put("v_PCLOSESTATE", egovMessageSource.getMessage("ezCommunity.t38", locale));
 		map.put("v_STRQUERY", searchValue);
 		map.put("v_STARTROW", 10 * (pageNum - 1));
+		map.put("v_OFFSETMIN", offSetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
@@ -656,12 +660,13 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	//2019-01-17 김헤정 - 폐쇄된 커뮤니티 리스트 상세정보
 	@Override
-	public CommunityCComCloseVO closeCommunityInfo(String lang, String code, String companyId, int tenantId) throws Exception {
+	public CommunityCComCloseVO closeCommunityInfo(String lang, String code, String offSetMin, String companyId, int tenantId) throws Exception {
 		logger.debug("closeCommunityInfo ended.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", lang);
 		map.put("v_CODE", code);
+		map.put("v_OFFSETMIN", offSetMin);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		

@@ -229,9 +229,11 @@ public class EzCommunityAdminController {
 		int pageNum        = request.getParameter("pageNum") != null ? Integer.parseInt(request.getParameter("pageNum")) : 1;
 		String searchType  = request.getParameter("searchType") != null ? request.getParameter("searchType")   : "" ;
 		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
+		String offSetMin   = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
 		logger.debug("pageNum=" + pageNum);
 		logger.debug("searchType=" + searchType + ",searchValue=" + searchValue);
+		logger.debug("offSetMin=" + offSetMin);
 		
 		int totalCount = ezCommunityAdminService.aspSearchKeyGet2(commonUtil.getMultiData(lang, tenantId), searchType, searchValue, companyId, tenantId);
 		int totalPage  = 1;
@@ -251,7 +253,7 @@ public class EzCommunityAdminController {
 		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage + ",iQueryCount=" + iQueryCount);
 		logger.debug("iQueryCount=" + iQueryCount);
 		
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(primary, iQueryCount, searchType, searchValue, companyId, tenantId);
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(primary, iQueryCount, searchType, searchValue, offSetMin, companyId, tenantId);
 		if (clubList.size() > 0) {
 			for(CommunityClubVO club : clubList) {
 				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), primary, companyId, tenantId));
@@ -286,9 +288,11 @@ public class EzCommunityAdminController {
 		int pageSize       = 10;
 		int pageNum        = request.getParameter("pageNum") != null ? Integer.parseInt(request.getParameter("pageNum")) : 1;
 		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
+		String offSetMin   = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
 		logger.debug("pageNum=" + pageNum);
 		logger.debug("searchValue=" + searchValue);
+		logger.debug("offSetMin=" + offSetMin);
 		
 		int totalCount = ezCommunityAdminService.getClosedCommuListCount(commonUtil.getMultiData(lang, tenantId), userInfo.getLocale(), searchValue, companyId, tenantId);
 		int totalPage  = 1;
@@ -305,7 +309,7 @@ public class EzCommunityAdminController {
 		
 		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
 		
-		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.getClosedCommuList(primary, userInfo.getLocale(), pageNum, searchValue, companyId, tenantId);
+		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.getClosedCommuList(primary, userInfo.getLocale(), pageNum, searchValue, offSetMin, companyId, tenantId);
 		if (clubList.size() > 0) {
 			for(CommunityCComCloseVO club : clubList) {
 				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), primary, companyId, tenantId));
@@ -378,13 +382,14 @@ public class EzCommunityAdminController {
 		logger.debug("commInfo started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		String lang        = userInfo.getLang();
 		String companyId   = userInfo.getCompanyID();
 		int tenantId       = userInfo.getTenantId();
 		
 		String code = request.getParameter("code");
 		
-		CommunityCComCloseVO club = ezCommunityAdminService.closeCommunityInfo(commonUtil.getMultiData(lang, tenantId), code, companyId, tenantId);
+		CommunityCComCloseVO club = ezCommunityAdminService.closeCommunityInfo(commonUtil.getMultiData(lang, tenantId), code, offSetMin, companyId, tenantId);
 		club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), userInfo.getPrimary(), companyId, tenantId));
 		
 		model.addAttribute("club", club);
@@ -561,9 +566,11 @@ public class EzCommunityAdminController {
 		String searchType  = request.getParameter("searchType") != null ? request.getParameter("searchType") : "" ;
 		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
 		String code        = request.getParameter("code") != null ? request.getParameter("code") : "" ; //언제쓰이는지?
+		String offSetMin   = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
 		logger.debug("pageNum=" + pageNum);
 		logger.debug("searchType=" + searchType + ",searchValue=" + searchValue);
+		logger.debug("offSetMin=" + offSetMin);
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), companyId, tenantId);
 		
@@ -584,7 +591,7 @@ public class EzCommunityAdminController {
 		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
 		
 		/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) -> 사간겸직한 회원이 만든 커뮤니티는 겸직한 회사만큼 전부 표출됨(수정필요) */
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), pageNum, companyId, tenantId);
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspAdmitComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), pageNum, offSetMin, companyId, tenantId);
 		
 		/* 2019-01-17 김혜정 - 관리자 > 폐쇄승인 커뮤니티 카운트  추가 */ 
 		int tabCount = ezCommunityAdminService.aspCloseComGet2("", "", commonUtil.getMultiData(lang, tenantId), companyId, tenantId);
@@ -615,9 +622,11 @@ public class EzCommunityAdminController {
 		String searchType  = request.getParameter("searchType") != null ? request.getParameter("searchType") : "" ;
 		String searchValue = request.getParameter("searchValue") != null ? request.getParameter("searchValue") : "" ;
 		String code        = request.getParameter("code") != null ? request.getParameter("code") : "" ; //언제쓰이는지?
+		String offSetMin   = commonUtil.getMinuteUTC(userInfo.getOffset());
 		
 		logger.debug("pageNum=" + pageNum);
 		logger.debug("searchType=" + searchType + ",searchValue=" + searchValue);
+		logger.debug("offSetMin=" + offSetMin);
 		
 		int sysopCheck = ezCommunityService.noticeSysopCheck(code, userInfo.getId(), userInfo.getRollInfo(), companyId, tenantId);
 		
@@ -638,7 +647,7 @@ public class EzCommunityAdminController {
 		logger.debug("totalCount=" + totalCount + ", totalPage=" + totalPage);
 		
 		/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
-		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), pageNum, companyId, tenantId);
+		List<CommunityCComCloseVO> clubList = ezCommunityAdminService.aspCloseComGet1(searchValue, searchType, commonUtil.getMultiData(lang, tenantId), pageNum, offSetMin, companyId, tenantId);
 		
 		/* 2019-01-17 김혜정 - 관리자 > 신청승인 커뮤니티 카운트  추가 */ 
 		int tabCount = ezCommunityAdminService.aspAdmitComGet2("", "", commonUtil.getMultiData(lang, tenantId), companyId, tenantId);

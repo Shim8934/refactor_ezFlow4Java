@@ -17,7 +17,7 @@
 				c_clubGubun,
 				B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
 				A.c_sysopid,
-				applicationdate
+				DATE_ADD(DATE_FORMAT(applicationdate, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as applicationdate
 			FROM
 				TBL_C_COMCLOSE A
 			INNER JOIN
@@ -73,7 +73,7 @@
 				c_clubGubun,
 				B.DISPLAYNAME$v_USERINFO_LANG$ AS username,
 				A.c_sysopid,
-				applicationdate
+				DATE_ADD(DATE_FORMAT(applicationdate, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as applicationdate
 			FROM
 				TBL_C_COMCLOSE A
 			INNER JOIN
@@ -179,7 +179,7 @@
 				c_clubGubun,
 				IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
 				c_sysopid,
-				c_regdate
+				DATE_ADD(DATE_FORMAT(c_regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as c_regdate
 			FROM
 				TBL_C_CLUB A
 			INNER JOIN
@@ -235,7 +235,7 @@
 				c_clubGubun,
 				IFNULL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
 				c_sysopid,
-				c_regdate
+				DATE_ADD(DATE_FORMAT(c_regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as c_regdate
 			FROM
 				TBL_C_CLUB A
 			INNER JOIN
@@ -351,7 +351,7 @@
 					c_ClubConfirmType,
 					c_clubGubun,
 					c_sysopid,
-					c_regdate,
+					DATE_ADD(DATE_FORMAT(c_regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as c_regdate,
 					DEPTID
 				FROM
 					TBL_C_CLUB A
@@ -790,7 +790,7 @@
 				c_clubno,
 				CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END AS c_clubname,
 				c_sysopid,
-				applicationdate,
+				DATE_ADD(DATE_FORMAT(applicationdate, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as applicationdate,
 				closereason
 			FROM
 				TBL_C_COMCLOSE
@@ -815,7 +815,7 @@
 				c_clubno,
 				c_clubname$v_USERINFO_LANG$ AS c_clubname,
 				c_sysopid,
-				applicationdate,
+				DATE_ADD(DATE_FORMAT(applicationdate, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as applicationdate,
 				closereason
 			FROM
 				TBL_C_COMCLOSE
