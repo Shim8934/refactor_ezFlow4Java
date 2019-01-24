@@ -166,6 +166,8 @@ body{ font-family:'Arial, MalgunGothic, AppleSDGothic'; font-size:12px; /*margin
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_table_lock { background-position: -1px -239px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_cell_lock { background-position: -29px -239px; }
 
+.kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_border_visualize { background-position: -124px -240px; }
+
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_fullscreen { background-position: -360px -150px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_video { background-position: -240px -181px; }
 .kk_editor .kk_editor_toolbar .menus .menu .menu_button .i_file { background-position: -272px -123px; }
