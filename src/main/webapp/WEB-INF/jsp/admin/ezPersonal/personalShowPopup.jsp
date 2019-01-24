@@ -39,7 +39,19 @@
 			function setCookie(name, value, expiredays) {
 				var todayDate = new Date();
 				todayDate.setDate( todayDate.getDate() + expiredays );
-				document.cookie = name + "=" + encodeURIComponent( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
+				$.ajax({
+					type : "POST",
+					async : false,
+					url : "/ezPortal/setPopupCookie.do",
+					data : { 
+							cookieName : name,
+							cookieValue : encodeURIComponent( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
+							},
+					success: function(text){
+						console.log("setCookie complete");
+					}
+				});
+// 				document.cookie = name + "=" + encodeURIComponent( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
 			}
 	
 			function closepopup() {

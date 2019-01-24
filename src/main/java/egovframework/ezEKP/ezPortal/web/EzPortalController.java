@@ -4006,4 +4006,20 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		logger.debug("boardPortlet ended");
 	}	
+	
+	/**
+	 * 공지사항 쿠키 생성
+	 * */
+	@RequestMapping(value="/ezPortal/setPopupCookie.do")
+	public void setPopupCookie(HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		logger.debug("setPopupCookie is started.");
+		String cookieName = request.getParameter("cookieName");
+		String cookieValue = request.getParameter("cookieValue");
+		logger.debug("cookeName = " + cookieName);
+		logger.debug("cookieValue = " + cookieValue);
+		Cookie popupCookie = new Cookie(cookieName, cookieValue);
+		popupCookie.setPath("/");
+    	response.addCookie(popupCookie);
+		logger.debug("setPopupCookie is ended.");
+	}
 }
