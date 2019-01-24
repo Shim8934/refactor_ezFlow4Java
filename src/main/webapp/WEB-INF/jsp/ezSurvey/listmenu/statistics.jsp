@@ -18,6 +18,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/bnk-2.js'        )}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/bnk-1.js'        )}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/tui-chart.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezSurvey/statistic/chart.min.js'    )}"></script>
 	
 	<body class="surveyBody">
 		<div class="header-wrapper">
@@ -35,7 +36,9 @@
 				<div id="surveyRespondents" class="respondents-div">
 					<div class="response-header"><spring:message code="ezSurvey.t95"/><div id="totalUserCnt"></div></div>
 					<div class="pieDiv">
-						<div id="respondentPie"></div>
+						<div id="userLegendDiv" class="bnk-legend"></div>
+						<canvas id="respondentPie" height="240"></canvas>
+						<!-- <div id="respondentPie"></div> -->
 					</div>
 				</div>
 			</div>
@@ -71,6 +74,10 @@
 			var userWindow        = null;
 			var surveyStatistic   = ${data};
 			var questionStatistic = ${questions};
+			
+			var colors = ["#e04343", "#f79f3f", "#a9cd40", "#00b4c8", "#898cff", "#ff89b5", "#ffdc89", "#90d4f7", "#71e096", "#f5a26f",
+						  "#668de5", "#ed6d79", "#5ad0e5", "#da97e0", "#cff381", "#ff96e3", "#bb96ff", "#67eebd", "#fa9928", "#ef3924",
+						  "#d41e47", "#4c64ae", "#01539c", "#f05f7c", "#00b3ca", "#bd8139", "#d9c622", "#4a2431", "#d41e47", "#eb148d"];
 			
 			startStatistic(questionStatistic);
 			
@@ -387,7 +394,7 @@
 				userWindow = window.open("/ezCommon/showPersonInfo.do?id=" + userId, "userInfo", feature);
 			}
 			
-			function createQuestionPie(question, divElmt) {
+			/* function createQuestionPie(question, divElmt) {
 				var divChart        = document.createElement("div");
 				divChart.className  = "pieDiv";
 				var divId           = "question" + question["level"];
@@ -444,9 +451,88 @@
 					wrapDivElmt.appendChild(ulElmt);
 					divElmt.appendChild(wrapDivElmt);
 				}
+			} */
+			
+			function createQuestionPie(question, divElmt) {
+				var divChart        = document.createElement("div");
+				divChart.className  = "pieDiv";
+				var canvasElmt      = document.createElement("canvas");
+				var divLegend       = document.createElement("div");
+				var canvasId        = "question" + question["level"];
+				var moreParam       = surveyStatistic["annoynymous"] == 0 ? question["questionId"] : null;
+				divLegend.className = "bnk-legend";
+				canvasElmt.setAttribute("height", 240);
+				canvasElmt.setAttribute("id", canvasId);
+				divChart.appendChild(divLegend);
+				divChart.appendChild(canvasElmt);
+				divElmt.appendChild(divChart);
+				
+				var options = question["option"];
+				var values  = [];
+				var labels  = [];
+				var others  = [];
+				
+				for (var i = 0; i < options.length; i++) {
+					var responses     = options[i]["responses"];
+					var otherFlag     = options[i]["otherFlag"];
+					var responsesCnt  = responses ? responses.length : 0;
+					
+					if (otherFlag == 1) {
+						others = responses;
+					}
+					
+					values.push(responsesCnt);
+					labels.push(options[i]["content"]);
+				}
+				
+				createPieChart(labels, values, canvasId, divLegend, moreParam);
+				
+				if (others && others.length > 0) {
+					var wrapDivElmt       = document.createElement("div");
+					var otherHeader       = document.createElement("div");
+					var ulElmt            = document.createElement("ul");
+					var spanElmt1         = document.createElement("span");
+					otherHeader.className = "others-div";
+					spanElmt1.textContent = SurveyMessages.strViewOther;
+					otherHeader.appendChild(spanElmt1);
+					ulElmt.className      = "txt-respul";
+					wrapDivElmt.className = "other-wrap";
+					otherHeader.className = "other-header";
+					var respCnt           = responses.length <= 3 ? responses.length : 3;
+					
+					if (responses.length > 3) {
+						var viewMore         = document.createElement("span");
+						viewMore.textContent = SurveyMessages.strViewAll;
+						viewMore.className   = "txt-viewmore";
+						viewMore.onclick     = function(e) {showAllMoreOthers(question["questionId"]);};
+						otherHeader.appendChild(viewMore);
+					}
+					
+					createTextList(respCnt, responses, ulElmt);
+					wrapDivElmt.appendChild(otherHeader);
+					wrapDivElmt.appendChild(ulElmt);
+					divElmt.appendChild(wrapDivElmt);
+				}
 			}
 			
 			function showRespondentStatistic() {
+				var values      = [];
+				var lables      = [];
+				var totalUsers  = parseInt(surveyStatistic["usersCnt"]);
+				var respondents = parseInt(surveyStatistic["respondentCnt"]);
+				var notTakePart = totalUsers - respondents;
+				var legendDiv   = document.getElementById("userLegendDiv");
+				
+				values.push(notTakePart);
+				values.push(respondents);
+				lables.push(SurveyMessages.strJoin1 + " [" + respondents + SurveyMessages.strUser3 + "]");
+				lables.push(SurveyMessages.strJoin2 + " [" + notTakePart + SurveyMessages.strUser3 + "]");
+				document.getElementById("totalUserCnt").innerHTML = surveyStatistic["usersCnt"];
+				
+				createPieChart(lables, values,  "respondentPie", legendDiv);
+			}
+			
+			/* function showRespondentStatistic() {
 				var data        = [];
 				var totalUsers  = parseInt(surveyStatistic["usersCnt"]);
 				var respondents = parseInt(surveyStatistic["respondentCnt"]);
@@ -466,9 +552,9 @@
 				document.getElementById("respondentPie").innerHTML = "";
 				
 				createPieChart(data, "respondentPie");
-			}
+			} */
 			
-			function createPieChart(dataset, elmtId, questionId) {
+			/* function createBnkPieChart(dataset, elmtId, questionId) {
 				var container = document.getElementById(elmtId);
 				var data = {series: dataset};
 				
@@ -496,6 +582,106 @@
 						showSelectedUsersForPie(questionId, itemIdx);
 					}
 				});
+			} */
+			
+			function generateRandomColor() {
+				var letters = '0123456789ABCDEF';
+				var color   = '#';
+				
+				for (var i = 0; i < 6; i++) {
+					color += letters[Math.floor(Math.random() * 16)];
+				}
+				
+				return color;
+			}
+			
+			function createPieChart(labels, values, elmtId, legendElmt, questionId) {
+				if (labels.length > colors.length) {
+					for (var i = colors.length; i < labels.length; i++) {
+						colors.push(generateRandomColor());
+					}
+				}
+				
+				var ctx = document.getElementById(elmtId).getContext("2d");
+				var myPieChart = new Chart(ctx, {
+					type: 'pie',
+					data: {
+						labels: labels,
+						datasets: [{
+							borderWidth: 2,
+							hoverBorderWidth: 8,
+							backgroundColor: colors,
+							data: values
+						}],
+						question : questionId
+					},
+					options: {
+						tooltips: {
+							callbacks: {
+								label: function(tooltipItem, data) {
+									var allData      = data.datasets[tooltipItem.datasetIndex].data;
+									var tooltipLabel = data.labels[tooltipItem.index];
+									var tooltipData  = allData[tooltipItem.index];
+									var total        = 0;
+									for (var i in allData) {
+										total += parseFloat(allData[i]);
+									}
+									var tooltipPercentage = ((tooltipData / total) * 100).toFixed(1);
+									return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
+								}
+							}
+						},
+						legendCallback: function(chart) {
+							return createLegend(chart.data);
+						},
+						legend: {
+							display: false,
+						},
+						onClick : function (evt, item) {
+							var itemIdx = item[0]["_index"];
+							var data    = myPieChart.data["question"];
+							if (data) {
+								showSelectedUsersForPie(data, itemIdx);
+							}
+						},
+						hover: {
+							onHover: function(e) {
+								var point = this.getElementAtEvent(e);
+								e.target.style.cursor = point.length ? "pointer" : "default";
+							}
+						},
+						responsive: false,
+					}
+				});
+				
+				legendElmt.appendChild(myPieChart.generateLegend());
+			}
+			
+			function createLegend(data) {
+				var ul       = document.createElement("ul");
+				ul.className = "legend-ul";
+				var datasets = data["datasets"];
+				
+				for (var i = 0; i < datasets[0].data.length; i++) {
+					var liElmt           = document.createElement("li");
+					var divElmt1         = document.createElement("div");
+					var divElmt2         = document.createElement("div");
+					divElmt1.className   = "legend-circle";
+					divElmt2.className   = "legend-label";
+					divElmt2.textContent = data["labels"][i];
+					divElmt2.setAttribute("title", divElmt2.textContent);
+					divElmt1.setAttribute("style", "background-color: " + datasets[0].backgroundColor[i]);
+					liElmt.appendChild(divElmt1);
+					liElmt.appendChild(divElmt2);
+					
+					if (data["question"]) {
+						liElmt.onclick = (function(questionId, optId) {return function() {showSelectedUsersForPie(questionId, optId);};})(data["question"], i);
+					}
+					
+					ul.appendChild(liElmt);
+				}
+				
+				return ul;
 			}
 			
 			function createQuestionBar(question, divElmt) {
