@@ -163,7 +163,8 @@
 			setParameter("<c:out value='${folderId}'/>", "<c:out value='${primary}'/>", "company", "<c:out value='${rootFolder}'/>", "<c:out value='${level}'/>");
 		</script>
 		
-		<div id="searchPanel" class="popup wfSearchPanel" style="display:none;">
+		<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">
+		<div class="popup" style="margin: 0; padding: 5px 10px 10px;">
 			<h1><spring:message code='ezWebFolder.t21'/></h1> 
 			<div id="wfSearchCloseBttn" class="wfClose"><ul><li><span></span></li></ul></div>
 			<div style="margin: 10px 0px 15px;">
@@ -204,6 +205,7 @@
 				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t123'/></span></a>
 				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t112'/></span></a>
 			</div>
+		</div>
 		</div>
 		
 		<div id="progress-wrp" style="display: none; margin-left: 5px;">
