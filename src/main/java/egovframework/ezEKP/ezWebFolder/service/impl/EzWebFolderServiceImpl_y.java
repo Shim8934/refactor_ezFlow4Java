@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_m;
 import egovframework.ezEKP.ezWebFolder.dao.EzWebFolderDAO_y;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderAdminService;
+import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_m;
 import egovframework.ezEKP.ezWebFolder.service.EzWebFolderService_y;
 import egovframework.ezEKP.ezWebFolder.util.EzWebfolderUtil;
@@ -38,6 +39,9 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 	@Autowired
 	private EzWebFolderDAO_m ezWebFolderDAO_m;
+
+	@Autowired
+	private EzWebFolderService ezWebFolderService;
 
 	@Autowired
 	private EzWebFolderService_m ezWebFolderService_m;
@@ -901,7 +905,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		String offset = userInfo.getOffset();
 		String primary = userInfo.getPrimary();
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		JSONObject result = new JSONObject();
+		Map<String, Object> result = new HashMap<>();
 		long[] fileSize            = new long[multiFileLists.size()];
 		
 		// 파일 가지고 온 array의 이름과 id를 가지고 다시 업로드 시켜야함
@@ -940,6 +944,9 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 			// 새로운 filePath로 경로 생성 및 db 업데이트
 			int updateResult = ezWebFolderDAO_y.updateFileRealData(map);
 			
+			// 로그 찍기
+			ezWebFolderService.saveLog("WR", comId, offset, userId, userInfo.getDisplayName1(), userInfo.getDisplayName2(), filevo.getFileName(), filevo.getFileSize(), filevo.getFileExt(), filevo.getFileTypeName(), tenantId);
+			
 			// db 업데이트 성공시 기존 파일 delete
 			File file = new File(realPath + filevo.getFilePath());
 			if (file.exists() && file.isFile()) {
@@ -953,7 +960,8 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		}
 		result.put("status", "ok");
 		result.put("code", 0);
-		return result;
+
+		return new JSONObject(result);
 	}
 
 	@Override
