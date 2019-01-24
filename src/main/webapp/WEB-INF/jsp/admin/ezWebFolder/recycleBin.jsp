@@ -604,7 +604,8 @@
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
         <iframe style="border:none;" id="iFrameLayer"></iframe>
     </div>
-	<div id="searchPanel"class="popup wfSearchPanel" style="display:none;">
+	<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">
+	<div class="popup" style="margin: 0; padding: 5px 10px 10px;">
 		<h1><spring:message code='ezWebFolder.t10'/><spring:message code='ezWebFolder.t123' /></h1> 
 		<div class="wfClose" onclick="doLayerPopup();"><ul><li><span></span></li></ul></div>
 		<div style="margin: 10px 0px 15px;">
@@ -643,7 +644,8 @@
 			<a class="webfolderBttn"><span onclick="search('basic');"><spring:message code='ezWebFolder.t123'/></span></a>
 			<a class="webfolderBttn"><span onclick="doLayerPopup();" ><spring:message code='ezWebFolder.t112'/></span></a>
 		</div>
-	</div>	
+	</div>
+	</div>
 	
 	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
 		<img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
