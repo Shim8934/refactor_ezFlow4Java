@@ -3136,7 +3136,7 @@ h2, #menu span {font-size: 12px;}
 .svPurpose {width: auto; height: auto; margin:0px 0px 10px 0px;}
 .svPurpose .ppContent {width: auto; height: auto; background-color:white; padding: 10px; border: 1px solid #d7d7d7; overflow: auto;}
 .ppContent img {max-width: 100%;}
-.ppContent p, .ppContent div, .ppContent td, .ppContent ul, .ppContent ol, .ppContent li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px; font-family:Malgun Gothic, Arial, Helvetica, sans-serif; font-size: 14px !important;}
+.ppContent p, .ppContent div, .ppContent td, .ppContent ul, .ppContent ol, .ppContent li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px;}
 .ppContent table td  {text-indent: 0px }
 .ppContent blockquote {margin-top: 0px; margin-bottom: 0px;}
 .surveyinfopp-wrap{max-height: 350px; overflow: auto; margin: 0px 0px 10px 0px; padding: 10px; border: 1px solid #ddd;}
@@ -3186,7 +3186,7 @@ input::-ms-clear {display: none;}
 .surveyinfo-wrapcf {border: 1px solid #d7d7d7; border-top: 0px; padding: 20px 40px; background-color: #fff; margin-bottom: 15px;}
 .survey-purpose {overflow: auto;}
 .survey-purpose img {max-width: 100%;}
-.survey-purpose p, .survey-purpose div, .survey-purpose td, .survey-purpose ul, .survey-purpose ol, .survey-purpose li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px; font-family: 'Gulim', 'arial', 'verdana' !important; font-size: 14px !important;}
+.survey-purpose p, .survey-purpose div, .survey-purpose td, .survey-purpose ul, .survey-purpose ol, .survey-purpose li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px;}
 .survey-purpose table td  {text-indent: 0px }
 .survey-purpose blockquote {margin-top: 0px; margin-bottom: 0px;}
 .survey-infrow, .survey-infrow-pv {display: flex; font-family: HanSans, Gulim; margin: 5px 0px; align-items: center;}
