@@ -17,16 +17,20 @@
 				<span id="surveyConfig" class="sub_iconLNB tree_leftconfig" title="<<spring:message code="ezSurvey.t06"/>"></span>
 			</div>
 			<div class="btn_writeBox">
-				<p class="btn_write01" id="createBttn"><span class="sub_iconLNB tree_write"></span><spring:message code='ezSurvey.t19'/></p>
+				<c:if test="${mode == 1}">
+					<p class="btn_write01" id="createBttn"><span class="sub_iconLNB tree_write"></span><spring:message code='ezSurvey.t19'/></p>
+				</c:if>
 			</div>
 			
 			<div class="surveyList">
 				<ul class="lnbUL">
-				    <li id="totalSurvey"><span class="sub_iconLNB tree_srvy_all"></span><span class="list_text"><spring:message code='ezSurvey.t80'/></span></li>
-				    <li id="processingSurvey"><span class="sub_iconLNB tree_srvy_ing"></span><span class="list_text"><spring:message code='ezSurvey.t02'/></span></li>
-				    <li id="finishedSurvey"><span class="sub_iconLNB tree_srvy_ok"></span><span class="list_text"><spring:message code='ezSurvey.t03'/></span></li>
-				    <li id="mySurvey"><span class="sub_iconLNB tree_srvy_my"></span><span class="list_text"><spring:message code='ezSurvey.t04'/></span></li>
-				    <li id="draftSurvey"><span class="sub_iconLNB tree_srvy_draft"></span><span class="list_text"><spring:message code='ezSurvey.t05'/></span></li>
+					<li id="totalSurvey"><span class="sub_iconLNB tree_srvy_all"></span><span class="list_text"><spring:message code='ezSurvey.t80'/></span></li>
+					<li id="processingSurvey"><span class="sub_iconLNB tree_srvy_ing"></span><span class="list_text"><spring:message code='ezSurvey.t02'/></span></li>
+					<li id="finishedSurvey"><span class="sub_iconLNB tree_srvy_ok"></span><span class="list_text"><spring:message code='ezSurvey.t03'/></span></li>
+					<c:if test="${mode == 1}">
+						<li id="mySurvey"><span class="sub_iconLNB tree_srvy_my"></span><span class="list_text"><spring:message code='ezSurvey.t04'/></span></li>
+						<li id="draftSurvey"><span class="sub_iconLNB tree_srvy_draft"></span><span class="list_text"><spring:message code='ezSurvey.t05'/></span></li>
+					</c:if>
 				</ul>
 			</div>
 			
@@ -58,13 +62,18 @@
 				
 				function setButtonEvents() {
 					document.onselectstart = function(e) {return false;}
+					var draftSurvey = document.getElementById("draftSurvey");
+					var mySurvey    = document.getElementById("mySurvey");
+					var createBttn  = document.getElementById("createBttn");
+					
+					if (draftSurvey) {draftSurvey.onclick = function(e) {getDraftSurveyPage()};}
+					if (mySurvey)    {mySurvey.onclick    = function(e) {getMySurveyPage()   };}
+					if (createBttn)  {createBttn.onclick  = function(e) {createNewSurvey()   };}
+					
 					document.getElementById("totalSurvey"     ).addEventListener("click", function(e) {getAllSurveyList()       ;});
 					document.getElementById("surveyConfig"    ).addEventListener("click", function(e) {getConfigPage()          ;});
 					document.getElementById("processingSurvey").addEventListener("click", function(e) {getProcessingSurveyList();});
 					document.getElementById("finishedSurvey"  ).addEventListener("click", function(e) {getFinishedSurveyPage()  ;});
-					document.getElementById("mySurvey"        ).addEventListener("click", function(e) {getMySurveyPage()        ;});
-					document.getElementById("draftSurvey"     ).addEventListener("click", function(e) {getDraftSurveyPage()     ;});
-					document.getElementById("createBttn"      ).addEventListener("click", function(e) {createNewSurvey()        ;});
 					window.addEventListener("resize", function(e) {windowResize();}, false);
 					getAllSurveyList();
 					windowResize();
