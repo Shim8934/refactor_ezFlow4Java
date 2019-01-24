@@ -3200,6 +3200,7 @@ input::-ms-clear {display: none;}
 .survey-user-pv em {padding: 0px 2px;}
 .survey-user-pv .user-inf {font-size: 13px !important; color: #333; cursor: pointer;}
 .survey-user-pv .user-inf:hover, .user-field:hover {color: blue;}
+.ui-datepicker-trigger.bnk {cursor: default !important;}
 /**** survey information confirm part end ****/
 
 /**** survey button panel start ****/
