@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezApprovalG.hyj02'/></title>
+		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<!-- <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}"> -->
@@ -349,6 +349,12 @@
 		        	change_statusCell();
 		        }
 		        
+				if ($("#presentcell").html() != undefined) {
+                    if ($("#presentcell").html().trim() == "") {
+						$("#presentcell").html("<spring:message code='ezApprovalG.t1747'/>");
+                    }
+                    document.title = $("#presentcell").html();
+		        }
 		    }
 			
 		    function change_statusCell() {
