@@ -1568,10 +1568,10 @@ var SurveyCreate     = function() {
 			$("#skipThrdBtnGrp" + id).css("display", "none");
 		});
 		
-		$(".quesBacgr").on("input", ".slider-range", function() {
+		$(".quesBacgr").on("change", ".slider-range", function() {
 			var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
 			outputElmt.textContent = this.value;
-		}).trigger("change");
+		});
 		
 		$(".quesBacgr").sortable({
 			handle: ".mvBtn",

@@ -255,14 +255,11 @@
 				if (logicNum && logicNum != -1 && logicmap) {processLogicNode(prId, logicNum);}
 			});
 			
-			// 슬라이드 질문 트리거
-			$(".prevQsArea").on("input", ".slider-range", function() {
-				var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
-				outputElmt.textContent = this.value;
-			}).trigger("change");
-			
 			// 슬라이드 질문 답변 표시
 			$(".prevQsArea").on("change", ".slider-range", function() {
+				var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
+				outputElmt.textContent = this.value;
+				
 				var prId       = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
 				var logicNum   = parseInt($("#slider" + prId).attr("logic"));
 				var logicPoint = parseInt($("#slider" + prId).attr("logicPoint"));
