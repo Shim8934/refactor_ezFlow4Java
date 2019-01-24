@@ -557,13 +557,13 @@ public class EzPortalController extends EgovFileMngUtil {
 			int popUpWidth = 0;
 			int popUpHeight = 0;
 			String popUpPosition = "";
-			String cookieValue = "";
 			
 			for (int i=0; i<infoList.size(); i++) {
 				int itemSeq = infoList.get(i).getItemSeq();
 				Cookie[] cookies = req.getCookies();
 				
 				if (cookies != null) {
+					String cookieValue = "";
 					for (int j=0; j<cookies.length; j++) {
 						if (cookies[j].getName().equals("POPUP_"+itemSeq+"_"+userInfo.getId())) {
 							cookieValue = cookies[j].getValue();
