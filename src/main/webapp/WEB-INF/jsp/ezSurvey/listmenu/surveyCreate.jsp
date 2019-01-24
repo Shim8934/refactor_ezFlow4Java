@@ -75,7 +75,7 @@
 		
 		<div id="addURLPanel" class="searchPanel off">
 			<div class="popupMenu searchDiv">
-				<div class="srchTtl"><spring:message code='ezSurvey.t25'/></div>
+				<div class="srchTtl"><spring:message code='ezSurvey.t85'/></div>
 				<div id="addUrlClose" class="closeImgBttn"><ul><li><span></span></li></ul></div>
 				<table class="content searchtable">
 					<tr>

@@ -76,6 +76,8 @@
 			var surveyStatistic   = ${data};
 			var questionStatistic = ${questions};
 			
+			console.log(questionStatistic);
+			
 			startStatistic(questionStatistic);
 			
 			function startStatistic(questions) {

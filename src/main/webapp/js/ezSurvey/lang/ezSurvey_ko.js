@@ -106,7 +106,7 @@ var SurveyMessages = {
 	strMore      : "이상",
 	strLogic     : "분기를 설정해 주세요.",
 	strSkipLogic : "분기 설정 단계를 생략 하시겠습니까?",
-	strSaveAsk   : "설문을 저장하시겠습니까?",
+	strSaveAsk   : "설문을 등록하시겠습니까?",
 	strLast      : "설문완료",
 	strSameNum   : "이미 같은 번호가 존재합니다. 그대로 진행하시겠습니까?",
 	strProcess   : "진행중",
