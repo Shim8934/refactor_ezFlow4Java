@@ -360,6 +360,7 @@ var getContextMenuPostion = function () {
 }
 	
 var setConextMenuPositionResize = function () {
+	
 	var obj = getContextMenuPostion();
 	var contextMenuBtn = document.getElementById('contextMenuBtn');
 
@@ -374,6 +375,56 @@ var setConextMenuPositionResize = function () {
 	}
 
 }
+
+var checkPopupMenuPosition = function () {
+	var popupMenuBtn = document.getElementById('popupMenuBtn');
+	var popupMenuCss = getComputedStyle(popupMenuBtn);
+	var top = contextMenuObject.replaceAll(popupMenuCss.top, 'px', '');
+	var left = contextMenuObject.replaceAll(popupMenuCss.left, 'px', '');
+	var right = contextMenuObject.replaceAll(popupMenuCss.right, 'px', '');
+	var bottom = contextMenuObject.replaceAll(popupMenuCss.bottom, 'px', '');
+	
+	var width = contextMenuObject.replaceAll(popupMenuCss.width, 'px', '');
+	var popupMenuRadius = Number(width) / 2;	
+	
+	var contextMenuBtn = document.getElementById('contextMenuBtn');
+	
+	if (top < 0) {
+		popupMenuBtn.style.top = '0';
+		contextMenuBtn.style.bottom = '';
+		contextMenuBtn.style.top = (popupMenuRadius - contextMenuObject.menuRadius) + 'px';
+	}
+	if (left < 0) {
+		popupMenuBtn.style.left = '0';
+		contextMenuBtn.style.right = '';
+		contextMenuBtn.style.left = (popupMenuRadius - contextMenuObject.menuRadius) + 'px';
+	}
+	if (right < 0) {
+		popupMenuBtn.style.right = '0';
+		contextMenuBtn.style.left = '';
+		contextMenuBtn.style.right = (popupMenuRadius - contextMenuObject.menuRadius) + 'px';
+	}
+	if (bottom < 0) {
+		popupMenuBtn.style.bottom = '0';
+		contextMenuBtn.style.top = '';
+		contextMenuBtn.style.bottom = (popupMenuRadius - contextMenuObject.menuRadius) + 'px';
+	}
+	
+	var obj = getContextMenuPostion();
+	
+	if(contextMenuBtn.style.left && contextMenuBtn.style.right) {
+		contextMenuBtn.style.left = '';		
+	}
+}
+
+var setMenuPostionResize = function () {
+	if(contextMenuObject.popupMenu) {
+		checkPopupMenuPosition();
+	} else {
+		setConextMenuPositionResize();	
+	}
+}
+
 
 var setContextMenuGadgetPosition = function () {
 	var obj = getContextMenuPostion();
@@ -402,6 +453,9 @@ var handlePopupMenuBtn = function (type) {
 		$('#contextMenuBtn').draggable('enable');
 		animatePopupBtn.reverse();
 		contextMenuObject.popupMenu = false;
+	} else if (type === 'ing') {
+		contextMenuObject.popupMenu = true;
+		$('#contextMenuBtn').draggable('disable');
 	}
 }
 
@@ -457,10 +511,10 @@ var checkContextMenuPosition = function () {
 	}
 
 	if(isChanged) {
-		$('#contextMenuBtn').css({
-			'top': obj.offsetTop, 
-			'left' : obj.offsetLeft
-		});
+//		$('#contextMenuBtn').css({
+//			'top': obj.offsetTop, 
+//			'left' : obj.offsetLeft
+//		});
 		$('#contextMenuBtn').animate({
 			top: tmpTop,
 			left: tmpLeft,
@@ -522,7 +576,9 @@ var setPopupMenuPosition = function () {
 	var height = contextMenuObject.replaceAll(popupMenuCss.height, 'px', '');
 	var menuRadius = contextMenuObject.menuRadius;
 	var distance = (width / 2) - menuRadius;
-	
+
+	popupMenuBtn.style.top = '';
+	popupMenuBtn.style.left = '';
 	popupMenuBtn.style.bottom = (contextMenuObject.bottom - distance) + 'px';
 	popupMenuBtn.style.right = (contextMenuObject.right - distance) + 'px';
 }
@@ -563,23 +619,23 @@ var getContextMenuPosition = function () {
     xhr.send();
 };
 
-var contextMenuRePosition = function () {
-	
-	var contextMenuBtn = document.getElementById('contextMenuBtn');
-	var contextMenuCss = getComputedStyle(contextMenuBtn);
-	if (Number(contextMenuCss.bottom) < 0) {
-		contextMenuBtn.style.left = '';
-		contextMenuBtn.style.right = '';		
-		contextMenuBtn.style.top = 'auto';
-		contextMenuBtn.style.bottom = '15';
-	}
-	if (Number(contextMenuCss.right) < 0) {
-		contextMenuBtn.style.top = '';
-		contextMenuBtn.style.bottom = '';		
-		contextMenuBtn.style.left = 'auto';
-		contextMenuBtn.style.right = '15';
-	}
-}
+//var contextMenuRePosition = function () {
+//	
+//	var contextMenuBtn = document.getElementById('contextMenuBtn');
+//	var contextMenuCss = getComputedStyle(contextMenuBtn);
+//	if (Number(contextMenuCss.bottom) < 0) {
+//		contextMenuBtn.style.left = '';
+//		contextMenuBtn.style.right = '';		
+//		contextMenuBtn.style.top = 'auto';
+//		contextMenuBtn.style.bottom = '15';
+//	}
+//	if (Number(contextMenuCss.right) < 0) {
+//		contextMenuBtn.style.top = '';
+//		contextMenuBtn.style.bottom = '';		
+//		contextMenuBtn.style.left = 'auto';
+//		contextMenuBtn.style.right = '15';
+//	}
+//}
 
 var createContextMenu = function (userDeptId) {
 	getContextMenuPosition();

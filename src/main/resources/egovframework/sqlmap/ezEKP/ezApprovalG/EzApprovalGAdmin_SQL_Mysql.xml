@@ -1687,6 +1687,7 @@
 				formdescription,
 				formfilelocation,
 				formconnflag,
+				reformflag,
 				companyid,
 				tenant_id)
 			VALUES
@@ -1698,6 +1699,7 @@
 				#v_PFORMDESCRIPT#,
 				#v_PURL#,
 				#v_PFORMCONNFLAG#,
+				#v_PREFORMFLAG#,
 				#companyID#,
 				#tenantID#)
 		]]>
@@ -1714,7 +1716,8 @@
 				formdoctype = #v_PFORMKIND#,
 				formdescription = #v_PFORMDESCRIPT#,
 				formfilelocation = #v_PURL#,
-				formconnflag = #v_PFORMCONNFLAG#
+				formconnflag = #v_PFORMCONNFLAG#,
+				reformflag = #v_PREFORMFLAG#
 			WHERE
 				tenant_id = #tenantID#
 			AND
