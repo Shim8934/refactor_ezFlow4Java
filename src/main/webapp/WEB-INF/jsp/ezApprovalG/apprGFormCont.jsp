@@ -163,6 +163,8 @@
 		                Rtnval[2] = selRow.getAttribute("DATA1");
 		                Rtnval[3] = selRow.childNodes[0].innerText;
 		                
+		                Rtnval["reformflag"] = selRow.getAttribute("reformflag");
+		                
 		                if (ReturnFunction != null) {
 		                    ReturnFunction(Rtnval);
 		                } else {
