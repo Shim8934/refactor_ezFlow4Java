@@ -1959,6 +1959,7 @@ public class EzEmailAdminController {
 
 		model.addAttribute("list", resultList);
 		model.addAttribute("userLang", userInfo.getPrimary());
+		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("signatureMainView ended.");
 

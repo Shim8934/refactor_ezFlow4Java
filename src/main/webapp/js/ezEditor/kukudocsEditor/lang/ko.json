@@ -621,6 +621,7 @@
     "cell_vertical_size": "높이를 같게",
     "table_lock": "테이블 잠금",
     "cell_lock": "셀 잠금",
+    "border_visualize": "숨김 테두리 보기",
     "table_background_color": "표 바탕색",
     "table_border_style": "선 스타일",
     "menuToolName": "도구",
