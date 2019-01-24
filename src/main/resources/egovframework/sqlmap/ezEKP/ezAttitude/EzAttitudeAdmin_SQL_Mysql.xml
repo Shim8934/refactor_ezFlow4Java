@@ -1411,9 +1411,9 @@
 		<![CDATA[
 			SELECT 
 				A.CN AS userId,
-			    A.DISPLAYNAME AS userName,
-			    A.TITLE AS userTitle,
-			    A.DESCRIPTION AS userDeptName,
+			    A.DISPLAYNAME$primary$ AS userName,
+			    A.TITLE$primary$ AS userTitle,
+			    A.DESCRIPTION$primary$ AS userDeptName,
 			    #searchYear# AS year,
 			    ifnull(sum(
 						CASE
@@ -1467,13 +1467,13 @@
 				A.PHYSICALDELIVERYOFFICENAME = #companyId#			
 		]]>
 		<isNotEmpty prepend="AND" property="searchDeptName">
-			A.description LIKE CONCAT('%', #searchDeptName#, '%')
+			A.description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchUserName">
-			A.displayname LIKE CONCAT('%', #searchUserName#, '%')
+			A.displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
 		</isNotEmpty>
 		<isNotEmpty prepend="AND" property="searchTitle">
-			A.title LIKE CONCAT('%', #searchTitle#, '%')
+			A.title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
 		</isNotEmpty>
 		
 		GROUP BY A.CN
@@ -1487,7 +1487,7 @@
 		<isEmpty property="orderCell">
 			<![CDATA[
 				ORDER BY
-					userName
+					userName$primary$
 			]]>
 		</isEmpty>	
 		<isNotEmpty property="limit">

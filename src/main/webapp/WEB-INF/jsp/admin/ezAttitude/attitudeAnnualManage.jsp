@@ -103,10 +103,11 @@
 	    			}
 	    		});
 	    		
-	    		//사용연차수 링크 클릭시
+	    		//사용 연차 수 링크 클릭
 	    		$(document).on('click', '.mainlist .useAnnualCnt', function(){
 	    			useAnnualHistory(this);
 	    		})
+	    		//총 연차 수 링크 클릭
 	    		$(document).on('click', '.mainlist .totalAnnualCnt', function(){
 	    			var userId = $(this).closest("tr").attr("userid");
 	    			var userName = $(this).closest("tr").children("td:eq(1)").text();
@@ -238,7 +239,7 @@
 	    		});
 	    		
 	    		if (resultHtml == "") {
-	    			resultHtml = "<tr id='List_TR_noItems' class='tr_noItems'><td colspan='9' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
+	    			resultHtml = "<tr id='List_TR_noItems' class='tr_noItems'><td colspan='7' style='text-align:center'><spring:message code='ezAttitude.t130' /></td></tr>";	
 	    		}
 	    		
 	    		$("#contentlist table.mainlist tbody").append(resultHtml);

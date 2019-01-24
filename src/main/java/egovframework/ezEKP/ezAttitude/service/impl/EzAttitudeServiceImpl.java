@@ -2558,6 +2558,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("orderOption", orderOption);
 		map.put("offsetMin", offsetMin);
 		
+		if (primary.equals("1")) {
+			primary = "";
+		}
+		map.put("primary", primary);
+		
 		List<AttitudeAnnualVO> resultList = ezAttitudeDAO.getAttitudeAnnualList(map);
 		
 		LOGGER.debug("getAttitudeAnnualList ended. resultList size = " + resultList.size());
