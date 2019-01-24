@@ -2990,12 +2990,12 @@ h2, #menu span {font-size: 12px;}
 /*** survey statistic part start ***/
 .statBody {background-color: rgb(244, 245, 245); padding: 10px;}
 .statBody #contentsBox {margin-top: 20px; min-height: 650px;}
-.pieDiv {padding: 0px 20px; display: flex;}
+.pieDiv {padding: 0px 20px; display: flex; border: 1px solid #ddd; border-top: none;}
 .barDiv {padding: 0px 20px 15px; display: flex;}
 .barDiv >canvas {flex: 1; min-height: 280px;}
 .survey-canvaswrap {flex: 1; min-height: 280px;}
 .pieDiv >canvas {height: 240px;}
-.response-wrap, .respondents-div {border: 1px solid #ddd; margin-bottom: 10px; background-color: #fff;}
+.response-wrap, .respondents-div {margin-bottom: 10px; background-color: #fff;}
 .response-usercnt {cursor: pointer;}
 .response-usercnt:hover {color: rgb(4, 112, 227);}
 .mainlist.users {width: 100%;}
@@ -3006,12 +3006,12 @@ h2, #menu span {font-size: 12px;}
 .usersTr td:first-child {width: 30px;}
 .response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; word-break: break-word; display: flex; align-items: center; padding: 8px 44px 8px 10px; min-height: 40px; position: relative;}
 .response-header >div {position: absolute; right: 6px; top: 12px; background-color: #fff; color: rgb(0, 115, 230); border-radius: 50%; font-size: 12px; cursor: pointer; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
-.response-users {padding: 10px;}
+.response-users {padding: 10px; border-right: 1px solid #ddd; border-left: 1px solid #ddd;}
 .response-users >ul {padding-left: 20px;}
 .no-data {text-align: center;}
 .no-data-img {padding: 20px 0px 10px;}
 .no-data-txt {padding: 10px 0px 20px; font-size: 13px; color: #c0c0c0; font-weight: bold;}
-.textDiv {padding: 0px 20px 15px;}
+.textDiv {padding: 0px 20px 15px; border: 1px solid #ddd; border-top: none;}
 .txt-response {display: flex; align-items: center; min-height: 30px;}
 .txt-response >img {width: 40px; height: 40px; min-width: 40px; cursor: pointer; margin-right: 10px;}
 .txt-response >span {flex: 1; word-break: break-word; line-height: 1.4; color: #e04343;}

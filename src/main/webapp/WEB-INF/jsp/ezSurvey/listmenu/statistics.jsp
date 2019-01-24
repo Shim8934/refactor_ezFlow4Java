@@ -21,11 +21,7 @@
 	
 	<body class="surveyBody">
 		<div class="header-wrapper">
-			<div class="surveydetail-header">
-				<ul class="on">	
-					<li class="off"><span id="showRespondedUsers"><spring:message code="ezSurvey.t95"/></span></li>
-				</ul>
-			</div>
+			<div class="surveydetail-header"><spring:message code="ezSurvey.t33"/></div>
 			<div id="close"><ul><li><span id="cancelBttn"></span></li></ul></div>
 		</div>
 		<div class="surveydetail-body" id="mainSurveyBody">
@@ -36,7 +32,7 @@
 			</div>
 			
 			<div id="contentsBox">
-				<div id="surveyRespondents" class="respondents-div off">
+				<div id="surveyRespondents" class="respondents-div">
 					<div class="response-header"><spring:message code="ezSurvey.t95"/><div id="totalUserCnt"></div></div>
 					<div class="pieDiv">
 						<div id="respondentPie"></div>
@@ -76,18 +72,17 @@
 			var surveyStatistic   = ${data};
 			var questionStatistic = ${questions};
 			
-			console.log(questionStatistic);
-			
 			startStatistic(questionStatistic);
 			
 			function startStatistic(questions) {
 				setBodyHeight();
 				window.addEventListener("load", function(e) {setBodyHeight();}, false);
 				window.addEventListener("resize", function(e) {setBodyHeight();}, false);
-				document.getElementById("showRespondedUsers").onclick = function(e) {toggleUserPanel();};
 				document.getElementById("closeRespondentl").onclick   = function(e) {togglePanel("respondentPanel");};
 				document.getElementById("closeTxtResponse").onclick   = function(e) {togglePanel("textPanel");};
 				window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
+				
+				showRespondentStatistic();
 				
 				for (var i = 0; i < questions.length; i++) {
 					showQuestionStatistic(questions[i]);
@@ -470,7 +465,7 @@
 				document.getElementById("totalUserCnt").innerHTML  = surveyStatistic["usersCnt"];
 				document.getElementById("respondentPie").innerHTML = "";
 				
-				createPieChart(data,  "respondentPie");
+				createPieChart(data, "respondentPie");
 			}
 			
 			function createPieChart(dataset, elmtId, questionId) {
@@ -812,19 +807,6 @@
 				dataSetObj["maxY"]       = maxYValue;
 				
 				return dataSetObj;
-			}
-			
-			function toggleUserPanel() {
-				var userPanel       = document.getElementById("surveyRespondents");
-				var crrClass        = userPanel.className;
-				
-				if (crrClass == "respondents-div off") {
-					userPanel.className = "respondents-div";
-					showRespondentStatistic();
-				}
-				else {
-					userPanel.className = "respondents-div off";
-				}
 			}
 		})();
 	</script>
