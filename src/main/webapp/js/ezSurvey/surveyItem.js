@@ -129,9 +129,11 @@ var SurveyItem = function() {
 	function keyPress(e) {if (e.which == 27) {if (document.getElementById("searchPanel").className == "cabSearchPanel") {toggleSearchPanel();}}}
 	
 	function preProcessing() {
-		var divList  = document.getElementById("wraperDiv");
-		var divChild = divList.querySelector("div[class='tableDataDiv']");
-		var reheight = 0;
+		var divList   = document.getElementById("wraperDiv");
+		var divChild  = divList.querySelector("div[class='tableDataDiv']");
+		var dataTable = divChild.querySelector("table");
+		var headerTbl = document.getElementById("tblSurveyList");
+		var reheight  = 0;
 		
 		if (crrPreMode == "h") {
 			reheight              = divChild.parentElement.parentElement.clientHeight - 80;
@@ -141,6 +143,18 @@ var SurveyItem = function() {
 			reheight              = document.documentElement.clientHeight - 120;
 			divList.style.height  = reheight + "px";
 			divChild.style.height = reheight - 70 + "px";
+		}
+		
+		if (divChild.clientHeight < dataTable.clientHeight) {
+			if (!headerTbl.querySelector("th[class='scrollTh']")) {
+				var thElemt       = document.createElement("th");
+				thElemt.className = "scrollTh";
+				headerTbl.rows[0].appendChild(thElemt);
+			}
+		}
+		else {
+			var thElmt = headerTbl.querySelector("th[class='scrollTh']");
+			if (thElmt) {thElmt.parentElement.removeChild(thElmt);}
 		}
 	}
 	
@@ -450,6 +464,7 @@ var SurveyItem = function() {
 				var tdElmt8    = document.createElement("td");
 				var tdElmt9    = document.createElement("td");
 				var tdElmt10   = document.createElement("td");
+				var tdElmt11   = document.createElement("td");
 				var endDateStr = itemList[i]["endDate"].substring(0, 10);
 				var today      = new Date();
 				var todayStr   = getStringFormatForDate(today);
@@ -476,14 +491,17 @@ var SurveyItem = function() {
 				}
 				
 				tdElmt3.textContent  = itemList[i]["title"];
-				tdElmt4.textContent  = endDateStr;
-				tdElmt5.textContent  = itemList[i]["paritipateFlag"] == 0   ? SurveyMessages.strUser7    : SurveyMessages.strUser8;
-				tdElmt6.textContent  = itemList[i]["creatorName"];
+				tdElmt4.textContent  = itemList[i]["creatorName"];
+				tdElmt5.textContent  = itemList[i]["createDate"].substring(0, 10);
+				tdElmt6.textContent  = itemList[i]["paritipateFlag"] == 0   ? SurveyMessages.strUser7    : SurveyMessages.strUser8;
 				tdElmt7.textContent  = itemList[i]["resultPublicFlag"] == 1 ? SurveyMessages.strPublic1  : SurveyMessages.strPublic2;
 				tdElmt8.textContent  = itemList[i]["anonymousFlag"]    == 0 ? SurveyMessages.strAnoynym1 : SurveyMessages.strAnoynym2;
+				tdElmt9.textContent  = endDateStr;
+				
 				tdElmt3.setAttribute("title", tdElmt3.textContent);
 				tdElmt4.setAttribute("title", tdElmt4.textContent);
-				tdElmt6.setAttribute("title", tdElmt6.textContent);
+				tdElmt5.setAttribute("title", tdElmt5.textContent);
+				tdElmt9.setAttribute("title", tdElmt9.textContent);
 				
 				//Check statistic button
 				if (currentUser == itemList[i]["creatorId"]) {
@@ -491,7 +509,7 @@ var SurveyItem = function() {
 						var statImg     = document.createElement("img");
 						statImg.src     = "/images/ezSurvey/survey_result.png";
 						statImg.onclick = function(e) {openSurveyStatistic(e);}
-						tdElmt9.appendChild(statImg);
+						tdElmt11.appendChild(statImg);
 					}
 				}
 				else {
@@ -506,7 +524,7 @@ var SurveyItem = function() {
 							var statImg     = document.createElement("img");
 							statImg.src     = "/images/ezSurvey/survey_result.png";
 							statImg.onclick = function(e) {openSurveyStatistic(e);}
-							tdElmt9.appendChild(statImg);
+							tdElmt11.appendChild(statImg);
 						}
 					}
 				}
@@ -544,13 +562,14 @@ var SurveyItem = function() {
 				tdElmt1.className    = "inputTh";
 				tdElmt2.className    = "inputTh";
 				tdElmt3.className    = "ttlTh";
-				tdElmt4.className    = "endDateTh";
-				tdElmt5.className    = "targetTh";
-				tdElmt6.className    = "createTh";
+				tdElmt4.className    = "createTh";
+				tdElmt5.className    = "endDateTh";
+				tdElmt6.className    = "targetTh";
 				tdElmt7.className    = "publicTh";
 				tdElmt8.className    = "anoynmTh";
-				tdElmt9.className    = "statisTh";
+				tdElmt9.className    = "endDateTh";
 				tdElmt10.className   = "statusTh";
+				tdElmt11.className   = "statisTh";
 				
 				trElmt.appendChild(tdElmt1);
 				trElmt.appendChild(tdElmt2);
@@ -562,6 +581,7 @@ var SurveyItem = function() {
 				trElmt.appendChild(tdElmt8);
 				trElmt.appendChild(tdElmt9);
 				trElmt.appendChild(tdElmt10);
+				trElmt.appendChild(tdElmt11);
 				
 				tableDataElmt.appendChild(trElmt);
 			}
