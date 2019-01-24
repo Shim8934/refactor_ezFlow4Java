@@ -402,18 +402,9 @@
 				WHERE
 					E.C_CAT = 'a'
 				AND
-					c_clubno IN (SELECT
-									c_clubno
-								FROM
-									TBL_C_CLUB
-								WHERE
-									CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END LIKE CONCAT('%', #v_STRQUERY#, '%')
-								AND
-									companyid = #companyID#
-								AND
-									tenant_id = #tenantID#)
-					AND
-						c_adminconfirm = 'Y'
+					CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END LIKE CONCAT('%', #v_STRQUERY#, '%')
+				AND
+					c_adminconfirm = 'Y'
 		]]>
 		<isNotEqual property="v_STRSELECT" compareValue="0">
 			<![CDATA[
@@ -457,16 +448,9 @@
 			WHERE
 				B.c_cat = 'a'
 			AND
-				c_clubno IN (SELECT
-								c_clubno
-							FROM
-								TBL_C_CLUB
-							WHERE
-								c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
-							AND
-								tenant_id = #tenantID#)
-				AND
-					c_adminconfirm = 'Y'
+				c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
+			AND
+				c_adminconfirm = 'Y'
 		]]>
 		<isNotEqual property="v_STRSELECT" compareValue="0">
 			<![CDATA[

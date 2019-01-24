@@ -2793,3 +2793,4 @@ h2, #menu span {font-size: 12px;}
 /* 검색 */
 .searchForm{float:right;font-weight:normal;color:black; position:relative;margin-right:17px;}
 .searchBtn{ position:absolute; right:-19px; top:-2px;}
+.searchinputBox{width:135px;}
