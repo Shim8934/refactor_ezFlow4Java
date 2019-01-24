@@ -618,6 +618,38 @@
 						}
 					}
 				});
+				
+				chart.on('selectLegend', function(info) {
+					var question = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0];
+					
+					if (question) {
+						var type     = parseInt(question["type"]);
+						if (type == 3 || type == 4) {
+							var columnIdx = parseInt(info["index"]);
+							var option    = question["option"];
+							var columId   = option.filter(function(opt) {return opt["colLevel"] == columnIdx})[0]["optionId"];
+							
+							var responses = question["responses"].filter(function(res) {
+								return res["columnId"] == columId;
+							});
+							
+							showSelectedUsers(responses);
+						}
+						else if (type == 8) {
+							var optionIdx  = parseInt(info["index"]);
+							console.log(info);
+							console.log(optionIdx);
+							
+							var option     = question["option"];
+							var optionId   = option.filter(function(opt) {return opt["level"] == optionIdx})[0]["optionId"];
+							var responses  = question["responses"].filter(function(res) {
+								return res["optionId"] == optionId;
+							});
+							
+							showSelectedUsers(responses);
+						}
+					}
+				});
 			}
 			
 			function addFogPanel(togglePanel, elmtId) {
