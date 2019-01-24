@@ -2172,7 +2172,9 @@ var SurveyCreate     = function() {
 	// 질문 객체 생성
 	function mkQstnObj(status, thisEl) {
 		var question     = {};
-		var qstnWrapper  = thisEl.parents(".qstnWrapper");
+		var qstnWrapper  =  thisEl.parents(".qstnWrapper");
+		
+		//qstnWrapper  = thisEl.parents(".qstnWrapper");
 		var qstnArea     = qstnWrapper.find(".quesDiv");
 		var qstnContent  = qstnArea.find(".questnTitle").val();
 		var questionList = SurveyCreate.getQs();
@@ -2192,7 +2194,13 @@ var SurveyCreate     = function() {
 		if (qstnFObj) {question["attach"] = getAttachFileInfo(qstnFObj);}
 		
 		//Question order
-		var qstId         = qstnWrapper.attr("id").replace("qstn", "") ? parseInt(qstnWrapper.attr("id").replace("qstn", "")) : questionList.length + 1;
+		var qstId = "";
+		if (status == "modify") {
+			qstId         = qstnWrapper.prev().attr("id").replace("qstn", "") ? parseInt(qstnWrapper.prev().attr("id").replace("qstn", "")) : questionList.length + 1;
+			
+		} else {
+			qstId         = qstnWrapper.attr("id").replace("qstn", "") ? parseInt(qstnWrapper.attr("id").replace("qstn", "")) : questionList.length + 1;
+		}
 		question["level"] = qstId;
 		
 		//Set id
@@ -2247,6 +2255,7 @@ var SurveyCreate     = function() {
 			questionList.splice(qstId - 1, 1);           // 질문 배열에서 해당 순번의 객체 삭제
 			questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
 		}
+		console.log(questionList);
 	}
 	// 재사용시 질문 폼 생성
 	function reuseQstns(questions) {
