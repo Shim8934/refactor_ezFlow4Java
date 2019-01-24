@@ -45,7 +45,7 @@
 					url : "/ezPortal/setPopupCookie.do",
 					data : { 
 							cookieName : name,
-							cookieValue : encodeURIComponent( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
+							cookieValue : encodeURIComponent( value )
 							},
 					success: function(text){
 						console.log("setCookie complete");

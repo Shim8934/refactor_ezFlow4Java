@@ -4019,6 +4019,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		logger.debug("cookieValue = " + cookieValue);
 		Cookie popupCookie = new Cookie(cookieName, cookieValue);
 		popupCookie.setPath("/");
+		popupCookie.setMaxAge(60*60*24);
     	response.addCookie(popupCookie);
 		logger.debug("setPopupCookie is ended.");
 	}
