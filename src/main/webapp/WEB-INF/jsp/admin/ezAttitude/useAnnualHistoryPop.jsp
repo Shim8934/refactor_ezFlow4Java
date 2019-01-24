@@ -120,14 +120,13 @@
 	</head>
 	<body class="popup">
 	    <h1>
-	    	사용내역확인
+	    	<spring:message code='ezAttitude.t240' />
 	    </h1>
 	    <div id="close">
             <ul>
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
-<!-- 	    <table class="content"> -->
 			<div class="timecheck_info">
 		    	<dl class="timeInfo">
 		        	<dt class="timeInfoPic" style="margin: 0px;">	
@@ -164,7 +163,6 @@
 			        </dl>
 			     </dl>
 		    </div>
-<!-- 	    </table> -->
 	    <!-- 리스트 -->
 		<div style="width: 100%; height: 100%;">
             <table class="mainlist" style="width: 100%;">

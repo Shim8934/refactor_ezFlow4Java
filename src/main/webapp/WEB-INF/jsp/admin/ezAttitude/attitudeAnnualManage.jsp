@@ -118,6 +118,7 @@
 	            windowResize();
 	        });
 		    
+		    //리사이즈
 		    function windowResize() {
 	        	var height = document.documentElement.clientHeight - 216 - document.getElementById("mainmenu").clientHeight;
 	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
@@ -127,6 +128,7 @@
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
 		    
+		    //년도 생성
 	        function makeoptionyear() {
 	            var date = new Date()
 	            var year = date.getFullYear();
@@ -167,36 +169,17 @@
 	            }
 	        }
 			
+		    //회사변경시
 	    	function company_change() {
 	    		pCompanyId = document.getElementById("ListCompany").value;
 	    		getAnnualList();
 	    	}
 	    	
-	    	function modifyAllAnnualPop() {
-	        	var url = "/admin/ezAttitude/modifyAllAnnualPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "modifyAllAnnualPop", GetOpenWindowfeature(500, 234));
-	        }
-	    	
-	    	function modifyPrsnAnnualPop(userId, userName, year) {
-	        	var url = "/admin/ezAttitude/modifyPrsnAnnualPop.do?year=" + year + "&userName=" + userName + "&userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "modifyPrsnAnnualPop", GetOpenWindowfeature(500, 294));
-	        }
-	    	
-	    	function annualHistoryPop(userId, year) {
-	        	var url = "/admin/ezAttitude/annualHistoryPop.do?year=" + year + "&userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "annualHistoryPop", GetOpenWindowfeature(750, 510));
-	        }
-	    	
-	    	function annualExcelUploadPop(userId, year) {
-	        	var url = "/admin/ezAttitude/annualExcelUploadPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "annualExcelUploadPop", GetOpenWindowfeature(500, 230));
-	        }
-	    	
+		    //리스트 가져오기
 	    	function getAnnualList() {
 	    		$.ajax({
 	    			data : "GET",
 	    			dataType : "json",
-	    			async : false,
 	    			url : "/admin/ezAttitude/attitudeAnnualList.do",
 	    			data : {
 	    				companyId : pCompanyId,
@@ -273,6 +256,19 @@
 	    		getAnnualList();
 	    	}
 	    	
+	    	//엔터로 검색되도록
+			function searchPress(evt) {
+		        if (window.event) {
+		            if (window.event.keyCode == 13) {
+		            	searchAnnualList('search');
+		            }
+		        } else {
+		            if (evt.which == 13)
+		            	searchAnnualList('search');
+		        }
+		    }
+			
+	    	//검색시 조건
 			function searchAnnualList(searchType){
 	    		if (searchType == "search") { //검색
 	    			searchYear = document.getElementById("searchYear").value;
@@ -298,17 +294,6 @@
     			getAnnualList();
 	    	}
 			
-			function searchPress(evt) {
-		        if (window.event) {
-		            if (window.event.keyCode == 13) {
-		            	searchAnnualList('search');
-		            }
-		        } else {
-		            if (evt.which == 13)
-		            	searchAnnualList('search');
-		        }
-		    }
-			
 			//엑셀 다운로드
 			function exportExcel() {
 				if ($('#contentlist table.mainlist tbody tr').eq(0).attr('id') == 'List_TR_noItems') {
@@ -320,11 +305,36 @@
 		    	exportExcelframe.target="_blank";
 			}
 			
+			//엑셀로 등록 팝업
+	    	function annualExcelUploadPop(userId, year) {
+	        	var url = "/admin/ezAttitude/annualExcelUploadPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
+				window.open(url, "annualExcelUploadPop", GetOpenWindowfeature(500, 230));
+	        }
+			
+			//전체 연차 변경 팝업
+	    	function modifyAllAnnualPop() {
+	        	var url = "/admin/ezAttitude/modifyAllAnnualPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
+				window.open(url, "modifyAllAnnualPop", GetOpenWindowfeature(500, 234));
+	        }
+	    	
+			//사용연차 수 팝업
 			function useAnnualHistory (obj) {
 				var userId = $(obj).closest("tr").attr("userid");
 				var url = "/admin/ezAttitude/useAnnualHistoryPop.do?userId=" + userId + "&year=" + searchYear + "&companyId=" + pCompanyId;
 				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(665, 535));
 			}
+	    	
+			//로우의 총 연차수 링크 클릭 시
+	    	function modifyPrsnAnnualPop(userId, userName, year) {
+	        	var url = "/admin/ezAttitude/modifyPrsnAnnualPop.do?year=" + year + "&userName=" + userName + "&userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
+				window.open(url, "modifyPrsnAnnualPop", GetOpenWindowfeature(500, 294));
+	        }
+	    	
+			//수정내역팝업
+	    	function annualHistoryPop(userId, year) {
+	        	var url = "/admin/ezAttitude/annualHistoryPop.do?year=" + year + "&userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
+				window.open(url, "annualHistoryPop", GetOpenWindowfeature(750, 510));
+	        }
 	    </script>
 	</head>
 	<body class="mainbody">
