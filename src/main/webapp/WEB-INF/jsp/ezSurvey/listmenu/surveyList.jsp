@@ -28,24 +28,32 @@
 		
 		<div id="mainmenu">
 			<ul>
-				<li id="searchBttn"><a><span class="icon16 icon16_search"></span></a></li>
-				<li id="deleteBttn"><a><span class="icon16 icon16_delete"></span></a></li>
 				<c:choose>
 					<c:when test="${mode != 'draft'}">
-						<li id="reuseBttn" ><a><span><spring:message code='ezSurvey.t22'/></span></a></li>
 						<li id="modifyBttn"><a><span><spring:message code='ezSurvey.t78'/></span></a></li>
-						<li id="right">
-							<img src="${config.previewMode == 'off' ? '/images/kr/cm/btn_onnoframe.gif'     : '/images/kr/cm/btn_noframe.gif'}"     class="btnimg survey" id="preViewNone"  >
-							<img src="${config.previewMode == 'h'   ? '/images/kr/cm/btn_onbottomframe.gif' : '/images/kr/cm/btn_bottomframe.gif'}" class="btnimg survey" id="preViewBottom">
-							<img src="${config.previewMode == 'w'   ? '/images/kr/cm/btn_onleftframe.gif'   : '/images/kr/cm/btn_leftframe.gif'}"   class="btnimg survey" id="preViewleft"  >
-							<img src="/images/kr/cm/btn_arrow_down.gif" role="off" id="sltView">
-						</li>
+						<li id="reuseBttn" ><a><span><spring:message code='ezSurvey.t22'/></span></a></li>
+						<li id="searchBttn"><a><span class="icon16 icon16_search"></span></a></li>
+						<li id="deleteBttn"><a><span class="icon16 icon16_delete"></span></a></li>
+						<div class="sub_frameIcon" style="float: right;">
+							<div class="sub_frameIconUL">
+								<p class="frameIconLI"><span class="icon16 ${config.previewMode == 'off' ? 'btn_onnoframe'     : 'btn_noframe'}"     id="preViewNone"  ></span></p>
+								<p class="frameIconLI"><span class="icon16 ${config.previewMode == 'h'   ? 'btn_onbottomframe' : 'btn_bottomframe'}" id="preViewBottom"></span></p>
+								<p class="frameIconLI"><span class="icon16 ${config.previewMode == 'w'   ? 'btn_onleftframe'   : 'btn_leftframe'}"   id="preViewleft"  ></span></p>
+							</div>
+							<div class="sub_frameIconUL02">
+								<p class="frameIconLI"><span role="off" class="icon16 btn_arrow_down" id="sltView"></span></p>
+							</div>
+						</div>
 					</c:when>
 					<c:otherwise>
 						<li id="modifyBttn"><a><span><spring:message code='ezSurvey.t78'/></span></a></li>
-						<li id="right">
-							<img src="/images/kr/cm/btn_arrow_down.gif" role="off" id="sltView">
-						</li>
+						<li id="searchBttn"><a><span class="icon16 icon16_search"></span></a></li>
+						<li id="deleteBttn"><a><span class="icon16 icon16_delete"></span></a></li>
+						<div class="sub_frameIcon" style="float: right;">
+							<div class="sub_frameIconUL02">
+								<p class="frameIconLI"><span role="off" class="icon16 btn_arrow_down" id="sltView"></span></p>
+							</div>
+						</div>
 					</c:otherwise>
 				</c:choose>
 			</ul>
@@ -77,7 +85,7 @@
 			</div>
 		</div>
 		
-		<div id="layerPopup" class="viewPopupMain" style="left: 0px; top: 0px; display: none;">
+		<div id="layer_Viewpopup" class="viewPopupMain" style="left: 0px; top: 0px; display: none;">
 			<div class="popupwrap1">
 				<div class="popupwrap2">
 					<table class="list_element survey">

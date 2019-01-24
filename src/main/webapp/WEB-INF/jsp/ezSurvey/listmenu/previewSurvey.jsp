@@ -19,10 +19,10 @@
 				<td class="right-Td">
 					<div class="surveyinf-divcf">
 						<span id="cf-startDate"></span>
-						<img class="ui-datepicker-trigger" src="/images/ezSurvey/calendar-month.png">
+						<img class="ui-datepicker-trigger bnk" src="/images/ezSurvey/calendar-month.png">
 						&nbsp;~&nbsp;
 						<span id="cf-endDate"></span>
-						<img class="ui-datepicker-trigger" src="/images/ezSurvey/calendar-month.png">
+						<img class="ui-datepicker-trigger bnk" src="/images/ezSurvey/calendar-month.png">
 					</div>
 				</td>
 				<th class="left-Th"><spring:message code="ezSurvey.t46"/></th> <%-- anonymous setting --%>

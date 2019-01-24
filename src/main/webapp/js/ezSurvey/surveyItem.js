@@ -89,22 +89,22 @@ var SurveyItem = function() {
 		
 		switch(mode) {
 			case "off":
-				document.getElementById("preViewNone").src   = "/images/kr/cm/btn_onnoframe.gif";
-				document.getElementById("preViewBottom").src = "/images/kr/cm/btn_bottomframe.gif";
-				document.getElementById("preViewleft").src   = "/images/kr/cm/btn_leftframe.gif";
+				document.getElementById("preViewNone").className   = "icon16 btn_onnoframe";
+				document.getElementById("preViewBottom").className = "icon16 btn_bottomframe";
+				document.getElementById("preViewleft").className   = "icon16 btn_leftframe";
 				surveyPreview.resizeDestroy();
 				break;
 			case "w":
-				document.getElementById("preViewNone").src   = "/images/kr/cm/btn_noframe.gif";
-				document.getElementById("preViewBottom").src = "/images/kr/cm/btn_bottomframe.gif";
-				document.getElementById("preViewleft").src   = "/images/kr/cm/btn_onleftframe.gif";
+				document.getElementById("preViewNone").className   = "icon16 btn_noframe";
+				document.getElementById("preViewBottom").className = "icon16 btn_bottomframe";
+				document.getElementById("preViewleft").className   = "icon16 btn_onleftframe";
 				surveyPreview.resizeByWidth();
 				if (slTrElmt) {itemClickHandler(slTrElmt);}
 				break;
 			case "h":
-				document.getElementById("preViewNone").src   = "/images/kr/cm/btn_noframe.gif";
-				document.getElementById("preViewBottom").src = "/images/kr/cm/btn_onbottomframe.gif";
-				document.getElementById("preViewleft").src   = "/images/kr/cm/btn_leftframe.gif";
+				document.getElementById("preViewNone").className   = "icon16 btn_noframe";
+				document.getElementById("preViewBottom").className = "icon16 btn_onbottomframe";
+				document.getElementById("preViewleft").className   = "icon16 btn_leftframe";
 				surveyPreview.resizeByHeight();
 				if (slTrElmt) {itemClickHandler(slTrElmt);}
 				break;
@@ -632,23 +632,23 @@ var SurveyItem = function() {
 	
 	function showViewPopUp() {
 		var optElmt             = document.getElementById("sltView");
-		var viewPopup           = document.getElementById("layerPopup");
+		var viewPopup           = document.getElementById("layer_Viewpopup");
 		viewPopup.style.left    = document.documentElement.clientWidth - 160 + "px";
-		viewPopup.style.top     = "100px";
+		viewPopup.style.top     = "82px";
 		viewPopup.style.display = "";
-		optElmt.setAttribute("src", "/images/kr/cm/btn_arrow_up.gif");
+		optElmt.setAttribute("class", "icon16 btn_onarrow_down");
 		optElmt.setAttribute("role", "on");
 	}
 	
 	function closeViewPopUp() {
 		var optElmt = document.getElementById("sltView");
-		document.getElementById("layerPopup").style.display = "none";
+		document.getElementById("layer_Viewpopup").style.display = "none";
 		optElmt.setAttribute("role", "off");
-		optElmt.setAttribute("src", "/images/kr/cm/btn_arrow_down.gif");
+		optElmt.setAttribute("class", "icon16 btn_arrow_down");
 	}
 	
 	function closeViewPopupOutside(e) {
-		var viewPopup = document.getElementById("layerPopup");
+		var viewPopup = document.getElementById("layer_Viewpopup");
 		var optElmt   = document.getElementById("sltView");
 		var role      = optElmt.getAttribute("role");
 		

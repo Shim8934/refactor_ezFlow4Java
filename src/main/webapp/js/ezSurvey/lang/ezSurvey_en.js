@@ -113,7 +113,7 @@ var SurveyMessages = {
 	strFinish    : "완료",
 	strWaiting   : "대기",
 	strDraft     : "임시저장",
-	strNoSameRsps: "같은 값을 선택할 수 없습니다.",
+	strNoSameRsps: "같은 리스트를 선택할 수 없습니다.",
 	strNoResponse: "질문에 응답해 주세요.",
 	strNotPeriod : "설문 기간이 아닙니다. 설문 기간: ",
 	strIncomplete: "번 질문에 대한 답변이 완료되지 않았습니다.",

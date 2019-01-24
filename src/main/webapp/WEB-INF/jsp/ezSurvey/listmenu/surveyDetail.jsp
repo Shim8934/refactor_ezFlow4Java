@@ -74,10 +74,10 @@
 						<td class="right-Td">
 							<div class="surveyinf-divcf">
 								<span id="cf-startDate"><c:out value="${fn:substring(survey.startDate, 0, 10)}"/></span>
-								<img class="ui-datepicker-trigger" src="/images/ezSurvey/calendar-month.png">
+								<img class="ui-datepicker-trigger bnk" src="/images/ezSurvey/calendar-month.png">
 								&nbsp;~&nbsp;
 								<span id="cf-endDate"><c:out value="${fn:substring(survey.endDate, 0, 10)}"/></span>
-								<img class="ui-datepicker-trigger" src="/images/ezSurvey/calendar-month.png">
+								<img class="ui-datepicker-trigger bnk" src="/images/ezSurvey/calendar-month.png">
 							</div>
 						</td>
 						<th class="left-Th"><spring:message code="ezSurvey.t49"/></th> <%-- multiple select setting --%>

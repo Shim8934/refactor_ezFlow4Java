@@ -2941,8 +2941,6 @@ h2, #menu span {font-size: 12px;}
 .zoomDiv {text-align: left; padding: 5px; margin: 0px; line-height: 0px;}
 .zoomDiv >img {cursor: pointer;}
 .viewPopupMain {width:150px; position: absolute; background-color:#fff; z-index: 2500;}
-.viewPopupMain .popupwrap1 {background-color:#fff; border: 1px solid #666a64; padding: 0px; margin: 0px; position: relative;}
-.viewPopupMain .popupwrap2 {border: 2px solid #e5e5e5; padding: 10px;}
 .ui-resizable-e, .ui-resizable-s {border: 1px solid #ddd; background-repeat: no-repeat;}
 .ui-resizable-e {background-image: url('/images/prevview_hbar_dotted.gif'); width: 5px !important; background-position: center;}
 .ui-resizable-s {background-image: url('/images/prevview_bar_dotted.gif'); height: 5px !important; background-position: center -2px;}
@@ -3131,12 +3129,12 @@ h2, #menu span {font-size: 12px;}
 .target-wrapper {flex: 1; border: 1px solid #ddd; height: 27px; box-sizing: border-box; display: flex; align-items: center;}
 
 /* survey purpose editor part */
-.survey-infpp-wrap {width: 100%; height: 350px; margin:0px 0px 15px 0px;}
+.survey-infpp-wrap {width: 100%; height: 450px; margin:0px 0px 15px 0px;}
 .surey-frameeditor {padding: 0px; height: 100%; width:100%; overflow: auto; border: 0px;}
 .svPurpose {width: auto; height: auto; margin:0px 0px 10px 0px;}
 .svPurpose .ppContent {width: auto; height: auto; background-color:white; padding: 10px; border: 1px solid #d7d7d7; overflow: auto;}
 .ppContent img {max-width: 100%;}
-.ppContent p, .ppContent div, .ppContent td, .ppContent ul, .ppContent ol, .ppContent li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px; font-family:Malgun Gothic, Arial, Helvetica, sans-serif; font-size: 14px !important;}
+.ppContent p, .ppContent div, .ppContent td, .ppContent ul, .ppContent ol, .ppContent li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px;}
 .ppContent table td  {text-indent: 0px }
 .ppContent blockquote {margin-top: 0px; margin-bottom: 0px;}
 .surveyinfopp-wrap{max-height: 350px; overflow: auto; margin: 0px 0px 10px 0px; padding: 10px; border: 1px solid #ddd;}
@@ -3186,7 +3184,7 @@ input::-ms-clear {display: none;}
 .surveyinfo-wrapcf {border: 1px solid #d7d7d7; border-top: 0px; padding: 20px 40px; background-color: #fff; margin-bottom: 15px;}
 .survey-purpose {overflow: auto;}
 .survey-purpose img {max-width: 100%;}
-.survey-purpose p, .survey-purpose div, .survey-purpose td, .survey-purpose ul, .survey-purpose ol, .survey-purpose li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px; font-family: 'Gulim', 'arial', 'verdana' !important; font-size: 14px !important;}
+.survey-purpose p, .survey-purpose div, .survey-purpose td, .survey-purpose ul, .survey-purpose ol, .survey-purpose li {margin-top: 0px; margin-bottom: 0px; margin-left: 0px;}
 .survey-purpose table td  {text-indent: 0px }
 .survey-purpose blockquote {margin-top: 0px; margin-bottom: 0px;}
 .survey-infrow, .survey-infrow-pv {display: flex; font-family: HanSans, Gulim; margin: 5px 0px; align-items: center;}
@@ -3200,6 +3198,7 @@ input::-ms-clear {display: none;}
 .survey-user-pv em {padding: 0px 2px;}
 .survey-user-pv .user-inf {font-size: 13px !important; color: #333; cursor: pointer;}
 .survey-user-pv .user-inf:hover, .user-field:hover {color: blue;}
+.ui-datepicker-trigger.bnk {cursor: default !important;}
 /**** survey information confirm part end ****/
 
 /**** survey button panel start ****/
