@@ -178,6 +178,17 @@
 		]]>
 	</select>
 	
+	<select id="EzCommonDAO.checkReformFlagColumn" resultClass="String">
+		<![CDATA[
+			SELECT
+				REFORMFLAG
+			FROM
+				TBL_FORMINFO
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	
 	<statement id="EzCommonDAO.createTblCompanyConfig"> 
 	    CREATE TABLE "TBL_COMPANY_CONFIG" (
 	        "TENANT_ID" NUMBER(5,0), 
@@ -186,6 +197,13 @@
 		    "PROPERTY_VALUE" NVARCHAR2(2000) NOT NULL ENABLE, 
 		    CONSTRAINT "PK2_TBL_COMPANY_CONFIG" PRIMARY KEY ("TENANT_ID", "COMPANY_ID", "PROPERTY_NAME")
 	    )	
+	</statement>
+	
+	<statement id="EzCommonDAO.createReformFlagColumn">
+		ALTER TABLE
+			TBL_FORMINFO
+		ADD
+			REFORMFLAG CHAR(1) DEFAULT 'N'
 	</statement>
 		
 	<select id="EzCommonDAO.getCompanyConfig" parameterClass="map" resultClass="String">
@@ -672,16 +690,12 @@
 	
 	<select id="EzCommonDAO.checkJournalFormDelFlag" resultClass="String">
 		<![CDATA[
-        SELECT
-        	FORM_DEL_FLAG
-        FROM (
-            SELECT
-				ROWNUM AS RNUM, FORM_DEL_FLAG
+			SELECT
+				form_del_flag
 			FROM
 				TBL_JOURNAL_FORM
-            )
-        WHERE
-        	RNUM <= 1
+			where
+				rownum <= 1
 		]]>
 	</select>
 	

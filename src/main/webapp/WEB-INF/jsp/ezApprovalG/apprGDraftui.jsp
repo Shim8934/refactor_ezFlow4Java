@@ -159,6 +159,7 @@
 			var nonElecRec = "${nonElecRec}";
 			var nonElecRecInfoXml = "";
 			var nonSepAttachLVXml = "";
+			var reformFlag = "${reformflag}";
 			var wAprMemberSN = "1";
 			
 		    window.onload = function ()
@@ -1309,26 +1310,28 @@
 		                DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
 		                drafterDeptid = arr_userinfo[4];
 		                getDraftInfo();
-		                //재사용이고 문서의 모든정보를 재사용하는 옵션일때
 		                if (isUsed == "reuse" && apprReuseConfig != '1') {
 		                	message.Set_EditorContentURL(beforeUrl);
 		                } else {
-			                if (pFormHref != "") {
-			                    if (pFormHref == "PC") {
-			                        pReadPC = true;
-			                    } else {
-			                        message.Set_EditorContentURL(pFormHref);
-			                    }
-			                    
-			                    if (beforeUrl != "") {
-		                            Insert_ReUse_Content();
-		                        }
-			                }
-			                else {
-			                    DraftFlag = "DRAFT";
-			                    pDraftFlag = "DRAFT";
-			                    message.Set_EditorContentURL(sihangURL);
-			                }
+							if (pFormHref != "") {
+								if (pFormHref == "PC") {
+									pReadPC = true;
+								} else {
+									var len;
+									len = FormHref.lastIndexOf("/");
+									pFormID = FormHref.substr(len + 1, 10);
+									message.Set_EditorContentURL(pFormHref);
+								}
+								
+								if (beforeUrl != "") {
+									Insert_ReUse_Content();
+								}
+							}
+							else {
+								DraftFlag = "DRAFT";
+								pDraftFlag = "DRAFT";
+								message.Set_EditorContentURL(sihangURL);
+							}
 		                }
 		            }
 		        }

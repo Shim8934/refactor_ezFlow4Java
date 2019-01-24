@@ -64,6 +64,7 @@ import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.service.impl.EzApprovalGKlibServiceImpl;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGContInfoVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
@@ -879,6 +880,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String isTmpDoc = request.getParameter("isTmpDoc");
 		String isUsed = request.getParameter("isUsed");
 		String nonElecRec = request.getParameter("nonElecRec");
+		// FormBuilder
+		// String reformflag = request.getParameter("reformflag");
 		
 		if (nonElecRec == null) {
 			nonElecRec = "";
@@ -1018,6 +1021,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("addLastKyulJeYN", addLastKyulJeYN);
 		model.addAttribute("apprReuseConfig", apprReuseConfig);
 		model.addAttribute("nonElecRec", nonElecRec);
+		// FormBuilder
+		if (docID == null || docID.isEmpty()) {
+			model.addAttribute("reformflag", ezApprovalGService.isReform(formURL) ? "Y" : "N");
+		} else if (listType.equals("21") ) {
+			model.addAttribute("reformflag", ezApprovalGService.isReformTempDoc(docSN, userInfo.getCompanyID(), tenantID) ? "Y" : "N");
+		} else {
+			model.addAttribute("reformflag", ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getCompanyID(), tenantID).getReformFlag());
+		}
 		
 		logger.debug("draftui ended.");
 
@@ -1063,6 +1074,80 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("draftContent ended.");
 		
 		return "ezApprovalG/apprGDraftContent";
+	}
+	
+	/**
+	 * 전자결재G 기안시 리폼 HTML
+	 */
+	@RequestMapping(value = "/ezApprovalG/reform/draftHtml.do")
+	public String reformDraftHtml(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws IOException {
+		logger.debug("reformDraftHtml started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String formId = request.getParameter("formID");
+		String reformBody = "";
+		
+		String approvalUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		String reformDirectoryPathStr = String.join(commonUtil.separator, approvalUploadPath, userInfo.getCompanyID(), "form", "reform", formId);
+		
+		String reformFilePrefix = reformDirectoryPathStr + commonUtil.separator + formId;
+		String reformHtmlRelativePathStr = reformFilePrefix +  "_FORMBuilder.html";
+		String reformFunctionRelativePathStr = reformFilePrefix + "_FORMBuilder.js";
+		
+		Path realPath = Paths.get(request.getServletContext().getRealPath(""));
+		Path reformHtmlRelativePath = realPath.resolve("." + reformHtmlRelativePathStr);
+				
+		if (Files.exists(reformHtmlRelativePath)) {
+			reformBody = new String(Files.readAllBytes(reformHtmlRelativePath));
+		}
+		
+		if (Files.exists(realPath.resolve("." + reformFunctionRelativePathStr))) {
+			model.addAttribute("reformFunctionUrl", reformFunctionRelativePathStr);
+		}
+		
+		model.addAttribute("reformBody", reformBody);
+		
+		logger.debug("reformDraftHtml ended.");
+		
+		return "ezApprovalG/reform/draftHtml";
+	}
+	
+	/**
+	 * 전자결재G 결재 리폼 HTML
+	 */
+	@RequestMapping(value = "/ezApprovalG/reform/approveHtml.do")
+	public String reformApproveHtml(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws IOException {
+		logger.debug("reformApproveHtml started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String formId = request.getParameter("formId");
+		
+		// 전자결재 업로드 폴더 경로에서 앞부분 경로구분자를 없앰
+		String approvalUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		String reformFunctionRelativePath = String.join(commonUtil.separator, approvalUploadPath, userInfo.getCompanyID(), "form", "reform", formId, formId + "_FORMBuilder.js");
+		
+		Path realPath = Paths.get(request.getServletContext().getRealPath(""));
+		
+		if (Files.exists(realPath.resolve("." + reformFunctionRelativePath))) {
+			model.addAttribute("reformFunctionUrl", reformFunctionRelativePath);
+		}
+		
+		logger.debug("reformApproveHtml ended.");
+		
+		return "ezApprovalG/reform/approveHtml";
+	}
+	
+	/**
+	 * 전자결재G 폼빌더 useProcessor selectionDialog 페이지
+	 */
+	@RequestMapping(value = "/ezApprovalG/reform/selectionDialog.do")
+	public String reformStyleDialog() throws Exception {
+		logger.debug("selectionDialog started.");
+		logger.debug("selectionDialog ended.");
+
+		return "ezApprovalG/reform/selectionDialog";
 	}
 	
 	/**
@@ -3874,6 +3959,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
 		String orgDocID = request.getParameter("orgDocID");
 		
+		// FormBuilder
+		ApprGFormVO reformInfo = ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getCompanyID(), tenantID);
+		String formId = reformInfo.getFormID();
+		boolean isReform = "Y".equals(reformInfo.getReformFlag());
+		
 		if (orgDocID == null) {
 			orgDocID = "";
 		}
@@ -3979,6 +4069,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("orgCompanyID", orgCompanyID);
 		
+		// FormBuilder
+		if (isReform) {
+			model.addAttribute("isReform", isReform);
+			model.addAttribute("formId", formId);
+		}
+		
 		logger.debug("approvui ended");
 		
 		return "ezApprovalG/apprGapprovui";
@@ -3988,12 +4084,27 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 결재화면 결재내용 호출 Method
 	 */
 	@RequestMapping(value = "/ezApprovalG/approvUIcontent.do")
-	public String approvUIcontent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception{
+	public String approvUIcontent(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("approvUIcontent started");
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		String editor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useAllowTextSelection = ezCommonService.getTenantConfig("useAllowTextSelection", userInfo.getTenantId());
+		
+		// FormBuilder
+		if (Boolean.valueOf(request.getParameter("isReform"))) {
+			model.addAttribute("isReform", true);
+			
+			String formId = request.getParameter("formId");
+			String approvalUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+			String reformFunctionRelativePath = String.join(commonUtil.separator, approvalUploadPath, userInfo.getCompanyID(), "form", "reform", formId, formId + "_FORMBuilder.js");
+			
+			Path realPath = Paths.get(request.getServletContext().getRealPath(""));
+			
+			if (Files.exists(realPath.resolve("." + reformFunctionRelativePath))) {
+				model.addAttribute("reformFunctionUrl", reformFunctionRelativePath);
+			}
+		}
 		
 		model.addAttribute("editor", editor);
 		model.addAttribute("useAllowTextSelection", useAllowTextSelection);

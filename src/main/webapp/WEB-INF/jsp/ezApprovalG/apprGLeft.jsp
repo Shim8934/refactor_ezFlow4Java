@@ -1219,11 +1219,11 @@
 		        </ul>
 		        <c:if test="${approvalFlag == 'S'}">
 			        <h2 class="off" id="personH2">
-			            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('person')"><spring:message code='ezApproval.t848'/></span><span class="sub_iconLNB tree_manage" onclick="MngUserOnclick()"></span>			            
+			        	<span class="sub_iconLNB tree_manage" onclick="MngUserOnclick()"></span>
+			            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('person')"><spring:message code='ezApproval.t848'/></span>			            
 			        </h2>
 			        <ul class="lnbUL off" id="personUL">
 			        	<div class="tree onlytree" id="divUserContTree"></div>
-						<h3><span id="MNGUSERCONT"  onclick="MngUserOnclick()" style="width: 100%; display: inline-block;"><spring:message code='ezApproval.t316'/></span></h3>
 			        </ul>
 		        </c:if>
 		        <c:if test="${approvalFlag eq 'G'}">
