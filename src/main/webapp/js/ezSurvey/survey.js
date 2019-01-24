@@ -993,11 +993,12 @@ var SurveyCreate     = function() {
 		
 		if (qstnWrapper) {
 			qstnWrapper.after(wrapper);
-			qstnWrapper.next().find(".questnTitle")[0].focus();
+			questnTitle.focus();
 		}
 		else {
 			$(".quesBacgr").append(wrapper);
-			$(".quesBacgr").find(".qstnWrapper").find(".questnTitle")[0].focus();
+			console.log(questnTitle);
+			questnTitle.focus();
 		}
 	}
 	
