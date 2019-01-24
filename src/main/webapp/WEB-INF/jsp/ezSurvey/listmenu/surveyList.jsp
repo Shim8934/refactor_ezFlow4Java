@@ -28,12 +28,12 @@
 		
 		<div id="mainmenu">
 			<ul>
-				<li id="searchBttn"><a><span class="icon16 icon16_search"></span></a></li>
-				<li id="deleteBttn"><a><span class="icon16 icon16_delete"></span></a></li>
 				<c:choose>
 					<c:when test="${mode != 'draft'}">
-						<li id="reuseBttn" ><a><span><spring:message code='ezSurvey.t22'/></span></a></li>
 						<li id="modifyBttn"><a><span><spring:message code='ezSurvey.t78'/></span></a></li>
+						<li id="reuseBttn" ><a><span><spring:message code='ezSurvey.t22'/></span></a></li>
+						<li id="searchBttn"><a><span class="icon16 icon16_search"></span></a></li>
+						<li id="deleteBttn"><a><span class="icon16 icon16_delete"></span></a></li>
 						<div class="sub_frameIcon" style="float: right;">
 							<div class="sub_frameIconUL">
 								<p class="frameIconLI"><span class="icon16 ${config.previewMode == 'off' ? 'btn_onnoframe'     : 'btn_noframe'}"     id="preViewNone"  ></span></p>
@@ -47,6 +47,8 @@
 					</c:when>
 					<c:otherwise>
 						<li id="modifyBttn"><a><span><spring:message code='ezSurvey.t78'/></span></a></li>
+						<li id="searchBttn"><a><span class="icon16 icon16_search"></span></a></li>
+						<li id="deleteBttn"><a><span class="icon16 icon16_delete"></span></a></li>
 						<div class="sub_frameIcon" style="float: right;">
 							<div class="sub_frameIconUL02">
 								<p class="frameIconLI"><span role="off" class="icon16 btn_arrow_down" id="sltView"></span></p>
