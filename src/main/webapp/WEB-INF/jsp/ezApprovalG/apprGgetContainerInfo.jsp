@@ -1036,7 +1036,7 @@
 		                "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
 		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition)+ "&allFG=" + AllFG ;
 		            
-		                for(var i=3; i<=20; i++) {
+		               /*  for(var i=3; i<=20; i++) {
 		                	condition[i] = "";
 		                }
 		                
@@ -1045,7 +1045,7 @@
 		        		condition[5] = apprFrom;
 	        			condition[6] = apprTo;
 	        			condition[3] = draftFrom;
-	        			condition[4] = draftTo;
+	        			condition[4] = draftTo; */
 		        	}
 		        	window.frames["saveExcel"].location.href = url;
                 }
@@ -1218,7 +1218,8 @@
 	            		period = condition[15]+strLang1028+" "+condition[16]+strLang1029+" "+condition[17]+strLang1030+" ~ "+condition[18]+strLang1028+" "+condition[19]+strLang1029+" "+condition[20]+strLang1030;
 	            	} else {
 	            		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
-	            	}
+	            	} 
+	            	
 		        }
 		        else {
 		        	if (GetSelectVal("sel_year") != "ALL" || GetSelectVal("who_year") != "ALL") {
@@ -1227,6 +1228,18 @@
 		                else
 				            period = document.getElementById("who_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("who_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
 		            }		        
+	            	//2019-01-24 김민성 - 검색시 기간 설정 수정
+	            	else {
+		            	if(condition[3] != null && condition[3] != "") {
+			            	period = condition[3].substring(0,4)+strLang1028+" "+parseInt(condition[3].substring(5,7))+strLang1029+" "+parseInt(condition[3].substring(8,10))+strLang1030+" ~ "+condition[4].substring(0,4)+strLang1028+" "+parseInt(condition[4].substring(5,7))+strLang1029+" "+parseInt(condition[4].substring(8,10))+strLang1030;
+		            	}
+		            	else if(condition[5] != null && condition[5] != "") {
+		            		period = condition[5].substring(0,4)+strLang1028+" "+parseInt(condition[5].substring(5,7))+strLang1029+" "+parseInt(condition[5].substring(8,10))+strLang1030+" ~ "+condition[6].substring(0,4)+strLang1028+" "+parseInt(condition[6].substring(5,7))+strLang1029+" "+parseInt(condition[6].substring(8,10))+strLang1030;
+		            	}
+		            	else if(condition[7] != null && condition[7] != "") {
+		            		period = condition[7].substring(0,4)+strLang1028+" "+parseInt(condition[7].substring(5,7))+strLang1029+" "+parseInt(condition[7].substring(8,10))+strLang1030+" ~ "+condition[8].substring(0,4)+strLang1028+" "+parseInt(condition[8].substring(5,7))+strLang1029+" "+parseInt(condition[8].substring(8,10))+strLang1030;
+		            	}
+	            	}
 		        }
 		
 		        document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + NodeListLen + " </span>" + strLang943 + " - " + period + "]";
