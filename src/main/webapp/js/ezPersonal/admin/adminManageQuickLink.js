@@ -137,6 +137,8 @@ function setQuickImg(linkType, linkTypeUrl) {
 
 function btn_add()  {
 	var itemId = "";
+	g_attendant = "";
+	
 	$.ajax({
 		url : "/admin/ezPersonal/addQuickLink.do",
 		async : false,
