@@ -2941,8 +2941,6 @@ h2, #menu span {font-size: 12px;}
 .zoomDiv {text-align: left; padding: 5px; margin: 0px; line-height: 0px;}
 .zoomDiv >img {cursor: pointer;}
 .viewPopupMain {width:150px; position: absolute; background-color:#fff; z-index: 2500;}
-.viewPopupMain .popupwrap1 {background-color:#fff; border: 1px solid #666a64; padding: 0px; margin: 0px; position: relative;}
-.viewPopupMain .popupwrap2 {border: 2px solid #e5e5e5; padding: 10px;}
 .ui-resizable-e, .ui-resizable-s {border: 1px solid #ddd; background-repeat: no-repeat;}
 .ui-resizable-e {background-image: url('/images/prevview_hbar_dotted.gif'); width: 5px !important; background-position: center;}
 .ui-resizable-s {background-image: url('/images/prevview_bar_dotted.gif'); height: 5px !important; background-position: center -2px;}
