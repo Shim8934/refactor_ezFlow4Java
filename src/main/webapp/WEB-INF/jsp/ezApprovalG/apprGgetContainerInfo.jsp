@@ -1032,7 +1032,7 @@
 		                "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
 		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition)+ "&allFG=" + AllFG ;
 		            
-		               /*  for(var i=3; i<=20; i++) {
+		               for(var i=3; i<=20; i++) {
 		                	condition[i] = "";
 		                }
 		                
@@ -1041,7 +1041,7 @@
 		        		condition[5] = apprFrom;
 	        			condition[6] = apprTo;
 	        			condition[3] = draftFrom;
-	        			condition[4] = draftTo; */
+	        			condition[4] = draftTo;
 		        	}
 		        	window.frames["saveExcel"].location.href = url;
                 }
