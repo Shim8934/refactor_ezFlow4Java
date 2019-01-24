@@ -346,12 +346,10 @@ var SurveyItem = function() {
 	function removePreviewDiv() {
 		var divElmtId  = crrPreMode == "w" ? "previewHeaderW" : "previewHeaderH";
 		var prevHElmt  = document.getElementById(divElmtId);
-		var parentElmt = prevHElmt.parentElement;
-		while (parentElmt.childElementCount > 1) {
-			parentElmt.removeChild(parentElmt.lastElementChild);
-		}
+		var frameElmt  = prevHElmt.parentElement.querySelector("iframe[class='pr-frame']");
 		
 		prevHElmt.innerHTML = "<span class='notSelected'>" + SurveyMessages.strSelect4 + "</span>";
+		if (frameElmt) {frameElmt.src = "";}
 	}
 	/* Search Panel end*/
 	
