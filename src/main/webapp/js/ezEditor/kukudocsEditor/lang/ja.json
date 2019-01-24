@@ -621,6 +621,7 @@
     "cell_vertical_size": "等しい高さ",
     "table_lock": "テーブルロック",
     "cell_lock": "セルのロック",
+    "border_visualize": "隠された線を表示",
     "table_background_color": "グリッドカラー",
     "table_border_style": "線のスタイル",
     "menuToolName": "ツール",

@@ -18982,10 +18982,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTER", drafter.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
 		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
 		map.put("v_FORMID", formID.trim());
-		map.put("v_ENDDATE1", tmpStartDate1);
-		map.put("v_ENDDATE2", tmpStartDate2);
-		map.put("v_STARTDATE1", tmpEndDate1);
-		map.put("v_STARTDATE2", tmpEndDate2);
+		map.put("v_STARTDATE1", tmpStartDate1);
+		map.put("v_STARTDATE2", tmpStartDate2);
+		map.put("v_ENDDATE1", tmpEndDate1);
+		map.put("v_ENDDATE2", tmpEndDate2);
 		map.put("v_PROCESSDATE1", tmpProcessDate1);
 		map.put("v_PROCESSDATE2", tmpProcessDate2);
 		map.put("approvalFlag", approvalFlag);
