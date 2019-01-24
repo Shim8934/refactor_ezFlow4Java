@@ -659,6 +659,35 @@ public class EzSurveyGWController {
 		return result;
 	}
 	
+	@RequestMapping(value="/rest/ezsurvey/user-info/{userid}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject getSurveyAdministratorInfo(@PathVariable(value="userid") String userId, Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
+		JSONObject result = new JSONObject();
+		
+		logger.debug("ServerName: " + serverName + " ||  userId: " + userId);
+		
+		if (serverName.equals("") || userId.equals("")) {
+			logger.debug("Parameter error!");
+			result.put("status", "error");
+			result.put("code", 1);
+			return result;
+		}
+		
+		try {
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			result.put("mode", isSurveyAdmin(userInfo.getRollInfo()) ? 1 : 0);
+			result.put("status", "ok");
+			result.put("code", 0);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 2);
+		}
+		
+		return result;
+	}
+	
 	@RequestMapping(value="/rest/ezsurvey/survey-item/info", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject getItemInfo(Locale locale, HttpServletRequest request) throws Exception {
 		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
@@ -795,5 +824,9 @@ public class EzSurveyGWController {
 		}
 		
 		return result;
+	}
+	
+	private boolean isSurveyAdmin(String rollInfo) {
+		return rollInfo.contains("c=1") || rollInfo.contains("k=1") || rollInfo.contains("l=1");
 	}
 }

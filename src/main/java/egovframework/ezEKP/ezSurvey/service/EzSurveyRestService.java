@@ -15,6 +15,9 @@ public interface EzSurveyRestService {
 	public JSONObject getUserListType(HttpServletRequest request, String userId) throws Exception;
 	public JSONObject getSearchMember(HttpServletRequest request, String userId, String srchOption, String srchValue, String currentPage) throws Exception;
 	
+	//User information
+	public JSONObject getUserInformation(HttpServletRequest request, String userId) throws Exception;
+	
 	//User preview configuration
 	public JSONObject getUserPreviewConfig(HttpServletRequest request, String userId) throws Exception;
 	public JSONObject saveUserConfig(HttpServletRequest request, String userId, String prevMode, String listCount, String contentWPrev, String contentHPrev) throws Exception;

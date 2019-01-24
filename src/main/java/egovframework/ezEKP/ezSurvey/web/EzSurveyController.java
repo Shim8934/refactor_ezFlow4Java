@@ -22,7 +22,6 @@ import egovframework.let.utl.fcc.service.CommonUtil;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -55,6 +54,15 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezSurvey/surveyLeft.do")
 	public String jspGetSurveyLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		logger.debug("jspGetSurveyLeft started");
+		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
+		JSONObject resultObj = surveyRestService.getUserInformation(request, user.getId());
+		logger.debug(resultObj.toJSONString());
+		
+		if (resultObj.get("status").toString().equals("ok")) {
+			int userMode = ((Long)resultObj.get("mode")).intValue();
+			model.addAttribute("mode", userMode);
+		}
+		
 		logger.debug("jspGetSurveyLeft ended");
 		return "ezSurvey/mainmenu/surveyLeft";
 	}
