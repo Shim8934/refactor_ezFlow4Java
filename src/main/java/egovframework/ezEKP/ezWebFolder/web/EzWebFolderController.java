@@ -205,6 +205,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		String oldDate = request.getParameter("oldDate");
 		String oldSize = request.getParameter("oldSize");
 		String oldOwnerId = request.getParameter("oldOwnerId");
+		boolean isOne = request.getParameter("isOne") != null;
 
 		Type newType = Type.valueOf(request.getParameter("newType"));
 		Type oldType = Type.valueOf(request.getParameter("oldType"));
@@ -245,6 +246,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		model.addAttribute("newSize", newSize);
 		model.addAttribute("oldDate", oldDate);
 		model.addAttribute("oldSize", oldSize);
+		model.addAttribute("isOne", isOne);
 		model.addAttribute("isAllFiles", newType == Type.FILE && oldType == Type.FILE);
 		model.addAttribute("isFolder", newType == Type.DIRECTORY);
 
