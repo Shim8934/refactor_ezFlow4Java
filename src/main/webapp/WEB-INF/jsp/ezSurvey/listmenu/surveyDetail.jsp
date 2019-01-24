@@ -577,25 +577,19 @@
 			var wrapper   = $("#prevQstn" + id);
 			var rowLength = wrapper.find("tbody").find("tr").length;
 			var colLength = wrapper.find("thead").find("td").length;
+			var checkedOpts = $("input[name^=qstn" + id + "opt]:checked");
 			
-			for (var i = 0; i < rowLength; i++) {
-				for (var j = 0; j < colLength; j++) {
-					var rowColObj = {};
-					var checkBox = $("input[id = qstn" + id + "opt" + i + j + "]");
-					
-					if (checkBox.prop("checked") == true) {
-						var rowColIds   = checkBox.attr("optionid");
-						var rowColArray = rowColIds.split(",");
-						var row         = rowColArray[0];
-						var col         = rowColArray[1];
-						
-						rowColObj['rowId'] = parseInt(row);
-						rowColObj['colId'] = parseInt(col);
-						answer.push(rowColObj);
-					}
-				}
+			for (var i = 0; i < checkedOpts.length; i++) {
+				var rowColObj = {};
+				var rowColIds = checkedOpts[i].getAttribute("optionid");
+				var rowColArray = rowColIds.split(",");
+				var row         = rowColArray[0];
+				var col         = rowColArray[1];
+				
+				rowColObj['rowId'] = parseInt(row);
+				rowColObj['colId'] = parseInt(col);
+				answer.push(rowColObj);
 			}
-			
 			if (answer.length > 0) {
 				answerObj['answers'] = answer;
 				answerObj['type'] = type;
