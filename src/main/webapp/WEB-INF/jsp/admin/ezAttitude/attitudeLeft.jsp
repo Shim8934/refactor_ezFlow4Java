@@ -87,7 +87,7 @@
 				<h2><span onClick="moveToPage(5)"><spring:message code = 'ezAttitude.t5' /></span></h2>
 				<h2><span onClick="moveToPage(6)"><spring:message code = 'ezAttitude.t6' /></span></h2>
 				<h2><span onClick="moveToPage(7)"><spring:message code = 'ezAttitude.t8' /></span></h2>
-				<h2><span onClick="moveToPage(8)">연차현황관리</span></h2>
+				<h2><span onClick="moveToPage(8)"><spring:message code = 'ezAttitude.t237' /></span></h2>
 			</div>
 		</div>
 	</body>

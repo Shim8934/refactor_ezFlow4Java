@@ -318,17 +318,6 @@
 				$("#attiStatis").append(objUl);				
 			}
 	    	
-			//엑셀 다운로드
-			function exportExcel() {
-				if ($('#contentlist table.mainlist tr').eq(0).attr('id') == 'List_TR_noItems') {
-					alert("<spring:message code='ezAttitude.t56'/>");
-					return;
-				}
-				
-		    	exportExcelframe.location.href="/ezAttitude/excelUserAnnualExport.do?year=" + selyear;
-		    	exportExcelframe.target="_blank";
-			}
-	    	
 			//월별 통계바 슬라이드 이벤트
 			function slideTd() {
 				if ($("#slideImg").attr("src") == "/images/ImgIcon/slideLeft.png") {
@@ -358,11 +347,21 @@
 				}
 			}
 	    	
+			//엑셀 다운로드
+			function exportExcel() {
+				if ($('#contentlist table.mainlist tr').eq(0).attr('id') == 'List_TR_noItems') {
+					alert("<spring:message code='ezAttitude.t56'/>");
+					return;
+				}
+				
+		    	exportExcelframe.location.href="/ezAttitude/excelUserAnnualExport.do?year=" + selyear;
+		    	exportExcelframe.target="_blank";
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0">
 	    <h1>
-	    	개인연차현황
+	    	<spring:message code='ezAttitude.t265' />
 	    </h1>
 			<div class="timecheck_info">
 		    	<dl class="timeInfo">
@@ -419,7 +418,7 @@
 			                    <th style="width: 25%; padding-left:15px; cursor: pointer;" colname="START_DATE"><span><spring:message code='ezAttitude.t107' /></span></th>
 			                    <th style="width: 15%; cursor: pointer;" colname="TYPE_NAME"><span><spring:message code='ezAttitude.t35' /></span></th>
 			                    <th style="width: 12%; cursor: pointer;" colname="annualCnt"><span><spring:message code='ezAttitude.t252' /></span></th>
-			                    <th style="width: 44%;"><span>내용</span></th>
+			                    <th style="width: 44%;"><span><spring:message code='ezAttitude.t264' /></span></th>
 			                </tr>
 			            </table>
 			            <div id="contentlist" name="contentlist" style="height: 520px; overflow-y: auto;">
