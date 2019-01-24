@@ -347,6 +347,7 @@ label[for="listOpt2"] { position: relative; top: -4.5px;}
 /* Manage Addjob*/
 .listview.addJob {width:99%;border-left:none;border-bottom:none;}
 .addJobPreviewTD {vertical-align:top;border:1px solid #ddd;border-right:none;border-bottom:none;}
+.addJobPreviewTD .previewmail {overflow:initial;}
 
 /* organ */
 .organList{ margin:3px; padding:0px; overflow:hidden; height:34px; line-height:34px;float:right;}
@@ -354,8 +355,8 @@ label[for="listOpt2"] { position: relative; top: -4.5px;}
 .organList .organListDD{ margin:0px; padding:2px 0px 0px 0px; float:right;}
 .moveWrap span{ display:inline-block; cursor:pointer; margin:3px 0px 0px 0px; padding:0px;}
 
-.concurrentUL{ margin:0px; padding:0px; list-style:none; overflow:hidden; width:100%;}
-.concurrentUL .concurrentLI{ margin:0px; padding:0px; height:67px; line-height:65px; border-bottom:1px solid #dddddd; float:none; overflow:hidden; cursor:pointer;}
+.concurrentUL{ margin:0px; padding:0px; list-style:none; width:100%;}
+.concurrentUL .concurrentLI{ margin:0px; padding:0px; height:67px; line-height:65px; border-bottom:1px solid #dddddd; float:none; cursor:pointer;}
 .concurrentUL .concurrentLI:hover{ background:#edf7ff;}
 .concurrentUL .concurrentLI:hover .conlistDL .conlistIcon{ border:1px solid #3d8fea;} 
 .concurrentUL .concurrentLI .conlistDL{ margin:0px; padding:0px 30px 0px 15px; float:left;}

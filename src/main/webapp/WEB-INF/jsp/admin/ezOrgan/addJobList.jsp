@@ -20,6 +20,22 @@
 	    }
 	    .preview_info {background: #f1f3f5; margin: 0px; padding: 3px; overflow: hidden; border-bottom: 1px solid #e5e5e5; height: 36px; font-weight: bold;}
 	    .preview_title {display: inline-block;margin-top: -6px;margin-left: 13px;}
+	    
+		/* Tooltip text */
+		.concurrentLI > .tooltip_span {visibility: hidden;background-color: rgba(66, 66, 66, 0.7);color: #fff;text-align: center;padding: 10px;border-radius: 6px; position: absolute; font-weight: normal;z-index: 1; top: 6px; opacity: 0; transition: opacity 1s;line-height:0px;}
+		.tooltip_span img {background-color : white; border-radius:30px; margin : 10px 10px;vertical-align:middle;}
+		
+		/* Show the tooltip text when you mouse over the tooltip container */
+		.concurrentLI:hover > .tooltip_span {visibility: visible;opacity: 1;}
+		.concurrentLI .tooltip_span::after {  content: " ";
+			position: absolute;
+			bottom: 100%;  /* At the top of the tooltip */
+			left: 10px;
+			margin-left: -5px;
+			border-width: 5px;
+			border-style: solid;
+			border-color: transparent transparent rgba(66, 66, 66, 0.7) transparent;
+		}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -35,6 +51,8 @@
 			var totalPage = 0;
 			var pageSize = 15;
 			var BlockSize = 10;
+			var positionX = 0;
+			var positionY = 0;
 	    	
 	    	document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -59,7 +77,13 @@
 			$(window).on("resize", function(){
 				 windowResize();
 			});
+			
 
+			window.onmousemove = function (e) {
+				positionX = e.clientX + 'px';
+				positionY = (e.clientY + 20) + 'px';
+			};
+			
 			function company_change() {
 		        AddJob_List();
 		    }
@@ -382,7 +406,7 @@
 		                	deleteElement.setAttribute("id", "Cardlist_" + Cnt);
 		                	deleteElement.onclick = function () { event_DeleteClick(this) };
 		                	deleteSpan.className = "icon16 icon16_delete";
-		                	console.log(UserAddJobList[0]);
+		                	
 		                	companyDd.textContent = getNodeText(SelectNodes(UserAddJobList[0], "COMPANY")[Cnt]);
 		                	
 		                    if (CrossYN()) {
@@ -393,6 +417,43 @@
 		                    
 		                    jobNameDd.textContent = getNodeText(SelectNodes(UserAddJobList[0], "DISPLAYNAME")[Cnt]) + " (" + getNodeText(SelectNodes(UserAddJobList[0], "TITLE")[Cnt]) + ")";
 		                    
+		                    ///////tooltip
+		                    var tooltipDiv = document.createElement("div");
+		                    tooltipDiv.className = "tooltip_span";
+		                    
+		                    var companySpan = document.createElement("span");
+		                    companySpan.className = "tooltiptext";
+		                    
+		                    var deptSpan = document.createElement("span");
+		                    deptSpan.className = "tooltiptext";
+		                    var jobNameSpan = document.createElement("span");
+		                    jobNameSpan.className = "tooltiptext";
+		                    
+		                    var tooltipCompImg = document.createElement("img");
+		                    var tooltipDeptImg = document.createElement("img");
+		                    var tooltipUserImg = document.createElement("img");
+		                    
+		                    tooltipCompImg.src = "/images/admin/admin_company.png";
+		                    tooltipDeptImg.src = "/images/admin/admin_team.png";
+		                    tooltipUserImg.src = "/images/admin/admin_user.png";
+		                    
+		                    companySpan.textContent = getNodeText(SelectNodes(UserAddJobList[0], "COMPANY")[Cnt]);
+		                    
+		                    if (CrossYN()) {
+		                    	deptSpan.textContent = getNodeText(SelectNodes(UserAddJobList[0], "DESCRIPTION")[Cnt])
+		                    } else {
+		                    	deptSpan.innerText = getNodeText(SelectNodes(UserAddJobList[0], "DESCRIPTION")[Cnt])
+		                    }
+		                    
+		                    jobNameSpan.textContent = getNodeText(SelectNodes(UserAddJobList[0], "DISPLAYNAME")[Cnt]) + " (" + getNodeText(SelectNodes(UserAddJobList[0], "TITLE")[Cnt]) + ")";
+
+		                    tooltipDiv.appendChild(tooltipCompImg);
+		                    tooltipDiv.appendChild(companySpan);
+		                    tooltipDiv.appendChild(tooltipDeptImg);
+		                    tooltipDiv.appendChild(deptSpan);
+		                    tooltipDiv.appendChild(tooltipUserImg);
+		                    tooltipDiv.appendChild(jobNameSpan);
+		                     
 		                    //company
 		                    companyDt.appendChild(companyImg);
 		                    companyElement.appendChild(companyDt);
@@ -416,79 +477,15 @@
 		                    liElement.appendChild(deptElement);
 		                    liElement.appendChild(jobNameElement);
 		                    liElement.appendChild(deleteElement);
+		                    liElement.appendChild(tooltipDiv);
 		                    
 		                    document.getElementById("AddJobList").appendChild(liElement);
-		                    /* var DivLayer = document.createElement("DIV");
-		                    DivLayer.setAttribute("id", "Cardlist_" + Cnt);                    
-		                    DivLayer.className = "address_boxlist";
-		                    DivLayer.style.cursor = "pointer";
-		                    DivLayer.style.display = "inline-block";
-		                    DivLayer.style.marginRight = "5px";
-		                    DivLayer.style.marginBottom = "10px";
-		                    DivLayer.style.width = "220px";
-		                    DivLayer.style.height = "80px";
-		                    DivLayer.setAttribute("_CN", getNodeText(SelectNodes(UserAddJobList[0], "CN")[Cnt]));
-		                    DivLayer.setAttribute("_DEPTID", getNodeText(SelectNodes(UserAddJobList[0], "DEPARTMENT")[Cnt]));
-		                    DivLayer.setAttribute("_T1", getNodeText(SelectNodes(UserAddJobList[0], "TITLE1")[Cnt]));
-		                    DivLayer.setAttribute("_T2", getNodeText(SelectNodes(UserAddJobList[0], "TITLE2")[Cnt]));
-		                    DivLayer.onclick = function () { event_Cardlistclick(this); };
-		                    DivLayer.onselectstart = function () { return false; };
-
-		                    var oTable = document.createElement("TABLE");
-		                    oTable.setAttribute("style", "width:218px");
-		                    var oTr = document.createElement("TR");
-		                    oTable.appendChild(oTr);
-
-		                    var SubDivLayer = document.createElement("DIV");
-		                    SubDivLayer.className = "back";
-		                    SubDivLayer.style.height = "80px";
-		                    SubDivLayer.style.borderRadius = "0px"
-
-		                    var SubDIVTag = document.createElement("DIV");
-		                    SubDIVTag.className = "topinfo";
-		                    SubDIVTag.innerHTML = "<img src=\"/images/icon/i_group.gif\" style=\"vertical-align:middle;margin-top:-4px;\" /> " + getNodeText(SelectNodes(UserAddJobList[0], "COMPANY")[Cnt]);
-
-		                    var oTd = document.createElement("TD");
-		                    oTd.setAttribute("style", "width:99%");
-		                    oTd.appendChild(SubDIVTag);
-		                    oTr.appendChild(oTd);
-
-		                    var ImgPTag = document.createElement("SPAN");
-		                    ImgPTag.setAttribute("id", "Cardlist_" + Cnt);
-		                    ImgPTag.onclick = function () { event_DeleteClick(this) };
-		                    ImgPTag.className = "icon16 icon16_delete";
-		                    //ImgPTag.innerHTML = "<img src=\"/images/icon/btn_topBtn.png\" />";
-
-		                    var oTd = document.createElement("TD");
-		                    oTd.appendChild(ImgPTag);
-		                    oTr.appendChild(oTd);
-
-		                    var ULTag = document.createElement("ul");
-		                    var UITag1 = document.createElement("li");
-		                    UITag1.className = "name";
-		                    if (CrossYN()) {
-		                        UITag1.textContent = getNodeText(SelectNodes(UserAddJobList[0], "DESCRIPTION")[Cnt]);
-		                    } else {
-		                        UITag1.innerText = getNodeText(SelectNodes(UserAddJobList[0], "DESCRIPTION")[Cnt]);
-		                    }
-		                    var UITag3 = document.createElement("li");
-		                    UITag3.innerHTML = "<span class=\"point_txt\">" + getNodeText(SelectNodes(UserAddJobList[0], "DISPLAYNAME")[Cnt]) + " (" + getNodeText(SelectNodes(UserAddJobList[0], "TITLE")[Cnt]) + ")</span>";                    
-
-		                    var EndDiv = document.createElement("DIV");
-		                    EndDiv.className = "shadow";
-
-		                    DivLayer.appendChild(SubDivLayer);
-		                    DivLayer.appendChild(EndDiv);
-		                    SubDivLayer.appendChild(oTable);
-
-		                    SubDivLayer.appendChild(ULTag);
-		                    ULTag.appendChild(UITag1);
-		                    ULTag.appendChild(UITag3); */
 		                    
 		                    var a = document.getElementById("preview_nodata");
 		                    a.style.display = "none";
 		                    var b = document.getElementById("previewmail");
 		                    b.style.display = "block";
+		                    
 		                    
 		                    //2018-12-28 문성업 row 이벤트 추가
 		                    var header_info = listview.GetSelectedRows()[0].getAttribute("id");
@@ -499,6 +496,18 @@
 		                    document.getElementById("preview_title2").textContent = headerTitle2 +"<spring:message code='ezOrgan.mse4' />";
 		                    /* document.getElementById("AddJobList").appendChild(DivLayer); */
 		                }	
+
+	                    //tooltip addeventlistener
+	                    var tooltipList = document.getElementsByClassName("concurrentLI");
+	                    HTMLCollection.prototype.forEach = Array.prototype.forEach;
+	                    
+	                    tooltipList.forEach(function(item, index) {
+	                    	item.addEventListener("mouseover", function() {
+	                    		var tooltip = item.getElementsByClassName("tooltip_span")[0];
+	                    		tooltip.style.top = positionY;
+	                    		tooltip.style.left = positionX;
+	                    	});
+	                    });
 		        	}
 		        });
 
