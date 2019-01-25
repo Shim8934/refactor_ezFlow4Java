@@ -1613,6 +1613,7 @@
 				USER_ID = #userId#
 			</isNotEmpty>
 	</insert>
+	
 	<select id="ezAttitudeAdminDAO.getUserAnnual" parameterClass="Map" resultClass="AdminAttitudeVO">
 		<![CDATA[
 			SELECT 
