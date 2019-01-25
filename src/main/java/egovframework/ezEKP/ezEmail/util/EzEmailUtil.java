@@ -1057,7 +1057,7 @@ public class EzEmailUtil {
 				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
 				
 				if (shareId != null) {
-					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+					aitem += "','&shareId=" + URLEncoder.encode(shareId, "UTF-8");
 				}
 				
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' \"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
@@ -1489,7 +1489,7 @@ public class EzEmailUtil {
 				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
 				
 				if (shareId != null) {
-					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+					aitem += "','&shareId=" + URLEncoder.encode(shareId, "UTF-8");
 				}
 				
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' onclick=\"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";

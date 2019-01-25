@@ -532,26 +532,6 @@ public class EzEmailAdminLetterController {
 	}
 
 	/**
-	 * 편지지 추가, 수정 이미지 업로드 (수아)
-	 */
-	@RequestMapping(value = "/admin/ezEmail/letterImageUpload.do", produces = "application/json; charset=utf-8")
-	@ResponseBody
-	public void letterImageUpload(@CookieValue("loginCookie") String loginCookie, @RequestParam MailLetterVO letter, Model model) throws Exception {
-		logger.debug("letterImageUpload started");
-
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-
-		String letterBoxNo = Integer.toString(letter.getLetterBoxNo());
-		String letterId = letter.getLetterId();
-		String displayname = letter.getDisplayname();
-		String displayname2 = letter.getDisplayname2();
-		String letterContent = letter.getLetterContent();
-
-		logger.debug("letterBoxNo=" + letterBoxNo + ", letterId=" + letterId + ", displayname:" + displayname + ", displayname2=" + displayname2 + ", letterContent=" + letterContent);
-
-	}
-
-	/**
 	 * 편지지 작성 (수아)
 	 * 
 	 * @param : displayname, displayname2, letterBoxNo
@@ -685,68 +665,6 @@ public class EzEmailAdminLetterController {
 		}
 
 		logger.debug("updateDisplayNameLetter ended.");
-		return returnStr;
-	}
-
-	/**
-	 * 편지지 수정 - 편지지 순서 (수아)
-	 * 
-	 * @param letterOrder, letterNo (편지지 순서, 편지지 번호)
-	 * @return : "OK" or "ERROR"
-	 */
-	@RequestMapping("/admin/ezEmail/updateOrderLetter.do")
-	@ResponseBody
-	public String updateOrderLetter(@CookieValue("loginCookie") String loginCookie, String letterNo, String letterOrder) throws Exception {
-		logger.debug("updateOrderLetter started.");
-		logger.debug("letterNo=" + letterNo + ", letterOrder=" + letterOrder);
-
-		// 관리자 권한체크
-		LoginVO auth = commonUtil.checkAdmin(loginCookie);
-		if (auth == null) {
-			return "cmm/error/adminDenied";
-		}
-
-		String returnStr = "OK";
-
-		try {
-			ezEmailAdminLetterService.updateOrderLetter(letterOrder, letterNo);
-		} catch (Exception e) {
-			returnStr = "ERROR";
-			// e.printStackTrace();
-		}
-
-		logger.debug("updateOrderLetter ended.");
-		return returnStr;
-	}
-
-	/**
-	 * 편지지 수정 - 편지지함 (수아)
-	 * 
-	 * @param letterNo, letterBoxNo (편지지 번호, 편지지함 번호)
-	 * @return : "OK" or "ERROR"
-	 */
-	@RequestMapping("/admin/ezEmail/updateBoxLetter.do")
-	@ResponseBody
-	public String updateBoxLetter(@CookieValue("loginCookie") String loginCookie, String letterNo, String letterBoxNo) throws Exception {
-		logger.debug("updateBoxLetter started.");
-		logger.debug("letterNo=" + letterNo + ", letterBoxNo=" + letterBoxNo);
-
-		// 관리자 권한체크
-		LoginVO auth = commonUtil.checkAdmin(loginCookie);
-		if (auth == null) {
-			return "cmm/error/adminDenied";
-		}
-
-		String returnStr = "OK";
-
-		try {
-			ezEmailAdminLetterService.updateBoxLetter(letterNo, letterBoxNo);
-		} catch (Exception e) {
-			returnStr = "ERROR";
-			// e.printStackTrace();
-		}
-
-		logger.debug("updateBoxLetter ended.");
 		return returnStr;
 	}
 
