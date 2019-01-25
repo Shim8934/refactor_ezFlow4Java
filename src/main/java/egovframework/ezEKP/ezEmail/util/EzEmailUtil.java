@@ -1066,7 +1066,7 @@ public class EzEmailUtil {
 				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
 				
 				if (shareId != null) {
-					aitem += "','&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
 				}
 				
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
@@ -1486,7 +1486,7 @@ public class EzEmailUtil {
 				String aitem = "/ezEmail/downloadAttach.do?mode=Attach&folderPath="+URLEncoder.encode(folderPath,"UTF-8")+"&uid="+uid+"&filename="+URLEncoder.encode(filename,"UTF-8")+"&index="+bodyPartIndex;
 				
 				if (shareId != null) {
-					aitem += "','&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
 				}
 				
 				pAttachListHtml += " <li><span onclick=\"DownloadAttach('" + aitem + "');\" _filehref='" + aitem + "' _filesize='" + size + "' _filename='" + EgovStringUtil.getSpclStrCnvr2(filename) + "' id='MailAttachDownloadItems' name='MailAttachDownloadItems' style='cursor:pointer;' ><img src='/images/icon_adddownload.gif' width='16' height='16'></span>";
