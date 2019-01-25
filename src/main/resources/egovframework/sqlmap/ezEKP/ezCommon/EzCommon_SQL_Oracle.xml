@@ -703,7 +703,7 @@
 		ALTER TABLE
 			TBL_JOURNAL_FORM
 		ADD (
-			form_del_flag VARCHAR(10) DEFAULT NULL
+			form_del_flag VARCHAR2(10) DEFAULT NULL
 			)
 	</statement>
 </sqlMap>

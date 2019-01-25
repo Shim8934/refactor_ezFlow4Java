@@ -33,6 +33,7 @@
 			var strActType6  = "<spring:message code='ezWebFolder.t287'/>";
 			var strActType7  = "<spring:message code='ezWebFolder.t121'/>";
 			var strActType8  = "<spring:message code='ezWebFolder.t122'/>";
+			var strActType9  = "<spring:message code='ezWebFolder.t506'/>";
 			var strNoData    = "<spring:message code='ezWebFolder.t144'/>";
 			var startDateStr = "";
 			var endDateStr   = "";
@@ -459,7 +460,8 @@
 			selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
 		</script>
 		
-		<div id="searchPanel" class="popup wfSearchPanel" style="display: none;">
+		<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">
+		<div class="popup" style="margin: 0; padding: 5px 10px 10px;">
 			<h1><spring:message code='ezWebFolder.t24'/></h1> 
 			<div class="wfClose" onclick="openSearchPanel();"><ul><li><span></span></li></ul></div>
 			<div style="margin: 10px 0px 15px;">
@@ -516,6 +518,7 @@
 				<a class="webfolderBttn"><span onclick="startSearch();"    ><spring:message code='ezWebFolder.t123'/></span></a>
 				<a class="webfolderBttn"><span onclick="openSearchPanel();"><spring:message code='ezWebFolder.t112'/></span></a>
 			</div>
+		</div>
 		</div>
 		
 		<div style="width:100%;"id ="tblFileList1_div">
