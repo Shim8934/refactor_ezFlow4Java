@@ -352,7 +352,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		map.put("v_pCompanyID", companyID.toUpperCase());
+		map.put("v_pCompanyID", companyID);
 		map.put("v_pSelectionCount", selectCount);
 		map.put("v_pPollTitle", pollTitle);
 		map.put("v_pPollTitle2", pollTitle2);
@@ -1020,7 +1020,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 
 		Map<String, Object> map = new HashMap<String, Object>();
 
-		map.put("v_pCompanyID", companyID.toUpperCase());
+		map.put("v_pCompanyID", companyID);
 		map.put("v_pSelectionCount", selectCount);
 		map.put("v_pPollTitle", pollTitle);
 		map.put("v_pPollTitle2", pollTitle2);
