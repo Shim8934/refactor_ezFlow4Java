@@ -296,7 +296,7 @@ var SurveyCreate     = function() {
 	function afterSaveSuccessfully(data) {
 		var code = data.code;
 		switch(code) {
-			case 0 : alert(SurveyMessages.strSave)    ;
+			case 0 : alert(SurveyMessages.strSave1)   ;
 					 window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
 					 break;
 			case 1 : alert(SurveyMessages.strParamErr); break;
