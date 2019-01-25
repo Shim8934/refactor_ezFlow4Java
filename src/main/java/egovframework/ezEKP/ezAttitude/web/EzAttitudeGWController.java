@@ -2306,6 +2306,12 @@ public class EzAttitudeGWController {
 			map.put("year", request.getParameter("year"));
 			map.put("offsetMin", request.getParameter("offsetMin"));
 			
+			String primary = info.getPrimary();
+			if (primary.equals("1")) {
+				primary = "";
+			}
+			map.put("primary", primary);
+			
 			AttitudeAnnualVO vo = ezAttitudeService.getAnnualCnt(map);
 			
 			result.put("status", "ok");
@@ -2342,6 +2348,12 @@ public class EzAttitudeGWController {
 			map.put("companyId", request.getParameter("companyId"));
 			map.put("tenantId", info.getTenantId());
 			map.put("year", request.getParameter("year"));
+			
+			String primary = info.getPrimary();
+			if (primary.equals("1")) {
+				primary = "";
+			}
+			map.put("primary", primary);
 			
 			List<Map<String,Object>> resultList = ezAttitudeService.getAnnualHistoryList(map);
 			

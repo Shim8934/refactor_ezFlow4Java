@@ -1702,9 +1702,9 @@
 		<![CDATA[
 			SELECT 
 					A.CN AS userId,
-			    	A.DISPLAYNAME AS userName,
-			    	A.TITLE AS userTitle,
-			    	A.DESCRIPTION AS userDeptName,
+			    	A.DISPLAYNAME$primary$ AS userName,
+			    	A.TITLE$primary$ AS userTitle,
+			    	A.DESCRIPTION$primary$ AS userDeptName,
 			    	A.PHYSICALDELIVERYOFFICENAME AS companyId,
 				    #year# AS year,
 				    ifnull(sum(
@@ -1775,7 +1775,7 @@
 				CHANGE_REASON AS CHANGE_REASON,
 				DATE_FORMAT(CHANGE_DATE, '%Y-%m-%d %T') AS CHANGE_DATE,
 				CHANGE_USER_ID AS CHANGE_USER_ID,
-				(SELECT DISPLAYNAME FROM tbl_usermaster WHERE CN = CHANGE_USER_ID AND TENANT_ID = #tenantId#) AS CHANGE_USER_NAME,
+				(SELECT DISPLAYNAME$primary$ FROM tbl_usermaster WHERE CN = CHANGE_USER_ID AND TENANT_ID = #tenantId#) AS CHANGE_USER_NAME,
 				COMPANY_ID AS COMPANY_ID,
 				TENANT_ID AS TENANT_ID,
 				YEAR AS YEAR
@@ -1787,7 +1787,8 @@
 				USER_ID = #userId#
 			AND
 				YEAR = #year#
-			ORDER BY CHANGE_DATE DESC
+			ORDER BY 
+				CHANGE_DATE DESC
 		]]>
 	</select>
 	
