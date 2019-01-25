@@ -160,9 +160,9 @@
 					isDefaultDiv.className = "isDefault";
 					isDefaultImg.src = "/images/admin/themeDefault.png";
 					
-					isDefaultDiv.append(isDefaultImg);
+					isDefaultDiv.appendChild(isDefaultImg);
 					
-					skinDom.append(isDefaultDiv);
+					skinDom.appendChild(isDefaultDiv);
 				} else {
 					skinObjs[0].classList.remove("unchecked");
 					skinObjs[0].classList.add("checked");
@@ -173,11 +173,11 @@
 					isDefaultDiv.className = "isDefault";
 					isDefaultImg.src = "/images/admin/themeDefault.png";
 					
-					isDefaultDiv.append(isDefaultImg);
+					isDefaultDiv.appendChild(isDefaultImg);
 					
 					var firstSkin = skinObjs[0].id;
 					
-					document.getElementById(firstSkin).append(isDefaultDiv);
+					document.getElementById(firstSkin).appendChild(isDefaultDiv);
 				}
 			}
 
@@ -188,7 +188,7 @@
 				skinDom.classList.remove('checked');
 				skinDom.classList.add('unchecked');
 				var isDefault = skinDom.getElementsByClassName("isDefault");
-				
+				console.log(isDefault[0]);
 				skinDom.removeChild(isDefault[0]);
 				skinValue = this.id.substring(4);
 
@@ -202,9 +202,9 @@
 				isDefaultDiv.className = "isDefault";
 				isDefaultImg.src = "/images/admin/themeDefault.png";
 				
-				isDefaultDiv.append(isDefaultImg);
+				isDefaultDiv.appendChild(isDefaultImg);
 				
-				skinDom.append(isDefaultDiv);
+				skinDom.appendChild(isDefaultDiv);
 			}
 
 
