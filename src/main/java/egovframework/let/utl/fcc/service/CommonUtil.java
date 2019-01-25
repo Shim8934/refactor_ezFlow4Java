@@ -149,7 +149,29 @@ public class CommonUtil {
     	
     	logger.debug("init ended.");
     }
-	
+
+    /**
+     * Path Traversal 공격을 방지하기 위해 filePath에 ../ 혹은 ..\ 패턴이 있으면
+     * 예외를 발생시킨다.  
+     * @param filePath
+     * @return
+     * @throws Exception
+     */
+    public String detectPathTraversal(String filePath) throws Exception {
+    	if (filePath != null && !filePath.isEmpty()) {
+	    	String parentFolder1 = "../";
+	    	String parentFolder2 = "..\\";
+	    	
+	    	if (filePath.contains(parentFolder1) || filePath.contains(parentFolder2)) {
+	    		logger.debug("PathTraversal detected. filePath=" + filePath);
+	    		
+	    		throw new Exception("PathTraversal detected.");
+	    	}
+    	}
+    	
+    	return filePath;
+    }
+    
 	public LoginVO userInfo(String loginCookie){
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
