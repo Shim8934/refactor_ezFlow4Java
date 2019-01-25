@@ -3373,7 +3373,7 @@ input::-ms-clear {display: none;}
 /* slider part */
 .silder-wrap {display:flex; padding:10px 0px; align-items:center;}
 .silder-wrap span{width:28px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
-.slider-lw, .slider-up {width:50px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
+.slider-lw, .slider-up, .slider-input {width:50px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
 .slider-main, .slider-range {-webkit-appearance: none; border: 1px solid white; flex: 1; cursor:pointer; margin: 0px 10px; padding: 0px;}
 input[type=range]::-webkit-slider-runnable-track {width: 100%;  height:16px; background:#f3f3f3; border: none; border-radius: 12px;}
 input[type=range]::-webkit-slider-thumb {-webkit-appearance: none; border: none; width:26px; height:26px; border-radius: 50%; background:#2196f3; margin-top: -5px;}
@@ -3389,6 +3389,8 @@ input[type=range]:focus::-ms-fill-lower {background:#f3f3f3;}
 input[type=range]:focus::-ms-fill-upper {background:#f3f3f3;}
 input[type=range]::-ms-tooltip {display: none;}
 .slider-output {display: block; height: 30px; text-align: center; width: 100%; font-size: 1.5em; font-family: 'Advent Pro', sans-serif; color: rgba(132, 206, 66, 1);}
+.slider-span {padding-right: 10px;}
+.silder-unit {text-align: center;}
 
 /* ranking and dropdown part */
 .delOption {width: 30px; height: 30px; cursor: pointer; background-repeat: no-repeat; background-size: 30px 30px; background-position: center; background-image: url('/images/ezSurvey/minus.png');}

@@ -1963,14 +1963,24 @@ var SurveyCreate     = function() {
 		var htmlTxt = "";
 		var lowest  = "";
 		var highest = "";
+		var unit    = "";
 		
 		if (question) {
 			var options = question.option;
 			lowest      = options.filter(function(val) {return val["level"] == 0;})[0]["content"];
 			highest     = options.filter(function(val) {return val["level"] == 1;})[0]["content"];
+			unit        = question["unit"];
 		}
-		var slidWrap = $("<div class='silder-wrap'></div>");
-		var sliderLw = $("<input type='input' class='slider-lw' value='" + lowest  + "'/>");
+		
+		var divWrap    = $("<div class='silder-container'></div>");
+		var sliderUnit = $("<div class='silder-unit'></div>");
+		var unitTxt    = $("<span class='slider-span'>" + SurveyMessages.strSlider7 + "</span>");
+		var unitInput  = $("<input type='input' class='slider-input' value='" + unit  + "'/>");
+		sliderUnit.append(unitTxt);
+		sliderUnit.append(unitInput);
+		
+		var slidWrap   = $("<div class='silder-wrap'></div>");
+		var sliderLw   = $("<input type='input' class='slider-lw' value='" + lowest  + "'/>");
 		slidWrap.append(sliderLw);
 		
 		var slideMain = $("<input type='range' class='slider-main'/>");
@@ -1978,8 +1988,10 @@ var SurveyCreate     = function() {
 		
 		var sliderUp = $("<input type='input' class='slider-up' value='" + highest + "'/>");
 		slidWrap.append(sliderUp);
+		divWrap.append(slidWrap);
+		divWrap.append(sliderUnit);
 		
-		return slidWrap;
+		return divWrap;
 	}
 	
 	function handleModifyRankDropDownQuesion(type, question) {
@@ -2229,6 +2241,7 @@ var SurveyCreate     = function() {
 			case 7  : var sliderObj = mkSliderObj(qstnForm[0]);
 					  if (sliderObj.error) {alert(SurveyMessages[sliderObj.error]); return;}
 					  if (sliderObj.option) {question["option"] = sliderObj.option;}
+					  if (sliderObj.unit)   {question["unit"]   = sliderObj.unit;}
 					  body = mkSliderQstn(question); break;
 			case 8  : var rankingObj = mkRankingDropDownObj("ranking", qstnForm);
 					  if (rankingObj.error) {alert(SurveyMessages[rankingObj.error]); return;}
@@ -2255,8 +2268,8 @@ var SurveyCreate     = function() {
 			questionList.splice(qstId - 1, 1);           // 질문 배열에서 해당 순번의 객체 삭제
 			questionList.splice(qstId - 1, 0, question); // 질문 배열에 해당 순번에 추가
 		}
-		console.log(questionList);
 	}
+	
 	// 재사용시 질문 폼 생성
 	function reuseQstns(questions) {
 		var qstn = questions;
@@ -2287,23 +2300,24 @@ var SurveyCreate     = function() {
 	}
 	
 	function mkSliderQstn(question) {
-		var options = question.option;
+		var options          = question.option;
 		var sliderLogicPoint = question.sliderLogicPoint;
-		var qstnId = question.level;
-		var logic = options[0].logic;
-		var lowest  = options.filter(function(val) {return val["level"] == 0;})[0]["content"];
-		var highest = options.filter(function(val) {return val["level"] == 1;})[0]["content"];
-		var optionId = "";
+		var qstnId           = question.level;
+		var sliderUnit       = question.unit;
+		var logic            = options[0].logic;
+		var lowest           = options.filter(function(val) {return val["level"] == 0;})[0]["content"];
+		var highest          = options.filter(function(val) {return val["level"] == 1;})[0]["content"];
+		var optionId         = "";
 		if (options[0]['optionId'] != undefined) {
 			optionId = options[0]['optionId'];
 		}
 		var questionSilder = $("<div class='question-silder'></div>");
-		var silderWrap = $("<div class='silder-wrap'></div>");
-		var low = $("<span>" + lowest + "</span>");
-		var input = $("<input type='range' class='slider-range' name='slider" + question["level"] + "' min='" + lowest + "' max='" + highest + "'/>");
-		var high = $("<span>" + highest + "</span>");
-		var output = $("<output for='slider" + question["level"] + "' id='slider" + question["level"] + "' class='slider-output' logic='" + logic + "' logicPoint='" + sliderLogicPoint + "' optionId = '" + optionId + "'></output>");
-
+		var silderWrap     = $("<div class='silder-wrap'></div>");
+		var low            = $("<span>" + lowest + "</span>");
+		var input          = $("<input type='range' class='slider-range' name='slider" + question["level"] + "' min='" + lowest + "' max='" + highest + "' step='" + sliderUnit + "'/>");
+		var high           = $("<span>" + highest + "</span>");
+		var output         = $("<output for='slider" + question["level"] + "' id='slider" + question["level"] + "' class='slider-output' logic='" + logic + "' logicPoint='" + sliderLogicPoint + "' optionId = '" + optionId + "'></output>");
+		
 		silderWrap.append(low);
 		silderWrap.append(input);
 		silderWrap.append(high);
@@ -2494,21 +2508,25 @@ var SurveyCreate     = function() {
 		var sliderObj    = {};
 		var lowestInput  = qstnForm.querySelector("input[class='slider-lw']");
 		var highestInput = qstnForm.querySelector("input[class='slider-up']");
+		var unitInput    = qstnForm.querySelector("input[class='slider-input']");
+		var unitValue    = unitInput    ? parseInt(unitInput.value)    : -1;
 		var lowestValue  = lowestInput  ? parseInt(lowestInput.value)  : -1;
 		var highestValue = highestInput ? parseInt(highestInput.value) : -1;
 		
 		//Check slider requirements
-		console.log(lowestValue);
 		if (!isValid(lowestValue))       {sliderObj.error = "strSlider1"; return sliderObj;}
 		if (!isValid(highestValue))      {sliderObj.error = "strSlider2"; return sliderObj;}
+		if (!isValid(unitValue))         {sliderObj.error = "strSlider5"; return sliderObj;}
 		if (lowestValue >= highestValue) {sliderObj.error = "strSlider3"; return sliderObj;}
-		if (highestValue > 30000)        {sliderObj.error = "strSlider4"; return sliderObj;}
+		if (((highestValue - lowestValue) % unitValue) != 0)  {sliderObj.error = "strSlider4"; return sliderObj;}
+		if (((highestValue - lowestValue) / unitValue) > 200) {sliderObj.error = "strSlider6"; return sliderObj;}
 		
 		var option = [];
 		option.push({content : lowestValue, level : 0});
 		option.push({content : highestValue, level : 1});
 		
 		sliderObj["option"]  = option;
+		sliderObj["unit"]    = unitValue;
 		return sliderObj;
 	}
 	

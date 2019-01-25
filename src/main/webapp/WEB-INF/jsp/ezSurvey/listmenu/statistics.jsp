@@ -1108,17 +1108,21 @@
 			}
 			
 			function getSliderDataSet(question) {
-				var responses   = question['responses'];
-				var options     = question['option'];
-				var startPoint  = parseInt(options[0]['content']);
-				var endPoint    = parseInt(options[1]['content']);
+				var responses   = question["responses"];
+				var options     = question["option"];
+				var startPoint  = parseInt(options[0]["content"]);
+				var endPoint    = parseInt(options[1]["content"]);
+				var unitValue   = parseInt(question["unit"]);
 				var unitArr     = [];
 				var dataSetArr  = [];
 				var dataSetObj  = {};
 				var maxLabelLen = 0;
 				var maxYValue   = 0;
+				var numCnt      = (endPoint - startPoint) / unitValue;
 				
-				for (var i = startPoint; i < endPoint + 1; i++) {
+				console.log("Unit value: " + unitValue);
+				
+				for (var i = startPoint; i <= endPoint; i+= unitValue) {
 					var unitlabel = i + "";
 					if (unitlabel.length > maxLabelLen) {
 						maxLabelLen = unitlabel.length;
@@ -1134,9 +1138,14 @@
 				
 				var minLabelWidth        = maxLabelLen * 12 > 40 ? maxLabelLen * 12 : 40;
 				
+				console.log("data set");
+				console.log(dataSetArr);
+				console.log("Labels");
+				console.log(unitArr);
+				
 				dataSetObj["labels"]     = unitArr;
 				dataSetObj["dataSetArr"] = dataSetArr;
-				dataSetObj["width"]      = (endPoint - startPoint + 1) * minLabelWidth;
+				dataSetObj["width"]      = numCnt * minLabelWidth;
 				dataSetObj["maxY"]       = maxYValue;
 				
 				return dataSetObj;

@@ -2994,7 +2994,7 @@ h2, #menu span {font-size: 12px;}
 .barDiv {padding: 0px 20px 15px; display: flex;}
 .barDiv >canvas {flex: 1; min-height: 280px;}
 .survey-canvaswrap {flex: 1; min-height: 280px;}
-.pieDiv >canvas {height: 300px; padding: 0px 10px;}
+.pieDiv >canvas {height: 300px; padding: 0px 20px 0px 30px;}
 .response-wrap, .respondents-div {margin-bottom: 10px; background-color: #fff;}
 .response-usercnt {cursor: pointer;}
 .response-usercnt:hover {color: rgb(4, 112, 227);}
@@ -3025,17 +3025,28 @@ h2, #menu span {font-size: 12px;}
 .other-header {padding: 10px 0px;}
 .other-header >span:first-child {color: red;}
 .user-wrapdiv {height: 246px;overflow-y: auto; overflow-x: hidden;}
-.legend-ul {padding: 20px 0px; list-style: none;}
-.legend-ul >li {display: flex; cursor: pointer;}
+.legend-ul {padding: 15px 0px; list-style: none; height: 260px;}
+.legend-ul >li {display: flex; cursor: pointer; padding: 5px 0px;}
 .legend-ul .legend-circle {width: 30px; min-width: 30px; height: 15px;}
-.legend-label {padding-left: 6px; padding-right: 6px; word-break: break-word;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.legend-label {padding-left: 6px; padding-right: 6px; word-break: break-word;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; max-width: 200px !important;}
 .legend-label-wrap {flex: 1; display: flex; min-width: 0px;}
 .legend-percent {white-space: nowrap;}
 .legend-label:hover {font-weight: bold;}
 .pieDiv .bnk-legend {width: 320px; min-width: 320px;}
 .barDiv .bnk-legend {width: 160px; min-width: 160px;}
+.lengen-off {display: none !important;}
+.lengen-navi {display: flex; height: 32px; padding-bottom: 10px;}
+.lengen-navi >span + span {margin-left: 10px;}
+.lengen-previous, .lengen-next {background-repeat: no-repeat; background-position: center; height: 30px; width: 30px; background-size: 26px 26px; cursor: pointer; border: 1px solid #ddd;}
+.lengen-previous:hover, .lengen-next:hover {border-color: #1273EB;}
+.lengen-previous {background-image: url('/images/ezSurvey/up_bttn.png');}
+.lengen-next {background-image: url('/images/ezSurvey/down_bttn.png');}
+.bnk-tooltip {opacity: 1; position: absolute; background: rgba(0, 0, 0, 0.7); color: #fff; border-radius: 3px; -webkit-transition: all .1s ease; transition: all .1s ease; pointer-events: none; -webkit-transform: translate(-50%, 0); transform: translate(-50%, 0);}
+.bnk-tooltip table {table-layout:fixed !important;}
+.bnk-tooltip td {max-width: 300px; color: #fff !important; word-wrap:break-word; -ms-word-wrap:break-word; word-break: break-word;}
+.chartjs-tooltip-key {display: inline-block; width: 10px; height: 10px;margin-right: 10px;}
 
-.chartWrapper {position: relative; padding: 0px 10px 15px;}
+.chartWrapper {position: relative; padding: 0px 10px 15px; border: 1px solid #ddd; border-top: none;}
 .chartAreaWrapper {width: 100%; overflow-x: auto; overflow-y: hidden;}
 .chartAreaWrapper.bnk-wrap {overflow-x: hidden;}
 /*** survey statistic part end ***/
@@ -3163,7 +3174,7 @@ input::-ms-clear {display: none;}
 .ulFiles li, .user-pageul li {float: left; width: 100%; min-width: 100%; height: 65px; position: relative; border-bottom: 1px dashed #ddd; box-sizing: border-box;}
 .ulFiles li >img, .user-pageul li >img {position: absolute; top: 2.5px; right: 2.5px; cursor: pointer;}
 .ulFiles li:lastChild {padding-bottom: 5px;}
-.user-pageul li:last-child {border-bottom: 0px !important;}
+.user-pageul {border-bottom: 0px !important;}
 .fileList .qstUl {margin: 0px; padding: 0px;}
 .fileList .optUl {margin: 0px; padding: 0px 40px;}
 .fileList .qstUl >li {position: relative; padding: 15px 15px 0px;}
@@ -3327,7 +3338,7 @@ input::-ms-clear {display: none;}
 /* question header panel */
 .question-panel{background:#f1f6fb;}
 .question-header {display:flex; padding:0px 0px 20px 0px;}
-.question-header .question-content {flex:1; padding:0px 20px; cursor: default; font-size:14px;}
+.question-header .question-content {flex:1; padding:0px 20px; cursor: default; font-size:14px; font-family:Malgun Gothic, "맑은 고딕";}
 .question-header .tooltip-bttns {display: flex; padding: 0px 10px;}
 .question-header .imptt {color: rgba(255, 0, 0, 1); padding-left: 20px; margin-right: -15px; font-size: 16px;}
 .question-panel .question-attach {max-height: 80px; padding: 10px 35px; display: flex; align-items: center;}
@@ -3362,7 +3373,7 @@ input::-ms-clear {display: none;}
 /* slider part */
 .silder-wrap {display:flex; padding:10px 0px; align-items:center;}
 .silder-wrap span{width:28px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
-.slider-lw, .slider-up {width:50px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
+.slider-lw, .slider-up, .slider-input {width:50px; height:32px; line-height:32px; padding:0px 10px; outline:0px; border:1px solid #c3c3c3; text-align:center; font-size:12px; color:#333;}
 .slider-main, .slider-range {-webkit-appearance: none; border: 1px solid white; flex: 1; cursor:pointer; margin: 0px 10px; padding: 0px;}
 input[type=range]::-webkit-slider-runnable-track {width: 100%;  height:16px; background:#f3f3f3; border: none; border-radius: 12px;}
 input[type=range]::-webkit-slider-thumb {-webkit-appearance: none; border: none; width:26px; height:26px; border-radius: 50%; background:#2196f3; margin-top: -5px;}
@@ -3378,6 +3389,8 @@ input[type=range]:focus::-ms-fill-lower {background:#f3f3f3;}
 input[type=range]:focus::-ms-fill-upper {background:#f3f3f3;}
 input[type=range]::-ms-tooltip {display: none;}
 .slider-output {display: block; height: 30px; text-align: center; width: 100%; font-size: 1.5em; font-family: 'Advent Pro', sans-serif; color: rgba(132, 206, 66, 1);}
+.slider-span {padding-right: 10px;}
+.silder-unit {text-align: center;}
 
 /* ranking and dropdown part */
 .delOption {width: 30px; height: 30px; cursor: pointer; background-repeat: no-repeat; background-size: 30px 30px; background-position: center; background-image: url('/images/ezSurvey/minus.png');}
@@ -3403,7 +3416,7 @@ input[type=range]::-ms-tooltip {display: none;}
 /* survey information, questions and logic confirm part */
 .prevQsWrapper{margin:0px 0px 10px 0px; border:1px solid #ddd; position: relative;}
 .prevQsContent{padding:10px; background:#f1f6fb;}
-.prevQsWrapper .question-header .question-content {overflow:hidden; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all;}
+.prevQsWrapper .question-header .question-content {overflow:hidden; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all; font-family:Malgun Gothic, "맑은 고딕";}
 .prevQsWrapper .question-header .imptt {line-height: 40px;}
 .srvyLogicbtn{display:inline-flex; margin:0px 0px 0px 10px;}
 .logicSkip{background-position:0px -94px !important; width:16px; height:16px; display:inline-block; margin:10px 0px 0px 0px; cursor:pointer;}

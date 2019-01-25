@@ -469,6 +469,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				if (questionObj.get("sliderLogicPoint") != null && questionLogic == 1) {
 					question.setSliderLogicPoint(((Long)questionObj.get("sliderLogicPoint")).intValue());
 				}
+				
+				question.setUnit((Long)questionObj.get("unit"));
 			}
 			
 			//Add question attach file

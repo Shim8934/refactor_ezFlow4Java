@@ -15,6 +15,7 @@ public class QuestionVO {
 	private int logicFlag;
 	private int sliderLogicPoint;
 	private long skip;
+	private long unit;
 	private int skipFlag;
 	private List<OptionVO> option;
 	private AttachVO attach;
@@ -146,5 +147,13 @@ public class QuestionVO {
 	
 	public void setSkipFlag(int skipFlag) {
 		this.skipFlag = skipFlag;
+	}
+	
+	public long getUnit() {
+		return unit;
+	}
+	
+	public void setUnit(long unit) {
+		this.unit = unit;
 	}
 }
