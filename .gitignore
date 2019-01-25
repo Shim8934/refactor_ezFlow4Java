@@ -1,7 +1,8 @@
 target/
 output/
-.idea/
+.idea
 *.iml
 #Eclipse Setting
 .settings/
 .classpath
+.gitignore
