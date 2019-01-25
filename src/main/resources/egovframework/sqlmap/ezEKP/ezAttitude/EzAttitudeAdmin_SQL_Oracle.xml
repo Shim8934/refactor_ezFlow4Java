@@ -1481,9 +1481,9 @@
 					(
 				SELECT 
 					A.CN AS userId,
-				    A.DISPLAYNAME AS userName,
-				    NVL(A.TITLE, ' ') AS userTitle,
-				    NVL(A.DESCRIPTION, ' ') AS userDeptName,
+				    A.DISPLAYNAME$primary$ AS userName,
+				    NVL(A.TITLE$primary$, ' ') AS userTitle,
+				    NVL(A.DESCRIPTION$primary$, ' ') AS userDeptName,
 				    #searchYear# AS year,
 				    nvl(sum(
 							CASE
@@ -1538,21 +1538,21 @@
 			]]>
 			<isNotEmpty prepend="AND" property="searchDeptName">
 				<![CDATA[
-					A.description LIKE '%' || #searchDeptName# || '%'
+					A.description$primary$ LIKE '%' || #searchDeptName# || '%'
 				]]>
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="searchUserName">
 				<![CDATA[
-					A.displayname LIKE '%' || #searchUserName# || '%'
+					A.displayname$primary$ LIKE '%' || #searchUserName# || '%'
 				]]>
 			</isNotEmpty>
 			<isNotEmpty prepend="AND" property="searchTitle">
 				<![CDATA[
-					A.title LIKE '%' || #searchTitle# || '%'
+					A.title$primary$ LIKE '%' || #searchTitle# || '%'
 				]]>
 			</isNotEmpty>
 			
-			GROUP BY A.CN, A.DISPLAYNAME, A.TITLE, A.DESCRIPTION, nvl(B.TOTAL_ANNUAL_CNT, 0)
+			GROUP BY A.CN, A.DISPLAYNAME$primary$, A.TITLE$primary$, A.DESCRIPTION$primary$, nvl(B.TOTAL_ANNUAL_CNT, 0)
 			
 			<isNotEmpty property="orderCell">
 				<![CDATA[
@@ -1563,7 +1563,7 @@
 			<isEmpty property="orderCell">
 				<![CDATA[
 					ORDER BY
-						userName
+						userName$primary$
 				]]>
 			</isEmpty>	
 		<![CDATA[
@@ -1702,14 +1702,16 @@
 		<![CDATA[
 			SELECT 
 				A.cn AS userId,
-			    A.DISPLAYNAME as userName,
-			    A.TITLE as userTitle,
-			    A.DESCRIPTION as deptName,
+			    A.DISPLAYNAME$primary$ as userName,
+			    A.TITLE$primary$ as userTitle,
+			    A.DESCRIPTION$primary$ as deptName,
 			    A.EXTENSIONATTRIBUTE2 as imgPath,
 			    C.START_DATE + #offsetMin# / (24 * 60) as startDate,
 			    C.END_DATE + #offsetMin# / (24 * 60) as endDate,
 			    C.TYPE_ID as typeId,
-			    D.TYPE_NAME as typeName,
+			    D.TYPE_NAME$primary$ as typeName,
+			    C.ATTITUDE_ID as attitudeId,
+			    C.CONTENT as content,
 			    nvl( 
 						CASE
 						   WHEN C.TYPE_ID = 'A11' THEN TRUNC(C.END_DATE) - TRUNC(C.START_DATE)
@@ -1775,9 +1777,9 @@
 		<![CDATA[
 			SELECT 
 					A.CN AS userId,
-			    	A.DISPLAYNAME AS userName,
-			    	A.TITLE AS userTitle,
-			    	A.DESCRIPTION AS userDeptName,
+			    	A.DISPLAYNAME$primary$ AS userName,
+			    	A.TITLE$primary$ AS userTitle,
+			    	A.DESCRIPTION$primary$ AS userDeptName,
 			    	A.PHYSICALDELIVERYOFFICENAME AS companyId,
 				    #year# AS year,
 				    nvl(sum(
@@ -1834,7 +1836,7 @@
 					A.CN = #userId#
 		]]>
 		
-		GROUP BY A.CN, A.DISPLAYNAME, A.TITLE, A.DESCRIPTION, A.PHYSICALDELIVERYOFFICENAME, nvl(B.TOTAL_ANNUAL_CNT, 0)
+		GROUP BY A.CN, A.DISPLAYNAME$primary$, A.TITLE$primary$, A.DESCRIPTION$primary$, A.PHYSICALDELIVERYOFFICENAME, nvl(B.TOTAL_ANNUAL_CNT, 0)
 		
 	</select>
 	
@@ -1848,7 +1850,7 @@
 				CHANGE_REASON AS CHANGE_REASON,
 				TO_CHAR(CHANGE_DATE, 'YYYY-MM-DD HH24:MI:SS') AS CHANGE_DATE,
 				CHANGE_USER_ID AS CHANGE_USER_ID,
-				(SELECT DISPLAYNAME FROM tbl_usermaster WHERE CN = CHANGE_USER_ID AND TENANT_ID = #tenantId#) AS CHANGE_USER_NAME,
+				(SELECT DISPLAYNAME$primary$ FROM tbl_usermaster WHERE CN = CHANGE_USER_ID AND TENANT_ID = #tenantId#) AS CHANGE_USER_NAME,
 				COMPANY_ID AS COMPANY_ID,
 				TENANT_ID AS TENANT_ID,
 				YEAR AS YEAR
@@ -1860,7 +1862,8 @@
 				USER_ID = #userId#
 			AND
 				YEAR = #year#
-			ORDER BY CHANGE_DATE DESC
+			ORDER BY 
+				CHANGE_DATE DESC
 		]]>
 	</select>
 	
