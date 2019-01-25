@@ -248,18 +248,21 @@ var setImageName = function (type) {
 }
 
 var setImageElement = function (parent, imgsrc, type) {
+	var buttonDiv = document.createElement('div');
+	buttonDiv.className = 'quickMenuBtnDiv';
+
 	var imageWrap = document.createElement('div');
 	var imageElement = document.createElement('img');
 	imageElement.src = imgsrc;
 	imageElement.dataset.type = type;
 	setImageName(type);
 	if(type !== 'memo') {
-		imageElement.addEventListener('click', function () {
+		buttonDiv.addEventListener('click', function () {
 			handleQuickMenuOpen(type);
 		});		
 	} else {
 		imageElement.id = 'open-memo';
-		imageElement.addEventListener('click', function(event) {
+		buttonDiv.addEventListener('click', function(event) {
 			event.preventDefault();
 			if(document.getElementById('layer-popup').style.display === 'none') {
 				document.getElementById('noteBlock').style.visibility = 'visible';
@@ -274,9 +277,7 @@ var setImageElement = function (parent, imgsrc, type) {
 	}
 	
 	imageWrap.appendChild(imageElement);
-	
-	var buttonDiv = document.createElement('div');
-	buttonDiv.className = 'quickMenuBtnDiv';
+
 	buttonDiv.appendChild(imageWrap);
 	buttonDiv.appendChild(setImageName(type));
 	
