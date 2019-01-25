@@ -178,6 +178,16 @@
 		]]>
 	</select>
 	
+	<select id="EzCommonDAO.checkReformFlagColumn">
+		<![CDATA[
+			SELECT
+				REFORMFLAG
+			FROM
+				TBL_FORMINFO
+			LIMIT 1
+		]]>
+	</select>
+	
 	<statement id="EzCommonDAO.createTblCompanyConfig"> 
 		CREATE TABLE `tbl_company_config` (
 		  `TENANT_ID` mediumint(5) NOT NULL,
@@ -186,6 +196,13 @@
 		  `PROPERTY_VALUE` varchar(2000) NOT NULL,
 		  PRIMARY KEY (`TENANT_ID`,`COMPANY_ID`,`PROPERTY_NAME`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8; 
+	</statement>
+	
+	<statement id="EzCommonDAO.createReformFlagColumn">
+		ALTER TABLE
+			TBL_FORMINFO
+		ADD
+			REFORMFLAG VARCHAR(4) DEFAULT 'N'
 	</statement>
 		
 	<select id="EzCommonDAO.getCompanyConfig" parameterClass="map" resultClass="String">

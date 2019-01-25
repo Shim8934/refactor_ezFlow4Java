@@ -27,32 +27,33 @@
 		});
 	}
 	
+	function checkedLooping() {
+		var checkbox = document.getElementById("all-apply");
+		
+		if (checkbox) {
+			return checkbox.checked;
+		}
+		
+		return false;
+	}
+	
 	<c:if test="${isOwner && isAllFiles}">
 	function onClickOverwrite() {
 		onClickClose({
 			code: "OVERWRITE",
-			looping: document.getElementById("all-apply").checked
+			looping: checkedLooping()
 		});
 	}
 	</c:if>
 
-	<c:if test="${isFolder}">
 	function onClickSkip() {
 		onClickClose({
 			code: "SKIP",
-			looping: false
-		});
-	}
-	</c:if>
-
-	<c:if test="${not isFolder}">
-	function onClickSkip() {
-		onClickClose({
-			code: "SKIP",
-			looping: document.getElementById("all-apply").checked
+			looping: checkedLooping()
 		});
 	}
 	
+	<c:if test="${not isFolder}">
 	function onClickRename() {
 		parent.DivPopUpShow(450, 250, "/ezWebFolder/fileRenameConfirm.do?isUploading");
 	}
@@ -126,7 +127,7 @@ table.content-inner td>h2 {
 							</tr>
 						</table>
 						<div style="text-align: center;">
-							<c:if test="${not isFolder}"><input id="all-apply" type="checkbox" style="vertical-align: middle;"> <label for="all-apply" style="vertical-align: middle;"><spring:message code='webfolder.duplicate.looping' /></label></c:if>
+							<c:if test="${not isFolder && not isOne}"><input id="all-apply" type="checkbox" style="vertical-align: middle;"> <label for="all-apply" style="vertical-align: middle;"><spring:message code='webfolder.duplicate.looping' /></label></c:if>
 							<c:if test="${not isOwner && isAllFiles}"><p style="margin: 10px 0 0 0; color: red;"><spring:message code='webfolder.duplicate.permission' /></p></c:if>
 						</div>
 					</c:otherwise>
@@ -139,5 +140,17 @@ table.content-inner td>h2 {
 		<a class="imgbtn" onclick="onClickSkip();"><span><c:choose><c:when test="${isFolder}"><spring:message code="ezWebFolder.t116" /></c:when><c:otherwise><spring:message code="webfolder.duplicate.button.skip" /></c:otherwise></c:choose></span></a>
 		<c:if test="${not isFolder}"><a class="imgbtn" onclick="onClickRename();"><span><spring:message code='webfolder.duplicate.button.rename' /></span></a></c:if>
 	</div>
+	<script>
+		(function() {
+			try {
+				var documentHeight = document.documentElement.offsetHeight;
+				var buttonDivHeight = document.querySelector(".btnpositionNew").scrollHeight;
+				
+				frameElement.style.height = documentHeight + buttonDivHeight + "px"
+			} catch (error) {
+				// ignore
+			}
+		})();
+	</script>
 </body>
 </html>

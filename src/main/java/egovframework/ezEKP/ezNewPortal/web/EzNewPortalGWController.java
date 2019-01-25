@@ -144,7 +144,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 사용자별 개인화 정보 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/settingInfo/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/settingInfo/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserPortalSetting(HttpServletRequest request, @PathVariable String userId, Locale locale) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getUserPortalSetting started.");
 		JSONObject result = new JSONObject();
@@ -435,7 +435,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PATCH] 사용자별 포틀릿 순서 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/portlets/order/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/portlets/order/users/{userId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updatePortletOrder(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jsonParam) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updatePortletOrder started.");
 		JSONObject result = new JSONObject();
@@ -563,7 +563,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 사용자별 테마 목록 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/themes/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/themes/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserThemeList(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getUserThemeList started.");
 		JSONObject result = new JSONObject();
@@ -615,7 +615,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 사용자별 메뉴 정보 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/menus/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/menus/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserMenuList(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getUserMenuList started.");
 		JSONObject result = new JSONObject();
@@ -801,7 +801,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PATCH] 개인 메뉴 순서 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/menus/order/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/menus/order/users/{userId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateUserMenuOrder(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jObj) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateUserMenuOrder started.");
 		JSONObject result = new JSONObject();
@@ -951,7 +951,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [DELETE] 개인 메뉴 순서 초기화
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/menus/order/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/menus/order/users/{userId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteUserMenuOrder(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W deleteUserMenuOrder started.");
 		JSONObject result = new JSONObject();
@@ -1128,7 +1128,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 테마 프레임 리스트 및 사용자 지정 프레임 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/frames/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/frames/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserFrameList(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getUserFrameList started.");
 		JSONObject result = new JSONObject();
@@ -1159,7 +1159,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PATCH] 사용자 프레임 설정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/frames/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/frames/users/{userId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateUserFrame(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jObj) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateUserFrame started.");
 		JSONObject result = new JSONObject();
@@ -1187,7 +1187,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 포틀릿 개인별 조회
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/portlets/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/portlets/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getPortletList(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getPortletList started.");
 		JSONObject result = new JSONObject();
@@ -1337,7 +1337,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PATCH] 포틀릿 개인별 사용/미사용 설정
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/portlets/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/portlets/users/{userId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateUserPortletSetting(HttpServletRequest request, @PathVariable String userId, @RequestBody JSONObject jObj) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateUserPortletSetting started.");
 		JSONObject result = new JSONObject();
@@ -1366,7 +1366,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [PATCH] 사용자별 테마 적용
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/themes/{themeId}/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/themes/{themeId}/users/{userId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateUserThemeSetting(HttpServletRequest request, @PathVariable String userId, @PathVariable int themeId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W updateUserThemeSetting started.");
 		JSONObject result = new JSONObject();
@@ -1397,7 +1397,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [DELETE] 사용자 테마 설정 초기화
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/themes/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/themes/users/{userId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteUserThemeSetting(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W deleteUserThemeSetting started.");
 		JSONObject result = new JSONObject();
@@ -1427,7 +1427,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 사용자별 읽지 않은 메일, 결재할 문서, 전자설문, 오늘일정, 회람판 개수 불러오기
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/settingInfo/unreadCounts/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/settingInfo/unreadCounts/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUnreadCounts(HttpServletRequest request, @PathVariable String userId, Locale locale) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getUnreadCounts started.");
 		JSONObject result = new JSONObject();
@@ -1594,7 +1594,7 @@ public class EzNewPortalGWController {
 	
 	//사용자 초기화면 정보 조회 + 메모 모듈 사용여부 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/startpage/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/startpage/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getUserStartPage(HttpServletRequest request, @PathVariable String userId) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getUserStartPage started.");
 		JSONObject result = new JSONObject();
@@ -1647,7 +1647,7 @@ public class EzNewPortalGWController {
 	
 	//사용자 초기화면 설정 실행
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezPortal/startpage/menus/{menuId}/users/{userId}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezPortal/startpage/menus/{menuId}/users/{userId:.+}", method = RequestMethod.PATCH, produces = "application/json;charset=utf-8")
 	public JSONObject updateUserStartPage (HttpServletRequest request, @PathVariable String userId, @PathVariable int menuId) {
 		LOGGER.debug("ezNewPortal G/W getUserStartPage started.");
 		JSONObject result = new JSONObject();
@@ -3828,7 +3828,7 @@ public class EzNewPortalGWController {
 	 * 포탈개인화 G/W [GET] 포틀릿 - 카운트
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezportal/portlets/count/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezportal/portlets/count/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getCountPortlet(HttpServletRequest request, @PathVariable String userId, Locale locale) throws Exception {
 		LOGGER.debug("ezNewPortal G/W getCountPortlet started.");
 

@@ -68,7 +68,7 @@
 		        var MainHeight = document.documentElement.clientHeight - parseInt(topHeight);
 		        document.getElementById("mainFrame").style.height = MainHeight + "px";
 		        // 컨텍스트 메뉴 관련
-		        contextMenuRePosition();
+		        //contextMenuRePosition();
 		    }
 
 		    function Div_Close() {
@@ -183,7 +183,7 @@
 		
 	 	$(window).resize(function() {
 	 		browserResize();
-	 		setConextMenuPositionResize();
+	 		setMenuPostionResize();
 		    
 	 		clearTimeout(window.resizedFinished);
 		    window.resizedFinished = setTimeout(function(){

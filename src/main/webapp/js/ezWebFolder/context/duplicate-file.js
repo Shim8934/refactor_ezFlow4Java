@@ -456,6 +456,7 @@ var duplicateFile = (function() {
 		// 파일 중복 처리하는 팝업 띄우기
 		var url = "/ezWebFolder/fileDuplicateConfirm.do?";
 		var currentInfo = current.info;
+		var height;
 		
 		url += "fileName=" + encodeURIComponent(currentInfo.fileName);
 		url += "&newType=" + encodeURIComponent(currentInfo.newType);
@@ -466,13 +467,25 @@ var duplicateFile = (function() {
 		url += "&oldSize=" + encodeURIComponent(currentInfo.oldSize);
 		url += "&oldOwnerId=" + encodeURIComponent(currentInfo.oldOwnerId);
 		
+		if (currentInfo.newType === "FILE") {
+			// 파일이 하나일 때는 체크박스 사라지니까 더 작게
+			if (isEmptyInfo()) {
+				url += "&isOne";
+				height = 278;
+			} else {
+				height = 300;
+			}
+		} else {
+			height = 200;
+		}
+		
 		// 기존 팝업이 닫히는거 기다리기
 		setTimeout((function(height) {
 			return function() {
 				openLeftPanel();
 				DivPopUpShow(450, height, url);
 			}
-		})(currentInfo.newType === "FILE" ? 300 : 200), 0);
+		})(height), 0);
 	}
 
 	var process = function(params, callerIsPopup) {

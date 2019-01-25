@@ -570,6 +570,52 @@ public interface EzApprovalGService {
 	 * */
 	public boolean isLinkedAttachFile(String attachHref) throws Exception;
 	
+	/* FormBuilder */
+	/**
+	 * 폼빌더 양식 여부를 반환
+	 * 
+	 * @param formUrl
+	 *            양식 경로
+	 */
+	boolean isReform(String formUrl) throws Exception;
+	
+	/**
+	 * 폼빌더 양식 여부를 반환
+	 * 
+	 * @param formId
+	 *            양식 아이디
+	 * @param companyId
+	 *            회사 아이디
+	 * @param tenantId
+	 *            테넌트 아이디
+	 */
+	boolean isReform(String formId, String companyId, int tenantId) throws Exception;
+
+	/**
+	 * 폼빌더 양식 여부를 반환
+	 * 
+	 * @param docSN
+	 *            아이디@번호
+	 * @param companyId
+	 *            회사 아이디
+	 * @param tenantId
+	 *            테넌트 아이디
+	 */
+	boolean isReformTempDoc(String docSN, String companyId, int tenantId) throws Exception;
+
+	/**
+	 * 결재 문서 양식의 폼빌더 여부를 반환
+	 * 
+	 * @param formId
+	 *            양식 아이디
+	 * @param companyId
+	 *            회사 아이디
+	 * @param tenantId
+	 *            테넌트 아이디
+	 */
+	ApprGFormVO getReformInfoApprovalDocument(String docId, String companyId, int tenantId) throws Exception;
+	/* FormBuilder end */
+	
 //	public void updateApprovConn(String docID, String companyID, int tenantID) throws Exception;
 //
 //	public void insertApprovConnSusin(String orgDocID, String formID, String companyID, int tenantID) throws Exception;
