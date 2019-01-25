@@ -3,7 +3,7 @@
 
 <div class="survey-nminfo"><div class="survey-title"></div></div>
 
-<div class="questions-wrap"><div class="quesBacgr"></div></div>
+<div class="questions-wrap" id="mainQsCreateDiv"><div class="quesBacgr"></div></div>
 
 <div class="survey-bttn-panel">
 	<div class="btnpositionSurvey">

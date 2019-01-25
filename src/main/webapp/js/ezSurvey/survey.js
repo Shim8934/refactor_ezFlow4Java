@@ -1233,7 +1233,7 @@ var SurveyCreate     = function() {
 		$(".quesBacgr").on("click", ".save", function() {mkQstnObj("save", $(this));});
 		
 		// 우상단 수정 버튼 클릭 이벤트
-		$(".quesBacgr").on("click", ".modifyBtn", function() {
+		$(".quesBacgr").on("click", ".modifyBtnLi", function() {
 			var tmpQstnWpr  = $(this).parents(".usrQstnWrapper");
 			var qstnWrapper = $(this).parents(".qstnWrapper");
 			// 수정할 질문 id와 타입
@@ -1253,7 +1253,7 @@ var SurveyCreate     = function() {
 		});
 		
 		// 우상단 복사 버튼 클릭 이벤트
-		$(".quesBacgr").on("click", ".copyBtn", function() {
+		$(".quesBacgr").on("click", ".copyBtnLi", function() {
 			var tmpQstnWpr  = $(this).parents(".usrQstnWrapper");
 			var qstnWrapper = $(this).parents(".qstnWrapper");
 			// 수정할 질문 id와 타입
@@ -1278,7 +1278,7 @@ var SurveyCreate     = function() {
 		});
 		
 		// 우상단 삭제 버튼 클릭 이벤트
-		$(".quesBacgr").on("click", ".deleteBtn", function() {
+		$(".quesBacgr").on("click", ".deleteBtnLi", function() {
 			var thisWrapper = $(this).parents(".qstnWrapper");
 			var qstnId      = parseInt(thisWrapper.attr("id").replace("qstn", ""));
 			var qstnList    = SurveyCreate.getQs();
@@ -1358,7 +1358,7 @@ var SurveyCreate     = function() {
 			var prevWrapper = $(this).parents(".prevQsWrapper");
 			var type = parseInt(prevWrapper.attr("type"));
 			var id = parseInt(prevWrapper.attr("id").replace("prevQstn", ""));
-
+			
 			var qstnList = surveyObj["questions"];
 			var qstn = qstnList[id - 1];
 			var logicFlag = qstn.logicFlag;
@@ -1428,7 +1428,8 @@ var SurveyCreate     = function() {
 					$("#logic" + id + i).remove();
 				}
 			
-			} else {
+			}
+			else {
 				if (type == 7) {
 					qstn.option[0].logic  = -1;
 					qstn.sliderLogicPoint = -1;
@@ -1580,68 +1581,64 @@ var SurveyCreate     = function() {
 			tolerance: "pointer",
 			axis: "y",
 			update: function(event, ui) {
-				var catchedWrapper = ui.item;
-				var catchedQsId = parseInt(catchedWrapper.attr("id").replace("qstn", ""));
-				var prevQsId = "";
-				var nextQsId = "";
-				var prev = catchedWrapper.prev();
-				var next = catchedWrapper.next();
+				var selectedDivList = ui.item;
+				var nxtQstDivList   = selectedDivList.next();
+				var prevDivList     = selectedDivList.prev();
+				var nextQstDiv      = (nxtQstDivList.length != 0) ? nxtQstDivList[0] : null;
+				var prevQstDiv      = (prevDivList.length   != 0) ? prevDivList[0]   : null;
 				
-				if (prev.length != 0) {
-					prevQsId = parseInt(prev.attr("id").replace("qstn", ""));
-				}
-
-				if (next.length != 0) {
-					if (next.attr("id") != "") {
-						nextQsId = parseInt(next.attr("id").replace("qstn", ""));
-					}
-				}
-				
-				var comparedQsId = "";
-				var qstnList    = SurveyCreate.getQs();
-				var catchedQsObj = qstnList[catchedQsId-1];
-				var type = catchedQsObj["type"];
-				
-				if (nextQsId != "") {
-					if (prevQsId != "") {
-						if (prevQsId > catchedQsId && nextQsId > catchedQsId) {
-							comparedQsId = prevQsId;
-						} else {
-							comparedQsId = nextQsId;
+				if (nextQstDiv != null &&  prevQstDiv != null) {
+					var nexQstDivId  = nextQstDiv.getAttribute("id");
+					
+					if (nexQstDivId.indexOf("qstn") == -1) {
+						var prevQstLevel = prevQstDiv.getAttribute("id").replace("qstn", "");
+						
+						if (nexQstDivId == prevQstLevel) {
+							//Insert between modifying question divs
+							selectedDivList[0].parentElement.insertBefore(prevQstDiv, nextQstDiv);
 						}
-					} else {
-						comparedQsId = nextQsId;
 					}
-				} else {
-					comparedQsId = prevQsId;
 				}
-				// drag & drop된 객체 이외의 객체 id 및 ui 변경
-				checkActionForNewId(catchedQsId, qstnList, 'reOrder', comparedQsId);
 				
-				// drag & drop된 객체 아이디 변경
-				catchedQsObj.level = comparedQsId;
-				// 그 객체 복사
-				var deepCopy       = JSON.parse(JSON.stringify(catchedQsObj));
-				// 그 객체 삭제
-				qstnList.splice(catchedQsId - 1, 1);
-				// 그 객체 제자리에 끼워넣기
-				qstnList.splice(comparedQsId - 1, 0, deepCopy);
-				
-				// 그 객체 ui 변경 작업
-				catchedWrapper.html("");
-				catchedWrapper.attr("id", "qstn" + comparedQsId);
-				
-				mkQstnsByType(catchedWrapper, type, deepCopy);
+				sortDivElementList();
 			}
 		});
 		
 		$(".quesBacgr").on("click", ".delImage", function() {questionFile.deleteFile(this);});
 	}
 	
+	function sortDivElementList() {
+		var backGroundDiv    = document.getElementById("mainQsCreateDiv");
+		var questionDivList  = backGroundDiv.querySelectorAll("div[class='qstnWrapper']");
+		var questionList     = JSON.parse(JSON.stringify(surveyObj["questions"]));
+		var newQstList       = [];
+		var crrListLen       = questionDivList.length - 1; //last div is not a question yet
+		
+		for (var i = 0; i < crrListLen; i++) {
+			var crrElmtId = questionDivList[i].getAttribute("id");
+			var newLevel  = newQstList.length + 1;
+			var crrLevel  = crrElmtId.replace("qstn", "");
+			
+			if (crrElmtId.indexOf("qstn") != -1) {
+				var crrQuestion = JSON.parse(JSON.stringify(questionList.filter(function(qst){return qst["level"] == crrLevel;})[0]));
+				crrQuestion["level"] = newLevel;
+				questionDivList[i].setAttribute("id", "qstn" + newLevel);
+				questionDivList[i].querySelector("div[class='question-content']").textContent = newLevel + ". " + crrQuestion["content"];
+				newQstList.push(crrQuestion);
+			}
+			else {
+				questionDivList[i].setAttribute("id", newLevel == 1 ? 1 : newLevel - 1);
+			}
+		}
+		
+		//Update new questions list
+		surveyObj["questions"] = JSON.parse(JSON.stringify(newQstList));
+	}
+	
 	function addImptMark(id) {
 		var wrapper = $("#prevQstn" + id);
 		var impttTag = "";
-
+		
 		if (wrapper.find(".question-header").find(".imptt").length == 0) {
 			impttTag = $("<strong id='imptt" + id + "' class='imptt'>*</strong>");
 			//wrapper.find(".question-content").find("span[id^=frstBtnGrp]").before(impttTag);
@@ -1826,61 +1823,7 @@ var SurveyCreate     = function() {
 		return optionWrapper;
 	}
 	
-	/*function createMatrixTable(mode, colRowStr, bttnClass, colRow) {
-		var html      = "<table cellpadding='0' cellspacing='0' border='0'>";
-		var bttnClass = mode == "row" ? "addRow" : "addCol";
-		html += "<tr><th rowspan='0'>" + colRowStr + "</th><td>";
-		
-		if (colRow) {
-			html  += mkRowCol(mode, colRow[0]);
-			html  += "</td></tr>";
-			
-			if (colRow.length > 1) {
-				for (var i = 1; i < row.length; i++) {
-					html += "<tr><td>";
-					html += mkRowCol(mode, colRow[i]);
-					html  += "</td></tr>";
-				}
-			}
-		}
-		else {
-			html  += mkRowCol(mode);
-			html  += "</td></tr>";
-			html  += "<tr><td>";
-			html  += mkRowCol(mode);
-			html  += "</td></tr>";
-		}
-		
-		//Add add button
-		html += "<tr><td>";
-		html += "<ul class='survey_atchBtn srvyAddBtn'>";
-		html += "<li class='off " + bttnClass + "'><span class='survey_icon srvyAddFile'></span></li>";
-		html += "</ul></td></tr></table>";
-		
-		return html;
-	}*/
-	
-	// 수정시 새로 생성하는 행렬질문 
 	function handleModifyMatrixQuestion(question) {
-/*		var html = "";
-		var row  = null;
-		var col  = null;
-		
-		if (question) {
-			var options = question["option"];
-			row         = options.filter(function(row) {return row["colLevel"] == -1;});
-			col         = options.filter(function(col) {return col["rowLevel"] == -1;});
-		}
-		
-		html += "<div class='mtrPart'>";
-		html += "<div class='rowArea'>";
-		html += createMatrixTable("row", SurveyMessages.strRow, "addRow", row);
-		html += "</div>";
-		html += "<div class='colArea'>";
-		html += createMatrixTable("col", SurveyMessages.strColumn, "addCol", col);
-		
-		return $(html);*/
-		
 		var html = "";
 		var row  = null;
 		var col  = null;
@@ -2401,25 +2344,22 @@ var SurveyCreate     = function() {
 		var atchBtnUl      = document.createElement("ul");
 		
 		for (var i = 0; i < 3; i++) {
-			var btnLi = document.createElement("li");
-			var btnSpan = document.createElement("span");
-			btnLi.className = "off";
+			var btnLi         = document.createElement("li");
+			var btnSpan       = document.createElement("span");
 			
 			switch (i) {
-			case 0 :
-				btnSpan.className = "survey_icon modifyBtn";
-				break;
-			case 1 : 
-				btnSpan.className = "survey_icon copyBtn";
-				break;
-			case 2 : 
-				btnSpan.className = "survey_icon deleteBtn";
-				break;
+				case 0 :  btnSpan.className = "survey_icon modifyBtn";
+						  btnLi.className   = "off modifyBtnLi"; break;
+				case 1 :  btnSpan.className = "survey_icon copyBtn";
+						  btnLi.className   = "off copyBtnLi"  ; break;
+				case 2 :  btnSpan.className = "survey_icon deleteBtn";
+						  btnLi.className   = "off deleteBtnLi"; break;
 			}
 			
 			btnLi.appendChild(btnSpan);
 			atchBtnUl.appendChild(btnLi);
 		}
+		
 		moveBttn.innerHTML = "<li class='off'><span class='survey_icon srvyDrag'></span></li>";
 		
 		//question content process
