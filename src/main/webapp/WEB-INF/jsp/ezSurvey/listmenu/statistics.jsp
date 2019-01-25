@@ -713,34 +713,31 @@
 								// Set Text
 								if (tooltip.body) {
 									var titleLines = tooltip.title || [];
-									var bodyLines = tooltip.body.map(getBody);
-									var innerHtml = '<thead>';
-									titleLines.forEach(function(title) {
-										innerHtml += '<tr><th>' + title + '</th></tr>';
-									});
-									innerHtml += '</thead><tbody>';
+									var bodyLines  = tooltip.body.map(getBody);
+									var trElmt     = document.createElement("tr");
+									var tdElmt     = document.createElement("td");
+									var tableElmt  = tooltipEl.querySelector('table');
 									
 									bodyLines.forEach(function(body, i) {
-										var colors = tooltip.labelColors[i];
-										var label  = labels[i];
-										var style = 'background:' + colors.backgroundColor;
-										style += '; border-color:' + colors.borderColor;
-										style += '; border-width: 2px';
-										var span = '<span class="chartjs-tooltip-key" style="' + style + '"></span>';
-										var span2 = '<span>' + body + '</span>';
-										innerHtml += '<tr><td>' + span + span2 + '</td></tr>';
+										var colors    = tooltip.labelColors[i];
+										var spanElmt1 = document.createElement("span");
+										var spanElmt2 = document.createElement("span");
+										var style     = "background:" + colors.backgroundColor + "; border-color:" + colors.borderColor + "; border-width: 2px";
+										spanElmt1.setAttribute("class", "chartjs-tooltip-key");
+										spanElmt1.setAttribute("style", style);
+										spanElmt2.textContent = body;
+										tdElmt.appendChild(spanElmt1);
+										tdElmt.appendChild(spanElmt2);
+										trElmt.appendChild(tdElmt);
 									});
-									
-									innerHtml += '</tbody>';
-									
-									var tableElmt = tooltipEl.querySelector('table');
 									
 									if (!tableElmt) {
 										tableElmt = document.createElement("table");
 										tooltipEl.appendChild(tableElmt);
 									}
 									
-									tableElmt.innerHTML = innerHtml;
+									tableElmt.innerHTML = "";
+									tableElmt.appendChild(trElmt);
 								}
 								
 								//Set tooltip position
@@ -973,7 +970,7 @@
 					var question = questionStatistic.filter(function(qst) {return qst["questionId"] == questionId})[0];
 					
 					if (question) {
-						var type     = parseInt(question["type"]);
+						var type = parseInt(question["type"]);
 						if (type == 3 || type == 4) {
 							var columnIdx = parseInt(info["index"]);
 							var option    = question["option"];
@@ -1120,8 +1117,6 @@
 				var maxYValue   = 0;
 				var numCnt      = (endPoint - startPoint) / unitValue;
 				
-				console.log("Unit value: " + unitValue);
-				
 				for (var i = startPoint; i <= endPoint; i+= unitValue) {
 					var unitlabel = i + "";
 					if (unitlabel.length > maxLabelLen) {
@@ -1137,12 +1132,6 @@
 				}
 				
 				var minLabelWidth        = maxLabelLen * 12 > 40 ? maxLabelLen * 12 : 40;
-				
-				console.log("data set");
-				console.log(dataSetArr);
-				console.log("Labels");
-				console.log(unitArr);
-				
 				dataSetObj["labels"]     = unitArr;
 				dataSetObj["dataSetArr"] = dataSetArr;
 				dataSetObj["width"]      = numCnt * minLabelWidth;
