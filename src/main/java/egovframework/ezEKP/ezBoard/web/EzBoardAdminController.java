@@ -996,7 +996,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
 		
-		/* 2019-01-24 홍승비 - 권한정보에 부서ID 추가 */
 		if (list != null) {
 			for (int i = 0; i < list.size(); i++) {
 				BoardPropertyVO obj = list.get(i);
@@ -1022,7 +1021,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				sb.append("<REPLY_FG>" + obj.getReply_FG() + "</REPLY_FG>");
 				sb.append("<DELETE_FG>" + obj.getDelete_FG() + "</DELETE_FG>");
 				sb.append("<POSTNOTICE>" + obj.getPostNotice() + "</POSTNOTICE>");
-				sb.append("<DEPTID><![CDATA[" + obj.getLoginVO().getDeptID() + "]]></DEPTID>");
 				sb.append("</ROW>");
 			}
 		}
@@ -1100,16 +1098,14 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		try {
 			Document doc = commonUtil.convertStringToDocument(data);
 			Map<String, Object> map = new HashMap<String, Object>();
-			
-			/* 2018-06-25 홍승비 - 일반 게시판 권한설정 시 현재 사용자의 companyID 부여 */
+			/* 2018-06-25 홍승비 - 게시판 권한설정 시 companyID 부여 */
 			map.put("v_COMPANYID", userInfo.getCompanyID());
 			map.put("v_TENANTID", userInfo.getTenantId());
 			
 			for (int i = 0; i < doc.getElementsByTagName("BOARDID").getLength(); i++) {
 				String pAccessName2 = doc.getElementsByTagName("TARGETNAME2").item(i).getTextContent();
 				String pAccess_FG = "";
-				String isAllGroupBaord = doc.getElementsByTagName("ISALLGROUPBOARD").item(i).getTextContent();
-
+				
 				if (pAccessName2 == null || pAccessName2.equals("")) {
 					pAccessName2 = doc.getElementsByTagName("TARGETNAME").item(i).getTextContent();
 				}
@@ -1118,12 +1114,6 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 					pAccess_FG = "1";
 				} else {
 					pAccess_FG = "0";
-				}
-				
-				/* 2019-01-25 홍승비 - 그룹사게시판이라면 deptID가 속한 회사를 기준으로 companyID를 대체함 */ 
-				if (isAllGroupBaord != null && isAllGroupBaord.equals("Y")) {
-					String tempCompID = ezBoardAdminService.findCompanyID(doc.getElementsByTagName("DEPTID").item(i).getTextContent(), userInfo.getTenantId());
-					map.replace("v_COMPANYID", tempCompID);
 				}
 				
 				map.put("v_pBoardID", doc.getElementsByTagName("BOARDID").item(i).getTextContent());

@@ -329,9 +329,4 @@ public class EzBoardAdminDAO extends EgovAbstractDAO {
 	public List<BoardPropertyVO> getCompanyList(Map<String, Object> map) throws Exception{
 		return (List<BoardPropertyVO>) list("EzBoardAdminDAO.getCompanyList", map);
 	}
-
-	/* 2019-01-24 홍승비 - 부서ID를 전달하여 해당 부서가 소속한 회사ID를 리턴하는 쿼리 추가 */
-	public String findCompanyID(Map<String, Object> map) {
-		return (String) select("EzBoardAdminDAO.findCompanyID", map);
-	}
 }

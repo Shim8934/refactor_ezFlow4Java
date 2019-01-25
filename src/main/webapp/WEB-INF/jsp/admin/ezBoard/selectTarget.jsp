@@ -224,31 +224,26 @@
 				}
 			}
 
-			// 권한리스트를 선택한 상태로 추가버튼 클릭 시 작동
-			// 기존 부모에서 선택한 권한 대상자 정보를 가져온다. (우측 리스트에 표출)
-			// RetValue["selectTargetListXML"]가 deptID를 함께 가져오도록 boardACL.jsp를 수정함
 			function applyCurrentData() {
 				var xmldoc;
 				xmldoc = loadXMLString(RetValue["selectTargetListXML"]);
 				var i = 0;
-				var username, userCN;
+				var username, useremail;
 				var username2, boardGroupACL, dept;
 				for (i = 0; i < GetElementsByTagName(xmldoc, "CN").length; i++) {
 					username = getNodeText(GetElementsByTagName(xmldoc, "NAME")[i]);
 					username2 = getNodeText(GetElementsByTagName(xmldoc,"NAME2")[i]);
-					userCN = getNodeText(GetElementsByTagName(xmldoc, "CN")[i]);
+					useremail = getNodeText(GetElementsByTagName(xmldoc, "CN")[i]);
 					boardGroupACL = getNodeText(GetElementsByTagName(xmldoc,"GROUP")[i]);
 					dept = getNodeText(GetElementsByTagName(xmldoc, "DEPT")[i]);
-					deptID = getNodeText(GetElementsByTagName(xmldoc, "DEPTID")[i]);
 					pparsingXML2 = "";
 					pparsingXML = "";
 					pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-					pparsingXML = pparsingXML + "<ROW><CELL><DATA1>"+ userCN + "</DATA1>";
+					pparsingXML = pparsingXML + "<ROW><CELL><DATA1>"+ useremail + "</DATA1>";
 					pparsingXML = pparsingXML + "<DATA2><![CDATA[" + username+ "]]></DATA2>";
 					pparsingXML = pparsingXML + "<DATA3><![CDATA[" + username2+ "]]></DATA3>";
 					pparsingXML = pparsingXML + "<DATA4><![CDATA[" + dept+ "]]></DATA4>";
 					pparsingXML = pparsingXML + "<DATA5><![CDATA["+ boardGroupACL + "]]></DATA5>";
-					pparsingXML = pparsingXML + "<DATA6><![CDATA["+ deptID + "]]></DATA6>";
 					
 					if (primary == "1") {
 						pparsingXML = pparsingXML + "<VALUE><![CDATA["+ username + "]]></VALUE>";
@@ -345,12 +340,12 @@
 			/* 다국어 설정할 시, 우측에 들어가는 이름도 다국어로 나타나야 한다. */
 			function InsertReceiver(pListView) {
 				if (m_selectedTree == TreeView) {
-					var pListViewDL = new ListView(); // ListView 선언
+					var pListViewDL = new ListView(); //// ListView 선언
 					pListViewDL.LoadFromID("OrganList");
 
 					var arrRows = pListViewDL.GetSelectedRows();
-					
-					if (arrRows.length > 0) { // 개인 대상자
+
+					if (arrRows.length > 0) {
 						var getlistview = new ListView();
 						getlistview.LoadFromID("ListViewMsgToView");
 						var existId = GetAttribute(arrRows[0], "data2");
@@ -363,14 +358,7 @@
 							alert("<spring:message code='ezBoard.t20' />");
 							pAddFlag = true;
 							return;
-						}
-						/* 2019-01-24 홍승비 - 개인 권한 대상에 부서ID 데이터 추가 */
-						else {
-							var organTree = new TreeView();
-							organTree.LoadFromID("TreeViewList");
-							var nodeIdx = organTree.GetSelectNode();
-							var strCN = nodeIdx.GetNodeData("CN");
-							
+						} else {
 							pparsingXML2 = "";
 							pparsingXML = "";
 							pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -379,7 +367,6 @@
 							pparsingXML = pparsingXML + "<DATA3><![CDATA["+ existName2 + "(" + strDeptNM2.trim()+ ")" + "]]></DATA3>";
 							pparsingXML = pparsingXML + "<DATA4><![CDATA[PERSON]]></DATA4>";
 							pparsingXML = pparsingXML + "<DATA5><![CDATA[N]]></DATA5>";
-							pparsingXML = pparsingXML + "<DATA6>"+ nodeIdx.GetNodeData("CN") + "</DATA6>";
 							
 							if (primary == "1") {
 								pparsingXML = pparsingXML + "<VALUE><![CDATA["+ existName + "(" + strDeptNM.trim()+ ")" + "]]></VALUE>";
@@ -410,7 +397,7 @@
 							admin_OK.disabled = true;
 							admin_NO.disabled = true;
 						}
-					} else { // 부서, 회사 대상자
+					} else {
 						var organTree = new TreeView();
 						organTree.LoadFromID("TreeViewList");
 
@@ -470,7 +457,6 @@
 				}
 			}
 
-			/* 2019-01-24 홍승비 - 개인 권한 대상에 부서ID 데이터 추가 */
 			function confirm_onClick() {
 				var listview = new ListView();
 				listview.LoadFromID("ListViewMsgToView");
@@ -483,18 +469,10 @@
 					selectTargetListXML += "<NAME2><![CDATA["+ listviewSelected[nCnt1].getAttribute("data3")+ "]]></NAME2>";
 					selectTargetListXML += "<DEPT><![CDATA["+ listviewSelected[nCnt1].getAttribute("data4")+ "]]></DEPT>";
 					selectTargetListXML += "<GROUP><![CDATA["+ listviewSelected[nCnt1].getAttribute("data5")+ "]]></GROUP>";
-					
-					if (listviewSelected[nCnt1].getAttribute("data4") == "PERSON") {
-						selectTargetListXML += "<DEPTID><![CDATA["+ listviewSelected[nCnt1].getAttribute("data6")+ "]]></DEPTID>";
-					} else {
-						selectTargetListXML += "<DEPTID><![CDATA["+ listviewSelected[nCnt1].getAttribute("data1")+ "]]></DEPTID>";
-					}
-					
-					if (nCnt1 == 0) {
+					if (nCnt1 == 0)
 						selectedTarget = listviewSelected[nCnt1].cells[0].innerText;
-					} else {
+					else
 						selectedTarget += ", "+ listviewSelected[nCnt1].cells[0].innerText;
-					}
 				}
 				selectTargetListXML += "</DATA>";
 

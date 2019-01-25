@@ -61,9 +61,7 @@
 	            if (primary != "1") {
 	                for (i = 0; i < xmldomNode.length; i++) {
 	                    listTR = listview.AddRow(listview.GetRowCount());
-	                    
-	                    // data태그 끝에 deptID 추가 -> 맨 끝 루프는 돌지 않는다(-1 처리)
-	                    for (j = 4; j < SelectNodes(xmldom, "DATA/ROW")[i].childNodes.length -1; j++) {
+	                    for (j = 4; j < SelectNodes(xmldom, "DATA/ROW")[i].childNodes.length; j++) {
 	                        listTD = document.createElement("TD");
 	                        
 	                       /* 동그라미로 플래그를 그린다.(13~20) */
@@ -75,7 +73,7 @@
 		                        }else if (getNodeText(xmldomNode[i].childNodes[j]) == "" || getNodeText(xmldomNode[i].childNodes[j]) == null) {
 		                            listTDText = document.createTextNode("");
 		                        }
-	                       }
+	                       }  
 	                       /* 회사(4), 부서(5), 이름(6), 직위직책(7) 부분은 값이 1이더라도 동그라미를 찍지 않도록 한다. */
 	                       else {
 	                    	   listTDText = document.createTextNode(getNodeText(xmldomNode[i].childNodes[j]));
@@ -96,14 +94,13 @@
 	                    listTR.setAttribute("DATA2", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
 	                    listTR.setAttribute("DATA1", SelectSingleNodeValue(xmldomNode[i], "ACCESSID"));
 	                    listTR.setAttribute("DATA3", SelectSingleNodeValue(xmldomNode[i], "BOARDGROUPACL"));
-	                    listTR.setAttribute("DATA4", SelectSingleNodeValue(xmldomNode[i], "DEPTID"));
 	                    listTR = null;
 	                }
 	            }
 	            else {
 	                for (i = 0; i < xmldomNode.length; i++) {
 	                    listTR = listview.AddRow(listview.GetRowCount());
-	                    for (j = 0; j < SelectNodes(xmldom, "DATA/ROW")[i].childNodes.length-1; j++) {
+	                    for (j = 0; j < SelectNodes(xmldom, "DATA/ROW")[i].childNodes.length; j++) {
 	                        listTD = document.createElement("TD");
 	                        
 	                        if (j >= 13) {
@@ -135,7 +132,6 @@
 	                    listTR.setAttribute("DATA2", SelectSingleNodeValue(xmldomNode[i], "ACCESSNAME2"));
 	                    listTR.setAttribute("DATA1", SelectSingleNodeValue(xmldomNode[i], "ACCESSID"));
 	                    listTR.setAttribute("DATA3", SelectSingleNodeValue(xmldomNode[i], "BOARDGROUPACL"));
-	                    listTR.setAttribute("DATA4", SelectSingleNodeValue(xmldomNode[i], "DEPTID"));
 	                    listTR = null;
 	                }
 	            }
@@ -172,10 +168,6 @@
 	                strXML += "<REPLY>" + reply_OK.checked + "</REPLY>";
 	                strXML += "<DELETE>" + delete_OK.checked + "</DELETE>";
 	                strXML += "<POSTNOTICE>" + PostNotice.checked + "</POSTNOTICE>";
-	                
-	                 /* 2019-01-24 홍승비 - 그룹사게시판 여부 플래그, 부서ID 데이터 추가 */
-	                strXML += "<ISALLGROUPBOARD>${isAllGroupBoard}</ISALLGROUPBOARD>";
-	                strXML += "<DEPTID>" + MakeXMLString(getNodeText(xmldom2.getElementsByTagName("DEPTID")[i])) + "</DEPTID>"; 
 	                strXML += "</NODE>";
 	                strXML += "</NODES>";
 	                xmldom = loadXMLString(strXML);
@@ -425,15 +417,13 @@
 	            _type = true;
 	            if (selnode != null) {
 	                selectTargetListXML = "<DATA>";
-	                
-					/* 2019-01-25 홍승비 - 기존 권한 리스트에서 레코드 클릭 시 deptID 데이터 추가(data4) */
+	
 	                if (selnode.length == 1) {
 	                    setNodeText(selectedTarget, getNodeText(selnode[0].cells[2]));
-	                    selectedTargetID = GetAttribute(selnode[0], "data1");
-	                    selectedTargetName = GetAttribute(selnode[0],"data");
-	                    selectedTargetName2 = GetAttribute(selnode[0],"data2");
-	                    selectedTargetGroup = GetAttribute(selnode[0],"data3");
-	                    selectedTargetDeptID = GetAttribute(selnode[0],"data4");
+	                    selectedTargetID = GetAttribute(selnode[0], "data1")
+	                    selectedTargetName = GetAttribute(selnode[0],"data")
+	                    selectedTargetName2 = GetAttribute(selnode[0],"data2")
+	                    selectedTargetGroup = GetAttribute(selnode[0],"data3")
 	                    if (para != "false")
 	                        FillACLTable();
 	
@@ -441,7 +431,6 @@
 	                    selectTargetListXML += "<NAME><![CDATA[" + selectedTargetName + "]]></NAME>";
 	                    selectTargetListXML += "<NAME2><![CDATA[" + selectedTargetName2 + "]]></NAME2>";
 	                    selectTargetListXML += "<GROUP><![CDATA[" + selectedTargetGroup + "]]></GROUP>";
-	                    selectTargetListXML += "<DEPTID><![CDATA[" + selectedTargetDeptID + "]]></DEPTID>";
 	                    if (selnode[0].cells[0].innerHTML == "" || selnode[0].cells[0].innerHTML == null)
 	                        selectTargetListXML += "<DEPT><![CDATA[DEPT]]></DEPT>";
 	                    else
@@ -453,17 +442,15 @@
 	                        if (i == 0) setNodeText(selectedTarget, getNodeText(selectedTarget) + getNodeText(selnode[i].cells[2]));
 	                        else setNodeText(selectedTarget, getNodeText(selectedTarget) + ", " + getNodeText(selnode[i].cells[2]));
 	
-	                        selectedTargetID = GetAttribute(selnode[i],"data1");
-	                        selectedTargetName = GetAttribute(selnode[i],"data");
-	                        selectedTargetName2 = GetAttribute(selnode[i],"data2");
-	                        selectedTargetGroup = GetAttribute(selnode[i],"data3");
-	                        selectedTargetDeptID = GetAttribute(selnode[i],"data4");
-	                        
+	                        selectedTargetID = GetAttribute(selnode[i],"data1")
+	                        selectedTargetName = GetAttribute(selnode[i],"data")
+	                        selectedTargetName2 = GetAttribute(selnode[i],"data2")
+	                        selectedTargetGroup = GetAttribute(selnode[i],"data3")
+	
 	                        selectTargetListXML += "<CN>" + selectedTargetID + "</CN>";
 	                        selectTargetListXML += "<NAME><![CDATA[" + selectedTargetName + "]]></NAME>";
 	                        selectTargetListXML += "<NAME2><![CDATA[" + selectedTargetName2 + "]]></NAME2>";
 	                        selectTargetListXML += "<GROUP><![CDATA[" + selectedTargetGroup + "]]></GROUP>";
-	                        selectTargetListXML += "<DEPTID><![CDATA[" + selectedTargetDeptID + "]]></DEPTID>";
 	                        if (selnode[i].cells[0].innerHTML == "" || selnode[i].cells[0].innerHTML == null)
 	                            selectTargetListXML += "<DEPT><![CDATA[DEPT]]></DEPT>";
 	                        else

@@ -115,7 +115,5 @@ public interface EzBoardAdminService {
 	/* 2018-06-26 홍승비 - 권한복사 시 companyID 추가 */
 	public String copyBoardAcl(Document doc, String companyID, int tenantID) throws Exception;
 	
-	/* 2019-01-24 홍승비 - 부서ID를 전달하여 소속한 회사ID를 리턴하는 메서드 추가 */
-	public String findCompanyID(String deptID, int tenantID) throws Exception;
 
 }

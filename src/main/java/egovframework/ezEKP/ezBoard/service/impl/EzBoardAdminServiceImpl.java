@@ -958,8 +958,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 			map.put("v_pAccessID", doc.getElementsByTagName("TARGETID").item(i).getTextContent());
 			
 			//ezBoardAdminDAO.deleteACL(map);
-			// 하위부서 권한까지 삭제로 변경. (companyID 조건 없이 삭제함)
-			ezBoardAdminDAO.deleteACLUnderBoard(map);
+			ezBoardAdminDAO.deleteACLUnderBoard(map); // 하위부서 권한까지 삭제로 변경.
 		}
 		
 		trunkBoard(tenantID);
@@ -1153,22 +1152,5 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		ezBoardAdminDAO.setBoardForm(map);
 
 		logger.debug("setBoardForm ended");
-	}
-	
-	/** 2019-01-24 홍승비 - 부서ID를 전달하여 해당 부서가 소속한 회사ID를 리턴하는 메서드 */
-	@Override
-	public String findCompanyID(String deptID, int tenantID) throws Exception {
-		logger.debug("findCompanyID started");
-
-		String retval = "";
-		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_DEPTID", deptID);
-		map.put("v_TENANTID", tenantID);
-		
-		retval = ezBoardAdminDAO.findCompanyID(map);
-		
-		logger.debug("findCompanyID ended");
-		return retval;
 	}
 }

@@ -84,8 +84,7 @@
 		<result property="write_FG" 				column="WRITE_FG" 					columnIndex="18"/>		
 		<result property="reply_FG" 				column="REPLY_FG" 					columnIndex="19"/>		
 		<result property="delete_FG" 				column="DELETE_FG" 					columnIndex="20"/>		
-		<result property="postNotice" 				column="POSTNOTICE" 				columnIndex="21"/>
-		<result property="loginVO.deptID" 				column="DEPTID" 				columnIndex="22"/>
+		<result property="postNotice" 				column="POSTNOTICE" 				columnIndex="21"/>			
 	</resultMap>
 	
 	<select id="EzBoardAdminDAO.getBoardTree_Get1" resultClass="String" parameterClass="Map" remapResults="true">
@@ -541,8 +540,7 @@
 	            T1.WRITE_FG ,
 	            T1.REPLY_FG ,
 	            T1.DELETE_FG ,
-	            T1.POSTNOTICE ,
-	            T2.DEPTID
+	            T1.POSTNOTICE 
         	FROM 
         		TBL_Board_BoardManage T1
         	INNER JOIN
@@ -639,8 +637,7 @@
 	            T1.WRITE_FG ,
 	            T1.REPLY_FG ,
 	            T1.DELETE_FG ,
-	            T1.POSTNOTICE ,
-	            T3.CN as DEPTID
+	            T1.POSTNOTICE 
         	FROM 
         		TBL_Board_BoardManage T1
         	JOIN 
@@ -926,20 +923,6 @@
                	  	(DEPTLEVEL = 1
                	  OR 
                	  	CN = 'Top') ) A
-		]]>
-	</select>
-	
-	<!-- 2019-01-24 홍승비 - 부서ID를 조건으로 회사ID를 가져오는 쿼리 -->
-	<select id="EzBoardAdminDAO.findCompanyID" parameterClass="Map" resultClass="String">
-		<![CDATA[
-			SELECT 
-				EXTENSIONATTRIBUTE2
-        	FROM 
-        		TBL_DEPTMASTER
-        	WHERE
-        		CN = #v_DEPTID#
-        	AND
-        		TENANT_ID = #v_TENANTID#
 		]]>
 	</select>
 	
