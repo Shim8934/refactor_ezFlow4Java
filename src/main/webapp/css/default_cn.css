@@ -2994,7 +2994,7 @@ h2, #menu span {font-size: 12px;}
 .barDiv {padding: 0px 20px 15px; display: flex;}
 .barDiv >canvas {flex: 1; min-height: 280px;}
 .survey-canvaswrap {flex: 1; min-height: 280px;}
-.pieDiv >canvas {height: 240px;}
+.pieDiv >canvas {height: 300px; padding: 0px 10px;}
 .response-wrap, .respondents-div {margin-bottom: 10px; background-color: #fff;}
 .response-usercnt {cursor: pointer;}
 .response-usercnt:hover {color: rgb(4, 112, 227);}
@@ -3028,8 +3028,10 @@ h2, #menu span {font-size: 12px;}
 .legend-ul {padding: 20px 0px; list-style: none;}
 .legend-ul >li {display: flex; cursor: pointer;}
 .legend-ul .legend-circle {width: 30px; min-width: 30px; height: 15px;}
-.legend-label {flex: 1; padding-left: 6px; padding-right: 6px; word-break: break-word;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.legend-label {padding-left: 6px; padding-right: 6px; word-break: break-word;overflow: hidden; white-space: nowrap; text-overflow: ellipsis;}
+.legend-label-wrap {flex: 1; display: flex; min-width: 0px;}
 .legend-label:hover {font-weight: bold;}
+.legend-percent {white-space: nowrap;}
 .pieDiv .bnk-legend {width: 320px; min-width: 320px;}
 .barDiv .bnk-legend {width: 160px; min-width: 160px;}
 .legend-ul li + li {padding-top: 10px;}

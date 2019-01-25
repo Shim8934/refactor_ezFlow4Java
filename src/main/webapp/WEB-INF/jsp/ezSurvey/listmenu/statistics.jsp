@@ -37,7 +37,8 @@
 					<div class="response-header"><spring:message code="ezSurvey.t95"/><div id="totalUserCnt"></div></div>
 					<div class="pieDiv">
 						<div id="userLegendDiv" class="bnk-legend"></div>
-						<canvas id="respondentPie" height="240"></canvas>
+						<canvas id="respondentPie" height="300"></canvas>
+						<div id="respondentTool" class="bnk-tooltip"></div>
 						<!-- <div id="respondentPie"></div> -->
 					</div>
 				</div>
@@ -70,6 +71,46 @@
 		</div>
 		
 		<script type="text/javascript">
+		var LegenNavi = function() {
+			return function(divNavi) {
+				var currentPage = 1;
+				var blockNum    = 10;
+				
+				function getTotalLies() {
+					var ulElmt = divNavi.parentElement.querySelector("ul[class='legend-ul']");
+					return ulElmt.children;
+				}
+				
+				function getNextLengend() {
+					var liList  = getTotalLies();
+					if (currentPage * blockNum >= liList.length) {return;}
+					currentPage += 1;
+					toggleLegendList(liList);
+				}
+				
+				function getPreviousLengend() {
+					var liList  = getTotalLies();
+					if (currentPage == 1) {return;}
+					currentPage -= 1;
+					toggleLegendList(liList);
+				}
+				
+				function toggleLegendList(liList) {
+					var startPoint = (currentPage - 1) * blockNum;
+					var endPoint   = startPoint + blockNum - 1;
+					
+					for (var i = 0, len = liList.length; i < len; i++) {
+						liList[i].className = (i >= startPoint && i <= endPoint) ? "lengen-on" : "lengen-off";
+					}
+				}
+				
+				return {
+					next : getNextLengend,
+					previous : getPreviousLengend,
+				}
+			};
+		}();
+		
 		(function() {
 			var userWindow        = null;
 			var surveyStatistic   = ${data};
@@ -454,17 +495,22 @@
 			} */
 			
 			function createQuestionPie(question, divElmt) {
-				var divChart        = document.createElement("div");
-				divChart.className  = "pieDiv";
-				var canvasElmt      = document.createElement("canvas");
-				var divLegend       = document.createElement("div");
-				var canvasId        = "question" + question["level"];
-				var moreParam       = surveyStatistic["annoynymous"] == 0 ? question["questionId"] : null;
-				divLegend.className = "bnk-legend";
-				canvasElmt.setAttribute("height", 240);
+				var divChart         = document.createElement("div");
+				divChart.className   = "pieDiv";
+				var canvasElmt       = document.createElement("canvas");
+				var divLegend        = document.createElement("div");
+				var canvasId         = "question" + question["level"];
+				var toolTipDiv       = document.createElement("div");
+				var toolTipId        = "tooltip" + question["level"];
+				var moreParam        = surveyStatistic["annoynymous"] == 0 ? question["questionId"] : null;
+				divLegend.className  = "bnk-legend";
+				toolTipDiv.className = "bnk-tooltip";
+				canvasElmt.setAttribute("height", 300);
 				canvasElmt.setAttribute("id", canvasId);
+				toolTipDiv.setAttribute("id", toolTipId);
 				divChart.appendChild(divLegend);
 				divChart.appendChild(canvasElmt);
+				divChart.appendChild(toolTipDiv);
 				divElmt.appendChild(divChart);
 				
 				var options = question["option"];
@@ -485,7 +531,7 @@
 					labels.push(options[i]["content"]);
 				}
 				
-				createPieChart(labels, values, canvasId, divLegend, moreParam);
+				createPieChart(labels, values, canvasElmt, divLegend, toolTipDiv, moreParam);
 				
 				if (others && others.length > 0) {
 					var wrapDivElmt       = document.createElement("div");
@@ -522,14 +568,16 @@
 				var respondents = parseInt(surveyStatistic["respondentCnt"]);
 				var notTakePart = totalUsers - respondents;
 				var legendDiv   = document.getElementById("userLegendDiv");
+				var canvasElmt  = document.getElementById("respondentPie");
+				var toolTipDiv  = document.getElementById("respondentTool");
 				
-				values.push(notTakePart);
 				values.push(respondents);
-				lables.push(SurveyMessages.strJoin1 + " [" + respondents + SurveyMessages.strUser3 + "]");
-				lables.push(SurveyMessages.strJoin2 + " [" + notTakePart + SurveyMessages.strUser3 + "]");
+				values.push(notTakePart);
+				lables.push(SurveyMessages.strJoin1);
+				lables.push(SurveyMessages.strJoin2);
 				document.getElementById("totalUserCnt").innerHTML = surveyStatistic["usersCnt"];
 				
-				createPieChart(lables, values,  "respondentPie", legendDiv);
+				createPieChart(lables, values, canvasElmt, legendDiv, toolTipDiv);
 			}
 			
 			/* function showRespondentStatistic() {
@@ -595,16 +643,26 @@
 				return color;
 			}
 			
-			function createPieChart(labels, values, elmtId, legendElmt, questionId) {
+			function addNewColor() {
+				var color = generateRandomColor();
+				while (colors.indexOf(color) > -1) {
+					color = generateRandomColor();
+				}
+				
+				return color;
+			}
+			
+			function createPieChart(labels, values, canvasElmt, legendElmt, tooltipEl, questionId) {
 				if (labels.length > colors.length) {
 					for (var i = colors.length; i < labels.length; i++) {
-						colors.push(generateRandomColor());
+						var newColor = generateRandomColor();
+						colors.push(addNewColor());
 					}
 				}
 				
-				var ctx = document.getElementById(elmtId).getContext("2d");
+				var ctx = canvasElmt.getContext("2d");
 				var myPieChart = new Chart(ctx, {
-					type: 'pie',
+					type: "pie",
 					data: {
 						labels: labels,
 						datasets: [{
@@ -629,8 +687,75 @@
 									var tooltipPercentage = ((tooltipData / total) * 100).toFixed(1);
 									return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
 								}
+							},
+							enabled: false,
+							custom: function (tooltip) {
+								// Hide if no tooltip
+								if (tooltip.opacity === 0) {
+									tooltipEl.style.opacity = 0;
+									return;
+								}
+								
+								// Set caret Position
+								tooltipEl.classList.remove("above", "below", "no-transform");
+								
+								if (tooltip.yAlign) {
+									tooltipEl.classList.add(tooltip.yAlign);
+								}
+								else {
+									tooltipEl.classList.add("no-transform");
+								}
+								
+								function getBody(bodyItem) {
+									return bodyItem.lines;
+								}
+								
+								// Set Text
+								if (tooltip.body) {
+									var titleLines = tooltip.title || [];
+									var bodyLines = tooltip.body.map(getBody);
+									var innerHtml = '<thead>';
+									titleLines.forEach(function(title) {
+										innerHtml += '<tr><th>' + title + '</th></tr>';
+									});
+									innerHtml += '</thead><tbody>';
+									
+									bodyLines.forEach(function(body, i) {
+										var colors = tooltip.labelColors[i];
+										var label  = labels[i];
+										var style = 'background:' + colors.backgroundColor;
+										style += '; border-color:' + colors.borderColor;
+										style += '; border-width: 2px';
+										var span = '<span class="chartjs-tooltip-key" style="' + style + '"></span>';
+										var span2 = '<span>' + body + '</span>';
+										innerHtml += '<tr><td>' + span + span2 + '</td></tr>';
+									});
+									
+									innerHtml += '</tbody>';
+									
+									var tableElmt = tooltipEl.querySelector('table');
+									
+									if (!tableElmt) {
+										tableElmt = document.createElement("table");
+										tooltipEl.appendChild(tableElmt);
+									}
+									
+									tableElmt.innerHTML = innerHtml;
+								}
+								
+								//Set tooltip position
+								var position                  = this._chart.canvas.getBoundingClientRect();
+								tooltipEl.style.opacity       = 1;
+								tooltipEl.style.position      = "absolute";
+								tooltipEl.style.left          = position.left + window.pageXOffset + tooltip.caretX + "px";
+								tooltipEl.style.top           = position.top + window.pageYOffset + tooltip.caretY + "px";
+								tooltipEl.style.fontFamily    = tooltip._bodyFontFamily;
+								tooltipEl.style.fontSize      = tooltip.bodyFontSize + "px";
+								tooltipEl.style.fontStyle     = tooltip._bodyFontStyle;
+								tooltipEl.style.padding       = tooltip.yPadding + "px " + tooltip.xPadding + "px";
+								tooltipEl.style.pointerEvents = "none";
 							}
-						},
+						} ,
 						legendCallback: function(chart) {
 							return createLegend(chart.data);
 						},
@@ -657,20 +782,39 @@
 				legendElmt.appendChild(myPieChart.generateLegend());
 			}
 			
+			function getTotalCnt(data) {
+				var totalCnt = 0;
+				for (var i = 0; i < data.length; i++) {
+					totalCnt += data[i];
+				}
+				
+				return totalCnt;
+			}
+			
 			function createLegend(data) {
+				var divMain  = document.createElement("div");
 				var ul       = document.createElement("ul");
 				ul.className = "legend-ul";
 				var datasets = data["datasets"];
+				var totalCnt = getTotalCnt(datasets[0].data);
 				
 				for (var i = 0; i < datasets[0].data.length; i++) {
-					var liElmt           = document.createElement("li");
-					var divElmt1         = document.createElement("div");
-					var divElmt2         = document.createElement("div");
-					divElmt1.className   = "legend-circle";
-					divElmt2.className   = "legend-label";
-					divElmt2.textContent = data["labels"][i];
-					divElmt2.setAttribute("title", divElmt2.textContent);
+					var crrValue          = datasets[0].data[i];
+					var liElmt            = document.createElement("li");
+					var divElmt1          = document.createElement("div");
+					var divElmt2          = document.createElement("div");
+					var spanElmt1         = document.createElement("div");
+					var spanElmt2         = document.createElement("div");
+					divElmt1.className    = "legend-circle";
+					divElmt2.className    = "legend-label-wrap";
+					spanElmt1.className   = "legend-label";
+					spanElmt2.className   = "legend-percent";
+					spanElmt1.textContent = data["labels"][i];
+					spanElmt2.textContent = "[" + (crrValue/totalCnt * 100).toFixed(1) + "% - " + crrValue + SurveyMessages.strUser3 + "]";
+					spanElmt1.setAttribute("title", spanElmt1.textContent);
 					divElmt1.setAttribute("style", "background-color: " + datasets[0].backgroundColor[i]);
+					divElmt2.appendChild(spanElmt1);
+					divElmt2.appendChild(spanElmt2);
 					liElmt.appendChild(divElmt1);
 					liElmt.appendChild(divElmt2);
 					
@@ -678,10 +822,30 @@
 						liElmt.onclick = (function(questionId, optId) {return function() {showSelectedUsersForPie(questionId, optId);};})(data["question"], i);
 					}
 					
+					liElmt.className = i >= 10 ? "lengen-off" : "lengen-on";
+					
 					ul.appendChild(liElmt);
 				}
 				
-				return ul;
+				divMain.appendChild(ul);
+				
+				if (datasets[0].data.length > 10) {
+					var newLegendNavi  = new LegenNavi(divMain);
+					var divBttn        = document.createElement("div");
+					var spanElmt1      = document.createElement("span");
+					var spanElmt2       = document.createElement("span");
+					divBttn.className   = "lengen-navi";
+					spanElmt1.className = "lengen-previous";
+					spanElmt2.className = "lengen-next";
+					spanElmt1.onclick = function(e) {newLegendNavi.previous();}
+					spanElmt2.onclick = function(e) {newLegendNavi.next();}
+					
+					divBttn.appendChild(spanElmt1);
+					divBttn.appendChild(spanElmt2);
+					divMain.appendChild(divBttn);
+				}
+				
+				return divMain;
 			}
 			
 			function createQuestionBar(question, divElmt) {
@@ -737,7 +901,7 @@
 				
 				if (maxYValue == 0) {maxYValue = 2;}
 				
-				createBnkBarChart(labels, dataSets, divId, divWidth, legendFlag, maxYValue,moreParam);
+				createBnkBarChart(labels, dataSets, divId, divWidth, legendFlag, maxYValue, moreParam);
 			}
 			
 			function createBnkBarChart(labels, dataSets, divId, chartWidth, legendFlag, maxYValue, questionId) {
@@ -823,9 +987,6 @@
 						}
 						else if (type == 8) {
 							var optionIdx  = parseInt(info["index"]);
-							console.log(info);
-							console.log(optionIdx);
-							
 							var option     = question["option"];
 							var optionId   = option.filter(function(opt) {return opt["level"] == optionIdx})[0]["optionId"];
 							var responses  = question["responses"].filter(function(res) {
