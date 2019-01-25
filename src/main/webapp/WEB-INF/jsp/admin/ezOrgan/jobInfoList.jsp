@@ -26,7 +26,7 @@
 		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC; font-size: 11px;}
 		.preview_content {width: 97%; height: 630px; border: solid 0px green; display: inline-block; padding:10px;}
 		.preview_nodata {position: absolute; display: inline-block; width: 49%; vertical-align: middle; text-align: center; padding-top: 70px; border-top: 1px solid #e5e5e5;}
-		.mainlist_free tr td:nth-child(4) {padding-left: 12px;}
+		#lvJobList tr td:nth-child(4) {padding-left: 12px;}
 		#lvJobList {min-width: 400px;}
 		#lvJobList tr th:nth-child(4), tr th:nth-child(5) {width: 15%;} 
 		#lvJobUserList {min-width: 360px;}
@@ -744,7 +744,6 @@
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t68' /></NAME>
-			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
