@@ -1228,7 +1228,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("downloadAttachCommon started.");
 		
 		String fileId = request.getParameter("fileid") == null ? "" : request.getParameter("fileid");
+		fileId = commonUtil.detectPathTraversal(fileId);		
 		String fileDate = request.getParameter("filedate") == null ? "" : request.getParameter("filedate");
+		fileDate = commonUtil.detectPathTraversal(fileDate);		
 		String tenantIdStr = request.getParameter("tid") == null ? "0" : request.getParameter("tid");
 			
 		int tenantId = Integer.parseInt(tenantIdStr);
