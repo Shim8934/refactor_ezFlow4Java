@@ -382,37 +382,37 @@
 					
 					if (mask == null) {
 						var qstnId = wrapper.getAttribute("id");
-						var id = parseInt(qstnId.replace("prevQstn", ""));
-						var type = parseInt(wrapper.getAttribute("type"));
+						var id     = parseInt(qstnId.replace("prevQstn", ""));
+						var type   = parseInt(wrapper.getAttribute("type"));
 						
 						switch (type) {
-						case 1:
-							responseResult = getSingleSltRespose(id, type);
-							break;
-						case 2:
-							responseResult = getMultiSltRespose(id, type);
-							break;
-						case 3:
-							getSingleMtrRespose(id, type);
-							break;
-						case 4:
-							getMultiMtrRespose(id, type);
-							break;
-						case 5:
-							getTxtRespose(id, type);
-							break;
-						case 6:
-							getTxtRespose(id, type);
-							break;
-						case 7:
-							getSliderRespose(id, type);
-							break;
-						case 8:
-							responseResult = getRankingRespose(id, type);
-							break;
-						case 9:
-							getDrdwRespose(id, type);
-							break;
+							case 1:
+								responseResult = getSingleSltRespose(id, type);
+								break;
+							case 2:
+								responseResult = getMultiSltRespose(id, type);
+								break;
+							case 3:
+								getSingleMtrRespose(id, type);
+								break;
+							case 4:
+								getMultiMtrRespose(id, type);
+								break;
+							case 5:
+								getTxtRespose(id, type);
+								break;
+							case 6:
+								getTxtRespose(id, type);
+								break;
+							case 7:
+								getSliderRespose(id, type);
+								break;
+							case 8:
+								responseResult = getRankingRespose(id, type);
+								break;
+							case 9:
+								getDrdwRespose(id, type);
+								break;
 						}
 						
 					}
@@ -633,10 +633,10 @@
 		function getSliderRespose(id, type) {
 			var answerObj = {};
 			var sliderObj = {};
-			var answer = [];
-			var wrapper = $("#prevQstn" + id);
-			var outputVal = parseInt($("#slider" + id).val());
-			var optionId = parseInt($("#slider" + id).attr("optionid"));
+			var answer    = [];
+			var wrapper   = $("#prevQstn" + id);
+			var outputVal = parseInt(document.getElementById("slider" + id).textContent);
+			var optionId  = parseInt($("#slider" + id).attr("optionid"));
 			
 			if (!isNaN(outputVal)) {
 				sliderObj['sliderValue'] = outputVal;
