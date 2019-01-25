@@ -148,6 +148,11 @@
 		<result  property="writerDeptName"		column="DESCRIPTION"			columnIndex="19"/>
 	</resultMap>
 	
+	<resultMap class="java.util.HashMap" id="monthlyAnnualMap">
+		<result property="annualCount" 					column="ANNUAL_COUNT" 					columnIndex="1"/>
+		<result property="month" 					column="MONTH" 				columnIndex="2"/>
+	</resultMap>
+	
 	<select id="ezAttitudeDAO.getAttitudeList" parameterClass="Map" resultMap="attitude" remapResults="true">
 		<![CDATA[
 			SELECT * FROM (
@@ -1883,5 +1888,55 @@
 				APPL_CNT DESC
 		]]>
 		</isEmpty>
+	</select>
+	
+	<select id="ezAttitudeDAO.getMonthlyAnnualList" parameterClass="Map" resultMap="monthlyAnnualMap">
+		<![CDATA[
+			SELECT 
+				NVL((SUM(
+			       TRUNC(
+			        TO_DATE( 
+			            CASE
+			                WHEN END_DATE + #offsetMin# / (24 * 60) > TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+			                THEN #endDate#
+			                ELSE TO_CHAR(NVL(END_DATE, START_DATE) + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+			            END
+			            , 'YYYY-MM-DD HH24:MI:SS')
+			           -
+			        TO_DATE(
+			            CASE
+			                WHEN START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+			                THEN #startDate#
+			                ELSE TO_CHAR(START_DATE + #offsetMin# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS')
+			            END
+			            , 'YYYY-MM-DD HH24:MI:SS'), 0))
+			    +
+	            SUM(
+					CASE
+					   WHEN TYPE_ID = 'A11' THEN 1
+		               WHEN TYPE_ID = 'A12' THEN 0.5
+		               WHEN TYPE_ID = 'A13' THEN 0.5
+					   ELSE 0
+					END
+				)
+				), 0) AS ANNUAL_COUNT,
+			    TO_CHAR(#startDate#, 'MM') AS MONTH
+			FROM   
+				tbl_attitude
+			WHERE
+				WRITER_ID = #userId#
+			AND
+				TENANT_ID = #tenantId#
+			AND
+				TYPE_ID IN ('A11', 'A12', 'A13')
+			AND    
+				(
+					(START_DATE + #offsetMin# / (24 * 60)  >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and START_DATE + #offsetMin# / (24 * 60) <= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) 
+					or
+					(END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and END_DATE + #offsetMin# / (24 * 60) < TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')) 
+					or
+					(START_DATE + #offsetMin# / (24 * 60) < TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS') and END_DATE + #offsetMin# / (24 * 60) >= TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'))
+				)
+		]]>
 	</select>
 </sqlMap>
