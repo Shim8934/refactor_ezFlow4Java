@@ -250,6 +250,7 @@ var setImageName = function (type) {
 var setImageElement = function (parent, imgsrc, type) {
 	var buttonDiv = document.createElement('div');
 	buttonDiv.className = 'quickMenuBtnDiv';
+	buttonDiv.style.height = '50px';
 
 	var imageWrap = document.createElement('div');
 	var imageElement = document.createElement('img');
