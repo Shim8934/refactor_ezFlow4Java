@@ -390,64 +390,6 @@ public class EzEmailAdminLetterServiceImpl implements EzEmailAdminLetterService 
 		
         logger.debug("updateDisplayNameLetter ended.");
 	}
-	
-	/**
-	 * 편지지 수정 - 편지지 순서 (수아)
-	 * @param letterOrder, letterNo (편지지 순서, 편지지 번호)
-	 */
-	@Override
-	public void updateOrderLetter(String letterOrder, String letterNo)
-			throws Exception {
-		logger.debug("updateOrderLetter started. letterOrder=" + letterOrder +  ",letterNo=" + letterNo);
-		
-		String letterOrderStr = "letterOrder=" + URLEncoder.encode(letterOrder, "UTF-8");
-		String letterNoStr = "letterNo=" + URLEncoder.encode(letterNo, "UTF-8");
-		String inputParams = letterOrderStr + "&" + letterNoStr;
-		logger.debug("inputParams="+inputParams);
-		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/updateOrderLetter", inputParams);
-		logger.debug("strJson="+strJson);
-		
-		if (!strJson.equals("")){
-			JSONParser parser = new JSONParser();
-			JSONObject object = (JSONObject)parser.parse(strJson);
-			
-			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1) {
-				throw new Exception("JGwServer ERROR");
-			}
-		}
-		
-        logger.debug("updateOrderLetter ended.");
-	}
-
-	/**
-	 * 편지지 수정 - 편지지함 (수아)
-	 * @param letterNo, letterBoxNo (편지지 번호, 편지지함 번호)
-	 */
-	@Override
-	public void updateBoxLetter(String letterNo, String letterBoxNo)
-			throws Exception {
-		logger.debug("updateBoxLetter started. letterBoxNo=" + letterBoxNo +  ",letterNo=" + letterNo);
-		
-		String letterBoxNoStr = "letterBoxNo=" + URLEncoder.encode(letterBoxNo, "UTF-8");
-		String letterNoStr = "letterNo=" + URLEncoder.encode(letterNo, "UTF-8");
-		String inputParams = letterBoxNoStr + "&" + letterNoStr;
-		logger.debug("inputParams="+inputParams);
-		
-		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/JMochaLetter/updateBoxLetter", inputParams);
-		logger.debug("strJson="+strJson);
-		
-		if (!strJson.equals("")){
-			JSONParser parser = new JSONParser();
-			JSONObject object = (JSONObject)parser.parse(strJson);
-			
-			if (object.get("resultCode").equals("ERROR") || ((Long)object.get("reasonCode")).intValue() == -1) {
-				throw new Exception("JGwServer ERROR");
-			}
-		}
-		
-        logger.debug("updateBoxLetter ended.");
-	}
 
 	/**
 	 * 편지지 삭제 (수아)

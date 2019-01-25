@@ -42,6 +42,7 @@
 			var userNameStr  = "";
 			var actTypeStr   = "";
 			var tableView    = new TableView();
+			var exportingExcel = false;
 			
 			window.onload = function () {
 				closeAllPopup();
@@ -330,7 +331,13 @@
 			}
 			
 			function excelExport() {
+				if (exportingExcel) {
+					return;
+				}
+				
 				var orderInf = tableView.getOrderInfo();
+				showProgress();
+				exportingExcel = true;
 				
 				$.ajax({
 					type: "POST",
@@ -354,7 +361,7 @@
 						
 						switch(code) {
 							case 0: 
-								var url = "/admin/ezWebFolder/downloadExcel.do?fileName=" + data.path;
+								var url = "/admin/ezWebFolder/downloadExcel.do?fileName=" + encodeURIComponent(data.path);
 								AttachDownFrame.location.href = url;
 								break;
 							case 1:
@@ -371,6 +378,9 @@
 					error : function(error) {
 						alert("<spring:message code='ezWebFolder.t134'/>" + error);
 					}
+				}).complete(function() {
+					hideProgress();
+					exportingExcel = false;
 				});
 			}
 

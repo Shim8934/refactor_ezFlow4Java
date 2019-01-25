@@ -368,11 +368,13 @@
 		        ezdocinfog_view_cross_dialogArguments[0] = "";
 		        ezdocinfog_view_cross_dialogArguments[1] = btnDocInfo_onclick_Complete;
 		
-		        DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + pDocID + "&ingFlag=END");
+		        //DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoGView.do?docID=" + pDocID + "&ingFlag=END"); 문서정보 새로 구현해서 주석
+		        DivPopUpShow(420, 500, "/ezApprovalG/ezDocInfoView.do?docID=" + pDocID + "&ingFlag=END");
 		    }
 		    function btnDocInfo_onclick_Complete() {
 		        DivPopUpHidden();
 		    }
+		    
 		    function SignCheck() {
 		    	var result = "";
 		    	
@@ -769,7 +771,7 @@
 		    <td style="height:20px"><div id="menu">
 		        <ul>
 		          <li id="btnWhoKyul" style="display:none"><span onClick="return btnWhoKyul_onclick()"><spring:message code='ezApproval.pjj35'/></span></li>
-		          <li id="btnDocInfo" class ="approvalG"><span id="span_btnDocInfo" onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
+		          <li id="btnDocInfo"><span id="span_btnDocInfo" onClick="return btnDocInfo_onclick()"><spring:message code='ezApprovalG.t54'/></span></li>
 		          <li id="btnhistory"><span id="span_btnhistory" onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 		          <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
 				  <li id="btnBoard"><span id="span_btnBoard" onClick="return NewItem_onclick()"><spring:message code='ezApprovalG.t1514'/></span></li>
