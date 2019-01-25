@@ -67,7 +67,7 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/memo-list/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/memo-list/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoList(@PathVariable String userId, MemoVO memoVO, MemoConfigVO memoConfigVO, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-list/users/" +userId + "] started.");
 
@@ -154,7 +154,7 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoFoldersInfo(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/users/" +userId + "] started.");
 		
@@ -201,7 +201,7 @@ public class EzMemoGWController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezMemo/setLayerArea/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/setLayerArea/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwSetLayerArea(@PathVariable String userId, MemoConfigVO memoConfig, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setLayerArea/users/" +userId + "] started.");
 
@@ -242,7 +242,7 @@ public class EzMemoGWController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezMemo/setLayerPosition/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/setLayerPosition/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwSetLayerPosition(@PathVariable String userId, MemoConfigVO memoConfig, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setLayerPosition/users/" +userId + "] started.");
 		
@@ -283,7 +283,7 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/folders/names/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/folders/names/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoFolderNames(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/folders/names/users/" +userId + "] started.");
 		
@@ -326,7 +326,7 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoFoldersAdd(@PathVariable String userId, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/folders/users/" +userId + "] started.");
 		
@@ -361,7 +361,7 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoFolderModify(@PathVariable String userId, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/folders/users/" +userId + "] started.");
 		
@@ -397,7 +397,7 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/folders/users/{userId:.+}", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoFolderDelete(@PathVariable String userId, MemoFolderVO memoFolderVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [Delete /rest/ezMemo/folders/users/" +userId + "] started.");
 		
@@ -436,7 +436,7 @@ public class EzMemoGWController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezMemo/getMemoConfig/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/getMemoConfig/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject gwGetMemoConfig(@PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/getMemoConfig/users/" +userId + "] started.");
 		
@@ -477,7 +477,7 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/memo-list/{folderId}/memo/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/memo-list/{folderId}/memo/{userId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoWrite(@PathVariable String folderId, @PathVariable String userId, MemoVO memoVO, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-list/" + folderId + "/memo/" +userId + "] started.");
 		
@@ -531,7 +531,7 @@ public class EzMemoGWController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezMemo/createMemoConfig/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/createMemoConfig/users/{userId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject insertMemoConfig(@PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/createMemoConfig/users/" +userId + "] started.");
 		
@@ -570,7 +570,7 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/folders/check/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/folders/check/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject hasMemoFolder(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/folders/check started.");
 		
@@ -611,7 +611,7 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/memo-display/memo/{memoId}/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/memo-display/memo/{memoId}/users/{userId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoDisplay(@PathVariable String userId, MemoVO memoVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/memo-display/memo/memoId/memo/" +userId + "] started.");
 		
@@ -654,7 +654,7 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/memo-detail/memo/{memoId}/users/{userId}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
+	@RequestMapping(value = "/rest/ezMemo/memo-detail/memo/{memoId}/users/{userId:.+}", method = RequestMethod.GET, produces = "application/json;charset=utf-8") 
 	public JSONObject getMemoDetail(@PathVariable String memoId, @PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception { 
 		LOGGER.debug("G/W MEMO [GET /rest/ezMemo/memo-detail/memo/" + memoId + "/memo/" +userId + "] started."); 
 	 
@@ -700,7 +700,7 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/move/folder/{folder_id}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/move/folder/{folder_id}/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoMove(@PathVariable String folder_id, @PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/move/folder/" + folder_id + "/users/" +userId + "] started.");
 
@@ -781,7 +781,7 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/moduleCopy/users/{userId}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/moduleCopy/users/{userId:.+}", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwOtherModuleCopy(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [POST /rest/ezMemo/moduleCopy/users/" + userId + "] started.");
 		
@@ -830,7 +830,7 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/memo-color/memo/{memoId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/memo-color/memo/{memoId}/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwSetMemoColor(@PathVariable String memoId, @PathVariable String userId, MemoVO memoVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-color/memo/" + memoId + "/users/" + userId + "] started.");
 		
@@ -873,9 +873,9 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/memo-order/draggedElId/{draggedElId}/compareElId/{compareElId}/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/memo-order/draggedElId/{draggedElId}/compareElId/{compareElId}/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwMemoOrder(@PathVariable String draggedElId, @PathVariable String compareElId, @PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-order/draggedElId/{draggedElId}/compareElId/{compareElId}/users/{userId}] started.");
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-order/draggedElId/{draggedElId}/compareElId/{compareElId}/users/{userId:.+}] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -946,7 +946,7 @@ public class EzMemoGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-order/draggedElId/{draggedElId}/nextElId/{nextElId}/users/{userId}] ended.");
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/memo-order/draggedElId/{draggedElId}/nextElId/{nextElId}/users/{userId:.+}] ended.");
 		return result;
 	}
 	
@@ -959,7 +959,7 @@ public class EzMemoGWController {
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ezMemo/setGadgetPosition/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/setGadgetPosition/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwSetGadgetPosition(@PathVariable String userId, MemoConfigVO memoConfig, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setGadgetPosition/users/" +userId + "] started.");
 		
@@ -999,7 +999,7 @@ public class EzMemoGWController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/rest/ezMemo/setMemoLayerMode/users/{userId}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezMemo/setMemoLayerMode/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwSetMemoLayerMode(@PathVariable String userId, MemoConfigVO memoConfigVO, HttpServletRequest request) throws Exception {
 		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setMemoLayerMode/users/" + userId + "] started.");
 		JSONObject result = new JSONObject();

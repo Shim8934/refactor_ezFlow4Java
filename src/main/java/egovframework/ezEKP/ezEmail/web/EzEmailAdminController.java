@@ -949,6 +949,13 @@ public class EzEmailAdminController {
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
 									    maxItemPerPage, searchKeycode, searchKeyword, companyId);
 		
+		IMAPAccess ia = null;
+		Locale locale = Locale.getDefault();
+		String password = jspw;
+		String domain = ezCommonService.getTenantConfig("DomainName",userInfo.getTenantId());
+		String mailServerAddress = config.getProperty("config.MailServerAddress");
+		String iMAPPort = config.getProperty("config.IMAPPort");
+		
 		// 각 사용자별로 처리한다.
 		for (OrganUserVO organUser : userCnList) {				
 			List<String> quaList = new ArrayList<String>();
@@ -961,12 +968,27 @@ public class EzEmailAdminController {
 			quaList.add(1, displayname);
 			quaList.add(2, department);
 
-			String mailboxUsage = organUser.getMailboxUsage();
-			String mailboxQuota = organUser.getMailboxQuota();
-			
-			quaList.add(3, String.valueOf(mailboxUsage));
-			quaList.add(4, String.valueOf(mailboxQuota));
-			userList.add((ArrayList<String>) quaList);
+			try {
+				String email = userId + "@" + domain;
+				
+				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
+	
+				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+	
+				// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
+				long mailboxUsage = storageUsageAndLimit[0]; // KBs
+				long mailboxQuota = storageUsageAndLimit[1]; // KBs
+
+				quaList.add(3, String.valueOf(mailboxUsage));
+				quaList.add(4, String.valueOf(mailboxQuota));
+				userList.add((ArrayList<String>) quaList);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (ia != null) {
+                    ia.close();
+                }
+            }
 		}
 
 		model.addAttribute("userList", userList);
@@ -1959,6 +1981,7 @@ public class EzEmailAdminController {
 
 		model.addAttribute("list", resultList);
 		model.addAttribute("userLang", userInfo.getPrimary());
+		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("signatureMainView ended.");
 
