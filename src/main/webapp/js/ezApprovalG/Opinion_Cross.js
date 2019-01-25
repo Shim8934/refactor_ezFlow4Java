@@ -624,6 +624,7 @@ function deleteOpinion_Complete(Rtnval) {
         document.getElementById("btn_OpinionAdd").textContent = strLang389;
         document.getElementById("btn_OpinionCancel").textContent = strLang10;
         document.getElementById("bbtn_OpinionDel").style.display = "none";
+        document.getElementById("bbtn_OpinionCancel").style.display = "";
         OpinionAddFlag = 0;
     }
 }

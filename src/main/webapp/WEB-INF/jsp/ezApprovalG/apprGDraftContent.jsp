@@ -310,7 +310,9 @@
 	                                document.getElementById("body").innerHTML = "";
 	                            }
 	                        }
-	                        Conent_contentEditable(document.getElementById('div_Content'));
+	                        if (parent.isUsed != "reuse"){
+		                        Conent_contentEditable(document.getElementById('div_Content'));
+	                        }
 	                        var SelectRows = document.getElementById('div_Content').getElementsByTagName("SELECT");
 	                        for (var i = 0; i < SelectRows.length; i++) {
 	                            SelectRows.item(i).onchange = function () { SelectOnchange(this); };

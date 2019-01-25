@@ -1,6 +1,7 @@
 target/
 output/
-
+.idea/
+*.iml
 #Eclipse Setting
 .settings/
 .classpath
