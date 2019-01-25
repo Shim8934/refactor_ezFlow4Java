@@ -826,7 +826,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [PUT] 수신 확인 처리
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/viewers/{userId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/viewers/{userId:.+}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject receiveOKJournal(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W receiveOKJournal started.");
 		LOGGER.debug("userId=" + userId);

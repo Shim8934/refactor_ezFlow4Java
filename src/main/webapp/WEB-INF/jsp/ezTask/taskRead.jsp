@@ -185,6 +185,11 @@
 				}
 				
 				initProgressBar(taskstatus, completerate);
+				
+				var agent = navigator.userAgent.toLowerCase(); 
+				if(window.screen.height < 910 && agent.indexOf("chrome") == -1) {
+					$("#tablecomment2Div").height(375);
+				}
 		    });
 		    
 		    window.onresize = function () {
@@ -621,7 +626,7 @@
 						var commentBgColor = 1;
 						var taskCommentList = "<tr>"
 							taskCommentList += "<td colspan='3'>"
-							taskCommentList += "<div style='width: 100%; overflow:auto; height:398px;border:1px solid rgb(225,225,225);'>";
+							taskCommentList += "<div id='tablecomment2Div' style='width: 100%; overflow:auto; height:398px;border:1px solid rgb(225,225,225);'>";
 							taskCommentList += "<table id='tablecomment2' class='layout' style='border: 0px;width:100%;height:0%;'>"
 						taskCommentList += "<colgroup><col width='20%' /><col width='62%' /><col width='18%' /></colgroup>";
 						list.forEach(function(vo, index) {

@@ -961,7 +961,7 @@
 		                		}
 		                	}
 		                	
-		                	if (checkAprCheckFN != null && checkAprCheckFN && (pReDraftAprLineFlag || pReDraftFlag == "REDRAFT")) {
+		                	if (checkAprCheckFN != null && checkAprCheckFN && (pReDraftAprLineFlag || pReDraftFlag == "REDRAFT") && opener.ListType != "21") {
 		                		alert("<spring:message code='ezApprovalG.bhs23'/>");
 		                		
 		                		ret[0] = "DUPL";
