@@ -247,6 +247,7 @@
 	<!-- <body class="mainbody" style="height: 89%;"> -->
 	<body class="mainbody" style="height: 95%; overflow:hidden;margin-left:0px;margin-right:0px">
 	 <h1 style="margin-left:10px;margin-right:10px;"><spring:message code='ezSchedule.t4003' />
+		<span class="title_bar"><img src="/images/name_bar.gif"></span>
 	    <select class="companySelect" id="ListCompany" onchange="changeCompany()">
 	    	<c:forEach var="item" items="${list}">
   				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>

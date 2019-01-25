@@ -76,6 +76,7 @@
 	<body class="mainbody"> 
 		<h1>
 			<spring:message code='ezSchedule.t9990007' />
+		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany" onchange="schedule_get_regiUse()">
 				<c:forEach var="item" items="${list}">
        				<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>

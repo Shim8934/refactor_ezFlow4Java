@@ -25,6 +25,7 @@
 	<body class="mainbody">
 		<h1>
 			<spring:message code='ezNewPortal.t057' />
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany"></select>
 		</h1>
 		<div class="loginLogo" style="margin-top:30px">

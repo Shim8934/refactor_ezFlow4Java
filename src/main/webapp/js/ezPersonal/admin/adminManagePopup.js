@@ -568,8 +568,8 @@ function setPreview(previewNum) {
 		} 
 		
 		doc.getElementById("contentlist").style.height = conlistH + "px";
-		mainView.style.width = "calc(100% - 625px)";
-		previewH.style.width = "625px";
+		mainView.style.width = "50%";
+		previewH.style.width = "49%";
 		previewH.style.height = conlistH + 47 + "px";
 		previewH.style.display = "";
 		previewmail_bar_h.style.height = conlistH + 47 + "px";
@@ -582,7 +582,7 @@ function setPreview(previewNum) {
 		} */
 		
 		porContent_RayerH.style.height = conlistH + 47 + "px";
-		frameDiv.style.height = conlistH - 5 + "px";
+		frameDiv.style.height = conlistH - 10 + "px";
 		preview_area.style.height = conlistH - 5 + "px";
 		break;
 	}
@@ -601,7 +601,6 @@ function showPreview(isPreview, itemseq) {
 		doc.getElementById('Preview_HeaderH').style.visibility ="hidden";
 		//doc.getElementById("ifrmPreViewH").style.display = "none";
 		doc.getElementById("ifrmPreViewH").style.height = "96%";
-		doc.getElementById("ifrmPreViewH").style.width = "600px";
 		doc.getElementById("ifrmPreViewH").src = "/blank_kr.htm";
 		
 		setTimeout(function(){
@@ -789,7 +788,7 @@ function windowResize() {
 		doc.getElementById("previewH").style.height = height + 41 + "px";
 		doc.getElementById("previewmail_bar_h").style.height = height + 47 + "px";
 		doc.getElementById("PreContent_RayerH").style.height = height + 47 + "px";
-		doc.getElementById("frameDiv").style.height = height - 5 + "px";
+		doc.getElementById("frameDiv").style.height = height - 10 + "px";
 		doc.getElementById("preview_area").style.height = height - 5 + "px";
 		/*doc.getElementById("ifrmPreViewH").style.height = height + 11 + "px";
 		if (navigator.userAgent.indexOf("Trident/7.0") > 0) {

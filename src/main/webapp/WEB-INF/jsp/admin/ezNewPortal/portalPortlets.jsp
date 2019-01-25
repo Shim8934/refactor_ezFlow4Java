@@ -92,6 +92,7 @@
 <body class="mainbody" marginwidth="0" marginheight="0">
 	<h1>
 		<spring:message code='ezNewPortal.t056' />
+		<span class="title_bar"><img src="/images/name_bar.gif"></span>
 		<select class="companySelect" id="ListCompany"></select>
 	</h1>
 		

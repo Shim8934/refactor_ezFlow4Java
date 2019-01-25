@@ -342,6 +342,7 @@
 	<body class="mainbody">
 	    <h1>
 	    	<spring:message code = 'ezAttitude.t4' /><span id="mailBoxInfo"></span>
+		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
 	    	<select class="companySelect" name="ListCompany" id="ListCompany" onchange="company_change()">
 				<c:forEach var = "companyItem" items="${list }">
 					<option value="<c:out value = '${companyItem.cn }' />"><c:out value = '${companyItem.displayName }'/></option>

@@ -102,6 +102,7 @@
 	    <form method="post">
 			<h1>
 				<spring:message code = 'ezPersonal.t266' /><span id="mailBoxInfo"></span>
+		    	<span class="title_bar"><img src="/images/name_bar.gif"></span>
 				<SELECT class="companySelect" id="ListCompany" name="ListCompany" onChange="company_change()">
 		        	<c:forEach var="item" items="${list}">
 						<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
@@ -125,7 +126,7 @@
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			</script>
 
-			<div class="mainView" id="mainView" style="width:calc(100% - 625px); float:left">
+			<div class="mainView" id="mainView" style="width:50%; float:left">
 				<div id="contentlist" style="width:100%; overflow: auto;">
 					<table class="mainlist" style="width:100%;">
 						<div id=AccessList style ="width:100%;"></div>
@@ -135,13 +136,13 @@
 				<div id="tblPageRayer"></div>
 			</div>
 			
-			<div class="previewH" id="previewH" style="width:625px; overflow:auto;">
+			<div class="previewH" id="previewH" style="width:49%; overflow:auto;">
 				<div id="PreviewRayerH" style="border:0px solid red; height:100%; overflow:hidden; vertical-align:top;  margin-left:0px;">
 					<span id="previewmail_bar_h" class="previewmail_bar_h" style="display: inline-block; border: 1px solid #e5e5e5; border-top:0px !important; border-bottom:0px !important;float:left;">
 						<p class="hbar_dotted" style="width:5px">
 						</p>
 					</span>
-					<div id="PreContent_RayerH" style="position: absolute; border: 0px solid blue; width:620px;display:inline-block;height:83%;">
+					<div id="PreContent_RayerH" style="position: absolute; border: 0px solid blue; width:49%;display:inline-block;height:83%;">
 						<div id="preview_area" style="width: 100%; display: block;">
 							<span class="previewmail_info" style="display: block; width: 100%; border-top: 1px solid #e8e8e8; ">
 								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; visibility:hidden;">

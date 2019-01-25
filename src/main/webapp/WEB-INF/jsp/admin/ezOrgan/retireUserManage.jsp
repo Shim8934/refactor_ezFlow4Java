@@ -657,6 +657,7 @@
 	<body class="mainbody">
 		<h1>
 			<spring:message code='ezOrgan.t311'/><span id="TitleInfo"></span>
+		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany" onChange="selectCompanyID()">
 	        	<c:forEach var="item" items="${companylist}">
             		<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>

@@ -183,6 +183,7 @@
 	<body class="mainbody"> 
 		<h1>
 			<spring:message code='ezJournal.t3' />
+		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="SCompID" name="SCompID" onchange="selectCompanyList(this.value)">
             	<c:forEach var="company" items="${companyList}">
             		<option value="<c:out value='${company.companyId}'/>"

@@ -1001,6 +1001,7 @@
 	    <form id="Form1" method="post">
 		    <h1>
 		    	<spring:message code='ezOrgan.t00013' />
+		    	<span class="title_bar"><img src="/images/name_bar.gif"></span>
 		    	<select class="companySelect" id="ListCompany" onchange="company_change()">
 	            	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
