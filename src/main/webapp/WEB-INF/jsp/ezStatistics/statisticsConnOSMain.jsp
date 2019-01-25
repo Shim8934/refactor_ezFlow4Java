@@ -322,7 +322,8 @@
 
         function btnexportexcel_onclick() {
         	if (document.querySelector('#statisticstable2 tr[style*="display: none;"]')) {
-	        	document.querySelector('#statisticstable2 tr[style*="display: none;"]').remove();
+        		var docQuerySelector = document.querySelector('#statisticstable2 tr[style*="display: none;"]');
+        		docQuerySelector.parentNode.removeChild(docQuerySelector);
         	}
         	
             document.getElementById("saveExcelData").value = document.getElementById("statisticstable").innerHTML + "_" + document.getElementById("statisticstable2").innerHTML;

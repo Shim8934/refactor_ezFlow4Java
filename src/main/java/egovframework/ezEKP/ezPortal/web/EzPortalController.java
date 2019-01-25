@@ -557,13 +557,13 @@ public class EzPortalController extends EgovFileMngUtil {
 			int popUpWidth = 0;
 			int popUpHeight = 0;
 			String popUpPosition = "";
-			String cookieValue = "";
 			
 			for (int i=0; i<infoList.size(); i++) {
 				int itemSeq = infoList.get(i).getItemSeq();
 				Cookie[] cookies = req.getCookies();
 				
 				if (cookies != null) {
+					String cookieValue = "";
 					for (int j=0; j<cookies.length; j++) {
 						if (cookies[j].getName().equals("POPUP_"+itemSeq+"_"+userInfo.getId())) {
 							cookieValue = cookies[j].getValue();
@@ -4006,4 +4006,21 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		logger.debug("boardPortlet ended");
 	}	
+	
+	/**
+	 * 공지사항 쿠키 생성
+	 * */
+	@RequestMapping(value="/ezPortal/setPopupCookie.do")
+	public void setPopupCookie(HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+		logger.debug("setPopupCookie is started.");
+		String cookieName = request.getParameter("cookieName");
+		String cookieValue = request.getParameter("cookieValue");
+		logger.debug("cookeName = " + cookieName);
+		logger.debug("cookieValue = " + cookieValue);
+		Cookie popupCookie = new Cookie(cookieName, cookieValue);
+		popupCookie.setPath("/");
+		popupCookie.setMaxAge(60*60*24);
+    	response.addCookie(popupCookie);
+		logger.debug("setPopupCookie is ended.");
+	}
 }
