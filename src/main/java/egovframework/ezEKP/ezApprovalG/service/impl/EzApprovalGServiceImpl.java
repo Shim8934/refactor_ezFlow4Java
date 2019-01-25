@@ -1851,6 +1851,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA6><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME").item(k).getTextContent()) + "]]></DATA6>");
 					resultXML.append("<DATA7><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMNAME2").item(k).getTextContent()) + "]]></DATA7>");
 					resultXML.append("<DATA8><![CDATA[" + makeListField(docXML.getElementsByTagName("FORMCONTID").item(k).getTextContent()) + "]]></DATA8>");
+					resultXML.append("<REFORMFLAG><![CDATA[" + makeListField(docXML.getElementsByTagName("REFORMFLAG").item(k).getTextContent()) + "]]></REFORMFLAG>");
 				}
 				
 				resultXML.append("</CELL>");
@@ -18929,9 +18930,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		map.put("v_ORDEROPTION2", orderOption2);
-		map.put("v_ORDEROPTION2LENGTH", orderOption2.length());
+		map.put("v_ORDEROPTIONLENGTH2", orderOption2.length());
 		if (orderOption2.length() > 0 ) {
-			map.put("v_ORDEROPTION2VALUE", orderOption2.substring(0, orderOption2.trim().length()).toLowerCase());
+			map.put("v_ORDEROPTIONVALUE2", orderOption2.substring(0, orderOption2.trim().length()).toLowerCase());
 		}
 		map.put("approvalFlag", approvalFlag);
 		map.put("v_LANGTYPE", langType);
@@ -18981,10 +18982,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTER", drafter.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
 		map.put("v_DEPTNAME", draftDeptName.trim().replace("[", "[[]").replace("%", "[%]").replace("_", "[_]"));
 		map.put("v_FORMID", formID.trim());
-		map.put("v_ENDDATE1", tmpStartDate1);
-		map.put("v_ENDDATE2", tmpStartDate2);
-		map.put("v_STARTDATE1", tmpEndDate1);
-		map.put("v_STARTDATE2", tmpEndDate2);
+		map.put("v_STARTDATE1", tmpStartDate1);
+		map.put("v_STARTDATE2", tmpStartDate2);
+		map.put("v_ENDDATE1", tmpEndDate1);
+		map.put("v_ENDDATE2", tmpEndDate2);
 		map.put("v_PROCESSDATE1", tmpProcessDate1);
 		map.put("v_PROCESSDATE2", tmpProcessDate2);
 		map.put("approvalFlag", approvalFlag);
@@ -19644,6 +19645,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							resultXML.append("<DATA9>" + "0" + "</DATA9>");
 						}
 						
+						String formId = makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent());
+						
 						resultXML.append("<DATA10>" + docXML.getElementsByTagName("FUNCTIONTYPE").item(k).getTextContent() + "</DATA10>");
 						resultXML.append("<DATA11>" + docXML.getElementsByTagName("HASOPINIONYN").item(k).getTextContent() + "</DATA11>");
 						resultXML.append("<DATA12>" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "</DATA12>");
@@ -19652,8 +19655,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						resultXML.append("<DATA15>" + makeListField(docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent()) + "</DATA15>");
 						resultXML.append("<DATA16>" + makeListField(docXML.getElementsByTagName("WRITERID").item(k).getTextContent()) + "</DATA16>");
 						//일괄결재로 인한 추가인데 위에 DATA17 겹침
-						resultXML.append("<DATA17>" + makeListField(docXML.getElementsByTagName("FORMID").item(k).getTextContent()) + "</DATA17>");
+						resultXML.append("<DATA17>" + formId + "</DATA17>");
 						resultXML.append("<orgCompanyID><![CDATA[" + makeListField(docXML.getElementsByTagName("COMPANYID").item(k).getTextContent()) + "]]></orgCompanyID>");
+						
+						resultXML.append("<REFORMFLAG>" + (isReform(formId, companyID, tenantID) ? "Y" : "N") + "</REFORMFLAG>");
 						resultXML.append("<APRMEMBERSN>" + makeListField(docXML.getElementsByTagName("APRMEMBERSN").item(k).getTextContent()) + "</APRMEMBERSN>");
 					}
 					
@@ -27084,6 +27089,66 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		parameterMap.put("href", attachHref);
 		
 		return ezApprovalGDAO.getLinkedAttachFileCount(parameterMap) > 0;
+	}
+	
+	@Override
+	public boolean isReform(String formUrl) throws Exception {
+		Matcher matcher = Pattern.compile("/fileroot/(\\d)/files/upload_approvalG/(.*)/form/(.*)\\..{0,3}").matcher(formUrl);
+		
+		if (matcher.find() && matcher.groupCount() == 3) {
+			String formId = matcher.group(3);
+			String companyId = matcher.group(2);
+			
+			int tenantId = Integer.parseInt(matcher.group(1));
+			
+			return isReform(formId, companyId, tenantId);
+		}
+		
+		return false;
+	}
+	
+	@Override
+	public boolean isReform(String formId, String companyId, int tenantId) throws Exception {
+		Map<String, Object> parameterMap = new HashMap<>();
+		parameterMap.put("formId", formId);
+		parameterMap.put("companyId", companyId);
+		parameterMap.put("tenantId", tenantId);
+
+		String reformFlag = ezApprovalGDAO.getReformFlag(parameterMap);
+		
+		return "Y".equalsIgnoreCase(reformFlag);
+	}
+
+	@Override
+	public boolean isReformTempDoc(String docSN, String companyId, int tenantId) throws Exception {
+		String[] splitInfo = docSN.split("@");
+
+		if (splitInfo.length != 2) {
+			return false;
+		}
+
+		Map<String, Object> parameterMap = new HashMap<>();
+		parameterMap.put("ownerId", splitInfo[0]);
+		parameterMap.put("sn", splitInfo[1]);
+		parameterMap.put("companyId", companyId);
+		parameterMap.put("tenantId", tenantId);
+
+		String reformFlag = ezApprovalGDAO.getReformFlagForTempDoc(parameterMap);
+		
+		return "Y".equalsIgnoreCase(reformFlag);
+	}
+
+	@Override
+	public ApprGFormVO getReformInfoApprovalDocument(String docId, String companyId, int tenantId) throws Exception {
+		Map<String, Object> parameterMap = new HashMap<>();
+		parameterMap.put("docId", docId);
+		parameterMap.put("companyId", companyId);
+		parameterMap.put("tenantId", tenantId);
+
+		// formId, reformflag
+		ApprGFormVO reformInfo = (ApprGFormVO) ezApprovalGDAO.getReformInfoForApprovalDocument(parameterMap);
+		
+		return reformInfo;
 	}
 
 	private String createDocNO(String cabinetSN, String docNumZeroCnt) {

@@ -70,6 +70,7 @@ function setButtons(mode) {
 	libttns[0].firstElementChild.onclick  = function() {fileDownload();};
 	// root에서 업로드 못하게 하려면 아래 주석을 풀면됨
 //	if (folderLevel != '0') {
+	if (libttns.length === 9) {
 		libttns[1].firstElementChild.onclick  = function() {fileUpload();};
 		libttns[2].firstElementChild.onclick  = function() {fileDelete();};
 		libttns[3].firstElementChild.onclick  = function() {fileRename();};
@@ -77,15 +78,15 @@ function setButtons(mode) {
 		libttns[5].firstElementChild.onclick  = function() {openSearchPanel();};
 		libttns[6].firstElementChild.onclick  = function() {refreshView();};
 		libttns[7].firstElementChild.onchange = function() {search_Set("1");};
-//	}
-//	else {
-//		libttns[1].firstElementChild.onclick  = function() {fileDelete();};
-//		libttns[2].firstElementChild.onclick  = function() {fileRename();};
-//		libttns[3].firstElementChild.onclick  = function() {fileMove();};
-//		libttns[4].firstElementChild.onclick  = function() {openSearchPanel();};
-//		libttns[5].firstElementChild.onclick  = function() {refreshView();};
-//		libttns[6].firstElementChild.onchange = function() {search_Set("1");};
-//	}
+	}
+	else {
+		libttns[1].firstElementChild.onclick  = function() {fileDelete();};
+		libttns[2].firstElementChild.onclick  = function() {fileRename();};
+		libttns[3].firstElementChild.onclick  = function() {fileMove();};
+		libttns[4].firstElementChild.onclick  = function() {openSearchPanel();};
+		libttns[5].firstElementChild.onclick  = function() {refreshView();};
+		libttns[6].firstElementChild.onchange = function() {search_Set("1");};
+	}
 	
 	var listCountElmt = document.getElementById("listCount");
 	listCountElmt.onchange = function() {search_Set("1");};
@@ -102,7 +103,7 @@ function setButtons(mode) {
 	
 	var mailPanelElmt       = document.getElementById("mailPanel");
 	mailPanelElmt.onclick   = function() {
-		if (duplicateFile && duplicateFile.isProcessing()) {
+		if (window.duplicateFile && duplicateFile.isProcessing()) {
 			duplicateFile.onClosePopup({
 				code: "SKIP",
 				looping: false

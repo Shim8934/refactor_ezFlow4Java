@@ -621,6 +621,7 @@
     "cell_vertical_size": "Equal height",
     "table_lock": "Table lock",
     "cell_lock": "Cell lock",
+    "border_visualize": "Show hidden border",
     "table_background_color": "grid color",
     "table_border_style": "Line style",
     "menuToolName": "Tools",

@@ -332,7 +332,7 @@
 							}
 						}
 						
-						var retVal = GetOpenWindow(url + parameter, "FormMain", 1050, 960, "no");
+						var retVal = GetOpenWindow(url + parameter, "FormMain", 1115, 960, "no");
 						Tree_setconfig();
 		            } else {
 		            	alert("<spring:message code = 'ezApproval.t722' />");
@@ -382,6 +382,8 @@
 		                parameter = parameter + HWP;
 		            }
 		            else {
+		            	parameter += "&reformflag=" + encodeURIComponent(GetAttribute(selRow[0], "REFORMFLAG"));
+		            	
 		            	if (approvalFlag =='S') {
 							if (pEditor == "CK" || pEditor == "DEXT" || pEditor == "NAMO" || pEditor == "TAGFREE" || pEditor == "KUKUDOCS") {
 								url = "/admin/ezApprovalG/formMainOther.do";
@@ -398,7 +400,7 @@
 						}
 		            }
 		            
-		            GetOpenWindow(url + parameter, "FormMain", 1050, 960, "no");
+		            GetOpenWindow(url + parameter, "FormMain", 1115, 960, "no");
 
 		            Tree_setconfig();
 		        } else {

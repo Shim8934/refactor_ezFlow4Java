@@ -848,14 +848,11 @@ public class EzEmailAdminController {
 		String returnValue = "True";
 
 		try {
-			String domainName = ezCommonService.getTenantConfig("DomainName",
-					auth.getTenantId());
+			String domainName = ezCommonService.getTenantConfig("DomainName", auth.getTenantId());
 
 			Document doc = commonUtil.convertStringToDocument(bodyData);
-			String maxStorage = doc.getElementsByTagName("MAXSTORAGE").item(0)
-					.getTextContent();
-			String warnStorage = doc.getElementsByTagName("WARNSTORAGE")
-					.item(0).getTextContent();
+			String maxStorage = doc.getElementsByTagName("MAXSTORAGE").item(0).getTextContent();
+			String warnStorage = doc.getElementsByTagName("WARNSTORAGE").item(0).getTextContent();
 
 			ezEmailUtil.setDefaultQuota(domainName, maxStorage, warnStorage);
 		} catch (Exception e) {
@@ -1962,6 +1959,7 @@ public class EzEmailAdminController {
 
 		model.addAttribute("list", resultList);
 		model.addAttribute("userLang", userInfo.getPrimary());
+		model.addAttribute("userInfo", userInfo);
 
 		logger.debug("signatureMainView ended.");
 

@@ -121,6 +121,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	logger.debug("init started.");
 
     	ezCommonService.createTblCompanyConfig();
+    	ezCommonService.createReformFlagColumn();
     	ezCommonService.addMailToJMochaDistribution();
     	ezCommonService.addAddJobMasterOrderBy();
     	ezCommonService.createTblIPAccessID();
@@ -2882,12 +2883,19 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             
             logger.debug("userEmail=" + userEmail + ",useDefault=" + useDefault 
                     + ",warnStorage=" + warnStorage + ",maxStorage=" + maxStorage);
-            
+
+            // 기본 스토어 설정에 따르는 경우
             if (useDefault.equals("1")) {
                 ezEmailUtil.deleteUserQuota(userEmail);
+				// 유저 마스터 테이블에 쿼터정보를 업데이트한다.
+				Double[] returnedData = ezEmailUtil.getDefaultQuota(domainName);
+				double convertMaxStorage = returnedData[0] * 1024;
+				ezOrganAdminService.updateProperty(userId, "mailboxquota", String.valueOf(convertMaxStorage), "user", tenantID);
             } else {
                 ezEmailUtil.setUserQuota(userEmail, maxStorage, warnStorage);
-            }            
+                double convertMaxStorage = Double.valueOf(maxStorage) * 1024;
+				ezOrganAdminService.updateProperty(userId, "mailboxquota", String.valueOf(convertMaxStorage), "user", tenantID);
+            }
             
             returnValue = "OK";
         } catch (Exception e) {

@@ -1324,7 +1324,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		} else if (fileList.size() > 0) {
 			// 중복된게 있으면 filesForQuery 갱신
 			if (duplicateList.size() > 0) {
-				filesForQuery = "'" + String.join("', '", fileList.stream().map(FileVO::getFileName).toArray(String[]::new)) + "'";
+				filesForQuery = "'" + String.join("', '", fileList.stream().map(FileVO::getFileId).toArray(String[]::new)) + "'";
 			}
 			
 			//copy files
