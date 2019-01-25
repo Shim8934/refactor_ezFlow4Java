@@ -141,7 +141,7 @@
 						<p class="hbar_dotted" style="width:5px">
 						</p>
 					</span>
-					<div id="PreContent_RayerH" style="position: absolute; border: 0px solid blue; width:620px;display:inline-block;height:100%;">
+					<div id="PreContent_RayerH" style="position: absolute; border: 0px solid blue; width:620px;display:inline-block;height:83%;">
 						<div id="preview_area" style="width: 100%; display: block;">
 							<span class="previewmail_info" style="display: block; width: 100%; border-top: 1px solid #e8e8e8; ">
 								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; visibility:hidden;">
