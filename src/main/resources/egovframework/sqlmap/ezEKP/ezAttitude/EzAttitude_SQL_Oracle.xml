@@ -1920,7 +1920,7 @@
 					END
 				)
 				), 0) AS ANNUAL_COUNT,
-			    TO_CHAR(#startDate#, 'MM') AS MONTH
+			    SUBSTR(#startDate#, 6, 2) AS MONTH
 			FROM   
 				tbl_attitude
 			WHERE

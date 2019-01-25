@@ -303,7 +303,7 @@
 					objDl = $("<dl></dl>").addClass("statsDL");
 					objDt = $("<dt></dt>");
 					
-					objDt.html($("<div style='width:70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + result[i].month + "'></div>").html(result[i].month + "월"));
+					objDt.html($("<div style='width:70px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;' title='" + result[i].month + "'></div>").html(Number(result[i].month) + "월"));
 					objDd = $("<dd></dd>")
 					 .text(result[i].annualCount + "일")
 					 .attr("id", result[i].month)
