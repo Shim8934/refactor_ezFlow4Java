@@ -6299,6 +6299,103 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 	}
 	
+	//2019-01-24 천성준 - 완료문서 문서정보 팝업UI 공공,일반버전 공통으로 소스구현
+	@RequestMapping(value = "/ezApprovalG/ezDocInfoView.do", method = RequestMethod.GET)
+	public String ezDocInfoView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("ezDocInfoView started");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String params = "";
+		String docID = request.getParameter("docID"); 
+		String ingFlag = request.getParameter("ingFlag"); //완료문서에선 END로 고정되서 들어옴
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		//공통정보
+		String urgentApproval = "";		//긴급결재여부	(Y : 긴급, N : 일반)
+		String publicityCode = "";		//공개여부		(G=대민공개여부, S=공개여부)
+		String securityCode = "";		//보안등급		(100:1등급, 200:2등급, 300:3등급, 400:4등급, 500:5등급)
+		String summary = "";			//요약정보
+		//G전용
+		String specialRecordCode = "";	//특수기록물
+		String securityApproval = "";	//보안결재 (ex. 2019-01-24)
+		String publicityYN = "";		//G버전 문서 공개여부
+		String limitRange = "";			//공개제한부분
+		String pageNum = "";			//쪽수
+		//S전용
+		String storagePeriod = "";		//보존기간
+		String taskCode = "";			//분류코드ID
+		String itemName = "";			//분류코드명
+		
+		if (approvalFlag.equals("G")) {
+			params = "SECURITYCODE;SPECIALRECORDCODE;URGENTAPPROVAL;PUBLICITYCODE;LIMITRANGE;PAGENUM;SECURITYAPPROVAL;SUMMARY;PUBLICITYYN"; //보안등급;특수기록물;긴급결재;대민공개여부 및 공개등급;공개제한부분;쪽수;보안결재;요약정보;공개여부
+		} else {
+			params = "SECURITYCODE;STORAGEPERIOD;URGENTAPPROVAL;PUBLICITYCODE;TASKCODE;ITEMNAME;SUMMARY"; //보안등급;보존기간;긴급결재;공개여부;분류코드ID;분류코드명;요약정보
+		}
+		
+		String strXML = ezApprovalGService.getDocInfo(docID, ingFlag, params, userInfo, userInfo.getCompanyID(), userInfo.getTenantId(), "", "");
+		
+		Document docXML = commonUtil.convertStringToDocument(strXML);
+		
+		
+		if (docXML.getElementsByTagName("URGENTAPPROVAL").item(0) != null) {
+			urgentApproval = docXML.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent();
+		}
+		if (docXML.getElementsByTagName("PUBLICITYCODE").item(0) != null) {
+			publicityCode = docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent();
+		}
+		if (docXML.getElementsByTagName("SECURITYCODE").item(0) != null) {
+			securityCode = docXML.getElementsByTagName("SECURITYCODE").item(0).getTextContent();
+		}
+		if (docXML.getElementsByTagName("SUMMARY").item(0) != null) {
+			summary = docXML.getElementsByTagName("SUMMARY").item(0).getTextContent();
+		}
+		
+		if (approvalFlag.equals("G")) {
+			if (docXML.getElementsByTagName("SPECIALRECORDCODE").item(0) != null) {
+				specialRecordCode = docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent();
+			}
+			if (docXML.getElementsByTagName("SECURITYAPPROVAL").item(0) != null) {
+				securityApproval = docXML.getElementsByTagName("SECURITYAPPROVAL").item(0).getTextContent();
+			}
+			if (docXML.getElementsByTagName("PUBLICITYYN").item(0) != null) {
+				publicityYN = docXML.getElementsByTagName("PUBLICITYYN").item(0).getTextContent();
+			}
+			if (docXML.getElementsByTagName("LIMITRANGE").item(0) != null) {
+				limitRange = docXML.getElementsByTagName("LIMITRANGE").item(0).getTextContent();
+			}
+			if (docXML.getElementsByTagName("PAGENUM").item(0) != null) {
+				pageNum = docXML.getElementsByTagName("PAGENUM").item(0).getTextContent();
+			}
+		} else {
+			if (docXML.getElementsByTagName("STORAGEPERIOD").item(0) != null) {
+				storagePeriod = docXML.getElementsByTagName("STORAGEPERIOD").item(0).getTextContent();
+			}
+			if (docXML.getElementsByTagName("TASKCODE").item(0) != null) {
+				taskCode = docXML.getElementsByTagName("TASKCODE").item(0).getTextContent();
+			}
+			if (docXML.getElementsByTagName("ITEMNAME").item(0) != null) {
+				itemName = docXML.getElementsByTagName("ITEMNAME").item(0).getTextContent();
+			}
+		}
+		
+		model.addAttribute("specialRecordCode", specialRecordCode);
+		model.addAttribute("securityApproval", securityApproval);
+		model.addAttribute("urgentApproval", urgentApproval);
+		model.addAttribute("publicityCode", publicityCode);
+		model.addAttribute("publicityYN", publicityYN);
+		model.addAttribute("storagePeriod", storagePeriod);
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("securityCode", securityCode);
+		model.addAttribute("limitRange", limitRange);
+		model.addAttribute("taskCode", taskCode);
+		model.addAttribute("itemName", itemName);
+		model.addAttribute("pageNum", pageNum);
+		model.addAttribute("summary", summary);
+		
+		logger.debug("ezDocInfoView ended");
+		return "ezApprovalG/apprGezDocInfoView";
+	}
+	
 	@RequestMapping(value = "/ezApprovalG/ezDocInfoGView.do")
 	public String ezDocInfoGView(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("ezDocInfoGView started");

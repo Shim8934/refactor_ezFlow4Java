@@ -500,22 +500,13 @@
 <body class="mainbody">
 	<h1>
 		<spring:message code='ezOrgan.csj01' />
-		<select class="companySelect" id="ListCompany" onChange="compChange()">
+		<select class="companySelect" id="ListCompany" onChange="companyChange()">
 			<c:forEach var="item" items="${list}">
 				<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 			</c:forEach>
 		</select>
 	</h1>
 	<div id="mainmenu">
-		<span>
-			<b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			<select id="ListCompany" onChange="companyChange()">
-				<c:forEach var="item" items="${list}">
-					<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-				</c:forEach>
-			</select>
-			<br/><br/>
-		</span>
 		<ul>
 			<li class="important"><span onClick="BtnAction('Add')"><spring:message code = 'ezAddress.t173'/></span></li>
 			<li><span onClick="BtnAction('Mod')"><spring:message code = 'ezAddress.t174'/></span></li>
