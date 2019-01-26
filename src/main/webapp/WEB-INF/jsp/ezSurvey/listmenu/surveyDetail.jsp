@@ -234,6 +234,7 @@
 		}
 		
 		function userEvent() {
+			SurveyCreate.changeMode(true); //change download mode
 			getQuestions();
 			showAttachList();
 			setBodyHeight();

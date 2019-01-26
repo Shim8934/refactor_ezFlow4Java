@@ -9,6 +9,7 @@ var SurveyCreate     = function() {
 	var scrolled     = true;
 	var questionFile = new SurveyFile("images");
 	var config       = {modify : "modify", required : "required", action : "action",}
+	var downloadMode = false;
 	// 로직 설정 단계를 건너뛰었는가 여부, 확인 클릭시 Y로 변경
 	var skipLogic    = 'N';
 	// 로직 설정 단계에 진입했었는가 여부, 진입한 적이 있으면 Y로 변경
@@ -958,21 +959,21 @@ var SurveyCreate     = function() {
 		var questnTitle  = $("<input class='questnTitle' value='" + qstContent + "' maxLength='250' placeholder='" + SurveyMessages.strQsContent + "' />");
 		var ulToolTip    = $("<ul class='survey_atchBtn'></ul>");
 		var liAttImg     = $("<li class='off atchLiImg'><span class='survey_icon atchImg'></span></li>");
-		var liAttVdo     = $("<li class='off atchLiVdo'><span class='survey_icon atchVdo'></span></li>");
-		var liAttMsic    = $("<li class='off atchLiMsic'><span class='survey_icon atchMsic'></span></li>");
+		//var liAttVdo     = $("<li class='off atchLiVdo'><span class='survey_icon atchVdo'></span></li>");
+		//var liAttMsic    = $("<li class='off atchLiMsic'><span class='survey_icon atchMsic'></span></li>");
 		var liAttUrl     = $("<li class='off atchLiUrl'><span class='survey_icon atchUrl'></span></li>");
 		var divRequired  = $("<div class='required'><input type='checkbox'><label>" + SurveyMessages.strRequired + "</label></div>");
 		var selectBox    = $("<div class='selectBox'></div>");
 		var qstnFileInfo = $("<div class='qstnFileInfo'></div>");
 		var fileList     = $("<div class='fileList'></div>");
 		var qstUl        = $("<ul class='qstUl'></ul>");
-		var qstnImgFile  = $("<input type='file' class='qstnImgFile' accept='image/*'/>");
-		var qstnAudFile  = $("<input type='file' class='qstnAudFile' accept='audio/*'/>");
-		var qstnVidFile  = $("<input type='file' class='qstnVidFile' accept='video/*'/>");
+		var qstnImgFile  = $("<input type='file' class='qstnImgFile' accept='/*'/>");
+		//var qstnAudFile  = $("<input type='file' class='qstnAudFile' accept='audio/*'/>");
+		//var qstnVidFile  = $("<input type='file' class='qstnVidFile' accept='video/*'/>");
 		
 		ulToolTip.append(liAttImg);
-		ulToolTip.append(liAttVdo);
-		ulToolTip.append(liAttMsic);
+		//ulToolTip.append(liAttVdo);
+		//ulToolTip.append(liAttMsic);
 		ulToolTip.append(liAttUrl);
 		
 		qstnRow.append(questnTitle);
@@ -984,8 +985,8 @@ var SurveyCreate     = function() {
 		qstUl.append(qstAtt);
 		fileList.append(qstUl);
 		fileList.append(qstnImgFile);
-		fileList.append(qstnAudFile);
-		fileList.append(qstnVidFile);
+		//fileList.append(qstnAudFile);
+		//fileList.append(qstnVidFile);
 		qstnFileInfo.append(fileList);
 		
 		quesDiv.append(qstnFileInfo);
@@ -1104,11 +1105,11 @@ var SurveyCreate     = function() {
 			var li = $(this).closest(".quesDiv").find(".fileList").find("li");
 			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
 			
-			toggleUrlPanel($(this).parent().parent().next().find(".fileList")[0]);
+			toggleUrlPanel($(this).parent().parent().next().find(".fileList")[0], "qstUl");
 		});
 		
 		$("#removeUrlPopup").click(function() {toggleUrlPanel();})
-		$(".quesBacgr").on("change", ".qstnImgFile", function(e) {fileUpload(this, "image");});
+		$(".quesBacgr").on("change", ".qstnImgFile", function(e) {fileUpload(this, "all");});
 		$(".quesBacgr").on("change", ".qstnVidFile", function(e) {fileUpload(this, "video");});
 		$(".quesBacgr").on("change", ".qstnAudFile", function(e) {fileUpload(this, "music");});
 		
@@ -1202,12 +1203,21 @@ var SurveyCreate     = function() {
 			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
 			optArea.find(".optionImgFile").click();
 		});
+		
+		$(".quesBacgr").on("click", ".attUrl", function() {
+			var optArea  = $(this).closest(".optArea");
+			var fileList = optArea.find(".fileList");
+			if (fileList.find("li").length > 0) {alert(SurveyMessages.strOnlyOne); return;}
+			toggleUrlPanel(fileList[0], "optUl");
+		});
+		
 		$(".quesBacgr").on("click", ".attVideo", function() {
 			var optArea = $(this).closest(".optArea");
 			var li      = optArea.find(".fileList").find("li");
 			if (li.length > 0) {alert(SurveyMessages.strOnlyOne); return;}
 			optArea.find(".optionVideoFile").click();
 		});
+		
 		$(".quesBacgr").on("click", ".attMusic", function() {
 			var optArea = $(this).closest(".optArea");
 			var li      = optArea.find(".fileList").find("li");
@@ -1216,7 +1226,7 @@ var SurveyCreate     = function() {
 		});
 		
 		// 첨부파일 버튼 이벤트
-		$(".quesBacgr").on("change", ".optionImgFile"  , function (e) {fileUpload(this, "image");});
+		$(".quesBacgr").on("change", ".optionImgFile"  , function (e) {fileUpload(this, "all");});
 		$(".quesBacgr").on("change", ".optionVideoFile", function (e) {fileUpload(this, "video");});
 		$(".quesBacgr").on("change", ".optionMusicFile", function (e) {fileUpload(this, "music");});
 		
@@ -2004,7 +2014,9 @@ var SurveyCreate     = function() {
 				if (option['optionId'] != undefined) {
 					optionId = option['optionId'];
 				}
+				
 				opt = $("<div class='opt' level='" + option.level + "'></div>");
+				
 				if (qstnType == 2) {
 					optChb = $("<input class='optChb' type='checkbox' name='qstn" + qstnId + "opt' value='" + option.level + "' logic='" + option.logic + "' optionId='" + optionId + "' />");
 					opt.append(optChb);
@@ -2015,7 +2027,20 @@ var SurveyCreate     = function() {
 				}
 				
 				if (option["attach"]) {
-					optAttach = $("<img alt='' src='" + questionFile.getImage(option["attach"])["imageSrc"] + "' class='optImg' />");
+					var attachInf = questionFile.getImage(option["attach"]);
+					optAttach = $("<img alt='' src='" + attachInf["imageSrc"] + "' class='optImg' />");
+					
+					if (attachInf["isImage"] == 0) {optAttach.attr("title", option["attach"]["fname"]);}
+					
+					if (downloadMode) {
+						if (option["attach"]["furl"]) {
+							optAttach[0].onclick = (function(url) {return function() {window.open(url);};})(option["attach"]["furl"]);
+						}
+						else {
+							optAttach[0].onclick = (function(name, path) {return function() {questionFile.download(name, path);};})(option["attach"]["fname"], option["attach"]["fpath"]);
+						}
+					}
+					
 					opt.append(optAttach);
 				}
 				
@@ -2047,8 +2072,22 @@ var SurveyCreate     = function() {
 				opt.append(optRdo);
 			}
 			
-			optAttach = other["attach"] ? $("<img alt='' src='" + questionFile.getImage(other["attach"])["imageSrc"] + "' class='optImg'>") : "";
-			opt.append(optAttach);
+			if (other["attach"]) {
+				var attachInf = questionFile.getImage(other["attach"]);
+				optAttach     = $("<img alt='' src='" + attachInf["imageSrc"] + "' class='optImg'>");
+				if (attachInf["isImage"] == 0) {optAttach.attr("title", other["attach"]["fname"]);}
+				if (downloadMode) {
+					if (other["attach"]["furl"]) {
+						optAttach[0].onclick = (function(url) {return function() {window.open(url);};})(other["attach"]["furl"]);
+					}
+					else {
+						optAttach[0].onclick = (function(name, path) {return function() {questionFile.download(name, path);};})(other["attach"]["fname"], other["attach"]["fpath"]);
+					}
+				}
+				
+				opt.append(optAttach);
+			}
+			
 			optSpan = $("<span class='optSpan'></span>");
 			optSpan[0].textContent = other["content"];
 			opt.append(optSpan);
@@ -2151,18 +2190,18 @@ var SurveyCreate     = function() {
 		//Question order
 		var qstId = "";
 		if (status == "modify") {
-			qstId         = qstnWrapper.prev().attr("id").replace("qstn", "") ? parseInt(qstnWrapper.prev().attr("id").replace("qstn", "")) : questionList.length + 1;
+			qstId = qstnWrapper.prev().attr("id").replace("qstn", "") ? parseInt(qstnWrapper.prev().attr("id").replace("qstn", "")) : questionList.length + 1;
 			
 		} else {
-			qstId         = qstnWrapper.attr("id").replace("qstn", "") ? parseInt(qstnWrapper.attr("id").replace("qstn", "")) : questionList.length + 1;
+			qstId = qstnWrapper.attr("id").replace("qstn", "") ? parseInt(qstnWrapper.attr("id").replace("qstn", "")) : questionList.length + 1;
 		}
 		question["level"] = qstId;
 		
 		//Set id
 		qstnWrapper.attr("id", "qstn" + qstId);
 		
-		var header       = makeQuestionHeaderPanel(question);
-		var body         = "";
+		var header = makeQuestionHeaderPanel(question);
+		var body   = "";
 		
 		switch(parseInt(qstnType)) {
 			case 1  :
@@ -2373,7 +2412,7 @@ var SurveyCreate     = function() {
 		divQsContent.className   = "question-content";
 		
 		//Tools div process
-		atchBtnUl.className  = "survey_atchBtn";
+		atchBtnUl.className = "survey_atchBtn";
 		divTools.className  = "tooltip-bttns";
 		divHeader.className = "question-header";
 		divTools.appendChild(atchBtnUl);
@@ -2389,6 +2428,16 @@ var SurveyCreate     = function() {
 			attImg.src       = attachInf["imageSrc"];
 			attImg.className = "qstnImg";
 			attDiv.className = "question-attach";
+			
+			if (downloadMode) {
+				if (qstnAtt["furl"]) {
+					attImg.onclick = (function(url) {return function() {window.open(url);};})(qstnAtt["furl"]);
+				}
+				else {
+					attImg.onclick = (function(name, path) {return function() {questionFile.download(name, path);};})(qstnAtt["fname"], qstnAtt["fpath"]);
+				}
+			}
+			
 			attDiv.appendChild(attImg);
 			
 			if (attachInf["isImage"] == 0) {
@@ -2592,6 +2641,7 @@ var SurveyCreate     = function() {
 			opt = $("<div class='other'></div>");
 			if (options) {
 				textInput = $("<input class='textInput' type='text' value='" + options["content"] + "' maxlength='250' placeholder='" + SurveyMessages.strOther + "'/>");
+				optAtt    = options["attach"];
 			}
 			else {
 				textInput = $("<input class='textInput' type='text' maxLength='250' placeholder='" + SurveyMessages.strOther + "'>");
@@ -2611,9 +2661,11 @@ var SurveyCreate     = function() {
 		//Add attach and delete buttons
 		var ulBttns  = $("<ul class='survey_atchBtn'></ul>");
 		var liAttch  = $("<li class='off attImg'><span class='survey_icon atchImg'></span></li>");
+		var liUrl    = $("<li class='off attUrl'><span class='survey_icon atchUrl'></span></li>");
 		var liDel    = $("<li class='off delImg'><span class='survey_icon srvyDel'></span></li>");
 		
 		ulBttns.append(liAttch);
+		ulBttns.append(liUrl);
 		ulBttns.append(liDel);
 		option.append(textInput);
 		option.append(ulBttns);
@@ -2624,7 +2676,7 @@ var SurveyCreate     = function() {
 		if (optAtt) {attEl = mkImgTag(optAtt);}
 		
 		var optUl         = $("<ul class='optUl'></ul>");
-		var optionImgFile = $("<input type='file' class='optionImgFile'   accept='image/*'/>");
+		var optionImgFile = $("<input type='file' class='optionImgFile' accept='/*'/>");
 		optUl.append(attEl);
 		
 		fileList.append(optUl);
@@ -3527,14 +3579,14 @@ var SurveyCreate     = function() {
 	
 	function checkUrl(str) {var pattern = new RegExp("^(http|https)://", "i"); return pattern.test(str);}
 	
-	function saveLinkAttach(elmt) {
+	function saveLinkAttach(elmt, ulClass) {
 		var attachName = document.getElementById("attfileName");
 		var attachUrl  = document.getElementById("attfileUrl");
 		
 		if (!replaceAll(attachName.value, " ", "")) {alert(SurveyMessages.strURL1); attachName.focus(); return;}
 		if (!replaceAll(attachUrl.value, " ", ""))  {alert(SurveyMessages.strURL2); attachUrl.focus() ; return;}
 		if (!checkUrl(attachUrl.value))             {alert(SurveyMessages.strURL3); attachUrl.focus() ; return;}
-		var mainUlElmt = elmt ? elmt.querySelector("ul[class='qstUl']") : document.getElementById("fileDiv").querySelector("ul[class='ulFiles']");
+		var mainUlElmt = elmt ? elmt.querySelector("ul[class='" + ulClass + "']") : document.getElementById("fileDiv").querySelector("ul[class='ulFiles']");
 		
 		//Create liElmt for link
 		var liElmt               = document.createElement("li");
@@ -3569,7 +3621,7 @@ var SurveyCreate     = function() {
 		liElmt.parentElement.removeChild(liElmt);
 	}
 	
-	function toggleUrlPanel(elmt) {
+	function toggleUrlPanel(elmt, ulClass) {
 		var rightFrame  = window.parent.frames["right"].document;
 		var urlPanel    = rightFrame.getElementById("addURLPanel");
 		if (urlPanel.className == "searchPanel off") {
@@ -3578,7 +3630,7 @@ var SurveyCreate     = function() {
 			urlPanel.style.top   = position[0] + "px";
 			urlPanel.style.right = position[1] + "px";
 			urlPanel.className   = "searchPanel";
-			document.getElementById("addUrlAttach").onclick = function(e) {saveLinkAttach(elmt);};
+			document.getElementById("addUrlAttach").onclick = function(e) {saveLinkAttach(elmt, ulClass);};
 		}
 		else {
 			removeFogPanel();
@@ -3597,6 +3649,8 @@ var SurveyCreate     = function() {
 		return purpose;
 	}
 	
+	function changeDownloadMode(flag) {downloadMode = flag;}
+	
 	return {
 		getUsers   : getSurveyUsers,
 		setUsers   : setSurveyUsers,
@@ -3608,6 +3662,7 @@ var SurveyCreate     = function() {
 		start      : initEvents,
 		setQsForm  : prevQstn,
 		convertQs  : getReuseQuestions,
+		changeMode : changeDownloadMode,
 		getPurpose : getSurveyPurpose
 	};
 }();
