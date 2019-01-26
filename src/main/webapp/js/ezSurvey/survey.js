@@ -681,6 +681,7 @@ var SurveyCreate     = function() {
 		
 		leftFrame.body.style.overflow  = "auto";
 		rightFrame.body.style.overflow = "";
+		hideQtipDiv();
 	}
 	
 	function getPosition(popUpW, popUpH) {
