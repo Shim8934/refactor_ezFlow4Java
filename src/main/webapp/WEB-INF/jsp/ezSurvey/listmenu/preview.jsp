@@ -21,7 +21,7 @@
 		<div id="closeLogicPl" class="closeImgBttn"><ul><li><span></span></li></ul></div>
 	</div>
 	<div class="popup-body">
-		<div class="logicMapWrap">
+		<div class="logicMapWrap" id="logicMapWrap">
 			<div class="logicTree" id="logicMap"></div>
 		</div>
 	</div>

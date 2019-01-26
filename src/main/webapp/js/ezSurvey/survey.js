@@ -108,12 +108,14 @@ var SurveyCreate     = function() {
 		var draftBttn           = document.getElementById("draftBttn");
 		if (draftBttn) {draftBttn.onclick = function(e) {saveDraftSurvey();};}
 		
-		document.getElementById("addUrlClose").onclick  = function(e) {toggleUrlPanel();};
-		document.getElementById("addUrlBttn").onclick   = function(e) {toggleUrlPanel();};
-		document.getElementById("addFileBttn").onclick  = function(e) {startUpload();};
-		document.getElementById("closeLogicPl").onclick = function(e) {toggleLogicPanel();};
-		document.getElementById("showLogicMap").onclick = function(e) {toggleLogicPanel();};
-		document.getElementById("userListDiv").onscroll = function(e) {scrollListOfUser(this);}
+		document.getElementById("addUrlClose").onclick   = function(e) {toggleUrlPanel();};
+		document.getElementById("addUrlBttn").onclick    = function(e) {toggleUrlPanel();};
+		document.getElementById("addFileBttn").onclick   = function(e) {startUpload();};
+		document.getElementById("closeLogicPl").onclick  = function(e) {toggleLogicPanel();};
+		document.getElementById("showLogicMap").onclick  = function(e) {toggleLogicPanel();};
+		document.getElementById("userListDiv").onscroll  = function(e) {scrollListOfUser(this);}
+		document.getElementById("logicMapWrap").onscroll = function(e) {hideQtipDiv();}
+		
 		document.onselectstart = function() {return false;};
 		var targetSpanList     = document.getElementsByName("targetSpan");
 		var publicSpanList     = document.getElementsByName("publicSpan");
@@ -824,12 +826,15 @@ var SurveyCreate     = function() {
 				boxSelectionEnabled: false,
 				ready: function(){},
 				style: [
-					{selector: 'node', css: {"content": "data(name)", "font-size": 10, "width" : 16,"height" : 16,}},
-					{selector: 'edge', css: {"target-arrow-shape": "triangle"}}
+					{selector: 'node', css: {"content": "data(name)", "font-size": 12, "width" : 27,"height" : 27, "background-color": "#3d8fea"}},
+					{selector: 'edge', css: {"target-arrow-shape": "triangle", "width" : 10, "line-color": "#aeaeae"}},
+					{selector: 'node:selected', css: {'background-color': '#b32d00',}},
+					{selector: 'edge:selected', css: {"width" : 13, "line-color": "#b32d00"}},
 				],
-				minZoom: 1,
-				maxZoom: 5,
-				wheelSensitivity: 1,
+				//minZoom: 1,
+				//maxZoom: 5,
+				//wheelSensitivity: 1,
+				zoomingEnabled: false,
 			});
 		}
 		
@@ -837,34 +842,242 @@ var SurveyCreate     = function() {
 		
 		bnk.elements().remove();
 		bnk.add(jsonElmt); 
-		bnk.layout({name: 'dagre', rankDir: 'TB',}).run();
-		bnk.resize();
-		bnk.fit();
-		bnk.center();
+		bnk.layout({name: 'dagre', rankDir: 'TB', nodeSep: 100,}).run();
 		
-		bnk.elements().qtip({
+		bnk.on('mouseover', 'node', function(e){$('#logicMap').css('cursor', 'pointer');});
+		bnk.on('mouseout' , 'node', function(e){$('#logicMap').css('cursor', 'default');});
+		bnk.on('mouseover', 'edge', function(e){$('#logicMap').css('cursor', 'pointer');});
+		bnk.on('mouseout' , 'edge', function(e){$('#logicMap').css('cursor', 'default');});
+		
+		bnk.elements('node').qtip({
 			content: {
 				 text: function(){
-					/*var divElmt  = document.createElement("div");
-					var divElmt1 = document.createElement("div");
-					var divElmt2 = document.createElement("div");
-					divElmt1.textContent = "Test1 => Question 1";
-					divElmt2.textContent = "Test1 => Question 9";
-					divElmt.appendChild(divElmt1);
-					divElmt.appendChild(divElmt2);
-					return divElmt;*/
-					return this.data("title");
+					return generateMapTreeNode(this.id());
 				}
-			 },
+			},
+			show: {event: 'click'},
+			hide: {event: 'mouseout'},
 			position: {
 				my: "top center",
 				at: "bottom center"
 			},
 			style: {
 				classes: "qtip-bootstrap",
-				tip: {width: 16,height: 8}
+				tip: {width: 16, height: 8}
 			}
 		});
+		
+		bnk.elements('edge').qtip({
+			content: {
+				 text: function(){
+					var edgeData = this.data();
+					return generateMapTreeEdge(parseInt(edgeData["source"]), parseInt(edgeData["target"]));
+				}
+			},
+			show: {event: 'click'},
+			hide: {event: 'mouseout'},
+			position: {
+				my: "top center",
+				at: "bottom center"
+			},
+			style: {
+				classes: "qtip-bootstrap",
+				tip: {width: 16, height: 8}
+			}
+		});
+		
+		var bounds = bnk.elements().boundingBox();
+		var height = (bounds.h + 60) > 2000 ? 2000 : bounds.h + 60;
+		document.getElementById("logicMap").style.height = height + "px";
+		bnk.resize();
+		bnk.fit();
+		bnk.center();
+	}
+	
+	function generateMapTreeEdge(sourceId, targetId) {
+		var sourceQst = surveyObj["questions"].filter(function(qst) {return qst["level"] == sourceId;})[0];
+		var table     = document.createElement("table");
+		var trTitle   = document.createElement("tr");
+		var thTitle   = document.createElement("th");
+		thTitle.setAttribute("colspan", 2);
+		thTitle.textContent = SurveyMessages.strOptionAll;
+		trTitle.appendChild(thTitle);
+		table.appendChild(trTitle);
+		
+		var options = sourceQst["option"];
+		var optList = [];
+		
+		if (sourceQst["logicFlag"] == 1) {
+			for (var j = 0; j < options.length; j++) {
+				var logicNum = options[j]["logic"];
+				var destQst  = -1;
+				
+				if (!logicNum || logicNum == -1 ) {
+					destQst = sourceQst["level"] + 1;
+				}
+				else {
+					destQst  = logicNum;
+				}
+				
+				if (destQst == targetId) {
+					optList.push(JSON.parse(JSON.stringify(options[j])));
+				}
+			}
+			
+			generateLogicpEdgeTip(table, optList, sourceQst, targetId);
+		}
+		else {
+			generateSkipEdgeTip(table);
+		}
+		
+		table.className = "bnk-qtiptable";
+		return table;
+	}
+	
+	function generateLogicpEdgeTip(table, optList, sourceQst, targetId) {
+		switch (parseInt(sourceQst["type"])) {
+			case 1: makeCommonToolTip(table, optList)                           ; break;
+			case 7: makeSliderEdgeToolTip(table, sourceQst, targetId) ; break;
+			case 8: makeCommonToolTip(table, optList)                           ; break;
+		}
+	}
+	
+	function makeSliderEdgeToolTip(table, sourceQst, targetId) {
+		var sliderLogic = sourceQst["sliderLogicPoint"];
+		var qstLevel    = parseInt(sourceQst["level"]);
+		var distance    = targetId - qstLevel;
+		var sliderStr   = (distance == 1) ? sliderLogic + " " + SurveyMessages.strLessThan : sliderLogic + " " + SurveyMessages.strMore;
+		
+		var trElmt  = document.createElement("tr");
+		var tdElmt1 = document.createElement("td");
+		tdElmt1.setAttribute("colspan", 2);
+		tdElmt1.className   = "tip-maininf";
+		tdElmt1.textContent = sliderStr;
+		tdElmt1.setAttribute("title", tdElmt1.textContent);
+		trElmt.appendChild(tdElmt1);
+		table.appendChild(trElmt);
+	}
+	
+	function generateSkipEdgeTip(table) {
+		var trOption   = document.createElement("tr");
+		var tdOption   = document.createElement("td");
+		tdOption.setAttribute("colspan", 2);
+		tdOption.className   = "tip-maininf";
+		tdOption.textContent = SurveyMessages.strViewAll;
+		trOption.appendChild(tdOption);
+		table.appendChild(trOption);
+	}
+	
+	function generateMapTreeNode(qstLevel) {
+		var question  = surveyObj["questions"].filter(function(qst) {return qst["level"] == qstLevel;})[0];
+		var questType = parseInt(question["type"]);
+		var table     = document.createElement("table");
+		var trTitle   = document.createElement("tr");
+		var thTitle   = document.createElement("th");
+		thTitle.setAttribute("colspan", 2);
+		thTitle.textContent = SurveyMessages.strQs + qstLevel + ". " + question["content"];
+		trTitle.appendChild(thTitle);
+		table.appendChild(trTitle);
+		
+		switch (questType) {
+			case 1: 
+			case 2: makeCommonToolTip(table, question["option"])        ; break;
+			case 3: 
+			case 4: makeMatrixNodeToolTip(table, question["option"])    ; break;
+			case 5: makeTextNodeToolTip(table,SurveyMessages.strShortQs); break;
+			case 6: makeTextNodeToolTip(table,SurveyMessages.strLongQs) ; break;
+			case 7: makeSliderNodeToolTip(table, question["option"])    ; break;
+			case 8: 
+			case 9: makeCommonToolTip(table, question["option"])        ; break;
+		}
+		
+		table.className = "bnk-qtiptable";
+		return table;
+	}
+	
+	function hideQtipDiv() {
+		var qtipDiv = document.querySelector("div[class='qtip qtip-default qtip-bootstrap qtip-pos-tc qtip-focus']");
+		if (qtipDiv) {qtipDiv.style.opacity = 0;}
+	}
+	
+	function makeRankingDropDownNodeToolTip(table, options) {
+		for (var i = 0; i < options.length; i++) {
+			var trElmt  = document.createElement("tr");
+			var tdElmt1 = document.createElement("td");
+			var tdElmt2 = document.createElement("td");
+			tdElmt1.className   = "tip-inf";
+			tdElmt2.className   = "tip-maininf";
+			tdElmt1.textContent = SurveyMessages.strOption + " " + (options[i]["level"] + 1) + ": ";
+			tdElmt2.textContent = options[i]["content"];
+			tdElmt2.setAttribute("title", tdElmt2.textContent);
+			trElmt.appendChild(tdElmt1);
+			trElmt.appendChild(tdElmt2);
+			table.appendChild(trElmt);
+		}
+	}
+	
+	function makeSliderNodeToolTip(table, options) {
+		for (var i = 0; i < options.length; i++) {
+			var trElmt    = document.createElement("tr");
+			var tdElmt1   = document.createElement("td");
+			var tdElmt2   = document.createElement("td");
+			var strSlider = options[i]["level"] == 0 ? SurveyMessages.strSlider8 : SurveyMessages.strSlider9;
+			tdElmt1.className   = "tip-inf";
+			tdElmt2.className   = "tip-maininf";
+			tdElmt1.textContent = strSlider;
+			tdElmt2.textContent = options[i]["content"];
+			tdElmt2.setAttribute("title", tdElmt2.textContent);
+			trElmt.appendChild(tdElmt1);
+			trElmt.appendChild(tdElmt2);
+			table.appendChild(trElmt);
+		}
+	}
+	
+	function makeTextNodeToolTip(table, strType) {
+		var trElmt    = document.createElement("tr");
+		var tdElmt1   = document.createElement("td");
+		var tdElmt2   = document.createElement("td");
+		tdElmt1.className   = "tip-inf";
+		tdElmt2.className   = "tip-maininf";
+		tdElmt1.textContent = SurveyMessages.strOption + ": ";
+		tdElmt2.textContent = strType;
+		tdElmt2.setAttribute("title", tdElmt2.textContent);
+		trElmt.appendChild(tdElmt1);
+		trElmt.appendChild(tdElmt2);
+		table.appendChild(trElmt);
+	}
+	
+	function makeMatrixNodeToolTip(table, options) {
+		for (var i = 0; i < options.length; i++) {
+			var trElmt    = document.createElement("tr");
+			var tdElmt1   = document.createElement("td");
+			var tdElmt2   = document.createElement("td");
+			var strColRow = options[i]["colLevel"] == -1 ? SurveyMessages.strRow + " " + (options[i]["rowLevel"] + 1) + ": " : SurveyMessages.strColumn + " " + (options[i]["colLevel"] + 1) + ": ";
+			tdElmt1.className   = "tip-inf";
+			tdElmt2.className   = "tip-maininf";
+			tdElmt1.textContent = strColRow;
+			tdElmt2.textContent = options[i]["content"];
+			tdElmt2.setAttribute("title", tdElmt2.textContent);
+			trElmt.appendChild(tdElmt1);
+			trElmt.appendChild(tdElmt2);
+			table.appendChild(trElmt);
+		}
+	}
+	
+	function makeCommonToolTip(table, options) {
+		for (var i = 0; i < options.length; i++) {
+			var trElmt  = document.createElement("tr");
+			var tdElmt1 = document.createElement("td");
+			var tdElmt2 = document.createElement("td");
+			tdElmt1.className   = "tip-inf";
+			tdElmt2.className   = "tip-maininf";
+			tdElmt1.textContent = SurveyMessages.strOption + " " + (options[i]["level"] + 1) + ": ";
+			tdElmt2.textContent = options[i]["content"];
+			tdElmt2.setAttribute("title", tdElmt2.textContent);
+			trElmt.appendChild(tdElmt1);
+			trElmt.appendChild(tdElmt2);
+			table.appendChild(trElmt);
+		}
 	}
 	
 	function createJsonElements() {

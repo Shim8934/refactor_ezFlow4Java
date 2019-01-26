@@ -73,6 +73,8 @@ var SurveyMessages = {
 	strSlider5   : "단위간격 값이 유효하지 않습니다.",
 	strSlider6   : "단위간격의 이동은 200번 이하로 지정해야합니다.",
 	strSlider7   : "단위간격",
+	strSlider8   : "최소값",
+	strSlider9   : "최대값",
 	strOptErr    : "최소 2개 이상의 보기가 필요합니다.",
 	strMaxtrix1  : "최소 1개 이상의 행이 필요합니다.",
 	strMaxtrix2  : "최소 1개 이상의 열이 필요합니다.",
@@ -108,6 +110,7 @@ var SurveyMessages = {
 	strBetweenNum: "최소값과 최대값 사이의 정수를 입력해 주세요.",
 	strQs        : "질문",
 	strMore      : "이상",
+	strLessThan  : "이하",
 	strLogic     : "분기를 설정해 주세요.",
 	strSkipLogic : "분기 설정 단계를 생략 하시겠습니까?",
 	strSaveAsk   : "설문을 등록하시겠습니까?",
@@ -141,4 +144,6 @@ var SurveyMessages = {
 	strQsContent : "질문을 입력해 주세요.",
 	strTxtContent: "내용을 작성해 주세요.",
 	strNotResp   : "설문 대상자가 아닙니다.",
+	strOption    : "보기",
+	strOptionAll : "보기 리스트",
 }
