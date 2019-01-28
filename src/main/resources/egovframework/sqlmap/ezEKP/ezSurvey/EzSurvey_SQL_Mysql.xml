@@ -224,9 +224,9 @@
 		</isEqual>
 		<isEqual property="pageMode" compareValue="all" prepend=" and ">
 			draft_flag = 0
-			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1)</isEmpty>
+			<isEmpty property="surveyIds" prepend=" and ">(survey_id = -1 or user_id = #userId#)</isEmpty>
 			<isNotEmpty property="surveyIds" prepend=" and ">
-				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>)
+				(survey_id in <iterate property="surveyIds" open="(" close=")" conjunction=",">#surveyIds[]#</iterate>) or user_id = #userId#
 			</isNotEmpty>
 		</isEqual>
 		<isEqual property="pageMode" compareValue="processing" prepend=" and ">
