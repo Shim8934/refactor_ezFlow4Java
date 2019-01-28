@@ -146,4 +146,5 @@ var SurveyMessages = {
 	strNotResp   : "설문 대상자가 아닙니다.",
 	strOption    : "보기",
 	strOptionAll : "보기 리스트",
+	strAttachErr : "파일 업로드가 완료될 때까지 기다려주세요.",
 }

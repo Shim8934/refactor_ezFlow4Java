@@ -485,6 +485,11 @@ var SurveyCreate     = function() {
 		
 		if (userFlag == 1 && !userList) {returnObj["error"] = SurveyMessages.strUser1; return returnObj;}
 		
+		//Check attach file progress
+		var divFileList = document.getElementById("fileDiv");
+		var canvasList  = divFileList.querySelectorAll("canvas");
+		if (canvasList && canvasList.length > 0) {returnObj["error"] = SurveyMessages.strAttachErr; return returnObj;}
+		
 		var surveyttlList = document.querySelectorAll("div[class='survey-title']");
 		for (var i = 0, len = surveyttlList.length; i < len; i++) {
 			surveyttlList[i].textContent = surveyTtl.value;
@@ -2382,7 +2387,10 @@ var SurveyCreate     = function() {
 		var question     = {};
 		var qstnWrapper  =  thisEl.parents(".qstnWrapper");
 		
-		//qstnWrapper  = thisEl.parents(".qstnWrapper");
+		//Check attach file upload progress
+		var canvasList   = qstnWrapper.find("canvas");
+		if (canvasList && canvasList.length > 0) {alert(SurveyMessages.strAttachErr); return;}
+		
 		var qstnArea     = qstnWrapper.find(".quesDiv");
 		var qstnContent  = qstnArea.find(".questnTitle").val();
 		var questionList = SurveyCreate.getQs();
