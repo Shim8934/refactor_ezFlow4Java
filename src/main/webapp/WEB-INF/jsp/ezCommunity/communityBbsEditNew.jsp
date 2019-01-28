@@ -140,7 +140,7 @@
 	 	 					        window.opener.parent.left.getBoardList();
 	 	 					    }
 	 						    
-	 	 					    window.opener.location.reload(false);
+	 	 					    window.opener.location.href="/admin/ezCommunity/bbsList.do?bName=tbl_c_board";
 	 	 					    window.close();
 	 	 					}
 	 					},

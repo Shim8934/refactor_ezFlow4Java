@@ -127,7 +127,7 @@ public class EzCommunityAdminController {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String code = "", keyword = "", sRadio = "", titleName = "";
-		int nowBlock = 0, curPage = 1 , comNoPerPage = 17;
+		int nowBlock = 0, curPage = 1 , comNoPerPage = 10;
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1) {
 			return "cmm/error/adminDenied";

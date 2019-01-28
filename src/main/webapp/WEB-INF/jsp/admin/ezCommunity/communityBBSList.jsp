@@ -206,7 +206,7 @@
 	        }
 				
 			function goToPage(page) {
-				var href = "/ezCommunity/board/bbsList.do?bName=" + encodeURIComponent("${bName}") + "&code="+ encodeURIComponent("${code}") + "&keyword=" + encodeURIComponent(make_searchstring(pKeyWord)) + "&s_radio=" + encodeURIComponent("${sRadio}") + "&block="+encodeURIComponent("${nowBlock}");
+				var href = "/admin/ezCommunity/bbsList.do?bName=" + encodeURIComponent("${bName}") + "&code="+ encodeURIComponent("${code}") + "&keyword=" + encodeURIComponent(make_searchstring(pKeyWord)) + "&s_radio=" + encodeURIComponent("${sRadio}") + "&block="+encodeURIComponent("${nowBlock}");
 				if(parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage)) {
 					document.location.href = href + "&goToPage=" + encodeURIComponent(parseInt(page));
 				}
@@ -304,11 +304,20 @@
 				<tr>
 					<th style="background-color: #f1f3f5; border: 1px solid #e2e3e6;"><spring:message code = 'ezCommunity.t28' /></th>
 					<td style="border: 1px solid #e2e3e6;">
-						<select name="s_radio" style="vertical-align: middle; height: 22px;">
-							<option value="title" selected><spring:message code = 'ezCommunity.t124' /></option>
-							<%-- <option value="titleContent"><spring:message code = 'ezCommunity.t169' /></option> --%>
-							<option value="writer"><spring:message code = 'ezCommunity.t138' /></option>
-						</select>
+						<c:choose>
+							<c:when test="${sRadio == '' || sRadio == 'title'}">
+								<select name="s_radio" style="vertical-align: middle; height: 22px;">
+									<option value="title" selected><spring:message code = 'ezCommunity.t124' /></option>
+									<option value="writer"><spring:message code = 'ezCommunity.t138' /></option>
+								</select>
+							</c:when>
+							<c:when test="${sRadio == 'writer'}">
+								<select name="s_radio" style="vertical-align: middle; height: 22px;">
+									<option value="title"><spring:message code = 'ezCommunity.t124' /></option>
+									<option value="writer" selected><spring:message code = 'ezCommunity.t138' /></option>
+								</select>
+							</c:when>
+						</c:choose>
 						
 						<input type="text" name="keyword" value="<c:out value = '${keyword}' />" onKeyDown="return keyword_onkeydown(event)" style="width:200px; height: 22px; vertical-align:middle;">
 						<a class="imgbtn imgbck" style="vertical-align: middle; margin-bottom: 0px;"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>
