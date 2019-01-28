@@ -183,7 +183,7 @@
 						case 3:
 						case 4:
 						case 7:
-						case 8: 
+						case 8:
 							createQuestionBar(question, divElmt);
 							break;
 						case 5:
@@ -1151,21 +1151,21 @@
 				var maxYValue   = 0;
 				
 				for (var i = 0; i < optionLen; i++) {
-					var rank         = i + 1;
-					var rankLabel    = rank + "";
 					var dataset      = {};
 					var colData      = [];
+					var optionId     = options[i]["optionId"];
 					dataset["name"]  = options[i]["content"];
+					var rankLabel    = (i + 1) + "";
 					
 					if (rankLabel.length > maxLabelLen) {
 						maxLabelLen = rankLabel.length;
 					}
 					
 					for (var j = 0; j < optionLen; j++) {
-						var rowId = options[j]["optionId"];
 						var rowColRes = responses.filter(function(res) {
-							return res["optionId"] == rowId && res["rankingLevel"] == rank;
+							return res["optionId"] == optionId && res["rankingLevel"] == (j + 1);
 						});
+						
 						var rowColResCnt = rowColRes && rowColRes.length > 0 ? rowColRes.length : 0;
 						colData.push(rowColResCnt);
 						

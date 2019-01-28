@@ -460,11 +460,11 @@
 						 if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload(); window.close();}
 						 if (parent && parent.SurveyItem)               {parent.SurveyItem.reload();}
 						 break;
-				case 1 : alert(SurveyMessages.strParamErr) ; break;
-				case 2 : alert(SurveyMessages.strError)    ; break;
-				case 5 : alert(SurveyMessages.strMultiple3); break;
-				case 6 : alert(SurveyMessages.strNotResp)  ; break;
-				default: alert(SurveyMessages.strError)    ; return;
+				case 1 : alert(SurveyMessages.strParamErr) ; resposeObj.responses = []; break;
+				case 2 : alert(SurveyMessages.strError)    ; resposeObj.responses = []; break;
+				case 5 : alert(SurveyMessages.strMultiple3); resposeObj.responses = []; break;
+				case 6 : alert(SurveyMessages.strNotResp)  ; resposeObj.responses = []; break;
+				default: alert(SurveyMessages.strError)    ; resposeObj.responses = []; return;
 			}
 		}
 		

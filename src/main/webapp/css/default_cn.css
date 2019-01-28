@@ -3008,7 +3008,7 @@ h2, #menu span {font-size: 12px;}
 .response-header >div {position: absolute; right: 6px; top: 12px; background-color: #fff; color: rgb(0, 115, 230); border-radius: 50%; font-size: 12px; cursor: pointer; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
 .response-users {padding: 10px; border-right: 1px solid #ddd; border-left: 1px solid #ddd;}
 .response-users >ul {padding-left: 20px;}
-.no-data {text-align: center;}
+.no-data {text-align: center; border: 1px solid #ddd; border-top: none;}
 .no-data-img {padding: 20px 0px 10px;}
 .no-data-txt {padding: 10px 0px 20px; font-size: 13px; color: #c0c0c0; font-weight: bold;}
 .textDiv {padding: 0px 20px 15px; border: 1px solid #ddd; border-top: none;}
