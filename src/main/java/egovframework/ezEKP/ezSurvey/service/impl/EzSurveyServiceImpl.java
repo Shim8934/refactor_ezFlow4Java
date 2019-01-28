@@ -669,7 +669,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		SurveyItemSearchVO searchVO = new SurveyItemSearchVO(pageMode, listCntSize, tenantId, userId, primary, offsetMinute, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption);
 		List<SurveyVO> itemList     = new ArrayList<>();
 		
-		if (pageMode.equals("processing") || pageMode.equals("finish")) {
+		if (pageMode.equals("processing") || pageMode.equals("finish") || pageMode.equals("all")) {
 			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
 			SimpleDateFormat formatter    = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			String timeUTC                = commonUtil.getDateStringInUTC(formatter.format(new Date()), offset, true);
