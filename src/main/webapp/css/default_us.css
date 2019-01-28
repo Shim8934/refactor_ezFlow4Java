@@ -3014,7 +3014,7 @@ h2, #menu span {font-size: 12px;}
 .textDiv {padding: 0px 20px 15px; border: 1px solid #ddd; border-top: none;}
 .txt-response {display: flex; align-items: center; min-height: 30px;}
 .txt-response >img {width: 40px; height: 40px; min-width: 40px; cursor: pointer; margin-right: 10px;}
-.txt-response >span {flex: 1; word-break: break-word; line-height: 1.4; color: #e04343;}
+.txt-response >span {flex: 1; word-break: break-word; line-height: 1.4;}
 .txt-respul {padding: 0px; list-style: none;}
 .txt-respul >li + li {padding-top: 10px; border-top: 1px dashed #ddd;}
 .txt-viewmore {padding: 4px 3px; margin-left: 8px; border: 1px solid #ddd; cursor: pointer;}
