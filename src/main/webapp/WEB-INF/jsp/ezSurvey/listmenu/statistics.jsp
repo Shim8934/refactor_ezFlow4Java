@@ -34,12 +34,11 @@
 			
 			<div id="contentsBox">
 				<div id="surveyRespondents" class="respondents-div">
-					<div class="response-header"><spring:message code="ezSurvey.t95"/><div id="totalUserCnt"></div></div>
+					<div class="response-header"><div><spring:message code="ezSurvey.t95"/></div><div id="totalUserCnt"></div></div>
 					<div class="pieDiv">
 						<div id="userLegendDiv" class="bnk-legend"></div>
 						<canvas id="respondentPie" height="300"></canvas>
 						<div id="respondentTool" class="bnk-tooltip"></div>
-						<!-- <div id="respondentPie"></div> -->
 					</div>
 				</div>
 			</div>
@@ -307,11 +306,12 @@
 				var ulElmt     = document.createElement("ul");
 				var liElmt     = document.createElement("li");
 				var spanElmt   = document.createElement("span");
+				var divChild1  = document.createElement("div");
 				var divRespCnt = document.createElement("div");
 				var totalCnt   = question["users"].length;
 				divElemt1.className    = "response-header";
 				divElemt2.className    = "response-users";
-				divElemt1.textContent  = question["level"] + "." + question["content"];
+				divChild1.textContent  = question["level"] + "." + question["content"];
 				spanElmt.textContent   = SurveyMessages.strRespondent + " " + totalCnt;
 				divRespCnt.textContent = responsesCnt <= 999 ? responsesCnt : 999 + "+";
 				spanElmt.className     = "response-usercnt";
@@ -322,6 +322,7 @@
 				
 				liElmt.appendChild(spanElmt);
 				ulElmt.appendChild(liElmt);
+				divElemt1.appendChild(divChild1);
 				divElemt1.appendChild(divRespCnt);
 				divElemt2.appendChild(ulElmt);
 				mainDiv.appendChild(divElemt1);

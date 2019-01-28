@@ -3004,8 +3004,9 @@ h2, #menu span {font-size: 12px;}
 .usersTr .mainTd {width: 50%;}
 .usersTr .respDate {width: 120px; min-width: 120px; white-space: nowrap; padding-right: 8px;}
 .usersTr td:first-child {width: 30px;}
-.response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; word-break: break-word; display: flex; align-items: center; padding: 8px 44px 8px 10px; min-height: 40px; position: relative;}
-.response-header >div {position: absolute; right: 6px; top: 12px; background-color: #fff; color: rgb(0, 115, 230); border-radius: 50%; font-size: 12px; cursor: pointer; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
+.response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; display: flex; align-items: center; padding: 8px 10px; word-wrap: break-word; word-break: break-word; font-family: Malgun Gothic, "맑은 고딕";}
+.response-header >div:first-child {flex: 1;}
+.response-header >div:last-child {background-color: #fff; color: rgb(0, 115, 230); border-radius: 50%; font-size: 12px; cursor: pointer; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
 .response-users {padding: 10px; border-right: 1px solid #ddd; border-left: 1px solid #ddd;}
 .response-users >ul {padding-left: 20px;}
 .no-data {text-align: center; border: 1px solid #ddd; border-top: none;}
@@ -3084,7 +3085,7 @@ h2, #menu span {font-size: 12px;}
 .logicPanel {height: 640px; width: 600px;}
 .userPanel {height: 262px;}
 .hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off, .respondents-div.off {display: none;}
-.surveydetail-header {padding-left: 10px;}
+.surveydetail-header {padding-left: 10px; font-family: Malgun Gothic, "맑은 고딕";}
 .surveydetail-header ul {padding: 0px; margin: 0px; list-style: none;}
 .surveydetail-header ul li {display: block; float: left; margin: 0 3px 0 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
 .surveydetail-header span {display: inline-block; background: white; border-top: 1px solid #c7c7c7; border-left: 1px solid #c7c7c7; border-right: 1px solid #c7c7c7; border-bottom: 1px solid #909193; height: 25px; padding: 0px 8px 2px 8px; line-height: 25px; font-size: 12px; color: #393939;}
