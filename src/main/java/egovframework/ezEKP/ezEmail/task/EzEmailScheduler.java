@@ -861,28 +861,47 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		}
 		
 		// using system locale
-		Locale locale = Locale.getDefault();
+		Locale systemLocale = Locale.getDefault();
 		// mail access info
 		String mailServerAddress = config.getProperty("config.MailServerAddress");
 		String imapPort = config.getProperty("config.IMAPPort");
 		
 		// message info
 		InternetAddress from = new InternetAddress("postmaster@localhost");		
-		String fontFamily = egovMessageSource.getMessage("ezEmail.sjw01", locale);
-		String subject = egovMessageSource.getMessage("ezEmail.sjw02", locale);
-		String suggestion = egovMessageSource.getMessage("ezEmail.sjw03", locale);
-		
-		String fontStyle = String.format("style='font-family: %s; font-size: %spx;'", fontFamily, 13);
 		
 		// process mailQuota
 		for (String userEmail : emailArray) {
 			
 			try {
+				String domainName = userEmail.substring(userEmail.indexOf("@") + 1, userEmail.length());
+				int tenantId = ezCommonService.getTenantIdByDomainName(domainName);
+				String primaryLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
+				Locale locale;
+				
+				switch (primaryLang) {
+				case "1":
+					locale = Locale.KOREA;
+					break;
+				case "2":
+					locale = Locale.US;
+					break;
+				case "3":
+					locale = Locale.JAPAN;
+					break;
+				default:
+					locale = systemLocale;
+				}
+				
+				String fontFamily = egovMessageSource.getMessage("ezEmail.sjw01", locale);
+				String subject = egovMessageSource.getMessage("ezEmail.sjw02", locale);
+				String suggestion = egovMessageSource.getMessage("ezEmail.sjw03", locale);
+				
+				String fontStyle = String.format("style='font-family: %s; font-size: %spx;'", fontFamily, 13);
+				
 				// user quota info
 				Double[] userQuotaData = ezEmailUtil.getUserQuota(userEmail);
 				
 				if (userQuotaData[0] == null) {
-					String domainName = userEmail.substring(userEmail.indexOf("@") + 1, userEmail.length());
 					userQuotaData = ezEmailUtil.getDefaultQuota(domainName);
 				}
 				
@@ -890,8 +909,9 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 														locale, ezEmailUtil);
 				
 				// KB
-				long mailboxUsage = imapAccess.getStorageUsageAndLimit()[0];
-				long mailboxQuota = imapAccess.getStorageUsageAndLimit()[1];
+				long[] storageUsageAndLimit = imapAccess.getStorageUsageAndLimit();
+				long mailboxUsage = storageUsageAndLimit[0];
+				long mailboxQuota = storageUsageAndLimit[1];
 				// MB to KB
 				double mailboxWarning = userQuotaData[1] * 1024;
 				
@@ -907,30 +927,28 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 					continue;
 				}
 				
-				int progressWidth = 200;
+				int usedPercent = (int) ((100 / (float) mailboxQuota) * mailboxUsage);
+				int unusedPercent = 100 - usedPercent;
 				
-				int usedPercent = (int) ((progressWidth / (float) mailboxQuota) * mailboxUsage);
-	            int unusedPercent = progressWidth - usedPercent;
+				logger.debug("used percent: {}", usedPercent);
+				logger.debug("unused percent: {}", unusedPercent);
+				logger.debug("============");
 				
-	            logger.debug(String.format("used percent: %s", usedPercent));
-	            logger.debug(String.format("unused percent: %s", unusedPercent));
-	            logger.debug("============");
-	            
-	            // content
-	            StringBuilder content = new StringBuilder();
-	            content.append(String.format("<span %s>%s</span><br/><br/>", fontStyle, subject));
-	            content.append("<table cellspacing='0;'>")
-	            	.append("	<tbody>")
-	            	.append("		<tr>")
-	            	.append("			<td style='background-color:#FFCC00;width:" + usedPercent + "px;border-left-style:solid;border-top-style:solid;border-bottom-style:solid;border-color:black;border-width:1'><font color='#000000' size='2' face='Tahoma'>" + humanReadableByteCount(mailboxUsage * 1024) + "</font></td>")
-	            	.append("			<td style='background-color:#ffffff;width:" + unusedPercent + "px;border-right-style:solid;border-top-style:solid;border-bottom-style:solid;border-color:black;border-width:1'>&nbsp;</td>")
-	            	.append("			<td><span " + fontStyle + "><b>" + humanReadableByteCount(mailboxQuota * 1024) + "</b></span></td>")
-	            	.append("		</tr>")
-	            	.append("	</tbody>")
-	            	.append("</table>");
-	            content.append(String.format("<br/><span %s>%s</span><br/>", fontStyle, suggestion));
+				// content
+				StringBuilder content = new StringBuilder();
+				content.append(String.format("<span %s>%s</span><br/><br/>", fontStyle, subject));
+				content.append("<table cellspacing='0;'>")
+					.append("	<tbody>")
+					.append("		<tr>")
+					.append("			<td style='background-color:#FFCC00;width:" + usedPercent * 2 + "px;border-left-style:solid;border-top-style:solid;border-bottom-style:solid;border-color:black;border-width:1'><font color='#000000' size='2' face='Tahoma'>" + humanReadableByteCount(mailboxUsage * 1024) + "</font></td>")
+					.append("			<td style='background-color:#ffffff;width:" + unusedPercent * 2 + "px;border-right-style:solid;border-top-style:solid;border-bottom-style:solid;border-color:black;border-width:1'>&nbsp;</td>")
+					.append("			<td><span " + fontStyle + "><b>" + humanReadableByteCount(mailboxQuota * 1024) + "</b></span></td>")
+					.append("		</tr>")
+					.append("	</tbody>")
+					.append("</table>");
+				content.append(String.format("<br/><span %s>%s</span><br/>", fontStyle, suggestion));
 				
-	            // send mail
+				// send mail
 				ezEmailService.sendMail(userEmail, jspw, null, from, new InternetAddress[]{ new InternetAddress(userEmail) }, null, null, subject, content.toString(), false, EmailImportance.HIGH);
 			} catch (Exception ex) {
 				ex.printStackTrace();
