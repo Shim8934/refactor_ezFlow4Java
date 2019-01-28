@@ -751,8 +751,14 @@
      			TBL_Board_BoardManage 
      		WHERE  
      			tenant_id = #v_TENANTID#
-     		AND
-     			companyid = #v_COMPANYID#
+     	]]>
+    	<isNotEqual property="isAllGroupBoard" compareValue="Y">
+    		<![CDATA[
+    		AND
+    			companyid = #v_COMPANYID#
+    		]]>
+		</isNotEqual>
+     	<![CDATA[
      		AND
      			BoardID = #v_pBoardID#
      		AND 
@@ -1696,8 +1702,14 @@
              	BoardGroupACL = #v_pBoardGroupACL#
        		WHERE  
        			tenant_id = #v_TENANTID#
-       		AND
-        		companyid = #v_COMPANYID#
+     	]]>
+    	<isNotEqual property="isAllGroupBoard" compareValue="Y">
+    		<![CDATA[
+    		AND
+    			companyid = #v_COMPANYID#
+    		]]>
+		</isNotEqual>
+     	<![CDATA[
        		AND
        			BoardID = #v_pBoardID#
         	AND 
