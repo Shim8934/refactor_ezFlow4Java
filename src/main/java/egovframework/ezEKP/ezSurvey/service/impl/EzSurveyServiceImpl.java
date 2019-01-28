@@ -1111,6 +1111,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		List<RespondentVO> totalUsers   = new ArrayList<>();
 		long responseId                 = ezSurveyDAO.getMaxResponseId(map);
 		SimpleDateFormat formatter      = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat formatter2     = new SimpleDateFormat("yyyy-MM-dd");
 		Date date                       = new Date();
 		String timeUTC                  = commonUtil.getDateStringInUTC(formatter.format(date), userInfo.getOffset(), true);
 		map.put("tenantId",  userInfo.getTenantId());
@@ -1129,6 +1130,21 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			result.put("code", 6);
 			return result;
 		}
+		
+		//Check date
+		String todayStr     = formatter2.format(new Date());
+		String endDateStr   = survey.getEndDate().substring(0, 10);
+		String startDateStr = survey.getStartDate().substring(0, 10);
+		Date dToday         = formatter2.parse(todayStr);
+		Date dEndDate       = formatter2.parse(endDateStr);
+		Date dStartDate     = formatter2.parse(startDateStr);
+		
+		if (dStartDate.compareTo(dToday) > 0 || dToday.compareTo(dEndDate) > 0) {
+			result.put("status", "error");
+			result.put("code", 7);
+			return result;
+		}
+		
 		
 		if (survey.getMultiAnswerFlag() == 0) {
 			int responseCnt = ezSurveyDAO.getUserResponseCntForSurvey(map);
@@ -1276,6 +1292,15 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				return result;
 			}
 			else {
+				//Check requirements
+				List<Long> checkReceivedSurvey = getUserReceivedSurveyList(userInfo, surveyId);
+				
+				if (checkReceivedSurvey == null || checkReceivedSurvey.size() == 0) {
+					result.put("status", "error");
+					result.put("code", 3);
+					return result;
+				}
+				
 				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 				String todayStr            = formatter.format(new Date());
 				String endDateStr          = survey.getEndDate().substring(0, 10);
