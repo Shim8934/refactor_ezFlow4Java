@@ -3006,7 +3006,7 @@ h2, #menu span {font-size: 12px;}
 .usersTr td:first-child {width: 30px;}
 .response-header {background-color: rgba(0, 115, 230, 0.64); color: #fff; display: flex; align-items: center; padding: 8px 10px; word-wrap: break-word; word-break: break-word; font-family: Malgun Gothic, "맑은 고딕";}
 .response-header >div:first-child {flex: 1;}
-.response-header >div:last-child {background-color: #fff; color: rgb(0, 115, 230); border-radius: 50%; font-size: 12px; cursor: pointer; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
+.response-header >div:last-child {margin-left: 10px; background-color: #fff; color: rgb(0, 115, 230); border-radius: 50%; font-size: 12px; cursor: pointer; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; font-weight: bold;}
 .response-users {padding: 10px; border-right: 1px solid #ddd; border-left: 1px solid #ddd;}
 .response-users >ul {padding-left: 20px;}
 .no-data {text-align: center; border: 1px solid #ddd; border-top: none;}
