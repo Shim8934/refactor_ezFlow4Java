@@ -3129,6 +3129,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		int eTextBodyIndex = bodyData.indexOf("</TEXTBODY>");
 		if (sTextBodyIndex > -1 && eTextBodyIndex > sTextBodyIndex) {
 			textBody = bodyData.substring(sTextBodyIndex + 10, eTextBodyIndex);
+			textBody = textBody.replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&amp;", "&");
 		}
 		
 //		// 다국어 발송 관련 변수들
