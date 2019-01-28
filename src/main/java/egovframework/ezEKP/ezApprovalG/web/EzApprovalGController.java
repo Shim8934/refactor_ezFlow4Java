@@ -3958,11 +3958,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
 		String orgDocID = request.getParameter("orgDocID");
+		String formId = "";
+		boolean isReform = false;
 		
 		// FormBuilder
 		ApprGFormVO reformInfo = ezApprovalGService.getReformInfoApprovalDocument(docID, userInfo.getCompanyID(), tenantID);
-		String formId = reformInfo.getFormID();
-		boolean isReform = "Y".equals(reformInfo.getReformFlag());
+		if (reformInfo != null) {
+			formId = reformInfo.getFormID();
+			isReform = "Y".equals(reformInfo.getReformFlag());
+		}
 		
 		if (orgDocID == null) {
 			orgDocID = "";
