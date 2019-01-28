@@ -455,9 +455,10 @@
 		function afterSaveSuccessfully(data) {
 			var code = data.code;
 			switch(code) {
-				case 0 : alert(SurveyMessages.strSave)     ;
+				case 0 : alert(SurveyMessages.strSave2)    ;
 						 resposeObj.responses = [];
-						 if (window.opener.SurveyItem) {window.opener.SurveyItem.reload(); window.close();}
+						 if (window.opener && window.opener.SurveyItem) {window.opener.SurveyItem.reload(); window.close();}
+						 if (parent && parent.SurveyItem)               {parent.SurveyItem.reload();}
 						 break;
 				case 1 : alert(SurveyMessages.strParamErr) ; break;
 				case 2 : alert(SurveyMessages.strError)    ; break;
@@ -809,35 +810,36 @@
 					var type = parseInt(qsWrappers[i].getAttribute("type"));
 					
 					switch(type) {
-					case 1 : 
-					case 2 :
-						checkResult = checkSltResponse(id);
-						break;
-					case 3 : 
-					case 4 :
-						checkResult = checkMtrResponse(id, type);
-						break;
-					case 5 : 
-					case 6 :
-						checkResult = checkTxtResponse(id, type);
-						break;
-					case 7 : 
-						checkResult = checkSliderResponse(id);
-						break;
-					case 8 : 
-						checkResult = checkRankingResponse(id);
-						break;
-					case 9 : 
-						checkResult = checkDrdwResponse(id);
-						break;
+						case 1 : 
+						case 2 :
+							checkResult = checkSltResponse(id);
+							break;
+						case 3 : 
+						case 4 :
+							checkResult = checkMtrResponse(id, type);
+							break;
+						case 5 : 
+						case 6 :
+							checkResult = checkTxtResponse(id, type);
+							break;
+						case 7 : 
+							checkResult = checkSliderResponse(id);
+							break;
+						case 8 : 
+							checkResult = checkRankingResponse(id);
+							break;
+						case 9 : 
+							checkResult = checkDrdwResponse(id);
+							break;
 					}
-					
 				}
+				
 				if (checkResult == 0 || checkResult == "") {
 					alert(id + SurveyMessages.strIncomplete);
 					result = "fail";
 					break;
 				}
+				
 				if (checkResult == 'break') {
 					result = "fail";
 					break;

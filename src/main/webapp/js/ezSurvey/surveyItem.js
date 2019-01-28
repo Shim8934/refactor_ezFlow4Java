@@ -518,7 +518,7 @@ var SurveyItem = function() {
 						today.setDate(today.getDate() - openDays);
 						var dateStr  = getStringFormatForDate(today);
 						
-						if (todayStr >= endDateStr && todayStr <= dateStr) {
+						if (todayStr >= endDateStr && dateStr <= endDateStr) {
 							var statImg     = document.createElement("img");
 							statImg.src     = "/images/ezSurvey/survey_result.png";
 							statImg.onclick = function(e) {openSurveyStatistic(e);}
