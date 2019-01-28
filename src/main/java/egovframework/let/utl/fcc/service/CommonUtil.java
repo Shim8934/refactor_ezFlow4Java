@@ -1016,12 +1016,37 @@ public class CommonUtil {
 					packageType = items[2];					
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				logger.debug("License Key Decryption failed.");
 			}			
 		}
 		
 		logger.debug("packageType=" + packageType);
 		
+		return packageType;
+	}
+	
+	// yy tenantID로 db에 있는것만 복호화하는게 아니고 요청된 licenseKey를 복호화하는 기능
+	public String licenseKeyDEC(String licenseKey) throws Exception {
+		String packageType = "";
+		
+		if (!licenseKey.equals("")) {
+			try {
+				// 라이센스키를 복호화한다.
+				licenseKey = egovFileScrty.decryptAES(licenseKey);
+				
+				logger.debug("Decrypted licenseKey=" + licenseKey);
+				
+				String items[] = licenseKey.split(":");
+
+				if (items.length >= 3) {
+					packageType = items[2];					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.debug("License Key Decryption failed.");
+			}			
+		}
 		return packageType;
 	}
 	

@@ -367,5 +367,24 @@
 		AND
 			PROPERTY_NAME = 'useMultiLogin'
 	</update>
+	
+	<update id="EzSystemAdminDAO.updateMenuChange" parameterClass="java.util.Map">
+		UPDATE 
+			TBL_PORTAL_MENU_COMP 
+		SET 
+			MENU_USED = #menuUse#
+		WHERE 
+			COMPANY_ID = #companyID# 
+		AND 
+			TENANT_ID = #tenantID#
+		<isNotEqual property="flagType" compareValue="all" >
+			<isNotEqual property="packageType" compareValue="standard" prepend="and">
+				MENU_ID IN 
+				<iterate property="menuId" open="(" close=")" conjunction=",">
+					#menuId[]#
+				</iterate>
+			</isNotEqual>
+		</isNotEqual>
+	</update>
 
 </sqlMap>

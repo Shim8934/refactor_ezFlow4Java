@@ -124,6 +124,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 			}
 		}
 		
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		
+		if (packageType.equals(CommonUtil.PT_MAIL) || packageType.equals(CommonUtil.PT_BASIC)) {
+			useMemo  = "NO";
+			returnUrl = "/ezEmail/mailMain.do";
+		}
+		
 		model.addAttribute("useMemo", useMemo);
 		model.addAttribute("mainUrl", returnUrl);
 		model.addAttribute("userDeptId", userInfo.getDeptID());
@@ -179,8 +186,15 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 				}
 			}
 			
+			// yy logo를 누르면 이동하는 url 수정 (라이센스가 standard가 아니면 mailMain.do를 호출하도록 수정)
+			String logoMainUrl = "/ezNewPortal/newPortalPortalPage.do";
+			String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		
+			if (packageType.equals(CommonUtil.PT_MAIL) || packageType.equals(CommonUtil.PT_BASIC)) {
+				logoMainUrl = "/ezEmail/mailMain.do";
+			}
 			
-			
+			model.addAttribute("logoMainUrl", logoMainUrl);
 			model.addAttribute("logoUrl", data.get("logoUrl"));
 			model.addAttribute("roleInfo", data.get("roleInfo"));
 			model.addAttribute("menuList", data.get("menuList"));
@@ -722,18 +736,19 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	public String help(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("help started");
 
-		/*String topMenuID = "";
-		
+		/*
+		String topMenuID = "";
 		if (req.getParameter("topMenuID") != null && !req.getParameter("topMenuID").equals("")) {
 			topMenuID = req.getParameter("topMenuID");
 		}
+				
+		model.addAttribute("lang", userInfo.getLang());
+		model.addAttribute("topMenuID", topMenuID);*/
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
-				
-		model.addAttribute("lang", userInfo.getLang());
+		logger.debug("packageType : " + packageType);
 		model.addAttribute("packageType", packageType);
-		model.addAttribute("topMenuID", topMenuID);*/
 		
 		logger.debug("help ended");
 		return "/ezNewPortal/help/index";
