@@ -247,13 +247,13 @@
 				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
 				var logicNum = parseInt($(this).attr("logic"));
 				
-				if (logicNum && logicNum != -1 && logicmap) {processLogicNode(prId, logicNum);}
+				if (!isNaN(logicNum) && logicNum != -1 && logicmap) {processLogicNode(prId, logicNum);}
 			});
 			
 			$(".prevQsArea").on("change", ".dropdown-wrap", function() {
 				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
 				var logicNum = parseInt($("select[name=drdw" + prId + "] option:selected").attr("logic"));
-				if (logicNum && logicNum != -1 && logicmap) {processLogicNode(prId, logicNum);}
+				if (!isNaN(logicNum) && logicNum != -1 && logicmap) {processLogicNode(prId, logicNum);}
 			});
 			
 			// 슬라이드 질문 답변 표시
@@ -266,7 +266,7 @@
 				var logicPoint = parseInt($("#slider" + prId).attr("logicPoint"));
 				var currentVal = parseInt(this.value);
 				
-				if (logicNum && logicNum != -1 && logicmap) {
+				if (!isNaN(logicNum) && logicNum != -1 && logicmap) {
 					if (currentVal > logicPoint) {
 						processLogicNode(prId, logicNum);
 					}
