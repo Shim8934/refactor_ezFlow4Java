@@ -206,7 +206,7 @@
 	        }
 				
 			function goToPage(page) {
-				var href = "/admin/ezCommunity/bbsList.do?bName=" + encodeURIComponent("${bName}") + "&code="+ encodeURIComponent("${code}") + "&keyword=" + encodeURIComponent(make_searchstring(pKeyWord)) + "&s_radio=" + encodeURIComponent("${sRadio}") + "&block="+encodeURIComponent("${nowBlock}");
+				var href = "/admin/ezCommunity/bbsList.do?bName=" + encodeURIComponent("${bName}") + "&code="+ encodeURIComponent("${code}") + "&keyword=" + encodeURIComponent(make_searchstring(pKeyWord)) + "&sRadio=" + encodeURIComponent("${sRadio}") + "&block="+encodeURIComponent("${nowBlock}");
 				if(parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage)) {
 					document.location.href = href + "&goToPage=" + encodeURIComponent(parseInt(page));
 				}
@@ -285,13 +285,6 @@
 						<li class="important"><span onClick="btn_write('${bName}')"><spring:message code = 'ezCommunity.t958' /></span></li>
 					</c:when>
 				</c:choose>
-				
-				<%-- 목록 버튼 안보이게 주석처리
-				<c:if test="${keyword != '' }">
-					<li><span onclick="btn_list('${bName}')"><spring:message code = 'ezCommunity.t168' /></span></li>
-				</c:if>
-				 --%>
-				
   			</ul>
 		</div>
 

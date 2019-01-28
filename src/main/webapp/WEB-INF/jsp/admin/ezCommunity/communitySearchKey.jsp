@@ -487,8 +487,8 @@
 							success : function(result) {
 								alert("<spring:message code = 'ezCommunity.t56' />");
 								
-								document.getElementById("txt_SearchQuery").value = "";
-								document.getElementsByName("cCateA")[0].value = "0";
+								//document.getElementById("txt_SearchQuery").value = "";
+								//document.getElementsByName("cCateA")[0].value = "0";
 								
 								openCommunityList();
 								window.parent.parent.frames[0].getApplicationListCount();
