@@ -154,7 +154,7 @@
 								</div>
 							</span>
 							<div id="frameDiv">
-								<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="border: solid 0px green; padding:10px;width:600px;height:96%;"></iframe>
+								<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="border: solid 0px green; padding:10px;width:96%;height:96%;"></iframe>
 							</div>
 						</div>
 					</div>
