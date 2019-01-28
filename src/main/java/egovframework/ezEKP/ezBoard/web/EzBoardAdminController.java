@@ -991,7 +991,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardName = boardProperty.getBoardName();
 		
 		/* 게시판 권한설정 시 companyID 조건 추가, 겸직한 사원의 경우 해당 겸직정보를 표출함 + 다국어 대응하도록 정보 가져옴 */
-		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID, userInfo.getCompanyID(), userInfo.getTenantId());
+		List<BoardPropertyVO> list = ezBoardAdminService.getBoardAccessList(boardID, isAllGroupBoard, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
