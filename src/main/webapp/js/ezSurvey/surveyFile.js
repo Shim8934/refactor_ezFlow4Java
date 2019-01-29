@@ -185,17 +185,20 @@ var SurveyFile = function() {
 					var code = data.code;
 					
 					switch(code) {
-						case 0 : afterUploadSuccessfully(liElmt, fileName, data.path, fileSize); break;
-						case 1 : alert(SurveyMessages.strParamErr)                            ; break;
-						case 2 : alert(SurveyMessages.strError)                               ; break;
-						default: alert(SurveyMessages.strError)                               ; return;
+						case 0 : afterUploadSuccessfully(liElmt, fileName, data.path, fileSize) ; break;
+						case 1 : alert(SurveyMessages.strParamErr); removeUploadFailFile(liElmt); break;
+						case 2 : alert(SurveyMessages.strError); removeUploadFailFile(liElmt)   ; break;
+						default: alert(SurveyMessages.strError); removeUploadFailFile(liElmt)   ; return;
 					}
 				},
 				error : function(error) {
-					//alert(SurveyMessages.strError);
+					alert(SurveyMessages.strUploadErr);
+					removeUploadFailFile(liElmt);
 				}
 			});
 		}
+		
+		function removeUploadFailFile(liElmt) {liElmt.parentElement.removeChild(liElmt);}
 		
 		function afterUploadSuccessfully(liElmt, filename, filePath, fileSize) {
 			if (!isStart && uploadType == "all") {

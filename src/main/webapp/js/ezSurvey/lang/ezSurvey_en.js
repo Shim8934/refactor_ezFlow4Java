@@ -1,5 +1,6 @@
 var SurveyMessages = {
 	strError     : "오류가 발생했습니다.",
+	strUploadErr : "파일을 업로드하는 동안 오류가 발생했습니다.",
 	strPrev      : "이전",
 	strNext      : "다음",
 	strTotal     : "총",
