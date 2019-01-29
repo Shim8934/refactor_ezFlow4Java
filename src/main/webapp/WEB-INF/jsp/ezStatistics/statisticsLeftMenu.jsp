@@ -221,18 +221,18 @@
 	                <li><span style="display: inline-block; width: 100%;" onclick="goPage(21)"><spring:message code='ezStatistics.t2005' /></span></li>
 	            </ul>
 	            -->
+		            <c:if test="${use_attitude == 'YES'}">
+			            <h2 class="off" id="menu4H2">
+		            		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="ATTITUDE" onclick="openFolder('menu4')" ><spring:message code='ezStatistics.kbm1' /></span>
+			            </h2>
+					    <ul class="lnbUL off" id="menu4UL">
+	              			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onClick="menu_change('ATTITUDE')"><spring:message code='ezStatistics.t1018' /></span></li>
+	              			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span></li>
+						    <%-- <li><span style="display:inline-block;width:100%;" onClick="menu_change('ATTITUDE')"><spring:message code='ezStatistics.t1018' /></span></li>
+						    <li><span style="display:inline-block;width:100%;" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span></li> --%>
+					    </ul>
+				    </c:if>
 	            </c:if>
-	            <c:if test="${use_attitude == 'YES'}">
-		            <h2 class="off" id="menu4H2">
-	            		<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" id="ATTITUDE" onclick="openFolder('menu4')" ><spring:message code='ezStatistics.kbm1' /></span>
-		            </h2>
-				    <ul class="lnbUL off" id="menu4UL">
-              			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onClick="menu_change('ATTITUDE')"><spring:message code='ezStatistics.t1018' /></span></li>
-              			<li><span class="sub_iconLNB tree_admin_stats"></span><span class="h2_text" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span></li>
-					    <%-- <li><span style="display:inline-block;width:100%;" onClick="menu_change('ATTITUDE')"><spring:message code='ezStatistics.t1018' /></span></li>
-					    <li><span style="display:inline-block;width:100%;" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span></li> --%>
-				    </ul>
-			    </c:if>
 		    </div>
 	    </div>
     </body>

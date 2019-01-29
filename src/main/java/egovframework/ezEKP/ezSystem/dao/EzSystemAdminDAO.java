@@ -111,5 +111,9 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 	public void updateMultiLogintype(Map<String, Object> paramMap) throws Exception {
 		insert("EzSystemAdminDAO.updateMultiLoginType", paramMap);
 	}
-
+	
+	public void updateMenuChange(Map<String, Object> paramMap) throws Exception {
+		update("EzSystemAdminDAO.updateMenuChange", paramMap);
+	}
+	
 }

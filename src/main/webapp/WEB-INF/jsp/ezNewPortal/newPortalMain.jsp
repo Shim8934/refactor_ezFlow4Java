@@ -129,9 +129,8 @@
 		<div id="noticePopupArea"></div>
   		<div id="contextMenuBlock" class="contextMenuBlock">
 			<div id="contextMenuBtn" class="contextMenuBtn" style="display: block;visibility:hidden;">
-				<div class="contextMenu">
-					<img src="/images/contextmenu/menu.png" />
-				</div>
+				<div class="contextMenu"></div>
+				
 			</div>
 			<div id="popupMenuBtn" class="popupMenuBtn" style="display: block;visibility:hidden;">
 				<div id="quickMenuBtn" class="quickMenuBtn">

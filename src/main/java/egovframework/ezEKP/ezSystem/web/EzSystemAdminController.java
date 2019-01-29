@@ -218,7 +218,7 @@ public class EzSystemAdminController {
 		}
 		
 		try {
-			ezSystemAdminService.updateSysParam(userInfo.getTenantId(), list, userInfo.getLocale());
+			ezSystemAdminService.updateSysParam(userInfo.getTenantId(), list, userInfo.getLocale(), userInfo.getCompanyID());
 		} catch (Exception e) {
 			return "{\"msg\":\"fail\"}";			
 		}

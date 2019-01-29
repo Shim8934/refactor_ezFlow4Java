@@ -301,7 +301,7 @@
 		
 		// 유틸메뉴 이벤트 모아둔 곳
 		var setUtilEvent = function () {
-			setEvent('logoUrl', '/ezNewPortal/newPortalPortalPage.do', 'main' ,'');
+			setEvent('logoUrl', '${logoMainUrl}', 'main' ,'');
 			if('${roleInfo}' === 'admin') {
 				setEvent('util_admin', '${utilAdminUrl}', '' ,'');	
 			}
