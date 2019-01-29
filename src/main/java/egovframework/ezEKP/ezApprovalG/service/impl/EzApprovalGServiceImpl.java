@@ -6348,7 +6348,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						strDeptID = drafterDept;
 					}
 					
-					String ret = getCabinetNum(strDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset());
+					String ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 					
 					logger.debug("serialNum = " + ret);
 					
@@ -6387,7 +6387,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (useReceiveDocNo.equals("NO") && totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && aprStateSign.equals("011")) {
 					strDeptID = receiveDept;
 					
-					String ret = getCabinetNum(strDeptID, "", companyID, userInfo.getTenantId(), userInfo.getOffset());
+					String ret = getCabinetNum(strDeptID, "", companyID, docID, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 					
 					logger.debug("serialNum = " + ret);
 					
@@ -14774,8 +14774,31 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		Document docXML = commonUtil.convertStringToDocument(sb.toString());
 		
+		//발신부서 최종결재자 불러오기 
+		String aprName = ezApprovalGDAO.getOrgLastAprMemberName(map);
+		
+		if (aprName == null || aprName.equals("")) {
+			aprName = docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim();
+		}
+		
+		//접수자 가져오기
+		String receiverName = ezApprovalGDAO.getreceiverName(map);
+		
+		if (receiverName == null || receiverName.equals("")) {
+			receiverName = docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim();
+		}
+		
 		if (docXML.getElementsByTagName("DOCNO").getLength() > 0) {
 			String docSN = docXML.getElementsByTagName("DOCNUMCODE").item(0).getTextContent().trim();
+			
+			//2018-08-27 강민수92 수신접수 최종 일괄결재시 임시로 recordid에 cabinetSN들어가게 수정
+			if (docSN.equals("undefined")) {
+				logger.debug("docSN is undefined");
+				docSN = getCabinetNum(deptID, "", companyID, docID, lang, tenantID, offSet);
+				docSN = docSN.replace("<REGNUM>", "").replace("</REGNUM>", "");
+				docSN = docSN.replace("<RESULT>", "").replace("</RESULT>", "");
+				docSN = getNDigitNum(docSN, 6);
+			}
 			
 			if (docSN != null && !docSN.equals("")) {
 				docSN = docSN.substring(docSN.length() - 6);
@@ -14832,9 +14855,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim(), 
 						docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim(),
 						writerDeptID, writerDeptName, writerDeptName2, "2", ezOrganService.getPropertyValue(userID, "title", tenantID), ezOrganService.getPropertyValue(userID, "title2", tenantID),
-						docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(), "", docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(),
+						aprName, "", docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(),
 						docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim(),
-						commonUtil.getTodayUTCTime("yyyy-MM-dd"), userName, userName2, deliverySN, "1", 
+						commonUtil.getTodayUTCTime("yyyy-MM-dd"), receiverName, receiverName, deliverySN, "1", 
 						docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim(), 
 						docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim(), 
 						docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent().trim(),
@@ -14973,6 +14996,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				numOfPage = "1";
 			}
 			
+			//수신처가 있는지 확인 후 있으면 등록대장 수신자에 넣어줌 
+			ArrayList<String> receiptNameList = new ArrayList<String>();
+			
+			receiptNameList = ezApprovalGDAO.getReceiptPointNameList(map);
+			
+			String receiptName = "";
+			
+			if (receiptNameList.size() == 0) {
+				receiptName = "";
+			} else if (receiptNameList.size() == 1) {
+				receiptName = receiptNameList.get(0);
+				
+			} else if (receiptNameList.size() > 1) {
+				receiptName = receiptNameList.get(0) + " 외 " + (receiptNameList.size() - 1);
+			}
+			
 			strSQL = regDocToCabinet("0", docID, docSN, 
 					docXML.getElementsByTagName("CABINETID").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("DOCTITLE").item(0).getTextContent().trim(), 
@@ -14986,8 +15025,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(),
 					docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim(), 
 					commonUtil.getTodayUTCTime("").substring(0, 10),
-					docXML.getElementsByTagName("WRITERNAME").item(0).getTextContent().trim(),
-					docXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent().trim(), "", "1", 
+					receiptName, // 여기랑 밑에
+					receiptName, "", "1", 
 					docXML.getElementsByTagName("ORGDOCNUMCODE").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("SPECIALRECORDCODE").item(0).getTextContent().trim(), 
 					docXML.getElementsByTagName("PUBLICITYCODE").item(0).getTextContent().trim(), 

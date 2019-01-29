@@ -956,7 +956,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						sb.append("<p " + defaultFontAndSize + ">");
 				        sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
 				        sb.append("</p>");
-				        sb.append("<br/><br/>");
+//				        sb.append("<br/><br/>");
+				        sb.append("<p " + defaultFontAndSize + ">&nbsp;</p>");
+				        sb.append("<p " + defaultFontAndSize + ">&nbsp;</p>");
 				            
 						// analyze the message and retrieve the attached file list.
 						List<Map<String, String>> attachedFileList = new ArrayList<Map<String, String>>();
