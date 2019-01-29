@@ -703,10 +703,11 @@ public class EzCircularServiceImpl implements EzCircularService {
 				ezCircularDAO.deleteCircular(map);
 				ezCircularDAO.deleteCircularUser(map);
 				ezCircularDAO.deleteCircularAttach(map);
-				ezCircularDAO.moveCircular3(map);			// 2019-01-10 김민성 - 회람문서함에서 삭제한 문서 영구삭제시 link 삭제
 			} else {
 				ezCircularDAO.updateDeleteFlag(map);
+				map.put("memberID", userID);
 			}
+			ezCircularDAO.moveCircular3(map);			// 2019-01-25 김민성 - 회람문서함에서 삭제한 문서 영구삭제시 link 삭제
 		}
 		
 		logger.debug("deleteCircularList ended.");
