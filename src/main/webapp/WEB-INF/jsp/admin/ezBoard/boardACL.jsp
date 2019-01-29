@@ -139,6 +139,7 @@
 	            xmldom = null;
 	        }
 	
+	        /* 2019-01-28 홍승비 - 권한 저장 시 그룹사게시판 여부 데이터 추가 */
 	        function SaveACL() {
 	            if (selectTargetListXML == "") {
 	                alert("<spring:message code='ezBoard.t600'/>")
@@ -168,6 +169,7 @@
 	                strXML += "<REPLY>" + reply_OK.checked + "</REPLY>";
 	                strXML += "<DELETE>" + delete_OK.checked + "</DELETE>";
 	                strXML += "<POSTNOTICE>" + PostNotice.checked + "</POSTNOTICE>";
+	                strXML += "<ISALLGROUPBOARD>${isAllGroupBoard}</ISALLGROUPBOARD>";
 	                strXML += "</NODE>";
 	                strXML += "</NODES>";
 	                xmldom = loadXMLString(strXML);
