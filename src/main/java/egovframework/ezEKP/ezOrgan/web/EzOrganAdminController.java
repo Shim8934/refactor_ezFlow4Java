@@ -1709,7 +1709,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		String fileName = sExt;
-		fileName = userID + "_" + guid + "." + fileName;
+		fileName = commonUtil.detectPathTraversal(userID + "_" + guid + "." + fileName);
 	 
 		if (mode.equals("PICTURE")) {
 			serverPath = thumbPath;
@@ -1816,7 +1816,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			fileName = fileName.replace("+", "%2b");
 			fileName = fileName.replace(";", "%3b");
 			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
-			fileName = userID + "_" + guid + ".";
+			fileName = commonUtil.detectPathTraversal(userID + "_" + guid + ".");
 
 			if (mode.equals("PICTURE")) {
 				serverPath = thumbPath;
