@@ -368,7 +368,9 @@ public class EzEmailAdminLetterController {
 			
 			// 이동 할 편지지 디렉토리명 변경하기  (같은 위치에 옮겨졌을때 대비)
 			String exFolder = realPath + filePath + letterId;
+			exFolder = commonUtil.detectPathTraversal(exFolder);
 			String changeFolder = realPath + filePath + letterId + "-old"; // 변경할 디렉토리명
+			changeFolder = commonUtil.detectPathTraversal(changeFolder);
 			File exFile = new File(exFolder); // 변경 전
 			File chFile = new File(changeFolder); // 변경 후
 			exFile.renameTo(chFile); // 변경
@@ -566,10 +568,12 @@ public class EzEmailAdminLetterController {
 		String fileType = "html";
 		String filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
+		realPath = commonUtil.detectPathTraversal(realPath);
 		String fileName = "letter." + fileType;
 
 		// files/upload_mail/letterBoxUpload/.../...
 		filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId;
+		filePath = commonUtil.detectPathTraversal(filePath);
 		logger.debug("filePath=" + filePath);
 
 		String returnStr = "OK";
@@ -635,10 +639,12 @@ public class EzEmailAdminLetterController {
 		String fileType = "html";
 		String filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
+		realPath = commonUtil.detectPathTraversal(realPath);
 		String fileName = "letter." + fileType;
 
 		// files/upload_mail/letterBoxUpload/.../...
 		filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId;
+		filePath = commonUtil.detectPathTraversal(filePath);
 		logger.debug("filePath=" + filePath);
 
 		try {
@@ -692,8 +698,10 @@ public class EzEmailAdminLetterController {
 		String returnStr = "OK";
 
 		String realPath = commonUtil.getRealPath(request);
+		realPath = commonUtil.detectPathTraversal(realPath);
 		String filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
 		filePath = filePath + commonUtil.separator + letterBoxNo;
+		filePath = commonUtil.detectPathTraversal(filePath);
 
 		try {
 			deleteDirectory(new File(realPath + filePath));
@@ -723,9 +731,15 @@ public class EzEmailAdminLetterController {
 
 		return path.delete();
 	}
-
 	// 폴더 이동할때 fileroot를 옮기는 함수 (재은)   folderName, fileName, originPath, path, uploadPath, letterBox, letterId
-	public String moveFile(String folderName, String fileName, String originPath, String copyPath, String uploadPath, String letterBox, String letterId) {
+	public String moveFile(String folderName, String fileName, String originPath, String copyPath, String uploadPath, String letterBox, String letterId) throws Exception{
+		folderName = commonUtil.detectPathTraversal(folderName);
+		fileName = commonUtil.detectPathTraversal(fileName);
+		originPath = commonUtil.detectPathTraversal(originPath);
+		copyPath = commonUtil.detectPathTraversal(copyPath);
+		uploadPath = commonUtil.detectPathTraversal(uploadPath);
+		letterBox = commonUtil.detectPathTraversal(letterBox);
+		letterId = commonUtil.detectPathTraversal(letterId);
 		String path = copyPath + "/" + folderName;
 		String filePath = path + "/" + fileName;
 		File dir = new File(path);
@@ -836,9 +850,11 @@ public class EzEmailAdminLetterController {
 
 		// /files/upload_mail/letterBoxUpload/
 		String realPath = commonUtil.getRealPath(request);
+		realPath = commonUtil.detectPathTraversal(realPath);
 		String filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
 		filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId;
-
+		filePath = commonUtil.detectPathTraversal(filePath);
+		
 		try {
 			ezEmailAdminLetterService.deleteLetter(letterNo);
 
@@ -912,13 +928,16 @@ public class EzEmailAdminLetterController {
 		String fileName = "letter." + fileType;
 		String filePath = commonUtil.getUploadPath("upload_mail.LETTER", userInfo.getTenantId());
 		String realPath = commonUtil.getRealPath(request);
+		realPath = commonUtil.detectPathTraversal(realPath);
+		
 		logger.debug("filePath=" + filePath);
 
 		try {
 			returnJson = ezEmailAdminLetterService.selectDetailLetter(letterNo);
 
 			String letter = filePath + commonUtil.separator + returnJson.get("letterBoxNo") + "/" + returnJson.get("letterId") + "/" + fileName;
-
+			letter = commonUtil.detectPathTraversal(letter);
+			
 			File file = new File(realPath + letter);
 
 			if (!file.exists()) {

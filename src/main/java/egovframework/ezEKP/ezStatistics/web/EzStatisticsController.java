@@ -591,7 +591,6 @@ public class EzStatisticsController {
 	 * 전자결재 통계 Excel 내려받기 호출 함수
 	 * 양식별, 부서별, 개인별 통계 현황
 	 */
-   // sua!!!
 	@RequestMapping(value = "/ezStatistics/saticGetXlsTotalA.do", method = RequestMethod.POST)
 	public void qstResultAnalysisSaveTotalA(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("qstResultAnalysisSaveTotalA started");
