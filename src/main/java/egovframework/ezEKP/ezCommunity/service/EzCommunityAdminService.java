@@ -19,7 +19,7 @@ public interface EzCommunityAdminService {
 	List<CommunityClubVO> aspAdmitComGet1(String keyword, String sRadio, String multiData, int pageNum, String offSetMin, String companyID, int tenantID) throws Exception;
 	
 	/* 관리자 > 커뮤니티검색화면 표출(하단 리스트) 시 companyID 조건 추가 */
-	List<CommunityClubVO> aspSearchKeyGet1(String lang, int iQueryCount, String select, String query, String offSetMin, String companyID, int tenantID) throws Exception;
+	List<CommunityClubVO> aspSearchKeyGet1(String lang, int pageNum, String select, String query, String offSetMin, String companyID, int tenantID) throws Exception;
 	
 	CommunityClubVO admCommunityInfoEdit(String lang, String code, int tenantID) throws Exception;
 	

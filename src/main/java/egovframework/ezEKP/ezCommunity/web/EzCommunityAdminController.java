@@ -248,12 +248,9 @@ public class EzCommunityAdminController {
 			}
 		}
 		
-		int iQueryCount = totalCount - (pageNum -1) * pageSize;
+		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage);
 		
-		logger.debug("totalCount=" + totalCount + ",totalPage=" + totalPage + ",iQueryCount=" + iQueryCount);
-		logger.debug("iQueryCount=" + iQueryCount);
-		
-		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(primary, iQueryCount, searchType, searchValue, offSetMin, companyId, tenantId);
+		List<CommunityClubVO> clubList = ezCommunityAdminService.aspSearchKeyGet1(primary, pageNum, searchType, searchValue, offSetMin, companyId, tenantId);
 		if (clubList.size() > 0) {
 			for(CommunityClubVO club : clubList) {
 				club.setUserName(ezCommunityAdminService.getUserName(club.getC_SysopID().trim(), primary, companyId, tenantId));

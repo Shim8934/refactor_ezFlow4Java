@@ -341,70 +341,67 @@
 	<select id="EzCommunityAdminDAO.aspSearchKeyGet1"					parameterClass="Map"		resultClass="CommunityClubVO">
 		<![CDATA[
 			SELECT
-				*
+				c_clubno,
+				c_memberCnt,
+				c_name,
+				CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END AS c_clubname,
+				c_ClubConfirmType,
+				c_clubGubun,
+				c_sysopid,
+				DATE_ADD(DATE_FORMAT(c_regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as c_regdate,
+				DEPTID
 			FROM
-				(SELECT
-					c_clubno,
-					c_memberCnt,
-					c_name,
-					CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END AS c_clubname,
-					c_ClubConfirmType,
-					c_clubGubun,
-					c_sysopid,
-					DATE_ADD(DATE_FORMAT(c_regdate, '%Y-%m-%d %H:%i:%s'), INTERVAL +#v_OFFSETMIN# minute) as c_regdate,
-					DEPTID
+				TBL_C_CLUB A
+			INNER JOIN
+			   ((SELECT
+					D.CN, D.DEPARTMENT as DEPTID,
+					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+					D.TENANT_ID
 				FROM
-					TBL_C_CLUB A
-				INNER JOIN
-				   ((SELECT
-						D.CN, D.DEPARTMENT as DEPTID,
-						D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
-						D.TENANT_ID
-					FROM
-						TBL_USERMASTER D
-					WHERE
-						D.TENANT_ID = #tenantID#
-					AND
-						D.PHYSICALDELIVERYOFFICENAME = #companyID#)
-						
-					UNION ALL
-					
-					(SELECT
-						B.cn, A2.DEPTID,
-						C.EXTENSIONATTRIBUTE2 as COMPANYID,
-						A2.TENANT_ID
-					FROM
-						TBL_USERMASTER B
-					INNER JOIN
-						TBL_ADDJOBMASTER A2
-					ON
-						A2.CN = B.CN
-					AND
-						A2.TENANT_ID = B.TENANT_ID
-					RIGHT JOIN
-						TBL_DEPTMASTER C
-					ON
-						A2.DEPTID = C.CN
-					AND
-						B.TENANT_ID = C.TENANT_ID)) T
-				ON
-					A.C_SYSOPID = T.CN
-				AND
-					A.TENANT_ID = T.TENANT_ID
-				AND
-					A.COMPANYID = T.COMPANYID
-				INNER JOIN
-					TBL_C_CATEGORY E
-				ON
-					A.C_CATE_A = E.C_CODE
-				AND
-					A.TENANT_ID = E.TENANT_ID
+					TBL_USERMASTER D
 				WHERE
-					E.C_CAT = 'a'
+					D.TENANT_ID = #tenantID#
 				AND
-					CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END LIKE CONCAT('%', #v_STRQUERY#, '%')
+					D.PHYSICALDELIVERYOFFICENAME = #companyID#)
+					
+				UNION ALL
+				
+				(SELECT
+					B.cn, A2.DEPTID,
+					C.EXTENSIONATTRIBUTE2 as COMPANYID,
+					A2.TENANT_ID
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN
+					TBL_ADDJOBMASTER A2
+				ON
+					A2.CN = B.CN
 				AND
-					c_adminconfirm = 'Y'
+					A2.TENANT_ID = B.TENANT_ID
+				RIGHT JOIN
+					TBL_DEPTMASTER C
+				ON
+					A2.DEPTID = C.CN
+				AND
+					B.TENANT_ID = C.TENANT_ID)) T
+			ON
+				A.C_SYSOPID = T.CN
+			AND
+				A.TENANT_ID = T.TENANT_ID
+			AND
+				A.COMPANYID = T.COMPANYID
+			INNER JOIN
+				TBL_C_CATEGORY E
+			ON
+				A.C_CATE_A = E.C_CODE
+			AND
+				A.TENANT_ID = E.TENANT_ID
+			WHERE
+				E.C_CAT = 'a'
+			AND
+				CASE #primary# WHEN '1' THEN c_clubname ELSE c_clubname2 END LIKE CONCAT('%', #v_STRQUERY#, '%')
+			AND
+				c_adminconfirm = 'Y'
 		]]>
 		<isNotEqual property="v_STRSELECT" compareValue="0">
 			<![CDATA[
@@ -420,13 +417,9 @@
 				GROUP BY
 					C_CLUBNO, C_SYSOPID
 				ORDER BY
-					c_regdate ASC
-				LIMIT
-					#v_IQUERYCOUNT#) T2
-				ORDER BY
 					c_regdate DESC
 				LIMIT
-					10
+					#v_STARTROW# ,10
 			]]>
 	</select>
 	

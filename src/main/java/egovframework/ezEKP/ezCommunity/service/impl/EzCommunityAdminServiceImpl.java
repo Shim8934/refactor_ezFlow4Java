@@ -370,12 +370,12 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/* 관리자 > 커뮤니티검색화면 표출(하단 리스트) 시 companyID 조건 추가, deptID 가져오기 */
 	@Override
-	public List<CommunityClubVO> aspSearchKeyGet1(String primary, int iQueryCount, String select, String query, String offSetMin, String companyID, int tenantID) throws Exception {
+	public List<CommunityClubVO> aspSearchKeyGet1(String primary, int pageNum, String select, String query, String offSetMin, String companyID, int tenantID) throws Exception {
 		logger.debug("aspSearchKeyGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("primary", primary);
-		map.put("v_IQUERYCOUNT", iQueryCount);
+		map.put("v_STARTROW", 10 * (pageNum - 1));
 		map.put("v_STRSELECT", select);
 		map.put("v_STRQUERY", query);
 		map.put("v_OFFSETMIN", offSetMin);
