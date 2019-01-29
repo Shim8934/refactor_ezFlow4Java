@@ -3099,6 +3099,7 @@ h2, #menu span {font-size: 12px;}
 .qtip, .qtip-tip {max-width: 630px !important; z-index: 99999999;}
 .bnk-pointer {cursor: pointer !important;}
 .qtip-bootstrap .qtip-content {overflow-y: auto !important; max-height: 300px !important;}
+.mask {width: 100% !important; height: 100% !important; background-color: rgb(128, 128, 128); opacity: 0.3; position: absolute;}
 /*** survey title ***/
 .survey-title {margin: 0px; padding: 0px 10px; line-height: 48px; background: #edf7ff; border: 1px solid #2196f3; font-size: 16px; font-weight: bold; color: #333;}
 
