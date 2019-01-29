@@ -85,7 +85,7 @@ public class EzAttitudeController {
 	 * 근태정보관리
 	 * 근태입력관리 미입력자관리 관리내역
 	 */
-	@RequestMapping(value="/ezAttitude/attitudeManage.do")
+	@RequestMapping(value="/ezAttitude/attitudeManage.do", method = RequestMethod.GET)
 	public String attitudeManage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LOGGER.debug("attitudeManage started.");
 		
@@ -171,7 +171,7 @@ public class EzAttitudeController {
 	 * 사용자 좌측메뉴
 	 * 수정신청관리 -> 나의수정신청
 	 */
-	@RequestMapping(value="/ezAttitude/attModAppList.do")
+	@RequestMapping(value="/ezAttitude/attModAppList.do", method = RequestMethod.GET)
 	public String getAttModAppList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=false)String pageNum,
 			@RequestParam(required=false)String apprUserName,
@@ -210,7 +210,7 @@ public class EzAttitudeController {
 	 * 사용자 좌측메뉴
 	 * 수정신청관리 -> 수정신청관리
 	 */
-	@RequestMapping(value="/ezAttitude/manageAttModAppList.do")
+	@RequestMapping(value="/ezAttitude/manageAttModAppList.do", method = RequestMethod.GET)
 	public String adminGetAttModAppList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=false)String pageNum,
 			@RequestParam(required=false)String apprUserName,
@@ -283,7 +283,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태 미입력자 팝업
 	 */
-	@RequestMapping(value = "/ezAttitude/popupAbsentedList.do")
+	@RequestMapping(value = "/ezAttitude/popupAbsentedList.do", method = RequestMethod.GET)
 	public String popupAbsentedList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("popupAbsentedList started.");
 		
@@ -325,7 +325,7 @@ public class EzAttitudeController {
 	/**
 	 * 사용자 근태리스트 출력
 	 */
-	@RequestMapping(value = "/ezAttitude/getAttitudeList.do", produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/ezAttitude/getAttitudeList.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONArray getAttitudeList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/getAttitudeList started");
@@ -389,7 +389,7 @@ public class EzAttitudeController {
 	/**
 	 * 사용자 근태 추가 및 수정
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeSave.do")
+	@RequestMapping(value = "/ezAttitude/attitudeSave.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String attitudeSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeSave started");
@@ -466,7 +466,7 @@ public class EzAttitudeController {
 	/**
 	 * attitude Main
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeMain.do")
+	@RequestMapping(value = "/ezAttitude/attitudeMain.do", method = RequestMethod.GET)
 	public String attitudeMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeMain started");
 		LOGGER.debug("/ezAttitude/attitudeMain ended");
@@ -476,7 +476,7 @@ public class EzAttitudeController {
 	/**
 	 * attitude Main Left
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeLeft.do")
+	@RequestMapping(value = "/ezAttitude/attitudeLeft.do", method = RequestMethod.GET)
 	public String attitudeLeft(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeLeft started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -622,7 +622,7 @@ public class EzAttitudeController {
 	/**
 	 * 개인근태현황 main
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeUserMain.do")
+	@RequestMapping(value = "/ezAttitude/attitudeUserMain.do", method = RequestMethod.GET)
 	public String attitudeUserMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeUserMain started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -665,7 +665,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태타입 리스트
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeTypeList.do")
+	@RequestMapping(value = "/ezAttitude/attitudeTypeList.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONArray attitudeTypeList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeTypeList started");
@@ -710,7 +710,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태통계 리스트
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeStatisList.do")
+	@RequestMapping(value = "/ezAttitude/attitudeStatisList.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONArray attitudeStatisList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeTypeList started");
@@ -768,7 +768,7 @@ public class EzAttitudeController {
 	/**
 	 * 회사 휴일정보
 	 */
-	@RequestMapping(value = "/ezAttitude/getHolidayList.do")
+	@RequestMapping(value = "/ezAttitude/getHolidayList.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getHolidayList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/getHolidayList started");
@@ -831,7 +831,7 @@ public class EzAttitudeController {
 	/**
 	 * 작성화면
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeNewItem.do")
+	@RequestMapping(value = "/ezAttitude/attitudeNewItem.do", method = RequestMethod.GET)
 	public String attitudeWrite(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeNewItem started");
 		
@@ -904,7 +904,7 @@ public class EzAttitudeController {
 	/**
 	 * 수정신청작성화면
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeModItem.do")
+	@RequestMapping(value = "/ezAttitude/attitudeModItem.do", method = RequestMethod.GET)
 	public String attitudeModify(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeModItem started");
 		
@@ -953,7 +953,7 @@ public class EzAttitudeController {
 	/**
 	 * 작성 양식
 	 */
-	@RequestMapping(value = "/ezAttitude/getFormBody.do")
+	@RequestMapping(value = "/ezAttitude/getFormBody.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getFormBody(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/getFormBody started");
@@ -996,7 +996,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태 상세보기
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeItemView.do")
+	@RequestMapping(value = "/ezAttitude/attitudeItemView.do", method = RequestMethod.GET)
 	public String attitudeItemView(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeItemView started");
 		
@@ -1063,7 +1063,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태 삭제
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeDeleteItem.do")
+	@RequestMapping(value = "/ezAttitude/attitudeDeleteItem.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String attitudeDeleteItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeDeleteItem started");
@@ -1108,59 +1108,9 @@ public class EzAttitudeController {
 	}
 	
 	/**
-	 * 수정신청 저장
-	 */
-	@RequestMapping(value = "/ezAttitude/saveAttModApp.do")
-	@ResponseBody
-	public String modApplicationSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
-		LOGGER.debug("/ezAttitude/modApplicationSave started");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String userId = userInfo.getId();
-		String attitudeId = request.getParameter("attitudeId");
-		String changeDate = request.getParameter("changeDate");
-		String content = request.getParameter("content");
-		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId + "/modify-applications";
-		
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-		headers.set("x-user-host", request.getServerName());
-		
-		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
-		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-				.queryParam("userId", userId)
-				.queryParam("changeDate", changeDate)
-				.queryParam("content", content);
-		
-		RestTemplate rest = new RestTemplate();
-		
-		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-		
-		JSONParser jp = new JSONParser();
-		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-		
-		String status = resultBody.get("status").toString();
-		LOGGER.debug("status : " + status);
-		
-		String resultStatus = "";
-		if (status.equals("ok")) {
-			resultStatus = "success";
-		} else {
-			resultStatus = "error";
-		}
-		
-		LOGGER.debug("/ezAttitude/modApplicationSave ended");
-		
-		return resultStatus;
-	}
-	
-	/**
 	 * 근태 내용
 	 */
-	@RequestMapping(value = "/ezAttitude/getAttitudeItem.do")
+	@RequestMapping(value = "/ezAttitude/getAttitudeItem.do", method = RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getAttitudeItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/getAttitudeItem started");
@@ -1219,7 +1169,7 @@ public class EzAttitudeController {
 		return returnValue;
 	}
 	
-	@RequestMapping(value = "/ezAttitude/getIsAttitude.do")
+	@RequestMapping(value = "/ezAttitude/getIsAttitude.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String getIsAttitude(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/getIsAttitude started");

@@ -372,11 +372,10 @@
 			*/
 			function getAttiTypeList() {
 				$.ajax({
-					type : "POST",
+					type : "get",
 					dataType : "json",
 					async : true,
 					url : "/ezAttitude/attitudeTypeList.do",
-					data : {},
 					success : function(result) {
 						getAttiTypeList_After(result);
 					}
@@ -444,7 +443,7 @@
 			function getAttiStatisList() {
 				var pDate = $("#calTitle").text().trim(); 
 				$.ajax({
-					type : "POST",
+					type : "get",
 					dataType : "json",
 					async : true,
 					url : "/ezAttitude/attitudeStatisList.do",
@@ -467,7 +466,7 @@
 			*/
 			function getHolidayList() {
 				$.ajax({
-					type : "POST",
+					type : "get",
 					dataType : "json",
 					async : true,
 					url : "/ezAttitude/getHolidayList.do",
