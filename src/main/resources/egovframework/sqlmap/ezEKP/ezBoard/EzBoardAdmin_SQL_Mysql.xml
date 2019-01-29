@@ -1044,8 +1044,14 @@
       	      	TBL_Board_BoardManage A
               WHERE  
               	TENANT_ID = #v_TENANTID#
+		]]>
+		<isNotEqual  property="isAllGroupBoard" compareValue="Y">
+			<![CDATA[
               AND
           	  	COMPANYID = #v_COMPANYID#
+			]]>
+		</isNotEqual>
+		<![CDATA[
               AND
               	BOARDID = #v_PDEFAULTBOARDID# )
 		]]>
@@ -1720,37 +1726,51 @@
 	</update>
 		
 	<update id="EzBoardAdminDAO.setUnderBoardIDAcl_U" parameterClass="Map">
-		UPDATE TBL_Board_BoardManage
-        SET 
-        	BOARDID = #v_pBoardID#,
-            ACCESSID = #v_pAccessID#,
-            ACCESSNAME = #v_PACCESSNAME#,
-            ACCESSNAME2 = #v_PACCESSNAME2#,
-			<isEmpty property="v_PACCESSLEVEL">
-	            ACCESSLEVEL = NULL,
-			</isEmpty>
-			<isNotEmpty property="v_PACCESSLEVEL">
-	            ACCESSLEVEL = #v_PACCESSLEVEL#,
-			</isNotEmpty>
-            ACCESS_ = #v_PACCESS#,
-            PARENTBOARDID = #v_PPARENTBOARDID#,
-            BOARDADMIN_FG = #v_PBOARDADMIN_FG#,
-            LISTVIEW_FG = #v_PLISTVIEW_FG#,
-            READ_FG = #v_PREAD_FG#,
-            WRITE_FG = #v_PWRITE_FG#,
-            REPLY_FG = #v_PREPLY_FG#,
-            DELETE_FG = #v_PDELETE_FG#,
-            INHERIT_FG = #v_PINHERIT_FG#,
-            POSTNOTICE = #v_PPOSTNOTICE#,
-            BOARDGROUPACL = #v_PBOARDGROUPACL#
-        WHERE  
-        	TENANT_ID = #v_TENANTID#
-        AND
-        	COMPANYID = #v_COMPANYID#
-        AND
-        	ACCESSID = #v_PACCESSID#
-        AND 
-        	BOARDID = #v_PBOARDID#
+		<![CDATA[
+			UPDATE TBL_Board_BoardManage
+	        SET 
+	        	BOARDID = #v_pBoardID#,
+	            ACCESSID = #v_pAccessID#,
+	            ACCESSNAME = #v_PACCESSNAME#,
+	            ACCESSNAME2 = #v_PACCESSNAME2#,
+		]]>
+		<isEmpty property="v_PACCESSLEVEL">
+			<![CDATA[
+				ACCESSLEVEL = NULL,
+            ]]>
+		</isEmpty>
+		<isNotEmpty property="v_PACCESSLEVEL">
+			<![CDATA[
+            	ACCESSLEVEL = #v_PACCESSLEVEL#,
+            ]]>
+		</isNotEmpty>
+			<![CDATA[
+	            ACCESS_ = #v_PACCESS#,
+	            PARENTBOARDID = #v_PPARENTBOARDID#,
+	            BOARDADMIN_FG = #v_PBOARDADMIN_FG#,
+	            LISTVIEW_FG = #v_PLISTVIEW_FG#,
+	            READ_FG = #v_PREAD_FG#,
+	            WRITE_FG = #v_PWRITE_FG#,
+	            REPLY_FG = #v_PREPLY_FG#,
+	            DELETE_FG = #v_PDELETE_FG#,
+	            INHERIT_FG = #v_PINHERIT_FG#,
+	            POSTNOTICE = #v_PPOSTNOTICE#,
+	            BOARDGROUPACL = #v_PBOARDGROUPACL#
+	        WHERE  
+	        	TENANT_ID = #v_TENANTID#
+			]]>
+    	<isNotEqual property="isAllGroupBoard" compareValue="Y">
+    		<![CDATA[
+    		AND
+    			COMPANYID = #v_COMPANYID#
+    		]]>
+		</isNotEqual>
+     	<![CDATA[
+	        AND
+	        	ACCESSID = #v_PACCESSID#
+	        AND 
+	        	BOARDID = #v_PBOARDID#
+		]]>
 	</update>
 	
 	<update id="EzBoardAdminDAO.apprProperty_info" parameterClass="Map">

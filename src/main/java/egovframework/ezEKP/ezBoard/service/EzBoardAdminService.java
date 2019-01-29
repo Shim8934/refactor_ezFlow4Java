@@ -101,8 +101,8 @@ public interface EzBoardAdminService {
 
 	public void setUnderBoardIDAcl(BoardPropertyVO vo) throws Exception;
 
-	/* 2018-06-26 홍승비 - 권한전파 시 companyID 조건 추가 */
-	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID, String companyID, int tenantID) throws Exception;
+	/* 2018-06-26 홍승비 - 권한전파 시 companyID 조건 추가 / 2019-01-28 홍승비 - 그룹사게시판 플래그 추가 */
+	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID, String isAllGroupBoard, String companyID, int tenantID) throws Exception;
 
 	public void saveBoardProperty_appr(String boardID, String apprUserID, String pMode, int tenantID) throws Exception;
 
