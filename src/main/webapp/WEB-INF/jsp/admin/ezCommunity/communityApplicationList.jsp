@@ -165,7 +165,7 @@
 									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t67' /></td>";
 								}
 								
-								html += "<td style='width: 10%;'>" + item.userName +"</td>";
+								html += "<td style='width: 10%;'>" + item.userName + "(" + item.c_SysopID + ")" +"</td>";
 								
 								if (selectedTabId == "admitCommu") {
 									html += "<td style='width: 7%;'>" + item.c_RegDate.substring(0, 10) +"</td>";
