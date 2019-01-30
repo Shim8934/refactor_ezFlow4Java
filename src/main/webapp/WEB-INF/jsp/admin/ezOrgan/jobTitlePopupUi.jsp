@@ -18,10 +18,10 @@
 	<script type="text/javascript">
 //  	var cn = "";
  		var jobID = "";
-		var mode = "${mode}";
-		var type = "${type}";
-		var jobCnt = "${jobCnt}";
-		var companyID = "${companyID}";
+		var mode = "<c:out value='${mode}'/>";
+		var type = "<c:out value='${type}'/>";
+		var jobCnt = "<c:out value='${jobCnt}'/>";
+		var companyID = "<c:out value='${companyID}'/>";
 		var ReturnFunction;
 		var displayName1, displayName2, code, sort, useFlag;
 		

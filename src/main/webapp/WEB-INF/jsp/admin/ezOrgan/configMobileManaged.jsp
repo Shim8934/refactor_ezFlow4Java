@@ -12,9 +12,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 		
-		var userId = "${userId}";
-		var userName = "${userName}";
-		var adminOrder = "${adminOrder}";
+		var userId = "<c:out value='${userId}'/>";
+		var userName = "<c:out value='${userName}'/>";
+		var adminOrder = "<c:out value='${adminOrder}'/>";
 		var setUsed = 0;
 		var xhttp = null;
 		
