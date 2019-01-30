@@ -148,12 +148,12 @@
 <result property="currentWeather" 			column="CURRENTWEATHER" nullValue=" "/>
 <result property="todayWeather" 			column="TODAYWEATHER"  nullValue=" "/>
 </resultMap>
-<resultMap class="QuickLinkVO" id="QuickLinkVO">
+<!-- <resultMap class="QuickLinkVO" id="QuickLinkVO">
 <result property="quickLinkName"		column="quicklinkname"/>
 <result property="linkTypeUrl"			column="linktype"/>
 <result property="url"					column="url"/>
 <result property="size"					column="quicksize"/>
-</resultMap>
+</resultMap> -->
 
 <!-- 공지사항 포틀릿 가져오기 -->
 <select id="ezNewPortal.getNoticePortletList" parameterClass="Map" resultMap="BoardListVO">
@@ -374,7 +374,7 @@ AND
 </delete>
 
 <!-- 퀵 링크 불러오기 -->
-<select id="ezNewPortal.getQuickLinkList" parameterClass="Map" resultMap="QuickLinkVO">
+<select id="ezNewPortal.getQuickLinkList" parameterClass="Map" resultClass="QuickLinkVO">
 <![CDATA[
 SELECT
 	quicklinkid, 
