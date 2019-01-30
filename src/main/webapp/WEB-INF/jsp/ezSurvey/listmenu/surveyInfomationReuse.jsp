@@ -67,7 +67,7 @@
 		</div>
 	</div>
 	
-	<div id="helpTxt" class="${survey.attachFlag == 0 ? 'uploadHelp off' : 'uploadHelp'}"><spring:message code='ezSurvey.t74'/></div>
+	<div id="helpTxt" class="uploadHelp"><spring:message code='ezSurvey.t74'/></div>
 	<div class="survey-attach">
 		<div class="attach-bttn-div">
 			<span style="float:left;">
@@ -82,8 +82,6 @@
 				</div>
 				<c:if test="${survey.attachFlag == 0}">
 					<div class="divInform">
-						<span><spring:message code='ezSurvey.t72'/></span>
-						<span><spring:message code='ezSurvey.t73'/></span>
 					</div>
 				</c:if>
 			</div>

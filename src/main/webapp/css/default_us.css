@@ -3084,7 +3084,7 @@ h2, #menu span {font-size: 12px;}
 .textPanel {height: 480px; width: 640px;}
 .logicPanel {height: 640px; width: 600px;}
 .userPanel {height: 262px;}
-.hiddenBttn, .hidden-tab, .searchPanel.off, .uploadHelp.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off, .respondents-div.off {display: none;}
+.hiddenBttn, .hidden-tab, .searchPanel.off, .qstnImgFile, .qstnAudFile, .qstnVidFile, .optionFile, .userPanel.off, .logicPanel.off, .respondentPanel.off, .textPanel.off, .attach-zone.off, .attach-zone2.off, .surveyinfo-wrap.off, .respondents-div.off {display: none;}
 .surveydetail-header {padding-left: 10px; font-family: Malgun Gothic, "맑은 고딕";}
 .surveydetail-header ul {padding: 0px; margin: 0px; list-style: none;}
 .surveydetail-header ul li {display: block; float: left; margin: 0 3px 0 0px; height: 28px; padding: 0px; vertical-align: top; cursor: pointer; vertical-align: middle;}
