@@ -1225,7 +1225,7 @@
 			                	<ul class="pretextUL">
 			                    	<li class="preSubject">
 			                    		<span class="popup_open" onclick="MailReadOpen();">
-			                    			<img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />">
+			                    			<img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" title="<spring:message code='ezEmail.t99000001' />">
 			                    		</span>
 			                    		<span class="subjectText" id="PreH_subject" style="display:none;">
 			                    			<span class="subjectText" id="PreH_sub_subject"></span>
@@ -1281,7 +1281,7 @@
 			                	<ul class="pretextUL">
 			                    	<li class="preSubject">
 			                    		<span class="popup_open" onclick="MailReadOpen();">
-			                    			<img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />">
+			                    			<img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" title="<spring:message code='ezEmail.t99000001' />">
 			                    		</span>
 			                    		<span class="subjectText" id="PreW_subject" style="display:none;">
 			                    			<span class="subjectText" id="PreW_sub_subject"></span>

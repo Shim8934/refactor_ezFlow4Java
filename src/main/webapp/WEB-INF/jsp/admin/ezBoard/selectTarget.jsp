@@ -498,6 +498,10 @@
 				}
 				adCount = 0;
 				var xmlDOM = createXmlDom();
+				var adminOrgan = "";
+				if (isAllGroupBoard == "Y") {
+					adminOrgan = "y";
+				}
 
 				$.ajax({
 						type : "POST",
@@ -508,7 +512,8 @@
 							search : pMode + "::" + cnkeyword.value,
 							cell : 'company;description;title;displayName;mail',
 							prop : 'department',
-							type : 'user'
+							type : 'user',
+			        		adminOrgan : adminOrgan
 						},
 						success : function(result) {
 							xmlDOM = loadXMLString(result);

@@ -106,6 +106,7 @@
 		    var pMode = "new";
 		    var starttime;
 		    var endtime;
+		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onresize = function ()
@@ -141,7 +142,14 @@
 		            document.getElementById("btn_move").style.display = "none";
 		            document.getElementById("noti").style.display = "none";
 		        }
-		
+		        
+		        /* 2019-01-30 홍승비 - 그룹사게시판의 경우, 사용자단에서 권한설정 버튼 숨김 */
+		        if (BoardAdmin_FG == "true" && isAllGroupBoard == "Y") {
+			        if (parent.document.location.href != null && parent.document.location.href.indexOf("/admin/") < 0) {
+						document.getElementById("btn_acl").style.display = "none";
+			        }
+		        }
+		        
 		        var height = parseInt(document.documentElement.clientHeight - 200);
 		        
 		        if (ListView_FG == "true") {
@@ -1326,7 +1334,7 @@
 				<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li id="noti" style="display:none"><span onClick="ChangeNotiOrder()"><spring:message code='ezBoard.t4000' /></span></li> 
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
-			        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
+			        <li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
 		        </c:if>
 		        <li><span class="icon16 icon16_star" onClick="AddToMyBoards()"></span></li>
 		        <li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup(this)"></span></li>
