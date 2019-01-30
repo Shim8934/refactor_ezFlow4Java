@@ -115,7 +115,6 @@
 			surveyId : surveyId,
 			responses : []
 		};
-		console.log(survey);
 		userEvent();
 		
 		function getQuestions() {
