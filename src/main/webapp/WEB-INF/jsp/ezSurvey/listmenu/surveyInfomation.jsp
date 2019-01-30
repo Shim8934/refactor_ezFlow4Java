@@ -62,7 +62,7 @@
 		</div>
 	</div>
 	
-	<div id="helpTxt" class="uploadHelp off"><spring:message code='ezSurvey.t74'/></div>
+	<div id="helpTxt" class="uploadHelp"><spring:message code='ezSurvey.t74'/></div>
 	<div class="survey-attach">
 		<div class="attach-bttn-div">
 			<span style="float:left;">
@@ -76,8 +76,6 @@
 					<ul class="ulFiles"></ul>
 				</div>
 				<div class="divInform">
-					<span><spring:message code='ezSurvey.t72'/></span>
-					<span><spring:message code='ezSurvey.t73'/></span>
 				</div>
 			</div>
 		</div>
