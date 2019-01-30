@@ -2541,9 +2541,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		//커뮤니티 소개글 저장할때 줄바꿈이 안되서, \r\n을 <br>태그로 치환
-		clubVO.setC_ClubDesc(clubVO.getC_ClubDesc().replaceAll("\r\n", "<br>"));
-		
+		/* 2019-01-29 홍승비 - 개행문자 <br>태그로 치환하는 부분 제거 */
 		ezCommunityService.adminBasicOkUpdate(clubVO, code, userInfo.getTenantId());
 		
 		model.addAttribute("code", code);

@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -3117,5 +3118,18 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public void insertReuseAttachFileInfo(Map<String, Object> map) throws Exception {
 		insert("EzApprovalG.insertReuseAttachFileInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> getReceiptPointNameList(Map<String, Object> map) throws Exception {
+		return (ArrayList<String>) list("EzApprovalG.getReceiptPointNameList", map);
+	}
+
+	public String getOrgLastAprMemberName(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getOrgLastAprMemberName", map);
+	}
+
+	public String getreceiverName(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getreceiverName", map);
 	}
 }
