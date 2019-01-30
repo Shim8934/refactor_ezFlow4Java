@@ -675,4 +675,25 @@
 			form_del_flag VARCHAR(10) DEFAULT NULL
 			)
 	</statement>
+	
+	<select id="EzCommonDAO.checkTaskUrl" resultClass="String">
+			SELECT
+				menu_id
+			FROM
+				TBL_PORTAL_MENU
+			WHERE
+				menu_url LIKE '%taskIndex%'
+			AND
+				menu_id = 17
+			LIMIT 1
+	</select>
+	
+	<update id="EzCommonDAO.addJournalFormDelFlag">
+		UPDATE
+			TBL_PORTAL_MENU
+		SET
+			menu_url = '/ezTask/taskIndex.do'
+		WHERE
+			menu_id = 17
+	</update>
 </sqlMap>
