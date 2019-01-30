@@ -408,6 +408,11 @@
 							success : function(result) {
 								alert(result.diviTitle);
 								
+								var rowCount = document.getElementById("mainListBody").rows.length;
+								if (((rowCount - 1 ) == 0) && pCurPage > 1) {
+									pCurPage = pCurPage - 1;
+								}
+								
 								applicationCommuList();
 								window.parent.parent.frames[0].getApplicationListCount();
 							},
@@ -439,6 +444,11 @@
 							success : function(result) {
 								alert(result.diviTitle);
 								
+								var rowCount = document.getElementById("mainListBody").rows.length;
+								if (((rowCount - 1 ) == 0) && pCurPage > 1) {
+									pCurPage = pCurPage - 1;
+								}
+								
 								applicationCommuList();
 								window.parent.parent.frames[0].getApplicationListCount();
 							},
@@ -465,6 +475,11 @@
 							},
 						success : function(result) {
 							alert("<spring:message code = 'ezCommunity.t56' />");
+							
+							var rowCount = document.getElementById("mainListBody").rows.length;
+							if (((rowCount - 1 ) == 0) && pCurPage > 1) {
+								pCurPage = pCurPage - 1;
+							}
 							
 							applicationCommuList();
 							window.parent.parent.frames[0].getApplicationListCount();
