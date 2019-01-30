@@ -75,7 +75,8 @@
 					document.getElementById("processingSurvey").addEventListener("click", function(e) {getProcessingSurveyList();});
 					document.getElementById("finishedSurvey"  ).addEventListener("click", function(e) {getFinishedSurveyPage()  ;});
 					window.addEventListener("resize", function(e) {windowResize();}, false);
-					getAllSurveyList();
+					//getAllSurveyList();
+					getProcessingSurveyList();
 					windowResize();
 					$(".surveyList").mCustomScrollbar({theme : "dark"});
 				}
