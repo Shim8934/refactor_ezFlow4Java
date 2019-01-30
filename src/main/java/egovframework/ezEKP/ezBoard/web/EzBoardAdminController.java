@@ -1256,8 +1256,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		logger.debug("boardUnderGroupCopy started");
 
 		String boardID = request.getParameter("boardID");
+		String isAllGroupBoard = request.getParameter("isAllGroupBoard");
 		
 		model.addAttribute("boardID", boardID);
+		model.addAttribute("isAllGroupBoard", isAllGroupBoard);
 
 		logger.debug("boardUnderGroupCopy ended");
 		return "admin/ezBoard/boardUnderGroupCopy";
@@ -1274,6 +1276,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		
 		String boardID = request.getParameter("boardID");		
 		String type = request.getParameter("type");
+		String isAllGroupBoard = request.getParameter("isAllGroupBoard");
 		
 		// 권한전파 시 companyID 추가
 		List<BoardPropertyVO> list = ezBoardAdminService.getUnderBoardID("%"+boardID+"%", "2", userInfo.getTenantId());
@@ -1290,6 +1293,8 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 					vo2.setBoardID(vo1.getBoardID());
 					vo2.setCompanyID(userInfo.getCompanyID());
 					vo2.setTenantID(userInfo.getTenantId());
+					vo2.setIsAllGroupBoard(isAllGroupBoard);
+					vo2.setParentBoardID(vo1.getParentBoardID());
 					
 					ezBoardAdminService.setUnderBoardIDAcl(vo2);
 				}				
@@ -1299,7 +1304,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				BoardPropertyVO vo = list.get(i);
 				
 				/* 2018-06-26 홍승비 - 권한전파 시 companyID 삽입 추가 */
-				ezBoardAdminService.setUnderBoardIDAcl2(boardID, vo.getBoardID(), vo.getParentBoardID(), userInfo.getCompanyID(), userInfo.getTenantId());
+				ezBoardAdminService.setUnderBoardIDAcl2(boardID, vo.getBoardID(), vo.getParentBoardID(), isAllGroupBoard, userInfo.getCompanyID(), userInfo.getTenantId());
 			}
 		}		
 
