@@ -2043,7 +2043,7 @@ SELECT A.PORTLET_ID,
 SELECT distinct PROPERTY_VALUE  
   FROM tbl_tenant_config 
  WHERE PROPERTY_NAME = 'PrimaryLang' 
-   AND PROPERTY_VALUE <> ''
+   AND PROPERTY_VALUE IS NOT NULL
 ]]>
 </select>
 
