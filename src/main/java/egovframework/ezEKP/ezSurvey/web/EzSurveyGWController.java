@@ -504,10 +504,11 @@ public class EzSurveyGWController {
 		String srchOption    = request.getParameter("srchOption")  != null ? request.getParameter("srchOption")                    : "";
 		int listCntSize      = request.getParameter("listCntSize") != null ? Integer.parseInt(request.getParameter("listCntSize")) : -1;
 		int currentPage      = request.getParameter("currentPage") != null ? Integer.parseInt(request.getParameter("currentPage")) : -1;
+		int userMode         = request.getParameter("userMode")    != null ? Integer.parseInt(request.getParameter("userMode"))    : -1;
 		String sqlQuery      = "";
 		JSONObject result    = new JSONObject();
 		
-		logger.debug("pageMode: " + pageMode + " || Title: " + title + " || Creator name: " + creatorName + " || Start Date: " + startDate + " || End Date: " + endDate + " || Column: " + column + " || Order: " + order + " || Search mode: " + srchMode + " || Search option: " + srchOption + " || List count: " + listCntSize);
+		logger.debug("pageMode: " + pageMode + " || Title: " + title + " || Creator name: " + creatorName + " || Start Date: " + startDate + " || End Date: " + endDate + " || Column: " + column + " || Order: " + order + " || Search mode: " + srchMode + " || Search option: " + srchOption + " || List count: " + listCntSize + " || userMode: " + userMode);
 		
 		if (serverName.equals("") || pageMode.equals("") || userId.equals("") || currentPage < 1 || listCntSize < 1) {
 			logger.debug("Parameter error!");
@@ -518,7 +519,7 @@ public class EzSurveyGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			result = surveyService.getItemsBySearching(pageMode, currentPage, listCntSize, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption, order, column, userInfo);
+			result = surveyService.getItemsBySearching(pageMode, currentPage, listCntSize, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption, order, column, userInfo, userMode);
 		}
 		catch (Exception e) {
 			e.printStackTrace();

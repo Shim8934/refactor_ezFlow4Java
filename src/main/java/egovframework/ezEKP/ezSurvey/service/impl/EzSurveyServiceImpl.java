@@ -633,7 +633,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	
 	@SuppressWarnings("unchecked")
 	@Override
-	public JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String sqlQuery, String srchMode, String srchOption, String order, String column, LoginVO userInfo) throws Exception {
+	public JSONObject getItemsBySearching(String pageMode, int currentPage, int listCntSize, String title, String creatorName, String startDate, String endDate, String sqlQuery, String srchMode, String srchOption, String order, String column, LoginVO userInfo, int userMode) throws Exception {
 		JSONObject result   = new JSONObject();
 		String userId       = userInfo.getId();
 		int tenantId        = userInfo.getTenantId();
@@ -666,7 +666,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		title       = title.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
 		creatorName = creatorName.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
 		
-		SurveyItemSearchVO searchVO = new SurveyItemSearchVO(pageMode, listCntSize, tenantId, userId, primary, offsetMinute, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption);
+		SurveyItemSearchVO searchVO = new SurveyItemSearchVO(pageMode, listCntSize, tenantId, userId, primary, offsetMinute, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption, userMode);
 		List<SurveyVO> itemList     = new ArrayList<>();
 		
 		if (pageMode.equals("processing") || pageMode.equals("finish") || pageMode.equals("all")) {

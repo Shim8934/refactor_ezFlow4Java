@@ -176,7 +176,7 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 	}
 	
 	@Override
-	public JSONObject getSurveyItems(HttpServletRequest request, String userId, String pageMode, String title, String creatorName, String startDate, String endDate, String column, String order, String srchMode, String srchOption, String listCntSize, String currentPage) throws Exception {
+	public JSONObject getSurveyItems(HttpServletRequest request, String userId, String pageMode, String title, String creatorName, String startDate, String endDate, String column, String order, String srchMode, String srchOption, String listCntSize, String currentPage, int userMode) throws Exception {
 		String url                = "/rest/ezsurvey/survey-item/get";
 		Map<String, Object> param = new HashMap<String, Object>();
 		param.put("userId",      userId);
@@ -191,6 +191,7 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		param.put("srchOption",  srchOption);
 		param.put("listCntSize", listCntSize);
 		param.put("currentPage", currentPage);
+		param.put("userMode", userMode);
 		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}

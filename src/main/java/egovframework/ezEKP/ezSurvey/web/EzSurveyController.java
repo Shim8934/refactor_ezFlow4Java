@@ -416,8 +416,14 @@ public class EzSurveyController extends EgovFileMngUtil {
 		String srchMode      = request.getParameter("srchMode")    != null ? request.getParameter("srchMode")    : "";
 		String srchOption    = request.getParameter("srchOption")  != null ? request.getParameter("srchOption")  : "";
 		String listCntSize   = request.getParameter("listCntSize") != null ? request.getParameter("listCntSize") : "";
+		JSONObject userObj = surveyRestService.getUserInformation(request, user.getId());
+		int userMode = 0;
 		
-		logger.debug("pageMode: " + pageMode + " || Title: " + title + " || Creator name: " + creatorName + " || Start Date: " + startDate + " || End Date: " + endDate + " || Column: " + column + " || Order: " + order + " || Search mode: " + srchMode + " || Search option: " + srchOption + " || List count: " + listCntSize + " || Current page: " + currentPage);
+		if (userObj.get("status").toString().equals("ok")) {
+			userMode = ((Long)userObj.get("mode")).intValue();
+		}
+		
+		logger.debug("pageMode: " + pageMode + " || Title: " + title + " || Creator name: " + creatorName + " || Start Date: " + startDate + " || End Date: " + endDate + " || Column: " + column + " || Order: " + order + " || Search mode: " + srchMode + " || Search option: " + srchOption + " || List count: " + listCntSize + " || Current page: " + currentPage + " || userMode: " + userMode);
 		
 		JSONObject resultObj = new JSONObject();
 		
@@ -427,7 +433,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 			return resultObj.toString();
 		}
 		
-		resultObj = surveyRestService.getSurveyItems(request, user.getId(), pageMode, title, creatorName, startDate, endDate, column, order, srchMode, srchOption, listCntSize, currentPage);
+		resultObj = surveyRestService.getSurveyItems(request, user.getId(), pageMode, title, creatorName, startDate, endDate, column, order, srchMode, srchOption, listCntSize, currentPage, userMode);
 		
 		logger.debug("jsonGetSurveyItems end");
 		return resultObj.toString();

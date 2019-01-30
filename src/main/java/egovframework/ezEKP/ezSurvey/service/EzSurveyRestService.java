@@ -29,7 +29,7 @@ public interface EzSurveyRestService {
 	
 	//Survey item process(check, save, get, delete, change state)
 	public JSONObject saveSurveyItem(HttpServletRequest request, JSONObject surveyItem) throws Exception;
-	public JSONObject getSurveyItems(HttpServletRequest request, String userId, String pageMode, String title, String creatorName, String startDate, String endDate, String column, String order, String srchMode, String srchOption, String listCntSize, String currentPage) throws Exception;
+	public JSONObject getSurveyItems(HttpServletRequest request, String userId, String pageMode, String title, String creatorName, String startDate, String endDate, String column, String order, String srchMode, String srchOption, String listCntSize, String currentPage, int userMode) throws Exception;
 	public JSONObject deleteItems(HttpServletRequest request, String userId, List<String> itemList) throws Exception;
 	public JSONObject checkSurveyItems(HttpServletRequest request, String userId, List<String> itemList, int mode) throws Exception;
 	public JSONObject getSurveyInformation(HttpServletRequest request, String userId, String itemId, String mode) throws Exception;

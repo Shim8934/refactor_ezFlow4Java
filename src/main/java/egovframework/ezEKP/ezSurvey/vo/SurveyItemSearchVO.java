@@ -19,10 +19,11 @@ public class SurveyItemSearchVO {
 	private String searchOption;
 	private String today;
 	private List<Long> surveyIds;
+	private int userMode;
 	
 	public SurveyItemSearchVO() {}
 	
-	public SurveyItemSearchVO(String pageMode, int listCount, int tenantId, String userId, String primary, String offset, String title, String creatorName, String startDate, String endDate, String sqlOrder, String searchMode, String searhOption) {
+	public SurveyItemSearchVO(String pageMode, int listCount, int tenantId, String userId, String primary, String offset, String title, String creatorName, String startDate, String endDate, String sqlOrder, String searchMode, String searhOption, int userMode) {
 		this.pageMode     = pageMode;
 		this.listCount    = listCount;
 		this.tenantId     = tenantId;
@@ -36,6 +37,7 @@ public class SurveyItemSearchVO {
 		this.sqlOrder     = sqlOrder;
 		this.searchMode   = searchMode;
 		this.searchOption = searhOption;
+		this.userMode = userMode;
 	}
 	
 	public int getStartPoint() {
@@ -163,5 +165,13 @@ public class SurveyItemSearchVO {
 	
 	public void setPageMode(String pageMode) {
 		this.pageMode = pageMode;
+	}
+
+	public int getUserMode() {
+		return userMode;
+	}
+
+	public void setUserMode(int userMode) {
+		this.userMode = userMode;
 	}
 }
