@@ -23,7 +23,9 @@
 	<div class="header-wrapper">
 		<div class="surveydetail-header">
 			<ul class="on">	
-				<li class="off"><span id="saveResult"><spring:message code="ezSurvey.t17"/></span></li>
+				<c:if test="${survey.draftFlag ne 1}">
+					<li class="off"><span id="saveResult"><spring:message code="ezSurvey.t17"/></span></li>
+				</c:if>
 				<c:if test="${empty mode and user == creator.id}">
 					<li class="off"><span id="suvyDlt"><spring:message code="ezSurvey.t21"/></span></li>
 				</c:if>
@@ -113,7 +115,7 @@
 			surveyId : surveyId,
 			responses : []
 		};
-		
+		console.log(survey);
 		userEvent();
 		
 		function getQuestions() {
