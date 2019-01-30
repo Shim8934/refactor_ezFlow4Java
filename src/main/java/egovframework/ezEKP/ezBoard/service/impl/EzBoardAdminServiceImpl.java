@@ -385,7 +385,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 	}	
 
 	@Override
-	public List<BoardPropertyVO> getBoardAccessList(String boardID, String companyID, int tenantID) throws Exception {
+	public List<BoardPropertyVO> getBoardAccessList(String boardID, String isAllGroupBoard, String companyID, int tenantID) throws Exception {
 		logger.debug("getBoardAccessList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -393,6 +393,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PBOARDID", boardID);
 		map.put("v_TENANTID", tenantID);
 		map.put("v_COMPANYID", companyID);
+		map.put("isAllGroupBoard", isAllGroupBoard);
 
 		logger.debug("getBoardAccessList ended");
 		return ezBoardAdminDAO.getBoardAccessList(map);
@@ -1004,6 +1005,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PBOARDGROUPACL", vo.getBoardGroupACL());
 		map.put("v_COMPANYID", vo.getCompanyID());
 		map.put("v_TENANTID", vo.getTenantID());
+		map.put("isAllGroupBoard", vo.getIsAllGroupBoard());
 		
 		// 해당 userID가 여러 회사의 레코드를 가지고 있을 수 있으므로, companyID 조건이 필요하다.
 		int tempCount = ezBoardAdminDAO.getBoardManage(map);
@@ -1023,7 +1025,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/* 2018-06-26 홍승비 - 권한전파 시 companyID 조건 추가 */
 	@Override
-	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID, String companyID, int tenantID) throws Exception {
+	public void setUnderBoardIDAcl2(String defaultBoardID, String boardID, String parentBoardID, String isAllGroupBoard, String companyID, int tenantID) throws Exception {
 		logger.debug("setUnderBoardIDAcl2 started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -1033,6 +1035,7 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		map.put("v_PPARENTBOARDID", parentBoardID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
+		map.put("isAllGroupBoard", isAllGroupBoard);
 		
 		// 기존 게시판 권한을 삭제하고, 하위게시판에 권한을 전파한다. (기존 게시판권한 삭제 시 companyID 불필요)
 		ezBoardAdminDAO.deleteBoardManage(map);

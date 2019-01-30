@@ -2189,7 +2189,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         		numOfPage = "1";
         	}
 
-        	rtnVal = regDocToCabinet("0", newDocID, docSN, apprGDocListVO2.getCabinetID(), apprGDocListVO2.getDocTitle(), apprGDocListVO2.getWriterDeptID(), apprGDocListVO2.getWriterDeptName(), apprGDocListVO2.getWriterDeptName2(),
+        	rtnVal = regDocToCabinet("0", newDocID, docSN, apprGDocListVO2.getCabinetID(), apprGDocListVO2.getDocTitle(), deptID, deptName, deptName2,
         			"1", apprGDocListVO2.getAprMemberJobTitle(), apprGDocListVO2.getAprMemberJobTitle2(), "", "", apprGDocListVO2.getWriterName(), apprGDocListVO2.getWriterName2(), EgovDateUtil.getTodayTime().substring(0, 10),
         			"", "", "", "1", apprGDocListVO2.getOrgDocNumCode(), apprGDocListVO2.getSpecialRecordCode(), apprGDocListVO2.getPublicityCode(), apprGDocListVO2.getPublicityYN(), apprGDocListVO2.getLimitRange(), "1", numOfPage, hasAttach, seperateAttachXML, companyID, lang, tenantID, offSet, locale, "", "", "", "");
 
