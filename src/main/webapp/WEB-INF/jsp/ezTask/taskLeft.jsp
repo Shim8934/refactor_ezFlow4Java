@@ -166,11 +166,21 @@
 					success : function(xml) {
 						listdom = loadXMLString(xml);
 						count = getNodeText(listdom.documentElement.getElementsByTagName("CNT")[0]);
-			            count2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
-			            count3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
-			            $("#taskCnt").html(count);
-			            $("#task2Cnt").html(count3);
-			            $("#task3Cnt").html(count2);
+						count2 = getNodeText(listdom.documentElement.getElementsByTagName("CNT2")[0]);
+						count3 = getNodeText(listdom.documentElement.getElementsByTagName("CNT3")[0]);
+						
+						if (count != 0) {
+							$("#taskCnt").html(count);
+						}
+						
+						if (count3 != 0) {
+							$("#task2Cnt").html(count3);
+						}
+						
+						if (count2 != 0) {
+							$("#task3Cnt").html(count2);
+						}
+						
 					},
 					error : function() {
 						alert("<spring:message code='ezTask.t992' />");
