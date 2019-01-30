@@ -2154,7 +2154,7 @@ var SurveyCreate     = function() {
 		var sliderLw   = $("<input type='input' class='slider-lw' value='" + lowest  + "'/>");
 		slidWrap.append(sliderLw);
 		
-		var slideMain = $("<input type='range' class='slider-main'/>");
+		var slideMain = $("<input type='range' class='slider-main' value='0'/>");
 		slidWrap.append(slideMain);
 		
 		var sliderUp = $("<input type='input' class='slider-up' value='" + highest + "'/>");
@@ -2517,7 +2517,7 @@ var SurveyCreate     = function() {
 		var questionSilder = $("<div class='question-silder'></div>");
 		var silderWrap     = $("<div class='silder-wrap'></div>");
 		var low            = $("<span>" + lowest + "</span>");
-		var input          = $("<input type='range' class='slider-range' name='slider" + question["level"] + "' min='" + lowest + "' max='" + highest + "' step='" + sliderUnit + "'/>");
+		var input          = $("<input type='range' class='slider-range' value='" + lowest + "' name='slider" + question["level"] + "' min='" + lowest + "' max='" + highest + "' step='" + sliderUnit + "'/>");
 		var high           = $("<span>" + highest + "</span>");
 		var output         = $("<output for='slider" + question["level"] + "' id='slider" + question["level"] + "' class='slider-output' logic='" + logic + "' logicPoint='" + sliderLogicPoint + "' optionId = '" + optionId + "'></output>");
 		
