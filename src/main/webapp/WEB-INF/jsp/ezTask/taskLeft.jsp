@@ -10,68 +10,57 @@
 		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<style type="text/css">
-	    	#mCSB_1_container {
+			#mCSB_1_container {
 				margin-right: 0px;
 			}  	
-	    </style>
-	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
+		</style>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
-	    <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 
-	    <script type="text/javascript">	    	
-	        var _funCode = "<c:out value='${funCode}'/>";
-	        var _subCode = "<c:out value='${subCode}'/>";
-	        var defaultView = "<c:out value='${defaultView}'/>";
-	        var uselang = "<c:out value='${lang}'/>";
-	        var xmlDom_treeview = createXmlDom();	        
-	        var ch_selected = false;
+		<script type="text/javascript">	    	
+			var _funCode = "<c:out value='${funCode}'/>";
+			var _subCode = "<c:out value='${subCode}'/>";
+			var defaultView = "<c:out value='${defaultView}'/>";
+			var uselang = "<c:out value='${lang}'/>";
+			var xmlDom_treeview = createXmlDom();	        
+			var ch_selected = false;
 			var totalCnt = 0;
 			var sStartDate;
 			var sEndDate;
 			var typeCal;			
 			
-	        document.onselectstart = function () { return false; };
-	        window.onload = function () {	            
-
-	            if (navigator.userAgent.indexOf('Firefox') != -1) {
-	                document.body.style.MozUserSelect = 'none';
-	                document.body.style.WebkitUserSelect = 'none';
-	                document.body.style.khtmlUserSelect = 'none';
-	                document.body.style.oUserSelect = 'none';
-	                document.body.style.UserSelect = 'none';
-	            }
-	            
-	            var ua = navigator.userAgent;
-	            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {	    
-	                if ("3" == _funCode) {
-	                    //document.getElementById('Task').parentElement.onclick();
-	                    document.getElementById('Task').onclick();
-	                }
-	                else if ("7" == _funCode) {
-	                    //document.getElementById('Task').parentElement.onclick();
-	                    document.getElementById('Task').onclick();
-	                    //document.getElementById('Task_Search').parentElement.onclick();
-	                    document.getElementById('Task_Search').onclick();
-	                }
-	                else if ("11" == _funCode) {
-	                	//document.getElementById('Schedule_Config').parentElement.onclick();
-	                    document.getElementById('Schedule_Config').onclick();
-	                }
-	            }
-	            else {	                
-	                if ("3" == _funCode) {
-	                    document.getElementById('Task').click();
-	                }
-	                else if ("7" == _funCode) {
-	                    document.getElementById('Task').click();
-	                    document.getElementById('Task_Search').click();
-	                }	            	               
-	                else if ("11" == _funCode) {
-	                    document.getElementById('Schedule_Config').click();	                    
-	                }
-	            }
+			document.onselectstart = function () { return false; };
+			window.onload = function () {
+				if (navigator.userAgent.indexOf('Firefox') != -1) {
+					document.body.style.MozUserSelect = 'none';
+					document.body.style.WebkitUserSelect = 'none';
+					document.body.style.khtmlUserSelect = 'none';
+					document.body.style.oUserSelect = 'none';
+					document.body.style.UserSelect = 'none';
+				}
+				
+				var ua = navigator.userAgent;
+				
+				if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
+					if (defaultView === "taskre") {
+						document.getElementById("Task2").onclick();
+					} else if (defaultView === "taskdi") {
+						document.getElementById("Task3").onclick();
+					} else {
+						document.getElementById('Task').onclick();
+					}
+				} else {
+					if (defaultView === "taskre") {
+						document.getElementById("Task2").click();
+					} else if (defaultView === "taskdi") {
+						document.getElementById("Task3").click();
+					} else {
+						document.getElementById('Task').click();
+					}
+				}
 	            
 	            leftResize();
 		        $(".taskListBox").mCustomScrollbar({
