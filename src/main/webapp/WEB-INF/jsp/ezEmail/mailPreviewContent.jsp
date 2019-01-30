@@ -8,13 +8,11 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link href="${util.addVer('/css/previewmail.css')}" rel="stylesheet" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/css/ezMemo/memoContext.css')}">
-	    <script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script>
 	    <script language="javascript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezEmail.e1', 'msg')}"></script>
 	    <script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/Newemail.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/contextmenu.js')}"></script>
 	    <style> 
 			p { margin-bottom: 0; margin-top: 0; } 
 		</style>
@@ -37,77 +35,6 @@
 				        divsToHide[i].style.display = "none";
 				    }
 				}
-	        	
-	        	if(memoFlag === "YES") {
-		        	/* 마우스 오른쪽 메뉴 변수 */
-					var conObject = document.getElementById("context-menus");
-					init();
-					
-					/* 마우스 클릭 리스너를 초기 실행시킨다. */
-					function init() {
-						rightMouseListener();
-						leftMouseListener();
-					}
-	
-					/* 마우스 왼클릭 감지 */
-					function leftMouseListener() {
-						document.addEventListener("click", function(e) {
-							toggleOnOff(0);
-						})
-					}
-	
-					/* 마우스 우클릭 감지 */
-					function rightMouseListener() {
-						document.addEventListener("contextmenu", function(e) {
-							event.preventDefault();
-							toggleOnOff(1);
-							copy();
-							showMenu(event.pageX, event.pageY);
-						});
-					}
-	
-					/* 마우스 메뉴 on & off */
-					function toggleOnOff(num) {
-						num === 1 ? conObject.classList.add("active") : conObject.classList.remove("active");
-					}
-	
-					/* 마우스 클릭한 지점에서 메뉴 보여줌 */
-					function showMenu(contextLeft, contextTop) {
-						var contextmenu = document.getElementById("context-menus");
-						var frameX = document.body.scrollWidth > 800 ? document.body.scrollWidth : window.innerWidth;
-						var frameY = document.body.scrollHeight > 610 ? document.body.scrollHeight : window.innerHeight;
-						var conWidth = contextmenu.offsetWidth;
-						var conHeight = contextmenu.offsetHeight;
-				
-						// 컨텍스트의 위치가 프레임의 범위를 벗어날 경우 위치 조정
-						if(contextLeft + conWidth >= frameX) {
-							contextLeft = frameX - conWidth + 9;
-						}
-						if(contextTop + conHeight >= frameY) {
-							contextTop = frameY - conHeight;
-						}
-						conObject.style.left = contextLeft + "px";
-						conObject.style.top = contextTop + "px";
-						mouseTop = contextTop + "px";
-					}
-					
-					$(".menus").click(function(){
-						var rightId = $(this).attr('id');
-						toggleOnOff(0);
-				  		
-				  		switch(rightId) {
-							case "menu1":
-								copyToClip();
-								break;
-							case "menu2":
-								btnPrint();
-								break;
-							case "menu3":
-								copyToMemo("preview");
-								break;
-						}
-					});
-	        	}
 		    }
 		    
 	        //보기설정 레이어팝업 바깥 클릭시 close되게 하기위한 코드 2018.03.05 강민수92
@@ -505,20 +432,6 @@
 		<!---->
 		</div>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
-		<!-- 마우스 오른쪽 메뉴 -->
-	  	<div id="context-menus" class="context-menus">
-	   		<table cellpadding="2" cellspacing="1" border="0" style="width:150px;" class="popuplist">
-	   			<tr>
-	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu1"><img src="/images/ezMemo/contextCopy.png" align="absmiddle" hspace="5"><spring:message code='ezMemo.t0060' /></span></td>
-	      		</tr>
-	      		<tr>
-	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu2"><img src="/images/ezMemo/contextPrint.png" align="absmiddle" hspace="5"><spring:message code='ezMemo.t0061' /></span></td>
-	      		</tr>
-	      		<tr>
-	      			<td onmouseover="javascript:this.style.backgroundColor='#f4f5f5'" onmouseout="javascript:this.style.backgroundColor='#ffffff'"><span class="menus" id="menu3"><img src="/images/ezMemo/contextMemoAdd.png" align="absmiddle" hspace="5"><spring:message code='ezMemo.t0062' /></span></td>
-	      		</tr>
-	    	</table>	
-	  	</div>
 	  	<c:if test="${previewMailImage == 'Y' && previewImageListHtml != ''}">
 		  	<div class="previewmail_addImage" style="margin-bottom:10px;font-family:<spring:message code='main.t246' />">
 				<p class="title"><spring:message code='ezEmail.0hun05' /></p>

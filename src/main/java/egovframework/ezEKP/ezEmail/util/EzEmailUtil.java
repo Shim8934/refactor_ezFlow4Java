@@ -1057,7 +1057,7 @@ public class EzEmailUtil {
 				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
 				
 				if (shareId != null) {
-					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+					aitem += "','&shareId=" + URLEncoder.encode(shareId, "UTF-8");
 				}
 				
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' \"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
@@ -1294,6 +1294,7 @@ public class EzEmailUtil {
 			
 			strContent = commonUtil.cleanValue(strContent);
 			
+			strContent = convertSpaceToNBSP(strContent);
 			String tempText = strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
 			StringBuilder tempText2 = new StringBuilder();
 			String[] tempTexts = tempText.split("<br />");
@@ -1303,6 +1304,8 @@ public class EzEmailUtil {
 			for (int i=0; i<tempTexts.length; i++) {
 				if (!tempTexts[i].equals("")) {
 					tempText2.append("<p " + defaultFontAndSize + ">" + tempTexts[i] + "</p>");
+				} else {
+					tempText2.append("<p " + defaultFontAndSize + ">&nbsp;</p>");
 				}
 			}
 			
@@ -1489,7 +1492,7 @@ public class EzEmailUtil {
 				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
 				
 				if (shareId != null) {
-					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+					aitem += "','&shareId=" + URLEncoder.encode(shareId, "UTF-8");
 				}
 				
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' onclick=\"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
@@ -4230,6 +4233,10 @@ public class EzEmailUtil {
 			}
 		}
 		logger.debug("outerMailInsertAddress end.");
+	}
+	
+	public String convertSpaceToNBSP(String src) {
+		return src.replace(" ", "&nbsp;");
 	}
 }
 

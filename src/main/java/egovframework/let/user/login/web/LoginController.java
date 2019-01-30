@@ -553,8 +553,8 @@ public class LoginController {
 	            	model.addAttribute("message2", errorMsg2);
 	            	model.addAttribute("message3", errorMsg3);
 	            	model.addAttribute("message4", errorMsg4);
-	            	model.addAttribute("message5", errorMsg4);
-	            	model.addAttribute("message6", errorMsg4);
+	            	model.addAttribute("message5", errorMsg5);
+	            	model.addAttribute("message6", errorMsg6);
 	            	model.addAttribute("isWrongPass", "Y");
 	            	
 	            	return "forward:/user/login/login.do";

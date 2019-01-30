@@ -694,8 +694,8 @@
 				form_del_flag
 			FROM
 				TBL_JOURNAL_FORM
-			where
-				rownum <= 1
+			WHERE
+				ROWNUM <= 1
 		]]>
 	</select>
 	

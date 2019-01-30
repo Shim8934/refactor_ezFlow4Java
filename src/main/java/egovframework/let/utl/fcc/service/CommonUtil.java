@@ -156,7 +156,29 @@ public class CommonUtil {
     	
     	logger.debug("init ended.");
     }
-	
+
+    /**
+     * Path Traversal 공격을 방지하기 위해 filePath에 ../ 혹은 ..\ 패턴이 있으면
+     * 예외를 발생시킨다.  
+     * @param filePath
+     * @return
+     * @throws Exception
+     */
+    public String detectPathTraversal(String filePath) throws Exception {
+    	if (filePath != null && !filePath.isEmpty()) {
+	    	String parentFolder1 = "../";
+	    	String parentFolder2 = "..\\";
+	    	
+	    	if (filePath.contains(parentFolder1) || filePath.contains(parentFolder2)) {
+	    		logger.debug("PathTraversal detected. filePath=" + filePath);
+	    		
+	    		throw new Exception("PathTraversal detected.");
+	    	}
+    	}
+    	
+    	return filePath;
+    }
+    
 	public LoginVO userInfo(String loginCookie){
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
@@ -994,12 +1016,37 @@ public class CommonUtil {
 					packageType = items[2];					
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				logger.debug("License Key Decryption failed.");
 			}			
 		}
 		
 		logger.debug("packageType=" + packageType);
 		
+		return packageType;
+	}
+	
+	// yy tenantID로 db에 있는것만 복호화하는게 아니고 요청된 licenseKey를 복호화하는 기능
+	public String licenseKeyDEC(String licenseKey) throws Exception {
+		String packageType = "";
+		
+		if (!licenseKey.equals("")) {
+			try {
+				// 라이센스키를 복호화한다.
+				licenseKey = egovFileScrty.decryptAES(licenseKey);
+				
+				logger.debug("Decrypted licenseKey=" + licenseKey);
+				
+				String items[] = licenseKey.split(":");
+
+				if (items.length >= 3) {
+					packageType = items[2];					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.debug("License Key Decryption failed.");
+			}			
+		}
 		return packageType;
 	}
 	

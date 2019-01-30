@@ -9,9 +9,11 @@ import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicLong;
 
 import javax.annotation.Resource;
@@ -77,7 +79,7 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 	}
 
 	@Override
-	public void updateSysParam(int tenantID, List<Map<String, String>> list, Locale locale) throws Exception {
+	public void updateSysParam(int tenantID, List<Map<String, String>> list, Locale locale, String companyID) throws Exception {
 		logger.debug("updateSysParam started. tenantID=" + tenantID);
 		
 		SysParamVO sysParamVO = new SysParamVO();
@@ -86,6 +88,17 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		for (int i = 0; i < list.size(); i++) {					
 			String paramName = list.get(i).get("name");
 			String paramValue = list.get(i).get("value");
+			
+			if (paramName.equals("LicenseKey")) {
+				String newPackageType = commonUtil.licenseKeyDEC(paramValue);
+				String oldPackageType = commonUtil.getPackageType(tenantID);
+				if (newPackageType.equals(oldPackageType)) {
+					continue;
+				} else {
+					// 바뀌었을때 새로운 packageType으로 디비 메뉴 맞춰줘야하는 것 추가
+					updateNewPortalMenuByPackageType(newPackageType, tenantID, companyID);
+				}
+			}
 			
 			sysParamVO.setName(paramName);
 			sysParamVO.setValue(paramValue);
@@ -647,5 +660,46 @@ public class EzSystemAdminServiceImpl implements EzSystemAdminService {
 		} else {
 			ezSystemAdminDAO.updateMultiLogintype(paramMap);
 		}
+	}
+
+	@Override
+	public void updateNewPortalMenuByPackageType(String newPackageType, int tenantID, String companyID) throws Exception {
+		logger.debug("updateNewPortalMenuByPackageType start.");
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		
+		Set<String> menuId = new HashSet<String>();
+
+		if (newPackageType.equals("mail")) {
+			System.out.println(newPackageType);
+			menuId.add("1");
+			menuId.add("13");
+		} else if (newPackageType.equals("basic")) {
+			System.out.println(newPackageType);
+			menuId.add("1");
+			menuId.add("2");
+			menuId.add("4");
+			menuId.add("13");
+		}
+		paramMap.put("menuId", menuId.toArray(new String[menuId.size()]));
+		paramMap.put("tenantID", tenantID);
+		paramMap.put("companyID", companyID);
+		paramMap.put("packageType", newPackageType);
+		paramMap.put("menuUse", 0);
+		paramMap.put("flagType", "all");
+		
+		ezSystemAdminDAO.updateMenuChange(paramMap);
+		
+		if (newPackageType.equals("") || newPackageType.equals("standard")) {
+			newPackageType = "standard";
+		} else {
+			paramMap.put("flagType", "notAll");
+		}
+		
+		paramMap.put("packageType", newPackageType);
+		paramMap.put("menuUse", 1);
+		
+		ezSystemAdminDAO.updateMenuChange(paramMap);
+		
+		logger.debug("updateNewPortalMenuByPackageType end.");
 	}
 }

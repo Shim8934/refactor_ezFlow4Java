@@ -2756,7 +2756,7 @@
 				(#menuItemSUID40#,#menuItemUUID17#,#topMenuEnUUID#,'In process','In process',2,' ','/ezApproval/apprMain.do?listType=3','main',' ',#tenantID#),
 				(#menuItemSUID41#,#menuItemUUID93#,#topMenuEnUUID#,'Dept.receipt folder','Dept.receipt folder',3,' ','/ezApprovalG/apprGMain.do?listType=4','main',' ',#tenantID#),
 				(#menuItemSUID42#,#menuItemUUID61#,#topMenuJaUUID#,'予約掲示','予約掲示',3,' ','/ezBoard/boardMain.do?subFunc=2','main',' ',#tenantID#),
-				(#menuItemSUID43#,#menuItemUUID43#,#topMenuKoUUID#,'업무관리','ToDo',1,' ','/ezSchedule/scheduleIndex.do?funCode=3','main',' ',#tenantID#);
+				(#menuItemSUID43#,#menuItemUUID43#,#topMenuKoUUID#,'업무관리','ToDo',1,' ','/ezSchedule/scheduleIndex.do?funCode=3','main',' ',#tenantID#)
     </insert>
     
   	<insert id="EzOrganAdminDAO.insertCompanyInfo_I23" parameterClass="Map">

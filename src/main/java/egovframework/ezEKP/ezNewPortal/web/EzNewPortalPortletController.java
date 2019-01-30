@@ -1054,4 +1054,11 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalCountPortlet End");
 		return "/ezNewPortal/portlets/cntPortlet"; 
 	}
+	
+	@RequestMapping(value = "/ezNewPortal/errorPortlet.do")
+	public String errorPortlet(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("errorPortlet Start");
+		logger.debug("errorPortlet End");
+		return "/ezNewPortal/portlets/errorPortlet"; 
+	}
 }

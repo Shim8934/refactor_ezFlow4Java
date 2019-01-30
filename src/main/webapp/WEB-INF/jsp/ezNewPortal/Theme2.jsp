@@ -359,15 +359,21 @@
  			li.appendChild(spanIcon);
  			li.appendChild(spanText);
 			li.addEventListener('click', function(){
+				var url = item.url;
+				
+				if (url.indexOf("http:") == -1 && url.indexOf("https:") == -1) {
+					url = "http://" + url;
+				}
+				
 				// size가 FULL인 경우 vs 아닌 경우
 				if(item.size === 'FULL') {
-					window.open("http://" + item.url, '_blank', '');
+					window.open(url, '_blank', '');
 				} else if (item.size.indexOf(':') > 0) {
 					var sizeArr = item.size.split(':');
 					var popupX = (window.screen.width / 2) - (sizeArr[0] /2);
 					var popupY = (window.screen.height / 2) - (sizeArr[1] /2);
 					var option = 'width='+sizeArr[0]+'px,height='+sizeArr[1]+'px, left='+popupX+', top='+popupY+', status = no, toolbar=no, menubar=no,location=no, resizable=0';
-					window.open("http://" + item.url, '_blank', option);
+					window.open(url, '_blank', option);
 				}
 			}); 			
  			
@@ -731,20 +737,35 @@
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
-			if (portletUrl.indexOf("ezNewPortal") != -1) {
+			
+			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
 				(function (portletId, portletUrl, portletName) {
 					$.ajax({
 						type : "POST",
 						dataType : "html",
 						data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
 						url : portletUrl,
+						tryCount : 0,
+						retryLimit : 3,
 						success : function(result) {
 							$("#" + portletId + "Portlet").append(result);
 							eventSetting(portletId, usedTheme);
+						},
+						error : function() {
+							this.url = "/ezNewPortal/errorPortlet.do";
+							this.tryCount++;
+							
+							if (this.tryCount <= this.retryLimit) {
+								//try again
+								$.ajax(this);
+								return;
+							}
+							
+							return;
 						}
 					});
 				}(portletId, portletUrl, portletName));
-			}
+			/* } */
 		}
 
 		var useQuestion = "<c:out value='${useQuestion}'/>";

@@ -248,18 +248,22 @@ var setImageName = function (type) {
 }
 
 var setImageElement = function (parent, imgsrc, type) {
+	var buttonDiv = document.createElement('div');
+	buttonDiv.className = 'quickMenuBtnDiv';
+	buttonDiv.style.height = '50px';
+
 	var imageWrap = document.createElement('div');
 	var imageElement = document.createElement('img');
 	imageElement.src = imgsrc;
 	imageElement.dataset.type = type;
 	setImageName(type);
 	if(type !== 'memo') {
-		imageElement.addEventListener('click', function () {
+		buttonDiv.addEventListener('click', function () {
 			handleQuickMenuOpen(type);
 		});		
 	} else {
 		imageElement.id = 'open-memo';
-		imageElement.addEventListener('click', function(event) {
+		buttonDiv.addEventListener('click', function(event) {
 			event.preventDefault();
 			if(document.getElementById('layer-popup').style.display === 'none') {
 				document.getElementById('noteBlock').style.visibility = 'visible';
@@ -274,9 +278,7 @@ var setImageElement = function (parent, imgsrc, type) {
 	}
 	
 	imageWrap.appendChild(imageElement);
-	
-	var buttonDiv = document.createElement('div');
-	buttonDiv.className = 'quickMenuBtnDiv';
+
 	buttonDiv.appendChild(imageWrap);
 	buttonDiv.appendChild(setImageName(type));
 	
@@ -387,34 +389,44 @@ var checkPopupMenuPosition = function () {
 	var width = contextMenuObject.replaceAll(popupMenuCss.width, 'px', '');
 	var popupMenuRadius = Number(width) / 2;	
 	
-	var contextMenuBtn = document.getElementById('contextMenuBtn');
+	var isRight = false;
+	var isBottom = false;
 	
-	if (top < 0) {
-		popupMenuBtn.style.top = '0';
-		contextMenuBtn.style.bottom = '';
-		contextMenuBtn.style.top = (popupMenuRadius - contextMenuObject.menuRadius) + 'px';
-	}
-	if (left < 0) {
-		popupMenuBtn.style.left = '0';
-		contextMenuBtn.style.right = '';
-		contextMenuBtn.style.left = (popupMenuRadius - contextMenuObject.menuRadius) + 'px';
-	}
+	var contextMenuBtn = document.getElementById('contextMenuBtn');
+
 	if (right < 0) {
+		isRight = true;
 		popupMenuBtn.style.right = '0';
 		contextMenuBtn.style.left = '';
 		contextMenuBtn.style.right = (popupMenuRadius - contextMenuObject.menuRadius) + 'px';
 	}
 	if (bottom < 0) {
+		isBottom = true;
 		popupMenuBtn.style.bottom = '0';
 		contextMenuBtn.style.top = '';
 		contextMenuBtn.style.bottom = (popupMenuRadius - contextMenuObject.menuRadius) + 'px';
+	}	
+	
+	if (!isBottom && (top < 0 || top === 'auto')) {
+		popupMenuBtn.style.top = '0';
+		contextMenuBtn.style.bottom = '';
+		contextMenuBtn.style.top = (popupMenuRadius - contextMenuObject.menuRadius) + 'px';
 	}
 	
-	var obj = getContextMenuPostion();
+	if (!isRight && (left < 0 || left === 'auto')) {
+		popupMenuBtn.style.left = '0';
+		contextMenuBtn.style.right = '';
+		contextMenuBtn.style.left = (popupMenuRadius - contextMenuObject.menuRadius) + 'px';
+	}
+
 	
+	var obj = getContextMenuPostion();
 	if(contextMenuBtn.style.left && contextMenuBtn.style.right) {
 		contextMenuBtn.style.left = '';		
 	}
+	if(contextMenuBtn.style.top && contextMenuBtn.style.bottom) {
+		contextMenuBtn.style.top = '';		
+	}	
 }
 
 var setMenuPostionResize = function () {
@@ -509,12 +521,11 @@ var checkContextMenuPosition = function () {
 		tmpLeft = (windowWidth - (popupMenuRadius + menuRadius));// + 'px';
 		isChanged = true;
 	}
-
 	if(isChanged) {
-//		$('#contextMenuBtn').css({
-//			'top': obj.offsetTop, 
-//			'left' : obj.offsetLeft
-//		});
+		$('#contextMenuBtn').css({
+			'top': obj.offsetTop, 
+			'left' : obj.offsetLeft
+		});
 		$('#contextMenuBtn').animate({
 			top: tmpTop,
 			left: tmpLeft,
@@ -553,7 +564,6 @@ var setContextMenuEvent = function () {
 	var contextMenuBtn = document.getElementById('contextMenuBtn');
 	
 	contextMenuBtn.addEventListener('click', function (event) {
-		event.preventDefault();
 		setQuickMenuBtn();
 		checkContextMenuPosition();
 	});	
