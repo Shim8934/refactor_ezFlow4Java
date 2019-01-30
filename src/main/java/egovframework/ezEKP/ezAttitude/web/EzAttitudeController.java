@@ -599,9 +599,6 @@ public class EzAttitudeController {
 			
 			status = resultBody.get("status").toString();
 			
-			JSONObject data = new JSONObject();
-			JSONArray list = new JSONArray();
-			
 			if(status.equals("ok")){
 				int totalAtt = Integer.parseInt(resultBody.get("data").toString());
 				model.addAttribute("totalAtt", totalAtt);
@@ -1178,7 +1175,7 @@ public class EzAttitudeController {
 		
 		String selectUserId = request.getParameter("selectUserId");
 		String userId = "";
-		if (selectUserId != "" && selectUserId != null) { //근태정보관리에서는 선택한 사원의 id 필요.
+		if (selectUserId != null && !selectUserId.equals("")) { //근태정보관리에서는 선택한 사원의 id 필요.
 			userId = selectUserId;
 		} else {
 			userId = userInfo.getId();
@@ -1514,7 +1511,7 @@ public class EzAttitudeController {
 		return resultj;
 	}
 	
-	@RequestMapping(value = "/ezAttitude/saticGetXlsAtt.do")
+	@RequestMapping(value = "/ezAttitude/saticGetXlsAtt.do", method = RequestMethod.POST)
 	public void qstResultsaticGetXlsAtt(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		LOGGER.debug("qstResultsaticGetXlsAtt started");
 		
@@ -1779,7 +1776,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태 수정 신청 상세
 	 */
-	@RequestMapping(value="/ezAttitude/attModAppDetail.do")
+	@RequestMapping(value="/ezAttitude/attModAppDetail.do", method = RequestMethod.GET)
 	public String attModAppDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=true)String attModId,
 			@RequestParam(required=false)String companyId,
@@ -1986,7 +1983,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태 수정 신청 상세
 	 */
-	@RequestMapping(value="/ezAttitude/attModAppMod.do")
+	@RequestMapping(value="/ezAttitude/attModAppMod.do", method = RequestMethod.GET)
 	public String attModAppMod(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=false)String attModId) throws Exception {
 		LOGGER.debug("attModAppMod started");
@@ -2051,7 +2048,7 @@ public class EzAttitudeController {
 	/**
 	 * 부서근태현황 main
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeDeptMain.do")
+	@RequestMapping(value = "/ezAttitude/attitudeDeptMain.do", method = RequestMethod.GET)
 	public String attitudeUserMain(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request,
 			@RequestParam(required=false)String deptid) throws Exception {
 		LOGGER.debug("attitudeUserMain started");
@@ -2224,7 +2221,7 @@ public class EzAttitudeController {
 	/**
 	 * 관리자 근태조회 리스트 조회
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeCheckList.do", produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/ezAttitude/attitudeCheckList.do",method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject getAttitudeCheckList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeCheckList started.");
@@ -2303,7 +2300,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태 상세보기
 	 */
-	@RequestMapping(value = "/ezAttitude/attitudeItemDetail.do")
+	@RequestMapping(value = "/ezAttitude/attitudeItemDetail.do", method = RequestMethod.GET)
 	public String attitudeItemDetail(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeItemDetail started");
 		
@@ -2431,7 +2428,7 @@ public class EzAttitudeController {
 	/**
 	 * 관리자 수정 작성화면
 	 */
-	@RequestMapping(value = "/ezAttitude/attAdminModItem.do")
+	@RequestMapping(value = "/ezAttitude/attAdminModItem.do", method = RequestMethod.GET)
 	public String attAdminModItem(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attAdminModItem started");
 		
@@ -2508,7 +2505,7 @@ public class EzAttitudeController {
 	/**
 	 *  관리자 작성화면
 	 */
-	@RequestMapping(value = "/ezAttitude/attAdminNewItem.do")
+	@RequestMapping(value = "/ezAttitude/attAdminNewItem.do", method = RequestMethod.GET)
 	public String attAdminNewItem(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attAdminNewItem started");
 		
@@ -2568,7 +2565,7 @@ public class EzAttitudeController {
 	/**
 	 *  관리자 작성화면2
 	 */
-	@RequestMapping(value = "/ezAttitude/attAdminNewItem2.do")
+	@RequestMapping(value = "/ezAttitude/attAdminNewItem2.do", method = RequestMethod.GET)
 	public String attAdminNewItem2(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attAdminNewItem started");
 		
@@ -2631,7 +2628,7 @@ public class EzAttitudeController {
 	/**
 	 * 사용자 근태 추가 및 수정
 	 */
-	@RequestMapping(value = "/ezAttitude/attAdminSave.do")
+	@RequestMapping(value = "/ezAttitude/attAdminSave.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String attAdminSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attAdminSave started");
@@ -2702,7 +2699,7 @@ public class EzAttitudeController {
 	/**
 	 * 관리자 근태 삭제
 	 */
-	@RequestMapping(value = "/ezAttitude/adminAttiDelItem.do")
+	@RequestMapping(value = "/ezAttitude/adminAttiDelItem.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String adminAttitudeDeleteItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeDeleteItem started");
@@ -2751,7 +2748,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태작성 - 조직도(받는사람,참조,숨은참조) 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezAttitude/attNewReceiverChoose.do")
+	@RequestMapping(value="/ezAttitude/attNewReceiverChoose.do", method = RequestMethod.GET)
 	public String attNewReceiverChoose(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
@@ -2847,7 +2844,7 @@ public class EzAttitudeController {
 	/**
 	 * 근태입력관리, 미입력자관리, 관리내역 엑셀 출력
 	 */
-	@RequestMapping(value = {"/ezAttitude/excelAttitudeListExport.do", "/ezAttitude/excelAbsentedListExport.do", "/ezAttitude/excelHistoryListExport.do"})
+	@RequestMapping(value = {"/ezAttitude/excelAttitudeListExport.do", "/ezAttitude/excelAbsentedListExport.do", "/ezAttitude/excelHistoryListExport.do"}, method = RequestMethod.GET)
 	public void excelFileExport(@CookieValue("loginCookie")String loginCookie, HttpServletResponse response, HttpServletRequest request) throws Exception{
 		LOGGER.debug("excelFileExport started."); 
 		
@@ -3181,7 +3178,7 @@ public class EzAttitudeController {
 	/**
 	 * 조직도 부서 및 사원목록 검색 함수
 	 */
-	@RequestMapping(value = "/ezAttitude/getSearchList.do", produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezAttitude/getSearchList.do", produces="text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getSearchList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception{
 	    LOGGER.debug("getSearchList started.");

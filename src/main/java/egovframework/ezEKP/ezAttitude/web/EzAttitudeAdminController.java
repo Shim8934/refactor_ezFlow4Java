@@ -64,11 +64,10 @@ public class EzAttitudeAdminController {
 	 * 관리자 근태관리 메인화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezAttitude/attitudeMain.do", method = RequestMethod.GET)
-	public String attitudeMain(@CookieValue("loginCookie") String loginCookie,
-			LoginVO userInfo) {
+	public String attitudeMain(@CookieValue("loginCookie") String loginCookie) {
 		LOGGER.debug("attitudeMain started");
 
-		userInfo = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -129,8 +128,6 @@ public class EzAttitudeAdminController {
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 			Calendar cal = Calendar.getInstance();
 			
-			
-			cal = Calendar.getInstance();
 			cal.setTime(sdf.parse(localDate));
 			cal.add(Calendar.DAY_OF_MONTH, -7);
 			
@@ -918,7 +915,6 @@ public class EzAttitudeAdminController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		
-		cal = Calendar.getInstance();
 		cal.setTime(sdf.parse(localDate));
 		cal.add(Calendar.DAY_OF_MONTH, -7);
 		
@@ -1077,7 +1073,6 @@ public class EzAttitudeAdminController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
 		
-		cal = Calendar.getInstance();
 		cal.setTime(sdf.parse(localDate));
 		cal.add(Calendar.DAY_OF_MONTH, -7);
 		
@@ -1506,7 +1501,6 @@ public class EzAttitudeAdminController {
 		String status = resultBody.get("status").toString();
 		LOGGER.debug("status : " + status);
 				
-		JSONObject jObject = new JSONObject();
 		if (status.equals("ok")) {
 			JSONArray deptList = (JSONArray) resultBody.get("data");
 			
