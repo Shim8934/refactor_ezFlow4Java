@@ -2158,8 +2158,12 @@ var SurveyCreate     = function() {
 		slidWrap.append(slideMain);
 		
 		var sliderUp = $("<input type='input' class='slider-up' value='" + highest + "'/>");
+		
+		var lwUpDiv = $("<div><span class='slider-lwExp'>최소값</span><span class='slider-upExp'>최대값</span></div>")
+		
 		slidWrap.append(sliderUp);
 		divWrap.append(slidWrap);
+		divWrap.append(lwUpDiv);
 		divWrap.append(sliderUnit);
 		
 		return divWrap;
@@ -2728,8 +2732,8 @@ var SurveyCreate     = function() {
 		if (!isValid(highestValue))      {sliderObj.error = "strSlider2"; return sliderObj;}
 		if (!isValid(unitValue))         {sliderObj.error = "strSlider5"; return sliderObj;}
 		if (lowestValue >= highestValue) {sliderObj.error = "strSlider3"; return sliderObj;}
-		if (((highestValue - lowestValue) % unitValue) != 0)  {sliderObj.error = "strSlider4"; return sliderObj;}
-		if (((highestValue - lowestValue) / unitValue) > 200) {sliderObj.error = "strSlider6"; return sliderObj;}
+		if (((highestValue - lowestValue) % unitValue) != 0)  {sliderObj.error = "strSlider10"; return sliderObj;}
+		if (((highestValue - lowestValue) / unitValue) > 200) {sliderObj.error = "strSlider10"; return sliderObj;}
 		
 		var option = [];
 		option.push({content : lowestValue, level : 0});
