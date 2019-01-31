@@ -143,6 +143,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.createPortalThemePortlet();
     	ezCommonService.insertPortalThemePortletInitdata();
     	ezCommonService.addJournalFormDelFlag();
+    	ezCommonService.updateTaskUrl();
     	
     	logger.debug("init ended.");
     }

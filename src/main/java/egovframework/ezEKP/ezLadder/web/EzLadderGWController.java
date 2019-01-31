@@ -153,7 +153,7 @@ public class EzLadderGWController {
 	 * 참여자 이름 검색으로 바로 추가 
 	 * */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/rest/ladder/ladders/writers/:.+}/searchUser", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ladder/ladders/writers/{writerId:.+}/searchUser", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject gwSelectSearchUser(@PathVariable String writerId, @RequestBody String [] searchUserName, LadderVO ladVO, HttpServletRequest request) {
 		
 		JSONObject result = new JSONObject();
