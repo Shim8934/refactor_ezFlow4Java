@@ -335,29 +335,31 @@
 	                            DocTitleObj = document.getElementById("doctitle");
 	
 	                        var EditorHeight = 500;
-	                        if (document.getElementById("body") != null) {
-	                            if (BODYTag.getAttribute("tagfreeheight")) {
-	                                EditorHeight = BODYTag.getAttribute("tagfreeheight");
-	                            }
-	                            div_BODY.innerHTML = BODYTag.innerHTML;
-	                        }
-	                        if (document.getElementById("body") != null) {
-	                        	if (isReform) {
-	                        		try {
-	                        			Conent_contentEditable(document.getElementById('body'));
-	                        			BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/reform/draftHtml.do?formID=" + parent.pFormID + "' frameborder='0'></iframe>";
-	                                } catch (e) { }
-	                        	}
-	                        	else if (BODYTag.getAttribute("editor") == null) {
-	                                isEditor = true;
-	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectApprovalEditor.do?type=APPROVALG&height=" + EditorHeight + "&isUsed=${isUsed}' frameborder='0'></ifrmae>";
-	                            }
-	                            else {
-	                                try {
-	                                	isEditor = false;
-	                                    Conent_contentEditable(document.getElementById('body'));
-	                                } catch (e) { }
-	                            }
+	                        if (parent.isUsed != "reuse"){
+		                        if (document.getElementById("body") != null) {
+		                            if (BODYTag.getAttribute("tagfreeheight")) {
+		                                EditorHeight = BODYTag.getAttribute("tagfreeheight");
+		                            }
+		                            div_BODY.innerHTML = BODYTag.innerHTML;
+		                        }
+		                        if (document.getElementById("body") != null) {
+		                        	if (isReform) {
+		                        		try {
+		                        			Conent_contentEditable(document.getElementById('body'));
+		                        			BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezApprovalG/reform/draftHtml.do?formID=" + parent.pFormID + "' frameborder='0'></iframe>";
+		                                } catch (e) { }
+		                        	}
+		                        	else if (BODYTag.getAttribute("editor") == null) {
+		                                isEditor = true;
+		                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectApprovalEditor.do?type=APPROVALG&height=" + EditorHeight + "&isUsed=${isUsed}' frameborder='0'></ifrmae>";
+		                            }
+		                            else {
+		                                try {
+		                                	isEditor = false;
+		                                    Conent_contentEditable(document.getElementById('body'));
+		                                } catch (e) { }
+		                            }
+		                        }
 	                        }
 	                    }
 	
