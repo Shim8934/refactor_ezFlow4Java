@@ -3232,7 +3232,7 @@ var SurveyCreate     = function() {
 		
 		if (qstnId) {
 			id = qstnId;
-			logicPoint = question.option[0]['logic'];
+			logicPoint = question['sliderLogicPoint'];
 		}
 		
 		var minVal = "";
@@ -3249,7 +3249,7 @@ var SurveyCreate     = function() {
 		var html = "";
 			html += "<div id='logic" + id + "' class='slidLogicArea'>";
 			html += "<input id='slidLogicInput" + id + "' class='prevSlidInput' type='text'>";
-			html += "<span id='LogicPoint" + id + "' class='logicSpan'></span>";
+			html += "<span id='LogicPoint" + id + "' class='logicSpan' style='display:none;'></span>";
 			html += "<span class='logicSpan'>" + SurveyMessages.strMore + "</span>";
 			html += "<img class='prevSlidArrow' src='/images/ezSurvey/arrow.png'>";
 			html += "<select id='slt" + id + "' class='logicSelect' name='slt" + id + "'>";
@@ -3262,7 +3262,16 @@ var SurveyCreate     = function() {
 		
 		if (question.logicFlag == 1) {
 			logicNum = qstnOpt[0].logic;
-			logic = SurveyMessages.strQs + " " + logicNum;
+			
+			if (!isNaN(logicNum) && logicNum != -1 && logicNum != 0) {
+				logic = SurveyMessages.strQs + " " + logicNum;
+				
+			} else if (logicNum == 0) {
+				logic = SurveyMessages.strLast;
+				
+			} else {
+				logic = SurveyMessages.strNoLogic;
+			}
 			
 			$("#frstBtnGrp" + id).css("display", "none");
 			$("#thrdBtnGrp" + id).css("display", "");
@@ -3402,7 +3411,7 @@ var SurveyCreate     = function() {
 					logic = SurveyMessages.strQs + " " + logicNum;
 					
 				} else {
-					logic = SurveyMessages.strLast; 
+					logic = SurveyMessages.strLast;
 				}
 				$("select[name=slt" + id + "]").css("display", "none");
 				$("#sltVal" + id).text(logic).css("display", "");
