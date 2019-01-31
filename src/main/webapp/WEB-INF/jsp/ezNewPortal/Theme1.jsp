@@ -491,13 +491,15 @@
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
 			
-			if (portletUrl.indexOf("ezNewPortal") != -1) {
+			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
 		  		(function (portletId, portletUrl, portletName) {
 					$.ajax({
 						type : "POST",
 						dataType : "html",
 						data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
 						url : portletUrl,
+						tryCount : 0,
+						retryLimit : 3,
 						success : function(result) {
 							$("#" + portletId + "Portlet").append(result);
 							
@@ -506,17 +508,22 @@
 							}
 							
 							eventSetting(portletId, usedTheme);
+						},
+						error : function() {
+							this.url = "/ezNewPortal/errorPortlet.do";
+							this.tryCount++;
 							
-							var portletPlus = document.getElementById(portletId + "Portlet").querySelector(".portletPlus");
-							
-							if (portletPlus != null) {
-								portletPlus.addEventListener("click", notice_all_close);
+							if (this.tryCount <= this.retryLimit) {
+								//try again
+								$.ajax(this);
+								return;
 							}
 							
+							return;
 						}
 					});
 				}(portletId, portletUrl, portletName));
-			}
+			/* } */
 		}
 
 		var useQuestion = "<c:out value='${useQuestion}'/>";

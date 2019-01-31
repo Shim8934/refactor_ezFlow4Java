@@ -3008,7 +3008,7 @@ INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_ord
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (14, '/ezQuestion/qstMain.do', 'G', 'icon_topmenu icon_nav_survey', 14);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (15, '/ezPoll/pollMain.do', 'G', 'icon_topmenu icon_nav_voting', 15);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (16, '/ezLadder/ladderMainPage.do', 'G', 'icon_topmenu icon_nav_laddergame', 16);
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (17, '/ezSchedule/scheduleIndex.do?funCode=3', 'G', 'icon_topmenu icon_nav_work', 17);
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (17, '/ezTask/taskIndex.do', 'G', 'icon_topmenu icon_nav_work', 17);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (18, '/ezMemo/memoMainPage.do', 'G', 'icon_topmenu icon_nav_memo', 18);
 UPDATE TBL_PORTAL_MENU SET menu_id = 0 WHERE default_order = 0;
 

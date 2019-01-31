@@ -506,4 +506,20 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addJournalFormDelFlag");
 		}
 	}
+
+	public void updateTaskUrl() {
+		try {
+			String taskUrl = select("EzCommonDAO.checkTaskUrl").toString();
+			
+			if (taskUrl == null) {
+				logger.debug("Task url has to update... update task module url...");
+				
+				update("EzCommonDAO.updateTaskUrl");
+			}
+		} catch (Exception e) {
+			logger.debug("Task url has to update... update task module url...");
+			
+			update("EzCommonDAO.updateTaskUrl");
+		}
+	}
 }

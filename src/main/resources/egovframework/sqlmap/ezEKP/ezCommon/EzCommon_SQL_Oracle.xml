@@ -706,4 +706,28 @@
 			form_del_flag VARCHAR2(10) DEFAULT NULL
 			)
 	</statement>
+	
+	<select id="EzCommonDAO.checkTaskUrl" resultClass="String">
+		<![CDATA[
+			SELECT
+				menu_id
+			FROM
+				TBL_PORTAL_MENU
+			WHERE
+				menu_url LIKE '%taskIndex%'
+			AND
+				menu_id = 17
+			AND
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<update id="EzCommonDAO.updateTaskUrl">
+		UPDATE
+			TBL_PORTAL_MENU
+		SET
+			menu_url = '/ezTask/taskIndex.do'
+		WHERE
+			menu_id = 17
+	</update>
 </sqlMap>

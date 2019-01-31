@@ -1294,6 +1294,7 @@ public class EzEmailUtil {
 			
 			strContent = commonUtil.cleanValue(strContent);
 			
+			strContent = convertSpaceToNBSP(strContent);
 			String tempText = strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
 			StringBuilder tempText2 = new StringBuilder();
 			String[] tempTexts = tempText.split("<br />");
@@ -1303,6 +1304,8 @@ public class EzEmailUtil {
 			for (int i=0; i<tempTexts.length; i++) {
 				if (!tempTexts[i].equals("")) {
 					tempText2.append("<p " + defaultFontAndSize + ">" + tempTexts[i] + "</p>");
+				} else {
+					tempText2.append("<p " + defaultFontAndSize + ">&nbsp;</p>");
 				}
 			}
 			
@@ -4230,6 +4233,10 @@ public class EzEmailUtil {
 			}
 		}
 		logger.debug("outerMailInsertAddress end.");
+	}
+	
+	public String convertSpaceToNBSP(String src) {
+		return src.replace(" ", "&nbsp;");
 	}
 }
 

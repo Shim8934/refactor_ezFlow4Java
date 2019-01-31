@@ -139,6 +139,7 @@
 	            xmldom = null;
 	        }
 	
+	        /* 2019-01-28 홍승비 - 권한 저장 시 그룹사게시판 여부 데이터 추가 */
 	        function SaveACL() {
 	            if (selectTargetListXML == "") {
 	                alert("<spring:message code='ezBoard.t600'/>")
@@ -168,6 +169,7 @@
 	                strXML += "<REPLY>" + reply_OK.checked + "</REPLY>";
 	                strXML += "<DELETE>" + delete_OK.checked + "</DELETE>";
 	                strXML += "<POSTNOTICE>" + PostNotice.checked + "</POSTNOTICE>";
+	                strXML += "<ISALLGROUPBOARD>${isAllGroupBoard}</ISALLGROUPBOARD>";
 	                strXML += "</NODE>";
 	                strXML += "</NODES>";
 	                xmldom = loadXMLString(strXML);
@@ -674,6 +676,7 @@
 	                    location.href = "/ezBoard/boardItemList.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	            }
 	        }
+	        
 	        /* 2018-09-03 홍승비 - 권한복사팝업 열리는 위치 수정 */
 	        function AclCopy() {
 	            var listview = new ListView();
@@ -691,6 +694,8 @@
 	            pwidth = pwidth - 350;
 	            window.open("/admin/ezBoard/boardAclList.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=660,width=700px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
+	        
+	        /* 2019-01-28 홍승비 - 권한전파 시 그룹사게시판 파라미터 전달, 사용하지 않는 부모게시판 파라미터 제거 */
 	        function UnderBoardCopy() {
 	            var pheigth = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
@@ -698,7 +703,7 @@
 	            pwidth = parseInt(pwidth) / 2;
 	            pheigth = pheigth - 192;
 	            pwidth = pwidth - 260;
-	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=170,width=458px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
+	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + pBoardID + "&isAllGroupBoard=${isAllGroupBoard}", "", "height=170,width=458px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 	    </script>
 		</head>

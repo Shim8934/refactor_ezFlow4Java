@@ -87,7 +87,7 @@
 								<c:if test="${approveFlag eq 1}">
 									<spring:message code="ezResource.t161"/>
 								</c:if>
-								<c:if test="${approveFlag eq 2}">
+								<c:if test="${approveFlag eq 0}">
 									<spring:message code="ezResource.t162"/>
 								</c:if>
           					</td>
