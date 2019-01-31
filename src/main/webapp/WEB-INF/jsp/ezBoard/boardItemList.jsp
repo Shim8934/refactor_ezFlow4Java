@@ -106,6 +106,7 @@
 		    var pMode = "new";
 		    var starttime;
 		    var endtime;
+		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onresize = function ()
@@ -141,7 +142,14 @@
 		            document.getElementById("btn_move").style.display = "none";
 		            document.getElementById("noti").style.display = "none";
 		        }
-		
+		        
+		        /* 2019-01-30 홍승비 - 그룹사게시판의 경우, 사용자단에서 권한설정 버튼 숨김 */
+		        if (BoardAdmin_FG == "true" && isAllGroupBoard == "Y") {
+			        if (parent.document.location.href != null && parent.document.location.href.indexOf("/admin/") < 0) {
+						document.getElementById("btn_acl").style.display = "none";
+			        }
+		        }
+		        
 		        var height = parseInt(document.documentElement.clientHeight - 200);
 		        
 		        if (ListView_FG == "true") {
@@ -1320,7 +1328,7 @@
 				<!-- <li style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
 		        <li id="noti" style="display:none"><span onClick="ChangeNotiOrder()"><spring:message code='ezBoard.t4000' /></span></li> 
 		        <c:if test="${boardInfo.boardAdmin_FG == true}">
-			        <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
+			        <li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63' /></span></li> 
 		        </c:if>
 			  </ul>
 			</div>
@@ -1389,7 +1397,7 @@
 		                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
 		                        <p class="mail_title" style="margin-left: 0px;">
 		                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
-		                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
+		                                <img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
 		                        </p>
 		                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
 		                        <dl class="mail_item">
@@ -1415,7 +1423,7 @@
 		                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
 		                        <p class="mail_title">
 		                            <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
-		                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
+		                                <img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
 		                        </p>
 		                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
 		                        <dl class="mail_item">
