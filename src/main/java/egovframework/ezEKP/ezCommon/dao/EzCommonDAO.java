@@ -509,7 +509,13 @@ public class EzCommonDAO extends EgovAbstractDAO {
 
 	public void updateTaskUrl() {
 		try {
-			select("EzCommonDAO.checkTaskUrl");
+			String taskUrl = select("EzCommonDAO.checkTaskUrl").toString();
+			
+			if (taskUrl == null) {
+				logger.debug("Task url has to update... update task module url...");
+				
+				update("EzCommonDAO.updateTaskUrl");
+			}
 		} catch (Exception e) {
 			logger.debug("Task url has to update... update task module url...");
 			
