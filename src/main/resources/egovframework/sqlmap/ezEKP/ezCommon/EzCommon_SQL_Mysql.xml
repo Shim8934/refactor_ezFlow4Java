@@ -688,7 +688,7 @@
 			LIMIT 1
 	</select>
 	
-	<update id="EzCommonDAO.addJournalFormDelFlag">
+	<update id="EzCommonDAO.updateTaskUrl">
 		UPDATE
 			TBL_PORTAL_MENU
 		SET
