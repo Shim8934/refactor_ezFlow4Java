@@ -436,7 +436,7 @@ FROM (
 		WHERE 
 			Q.TENANT_ID = #tenantId#
 		ORDER BY
-		    Q.REGDATE DESC
+		    LINKORDER ASC
 	) INFO
 	WHERE
 		INFO.viewflag = 'Y'
