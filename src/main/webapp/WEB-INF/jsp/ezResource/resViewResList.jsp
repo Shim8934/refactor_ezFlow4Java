@@ -448,7 +448,7 @@
 				</c:if>
 				<c:if test="${empty resBrdList}">
 					<tr>
-	    				<td colspan="7" style="text-align: center"><spring:message code='main.t00026' /></td>
+	    				<td colspan="6" style="text-align: center"><spring:message code='main.t00026' /></td>
 	    			</tr>
 				</c:if>
 			</table>

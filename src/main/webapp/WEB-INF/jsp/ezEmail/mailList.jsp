@@ -1263,7 +1263,7 @@
                 <span style="width:100%;height:100px;display:block;" onclick="event_secondRightClick();">
 	                <span class="previewmail_info" style="display:block;width:100%;">
                         <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display:none;">
-		                    <p class="mail_title"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreW_subject" ><span id="PreW_sub_subject" class="title_blodtxt"></span></span></p>
+		                    <p class="mail_title"><span class="icon_btn"><span onclick="MailReadOpen();" style="cursor:pointer;padding-right:5px;"><img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="<spring:message code="ezEmail.t99000001" />" border="0"></span></span><span id="PreW_subject" ><span id="PreW_sub_subject" class="title_blodtxt"></span></span></p>
 		                    <span class="mail_date" style="margin-right:10px;display:inline-block;"><span id="PreW_date" ><span id="PreW_sub_date"></span></span></span>
 		                    <dl class="mail_item">
 			                    <dt><spring:message code="ezEmail.t693" /></dt>
