@@ -202,10 +202,12 @@
 		            if (type == "WEEK") {
 	    	            document.getElementById("TR_Line2").style.display = "";
 	        	        weekonload(date.getFullYear(), parseInt(date.getMonth()) + 1, date.getDate());
+	        	        $('body').css('overflowY', 'hidden');
 		            }
 		            else if (type == "TODAY") {
 	    	            document.getElementById("TR_Line2").style.display = "";
 	        	        todayonlaod(date.getFullYear(), parseInt(date.getMonth()) + 1, date.getDate());
+	        	        $('body').css('overflowY', 'auto');
 	            	}
 	        	} else {
 	            	document.getElementById("TR_Line2").style.display = "none";
@@ -386,7 +388,7 @@
 	        }
 		</script>
 	</head>
-	<body class="mainbody" style="overflow-x:hidden; overflow-y:auto; padding-right: 6px;">
+	<body class="mainbody" style="overflow:hidden; padding-right: 6px;">
 		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
 		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
 		<div id="mainmenu" onload = "makePageSelPage()">
