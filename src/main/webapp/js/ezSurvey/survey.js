@@ -3018,13 +3018,10 @@ var SurveyCreate     = function() {
 			qsArea = $(".confirmQsArea");
 			$(".prevQsArea").html("");
 			
-		}
-		qsArea.html("");
-		
-		if (step == 4) {
 			var qstInf = SurveyCreate.getInfo();
 			confirmSurveyInfo(qstInf);
 		}
+		qsArea.html("");
 		
 		if (qstnList.length != 0) {
 			for (var i = 0; i < qstnList.length; i++) {
