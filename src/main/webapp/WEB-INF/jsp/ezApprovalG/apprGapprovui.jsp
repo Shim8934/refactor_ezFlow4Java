@@ -673,6 +673,7 @@
 		            }
 		        }
 		        
+		        var habYuiAprStateFlag = true;
 		        if (addLastKyulJeYN != "0") {
 		        	var hDocID ;
 					if (pDraftFlag == "HABYUI") {
@@ -693,6 +694,21 @@
                 			totalMemSN = result;
                 		}
                 	});
+		        	
+		        	$.ajax({
+                		type : "POST",
+                		dataType : "text",
+                		async : false,
+                		url : "/ezApprovalG/checkHabYuiState.do",
+                		data : {
+                				docID     : hDocID,
+                				},
+                		success : function(result) {
+                			if (result == "FALSE") {
+                				habYuiAprStateFlag = false;
+                			}
+                		}
+                	});
 		        }
 		        
 		        // getDocNumber를 이용한 문서번호 채번
@@ -700,7 +716,7 @@
 		        	if (approvalFlag == "S") {
 		        		// '현재진행 중인 결재가 개인순차합의가 아닌 경우' 추가
 		        		// 마지막 결재자가 합의인 경우 totalMemSN 값으로 해당 조건절 사용.
-			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7) || pAprLineType == strAprType4 || totalMemSN > 0) {
+			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7 && habYuiAprStateFlag) || pAprLineType == strAprType4 || totalMemSN > 0) {
 			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
 			                    var rtnval;
 			                    //rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
@@ -818,7 +834,7 @@
 		        if (rtnVal != "TRUE")  {
 		        	if (pDraftFlag != "SUSIN") {
 		        		if (approvalFlag == "S") {
-		        			if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7) || pAprLineType == strAprType4 || totalMemSN > 0) {
+		        			if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7  && habYuiAprStateFlag) || pAprLineType == strAprType4 || totalMemSN > 0) {
 		        				if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
 		        					rollbackDocNumber(drafterDeptid, "", pDocID);
 		        				}
