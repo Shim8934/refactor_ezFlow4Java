@@ -847,7 +847,11 @@ function ListView() {
                     objTd.appendChild(_TDCheckBox_Sub);
                 }
                 else {
+                	/* 2019-01-31 홍승비 - 게시자 이름 특문처리 (익명게시판 오류수정) */
                     if (SelectSingleNodeValue(oHeaders[j], "COLNAME").indexOf('WRITERNAME') > -1) {
+                    	strValue = ReplaceText(strValue, "&lt;", "<");
+                    	strValue = ReplaceText(strValue, "&gt;", ">");
+                    	strValue = ReplaceText(strValue, "&amp;", "&");	
                         if (getNodeText(oDatas[10]) != "0") {
                             objTd.innerHTML += MakeXMLString(strValue) + " " + titleOneLineCnt;
                         } else {

@@ -3,7 +3,7 @@
 }
 
 input, label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, .box2, .nobox, .leftbody, .message, .mainbody,  .listview2 td,.content td, .file td, .file2 td, .txt, .imgbtn{
-	font-family: 'malgun gothic', 'arial', 'verdana';
+	font-family: 'arial', 'arial', 'arial';
 	font-size:12px;
 	color: #393939;
 	text-decoration: none;
@@ -11,7 +11,7 @@ input, label, textarea, select, ul, li, h1, h2, table, th, .page, .point, .box, 
 }
 
 p, strong, h3 {
-	font-family: 'malgun gothic', 'arial', 'verdana';
+	font-family: 'arial', 'arial', 'arial';
 }
 
 input {
@@ -125,7 +125,7 @@ form{display:inline;margin:0}
 	background-color:white;
 	border:1px solid #777;
 	border-radius: 4px;
-	font-family:'malgun gothic','arial';
+	font-family:'arial', 'arial', 'arial';
 	/* border-left:1px solid #c4d0dc;
 	border-top:1px solid #c4d0dc;
 	border-right:1px solid #7792ad;
@@ -347,7 +347,7 @@ form{display:inline;margin:0}
 .left_webfolder{height:52px; background:#0470e4;}
 .left_webfolder span{background:url(/images/webfolder/left_webfolder.png) no-repeat left center ;display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
 .left_env{height:52px; background:#0470e4;}
-.left_env span{background:url(/images/kr/left/left_env.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
+.left_env span{background:url(/images/kr/left/left_env.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:arial; font-size:20px;}
 .left_sitemap{background:url(/images/kr/left/left_sitemap.gif) repeat ;height: 51px;}
 .left_notice{background:url(/images/left/left_notice.jpg) repeat #184c8b;height: 40px;}
 .left_memo{background:url(/images/left/left_memo.jpg) repeat #184c8b;height: 40px;}
@@ -357,6 +357,7 @@ form{display:inline;margin:0}
 .left_tasktime{background:url(/images/left/left_tasktime.jpg) left top repeat ;width:170px; height: 40px;}
 .left_circular{height:52px; background:#0470e4;}
 .left_circular span{background:url(/images/kr/left/left_circular.png) no-repeat left center ; display:inline-block; height:50px; line-height:48px; font-weight:normal; color:#fff; margin:0px 0px 0px 16px; padding:0px 0px 0px 33px; text-align:center; font-family:Malgun Gothic; font-size:20px;}
+
 
 
 .tasktime { background: url(/images/main/time_bg.gif) no-repeat left top; 
@@ -449,7 +450,7 @@ form{display:inline;margin:0}
     float: left;
     padding: 0px 4px;
     font-size:12px;
-	font-family:Malgun Gothic, Arial, Helvetica, sans-serif;
+	font-family:arial, Arial, Helvetica, sans-serif;
     line-height:28px;
     box-sizing:border-box;
 /*    border-top: 1px solid #c7c7c7;
@@ -885,7 +886,7 @@ form{display:inline;margin:0}
 .left_admin{
     font-size:17px;
 	font-weight:bold;
-	font-family:'malgun gothic','arial';
+	font-family:'arial', 'arial', 'arial';
 	color:rgb(93,93,93);
 	text-align:left;
 	padding-top:12px;
@@ -1242,7 +1243,7 @@ form{display:inline;margin:0}
 	border:1px solid #e0e0e2;	
 }
 
-.mainlist{table-layout:fixed; border:0 none !important;font-family:malgun gothic, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.mainlist{table-layout:fixed; border:0 none !important;font-family:arial, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .mainlist tr{height:34px}
 .mainlist tr th{text-align:left;border:0px;text-decoration:none; font-weight:normal; color:#333; font-size:12px; padding:5px 4px; border-top:1px solid #e2e3e6;border-bottom:1px solid #e2e3e6; background-color: #f1f3f5; height:21px}
 .mainlist tr th.title{width:100%; text-align:left;}
@@ -1251,7 +1252,7 @@ form{display:inline;margin:0}
 .mainlist tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle; border:0px;}
 
 
-.mainlist_free{table-layout:fixed; border:0 none !important;font-family:malgun gothic, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.mainlist_free{table-layout:fixed; border:0 none !important;font-family:arial, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 /* fomace */
 .mainlist_free tr td{height:23px}
 .mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:8px 4px; border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8; font-weight:normal; background-color: #f8f8fa;}
@@ -1261,7 +1262,7 @@ form{display:inline;margin:0}
 .mainlist_free tr td.title{width:100%; text-align:left; color:#5b5a5a;}
 .mainlist_free tr td.title span{width:95%; display:inline-block; font-size:12px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; vertical-align:middle;}
 
-.mainlist_depth{table-layout:fixed; border:0 none !important;font-family:malgun gothic, Verdana, Arial, Helvetica, sans-serif;font-size:12px;}
+.mainlist_depth{table-layout:fixed; border:0 none !important;font-family:arial, Verdana, Arial, Helvetica, sans-serif;font-size:12px;}
 .mainlist_depth tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:8px 4px; border-top:1px solid #ddd;border-bottom:1px solid #ddd; background:url(../images/sub/th_bg2.gif) #eee repeat-x bottom;}
 .mainlist_depth tr th.title{width:100%; text-align:left;}
 .mainlist_depth tr th.left {border-left:1px solid #ddd;}
@@ -1418,7 +1419,7 @@ form{display:inline;margin:0}
 /* pagenavi */
 #tblPageRayer {width:100% !important}
 .popup_pagenavi {border-top:1px solid #c8c8c8;}
-.pagenavi {float:none; margin: 0px; padding: 10px 0; line-height: normal; text-align: center; overflow:hidden;font-family:Dotum, "돋움", malgun gothic, "malgun gothic", Arial, Helvetica, sans-serif;}
+.pagenavi {float:none; margin: 0px; padding: 10px 0; line-height: normal; text-align: center; overflow:hidden;font-family:Dotum, "돋움", arial, "굴림", Arial, Helvetica, sans-serif;}
 .pagenavi span {display: inline-block; height: 27px; line-height: 26px; margin: 0px 2px; padding: 0px 9px 0px 9px; border: 1px solid #c8c8c8; -webkit-border-radius: 3px; -moz-border-radius: 3px; border-radius: 3px; box-sizing:border-box; font-size: 12px; text-align: center; font-weight: bold; color: #333; cursor: pointer;}
 .pagenavi span:hover {color: #ffffff;}
 .pagenavi span.on {color: #ffffff;}
@@ -1507,7 +1508,7 @@ form{display:inline;margin:0}
 	background-color:white;
 	border:1px solid #bbbbbb;
 	border-radius: 3px;
-	font-family:'malgun gothic','arial';
+	font-family:'arial', 'arial', 'arial';
 	cursor:pointer;
 	color:#000;
 	font-weight:bold;
@@ -1653,7 +1654,7 @@ form{display:inline;margin:0}
 .organwrap_list  .organinfo .name { height:18px; padding-top:5px!important;}
 
 /* organliststyle2 */
-.popup_mainlist{table-layout:fixed; width:100%;  border:0 none !important;font-family:malgun gothic, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.popup_mainlist{table-layout:fixed; width:100%;  border:0 none !important;font-family:arial, arial, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .popup_mainlist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; line-height:19px; padding:3px 4px 1px; border-top:1px solid #e8e8e8; border-bottom:1px solid #e8e8e8; background-color: #f8f8fa;}
 .popup_mainlist tr th.title{width:100%; text-align:left;}
 
@@ -1918,7 +1919,7 @@ form{display:inline;margin:0}
 .receiver_tltype02 span {font-size:12px; font-weight:bold; color:#333; height:28px;display:inline-block;padding:0px 25px 0px 0px; min-width:49px;}
 .receiver_borderbox { border-left:1px solid #ddd; border-right:1px solid #ddd; border-bottom:1px solid #ddd; }
 
-.receiver_list{border:0 none !important;font-family:malgun gothic, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.receiver_list{border:0 none !important;font-family:arial, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .receiver_list th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:8px 4px; border-top:1px solid #cfcfcf;border-bottom:1px solid #cfcfcf; background-color: #f6f6f6;}
 .receiver_list td{ border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #efefef; border-spacing:0;}
 
@@ -1934,7 +1935,7 @@ form{display:inline;margin:0}
 .address_boxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_boxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
 .address_boxlist ul .company { color:#393939; margin-bottom: 10px;}
-.address_boxlist .point_txt { color:steelblue; margin-left:3px; font-family: dotum;}
+.address_boxlist .point_txt { color:steelblue; margin-left:3px; font-family: arial;}
 
 .address_onboxlist { float:left; width:250px; height:142px; margin:0px 5px 10px 0px; padding:0px;  }
 .address_onboxlist .shadow { height:2px; font-size:0px; background:#e4e4e4;}
@@ -1944,9 +1945,9 @@ form{display:inline;margin:0}
 .address_onboxlist ul li {white-space:nowrap; overflow:hidden; text-overflow:ellipsis; height:19px; color:#8f8f8f;}
 .address_onboxlist ul .name { font-size:15px; color:#393939; font-weight:bold; margin-bottom:6px;}
 .address_onboxlist ul .company { color:#393939; margin-bottom: 10px;}
-.address_onboxlist .point_txt { color:steelblue; margin-left:3px; font-family: dotum;}
+.address_onboxlist .point_txt { color:steelblue; margin-left:3px; font-family: arial;}
 
-.sublist{table-layout:fixed; border:0 none !important;font-family:malgun gothic, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
+.sublist{table-layout:fixed; border:0 none !important;font-family:arial, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 .sublist tr th{text-align:left;border:0px;text-decoration:none; color:#777; font-size:12px; padding:3px 4px 4px; border-bottom:1px solid #ddd; font-weight:normal;}
 .sublist tr th.title{width:100%; text-align:left;}
 .sublist tr td{padding:5px 4px; border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; border-bottom:1px solid #efefef; border-spacing:0;}
@@ -1970,7 +1971,7 @@ form{display:inline;margin:0}
 .onimg { position:absolute; top:0px; left:0px; z-index:5; width:175px; height:140px; background:url(../images/sub/theme_overimg_kr.png) no-repeat; }
 
 
-.themelist_box { table-layout:fixed; font-family:malgun gothic, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;border:1px solid #dddada; width:100%;}
+.themelist_box { table-layout:fixed; font-family:arial, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;border:1px solid #dddada; width:100%;}
 .themelist_box th { text-align:left; border:1px solid #dddada; background:#fafafa;padding:15px 10px; margin:0px ; font-size:12px;}
 .themelist_box td {border:0px solid #dddada !important; border-bottom:1px solid #dddada !important; padding:10px; vertical-align:middle; text-align:center;}
 
@@ -2288,7 +2289,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .volume_num{ margin:0px; padding:0px;}
 .volume_graph{ margin:5px 0px 10px 0px; padding:0px; width:100%; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px; background:#e9e9e9;}
 .volume_graph span{ display:inline-block; height:13px; border-radius:25px; -webkit-border-radius:25px; -moz-border-radius:25px;}
-.volumeDL{ margin:0px; padding:0px; font-family:Dotum; font-size:12px; font-weight:bold;}
+.volumeDL{ margin:0px; padding:0px; font-family:arial; font-size:12px; font-weight:bold;}
 .volumeDL dt{margin:0px; padding:0px 0px 0px 0px; float:left; color:#000;}
 .volumeDL dt span{ display:inline-block; color:#959595;}
 .volumeDL dd{margin:0px; padding:0px; float:right; color:#0470e4;}
@@ -2357,21 +2358,21 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .lnb h2 .sub_iconLNB {float:left;}
 .lnb h2 .sub_iconLNB.tree_manage {position:relative; float:right; margin-left:10px;}
 .lnb h2 .h2Title {float:none; display:block; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
-.left_title{ position:relative; height:52px; background:#3d8fea; font-family:Malgun Gothic, "맑은 고딕"; line-height:52px; font-size:20px; font-weight:bold; color:#fff; padding: 0px 38px 0px 20px; letter-spacing:-1px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;} /* 타이틀 텍스트 공통영역 */
+.left_title{ position:relative; height:52px; background:#3d8fea; font-family:arial, "arial"; line-height:52px; font-size:20px; font-weight:bold; color:#fff; padding: 0px 38px 0px 20px; letter-spacing:-1px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;} /* 타이틀 텍스트 공통영역 */
 .tree_leftconfig{ width:16px; height:16px; display:inline-block; background-position:0px 0px; position:absolute; right:20px; top:20px; cursor:pointer;}  /* 환경설정 */
 .btn_writeBox{ height:50px; background:#3d8fea; margin:0px; padding:10px; box-sizing:border-box;} /* 작성버튼 */
-.btn_writeBox .btn_write01{ margin:0px 0px 0px 0px; padding:0px; width:auto; text-align:center; height:30px; line-height:28px; background:#0b56ab; float:none; overflow:hidden; font-family:Malgun Gothic, "맑은 고딕"; font-size:13px; color:#fff; cursor:pointer;}
+.btn_writeBox .btn_write01{ margin:0px 0px 0px 0px; padding:0px; width:auto; text-align:center; height:30px; line-height:28px; background:#0b56ab; float:none; overflow:hidden; font-family:arial, "arial"; font-size:13px; color:#fff; cursor:pointer;}
 .btn_writeBox .btn_write01:hover{ background:#1264c1;}
 .btn_writeBox .btn_write01 .tree_write{ width:16px; height:16px; background-position:0px -26px; display:inline-block; margin:6px 5px 0px 0px;}
-.btn_writeBox .btn_write02{margin:0px 0px 0px 2px; padding:0px; width:98px; text-align:center; height:30px; line-height:28px; background:#196dcb; float:right; overflow:hidden; font-family:Malgun Gothic, "맑은 고딕"; font-size:13px; color:#fff; cursor:pointer;}
+.btn_writeBox .btn_write02{margin:0px 0px 0px 2px; padding:0px; width:98px; text-align:center; height:30px; line-height:28px; background:#196dcb; float:right; overflow:hidden; font-family:arial, "arial"; font-size:13px; color:#fff; cursor:pointer;}
 .btn_writeBox .btn_write02:hover{ background:#1f79de;}
 .btn_writeBox .btn_write02 .tree_Mwrite{ width:16px; height:16px; background-position:0px -52px; display:inline-block; margin:6px 5px 0px 0px;}
 
 .btn_writeBox_work{ height:50px; background:#3d8fea; margin:0px; padding:10px; box-sizing:border-box;} /* 근태버튼 */
 .btn_writeBox_work .btn_write01{ margin:0px 0px 0px 0px; padding:0px; width:auto; text-align:left; height:30px; line-height:28px; background:#0b56ab; float:none; overflow:hidden; cursor:pointer;}
 .btn_writeBox_work .btn_write01:hover{ background:#1264c1;}
-.btn_writeBox_work span.worksT{font-family:Malgun Gothic, "맑은 고딕"; font-size:12px; padding:0px 10px 0px 10px; display:inline-block; color:#fff; overflow:hidden; height:30px; line-height:30px;}
-.btn_writeBox_work span.workT{ display:inline-block; margin:0px; padding:0px 0px 0px 10px; font-family:Malgun Gothic, "맑은 고딕"; font-size:14px; color:#fff; overflow:hidden; height:30px; line-height:28px;}
+.btn_writeBox_work span.worksT{font-family:arial, "arial"; font-size:12px; padding:0px 10px 0px 10px; display:inline-block; color:#fff; overflow:hidden; height:30px; line-height:30px;}
+.btn_writeBox_work span.workT{ display:inline-block; margin:0px; padding:0px 0px 0px 10px; font-family:arial, "arial"; font-size:14px; color:#fff; overflow:hidden; height:30px; line-height:28px;}
 .btn_writeBox_work .btn_write02{margin:0px 0px 0px 2px; padding:0px; width:98px; text-align:left; height:30px; line-height:28px; background:#196dcb; float:right; overflow:hidden; cursor:pointer;}
 .btn_writeBox_work .btn_write02:hover{ background:#1f79de;}
 
@@ -2380,11 +2381,11 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .lnbUL li {position:relative; padding: 0px 6px 0px 16px; margin:0px 10px; cursor: pointer; box-sizing: border-box; }
 .lnbUL li .sub_iconLNB { float: left; }
 .lnbUL li .sub_iconLNB.tree_manage { float: right; position:relative;}
-.lnbUL li .list_text { display: block; float: none; font-size: 13px; height: 30px; line-height: 30px; padding: 0px 0px 0px 5px; color: #393939; font-family: Malgun Gothic, "맑은 고딕"; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; box-sizing: border-box; }
+.lnbUL li .list_text { display: block; float: none; font-size: 13px; height: 30px; line-height: 30px; padding: 0px 0px 0px 5px; color: #393939; font-family: arial, "arial"; white-space: nowrap; text-overflow: ellipsis; overflow: hidden; box-sizing: border-box; }
 .lnbUL li:hover .list_text { color: #0470e4; font-weight: bold; }
 
 /* left LNB tree list */
-.tree { padding: 0px 10px 0px 7px; font-family: Malgun Gothic, "맑은 고딕"; overflow: auto; }
+.tree { padding: 0px 10px 0px 7px; font-family: arial, "arial"; overflow: auto; }
 .lnbUL > .tree { border-bottom: 1px solid #cdd2d9; padding-bottom:10px; margin-bottom:10px;}
 
 /* left LNB tree 만 있을경우/하위 list 없음 */
@@ -2502,7 +2503,6 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .tree_memo_default{background-position: -182px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기본메모*/
 .tree_ladder_all{background-position: -208px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 전체사다리*/
 .tree_ladder_in{background-position: -234px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 참여사다리*/
-
 .tree_srvy_all {background-position: -0px -260px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;} /* tree 전체 설문 */
 .tree_srvy_ing {background-position: -26px -260px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;} /* tree 진행 설문 */
 .tree_srvy_ok {background-position: -52px -260px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;} /* tree 완료 설문 */
@@ -2511,16 +2511,16 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 
 
 /* left LNB tree text */
-.lnb h2 .h2Title{font-family:Malgun Gothic, "맑은 고딕"; font-size:13px; font-weight:bold; color:#393939; padding:0px 0px 0px 0px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; box-sizing:border-box;}
-.h2_text{ font-size:13px; height:30px; line-height:30px; color:#393939; display:inline-block; padding:0px 0px 0px 5px;font-family:Malgun Gothic, "맑은 고딕"; cursor:pointer;white-space:nowrap; text-overflow:ellipsis; overflow: hidden; box-sizing:border-box;}
-.h2_text .tRed{ font-weight:bold; color:#ff0000; padding:0px 0px 0px 2px; font-family:Malgun Gothic, "맑은 고딕";}
+.lnb h2 .h2Title{font-family:arial, "arial"; font-size:13px; font-weight:bold; color:#393939; padding:0px 0px 0px 0px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; box-sizing:border-box;}
+.h2_text{ font-size:13px; height:30px; line-height:30px; color:#393939; display:inline-block; padding:0px 0px 0px 5px;font-family:arial, "arial"; cursor:pointer;white-space:nowrap; text-overflow:ellipsis; overflow: hidden; box-sizing:border-box;}
+.h2_text .tRed{ font-weight:bold; color:#ff0000; padding:0px 0px 0px 2px; font-family:arial, "arial";}
 .h2_text:hover{ color:#0470e4; font-weight:bold;}
-.confirmation{font-family:Malgun Gothic, "맑은 고딕"; float:right; font-size:12px; color:#393939; border-left:1px solid #c7c7c7; border-right:1px solid #c7c7c7; border-top:1px solid #c7c7c7; border-bottom:1px solid #909193; background:#fff; padding:0px 2px 0px 2px; margin:6px 0px 0px 0px; cursor:pointer; position:absolute; right:0px; line-height:16px; height:18px; max-width:70px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;} /* 장진혁 */
+.confirmation{font-family:arial, "arial"; float:right; font-size:12px; color:#393939; border-left:1px solid #c7c7c7; border-right:1px solid #c7c7c7; border-top:1px solid #c7c7c7; border-bottom:1px solid #909193; background:#fff; padding:0px 2px 0px 2px; margin:6px 0px 0px 0px; cursor:pointer; position:absolute; right:0px; line-height:16px; height:18px; max-width:70px; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;} /* 장진혁 */
 .confirmation:hover{ color:#0470e4;}
 
 /* left mail 용량 */
 .mail_space{height:39px; line-height:39px; background:#bbbfc3; position:absolute; bottom:0px; width:220px;}
-.mail_space .mail_spaceText{font-family:Malgun Gothic, "맑은 고딕"; font-size:14px; color:#fff; display:inline-block; margin:0px; padding:0px 0px 0px 20px; position:absolute;}
+.mail_space .mail_spaceText{font-family:arial, "arial"; font-size:14px; color:#fff; display:inline-block; margin:0px; padding:0px 0px 0px 20px; position:absolute;}
 .mail_space .mailBar{ display:inline-block; width:0%; height:39px; background:#82b9f6; margin:0px; padding:0px;}
 
 /* left community */
@@ -2533,7 +2533,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .tree {overflow-x:hidden;}
 /*.confirmation {line-height:normal !important;} style 제거 */
 .node_div .tree_arrow_up{background-position:0px -156px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px; cursor:pointer;}
-.admin_left_title { position:relative; height:52px; background:#3d8fea; font-family:Malgun Gothic, "맑은 고딕"; line-height:52px; font-size:20px; font-weight:bold; color:#fff; padding: 0px 0px 0px 20px;} /* 타이틀 텍스트 공통영역 */
+.admin_left_title { position:relative; height:52px; background:#3d8fea; font-family:arial, "arial"; line-height:52px; font-size:20px; font-weight:bold; color:#fff; padding: 0px 0px 0px 20px;} /* 타이틀 텍스트 공통영역 */
 .companySelect {margin-left:10px; height:31px; float:right; border:1px solid #bbb;}
 
 /* icon16 */
@@ -2580,7 +2580,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 /* previewmail */
 .previewmail_bar_h{ border:1px solid #e5e5e5 !important; border-top:0px !important;}
 
-.previewmail{margin:0px; padding:0px; font-family:Malgun Gothic, malgun gothic; overflow:hidden; }
+.previewmail{margin:0px; padding:0px; font-family:arial, "arial"; overflow:hidden; }
 .previewmail .previewmail_info{background:#f1f3f5; margin:0px; padding:0px; overflow:hidden; border-top:1px solid #e5e5e5;}
 .previewmailDL{ margin:15px 20px; padding:0px; overflow:hidden;}
 .previewmailDL dt.prepic{ margin:0px; padding:0px; border-radius:30px; float:left;}
@@ -2632,7 +2632,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 /* admin */
 
 /* admin menu */
-.admin_menu{ margin:20px 0px 0px 0px; padding:0px; width:871px; height:287px; font-family:Malgun Gothic;}
+.admin_menu{ margin:20px 0px 0px 0px; padding:0px; width:871px; height:287px; font-family:arial;}
 .admin_menuDL{ margin:0px; padding:0px; height:44px; line-height:42px; background:#edf7ff; border:1px solid #2196f3; box-sizing:border-box;}
 .admin_menuDL .admin_menuTit{ margin:0px; padding:0px 0px 0px 15px; font-size:16px; font-weight:bold; color:#393939; box-sizing:border-box; float:left;}
 .admin_menuDL .admin_menuX{ margin:0px; padding:0px;}
@@ -2652,7 +2652,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .bottomBtn .btnA:hover{border:1px solid #0470e4; color:#0470e4; background:#f1f8ff;}
 
 /* admin thema */
-.admin_thema{ margin:20px 0px 0px 0px; padding:0px; width:797px; height:398px; font-family:Malgun Gothic;}
+.admin_thema{ margin:20px 0px 0px 0px; padding:0px; width:797px; height:398px; font-family:arial;}
 .admin_thema .menuIconTH{ margin:0px; padding:0px; width:161px; background:#f6f8fa; border:1px solid #dfdfdf; color:#393939; font-weight:bold; letter-spacing:-1px; height:34px; text-align:center;}
 .admin_thema .menuIconTD{ margin:0px; padding:0px 5px 0px 5px; border:1px solid #dfdfdf; color:#393939; letter-spacing:-1px;}
 .admin_thema .menuIconTD_img{margin:0px; padding:20px 5px 20px 5px; border:1px solid #dfdfdf; color:#393939; text-align:center;}
@@ -2680,13 +2680,13 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_bannerCommunity p{margin:0px; padding:0px; text-align:center;}
 
 .community_section02{height:242px; margin:0px 0px 20px 0px; padding:0px;}
-.contents_noticeCommunity{float:left; width:calc(50% - 10px); height:240px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
-.contents_boardCommunity{float:right; width:calc(50% - 10px); height:240px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.contents_noticeCommunity{float:left; width:calc(50% - 10px); height:240px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:arial, arial, Arial, Helvetica, sans-serif;}
+.contents_boardCommunity{float:right; width:calc(50% - 10px); height:240px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:arial, arial, Arial, Helvetica, sans-serif;}
 .contents_tabCommunity{height:44px; margin:0px; padding:0px; color:#333333; font-size:14px; font-weight:bold; border-bottom:1px solid #e7e7e7; background-color: #f3f5f7;}
 .contents_tabCommunity dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
 .contents_tabCommunity dd{float:right; height:44px; margin:0px; padding:0px;}
 .contents_tabCommunity dd.btn_more{width:42px; background:url(../images/kr/community/communityPortlet_btnmore.gif) center no-repeat; border-left:1px solid #e7e7e7; cursor:pointer;}
-.contents_listCommunity{overflow:hidden; list-style:none; margin:0px; padding:14px 23px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.contents_listCommunity{overflow:hidden; list-style:none; margin:0px; padding:14px 23px; font-family:arial, arial, Arial, Helvetica, sans-serif;}
 .contents_listCommunity li{overflow:hidden; margin:0px; padding:0px; line-height:34px; color:#555555; font-size:13px; background:url(../images/kr/community/communityPortlet_listpoint.gif) left center no-repeat; cursor:pointer;}
 .contents_listCommunity li span{display:inline-block; margin:0px; padding:0px 0px 0px 6px;}
 .contents_listCommunity li span.icon_new{float:left;}
@@ -2695,8 +2695,8 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_listCommunity li span.txt{float:left; width:70%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;}
 .contents_listCommunity li span.date{float:right;}
 
-.contents_newCommunity{width:100%; height:280px; margin:0px 0px 20px 0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
-.contents_popularCommunity{width:100%; height:280px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.contents_newCommunity{width:100%; height:280px; margin:0px 0px 20px 0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:arial, arial, Arial, Helvetica, sans-serif;}
+.contents_popularCommunity{width:100%; height:280px; margin:0px; padding:0px; background:#ffffff; border:1px solid #e7e7e7; font-family:arial, arial, Arial, Helvetica, sans-serif;}
 .contents_rightCommunity{margin:0px; padding:0px;}
 .contents_rightCommunity dt{width:196px; height:138px; margin:20px auto 15px; padding:0px; text-align:center; border:1px solid #e7e7e7; background:url(../images/ezCommunity/logo/default_logo_empty.png) center no-repeat;}
 .contents_rightCommunity dd{margin:0px; padding:0px 20px; line-height:24px; color:#555555; font-size:13px;}
@@ -2706,10 +2706,10 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 
 .community_section03{height:442px; margin:0px 0px 20px 0px; padding:0px;}
 .contents_category{width:100%; height:440px; background:#ffffff; border:1px solid #e7e7e7;}
-.contents_categoryTab{float:left; width:199px; height:440px; border-right:1px solid #e7e7e7; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.contents_categoryTab{float:left; width:199px; height:440px; border-right:1px solid #e7e7e7; font-family:arial, arial, Arial, Helvetica, sans-serif;}
 .contents_tabCategory{height:44px; margin:0px; padding:0px; color:#333333; font-size:14px; font-weight:bold; border-bottom:1px solid #e7e7e7;}
 .contents_tabCategory dt{float:left; height:44px; line-height:40px; margin:0px 0px 0px 18px; padding:0px;}
-.contents_listCategory{overflow:hidden; list-style:none; margin:0px; padding:14px 23px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.contents_listCategory{overflow:hidden; list-style:none; margin:0px; padding:14px 23px; font-family:arial, arial, Arial, Helvetica, sans-serif;}
 .contents_listCategory li{margin:0px; padding:0px; line-height:26px; color:#555555; font-size:13px; cursor:pointer;}
 .contents_listCategory li span{display:inline-block; margin:0px; padding:0px;}
 .contents_listCategory li span.icon{}
@@ -2718,7 +2718,7 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_listCategory li span.bold{font-weight:bold;}
 .contents_listCategory li span.count{color:#ff6c00;}
 
-.contents_categoryView{float:left; width:calc(100% - 200px); height:440px; background:#f3f5f7; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.contents_categoryView{float:left; width:calc(100% - 200px); height:440px; background:#f3f5f7; font-family:arial, arial, Arial, Helvetica, sans-serif;}
 .contents_searchCategory{overflow:hidden; margin:20px; padding:0px;}
 .contents_searchCategory dl{margin:0px; padding:0px;}
 .contents_searchCategory dl dt{float:left; margin:0px 10px 0px 0px; padding:0px; border:1px solid #e2e3e6;}
@@ -2729,9 +2729,9 @@ input:checked + .slider:before {-webkit-transform: translateX(26px); -ms-transfo
 .contents_searchCategory dl dd{float:left; height:34px; margin:0px; padding:0px 26px; line-height:32px; background:#3d8fea; color:#ffffff; font-size:16px; font-weight:bold; cursor:pointer;}
 
 .contents_categoryViewList{overflow-y:auto; width:calc(100% - 30px); margin:15px 15px; padding:0px;}
-.categoryBox{float:left; width:calc(20% - 42px); height:68px; margin:0px 5px 10px 5px; padding:20px 15px; background:#ffffff; border:1px solid #e2e3e6; cursor:pointer; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.categoryBox{float:left; width:calc(20% - 42px); height:68px; margin:0px 5px 10px 5px; padding:20px 15px; background:#ffffff; border:1px solid #e2e3e6; cursor:pointer; font-family:arial, arial, Arial, Helvetica, sans-serif;}
 .categoryPic{float:left; width:91px; height:64px; margin:0px 20px 0px 0px; padding:0px; border:1px solid #e2e3e6;}
-.categoryInfo{float:left; width:calc(100% - 113px); margin:0px; padding:0px; color:#333333; font-size:12px; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif;}
+.categoryInfo{float:left; width:calc(100% - 113px); margin:0px; padding:0px; color:#333333; font-size:12px; font-family:arial, arial, Arial, Helvetica, sans-serif;}
 .categoryInfo dt{margin:0px; padding:0px;}
 .categoryInfo dt.sort{height:18px; margin:0px 0px 8px 0px; padding:0px 6px; line-height:18px; text-align:center; background:#999; color:#ffffff; font-size:12px; border-radius:2px;-webkit-border-radius:2px;-moz-border-radius:2px; display:inline-block;}
 .categoryInfo dt.sortBlue{background:#0dbeff;}

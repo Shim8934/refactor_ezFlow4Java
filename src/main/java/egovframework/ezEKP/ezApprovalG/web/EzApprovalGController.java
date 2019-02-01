@@ -9054,5 +9054,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("checkAprState ended");
 		return retValue;
 	}
+	
+	@RequestMapping(value = "/ezApprovalG/checkHabYuiState.do")
+	@ResponseBody
+	public String checkHabYuiState(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("checkHabYuiState started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		
+		String result = ezApprovalGService.checkHabYuiState(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("checkHabYuiState ended.");
+		return result;
+	}
 }
 

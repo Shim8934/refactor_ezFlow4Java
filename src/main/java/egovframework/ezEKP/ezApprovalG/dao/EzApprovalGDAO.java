@@ -3175,4 +3175,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getreceiverName(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getreceiverName", map);
 	}
+	
+	public int checkHabYuiState(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.checkHabYuiState", map);
+	}
 }
