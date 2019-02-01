@@ -1404,13 +1404,13 @@ var SurveyCreate     = function() {
 		// matrix 행 삭제
 		$(".quesBacgr").on("click", ".delRow", function(e) {
 			var lowLength = $(this).closest(".rows").find(".row").length;
-			if (lowLength <= 1) {alert(SurveyMessages.strMaxtrix1); return;}
+			if (lowLength <= 2) {alert(SurveyMessages.strMaxtrix1); return;}
 			$(this).closest(".row").remove();
 		});
 		// matrix 열 삭제
 		$(".quesBacgr").on("click", ".delCol", function() {
 			var colLength = $(this).closest(".cols").find(".col").length;
-			if (colLength <= 1) {alert(SurveyMessages.strMaxtrix2); return;}
+			if (colLength <= 2) {alert(SurveyMessages.strMaxtrix2); return;}
 			$(this).closest(".col").remove();
 		});
 		
