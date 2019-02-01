@@ -222,11 +222,17 @@
 		            if (type == "WEEK") {
 	    	            document.getElementById("TR_Line2").style.display = "";
 	        	        weekonload(date.getFullYear(), parseInt(date.getMonth()) + 1, date.getDate());
+	        	        $("#Weekbtn").attr("class","on");
+	        	        $("#ToDaybtn").attr("class","off");
+	        	        
+	        	        $("#divViewHeader").css("color","");
 	        	        $('body').css('overflowY', 'hidden');
 		            }
 		            else if (type == "TODAY") {
 	    	            document.getElementById("TR_Line2").style.display = "";
 	        	        todayonlaod(date.getFullYear(), parseInt(date.getMonth()) + 1, date.getDate());
+	        	        $("#Weekbtn").attr("class","off");
+	        	        $("#ToDaybtn").attr("class","on");
 	        	        $('body').css('overflowY', 'auto');
 	            	}
 	        	} else {
