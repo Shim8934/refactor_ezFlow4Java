@@ -220,6 +220,11 @@
 				
 				var tmpStartDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
 			    var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+			    
+			    if (tmpStartDateTime > tmpEndDateTime) {
+		        	alert("<spring:message code='ezResource.dateChk' />");
+		        	return;
+		        }
 
 				$.ajax({
 		        	type : "POST",
