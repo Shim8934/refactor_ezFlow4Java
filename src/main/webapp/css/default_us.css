@@ -3440,7 +3440,7 @@ input[type=range]::-ms-tooltip {display: none;}
 
 .prevQsOpt .sltLogicArea {display: flex;}
 .prevQsOpt .sltLogicArea .prevSltArrow {padding: 0px 30px;}
-.prevQsOpt .sltLogicArea .logicSpan {font-size: 16px; margin-top: 2px; width: 65px;}
+.prevQsOpt .sltLogicArea .logicSpan {font-size: 16px; margin-top: 1px; width: 65px;}
 .prevQsOpt .slidLogicArea {display: flex; align-items: center; justify-content: center; padding-bottom: 10px; min-height: 40px;}
 .prevQsOpt .slidLogicArea .prevSlidSpan {padding-top: 6px; padding-left: 15px;}
 .prevQsOpt .slidLogicArea .prevSlidArrow {padding: 0px 30px;}
@@ -3450,13 +3450,18 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow {display: flex; padding: 10px 0px;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwSpan {font-size: 16px; padding-top: 3px;}
 .prevQsOpt .drdwLogicArea .drdwLogicRow .prevDrdwArrow {padding: 0px 30px;}
-.prevQsOpt .drdwLogicArea .drdwLogicRow .logicSpan {font-size: 16px; margin-top: 2px; width: 65px;}
+.prevQsOpt .drdwLogicArea .drdwLogicRow .logicSpan {font-size: 14px; width: 65px; padding-top: 3px;}
 .prevQsOpt .othersLogicArea {display: flex; padding-left: 15px;}
 .prevQsOpt .othersLogicArea .prevArrow {padding: 0px 30px;}
 .prevQsOpt .othersLogicArea .logicSpan {font-size: 16px; margin-top: 2px; width: 65px;}
 .skipSelect, .logicSelect {height: 22px; padding: 0px 10px; font-size: 12px; color: #333; border: 1px solid #ddd; outline: 0px; min-width: 90px; -webkit-appearance: none; border: 1px solid #ddd; margin: 0; background: url(/images/ezSurvey/srvySelect.gif) #fff no-repeat right 16px center;}
 .prevQsWrapper .skipArrow {vertical-align: middle; padding: 0px 30px;}
 .prevQsWrapper .skipSpan {font-size: 16px; margin-top: 2px; font-weight: normal;}
+
+/* skip part */
+.skipArea {display: flex;}
+.skipArea .skipArrow {height: 24px; padding-top: 9px;}
+.skipArea .skipSelect {margin-top: 9px;}
 
 /* survey Info Btn */
 .srvyTitle_info{display:inline-block; float:right; cursor:pointer;}
