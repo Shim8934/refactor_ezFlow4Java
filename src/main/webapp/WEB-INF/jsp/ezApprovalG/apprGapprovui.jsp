@@ -1900,18 +1900,21 @@
 		    
 		    function redrawMappingSign() {
 		    	if (approvalFlag == "S") {
-			        var reMappingAprLine = getAprLineList("${isUsed}");
-			        
-			        //참조가 END인 경우 종료된 문서임으로 굳이 sign이나 수신처를 remap할 필요가 없다.
-			        if (reMappingAprLine != "END") {
-				        SReAprLineSingMapping(reMappingAprLine);
+		    		//공유결재 - 결재, 전결 일때만 사인칸을 다시그리도록 조건추가
+		    		if (pAprLineType == strAprType1 || pAprLineType == strAprType4) {
+				        var reMappingAprLine = getAprLineList("${isUsed}");
 				        
-				        if (pSuSinFlag == "Y") {
-					        var reMappingReceipt = getReceiptList();
+				        //참조가 END인 경우 종료된 문서임으로 굳이 sign이나 수신처를 remap할 필요가 없다.
+				        if (reMappingAprLine != "END") {
+					        SReAprLineSingMapping(reMappingAprLine);
 					        
-					        setRecevInfo(reMappingReceipt);
+					        if (pSuSinFlag == "Y") {
+						        var reMappingReceipt = getReceiptList();
+						        
+						        setRecevInfo(reMappingReceipt);
+					        }
 				        }
-			        }
+		    		}
 		        }
 		    }
 		    
