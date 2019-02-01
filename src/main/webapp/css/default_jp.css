@@ -3455,13 +3455,12 @@ input[type=range]::-ms-tooltip {display: none;}
 .prevQsOpt .othersLogicArea .prevArrow {padding: 0px 30px;}
 .prevQsOpt .othersLogicArea .logicSpan {font-size: 16px; margin-top: 2px; width: 65px;}
 .skipSelect, .logicSelect {height: 22px; padding: 0px 10px; font-size: 12px; color: #333; border: 1px solid #ddd; outline: 0px; min-width: 90px; -webkit-appearance: none; border: 1px solid #ddd; margin: 0; background: url(/images/ezSurvey/srvySelect.gif) #fff no-repeat right 16px center;}
-.prevQsWrapper .skipArrow {vertical-align: middle; padding: 0px 30px;}
-.prevQsWrapper .skipSpan {font-size: 16px; margin-top: 2px; font-weight: normal;}
 
 /* skip part */
-.skipArea {display: flex;}
-.skipArea .skipArrow {height: 24px; padding-top: 9px;}
-.skipArea .skipSelect {margin-top: 9px;}
+.prevQsWrapper .skipArea {display: flex;}
+.prevQsWrapper .skipArea .skipArrow {padding: 0px 30px; height: 24px; padding-top: 9px;}
+.prevQsWrapper .skipArea .skipSpan {font-size: 16px; margin-top: 2px; font-weight: normal;}
+.prevQsWrapper .skipArea .skipSelect {margin-top: 9px;}
 
 /* survey Info Btn */
 .srvyTitle_info{display:inline-block; float:right; cursor:pointer;}
