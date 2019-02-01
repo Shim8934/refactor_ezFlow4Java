@@ -22803,9 +22803,9 @@
 		<isEqual property="v_FLAG" compareValue="APR">
 			INSERT INTO 
 				TBL_APRDOCINFO 
-			(     DocID,  FormID, OrgDocID, DocType, DocState, FunctionType,     Href,   DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate,                                  EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
+			(     DocID,  FormID, OrgDocID, DocType, DocState, FunctionType,     Href,   DocTitle, DocNo, HasAttachYN, HasOpinionYN, EndDate, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID) 
 			(SELECT 
-				#v_NEWID#, FormID, OrgDocID, DocType, '011',  #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, #v_SYSDATE#, NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
+				#v_NEWID#, FormID, OrgDocID, DocType, '011',  #v_FUNCTIONTYPE#, #v_URL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, NULL, WriterID, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2,  WriterDeptID, WriterDeptName, WriterDeptName2, isPublic, TENANT_ID, COMPANYID 
 			  FROM 
 			  	TBL_APRDOCINFO 
 			  WHERE 
@@ -27612,5 +27612,59 @@
 			AND
 				TENANT_ID = #v_TENANTID#) B
 	</select>
+	
+	<select id="EzApprovalG.getReceiptPointNameList" parameterClass="Map" resultClass="String">
+    	SELECT
+    		RECEIPTPOINTNAME
+    	FROM
+    		TBL_RECEIPTPOINTINFO
+    	WHERE
+    		DOCID = #v_DOCID#
+   		AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    	ORDER BY
+    		DEPTMEMBERSN ASC
+    </select>
+	
+	 <select id="EzApprovalG.getOrgLastAprMemberName" parameterClass="Map" resultClass="String">
+
+        SELECT
+            APRMEMBERNAME
+        FROM
+            tbl_endaprlineinfo
+        WHERE
+            docid = (
+                SELECT
+                    orgdocid
+                FROM
+                    tbl_aprdocinfo
+                WHERE
+                    docid = #v_DOCID#
+                AND
+                    TENANT_ID = #v_TENANTID#
+                AND
+                    COMPANYID = #companyID#
+            )
+        ORDER BY
+            aprmembersn DESC
+		LIMIT 1
+    </select>
+
+	 <select id="EzApprovalG.getreceiverName" parameterClass="Map" resultClass="String">
+
+        SELECT
+            aprmembername
+        FROM
+            tbl_aprlineinfo
+        WHERE
+            docid = #v_DOCID#
+            AND   tenant_id = #v_TENANTID#
+            AND   companyid = #companyID#
+        ORDER BY
+            aprmembersn ASC
+		LIMIT 1
+    </select>
 	
 </sqlMap>

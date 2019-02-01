@@ -94,7 +94,7 @@ public class EzEmailMailListController {
     /**
 	 * 메일 리스트화면 호출 함수
 	 */
-	@RequestMapping("/ezEmail/mailList.do")
+	@RequestMapping(value="/ezEmail/mailList.do", method = RequestMethod.GET)
 	public String showMailList(@CookieValue("loginCookie") String loginCookie, 
 			Locale locale,
 			HttpServletRequest request,
@@ -599,7 +599,7 @@ public class EzEmailMailListController {
 	/**
 	 * 메일 리스트 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetList.do",method=RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetList.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getMailList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody String bodyData, Locale locale, Model model) throws Exception {
 		logger.debug("getMailList started.");
@@ -950,7 +950,7 @@ public class EzEmailMailListController {
 	/**
 	 * 메일 삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailDelete.do",method=RequestMethod.POST)
+	@RequestMapping(value="/ezEmail/mailDelete.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String mailDelete(@CookieValue("loginCookie") String loginCookie, 
 			HttpServletRequest request,
@@ -1116,7 +1116,7 @@ public class EzEmailMailListController {
 	/**
 	 * 메일 이동/복사 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailMoveCopyMessage.do")
+	@RequestMapping(value="/ezEmail/mailMoveCopyMessage.do", method=RequestMethod.POST)
 	@ResponseBody
 	public String mailMoveCopyMessage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, 
 			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
@@ -1245,7 +1245,7 @@ public class EzEmailMailListController {
 	/**
 	 * 메일 책갈피 지정 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSetFlag.do",method=RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailSetFlag.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetFlag(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request,
@@ -1347,7 +1347,7 @@ public class EzEmailMailListController {
 	/**
 	 * 메일 읽음 상태 지정 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailSetReadChange.do",method=RequestMethod.POST,
+	@RequestMapping(value="/ezEmail/mailSetReadChange.do", method=RequestMethod.POST,
 			produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailSetReadChange(@CookieValue("loginCookie") String loginCookie,
@@ -1437,7 +1437,7 @@ public class EzEmailMailListController {
 	/**
 	 * 메일에서 보낸사람 정보 추출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailGetFromEmail.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailGetFromEmail.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailGetFromEmail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
@@ -1528,7 +1528,7 @@ public class EzEmailMailListController {
 	/**
 	 * 수신거부 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailDenial.do")
+	@RequestMapping(value="/ezEmail/mailDenial.do", method=RequestMethod.GET)
 	public String mailDenial() throws Exception {
 		return "ezEmail/mailDenial";
 	}
@@ -1536,7 +1536,7 @@ public class EzEmailMailListController {
 	/**
 	 * jgw에 수신거부 요청 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailRequestDenial.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailRequestDenial.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String mailRequestDenial(@CookieValue("loginCookie") String loginCookie,
 			@RequestBody String bodyData, Locale locale, Model model) throws Exception {
@@ -1606,7 +1606,7 @@ public class EzEmailMailListController {
 	/**
 	 * mail list 및 mail quota 정보 추출 함수 (portal 연동)
 	 */
-	@RequestMapping(value="/ezEmail/getPortletMailList.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/getPortletMailList.do", method=RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
 	public String getPortletMailList(@CookieValue("loginCookie") String loginCookie,
 			Locale locale, Model model) throws Exception {

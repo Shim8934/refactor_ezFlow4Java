@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import egovframework.ezEKP.ezUCMessenger.util.EzUCMessengerUtil;
 import egovframework.let.user.login.vo.LoginVO;
@@ -33,7 +34,7 @@ public class EzEmailController {
 	/**
 	 * 메일 메인화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailMain.do")
+	@RequestMapping(value="/ezEmail/mailMain.do", method = RequestMethod.GET)
 	public String showMailMain(Model model, HttpServletRequest request) throws Exception {
 		String funCode = "1";
 		String subCode = "1";
@@ -55,12 +56,12 @@ public class EzEmailController {
     /**
      * 메일 단독 모드에서의 메인화면 호출 함수
      */
-    @RequestMapping(value="/ezEmail/mailAloneMain.do")
+    @RequestMapping(value="/ezEmail/mailAloneMain.do", method = RequestMethod.GET)
     public String showMailAloneMain(Model model, HttpServletRequest request) throws Exception {
         return "ezEmail/mailAloneMain";
     }
 	
-    @RequestMapping(value="/ezEmail/mailAloneTop.do")
+    @RequestMapping(value="/ezEmail/mailAloneTop.do", method = RequestMethod.GET)
     public String showMailAloneTop(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
         LoginVO auth = commonUtil.checkAdmin(loginCookie);
         

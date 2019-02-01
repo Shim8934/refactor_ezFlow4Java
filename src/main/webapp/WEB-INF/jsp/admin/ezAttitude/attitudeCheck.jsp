@@ -174,7 +174,7 @@
 				}
 	    		
 	    		$.ajax({
-	    			data : "GET",
+	    			type : "GET",
 	    			dataType : "json",
 	    			async : false,
 	    			url : "/admin/ezAttitude/attitudeCheckList.do",

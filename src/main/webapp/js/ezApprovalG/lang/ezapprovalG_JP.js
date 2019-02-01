@@ -530,7 +530,7 @@ var strLang735 = "분리첨부 등록 구분"
 var strLang736 = "시청각기록물 내용 요약"
 var strLang737 = "시청각기록물 형태코드"
 var strLang740 = "回送に失敗しました。."
-var strLang741 = "文書を差し戻し処理しました。"
+var strLang741 = "文書を回送処理しました。"
 // ezViewHWP\ezSimsaG_HWP.js
 // ezViewWord\ezAprovUI.js
 var strLang752 = "回覧"

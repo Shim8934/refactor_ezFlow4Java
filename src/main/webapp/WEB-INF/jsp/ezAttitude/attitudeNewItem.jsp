@@ -224,7 +224,7 @@
 			
 			function getFormBody() {
 				$.ajax({
-					type : "POST",
+					type : "get",
 					url : "/ezAttitude/getFormBody.do",
 					async : true,
 					data : {
