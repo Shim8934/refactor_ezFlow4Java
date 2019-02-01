@@ -3,7 +3,7 @@
 
 <div class="survey-title"></div>
 
-<div class="prevQsArea logic"></div>
+<div class="prevQsArea"></div>
 
 <div class="survey-bttn-panel">
 	<div class="btnpositionSurvey">

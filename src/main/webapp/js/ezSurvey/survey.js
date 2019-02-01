@@ -3007,10 +3007,20 @@ var SurveyCreate     = function() {
 	
 	// 미리보기 질문 폼 생성
 	function prevQstn(step) {
-		var prevQsArea = $(".prevQsArea");
-		prevQsArea.html("");
-		
 		var qstnList = SurveyCreate.getQs();
+		var qsArea = "";
+		
+		if (step == 3) {
+			qsArea = $(".prevQsArea");
+			$(".confirmQsArea").html("");
+			
+		} else if (step == 4) {
+			qsArea = $(".confirmQsArea");
+			$(".prevQsArea").html("");
+			
+		}
+		qsArea.html("");
+		
 		if (step == 4) {
 			var qstInf = SurveyCreate.getInfo();
 			confirmSurveyInfo(qstInf);
@@ -3043,15 +3053,13 @@ var SurveyCreate     = function() {
 				wrapper.append(header);
 				prevQsOpt.append(body);
 				wrapper.append(prevQsOpt);
-				prevQsArea.append(wrapper);
+				qsArea.append(wrapper);
 				
-				if (step == 3) {
-					if (question.logicFlag == 1) {
-						mkLogicForm(qstnId);
-					}
-					else if (question.skipFlag == 1) {
-						mkSkipForm(qstnId)
-					}
+				if (question.logicFlag == 1) {
+					mkLogicForm(qstnId);
+				}
+				else if (question.skipFlag == 1) {
+					mkSkipForm(qstnId)
 				}
 			}
 		}
