@@ -136,7 +136,7 @@ var SurveyMessages = {
 	strOtherList2: "기타",
 	strJoin1     : "설문 참여 인원",
 	strJoin2     : "설문 미참여 인원",
-	strViewAll   : "모두 보기",
+	strViewAll   : "모든 보기",
 	strViewOther : "*기타",
 	strAllUsers  : "참여인원 리스트",
 	strMultiple3 : "중복 응답이 불가한 설문입니다.",
