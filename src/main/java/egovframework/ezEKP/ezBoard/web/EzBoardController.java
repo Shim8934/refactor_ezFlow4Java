@@ -3575,7 +3575,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("guBun", guBun);
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
-		model.addAttribute("useCabinet", use_cabinet);
 
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
