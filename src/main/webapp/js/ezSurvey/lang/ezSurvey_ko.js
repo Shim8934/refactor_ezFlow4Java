@@ -41,7 +41,7 @@ var SurveyMessages = {
 	strUpFolder  : "폴더는 업로드 할 수 없습니다.",
 	strSave      : "저장이 완료되었습니다.",
 	strSave1     : "등록되었습니다.",
-	strSave2     : "설문이 완료되었습니다.",
+	strSave2     : "응답이 완료되었습니다.",
 	strSaveDraft : "임시 저장이 완료되었습니다.",
 	strQselect   : "질문 유형 선택",
 	strSlOne     : "단일선택",
