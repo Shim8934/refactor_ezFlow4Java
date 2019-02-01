@@ -431,6 +431,8 @@
 				}
 
 				taskComment = $.trim(taskComment);
+				taskComment = taskComment.replace(/(?:\r\n|\r|\n)/g, '<br />');
+				console.log(taskComment);
 
 				$.ajax({
 					type : "POST",
@@ -632,6 +634,9 @@
 						list.forEach(function(vo, index) {
 							commentorID = "\"" + vo.commentorID + "\"";
 							deleteCommentParam =  "\"" + vo.commentorID + "\", \"" + vo.commentID + "\"";
+							var commentContent = vo.comment;
+							commentContent = commentContent.split('<br/>').join("\r\n");
+							
 							if (commentBgColor === 1) {
 								taskCommentList += "<tr class='taskCommentTr' style='height:40px;text-align:left;border:1px solid #e2e2e2; background-color:#white; border-left: 0px; border-top: 0px; border-right: 0px;'>";
 							} else {
@@ -643,7 +648,7 @@
 							
 							taskCommentList += "</td>";
 							taskCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;word-wrap:break-word;line-height:1.5'>"
-												+ vo.comment + "&nbsp;&nbsp;";
+												+ commentContent + "&nbsp;&nbsp;";
 								
 							if ( typeof userInfoID == "undefined") {
 								userInfoID = "";    	
