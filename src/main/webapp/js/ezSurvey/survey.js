@@ -3009,15 +3009,22 @@ var SurveyCreate     = function() {
 	function prevQstn(step) {
 		var qstnList = SurveyCreate.getQs();
 		var qsArea = "";
+		qsArea = $(".prevQsArea");
 		
-		if (step == 3) {
-			qsArea = $(".prevQsArea");
+		/*
+		if (step == 3 || step == 0) {
 			$(".confirmQsArea").html("");
 			
 		} else if (step == 4) {
 			qsArea = $(".confirmQsArea");
 			$(".prevQsArea").html("");
 			
+			var qstInf = SurveyCreate.getInfo();
+			confirmSurveyInfo(qstInf);
+		}
+		*/
+		
+		if (step == 4) {
 			var qstInf = SurveyCreate.getInfo();
 			confirmSurveyInfo(qstInf);
 		}
@@ -3051,12 +3058,14 @@ var SurveyCreate     = function() {
 				prevQsOpt.append(body);
 				wrapper.append(prevQsOpt);
 				qsArea.append(wrapper);
-				
-				if (question.logicFlag == 1) {
-					mkLogicForm(qstnId);
-				}
-				else if (question.skipFlag == 1) {
-					mkSkipForm(qstnId)
+
+				if (step == 3) {
+					if (question.logicFlag == 1) {
+						mkLogicForm(qstnId);
+					}
+					else if (question.skipFlag == 1) {
+						mkSkipForm(qstnId)
+					}
 				}
 			}
 		}
