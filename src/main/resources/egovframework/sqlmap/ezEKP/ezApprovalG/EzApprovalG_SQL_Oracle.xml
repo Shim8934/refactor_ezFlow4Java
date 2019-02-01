@@ -27783,4 +27783,21 @@
 		WHERE
 		    ROWNUM = 1
     </select>
+    
+    <select id="EzApprovalG.checkHabYuiState" parameterClass="Map" resultClass="int" remapResults="true">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_APRLINEINFO
+		WHERE
+			DOCID = #v_DOCID#
+		AND
+			COMPANYID = #v_COMPANYID#
+		AND
+			TENANT_ID = #v_TENANTID#
+		AND
+			(APRTYPE = '008' OR APRTYPE = '011')
+		AND
+			APRSTATE = '001'
+	</select>
 </sqlMap>
