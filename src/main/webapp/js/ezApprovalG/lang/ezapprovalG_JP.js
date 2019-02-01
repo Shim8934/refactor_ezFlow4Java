@@ -982,7 +982,7 @@ var strLangS195  ="入力し直してください。";
 var strLangSHJ1 = "参照後の最終決裁者を指定してください。";
 
 var strLangS822 = "既に循環が送信されたユーザです。 "
-var strLangS824 = "循環が重複しました。";
+var strLangS824 = "重複しているユーザ情報があります。";
 var strLangS825 = "循環子を指定してください。";
 var strLangS826 = "循環を送信しませんでした。";
 var strLangpjj27 = "編集するお気に入りを供覧者リストに適用する必要が編集することができます。";

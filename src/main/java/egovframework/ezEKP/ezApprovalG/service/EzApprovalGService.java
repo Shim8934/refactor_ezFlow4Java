@@ -583,4 +583,6 @@ public interface EzApprovalGService {
 	public List<String> getShareOwnerId(String userID, int tenantID) throws Exception;
 	
 	public int getCheckAprState(String docID, String userID, String docState, String aprMemberSN, String companyID, int tenantID) throws Exception;
+	
+	public String checkHabYuiState(String docID, String companyID, int tenantID) throws Exception;
 }

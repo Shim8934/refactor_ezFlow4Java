@@ -673,6 +673,7 @@
 		            }
 		        }
 		        
+		        var habYuiAprStateFlag = true;
 		        if (addLastKyulJeYN != "0") {
 		        	var hDocID ;
 					if (pDraftFlag == "HABYUI") {
@@ -693,6 +694,21 @@
                 			totalMemSN = result;
                 		}
                 	});
+		        	
+		        	$.ajax({
+                		type : "POST",
+                		dataType : "text",
+                		async : false,
+                		url : "/ezApprovalG/checkHabYuiState.do",
+                		data : {
+                				docID     : hDocID,
+                				},
+                		success : function(result) {
+                			if (result == "FALSE") {
+                				habYuiAprStateFlag = false;
+                			}
+                		}
+                	});
 		        }
 		        
 		        // getDocNumber를 이용한 문서번호 채번
@@ -700,7 +716,7 @@
 		        	if (approvalFlag == "S") {
 		        		// '현재진행 중인 결재가 개인순차합의가 아닌 경우' 추가
 		        		// 마지막 결재자가 합의인 경우 totalMemSN 값으로 해당 조건절 사용.
-			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7) || pAprLineType == strAprType4 || totalMemSN > 0) {
+			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7 && habYuiAprStateFlag) || pAprLineType == strAprType4 || totalMemSN > 0) {
 			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
 			                    var rtnval;
 			                    //rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
@@ -818,7 +834,7 @@
 		        if (rtnVal != "TRUE")  {
 		        	if (pDraftFlag != "SUSIN") {
 		        		if (approvalFlag == "S") {
-		        			if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7) || pAprLineType == strAprType4 || totalMemSN > 0) {
+		        			if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7  && habYuiAprStateFlag) || pAprLineType == strAprType4 || totalMemSN > 0) {
 		        				if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
 		        					rollbackDocNumber(drafterDeptid, "", pDocID);
 		        				}
@@ -1902,18 +1918,21 @@
 		    
 		    function redrawMappingSign() {
 		    	if (approvalFlag == "S") {
-			        var reMappingAprLine = getAprLineList("${isUsed}");
-			        
-			        //참조가 END인 경우 종료된 문서임으로 굳이 sign이나 수신처를 remap할 필요가 없다.
-			        if (reMappingAprLine != "END") {
-				        SReAprLineSingMapping(reMappingAprLine);
+		    		//공유결재 - 결재, 전결 일때만 사인칸을 다시그리도록 조건추가
+		    		if (pAprLineType == strAprType1 || pAprLineType == strAprType4) {
+				        var reMappingAprLine = getAprLineList("${isUsed}");
 				        
-				        if (pSuSinFlag == "Y") {
-					        var reMappingReceipt = getReceiptList();
+				        //참조가 END인 경우 종료된 문서임으로 굳이 sign이나 수신처를 remap할 필요가 없다.
+				        if (reMappingAprLine != "END") {
+					        SReAprLineSingMapping(reMappingAprLine);
 					        
-					        setRecevInfo(reMappingReceipt);
+					        if (pSuSinFlag == "Y") {
+						        var reMappingReceipt = getReceiptList();
+						        
+						        setRecevInfo(reMappingReceipt);
+					        }
 				        }
-			        }
+		    		}
 		        }
 		    }
 		    

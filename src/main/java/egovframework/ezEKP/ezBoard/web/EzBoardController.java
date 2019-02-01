@@ -3549,10 +3549,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			model.addAttribute("commentCount", commentCount);
 		}
 		
-		//2018.08.08 캐비넷 추가
-		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
-		if (use_cabinet.equals("YES")) {
-			use_cabinet = cabinetAdminService.checkModuleActive("board", userInfo);
+		/* 2019-01-31 홍승비 - 게시물 보기 시 게시자 이름 특문처리 (익명게시판 오류수정) */
+		if (boardItem.getWriterName() != null && !boardItem.getWriterName().equals("")) {
+			boardItem.setWriterName(commonUtil.htmlUnescape(boardItem.getWriterName()));
 		}
 		
 		model.addAttribute("userInfo", userInfo);

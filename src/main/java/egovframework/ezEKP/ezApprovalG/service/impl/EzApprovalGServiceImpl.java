@@ -7140,9 +7140,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			cal.setTime(format.parse(tmpYear));
 			tmpYear = String.valueOf(cal.get(Calendar.YEAR));
 			
+			boolean habYuiAprStateFlag = true;
+			String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
+			if (addLastKyulJeYN != null && !addLastKyulJeYN.equals("0")) {
+				String rtnVal = checkHabYuiState(docID, companyID, userInfo.getTenantId());
+				if (rtnVal.equals("FALSE")) {
+					habYuiAprStateFlag = false;
+				}
+			}
+			
 			//일반 채번문제 수정 2017-05-15
 //			if ((totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007") && !aprStateSign.equals("011")) {
-			if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && !aprStateSign.equals("011")) {
+			if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && !aprStateSign.equals("011") && habYuiAprStateFlag) {
 				if (aprStateSign.equals("012")) {
 					strDeptID = receiveDept;
 				} else {
@@ -27624,5 +27633,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_APRMEMBERSN", aprMemberSN);
 		
 		return ezApprovalGDAO.getCheckAprState(map);
+	}
+	
+	@Override
+	public String checkHabYuiState(String docID, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		String result = "";
+		
+		int rtnVal = ezApprovalGDAO.checkHabYuiState(map);
+		
+		if (rtnVal > 0) {
+			result = "FALSE";
+		} else {
+			result = "TRUE";
+		}
+		
+		return result;
 	}
 }
