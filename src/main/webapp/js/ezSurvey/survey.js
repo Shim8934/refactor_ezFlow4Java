@@ -3009,22 +3009,15 @@ var SurveyCreate     = function() {
 	function prevQstn(step) {
 		var qstnList = SurveyCreate.getQs();
 		var qsArea = "";
-		qsArea = $(".prevQsArea");
 		
-		/*
 		if (step == 3 || step == 0) {
+			qsArea = $(".prevQsArea");
 			$(".confirmQsArea").html("");
 			
 		} else if (step == 4) {
 			qsArea = $(".confirmQsArea");
 			$(".prevQsArea").html("");
 			
-			var qstInf = SurveyCreate.getInfo();
-			confirmSurveyInfo(qstInf);
-		}
-		*/
-		
-		if (step == 4) {
 			var qstInf = SurveyCreate.getInfo();
 			confirmSurveyInfo(qstInf);
 		}
@@ -3059,7 +3052,7 @@ var SurveyCreate     = function() {
 				wrapper.append(prevQsOpt);
 				qsArea.append(wrapper);
 
-				if (step == 3) {
+				if (step != 0) {
 					if (question.logicFlag == 1) {
 						mkLogicForm(qstnId);
 					}

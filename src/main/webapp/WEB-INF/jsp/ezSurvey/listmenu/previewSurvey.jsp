@@ -73,8 +73,7 @@
 </div>
 
 
-<!-- <div class="confirmQsArea"></div> -->
-<div class="prevQsArea"></div>
+<div class="confirmQsArea"></div>
 
 <div class="survey-bttn-panel">
 	<div class="btnpositionSurvey">
