@@ -223,7 +223,7 @@
 			}
 		}
 		
-		function toggelSurveyInformation() {
+		function toggleSurveyInformation() {
 			var ulInf    = document.getElementById("upage-ul");
 			var crrClass = ulInf.className;
 			ulInf.className = crrClass == "upage-ul" ? "upage-ul off" : "upage-ul";
@@ -241,7 +241,7 @@
 			setBodyHeight();
 			window.addEventListener("load", function(e) {setBodyHeight();}, false);
 			window.addEventListener("resize", function(e) {setBodyHeight();}, false);
-			document.getElementById("surveyInfBttn").onclick = function(e) {toggelSurveyInformation();};
+			document.getElementById("surveyInfBttn").onclick = function(e) {toggleSurveyInformation();};
 			
 			// 라디오 버튼 클릭 이벤트
 			$(".prevQsArea").on("click", ".optRdo", function() {
