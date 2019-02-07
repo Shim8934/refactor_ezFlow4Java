@@ -100,6 +100,6 @@
     <alias name="spring.RegularCommonsMultipartResolver" alias="multipartResolver" />
     
     <task:annotation-driven executor="ezExecutor" scheduler="ezScheduler" />
-	<task:executor id="ezExecutor" pool-size="5-50" />
+	<task:executor id="ezExecutor" pool-size="50" />
 	<task:scheduler id="ezScheduler" pool-size="50" />
 </beans>
