@@ -460,15 +460,17 @@
 					repetition_Delete();
 				} 
 				else {
-					delete_task();
+					if (!confirm("<spring:message code='ezTask.t106' />")) {
+						delete_task();
+					}
 				}
 			}
 			
 			var deltaskid = "";
 			function delete_task() {
-				if (!confirm("<spring:message code='ezTask.t106' />")) {
+				/* if (!confirm("<spring:message code='ezTask.t106' />")) {
 					return;
-				}	
+				} */	
 				
 				deltaskid = taskid + ";";
 				
@@ -495,21 +497,20 @@
 			function repetition_Delete() {
 				task_delete_confirm_cross_dialogArguments[0] = "";
 	        	task_delete_confirm_cross_dialogArguments[1] = deleteTask_Complete;
-	            GetOpenWindow("/ezTask/taskDeleteConfirm.do", "task_delete_confirm_Cross", 400, 170);				
+	            GetOpenWindow("/ezTask/taskDeleteConfirm.do", "task_delete_confirm_Cross", 500, 170);				
 			}
 
 			function deleteTask_Complete(ret) {				
 				if (ret == "0") {
 					once_Delete_Task();
 				} else {
-					delete_task();
+					if (!confirm("<spring:message code='ezTask.t106' />")) {
+						delete_task();
+					}
 				}								
 			}
 
 			function once_Delete_Task() {
-	        	if (!confirm("<spring:message code='ezTask.t106' />"))
-	                return;
-		            
 	            $.ajax({
 					type : "POST",
 					dataType : "text",
