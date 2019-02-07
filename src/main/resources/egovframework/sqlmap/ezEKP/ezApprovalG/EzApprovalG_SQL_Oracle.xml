@@ -26051,25 +26051,26 @@
 			(APRTYPE != '002' AND APRTYPE != '007')
       </select>
            
-      <select id ="EzApprovalG.lastHabYuiSN" parameterClass="map" resultClass="String">
-	         SELECT 
-	      		A.APRMEMBERSN
- 	      	FROM 
-
-	      		(SELECT 
-	      			ROWNUM as NUM, APRMEMBERSN 
-	      		FROM 
-	      			TBL_APRLINEINFO
-	      		WHERE
-	      			DOCID = #v_DOCID#
-	      		AND
-	      			TENANT_ID = #v_TENANTID#
-	      		AND
-	      			COMPANYID = #companyID# ) A
- 			WHERE 
-	
-              	A.NUM = (#v_memSN# + 1)	
-
+	<select id ="EzApprovalG.lastHabYuiSN" parameterClass="map" resultClass="String">
+		SELECT
+			A.APRMEMBERSN
+		FROM
+			(SELECT 
+				ROWNUM as NUM, APRMEMBERSN 
+			FROM
+				TBL_APRLINEINFO
+			WHERE
+				DOCID = #v_DOCID#
+			AND
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				(APRTYPE != '002' AND APRTYPE != '007')
+			) A
+			
+		WHERE
+			A.NUM = (#v_memSN# + 1)	
       </select>
             
       <select id ="EzApprovalG.lastKyulJeHabYuiYN" parameterClass="map" resultClass="String">

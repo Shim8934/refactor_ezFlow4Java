@@ -23763,7 +23763,7 @@
    			TBL_ENDAPRDOCINFO 
    		(     DocID,   FormID, OrgDocID, DocType, DocState, FunctionType, Href,    DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, EndDate,                                     WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, ContainerID, isPublic, TENANT_ID, COMPANYID )
 		( SELECT 
-			#v_DOCID#, FormID, OrgDocID, DocType, DocState,  '003',    #v_endURL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, #v_SYSDATE#, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, #v_ContainerID#, isPublic, TENANT_ID, COMPANYID  
+			#v_DOCID#, FormID, OrgDocID, DocType, #v_DOCSTATE#,  '003',    #v_endURL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, #v_SYSDATE#, WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName, WriterDeptName2, #v_ContainerID#, isPublic, TENANT_ID, COMPANYID  
 		  FROM 
 		  	TBL_APRDOCINFO A  
 		  WHERE  

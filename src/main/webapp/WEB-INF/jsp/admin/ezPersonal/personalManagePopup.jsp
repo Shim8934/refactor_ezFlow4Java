@@ -106,7 +106,7 @@
 		    function mod_popup(popup_number) {
 		        var pheight = window.screen.availHeight;
 		        var pwidth = window.screen.availWidth;
-		        var pTop = (pheight - 620) / 2;
+		        var pTop = (pheight - 700) / 2;
 		        var pLeft = (pwidth - 820) / 2;
 		        var compid = document.getElementById("ListCompany").value;
 	

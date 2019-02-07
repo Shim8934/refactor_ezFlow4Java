@@ -1632,7 +1632,7 @@
 			('SA02', '003',		'감사',					'Audit',				'遵法監視',		'监督',			'0',	'준법감시',	#companyID#,	#tenantID#),
 			('SA02', '004',		'심사',					'Request send',				'審査',		'심사_ZH',		'1',	'심사',		#companyID#,	#tenantID#),
 			('SA02', '011',		'수신',					'Receipt',				'受信',		'收件',		'1',	'수신',		#companyID#,	#tenantID#),
-			('SA02', '012',		'협조/합의',				'Draft',				'起案文',	'기안문_ZH',	'1',	'기안문',	#companyID#,	#tenantID#),
+			('SA02', '012',		'협조/합의',				'Draft',				'合意',	'기안문_ZH',	'1',	'기안문',	#companyID#,	#tenantID#),
 			('SA02', '013',		'시행',					'Enforcement',			'施行',		'执行',		'0',	'시행',		#companyID#,	#tenantID#),
 			('SA02', '014',		'감사(검사부)',				'Audit(dept.)',			'監査',		'审查',		'0',	'감사',		#companyID#,	#tenantID#),
 			('SA02', '015',		'공람',					'Display',				'回覧',		'传阅',		'0',	'회람',		#companyID#,	#tenantID#),
