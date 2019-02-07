@@ -82,16 +82,17 @@ function ptlAttiClock() {
     var h, m;
     var s;
     var ptlTime = " ";
+    var nowClientTime = new Date();
+    var nowServerTime = new Date(nowClientTime.getTime() - timeDiff);
     
-    ptlNowAttiTime.setSeconds(ptlNowAttiTime.getSeconds() + 1);
-    ptlTime = leadingZeros(ptlNowAttiTime.getHours(), 2) + ':' + leadingZeros(ptlNowAttiTime.getMinutes(), 2);
+    ptlTime = leadingZeros(nowServerTime.getHours(), 2) + ':' + leadingZeros(nowServerTime.getMinutes(), 2);
     document.getElementById("ptlTimeFlow").innerHTML = ptlTime;
 
     if (ptlTime == "00:00" || ptlTime == "12:00") {
-    	ptlAmPmCheck(ptlNowAttiTime.getHours());
+    	ptlAmPmCheck(nowServerTime.getHours());
     }
     
-    gizmo = setTimeout("ptlAttiClock()", 1000);
+    gizmo = setTimeout("ptlAttiClock()", 500);
 }
 
 function ptlAmPmCheck(hours) {
@@ -219,6 +220,9 @@ function ptlParseDate() {
 	        }
 	    }
 	}
+	
+	var clientTime = new Date();
+	ptlTimeDiff = nowAttiTime.getTime() - clientTime.getTime();
 	
 	//$("#todayTime").html(nowAttiTime.getFullYear() + "."  + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "." + leadingZeros(nowAttiTime.getDate(), 2));
 	

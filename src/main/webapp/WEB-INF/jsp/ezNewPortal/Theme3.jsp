@@ -109,6 +109,8 @@
 	var afterAlertDate = "";
 	var overTime = "";
  	var serverTime = "<c:out value='${serverTime}'/>";
+ 	var timeDiff;
+ 	var ptlTimeDiff;
  	var birthdayMonth = Number("<c:out value='${nowMonth}'/>");
  	var birthdayCurPage = 0;
  	var birthdayTotalCount = 0;

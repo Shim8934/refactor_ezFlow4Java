@@ -61,6 +61,8 @@ function parseDate(themeId) {
 	    }
 	}
 	
+	var clientTime = new Date();
+	timeDiff = nowAttiTime.getTime() - clientTime.getTime();
 	//$("#todayTime").html(nowAttiTime.getFullYear() + "."  + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "." + leadingZeros(nowAttiTime.getDate(), 2));
 	
 }
@@ -69,10 +71,11 @@ function attiClock() {
     var h, m;
     var s;
     var time = " ";
+    var nowClientTime = new Date();
+    var nowServerTime = new Date(nowClientTime.getTime() - timeDiff);
     
-    nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
-    time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2) + ':' + leadingZeros(nowAttiTime.getSeconds(), 2);
-    portletTime = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2);
+    time = leadingZeros(nowServerTime.getHours(), 2) + ':' + leadingZeros(nowServerTime.getMinutes(), 2) + ':' + leadingZeros(nowServerTime.getSeconds(), 2);
+    portletTime = leadingZeros(nowServerTime.getHours(), 2) + ':' + leadingZeros(nowServerTime.getMinutes(), 2);
     document.getElementById("timeFlow").innerHTML = time;
     
     if (document.getElementById("ptlTimeFlow") != null) {
@@ -80,10 +83,10 @@ function attiClock() {
     }
     
     if (portletTime == "00:00" || portletTime == "12:00") {
-    	ptlAmPmCheck(nowAttiTime.getHours());
+    	ptlAmPmCheck(nowServerTime.getHours());
     }
     
-    gizmo = setTimeout("attiClock()", 1000);
+    gizmo = setTimeout("attiClock()", 500);
     
 }
 
