@@ -211,7 +211,6 @@ public class EzStatisticsMailLogController {
 		String endDate = request.getParameter("searchEndTime");
 		String companyId = request.getParameter("companyId");
 		
-		
 		if (!searchStartTime.isEmpty()) {
 			searchStartTime = searchStartTime.replaceAll("[^0-9]", "");
 		}
@@ -346,6 +345,10 @@ public class EzStatisticsMailLogController {
 			isPrimaryLang = userInfo.getLang();
 		} else { 
 			isPrimaryLang = sysLang;
+		}
+		
+		if (companyId == null || companyId.equals("Top/organ")) {
+			companyId = "";
 		}
 
 		Map<String, Object> resultMap = ezStatisticsAdminService.getMailLogList(tenantId, pageNo, String.valueOf(pageSize), 
