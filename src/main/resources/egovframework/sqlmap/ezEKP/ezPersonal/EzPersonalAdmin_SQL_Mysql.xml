@@ -764,9 +764,9 @@
                         C.CN ,
                         C.DISPLAYNAME ,
                         C.DISPLAYNAME2 ,
-                        PHYSICALDELIVERYOFFICENAME ,
-                        COMPANY ,
-                        COMPANY2 ,
+                        C.EXTENSIONATTRIBUTE2 AS PHYSICALDELIVERYOFFICENAME ,
+                        C.EXTENSIONATTRIBUTE3 AS COMPANY ,
+                        COMPNM2 AS COMPANY2 ,
                         A.TITLE ,
                         A.TITLE2 ,
                         #v_pTerm# ,
@@ -793,7 +793,7 @@
                     AND
                         A.TENANT_ID = #tenantID#
                     AND
-                        B.PHYSICALDELIVERYOFFICENAME = #companyID#              	
+                        C.EXTENSIONATTRIBUTE2 = #companyID#              	
 		]]>
 	</insert>
 	
