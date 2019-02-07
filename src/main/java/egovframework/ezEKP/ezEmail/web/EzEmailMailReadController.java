@@ -234,6 +234,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (f == null || !f.exists()) {
 				logger.error("Folder not found. folderPath=" + folderPath);
+				model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+				model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+				model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+				return "ezCommon/error";
 			} else {
 				f.open(Folder.READ_WRITE);
 				
@@ -244,6 +248,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 				if (message == null) {
 					logger.error("Message not found. uid=" + uid);
+					model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+					return "ezCommon/error";
 				} else {
 					
 					FetchProfile fp = new FetchProfile();
