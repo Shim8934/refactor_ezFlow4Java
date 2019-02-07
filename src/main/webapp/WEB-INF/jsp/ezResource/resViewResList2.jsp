@@ -269,6 +269,12 @@
 		    	        document.getElementById("res_Div").style.height = document.documentElement.clientHeight - 190 + "px";
 		        	scroll();
 	    		}
+	    		//else if(Mod == "TODAY") {
+	    			if (navigator.userAgent.indexOf("Chrome") > -1)
+		                document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 110 + "px";
+		            else
+	    	            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 130 + "px";
+	    		//}
 	    	}
 
 	    	function btnAdd_Click() {

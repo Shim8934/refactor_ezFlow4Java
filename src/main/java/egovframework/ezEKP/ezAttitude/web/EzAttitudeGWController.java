@@ -143,6 +143,7 @@ public class EzAttitudeGWController {
 			String checkAttitude = "";
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			String offSet = info.getOffSet();
+			String isOutCheck = "";//퇴근체크 여부
 			
 			if (adminId != null && !adminId.equals("")) { //관리자가 등록시 등록하는 사람의 offset이 필요함
 				MCommonVO adminInfo = mOptionService.commonInfoWeb(serverName, adminId);
@@ -150,13 +151,23 @@ public class EzAttitudeGWController {
 			}
 			
 			if (typeId.equals("A01") || typeId.equals("A02") || typeId.equals("A03") || typeId.equals("A08")) {
-				checkAttitude = ezAttitudeService.getIsAttitude(typeId, userId, startDate, offSet, info.getCompanyId(), info.getTenantId());
+				if (typeId.equals("A03")) {
+					isOutCheck = "true";
+				}
+				checkAttitude = ezAttitudeService.getIsAttitude(typeId, userId, startDate, offSet, info.getCompanyId(), info.getTenantId(), isOutCheck);
 			}
 			
-			if (!checkAttitude.equals("") && !checkAttitude.equals("0")) {
+			if (checkAttitude != null && !checkAttitude.equals("") && !checkAttitude.equals("0") && !typeId.equals("A03")) {
 				checkAttitude = "dupl";
 			} else {
-				ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, offSet, info.getCompanyId(), info.getTenantId(), mode, adminId);
+				if (checkAttitude != null && !checkAttitude.equals("0") && typeId.equals("A03")) { //이미 퇴근이 있는 경우
+					AttitudeVO attVO = new AttitudeVO();
+					attVO.setCompanyId(info.getCompanyId()); //사용자가 업데이트 시에는 companyId만 필요하므로 companyId만 셋팅해서 가져간다.
+					startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), info.getOffSet(), false);
+					ezAttitudeService.updateAttitude(checkAttitude, startDate, null, region, mobile, bizSub, content, info.getOffSet(), "", typeId, dateType, mode, attVO, userId, info, null, info.getTenantId(), info.getCompanyId());
+				} else {
+					ezAttitudeService.insertAttitude(userId, info.getDeptId(), startDate, endDate, region, mobile, bizSub, content, "0", typeId, dateType, offSet, info.getCompanyId(), info.getTenantId(), mode, adminId);					
+				}
 			}
 			
 			result.put("status", "ok");
@@ -230,7 +241,7 @@ public class EzAttitudeGWController {
 			//2. 똑같은 attitudeVO를 가져와서 비교할 수 는 없어 시작일 변경??
 			// ==> typeId와 startDate를 비교하면
 			if (typeId.equals("A08")) {
-				checkAttitude = ezAttitudeService.getIsAttitude(typeId, attitudeVO.getWriterId(), startDate, info.getOffSet(), attitudeVO.getCompanyId(), info.getTenantId());
+				checkAttitude = ezAttitudeService.getIsAttitude(typeId, attitudeVO.getWriterId(), startDate, info.getOffSet(), attitudeVO.getCompanyId(), info.getTenantId(),"");
 			}
 			
 			if (!checkAttitude.equals("") && !checkAttitude.equals("0") && !(typeId.equals(attitudeVO.getTypeId()) && startDate.split(" ")[0].equals(attitudeVO.getStartDate().split(" ")[0]))) {
@@ -1997,7 +2008,7 @@ public class EzAttitudeGWController {
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			String returnValue = ezAttitudeService.getIsAttitude(typeId, userId, startDate, info.getOffSet(), info.getCompanyId(), info.getTenantId());
+			String returnValue = ezAttitudeService.getIsAttitude(typeId, userId, startDate, info.getOffSet(), info.getCompanyId(), info.getTenantId(), "");
 						
 			result.put("status", "ok");
 			result.put("code", 0);
