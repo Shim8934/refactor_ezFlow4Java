@@ -33,7 +33,7 @@
 							<span class="inf-spanTxt"><input type="radio" name="targetSpan" value="0" ${survey.paritipateFlag == 0 ? 'checked' : ''}><spring:message code="ezSurvey.t53"/></span>
 							<span class="inf-spanTxt"><input type="radio" name="targetSpan" value="1" ${survey.paritipateFlag == 1 ? 'checked' : ''}><spring:message code="ezSurvey.t54"/></span>
 							<div id="userWrapDiv" class="${survey.paritipateFlag == 0 ? 'user-mainDiv' : 'user-mainDiv on'}">
-								<a class="imgbtn inf-surveyimg" id="targetBttn"><span><spring:message code="ezSurvey.t55"/></span></a>
+								<a class="imgbtn inf-surveyimg" id="targetBttn"><span><spring:message code="ezSurvey.t52"/></span></a>
 								<div class="target-wrapper"><div id="userListDiv" class="user-listDiv"></div></div>
 							</div>
 						</div>
