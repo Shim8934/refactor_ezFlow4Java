@@ -21,12 +21,12 @@
 						<tr>
 							<!-- left -->
 							<td class="left-tdtbl">
-								<table class="infor-tbl">
+								<%-- <table class="infor-tbl">
 									<tr>
 										<th><spring:message code="ezSurvey.t79"/></th>
 										<td><spring:message code="ezSurvey.t55"/></td>
 									</tr>
-								</table>
+								</table> --%>
 								
 								<!-- 검색 -->
 								<div class="infor-searchPanel">
