@@ -329,57 +329,44 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 							}
 							if (maxCount == count) break;
 							
-//							boolean generated = false;
-							
-//							if (generated) {
-								//카운트가 늘어나면서
-								String calcuDate = nsdf.format(date_cal.getTime());
+							Calendar lastDayOfWeek = Calendar.getInstance();
+							lastDayOfWeek.setTime(sdf.parse(vo.getStartDate()));
+							String calcuDate = nsdf.format(date_cal.getTime());
 								
-								//if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {	
-									if(info[0].equals("0")){
-										
-												for (Integer yoil : wDay) {
-													
-													date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
-													calcuDate = nsdf.format(date_cal.getTime());
-													if (!rList.contains(calcuDate)) {
-														if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0 && date_cal.getTime().compareTo(sdf.parse(endDate)) <= 0) {
-														ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
-														tempResultList.add(rVo);
-													}
-													
-												}
-												date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
-										}
-									}else{
-										
-										//row 추가
-											for (Integer yoil : wDay) {
-												date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
-												calcuDate = nsdf.format(date_cal.getTime());
-												if (!rList.contains(calcuDate)) {
-													if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0){
-														ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
-														tempResultList.add(rVo);
-													}
-												}
-											date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
+								if(info[0].equals("0")){
+									for (Integer yoil : wDay) {
+										date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
+										calcuDate = nsdf.format(date_cal.getTime());
+										if (!rList.contains(calcuDate)) {
+											if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0 && date_cal.getTime().compareTo(sdf.parse(endDate)) <= 0) {
+												ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
+												tempResultList.add(rVo);
 											}
+										}
+										date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
 									}
-								//}
-								//요일이 여러개일 경우 하나씩 세팅해줘야된다
-								
-//							}
-							
-							/*if (weekcount == 0) {
-								date_cal.add(Calendar.DATE, (Integer.parseInt(info[3]) - 1) * 7 + 1);
-								weekcount = 6;
-							} else {
-								date_cal.add(Calendar.DATE, 1);
-								weekcount--;
-							}*/
+								} else {
+									for (int j = 0; j < wDay.size(); j++) {
+										date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(j)+1);
+										calcuDate = nsdf.format(date_cal.getTime());
+										
+										if (j == wDay.size() - 1) {
+											lastDayOfWeek.set(Calendar.DAY_OF_WEEK,wDay.get(j)+1);
+										}
+										
+										if (!rList.contains(calcuDate)) {
+											if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0){
+												ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
+												tempResultList.add(rVo);
+											}
+										}
+										date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
+									}
+								}
+							if (lastDayOfWeek.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0 || date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0) {
+								count++;
+							}
 							date_cal.add(Calendar.DATE, (Integer.parseInt(info[3])) * 7);
-							count++;
 						}						
 					break;	
 					
