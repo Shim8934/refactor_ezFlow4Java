@@ -278,7 +278,7 @@
 					$(".personal_content").show();
 				}
 			});
-			
+
 			var timeDiff;
 			
 		    function window_onload_total() {
