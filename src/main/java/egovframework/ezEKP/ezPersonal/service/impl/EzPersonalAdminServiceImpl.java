@@ -375,12 +375,14 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		}
 
 		try {
+			// 진행중인 설문 종료일 업데이트
 			if (companyID != null && companyID.equals("Top")) {
 				ezPersonalAdminDAO.insertPoll_U1(map);
 			} else {
 				ezPersonalAdminDAO.insertPoll_U2(map);
 			}
-			
+
+			// 새로운 설문 삽입
 			if (companyID != null && companyID.equals("Top")) {
 				ezPersonalAdminDAO.insertPoll_I1(map);
 			} else {

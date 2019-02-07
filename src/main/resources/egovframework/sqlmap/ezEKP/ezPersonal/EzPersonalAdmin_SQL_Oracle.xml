@@ -27,7 +27,8 @@
 		<result property="endDate"						column="ENDDATE"				columnIndex="5"/>
 		<result property="width"						column="WIDTH"					columnIndex="6"/>
 		<result property="height"						column="HEIGHT"					columnIndex="7"/>
-		<result property="position"						column="POSITION"				columnIndex="8"/>		
+		<result property="position"						column="POSITION"				columnIndex="8"/>
+		<result property="skinValue"					column="SKINVALUE"				columnIndex="9"/>
 	</resultMap>
 	
 	<select id="EzPersonalAdmin.EZSP_GETNOTICEINFO" parameterClass="Map"		resultMap="personalNoticeVO">
@@ -57,7 +58,8 @@
              	HEIGHT ,
              	POSITION ,
              	STARTDATE ,
-             	ENDDATE 
+             	ENDDATE,
+             	SKINVALUE 
         	FROM
         		TBL_PS_POPUP 
        		WHERE
@@ -132,54 +134,68 @@
 			<![CDATA[
 				SELECT
 					* 
-           		FROM
-           			( 	SELECT
-           					ITEMSEQ ,
-                         	POLLTITLE ,
-                         	POLLTITLE2 ,
-                         	STARTDATE ,
-                         	NVL(ENDDATE, to_date('1900-01-01', 'yyyy-MM-dd HH24:MI:SS')) EndDate  
-           				FROM
-           					TBL_PS_LIGHTPOLL 
-          				WHERE
-          					COMPANYID = UPPER(#v_pCompanyID#)
-          				AND
-          					TENANT_ID = #tenantID#	
-           				ORDER BY ITEMSEQ DESC )
-           		WHERE ROWNUM <= #v_pCount#
+				FROM
+					( 	SELECT
+							ITEMSEQ ,
+							POLLTITLE ,
+							POLLTITLE2 ,
+							STARTDATE ,
+							ENDDATE ,
+							(
+								CASE
+									WHEN (STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')) THEN 1
+									ELSE 0
+								END 
+							) PROGRESS
+						FROM
+							TBL_PS_LIGHTPOLL 
+						WHERE
+							COMPANYID = UPPER(#v_pCompanyID#)
+						AND
+							TENANT_ID = #tenantID#	
+						ORDER BY ITEMSEQ DESC )
+					WHERE ROWNUM <= #v_pCount#
 			]]>
 		</isEqual>
 		<isNotEqual property="v_pStart" compareValue="0">
 			<![CDATA[
 				SELECT
 					* 
-           		FROM ( SELECT
-           						ITEMSEQ ,
-                         		POLLTITLE ,
-                         		POLLTITLE2 ,
-                         		STARTDATE ,
-                         		ENDDATE 
-           					FROM ( SELECT
-           									* 
-                    					FROM ( SELECT
-                    									ITEMSEQ ,
-                                  						POLLTITLE ,
-                                  						POLLTITLE2 ,
-                                  						STARTDATE ,
-                                  						NVL(ENDDATE, to_date('1900-01-01', 'yyyy-MM-dd HH24:MI:SS')) EndDate  
-                  									FROM
-                  										TBL_PS_LIGHTPOLL 
-                   									WHERE
-                   										COMPANYID = UPPER(#v_pCompanyID#)
-                   									AND
-                   										TENANT_ID = #tenantID#	
-                    								ORDER BY
-                    									ITEMSEQ ASC )
-                    					WHERE
-                    						ROWNUM <= #v_pTotal# - #v_pStart# ) temp
-           					ORDER BY ITEMSEQ DESC )
-           		WHERE
-           			ROWNUM <= #v_pCount#
+				FROM (
+						SELECT
+							ITEMSEQ ,
+							POLLTITLE ,
+							POLLTITLE2 ,
+							STARTDATE ,
+							ENDDATE ,
+							PROGRESS
+						FROM ( SELECT
+									* 
+								FROM ( SELECT
+											ITEMSEQ ,
+											POLLTITLE ,
+											POLLTITLE2 ,
+											STARTDATE ,
+											ENDDATE ,
+											(
+												CASE
+													WHEN (STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')) THEN 1
+													ELSE 0
+												END
+											) PROGRESS
+										FROM
+											TBL_PS_LIGHTPOLL 
+										WHERE
+											COMPANYID = UPPER(#v_pCompanyID#)
+										AND
+											TENANT_ID = #tenantID#	
+										ORDER BY
+											ITEMSEQ ASC )
+										WHERE
+											ROWNUM <= #v_pTotal# - #v_pStart# ) temp
+								ORDER BY ITEMSEQ DESC )
+				WHERE
+					ROWNUM <= #v_pCount#
 			]]>
 		</isNotEqual>
 	</select> 
@@ -369,7 +385,7 @@
 							(
 								CASE
 									WHEN 
-										(STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'))
+										(STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'))
 									THEN
 										1
 									ELSE
@@ -404,7 +420,7 @@
 							(
 								CASE
 									WHEN 
-										(STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s'))
+										(STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'))
 									THEN
 										1
 									ELSE
@@ -421,7 +437,8 @@
 											ENDDATE,
 											WIDTH,
 											HEIGHT,
-											POSITION
+											POSITION,
+											INUSE
 										FROM
 											TBL_PS_POPUP 
 										WHERE
@@ -624,10 +641,28 @@
 		<![CDATA[
 			UPDATE
 				TBL_PS_LIGHTPOLL
-      		SET
-      			ENDDATE = #nowDate#
-    		WHERE
-    			ENDDATE IS NULL
+			SET
+				ENDDATE = TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+			WHERE
+				ITEMSEQ = (
+							SELECT
+								ITEMSEQ
+							FROM (
+								SELECT
+									ITEMSEQ
+								FROM
+									TBL_PS_LIGHTPOLL
+								WHERE
+									TENANT_ID = #tenantID#
+								AND
+									(STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'))
+								AND
+									ROWNUM = 1
+								ORDER BY
+									ITEMSEQ 
+								DESC
+								)
+							)
     		AND
     			TENANT_ID = #tenantID#	
 		]]>
@@ -637,14 +672,32 @@
 		<![CDATA[
 			UPDATE
 				TBL_PS_LIGHTPOLL
-         	SET
-         		ENDDATE = to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
-       		WHERE
-       			ENDDATE IS NULL
-        	AND
-        		CompanyID = #v_pCompanyID#
-        	AND
-        		TENANT_ID = #tenantID#	
+			SET
+				ENDDATE = TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+			WHERE
+				ITEMSEQ = (
+							SELECT
+								ITEMSEQ
+							FROM (
+								SELECT
+									ITEMSEQ
+								FROM
+									TBL_PS_LIGHTPOLL
+								WHERE
+									TENANT_ID = #tenantID#
+								AND
+									(STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'))
+								AND
+									ROWNUM = 1
+								ORDER BY
+									ITEMSEQ 
+								DESC
+								)
+							)
+			AND
+				CompanyID = #v_pCompanyID#
+			AND
+				TENANT_ID = #tenantID#
 		]]>
 	</update>
 	
@@ -652,9 +705,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_LIGHTPOLL
-        		( ITEMSEQ, COMPANYID, STARTDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
-        	VALUES
-        		( SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ.NEXTVAL, #v_pCompanyID#, to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
+				( ITEMSEQ, COMPANYID, STARTDATE, ENDDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
+			VALUES
+				( SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ.NEXTVAL, #v_pCompanyID#, TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -662,9 +715,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_LIGHTPOLL
-        		( ITEMSEQ, COMPANYID, STARTDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
-        	VALUES
-        		( SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ.NEXTVAL, UPPER(#v_pCompanyID#), to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
+				( ITEMSEQ, COMPANYID, STARTDATE, ENDDATE, POLLSELECTIONCOUNT, POLLTITLE, POLLTITLE2, ANSWER1, ANSWER2, ANSWER3, ANSWER4, ANSWER5, ANSWER6, ANSWER7, ANSWER8, ANSWER9, ANSWER10, TENANT_ID )
+			VALUES
+				( SEQ_TBL_PS_LIGHTPOLL_ITEMSEQ.NEXTVAL, UPPER(#v_pCompanyID#), TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS'), #v_pSelectionCount#, #v_pPollTitle#, #v_pPollTitle2#, #v_pAnswer1#, #v_pAnswer2#, #v_pAnswer3#, #v_pAnswer4#, #v_pAnswer5#, #v_pAnswer6#, #v_pAnswer7#, #v_pAnswer8#, #v_pAnswer9#, #v_pAnswer10#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -672,9 +725,9 @@
 		<![CDATA[
 			INSERT INTO
 				TBL_PS_POPUP
-				( ITEMSEQ, COMPANYID, STARTDATE, ENDDATE, WIDTH, HEIGHT, POSITION, TITLE, TITLE2, CONTENT, TENANT_ID, INUSE )
+				( ITEMSEQ, COMPANYID, STARTDATE, ENDDATE, WIDTH, HEIGHT, POSITION, TITLE, TITLE2, CONTENT, TENANT_ID, INUSE, SKINVALUE)
 			VALUES 
-				( SEQ_TBL_PS_POPUP_ITEMSEQ.NEXTVAL, #v_pCompanyID#, TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS'), #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #tenantID#, 1 )
+				( SEQ_TBL_PS_POPUP_ITEMSEQ.NEXTVAL, #v_pCompanyID#, TO_DATE(#v_pStartDate#,'YYYY-MM-DD HH24:MI:SS'), TO_DATE(#v_pEndDate#,'YYYY-MM-DD HH24:MI:SS'), #v_pWidth#, #v_pHeight#, #v_pPosition#, #v_pTitle#, #v_pTitle2#, #v_pContent#, #tenantID#, 1, #skinValue# )
 		]]>
 	</insert>
 	
@@ -690,7 +743,8 @@
           		POSITION = #v_pPosition#,
           		TITLE = #v_pTitle#,
           		TITLE2 = #v_pTitle2#,
-          		CONTENT = #v_pContent#
+          		CONTENT = #v_pContent#,
+				SKINVALUE = #skinValue#
     		WHERE
     			ITEMSEQ = #v_pItemSeq#
     		AND
@@ -1089,4 +1143,116 @@
 				COMPANYID = #companyID#
 		]]>
 	</update>
+
+	<update id="EzPersonalAdmin.EZSP_UPDATEPOLL_U1" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_PS_LIGHTPOLL
+			SET
+				STARTDATE = TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+			,
+				ENDDATE = TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+			,
+				POLLSELECTIONCOUNT = #v_pSelectionCount#
+			,
+				POLLTITLE = #v_pPollTitle#
+			,
+				POLLTITLE2 = #v_pPollTitle2#
+			,
+				ANSWER1 = #v_pAnswer1#
+			,
+				ANSWER2 = #v_pAnswer2#
+			,
+				ANSWER3 = #v_pAnswer3#
+			,
+				ANSWER4 = #v_pAnswer4#
+			,
+				ANSWER5 = #v_pAnswer5#
+			,
+				ANSWER6 = #v_pAnswer6#
+			,
+				ANSWER7 = #v_pAnswer7#
+			,
+				ANSWER8 = #v_pAnswer8#
+			,
+				ANSWER9 = #v_pAnswer9#
+			,
+				ANSWER10 = #v_pAnswer10#
+			WHERE
+				ITEMSEQ = #itemSeq#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</update>
+
+	<update id="EzPersonalAdmin.EZSP_UPDATEPOLL_U2" parameterClass="Map"> 
+		<![CDATA[
+			UPDATE
+				TBL_PS_LIGHTPOLL
+			SET
+				STARTDATE = TO_DATE(#startDate#, 'YYYY-MM-DD HH24:MI:SS')
+			,
+				ENDDATE = TO_DATE(#endDate#, 'YYYY-MM-DD HH24:MI:SS')
+			,
+				POLLSELECTIONCOUNT = #v_pSelectionCount#
+			,
+				POLLTITLE = #v_pPollTitle#
+			,
+				POLLTITLE2 = #v_pPollTitle2#
+			,
+				ANSWER1 = #v_pAnswer1#
+			,
+				ANSWER2 = #v_pAnswer2#
+			,
+				ANSWER3 = #v_pAnswer3#
+			,
+				ANSWER4 = #v_pAnswer4#
+			,
+				ANSWER5 = #v_pAnswer5#
+			,
+				ANSWER6 = #v_pAnswer6#
+			,
+				ANSWER7 = #v_pAnswer7#
+			,
+				ANSWER8 = #v_pAnswer8#
+			,
+				ANSWER9 = #v_pAnswer9#
+			,
+				ANSWER10 = #v_pAnswer10#
+			WHERE
+				ITEMSEQ = #itemSeq#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				CompanyID = #v_pCompanyID#	
+		]]>
+	</update>
+
+	<delete id="EzPersonalAdmin.EZSP_UPDATE_RESULT" parameterClass="Map" >
+		<![CDATA[
+			DELETE FROM
+				TBL_PS_LIGHTPOLLRESULT
+			WHERE
+				ITEMSEQ = #itemSeq#
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				RESULT IN ($sbQuery$)
+		]]>
+	</delete>
+
+	<select id="EzPersonalAdmin.EZSP_CheckJoinPoll" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM
+				TBL_PS_LIGHTPOLLRESULT
+			WHERE
+				ITEMSEQ = #itemSeq#
+			AND
+				USERID = #userId#
+			AND
+				TENANT_ID = #tenantID#
+		]]>
+	</select>
 </sqlMap>
