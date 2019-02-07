@@ -268,7 +268,7 @@
 				var currentVal = parseInt(this.value);
 				
 				if (!isNaN(logicNum) && logicNum != -1 && logicmap) {
-					if (currentVal > logicPoint) {
+					if (currentVal >= logicPoint) {
 						processLogicNode(prId, logicNum);
 					}
 					else {
