@@ -69,6 +69,9 @@
 		    		/* sliderName = result[i].sliderName;
 		    		sliderName2 = result[i].sliderName2; */
 		    		sliderRegDate = result[i].regDate;
+		    		if(result[i].url == null) {
+		    			result[i].url = "";
+		    		}
 		    		sliderURL = result[i].url;
 		    		sliderIsUse = result[i].isUse;
 		    		

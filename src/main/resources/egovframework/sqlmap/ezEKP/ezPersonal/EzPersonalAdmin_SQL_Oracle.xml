@@ -239,7 +239,7 @@
                    		REGDATE ,
                    		SN ,
                    		ISUSE ,
-                   		URL
+                   		NVL(URL, ' ')
               		FROM
               			TBL_PS_SLIDERIMAGE 
              		WHERE
@@ -858,7 +858,7 @@
 				TBL_PS_SLIDERIMAGE
         		( SLIDERID, SLIDERNAME, SLIDERNAME2, FILENAME, IMAGEPATH, REGUSERID, REGDATE, COMPANYID, ISUSE, SN, TENANT_ID, URL )
         	VALUES
-        		( #v_SLIDERID#, #v_SLIDERNAME#, #v_SLIDERNAME2#, #v_FILENAME#, #v_IMAGEPATH#, #v_REGUSERID#, #v_REGDATE#, #v_COMPANYID#, 1, #count# + 1, #tenantID#, #v_URL# )
+        		( #v_SLIDERID#, #v_SLIDERNAME#, #v_SLIDERNAME2#, #v_FILENAME#, #v_IMAGEPATH#, #v_REGUSERID#, #v_REGDATE#, #v_COMPANYID#, #v_ISUSE#, #count# + 1, #tenantID#, #v_URL# )
 		]]>
 	</insert>
 	
@@ -1290,4 +1290,17 @@
 				U.PHYSICALDELIVERYOFFICENAME = #companyID#
 		]]>
 	</select>
+
+	<update id="EzPersonalAdmin.EZSP_SETSLIDERIMAGEITEM_ORDER" parameterClass="Map">
+		<![CDATA[
+				UPDATE
+					TBL_PS_SLIDERIMAGE
+				SET
+					SN = #v_SN#
+				WHERE
+					SLIDERID = #v_SLIDERID#
+				AND
+					TENANT_ID = #tenantId#
+		]]>
+	</update>
 </sqlMap>
