@@ -53,13 +53,13 @@ function ptlGetAttitudeList(usedTheme) {
  						$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
  					}
 				} else if (result[i].typeId == "A03") { //퇴근
-					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
+//					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
 					
 					if (usedTheme == 2) {
  						$("#outAttiBtn").parent().addClass("commute_on");
  					}
 					
-					$("#ptlOutAttiBtn").attr("onclick", "").unbind("mouseenter");
+//					$("#ptlOutAttiBtn").attr("onclick", "").unbind("mouseenter");
 					$("#ptlOutAttiBtn").removeClass("out").addClass("in");
 					$("#ptlOutAttiBtn dt").css("margin-bottom","5px");
 					$("#ptlOutAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
@@ -145,7 +145,9 @@ function ptlCheckAttitude(obj, usedTheme) {
 	if (returnValue == 0) {
 		ptlAddAttitude(obj, usedTheme);
 	} else {
-		alert(messages.strLang10);
+		if (obj.getAttribute("type") === "A08" || obj.getAttribute("type") === "A03") { //퇴근,조퇴일때 조퇴,퇴근이 있는 경우 경고창
+			alert(messages.strLang10);
+		}
 		ptlGetAttitudeList(usedTheme);
 		try{}catch(e){}
 	}
@@ -166,14 +168,14 @@ function ptlAddAttitude(obj,usedTheme) {
 	}
 	
 	beforeAlertDate = new Date();
-	var dateAlert = ptlNowAttiTime.getFullYear() + messages.strLang4 + (ptlNowAttiTime.getMonth() + 1) + messages.strLang5 + (ptlNowAttiTime.getDate()) + messages.strLang6 + leadingZeros(ptlNowAttiTime.getHours(), 2) + ":" + leadingZeros(ptlNowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(ptlNowAttiTime.getSeconds(), 2);
-	var saveFlag = confirm(messages.strLang7 + dateAlert + messages.strLang8);
-	if (!saveFlag) {
-		afterAlertDate = new Date();
-		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
-		ptlNowAttiTime.setMilliseconds(ptlNowAttiTime.getMilliseconds() + overTime);
-		return;
-	} 
+//	var dateAlert = ptlNowAttiTime.getFullYear() + messages.strLang4 + (ptlNowAttiTime.getMonth() + 1) + messages.strLang5 + (ptlNowAttiTime.getDate()) + messages.strLang6 + leadingZeros(ptlNowAttiTime.getHours(), 2) + ":" + leadingZeros(ptlNowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(ptlNowAttiTime.getSeconds(), 2);
+//	var saveFlag = confirm(messages.strLang7 + dateAlert + messages.strLang8);
+//	if (!saveFlag) {
+//		afterAlertDate = new Date();
+//		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+//		ptlNowAttiTime.setMilliseconds(ptlNowAttiTime.getMilliseconds() + overTime);
+//		return;
+//	} 
 	$.ajax({
 		type : "POST",
 		async : true,
