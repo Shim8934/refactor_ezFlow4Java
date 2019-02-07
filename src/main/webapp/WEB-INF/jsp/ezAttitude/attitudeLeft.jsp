@@ -78,6 +78,7 @@
 		var beforeAlertDate = "";
 		var afterAlertDate = "";
 		var overTime = "";
+		var timeDiff;
 		
 		window.onload = function(){
 			closedDay = closedDay.split(",");
@@ -198,7 +199,7 @@
 	 	function checkAttitude(obj) {
 			var returnValue = getIsAttitude(obj.getAttribute("type"));
 			
-			if (returnValue == 0 || (obj.getAttribute("type") === "A03" && returnValue == 0)) { //해당근태가 없거나, 퇴근일 경우는 근태등록되게
+			if (returnValue == 0) { //해당근태가 없거나, 퇴근일 경우는 근태등록되게
 				addAttitude(obj);
 			} else {
 				if (obj.getAttribute("type") === "A08" || obj.getAttribute("type") === "A03") { //퇴근,조퇴일때 조퇴,퇴근이 있는 경우 경고창
@@ -323,17 +324,21 @@
     		        }
     		    }
     		}
+    		
+    		var clientTime = new Date();
+    		timeDiff = nowAttiTime.getTime() - clientTime.getTime();
     	}
     	
     	function attiClock() {
 	        var h, m;
 	        var s;
 	        var time = " ";
+	        var nowClientTime = new Date();
+	        var nowServerTime = new Date(nowClientTime.getTime() + timeDiff);
 	        
-	        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
-	        time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2) + ':' + leadingZeros(nowAttiTime.getSeconds(), 2);
+	        time = leadingZeros(nowServerTime.getHours(), 2) + ':' + leadingZeros(nowServerTime.getMinutes(), 2) + ':' + leadingZeros(nowServerTime.getSeconds(), 2);
 	        document.getElementById("timeFlow").innerHTML = time;
-	        gizmo = setTimeout("attiClock()", 1000);
+	        gizmo = setTimeout("attiClock()", 500);
 	    }
     			
     	//카운트 refresh
