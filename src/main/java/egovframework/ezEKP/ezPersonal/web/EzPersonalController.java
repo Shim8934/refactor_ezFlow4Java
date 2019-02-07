@@ -894,7 +894,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		HashMap <String, String> moduleList = new HashMap<String, String>();
 
 		moduleList.put("/ezEmail/mailMain.do", "mail");
-		moduleList.put("/ezSchedule/scheduleIndex.do?funCode=2", "schedule");
+		moduleList.put("/ezSchedule/scheduleIndex.do", "schedule");
 		moduleList.put("/ezApprovalG/apprGMain.do", "appr");
 		moduleList.put("/ezBoard/boardMain.do", "board");
 		moduleList.put("/ezCommunity/communityMain.do", "community");

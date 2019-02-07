@@ -226,12 +226,14 @@
 	        	        $("#ToDaybtn").attr("class","off");
 	        	        
 	        	        $("#divViewHeader").css("color","");
+	        	        $('body').css('overflowY', 'hidden');
 		            }
 		            else if (type == "TODAY") {
 	    	            document.getElementById("TR_Line2").style.display = "";
 	        	        todayonlaod(date.getFullYear(), parseInt(date.getMonth()) + 1, date.getDate());
 	        	        $("#Weekbtn").attr("class","off");
 	        	        $("#ToDaybtn").attr("class","on");
+	        	        $('body').css('overflowY', 'auto');
 	            	}
 	        	} else {
 	            	document.getElementById("TR_Line2").style.display = "none";
@@ -267,6 +269,12 @@
 		    	        document.getElementById("res_Div").style.height = document.documentElement.clientHeight - 190 + "px";
 		        	scroll();
 	    		}
+	    		//else if(Mod == "TODAY") {
+	    			if (navigator.userAgent.indexOf("Chrome") > -1)
+		                document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 110 + "px";
+		            else
+	    	            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 130 + "px";
+	    		//}
 	    	}
 
 	    	function btnAdd_Click() {
@@ -412,7 +420,7 @@
 	        }
 		</script>
 	</head>
-	<body class="mainbody" style="overflow-x:hidden; overflow-y:auto; padding-right: 6px;">
+	<body class="mainbody" style="overflow:hidden; padding-right: 6px;">
 		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
 		<h1 style="text-overflow:ellipsis;overflow:hidden;white-space:nowrap;"><c:out value='${brdNm}'/><span id="TitleInfo"></span></h1>
 		<div id="mainmenu" onload = "makePageSelPage()">

@@ -322,8 +322,8 @@
 			        HwpCtrl.ChangeMode(3);
 					
 			        //2018-10-15 반송 후 배부된 문서의 접수번호 초기화
-			        if (pDraftFlag == "REDRAFT") {
-				        HwpCtrl.SetFieldText("receiptnumber", "");
+			        if (pDraftFlag == "REDRAFT" || pDraftFlag == "SUSIN") {
+				        HwpCtrl.SetFieldText("receiptnumber", "@dp-@nn");
 			        }
 			        
 			        HwpCtrl.SetFieldFocus("doctitle");

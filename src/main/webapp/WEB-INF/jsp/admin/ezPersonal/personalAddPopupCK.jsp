@@ -327,13 +327,11 @@
 					return;
 				}
 
-				// Sdatepicker*Edatepicker check
-				var Sdate = $('#Sdatepicker').datepicker('getDate');
-				var Edate = $('#Edatepicker').datepicker('getDate');
+				var tmpStartDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
+				var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
 
-				days = (Edate - Sdate) / 86400000
-				if(days<0) {
-					alert("<spring:message code = 'ezPersonal.hyh10' />")
+				if (tmpStartDateTime > tmpEndDateTime) {
+					alert("<spring:message code='ezResource.dateChk' />");
 					return;
 				}
 
@@ -342,9 +340,6 @@
 					return;
 				}
 
-				var tmpStartDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
-				var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
-				
 				$.ajax({
 					type : "POST",
 					url : "/admin/ezPersonal/savePopup.do",

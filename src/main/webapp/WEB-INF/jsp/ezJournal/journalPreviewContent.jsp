@@ -51,7 +51,7 @@
 					</dt>
 					<dd class="pretext">
 						<ul class="pretextUL">
-							<li class="preSubject"><span class="popup_open" id="${journal.journalId}" onclick="goJournalDetail(this);"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject"><span class="subjectText" id="PreH_sub_subject" title="<c:out value='${journal.journalTitle }'/>"><c:out value='${journal.journalTitle }' /></span></span></li>
+							<li class="preSubject"><span class="popup_open" id="${journal.journalId}" onclick="goJournalDetail(this);"><img src="/images/kr/cm/btn_newpopup.gif"  title="<spring:message code='ezEmail.t99000001' />" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject"><span class="subjectText" id="PreH_sub_subject" title="<c:out value='${journal.journalTitle }'/>"><c:out value='${journal.journalTitle }' /></span></span></li>
 							<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezJournal.t34" /></span> : <span id="PreH_MailReceiver" onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style="cursor:pointer" onclick="OpenUserInfo('${journal.writerId}');"><c:out value='${journal.writerName }'/></span></span><span class="t_right"><span class="cblack"><spring:message code="ezJournal.t35" /> : </span><span id="PreH_date"><c:out value='${fn:substring(journal.journalDate, 0, 16) }'/></span></span></li>
 							
 						</ul>
