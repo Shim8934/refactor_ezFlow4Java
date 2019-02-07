@@ -15573,6 +15573,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				// 파일 복사에 성공하면 완료문서 관련 테이블에 데이터 입력.
 				if (rtnVal) {
 					map.put("v_DOCID", docID);
+					map.put("v_DOCSTATE", docState);
 					map.put("v_endURL", endURL);
 					map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 					map.put("v_ContainerID", containerID);
