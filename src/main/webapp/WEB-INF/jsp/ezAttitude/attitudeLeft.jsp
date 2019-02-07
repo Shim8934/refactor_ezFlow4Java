@@ -78,6 +78,7 @@
 		var beforeAlertDate = "";
 		var afterAlertDate = "";
 		var overTime = "";
+		var timeDiff;
 		
 		window.onload = function(){
 			closedDay = closedDay.split(",");
@@ -321,17 +322,21 @@
     		        }
     		    }
     		}
+    		
+    		var clientTime = new Date();
+    		timeDiff = nowAttiTime.getTime() - clientTime.getTime();
     	}
     	
     	function attiClock() {
 	        var h, m;
 	        var s;
 	        var time = " ";
+	        var nowClientTime = new Date();
+	        var nowServerTime = new Date(nowClientTime.getTime() + timeDiff);
 	        
-	        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
-	        time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2) + ':' + leadingZeros(nowAttiTime.getSeconds(), 2);
+	        time = leadingZeros(nowServerTime.getHours(), 2) + ':' + leadingZeros(nowServerTime.getMinutes(), 2) + ':' + leadingZeros(nowServerTime.getSeconds(), 2);
 	        document.getElementById("timeFlow").innerHTML = time;
-	        gizmo = setTimeout("attiClock()", 1000);
+	        gizmo = setTimeout("attiClock()", 500);
 	    }
     			
     	//카운트 refresh
