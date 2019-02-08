@@ -199,7 +199,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return "ezSurvey/listmenu/surveyCreate";
 	}
 	
-	@RequestMapping(value="/ezCabinet/surveyDetail.do")
+	@RequestMapping(value="/ezSurvey/surveyDetail.do")
 	public String jspGetSurveyDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetSurveyDetail started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);

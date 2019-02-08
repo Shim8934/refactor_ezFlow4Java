@@ -776,7 +776,7 @@ var SurveyItem = function() {
 	
 	function openSurveyDetail(itemId) {
 		if(itemPopup) {itemPopup.close();}
-		itemPopup = window.open("/ezCabinet/surveyDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(780, 750));
+		itemPopup = window.open("/ezSurvey/surveyDetail.do?itemId=" + itemId, "fileDetail", getOpenWindowfeature(780, 750));
 	}
 	
 	function generatePreviewElmt(divElmt) {
@@ -831,7 +831,7 @@ var SurveyItem = function() {
 		var iframeId     = crrPreMode == "w" ? "mainContentIframeW" : "mainContentIframeH";
 		var ifameContent = document.getElementById(iframeId);
 		
-		ifameContent.src = "/ezCabinet/surveyDetail.do?mode=view&itemId=" + surveyId;
+		ifameContent.src = "/ezSurvey/surveyDetail.do?mode=view&itemId=" + surveyId;
 		
 		ifameContent.addEventListener("load", function(e) {
 			var ifameContentWd = ifameContent.contentWindow || ifameContent.contentDocument;
