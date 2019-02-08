@@ -63,13 +63,13 @@
 				</c:choose>
 			</div>
 			<div id="tab2" class="hidden-tab">
-				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/questionCreate.jsp"></jsp:include>
+				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyQuestion.jsp"></jsp:include>
 			</div>
 			<div id="tab3" class="hidden-tab">
-				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/preview.jsp"></jsp:include>
+				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyLogic.jsp"></jsp:include>
 			</div>
 			<div id="tab4" class="hidden-tab">
-				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/previewSurvey.jsp"></jsp:include>
+				<jsp:include page="/WEB-INF/jsp/ezSurvey/listmenu/surveyPreview.jsp"></jsp:include>
 			</div>
 		</div>
 		
