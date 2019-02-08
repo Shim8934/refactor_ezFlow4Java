@@ -1192,9 +1192,9 @@
 	        var xmlstring = "<DocID>" + DocID + "</DocID>";
 	        xmlpara = loadXMLString(xmlstring);
 	        if (Target == "APPROVALG")
-	            xmlHTTP.open("POST", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
+	            xmlHTTP.open("GET", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
 	        else
-	            xmlHTTP.open("POST", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
+	            xmlHTTP.open("GET", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
 	        xmlHTTP.withCredentials = true;
 	        xmlHTTP.send(xmlpara);
 
