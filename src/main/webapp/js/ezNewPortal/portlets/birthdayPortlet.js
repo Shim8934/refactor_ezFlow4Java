@@ -36,7 +36,7 @@ function getBirthdayList() {
 	window.clearTimeout(ptlTimer);
 	
 	$.ajax({
-		type : "POST",
+		type : "GET",
 		url : "/ezNewPortal/getMonthlyBirthdayEmployees.do",
 		dataType : "json",
 		data : {"birthdayMonth" : ptlBirthMonth, "birthdayCurPage" : ptlBirthCurPage, "birthdayCount" : 6},

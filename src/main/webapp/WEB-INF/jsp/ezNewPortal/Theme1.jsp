@@ -494,7 +494,7 @@
 			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
 		  		(function (portletId, portletUrl, portletName) {
 					$.ajax({
-						type : "POST",
+						type : "GET",
 						dataType : "html",
 						data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
 						url : portletUrl,

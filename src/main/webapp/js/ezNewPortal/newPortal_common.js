@@ -24,7 +24,7 @@ function updatePortletOrderUser(usedTheme) {
 	
 	//ajax로 순서 변경
 	$.ajax({
-		type : "POST",
+		type : "PATCH",
 		url : "/ezNewPortal/updatePortletOrderUser.do",
 		contentType : "application/json",
 		dataType : "text",
@@ -542,7 +542,7 @@ function getBirthdayEmployeesList() {
 	window.clearTimeout(timer);
 	
 	$.ajax({
-		type : "POST",
+		type : "GET",
 		url : "/ezNewPortal/getMonthlyBirthdayEmployees.do",
 		dataType : "json",
 		data : {"birthdayMonth" : birthdayMonth, "birthdayCurPage" : birthdayCurPage, "birthdayCount" : 6},
@@ -620,7 +620,7 @@ function openUserInfo(event) {
 //월별 우수사원 정보 호출
 function getMonthlyBestEmployee() {
 	$.ajax({
-		type : "POST",
+		type : "GET",
 		url : "/ezNewPortal/getMonthlyBestEmployee.do",
 		dataType : "json",
 		success : function(result) {

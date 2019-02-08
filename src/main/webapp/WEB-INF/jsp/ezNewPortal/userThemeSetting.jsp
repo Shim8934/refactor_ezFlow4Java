@@ -40,7 +40,7 @@ $(function(){
 
 function deleteUserThemeSetting() {
 	$.ajax({
-		type : "POST",
+		type : "DELETE",
 		url : "/ezNewPortal/deleteUserThemeSetting.do",
 		success : function() {
 			parent.parent.location.reload();

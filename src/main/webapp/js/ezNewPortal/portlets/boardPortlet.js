@@ -4,7 +4,7 @@
 function getBoardPortletInfo(portletId) {
 	var data = {"portletId" : portletId};
 	$.ajax({
-		type : "POST",
+		type : "GET",
 		dataType : "json",
 		data : data,
 		url : "/ezNewPortal/getCustomBoardInfo.do",
