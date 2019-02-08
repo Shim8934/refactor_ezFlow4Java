@@ -1722,11 +1722,12 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPersonal/setMobileManaged.do")
 	public void setMobileManaged(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
-			Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("setMobileManaged started");
-		String returnValue = "OK";
 
 		userInfo = commonUtil.userInfo(loginCookie);
+
+		String returnValue = "OK";
 		int tenantId = userInfo.getTenantId();
 		String notUsed = request.getParameter("pNotUsed");
 		String userId = userInfo.getId();
@@ -1758,21 +1759,21 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezPersonal/deleteMobileDeviceManaged.do")
 	public void deleteMobileDeviceManaged(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
-			Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("deleteMobileDeviceManaged started");
-		String returnValue = "DELETE";
+
 		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String userId = userInfo.getId();
+
+		String returnValue = "DELETE";
+		String pUserId = request.getParameter("userId");
 		String devId = request.getParameter("pDevId");
+		String userId = pUserId == null ? userInfo.getId() : pUserId;
 		String inputParams = "userId=" + userId + "&devId=" + devId;
-		String getResult = "";
 		logger.debug("inputParams=" + inputParams);
 		
 		try {
 			String requestURL = "/ezTalkGate/deleteUserMobileDevice";
-			
-			getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+			String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
 			logger.debug("getResult=" + getResult);
 		} catch (Exception e) {
 			returnValue = "ERROR";
@@ -1788,23 +1789,21 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value= "/ezPersonal/setMobileDeviceInfo.do")
 	public void setMobileDeviceInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
-			Model model, HttpServletRequest request, Locale locale, HttpServletResponse response) throws Exception {
+			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("setMobileDeviceInfo started");
-		String returnValue = "OK";
 
 		userInfo = commonUtil.userInfo(loginCookie);
-		
+
+		String returnValue = "OK";
 		String userId = userInfo.getId();
 		String devId = request.getParameter("pDevId");
 		String notUsed = request.getParameter("pState");
 		String inputParams = "userId=" + userId + "&devId=" + devId + "&notUsed=" + notUsed;
-		String getResult = "";
 		logger.debug("inputParams=" + inputParams);
 		
 		try {
 			String requestURL = "/ezTalkGate/setMobileDeviceInfo";
-			
-			getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+			String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
 			logger.debug("getResult=" + getResult);
 		} catch (Exception e) {
 			returnValue = "ERROR";

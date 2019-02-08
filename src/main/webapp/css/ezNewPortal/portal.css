@@ -601,7 +601,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:592px; z-index
 .main_time .timeCheckIn dt{margin:15px 0px 12px 0px; padding:0px;}
 .main_time .timeCheckIn dd{margin:0px; padding:0px;}
 .main_time .timeCheckOut{float:left; width:calc(50% - 1px); height:76px; margin:0px; padding:0px; color:#ffffff; font-size:13px; border-left:1px solid #ffffff; text-align:center; background:#45a8fb; cursor:pointer;}
-.main_time .timeCheckOut.in{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
+.main_time .timeCheckOut.in{font-size:18px; font-weight:bold; background:#45c3fb; cursor: pointer;}
 .main_time .timeCheckOut.in dd{margin:-4px 0px 0px 0px;}
 .main_time .timeCheckOut dt{margin:15px 0px 12px 0px; padding:0px;}
 .main_time .timeCheckOut dd{margin:0px; padding:0px;}
@@ -1058,7 +1058,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:592px; z-index
 #theme3Body .main_time .timeCheckIn dt{margin:15px 0px 12px 0px; padding:0px;}
 #theme3Body .main_time .timeCheckIn dd{margin:0px; padding:0px;}
 #theme3Body .main_time .timeCheckOut{float:left; width:calc(50% - 1px); height:76px; margin:0px; padding:0px; color:#ffffff; font-size:13px; border-left:1px solid #ffffff; text-align:center; background:#45a8fb; cursor:pointer;}
-#theme3Body .main_time .timeCheckOut.in{font-size:18px; font-weight:bold; background:#45c3fb; cursor: default;}
+#theme3Body .main_time .timeCheckOut.in{font-size:18px; font-weight:bold; background:#45c3fb; cursor: pointer;}
 #theme3Body .main_time .timeCheckOut.in dd{margin:-4px 0px 0px 0px;}
 #theme3Body .main_time .timeCheckOut dt{margin:15px 0px 12px 0px; padding:0px;}
 #theme3Body .main_time .timeCheckOut dd{margin:0px; padding:0px;}

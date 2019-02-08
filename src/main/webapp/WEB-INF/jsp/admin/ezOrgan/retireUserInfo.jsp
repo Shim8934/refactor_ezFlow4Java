@@ -40,16 +40,7 @@
 	    				DeptName2.innerText = ifNull(info.description2);
 	    				SocialNum.innerText = ifNull(info.extensionAttribute14);
 	    			 
-	    				var AclList = ifNull(info.extensionAttribute1);
 	    				SecurityLevel.value = ifNull(info.extensionAttribute6);
-	    				
-	    				for (var i = 1; i < 12; i++) {	    				
-	    					try {
-	    						if (AclList.indexOf(eval("Check" + i).value + "=1") > -1) {
-	    							eval("Check" + i).checked = true;
-	    						}
-	    				  	} catch(e) {}
-	    				}
 	    				
 	    				if (ifNull(info.extensionAttribute2) != "") {	    					
 	    					document.getElementById("UserPhotoDiv").innerHTML = "<IMG style='width:119px; height:128px;' SRC='/admin/ezOrgan/getPersonalInfo.do?fileName=" + ifNull(info.extensionAttribute2) + "'>";

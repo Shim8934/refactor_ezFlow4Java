@@ -1239,8 +1239,6 @@
 		    
 		    // 모바일 설정 함수 
 		    function mobile_managed() {
-		    	var data = "";
-				var mobileOwner = "";
 		    	var listview = new ListView();
 		    	listview.LoadFromID("lvUserList");
 		    	
@@ -1258,9 +1256,8 @@
 	    		}
 		    	
 	    		var trIdx = listview.GetSelectedRows()[0];
-	    		mobileOwner = $(trIdx).children().eq(0).text();
-	    		data = listview.GetSelectedRows()[0].getAttribute("DATA2");
-		    	
+	    		var mobileOwner = $(trIdx).children().eq(0).text();
+	    		var data = listview.GetSelectedRows()[0].getAttribute("DATA2");
 		    	document.getElementById("userSend").value = data;
 		    	
 		    	var agent = navigator.userAgent.toLowerCase();
@@ -1270,7 +1267,7 @@
 		    	} else {
 			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 300));
 		    	}
-		    } 
+		    }
 		   
 		    // POP3/IMAP 설정 함수
 		    var serUseDisablePopImap_dialogArguments = new Array();
