@@ -226,6 +226,9 @@
                     return;
                 }
             }
+            else {
+            	DivPopUpHidden();
+            }
         }
         
         var getcontname_dialogArgument = new Array();
