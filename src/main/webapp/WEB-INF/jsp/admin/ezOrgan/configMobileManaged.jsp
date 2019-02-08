@@ -47,7 +47,7 @@
 			if (confirm("<spring:message code='ezPortal.t54' />")) {
 		    	xhttp = createXMLHttpRequest();
 		    	xhttp.onreadystatechange = loader;
-				xhttp.open("POST", "/ezPersonal/deleteMobileDeviceManaged.do?pDevId=" + devid);
+				xhttp.open("POST", "/ezPersonal/deleteMobileDeviceManaged.do?pDevId=" + devid + "&userId=" + userId);
 				xhttp.send();
 			}
 	    }
