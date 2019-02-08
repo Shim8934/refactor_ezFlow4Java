@@ -10,6 +10,14 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.CellRangeAddress;
+import org.apache.poi.hssf.util.HSSFColor;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +26,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -105,7 +115,7 @@ public class EzStatisticsApprController {
 	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, HttpServletResponse response, HttpServletRequest request) throws IOException {
 		logger.debug("excelExportOut started");
 
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		/*LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		response.setContentType("application/vnd.ms-excel");
 		response.setCharacterEncoding("UTF-8");
@@ -115,7 +125,133 @@ public class EzStatisticsApprController {
 			PrintWriter writer = response.getWriter();
 			
 			writer.println(request.getParameter("saveExcelData"));
+		}*/
+		
+		// 2019-02-08 김민성 - 엑셀내려받기 workbook 형식 다운로드로 변경
+		HSSFWorkbook workbook = new HSSFWorkbook();
+	    HSSFSheet sheet;
+	    
+	    HSSFCellStyle headerStyle= workbook.createCellStyle();
+	    headerStyle.setFillForegroundColor(HSSFColor.GREY_25_PERCENT.index);
+	    headerStyle.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+	    headerStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+	    headerStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+	    headerStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+	    headerStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+	    headerStyle.setAlignment(CellStyle.ALIGN_CENTER);
+	      
+	    HSSFCellStyle bodyStyle= workbook.createCellStyle();
+	    bodyStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+	    bodyStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+	    bodyStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+	    bodyStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+	    bodyStyle.setAlignment(CellStyle.ALIGN_CENTER);
+	      
+	    Row row;
+	    Cell cell;
+	    
+	    String pFileName = "";
+	    String strDate = EgovDateUtil.getToday("-");
+	    pFileName = strDate+"_Report";
+	    
+	    String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
+	      
+	    Document analysisData = commonUtil.convertStringToDocument(StrAnalysisDate);
+	      
+	    Node tableNode = analysisData.getElementsByTagName("table").item(0);
+		Node tbody = tableNode.getChildNodes().item(0);
+	    Node tableHeadNode1to6;
+		Node tableHeadNode7to12;
+		Node tableBodyNodeType;
+		Node tableBodyNodeData1to6;
+		Node tableBodyNodeData7to12;
+	      
+	    sheet = workbook.createSheet("report");
+	      
+	    tableHeadNode1to6 = tbody.getChildNodes().item(0);
+		tableHeadNode7to12 = tbody.getChildNodes().item(3);
+		tableBodyNodeType = tbody.getChildNodes().item(1);
+		tableBodyNodeData1to6 = tbody.getChildNodes().item(2);
+		tableBodyNodeData7to12 = tbody.getChildNodes().item(5);
+
+row = sheet.createRow(0);
+		
+		for (int i = 0; i < tableHeadNode1to6.getChildNodes().getLength() ; i++){
+		
+			cell = row.createCell(i*4);
+			row.createCell(i*4+1).setCellStyle(headerStyle);
+			row.createCell(i*4+2).setCellStyle(headerStyle);
+			row.createCell(i*4+3).setCellStyle(headerStyle);
+			cell.setCellValue(tableHeadNode1to6.getChildNodes().item(i).getTextContent());
+			cell.setCellStyle(headerStyle);
+			
 		}
+		
+		row = sheet.createRow(1);
+		
+		for (int i = 0; i < tableBodyNodeType.getChildNodes().getLength() ; i++){
+			
+			cell = row.createCell(i);
+			cell.setCellValue(tableBodyNodeType.getChildNodes().item(i).getTextContent());
+			cell.setCellStyle(headerStyle);
+			
+		}
+		
+		row = sheet.createRow(2);
+		
+		for (int i = 0; i < tableBodyNodeData1to6.getChildNodes().getLength() ; i++){
+		
+			cell = row.createCell(i);
+			cell.setCellValue(tableBodyNodeData1to6.getChildNodes().item(i).getTextContent());
+			cell.setCellStyle(bodyStyle);
+			
+		}
+		
+		row = sheet.createRow(3);
+		
+		for (int i = 0; i < tableHeadNode7to12.getChildNodes().getLength() ; i++){
+		
+			cell = row.createCell(i*4);
+			row.createCell(i*4+1).setCellStyle(headerStyle);
+			row.createCell(i*4+2).setCellStyle(headerStyle);
+			row.createCell(i*4+3).setCellStyle(headerStyle);
+			cell.setCellValue(tableHeadNode7to12.getChildNodes().item(i).getTextContent());
+			cell.setCellStyle(headerStyle);
+			
+		}
+		
+		row = sheet.createRow(4);
+		
+		for (int i = 0; i < tableBodyNodeType.getChildNodes().getLength() ; i++){
+			
+			cell = row.createCell(i);
+			cell.setCellValue(tableBodyNodeType.getChildNodes().item(i).getTextContent());
+			cell.setCellStyle(headerStyle);
+			
+		}
+		
+		row = sheet.createRow(5);
+		
+		for (int i = 0; i < tableBodyNodeData7to12.getChildNodes().getLength() ; i++){
+			
+			cell = row.createCell(i);
+			cell.setCellValue(tableBodyNodeData7to12.getChildNodes().item(i).getTextContent());
+			cell.setCellStyle(bodyStyle);
+			
+		}
+		
+		for (int i = 0; i < 6; i++) {
+			
+			sheet.addMergedRegion(new CellRangeAddress(0,0,i*4,i*4+3));
+			sheet.addMergedRegion(new CellRangeAddress(3,3,i*4,i*4+3));
+			 
+		}
+
+
+	    response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");
+	    workbook.write(response.getOutputStream());
+	      
+	    workbook.close();
 
 		logger.debug("excelExportOut ended");
 	}
