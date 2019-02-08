@@ -301,7 +301,7 @@
 			}
 			
 			function ShowUserInfo(UserID) {
-			    window.open("/admin/ezOrgan/retireUserInfo.do?id=" + UserID, "", "height=800px,width=530px,status=no,toolbar=no,menubar=no,location=no,resizable=0"+GetOpenPosition(530, 800));
+			    window.open("/admin/ezOrgan/retireUserInfo.do?id=" + UserID, "", "height=600px,width=530px,status=no,toolbar=no,menubar=no,location=no,resizable=0"+GetOpenPosition(530, 800));
 			}
 			
 			function selectCompanyID() {
