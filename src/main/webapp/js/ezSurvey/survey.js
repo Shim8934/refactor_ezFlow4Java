@@ -2399,7 +2399,7 @@ var SurveyCreate     = function() {
 		var questionList = SurveyCreate.getQs();
 		
 		//Save common question information
-		if (!qstnContent) {alert(SurveyMessages.strQs + " " + SurveyMessages.strContent); return;}
+		if (!qstnContent) {alert(SurveyMessages.strQsContent); return;}
 		
 		question["content"]  = qstnContent;
 		var qstnForm         = qstnArea.next();
