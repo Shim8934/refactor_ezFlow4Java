@@ -114,7 +114,7 @@
 		</table>
 		<div class="btnposition">
 		    <a class="imgbtn">
-		    	<span onClick="return setUserMobileInfo()"><spring:message code='ezOrgan.t124' /></span>
+		    	<span onClick="return setUserMobileInfo()"><spring:message code='ezPersonal.t34' /></span>
 		    </a>
 		</div>
 		<br/>
