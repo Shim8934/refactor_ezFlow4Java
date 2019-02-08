@@ -29,7 +29,7 @@
 			if (notUsed == "1") {
 				$('#chkMobileNotUse').prop('checked', true);
 			}
-		}
+		};
 
 		// 기기별 사용여부 selectBox changed // Section? S:P
 	    function selectChange(devid, obj, section) {
