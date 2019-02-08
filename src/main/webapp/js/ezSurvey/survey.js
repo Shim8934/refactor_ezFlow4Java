@@ -1179,7 +1179,8 @@ var SurveyCreate     = function() {
 		var liAttImg     = $("<li class='off atchLiImg'><span class='survey_icon atchImg'></span></li>");
 		//var liAttVdo     = $("<li class='off atchLiVdo'><span class='survey_icon atchVdo'></span></li>");
 		//var liAttMsic    = $("<li class='off atchLiMsic'><span class='survey_icon atchMsic'></span></li>");
-		var liAttUrl     = $("<li class='off atchLiUrl'><span class='survey_icon atchUrl'></span></li>");
+		//var liAttUrl     = $("<li class='off atchLiUrl'><span class='survey_icon atchUrl'></span></li>");
+		var liAttUrl     = $("<li class='off atchLiUrl'><span class=''>" + SurveyMessages.strAttUrl + "</span></li>");
 		var divRequired  = $("<div class='required'><input type='checkbox'><label>" + SurveyMessages.strRequired + "</label></div>");
 		var selectBox    = $("<div class='selectBox'></div>");
 		var qstnFileInfo = $("<div class='qstnFileInfo'></div>");
@@ -2886,7 +2887,8 @@ var SurveyCreate     = function() {
 		//Add attach and delete buttons
 		var ulBttns  = $("<ul class='survey_atchBtn'></ul>");
 		var liAttch  = $("<li class='off attImg'><span class='survey_icon atchImg'></span></li>");
-		var liUrl    = $("<li class='off attUrl'><span class='survey_icon atchUrl'></span></li>");
+		//var liUrl    = $("<li class='off attUrl'><span class='survey_icon atchUrl'></span></li>");
+		var liUrl    = $("<li class='off attUrl'><span class=''>" + SurveyMessages.strAttUrl + "</span></li>");
 		var liDel    = $("<li class='off delImg'><span class='survey_icon srvyDel'></span></li>");
 		
 		ulBttns.append(liAttch);
