@@ -2344,14 +2344,6 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 #left h4{width:155px; margin:0px auto; border:1px solid #e0e0e0; padding:8px 15px; text-align:left; font-weight:normal; background:url('/images/kr/left/icon_adminMail.gif') no-repeat 12px 10px; cursor:pointer;}
 #left h4 span{padding:0px 0px 0px 20px; line-height:18px;}
 
-/* 20190207 조진호 - error page 추가*/
-.error_wrap{ overflow:hidden; border:1px solid #dedede; width:600px; margin:80px auto; padding:80px;}
-.error_wrap p{ margin:0px; padding:0px; font-family:Malgun Gothic; text-align:center;}
-.error_wrap dl{ margin:20px 0px 0px 40px;; padding:0px; line-height:40px; font-family:Malgun Gothic; text-align:center;}
-.error_wrap dt,dd{ margin:0px; padding:0px; letter-spacing:-1px;}
-.error_wrap dt{ font-size:26px; color:#333; padding:0px 0px 5px 0px;}
-.error_wrap dd{color:#666; font-size:18px; padding:0px 0px 0px 0px;}
-
 /* lnb */
 .lnb{ width:220px; box-sizing:border-box; background-color: #e4e8ec; height:100%; }
 .lnb_btn{ background:url(../images/kr/left/lnb_btn.png) no-repeat; width:22px; height:22px; position:absolute; left:207px; top:0px; z-index:1000; cursor:pointer;}
@@ -3483,3 +3475,11 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li .srvyInfo02{display:inline-block; width:16px; height:16px; background-position:-16px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo03{display:inline-block; width:16px; height:16px; background-position:-32px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo04{display:inline-block; width:16px; height:16px; background-position:-48px -110px !important; margin:6px 8px 0px 0px;}
+
+/* 20190207 조진호 - error page 추가*/
+.error_wrap{ overflow:hidden; border:1px solid #dedede; width:600px; margin:80px auto; padding:80px;}
+.error_wrap p{ margin:0px; padding:0px; font-family:Malgun Gothic; text-align:center;}
+.error_wrap dl{ margin:20px 0px 0px 40px;; padding:0px; line-height:40px; font-family:Malgun Gothic; text-align:center;}
+.error_wrap dt,dd{ margin:0px; padding:0px; letter-spacing:-1px;}
+.error_wrap dt{ font-size:26px; color:#333; padding:0px 0px 5px 0px;}
+.error_wrap dd{color:#666; font-size:18px; padding:0px 0px 0px 0px;}

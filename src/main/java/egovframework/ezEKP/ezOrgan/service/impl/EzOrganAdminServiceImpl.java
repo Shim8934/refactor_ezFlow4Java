@@ -1312,12 +1312,14 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date date                  = new Date();
 		String timeUTC             =  commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+		String initPermission = "c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;";
 		
 		map.put("timeUTC", timeUTC);
 	    map.put("v_TENANT_ID", tenantID);
 		map.put("v_CN", cn);
 		map.put("v_PARENTCN", deptID);
 		map.put("temp", "");
+		map.put("initPermission", initPermission);
 		
     	ezOrganAdminDao.restoreRetireEntry(map);
     	ezOrganAdminDao.restoreRetireEntry_D(map);  

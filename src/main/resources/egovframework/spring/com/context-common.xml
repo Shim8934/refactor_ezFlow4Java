@@ -99,5 +99,7 @@
     <!-- alias name="local.MultiCommonsMultipartResolver" alias="multipartResolver" /-->
     <alias name="spring.RegularCommonsMultipartResolver" alias="multipartResolver" />
     
-    <task:annotation-driven/>
+    <task:annotation-driven executor="ezExecutor" scheduler="ezScheduler" />
+	<task:executor id="ezExecutor" pool-size="50" />
+	<task:scheduler id="ezScheduler" pool-size="50" />
 </beans>

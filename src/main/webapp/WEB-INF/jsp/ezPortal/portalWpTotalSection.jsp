@@ -278,6 +278,7 @@
 					$(".personal_content").show();
 				}
 			});
+
 			var timeDiff;
 			
 		    function window_onload_total() {
@@ -1103,8 +1104,6 @@
 	    		        }
 	    		    }
 	    		}
-	    		
-	    		//$("#todayTime").html(nowAttiTime.getFullYear() + "."  + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "." + leadingZeros(nowAttiTime.getDate(), 2));
 	    		
 	    		$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
 	    		var clientTime = new Date();

@@ -161,9 +161,9 @@
 	                	document.body.style.UserSelect = 'none';
 	            	}
 	            	if (navigator.userAgent.indexOf("Chrome") > -1)
-		                document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 110 + "px";
+		                document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 150 + "px";
 		            else
-	    	            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 130 + "px";
+	    	            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 170 + "px";
 
 	        	    if (pBrdCount != 0) {
 	            	    for (var i = 0; i < pBrdCount; i++) {
@@ -271,9 +271,9 @@
 	    		}
 	    		//else if(Mod == "TODAY") {
 	    			if (navigator.userAgent.indexOf("Chrome") > -1)
-		                document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 110 + "px";
+		                document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 150 + "px";
 		            else
-	    	            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 130 + "px";
+	    	            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 170 + "px";
 	    		//}
 	    	}
 
@@ -493,7 +493,7 @@
                     		</tr>
                     		<tr>
                       			<td colspan="2" id='tdCalViewCell2'  class='tdViewContainer' style="vertical-align:top;"><!-- 'exchangcalendar에서 일,월,주보기 쿼리를 가지고 FolderUrl경로를 사용한다.  ---->
-                        			<div id="idCalendarViewer2" style='height:100%; text-align:center'> </div>
+                        			<div id="idCalendarViewer2" style='height:100%; text-align:center; margin-bottom:10px;'> </div>
                         		</td>
                     		</tr>
                     		<tr style="display:none;" id="approval">
