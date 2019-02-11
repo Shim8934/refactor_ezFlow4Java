@@ -2665,7 +2665,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		String userName = request.getParameter("userName");
 		String userDeptName = request.getParameter("userDeptName");
-		String errMsg = request.getParameter("tempCabinetID");
+		String errMsg = request.getParameter("errMsg");
 		
 		if (userDeptName == null) {
 			userDeptName = "";

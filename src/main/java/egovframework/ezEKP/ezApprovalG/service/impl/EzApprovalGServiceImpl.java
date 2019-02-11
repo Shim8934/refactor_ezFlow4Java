@@ -26348,12 +26348,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              objXML.getElementsByTagName("xsl-version").item(0).setTextContent("2.0");
 
              if (strDocType.equals("req-resend")) {
-                 objXML.getElementsByTagName("contents").item(0).appendChild(objXML.createElement("content"));
-                 objXML.createElement("content").setAttribute("content-role", "return");
-                 objXML.createElement("content").setAttribute("filename", "return");
-                 objXML.createElement("content").setAttribute("content-transfer-encoding", "base64");
-                 objXML.createElement("content").setAttribute("content-type", "text/xml");
-                 objXML.createElement("content").setAttribute("charset", "");
+             	 //어트리뷰트 세팅이 안돼서 수정해줌
+             	 org.w3c.dom.Element contentElement = objXML.createElement("content");
+                 objXML.getElementsByTagName("contents").item(0).appendChild(contentElement);
+                 contentElement.setAttribute("content-role", "return");
+                 contentElement.setAttribute("filename", "return.txt");
+                 contentElement.setAttribute("content-transfer-encoding", "base64");
+                 contentElement.setAttribute("content-type", "text/xml");
+                 contentElement.setAttribute("charset", "euc-kr");
                  objXML.getElementsByTagName("content").item(0).setTextContent(Base64.encodeBase64String(strErrMsg.getBytes("euc-kr")));
              }
 

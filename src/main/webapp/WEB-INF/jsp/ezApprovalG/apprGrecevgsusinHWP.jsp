@@ -357,7 +357,8 @@
 			            if (isRelay) {
 			                try {
 			                	/* 재발송기능 display:none처리 2018-08-25 */
-			                    /* document.getElementById("btnReqReSend").style.display = ""; */
+			                	/* 재발송요청기능 살림 2019-02-08 */
+			                    document.getElementById("btnReqReSend").style.display = ""; 
 			                    if (getNodeText(pRelayDocInfo.getElementsByTagName("isPKI").item(0)) == "Y") {
 			                        hideProgress();
 			
@@ -430,7 +431,7 @@
 			                var NewIsRelay = GetRelayDocInfo();
 			                if (NewIsRelay) {
 			                	/* 재발송기능 display:none처리 */
-			                    /* btnReqReSend.style.display = ""; */
+			                    btnReqReSend.style.display = "";
 			                } else {
 			                    btnReqReSend.style.display = "none";
 			                }
