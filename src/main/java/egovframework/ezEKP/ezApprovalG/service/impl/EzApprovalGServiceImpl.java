@@ -2552,6 +2552,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.aprMakeTmp2Ing7(map);
 			// 문서 정보
 			ezApprovalGDAO.aprMakeTmp2Ing8(map);
+			// 회람 문서 orgdocid 재설정
+			ezApprovalGDAO.aprMakeTmp2Ing9(map);
 
 			rtnVal = "<RESULT>" + docID + "</RESULT>";
 			logger.debug("makeTmp2IngDocInfo Ended");
