@@ -159,6 +159,21 @@
 	                        tempyear--;
 	                    }
 	                    tempyear = selyear + 2;
+	                } else if (selyear + 1 == year){
+	                	document.getElementById("selyear").innerHTML = "";
+	                    tempyear = selyear + 1;
+	                    for (var i = 0; i < 5; i++) {
+	                        var option = document.createElement("OPTION");
+	                        option.value = tempyear;
+	                        option.innerHTML = tempyear;
+
+	                        if (selyear == tempyear)
+	                            option.selected = true;
+
+	                        document.getElementById("selyear").appendChild(option);
+	                        tempyear--;
+	                    }
+	                    tempyear = selyear + 1;
 	                }
 	            }
 	        }

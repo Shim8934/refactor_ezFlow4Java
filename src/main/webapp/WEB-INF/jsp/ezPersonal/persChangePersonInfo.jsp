@@ -202,20 +202,28 @@
 			    }
 			    
 			    function ButtonDeleteClick() {
-					$.ajax({
-			    		type : "POST",
-			    		dataType : "html",
-			    		url : "/ezPersonal/deletePicture.do",
-			    		success : function(result) {
-			    			 if (result == "OK") {
-			    				var literalPhoto = document.getElementById("LiteralPhoto"); 
-			    				literalPhoto.innerHTML = "<image id=myimg <spring:message code='ezPersonal.i1'/>>";
-			    			} 
-						},
-			    		error : function() {
-			    			alert("<spring:message code='ezPersonal.t190'/>");
-			    		}
-			    	});
+			    	var imgName = document.getElementById("myimg").src; //현재 이미지 src
+			    	imgName = imgName.substr(imgName.lastIndexOf("/") + 1);
+			    	
+			    	var dImgName = "<spring:message code='ezPersonal.i1'/>"; //기본 이미지(사진이 없을 경우) src
+			    	dImgName = dImgName.substring(dImgName.lastIndexOf("/") + 1, dImgName.lastIndexOf("."));
+			    	
+			    	if (imgName.indexOf(dImgName) < 0 && confirm("<spring:message code='ezPersonal.psb01'/>")) {
+						$.ajax({
+				    		type : "POST",
+				    		dataType : "html",
+				    		url : "/ezPersonal/deletePicture.do",
+				    		success : function(result) {
+				    			 if (result == "OK") {
+				    				var literalPhoto = document.getElementById("LiteralPhoto"); 
+				    				literalPhoto.innerHTML = "<image id=myimg <spring:message code='ezPersonal.i1'/>>";
+				    			} 
+							},
+				    		error : function() {
+				    			alert("<spring:message code='ezPersonal.t190'/>");
+				    		}
+				    	});
+			    	}
 			     }
 			    
 				function PassWordChange() {

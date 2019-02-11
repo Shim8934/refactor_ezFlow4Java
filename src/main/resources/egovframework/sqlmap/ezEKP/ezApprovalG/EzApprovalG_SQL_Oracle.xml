@@ -5788,7 +5788,7 @@
 				SVTASKCLASS.TEMPFLAG ,
 				SVTASKCLASS.KEEPINGMETHOD ,
 				SVTASKCLASS.KEEPINGPLACE ,
-				SVTASKCLASS.TASKNAME$lang$ ,
+				SVTASKCLASS.TASKNAME$lang$ TASKNAME,
 				SVTASKCLASS.SCName$lang$ SCName,
 				SVTASKCLASS.SubCategoryCode ,
 				SVTASKCLASS.MCName$lang$ MCName,
@@ -7089,6 +7089,7 @@
 	         		COMPANYID = #companyID#	         		
 		</isEqual>
 		<isNotEqual property="v_PMODE" compareValue="APR">
+			<isEqual property="v_PMODE" compareValue="END">
 				SELECT 
 						'DOC' TYPE  ,
 		                DocTitle FILENAME  ,
@@ -7130,7 +7131,58 @@
 		        AND
 	         			TENANT_ID = #v_TENANTID#
 	         	AND
-	         		    COMPANYID = #companyID#	         			
+	         		    COMPANYID = #companyID#
+			</isEqual>
+			<isNotEqual property="v_PMODE" compareValue="END">
+				SELECT
+					TYPE,
+					FILENAME,
+					FILEPATH
+				FROM
+					(
+						SELECT 
+							'DOC' TYPE,
+							DOCTITLE FILENAME,
+							HREF FILEPATH,
+							CONCAT(CONCAT(OWNERID, '@'), TO_CHAR(SN)) AS DOCID
+						FROM
+							TBL_TMPAPRDOCINFO
+						WHERE
+							TENANT_ID = #v_TENANTID#
+						AND
+							COMPANYID = #companyID#
+						
+						UNION ALL
+						
+						SELECT
+							'ATT' TYPE,
+							DISPLAYNAME FILENAME,
+							ATTACHFILEHREF FILEPATH,
+							CONCAT(CONCAT(OWNERID, '@'), TO_CHAR(SN)) AS DOCID
+						FROM
+							TBL_TMPATTACHINFO
+						WHERE
+							TENANT_ID = #v_TENANTID#
+						AND
+							COMPANYID = #companyID#
+						
+						UNION ALL
+						
+						SELECT
+							'ATTDOC' TYPE,
+							ATTACHDOCNAME FILENAME,
+							ATTACHDOCURL FILEPATH,
+							CONCAT(CONCAT(OWNERID, '@'), TO_CHAR(SN)) AS DOCID
+						FROM
+							TBL_TMPAPRDOCATTACHINFO
+						WHERE
+							TENANT_ID = #v_TENANTID#
+						AND
+							COMPANYID = #companyID#
+					)
+				WHERE
+					DOCID = #v_PDOCID#
+			</isNotEqual>
 		</isNotEqual>
 		
 	</select>
@@ -10880,16 +10932,36 @@
            		COMPANYID = #companyID#            	
 		</isEqual>
 		<isNotEqual property="v_FLAG" compareValue="APR">
-		   SELECT 
-		 		HREF 
-           FROM 
-           		TBL_ENDAPRDOCINFO 
-           WHERE  
-           		DOCID = #v_DOCID#
-           AND
-            	TENANT_ID = #v_TENANTID# 
-           AND
-           		COMPANYID = #companyID#             	
+			<isEqual property="v_FLAG" compareValue="END">
+			   SELECT 
+			 		HREF 
+	           FROM 
+	           		TBL_ENDAPRDOCINFO 
+	           WHERE  
+	           		DOCID = #v_DOCID#
+	           AND
+	            	TENANT_ID = #v_TENANTID# 
+	           AND
+	           		COMPANYID = #companyID#             	
+			</isEqual>
+			<isNotEqual property="v_FLAG" compareValue="END">
+				SELECT 
+					HREF
+				FROM
+					(
+						SELECT 
+							NVL(HREF, '') AS HREF,
+							CONCAT(CONCAT(OWNERID, '@'), TO_CHAR(SN)) AS DOCID
+						FROM 
+							TBL_TMPAPRDOCINFO
+						WHERE
+							TENANT_ID = #v_TENANTID#
+						AND
+							COMPANYID = #companyID#
+					)
+				WHERE
+					DOCID = #v_DOCID#
+			</isNotEqual>
 		</isNotEqual>
 	</select>
 	
@@ -10909,18 +10981,40 @@
            		COMPANYID = #companyID#     	
 		</isEqual>
 		<isNotEqual property="v_FLAG" compareValue="APR">
-			SELECT 
-				ATTACHFILEHREF
-            FROM 
-            	TBL_ENDATTACHINFO 
-            WHERE  
-            	DOCID = #v_DOCID#
-            AND
-            	ATTACHFILESN = #docAttachSN#
-            AND
-            	TENANT_ID = #v_TENANTID#
-           	AND
-           		COMPANYID = #companyID#     	
+			<isEqual property="v_FLAG" compareValue="END">
+				SELECT 
+					ATTACHFILEHREF
+	            FROM 
+	            	TBL_ENDATTACHINFO 
+	            WHERE  
+	            	DOCID = #v_DOCID#
+	            AND
+	            	ATTACHFILESN = #docAttachSN#
+	            AND
+	            	TENANT_ID = #v_TENANTID#
+	           	AND
+	           		COMPANYID = #companyID#
+       		</isEqual>
+			<isNotEqual property="v_FLAG" compareValue="END">
+				SELECT
+					ATTACHFILEHREF
+				FROM
+					(
+						SELECT
+							NVL(ATTACHFILEHREF, '') AS ATTACHFILEHREF,
+							CONCAT(CONCAT(OWNERID, '@'), TO_CHAR(SN)) AS DOCID
+						FROM
+							TBL_TMPATTACHINFO
+						WHERE
+							ATTACHFILESN = #docAttachSN#
+						AND
+							TENANT_ID = #v_TENANTID#
+						AND
+							COMPANYID = #companyID#
+					)
+				WHERE
+					DOCID = #v_DOCID#
+			</isNotEqual>
 		</isNotEqual>
 	</select>
 <!-- 	<procedure id="EzApprovalG.getSusinSNInside" parameterClass="Map" resultClass="String"> -->
@@ -15209,6 +15303,29 @@
           AND 
           	  SN = #v_PSN#)
 	</insert>
+	
+	<update id="EzApprovalG.aprMakeTmp2Ing9" parameterClass="Map">
+		UPDATE 
+			TBL_APRDOCINFO
+		SET 
+			ORGDOCID = #v_PDOCID#
+		WHERE 
+			ORGDOCID = 
+				(
+				SELECT 
+					SUBSTR(SUBSTR(HREF,INSTR(HREF,'/',-1,1)+1),0,INSTR(SUBSTR(HREF,INSTR(HREF,'/',-1,1)+1),'.',1,1)-1)
+				  FROM
+					TBL_TMPAPRDOCINFO
+				  WHERE  	
+		          	  TENANT_ID = #v_TENANTID#
+		          AND
+		          	  COMPANYID = #companyID#
+		          AND
+		          	  OWNERID = #v_PUSERID#
+		          AND 
+		          	  SN = #v_PSN#)
+	</update>
+	
 <!-- 	<procedure id="EzApprovalG.transferCabinet" parameterClass="Map"> -->
 <!-- 		{CALL SPTRANSCABINET1(#v_DDeptCode#, #v_DDeptName#, #v_DDeptName2#, #v_DTaskCode#, #v_DTaskName#, #v_DTaskName2#, #v_CabIDList#, #v_DeptMID#, #v_DeptMName#, #v_DeptMName2#)} -->
 <!-- 	</procedure> -->
