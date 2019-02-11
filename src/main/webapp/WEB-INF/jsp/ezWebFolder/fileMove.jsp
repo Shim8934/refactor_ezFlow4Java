@@ -21,6 +21,8 @@
 		var currentFolders = [];
 		var arrSubFolder   = [];
 		var mode           = "<c:out value='${mode}'/>";
+		var functionType   = "";
+		var targetId 	   = "";
 		
 		window.onbeforeunload = function() {
 			parent.closeAllPopup();
@@ -260,6 +262,14 @@
 			wClose();
 		}
 		
+		function afterSuccessForDup(dupFolder) {
+			if (dupFolder != "" || dupFolder != null) {
+				parent.leftFolderCPMV(functionType, dupFolder, targetId);
+			}
+			parent.refreshView();
+			wClose();
+		}
+		
 		function fileCopy() {
 			var type = document.querySelector('input[name=treeType]:checked').value;
 			
@@ -268,7 +278,7 @@
 				return;
 			}
 			
-			if (type != "share" && selectedLevel == '0') {
+			if (type == "comp" && selectedLevel == '0') {
 				alert("<spring:message code='ezWebFolder.t18'/>");
 				return;
 			}
@@ -277,6 +287,9 @@
 				alert("<spring:message code='ezWebFolder.t210'/>");
 				return;
 			}
+			
+			functionType = "cp";
+			targetId = selectedFolder; 
 			
 			$.ajax({
 				type: "POST",
@@ -308,7 +321,7 @@
 					switch(code) {
 						case 0: 
 							alert("<spring:message code='ezWebFolder.t248'/>");
-							afterSuccess();
+							afterSuccessForDup(folderList);
 							break;
 						case 1:
 							alert("<spring:message code='ezWebFolder.t306'/>");
@@ -323,13 +336,39 @@
 							alert("<spring:message code='ezWebFolder.t250' />");
 							break;
 						case 8:
+							var folderArr = new Array();
+							folderArr = folderList.split(',');
+							var infoArray = data.duplicateInfoArray;
+							
+							var dirDupInfo = infoArray.filter( 
+								function(ele) {
+									return ele.newType ==="DIRECTORY";
+								}		
+							).map( // 배열 내의 모든 요소 각각에 대하여 주어진 함수 결과를 모아 새로운 배열 반환
+								function(ele) {
+									return ele.newId;
+								}
+							);
+							
+							var nEquFolder = folderArr.filter(
+								function(ele) {
+									return dirDupInfo.indexOf(ele) == -1;
+								}		
+							)
+							
+							var dupFolder = ""; 
+							// -1 인거는 같지 않은거 이동시키는 로직을 처리해야ㅎ하는거 
+							if (nEquFolder != null || nEquFolder != undefined || nEquFolder.length != 0) {
+								dupFolder = nEquFolder.toString();
+							}
+							
 							parent.duplicateFile.process({
 								workType: "copy",
 								infoArray: data.duplicateInfoArray, 
 								folderId: selectedFolder
 							});
 							
-							afterSuccess();
+							afterSuccessForDup(dupFolder);
 							break;
 					}
 				},
@@ -347,7 +386,7 @@
 				return;
 			}
 			
-			if (type != "share" && selectedLevel == '0') {
+			if (type == "comp" && selectedLevel == '0') {
 				alert("<spring:message code='ezWebFolder.t18'/>");
 				return;
 			}
@@ -356,6 +395,9 @@
 				alert("<spring:message code='ezWebFolder.t210'/>");
 				return;
 			}
+			
+			functionType = "mv";
+			targetId = selectedFolder;
 			
 			$.ajax({
 				type: "POST",
@@ -388,7 +430,7 @@
 					switch(code) {
 						case 0: 
 							alert("<spring:message code='ezWebFolder.t247'/>");
-							afterSuccess();
+							afterSuccessForDup(folderList);
 							break;
 						case 1:
 							alert("<spring:message code='ezWebFolder.t306'/>");
@@ -403,13 +445,39 @@
 							alert("<spring:message code='ezWebFolder.t243' />");
 							break;
 						case 8:
+							var folderArr = new Array();
+							folderArr = folderList.split(',');
+							var infoArray = data.duplicateInfoArray;
+							
+							var dirDupInfo = infoArray.filter( 
+								function(ele) {
+									return ele.newType ==="DIRECTORY";
+								}		
+							).map( // 배열 내의 모든 요소 각각에 대하여 주어진 함수 결과를 모아 새로운 배열 반환
+								function(ele) {
+									return ele.newId;
+								}
+							);
+							
+							var nEquFolder = folderArr.filter(
+								function(ele) {
+									return dirDupInfo.indexOf(ele) == -1;
+								}		
+							)
+							
+							var dupFolder = ""; 
+							// -1 인거는 같지 않은거 이동시키는 로직을 처리해야ㅎ하는거 
+							if (nEquFolder != null || nEquFolder != undefined || nEquFolder.length != 0) {
+								dupFolder = nEquFolder.toString();
+							}
+							
 							parent.duplicateFile.process({
 								workType: "move",
 								infoArray: data.duplicateInfoArray, 
 								folderId: selectedFolder
 							});
 							
-							afterSuccess();
+							afterSuccessForDup(dupFolder);
 							break;
 					}
 				},

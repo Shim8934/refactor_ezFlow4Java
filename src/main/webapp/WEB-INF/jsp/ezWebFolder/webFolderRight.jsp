@@ -328,6 +328,7 @@
 			searchContext.clearRequirement();
 			$("#idSelect").val("");
 			onFileTypeChange("");
+			selectLeftFolder(folderId);
 		}
 		
 		function renderData(result) {
@@ -473,6 +474,7 @@
 					
 					if(result[i]["typeId"] == "folder") {
 						trElmt.ondblclick = function() {
+							selectLeftFolder(this.getAttribute("targetId"));
 							getFileList(this.getAttribute("targetId"));
 						};
 					}
@@ -639,6 +641,32 @@
         
         function hideProgress() {
         	document.getElementById("progressPanel").style.display = "none";
+        }
+        
+        function selectLeftFolder(targetID) {
+        	window.parent.frames["left"].selectFolder(targetID);
+        }
+
+        function leftFolderUpdate(functionType, fileId, parentFolderId, targetId, folderName) {
+        	if (functionType == "insert" && fileId == 0) {
+        		window.parent.frames["left"].insertLeftFolder(parentFolderId, targetId, folderName);
+        	} else if (functionType == "update" && fileId == 0) {
+        		window.parent.frames["left"].updateLeftFolder(parentFolderId, targetId, folderName);
+        	}
+        }
+        
+        function leftFolderDelete(folderList) {
+        	window.parent.frames["left"].deleteLeftFolder(folderList);
+        }
+        
+        function leftFolderCPMV(functionType, folderList, toTargetId) {
+        	if (folderList != null || folderList != "") {
+	        	if(functionType == "mv") {
+	        		window.parent.frames["left"].moveLeftFolder(folderList, toTargetId);
+	        	} else if (functionType == "cp") {
+	        		window.parent.frames["left"].copyLeftFolder(folderList, toTargetId, folderId);
+	        	}
+        	}
         }
         
     </script>
