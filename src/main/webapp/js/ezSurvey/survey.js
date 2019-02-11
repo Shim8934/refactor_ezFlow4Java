@@ -26,9 +26,11 @@ var SurveyCreate     = function() {
 		 { text : SurveyMessages.strSlider  , value: 7, selected: false, imageSrc: "/images/ezSurvey/qsType07.png"},
 		 { text : SurveyMessages.strRanking , value: 8, selected: false, imageSrc: "/images/ezSurvey/qsType08.png"},
 		 { text : SurveyMessages.strDropdown, value: 9, selected: false, imageSrc: "/images/ezSurvey/qsType09.png"}];
-	
+	// 설문 저장 및 설문 정보 불러올 시 사용되는 설문 객체
 	var surveyObj   = {
+		// 설문 정보 관련 사항
 		infor     : {},
+		// 질문 관련 사항
 		questions : []
 	};
 	
@@ -74,7 +76,7 @@ var SurveyCreate     = function() {
 		
 		$("#startDate").datepicker(datepickerSt);
 		$("#endDate").datepicker(datepickerSt);
-		
+		// 설문 생성시, 재사용인지 처음 생성하는 것인지 확인
 		if (!surveyItem) {
 			var today = new Date();
 			$("#startDate").datepicker("setDate", today);
@@ -171,7 +173,7 @@ var SurveyCreate     = function() {
 			window.addEventListener("beforeunload", function(e) {changeSurveyState();}, false);
 		}
 	}
-	
+	// 설문 임시저장
 	function saveDraftSurvey() {
 		//Check survey information
 		var returnObj = checkStep1();
@@ -215,7 +217,7 @@ var SurveyCreate     = function() {
 		surveyObj['questions'] = [];
 		window.parent.frames["right"].location.href = "/ezSurvey/surveyList.do?mode=processing";
 	}
-	
+	// 설문 저장
 	function saveSurvey() {
 		if(confirm(SurveyMessages.strSaveAsk) == true) {
 			$.ajax({
@@ -235,7 +237,7 @@ var SurveyCreate     = function() {
 			});
 		}
 	}
-	
+	// 설문 정보 저장
 	function saveSurveyInformation() {
 		var surveyInfoWrap = document.querySelector("div[class='surveyinfo-wrap']");
 		var surveyAttWrap  = document.querySelector("div[class='survey-attach']");
@@ -306,7 +308,7 @@ var SurveyCreate     = function() {
 			default: alert(SurveyMessages.strError)   ; return;
 		}
 	}
-	
+	// 설문 정보 입력 단계
 	function gotoFirstStep() {
 		var listTabElmt          = document.getElementsByClassName("headpanel")[0].children;
 		listTabElmt[0].className = "crust selected";
@@ -318,7 +320,7 @@ var SurveyCreate     = function() {
 		document.getElementById("tab1").className = "select-tab";
 		lastStep = 1;
 	}
-	
+	// 질문 생성 단계
 	function gotoSecondStep() {
 		var backFlag = "";
 		if (enterLogic == 'Y') {backFlag = deleteAllLogics();}	// 로직 설정 단계에 진입했는지 확인
@@ -337,7 +339,7 @@ var SurveyCreate     = function() {
 			lastStep = 2;
 		}
 	}
-	
+	// 분기 설정 단계
 	function gotoThirdStep() {
 		var checkObj = prepareForStep3();
 		if (checkObj["error"]) {alert(checkObj["error"]); return;}
@@ -352,9 +354,9 @@ var SurveyCreate     = function() {
 		document.getElementById("tab3").className = "select-tab";
 		enterLogic = 'Y';
 		lastStep = 3;
-		getSurveyPreview(lastStep);
+		showSurveyQuestions(lastStep);
 	}
-	
+	// 설문 확인 단계
 	function gotoForthStep() {
 		var checkObj = prepareForStep4();
 		if (checkObj["error"]) {alert(checkObj["error"]); return;}
@@ -368,7 +370,7 @@ var SurveyCreate     = function() {
 		$("div[id^=tab]").attr("class", "hidden-tab");
 		document.getElementById("tab4").className = "select-tab";
 		lastStep = 4;
-		getSurveyPreview(lastStep);
+		showSurveyQuestions(lastStep);
 	}
 	
 	function selectStep(tabIdx, spanElemt) {
@@ -392,13 +394,13 @@ var SurveyCreate     = function() {
 			case 3: checkObj = prepareForStep3();
 					if (checkObj["error"]) {alert(checkObj["error"]); return;}
 					toggleStep(spanElemt, crrSpan, tabIdx);
-					getSurveyPreview(tabIdx);
+					showSurveyQuestions(tabIdx);
 					enterLogic = 'Y';
 					lastStep = 3; break;
 			case 4: checkObj = prepareForStep4();
 					if (checkObj["error"]) {alert(checkObj["error"]); return;}
 					toggleStep(spanElemt, crrSpan, tabIdx);
-					getSurveyPreview(tabIdx);
+					showSurveyQuestions(tabIdx);
 					lastStep = 4; break;
 		}
 	}
@@ -414,7 +416,7 @@ var SurveyCreate     = function() {
 	
 	function focusonQuestionTitleStep1() {document.getElementById("info-input-ttl").focus();}
 	function focusonQuestionTitleStep2() {document.querySelector("div[class='quesDiv']").querySelector("input[class='questnTitle']").focus();}
-	function getSurveyPreview(step) {prevQstn(step);}
+	function showSurveyQuestions(step) {prevQstn(step);}
 	
 	function prepareForStep2() {
 		var returnObj = {};
@@ -530,7 +532,7 @@ var SurveyCreate     = function() {
 		}
 		return returnObj;
 	}
-	// 분기 설정 이후 step2로 되돌아갈 시, 질문의 모든 로직 삭제
+	// 분기 설정 이후 step2로 되돌아갈 시, 질문의 모든 분기 삭제
 	function deleteAllLogics() {
 		var questionList = surveyObj.questions;
 		var questionLength = questionList.length;
@@ -581,7 +583,7 @@ var SurveyCreate     = function() {
 			return backFlag;
 		}
 	}
-	
+	// 분기 유무 체크
 	function checkAllLogicAndSkip(questions, length) {
 		var result = "";
 		
@@ -762,7 +764,7 @@ var SurveyCreate     = function() {
 		var spanElmt = imgElmt.parentElement;
 		spanElmt.parentElement.removeChild(spanElmt);
 	}
-	
+	// 재사용할 설문 정보 획득
 	function getReuseQuestions() {
 		$.ajax({
 			type: "GET",
@@ -823,7 +825,7 @@ var SurveyCreate     = function() {
 			userPanel.className   = "logicPanel off";
 		}
 	}
-	
+	// 분기맵 나타내기
 	function showLogicMap() {
 		if (!bnk) {
 			bnk = cytoscape({
@@ -942,7 +944,7 @@ var SurveyCreate     = function() {
 	function generateLogicpEdgeTip(table, optList, sourceQst, targetId) {
 		switch (parseInt(sourceQst["type"])) {
 			case 1: makeCommonToolTip(table, optList)                           ; break;
-			case 7: makeSliderEdgeToolTip(table, sourceQst, targetId) ; break;
+			case 7: makeSliderEdgeToolTip(table, sourceQst, targetId) 			; break;
 			case 8: makeCommonToolTip(table, optList)                           ; break;
 		}
 	}
@@ -1177,9 +1179,6 @@ var SurveyCreate     = function() {
 		var questnTitle  = $("<input class='questnTitle' value='" + qstContent + "' maxLength='250' placeholder='" + SurveyMessages.strQsContent + "' />");
 		var ulToolTip    = $("<ul class='survey_atchBtn'></ul>");
 		var liAttImg     = $("<li class='off atchLiImg'><span class='survey_icon atchImg'></span></li>");
-		//var liAttVdo     = $("<li class='off atchLiVdo'><span class='survey_icon atchVdo'></span></li>");
-		//var liAttMsic    = $("<li class='off atchLiMsic'><span class='survey_icon atchMsic'></span></li>");
-		//var liAttUrl     = $("<li class='off atchLiUrl'><span class='survey_icon atchUrl'></span></li>");
 		var liAttUrl     = $("<li class='off atchLiUrl'><span class=''>" + SurveyMessages.strAttUrl + "</span></li>");
 		var divRequired  = $("<div class='required'><input type='checkbox'><label>" + SurveyMessages.strRequired + "</label></div>");
 		var selectBox    = $("<div class='selectBox'></div>");
@@ -1187,12 +1186,8 @@ var SurveyCreate     = function() {
 		var fileList     = $("<div class='fileList'></div>");
 		var qstUl        = $("<ul class='qstUl'></ul>");
 		var qstnImgFile  = $("<input type='file' class='qstnImgFile' accept='/*'/>");
-		//var qstnAudFile  = $("<input type='file' class='qstnAudFile' accept='audio/*'/>");
-		//var qstnVidFile  = $("<input type='file' class='qstnVidFile' accept='video/*'/>");
 		
 		ulToolTip.append(liAttImg);
-		//ulToolTip.append(liAttVdo);
-		//ulToolTip.append(liAttMsic);
 		ulToolTip.append(liAttUrl);
 		
 		qstnRow.append(questnTitle);
@@ -1204,8 +1199,6 @@ var SurveyCreate     = function() {
 		qstUl.append(qstAtt);
 		fileList.append(qstUl);
 		fileList.append(qstnImgFile);
-		//fileList.append(qstnAudFile);
-		//fileList.append(qstnVidFile);
 		qstnFileInfo.append(fileList);
 		
 		quesDiv.append(qstnFileInfo);
@@ -1782,7 +1775,7 @@ var SurveyCreate     = function() {
 			$("#skipScndBtnGrp" + id).css("display", "none");
 			$("#skipThrdBtnGrp" + id).css("display", "none");
 		});
-		
+		// skip 수정 버튼 이벤트
 		$(".prevQsArea").on("click", ".mdfSkip", function() {
 			var id = $(this).attr("id").replace("mdfSkip", "");
 			var qstnList = SurveyCreate.getQs();
@@ -1802,7 +1795,7 @@ var SurveyCreate     = function() {
 			var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
 			outputElmt.textContent = this.value;
 		});
-		
+		// 질문 정렬
 		$(".quesBacgr").sortable({
 			handle: ".mvBtn",
 			cursor: "move",
@@ -1863,7 +1856,7 @@ var SurveyCreate     = function() {
 		//Update new questions list
 		surveyObj["questions"] = JSON.parse(JSON.stringify(newQstList));
 	}
-	
+	// 필수 답변 표시(*) 추가 함수
 	function addImptMark(id) {
 		var wrapper = $("#prevQstn" + id);
 		var impttTag = "";
@@ -2321,7 +2314,7 @@ var SurveyCreate     = function() {
 		
 		return questionOpts;
 	}
-	
+	// 행렬 질문 생성
 	function mkMatrixQstn(question) {
 		var id         = question.level;
 		var inpType    = question.type == 3 ? "radio" : "checkbox";
@@ -3007,7 +3000,7 @@ var SurveyCreate     = function() {
 	
 	function isValid(value) {if (!isNaN(value) && parseFloat(value) >= 0 && value % 1 === 0) {return true;} else {return false;}}
 	
-	// 미리보기 질문 폼 생성
+	// 질문 생성
 	function prevQstn(step) {
 		var qstnList = SurveyCreate.getQs();
 		var qsArea = "";
@@ -3150,7 +3143,7 @@ var SurveyCreate     = function() {
 		return prevQsContent;
 	}
 	
-	// 로직 폼 생성
+	// 분기 생성
 	function mkLogicForm(id) {
 		var prevWrapper = $("#prevQstn" + id);
 		
@@ -3181,7 +3174,7 @@ var SurveyCreate     = function() {
 		}
 	}
 	
-	// select 질문에 logic form 추가
+	// select 질문에 분기 추가
 	function sltLogicForm(prevWrapper, htmlOption, question, qstnId) {
 		var id = "";
 		var logicNum = "";
@@ -3232,7 +3225,7 @@ var SurveyCreate     = function() {
 		}
 	}
 	
-	// slider 질문에 logic form 추가
+	// slider 질문에 분기 추가
 	function slidLogicForm(prevWrapper, htmlOption, question, qstnId) {
 		var id = "";
 		var qstnOpt = question.option;
@@ -3293,7 +3286,7 @@ var SurveyCreate     = function() {
 		}
 	}
 	
-	// dropdown 질문에 logic form 추가
+	// dropdown 질문에 분기 추가
 	function drdwLogicForm(prevWrapper, htmlOption, question, qstnId) {
 		var id = "";
 		if (qstnId) {
@@ -3344,7 +3337,7 @@ var SurveyCreate     = function() {
 			}
 		}
 	}
-	// select 질문 logic form 나타내기
+	// select 질문 분기 나타내기
 	function showSltLogicForm(id, qstn) {
 		var prevQsWrapper = $("#prevQstn" + id);
 		var opt = prevQsWrapper.find(".prevQsOpt").find(".opt");
@@ -3359,7 +3352,7 @@ var SurveyCreate     = function() {
 		}
 	}
 	
-	// select 질문 객체, ui에 로직 value 추가
+	// select 질문 객체, ui에 분기 번호 추가
 	function addSltLogic(id, qstn) {
 		var wrapper = $("#prevQstn"+id);
 		var opt = wrapper.find(".opt");
@@ -3387,7 +3380,7 @@ var SurveyCreate     = function() {
 		return "success";
 	}
 	
-	// slider 질문 logic form 나타내기
+	// slider 질문에 분기 나타내기
 	function showSlidLogicForm(id, qstn) {
 		var prevQsWrapper = $("#prevQstn" + id);
 		
@@ -3401,7 +3394,7 @@ var SurveyCreate     = function() {
 		$("#slt" + id).val(logicNum).prop("selected", true).css("display", "");
 	}
 	
-	// slider 질문 객체, ui에 로직 value 추가
+	// slider 질문 객체, ui에 분기 번호 추가
 	function addSlidLogic(id, qstn) {
 		var inputVal = parseInt($("#slidLogicInput" + id).val());
 		var maxVal = parseInt(qstn.option[1]['content']);
@@ -3437,7 +3430,7 @@ var SurveyCreate     = function() {
 		}
 	}
 	
-	// dropdown 질문 logic form 나타내기
+	// dropdown 질문 분기 나타내기
 	function showDrdwLogicForm(id, qstn) {
 		var prevQsWrapper = $("#prevQstn" + id);
 		var logicRow = prevQsWrapper.find("#logic" + id).find(".drdwLogicRow");
@@ -3453,7 +3446,7 @@ var SurveyCreate     = function() {
 		}
 	}
 	
-	// dropdown 질문 객체, ui에 로직 value 추가
+	// dropdown 질문 객체, ui에 분기 번호 추가
 	function addDrdwLogic(id, qstn) {
 		var logicArea = $("#logic" + id);
 		var rows = logicArea.find(".drdwLogicRow");
@@ -3478,7 +3471,7 @@ var SurveyCreate     = function() {
 		}
 		return "success";
 	}
-	
+	// 질문 헤더에 전체 분기 나타내기
 	function mkSkipForm(id, mode) {
 		var prevWrapper = $("#prevQstn" + id);
 		var qstnContent = prevWrapper.find(".question-content");
@@ -3533,7 +3526,7 @@ var SurveyCreate     = function() {
 		}
 	}
 	
-	// 로직 폼 제거
+	// 분기 폼 제거
 	function dltLogicForm(type, id) {
 		if (type == 1 || type == 2) {
 			var prevWrapper = $("#prevQstn" + id);
@@ -3821,7 +3814,7 @@ var SurveyCreate     = function() {
 	}
 	
 	function checkUrl(str) {var pattern = new RegExp("^(http|https)://", "i"); return pattern.test(str);}
-	
+	// URL 첨부 추가
 	function saveLinkAttach(elmt, ulClass) {
 		var attachName = document.getElementById("attfileName");
 		var attachUrl  = document.getElementById("attfileUrl");
@@ -3857,13 +3850,13 @@ var SurveyCreate     = function() {
 		mainUlElmt.appendChild(liElmt);
 		toggleUrlPanel();
 	}
-	
+	// URL 첨부 삭제
 	function deleteUrlFile(event) {
 		event.stopPropagation();
 		var liElmt = event.currentTarget.parentElement;
 		liElmt.parentElement.removeChild(liElmt);
 	}
-	
+	// URL 레이어 팝업 토글 함수
 	function toggleUrlPanel(elmt, ulClass) {
 		var rightFrame  = window.parent.frames["right"].document;
 		var urlPanel    = rightFrame.getElementById("addURLPanel");

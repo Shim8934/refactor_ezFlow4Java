@@ -145,7 +145,7 @@
 				}
 			});
 		}
-		
+		// 분기 노드 처리 함수
 		function processLogicNode(parentNode, nodeLevel) {
 			var path      = [];
 			var totalPath = [];
@@ -173,7 +173,7 @@
 			
 			surveyPath.sort(function(a, b) {return a - b}); //sort surveyPath
 		}
-		
+		// 분기 설정에 따라 mask 생성/제거
 		function toggleQuestionList(checkList) {
 			var listQstDiv = document.getElementsByClassName("prevQsWrapper");
 			for (var i = 0, len = listQstDiv.length; i < len; i++) {
@@ -222,7 +222,7 @@
 				}
 			}
 		}
-		
+		// 설문 정보 토글
 		function toggleSurveyInformation() {
 			var ulInf    = document.getElementById("upage-ul");
 			var crrClass = ulInf.className;
@@ -243,21 +243,21 @@
 			window.addEventListener("resize", function(e) {setBodyHeight();}, false);
 			document.getElementById("surveyInfBttn").onclick = function(e) {toggleSurveyInformation();};
 			
-			// 라디오 버튼 클릭 이벤트
+			// 단일 선택 질문 버튼 클릭 이벤트
 			$(".prevQsArea").on("click", ".optRdo", function() {
 				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
 				var logicNum = parseInt($(this).attr("logic"));
 				
 				if (!isNaN(logicNum) && logicNum != -1 && logicmap) {processLogicNode(prId, logicNum);}
 			});
-			
+			// 드롭다운 질문 셀렉트 박스 이벤트
 			$(".prevQsArea").on("change", ".dropdown-wrap", function() {
 				var prId     = parseInt($(this).parents(".prevQsWrapper").attr("id").replace("prevQstn", ""));
 				var logicNum = parseInt($("select[name=drdw" + prId + "] option:selected").attr("logic"));
 				if (!isNaN(logicNum) && logicNum != -1 && logicmap) {processLogicNode(prId, logicNum);}
 			});
 			
-			// 슬라이드 질문 답변 표시
+			// 슬라이드 질문 슬라이드값 변경 이벤트
 			$(".prevQsArea").on("change", ".slider-range", function() {
 				var outputElmt         = this.parentElement.parentElement.querySelector("output[class='slider-output']");
 				outputElmt.textContent = this.value;
@@ -298,7 +298,7 @@
 					}
 				}
 			});
-			
+			// 설문 정보 버튼 클릭 이벤트
 			$("#surveyInfBttn").click(function() {
 				var infoElmt = $("#upage-ul");
 				var status = infoElmt.css("display");
@@ -318,7 +318,7 @@
 			if (cancelBttn) {cancelBttn.onclick = function(e) {window.close();};}
 			if (saveResult) {saveResult.onclick = function(e) {saveSurveyResponses();};}
 		}
-		
+		// 첨부파일 리스트 나타내기
 		function showAttachList() {
 			var attachList = survey["attachList"];
 			if (attachList && attachList.length > 0) {
@@ -368,7 +368,7 @@
 				document.getElementById("surveyAtt").className = "attach-zone2 off";
 			}
 		}
-		
+		// 설문 응답값 획득
 		function saveSurveyResponses() {
 			var periodResult   = checkDate(); // 설문 기간 체크
 			// 필수 답변에 응답 여부 체크
@@ -428,7 +428,7 @@
 				saveResponse();
 			}
 		}
-		
+		// 응답 저장
 		function saveResponse() {
 			if (resposeObj.responses.length > 0) {
 				$.ajax({
@@ -469,7 +469,7 @@
 				default: alert(SurveyMessages.strError)     ; resposeObj.responses = []; return;
 			}
 		}
-		
+		// 단일 선택 질문 응답 획득
 		function getSingleSltRespose(id, type) {
 			var answerObj  = {};
 			var optionId   = {};
@@ -502,7 +502,7 @@
 			
 			return result;
 		}
-		
+		// 다중 선택 질문 응답 획득
 		function getMultiSltRespose(id, type) {
 			var answerObj = {};
 			var answer    = [];
@@ -545,7 +545,7 @@
 			
 			return result;
 		}
-		
+		// 행렬(단일 선택) 질문 응답 획득
 		function getSingleMtrRespose(id, type) {
 			var answerObj = {};
 			var answer    = [];
@@ -574,7 +574,7 @@
 				resposeObj.responses.push(answerObj);
 			}
 		}
-		
+		// 행렬(다중 선택) 질문 응답 획득
 		function getMultiMtrRespose(id, type) {
 			var answerObj = {};
 			var answer    = [];
@@ -601,7 +601,7 @@
 				resposeObj.responses.push(answerObj);
 			}
 		}
-		
+		// 텍스트 질문 응답 획득
 		function getTxtRespose(id, type) {
 			var answerObj = {};
 			var txtObj    = {};
@@ -633,7 +633,7 @@
 				resposeObj.responses.push(answerObj);
 			}
 		}
-		
+		// 슬라이드 질문 응답 획득
 		function getSliderRespose(id, type) {
 			var answerObj = {};
 			var sliderObj = {};
@@ -655,7 +655,7 @@
 				resposeObj.responses.push(answerObj);
 			}
 		}
-		
+		// 순위 질문 응답 획득
 		function getRankingRespose(id, type) {
 			var answerObj = {};
 			var answer = [];
@@ -701,7 +701,7 @@
 			
 			return result;
 		}
-		
+		// 드롭다운 질문 응답 획득
 		function getDrdwRespose(id, type) {
 			var answerObj = {};
 			var drdwObj = {};
@@ -769,7 +769,7 @@
 				}
 			});
 		}
-		
+		// 설문 가능 기간과 오늘 날짜 비교
 		function checkDate() {
 			var startDate = survey.startDate.substr(0, 10);
 			var endDate   = survey.endDate.substr(0, 10);
@@ -796,7 +796,7 @@
 			
 			return result;
 		}
-		
+		// 필수 응답 질문 유무 체크
 		function checkRequired() {
 			var result      = "success";
 			var qsWrappers  = $(".prevQsArea").find(".prevQsWrapper");
