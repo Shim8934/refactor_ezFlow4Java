@@ -208,7 +208,7 @@
 			    	var dImgName = "<spring:message code='ezPersonal.i1'/>"; //기본 이미지(사진이 없을 경우) src
 			    	dImgName = dImgName.substring(dImgName.lastIndexOf("/") + 1, dImgName.lastIndexOf("."));
 			    	
-			    	if (imgName.indexOf(dImgName) < 0 && confirm("사진을 삭제하시겠습니까?")) {
+			    	if (imgName.indexOf(dImgName) < 0 && confirm("<spring:message code='ezPersonal.psb01'/>")) {
 						$.ajax({
 				    		type : "POST",
 				    		dataType : "html",
