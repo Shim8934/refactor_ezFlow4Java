@@ -185,6 +185,7 @@
 		    }
 		    
 		    function TreeViewNodeClick() {
+		        p_ListOrderObject = null;
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
 		        nodeIdx = treeView.GetSelectNode();
@@ -1142,12 +1143,12 @@
 		    }
 		    
 		    function search_click(){
+				p_ListOrderObject = null;
 				if (keyword.value == ""){
 					alert("<spring:message code='ezOrgan.t56' />");
 					keyword.focus();
 					return;
 				}			   
-			    				
 				$.ajax({
 		        	type : "POST",
 		        	dataType : "text",
@@ -1198,6 +1199,7 @@
 		    
 		    function search_press(){
 				if (window.event.keyCode == "13"){
+					p_ListOrderObject = null;
 					search_click();
 				}
 			}
