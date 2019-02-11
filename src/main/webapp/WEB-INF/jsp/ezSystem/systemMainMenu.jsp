@@ -64,6 +64,9 @@
 				    alert("<spring:message code='ezSystem.x0005'/>: <spring:message code='ezEmail.t99000066'/>");
 				    return;
 				} else if (!paramArray[4].value.match(/^\d+$/)) {
+				    alert("<spring:message code='ezSystem.x0038'/>: <spring:message code='ezEmail.t99000066'/>");
+				    return;
+				} else if (!paramArray[5].value.match(/^\d+$/)) {
 				    alert("<spring:message code='ezSystem.x0006'/>: <spring:message code='ezEmail.t99000066'/>");
 				    return;
 				} else if (!paramArray[15].value.match(/^\d+$/)) {
