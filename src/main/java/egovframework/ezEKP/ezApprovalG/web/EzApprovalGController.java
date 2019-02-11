@@ -4991,21 +4991,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
 		}
 		
-		if (docID != null && !docID.equals("")) {
-			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "REC", userInfo.getCompanyID(), userInfo.getTenantId(), "");
-			
-			if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
-				return "main/warning";
-			}
-			if (!doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals(userInfo.getId()) && !doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("NULL")) {
-				if (doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("") && (!doc.getElementsByTagName("RECEIVEDDEPTID").item(0).getTextContent().equals(userInfo.getDeptID()) || userInfo.getRollInfo().indexOf("a=1") == -1)) {
-					return "main/warning";
-				}
-				if (!doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("")) {
-					return "main/warning";
-				}
-			}
-		}
+//		if (docID != null && !docID.equals("")) {
+//			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), "REC", userInfo.getCompanyID(), userInfo.getTenantId(), "");
+//			
+//			if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+//				return "main/warning";
+//			}
+//			if (!doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals(userInfo.getId()) && !doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("NULL")) {
+//				if (doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("") && (!doc.getElementsByTagName("RECEIVEDDEPTID").item(0).getTextContent().equals(userInfo.getDeptID()) || userInfo.getRollInfo().indexOf("a=1") == -1)) {
+//					return "main/warning";
+//				}
+//				if (!doc.getElementsByTagName("PROCESSORID").item(0).getTextContent().equals("")) {
+//					return "main/warning";
+//				}
+//			}
+//		}
 		
 		model.addAttribute("docID", docID);
 		model.addAttribute("dirYear", dirYear);
