@@ -4748,62 +4748,82 @@
 	<select id="EzOrganAdminDAO.getAddJobList" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			SELECT
-				CN ,
-             	CASE
-             		#v_LANGDATA#
-                WHEN
-                	'1'
-                THEN
-                	DISPLAYNAME
-                ELSE
-                	DISPLAYNAME2
-                END
-                	DISPLAYNAME  ,
-             	CASE
-             		#v_LANGDATA#
-                WHEN
-                	'1'
-                THEN
-                	DESCRIPTION
-                ELSE
-                	DESCRIPTION2
-                END
-                	DESCRIPTION  ,
-             	CASE
-             		#v_LANGDATA#
-                WHEN
-                	'1'
-                THEN
-                	TITLE
-                ELSE
-                	TITLE2
-                END
-                	TITLE  ,
-             	mail ,
-             	TelephoneNumber ,
-             	CASE
-             		#v_LANGDATA#
-                WHEN
-                	'1'
-                THEN
-                	COMPANY
-                ELSE
-                	COMPANY2
-                END
-                	COMPANY  ,
-             	EXTENSIONATTRIBUTE4 
-        	FROM
-        		TBL_USERMASTER 
-			WHERE
-				NULLIF(EXTENSIONATTRIBUTE4, null) IS NOT NULL
-       		AND
-       			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
-            AND 
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                
-       		AND
-       			TENANT_ID = #v_TENANT_ID#	
-      		ORDER BY
-      			DISPLAYNAME
+				*
+			FROM
+			(
+				SELECT
+					ROWNUM AS RNUM,
+					CN ,
+					DISPLAYNAME  ,
+					DESCRIPTION  ,
+					TITLE  ,
+					mail ,
+					TelephoneNumber ,
+					COMPANY  ,
+					EXTENSIONATTRIBUTE4 
+				FROM
+					(
+						SELECT
+							CN ,
+							CASE
+								#v_LANGDATA#
+								WHEN
+									'1'
+								THEN
+									DISPLAYNAME
+								ELSE
+									DISPLAYNAME2
+							END
+							DISPLAYNAME  ,
+							CASE
+								#v_LANGDATA#
+								WHEN
+									'1'
+								THEN
+									DESCRIPTION
+								ELSE
+									DESCRIPTION2
+							END
+							DESCRIPTION  ,
+							CASE
+								#v_LANGDATA#
+								WHEN
+									'1'
+								THEN
+									TITLE
+								ELSE
+									TITLE2
+							END
+							TITLE  ,
+							mail ,
+							TelephoneNumber ,
+							CASE
+								#v_LANGDATA#
+								WHEN
+									'1'
+								THEN
+									COMPANY
+								ELSE
+									COMPANY2
+							END
+							COMPANY  ,
+							EXTENSIONATTRIBUTE4 
+						FROM
+							TBL_USERMASTER 
+						WHERE
+							NULLIF(EXTENSIONATTRIBUTE4, null) IS NOT NULL
+						AND
+							PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+						AND 
+							CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                
+						AND
+							TENANT_ID = #v_TENANT_ID#
+						ORDER BY
+							DISPLAYNAME
+						) WHERE ROWNUM <= #v_ENDROW#
+					)
+					WHERE 
+						RNUM > #v_STARTNUM# 
 		]]>
 	</select>
 	
@@ -4812,7 +4832,26 @@
 			{CALL EZSP_GETPROXYUSERINFO(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
-	
+
+	<select id="EzOrganAdminDAO.getAddJobCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT (CN) 
+			FROM
+				TBL_USERMASTER 
+			WHERE
+				NULLIF(EXTENSIONATTRIBUTE4, NULL) IS NOT NULL
+			AND
+				PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+			AND 
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                      
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			ORDER BY
+				DISPLAYNAME
+		]]>
+	</select>
+
 	<select id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">
 		<![CDATA[
 			SELECT
@@ -6519,7 +6558,18 @@
 				EXTENSIONATTRIBUTE15 >= #v_EXTATTR15#
 		]]>
 	</update>
-	
+
+	<select id="EzOrganAdminDAO.getCompanyName" parameterClass="map" resultClass="String">
+		SELECT
+			EXTENSIONATTRIBUTE3
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			TENANT_ID = #v_TENANT_ID#
+		AND
+			CN = #v_CN#
+	</select>
+
  	 <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}
      </procedure>
@@ -6543,5 +6593,4 @@
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_UPDATETHUMNAILPROFILE" parameterClass="Map">
        {CALL talk_SP_CONN_UPDATETHUMNAILPROFILE(#TENANT_ID#)}
      </procedure>
- 
 </sqlMap>
