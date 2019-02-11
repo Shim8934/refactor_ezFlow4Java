@@ -1681,11 +1681,12 @@ public class EzQuestionController extends EgovFileMngUtil {
             for(Field field : qstResponseVO.getClass().getDeclaredFields()){
             	field.setAccessible(true);
             	
+            	QstVO qstVO = ezQuestionService.getQuestionForSubjective(brdID, itemNo, questionNo, userInfo.getTenantId());
+            	pAnsType = Integer.toString(qstVO.getAnswerType());
+            	
             	if(field.getName().equals("ANSWER_SUBJECTIVITY")){
             		pAnsSubjectivity = (String) field.get(qstResponseVO);
             		//////////////////////////
-            		QstVO qstVO = ezQuestionService.getQuestionForSubjective(brdID, itemNo, questionNo, userInfo.getTenantId());
-            		pAnsType = Integer.toString(qstVO.getAnswerType());
             		
             		if(pAnsType.equals("4")){
             			List<QstAnswerVO> rtnList = dataProcessAns(userInfo ,Integer.parseInt(brdID), Integer.parseInt(itemNo), Integer.parseInt(questionNo));
