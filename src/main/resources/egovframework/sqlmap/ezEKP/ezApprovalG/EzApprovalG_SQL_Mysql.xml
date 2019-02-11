@@ -15288,6 +15288,29 @@
           AND 
           	  SN = #v_PSN#)
 	</insert>
+	
+	<update id="EzApprovalG.aprMakeTmp2Ing9" parameterClass="Map">
+		UPDATE 
+			TBL_APRDOCINFO
+		SET 
+			ORGDOCID = #v_PDOCID#
+		WHERE 
+			ORGDOCID = 
+				(
+				SELECT 
+					SUBSTRING_INDEX(SUBSTRING_INDEX(HREF,'/',-1),'.',1) 
+				FROM
+					TBL_TMPAPRDOCINFO
+				  WHERE  	
+		          	  TENANT_ID = #v_TENANTID#
+		          AND
+		          	  COMPANYID = #companyID#
+		          AND
+		          	  OWNERID = #v_PUSERID#
+		          AND 
+		          	  SN = #v_PSN#)
+	</update>
+	
 <!-- 	<procedure id="EzApprovalG.transferCabinet" parameterClass="Map"> -->
 <!-- 		{CALL SPTRANSCABINET1(#v_DDeptCode#, #v_DDeptName#, #v_DDeptName2#, #v_DTaskCode#, #v_DTaskName#, #v_DTaskName2#, #v_CabIDList#, #v_DeptMID#, #v_DeptMName#, #v_DeptMName2#)} -->
 <!-- 	</procedure> -->
