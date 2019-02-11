@@ -376,7 +376,7 @@ var slideImageDel = function(event) {
 	    var selectSlideId = selectImage[0].id; 
 	    
 		var request = new XMLHttpRequest();
-		request.open('POST', '/admin/ezNewPortal/delSlideImage.do', true);
+		request.open('DELETE', '/admin/ezNewPortal/delSlideImage.do', true);
 		request.setRequestHeader('Content-Type', 'application/json');
 	
 		request.onload = function() {
@@ -414,7 +414,7 @@ var updateSlideOrder = function() {
 	}
 	
 	var request = new XMLHttpRequest();
-	request.open('POST', '/admin/ezNewPortal/updateSlideOrder.do', true);
+	request.open('PATCH', '/admin/ezNewPortal/updateSlideOrder.do', true);
 	request.setRequestHeader('content-type', 'application/json');
 	
 	request.onload = function() {getSlideImage();}

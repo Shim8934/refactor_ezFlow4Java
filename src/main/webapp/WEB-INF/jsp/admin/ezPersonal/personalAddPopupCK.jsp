@@ -42,7 +42,7 @@
 	            if (startdate != "") {
 	            }
 	            
-	            var wPosition = "<c:out value = '${position}' />";
+	            var wPosition = "<c:out value = '${personalPopupVO.position}' />";
 	
 	            if (wPosition == 0)
 	                document.getElementById("selectPos").selectedIndex = 0;

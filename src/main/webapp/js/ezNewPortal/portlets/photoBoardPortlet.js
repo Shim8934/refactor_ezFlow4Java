@@ -19,7 +19,7 @@ function photoBoardMovePage(event) {
 	portletId = portletId.substring(0, portletId.indexOf("P"));
 
 	$.ajax({
-		type : "POST",
+		type : "GET",
 		dataType : "json",
 		url : "/ezNewPortal/getPhotoItemList.do",
 		data : {"boardId" : boardId, "page" : photoBoardPage, "photoCount" : photoCount, "portletId" : portletId},

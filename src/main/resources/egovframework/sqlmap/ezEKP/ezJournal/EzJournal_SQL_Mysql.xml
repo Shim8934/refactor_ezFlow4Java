@@ -860,17 +860,17 @@
 			(select 
 				count(*) 
 			from 
-<!-- 				(select  -->
-<!-- 					user_id, journal_id, TENANT_ID  -->
-<!-- 				from  -->
+				(select 
+					user_id, journal_id, TENANT_ID 
+				from 
 					tbl_journal_view v
-<!-- 				union  -->
-<!-- 				select  -->
-<!-- 					user_id, journal_id, TENANT_ID  -->
-<!-- 				from  -->
-<!-- 					tbl_journal_recv  -->
-<!-- 				where  -->
-<!-- 					recieve_date is not null) v -->
+				union 
+				select 
+					user_id, journal_id, TENANT_ID 
+				from 
+					tbl_journal_recv 
+				where 
+					recieve_date is not null) v
 			where
 				not(v.user_id = j.journal_writer) and v.journal_id = j.journal_id and v.tenant_id = j.tenant_id) as view_count,
 			(select 
@@ -886,21 +886,21 @@
 			where
 				r.journal_id = j.journal_id and r.tenant_id = j.tenant_id and r.recieve_date is not null) as check_recv,
 			ifnull(
-				(
-<!-- 				select  -->
-<!-- 					recieve_date as is_view -->
-<!-- 				from  -->
-<!-- 					tbl_journal_recv  -->
-<!-- 				where  -->
-<!-- 					user_id = #userId# and tenant_id = j.tenant_id and journal_id = j.journal_id -->
-<!-- 				union  -->
-				select 
+				(ifnull(
+					(select 
+						recieve_date as is_view
+					from 
+						tbl_journal_recv 
+					where 
+						user_id = #userId# and tenant_id = j.tenant_id and journal_id = j.journal_id
+				),
+				(select 
 					view_date as is_view
 				from 
 					tbl_journal_view 
 				where 
 					user_id = #userId# and tenant_id = j.tenant_id and journal_id = j.journal_id
-				),
+				))),
 			'noView') as is_view ,
 			f.form_status as form_status,
 			j.journal_sum as journal_sum,

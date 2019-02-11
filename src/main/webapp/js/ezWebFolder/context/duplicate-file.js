@@ -485,7 +485,8 @@ var duplicateFile = (function() {
 				openLeftPanel();
 				DivPopUpShow(450, height, url);
 			}
-		})(height), 0);
+		})(height), 100);
+		// 기존 팝업이 제대로 뜨지 않는 문제로 0->100수정
 	}
 
 	var process = function(params, callerIsPopup) {
