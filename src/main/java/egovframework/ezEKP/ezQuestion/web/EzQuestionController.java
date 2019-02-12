@@ -3196,7 +3196,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 				for (String key : tbl.keySet()) {
 					sNo = sNo + 1;
 
-					if (qUser.equals("")) {
+					if (qUser == null || qUser.equals("")) {
 						answerStr = ",,," + tbl.get(key);
 					} else {
 						answerStr = key + tbl.get(key);
