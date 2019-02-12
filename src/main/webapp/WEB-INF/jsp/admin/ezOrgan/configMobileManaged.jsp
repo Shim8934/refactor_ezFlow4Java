@@ -129,6 +129,7 @@
 	    		<c:forEach items="${deviceInfo}" var="list">
 		            <c:set var="notUsed" value="${list.notUsed}"></c:set>
                     <c:set var="deviceType" value="${list.devType}"></c:set>
+                    <c:set var="type" value="${list.type}"></c:set>
 		            <tr height=24px bgcolor=ffffff>
                     <td>
                         <c:choose>
@@ -137,6 +138,10 @@
                             <c:otherwise>${deviceType}</c:otherwise>
                         </c:choose>
                         ${list.subType}
+                        <c:choose>
+                            <c:when test="${list.type eq 'talk'}">(<spring:message code="main.kyj01" />)</c:when>
+                            <c:otherwise>(<spring:message code="main.kyj02" />)</c:otherwise>
+                        </c:choose>
                     </td>
 						<td>
 							<select name="selectbox" id='selectChangeState' onchange='selectChange("${list.devId}",this,"S")'>
