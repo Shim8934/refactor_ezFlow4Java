@@ -12,7 +12,7 @@
 <script type="text/javascript">
 $(function() {
 	var boardPortlet = "<c:out value='${portletId}'/>";
-	$(".customBoard").find(".portletPlus").on("click", Boardmore_NewBoardSTD_btnClick);
+	$(".customBoard").find(".portletPlus").on("click", customBoardBtnClick);
 	getBoardPortletInfo(boardPortlet);
 });
 </script>
