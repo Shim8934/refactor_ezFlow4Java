@@ -14,7 +14,7 @@
 					<c:out value='${portletName }'/>
 				</dt>
 				<dd class="portletPlus" id="pollPlus">
-					<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 				</dd>
 			</dl>
 			<div class="vote_contents">

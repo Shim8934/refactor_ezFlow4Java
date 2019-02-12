@@ -673,7 +673,6 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	/**
 	 * 포틀릿 - 환율 포틀릿
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezNewPortal/currencyPortlet.do", method=RequestMethod.GET)
 	public String portalCurrencyPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalCurrencyPortlet Start");

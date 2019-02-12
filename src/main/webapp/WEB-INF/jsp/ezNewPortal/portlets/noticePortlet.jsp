@@ -12,7 +12,7 @@
 		<dl class="portlet_title sortablePortlet">
 			<dt class="portletText"><c:out value='${portletName }'/></dt>
 			<dd class="portletPlus" id="noticePlus">
-				<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+				<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 			</dd>
 		</dl>
 		<div id="BoardList_NewBoard">

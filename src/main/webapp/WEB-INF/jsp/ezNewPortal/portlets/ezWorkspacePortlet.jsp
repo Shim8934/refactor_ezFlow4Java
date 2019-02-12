@@ -10,7 +10,7 @@
 		<div class="layDIV">
 			<dl class="portlet_title sortablePortlet">
 			    <dt class="portletText"><spring:message code='ezNewPortal.pjg01' /></dt>
-			    <dd class="portletPlus" id="ezWorkspacePlus"><img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png"></dd>
+			    <dd class="portletPlus" id="ezWorkspacePlus"><img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png"></dd>
 			</dl>          
 			<ul class="collaborate_tab" id="divSpaceListResults" style="overflow-y: auto; height: 204px;">
 			</ul>

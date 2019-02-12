@@ -18,7 +18,7 @@
 							<c:out value="${portletName }" />
 						</dt>
 					<dd class="portletPlus" id="photoBoardPlus">
-						<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+						<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 					</dd>
 						<c:if test="${not empty photoBoardList}">
 							<dd class="nextBtn">
