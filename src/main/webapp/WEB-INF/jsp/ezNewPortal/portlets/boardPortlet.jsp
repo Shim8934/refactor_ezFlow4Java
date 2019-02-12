@@ -30,7 +30,7 @@ $(function() {
 			</dl>
 			<c:choose>
 			<c:when test="${not empty boardList}">
-			<ul id="customBoardList${portletId }" class="portlet_list">
+			<ul id="customBoardList<c:out value='${portletId }'/>" class="portlet_list">
 			</ul>
 			</c:when>
 			<c:when test="${access eq false }">

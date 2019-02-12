@@ -7,7 +7,7 @@
 <head>
 </head>
 <body>
-<input id="schedule_usedTheme" type="hidden" value="${usedTheme}">
+<input id="schedule_usedTheme" type="hidden" value="<c:out value='${usedTheme}'/>">
 	<c:choose>
 		<c:when test="${usedTheme eq 1}">
 			<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 998; border-bottom:none; background:none;"></dl>
