@@ -150,12 +150,16 @@ public class EzAttitudeGWController {
 					isOutCheck = "true";
 				}
 				checkAttitude = ezAttitudeService.getIsAttitude(typeId, userId, startDate, offSet, info.getCompanyId(), info.getTenantId(), isOutCheck);
+				
+				if (checkAttitude == null) {
+					checkAttitude = "";
+				}
 			}
 			
-			if (checkAttitude != null && !checkAttitude.equals("") && !checkAttitude.equals("0") && !typeId.equals("A03")) {
+			if (!checkAttitude.equals("") && !checkAttitude.equals("0") && !typeId.equals("A03")) {
 				checkAttitude = "dupl";
 			} else {
-				if (checkAttitude != null && !checkAttitude.equals("0") && typeId.equals("A03")) { //이미 퇴근이 있는 경우
+				if (!checkAttitude.equals("") && !checkAttitude.equals("0") && typeId.equals("A03")) { //이미 퇴근이 있는 경우
 					AttitudeVO attVO = new AttitudeVO();
 					attVO.setCompanyId(info.getCompanyId()); //사용자가 업데이트 시에는 companyId만 필요하므로 companyId만 셋팅해서 가져간다.
 					startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), info.getOffSet(), false);
