@@ -199,7 +199,7 @@ var SurveyCreate     = function() {
 	
 	function changeSurveyState() {
 		$.ajax({
-			type: "GET",
+			type: "PUT",
 			url: "/ezSurvey/changeSurveyState.do",
 			data: {surveyId : surveyObj["surveyId"]},
 			contentType: "application/json; charset=utf-8",

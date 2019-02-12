@@ -88,8 +88,15 @@
 </div>
 
 <div class="survey-bttn-panel">
-	<div class="btnpositionSurvey">
+	<%-- <div class="btnpositionSurvey">
 		<a class="imgbtnSurvey imgbtnSurvey_save gotoSecondTab"><span><spring:message code='ezSurvey.t89'/></span></a>
 		<a class="imgbtnSurvey cancelSurvey"><span><spring:message code='ezSurvey.t18'/></span></a>
+	</div> --%>
+	<!-- 임시 -->
+	<div class="btnpositionSurvey">
+	    <a class="imgbtnSurvey imgbtnSurvey_save gotoSecondTab"><span>이전</span></a>
+	    <a class="imgbtnSurvey imgbtnSurvey"><span>다음</span></a>
+	    <a class="imgbtnSurvey imgbtnSurvey_save"><span>완료</span></a>
+	    <a class="imgbtnSurvey cancelSurvey"><span>취소</span></a>
 	</div>
 </div>

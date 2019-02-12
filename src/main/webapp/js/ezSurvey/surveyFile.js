@@ -300,6 +300,7 @@ var SurveyFile = function() {
 				case "xlsx" : urlImg   = "/images/ezSurvey/xlsx.png" ; break;
 				case "hwp"  : urlImg   = "/images/ezSurvey/hwp.png"  ; break;
 				case "txt"  : urlImg   = "/images/ezSurvey/txt.png"  ; break;
+				case "mp3"  : urlImg   = "/images/ezSurvey/mp3.png"  ; break;
 				case "mp4"  : urlImg   = "/images/ezSurvey/mp4.png"  ; break;
 				case "flv"  : urlImg   = "/images/ezSurvey/flv.png"  ; break;
 				case "mkv"  : urlImg   = "/images/ezSurvey/mkv.png"  ; break;
