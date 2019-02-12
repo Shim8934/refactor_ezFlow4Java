@@ -44,14 +44,14 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
-	@RequestMapping(value = "/ezSurvey/surveyMain.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value = "/ezSurvey/surveyMain.do", method = RequestMethod.GET)
 	public String jspGetSurveyMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) {
 		logger.debug("jspGetSurveyMain started");
 		logger.debug("jspGetSurveyMain ended");
 		return "ezSurvey/mainmenu/surveyMain";
 	}
 	
-	@RequestMapping(value="/ezSurvey/surveyLeft.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/ezSurvey/surveyLeft.do", method = RequestMethod.GET)
 	public String jspGetSurveyLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		logger.debug("jspGetSurveyLeft started");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
@@ -67,14 +67,14 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return "ezSurvey/mainmenu/surveyLeft";
 	}
 	
-	@RequestMapping(value="/ezSurvey/surveyConfig.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/ezSurvey/surveyConfig.do", method = RequestMethod.GET)
 	public String jspGetSurveyConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetSurveyConfig started");
 		logger.debug("jspGetSurveyConfig ended");
 		return "ezSurvey/config/surveyConfig";
 	}
 	
-	@RequestMapping(value="/ezSurvey/surveyGeneral.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/ezSurvey/surveyGeneral.do", method = RequestMethod.GET)
 	public String jspGetSurveyGeneral(@CookieValue("loginCookie") String loginCookie,  HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetSurveyGeneral started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -91,7 +91,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return "ezSurvey/config/surveyGeneral";
 	}
 	
-	@RequestMapping(value="/ezSurvey/surveyList.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/ezSurvey/surveyList.do", method = RequestMethod.GET)
 	public String jspGetSurveyList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale) throws Exception {
 		logger.debug("jspGetSurveyList started");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
@@ -120,14 +120,14 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return "ezSurvey/listmenu/surveyList";
 	}
 	
-	@RequestMapping(value="/ezSurvey/createSurvey.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/ezSurvey/createSurvey.do", method = RequestMethod.GET)
 	public String jspGetCreateSurveyPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCreateSurveyPage started");
 		logger.debug("jspGetCreateSurveyPage ended");
 		return "ezSurvey/listmenu/surveyCreate";
 	}
 	
-	@RequestMapping(value="/ezSurvey/reuseItem.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/ezSurvey/reuseItem.do", method = RequestMethod.GET)
 	public String jspGetReuseSurveyPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetReuseSurveyPage started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -163,7 +163,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return "ezSurvey/listmenu/surveyCreate";
 	}
 	
-	@RequestMapping(value="/ezSurvey/modifyItem.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/ezSurvey/modifyItem.do", method = RequestMethod.GET)
 	public String jspGetModifySurveyPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetModifySurveyPage started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -199,7 +199,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return "ezSurvey/listmenu/surveyCreate";
 	}
 	
-	@RequestMapping(value="/ezSurvey/surveyDetail.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/ezSurvey/surveyDetail.do", method = RequestMethod.GET)
 	public String jspGetSurveyDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetSurveyDetail started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -240,7 +240,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return "ezSurvey/listmenu/surveyDetail";
 	}
 	
-	@RequestMapping(value="/ezSurvey/showStatisticInfo.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/ezSurvey/showStatisticInfo.do", method = RequestMethod.GET)
 	public String jspGetStatisticsPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetStatisticsPage started");
 		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
@@ -273,7 +273,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return "ezSurvey/listmenu/statistics";
 	}
 	
-	@RequestMapping(value="/ezSurvey/selectUsers.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/ezSurvey/selectUsers.do", method = RequestMethod.GET)
 	public String jspGetSelectUesrPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetSelectUesrPage started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -288,7 +288,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return "ezSurvey/user/selectUser";
 	}
 	
-	@RequestMapping(value="/ezSurvey/getSurveyQuestions.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/ezSurvey/getSurveyQuestions.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetSurveyQuestions(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetSurveyQuestions start");
@@ -309,7 +309,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezSurvey/changeSurveyState.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/ezSurvey/changeSurveyState.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonChangeSurveyState(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonChangeSurveyState start");
@@ -329,6 +329,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return resultObj.toString();
 	}
 	// 어디서 쓰는거지?
+	/*
 	@RequestMapping(value="/ezSurvey/checkReusePermission.do")
 	@ResponseBody
 	public String jsonCheckItems(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "itemList") List<String> itemList, HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -347,8 +348,8 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("jsonCheckItems end");
 		return resultObj.toString();
 	}
-	
-	@RequestMapping(value="/ezSurvey/checkProcessingSurvey.do", method = RequestMethod.GET, produces="application/json;charset=utf-8")
+	*/
+	@RequestMapping(value="/ezSurvey/checkProcessingSurvey.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonCheckProcessingSurvey(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonCheckItems start");
@@ -368,7 +369,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezSurvey/saveSurvey.do", method = RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/ezSurvey/saveSurvey.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String jsonSaveSurveyItem(@RequestBody JSONObject surveyItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jsonSaveSurveyItem started");
@@ -381,7 +382,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezSurvey/deleteItems.do")
+	@RequestMapping(value="/ezSurvey/deleteItems.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonDeleteItems(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "itemList") List<String> itemList, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonDeleteItems start");
@@ -400,7 +401,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezSurvey/getSurveyItems.do")
+	@RequestMapping(value="/ezSurvey/getSurveyItems.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetSurveyItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetSurveyItems start");
@@ -439,7 +440,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezSurvey/getCompanyTree.do")
+	@RequestMapping(value="/ezSurvey/getCompanyTree.do", method=RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetCompanyTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -451,7 +452,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezSurvey/getSubNodes.do")
+	@RequestMapping(value="/ezSurvey/getSubNodes.do", method=RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetSubNodes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		logger.debug("jsonGetSubNodes started");
@@ -581,7 +582,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("responeDownloadFile finishes!");
 	}
 	
-	@RequestMapping(value="/ezSurvey/saveUserConfig.do")
+	@RequestMapping(value="/ezSurvey/saveUserConfig.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String jsonSaveUserConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveUserConfig start");
@@ -604,7 +605,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezSurvey/saveResponse.do", method = RequestMethod.POST, produces="application/json;charset=utf-8")
+	@RequestMapping(value="/ezSurvey/saveResponse.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String jsonSaveResponse(@RequestBody JSONObject responseItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jsonSaveResponse started");

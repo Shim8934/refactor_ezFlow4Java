@@ -138,7 +138,7 @@
 						contentH  : document.getElementById("hUserList").value
 					};
 					
-					makeAjaxCall(data, "GET", url, afterSaveConfig, null, true, null);
+					makeAjaxCall(data, "POST", url, afterSaveConfig, null, true, null);
 				}
 				
 				function afterSaveConfig(data) {
