@@ -23,7 +23,7 @@
 <body>
 	<header>
         <dl>
-            <dt><span class="tit01">가온누리</span> <span class="tit02">도움말안내</span></dt>
+            <dt><span class="tit01">도움말안내</span></dt>
             <dd class="lng">
                 <span class="kr">한국어</span><!-- <span class="en">영어</span><span class="jp">일본어</span><span class="cn">중국어</span> -->
             </dd>
