@@ -31,22 +31,22 @@
 			var MHTLoadComplete="";
 			var initdate = "<c:out value = '${initDate}' />";
 			var skinValue = "<c:out value = '${personalPopupVO.skinValue}' />";
+	        
+	        window.onload = window_onload;
+	        function window_onload() {
+	            //compid = window.dialogArguments;
 
-			window.onload = window_onload;
-			function window_onload() {
-				//compid = window.dialogArguments;
+	            if (startdate == "" && enddate == "") {
+	                var nowDate = new Date();
+	                document.getElementById("Sdatepicker").value = DateFormat(nowDate);
+	    	        document.getElementById("Edatepicker").value = DateFormat(nowDate);
+	            }
+	            
+	            if (startdate != "") {
+	            }
+	            
+	            var wPosition = "<c:out value = '${personalPopupVO.position}' />";
 
-				if (startdate == "" && enddate == "") {
-					var nowDate = new Date();
-					document.getElementById("Sdatepicker").value = DateFormat(nowDate);
-					document.getElementById("Edatepicker").value = DateFormat(nowDate);
-				}
-
-				if (startdate != "") {
-				}
-
-				var wPosition = "<c:out value = '${position}' />";
-	
 				if (wPosition == 0)
 					document.getElementById("selectPos").selectedIndex = 0;
 				else if (wPosition == 1)

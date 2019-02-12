@@ -61,8 +61,10 @@
 				} else {
 					CancelFunction();
 				}
-			} else
+			} else {
 				window.opener.drawVolume();
+			}
+			window.opener.refreshView();
 			window.close();
 		}
 

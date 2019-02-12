@@ -63,6 +63,8 @@
         var functionType = "";
         var folderName1 = "";
         var folderName2 = "";
+        var targetId = "";
+        var newName = "";
         
 		window.onload = function(){
 			if (!parent.inputNameDlg_cross_dialogArguments) {
@@ -92,11 +94,19 @@
 		
 		function afterDeleteSuccess() {
 			parent.refreshView();
+			try {
+				parent.leftFolderUpdate(functionType, fileId, folderUppId, targetId, newName);
+			} catch (e) {};
+			wClose();
+		}
+		
+		function afterSuccessOnlyFolderManage() {
+			parent.refreshView();
 			wClose();
 		}
 		
 		function ok_Click() {
-			var newName = document.getElementById("nameInput").value;
+			newName = document.getElementById("nameInput").value;
 			
 			if (newName == "") {
 				alert('<spring:message code='ezWebFolder.t400'/>');
@@ -147,6 +157,7 @@
 						case 8:
 							alert(messages.resultErrDuplicateCreate);
 						}
+						targetId = data.data;
 					}
 	        	});
 			} else if (functionType == "update" && fileId == 0) {
@@ -176,6 +187,7 @@
 						case 8:
 							alert(messages.resultErrDuplicateRename);
 						}
+						targetId = folderUppId;
 					}
 				});
 			} else {

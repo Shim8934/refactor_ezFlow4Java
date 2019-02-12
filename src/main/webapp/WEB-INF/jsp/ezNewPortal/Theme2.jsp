@@ -542,7 +542,7 @@
 	//월별 우수사원 정보 호출
 	var getMonthlyBestEmployeeTheme2 = function () {
 		$.ajax({
-			type : "POST",
+			type : "GET",
 			url : "/ezNewPortal/getMonthlyBestEmployee.do",
 			dataType : "json",
 			success : function(result) {
@@ -745,7 +745,7 @@
 			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
 				(function (portletId, portletUrl, portletName) {
 					$.ajax({
-						type : "POST",
+						type : "GET",
 						dataType : "html",
 						data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
 						url : portletUrl,

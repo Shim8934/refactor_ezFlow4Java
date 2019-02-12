@@ -1218,6 +1218,15 @@
 					</c:if>
 		        </ul>
 		        <c:if test="${approvalFlag == 'S'}">
+		        	<h2 class="off" id="ITEMCONTH2">
+		        		<span class="sub_iconLNB tree_arrow_up"></span>
+		        		<span class="h2Title" onclick="openFolder('ITEMCONT');"><spring:message code='ezApproval.t844'/></span>
+		        	</h2>
+					<ul class="off" id="ITEMCONTUL">
+			          	<c:forEach var="itemList" items="${itemList}" varStatus="status">
+			          	    <li><span class="sub_iconLNB tree_appr_record1"></span><span class="list_text" id="itemList${status.count - 1}"  onclick="setPresentValue('${itemList.taskName}(${itemList.keepingPeriod})');cmdOK_onclick2('${itemList.taskCode}', '${itemList.taskName}', '${itemList.taskName}(${itemList.keepingPeriod})');">${itemList.taskName}(${itemList.keepingPeriod}) </span></li>
+			          	</c:forEach>
+		          	</ul>
 			        <h2 class="off" id="personH2">
 			        	<span class="sub_iconLNB tree_manage" onclick="MngUserOnclick()"></span>
 			            <span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title" onclick="openFolder('person')"><spring:message code='ezApproval.t848'/></span>			            

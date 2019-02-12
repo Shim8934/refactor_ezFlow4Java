@@ -10,7 +10,7 @@ function view_bestCommunity(event) {
 	
 	var clubType = "";
 	$.ajax({
-		type : "POST",
+		type : "GET",
 		dataType : "text",
 		async : true,
 		url : "/ezNewPortal/getCommunityPermit.do",

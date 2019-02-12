@@ -24,6 +24,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -93,7 +94,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	/**
 	 * 포탈 호출 함수
 	 */
-	@RequestMapping(value = "/ezNewPortal/newPortalMain.do")
+	@RequestMapping(value = "/ezNewPortal/newPortalMain.do", method=RequestMethod.GET)
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalMain Start");
 		//초기화면 설정 확인
@@ -144,7 +145,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 포탈 탑메뉴 호출 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezNewPortal/newPortalTopMenu.do")
+	@RequestMapping(value = "/ezNewPortal/newPortalTopMenu.do", method=RequestMethod.GET)
 	public String portalTopMenu(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalTopMenu Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -213,7 +214,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 사용자 메뉴 순서 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezNewPortal/updateUserMenuOrder.do")
+	@RequestMapping(value = "/ezNewPortal/updateUserMenuOrder.do", method=RequestMethod.PATCH)
 	@ResponseBody
 	public JSONObject updateUserMenuOrder(@RequestBody JSONObject jObj, HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updateUserMenuOrder Start");
@@ -240,7 +241,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 사용자 메뉴 순서 초기화
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezNewPortal/deleteUserMenuOrder.do")
+	@RequestMapping(value = "/ezNewPortal/deleteUserMenuOrder.do", method=RequestMethod.DELETE)
 	@ResponseBody
 	public JSONObject deleteUserMenuOrder(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("deleteUserMenuOrder Start");
@@ -267,7 +268,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 *	퀵 링크 가져오기 
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezNewPortal/getQuickLink.do")
+	@RequestMapping(value = "/ezNewPortal/getQuickLink.do", method=RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getQuickLink(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getQuickLink Start");
@@ -296,7 +297,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 사용자 프레임 리스트 출력
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezNewPortal/getUserFrameList.do")
+	@RequestMapping(value = "/ezNewPortal/getUserFrameList.do", method=RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getUserFrameList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getUserFrameList Start");
@@ -320,7 +321,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 사용자 포틀릿 설정 리스트 출력
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezNewPortal/getUserPortletList.do")
+	@RequestMapping(value = "/ezNewPortal/getUserPortletList.do", method=RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getUserPortletList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getUserPortletList Start");
@@ -347,7 +348,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	/**
 	 * 사용자 프레임 변경 & 포틀릿 설정 변경 
 	 */
-	@RequestMapping(value = "/ezNewPortal/updateUserFrameAndPortelt.do")
+	@RequestMapping(value = "/ezNewPortal/updateUserFrameAndPortelt.do", method=RequestMethod.PATCH)
 	@ResponseBody
 	public String updateUserFrameAndPortlet(HttpServletRequest req, @RequestBody JSONObject jObj ,Model model, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updateUserFrameAndPortlet Start");
@@ -381,7 +382,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	/**
 	 * 포탈 메인 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezNewPortal/newPortalPortalPage.do")
+	@RequestMapping(value = "/ezNewPortal/newPortalPortalPage.do", method=RequestMethod.GET)
 	public String portalMainPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalMainPage Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -450,8 +451,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezNewPortal/updatePortletOrderUser.do")
+	@RequestMapping(value = "/ezNewPortal/updatePortletOrderUser.do", method=RequestMethod.PATCH)
 	@ResponseBody
 	public String updatePortletOrderUser(@RequestBody JSONObject jsonParam, HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updatePortletOrderUser Start");
@@ -481,7 +481,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * @throws Exception
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezNewPortal/getMonthlyBirthdayEmployees.do")
+	@RequestMapping(value = "/ezNewPortal/getMonthlyBirthdayEmployees.do", method=RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getMonthlyBirthdayEmployees(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getMonthlyBirthdayEmployees Start");
@@ -508,8 +508,17 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		return birthdayInfo;
 	}
 	
+	/**
+	 * 이달의 우수사원 정보 가져오기
+	 * @param req
+	 * @param model
+	 * @param loginCookie
+	 * @param resp
+	 * @return
+	 * @throws Exception
+	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezNewPortal/getMonthlyBestEmployee.do")
+	@RequestMapping(value = "/ezNewPortal/getMonthlyBestEmployee.do", method=RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getMonthlyBestEmployee(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getMonthlyBestEmployee Start");
@@ -535,7 +544,10 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		return bestEmployee;
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/portletSetting.do")
+	/**
+	 * 포틀릿/프레임 개인 설정 화면 호출
+	 */
+	@RequestMapping(value = "/ezNewPortal/portletSetting.do", method=RequestMethod.GET)
 	public String portletSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		
 		return "/ezNewPortal/portletSetting";
@@ -543,7 +555,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	
 	//읽지 않은 메일, 결재할 문서, 전자설문, 오늘일정, 회람판 개수 불러오기
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezNewPortal/unreadCounts.do")
+	@RequestMapping(value = "/ezNewPortal/unreadCounts.do", method=RequestMethod.POST)
 	@ResponseBody
 	public JSONObject getUnreadCounts(HttpServletRequest req, Model model,@RequestBody Map<String, Object> param, @CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("getUnreadCounts Start");
@@ -570,7 +582,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	
 	//테마 설정 화면 호출
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezNewPortal/userThemeSetting.do")
+	@RequestMapping(value = "/ezNewPortal/userThemeSetting.do", method=RequestMethod.GET)
 	public String userThemeSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("userThemeSetting Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -607,7 +619,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	}
 	
 	//초기화면 설정 화면 호출
-	@RequestMapping(value = "/ezNewPortal/userStartPageSetting.do")
+	@RequestMapping(value = "/ezNewPortal/userStartPageSetting.do", method=RequestMethod.GET)
 	public String userStartPageSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("userStartPageSetting Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -648,7 +660,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	}
 	
 	//사용자 초기화면 설정 실행 함수
-	@RequestMapping(value = "/ezNewPortal/updateUserStartPage.do")
+	@RequestMapping(value = "/ezNewPortal/updateUserStartPage.do", method=RequestMethod.POST)
 	public void updateUserStartPage(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updateUserStartPage Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -662,7 +674,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	}
 	
 	//테마 초기화 실행 함수
-	@RequestMapping(value = "/ezNewPortal/deleteUserThemeSetting.do")
+	@RequestMapping(value = "/ezNewPortal/deleteUserThemeSetting.do", method=RequestMethod.DELETE)
 	public void deleteUserThemeSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("deleteUserThemeSetting Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -675,7 +687,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	}
 	
 	//사용자 기본 테마 설정 실행 함수
-	@RequestMapping(value = "/ezNewPortal/updateUserThemeSetting.do")
+	@RequestMapping(value = "/ezNewPortal/updateUserThemeSetting.do", method=RequestMethod.POST)
 	public void updateUserThemeSetting(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("updateUserThemeSetting Start");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -696,7 +708,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	/**
 	 * 포탈 ActiveX 다운로드 실행 함수
 	 */
-	@RequestMapping(value = "/ezNewPortal/progress.do")
+	@RequestMapping(value = "/ezNewPortal/progress.do", method=RequestMethod.GET)
 	public String progress() {
 		return "/ezNewPortal/portalProgress";
 	}
@@ -704,7 +716,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	/**
 	 * 포탈 ActiveX 다운로드 목록 호출 함수
 	 */
-	@RequestMapping(value = "/ezNewPortal/componentListTransfer.do", produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezNewPortal/componentListTransfer.do", produces="text/xml;charset=utf-8", method=RequestMethod.GET)
 	@ResponseBody
 	public String componentListTransfer(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		StringBuilder result = new StringBuilder();
@@ -712,6 +724,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		String path = "xml" + commonUtil.separator + "ezPortal" + commonUtil.separator + "componentlist.xml";
 		path = realPath + commonUtil.separator + path;
 		try {
+			path = commonUtil.detectPathTraversal(path);
+			
 			File file = new File(path);
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line = null;
@@ -732,7 +746,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 	 * 2019-01-03 김민성
 	 * 포탈 - 웹가이드 메인 화면 호출 함수
 	 */
-	@RequestMapping(value = "/ezNewPortal/help/index.do")
+	@RequestMapping(value = "/ezNewPortal/help/index.do", method=RequestMethod.GET)
 	public String help(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		logger.debug("help started");
 
@@ -754,77 +768,77 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalControll
 		return "/ezNewPortal/help/index";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub1-1.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub1-1.do", method=RequestMethod.GET)
 	public String sub11(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub1-1";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub1-2.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub1-2.do", method=RequestMethod.GET)
 	public String sub12(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub1-2";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub2-1.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub2-1.do", method=RequestMethod.GET)
 	public String sub21(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub2-1";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub2-2.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub2-2.do", method=RequestMethod.GET)
 	public String sub22(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub2-2";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub2-3.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub2-3.do", method=RequestMethod.GET)
 	public String sub23(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub2-3";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub3-1.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub3-1.do", method=RequestMethod.GET)
 	public String sub31(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub3-1";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub3-2.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub3-2.do", method=RequestMethod.GET)
 	public String sub32(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub3-2";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub3-3.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub3-3.do", method=RequestMethod.GET)
 	public String sub33(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub3-3";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub4-1.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub4-1.do", method=RequestMethod.GET)
 	public String sub41(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub4-1";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub4-2.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub4-2.do", method=RequestMethod.GET)
 	public String sub42(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub4-2";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub4-3.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub4-3.do", method=RequestMethod.GET)
 	public String sub43(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub4-3";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub5-1.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub5-1.do", method=RequestMethod.GET)
 	public String sub51(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub5-1";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub5-2.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub5-2.do", method=RequestMethod.GET)
 	public String sub52(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub5-2";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub5-3.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub5-3.do", method=RequestMethod.GET)
 	public String sub53(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub5-3";
 	}
 	
-	@RequestMapping(value = "/ezNewPortal/help/sub6-1.do")
+	@RequestMapping(value = "/ezNewPortal/help/sub6-1.do", method=RequestMethod.GET)
 	public String sub61(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
 		return "/ezNewPortal/help/sub6-1";
 	}
