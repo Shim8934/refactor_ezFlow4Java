@@ -452,7 +452,6 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		//메뉴권한수정
 		jsonParam = new JSONObject();
 		jsonParam.put("menuAuths", paramMap.get("menuAuths"));
-		System.out.println(paramMap.get("menuAuths"));
 		
 		url = "/rest/admin/ezPortal/menus/" + paramMap.get("menuId") + "/authorities/companies/" + paramMap.get("companyId");
 		
@@ -799,8 +798,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyId = json.get("companyId").toString();
 		String url = "/rest/admin/ezPortal/portlets/order/companies/" + companyId;
-		System.out.println(companyId);
-		System.out.println(json.get("portlets"));
+		
 		json.put("userId", userInfo.getId());		
 		
 		commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, null, req, "patch", json);
@@ -1015,7 +1013,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			paramMap.put("userId", userId);
 			
 			String url = "/rest/admin/ezPortal/themes/" + themeId + "/default/companies/" + companyId;
-			System.out.println(url);
+			
 			commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, request, "patch", null);
 			
 			LOGGER.debug("updateCompanyDefaultTheme ended.");
@@ -1041,7 +1039,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			paramMap.put("userId", userId);
 			
 			String url = "/rest/admin/ezPortal/logos/" + logoType + "/companies/" + companyId;
-			System.out.println(url);
+			
 			commonUtil.getJsonFromRestApi(config.getProperty("config.portalGwServerURL"), url, paramMap, request, "delete", null);
 			
 			LOGGER.debug("deleteLogo ended.");
@@ -1188,7 +1186,6 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezNewPortal/uploadSlideImage.do", produces = "text/plain; charset=utf-8", method=RequestMethod.POST)
 	@ResponseBody
 	public String uploadSlideImage(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {

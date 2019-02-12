@@ -28,7 +28,7 @@
 									<c:out value='${portletName }'/>
 								</dt>
 								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
-									<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+									<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 								</dd>
 							</dl>
 							<div id="scheduleList" class="sschedule_list">
@@ -58,7 +58,7 @@
 									<spring:message code='main.t203' />
 								</dt>
 								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
-									<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+									<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 								</dd>
 							</dl>
 							<div id="scheduleList" class="sschedule_list">
@@ -88,7 +88,7 @@
 									<spring:message code='main.t203' />
 								</dt>
 								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
-									<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+									<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 								</dd>
 							</dl>
 							<div id="scheduleList" class="sschedule_list">
