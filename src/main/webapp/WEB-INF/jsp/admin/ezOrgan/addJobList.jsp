@@ -36,6 +36,7 @@
 			border-style: solid;
 			border-color: transparent transparent rgba(66, 66, 66, 0.7) transparent;
 		}
+		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC; font-size: 11px;}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -202,6 +203,7 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
+		        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span style='color:#017BEC;'>" + totalCnt + "</span>";
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
@@ -350,12 +352,13 @@
 		        		result=loadXMLString(xml);
 		        		document.getElementById("AddJobList").innerHTML = "";
 		                var UserAddJobList = SelectNodes(result, "DATA/ROW");
-		               
+		                var userCount = UserAddJobList.length;
+		                
 		                //2019.01.23 유은정 디자인 변경
 		                var ulElement = document.createElement("ul");
 		                ulElement.className = "concurrentUL";
 		                
-		                for (var Cnt = 0; Cnt < UserAddJobList.length; Cnt++) {
+		                for (var Cnt = 0; Cnt < userCount; Cnt++) {
 		                	var liElement = document.createElement("li");
 		                	var companyElement = document.createElement("dl");
 		                	var deptElement = document.createElement("dl");
@@ -494,7 +497,7 @@
 		                    
 		                    document.getElementById("preview_title").textContent = headerTitle;
 		                    document.getElementById("preview_title2").textContent = headerTitle2 +"<spring:message code='ezOrgan.mse4' />";
-		                    /* document.getElementById("AddJobList").appendChild(DivLayer); */
+		                    document.getElementById("preview_count").textContent =  userCount;
 		                }	
 
 	                    //tooltip addeventlistener
@@ -1001,6 +1004,7 @@
 	    <form id="Form1" method="post">
 		    <h1>
 		    	<spring:message code='ezOrgan.t00013' />
+		    	<span id="mailBoxInfo"></span>
 		    	<span class="title_bar"><img src="/images/name_bar.gif"></span>
 		    	<select class="companySelect" id="ListCompany" onchange="company_change()">
 	            	<c:forEach var="item" items="${list}">
@@ -1048,6 +1052,7 @@
 						<p class="preview_header">
 						   <span class="preview_title" id="preview_title"></span>
 						   <span class="preview_title2" id="preview_title2"></span>
+						   <span class="preview_count" id="preview_count"></span>
 						</p>
 		              </div>
 		              </div>
