@@ -1430,7 +1430,11 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		List<OrganJobVO> jobList = ezOrganAdminDao.getTitleList(map);
 		
-		rtnVal.append("<LISTVIEWDATA><ROWS>");
+		int totalCnt = ezOrganAdminDao.getTitleListCnt(map);
+		
+		rtnVal.append("<LISTVIEWDATA>");
+		rtnVal.append("<TOTALCOUNT>" + totalCnt + "</TOTALCOUNT>");
+		rtnVal.append("<ROWS>");
 		
 		if (jobList != null && jobList.size() > 0) {
 			for (int i = 0; i < jobList.size(); i++) {

@@ -103,7 +103,10 @@
 	            Node = headerData.importNode(xmlRtn, true);
 	            headerData.documentElement.appendChild(Node);
 		    }
-            
+		    
+		    var titleCnt = Number(SelectSingleNodeValueNew(xmlDom, "LISTVIEWDATA/TOTALCOUNT"));
+		    document.getElementById("title_info").textContent = titleCnt;
+		    
             document.getElementById("jobListView").innerHTML = "";
             
             var listview = new ListView();
@@ -633,6 +636,7 @@
 <body class="mainbody" style="overflow: hidden;">
 	<h1>
 		<spring:message code='ezOrgan.csj01' />
+		<span>&nbsp;<span class="countColor" id="title_info"></span></span>
 		<span class="title_bar"><img src="/images/name_bar.gif"></span>
 		<select class="companySelect" id="ListCompany" onChange="companyChange()">
 			<c:forEach var="item" items="${list}">
