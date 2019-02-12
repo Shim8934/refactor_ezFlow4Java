@@ -453,11 +453,11 @@
 				var menuLang = menuName.id;
 				menuLang = menuLang.substring(4);
 				
-				if (menuName.value == "") {
+				if ($.trim(menuName.value) == "") {
 					menuNameEmptyNum++;
 				}
 				
-				menuNameList.push({"menuLang" : menuLang, "menuId" : menuId, "menuName" : menuName.value});
+				menuNameList.push({"menuLang" : menuLang, "menuId" : menuId, "menuName" : $.trim(menuName.value)});
 			}
 			
 			if (menuNameEmptyNum >= menuNamesCount) {
@@ -617,11 +617,11 @@
 				var menuLang = menuName.id;
 				menuLang = menuLang.substring(4);
 				
-				if (menuName.value == "") {
+				if ($.trim(menuName.value) == "") {
 					menuNameEmptyNum++;
 				}
 				
-				menuNameList.push({"menuLang" : menuLang, "menuName" : menuName.value});
+				menuNameList.push({"menuLang" : menuLang, "menuName" : $.trim(menuName.value)});
 			}
 			
 			if (menuNameEmptyNum >= menuNamesCount) {

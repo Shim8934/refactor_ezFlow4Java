@@ -168,7 +168,7 @@
 					portletNameEmptyNum++;
 				}
 				
-				nameList.push({"portletName" : portletNameList[i].value, "portletLang" : portletNameList[i].getAttribute("data1")});
+				nameList.push({"portletName" : $.trim(portletNameList[i].value), "portletLang" : portletNameList[i].getAttribute("data1")});
 			}
 			
 			if (portletNameEmptyNum >= portletNameListCount) {
@@ -305,7 +305,7 @@
 					portletNameEmptyNum++;
 				}
 				
-				nameList.push({"portletId" : portletId, "portletName" : portletNameList[i].value, "portletLang" : portletNameList[i].getAttribute("data1")});
+				nameList.push({"portletId" : portletId, "portletName" : $.trim(portletNameList[i].value), "portletLang" : portletNameList[i].getAttribute("data1")});
 			}
 			
 			if (portletNameEmptyNum >= portletNameListCount) {
