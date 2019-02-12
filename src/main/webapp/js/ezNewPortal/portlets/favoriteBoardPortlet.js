@@ -14,7 +14,7 @@ function getTabList() {
    	
    	$.ajax ({
 	   url : '/ezNewPortal/favoriteBoardPortletList.do',
-	   type : 'POST',
+	   type : 'GET',
        dataType : 'json',
        data : { 
     	   "mode" : mode
@@ -69,7 +69,7 @@ function getTabList() {
 
 function getBoardList_NewBoardSTD() {
     $.ajax({
-    	type : "POST",
+    	type : "GET",
     	dataType : "json",
     	url : "/ezNewPortal/getFavoriteBoardList.do",
     	data : {

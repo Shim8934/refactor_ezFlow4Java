@@ -24,6 +24,9 @@
 		
 		function afterDeleteSuccess() {
 			parent.refreshView();
+			try {
+				parent.leftFolderDelete(folderList);
+			} catch (e) {}
 			wClose();
 		}
 		

@@ -13,6 +13,7 @@
 	    <link rel="stylesheet" href="${util.addVer('/js/ezWebFolder/jsTree/dist/themes/default/style.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/jsTree/dist/jstree.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/jstreeManage.js')}"></script>
 	    <link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 	    <link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	    <style>
@@ -34,6 +35,7 @@
 		    var treeData;
 		    var allFileFlag = "N";
 		    var parentId = "";
+		    var selectFolderData = "";
 		    
 			document.onselectstart = function() {
 				return false;
@@ -108,7 +110,82 @@
 									"dots"       : false,
 									'responsive' : false,
 									'variant'    : 'small',
-									'stripes'    : false
+									'stripes'    : false,
+									"load_open"	 : true
+								}
+							},
+							"types" : {
+								"default": {
+									"icon" :"/images/OrganTree_cross/fldr.gif"
+								}
+							},
+							"grid": {
+								"width"       : "20",
+								"margin-left" : "10"
+							}
+						});
+					},
+					error : function(error) {
+// 						alert("<spring:message code='ezWebFolder.t134' />" + error + (ssss) );
+					}
+				});
+		    }
+		    
+		    // jstree의 특성상 loaded.jstree가 다른 function 뒤에 실행되므로 jstree가 필요한 상황이면 load된 후 function실행하도록 
+		    function folderList2(obj) {
+		    	$($element).jstree('destroy');
+				if ( obj == 'C') {
+					$element = '#tree';
+				} else if (obj == 'D') {
+					$element = '#treeDept';
+				} else if (obj == 'U') {
+					$element = '#treePer';
+				}
+				
+				folderType = obj;
+				$.ajax ({
+					type :"POST",
+					async: true,
+					url  : "/ezWebFolder/folderList.do",
+					data : {
+							 "folderId"   : folderId
+							,"folderType" : obj
+						},
+					dataType: "JSON",
+					success : function (data) {
+						var firstNode = "#" + folderId;
+
+						$($element).on('loaded.jstree', function() {
+
+							$('.jstree-anchor').attr('oncontextmenu', 'event_folderMenu(event);');
+							$('.jstree-anchor').attr('onclick', 'HiddenFolderMenu();');
+							firFolderId = folderId;
+							treeData = data.data;
+							addTitle();
+							selectFolder(folderId);
+							
+						}).on('changed.jstree', function (e, data) {
+							try {
+								if(data.node.parent != undefined ){
+									folderId = data.selected[0];
+									parentId = data.node.parent;
+									getFileList(folderId);
+								}
+							} catch(e){}
+							
+						}).jstree({
+							'plugins': ["core","types","json_data","themes","contextmenu","ui"],
+							'core' : {
+								"animation" : 0,
+								'data' : data.data,
+								"multiple" : false,
+								'themes' : {
+									"theme"      : "default",
+									"dots"       : false,
+									'responsive' : false,
+									'variant'    : 'small',
+									'stripes'    : false,
+									"load_open": true
 								}
 							},
 							"types" : {
@@ -135,9 +212,6 @@
 		    		var folderName = data[i]["folderName1"];
 		    		var childE = document.getElementById(dataId);
 		    		if (childE != null){
-// 		    			dataId = data[i]["id"];
-// 			    		folderName = data[i]["folderName1"];
-// 			    		childE = document.getElementById(dataId);
 						childE.setAttribute("title", folderName);
 		    		}
 		    	}
@@ -169,35 +243,13 @@
 			                 	   //용량 체크(색깔로)
 		                 	    if (percent >= 80) {
 		                 	   		colorClass = "myBar_red";
-		                 	       	//$(".volumeDL dd").css("color", "#ff4040");
 		                 	    } else if (percent >= 70) {
 							   		colorClass = "myBar_yellow";
-							   		//$(".volumeDL dd").css("color", "#ff9c00");
 		                 	    } else {
 		                 		  	colorClass = "myBar_green";
-		                 		  	//$(".volumeDL dd").css("color", "#0470e4");
 		                 	    }                  		   
 			                 	            
 			                 	$("#myBar").addClass(colorClass);
-								
-								/* if (percent < 100) {
-									barElmt.style.width = percent + "%";
-								} else {
-									barElmt.style.width = "100%";
-								}
-								$("#useVol").html(useVolume + "<span>/ " + totalVolume + "</span>");
-								$("#usePer").text(percent+"%");
-														
-								if (percent >= 80) {
-									barElmt.className = "myBar_red";
-									$(".volumeDL dd").css("color", "#ff4040");
-								} else if (percent >= 70) {
-									barElmt.className = "myBar_yellow";
-									$(".volumeDL dd").css("color", "#ff9c00");
-								} else {
-									barElmt.className = "myBar_green";
-									$(".volumeDL dd").css("color", "#0470e4");
-								} */
 						}
 					},
 					error : function(error) {
@@ -348,10 +400,12 @@
 		        document.getElementById("folderMenuDiv").style.display = "";
 		       
 		    }
+		    
 			function HiddenFolderMenu(){
 		    	document.getElementById("folderPanel").style.display = "none";
 		        document.getElementById("folderMenuDiv").style.display = "none";
 		    }
+		    
 			function allFile() {
 				allFileFlag = "all";
 				getFileList(folderId);

@@ -89,7 +89,7 @@
 
 			var getCompanies = function() {
 				var request = new XMLHttpRequest();
-				request.open('POST', '/admin/ezNewPortal/getCompanies.do', false);
+				request.open('GET', '/admin/ezNewPortal/getCompanies.do', false);
 				request.setRequestHeader('Content-Type', 'application/json');
 				var companiesHTML = "";
 
@@ -255,7 +255,7 @@
 					}
 					
 					var request = new XMLHttpRequest();
-					request.open("POST", "/admin/ezNewPortal/deleteLogo.do", true);
+					request.open("DELETE", "/admin/ezNewPortal/deleteLogo.do", true);
 					request.setRequestHeader('content-type', 'application/json');
 	    
 					request.onload = function() {

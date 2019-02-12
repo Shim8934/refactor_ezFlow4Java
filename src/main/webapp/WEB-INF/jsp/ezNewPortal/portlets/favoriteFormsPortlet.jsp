@@ -60,7 +60,7 @@
 			//즐겨찾기양식목록 조회
 			var getFavoriteForms = function() {
 				var request = new XMLHttpRequest();
-				request.open('POST', '/ezNewPortal/getFavoriteForms.do', true);
+				request.open('GET', '/ezNewPortal/getFavoriteForms.do', true);
 
 				request.onload = function() {
 					if (request.status >= 200 && request.status < 400) {
@@ -101,7 +101,7 @@
 			//결제통계 조회
 			var getApprovalStatistics = function() {
 				var request = new XMLHttpRequest();
-				request.open('POST', '/ezNewPortal/getApprovalStatistics.do', true);
+				request.open('GET', '/ezNewPortal/getApprovalStatistics.do', true);
 
 				request.onload = function() {
 					if (request.status >= 200 && request.status < 400) {

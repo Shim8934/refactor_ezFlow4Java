@@ -5,7 +5,7 @@ var mailPercent = "";
 
 function getMailList() {
 	$.ajax({
-		type : "POST",
+		type : "GET",
 		dataType : "json",
 		async : true,
 		url : "/ezNewPortal/receivedMailPortletList.do",

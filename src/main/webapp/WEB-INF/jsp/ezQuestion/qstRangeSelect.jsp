@@ -25,6 +25,7 @@
 			var bSearch = false;
         	var retArr = new Array();
         	var langData = "${langData}";
+        	var searchUserId = "";
         	
         	window.onload = function () {
             	var InitData = "";
@@ -302,6 +303,13 @@
 	                listview.DataBind("OrganListView");
 	                listview.DataSource(loadXMLString(result));
 	                listview.RowDataBind();
+	                
+	                //대상자 검색 후 선택시 참여대상자에 추가되도록 변경
+	                if (searchUserId != "") {
+	                	$("#Organ tr[data2=" + searchUserId + "]").click();
+	                	add_member();
+	                	searchUserId = "";
+	                }
 	        	},
 	        	error : function(error){
 	        		alert("<spring:message code='ezBoard.t22'/>" + error);	
@@ -439,6 +447,8 @@
             	xmlHttp_Depttree.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             	xmlHttp_Depttree.onreadystatechange = event_getDeptFullTree;
             	xmlHttp_Depttree.send(strQuery);
+            	//대상자 검색 후 선택시 참여대상자에 추가되도록 변경
+            	searchUserId = RetValue["userid"];
         	}
     	}
 	    function event_getDeptFullTree() {

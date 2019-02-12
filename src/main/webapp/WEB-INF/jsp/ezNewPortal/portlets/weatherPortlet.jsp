@@ -59,7 +59,7 @@
 				//셀렉트박스 onchange
 				$("#cityList").change(function(){
 			    	$.ajax({
-			    		type : "POST",
+			    		type : "GET",
 			    		dataType : "json",
 			    		async : false,
 			    		url : "/ezNewPortal/weatherPortletChange.do",

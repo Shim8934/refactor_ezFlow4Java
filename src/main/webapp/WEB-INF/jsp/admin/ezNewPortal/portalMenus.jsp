@@ -102,7 +102,7 @@
 		
 		var getCompanies = function() {
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/getCompanies.do', false);
+			request.open('GET', '/admin/ezNewPortal/getCompanies.do', false);
 			request.setRequestHeader('Content-Type', 'application/json');
 			var companiesHTML = "";
 	
@@ -470,7 +470,7 @@
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/updateMenu.do', true);
+			request.open('PATCH', '/admin/ezNewPortal/updateMenu.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 
@@ -672,7 +672,7 @@
 				var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 				
 				var request = new XMLHttpRequest();
-				request.open('POST', '/admin/ezNewPortal/deleteMenu.do', true);
+				request.open('DELETE', '/admin/ezNewPortal/deleteMenu.do', true);
 				request.setRequestHeader('content-type', 'application/json');
 				
 				request.onload = function() { getMenus(); }
@@ -719,7 +719,7 @@
 			
 			//ajax로 메뉴 순서지정
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/updateMenuOrder.do', true);
+			request.open('PATCH', '/admin/ezNewPortal/updateMenuOrder.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { }
