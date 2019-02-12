@@ -209,7 +209,7 @@
 						c_clubConfirmType,
 						c_clubGubun,
 						NVL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
-						c_sysopid,
+						RTRIM(c_sysopid) AS c_sysopid,
 						TO_CHAR(c_regdate + #v_OFFSETMIN# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS c_regdate
 					FROM
 						TBL_C_CLUB A
@@ -277,7 +277,7 @@
 						c_clubConfirmType,
 						c_clubGubun,
 						NVL(C.DISPLAYNAME$v_USERINFO_LANG$, B.USERNAME$v_USERINFO_LANG$) AS username,
-						c_sysopid,
+						RTRIM(c_sysopid) AS c_sysopid,
 						TO_CHAR(c_regdate + #v_OFFSETMIN# / (24 * 60), 'YYYY-MM-DD HH24:MI:SS') AS c_regdate
 					FROM
 						TBL_C_CLUB A
