@@ -126,6 +126,7 @@
 		                		$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
 		                	});
 		                }
+		                rowListSelect();
 		                checkItems();
 		                makePageSelPage();
 		                setFucntion();
@@ -420,6 +421,7 @@
 		        CurPage = 1;
 		        checkFlag = false;
 		        clearSearchVal();
+		        rowList = [];
 		        Permissions_List();
 		    }
 			
@@ -642,7 +644,26 @@
 		    	console.log(data);
 		    	Permissions_Del(data);
 		    } */
-		    
+
+			// 등록, 수정 , 삭제 후 rowSelect 선택 method
+			function rowListSelect() {
+				var len = rowList.length;
+				for (var i = 0; i < len; i++) {
+					var tempItemSeq = rowList.pop();
+					if (document.getElementById(tempItemSeq) != null) {
+						$("#" + tempItemSeq).prop("checked", true);
+						var tempID = $("#" + tempItemSeq)[0].parentNode.parentNode.id;
+						$("#" + tempID + " td").css("background-color",
+								"rgb(241, 248, 255)");
+					}
+				}
+
+				if (checkFlag) {
+					$("#checkAll").prop("checked", true);
+				} else {
+					$("#checkAll").prop("checked", false);
+				}
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
