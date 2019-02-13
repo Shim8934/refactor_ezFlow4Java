@@ -16,6 +16,20 @@
 						&nbsp;~&nbsp;
 						<input type="text" id="endDate" class="srchDate" readonly size="10">
 					</td>
+					<th class="left-Th"><spring:message code="ezSurvey.t44"/></th> <%-- open public result days setting --%>
+					<td class="right-Td">
+						<input type="text" class="date-input" value="0" tabindex="1">
+						<span><spring:message code="ezSurvey.t45"/></span>
+					</td>
+				</tr>
+				<tr>
+					<th class="left-Th"><spring:message code="ezSurvey.t41"/></th> <%-- public setting --%>
+					<td class="right-Td">
+						<div>
+							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="1" checked><spring:message code="ezSurvey.t42"/></span>
+							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="0"><spring:message code="ezSurvey.t43"/></span>
+						</div>
+					</td>
 					<th class="left-Th"><spring:message code="ezSurvey.t46"/></th> <%-- anonymous setting --%>
 					<td class="right-Td">
 						<div>
@@ -30,10 +44,12 @@
 						<div class="survey-flexdiv">
 							<span class="inf-spanTxt"><input type="radio" name="targetSpan" value="0" checked><spring:message code="ezSurvey.t53"/></span>
 							<span class="inf-spanTxt"><input type="radio" name="targetSpan" value="1"><spring:message code="ezSurvey.t54"/></span>
+							<%-- 
 							<div id="userWrapDiv" class="user-mainDiv">
 								<a class="imgbtn inf-surveyimg" id="targetBttn"><span><spring:message code="ezSurvey.t52"/></span></a>
 								<div class="target-wrapper"><div id="userListDiv" class="user-listDiv"></div></div>
 							</div>
+							 --%>
 						</div>
 					</td>
 					<th class="left-Th"><spring:message code="ezSurvey.t49"/></th> <%-- multiple select setting --%>
@@ -44,18 +60,13 @@
 						</div>
 					</td>
 				</tr>
-				<tr>
-					<th class="left-Th"><spring:message code="ezSurvey.t41"/></th> <%-- public setting --%>
-					<td class="right-Td">
-						<div>
-							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="1" checked><spring:message code="ezSurvey.t42"/></span>
-							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="0"><spring:message code="ezSurvey.t43"/></span>
+				<tr class='rspdtList' id='rspdtList'>
+					<th class="left-Th"><spring:message code="ezSurvey.t55"/></th> <%-- respondent setting --%>
+					<td class="right-Td" colspan="3">
+						<div id="userWrapDiv" class="user-mainDiv">
+							<a class="imgbtn inf-surveyimg" id="targetBttn"><span><spring:message code="ezSurvey.t100"/></span></a>
+							<div class="target-wrapper"><div id="userListDiv" class="user-listDiv"></div></div>
 						</div>
-					</td>
-					<th class="left-Th"><spring:message code="ezSurvey.t44"/></th> <%-- open public result days setting --%>
-					<td class="right-Td">
-						<input type="text" class="date-input" value="0" tabindex="1">
-						<span><spring:message code="ezSurvey.t45"/></span>
 					</td>
 				</tr>
 			</table>
