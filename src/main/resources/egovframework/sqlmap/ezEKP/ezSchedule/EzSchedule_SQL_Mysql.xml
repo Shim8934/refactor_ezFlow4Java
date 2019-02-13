@@ -1188,6 +1188,39 @@
 			)
    		]]>
 	</insert>
+	<insert id="EzScheduleDAO.insertScheduleRepeDelChild" parameterClass="map">
+		<![CDATA[
+			insert into tbl_schedulerepetition_del(
+				scheduleid,			startdate, 				enddate,				tenant_id,				companyid
+			) 
+			select 
+				scheduleid ,		#v_STARTDATE#,			#v_STARTDATE#,			#v_TENANTID#,			#v_COMPANYID#
+			from 
+				tbl_schedule 
+			where 
+				parentid = #v_SCHEDULEID#
+   		]]>
+	</insert>
+	
+	<insert id="EzScheduleDAO.insertAttendantScheduleDel" parameterClass="map">
+		<![CDATA[
+			insert into tbl_schedulerepetition_del(
+				scheduleid,			startdate, 				enddate,				tenant_id,				companyid
+			)
+			select 
+				s.scheduleid ,		d.startdate,			d.enddate,			s.tenant_id,			s.companyid
+			from 
+				tbl_schedule s
+			inner join
+				tbl_schedulerepetition_del d
+			on
+				(s.parentid = d.scheduleid and s.tenant_id = d.tenant_id and s.companyid = d.companyid)
+			where 
+				s.parentid = #v_SCHEDULEID#
+			and
+				s.tenant_id = #v_TENANTID#
+   		]]>
+	</insert>
 	<!-- checked -->
 	<insert id="EzScheduleDAO.insertScheduleGroupMember" parameterClass="map">
 		<![CDATA[
@@ -1343,6 +1376,17 @@
 				tbl_schedulerepetition_del
 	   		where  
 	   			scheduleid = #v_SCHEDULEID#
+	   		and
+	   			tenant_id = #v_TENANTID#
+	   	]]>		
+	</delete>
+	
+	<delete id="EzScheduleDAO.deleteScheduleRepeChild" parameterClass="map">
+		<![CDATA[
+			delete from
+				tbl_schedulerepetition_del
+	   		where  
+	   			scheduleid in (select scheduleid from tbl_schedule where parentid = #v_SCHEDULEID#)
 	   		and
 	   			tenant_id = #v_TENANTID#
 	   	]]>		

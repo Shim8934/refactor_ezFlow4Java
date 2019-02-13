@@ -20,6 +20,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memoPortal.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezMemo.e1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style>
 			.layerpopup {
 				-webkit-border-top-left-radius: 5px;

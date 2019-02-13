@@ -1763,6 +1763,8 @@ public class EzQuestionController extends EgovFileMngUtil {
             		else{
             			newDataValue = xmlMainDom.createTextNode(commonUtil.cleanValue((String)field.get(qstResponseVO)).trim());
             		}
+            	} else {
+            		newDataValue = xmlMainDom.createTextNode("null");
             	}
             	
             	newDataName.appendChild(newDataValue);
@@ -1925,6 +1927,8 @@ public class EzQuestionController extends EgovFileMngUtil {
             		else{
             			newDataValue = xmlMainDom.createTextNode(commonUtil.cleanValue((String)field.get(qstResponseVO)).trim());
             		}
+            	} else {
+            		newDataValue = xmlMainDom.createTextNode("null");
             	}
             	
             	newDataName.appendChild(newDataValue);
