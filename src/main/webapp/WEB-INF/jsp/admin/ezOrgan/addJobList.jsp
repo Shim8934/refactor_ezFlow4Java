@@ -202,6 +202,9 @@
 		    }
 			
 			function makePageSelPage() {
+				checkFlag = false;
+				$("#checkAll").prop("checked", false);
+				
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
