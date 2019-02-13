@@ -3157,10 +3157,8 @@ h2, #menu span {font-size: 12px;}
 .srchDate {width: 100px !important; text-align: center; padding: 0px 5px;}
 
 /* select respondent part */
-.survey-flexdiv {display: flex;}
 .imgbtn.inf-surveyimg {margin: 0px 5px 0px 0px;}
-.user-mainDiv.on {flex: 1; display: flex; align-items: center;}
-.user-mainDiv {display: none;}
+.user-mainDiv {flex: 1; display: flex; align-items: center;}
 .target-wrapper {flex: 1; border: 1px solid #ddd; height: 27px; box-sizing: border-box; display: flex; align-items: center;}
 
 /* survey purpose editor part */
@@ -3227,7 +3225,6 @@ input::-ms-clear {display: none;}
 .survey-infrow >span, .survey-infrow-pv >span {margin: 0px 10px; line-height: 32px; font-size: 14px;}
 .survey-infrow >span:first-child, .survey-infrow-pv >span:first-child {margin-left: 0px !important; min-width: 80px;}
 .survey-infrow .target-select {border-radius: 3px; outline: none; background-color: rgba(204, 204, 204, 0.46); padding: 0px 5px; font-size: 13px; line-height: 27px; cursor: pointer; margin: 0px 10px; border: 1px solid #ddd;}
-.user-mainDiv.on {display: flex;}
 .survey-infrow .date-input {width: 60px; outline: 0px; border: 1px solid #ddd; padding-left: 5px;}
 .survey-infrow input, .survey-infrow select, .survey-infrow .target-select {height: 27px;}
 .survey-user-pv em {padding: 0px 2px;}

@@ -39,17 +39,11 @@
 					</td>
 				</tr>
 				<tr>
-					<th class="left-Th"><spring:message code="ezSurvey.t52"/></th> <%-- respondent setting --%>
+					<th class="left-Th"><spring:message code="ezSurvey.t30"/></th> <%-- respondent setting --%>
 					<td class="right-Td">
 						<div class="survey-flexdiv">
 							<span class="inf-spanTxt"><input type="radio" name="targetSpan" value="0" checked><spring:message code="ezSurvey.t53"/></span>
 							<span class="inf-spanTxt"><input type="radio" name="targetSpan" value="1"><spring:message code="ezSurvey.t54"/></span>
-							<%-- 
-							<div id="userWrapDiv" class="user-mainDiv">
-								<a class="imgbtn inf-surveyimg" id="targetBttn"><span><spring:message code="ezSurvey.t52"/></span></a>
-								<div class="target-wrapper"><div id="userListDiv" class="user-listDiv"></div></div>
-							</div>
-							 --%>
 						</div>
 					</td>
 					<th class="left-Th"><spring:message code="ezSurvey.t49"/></th> <%-- multiple select setting --%>
