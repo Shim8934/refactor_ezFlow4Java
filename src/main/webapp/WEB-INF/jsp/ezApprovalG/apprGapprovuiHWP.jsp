@@ -178,7 +178,8 @@
 		        else if (RtnVal == "1") {
 		
 		            if (allFlag == "1")
-		                btnStay_onclick();
+		                //btnStay_onclick();
+		            	LoadNextDocument("\n<spring:message code='ezApprovalG.t2'/>");
 		            else if (allFlag == "2")
 		                LoadNextDocument("\n<spring:message code='ezApprovalG.t2'/>");
 			    }
