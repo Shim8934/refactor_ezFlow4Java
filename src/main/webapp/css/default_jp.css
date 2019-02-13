@@ -3414,7 +3414,7 @@ input[type=range]::-ms-tooltip {display: none;}
 .ranking-order, .dropdown-order {width:34px; height:22px; line-height:22px; margin:0px 10px 0px 0px; font-size:12px; color:#333; text-align:center; background:#fff; border:1px solid #2196f3; border-radius:22px;}
 .ranking-select .rank-order {width:36px; height:22px; line-height:22px; margin:0px 10px 0px 0px; font-size:16px; color:#2196f3; text-align:center; border:1px solid #2196f3; border-radius:22px;}
 .ranking-select >select, .dropdown-wrap select {width:100%; height:34px; padding:0px 10px; font-size:12px; color:#333; border:1px solid #ddd; outline:0px;}
-.ranking-select >select:focus, .dropdown-wrap select:focus, .searchTblTd input[type='text']:focus, .othInput:focus, .topSearchSpan >select:focus, .questnTitle:focus, .survey-infrow input:focus, .survey-infrow select:focus {border-color:#66afe9; outline: 0px; -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6); box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
+.ranking-select >select:focus, .dropdown-wrap select:focus, .searchTblTd input[type='text']:focus, .othInput:focus, .topSearchSpan >select:focus, .survey-infrow input:focus, .survey-infrow select:focus {border-color:#66afe9; outline: 0px; -webkit-box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6); box-shadow:inset 0 1px 1px rgba(0,0,0,.075),0 0 8px rgba(102,175,233,.6)}
 .textInput:focus, .info-input-ttl:focus, .info-input-pp:focus {border-bottom: 1px solid #03a9f4 !important;}
 .srvySelect{min-height:20px; -webkit-appearance: none; border:1px solid #ddd; margin: 0; padding: .1em .1em; background: url(/images/ezSurvey/srvySelect.gif) #fff no-repeat right 16px center;}
 
