@@ -96,7 +96,7 @@
 
 <div class="survey-bttn-panel">
 	<div class="btnpositionSurvey">
-		<a class="imgbtnSurvey imgbtnSurvey_save gotoSecondTab"><span><spring:message code='ezSurvey.t89'/></span></a>
+		<a class="imgbtnSurvey imgbtnSurvey gotoSecondTab"><span><spring:message code='ezSurvey.t89'/></span></a>
 		<a class="imgbtnSurvey cancelSurvey"><span><spring:message code='ezSurvey.t18'/></span></a>
 	</div>
 </div>

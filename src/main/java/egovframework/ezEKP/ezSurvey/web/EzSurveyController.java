@@ -551,6 +551,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("Delete file is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String filePath        = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
+		filePath = commonUtil.detectPathTraversal(filePath);
 		JSONObject resultObj   = new JSONObject();
 		
 		if (filePath.equals("")) {
@@ -570,7 +571,9 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("responeDownloadFile is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String filePath        = request.getParameter("filePath") != null ? request.getParameter("filePath") : "";
+		filePath = commonUtil.detectPathTraversal(filePath);
 		String fileName        = request.getParameter("fileName") != null ? request.getParameter("fileName") : "";
+		fileName = commonUtil.detectPathTraversal(fileName);
 		
 		if (filePath.equals("") || fileName.equals("")) {
 			logger.debug("Invalid arguments!!!");
@@ -609,7 +612,6 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@ResponseBody
 	public String jsonSaveResponse(@RequestBody JSONObject responseItem, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jsonSaveResponse started");
-		logger.debug("" + responseItem);
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		responseItem.put("userId", user.getId());
 		

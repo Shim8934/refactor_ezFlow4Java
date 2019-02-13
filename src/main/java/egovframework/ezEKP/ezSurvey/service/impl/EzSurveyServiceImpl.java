@@ -238,6 +238,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	@Override
 	public String saveUploadFile(List<MultipartFile> multiFileLists, JSONArray nameArray, String realPath, int tenantId) throws Exception {
 		String pFileName   = (String)((JSONObject)nameArray.get(0)).get("originalFilename");
+		pFileName = commonUtil.detectPathTraversal(pFileName);
 		String cabinetPath = getSurveyDirPath(tenantId);
 		String pDirPath    = realPath + cabinetPath;
 		

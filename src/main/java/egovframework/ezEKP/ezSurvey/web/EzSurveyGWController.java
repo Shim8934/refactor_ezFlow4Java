@@ -281,6 +281,7 @@ public class EzSurveyGWController {
 		try {
 			int tenantId    = loginService.getTenantId(serverName);
 			String realPath = request.getServletContext().getRealPath("");
+			realPath = commonUtil.detectPathTraversal(realPath);
 			String filePath = surveyService.saveUploadFile(multiFileLists, nameArray, realPath, tenantId);
 			
 			result.put("status", "ok");
@@ -313,7 +314,7 @@ public class EzSurveyGWController {
 		
 		//Get absolute path of the application
 		String realPath = request.getServletContext().getRealPath("");
-		
+		realPath = commonUtil.detectPathTraversal(realPath);
 		surveyService.getDownloadedFile(fileName, filePath, realPath, userAgent, request, response);
 		
 		logger.debug("File Download Finish!");
@@ -338,6 +339,7 @@ public class EzSurveyGWController {
 		try {
 			int tenantId      = loginService.getTenantId(serverName);
 			String realPath   = request.getServletContext().getRealPath("");
+			realPath = commonUtil.detectPathTraversal(realPath);
 			surveyService.deleteAttachFile(filePath, realPath, tenantId);
 			
 			result.put("status", "ok");
