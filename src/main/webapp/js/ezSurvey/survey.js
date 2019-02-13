@@ -608,11 +608,12 @@ var SurveyCreate     = function() {
 		var sltedIdx = inputElmt.getAttribute("value");
 		
 		if (sltedIdx == 0) {
-			document.getElementById("userWrapDiv").setAttribute("class", "user-mainDiv");
+			document.getElementById("rspdtList").setAttribute("class", "rspdtList");
 			surveyObj["infor"]["users"] = null;
+			document.getElementById("userListDiv").innerHTML = "";
 		}
 		else {
-			document.getElementById("userWrapDiv").setAttribute("class", "user-mainDiv on");
+			document.getElementById("rspdtList").setAttribute("class", "rspdtList on");
 		}
 	}
 	
@@ -2669,7 +2670,7 @@ var SurveyCreate     = function() {
 			divPanel.appendChild(attDiv);
 		}
 		
-		moveBttn.className = "survey_atchBtn mvBtn";
+		moveBttn.className = "survey_atchBtn mvBtn srvyDragBtn";
 		divPanel.className = "question-panel";
 		wrapDiv.className  = "usrQstnWrapper";
 		wrapDiv.setAttribute("qstnType", qstnType);

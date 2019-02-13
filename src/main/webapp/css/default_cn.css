@@ -3160,6 +3160,8 @@ h2, #menu span {font-size: 12px;}
 .imgbtn.inf-surveyimg {margin: 0px 5px 0px 0px;}
 .user-mainDiv {flex: 1; display: flex; align-items: center;}
 .target-wrapper {flex: 1; border: 1px solid #ddd; height: 27px; box-sizing: border-box; display: flex; align-items: center;}
+.rspdtList {display: none;}
+.rspdtList.on {display: table-row;}
 
 /* survey purpose editor part */
 .survey-infpp-wrap {width: 100%; height: 450px; margin:0px 0px 15px 0px;}
