@@ -157,7 +157,7 @@
     			<!-- 2018-07-26 김보미 - style속성 수정 -->   				
    				<!-- <div class="question" style="width:223px;overflow-y:auto"> -->
   				<div class="question" style="width:378px;overflow-y:hidden;">
-					<p><spring:message code='ezPersonal.t2000' />:</p>
+					<p><spring:message code='ezPersonal.t240' />:</p>
     				${labelPollTitle}
   				</div>
   					<!-- 2018-07-26 김보미 - 너비값 조정 -->
