@@ -2534,7 +2534,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 일정보기 > 참석자관리 > 참석자제외
+	 * 일정보기 > 참석자관리 > 참석수락
 	 */	
 	@RequestMapping(value="/ezSchedule/scheduleAcceptAttendant.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody
