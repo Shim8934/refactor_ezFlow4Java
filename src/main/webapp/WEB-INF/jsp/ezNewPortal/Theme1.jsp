@@ -383,10 +383,10 @@
 				}
 				
 				// size가 FULL인 경우 vs 아닌 경우
-				if(item.size === 'FULL') {
+				if(item.quickSize === 'FULL') {
 					window.open( url, '_blank', '');
-				} else if (item.size.indexOf(':') > 0) {
-					var sizeArr = item.size.split(':');
+				} else if (item.quickSize.indexOf(':') > 0) {
+					var sizeArr = item.quickSize.split(':');
 					var popupX = (window.screen.width / 2) - (sizeArr[0] /2);
 					var popupY = (window.screen.height / 2) - (sizeArr[1] /2);
 					var option = 'width='+sizeArr[0]+'px,height='+sizeArr[1]+'px, left='+popupX+', top='+popupY+', status = no, toolbar=no, menubar=no,location=no, resizable=0';

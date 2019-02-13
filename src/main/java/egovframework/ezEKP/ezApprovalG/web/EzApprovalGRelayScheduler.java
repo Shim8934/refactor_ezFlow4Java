@@ -23,6 +23,8 @@ import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.w3c.dom.Document;
@@ -37,7 +39,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
-@Controller
+@Component
 public class EzApprovalGRelayScheduler {
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGRelayScheduler.class);
 
@@ -62,8 +64,8 @@ public class EzApprovalGRelayScheduler {
 	@Resource(name = "EzOrganService")
 	private EzOrganService ezOrganService;
 	
-//	@Scheduled(cron = "0 0/5 * * * *")
-	@RequestMapping(value = "/ezApprovalG/relay.do")
+//	@RequestMapping(value = "/ezApprovalG/relay.do")
+	@Scheduled(cron = "0 0/1 * * * *")
 	public void receiverMain() throws Exception{
 		if (config.getProperty("config.Run_RelayScheduler").equals("NO")) {
 			return;
@@ -378,7 +380,8 @@ public class EzApprovalGRelayScheduler {
         								 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "N", strCompanyID, tenantID);
         								 break;
         							 case "attach_body":
-        								 //콘텐트의 내용을 base64로 디코딩
+        								 // 이 것 때문에 attach_body에서 오류남 
+        								/* //콘텐트의 내용을 base64로 디코딩
         								 String tempString = new String(Base64.decodeBase64(objXML.getElementsByTagName("content").item(0).getTextContent()), "euc-kr" );
         								 //디코딩된 내용에 nbsp가 있으면 string 에서 xml로 변환되지 않음
         								 tempString = tempString.replaceAll("&nbsp;", "");
@@ -386,13 +389,13 @@ public class EzApprovalGRelayScheduler {
         								 String[] tempStrLine = tempString.split("\\r?\\n", 4);
         								 
         								 //4번째부터의 내용을 xml로 변환
-        								 Document tempXml = commonUtil.convertStringToDocument(tempStrLine[3]);
+        								 Document tempXml = commonUtil.convertStringToDocument(tempStrLine[3]);*/
         								 
-        								 if ("true".equals(tempXml.getElementsByTagName("body").item(0).getAttributes().getNamedItem("separate").getTextContent())) {
+//        								 if ("true".equals(tempXml.getElementsByTagName("body").item(0).getAttributes().getNamedItem("separate").getTextContent())) {
         									 boolean WriteBodyAttach = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "ExDocDown" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);
         									 logger.debug("#attach_body생성=" + WriteBodyAttach);
         									 ezApprovalGService.addAttachInfo(strCont_Name, strXDocID.replace("/", "_").replace("#", "_") + strCont_Name, strXDocID, Integer.toString(count), "Y", strCompanyID, tenantID);
-        								 }
+//        								 }
         								 break;
         							 case "attach_xml":
         								 boolean WriteXMLFile = WriteFileFromBase64(strCont, strAprDocPath + strCompanyID + commonUtil.separator + "exch" , strXDocID.replace("/", "_").replace("#", "_") + strCont_Name);

@@ -337,7 +337,7 @@ SELECT
     linktype, 
     linktypeurl,
     url,
-    size
+    quicksize
 FROM (
 	SELECT
 		Q.quicklinkid, 
@@ -347,7 +347,7 @@ FROM (
 	    Q.linktype, 
 	    Q.linktypeurl, 
 	    Q.url,
-	    Q.size_ as size,
+	    Q.size_ as quicksize,
 	    IFNULL(USER.view_flag, IFNULL(DEPT.view_flag, IFNULL(COMP.view_flag, IFNULL(EVERY.view_flag, 'N')))) as viewflag,
 	    Q.linkorder
 	FROM 

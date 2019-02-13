@@ -165,11 +165,11 @@
 			
 			for (var i = 0; i < portletNameListCount; i++) {
 				
-				if (portletNameList[i].value == "") {
+				if ($.trim(portletNameList[i].value) == "") {
 					portletNameEmptyNum++;
 				}
 				
-				nameList.push({"portletName" : portletNameList[i].value, "portletLang" : portletNameList[i].getAttribute("data1")});
+				nameList.push({"portletName" : $.trim(portletNameList[i].value), "portletLang" : portletNameList[i].getAttribute("data1")});
 			}
 			
 			if (portletNameEmptyNum >= portletNameListCount) {
@@ -302,11 +302,16 @@
 			
 			for (var i = 0; i < portletNameListCount; i++) {
 	
-				if (portletNameList[i].value == "") {
+				if ($.trim(portletNameList[i].value) == "") {
 					portletNameEmptyNum++;
 				}
 				
-				nameList.push({"portletId" : portletId, "portletName" : portletNameList[i].value, "portletLang" : portletNameList[i].getAttribute("data1")});
+				nameList.push({"portletId" : portletId, "portletName" : $.trim(portletNameList[i].value), "portletLang" : portletNameList[i].getAttribute("data1")});
+			}
+			
+			if (portletNameEmptyNum >= portletNameListCount) {
+				alert("<spring:message code='ezNewPortal.t091' />");
+				return;
 			}
 			
 			//게시판 설정(게시판 아이디)

@@ -1677,16 +1677,14 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 * 포탈 환경설정 개인정보관리 모바일설정 화면 호출 메서드 - 2018.10.22 (yjks)
 	 */
 	@RequestMapping(value = "/ezPersonal/mobileManaged.do")
-	public String mobileManaged(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
-			Model model, HttpServletRequest req, Locale locale) throws Exception {
+	public String mobileManaged(@CookieValue("loginCookie") String loginCookie,	Model model) throws Exception {
 		logger.debug("mobileManaged started");
 
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		int tenantId = userInfo.getTenantId();
 		String userId = userInfo.getId();
 		String inputParams = "userId=" + userId;
-		String getResult = "";
 		logger.debug("inputParams=" + inputParams);
 		
 		JSONParser parser = new JSONParser();
@@ -1694,7 +1692,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String requestURL = "/ezTalkGate/getUserMobileDeviceList";
 		
-		getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+		String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
 		logger.debug("result=" + getResult);
 		
 		JSONObject resultObj = (JSONObject) parser.parse(getResult);
@@ -1712,7 +1710,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("deviceInfo", jsonArr);
 		model.addAttribute("adminOrder", adminOrder);
 		model.addAttribute("notUserMobileLogin", notUserMobileLogin);
-		
+
 		logger.debug("mobileManaged ended");
 		return "/ezPersonal/persPersonMobileManaged";
 	}
@@ -1721,11 +1719,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 * 포탈 환경설정 개인정보관리 모바일설정 전체 사용/사용안함 업데이트 메서드 - 2018.10.22 (yjks)
 	 */
 	@RequestMapping(value = "/ezPersonal/setMobileManaged.do")
-	public void setMobileManaged(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
+	public void setMobileManaged(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("setMobileManaged started");
 
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String returnValue = "OK";
 		int tenantId = userInfo.getTenantId();
@@ -1758,11 +1756,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 * 포탈 환경설정 개인정보관리 모바일설정 모바일 기기 삭제 메서드 - 2018.10.22 (yjks)
 	 */
 	@RequestMapping(value = "/ezPersonal/deleteMobileDeviceManaged.do")
-	public void deleteMobileDeviceManaged(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
+	public void deleteMobileDeviceManaged(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("deleteMobileDeviceManaged started");
 
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String returnValue = "DELETE";
 		String pUserId = request.getParameter("userId");
@@ -1788,11 +1786,11 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 *  포탈 환경설정 개인정보관리 모바일설정 모바일 기기 사용여부 저장 메서드 - 2018.10.22 (yjks)
 	 */
 	@RequestMapping(value= "/ezPersonal/setMobileDeviceInfo.do")
-	public void setMobileDeviceInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
+	public void setMobileDeviceInfo(@CookieValue("loginCookie") String loginCookie,
 			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("setMobileDeviceInfo started");
 
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String returnValue = "OK";
 		String userId = userInfo.getId();

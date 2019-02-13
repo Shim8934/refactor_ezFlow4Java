@@ -3275,9 +3275,10 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 관리자가 조직도에서 유저선택 후 모바일 설정 버튼 클릭시 호출되는 메서드 
 	 */
 	@RequestMapping(value="/admin/ezOrgan/configMobileManaged.do")
-	public String adminMobileManaged(@CookieValue("loginCookie") String loginCookie, Locale locale,
+	public String adminMobileManaged(@CookieValue("loginCookie") String loginCookie,
 			Model model, HttpServletRequest request) throws Exception {
 		logger.debug("setUserMobileManaged started");
+
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		int tenantId = userInfo.getTenantId();
@@ -3294,7 +3295,6 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		// 사용자 기기목록
 		String inputParams = "userId=" + userId;
-		String getResult = "";
 		logger.debug("inputParams=" + inputParams);
 		
 		JSONParser parser = new JSONParser();
@@ -3302,7 +3302,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String requestURL = "/ezTalkGate/getUserMobileDeviceList";
 		
-		getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+		String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
 		logger.debug("result=" + getResult);
 		
 		JSONObject resultObj = (JSONObject) parser.parse(getResult);
@@ -3315,7 +3315,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("userName", userName);
 		model.addAttribute("userId", userId);
 		model.addAttribute("adminOrder", adminOrder);
-		
+
 		logger.debug("setUserMobileManaged ended");
 		return "/admin/ezOrgan/configMobileManaged";
 	}
@@ -3324,8 +3324,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	 * 관리자가 유저별 모바일 설정을 한 뒤 확인 버튼을 눌렀을 때 호출되는 메서드 
 	 */
 	@RequestMapping(value="/admin/ezOrgan/setUserMobileManaged.do")
-	public void setUserMobileManaged(@CookieValue("loginCookie") String loginCookie, Locale locale,
-			Model model, HttpServletRequest request,HttpServletResponse response) throws Exception {
+	public void setUserMobileManaged(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("setUserMobileManaged started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);

@@ -7,7 +7,7 @@
 <head>
 </head>
 <body>
-<input id="schedule_usedTheme" type="hidden" value="${usedTheme}">
+<input id="schedule_usedTheme" type="hidden" value="<c:out value='${usedTheme}'/>">
 	<c:choose>
 		<c:when test="${usedTheme eq 1}">
 			<dl class="portlet_title sortablePortlet" style="position: relative; width: 100%; bottom: 0px; z-index: 998; border-bottom:none; background:none;"></dl>
@@ -28,7 +28,7 @@
 									<c:out value='${portletName }'/>
 								</dt>
 								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
-									<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+									<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 								</dd>
 							</dl>
 							<div id="scheduleList" class="sschedule_list">
@@ -58,7 +58,7 @@
 									<spring:message code='main.t203' />
 								</dt>
 								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
-									<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+									<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 								</dd>
 							</dl>
 							<div id="scheduleList" class="sschedule_list">
@@ -88,7 +88,7 @@
 									<spring:message code='main.t203' />
 								</dt>
 								<dd class="portletPlus" onclick="goSchedule();" style="position: relative; z-index: 999;">
-									<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+									<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 								</dd>
 							</dl>
 							<div id="scheduleList" class="sschedule_list">
