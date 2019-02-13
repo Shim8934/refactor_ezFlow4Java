@@ -242,6 +242,10 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public void insertAttendantSchedule(Map<String, Object> map) throws Exception {
 		insert("EzScheduleDAO.insertAttendantSchedule", map);		
 	}
+	
+	public void insertAttendantScheduleDel(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.insertAttendantScheduleDel", map);		
+	}
 
 	public void updateSchedule(Map<String, Object> map) throws Exception {
 		update("EzScheduleDAO.updateSchedule", map);
@@ -250,9 +254,17 @@ public class EzScheduleDAO extends EgovAbstractDAO {
 	public void insertScheduleRepeDel(Map<String, Object> map) throws Exception {
 		insert("EzScheduleDAO.insertScheduleRepeDel", map);
 	}
+	
+	public void insertScheduleRepeDelChild(Map<String, Object> map) throws Exception {
+		insert("EzScheduleDAO.insertScheduleRepeDelChild", map);
+	}
 
 	public void deleteScheduleRepe(Map<String, Object> map) throws Exception {
 		delete("EzScheduleDAO.deleteScheduleRepe", map);
+	}
+	
+	public void deleteScheduleRepeChild(Map<String, Object> map) throws Exception {
+		delete("EzScheduleDAO.deleteScheduleRepeChild", map);
 	}
 
 	public void updateDragSchedule(Map<String, Object> map) throws Exception {
