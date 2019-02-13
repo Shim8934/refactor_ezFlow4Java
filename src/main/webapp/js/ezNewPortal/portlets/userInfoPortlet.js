@@ -83,7 +83,7 @@ function ptlAttiClock() {
     var s;
     var ptlTime = " ";
     var nowClientTime = new Date();
-    var nowServerTime = new Date(nowClientTime.getTime() - ptlTimeDiff);
+    var nowServerTime = new Date(nowClientTime.getTime() + ptlTimeDiff);
     
     ptlTime = leadingZeros(nowServerTime.getHours(), 2) + ':' + leadingZeros(nowServerTime.getMinutes(), 2);
     document.getElementById("ptlTimeFlow").innerHTML = ptlTime;
