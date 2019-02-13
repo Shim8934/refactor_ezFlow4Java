@@ -339,7 +339,7 @@
 					WHERE Brd_Upper = IFNULL(#v_P_ParentID#,0)
 					AND Brd_Company = #v_P_CompanyID#
 					AND TENANT_ID = #tenantID#
-					ORDER BY Brd_Step
+					ORDER BY Brd_GB, Brd_Step
 				]]>
 			</isEqual>
 			<isNotEqual property="v_P_TreeType" compareValue="0">
@@ -860,6 +860,7 @@
 				BRD_COMPANY = #v_PCOMPANYID#
 			AND
 				TENANT_ID = #tenantID#
+			ORDER BY BRD_STEP
 			LIMIT
 				#v_PTOPCNT#
 		]]>
@@ -1983,4 +1984,109 @@
 				TENANT_ID = #tenantID# 
         ]]>
     </select>
+    
+    <select id="EzResourceDAO.getResourceOrder" parameterClass="map" resultClass="String">
+		<![CDATA[
+			select 
+				brd_step
+            from 
+				tbl_rs_brd
+			where
+				brd_id = #resourceId#
+			and
+				tenant_id = #tenantId#
+			and
+				brd_company = #brd_company#	 		
+			and
+				brd_upper = #upperResourceId#
+			and
+				brd_gb = '2'
+		]]>
+	</select>
+	
+	<update id="EzResourceDAO.ChangeResourceOrder" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_rs_brd
+			set
+				brd_step = #resourceOrder#
+			where
+				brd_upper = #upperResourceId#
+			and
+				tenant_id = #tenantId#
+			and
+				brd_company = #brd_company#	
+			and 
+				brd_id = #resourceId#
+		]]>
+	</update>
+	
+	<select id="EzResourceDAO.getMaxBrdStepInSelectedResourceGroup" parameterClass="map" resultClass="String">
+		<![CDATA[
+			select 
+				max(brd_step)
+            from 
+				tbl_rs_brd
+			where
+				tenant_id = #tenantId#
+			and
+				brd_company = #brd_company#	 		
+			and
+				brd_upper = #upperResourceGroupId#
+			and
+				brd_gb = '2'
+			group by
+				brd_upper
+		]]>
+	</select>
+	
+	<update id="EzResourceDAO.moveResourceToOtherResourceGroup" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_rs_brd
+			set
+				brd_upper = #selectedResourceGroupId#,
+				brd_step = #brd_step#
+			where				
+				tenant_id = #tenantId#
+			and
+				brd_company = #brd_company#	
+			and 
+				brd_id = #originResourceGroupId#
+		]]>
+	</update>
+	
+	<select id="EzResourceDAO.isResourceGroupManager" parameterClass="map" resultClass="String">
+		<![CDATA[
+			select 
+				case when count(*) >= 1 then 1 else 0 end as result
+            from 
+				tbl_rs_resacl a
+			where exists
+				(
+				 select 
+					1				 
+				 from 
+				 	tbl_rs_resacl b 
+				 where 
+				 	a.resid = b.resid 
+				 and 
+				 	a.companyid = b.companyid 
+				 and 
+				 	a.tenant_id = b.tenant_id 
+				 and 
+				 	a.member_id = b.member_id 
+				 and 
+				 	a.COMPANYID= #brd_company#
+				 and 
+				 	a.TENANT_ID= #tenantId#
+				 and 
+				 	a.resid=#selectedResourceGroupId# 
+				 and
+				 	a.access_lvl = '1'
+				 and 
+				 	(a.member_id=#userId# or a.member_id = 'everyone')
+				 )
+		]]>
+	</select>
 </sqlMap>
