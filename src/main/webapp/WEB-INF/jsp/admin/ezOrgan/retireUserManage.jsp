@@ -416,6 +416,7 @@
             }
             
             function goToPageByNum(Value) {
+            	document.getElementById("checkAll").checked = false;
             	CurPage = Value;
             	retireUserList();
             }

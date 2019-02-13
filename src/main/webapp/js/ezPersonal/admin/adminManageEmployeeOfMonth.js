@@ -194,9 +194,12 @@ function renderList(result, selectedYear) {
 			/*ddElmt1.textContent = month + strLangkhj27;*/
 			textElmt.textContent = strLangkhj28;
 			
-			addBttnElmt.setAttribute("id", "add_" + month);
+			//addBttnElmt.setAttribute("id", "add_" + month);
 			addBttnElmt.setAttribute("src", "/images/admin/addPlus.png");
-			addBttnElmt.addEventListener("click", function(event) {btn_add(this);});
+			//addBttnElmt.addEventListener("click", function(event) {btn_add(this);});
+			
+			dtElmt.setAttribute("id", "add_" + month);
+			dtElmt.addEventListener("click", function(event) {btn_add(this);});
 			
 			dtElmt.className = "emPic_add";
 			textElmt.className = "emAdd_text";
