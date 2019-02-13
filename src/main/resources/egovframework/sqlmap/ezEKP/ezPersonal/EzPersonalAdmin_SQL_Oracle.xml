@@ -143,7 +143,7 @@
 							ENDDATE ,
 							(
 								CASE
-									WHEN (STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')) THEN 1
+									WHEN (STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')) THEN 1
 									ELSE 0
 								END 
 							) PROGRESS
@@ -179,7 +179,7 @@
 											ENDDATE ,
 											(
 												CASE
-													WHEN (STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE >= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')) THEN 1
+													WHEN (STARTDATE <= TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS') AND ENDDATE > TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')) THEN 1
 													ELSE 0
 												END
 											) PROGRESS

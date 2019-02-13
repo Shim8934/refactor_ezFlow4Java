@@ -291,6 +291,7 @@
 		    }
 			
 			function makePageSelPage() {
+				checkFlag = false;
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";

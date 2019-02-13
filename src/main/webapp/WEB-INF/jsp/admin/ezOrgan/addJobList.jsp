@@ -86,6 +86,8 @@
 			};
 			
 			function company_change() {
+				document.getElementById("preview_nodata").style.display = "";
+                document.getElementById("previewmail").style.display = "none";
 		        AddJob_List();
 		    }
 		    
@@ -483,12 +485,8 @@
 		                    liElement.appendChild(tooltipDiv);
 		                    
 		                    document.getElementById("AddJobList").appendChild(liElement);
-		                    
-		                    var a = document.getElementById("preview_nodata");
-		                    a.style.display = "none";
-		                    var b = document.getElementById("previewmail");
-		                    b.style.display = "block";
-		                    
+		                    document.getElementById("preview_nodata").style.display = "none";
+		                    document.getElementById("previewmail").style.display = "block";
 		                    
 		                    //2018-12-28 문성업 row 이벤트 추가
 		                    var header_info = listview.GetSelectedRows()[0].getAttribute("id");

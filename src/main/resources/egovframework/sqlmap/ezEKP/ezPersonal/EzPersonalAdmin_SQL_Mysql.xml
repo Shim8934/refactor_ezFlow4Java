@@ -131,7 +131,7 @@
 						ENDDATE,
 						(
 							CASE
-								WHEN (STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')) THEN 1
+								WHEN (STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE > DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')) THEN 1
 								ELSE 0
 							END
 						) PROGRESS
@@ -157,7 +157,7 @@
 					ENDDATE,
 					(
 							CASE
-								WHEN (STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')) THEN 1
+								WHEN (STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s') AND ENDDATE > DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')) THEN 1
 								ELSE 0
 							END
 						) PROGRESS

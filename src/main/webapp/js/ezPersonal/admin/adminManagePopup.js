@@ -633,6 +633,10 @@ function td_Create1(strtext) {
 
 // 페이징 method
 function makePageSelPage() {
+	// 페이지 이동시 체크박스 해제
+	checkFlag = false;
+	$("#checkAll").prop("checked", false);
+
 	var strtext;
 	var PagingHTML = "";
 	document.getElementById("tblPageRayer").innerHTML = "";
