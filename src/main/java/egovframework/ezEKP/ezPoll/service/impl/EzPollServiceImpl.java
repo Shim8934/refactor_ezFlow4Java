@@ -642,7 +642,7 @@ public class EzPollServiceImpl implements EzPollService{
 						qstFileName= qstFileName.split("/")[0];
 					}
 					
-					String absoluteFilePath = pDirPath + "uploadFile/" + qstFileName;
+					String absoluteFilePath = pDirPath + "uploadFile/" + commonUtil.detectPathTraversal(qstFileName);
 					
 					try {
 						File file = new File(absoluteFilePath);
@@ -672,7 +672,7 @@ public class EzPollServiceImpl implements EzPollService{
 					ansFileName= ansFileName.split("/")[0];
 				}
 				
-				String absoluteFilePath = pDirPath + "uploadFile/" + ansFileName;
+				String absoluteFilePath = pDirPath + "uploadFile/" + commonUtil.detectPathTraversal(ansFileName);
 				
 				try {
 					File file = new File(absoluteFilePath);
@@ -699,7 +699,7 @@ public class EzPollServiceImpl implements EzPollService{
 				//댓글은 재사용하지 않기 때문에 파일 사용유무 체크하지 않음.
 				if(cmtFileName != null){
 					String pDirPath = (String)map.get("pDirPath");
-					String absoluteFilePath = pDirPath + "uploadFile/" + cmtFileName;
+					String absoluteFilePath = pDirPath + "uploadFile/" + commonUtil.detectPathTraversal(cmtFileName);
 					
 					try {
 						File file = new File(absoluteFilePath);
@@ -724,7 +724,7 @@ public class EzPollServiceImpl implements EzPollService{
 					}*/
 					
 					String realPath = (String)map.get("realPath");
-					String absoluteFilePath = realPath + cmtFileName;
+					String absoluteFilePath = realPath + commonUtil.detectPathTraversal(cmtFileName);
 					
 					try {
 						File file = new File(absoluteFilePath);
