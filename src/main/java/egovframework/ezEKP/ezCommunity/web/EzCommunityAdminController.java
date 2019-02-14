@@ -140,6 +140,7 @@ public class EzCommunityAdminController {
 		}
 		if (request.getParameter("keyword") != null) {
 			keyword = request.getParameter("keyword");
+			keyword = keyword.replace("\\", "\\\\");
 		}
 		if (request.getParameter("sRadio") != null) {
 			sRadio = request.getParameter("sRadio");

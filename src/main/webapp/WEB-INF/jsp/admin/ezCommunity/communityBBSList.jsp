@@ -56,16 +56,17 @@
 			
 			function search() {
 				if (document.page.s_radio.value == "title" ) {
-					var strSearch = "sRadio=title&keyword=" + make_searchstring(document.page.keyword.value);
+					var strSearch = "sRadio=title&keyword=" + encodeURIComponent(document.page.keyword.value);
 				} else {
-					var strSearch = "sRadio=writer&keyword=" + make_searchstring(document.page.keyword.value);
+					var strSearch = "sRadio=writer&keyword=" + encodeURIComponent(document.page.keyword.value);
 				}
 				/// else if (document.page.s_radio.value == "titleContent" ) {
 				//	var strSearch = "sRadio=titleContent&keyword=" + make_searchstring(document.page.keyword.value);
 				// } 
 				
-				strSearch = strSearch + "&code=" + "<c:out value = '${code}' />" + "&bName=" + "<c:out value = '${bName}' />" + "&key=" + make_searchstring(document.page.keyword.value);
-				window.location.href = "/admin/ezCommunity/bbsList.do" + "?" + encodeURI(strSearch);
+				// key파마리터 없어도 되므로 삭제
+				strSearch = strSearch + "&code=" + "<c:out value = '${code}' />" + "&bName=" + "<c:out value = '${bName}' />";
+				window.location.href = "/admin/ezCommunity/bbsList.do?" + strSearch;
 			}
 	
 			function comm_searchCheck() {
@@ -206,7 +207,7 @@
 	        }
 				
 			function goToPage(page) {
-				var href = "/admin/ezCommunity/bbsList.do?bName=" + encodeURIComponent("${bName}") + "&code="+ encodeURIComponent("${code}") + "&keyword=" + encodeURIComponent(make_searchstring(pKeyWord)) + "&sRadio=" + encodeURIComponent("${sRadio}") + "&block="+encodeURIComponent("${nowBlock}");
+				var href = "/admin/ezCommunity/bbsList.do?bName=" + encodeURIComponent("${bName}") + "&code="+ encodeURIComponent("${code}") + "&keyword=" + encodeURIComponent(pKeyWord) + "&sRadio=" + encodeURIComponent("${sRadio}") + "&block="+encodeURIComponent("${nowBlock}");
 				if(parseInt(page) > 0 && parseInt(page) <= parseInt(totalPage)) {
 					document.location.href = href + "&goToPage=" + encodeURIComponent(parseInt(page));
 				}
@@ -312,7 +313,7 @@
 							</c:when>
 						</c:choose>
 						
-						<input type="text" name="keyword" value="<c:out value = '${keyword}' />" onKeyDown="return keyword_onkeydown(event)" style="width:200px; height: 22px; vertical-align:middle;">
+						<input type="text" name="keyword" onKeyDown="return keyword_onkeydown(event)" style="width:200px; height: 22px; vertical-align:middle;">
 						<a class="imgbtn imgbck" style="vertical-align: middle; margin-bottom: 0px;"><span onClick="javascript:search();"><spring:message code = 'ezCommunity.t31' /></span></a>
 					</td>
 				</tr>
