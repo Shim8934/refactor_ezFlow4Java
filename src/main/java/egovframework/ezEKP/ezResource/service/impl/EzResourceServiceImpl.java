@@ -3649,6 +3649,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map2.put("tenantId", tenantId);
 		map2.put("brd_company", companyID);
 		map2.put("selectedResourceGroupId", selectedResourceGroupId);
+		
+		maxBrdStep = maxBrdStep == null ? "0" : maxBrdStep;
+		
 		map2.put("brd_step", String.valueOf(Integer.parseInt(maxBrdStep)+1));
 		
 		ezResourceDAO.moveResourceToOtherResourceGroup(map2);

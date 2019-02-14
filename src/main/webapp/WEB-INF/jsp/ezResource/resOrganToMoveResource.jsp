@@ -94,7 +94,7 @@
 				if (pOrgUpperBrdID == p_TargetID) {
 					alert("<spring:message code="ezResource.t118" />");
 				} else if (p_TargetID == 1 || p_TargetID == 0) {
-					alert("해당 위치에 자원을 이동할 수 없습니다.");
+					alert("<spring:message code="ezResource.gha01" />");
 				} else {
 					checkHavePermission();
 				}
@@ -110,19 +110,18 @@
 		    		url : "/ezResource/isResourceGroupManager.do",
 		    		success: function(text){
 		    			if (text != 1) {
-							alert("응~너관리자 아니야~");
+							alert("<spring:message code="ezResource.gha02" />");
 						} else {
 							moveResourceToOtherResourceGroup();
 						}
 		    		},
 		    		error: function(err){
-		    			alert("<spring:message code='ezSchedule.t255' />");
 		    		}
 		    	});
 			}
 			
 			function moveResourceToOtherResourceGroup() {
-				if (confirm("<spring:message code='ezResource.t77' />") == true) {
+				if (confirm("<spring:message code='ezResource.gha05' />") == true) {
 			        $.ajax({
 			    		type : "POST",
 			    		async : false,
@@ -136,7 +135,6 @@
 							window.location.reload(false);
 			    		},
 			    		error: function(err){
-			    			alert("<spring:message code='ezSchedule.t255' />");
 			    		}
 			    	});
 			        window.close();	

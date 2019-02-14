@@ -392,11 +392,14 @@
 	        }
 		    
 		    function resourceOrderUp() {
-		    	var checkId = $('input:checked');
+		    	var checkId = $("input:checkbox[id='chk']:checked");
 		    	//$("input:checkbox[id='chk']").is(":checked")
 
-		    	if (checkId.length != 1) {
-		    		alert("하나 선택해야한다.");
+		    	if (checkId.length < 1) {
+		    		alert("<spring:message code="ezResource.gha04" />");
+		    		return;
+		    	} else if (checkId.length > 1) {
+		    		alert("<spring:message code="ezResource.gha03" />");
 		    		return;
 		    	}
 		    	
@@ -427,16 +430,18 @@
 		    			}
 		    		},
 		    		error: function(err){
-		    			alert("<spring:message code='ezSchedule.t255' />");
 		    		}
 		    	});
 		    }
 		    
 		    function resourceOrderDown() {
-		    	var checkId = $('input:checked');
+		    	var checkId = $("input:checkbox[id='chk']:checked");
 
-		    	if (checkId.length != 1) {
-		    		alert("하나 선택해야한다.");
+		    	if (checkId.length < 1) {
+		    		alert("<spring:message code="ezResource.gha04" />");
+		    		return;
+		    	} else if (checkId.length > 1) {
+		    		alert("<spring:message code="ezResource.gha03" />");
 		    		return;
 		    	}
 		    	
@@ -467,7 +472,6 @@
 		    			}
 		    		},
 		    		error: function(err){
-		    			alert("<spring:message code='ezSchedule.t255' />");
 		    		}
 		    	});
 		    }
@@ -475,10 +479,13 @@
 		    var organ_cross_dialogArguments = new Array();
 		    
 		    function moveResourceToOtherResourceGroup() {
-		    	var checkId = $('input:checked');
-
-		    	if (checkId.length != 1) {
-		    		alert("하나 선택해야한다.");
+		    	var checkId = $("input:checkbox[id='chk']:checked");
+	    		
+		    	if (checkId.length < 1) {
+		    		alert("<spring:message code="ezResource.gha04" />");
+		    		return;
+		    	} else if (checkId.length > 1) {
+		    		alert("<spring:message code="ezResource.gha03" />");
 		    		return;
 		    	}
 		    	
