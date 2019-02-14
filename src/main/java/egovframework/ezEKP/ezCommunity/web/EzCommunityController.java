@@ -508,7 +508,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 게시판 목록화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/boardItemList.do")
+	@RequestMapping(value = "/ezCommunity/boardItemList.do", method = RequestMethod.GET)
 	public String boardItemList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
