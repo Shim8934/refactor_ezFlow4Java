@@ -168,7 +168,7 @@ function Save_OneLineReply() {
 //강민수92
 function getBoardComment() {
 	$.ajax({
-		type : "POST",
+		type : "GET",
 		async : false,
 		url : "/ezCommunity/readOneLineReply.do",
 		dataType : "json",
@@ -336,7 +336,7 @@ function deleteBoardComment(obj) {
             }
             
         } else {
-            xmlhttp.open("POST", "/ezCommunity/checkOneLineOwner.do?replyID=" + delpReplyID, false);
+            xmlhttp.open("GET", "/ezCommunity/checkOneLineOwner.do?replyID=" + delpReplyID, false);
             xmlhttp.send();
             if (xmlhttp.responseText.substr(0, 2) != "OK") {
                 alert(strLang184);

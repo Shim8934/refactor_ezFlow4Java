@@ -275,7 +275,7 @@
 	            var filename = "";
 	            var filepath = "";
 
-	            xmlhttp.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + strItemID, false);
+	            xmlhttp.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + strItemID, false);
 	            xmlhttp.send();
 
 	            xmldom.async = false;

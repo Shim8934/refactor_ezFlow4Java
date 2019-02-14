@@ -76,7 +76,7 @@
 			}
 		
 			function GetSubBoards() {
-			    xmlhttp.open("POST", "/ezCommunity/adminGetSubBoards.do?upperBoardID=" + UpperBoardID + "&code=" + code, false);
+			    xmlhttp.open("GET", "/ezCommunity/adminGetSubBoards.do?upperBoardID=" + UpperBoardID + "&code=" + code, false);
 			    xmlhttp.send();
 		
 			    xmldom = loadXMLString(getXmlString(xmlhttp.responseXML));

@@ -105,7 +105,7 @@
 		    
 		    function getCommhomeBoardInfo() {
 		    	$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 // 					async : true,
 					url : "/ezCommunity/commHome/commHomeBoardInfo.do",
@@ -161,9 +161,9 @@
 
 	                            var ul = document.createElement("ul");
 	                            $.ajax({
-	            					type : "POST",
+	            					type : "GET",
 	            					dataType : "text",
-// 	            					async : true,
+// 	            				async : true,
 	            					url : "/ezCommunity/commHome/commHomeBoardItemList.do",
 	            					data : { boardID   : infoVO.boardID
 	            					},

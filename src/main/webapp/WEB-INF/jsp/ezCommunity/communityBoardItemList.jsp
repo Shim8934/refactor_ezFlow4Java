@@ -344,7 +344,7 @@
     		
     		function CheckIfHasReplies() {
     		    var xmlhttp = createXMLHttpRequest();
-    			xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + strListInfo, false);
+    			xmlhttp.open("GET", "/ezCommunity/checkIfHasReply.do?itemList=" + strListInfo, false);
     			xmlhttp.send();
     			
     			if(xmlhttp.responseText == "TRUE") {

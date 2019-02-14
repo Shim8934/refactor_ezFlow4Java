@@ -113,7 +113,7 @@
 				var access = "";
 				
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					async : false,
 					url : "/ezCommunity/getACL.do",
 					dataType : "JSON",
@@ -141,7 +141,7 @@
 				var retval = '0';
 				
 				$.ajax({
-			   		type : "POST",
+			   		type : "GET",
 			   		async : false,
 			   		url : "/ezCommunity/checkIfAnonyBoard.do",
 			   		dataType : "JSON",

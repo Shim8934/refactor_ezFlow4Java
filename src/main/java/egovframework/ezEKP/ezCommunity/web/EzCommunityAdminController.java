@@ -68,7 +68,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 메인화면 호출함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/communityMain.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/communityMain.do", method = RequestMethod.GET)
 	public String main() throws Exception {
 		return "/admin/ezCommunity/communityMain";
 	}
@@ -76,7 +76,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 왼쪽 메뉴화면 호출함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/left.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/left.do", method = RequestMethod.GET)
 	public String left() throws Exception {
 		return "/admin/ezCommunity/communityLeft";
 	}
@@ -84,7 +84,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 오른쪽화면 호출함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/right.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/right.do", method = RequestMethod.GET)
 	public String right(ModelMap model, HttpServletRequest request) throws Exception {
 		String cID = "";
 		
@@ -100,7 +100,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 알림마당화면 호출함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/bbsList.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/bbsList.do", method = RequestMethod.GET)
 	public String bbsList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
@@ -167,7 +167,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 커뮤니티 검색화면 호출함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/searchKey.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/searchKey.do", method = RequestMethod.GET)
 	public String searchKey(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int curPage = 1, comNoPerPage = 10;
@@ -225,7 +225,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 커뮤니티 상세정보 수정화면 호출함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/admCommunityInfoEdit.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/admCommunityInfoEdit.do", method = RequestMethod.GET)
 	public String admCommunityInfoEdit(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -248,7 +248,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 커뮤니티 상세정보 수정 실행함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/admCommunityInfoEditOk.do", method=RequestMethod.POST)
+	@RequestMapping(value = "/admin/ezCommunity/admCommunityInfoEditOk.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String admCommunityInfoEditOk(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("admCommunityInfoEditOk started.");
@@ -271,7 +271,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 폐쇄승인화면 호출함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/closeCom.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/closeCom.do", method = RequestMethod.GET)
 	public String closeCom (@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = "", keyword = "", sRadio = "", s = "", sort1 = "", sort2 = "";
@@ -386,7 +386,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 승인/폐쇄신청 커뮤니티 정보화면 호출함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/commInfo.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/commInfo.do", method = RequestMethod.GET)
 	public String commInfo(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		logger.debug("commInfo started.");
 		
@@ -425,7 +425,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 폐쇄신청 실행함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/commCloseAll.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/commCloseAll.do", method = RequestMethod.GET)
 	public String commCloseAll(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -443,7 +443,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 신청승인화면 호출함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/admitCom.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/admitCom.do", method = RequestMethod.GET)
 	public String admitCom(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String code = "", sRadio = "", keyword = "", s = "", sort1 = "", sort2 = "";
@@ -550,7 +550,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 승인신청 실행함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/commAdmitOk.do", method=RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/commAdmitOk.do", method = RequestMethod.GET)
 	public String commAdmitOk(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String diviTitle = "";

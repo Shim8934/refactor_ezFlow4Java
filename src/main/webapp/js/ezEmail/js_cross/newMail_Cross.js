@@ -2208,7 +2208,7 @@ function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
         	"<br><br><hr></hr><DIV style='font-family:"+ pFont + "'><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender +
         	"<br><B>" + strLang120 + "</B>" + eSubject.value + "<br><br></DIV>" + htmlData;
 
-        xmlHTTP.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + pItemID, false);
+        xmlHTTP.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + pItemID, false);
         xmlHTTP.send();
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
         var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");

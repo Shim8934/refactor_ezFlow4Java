@@ -117,7 +117,7 @@
 
 	        function get_newCommunity() {
 	        	$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : true,
 					url : "/ezCommunity/getBestNewCommunity.do",
@@ -131,7 +131,7 @@
 
 	        function get_bestCommunity() {
 	        	$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : true,
 					url : "/ezCommunity/getBestNewCommunity.do",
@@ -271,7 +271,7 @@
 
 	        function get_myCommunity() {
 	        	$.ajax({
-						type : "POST",
+						type : "GET",
 						dataType : "text",
 						async : false,
 						url : "/ezCommunity/myCopNewBoardItem.do",
@@ -622,7 +622,7 @@
 	        
 	        function get_categoryCommunity(type) {
 	            $.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : true,
 					url : "/ezCommunity/myCategoryCop.do",
@@ -785,7 +785,7 @@
 	            }
 	            
 	            $.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					url : "/ezCommunity/categoryCopList.do",
 					data	: {	mode	:	mode,
@@ -933,7 +933,7 @@
 
 	        function get_todaycop() {
 	            $.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : true,
 					url : "/ezCommunity/todayCop.do",
@@ -1141,7 +1141,7 @@
 	            CurPage = "1";
 	            
 	            $.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					url : "/ezCommunity/searchCop.do",
 					data	: {	option	:	searchoption,
@@ -1158,7 +1158,7 @@
 	            search = true;
 
 	            $.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					url : "/ezCommunity/searchCop.do",
 					data	: {	option	:	searchoption,
@@ -1218,7 +1218,7 @@
 								
 								if (rtn) {
 									$.ajax({
-										type : "POST",
+										type : "GET",
 										dataType : "text",
 										async : false,
 										url : "/ezCommunity/getIsJoin.do",
@@ -1263,7 +1263,7 @@
 	        function move_cop_Complete(rtn) {
 	        	if (rtn) {
 	        		$.ajax({
-						type : "POST",
+						type : "GET",
 						dataType : "text",
 						async : false,
 						url : "/ezCommunity/getIsJoin.do",

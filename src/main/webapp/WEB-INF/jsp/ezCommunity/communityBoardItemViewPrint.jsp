@@ -101,7 +101,7 @@
 			    var xmlhttp = createXMLHttpRequest();
 			    var xmldom = createXmlDom();
 				
-			    xmlhttp.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + pItemID, false);
+			    xmlhttp.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + pItemID, false);
 			    xmlhttp.send();
 				
 			    xmldom = loadXMLString(xmlhttp.responseText);
@@ -153,7 +153,7 @@
 			
 			function getOneLineReply() {
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : false,
 					url : "/ezCommunity/readOneLineReply.do",
