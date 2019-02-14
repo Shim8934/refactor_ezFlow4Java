@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -31,7 +32,7 @@ public class EzCabinetAdminController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetAdminController.class);
 	
-	@RequestMapping(value = "/admin/ezCabinet/cabinetAdminMain.do")
+	@RequestMapping(value = "/admin/ezCabinet/cabinetAdminMain.do", method = RequestMethod.GET)
 	public String jspAdminPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jspAdminPage start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -44,7 +45,7 @@ public class EzCabinetAdminController {
 		return "admin/ezCabinet/adminMain";
 	}
 	
-	@RequestMapping(value="/admin/ezcabinet/cabinetAdminLeft.do")
+	@RequestMapping(value="/admin/ezcabinet/cabinetAdminLeft.do", method = RequestMethod.GET)
 	public String jspAdminLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("jspAdminLeft start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -57,7 +58,7 @@ public class EzCabinetAdminController {
 		return "admin/ezCabinet/cabinetAdminLeft";
 	}
 	
-	@RequestMapping(value="/admin/ezCabinet/getBasicPage.do")
+	@RequestMapping(value="/admin/ezCabinet/getBasicPage.do", method = RequestMethod.GET)
 	public String jspGetBasicPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetBasicPage start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -83,7 +84,7 @@ public class EzCabinetAdminController {
 		return "admin/ezCabinet/cabinetBasicConfig";
 	}
 	
-	@RequestMapping(value="/admin/ezCabinet/getPersonalPage.do")
+	@RequestMapping(value="/admin/ezCabinet/getPersonalPage.do", method = RequestMethod.GET)
 	public String jspGetPersonalPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetPersonalPage start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -110,7 +111,7 @@ public class EzCabinetAdminController {
 		return "admin/ezCabinet/cabinetPersonalConfig";
 	}
 	
-	@RequestMapping(value="/admin/ezCabinet/getRelatedCabinetConfig.do")
+	@RequestMapping(value="/admin/ezCabinet/getRelatedCabinetConfig.do", method = RequestMethod.GET)
 	public String jspGetRelatedCabinetConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetRelatedCabinetConfig start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -143,7 +144,7 @@ public class EzCabinetAdminController {
 		return "admin/ezCabinet/cabinetAdminInterLock";
 	}
 	
-	@RequestMapping(value="/admin/ezCabinet/getCompanyCapacity.do")
+	@RequestMapping(value="/admin/ezCabinet/getCompanyCapacity.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetCompanyCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetCompanyCapacity start");
@@ -168,7 +169,7 @@ public class EzCabinetAdminController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/admin/ezCabinet/saveCompanyCapacity.do")
+	@RequestMapping(value="/admin/ezCabinet/saveCompanyCapacity.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonSaveCompanyCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveCompanyCapacity start");
@@ -195,7 +196,7 @@ public class EzCabinetAdminController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/admin/ezCabinet/getUserCapacity.do")
+	@RequestMapping(value="/admin/ezCabinet/getUserCapacity.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetUserCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetUserCapacity start");
@@ -227,7 +228,7 @@ public class EzCabinetAdminController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/admin/ezCabinet/saveUserCapacity.do")
+	@RequestMapping(value="/admin/ezCabinet/saveUserCapacity.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonSaveUserCapacity(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "userList") List<String> userList, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveUserCapacity start");
@@ -254,7 +255,7 @@ public class EzCabinetAdminController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/admin/ezCabinet/saveUserDefaultCapacity.do")
+	@RequestMapping(value="/admin/ezCabinet/saveUserDefaultCapacity.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonSaveUserDefaultCapacity(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "userList") List<String> userList, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveUserDefaultCapacity start");
@@ -279,7 +280,7 @@ public class EzCabinetAdminController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/admin/ezCabinet/getModules.do")
+	@RequestMapping(value="/admin/ezCabinet/getModules.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetModules(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetModules start");
@@ -304,7 +305,7 @@ public class EzCabinetAdminController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/admin/ezCabinet/saveModules.do")
+	@RequestMapping(value="/admin/ezCabinet/saveModules.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonSaveModulesSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveModulesSetting start");

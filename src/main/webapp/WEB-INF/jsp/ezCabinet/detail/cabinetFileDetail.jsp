@@ -591,7 +591,7 @@
 						itemArr.push(itemId);
 						var data = {itemList : itemArr.toString()};
 						$.ajax({
-							type: "POST",
+							type: "GET",
 							url: "/ezCabinet/deleteItems.do",
 							data: {itemList : itemArr.toString()},
 							dataType: "JSON",

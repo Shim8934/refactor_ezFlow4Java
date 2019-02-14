@@ -218,7 +218,7 @@
 				function drawVolume() {
 					$.ajax({
 						url: "/ezCabinet/getUserCapicity.do",
-						type: "POST",
+						type: "GET",
 						dataType: "JSON",
 						async : true,
 						success : function(data) {

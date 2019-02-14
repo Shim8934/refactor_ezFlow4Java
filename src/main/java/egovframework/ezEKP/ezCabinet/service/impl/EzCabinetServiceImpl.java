@@ -175,6 +175,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		if (listAllModule == null || listAllModule.size() == 0) {
 			//Auto insert data
+			listAllModule = new ArrayList<>();
 			listModule.add(new CabinetModuleVO(companyId, "resrc" , 1, tenantId));
 			listModule.add(new CabinetModuleVO(companyId, "option", 1, tenantId));
 			listModule.add(new CabinetModuleVO(companyId, "commu" , 1, tenantId));
@@ -192,7 +193,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		else {
 			listActiveModule      = listAllModule.stream().filter(module -> module.getActiveStatus() == 1).collect(Collectors.toList());
 			List<String> typeList = listActiveModule.stream().map(CabinetModuleVO::getModuleType).collect(Collectors.toList());
-			if (listActiveModule != null && listActiveModule.size() > 0) {
+			if (listActiveModule.size() > 0) {
 				map.put("typeList", typeList);
 				listModule = ezCabinetDAO.getModuleListForUser(map);
 				
@@ -805,9 +806,10 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 						int dotPos      = fileName.lastIndexOf(".");
 						String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
 						String newName  = UUID.randomUUID().toString() + "." + extend;
-						String newPath  = getCabinetDirPath(tenantId) + newName;
-						File srcFile    = new File(realPath + attach.getFilePath());
-						File destFile   = new File(realPath  + newPath);
+						String newPath  = getCabinetDirPath(tenantId) + commonUtil.detectPathTraversal(newName);
+						String attPath  = commonUtil.detectPathTraversal(attach.getFilePath());
+						File srcFile    = new File(realPath + attPath);
+						File destFile   = new File(realPath + newPath);
 						
 						try {
 							FileUtils.copyFile(srcFile, destFile);
@@ -861,7 +863,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	public String saveUploadFile(List<MultipartFile> multiFileLists, JSONArray nameArray, String realPath, int tenantId) throws Exception {
 		String pFileName   = (String)((JSONObject)nameArray.get(0)).get("originalFilename");
 		String cabinetPath = getCabinetDirPath(tenantId);
-		String pDirPath    = realPath + cabinetPath;
+		String pDirPath    = realPath + commonUtil.detectPathTraversal(cabinetPath);
 		
 		File file = new File(pDirPath);
 		
@@ -879,7 +881,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	
 	@Override
 	public void deleteAttachFile(String filePath, String realPath, int tenantId) throws Exception {
-		String pDirPath = realPath + filePath;
+		String pDirPath = realPath + commonUtil.detectPathTraversal(filePath);
 		File file       = new File(pDirPath);
 		
 		if (file.exists()) {
@@ -917,7 +919,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 				String filePath    = (String)fileObj.get("path");
 				String fileName    = (String)fileObj.get("name");
 				
-				File file          = new File(realPath + filePath);
+				File file          = new File(realPath + commonUtil.detectPathTraversal(filePath));
 				long fileSize      = file.length();
 				
 				CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, filePath, fileName, fileSize, "", companyId, tenantId);
@@ -1434,7 +1436,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	public void getDownloadedFile(String fileName, String filePath, String realPath, LoginVO userInfo, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String _fileName = fileName;
 		_fileName        = CommonUtil.getEncodedFileNameForDownload(userAgent, _fileName);
-		File file        = new File(realPath + filePath);
+		File file        = new File(realPath + commonUtil.detectPathTraversal(filePath));
 		
 		if (!file.exists()) {
 			throw new FileNotFoundException(fileName);
@@ -1501,7 +1503,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			long totalAttachSize               = 0;
 			List<CabinetAttachFileVO> fileList = new ArrayList<>();
 			String cabinetPath                 = getCabinetDirPath(tenantId);
-			File file                          = new File(realPath + cabinetPath);
+			File file                          = new File(realPath + commonUtil.detectPathTraversal(cabinetPath));
 			UserCapacityVO capacity            = cabinetAdminService.getUserCapacity(userInfo.getId(), userInfo.getCompanyID(), userInfo.getPrimary(), tenantId);
 			int totalCnt                       = attachList.size();
 			int attachId                       = ezCabinetDAO.getMaxAttachId(map) + 1;
@@ -1525,7 +1527,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 					//Delete temp files
 					try {
 						for (CabinetAttachFileVO fileAttach : fileList) {
-							File tempFile = new File(realPath + fileAttach.getFilePath());
+							File tempFile = new File(realPath + commonUtil.detectPathTraversal(fileAttach.getFilePath()));
 							tempFile.delete();
 						}
 						
@@ -1591,7 +1593,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		String newName      = UUID.randomUUID().toString() + "." + extend;
 		String pDirPath     = realPath + cabinetPath;
 		String filePath     = cabinetPath + newName;
-		String newFilePath  = pDirPath + File.separator + newName;
+		String newFilePath  = pDirPath + File.separator + commonUtil.detectPathTraversal(newName);
 		
 		logger.debug("userEmail: " + userEmail);
 		logger.debug("UID: " + uId + " || Folder path: " + folderPath + " || File name: " + fname);
@@ -1644,9 +1646,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 							throw e1;
 						}
 						finally {
-							if (ia != null) {
-								ia.close();
-							}
+							ia.close();
 							if (input != null) {
 								try { input.close(); } catch (IOException e2) {throw e2;}
 							}

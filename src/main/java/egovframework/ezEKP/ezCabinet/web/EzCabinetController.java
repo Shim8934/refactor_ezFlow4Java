@@ -34,14 +34,14 @@ public class EzCabinetController {
 	@Autowired
 	private EzCabinetRestService cabinetRestService;
 	
-	@RequestMapping(value = "/ezCabinet/cabinetMain.do")
+	@RequestMapping(value = "/ezCabinet/cabinetMain.do", method = RequestMethod.GET)
 	public String jspGetCabinetMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) {
 		logger.debug("jspGetCabinetMain started");
 		logger.debug("jspGetCabinetMain ended");
 		return "ezCabinet/main/cabinetMain";
 	}
 	
-	@RequestMapping(value="/ezCabinet/cabinetLeft.do")
+	@RequestMapping(value="/ezCabinet/cabinetLeft.do", method = RequestMethod.GET)
 	public String jspGetCabinetLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		logger.debug("jspGetCabinetLeft started");
 		
@@ -64,7 +64,7 @@ public class EzCabinetController {
 		return "ezCabinet/main/cabinetLeft";
 	}
 	
-	@RequestMapping(value="/ezCabinet/cabinetGeneral.do")
+	@RequestMapping(value="/ezCabinet/cabinetGeneral.do", method = RequestMethod.GET)
 	public String jspGetCabinetGeneral(@CookieValue("loginCookie") String loginCookie,  HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCabinetGeneral started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -80,14 +80,14 @@ public class EzCabinetController {
 		return "ezCabinet/config/cabinetGeneral";
 	}
 	
-	@RequestMapping(value="/ezCabinet/cabinetConfig.do")
+	@RequestMapping(value="/ezCabinet/cabinetConfig.do", method = RequestMethod.GET)
 	public String jspGetCabinetConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCabinetConfig started");
 		logger.debug("jspGetCabinetConfig ended");
 		return "ezCabinet/config/cabinetConfig";
 	}
 	
-	@RequestMapping(value="/ezCabinet/cabinetManagement.do")
+	@RequestMapping(value="/ezCabinet/cabinetManagement.do", method = RequestMethod.GET)
 	public String jspGetCabinetManagement(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCabinetManagement started");
 		String currentNode = request.getParameter("node") != null ? request.getParameter("node") : "";
@@ -97,7 +97,7 @@ public class EzCabinetController {
 		return "ezCabinet/management/cabinetManagement";
 	}
 	
-	@RequestMapping(value="/ezCabinet/getRelatedFile.do")
+	@RequestMapping(value="/ezCabinet/getRelatedFile.do", method = RequestMethod.GET)
 	public String jspGetRelatedFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetRelatedFile started");
 		
@@ -111,7 +111,7 @@ public class EzCabinetController {
 		return "ezCabinet/item/cabinetFileSelect";
 	}
 	
-	@RequestMapping(value="/ezCabinet/cabinetInterLocking.do")
+	@RequestMapping(value="/ezCabinet/cabinetInterLocking.do", method = RequestMethod.GET)
 	public String jspGetRelatedCabinetConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetRelatedCabinetConfig started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -127,7 +127,7 @@ public class EzCabinetController {
 		return "ezCabinet/config/cabinetInterLock";
 	}
 	
-	@RequestMapping(value="/ezCabinet/myCabinet.do")
+	@RequestMapping(value="/ezCabinet/myCabinet.do", method = RequestMethod.GET)
 	public String jspGetCabinetPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetMyCabinet started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -152,7 +152,7 @@ public class EzCabinetController {
 		return "ezCabinet/main/cabinetItem";
 	}
 	
-	@RequestMapping(value="/ezCabinet/getShareCabinet.do")
+	@RequestMapping(value="/ezCabinet/getShareCabinet.do", method = RequestMethod.GET)
 	public String jspGetShareCabinetPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetShareCabinetPage started");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -162,14 +162,14 @@ public class EzCabinetController {
 		
 		JSONObject shareObj = cabinetRestService.getShareCabinetInfo(request, user.getId(), cabinetId);
 		
-		if (shareObj.get("status").toString().equals("ok")) {
+		if (((Long)shareObj.get("code")).intValue() == 0) {
 			JSONObject cabinet = (JSONObject) shareObj.get("cabinet");
 			model.addAttribute("cabinet", cabinet);
 		}
 		
 		JSONObject configObj = cabinetRestService.getUserPreviewConfig(request, user.getId());
 		
-		if (configObj.get("status").toString().equals("ok")) {
+		if (((Long)configObj.get("status")).intValue() == 0) {
 			JSONObject userConfig = (JSONObject)configObj.get("config");
 			model.addAttribute("config", userConfig);
 		}
@@ -179,7 +179,7 @@ public class EzCabinetController {
 		return "ezCabinet/main/cabinetItem";
 	}
 	
-	@RequestMapping(value="/ezCabinet/addCabinetFile.do")
+	@RequestMapping(value="/ezCabinet/addCabinetFile.do", method = RequestMethod.GET)
 	public String jspGetAddCabinetFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetAddCabinetFile started");
 		String cabinetId = request.getParameter("cabId");
@@ -189,7 +189,7 @@ public class EzCabinetController {
 		return "ezCabinet/item/cabinetAddFile";
 	}
 	
-	@RequestMapping(value = "/ezCabinet/cabinetAddRelated.do")
+	@RequestMapping(value = "/ezCabinet/cabinetAddRelated.do", method = RequestMethod.GET)
 	public String jspGetCabinetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetCabinetFileDetail started");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
@@ -211,7 +211,7 @@ public class EzCabinetController {
 		return "ezCabinet/related/cabinetAddRelated";
 	}
 	
-	@RequestMapping(value = "/ezCabinet/getPreviewContent.do")
+	@RequestMapping(value = "/ezCabinet/getPreviewContent.do", method = RequestMethod.GET)
 	public String jspGetPreviewPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetPreviewPage started");
 		String module = request.getParameter("module") != null ? request.getParameter("module") : "";
@@ -221,14 +221,14 @@ public class EzCabinetController {
 		return "ezCabinet/preview/cabinetPrevContent";
 	}
 	
-	@RequestMapping(value = "/ezCabinet/getPreviewPhoto.do")
+	@RequestMapping(value = "/ezCabinet/getPreviewPhoto.do", method = RequestMethod.GET)
 	public String jspGetPreviewPhotoPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetPreviewPhotoPage started");
 		logger.debug("jspGetPreviewPhotoPage ended");
 		return "ezCabinet/preview/cabinetPrevPhoto";
 	}
 	
-	@RequestMapping(value = "/ezCabinet/cabinetRelatedTreeNotFound.do")
+	@RequestMapping(value = "/ezCabinet/cabinetRelatedTreeNotFound.do", method = RequestMethod.GET)
 	public String jspGetRelatedTreeNotFound(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetRelatedTreeNotFound started");
 		model.addAttribute("message", "ezCabinet.t32");
@@ -236,7 +236,7 @@ public class EzCabinetController {
 		return "ezCabinet/cabinetBlankTree";
 	}
 	
-	@RequestMapping(value = "/ezCabinet/cabinetShareTreeNotFound.do")
+	@RequestMapping(value = "/ezCabinet/cabinetShareTreeNotFound.do", method = RequestMethod.GET)
 	public String jspGetShareTreeNotFound(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetShareTreeNotFound started");
 		model.addAttribute("message", "ezCabinet.t05");
@@ -244,7 +244,7 @@ public class EzCabinetController {
 		return "ezCabinet/cabinetBlankTree";
 	}
 	
-	@RequestMapping(value = "/ezCabinet/myShareTreeNotFound.do")
+	@RequestMapping(value = "/ezCabinet/myShareTreeNotFound.do", method = RequestMethod.GET)
 	public String jspGetMyShareTreeNotFound(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetMyShareTreeNotFound started");
 		model.addAttribute("message", "ezCabinet.t157");
@@ -252,7 +252,7 @@ public class EzCabinetController {
 		return "ezCabinet/cabinetBlankTree";
 	}
 	
-	@RequestMapping(value="/ezCabinet/downloadAttachFile", produces="application/zip")
+	@RequestMapping(value="/ezCabinet/downloadAttachFile", method = RequestMethod.GET, produces="application/zip")
 	public void responeDownloadFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("responeDownloadFile is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -269,7 +269,7 @@ public class EzCabinetController {
 		logger.debug("responeDownloadFile finishes!");
 	}
 	
-	@RequestMapping(value="/ezCabinet/getCompanyTree.do")
+	@RequestMapping(value="/ezCabinet/getCompanyTree.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetCompanyTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -281,7 +281,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getSubNodes.do")
+	@RequestMapping(value="/ezCabinet/getSubNodes.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetSubNodes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		logger.debug("jsonGetSubNodes started");
@@ -367,7 +367,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/saveModules.do")
+	@RequestMapping(value="/ezCabinet/saveModules.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonSaveModulesSetting(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveModulesSetting start");
@@ -390,7 +390,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getUserCapicity.do")
+	@RequestMapping(value="/ezCabinet/getUserCapicity.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetUserCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetUserCapacity start");
@@ -401,7 +401,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/saveUserConfig.do")
+	@RequestMapping(value="/ezCabinet/saveUserConfig.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonSaveUserConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSaveUserConfig start");
@@ -424,7 +424,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getMyCabinetTree.do")
+	@RequestMapping(value="/ezCabinet/getMyCabinetTree.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonMyCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonMyCabinetTree start");
@@ -438,7 +438,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getAllCabinetTree.do")
+	@RequestMapping(value="/ezCabinet/getAllCabinetTree.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonAllCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonAllCabinetTree start");
@@ -452,7 +452,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getRelatedCabinetTree.do")
+	@RequestMapping(value="/ezCabinet/getRelatedCabinetTree.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonRelatedCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonRelatedCabinetTree start");
@@ -466,7 +466,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getSharedCabinetTree.do")
+	@RequestMapping(value="/ezCabinet/getSharedCabinetTree.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonSharedCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSharedCabinetTree start");
@@ -479,7 +479,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getMyShareCabinetTree.do")
+	@RequestMapping(value="/ezCabinet/getMyShareCabinetTree.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonMyShareCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonMyShareCabinetTree start");
@@ -493,7 +493,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getSharedCabinetsByUser.do")
+	@RequestMapping(value="/ezCabinet/getSharedCabinetsByUser.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetUserSharedCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetUserSharedCabinet start");
@@ -513,7 +513,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getSubCabinetNodes.do")
+	@RequestMapping(value="/ezCabinet/getSubCabinetNodes.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetSubCabinetNodes(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetSubCabinetNodes start");
@@ -527,7 +527,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/addCabinet.do")
+	@RequestMapping(value="/ezCabinet/addCabinet.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonAddCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonAddCabinet start");
@@ -549,7 +549,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/renameCabinet.do")
+	@RequestMapping(value="/ezCabinet/renameCabinet.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonRenameCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonRenameCabinet start");
@@ -570,7 +570,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/deleteCabinet.do")
+	@RequestMapping(value="/ezCabinet/deleteCabinet.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonDeleteCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonDeleteCabinet start");
@@ -590,7 +590,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/moveCabinet.do")
+	@RequestMapping(value="/ezCabinet/moveCabinet.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonMoveCabinet(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonMoveCabinet start");
@@ -647,7 +647,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/deleteItems.do")
+	@RequestMapping(value="/ezCabinet/deleteItems.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonDeleteItems(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "itemList") List<String> itemList, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonDeleteItems start");
@@ -669,7 +669,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/moveItems.do")
+	@RequestMapping(value="/ezCabinet/moveItems.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonMoveItems(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "itemList") List<String> itemList, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonMoveItems start");
@@ -693,7 +693,7 @@ public class EzCabinetController {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezCabinet/getCabinetFiles.do")
+	@RequestMapping(value="/ezCabinet/getCabinetFiles.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonGetCabinetFiles(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonGetCabinetFiles start");

@@ -1292,7 +1292,7 @@ public class EzCabinetGWController {
 					for (int i = 0; i < attacheFiles.size(); i++) {
 						JSONObject fileObj = (JSONObject)attacheFiles.get(i);
 						String filePath    = (String)fileObj.get("path");
-						File file          = new File(realPath + filePath);
+						File file          = new File(realPath + commonUtil.detectPathTraversal(filePath));
 						totalAttachSize    = totalAttachSize + file.length();
 					}
 				}

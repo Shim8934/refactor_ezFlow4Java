@@ -35,7 +35,7 @@ public class EzCabinetController_h {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzCabinetController_h.class);
 	
-	@RequestMapping(value="/ezCabinet/cabinetFileDetail.do")
+	@RequestMapping(value="/ezCabinet/cabinetFileDetail.do", method = RequestMethod.GET)
 	public String jspGetCabinetFileDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, Locale locale) throws Exception {
 		logger.debug("jspGetCabinetFileDetail started");
 		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
@@ -63,7 +63,6 @@ public class EzCabinetController_h {
 			jspPageName = getModuleHandler(model, iteminfo);
 		}
 		else {
-			
 			return "ezCabinet/cabinetAccessDenied";
 		}
 		
@@ -73,7 +72,7 @@ public class EzCabinetController_h {
 		return jspPageName;
 	}
 	
-	@RequestMapping(value="/ezCabinet/shareCabinet.do")
+	@RequestMapping(value="/ezCabinet/shareCabinet.do", method = RequestMethod.GET)
 	public String jspGetShareCabinetPage(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetShareCabinetPage started");
 		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
@@ -104,7 +103,7 @@ public class EzCabinetController_h {
 		return "ezCabinet/share/cabinetShare";
 	}
 	
-	@RequestMapping(value="/ezCabinet/getSearchShareList.do")
+	@RequestMapping(value="/ezCabinet/getSearchShareList.do", method = RequestMethod.GET)
 	public String jspGetShareUsers(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetShareUsers started");
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
@@ -126,7 +125,7 @@ public class EzCabinetController_h {
 		return "ezCabinet/share/cabinetSearchShare";
 	}
 	
-	@RequestMapping(value="/ezCabinet/getAncestorShareList.do")
+	@RequestMapping(value="/ezCabinet/getAncestorShareList.do", method = RequestMethod.GET)
 	public String jspGetAncestorShareList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("jspGetAncestorShareList started");
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);

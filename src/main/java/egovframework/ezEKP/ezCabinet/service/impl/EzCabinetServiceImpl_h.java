@@ -403,7 +403,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 				}
 				
 				String fileName = (String)fileObj.get("name");
-				File file       = new File(realPath + filePath);
+				File file       = new File(realPath + commonUtil.detectPathTraversal(filePath));
 				long fileSize   = file.length();
 				
 				CabinetAttachFileVO attachFile = new CabinetAttachFileVO(attachId, itemId, filePath, fileName, fileSize, "", companyId, tenantId);
@@ -493,7 +493,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		map.put("tenantId", tenantId);
 		int totalCnt                       = attachList.size();
 		int attachId                       = ezCabinetDAO.getMaxAttachId(map) + 1;
-		File file                          = new File(realPath + cabinetPath);
+		File file                          = new File(realPath + commonUtil.detectPathTraversal(cabinetPath));
 		
 		if (!file.exists()) {
 			file.mkdir();
@@ -517,7 +517,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 				//Delete temp files
 				try {
 					for (CabinetAttachFileVO fileAttach : fileList) {
-						File tempFile = new File(realPath + fileAttach.getFilePath());
+						File tempFile = new File(realPath + commonUtil.detectPathTraversal(fileAttach.getFilePath()));
 						tempFile.delete();
 					}
 					
@@ -564,8 +564,8 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		String extend        = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
 		String newName       = UUID.randomUUID().toString() + "." + extend;
 		String pDirPath      = realPath + cabinetPath;
-		String newFilePath   = pDirPath + File.separator + newName;
-		String pfilePath     = cabinetPath + newName;
+		String newFilePath   = pDirPath + File.separator + commonUtil.detectPathTraversal(newName);
+		String pfilePath     = cabinetPath + commonUtil.detectPathTraversal(newName);
 		
 		if (modulePath.equals("upload_circular.ROOT")) {
 			filePath = filePath + fileName;
@@ -573,7 +573,7 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		
 		logger.debug("file path: " + filePath + " || file name : " + fileName);
 		
-		File file = new File(realPath + filePath);
+		File file = new File(realPath + commonUtil.detectPathTraversal(filePath));
 		
 		if(!file.exists()) {
 			logger.error("File not found.");

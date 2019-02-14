@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -116,6 +117,7 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 		
 		if (result == null || result.size() == 0) {
 			//Auto insert data
+			result = new ArrayList<>();
 			result.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "resrc" , 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "option", 1, tenantId));
@@ -180,6 +182,7 @@ public class EzCabinetAdminServiceImpl implements EzCabinetAdminService {
 		
 		if (result == null || result.size() == 0) {
 			//Auto insert data
+			result = new ArrayList<>();
 			result.add(new CabinetModuleVO(companyId, "schedl", 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "resrc" , 1, tenantId));
 			result.add(new CabinetModuleVO(companyId, "option", 1, tenantId));
