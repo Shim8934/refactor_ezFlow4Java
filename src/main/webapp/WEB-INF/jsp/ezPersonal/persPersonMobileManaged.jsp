@@ -120,10 +120,10 @@
     	<br/>
     	<table class="mainlist" style="white-space: nowrap; width:100%; overflow-x: hidden; overflow-y: scroll;">
             <tr>
-                <th width='30%'><spring:message code="ezPersonal.kyj01" /></th>
-                <th width='20%'><spring:message code="ezPersonal.t513" /></th>
-                <th width='30%'><spring:message code="ezApproval.t367" /></th>
-                <th width='20%'><spring:message code="ezPersonal.kyj02" /></th>
+                <th width='50%'><spring:message code="ezPersonal.kyj01" /></th>
+                <th width='15%'><spring:message code="ezPersonal.t513" /></th>
+                <th width='15%'><spring:message code="ezApproval.t367" /></th>
+                <th width='15%'><spring:message code="ezPersonal.kyj02" /></th>
             </tr>
             <c:if test="${deviceInfo ne null}">
 	    		<c:forEach items="${deviceInfo}" var="list">
