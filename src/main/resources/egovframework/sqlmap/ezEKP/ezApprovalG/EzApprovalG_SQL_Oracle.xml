@@ -22815,8 +22815,10 @@
    			ProcessDate = TO_DATE(#v_SYSDATE#,'YYYY-MM-DD HH24:MI:SS')
         WHERE 
         	DocID = #v_DOCID# 
+        <isNotEmpty property="v_DEPTID">
         AND 
         	ReceiptPointID = #v_DEPTID#
+        </isNotEmpty>
         AND 
         	TENANT_ID = #v_TENANTID#
         AND
