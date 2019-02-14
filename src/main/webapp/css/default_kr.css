@@ -3223,8 +3223,8 @@ input::-ms-clear {display: none;}
 .survey-infrow .date-input {width: 60px; outline: 0px; border: 1px solid #ddd; padding-left: 5px;}
 .survey-infrow input, .survey-infrow select, .survey-infrow .target-select {height: 27px;}
 .survey-user-pv em {padding: 0px 2px;}
-.survey-user-pv .user-inf {font-size: 13px !important; color: #333; cursor: pointer;}
-.survey-user-pv .user-inf:hover, .user-field:hover {color: blue;}
+.survey-user-pv, .user-inf {font-size: 13px !important; color: #333; cursor: pointer;}
+.survey-user-pv, .user-inf:hover, .user-field:hover {color: blue;}
 .ui-datepicker-trigger.bnk {cursor: default !important;}
 /**** survey information confirm part end ****/
 
