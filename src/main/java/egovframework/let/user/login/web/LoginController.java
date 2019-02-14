@@ -609,19 +609,19 @@ public class LoginController {
         		for (int i = 0; i < ipBandList.size(); i++) {
         			getAccess = ipBandList.get(i).getAccess();
         			
-        			if (!getAccess.equals("NO")) {
-        				String ipListIp[] = ipBandList.get(i).getIpAddress().split("\\."); // *(대역)이 있을 수도 있으니 하나하나 검사해야됨
-            			for (int j = 0; j < clientIP.length; j++) {
-            				if (ipListIp[j].equals(clientIP[j]) || ipListIp[j].equals("*")) {
-            					checkCnt++;
-            				}
-            			}
-            			
-            			if (checkCnt == 4) {
-            				returnValue = true;
-            			}
-            			checkCnt = 0;
+    				String ipListIp[] = ipBandList.get(i).getIpAddress().split("\\."); // *(대역)이 있을 수도 있으니 하나하나 검사해야됨
+        			for (int j = 0; j < clientIP.length; j++) {
+        				if (ipListIp[j].equals(clientIP[j]) || ipListIp[j].equals("*")) {
+        					checkCnt++;
+        				}
         			}
+        			
+        			if (checkCnt == 4 && getAccess.equals("NO")) {
+        				return false;
+        			} else if (checkCnt == 4){
+        				returnValue = true;
+        			}
+        			checkCnt = 0;
         		}
         		
         	} else { // 대역이 등록 안돼있으면 무조건 false (useIPAccess컨피그 사용O -> id체크X -> 부서체크X -> 등록된 대역도 없으므로)

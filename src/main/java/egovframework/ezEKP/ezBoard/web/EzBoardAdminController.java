@@ -1277,18 +1277,28 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String boardID = request.getParameter("boardID");		
 		String type = request.getParameter("type");
 		String isAllGroupBoard = request.getParameter("isAllGroupBoard");
+		String parentBoardID = ezBoardService.getParentBoardID(boardID, userInfo.getTenantId());
 		
 		// 권한전파 시 companyID 추가
-		List<BoardPropertyVO> list = ezBoardAdminService.getUnderBoardID("%"+boardID+"%", "2", userInfo.getTenantId());
+		List<BoardPropertyVO> list = ezBoardAdminService.getUnderBoardID(boardID, "2", userInfo.getTenantId());
 		
 		if (type.equals("1")) { // 권한 복사(type 1)
-			List<BoardPropertyVO> list2 = ezBoardAdminService.getUnderBoardID("%"+boardID+"%", "1", userInfo.getTenantId());
+			List<BoardPropertyVO> list2 = ezBoardAdminService.getUnderBoardID(boardID, "1", userInfo.getTenantId());
 			
 			for (int i = 0; i < list.size(); i++) {
 				BoardPropertyVO vo1 = list.get(i);
 				
 				for (int j = 0; j < list2.size(); j++) {
-					BoardPropertyVO vo2 = list2.get(j); 
+					BoardPropertyVO vo2 = list2.get(j);
+					
+					/* 2019-02-13 홍승비 - 게시판그룹에서 관리자(+접근)권한을 전파할 경우, 하위게시판의 나머지 권한들을 true로 고정(게시메일알림 제외) */
+					if (parentBoardID != null && parentBoardID.equals("top") && vo2.getBoardAdmin_FG() != null && vo2.getBoardAdmin_FG().equals("true")) {
+						vo2.setListView_FG("true");
+						vo2.setRead_FG("true");
+						vo2.setWrite_FG("true");
+						vo2.setReply_FG("true");
+						vo2.setDelete_FG("true");
+					}
 					
 					vo2.setBoardID(vo1.getBoardID());
 					vo2.setCompanyID(userInfo.getCompanyID());

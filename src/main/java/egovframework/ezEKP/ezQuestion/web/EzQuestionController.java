@@ -1664,6 +1664,9 @@ public class EzQuestionController extends EgovFileMngUtil {
         int iDataCount = 0;
         String pAnsSubjectivity = "";
         
+        QstVO qstVO = ezQuestionService.getQuestionForSubjective(brdID, itemNo, questionNo, userInfo.getTenantId());
+		pAnsType = Integer.toString(qstVO.getAnswerType());
+        
         for(QstResponseVO qstResponseVO : qstResponseVOList){
         	Node targetNode = xmlMainDom.getFirstChild();
             Node newRow = xmlMainDom.createElement("ROW");
@@ -1681,12 +1684,12 @@ public class EzQuestionController extends EgovFileMngUtil {
             for(Field field : qstResponseVO.getClass().getDeclaredFields()){
             	field.setAccessible(true);
             	
-            	QstVO qstVO = ezQuestionService.getQuestionForSubjective(brdID, itemNo, questionNo, userInfo.getTenantId());
-            	pAnsType = Integer.toString(qstVO.getAnswerType());
             	
             	if(field.getName().equals("ANSWER_SUBJECTIVITY")){
             		pAnsSubjectivity = (String) field.get(qstResponseVO);
             		//////////////////////////
+//            		QstVO qstVO = ezQuestionService.getQuestionForSubjective(brdID, itemNo, questionNo, userInfo.getTenantId());
+//            		pAnsType = Integer.toString(qstVO.getAnswerType());
             		
             		if(pAnsType.equals("4")){
             			List<QstAnswerVO> rtnList = dataProcessAns(userInfo ,Integer.parseInt(brdID), Integer.parseInt(itemNo), Integer.parseInt(questionNo));
@@ -1741,6 +1744,8 @@ public class EzQuestionController extends EgovFileMngUtil {
             		else{
             			newDataValue = xmlMainDom.createTextNode(commonUtil.cleanValue((String)field.get(qstResponseVO)).trim());
             		}
+            	} else {
+            		newDataValue = xmlMainDom.createTextNode("null");
             	}
             	
             	newDataName.appendChild(newDataValue);
@@ -1903,6 +1908,8 @@ public class EzQuestionController extends EgovFileMngUtil {
             		else{
             			newDataValue = xmlMainDom.createTextNode(commonUtil.cleanValue((String)field.get(qstResponseVO)).trim());
             		}
+            	} else {
+            		newDataValue = xmlMainDom.createTextNode("null");
             	}
             	
             	newDataName.appendChild(newDataValue);
