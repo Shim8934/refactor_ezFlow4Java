@@ -1119,8 +1119,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		resultXML.append("</HEADERS>");
 		
 		String docList = "";
-		//회람은 새로 생긴 DOCID여서 orgdocid로 회람문서 찾아내야함
-		docID = getCircularDocID(docID, companyID, tenantID);
+		
+		//임시저장문서의 DOCID는 (USERID@SN) 형태이기 때문에 orgDocID를 뽑을 필요없음
+		if (mode != null && !mode.equals("TMP")) {
+			//회람은 새로 생긴 DOCID여서 orgdocid로 회람문서 찾아내야함
+			docID = getCircularDocID(docID, companyID, tenantID);
+		}
 		
 		if (docID != null && !docID.equals("")) {
 			docList = getCirculationInfo(docID, mode, companyID, tenantID);
@@ -1205,6 +1209,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("docID", docID);
+		map.put("mode", mode);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -2552,9 +2557,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.aprMakeTmp2Ing7(map);
 			// 문서 정보
 			ezApprovalGDAO.aprMakeTmp2Ing8(map);
-			// 회람 문서 orgdocid 재설정
-			ezApprovalGDAO.aprMakeTmp2Ing9(map);
-
+			
+			try {
+				//임시저장된 문서의 DocID를 추출한다.
+				String tmpDocID = ezApprovalGDAO.getTmpDocID(map);
+				map.put("v_TMPDOCID", tmpDocID);
+				//임시저장 할때 설정한 회람(공람)이 있는지 확인한다.
+				if (ezApprovalGDAO.checkTmpDocHasGongRam(map) > 0) {
+					//설정한 회람(공람)이 있으면 새로운 DocID를 추출하여 회람정보를 DB에 추가해준다.
+					String gongRamDocID = getNewID(companyID, tenantID);
+					map.put("v_GDOCID", gongRamDocID);
+					
+					ezApprovalGDAO.aprMakeTmp2Ing9(map);	//TBL_APRDOCINFO
+					ezApprovalGDAO.aprMakeTmp2Ing10(map);	//TBL_APRLINEINFO
+					ezApprovalGDAO.aprMakeTmp2Ing11(map);	//TBL_EXPAPRLINE
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			
 			rtnVal = "<RESULT>" + docID + "</RESULT>";
 			logger.debug("makeTmp2IngDocInfo Ended");
 		
