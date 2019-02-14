@@ -5834,6 +5834,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			ezApprovalGDAO.insertRejectAprReceiptProcessInfo(map);
 			
+			//여기다 발송의뢰반송시 수신처에 발송의뢰반송표시하게 해주면 되나
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("v_DOCID", signList.getOrgDocID());
+			map2.put("v_PROCESSYN", "B");
+			map2.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+			map2.put("v_TENANTID", tenantID);
+			map2.put("companyID", companyID);
+			
+			ezApprovalGDAO.updateProYnEndReceiptPointInfo(map2);
+			
 			retValue = "<RESULT>TRUE</RESULT>";
 		
 		logger.debug("doSendOfferReject ended");
