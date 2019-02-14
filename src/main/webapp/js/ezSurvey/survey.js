@@ -739,16 +739,16 @@ var SurveyCreate     = function() {
 			var spanElmt = document.createElement("span");
 			var uElmt    = document.createElement("u");
 			var imgElmt  = document.createElement("img");
-			var divideEm = document.createElement("em");
+			var divideSpan = document.createElement("span");
 			uElmt.setAttribute("role", userArr[i]["userId"]);
 			uElmt.textContent    = userArr[i]["userName"];
 			uElmt.onclick        = (function(userId){return function() {showUserInfoFromId(userId);};})(userArr[i]["userId"]);
 			imgElmt.onclick      = (function(userId, userType){return function() {removeUser(this, userId, userType);};})(userArr[i]["userId"], userArr[i]["userType"]);
 			spanElmt.className   = "rlSpanBnk";
-			divideEm.textContent = ";";
+			divideSpan.textContent = ";";
 			imgElmt.src          = "/images/icon/oneline_delete.gif";
 			spanElmt.appendChild(uElmt);
-			spanElmt.appendChild(divideEm);
+			spanElmt.appendChild(divideSpan);
 			spanElmt.appendChild(imgElmt);
 			divElmt.appendChild(spanElmt);
 		}
@@ -3702,9 +3702,9 @@ var SurveyCreate     = function() {
 					surveyUserElmt.appendChild(spanElmt);
 					
 					if (i != userList.length - 1) {
-						var divideEm         = document.createElement("em");
-						divideEm.textContent = "; ";
-						surveyUserElmt.appendChild(divideEm);
+						var divideSpan         = document.createElement("span");
+						divideSpan.textContent = "; ";
+						surveyUserElmt.appendChild(divideSpan);
 					}
 				}
 				

@@ -18,6 +18,24 @@
 						&nbsp;~&nbsp;
 						<input type="text" id="endDate" class="srchDate" readonly size="10" value="${fn:substring(survey.endDate, 0, 10)}">
 					</td>
+					<th class="left-Th"><spring:message code="ezSurvey.t101"/></th> <%-- open public result days setting --%>
+					<td class="right-Td">
+						<span class='period-span'><spring:message code="ezSurvey.t44"/></span>
+						<c:choose>
+							<c:when test="${survey.resultPublicFlag == 0}"><input class="date-input" value="" tabindex="1" disabled></c:when>
+							<c:otherwise><input class="date-input" value="0" tabindex="1"></c:otherwise>
+						</c:choose>
+						<span><spring:message code="ezSurvey.t45"/></span>
+					</td>
+				</tr>
+				<tr>
+					<th class="left-Th"><spring:message code="ezSurvey.t41"/></th> <%-- public setting --%>
+					<td class="right-Td">
+						<div>
+							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="1" ${survey.resultPublicFlag == 1 ? 'checked' : ''}><spring:message code="ezSurvey.t42"/></span>
+							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="0" ${survey.resultPublicFlag == 0 ? 'checked' : ''}><spring:message code="ezSurvey.t43"/></span>
+						</div>
+					</td>
 					<th class="left-Th"><spring:message code="ezSurvey.t46"/></th> <%-- anonymous setting --%>
 					<td class="right-Td">
 						<div>
@@ -27,15 +45,12 @@
 					</td>
 				</tr>
 				<tr>
-					<th class="left-Th"><spring:message code="ezSurvey.t52"/></th> <%-- respondent setting --%>
+					<th class="left-Th"><spring:message code="ezSurvey.t30"/></th> <%-- respondent setting --%>
 					<td class="right-Td">
 						<div class="survey-flexdiv">
 							<span class="inf-spanTxt"><input type="radio" name="targetSpan" value="0" ${survey.paritipateFlag == 0 ? 'checked' : ''}><spring:message code="ezSurvey.t53"/></span>
 							<span class="inf-spanTxt"><input type="radio" name="targetSpan" value="1" ${survey.paritipateFlag == 1 ? 'checked' : ''}><spring:message code="ezSurvey.t54"/></span>
-							<div id="userWrapDiv" class="${survey.paritipateFlag == 0 ? 'user-mainDiv' : 'user-mainDiv on'}">
-								<a class="imgbtn inf-surveyimg" id="targetBttn"><span><spring:message code="ezSurvey.t52"/></span></a>
-								<div class="target-wrapper"><div id="userListDiv" class="user-listDiv"></div></div>
-							</div>
+							
 						</div>
 					</td>
 					<th class="left-Th"><spring:message code="ezSurvey.t49"/></th> <%-- multiple select setting --%>
@@ -47,20 +62,12 @@
 					</td>
 				</tr>
 				<tr>
-					<th class="left-Th"><spring:message code="ezSurvey.t41"/></th> <%-- public setting --%>
-					<td class="right-Td">
-						<div>
-							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="1" ${survey.resultPublicFlag == 1 ? 'checked' : ''}><spring:message code="ezSurvey.t42"/></span>
-							<span class="inf-spanTxt"><input type="radio" name="publicSpan" value="0" ${survey.resultPublicFlag == 0 ? 'checked' : ''}><spring:message code="ezSurvey.t43"/></span>
+					<th class="left-Th"><spring:message code="ezSurvey.t55"/></th> <%-- respondent setting --%>
+					<td class="right-Td" colspan="3">
+						<div id="userWrapDiv" class="${survey.paritipateFlag == 0 ? 'user-mainDiv' : 'user-mainDiv on'}">
+							<a class="imgbtn inf-surveyimg" id="targetBttn"><span><spring:message code="ezSurvey.t100"/></span></a>
+							<div class="target-wrapper"><div id="userListDiv" class="user-listDiv"></div></div>
 						</div>
-					</td>
-					<th class="left-Th"><spring:message code="ezSurvey.t44"/></th> <%-- open public result days setting --%>
-					<td class="right-Td">
-						<c:choose>
-							<c:when test="${survey.resultPublicFlag == 0}"><input class="date-input" value="" tabindex="1" disabled></c:when>
-							<c:otherwise><input class="date-input" value="0" tabindex="1"></c:otherwise>
-						</c:choose>
-						<span><spring:message code="ezSurvey.t45"/></span>
 					</td>
 				</tr>
 			</table>
