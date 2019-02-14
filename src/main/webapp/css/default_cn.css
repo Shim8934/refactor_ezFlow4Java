@@ -3266,9 +3266,7 @@ input::-ms-clear {display: none;}
 .tooltip-bttns .copyBtn {display:inline-block; width:16px; height:16px; margin:11px 0px; background-position:-16px -78px !important;}
 .tooltip-bttns .deleteBtn {display:inline-block; width:16px; height:16px; margin:11px 0px; background-position:-32px -78px !important;}
 
-
 /* select && multiple select question */
-/* .questnTitle:focus {border:none !important; border-bottom: 1px solid #03a9f4 !important; font-size:14px; font-weight:bold; color:#1f1f1f !important; outline:none !important; webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6); box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);} */
 .questnTitle:focus {border:none !important; border-bottom: 1px solid #03a9f4 !important; font-size:14px; font-weight:bold; color:#1f1f1f !important; outline:none !important; /*webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6); box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);*/}
 .qstnForm .other {padding-top: 10px;}
 .qstnForm .optPart + .optPart {padding-top: 10px;}
@@ -3357,12 +3355,15 @@ input::-ms-clear {display: none;}
 .question-panel .mvBtn span{display:inline-block; width:16px; height:16px; margin:10px 6px 0px 6px; background-position:-64px 0px !important;}
 .mvBtn li:hover{background-color:rgb(255,255,255); border-color: rgb(199,199,199) !important; border-bottom: 1px solid #909193 !important;}
 
+.question-panel .srvyDragBtn {position:absolute; display:block; left:50%;}
+
 /* question header panel */
-.question-panel{background:#f1f6fb;}
-.question-header {display:flex; padding:0px 0px 20px 0px; height: 40px;}
-.question-header .question-content {flex:1; padding:0px 20px; cursor: default; font-size:14px; font-family:Malgun Gothic, "맑은 고딕";}
-.question-header .tooltip-bttns {display: flex; padding: 0px 10px;}
-.question-header .imptt {color: rgba(255, 0, 0, 1); padding-left: 20px; margin-right: -15px; font-size: 16px;}
+.question-panel{background:#f1f6fb; padding: 10px;}
+.question-header {display:block; height:40px; line-height:40px; padding:10px 0px;}
+.question-header .question-content {float:left; padding:0px 20px; cursor: default; font-size:14px; font-family:Malgun Gothic, "맑은 고딕";}
+.question-header .tooltip-bttns {float:right; padding: 0px 10px;}
+
+.question-header .imptt {color: rgba(255, 0, 0, 1); padding-left: 20px; margin-right: -15px; font-size: 16px; float: left;}
 .question-panel .question-attach {max-height: 80px; padding: 10px 35px; display: flex; align-items: center;}
 .question-attach .qstnImg {width: auto; height: auto; max-height: 80px; cursor: pointer;}
 .question-attach >span {padding-left: 10px; overflow: hidden;}
@@ -3439,7 +3440,7 @@ input[type=range]::-ms-tooltip {display: none;}
 
 /* survey information, questions and logic confirm part */
 .prevQsWrapper{margin:10px 0px 0px 0px; border:1px solid #ddd; position: relative;}
-.prevQsContent{padding:10px; background:#f1f6fb;}
+.prevQsContent{background:#f1f6fb;}
 .prevQsWrapper .question-header .question-content {overflow:hidden; line-height:40px; margin:0px; font-size:14px; color:#333; cursor:default; word-break:break-all; font-family:Malgun Gothic, "맑은 고딕"; display: flex;}
 .prevQsWrapper .question-header .imptt {line-height: 40px;}
 .srvyLogicbtn{display:inline-flex; margin:0px 0px 0px 10px;}
