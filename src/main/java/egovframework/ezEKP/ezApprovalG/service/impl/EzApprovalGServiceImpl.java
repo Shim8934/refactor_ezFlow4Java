@@ -5855,6 +5855,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			ezApprovalGDAO.insertRejectAprReceiptProcessInfo(map);
 			
+			//여기다 발송의뢰반송시 수신처에 발송의뢰반송표시하게 해주면 되나
+			Map<String, Object> map2 = new HashMap<String, Object>();
+			map2.put("v_DOCID", signList.getOrgDocID());
+			map2.put("v_PROCESSYN", "B");
+			map2.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+			map2.put("v_TENANTID", tenantID);
+			map2.put("companyID", companyID);
+			
+			ezApprovalGDAO.updateProYnEndReceiptPointInfo(map2);
+			
 			retValue = "<RESULT>TRUE</RESULT>";
 		
 		logger.debug("doSendOfferReject ended");
@@ -22868,8 +22878,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			else {
 				// 수정(2006.01.10) : 발송한 유통문서인 경우 발송 플래그(S) 업데이트 하도록 수정
 			    if( deptID.equals("")) {
-		        	map.put("v_DOCID", docID.trim());
-		        	map.put("v_TENANTID", tenantID);
+			    	map.put("v_PROCESSYN", processYN);
+					map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
+					map.put("v_DOCID", docID.trim());
+					map.put("v_DEPTID", deptID.trim());
+					map.put("v_TENANTID", tenantID);
+					map.put("companyID", companyID);
+					 
+					ezApprovalGDAO.updateProYnEndReceiptPointInfo(map);
 			    	ezApprovalGDAO.insertProHistoryReceiptInfo(map);
 				}
 				else {
@@ -22885,6 +22901,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		 				map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 		 			 	map.put("v_TENANTID", tenantID);
 		 			 	ezApprovalGDAO.insertProHistoryReceiptInfo2(map);
+		 				ezApprovalGDAO.updateProYnEndReceiptPointInfo(map);
 			}
 		}
 		
