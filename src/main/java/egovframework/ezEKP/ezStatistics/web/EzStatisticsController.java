@@ -218,7 +218,7 @@ public class EzStatisticsController {
 		
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
-		pFileName = strDate+"_Report.xls";
+		pFileName = strDate+"_Report";
 		
 		String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
 		
@@ -322,7 +322,7 @@ public class EzStatisticsController {
 		
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
-		pFileName = strDate+"_Report.xls";
+		pFileName = strDate+"_Report";
 		
 		String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
 		
@@ -459,7 +459,7 @@ public class EzStatisticsController {
       
       String pFileName = "";
       String strDate = EgovDateUtil.getToday("-");
-      pFileName = strDate+"_Report.xls";
+      pFileName = strDate+"_Report";
       
       String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
       
@@ -532,7 +532,7 @@ public class EzStatisticsController {
       
       String pFileName = "";
       String strDate = EgovDateUtil.getToday("-");
-      pFileName = strDate+"_Report.xls";
+      pFileName = strDate+"_Report";
       
       String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
       
@@ -626,7 +626,7 @@ public class EzStatisticsController {
 		
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
-		pFileName = strDate+"_Report.xls";
+		pFileName = strDate+"_Report";
 		
 		String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
 		
@@ -729,7 +729,7 @@ public class EzStatisticsController {
 		
 		String pFileName = "";
 		String strDate = EgovDateUtil.getToday("-");
-		pFileName = strDate+"_Report.xls";
+		pFileName = strDate+"_Report";
 		
 		String StrAnalysisDate = request.getParameter("saveExcelData").trim().replaceAll("&nbsp;", "").replaceAll("\r\n", "").replaceAll("\n", "").replaceAll("\t", "");
 		

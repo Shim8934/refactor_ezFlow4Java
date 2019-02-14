@@ -79,6 +79,9 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 	@Autowired
 	private Properties config;
 
+	@Autowired
+	private Properties globals;
+	
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource; 
 
@@ -237,6 +240,30 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		}
 		
 		logger.debug("deleteAllUserMail scheduler ended.");
+	}
+	
+	@Scheduled(fixedDelay = 600000, initialDelay = 60000)
+	public void deleteMailDeletedUser() throws Exception {
+		logger.debug("deleteMailDeletedUser started.");
+		
+		String schedulerId = config.getProperty("config.SchedulerServer");
+		String dbType = globals.getProperty("Globals.DbType");
+		
+		logger.debug("dbType=" + dbType);
+		
+		// 1번 서버가 삭제된 사용자의 메일 목록을 보관한 james_mail_deleted_user 테이블의 레코드와
+		// james_mail_blob 테이블의 레코드를 삭제하는 작업을 수행한다.
+		if (schedulerId != null && schedulerId.equals("1")) {
+			if (dbType.equals("mysql")) {
+	            String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteMailDeletedUser";
+	                        
+	            String response = ezEmailUtil.getWebServiceResult(requestURL, null); 
+	            
+	            logger.debug("response=" + response);       			
+			}
+		}
+		
+		logger.debug("deleteMailDeletedUser ended.");
 	}
 	
 	/**

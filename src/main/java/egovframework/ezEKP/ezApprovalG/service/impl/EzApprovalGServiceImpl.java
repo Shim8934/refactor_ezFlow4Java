@@ -7140,9 +7140,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			cal.setTime(format.parse(tmpYear));
 			tmpYear = String.valueOf(cal.get(Calendar.YEAR));
 			
+			boolean habYuiAprStateFlag = true;
+			String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
+			if (addLastKyulJeYN != null && !addLastKyulJeYN.equals("0")) {
+				String rtnVal = checkHabYuiState(docID, companyID, userInfo.getTenantId());
+				if (rtnVal.equals("FALSE")) {
+					habYuiAprStateFlag = false;
+				}
+			}
+			
 			//일반 채번문제 수정 2017-05-15
 //			if ((totalLineSN == Integer.parseInt(signNum.trim()) || aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007") && !aprStateSign.equals("011")) {
-			if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && !aprStateSign.equals("011")) {
+			if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001") || aprType.equals("004")) && !aprType.equals("007") && !aprStateSign.equals("011") && habYuiAprStateFlag) {
 				if (aprStateSign.equals("012")) {
 					strDeptID = receiveDept;
 				} else {
@@ -15564,6 +15573,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				// 파일 복사에 성공하면 완료문서 관련 테이블에 데이터 입력.
 				if (rtnVal) {
 					map.put("v_DOCID", docID);
+					map.put("v_DOCSTATE", docState);
 					map.put("v_endURL", endURL);
 					map.put("v_SYSDATE", commonUtil.getTodayUTCTime(""));
 					map.put("v_ContainerID", containerID);
@@ -26338,12 +26348,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              objXML.getElementsByTagName("xsl-version").item(0).setTextContent("2.0");
 
              if (strDocType.equals("req-resend")) {
-                 objXML.getElementsByTagName("contents").item(0).appendChild(objXML.createElement("content"));
-                 objXML.createElement("content").setAttribute("content-role", "return");
-                 objXML.createElement("content").setAttribute("filename", "return");
-                 objXML.createElement("content").setAttribute("content-transfer-encoding", "base64");
-                 objXML.createElement("content").setAttribute("content-type", "text/xml");
-                 objXML.createElement("content").setAttribute("charset", "");
+             	 //어트리뷰트 세팅이 안돼서 수정해줌
+             	 org.w3c.dom.Element contentElement = objXML.createElement("content");
+                 objXML.getElementsByTagName("contents").item(0).appendChild(contentElement);
+                 contentElement.setAttribute("content-role", "return");
+                 contentElement.setAttribute("filename", "return.txt");
+                 contentElement.setAttribute("content-transfer-encoding", "base64");
+                 contentElement.setAttribute("content-type", "text/xml");
+                 contentElement.setAttribute("charset", "euc-kr");
                  objXML.getElementsByTagName("content").item(0).setTextContent(Base64.encodeBase64String(strErrMsg.getBytes("euc-kr")));
              }
 
@@ -27624,5 +27636,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_APRMEMBERSN", aprMemberSN);
 		
 		return ezApprovalGDAO.getCheckAprState(map);
+	}
+	
+	@Override
+	public String checkHabYuiState(String docID, String companyID, int tenantID) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_DOCID", docID);
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		String result = "";
+		
+		int rtnVal = ezApprovalGDAO.checkHabYuiState(map);
+		
+		if (rtnVal > 0) {
+			result = "FALSE";
+		} else {
+			result = "TRUE";
+		}
+		
+		return result;
 	}
 }

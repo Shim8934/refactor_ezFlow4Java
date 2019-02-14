@@ -323,7 +323,7 @@
 				var pageSize = "-1"; // 전체
 				var params = 'searchStartTime=' + searchStartTime +'&searchEndTime=' + searchEndTime;
 				 	params += '&searchField=' + searchField + '&searchValue=' + searchValue ; 
-					params += '&pageNo=' + pageNo + '&mailLogType=' + mailLogType + '&pageSize=' + pageSize + "&companyId=" + companyId;
+					params += '&pageNo=' + pageNo + '&mailLogType=' + mailLogType + '&pageSize=' + pageSize + "&companyId=" + companyIdVal;
 				var pURL = "/ezStatistics/statisticsMailLogExcelExport.do" + "?" + params;
 
 				saveExcel.location.href = pURL;
