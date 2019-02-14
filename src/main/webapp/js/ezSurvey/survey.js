@@ -3676,7 +3676,7 @@ var SurveyCreate     = function() {
 		
 		if (qstInf["public"] == 1) {
 			document.getElementById("public-cfdiv").innerHTML = SurveyMessages.strPublic1;
-			document.getElementById("public-days").innerHTML  = qstInf["publicDays"] + " " + SurveyMessages.strPublic5;
+			document.getElementById("public-days").innerHTML  = SurveyMessages.strPublic4 + " " + qstInf["publicDays"] + " " + SurveyMessages.strPublic5;
 		}
 		else {
 			document.getElementById("public-cfdiv").innerHTML = SurveyMessages.strPublic2;

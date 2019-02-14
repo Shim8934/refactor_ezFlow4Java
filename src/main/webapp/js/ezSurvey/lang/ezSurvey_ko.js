@@ -10,7 +10,7 @@ var SurveyMessages = {
 	strPublic1   : "공개",
 	strPublic2   : "비공개",
 	strPublic3   : "조사 결과",
-	strPublic4   : "설문 종료후",
+	strPublic4   : "설문 종료 후",
 	strPublic5   : "일간",
 	strAnoynym1  : "기명",
 	strAnoynym2  : "무기명",

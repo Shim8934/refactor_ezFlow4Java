@@ -25,20 +25,20 @@
 						<img class="ui-datepicker-trigger bnk" src="/images/ezSurvey/calendar-month.png">
 					</div>
 				</td>
-				<th class="left-Th"><spring:message code="ezSurvey.t46"/></th> <%-- anonymous setting --%>
-				<td class="right-Td"><div id="cf-anoynymous" class="surveyinf-divcf"></div></td>
-			</tr>
-			<tr>
-				<th class="left-Th"><spring:message code="ezSurvey.t52"/></th> <%-- respondent setting --%>
-				<td class="right-Td"><div id="cf-userdiv" class="surveyinf-divcf flex-cf"></div></td>
-				<th class="left-Th"><spring:message code="ezSurvey.t49"/></th> <%-- multiple select setting --%>
-				<td class="right-Td"><div id="cf-multiple" class="surveyinf-divcf"></div></td>
+				<th class="left-Th"><spring:message code="ezSurvey.t101"/></th> <%-- open public result days setting --%>
+				<td class="right-Td"><div id="public-days" class="surveyinf-divcf"></div></td>
 			</tr>
 			<tr>
 				<th class="left-Th"><spring:message code="ezSurvey.t41"/></th> <%-- public setting --%>
 				<td class="right-Td"><div id="public-cfdiv" class="surveyinf-divcf"></div></td>
-				<th class="left-Th"><spring:message code="ezSurvey.t44"/></th> <%-- open public result days setting --%>
-				<td class="right-Td"><div id="public-days" class="surveyinf-divcf"></div></td>
+				<th class="left-Th"><spring:message code="ezSurvey.t46"/></th> <%-- anonymous setting --%>
+				<td class="right-Td"><div id="cf-anoynymous" class="surveyinf-divcf"></div></td>
+			</tr>
+			<tr>
+				<th class="left-Th"><spring:message code="ezSurvey.t30"/></th> <%-- respondent setting --%>
+				<td class="right-Td"><div id="cf-userdiv" class="surveyinf-divcf flex-cf"></div></td>
+				<th class="left-Th"><spring:message code="ezSurvey.t49"/></th> <%-- multiple select setting --%>
+				<td class="right-Td"><div id="cf-multiple" class="surveyinf-divcf"></div></td>
 			</tr>
 		</table>
 	</div>
