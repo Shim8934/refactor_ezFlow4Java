@@ -101,7 +101,7 @@
         }
         
         function btnIns_onclick() {
-            if (nodeIdx == undefined) {
+            if (nodeIdx == undefined || nodeIdx == "") {
                 var pAlertContent = "<spring:message code='ezApproval.t299'/>";
                 OpenAlertUI(pAlertContent);
                 return;
@@ -191,6 +191,8 @@
                     OpenAlertUI(pAlertContent);
                     TreeViewRefresh();
                     opener.TreeViewRefresh();
+	                //선택한 노드 값 초기화
+	                nodeIdx = "";
                     return;
                 } else if (rvalue == "HASSUBCONT") {
                 	var pAlertContent = "<spring:message code='ezApprovalG.pjj34'/>";
@@ -278,6 +280,8 @@
     	                        OpenAlertUI(pAlertContent);
     	                        TreeViewRefresh();
     	                        opener.TreeViewRefresh();
+    	                      	//선택한 노드 값 초기화
+    	    	                nodeIdx = "";
     	                        return;
     	                    }
     		            } else {
