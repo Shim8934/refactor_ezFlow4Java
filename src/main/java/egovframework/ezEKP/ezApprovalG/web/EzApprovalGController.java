@@ -7437,6 +7437,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String docHref = request.getParameter("docHref");
 		String orgDocID = request.getParameter("orgDocID");
+		String docTitle = request.getParameter("docTitle");
 		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
@@ -7470,6 +7471,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("pass", pass);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalPWD", approvalPWD);
+		model.addAttribute("docTitle", docTitle);
 		
 		logger.debug("ezSimsaG ended");
 		
