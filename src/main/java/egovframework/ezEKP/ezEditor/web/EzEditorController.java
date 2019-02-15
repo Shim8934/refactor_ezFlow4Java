@@ -258,6 +258,8 @@ public class EzEditorController extends EgovFileMngUtil {
 		 * letterId + "/images"; }
 		 */
 
+		filePath = commonUtil.detectPathTraversal(filePath);
+
 		File file = new File(realPath + filePath);
 		if (!file.exists()) {
 			file.mkdirs();
@@ -318,6 +320,8 @@ public class EzEditorController extends EgovFileMngUtil {
 		BufferedImage img = null;
 
 		try {
+			filename = commonUtil.detectPathTraversal(filename);
+			
 			img = ImageIO.read(new File(filename));
 		} catch (Exception e) {
 			result = true;
@@ -368,6 +372,8 @@ public class EzEditorController extends EgovFileMngUtil {
 			filePath = filePath + commonUtil.separator + today;
 		}
 
+		filePath = commonUtil.detectPathTraversal(filePath);
+		
 		File file = new File(realPath + filePath);
 
 		if (!file.exists()) {
@@ -428,6 +434,8 @@ public class EzEditorController extends EgovFileMngUtil {
 			filePath = filePath + commonUtil.separator + letterBoxNo + "/" + letterId + "/images";
 		}
 		logger.debug("filePath : " + filePath);
+		
+		filePath = commonUtil.detectPathTraversal(filePath);
 
 		File file = new File(realPath + filePath);
 		if (!file.exists()) {
@@ -452,7 +460,7 @@ public class EzEditorController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String fileData = request.getParameter("clip_contents");
-		String fileType = request.getParameter("file_extension");
+		String fileType = commonUtil.detectPathTraversal(request.getParameter("file_extension"));
 		String rootId = request.getParameter("xfe_root_id");
 		String resultCode = "0";
 
@@ -505,6 +513,8 @@ public class EzEditorController extends EgovFileMngUtil {
 			}
 			logger.debug("filePath : " + filePath);
 
+			filePath = commonUtil.detectPathTraversal(filePath);
+			
 			File file = new File(realPath + filePath);
 
 			if (!file.exists()) {
@@ -581,6 +591,7 @@ public class EzEditorController extends EgovFileMngUtil {
 
 				MultipartFile multiFile = request.getFile("imageFile");
 				String fileType = multiFile.getContentType().replace("\\", "/").split("/")[1];
+				fileType = commonUtil.detectPathTraversal(fileType);
 				long fileSize = multiFile.getSize();
 				long maxSize = 10485760;
 				logger.debug("fileType=" + fileType + ",fileSize=" + fileSize);
@@ -622,6 +633,8 @@ public class EzEditorController extends EgovFileMngUtil {
 						filePath = filePath + commonUtil.separator + today;
 					}
 
+					filePath = commonUtil.detectPathTraversal(filePath);
+					
 					File file = new File(realPath + filePath);
 					if (!file.exists()) {
 						file.mkdirs();
@@ -731,6 +744,7 @@ public class EzEditorController extends EgovFileMngUtil {
 
 				if (fileDatas[0].startsWith("data:image/")) {
 					String fileType = fileDatas[0].substring(fileDatas[0].indexOf("/") + 1, fileDatas[0].indexOf(";"));
+					fileType = commonUtil.detectPathTraversal(fileType);
 					fileData = fileDatas[1];
 					FileOutputStream fileOuputStream = null;
 
@@ -800,6 +814,8 @@ public class EzEditorController extends EgovFileMngUtil {
 				}
 				logger.debug("filePath : " + filePath);
 
+				filePath = commonUtil.detectPathTraversal(filePath);
+				
 				File file = new File(realPath + filePath);
 
 				if (!file.exists()) {

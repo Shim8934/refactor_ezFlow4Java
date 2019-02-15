@@ -789,6 +789,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		List<MultipartFile> multiFile = request.getFiles("file1");
 		logger.debug("userkey=" + userkey + ",encryptPw=" + encryptPw + ",retryPathId=" + retryPathId + ",folderPath" + folderPath);
 		
+		retryPathId = commonUtil.detectPathTraversal(retryPathId);
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int tenantId = userInfo.getTenantId();
 		String useEncryptZipForEmail = ezCommonService.getTenantConfig("UseEncryptZipForEmail", tenantId);
@@ -841,7 +843,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					logger.debug("encrypted zip file is deleted. path=" + sourceFile.getAbsolutePath());
 				}
 				
-				zipFilePath = zipFolder(destFolderPath, retryPathId, true);
+				zipFilePath = commonUtil.detectPathTraversal(zipFolder(destFolderPath, retryPathId, true));
 			}
 			
 			// UTF-8로 읽어 에러가 날 경우가 있어 미리 체크한다. 에러가 나면 EUC-KR로 읽도록 한다.
@@ -1561,6 +1563,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String tempZipName = request.getParameter("temp");
 		logger.debug("tempZipName=" + tempZipName);
 		
+		tempZipName = commonUtil.detectPathTraversal(tempZipName);
+		
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		String filePath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + tempZipName + ".zip";
@@ -1626,6 +1630,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		String encryptPw = request.getParameter("encryptPw");
 		logger.debug("folderName=" + folderName + ",tempZipName=" + tempZipName + ", encryptPw=" + encryptPw);
 		
+		tempZipName = commonUtil.detectPathTraversal(tempZipName);
+		encryptPw = commonUtil.detectPathTraversal(encryptPw);
+		
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		String filePath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + tempZipName + ".zip";
@@ -1675,11 +1682,13 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String temp = request.getParameter("temp");
+		temp = commonUtil.detectPathTraversal(temp);
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
 		pDirPath = realPath + pDirPath;
 		String pDirTempPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + temp;
 		String tempId = request.getParameter("tempId");
+		tempId = commonUtil.detectPathTraversal(tempId);
 		String pDirEncZipTempPath = pDirPath + commonUtil.separator + "tempFileUpload" + commonUtil.separator + tempId;
 		
 		File file = new File(pDirTempPath + ".zip");

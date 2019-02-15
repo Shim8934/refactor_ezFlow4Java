@@ -1397,6 +1397,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 
 		if (request.getParameter("STATUS") != null && !request.getParameter("STATUS").equals("")) {
 			tempFolderName = request.getParameter("STATUS");
+			tempFolderName = commonUtil.detectPathTraversal(tempFolderName);
 		} else {
 			return "NODATA";
 		}
@@ -1495,7 +1496,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
                 FileOutputStream fos = null;
                 
                 try {
-                	File f = new File(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt");
+                	File f = new File(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + sGUID[i] + "__.txt"));
                 	fos = new FileOutputStream(f);
                     fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
                 } catch(Exception e) {
@@ -1640,6 +1641,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String isBigYN = request.getParameter("isbigyn") == null ? "" : request.getParameter("isbigyn"); //isBigYN은 항상 N
 		logger.debug("tempFolderName=" + tempFolderName + ",isBigYN=" + isBigYN);
 		
+		tempFolderName = commonUtil.detectPathTraversal(tempFolderName);
+		
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		String bigMaxSizeStr = doc.getElementsByTagName("BIGMAXSIZE").item(0).getTextContent();
 		long bigMaxSize = Long.parseLong(bigMaxSizeStr);
@@ -1692,6 +1695,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			if (!filePathValue.startsWith("/")) {
 				filePathValue = "/" + filePathValue;
 			}
+			filePathValue = commonUtil.detectPathTraversal(filePathValue);
 			
 			filePath[i] = realPath + filePathValue;
 			
@@ -1708,6 +1712,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						
 						// 다운로드된 파일을 저장할 로컬 파일명을 임의로 생성한다.
 						String localFilePath = pTempFileUploadPath + commonUtil.separator + UUID.randomUUID().toString();
+						localFilePath = commonUtil.detectPathTraversal(localFilePath);
+						
 						File localFile = new File(localFilePath);
 						
 						// URL로부터 다운로드를 시도한다.
@@ -1998,6 +2004,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("bodyData=" + bodyData);
 		
 		String tempFolderName = request.getParameter("STATUS") == null ? "" : request.getParameter("STATUS");
+		tempFolderName = commonUtil.detectPathTraversal(tempFolderName);
 		String isBigYN = request.getParameter("isbigyn") == null ? "" : request.getParameter("isbigyn"); //isBigYN은 항상 N
 		logger.debug("tempFolderName=" + tempFolderName + ",isBigYN=" + isBigYN);
 		
@@ -2050,7 +2057,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 //				filePathValue = "/" + filePathValue;
 //			}
 			
-			filePath[i] = journalPath + filePathValue;
+			filePath[i] = commonUtil.detectPathTraversal(journalPath + filePathValue);
 			
 			if (dotNetIntegration.equals("YES")) {
 				try {
@@ -2362,6 +2369,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
             String tempFolderName = request.getParameter("dir");
             
             logger.debug("sFileTitle=" + sFileTitle + ",sFileData=" + sFileData + ",sExt=" + sExt + ",tempFolderName=" + tempFolderName);
+            
+            sExt = commonUtil.detectPathTraversal(sExt);
+            tempFolderName = commonUtil.detectPathTraversal(tempFolderName);
             
             String pBigFileUpload = sFileData;
             String newguid = UUID.randomUUID().toString();
@@ -2731,6 +2741,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					NodeList childNodes = subNode.getChildNodes();
 					String fileName = childNodes.item(0).getTextContent();
 					String path = childNodes.item(1).getTextContent();
+					path = commonUtil.detectPathTraversal(path);
 					String bigBool = childNodes.item(2).getTextContent();
 					
 					// 일반첨부파일의 경우
@@ -2816,7 +2827,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					NodeList childNodes = subNode.getChildNodes();
 					
 	                if (childNodes.item(2).getTextContent().equals("N")) {
-	                	File file = new File(pDirTempPath + commonUtil.separator + childNodes.item(1).getTextContent());
+	                	String childNodeContent = commonUtil.detectPathTraversal(childNodes.item(1).getTextContent());
+	                	File file = new File(pDirTempPath + commonUtil.separator + childNodeContent);
 	                    
 	                	if (file.exists()) {
 	                    	file.delete();
@@ -4433,6 +4445,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		
 		//첨부파일 정보파일(templist) 삭제
 		String delId = request.getParameter("delid");
+		delId = commonUtil.detectPathTraversal(delId);
         String realPath = commonUtil.getRealPath(request);
         String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", loginInfo.getTenantId()) + commonUtil.separator + "templist";
         pDirPath += commonUtil.separator + delId + ".txt";
@@ -4460,6 +4473,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
         LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String delId = request.getParameter("delid");
+		delId = commonUtil.detectPathTraversal(delId);
         String realPath = commonUtil.getRealPath(request);
         String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId()) + commonUtil.separator + "templist";
         pDirPath += commonUtil.separator + delId + ".txt";
@@ -4487,6 +4501,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("fileListSession started.");
 		
 		String fileData = request.getParameter("filedata") == null ? "" : request.getParameter("filedata");
+		fileData = commonUtil.detectPathTraversal(fileData);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pDirPath = commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
@@ -4686,6 +4701,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String fileData = request.getParameter("filedata") != null ? request.getParameter("filedata") : "";
 		String realFileNM = request.getParameter("realFileNM") != null ? request.getParameter("realFileNM") : "";
 		
+		fileData = commonUtil.detectPathTraversal(fileData);
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
@@ -4724,6 +4741,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 						String fileLocation = nodeList.item(i).getChildNodes().item(4).getTextContent();
 						String[] fileLocationArray = fileLocation.split("\\|!\\|");
 						String pRealFilePath = largeFilePath + commonUtil.separator + fileLocationArray[0] + commonUtil.separator + fileLocationArray[1];
+						pRealFilePath = commonUtil.detectPathTraversal(pRealFilePath);
+						
 						File bigAttachFile = new File(pRealFilePath);
 						
 						if (bigAttachFile.exists()) {
@@ -5591,7 +5610,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		logger.debug("sendDate : " + sendDate);
 		logger.debug("reservedId : " + reservedId);
 		
-		String messageId = reservedId;
+		String messageId = commonUtil.detectPathTraversal(reservedId);
 		
 		messageId = ezEmailService.setMailReserved(tenantId, messageId, subject, sendDate, userId, isReserve);
 		

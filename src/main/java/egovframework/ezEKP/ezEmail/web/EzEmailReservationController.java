@@ -139,6 +139,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		logger.debug("mailDeleteReservedMail started.");
 		
 		String messageId = request.getParameter("messageid") == null ? "" : request.getParameter("messageid");
+		messageId = commonUtil.detectPathTraversal(messageId);
 		
 		ezEmailService.deleteMailReserved(messageId);
 		
@@ -213,6 +214,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 		MimeMessage message = null;
 		if (request.getParameter("messageid") != null && !request.getParameter("messageid").trim().equals("")) { 
 			pCDOMessageID = request.getParameter("messageid").trim();
+			pCDOMessageID = commonUtil.detectPathTraversal(pCDOMessageID);
 			
 			pReservedSaveTime = ezEmailService.getMailReservedTime(pCDOMessageID);
 			
