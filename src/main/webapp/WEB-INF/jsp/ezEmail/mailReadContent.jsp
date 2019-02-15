@@ -55,6 +55,17 @@
 					        divsToHide[i].style.display = "none";
 					    }
 					}
+					
+					// 메일 본문에 absolute이거나 fixed인 position 스타일을 찾아서 지운다.
+					setTimeout(function() {
+		        		$("#normalScreen").find('*').each(function() {
+							var position = $(this).css('position');
+							
+							if (position == 'absolute' || position == 'fixed') {
+								$(this).css('position', '');
+							}
+						});
+		        	}, 10);
 				}
 				
 				function sizeBtnAppend() {
