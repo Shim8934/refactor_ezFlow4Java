@@ -1320,6 +1320,7 @@
 		        var pHref = tr.getAttribute("DATA3");
 		        var openLocation;
 		        var pOrgCompanyID = tr.getAttribute("ORGCOMPANYID");
+		        var pDocTitle = tr.firstChild.textContent;
 		        
 		        // 2018.07.06 (KLIB) - ezd 확장자 처리
 		        var pHrefExt = pHref.substr(pHref.length - 3, pHref.length).toLowerCase();
@@ -1337,7 +1338,8 @@
 		        } else {
 	                openLocation = "/ezApprovalG/ezSimsaG.do";
 		        }
-		        openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pHref) + "&orgDocID=" + encodeURI(pOrgDocID) + "&orgCompanyID=" + encodeURI(pOrgCompanyID);
+		        openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pHref) + "&orgDocID=" + encodeURI(pOrgDocID) + 
+		        		"&orgCompanyID=" + encodeURI(pOrgCompanyID) + "&docTitle=" + encodeURI(pDocTitle);
 		        var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left;
 		        window.open(openLocation, "enforce", param);
 		    }
