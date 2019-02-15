@@ -320,11 +320,11 @@ function GetUserContListSave(AllFG) {
             //and point the link element towards it
             var ua = window.navigator.userAgent;
             if(ua.indexOf('MSIE') > 0 || ua.indexOf('Trident') > 0) {
-            	navigator.msSaveBlob(blob,period+'.xls');
+            	navigator.msSaveBlob(blob,excelFileName+'.xls');
             } else {
 	            var url = window.URL.createObjectURL(blob);
 	            a.href = url;
-	            a.download = period+'.xls';
+	            a.download = excelFileName+'.xls';
 	            document.body.appendChild(a);
 	            //programatically click the link to trigger the download
 	            a.click();
