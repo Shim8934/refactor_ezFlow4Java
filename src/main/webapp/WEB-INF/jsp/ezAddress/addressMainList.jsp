@@ -24,12 +24,12 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery.modal.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezAddress.e1', 'msg')}"></script>
 	    <script type="text/javascript">
-	        var pFolderID = "${pFolderId}";
-	        var pFolderType = "${pFolderType}";
-	        var pOwerID = "${pOwerId}";
-	        var deptAdmin = "${deptAdmin}";
-	        var compAdmin = "${compAdmin}";
-	        var useAnyoneEdit = "${useAnyoneEdit}";
+	        var pFolderID = "<c:out value='${pFolderId}'/>";
+	        var pFolderType = "<c:out value='${pFolderType}'/>";
+	        var pOwerID = "<c:out value='${pOwerId}'/>";
+	        var deptAdmin = "<c:out value='${deptAdmin}'/>";
+	        var compAdmin = "<c:out value='${compAdmin}'/>";
+	        var useAnyoneEdit = "<c:out value='${useAnyoneEdit}'/>";
 	        var pCurrentPage = "1";
 	        var pOrderOption = "S_NAME:0";
 	        var pFilter = "";

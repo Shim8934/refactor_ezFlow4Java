@@ -18,7 +18,7 @@
 			var creatorid = "${addressInfo.creatorId}";
 			var modifierid = "${addressInfo.modifierId}";
 			var userid = "${userInfo.id}";
-			var foldertype = "${pFolderType}";
+			var foldertype = "<c:out value='${pFolderType}'/>";
 			var addressid = "${pAddressId}";
 			var deptAdmin = "${deptAdmin}";
 			var compAdmin = "${compAdmin}";

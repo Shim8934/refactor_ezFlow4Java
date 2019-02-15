@@ -22,7 +22,7 @@
         var CancelFunction;
         var isDivPopUp = false;
         var isFolderManager = false;
-        var shareId = "${shareId}";
+        var shareId = "<c:out value='${shareId}'/>";
         
         if ("${isFolderManager}" == "1") {
         	isFolderManager = true;

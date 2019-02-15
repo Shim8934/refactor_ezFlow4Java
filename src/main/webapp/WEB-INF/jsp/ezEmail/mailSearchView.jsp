@@ -38,9 +38,9 @@
 		    var m_strColorDefault = "#ffffff";
 		    var pNoneActiveX = "YES";
 		    var useEncryptZipForEmail = "${useEncryptZipForEmail}";
-		    var keywordFromList = "${keywordFromList}";
-			var searchCheck = "${searchCheck}";
-			var searchFromList = "${searchFromList}";
+		    var keywordFromList = "<c:out value='${keywordFromList}'/>";
+			var searchCheck = "<c:out value='${searchCheck}'/>";
+			var searchFromList = "<c:out value='${searchFromList}'/>";
 		    
 		    
 		    document.onselectstart = function () {

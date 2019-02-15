@@ -28,8 +28,8 @@
 	        var CardHeader2 = "<spring:message code='ezAddress.t189' />";
 	        var CardHeader3 = "<spring:message code='ezAddress.t264' />";
 	        var idlist = "";
-	        var orderby = "${orderBy}";
-	        var filter = "${filter}";
+	        var orderby = "<c:out value='${orderBy}'/>";
+	        var filter = "<c:out value='${filter}'/>";
 	        var Badmin = "${bAdmin}";
 	        var Cadmin = "${cAdmin}";
 	        var strLang_1 = "<spring:message code='ezAddress.t315' />";

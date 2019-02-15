@@ -42,11 +42,11 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <style>.txtClass{box-sizing : border-box; -moz-box-sizing:border-box;}</style>
 	    <script type="text/javascript">
-	        var addressid = "${addressId}";
-	        var folderid = "${folderId}";
-	        var ownerid = "${ownerId}";
-	        var foldertype = "${folderType}";
-	        var changekey = "${changeKey}";
+	        var addressid = "<c:out value='${addressId}'/>";
+	        var folderid = "<c:out value='${folderId}'/>";
+	        var ownerid = "<c:out value='${ownerId}'/>";
+	        var foldertype = "<c:out value='${folderType}'/>";
+	        var changekey = "<c:out value='${changeKey}'/>";
 	        var page = 1;
 	        var CurPage = "1";
 	        var pagecount;
