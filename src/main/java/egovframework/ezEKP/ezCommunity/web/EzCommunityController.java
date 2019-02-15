@@ -2019,7 +2019,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 설문조사 등록 화면1 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/pollAdd.do")
+	@RequestMapping(value = "/ezCommunity/pollAdd.do", method = RequestMethod.POST)
 	public String pollAdd(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String pState = "", pSubject = "", pStartDate = "", pEndDate = "", pSelType = "", pSelRes1 = "", pSelRes2 = "", expireDays = "-1";
@@ -2670,7 +2670,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 커뮤니티 환경설정화면 실행함수 IE9
 	 */
-	@RequestMapping(value = "/ezCommunity/adminLogoIE9Ok.do")
+	@RequestMapping(value = "/ezCommunity/adminLogoIE9Ok.do", method = RequestMethod.GET)
 	public String adminLogoOkIE9(@CookieValue("loginCookie")String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -3245,7 +3245,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 탈퇴희망자 승인 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminOuterOkNo.do")
+	@RequestMapping(value = "/ezCommunity/adminOuterOkNo.do",  method = RequestMethod.POST)
 	public String adminOuterOkNo(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -3314,7 +3314,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/** 
 	 * 회원 탈퇴처리화면/마스터이취임화면 실행함수
 	 */
-	@RequestMapping( value = "/ezCommunity/adminMemberListOk.do")
+	@RequestMapping( value = "/ezCommunity/adminMemberListOk.do", method = RequestMethod.POST)
 	String adminMemberListOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		CommunityCClubUserVO clubUser = null;
@@ -3651,7 +3651,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 회원가입 정보입력화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/join.do")
+	@RequestMapping(value = "/ezCommunity/join.do", method = RequestMethod.GET)
 	public String join(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("join started.");
 		
@@ -3678,7 +3678,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 회원가입 실행함수
 	 */
-	@RequestMapping(value = "/ezCommunity/joinOk.do")
+	@RequestMapping(value = "/ezCommunity/joinOk.do", method = RequestMethod.POST)
 	public String joinOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("joinOk started.");
 		

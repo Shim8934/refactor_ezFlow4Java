@@ -78,7 +78,7 @@
 		        	alert("<spring:message code = 'ezCommunity.t667' />");
 		        	return;
 		        } else {
-					window.location.href = "/ezCommunity/pollAdd.do?code=" + encodeURIComponent(code);
+		        	document.getElementById("pollAdd").submit();
 		        }
 			}
 
@@ -129,5 +129,9 @@
 					</tr>
 				</c:if>
 		</table>
+		
+		<form id="pollAdd" action="/ezCommunity/pollAdd.do" method="POST" >
+			<input  type="hidden" name="code" value="${code}">
+		</form>
 	</body>
 </html>
