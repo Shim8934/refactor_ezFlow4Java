@@ -1092,6 +1092,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_SCHEDULEID", scheduleId);
 		map.put("v_TENANTID", tenantID);
 				
+		ezScheduleDAO.deleteScheduleRepeChild(map);
 		ezScheduleDAO.deleteScheduleAttach(map);
 		ezScheduleDAO.deleteAttendant(map);
 		ezScheduleDAO.deleteSchedule(map);
@@ -1201,6 +1202,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		if (status.equals("1")) {
 			ezScheduleDAO.insertAttendantSchedule(map);
+			ezScheduleDAO.insertAttendantScheduleDel(map);
 		}
 	}
 
@@ -1227,6 +1229,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_COMPANYID", companyID);
 		
 		ezScheduleDAO.insertScheduleRepeDel(map);
+		ezScheduleDAO.insertScheduleRepeDelChild(map);
 	}
 
 	@Override

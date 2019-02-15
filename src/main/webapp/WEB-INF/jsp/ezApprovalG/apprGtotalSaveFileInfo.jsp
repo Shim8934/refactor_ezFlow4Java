@@ -180,6 +180,11 @@
 	            var count = GetChildNodes(document.getElementById('table_filelist')).length;
 	            if (!CrossYN())
 	                count = count - 1;
+	            
+	            strPathInfo = "";
+                strTypeInfo = "";
+                strFileName = "";
+                
 	            if (obj.checked) {
 	                for (var i = 0; i < count ; i++) {
 	
@@ -206,10 +211,6 @@
 	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[0].style.backgroundColor = "#FFFFFF";
 	                        GetChildNodes(GetChildNodes(document.getElementById('table_filelist'))[i + 1])[1].style.backgroundColor = "#FFFFFF";
 	                    }
-	
-	                    strPathInfo = "";
-	                    strTypeInfo = "";
-	                    strFileName = "";
 	                }
 	            }
 	        }

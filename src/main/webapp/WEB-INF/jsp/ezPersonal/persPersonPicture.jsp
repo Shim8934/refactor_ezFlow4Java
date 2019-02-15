@@ -75,9 +75,28 @@
 			}
 
 			/* 2018-12-04 홍승비 - 사원이미지 추가 직후 스크립트 오류 수정 */
-			function btn_AttachAdd_onclick() {
-				if (document.form.file1.value != "") {
+// 			function btn_AttachAdd_onclick() {
+// 				if (document.form.file1.value != "") {
 					
+// 					var file1val = document.getElementById("file1").value;
+// 					var exIndex = file1val.lastIndexOf('.');
+// 				    var extension = file1val.substring(exIndex+1, file1val.length);
+// 				    var check = false;
+// 				    check = compareExtension(check, extension);
+	
+// 				    if (!check) {
+// 		    		    alert("<spring:message code='ezPersonal.t206'/>" + " <spring:message code='ezPersonal.t200'/>");
+// 		        		document.getElementById("file1").value = "";
+// 		    		} else {
+// 		    			var frm = document.getElementById('form');
+// 			    		frm.action = "/ezPersonal/photoUploadByUser.do";
+// 			    		frm.submit();
+// 			    		document.form.file1.value = "";
+// 		    		}
+// 				}
+// 			}
+			function btn_AttachAdd_onclick() { //사진 선택시 임시 저장
+				if (document.form.file1.value != "") {
 					var file1val = document.getElementById("file1").value;
 					var exIndex = file1val.lastIndexOf('.');
 				    var extension = file1val.substring(exIndex+1, file1val.length);
@@ -89,7 +108,7 @@
 		        		document.getElementById("file1").value = "";
 		    		} else {
 		    			var frm = document.getElementById('form');
-			    		frm.action = "/ezPersonal/photoUploadByUser.do";
+			    		frm.action = "/ezPersonal/tempPhotoUploadByUser.do";
 			    		frm.submit();
 			    		document.form.file1.value = "";
 		    		}
@@ -113,6 +132,29 @@
 	    		else
 	        		window.returnValue = "OK";
 	    		window.close();
+			}
+			
+			function btnOk_onclick() { //저장
+				if (document.getElementById("imagefile").value == "") {
+					alert("<spring:message code='ezPersonal.t200'/>");
+					return;
+				}
+				
+				if (confirm("<spring:message code='ezPersonal.psb02'/>")) {
+					var fileName = document.getElementById("imagefile").value;
+					fileName = fileName.substr(fileName.lastIndexOf("/") + 1);
+					
+			        $.ajax({
+			    		type : "POST",
+			    		url : "/ezPersonal/photoUploadByUser.do",
+			    		data : {
+				    			fileName: fileName
+			    		},
+			    		success: function(){
+			    			cancel_onclick();
+			    		}        			
+			    	});
+				}
 			}
 		</script>
 	</head>
@@ -161,6 +203,9 @@
 				</td>
 			</tr>
     	</table>
+    	<div class="btnpositionNew">
+			<a class="imgbtn"><span onclick="return btnOk_onclick()"><spring:message code='ezPersonal.t34'/></span></a>
+		</div>
     	<iframe name="ifrm" src="about:blank" style="display: none"></iframe>
     	<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezPersonal/photoUploadByUser.do" target="ifrm" style="width: 1px; height: 1px;display:none">
         	<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" multiple="false" accept="image/*"/>
