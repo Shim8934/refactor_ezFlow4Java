@@ -1240,8 +1240,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		String fileDate = request.getParameter("filedate") == null ? "" : request.getParameter("filedate");
 		fileDate = commonUtil.detectPathTraversal(fileDate);		
 		String tenantIdStr = request.getParameter("tid") == null ? "0" : request.getParameter("tid");
-		tenantIdStr = commonUtil.detectPathTraversal(tenantIdStr);
-		
+			
 		int tenantId = Integer.parseInt(tenantIdStr);
 		String serverLang = ezCommonService.getTenantConfig("PrimaryLang", tenantId);
 		Locale locale = new Locale(commonUtil.getTwoLetterLangFromLangNum(serverLang));
@@ -2560,7 +2559,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								if (part != null) {
 									String orgFileName = attachedFileList.get(i).get("filename");
 									String fileName = newGuid + "_" + orgFileName;
-									fileName = commonUtil.detectPathTraversal(fileName);
 
 									File file = new File(realPath + path);
 									if (!file.exists()) {
@@ -2765,8 +2763,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								if (part != null) {
 									String orgFileName = attachedFileList.get(i).get("filename");
 									String fileName = newGuid + "_" + orgFileName;
-									fileName = commonUtil.detectPathTraversal(fileName);
-									
+
 									File file = new File(realPath + path);
 									if (!file.exists()) {
 										file.mkdirs();
