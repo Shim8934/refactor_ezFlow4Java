@@ -45,6 +45,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -178,6 +180,17 @@ public class CommonUtil {
     	
     	return filePath;
     }
+    
+	/** 
+	 * strip <object>,<applet>,<script> tags
+	 */	
+    public String stripScriptTags(String src) {
+		Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher m = p.matcher(src);
+		src = m.replaceAll("");
+				
+		return src;		
+	}
     
 	public LoginVO userInfo(String loginCookie){
 		try{

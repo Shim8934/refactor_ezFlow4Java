@@ -13,6 +13,12 @@
 				width:158px;
 				overflow:hidden;
 				text-overflow:ellipsis;
+				display:inline-block;
+			}
+			.arrowSpan {
+				width:42px;
+				height:33px;
+				display:inline-block;
 			}
 			#FromTreeView {
 				height: 100%;
@@ -975,6 +981,10 @@
 	            tempID = ID;
 	        }
 		    
+		    /* 2019-02-14 홍승비 - 좌측 게시판리스트의 펼치기 화살표 클릭 시 하위게시판 불러오도록 수정*/
+		    /* function spanClick(divID) {
+		    	document.getElementById(divID).click();
+		    } */
 	    </script>
 	</head>
 	<body class="newLeft">
@@ -1043,7 +1053,9 @@
 				</div>	
 			</div>	        
 	    </div>
-	    <%-- <div id="left" style="overflow: auto">
+	    <%-- 
+	<body class="leftbody" style="overflow: auto; height:100%">
+	    <div id="left" style="overflow-x: hidden; overflow-y: auto;">
 	        <div class="left_board" title="<spring:message code='ezBoard.t116'/>"><span><spring:message code='ezBoard.t116'/></span></div>
 	        <c:if test="${MyBoardTopFlag != 'NO'}">
 	        	<div class="fList" onclick="favoriteList()">
@@ -1078,6 +1090,7 @@
        			        document.write("<h2 class='off'>");
            				document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
            					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); 
+           				document.write("<span class='arrowSpan' onclick='spanClick(\"TreeCtr" + i + "\")'></span>");
            				document.write("</h2>\n");
            				document.write("<ul class='off'>\n");
            				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 100%; padding-bottom: 20px; padding-left: 10px; overflow-x: hidden; overflow-y: auto;'></div>\n");
