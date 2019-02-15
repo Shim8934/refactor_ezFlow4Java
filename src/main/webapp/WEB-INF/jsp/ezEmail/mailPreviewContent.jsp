@@ -37,8 +37,8 @@
 				}
 		    }
 		    
-	        //보기설정 레이어팝업 바깥 클릭시 close되게 하기위한 코드 2018.03.05 강민수92
 	        $(document).ready(function() {
+	        	//보기설정 레이어팝업 바깥 클릭시 close되게 하기위한 코드 2018.03.05 강민수92
 	        	var maillistoption = parent.document.getElementById('maillistoptiondiv');
 	        	
 	        	$(document).mouseup(function(e) {
@@ -55,6 +55,17 @@
 	        	})
 	        	
 			    sentDateView();
+	        	
+	        	// 메일 본문에 absolute이거나 fixed인 position 스타일을 찾아서 지운다.
+				setTimeout(function() {
+	        		$("#normalScreen").find('*').each(function() {
+						var position = $(this).css('position');
+						
+						if (position == 'absolute' || position == 'fixed') {
+							$(this).css('position', '');
+						}
+					});
+	        	}, 10);
 	        });
 	        
 	        function btnPrint_onClick() {

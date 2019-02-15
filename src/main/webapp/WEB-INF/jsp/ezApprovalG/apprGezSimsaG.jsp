@@ -16,6 +16,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/escapenew.js')}"></SCRIPT>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 		    var pDocID = "${docID}";
 		    var pDocHref = "${docHref}";
@@ -85,6 +86,7 @@
 		    var PrtBodyContent;
 		    var orgCompanyID = "";
 		    var ext = "mht";
+		    var docTitle = "${docTitle}";
 		    
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "");
@@ -497,7 +499,9 @@
 		    		
 		            var ResultXML = result;
 		            if (getNodeText(GetChildNodes(ResultXML)[0]) == "TRUE") {
-		                var pAlertContent = "<spring:message code='ezApprovalG.t256'/>";
+		                //여기다 발송의뢰반송 메일알람 추가
+		                SendSimsaBansong(docTitle);
+		            	var pAlertContent = "<spring:message code='ezApprovalG.t256'/>";
 		                OpenAlertUI(pAlertContent);
 		                setBtnDisable();
 		            } else {
