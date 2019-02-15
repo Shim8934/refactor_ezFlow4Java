@@ -849,6 +849,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    String docID = request.getParameter("docID");
 	    String docHref = request.getParameter("docHref");
 	    String orgDocID = request.getParameter("orgDocID");
+	    String docTitle = request.getParameter("docTitle");
 	    String hwpToolbar = ezCommonService.getTenantConfig("HWPToolbar", userInfo.getTenantId());
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 	    String Use_ImgTagTOAttah_body = "N";
@@ -870,6 +871,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	    model.addAttribute("approvalPWD", approvalPWD);
 	    model.addAttribute("Use_ImgTagTOAttah_body", Use_ImgTagTOAttah_body);
 	    model.addAttribute("orgCompanyID", orgCompanyID);
+	    model.addAttribute("docTitle", docTitle);
 		
 		LOGGER.debug("ezSimsaG_HWP ended");
 		

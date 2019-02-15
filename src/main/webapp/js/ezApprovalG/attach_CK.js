@@ -173,10 +173,12 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	pAttachxml = pAttachxml + "<DATA6>" + MakeXMLString(pDeptID) + "</DATA6>";
     	pAttachxml = pAttachxml + "<DATA7>" + MakeXMLString(pDeptName) + "</DATA7>";
     	pAttachxml = pAttachxml + "<DATA8>" + temppFileSize + "</DATA8>";
-    	pAttachxml = pAttachxml + "<DATA9>" + MakeXMLString(retValue[1]) + "</DATA9>";
+    	//pAttachxml = pAttachxml + "<DATA9>" + MakeXMLString(retValue[1]) + "</DATA9>";
+    	pAttachxml = pAttachxml + "<DATA9>1</DATA9>";
     	pAttachxml = pAttachxml + "<DATA10>" + MakeXMLString(temppFileName) + "</DATA10>";
     	pAttachxml = pAttachxml + "<DATA11>" + MakeXMLString(BodyAttach) + "</DATA11>";
-    	pAttachxml = pAttachxml + "<DATA12>" + MakeXMLString(retValue[2]) + "</DATA12>";
+    	//pAttachxml = pAttachxml + "<DATA12>" + MakeXMLString(retValue[2]) + "</DATA12>";
+    	pAttachxml = pAttachxml + "<DATA12>" + MakeXMLString(retValue) + "</DATA12>";
     	pAttachxml = pAttachxml + "<DATA13>" + MakeXMLString(arr_userinfo[11]) + "</DATA13>";
     	pAttachxml = pAttachxml + "<DATA14>" + MakeXMLString(arr_userinfo[12]) + "</DATA14>";
     	pAttachxml = pAttachxml + "<DATA15>" + MakeXMLString(arr_userinfo[13]) + "</DATA15>";
@@ -184,7 +186,8 @@ function AddAttachFileInfoXmlParsing_Complete(retValue) {
     	pAttachxml = pAttachxml + "<DATA17>" + MakeXMLString(arr_userinfo[15]) + "</DATA17>";
     	pAttachxml = pAttachxml + "<DATA18>" + MakeXMLString(arr_userinfo[16]) + "</DATA18>";
     	pAttachxml = pAttachxml + "</CELL><CELL>";
-    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[2]) + "</VALUE>";
+    	//pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue[2]) + "</VALUE>";
+    	pAttachxml = pAttachxml + "<VALUE>" + MakeXMLString(retValue) + "</VALUE>";
     	pAttachxml = pAttachxml + "</CELL><CELL>";
     	
     	var strSize;
@@ -274,15 +277,16 @@ function AddAttachFileInfoXmlParsing(pFileName, pFileSize, pFileLocation) {
     
     if (CrossYN()) {
 	    if (approvalFlag == "G") {
-	    	if (BodyAttach == "Y") {
+	    	/*if (BodyAttach == "Y") {
 	    		var retValue = getAttachFilePageNum("1", "(" + strLang219 + pFileName, AddAttachFileInfoXmlParsing_Complete);
 	    	} else {
 	    		var retValue = getAttachFilePageNum("1", pFileName, AddAttachFileInfoXmlParsing_Complete);
-	    	}
+	    	}*/
 	    	
 	    	temppFileLocation = pFileLocation;
 	        temppFileSize = pFileSize;
 	        temppFileName = pFileName;
+	        AddAttachFileInfoXmlParsing_Complete(pFileName);
 	        return;
 	    } else {
 	    	temppFileLocation = pFileLocation;

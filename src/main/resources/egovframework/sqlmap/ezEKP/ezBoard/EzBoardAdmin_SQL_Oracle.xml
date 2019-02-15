@@ -797,7 +797,7 @@
           		WHERE
           			A.tenant_id = #v_TENANTID#
           		AND  
-          			B.BoardID LIKE #v_PBOARDID#
+          			B.BoardID = #v_PBOARDID#
 			]]>
 		</isEqual>
 		<isNotEqual property="v_PTYPE" compareValue="1">
@@ -810,7 +810,7 @@
         		WHERE  
         			TENANT_ID = #v_TENANTID#
         		AND
-        			BOARDTREEPATH LIKE #v_PBOARDID#
+        			BOARDTREEPATH LIKE '%'||#v_PBOARDID#||'%'
 			]]>
 		</isNotEqual>
 	</select>
@@ -1032,11 +1032,11 @@
                 ACCESS_ ,
                 #v_PPARENTBOARDID# ,
                 BOARDADMIN_FG ,
-                LISTVIEW_FG ,
-                READ_FG ,
-                WRITE_FG ,
-                REPLY_FG ,
-                DELETE_FG ,
+                DECODE(BOARDADMIN_FG, 'true', 'true', LISTVIEW_FG) ,
+                DECODE(BOARDADMIN_FG, 'true', 'true', READ_FG) ,
+                DECODE(BOARDADMIN_FG, 'true', 'true', WRITE_FG) ,
+                DECODE(BOARDADMIN_FG, 'true', 'true', REPLY_FG) ,
+                DECODE(BOARDADMIN_FG, 'true', 'true', DELETE_FG) ,
                 INHERIT_FG ,
                 POSTNOTICE ,
                 BOARDGROUPACL,
@@ -1765,9 +1765,9 @@
 		</isNotEqual>
      	<![CDATA[
 	        AND
-	        	ACCESSID = #v_PACCESSID#
+	        	ACCESSID = #v_pAccessID#
 	        AND 
-	        	BOARDID = #v_PBOARDID#
+	        	BOARDID = #v_pBoardID#
         ]]>
 	</update>
 	

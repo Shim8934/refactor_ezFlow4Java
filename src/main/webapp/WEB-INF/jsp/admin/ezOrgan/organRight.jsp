@@ -1442,14 +1442,25 @@
 	    		var mobileOwner = $(trIdx).children().eq(0).text();
 	    		var data = listview.GetSelectedRows()[0].getAttribute("DATA2");
 		    	document.getElementById("userSend").value = data;
-		    	
-		    	var agent = navigator.userAgent.toLowerCase();
-		    	
-		    	if (agent.indexOf("chrome") != -1) {
-		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 300));
-		    	} else {
-			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 300));
-		    	}
+
+				var wWeight = "660";
+				var wHeight = "370";
+
+				var heigth = window.screen.availHeight;
+				var width = window.screen.availWidth;
+
+				var left = (width - wWeight) / 2;
+				var top = (heigth - wHeight) / 2;
+
+				if (CrossYN()) {
+					var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(wWeight, wHeight));
+					try { OpenWin.focus(); } catch (e) { }
+				} else {
+					var ret = window.showModalDialog("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "",
+								"dialogWidth:405px;dialogHeight:280px;dialogleft:" + left + "px;dialogtop:"
+								+ top + "px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no");
+					window.location.reload(true);
+				}
 		    }
 		   
 		    // POP3/IMAP 설정 함수
