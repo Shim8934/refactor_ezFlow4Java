@@ -806,9 +806,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		Iterator<String> itr = request.getFileNames();
 		
 		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
-		String tempPath = pDirPath  + "tempUploadFile";
-		String uploadPath = pDirPath  + pBoardID + commonUtil.separator + "uploadFile";
-		String docPath = pDirPath  + pBoardID + commonUtil.separator + "doc";
+		String tempPath = pDirPath + "tempUploadFile";
+		String uploadPath = pDirPath + pBoardID + commonUtil.separator + "uploadFile";
+		String docPath = pDirPath + pBoardID + commonUtil.separator + "doc";
+		
+		pDirPath = commonUtil.detectPathTraversal(pDirPath);
+		tempPath = commonUtil.detectPathTraversal(tempPath);
+		uploadPath = commonUtil.detectPathTraversal(uploadPath);
+		docPath = commonUtil.detectPathTraversal(docPath);
 		
 		File tempDir = new File(tempPath);
 		
@@ -816,7 +821,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			tempDir.mkdirs();
 		}
 		
-		File boardDir = new File(pDirPath + pBoardID);
+		File boardDir = new File(commonUtil.detectPathTraversal(pDirPath + pBoardID));
 		File uploadDir = new File(uploadPath);
 		File docDir = new File(docPath);
 		
@@ -854,12 +859,14 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 						resultUpload = "denied";
 					} else {
 						pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator + pUploadSN + "_" + pFileName;
+						pAttachPath = commonUtil.detectPathTraversal(pAttachPath);
 						File thumbnailFile = new File(pAttachPath);
 						file.transferTo(thumbnailFile);
 						resultUpload = "true";
 					}
 				} else if (pMode.equals("PHOTO")) {
 					pAttachPath = pDirPath + "tempUploadFile" + commonUtil.separator + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
+					pAttachPath = commonUtil.detectPathTraversal(pAttachPath);
 					File thumbnailFile = new File(pAttachPath);
 					file.transferTo(thumbnailFile);
 					
@@ -871,7 +878,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 					saveImage = outputImage.createGraphics();
 					saveImage.drawImage(inputImage, 0, 0, 100, 100, null);
 					
-					File tempTumbbail = new File(pDirPath + "tempUploadFile" + commonUtil.separator + "s_" + pUploadSN + pFileName.substring(pFileName.lastIndexOf(".")));
+					String tempThumbFilaPath = pDirPath + "tempUploadFile" + commonUtil.separator + "s_" + pUploadSN + pFileName.substring(pFileName.lastIndexOf("."));
+					tempThumbFilaPath = commonUtil.detectPathTraversal(tempThumbFilaPath);
+					
+					File tempTumbbail = new File(tempThumbFilaPath);
 					ImageIO.write(outputImage, "png", tempTumbbail);
 					
 					resultUpload = "true";
@@ -1764,6 +1774,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			iStart = attachFile.lastIndexOf(".");
 			extName = attachFile.substring(iStart);
 			String logoFileName = code + "_logo_Temp." + extName;
+			logoFileName = commonUtil.detectPathTraversal(logoFileName);
 			
 			File file = new File(logoPath + logoFileName);
 			logoFile.transferTo(file);
@@ -1776,7 +1787,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			saveImage = outputImage.createGraphics();
 			saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
 			
-			File newLogo = new File(logoPath + code + "_logo.png");
+			String newLogoFilePath = logoPath + code + "_logo.png";
+			newLogoFilePath = commonUtil.detectPathTraversal(newLogoFilePath);
+			
+			File newLogo = new File(newLogoFilePath);
 			ImageIO.write(outputImage, "png", newLogo);
 			logoFileNameLogo = code + "_logo.png";
 			
@@ -1788,8 +1802,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			iStart = attachFile.lastIndexOf(".");
 			extName = attachFile.substring(iStart);
 			String thumbFileName = code + "_thumb_Temp." + extName;
+			String thumbFilePath = logoPath + thumbFileName;
+			thumbFilePath = commonUtil.detectPathTraversal(thumbFilePath);
 			
-			File file = new File(logoPath + thumbFileName);
+			File file = new File(thumbFilePath);
 			thumbFile.transferTo(file);
 			
 			BufferedImage inputImage = ImageIO.read(file);
@@ -1800,7 +1816,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			saveImage = outputImage.createGraphics();
 			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
 			
-			File newThumbnail = new File(logoPath + code + "_thumbnail.png");
+			String newThumbFilePath = logoPath + code + "_thumbnail.png";
+			newThumbFilePath = commonUtil.detectPathTraversal(newThumbFilePath);
+			
+			File newThumbnail = new File(newThumbFilePath);
 			ImageIO.write(outputImage, "png", newThumbnail);
 			logoFileNameThumbnail = code + "_thumbnail.png";
 			
@@ -3639,6 +3658,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         			dir.mkdirs();
         		}
         		
+        		strPath = commonUtil.detectPathTraversal(strPath);
 	    		pw = new PrintWriter(new File(strPath));
 	    		pw.print(MHTcontent);
 	    		pw.flush();
