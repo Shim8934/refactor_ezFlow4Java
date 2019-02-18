@@ -88,6 +88,14 @@
 		                    document.getElementById("txtOldPassword").focus();
 		                    return;
 		                }
+		                
+		                if (document.getElementById("txtOldPassword").value == document.getElementById("txtNewPassword").value) {
+		                	alert("<spring:message code='ezPersonal.t194'/>");
+		                	document.getElementById("txtNewPassword").value = "";
+		                	document.getElementById("txtNewPassword").focus();
+		                	return;
+		                }
+		                
 		                if (CheckPassword(rsa.encrypt(document.getElementById("txtOldPassword").value), AprPass) == "OK") {
 		                    CheckPwd = true;
 		                } else {
