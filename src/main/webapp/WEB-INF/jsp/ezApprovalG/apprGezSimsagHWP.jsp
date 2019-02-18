@@ -636,7 +636,7 @@
 
                 if (HwpCtrl.CheckFieldExist("sealsign")) {
                     HwpCtrl.SetFieldText("sealsign", "");
-                    HwpCtrl.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(SealHref), 12);
+                    HwpCtrl.SetFieldBackImage("sealsign", document.location.protocol + "//" + document.location.hostname + ":" + location.port + "/ezCommon/downloadAttach.do?filePath=" + escape(SealHref), 6);
                     NostampFlag = true;
                     SetDocumentElement(HwpCtrl, "surl", SealHref);
 
