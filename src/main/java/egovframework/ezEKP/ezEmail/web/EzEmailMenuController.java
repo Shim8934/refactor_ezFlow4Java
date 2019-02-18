@@ -843,7 +843,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					logger.debug("encrypted zip file is deleted. path=" + sourceFile.getAbsolutePath());
 				}
 				
-				zipFilePath = commonUtil.detectPathTraversal(zipFolder(destFolderPath, retryPathId, true));
+				zipFilePath = zipFolder(destFolderPath, retryPathId, true);
 			}
 			
 			// UTF-8로 읽어 에러가 날 경우가 있어 미리 체크한다. 에러가 나면 EUC-KR로 읽도록 한다.
@@ -1631,7 +1631,6 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		logger.debug("folderName=" + folderName + ",tempZipName=" + tempZipName + ", encryptPw=" + encryptPw);
 		
 		tempZipName = commonUtil.detectPathTraversal(tempZipName);
-		encryptPw = commonUtil.detectPathTraversal(encryptPw);
 		
 		String realPath = commonUtil.getRealPath(request);
 		String pDirPath = realPath + commonUtil.getUploadPath("upload_mail.ROOT", userInfo.getTenantId());
