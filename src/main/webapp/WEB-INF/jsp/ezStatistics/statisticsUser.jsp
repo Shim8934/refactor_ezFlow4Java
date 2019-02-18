@@ -225,7 +225,14 @@
 	    		});
 	        }
 	
+	        /* 2019-02-18 홍승비 - 잘못된 기간으로 검색되지 않도록 수정 */
 	        function getapprovalstatistics() {
+	        	
+				if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Sdatepicker2").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
+					alert("<spring:message code='ezBoard.t191' />");
+					return;
+				}
+				
 	            var pUserList = new ListView();
 	            pUserList.LoadFromID("lvUserList");
 	            
@@ -414,6 +421,12 @@
 	        }
 	
 	        function search() {
+	        	
+				if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Sdatepicker2").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
+					alert("<spring:message code='ezBoard.t191' />");
+					return;
+				}
+				
 	            if (keyword.value.trim() == "") {
 	                alert("<spring:message code='ezStatistics.t1010'/>");
 	                 deptkeyword.focus();
