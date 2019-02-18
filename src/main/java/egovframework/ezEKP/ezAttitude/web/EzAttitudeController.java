@@ -1216,7 +1216,7 @@ public class EzAttitudeController {
 		return returnValue;
 	}
 	
-	@RequestMapping(value = "/ezAttitude/getAttitudeReg.do")
+	@RequestMapping(value = "/ezAttitude/getAttitudeReg.do", method = RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getAttitudeReg(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/attitudeUserMain started");
