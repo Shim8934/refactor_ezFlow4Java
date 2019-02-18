@@ -8222,7 +8222,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userJobTitle2 = doc.getElementsByTagName("PUSERJOBTITLE2").item(0).getTextContent();
 		String userDeptName2 = doc.getElementsByTagName("PUSERDEPTNAME2").item(0).getTextContent();
 		
-		if (doc.getElementsByTagName("ORGCOMPANYID") != null && !doc.getElementsByTagName("ORGCOMPANYID").equals(userInfo.getCompanyID()) ) {
+		if (doc.getElementsByTagName("ORGCOMPANYID").getLength() > 0 && !doc.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent().equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(doc.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
 		}
 
