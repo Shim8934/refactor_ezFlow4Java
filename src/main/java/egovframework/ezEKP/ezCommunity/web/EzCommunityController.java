@@ -906,11 +906,11 @@ public class EzCommunityController extends EgovFileMngUtil{
         		new File(dirPath + "tempUploadFile").mkdirs();
         	}
         	
-        	if (!new File(dirPath + boardID).exists()) {
-        		new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
-        		new File(dirPath + boardID + commonUtil.separator + "doc").mkdirs();
-        	} else if (!new File(dirPath + boardID + commonUtil.separator + "uploadFile").exists()) {
-        		new File(dirPath + boardID + commonUtil.separator + "uploadFile").mkdirs();
+        	if (!new File(commonUtil.detectPathTraversal(dirPath + boardID)).exists()) {
+        		new File(commonUtil.detectPathTraversal(dirPath + boardID + commonUtil.separator + "uploadFile")).mkdirs();
+        		new File(commonUtil.detectPathTraversal(dirPath + boardID + commonUtil.separator + "doc")).mkdirs();
+        	} else if (!new File(commonUtil.detectPathTraversal(dirPath + boardID + commonUtil.separator + "uploadFile")).exists()) {
+        		new File(commonUtil.detectPathTraversal(dirPath + boardID + commonUtil.separator + "uploadFile")).mkdirs();
         	}
         	
         	String attachPath = dirPath + "tempUploadFile" + commonUtil.separator + uploadSN + "_" + fileName;
@@ -4361,6 +4361,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			item.setExtensionAttribute5(item.getExtensionAttribute5().replace("/uploadFile/s_", "/uploadFile/"));
 			String pFilePath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator + item.getExtensionAttribute5();
 			gImageUrl = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + boardID + "&imgUrl=" + item.getExtensionAttribute5() + "&fileName=" + URLEncoder.encode((item.getExtensionAttribute4()).replace("+", "%20").replace("&amp;", "&"),"UTF-8");
+			pFilePath = commonUtil.detectPathTraversal(pFilePath);
 			
 			File file = new File(pFilePath);
 			
