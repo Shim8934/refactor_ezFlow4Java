@@ -5859,7 +5859,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
     }
 	
 	private String convertDownloadInlineImageURLtoCid(String htmlStr) {
-		Pattern pat = Pattern.compile("src=\"/ezEmail/downloadInline\\.do.*?contentId=%3C(.*?)%3E\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Pattern pat = Pattern.compile("src=\"/ezEmail/downloadInline\\.do.*?contentId=%3C(.*?)%3E.*?\"", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher mat = pat.matcher(htmlStr);
 				
 		StringBuffer result = new StringBuffer();

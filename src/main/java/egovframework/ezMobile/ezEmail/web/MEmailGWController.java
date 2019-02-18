@@ -4919,7 +4919,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	
 	private String convertDownloadInlineImageURLtoCid(String htmlStr, String downloadInlineUri) {
 		downloadInlineUri = downloadInlineUri.replace(".", "\\.");
-		String regex = "src=\"" + downloadInlineUri + ".*?contentId=%3C(.*?)%3E\"";				
+		String regex = "src=\"" + downloadInlineUri + ".*?contentId=%3C(.*?)%3E.*?\"";				
 		Pattern pat = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher mat = pat.matcher(htmlStr);
 				
