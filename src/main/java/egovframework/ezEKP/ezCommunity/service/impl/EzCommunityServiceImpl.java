@@ -199,10 +199,10 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (mode.equals("logo")) {
 			String onlyFileName = fileName.substring(0, fileName.lastIndexOf(".") + 1);
             String ext = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.length());
-            String logoTemp = onlyFileName + "_logoTemp" + "." + ext;
-            String logoFileName = code + "_logo" + ".png";
-            String logoThumbnailFileName = code + "_thumbnail" + ".png";
-
+            String logoTemp = commonUtil.detectPathTraversal(onlyFileName + "_logoTemp" + "." + ext);
+            String logoFileName = commonUtil.detectPathTraversal(code + "_logo" + ".png");
+            String logoThumbnailFileName = commonUtil.detectPathTraversal(code + "_thumbnail" + ".png");
+            logoPath = commonUtil.detectPathTraversal(logoPath);
             
             if (!new File(logoPath).exists()) {
 				new File(logoPath).mkdirs();
@@ -262,6 +262,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", userInfo.getTenantId()) + commonUtil.separator;
 		String logo = "default_logo_type5.jpg";
 		String thumb = "default_logo_empty.png";
+		logoPath = commonUtil.detectPathTraversal(logoPath);
 		
 		logger.debug("logoPath 		::		 " + logoPath);
 			
@@ -364,7 +365,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				new File(logoPath).mkdirs();
 			}
 			
-			File file = new File(logoPath + code + "_logo." + extName);
+			File file = new File(commonUtil.detectPathTraversal(logoPath + code + "_logo." + extName));
 			cClubLogo.transferTo(file);
 			
 			BufferedImage inputImage = ImageIO.read(file);
@@ -374,7 +375,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			saveImage = outputImage.createGraphics();
 			saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
 			
-			File newLogo = new File(logoPath + code + "_logo.png");
+			File newLogo = new File(commonUtil.detectPathTraversal(logoPath + code + "_logo.png"));
 			ImageIO.write(outputImage, "png", newLogo);			
 			file.delete();
 
@@ -394,7 +395,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				new File(logoPath).mkdirs();
 			}
 			
-			File file = new File(logoPath + code + "_thumbnail." + extName);
+			File file = new File(commonUtil.detectPathTraversal(logoPath + code + "_thumbnail." + extName));
 			cClubThumb.transferTo(file);
 			
 			BufferedImage inputImage = ImageIO.read(file);
@@ -404,7 +405,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			saveImage = outputImage.createGraphics();
 			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
 			
-			File newThumbnail = new File(logoPath + code + "_thumbnail.png");
+			File newThumbnail = new File(commonUtil.detectPathTraversal(logoPath + code + "_thumbnail.png"));
 			ImageIO.write(outputImage, "png", newThumbnail);			
 			file.delete();
 			
@@ -1767,6 +1768,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		String logoFileNameThumbnail = "";
 		
 		String logoPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.LOGO", tenantID) + commonUtil.separator;
+		logoPath = commonUtil.detectPathTraversal(logoPath);
 		
 		// 상단 이미지 저장
 		if (!logoFile.isEmpty()) {
@@ -1846,7 +1848,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			String extName = fileName.substring(iStart);
 			String logoFileName = code + "_logo_Temp" + "." + extName;
 			
-			File file = new File(logoPath + logoFileName);
+			File file = new File(commonUtil.detectPathTraversal(logoPath + logoFileName));
 	        byte[] byteList = Base64.decodeBase64(fileData);
 	        
 	        FileOutputStream fos = null;
@@ -1863,7 +1865,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				saveImage = outputImage.createGraphics();
 				saveImage.drawImage(inputImage, 0, 0, 894, 100, null);
 				
-				File newLogo = new File(logoPath + code + "_logo" + ".png");
+				File newLogo = new File(commonUtil.detectPathTraversal(logoPath + code + "_logo" + ".png"));
 				ImageIO.write(outputImage, "png", newLogo);
 				String logoFileNameLogo = code + "_logo" + ".png";
 				
@@ -1895,7 +1897,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			String extName = fileName.substring(iStart);
 			String thumbFileName = code + "_thumb_Temp" + "." + extName;
 			
-			File file = new File(thumbPath + thumbFileName);
+			File file = new File(commonUtil.detectPathTraversal(thumbPath + thumbFileName));
 	        byte[] byteList = Base64.decodeBase64(fileData);
 	        
 	        FileOutputStream fos = null;
@@ -1912,7 +1914,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				saveImage = outputImage.createGraphics();
 				saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
 				
-				File newThumbnail = new File(thumbPath + code + "_thumbnail" + ".png");
+				File newThumbnail = new File(commonUtil.detectPathTraversal(thumbPath + code + "_thumbnail" + ".png"));
 				ImageIO.write(outputImage, "png", newThumbnail);
 				String logoFileNameThumbnail = code + "_thumbnail" + ".png";
 
@@ -3546,7 +3548,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
             myLevel = Integer.parseInt(request.getParameter("level"));
         }
 		
-logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLevel);
+        logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLevel);
         String maxIdFieldName = "c_no";
         
         InputStream is = null;
@@ -3564,6 +3566,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         		if (cBoard.getId().trim().equals(userInfo.getId()) || adminCheck == 1) {
 	                bbsEditOkSet1(bName.toUpperCase(), title, no, code, attachList, textContent, userInfo.getTenantId());
 	                String strPath = realPath + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator + cBoard.getFileName().trim();
+	                strPath = commonUtil.detectPathTraversal(strPath);
 	                logger.debug("strPath ==== " + strPath);
 	                try{
 		    		    pw = new PrintWriter(new File(strPath));
@@ -3652,7 +3655,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
         	bbsEditOkInsert(bName.toUpperCase(), myRef, newStep, newLevel, attachList, number, textContent, nowDate, fileName, code, userInfo.getCompanyID(), userInfo.getId(), userNm, userNm2, title, maxIdFieldName, userInfo.getTenantId());
         	
         	try{
-        		File dir = new File(dirPath);
+        		File dir = new File(commonUtil.detectPathTraversal(dirPath));
         		
         		if (!dir.exists()) {
         			dir.mkdirs();
@@ -3700,7 +3703,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			if (fileName != null) {
 				folder = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_community.FILEDATA", userInfo.getTenantId()) + commonUtil.separator + getFileFolderName(bName) + commonUtil.separator;
 				strFile = folder + fileName;
-				File file = new File(strFile);
+				File file = new File(commonUtil.detectPathTraversal(strFile));
 				
 				if (file.exists()) {
 					file.delete();
@@ -3716,7 +3719,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 					
 					for (int i = 0; i <= strAttachFile.length; i++) {
 						strFile = folder + strAttachFile[i];
-						File file = new File(strFile);
+						File file = new File(commonUtil.detectPathTraversal(strFile));
 						
 						if (file.exists()) {
 							file.delete();
@@ -6561,6 +6564,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		
 		try {
 			docPath = realPath + strFilePath;
+			docPath = commonUtil.detectPathTraversal(docPath);
+			strBoardID = commonUtil.detectPathTraversal(strBoardID);
 			
 			if (!new File(docPath + strBoardID).exists()) {
 				File dir1 = new File(docPath + strBoardID + commonUtil.separator + "uploadFile");
@@ -6570,6 +6575,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 			}
 			
 			mhtFilePath = docPath + strBoardID + commonUtil.separator + "doc" + commonUtil.separator + strMHTFileName + ".mht";
+			mhtFilePath = commonUtil.detectPathTraversal(mhtFilePath);
 			
 			if(new File(mhtFilePath).exists()) {
 				new File(mhtFilePath).delete();
@@ -6621,22 +6627,24 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				map = new HashMap<String, Object>();
 				map.put("tenantID", tenantID);
 				
-				File file = new File(realPath + pUploadFilePath + attachmentsArr[i]);
+				File file = new File(commonUtil.detectPathTraversal(realPath + pUploadFilePath + attachmentsArr[i]));
 				fileSize = Integer.toString((int) file.length());
 				filePath = attachmentsArr[i];
 				
 				if (attachmentsArr[i].indexOf("tempUploadFile") > -1) {
-					File destFile = new File(realPath + pUploadFilePath + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + filePath.replace("tempUploadFile", ""));
+					String destFilePath = commonUtil.detectPathTraversal(realPath + pUploadFilePath + boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + filePath.replace("tempUploadFile", ""));
+					File destFile = new File(destFilePath);
 					FileUtils.moveFile(file, destFile);
 					filePath = filePath.replace("tempUploadFile", "");
 				}
 				
 				if (!thumbPath.equals("")) {
-					File thumbnailFile = new File(realPath + pUploadFilePath  + thumbPath.split(";")[i]);
+					File thumbnailFile = new File(commonUtil.detectPathTraversal(realPath + pUploadFilePath  + thumbPath.split(";")[i]));
 					map.put("itemID", itemID);
 					
 					if (thumbPath.indexOf("tempUploadFile") > -1) {
-						File destThumbFile = new File(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "uploadFile" + thumbPath.split(";")[i].replace("tempUploadFile", ""));
+						String destThumbFilePath = commonUtil.detectPathTraversal(realPath+ pUploadFilePath  + boardID + commonUtil.separator + "uploadFile" + thumbPath.split(";")[i].replace("tempUploadFile", ""));
+						File destThumbFile = new File(destThumbFilePath);
 						FileUtils.moveFile(thumbnailFile, destThumbFile);
 						map.put("filePath", boardID + commonUtil.separator + "uploadFile" + commonUtil.separator + thumbPath.split(";")[i].replace("tempUploadFile", ""));
 					} else {
@@ -7228,15 +7236,15 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		}*/
 
 	public void copyFiles(String pOrgItemID, String pOrgBoardID, String pDestItemID, String pDestBoardID, String pRef) throws Exception {
-        String orgFilePath = pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".mht";
-        String destFilePath = pRef + pDestBoardID + commonUtil.separator + "doc" + commonUtil.separator + pDestItemID + ".mht";
+        String orgFilePath = commonUtil.detectPathTraversal(pRef + pOrgBoardID + commonUtil.separator + "doc" + commonUtil.separator + pOrgItemID + ".mht");
+        String destFilePath = commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "doc" + commonUtil.separator + pDestItemID + ".mht");
 
-        File destdir = new File(pRef + pDestBoardID);
+        File destdir = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID));
         if (!destdir.exists()) {
         	destdir.mkdir();
-        	File destdir1 = new File(pRef + pDestBoardID + commonUtil.separator + "doc");
+        	File destdir1 = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "doc"));
         	destdir1.mkdir();
-        	File destdir2 = new File(pRef + pDestBoardID + commonUtil.separator + "uploadFile");
+        	File destdir2 = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "uploadFile"));
         	destdir2.mkdir();
         }
         
@@ -7247,15 +7255,15 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 	}
 	
 	public void copyAttachments(String pOrgFilePath, String pDestFilePath, String pDestBoardID, String pRef) throws Exception {
-        String orgFilePath = pRef + pOrgFilePath;
-        String destFilePath = pRef + pDestFilePath;
+        String orgFilePath = commonUtil.detectPathTraversal(pRef + pOrgFilePath);
+        String destFilePath = commonUtil.detectPathTraversal(pRef + pDestFilePath);
 
-        File destdir = new File(pRef + pDestBoardID);
+        File destdir = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID));
         if (!destdir.exists()) {
         	destdir.mkdir();
-        	File destdir1 = new File(pRef + pDestBoardID + commonUtil.separator + "doc");
+        	File destdir1 = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "doc"));
         	destdir1.mkdir();
-        	File destdir2 = new File(pRef + pDestBoardID + commonUtil.separator + "uploadFile");
+        	File destdir2 = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID + commonUtil.separator + "uploadFile"));
         	destdir2.mkdir();
         }
         
@@ -7270,8 +7278,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		String oriFileName = logoFile.getOriginalFilename();
 		String logoFileName = code + "_logo_Temp" + oriFileName.substring(oriFileName.lastIndexOf("."));
 		
-		File logoDir = new File(realPath + commonUtil.separator + logoPath);
-		File logo = new File(realPath + commonUtil.separator + logoPath + commonUtil.separator + logoFileName);
+		File logoDir = new File(commonUtil.detectPathTraversal(realPath + commonUtil.separator + logoPath));
+		File logo = new File(commonUtil.detectPathTraversal(realPath + commonUtil.separator + logoPath + commonUtil.separator + logoFileName));
 		
 		String result = "";
 		try {
@@ -7296,8 +7304,8 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 		String oriFileName = thumbFile.getOriginalFilename();
 		String thumbFileName = code + "_thumb_Temp" + oriFileName.substring(oriFileName.lastIndexOf("."));
 		
-		File thumbDir = new File(realPath + commonUtil.separator + thumbPath);
-		File thumb = new File(realPath + commonUtil.separator + thumbPath + commonUtil.separator + thumbFileName);
+		File thumbDir = new File(commonUtil.detectPathTraversal(realPath + commonUtil.separator + thumbPath));
+		File thumb = new File(commonUtil.detectPathTraversal(realPath + commonUtil.separator + thumbPath + commonUtil.separator + thumbFileName));
 		
 		String result = "";
 		try {
