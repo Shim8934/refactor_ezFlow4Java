@@ -554,7 +554,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 				width = bi.getWidth();
 				height = bi.getHeight();
 				
-				response.getWriter().write(filePath + "," + fileName + "," + width + "/" + height);
+				response.getWriter().write(commonUtil.stripScriptTags(filePath + "," + fileName + "," + width + "/" + height));
 			}
 		} catch (Exception e) {
 			logger.debug("uploadBackGroundImage error");

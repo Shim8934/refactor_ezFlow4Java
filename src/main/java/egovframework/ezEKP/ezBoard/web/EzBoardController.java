@@ -3306,7 +3306,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		res.setContentType("text/xml"); 
 		res.setCharacterEncoding("UTF-8");
 		res.setHeader("Cache-Control", "no-cache");
-		res.getWriter().write(output);
+		res.getWriter().write(commonUtil.stripScriptTags(output));
 		
 		logger.debug("getSubBoards ended");
 	}
@@ -7402,7 +7402,8 @@ public class EzBoardController extends EgovFileMngUtil{
                 ImageIO.write(bufferedImage, "png", new File(savePath + commonUtil.separator + "S_" + commonUtil.detectPathTraversal(fileName)));
 			}
 			
-			response.getWriter().write(commonUtil.getUploadPath("upload_board.BOARDBACKGROUND", userInfo.getTenantId()) + commonUtil.separator + "S_" + commonUtil.detectPathTraversal(fileName));
+			String respOutput = commonUtil.getUploadPath("upload_board.BOARDBACKGROUND", userInfo.getTenantId()) + commonUtil.separator + "S_" + commonUtil.detectPathTraversal(fileName);
+			response.getWriter().write(commonUtil.stripScriptTags(respOutput));
 		} else {
 			String fileType = file.getContentType().split("/")[1];
 			String newFileName = "{" + UUID.randomUUID().toString() + "}." + commonUtil.detectPathTraversal(fileType);
@@ -7424,7 +7425,8 @@ public class EzBoardController extends EgovFileMngUtil{
 					width = bi.getWidth();
 					height = bi.getHeight();
 					
-					response.getWriter().write(commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator + newFileName + "|!|" + width + "|!|" + height);
+					String respOutput = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId()) + commonUtil.separator + newFileName + "|!|" + width + "|!|" + height;
+					response.getWriter().write(commonUtil.stripScriptTags(respOutput));
 				}
 			} catch (Exception e) {
 				logger.debug("uploadBackImage error");
