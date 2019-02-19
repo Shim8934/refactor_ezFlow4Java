@@ -122,7 +122,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈  메인 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/portalMain.do")
+	@RequestMapping(value = "/admin/ezPortal/portalMain.do", method = RequestMethod.GET)
 	public String portalMain(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalMain started");
 
@@ -139,7 +139,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈  좌측 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/leftTop.do")
+	@RequestMapping(value = "/admin/ezPortal/leftTop.do", method = RequestMethod.GET)
 	public String leftTop(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("leftTop started");
 
@@ -163,7 +163,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈  테마리스트 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/themeList.do")
+	@RequestMapping(value = "/admin/ezPortal/themeList.do", method = RequestMethod.GET)
 	public String themeList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("themeList started");
 
@@ -197,7 +197,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈  테마정보 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/themeInfo.do")
+	@RequestMapping(value = "/admin/ezPortal/themeInfo.do", method = RequestMethod.GET)
 	public String themeInfo(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("themeInfo started");
 
@@ -313,7 +313,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈  테마만들기 이미지업로드 표출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/portletImageUpload.do")
+	@RequestMapping(value = "/admin/ezPortal/portletImageUpload.do", method = RequestMethod.POST)
 	public String portletImageUpload(MultipartHttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portletImageUpload started");
 
@@ -482,7 +482,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 상단메뉴영역설정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/topList.do")
+	@RequestMapping(value = "/admin/ezPortal/topList.do", method = RequestMethod.GET)
 	public String topList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("topList started");
 
@@ -715,7 +715,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈  포탈페이지관리 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/portalPageList.do")
+	@RequestMapping(value = "/admin/ezPortal/portalPageList.do", method = RequestMethod.GET)
 	public String portalPageList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalPageList started");
 		
@@ -999,7 +999,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 포탈페이지관리 권한 선택 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/selectTarget.do")
+	@RequestMapping(value = "/admin/ezPortal/selectTarget.do", method = RequestMethod.GET)
 	public String selectTarget(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("selectTarget started");
 
@@ -1030,7 +1030,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 포틀릿관리 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/portletList.do")
+	@RequestMapping(value = "/admin/ezPortal/portletList.do", method = RequestMethod.GET)
 	public String portletList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portletList started");
 
@@ -1127,7 +1127,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 포틀릿관리 상세보기 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/portletEdit.do")
+	@RequestMapping(value = "/admin/ezPortal/portletEdit.do", method = RequestMethod.GET)
 	public String portletEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portletEdit started");
 
@@ -1567,7 +1567,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 포틀릿관리 포틀릿 미리보기 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/portletPreview.do")
+	@RequestMapping(value = "/admin/ezPortal/portletPreview.do", method = RequestMethod.GET)
 	public String portletPreview(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portletPreview started");
 
@@ -1620,7 +1620,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 포틀릿관리 포틀릿 미리보기 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/logoList.do")
+	@RequestMapping(value = "/admin/ezPortal/logoList.do", method = RequestMethod.GET)
 	public String logoList(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("logoList started");
 
@@ -1711,7 +1711,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 로고설정 상세보기 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/logoEdit.do")
+	@RequestMapping(value = "/admin/ezPortal/logoEdit.do", method = RequestMethod.GET)
 	public String logoEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("logoEdit started");
 
@@ -1911,7 +1911,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 로고설정 위치설정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/menuPosition.do")
+	@RequestMapping(value = "/admin/ezPortal/menuPosition.do", method = RequestMethod.GET)
 	public String menuPosition(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("menuPosition started");
 
@@ -2029,7 +2029,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 유틸메뉴설정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/utilMenuAreaEdit.do")
+	@RequestMapping(value = "/admin/ezPortal/utilMenuAreaEdit.do", method = RequestMethod.GET)
 	public String utilMenuAreaEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("utilMenuAreaEdit started");
 
@@ -2130,7 +2130,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 유틸메뉴설정 상세보기 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/menuItemEdit.do")
+	@RequestMapping(value = "/admin/ezPortal/menuItemEdit.do", method = RequestMethod.GET)
 	public String menuItemEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("menuItemEdit started");
 
@@ -2368,7 +2368,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 메뉴순서조정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/menuSortOrder.do")
+	@RequestMapping(value = "/admin/ezPortal/menuSortOrder.do", method = RequestMethod.GET)
 	public String menuSortOrder(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("menuSortOrder started");
 
@@ -2407,7 +2407,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 순서조정 저장 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/saveMenuItemsOrder.do")
+	@RequestMapping(value = "/admin/ezPortal/saveMenuItemsOrder.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void saveMenuItemsOrder(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
 		logger.debug("saveMenuItemsOrder started");
@@ -2432,7 +2432,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 서브메뉴 순서조정 저장 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/saveSubMenuItemsOrder.do")
+	@RequestMapping(value = "/admin/ezPortal/saveSubMenuItemsOrder.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void saveSubMenuItemsOrder(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale, @RequestBody String xmlStr) throws Exception {
 		logger.debug("saveSubMenuItemsOrder started");
@@ -2457,7 +2457,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 메인메뉴설정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/mainMenuAreaEdit.do")
+	@RequestMapping(value = "/admin/ezPortal/mainMenuAreaEdit.do", method = RequestMethod.GET)
 	public String mainMenuAreaEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("mainMenuAreaEdit started");
 
@@ -2582,7 +2582,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 서브메뉴설정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/subMenuItemsEdit.do")
+	@RequestMapping(value = "/admin/ezPortal/subMenuItemsEdit.do", method = RequestMethod.GET)
 	public String subMenuItemsEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("subMenuItemsEdit started");
 
@@ -2758,7 +2758,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 서브메뉴순서조정 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/subMenuSortOrder.do")
+	@RequestMapping(value = "/admin/ezPortal/subMenuSortOrder.do", method = RequestMethod.GET)
 	public String subMenuSortOrder(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("subMenuSortOrder started");
 
@@ -2797,7 +2797,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포탈 서브메뉴설정 상세보기 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/subMenuItemEdit.do")
+	@RequestMapping(value = "/admin/ezPortal/subMenuItemEdit.do", method = RequestMethod.GET)
 	public String subMenuItemEdit(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("subMenuItemEdit started");
 
@@ -2971,7 +2971,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자 포틀릿 미리보기 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPortal/imageView.do")
+	@RequestMapping(value = "/admin/ezPortal/imageView.do", method = RequestMethod.GET)
 	public String imageView(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("imageView started");
 
@@ -3087,7 +3087,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 	/**
 	 * 포틀릿 관리 > 공지게시판_포틀릿 > 게시판 선택 UI 호출
 	 */
-	@RequestMapping(value = "/admin/ezPortal/portalBoardSelect.do")
+	@RequestMapping(value = "/admin/ezPortal/portalBoardSelect.do", method = RequestMethod.GET)
 	public String portalBoardSelect(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("portalBoardSelect started");
 
