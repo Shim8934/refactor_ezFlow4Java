@@ -1071,6 +1071,8 @@ WHERE
 AND
 	C.company_id = #companyId#
 AND
+	C.tenant_id = #tenantId#
+AND
 	B.tenant_id = #tenantId#
 AND
 	B.theme_used = 1
