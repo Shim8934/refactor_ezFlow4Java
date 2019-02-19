@@ -27697,4 +27697,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		return result;
 	}
+	
+	@Override
+	public void setHesongCabinetID(String docID, String companyID, int tenantId) throws Exception {
+		logger.debug("setHesongCabinetID started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("companyID", companyID);
+		map.put("tenantId", tenantId);
+		
+		ezApprovalGDAO.setHesongCabinetID(map);
+		logger.debug("setHesongCabinetID ended");
+	}
 }

@@ -178,7 +178,7 @@
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
 				            headerData.documentElement.appendChild(xmlRtn);
 				        }
-		                document.getElementById("OrganListView").innerHTML = "";
+		                document.getElementById("OrganListView").innerHTML = '<table style="width: 100%; height: 30px;" class="popup_mainlist"><tr><th style="white-space:normal;background-color: white;border-top:0px;border-bottom:1px solid #eaeaea"><span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block;"></span></th></tr></table>';
 
 				        var pUserList = new ListView();
 				        pUserList.SetID("lvUserList");
@@ -188,6 +188,11 @@
 				        pUserList.SetHeightFree(true);
 				        pUserList.DataSource(headerData);
 				        pUserList.DataBind("OrganListView");
+				        
+				        var treeView = new TreeView();
+					    treeView.LoadFromID("FromTreeView");
+					    var selnode = treeView.GetSelectNode();
+				        $("#SelectDeptNM").html("<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + selnode.GetNodeData("NodeName") + "" + "-[<span style='color:#017BEC;'>" + $(headerData).find("ROWS ROW").length + strLang24 + "</span>]");
 
 				        moveDisplay(false);
 		        	},
@@ -690,7 +695,7 @@
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
 				            headerData.documentElement.appendChild(xmlRtn);
 				        }
-		                document.getElementById("OrganListView").innerHTML = "";
+				        document.getElementById("OrganListView").innerHTML = '<table style="width: 100%; height: 30px;" class="popup_mainlist"><tr><th style="white-space:normal;background-color: white;border-top:0px;border-bottom:1px solid #eaeaea"><span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block;"></span></th></tr></table>';
 
 				        var pUserList = new ListView();
 				        pUserList.SetID("lvUserList");
@@ -699,6 +704,11 @@
 				        pUserList.SetHeightFree(true);
 				        pUserList.DataSource(headerData);
 				        pUserList.DataBind("OrganListView");
+				        
+				        var treeView = new TreeView();
+					    treeView.LoadFromID("FromTreeView");
+					    var selnode = treeView.GetSelectNode();
+				        $("#SelectDeptNM").html("<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezOrgan.t101' />" + "" + "-[<span style='color:#017BEC;'>" + $(headerData).find("ROWS ROW").length + strLang24 + "</span>]");
 				        
 				        moveDisplay(true);
 					},
@@ -1718,10 +1728,12 @@
 		        <th style="padding: 3px; text-align: left;vertical-align:top">
 		            <div class="listview" style="margin:10px;margin-bottom:2px">
 		            	<c:if test="${dotNetIntegration != 'YES'}">
-		                <div id="OrganListView" style="border: 0px solid #ddd; Width: 375px; Height: 510px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; "></div>
+			                <div id="OrganListView" style="border: 0px solid #ddd; Width: 375px; Height: 510px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; ">
+			                </div>
 		                </c:if>
 		                <c:if test="${dotNetIntegration == 'YES'}">
-		                <div id="OrganListView" style="border: 0px solid #ddd; Width: 375px; Height: 540px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; "></div>
+			                <div id="OrganListView" style="border: 0px solid #ddd; Width: 375px; Height: 540px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; ">
+			                </div>
 		                </c:if>
 		            </div>
 		            <div style="height: 5px; overflow: hidden">&nbsp;</div>
