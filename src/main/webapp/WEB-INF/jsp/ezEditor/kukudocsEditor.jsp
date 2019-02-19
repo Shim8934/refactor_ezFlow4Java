@@ -10,8 +10,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<style> html, body {height: 100%; margin: 0; padding: 0; overflow: hidden;} </style>
 		<script type="text/javascript">
-			var type = "${type}";
-			var height = "${height}";
+			var type = '<c:out value="${type}"/>';
+			var height = '<c:out value="${height}"/>';
 			var editorLoadFlag = false;
 			
 			function Editor_Complete() {

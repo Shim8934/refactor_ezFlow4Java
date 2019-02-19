@@ -28,6 +28,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -67,7 +68,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * editor 호출 Method
 	 */
-	@RequestMapping(value = {"/ezEditor/selectEditor.do", "/ezEditor/selectApprovalEditor.do"})
+	@RequestMapping(value = {"/ezEditor/selectEditor.do", "/ezEditor/selectApprovalEditor.do"}, method = RequestMethod.GET)
 	public String selectEditor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception {
 
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -134,7 +135,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * editor 호출 Method
 	 */
-	@RequestMapping(value = {"/admin/ezEditor/selectEditor.do", "/admin/ezEditor/selectApprovalEditor.do"})
+	@RequestMapping(value = {"/admin/ezEditor/selectEditor.do", "/admin/ezEditor/selectApprovalEditor.do"}, method = RequestMethod.GET)
 	public String adminSelectEditor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO userInfo, Model model) throws Exception {
 
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -197,7 +198,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * ck에디터 이미지 업로드 화면 호출 Method
 	 */
-	@RequestMapping(value = "/ezEditor/ckImageUpload.do")
+	@RequestMapping(value = "/ezEditor/ckImageUpload.do", method = RequestMethod.GET)
 	public String ckImageUpload(HttpServletRequest request, Model model) {
 		String type = request.getParameter("type");
 		logger.debug("ckImageUpload.do type : " + type);
@@ -208,7 +209,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * ck에디터 업로드 실행 Method
 	 */
-	@RequestMapping(value = "/ezEditor/ckUpload.do")
+	@RequestMapping(value = "/ezEditor/ckUpload.do", method = RequestMethod.POST)
 	public String ckUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		logger.debug("ckUpload started");
 
@@ -338,7 +339,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	 * ck에디터 심플업로드 실행 Method
 	 */
 
-	@RequestMapping(value = "/ezEditor/ckSimpleUpload.do", produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/ezEditor/ckSimpleUpload.do", produces = "application/json; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String ckSimpleUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		logger.debug("ckSimpleUpload started");
@@ -399,7 +400,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * TagFree에디터 업로드 실행 Method
 	 */
-	@RequestMapping(value = "/ezEditor/tfxUpload.do")
+	@RequestMapping(value = "/ezEditor/tfxUpload.do", method = RequestMethod.POST)
 	public String tfxUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
@@ -453,7 +454,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * TagFree에디터 심플업로드(drag&drop) 실행 Method
 	 */
-	@RequestMapping(value = "/ezEditor/tfxSimpleUpload.do")
+	@RequestMapping(value = "/ezEditor/tfxSimpleUpload.do", method = RequestMethod.POST)
 	public String tfxSimpleUpload(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("tfxSimpleUpload started");
 
@@ -557,7 +558,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * 메일 부재중설정 TagFree에디터 심플업로드(drag&drop) 시 아무처리 안하는 Method
 	 */
-	@RequestMapping(value = "/ezEditor/tfxNoop.do")
+	@RequestMapping(value = "/ezEditor/tfxNoop.do", method = RequestMethod.POST)
 	public String tfxNoop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("tfxNoop started");
 
@@ -569,7 +570,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * namo에디터 업로드 실행 Method
 	 */
-	@RequestMapping(value = "/ezEditor/namoUpload.do")
+	@RequestMapping(value = "/ezEditor/namoUpload.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String namoUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model) throws Exception {
 		logger.debug("namoUpload started");
@@ -715,7 +716,7 @@ public class EzEditorController extends EgovFileMngUtil {
 	/**
 	 * 쿠쿠닥스 에디터 업로드 실행 Method
 	 */
-	@RequestMapping(value = "/ezEditor/kukudocsUpload.do")
+	@RequestMapping(value = "/ezEditor/kukudocsUpload.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String kukudocsUpload(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Model model, Locale locale) throws Exception {
 		logger.debug("kukudocsUpload started.");

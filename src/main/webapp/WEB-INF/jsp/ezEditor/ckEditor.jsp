@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -8,8 +9,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezEditor/ckEditor/ckeditor.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
-			var type = "${type}";
-			var height = "${height}";
+			var type = '<c:out value="${type}"/>';
+			var height = '<c:out value="${height}"/>';
 			var editorLoadFlag = false;
 			
 		    CKEDITOR.on( 'instanceReady', function( ev ) {
@@ -59,7 +60,7 @@
 						CKEDITOR.instances.editor1.setData(Data);	
 					}
 	                if (type == "APPROVAL" || type == "APPROVALG") {
-	                	if ("${isUsed}" != "reuse") {
+	                	if ('<c:out value="${isUsed}"/>' != "reuse") {
 	                    	Set_CellLocked();
 	                	}
 	                }

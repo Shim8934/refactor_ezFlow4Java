@@ -35,6 +35,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -105,7 +106,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	/**
 	 * 메일 예약발송 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailReservation.do")
+	@RequestMapping(value="/ezEmail/mailReservation.do", method = RequestMethod.GET)
 	public String mailReservation(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailReservation started.");
 		
@@ -133,7 +134,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	/**
 	 * 예약발송메일 삭제 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailDeleteReservedMail.do")
+	@RequestMapping(value="/ezEmail/mailDeleteReservedMail.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailDeleteReservedMail(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailDeleteReservedMail started.");
@@ -163,7 +164,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	/**
 	 * 예약발송메일 수정 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailEdit.do")
+	@RequestMapping(value="/ezEmail/mailEdit.do", method = RequestMethod.GET)
 	public String mailEdit(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, Model model, 
@@ -668,7 +669,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	/**
 	 * 예약발송메일 DB 체크 함수
 	 */
-	@RequestMapping(value="/ezEmail/reservedMailCheck.do")
+	@RequestMapping(value="/ezEmail/reservedMailCheck.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String reservedMailCheck(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, @RequestBody String bodyData) throws Exception{
 		logger.debug("reservedMailCheck started.");
@@ -704,7 +705,7 @@ public class EzEmailReservationController extends EgovFileMngUtil {
 	/**
 	 * 메일 메시지 화면 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailMessage.do")
+	@RequestMapping(value="/ezEmail/mailMessage.do", method = RequestMethod.GET)
 	public String mailMessage(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailMessage started.");
 		

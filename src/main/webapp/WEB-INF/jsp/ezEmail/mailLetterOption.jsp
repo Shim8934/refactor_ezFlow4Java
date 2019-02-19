@@ -26,7 +26,7 @@
 	
 			var offsetMin = "${offsetMin}";
 			var individualMailUser = parseInt("${individualMailUser}");
-			var shareId = "${shareId}";
+			var shareId = '<c:out value="${shareId}"/>';
 			
 		    var RetValue;
 		    var ReturnFunction;

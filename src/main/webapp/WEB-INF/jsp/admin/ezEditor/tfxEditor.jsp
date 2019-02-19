@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -230,7 +231,7 @@
 	
 	            if (type == "DEL") {
 	            	// 일지 양식작성에서 사용하는 부분
-	            	if ("${type}" == "JOURNAL") {
+	            	if ('<c:out  value="${type}"/>' == "JOURNAL") {
 	            		selCell.removeAttribute("id");
 	            		selCell.innerHTML = "";
 	            	} else {
@@ -295,7 +296,7 @@
 	            }
 	            else {
 	            	// 일지 양식작성에서 사용하는 부분
-	            	if ("${type}" == "JOURNAL") {
+	            	if ('<c:out value="${type}"/>' == "JOURNAL") {
 	            		selCell.setAttribute("id", id);
 	            		selCell.innerHTML = "@" + id;
 	            	} else {
@@ -416,7 +417,7 @@
 	            basePath : "/js/ezEditor/tfxEditor",
 	            width : "100%",
 // 	            height : (document.documentElement.clientHeight) + "px",
-	            height : parseInt("${height}") - 8 + "px",
+	            height : parseInt('<c:out value="${height}"/>') - 8 + "px",
 	            initFontFamilyMenu : initFontFamilyMenu,
 	            initFontFamily : defaultFontFamily,
 	            initFontSize : defaultFontSize,

@@ -49,6 +49,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -122,7 +123,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * 메일 왼쪽화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailLeft.do")
+	@RequestMapping(value="/ezEmail/mailLeft.do", method = RequestMethod.GET)
 	public String showMailLeft(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("showMailLeft started.");
 		
@@ -332,7 +333,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * 메일 폴더 리스트 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/getFolderList.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/getFolderList.do", produces="text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getFolderList(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
 		logger.debug("getFolderList started.");
@@ -525,7 +526,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * 읽지않은 메시지 개수 정보 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/getFolderUnreadCount.do", produces="text/xml; charset=utf-8")
+	@RequestMapping(value="/ezEmail/getFolderUnreadCount.do", produces="text/xml; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getFolderUnreadCount(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request) throws Exception {
 		logger.debug("getFolderUnreadCount started.");
@@ -584,7 +585,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * PC에서 메일 가져오기 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailImportUpload.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailImportUpload.do", produces = "text/plain; charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailImportUpload(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, MultipartHttpServletRequest request) throws Exception{
 		logger.debug("mailImportUpload started.");
@@ -683,8 +684,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	
 	/**
 	 * PC에서 메일 가져오기 실행 함수(ActiveX)
+	 * 
+	 * 사용하지 않는 코드(원래는 IE9에서 사용)여서 일단 method = RequestMethod.GET 로 수정함
 	 */
-	@RequestMapping(value="/ezEmail/mailImportUploadX.do", produces = "text/plain; charset=utf-8")
+	@RequestMapping(value="/ezEmail/mailImportUploadX.do", produces = "text/plain; charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public String mailImportUploadX(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("mailImportUploadX started.");
@@ -773,7 +776,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	 * PC에서 메일함(메일파일묶음) 가져오기 실행 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/ezEmail/mailboxImportZip.do")
+	@RequestMapping(value="/ezEmail/mailboxImportZip.do", method = RequestMethod.POST)
 	public String mailboxImportZip(@CookieValue("loginCookie") String loginCookie, MultipartHttpServletRequest request, Locale locale, Model model) throws Exception{
 		logger.debug("mailboxImportZip started.");
 	
@@ -1073,7 +1076,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * PC에 메일파일 저장하기 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailExport.do")
+	@RequestMapping(value="/ezEmail/mailExport.do", method = RequestMethod.GET)
 	public void mailExport(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailExport started.");
 		
@@ -1176,7 +1179,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * 여러개의 메일파일을 zip파일로 서버에 저장하기 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailExportZip.do")
+	@RequestMapping(value="/ezEmail/mailExportZip.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailExportZip(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("mailExportZip started.");
@@ -1329,7 +1332,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	 * 특정 메일함의 모든 메일을 zip파일로 서버에 저장하기 실행 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/ezEmail/mailboxExportZip.do")
+	@RequestMapping(value="/ezEmail/mailboxExportZip.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String mailboxExportZip(@CookieValue("loginCookie") String loginCookie, Locale locale,
 				Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
@@ -1532,7 +1535,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * 메일 zip파일 다운로드 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/downloadMailZip.do")
+	@RequestMapping(value="/ezEmail/downloadMailZip.do", method = RequestMethod.GET)
 	public void downloadMailZip(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadMailZip started.");
 		
@@ -1598,7 +1601,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	 * 메일함 zip파일 다운로드 실행 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/ezEmail/downloadMailboxZip.do")
+	@RequestMapping(value="/ezEmail/downloadMailboxZip.do", method = RequestMethod.GET)
 	public void downloadMailboxZip(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("downloadMailboxZip started.");
 		
@@ -1674,7 +1677,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * zip파일 삭제 실행 함수
 	 */
-	@RequestMapping(value="/ezEmail/deleteZipFile.do")
+	@RequestMapping(value="/ezEmail/deleteZipFile.do", method = RequestMethod.POST)
 	public String deleteZipFile(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		logger.debug("deleteZipFile started.");
 		
@@ -1800,7 +1803,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
     /**
 	 * 편지함 내보내기 옵션(암호화확인) 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailExportOption.do")
+	@RequestMapping(value="/ezEmail/mailExportOption.do", method = RequestMethod.GET)
 	public String mailExportOption(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 
@@ -1821,7 +1824,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 	/**
 	 * 편지함 가져오기 옵션(암호화확인) 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezEmail/mailImportOption.do")
+	@RequestMapping(value="/ezEmail/mailImportOption.do", method = RequestMethod.GET)
 	public String mailImportOption(
 			@CookieValue("loginCookie") String loginCookie, 
 			Locale locale, 

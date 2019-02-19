@@ -70,8 +70,8 @@
 	        var AddressTreeView = null;
 	        var UserAgentState = navigator.userAgent.toLowerCase();
 	        var browserIE = (!CrossYN()) ? true : false;
-	        var type = "${type}";
-	        var rulekind = "${ruleKind}";
+	        var type = '<c:out value="${type}"/>';
+	        var rulekind = '<c:out value="${ruleKind}"/>';
 	        var pListType = "TXT";
 	        var pListXML_Info = null;
 	        var strLang_2 = "<spring:message code='ezEmail.t655' />";
@@ -265,7 +265,7 @@
 	                document.getElementById("dept_select").style.display = "none";
 	            }
 	            else {
-	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
+	                SelectReceiverWindow(eval('<c:out value="${defaultWin}"/>' + "Title"), eval("ListViewMsg" + '<c:out value="${defaultWin}"/>'));
 	            }
 	            
 	            // (수신자 설정 시 drag, drop으로 순서 조정)

@@ -40,8 +40,8 @@
 		<script>
 			var g_szAuthor = "";
 			var g_szExchange = "exchange";
-			var g_cmd = "${cmd}";
-		    var Org_cmd = "${cmd}";
+			var g_cmd = '<c:out value="${cmd}"/>';
+		    var Org_cmd = '<c:out value="${cmd}"/>';
 			var g_servername = "${serverName}";
 			var g_myemail = "${userInfo.mail}";
 			var g_from = "${userInfo.mail}";
@@ -90,7 +90,7 @@
 			var userTimezone = "${userTimeset}";
 			var isPrimary = "${userPrimary}";
 			var initFlag = false;
-		    var gg_cmd = "${cmdOwn}";
+	    	var gg_cmd = '<c:out value="${cmdOwn}"/>';
 		    var gg_url = "${urlOwn}";
 		    var g_newid = "${newwindowid}";
 		    var FileUploadtype = "${fileUploadType}";
@@ -103,7 +103,7 @@
 		    var docHref = "${docHref}";
 		    var pTime= "${pReservedSaveTime}";
 		    var isReserve = "YES";
-		    var pCDOMessageId = "${pCDOMessageID}";
+		    var pCDOMessageId = '<c:out value="${pCDOMessageID}"/>';
 		    var pUse_Editor = "${useEditor}";
 		    var GroupplusImg ="/images/ImgIcon/groupplus.gif";
 		    var GroupminImg ="/images/ImgIcon/groupmin.gif";
