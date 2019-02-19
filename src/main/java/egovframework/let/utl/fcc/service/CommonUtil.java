@@ -1653,12 +1653,17 @@ public class CommonUtil {
 				}
 				
 				if(loginCookie != null) {
-					String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///");
+					String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///", -1);
 					
 					String userID = cookieInfo[1];
 					String companyID = cookieInfo[10];
-					int tenantID = Integer.parseInt(cookieInfo[8]);
-//					String userInfo = userID + "_" + tenantID;
+					String tenantIDStr = cookieInfo[8];
+					
+					if(userID.equals("") || companyID.equals("") || tenantIDStr.equals("")) {
+						return result;
+					}
+					
+					int tenantID = Integer.parseInt(tenantIDStr);
 					
 					useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
 					
