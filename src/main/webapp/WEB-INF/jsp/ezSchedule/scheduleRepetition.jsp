@@ -58,6 +58,7 @@
 		        datepicker();
 		        datetimepicker();
 		        var repetition = RetValue["REPETITION"];
+		        var allday = RetValue["ALLDAYCHECK"];
 		    				
 		    	if (repetition != "")
 		    	{
@@ -138,6 +139,11 @@
 		    				}
 		    		}
 		    	}
+		    	else {			// 일정작성 탭에서 하루종일 체크하고 반복 클릭 시
+		    		if(allday == true) {
+		    			alldaycheck.checked = true;
+		    		}
+		    	}
 		    	allDayTime();
 		    	clearAllDay();
 		    }
@@ -198,6 +204,12 @@
 		    	        return;
 		    	    }
 		    	}
+		    	
+		    	// 시작시간과 종료시간이 00시 00분이면 무조건 하루종일로
+		    	if(stime == "00:00" && etime == "00:00") {
+		    		document.getElementById("alldaycheck").checked = true;
+		    	}
+		    	
 		    	var allDayString = "";
 		    	var scheduleTerm = "";	
 		    	var occurrenceTerm = "";			
@@ -811,6 +823,11 @@
 		    
 		        sTimeTemp = $('#Stimepicker').val();
 		        eTimeTemp = $('#Etimepicker').val();
+
+		        // 시작시간과 종료시간이 00시 00분이면 무조건 하루종일로
+		        if(sTimeTemp == "00:00" && eTimeTemp == "00:00") {
+		        	document.getElementById("alldaycheck").checked = true;
+		        }
 		    }
 		    		    
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";

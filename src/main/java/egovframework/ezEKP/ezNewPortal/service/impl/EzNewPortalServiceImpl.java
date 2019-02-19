@@ -927,6 +927,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		//메뉴
 		map = new ObjectMapper().readValue(portletInfo.toJSONString(), Map.class);
+		map.put("boardId", commonUtil.stripScriptTags(map.get("boardId").toString()));
+		map.put("connectionUrl", commonUtil.stripScriptTags(map.get("connectionUrl").toString()));
+		map.put("menuId", commonUtil.stripScriptTags(map.get("menuId").toString()));
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		boolean portletUsed = Boolean.parseBoolean(map.get("portletUsed").toString());
@@ -949,6 +952,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				JSONObject portletNameInfo = (JSONObject) item;
 				
 				map = new ObjectMapper().readValue(portletNameInfo.toJSONString(), Map.class);
+				map.put("portletName", commonUtil.stripScriptTags(map.get("portletName").toString()));
+				map.put("portletLang", commonUtil.stripScriptTags(map.get("portletLang").toString()));
+				
 				map.put("menuId", menuId);
 				map.put("portletId", portletId);
 				map.put("companyId", companyId);
@@ -983,6 +989,14 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		//메뉴
 		map = new ObjectMapper().readValue(portletInfo.toJSONString(), Map.class);
+		map.put("portletId", commonUtil.stripScriptTags(map.get("portletId").toString()));
+		
+		if (map.get("boardId") != null) {
+			map.put("boardId", commonUtil.stripScriptTags(map.get("boardId").toString()));
+		}
+		
+		map.put("connectionUrl", commonUtil.stripScriptTags(map.get("connectionUrl").toString()));
+		map.put("menuId", commonUtil.stripScriptTags(map.get("menuId").toString()));
 		map.put("companyLang", 1);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -1001,6 +1015,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				JSONObject portletNameInfo = (JSONObject) item;
 				
 				map = new ObjectMapper().readValue(portletNameInfo.toJSONString(), Map.class);
+				map.put("portletId", commonUtil.stripScriptTags(map.get("portletId").toString()));
+				map.put("portletName", commonUtil.stripScriptTags(map.get("portletName").toString()));
+				map.put("portletLang", commonUtil.stripScriptTags(map.get("portletLang").toString()));
+				
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
 				map.put("menuId", menuId);
@@ -1532,6 +1550,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				JSONObject menuAuth = (JSONObject) item;
 				
 				map = new ObjectMapper().readValue(menuAuth.toJSONString(), Map.class);
+				map.put("userName", commonUtil.stripScriptTags(map.get("userName").toString()));
+				map.put("userId", commonUtil.stripScriptTags(map.get("userId").toString()));
+				map.put("userDeptName", commonUtil.stripScriptTags(map.get("userDeptName").toString()));
+				
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
 				map.put("menuId", menuId);
@@ -1553,6 +1575,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//메뉴
 		map = new ObjectMapper().readValue(menuInfo.toJSONString(), Map.class);
 		
+		//2018.02.19 정보 저장시 secure coding 적용
+		map.put("menuUrl", commonUtil.stripScriptTags(map.get("menuUrl").toString()));
+		map.put("iconUrl", commonUtil.stripScriptTags(map.get("iconUrl").toString()));
+		
 		//tbl_portal_menu
 		int menuId = ezNewPortalDAO.insertMenu(map);
 		
@@ -1570,6 +1596,10 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				JSONObject menuNameInfo = (JSONObject) item;
 				
 				map = new ObjectMapper().readValue(menuNameInfo.toJSONString(), Map.class);
+				//2018.02.19 정보 저장시 secure coding 적용
+				map.put("menuLang", commonUtil.stripScriptTags(map.get("menuLang").toString()));
+				map.put("menuName", commonUtil.stripScriptTags(map.get("menuName").toString()));
+				
 				map.put("menuId", menuId);
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);

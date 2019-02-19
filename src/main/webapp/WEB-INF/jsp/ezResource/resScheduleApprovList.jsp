@@ -715,10 +715,10 @@
 	    	    if (CrossYN()) {
 	        	    schedule_select_user_dialogArguments[1] = seluser_Complete;
 	            	if (navigator.appName.indexOf("Microsoft") > -1) {
-		                var OpenWin = window.open("/ezResource/scheduleSelectUser.do", "schedule_select_user", GetOpenWindowfeature(735, 580));
+		                var OpenWin = window.open("/ezResource/scheduleSelectUser.do", "schedule_select_user", GetOpenWindowfeature(1000, 580));
 		                try { OpenWin.focus(); } catch (e) { }
 	    	        } else {
-	                	var OpenWin = window.open("/ezResource/scheduleSelectUser.do", "schedule_select_user", GetOpenWindowfeature(735, 555));
+	                	var OpenWin = window.open("/ezResource/scheduleSelectUser.do", "schedule_select_user", GetOpenWindowfeature(1000, 555));
 	                	try { OpenWin.focus(); } catch (e) { }
 	            	}
 		        } else {
@@ -726,10 +726,10 @@
 	            	var feature = GetShowModalPosition(735, 580);
 	            	if (navigator.appName.indexOf("Microsoft") > -1)
 		                rtnValue = window.showModalDialog("/ezResource/scheduleSelectUser.do", "",
-	            	"dialogHeight:580px;dialogwidth:735px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
+	            	"dialogHeight:580px;dialogwidth:1000px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
 	            	else
 		                rtnValue = window.showModalDialog("/ezResource/scheduleSelectUser.do", "",
-	            	"dialogHeight:555px;dialogwidth:735px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
+	            	"dialogHeight:555px;dialogwidth:1000px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + feature);
 
 		            if (typeof (rtnValue) != "undefined") {
 		                userid = rtnValue.split(":")[0];

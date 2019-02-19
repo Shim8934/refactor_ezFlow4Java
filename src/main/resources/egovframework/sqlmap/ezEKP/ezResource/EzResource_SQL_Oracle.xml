@@ -1051,30 +1051,35 @@
 	<select id="EzResourceDAO.getDeptID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				D.department
-			FROM 
-				TBL_USERMASTER D
-			WHERE 
-				D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID# and d.cn = #writerID#
-			UNION ALL
-			SELECT 
-				C.cn as department
-			FROM 
-				TBL_USERMASTER B 
-			INNER JOIN 
-				TBL_ADDJOBMASTER A 
-			ON 
-				A.CN = B.CN 
-			AND 
-				A.TENANT_ID = B.TENANT_ID       
-			RIGHT JOIN 
-				TBL_DEPTMASTER C
-			ON 
-				A.DEPTID = C.CN
-			AND 
-				B.TENANT_ID = C.TENANT_ID   
-			WHERE 
-				A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# and C.displayname = #deptNm# AND B.CN = #writerID#
+				DEPARTMENT
+			FROM(
+				SELECT 
+					D.department
+				FROM 
+					TBL_USERMASTER D
+				WHERE 
+					D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID# and d.cn = #writerID#
+				UNION ALL
+				SELECT 
+					C.cn as department
+				FROM 
+					TBL_USERMASTER B 
+				INNER JOIN 
+					TBL_ADDJOBMASTER A 
+				ON 
+					A.CN = B.CN 
+				AND 
+					A.TENANT_ID = B.TENANT_ID       
+				RIGHT JOIN 
+					TBL_DEPTMASTER C
+				ON 
+					A.DEPTID = C.CN
+				AND 
+					B.TENANT_ID = C.TENANT_ID   
+				WHERE 
+					A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# and C.displayname = #deptNm# AND B.CN = #writerID#
+			) E
+			ROWNUM = 1
 		]]>
 	</select>
 	
