@@ -478,7 +478,8 @@ function event_btnOk_onclick()
 	var xmlDoc = null;
 	var Root = null;
 	
-	if( !CheckBeforeSave() )
+	// 2019-02-19 김민성 - 하루종일 체크 시 시간 체크 안하도록 수정
+	if(document.getElementById("alldaycheck").checked==false && !CheckBeforeSave())
 		return;
 	
 	switch (pRepetitionFlag) {
