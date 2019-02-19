@@ -32,6 +32,7 @@
 		
 	    window.onload = function() {
 			toggle_menu(menuindex);
+			removeWhiteSpace();
 		}
 		
 		function toggle_menu(pIndex)
@@ -345,6 +346,12 @@
         	if (tabObj.id != selSpan) {
         		tabObj.setAttribute("class", "");
         	}
+        }
+        
+        function removeWhiteSpace() {
+        	$("#toggle_tbl1 input").each(function() {
+        		$(this).val($(this).val().trim());
+        	})
         }
         
 		</script>
