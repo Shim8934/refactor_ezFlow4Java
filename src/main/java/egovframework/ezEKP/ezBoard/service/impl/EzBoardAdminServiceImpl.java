@@ -157,15 +157,15 @@ public class EzBoardAdminServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		try {			
 			String docPath = commonUtil.getUploadPath("upload_board.FORM", tenantID) + commonUtil.separator;	
-			String fullPath = realPath + docPath;
-			File doc = new File(fullPath);		
+			String fullPath = realPath + commonUtil.detectPathTraversal(docPath);
+			File doc = new File(fullPath);
 			
 			if (!doc.exists() || !doc.isDirectory()) {
 				doc.mkdir();
 			}
 			
 			dbPath = docPath + boardID + ".mht";
-			mhtFilePath = realPath + dbPath;
+			mhtFilePath = realPath + commonUtil.detectPathTraversal(dbPath);
 			File mht = new File(mhtFilePath);
 			
 			if (mht.exists()) {

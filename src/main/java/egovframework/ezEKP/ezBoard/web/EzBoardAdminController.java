@@ -6,12 +6,10 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
-
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezBoard.service.EzBoardAdminService;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -550,10 +547,10 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		writeUploadedFile(file, "S_" + fileName, realPath + filePath);
 		
 		try {
-			File imageFile = new File(realFullPath);
+			File imageFile = new File(commonUtil.detectPathTraversal(realFullPath));
 			
 			if (imageFile.exists()) {
-				BufferedImage bi = ImageIO.read(new File(realFullPath));
+				BufferedImage bi = ImageIO.read(new File(commonUtil.detectPathTraversal(realFullPath)));
 				width = bi.getWidth();
 				height = bi.getHeight();
 				
@@ -590,7 +587,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			writeUploadedFile(file, "S_" + fileName, realPath + filePath);
 			
 			try {
-				File tempFile = new File(realPath + tempFilePath + commonUtil.separator + "S_" + fileName);
+				File tempFile = new File(realPath + tempFilePath + commonUtil.separator + "S_" + commonUtil.detectPathTraversal(fileName));
 				
 				if (tempFile != null) {
 					tempFile.delete();
@@ -625,7 +622,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardBackgroundVO.setTenantID(userInfo.getTenantId());
 		
 		try {
-			File tempFile = new File(realPath + filePath + commonUtil.separator +"S_" + fileName);
+			File tempFile = new File(realPath + filePath + commonUtil.separator +"S_" + commonUtil.detectPathTraversal(fileName));
 			
 			if (tempFile != null) {
 				tempFile.delete();

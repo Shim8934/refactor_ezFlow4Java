@@ -2332,10 +2332,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String strFilePath = "";
 		
 		for (int i = 0; i < boardListVO.getImageCount(); i++) {
-			strFilePath = boardListVO.getExtensionAttribute5().split("\\|")[i];
+			strFilePath = commonUtil.detectPathTraversal(boardListVO.getExtensionAttribute5().split("\\|")[i]);
 			File file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
 			strFilePath = commonUtil.getUploadPath("upload_board.ROOT", boardListVO.getTenantID()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().split("\\|")[i].replace("tempUploadFile", "");
-			File mvFile = new File(boardListVO.getRealPath() + commonUtil.separator + strFilePath);
+			File mvFile = new File(boardListVO.getRealPath() + commonUtil.separator + commonUtil.detectPathTraversal(strFilePath));
 			
 			if(!mvFile.exists()){
 				FileUtils.copyFile(file, mvFile);
@@ -2748,7 +2748,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			//tempUploadFile을 저장할 때 게시판의 제목으로 저장합니다. 이때 파일명으로 사용할 수 없는 특수문자(8개)가 게시판 제목으로 있을 경우 file을 저장할 수 없어 오류가 발생 
 			String boardItemTitle = boardItemVO.getTitle().replaceAll("[/*?\"<>|:]","_");
 			String newFilePath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", boardItemVO.getTenantID()) + 
-					commonUtil.separator + "{" + UUID.randomUUID().toString() + "}_" + boardItemTitle + fileExtension;
+					commonUtil.separator + "{" + UUID.randomUUID().toString() + "}_" + commonUtil.detectPathTraversal(boardItemTitle + fileExtension);
 			long mhtSize = file.length();
 			
 			FileUtils.copyFile(file, new File(boardItemVO.getFilePath() + newFilePath));
@@ -2766,7 +2766,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			String newFilePath = filePath.split("/")[filePath.split("/").length - 1];
 			newFilePath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", boardItemVO.getTenantID()) +
 					commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + newFilePath.substring(newFilePath.indexOf("_"));
-			
+			newFilePath = commonUtil.detectPathTraversal(newFilePath);
 			FileUtils.copyFile(new File(boardItemVO.getFilePath() + filePath), new File(boardItemVO.getFilePath() + newFilePath));
 			
 			resultXML.append("<NODE>");
@@ -2922,18 +2922,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			for (int k = 0; k < savecount; k++) {
 				String uploadFilePath = realPath + commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 				String tempFilePath = "";
+				String checkFilePath = commonUtil.detectPathTraversal(filePaths[k]);
 				
-				if (filePaths[k].indexOf("s_") == -1) {
-					File file = new File(uploadFilePath + commonUtil.separator + filePaths[k]);
+				if (checkFilePath.indexOf("s_") == -1) {
+					File file = new File(uploadFilePath + commonUtil.separator + checkFilePath);
 					if (file.exists()) {
-						tempFilePath = uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + filePaths[k].replace("tempUploadFile", "");
+						tempFilePath = uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + checkFilePath.replace("tempUploadFile", "");
 						FileUtils.copyFile(file, new File(tempFilePath));
 						FileUtils.deleteQuietly(file);
 					}
 				} else {
-					File file2 = new File(uploadFilePath + commonUtil.separator + filePaths[k].replace("s_", ""));
+					File file2 = new File(uploadFilePath + commonUtil.separator + checkFilePath.replace("s_", ""));
 					if (file2.exists()) {
-						tempFilePath = uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + filePaths[k].replace("s_", "").replace("tempUploadFile", "");
+						tempFilePath = uploadFilePath + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + checkFilePath.replace("s_", "").replace("tempUploadFile", "");
 						FileUtils.copyFile(file2, new File(tempFilePath));
 						FileUtils.deleteQuietly(file2);
 					}
@@ -3141,13 +3142,13 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 						filePath = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
 					}
 					
-					File file = new File(realPath + filePath);
+					File file = new File(realPath + commonUtil.detectPathTraversal(filePath));
 					fileSize = file.length();
 					
 					if (strAttachments.split("\\|")[i].indexOf("tempUploadFile") > -1) {
 						filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split("\\|")[i].replace("tempUploadFile", "");
 						
-						File fileinfo = new File(realPath + filePath2);
+						File fileinfo = new File(realPath + commonUtil.detectPathTraversal(filePath2));
 						
 						if (!fileinfo.exists()) {
 							FileUtils.moveFile(file, fileinfo);
@@ -3160,10 +3161,11 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					
 					file = null;
 				} else {
-					File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2]);
+					String checkPath = commonUtil.detectPathTraversal(strAttachments.split("\\|")[i].split("/")[2]);
+					File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + checkPath);
 					fileSize = file.length();
 					
-					filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2];
+					filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + checkPath;
 					
 					File fileinfo = new File(realPath + filePath2);
 					
@@ -3210,8 +3212,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			strHTML = strHTML.replace("'", "''");
 		}
 		
-		docPath = strFilePath + commonUtil.separator + strBoardID;
-		mhtFilePath = strMHTFilename + ".mht";
+		docPath = commonUtil.detectPathTraversal(strFilePath + commonUtil.separator + strBoardID);
+		mhtFilePath = commonUtil.detectPathTraversal(strMHTFilename + ".mht");
 		
 		String stordFilePathReal = docPath + commonUtil.separator + "doc";
 		
@@ -3395,7 +3397,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		for (BoardDeleteItemVO k : boardInfoList) {
 			logger.debug("deleteBoardPath :  " + realPath + commonUtil.getUploadPath("upload_board.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID());
-			Path docPath = Paths.get(realPath + commonUtil.getUploadPath("upload_board.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID());
+			Path docPath = Paths.get(realPath + commonUtil.getUploadPath("upload_board.ROOT", k.getTenantID()) + commonUtil.separator + commonUtil.detectPathTraversal(k.getBoardID()));
 			
 			//게시판 디렉토리 하위 이미지, 게시물 관련 파일 모두 지우기
 			try {
@@ -3453,8 +3455,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		for (BoardDeleteItemVO k : boardItemList) {
-			Path docPath = Paths.get(realPath + commonUtil.getUploadPath("upload_board.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID()
-					+ commonUtil.separator + "doc" + commonUtil.separator + k.getItemID() + ".mht");
+			Path docPath = Paths.get(realPath + commonUtil.getUploadPath("upload_board.ROOT", k.getTenantID()) + commonUtil.separator + commonUtil.detectPathTraversal(k.getBoardID())
+					+ commonUtil.separator + "doc" + commonUtil.separator + commonUtil.detectPathTraversal(k.getItemID()) + ".mht");
 			
 			Files.deleteIfExists(docPath);
 			
@@ -3465,7 +3467,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			List<String> filePathList = ezBoardDAO.getCopyItemAttach(map);
 			
 			for (String h : filePathList) {
-				Path filePath = Paths.get(realPath + h);
+				Path filePath = Paths.get(realPath + commonUtil.detectPathTraversal(h));
 				
 				Files.deleteIfExists(filePath);
 			}
@@ -3613,9 +3615,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			//move 이면 지우고 옮기기
 			if (mode.equals("copy")) {
-				FileUtils.copyFile(new File(orgFilePath), new File(destFilePath));
+				FileUtils.copyFile(new File(commonUtil.detectPathTraversal(orgFilePath)), new File(commonUtil.detectPathTraversal(destFilePath)));
 			} else {
-				FileUtils.moveFile(new File(orgFilePath), new File(destFilePath));
+				FileUtils.moveFile(new File(commonUtil.detectPathTraversal(orgFilePath)), new File(commonUtil.detectPathTraversal(destFilePath)));
 			}
 		}
 
@@ -3785,15 +3787,15 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String orgFilePath = "";
 		String destFilePath = "";
 		
-		orgFilePath = path + commonUtil.separator + orgBoardID + commonUtil.separator + "doc" + commonUtil.separator + orgItemID + ".mht";
-		destFilePath = path + commonUtil.separator + destBoardID + commonUtil.separator + "doc" + commonUtil.separator + destItemID + ".mht";
+		orgFilePath = path + commonUtil.separator + commonUtil.detectPathTraversal(orgBoardID) + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.detectPathTraversal(orgItemID) + ".mht";
+		destFilePath = path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.detectPathTraversal(destItemID) + ".mht";
 		
-		File file = new File(path + commonUtil.separator + destBoardID);
+		File file = new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID));
 		
 		if (!file.exists()) {
 			file.mkdir();
-			new File(path + commonUtil.separator + destBoardID + commonUtil.separator + "doc").mkdir();
-			new File(path + commonUtil.separator + destBoardID + commonUtil.separator + "uploadFile").mkdir();
+			new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "doc").mkdir();
+			new File(path + commonUtil.separator + commonUtil.detectPathTraversal(destBoardID) + commonUtil.separator + "uploadFile").mkdir();
 		}
 		
 		//move 이면 지우고 옮기기
