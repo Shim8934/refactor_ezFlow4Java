@@ -8222,7 +8222,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userJobTitle2 = doc.getElementsByTagName("PUSERJOBTITLE2").item(0).getTextContent();
 		String userDeptName2 = doc.getElementsByTagName("PUSERDEPTNAME2").item(0).getTextContent();
 		
-		if (doc.getElementsByTagName("ORGCOMPANYID") != null && !doc.getElementsByTagName("ORGCOMPANYID").equals(userInfo.getCompanyID()) ) {
+		if (doc.getElementsByTagName("ORGCOMPANYID").getLength() > 0 && !doc.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent().equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(doc.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
 		}
 
@@ -8894,5 +8894,21 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("checkHabYuiState ended.");
 		return result;
+	}
+	
+	/* 
+	 * 회송문서의 철정보를 원문서 정보로 변경
+	 * */
+	@RequestMapping(value = "/ezApprovalG/setHesongCabinetInfo.do")
+	@ResponseBody
+	public void setHesongCabinetInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("setHesongCabinetInfo started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		
+		ezApprovalGService.setHesongCabinetID(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("setHesongCabinetInfo ended.");
 	}
 }

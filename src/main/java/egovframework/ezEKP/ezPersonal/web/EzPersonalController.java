@@ -1714,8 +1714,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String returnValue = "DELETE";
-		String pUserId = request.getParameter("userId");
 		String devId = request.getParameter("pDevId");
+		String pUserId = request.getParameter("userId");
 		String userId = pUserId == null ? userInfo.getId() : pUserId;
 		String inputParams = "userId=" + userId + "&devId=" + devId;
 		logger.debug("inputParams=" + inputParams);
@@ -1744,7 +1744,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 
 		String returnValue = "OK";
-		String userId = userInfo.getId();
+		String pUserId = request.getParameter("userId");
+		String userId = pUserId == null ? userInfo.getId() : pUserId;
 		String devId = request.getParameter("pDevId");
 		String notUsed = request.getParameter("pState");
 		String inputParams = "userId=" + userId + "&devId=" + devId + "&notUsed=" + notUsed;
