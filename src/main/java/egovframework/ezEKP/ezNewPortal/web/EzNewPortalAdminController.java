@@ -840,7 +840,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			if (result.equals("ok")) {
 				model.addAttribute("menuList", resultBody.get("data"));
 				model.addAttribute("companyId", companyId);
-				model.addAttribute("portletId", request.getParameter("portletId"));
+				model.addAttribute("portletId", commonUtil.stripScriptTags(request.getParameter("portletId")));
 			}
 			
 			LOGGER.debug("openPortalMenu ended.");

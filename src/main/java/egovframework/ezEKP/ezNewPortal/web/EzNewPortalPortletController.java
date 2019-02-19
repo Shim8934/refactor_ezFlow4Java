@@ -107,7 +107,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String usedTheme = req.getParameter("usedTheme");
 		
 		model.addAttribute("portletName", req.getParameter("portletName"));
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		return "/ezNewPortal/portlets/noticePortlet";
 	}
 	
@@ -157,7 +157,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String usedTheme = req.getParameter("usedTheme");
 		
 		model.addAttribute("portletName", req.getParameter("portletName"));
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		
 		logger.debug("portalReceivedMailPortlet End");
 		return "/ezNewPortal/portlets/receivedMailPortlet";
@@ -207,7 +207,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("portalVotePortlet Start");
 		String usedTheme = req.getParameter("usedTheme");
 		
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -244,7 +244,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String usedTheme = req.getParameter("usedTheme");
 		
 		model.addAttribute("portletName", req.getParameter("portletName"));
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		
 		return "/ezNewPortal/portlets/pollPortlet";
 	}
@@ -277,7 +277,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String usedTheme = req.getParameter("usedTheme");
 		
 		model.addAttribute("portletName", req.getParameter("portletName"));
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		
 		logger.debug("portalSchedulePortlet End");
 		return "/ezNewPortal/portlets/schedulePortlet";
@@ -325,7 +325,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String usedTheme = req.getParameter("usedTheme");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("portalApprovalListPortlet ended.");
@@ -381,7 +381,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String usedTheme = req.getParameter("usedTheme");
 		
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = request.getParameter("portletId");
@@ -467,7 +467,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String usedTheme = req.getParameter("usedTheme");
 		
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = req.getParameter("portletId");
@@ -507,7 +507,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String usedTheme = req.getParameter("usedTheme");
 		
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -598,7 +598,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String usedTheme = req.getParameter("usedTheme");
 		
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -665,7 +665,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String usedTheme = req.getParameter("usedTheme");
 		
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		
 		return "/ezNewPortal/portlets/helpPortlet";
 	}
@@ -679,7 +679,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String usedTheme = req.getParameter("usedTheme");
 		
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -705,7 +705,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String usedTheme = req.getParameter("usedTheme");
 		
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		model.addAttribute("portletName", req.getParameter("portletName"));
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -813,7 +813,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String usedTheme = req.getParameter("usedTheme");
 		
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		model.addAttribute("portletName", req.getParameter("portletName"));
 		
 		Calendar cal = Calendar.getInstance();
@@ -894,7 +894,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String usedTheme = req.getParameter("usedTheme");
 		
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = req.getParameter("portletId");
@@ -935,7 +935,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		String usedTheme = req.getParameter("usedTheme");
 		
 		model.addAttribute("userId", userInfo.getId());
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		
 		logger.debug("ezWorkspacePortlet End");
 		return "/ezNewPortal/portlets/ezWorkspacePortlet";
@@ -950,7 +950,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		
 		String usedTheme = req.getParameter("usedTheme");
 		
-		model.addAttribute("usedTheme", usedTheme);
+		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = req.getParameter("portletId");
