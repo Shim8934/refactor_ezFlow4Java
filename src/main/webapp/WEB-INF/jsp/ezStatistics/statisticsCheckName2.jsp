@@ -114,7 +114,7 @@
 		    <li><span onClick="cancel_onClick()"></span></li>
 		  </ul>
 		</div>
-		<h2><spring:message code='ezPersonal.t100003' /></h2>
+		<h2><spring:message code='ezOrgan.t109' /></h2>
 		<div class="listview">
 		  <div id="ListViewItem" style="width:100%; min-width:587px; Height:210px; border:0px;overflow:auto" ></div>
 		</div>

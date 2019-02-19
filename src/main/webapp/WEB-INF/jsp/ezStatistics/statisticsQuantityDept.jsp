@@ -116,8 +116,18 @@
     function makeoptionyear() {
         var date = new Date()
         var year = date.getFullYear();
-
-        if (isfirst) {
+        var lastYear = 2017;
+        var diffYear = year - lastYear;
+        
+        for (var i = 0; i <= diffYear; i++) {
+            var option = document.createElement("OPTION");
+            option.value = year;
+            option.innerHTML = year;
+            
+            document.getElementById("selyear").appendChild(option);
+            year--;
+        }
+        /* if (isfirst) {
             tempyear = year;
             for (var i = 0; i < 5; i++) {
                 var option = document.createElement("OPTION");
@@ -146,8 +156,23 @@
                     tempyear--;
                 }
                 tempyear = selyear + 2;
+            } else if (selyear + 1 == year){
+            	document.getElementById("selyear").innerHTML = "";
+                tempyear = selyear + 1;
+                for (var i = 0; i < 5; i++) {
+                    var option = document.createElement("OPTION");
+                    option.value = tempyear;
+                    option.innerHTML = tempyear;
+
+                    if (selyear == tempyear)
+                        option.selected = true;
+
+                    document.getElementById("selyear").appendChild(option);
+                    tempyear--;
+                }
+                tempyear = selyear + 1;
             }
-        }
+        } */
     }
 
     var data = new Array();
@@ -518,7 +543,7 @@
     <tr>
         <td style="width: 99%">
             <span id="topmenu" style="width: 500px">&nbsp;<spring:message code='ezStatistics.t1002' /> : 
-        <select style="height:24px" id="selyear" onchange="makeoptionyear(); getmailstatistics()"></select>
+        <select style="height:24px" id="selyear" onchange="getmailstatistics()"></select>
                 <spring:message code='ezStatistics.t55' />
    &nbsp;&nbsp;<spring:message code='ezStatistics.t1013' /> : 
          <input id="deptkeyword" type="text" style="width: 100px" onkeypress="search_press(event)" />
