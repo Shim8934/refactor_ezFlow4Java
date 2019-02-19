@@ -1419,8 +1419,26 @@
 		        var oArrRows = DocList.GetSelectedRows();
 		        var tr = oArrRows[0];
 		        if (tr.getAttribute("DATA10") == "015") {
-		            if (Ans) {
-		                RemoveDocCabinet(tr.getAttribute("DATA1"), "Y");
+		        	if (Ans) {
+		            	//2019-02-18 기안원문서철과 비교해서 다르면 다시 세팅
+		            	
+		            	var result = "";
+		            	$.ajax({
+		            		type : "POST",
+				    		dataType : "text",
+				    		async : false,
+				    		url : "/ezApprovalG/setHesongCabinetInfo.do",
+				    		data : {
+				    				docID  : tr.getAttribute("DATA1")
+				    				},
+				    		success: function(xml){
+				    			RemoveDocCabinet(tr.getAttribute("DATA1"), "Y");
+				    		},
+				    		error : function(error) {
+// 				    			OpenAlertUI(strLang936 + "<spring:message code='ezApprovalG.t933'/>");
+				    			alert(strLang936 + "<spring:message code='ezApprovalG.t933'/>");
+				    		}
+		            	});
 		                openergetDocInfo();
 		            }
 		        }

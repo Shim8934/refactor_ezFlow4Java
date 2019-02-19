@@ -28195,4 +28195,35 @@
 		AND
 			APRSTATE = '001'
 	</select>
+	
+	<update id="EzApprovalG.setHesongCabinetID" parameterClass="Map">
+    	update
+		    tbl_expaprdocinfo a
+		set
+		    (cabinetid, taskcode)
+		    = (
+		        SELECT
+		            cabinetid,
+		            taskcode
+		        FROM
+		            tbl_expendaprdocinfo
+		        WHERE
+		            docid = (
+		                SELECT
+		                    orgdocid
+		                FROM
+		                    tbl_aprdocinfo
+		                WHERE
+		                    docid = #docID#
+		                    AND   companyid = #companyID#
+		                    AND   tenant_id = #tenantId#
+		            )
+		            AND   companyid = #companyID#
+		            AND   tenant_id = #tenantId#
+		    )
+		WHERE
+		    a.docid = #docID#
+		    AND   a.companyid = #companyID#
+		    AND   a.tenant_id = #tenantId#
+    </update>
 </sqlMap>

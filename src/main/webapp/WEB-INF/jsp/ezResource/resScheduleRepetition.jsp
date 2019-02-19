@@ -23,6 +23,8 @@
 		<script type="text/javascript">
 			var lang = "${userInfo.lang}";
 			var pRepetitionFlag = 1; //0:매일, 1:매주, 2:매월, 3:매년 (매주가 default이므로 초기설정)
+			var sTimeTemp = "";
+		    var eTimeTemp = "";
 			
 		    function windows_close() {
 		        window.close();
@@ -32,6 +34,7 @@
 	    	window.onload = function () {
 		        window_onload();
 	        	datepicker();        
+	        	clearAllDay();
 	    	}
 	    	
 	    	function KeEventControl(obj) {
@@ -103,6 +106,9 @@
 	        	$('#Etimepicker').timepicker();
 	        	$('#Etimepicker').timepicker('setTime', EDate);
 	        	$('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+	        	
+		        sTimeTemp = $('#Stimepicker').val();
+		        eTimeTemp = $('#Etimepicker').val();
 	    	}
 	    	
 	    	$(function () {
@@ -176,6 +182,38 @@
 		        	} 
 	        	}
 	    	}
+	    	
+	    	/* 2019-02-19 김민성 - 자원관리 하루종일 체크시 시간 00:00로 변경(일정관리와 스펙 맞춤) */
+	    	function allDayTime(){
+	    		if(document.getElementById("alldaycheck").checked == true){
+	    			sTimeTemp = $('#Stimepicker').val();
+		    		eTimeTemp = $('#Etimepicker').val();
+		    		$('#Stimepicker').timepicker("setTime", "00:00");
+		    		$('#Etimepicker').timepicker("setTime", "00:00");
+		    	}else{
+		    		$('#Stimepicker').timepicker("setTime", sTimeTemp);
+		    		$('#Etimepicker').timepicker("setTime", eTimeTemp);
+		    	}
+		    }
+	    	
+	    	function clearAllDay(){
+		    	$('#Stimepicker').change(function(){
+		    		if($("#alldaycheck").prop("checked") == true){
+		    			$("#alldaycheck").prop("checked", false);
+		    		}
+		    		if($('#Stimepicker').val() == "00:00" && $('#Etimepicker').val() == "00:00"){
+		    			$("#alldaycheck").prop("checked", true);
+		    		}
+		    	});
+		    	$('#Etimepicker').change(function(){
+		    		if($("#alldaycheck").prop("checked") == true){
+		    			$("#alldaycheck").prop("checked", false);
+		    		}
+		    		if(($('#Stimepicker').val() == "00:00") && ($('#Etimepicker').val() == "00:00")){
+		    			$("#alldaycheck").prop("checked", true);
+		    		}
+		    	});
+		    }
 		</script>
 	</head>
 	<body class="popup">
@@ -193,7 +231,7 @@
       				<td>
        					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" />
      					<label for="btnT1"></label>
-     					<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" />
+     					<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" onclick="allDayTime()" />
      					<spring:message code="ezResource.t277"/>
         			</td>
     			</tr>

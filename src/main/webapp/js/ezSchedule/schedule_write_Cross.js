@@ -788,6 +788,7 @@ function config_repeat()
 		} 	   
 	}
 	args["REPETITION"] = repetition;
+	args["ALLDAYCHECK"] = document.getElementById("alldaycheck").checked;		// 일정작성 탭 하루종일 체크 유무
 
 	schedule_repetition_cross_dialogArguments[0] = args;
 	schedule_repetition_cross_dialogArguments[1] = config_repeat_Complete;
@@ -993,8 +994,10 @@ function show_repetition_info()
 
 	repeatinfo += " " + strLang38;
 	
-	if (info[1] == "1")
+	if (info[1] == "1") {					// 하루종일 일정
 		repeatinfo += strLang39;
+		document.getElementById("alldaycheck").checked = true;
+	}
 	else
 	{
 		var sdate, edate;

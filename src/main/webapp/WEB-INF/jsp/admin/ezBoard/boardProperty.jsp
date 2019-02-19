@@ -119,6 +119,7 @@
 	            }
 			});
 			
+			/* 2019-02-18 홍승비 - 일반설정 저장 시 각 필드 문자, 숫자 입력 제한 적용 */
 			function Save() {
 	            if ($.trim($("#txtBoardName").val()) == "") {
 	                alert("<spring:message code='ezBoard.t144'/>");
@@ -179,17 +180,29 @@
 	                FormFlag = "N";
 				}
 	            
+	            // 게시만료일
 	            if ($("#chkPermanent").is(":checked")) {
 	                Expires = "-1"
 	            } else {
-	                Expires = $("#txtExpires").val();
+	            	if (!$("#txtExpires").val().match(/^\d+$/)) {
+					    alert("<spring:message code='ezBoard.t156'/>: <spring:message code='ezEmail.t99000066'/>");
+					    return;
+					} else {
+	                	Expires = $("#txtExpires").val();
+	                }
 	            }
 
+	            // 만료게시물 정책
 	            var iDeleteAfter = "-1";
-	            if ($("#usedeleteafter").is(":checked") && $("#deleteafter").val() == "") {
-	                alert("<spring:message code='ezBoard.t146'/>");
-	                $("#deleteafter").focus();
-	                return;
+	            if ($("#usedeleteafter").is(":checked")) {
+		            if ($("#deleteafter").val() == "") {
+		                alert("<spring:message code='ezBoard.t146'/>");
+		                $("#deleteafter").focus();
+		                return;
+		            } else if (!$("#usedeleteafter").val().match(/^\d+$/)) {
+						alert("<spring:message code='ezBoard.t159'/>: <spring:message code='ezEmail.t99000066'/>");
+					    return;
+		            }
 	            }
 	            
 	            var url = $("#txtURL").val().trim();
@@ -227,9 +240,14 @@
 	                iDeleteAfter = $("#deleteafter").val();
 	            }
 	            
+	            // 첨부크기제한
 	            if (AttachMax == "") {
 	            	AttachMax = "5";
+	            } else if (!AttachMax.match(/^\d+$/)) {
+					alert("<spring:message code='ezBoard.t167'/>: <spring:message code='ezEmail.t99000066'/>");
+					return;
 	            }
+	            
 	            if (Expires == "") {
 	            	Expires = "30";
 	            }
