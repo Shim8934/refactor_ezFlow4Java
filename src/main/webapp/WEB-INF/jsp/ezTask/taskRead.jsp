@@ -464,7 +464,7 @@
 					repetition_Delete();
 				} 
 				else {
-					if (!confirm("<spring:message code='ezTask.t106' />")) {
+					if (confirm("<spring:message code='ezTask.t106' />")) {
 						delete_task();
 					}
 				}
@@ -472,7 +472,7 @@
 			
 			var deltaskid = "";
 			function delete_task() {
-				/* if (!confirm("<spring:message code='ezTask.t106' />")) {
+				/* if (confirm("<spring:message code='ezTask.t106' />")) {
 					return;
 				} */	
 				
