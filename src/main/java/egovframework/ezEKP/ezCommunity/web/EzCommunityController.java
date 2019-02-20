@@ -3127,7 +3127,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String parentBoardID = request.getParameter("parentBoardID");
 		String boardGroupID = request.getParameter("boardGroupID");
 		String code = request.getParameter("code");
-		
 		String orgBoardParameters = request.getParameter("orgBoardParameters");
 		
 		if (request.getParameter("page") != null) {
@@ -3198,6 +3197,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         model.addAttribute("title", title);
         model.addAttribute("writerName", writerName);
         model.addAttribute("abstract", abstracts);
+        model.addAttribute("pPage", pPage);
         
 		return "ezCommunity/communityAdminSearchBoardItem";
 	}
