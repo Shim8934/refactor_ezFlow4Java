@@ -957,8 +957,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				JSONObject portletNameInfo = (JSONObject) item;
 				
 				map = new ObjectMapper().readValue(portletNameInfo.toJSONString(), Map.class);
-				map.put("portletName", commonUtil.stripScriptTags(map.get("portletName").toString()));
-				map.put("portletLang", commonUtil.stripScriptTags(map.get("portletLang").toString()));
+				
+				String portletName = commonUtil.stripScriptTags(map.get("portletName").toString());
+				portletName = commonUtil.detectPathTraversal(portletName);
+				portletName = specialCharacterToEmptyString(portletName);
+
+				String portletLang = commonUtil.stripScriptTags(map.get("portletLang").toString());
+				portletLang = commonUtil.detectPathTraversal(portletLang);
+				portletLang = specialCharacterToEmptyString(portletLang);
+				
+				map.put("portletName", portletName);
+				map.put("portletLang", portletLang);
 				
 				map.put("menuId", menuId);
 				map.put("portletId", portletId);
@@ -999,9 +1008,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		if (map.get("boardId") != null) {
 			map.put("boardId", commonUtil.stripScriptTags(map.get("boardId").toString()));
 		}
+
+		String connectionUrl = commonUtil.stripScriptTags(map.get("connectionUrl").toString());
+		connectionUrl = commonUtil.detectPathTraversal(connectionUrl);
+		connectionUrl = specialCharacterToEmptyString(connectionUrl);
 		
-		map.put("connectionUrl", commonUtil.stripScriptTags(map.get("connectionUrl").toString()));
-		map.put("menuId", commonUtil.stripScriptTags(map.get("menuId").toString()));
+		map.put("connectionUrl", connectionUrl);
+		map.put("menuId", Integer.parseInt(map.get("menuId").toString()));
 		map.put("companyLang", 1);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -1020,9 +1033,19 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				JSONObject portletNameInfo = (JSONObject) item;
 				
 				map = new ObjectMapper().readValue(portletNameInfo.toJSONString(), Map.class);
+
+				String portletName = commonUtil.stripScriptTags(map.get("portletName").toString());
+				portletName = commonUtil.detectPathTraversal(portletName);
+				portletName = specialCharacterToEmptyString(portletName);
+
+				String portletLang = commonUtil.stripScriptTags(map.get("portletLang").toString());
+				portletLang = commonUtil.detectPathTraversal(portletLang);
+				portletLang = specialCharacterToEmptyString(portletLang);
+				
+				map.put("portletName", portletName);
+				map.put("portletLang", portletLang);
+				
 				map.put("portletId", commonUtil.stripScriptTags(map.get("portletId").toString()));
-				map.put("portletName", commonUtil.stripScriptTags(map.get("portletName").toString()));
-				map.put("portletLang", commonUtil.stripScriptTags(map.get("portletLang").toString()));
 				
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
@@ -1516,8 +1539,19 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		for (Object item : menuNames) {
 			if (item instanceof JSONObject) {
 				JSONObject menuNameInfo = (JSONObject) item;
-				
 				map = new ObjectMapper().readValue(menuNameInfo.toJSONString(), Map.class);
+				
+				String menuLang = commonUtil.stripScriptTags(map.get("menuLang").toString());
+				menuLang = commonUtil.detectPathTraversal(menuLang);
+				menuLang = specialCharacterToEmptyString(menuLang);
+				
+				String menuName = commonUtil.stripScriptTags(map.get("menuName").toString());
+				menuName = commonUtil.detectPathTraversal(menuName);
+				menuName = specialCharacterToEmptyString(menuName);
+				
+				map.put("menuLang", menuLang);
+				map.put("menuName", menuName);
+				
 				map.put("companyId", companyId);
 				map.put("tenantId", tenantId);
 				
@@ -1601,7 +1635,6 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		iconUrl = commonUtil.detectPathTraversal(iconUrl);
 		iconUrl = specialCharacterToEmptyString(iconUrl);
 		
-		
 		map.put("menuUrl", menuUrl);
 		map.put("iconUrl", iconUrl);
 		
@@ -1623,8 +1656,16 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				
 				map = new ObjectMapper().readValue(menuNameInfo.toJSONString(), Map.class);
 				//2018.02.19 정보 저장시 secure coding 적용
-				map.put("menuLang", commonUtil.stripScriptTags(map.get("menuLang").toString()));
-				map.put("menuName", commonUtil.stripScriptTags(map.get("menuName").toString()));
+				String menuLang = commonUtil.stripScriptTags(map.get("menuLang").toString());
+				menuLang = commonUtil.detectPathTraversal(menuLang);
+				menuLang = specialCharacterToEmptyString(menuLang);
+				
+				String menuName = commonUtil.stripScriptTags(map.get("menuName").toString());
+				menuName = commonUtil.detectPathTraversal(menuName);
+				menuName = specialCharacterToEmptyString(menuName);
+				
+				map.put("menuLang", menuLang);
+				map.put("menuName", menuName);
 				
 				map.put("menuId", menuId);
 				map.put("companyId", companyId);
@@ -2253,6 +2294,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		value = value.replaceAll("%", "");
 		value = value.replaceAll("#", "");
 		value = value.replaceAll(":", "");
+        value = value.replaceAll("<", "& lt;").replaceAll(">", "& gt;");
+        value = value.replaceAll("\\(", "& #40;").replaceAll("\\)", "& #41;");
+        value = value.replaceAll("'", "& #39;");
+        value = value.replaceAll("eval\\((.*)\\)", "");
+        value = value.replaceAll("[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']", "\"\"");
+        value = value.replaceAll("script", "");
 		
 		return value;
 	}

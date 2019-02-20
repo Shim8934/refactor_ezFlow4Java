@@ -104,10 +104,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/noticePortlet.do", method=RequestMethod.GET)
 	public String portalNoticePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalNoticePortlet Start");
-		String usedTheme = req.getParameter("usedTheme");
 		
 		model.addAttribute("portletName", req.getParameter("portletName"));
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		return "/ezNewPortal/portlets/noticePortlet";
 	}
 	
@@ -154,10 +153,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalReceivedMailPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalReceivedMailPortlet Start");
 		
-		String usedTheme = req.getParameter("usedTheme");
-		
 		model.addAttribute("portletName", req.getParameter("portletName"));
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		
 		logger.debug("portalReceivedMailPortlet End");
 		return "/ezNewPortal/portlets/receivedMailPortlet";
@@ -205,9 +202,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	@RequestMapping(value = "/ezNewPortal/votePortlet.do", method=RequestMethod.GET)
 	public String portalVotePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalVotePortlet Start");
-		String usedTheme = req.getParameter("usedTheme");
 		
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -241,10 +237,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalPollPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalNoticePortlet Start");
 		
-		String usedTheme = req.getParameter("usedTheme");
-		
 		model.addAttribute("portletName", req.getParameter("portletName"));
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		
 		return "/ezNewPortal/portlets/pollPortlet";
 	}
@@ -274,10 +268,8 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalSchedulePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalSchedulePortlet Start");
 		
-		String usedTheme = req.getParameter("usedTheme");
-		
 		model.addAttribute("portletName", req.getParameter("portletName"));
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		
 		logger.debug("portalSchedulePortlet End");
 		return "/ezNewPortal/portlets/schedulePortlet";
@@ -322,10 +314,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalApprovalListPortlet(HttpServletRequest req, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("portalApprovalListPortlet started.");
 		
-		String usedTheme = req.getParameter("usedTheme");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("portalApprovalListPortlet ended.");
@@ -379,9 +370,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalFavoriteFormsPortlet(HttpServletRequest req, @CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("favoriteFormsPortlet started.");
 		
-		String usedTheme = req.getParameter("usedTheme");
-		
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(request.getParameter("usedTheme")));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = request.getParameter("portletId");
@@ -465,9 +454,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalPhotoBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie,HttpServletResponse resp) throws Exception {
 		logger.debug("portalPhotoBoardPortlet Start");
 		
-		String usedTheme = req.getParameter("usedTheme");
-		
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = req.getParameter("portletId");
@@ -505,9 +492,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalFavoriteBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalFavoriteBoardPortlet Start");
 		
-		String usedTheme = req.getParameter("usedTheme");
-		
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -596,9 +581,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalCommunityPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalCommunityPortlet Start");
 		
-		String usedTheme = req.getParameter("usedTheme");
-		
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -663,9 +646,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalHelpPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalHelpPortlet Start");
 		
-		String usedTheme = req.getParameter("usedTheme");
-		
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		
 		return "/ezNewPortal/portlets/helpPortlet";
 	}
@@ -677,9 +658,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalCurrencyPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, HttpServletResponse resp) throws Exception {
 		logger.debug("portalCurrencyPortlet Start");
 		
-		String usedTheme = req.getParameter("usedTheme");
-		
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -703,9 +682,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalWeatherePortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse resp, Locale locale) throws Exception {
 		logger.debug("portalWeatherePortlet Start");
 		
-		String usedTheme = req.getParameter("usedTheme");
-		
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		model.addAttribute("portletName", req.getParameter("portletName"));
 		
 		userInfo = commonUtil.userInfo(loginCookie);
@@ -811,9 +788,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalBirthdayPortlet(HttpServletRequest req, Model model) throws Exception {
 		logger.debug("portalBirthdayPortlet Start");
 		
-		String usedTheme = req.getParameter("usedTheme");
-		
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		model.addAttribute("portletName", req.getParameter("portletName"));
 		
 		Calendar cal = Calendar.getInstance();
@@ -878,7 +853,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 			model.addAttribute("userPhoto", data.get("userPhoto"));
 			model.addAttribute("userEmail", data.get("userEmail"));
 			model.addAttribute("lastLogin", data.get("lastLogin"));
-			model.addAttribute("usedTheme", req.getParameter("usedTheme"));
+			model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		}
 		
 		logger.debug("portalUserInfoPortlet End");
@@ -892,9 +867,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalMovieBoardPortlet(HttpServletRequest req, Model model,@CookieValue("loginCookie") String loginCookie,HttpServletResponse resp) throws Exception {
 		logger.debug("portalMovieBoardPortlet Start");
 		
-		String usedTheme = req.getParameter("usedTheme");
-		
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = req.getParameter("portletId");
@@ -932,10 +905,9 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("ezWorkspacePortlet Start");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String usedTheme = req.getParameter("usedTheme");
 		
 		model.addAttribute("userId", userInfo.getId());
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		
 		logger.debug("ezWorkspacePortlet End");
 		return "/ezNewPortal/portlets/ezWorkspacePortlet";
@@ -948,9 +920,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String portalBoardPortlet(HttpServletRequest req, Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("portalBoardPortlet Start");
 		
-		String usedTheme = req.getParameter("usedTheme");
-		
-		model.addAttribute("usedTheme", commonUtil.stripScriptTags(usedTheme));
+		model.addAttribute("usedTheme", Integer.parseInt(req.getParameter("usedTheme")));
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = req.getParameter("portletId");
@@ -1060,5 +1030,29 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		logger.debug("errorPortlet Start");
 		logger.debug("errorPortlet End");
 		return "/ezNewPortal/portlets/errorPortlet"; 
+	}
+	
+	public String specialCharacterToEmptyString(String value) {
+		value = value.replaceAll("\'", "");
+		value = value.replaceAll("\"", "");
+		value = value.replaceAll("AND", "");
+		value = value.replaceAll("OR", "");
+		value = value.replaceAll("and", "");
+		value = value.replaceAll("or", "");
+		value = value.replaceAll("\\+", "");
+		value = value.replaceAll("@", "");
+		value = value.replaceAll("\\$", "");
+		value = value.replaceAll(";", "");
+		value = value.replaceAll("%", "");
+		value = value.replaceAll("#", "");
+		value = value.replaceAll(":", "");
+        value = value.replaceAll("<", "& lt;").replaceAll(">", "& gt;");
+        value = value.replaceAll("\\(", "& #40;").replaceAll("\\)", "& #41;");
+        value = value.replaceAll("'", "& #39;");
+        value = value.replaceAll("eval\\((.*)\\)", "");
+        value = value.replaceAll("[\\\"\\\'][\\s]*javascript:(.*)[\\\"\\\']", "\"\"");
+        value = value.replaceAll("script", "");
+		
+		return value;
 	}
 }
