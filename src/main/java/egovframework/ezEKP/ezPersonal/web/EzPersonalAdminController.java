@@ -1031,7 +1031,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String serverPath = dirPath + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + mode + commonUtil.separator;
 		String uniqueName = uploadSN + multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
 		
-		File dir = new File(realPath + serverPath);
+		File dir = new File(commonUtil.detectPathTraversal(realPath + serverPath));
 		
 		if (!dir.exists()) {
 			dir.mkdirs();
@@ -1039,7 +1039,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		writeUploadedFile(multiFile, uniqueName, realPath + serverPath);
 		
-		File file = new File(realPath + serverPath + uniqueName);
+		File file = new File(commonUtil.detectPathTraversal(realPath + serverPath + uniqueName));
 		
 		if (mode.equals("SLIDERIMAGE")) {
 			String saveName = UUID.randomUUID() + ".jpg";
@@ -1052,7 +1052,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			saveImage.drawImage(inputImage, 0, 0, 467, 200, null);
 			saveImage.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
 			
-			File newFile = new File(realPath + serverPath + saveName);
+			File newFile = new File(commonUtil.detectPathTraversal(realPath + serverPath + saveName));
 			
 			ImageIO.write(outputImage, "png" , newFile);
 			deleteFile(realPath + serverPath + uniqueName);
@@ -1196,7 +1196,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 
         String pAttachPath = dirPath + commonUtil.separator + boardID + commonUtil.separator + fileName;
        
-        File dir = new File(realPath + serverPath);
+        File dir = new File(commonUtil.detectPathTraversal(realPath + serverPath));
 		
    		if (!dir.exists()) {
    			dir.mkdirs();
@@ -1207,7 +1207,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String extension = null;
         BufferedInputStream bis = null;
    		
-        File file = new File(realPath + pAttachPath);
+        File file = new File(commonUtil.detectPathTraversal(realPath + pAttachPath));
     
         try {
 	        bis = new BufferedInputStream(new FileInputStream(file));
@@ -1250,7 +1250,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		saveImage.setRenderingHints(hm);
 		
-		File newFile = new File(realPath + serverPath + pSaveName);
+		File newFile = new File(commonUtil.detectPathTraversal(realPath + serverPath + pSaveName));
 		
 		ImageIO.write(outputImage, extension.replace(".", "") , newFile);
 		//deleteFile(dirPath + serverPath + fileName);

@@ -373,7 +373,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			pDirPath = pDirPath + commonUtil.separator;
 		}
 		
-		File file = new File(pServerPath);
+		File file = new File(commonUtil.detectPathTraversal(pServerPath));
 		
 		if (!file.exists()) {
 			file.mkdirs();
@@ -388,7 +388,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			
 			fileLocation[i] = userInfo.getCompanyID() + commonUtil.separator + pBoardID + commonUtil.separator + pUniqueName;
 			
-			File imageFile = new File(pServerPath + commonUtil.separator + pUniqueName);
+			File imageFile = new File(commonUtil.detectPathTraversal(pServerPath + commonUtil.separator + pUniqueName));
 			
 			int nImgWidth = 0;
 			int nImgHeight = 0;
@@ -444,10 +444,10 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 					
 					bufferedImage.createGraphics().drawImage(bi, 0, 0, 170, 140, null);
 					
-					ImageIO.write(bufferedImage, extension.replace(".", ""), new File(pServerPath + commonUtil.separator + pSaveName));
+					ImageIO.write(bufferedImage, extension.replace(".", ""), new File(commonUtil.detectPathTraversal(pServerPath + commonUtil.separator + pSaveName)));
 					//ImageIO.write(bufferedImage, "png", new File(pAttachPath));
 					
-					File file1 = new File(pAttachPath);
+					File file1 = new File(commonUtil.detectPathTraversal(pAttachPath));
 					
 					if (file1.exists()) {
 						FileUtils.deleteQuietly(file1);
@@ -1449,6 +1449,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		try {
 			docPath = realPath + strFilePath + commonUtil.separator +"mht";
+			docPath = commonUtil.detectPathTraversal(docPath);
 			
 			if (!new File(docPath).exists()) {
 				File dir = new File(docPath);
@@ -1456,6 +1457,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			}
 			
 			mhtFilePath = docPath + commonUtil.separator + strMHTFileName + ".mht";
+			mhtFilePath = commonUtil.detectPathTraversal(mhtFilePath);
 			
 			if (new File(mhtFilePath).exists()) {
 				new File(mhtFilePath).delete();
@@ -1829,6 +1831,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		
 		//String pServerPath = config.getProperty("upload_portal.ROOT") + commonUtil.separator + "Logo";
 		String pServerPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId())+ commonUtil.separator + "Logo";
+		pServerPath = commonUtil.detectPathTraversal(pServerPath);
 		
 		//로고저장
 		if (mode.equals("SAVE")) {
@@ -1845,6 +1848,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			String skin = xmlDom.getElementsByTagName("SKIN").item(0).getTextContent();
 			
 			if (oldImageName != null && !oldImageName.equals("")) {
+				oldImageName = commonUtil.detectPathTraversal(oldImageName);
 				if (new File(pServerPath + commonUtil.separator + oldImageName).exists()) {
 					new File(pServerPath + commonUtil.separator + oldImageName).delete();
 				}
@@ -1887,6 +1891,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			
 			if (req.getParameter("oldFileName") != null && !req.getParameter("oldFileName").equals("")) {
 				oldFileName = req.getParameter("oldFileName");
+				oldFileName = commonUtil.detectPathTraversal(oldFileName);
 			}
 			
 			if (oldFileName != null && !oldFileName.equals("")) {
@@ -2986,7 +2991,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		//해당 이미지가 존재하는지 체크
 		String realPath = req.getServletContext().getRealPath("");
 		//File file = new File(realPath + config.getProperty("upload_portal.ROOT") + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator +"PHOTO");
-		File file = new File(realPath + commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator +"PHOTO");
+		File file = new File(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator +"PHOTO"));
 		
 		if (!file.exists()) {
 			imageName = "";
@@ -3050,6 +3055,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String imageData = xmlDom.getElementsByTagName("DATA").item(0).getTextContent();
 		String pUniqueName = ezPortalAdminService.getUniqueFileName(pServerPath, imageName);
 		String savePath = pServerPath + commonUtil.separator + pUniqueName;
+		savePath = commonUtil.detectPathTraversal(savePath);
 		
 		byte[] byt = Base64.decode(imageData);
 		
@@ -3067,7 +3073,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			BufferedImage bufferedImage = new BufferedImage(170, 140, bi.getType());
 			bufferedImage.createGraphics().drawImage(bi, 0, 0, 170, 140, null);
 			
-			ImageIO.write(bufferedImage, "jpg", new File(pServerPath + commonUtil.separator + pSaveName));
+			ImageIO.write(bufferedImage, "jpg", new File(commonUtil.detectPathTraversal(pServerPath + commonUtil.separator + pSaveName)));
 			//ImageIO.write(bufferedImage, "png", new File(pAttachPath));
 			
 			File file1 = new File(savePath);
@@ -3108,7 +3114,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		String stordFilePathReal = (stordFilePath==null?"":stordFilePath);
 		
 		try {
-			File cFile = new File(stordFilePathReal);
+			File cFile = new File(commonUtil.detectPathTraversal(stordFilePathReal));
 			
 			if (!cFile.isDirectory()) {
 				boolean _flag = cFile.mkdir();
@@ -3117,7 +3123,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 				}
 			}
 			
-			bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
+			bos = new FileOutputStream(commonUtil.detectPathTraversal(stordFilePathReal + File.separator + newName));
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[BUFF_SIZE];
