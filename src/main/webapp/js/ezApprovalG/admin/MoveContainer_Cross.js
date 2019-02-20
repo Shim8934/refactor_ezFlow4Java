@@ -470,7 +470,7 @@ function getDocListjson(pageNum) {
 	var docnumber = $("#DocNumber").val();
 	var doctitle = $("#DocTitle").val();
 	var drafter = $("#drafter").val();
-	var drafterdept = $("#drafterdept").val();
+	var drafterdept = document.getElementsByName("drafterdept")[0].id;
 	console.log("drafterdept :: "+drafterdept);
 	if (!$("#usedate").prop("checked")) {
 		searchStartTime = "";
@@ -497,7 +497,7 @@ function getDocListjson(pageNum) {
 					drafter    : drafter,//기안자
 					aprFrom    : searchStartTime,//완료일자
 					aprTo      : searchEndTime,//완료일자
-					deptName   : drafterdept,//기안부서
+					drafterdept   : drafterdept,//기안부서
 					pSelectTab : pSelectTab//탭구분	
 				},
 				success : function(res) {
