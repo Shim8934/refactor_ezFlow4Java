@@ -32,6 +32,7 @@
 		
 	    window.onload = function() {
 			toggle_menu(menuindex);
+			removeWhiteSpace();
 		}
 		
 		function toggle_menu(pIndex)
@@ -166,6 +167,12 @@
 			xmlhttp.send(strXML);
 			
 			alert("<spring:message code='ezPortal.t84'/>");
+			
+			if (xmlhttp.status == 200) {
+				window.opener.location.reload(true);
+				window.close();
+			}
+			
 			g_bSaved = true;
 			xmlhttp = null;
 			
@@ -345,6 +352,12 @@
         	if (tabObj.id != selSpan) {
         		tabObj.setAttribute("class", "");
         	}
+        }
+        
+        function removeWhiteSpace() {
+        	$("#toggle_tbl1 input").each(function() {
+        		$(this).val($(this).val().trim());
+        	})
         }
         
 		</script>
