@@ -102,7 +102,7 @@
         	    <span class="tr"></span>
             	<span class="title_txt"><spring:message code='main.t1006' /></span>
             	<span class="btn_more" onclick="Copmore_btnClick()">
-                	<img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />" >
+                	<img src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />" >
             	</span>
         	</div>
         	<div id="tblBest" class="communitycont" style="${strHTML != '' ? 'padding-top:0px' : ''}">

@@ -47,21 +47,21 @@
 			if (confirm("<spring:message code='ezPortal.t54' />")) {
 		    	xhttp = createXMLHttpRequest();
 		    	xhttp.onreadystatechange = loader;
-				xhttp.open("POST", "/ezPersonal/deleteMobileDeviceManaged.do?pDevId=" + devid + "&userId=" + userId);
+				xhttp.open("POST", "/ezPersonal/deleteMobileDeviceManaged.do?userId=" + userId + "&pDevId=" + devid);
 				xhttp.send();
 			}
 	    }
 		
-		// 기기별 사용여부 selectBox changed // Section? S:P
-	    function selectChange(devid, obj, section) {
-            setDevice(devid, obj.options[obj.selectedIndex].value, section);
+		// 기기별 사용여부 selectBox changed
+	    function selectChange(devid, obj) {
+            setDevice(devid, obj.options[obj.selectedIndex].value);
 	    }
 		
 		// 기기별 사용여부 selectBox changed
-	    function setDevice(devId, state, section) {
+	    function setDevice(devId, state) {
 	    	xhttp = createXMLHttpRequest();
 			xhttp.onreadystatechange = loader;
-			xhttp.open("POST", "/ezPersonal/setMobileDeviceInfo.do?pDevId=" + devId + "&pState=" + state);
+			xhttp.open("POST", "/ezPersonal/setMobileDeviceInfo.do?userId=" + userId + "&pDevId=" + devId + "&pState=" + state);
 			xhttp.send();
 	    }
 		
@@ -144,7 +144,7 @@
                         </c:choose>
                     </td>
 						<td>
-							<select name="selectbox" id='selectChangeState' onchange='selectChange("${list.devId}",this,"S")'>
+							<select name="selectbox" id='selectChangeState' onchange='selectChange("${list.devId}",this)'>
 								<option value='0' <c:if test="${notUsed eq 0}"> selected="selected" </c:if>><spring:message code="ezPersonal.t937" /></option>
 								<option value='2' <c:if test="${notUsed ne 0}"> selected="selected" </c:if>><spring:message code="ezPersonal.t1000" /></option>
 							</select>

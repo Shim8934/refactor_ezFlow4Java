@@ -206,14 +206,13 @@
 	                alert("<spring:message code = 'ezCommunity.t1459' />");
 			        return;
 			    }
-					
-				var title, writerName, strAbstract, searchStart, searchEnd, boardname;
-				title = document.getElementById("txtTitle").value;
-				writerName = document.getElementById("txtWriterName").value;
-				strAbstract = document.getElementById("txtAbstract").value;
-				searchStart = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-				searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-				boardname = document.getElementById("txtBoardName").value;
+				
+				var title = document.getElementById("txtTitle").value;
+				var writerName = document.getElementById("txtWriterName").value;
+				var strAbstract = document.getElementById("txtAbstract").value;
+				var searchStart = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+				var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+				var boardname = document.getElementById("txtBoardName").value;
 	
 				if (boardname == "") {
 				    alert("<spring:message code = 'ezCommunity.t289' />");
@@ -448,23 +447,24 @@
 				}
 			}
 	
+			/* 2019-02-19 홍승비 - 페이징 변수명 수정 */
 	        function moveToPage(CurPage) {
 				//if(window.event.keyCode == 13)
 				//{
 				//	var newPage = txt_PageInputNum.value;	
 	            //}
-				var title, writerName, abstract, searchStart, searchEnd, boardname;
-				title = document.getElementById("txtTitle").value;
-				writerName = document.getElementById("txtWriterName").value;
-				abstract = document.getElementById("txtAbstract").value;
+				var title = document.getElementById("txtTitle").value;
+				var writerName = document.getElementById("txtWriterName").value;
+				var txtAbstract = document.getElementById("txtAbstract").value;
 				var searchStart = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-				boardname = document.getElementById("txtBoardName").value;
+				var boardname = document.getElementById("txtBoardName").value;
+				
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 				url += "&boardID=" + pBoardID;
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
-				url += "&abstract=" + encodeURIComponent(abstract);
+				url += "&abstract=" + encodeURIComponent(txtAbstract);
 				url += "&searchStart=" + searchStart;
 				url += "&searchEnd=" + searchEnd;
 				url += "&code=" + code;
@@ -742,11 +742,6 @@
 		                PagingHTML += strtext;
 		            }
 		        }
-		        
-		        if (i == 1) {
-	            	strtext = "<span class='off'>" + i + "</span>";
-                    PagingHTML += strtext;
-	            }
 		        
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
