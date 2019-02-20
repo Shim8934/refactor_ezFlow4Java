@@ -564,9 +564,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			ezSurveyDAO.saveSurveyItem(survey);
 		}
 		
-		//Save attach
-		for (AttachVO attach : totalAttach) {
-			ezSurveyDAO.saveAttachItem(attach);
+		//Save questions
+		for (QuestionVO question : totalQuestions) {
+			ezSurveyDAO.saveQuestionItem(question);
 		}
 		
 		//Save options
@@ -574,9 +574,9 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			ezSurveyDAO.saveOptionItem(option);
 		}
 		
-		//Save questions
-		for (QuestionVO question : totalQuestions) {
-			ezSurveyDAO.saveQuestionItem(question);
+		//Save attach
+		for (AttachVO attach : totalAttach) {
+			ezSurveyDAO.saveAttachItem(attach);
 		}
 		
 		//Save users
