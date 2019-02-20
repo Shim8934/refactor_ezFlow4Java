@@ -362,7 +362,7 @@
 		            else
 		                printDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 		        } else {
-		            printDate = "<spring:message code='ezSchedule.t343' />";
+		        	printDate = $("#repeatinfo").text()
 		        }
 
 		        printLocation = document.getElementById("TextLocation").value;
