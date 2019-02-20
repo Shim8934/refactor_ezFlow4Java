@@ -262,7 +262,7 @@ public class CommonUtil {
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
 
-			String[] decDataArray = decData.split("///");
+			String[] decDataArray = decData.split("///", -1);
 			
 			String serverName = decDataArray[0];
 			String userID = decDataArray[1];
