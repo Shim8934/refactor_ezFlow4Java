@@ -167,6 +167,12 @@
 			xmlhttp.send(strXML);
 			
 			alert("<spring:message code='ezPortal.t84'/>");
+			
+			if (xmlhttp.status == 200) {
+				window.opener.location.reload(true);
+				window.close();
+			}
+			
 			g_bSaved = true;
 			xmlhttp = null;
 			
