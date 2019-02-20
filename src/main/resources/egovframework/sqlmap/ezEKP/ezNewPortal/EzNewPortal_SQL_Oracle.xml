@@ -1071,6 +1071,8 @@ WHERE
 AND
 	C.company_id = #companyId#
 AND
+	C.tenant_id = #tenantId#
+AND
 	B.tenant_id = #tenantId#
 AND
 	B.theme_used = 1
@@ -1247,7 +1249,7 @@ AND
 						    DOCINFO.docstate,
 						    DOCINFO.functiontype,
 						    DOCINFO.doctitle,
-						    TO_DATE(DOCINFO.startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+						    (DOCINFO.startdate + (#offset#/(60*24))) AS startdate,
 						    DOCINFO.writerid,
 						    DOCINFO.writername,
 						    DOCINFO.writername2,
@@ -1379,7 +1381,7 @@ AND
 						    docstate,
 						    functiontype,
 						    doctitle,
-						    TO_DATE(startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+						    (startdate + (#offset#/(60*24))) AS startdate,
 						    writerid,
 						    writername,
 						    writername2,
@@ -1453,7 +1455,7 @@ AND
 						    DOCINFO.docstate,
 						    DOCINFO.functiontype,
 						    DOCINFO.doctitle,
-						    TO_DATE(DOCINFO.startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+						    (DOCINFO.startdate + (#offset#/(60*24))) AS startdate,
 						    DOCINFO.writerid,
 						    DOCINFO.writername,
 						    DOCINFO.writername2,
