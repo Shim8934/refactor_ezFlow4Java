@@ -107,10 +107,10 @@
 		                document.getElementById("periodblockTR").style.display = "none";
 		            }                   
 		        } else if (datetype != ""){ 
-		        	//if (datetype == "1") {
-		                //document.getElementById("alldaycheck").checked = false;
+		        	if (datetype == "2") {
+		                document.getElementById("alldaycheck").checked = true;
+		           } 
 		                allday_change();
-		            //} 
 		        } else {
 		        	//document.getElementById("alldaycheck").checked = false;
 	                allday_change();
