@@ -375,6 +375,7 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String portletId = request.getParameter("portletId");
 		String portletName = request.getParameter("portletName");
+		portletName = portletName.replaceAll("=", "");
 		
 		String buJaeInfo = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
 		
@@ -1035,13 +1036,13 @@ private static final Logger logger = LoggerFactory.getLogger(EzNewPortalPortletC
 	public String specialCharacterToEmptyString(String value) {
 		value = value.replaceAll("\'", "");
 		value = value.replaceAll("\"", "");
-		value = value.replaceAll("AND", "");
-		value = value.replaceAll("OR", "");
-		value = value.replaceAll("and", "");
-		value = value.replaceAll("or", "");
 		value = value.replaceAll("\\+", "");
 		value = value.replaceAll("@", "");
 		value = value.replaceAll("\\$", "");
+		value = value.replaceAll("AND ", "");
+		value = value.replaceAll("OR ", "");
+		value = value.replaceAll("and ", "");
+		value = value.replaceAll("or ", "");
 		value = value.replaceAll(";", "");
 		value = value.replaceAll("%", "");
 		value = value.replaceAll("#", "");

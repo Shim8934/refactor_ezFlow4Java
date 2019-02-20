@@ -1227,6 +1227,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
         
         String slidePath = realPath + pDirPath;
         slidePath = commonUtil.detectPathTraversal(slidePath);
+        slidePath = commonUtil.stripScriptTags(slidePath);
         
         File file = new File(slidePath);
 

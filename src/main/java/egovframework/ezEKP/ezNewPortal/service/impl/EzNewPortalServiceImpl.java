@@ -1626,7 +1626,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//메뉴
 		map = new ObjectMapper().readValue(menuInfo.toJSONString(), Map.class);
 		
-		//2018.02.19 정보 저장시 secure coding 적용
+		//2019.02.19 정보 저장시 secure coding 적용
 		String menuUrl = commonUtil.stripScriptTags(map.get("menuUrl").toString());
 		menuUrl = commonUtil.detectPathTraversal(menuUrl);
 		menuUrl = specialCharacterToEmptyString(menuUrl);
@@ -1655,7 +1655,7 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				JSONObject menuNameInfo = (JSONObject) item;
 				
 				map = new ObjectMapper().readValue(menuNameInfo.toJSONString(), Map.class);
-				//2018.02.19 정보 저장시 secure coding 적용
+				//2019.02.19 정보 저장시 secure coding 적용
 				String menuLang = commonUtil.stripScriptTags(map.get("menuLang").toString());
 				menuLang = commonUtil.detectPathTraversal(menuLang);
 				menuLang = specialCharacterToEmptyString(menuLang);
@@ -2283,13 +2283,13 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	public String specialCharacterToEmptyString(String value) {
 		value = value.replaceAll("\'", "");
 		value = value.replaceAll("\"", "");
-		value = value.replaceAll("AND", "");
-		value = value.replaceAll("OR", "");
-		value = value.replaceAll("and", "");
-		value = value.replaceAll("or", "");
 		value = value.replaceAll("\\+", "");
 		value = value.replaceAll("@", "");
 		value = value.replaceAll("\\$", "");
+		value = value.replaceAll("AND ", "");
+		value = value.replaceAll("OR ", "");
+		value = value.replaceAll("and ", "");
+		value = value.replaceAll("or ", "");
 		value = value.replaceAll(";", "");
 		value = value.replaceAll("%", "");
 		value = value.replaceAll("#", "");
