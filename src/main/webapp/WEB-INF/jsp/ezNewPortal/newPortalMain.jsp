@@ -40,8 +40,6 @@
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
-			var topUrl = "/ezNewPortal/newPortalTopMenu";
-			var mainUrl = "/ezNewPortal/newPortalPortalPage";
 			var headerColor;
 	    	var textColor;
 	    	var currText;

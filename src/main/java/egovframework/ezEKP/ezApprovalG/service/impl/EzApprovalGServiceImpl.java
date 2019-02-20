@@ -10755,7 +10755,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				companyID.trim() + "</COMPANYID><DOCID>" + docID + "</DOCID><LANGTYPE>" + lang + "</LANGTYPE></PARAMETERS>";
 		
 		String rtnVal = getRegSN(strXML, tenantID, offsetMin);
-
+		
+		logger.debug("REGNUM = " + rtnVal);
 		logger.debug("getCabinetNum ended");
 		
 		return "<REGNUM>" + rtnVal + "</REGNUM>";
@@ -10772,7 +10773,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				companyID.trim() + "</COMPANYID></PARAMETERS>";
 		
 		String rtnVal = getRegSN(strXML, tenantID, offsetMin);
-
+		
+		logger.debug("REGNUM = " + rtnVal);
 		logger.debug("getCabinetNum ended");
 		
 		return "<REGNUM>" + rtnVal + "</REGNUM>";
@@ -12601,7 +12603,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			ezApprovalGDAO.updateSerialNo(map);
 			result = Integer.toString((Integer.parseInt(result)));
 		}
-
+		
+		logger.debug("deptID,SerialNum = " + type2 + result);
 		logger.debug("getSerialNum ended");
 		
 		return result;
@@ -15536,6 +15539,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			result = Integer.toString((Integer.parseInt(result)));
 		}
 		
+		logger.debug("deptID,SerialNum = " + snType2 + result);
 		logger.debug("getSerialNum ended.");
 		
 		return String.valueOf(result);
@@ -17432,7 +17436,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	 * */
 	public String registerSepAttachEx(String recID, String cabID, String title, String numOfPage, String regType, String summary, String recType, String companyID, String tempSepAttSN,int tenantID, Locale locale, String docID, String nonElecRecXML) throws Exception {
 		logger.debug("registerSepAttachEx started");
-
+		logger.debug("recID = " + recID);
+		logger.debug("docID = " + docID);
+		logger.debug("title = " + title);
+		
 		String rtnVal = "TRUE";
 		String sepAttSN = tempSepAttSN;
 		String nonElecRecYN = "";

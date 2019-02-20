@@ -2272,6 +2272,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				resultList.add(j++, vo);
 			}
 		}
+		
+		String packageType = commonUtil.getPackageType(user.getTenantId());
 		        	
 		model.addAttribute("use_editor", use_editor);
 		model.addAttribute("userCompany", user.getCompanyID());
@@ -2282,6 +2284,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         //2018-07-31 김보미 - 근태 추가
         model.addAttribute("use_attitude", use_attitude);
         model.addAttribute("useWebfolder", useWebfolder);
+        model.addAttribute("packageType", packageType);
 		
 		logger.debug("permissionsList ended.");
 		
