@@ -715,7 +715,7 @@
 			AND
                 A.TENANT_ID = #tenantID#
       	   ORDER BY
-           BRD_STEP	
+           BRD_GB, BRD_STEP	
 		]]>
 	</select>
   
