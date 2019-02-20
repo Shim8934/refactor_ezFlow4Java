@@ -928,7 +928,12 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		//메뉴
 		map = new ObjectMapper().readValue(portletInfo.toJSONString(), Map.class);
 		map.put("boardId", commonUtil.stripScriptTags(map.get("boardId").toString()));
-		map.put("connectionUrl", commonUtil.stripScriptTags(map.get("connectionUrl").toString()));
+		
+		String connectionUrl = commonUtil.stripScriptTags(map.get("connectionUrl").toString());
+		connectionUrl = commonUtil.detectPathTraversal(connectionUrl);
+		connectionUrl = specialCharacterToEmptyString(connectionUrl);
+		
+		map.put("connectionUrl", connectionUrl);
 		map.put("menuId", commonUtil.stripScriptTags(map.get("menuId").toString()));
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
@@ -1484,10 +1489,22 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		boolean menuUsed = (boolean) menuInfo.get("menuUsed");
 		
 		Map<String, Object> map = new HashMap<>();
+		//secure coding 적용
 		map.put("menuId", menuId);
-		map.put("menuUrl", menuInfo.get("menuUrl"));
+		
+		String menuUrl = menuInfo.get("menuUrl").toString();
+		menuUrl = commonUtil.stripScriptTags(menuUrl);
+		menuUrl = commonUtil.detectPathTraversal(menuUrl);
+		menuUrl = specialCharacterToEmptyString(menuUrl);
+		
+		String iconUrl = menuInfo.get("iconUrl").toString();
+		iconUrl = commonUtil.stripScriptTags(iconUrl);
+		iconUrl = commonUtil.detectPathTraversal(iconUrl);
+		iconUrl = specialCharacterToEmptyString(iconUrl);
+		
+		map.put("menuUrl", menuUrl);
 		map.put("menuType", menuInfo.get("menuType"));
-		map.put("iconUrl", menuInfo.get("iconUrl"));
+		map.put("iconUrl", iconUrl);
 		map.put("menuUsed", menuUsed);
 		map.put("companyLang", menuInfo.get("companyLang"));
 		map.put("companyId", companyId);
@@ -1576,8 +1593,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		map = new ObjectMapper().readValue(menuInfo.toJSONString(), Map.class);
 		
 		//2018.02.19 정보 저장시 secure coding 적용
-		map.put("menuUrl", commonUtil.stripScriptTags(map.get("menuUrl").toString()));
-		map.put("iconUrl", commonUtil.stripScriptTags(map.get("iconUrl").toString()));
+		String menuUrl = commonUtil.stripScriptTags(map.get("menuUrl").toString());
+		menuUrl = commonUtil.detectPathTraversal(menuUrl);
+		menuUrl = specialCharacterToEmptyString(menuUrl);
+		
+		String iconUrl = commonUtil.stripScriptTags(map.get("iconUrl").toString());
+		iconUrl = commonUtil.detectPathTraversal(iconUrl);
+		iconUrl = specialCharacterToEmptyString(iconUrl);
+		
+		
+		map.put("menuUrl", menuUrl);
+		map.put("iconUrl", iconUrl);
 		
 		//tbl_portal_menu
 		int menuId = ezNewPortalDAO.insertMenu(map);
@@ -2211,5 +2237,23 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 				ezNewPortalDAO.updateSlideOrder(map);
 			}
 		}		
+	}
+	
+	public String specialCharacterToEmptyString(String value) {
+		value = value.replaceAll("\'", "");
+		value = value.replaceAll("\"", "");
+		value = value.replaceAll("AND", "");
+		value = value.replaceAll("OR", "");
+		value = value.replaceAll("and", "");
+		value = value.replaceAll("or", "");
+		value = value.replaceAll("\\+", "");
+		value = value.replaceAll("@", "");
+		value = value.replaceAll("\\$", "");
+		value = value.replaceAll(";", "");
+		value = value.replaceAll("%", "");
+		value = value.replaceAll("#", "");
+		value = value.replaceAll(":", "");
+		
+		return value;
 	}
 }
