@@ -1708,7 +1708,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 알림마당 쓰기/수정 화면 호출함수 
 	 */
-	@RequestMapping(value = "/ezCommunity/board/bbsEditNew.do")
+	@RequestMapping(value = "/ezCommunity/board/bbsEditNew.do", method = RequestMethod.GET)
 	public String bbsEditNew(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception{
 		logger.debug("bbsEditNew started.");
 		
@@ -3269,7 +3269,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 	/**
 	 * 회원 탈퇴처리화면/마스터이취임화면 호출함수
 	 */
-	@RequestMapping(value = "/ezCommunity/adminMemberList.do")
+	@RequestMapping(value = "/ezCommunity/adminMemberList.do", method = RequestMethod.GET)
 	public String adminMemberList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("adminMemberList started.");
 		

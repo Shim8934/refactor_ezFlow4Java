@@ -3570,7 +3570,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	                logger.debug("strPath ==== " + strPath);
 	                try{
 		    		    pw = new PrintWriter(new File(strPath));
-			    		pw.print(MHTcontent);
+			    		pw.print(commonUtil.stripScriptTags(MHTcontent));
 			    		pw.flush();
 			    		pw.close();
 	                } catch (FileNotFoundException fnfe) {
@@ -3663,7 +3663,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         		
         		strPath = commonUtil.detectPathTraversal(strPath);
 	    		pw = new PrintWriter(new File(strPath));
-	    		pw.print(MHTcontent);
+	    		pw.print(commonUtil.stripScriptTags(MHTcontent));
 	    		pw.flush();
 	    		pw.close();
             } catch (FileNotFoundException fnfe) {
@@ -6582,7 +6582,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			}
 			
 			PrintWriter pw = new PrintWriter(new File(mhtFilePath));
-			pw.print(strHTML);
+			pw.print(commonUtil.stripScriptTags(strHTML));
 			pw.flush();
 			pw.close();
 			
