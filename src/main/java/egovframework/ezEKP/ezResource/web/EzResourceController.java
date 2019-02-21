@@ -51,6 +51,7 @@ import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -2294,5 +2295,65 @@ public class EzResourceController extends EgovFileMngUtil {
         ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
         
         logger.debug("sendMailToUser ended");
+	}
+	
+	@RequestMapping(value = "/ezResource/changeResourceOrder.do", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public void changeResourceOrder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ changeResourceOrder started ============");
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		
+		String selectedResourceId = request.getParameter("selectedResourceId");
+		String targetResourceId = request.getParameter("targetResourceId");
+		String upperResourceId = request.getParameter("upperResourceId");
+			
+		ezResourceService.changeResourceOrder(selectedResourceId, targetResourceId, loginVO.getTenantId(), loginVO.getCompanyID(), upperResourceId);
+		logger.debug("============ changeResourceOrder ended ============");
+	}
+	
+	@RequestMapping(value = "ezResource/resOrganToMoveResource.do")
+	public String resOrganToMoveResource(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		logger.debug("============ resOrganToMoveResource ended ============");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("serverName", req.getServerName());
+		
+		logger.debug("============ resOrganToMoveResource ended ============");
+		return "ezResource/resOrganToMoveResource";
+	}
+	
+	@RequestMapping(value = "/ezResource/moveResourceToOtherResourceGroup.do", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public void moveResourceToOtherResourceGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ moveResourceToOtherResourceGroup started ============");
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		
+		String originResourceGroupId = request.getParameter("originResourceGroupId");
+		String selectedResourceGroupId = request.getParameter("selectedResourceGroupId");
+			
+		ezResourceService.moveResourceToOtherResourceGroup(originResourceGroupId, selectedResourceGroupId, loginVO.getTenantId(), loginVO.getCompanyID());
+		logger.debug("============ moveResourceToOtherResourceGroup ended ============");
+	}
+	
+	@RequestMapping(value = "/ezResource/isResourceGroupManager.do", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String isResourceGroupManager(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ moveResourceToOtherResourceGroup started ============");
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		
+		String selectedResourceGroupId = request.getParameter("selectedResourceGroupId");
+			
+		String isManger = ezResourceService.isResourceGroupManager(selectedResourceGroupId, loginVO.getId(),loginVO.getTenantId(), loginVO.getCompanyID());
+		
+		logger.debug("============ moveResourceToOtherResourceGroup ended ============");
+		return isManger;
 	}
 }
