@@ -522,4 +522,28 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.updateTaskUrl");
 		}
 	}
+
+	public void addPortalPortletUserPortletUsed() {
+		try {
+			select("EzCommonDAO.checkAddPortalPortletUserPortletUsed");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_portlet_user portlet_used doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addPortalPortletUserPortletUsed");
+		}
+		
+	}
+
+	public void addPortalPortletUserThemeId() {
+		try {
+			select("EzCommonDAO.checkPortalPortletUserThemeId");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_portlet_user theme_id doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addPortalPortletUserThemeId");
+			update("EzCommonDAO.deletePortalPortletUserPrimaryKey");
+			update("EzCommonDAO.addPortalPortletUserPrimaryKey");
+		}
+		
+	}
 }

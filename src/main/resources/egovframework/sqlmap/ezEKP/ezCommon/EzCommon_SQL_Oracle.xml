@@ -730,4 +730,54 @@
 		WHERE
 			menu_id = 17
 	</update>
+	
+	<select id="EzCommonDAO.checkAddPortalPortletUserPortletUsed">
+		<![CDATA[
+			SELECT
+				portlet_used
+			FROM 
+				TBL_PORTAL_PORTLET_USER
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addPortalPortletUserPortletUsed"> 
+		ALTER TABLE 
+			TBL_PORTAL_PORTLET_USER
+		ADD 
+			PORTLET_USED NUMBER(11, 0) DEFAULT 1
+	</statement>
+	
+	<select id="EzCommonDAO.checkPortalPortletUserThemeId">
+		<![CDATA[
+			SELECT
+				theme_id
+			FROM 
+				TBL_PORTAL_PORTLET_USER
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addPortalPortletUserThemeId"> 
+		ALTER TABLE 
+			TBL_PORTAL_PORTLET_USER
+		ADD 
+			THEME_ID NUMBER(11, 0) DEFAULT 1
+	</statement>
+	
+	<statement id="EzCommonDAO.deletePortalPortletUserPrimaryKey"> 
+		ALTER TABLE 
+			TBL_PORTAL_PORTLET_USER
+		DROP 
+			PRIMARY KEY
+	</statement>
+	
+	<statement id="EzCommonDAO.addPortalPortletUserPrimaryKey"> 
+		ALTER TABLE 
+			TBL_PORTAL_PORTLET_USER
+		ADD CONSTRAINT 
+			TBL_PORTAL_PORTLET_USER_PK PRIMARY KEY(user_id, tenant_id, company_id, portlet_id, theme_id)
+	</statement>
 </sqlMap>

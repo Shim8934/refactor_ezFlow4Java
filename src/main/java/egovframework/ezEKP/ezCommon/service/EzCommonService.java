@@ -113,6 +113,10 @@ public interface EzCommonService {
 	public void addJournalFormDelFlag() throws Exception;
 
 	public void updateTaskUrl() throws Exception;
+
+	public void addPortalPortletUserPortletUsed() throws Exception;
+
+	public void addPortalPortletUserThemeId() throws Exception;
 	
 }
 
