@@ -12,8 +12,15 @@ public class ScheduleReceiveListVO {
 	private String startDate;	
 	private String endDate;
 	private String status;
+	private String repetition;
 	
 	
+	public String getRepetition() {
+		return repetition;
+	}
+	public void setRepetition(String repetition) {
+		this.repetition = repetition;
+	}
 	public String getScheduleId() {
 		return scheduleId;
 	}

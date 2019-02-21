@@ -141,6 +141,7 @@
 		<result property="dateType"			column="DATETYPE"			columnIndex="9"/>
 		<result property="startDate"		column="STARTDATE"			columnIndex="10"/>
 		<result property="endDate"			column="ENDDATE"			columnIndex="11"/>
+		<result property="repetition"		column="REPETITION"			columnIndex="12"/>
 	</resultMap>
 
 	<resultMap class="OrganUserVO" id="organUserVO">
@@ -975,7 +976,8 @@
              	b.location as location,
              	b.datetype as datetype,
              	date_add(b.startdate, interval +#v_OFFSETMIN# minute) as startdate,
-             	date_add(b.enddate, interval +#v_OFFSETMIN# minute) as enddate
+             	date_add(b.enddate, interval +#v_OFFSETMIN# minute) as enddate,
+             	b.repetition as repetition
         	from
         		tbl_attendant a join tbl_schedule b on a.scheduleid = b.scheduleid and a.tenant_id = b.tenant_id
         	where
