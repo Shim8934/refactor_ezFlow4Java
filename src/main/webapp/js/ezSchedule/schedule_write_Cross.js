@@ -686,20 +686,21 @@ function attach_Delete()
 /* 2018-11-09 김민성 - 일정관리의 일보기, 주보기의 종일일정 선택시 하루종일,
 								월보기, 일정작성 선택시 현재 시간,
 								일보기, 주보기의 시간 선택시 선택 시간 으로 설정 되도록 수정 */
+/* 2019-02-20 김민성 - 하루종일 체크 해제시 현재 시간으로 나오도록 수정 */
 function allday_change()
 {
     if (document.getElementById("alldaycheck").checked == true)
 	{
         document.getElementById("Stimepicker").style.display = "none";
         document.getElementById("Etimepicker").style.display = "none";
-        if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "00:00") {
+        if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "23:59") {
         	var EDate = $("#Edatepicker").val();
         	var eYear = EDate.substring(0,4);
         	var eMonth = EDate.substring(5,7);
         	var eDay = EDate.substring(8,10);
         	
         	var EDate2 = new Date();
-	        EDate2.setFullYear(eYear, parseInt(eMonth)-1, parseInt(eDay)-1);
+	        EDate2.setFullYear(eYear, parseInt(eMonth)-1, parseInt(eDay));
 	        $("#Edatepicker").datepicker('setDate', EDate2);
         }
 	}
@@ -709,7 +710,7 @@ function allday_change()
         document.getElementById("Etimepicker").style.display = "";
         if ((!timeSelect && datetype == "1") || datetype == "" || datetype == "2") { //하루종일 일정일 때 시간
         	//2018-08-28 김보미 - 현재시간으로 설정
-        	if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "00:00") {
+        	if($("#Stimepicker").val() == "00:00" && $("#Etimepicker").val() == "23:59") {
 	        	var now = new Date();
 	        	
 	        	//시작시간
@@ -1289,6 +1290,8 @@ function config_repeat_resource() {
         alert(strLang109);
         return;
     }
+    
+    g_data["REPETITION"] = repetition;
 
     var resultXML;
     var xmlHttp = createXMLHttpRequest();
@@ -1310,9 +1313,8 @@ function config_repeat_resource() {
 	    {
 	    	g_data["startTime"] = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val();
 	    	g_data["endTime"] = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
-		    
 	    }
-	    else
+	    else if(g_data["startTime"] == null)
 	    {    	    
 	    	g_data["startTime"] = g_sdate;
 	    	g_data["endTime"] = g_edate; 	        		   
@@ -1328,7 +1330,10 @@ function config_repeat_resource() {
     else
         pAlldaycheck = "0";
 
-    g_data["alldaycheck"] = pAlldaycheck;
+    // 일정과 자원의 시간대 설정이 다른 경우 일정의 플래그 값을 저장한다
+    if(typeof (g_data["str"]) == "undefined" || g_data["str"] == "") {
+    	g_data["alldaycheck"] = pAlldaycheck;
+    }
     
     schedule_repetition_cross_dialogArguments[0] = g_data;
     schedule_repetition_cross_dialogArguments[1] = config_repeat_resource_Complete;
@@ -1355,9 +1360,17 @@ function config_repeat_resource_Complete(rgParams) {
         g_data["str"] = rgParams["str"];
         g_data["startTime"] = rgParams["startTime"];
         g_data["endTime"] = rgParams["endTime"];
+        g_data["alldaycheck"] = rgParams["alldaycheck"];
         
         document.getElementById("resourcerepeatinfo").innerHTML = g_data["str"];
         tmpReFlag = "1";
+    }
+    
+    if(g_data["alldaycheck"] == "1") {
+    	document.getElementById("alldaycheck").checked = true; 
+    }
+    else {
+    	document.getElementById("alldaycheck").checked = false; 
     }
 }
 
