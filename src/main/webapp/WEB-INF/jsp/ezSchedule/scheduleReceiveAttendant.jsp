@@ -147,7 +147,7 @@
 			}
 			
 			function makeScheduleTimeString(startDate, endDate) {
-				var timeString = startDate + " ~ " + endDate;
+				var timeString = startDate.substring(0,16) + " ~ " + endDate.substring(0,16);
         		return timeString;
 			}
 			
