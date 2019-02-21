@@ -34,6 +34,7 @@
 	    	window.onload = function () {
 		        window_onload();
 	        	datepicker();        
+	        	allDayTime();
 	        	clearAllDay();
 	    	}
 	    	
@@ -183,7 +184,8 @@
 	        	}
 	    	}
 	    	
-	    	/* 2019-02-19 김민성 - 자원관리 하루종일 체크시 시간 00:00로 변경(일정관리와 스펙 맞춤) */
+	    	/* 2019-02-19 김민성 - 자원관리 하루종일 체크시 시간 00:00로 변경(일정관리와 스펙 맞춤)
+	    								  - 하루종일 체크 해제시 현재 시간 기준 30분 단위 표시로 수정 */
 	    	function allDayTime(){
 	    		if(document.getElementById("alldaycheck").checked == true){
 	    			sTimeTemp = $('#Stimepicker').val();
@@ -191,8 +193,34 @@
 		    		$('#Stimepicker').timepicker("setTime", "00:00");
 		    		$('#Etimepicker').timepicker("setTime", "00:00");
 		    	}else{
-		    		$('#Stimepicker').timepicker("setTime", sTimeTemp);
-		    		$('#Etimepicker').timepicker("setTime", eTimeTemp);
+		    		var now = new Date();
+		        	
+		        	//시작시간
+		        	var startTime;
+		        	var hour = now.getHours();
+		        	var time = now.getMinutes();
+		        	
+		        	if (parseInt(time) < 30) {
+		        		startTime = hour + ":00:00";
+		        	} else {
+		        		startTime = hour + ":30:00";
+		        	}
+		        	
+		        	//종료시간
+		        	var endTime;
+		        	now.setMinutes(now.getMinutes() + 30);
+		        	
+		        	hour = now.getHours();
+		        	time = now.getMinutes();
+		        	
+		        	if (parseInt(time) < 30) {
+		        		endTime = hour + ":00:00";
+		        	} else {
+		        		endTime = hour + ":30:00";
+		        	}
+		        	
+		        	$('#Stimepicker').timepicker('setTime', startTime);
+		        	$('#Etimepicker').timepicker('setTime', endTime);
 		    	}
 		    }
 	    	
@@ -279,7 +307,7 @@
       					<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px;text-align:center;" value="1">
       					<spring:message code="ezResource.t289"/>
       				</label>
-      				<div>
+      				<div id="daytable">
       					<input type="checkbox" name="day" id="day0" value="0"> <spring:message code="ezResource.t290"/>
 						<input type="checkbox" name="day" id="day1" value="1"> <spring:message code="ezResource.t291"/>
 						<input type="checkbox" name="day" id="day2" value="2"> <spring:message code="ezResource.t292"/>
