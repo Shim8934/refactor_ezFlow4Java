@@ -384,8 +384,8 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		survey.setParitipateFlag(userFlag);
 		survey.setResultPublicFlag(publicFlag);
 		survey.setAnonymousFlag(anonymousFlag);
-		survey.setTitle(title);
-		survey.setPurpose(purpose);
+		survey.setTitle(commonUtil.stripScriptTags(title));
+		survey.setPurpose(commonUtil.stripScriptTags(purpose));
 		survey.setCreateDate(timeUTC);
 		survey.setUpdateDate(timeUTC);
 		survey.setUseStatus(useStatus);
@@ -414,7 +414,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			for (int j = 0; j < options.size(); j++, maxOptionId++) {
 				JSONObject optionObj = (JSONObject)options.get(j);
 				JSONObject optionAtt = (JSONObject)optionObj.get("attach");
-				String optionContent = optionObj.get("content").toString();
+				String optionContent = commonUtil.stripScriptTags(optionObj.get("content").toString());
 				int optionLevel      = optionObj.get("level")     != null ? ((Long)optionObj.get("level")).intValue()     : 0;
 				int otherFlag        = optionObj.get("otherFlag") != null ? ((Long)optionObj.get("otherFlag")).intValue() : 0;
 				int logicNum         = optionObj.get("logic")     != null ? ((Long)optionObj.get("logic")).intValue()     : -1;
@@ -446,7 +446,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				totalOptions.add(option);
 			}
 			
-			String questionTitle = questionObj.get("content").toString();
+			String questionTitle = commonUtil.stripScriptTags(questionObj.get("content").toString());
 			int questionLogic    = questionObj.get("logicFlag") != null ? ((Long)questionObj.get("logicFlag")).intValue() : 0;
 			int skipFlag         = questionObj.get("skipFlag")  != null ? ((Long)questionObj.get("skipFlag")).intValue()  : 0;
 			long questionSkip    = questionObj.get("skip")      != null ? ((Long)questionObj.get("skip"))                 : -1;
@@ -1190,7 +1190,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 						long optionId = (Long) answerObject.get("optionId");
 						
 						if (answerObject.get("otherFlag") != null && ((Long) answerObject.get("otherFlag")).intValue() == 1) {
-							String otherValue = (String) answerObject.get("texts");
+							String otherValue = commonUtil.stripScriptTags((String) answerObject.get("texts"));
 							response.setTexts(otherValue);
 						}
 						response.setOptionId(optionId);
@@ -1205,7 +1205,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 					case 5:
 					case 6:
 						long txtOptionId = (Long) answerObject.get("optionId");
-						String txt = (String) answerObject.get("texts");
+						String txt = commonUtil.stripScriptTags((String) answerObject.get("texts"));
 						response.setOptionId(txtOptionId);
 						response.setTexts(txt);
 						break;
