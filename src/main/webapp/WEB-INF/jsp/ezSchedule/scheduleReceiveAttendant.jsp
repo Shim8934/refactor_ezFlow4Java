@@ -158,6 +158,7 @@
 				} else {
 					timeString = startDate.substring(0,10) + " ~ " + endDate.substring(0,10) + " (" + strLang105 + ")";
 				}
+				return timeString;
 			}
 			
 			function makeRepetitionScheduleString(startDate, endDate, repetition) {
@@ -248,9 +249,9 @@
 				}
 				
 				if (info[0] == -1) {
-				    repeatinfo += " " + strLang79 + " : " + startDate.substring(0,10) + " ~ " + strLang46;
+				    repeatinfo += " " + startDate.substring(0,10) + " ~ " + strLang46;
 				} else if (info[0] == 0){
-					repeatinfo += " " + strLang79 + " : " + startDate.substring(0,10) + " ~ " + endDate.substring(0,10);
+					repeatinfo += " " + startDate.substring(0,10) + " ~ " + endDate.substring(0,10);
 				} else {
 					repeatinfo += " " + startDate.substring(0,10) + " ~ " + info[0] + strLang47;
 				}
