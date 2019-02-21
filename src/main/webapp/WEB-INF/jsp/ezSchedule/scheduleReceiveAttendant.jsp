@@ -171,7 +171,7 @@
 						break;
 					case "1":
 						if(info[3] == '1'){				
-							repeatinfo += strLang35;
+							repeatinfo += strLang35 + " ";
 							if(info[4]){
 								for (var i = 0; i< info[4].length; i++){
 									var eachDayOfWeek = info[4].substr(i, 1);
