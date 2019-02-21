@@ -135,13 +135,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addJobMasterJobID();
     	ezCommonService.createWebfolderToken();
     	ezCommonService.addJmochaMailGenenalPreviewMailImage();
+    	ezCommonService.createPortalThemePortlet();
+    	ezCommonService.insertPortalThemePortletInitdata();
     	ezCommonService.addPortalThemePortletIsFixed();
     	ezCommonService.addUserMasterMailBoxQuota();
     	ezCommonService.createTblUserMultiLogin();
     	ezCommonService.addHolidayFlag();
     	ezCommonService.addHolidayRepeat();
-    	ezCommonService.createPortalThemePortlet();
-    	ezCommonService.insertPortalThemePortletInitdata();
     	ezCommonService.addJournalFormDelFlag();
     	ezCommonService.updateTaskUrl();
     	
