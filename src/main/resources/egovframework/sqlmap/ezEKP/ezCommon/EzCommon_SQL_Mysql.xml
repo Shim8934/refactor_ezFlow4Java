@@ -744,4 +744,21 @@
 		ADD 
 			PRIMARY KEY(user_id, tenant_id, company_id, portlet_id, theme_id)
 	</statement>
+	
+	<select id="EzCommonDAO.checkAddTblPortalThemeUserIsDefault">
+		<![CDATA[
+			SELECT
+				is_default
+			FROM 
+				TBL_PORTAL_THEME_USER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addTblPortalThemeUserIsDefault"> 
+		ALTER TABLE 
+			TBL_PORTAL_THEME_USER
+		ADD 
+			is_default int(11) DEFAULT 0
+	</statement>
 </sqlMap>

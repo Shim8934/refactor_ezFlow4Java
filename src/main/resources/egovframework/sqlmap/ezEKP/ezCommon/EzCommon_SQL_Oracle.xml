@@ -780,4 +780,22 @@
 		ADD CONSTRAINT 
 			TBL_PORTAL_PORTLET_USER_PK PRIMARY KEY(user_id, tenant_id, company_id, portlet_id, theme_id)
 	</statement>
+	
+	<select id="EzCommonDAO.checkAddTblPortalThemeUserIsDefault">
+		<![CDATA[
+			SELECT
+				is_default
+			FROM 
+				TBL_PORTAL_THEME_USER
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addTblPortalThemeUserIsDefault"> 
+		ALTER TABLE 
+			TBL_PORTAL_THEME_USER
+		ADD 
+			is_default NUMBER(11, 0) DEFAULT 0
+	</statement>
 </sqlMap>

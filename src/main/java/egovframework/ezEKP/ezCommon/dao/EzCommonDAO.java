@@ -544,6 +544,16 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.deletePortalPortletUserPrimaryKey");
 			update("EzCommonDAO.addPortalPortletUserPrimaryKey");
 		}
+	}
+	
+	public void addTblPortalThemeUserIsDefault() {
+		try {
+			select("EzCommonDAO.checkAddTblPortalThemeUserIsDefault");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme_user is_default doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addTblPortalThemeUserIsDefault");
+		}
 		
 	}
 }
