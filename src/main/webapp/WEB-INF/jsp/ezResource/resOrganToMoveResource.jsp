@@ -102,7 +102,7 @@
 			
 			function checkHavePermission() {
 				$.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		async : false,
 		    		data : {
 		    			selectedResourceGroupId : p_TargetID

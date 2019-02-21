@@ -458,7 +458,7 @@
 		//2018-06-05 구해안 showres 함수 추가
 		function showRes(val01) {
     		$.ajax({
-				type : "POST",
+				type : "GET",
 				dataType : "json",
 				async : false,
 				url : "/ezResource/scheduleResourceData.do",

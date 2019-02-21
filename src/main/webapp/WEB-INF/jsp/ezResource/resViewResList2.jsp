@@ -314,7 +314,7 @@
 	    	
 	    	function showRes(val01) {
 	    		$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : false,
 					url : "/ezResource/scheduleResourceData.do",
