@@ -118,14 +118,4 @@ public class RespondentVO {
 	public void setTenantId(int tenantId) {
 		this.tenantId = tenantId;
 	}
-	@Override
-	public String toString() {
-		return "RespondentVO [surveyId=" + surveyId + ", userId=" + userId
-				+ ", userName1=" + userName1 + ", userName2=" + userName2
-				+ ", email=" + email + ", deptId=" + deptId + ", deptName1="
-				+ deptName1 + ", deptName2=" + deptName2 + ", responseDate="
-				+ responseDate + ", companyId=" + companyId + ", tenantId="
-				+ tenantId + "]";
-	}
-	
 }
