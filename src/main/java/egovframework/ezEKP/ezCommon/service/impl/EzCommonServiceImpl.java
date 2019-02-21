@@ -1529,4 +1529,21 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void updateTaskUrl() throws Exception {
 		ezCommonDAO.updateTaskUrl();
 	}
+
+	@Override
+	public void addPortalPortletUserPortletUsed() throws Exception {
+		ezCommonDAO.addPortalPortletUserPortletUsed();
+		
+	}
+
+	@Override
+	public void addPortalPortletUserThemeId() throws Exception {
+		ezCommonDAO.addPortalPortletUserThemeId();
+		
+	}
+
+	@Override
+	public void addTblPortalThemeUserIsDefault() throws Exception {
+		ezCommonDAO.addTblPortalThemeUserIsDefault();
+	}
 }
