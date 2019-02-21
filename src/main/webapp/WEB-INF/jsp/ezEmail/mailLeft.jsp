@@ -835,9 +835,7 @@
 		            	parent.frames["right"].location.href = url;
 		    		}
 		    		
-	            	setTimeout(function() {
-	            		parent.frames["right"].mailbox_import();
-		        	}, 1000);
+	            	parent.frames["right"].mailbox_import();
 	            } catch (e) {
 	            	console.log("mailbox_import error!");
 	            }

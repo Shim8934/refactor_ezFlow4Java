@@ -212,6 +212,8 @@ public class EzConnController {
 					resultPage = "/ezSchedule/scheduleIndex.do?funCode=2";
 				} else if (requestUri.equals("/ezConn/scheduleWrite.do")) {
 					resultPage = "/ezSchedule/scheduleWrite.do?defaultid=0";
+				} else if (requestUri.equals("/ezConn/admin/mailMain.do")) {
+					resultPage = "/admin/ezEmail/adminMailMain.do";
 				} else if (requestUri.equals("/ezConn/admin/organMain.do")) {
 					resultPage = "/admin/ezOrgan/organMain.do";
 				} else if (requestUri.equals("/ezConn/admin/scheduleMain.do")) {

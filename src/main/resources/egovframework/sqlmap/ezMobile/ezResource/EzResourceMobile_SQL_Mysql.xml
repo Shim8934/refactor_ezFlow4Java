@@ -715,7 +715,7 @@
 			AND
                 A.TENANT_ID = #tenantID#
       	   ORDER BY
-           BRD_STEP	
+           BRD_GB, BRD_STEP	
 		]]>
 	</select>
   
@@ -1672,6 +1672,8 @@
 				TENANT_ID = #tenantID#  
 			AND 
 				ACCESS_LVL = 1 
+			AND
+				COMPANYID = #v_PBRDCOMPANY#
 		]]>
 	</select>
 	

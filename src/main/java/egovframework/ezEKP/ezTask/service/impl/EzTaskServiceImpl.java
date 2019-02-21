@@ -1508,7 +1508,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 					if (maxCount == count) break;
 					
 					String calcuDate = nsdf.format(date_cal.getTime());
-					Calendar lastDayOfWeek = Calendar.getInstance(); 
+					Calendar lastDayOfWeek = Calendar.getInstance();
+					lastDayOfWeek.setTime(sdf.parse(vo.getStartDate()));
 					
 					if(info[0].equals("0")){
 						for (Integer yoil : wDay) {
@@ -1532,7 +1533,6 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 							if (i == wDay.size() - 1) {
 								lastDayOfWeek.set(Calendar.DAY_OF_WEEK,wDay.get(i)+1);
 							}
-							
 							if ((date_cal.compareTo(sDate_cal) >= 0) && (date_cal.compareTo(eDate_cal) <= 0)) {
 								if (!rList.contains(calcuDate)) {
 									if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0 ){

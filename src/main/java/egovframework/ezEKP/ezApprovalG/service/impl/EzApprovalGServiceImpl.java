@@ -2099,8 +2099,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				extFileName = getExtendedFileName(apprGDocListVO.getHref());
 				docNumCode = deptID + getNDigitNum(sn, 6);
 				
+				docNo = commonUtil.cleanValue(deptName) + "-" + sn;
 				if (orgDocNumCode == null || orgDocNumCode.trim().equals("") || !gFlag.equals("G")) {
-					docNo = commonUtil.cleanValue(deptName) + "-" + sn;
+//					docNo = commonUtil.cleanValue(deptName) + "-" + sn;
 					
 					//2018-10-04 배현상, companyid 병합에 따른 G버전 오류 개선(ORGCOMPANYID 추가)
 					String strXML = "<SIGNINFOS><SIGNINFO><DOCID>" + newDocID + 
@@ -2115,9 +2116,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					if(rtnVal.equals("FALSE")){
 						return "<RESULT>FALSE</RESULT>";
 					}
-				} else {
-					docNo = "";
-				}
+				} 
 			}
 		}
 		
@@ -2210,6 +2209,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	}
         }
         
+        //hwp일 경우 대장등록전 문서에 새로운 문서번호 박아주기 
+        if (docNo != null && !docNo.trim().equals("") && extFileName.equals("hwp")) {
+	        HWPFile hwpFile = HWPReader.fromFile(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName);
+	        setHwpText("docnumber", docNo, hwpFile);
+	        HWPWriter.toFile(hwpFile, dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName);
+        }
 		
 		if (!rtnVal.equals("FALSE")) {
 			// 2018.06.26 - 대장등록 성공시 파일 KLIB 암호화
