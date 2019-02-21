@@ -265,16 +265,14 @@
 		VALUES (#tenantID#, #userID#, #loginTime#)
 	</insert>
 	
-	<update id="EzCommonDAO.updateMultiLoginUser" parameterClass="map">
-		UPDATE 
+	<delete id="EzCommonDAO.deleteMultiLoginUser" parameterClass="map">
+		DELETE FROM
 			TBL_USER_MULTILOGIN
-		SET
-			LOGIN_TIME = #loginTime#
 		WHERE
 			TENANT_ID = #tenantID#
 		AND
 			USER_ID = #userID#
-	</update>
+	</delete>
 	
 	<select id="EzCommonDAO.selectMultiLoginUser" parameterClass="map" resultClass="String">
 		SELECT

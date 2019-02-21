@@ -750,19 +750,24 @@ public class LoginController {
     		ssoLoginCookie.setDomain(useSSOCookie);
     		response.addCookie(ssoLoginCookie);
     	}
-    	
-    	// 멀티로그인 옵션 관련 쿠키 (default : YES)
-//    	String multiLoginUserInfo = userId + "_" + tenantId;
-    	String multiLoginTime = String.valueOf(System.currentTimeMillis());
+
+    	String multiLoginTime = "";
+    	if(!request.getRequestURI().matches("(/ezConn|/ezTalkGate|/ezUCMessenger).+")) { // 외부 로그인으로 접근시에는 멀티로그인 옵션 무시
+    		// 멀티로그인 옵션 관련 쿠키 (default : YES)
+    		multiLoginTime = String.valueOf(System.currentTimeMillis());
+    		
+    		String useMultiLogin = ezCommonService.getCompanyConfig(tenantId, companyID, "useMultiLogin");
+    		if(useMultiLogin.equalsIgnoreCase("NO")) {
+    			commonUtil.setLoginUsers(tenantId, userId, multiLoginTime);
+    		}
+    	} else {
+    		// 멀티로그인 쿠키 셀렉트해서 넣어주기 
+    		multiLoginTime = ezCommonService.selectMultiLoginTime(tenantId, userId);
+    	}
     	
     	Cookie multiLoginCookieID = new Cookie("multiLoginCookie", multiLoginTime);
     	multiLoginCookieID.setPath("/");
     	response.addCookie(multiLoginCookieID);
-    	
-    	String useMultiLogin = ezCommonService.getCompanyConfig(tenantId, companyID, "useMultiLogin");
-    	if(useMultiLogin.equalsIgnoreCase("NO")) {
-    		commonUtil.setLoginUsers(tenantId, userId, multiLoginTime);
-     	}
     	// end
     }
     

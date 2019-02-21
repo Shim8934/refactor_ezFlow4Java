@@ -64,6 +64,8 @@ public interface EzCommonService {
 	
 	public void setMultiLoginUser(int tenantID, String userID, String loginTime) throws Exception;
 	
+	public String selectMultiLoginTime(int tenantID, String userID) throws Exception;
+	
 	public boolean matchMultiLoginTime(int tenantID, String userID, String loginTime) throws Exception;
 	
 	public void createTblUserMultiLogin() throws Exception;
