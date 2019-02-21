@@ -2816,7 +2816,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				sb.append("<ReadCount>" + boardList.getReadCount() + "</ReadCount>");
 				sb.append("<ItemLevel>" + boardList.getItemLevel() + "</ItemLevel>");
 				sb.append("<ReadFlag>" + boardList.getReadFlag() + "</ReadFlag>");
-				sb.append("<Abstract>" + boardList.getAbsTract() + "</Abstract>");
+				sb.append("<Abstract>" + commonUtil.cleanValue(boardList.getAbsTract()) + "</Abstract>");
 				sb.append("</NODE>");
 			}
 		}
@@ -4777,7 +4777,7 @@ logger.debug("myRef = " + myRef + ", myStep = " + myStep + ", myLevel = " + myLe
 				sb.append("<ReadCount>" + board.getReadCount() + "</ReadCount>");
 				sb.append("<ItemLevel>" + board.getItemLevel() + "</ItemLevel>");
 				sb.append("<ReadFlag>" + board.getReadFlag() + "</ReadFlag>");
-				sb.append("<Abstract>" + board.getAbsTract() + "</Abstract>");
+				sb.append("<Abstract>" + commonUtil.cleanValue(board.getAbsTract()) + "</Abstract>");
 				sb.append("</NODE>");
 			}
 		}
