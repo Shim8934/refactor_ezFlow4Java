@@ -16,9 +16,6 @@
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-ui.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/TweenMax.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/portalContextMenu.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memo.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/memoPortal.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
@@ -172,6 +169,9 @@
 		</div>
 	</body>
 	<!-- 컨텍스트 메뉴 관련 시작 -->
+	<script type="text/javascript" src="${util.addVer('/js/TweenMax.min.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/portalContextMenu.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('ezNewPortal.e1', 'msg')}"></script>
   	<script type="text/javascript">
 
 		createContextMenu("${userDeptId}");
