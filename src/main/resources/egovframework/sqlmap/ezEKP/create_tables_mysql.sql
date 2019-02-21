@@ -9218,6 +9218,234 @@ CREATE TABLE `tbl_submit_queue` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `tbl_survey`
+--
+
+DROP TABLE IF EXISTS `tbl_survey`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_survey` (
+  `survey_id` bigint(20) NOT NULL COMMENT '설문 아이디',
+  `title` mediumtext NOT NULL COMMENT '설문 제목',
+  `purpose` longtext NOT NULL COMMENT '설문 목적',
+  `user_id` varchar(50) NOT NULL COMMENT '작성자 아이디',
+  `create_date` datetime NOT NULL COMMENT '작성일',
+  `start_date` datetime NOT NULL COMMENT '설문 시작 일시',
+  `end_date` datetime NOT NULL COMMENT '설문 마감 일시',
+  `user_name1` varchar(150) NOT NULL COMMENT '작성자 이름(한글)',
+  `user_name2` varchar(150) NOT NULL COMMENT '작성자 이름(영어)',
+  `use_status` int(11) DEFAULT '0' COMMENT '설문 사용 상태',
+  `open_days` int(11) NOT NULL COMMENT '공개일',
+  `result_public_flag` tinyint(4) DEFAULT '0' COMMENT '결과 공개 여부',
+  `anonymous_flag` tinyint(4) DEFAULT '0' COMMENT '익명 여부',
+  `multi_answer_flag` tinyint(4) DEFAULT '0' COMMENT '중복 응답 가능 여부',
+  `participate_flag` tinyint(4) DEFAULT '0' COMMENT '대상자 선택 여부',
+  `attach_flag` tinyint(4) DEFAULT '0' COMMENT '첨부 파일 유무 여부',
+  `modify_flag` tinyint(4) DEFAULT '0' COMMENT '수정 여부',
+  `draft_flag` tinyint(4) DEFAULT '0' COMMENT '임시 저장 여부',
+  `response_flag` tinyint(4) DEFAULT '0' COMMENT '응답 유무',
+  `delete_user` varchar(50) DEFAULT NULL COMMENT '삭제한 유저 아이디',
+  `update_user` varchar(50) DEFAULT NULL COMMENT '수정한 유저 아이디',
+  `update_date` datetime DEFAULT NULL COMMENT '수정한 날짜',
+  `total_user` int(20) NOT NULL DEFAULT '0' COMMENT '설문 대상자 수',
+  `company_id` varchar(80) NOT NULL COMMENT '컴퍼니 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`survey_id`,`tenant_id`,`company_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `tbl_survey_question`
+--
+
+DROP TABLE IF EXISTS `tbl_survey_question`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_survey_question` (
+  `question_id` bigint(20) NOT NULL COMMENT '질문 아이디',
+  `survey_id` bigint(20) NOT NULL COMMENT '설문 아이디',
+  `question_type` tinyint(4) NOT NULL COMMENT '질문 타입',
+  `title` varchar(250) NOT NULL COMMENT '질문 내용',
+  `levels` int(11) NOT NULL COMMENT '순서',
+  `use_status` tinyint(4) DEFAULT '0' COMMENT '사용 상태',
+  `required_flag` tinyint(4) DEFAULT '0' COMMENT '필수 답변 여부',
+  `logic_flag` tinyint(4) DEFAULT '0' COMMENT '분기 설정 여부',
+  `slider_logic_point` bigint(20) DEFAULT '-1' COMMENT '슬라이드 질문의 분기 실행 기준',
+  `skip_flag` tinyint(4) DEFAULT '0' COMMENT '다음 질문 번호 설정 여부',
+  `skip_num` int(11) DEFAULT '-1' COMMENT '다음 질문 번호',
+  `unit` bigint(20) DEFAULT '-1' COMMENT '슬라이드 질문의 단위',
+  `company_id` varchar(80) NOT NULL COMMENT '컴퍼니 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`question_id`,`company_id`,`tenant_id`),
+  KEY `FK_SURVEY_QUESTION_idx` (`survey_id`),
+  CONSTRAINT `FK_SURVEY_QUESTION` FOREIGN KEY (`survey_id`) REFERENCES `tbl_survey` (`survey_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `tbl_survey_option`
+--
+
+DROP TABLE IF EXISTS `tbl_survey_option`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_survey_option` (
+  `option_id` bigint(20) NOT NULL COMMENT '보기 아이디',
+  `survey_id` bigint(20) NOT NULL COMMENT '설문 아이디',
+  `question_id` bigint(20) NOT NULL COMMENT '질문 아이디',
+  `question_type` tinyint(4) NOT NULL COMMENT '질문 타입',
+  `question_level` bigint(20) NOT NULL COMMENT '질문 순서',
+  `content` varchar(250) DEFAULT NULL COMMENT '보기 내용',
+  `levels` int(11) NOT NULL COMMENT '순서',
+  `other_flag` tinyint(4) DEFAULT '0' COMMENT '기타 여부',
+  `logic_num` int(11) DEFAULT '-1' COMMENT '분기 번호',
+  `row_level` int(11) DEFAULT NULL COMMENT '행 순서',
+  `column_level` int(11) DEFAULT NULL COMMENT '컬럼 순서',
+  `company_id` varchar(80) NOT NULL COMMENT '컴퍼니 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`option_id`,`company_id`,`tenant_id`),
+  KEY `FK_SURVEY_OPTION_SURVEY_idx` (`survey_id`),
+  KEY `FK_SURVEY_OPTION_QUEESTION_idx` (`question_id`),
+  CONSTRAINT `FK_SURVEY_OPTION_SURVEY` FOREIGN KEY (`survey_id`) REFERENCES `tbl_survey` (`survey_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_SURVEY_OPTION_QUEESTION` FOREIGN KEY (`question_id`) REFERENCES `tbl_survey_question` (`question_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `tbl_survey_attachfile`
+--
+
+DROP TABLE IF EXISTS `tbl_survey_attachfile`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_survey_attachfile` (
+  `att_file_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '첨부파일 아이디',
+  `survey_id` bigint(20) NOT NULL COMMENT '설문 아이디',
+  `target_id` bigint(20) NOT NULL COMMENT '타겟(설문 or 질문 or 보기) 아이디',
+  `target_type` varchar(50) NOT NULL COMMENT '타겟 타입(설문 or 질문 or 보기)',
+  `file_nm` varchar(256) NOT NULL COMMENT '파일 이름',
+  `file_size` bigint(20) DEFAULT '0' COMMENT '파일 사이즈',
+  `file_path` varchar(256) DEFAULT NULL COMMENT '파일 경로',
+  `file_url` varchar(256) DEFAULT NULL COMMENT '첨부 URL',
+  `company_id` varchar(80) NOT NULL COMMENT '컴퍼니 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`att_file_id`,`tenant_id`,`company_id`),
+  KEY `attachIdx1` (`target_id`,`target_type`),
+  KEY `FK_SURVEY_ATTACHFILE_idx` (`survey_id`),
+  CONSTRAINT `FK_SURVEY_ATTACHFILE` FOREIGN KEY (`survey_id`) REFERENCES `tbl_survey` (`survey_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `tbl_survey_config`
+--
+
+DROP TABLE IF EXISTS `tbl_survey_config`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_survey_config` (
+  `user_id` varchar(50) NOT NULL COMMENT '작성자 아이디',
+  `list_count` int(11) DEFAULT NULL COMMENT '리스트 개수',
+  `preview_flag` varchar(10) DEFAULT NULL COMMENT '미리보기 설정값',
+  `list_h_percent` int(11) DEFAULT NULL COMMENT '미리보기 높이 퍼센트',
+  `list_w_percent` int(11) DEFAULT NULL COMMENT '미리보기 넓이 퍼센트',
+  `company_id` varchar(80) NOT NULL COMMENT '컴퍼니 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`user_id`,`tenant_id`,`company_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `tbl_survey_participant`
+--
+
+DROP TABLE IF EXISTS `tbl_survey_participant`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_survey_participant` (
+  `participant_id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT '설문 참여자 아이디',
+  `survey_id` bigint(20) NOT NULL COMMENT '설문 아이디',
+  `user_type` varchar(50) NOT NULL COMMENT '참여자 타입',
+  `user_id` varchar(50) NOT NULL COMMENT '참여자 아이디',
+  `user_name1` varchar(80) DEFAULT NULL COMMENT '참여자 이름(한글)',
+  `user_name2` varchar(80) DEFAULT NULL COMMENT '참여자 이름(영문)',
+  `email` varchar(150) DEFAULT NULL COMMENT '참여자 이메일',
+  `dept_id` varchar(80) DEFAULT NULL COMMENT '참여자 부서 아이디',
+  `dept_name1` varchar(80) DEFAULT NULL COMMENT '부서 이름(한글)',
+  `dept_name2` varchar(80) DEFAULT NULL COMMENT '부서 이름(영문)',
+  `company_id` varchar(80) NOT NULL COMMENT '컴퍼니 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`participant_id`,`company_id`,`tenant_id`),
+  UNIQUE KEY `participantIdx1` (`survey_id`,`user_type`,`user_id`,`company_id`,`tenant_id`),
+  CONSTRAINT `FK_SURVEY_PARTICIPANT` FOREIGN KEY (`survey_id`) REFERENCES `tbl_survey` (`survey_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `tbl_survey_response`
+--
+
+DROP TABLE IF EXISTS `tbl_survey_response`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_survey_response` (
+  `response_id` bigint(20) NOT NULL COMMENT '응답 아이디',
+  `survey_id` bigint(20) NOT NULL COMMENT '설문 아이디',
+  `question_level` bigint(20) NOT NULL COMMENT '질문 순서',
+  `question_type` tinyint(4) NOT NULL COMMENT '질문 타입',
+  `user_id` varchar(50) NOT NULL COMMENT '응답자 아이디',
+  `option_id` bigint(20) NOT NULL DEFAULT '-1' COMMENT '보기 아이디',
+  `texts` mediumtext COMMENT '텍스트 답변',
+  `row_id` int(11) DEFAULT '-1' COMMENT '행 아이디',
+  `column_id` int(11) DEFAULT '-1' COMMENT '열 아이디',
+  `ranking_level` int(11) DEFAULT '-1' COMMENT '순위 질문의 보기 번호',
+  `slider_value` int(11) DEFAULT '-1' COMMENT '슬라이더 질문의 답변값',
+  `company_id` varchar(80) NOT NULL COMMENT '컴퍼니 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`response_id`,`company_id`,`tenant_id`),
+  KEY `FK_SURVEY_RESPONSE_idx` (`survey_id`),
+  CONSTRAINT `FK_SURVEY_RESPONSE` FOREIGN KEY (`survey_id`) REFERENCES `tbl_survey` (`survey_id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
+-- Table structure for table `tbl_survey_respondent`
+--
+
+DROP TABLE IF EXISTS `tbl_survey_respondent`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `tbl_survey_respondent` (
+  `response_id` bigint(20) NOT NULL COMMENT '응답 아이디',
+  `survey_id` bigint(20) NOT NULL COMMENT '설문 아이디',
+  `user_id` varchar(50) NOT NULL COMMENT '응답자 아이디',
+  `user_name1` varchar(80) NOT NULL COMMENT '이름(한글)',
+  `user_name2` varchar(80) NOT NULL COMMENT '이름(영어)',
+  `email` varchar(150) NOT NULL COMMENT '이메일',
+  `image` varchar(150) DEFAULT NULL COMMENT '이미지',
+  `dept_id` varchar(80) NOT NULL COMMENT '부서 아이디',
+  `dept_name1` varchar(80) NOT NULL COMMENT '부서 이름(한글)',
+  `dept_name2` varchar(80) NOT NULL COMMENT '부서 이름(영어)',
+  `response_date` datetime NOT NULL COMMENT '응답일',
+  `company_id` varchar(80) NOT NULL COMMENT '컴퍼니 아이디',
+  `tenant_id` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
+  PRIMARY KEY (`company_id`,`tenant_id`,`response_id`),
+  KEY `FK_SURVEY_RESPONDENT_idx` (`survey_id`),
+  KEY `FK_SURVEY_RESPONDENT_RESPONSE_idx` (`response_id`),
+  CONSTRAINT `FK_SURVEY_RESPONDENT_SURVEY` FOREIGN KEY (`survey_id`) REFERENCES `tbl_survey` (`survey_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  CONSTRAINT `FK_SURVEY_RESPONDENT_RESPONSE` FOREIGN KEY (`response_id`) REFERENCES `tbl_survey_response` (`response_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+--
 -- Table structure for table `tbl_task`
 --
 
