@@ -54,9 +54,12 @@
 						pTag.style.fontFamily = defaultFontFamily;
 						
 						console.log('pTag', pTag.outerHTML);
-						CKEDITOR.instances.editor1.setData(pTag.outerHTML);	
+					}
+					
+					if (CKEDITOR.instances.editor1.mode === "source") {
+						CKEDITOR.instances.editor1.setData(Data);
 					} else {
-						CKEDITOR.instances.editor1.setData(Data);	
+						CKEDITOR.instances.editor1.editable().setHtml(Data);
 					}
 	                if (type == "APPROVAL" || type == "APPROVALG") {
 	                	if ("${isUsed}" != "reuse") {

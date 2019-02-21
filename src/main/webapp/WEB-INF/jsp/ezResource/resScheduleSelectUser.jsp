@@ -407,7 +407,7 @@
        			</td>
        			<td valign="top" style="padding-left:5px">
            			<div class="listview">
-               			<div id="OrganListView" style="border: 0px solid #ddd; Width: 100%; Height: 416px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto; "></div>
+               			<div id="OrganListView" style="border: 0px solid #ddd; Width: 690px; Height: 416px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto; "></div>
            			</div>
            			<div class="box" style="margin-top:3px;border:0px;float:right" >
                			<select id="search_type" style="margin-bottom:2px;height:22px">
