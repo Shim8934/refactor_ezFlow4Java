@@ -30,7 +30,7 @@ var contextMenuObject = {
 	},
 	popupMenu: false,
 	memoFlag: memoFlag,
-	userDeptId: '',
+	userDeptId: ''
 }
 
 /* 결재 연동을 위한 소스 시작 */
