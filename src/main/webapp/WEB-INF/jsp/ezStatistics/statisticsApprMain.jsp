@@ -55,18 +55,8 @@
 	        function makeoptionyear() {
 	            var date = new Date()
 	            var year = date.getFullYear();
-	            var lastYear = 2017;
-	            var diffYear = year - lastYear;
-	            
-	            for (var i = 0; i <= diffYear; i++) {
-	                var option = document.createElement("OPTION");
-	                option.value = year;
-	                option.innerHTML = year;
-
-	                document.getElementById("selyear").appendChild(option);
-	                year--;
-	            }
-	            /* if (isfirst) {
+	
+	            if (isfirst) {
 	                tempyear = year;
 	                for (var i = 0; i < 5; i++) {
 	                    var option = document.createElement("OPTION");
@@ -111,7 +101,7 @@
 	                    }
 	                    tempyear = selyear + 1;
 	                }
-	            } */
+	            }
 	        }
 	
 	        function getapprovalstatistics() {
@@ -341,7 +331,7 @@
             		</c:forEach>
 	            </select>
 	                    &nbsp;<spring:message code='ezStatistics.t1002'/> : 
-	                <select style="height:24px" id="selyear" onchange="getapprovalstatistics()"></select>
+	                <select style="height:24px" id="selyear" onchange="makeoptionyear(); getapprovalstatistics()"></select>
 	                    <spring:message code='ezStatistics.t55'/></span>
 	            </td>
 	            <td>
