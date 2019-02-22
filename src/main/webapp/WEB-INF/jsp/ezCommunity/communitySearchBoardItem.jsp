@@ -97,7 +97,7 @@
 					
 					listXML += "<tr id='rowdata'>";
 					listXML += "<td width=20 align=center valign=middle style='padding:0'><input type='checkbox' name='chk' id='chk' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'></td>";
-					listXML += "<td class='"+ urgency +"' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + bTag + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'><nobr>"
+					listXML += "<td class='"+ urgency +"' title='" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`")) + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + bTag + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'><nobr>"
 						+ bTag + strEmergent + strSpace + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Title").trim()) + "</nobr></td>";
 
 					if (gubun == "1") {
@@ -869,15 +869,15 @@
 			</tr>
 			<tr>
 				<th><spring:message code='ezCommunity.t138'/></th>
-				<td><input class="inputText" type="text" id="txtWriterName" style="width:100px" value="${writerName}"></td>
+				<td><input class="inputText" type="text" id="txtWriterName" style="width:100px" value="<c:out value='${writerName}'/>"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezCommunity.t124'/></th>
-				<td><input class="inputText" type="text" id="txtTitle" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${title}"></td>
+				<td><input class="inputText" type="text" id="txtTitle" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="<c:out value='${title}'/>"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezCommunity.t433'/></th>
-				<td><input class="inputText" type="text" id="txtAbstract" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="${abstracts}"></td>
+				<td><input class="inputText" type="text" id="txtAbstract" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box;" value="<c:out value='${abstracts}'/>"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezCommunity.t434'/></th>
