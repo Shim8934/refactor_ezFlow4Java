@@ -140,6 +140,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 	@Autowired
 	private Properties config;
 	
+	@Resource(name="egovMessageSource")
+	private EgovMessageSource egovMessageSource;
+	
 	/**
 	 * 일정관리 인덱스화면 호출함수
 	 */
@@ -238,11 +241,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		model.addAttribute("lang", loginVO.getLang());
 		model.addAttribute("userOffset", userOffset);
 		
-		if(funCode.equals("3")) {
-			return "/ezTask/taskLeft";
-		} else {
-			return "/ezSchedule/scheduleLeft";
-		}
+		return "/ezSchedule/scheduleLeft";
 	}
 	
 	/**
@@ -2315,6 +2314,14 @@ public class EzScheduleController extends EgovFileMngUtil {
         //일정 상세정보
         ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, tenantId, companyID);
         
+        if (vo == null) {
+        	logger.error("Schedule not found.");
+			model.addAttribute("title", egovMessageSource.getMessage("ezSchedule.t342", locale));
+			model.addAttribute("mainContent", egovMessageSource.getMessage("ezSchedule.gha01", locale));
+			model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+			return "ezCommon/error";
+        }
+        
         //일정기간 계산        
         if (vo.getDateType().equals("3")){        	
         	_repeatcount = request.getParameter("repeatcount");
@@ -2586,7 +2593,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 일정보기 > 참석자관리 > 참석자제외
+	 * 일정보기 > 참석자관리 > 참석수락
 	 */	
 	@RequestMapping(value="/ezSchedule/scheduleAcceptAttendant.do", produces = "text/xml; charset=utf-8")
 	@ResponseBody

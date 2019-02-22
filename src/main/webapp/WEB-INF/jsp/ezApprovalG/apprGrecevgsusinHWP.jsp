@@ -322,8 +322,8 @@
 			        HwpCtrl.ChangeMode(3);
 					
 			        //2018-10-15 반송 후 배부된 문서의 접수번호 초기화
-			        if (pDraftFlag == "REDRAFT") {
-				        HwpCtrl.SetFieldText("receiptnumber", "");
+			        if (pDraftFlag == "REDRAFT" || pDraftFlag == "SUSIN") {
+				        HwpCtrl.SetFieldText("receiptnumber", "@dp-@nn");
 			        }
 			        
 			        HwpCtrl.SetFieldFocus("doctitle");
@@ -357,7 +357,8 @@
 			            if (isRelay) {
 			                try {
 			                	/* 재발송기능 display:none처리 2018-08-25 */
-			                    /* document.getElementById("btnReqReSend").style.display = ""; */
+			                	/* 재발송요청기능 살림 2019-02-08 */
+			                    document.getElementById("btnReqReSend").style.display = ""; 
 			                    if (getNodeText(pRelayDocInfo.getElementsByTagName("isPKI").item(0)) == "Y") {
 			                        hideProgress();
 			
@@ -430,7 +431,7 @@
 			                var NewIsRelay = GetRelayDocInfo();
 			                if (NewIsRelay) {
 			                	/* 재발송기능 display:none처리 */
-			                    /* btnReqReSend.style.display = ""; */
+			                    btnReqReSend.style.display = "";
 			                } else {
 			                    btnReqReSend.style.display = "none";
 			                }

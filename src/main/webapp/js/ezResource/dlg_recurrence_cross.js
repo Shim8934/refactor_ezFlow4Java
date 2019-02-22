@@ -54,8 +54,11 @@ function window_onload() {
         var iWeekdayNumber = m_objStartTime.getDay();
         var iMonthNumber = m_objStartTime.getMonth();
 
-        document.getElementById("day" + iWeekdayNumber).checked = true;
-
+        // 2019-02-20 김민성 - 일정관리 데이터 없을 때 해당 요일 체크되도록 수정
+        if(typeof (m_dlgArgs["REPETITION"]) == "undefined" || m_dlgArgs["REPETITION"] == "") {
+        	document.getElementById("day" + iWeekdayNumber).checked = true;
+        }
+        
         SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);
         SetWeekdayDropDown(list_YearlyDay, iWeekdayNumber);
         
@@ -68,6 +71,87 @@ function window_onload() {
         var nEach = parseInt(iDateNumber / 7);
         document.getElementById("list_MonthlyEach").selectedIndex = nEach;
         document.getElementById("list_YearlyEach").selectedIndex = nEach;
+        
+        // 2019-02-19 김민성 - 일정관리 자원 예약 반복 설정
+        if((typeof (m_dlgArgs["REPETITION"]) != "undefined" && m_dlgArgs["REPETITION"] != "")
+             && (typeof (m_dlgArgs["str"]) == "undefined" || m_dlgArgs["str"] == "")) {
+    	    var info = m_dlgArgs["REPETITION"].split("|");
+    					
+    		switch (info[0])
+    		{
+    			case "-1":
+    				document.getElementsByName("optRangeEnd")[0].checked = true;
+    				break;
+    			case "0":
+    				document.getElementsByName("optRangeEnd")[2].checked = true;
+    				break;
+    			default:
+    				document.getElementsByName("optRangeEnd")[1].checked = true;
+    				list_ReCount.value = info[0];
+    				break;
+    		}
+    		
+    		if (info[1] == "1")
+    			alldaycheck.checked = true;
+    			
+    		showMainPattern(info[2]);
+    		
+    		switch (info[2])
+    		{
+    			case "0":
+    				mpDaily.checked = true;
+    				if (info[3] == "0")
+    					id0D2.checked = true;
+    				else
+    				{
+    					id0D1.checked = true;
+    					txt_De.value = info[3];
+    				}
+    			break;
+    			case "1":
+    				mpWeekly.checked = true;
+    				txt_We.value = info[3];
+    				for (var i=0; i<info[4].length; i++)
+    				{
+    					var idx = parseInt(info[4].substr(i, 1));
+    					daytable.getElementsByTagName("input").item(idx).checked = true;
+    				}
+    			break;
+    			case "2":
+    				mpMonthly.checked = true;
+    				if (info[3] == "1")
+    				{
+    					idOM1.checked = true;
+    					list_MonthInterval.value = info[4];
+    					list_MonthlyDays.value = info[5];
+    				}
+    				else
+    				{
+    					id0M2.checked = true;
+    					list_MonthInterval2.value = info[4];
+    					list_MonthlyEach.value = info[5];
+    					list_MonthlyDay.value = info[6];
+    				}
+    			break;
+    			case "3":
+    				mpYearly.checked = true;
+    				if (info[3] == "1")
+    				{
+    					optY1.checked = true;
+    					list_Month.value = info[4];
+    					list_YearlyDays.value = info[5];
+    					
+    					
+    				}
+    				else
+    				{
+    					optY2.checked = true;
+    					list_Month2.value = info[4];
+    					list_YearlyEach.value = info[5];
+    					list_YearlyDay.value = info[6];
+    				}
+    		}
+        }
 
         if (typeof (m_dlgArgs["recurrence"]) != "undefined" && m_dlgArgs["recurrence"] != "") {
             var xmlinDoc = null;
@@ -478,7 +562,8 @@ function event_btnOk_onclick()
 	var xmlDoc = null;
 	var Root = null;
 	
-	if( !CheckBeforeSave() )
+	// 2019-02-19 김민성 - 하루종일 체크 시 시간 체크 안하도록 수정
+	if(document.getElementById("alldaycheck").checked==false && !CheckBeforeSave())
 		return;
 	
 	switch (pRepetitionFlag) {

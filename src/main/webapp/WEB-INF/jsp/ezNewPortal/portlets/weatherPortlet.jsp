@@ -59,7 +59,7 @@
 				//셀렉트박스 onchange
 				$("#cityList").change(function(){
 			    	$.ajax({
-			    		type : "POST",
+			    		type : "GET",
 			    		dataType : "json",
 			    		async : false,
 			    		url : "/ezNewPortal/weatherPortletChange.do",
@@ -249,6 +249,7 @@
 		                    <dd><span id="date5"></span><span id="temp5"></span></dd>
 		                </dl>
 		            </div>
+					<span style="font-size:10px;margin-right:6px;margin-top:3px;float:right;">Weather from OpenWeatherMap </span>
 		        </div>
 		    </div>
 		</article>

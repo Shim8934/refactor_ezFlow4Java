@@ -101,7 +101,7 @@
 		
 		var getCompanies = function() {
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/getCompanies.do', false);
+			request.open('GET', '/admin/ezNewPortal/getCompanies.do', false);
 			request.setRequestHeader('Content-Type', 'application/json');
 			var companiesHTML = "";
 	
@@ -453,11 +453,11 @@
 				var menuLang = menuName.id;
 				menuLang = menuLang.substring(4);
 				
-				if (menuName.value == "") {
+				if ($.trim(menuName.value) == "") {
 					menuNameEmptyNum++;
 				}
 				
-				menuNameList.push({"menuLang" : menuLang, "menuId" : menuId, "menuName" : menuName.value});
+				menuNameList.push({"menuLang" : menuLang, "menuId" : menuId, "menuName" : $.trim(menuName.value)});
 			}
 			
 			if (menuNameEmptyNum >= menuNamesCount) {
@@ -469,7 +469,7 @@
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/updateMenu.do', true);
+			request.open('PATCH', '/admin/ezNewPortal/updateMenu.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 
@@ -617,11 +617,11 @@
 				var menuLang = menuName.id;
 				menuLang = menuLang.substring(4);
 				
-				if (menuName.value == "") {
+				if ($.trim(menuName.value) == "") {
 					menuNameEmptyNum++;
 				}
 				
-				menuNameList.push({"menuLang" : menuLang, "menuName" : menuName.value});
+				menuNameList.push({"menuLang" : menuLang, "menuName" : $.trim(menuName.value)});
 			}
 			
 			if (menuNameEmptyNum >= menuNamesCount) {
@@ -671,7 +671,7 @@
 				var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 				
 				var request = new XMLHttpRequest();
-				request.open('POST', '/admin/ezNewPortal/deleteMenu.do', true);
+				request.open('DELETE', '/admin/ezNewPortal/deleteMenu.do', true);
 				request.setRequestHeader('content-type', 'application/json');
 				
 				request.onload = function() { getMenus(); }
@@ -718,7 +718,7 @@
 			
 			//ajax로 메뉴 순서지정
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/updateMenuOrder.do', true);
+			request.open('PATCH', '/admin/ezNewPortal/updateMenuOrder.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { }

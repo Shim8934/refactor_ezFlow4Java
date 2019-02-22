@@ -93,6 +93,8 @@
  	       	var ext;
  	        var pListTypeValue;
  	        var isSearch = false;
+ 	     	//개인문서함 엑셀내보내기시에 필요한 파일명.
+ 	        var excelFileName = "${excelFileName}";
  	        
 	        document.onselectstart = function () { return false; };
 	

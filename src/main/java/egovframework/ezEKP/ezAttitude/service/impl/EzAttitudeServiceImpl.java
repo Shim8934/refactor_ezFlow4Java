@@ -2456,12 +2456,22 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     }
     
     @Override
-    public String getIsAttitude(String typeId, String writerId, String startDate, String offset, String companyId, int tenantId) throws Exception {
+    public String getIsAttitude(String typeId, String writerId, String startDate, String offset, String companyId, int tenantId, String isOutCheck) throws Exception {
     	LOGGER.debug("getIsAttitude started");
+    	Map<String,Object> map = new HashMap<String, Object>();
     	
     	if (typeId.equals("A01") || typeId.equals("A02")) {
     		typeId = "A01,A02";
-    	} else if (typeId.equals("A03") || typeId.equals("A08")) {
+    	} 
+    	else if (typeId.equals("A03") && !isOutCheck.equals("true")) {// 퇴근은 여러번 찍을 수 있으므로 조회시 조퇴여부만 확인한다.
+    		typeId = "A08";
+    	}
+    	else if (typeId.equals("A03") && isOutCheck.equals("true")) {// 퇴근은 여러번 찍을 수 있으므로 등록시 퇴근여부만 확인한다.
+    		typeId = "A03";
+    		map.put("typeId", typeId);
+    		map.put("isOutCheck", isOutCheck);
+    	}
+    	else if (typeId.equals("A08")) {
     		typeId = "A03,A08";
     	}
     	
@@ -2469,7 +2479,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
     	}
     	
-    	Map<String,Object> map = new HashMap<String, Object>();
     	map.put("typeIdArr", typeId.split(","));
     	map.put("writerId", writerId);
     	map.put("offsetMin", commonUtil.getMinuteUTC(offset));

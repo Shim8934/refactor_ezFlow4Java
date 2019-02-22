@@ -141,6 +141,7 @@
 		<result property="dateType"			column="DATETYPE"			columnIndex="9"/>
 		<result property="startDate"		column="STARTDATE"			columnIndex="10"/>
 		<result property="endDate"			column="ENDDATE"			columnIndex="11"/>
+		<result property="repetition"		column="REPETITION"			columnIndex="12"/>
 	</resultMap>
 
 	<resultMap class="OrganUserVO" id="organUserVO">
@@ -1091,7 +1092,8 @@
              	b.location as location,
              	b.datetype as datetype,
              	date_add(b.startdate, interval +#v_OFFSETMIN# minute) as startdate,
-             	date_add(b.enddate, interval +#v_OFFSETMIN# minute) as enddate
+             	date_add(b.enddate, interval +#v_OFFSETMIN# minute) as enddate,
+             	b.repetition as repetition
         	from
         		tbl_attendant a join tbl_schedule b on a.scheduleid = b.scheduleid and a.tenant_id = b.tenant_id
         	where
@@ -1186,6 +1188,39 @@
 			) values (
 				#v_SCHEDULEID#,		#v_STARTDATE#,			#v_STARTDATE#,			#v_TENANTID#,			#v_COMPANYID#
 			)
+   		]]>
+	</insert>
+	<insert id="EzScheduleDAO.insertScheduleRepeDelChild" parameterClass="map">
+		<![CDATA[
+			insert into tbl_schedulerepetition_del(
+				scheduleid,			startdate, 				enddate,				tenant_id,				companyid
+			) 
+			select 
+				scheduleid ,		#v_STARTDATE#,			#v_STARTDATE#,			#v_TENANTID#,			#v_COMPANYID#
+			from 
+				tbl_schedule 
+			where 
+				parentid = #v_SCHEDULEID#
+   		]]>
+	</insert>
+	
+	<insert id="EzScheduleDAO.insertAttendantScheduleDel" parameterClass="map">
+		<![CDATA[
+			insert into tbl_schedulerepetition_del(
+				scheduleid,			startdate, 				enddate,				tenant_id,				companyid
+			)
+			select 
+				s.scheduleid ,		d.startdate,			d.enddate,			s.tenant_id,			s.companyid
+			from 
+				tbl_schedule s
+			inner join
+				tbl_schedulerepetition_del d
+			on
+				(s.parentid = d.scheduleid and s.tenant_id = d.tenant_id and s.companyid = d.companyid)
+			where 
+				s.parentid = #v_SCHEDULEID#
+			and
+				s.tenant_id = #v_TENANTID#
    		]]>
 	</insert>
 	<!-- checked -->
@@ -1343,6 +1378,17 @@
 				tbl_schedulerepetition_del
 	   		where  
 	   			scheduleid = #v_SCHEDULEID#
+	   		and
+	   			tenant_id = #v_TENANTID#
+	   	]]>		
+	</delete>
+	
+	<delete id="EzScheduleDAO.deleteScheduleRepeChild" parameterClass="map">
+		<![CDATA[
+			delete from
+				tbl_schedulerepetition_del
+	   		where  
+	   			scheduleid in (select scheduleid from tbl_schedule where parentid = #v_SCHEDULEID#)
 	   		and
 	   			tenant_id = #v_TENANTID#
 	   	]]>		

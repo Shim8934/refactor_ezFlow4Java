@@ -912,6 +912,7 @@ public class EzOrganServiceImpl implements EzOrganService {
         map.put("class", pClass);
         map.put("v_TENANT_ID", tenantID);
         map.put("companyId", companyID); // top이면 '' 공백
+        map.put("noAddJob", "Y");
         
         logger.debug("strSQL=" + strSQL);
         

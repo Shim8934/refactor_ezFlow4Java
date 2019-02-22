@@ -839,7 +839,7 @@
 	          		</c:otherwise>
 	          	</c:choose>
 	          </td>
-	          <th style="width:80px; text-align:center"><spring:message code='ezBoard.t207'/></th>
+	          <th style="width:80px; text-align:center"><spring:message code='ezBoard.t223'/></th>
 	          <td style="width:120px; text-align:center">${userID}</td>
 	        </tr>
 	        <tr>

@@ -24,7 +24,7 @@ function updatePortletOrderUser(usedTheme) {
 	
 	//ajax로 순서 변경
 	$.ajax({
-		type : "POST",
+		type : "PATCH",
 		url : "/ezNewPortal/updatePortletOrderUser.do",
 		contentType : "application/json",
 		dataType : "text",
@@ -61,6 +61,8 @@ function parseDate(themeId) {
 	    }
 	}
 	
+	var clientTime = new Date();
+	timeDiff = nowAttiTime.getTime() - clientTime.getTime();
 	//$("#todayTime").html(nowAttiTime.getFullYear() + "."  + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "." + leadingZeros(nowAttiTime.getDate(), 2));
 	
 }
@@ -69,10 +71,11 @@ function attiClock() {
     var h, m;
     var s;
     var time = " ";
+    var nowClientTime = new Date();
+    var nowServerTime = new Date(nowClientTime.getTime() + timeDiff);
     
-    nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
-    time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2) + ':' + leadingZeros(nowAttiTime.getSeconds(), 2);
-    portletTime = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2);
+    time = leadingZeros(nowServerTime.getHours(), 2) + ':' + leadingZeros(nowServerTime.getMinutes(), 2) + ':' + leadingZeros(nowServerTime.getSeconds(), 2);
+    portletTime = leadingZeros(nowServerTime.getHours(), 2) + ':' + leadingZeros(nowServerTime.getMinutes(), 2);
     document.getElementById("timeFlow").innerHTML = time;
     
     if (document.getElementById("ptlTimeFlow") != null) {
@@ -80,10 +83,10 @@ function attiClock() {
     }
     
     if (portletTime == "00:00" || portletTime == "12:00") {
-    	ptlAmPmCheck(nowAttiTime.getHours());
+    	ptlAmPmCheck(nowServerTime.getHours());
     }
     
-    gizmo = setTimeout("attiClock()", 1000);
+    gizmo = setTimeout("attiClock()", 500);
     
 }
 
@@ -539,7 +542,7 @@ function getBirthdayEmployeesList() {
 	window.clearTimeout(timer);
 	
 	$.ajax({
-		type : "POST",
+		type : "GET",
 		url : "/ezNewPortal/getMonthlyBirthdayEmployees.do",
 		dataType : "json",
 		data : {"birthdayMonth" : birthdayMonth, "birthdayCurPage" : birthdayCurPage, "birthdayCount" : 6},
@@ -617,7 +620,7 @@ function openUserInfo(event) {
 //월별 우수사원 정보 호출
 function getMonthlyBestEmployee() {
 	$.ajax({
-		type : "POST",
+		type : "GET",
 		url : "/ezNewPortal/getMonthlyBestEmployee.do",
 		dataType : "json",
 		success : function(result) {
@@ -711,15 +714,15 @@ function getAttitudeList(themeId) {
  						$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
  					}
 				} else if (result[i].typeId == "A03") {
-					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
+//					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
 					
 					if (nowTheme == 2) {
-						$("#outAttiBtn_txt").attr("onclick", "").unbind("mouseenter");
+//						$("#outAttiBtn_txt").attr("onclick", "").unbind("mouseenter");
  						$("#outAttiBtn").parent().addClass("commute_on");
  					}
 					
 					if ($('#36Portlet')) {
-						$("#ptlOutAttiBtn").attr("onclick", "").unbind("mouseenter");
+//						$("#ptlOutAttiBtn").attr("onclick", "").unbind("mouseenter");
 						$("#ptlOutAttiBtn").removeClass("out").addClass("in");
 						$("#ptlOutAttiBtn dt").css("margin-bottom","5px");
 						$("#ptlOutAttiBtn dd").text(result[i].startDate.split(" ")[1].substring(0,5));
@@ -755,13 +758,13 @@ function addAttitude(obj, themeId) {
 	
 	beforeAlertDate = new Date();
 	var dateAlert = nowAttiTime.getFullYear() + messages.strLang4 + (nowAttiTime.getMonth() + 1) + messages.strLang5 + (nowAttiTime.getDate()) + messages.strLang6 + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
-	var saveFlag = confirm(messages.strLang7 + dateAlert + messages.strLang8);
-	if (!saveFlag) {
-		afterAlertDate = new Date();
-		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
-		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
-		return;
-	} 
+//	var saveFlag = confirm(messages.strLang7 + dateAlert + messages.strLang8);
+//	if (!saveFlag) {
+//		afterAlertDate = new Date();
+//		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+//		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
+//		return;
+//	} 
 	$.ajax({
 		type : "POST",
 		async : true,

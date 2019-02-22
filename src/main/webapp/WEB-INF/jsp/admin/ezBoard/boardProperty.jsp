@@ -119,6 +119,7 @@
 	            }
 			});
 			
+			/* 2019-02-18 홍승비 - 일반설정 저장 시 각 필드 문자, 숫자 입력 제한 적용 */
 			function Save() {
 	            if ($.trim($("#txtBoardName").val()) == "") {
 	                alert("<spring:message code='ezBoard.t144'/>");
@@ -179,17 +180,29 @@
 	                FormFlag = "N";
 				}
 	            
+	            // 게시만료일
 	            if ($("#chkPermanent").is(":checked")) {
 	                Expires = "-1"
 	            } else {
-	                Expires = $("#txtExpires").val();
+	            	if (!$("#txtExpires").val().match(/^\d+$/)) {
+					    alert("<spring:message code='ezBoard.t156'/>: <spring:message code='ezEmail.t99000066'/>");
+					    return;
+					} else {
+	                	Expires = $("#txtExpires").val();
+	                }
 	            }
 
+	            // 만료게시물 정책
 	            var iDeleteAfter = "-1";
-	            if ($("#usedeleteafter").is(":checked") && $("#deleteafter").val() == "") {
-	                alert("<spring:message code='ezBoard.t146'/>");
-	                $("#deleteafter").focus();
-	                return;
+	            if ($("#usedeleteafter").is(":checked")) {
+		            if ($("#deleteafter").val() == "") {
+		                alert("<spring:message code='ezBoard.t146'/>");
+		                $("#deleteafter").focus();
+		                return;
+		            } else if (!$("#deleteafter").val().match(/^\d+$/)) {
+						alert("<spring:message code='ezBoard.t159'/>: <spring:message code='ezEmail.t99000066'/>");
+					    return;
+		            }
 	            }
 	            
 	            var url = $("#txtURL").val().trim();
@@ -227,9 +240,14 @@
 	                iDeleteAfter = $("#deleteafter").val();
 	            }
 	            
+	            // 첨부크기제한
 	            if (AttachMax == "") {
 	            	AttachMax = "5";
+	            } else if (!AttachMax.match(/^\d+$/)) {
+					alert("<spring:message code='ezBoard.t167'/>: <spring:message code='ezEmail.t99000066'/>");
+					return;
 	            }
+	            
 	            if (Expires == "") {
 	            	Expires = "30";
 	            }
@@ -269,22 +287,38 @@
 	            	}	            		
 	            });
 	        }
+			
+			/* 2019-02-20 홍승비 - 게시만료일 체크여부에 따라 입력필드 표시 수정 */
 			function chkPermanent_onclick() {
 	            if (chkPermanent.checked) {
 	                chkExpires.checked = false;
 	                txtExpires.value = "";
+	                txtExpires.readOnly = true;
 	            } else {
 	                chkExpires.checked = true;
 	                txtExpires.value = "365";
+	                txtExpires.readOnly = false;
 	            }
-	        }			
+	        }
 			function chkExpires_onclick() {
 	            if (chkExpires.checked) {
 	                chkPermanent.checked = false;
 	                txtExpires.value = "365";
+	                txtExpires.readOnly = false;
 	            } else {
 	                chkPermanent.checked = true;
 	                txtExpires.value = "";
+	                txtExpires.readOnly = true;
+	            }
+	        }
+			
+			/* 2019-02-20 홍승비 - 만료게시물 정책 체크여부에 따라 입력필드 표시 수정 */
+			function chkDeleteAfter_onclick() {
+	            if (document.getElementById("usedeleteafter").checked) {
+	                document.getElementById("deleteafter").readOnly = false;
+	            } else {
+	            	document.getElementById("deleteafter").value = "";
+	            	document.getElementById("deleteafter").readOnly = true;
 	            }
 	        }
 			
@@ -773,7 +807,7 @@
 		                <input type="checkbox" id="chkPermanent" onclick="chkPermanent_onclick()" checked />
 		                <spring:message code="ezBoard.t157"/>
 		                <input type="checkbox" id="chkExpires" onclick="chkExpires_onclick()" />
-		                <input type="text" id="txtExpires" value="365" style="width: 35px" />
+		                <input type="text" id="txtExpires" style="width: 35px" readonly />
 		                <spring:message code="ezBoard.t158"/>
 	            	</c:if>
 	                <c:if test="${model.itemExpires != '-1'}">   
@@ -790,9 +824,9 @@
 		            <th><spring:message code="ezBoard.t159"/></th>
 		            <td>
 		            	<spring:message code="ezBoard.t160"/>
-	                	<input type="inputbox" id="deleteafter" style="width: 50px;height:20px;margin-top:3px"/>
+	                	<input type="inputbox" id="deleteafter" style="width: 50px;height:20px;margin-top:3px" readonly />
 	                	<spring:message code="ezBoard.t161"/><br/>
-	                	<input type="checkbox" id="usedeleteafter"/>
+	                	<input type="checkbox" id="usedeleteafter" onclick="chkDeleteAfter_onclick()"/>
 	                	<spring:message code="ezBoard.t162"/>
 	                </td>
 	            </c:if>
@@ -802,7 +836,7 @@
 	            		<spring:message code="ezBoard.t160"/>
 	                	<input type="inputbox" id="deleteafter" style="width: 50px;height:20px;margin-top:3px" value="<c:out value='${model.deleteAfter}' />"/>
 	                	<spring:message code="ezBoard.t161"/><br/>
-	                	<input type="checkbox" id="usedeleteafter" checked />
+	                	<input type="checkbox" id="usedeleteafter" onclick="chkDeleteAfter_onclick()" checked />
 	                	<spring:message code="ezBoard.t162"/>
 	                </td>
 	            </c:if>

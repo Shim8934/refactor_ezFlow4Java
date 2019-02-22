@@ -29,6 +29,12 @@
 	            SetTreeConfig();
 	            makeTreeList();
 	        };
+	        
+	        /* 2019-01-31 홍승비 - 세로방향 리사이즈 시 내부 테이블 높이도 리사이즈 */
+	        window.onresize = function () {    	
+	        	document.getElementById("TreeCtrl_MyBoardTree").style.height = (document.documentElement.clientHeight - 141) + "px";
+	        }
+	        
 	        function makeTreeList() {
 	            document.getElementById("TreeCtrl_MyBoardTree").innerHTML = "";
 	            treeView.SetID("FromTreeView");

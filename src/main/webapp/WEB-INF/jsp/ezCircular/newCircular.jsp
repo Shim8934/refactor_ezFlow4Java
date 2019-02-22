@@ -561,10 +561,11 @@
 	                    return;
 	                }
 	            } else if (type == "quick") {
-	            	if ($.trim($("#txt_keyword").val()) == "") {
-			        	alert("<spring:message code='ezCircular.t189' />");
-			            return;
-			        }
+	            	//공백으로 검색할 수 없습니다.는 검색키워드를 입력해주세요에 포함되는 의미라서 주석처리.
+// 	            	if ($.trim($("#txt_keyword").val()) == "") {
+// 			        	alert("<spring:message code='ezCircular.t189' />");
+// 			            return;
+// 			        }
 
 	                if (document.getElementById("txt_keyword").value == "") {
 	                    alert("<spring:message code='ezCircular.t91'/>");
@@ -722,7 +723,7 @@
 							<dt class="prepic" id="PreH_userPic"><img src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
 							<dd class="pretext">
 								<ul class="pretextUL">
-									<li class="preSubject"><span class="popup_open" onclick="CircularReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject"><span class="subjectText" id="PreH_sub_subject"></span></span></li>
+									<li class="preSubject"><span class="popup_open" onclick="CircularReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject"><span class="subjectText" id="PreH_sub_subject"></span></span></li>
 									<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t207" /></span> : <span id="PreH_MailReceiver"></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t5007" /> : </span><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span></li>
 								</ul>
 							</dd>
@@ -743,7 +744,7 @@
 							<dt class="prepic" id="PreW_userPic"><img src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
 							<dd class="pretext">
 								<ul class="pretextUL">
-									<li class="preSubject"><span class="popup_open" onclick="CircularReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreW_subject"><span class="subjectText" id="PreW_sub_subject"></span></span></li>
+									<li class="preSubject"><span class="popup_open" onclick="CircularReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreW_subject"><span class="subjectText" id="PreW_sub_subject"></span></span></li>
 									<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t207" /></span> : <span id="PreW_MailReceiver"></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t5007" /> : </span><span id="PreW_date"><span id="PreW_sub_date" style="display:none;"></span></span></span></li>
 								</ul>
 							</dd>

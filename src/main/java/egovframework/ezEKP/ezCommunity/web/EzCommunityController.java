@@ -789,6 +789,20 @@ public class EzCommunityController extends EgovFileMngUtil{
 			attachFileNameMaxLength = "100";
 		}
 		
+		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + "'";
+		
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				String fontFamily = editorFontStyle.split("\\|")[0];
+				String fontSize = editorFontStyle.split("\\|")[1];
+				
+				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+			}
+		}
+		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
 		ezCommunityService.newBoardItem(item, boardInfo, userInfo, pItemID, pBoardID, pUrl, pMode, expireDays, model);
@@ -807,6 +821,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("endDate", item.getEndDate());
+		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		
 		logger.debug("item.endDate: " + item.getEndDate());
 		
@@ -2527,9 +2542,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		//커뮤니티 소개글 저장할때 줄바꿈이 안되서, \r\n을 <br>태그로 치환
-		clubVO.setC_ClubDesc(clubVO.getC_ClubDesc().replaceAll("\r\n", "<br>"));
-		
+		/* 2019-01-29 홍승비 - 개행문자 <br>태그로 치환하는 부분 제거 */
 		ezCommunityService.adminBasicOkUpdate(clubVO, code, userInfo.getTenantId());
 		
 		model.addAttribute("code", code);
@@ -3105,7 +3118,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String parentBoardID = request.getParameter("parentBoardID");
 		String boardGroupID = request.getParameter("boardGroupID");
 		String code = request.getParameter("code");
-		
 		String orgBoardParameters = request.getParameter("orgBoardParameters");
 		
 		if (request.getParameter("page") != null) {
@@ -3176,6 +3188,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         model.addAttribute("title", title);
         model.addAttribute("writerName", writerName);
         model.addAttribute("abstract", abstracts);
+        model.addAttribute("pPage", pPage);
         
 		return "ezCommunity/communityAdminSearchBoardItem";
 	}

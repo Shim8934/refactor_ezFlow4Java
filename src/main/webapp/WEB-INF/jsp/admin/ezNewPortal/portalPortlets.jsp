@@ -114,7 +114,7 @@
 		
 		var getCompanies = function() {
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/getCompanies.do', false);
+			request.open('GET', '/admin/ezNewPortal/getCompanies.do', false);
 			request.setRequestHeader('Content-Type', 'application/json');
 			var companiesHTML = "";
 	
@@ -134,7 +134,7 @@
 					document.getElementById("ListCompany").innerHTML = companiesHTML;
 					
 					document.getElementById("ListCompany").addEventListener('change', function() {
-						getMenus();
+						getPortletList();	
 					});
 				} else {
 					// We reached our target server, but it returned an error
@@ -164,11 +164,11 @@
 			
 			for (var i = 0; i < portletNameListCount; i++) {
 				
-				if (portletNameList[i].value == "") {
+				if ($.trim(portletNameList[i].value) == "") {
 					portletNameEmptyNum++;
 				}
 				
-				nameList.push({"portletName" : portletNameList[i].value, "portletLang" : portletNameList[i].getAttribute("data1")});
+				nameList.push({"portletName" : $.trim(portletNameList[i].value), "portletLang" : portletNameList[i].getAttribute("data1")});
 			}
 			
 			if (portletNameEmptyNum >= portletNameListCount) {
@@ -246,7 +246,7 @@
 			var menuId = event.data.menuId;
 			
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/deletePortlet.do', true);
+			request.open('DELETE', '/admin/ezNewPortal/deletePortlet.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 
@@ -301,11 +301,16 @@
 			
 			for (var i = 0; i < portletNameListCount; i++) {
 	
-				if (portletNameList[i].value == "") {
+				if ($.trim(portletNameList[i].value) == "") {
 					portletNameEmptyNum++;
 				}
 				
-				nameList.push({"portletId" : portletId, "portletName" : portletNameList[i].value, "portletLang" : portletNameList[i].getAttribute("data1")});
+				nameList.push({"portletId" : portletId, "portletName" : $.trim(portletNameList[i].value), "portletLang" : portletNameList[i].getAttribute("data1")});
+			}
+			
+			if (portletNameEmptyNum >= portletNameListCount) {
+				alert("<spring:message code='ezNewPortal.t091' />");
+				return;
 			}
 			
 			//게시판 설정(게시판 아이디)
@@ -344,7 +349,7 @@
 			}
 			
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/updatePortlet.do', true);
+			request.open('PATCH', '/admin/ezNewPortal/updatePortlet.do', true);
 			request.setRequestHeader('content-type', 'application/json');
 			
 			request.onload = function() { 

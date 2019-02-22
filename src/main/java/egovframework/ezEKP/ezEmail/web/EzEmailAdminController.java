@@ -32,12 +32,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -900,6 +895,55 @@ public class EzEmailAdminController {
 		return "/admin/ezEmail/mailQuotaList";
 	}
 
+	@RequestMapping(value = "/admin/ezEmail/mailBoxQuotaUpdate.do", method = RequestMethod.GET)
+	public String mailBoxQuotaUpdate(@CookieValue("loginCookie") String loginCookie) throws Exception{
+		logger.debug("mailBoxQuotaUpdate started.");
+
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		int tenantID = userInfo.getTenantId();
+		String email = null;
+		IMAPAccess ia = null;
+		Locale locale = Locale.getDefault();
+		String password = jspw;
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantID);
+		String mailServerAddress = config.getProperty("config.MailServerAddress");
+		String iMAPPort = config.getProperty("config.IMAPPort");
+
+		List<OrganUserVO> vo = ezOrganAdminService.getAllUserCnList(tenantID);
+
+		for (OrganUserVO user : vo) {
+
+			try {
+				String cn = user.getCn();
+				email = cn + "@" + domain;
+				ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
+
+				long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+
+				long mailboxUsage = storageUsageAndLimit[0];
+				long mailboxQuota = storageUsageAndLimit[1];
+
+				ezOrganAdminService.updateProperty(cn, "mailboxusage", String.valueOf(mailboxUsage), "user", tenantID);
+				ezOrganAdminService.updateProperty(cn, "mailboxquota", String.valueOf(mailboxQuota), "user", tenantID);
+			} catch (Exception e) {
+				logger.debug("error. user=" + email);
+				e.printStackTrace();
+			} finally {
+				if (ia != null) {
+					ia.close();
+				}
+			}
+		}
+
+		logger.debug("mailBoxQuotaUpdate ended.");
+		return "json";
+	}
+
 	@RequestMapping(value = "/admin/ezEmail/mailBoxQuotaManageList.do")
 	public String mailBoxQuotaManageList( @CookieValue("loginCookie") String loginCookie,
 			Model model, HttpServletRequest req,
@@ -948,7 +992,14 @@ public class EzEmailAdminController {
 		// 모든 사용자의 목록을 가져온다.
 		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
 									    maxItemPerPage, searchKeycode, searchKeyword, companyId);
-		
+
+        IMAPAccess ia = null;
+        Locale locale = Locale.getDefault();
+        String password = jspw;
+        String domain = ezCommonService.getTenantConfig("DomainName",userInfo.getTenantId());
+        String mailServerAddress = config.getProperty("config.MailServerAddress");
+        String iMAPPort = config.getProperty("config.IMAPPort");
+
 		// 각 사용자별로 처리한다.
 		for (OrganUserVO organUser : userCnList) {				
 			List<String> quaList = new ArrayList<String>();
@@ -960,13 +1011,38 @@ public class EzEmailAdminController {
 			quaList.add(0, userId);
 			quaList.add(1, displayname);
 			quaList.add(2, department);
+			long mailboxUsage = 0;
+			long mailboxQuota = 0;
 
-			String mailboxUsage = organUser.getMailboxUsage();
-			String mailboxQuota = organUser.getMailboxQuota();
-			
-			quaList.add(3, String.valueOf(mailboxUsage));
-			quaList.add(4, String.valueOf(mailboxQuota));
-			userList.add((ArrayList<String>) quaList);
+			try {
+                String email = userId + "@" + domain;
+
+                if (searchKeycode.equalsIgnoreCase("quota")) {
+                	// imap 과 약간의 차이가 있을 수 있으므로
+                	mailboxQuota = Long.parseLong(organUser.getMailboxQuota());
+					mailboxUsage = Long.parseLong(organUser.getMailboxUsage());
+					logger.debug("get organUserVO, mailboxQuota=" + mailboxQuota + ", mailboxUsage=" + mailboxUsage);
+				} else {
+					ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);
+
+					long[] storageUsageAndLimit = ia.getStorageUsageAndLimit();
+
+					// 사용자의 현재 메일박스 스토리지 사용량과 쿼터(최대 할당량)을 구한다.
+					mailboxUsage = storageUsageAndLimit[0]; // KBs
+					mailboxQuota = storageUsageAndLimit[1]; // KBs
+					logger.debug("get IMAP, mailboxQuota=" + mailboxQuota + ", mailboxUsage=" + mailboxUsage);
+				}
+
+                quaList.add(3, String.valueOf(mailboxUsage));
+                quaList.add(4, String.valueOf(mailboxQuota));
+                userList.add((ArrayList<String>) quaList);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (ia != null) {
+                    ia.close();
+                }
+            }
 		}
 
 		model.addAttribute("userList", userList);
@@ -1025,11 +1101,11 @@ public class EzEmailAdminController {
 			quaList.add(1, displayname);
 			quaList.add(2, department);
 				
-			String mailboxUsage = organUser.getMailboxUsage();
-			String mailboxQuota = organUser.getMailboxQuota();
+			String mailboxUsage = String.valueOf(Long.parseLong(organUser.getMailboxUsage()) / 1024);
+			String mailboxQuota = String.valueOf(Long.parseLong(organUser.getMailboxQuota()) / 1024);
 			
-			quaList.add(3, String.valueOf(mailboxUsage));
-			quaList.add(4, String.valueOf(mailboxQuota));
+			quaList.add(3, mailboxUsage);
+			quaList.add(4, mailboxQuota);
 			userList.add((ArrayList<String>) quaList);
 		}
 		

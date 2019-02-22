@@ -321,7 +321,7 @@ function SaveFormInfo() {
     	url = "/admin/ezApprovalG/formSave.do";
     	
 		// FormBuilder
-		if (document.getElementById("reform-checkbox").checked) {
+		if (document.getElementById("reform-checkbox") && document.getElementById("reform-checkbox").checked) {
 			iframe_ApvReForm.processForSaving();
 			
 			var reformBodyStr = iframe_ApvReForm.GetEditorContent();

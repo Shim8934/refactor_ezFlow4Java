@@ -330,7 +330,7 @@ SELECT
     linktype, 
     linktypeurl,
     url,
-    size
+    quicksize
 FROM (
 	SELECT
 		Q.quicklinkid, 
@@ -340,7 +340,7 @@ FROM (
 	    Q.linktype,
 	    Q.linktypeurl, 
 	    Q.url,
-	    Q.size_ as size,
+	    Q.size_ as quicksize,
 	    IFNULL(USER.view_flag, IFNULL(DEPT.view_flag, IFNULL(COMP.view_flag, IFNULL(EVERY.view_flag, 'N')))) as viewflag
 	FROM 
 		tbl_ps_quicklink as Q
@@ -942,6 +942,8 @@ WHERE
 	B.company_id = #companyId#
 AND
 	C.company_id = #companyId#
+AND
+	C.tenant_id = #tenantId#
 AND
 	B.tenant_id = #tenantId#
 AND

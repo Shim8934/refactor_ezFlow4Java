@@ -118,6 +118,7 @@ function ListView() {
     this.SetListType = SetListType;
     this.SetOrderbyCol = SetOrderbyCol; // Header order by 노드명 셋팅
     this.SetUnSelected = SetUnSelected;
+    this.setDeleteRow = setDeleteRow;
     
     //사용자 정의 이벤트 지정
     this.SetHeaderOnClick = SetHeaderOnClick;
@@ -1582,7 +1583,7 @@ function SetUnSelected(pTableID) {
 }
 
 function setDeleteRow(nodeId) {
-	var colCount = _dataSource.getElementsByTagName("ROW");
+	var colCount = document.getElementById(nodeId).getElementsByTagName("th").length;
 	var oTable = document.getElementById(nodeId);
 	var oTbody = oTable.lastChild;
 	

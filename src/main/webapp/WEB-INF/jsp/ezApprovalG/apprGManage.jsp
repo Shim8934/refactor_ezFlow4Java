@@ -1321,6 +1321,7 @@
 		        var pHref = tr.getAttribute("DATA3");
 		        var openLocation;
 		        var pOrgCompanyID = tr.getAttribute("ORGCOMPANYID");
+		        var pDocTitle = tr.firstChild.textContent;
 		        
 		        // 2018.07.06 (KLIB) - ezd 확장자 처리
 		        var pHrefExt = pHref.substr(pHref.length - 3, pHref.length).toLowerCase();
@@ -1338,7 +1339,8 @@
 		        } else {
 	                openLocation = "/ezApprovalG/ezSimsaG.do";
 		        }
-		        openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pHref) + "&orgDocID=" + encodeURI(pOrgDocID) + "&orgCompanyID=" + encodeURI(pOrgCompanyID);
+		        openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pHref) + "&orgDocID=" + encodeURI(pOrgDocID) + 
+		        		"&orgCompanyID=" + encodeURI(pOrgCompanyID) + "&docTitle=" + encodeURI(pDocTitle);
 		        var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left;
 		        window.open(openLocation, "enforce", param);
 		    }
@@ -1417,8 +1419,26 @@
 		        var oArrRows = DocList.GetSelectedRows();
 		        var tr = oArrRows[0];
 		        if (tr.getAttribute("DATA10") == "015") {
-		            if (Ans) {
-		                RemoveDocCabinet(tr.getAttribute("DATA1"), "Y");
+		        	if (Ans) {
+		            	//2019-02-18 기안원문서철과 비교해서 다르면 다시 세팅
+		            	
+		            	var result = "";
+		            	$.ajax({
+		            		type : "POST",
+				    		dataType : "text",
+				    		async : false,
+				    		url : "/ezApprovalG/setHesongCabinetInfo.do",
+				    		data : {
+				    				docID  : tr.getAttribute("DATA1")
+				    				},
+				    		success: function(xml){
+				    			RemoveDocCabinet(tr.getAttribute("DATA1"), "Y");
+				    		},
+				    		error : function(error) {
+// 				    			OpenAlertUI(strLang936 + "<spring:message code='ezApprovalG.t933'/>");
+				    			alert(strLang936 + "<spring:message code='ezApprovalG.t933'/>");
+				    		}
+		            	});
 		                openergetDocInfo();
 		            }
 		        }

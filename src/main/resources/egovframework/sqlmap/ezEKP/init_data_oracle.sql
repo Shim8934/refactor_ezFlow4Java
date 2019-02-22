@@ -43,7 +43,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useReSend', '메일 재작성 사용여부', 'YES', '보낸 메일의 재작성 기능을 사용한다.YES: 사용NO: 사용안함메일>보낸편지함메일>보낸편지함>메일읽기 (default: YES)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useReform', '전자결재 폼빌더 양식 작성 가능 여부', 'NO', '전자결재 양식 추가 시에 폼빌더 작성기를 활성화할 수 있는지에 대한 여부를 설정한다. 이미 폼빌더 양식으로 추가 됐다면 옵션을 비활성화해도 폼빌더 양식으로서 동작한다. (default : NO)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useReceiveInfoName', '수신부서 표기 타입', '0', '수신부서 지정 시 부서 이름 끝에 "장"을 붙인다.0: 부서이름만 표기1: 부서이름+장으로 표기 (default: 0)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재');
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useReceiveDocNo', '접수 시 채번방식 설정', 'YES', '결재문서 접수 시 채번 붙이는 때를 설정한다. (전자결재G)YES: 접수/편철/전결 시 채번NO: 최종결재/편철/전결 시 채번 (default: YES)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재G');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useReceiveDocNo', '접수 시 채번방식 설정', 'NO', '결재문서 접수 시 채번 붙이는 때를 설정한다. (전자결재G)YES: 접수/편철/전결 시 채번NO: 최종결재/편철/전결 시 채번 (default: NO)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '전자결재G');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useReceiptExternal', '외부메일 수신확인 지원여부', 'NO', '외부메일 수신확인을 지원한다.YES: 지원NO: 지원안함 (default: NO)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useQuestion', '전자설문 모듈 사용여부', 'NO', 'YES: 사용NO: 사용안함 (default: NO)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '기타모듈');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'UsePreviewSubTreeForEmail', '하위 편지함 오픈 설정 사용여부', 'NO', '메일>환경설정에서 하위편지함 자동 열기 설정을 사용한다.YES: 사용NO: 사용안함 (default: NO)', TO_DATE('2017-01-06 00:00:00','yyyy-mm-dd hh24:mi:ss'), '메일');
@@ -509,6 +509,7 @@ INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMP
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A57','001','Y','1','내양식함기능 사용여부 (Y는 사용. 그외는 사용안함)','Y','Y','Y','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A60','0  ','수신처상태','0','ProcessYN Flag','수신처상태','수신처상태','수신처상태','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A60','A  ','도착','1','도착 (Arrived)','Arrived','到着','到达','Top',0);
+INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A60','B  ','발송의뢰반송','1','발송의뢰반송(Return Offered)','Return Offered','送信依頼拒否','拒绝发送请求','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A60','E  ','전송실패','1','전송 실패 (Error)','Error','送信エラー','传输失败','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A60','H  ','회송','1','회송 (HweSong)','Return','回送','返回','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A60','I  ','접수','1','접수 (Inter..)','Reception progress','受付','收到','Top',0);
@@ -2152,7 +2153,7 @@ Insert into tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJour
 
 Insert into tbl_journal_form (form_id,tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
 values (seq_tbl_journal_form.nextval,0,'일일업무일지(기본)',
-'<div>
+to_clob('<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
          <tr>
@@ -2191,8 +2192,8 @@ values (seq_tbl_journal_form.nextval,0,'일일업무일지(기본)',
                            </td>
                         </tr>
                         <tr>
-                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
-                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">')||
+to_clob('<p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                                  <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
                               </p>
                            </td>
@@ -2229,8 +2230,8 @@ values (seq_tbl_journal_form.nextval,0,'일일업무일지(기본)',
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                               <span style="font-weight: bold;">구&nbsp;분</span>
                            </p>
-                        </td>
-                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                        </td>')||
+to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                               <span style="font-weight: bold;">업무내용 및 진행사항</span>
                            </p>
@@ -2270,12 +2271,12 @@ values (seq_tbl_journal_form.nextval,0,'일일업무일지(기본)',
 </div>
 <p>
    <span>&nbsp;</span>
-</p>'
+</p>')
 ,'ezJournal.t05',SYS_EXTRACT_UTC(SYSTIMESTAMP),'기본일일업무일지','Top','basic');
 
 Insert into tbl_journal_form (form_id,tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
 values (seq_tbl_journal_form.nextval,0,'주간업무일지(기본)',
-'<div>
+to_clob('<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
          <tr>
@@ -2314,8 +2315,8 @@ values (seq_tbl_journal_form.nextval,0,'주간업무일지(기본)',
                            </td>
                         </tr>
                         <tr>
-                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
-                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">')||
+to_clob('<p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                                  <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
                               </p>
                            </td>
@@ -2352,8 +2353,8 @@ values (seq_tbl_journal_form.nextval,0,'주간업무일지(기본)',
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                               <span style="font-weight: bold;">구&nbsp;분</span>
                            </p>
-                        </td>
-                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                        </td>')||
+to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                               <span style="font-weight: bold;">업무내용 및 진행사항</span>
                            </p>
@@ -2393,12 +2394,12 @@ values (seq_tbl_journal_form.nextval,0,'주간업무일지(기본)',
 </div>
 <p>
    <span>&nbsp;</span>
-</p>'
+</p>')
 ,'ezJournal.t06',SYS_EXTRACT_UTC(SYSTIMESTAMP),'기본주간업무일지','Top','basic');
 
 Insert into tbl_journal_form (form_id,tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
 values (seq_tbl_journal_form.nextval,0,'월간업무일지(기본)',
-'<div>
+to_clob('<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
          <tr>
@@ -2437,8 +2438,8 @@ values (seq_tbl_journal_form.nextval,0,'월간업무일지(기본)',
                            </td>
                         </tr>
                         <tr>
-                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
-                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">')||
+to_clob('<p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                                  <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
                               </p>
                            </td>
@@ -2475,8 +2476,8 @@ values (seq_tbl_journal_form.nextval,0,'월간업무일지(기본)',
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                               <span style="font-weight: bold;">구&nbsp;분</span>
                            </p>
-                        </td>
-                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                        </td>')||
+to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                               <span style="font-weight: bold;">업무내용 및 진행사항</span>
                            </p>
@@ -2516,12 +2517,12 @@ values (seq_tbl_journal_form.nextval,0,'월간업무일지(기본)',
 </div>
 <p>
    <span>&nbsp;</span>
-</p>'
+</p>')
 ,'ezJournal.t07',SYS_EXTRACT_UTC(SYSTIMESTAMP),'기본월간업무일지','Top','basic');
 
 Insert into tbl_journal_form (form_id,tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
 values (seq_tbl_journal_form.nextval,0,'분기업무일지(기본)',
-'<div>
+to_clob('<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
          <tr>
@@ -2560,8 +2561,8 @@ values (seq_tbl_journal_form.nextval,0,'분기업무일지(기본)',
                            </td>
                         </tr>
                         <tr>
-                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
-                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">')||
+to_clob('<p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                                  <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
                               </p>
                            </td>
@@ -2598,8 +2599,8 @@ values (seq_tbl_journal_form.nextval,0,'분기업무일지(기본)',
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                               <span style="font-weight: bold;">구&nbsp;분</span>
                            </p>
-                        </td>
-                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                        </td>')||
+to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                               <span style="font-weight: bold;">업무내용 및 진행사항</span>
                            </p>
@@ -2639,12 +2640,12 @@ values (seq_tbl_journal_form.nextval,0,'분기업무일지(기본)',
 </div>
 <p>
    <span>&nbsp;</span>
-</p>'
+</p>')
 ,'ezJournal.t08',SYS_EXTRACT_UTC(SYSTIMESTAMP),'기본분기업무일지','Top','basic');
 
 Insert into tbl_journal_form (form_id,tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
 values (seq_tbl_journal_form.nextval,0,'반기업무일지(기본)',
-'<div>
+to_clob('<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
          <tr>
@@ -2683,8 +2684,8 @@ values (seq_tbl_journal_form.nextval,0,'반기업무일지(기본)',
                            </td>
                         </tr>
                         <tr>
-                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
-                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">')||
+to_clob('<p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                                  <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
                               </p>
                            </td>
@@ -2721,8 +2722,8 @@ values (seq_tbl_journal_form.nextval,0,'반기업무일지(기본)',
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                               <span style="font-weight: bold;">구&nbsp;분</span>
                            </p>
-                        </td>
-                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                        </td>')||
+to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                               <span style="font-weight: bold;">업무내용 및 진행사항</span>
                            </p>
@@ -2762,12 +2763,12 @@ values (seq_tbl_journal_form.nextval,0,'반기업무일지(기본)',
 </div>
 <p>
    <span>&nbsp;</span>
-</p>'
+</p>')
 ,'ezJournal.t09',SYS_EXTRACT_UTC(SYSTIMESTAMP),'기본반기업무일지','Top','basic');
 
 Insert into tbl_journal_form (form_id,tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
 values (seq_tbl_journal_form.nextval,0,'연간업무일지(기본)',
-'<div>
+to_clob('<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
          <tr>
@@ -2806,8 +2807,8 @@ values (seq_tbl_journal_form.nextval,0,'연간업무일지(기본)',
                            </td>
                         </tr>
                         <tr>
-                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">
-                              <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
+                           <td width="115" style="width: 115px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-left-width: 1px; border-top-style: solid; border-left-style: solid;">')||
+to_clob('<p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                                  <span style="font-weight: bold;">작&nbsp;&nbsp;성&nbsp;&nbsp;자</span>
                               </p>
                            </td>
@@ -2844,8 +2845,8 @@ values (seq_tbl_journal_form.nextval,0,'연간업무일지(기본)',
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                               <span style="font-weight: bold;">구&nbsp;분</span>
                            </p>
-                        </td>
-                        <td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
+                        </td>')||
+to_clob('<td width="520" height="38" style="width: 520px; height: 38px; vertical-align: middle; border-top-color: rgb(0, 0, 0); border-right-color: rgb(0, 0, 0); border-left-color: rgb(0, 0, 0); border-top-width: 1px; border-right-width: 1px; border-left-width: 1px; border-top-style: solid; border-right-style: solid; border-left-style: solid; background-color: #edf3f8;">
                            <p align="center" style="font-family: 맑은 고딕; font-size: 13px;">
                               <span style="font-weight: bold;">업무내용 및 진행사항</span>
                            </p>
@@ -2885,7 +2886,7 @@ values (seq_tbl_journal_form.nextval,0,'연간업무일지(기본)',
 </div>
 <p>
    <span>&nbsp;</span>
-</p>'
+</p>')
 ,'ezJournal.t10',SYS_EXTRACT_UTC(SYSTIMESTAMP),'기본연간업무일지','Top','basic');
 
 -- webfolder fileType 
@@ -3008,7 +3009,7 @@ INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_ord
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (14, '/ezQuestion/qstMain.do', 'G', 'icon_topmenu icon_nav_survey', 14);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (15, '/ezPoll/pollMain.do', 'G', 'icon_topmenu icon_nav_voting', 15);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (16, '/ezLadder/ladderMainPage.do', 'G', 'icon_topmenu icon_nav_laddergame', 16);
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (17, '/ezSchedule/scheduleIndex.do?funCode=3', 'G', 'icon_topmenu icon_nav_work', 17);
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (17, '/ezTask/taskIndex.do', 'G', 'icon_topmenu icon_nav_work', 17);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (18, '/ezMemo/memoMainPage.do', 'G', 'icon_topmenu icon_nav_memo', 18);
 UPDATE TBL_PORTAL_MENU SET menu_id = 0 WHERE default_order = 0;
 

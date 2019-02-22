@@ -45,6 +45,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -156,7 +158,40 @@ public class CommonUtil {
     	
     	logger.debug("init ended.");
     }
-	
+
+    /**
+     * Path Traversal 공격을 방지하기 위해 filePath에 ../ 혹은 ..\ 패턴이 있으면
+     * 예외를 발생시킨다.  
+     * @param filePath
+     * @return
+     * @throws Exception
+     */
+    public String detectPathTraversal(String filePath) throws Exception {
+    	if (filePath != null && !filePath.isEmpty()) {
+	    	String parentFolder1 = "../";
+	    	String parentFolder2 = "..\\";
+	    	
+	    	if (filePath.contains(parentFolder1) || filePath.contains(parentFolder2)) {
+	    		logger.debug("PathTraversal detected. filePath=" + filePath);
+	    		
+	    		throw new Exception("PathTraversal detected.");
+	    	}
+    	}
+    	
+    	return filePath;
+    }
+    
+	/** 
+	 * strip <object>,<applet>,<script> tags
+	 */	
+    public String stripScriptTags(String src) {
+		Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher m = p.matcher(src);
+		src = m.replaceAll("");
+				
+		return src;		
+	}
+    
 	public LoginVO userInfo(String loginCookie){
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
@@ -227,7 +262,7 @@ public class CommonUtil {
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
 
-			String[] decDataArray = decData.split("///");
+			String[] decDataArray = decData.split("///", -1);
 			
 			String serverName = decDataArray[0];
 			String userID = decDataArray[1];
@@ -994,12 +1029,37 @@ public class CommonUtil {
 					packageType = items[2];					
 				}
 			} catch (Exception e) {
+				e.printStackTrace();
 				logger.debug("License Key Decryption failed.");
 			}			
 		}
 		
 		logger.debug("packageType=" + packageType);
 		
+		return packageType;
+	}
+	
+	// yy tenantID로 db에 있는것만 복호화하는게 아니고 요청된 licenseKey를 복호화하는 기능
+	public String licenseKeyDEC(String licenseKey) throws Exception {
+		String packageType = "";
+		
+		if (!licenseKey.equals("")) {
+			try {
+				// 라이센스키를 복호화한다.
+				licenseKey = egovFileScrty.decryptAES(licenseKey);
+				
+				logger.debug("Decrypted licenseKey=" + licenseKey);
+				
+				String items[] = licenseKey.split(":");
+
+				if (items.length >= 3) {
+					packageType = items[2];					
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+				logger.debug("License Key Decryption failed.");
+			}			
+		}
 		return packageType;
 	}
 	
@@ -1570,7 +1630,6 @@ public class CommonUtil {
 	}
 	
 	public void setLoginUsers(int tenantID, String userID, String loginTime) throws Exception {
-//		loginUsers.put(userInfo, loginTime);
 		ezCommonService.setMultiLoginUser(tenantID, userID, loginTime);
 	}
 	
@@ -1595,10 +1654,19 @@ public class CommonUtil {
 				if(loginCookie != null) {
 					String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///");
 					
+					if(cookieInfo.length <  11) {
+						return result;
+					}
+					
 					String userID = cookieInfo[1];
 					String companyID = cookieInfo[10];
 					int tenantID = Integer.parseInt(cookieInfo[8]);
-//					String userInfo = userID + "_" + tenantID;
+					
+					logger.debug("MultiLogin::: userID = " + userID + ", companyID = " + companyID + ", tenantID = " + tenantID);
+					
+					if(companyID.equals("")) { 
+						return result;
+					}
 					
 					useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
 					

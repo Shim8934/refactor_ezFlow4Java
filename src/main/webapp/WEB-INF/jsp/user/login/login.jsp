@@ -54,9 +54,11 @@
 			function actionLogin() {
 			    if (document.loginForm.id.value =="") {
 			        alert("<spring:message code='main.jjs02'/>");
+			        document.loginForm.id.focus();
 			        return;
 			    } else if (document.loginForm.password.value =="") {
 			        alert("<spring:message code='main.jjs01'/>");
+			        document.loginForm.password.focus();
 			        return;
 			    } else {
 			    	var frm = document.loginForm;

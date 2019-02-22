@@ -12,7 +12,7 @@
 .main_time dl.timeCheckOut dd.out{ background:url(/images/ezAttitude/maincheckOut_bg.png) no-repeat center; font-size:12px; font-weight:bold; color:#5d6165; font-family:Malgun Gothic, Meiryo UI;}
 .main_time dl.timeCheckIn dd.in{ background:url(/images/ezAttitude/maincheckIn_bg.png) no-repeat center; font-size:14px; font-weight:bold; color:#0373c5; cursor:default; font-family:Malgun Gothic, Meiryo UI;}
 .main_time dl.timeCheckIn dd.lateIn{ background:url(/images/ezAttitude/maincheckIn_bg.png) no-repeat center; font-size:14px; font-weight:bold; color:#fe0101; cursor:default; font-family:Malgun Gothic, Meiryo UI;}
-.main_time dl.timeCheckOut dd.in{ background:url(/images/ezAttitude/maincheckIn_bg.png) no-repeat center; font-size:14px; font-weight:bold; color:#0373c5; cursor:default; font-family:Malgun Gothic, Meiryo UI;}
+.main_time dl.timeCheckOut dd.in{ background:url(/images/ezAttitude/maincheckIn_bg.png) no-repeat center; font-size:14px; font-weight:bold; color:#0373c5; cursor:pointer; font-family:Malgun Gothic, Meiryo UI;}
 
 /* sub_time  */
 .sub_time{ margin:0 auto; padding:15px 0px 0px 0px; width:176px; overflow:hidden; border-top:1px solid #e7eaec;}
@@ -25,7 +25,7 @@
 .sub_time dl.timeCheckOut dd.out{ background:url(/images/ezAttitude/checkOut_bg.png) no-repeat center; font-size:12px; font-weight:bold; color:#5d6165; font-family:Malgun Gothic, Meiryo UI;}
 .sub_time dl.timeCheckIn dd.in{ background:url(/images/ezAttitude/checkIn_bg.png) no-repeat center; font-size:16px; font-weight:bold; color:#0373c5; cursor:default; font-family:Malgun Gothic, Meiryo UI;}
 .sub_time dl.timeCheckIn dd.lateIn{ background:url(/images/ezAttitude/checkIn_bg.png) no-repeat center; font-size:16px; font-weight:bold; color:#fe0101; cursor:default; font-family:Malgun Gothic, Meiryo UI;}
-.sub_time dl.timeCheckOut dd.in{ background:url(/images/ezAttitude/checkIn_bg.png) no-repeat center; font-size:16px; font-weight:bold; color:#0373c5; cursor:default; font-family:Malgun Gothic, Meiryo UI;}
+.sub_time dl.timeCheckOut dd.in{ background:url(/images/ezAttitude/checkIn_bg.png) no-repeat center; font-size:16px; font-weight:bold; color:#0373c5; cursor:pointer; font-family:Malgun Gothic, Meiryo UI;}
 
 /* time_stats  */
 .time_stats{ margin:0px; padding:0px; width:151px;}

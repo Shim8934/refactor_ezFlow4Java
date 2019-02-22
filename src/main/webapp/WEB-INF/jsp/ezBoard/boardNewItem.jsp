@@ -1021,22 +1021,29 @@
 		        if (MailxmlHTTP.status == 200) {
 		            var mailXml = loadXMLString(MailxmlHTTP.responseText);
 		            document.getElementById('txtTitle').value = "<spring:message code='ezBoard.t409' />" + getNodeText(mailXml.getElementsByTagName("SUBJECT").item(0));
-		            var Content = "<P>&nbsp;<br></P><br><DIV><br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t410' />"+"</B>-----</DIV><DIV><B>"+"<spring:message code='ezBoard.t411' />"+"</B>" + getNodeText(mailXml.getElementsByTagName("DATE").item(0)) + "</DIV>";
+		            var Content = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		            Content += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t410' /></B>-----</p>";
+		            Content += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t411' /></B>" + getNodeText(mailXml.getElementsByTagName("DATE").item(0)) + "</p>";
+		            
 		            if (getNodeText(mailXml.getElementsByTagName("COMMENT").item(0)) != "") {
-		                Content = Content + "<DIV><B>"+"<spring:message code='ezBoard.t412' /></B>" + ReplaceText(getNodeText(mailXml.getElementsByTagName("FROMNAME").item(0)), "\\\"", "");
-		                Content = Content + "  (" + getNodeText(mailXml.getElementsByTagName("COMMENT").item(0)) + ") </DIV>";
+		                Content += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t412' /></B>" + ReplaceText(getNodeText(mailXml.getElementsByTagName("FROMNAME").item(0)), "\\\"", "");
+		                Content += "  (" + getNodeText(mailXml.getElementsByTagName("COMMENT").item(0)) + ") </p>";
+		            } else {
+		                Content += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t412' /></B>" + ReplaceText(ReplaceText(getNodeText(mailXml.getElementsByTagName("FROMNAME").item(0)), "<", "&lt"), ">", "&gt;") + "</p>";
 		            }
-		            else
-		                Content = Content + "<DIV><B>"+"<spring:message code='ezBoard.t412' />"+"</B>" + ReplaceText(ReplaceText(getNodeText(mailXml.getElementsByTagName("FROMNAME").item(0)), "<", "&lt"), ">", "&gt;") + "</DIV>";
 		
-		            Content = Content + "<DIV><B>"+"<spring:message code='ezBoard.t413' />"+"</B>" + getNodeText(mailXml.getElementsByTagName("SUBJECT").item(0)) + "</DIV><P><br><br>" + getNodeText(mailXml.getElementsByTagName("HTMLDESCRIPTION").item(0)) + "</P>";
+		            Content += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B>" + getNodeText(mailXml.getElementsByTagName("SUBJECT").item(0)) + "</p>";
+		            Content += "<p " + defaultFontAndSize + "></p><p " + defaultFontAndSize + "></p>";
+		            Content += "<p " + defaultFontAndSize + ">" + getNodeText(mailXml.getElementsByTagName("HTMLDESCRIPTION").item(0)) + "</p>";
 		            Content = ReplaceText(Content, "id=doctitle", "");
 		            Content = ReplaceText(Content, "id=\"doctitle\"", "");
 		            Content = ReplaceText(Content, "id=\'doctitle\'", "");
+			            
 		            if (Content.indexOf("id=\"_BigAttachListHtml\"") != -1) {
 		            	Content = ReplaceText(Content, "<td width=\"75%\"", "<td width=\"65%\"");
 		            	Content = ReplaceText(Content, "<td width=\"30%\"", "<td width=\"35%\"");
-		            }    
+		            }
+		            
 		            Content = '<div '+defaultFontAndSize+'>' + Content + '</div>';
 			
 		            message.SetEditorContent(Content);
@@ -1439,9 +1446,21 @@
 		                        
 		                        htmlData = "<body free>" + htmlData + "</body>";
 		                        if (gubun != "2"){
-		                            htmlData = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----<br><B>"+"<spring:message code='ezBoard.t424' />"+"</B>" + strWriteDate + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B>"+"<spring:message code='ezBoard.t413' />"+"</B>" + "<c:out value = '${boardListVO.title}' />" + "<br><br>" + htmlData;
+		                        	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t424' /></B>" + strWriteDate + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t425' /></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B><c:out value = '${boardListVO.title}' /></p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		                        	htmlData = replyHeader + htmlData;
 		                        }else{
-		                            htmlData = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----<br><B>"+"<spring:message code='ezBoard.t424' />"+"</B>" + strWriteDate + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" + strWriterFakeName + "<br><B><spring:message code='ezBoard.t413' /></B>" + "<c:out value = '${boardListVO.title}' />" + "<br><br>" + htmlData;
+		                        	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t424' /></B>" + strWriteDate + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t425' /></B>" + strWriterFakeName + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B><c:out value = '${boardListVO.title}' /></p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		                        	htmlData = replyHeader + htmlData;
 		                        }
 		                        message.SetEditorContent(htmlData);
 		                    }else {

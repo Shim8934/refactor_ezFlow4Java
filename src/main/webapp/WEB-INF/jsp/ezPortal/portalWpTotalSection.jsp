@@ -278,6 +278,8 @@
 					$(".personal_content").show();
 				}
 			});
+
+			var timeDiff;
 			
 		    function window_onload_total() {
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -902,7 +904,7 @@
 								$("#inAttiBtn").removeClass("out").addClass("lateIn");
 								$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 		    				} else if (result[i].typeId == "A03") {
-		    					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
+//	 	    					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter"); //퇴근은 여러번 찍을 수 있다.
 								$("#outAttiBtn").removeClass("out").addClass("in");
 								$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 		    				}
@@ -927,13 +929,13 @@
 		    	
 		    	beforeAlertDate = new Date();
 		    	var dateAlert = nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + (nowAttiTime.getMonth() + 1) + "<spring:message code='ezAttitude.t67'/> " + (nowAttiTime.getDate()) + "<spring:message code='ezAttitude.t68'/> " + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
-		    	var saveFlag = confirm("<spring:message code='ezAttitude.t69'/> " + dateAlert + "<spring:message code='ezAttitude.t70'/>");
-		    	if (!saveFlag) {
-		    		afterAlertDate = new Date();
-		    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
-		    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
-		    		return;
-		    	} 
+// 		    	var saveFlag = confirm("<spring:message code='ezAttitude.t69'/> " + dateAlert + "<spring:message code='ezAttitude.t70'/>");
+// 		    	if (!saveFlag) {
+// 		    		afterAlertDate = new Date();
+// 		    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+// 		    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
+// 		    		return;
+// 		    	} 
 		    	$.ajax({
 		    		type : "POST",
 		    		async : true,
@@ -1044,10 +1046,12 @@
 		 	function checkAttitude(obj) {
 				var returnValue = getIsAttitude(obj.getAttribute("type"));
 				
-				if (returnValue == 0) {
+				if (returnValue == 0) { //해당근태가 없거나, 퇴근일 경우는 근태등록되게
 					addAttitude(obj);
 				} else {
-					alert("<spring:message code='ezAttitude.t169'/>");
+					if (obj.getAttribute("type") === "A08" || obj.getAttribute("type") === "A03") { //퇴근,조퇴일때 조퇴,퇴근이 있는 경우 경고창
+						alert("<spring:message code='ezAttitude.t169'/>");					
+					}
 					getAttitudeList();
 	    			try{parent.frames["right"].getAttitudeMainList();}catch(e){}
 				}
@@ -1101,22 +1105,24 @@
 	    		    }
 	    		}
 	    		
-	    		//$("#todayTime").html(nowAttiTime.getFullYear() + "."  + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "." + leadingZeros(nowAttiTime.getDate(), 2));
-	    		
+	    		$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
+	    		var clientTime = new Date();
+	    		timeDiff = nowAttiTime.getTime() - clientTime.getTime();
 	    	}
 		    
 		    function attiClock() {
 		        var h, m;
 		        var s;
 		        var time = " ";
+		        var nowClientTime = new Date();
+		        var nowServerTime = new Date(nowClientTime.getTime() + timeDiff);
 		        
-		        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
-		        time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2) + ':' + leadingZeros(nowAttiTime.getSeconds(), 2);
+		        time = leadingZeros(nowServerTime.getHours(), 2) + ':' + leadingZeros(nowServerTime.getMinutes(), 2) + ':' + leadingZeros(nowServerTime.getSeconds(), 2);
 		        document.getElementById("timeFlow").innerHTML = time;
 		        if (time == "00:00:00") {
 		        	//$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
 		        }
-		        gizmo = setTimeout("attiClock()", 1000);
+		        gizmo = setTimeout("attiClock()", 500);
 		        
 		    }
 		    

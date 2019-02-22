@@ -46,7 +46,7 @@ INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_V
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useReSend', '메일 재작성 사용여부', 'YES', '보낸 메일의 재작성 기능을 사용한다.YES: 사용NO: 사용안함메일>보낸편지함메일>보낸편지함>메일읽기 (default: YES)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useReform', '전자결재 폼빌더 양식 작성 가능 여부', 'NO', '전자결재 양식 추가 시에 폼빌더 작성기를 활성화할 수 있는지에 대한 여부를 설정한다. 이미 폼빌더 양식으로 추가 됐다면 옵션을 비활성화해도 폼빌더 양식으로서 동작한다. (default : NO)', '2017-01-06 00:00:00', '전자결재');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useReceiveInfoName', '수신부서 표기 타입', '0', '수신부서 지정 시 부서 이름 끝에 "장"을 붙인다.0: 부서이름만 표기1: 부서이름+장으로 표기 (default: 0)', '2017-01-06 00:00:00', '전자결재');
-INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useReceiveDocNo', '접수 시 채번방식 설정', 'YES', '결재문서 접수 시 채번 붙이는 때를 설정한다. (전자결재G)YES: 접수/편철/전결 시 채번NO: 최종결재/편철/전결 시 채번 (default: YES)', '2017-01-06 00:00:00', '전자결재G');
+INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useReceiveDocNo', '접수 시 채번방식 설정', 'NO', '결재문서 접수 시 채번 붙이는 때를 설정한다. (전자결재G)YES: 접수/편철/전결 시 채번NO: 최종결재/편철/전결 시 채번 (default: NO)', '2017-01-06 00:00:00', '전자결재G');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useReceiptExternal', '외부메일 수신확인 지원여부', 'NO', '외부메일 수신확인을 지원한다.YES: 지원NO: 지원안함 (default: NO)', '2017-01-06 00:00:00', '메일');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'useQuestion', '전자설문 모듈 사용여부', 'YES', 'YES: 사용NO: 사용안함 (default: NO)', '2017-01-06 00:00:00', '기타모듈');
 INSERT INTO TBL_TENANT_CONFIG (TENANT_ID, PROPERTY_NAME, CONFIG_NAME, PROPERTY_VALUE, DESCRIPTION, REGDATE, CONFIG_TYPE) VALUES (0, 'UsePreviewSubTreeForEmail', '하위 편지함 오픈 설정 사용여부', 'NO', '메일>환경설정에서 하위편지함 자동 열기 설정을 사용한다.YES: 사용NO: 사용안함 (default: NO)', '2017-01-06 00:00:00', '메일');
@@ -247,7 +247,6 @@ Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNA
 Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('7',3,'부서','Department','部署','部门','WRITERDEPTNAME',100,'Y',0);
 Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('7',4,'게시자','Writer','作成者','写作者','WRITERNAME',100,'Y',0);
 Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('7',5,'게시일','Registered','掲示日','发布日期','WRITEDATE',100,'Y',0);
-Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('4',6,'조회수','View','ヒット数','查询数','READCOUNT',50,'Y',0);
 Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('A',0,'CHECK','CHECK','CHECK','CHECK','ITEMID',20,'Y',0);
 Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('A',1,'첨부','Attach','添付','附加','ATTACHMENTS',20,'Y',0);
 Insert into TBL_BOARD_ITEM_LISTOPTION (LISTTYPE,SN,NAME1,NAME2,NAME3,NAME4,COLNAME,WIDTH,VIEW_FG,TENANT_ID) values ('A',2,'게시판명','Board','掲示板名','布告板名称','BOARDNAME',100,'Y',0);
@@ -470,6 +469,7 @@ INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMP
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A57','001','Y','1','내양식함기능 사용여부 (Y는 사용. 그외는 사용안함)','Y','Y','Y','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A60','0  ','수신처상태','0','ProcessYN Flag','Receiver state','수신처상태','수신처상태','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A60','A  ','도착','1','도착 (Arrived)','Arrived','到着','到达','Top',0);
+INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A60','B  ','발송의뢰반송','1','발송의뢰반송(Return Offered)','Return Offered','送信依頼拒否','拒绝发送请求','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A60','E  ','전송실패','1','전송 실패 (Error)','Error','送信エラー','传输失败','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A60','H  ','회송','1','회송 (HweSong)','Return','回送','返回','Top',0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('A60','I  ','접수','1','접수 (Inter..)','Reception progress','受付','收到','Top',0);
@@ -811,7 +811,7 @@ INSERT INTO TBL_CODELIST (CODE1,CODE2,ISUSE,DESCRIPT,NAME,NAME2,NAME3,NAME4,COMP
 INSERT INTO TBL_CODELIST (CODE1,CODE2,ISUSE,DESCRIPT,NAME,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA02', '003',	'0',	'감사',			'준법감시',	'Audit',	'遵法監視',	'监督',	'Top', 0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,ISUSE,DESCRIPT,NAME,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA02', '004',	'1',	'심사',			'심사',	'Request send',	'審査',	'심사_ZH',	'Top', 0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,ISUSE,DESCRIPT,NAME,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA02', '011',	'1',	'수신',			'수신',	'Receipt',	'受信',	'收件',	'Top', 0);
-INSERT INTO TBL_CODELIST (CODE1,CODE2,ISUSE,DESCRIPT,NAME,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA02', '012',	'1',	'협조/합의',	'기안문',	'Draft',	'起案文',	'기안문_ZH',	'Top', 0);
+INSERT INTO TBL_CODELIST (CODE1,CODE2,ISUSE,DESCRIPT,NAME,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA02', '012',	'1',	'협조/합의',	'합의',	'Draft',	'合意',	'합의_ZH',	'Top', 0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,ISUSE,DESCRIPT,NAME,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA02', '013',	'0',	'시행',			'시행',	'Enforcement',	'施行',	'执行',	'Top', 0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,ISUSE,DESCRIPT,NAME,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA02', '014',	'0',	'감사(검사부)',	'감사',	'Audit(dept.)',	'監査',	'审查',	'Top', 0);
 INSERT INTO TBL_CODELIST (CODE1,CODE2,ISUSE,DESCRIPT,NAME,NAME2,NAME3,NAME4,COMPANYID, TENANT_ID) values ('SA02', '015',	'0',	'공람',			'공람',	'Display',	'回覧',	'传阅',	'Top', 0);
@@ -2505,7 +2505,7 @@ INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_ord
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (14, '/ezQuestion/qstMain.do', 'G', 'icon_topmenu icon_nav_survey', 14);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (15, '/ezPoll/pollMain.do', 'G', 'icon_topmenu icon_nav_voting', 15);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (16, '/ezLadder/ladderMainPage.do', 'G', 'icon_topmenu icon_nav_laddergame', 16);
-INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (17, '/ezSchedule/scheduleIndex.do?funCode=3', 'G', 'icon_topmenu icon_nav_work', 17);
+INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (17, '/ezTask/taskIndex.do', 'G', 'icon_topmenu icon_nav_work', 17);
 INSERT INTO TBL_PORTAL_MENU (menu_id, menu_url, menu_type, icon_url, default_order) VALUES (18, '/ezMemo/memoMainPage.do', 'G', 'icon_topmenu icon_nav_memo', 18);
 UPDATE TBL_PORTAL_MENU SET menu_id = 0 WHERE default_order = 0;
 

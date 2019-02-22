@@ -12,7 +12,7 @@
 <script type="text/javascript">
 $(function() {
 	var boardPortlet = "<c:out value='${portletId}'/>";
-	$(".customBoard").find(".portletPlus").on("click", Boardmore_NewBoardSTD_btnClick);
+	$(".customBoard").find(".portletPlus").on("click", customBoardBtnClick);
 	getBoardPortletInfo(boardPortlet);
 });
 </script>
@@ -25,12 +25,12 @@ $(function() {
 					<c:out value="${portletName }"/>
 				</dt>
 				<dd class="portletPlus" data1="<c:out value='${boardId }'/>">
-					<img src="/images/ezNewPortal/portlet_Plus${usedTheme }.png">
+					<img src="/images/ezNewPortal/portlet_Plus<c:out value='${usedTheme }'/>.png">
 				</dd>
 			</dl>
 			<c:choose>
 			<c:when test="${not empty boardList}">
-			<ul id="customBoardList${portletId }" class="portlet_list">
+			<ul id="customBoardList<c:out value='${portletId }'/>" class="portlet_list">
 			</ul>
 			</c:when>
 			<c:when test="${access eq false }">

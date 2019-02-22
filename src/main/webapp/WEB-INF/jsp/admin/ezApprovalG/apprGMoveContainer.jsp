@@ -583,6 +583,10 @@
 	                document.getElementsByName("SDeptName")[0].id = retVal[0];
 	                document.getElementsByName("SDeptName")[0].value = retVal[1];
 	                pChackYN == "FALSE"
+	                if(document.getElementsByName("SDeptName")[0].id == ""){
+	                	document.getElementsByName("drafterdept")[0].id = "";
+		                document.getElementsByName("drafterdept")[0].value = "";
+	                }
 	            }
 	            Flag = "SDeptName";
 	            getDocType(Flag);
@@ -606,6 +610,10 @@
 	        }
 	
 	        function bt_TDeptSelect_onclick(obj) {
+	        	if(document.getElementsByName("SDeptName")[0].id == null || document.getElementsByName("SDeptName")[0].id == ""){
+	        		alert("<spring:message code='ezApproval.t345'/>");
+	        		return;
+	        	}
 	            organ_dialogArguments[0] = P_CompanyID;
 	            if (obj.id == "spanrecev") {
 	            	organ_dialogArguments[1] = bt_TDeptSelect_onclick_Complete;
@@ -616,25 +624,19 @@
 	        }
 	        
 	        function bt_TDeptSelect_onclick_Complete(retVal) {
-	            var Flag;
 	            if (typeof (retVal) != "undefined") {
-	                document.getElementsByName("TDeptName")[0].id = retVal[0];
-	                document.getElementsByName("TDeptName")[0].value = retVal[1];
-	            }
-	            Flag = "TDeptName";
-	            getDocType(Flag);
-	        }
-	        
-	        function bt_TDeptSelect_onclick_Complete_spanvdept(retVal) {
-	            var Flag;
-	            if (typeof (retVal) != "undefined") {
-	                $("#drafterdept").val(retVal[1]);
-	             	// 2018-06-20. 황윤호 	관리자 > 전자결재 > 문서이동 #drafetdept 값 설정
 	                document.getElementsByName("drafterdept")[0].id = retVal[0];
 	                document.getElementsByName("drafterdept")[0].value = retVal[1];
 	            }
-	            Flag = "TDeptName";
-	            getDocType(Flag);
+	            getDocListjson(1);
+	        }
+	        
+	        function bt_TDeptSelect_onclick_Complete_spanvdept(retVal) {
+	        	if (typeof (retVal) != "undefined") {
+	                document.getElementsByName("drafterdept")[0].id = retVal[0];
+	                document.getElementsByName("drafterdept")[0].value = retVal[1];
+	            }
+	            getDocListjson(1);
 	        }	
 	
 	        function bt_selSContName_onclick() {
@@ -908,7 +910,7 @@
 							<spring:message code='ezApprovalG.kes04'/>  
 						</td>
 						<td style="width:17%;">
-							<input type="text" id="SDeptName" name="SDeptName" style="width: 72%; height: 23px;" readonly="readonly" />
+							<input type="text" id="" name="SDeptName" style="width: 72%; height: 23px;" readonly="readonly" />
 			 	            <a class="imgbtn" name="SDeptSelect"><span onclick="bt_SDeptSelect_onclick()"><spring:message code='ezApprovalG.t105'/></span></a>
 						</td>
 						<td style="width:6%;">
@@ -935,7 +937,7 @@
 							<spring:message code='ezApproval.t437'/>
 						</td>
 						<td>
-							<input type="text" id="drafterdept" name="drafterdept" style="width: 72%; height: 23px;" maxlength="50" readonly="readonly"/>
+							<input type="text" id="" name="drafterdept" style="width: 72%; height: 23px;" maxlength="50" readonly="readonly"/>
 							<a class="imgbtn" name="TDeptSelect"><span id = "spandept" onclick="bt_TDeptSelect_onclick(this)"><spring:message code='ezApprovalG.t105'/></span></a>
 						</td>
 						<td>

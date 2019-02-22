@@ -109,6 +109,8 @@
 	var afterAlertDate = "";
 	var overTime = "";
  	var serverTime = "<c:out value='${serverTime}'/>";
+ 	var timeDiff;
+ 	var ptlTimeDiff;
  	var birthdayMonth = Number("<c:out value='${nowMonth}'/>");
  	var birthdayCurPage = 0;
  	var birthdayTotalCount = 0;
@@ -161,10 +163,10 @@
 				}
 				
 				// size가 FULL인 경우 vs 아닌 경우
-				if(item.size === 'FULL') {
+				if(item.quickSize === 'FULL') {
 					window.open(url, '_blank', '');
-				} else if (item.size.indexOf(':') > 0) {
-					var sizeArr = item.size.split(':');
+				} else if (item.quickSize.indexOf(':') > 0) {
+					var sizeArr = item.quickSize.split(':');
 					var popupX = (window.screen.width / 2) - (sizeArr[0] /2);
 					var popupY = (window.screen.height / 2) - (sizeArr[1] /2);
 					var option = 'width='+sizeArr[0]+'px,height='+sizeArr[1]+'px, left='+popupX+', top='+popupY+', status = no, toolbar=no, menubar=no,location=no, resizable=0';
@@ -266,13 +268,16 @@
 			var portletId = portletOrder[i].portletId;
 			var portletUrl = portletOrder[i].portletUrl;
 			var portletName = portletOrder[i].portletName;
-			if (portletUrl.indexOf("ezNewPortal") != -1) {
+			
+			/* if (portletUrl.indexOf("ezNewPortal") != -1) { */
 				(function (portletId, portletUrl, portletName) {
 					$.ajax({
-						type : "POST",
+						type : "GET",
 						dataType : "html",
 						data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
 						url : portletUrl,
+						tryCount : 0,
+						retryLimit : 3,
 						success : function(result) {
 							$("#" + portletId + "Portlet").append(result);
 							
@@ -285,10 +290,22 @@
 						error : function() {
 							var nonePage = "<article class='box_shadow'></article>"
 							$("#" + portletId + "Portlet").append(nonePage);
+						},
+						error : function() {
+							this.url = "/ezNewPortal/errorPortlet.do";
+							this.tryCount++;
+							
+							if (this.tryCount <= this.retryLimit) {
+								//try again
+								$.ajax(this);
+								return;
+							}
+							
+							return;
 						}
 					});
 				}(portletId, portletUrl, portletName));
-			}
+			/* } */
 		}
 		
 		var useQuestion = "<c:out value='${useQuestion}'/>";

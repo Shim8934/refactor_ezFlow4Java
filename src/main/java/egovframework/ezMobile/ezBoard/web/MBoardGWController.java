@@ -101,14 +101,15 @@ public class MBoardGWController {
 			String pSearchText = request.getParameter("pSearchText");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
-			
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+			
+			LOGGER.debug("serverName = " + serverName + " | boardId = " + boardId + " | lastDate = " + lastDate + " | pSearchText = " + pSearchText + " | primary = " + primary);
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			/* 2018-07-05 홍승비 - deptPath에 자신의 ID 빠져있는 부분 추가 */
 			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			
-			LOGGER.debug("deptPathCode = "+deptPathCode);
+			LOGGER.debug("deptPathCode = " + deptPathCode);
 			
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
@@ -129,6 +130,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -160,8 +162,10 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			MOptionVO mobileInfo = mOptionService.optionInfo(userID, info.getTenantId());
-			
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+			
+			LOGGER.debug("serverName = " + serverName + " | userID = " + userID + " | lastDate = " + lastDate + " | add = " + add + " | parentWriteDate = " + parentWriteDate + 
+					"upperitemidtree = " + upperitemidtree + " | pSearchText = " + pSearchText + " | primary = " + primary);
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
@@ -224,6 +228,8 @@ public class MBoardGWController {
 			MOptionVO mobileInfo = mOptionService.optionInfo(userId, info.getTenantId());
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
+			LOGGER.debug("serverName = " + serverName + " | primary = " + primary);
+			
 			/* 2018-07-03 홍승비 - 게시판 즐겨찾기 리스트에 companyID 조건 추가 */
 			List<MBoardFavoriteVO> resultList = mBoardService.getFavoriteList(userId, info.getCompanyId(), info.getTenantId(), primary);
 
@@ -231,6 +237,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", resultList);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -265,13 +272,15 @@ public class MBoardGWController {
 			
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
+			LOGGER.debug("serverName = " + serverName + " | userID = " + userID + " | primary = " + primary);
+			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			
 			// 현재 사용자의 부서 경로(자기ID+부서ID+회사ID 전부 ,로 나누어 붙인 문자열) 받아온다.
 			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", info.getTenantId());
 			
-			LOGGER.debug("deptPathCode = "+deptPathCode);
+			LOGGER.debug("deptPathCode = " + deptPathCode + " | attachFileNameMaxLength = " + attachFileNameMaxLength);
 			
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
@@ -306,8 +315,10 @@ public class MBoardGWController {
 			
 			// 20180824 조진호 - 모바일 viewerflag 값 추가
         	String useMobileViewer = ezCommonService.getTenantConfig("useMobileViewer", info.getTenantId());
+        	
+        	LOGGER.debug("realPath = " + realPath + " | domain = " + domain + " | scheme = " + scheme + " | useMobileViewer = " + useMobileViewer);
+        	
         	data.put("useMobileViewer", useMobileViewer);
-			
 			data.put("boardItem", boardItem);
 			data.put("content", mhtContent);
 			data.put("boardInfo", boardInfo);
@@ -317,6 +328,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -350,6 +362,8 @@ public class MBoardGWController {
 			
 			//boardInfo
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
+			
+			LOGGER.debug("serverName = " + serverName + " | userID = " + userID + " | primary = " + primary);
 			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
@@ -392,6 +406,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -423,11 +438,13 @@ public class MBoardGWController {
 			//boardInfo
 			String primary = commonUtil.getPrimaryData(mobileInfo.getLang(), info.getTenantId());
 			
+			LOGGER.debug("serverName = " + serverName + " | userID = " + userID + " | primary = " + primary);
+			
 			MBoardInfoVO boardInfo = new MBoardInfoVO();
 			String deptPathCode = info.getUserId() + "," + mBoardService.getDeptPathCode(info.getDeptId(), info.getTenantId());
 			String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", info.getTenantId());
 			
-			LOGGER.debug("deptPathCode = "+deptPathCode);
+			LOGGER.debug("deptPathCode = " + deptPathCode + " | attachFileNameMaxLength = " + attachFileNameMaxLength);
 			
 			boardInfo = mBoardService.getBoardProperty(boardId, primary, info.getTenantId(), info.getUserId());
 			boardInfo = mBoardService.getBoardInfo(boardInfo, info.getRollInfo(), deptPathCode, info);
@@ -439,6 +456,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -472,8 +490,12 @@ public class MBoardGWController {
 	    	if (request.getHeader("HTTPS") != null && request.getHeader("HTTPS").toString().toLowerCase().equals("on")) {
 	    		scheme = "https://";
 	    	}
+	    	
+	    	LOGGER.debug("serverName = " + serverName + " | realPath = " + realPath + " | scheme = " + scheme);
 			
 			content = content.replace("replace_" + scheme, scheme);
+			
+			LOGGER.debug("content = " + content);
 			
 			//html -> mht변환
 			String mhtData = ezCommonService.startHtml2Mht(content, realPath, locale);
@@ -517,7 +539,11 @@ public class MBoardGWController {
 	    		scheme = "https://";
 	    	}
 	    	
+	    	LOGGER.debug("serverName = " + serverName + " | realPath = " + realPath + " | scheme = " + scheme);
+	    	
 	    	content = content.replace("replace_" + scheme, scheme);
+	    	
+	    	LOGGER.debug("content = " + content);
 			
 			//html -> mht변환
 			String mhtData = ezCommonService.startHtml2Mht(content, realPath, locale);
@@ -550,6 +576,8 @@ public class MBoardGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+			
+			LOGGER.debug("serverName = " + serverName + " | userId = " + userId);
 			
 			mBoardService.deleteItem(contentId, boardId, info.getTenantId());
 			
@@ -584,6 +612,9 @@ public class MBoardGWController {
 			String excludeBoardID = request.getParameter("excludeBoardId");
 			String subFlag = request.getParameter("subFlag");
 			
+			LOGGER.debug("serverName = " + serverName + " | userId = " + userId + " | rootBoardID = " + rootBoardID + " | selectBy = " + selectBy + " | excludeBoardID " + excludeBoardID +
+					" | subFlag = " + subFlag + " | mode = " + mode);
+			
 			// 여기에 테넌트나 companyID 등의 정보가 담긴다.
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
@@ -599,6 +630,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -637,12 +669,15 @@ public class MBoardGWController {
 				}
 			}
 			
+			LOGGER.debug("serverName = " + serverName + " | userId = " + userId + " | isAllGroupBoard = " + isAllGroupBoard);
+			
 			/* 2018-07-04 홍승비 - 모바일 게시판 즐겨찾기 추가 시 companyID 삽입 */
 			mBoardService.insertFavorite(info.getUserId(), boardId, info.getCompanyId(), info.getTenantId(), isAllGroupBoard);
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 		}	
@@ -667,11 +702,14 @@ public class MBoardGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
 			
+			LOGGER.debug("serverName = " + serverName + " | userId = " + userId);
+			
 			mBoardService.deleteFavorite(info.getUserId(), boardId, info.getTenantId());
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 		}	
@@ -695,6 +733,8 @@ public class MBoardGWController {
 			String userId = request.getParameter("userId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName,  userId);
+			
+			LOGGER.debug("serverName = " + serverName + " | userId = " + userId);
 			
 			List<MBoardAttachVO> list = mBoardService.getAttachList(contentId, info.getTenantId());
 			
@@ -723,6 +763,7 @@ public class MBoardGWController {
 			result.put("code", 0);			
 			result.put("data", list);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -741,11 +782,10 @@ public class MBoardGWController {
 		String filePath = request.getParameter("filePath");
 		String fileName = request.getParameter("fileName");
 		String boardID = request.getParameter("boardID");
+		String serverName = request.getHeader("x-user-host");
 		
 		LOGGER.debug("filePath = " + filePath);
-		LOGGER.debug("fileName:"+fileName);
-		
-		String serverName = request.getHeader("x-user-host");
+		LOGGER.debug("serverName = " + serverName + " | fileName = " + fileName + " | boardID = " + boardID);
 		
 		JSONParser jp = new JSONParser();
 		jsonObject = (JSONObject) jp.parse(jsonObject.toJSONString());
@@ -774,6 +814,8 @@ public class MBoardGWController {
 			if (jsonObject.get("userID") != null) {
 				userID = (String) jsonObject.get("userID");
 			}
+			
+			LOGGER.debug("cnt = " + cnt + " | maxSize = " + maxSize + " | userID = " + userID);
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userID);
 			
@@ -866,6 +908,7 @@ public class MBoardGWController {
 			result.put("status", "ok");
 			result.put("code", 0);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("data", "");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -904,9 +947,7 @@ public class MBoardGWController {
 		    }
 	
 		    bos = new FileOutputStream(stordFilePathReal + File.separator + newName);
-		    LOGGER.debug("###" + stordFilePathReal + File.separator + newName + "###");
-		    int bytesRead = 0;
-		    byte[] buffer = new byte[BUFF_SIZE];
+		    LOGGER.debug("stordFilePathReal = " + stordFilePathReal + File.separator + newName);
 		    Decoder decoder = Base64.getDecoder();
 
 		    bos.write(decoder.decode(bytearray));
@@ -945,8 +986,11 @@ public class MBoardGWController {
 		String boardGroupAdmin_FG = ezBoardAdminService.checkIfBoardGroupAdmin(rootBoardID, info.getUserId(), info.getDeptId(), info.getCompanyId(), info.getTenantId());
 		String rollInfo = info.getRollInfo();
 		
+		LOGGER.debug("rootBoardID = " + rootBoardID + " | boardGroupAdmin_FG = " + boardGroupAdmin_FG);
+		
 		// 전체/회사/게시관리자 권한이 있다면 바로 true 리턴한다.
 		if (rollInfo != null && (boardGroupAdmin_FG.equals("OK") || rollInfo.toLowerCase().indexOf("c=1") > -1 || rollInfo.toLowerCase().indexOf("k=1") > -1 || rollInfo.toLowerCase().indexOf("n=1") > -1)) {
+			LOGGER.debug("rollInfo = " + rollInfo);
 			LOGGER.debug("accessCheck ended1");
 			return true;
 		} else {
@@ -965,8 +1009,12 @@ public class MBoardGWController {
 			
 			String userDeptPath = deptPathOrgan + ",everyone";
 			
+			LOGGER.debug("userDeptPath = " + userDeptPath);
+			
 			for (int i = 0; i < userDeptPath.split(",").length; i++) {
 				result = ezBoardService.getCheckItemID(contentID, "GENERAL", userDeptPath.split(",")[i].trim(), info.getTenantId());
+				
+				LOGGER.debug(userDeptPath.split(",")[i].trim() + " result = " + result);
 				
 				/* 2018-10-04 홍승비 - 변경된 게시판권한 스펙 모바일에도 적용(개인>부서>회사) */
 				//2018-09-19 배현상, result가 999인 경우는 해당 ACCESSID가 권한설정이 안되어 있는 경우
@@ -984,6 +1032,7 @@ public class MBoardGWController {
 				}
 			}
 			
+			LOGGER.debug("rtv = " + rtv);
 			LOGGER.debug("accessCheck ended2");
 			return rtv;
 		}

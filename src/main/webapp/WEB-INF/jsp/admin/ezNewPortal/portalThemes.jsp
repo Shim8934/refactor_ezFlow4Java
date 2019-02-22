@@ -125,7 +125,7 @@
 		
 		var getCompanies = function() {
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/getCompanies.do', false);
+			request.open('GET', '/admin/ezNewPortal/getCompanies.do', false);
 			request.setRequestHeader('Content-Type', 'application/json');
 			var companiesHTML = "";
 	
@@ -165,7 +165,7 @@
 			var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 			
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/getThemes.do', true);
+			request.open('POST', '/admin/ezNewPortal/getThemes.do', false);
 			request.setRequestHeader('Content-Type', 'application/json');
 	
 			request.onload = function() {
@@ -444,7 +444,7 @@
 				var companyValue = companiesObj.options[companiesObj.selectedIndex].value;
 				
 				var request = new XMLHttpRequest();
-				request.open('POST', '/admin/ezNewPortal/updateThemeInfo.do', true);
+				request.open('PATCH', '/admin/ezNewPortal/updateThemeInfo.do', true);
 				request.setRequestHeader('Content-Type', 'application/json');
 				
 				request.onload = function() {
@@ -508,7 +508,7 @@
 			}
 			
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/updateCompanyDefaultTheme.do', true);
+			request.open('PATCH', '/admin/ezNewPortal/updateCompanyDefaultTheme.do', true);
 			request.setRequestHeader('Content-Type', 'application/json');
 			request.onload = function() {
 				getThemes();
@@ -685,7 +685,7 @@
 			}
 			
 			var request = new XMLHttpRequest();
-			request.open('POST', '/admin/ezNewPortal/updateThemePortletUsed.do', true);
+			request.open('PATCH', '/admin/ezNewPortal/updateThemePortletUsed.do', true);
 			request.setRequestHeader('Content-Type', 'application/json');
 			
 			request.onload = function() {
@@ -745,13 +745,9 @@
 		var changeFixed = function() {
 			var imgId = this.id;
 			var portletId = imgId.substring(12);
-			console.log(this);
-			console.log(imgId);
-			console.log(portletId);
 			var checkPortlet = checkPortletUsed(portletId);
 			
 			if (checkPortlet) {
-				console.log(this.classList);
 				for (var i = 0; i < this.classList.length; i++) {
 					if (this.classList[i] == "fixedPortlet") {
 						this.classList.remove("fixedPortlet");

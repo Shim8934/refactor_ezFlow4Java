@@ -786,7 +786,7 @@
     <td><div id="tabnav" style="width:383px">
         <ul>
           <li id="tagsub1"><span onClick="Tab_MoveClick('1')" ><spring:message code='ezApprovalG.t1234'/></span></li>
-          <li id="tagsub2"><span onClick="Tab_MoveClick('2')" ><spring:message code='ezApprovalG.t1235'/></span></li>
+          <li id="tagsub2" style="display:none;"><span onClick="Tab_MoveClick('2')" ><spring:message code='ezApprovalG.t1235'/></span></li>
         </ul>
       </div>
 	  <table>
