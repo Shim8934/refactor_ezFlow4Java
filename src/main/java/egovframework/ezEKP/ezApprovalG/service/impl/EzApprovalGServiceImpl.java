@@ -2216,6 +2216,17 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	if (extFileName.equals("hwp")) {
 		        HWPFile hwpFile = HWPReader.fromFile(docFilePath);
 		        setHwpText("docnumber", docNo, hwpFile);
+		        
+		        //접수 후 반송,회송대장등록일 경우 접수결재칸 지워주기
+				for (int i = 1; i < 10; i++) {
+					if (findHwpField("1sign" + i, hwpFile)) {
+						setHwpText("1sign" + i, " ", hwpFile);
+						setHwpText("1jikwe" + i, " ", hwpFile);
+					} else {
+						break;
+					}
+				}
+		        
 		        HWPWriter.toFile(hwpFile, docFilePath);
         	} else {
         		OutputStream outputStream = null;
