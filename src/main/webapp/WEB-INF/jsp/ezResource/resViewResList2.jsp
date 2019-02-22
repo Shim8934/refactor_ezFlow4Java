@@ -365,7 +365,7 @@
 						
 						var resbrdExc = "";
 						if (result.resBrd.brdExplain != null) {
-							resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
+							resbrdExc = MakeXMLString(result.resBrd.brdExplain);
 						}
 						
 						$("#brdExplain").html(resbrdExc);
@@ -513,7 +513,7 @@
 					</tr>
 					<tr>
 						<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
-						<td><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></td>
+						<td><div style="overflow-y: auto; height: 200px; word-break:break-all; white-space:pre-wrap;" id="brdExplain"></div></td>
 					</tr>
 	         	</table>
 	         </div>	
