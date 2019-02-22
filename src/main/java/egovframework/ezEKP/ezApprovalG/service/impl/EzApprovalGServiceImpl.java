@@ -2065,7 +2065,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String hesongFlag, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception {
+	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String realPath, String hesongFlag, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception {
 		logger.debug("setCabinetReject Started");
 
 		StringBuilder strSQL = new StringBuilder();
@@ -2209,11 +2209,38 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	}
         }
         
-        //hwp일 경우 대장등록전 문서에 새로운 문서번호 박아주기 
-        if (docNo != null && !docNo.trim().equals("") && extFileName.equals("hwp")) {
-	        HWPFile hwpFile = HWPReader.fromFile(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName);
-	        setHwpText("docnumber", docNo, hwpFile);
-	        HWPWriter.toFile(hwpFile, dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName);
+        //hwp일 경우 대장등록전 문서에 새로운 문서번호 박아주기 | 2019-02-22 천성준 - mht일 경우 추가
+        if (docNo != null && !docNo.trim().equals("")) {
+        	String docFilePath = dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName;
+        	
+        	if (extFileName.equals("hwp")) {
+		        HWPFile hwpFile = HWPReader.fromFile(docFilePath);
+		        setHwpText("docnumber", docNo, hwpFile);
+		        HWPWriter.toFile(hwpFile, docFilePath);
+        	} else {
+        		OutputStream outputStream = null;
+        		OutputStreamWriter output = null;
+        		
+        		String loadMht = ezCommonService.loadMHTFile(docFilePath);
+        		String content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), realPath, locale, "", "");
+        		
+        		org.jsoup.nodes.Document doc = Jsoup.parse(content);
+        		doc.getElementById("docnumber").html(docNo);
+        		
+        		String tempHtml = doc.outerHtml();
+        		String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
+        		
+        		try {
+        			outputStream = new FileOutputStream(new File(docFilePath));
+        			output = new OutputStreamWriter(outputStream);
+        			output.write(convertedMHT);
+        		} catch (Exception e) {
+        			e.printStackTrace();
+        		} finally {
+        			output.close();
+        			outputStream.close();
+        		}
+        	}
         }
 		
 		if (!rtnVal.equals("FALSE")) {
