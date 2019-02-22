@@ -480,7 +480,7 @@ public class EzSystemAdminController {
 	 * 전체 서버 목록 가져오기.
 	 * config.properties에 현재 포함 다른 서버 목록 전부 저장
 	 * */
-	@RequestMapping(value = {"/admin/ezSystem/sysREST.do", "/gCloud/sysREST.do"})
+	@RequestMapping(value = {"/admin/ezSystem/sysREST.do", "/gCloud/sysREST.do"}, method=RequestMethod.GET)
 	public String sysREST(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request , Model model) throws Exception {
 		logger.debug("sysREST started.");
 		
@@ -542,7 +542,7 @@ public class EzSystemAdminController {
 	/**
 	 * 선택된 서버의 CPU, 메모리, 네트워크 등 정보 가져오기
 	 * */
-	@RequestMapping(value = {"/admin/ezSystem/sysMonitorREST.do", "/gCloud/sysMonitorREST.do"})
+	@RequestMapping(value = {"/admin/ezSystem/sysMonitorREST.do", "/gCloud/sysMonitorREST.do"}, method=RequestMethod.POST)
 	public String sysMonitorREST(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("sysMonitorREST started.");
 		logger.debug("<<<serverSN : " + request.getParameter("serverSN"));

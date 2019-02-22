@@ -15,7 +15,7 @@
 	    
 	</head>
 	<script>
-		var _type = "${type}";
+		var _type = "<c:out value = '${type}' />";
 		var _ipNo = "${ipNo}";
 		var _ipAddress = "${ipAddress}";
 		var _access = "${access}";
