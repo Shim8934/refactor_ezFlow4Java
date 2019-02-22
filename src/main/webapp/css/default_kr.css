@@ -1,4 +1,4 @@
-﻿.inputText {
+﻿﻿.inputText {
 	border:1px solid #999
 }
 
@@ -244,8 +244,8 @@ form{display:inline;margin:0}
 #left h2, #TopBoards h2{
 	margin: -1px 0px 0px 0px;
 	padding:0 0 0 19px;
-/* 	border-top:1px solid #eaeaea;
-	border-bottom: 1px solid #eaeaea; */
+	border-top:1px solid #eaeaea;
+	border-bottom: 1px solid #eaeaea;
 	cursor: pointer;
 	background: url('/images/kr/left/01_minus.gif') no-repeat right 13px;
 	height:33px;
@@ -2351,7 +2351,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .lnb_lay{ height:auto; overflow:auto;}
 
 /* left LNB title */
-.lnb h2{position:relative; margin: 0px 0px 0px 0px !important; padding:7px 10px 7px 23px !important; cursor: pointer; height:26px !important; line-height:28px !important; word-break:keep-all; white-space:nowrap; z-index:10; background:none !important; overflow:hidden;} /* 장진혁 */
+.lnb h2{position:relative; margin: 0px 0px 0px 0px !important; padding:7px 10px 7px 23px !important; cursor: pointer; height:30px !important; line-height:28px !important; word-break:keep-all; white-space:nowrap; z-index:10; border-bottom:1px solid #cdd2d9 !important; background:none !important; overflow:hidden;} /* 장진혁 */
 .lnb h2.on{margin: 0px 0px 0px 0px !important; padding:7px 10px 0px 7px !important; cursor: pointer; height:30px !important; line-height:28px !important; word-break:keep-all; white-space:nowrap; z-index:10; border-bottom:none !important; background:none !important;}
 .lnb h2 .sub_iconLNB {float:left;}
 .lnb h2 .sub_iconLNB.tree_manage {position:relative; float:right; margin-left:10px;}
@@ -2492,7 +2492,6 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 
 .tree_admin_organization{ background-position:-78px -182px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 관리자 조직도 */
 .tree_admin_stats{ background-position:-104px -182px; width:16px; height:16px; display:inline-block; margin: 8px 0px 0px 0px; cursor:pointer;} /* tree 관리자 통계 */
-.tree_admin_dotlist{ background-position:-234px -104px; width:16px; height:16px; display:inline-block; margin: 0px 0px 0px 0px; cursor:pointer;} /* tree 관리자 리스트 도트아이콘 */
 
 .tree_poll_all{background-position: -52px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 전체투표*/
 .tree_poll_ing{background-position: -78px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 진행투표*/
@@ -2502,13 +2501,6 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .tree_memo_default{background-position: -182px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 기본메모*/
 .tree_ladder_all{background-position: -208px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 전체사다리*/
 .tree_ladder_in{background-position: -234px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 참여사다리*/
-
-.tree_srvy_all {background-position: -0px -260px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;} /* tree 전체 설문 */
-.tree_srvy_ing {background-position: -26px -260px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;} /* tree 진행 설문 */
-.tree_srvy_ok {background-position: -52px -260px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;} /* tree 완료 설문 */
-.tree_srvy_my {background-position: -78px -260px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;} /* tree 내가 작성한 설문 */
-.tree_srvy_draft {background-position: -104px -260px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;} /* tree 임시 설문 */
-
 
 /* left LNB tree text */
 .lnb h2 .h2Title{font-family:Malgun Gothic, "맑은 고딕"; font-size:13px; font-weight:bold; color:#393939; padding:0px 0px 0px 0px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; box-sizing:border-box;}
@@ -2805,6 +2797,3 @@ h2, #menu span {font-size: 12px;}
 .error_wrap dt{ font-size:26px; color:#333; padding:0px 0px 5px 0px;}
 .error_wrap dd{color:#666; font-size:18px; padding:0px 0px 0px 0px;}
 
-.lnb h2.on + .leftList { visibility: visible; height: auto !important;}
-.lnb .leftList { visibility: hidden; height: 0px !important; list-style-type: none; padding: 0;  margin: 0; width: 100%; overflow: hidden;}
-.lnb .leftList li { padding: 4px 20px; cursor: pointer;}
