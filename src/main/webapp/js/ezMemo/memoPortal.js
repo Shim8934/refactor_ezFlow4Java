@@ -345,6 +345,8 @@ function modifyMemo(obj) {
         },  
         cache: false,
         success: function(result) {
+        	$("textarea[memoid=" + memoId + "]").val(result.contents);
+        	
         	saveMemoToast(memoId);
             if(window.frames["main"].frames["right"] != undefined) {			
                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침

@@ -18,6 +18,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -63,7 +64,7 @@ public class EzMemoController {
 	/**
 	 * 메모 호출
 	 * */
-	@RequestMapping(value = "/ezMemo/memoMain.do")
+	@RequestMapping(value = "/ezMemo/memoMain.do", method = RequestMethod.GET)
 	public String memoMain(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoMain started.");
 		
@@ -95,7 +96,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/getMemoList.do")
+	@RequestMapping(value = "/ezMemo/getMemoList.do", method = RequestMethod.POST)
 	public String getMemoList(String layerFlag, String searchInput, String startDate, String endDate, String folderId, String orderOption, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getMemoList started.");
 
@@ -147,7 +148,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/getMemoFoldersInfo.do")
+	@RequestMapping(value = "/ezMemo/getMemoFoldersInfo.do", method = RequestMethod.GET)
 	public String memoFoldersInfo(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoFoldersInfo started");
 		
@@ -177,7 +178,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/memoFolderManage.do")
+	@RequestMapping(value = "/ezMemo/memoFolderManage.do", method = RequestMethod.GET)
 	public String memoFolderManage(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoFolderManage started");
 		logger.debug("memoFolderManage ended");
@@ -193,7 +194,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/memoInputName.do")
+	@RequestMapping(value = "/ezMemo/memoInputName.do", method = RequestMethod.GET)
 	public String memoInputName(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoInputName started");
 		
@@ -224,7 +225,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/memoWrite.do")
+	@RequestMapping(value = "/ezMemo/memoWrite.do", method = RequestMethod.POST)
 	public String memoWrite(String layerFlag, String folderId, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoWrite started");
 		
@@ -269,7 +270,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/memoModify.do")
+	@RequestMapping(value = "/ezMemo/memoModify.do", method = RequestMethod.POST)
 	public String memoModify(String memoId, String contents, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoModify started.");
 		
@@ -291,7 +292,8 @@ public class EzMemoController {
 		
 		logger.debug("memoModify ended.");
 		
-		if (status.equals("ok")) {		
+		if (status.equals("ok")) {
+			model.addAttribute("contents", resultBody.get("contents"));
 			return "json";
 		}
 		else {
@@ -309,7 +311,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/memoRead.do")
+	@RequestMapping(value = "/ezMemo/memoRead.do", method = RequestMethod.GET)
 	public String memoRead(String memoId, @CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoRead started.");
 		
@@ -340,7 +342,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/memoFolderAction.do")
+	@RequestMapping(value = "/ezMemo/memoFolderAction.do", method = RequestMethod.POST)
 	public String memoFolderAction(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model, String methodType, String folder_id) throws Exception {
 		logger.debug("memoFolderAction started.");
 		
@@ -376,7 +378,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/setLayerArea.do")
+	@RequestMapping(value = "/ezMemo/setLayerArea.do", method = RequestMethod.POST)
 	public String setLayerArea(@CookieValue("loginCookie") String loginCookie,  String layerWidth, String layerHeight, HttpServletRequest request) throws Exception {
 		logger.debug("setLayerArea started");
 		
@@ -406,7 +408,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/setLayerPosition.do")
+	@RequestMapping(value = "/ezMemo/setLayerPosition.do", method = RequestMethod.POST)
 	public String setLayerPosition(@CookieValue("loginCookie") String loginCookie,  String layerTop, String layerLeft, HttpServletRequest request) throws Exception {
 		logger.debug("setLayerPosition started");
 
@@ -435,7 +437,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/getMemoConfig.do")
+	@RequestMapping(value = "/ezMemo/getMemoConfig.do", method = RequestMethod.GET)
 	public String getMemoConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getMemoConfig started");
 		
@@ -465,7 +467,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/insertMemoConfig.do")
+	@RequestMapping(value = "/ezMemo/insertMemoConfig.do", method = RequestMethod.POST)
 	public String insertMemoConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("insertMemoConfig started");
 		
@@ -501,7 +503,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/hasMemoFolder.do")
+	@RequestMapping(value = "/ezMemo/hasMemoFolder.do", method = RequestMethod.GET)
 	public String hasMemoFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("hasMemoFodler started");
 		
@@ -530,7 +532,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/ezMemo/memo-display.do")
+	@RequestMapping(value = "/ezMemo/memo-display.do", method = RequestMethod.POST)
 	public String setMemoDisplay(@CookieValue("loginCookie") String loginCookie, String memo_ids, String display, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setMemoDisplay start");
 		
@@ -560,7 +562,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/memoDetail.do")
+	@RequestMapping(value = "/ezMemo/memoDetail.do", method = RequestMethod.GET)
 	public String getMemoDetail(@CookieValue("loginCookie") String loginCookie, int memoId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getMemoDetail started");
 		
@@ -590,7 +592,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/ezMemo/memoMove.do")
+	@RequestMapping(value = "/ezMemo/memoMove.do", method = RequestMethod.GET)
 	public String memoMove(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String folder_id, String memo_ids) throws Exception{
 		logger.debug("memoMove started");
 		
@@ -620,7 +622,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/ezMemo/memoDelete.do")
+	@RequestMapping(value = "/ezMemo/memoDelete.do", method = RequestMethod.POST)
 	public String memoDelete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String memo_ids) throws Exception{
 		logger.debug("memoDelete started");
 		
@@ -652,7 +654,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/ezMemo/otherModuleCopy.do")
+	@RequestMapping(value = "/ezMemo/otherModuleCopy.do", method = RequestMethod.POST)
 	public String otherModuleCopy(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, String contents) throws Exception {
 		logger.debug("otherModuleCopy started");
 		
@@ -681,7 +683,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/ezMemo/memoColorModify.do")
+	@RequestMapping(value = "/ezMemo/memoColorModify.do", method = RequestMethod.POST)
 	public String setMemoColor(@CookieValue("loginCookie") String loginCookie, String memoId, String colorId, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setMemoColor start");
 		
@@ -714,7 +716,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping("/ezMemo/reOrder.do")
+	@RequestMapping(value = "/ezMemo/reOrder.do", method = RequestMethod.POST)
 	public String reOrder(@CookieValue("loginCookie") String loginCookie, String draggedElId, String compareElId, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("reOrder started");
 		
@@ -743,7 +745,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/setGadgetPosition.do")
+	@RequestMapping(value = "/ezMemo/setGadgetPosition.do", method = RequestMethod.POST)
 	public String setGadgetPosition(@CookieValue("loginCookie") String loginCookie,  String gadgetBottom, String gadgetRight, HttpServletRequest request) throws Exception {
 		logger.debug("setGadgetPosition started");
 
@@ -772,7 +774,7 @@ public class EzMemoController {
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezMemo/setMemoLayerMode.do")
+	@RequestMapping(value = "/ezMemo/setMemoLayerMode.do", method = RequestMethod.POST)
 	public String setMemoLayerMode(@CookieValue("loginCookie") String loginCookie, String full_mode, HttpServletRequest request) throws Exception {
 		logger.debug("setMemoLayerMode started");
 		
