@@ -1672,6 +1672,8 @@
 				TENANT_ID = #tenantID#  
 			AND 
 				ACCESS_LVL = 1 
+			AND
+				COMPANYID = #v_PBRDCOMPANY#
 		]]>
 	</select>
 	

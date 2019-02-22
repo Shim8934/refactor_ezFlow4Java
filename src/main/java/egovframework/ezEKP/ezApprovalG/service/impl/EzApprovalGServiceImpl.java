@@ -2065,7 +2065,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String hesongFlag, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception {
+	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String realPath, String hesongFlag, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception {
 		logger.debug("setCabinetReject Started");
 
 		StringBuilder strSQL = new StringBuilder();
@@ -2099,8 +2099,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				extFileName = getExtendedFileName(apprGDocListVO.getHref());
 				docNumCode = deptID + getNDigitNum(sn, 6);
 				
+				docNo = commonUtil.cleanValue(deptName) + "-" + sn;
 				if (orgDocNumCode == null || orgDocNumCode.trim().equals("") || !gFlag.equals("G")) {
-					docNo = commonUtil.cleanValue(deptName) + "-" + sn;
+//					docNo = commonUtil.cleanValue(deptName) + "-" + sn;
 					
 					//2018-10-04 배현상, companyid 병합에 따른 G버전 오류 개선(ORGCOMPANYID 추가)
 					String strXML = "<SIGNINFOS><SIGNINFO><DOCID>" + newDocID + 
@@ -2115,9 +2116,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					if(rtnVal.equals("FALSE")){
 						return "<RESULT>FALSE</RESULT>";
 					}
-				} else {
-					docNo = "";
-				}
+				} 
 			}
 		}
 		
@@ -2210,6 +2209,50 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	}
         }
         
+        //hwp일 경우 대장등록전 문서에 새로운 문서번호 박아주기 | 2019-02-22 천성준 - mht일 경우 추가
+        if (docNo != null && !docNo.trim().equals("")) {
+        	String docFilePath = dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offSet, false).substring(0,4) + commonUtil.separator + getDocDir(newDocID) + commonUtil.separator + newDocID + "." + extFileName;
+        	
+        	if (extFileName.equals("hwp")) {
+		        HWPFile hwpFile = HWPReader.fromFile(docFilePath);
+		        setHwpText("docnumber", docNo, hwpFile);
+		        
+		        //접수 후 반송,회송대장등록일 경우 접수결재칸 지워주기
+				for (int i = 1; i < 10; i++) {
+					if (findHwpField("1sign" + i, hwpFile)) {
+						setHwpText("1sign" + i, " ", hwpFile);
+						setHwpText("1jikwe" + i, " ", hwpFile);
+					} else {
+						break;
+					}
+				}
+		        
+		        HWPWriter.toFile(hwpFile, docFilePath);
+        	} else {
+        		OutputStream outputStream = null;
+        		OutputStreamWriter output = null;
+        		
+        		String loadMht = ezCommonService.loadMHTFile(docFilePath);
+        		String content = ezCommonService.startMHT2HTML(realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), loadMht, realPath + commonUtil.getUploadPath("config.LocalPath", tenantID), realPath, locale, "", "");
+        		
+        		org.jsoup.nodes.Document doc = Jsoup.parse(content);
+        		doc.getElementById("docnumber").html(docNo);
+        		
+        		String tempHtml = doc.outerHtml();
+        		String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
+        		
+        		try {
+        			outputStream = new FileOutputStream(new File(docFilePath));
+        			output = new OutputStreamWriter(outputStream);
+        			output.write(convertedMHT);
+        		} catch (Exception e) {
+        			e.printStackTrace();
+        		} finally {
+        			output.close();
+        			outputStream.close();
+        		}
+        	}
+        }
 		
 		if (!rtnVal.equals("FALSE")) {
 			// 2018.06.26 - 대장등록 성공시 파일 KLIB 암호화
