@@ -286,7 +286,7 @@
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t148"/></th>
-          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="${resLocation}" style="width: 100%" maxlength="100"></td>
+          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="<c:out value='${resLocation}'/>" style="width: 100%" maxlength="100"></td>
         				</tr>
         				<tr>
 							<th> <spring:message code="ezResource.t149"/></th>

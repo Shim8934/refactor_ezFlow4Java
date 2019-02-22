@@ -190,3 +190,5 @@ var strLangKHJ8 = "権限がありません。";
 //2018-12-27
 var strLangKHA1 = "会社記念日";
 var strLangKHA2 = "法定公休日";
+//2018-02-22
+var strLangGHA1 = "、";
