@@ -34,7 +34,24 @@
 			    document.getElementById("progressPanel").style.display = "none";
 			}
 		    
+			function mailStatisticsFolder() {
+				if($("#MAIL").parent().attr('class') == "on"){
+					$("#MAIL").parent().attr('class', '');
+					document.getElementById("leftList").style.display = "";
+				} else {
+					$("#MAIL").parent().attr('class', 'on');
+					document.getElementById("leftList").style.display = "block";
+				}
+				
+			}
+			
 		    function goPage(idx){
+		    	if(idx==23 | idx==24 | idx==25 | idx==26 | idx==27 | idx==28 | idx==29){
+		    		$("#MAIL").parent().attr('class', 'on');
+		    	} else {
+		    		$("#MAIL").parent().attr('class', '');
+		    	}
+		    	
 				var url = "";
 				
 				switch(idx){
@@ -153,7 +170,7 @@
   			</div>
   			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 	  			<c:if test="${dotNetIntegration != 'YES'}">
-		  			<h2 class="on">
+		  			<h2>
 		  				<span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='main.t56' /></span>
 		  			</h2>
 	  			</c:if>
@@ -239,15 +256,15 @@
 	            <h2><span id="PARAMETER" style="display:inline-block;width:100%;" onClick="goPage(14)" ><spring:message code='main.kms1' /></span>
 	            <ul class="on"></ul>
 	            </h2>		
-	      	    <h2><span id="MAIL" style="display:inline-block;width:100%;" onClick="goPage(23)"><spring:message code='ezStatistics.t2' /></span></h2>
-			    <ul>
-				    <li><span style="display:inline-block;width:100%;" onClick="goPage(23)"><spring:message code='ezStatistics.t1001' /></span></li>
-				    <li><span style="display:inline-block;width:100%;" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span></li>
-	                <li><span style="display:inline-block;width:100%;" onclick="goPage(25)"><spring:message code='ezStatistics.t1018' /></span></li>
-	                <li><span style="display:inline-block;width:100%;" onclick="goPage(26)"><spring:message code='ezStatistics.t1023' /></span></li>
-	                <li><span style="display:inline-block;width:100%;" onclick="goPage(27)"><spring:message code='ezStatistics.t1025' /></span></li>
-	                <li><span style="display:inline-block;width:100%;" onclick="goPage(28)"><spring:message code='ezStatistics.kyj1' /></span></li>
-	                <li><span style="display:inline-block;width:100%;" onclick="goPage(29)"><spring:message code='ezStatistics.kyj2' /></span></li>
+	      	    <h2><span class="sub_iconLNB tree_arrow_up"></span><span id="MAIL" style="display:inline-block;width:100%;" onClick="mailStatisticsFolder(this)"><spring:message code='ezStatistics.t2' /></span></h2>
+			    <ul class="leftList" id="leftList">
+				    <li><span class="sub_iconLNB tree_admin_dotlist"></span><span class="li_text" onClick="goPage(23)"><spring:message code='ezStatistics.t1001' /></span></li>
+				    <li><span class="sub_iconLNB tree_admin_dotlist"></span><span class="li_text" onClick="goPage(24)"><spring:message code='ezStatistics.t1012' /></span></li>
+	                <li><span class="sub_iconLNB tree_admin_dotlist"></span><span class="li_text" onclick="goPage(25)"><spring:message code='ezStatistics.t1018' /></span></li>
+	                <li><span class="sub_iconLNB tree_admin_dotlist"></span><span class="li_text" onclick="goPage(26)"><spring:message code='ezStatistics.t1023' /></span></li>
+	                <li><span class="sub_iconLNB tree_admin_dotlist"></span><span class="li_text" onclick="goPage(27)"><spring:message code='ezStatistics.t1025' /></span></li>
+	                <li><span class="sub_iconLNB tree_admin_dotlist"></span><span class="li_text" onclick="goPage(28)"><spring:message code='ezStatistics.kyj1' /></span></li>
+	                <li><span class="sub_iconLNB tree_admin_dotlist"></span><span class="li_text" onclick="goPage(29)"><spring:message code='ezStatistics.kyj2' /></span></li>
 			    </ul>			            				
 	            </c:if>		
             </div>
