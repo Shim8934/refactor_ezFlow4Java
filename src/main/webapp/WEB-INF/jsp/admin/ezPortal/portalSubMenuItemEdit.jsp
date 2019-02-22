@@ -15,15 +15,15 @@
 			var imageWidth = "${imgWidth}";
 			var imageHeight = "${imgHeight}";
 		    var g_xmlhttp = createXMLHttpRequest();
-			var uid = "${uID}";
+			var uid = "<c:out value = '${uID}' />";
 			var imguid = "${imgUID}";
 			var g_Dirty = false;
-			var pageid = "${pageID}";
-			var pmode = "${mode}";
-			var parentuid = "${parentUID}";
+			var pageid = "<c:out value = '${pageID}' />";
+			var pmode = "<c:out value = '${mode}' />";
+			var parentuid = "<c:out value = '${parentUID}' />";
 			var pSkin = "1";   // 기본설정에선 모두 스킨1만 설정
 			var g_bSaved = false;
-			var menuindex = "${menuIndex}";
+			var menuindex = "<c:out value = '${menuIndex}' />";
 		    var pNoneActiveX = "${noneActiveX}";
 			window.onload = function()
 			{

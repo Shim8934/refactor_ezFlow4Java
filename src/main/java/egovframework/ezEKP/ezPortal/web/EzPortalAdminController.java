@@ -1465,7 +1465,7 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 			
 			PrintWriter pw = new PrintWriter(new File(mhtFilePath));
 			
-			pw.print(strHTML);
+			pw.print(commonUtil.stripScriptTags(strHTML));
 			pw.flush();
 			pw.close();
 			
