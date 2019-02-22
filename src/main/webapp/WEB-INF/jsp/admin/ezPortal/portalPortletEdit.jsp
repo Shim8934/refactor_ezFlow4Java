@@ -325,6 +325,11 @@
 						}
 					}
 					
+					if (image_type === "1") { //이미지 타입이 1일경우; 원본크기를 따라가므로 파일 높이 너비가 필요.
+						pImageWidth = document.getElementById("txtImage").width;
+						pImageHeight = document.getElementById("txtImage").height;
+					}
+					
 					// 새창여부
 					var pOpenMode = "0";
 					if (document.getElementsByName("OpenMode").checked == true)
