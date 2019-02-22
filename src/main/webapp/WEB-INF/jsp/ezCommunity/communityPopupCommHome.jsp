@@ -182,7 +182,8 @@
 		                                    	if (pastDate <= itemVO.writeDate) {
 		                                    		span2.innerHTML = "<img src='/images/i_new.gif' style='margin-bottom:1px;'>&nbsp;";
                    		 						}
-		                                        span2.innerHTML += itemVO.title;
+		                                    	/* 2019-02-21 홍승비 - 커뮤니티 팝업홈 메인화면 일반/그룹/익명게시물명 특문처리 */
+		                                        span2.innerHTML += MakeXMLString(itemVO.title);
 		                                        
 		                                        /* 2018-05-04 홍승비 - 댓글수 표출 */
 		                                        if (itemVO.oneLineCnt > 0) {
@@ -222,7 +223,8 @@
 			                                        if (pastDate <= itemVO.writeDate) {
 			                                    		span3.innerHTML = "<img src='/images/new_icon.gif'>&nbsp;";
 	                   		 						}
-			                                        span3.innerHTML += itemVO.title;
+			                                        /* 2019-02-21 홍승비 - 커뮤니티 팝업홈 메인화면 포토게시물명 특문처리 */
+			                                        span3.innerHTML += MakeXMLString(itemVO.title);
 			                                        /* 2018-05-07 홍승비 - 댓글수 표출 */
 			                                        if (itemVO.oneLineCnt > 0) {
 			                                        	span3.innerHTML += ("<SPAN style='color:#c64200'> [" + itemVO.oneLineCnt + "]</SPAN>");

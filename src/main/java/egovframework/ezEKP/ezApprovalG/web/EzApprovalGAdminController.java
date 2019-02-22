@@ -3496,11 +3496,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}
 		}
 		
-		if (request.getParameter("deptName") != null && !request.getParameter("deptName").equals("")) {
+		if (request.getParameter("drafterdept") != null && !request.getParameter("drafterdept").equals("")) {
 			if (!subQuery.toString().equals("")) {
 				subQuery.append(" AND ");
 			}			
-			subQuery.append(" (TBL_ENDAPRDOCINFO.writerDeptName LIKE '%" + request.getParameter("deptName") + "%' OR TBL_ENDAPRDOCINFO.writerDeptName2 LIKE '%" + request.getParameter("deptName") + "%')");
+			subQuery.append(" (TBL_ENDAPRDOCINFO.WRITERDEPTID = '" + request.getParameter("drafterdept")+"')");
 		}
 		
 		if (request.getParameter("formID") != null && !request.getParameter("formID").equals("")) {

@@ -107,10 +107,10 @@
 		                document.getElementById("periodblockTR").style.display = "none";
 		            }                   
 		        } else if (datetype != ""){ 
-		        	//if (datetype == "1") {
-		                //document.getElementById("alldaycheck").checked = false;
+		        	if (datetype == "2") {
+		                document.getElementById("alldaycheck").checked = true;
+		           } 
 		                allday_change();
-		            //} 
 		        } else {
 		        	//document.getElementById("alldaycheck").checked = false;
 	                allday_change();
@@ -372,7 +372,7 @@
 		            else
 		                printDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val() + " ~ " + $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val();
 		        } else {
-		            printDate = "<spring:message code='ezSchedule.t343' />";
+		        	printDate = $("#repeatinfo").text()
 		        }
 
 		        printLocation = document.getElementById("TextLocation").value;

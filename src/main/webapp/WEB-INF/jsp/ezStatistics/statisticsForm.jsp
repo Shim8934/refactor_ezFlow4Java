@@ -96,12 +96,6 @@
 	        }
 	
 	        function getforminfo() {
-	        	
-				if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Sdatepicker2").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
-					alert("<spring:message code='ezBoard.t191' />");
-					return;
-				}
-	        	
 	        	$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -151,14 +145,22 @@
              	 }
 	        }
 	
-	        /* 2019-02-18 홍승비 - 잘못된 기간으로 검색되지 않도록 수정 */
-	        function getapprovalstatistics() {
-	        	
-				if (new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val()) > new Date($("#Sdatepicker2").datepicker({ dateFormat: 'yy-mm-dd' }).val())) {
-					alert("<spring:message code='ezBoard.t191' />");
-					return;
-				}
-	        	
+	         /* 2019-02-21 홍승비 - 잘못된 기간으로 검색되지 않도록 재수정 (사용자 통계 참고) */
+	        function getapprovalstatistics(mode) {
+	        	 
+				var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+    			var eDate = $("#Sdatepicker2").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		    	if (sDate > eDate) {
+		    		if (mode != null && typeof(mode) != "undefined") {
+			     		if (mode == "sDate") {
+			     			$("#Sdatepicker2").val($("#Sdatepicker").val());
+			     		}
+			     		if (mode == "eDate") {
+			     			$("#Sdatepicker").val($("#Sdatepicker2").val());
+			     		}
+		    		}
+		    	}
+	        
 	            var pformList = new ListView();
 	            pformList.LoadFromID("lvformlist");
 	            
@@ -354,9 +356,9 @@
             		</c:forEach>
 	       		 </select>
 	                     &nbsp;&nbsp;<spring:message code='ezStatistics.t1002'/> : 
-	             <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" onchange="getapprovalstatistics()" readonly="readonly">
+	             <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" onchange="getapprovalstatistics('sDate')" readonly="readonly">
 	                     ~ 
-	             <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" onchange="getapprovalstatistics()" readonly="readonly">
+	             <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" onchange="getapprovalstatistics('eDate')" readonly="readonly">
 	                     &nbsp;&nbsp;<spring:message code='ezStatistics.t1032'/> : 
 	        			<input id="formname" type="text" style="width: 100px;" onkeypress="search_press(event)" />
 	                     <a class="imgbtn" style="vertical-align: middle;height:22px"><span onclick="getforminfo()"><spring:message code='ezStatistics.t36'/></span></a>

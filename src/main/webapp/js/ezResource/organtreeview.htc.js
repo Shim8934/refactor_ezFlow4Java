@@ -1064,12 +1064,15 @@ function organtreeview(thisobjid, elobjid) {
           //2016-10-10
             var childNode = nodeXML.firstElementChild;
             //var childNode = nodeXML.getElementsByTagName('NODE').item(0).firstElementChild;
+            var k = 0;
             while (childNode) {
                 g_nodeCount++;
 
                 var nodeCount = g_nodeCount;
                 var mydepth = depth;
-                var nodeHtml = "<span'><span><div class='node_div'>";
+
+            	var nodeHtml = "<span id= 'res"+nodeXML.getElementsByTagName('NODE')[k].getElementsByTagName('DATA1')[0].textContent+"'><span><div class='node_div'>";
+            	k++;
 
                 for (var j = 0; j < depth.length; j++) {
                     if (depth.charAt(j) == "1")
@@ -1223,7 +1226,8 @@ function organtreeview(thisobjid, elobjid) {
                 var mydepth = depth;
                 var childNode = nodeXML.item(i);
                 //var nodeHtml = "<span style='display:block;'><span style='height:18px;overflow-y:hidden;white-space:nowrap;display:inline-block;'>";
-                var nodeHtml = "<span'><span><div class='node_div'>";
+                
+            	var nodeHtml = "<span id='res"+nodeXML.getElementsByTagName('NODE')[i].getElementsByTagName('DATA1')[0].textContent+"'><span><div class='node_div'>";
 
                 for (var j = 0; j < depth.length; j++) {
                     if (depth.charAt(j) == "1")

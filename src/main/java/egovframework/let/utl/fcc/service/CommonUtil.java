@@ -1630,7 +1630,6 @@ public class CommonUtil {
 	}
 	
 	public void setLoginUsers(int tenantID, String userID, String loginTime) throws Exception {
-//		loginUsers.put(userInfo, loginTime);
 		ezCommonService.setMultiLoginUser(tenantID, userID, loginTime);
 	}
 	
@@ -1653,17 +1652,21 @@ public class CommonUtil {
 				}
 				
 				if(loginCookie != null) {
-					String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///", -1);
+					String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///");
 					
-					String userID = cookieInfo[1];
-					String companyID = cookieInfo[10];
-					String tenantIDStr = cookieInfo[8];
-					
-					if(userID.equals("") || companyID.equals("") || tenantIDStr.equals("")) {
+					if(cookieInfo.length <  11) {
 						return result;
 					}
 					
-					int tenantID = Integer.parseInt(tenantIDStr);
+					String userID = cookieInfo[1];
+					String companyID = cookieInfo[10];
+					int tenantID = Integer.parseInt(cookieInfo[8]);
+					
+					logger.debug("MultiLogin::: userID = " + userID + ", companyID = " + companyID + ", tenantID = " + tenantID);
+					
+					if(companyID.equals("")) { 
+						return result;
+					}
 					
 					useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
 					

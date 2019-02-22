@@ -223,8 +223,8 @@ public class EzCommonDAO extends EgovAbstractDAO {
 		insert("EzCommonDAO.insertUserConfigInfo", map);
 	}
 	
-	public void updateMultiLoginUser(Map<String, Object> map) throws Exception {
-		update("EzCommonDAO.updateMultiLoginUser", map);
+	public void deleteMultiLoginUser(Map<String, Object> map) throws Exception {
+		update("EzCommonDAO.deleteMultiLoginUser", map);
 	}
 	
 	public String selectMultiLoginUser(Map<String, Object> map) throws Exception {
@@ -521,5 +521,39 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			
 			update("EzCommonDAO.updateTaskUrl");
 		}
+	}
+
+	public void addPortalPortletUserPortletUsed() {
+		try {
+			select("EzCommonDAO.checkAddPortalPortletUserPortletUsed");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_portlet_user portlet_used doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addPortalPortletUserPortletUsed");
+		}
+		
+	}
+
+	public void addPortalPortletUserThemeId() {
+		try {
+			select("EzCommonDAO.checkPortalPortletUserThemeId");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_portlet_user theme_id doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addPortalPortletUserThemeId");
+			update("EzCommonDAO.deletePortalPortletUserPrimaryKey");
+			update("EzCommonDAO.addPortalPortletUserPrimaryKey");
+		}
+	}
+	
+	public void addTblPortalThemeUserIsDefault() {
+		try {
+			select("EzCommonDAO.checkAddTblPortalThemeUserIsDefault");
+		} catch (Exception e) {
+			logger.debug("tbl_portal_theme_user is_default doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addTblPortalThemeUserIsDefault");
+		}
+		
 	}
 }
