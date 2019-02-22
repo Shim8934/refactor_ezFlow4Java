@@ -180,3 +180,5 @@ var strLangKHJ6 = "Invalid ics file format.";
 var strLangKHJ7 = "Error while saving ics file";
 //2018-11-12
 var strLangKHJ8 = "No right.";
+//2018-02-22
+var strLangGHA1 = ", ";
