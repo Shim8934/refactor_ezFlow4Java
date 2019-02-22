@@ -104,6 +104,13 @@ public class EzSurveyController extends EgovFileMngUtil {
 			model.addAttribute("config", userConfig);
 		}
 		
+		JSONObject resultObj = surveyRestService.getUserInformation(request, user.getId());
+		
+		if (resultObj.get("status").toString().equals("ok")) {
+			int userMode = ((Long)resultObj.get("mode")).intValue();
+			model.addAttribute("reuseFlag", userMode);
+		}
+		
 		switch(mode) {
 			case "all"        : pageName = egovMessageSource.getMessage("ezSurvey.t80", locale); break;
 			case "processing" : pageName = egovMessageSource.getMessage("ezSurvey.t02", locale); break;
@@ -328,27 +335,18 @@ public class EzSurveyController extends EgovFileMngUtil {
 		logger.debug("jsonChangeSurveyState end");
 		return resultObj.toString();
 	}
-	// 어디서 쓰는거지?
-	/*
-	@RequestMapping(value="/ezSurvey/checkReusePermission.do")
+	
+	@RequestMapping(value="/ezSurvey/checkReusePermission.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String jsonCheckItems(@CookieValue("loginCookie") String loginCookie, @RequestParam(value = "itemList") List<String> itemList, HttpServletRequest request, HttpServletResponse response) throws Exception {
+	public String jsonCheckItems(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonCheckItems start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		JSONObject resultObj = new JSONObject();
-		
-		if (itemList.size() == 0) {
-			resultObj.put("code", 1);
-			resultObj.put("status", "error");
-			return resultObj.toString();
-		}
-		
-		resultObj = surveyRestService.checkSurveyItems(request, user.getId(), itemList, 1);
+		JSONObject resultObj = surveyRestService.checkSurveyItems(request, user.getId());
 		
 		logger.debug("jsonCheckItems end");
 		return resultObj.toString();
 	}
-	*/
+	
 	@RequestMapping(value="/ezSurvey/checkProcessingSurvey.do", method = RequestMethod.GET)
 	@ResponseBody
 	public String jsonCheckProcessingSurvey(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {

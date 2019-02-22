@@ -575,15 +575,14 @@ public class EzSurveyGWController {
 	}
 	
 	@RequestMapping(value="/rest/ezsurvey/survey-item/check", method= RequestMethod.GET, produces="application/json;charset=utf-8")
-	public JSONObject checkItems(@RequestParam(value = "itemList") List<String> itemList, Locale locale, HttpServletRequest request) throws Exception {
-		String serverName = request.getHeader("host-name") != null ? request.getHeader("host-name") : "";
-		String userId     = request.getParameter("userId") != null ? request.getParameter("userId") : "";
-		String mode       = request.getParameter("mode")   != null ? request.getParameter("mode")   : "";
+	public JSONObject checkItems(Locale locale, HttpServletRequest request) throws Exception {
+		String serverName = request.getHeader("host-name")   != null ? request.getHeader("host-name")   : "";
+		String userId     = request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
 		JSONObject result = new JSONObject();
 		
-		logger.debug("ServerName: " + serverName + " ||  userId: " + userId + " || itemList: " + String.join(",", itemList) + " || mode: " + mode);
+		logger.debug("ServerName: " + serverName + " ||  userId: " + userId);
 		
-		if (serverName.equals("") || itemList.size() == 0 || userId.equals("")) {
+		if (serverName.equals("") || userId.equals("")) {
 			logger.debug("Parameter error!");
 			result.put("status", "error");
 			result.put("code", 1);
@@ -591,9 +590,9 @@ public class EzSurveyGWController {
 		}
 		
 		try {
-			LoginVO userInfo      = commonUtil.getUserForGw(userId, serverName);
-			List<Long> itemIdList = itemList.stream().map(Long::parseLong).collect(Collectors.toList());
-			result                = surveyService.checkPermission(itemIdList, Integer.parseInt(mode), userInfo);
+			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
+			result.put("code", isSurveyAdmin(userInfo.getRollInfo()) ? 0 : 3);
+			result.put("status", "ok");
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -712,13 +711,22 @@ public class EzSurveyGWController {
 			LoginVO userInfo   = commonUtil.getUserForGw(userId, serverName);
 			Long surveyId      = Long.parseLong(itemId);
 			String realPath    = request.getServletContext().getRealPath("");
-			List<Long> items   = new ArrayList<>();
-			items.add(Long.parseLong(itemId));
-			int checkPri       = mode.equals("normal") ? 2 : 1;
-			JSONObject check   = surveyService.checkPermission(items, checkPri, userInfo);
 			
-			if ((int)check.get("code") != 0) {
-				return check;
+			if (mode.equals("reuse")) {
+				if (!isSurveyAdmin(userInfo.getRollInfo())) {
+					result.put("status", "error");
+					result.put("code", 3);
+				}
+			}
+			else {
+				List<Long> items   = new ArrayList<>();
+				items.add(Long.parseLong(itemId));
+				int checkPri       = mode.equals("normal") ? 2 : 1;
+				JSONObject check   = surveyService.checkPermission(items, checkPri, userInfo);
+				
+				if ((int)check.get("code") != 0) {
+					return check;
+				}
 			}
 			
 			result = surveyService.getItemInfo(surveyId, mode, realPath, userInfo);

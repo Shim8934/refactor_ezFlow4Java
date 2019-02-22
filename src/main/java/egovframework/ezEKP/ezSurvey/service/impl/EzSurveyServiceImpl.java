@@ -206,7 +206,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		List<SurveyVO> listSurvey  = ezSurveyDAO.getSurveyListForPermission(map);
 		
-		if (listSurvey == null || listSurvey.size() == 0) {
+		if (listSurvey == null || listSurvey.isEmpty()) {
 			result.put("code", 3);
 			return result;
 		}

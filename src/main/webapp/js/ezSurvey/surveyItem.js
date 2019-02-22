@@ -706,11 +706,23 @@ var SurveyItem = function() {
 		refreshAllFrames();
 	}
 	
+	function afterCheckReusePermission(data, itemId) {
+		var code = data.code;
+		switch(code) {
+			case 0 : window.parent.frames["right"].location.href = "/ezSurvey/reuseItem.do?itemId=" + itemId; break;
+			case 1 : alert(SurveyMessages.strParamErr); break;
+			case 2 : alert(SurveyMessages.strError)   ; break;
+			case 3 : alert(SurveyMessages.strPerm)    ; break;
+			default: alert(SurveyMessages.strError)   ; return;
+		}
+	}
+	
 	function reuseSurveyConfirm() {
 		var itemArr = getSelectedItems();
 		if (itemArr.length == 0) {alert(SurveyMessages.strItemErr) ; return;}
 		if (itemArr.length > 1)  {alert(SurveyMessages.strItemErr1); return;}
-		window.parent.frames["right"].location.href = "/ezSurvey/reuseItem.do?itemId=" + itemArr[0];
+		
+		makeAjaxCall({}, "POST", "/ezSurvey/checkReusePermission.do", afterCheckReusePermission, null, true, itemArr[0]);
 	}
 	
 	function modifySurveyConfirm() {
