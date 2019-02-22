@@ -585,7 +585,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickPoll 본문화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/pollResult.do")
+	@RequestMapping(value = "/admin/ezPersonal/pollResult.do", method = RequestMethod.GET)
 	public String pollResult(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("pollResult started");
 
