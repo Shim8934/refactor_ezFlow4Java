@@ -190,3 +190,5 @@ var strLangKHJ8 = "권한이 없습니다.";
 //2018-12-27
 var strLangKHA1 = "회사휴무일";
 var strLangKHA2 = "법정공휴일";
+//2018-02-22
+var strLangGHA1 = ", ";

@@ -142,7 +142,7 @@
                         listXML += "</TD><TD></TD>";
 					}
 					else {
-						listXML += "<TD class='"+ urgency + " " + bClass + "' title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
+						listXML += "<TD class='"+ urgency + " " + bClass + "' title='" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`")) + "' style='cursor:pointer; text-overflow:ellipsis; overflow:hidden' onclick='ItemRead_onclick(\""
 							+ pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID") + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Writer") + "\", event)'>";
 						listXML += "<div style='float: left; overflow: hidden; text-overflow: ellipsis; display: block; max-width: 100%;'>";
 						
