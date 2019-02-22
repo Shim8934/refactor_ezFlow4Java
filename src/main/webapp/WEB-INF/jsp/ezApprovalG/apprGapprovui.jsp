@@ -712,7 +712,8 @@
 		        }
 		        
 		        // getDocNumber를 이용한 문서번호 채번
-		        if (pDraftFlag != "SUSIN") {
+		        // 합의문서일 경우 채번하기 위해 조건 추가함. 2019-02-21 홍대표
+		        if (pDraftFlag != "SUSIN" && pDraftFlag != "HABYUI") {
 		        	if (approvalFlag == "S") {
 		        		// '현재진행 중인 결재가 개인순차합의가 아닌 경우' 추가
 		        		// 마지막 결재자가 합의인 경우 totalMemSN 값으로 해당 조건절 사용.

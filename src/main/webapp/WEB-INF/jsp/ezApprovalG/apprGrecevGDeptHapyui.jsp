@@ -894,7 +894,7 @@
 		        parameter[33] = pSummery;
 		        parameter[34] = pSpecialRecordCode;
 		        parameter[35] = pPublicityCode;
-		        //parameter[36] = pLimitRange;
+		        parameter[36] = pLimitRange;
 		        parameter[37] = pPageNum;
 		        parameter[38] = tempSecurityDate;
 		        parameter[39] = SummaryFlag;
@@ -1018,7 +1018,7 @@
 		  <tr>
 		    <td style="height:20px"><div id="menu">
 		        <ul>
-		          <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo('9')" ><spring:message code="ezApprovalG.t1742"/></span></li>
+		          <li id="btntotaldocinfo"><span onClick="return btnApprovalInfo('14')" ><spring:message code="ezApprovalG.t1742"/></span></li>
 		          <span style ="display:none" ><li id="btnSetAprLine"> <span onclick="return btnSetAprLine_onclick()" ><spring:message code='ezApprovalG.t153'/></span></li></span>
 		          <li id="btnSendDraft"> <span onclick="return btnSendDraft_onclick()" ><spring:message code='ezApprovalG.t156'/></span></li>
 		          <span style ="display:none" ><li id="btnDocInfo" style="display:none;"> <span onclick="return btnDocInfo_onclick()"  ><spring:message code='ezApprovalG.t54'/></span></li></span>

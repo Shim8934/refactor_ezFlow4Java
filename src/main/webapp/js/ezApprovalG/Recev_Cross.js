@@ -1226,14 +1226,16 @@ function getDeptSymbol(DeptID, DeptName)
 		}        			
 	});
 	
-	if (result == "")
-	{
-		return DeptName;
-	}
-	else
-	{
-		return getNodeText(GetChildNodes(loadXMLString(result).documentElement)[0]);
-	}
+	//일반기안 참고하여 수정. 기존 result와 비교 오류가 있었음. 2019-02-11 홍대표.
+	var dataNodes = GetChildNodes(loadXMLString(result).documentElement);
+    var RtnVal = getNodeText(dataNodes[0]);
+
+    if (RtnVal == "") {
+        return DeptName;
+    }
+    else {
+        return RtnVal;
+    }
 }
 
 //자동입력Field에 값을 입력하는 함수
@@ -1560,6 +1562,11 @@ function SaveDraftDocInfo()
                     createNodeAndInsertText(xmlpara, objNode, "DOCNO", getfieldValue(field));
                 else
                     createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
+                
+                	//부서순차합의 일경우 접수번호를 통해 가져온 DOCNO 를 가져오도록 수정. 2019-02-21 홍대표
+	                if(pDraftFlag == "HAPYUI") {
+	                	xmlpara.getElementsByTagName("DOCNO")[0].textContent = pDocNo;
+	                }
             }
 
             createNodeAndInsertText(xmlpara, objNode, "HASATTACHYN", pHasAttachYN);
@@ -2328,8 +2335,12 @@ function SaveDraftDocInfo()
         var szYear  = initdate.substring(0,4);
         var szMonth = initdate.substring(5,7);
         var szDay   = initdate.substring(8,10);
+        
+        var d = new Date(initdate);
 		
         var numHeader = "";
+        
+        pPrefix = !pPrefix ? "" : pPrefix;
 		
         var field = GetListItem(fields, pPrefix + "docnumber");//CKEDITOR-원본 : var field = pzFormProc.fields(pPrefix + "docnumber")
         if(!field) return 

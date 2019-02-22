@@ -1105,6 +1105,8 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
         } else {
             var pURL = GetAttribute(pCurSelRow, "DATA3");
             var pDocID = GetAttribute(pCurSelRow, "DATA1");
+            var orgCompanyID = GetAttribute(pCurSelRow, "orgCompanyID");
+            
             if (pURL.substr(pURL.length - 3, pURL.length).toLowerCase() == "hwp") {
             	if (/chrome/i.test(navigator.userAgent)) {
             		alert(strLang1103);
@@ -1112,10 +1114,12 @@ function OpenReceiveDraftUI(pCurSelRow, pDraftFlag) {
             	} else {
             		openLocation = "/ezApprovalG/ezDeptRecevUI_HWP.do";
             	}
+            } else if (pDraftFlag == "HAPYUI" && approvalFlag == "G") {
+            	openLocation = "/ezApprovalG/recevGDeptHapyui.do";
             } else {
-                openLocation = "/ezApprovalG/recev.do";
+            	openLocation = "/ezApprovalG/recev.do";
             }
-            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag);
+            openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&draftFlag=" + encodeURI(pDraftFlag) + "&orgCompanyID=" + encodeURI(orgCompanyID);
             openwindow(openLocation, "receive", 880, 550);
         }
     } else {

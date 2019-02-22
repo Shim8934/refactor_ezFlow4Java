@@ -7966,6 +7966,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		//부서합의문에서 채번하기 위해 수정 2019-02-08 홍대표
+		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
+		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
 
 		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
 			susinAdmin = "YES";
@@ -7986,6 +7997,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		draftDate = commonUtil.getTodayUTCTime("");
 		
+		if (approvalFlag.equals("G")) {
+			String nonElecRec = ezApprovalGService.checkNonElecRec(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+			if (!nonElecRec.equals("")) {
+				model.addAttribute("nonElecRec", nonElecRec);
+			}
+		}
+		
 		model.addAttribute("docID", docID);
 		model.addAttribute("draftFlag", draftFlag);
 		model.addAttribute("susinAdmin", susinAdmin);
@@ -8000,6 +8018,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("junGyulFlag", junGyulFlag);
 		model.addAttribute("signImageSize", signImageSize);
 		model.addAttribute("draftDeptID", draftDeptID);
+		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+		model.addAttribute("docNumZeroCnt", docNumZeroCnt);
 		
 		logger.debug("recev ended");
 
@@ -8911,5 +8931,87 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		ezApprovalGService.setHesongCabinetID(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("setHesongCabinetInfo ended.");
+	}
+	
+	/**
+	 * 전자결재G 부서(병렬,순차)합의 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/recevGDeptHapyui.do")
+	public String recevGDeptHapyui(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("recevGDeptHapyui started");
+
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		String docID = request.getParameter("docID");
+		String draftFlag = request.getParameter("draftFlag");
+		String susinAdmin = "";
+		String optSignDateFormat = "";
+		String optisSplit = "";
+		String optSplitKind = "";
+		String userDirectSign = "";
+		String draftDate = "";
+		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
+		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
+		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+		
+		//부서합의문에서 채번하기 위해 수정 2019-02-08 홍대표
+		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
+		String orgCompanyID = request.getParameter("orgCompanyID");
+		String companyID = userInfo.getCompanyID();
+		
+		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
+			userInfo.setCompanyID(orgCompanyID);
+		}
+		
+		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
+
+		if (userInfo.getRollInfo().indexOf("a=1") > -1) {
+			susinAdmin = "YES";
+		} else {
+			susinAdmin = "NO";
+		}
+		
+		optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
+		
+		if (approvalFlag.equals("S")) {
+			optisSplit = ezApprovalGService.getOptionInfo("SA33", "001", userInfo, "CODE");
+		} else {
+			optisSplit = ezApprovalGService.getOptionInfo("A33", "001", userInfo, "CODE");
+		}
+		optSplitKind = ezApprovalGService.getOptionInfo("A33", "002", userInfo, "CODE");
+		
+		userDirectSign = ezCommonService.getTenantConfig("USE_DirectSign", userInfo.getTenantId());
+		
+		draftDate = commonUtil.getTodayUTCTime("");
+		
+		if (approvalFlag.equals("G")) {
+			String nonElecRec = ezApprovalGService.checkNonElecRec(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+			if (!nonElecRec.equals("")) {
+				model.addAttribute("nonElecRec", nonElecRec);
+			}
+		}
+		
+		model.addAttribute("docID", docID);
+		model.addAttribute("draftFlag", draftFlag);
+		model.addAttribute("susinAdmin", susinAdmin);
+		model.addAttribute("optSignDateFormat", optSignDateFormat);
+		model.addAttribute("optisSplit", optisSplit);
+		model.addAttribute("optSplitKind", optSplitKind);
+		model.addAttribute("userDirectSign", userDirectSign);
+		model.addAttribute("draftDate", draftDate);
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("approvalPWD", approvalPWD);
+		model.addAttribute("approvalFlag", approvalFlag);
+		model.addAttribute("junGyulFlag", junGyulFlag);
+		model.addAttribute("signImageSize", signImageSize);
+		model.addAttribute("draftDeptID", draftDeptID);
+		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
+		model.addAttribute("docNumZeroCnt", docNumZeroCnt);
+		
+		logger.debug("recevGDeptHapyui ended");
+
+		return "ezApprovalG/apprGrecevGDeptHapyui";
 	}
 }
