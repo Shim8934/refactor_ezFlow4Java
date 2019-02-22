@@ -225,7 +225,22 @@
 	    		});
 	        }
 	
-	        function getapprovalstatistics() {
+	        /* 2019-02-21 홍승비 - 잘못된 기간으로 검색되지 않도록 재수정 (사용자 통계 참고) */
+	        function getapprovalstatistics(mode) {
+	        	
+	        	var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+    			var eDate = $("#Sdatepicker2").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		    	if (sDate > eDate) {
+		    		if (mode != null && typeof(mode) != "undefined") {
+			     		if (mode == "sDate") {
+			     			$("#Sdatepicker2").val($("#Sdatepicker").val());
+			     		}
+			     		if (mode == "eDate") {
+			     			$("#Sdatepicker").val($("#Sdatepicker2").val());
+			     		}
+		    		}
+		    	}
+				
 	            var pUserList = new ListView();
 	            pUserList.LoadFromID("lvUserList");
 	            
@@ -611,9 +626,9 @@
 	         <tr>
 	             <td style="width: 99%">
 	                 <span id="topmenu" style="float: left; width: 500px">&nbsp;<spring:message code='ezStatistics.t1002'/> : 
-	       <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" onchange="getapprovalstatistics()" readonly="readonly">
+	       <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" onchange="getapprovalstatistics('sDate')" readonly="readonly">
 	                     ~ 
-	             <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" onchange="getapprovalstatistics()" readonly="readonly">
+	             <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" onchange="getapprovalstatistics('eDate')" readonly="readonly">
 	                     &nbsp;&nbsp;
 	             <select id="searchopt" style="height:24px">
 	                 <option value="1"><spring:message code='ezStatistics.t1017'/></option>

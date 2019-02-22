@@ -83,4 +83,9 @@ public interface EzResourceService {
 
 	public List<OrganUserVO> getOwnerInfo(String[] ownerList, int tenantID, String companyID) throws Exception;
 	
+	public void changeResourceOrder(String selectedResourceId, String targetResourceId, int tenantId,String companyID,String upperResourceId) throws Exception;
+	
+	public void moveResourceToOtherResourceGroup(String originResourceGroupId, String selectedResourceGroupId, int tenantId, String companyID) throws Exception;
+	
+	public String isResourceGroupManager(String selectedResourceGroupId, String userId, int tenantId, String companyID) throws Exception;
 }

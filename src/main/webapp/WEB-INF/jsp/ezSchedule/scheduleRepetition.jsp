@@ -58,6 +58,7 @@
 		        datepicker();
 		        datetimepicker();
 		        var repetition = RetValue["REPETITION"];
+		        var allday = RetValue["ALLDAYCHECK"];
 		    				
 		    	if (repetition != "")
 		    	{
@@ -138,6 +139,16 @@
 		    				}
 		    		}
 		    	}
+		    	else {
+		    		if(allday == true) {			// 일정작성 탭에서 하루종일 체크하고 반복 클릭 시
+		    			alldaycheck.checked = true;
+		    		}
+		    	
+		    		// 2019-02-20 김민성 - 일정반복 데이터 없을 때 해당 요일 체크되도록 수정
+		    		var m_objStartTime = new Date(RetValue["SDATE"]);
+		    		var iWeekdayNumber = m_objStartTime.getDay();
+		    		document.getElementById("day" + iWeekdayNumber).checked = true;
+		    	}
 		    	allDayTime();
 		    	clearAllDay();
 		    }
@@ -198,6 +209,12 @@
 		    	        return;
 		    	    }
 		    	}
+		    	
+		    	// 시작시간과 종료시간이 00시 00분이면 무조건 하루종일로
+		    	if(stime == "00:00" && etime == "00:00") {
+		    		document.getElementById("alldaycheck").checked = true;
+		    	}
+		    	
 		    	var allDayString = "";
 		    	var scheduleTerm = "";	
 		    	var occurrenceTerm = "";			
@@ -811,6 +828,11 @@
 		    
 		        sTimeTemp = $('#Stimepicker').val();
 		        eTimeTemp = $('#Etimepicker').val();
+
+		        // 시작시간과 종료시간이 00시 00분이면 무조건 하루종일로
+		        if(sTimeTemp == "00:00" && eTimeTemp == "00:00") {
+		        	document.getElementById("alldaycheck").checked = true;
+		        }
 		    }
 		    		    
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
@@ -884,6 +906,7 @@
 		        return true;
 		    } */
 	    	/* 2018.02.23 김기하  */
+	    	/* 2019-02-20 김민성 - 하루종일 체크 해제시 현재 시간 기준 30분 단위 표시로 수정 */
 		    function allDayTime(){
 	    		if(document.getElementById("alldaycheck").checked == true){
 	    			sTimeTemp = $('#Stimepicker').val();
@@ -891,8 +914,34 @@
 		    		$('#Stimepicker').timepicker("setTime", "00:00");
 		    		$('#Etimepicker').timepicker("setTime", "00:00");
 		    	}else{
-		    		$('#Stimepicker').timepicker("setTime", sTimeTemp);
-		    		$('#Etimepicker').timepicker("setTime", eTimeTemp);
+					var now = new Date();
+		        	
+		        	//시작시간
+		        	var startTime;
+		        	var hour = now.getHours();
+		        	var time = now.getMinutes();
+		        	
+		        	if (parseInt(time) < 30) {
+		        		startTime = hour + ":00:00";
+		        	} else {
+		        		startTime = hour + ":30:00";
+		        	}
+		        	
+		        	//종료시간
+		        	var endTime;
+		        	now.setMinutes(now.getMinutes() + 30);
+		        	
+		        	hour = now.getHours();
+		        	time = now.getMinutes();
+		        	
+		        	if (parseInt(time) < 30) {
+		        		endTime = hour + ":00:00";
+		        	} else {
+		        		endTime = hour + ":30:00";
+		        	}
+		        	
+		        	$('#Stimepicker').timepicker('setTime', startTime);
+		        	$('#Etimepicker').timepicker('setTime', endTime);
 		    	}
 		    }
 		    

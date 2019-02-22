@@ -11,6 +11,7 @@
 		<script type="text/javascript" src="${util.addVer('ezResource.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<style type="text/css"> 
 			.pagetd{ padding-top:6px; }
 			.pcol{ padding-top:6px; }
@@ -389,6 +390,121 @@
 	        	document.getElementById("contentlist").style.height = height + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
+		    
+		    function resourceOrderUp() {
+		    	var checkId = $("input:checkbox[id='chk']:checked");
+		    	//$("input:checkbox[id='chk']").is(":checked")
+
+		    	if (checkId.length < 1) {
+		    		alert("<spring:message code="ezResource.gha04" />");
+		    		return;
+		    	} else if (checkId.length > 1) {
+		    		alert("<spring:message code="ezResource.gha03" />");
+		    		return;
+		    	}
+		    	
+		    	var resPlusCheckId = 'res' + checkId.attr('value');
+		    	var previousCheckId = $(checkId[0]).closest("tr").prev().children().eq(0).find('input').attr("value");
+		    	var resPluspreviousCheckId = 'res' + previousCheckId;
+		    	
+		    	if ($(checkId[0]).closest("tr").prev().children().eq(0).find('input').attr("value") == undefined) {
+		    		return;
+		    	}
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		async : false,
+		    		data : {
+		    			selectedResourceId : $(checkId[0]).attr("value"),
+		    			targetResourceId : $(checkId[0]).closest("tr").prev().children().eq(0).find('input').attr("value"),
+		    			upperResourceId : pBrdid
+		    		},
+		    		url : "/ezResource/changeResourceOrder.do",
+		    		success: function(text){
+		    			var $tr = $(checkId[0]).closest("tr"); // 클릭한 버튼이 속한 tr 요소
+		    			$tr.prev().before($tr); // 현재 tr 의 이전 tr 앞에 선택한 tr 넣기
+		    			
+		    			var $label = $(parent.frames["left"].document.querySelectorAll("[id='res"+$(checkId[0]).attr("value")+"']"));
+		    			if ($label) {
+			    			$label.prev().before($label);
+		    			}
+		    		},
+		    		error: function(err){
+		    		}
+		    	});
+		    }
+		    
+		    function resourceOrderDown() {
+		    	var checkId = $("input:checkbox[id='chk']:checked");
+
+		    	if (checkId.length < 1) {
+		    		alert("<spring:message code="ezResource.gha04" />");
+		    		return;
+		    	} else if (checkId.length > 1) {
+		    		alert("<spring:message code="ezResource.gha03" />");
+		    		return;
+		    	}
+		    	
+		    	var resPlusCheckId = 'res' + checkId.attr('value');
+		    	var nextCheckId = $(checkId[0]).closest("tr").prev().children().eq(0).find('input').attr("value");
+		    	var resPlusnextCheckId = 'res' + nextCheckId;
+		    	
+		    	if ($(checkId[0]).closest("tr").next().children().eq(0).find('input').attr("value") == undefined) {
+		    		return;
+		    	}
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		async : false,
+		    		data : {
+		    			selectedResourceId : $(checkId[0]).attr("value"),
+		    			targetResourceId : $(checkId[0]).closest("tr").next().children().eq(0).find('input').attr("value"),
+		    			upperResourceId : pBrdid
+		    		},
+		    		url : "/ezResource/changeResourceOrder.do",
+		    		success: function(text){
+		    			var $tr = $(checkId[0]).closest("tr"); // 클릭한 버튼이 속한 tr 요소
+		    			$tr.next().after($tr); // 현재 tr 의 이전 tr 앞에 선택한 tr 넣기
+		    			
+		    			var $label = $(parent.frames["left"].document.querySelectorAll("[id='res"+$(checkId[0]).attr("value")+"']"));
+		    			if ($label) {
+			    			$label.next().after($label);
+		    			}
+		    		},
+		    		error: function(err){
+		    		}
+		    	});
+		    }
+		    
+		    var organ_cross_dialogArguments = new Array();
+		    
+		    function moveResourceToOtherResourceGroup() {
+		    	var checkId = $("input:checkbox[id='chk']:checked");
+	    		
+		    	if (checkId.length < 1) {
+		    		alert("<spring:message code="ezResource.gha04" />");
+		    		return;
+		    	} else if (checkId.length > 1) {
+		    		alert("<spring:message code="ezResource.gha03" />");
+		    		return;
+		    	}
+		    	
+		    	var para = new Array();
+				var retVal = new Array();
+				var url = "/ezResource/resOrganToMoveResource.do";
+				para[1] = pCompanyID;
+				para[2] = pBrdid;
+				para[3] = $(checkId[0]).attr("value");
+				
+				if (CrossYN()) {
+				    organ_cross_dialogArguments[0] = para;
+
+				    var OpenWin = window.open(url, "organ", GetOpenWindowfeature(460, 440));
+			        try { OpenWin.focus(); } catch (e) { }
+				} else {
+				    retVal = window.showModalDialog(url, para, "dialogWidth:480px;dialogHeight:440px;status:no;help:no;scroll:no");
+				}
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -402,6 +518,13 @@
     			<li><span onClick="btnModify_Click();"><spring:message code='ezResource.t364' /></span></li>
     			<li><span onClick="btnDelete_Click();"><spring:message code='ezResource.t365' /></span></li>
     			<li><span onClick="btnCcalendar_Click();"><spring:message code='ezResource.t400' /></span></li>
+    			<li><span onClick="moveResourceToOtherResourceGroup();"><spring:message code='ezResource.gha06' /></span></li>
+    			<li>
+            		<span onclick="resourceOrderUp()"><img src="/images/ImgIcon/prev.gif" style="margin-top: -4px;" alt="up"></span>
+		        </li>
+	            <li>
+            		<span onclick="resourceOrderDown()"><img src="/images/ImgIcon/next.gif" style="margin-top: -4px;" alt="down"></span>
+		        </li>
   			</ul>
 		</div>
 		<script type="text/javascript">
@@ -417,7 +540,7 @@
 	    			<%-- <th style="width:100px"> <spring:message code='ezResource.t37' /></th> --%>
 	    			<th style="width:120px"> <spring:message code='ezResource.t367' /></th>
 	    			<th style="width:120px"> <spring:message code='ezPersonal.t1024' /></th>
-	    			<th style="width:150px;"> <spring:message code='ezResource.t148' /></th>
+	    			<th style="width:150px;"> <spring:message code='ezResource.t148' /></th>	    			
 	  			</tr>
 				<c:if test="${!empty resBrdList}" >
 					<c:forEach var="list"  items="${resBrdList}" begin="${start}" varStatus="value">

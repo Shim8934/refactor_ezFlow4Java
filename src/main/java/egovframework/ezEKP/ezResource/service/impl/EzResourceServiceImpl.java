@@ -3601,6 +3601,77 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("getOwnerInfo ended");
 		return ezResourceDAO.getOwnerInfo(map);
 	}
+	//public void changeResourceOrder(String selectedResourceId, String targetResourceId, int tenantId,String companyID,String upperResourceId);
 	
+	@Override
+	public void changeResourceOrder(String selectedResourceId, String targetResourceId, int tenantId,String companyID,String upperResourceId) throws Exception {
+		logger.debug("changeResourceOrder start");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("resourceId", selectedResourceId);
+		map.put("tenantId", tenantId);
+		map.put("brd_company", companyID);
+		map.put("upperResourceId", upperResourceId);
+
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("resourceId", targetResourceId);
+		map2.put("tenantId", tenantId);
+		map2.put("brd_company", companyID);
+		map2.put("upperResourceId", upperResourceId);
+		
+		String SelectedResourceIdOrder = ezResourceDAO.getResourceOrder(map);
+		String TargetResourceIdOrder = ezResourceDAO.getResourceOrder(map2);
+		
+		String tempOrder = SelectedResourceIdOrder;
+		SelectedResourceIdOrder = TargetResourceIdOrder;
+		TargetResourceIdOrder = tempOrder;
+		
+		map.put("resourceOrder", SelectedResourceIdOrder);
+		map2.put("resourceOrder", TargetResourceIdOrder);
+		
+		ezResourceDAO.ChangeResourceOrder(map);
+		ezResourceDAO.ChangeResourceOrder(map2);
+		logger.debug("changeResourceOrder ended");
+	}
+	
+	@Override
+	public void moveResourceToOtherResourceGroup(String originResourceGroupId, String selectedResourceGroupId, int tenantId, String companyID) throws Exception {
+		logger.debug("moveResourceToOtherResourceGroup start");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("brd_company", companyID);
+		map.put("upperResourceGroupId", selectedResourceGroupId);
+		
+		String maxBrdStep = ezResourceDAO.getMaxBrdStepInSelectedResourceGroup(map);
+		
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		
+		map2.put("originResourceGroupId", originResourceGroupId);
+		map2.put("tenantId", tenantId);
+		map2.put("brd_company", companyID);
+		map2.put("selectedResourceGroupId", selectedResourceGroupId);
+		
+		maxBrdStep = maxBrdStep == null ? "0" : maxBrdStep;
+		
+		map2.put("brd_step", String.valueOf(Integer.parseInt(maxBrdStep)+1));
+		
+		ezResourceDAO.moveResourceToOtherResourceGroup(map2);
+		logger.debug("moveResourceToOtherResourceGroup ended");
+	}
+	
+	@Override
+	public String isResourceGroupManager(String selectedResourceGroupId, String userId, int tenantId, String companyID) throws Exception {
+		logger.debug("isResourceGroupManager start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("brd_company", companyID);
+		map.put("selectedResourceGroupId", selectedResourceGroupId);
+		
+		String isManager = ezResourceDAO.isResourceGroupManager(map);
+		
+ 		logger.debug("isResourceGroupManager ended");
+		return isManager;
+	}
 }
 

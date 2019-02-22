@@ -133,18 +133,8 @@
     function makeoptionyear() {
         var date = new Date()
         var year = date.getFullYear();
-        var lastYear = 2017;
-        var diffYear = year - lastYear;
-        
-        for (var i = 0; i <= diffYear; i++) {
-            var option = document.createElement("OPTION");
-            option.value = year;
-            option.innerHTML = year;
-            
-            document.getElementById("selyear").appendChild(option);
-            year--;
-        }
-        /* if (isfirst) {
+
+        if (isfirst) {
             tempyear = year;
             for (var i = 0; i < 5; i++) {
                 var option = document.createElement("OPTION");
@@ -177,7 +167,7 @@
                 tempyear--;
             }
             tempyear = selyear + 2;
-        } */
+        }
     }
     
     //회사 클릭시마다 근태유형 selectbox 변경
@@ -489,7 +479,7 @@
             <td style="width: 99%">
                 <span id="topmenu" style="width: 500px">
                 &nbsp;<spring:message code='ezStatistics.t1002' /> : 
-                <select style="height:24px" id="selyear" onchange="selectBox_change()"></select>
+                <select style="height:24px" id="selyear" onchange="makeoptionyear(); selectBox_change()"></select>
                     <spring:message code='ezStatistics.t55' />
 		            &nbsp;&nbsp;
 					<spring:message code='ezStatistics.t1013' /> : 
