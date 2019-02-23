@@ -406,10 +406,11 @@
 				xmlhttp.open("POST", "/admin/ezPortal/savePortletProperty.do", false);
 				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send(strXML);
-				if (xmlhttp.responseText != "OK")
-				{
+				if (xmlhttp.responseText != "OK") {
 					alert("<spring:message code='ezPortal.t149'/>");
 					return;
+				} else {
+					window.opener.location.reload(true);
 				}
 				xmlhttp = null;
 	
