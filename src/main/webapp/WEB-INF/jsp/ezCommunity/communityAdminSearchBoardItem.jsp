@@ -191,12 +191,12 @@
 	
 			function search() {
 			    if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-			        alert("<spring:message code = 'ezCommunity.t421' />");
+			        alert("<spring:message code = 'ezSystem.x0035' />");
 					return;
 			    }
 			    
 	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-					alert("<spring:message code = 'ezCommunity.t421' />");
+					alert("<spring:message code = 'ezSystem.x0036' />");
 			        return;
 			    }
 	            
