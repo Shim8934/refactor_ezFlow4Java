@@ -143,6 +143,11 @@
 					return;
 				}
 				
+				if (!SortNum.value.match(/^\d*$/)) {
+					OpenAlertUI("<spring:message code='ezOrgan.t226' />: <spring:message code='ezEmail.t99000066'/>");
+					return;
+				}
+				
 				var parentCn;
 				var extensionattribute8 = "0";
 				/* 2017-12-29 장진혁 - 조직도에서 기본적으로 해당 부서를 수신처로 등록할 수 있게 수정 */
