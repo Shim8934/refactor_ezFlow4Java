@@ -235,14 +235,14 @@
 		        
 		        if (draftfrom != "" && draftto != "") {
 		            if (draftfrom > draftto) {
-		                OpenAlertUI("<spring:message code='ezApprovalG.t1327'/>");
+		                OpenAlertUI("<spring:message code='ezApprovalG.psb03'/>");
 		                return;
 		            }
 		        }
 		
 		        if (apprfrom != "" && apprto != "") {
 		            if (apprfrom > apprto) {
-		                OpenAlertUI("<spring:message code='ezApprovalG.t1328'/>" + "<br>" + "<spring:message code='ezApprovalG.t1327'/>");
+		                OpenAlertUI("<spring:message code='ezApprovalG.psb06'/>");
 		                return;
 		            }
 		        }
