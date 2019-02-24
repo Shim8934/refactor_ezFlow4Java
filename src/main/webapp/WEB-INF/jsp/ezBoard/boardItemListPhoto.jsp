@@ -1257,7 +1257,7 @@
 
     <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
 
-        <div style="width:100%; " id="divList">
+        <div style="width:100%; overflow-x:auto; overflow-y:hidden;" id="divList">
 
             <div id="lvBoardList"></div>
         </div>
