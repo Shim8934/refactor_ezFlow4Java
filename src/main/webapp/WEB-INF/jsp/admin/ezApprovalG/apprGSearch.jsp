@@ -203,7 +203,7 @@
 		        apprfrom = document.getElementById("S1datepicker").value;
 		        apprto = document.getElementById("E1datepicker").value;
 		        
-		        if (draftfrom != "" && draftto != "") {
+		        /* if (draftfrom != "" && draftto != "") {
 		            if (draftfrom > draftto) {
 		                OpenAlertUI("<spring:message code ='ezApprovalG.t1326' /><br><spring:message code ='ezApprovalG.t1327' />");
 		                return;
@@ -213,6 +213,36 @@
 		        if (apprfrom != "" && apprto != "") {
 		            if (apprfrom > apprto) {
 		                OpenAlertUI("<spring:message code ='ezApprovalG.t1328' /><br><spring:message code ='ezApprovalG.t1327' />");
+		                return;
+		            }
+		        } */
+		        
+		        if (draftfrom != "" && draftto == "") {
+		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm02'/>");
+		        	return;
+		        } else if (draftfrom == "" && draftto != "" ) {
+		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm01'/>");
+		        	return;
+		        }
+		        
+		        if (apprfrom != "" && apprto == "") {
+		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm04'/>");
+		        	return;
+		        } else if (apprfrom == "" && apprto != "" ) {
+		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm03'/>");
+		        	return;
+		        }
+		        
+		        if (draftfrom != "" && draftto != "") {
+		            if (draftfrom > draftto) {
+		                OpenAlertUI("<spring:message code='ezApprovalG.t1327'/>");
+		                return;
+		            }
+		        }
+		
+		        if (apprfrom != "" && apprto != "") {
+		            if (apprfrom > apprto) {
+		                OpenAlertUI("<spring:message code='ezApprovalG.t1328'/>" + "<br>" + "<spring:message code='ezApprovalG.t1327'/>");
 		                return;
 		            }
 		        }
