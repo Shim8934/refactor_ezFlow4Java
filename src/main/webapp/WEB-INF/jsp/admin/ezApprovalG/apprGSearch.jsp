@@ -242,7 +242,7 @@
 		
 		        if (apprfrom != "" && apprto != "") {
 		            if (apprfrom > apprto) {
-		                OpenAlertUI("<spring:message code='ezApprovalG.psb06'/>");
+		                OpenAlertUI("<spring:message code='ezApprovalG.psb05'/>");
 		                return;
 		            }
 		        }
