@@ -3160,7 +3160,7 @@ public class EzQuestionController extends EgovFileMngUtil {
 
 			if (maxNum != 0) {
 				for (int i = 1; i < maxNum + 1; i++) {
-					headerInfo = headerInfo + "," + i;
+					headerInfo = headerInfo + "," + egovMessageSource.getMessage("ezQuestion.t333", locale) + " " + i;
 				}
 
 				headerInfo = headerInfo + "\r\n";

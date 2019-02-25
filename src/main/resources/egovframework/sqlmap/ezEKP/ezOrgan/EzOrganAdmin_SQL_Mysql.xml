@@ -1863,7 +1863,7 @@
                ('013',4,'부서',130,'TBL_APRLINEINFO','AprMemberDeptName',null,null,'결재선정보(코딩)','부서명','Dept.','部署','部门',#tenantID#, #companyID#),
                ('013',5,'결재유형',120,'TBL_APRLINEINFO','AprType',null,null,'결재선정보(코딩)','결재방법','Type','処理類型','批准类型',#tenantID#, #companyID#),
                ('013',6,'결재상태',70,'TBL_APRLINEINFO','AprState',null,null,'결재선정보(코딩)','결재상태','Status','ステータス','批准状态',#tenantID#, #companyID#),
-               ('013',7,'결재일시',120,'TBL_APRLINEINFO','ProcessDate',null,null,'결재선정보(코딩)','결재일시','Date','処理日時','批准日',#tenantID#, #companyID#),
+               ('013',7,'결재일시',140,'TBL_APRLINEINFO','ProcessDate',null,null,'결재선정보(코딩)','결재일시','Date','処理日時','批准日',#tenantID#, #companyID#),
                ('021',1,'순번',35,'TBL_RECEIPTPOINTINFO','DeptMemberSN',null,null,'수신처정보(진행)','순번','No.','順番','序号',#tenantID#, #companyID#),
                ('021',2,'수신자명',200,'TBL_RECEIPTPOINTINFO','ReceiptPointName',null,null,'수신처정보(진행)','수신부서명','Dept.','受信部署名','收信部门名',#tenantID#, #companyID#),
                ('021',3,'수신자성명',200,'TBL_RECEIPTPOINTINFO','ReceiptMemberName',null,null,'수신처정보(진행)','수신자성명','Name','受信者氏名','收信创建名',#tenantID#, #companyID#),
@@ -4757,7 +4757,7 @@
 				EXTENSIONATTRIBUTE15 = 0,
 				UPDATEDT = #nowDate#
 			WHERE
-				EXTENSIONATTRIBUTE2 = (SELECT * FROM(SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#)AS AA)
+				EXTENSIONATTRIBUTE1 = #v_PARENTCN#
 			AND
 				TENANT_ID = #v_TENANT_ID#
 			AND
@@ -4773,7 +4773,7 @@
 				EXTENSIONATTRIBUTE15 = EXTENSIONATTRIBUTE15 + 1,
 				UPDATEDT = #nowDate#
 			WHERE
-				EXTENSIONATTRIBUTE2 = (SELECT * FROM(SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#)AS AA)
+				EXTENSIONATTRIBUTE1 = #v_PARENTCN#
 			AND
 				TENANT_ID = #v_TENANT_ID#
 			AND

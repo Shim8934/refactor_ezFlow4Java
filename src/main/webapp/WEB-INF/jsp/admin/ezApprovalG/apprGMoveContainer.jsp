@@ -93,6 +93,7 @@
 	        
 	        //페이징 위치 조정
 	        windowResize();
+	        makePageSelPage();
 	    }
 	    
 		// 검색값 입력 후 엔터키 입력 시 검색 호출
@@ -307,15 +308,19 @@
 				MaxNum = totalPage;
 			}
 
-			for (i = startNum; i <= MaxNum; i++) {
-				if (i == pageNum) {
-					strtext = "<span class='on'>" + i + "</span>";
-					PagingHTML += strtext;
-				} else {
-					strtext = "<span onclick='goToPageByNum(" + i + ")'>"
-							+ i + "</span>";
-					PagingHTML += strtext;
+			if(MaxNum != ""){
+				for (i = startNum; i <= MaxNum; i++) {
+					if (i == pageNum) {
+						strtext = "<span class='on'>" + i + "</span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "<span onclick='goToPageByNum(" + i + ")'>"
+								+ i + "</span>";
+						PagingHTML += strtext;
+					}
 				}
+			} else {
+				PagingHTML += '<span class="on">1</span>';
 			}
 
 			if (totalPage > BlockSize) {
@@ -596,14 +601,15 @@
 	            	getDocListjson(1);
 	            } else {
 	            	if(retVal[0] != "" && retVal[1] !="") {
-	            		totalPage = 1;
-	            		CurPage= 1;
- 	            		makePageSelPage();
-						$("#listInfo").html(" &nbsp;[<spring:message code='main.t252'/><span style='color:#017BEC;'> "
-							+ '0' + " </span><spring:message code='ezSystem.kyj2'/>]")
+ 	            		document.getElementsByName("SDeptName")[0].id = "";
+ 		                document.getElementsByName("SDeptName")[0].value = "";
 	            		alert("<spring:message code='ezApprovalG.t1788'/>");
 	            	}
 	            	$('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
+	            	CurPage = "";
+	        		totalPage = "";
+	        		totalCount = "";
+	            	makePageSelPage();
 	            }
 				$("#checkboxAll").prop("checked", false);
 

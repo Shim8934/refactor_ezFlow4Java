@@ -349,7 +349,7 @@
 			</LISTVIEWDATA>
 	    </xml>
 	    
-	    <h1><spring:message code='ezSchedule.t1004' /></h1>
+	    <h1><spring:message code='ezApprovalG.t424' /></h1>
 	    <div id="close"> 
             <ul>
                 <li><span onclick="window.close()"></span></li>
