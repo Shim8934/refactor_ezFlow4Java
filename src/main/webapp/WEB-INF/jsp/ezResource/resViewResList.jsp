@@ -518,7 +518,7 @@
     			<li><span onClick="btnModify_Click();"><spring:message code='ezResource.t364' /></span></li>
     			<li><span class="icon16 icon16_delete" onClick="btnDelete_Click();"></span></li>
     			<li><span onClick="btnCcalendar_Click();"><spring:message code='ezResource.t400' /></span></li>
-    			<li><span onClick="moveResourceToOtherResourceGroup();">자원이동</span></li>
+    			<li><span onClick="moveResourceToOtherResourceGroup();"><spring:message code='ezResource.gha06' /></span></li>
     			<li>
             		<span onclick="resourceOrderUp()"><img src="/images/ImgIcon/prev.gif" style="margin-top: -4px;" alt="up"></span>
 		        </li>

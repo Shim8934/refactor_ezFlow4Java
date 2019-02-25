@@ -80,7 +80,7 @@
 	    	 /* 2019-01-11 김민성 - 접근 권한 없는 경우 메시지 출력 수정 */
 		    if(pAdminFg == "") {
 		    	var msg = "<spring:message code='ezResource.t58' />";
-		        window.location.href = "/ezResource/nonResList.do?msg=" + msg;
+		        window.location.href = "/ezResource/nonResList.do?msg=" + encodeURIComponent(msg);
 		    }
 	    	 
 	    	document.onselectstart = function () { return false; };
@@ -391,7 +391,7 @@
 						
 						var resbrdExc = "";
 						if (result.resBrd.brdExplain != null) {
-							resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
+							resbrdExc = MakeXMLString(result.resBrd.brdExplain);
 						}
 						
 						$("#brdExplain").html(resbrdExc);
@@ -556,7 +556,7 @@
 					</tr>
 					<tr>
 						<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
-						<td><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></td>
+						<td><div style="overflow-y: auto; height: 200px; word-break:break-all; white-space:pre-wrap;" id="brdExplain"></div></td>
 					</tr>
 	         	</table>
 	         </div>	

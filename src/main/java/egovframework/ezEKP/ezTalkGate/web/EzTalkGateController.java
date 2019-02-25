@@ -25,6 +25,8 @@ import egovframework.ezEKP.ezBoard.service.EzBoardService;
 import egovframework.ezEKP.ezBoard.vo.BoardListVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezTalkGate.util.EzTalkGateUtil;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.user.login.vo.LoginVO;
@@ -55,6 +57,9 @@ public class EzTalkGateController {
 	
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -226,7 +231,11 @@ public class EzTalkGateController {
 		if (isUserExists) {
 			String encryptedPw = EgovFileScrty.encryptPassword(orgPw, orgId);
 			
-			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response,"","");
+			OrganUserVO userVO = ezOrganAdminService.getUserInfo(orgId, "1", tenantId);
+			String deptId = userVO.getDepartment();
+			String compId = userVO.getPhysicalDeliveryOfficeName();
+			
+			loginController.createLoginCookie(orgId, orgPw, encryptedPw, tenantId, request, response, deptId, compId);
 			
 			logger.debug("ezTalkGateMain ended.");
 			
@@ -303,7 +312,11 @@ public class EzTalkGateController {
 				String ezTalkGateNoticeBoardId = ezBoardService.getEzTalkGateNoticeBoardId(vo.getCompanyID(), tenantId);
 				logger.debug("ezTalkGateNoticeBoardId=" + ezTalkGateNoticeBoardId);
 				
-				loginController.createLoginCookie(orgId, orgPw, encryptPw, tenantId, request, response, "", "");
+				OrganUserVO userVO = ezOrganAdminService.getUserInfo(orgId, "1", tenantId);
+				String deptId = userVO.getDepartment();
+				String compId = userVO.getPhysicalDeliveryOfficeName();
+				
+				loginController.createLoginCookie(orgId, orgPw, encryptPw, tenantId, request, response, deptId, compId);
 				
 				redirectUrl = "redirect:/ezBoard/boardItemList.do?boardID=" 
 								+ URLEncoder.encode(ezTalkGateNoticeBoardId) + "&boardType=" + boardType;
