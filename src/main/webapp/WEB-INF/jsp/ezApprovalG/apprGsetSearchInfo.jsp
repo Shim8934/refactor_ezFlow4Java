@@ -193,11 +193,19 @@
 		        myapprto = $("#Edatepickerapp").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		
 		        //2018-10-11 김보미 - 시작일자, 종료일자중 하나만 지정했을 경우 나머지 일자 입력하게끔 알림창 뜨게
-		        if (draftfrom != "" && draftto == "") {
+		        if (draftfrom != "" && draftto == "" && openPageInfo != "usercontlist") {
 		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm02'/>");
 		        	return;
-		        } else if (draftfrom == "" && draftto != "" ) {
+		        } else if (draftfrom == "" && draftto != "" && openPageInfo != "usercontlist") {
 		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm01'/>");
+		        	return;
+		        }
+		        
+		        if (draftfrom != "" && draftto == "" && openPageInfo == "usercontlist") {
+		        	OpenAlertUI("<spring:message code='ezApprovalG.psb02'/>");
+		        	return;
+		        } else if (draftfrom == "" && draftto != "" && openPageInfo == "usercontlist") {
+		        	OpenAlertUI("<spring:message code='ezApprovalG.psb01'/>");
 		        	return;
 		        }
 		        
@@ -217,23 +225,30 @@
 		        	return;
 		        }
 		       
-			        if (draftfrom != "" && draftto != "") {
+			        if (draftfrom != "" && draftto != "" && openPageInfo != "usercontlist") {
 			            if (draftfrom > draftto) {
-			                OpenAlertUI("<spring:message code='ezApprovalG.t1327'/>");
+			                OpenAlertUI("<spring:message code='ezApprovalG.psb03'/>");
+			                return;
+			            }
+			        }
+			        
+			        if (draftfrom != "" && draftto != "" && openPageInfo == "usercontlist") {
+			            if (draftfrom > draftto) {
+			                OpenAlertUI("<spring:message code='ezApprovalG.psb06'/>");
 			                return;
 			            }
 			        }
 			
 			        if (apprfrom != "" && apprto != "") {
 			            if (apprfrom > apprto) {
-			                OpenAlertUI("<spring:message code='ezApprovalG.t1328'/>" + "<br>" + "<spring:message code='ezApprovalG.t1327'/>");
+			                OpenAlertUI("<spring:message code='ezApprovalG.psb04'/>");
 			                return;
 			            }
 			        }
 			
 			        if (myapprfrom != "" && myapprto != "") {
 			            if (myapprfrom > myapprto) {
-			                OpenAlertUI("<spring:message code='ezApprovalG.t1552'/>" + "<br>" + "<spring:message code='ezApprovalG.t1327'/>");
+			                OpenAlertUI("<spring:message code='ezApprovalG.psb05'/>");
 			                return;
 			            }
 			        }

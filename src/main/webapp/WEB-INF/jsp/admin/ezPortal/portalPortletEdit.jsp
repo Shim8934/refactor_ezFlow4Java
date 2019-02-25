@@ -325,6 +325,11 @@
 						}
 					}
 					
+					if (image_type === "1") { //이미지 타입이 1일경우; 원본크기를 따라가므로 파일 높이 너비가 필요.
+						pImageWidth = document.getElementById("txtImage").width;
+						pImageHeight = document.getElementById("txtImage").height;
+					}
+					
 					// 새창여부
 					var pOpenMode = "0";
 					if (document.getElementsByName("OpenMode").checked == true)
@@ -401,10 +406,11 @@
 				xmlhttp.open("POST", "/admin/ezPortal/savePortletProperty.do", false);
 				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send(strXML);
-				if (xmlhttp.responseText != "OK")
-				{
+				if (xmlhttp.responseText != "OK") {
 					alert("<spring:message code='ezPortal.t149'/>");
 					return;
+				} else {
+					window.opener.location.reload(true);
 				}
 				xmlhttp = null;
 	

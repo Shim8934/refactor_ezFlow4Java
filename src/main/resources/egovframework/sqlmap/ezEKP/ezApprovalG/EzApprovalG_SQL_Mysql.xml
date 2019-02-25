@@ -2460,7 +2460,7 @@
 			* 
 		FROM (
 			SELECT 
-				'파일' AS ATTACHTYPE, 
+				#v_LANGFILE# AS ATTACHTYPE, 
 				ATTACHFILESN AS ATTACHSN, 
             	DISPLAYNAME AS ATTACHNAME, 
             	ATTACHFILEHREF AS ATTACHHREF, 
@@ -2481,7 +2481,7 @@
             UNION ALL 
             
             SELECT 
-            	'문서' AS ATTACHTYPE, 
+            	#v_LANGDOCUMENT# AS ATTACHTYPE, 
             	ATTACHSN, 
             	ATTACHDOCNAME AS ATTACHNAME, 
             	ATTACHDOCURL AS ATTACHHREF, 

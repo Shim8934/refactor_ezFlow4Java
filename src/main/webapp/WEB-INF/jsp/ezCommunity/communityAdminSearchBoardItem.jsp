@@ -191,12 +191,12 @@
 	
 			function search() {
 			    if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-			        alert("<spring:message code = 'ezCommunity.t421' />");
+			        alert("<spring:message code = 'ezSystem.x0035' />");
 					return;
 			    }
 			    
 	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-					alert("<spring:message code = 'ezCommunity.t421' />");
+					alert("<spring:message code = 'ezSystem.x0036' />");
 			        return;
 			    }
 	            
@@ -829,7 +829,7 @@
 			<tr>
 			    <th><spring:message code = 'ezCommunity.t418' /></th>
 			    <td><input type="text" id="txtBoardName" readonly ="readonly" style="width:200px">
-			      <a class="imgbtn"><span onClick="SelectBoard()"><spring:message code = 'ezCommunity.t351' /></span></a></td>
+			      <a class="imgbtn"><span onClick="SelectBoard()"><spring:message code = 'ezCommunity.t352' /></span></a></td>
 		  	</tr>
 		  	<tr>
 			    <th><spring:message code = 'ezCommunity.t138' /></th>

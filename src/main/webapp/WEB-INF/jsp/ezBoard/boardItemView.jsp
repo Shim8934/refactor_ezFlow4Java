@@ -772,7 +772,8 @@
 		        if (RtnVal[0] != "0" && RtnVal[1] != "0") {
 		            url = url.replace("PrintOption.do", "Print.do");
 		            url = url + "&oneLine=" + RtnVal[0] + "&attach=" + RtnVal[1];
-		            window.open(url, "", "top=0, left=0, height=700px, width=840px, location=0, menubar=0, toolbar=1, resizable=1, scrollbars=1");
+		            var feature = GetOpenPosition(840, 700);
+		            window.open(url, "", "height=700px, width=840px, location=0, menubar=0, toolbar=1, resizable=1, scrollbars=1" + feature);
 		        }
 		    }
 		    

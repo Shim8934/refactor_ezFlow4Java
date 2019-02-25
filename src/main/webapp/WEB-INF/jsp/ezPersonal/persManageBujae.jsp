@@ -303,17 +303,20 @@
 		    		success: function(text){
 			            if (gIsAppoint == "1") {
 			                alert("<spring:message code='ezPersonal.t00002'/>"); // 대리 결재자 지정
+			                window.location.reload(false);
 			            }
 			            else if (gIsAppoint == "2") {
 			                alert("<spring:message code='ezPersonal.t40'/>"); // 부재사유 설정
+			                window.location.reload(false);
 			            }
 			            else if (gIsAppoint == "3") {
 			                alert("<spring:message code='ezPersonal.t41'/>"); // 설정 해제 
+			                window.location.reload(false);
 			            }
 			            else if (gIsAppoint == "4") {
-			            	alert("<spring:message code='ezPersonal.t191'/>");// 아무것도 지정 않았을 때
+			            	alert("<spring:message code='ezPersonal.t65'/>");// 아무것도 지정 않았을 때
 			            }
-			            window.location.reload(false);
+			            
 		    		},
 		    		error: function(){
 			            if (gIsAppoint == "1") {
