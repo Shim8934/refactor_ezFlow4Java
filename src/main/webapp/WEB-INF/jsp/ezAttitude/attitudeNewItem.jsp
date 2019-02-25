@@ -293,7 +293,7 @@
 				
 				//휴무일이 있는 경우 근태를 등록하지 못하게 변경
 				if (attRegCheck() && holidayAttReg == "0") {
-					if (selectType != "A07" && selectType != "A09" && selectType != "A10" ) { //휴근, 출장, 파견은 휴무근태등록 허용안함 상태에도 휴무일포함해서 등록되도록
+					if (selectType != "A07" && selectType != "A09" && selectType != "A10" && selectType != "A04" ) { //휴근, 출장, 파견, 외근은 휴무근태등록 허용안함 상태에도 휴무일포함해서 등록되도록
 						alert("<spring:message code='ezAttitude.t154'/>");
 						return;
 	 				} 
