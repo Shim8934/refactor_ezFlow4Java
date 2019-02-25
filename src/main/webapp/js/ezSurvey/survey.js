@@ -242,7 +242,7 @@ var SurveyCreate     = function() {
 		var surveyInfoWrap = document.querySelector("div[class='surveyinfo-wrap']");
 		var surveyAttWrap  = document.querySelector("div[class='survey-attach']");
 		var surveyTitle    = document.getElementById("info-input-ttl").value;
-		var surveyPurpose  = document.getElementById("info-input-pp").contentWindow.GetEditorContent();
+		var surveyPurpose  = replaceAll(document.getElementById("info-input-pp").contentWindow.GetEditorContent(), "(&lt;(\/?)(script|applet|object)&gt;)", "");
 		var startDate      = document.getElementById("startDate").value;
 		var endDate        = document.getElementById("endDate").value;
 		var publicFlag     = parseInt(document.querySelector('input[name="publicSpan"]:checked').value);
@@ -493,7 +493,7 @@ var SurveyCreate     = function() {
 		
 		var surveyttlList = document.querySelectorAll("div[class='survey-title']");
 		for (var i = 0, len = surveyttlList.length; i < len; i++) {
-			surveyttlList[i].textContent = surveyTtl.value;
+			surveyttlList[i].textContent = replaceAll(surveyTtl.value, "(<(\/?)(script|applet|object)>)", "");
 		}
 		
 		if (lastStep == 1) {saveSurveyInformation();}
@@ -2390,7 +2390,7 @@ var SurveyCreate     = function() {
 		if (canvasList && canvasList.length > 0) {alert(SurveyMessages.strAttachErr); return;}
 		
 		var qstnArea     = qstnWrapper.find(".quesDiv");
-		var qstnContent  = qstnArea.find(".questnTitle").val();
+		var qstnContent  = replaceAll(qstnArea.find(".questnTitle").val(), "(<(\/?)(script|applet|object)>)", "");
 		var questionList = SurveyCreate.getQs();
 		
 		//Save common question information
@@ -2404,7 +2404,7 @@ var SurveyCreate     = function() {
 		question[config["required"]] = rqrd.is(":checked") == true ? 1 : 0;
 		
 		//Check question attach files
-		var qstnFObj = qstnArea.find(".qstnFileInfo")[0].childNodes[0].childNodes[0].childNodes[0];
+		var qstnFObj = qstnArea.find(".qstnFileInfo")[0].querySelector("li");
 		if (qstnFObj) {question["attach"] = getAttachFileInfo(qstnFObj);}
 		
 		//Question order
@@ -2541,19 +2541,20 @@ var SurveyCreate     = function() {
 		for (var i = 0, len = options.length; i < len; i++) {
 			var rankingSelect = $("<div class='ranking-select'></div>");
 			var rankOrder = $("<span class='rank-order' id='rank-order" + (i + 1) + "'>" + (i + 1) + "</span>");
-			var strSlct = "<select name='ranking" + id + i + "' class='srvySelect'>";
-			strSlct    += "<option value='' selected>" + SurveyMessages.strSelect + "</option>";
+			var select = $("<select name='ranking" + id + i + "' class='srvySelect'></select>");
+			var defaultOpt = $("<option value='' selected>" + SurveyMessages.strSelect + "</option>");
+			select.append(defaultOpt);
 			
 			for (var j = 0, len = options.length; j < len; j++) {
 				if (options[j]['optionId'] != undefined) {
 					optionId = options[j]['optionId'];
 				}
-				strSlct += "<option value='" + options[j]['level'] + "' optionId='" + optionId + "'>" + options[j]["content"] + "</option>";
+				var opt = $("<option value='" + options[j]['level'] + "' optionId='" + optionId + "'>" + options[j]["content"] + "</option>");
+				opt[0].textContent = options[j]["content"];
+				select.append(opt);
 			}
-			strSlct += "</select>";
-			
 			rankingSelect.append(rankOrder);
-			rankingSelect.append(strSlct);
+			rankingSelect.append(select);
 			rankingWrap.append(rankingSelect);
 		}
 		
@@ -2688,7 +2689,7 @@ var SurveyCreate     = function() {
 		
 		for (var i = 0; i < optCnt; i++) {
 			var optObj   = {};
-			var optValue = optList[i].querySelector("input[class='textInput']").value;
+			var optValue = replaceAll(optList[i].querySelector("input[class='textInput']").value, "(<(\/?)(script|applet|object)>)", "");
 			
 			if (optValue) {
 				optObj["content"] = optValue;
@@ -2750,7 +2751,7 @@ var SurveyCreate     = function() {
 		// 보기의 개수 확인
 		if (optCnt > 0) {
 			for (var i = 0; i < optCnt; i++) {
-				var optVal = opt[i].childNodes[0].childNodes[0].childNodes[0].value; // 보기가 비어있는지 확인
+				var optVal = replaceAll(opt[i].childNodes[0].childNodes[0].childNodes[0].value, "(<(\/?)(script|applet|object)>)", ""); // 보기가 비어있는지 확인
 				var fObj   = opt[i].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
 				
 				if (optVal || fObj) {
@@ -2769,7 +2770,7 @@ var SurveyCreate     = function() {
 		// 기타의 유무 확인
 		if (oth.length != 0) {
 			var other          = {};
-			var othVal         = oth[0].childNodes[0].childNodes[0].childNodes[0].value;
+			var othVal         = replaceAll(oth[0].childNodes[0].childNodes[0].childNodes[0].value, "(<(\/?)(script|applet|object)>)", "");
 			var othObj         = oth[0].childNodes[0].childNodes[1].childNodes[0].childNodes[0].childNodes[0];
 			other["content"]   = othVal ? othVal : SurveyMessages.strOther;
 			other["otherFlag"] = 1;
@@ -2798,7 +2799,7 @@ var SurveyCreate     = function() {
 			
 			for (var i = 0, len = rows.length; i < len; i++) {
 				var rowObj = {};
-				var rowVal = rows[i].childNodes[0].value;
+				var rowVal = replaceAll(rows[i].childNodes[0].value, "(<(\/?)(script|applet|object)>)", "");
 				
 				if (rowVal) {
 					rowObj["colLevel"] = -1;
@@ -2817,7 +2818,7 @@ var SurveyCreate     = function() {
 			
 			for (var i = 0, len = cols.length; i < len; i++) {
 				var colObj = {};
-				var colVal = cols[i].childNodes[0].value;
+				var colVal = replaceAll(cols[i].childNodes[0].value, "(<(\/?)(script|applet|object)>)", "");
 				
 				if (colVal) {
 					colObj["colLevel"] = col.length;
@@ -3666,7 +3667,7 @@ var SurveyCreate     = function() {
 	
 	function confirmSurveyInfo(qstInf) {
 		var surveyInfWrap = document.getElementById("surveyInfConfirm");
-		document.getElementById("cf-purpose").innerHTML      = qstInf["purpose"];
+		document.getElementById("cf-purpose").innerHTML      = replaceAll(qstInf["purpose"], "(&lt;(\/?)(script|applet|object)&gt;)", "");
 		document.getElementById("cf-startDate").textContent  = qstInf["startDate"];
 		document.getElementById("cf-endDate").textContent    = qstInf["endDate"];
 		document.getElementById("cf-anoynymous").textContent = qstInf["anonymous"] == 0 ? SurveyMessages.strAnoynym1  : SurveyMessages.strAnoynym2;
