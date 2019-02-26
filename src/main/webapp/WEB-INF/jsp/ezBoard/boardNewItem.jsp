@@ -600,8 +600,11 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", MakeXMLString(SSCompanyName2));
 		        }
 		        else {
+		        	/* 2019-02-26 홍승비 - 익명게시판 표시이름 체크 시 앞뒤공백 제거 */
 		            var nickname = document.getElementById("txtNickName").value;
-		            if (nickname == "") nickname = "<spring:message code='ezBoard.t286' />";
+		            if (trim(nickname) == "") {
+		            	nickname = "<spring:message code='ezBoard.t286' />";
+		            }
 
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(nickname));

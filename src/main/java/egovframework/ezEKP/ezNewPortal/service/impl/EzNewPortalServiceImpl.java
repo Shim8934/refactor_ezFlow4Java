@@ -1008,12 +1008,19 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		if (map.get("boardId") != null) {
 			map.put("boardId", commonUtil.stripScriptTags(map.get("boardId").toString()));
 		}
-
-		String connectionUrl = commonUtil.stripScriptTags(map.get("connectionUrl").toString());
-		connectionUrl = commonUtil.detectPathTraversal(connectionUrl);
-		connectionUrl = specialCharacterToEmptyString(connectionUrl);
 		
-		map.put("connectionUrl", connectionUrl);
+		if (map.get("connectionUrl") != null) {
+			String connectionUrl = map.get("connectionUrl").toString();
+			
+			if (connectionUrl != null) {
+				connectionUrl = commonUtil.stripScriptTags(connectionUrl);
+				connectionUrl = commonUtil.detectPathTraversal(connectionUrl);
+				connectionUrl = specialCharacterToEmptyString(connectionUrl);
+			}
+			
+			map.put("connectionUrl", connectionUrl);
+		}
+		
 		map.put("menuId", Integer.parseInt(map.get("menuId").toString()));
 		map.put("companyLang", 1);
 		map.put("companyId", companyId);
