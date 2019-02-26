@@ -2184,6 +2184,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	public Map<String, Integer> getRepTaskInfo(String date, String taskID, String offset, String primary, int tenantID, TaskInfoVO taskInfoVO, String companyID) throws Exception {		
 		SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");	
 		int flag = 0;
+		int isDeletedRepeatTaskFlag = 0;
 		
 		Date startDate = nsdf.parse(date); 
         Calendar calendar = Calendar.getInstance();  
@@ -2198,7 +2199,14 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
         String firstDayOfMonth = nsdf.format(calendar.getTime()) + " 00:00:00";       	              
 		
         Map<String, Integer> result = getDatesOfRepTask(taskID, offset, primary, lastDayOfMonth, firstDayOfMonth, date, tenantID, companyID);	
-		
+        Map<String, Object> map = new HashMap<String, Object>();
+		map.put("offset", commonUtil.getMinuteUTC(offset));
+		map.put("primary", primary);
+		map.put("tenantID", tenantID);
+		map.put("taskID", taskID);
+		map.put("companyID", companyID);
+		List<String> deletedRepeatTaskList = ezTaskDAO.getTaskRepeDelList(map);
+        
 		while (flag == 0) {
 			if (result.size() > 0) {
 				for (String d: result.keySet()) {
@@ -2207,11 +2215,28 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 					
 					Date tskD = nsdf.parse(d); 
 			        Calendar calendar1 = Calendar.getInstance();  
-			        calendar1.setTime(tskD); 			        
+			        calendar1.setTime(tskD);
+			       
 			        if (calendar1.compareTo(calendar2) >= 0){
-			        	flag = 1;
-			        	break;
-			        }			        
+		        		flag = 1;
+		        		break;
+			        }
+			        
+			        if (deletedRepeatTaskList.size() > 0) {
+		        		Calendar deletedDateCalendar = Calendar.getInstance();
+		        		for (String deletedRepeatTask : deletedRepeatTaskList) {
+							Date deletedRepeatTaskDate = nsdf.parse(deletedRepeatTask);
+							deletedDateCalendar.setTime(deletedRepeatTaskDate);
+							if (deletedDateCalendar.compareTo(calendar2) >= 0) {
+								isDeletedRepeatTaskFlag = 1;
+								break;
+							}
+						}
+		        		if (isDeletedRepeatTaskFlag == 1) {
+		        			flag = 1;
+		        			break;
+		        		}
+		        	}
 				}
 			}
 			
