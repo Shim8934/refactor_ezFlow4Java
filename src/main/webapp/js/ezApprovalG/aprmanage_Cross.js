@@ -1190,6 +1190,7 @@ function OpenOpinionUI(pSelectedRow, pOpinionFlag) {
         parameter[2] = KuyjeType;
         parameter[3] = "";
         temppSelectedRow = pSelectedRow;
+        parameter[98] = GetAttribute(pSelectedRow, "ORGCOMPANYID");
         //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
         parameter[99] = ext;
         

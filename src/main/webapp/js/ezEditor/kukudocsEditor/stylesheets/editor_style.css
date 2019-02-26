@@ -56,6 +56,19 @@ hr:after {
     overflow: hidden;
 }
 
+.ie_arrow_key_down hr:after {
+    content:'';
+}
+
+.ie_arrow_key_down style {
+    -ms-user-select: contain;
+    display: block;
+    visibility: hidden;
+    height: 0px;
+    width: 0px;
+    overflow: hidden;
+}
+
 a[filedata="kk_type_file"]:after {
     content: "💾";
     color: #0000ff;
