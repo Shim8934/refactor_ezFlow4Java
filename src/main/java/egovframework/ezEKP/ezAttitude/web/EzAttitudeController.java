@@ -765,7 +765,7 @@ public class EzAttitudeController {
 	/**
 	 * 회사 휴일정보
 	 */
-	@RequestMapping(value = "/ezAttitude/getHolidayList.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/ezAttitude/getHolidayList.do")
 	@ResponseBody
 	public JSONObject getHolidayList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		LOGGER.debug("/ezAttitude/getHolidayList started");

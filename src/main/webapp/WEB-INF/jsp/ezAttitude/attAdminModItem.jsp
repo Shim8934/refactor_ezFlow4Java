@@ -35,7 +35,7 @@
 			var date = "${date}";
 			var time = "${time}";//현재시간
 			var nowTime = time.split(":");
-			var mode = "${mode}";
+			var mode = "<c:out value='${mode}'/>";
 			var pStartDate = "<c:out value='${attitudeInfo.startDate}'/>";
 			var pEndDate = "<c:out value='${attitudeInfo.endDate}'/>";
 			var typeId = "<c:out value='${attitudeInfo.typeId}'/>";

@@ -31,8 +31,8 @@
 			var uselang = "${userInfo.lang}";
 			var userOffset = "${userOffset}";
 			var companyId = "${companyId}";
-			var date = "${date}";
-			var mode = "${mode}";
+			var date = "<c:out value='${date}'/>";
+			var mode = "<c:out value='${mode}'/>";
 			var pStartDate = "<c:out value='${attitudeInfo.startDate}'/>";
 			var pEndDate = "<c:out value='${attitudeInfo.endDate}'/>";
 			var typeId = "<c:out value='${attitudeInfo.typeId}'/>";

@@ -33,8 +33,8 @@
 			var searchUserName = "";
 			var searchDeptName = "";
 			var searchTitle = "";
-			var searchDeptId = "${searchDeptId}";
-			var searchStartDate = "${searchStartDate}";
+			var searchDeptId = "<c:out value='${searchDeptId}'/>";
+			var searchStartDate = "<c:out value='${searchStartDate}'/>";
 			var searchEndDate = "${searchEndDate}";
 			var pageNum = 1;
 	    	var totalCount = "";
