@@ -26,7 +26,7 @@
 		    }
 		    
 		    function Task_Confirm(id) {
-		    	if (confirm("<spring:message code='ezSchedule.t209' />")) {
+		    	if (confirm("<spring:message code='ezTask.t106' />")) {
 			        if (radio1.checked) {
 			            optionStr = "0";
 			        } else {
