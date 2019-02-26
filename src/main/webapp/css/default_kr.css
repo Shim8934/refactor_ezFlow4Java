@@ -2502,6 +2502,13 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .tree_ladder_all{background-position: -208px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 전체사다리*/
 .tree_ladder_in{background-position: -234px -208px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 참여사다리*/
 
+.tree_srvy_all {background-position: -0px -260px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;} /* tree 전체 설문 */
+.tree_srvy_ing {background-position: -26px -260px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;} /* tree 진행 설문 */
+.tree_srvy_ok {background-position: -52px -260px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;} /* tree 완료 설문 */
+.tree_srvy_my {background-position: -78px -260px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;} /* tree 내가 작성한 설문 */
+.tree_srvy_draft {background-position: -104px -260px; width: 16px; height: 16px; display: inline-block; margin: 8px 0px 0px 0px; cursor: pointer;} /* tree 임시 설문 */
+
+
 /* left LNB tree text */
 .lnb h2 .h2Title{font-family:Malgun Gothic, "맑은 고딕"; font-size:13px; font-weight:bold; color:#393939; padding:0px 0px 0px 0px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; box-sizing:border-box;}
 .h2_text{ font-size:13px; height:30px; line-height:30px; color:#393939; display:inline-block; padding:0px 0px 0px 5px;font-family:Malgun Gothic, "맑은 고딕"; cursor:pointer;white-space:nowrap; text-overflow:ellipsis; overflow: hidden; box-sizing:border-box;}
