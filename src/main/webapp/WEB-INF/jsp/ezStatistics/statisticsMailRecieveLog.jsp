@@ -424,6 +424,8 @@
     	var height = document.documentElement.clientHeight - 177 - document.getElementById("mainmenu").clientHeight;
     	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
     		height = height - 30;
+    	} else {
+    		height = height - 30;
     	}
     	document.getElementById("contentlist").style.height = height + "px";
     	document.getElementById("contentlist").style.overflow = "auto";

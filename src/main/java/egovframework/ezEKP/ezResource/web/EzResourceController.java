@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -38,6 +39,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezResource.service.EzResourceAdminService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
@@ -103,6 +105,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	
 	@Resource(name="EzScheduleService")
 	private EzScheduleService ezScheduleService;
+	
+	@Resource(name="EzResourceAdminService")
+	private EzResourceAdminService ezResourceAdminService;
 	
 	/**
 	 * 자원관리 메인 화면 호출 함수
@@ -2355,5 +2360,124 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		logger.debug("============ moveResourceToOtherResourceGroup ended ============");
 		return isManger;
+	}
+	
+	/**
+	 * 자원관리 관리자 정보 실행 함수
+	 */
+	@RequestMapping(value = "/ezResource/callManagerDepthNodeForMoveResource.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String callManagerDepthNode(@RequestBody String xmlStr,HttpServletRequest req,Model model, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("callManagerDepthNode Start");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String selectFlag = "";
+		StringBuilder strXML = new StringBuilder();
+		Document xmlRet = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		
+		if (req.getParameter("flag") != null) {
+			selectFlag = req.getParameter("flag");
+		}
+		logger.debug("xmlStr="+xmlStr);
+		String ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
+		xmlRet = commonUtil.convertStringToDocument(ret);
+		
+		if (xmlRet.getElementsByTagName("EXPANDED").getLength() <= 0) {
+			strXML.append("<PARADATA>");
+			strXML.append("<DATA>0</DATA>");
+			strXML.append("<DATA>"+userInfo.getDeptID()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getDeptName1()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getId()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getDisplayName1()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getTitle1()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getPhone()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getCompanyName1()+"</DATA>");
+			strXML.append("<DATA></DATA>");
+			strXML.append("<DATA></DATA>");
+			strXML.append("<DATA>"+userInfo.getCompanyID()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getCompanyName2()+"</DATA>");
+			strXML.append("<ISCOMPANY>Y</ISCOMPANY>");
+			strXML.append("</PARADATA>");
+			
+			ezResourceAdminService.addClsData(strXML.toString(), userInfo.getTenantId());
+			
+			ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
+			
+			xmlRet = commonUtil.convertStringToDocument(ret);
+		}
+		
+		XPath xpath = XPathFactory.newInstance().newXPath();
+		NodeList nodes = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/EXPANDED", xmlRet, XPathConstants.NODESET);
+		NodeList nodes1 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE", xmlRet, XPathConstants.NODESET);
+		NodeList nodes2 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/SETNODEICONBYNAME", xmlRet, XPathConstants.NODESET);
+		NodeList nodes3 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA12", xmlRet, XPathConstants.NODESET);
+		NodeList nodes4 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/ISLEAF", xmlRet, XPathConstants.NODESET);
+		NodeList nodes5 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/SELECT", xmlRet, XPathConstants.NODESET);
+		NodeList nodes16 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA8", xmlRet, XPathConstants.NODESET);
+		NodeList nodes17 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA9", xmlRet, XPathConstants.NODESET);
+		NodeList nodes18 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA10", xmlRet, XPathConstants.NODESET);
+			
+		NodeList nodes7 = (NodeList)xpath.evaluate("NODES/NODE/EXPANDED", xmlRet, XPathConstants.NODESET);
+		NodeList nodes8 = (NodeList)xpath.evaluate("NODES/NODE", xmlRet, XPathConstants.NODESET);
+		NodeList nodes9 = (NodeList)xpath.evaluate("NODES/NODE/DATA12", xmlRet, XPathConstants.NODESET);
+		NodeList nodes10 = (NodeList)xpath.evaluate("NODES/NODE/ISLEAF", xmlRet, XPathConstants.NODESET);
+		NodeList nodes11 = (NodeList)xpath.evaluate("NODES/NODE/SETNODEICONBYNAME", xmlRet, XPathConstants.NODESET);
+		NodeList nodes13 = (NodeList)xpath.evaluate("NODES/NODE/DATA8", xmlRet, XPathConstants.NODESET);
+		NodeList nodes14 = (NodeList)xpath.evaluate("NODES/NODE/DATA9", xmlRet, XPathConstants.NODESET);
+		NodeList nodes15 = (NodeList)xpath.evaluate("NODES/NODE/DATA10", xmlRet, XPathConstants.NODESET);
+			
+		if (nodes.getLength() != 0) {
+			for (int i=0; i<nodes.getLength(); i++) {
+				nodes1.item(i).removeChild((Node) nodes2.item(i));
+				
+				if (nodes3.item(i).getTextContent().equals("0")) {
+					nodes4.item(i).setTextContent("TRUE");
+				}
+				
+				if(nodes5.item(i).getTextContent().equals("")) {
+					nodes5.item(i).setTextContent(" ");
+				}
+				
+				if(nodes16.item(i).getTextContent().equals("")) {
+					nodes16.item(i).setTextContent(" ");
+				}
+				if(nodes17.item(i).getTextContent().equals("")) {
+					nodes17.item(i).setTextContent(" ");
+				}
+				if(nodes18.item(i).getTextContent().equals("")) {
+					nodes18.item(i).setTextContent(" ");
+				}
+					
+				//좌측 리로드할때는 선택 안되도록
+				if (selectFlag.equals("SELECT_NO")) {
+					if (nodes5.getLength() != 0) {
+						nodes1.item(i).removeChild((Node) nodes5.item(i));
+					}
+				}
+			}
+		}
+		if (nodes7.getLength() != 0) {
+			for (int i=0; i<nodes7.getLength(); i++) {
+				nodes8.item(i).removeChild((Node) nodes11.item(i));
+				
+				if (nodes9.item(i).getTextContent().equals("0")) {
+					nodes10.item(i).setTextContent("TRUE");
+				}
+				if(nodes13.item(i).getTextContent().equals("")) {
+					nodes13.item(i).setTextContent(" ");
+				}
+				if(nodes14.item(i).getTextContent().equals("")) {
+					nodes14.item(i).setTextContent(" ");
+				}
+				if(nodes15.item(i).getTextContent() == null || nodes15.item(i).getTextContent().equals("")) {
+					nodes15.item(i).setTextContent(" ");
+				}
+				
+			}
+		}
+		
+		logger.debug("xmlRet="+commonUtil.convertDocumentToString(xmlRet));
+		logger.debug("callManagerDepthNode End");
+		return commonUtil.convertDocumentToString(xmlRet);
 	}
 }

@@ -385,6 +385,12 @@
 		            alert("<spring:message code='ezOrgan.t265' />");
 		            return;
 		        }
+		        
+		        if (!SortNum.value.match(/^\d*$/)) {
+		        	alert("<spring:message code='ezOrgan.t226' />: <spring:message code='ezEmail.t99000066'/>");
+					return;
+				}
+		        
 		        // 표준모듈 (2007.02.21) 수정 : 사용자 추가일 경우만, 체크한다.
 		        if (RetValue[2] == "") {
 		            if (MailAlias.value != "" && MailAlias.value.indexOf("@") != -1) {
