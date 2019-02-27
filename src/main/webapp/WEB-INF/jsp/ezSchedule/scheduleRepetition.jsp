@@ -145,7 +145,11 @@
 		    		}
 		    	
 		    		// 2019-02-20 김민성 - 일정반복 데이터 없을 때 해당 요일 체크되도록 수정
-		    		var m_objStartTime = new Date(RetValue["SDATE"]);
+		    		try {
+		                m_objStartTime = new Date(RetValue["SDATE"].split(' ')[0].split('-')[0], parseInt(RetValue["SDATE"].split(' ')[0].split('-')[1]) - 1, RetValue["SDATE"].split(' ')[0].split('-')[2], RetValue["SDATE"].split(' ')[1].split(':')[0], RetValue["SDATE"].split(' ')[1].split(':')[1], 0, 0);
+		            } catch (e) {
+		                m_objStartTime = new Date(RetValue["SDATE"]);
+		            }  
 		    		var iWeekdayNumber = m_objStartTime.getDay();
 		    		document.getElementById("day" + iWeekdayNumber).checked = true;
 		    	}
