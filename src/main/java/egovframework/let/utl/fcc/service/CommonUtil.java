@@ -50,6 +50,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -79,6 +80,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -459,6 +461,59 @@ public class CommonUtil {
 		if (compatibleValue != null) {
 			response.setHeader("X-UA-Compatible", compatibleValue);
 		}		
+	}
+	
+	public static String addVer(ServletContext application, String filePath) {		
+		File fileObj = new File(application.getRealPath(filePath));
+		
+		if (fileObj.exists()) {
+			Date lastDate = new Date(fileObj.lastModified());
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			String version = sdf.format(lastDate);
+			
+			filePath += "?v=" + version;
+		}
+		
+		return filePath;
+	}
+	
+	public static String addVer(ServletContext application, HttpServletRequest request, String filePath) {
+		String springMessage = "<spring:message";
+		int startOfSpringMessage = filePath.indexOf(springMessage);
+		
+		if (startOfSpringMessage > -1) {
+			String code = "code='";
+			int startOfCode = filePath.indexOf(code, startOfSpringMessage + springMessage.length());
+			
+			if (startOfCode > -1) {
+				int endOfCode = filePath.indexOf("'", startOfCode + code.length());
+				
+				if (endOfCode > -1) {
+					String codeValue = filePath.substring(startOfCode + code.length(), endOfCode);					
+					String msg = commonUtilInstance.egovMessageSource.getMessage(codeValue, new CookieLocaleResolver().resolveLocale(request));					
+					int endOfSpringMessage = filePath.indexOf(">", endOfCode + 1); 
+					
+					if (endOfSpringMessage > -1) {
+						filePath = filePath.substring(0, startOfSpringMessage) + msg
+									+ filePath.substring(endOfSpringMessage + 1);
+					}
+				}
+			}
+		}
+		
+		File fileObj = new File(application.getRealPath(filePath));
+		
+		if (fileObj.exists()) {
+			Date lastDate = new Date(fileObj.lastModified());
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			String version = sdf.format(lastDate);
+			
+			filePath += "?v=" + version;
+		}
+		
+		return filePath;
 	}
 	
 	public boolean isLoginCookieExists(HttpServletRequest request, HttpServletResponse response) {

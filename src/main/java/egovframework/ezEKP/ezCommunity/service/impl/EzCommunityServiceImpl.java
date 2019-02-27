@@ -3236,7 +3236,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 				sb.append("<Importance>" + boardList.getImportance() + "</Importance>");
 				sb.append("<StartDate>" + boardList.getStartDate().substring(0, 19) + "</StartDate>");
 				sb.append("<EndDate>" + boardList.getEndDate().substring(0, 19) + "</EndDate>");
-				sb.append("<Abstract>" + boardList.getAbsTract() + "</Abstract>");
+				sb.append("<Abstract>" + commonUtil.cleanValue(boardList.getAbsTract()) + "</Abstract>");
 				sb.append("</NODE>");
 			}
 		}

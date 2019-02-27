@@ -16,7 +16,7 @@
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_listForAdminNumberOfApproval.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Pagenation_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezStatistics_Cross.js')}"></script>		
 		<script type="text/javascript">
@@ -335,7 +335,7 @@
 	        <tr id="PageNum"></tr>
 	    </table>
 	
-		<div class="listview" style="width: 770px; overflow-y: auto; overflow-x: hidden">
+		<div class="listview" style="width: 770px; overflow-y: hidden; overflow-x: hidden">
 			<div id="lvSDoc" style="border: 0; width: 770px; height: 320px;"></div>
 		</div>
 	    

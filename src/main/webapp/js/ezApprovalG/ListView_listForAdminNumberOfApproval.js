@@ -1,4 +1,4 @@
-﻿﻿﻿/*###########################################################################################
+﻿﻿/*###########################################################################################
 
 
 
@@ -14,7 +14,7 @@ var PressShiftKey = false;
 //모질라 계열의 브라우저에서는 event.ctrlKey 등이 작동하지 않는다.
 //따라서 List의 SetMulSelectable 속성의 값이 true인 경우에만
 //document 객체에 keydown, keyup 이벤트를 등록하여 FLAG의 값을 지정한다.
-var m_strColorSelect = "#f1f8ff";
+var m_strColorSelect = "#edf4fd";
 var m_strColorDefault = "#FFFFFF";
 var m_strColorOver = "#f4f5f5";
 var m_UrgentColor = "#E9101A";
@@ -474,7 +474,9 @@ function ListView() {
                 var objTd = document.createElement("TH");
 
                 objTd.id = _thisID + "_TH_" + i;
-
+                objTd.style.width = "20%";
+//                objTd.style.width = "154px";
+                
                 if (_headeronclick != null && _headeronclick != "" ) {
                     objTd.style.cursor = "pointer";
                     if(_HeaderNode == "COLNAME")     
@@ -523,19 +525,18 @@ function ListView() {
                 }
                 
                 if (strColName == "RejectFlag") {
-                	objTd.style.textAlign = "center";
+                	objTd.style.textAlign = "left";
                 }
                 
                 if (strColName == "TransferFlag") {
-//                	objTd.style.textAlign = "center";
+                	objTd.style.textAlign = "center";
                 }
                
                 if (strColName == "DelayFlag") {
-//                	objTd.style.textAlign = "center";
+                	objTd.style.textAlign = "center";
                 }
                 
-//                if (strName == "비치" || strName == "특수목록" || strName == "연기신청" || strName == "수신") {
-            	if (strName == "비치" || strName == "특수목록" || strName == "수신") {
+                if (strName == "비치" || strName == "특수목록" || strName == "연기신청" || strName == "수신") {
                 	objTd.style.textAlign = "center";
                 }
 
@@ -615,16 +616,23 @@ function ListView() {
     function GetTableBodyObj() {
         var oTbody = document.createElement("TBODY");
         oTbody.style.backgroundColor = m_strColorDefault;
+        oTbody.style.overflowY = "auto";
+        oTbody.style.overflowX = "hidden";
+        oTbody.style.float = "left";
+        oTbody.style.width = "770px";
+        oTbody.style.height = "288px";
 
         var oRows = _dataSource.getElementsByTagName("ROW");
         _rowCount = oRows.length;
         
         var oHeaders = _dataSource.getElementsByTagName("HEADER");
         var colCount = oHeaders.length;
-        var strToday = GetTodayDate();
+//        var strToday = GetTodayDate();
         if (_rowCount == 0) {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
+            objTr.style.display = "table";
+            objTr.style.width = "770px";
             oTbody.appendChild(objTr);
             var oText = document.createTextNode(strLang944);
             var objTd = document.createElement("TD");
@@ -693,7 +701,8 @@ function ListView() {
 
                 objTr.setAttribute(strData, strValue);
             }
-
+            objTr.style.display = "table";
+            objTr.style.width = "770px";
             oTbody.appendChild(objTr);
 
             for (var j = 0; j < oCells.length; j++) {
@@ -735,6 +744,9 @@ function ListView() {
                         objTd.style.overflow = "hidden";
                         objTd.style.textOverflow = "ellipsis";
                         objTd.style.whiteSpace = "nowrap";
+//                        objTd.style.width = "20%";
+                        objTd.style.maxWidth = "147px";
+                        objTd.style.width = "20%";
 
                         if (CrossYN()) {
                             if (_SecurityFlag && oDatas[13].textContent.trim() != "" && oDatas[13].textContent >= strToday) {   //DATA10값
@@ -751,7 +763,9 @@ function ListView() {
                             objTd.title = strValue;
                             objTd.style.overflow = "hidden";
                             objTd.style.textOverflow = "ellipsis";
-                            objTd.style.whiteSpace = "nowrap";                           
+                            objTd.style.whiteSpace = "nowrap";
+//                            objTd.style.width = "20%";
+                            objTd.style.width = "154px";
 
                         if (_titleIdx == j) {
                             //20120823 기록물배부대장은 oDatas length가 7까지 들어오므로 추가
@@ -844,7 +858,7 @@ function ListView() {
                     	objTd.appendChild(oText);
                     }
                     else if (SelectSingleNodeValue(oHeaders[j], "NAME") == "비치" || SelectSingleNodeValue(oHeaders[j], "NAME") == "연기신청") {
-                    	objTd.style.textAlign = "left";
+                    	objTd.style.textAlign = "center";
                     	oText = document.createTextNode(strValue);
                     	objTd.appendChild(oText);
                     }
@@ -1586,15 +1600,6 @@ function setDeleteRow(nodeId) {
 	var colCount = document.getElementById(nodeId).getElementsByTagName("th").length;
 	var oTable = document.getElementById(nodeId);
 	var oTbody = oTable.lastChild;
-    // 2019.02.26 유은정 전자결재G인 경우에 colspan이 맞지 않는 경우 관련 수정
-	var thCount = 0;
-	var thList = document.getElementById(nodeId).getElementsByTagName("th");
-
-	for (var i = 0; i < colCount; i++) {
-		if (thList[i].style.display != "none") {
-			thCount++;
-		}
-	}
 	
 	var objTr = document.createElement("TR");
     objTr.setAttribute("id", nodeId + "_TR_" + "noItems");
@@ -1602,7 +1607,7 @@ function setDeleteRow(nodeId) {
     var oText = document.createTextNode(strLang944);
     var objTd = document.createElement("TD");
     objTd.align = "center";
-    objTd.setAttribute("colSpan", thCount);
+	objTd.setAttribute("colSpan", colCount);
     objTd.appendChild(oText);
     objTr.appendChild(objTd);
     

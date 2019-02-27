@@ -5291,7 +5291,6 @@
     </update>
           
     <update id="EzOrganAdminDAO.moveGroupUser_U" parameterClass="Map" >
-        <![CDATA[
             UPDATE
                 TBL_USERMASTER
             SET 
@@ -5303,12 +5302,29 @@
                 COMPANY2 = (SELECT COMPNM2 FROM (SELECT COMPNM2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
             	UPDATEDT = TO_DATE(#timeUTC#, 'yyyy-MM-dd HH24:MI:SS'),
             	EXTENSIONATTRIBUTE15 = 0,
-                EXTENSIONATTRIBUTE1 = #initPermission#
+                <isNotEmpty property="initPermission">
+                	EXTENSIONATTRIBUTE1 = #initPermission#
+                </isNotEmpty>
+                <isEmpty property="initPermission">
+                	EXTENSIONATTRIBUTE1 = (
+                	SELECT 
+                		EXTENSIONATTRIBUTE1
+       				FROM 
+	                	(SELECT 
+	                		REPLACE(REPLACE(REPLACE(EXTENSIONATTRIBUTE1, 'g=1', 'g=0'), 'a=1', 'a=0'), 'm=1', 'm=0') AS EXTENSIONATTRIBUTE1
+	                	FROM 
+	                		TBL_USERMASTER
+	                	WHERE
+			                CN = #v_CN#
+			            AND
+			                TENANT_ID = #v_TENANT_ID#
+		                ) b
+		            )
+                </isEmpty>
             WHERE
                 CN = #v_CN#
             AND
                 TENANT_ID = #v_TENANT_ID#  
-        ]]>
     </update>
  	
 	<!-- <procedure id="EzOrganAdminDAO.getRetireEntryInfo" parameterClass="Map" resultClass="OrganUserVO">
@@ -5652,8 +5668,10 @@
         DELETE 
             TBL_ADDJOBMASTER
         WHERE  
+		<isNotNull property="v_CN">
             cn = #v_CN#
         AND 
+        </isNotNull>
             deptid = #v_DEPTID#
         AND 
             TENANT_ID = #v_TENANT_ID#
@@ -6500,7 +6518,7 @@
 				EXTENSIONATTRIBUTE15 = 0,
 				UPDATEDT = to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
 			WHERE
-				EXTENSIONATTRIBUTE2 = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#)
+				EXTENSIONATTRIBUTE1 = #v_PARENTCN#
 			AND
 				TENANT_ID = #v_TENANT_ID#
 			AND
@@ -6516,7 +6534,7 @@
 				EXTENSIONATTRIBUTE15 = EXTENSIONATTRIBUTE15 + 1,
 				UPDATEDT = to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
 			WHERE
-				EXTENSIONATTRIBUTE2 = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#)
+				EXTENSIONATTRIBUTE1 = #v_PARENTCN#
 			AND
 				TENANT_ID = #v_TENANT_ID#
 			AND

@@ -362,7 +362,7 @@
 		        	var data2;
 		        	
 		            if (mode == "ALL") {
-		            	data2 = "";		                
+		            	data2 = "c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;";		                
 		            } else {
 		                var tempDelType = DelType;
 		                var DelValue = tempDelType + "=1";

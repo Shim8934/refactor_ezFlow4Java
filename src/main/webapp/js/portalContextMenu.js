@@ -619,7 +619,14 @@ var getContextMenuPosition = function () {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
         if (xhr.status >= 200 && xhr.status < 300) {
-            setContextMenuPosition(JSON.parse(xhr.responseText));
+        	var memoConfig = JSON.parse(xhr.responseText);
+        	
+        	if (memoConfig.memoConfigVO != null) {
+        		setContextMenuPosition(JSON.parse(xhr.responseText));
+        	} else {
+        		console.log("start insert context menu config..");
+        		insertContextMenuConfig();
+        	}
         } else {
             console.error(xhr.responseText);
         }
@@ -655,4 +662,19 @@ var createContextMenu = function (userDeptId) {
 
 var setMemoFlag = function (type) {
 	contextMenuObject.memoFlag = type; 
+}
+
+/**
+ * tenant config -- useMemo가 초기에 NO여도 값 세팅할 수 있도록 조절 
+ * 초기 config값 insert 메서드
+ */
+function insertContextMenuConfig() {	
+	$.ajax({
+		type : "POST",
+		dataType : "JSON",
+		url : "/ezMemo/insertMemoConfig.do",
+		success : function(result) {
+			getContextMenuPosition();
+		}
+	});
 }

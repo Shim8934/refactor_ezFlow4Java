@@ -564,7 +564,13 @@
 			SELECT
 				NVL(COUNT(c_clubno), 0) 
 			FROM
-				TBL_C_CLUB
+				TBL_C_CLUB A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				RTRIM(A.c_sysopid) = RTRIM(B.CN)
+			AND
+				A.tenant_id = B.tenant_id
 		]]>
 		
 		<isEqual property="v_STRSELECT" compareValue="PCOMMUINTYDESC">
@@ -583,7 +589,7 @@
 				AND
 					companyid = #companyID#
 				AND
-					tenant_id = #tenantID#
+					A.tenant_id = #tenantID#
 			]]>
 		</isEqual>
 		
@@ -604,7 +610,7 @@
 					AND
 						companyid = #companyID#
 					AND
-						tenant_id = #tenantID#
+						A.tenant_id = #tenantID#
 				]]>
 			</isEqual>
 			
@@ -615,7 +621,7 @@
 					AND
 						companyid = #companyID#
 					AND
-						tenant_id = #tenantID#
+						A.tenant_id = #tenantID#
 				]]>
 			</isNotEqual>
 		</isNotEqual>
