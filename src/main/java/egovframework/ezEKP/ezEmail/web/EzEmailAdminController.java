@@ -981,25 +981,39 @@ public class EzEmailAdminController {
 		
 		int dbName = globals.getProperty("Globals.DbType").equals("mysql") ? 1 : 2;
    		searchKeyword = commonUtil.getWildcardEscapedString(searchKeyword, dbName);
-		int itemCnt = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, companyId);
-		int totalPage = itemCnt / maxItemPerPage;
-
-		if (itemCnt < 1) {
-			totalPage = 1;
-		}
-
-		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
-			totalPage = totalPage + 1;
-		}
-
-		currentPage = Math.min(currentPage, totalPage);
 
 		List<ArrayList<String>> userList = new ArrayList<ArrayList<String>>();
 
 		// 모든 사용자의 목록을 가져온다.
-		List<OrganUserVO> userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
-									    maxItemPerPage, searchKeycode, searchKeyword, companyId);
+		List<OrganUserVO> userCnList;
+		int itemCnt;
+		
+		// 사용률로 검색 시에 숫자가 아니면 빈 값으로 리턴하도록 처리
+		try {
+			if (searchKeycode.equals("quota")) {
+				Double.parseDouble(searchKeyword);
+			}
+			
+			userCnList = ezOrganAdminService.getUserList(userInfo.getTenantId(), startRow, 
+				    maxItemPerPage, searchKeycode, searchKeyword, companyId);
+			itemCnt = ezOrganAdminService.getUserCount(userInfo.getTenantId(), searchKeycode, searchKeyword, companyId);
+		} catch (Exception ex) {
+			userCnList = new ArrayList<>();
+			itemCnt = 0;
+		}
 
+		int totalPage = itemCnt / maxItemPerPage;
+		
+		if (itemCnt < 1) {
+			totalPage = 1;
+		}
+		
+		if ((totalPage * maxItemPerPage) != itemCnt && (itemCnt % maxItemPerPage) != 0) {
+			totalPage = totalPage + 1;
+		}
+		
+		currentPage = Math.min(currentPage, totalPage);
+		
         IMAPAccess ia = null;
         Locale locale = Locale.getDefault();
         String password = jspw;
@@ -1026,8 +1040,8 @@ public class EzEmailAdminController {
 
                 if (searchKeycode.equalsIgnoreCase("quota")) {
                 	// imap 과 약간의 차이가 있을 수 있으므로
-                	mailboxQuota = Long.parseLong(organUser.getMailboxQuota());
-					mailboxUsage = Long.parseLong(organUser.getMailboxUsage());
+                	mailboxQuota = (long) Double.parseDouble(organUser.getMailboxQuota());
+					mailboxUsage = (long) Double.parseDouble(organUser.getMailboxUsage());
 					logger.debug("get organUserVO, mailboxQuota=" + mailboxQuota + ", mailboxUsage=" + mailboxUsage);
 				} else {
 					ia = IMAPAccess.getInstance(mailServerAddress, iMAPPort, email, password, egovMessageSource, locale, ezEmailUtil);

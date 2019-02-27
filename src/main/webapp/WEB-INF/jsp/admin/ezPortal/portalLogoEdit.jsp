@@ -168,15 +168,15 @@
 			
 			alert("<spring:message code='ezPortal.t84'/>");
 			
+			
+			g_bSaved = true;
 			if (xmlhttp.status == 200) {
 				window.opener.location.reload(true);
 				window.close();
 			}
-			
-			g_bSaved = true;
 			xmlhttp = null;
 			
-			location.href = "/admin/ezPortal/logoEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=1";
+// 			location.href = "/admin/ezPortal/logoEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=1";
 		}
 		
 	    window.onbeforeunload = function() {

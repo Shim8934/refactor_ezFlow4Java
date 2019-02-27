@@ -65,9 +65,6 @@
 			}
 	
 		    $(function () {
-		    	$("#txtTitle").val("${title}");
-		    	$("#txtAbstracts").val("${abstracts}");
-		    	$("#txtWriterName").val("${writerName}");
 		    	var xmldoc = loadXMLString('${strXML}');
     			var listXML = '';
     			
@@ -97,7 +94,8 @@
 					listXML += "<tr id='rowdata'>";
 					listXML += "<td style='padding:0'><input type='checkbox' name='chk' id='chk"+i+"' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID").trim() + "\", event)'></td>";
 					listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName").trim() + "</td>";
-					listXML += "<td title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer;text-overflow:ellipsis; overflow:hidden; word-break:break-all' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + bTag + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'><nobr>" + bTag + strEmergent + strSpace + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Title").trim() + "</nobr></td>";
+					listXML += "<td title='" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`")) + "' style='cursor:pointer;text-overflow:ellipsis; overflow:hidden; word-break:break-all' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + bTag + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'><nobr>"
+						+ bTag + strEmergent + strSpace + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Title").trim()) + "</nobr></td>";
 					listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptName").trim() + "</td>";
 					listXML += "<td><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></td>";
 		    		listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</td>";
@@ -193,12 +191,12 @@
 	
 			function search() {
 			    if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-			        alert("<spring:message code = 'ezCommunity.t421' />");
+			        alert("<spring:message code = 'ezSystem.x0035' />");
 					return;
 			    }
 			    
 	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-					alert("<spring:message code = 'ezCommunity.t421' />");
+					alert("<spring:message code = 'ezSystem.x0036' />");
 			        return;
 			    }
 	            
@@ -383,20 +381,19 @@
 	
 			function prevPage_onclick() {
 				newPage = parseInt(CurPage) - 1;
-	
-				var title, writerName, abstract, searchStart, searchEnd, boardname;
-				title = document.getElementById("txtTitle").value;
-				writerName = document.getElementById("txtWriterName").value;
-				abstract = document.getElementById("txtAbstract").value;
+				
+				var title = document.getElementById("txtTitle").value;
+				var writerName = document.getElementById("txtWriterName").value;
+				var txtAbstract = document.getElementById("txtAbstract").value;
 				var searchStart = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-				boardname = document.getElementById("txtBoardName").value;
+				var boardname = document.getElementById("txtBoardName").value;
 	
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 				url += "&boardID=" + pBoardID;
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
-				url += "&abstract=" + encodeURIComponent(abstract);
+				url += "&abstract=" + encodeURIComponent(txtAbstract);
 				url += "&searchStart=" + searchStart;
 				url += "&searchEnd=" + searchEnd;
 				url += "&code=" + code;
@@ -416,20 +413,19 @@
 	
 			function nextPage_onclick() {
 				newPage = parseInt(CurPage) + 1;
-	
-				var title, writerName, abstract, searchStart, searchEnd, boardname;
-				title = document.getElementById("txtTitle").value;
-				writerName = document.getElementById("txtWriterName").value;
-				abstract = document.getElementById("txtAbstract").value;
+				
+				var title = document.getElementById("txtTitle").value;
+				var writerName = document.getElementById("txtWriterName").value;
+				var txtAbstract = document.getElementById("txtAbstract").value;
 				var searchStart = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-				boardname = document.getElementById("txtBoardName").value;
+				var boardname = document.getElementById("txtBoardName").value;
 	
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 				url += "&boardID=" + pBoardID;
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
-				url += "&abstract=" + encodeURIComponent(abstract);
+				url += "&abstract=" + encodeURIComponent(txtAbstract);
 				url += "&searchStart=" + searchStart;
 				url += "&searchEnd=" + searchEnd;
 				url += "&code=" + code;
@@ -833,19 +829,19 @@
 			<tr>
 			    <th><spring:message code = 'ezCommunity.t418' /></th>
 			    <td><input type="text" id="txtBoardName" readonly ="readonly" style="width:200px">
-			      <a class="imgbtn"><span onClick="SelectBoard()"><spring:message code = 'ezCommunity.t351' /></span></a></td>
+			      <a class="imgbtn"><span onClick="SelectBoard()"><spring:message code = 'ezCommunity.t352' /></span></a></td>
 		  	</tr>
 		  	<tr>
 			    <th><spring:message code = 'ezCommunity.t138' /></th>
-			    <td><input type="text" id="txtWriterName" style="width:100px" onkeydown="return onkey_down()"></td>
+			    <td><input type="text" id="txtWriterName" style="width:100px" onkeydown="return onkey_down()" value="<c:out value='${writerName}'/>"></td>
 		  	</tr>
 		 	<tr>
 			    <th  ><spring:message code = 'ezCommunity.t124' /></th>
-			    <td><input type="text" id="txtTitle" style="width:400px" onkeydown="return onkey_down()"></td>
+			    <td><input type="text" id="txtTitle" style="width:400px" onkeydown="return onkey_down()"  value="<c:out value='${title}'/>"></td>
 		 	</tr>
 		  	<tr>
 			    <th  ><spring:message code = 'ezCommunity.t433' /></th>
-			    <td><input type="text" id="txtAbstract" style="width:400px" onkeydown="return onkey_down()"></td>
+			    <td><input type="text" id="txtAbstract" style="width:400px" onkeydown="return onkey_down()" value="<c:out value='${abstracts}'/>"></td>
 		  	</tr>
 		  	<tr>
 			    <th  ><spring:message code = 'ezCommunity.t434' /></th>

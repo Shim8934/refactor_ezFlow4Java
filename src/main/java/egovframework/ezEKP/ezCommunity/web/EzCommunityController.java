@@ -647,7 +647,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         model.addAttribute("boardName", boardInfo.getBoardName());
         model.addAttribute("title", title);
         model.addAttribute("writerName", writerName);
-        model.addAttribute("abstract", abstracts);
+        model.addAttribute("abstracts", abstracts);
         model.addAttribute("searchStart", searchStart);
         model.addAttribute("searchEnd", searchEnd);
         model.addAttribute("pPage", pPage);
@@ -3197,7 +3197,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         model.addAttribute("totalPage", totalPage);
         model.addAttribute("title", title);
         model.addAttribute("writerName", writerName);
-        model.addAttribute("abstract", abstracts);
+        model.addAttribute("abstracts", abstracts);
         model.addAttribute("pPage", pPage);
         
 		return "ezCommunity/communityAdminSearchBoardItem";

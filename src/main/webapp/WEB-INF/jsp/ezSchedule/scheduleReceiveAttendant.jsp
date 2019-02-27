@@ -9,13 +9,15 @@
 	    <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>        
+        <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+        <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 <%-- 		<title><spring:message code='ezSchedule.t332'/></title> --%>
 		<script>
 			var parentwin = null;
 			var RetValue;
 			var ReturnFunction;
 			var serverFlag = "<c:out value='${serverFlag}' />";
+			var receiveList = "<c:out value='${receiveList}' />";
 			
 			window.onload = function () {
 			    try {
@@ -30,6 +32,8 @@
 			        }
 			    }
 			    parentwin = RetValue;
+			    
+			    showDateType();
 			}
 	
 			function accept_schedule(status)
@@ -117,6 +121,206 @@
 // 		        	ReturnFunction();	
 // 		    	}
 // 			}
+
+			function showDateType() {
+				$( ".showDateType" ).each(function(index) {
+					var dateType = $( this ).attr('dateType');
+					var startDate = $( this ).attr('startDate');
+					var endDate = $( this ).attr('endDate');
+					var timeString = "";
+					switch (dateType) {
+						case "1":
+							timeString = makeScheduleTimeString(startDate, endDate);
+							$( this ).text(timeString);
+							break;
+						case "2":
+							timeString = makeAllDayScheduleTimeString(startDate, endDate);
+							$( this ).text(timeString);
+							break;
+						case "3":
+							var repetition = $( this ).attr('repetition');
+							timeString = makeRepetitionScheduleString(startDate, endDate, repetition);
+							$( this ).text(timeString);
+							break;
+					}
+				});
+			}
+			
+			function makeScheduleTimeString(startDate, endDate) {
+				var timeString = startDate.substring(0,16) + " ~ " + endDate.substring(0,16);
+        		return timeString;
+			}
+			
+			function makeAllDayScheduleTimeString(startDate, endDate) {
+				var timeString;
+				if (startDate.substring(0,10) == endDate.substring(0,10)) {
+					timeString = startDate.substring(0,10) + " (" + strLang105 + ")";
+				} else {
+					timeString = startDate.substring(0,10) + " ~ " + endDate.substring(0,10) + " (" + strLang105 + ")";
+				}
+				return timeString;
+			}
+			
+			function makeRepetitionScheduleString(startDate, endDate, repetition) {
+				var repeatinfo = "[";
+				var info = repetition.split("|");
+				var repetitionType = info[2];
+				
+				switch (repetitionType) {
+					case "0":
+						if (info[3] == '0') {
+							repeatinfo += strLang45;
+						} else if (info[3] == '1') {
+							repeatinfo += strLang34;
+						} else {
+							repeatinfo += info[3] + strLang81;
+						}
+						break;
+					case "1":
+						if(info[3] == '1'){				
+							repeatinfo += strLang35 + " ";
+							if(info[4]){
+								for (var i = 0; i< info[4].length; i++){
+									var eachDayOfWeek = info[4].substr(i, 1);
+									var dayOfWeekStringInfo = makeStringDayofWeekInfo(eachDayOfWeek);
+									if (i>0) {
+										repeatinfo += strLangGHA1;
+									}
+									repeatinfo += dayOfWeekStringInfo;
+								}
+							}
+						}else{
+							repeatinfo += info[3] + strLang82 + " ";
+							if(info[4]){
+								for (var i = 0; i< info[4].length; i++){
+									var eachDayOfWeek = info[4].substr(i, 1);
+									var dayOfWeekStringInfo = makeStringDayofWeekInfo(eachDayOfWeek);
+									if (i>0) {
+										repeatinfo += strLangGHA1;
+									}
+									repeatinfo += dayOfWeekStringInfo;
+								}
+							}
+						}
+						break;
+				    case "2":
+				    	if(info[3] == '1'){
+							repeatinfo += info[4] + strLang83 + " ";
+							repeatinfo += info[5] + strLang80 + " ";
+						}else{					
+							repeatinfo += info[4] + strLang83 + " ";
+							for (var i = 0; i< info[5].length; i++){
+								var weekNumberInfo = makeStringWeekNumber(info[5]);
+								repeatinfo += weekNumberInfo; 
+							}
+							repeatinfo += " ";
+							for (var i = 0; i < info[6].length; i++) {
+								var idx = info[6].substr(i, 1);
+								var dayOfWeekStringInfo = makeStringDayofWeekInfo(idx);
+								if (i>0) {
+									repeatinfo += strLangGHA1;
+								}
+								repeatinfo += dayOfWeekStringInfo;
+							}
+						}
+						break;
+					case "3":
+						if (info[3] == '1'){
+							repeatinfo += strLang37 + " ";
+							repeatinfo += info[4] + strLang122 + " ";
+							repeatinfo += info[5] + strLang81;
+						} else {	
+							repeatinfo += strLang37 + " ";
+							repeatinfo += info[4] + strLang122 + " ";
+							for (var i = 0; i< info[5].length; i++){
+								var weekNumberInfo = makeStringWeekNumber(info[5]);
+								repeatinfo += weekNumberInfo;
+							}
+							repeatinfo += " ";
+							for (var i = 0; i < info[6].length; i++) {
+								var idx = info[6].substr(i, 1);
+								var dayOfWeekStringInfo = makeStringDayofWeekInfo(idx);
+								if (i>0) {
+									repeatinfo += strLangGHA1;
+								}
+								repeatinfo += dayOfWeekStringInfo;
+							}
+						}
+					break;
+				}	
+
+				repeatinfo += "] ";
+				
+				if (info[1] == "1") {					// 하루종일 일정
+					repeatinfo += "[" + strLang39;
+				} else {
+					repeatinfo += "[" + startDate.substring(11,16) + " ~ " +endDate.substring(11,16);
+				}
+				
+				repeatinfo += "] ";
+				
+				if (info[0] == -1) {
+				    repeatinfo += " [" + startDate.substring(0,10) + " ~ " + strLang46;
+				} else if (info[0] == 0){
+					repeatinfo += " [" + startDate.substring(0,10) + " ~ " + endDate.substring(0,10);
+				} else {
+					repeatinfo += " [" + startDate.substring(0,10) + " ~ " + info[0] + strLang47;
+				}
+				
+				repeatinfo += "]";
+				
+				return repeatinfo;
+			}
+			
+			function makeStringDayofWeekInfo(dayOfWeek) {
+				var dayOfWeekString;
+				switch (dayOfWeek){
+					case "0":
+						dayOfWeekString = strLang48;
+						break;
+					case "1":
+						dayOfWeekString = strLang49;
+						break;
+					case "2":
+						dayOfWeekString = strLang50;
+						break;
+					case "3":
+						dayOfWeekString = strLang51;
+						break;
+					case "4":
+						dayOfWeekString = strLang52;
+						break;
+					case "5":
+						dayOfWeekString = strLang53;
+						break;
+					case "6":
+						dayOfWeekString = strLang54;
+						break;
+				}
+				return dayOfWeekString;
+			}
+			
+			function makeStringWeekNumber(number) {
+				var weekNumber;
+				switch (number){
+					case "1":
+						weekNumber = strLang55;
+						break;
+					case "2":
+						weekNumber = strLang56;
+						break;
+					case "3":
+						weekNumber = strLang57;
+						break;
+					case "4":
+						weekNumber = strLang58;
+						break;
+					case "5":
+						weekNumber = strLang59;
+						break;
+				}
+				return weekNumber;
+			}
 		</script>
 	</head>
 	
@@ -130,7 +334,7 @@
 	            </ul>
 	        </div> 
 	
-	        <div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:270px"> 
+	        <div id="receivelist" style="OVERFLOW-Y:auto; OVERFLOW-X:hidden; WIDTH:100%; HEIGHT:370px"> 
 	            <table class="popuplist" style="WIDTH: 100%">
 	                <tr>
 	                    <th style="white-space:nowrap; width:20px"><spring:message code='ezSchedule.t190' /></th> 
@@ -155,17 +359,8 @@
 	                    </td> 
 	                    <td><c:out value="${item.location }" /></td> 
 	                    <td title="<spring:message code='ezSchedule.t342' />" style="word-break:break-all;cursor:pointer;text-overflow:ellipsis;overflow:hidden" onClick="parentwin.open_schedule('${item.scheduleId}')"><c:out value="${item.title}" /></td> 
-	                    <td style="white-space:nowrap">
-	                    	<c:if test="${item.dateType == '1'}">
-	                    		${fn:substring(item.startDate,0,16)} ~ ${fn:substring(item.endDate,0,16)}	
-	                    	</c:if>
-	                    	<c:if test="${item.dateType == '2'}">
-	                    		<c:if test="${fn:substring(item.startDate,0,10) == fn:substring(item.endDate,0,10)}">${fn:substring(item.startDate,0,10)} (<spring:message code='ezSchedule.t280' /></c:if>
-	                    		<c:if test="${fn:substring(item.startDate,0,10) != fn:substring(item.endDate,0,10)}">${fn:substring(item.startDate,0,10)} ~ ${fn:substring(item.endDate,0,10)} (<spring:message code='ezSchedule.t280' /></c:if>
-	                    	</c:if>
-	                    	<c:if test="${item.dateType == '3'}">
-	                    		<spring:message code='ezSchedule.t343' />
-	                    	</c:if>
+	                    <td class="showDateType" style="white-space:nowrap" startDate="${item.startDate}" endDate="${item.endDate}" dateType="${item.dateType}" repetition="${item.repetition}">
+	                    	
 	                    </td> 
 	                </tr>	              		
 	              	</c:forEach>	                 

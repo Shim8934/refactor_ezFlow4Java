@@ -159,7 +159,7 @@
 			        createNodeAndInsertText(xmlpara, objNode, "FIRST_NODE", "Y");
 			        createNodeAndInsertText(xmlpara, objNode, "TREE_TYPE", "1");
 					
-					xmlhttp.open("POST","/admin/ezResource/callManagerDepthNode.do",false);
+					xmlhttp.open("POST","/ezResource/callManagerDepthNodeForMoveResource.do",false);
 					xmlhttp.send(xmlpara);
 					
 					var XMLstring = xmlhttp.responseText;
@@ -185,7 +185,7 @@
 			    createNodeAndInsertText(xmlpara, objNode, "FIRST_NODE", "N");
 			    createNodeAndInsertText(xmlpara, objNode, "TREE_TYPE", "1");
 
-				xmlhttp.open("POST","/admin/ezResource/callManagerDepthNode.do",false);
+				xmlhttp.open("POST","/ezResource/callManagerDepthNodeForMoveResource.do",false);
 				xmlhttp.send(xmlpara);
 
 				if (xmlhttp.responseText == "") return;

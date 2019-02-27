@@ -2178,6 +2178,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		for (int k = 0; k < boardListVOs.size(); k++) {
 			boardListVOs.get(k).setStartDate(commonUtil.getDateStringInUTC(boardListVOs.get(k).getStartDate(), offset, false));
 			boardListVOs.get(k).setEndDate(commonUtil.getDateStringInUTC(boardListVOs.get(k).getEndDate(), offset, false));
+			boardListVOs.get(k).setTitle(commonUtil.cleanValue(boardListVOs.get(k).getTitle()));
+			boardListVOs.get(k).setABSTRACT(commonUtil.cleanValue(boardListVOs.get(k).getABSTRACT()));
 		}
 
 		logger.debug("getReservedItemList ended");

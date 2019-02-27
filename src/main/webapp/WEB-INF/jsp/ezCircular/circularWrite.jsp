@@ -308,6 +308,7 @@
 							window.opener.getLeftCount();
 							window.opener.refresh_onclick();
 							window.close();
+		                	alert("<spring:message code='ezBoard.t10033'/>");	
 		                },
 		                error: function() {
 		                	alert("<spring:message code='ezCircular.t102'/>");	

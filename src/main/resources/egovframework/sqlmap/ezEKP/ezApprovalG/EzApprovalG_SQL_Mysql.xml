@@ -2460,7 +2460,7 @@
 			* 
 		FROM (
 			SELECT 
-				'파일' AS ATTACHTYPE, 
+				#v_LANGFILE# AS ATTACHTYPE, 
 				ATTACHFILESN AS ATTACHSN, 
             	DISPLAYNAME AS ATTACHNAME, 
             	ATTACHFILEHREF AS ATTACHHREF, 
@@ -2481,7 +2481,7 @@
             UNION ALL 
             
             SELECT 
-            	'문서' AS ATTACHTYPE, 
+            	#v_LANGDOCUMENT# AS ATTACHTYPE, 
             	ATTACHSN, 
             	ATTACHDOCNAME AS ATTACHNAME, 
             	ATTACHDOCURL AS ATTACHHREF, 
@@ -22090,7 +22090,7 @@
    		 	TBL_ENDAPRDOCINFO 
         ( 	   DocID,     FormID, OrgDocID,    DocType, DocState,  FunctionType, Href,      DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, EndDate,                                      WriterName, WriterName2, WriterJobTitle, WriterJobTitle2, WriterDeptID, WriterDeptName,    WriterDeptName2,     ContainerID, isPublic, TENANT_ID, COMPANYID )
         ( SELECT 
-        	 #v_NEWDOCID#, FormID , OrgDocID , DocType ,#v_DOCSTATE# , '004',    #v_ENDURL#, DocTitle, DocNo, HasAttachYN, HasOpinionYN, StartDate, WriterID, #v_SYSDATE#, WriterName, WriterName2, WriterJobTitle , WriterJobTitle2 , WriterDeptID , WriterDeptName , WriterDeptName2 , #v_CONTAINERID# , isPublic, TENANT_ID , COMPANYID
+        	 #v_NEWDOCID#, FormID , OrgDocID , DocType ,#v_DOCSTATE# , '004',    #v_ENDURL#, DocTitle, #v_DOCNO#, HasAttachYN, HasOpinionYN, StartDate, WriterID, #v_SYSDATE#, WriterName, WriterName2, WriterJobTitle , WriterJobTitle2 , WriterDeptID , WriterDeptName , WriterDeptName2 , #v_CONTAINERID# , isPublic, TENANT_ID , COMPANYID
           FROM 
           	 TBL_APRDOCINFO A 
           WHERE  
