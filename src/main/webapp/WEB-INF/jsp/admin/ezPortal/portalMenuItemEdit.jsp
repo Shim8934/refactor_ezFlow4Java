@@ -641,7 +641,7 @@
 									<tr style="height:47px">
 										<c:choose>
 											<c:when test="${overImagePath != null && overImagePath != ''}">
-												<td id="tdOverImage">&nbsp;<img id="txtOverImage" src="${overImagePath}"></td>
+												<td id="tdOverImage">&nbsp;<img id="txtOverImage" src="${overImagePath}" width="106" height="42"></td>
 											</c:when>
 											<c:otherwise>
 												<td id="tdOverImage">&nbsp;<img id="txtOverImage" src="" style="display: none"></td>
