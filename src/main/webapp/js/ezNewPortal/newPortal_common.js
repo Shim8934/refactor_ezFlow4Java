@@ -75,16 +75,7 @@ function attiClock() {
     var nowServerTime = new Date(nowClientTime.getTime() + timeDiff);
     
     time = leadingZeros(nowServerTime.getHours(), 2) + ':' + leadingZeros(nowServerTime.getMinutes(), 2) + ':' + leadingZeros(nowServerTime.getSeconds(), 2);
-    portletTime = leadingZeros(nowServerTime.getHours(), 2) + ':' + leadingZeros(nowServerTime.getMinutes(), 2);
     document.getElementById("timeFlow").innerHTML = time;
-    
-    if (document.getElementById("ptlTimeFlow") != null) {
-    	document.getElementById("ptlTimeFlow").innerHTML = portletTime;
-    }
-    
-    if (portletTime == "00:00" || portletTime == "12:00") {
-    	ptlAmPmCheck(nowServerTime.getHours());
-    }
     
     gizmo = setTimeout("attiClock()", 500);
     
