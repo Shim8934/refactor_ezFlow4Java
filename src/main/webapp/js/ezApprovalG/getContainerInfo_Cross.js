@@ -320,7 +320,7 @@ function GetUserContListSave(AllFG) {
             //and point the link element towards it
             var ua = window.navigator.userAgent;
             if(ua.indexOf('MSIE') > 0 || ua.indexOf('Trident') > 0) {
-            	navigator.msSaveBlob(blob,excelFileName+'.xls');
+            	navigator.msSaveOrOpenBlob(blob,excelFileName+'.xls');
             } else {
 	            var url = window.URL.createObjectURL(blob);
 	            a.href = url;
