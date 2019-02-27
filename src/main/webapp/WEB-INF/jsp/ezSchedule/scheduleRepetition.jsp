@@ -862,58 +862,27 @@
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    }
 		    
+		    function setTimePickerReadOnly() {
+		    	$('#Stimepicker').attr('readOnly','true');
+	    		$('#Etimepicker').attr('readOnly','true');
+		    }
 		    
-		    //CheckPreviously 함수 사용을 위해 schedule_write_Corss.js 호출하고  스크립트에 포함된 함수인 check_time 삭제. 
+			function setTimePickerModifiable() {
+				$('#Stimepicker').removeAttr('readOnly');
+	    		$('#Etimepicker').removeAttr('readOnly');
+		    }
 		    
-		    //2017-11-01 #9736  일정반복설정시, 시작일과 종료일을 반대로 지정해도 경고없이 등록되는 현상 
-		   /*  function check_time() {
-		        var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-		        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-
-		        var startYear = startDate.split("-")[0];
-		        var startMonth = startDate.split("-")[1];
-		        var startDay = startDate.split("-")[2];
-		        var endYear = endDate.split("-")[0];
-		        var endMonth = endDate.split("-")[1];
-		        var endDay = endDate.split("-")[2];
-		        var stime = $('#Stimepicker').val()
-
-		        var shour, sminute;
-		        var ehour, eminute;
-
-		        shour = stime.split(":")[0];
-		        sminute = stime.split(":")[1];
-
-		        var etime = $('#Etimepicker').val()
-
-		        ehour = etime.split(":")[0];
-		        eminute = etime.split(":")[1];
-
-		        if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) > parseInt(endDay))) {
-		            return false;
-		        }
-		        else if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) == parseInt(endDay))) {
-		            if (document.getElementById("alldaycheck").checked == false) {
-		                if (shour > ehour || (shour == ehour && sminute >= eminute)) {
-		                    return false;
-		                }
-		                else
-		                    return true;
-		            }
-		            return true;
-		        }
-		        
-		        return true;
-		    } */
-	    	/* 2018.02.23 김기하  */
-	    	/* 2019-02-20 김민성 - 하루종일 체크 해제시 현재 시간 기준 30분 단위 표시로 수정 */
 		    function allDayTime(){
 	    		if(document.getElementById("alldaycheck").checked == true){
 	    			sTimeTemp = $('#Stimepicker').val();
 		    		eTimeTemp = $('#Etimepicker').val();
 		    		$('#Stimepicker').timepicker("setTime", "00:00");
 		    		$('#Etimepicker').timepicker("setTime", "00:00");
+		    		
+		    		setTimePickerReadOnly();
 		    	}else{
+		    		setTimePickerModifiable();
+		    		
 					var now = new Date();
 		        	
 		        	//시작시간
@@ -952,6 +921,7 @@
 		    		}
 		    		if($('#Stimepicker').val() == "00:00" && $('#Etimepicker').val() == "00:00"){
 		    			$("#alldaycheck").prop("checked", true);
+		    			setTimePickerReadOnly();
 		    		}
 		    	});
 		    	$('#Etimepicker').change(function(){
@@ -960,56 +930,12 @@
 		    		}
 		    		if(($('#Stimepicker').val() == "00:00") && ($('#Etimepicker').val() == "00:00")){
 		    			$("#alldaycheck").prop("checked", true);
+		    			setTimePickerReadOnly();
 		    		}
 		    	});
 		    	
 		    	
-		    }
-		    //2018-07-31 구해안 두 날짜 사이 날짜들 구하는 함수
-		   /*  function getDateRange(startDate, endDate, listDate) {
-		        var dateMove = new Date(startDate);
-		        var strDate = startDate;
-
-			        if (startDate == endDate) {
-			            var strDate = dateMove.toISOString().slice(0,10);
-			            listDate.push(strDate);
-			       	}else{
-
-		            while (strDate < endDate) {
-		                var strDate = dateMove.toISOString().slice(0, 10);
-		                listDate.push(strDate);
-		                dateMove.setDate(dateMove.getDate() + 1);
-		            }
-		        }
-		        return listDate;
-		    };
-		    
-		    function checkRangeRepe(){
-		    	var listDate = [];
-		    	
-		    	var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-		    	var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-
-		        getDateRange(startDate, endDate, listDate);
-		        
-
-		        $.ajax({
-					type : "POST",
-					dataType : "text",
-					traditional : true,
-					async : false,
-					url : "/ezSchedule/scheduleCheckRange.do",
-					data : { 
-						startDate  : startDate,
-						endDate    : endDate,
-						listDate   : listDate
-					},
-					success: function(result){
-						
-					}
-				});
-	            
-		    } */
+		    }	
 
 		</script>
 	</head>
