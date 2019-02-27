@@ -827,6 +827,7 @@
 	
 	<body class="mainbody" onLoad="javascript:window_onload()">
 		<h1><spring:message code='ezApprovalG.t1678'/><span id="listInfo"></span></h1>
+		<span style="float:right; margin-top: -20px;"><spring:message code='ezApproval.psb01'/></span>
 		<input type="hidden" id="ListCompany" value="${userInfo.companyID }" >
 		<!-- 2018-08-02 김보미 - 검색테이블 ui 수정 -->	
 		<!-- <table style="width:100%;">		

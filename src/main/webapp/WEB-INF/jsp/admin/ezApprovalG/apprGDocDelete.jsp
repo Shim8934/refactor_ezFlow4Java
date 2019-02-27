@@ -897,6 +897,7 @@
 		        <p><span id="1tab2" divname="deletedoclist"><spring:message code='ezApprovalG.kes02' /></span></p>		        
 		    </div>
 		</div>
+		<span style="float:right; margin-top: -20px;"><spring:message code='ezApproval.psb01'/></span>
 		<!-- 2018-08-02 김보미 - 검색 테이블 ui수정 -->
 	<!-- <table style="width: 100%; background-color: #fcfcfc;">
 			<tr>
