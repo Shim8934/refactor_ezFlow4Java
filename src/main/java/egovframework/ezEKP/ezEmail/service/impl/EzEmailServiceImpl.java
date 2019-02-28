@@ -2602,6 +2602,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 				vo.setShareName(user.getDisplayName());
 				vo.setShareId(user.getCn());
 				vo.setShareMail(user.getMail());
+				vo.setCompanyName(user.getCompany());
 				
 				list.add(vo);
 			}
