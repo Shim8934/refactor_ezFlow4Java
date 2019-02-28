@@ -540,12 +540,18 @@
 		 }
 		 
 		function reload() {
-			
+			var SDate = new Date();
+	        var EDate = new Date();
+	        $("#startDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $("#endDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $("#startDatepicker").datepicker('setDate', SDate);
+	        $("#endDatepicker").datepicker('setDate', EDate);
+			$("#startDatepicker").datepicker('disable');
+	        $("#endDatepicker").datepicker('disable');
+	        
 			$(":checkbox[id=usedate]").prop("checked", false);
 			usedate = false;
 			$("#checkboxAll").prop("checked", false);
-			$("#startDatepicker").datepicker('disable');
-	        $("#endDatepicker").datepicker('disable');
 	        
 	        $("#DocNumber").val("");
 			$("#DocTitle").val("");
