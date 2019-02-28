@@ -2663,8 +2663,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	public String mailReadBoardDotNet(@CookieValue("loginCookie") String loginCookie, Locale locale, @RequestBody String bodyData, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
 		logger.debug("mailReadBoardDotNet started.");
 		
-		Document xmldom = commonUtil.convertStringToDocument(bodyData);
-		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
+		/*Document xmldom = commonUtil.convertStringToDocument(bodyData);
+		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();*/
+		String url = request.getParameter("url");
 		String newGuid = UUID.randomUUID().toString();
 		newGuid = "{" + newGuid + "}";
 		
