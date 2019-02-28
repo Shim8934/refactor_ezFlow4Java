@@ -207,6 +207,34 @@
 					$('.utmenu ul li:first-child').css('cursor:default', 'cursor:default');
 					$('.utmenu ul li:first-child').css('color', '#000');
 				}
+				
+				//2019.02.28 유틸메뉴 이미지 마우스 오버시, 이미지 변경되도록 이벤트 세틍
+				utilMenuImageSetting();
+			}
+			
+			
+			function utilMenuImageSetting() {
+				var utilMenu = document.getElementsByClassName("utmenu")[0].querySelectorAll("img");
+				var utilMenuCount = utilMenu.length;
+
+				for (var i = 0; i < utilMenuCount; i++) {
+					var item = utilMenu[i];
+					
+					if (item.id != null && item.id != "") {
+						
+						document.getElementById(item.id).addEventListener("mouseover", function() {
+							var originalImg = this.getAttribute("data1");
+							var overImg = this.getAttribute("data2");
+							this.src = overImg;
+						});
+						
+						document.getElementById(item.id).addEventListener("mouseout", function() {
+							var originalImg = this.getAttribute("data1");
+							var overImg = this.getAttribute("data2");
+							this.src = originalImg;
+						});
+					}
+				}
 			}
 			
 			function ezNotieSetting() {
