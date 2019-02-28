@@ -191,7 +191,7 @@
 			function opendocview(pDocID, pHref, pAprMemberID, pAprMemberName, pAprMemberDeptID, pDocState, pFunctionType, orgCompanyID) {
 		        var openLocation = "";
 		        var selectedTapId = document.querySelector("div.layDIV.approval dl.portlet_tab.sortablePortlet dt.on").id;
-	
+				
 	            if (selectedTapId != "draftTab") {
 	                if (pFunctionType == "004" || pFunctionType == "006" || pFunctionType == "015") {
 	                    if (pDocState == "012" || pDocState == "014" || pDocState == "018") {
@@ -343,12 +343,14 @@
 	                openLocation = "/myoffice/ezApprovalG/ezViewWord/ezAproveUI_word_Cross.aspx?DocID=" + encodeURIComponent(pArgument[0]);
 	                openLocation = openLocation + "&uID=" + encodeURIComponent(pArgument[1]) + "&uName=" + encodeURIComponent(pArgument[2]);
 	                openLocation = openLocation + "&uDeptID=" + encodeURIComponent(pArgument[3]) + "&AllFlag=0";
+	                openLocation = openLocation + "&functionType=" + encodeURIComponent(pFunctionType);
 	            } else if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "hwp") {
 	            	if (isIE()) {
 		                openLocation = "/ezApprovalG/approvuiHWP.do?docID=" + encodeURIComponent(pArgument[0]);
 		                openLocation = openLocation + "&id=" + encodeURIComponent(pArgument[1]) + "&name=" + encodeURIComponent(pArgument[2]);
 		                openLocation = openLocation + "&deptID=" + encodeURIComponent(pArgument[3]) + "&allFlag=0" + "&docState=" + encodeURIComponent(pDocState);
 		                openLocation += "&orgCompanyID=" + encodeURIComponent(orgCompanyID);
+		                openLocation += "&functionType=" + encodeURIComponent(pFunctionType);
 	            	} else {
 	            		var pAlertContent = "<spring:message code='ezNewPortal.t038' />";
 	                    alert(pAlertContent);
@@ -361,6 +363,7 @@
 	                openLocation = openLocation + "&id=" + encodeURIComponent(pArgument[1]) + "&name=" + encodeURIComponent(pArgument[2]);
 	                openLocation = openLocation + "&deptID=" + encodeURIComponent(pArgument[3]) + "&allFlag=0" + "&docState=" + encodeURIComponent(pDocState);
 	                openLocation += "&orgCompanyID=" + encodeURIComponent(orgCompanyID);
+	                openLocation += "&functionType=" + encodeURIComponent(pFunctionType);
 	            }
 	            openwindow(openLocation, "", 880, 550);       
 		    }
