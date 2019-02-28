@@ -11,6 +11,7 @@ public class MailSharedMailboxVO {
 	private String shareName1;
 	private String shareName2;
 	private String compId;
+	private String companyName;
 	private List<MailSharedMailboxUserVO> userList = new ArrayList<>();
 	
 	public String getShareId() {
@@ -49,6 +50,12 @@ public class MailSharedMailboxVO {
 	public void setCompId(String compId) {
 		this.compId = compId;
 	}
+	public String getCompanyName() {
+		return companyName;
+	}
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
 	public List<MailSharedMailboxUserVO> getUserList() {
 		return userList;
 	}
@@ -59,8 +66,8 @@ public class MailSharedMailboxVO {
 	@Override
 	public String toString() {
 		return "MailSharedMailboxVO [shareId=" + shareId + ", shareMail=" + shareMail + ", shareName=" + shareName
-				+ ", shareName1=" + shareName1 + ", shareName2=" + shareName2 + ", compId=" + compId + ", userList="
-				+ userList + "]";
+				+ ", shareName1=" + shareName1 + ", shareName2=" + shareName2 + ", compId=" + compId 
+				+ ", companyName=" + companyName + ", userList=" + userList + "]";
 	}
 	
 }

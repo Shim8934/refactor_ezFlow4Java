@@ -421,7 +421,7 @@
 		            	var requestUrl; 
 		            	
 		            	if (dotNetIntegration == "YES") {
-		            		requestUrl = "${dotNetUrl}/myoffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL) + "&pagetype=POPUP&javaflag=true";
+		            		requestUrl = "${dotNetUrl}/myoffice/ezBoardSTD/NewBoardItem.aspx?BoardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL) + "&pagetype=POPUP&javaflag=true";
 		            	} else {
 		            		requestUrl = "/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL);
 		            	}
