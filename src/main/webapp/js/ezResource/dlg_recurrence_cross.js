@@ -703,9 +703,12 @@ function event_btnOk_onclick()
             m_objEndTime.setMinutes(Number($('#Etimepicker').val().split(":")[1]));
         }
 
+        // 2019-02-28 김민성 - 일정관리 연동으로 인한 날짜 데이터 포맷 변경
         putReturnData("alldaycheck", pAlldaycheck);
-        putReturnData("startTime", m_objStartTime);
-        putReturnData("endTime", m_objEndTime);
+       // putReturnData("startTime", m_objStartTime);
+       // putReturnData("endTime", m_objEndTime);
+        putReturnData("startTime", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Stimepicker').val());
+        putReturnData("endTime", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " " + $('#Etimepicker').val());
         
         Remainder(Root, xmlDoc);
 
