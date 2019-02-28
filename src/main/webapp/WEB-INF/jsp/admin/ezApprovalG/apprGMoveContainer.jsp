@@ -699,7 +699,7 @@
 			        }
 			        $("#checkboxAll").prop("checked", false);
 	        	} else {
-		            alert("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1676'/>");
+		            alert("<spring:message code='ezApprovalG.t1676'/>");
 	        		strMoveListIDInfo = "";
 					selectelem = null;
 					$("#checkboxAll").prop("checked", false);
