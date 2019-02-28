@@ -327,10 +327,19 @@ function Schedule_Repetition_onclick_Complete(retVal) {
 
         g_data["recurrence"] = retVal["xml"];
         
-        var sDate = retVal["startTime"];
+        // 2019-02-28 김민성 - 일정관리 연동으로 인한 날짜 데이터 포맷 변경
+        var sDate;
+        var eDate;
+        
+        try {
+        	sDate = new Date(retVal["startTime"].split(' ')[0].split('-')[0], parseInt(retVal["startTime"].split(' ')[0].split('-')[1]) - 1, retVal["startTime"].split(' ')[0].split('-')[2], retVal["startTime"].split(' ')[1].split(':')[0], retVal["startTime"].split(' ')[1].split(':')[1], 0, 0);
+        	eDate = new Date(retVal["endTime"].split(' ')[0].split('-')[0], parseInt(retVal["endTime"].split(' ')[0].split('-')[1]) - 1, retVal["endTime"].split(' ')[0].split('-')[2], retVal["endTime"].split(' ')[1].split(':')[0], retVal["endTime"].split(' ')[1].split(':')[1], 0, 0);
+        } catch (e) {
+        	sDate = new Date(retVal["startTime"]);
+        	eDate = new Date(retVal["endTime"]);
+        }   
+        
         var SetsTime = sDate.getFullYear() + "-" + (sDate.getMonth() + 1) + "-" + sDate.getDate();
-
-        var eDate = retVal["endTime"];
         var SeteTime = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
         
         var ssDate = new Date();

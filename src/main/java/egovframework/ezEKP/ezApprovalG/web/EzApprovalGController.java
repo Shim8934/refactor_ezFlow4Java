@@ -3951,6 +3951,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mode = request.getParameter("mode");
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String companyID = userInfo.getCompanyID();
+		String functionType = request.getParameter("functionType");
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -4072,6 +4073,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docState", docState);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("functionType", functionType);
 		
 		// FormBuilder
 		if (isReform) {
