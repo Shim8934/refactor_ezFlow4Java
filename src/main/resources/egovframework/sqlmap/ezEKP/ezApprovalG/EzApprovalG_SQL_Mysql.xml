@@ -11384,7 +11384,7 @@
                   		AND
                   			TENANT_ID = #v_TENANTID#
                   		AND
-          					COMPANYID = #companyID#)  END
+          					COMPANYID = #companyID#)  END AS APRSTATE
      		  FROM (
    		  		 SELECT 
    		  		 	COUNT(DOCID)  DOCID

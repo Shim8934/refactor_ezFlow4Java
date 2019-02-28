@@ -8955,6 +8955,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String junGyulFlag = ezCommonService.getTenantConfig("JunGyulFlag", userInfo.getTenantId());
 		String signImageSize = ezCommonService.getTenantConfig("SignImageSize", userInfo.getTenantId());
 		String draftDeptID = ezApprovalGService.getOrgDraftDeptID(docID, userInfo.getTenantId(), userInfo.getCompanyID());
+		String isReDraft = request.getParameter("isReDraft");
 		
 		//부서합의문에서 채번하기 위해 수정 2019-02-08 홍대표
 		String useReceiveDocNo = ezCommonService.getTenantConfig("useReceiveDocNo", userInfo.getTenantId());
@@ -9009,6 +9010,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("draftDeptID", draftDeptID);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("docNumZeroCnt", docNumZeroCnt);
+		model.addAttribute("isReDraft", isReDraft);
 		
 		logger.debug("recevGDeptHapyui ended");
 

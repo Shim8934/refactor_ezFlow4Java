@@ -2256,10 +2256,11 @@ function SaveDraftDocInfo()
     function setButtonReceiveTrue()
     {
         SetBtnStateFalse();
-        btnAssign.Enable = "false";
-        btnDistribute.Enable = "false";
-        btnReturn.Enable = "false";
-        btnAproveSusin.Enable = "false";
+        //닷넷 로직 따라서 주석 처리. 2019-02-27 홍대표
+//        btnAssign.Enable = "false";
+//        btnDistribute.Enable = "false";
+//        btnReturn.Enable = "false";
+//        btnAproveSusin.Enable = "false";
 
     }
 
@@ -2687,4 +2688,44 @@ function SaveDraftDocInfo()
         		}
         	});
         }
+    }
+    
+    //부서합의에서 회송 처리하기 위해 추가. 2019-02-27 홍대표
+    function setHeSongDocInfo() {
+    	var objRoot;
+        var objNode;
+
+        var xmlpara = createXmlDom();
+        var xmlhttp = createXMLHttpRequest();
+        createNodeInsert(xmlpara, objNode, "ASSIGN");
+
+        createNodeAndInsertText(xmlpara, objNode, "pDocID", pDocID);
+        createNodeAndInsertText(xmlpara, objNode, "pAprMemberDeptID", arr_userinfo[4]);
+        createNodeAndInsertText(xmlpara, objNode, "pAprMemberID", pUserID);
+
+        //receivesn 받아올 곳 찾기 전까진 1로 고정.
+        createNodeAndInsertText(xmlpara, objNode, "pReceiveSN", "1");
+//        if (pListTypeValue == "4")
+//            createNodeAndInsertText(xmlpara, objNode, "pReceiveSN", GetAttribute(pSelectedRow, "DATA2"));
+//        else {
+//            createNodeAndInsertText(xmlpara, objNode, "pReceiveSN", "1");
+//        }
+
+        xmlhttp.open("POST", "/ezApprovalG/setHeSongHapyuiDocInfo.do", false);
+        xmlhttp.send(xmlpara);
+        
+        if (xmlhttp != null && xmlhttp.readyState == 4) {
+       	 if (xmlhttp.statusText == "OK") {
+       		 var pAlertContent = strLang878;
+             OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+       	 } else {
+       		 var pAlertContent = strLang740;
+             OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+             return;
+       	 }
+       } 
+    }
+    
+    function OpenAlertUI_Close_Complete() {
+        btnClose_onclick();
     }

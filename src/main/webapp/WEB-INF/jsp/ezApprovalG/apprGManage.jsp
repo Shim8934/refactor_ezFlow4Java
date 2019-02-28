@@ -992,8 +992,8 @@
 				            }
 				            else
 				                OpenOpinionUI(pCurSelRow, "HeSong");
-					        }
-			        	}
+				        }
+		        	}
 			    } else {
 			    	if (oArrRows != 0) {
 		                var pCurSelRow = oArrRows[0];
