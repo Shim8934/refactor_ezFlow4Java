@@ -551,6 +551,7 @@ function GetDocInfoData(mode, field) {
 function SendMailBansongtoDrafter() {
     getOpinionInfo(pDocID, "APR");
     if (pDraftFlag == "DRAFT") {
+    	//기안 문서 반송 메일알림은 원기안자에게
         var pwriterID   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
         var Drafter     = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
         var pstartdate  = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[11]));
@@ -568,8 +569,10 @@ function SendMailBansongtoDrafter() {
     }
 
     if (pDraftFlag == "SUSIN") {
-        var NextUserID  = trim(getNodeText(GetChildNodes(GetChildNodes(GetElementsByTagName(document.getElementById("APRLINEINFO").dataSource, "ROW")[0])[0])[14]));
-        var NextUser    = NextUserID;
+    	//수신 문서 반송 메일알림은 수신자에게 
+    	var susinUserIdx = GetElementsByTagName(document.getElementById("APRLINEINFO").dataSource, "ROW").length-1; 
+    	var susinUserID = trim(getNodeText(GetChildNodes(GetChildNodes(GetElementsByTagName(document.getElementById("APRLINEINFO").dataSource, "ROW")[susinUserIdx])[0])[4]));
+    	var NextUser = susinUserID;
         var pwriterID   = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[13]));
         var Drafter     = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[14]));
         var pstartdate  = trim(getNodeText(GetChildNodes(GetElementsByTagName(document.getElementById("DOCINFO").dataSource, "DATA")[0])[11]));

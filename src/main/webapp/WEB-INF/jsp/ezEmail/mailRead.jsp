@@ -400,11 +400,19 @@
 		            if (pBoardID == "" || typeof (pBoardID) == "undefined") {
 		                return;
 		            }
-		
+					var boardWidth = 765;
+					var boardHeight = 720;
+					var boardTarget = "";
+					if (dotNetIntegration == "YES") {
+						boardWidth = 900;
+						boardHeight = 800;
+						boardTarget = "NewBoardItem";
+					}
+		            
 		            var pheight = window.screen.availHeight;
 		            var pwidth = window.screen.availWidth;
-		            var pTop = (pheight - 720) / 2;
-		            var pLeft = (pwidth - 765) / 2;
+		            var pTop = (pheight - boardWidth) / 2;
+		            var pLeft = (pwidth - boardHeight) / 2;
 		
 		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4") {
 		                alert(strLang337);
@@ -413,7 +421,7 @@
 		            	var requestUrl; 
 		            	
 		            	if (dotNetIntegration == "YES") {
-		            		requestUrl = "${dotNetUrl}/myoffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL);
+		            		requestUrl = "${dotNetUrl}/myoffice/ezBoardSTD/NewBoardItem_Cross.aspx?BoardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL) + "&pagetype=POPUP&javaflag=true";
 		            	} else {
 		            		requestUrl = "/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL);
 		            	}
@@ -422,7 +430,7 @@
 	                		requestUrl += "&mailShareId=" + encodeURIComponent(shareId);
 	    				}
 		            	
-	                	window.open(requestUrl, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+	                	window.open(requestUrl, boardTarget, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + boardHeight + ",width=" + boardWidth + ",top=" + pTop + ",left=" + pLeft, "");
 		            }
 		        }
 		    }

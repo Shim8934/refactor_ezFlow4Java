@@ -3679,8 +3679,10 @@
         DELETE FROM
             TBL_ADDJOBMASTER
         WHERE  
+		<isNotNull property="v_CN">
             cn = #v_CN#
         AND 
+        </isNotNull>
             deptid = #v_DEPTID#
         AND 
             TENANT_ID = #v_TENANT_ID#

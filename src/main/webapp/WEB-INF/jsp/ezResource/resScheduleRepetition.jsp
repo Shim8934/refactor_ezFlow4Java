@@ -184,6 +184,16 @@
 	        	}
 	    	}
 	    	
+	    	function setTimePickerReadOnly() {
+		    	$('#Stimepicker').attr('readOnly','true');
+	    		$('#Etimepicker').attr('readOnly','true');
+		    }
+		    
+			function setTimePickerModifiable() {
+				$('#Stimepicker').removeAttr('readOnly');
+	    		$('#Etimepicker').removeAttr('readOnly');
+		    }
+	    	
 	    	/* 2019-02-19 김민성 - 자원관리 하루종일 체크시 시간 00:00로 변경(일정관리와 스펙 맞춤)
 	    								  - 하루종일 체크 해제시 현재 시간 기준 30분 단위 표시로 수정 */
 	    	function allDayTime(){
@@ -192,7 +202,9 @@
 		    		eTimeTemp = $('#Etimepicker').val();
 		    		$('#Stimepicker').timepicker("setTime", "00:00");
 		    		$('#Etimepicker').timepicker("setTime", "00:00");
+		    		setTimePickerReadOnly();
 		    	}else{
+		    		setTimePickerModifiable();
 		    		var now = new Date();
 		        	
 		        	//시작시간
@@ -231,6 +243,7 @@
 		    		}
 		    		if($('#Stimepicker').val() == "00:00" && $('#Etimepicker').val() == "00:00"){
 		    			$("#alldaycheck").prop("checked", true);
+		    			setTimePickerReadOnly();
 		    		}
 		    	});
 		    	$('#Etimepicker').change(function(){
@@ -239,6 +252,7 @@
 		    		}
 		    		if(($('#Stimepicker').val() == "00:00") && ($('#Etimepicker').val() == "00:00")){
 		    			$("#alldaycheck").prop("checked", true);
+		    			setTimePickerReadOnly();
 		    		}
 		    	});
 		    }

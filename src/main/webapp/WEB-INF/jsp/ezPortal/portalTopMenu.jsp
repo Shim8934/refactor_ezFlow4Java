@@ -47,8 +47,8 @@
 							<li><span onClick="insertcell()"><spring:message code='ezPortal.t327' /></span></li>
 							<li><span onClick="removecell()"><spring:message code='ezPortal.t328' /></span></li>
 							<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-							<li><span onClick="insertrow()"><spring:message code='ezPortal.t329' /></span></li>
-							<li><span onClick="removerow()"><spring:message code='ezPortal.t330' /></span></li>
+							<li><span onClick="insertrow()"><spring:message code='ezPortal.t280' /></span></li>
+							<li><span onClick="removerow()"><spring:message code='ezPortal.kbm02' /></span></li>
 							<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 							<li><span onClick="swaprow('up')"><spring:message code='ezPortal.t331' /></span></li>
 							<li><span onClick="swaprow('down')"><spring:message code='ezPortal.t332' /></span></li>
@@ -640,7 +640,7 @@
 			
 			function insertrow() {
 				if (selectedCell == "") {
-					alert("<spring:message code='ezPortal.t347' />");
+					alert("<spring:message code='ezPortal.kbm01' />");
 					return;
 				}
 				
@@ -820,7 +820,7 @@
 	
 			function removerow() {
 				if (selectedSubCell == "") {	
-					alert("<spring:message code='ezPortal.t351' />");
+					alert("<spring:message code='ezPortal.jjs12' />");
 					return;
 				}
 				

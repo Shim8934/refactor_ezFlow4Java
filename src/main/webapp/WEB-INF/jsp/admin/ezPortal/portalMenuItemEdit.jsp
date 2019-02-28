@@ -138,10 +138,13 @@
 				xmlhttp.open("POST", "/admin/ezPortal/saveMenuItem.do?pageID=" + pageid, false);
 				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send(strXML);
-				xmlhttp = null;
 				
 				alert("<spring:message code='ezPortal.t84'/>");
 				g_bSaved = true;
+				if (xmlhttp.status == 200) {
+					window.opener.location.reload(true);
+				}
+				xmlhttp = null;
 
 				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=1&parentUID=203";
 			}
@@ -641,7 +644,7 @@
 									<tr style="height:47px">
 										<c:choose>
 											<c:when test="${overImagePath != null && overImagePath != ''}">
-												<td id="tdOverImage">&nbsp;<img id="txtOverImage" src="${overImagePath}"></td>
+												<td id="tdOverImage">&nbsp;<img id="txtOverImage" src="${overImagePath}" width="106" height="42"></td>
 											</c:when>
 											<c:otherwise>
 												<td id="tdOverImage">&nbsp;<img id="txtOverImage" src="" style="display: none"></td>
