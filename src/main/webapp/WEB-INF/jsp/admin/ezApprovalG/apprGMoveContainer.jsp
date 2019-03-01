@@ -828,6 +828,10 @@
 			    document.getElementById("mailPanel").style.display = "none";
 			    document.getElementById("MailProgress").style.display = "none";
 			}
+			function keyword_Clear() {
+		        document.getElementsByName('drafterdept')[0].value = "";
+		        document.getElementsByName('drafterdept')[0].id = "";
+		    }
 	    </script>
 	</head>
 	
@@ -950,7 +954,7 @@
 							<spring:message code='ezApproval.t437'/>
 						</td>
 						<td>
-							<input type="text" id="" name="drafterdept" style="width: 72%; height: 23px;" maxlength="50" readonly="readonly"/>
+							<input type="text" id="" name="drafterdept" style="width: 72%; height: 23px;" maxlength="50" readonly="readonly" onmousedown="keyword_Clear()"/>
 							<a class="imgbtn" name="TDeptSelect"><span id = "spandept" onclick="bt_TDeptSelect_onclick(this)"><spring:message code='ezApprovalG.t105'/></span></a>
 						</td>
 						<td>
