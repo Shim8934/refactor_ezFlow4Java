@@ -3332,6 +3332,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		StringBuilder rtnXML = new StringBuilder();
 		String subSQL = "";
 		String rtnVal = "";
+		String recMemNm = "";
+		String recMemNm2 = "";
+		String recMemJobTitle = "";
+		String recMemJobTitle2 = "";
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_DOCID", docID.trim());
@@ -3373,16 +3377,30 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_RECNM2", deptXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent());
 			}
 			
+			if (!docXML.getElementsByTagName("RECEIPTMEMBERID").item(0).getTextContent().equals("")) {
+				try {
+					String userInfo = ezOrganService.getPropertyList(docXML.getElementsByTagName("RECEIPTMEMBERID").item(0).getTextContent(), "displayname;displayname2;title;title2", "1", tenantID);
+					Document userXML = commonUtil.convertStringToDocument(userInfo);
+					
+					recMemNm = userXML.getElementsByTagName("DISPLAYNAME").item(0).getTextContent();
+					recMemNm2 = userXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
+					recMemJobTitle = userXML.getElementsByTagName("TITLE").item(0).getTextContent();
+					recMemJobTitle2 = userXML.getElementsByTagName("TITLE2").item(0).getTextContent();
+				} catch (Exception e) {
+					e.getMessage();
+				}
+			}
+			
 			map.put("v_ExtRecYN", extYN);
 			map.put("v_ProcessYN", "N");
 			map.put("v_ProcessSN", "1");
 			map.put("v_CanEditYN", "N");
 			map.put("v_EXTATTR2", deptXML.getElementsByTagName("EXTENSIONATTRIBUTE2").item(0).getTextContent());
-			map.put("v_RECMEMID", "");
-			map.put("v_RECMEMNM", "");
-			map.put("v_RECMEMNM2", "");
-			map.put("v_RECMEMJOBTITLE", "");
-			map.put("v_RECMEMJOBTITLE2", "");
+			map.put("v_RECMEMID", docXML.getElementsByTagName("RECEIPTMEMBERID").item(0).getTextContent());
+			map.put("v_RECMEMNM", recMemNm);
+			map.put("v_RECMEMNM2", recMemNm2);
+			map.put("v_RECMEMJOBTITLE", recMemJobTitle);
+			map.put("v_RECMEMJOBTITLE2", recMemJobTitle2);
 			map.put("v_DEPTSN", docXML.getElementsByTagName("DEPTSN").item(k).getTextContent().trim());
 			
 			ezApprovalGDAO.insertFormRecvTB(map);

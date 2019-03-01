@@ -4005,7 +4005,8 @@
 			SELECT 
 				DEPTID,
 				deptname,
-                DEPTSN 
+                DEPTSN ,
+                USERID AS RECEIPTMEMBERID
            FROM 
            		TBL_FormRecv 
            WHERE  
