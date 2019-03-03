@@ -297,7 +297,6 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					break;
 					case "1" :
 						
-						
 						String isExistEndDate = info[0];
 						String isAllday = info[1];
 						String weeklyInterval = info[3];
