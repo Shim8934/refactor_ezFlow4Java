@@ -831,12 +831,17 @@
 			function keyword_Clear() {
 		        document.getElementsByName('drafterdept')[0].value = "";
 		        document.getElementsByName('drafterdept')[0].id = "";
+		        getDocListjson(1);
 		    }
 			function all_keyword_Clear() {
 		        document.getElementsByName('SDeptName')[0].value = "";
 		        document.getElementsByName('SDeptName')[0].id = "";
 		        document.getElementsByName('drafterdept')[0].value = "";
 		        document.getElementsByName('drafterdept')[0].id = "";
+		        $("select[name=selSContName]").val("");
+		        ScontID = "";
+		        $('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
+		        makePageSelPage();
 		    }
 	    </script>
 	</head>
