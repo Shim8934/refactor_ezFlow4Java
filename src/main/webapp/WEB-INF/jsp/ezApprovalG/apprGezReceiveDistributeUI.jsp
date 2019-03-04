@@ -887,8 +887,14 @@
 	            }
 	            if (ListViewLen.length == 1) {
 	                if (GetAttribute(ListViewLen[0], "id") == "listAPRLINE1_TR_noItems") {
-	                    alert("<spring:message code='ezApprovalG.pjj31'/>");
-	                    return;
+	                	if(tempmode == 'MODIFY'){
+		                    alert("<spring:message code='ezApprovalG.pjj31'/>");
+		                    return;
+	                	}
+	                	if(tempmode == 'NEW'){
+		                    alert("<spring:message code='ezApprovalG.psb31'/>");
+		                    return;
+	                	}
 	                }
 	            }
 	
