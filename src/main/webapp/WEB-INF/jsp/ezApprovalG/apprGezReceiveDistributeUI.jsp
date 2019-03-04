@@ -66,7 +66,7 @@
 	        var linealt13 = "<spring:message code='ezApprovalG.t2001'/>";
 	        var linealt14 = "<spring:message code='ezApprovalG.t322'/>";
 	        var linealt15 = "<spring:message code='ezApprovalG.t323'/>";
-	        var linealt16 = "<spring:message code='ezApprovalG.t324'/>";
+	        var linealt16 = "<spring:message code='ezApprovalG.psb324'/>";
 	        var linealt17 = "<spring:message code='ezApprovalG.t1178'/>";
 	        var Cabinet1 = "<spring:message code='ezApprovalG.t379'/>";
 	        var Cabinet2 = "<spring:message code='ezApprovalG.t572'/>";
@@ -887,8 +887,14 @@
 	            }
 	            if (ListViewLen.length == 1) {
 	                if (GetAttribute(ListViewLen[0], "id") == "listAPRLINE1_TR_noItems") {
-	                    alert("<spring:message code='ezApprovalG.pjj31'/>");
-	                    return;
+	                	if(tempmode == 'MODIFY'){
+		                    alert("<spring:message code='ezApprovalG.pjj31'/>");
+		                    return;
+	                	}
+	                	if(tempmode == 'NEW'){
+		                    alert("<spring:message code='ezApprovalG.psb31'/>");
+		                    return;
+	                	}
 	                }
 	            }
 	
