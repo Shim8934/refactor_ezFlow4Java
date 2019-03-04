@@ -867,13 +867,13 @@
 		    }
 		    
 		    function setTimePickerReadOnly() {
-		    	$('#Stimepicker').attr('readOnly','true');
-	    		$('#Etimepicker').attr('readOnly','true');
+		    	$('#Stimepicker').attr('disabled','disabled');
+	    		$('#Etimepicker').attr('disabled','disabled');
 		    }
 		    
 			function setTimePickerModifiable() {
-				$('#Stimepicker').removeAttr('readOnly');
-	    		$('#Etimepicker').removeAttr('readOnly');
+				$('#Stimepicker').removeAttr('disabled');
+	    		$('#Etimepicker').removeAttr('disabled');
 		    }
 		    
 		    function allDayTime(){

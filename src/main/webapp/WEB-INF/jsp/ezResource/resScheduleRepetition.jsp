@@ -185,13 +185,13 @@
 	    	}
 	    	
 	    	function setTimePickerReadOnly() {
-		    	$('#Stimepicker').attr('readOnly','true');
-	    		$('#Etimepicker').attr('readOnly','true');
+		    	$('#Stimepicker').attr('disabled','disabled');
+	    		$('#Etimepicker').attr('disabled','disabled');
 		    }
 		    
 			function setTimePickerModifiable() {
-				$('#Stimepicker').removeAttr('readOnly');
-	    		$('#Etimepicker').removeAttr('readOnly');
+				$('#Stimepicker').removeAttr('disabled');
+	    		$('#Etimepicker').removeAttr('disabled');
 		    }
 	    	
 	    	/* 2019-02-19 김민성 - 자원관리 하루종일 체크시 시간 00:00로 변경(일정관리와 스펙 맞춤)

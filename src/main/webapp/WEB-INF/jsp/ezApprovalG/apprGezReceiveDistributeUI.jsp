@@ -1467,7 +1467,7 @@
 	            <td style="vertical-align: top;">
 	                <h2 class="h2_dot" style="padding-top:3px;padding-bottom:3px;float:left"><spring:message code='ezApprovalG.t432'/></h2>
 	                <div style="float:right;">
-	                    <a class="imgbtn imgbck" style="margin-top: 3px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
+	                    <a class="imgbtn imgbck" style="margin-top: 3px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><spring:message code='ezApprovalG.G0009'/></span></a>
 	                </div>
 	                <div style="clear:both"></div>
 	                <div class="listview">
