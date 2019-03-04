@@ -4005,7 +4005,8 @@
 			SELECT 
 				DEPTID,
 				deptname,
-                DEPTSN 
+                DEPTSN ,
+                USERID AS RECEIPTMEMBERID
            FROM 
            		TBL_FormRecv 
            WHERE  
@@ -26483,7 +26484,7 @@
 				
 	  <select id="EzApprovalG.recRelayInfo" parameterClass="Map" resultClass="ApprGRelayVO" remapResults="true">
 		  SELECT 
-		  		XDOCID 
+		  		* 
 		  FROM 
 		  		TBL_RECRELAYINFO 
 		  WHERE 
@@ -26500,34 +26501,15 @@
 		  DELETE FROM 
 		  		TBL_RECRELAYINFO
 		  WHERE 
-		  		DOCID IN (
-		  		 			SELECT
-		  		 			  * 
-		  		 			FROM
-			  					(SELECT 
-						  			A.DOCID
-								FROM 
-									TBL_RECRELAYINFO A 
-								INNER JOIN 
-									TBL_APRDOCINFO B
-								ON 
-									A.DOCID = B.DOCID
-								AND
-									A.TENANT_ID = B.TENANT_ID
-								AND
-									A.COMPANYID = B.COMPANYID
-								WHERE 
-									A.TENANT_ID = #v_TENANTID#
-								AND
-									A.COMPANYID = #companyID#
-								AND
-									A.XDOCID = #xDocID# 
-								AND 
-									XTOCODE = #xToCode#	
-								AND 
-									(B.HREF IS NULL
-								OR 
-									B.HREF = '')) A)
+		  		DOCID = #v_docID#
+		  AND
+		  		XDOCID = #xDocID#
+		  AND 
+		  		XTOCODE = #xToCode#
+		  AND
+		  		TENANT_ID = #v_TENANTID#
+		  AND
+		  		COMPANYID = #companyID#
 	  </delete>
 	  	  
 	  <delete id="EzApprovalG.deleteRelayAprDocInfo" parameterClass="Map" >
@@ -28173,4 +28155,35 @@
 		    AND   a.companyid = #companyID#
 		    AND   a.tenant_id = #tenantId#
     </update>
+     <select id="EzApprovalG.getAprOrgDocID" parameterClass="Map" resultClass="String">
+    	SELECT
+    		NVL(ORGDOCID, '') AS ORGDOCID
+    	FROM
+    		TBL_APRDOCINFO
+    	WHERE
+    		DOCID = #v_DOCID#
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    </select>
+    <select id="EzApprovalG.getEndAprOpinionCnt" parameterClass="Map" resultClass="int">
+    	SELECT
+    		COUNT(*)
+    	FROM
+    		TBL_ENDAPROPINIONINFO
+    	WHERE
+    		DOCID = #v_ORGDOCID#
+    	AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #v_TENANTID#
+    </select>
+    <insert id="EzApprovalG.insertHesongOpinion" parameterClass="Map">
+    	INSERT INTO
+    		TBL_ENDAPROPINIONINFO
+    			(DocID,      UserID,     OpinionGB,    Content,      UserName,     UserName2,     UserJobTitle,     UserJobTitle2,     UserDeptID,    UserDeptName,     UserDeptName2,      OpinionSN,   TENANT_ID, COMPANYID)
+    		VALUES
+    			(#v_ORGDOCID#, #v_USERID#, #v_OPINIONGB#, #v_CONTENT#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_USERDEPTID#, #v_USERDEPTNAME#, #v_USERDEPTNAME2# , #v_ORGOPINIONSN#, #v_TENANTID#, #companyID#)
+    </insert>
 </sqlMap>

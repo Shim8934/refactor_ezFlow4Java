@@ -301,7 +301,6 @@ public class EzTaskController extends EgovFileMngUtil {
 	/**
 	 *  업무상세화면 의견목록 조회
 	 */
-	/*2018-05-17 구해안 댓글삭제 버튼 유효성검사를 위해 userInfo Model로 넘기도록 수정*/
 	@RequestMapping(value = "/ezTask/getTaskCommentList.do")
 	public String getTaskCommentList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getTaskCommentList started.");
@@ -495,8 +494,6 @@ public class EzTaskController extends EgovFileMngUtil {
             String key = entry.getKey();
             Integer value = entry.getValue();
             
-            /*2018-05-18 구해안 1일 클릭시 전달 말일로 넘어가는 버그, UTC -> 현재날짜로 수정*/
-			/*String covertDate = commonUtil.getDateStringInUTC(key + " 00:00:00", userInfo.getOffset(), true);*/
             String covertDate = key + " 00:00:00";
 			int comRate = ezTaskService.selectCompletionOfRepTask(taskID, covertDate, tenantID);
 			rateList.add(Integer.toString(comRate));
@@ -1368,8 +1365,6 @@ public class EzTaskController extends EgovFileMngUtil {
     	taskInfoVO.setEndDate(date + " 23:59:59");		
     	
 		String realStartDate = date + " 00:00:00";
-		/*2018-05-18 구해안 1일 클릭시 전달 말일로 넘어가는 버그, UTC -> 현재날짜로 수정*/
-		/*		String realDate = commonUtil.getDateStringInUTC(realStartDate, userInfo.getOffset(), true);*/
 				
 		int status = ezTaskService.getStatusOfRepTask(taskID, realStartDate, tenantID);
 		taskInfoVO.setTaskStatus(status);

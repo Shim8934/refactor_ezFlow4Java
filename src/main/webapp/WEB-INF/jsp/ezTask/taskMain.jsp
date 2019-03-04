@@ -154,7 +154,6 @@
 		        
 	        	feature = GetOpenPosition(790, 810);
 	        	
-	        	/*2018-05-18 구해안 윈도우 창 크기 개선*/
                 window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 820px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 	
@@ -995,7 +994,6 @@
 		<br />
 		<div id="mainmenu">
 			<ul>
-				<!-- 2018-05-24 구해안 이미지 이동 -->
 				<li><span id="pn_img" onClick="WriteTask()"><spring:message code='ezTask.t113' /></span></li>
 				<li><span onClick="DeleteTask()"><spring:message code='ezTask.t115' /></span></li>
 				<li><span onClick="RefreshView()"><spring:message code='ezTask.t116' /></span></li>
@@ -1029,7 +1027,6 @@
 			<tr>
 				<td style="WIDTH: 100%;HEIGHT: 100%;vertical-align:top">
 					<%-- 2018-04-24 김민성 - 업무명, 메모 길이 조절  --%>
-					<!-- 2018-05-24 구해안 - 업무구분,완료율,시작일,종료일 사이간격 띄우기 -->
 					<div>
 					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed; min-width:800px;">
 						<col style ="width:30px;">
@@ -1040,17 +1037,11 @@
 							<col style = "width:80%;">
 							<col style ="width:30px;">
 							<col style ="width:25%;">
-							<%-- <col >
-							<col style ="width:50px;">
-							<col style ="width:140px;"> --%>
 						</c:if>
 						<c:if test="${useTodoMemo == 'NO'}">
 							<col style = "width:80%;">
 							<col style = "width:30px;">
 							<col style = "width:25%;">
-							<%-- <col >
-							<col style ="width:50px;">
-							<col style ="width:30px;"> --%>
 						</c:if>
 		                <col style ="width:120px;">
 						<col style ="width:130px;" id="col_progress">
@@ -1070,7 +1061,6 @@
 							<c:if test="${useTodoMemo == 'NO'}">
 								<th ></th>
 							</c:if>
-		                    <!-- 2018-05-16 구해안 업무구분과 완료율 간격 조정 -->
 		                    <!-- 18-05-24 김민성 - 중요도 이미지로 수정 -->
 		                    <th style="padding-left:14px"><spring:message code='ezTask.t2003'/></th>		                    
 							<th id="_thprogress"  style="text-align:center;padding-right: 12px;"><spring:message code='ezTask.t120' /></th>						
@@ -1103,17 +1093,11 @@
 							<col style = "width:80%;">
 							<col style ="width:30px;">
 							<col style ="width:25%;">
-							<%-- <col >
-							<col style ="width:50px;">
-							<col style ="width:140px;"> --%>
 						</c:if>
 						<c:if test="${useTodoMemo == 'NO'}">
 							<col style = "width:80%;">
 							<col style = "width:30px;">
 							<col style = "width:25%;">
-							<%-- <col >
-							<col style ="width:50px;">
-							<col style ="width:30px;"> --%>
 						</c:if>
 		                <col style ="width:120px;">
 						<col style ="width:130px;" id="col_progress2">

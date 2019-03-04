@@ -699,7 +699,7 @@
 			        }
 			        $("#checkboxAll").prop("checked", false);
 	        	} else {
-		            alert("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1676'/>");
+		            alert("<spring:message code='ezApprovalG.t1676'/>");
 	        		strMoveListIDInfo = "";
 					selectelem = null;
 					$("#checkboxAll").prop("checked", false);
@@ -828,6 +828,21 @@
 			    document.getElementById("mailPanel").style.display = "none";
 			    document.getElementById("MailProgress").style.display = "none";
 			}
+			function keyword_Clear() {
+		        document.getElementsByName('drafterdept')[0].value = "";
+		        document.getElementsByName('drafterdept')[0].id = "";
+		        getDocListjson(1);
+		    }
+			function all_keyword_Clear() {
+		        document.getElementsByName('SDeptName')[0].value = "";
+		        document.getElementsByName('SDeptName')[0].id = "";
+		        document.getElementsByName('drafterdept')[0].value = "";
+		        document.getElementsByName('drafterdept')[0].id = "";
+		        $("select[name=selSContName]").val("");
+		        ScontID = "";
+		        $('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
+		        makePageSelPage();
+		    }
 	    </script>
 	</head>
 	
@@ -923,7 +938,7 @@
 							<spring:message code='ezApprovalG.kes04'/>  
 						</td>
 						<td style="width:17%;">
-							<input type="text" id="" name="SDeptName" style="width: 72%; height: 23px;" readonly="readonly" />
+							<input type="text" id="" name="SDeptName" style="width: 72%; height: 23px;" readonly="readonly" onmousedown="all_keyword_Clear()"/>
 			 	            <a class="imgbtn" name="SDeptSelect"><span onclick="bt_SDeptSelect_onclick()"><spring:message code='ezApprovalG.t105'/></span></a>
 						</td>
 						<td style="width:6%;">
@@ -950,7 +965,7 @@
 							<spring:message code='ezApproval.t437'/>
 						</td>
 						<td>
-							<input type="text" id="" name="drafterdept" style="width: 72%; height: 23px;" maxlength="50" readonly="readonly"/>
+							<input type="text" id="" name="drafterdept" style="width: 72%; height: 23px;" maxlength="50" readonly="readonly" onmousedown="keyword_Clear()"/>
 							<a class="imgbtn" name="TDeptSelect"><span id = "spandept" onclick="bt_TDeptSelect_onclick(this)"><spring:message code='ezApprovalG.t105'/></span></a>
 						</td>
 						<td>

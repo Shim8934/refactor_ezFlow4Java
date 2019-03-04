@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.vo;
 
 public class ApprGRelayVO {
+	private String docID;
 	private String xDocID;
 	private String recdate;
 	private String mFrom;
@@ -177,4 +178,11 @@ public class ApprGRelayVO {
 	public void setRealSignName(String realSignName) {
 		this.realSignName = realSignName;
 	}
+	public String getDocID() {
+		return docID;
+	}
+	public void setDocID(String docID) {
+		this.docID = docID;
+	}
+	
 }

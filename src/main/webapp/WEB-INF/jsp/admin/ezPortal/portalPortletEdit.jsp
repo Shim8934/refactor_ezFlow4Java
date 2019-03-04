@@ -1126,7 +1126,7 @@
     						<input type="checkbox" name="OpenMode" onclick="newWindowClick()">
     					</c:otherwise>
     				</c:choose>
-      				(<spring:message code='ezPortal.t171'/>
+      				<spring:message code='ezPortal.t171'/>
 				</td>
   			</tr>
   			<tr id="txtWindowOptionID" style="display:none">
