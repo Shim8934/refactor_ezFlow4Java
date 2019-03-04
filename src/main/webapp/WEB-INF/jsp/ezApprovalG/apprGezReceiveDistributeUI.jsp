@@ -66,7 +66,7 @@
 	        var linealt13 = "<spring:message code='ezApprovalG.t2001'/>";
 	        var linealt14 = "<spring:message code='ezApprovalG.t322'/>";
 	        var linealt15 = "<spring:message code='ezApprovalG.t323'/>";
-	        var linealt16 = "<spring:message code='ezApprovalG.t324'/>";
+	        var linealt16 = "<spring:message code='ezApprovalG.psb324'/>";
 	        var linealt17 = "<spring:message code='ezApprovalG.t1178'/>";
 	        var Cabinet1 = "<spring:message code='ezApprovalG.t379'/>";
 	        var Cabinet2 = "<spring:message code='ezApprovalG.t572'/>";
@@ -887,8 +887,14 @@
 	            }
 	            if (ListViewLen.length == 1) {
 	                if (GetAttribute(ListViewLen[0], "id") == "listAPRLINE1_TR_noItems") {
-	                    alert("<spring:message code='ezApprovalG.pjj31'/>");
-	                    return;
+	                	if(tempmode == 'MODIFY'){
+		                    alert("<spring:message code='ezApprovalG.pjj31'/>");
+		                    return;
+	                	}
+	                	if(tempmode == 'NEW'){
+		                    alert("<spring:message code='ezApprovalG.psb31'/>");
+		                    return;
+	                	}
 	                }
 	            }
 	
@@ -1467,7 +1473,7 @@
 	            <td style="vertical-align: top;">
 	                <h2 class="h2_dot" style="padding-top:3px;padding-bottom:3px;float:left"><spring:message code='ezApprovalG.t432'/></h2>
 	                <div style="float:right;">
-	                    <a class="imgbtn imgbck" style="margin-top: 3px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
+	                    <a class="imgbtn imgbck" style="margin-top: 3px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><spring:message code='ezApprovalG.G0009'/></span></a>
 	                </div>
 	                <div style="clear:both"></div>
 	                <div class="listview">

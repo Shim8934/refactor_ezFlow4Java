@@ -39,7 +39,7 @@
 		            
 		            TxtAprDeptTempletName.focus();
 		        }
-		        else if (p_AprDeptTempletName.length > 7) {
+		        else if (p_AprDeptTempletName.length > 20) {
 		            //var pAlertContent = "<spring:message code='ezApprovalG.t310'/>";
 		            //OpenAlertUI(pAlertContent);
 		            alert("<spring:message code='ezApprovalG.t310'/>");
@@ -105,7 +105,7 @@
         </div>
 		<span>▒ <c:if test ="${approvalFlag =='G'}"><spring:message code='ezApprovalG.t311'/></c:if><c:if test ="${approvalFlag =='S'}"><spring:message code='ezApproval.t199'/></c:if></span>
 		<div class="nobox" style="margin-top:7px">
-		<input class="text" type="text" id="TxtAprDeptTempletName" name="TxtAprDeptTempletName" style="width:100%;border:1px solid #ccc;height:25px" maxlength="7">
+		<input class="text" type="text" id="TxtAprDeptTempletName" name="TxtAprDeptTempletName" style="width:100%;border:1px solid #ccc;height:25px" maxlength="20">
 		</div>
 		<div class="btnposition btnpositionNew">
 			<a class="imgbtn" name="btn_SaveAprLineTempletName" id="btn_SaveAprLineTempletName" onClick="return btn_SaveAprDeptTempletName_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>

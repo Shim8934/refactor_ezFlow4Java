@@ -82,7 +82,7 @@
 		<result property="userName2"					column="USERNAME2"					columnIndex="4"/>
 		<result property="companyID"					column="COMPANYID"					columnIndex="5"/>
 		<result property="title"						column="TITLE"						columnIndex="6"/>
-		<result property="content"						column="CONTENT"					columnIndex="7"		javaType="String" jdbcType="CLOB"/>
+		<result property="content"						column="CONTENT"					columnIndex="7"		javaType="String" jdbcType="TEXT"/>
 		<result property="contentURL"					column="CONTENTURL"					columnIndex="8"/>
 		<result property="readNum"						column="READNUM"					columnIndex="9"/>
 		<result property="writeDay"						column="WRITEDAY"					columnIndex="10"/>
@@ -1668,8 +1668,6 @@
 			WHERE
 				CN = #v_USERID#
 			AND
-				PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
-			AND
 				tenant_id = #tenantID#
 		]]>
 	</select>
@@ -3041,28 +3039,37 @@
 		<![CDATA[
 			SELECT
 				(SUBSTR(c_clubname$v_USERINFO_LANG$, 1, 18)) AS c_clubname,
-				c_clubno,
+				T1.c_clubno,
 				c_clubgubun,
 				c_clubdesc,
 				c_logo_thumbnail,
-				c_membercnt,
 				c_clubconfirmtype
 			FROM
-				TBL_C_CLUB
+				TBL_C_CLUB T1
 			JOIN
 				TBL_USERMASTER T2
 			ON
-				RTRIM(TBL_C_CLUB.c_sysopid) = RTRIM(T2.cn)
+				RTRIM(T1.c_sysopid) = RTRIM(T2.cn)
 			AND
-				TBL_C_CLUB.tenant_id = T2.tenant_id
+				T1.tenant_id = T2.tenant_id
+			JOIN
+				TBL_C_CLUBUSER T3
+			ON
+				RTRIM(T1.c_clubno) = RTRIM(T3.c_clubno)
+			AND
+				T3.permit <> 0
+			AND
+				T1.tenant_id = T3.tenant_id
 			WHERE
 				c_adminconfirm = 'Y'
 			AND
-				TBL_C_CLUB.companyid = #companyID#
+				T1.companyid = #companyID#
 			AND
-				TBL_C_CLUB.tenant_id = #tenantID#
+				T1.tenant_id = #tenantID#
+			GROUP BY
+				T1.c_clubno
 			ORDER BY
-				c_membercnt DESC
+				IFNULL(COUNT(T3.c_id), 0) DESC
 			LIMIT
 				3
 		]]>
