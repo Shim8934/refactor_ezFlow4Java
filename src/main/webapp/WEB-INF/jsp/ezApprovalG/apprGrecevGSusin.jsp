@@ -285,6 +285,8 @@
 			                document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.t1406'/>";
 			            else
 			                document.getElementById("btnRJunkyul").childNodes[0].innerText = "<spring:message code='ezApprovalG.t1406'/>";
+		        	} else {
+		        		document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.csj001'/>";
 		        	}
 		            document.getElementById("btnSetAprLine").style.display = "none";
 		            document.getElementById("btnSendDraft").style.display = "none";

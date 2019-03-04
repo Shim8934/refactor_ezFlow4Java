@@ -388,6 +388,7 @@
 		                        window.opener.refresh_onclick();
 		                    } catch (e) {
 		                    }
+		                    
 		                    window.close();
 		                }
 		            }
@@ -418,6 +419,33 @@
 		                    window.opener.refresh_onclick();
 		                } catch (e) {
 		                }
+		                
+
+	                    //2019.03.04 유은정 - 게시판 적용
+	                    if (parent.opener.getNoticePortletList != undefined) {
+	                    	parent.opener.getNoticePortletList();
+	                    }
+	                    
+	                 	// 게시판 포틀릿 리스트 업데이트 되도록 수정
+			            if (parent.opener.getBoardPortletInfo != undefined) {
+			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+			            	var customBoardCount = customBoardList.length;
+			            	
+			            	for (var i = 0; i < customBoardCount; i++) {
+			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+			            		
+			            		if (boardId == pBoardID) {
+			            			var portletId = customBoardList[i].parentElement.id;
+			            			portletId = portletId.substring(0, portletId.indexOf("P"));
+			            			parent.opener.getBoardPortletInfo(portletId);
+			            		}
+			            	}
+			            }
+	                 	
+			            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+							parent.opener.getBoardList_NewBoardSTD();
+						}
+			            
 		                window.close();
 		            }
 		        }
@@ -486,6 +514,17 @@
 		            alert("<spring:message code='ezBoard.t304' />");
 		            return;
 		        }
+		        
+		        var portletId = "";
+		     	// 게시판 포틀릿 리스트 업데이트 되도록 수정
+	            if (parent.opener.getBoardPortletInfo != undefined) {
+	            	portletId = "<c:out value='${portletId}'/>";
+	            }
+		     	
+	            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+					parent.opener.getBoardList_NewBoardSTD();
+				}
+	            
 		        //익명게시판
 		        if (gubun == "2") {
 		            if (CrossYN()) {
@@ -504,12 +543,12 @@
 		                    return;
 		                }
 		
-	                    window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+	                    window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId;
 		                window.resizeTo(785, 780);
 		            }
 		        }
 		        if (gubun != "2") {
-	                window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+	                window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem + "&portletId=" + portletId;
 		            window.resizeTo(785, 780);
 		        }
 		    }

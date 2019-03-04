@@ -2,7 +2,7 @@
  * 
  */
 function viewQstList() {
-	window.open("/ezBoard/boardMain.do?func=3","main");		    	
+	window.open("/ezPoll/pollMain.do","main");		    	
 }
 
 function votePoll() {
@@ -21,7 +21,7 @@ function votePoll() {
 			var result = JSON.parse(data).result;					
 
 			if (result == "Normal") {
-				window.open("/ezBoard/boardMain.do?func=3&qstId=" + qstId, "main");
+				window.open("/ezPoll/pollMain.do?qstId=" + qstId, "main");
 			}
 			else {
 				alert(messages.strLang13);

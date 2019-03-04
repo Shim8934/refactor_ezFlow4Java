@@ -180,9 +180,9 @@
 	                FormFlag = "N";
 				}
 	            
-	            // 게시만료일
-	            if ($("#chkPermanent").is(":checked")) {
-	                Expires = "-1"
+	            // 게시만료일 /* 2019-03-04 홍승비 - 게시판그룹인 경우 게시만료일 체크 분기 타지 않도록 수정 */
+	            if ($("#chkPermanent").is(":checked") || parentBoardID == "top") {
+	                Expires = "-1";
 	            } else {
 	            	if (!$("#txtExpires").val().match(/^\d+$/)) {
 					    alert("<spring:message code='ezBoard.t156'/>: <spring:message code='ezEmail.t99000066'/>");
