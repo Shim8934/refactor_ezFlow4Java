@@ -330,9 +330,16 @@ public class EzPollController extends EgovFileMngUtil {
 	 * 투표 메인 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezPoll/pollMain.do")
-	public String qstMain() throws Exception{
+	public String qstMain(HttpServletRequest request, ModelMap model) throws Exception{
 		logger.debug("pollMain Start");
+		String qstId = request.getParameter("qstId");
 		
+		if (qstId != null) {
+			qstId = commonUtil.detectPathTraversal(qstId);
+			qstId = commonUtil.stripScriptTags(qstId);
+		}
+		
+		model.addAttribute("qstId", qstId);
 		logger.debug("pollMain End");
 		return "/ezPoll/pollMain";
 	}
@@ -341,8 +348,16 @@ public class EzPollController extends EgovFileMngUtil {
 	 * 투표 레프트 메뉴 화면 호출 함수
 	 */
 	@RequestMapping(value="/ezPoll/pollLeft.do")
-	public String qstLeft() throws Exception{
+	public String qstLeft(HttpServletRequest request, ModelMap model) throws Exception{
 		logger.debug("pollLeft Start");
+		String qstId = request.getParameter("qstId");
+		
+		if (qstId != null) {
+			qstId = commonUtil.detectPathTraversal(qstId);
+			qstId = commonUtil.stripScriptTags(qstId);
+		}
+		
+		model.addAttribute("qstId", qstId);
 		
 		logger.debug("pollLeft End");
 		return "/ezPoll/pollLeft";
