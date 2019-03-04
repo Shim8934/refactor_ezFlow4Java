@@ -82,7 +82,7 @@
 		<result property="userName2"					column="USERNAME2"					columnIndex="4"/>
 		<result property="companyID"					column="COMPANYID"					columnIndex="5"/>
 		<result property="title"						column="TITLE"						columnIndex="6"/>
-		<result property="content"						column="CONTENT"					columnIndex="7"		javaType="String" jdbcType="CLOB"/>
+		<result property="content"						column="CONTENT"					columnIndex="7"		javaType="String" jdbcType="TEXT"/>
 		<result property="contentURL"					column="CONTENTURL"					columnIndex="8"/>
 		<result property="readNum"						column="READNUM"					columnIndex="9"/>
 		<result property="writeDay"						column="WRITEDAY"					columnIndex="10"/>
