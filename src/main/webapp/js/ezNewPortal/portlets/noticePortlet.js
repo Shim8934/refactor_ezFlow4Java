@@ -5,8 +5,7 @@ var assembleNoticeList = function(noticeList, portletBoardId, access) {
 	var str = '';
 	var viewCnt = 3; // 보여주는 공지사항 갯수
 	var boardId = '';
-	console.log(portletBoardId);
-	console.log(access);
+	
 	var noticeDetail = function() {
 		var height = window.screen.availHeight;
 		var width = window.screen.availWidth;

@@ -107,7 +107,13 @@
 						alert("<spring:message code='ezPersonal.t381' />");
 						return;
 					}
-				
+					
+					if (parent.opener.getPollPortletList != undefined) {
+						parent.opener.getPollPortletList();
+					} else if (parent.opener.opener.getPollPortletList != undefined) {
+						parent.opener.opener.getPollPortletList();
+					}
+					
 			    	var url = "/ezPersonal/pollResult.do?itemSeq=" + itemseq + "&answer=" + poll_answer;
 			    	PollResult_Cross_dialogArguments[1] = vote_poll_Complete;
 			    	var OpenWin = window.open(url, "PollResult_Cross", GetOpenWindowfeature(455, 400));
@@ -120,18 +126,42 @@
 				    
 				    window.open("/ezPersonal/pollResult.do?itemSeq=" + itemseq, "", "height=400px,width=455px, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
 				}
-				opener.location.reload();
+				
+				if (parent.opener.getPollPortletList != undefined) {
+					parent.opener.getPollPortletList();
+				} else if (parent.opener.opener.getPollPortletList != undefined) {
+					parent.opener.opener.getPollPortletList();
+				} else {
+					opener.location.reload();
+				}
+				
 			}
 			
 		    function vote_poll_Complete() {
-				document.location.reload();
-				window.opener.location.reload();
-				
+		    	if (parent.opener.getPollPortletList != undefined) {
+					parent.opener.getPollPortletList();
+				} else {
+					document.location.reload();
+					window.opener.location.reload();
+				}
+		    	
 		        if(window.opener.opener != null) {
-		            window.opener.opener.location.reload();
-		            if(window.opener.opener.opener != null)
-		                window.opener.opener.opener.location.reload();
-		        }
+		        	if (parent.opener.opener.getPollPortletList != undefined) {
+						parent.opener.opener.getPollPortletList();
+					} else {
+			            window.opener.opener.location.reload();
+					}
+		        	
+		            if(window.opener.opener.opener != null) {
+		            	if (parent.opener.opener.opener.getPollPortletList != undefined) {
+							parent.opener.opener.opener.getPollPortletList();
+						} else {
+							window.opener.opener.opener.location.reload();
+						}
+		                
+		            }
+	        	}
+		    	
 		    }
 
 		function open_polllist() {
