@@ -93,10 +93,13 @@
 				xmlhttp.open("POST", "/admin/ezPortal/saveSubMenuItem.do?pageID=" + pageid, false);
 				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send(strXML);
-				xmlhttp = null;
 				
 				alert("<spring:message code='ezPortal.t84'/>");
 				g_bSaved = true;
+				if (xmlhttp.status == 200) {
+					window.opener.location.reload(true);
+				}
+				xmlhttp = null;
 				
 				location.href = "/admin/ezPortal/subMenuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=1";
 			}

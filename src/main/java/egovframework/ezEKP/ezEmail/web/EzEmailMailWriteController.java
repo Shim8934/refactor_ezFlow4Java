@@ -5494,6 +5494,10 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 				sb.append(commonUtil.cleanValue(vo.getShareMail()));
 				sb.append("</DATA3>");
 				
+				sb.append("<DATA4>");
+				sb.append(commonUtil.cleanValue(vo.getCompanyName()));
+				sb.append("</DATA4>");
+				
 				sb.append("</CELL></ROW>");
 			}
 			

@@ -2356,7 +2356,9 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 				sb.append("<li><img src='" + imageNormalImagePath + "'");
 				
 				if (imageOverImagePath != null && !imageOverImagePath.equals("")) {
-					sb.append(" id=\"" + imageNormalImagePath.substring(imageNormalImagePath.lastIndexOf("/") + 1).split("\\.")[0] + "\" onmouseover=\"img_onMouseOver('" + imageOverImagePath + "', this);\" onmouseout=\"img_onMouseOut(this);\"");
+					sb.append(" id=\"" + imageNormalImagePath.substring(imageNormalImagePath.lastIndexOf("/") + 1).split("\\.")[0] + "\"");
+					sb.append(" data1=\"" + imageNormalImagePath + "\"");
+					sb.append(" data2=\"" + imageOverImagePath + "\"");
 				}
 				
 				if (imageLinkURL != null && !imageLinkURL.equals("")) {
@@ -2374,6 +2376,7 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 					sb.append(" height='" + imageImageHeight + "'");
 				}
 				
+				sb.append(" title=\"" + menuItemDisplayName + "\"");
 				sb.append("></li>\n");
 				strHTML = sb.toString();
 				

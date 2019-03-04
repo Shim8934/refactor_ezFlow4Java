@@ -1411,8 +1411,8 @@ function GetMailAddresses(name) {
         m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
         m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
         m_addrBook["href"][count + adCount] = "";
-        m_addrBook["company"][count + adCount] = strLangSharedMailbox01;
-        m_addrBook["dept"][count + adCount] = "";
+        m_addrBook["company"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA4")[0]);
+        m_addrBook["dept"][count + adCount] = strLangSharedMailbox01;
         m_addrBook["title"][count + adCount] = "";
     }
     

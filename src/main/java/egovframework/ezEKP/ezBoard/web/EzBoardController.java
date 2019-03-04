@@ -6462,10 +6462,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userID = request.getParameter("pUserID");
 		String listCount = request.getParameter("pListCount");
 		String preView = request.getParameter("pPreView");
-		int tempCount = 10;
+		int tempCount;
 		
+		/* 2019-02-28 홍승비 - listCount 파라미터가 null인 경우 기존 리스트카운트를 가져오도록 수정 (디폴트 20)*/
 		if (listCount != null) {
 			tempCount = Integer.parseInt(listCount);
+		} else {
+			BoardConfigVO tempVO = ezBoardService.getPersonalCount(userInfo);
+			tempCount = tempVO.getListCount();
 		}
 		
 		String result = ezBoardService.setBoardConfig(userID, tempCount, preView, userInfo.getTenantId());
