@@ -213,7 +213,7 @@
 		                    ActObj.nextSibling.setAttribute("value", spltAct[i]);
 		                    break;
 		                case "IMPORTANCE":
-		                    ActObj.selectedIndex = 5;
+		                    ActObj.selectedIndex = 6;
 		                    ActObj.item(5).checked = true;
 		                    ActObj.nextSibling.innerHTML = "<span><nobr><u>" + strLang343 + "</u></nobr></span>";
 		                    ActObj.nextSibling.setAttribute("RuleKind", spltAct[i]);
