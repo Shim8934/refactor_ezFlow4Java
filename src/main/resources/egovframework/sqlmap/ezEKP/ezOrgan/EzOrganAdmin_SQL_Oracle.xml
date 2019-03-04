@@ -6028,6 +6028,20 @@
 		]]>
 	</update>
 	
+	<select id="EzOrganAdminDAO.getDeptAddJobUserList" parameterClass="Map" resultMap="userExt4List">
+		<![CDATA[
+			SELECT
+				CN,
+				EXTENSIONATTRIBUTE4
+			FROM
+				TBL_USERMASTER
+			WHERE
+				(EXTENSIONATTRIBUTE4 LIKE #v_DEPTID# || ':%' OR EXTENSIONATTRIBUTE4 LIKE '%;' || #v_DEPTID# || ':%')
+			AND
+				TENANT_ID = #v_TENANT_ID#
+		]]>
+	</select>
+	
  	 <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}
      </procedure>
