@@ -816,13 +816,14 @@
 						</select>
 						<input name="Input" class="text" id="list_YearlyDays" style="Width:40px;text-align: center;" onFocus='window.document.all["optYearly"][0].checked=true;' maxlength="2">
 						&nbsp;<spring:message code='ezTask.t62' />
-						<c:if test="${userinfo.lang == 3}" >
+						<%-- <c:if test="${userInfo.lang == 1}" >
 							<input type="checkbox" value="1" id="moonday" style="margin:0px 0px 2px 0px;vertical-align:middle;">
 						</c:if>
-						<c:if test="${userinfo.lang != 3}" >
+						<c:if test="${userInfo.lang != 1}" >
 							<input type="checkbox" value="1" id="moonday" style="margin:0px 0px 2px 0px;vertical-align:middle;display:none;">
 						</c:if>
-						<spring:message code='ezTask.t63' /><br>
+						<spring:message code='ezTask.t63' /><br> --%>
+						<br>
 						<input id="optY2" type="radio" name="optYearly" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;">          
 						<label for="optY2" accesskey="E" style="vertical-align:middle"><spring:message code='ezTask.t53' /><u>E</u>)&nbsp;</label>
 						<select name="select" id="list_Month2" onFocus='window.document.all["optYearly"][1].checked=true;'>
