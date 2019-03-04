@@ -1668,8 +1668,6 @@
 			WHERE
 				CN = #v_USERID#
 			AND
-				PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
-			AND
 				tenant_id = #tenantID#
 		]]>
 	</select>
