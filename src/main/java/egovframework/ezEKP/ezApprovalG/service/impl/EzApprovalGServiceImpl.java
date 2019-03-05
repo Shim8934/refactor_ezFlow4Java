@@ -26274,8 +26274,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			List<ApprGRelayVO> apprGAttachInfoVOList = ezApprovalGDAO.recRelayInfo(map);
 			
 			if (apprGAttachInfoVOList.size() > 0) {
-				ezApprovalGDAO.deleteRecRelayInfo(map);
-				ezApprovalGDAO.deleteRelayAprDocInfo(map);
+				for (ApprGRelayVO relayVO : apprGAttachInfoVOList) {
+					map.put("v_docID", relayVO.getDocID());
+					ezApprovalGDAO.deleteRelayAprDocInfo(map);
+					ezApprovalGDAO.deleteRecRelayInfo(map);
+				}
 			}
 			ezApprovalGDAO.insertRelayDB(map);
 			result = true;
