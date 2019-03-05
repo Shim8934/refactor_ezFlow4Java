@@ -840,6 +840,7 @@
 		        document.getElementsByName('drafterdept')[0].id = "";
 		        $("select[name=selSContName]").val("");
 		        ScontID = "";
+		        totalCount = "";
 		        $('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
 		        makePageSelPage();
 		    }
