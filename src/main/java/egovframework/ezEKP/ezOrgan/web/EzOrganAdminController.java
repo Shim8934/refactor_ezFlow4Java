@@ -135,6 +135,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.createWebfolderToken();
     	ezCommonService.addUserMasterMailBoxQuota();
     	ezCommonService.addJournalFormDelFlag();
+    	ezCommonService.createJmochaMailCopyright();
     	
     	logger.debug("init ended.");
     }

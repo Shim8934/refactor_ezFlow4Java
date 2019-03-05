@@ -1421,5 +1421,10 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addJournalFormDelFlag() throws Exception {
 		ezCommonDAO.addJournalFormDelFlag();
 	}
+
+	@Override
+	public void createJmochaMailCopyright() throws Exception {
+		ezCommonDAO.createJmochaMailCopyright();
+	}
 	
 }

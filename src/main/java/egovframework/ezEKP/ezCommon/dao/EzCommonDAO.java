@@ -388,4 +388,14 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			update("EzCommonDAO.addJournalFormDelFlag");
 		}
 	}
+	
+	public void createJmochaMailCopyright() {
+		try {
+			select("EzCommonDAO.checkJmochaMailCopyright");
+		} catch (Exception e) {
+			logger.debug("jmocha_mail_copyright doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createJmochaMailCopyright");
+		}
+	}
 }

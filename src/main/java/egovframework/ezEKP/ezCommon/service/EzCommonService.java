@@ -91,6 +91,8 @@ public interface EzCommonService {
 	public void addUserMasterMailBoxQuota() throws Exception;
 
 	public void addJournalFormDelFlag() throws Exception;
+	
+	public void createJmochaMailCopyright() throws Exception;
 
 }
 

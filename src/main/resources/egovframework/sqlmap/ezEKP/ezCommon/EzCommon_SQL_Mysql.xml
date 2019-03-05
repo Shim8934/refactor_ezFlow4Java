@@ -518,4 +518,20 @@
 			form_del_flag VARCHAR(10) DEFAULT NULL
 			)
 	</statement>
+	
+	<select id="EzCommonDAO.checkJmochaMailCopyright">
+		SELECT 
+			TENANT_ID
+		FROM 
+			JMOCHA_MAIL_COPYRIGHT
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.createJmochaMailCopyright"> 
+		CREATE TABLE `jmocha_mail_copyright` (
+		  `TENANT_ID` INT NOT NULL,
+		  `COPYRIGHT_TEXT` varchar(500) DEFAULT NULL,
+          PRIMARY KEY (`TENANT_ID`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8
+	</statement>
 </sqlMap>
