@@ -438,18 +438,18 @@
 				A.c_cate_a = B.c_code
 			AND
 				A.tenant_id = B.tenant_id
-			WHERE
-				B.c_cat = 'a'
-			AND
-				c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
-			AND
-				c_adminconfirm = 'Y'
 			INNER JOIN
 				TBL_USERMASTER C
 			ON
 				RTRIM(A.c_sysopid) = RTRIM(C.CN)
 			AND
 				A.tenant_id = C.tenant_id
+			WHERE
+				B.c_cat = 'a'
+			AND
+				c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
+			AND
+				c_adminconfirm = 'Y'
 		]]>
 		<isNotEqual property="v_STRSELECT" compareValue="0">
 			<![CDATA[
