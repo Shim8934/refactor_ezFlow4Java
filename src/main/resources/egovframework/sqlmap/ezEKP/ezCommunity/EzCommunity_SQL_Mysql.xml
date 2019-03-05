@@ -1919,7 +1919,7 @@
 				AND
 					permit <> 0
 				AND
-					A.c_id LIKE CONCAT('%', #v_SER#, '%')
+					C.CN LIKE CONCAT('%', #v_SER#, '%')
 				AND
 					B.companyid = #companyID#
 				AND
@@ -1979,7 +1979,7 @@
 						A.tenant_id = B.tenant_id
 					AND
 						A.companyid = B.companyid
-					LEFT OUTER JOIN
+					INNER JOIN
 						TBL_USERMASTER C
 					ON
 						A.c_id = C.CN
@@ -4014,6 +4014,12 @@
 					IFNULL(COUNT(c_clubno), 0)
 				FROM
 					TBL_C_CLUBUSER 
+				JOIN
+					TBL_USERMASTER
+				ON
+					RTRIM(TBL_USERMASTER.CN) = RTRIM(TBL_C_CLUBUSER.c_id)
+				AND
+					TBL_C_CLUBUSER.tenant_id = TBL_USERMASTER.tenant_id
 				WHERE
 					RTRIM(c_clubno) = #v_CODE#
 				AND
@@ -4021,7 +4027,7 @@
 				AND
 					permit <> 0
 				AND
-					tenant_id = #tenantID#
+					TBL_C_CLUBUSER.tenant_id = #tenantID#
 			]]>
 		</isEqual>
 		<isNotEqual property="v_S_RADIO" compareValue="ID">
@@ -4038,7 +4044,7 @@
 					AND
 						TBL_C_CLUBUSER.tenant_id = TBL_USERMASTER.tenant_id
 					WHERE
-						RTRIM(TBL_C_CLUBUSER.c_clubno) = #v_CODE#
+						RTRIM(c_clubno) = #v_CODE#
 					AND 
 						CASE WHEN #primary# = '1' THEN TBL_USERMASTER.DISPLAYNAME ELSE TBL_USERMASTER.DISPLAYNAME2 END LIKE CONCAT('%', #v_KEYWORD#, '%')
 					AND
@@ -4053,12 +4059,18 @@
 						IFNULL(COUNT(c_clubno), 0)
 					FROM
 						TBL_C_CLUBUSER
+					JOIN
+						TBL_USERMASTER
+					ON
+						RTRIM(TBL_USERMASTER.CN) = RTRIM(TBL_C_CLUBUSER.c_id)
+					AND
+						TBL_C_CLUBUSER.tenant_id = TBL_USERMASTER.tenant_id
 					WHERE
 						RTRIM(c_clubno) = #v_CODE#
 					AND
 						permit <> 0
 					AND
-						tenant_id = #tenantID#
+						TBL_C_CLUBUSER.tenant_id = #tenantID#
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -4896,6 +4908,12 @@
 					A.tenant_id = B.tenant_id
 				AND
 					A.companyid = B.companyid
+				INNER JOIN
+					TBL_USERMASTER
+				ON
+					RTRIM(TBL_USERMASTER.CN) = RTRIM(A.c_id)
+				AND
+					A.tenant_id = TBL_USERMASTER.tenant_id
 				WHERE
 					RTRIM(c_clubno) = #v_CODE#
 				AND
@@ -4943,12 +4961,18 @@
 					IFNULL(COUNT(c_clubno), 0)  
 				FROM
 					TBL_C_CLUBUSER
+				JOIN
+					TBL_USERMASTER
+				ON
+					RTRIM(TBL_USERMASTER.CN) = RTRIM(TBL_C_CLUBUSER.c_id)
+				AND
+					TBL_C_CLUBUSER.tenant_id = TBL_USERMASTER.tenant_id
 				WHERE
 					RTRIM(c_clubno) = #v_CODE#
 				AND
 					permit <> 0
 				AND
-					tenant_id = #tenantID#
+					TBL_C_CLUBUSER.tenant_id = #tenantID#
 				]]>
 			</isNotEqual>
 		</isNotEqual>

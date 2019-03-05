@@ -80,6 +80,12 @@
 		    		
 		    		if (info[1] == "1")
 		    			alldaycheck.checked = true;
+		    		
+					var m_objStartTime = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+		    		
+		    		var iDateNumber = m_objStartTime.getDate();
+		            var iWeekdayNumber = m_objStartTime.getDay();
+		            var iMonthNumber = m_objStartTime.getMonth();
 		    			
 		    		showMainPattern(info[2]);
 		    		
@@ -94,6 +100,7 @@
 		    					id0D1.checked = true;
 		    					txt_De.value = info[3];
 		    				}
+		    				document.getElementById("day" + iWeekdayNumber).checked = true;
 		    			break;
 		    			case "1":
 		    				mpWeekly.checked = true;
@@ -111,14 +118,30 @@
 		    					idOM1.checked = true;
 		    					list_MonthInterval.value = info[4];
 		    					list_MonthlyDays.value = info[5];
+		    					
+		    					var nEach = parseInt(iDateNumber / 7);
+					            document.getElementById("list_MonthlyEach").selectedIndex = nEach;
+					            SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);
 		    				}
 		    				else
 		    				{
+		    					document.getElementById("list_MonthlyDays").value = iDateNumber;
+		    					
 		    					id0M2.checked = true;
 		    					list_MonthInterval2.value = info[4];
 		    					list_MonthlyEach.value = info[5];
 		    					list_MonthlyDay.value = info[6];
 		    				}
+		    				document.getElementById("day" + iWeekdayNumber).checked = true;			// 매주 체크
+		    				
+				            document.getElementById("list_YearlyDays").value = iDateNumber;
+				            
+				            document.getElementById("list_Month").selectedIndex = iMonthNumber;
+				            document.getElementById("list_Month2").selectedIndex = iMonthNumber;
+				            
+				            var nEach = parseInt(iDateNumber / 7);
+				            document.getElementById("list_YearlyEach").selectedIndex = nEach;
+				            SetWeekdayDropDown(list_YearlyDay, iWeekdayNumber);							// 매년 체크
 		    			break;
 		    			case "3":
 		    				mpYearly.checked = true;
@@ -128,7 +151,12 @@
 		    					list_Month.value = info[4];
 		    					list_YearlyDays.value = info[5];
 		    					
+		    					document.getElementById("list_Month2").selectedIndex = iMonthNumber;
 		    					
+		    					var nEach = parseInt(iDateNumber / 7);
+					            document.getElementById("list_YearlyEach").selectedIndex = nEach;
+					            
+					            SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);
 		    				}
 		    				else
 		    				{
@@ -136,7 +164,32 @@
 		    					list_Month2.value = info[4];
 		    					list_YearlyEach.value = info[5];
 		    					list_YearlyDay.value = info[6];
+		    					
+		    					 document.getElementById("list_Month").selectedIndex = iMonthNumber;
+		    					 
+		    					 document.getElementById("list_YearlyDays").value = iDateNumber;
 		    				}
+		    				document.getElementById("day" + iWeekdayNumber).checked = true;			// 매주 체크
+		    				
+		    				document.getElementById("list_MonthlyDays").value = iDateNumber;
+		    				
+		    				document.getElementById("list_MonthlyEach").selectedIndex = nEach;
+		    				SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);						// 매월 체크
+		    		}
+		    		
+		    		if(info[2] == "0" || info[2] == "1") {
+			    		SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);
+			            SetWeekdayDropDown(list_YearlyDay, iWeekdayNumber);
+			            
+			            document.getElementById("list_MonthlyDays").value = iDateNumber;
+			            document.getElementById("list_YearlyDays").value = iDateNumber;
+		
+			            document.getElementById("list_Month").selectedIndex = iMonthNumber;
+			            document.getElementById("list_Month2").selectedIndex = iMonthNumber;
+		
+			            var nEach = parseInt(iDateNumber / 7);
+			            document.getElementById("list_MonthlyEach").selectedIndex = nEach;
+			            document.getElementById("list_YearlyEach").selectedIndex = nEach;
 		    		}
 		    	}
 		    	else {
@@ -155,9 +208,9 @@
 		            var iWeekdayNumber = m_objStartTime.getDay();
 		            var iMonthNumber = m_objStartTime.getMonth();
 
-		    		document.getElementById("day" + iWeekdayNumber).checked = true;			// 매주 반복주기 설정
-		    		SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);						// 매월 반복주기 설정
-		            SetWeekdayDropDown(list_YearlyDay, iWeekdayNumber);							// 매년 반복주기 설정
+		    		document.getElementById("day" + iWeekdayNumber).checked = true;
+		    		SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);
+		            SetWeekdayDropDown(list_YearlyDay, iWeekdayNumber);
 		            
 		            document.getElementById("list_MonthlyDays").value = iDateNumber;
 		            document.getElementById("list_YearlyDays").value = iDateNumber;
@@ -307,7 +360,6 @@
 		    			if (txt_De.value == parseInt(txt_De.value) && parseInt(txt_De.value) > 0){
 		    				
 		    				repetition += "|" + parseInt(txt_De.value);	
-		    				console.log(repetition + ' text_De.value : '+txt_De.value + ' parseInt : ' + parseInt(txt_De.value));
 		    			}		    				
 		    			else {		    				
 			    				alert("<spring:message code='ezSchedule.t62' />");
@@ -918,7 +970,13 @@
 		    		$('#Etimepicker').timepicker("setTime", "00:00");
 		    		
 		    		setTimePickerReadOnly();
-		    	}else{
+		    	}else if(sTimeTemp != null){
+		    		setTimePickerModifiable();
+		    		
+		    		$('#Stimepicker').timepicker("setTime", sTimeTemp);
+		    		$('#Etimepicker').timepicker("setTime", eTimeTemp);
+		    	}
+		    	else {
 		    		setTimePickerModifiable();
 		    		
 					var now = new Date();
