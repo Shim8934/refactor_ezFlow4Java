@@ -662,7 +662,7 @@
 	        var approval_admin_popup_choicedept_dialogArguments = new Array();
 	        
 	        function bt_OK_onclick() {
-	        	
+	        	if (document.getElementsByName("SDeptName")[0].value != "") {
 	        	 if (CrossYN()) {
 	        		 	approval_admin_popup_choicedept_dialogArguments[0] = "one";
 		                approval_admin_popup_choicedept_dialogArguments[1] = bt_OK_onclick_Complete;
@@ -676,6 +676,7 @@
 		                    window.location.reload(false);
 		                }
 		            }
+	        	}
 			}
 	        
 	        function bt_OK_onclick_Complete(retVal) { 
@@ -709,7 +710,7 @@
 	        }
 	        
 	        function bt_All_onclick() {
-				
+	        	if (document.getElementsByName("SDeptName")[0].value != "") {
 	        	 if (CrossYN()) {
 	        		 	approval_admin_popup_choicedept_dialogArguments[0] = "all";
 		                approval_admin_popup_choicedept_dialogArguments[1] = bt_All_onclick_Complete;
@@ -723,6 +724,7 @@
 		                    window.location.reload(false);
 		                }
 		            }
+	        	}
 	        }
 	        
 	        function bt_All_onclick_Complete(retVal) {
