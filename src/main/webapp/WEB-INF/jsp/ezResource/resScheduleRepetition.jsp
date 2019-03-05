@@ -203,7 +203,13 @@
 		    		$('#Stimepicker').timepicker("setTime", "00:00");
 		    		$('#Etimepicker').timepicker("setTime", "00:00");
 		    		setTimePickerReadOnly();
-		    	}else{
+		    	}else if(sTimeTemp != null){
+		    		setTimePickerModifiable();
+		    		
+		    		$('#Stimepicker').timepicker("setTime", sTimeTemp);
+		    		$('#Etimepicker').timepicker("setTime", eTimeTemp);
+		    	}
+		    	else {
 		    		setTimePickerModifiable();
 		    		var now = new Date();
 		        	

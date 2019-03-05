@@ -3318,8 +3318,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		CommunityCClubUserVO clubUser = null;
 		
-		/* 2018-12-03 홍승비 - 카뮤니티 멤버의 부서명 Prop으로 가져오도록 수정 */
-		String propList = "extensionAttribute2;company;displayName;title;mail;telephoneNumber;mobile;info;homePhone;facsimileTelephoneNumber;postalCode;streetAddress;description";
+		/* 2018-12-03 홍승비 - 카뮤니티 멤버의 부서명 Prop으로 가져오도록 수정, 사용하지 않는 prop 제거 */
+		String propList = "displayName;telephoneNumber;mobile;facsimileTelephoneNumber;postalCode;streetAddress;description";
 		int userMode = 0;
 		boolean existOutList = false;
 		
@@ -3347,12 +3347,19 @@ public class EzCommunityController extends EgovFileMngUtil{
 		memberInfo.setCompanyAddress(xmldom.getElementsByTagName("STREETADDRESS").item(0).getTextContent());
 		memberInfo.setUserName(xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent());
 		memberInfo.setCompanyTel(xmldom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent());
-		memberInfo.setDeptName(xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent());
+		//memberInfo.setDeptName(xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent());
 		
+		/* 2019-03-05 홍승비 - 커뮤니티 팝업홈 > 관리메뉴 > 회원정보가 사간겸직에 대응하도록 수정 */
 		logger.debug("getMemberInfo(" + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
 		CommunityMemberInfoVO memberInfoVO = ezCommunityService.getMemberInfo(companyID, cID, userInfo.getTenantId());
 		
 		if (memberInfoVO != null) {
+			if (userInfo.getPrimary().equals("1")) {
+				memberInfo.setDeptName(memberInfoVO.getDeptName());
+			} else {
+				memberInfo.setDeptName(memberInfoVO.getDeptName2());
+			}
+			
 			logger.debug("adminMemberListOkGet(" + code + ", " + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
 			clubUser = ezCommunityService.adminMemberListOkGet(code, cID, companyID, userInfo.getTenantId());
 			
