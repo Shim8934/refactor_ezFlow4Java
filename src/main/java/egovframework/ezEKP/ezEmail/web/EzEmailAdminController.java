@@ -2311,6 +2311,98 @@ public class EzEmailAdminController {
 		return "admin/ezEmail/signaturePreview";
 
 	}
+
+	/**
+	 * 수취인안내설정 관리 화면(copyright)
+	 * 
+	 */
+	@RequestMapping(value = "/admin/ezEmail/mailCopyright.do", method = RequestMethod.GET)
+	public String mailCopyright(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("mailCopyright started.");
+		
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+		
+		logger.debug("mailCopyright ended.");
+		return "admin/ezEmail/mailCopyright";
+	}
+	
+	/**
+	 * 수취인안내설정 데이터 가져오기(copyright)
+	 */
+	@RequestMapping(value = "/admin/ezEmail/mailCopyrightData.do", method = RequestMethod.POST)
+	@ResponseBody
+	public JSONArray mailCopyrightData(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("mailCopyrightData started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String useCopyright = commonUtil.getTenantConfigRest("useCopyright", userInfo.getId(), request); // 수취인안내설정 사용여부
+		if (useCopyright == null || useCopyright.equals("")) {
+			useCopyright = "YES";
+		}
+		logger.debug("useCopyright=" + useCopyright);
+		
+		String inputParams = "tenantId=" + userInfo.getTenantId();
+		logger.debug("inputParams=" + inputParams);
+		
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getCopyright";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		String copyrightText = "";
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject jsonObj = (JSONObject) jsonParser.parse(response);
+
+			Map<String, String> resultMap = (Map<String, String>) jsonObj.get("result");
+			copyrightText = resultMap.get("copyrightText");
+			
+			if (copyrightText == null) {
+				copyrightText = "";
+			} 
+		}
+		logger.debug("copyrightText=" + copyrightText);
+		
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("useCopyright", useCopyright);
+		jsonObj.put("copyrightText", copyrightText);
+
+		JSONArray jsonArr = new JSONArray();
+		jsonArr.add(jsonObj);
+		
+		logger.debug("mailCopyrightData ended.");
+		return jsonArr;
+	}
+	
+	/**
+	 * 수취인안내설정 저장(copyright)
+	 * 
+	 */
+	@RequestMapping(value = "/admin/ezEmail/mailCopyrightSave.do", method = RequestMethod.POST)
+	@ResponseBody
+	public String mailCopyrightSave(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		logger.debug("mailCopyrightSave started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String copyrightText = request.getParameter("copyrightText");
+		String useCopyright = request.getParameter("useCopyright");
+		
+		String inputParams = "tenantId=" + userInfo.getTenantId() 
+				+ "&copyrightText=" + URLEncoder.encode(copyrightText, "UTF-8") + "&useCopyright=" + useCopyright;
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/updateCopyright";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		logger.debug("mailCopyrightSave ended.");
+		return "";
+	}
 	
 	private String replaceUserInfo(OrganUserVO _vo, String content) {
 		content = content.replace("${company}", _vo.getCompany1()).replace("${engCompany}", _vo.getCompany2()).replace("${name}", _vo.getDisplayName1()).replace("${engName}", _vo.getDisplayName2())

@@ -174,6 +174,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("useSignatureTemplate=" + useSignatureTemplate);
+
+		String useCopyrightMenu = ezCommonService.getTenantConfig("useCopyrightMenu", user.getTenantId());
+		if (useCopyrightMenu == null || useCopyrightMenu.equals("")) {
+			useCopyrightMenu = "NO";
+		}
+		logger.debug("useCopyrightMenu=" + useCopyrightMenu);
 		
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", user.getTenantId());
 		
@@ -181,6 +187,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		model.addAttribute("useLetter", useLetter);
 		model.addAttribute("useSignatureTemplate", useSignatureTemplate);
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
+		model.addAttribute("useCopyrightMenu", useCopyrightMenu);
 		model.addAttribute("cChk", cChk);
 		
 		return "admin/ezOrgan/organLeft";
