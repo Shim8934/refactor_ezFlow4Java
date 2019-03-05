@@ -731,7 +731,7 @@
 				if(popupselTContName!=undefined && popupselTContName != "" ) {
 				if (popupselTContName == null || popupselTContName == '' 
 	        			|| $("select[name=selSContName]").val() == null || $("select[name=selSContName]").val() == '') {
-	                alert("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1676'/>");
+	                alert("<spring:message code='ezApprovalG.t1676'/>");
 	                
 	        	}
 				else {
@@ -743,7 +743,7 @@
 				}
 				        
 	        } else {
-	            alert("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1676'/>");
+	            alert("<spring:message code='ezApprovalG.t1676'/>");
         		strMoveListIDInfo = "";
 				selectelem = null;
 				$(":checkbox[name=myCheckbox]").prop("checked", false);
