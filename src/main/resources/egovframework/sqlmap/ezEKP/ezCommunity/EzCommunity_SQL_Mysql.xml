@@ -6915,15 +6915,77 @@
 	<select id="EzCommunityDAO.getMemberInfo"					parameterClass="Map"		resultClass="CommunityMemberInfoVO">
 		<![CDATA[
 			SELECT 
-				*
+				M.COMPANYID,
+				USERID,
+				USERNAME,
+				USERNAME2,
+				COMPANYNAME,
+				COMPANYNAME2,
+				COMPANYZIP,
+				COMPANYADDRESS,
+				T2.DESCRIPTION as DEPTNAME,
+				T2.DESCRIPTION2 as DEPTNAME2,
+				COMPANYTEL,
+				COMPANYFAX,
+				HOMEZIP,
+				HOMEADDRESS,
+				HOMETEL,
+				HANDPHONE,
+				EMAIL,
+				BIRTHDAY,
+				GENDER,
+				GENDER2,
+				M.TENANT_ID
 			FROM 
-	        	TBL_C_MEMBERINFO
+	        	TBL_C_MEMBERINFO M	
+        	INNER JOIN
+				((SELECT
+					D.CN, D.DEPARTMENT as DEPTID,
+					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+					D.TENANT_ID,
+					D.DESCRIPTION,
+					D.DESCRIPTION2
+				FROM
+					TBL_USERMASTER D
+				WHERE
+					D.TENANT_ID = #tenantID#
+				AND
+					D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#)
+					
+				UNION ALL
+				
+				(SELECT
+					B.cn, A2.DEPTID,
+					C.EXTENSIONATTRIBUTE2 as COMPANYID,
+					A2.TENANT_ID,
+					C.DISPLAYNAME as DESCRIPTION,
+					C.DISPLAYNAME2 as DESCRIPTION2
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN
+					TBL_ADDJOBMASTER A2
+				ON
+					A2.CN = B.CN
+				AND
+					A2.TENANT_ID = B.TENANT_ID
+				RIGHT JOIN
+					TBL_DEPTMASTER C
+				ON
+					A2.DEPTID = C.CN
+				AND
+					B.TENANT_ID = C.TENANT_ID)) T2
+			ON
+				M.USERID = T2.CN
+			AND
+				M.TENANT_ID = T2.TENANT_ID
 			WHERE  
-	       		companyid = #v_COMPANYID#
+	       		T2.companyid = #v_COMPANYID#
 	       	AND
-	       		RTRIM(userid) = #v_C_ID#
+	       		RTRIM(M.userid) = #v_C_ID#
 	       	AND
-	       		tenant_id = #tenantID#
+	       		M.tenant_id = #tenantID#
+	       	GROUP BY
+	       		USERID
 		]]>
 	</select>
 	
