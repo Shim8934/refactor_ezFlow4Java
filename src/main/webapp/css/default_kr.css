@@ -1,4 +1,4 @@
-﻿.inputText {
+﻿﻿.inputText {
 	border:1px solid #999
 }
 
@@ -2806,3 +2806,7 @@ h2, #menu span {font-size: 12px;}
 .error_wrap dt{ font-size:26px; color:#333; padding:0px 0px 5px 0px;}
 .error_wrap dd{color:#666; font-size:18px; padding:0px 0px 0px 0px;}
 
+.tree_admin_dotlist{ background-position:-234px -104px; width:16px; height:16px; display:inline-block; margin: 0px 0px 0px 0px; cursor:pointer;} /* tree 관리자 리스트 도트아이콘 */
+.lnb h2.on + .leftList { visibility: visible; height: auto !important;}
+.lnb .leftList { visibility: hidden; height: 0px !important; list-style-type: none; padding: 0;  margin: 0; width: 100%; overflow: hidden;}
+.lnb .leftList li { padding: 4px 20px; cursor: pointer;}

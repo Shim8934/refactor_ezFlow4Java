@@ -645,19 +645,19 @@ public class LoginController {
         		for (int i = 0; i < ipBandList.size(); i++) {
         			getAccess = ipBandList.get(i).getAccess();
         			
-        			if (!getAccess.equals("NO")) {
-        				String ipListIp[] = ipBandList.get(i).getIpAddress().split("\\."); // *(대역)이 있을 수도 있으니 하나하나 검사해야됨
-            			for (int j = 0; j < clientIP.length; j++) {
-            				if (ipListIp[j].equals(clientIP[j]) || ipListIp[j].equals("*")) {
-            					checkCnt++;
-            				}
-            			}
-            			
-            			if (checkCnt == 4) {
-            				returnValue = true;
-            			}
-            			checkCnt = 0;
+    				String ipListIp[] = ipBandList.get(i).getIpAddress().split("\\."); // *(대역)이 있을 수도 있으니 하나하나 검사해야됨
+        			for (int j = 0; j < clientIP.length; j++) {
+        				if (ipListIp[j].equals(clientIP[j]) || ipListIp[j].equals("*")) {
+        					checkCnt++;
+        				}
         			}
+        			
+        			if (checkCnt == 4 && getAccess.equals("NO")) {
+        				return false;
+        			} else if (checkCnt == 4){
+        				returnValue = true;
+        			}
+        			checkCnt = 0;
         		}
         		
         	} else { // 대역이 등록 안돼있으면 무조건 false (useIPAccess컨피그 사용O -> id체크X -> 부서체크X -> 등록된 대역도 없으므로)
@@ -750,19 +750,24 @@ public class LoginController {
     		ssoLoginCookie.setDomain(useSSOCookie);
     		response.addCookie(ssoLoginCookie);
     	}
-    	
-    	// 멀티로그인 옵션 관련 쿠키 (default : YES)
-//    	String multiLoginUserInfo = userId + "_" + tenantId;
-    	String multiLoginTime = String.valueOf(System.currentTimeMillis());
+
+    	String multiLoginTime = "";
+    	if(!request.getRequestURI().matches("(/ezConn|/ezTalkGate|/ezUCMessenger).+")) { // 외부 로그인으로 접근시에는 멀티로그인 옵션 무시
+    		// 멀티로그인 옵션 관련 쿠키 (default : YES)
+    		multiLoginTime = String.valueOf(System.currentTimeMillis());
+    		
+    		String useMultiLogin = ezCommonService.getCompanyConfig(tenantId, companyID, "useMultiLogin");
+    		if(useMultiLogin.equalsIgnoreCase("NO")) {
+    			commonUtil.setLoginUsers(tenantId, userId, multiLoginTime);
+    		}
+    	} else {
+    		// 멀티로그인 쿠키 셀렉트해서 넣어주기 
+    		multiLoginTime = ezCommonService.selectMultiLoginTime(tenantId, userId);
+    	}
     	
     	Cookie multiLoginCookieID = new Cookie("multiLoginCookie", multiLoginTime);
     	multiLoginCookieID.setPath("/");
     	response.addCookie(multiLoginCookieID);
-    	
-    	String useMultiLogin = ezCommonService.getCompanyConfig(tenantId, companyID, "useMultiLogin");
-    	if(useMultiLogin.equalsIgnoreCase("NO")) {
-    		commonUtil.setLoginUsers(tenantId, userId, multiLoginTime);
-     	}
     	// end
     }
     

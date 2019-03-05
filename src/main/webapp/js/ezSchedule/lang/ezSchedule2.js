@@ -190,3 +190,5 @@ var strLangKHJ8 = "No right.";
 //2018-12-27
 var strLangKHA1 = "Company Anniversary";
 var strLangKHA2 = "Statutory Holiday";
+//2018-02-22
+var strLangGHA1 = ", ";

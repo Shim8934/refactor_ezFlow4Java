@@ -32,7 +32,24 @@
 				document.getElementById("progressPanel").style.display = "none";
 			}
 
-			function goPage(idx){
+			function mailStatisticsFolder() {
+				if($("#MAIL").parent().attr('class') == "on"){
+					$("#MAIL").parent().attr('class', '');
+					document.getElementById("leftList").style.display = "";
+				} else {
+					$("#MAIL").parent().attr('class', 'on');
+					document.getElementById("leftList").style.display = "block";
+				}
+				
+			}
+			
+		    function goPage(idx){
+		    	if(idx==23 | idx==24 | idx==25 | idx==26 | idx==27 | idx==28 | idx==29){
+		    		$("#MAIL").parent().attr('class', 'on');
+		    	} else {
+		    		$("#MAIL").parent().attr('class', '');
+		    	}
+		    	
 				var url = "";
 
 				switch(idx){

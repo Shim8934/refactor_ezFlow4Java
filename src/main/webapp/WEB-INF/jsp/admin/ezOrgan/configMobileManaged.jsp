@@ -47,21 +47,21 @@
 			if (confirm("<spring:message code='ezPortal.t54' />")) {
 		    	xhttp = createXMLHttpRequest();
 		    	xhttp.onreadystatechange = loader;
-				xhttp.open("POST", "/ezPersonal/deleteMobileDeviceManaged.do?pDevId=" + devid + "&userId=" + userId);
+				xhttp.open("POST", "/ezPersonal/deleteMobileDeviceManaged.do?userId=" + userId + "&pDevId=" + devid);
 				xhttp.send();
 			}
 	    }
 		
-		// 기기별 사용여부 selectBox changed // Section? S:P
-	    function selectChange(devid, obj, section) {
-            setDevice(devid, obj.options[obj.selectedIndex].value, section);
+		// 기기별 사용여부 selectBox changed
+	    function selectChange(devid, obj) {
+            setDevice(devid, obj.options[obj.selectedIndex].value);
 	    }
 		
 		// 기기별 사용여부 selectBox changed
-	    function setDevice(devId, state, section) {
+	    function setDevice(devId, state) {
 	    	xhttp = createXMLHttpRequest();
 			xhttp.onreadystatechange = loader;
-			xhttp.open("POST", "/ezPersonal/setMobileDeviceInfo.do?pDevId=" + devId + "&pState=" + state);
+			xhttp.open("POST", "/ezPersonal/setMobileDeviceInfo.do?userId=" + userId + "&pDevId=" + devId + "&pState=" + state);
 			xhttp.send();
 	    }
 		
@@ -120,10 +120,10 @@
 		<br/>
 		<table class="mainlist" id="deviceTbl" style="white-space: nowrap; width:100%; overflow-x: hidden; overflow-y: auto;">
             <tr>
-                <th width='30%'><spring:message code="ezPersonal.kyj01" /></th>
-                <th width='20%'><spring:message code="ezPersonal.t513" /></th>
-                <th width='30%'><spring:message code="ezApproval.t367" /></th>
-                <th width='20%'><spring:message code="ezPersonal.kyj02" /></th>
+                <th width='50%'><spring:message code="ezPersonal.kyj01" /></th>
+                <th width='15%'><spring:message code="ezPersonal.t513" /></th>
+                <th width='15%'><spring:message code="ezApproval.t367" /></th>
+                <th width='15%'><spring:message code="ezPersonal.kyj02" /></th>
             </tr>
             <c:if test="${deviceInfo ne null}">
 	    		<c:forEach items="${deviceInfo}" var="list">
@@ -144,7 +144,7 @@
                         </c:choose>
                     </td>
 						<td>
-							<select name="selectbox" id='selectChangeState' onchange='selectChange("${list.devId}",this,"S")'>
+							<select name="selectbox" id='selectChangeState' onchange='selectChange("${list.devId}",this)'>
 								<option value='0' <c:if test="${notUsed eq 0}"> selected="selected" </c:if>><spring:message code="ezPersonal.t937" /></option>
 								<option value='2' <c:if test="${notUsed ne 0}"> selected="selected" </c:if>><spring:message code="ezPersonal.t1000" /></option>
 							</select>

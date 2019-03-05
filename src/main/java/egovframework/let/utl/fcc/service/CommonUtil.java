@@ -45,9 +45,12 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -77,6 +80,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.util.UriComponentsBuilder;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -179,6 +183,17 @@ public class CommonUtil {
     	return filePath;
     }
     
+	/** 
+	 * strip <object>,<applet>,<script> tags
+	 */	
+    public String stripScriptTags(String src) {
+		Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher m = p.matcher(src);
+		src = m.replaceAll("");
+				
+		return src;		
+	}
+    
 	public LoginVO userInfo(String loginCookie){
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
@@ -249,7 +264,7 @@ public class CommonUtil {
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
 
-			String[] decDataArray = decData.split("///");
+			String[] decDataArray = decData.split("///", -1);
 			
 			String serverName = decDataArray[0];
 			String userID = decDataArray[1];
@@ -446,6 +461,59 @@ public class CommonUtil {
 		if (compatibleValue != null) {
 			response.setHeader("X-UA-Compatible", compatibleValue);
 		}		
+	}
+	
+	public static String addVer(ServletContext application, String filePath) {		
+		File fileObj = new File(application.getRealPath(filePath));
+		
+		if (fileObj.exists()) {
+			Date lastDate = new Date(fileObj.lastModified());
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			String version = sdf.format(lastDate);
+			
+			filePath += "?v=" + version;
+		}
+		
+		return filePath;
+	}
+	
+	public static String addVer(ServletContext application, HttpServletRequest request, String filePath) {
+		String springMessage = "<spring:message";
+		int startOfSpringMessage = filePath.indexOf(springMessage);
+		
+		if (startOfSpringMessage > -1) {
+			String code = "code='";
+			int startOfCode = filePath.indexOf(code, startOfSpringMessage + springMessage.length());
+			
+			if (startOfCode > -1) {
+				int endOfCode = filePath.indexOf("'", startOfCode + code.length());
+				
+				if (endOfCode > -1) {
+					String codeValue = filePath.substring(startOfCode + code.length(), endOfCode);					
+					String msg = commonUtilInstance.egovMessageSource.getMessage(codeValue, new CookieLocaleResolver().resolveLocale(request));					
+					int endOfSpringMessage = filePath.indexOf(">", endOfCode + 1); 
+					
+					if (endOfSpringMessage > -1) {
+						filePath = filePath.substring(0, startOfSpringMessage) + msg
+									+ filePath.substring(endOfSpringMessage + 1);
+					}
+				}
+			}
+		}
+		
+		File fileObj = new File(application.getRealPath(filePath));
+		
+		if (fileObj.exists()) {
+			Date lastDate = new Date(fileObj.lastModified());
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			String version = sdf.format(lastDate);
+			
+			filePath += "?v=" + version;
+		}
+		
+		return filePath;
 	}
 	
 	public boolean isLoginCookieExists(HttpServletRequest request, HttpServletResponse response) {
@@ -1617,7 +1685,6 @@ public class CommonUtil {
 	}
 	
 	public void setLoginUsers(int tenantID, String userID, String loginTime) throws Exception {
-//		loginUsers.put(userInfo, loginTime);
 		ezCommonService.setMultiLoginUser(tenantID, userID, loginTime);
 	}
 	
@@ -1642,10 +1709,19 @@ public class CommonUtil {
 				if(loginCookie != null) {
 					String [] cookieInfo = egovFileScrty.decryptAES(loginCookie.getValue()).split("///");
 					
+					if(cookieInfo.length <  11) {
+						return result;
+					}
+					
 					String userID = cookieInfo[1];
 					String companyID = cookieInfo[10];
 					int tenantID = Integer.parseInt(cookieInfo[8]);
-//					String userInfo = userID + "_" + tenantID;
+					
+					logger.debug("MultiLogin::: userID = " + userID + ", companyID = " + companyID + ", tenantID = " + tenantID);
+					
+					if(companyID.equals("")) { 
+						return result;
+					}
 					
 					useMultiLogin = ezCommonService.getCompanyConfig(tenantID, companyID, "useMultiLogin");
 					

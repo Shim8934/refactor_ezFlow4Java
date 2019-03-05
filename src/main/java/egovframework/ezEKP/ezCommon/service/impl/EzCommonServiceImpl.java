@@ -1363,27 +1363,30 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		map.put("userID", userID);
 		map.put("loginTime", loginTime);
 		
-		String pre_loginTime = Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
-		
 		try {
-			if("".equals(pre_loginTime)) {
-				ezCommonDAO.insertMultiLoginUser(map);
-			} else {
-				ezCommonDAO.updateMultiLoginUser(map);
-			}
+			ezCommonDAO.deleteMultiLoginUser(map);
+			ezCommonDAO.insertMultiLoginUser(map);
 		} catch (DeadlockLoserDataAccessException e) {
 			//데드락이 발생하면 실패한 작업 다시 실행
 			
 			Thread.sleep(1000);
 			
-			if("".equals(pre_loginTime)) {
-				ezCommonDAO.insertMultiLoginUser(map);
-			} else {
-				ezCommonDAO.updateMultiLoginUser(map);
-			}
+			ezCommonDAO.deleteMultiLoginUser(map);
+			ezCommonDAO.insertMultiLoginUser(map);
 		}
 		
 		logger.debug("insertMultiLoginUser ended");
+	}
+	
+	@Override
+	public String selectMultiLoginTime(int tenantID, String userID) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("userID", userID);
+		
+		return Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
 	}
 	
 	@Override
@@ -1525,5 +1528,22 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	@Override
 	public void updateTaskUrl() throws Exception {
 		ezCommonDAO.updateTaskUrl();
+	}
+
+	@Override
+	public void addPortalPortletUserPortletUsed() throws Exception {
+		ezCommonDAO.addPortalPortletUserPortletUsed();
+		
+	}
+
+	@Override
+	public void addPortalPortletUserThemeId() throws Exception {
+		ezCommonDAO.addPortalPortletUserThemeId();
+		
+	}
+
+	@Override
+	public void addTblPortalThemeUserIsDefault() throws Exception {
+		ezCommonDAO.addTblPortalThemeUserIsDefault();
 	}
 }

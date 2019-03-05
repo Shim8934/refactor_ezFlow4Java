@@ -2,15 +2,21 @@
  * 
  */
 function photoBoardMovePage(event) {
-	var isNext = event.data.isNext;
+	var isNext = false;
+	
+	if (event != null) {
+		isNext = event.data.isNext;
+	}
 	
 	if (isNext === true) {
 		photoBoardPage += 1;
 	} else {
-		if (photoBoardPage == 1) {
-			return;
-		} else {
-			photoBoardPage -= 1;
+		if (event != null) {
+			if (photoBoardPage == 1) {
+				return;
+			} else {
+				photoBoardPage -= 1;
+			}
 		}
 	}
 	
@@ -45,7 +51,6 @@ function photoBoardMovePage(event) {
 
 function viewPhotoBoardList() {
 	var boardId = $(".photo_board").find(".portletText").attr("data1");
-	
 	window.open("/ezBoard/boardMainRedirect.do?boardID=" + encodeURIComponent(boardId), "main", "");
 }
 
@@ -62,5 +67,9 @@ function photoItemRead(elem) {
 		var height = 785;
 	}
 
-	window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(elem.getAttribute("data2")) + "&boardID=" + encodeURIComponent(elem.getAttribute("data1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+	var boardId = $(".photo_portlet").find(".portletText").attr("data1");
+	var portletId = $(".photo_portlet").parent().attr("id");
+	portletId = portletId.substring(0, portletId.indexOf("P"));
+	
+	window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(elem.getAttribute("data2")) + "&boardID=" + encodeURIComponent(elem.getAttribute("data1")) + "&portletId=" + portletId, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 }

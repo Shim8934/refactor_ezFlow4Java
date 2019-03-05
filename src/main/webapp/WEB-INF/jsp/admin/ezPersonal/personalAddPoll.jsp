@@ -295,7 +295,7 @@
 				var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
 
 				for (var i=1; i<11; i++) {
-					if (get_length(eval("answer" + i).value) > 100) {
+					if ($("#answer"+i).val().length > 100) {
 						alert("<spring:message code = 'ezPersonal.t217'/>");
 						eval("answer" + i).focus();
 						return;

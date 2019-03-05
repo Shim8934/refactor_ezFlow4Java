@@ -96,7 +96,7 @@
 		    $(document).ready(function() {
 		    	var clickOutside;
 		    	
-		    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
+		    	if (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
 		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
 		    	} else {
 		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
@@ -561,10 +561,11 @@
 	                    return;
 	                }
 	            } else if (type == "quick") {
-	            	if ($.trim($("#txt_keyword").val()) == "") {
-			        	alert("<spring:message code='ezCircular.t189' />");
-			            return;
-			        }
+	            	//공백으로 검색할 수 없습니다.는 검색키워드를 입력해주세요에 포함되는 의미라서 주석처리.
+// 	            	if ($.trim($("#txt_keyword").val()) == "") {
+// 			        	alert("<spring:message code='ezCircular.t189' />");
+// 			            return;
+// 			        }
 
 	                if (document.getElementById("txt_keyword").value == "") {
 	                    alert("<spring:message code='ezCircular.t91'/>");

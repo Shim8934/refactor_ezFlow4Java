@@ -2076,7 +2076,8 @@
 		SELECT
 			CN,
            	DISPLAYNAME,
-           	MAIL 
+           	MAIL,
+           	COMPANY
       	FROM
       		TBL_USERMASTER 
       	WHERE

@@ -3951,6 +3951,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mode = request.getParameter("mode");
 		String orgCompanyID = request.getParameter("orgCompanyID");
 		String companyID = userInfo.getCompanyID();
+		String functionType = request.getParameter("functionType");
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(companyID)) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -4072,6 +4073,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("docState", docState);
 		model.addAttribute("useReceiveDocNo", useReceiveDocNo);
 		model.addAttribute("orgCompanyID", orgCompanyID);
+		model.addAttribute("functionType", functionType);
 		
 		// FormBuilder
 		if (isReform) {
@@ -6136,6 +6138,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("approvalPWD", approvalPWD);
 		model.addAttribute("tmpValue", tmpValue);
 		model.addAttribute("nowDateUTC", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
+		//2019-02-19 김보미 - 개인문서함의 경우 파일다운로드 방식이 틀려, 파일명을 javascript에서 지정하기 때문에 가져간다.
+		model.addAttribute("excelFileName", EgovDateUtil.getTodayTime().substring(0, 10) + "_" + userInfo.getDeptID() + "_" + messageSource.getMessage("ezApprovalG.t1750", userInfo.getLocale()));
 		
  		logger.debug("getContainerInfo ended");
 		
@@ -7614,6 +7618,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docID = request.getParameter("docID");
 		String docHref = request.getParameter("docHref");
 		String orgDocID = request.getParameter("orgDocID");
+		String docTitle = request.getParameter("docTitle");
 		String accessInfo = config.getProperty("config.UserInfo_ApprovalG_VIEW");
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
@@ -7647,6 +7652,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("pass", pass);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalPWD", approvalPWD);
+		model.addAttribute("docTitle", docTitle);
 		
 		logger.debug("ezSimsaG ended");
 		
@@ -7879,9 +7885,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String deptName = request.getParameter("deptName");
 		String deptName2 = request.getParameter("deptName2");
 		String flag = request.getParameter("flag");
-		String dirPath = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+		String realPath = commonUtil.getRealPath(request);
+		String dirPath = realPath +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
-		String result = ezApprovalGService.setCabinetReject(docID, deptID, deptName, deptName2, dirPath, flag, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
+		String result = ezApprovalGService.setCabinetReject(docID, deptID, deptName, deptName2, dirPath, realPath, flag, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset(), userInfo.getLocale());
 		
 		if(result.indexOf("FALSE") > -1) {
 			String[] resultArr = result.split(",");
@@ -8397,7 +8404,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String userJobTitle2 = doc.getElementsByTagName("PUSERJOBTITLE2").item(0).getTextContent();
 		String userDeptName2 = doc.getElementsByTagName("PUSERDEPTNAME2").item(0).getTextContent();
 		
-		if (doc.getElementsByTagName("ORGCOMPANYID") != null && !doc.getElementsByTagName("ORGCOMPANYID").equals(userInfo.getCompanyID()) ) {
+		if (doc.getElementsByTagName("ORGCOMPANYID").getLength() > 0 && !doc.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent().equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(doc.getElementsByTagName("ORGCOMPANYID").item(0).getTextContent());
 		}
 
@@ -9067,6 +9074,22 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		logger.debug("checkHabYuiState ended.");
 		return result;
+	}
+	
+	/* 
+	 * 회송문서의 철정보를 원문서 정보로 변경
+	 * */
+	@RequestMapping(value = "/ezApprovalG/setHesongCabinetInfo.do")
+	@ResponseBody
+	public void setHesongCabinetInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("setHesongCabinetInfo started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		
+		ezApprovalGService.setHesongCabinetID(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("setHesongCabinetInfo ended.");
 	}
 }
 

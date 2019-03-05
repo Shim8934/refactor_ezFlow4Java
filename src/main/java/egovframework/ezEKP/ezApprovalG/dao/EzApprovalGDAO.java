@@ -1430,6 +1430,22 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		insert("EzApprovalG.aprMakeTmp2Ing9", map);
 	}
 	
+	public void aprMakeTmp2Ing10(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.aprMakeTmp2Ing10", map);
+	}
+	
+	public void aprMakeTmp2Ing11(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.aprMakeTmp2Ing11", map);
+	}
+	
+	public int checkTmpDocHasGongRam(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.checkTmpDocHasGongRam", map);
+	}
+	
+	public String getTmpDocID(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getTmpDocID", map);
+	}
+	
 	public void setUserFormInfo(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.setUserFormInfo", map);
 	}
@@ -3182,5 +3198,21 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public int checkHabYuiState(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.checkHabYuiState", map);
+	}
+	
+	public void setHesongCabinetID(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.setHesongCabinetID", map);
+	}
+	
+	public String getAprOrgDocID(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getAprOrgDocID", map);
+	}
+	
+	public int getEndAprOpinionCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getEndAprOpinionCnt", map);
+	}
+	
+	public void insertHesongOpinion(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertHesongOpinion", map);
 	}
 }

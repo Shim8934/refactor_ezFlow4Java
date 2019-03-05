@@ -81,9 +81,17 @@ var assemblePollList = function (poll) {
 		}
 	}
 	str += '</div>';
+	
 	document.getElementById('pollInfo').innerHTML = str;
 	document.getElementById('pollTitle').textContent = '"'+ poll.pollInfo.pollTitle +'"';
-	document.getElementById('pollBtn').addEventListener('click', joinPoll);
+	document.getElementById('pollBtn').addEventListener('click', function() {
+		if (poll.pollInfo.result != 0) {
+			joinPoll(true, poll.pollInfo.itemSeq);
+		} else {
+			joinPoll(false, poll.pollInfo.itemSeq);
+		}
+		
+	});
 	document.getElementById('pollPlus').addEventListener('click', pollPlus);
 };
 

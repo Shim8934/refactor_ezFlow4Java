@@ -600,8 +600,11 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", MakeXMLString(SSCompanyName2));
 		        }
 		        else {
+		        	/* 2019-02-26 홍승비 - 익명게시판 표시이름 체크 시 앞뒤공백 제거 */
 		            var nickname = document.getElementById("txtNickName").value;
-		            if (nickname == "") nickname = "<spring:message code='ezBoard.t286' />";
+		            if (trim(nickname) == "") {
+		            	nickname = "<spring:message code='ezBoard.t286' />";
+		            }
 
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(nickname));
@@ -870,7 +873,31 @@
 			            }
 					} catch (e) {
 					}
-
+					
+					if (parent.opener.getNoticePortletList != undefined) {
+						parent.opener.getNoticePortletList();
+					}
+					
+					// 게시판 포틀릿 리스트 업데이트 되도록 수정
+		            if (parent.opener.getBoardPortletInfo != undefined) {
+		            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+		            	var customBoardCount = customBoardList.length;
+		            	
+		            	for (var i = 0; i < customBoardCount; i++) {
+		            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+		            		
+		            		if (boardId == pBoardID) {
+		            			var portletId = customBoardList[i].parentElement.id;
+		            			portletId = portletId.substring(0, portletId.indexOf("P"));
+		            			parent.opener.getBoardPortletInfo(portletId);
+		            		}
+		            	}
+		            }
+					
+					if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+						parent.opener.getBoardList_NewBoardSTD();
+					}
+					
 		            window.close();
 		        } else {
 		            if (getNodeText(GetChildNodes(loadXMLString(xmlhttp.responseText))[0]) == "XSS")

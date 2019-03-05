@@ -444,6 +444,12 @@
 				c_clubname$v_USERINFO_LANG$ LIKE CONCAT('%', #v_STRQUERY#, '%')
 			AND
 				c_adminconfirm = 'Y'
+			INNER JOIN
+				TBL_USERMASTER C
+			ON
+				RTRIM(A.c_sysopid) = RTRIM(C.CN)
+			AND
+				A.tenant_id = C.tenant_id
 		]]>
 		<isNotEqual property="v_STRSELECT" compareValue="0">
 			<![CDATA[

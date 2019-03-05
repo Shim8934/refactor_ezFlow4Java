@@ -840,7 +840,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
 			if (result.equals("ok")) {
 				model.addAttribute("menuList", resultBody.get("data"));
 				model.addAttribute("companyId", companyId);
-				model.addAttribute("portletId", request.getParameter("portletId"));
+				model.addAttribute("portletId", commonUtil.stripScriptTags(request.getParameter("portletId")));
 			}
 			
 			LOGGER.debug("openPortalMenu ended.");
@@ -1227,6 +1227,7 @@ public class EzNewPortalAdminController extends EgovFileMngUtil {
         
         String slidePath = realPath + pDirPath;
         slidePath = commonUtil.detectPathTraversal(slidePath);
+        slidePath = commonUtil.stripScriptTags(slidePath);
         
         File file = new File(slidePath);
 

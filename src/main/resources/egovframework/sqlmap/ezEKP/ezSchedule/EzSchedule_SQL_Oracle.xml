@@ -1238,6 +1238,40 @@
    		]]>
 	</insert>
 	
+	<insert id="EzScheduleDAO.insertScheduleRepeDelChild" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_SCHEDULEREPETITION_DEL(
+				SCHEDULEID,			STARTDATE, 				ENDDATE,				TENANT_ID,				COMPANYID
+			) 
+			SELECT 
+				SCHEDULEID ,		#v_STARTDATE#,			#v_STARTDATE#,			#v_TENANTID#,			#v_COMPANYID#
+			FROM 
+				TBL_SCHEDULE 
+			WHERE 
+				PARENTID = #v_SCHEDULEID#
+   		]]>
+	</insert>
+	
+	<insert id="EzScheduleDAO.insertAttendantScheduleDel" parameterClass="map">
+		<![CDATA[
+			INSERT INTO TBL_SCHEDULEREPETITION_DEL(
+				SCHEDULEID,			STARTDATE, 				ENDDATE,				TENANT_ID,				COMPANYID
+			)
+			SELECT 
+				S.SCHEDULEID ,		D.STARTDATE,			D.ENDDATE,			S.TENANT_ID,			S.COMPANYID
+			FROM 
+				TBL_SCHEDULE S
+			INNER JOIN
+				TBL_SCHEDULEREPETITION_DEL D
+			ON
+				(S.PARENTID = D.SCHEDULEID AND S.TENANT_ID = D.TENANT_ID AND S.COMPANYID = D.COMPANYID)
+			WHERE 
+				S.PARENTID = #v_SCHEDULEID#
+			AND
+				S.TENANT_ID = #v_TENANTID#
+   		]]>
+	</insert>
+	
 	<insert id="EzScheduleDAO.insertScheduleGroupMember" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULEGROUPMEMBER(

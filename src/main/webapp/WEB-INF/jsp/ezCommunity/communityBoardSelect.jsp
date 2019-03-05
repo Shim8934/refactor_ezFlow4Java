@@ -8,6 +8,20 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('ezCommunity.i1', 'msg')}">
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
+		<style>
+			.groupBoard {
+				display:inline-block;
+				width:276px;
+				word-break:break-all;
+				overflow:hidden;
+				white-space:nowrap;
+				text-overflow:ellipsis;
+			}
+			.node_div {
+				overflow:hidden;
+				text-overflow:ellipsis;
+			}
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/TreeView.js')}"></script>
@@ -179,8 +193,9 @@
 	            for (var i = 0; i < xmldomNodes.length; i++) {
 	                var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 	                tid = tid.substring(1, 37);
-	                strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
-	                strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;overflow:hidden;height:100%;width:300px;padding-top:5px;padding-bottom:3px'></DIV></td></tr>";
+	                strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" +
+	                "<span class = 'groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
+	                strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;display:none;height:100%;width:300px;padding-top:5px;padding-bottom:3px'></DIV></td></tr>";
 	            }
 	            strHTML += "</table>";
 
@@ -209,6 +224,26 @@
 	                }
 	            }
 	        }
+	        
+			function applyEllipsis() {
+	        	//nodelevel 값을 가져와서 처리한다.
+	        	$(".node_div").each(function(index, element){
+	        		var nodelevel = $(element).attr("nodelevel");
+	        		var title = $(element).attr("nodename");
+	        		var nodeId = $(element).attr("id");
+	        		
+	        		$("#spn_"+nodeId).attr("title", title);
+	        		
+	        		if (nodelevel > 0) {
+	        			var customWidth = 135 - (18 * nodelevel);
+	        			if (customWidth < 0) {
+	        				customWidth = 0;
+	        			}
+	        			$("#spn_"+nodeId).css("width", customWidth+"px");
+	        		}
+	        	});
+	        }
+			
 		</script>
 	</head>
 	<body class="popup" onload = "javascript:window_onload()" style="overflow: hidden">

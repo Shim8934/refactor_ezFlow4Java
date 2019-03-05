@@ -1018,7 +1018,11 @@ WHERE
 	 AND
 	 	PHYSICALDELIVERYOFFICENAME = #companyId#
 	 AND
-	 	CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+	 	CN NOT IN (
+	 		SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#
+			UNION ALL
+			SELECT CN FROM TBL_USERMASTER WHERE DEPARTMENT = 'retirees' AND TENANT_ID = #tenantId#
+	 	)
 ]]>
 </select>
 
@@ -1076,6 +1080,8 @@ WHERE
 	B.company_id = #companyId#
 AND
 	C.company_id = #companyId#
+AND
+	C.tenant_id = #tenantId#
 AND
 	B.tenant_id = #tenantId#
 AND
@@ -1253,7 +1259,7 @@ AND
 						    DOCINFO.docstate,
 						    DOCINFO.functiontype,
 						    DOCINFO.doctitle,
-						    TO_DATE(DOCINFO.startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+						    (DOCINFO.startdate + (#offset#/(60*24))) AS startdate,
 						    DOCINFO.writerid,
 						    DOCINFO.writername,
 						    DOCINFO.writername2,
@@ -1385,7 +1391,7 @@ AND
 						    docstate,
 						    functiontype,
 						    doctitle,
-						    TO_DATE(startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+						    (startdate + (#offset#/(60*24))) AS startdate,
 						    writerid,
 						    writername,
 						    writername2,
@@ -1459,7 +1465,7 @@ AND
 						    DOCINFO.docstate,
 						    DOCINFO.functiontype,
 						    DOCINFO.doctitle,
-						    TO_DATE(DOCINFO.startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+						    (DOCINFO.startdate + (#offset#/(60*24))) AS startdate,
 						    DOCINFO.writerid,
 						    DOCINFO.writername,
 						    DOCINFO.writername2,

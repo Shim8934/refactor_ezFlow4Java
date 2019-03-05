@@ -447,7 +447,8 @@
 				                    parent.frames["right"].checkBujaeInfo();
 				                }
 				                else if (listtype == "10") {
-				                    parent.frames["right"].passValLeftMenu("10");
+				                	parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
+				                	parent.frames["right"].passValLeftMenu("10");
 				                   // parent.frames["right"].checkBujaeInfo();
 				                }
 				                else if (listtype == "99") {

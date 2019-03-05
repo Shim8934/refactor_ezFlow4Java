@@ -365,7 +365,7 @@
         		<HEADERS>
           			<HEADER>
             			<NAME><spring:message code='ezResource.t2005'/></NAME>
-            			<WIDTH>65</WIDTH>
+            			<WIDTH>90</WIDTH>
           			</HEADER>
           			<HEADER>
             			<NAME><spring:message code='ezResource.t132'/></NAME>
@@ -381,7 +381,7 @@
           			</HEADER>
           			<HEADER>
             			<NAME><spring:message code='ezResource.t11'/></NAME>
-            			<WIDTH>100</WIDTH>
+            			<WIDTH>60</WIDTH>
           			</HEADER>
         		</HEADERS>
       		</LISTVIEWDATA>
@@ -407,7 +407,7 @@
        			</td>
        			<td valign="top" style="padding-left:5px">
            			<div class="listview">
-               			<div id="OrganListView" style="border: 0px solid #ddd; Width: 416px; Height: 416px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto; "></div>
+               			<div id="OrganListView" style="border: 0px solid #ddd; Width: 690px; Height: 416px; overflow: hidden; BACKGROUND-COLOR: white; overflow-x: auto; overflow-y: auto; "></div>
            			</div>
            			<div class="box" style="margin-top:3px;border:0px;float:right" >
                			<select id="search_type" style="margin-bottom:2px;height:22px">

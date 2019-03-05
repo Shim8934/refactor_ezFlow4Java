@@ -136,15 +136,18 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addJobMasterJobID();
     	ezCommonService.createWebfolderToken();
     	ezCommonService.addJmochaMailGenenalPreviewMailImage();
+    	ezCommonService.createPortalThemePortlet();
+    	ezCommonService.insertPortalThemePortletInitdata();
     	ezCommonService.addPortalThemePortletIsFixed();
     	ezCommonService.addUserMasterMailBoxQuota();
     	ezCommonService.createTblUserMultiLogin();
     	ezCommonService.addHolidayFlag();
     	ezCommonService.addHolidayRepeat();
-    	ezCommonService.createPortalThemePortlet();
-    	ezCommonService.insertPortalThemePortletInitdata();
     	ezCommonService.addJournalFormDelFlag();
     	ezCommonService.updateTaskUrl();
+    	ezCommonService.addPortalPortletUserPortletUsed();
+    	ezCommonService.addPortalPortletUserThemeId();
+    	ezCommonService.addTblPortalThemeUserIsDefault();
     	
     	logger.debug("init ended.");
     }
@@ -2323,6 +2326,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 		}
 
+		String packageType = commonUtil.getPackageType(user.getTenantId());
 		model.addAttribute("use_editor", use_editor);
 		model.addAttribute("userCompany", user.getCompanyID());
 		model.addAttribute("list", resultList);
@@ -2332,6 +2336,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         //2018-07-31 김보미 - 근태 추가
         model.addAttribute("use_attitude", use_attitude);
         model.addAttribute("useWebfolder", useWebfolder);
+        model.addAttribute("packageType", packageType);
 		
 		logger.debug("permissionsList ended.");
 		

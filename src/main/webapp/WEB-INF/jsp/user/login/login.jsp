@@ -54,9 +54,11 @@
 			function actionLogin() {
 			    if (document.loginForm.id.value =="") {
 			        alert("<spring:message code='main.jjs02'/>");
+			        document.loginForm.id.focus();
 			        return;
 			    } else if (document.loginForm.password.value =="") {
 			        alert("<spring:message code='main.jjs01'/>");
+			        document.loginForm.password.focus();
 			        return;
 			    } else {
 			    	var frm = document.loginForm;
@@ -242,7 +244,7 @@
 	                    <fieldset>		                    	
 	                    	<p class="logo"><img src="<c:out value='${logoUrl }'/>"></p>   
 	                        <p class="id">
-	                        	<input id="uid" name="id" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />
+	                        	<input id="uid" name="id" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) document.loginForm.password.focus();" />
 	                        </p>		                 
 	                        <p class="pw">
 	                        	<input id="upw" name="password" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />

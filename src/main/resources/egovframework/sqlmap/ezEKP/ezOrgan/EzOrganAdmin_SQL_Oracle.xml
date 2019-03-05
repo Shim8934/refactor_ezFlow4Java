@@ -1673,7 +1673,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A60','E  ','전송실패','1','전송 실패 (Error)','Error','送信エラー','传输失败',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('A60','H  ','회송','1','회송 (HweSong)','Return','回送','返回',#tenantID#, #companyID#)
+			VALUES ('A60','H  ','회송','1','회송 (HweSong)','Return','返送','返回',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A60','I  ','접수','1','접수 (Inter..)','Reception progress','受付','收到',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -1829,7 +1829,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A02','031','반송','1','반송','Rejection','差し戻し','退回',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('A02','032','회송','1','회송','Returning','回送','退回',#tenantID#, #companyID#)
+			VALUES ('A02','032','회송','1','회송','Returning','返送','退回',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A03','0  ','결재방법','0','결재방법','결재방법',null,null,#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -1895,7 +1895,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A04','014','배부','1','배부','Distributed','配付','发行',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('A04','015','회송','1','회송','Returned','回送','退回',#tenantID#, #companyID#)
+			VALUES ('A04','015','회송','1','회송','Returned','返送','退回',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A04','016','접수','1','수신진행','Received','受信進行','进行接收',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -1951,7 +1951,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A17','003','보류의견','1','보류의견','Holding','保留意見','保存意见',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
-			VALUES ('A17','004','회송의견','1','회송의견','Returning','回送','退回意见',#tenantID#, #companyID#)
+			VALUES ('A17','004','회송의견','1','회송의견','Returning','返送','退回意见',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
 			VALUES ('A17','005','지시사항','1','지시사항','지시사항','指示','说明',#tenantID#, #companyID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,TENANT_ID, COMPANYID) 
@@ -2063,7 +2063,7 @@
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
 			VALUES ('SA02', '031',		'반송',						'Rejection',		'差し戻し',		'반송_ZH',		'0',	'반송',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SA02', '032',		'회송',						'Returning',		'回送',		'회송_ZH',		'0',	'회송',		#companyID#,	#tenantID#)
+			VALUES ('SA02', '032',		'회송',						'Returning',		'返送',		'회송_ZH',		'0',	'회송',		#companyID#,	#tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
 			VALUES ('SA03','0  ','결재방법','결재방법',null,null,'0','결재방법',#companyID#, #tenantID# )
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
@@ -2373,7 +2373,7 @@
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
 			VALUES ('SL06', '008', '지정문서', '지정문서', '指定文書', '지정문서', '1', '결재알림시 사용', #companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
-			VALUES ('SL06', '009', '회송문서', '회송문서', '回送文書', '회송문서', '1', '결재알림시 사용', #companyID#, #tenantID#)
+			VALUES ('SL06', '009', '회송문서', '회송문서', '返送文書', '회송문서', '1', '결재알림시 사용', #companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
 			VALUES ('SL06', '010', '문서회수', '문서회수', '文書引き戻し', '문서회수', '1', '결재알림시 사용', #companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1, CODE2, NAME, NAME2, NAME3, NAME4, ISUSE, DESCRIPT, COMPANYID, TENANT_ID)
@@ -2410,7 +2410,7 @@
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID,TENANT_ID) 
 			VALUES ('SA04','014','배부','1','배부','Distributed','配付','发行',#companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID,TENANT_ID) 
-			VALUES ('SA04','015','회송','1','회송','Returned','回送','退回',#companyID#, #tenantID#)
+			VALUES ('SA04','015','회송','1','회송','Returned','返送','退回',#companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID,TENANT_ID) 
 			VALUES ('SA04','016','접수','1','수신진행','Received','受信進行','进行接收',#companyID#, #tenantID#)
 			INTO TBL_CODELIST (CODE1,CODE2,NAME,ISUSE,DESCRIPT,NAME2,NAME3,NAME4,COMPANYID,TENANT_ID) 
@@ -5334,7 +5334,6 @@
     </update>
           
     <update id="EzOrganAdminDAO.moveGroupUser_U" parameterClass="Map" >
-        <![CDATA[
             UPDATE
                 TBL_USERMASTER
             SET 
@@ -5346,12 +5345,29 @@
                 COMPANY2 = (SELECT COMPNM2 FROM (SELECT COMPNM2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
             	UPDATEDT = TO_DATE(#timeUTC#, 'yyyy-MM-dd HH24:MI:SS'),
             	EXTENSIONATTRIBUTE15 = 0,
-                EXTENSIONATTRIBUTE1 = #initPermission#
+                <isNotEmpty property="initPermission">
+                	EXTENSIONATTRIBUTE1 = #initPermission#
+                </isNotEmpty>
+                <isEmpty property="initPermission">
+                	EXTENSIONATTRIBUTE1 = (
+                	SELECT 
+                		EXTENSIONATTRIBUTE1
+       				FROM 
+	                	(SELECT 
+	                		REPLACE(REPLACE(REPLACE(EXTENSIONATTRIBUTE1, 'g=1', 'g=0'), 'a=1', 'a=0'), 'm=1', 'm=0') AS EXTENSIONATTRIBUTE1
+	                	FROM 
+	                		TBL_USERMASTER
+	                	WHERE
+			                CN = #v_CN#
+			            AND
+			                TENANT_ID = #v_TENANT_ID#
+		                ) b
+		            )
+                </isEmpty>
             WHERE
                 CN = #v_CN#
             AND
                 TENANT_ID = #v_TENANT_ID#  
-        ]]>
     </update>
  	
 	<!-- <procedure id="EzOrganAdminDAO.getRetireEntryInfo" parameterClass="Map" resultClass="OrganUserVO">
@@ -5695,8 +5711,10 @@
         DELETE 
             TBL_ADDJOBMASTER
         WHERE  
+		<isNotNull property="v_CN">
             cn = #v_CN#
         AND 
+        </isNotNull>
             deptid = #v_DEPTID#
         AND 
             TENANT_ID = #v_TENANT_ID#
@@ -6537,7 +6555,7 @@
 				EXTENSIONATTRIBUTE15 = 0,
 				UPDATEDT = to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
 			WHERE
-				EXTENSIONATTRIBUTE2 = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#)
+				EXTENSIONATTRIBUTE1 = #v_PARENTCN#
 			AND
 				TENANT_ID = #v_TENANT_ID#
 			AND
@@ -6553,7 +6571,7 @@
 				EXTENSIONATTRIBUTE15 = EXTENSIONATTRIBUTE15 + 1,
 				UPDATEDT = to_date(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
 			WHERE
-				EXTENSIONATTRIBUTE2 = (SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#)
+				EXTENSIONATTRIBUTE1 = #v_PARENTCN#
 			AND
 				TENANT_ID = #v_TENANT_ID#
 			AND

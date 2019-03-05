@@ -1054,6 +1054,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_CLASS", pClass);
 		
 	    if (pClass.toLowerCase().equals("group")) {
+	    	// 겸직테이블에서 해당 부서 겸직정보 삭제
+	    	Map<String, Object> map2 = new HashMap<String, Object>();
+	    	map2.put("v_TENANT_ID", tenantID);
+	    	map2.put("v_DEPTID", cn);
+	    	ezOrganAdminDao.deleteAddJob(map2);
+	    	
 	        ezOrganAdminDao.deleteDBData(map);
 	        
 	        //회사 삭제시 넣었던 초기데이터 테이블 삭제

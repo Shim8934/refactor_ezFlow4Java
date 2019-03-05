@@ -46,6 +46,7 @@
 				var RowNode = SelectSingleNode(DataNode,"ROW");
 				var nodes = GetChildNodes(DataNode);
 				var tableXml="";
+				var colspanNum = $("#xmlTable >tbody >tr >th").length;
 				
 				for(i=0;nodes.length>i; i++){
 					tableXml += "<tr>";
@@ -91,7 +92,7 @@
 				/* 18-05-02 김민성 - 답변보기 리스트 응답결과 없을 때 UI 수정 */
 				if(totalCount ==0){
 					tableXml += "<tr>";
-					tableXml += "<td style='height:30px;text-align:center' colspan='5'>";
+					tableXml += "<td style='height:30px;text-align:center' colspan='" + colspanNum + "'>";
 					tableXml += "<spring:message code='ezQuestion.t413' />";
 					tableXml += "</td>";
 					tableXml += "</tr>";
@@ -107,6 +108,7 @@
 				var RowNode = SelectSingleNode(DataNode,"ROW");
 				var nodes = GetChildNodes(DataNode);
 				var tableXml="";
+				var colspanNum = $("#xmlTable >tbody >tr >th").length;
 				
 				for(i=0;nodes.length>i; i++){
 					tableXml += "<tr>";
@@ -141,7 +143,7 @@
 					tableXml += "</tr>";
 					if("${pTotalCnt}" ==0){
 						tableXml += "<tr>";
-						tableXml += "<td style='height:30px;text-align:center' colspan='5'>";
+						tableXml += "<td style='height:30px;text-align:center' colspan='" + colspanNum + "'>";
 						tableXml += "<spring:message code='ezQuestion.t413' />";
 						tableXml += "</td>";
 						tableXml += "</tr>";

@@ -19,6 +19,6 @@
 		</script>
 	</head>
      <body>
-         <iframe frameborder="0" scrolling="no" src="${dotNetUrl}/myoffice/ezBoardSTD/WriteBoardSelect_Modal.aspx" style="width:100%;height:655px;border:none;overflow:hidden;" />
+         <iframe frameborder="0" scrolling="no" src="${dotNetUrl}/myoffice/ezBoardSTD/WriteBoardSelect_Modal.aspx?pagetype=POPUP&javaflag=true" style="width:100%;height:655px;border:none;overflow:hidden;" />
      </body>	
 </html>

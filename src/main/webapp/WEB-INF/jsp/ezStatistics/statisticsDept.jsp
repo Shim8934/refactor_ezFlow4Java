@@ -185,7 +185,22 @@
 	            treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
 	        }
 	
-	        function getapprovalstatistics() {
+	        /* 2019-02-21 홍승비 - 잘못된 기간으로 검색되지 않도록 재수정 (사용자 통계 참고) */
+	        function getapprovalstatistics(mode) {
+	        	
+	        	var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	        	var eDate = $("#Sdatepicker2").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+	        	if (sDate > eDate) {
+	        		if (mode != null && typeof(mode) != "undefined") {
+		        		if (mode == "sDate") {
+		        			$("#Sdatepicker2").val($("#Sdatepicker").val());
+		        		}
+		        		if (mode == "eDate") {
+		        			$("#Sdatepicker").val($("#Sdatepicker2").val());
+		        		}
+	        		}
+	        	}
+	        	
 	        	$.ajax({
 					type : "POST",
 					dataType : "text",
@@ -490,9 +505,9 @@
 	             <td style="width: 99%">
 	                 <span id="topmenu" style="float: left; width: 500px">
 	                     &nbsp;<spring:message code='ezStatistics.t1002'/> : 
-	             <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" onchange="getapprovalstatistics()" readonly="readonly">
+	             <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" onchange="getapprovalstatistics('sDate')" readonly="readonly">
 	                     ~ 
-	             <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" onchange="getapprovalstatistics()" readonly="readonly">
+	             <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" onchange="getapprovalstatistics('eDate')" readonly="readonly">
 	                     &nbsp;&nbsp;<spring:message code='ezStatistics.t1013'/> : 
 	       		 <input id="deptkeyword" type="text" style="width: 100px;" onkeypress="search_press(event)" />
 	                     <a class="imgbtn" style="vertical-align: middle;height:22px"><span onclick="searchdept()"><spring:message code='ezStatistics.t36'/></span></a>

@@ -317,7 +317,7 @@ public interface EzApprovalGService {
 	
 	public String getUserRecRight(String recID, String sepAttNo, String userID, String companyID, int tenantID) throws Exception;
 	
-	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String flag, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception;
+	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String realPath, String flag, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception;
 	
 	public String gongRamSave(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet) throws Exception;
 	
@@ -641,4 +641,6 @@ public interface EzApprovalGService {
 	public int getCheckAprState(String docID, String userID, String docState, String aprMemberSN, String companyID, int tenantID) throws Exception;
 	
 	public String checkHabYuiState(String docID, String companyID, int tenantID) throws Exception;
+	
+	public void setHesongCabinetID(String docID, String companyID, int tenantId) throws Exception;
 }
