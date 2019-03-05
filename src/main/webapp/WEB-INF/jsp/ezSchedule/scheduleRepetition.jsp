@@ -150,12 +150,46 @@
 		            } catch (e) {
 		                m_objStartTime = new Date(RetValue["SDATE"]);
 		            }  
-		    		var iWeekdayNumber = m_objStartTime.getDay();
-		    		document.getElementById("day" + iWeekdayNumber).checked = true;
+		    	
+		            var iDateNumber = m_objStartTime.getDate();
+		            var iWeekdayNumber = m_objStartTime.getDay();
+		            var iMonthNumber = m_objStartTime.getMonth();
+
+		    		document.getElementById("day" + iWeekdayNumber).checked = true;			// 매주 반복주기 설정
+		    		SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);						// 매월 반복주기 설정
+		            SetWeekdayDropDown(list_YearlyDay, iWeekdayNumber);							// 매년 반복주기 설정
+		            
+		            document.getElementById("list_MonthlyDays").value = iDateNumber;
+		            document.getElementById("list_YearlyDays").value = iDateNumber;
+	
+		            document.getElementById("list_Month").selectedIndex = iMonthNumber;
+		            document.getElementById("list_Month2").selectedIndex = iMonthNumber;
+	
+		            var nEach = parseInt(iDateNumber / 7);
+		            document.getElementById("list_MonthlyEach").selectedIndex = nEach;
+		            document.getElementById("list_YearlyEach").selectedIndex = nEach;
 		    	}
 		    	allDayTime();
 		    	clearAllDay();
 		    }
+		    
+		    function SetWeekdayDropDown(ddDay, value)
+		    {
+		    	var iList;
+		    	var iLength = ddDay.length;
+		        
+		    	for (iList = 0; iList < iLength; iList++)
+		    	{  
+		    		if (ddDay[iList].value == value)
+		    		{ 
+		    			ddDay[iList].selected = true;
+		    			
+		    			return;
+		    		}
+		    	}						
+		    	return;
+		    }
+		    
 		    function KeEventControl(obj) {
 		        useragt = navigator.userAgent.toUpperCase();
 		        if (useragt.indexOf("SAFARI") > 0 && useragt.indexOf("CHROME") < 0) //사파리 브라우저일 경우
@@ -404,7 +438,7 @@
 		    			repetition += "|1";
 		    			repetition += "|" + list_Month.value;
 		    			
-		    			recurString = recurString + " " + getMonthString(parseInt(list_Month.value)) + list_YearlyDays.value + strLang80;					
+		    			recurString = recurString + " " + getMonthString(parseInt(list_Month.value)) + " " + list_YearlyDays.value + strLang80;					
 		    			
 		    			if (list_YearlyDays.value == parseInt(list_YearlyDays.value) && parseInt(list_YearlyDays.value) > 0 &&
 		    				parseInt(list_YearlyDays.value) < 32)
