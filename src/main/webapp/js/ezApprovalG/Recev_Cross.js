@@ -1564,7 +1564,7 @@ function SaveDraftDocInfo()
                     createNodeAndInsertText(xmlpara, objNode, "DOCNO", "");
                 
                 	//부서순차합의 일경우 접수번호를 통해 가져온 DOCNO 를 가져오도록 수정. 2019-02-21 홍대표
-	                if(pDraftFlag == "HAPYUI") {
+	                if(pDraftFlag == "HAPYUI" && approvalFlag == "G") {
 	                	xmlpara.getElementsByTagName("DOCNO")[0].textContent = pDocNo;
 	                }
             }
