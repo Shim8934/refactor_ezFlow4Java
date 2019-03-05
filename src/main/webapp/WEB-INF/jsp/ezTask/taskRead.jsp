@@ -882,7 +882,7 @@
 			            selecttab = "4";
 			            
 /* 			            $.ajax({
-							type : "POST",
+							type : "GET",
 							dataType : "text",
 							async : false,
 							url : "/ezTask/taskRepGetList.do",
@@ -1428,7 +1428,7 @@
 			
 			function getTaskAttachList() {
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					url : "/ezTask/getTaskAttachList.do",
 					dataType : "json",
 					data : {
@@ -1450,7 +1450,7 @@
 
 			function getTaskWorkAttachList() {
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					url : "/ezTask/getTaskWorkAttachList.do",
 					dataType : "json",
 					data : {
@@ -1612,7 +1612,7 @@
 				//window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatCount + "&date=" + changeDate, "", "height = 810px, width = 750px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 				//window.close();
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : false,
 					url : "/ezTask/taskRepGetList.do",

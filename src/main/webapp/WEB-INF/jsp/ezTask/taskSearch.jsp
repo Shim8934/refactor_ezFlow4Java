@@ -233,7 +233,7 @@
 				var chkValue = $("#search_field").val();
 
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : false,
 					url : "/ezTask/taskGetList.do",

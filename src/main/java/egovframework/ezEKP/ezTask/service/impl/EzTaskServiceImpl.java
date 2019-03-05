@@ -181,12 +181,19 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			mhtFilePath = realPath + uploadTaskPath + commonUtil.separator + taskInfoVO.getContentPath();
 		}
 		
-		File docFolder = new File(realPath + uploadTaskPath + commonUtil.separator + "Doc");
+		String docPath = realPath + uploadTaskPath + commonUtil.separator + "Doc";
+		docPath = commonUtil.detectPathTraversal(docPath);
+		docPath = commonUtil.stripScriptTags(docPath);
+		
+		File docFolder = new File(docPath);
 		if (!docFolder.exists()) {
 			docFolder.mkdirs();
 		}
 		
 		PrintWriter pw = null;
+		
+		mhtFilePath = commonUtil.detectPathTraversal(mhtFilePath);
+		mhtFilePath = commonUtil.stripScriptTags(mhtFilePath);
 		
 		try {
 			pw = new PrintWriter(new File(mhtFilePath));
@@ -212,7 +219,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		if (fileList.length() > 0) {
 			Map<String, Object> attachMap = new HashMap<String, Object>();
 			String pDirPath = realPath + uploadTaskPath + commonUtil.separator;
-			File uploadFileFolder = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + taskID);
+			String uploadFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + taskID;
+			uploadFilePath = commonUtil.detectPathTraversal(uploadFilePath);
+			uploadFilePath = commonUtil.stripScriptTags(uploadFilePath);
+			
+			File uploadFileFolder = new File(uploadFilePath);
 			
 			logger.debug("fileList = " + fileList);
 			logger.debug("fileNamse = " + fileNames);
@@ -265,15 +276,21 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			mhtFilePath = realPath + uploadTaskPath + commonUtil.separator + contentPath;
 		}
 		
-		File folder = new File(realPath + uploadTaskPath + commonUtil.separator + "Doc");
+		String folderPath = realPath + uploadTaskPath + commonUtil.separator + "Doc";
+		folderPath = commonUtil.detectPathTraversal(folderPath);
+		folderPath = commonUtil.stripScriptTags(folderPath);
+		
+		File folder = new File(folderPath);
 		if (!folder.exists()) {
 			folder.mkdirs();
 		}
 		
 		PrintWriter pw = null;
+		String mhtFile = commonUtil.detectPathTraversal(mhtFilePath);
+		mhtFile = commonUtil.stripScriptTags(mhtFile);
 		
 		try {
-			pw = new PrintWriter(new File(mhtFilePath));
+			pw = new PrintWriter(new File(mhtFile));
 			pw.println(content);
 			pw.flush();
 		} catch (Exception e) {
@@ -294,7 +311,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		if (attachList.length() > 0) {
 			Map<String, Object> attachMap = new HashMap<String, Object>();
 			String pDirPath = realPath + uploadTaskPath + commonUtil.separator;
-			File uploadFileFolder = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + taskID);
+			String uploadFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + taskID;
+			uploadFilePath = commonUtil.detectPathTraversal(uploadFilePath);
+			uploadFilePath = commonUtil.stripScriptTags(uploadFilePath);
+			
+			File uploadFileFolder = new File(uploadFilePath);
 			
 			if (!uploadFileFolder.exists()) {
 				uploadFileFolder.mkdirs();
@@ -1010,8 +1031,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 			String mhtPath = vo.getContentPath();
 
 			logger.debug("Delete mhtPath : " + mhtPath);
-
-			File file = new File(pDirPath + mhtPath);
+			
+			String dirPath = pDirPath + mhtPath;
+			dirPath = commonUtil.detectPathTraversal(dirPath);
+			dirPath = commonUtil.stripScriptTags(dirPath);
+			
+			File file = new File(dirPath);
 
 			if (file.exists()) {
 				file.delete();
@@ -1176,7 +1201,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 	private void fileMove(String beforeFilePath, String afterFilePath) throws Exception {
 		logger.debug("fileMove started.");
 		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
-
+		
+		beforeFilePath = commonUtil.detectPathTraversal(beforeFilePath);
+		afterFilePath = commonUtil.detectPathTraversal(afterFilePath);
+		
 		File file = new File(beforeFilePath);
 
 		try {
@@ -1190,8 +1218,12 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 
 	private void deleteDirectory(String taskID, String pDirpath, int tenantID) throws Exception {
 		logger.debug("deleteDirectory ended.");
-
-		File directoryFile = new File(pDirpath + "uploadFile" + commonUtil.separator + taskID + "_uploadFile");
+		
+		String dirPath = pDirpath + "uploadFile" + commonUtil.separator + taskID + "_uploadFile";
+		dirPath = commonUtil.detectPathTraversal(dirPath);
+		dirPath = commonUtil.stripScriptTags(dirPath);
+		
+		File directoryFile = new File(dirPath);
 		File[] deleteFileList = directoryFile.listFiles();
 
 		if (directoryFile.exists()) {

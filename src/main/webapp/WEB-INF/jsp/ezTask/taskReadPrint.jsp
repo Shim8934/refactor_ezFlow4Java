@@ -407,7 +407,7 @@
 			
 			function dayOnMouseClick(changeDate) {								
 				$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : false,
 					url : "/ezTask/taskRepGetList.do",

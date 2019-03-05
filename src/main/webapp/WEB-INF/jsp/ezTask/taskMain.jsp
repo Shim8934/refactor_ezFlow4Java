@@ -23,24 +23,24 @@
 			}
 		</STYLE>
 		<script type="text/javascript">
-			var delayColor = "${delayColor}";
-			var completeColor = "${completeColor}"
-			var userid = "${userInfo.id}";
+			var delayColor = "<c:out value='${delayColor}'/>";
+			var completeColor = "<c:out value='${completeColor}'/>"
+			var userid = "<c:out value='${userInfo.id}'/>";
 			var listdom = "";
 			var pagecount = 0;
 			var allCnt = 0;
 			var currentpage = 0;
-			var pagesize = "${taskGeneralVO.listCount}";
-			var changeTab = "${taskGeneralVO.selectTaskStatus}";
+			var pagesize = "<c:out value='${taskGeneralVO.listCount}'/>";
+			var changeTab = "<c:out value='${taskGeneralVO.selectTaskStatus}'/>";
 			var isrefresh = false;
 			var selectelem = null;
 			var initdate = "";
 		    var startdate = "";
 		    var enddate = "";
 		    var type = "";
-		    var userlang = "${userInfo.lang}";
-		    var primary = "${userInfo.primary}";
-		    var useTodoMemo = "${useTodoMemo }";
+		    var userlang = "<c:out value='${userInfo.lang}'/>";
+		    var primary = "<c:out value='${userInfo.primary}'/>";
+		    var useTodoMemo = "<c:out value='${useTodoMemo }'/>";
 		    
 		    window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -883,7 +883,7 @@
 		    	filter = MakeXMLString(filter);
 		    	
 		    	$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : false,
 					url : "/ezTask/taskGetList.do",
