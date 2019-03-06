@@ -1060,6 +1060,8 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	    	map2.put("v_DEPTID", cn);
 	    	ezOrganAdminDao.deleteAddJob(map2);
 	    	
+	    	deleteUserAddJob(cn, tenantID);
+	    	
 	        ezOrganAdminDao.deleteDBData(map);
 	        
 	        //회사 삭제시 넣었던 초기데이터 테이블 삭제
@@ -1752,4 +1754,32 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("getCompanyName ended");
 		return companyName;
 	}
+	
+	private void deleteUserAddJob(String deptId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("v_DEPTID", deptId);
+    	map.put("v_TENANT_ID", tenantId);
+		
+    	List<OrganUserVO> list = ezOrganAdminDao.getDeptAddJobUserList(map);
+    	
+    	for (OrganUserVO vo : list) {
+    		String ext4 = vo.getExtensionAttribute4();
+			String[] arr = ext4.split(";");
+    		String newExt4 = "";
+			
+			for (String str : arr) {
+				if (!str.startsWith(deptId + ":")) {
+					if (newExt4.equals("")) {
+						newExt4 = str;
+					} else {
+						newExt4 += ";" + str;
+					}
+				}
+			}
+			
+			if (!newExt4.equals(ext4)) {
+	    		updateProperty(vo.getCn(), "EXTENSIONATTRIBUTE4", newExt4, "user", tenantId);
+			}
+    	}
+    }
 }
