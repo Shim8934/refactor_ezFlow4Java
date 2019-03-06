@@ -28,7 +28,7 @@
 		
 		    var ReturnFunction;
 		    var m_dialogArguments;
-		    var lang = "${userInfo.lang}";
+		    var lang = "<c:out value='${userInfo.lang}'/>";
 		    window.onload = function () {
 		        try {
 		            m_dialogArguments = parent.task_repetition_cross_dialogArguments[0];

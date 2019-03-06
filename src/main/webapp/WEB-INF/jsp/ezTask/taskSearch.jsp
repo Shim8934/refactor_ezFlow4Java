@@ -35,11 +35,11 @@
 		    var orgfilter = "_OrgFilter";
 		    var pUse_Editor = "Use_Editor";
 		    var pSearchType = "pSearchType";
-		    var primary = "${userInfo.primary}";
-		    var delayColor = "${delayColor}";
-		    var completeColor = "${completeColor}"
+		    var primary = "<c:out value='${userInfo.primary}'/>";
+		    var delayColor = "<c:out value='${delayColor}'/>";
+		    var completeColor = "<c:out value='${completeColor}'/>"
 		    var selectelem = null;
-		    var useTodoMemo = "${useTodoMemo }";
+		    var useTodoMemo = "<c:out value='${useTodoMemo }'/>";
 		    
 		    document.onselectstart = function () { return false; };
 		    window.onload = function () {

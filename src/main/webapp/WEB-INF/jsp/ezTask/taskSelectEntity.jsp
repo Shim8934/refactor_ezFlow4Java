@@ -44,8 +44,8 @@
 	    var pListXML_Info = null;
 	    var returnval = null;
 	    var strLang_1 = "<spring:message code='ezTask.t190' />";
-	    var type = "${type }";
-	    var primary = "${userInfo.primary}";
+	    var type = "<c:out value='${type }'/>";
+	    var primary = "<c:out value='${userInfo.primary}'/>";
 	    var CurPage = "1";
 	    var ReturnFunction;
 	        
