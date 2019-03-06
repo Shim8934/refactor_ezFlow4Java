@@ -4009,6 +4009,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			boolean checkPermission = true;
 			
 			if (proxyUserArray.length > 1) {
+				if (mode == null || mode == "") {
+					mode = "APR";
+				}
 				String docList = ezApprovalGService.getAprLineInfoDB(docID, "1", "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", mode);
 				
 				Document docXML = commonUtil.convertStringToDocument(docList);
