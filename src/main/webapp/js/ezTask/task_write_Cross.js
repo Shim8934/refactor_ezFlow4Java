@@ -439,7 +439,6 @@ function show_repetition_info()
 			break;
 	}	
 
-	repeatinfo += ", ";	
 		var sdate, edate;
 		if (g_sdate == null)
 		{	
@@ -466,11 +465,15 @@ function show_repetition_info()
 		}
 	//2018-05-23 구해안 저장 버튼 눌렀을때 startDate 와 endDate 비교 플레그(radioCheck)
 	//strLang71, strLang72 추가
-	repeatinfo += strLang71 + " : ";
+	repeatinfo += ", " + strLang71 + " : ";
 	if(info[0] == '-1'){
 		repeatinfo += sdate + ' ~ ' + strLang72;
-	}else{
+	}
+	else if(info[0] == '0'){
 		repeatinfo += sdate + ' ~ ' + edate;
+	}
+	else {
+		repeatinfo += sdate + ' ~ ' + info[0] + strLang47;
 	}
 	document.getElementById("repeatinfo").innerHTML = repeatinfo;
 }

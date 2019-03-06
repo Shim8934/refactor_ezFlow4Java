@@ -66,7 +66,7 @@
 	        var linealt13 = "<spring:message code='ezApprovalG.t2001'/>";
 	        var linealt14 = "<spring:message code='ezApprovalG.t322'/>";
 	        var linealt15 = "<spring:message code='ezApprovalG.t323'/>";
-	        var linealt16 = "<spring:message code='ezApprovalG.t324'/>";
+	        var linealt16 = "<spring:message code='ezApprovalG.psb324'/>";
 	        var linealt17 = "<spring:message code='ezApprovalG.t1178'/>";
 	        var Cabinet1 = "<spring:message code='ezApprovalG.t379'/>";
 	        var Cabinet2 = "<spring:message code='ezApprovalG.t572'/>";
@@ -615,8 +615,6 @@
 	        try {
 	
 	            if (innserdeptid == arr_userinfo[4] && "${USE_SELFDISTRIBUTE}" == "N") {
-	                var pAlertContent = "<spring:message code='ezApprovalG.t2000'/>";
-	                OpenAlertUI(pAlertContent);
 	                selfInsert = true;
 	            }
 	
@@ -650,9 +648,7 @@
 	
 	                if (objNodes.length > 0) {
 	                    for (var i = 0; i < objNodes.length; i++) {
-	                    	if (!isReceiverChk(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue)) {
-		                        insertInnerDept(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue, objNodes[i].getElementsByTagName("VALUE")[0].childNodes[0].nodeValue);
-	                    	}
+	                        insertInnerDept(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue, objNodes[i].getElementsByTagName("VALUE")[0].childNodes[0].nodeValue);
 	                    }
 	                }
 	            }
@@ -689,57 +685,54 @@
 	                return;
 	            }
 	        }
-	        if (!isReceiverChk(STRDEPTID)) {
-	        	var pAlertContent = strLang1101 + strLang1102;
-                OpenAlertUI(pAlertContent);
-	        	return;
-	        }
-	        if (lastRowIdx < 1) {
-	            strXML = "<LISTVIEWDATA><HEADERS>";
-	            strXML = strXML + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t428'/>" + "</NAME><WIDTH>156</WIDTH></HEADER>";
-	            strXML = strXML + "</HEADERS><ROWS><ROW><CELL>";
-	            strXML = strXML + "<VALUE>" + MakeXMLString(STRDEPTNAME) + "</VALUE>";
-	            strXML = strXML + "<DATA1>" + STRDEPTID + "</DATA1>";
-	            strXML = strXML + "<DATA2>" + "" + "</DATA2>";
-	            strXML = strXML + "<DATA3>" + "" + "</DATA3>";
-	            strXML = strXML + "<DATA4>" + MakeXMLString(STRDEPTNAME) + "</DATA4>";
-	            strXML = strXML + "<DATA5>" + MakeXMLString(STRDEPTNAME) + "</DATA5>";
-	            strXML = strXML + "</CELL></ROW></ROWS></LISTVIEWDATA>";
-	            objXML = loadXMLString(strXML);
-	            document.getElementById("APRLINE1").innerHTML = "";
-	            var listview = new ListView();
-	            listview.SetID("listAPRLINE1");
-	            listview.SetMulSelectable(false);
-	            listview.SetRowOnDblClick("btn_DeptDel_onclick");
-	            listview.DataSource(objXML);
-	            listview.DataBind("APRLINE1");
-	        } else {
-	            var listview = new ListView();
-	            listview.LoadFromID("listAPRLINE1");
-	            var InitTr = listview.GetDataRows();
-	            var MaxID = 0;
-	
-	            for (var j = 0  ; j < InitTr.length  ; j++) {
-	                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                if (MaxID < curnum)
-	                    MaxID = curnum;
-	            }
-	            strXML = "<ROW><CELL><VALUE>" + MakeXMLString(STRDEPTNAME) + "</VALUE>";
-	            strXML = strXML + "<DATA1>" + STRDEPTID + "</DATA1>";
-	            strXML = strXML + "<DATA2>" + "" + "</DATA2>";
-	            strXML = strXML + "<DATA3>" + "" + "</DATA3>";
-	            strXML = strXML + "<DATA4>" + MakeXMLString(STRDEPTNAME) + "</DATA4>";
-	            strXML = strXML + "<DATA5>" + MakeXMLString(STRDEPTNAME) + "</DATA5>";
-	            strXML = strXML + "</CELL></ROW>";
-	            if (listview.GetSelectedRows().length == 0) {
-	                var objTr = listview.AddRow(0);
-	                SetAttribute(objTr, "id", "listAPRLINE1" + "_TR_" + eval(MaxID + 1));
-	                listview.AddDataRow(objTr, loadXMLString(strXML));
-	            } else {
-	                var objTr = listview.AddRow(Number(listview.GetSelectedIndexes().split(',')[0]));
-	                SetAttribute(objTr, "id", "listAPRLINE1" + "_TR_" + eval(MaxID + 1));
-	                listview.AddDataRow(objTr, loadXMLString(strXML));
-	            }
+	        if (isReceiverChk(STRDEPTID)) {
+		        if (lastRowIdx < 1) {
+		            strXML = "<LISTVIEWDATA><HEADERS>";
+		            strXML = strXML + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t428'/>" + "</NAME><WIDTH>156</WIDTH></HEADER>";
+		            strXML = strXML + "</HEADERS><ROWS><ROW><CELL>";
+		            strXML = strXML + "<VALUE>" + MakeXMLString(STRDEPTNAME) + "</VALUE>";
+		            strXML = strXML + "<DATA1>" + STRDEPTID + "</DATA1>";
+		            strXML = strXML + "<DATA2>" + "" + "</DATA2>";
+		            strXML = strXML + "<DATA3>" + "" + "</DATA3>";
+		            strXML = strXML + "<DATA4>" + MakeXMLString(STRDEPTNAME) + "</DATA4>";
+		            strXML = strXML + "<DATA5>" + MakeXMLString(STRDEPTNAME) + "</DATA5>";
+		            strXML = strXML + "</CELL></ROW></ROWS></LISTVIEWDATA>";
+		            objXML = loadXMLString(strXML);
+		            document.getElementById("APRLINE1").innerHTML = "";
+		            var listview = new ListView();
+		            listview.SetID("listAPRLINE1");
+		            listview.SetMulSelectable(false);
+		            listview.SetRowOnDblClick("btn_DeptDel_onclick");
+		            listview.DataSource(objXML);
+		            listview.DataBind("APRLINE1");
+		        } else {
+		            var listview = new ListView();
+		            listview.LoadFromID("listAPRLINE1");
+		            var InitTr = listview.GetDataRows();
+		            var MaxID = 0;
+		
+		            for (var j = 0  ; j < InitTr.length  ; j++) {
+		                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                if (MaxID < curnum)
+		                    MaxID = curnum;
+		            }
+		            strXML = "<ROW><CELL><VALUE>" + MakeXMLString(STRDEPTNAME) + "</VALUE>";
+		            strXML = strXML + "<DATA1>" + STRDEPTID + "</DATA1>";
+		            strXML = strXML + "<DATA2>" + "" + "</DATA2>";
+		            strXML = strXML + "<DATA3>" + "" + "</DATA3>";
+		            strXML = strXML + "<DATA4>" + MakeXMLString(STRDEPTNAME) + "</DATA4>";
+		            strXML = strXML + "<DATA5>" + MakeXMLString(STRDEPTNAME) + "</DATA5>";
+		            strXML = strXML + "</CELL></ROW>";
+		            if (listview.GetSelectedRows().length == 0) {
+		                var objTr = listview.AddRow(0);
+		                SetAttribute(objTr, "id", "listAPRLINE1" + "_TR_" + eval(MaxID + 1));
+		                listview.AddDataRow(objTr, loadXMLString(strXML));
+		            } else {
+		                var objTr = listview.AddRow(Number(listview.GetSelectedIndexes().split(',')[0]));
+		                SetAttribute(objTr, "id", "listAPRLINE1" + "_TR_" + eval(MaxID + 1));
+		                listview.AddDataRow(objTr, loadXMLString(strXML));
+		            }
+		        }
 	        }
 	    }
 	    function isExistDept(ExtFlag) {
@@ -887,8 +880,14 @@
 	            }
 	            if (ListViewLen.length == 1) {
 	                if (GetAttribute(ListViewLen[0], "id") == "listAPRLINE1_TR_noItems") {
-	                    alert("<spring:message code='ezApprovalG.pjj31'/>");
-	                    return;
+	                	if(tempmode == 'MODIFY'){
+		                    alert("<spring:message code='ezApprovalG.pjj31'/>");
+		                    return;
+	                	}
+	                	if(tempmode == 'NEW'){
+		                    alert("<spring:message code='ezApprovalG.psb31'/>");
+		                    return;
+	                	}
 	                }
 	            }
 	
