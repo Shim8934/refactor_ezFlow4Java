@@ -93,7 +93,7 @@
 	<resultMap class="CommunityCOutApplicationVO" id="communityCOutApplicationVO">
 		<result property="userID"						column="USERID"						columnIndex="1"/>
 		<result property="outDate"						column="OUTDATE"					columnIndex="2"/>
-		<result property="outReason"					column="OUTREASON"					columnIndex="3"		javaType="String" jdbcType="CLOB"/>
+		<result property="outReason"					column="OUTREASON"					columnIndex="3"		javaType="String" jdbcType="TEXT"/>
 		<result property="userName"						column="USERNAME"					columnIndex="4"/>
 	</resultMap>
 	
