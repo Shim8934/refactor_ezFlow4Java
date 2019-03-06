@@ -24772,6 +24772,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					if (result.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
 					}
+				} else if(aprTypeList.get(0).getAprType().equals(staATBuSeuByungRyulHyubJo)) {
+					// 부서병렬합의에서 회송일 경우, 결재선에서 합의부서 상태값을 015로 넣어주기 위해 추가. 2019-03-05 홍대표
+					result = doApprove(pOrgDocID, pDeptID, staASWheSong, ezOrganService.getPropertyValue(pDeptID, "DisplayName", tenantID), ezOrganService.getPropertyValue(pDeptID, "DisplayName2", tenantID), dirPath, pDeptID, "", pOrgCompanyID, lang, userInfo, curDocNum, "", "");
+
+					if (result.toUpperCase().equals("FALSE")) {
+						rtnVal = false;
+					}
 				} else {
 					// 표준모듈 (2007.05.07) : 다국어
 					result = doApprove(pOrgDocID, "", staASWheSong, ezOrganService.getPropertyValue(pDeptID, "DisplayName", tenantID), ezOrganService.getPropertyValue(pDeptID, "DisplayName2", tenantID), dirPath, pDeptID, "", pOrgCompanyID, lang, userInfo, curDocNum, "", "");
