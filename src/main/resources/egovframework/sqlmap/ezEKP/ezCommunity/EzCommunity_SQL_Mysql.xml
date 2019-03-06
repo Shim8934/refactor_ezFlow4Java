@@ -3063,6 +3063,17 @@
 			WHERE
 				c_adminconfirm = 'Y'
 			AND
+				EXISTS (
+					SELECT
+						CN
+                    FROM
+						TBL_USERMASTER
+                    WHERE
+						CN = T3.C_ID
+                    AND
+						TENANT_ID = #tenantID#
+                )
+			AND
 				T1.companyid = #companyID#
 			AND
 				T1.tenant_id = #tenantID#
