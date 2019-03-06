@@ -90,7 +90,8 @@
 		    
 // 		    document.onselectstart = function () { return false; };
 		    
-		    function select_row(elem) {		    	
+		    function select_row(elem) {		    
+		    	
 				if ($("#checkboxAll").is(":checked")) {					
 					if ($("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked") == true && selectelem != null) {//전체 선택 후 개별 선택 시 선택한것 해제
 						$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", false);
@@ -118,7 +119,7 @@
 				}
 
 				// 체크 후 체크박스 눌러서 체크 해제할 때
-		        if (selectelem != null) {
+		        if (selectelem != null && selectelem != elem) {
 					if ($("#checkboxAll").is(":checked")) {
 			        	$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", false);
 			        	$(".row_body[taskid='" + $(elem).attr("taskid") + "']").css("background", "#ffffff");
@@ -311,17 +312,21 @@
 			var strListInfo = "";
 			var strListIdInfo = "";
 
-			function chk_onselect(obj) {
+			function chk_onselect(obj, event) {
+				event.stopPropagation();
 				if (obj.checked) {
 		            strListInfo += $(obj).attr("taskID") + ";";
 		            strListIdInfo += $(obj).attr("creatorID") + ";";
-		            selectelem = null;
+		            selectelem = obj.parentNode.parentNode;
+		            obj.parentNode.parentNode.style.backgroundColor = "#edf4fd";
 		        } else {
 		            strListInfo = ReplaceText(strListInfo, $(obj).attr("taskID") + ";", "");
 		            strListIdInfo = ReplaceText(strListIdInfo, $(obj).attr("creatorID") + ";", "");
-		            selectelem = obj.parentNode.parentNode;
+		            selectelem = null;
+		            obj.parentNode.parentNode.style.backgroundColor = "#ffffff";
 		        }
 		    }
+			
 
 			function ReplaceText(orgStr, findStr, replaceStr) {
 		        var re = new RegExp(findStr, "gi");		        
@@ -386,7 +391,7 @@
 				        tr.setAttribute("startdate", startdate);
 	
 				        tr.cells[0].innerHTML += "<input name='myCheckbox' type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "_" + i + 
-				        "'onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
+				        "'onclick='chk_onselect(this, event)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
 	
 				        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
 				            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";

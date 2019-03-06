@@ -355,7 +355,7 @@
 		                repetition += "|1";
 		                repetition += "|" + list_Month.value;
 						
-		                recurString = recurString + " " + getMonthString(parseInt(list_Month.value)) + list_YearlyDays.value + strLang80;	
+		                recurString = recurString + " " + getMonthString(parseInt(list_Month.value)) + " " + list_YearlyDays.value + strLang80;	
 		                
 		                var enddate0;
 		                var errorMeg;
@@ -405,7 +405,7 @@
 		
 		        rtn["REPETITION"] = repetition;
 		        /*2018-05-16 구해안 task_write_cross */
-		        rtn["REPDISPLAY"] = strLang33 + " " + recurString + " , " + strLang79 + " : " + scheduleTerm;
+		        rtn["REPDISPLAY"] = strLang33 + " " + recurString + ", " + strLang79 + " : " + scheduleTerm;
 		        
 		        if (ReturnFunction != null){
 		            window.parent.timeCheck = true;
@@ -740,6 +740,7 @@
 						<input name="text" type="text" id="txt_De" style="Width:40px;height:18px;text-align: center;" onFocus='window.document.all["optDaily"][0].checked=true;' value="1" maxlength='3'>
 						&nbsp;<spring:message code='ezTask.t39' /></label>
 						<br>
+						<br>
 						<input id="id0D2" type="radio" name="optDaily" style="margin:0px 0px 0px 0px;vertical-align:middle;">
 						<label for="id0D2" accesskey="K" style="vertical-align:middle;"><spring:message code='ezTask.t40' /><u>K</u>)</label>
 					</div>
@@ -775,7 +776,7 @@
 						<input name="Input" id="list_MonthInterval" style="Width:40px;text-align: center;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="1" maxlength="3">
 						&nbsp;<spring:message code='ezTask.t51' />
 						<input name="Input" id="list_MonthlyDays" style="Width:40px;text-align: center;" onFocus='window.document.all["optMonthly"][0].checked=true;' maxlength="2">
-						&nbsp;<spring:message code='ezTask.t52' /><br>
+						&nbsp;<spring:message code='ezTask.t52' /><br><br>
 						<input id="id0M2" type="radio" name='optMonthly' style="margin:0px 0px 0px 0px;vertical-align:middle;">
 						<label for="id0M2" accesskey="E" style="vertical-align:middle"><spring:message code='ezTask.t53' /><u>E</u>)&nbsp;</label>
 						<input name="Input" id="list_MonthInterval2" style="Width:40px;text-align: center;" onFocus='window.document.all["optMonthly"][1].checked=true;' value="1" maxlength="3">
@@ -816,13 +817,14 @@
 						</select>
 						<input name="Input" class="text" id="list_YearlyDays" style="Width:40px;text-align: center;" onFocus='window.document.all["optYearly"][0].checked=true;' maxlength="2">
 						&nbsp;<spring:message code='ezTask.t62' />
-						<c:if test="${userinfo.lang == 3}" >
-							<input type="checkbox" value="1" id="moonday" style="margin:0px 0px 2px 0px;vertical-align:middle;">
+						<c:if test="${userInfo.lang == 1}" >
+							<input type="checkbox" value="1" id="moonday" style="margin:0px 0px 2px 0px;vertical-align:middle;display:none;">
+							<%-- <spring:message code='ezTask.t63' /> --%><br>
 						</c:if>
-						<c:if test="${userinfo.lang != 3}" >
+						<c:if test="${userInfo.lang != 1}" >
 							<input type="checkbox" value="1" id="moonday" style="margin:0px 0px 2px 0px;vertical-align:middle;display:none;">
 						</c:if>
-						<spring:message code='ezTask.t63' /><br>
+						<br>
 						<input id="optY2" type="radio" name="optYearly" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;">          
 						<label for="optY2" accesskey="E" style="vertical-align:middle"><spring:message code='ezTask.t53' /><u>E</u>)&nbsp;</label>
 						<select name="select" id="list_Month2" onFocus='window.document.all["optYearly"][1].checked=true;'>

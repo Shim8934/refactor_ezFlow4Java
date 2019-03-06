@@ -118,7 +118,7 @@ function window_onload() {
     				}
     			break;
     			case "2":
-    				mpMonthly.checked = true;
+    				mpMontly.checked = true;
     				if (info[3] == "1")
     				{
     					idOM1.checked = true;
@@ -1001,7 +1001,7 @@ function YearlyDisposal( xmlDoc, nPattern )
 				document.getElementById("list_YearlyDays").value = 1;
 			createNodeAndInsertText(xmlDoc, objNode, "daysOfMonth", document.getElementById("list_YearlyDays").value);
 
-			rtvString = strLang98 + " " + iNumber + strLang271 + " " + document.getElementById("list_Month").value + strLang278 + " " + rtvString;
+			rtvString = strLang98 + " " + document.getElementById("list_Month").value + strLang271 + " " + iNumber + strLang278 + " " + rtvString;
 		}
 		else
 		{

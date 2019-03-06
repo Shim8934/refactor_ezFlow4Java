@@ -321,6 +321,12 @@
 				}
 				return weekNumber;
 			}
+			
+			function open_schedule_in_receiveAttendant(scheduleid, isReceive) {
+		        var feature = GetOpenPosition(790, 670);
+		        window.open("/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleid) + "&isReceive=" + encodeURIComponent(isReceive), "",
+					"height = 670px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		    }
 		</script>
 	</head>
 	
@@ -358,7 +364,7 @@
 	                    	<c:if test="${item.status != '0'}"><spring:message code='ezSchedule.t169' /></c:if>
 	                    </td> 
 	                    <td><c:out value="${item.location }" /></td> 
-	                    <td title="<spring:message code='ezSchedule.t342' />" style="word-break:break-all;cursor:pointer;text-overflow:ellipsis;overflow:hidden" onClick="parentwin.open_schedule('${item.scheduleId}')"><c:out value="${item.title}" /></td> 
+	                    <td title="<spring:message code='ezSchedule.t342' />" style="word-break:break-all;cursor:pointer;text-overflow:ellipsis;overflow:hidden" onClick="open_schedule_in_receiveAttendant('${item.scheduleId}', 'Y')"><c:out value="${item.title}" /></td> 
 	                    <td class="showDateType" style="white-space:nowrap" startDate="${item.startDate}" endDate="${item.endDate}" dateType="${item.dateType}" repetition="${item.repetition}">
 	                    	
 	                    </td> 

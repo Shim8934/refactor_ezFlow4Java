@@ -662,7 +662,7 @@
 	        var approval_admin_popup_choicedept_dialogArguments = new Array();
 	        
 	        function bt_OK_onclick() {
-	        	
+	        	if (document.getElementsByName("SDeptName")[0].value != "") {
 	        	 if (CrossYN()) {
 	        		 	approval_admin_popup_choicedept_dialogArguments[0] = "one";
 		                approval_admin_popup_choicedept_dialogArguments[1] = bt_OK_onclick_Complete;
@@ -676,6 +676,7 @@
 		                    window.location.reload(false);
 		                }
 		            }
+	        	}
 			}
 	        
 	        function bt_OK_onclick_Complete(retVal) { 
@@ -709,7 +710,7 @@
 	        }
 	        
 	        function bt_All_onclick() {
-				
+	        	if (document.getElementsByName("SDeptName")[0].value != "") {
 	        	 if (CrossYN()) {
 	        		 	approval_admin_popup_choicedept_dialogArguments[0] = "all";
 		                approval_admin_popup_choicedept_dialogArguments[1] = bt_All_onclick_Complete;
@@ -723,6 +724,7 @@
 		                    window.location.reload(false);
 		                }
 		            }
+	        	}
 	        }
 	        
 	        function bt_All_onclick_Complete(retVal) {
@@ -731,7 +733,7 @@
 				if(popupselTContName!=undefined && popupselTContName != "" ) {
 				if (popupselTContName == null || popupselTContName == '' 
 	        			|| $("select[name=selSContName]").val() == null || $("select[name=selSContName]").val() == '') {
-	                alert("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1676'/>");
+	                alert("<spring:message code='ezApprovalG.t1676'/>");
 	                
 	        	}
 				else {
@@ -743,7 +745,7 @@
 				}
 				        
 	        } else {
-	            alert("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1676'/>");
+	            alert("<spring:message code='ezApprovalG.t1676'/>");
         		strMoveListIDInfo = "";
 				selectelem = null;
 				$(":checkbox[name=myCheckbox]").prop("checked", false);
@@ -840,6 +842,7 @@
 		        document.getElementsByName('drafterdept')[0].id = "";
 		        $("select[name=selSContName]").val("");
 		        ScontID = "";
+		        totalCount = "";
 		        $('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
 		        makePageSelPage();
 		    }
