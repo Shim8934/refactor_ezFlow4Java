@@ -629,7 +629,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 								if (proxyUserFlag == null) {
 									curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
 								} else {
-									curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k-1).getTextContent();
+									if (k > 0) {
+										curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k-1).getTextContent();
+									} else {
+										curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
+									}
 								}
 								
 								for (int j = 0; j < proxyUserArray.length; j++) {

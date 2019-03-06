@@ -2273,7 +2273,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         }
         
         //일정기간 계산        
-        if (vo.getDateType().equals("3")){        	
+        if (vo.getDateType().equals("3")){
         	_repeatcount = request.getParameter("repeatcount");
         	_date = request.getParameter("date");
         	//일정관리 참석자 초대메세지에서 반복일정 걸려있는 일정 조회 시, 회차랑 시작일자를 null로 받아와서 null검사 추가 #14484
@@ -2358,6 +2358,16 @@ public class EzScheduleController extends EgovFileMngUtil {
         	if (ssvo.getSecId().equals(vo.getOwnerId())) {
         		_admin = "Y";
         		_editPosible = "Y";
+        	}
+        }
+        
+        String isReceive = request.getParameter("isReceive");
+        if (isReceive == null ) {
+        	isReceive = "";
+        } else if (isReceive.equals("Y")) {
+        	if (vo.getRepetition().length() > 0) {
+        		model.addAttribute("isReceive", isReceive);
+        		model.addAttribute("repetitionInfo", vo.getRepetition());
         	}
         }
         
