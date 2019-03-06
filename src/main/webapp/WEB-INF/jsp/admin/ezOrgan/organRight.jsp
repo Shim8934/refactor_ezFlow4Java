@@ -1657,10 +1657,10 @@
 						<tr>
 							<td><a class="imgbtn" id="userRetire"><span onClick="Retire_user()"><spring:message code='ezOrgan.t310' /></span></a></td>
 						</tr>      
-						<tr <c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>>
+						<tr <c:if test="${use_approvalG != 'YES' or packageType != 'standard'}">style="display:none;"</c:if>>
 							<td height="15"><img <spring:message code='ezOrgan.i1' /> style="margin-bottom:3px"></td>
 						</tr>
-						<tr <c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>>
+						<tr <c:if test="${use_approvalG != 'YES' or packageType != 'standard'}">style="display:none;"</c:if>>
 							<td><a class="imgbtn" id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></a></td>
 						</tr>
 						<tr>

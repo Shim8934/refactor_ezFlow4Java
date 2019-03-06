@@ -210,6 +210,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
+		String packageType = commonUtil.getPackageType(user.getTenantId());
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
 		String useSyncServer = ezCommonService.getTenantConfig("useSyncServer", user.getTenantId());
@@ -234,6 +235,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			useDisablePop3Imap = "NO";
 		}
 		
+		model.addAttribute("packageType", packageType);
 		model.addAttribute("useDisablePopImap", useDisablePop3Imap);
 		model.addAttribute("topid", topid);
 		model.addAttribute("useOCS", config.getProperty("config.USE_OCS"));
