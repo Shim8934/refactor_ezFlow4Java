@@ -19698,6 +19698,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else if (listType.equals("21")) {
 			//서버저장 문서
 			listString = getListHeader("009", companyID, userLang, tenantID);
+		} else if (listType.equals("99")) {
+			//회람수신함
+			listString = getListHeader("S001", companyID, userLang, tenantID);
 		} else {
 			listString = getListHeader("001", companyID, userLang, tenantID);
 		}

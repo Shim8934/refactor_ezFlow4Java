@@ -121,5 +121,8 @@ public interface EzCommonService {
 	public void addPortalPortletUserThemeId() throws Exception;
 	
 	public void addTblPortalThemeUserIsDefault() throws Exception;
+
+	public void updateListOptionData() throws Exception;
+
 }
 

@@ -70,3 +70,4 @@ var strLang70	=	"시작시간은 종료시간보다 빨라야합니다.";
 var strLang71   =   "기간";
 var strLang72   =   "종료일 지정 안함.";
 var strLang73   =   "저장";
+var strLang47 = "회";

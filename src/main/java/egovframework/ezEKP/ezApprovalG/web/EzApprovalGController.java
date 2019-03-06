@@ -628,7 +628,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 								if (proxyUserFlag == null) {
 									curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
 								} else {
-									curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k-1).getTextContent();
+									if (k > 0) {
+										curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k-1).getTextContent();
+									} else {
+										curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
+									}
 								}
 								
 								for (int j = 0; j < proxyUserArray.length; j++) {
@@ -4009,6 +4013,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			boolean checkPermission = true;
 			
 			if (proxyUserArray.length > 1) {
+				if (mode == null || mode == "") {
+					mode = "APR";
+				}
 				String docList = ezApprovalGService.getAprLineInfoDB(docID, "1", "", "", userInfo.getCompanyID(), userInfo.getTenantId(), "", "", mode);
 				
 				Document docXML = commonUtil.convertStringToDocument(docList);
