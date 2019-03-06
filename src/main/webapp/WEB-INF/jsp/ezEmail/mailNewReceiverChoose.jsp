@@ -3383,7 +3383,7 @@
                 dropelement = "";
             }
             
-            var BlockSize2 = 10;
+            var BlockSize2 = 5;
             function td_Create2(strtext) {
                 document.getElementById("tblPageRayer2").innerHTML = strtext;
             }

@@ -837,11 +837,19 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var selRow = DocList.GetSelectedRows();
+		        
 		        if (selRow.length != 0) {
-		            var tr = selRow[0];
-		            SwapSubMenuDisplay("1");
-		            InitGlobals("RECORD", "0", "1");
-		            g_SelCabXml = "<CABINETINFO><CABINET><CABINETID><![CDATA[" + tr.getAttribute("DATA1") + "]]></CABINETID></CABINET></CABINETINFO>";
+		        	SwapSubMenuDisplay("1");
+			        InitGlobals("RECORD", "0", "1");
+			            
+		        	g_SelCabXml = "<CABINETINFO><CABINET>";
+		        			        	
+		        	for(var i = 0; i < selRow.length; i++) {
+		        		g_SelCabXml += "<CABINETID><![CDATA[" + selRow[i].getAttribute("DATA1") + "]]></CABINETID>";
+		        	}
+		        	
+		        	g_SelCabXml += "</CABINET></CABINETINFO>";
+		            
 		            GetRecordList();
 		            $("#tdViewCabList").show();
 		        }

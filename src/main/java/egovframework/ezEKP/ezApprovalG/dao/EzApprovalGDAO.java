@@ -3203,4 +3203,16 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void setHesongCabinetID(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.setHesongCabinetID", map);
 	}
+	
+	public String getAprOrgDocID(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getAprOrgDocID", map);
+	}
+	
+	public int getEndAprOpinionCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getEndAprOpinionCnt", map);
+	}
+	
+	public void insertHesongOpinion(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertHesongOpinion", map);
+	}
 }

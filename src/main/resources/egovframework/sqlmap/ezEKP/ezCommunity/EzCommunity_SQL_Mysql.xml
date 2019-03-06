@@ -82,7 +82,7 @@
 		<result property="userName2"					column="USERNAME2"					columnIndex="4"/>
 		<result property="companyID"					column="COMPANYID"					columnIndex="5"/>
 		<result property="title"						column="TITLE"						columnIndex="6"/>
-		<result property="content"						column="CONTENT"					columnIndex="7"		javaType="String" jdbcType="CLOB"/>
+		<result property="content"						column="CONTENT"					columnIndex="7"		javaType="String" jdbcType="TEXT"/>
 		<result property="contentURL"					column="CONTENTURL"					columnIndex="8"/>
 		<result property="readNum"						column="READNUM"					columnIndex="9"/>
 		<result property="writeDay"						column="WRITEDAY"					columnIndex="10"/>
@@ -1483,8 +1483,8 @@
 						B.cn, A2.DEPTID,
 						C.EXTENSIONATTRIBUTE2 as COMPANYID,
 						A2.TENANT_ID,
-						B.DESCRIPTION,
-						B.DESCRIPTION2
+						C.DISPLAYNAME as DESCRIPTION,
+						C.DISPLAYNAME2 as DESCRIPTION2
 					FROM
 						TBL_USERMASTER B
 					INNER JOIN
@@ -1565,8 +1565,8 @@
 							A2.TENANT_ID,
 							B.DISPLAYNAME,
 							B.DISPLAYNAME2,
-							B.DESCRIPTION,
-							B.DESCRIPTION2
+							C.DISPLAYNAME as DESCRIPTION,
+							C.DISPLAYNAME2 as DESCRIPTION2
 						FROM
 							TBL_USERMASTER B
 						INNER JOIN
@@ -1642,8 +1642,8 @@
 							B.cn, A2.DEPTID,
 							C.EXTENSIONATTRIBUTE2 as COMPANYID,
 							A2.TENANT_ID,
-							B.DESCRIPTION,
-							B.DESCRIPTION2
+							C.DISPLAYNAME as DESCRIPTION,
+							C.DISPLAYNAME2 as DESCRIPTION2
 						FROM
 							TBL_USERMASTER B
 						INNER JOIN
@@ -1695,8 +1695,6 @@
 				TBL_USERMASTER
 			WHERE
 				CN = #v_USERID#
-			AND
-				PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
 			AND
 				tenant_id = #tenantID#
 		]]>
@@ -1949,7 +1947,7 @@
 				AND
 					permit <> 0
 				AND
-					A.c_id LIKE CONCAT('%', #v_SER#, '%')
+					C.CN LIKE CONCAT('%', #v_SER#, '%')
 				AND
 					B.companyid = #companyID#
 				AND
@@ -2009,7 +2007,7 @@
 						A.tenant_id = B.tenant_id
 					AND
 						A.companyid = B.companyid
-					LEFT OUTER JOIN
+					INNER JOIN
 						TBL_USERMASTER C
 					ON
 						A.c_id = C.CN
@@ -2127,8 +2125,8 @@
 					B.cn, A2.DEPTID,
 					C.EXTENSIONATTRIBUTE2 as COMPANYID,
 					A2.TENANT_ID,
-					B.DISPLAYNAME,
-					B.DISPLAYNAME2
+					C.DISPLAYNAME,
+					C.DISPLAYNAME2
 				FROM
 					TBL_USERMASTER B
 				INNER JOIN
@@ -3090,28 +3088,37 @@
 		<![CDATA[
 			SELECT
 				(SUBSTR(c_clubname$v_USERINFO_LANG$, 1, 18)) AS c_clubname,
-				c_clubno,
+				T1.c_clubno,
 				c_clubgubun,
 				c_clubdesc,
 				c_logo_thumbnail,
-				c_membercnt,
 				c_clubconfirmtype
 			FROM
-				TBL_C_CLUB
+				TBL_C_CLUB T1
 			JOIN
 				TBL_USERMASTER T2
 			ON
-				RTRIM(TBL_C_CLUB.c_sysopid) = RTRIM(T2.cn)
+				RTRIM(T1.c_sysopid) = RTRIM(T2.cn)
 			AND
-				TBL_C_CLUB.tenant_id = T2.tenant_id
+				T1.tenant_id = T2.tenant_id
+			JOIN
+				TBL_C_CLUBUSER T3
+			ON
+				RTRIM(T1.c_clubno) = RTRIM(T3.c_clubno)
+			AND
+				T3.permit <> 0
+			AND
+				T1.tenant_id = T3.tenant_id
 			WHERE
 				c_adminconfirm = 'Y'
 			AND
-				TBL_C_CLUB.companyid = #companyID#
+				T1.companyid = #companyID#
 			AND
-				TBL_C_CLUB.tenant_id = #tenantID#
+				T1.tenant_id = #tenantID#
+			GROUP BY
+				T1.c_clubno
 			ORDER BY
-				c_membercnt DESC
+				IFNULL(COUNT(T3.c_id), 0) DESC
 			LIMIT
 				3
 		]]>
@@ -4056,6 +4063,12 @@
 					IFNULL(COUNT(c_clubno), 0)
 				FROM
 					TBL_C_CLUBUSER 
+				JOIN
+					TBL_USERMASTER
+				ON
+					RTRIM(TBL_USERMASTER.CN) = RTRIM(TBL_C_CLUBUSER.c_id)
+				AND
+					TBL_C_CLUBUSER.tenant_id = TBL_USERMASTER.tenant_id
 				WHERE
 					RTRIM(c_clubno) = #v_CODE#
 				AND
@@ -4063,7 +4076,7 @@
 				AND
 					permit <> 0
 				AND
-					tenant_id = #tenantID#
+					TBL_C_CLUBUSER.tenant_id = #tenantID#
 			]]>
 		</isEqual>
 		<isNotEqual property="v_S_RADIO" compareValue="ID">
@@ -4080,7 +4093,7 @@
 					AND
 						TBL_C_CLUBUSER.tenant_id = TBL_USERMASTER.tenant_id
 					WHERE
-						RTRIM(TBL_C_CLUBUSER.c_clubno) = #v_CODE#
+						RTRIM(c_clubno) = #v_CODE#
 					AND 
 						CASE WHEN #primary# = '1' THEN TBL_USERMASTER.DISPLAYNAME ELSE TBL_USERMASTER.DISPLAYNAME2 END LIKE CONCAT('%', #v_KEYWORD#, '%')
 					AND
@@ -4097,12 +4110,18 @@
 						IFNULL(COUNT(c_clubno), 0)
 					FROM
 						TBL_C_CLUBUSER
+					JOIN
+						TBL_USERMASTER
+					ON
+						RTRIM(TBL_USERMASTER.CN) = RTRIM(TBL_C_CLUBUSER.c_id)
+					AND
+						TBL_C_CLUBUSER.tenant_id = TBL_USERMASTER.tenant_id
 					WHERE
 						RTRIM(c_clubno) = #v_CODE#
 					AND
 						permit <> 0
 					AND
-						tenant_id = #tenantID#
+						TBL_C_CLUBUSER.tenant_id = #tenantID#
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -4946,6 +4965,12 @@
 					A.tenant_id = B.tenant_id
 				AND
 					A.companyid = B.companyid
+				INNER JOIN
+					TBL_USERMASTER
+				ON
+					RTRIM(TBL_USERMASTER.CN) = RTRIM(A.c_id)
+				AND
+					A.tenant_id = TBL_USERMASTER.tenant_id
 				WHERE
 					RTRIM(c_clubno) = #v_CODE#
 				AND
@@ -4993,12 +5018,18 @@
 					IFNULL(COUNT(c_clubno), 0)  
 				FROM
 					TBL_C_CLUBUSER
+				JOIN
+					TBL_USERMASTER
+				ON
+					RTRIM(TBL_USERMASTER.CN) = RTRIM(TBL_C_CLUBUSER.c_id)
+				AND
+					TBL_C_CLUBUSER.tenant_id = TBL_USERMASTER.tenant_id
 				WHERE
 					RTRIM(c_clubno) = #v_CODE#
 				AND
 					permit <> 0
 				AND
-					tenant_id = #tenantID#
+					TBL_C_CLUBUSER.tenant_id = #tenantID#
 				]]>
 			</isNotEqual>
 		</isNotEqual>
@@ -6965,15 +6996,77 @@
 	<select id="EzCommunityDAO.getMemberInfo"					parameterClass="Map"		resultClass="CommunityMemberInfoVO">
 		<![CDATA[
 			SELECT 
-				*
+				M.COMPANYID,
+				USERID,
+				USERNAME,
+				USERNAME2,
+				COMPANYNAME,
+				COMPANYNAME2,
+				COMPANYZIP,
+				COMPANYADDRESS,
+				T2.DESCRIPTION as DEPTNAME,
+				T2.DESCRIPTION2 as DEPTNAME2,
+				COMPANYTEL,
+				COMPANYFAX,
+				HOMEZIP,
+				HOMEADDRESS,
+				HOMETEL,
+				HANDPHONE,
+				EMAIL,
+				BIRTHDAY,
+				GENDER,
+				GENDER2,
+				M.TENANT_ID
 			FROM 
-	        	TBL_C_MEMBERINFO
+	        	TBL_C_MEMBERINFO M	
+        	INNER JOIN
+				((SELECT
+					D.CN, D.DEPARTMENT as DEPTID,
+					D.PHYSICALDELIVERYOFFICENAME as COMPANYID,
+					D.TENANT_ID,
+					D.DESCRIPTION,
+					D.DESCRIPTION2
+				FROM
+					TBL_USERMASTER D
+				WHERE
+					D.TENANT_ID = #tenantID#
+				AND
+					D.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#)
+					
+				UNION ALL
+				
+				(SELECT
+					B.cn, A2.DEPTID,
+					C.EXTENSIONATTRIBUTE2 as COMPANYID,
+					A2.TENANT_ID,
+					C.DISPLAYNAME as DESCRIPTION,
+					C.DISPLAYNAME2 as DESCRIPTION2
+				FROM
+					TBL_USERMASTER B
+				INNER JOIN
+					TBL_ADDJOBMASTER A2
+				ON
+					A2.CN = B.CN
+				AND
+					A2.TENANT_ID = B.TENANT_ID
+				RIGHT JOIN
+					TBL_DEPTMASTER C
+				ON
+					A2.DEPTID = C.CN
+				AND
+					B.TENANT_ID = C.TENANT_ID)) T2
+			ON
+				M.USERID = T2.CN
+			AND
+				M.TENANT_ID = T2.TENANT_ID
 			WHERE  
-	       		companyid = #v_COMPANYID#
+	       		T2.companyid = #v_COMPANYID#
 	       	AND
-	       		RTRIM(userid) = #v_C_ID#
+	       		RTRIM(M.userid) = #v_C_ID#
 	       	AND
-	       		tenant_id = #tenantID#
+	       		M.tenant_id = #tenantID#
+	       	GROUP BY
+	       		USERID
 		]]>
 	</select>
 	

@@ -47,8 +47,8 @@
 							<li><span onClick="insertcell()"><spring:message code='ezPortal.t327' /></span></li>
 							<li><span onClick="removecell()"><spring:message code='ezPortal.t328' /></span></li>
 							<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-							<li><span onClick="insertrow()"><spring:message code='ezPortal.t329' /></span></li>
-							<li><span onClick="removerow()"><spring:message code='ezPortal.t330' /></span></li>
+							<li><span onClick="insertrow()"><spring:message code='ezPortal.t280' /></span></li>
+							<li><span onClick="removerow()"><spring:message code='ezPortal.kbm02' /></span></li>
 							<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
 							<li><span onClick="swaprow('up')"><spring:message code='ezPortal.t331' /></span></li>
 							<li><span onClick="swaprow('down')"><spring:message code='ezPortal.t332' /></span></li>
@@ -206,6 +206,34 @@
 					$('.utmenu ul li:first-child').css('font-weight', 'bold');
 					$('.utmenu ul li:first-child').css('cursor:default', 'cursor:default');
 					$('.utmenu ul li:first-child').css('color', '#000');
+				}
+				
+				//2019.02.28 유틸메뉴 이미지 마우스 오버시, 이미지 변경되도록 이벤트 세틍
+				utilMenuImageSetting();
+			}
+			
+			
+			function utilMenuImageSetting() {
+				var utilMenu = document.getElementsByClassName("utmenu")[0].querySelectorAll("img");
+				var utilMenuCount = utilMenu.length;
+
+				for (var i = 0; i < utilMenuCount; i++) {
+					var item = utilMenu[i];
+					
+					if (item.id != null && item.id != "") {
+						
+						document.getElementById(item.id).addEventListener("mouseover", function() {
+							var originalImg = this.getAttribute("data1");
+							var overImg = this.getAttribute("data2");
+							this.src = overImg;
+						});
+						
+						document.getElementById(item.id).addEventListener("mouseout", function() {
+							var originalImg = this.getAttribute("data1");
+							var overImg = this.getAttribute("data2");
+							this.src = originalImg;
+						});
+					}
 				}
 			}
 			
@@ -640,7 +668,7 @@
 			
 			function insertrow() {
 				if (selectedCell == "") {
-					alert("<spring:message code='ezPortal.t347' />");
+					alert("<spring:message code='ezPortal.kbm01' />");
 					return;
 				}
 				
@@ -820,7 +848,7 @@
 	
 			function removerow() {
 				if (selectedSubCell == "") {	
-					alert("<spring:message code='ezPortal.t351' />");
+					alert("<spring:message code='ezPortal.jjs12' />");
 					return;
 				}
 				

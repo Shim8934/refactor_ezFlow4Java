@@ -1,10 +1,9 @@
-var joinPoll = function (e) {
-	var condition = true;
+var joinPoll = function (result, itemSeq) {
 	var height = window.screen.availHeight;
 	var width = window.screen.availWidth;		
-	var itemseq = '50';
+	var itemseq = itemSeq;
 	
-	if (condition) {
+	if (!result) {
 		var top = (height - 370) / 2;
 		var left = (width - 300) / 2;
 		var option = 'toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=400px,width=455px,top=' + top + ',left=' + left;
@@ -62,9 +61,17 @@ var assemblePollList = function (poll) {
 		}
 	}
 	str += '</div>';
+	
 	document.getElementById('pollInfo').innerHTML = str;
 	document.getElementById('pollTitle').textContent = '"'+ poll.pollInfo.pollTitle +'"';
-	document.getElementById('pollBtn').addEventListener('click', joinPoll);
+	document.getElementById('pollBtn').addEventListener('click', function() {
+		if (poll.pollInfo.result != 0) {
+			joinPoll(true, poll.pollInfo.itemSeq);
+		} else {
+			joinPoll(false, poll.pollInfo.itemSeq);
+		}
+		
+	});
 	document.getElementById('pollPlus').addEventListener('click', pollPlus);
 };
 

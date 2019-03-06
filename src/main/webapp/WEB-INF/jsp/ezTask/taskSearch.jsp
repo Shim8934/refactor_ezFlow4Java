@@ -555,16 +555,16 @@
 			<tr>
 				<th style="height:auto"><spring:message code='ezTask.t181' /></th>
 				<td>
-					<select id="search_field" name="search_field" style="WIDTH: 70px;vertical-align:middle;height:22px">
-						<option  value="title" selected><spring:message code='ezTask.t118' /></option>
-						<option  value="personName" ><spring:message code='ezTask.t2005' /></option>
-					</select>
 					<select name="search_class" id="search_class" style="WIDTH: 80px;vertical-align:middle;height:22px">
 						<option  value="" selected ><spring:message code='ezTask.t240' /></option>
 						<%-- <option  value="1" ><spring:message code='ezTask.t97' /></option> --%>
 						<option  value="2"><spring:message code='ezTask.t98' /></option>
 						<option  value="3"><spring:message code='ezTask.t9001' /></option>
 						<option  value="4"><spring:message code='ezTask.t100' /></option>
+					</select>
+					<select id="search_field" name="search_field" style="WIDTH: 70px;vertical-align:middle;height:22px">
+						<option  value="title" selected><spring:message code='ezTask.t118' /></option>
+						<option  value="personName" ><spring:message code='ezTask.t2005' /></option>
 					</select>
 					<input name="text" type="text" id="keyword" onKeyPress="return search_keypress(event)" size="21" style="vertical-align:middle;height:22px">
 					<span style="vertical-align:middle"><a class="imgbtn imgbck" style="vertical-align:middle;margin-top:1px"><span onClick="search()"><spring:message code='ezTask.t183' /></span></a></span>

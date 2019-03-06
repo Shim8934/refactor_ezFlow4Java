@@ -816,7 +816,7 @@
 			    ISREPEAT,
 			    ISREST,
 			    ISUSE,
-			    USECOMPANY
+			    USECOMPANY,
 			    HOLIDAYFLAG,
 			    HOLIDAYREPEAT
 			FROM

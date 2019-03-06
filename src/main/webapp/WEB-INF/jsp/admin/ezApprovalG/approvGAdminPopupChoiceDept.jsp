@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezSchedule.t6' /></title>
+		<title><spring:message code='ezApprovalG.t1678' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />		
 		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>	    

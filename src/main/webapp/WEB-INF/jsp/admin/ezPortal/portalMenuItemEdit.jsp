@@ -32,6 +32,16 @@
 			
 			window.onload = function() {
 				toggle_menu(menuindex);
+				
+				var menuType = "<c:out value='${menuType}'/>";
+				
+				if (parentuid == "203" || menuType == "203") {
+					document.getElementById("trOverImage").style.display = "none";
+					document.getElementById("trNormalImage").style.display = "none";
+				} else {
+					document.getElementById("trOverImage").style.display = "";
+					document.getElementById("trNormalImage").style.display = "";
+				}
 			}
 			
 		    window.onbeforeunload = function() {
@@ -138,12 +148,21 @@
 				xmlhttp.open("POST", "/admin/ezPortal/saveMenuItem.do?pageID=" + pageid, false);
 				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send(strXML);
-				xmlhttp = null;
 				
 				alert("<spring:message code='ezPortal.t84'/>");
 				g_bSaved = true;
-
-				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=1&parentUID=203";
+				if (xmlhttp.status == 200) {
+					window.opener.location.reload(true);
+				}
+				xmlhttp = null;
+				
+				var menuType = "<c:out value='${menuType}'/>";
+				
+				if (menuType != "") {
+					location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=1&parentUID=" + menuType;
+				} else {
+					location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=1&parentUID=" + parentuid;
+				}
 			}
 		    
 			function removeNormalImage() {
@@ -604,90 +623,90 @@
 				
 				<c:choose>
 					<c:when test="${imageWidth != null && imageWidth != ''}">
-						<tr>
-							<th>Normal image</th>
-							<td>
-								<table width="100%" border="0" cellspacing="0" cellpadding="0">
-									<tr style="height:47px">
-										<c:choose>
-											<c:when test="${normalImagePath != null && normalImagePath != ''}">
-												<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="${normalImagePath}" width="106" height="42"></td>
-											</c:when>
-											<c:otherwise>
-												<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" style="display: none" width="106" height="42"></td>
-											</c:otherwise>
-										</c:choose>
-						
-										<td width="100%" align="center" nowrap>
-											<a class="imgbtn imgbck">
-												<span onclick="changeNormalImage()">
-													<spring:message code='ezPortal.t66'/>
-												</span>
-											</a>
-											<a class="imgbtn imgbck">
-												<span onclick="removeNormalImage()">
-													<spring:message code='ezPortal.t67'/>
-												</span>
-											</a>
-										</td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-						<tr>
-							<th>Over image</th>
-							<td>
-								<table width="100%" border="0" cellspacing="0" cellpadding="0">
-									<tr style="height:47px">
-										<c:choose>
-											<c:when test="${overImagePath != null && overImagePath != ''}">
-												<td id="tdOverImage">&nbsp;<img id="txtOverImage" src="${overImagePath}"></td>
-											</c:when>
-											<c:otherwise>
-												<td id="tdOverImage">&nbsp;<img id="txtOverImage" src="" style="display: none"></td>
-											</c:otherwise>
-										</c:choose>
-										<td width="100%" align="center" nowrap>
-											<a class="imgbtn imgbck">
-												<span onclick="changeOverImage()">
-													<spring:message code='ezPortal.t66'/>
-												</span>
-											</a>
-											<a class="imgbtn imgbck">
-												<span onclick="removeOverImage()">
-													<spring:message code='ezPortal.t67'/>
-												</span>
-											</a>
-										</td>
-									</tr>
-								</table>
-							</td>
-						</tr>
-						<tr>
-							<th><spring:message code='ezPortal.t68'/></th>
-							<td>
-								<input type="text" id="txtLinkURL" style="width: 100%" value="${imageDataLinkURL}" maxLength="255">
-							</td>
-						</tr>
-						<tr>
-							<th>
-								<spring:message code='ezPortal.t89'/>
-							</th>
-							<td>
-								<input type="text" id="txtLinkLocation" style="width: 100%" value="${imageDataLinkLocation}" maxLength="50">
-							</td>
-						</tr>
-						<tr>
-							<th>
-								<spring:message code='ezPortal.t90'/>
-							</th>
-							<td>
-								<input type="text" id="txtWindowOption" style="width: 100%" value="${imageDataWindowOption}" maxLength="150">
-							</td>
-						</tr>
+							<tr id="trNormalImage">
+								<th>Normal image</th>
+								<td>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr style="height:47px">
+											<c:choose>
+												<c:when test="${normalImagePath != null && normalImagePath != ''}">
+													<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" src="${normalImagePath}" width="106" height="42"></td>
+												</c:when>
+												<c:otherwise>
+													<td id="tdNormalImage">&nbsp;<img id="txtNormalImage" style="display: none" width="106" height="42"></td>
+												</c:otherwise>
+											</c:choose>
+							
+											<td width="100%" align="center" nowrap>
+												<a class="imgbtn imgbck">
+													<span onclick="changeNormalImage()">
+														<spring:message code='ezPortal.t66'/>
+													</span>
+												</a>
+												<a class="imgbtn imgbck">
+													<span onclick="removeNormalImage()">
+														<spring:message code='ezPortal.t67'/>
+													</span>
+												</a>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr id="trOverImage">
+								<th>Over image</th>
+								<td>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr style="height:47px">
+											<c:choose>
+												<c:when test="${overImagePath != null && overImagePath != ''}">
+													<td id="tdOverImage">&nbsp;<img id="txtOverImage" src="${overImagePath}" width="106" height="42"></td>
+												</c:when>
+												<c:otherwise>
+													<td id="tdOverImage">&nbsp;<img id="txtOverImage" src="" style="display: none"></td>
+												</c:otherwise>
+											</c:choose>
+											<td width="100%" align="center" nowrap>
+												<a class="imgbtn imgbck">
+													<span onclick="changeOverImage()">
+														<spring:message code='ezPortal.t66'/>
+													</span>
+												</a>
+												<a class="imgbtn imgbck">
+													<span onclick="removeOverImage()">
+														<spring:message code='ezPortal.t67'/>
+													</span>
+												</a>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<th><spring:message code='ezPortal.t68'/></th>
+								<td>
+									<input type="text" id="txtLinkURL" style="width: 100%" value="${imageDataLinkURL}" maxLength="255">
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<spring:message code='ezPortal.t89'/>
+								</th>
+								<td>
+									<input type="text" id="txtLinkLocation" style="width: 100%" value="${imageDataLinkLocation}" maxLength="50">
+								</td>
+							</tr>
+							<tr>
+								<th>
+									<spring:message code='ezPortal.t90'/>
+								</th>
+								<td>
+									<input type="text" id="txtWindowOption" style="width: 100%" value="${imageDataWindowOption}" maxLength="150">
+								</td>
+							</tr>
 						</c:when>
 						<c:otherwise>
-							<tr>
+							<tr id="trNormalImage">
 								<th>Normal image</th>
 								<td>
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -709,7 +728,7 @@
 									</table>
 								</td>
 							</tr>
-							<tr>
+							<tr id="trOverImage">
 								<th>Over image</th>
 								<td>
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">

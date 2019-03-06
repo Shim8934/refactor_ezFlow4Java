@@ -30,7 +30,7 @@
 		<script type="text/javascript" >
 	        var items = "${resultCount}";
 	        var rightFrame = "";
-	        var qstId = "";
+	        var qstId = "<c:out value='${qstId}'/>";
 	        var pollNum = "2";
 	        
 		    window.onresize = function () {

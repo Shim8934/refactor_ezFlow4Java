@@ -279,14 +279,17 @@
 		        setFirstDrafter();
 		        
 		        if (SignCount < 1) {
-		            pGubun = "12";
+		        	if (approvalFlag == "G") {
+			            pGubun = "12";
+			            if (CrossYN())
+			                document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.t1406'/>";
+			            else
+			                document.getElementById("btnRJunkyul").childNodes[0].innerText = "<spring:message code='ezApprovalG.t1406'/>";
+		        	} else {
+		        		document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.csj001'/>";
+		        	}
 		            document.getElementById("btnSetAprLine").style.display = "none";
 		            document.getElementById("btnSendDraft").style.display = "none";
-		            if (CrossYN())
-		                document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.t1406'/>";
-		            else
-		                document.getElementById("btnRJunkyul").childNodes[0].innerText = "<spring:message code='ezApprovalG.t1406'/>";
-		
 		            document.getElementById("btntotaldocinfo").style.display = "none";
 		        }
 		        getGongRamDocInfo();

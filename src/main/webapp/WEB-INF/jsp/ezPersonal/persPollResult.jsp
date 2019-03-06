@@ -65,11 +65,19 @@
         	function close_btn() {
 	            if(ReturnFunction!= null) {
 	            	if(parent != null) {
-                		parent.location.reload();
+	            		if (parent.getPollPortletList != undefined) {
+	            			parent.getPollPortletList();
+						} else {
+	                		parent.location.reload();
+						}
 	            	}
 	            	
 	            	if(paparent != null) {
-	            		paparent.location.reload();
+	            		if (paparent.getPollPortletList != undefined) {
+	            			paparent.getPollPortletList();
+						} else {
+		            		paparent.location.reload();
+						}
 	            	}
 	            }
             	window.close();
