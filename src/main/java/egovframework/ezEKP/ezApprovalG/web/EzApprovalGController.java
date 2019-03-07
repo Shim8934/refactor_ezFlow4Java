@@ -628,11 +628,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 								if (proxyUserFlag == null) {
 									curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
 								} else {
-									if (k > 0) {
-										curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k-1).getTextContent();
-									} else {
-										curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k).getTextContent();
-									}
+									curAprUserID = docXML.getElementsByTagName("ORGUSERID").item(k-1).getTextContent();
 								}
 								
 								for (int j = 0; j < proxyUserArray.length; j++) {
@@ -4763,6 +4759,30 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 returnQuery += " AND TBL_EXPAPRDOCINFO.URGENTAPPROVAL = '" + xmlDomSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
             }
             
+            if (tempQuery.indexOf("RECVSTARTDATE;") != -1) {
+            	if (!dbType.equals("mysql")) {
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE >= TO_DATE('" + xmlDomSub.getElementsByTagName("RECVSTARTDATE").item(0).getTextContent()+ " 00:00:01' ,'YYYY-MM-DD HH24:MI:SS') ";
+            	} else {
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE >= STR_TO_DATE('" + xmlDomSub.getElementsByTagName("RECVSTARTDATE").item(0).getTextContent()+ " 00:00:01' , '%Y-%m-%d %H:%i:%s') ";
+            	}
+            }
+            
+            if (tempQuery.indexOf("RECVENDDATE;") != -1) {
+            	if (!dbType.equals("mysql")) {
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= TO_DATE('" + xmlDomSub.getElementsByTagName("RECVENDDATE").item(0).getTextContent()+ " 00:00:01' ,'YYYY-MM-DD HH24:MI:SS') ";
+            	} else {
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= STR_TO_DATE('" + xmlDomSub.getElementsByTagName("RECVENDDATE").item(0).getTextContent()+ " 00:00:01' , '%Y-%m-%d %H:%i:%s') ";
+            	}
+            }
+            
+            if (tempQuery.indexOf("SENTDEPTNAME;") != -1) {
+            	returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.SENTDEPTNAME LIKE '%" + xmlDomSub.getElementsByTagName("SENTDEPTNAME").item(0).getTextContent() + "%' ";
+            }
+            
+            if (tempQuery.indexOf("RECEIVEDDEPTNAME;") != -1) {
+            	returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTNAME LIKE '%" + xmlDomSub.getElementsByTagName("RECEIVEDDEPTNAME").item(0).getTextContent() + "%' ";
+            }
+            
             if (searchStatus != null && !searchStatus.equals("") && !searchStatus.equals("ALL")) {
             	returnQuery += " AND APRSTATE = '" + searchStatus + "' ";
             }
@@ -5513,6 +5533,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String type = request.getParameter("type");
+		String searchType = request.getParameter("searchType");
+		if(searchType != null && searchType.equals("4")){
+			searchType = "recDept";
+		}
 		String susinAdmin = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
@@ -5530,6 +5554,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("monthEndDay", monthEndDay);
 		model.addAttribute("initDate", initDate);
+		model.addAttribute("searchType", searchType);
 		
 		logger.debug("setSearchInfo ended");
 		

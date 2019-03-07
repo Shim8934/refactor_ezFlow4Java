@@ -591,7 +591,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				ezResourceDAO.modifyResSch_I2(map);
 			}
 		} else {
-			ezResourceDAO.modifyResSch_D2(map);
+			//ezResourceDAO.modifyResSch_D2(map);
 			ezResourceDAO.modifyResSch_U2(map);
 		}
 		logger.debug("modifyResSch End");
@@ -1062,6 +1062,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		if (getScheduleListRept.size() > 0) {
 			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
 			for (int i=0; i< getScheduleListRept.size(); i++) {
 				String reCompanyID = getScheduleListRept.get(i).getCompanyID();
 				int reNum = getScheduleListRept.get(i).getNum();
@@ -1086,12 +1087,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					logger.debug("deletedDateStrList.size=" + deletedDateStrList.size());
 					
 					for (int j=0; j<deletedDateStrList.size(); j++) {
-						deletedDateStrList.set(j, commonUtil.getDateStringInUTC(deletedDateStrList.get(j), offset, false));
+						deletedDateStrList.set(j, (commonUtil.getDateStringInUTC(deletedDateStrList.get(j), offset, false)).substring(0,10));
 					}
 					
 					for (Date[] dateArr : returnRepDateTimes) {
 						// 삭제된 예약이면 넘어감
-						if (deletedDateStrList.contains(format.format(dateArr[0]))) {
+						if (deletedDateStrList.contains(format2.format(dateArr[0]))) {		// 날짜만 비교하도록 수정
 							continue;
 						}
 						
@@ -2612,7 +2613,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 			List<String> deletedDateStrListConvertedInUTC  = new ArrayList<String>();
 			for (String date : deletedDateStrList) {
-				date = commonUtil.getDateStringInUTC(date, offset, false);
+				date = commonUtil.getDateStringInUTC(date, offset, false).substring(0,10);
 				deletedDateStrListConvertedInUTC.add(date);
 			}
 			
@@ -2758,7 +2759,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 			List<String> deletedDateStrListConvertedInUTC  = new ArrayList<String>();
 			for (String date : deletedDateStrList) {
-				date = commonUtil.getDateStringInUTC(date, offset, false);
+				date = commonUtil.getDateStringInUTC(date, offset, false).substring(0,10);
 				deletedDateStrListConvertedInUTC.add(date);
 			}
 			
@@ -2784,6 +2785,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("dateList2.size = " + dateList2.size());
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
 		if (deletedList == null || deletedList.size() == 0) {
 			for (Date[] dateVO : dateList) {
 				for (Date[] dateVO2 : dateList2) {
@@ -2806,6 +2808,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					logger.debug("dateVO[1] : " + format.format(dateVO[1]) + " after? dateVO2[0] : " + format.format(dateVO2[0]));
 					
 					if (!(!dateVO[0].before(dateVO2[1]) || !dateVO[1].after(dateVO2[0]))) {
+						// 삭제된 예약이면 넘어감
+						if (deletedList.contains(format2.format(dateVO[0]))) {		// 날짜만 비교하도록 수정
+							continue;
+						}
 						if (!deletedList.contains(format.format(dateVO2[0]))) {
 							
 							logger.debug("첫번째 조건 : " + (dateVO[0].before(dateVO2[1])));

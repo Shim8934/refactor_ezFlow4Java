@@ -8738,11 +8738,11 @@
 							   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
 							   			<isEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
 							   				ORDER BY 
-							   						$v_ORDEROPTION$
+							   						$v_ORDEROPTION$ , DOCNO DESC
 							   			</isEqual>
 							   			<isNotEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
 							   	 			ORDER BY
-							   	 			 		$v_ORDEROPTION$ , ENDDATE DESC
+							   	 			 		$v_ORDEROPTION$, ENDDATE DESC
 							   			</isNotEqual>
 							   		</isGreaterEqual>
 							   		<isLessThan  property="v_ORDEROPTIONLENGTH" compareValue="7">
@@ -8752,7 +8752,7 @@
 							   	</isNotEmpty>
 							   	<isEmpty property="v_ORDEROPTION">
 							   		ORDER BY 
-							   				ENDDATE DESC
+							   				ENDDATE DESC  , DOCNO DESC
 							   	</isEmpty>
 								<isNotEqual property="alFlag" compareValue="1">
 							   	LIMIT #v_PAGESIZE#
@@ -8769,7 +8769,7 @@
 				<isGreaterEqual property="v_ORDEROPTIONLENGTH2" compareValue="7">
 				<isEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
 					 ORDER BY 
-					 		$v_ORDEROPTION2$
+					 		$v_ORDEROPTION2$  , DOCNO
 				</isEqual>
 				<isNotEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
 					 ORDER BY 
@@ -8778,12 +8778,12 @@
 				</isGreaterEqual>
 				<isLessThan property="v_ORDEROPTIONLENGTH2" compareValue="7">
 					ORDER BY 
-							$v_ORDEROPTION2$, ENDDATE
+							$v_ORDEROPTION2$ , ENDDATE
 				</isLessThan>
 				</isNotEmpty>
 				<isEmpty property="v_ORDEROPTION2">
 				 ORDER BY 
-				 		ENDDATE
+				 		ENDDATE  , DOCNO
 				</isEmpty>
 	</select>
 	

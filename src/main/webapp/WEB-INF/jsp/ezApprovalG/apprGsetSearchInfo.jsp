@@ -139,6 +139,22 @@
 		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
+		        $("#Sdatepickerrec").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImageOnly: true
+		        });
+		        $("#Edatepickerrec").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		            showOn: "both",
+		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImageOnly: true
+		        });
 		    });
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
 		     var monthStr = monthMsg.split(";");     
@@ -183,7 +199,7 @@
 		        var RtnVal = new Array();
 		        var chkVal = false;
 		        var i;
-		        var draftfrom, draftto, apprfrom, apprto, myapprfrom, myapprto;
+		        var draftfrom, draftto, apprfrom, apprto, myapprfrom, myapprto, recvfrom, recvto;
 		
 		        draftfrom = $("#Sdatepickerapr").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        draftto = $("#Edatepickerapr").datepicker({ dateFormat: 'yy-mm-dd' }).val();
@@ -191,6 +207,8 @@
 		        apprto = $("#Edatepickerend").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        myapprfrom = $("#Sdatepickerapp").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        myapprto = $("#Edatepickerapp").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		        recvfrom = $("#Sdatepickerrec").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+		        recvto = $("#Edatepickerrec").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		
 		        //2018-10-11 김보미 - 시작일자, 종료일자중 하나만 지정했을 경우 나머지 일자 입력하게끔 알림창 뜨게
 		        if (draftfrom != "" && draftto == "" && openPageInfo != "usercontlist") {
@@ -225,6 +243,14 @@
 		        	return;
 		        }
 		       
+		        if (recvfrom != "" && recvto == "") {
+		        	OpenAlertUI("<spring:message code='ezApprovalG.psb08'/>");
+		        	return;
+		        } else if (recvfrom == "" && recvto != "") {
+		        	OpenAlertUI("<spring:message code='ezApprovalG.psb07'/>");
+		        	return;
+		        }
+		       
 			        if (draftfrom != "" && draftto != "" && openPageInfo != "usercontlist") {
 			            if (draftfrom > draftto) {
 			                OpenAlertUI("<spring:message code='ezApprovalG.psb03'/>");
@@ -249,6 +275,13 @@
 			        if (myapprfrom != "" && myapprto != "") {
 			            if (myapprfrom > myapprto) {
 			                OpenAlertUI("<spring:message code='ezApprovalG.psb05'/>");
+			                return;
+			            }
+			        }
+			        
+			        if (recvfrom != "" && recvto != "") {
+			            if (recvfrom > recvto) {
+			                OpenAlertUI("<spring:message code='ezApprovalG.psb09'/>");
 			                return;
 			            }
 			        }
@@ -289,7 +322,11 @@
 			        RtnVal[22] = EndAprYear.value;
 			        RtnVal[23] = drafterdept.value;
 			        RtnVal[24] = "";
-			        for (i = 0; i < 25; i++) {
+			        RtnVal[25] = recvfrom;
+		            RtnVal[26] = recvto;
+		            RtnVal[27] = document.getElementById("sendDept").value;
+		            RtnVal[28] = document.getElementById("recDept").value;
+			        for (i = 0; i < 29; i++) {
 			            if (RtnVal[i] != "" && typeof (RtnVal[i]) != "undefined") {
 			                chkVal = true;
 			                break;
@@ -319,6 +356,14 @@
 		            if (myapprto != "")
 		                myapprto = myapprto + " 23:59:59";
 		            else myapprto = "";
+		            
+		            if (recvfrom != "")
+		            	recvfrom = recvfrom + " 00:00:01";
+		            else myapprfrom = "";
+
+		            if (recvto != "")
+		            	recvto = recvto + " 23:59:59";
+		            else recvto = "";
 
 		            RtnVal[0] = document.getElementById("DocNumber").value;
 		            RtnVal[1] = document.getElementById("DocTitle").value;
@@ -336,6 +381,10 @@
 
 		            RtnVal[12] = "";
 		            RtnVal[13] = "";
+		            RtnVal[25] = recvfrom;
+		            RtnVal[26] = recvto;
+		            RtnVal[27] = document.getElementById("sendDept").value;
+		            RtnVal[28] = document.getElementById("recDept").value;
 
 // 		            if (document.getElementById("tbItemCode").value != "") {
 // 		                if (SearchType != "APR") {
@@ -350,7 +399,7 @@
 
 // 		            }
 
-		            for (i = 0; i < 14; i++) {
+		            for (i = 0; i < 29; i++) {
 		                if (RtnVal[i] != "" && typeof (RtnVal[i]) != "undefined") {
 		                    chkVal = true;
 		                    break;
@@ -935,28 +984,90 @@
 		    <td ><input type="text" id="DocTitle" name="DocTitle" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
 		    </td>
 		  </tr>
-		  <tr>
-		    <th ><spring:message code='ezApprovalG.t445'/></th>
-		    <td ><input type="text" id="drafter" name="drafter" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
-		    </td>
-		  </tr>
-		  <tr>
-		    <th ><spring:message code='ezApprovalG.t1331'/></th>
-		    <td ><input type="text" id="drafterdept" name="drafterdept" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
-		    </td>
-		  </tr>
-		  <tr style="display:none">
-		    <th ><spring:message code='ezApprovalG.t1553'/></th>
-		    <td ><input type="text" id="EndAprYear" name="EndAprYear" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
-		    </td>
-		  </tr>
-		  <tr>
-		    <th ><spring:message code='ezApprovalG.t1332'/></th>
-		    <td >
-		        <input type="text" id="Sdatepickerapr" style="width:80px;text-align:center">
-		        <input type="text" id="Edatepickerapr" style="width:80px;text-align:center">
-		    </td>
-		  </tr>
+		  <c:choose>
+		  	<c:when test="${searchType eq 'recDept'}">
+			  	<tr>
+				    <th ><spring:message code='ezApprovalG.psb1331'/></th>
+				    <td ><input type="text" id="sendDept" name="sendDept" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
+				    </td>
+				</tr>
+				<tr>
+				    <th ><spring:message code='ezApprovalG.psb1332'/></th>
+				    <td ><input type="text" id="recDept" name="recDept" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
+				    </td>
+				</tr>
+				<tr>
+				    <th ><spring:message code='ezApprovalG.psb1334'/></th>
+				    <td >
+				        <input type="text" id="Sdatepickerrec" style="width:80px;text-align:center">
+				        <input type="text" id="Edatepickerrec" style="width:80px;text-align:center">
+				    </td>
+			 	</tr>
+			 	<tr style="display:none;">
+				    <th ><spring:message code='ezApprovalG.t445'/></th>
+				    <td ><input type="text" id="drafter" name="drafter" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
+				    </td>
+				  </tr>
+				  <tr style="display:none;">
+				    <th ><spring:message code='ezApprovalG.t1331'/></th>
+				    <td ><input type="text" id="drafterdept" name="drafterdept" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
+				    </td>
+				  </tr>
+				  <tr style="display:none">
+				    <th ><spring:message code='ezApprovalG.t1553'/></th>
+				    <td ><input type="text" id="EndAprYear" name="EndAprYear" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
+				    </td>
+				  </tr>
+				  <tr style="display:none;">
+				    <th ><spring:message code='ezApprovalG.t1332'/></th>
+				    <td >
+				        <input type="text" id="Sdatepickerapr" style="width:80px;text-align:center">
+				        <input type="text" id="Edatepickerapr" style="width:80px;text-align:center">
+				    </td>
+				  </tr>
+		  	</c:when>
+		  	<c:otherwise>
+		  		<tr style="display:none;">
+				    <th ><spring:message code='ezApprovalG.psb1331'/></th>
+				    <td ><input type="text" id="sendDept" name="sendDept" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
+				    </td>
+				</tr>
+				<tr style="display:none;">
+				    <th ><spring:message code='ezApprovalG.psb1332'/></th>
+				    <td ><input type="text" id="recDept" name="recDept" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
+				    </td>
+				</tr>
+				<tr style="display:none;">
+				    <th ><spring:message code='ezApprovalG.psb1334'/></th>
+				    <td >
+				        <input type="text" id="Sdatepickerrec" style="width:80px;text-align:center">
+				        <input type="text" id="Edatepickerrec" style="width:80px;text-align:center">
+				    </td>
+			 	</tr>
+				  <tr>
+				    <th ><spring:message code='ezApprovalG.t445'/></th>
+				    <td ><input type="text" id="drafter" name="drafter" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
+				    </td>
+				  </tr>
+				  <tr>
+				    <th ><spring:message code='ezApprovalG.t1331'/></th>
+				    <td ><input type="text" id="drafterdept" name="drafterdept" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
+				    </td>
+				  </tr>
+				  <tr style="display:none">
+				    <th ><spring:message code='ezApprovalG.t1553'/></th>
+				    <td ><input type="text" id="EndAprYear" name="EndAprYear" style="width:100%;box-sizing:border-box;-moz-box-sizing:border-box" maxlength="50">
+				    </td>
+				  </tr>
+				  <tr>
+				    <th ><spring:message code='ezApprovalG.t1332'/></th>
+				    <td >
+				        <input type="text" id="Sdatepickerapr" style="width:80px;text-align:center">
+				        <input type="text" id="Edatepickerapr" style="width:80px;text-align:center">
+				    </td>
+				  </tr>
+		  	</c:otherwise>
+		  </c:choose>
 		    
 		  <tr id="displayTR1">
 		    <th ><spring:message code='ezApprovalG.t1334'/></th>
