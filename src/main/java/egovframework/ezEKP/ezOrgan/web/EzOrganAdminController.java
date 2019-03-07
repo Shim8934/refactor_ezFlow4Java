@@ -148,6 +148,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addPortalPortletUserPortletUsed();
     	ezCommonService.addPortalPortletUserThemeId();
     	ezCommonService.addTblPortalThemeUserIsDefault();
+    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
     	
     	logger.debug("init ended.");
     }
@@ -219,6 +220,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
+		String packageType = commonUtil.getPackageType(user.getTenantId());
 		String use_approvalG = config.getProperty("config.UserInfo_ApprovalG");
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", user.getTenantId());
 		String useSyncServer = ezCommonService.getTenantConfig("useSyncServer", user.getTenantId());
@@ -243,6 +245,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			useDisablePop3Imap = "NO";
 		}
 		
+		model.addAttribute("packageType", packageType);
 		model.addAttribute("useDisablePopImap", useDisablePop3Imap);
 		model.addAttribute("topid", topid);
 		model.addAttribute("useOCS", config.getProperty("config.USE_OCS"));

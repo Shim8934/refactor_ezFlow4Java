@@ -1597,7 +1597,7 @@
 		        setsearchinfo_cross_dialogArguments[0] = para;
 		        setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 		        var type = "APR";
-		        OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do?type=" + type, "setsearchInfo_Cross", GetOpenWindowfeature(510, 375));
+		        OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do?type=" + type+ "&searchType="+pListTypeValue, "setsearchInfo_Cross", GetOpenWindowfeature(510, 375));
 		        try { OpenWin2.focus(); } catch (e) { }
 		    }
 		
@@ -1765,6 +1765,22 @@
 				    if (typeof (condition[16]) != "undefined" && condition[16] != "") {
 				        TYPE += condition[16];
 				        DATA += condition[17];
+				    }
+				    if (typeof (condition[25]) != "undefined" && condition[25] != "") {
+				    	TYPE += "RECVSTARTDATE;"
+				        DATA += "<RECVSTARTDATE>" + condition[25] + "</RECVSTARTDATE>";
+				    }
+				    if (typeof (condition[26]) != "undefined" && condition[26] != "") {
+				    	TYPE += "RECVENDDATE;"
+				        DATA += "<RECVENDDATE>" + condition[26] + "</RECVENDDATE>";
+				    }
+				    if (typeof (condition[27]) != "undefined" && condition[27] != "") {
+				    	TYPE += "SENTDEPTNAME;"
+				        DATA += "<SENTDEPTNAME>" + condition[27] + "</SENTDEPTNAME>";
+				    }
+				    if (typeof (condition[28]) != "undefined" && condition[28] != "") {
+				    	TYPE += "RECEIVEDDEPTNAME;"
+				        DATA += "<RECEIVEDDEPTNAME>" + condition[28] + "</RECEIVEDDEPTNAME>";
 				    }
 				}
 				SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";

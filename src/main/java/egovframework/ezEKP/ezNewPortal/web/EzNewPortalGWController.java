@@ -4041,7 +4041,7 @@ public class EzNewPortalGWController {
 				if (info.getRollInfo() != null && info.getRollInfo().indexOf("a=1") > -1 || ezOrganService.isProxyUser(info.getTenantId(), userId, nowDateTime).equals("1")) {
 					susinAdmin = "admin";
 				}
-				String approvalTotalCount = ezApprovalGSerivce.getWebPartList("4", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offsetMin);
+				String approvalTotalCount = ezApprovalGSerivce.getWebPartList("1", userId, deptId, "", "LEFT", susinAdmin, companyId, portletLang, tenantId, offsetMin);
 				LOGGER.debug("approvalTotalCount : " + approvalTotalCount);
 				
 				Document docXML = commonUtil.convertStringToDocument(approvalTotalCount);

@@ -1307,7 +1307,7 @@ AND
 													tenant_id = #tenantId#
 												)
 						AND
-							LINEINFO.aprmemberid = #userId#
+							LINEINFO.aprmemberid in ($userIDs$)
 						AND
 							DOCINFO.functiontype = '002'
 						AND

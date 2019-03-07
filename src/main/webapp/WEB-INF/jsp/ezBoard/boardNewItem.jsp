@@ -600,9 +600,10 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", MakeXMLString(SSCompanyName2));
 		        }
 		        else {
-		        	/* 2019-02-26 홍승비 - 익명게시판 표시이름 체크 시 앞뒤공백 제거 */
+		            /* 2019-03-07 홍승비 - 익명게시판 표시이름 체크 시 앞뒤공백 제거 강화(일본어 전각문자 공백 체크) */
 		            var nickname = document.getElementById("txtNickName").value;
-		            if (trim(nickname) == "") {
+		        	var nickname2 = ReplaceText(nickname, "　", " ");
+		            if (trim(nickname) == "" || trim(nickname2) == "") {
 		            	nickname = "<spring:message code='ezBoard.t286' />";
 		            }
 

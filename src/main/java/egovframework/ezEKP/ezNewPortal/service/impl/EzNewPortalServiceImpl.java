@@ -27,6 +27,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 import com.ibm.icu.util.ChineseCalendar;
 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGDocListVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGFormVO;
 import egovframework.ezEKP.ezBoard.vo.BoardItemVO;
@@ -64,6 +65,9 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 	
 	@Autowired
 	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EzApprovalGService ezApprovalGService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -1248,6 +1252,17 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		switch (type) {
 		case "doing":
 			//결재할
+			
+			/*대리결제 표시 위해 추가 2019-03-05*/
+			String userIDs = "'" + userId + "'";
+			String proxyOption = "";
+			proxyOption = ezApprovalGService.getIsUse("A23", "001", companyId, lang, tenantId);
+
+			if (proxyOption.equals("1")) {
+				userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
+			}
+			map.put("userIDs", userIDs);
+			
 			list = ezNewPortalDAO.getApprovalDoingList(map);
 			result.put("list", list);
 			
@@ -1296,22 +1311,29 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		boolean isUser = false;
 		
 		Iterator<ApprGDocListVO> it = ezNewPortalDAO.getApprovalDoingLines(param).iterator();
+		// 대리결재할 id
+		String userIds = (String)param.get("userIDs");
+		String[] idArr = userIds.split(",");
+		String subId = idArr[0].substring(1, idArr[0].lastIndexOf("'"));
+		
 		while(it.hasNext() && index < 3) {
 			ApprGDocListVO vo = it.next();
+			
 			if (index == 0 && vo.getAprMemberSN().equalsIgnoreCase("1")) {
 				ret.add(vo);
+				index++;
 			} else {
-				if(isUser && ret.size() < 3) {
-					ret.add(vo);
-				}
 				// 현재 유저 결재선 정보와 바로 뒷 사람 정보까지 넣고 while문 종료!
-				if(param.get("userId").toString().equalsIgnoreCase(vo.getAprMemberID())) {
+				if(param.get("userId").toString().equalsIgnoreCase(vo.getAprMemberID()) || subId.equalsIgnoreCase(vo.getAprMemberID())) {
 					ret.add(vo);
+					index++;
 					isUser = true;
+				} else if (isUser && ret.size() < 3) {
+					ret.add(vo);
+					index++;
 				}
 			}
 			
-			index++;
 		}
 		
 		LOGGER.debug("assembleApprPortletList ended.");
