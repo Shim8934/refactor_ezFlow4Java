@@ -539,6 +539,7 @@
 		    }
 		    
 		    function refresh_onclick() {
+		    	prevShow_Clear();
 		    	getBoardList();
 		    }
 		
