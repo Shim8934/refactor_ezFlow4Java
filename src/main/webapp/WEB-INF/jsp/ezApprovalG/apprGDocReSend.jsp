@@ -261,7 +261,7 @@
 	            }
 	            else {
 	                var pInformationContent = "<spring:message code='ezApproval.t146'/>";
-	                OpenInformationUI(pInformationContent, Send_Complete);
+	                OpenInformationUI(pInformationContent, Send_Complete, 'resend');
 	            }
 	        }
 	        
