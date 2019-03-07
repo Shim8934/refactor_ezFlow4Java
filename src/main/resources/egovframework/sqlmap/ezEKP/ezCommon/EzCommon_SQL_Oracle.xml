@@ -796,4 +796,53 @@
 		ADD 
 			is_default NUMBER(11, 0) DEFAULT 0
 	</statement>
+
+	<select id="EzCommonDAO.checkListOptionData1" resultClass="int" remapResults="true">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			TBL_LISTOPTION 
+		WHERE 
+			LISTTYPE = 'S001' 
+		AND 
+			COLNAME = 'StartDate' 
+		AND 
+			NAME = '기안일시'
+	</select>
+	<select id="EzCommonDAO.checkListOptionData2" resultClass="int" remapResults="true">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			TBL_LISTOPTION 
+		WHERE 
+			LISTTYPE = 'S001' 
+		AND 
+			COLNAME = 'FunctionTypeName' 
+	</select>
+	
+	<update id="EzCommonDAO.updateListOptionData1">
+		UPDATE 
+			TBL_LISTOPTION 
+		SET 
+			NAME = '수신일자', 
+			NAME2 = 'ProcessDate', 
+			NAME3 = '到着日付', 
+			NAME4 = '接收日' 
+		WHERE 
+			LISTTYPE = 'S001' 
+		AND 
+			COLNAME = 'StartDate' 
+		AND 
+			NAME = '기안일시'
+	</update>
+	<update id="EzCommonDAO.updateListOptionData2">
+		UPDATE 
+			TBL_LISTOPTION 
+		SET 
+			COLNAME = 'FunctionType' 
+		WHERE 
+			LISTTYPE = 'S001' 
+		AND 
+			COLNAME = 'FunctionTypeName'
+	</update>
 </sqlMap>

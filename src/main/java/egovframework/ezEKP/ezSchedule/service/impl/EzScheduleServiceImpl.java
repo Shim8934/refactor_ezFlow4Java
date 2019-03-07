@@ -275,6 +275,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				lastDateOfCalendar.setTime(sdf.parse(orgEndDate));
 				
 				Calendar calculatedScheduleEndDateCalendar = Calendar.getInstance();
+				Calendar eDate_cal = Calendar.getInstance();
+				eDate_cal.setTime(sdf.parse(endDate));
 				
 				switch (info[2]) {
 					case "0" :
@@ -417,11 +419,11 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					break;	
 					
 					case "2" :
-						while (true) {						
+						while (true) {
 							int year = date_cal.get(Calendar.YEAR);
 							int month = date_cal.get(Calendar.MONTH) + 1;
 
-							if ((year >= lastDateOfCalendar.get(Calendar.YEAR) && month > lastDateOfCalendar.get(Calendar.MONTH) + 1) || year > lastDateOfCalendar.get(Calendar.YEAR)) break;
+							if ((year >= eDate_cal.get(Calendar.YEAR) && month > eDate_cal.get(Calendar.MONTH) + 1) || year > eDate_cal.get(Calendar.YEAR)) break;
 							if (maxCount == count) break;
 							
 							boolean generated = false;
@@ -464,11 +466,21 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 
 								String calcuDate = nsdf.format(newCal.getTime());
 								
-								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {
-									//row 추가
-									if (!rList.contains(calcuDate)) {
-										ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
-										resultList.add(rVo);
+								if (info[0].equals("0")) {
+									if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+										//row 추가
+										if (!rList.contains(calcuDate)) {
+											ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+											resultList.add(rVo);
+										}
+									}
+								} else {
+									if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {
+										//row 추가
+										if (!rList.contains(calcuDate)) {
+											ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+											resultList.add(rVo);
+										}
 									}
 								}
 							}
@@ -533,11 +545,21 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 								
 								String calcuDate = nsdf.format(newCal.getTime());
 								
-								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0 && calcuDate.compareTo(vo.getStartDate().substring(0,10)) >= 0) {
-									//row 추가
-									if (!rList.contains(calcuDate)) {
-										ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
-										resultList.add(rVo);
+								if (info[0].equals("0")) {
+									if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0 && calcuDate.compareTo(vo.getStartDate().substring(0,10)) >= 0) {
+										//row 추가
+										if (!rList.contains(calcuDate)) {
+											ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+											resultList.add(rVo);
+										}
+									}
+								} else {
+									if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0 && calcuDate.compareTo(vo.getStartDate().substring(0,10)) >= 0) {
+										//row 추가
+										if (!rList.contains(calcuDate)) {
+											ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+											resultList.add(rVo);
+										}
 									}
 								}
 							}

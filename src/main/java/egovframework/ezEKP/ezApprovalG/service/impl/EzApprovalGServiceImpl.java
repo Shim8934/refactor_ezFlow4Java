@@ -19698,6 +19698,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		} else if (listType.equals("21")) {
 			//서버저장 문서
 			listString = getListHeader("009", companyID, userLang, tenantID);
+		} else if (listType.equals("99")) {
+			//회람수신함
+			listString = getListHeader("S001", companyID, userLang, tenantID);
 		} else {
 			listString = getListHeader("001", companyID, userLang, tenantID);
 		}
@@ -24480,6 +24483,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		String OrderOption1 = "";
 		String OrderOption2 = "";
+		String OrderOptionValue = "";
 		boolean PublicFlag = false;	// 공개/비공개 사용 여부
 		boolean SecurityFlag = false;	// 보안등급 사용 여부
 		boolean SecurityLineFlag = false;	// 보안등급결재선.  true 이면, 보안등급보다 결재선 소속여부가 우선함.
@@ -24732,6 +24736,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					OrderOption1 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " desc ";
 					OrderOption2 = listXML.getElementsByTagName("COLNAME").item(k).getTextContent() + " ";
 				}
+				OrderOptionValue = listXML.getElementsByTagName("COLNAME").item(k).getTextContent();
 			}
 			resultXML.append("</HEADER>");
 		}
@@ -24741,13 +24746,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_ORDEROPTIONLENGTH", OrderOption1.length());
 		
 		if (OrderOption1.length() > 0 ) {
-			map.put("v_ORDEROPTIONVALUE", OrderOption1.substring(0,OrderOption1.trim().length()).toLowerCase());
+			map.put("v_ORDEROPTIONVALUE", OrderOptionValue.toLowerCase());
 		}
 		map.put("v_ORDEROPTION2", OrderOption2);
 		map.put("v_ORDEROPTIONLENGTH2", OrderOption2.length());
 		
 		if (OrderOption2.length() > 0 ) {
-			map.put("v_ORDEROPTIONVALUE2", OrderOption2.substring(0,OrderOption2.trim().length()).toLowerCase());
+			map.put("v_ORDEROPTIONVALUE2", OrderOptionValue.toLowerCase());
 		}
 		
 		map.put("v_PSTRLANG", lang);
@@ -24756,7 +24761,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PAGESIZE2", totalCount - (Integer.parseInt(pageSize)*(Integer.parseInt(pageNum)-1)));
 		map.put("v_PAGESIZE", Integer.parseInt(pageSize)*Integer.parseInt(pageNum));
 		map.put("v_PAGESIZE3", Integer.parseInt(pageSize) * Integer.parseInt(pageNum) - Integer.parseInt(pageSize));
-		map.put("v_ORDEROPTION", OrderOption1);
+		//map.put("v_ORDEROPTION", OrderOption1);
 		
 		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
 		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
@@ -26274,8 +26279,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			List<ApprGRelayVO> apprGAttachInfoVOList = ezApprovalGDAO.recRelayInfo(map);
 			
 			if (apprGAttachInfoVOList.size() > 0) {
-				ezApprovalGDAO.deleteRecRelayInfo(map);
-				ezApprovalGDAO.deleteRelayAprDocInfo(map);
+				for (ApprGRelayVO relayVO : apprGAttachInfoVOList) {
+					map.put("v_docID", relayVO.getDocID());
+					ezApprovalGDAO.deleteRelayAprDocInfo(map);
+					ezApprovalGDAO.deleteRecRelayInfo(map);
+				}
 			}
 			ezApprovalGDAO.insertRelayDB(map);
 			result = true;

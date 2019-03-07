@@ -8738,11 +8738,11 @@
 							   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
 							   			<isEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
 							   				ORDER BY 
-							   						$v_ORDEROPTION$
+							   						$v_ORDEROPTION$ , DOCNO DESC
 							   			</isEqual>
 							   			<isNotEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
 							   	 			ORDER BY
-							   	 			 		$v_ORDEROPTION$ , ENDDATE DESC
+							   	 			 		$v_ORDEROPTION$, ENDDATE DESC
 							   			</isNotEqual>
 							   		</isGreaterEqual>
 							   		<isLessThan  property="v_ORDEROPTIONLENGTH" compareValue="7">
@@ -8752,7 +8752,7 @@
 							   	</isNotEmpty>
 							   	<isEmpty property="v_ORDEROPTION">
 							   		ORDER BY 
-							   				ENDDATE DESC
+							   				ENDDATE DESC  , DOCNO DESC
 							   	</isEmpty>
 								<isNotEqual property="alFlag" compareValue="1">
 							   	LIMIT #v_PAGESIZE#
@@ -8769,7 +8769,7 @@
 				<isGreaterEqual property="v_ORDEROPTIONLENGTH2" compareValue="7">
 				<isEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
 					 ORDER BY 
-					 		$v_ORDEROPTION2$
+					 		$v_ORDEROPTION2$  , DOCNO
 				</isEqual>
 				<isNotEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
 					 ORDER BY 
@@ -8778,12 +8778,12 @@
 				</isGreaterEqual>
 				<isLessThan property="v_ORDEROPTIONLENGTH2" compareValue="7">
 					ORDER BY 
-							$v_ORDEROPTION2$, ENDDATE
+							$v_ORDEROPTION2$ , ENDDATE
 				</isLessThan>
 				</isNotEmpty>
 				<isEmpty property="v_ORDEROPTION2">
 				 ORDER BY 
-				 		ENDDATE
+				 		ENDDATE  , DOCNO
 				</isEmpty>
 	</select>
 	
@@ -26498,7 +26498,7 @@
 		
 	  <select id="EzApprovalG.recRelayInfo" parameterClass="Map" resultClass="ApprGRelayVO" remapResults="true">
 		  SELECT 
-		  		XDOCID 
+		  		* 
 		  FROM 
 		  		TBL_RECRELAYINFO 
 		  WHERE 
@@ -26515,34 +26515,15 @@
 		  DELETE FROM 
 		  		TBL_RECRELAYINFO
 		  WHERE 
-		  		DOCID IN (
-		  		 			SELECT
-		  		 			  * 
-		  		 			FROM
-			  					(SELECT 
-						  			A.DOCID
-								FROM 
-									TBL_RECRELAYINFO A 
-								INNER JOIN 
-									TBL_APRDOCINFO B
-								ON 
-									A.DOCID = B.DOCID
-								AND
-									A.TENANT_ID = B.TENANT_ID
-								AND
-									A.COMPANYID = B.COMPANYID
-								WHERE 
-									A.TENANT_ID = #v_TENANTID#
-								AND
-									A.COMPANYID = #companyID#
-								AND
-									A.XDOCID = #xDocID# 
-								AND 
-									XTOCODE = #xToCode#	
-								AND 
-									(B.HREF IS NULL
-								OR 
-									B.HREF = '')) A)
+		  		DOCID = #v_docID#
+		  AND
+		  		XDOCID = #xDocID#
+		  AND 
+		  		XTOCODE = #xToCode#
+		  AND
+		  		TENANT_ID = #v_TENANTID#
+		  AND
+		  		COMPANYID = #companyID#
 	  </delete>
 	  
 	  <delete id="EzApprovalG.deleteRelayAprDocInfo" parameterClass="Map" >
