@@ -1311,9 +1311,10 @@
 			            setFirstDrafterAuto();
 			        }
 			
-			        if (ListType == "21" && DraftFlag == "REDRAFT") {
-			            RemoveTmpDoc(DocSN);
-			        }
+			        //임시저장문서 삭제와 생성을 동시에
+// 			        if (ListType == "21" && DraftFlag == "REDRAFT") {
+// 			            RemoveTmpDoc(DocSN);
+// 			        }
 			
 			        var rtnVal = SaveTMPFile();
 			        if (rtnVal == "TRUE") {

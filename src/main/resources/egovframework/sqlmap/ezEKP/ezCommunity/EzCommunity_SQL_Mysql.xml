@@ -93,7 +93,7 @@
 	<resultMap class="CommunityCOutApplicationVO" id="communityCOutApplicationVO">
 		<result property="userID"						column="USERID"						columnIndex="1"/>
 		<result property="outDate"						column="OUTDATE"					columnIndex="2"/>
-		<result property="outReason"					column="OUTREASON"					columnIndex="3"		javaType="String" jdbcType="CLOB"/>
+		<result property="outReason"					column="OUTREASON"					columnIndex="3"		javaType="String" jdbcType="TEXT"/>
 		<result property="userName"						column="USERNAME"					columnIndex="4"/>
 	</resultMap>
 	
@@ -2097,8 +2097,8 @@
 					B.cn, A2.DEPTID,
 					C.EXTENSIONATTRIBUTE2 as COMPANYID,
 					A2.TENANT_ID,
-					C.DISPLAYNAME,
-					C.DISPLAYNAME2
+					B.DISPLAYNAME,
+					B.DISPLAYNAME2
 				FROM
 					TBL_USERMASTER B
 				INNER JOIN
@@ -3062,6 +3062,17 @@
 				T1.tenant_id = T3.tenant_id
 			WHERE
 				c_adminconfirm = 'Y'
+			AND
+				EXISTS (
+					SELECT
+						CN
+                    FROM
+						TBL_USERMASTER
+                    WHERE
+						CN = T3.C_ID
+                    AND
+						TENANT_ID = #tenantID#
+                )
 			AND
 				T1.companyid = #companyID#
 			AND
