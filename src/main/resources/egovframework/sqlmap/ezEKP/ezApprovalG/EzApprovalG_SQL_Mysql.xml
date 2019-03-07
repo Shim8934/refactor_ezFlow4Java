@@ -24957,42 +24957,42 @@
    		 	$v_PSUBQUERY$
    		</isGreaterThan>
    		<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
-   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="8">
-   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="linkdate">
-   			ORDER BY 
-   				$v_ORDEROPTION$ 
-   		</isEqual>
-   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="linkdate">
-   		ORDER BY 
-   			$v_ORDEROPTION$, LINKDATE DESC 
-   		</isNotEqual>
-   		</isGreaterEqual>
-   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="8">
-   		ORDER BY  
-   			$v_ORDEROPTION$ , LINKDATE DESC
-   		</isLessThan>
+	   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="8">
+		   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="linkdate">
+		   			ORDER BY 
+		   				$v_ORDEROPTION$ 
+		   		</isEqual>
+		   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="linkdate">
+			   		ORDER BY 
+			   			$v_ORDEROPTION$, LINKDATE DESC 
+		   		</isNotEqual>
+	   		</isGreaterEqual>
+	   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="8">
+		   		ORDER BY  
+		   			$v_ORDEROPTION$ , LINKDATE DESC
+	   		</isLessThan>
    		</isGreaterThan>
    		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
-   		ORDER BY LINKDATE DESC 
+   			ORDER BY LINKDATE DESC 
    		</isLessEqual>
    			LIMIT #v_PQUERYSIZESUB#, #v_PLISTCOUNT#
    		) A 
          
       	<isGreaterThan property="v_ORDEROPTIONLENGTH2" compareValue="0">
-   		<isGreaterEqual property="v_ORDEROPTIONLENGTH2" compareValue="8">
-   		<isEqual property="v_ORDEROPTIONVALUE2" compareValue="linkdate">
-   			ORDER BY $v_ORDEROPTION2$
-   		</isEqual>
-   		<isNotEqual property="v_ORDEROPTIONVALUE2" compareValue="linkdate">
-   		ORDER BY $v_ORDEROPTION2$, LINKDATE
-   		</isNotEqual>
-   		</isGreaterEqual>
-   		<isLessThan property="v_ORDEROPTIONLENGTH2" compareValue="8">
-   		ORDER BY $v_ORDEROPTION2$, LINKDATE
-   		</isLessThan>
+	   		<isGreaterEqual property="v_ORDEROPTIONLENGTH2" compareValue="8">
+		   		<isEqual property="v_ORDEROPTIONVALUE2" compareValue="linkdate">
+		   			ORDER BY $v_ORDEROPTION2$
+		   		</isEqual>
+		   		<isNotEqual property="v_ORDEROPTIONVALUE2" compareValue="linkdate">
+		   			ORDER BY $v_ORDEROPTION2$, LINKDATE
+		   		</isNotEqual>
+	   		</isGreaterEqual>
+	   		<isLessThan property="v_ORDEROPTIONLENGTH2" compareValue="8">
+	   			ORDER BY $v_ORDEROPTION2$, LINKDATE
+	   		</isLessThan>
    		</isGreaterThan>
    		<isLessEqual property="v_ORDEROPTIONLENGTH2" compareValue="0">
-   		ORDER BY LINKDATE DESC
+   			ORDER BY LINKDATE
    		</isLessEqual>
    	</select>
    	
@@ -25091,7 +25091,7 @@
    		</isLessThan>
    		</isGreaterThan>
    		<isLessEqual property="v_ORDEROPTIONLENGTH2" compareValue="0">
-   		ORDER BY LINKDATE DESC
+   		ORDER BY LINKDATE
    		</isLessEqual>
    	</select>
    	

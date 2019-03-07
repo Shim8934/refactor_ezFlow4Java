@@ -25148,7 +25148,7 @@
    		</isLessThan>
    		</isGreaterThan>
    		<isLessEqual property="v_ORDEROPTIONLENGTH2" compareValue="0">
-   		ORDER BY LINKDATE DESC
+   		ORDER BY LINKDATE
    		</isLessEqual>
    	</select> 	
    	
@@ -25247,7 +25247,7 @@
    		</isLessThan>
    		</isGreaterThan>
    		<isLessEqual property="v_ORDEROPTIONLENGTH2" compareValue="0">
-   		ORDER BY LINKDATE DESC
+   		ORDER BY LINKDATE
    		</isLessEqual>
    	</select>
    	  	     	
