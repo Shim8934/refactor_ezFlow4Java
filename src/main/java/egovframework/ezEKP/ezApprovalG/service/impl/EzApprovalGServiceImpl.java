@@ -2583,6 +2583,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
+		String href = ezApprovalGDAO.getTmpHref(map);
+		
+		map.put("href", href);
+		
+		ArrayList<String> docList = ezApprovalGDAO.getTmpDocList(map);
+		for (String s : docList) {
+			map.put("v_DocID", s);
+			//기존 임시저장문서 지우기
+			ezApprovalGDAO.aprDeleteDocInfo(map);
+			ezApprovalGDAO.aprDeleteDocInfo2(map);
+			ezApprovalGDAO.aprDeleteDocInfo3(map);
+			ezApprovalGDAO.aprDeleteDocInfo4(map);
+			ezApprovalGDAO.aprDeleteDocInfo5(map);
+			ezApprovalGDAO.aprDeleteDocInfo6(map);
+			ezApprovalGDAO.aprDeleteDocInfo7(map);
+			ezApprovalGDAO.aprDeleteDocInfo8(map);
+			ezApprovalGDAO.aprDeleteDocInfo9(map);
+		}
+		
 		logger.debug("makeTmp2IngDocInfo Param : v_PUSERID =" + userID.trim() + "v_PDOCID = " + docID + "v_PSN = " + sn + "companyID =" + companyID + "v_TENANTID =" + tenantID);
 
 			//수신정보
@@ -10249,7 +10268,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PSN", sn);
 		map.put("v_TENANTID", tenantID);
 		
-		String href = ezApprovalGDAO.selectHrefDocInfo(map); 
+		String href = ezApprovalGDAO.getTmpHref(map);
+		
+		map.put("href", href);
+		
+		ArrayList<String> docList = ezApprovalGDAO.getTmpDocList(map);
+		for (String s : docList) {
+			map.put("v_DocID", s);
+			//기존 임시저장문서 지우기
+			ezApprovalGDAO.aprDeleteDocInfo(map);
+			ezApprovalGDAO.aprDeleteDocInfo2(map);
+			ezApprovalGDAO.aprDeleteDocInfo3(map);
+			ezApprovalGDAO.aprDeleteDocInfo4(map);
+			ezApprovalGDAO.aprDeleteDocInfo5(map);
+			ezApprovalGDAO.aprDeleteDocInfo6(map);
+			ezApprovalGDAO.aprDeleteDocInfo7(map);
+			ezApprovalGDAO.aprDeleteDocInfo8(map);
+			ezApprovalGDAO.aprDeleteDocInfo9(map);
+		}
+		
 		ezApprovalGDAO.deleteTmpDocInfo(map);
 		ezApprovalGDAO.deleteTmpDocInfo2(map);
 		ezApprovalGDAO.deleteTmpDocInfo3(map);

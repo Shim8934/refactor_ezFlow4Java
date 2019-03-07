@@ -3176,4 +3176,13 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public String getTmpDocHref(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getTmpDocHref", map);
 	}
+	
+	public String getTmpHref(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getTmpHref", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> getTmpDocList(Map<String, Object> map) throws Exception {
+		return (ArrayList<String>) list("EzApprovalG.getTmpDocList", map);
+	}
 }
