@@ -2583,6 +2583,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("companyID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
+		String href = ezApprovalGDAO.getTmpHref(map);
+		
+		map.put("href", href);
+		
+		ArrayList<String> docList = ezApprovalGDAO.getTmpDocList(map);
+		for (String s : docList) {
+			map.put("v_DocID", s);
+			//기존 임시저장문서 지우기
+			ezApprovalGDAO.aprDeleteDocInfo(map);
+			ezApprovalGDAO.aprDeleteDocInfo2(map);
+			ezApprovalGDAO.aprDeleteDocInfo3(map);
+			ezApprovalGDAO.aprDeleteDocInfo4(map);
+			ezApprovalGDAO.aprDeleteDocInfo5(map);
+			ezApprovalGDAO.aprDeleteDocInfo6(map);
+			ezApprovalGDAO.aprDeleteDocInfo7(map);
+			ezApprovalGDAO.aprDeleteDocInfo8(map);
+			ezApprovalGDAO.aprDeleteDocInfo9(map);
+		}
+		
 		logger.debug("makeTmp2IngDocInfo Param : v_PUSERID =" + userID.trim() + "v_PDOCID = " + docID + "v_PSN = " + sn + "companyID =" + companyID + "v_TENANTID =" + tenantID);
 
 			//수신정보
@@ -10249,7 +10268,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PSN", sn);
 		map.put("v_TENANTID", tenantID);
 		
-		String href = ezApprovalGDAO.selectHrefDocInfo(map); 
+		String href = ezApprovalGDAO.getTmpHref(map);
+		
+		map.put("href", href);
+		
+		ArrayList<String> docList = ezApprovalGDAO.getTmpDocList(map);
+		for (String s : docList) {
+			map.put("v_DocID", s);
+			//기존 임시저장문서 지우기
+			ezApprovalGDAO.aprDeleteDocInfo(map);
+			ezApprovalGDAO.aprDeleteDocInfo2(map);
+			ezApprovalGDAO.aprDeleteDocInfo3(map);
+			ezApprovalGDAO.aprDeleteDocInfo4(map);
+			ezApprovalGDAO.aprDeleteDocInfo5(map);
+			ezApprovalGDAO.aprDeleteDocInfo6(map);
+			ezApprovalGDAO.aprDeleteDocInfo7(map);
+			ezApprovalGDAO.aprDeleteDocInfo8(map);
+			ezApprovalGDAO.aprDeleteDocInfo9(map);
+		}
+		
 		ezApprovalGDAO.deleteTmpDocInfo(map);
 		ezApprovalGDAO.deleteTmpDocInfo2(map);
 		ezApprovalGDAO.deleteTmpDocInfo3(map);
@@ -10417,6 +10454,41 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				if (rtnVal) {
 					logger.debug("doapprov makeTmpDocInfo started. userID = " + userID + " || docID = " + docID + " || proxyUserID = " + proxyUserID + " || companyID = " + companyID + " || tenantID = " + userInfo.getTenantId());
+					
+					//여기서 디비랑 비교하자
+					String listType = "";
+					if (strXML.getElementsByTagName("LISTTYPE").getLength() > 0) {
+						listType = strXML.getElementsByTagName("LISTTYPE").item(0).getTextContent();
+					}
+
+					String draftFlag = "";
+					if (strXML.getElementsByTagName("DRAFTFLAG").getLength() > 0) {
+						draftFlag = strXML.getElementsByTagName("DRAFTFLAG").item(0).getTextContent();
+					}
+					
+					String FormHref = "";
+					if (strXML.getElementsByTagName("FORMHREF").getLength() > 0) {
+						FormHref = strXML.getElementsByTagName("FORMHREF").item(0).getTextContent();
+					}
+					
+					String docSN = "";
+					if (strXML.getElementsByTagName("DOCSN").getLength() > 0) {
+						docSN = strXML.getElementsByTagName("DOCSN").item(0).getTextContent();
+					}
+					
+					//따로 삭제하지말고 한번에 삭제하고 생성하자
+					if (!FormHref.equals("") && listType.equals("21") && draftFlag.equals("REDRAFT")) {
+						if (!compareTmpDocID(FormHref, docSN, companyID, userInfo.getTenantId())) {
+							return "<RESULT>FALSE</RESULT>";
+						} else {
+							String path = userInfo.getRealPath() + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
+							
+							String delRtn = deleteTmpDocInfo(userID, docSN.split("@")[1], path, userInfo.getCompanyID(), userInfo.getLang(), userInfo.getTenantId());
+							if (!delRtn.equals("<RESULT>TRUE</RESULT>")) {
+								return "<RESULT>FALSE</RESULT>";
+							}
+						}
+					}
 					
 					subSQL = makeTmpDocInfo(userID, docID, proxyUserID, companyID, lang, userInfo.getTenantId());
 					
@@ -27781,6 +27853,42 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		return result;
+	}
+	
+	private boolean compareTmpDocID(String FormHref, String docSN, String companyID, int tenantId) throws Exception {
+		logger.debug("compareTmpDocID started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		logger.debug("FormHref = " + FormHref);
+		logger.debug("docSN = " + docSN);
+		
+		FormHref = FormHref.substring(FormHref.length() - 24, FormHref.length() - 4);
+		String tmpUserID = docSN.split("@")[0];
+		String tmpSN = docSN.split("@")[1];
+		
+		String href = "";
+		
+		map.put("tmpSN",  tmpSN);
+		map.put("id",  tmpUserID);
+		map.put("tenantId",  tenantId);
+		map.put("companyID",  companyID);
+		
+		href = ezApprovalGDAO.getTmpDocHref(map);
+		logger.debug("href = " + href);
+		
+		if (href != null && !href.equals("")) {
+			href = href.substring(href.length() - 24, href.length() - 4);
+			logger.debug("subString href = " + href);
+		} else {
+			return false;
+		}
+		
+		if (FormHref.equals(href)) {
+			logger.debug("compareTmpDocID ended");
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	@Override
