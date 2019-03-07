@@ -6575,6 +6575,7 @@
 	       	 	 ROWNUM <= 1
 	       	 	 ]]> 
 	</select>
+	<!-- 합의문 또는 감사문 회송시 합의부서 문서의 마지막 의견을 원문서에 만들어주는 로직에서 사용 -->
 <!-- 	<procedure id="EzApprovalG.setLastOpinionToOrgDoc" parameterClass="Map" resultClass="ApprGOpinionVO"> -->
 <!-- 		{CALL EZSP_SETLASTOPINIONTOORGDOC(#v_DOCID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure> -->
@@ -6586,17 +6587,7 @@
 				SELECT 
 					TBL_APROPINIONINFO.* 
 				FROM 
-					TBL_APROPINIONINFO 
-		        JOIN 
-		        	TBL_APRLINEINFO    
-		        ON 
-		        	TBL_APROPINIONINFO.DocID = TBL_APRLINEINFO.DocID
-		        AND 
-		        	TBL_APROPINIONINFO.UserID = TBL_APRLINEINFO.AprMemberID
-		        AND
-		        	TBL_APROPINIONINFO.TENANT_ID = TBL_APRLINEINFO.TENANT_ID
-        		AND
-        			TBL_APROPINIONINFO.COMPANYID = TBL_APRLINEINFO.COMPANYID		        	
+					TBL_APROPINIONINFO
 				WHERE  
 					TBL_APROPINIONINFO.DocID = #v_DOCID#
 				AND
