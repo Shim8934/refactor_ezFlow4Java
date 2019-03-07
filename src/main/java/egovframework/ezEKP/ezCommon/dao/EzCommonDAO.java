@@ -388,4 +388,18 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			update("EzCommonDAO.addJournalFormDelFlag");
 		}
 	}
+	
+	public void updateListOptionData() {
+		try {
+			if ((int) select("EzCommonDAO.checkListOptionData1") > 0) {
+				update("EzCommonDAO.updateListOptionData1");
+			}
+			if ((int) select("EzCommonDAO.checkListOptionData2") > 0) {
+				update("EzCommonDAO.updateListOptionData2");
+			}
+		} catch (Exception e) {
+			logger.debug("updateListOptionData() ERROR...");
+			e.printStackTrace();
+		}
+	}
 }
