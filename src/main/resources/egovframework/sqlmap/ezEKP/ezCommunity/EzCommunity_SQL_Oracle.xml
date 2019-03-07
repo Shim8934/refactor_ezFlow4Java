@@ -1760,8 +1760,6 @@
 			WHERE
 				CN = #v_USERID#
 			AND
-				PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
-			AND
 				tenant_id = #tenantID#
 		]]>
 	</select>
@@ -2158,7 +2156,7 @@
 				A.c_id,
 				A.companyid,
 				A.c_indate,
-				NVL(CASE WHEN #primary# = '1' THEN T2.DISPLAYNAME ELSE T2.DISPLAYNAME2 END,
+				NVL(CASE WHEN #primary# = '1' THEN TR.DISPLAYNAME ELSE TR.DISPLAYNAME2 END,
 					CASE WHEN #primary# = '1' THEN T.USERNAME ELSE T.USERNAME2 END) AS username,
 				DEPTID
 			FROM
