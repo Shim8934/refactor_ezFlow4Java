@@ -3172,4 +3172,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public void insertHesongOpinion(Map<String, Object> map) throws Exception {
 		insert("EzApprovalG.insertHesongOpinion", map);
 	}
+
+	public String getTmpDocHref(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getTmpDocHref", map);
+	}
 }

@@ -28068,6 +28068,22 @@
     	AND
     		TENANT_ID = #v_TENANTID#
     </select>
+    
+   	 <select id="EzApprovalG.getTmpDocHref" parameterClass="Map" resultClass="String">
+    	SELECT
+    		HREF
+    	FROM
+    		TBL_TMPAPRDOCINFO
+    	WHERE
+    		sn = #tmpSN#
+   		AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #tenantId#
+    	AND
+    		OWNERID = #id#
+    </select>
+    
     <insert id="EzApprovalG.insertHesongOpinion" parameterClass="Map">
     	INSERT INTO
     		TBL_ENDAPROPINIONINFO

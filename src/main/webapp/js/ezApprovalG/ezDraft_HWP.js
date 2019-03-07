@@ -1764,6 +1764,10 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         createNodeAndInsertText(xmlpara, objNode, "TASKCODE", TaskCode);
         createNodeAndInsertText(xmlpara, objNode, "DOCNUMCODE", DocNumCode);
         createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", "");
+        createNodeAndInsertText(xmlpara, objNode, "FORMHREF", FormHref);
+        createNodeAndInsertText(xmlpara, objNode, "DOCSN", DocSN);
+        createNodeAndInsertText(xmlpara, objNode, "LISTTYPE", ListType);
+        createNodeAndInsertText(xmlpara, objNode, "DRAFTFLAG", DraftFlag);
 
         var g_SepAttachLVXml = "";
         g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
