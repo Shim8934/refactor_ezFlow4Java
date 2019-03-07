@@ -377,6 +377,9 @@ function openLinkDetail(item, itemId) {
 function popChange() {
 	var popSize = document.getElementById("popSize").value;
 	if (popSize == "chk_Full") {
+		document.getElementById("txt_Width").value = "";
+		document.getElementById("txt_Height").value = "";
+		
 		document.getElementById("txt_Width").disabled = true; 
 		document.getElementById("txt_Height").disabled = true; 	
 	}
