@@ -775,9 +775,9 @@ function GetRecordListXml() {
         var CabListXml = loadXMLString(g_SelCabXml);
 
         var objCabs = SelectNodes(CabListXml, "CABINETID");
-        //len = objCabs.length;
-
-        for (i = 0; i < objCabs.length; i++) {
+        len = objCabs.length; // 이거 주석 처리하면 안됨. for문에 len이 아닌 objCabs.length로 비교할 경우 자꾸 줄어들어서 에러 남 2019-02-27 임민석
+        
+        for (i = 0; i < len; i++) {
             try{
                 objChildNode.appendChild(objCabs[i]);
             }

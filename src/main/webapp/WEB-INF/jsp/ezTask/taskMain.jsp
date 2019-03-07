@@ -90,7 +90,8 @@
 		    
 // 		    document.onselectstart = function () { return false; };
 		    
-		    function select_row(elem) {		    	
+		    function select_row(elem) {		    
+		    	
 				if ($("#checkboxAll").is(":checked")) {					
 					if ($("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked") == true && selectelem != null) {//전체 선택 후 개별 선택 시 선택한것 해제
 						$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", false);
@@ -118,7 +119,7 @@
 				}
 
 				// 체크 후 체크박스 눌러서 체크 해제할 때
-		        if (selectelem != null) {
+		        if (selectelem != null && selectelem != elem) {
 					if ($("#checkboxAll").is(":checked")) {
 			        	$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", false);
 			        	$(".row_body[taskid='" + $(elem).attr("taskid") + "']").css("background", "#ffffff");
@@ -154,7 +155,6 @@
 		        
 	        	feature = GetOpenPosition(790, 810);
 	        	
-	        	/*2018-05-18 구해안 윈도우 창 크기 개선*/
                 window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 820px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 	
@@ -312,17 +312,21 @@
 			var strListInfo = "";
 			var strListIdInfo = "";
 
-			function chk_onselect(obj) {
+			function chk_onselect(obj, event) {
+				event.stopPropagation();
 				if (obj.checked) {
 		            strListInfo += $(obj).attr("taskID") + ";";
 		            strListIdInfo += $(obj).attr("creatorID") + ";";
-		            selectelem = null;
+		            selectelem = obj.parentNode.parentNode;
+		            obj.parentNode.parentNode.style.backgroundColor = "#edf4fd";
 		        } else {
 		            strListInfo = ReplaceText(strListInfo, $(obj).attr("taskID") + ";", "");
 		            strListIdInfo = ReplaceText(strListIdInfo, $(obj).attr("creatorID") + ";", "");
-		            selectelem = obj.parentNode.parentNode;
+		            selectelem = null;
+		            obj.parentNode.parentNode.style.backgroundColor = "#ffffff";
 		        }
 		    }
+			
 
 			function ReplaceText(orgStr, findStr, replaceStr) {
 		        var re = new RegExp(findStr, "gi");		        
@@ -387,7 +391,7 @@
 				        tr.setAttribute("startdate", startdate);
 	
 				        tr.cells[0].innerHTML += "<input name='myCheckbox' type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "_" + i + 
-				        "'onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
+				        "'onclick='chk_onselect(this, event)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
 	
 				        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
 				            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
@@ -995,7 +999,6 @@
 		<br />
 		<div id="mainmenu">
 			<ul>
-				<!-- 2018-05-24 구해안 이미지 이동 -->
 				<li><span id="pn_img" onClick="WriteTask()"><spring:message code='ezTask.t113' /></span></li>
 				<li><span onClick="DeleteTask()"><spring:message code='ezTask.t115' /></span></li>
 				<li><span onClick="RefreshView()"><spring:message code='ezTask.t116' /></span></li>
@@ -1029,7 +1032,6 @@
 			<tr>
 				<td style="WIDTH: 100%;HEIGHT: 100%;vertical-align:top">
 					<%-- 2018-04-24 김민성 - 업무명, 메모 길이 조절  --%>
-					<!-- 2018-05-24 구해안 - 업무구분,완료율,시작일,종료일 사이간격 띄우기 -->
 					<div>
 					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed; min-width:800px;">
 						<col style ="width:30px;">
@@ -1040,17 +1042,11 @@
 							<col style = "width:80%;">
 							<col style ="width:30px;">
 							<col style ="width:25%;">
-							<%-- <col >
-							<col style ="width:50px;">
-							<col style ="width:140px;"> --%>
 						</c:if>
 						<c:if test="${useTodoMemo == 'NO'}">
 							<col style = "width:80%;">
 							<col style = "width:30px;">
 							<col style = "width:25%;">
-							<%-- <col >
-							<col style ="width:50px;">
-							<col style ="width:30px;"> --%>
 						</c:if>
 		                <col style ="width:120px;">
 						<col style ="width:130px;" id="col_progress">
@@ -1070,7 +1066,6 @@
 							<c:if test="${useTodoMemo == 'NO'}">
 								<th ></th>
 							</c:if>
-		                    <!-- 2018-05-16 구해안 업무구분과 완료율 간격 조정 -->
 		                    <!-- 18-05-24 김민성 - 중요도 이미지로 수정 -->
 		                    <th style="padding-left:14px"><spring:message code='ezTask.t2003'/></th>		                    
 							<th id="_thprogress"  style="text-align:center;padding-right: 12px;"><spring:message code='ezTask.t120' /></th>						
@@ -1103,17 +1098,11 @@
 							<col style = "width:80%;">
 							<col style ="width:30px;">
 							<col style ="width:25%;">
-							<%-- <col >
-							<col style ="width:50px;">
-							<col style ="width:140px;"> --%>
 						</c:if>
 						<c:if test="${useTodoMemo == 'NO'}">
 							<col style = "width:80%;">
 							<col style = "width:30px;">
 							<col style = "width:25%;">
-							<%-- <col >
-							<col style ="width:50px;">
-							<col style ="width:30px;"> --%>
 						</c:if>
 		                <col style ="width:120px;">
 						<col style ="width:130px;" id="col_progress2">

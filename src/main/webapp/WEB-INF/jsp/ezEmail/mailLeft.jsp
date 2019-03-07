@@ -285,8 +285,8 @@
 	            if (typeof nodeIdx == 'undefined' && arguments.length > 0) {
 	                nodeIdx = arguments[0].nodeIdx;
 	            }
-	            var childxml = get_childXML(eval(treeviewStr).getvalue(nodeIdx, "href"), false, true, false);
-	            eval(treeviewStr).putchildxml(nodeIdx, childxml);
+	            var childxml = get_childXML(window[treeviewStr].getvalue(nodeIdx, "href"), false, true, false);
+	            window[treeviewStr].putchildxml(nodeIdx, childxml);
 	            
 	            /**
 	            	ellipsis 적용을 위해 함수 호출
@@ -299,8 +299,8 @@
 				/* 2018-08-06 장진혁 스크립트 오류로 undefined 걸름 */
 	        	if (event != undefined) {
 		        	if (event.which != 3) {
-					    var nodeIdx = eval(treeviewStr).selectedIndex();
-					    var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(eval(treeviewStr).getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(eval(treeviewStr).getvalue(nodeIdx, "href"));
+					    var nodeIdx = window[treeviewStr].selectedIndex();
+					    var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "href"));
 		        		
 		        		if (shareId != "") {
 		        			url += "&shareId=" + encodeURIComponent(shareId);
@@ -332,24 +332,24 @@
 	            if (CrossYN()) {
 	                if (szCommand == "move" && szSubCommand == "ViewMailListMove") {
 	                    try {
-	                        window.parent.frames("right").move_on_dragdrop(eval(treeviewStr).getvalue(event.nodeIdx, "href"));
+	                        window.parent.frames("right").move_on_dragdrop(window[treeviewStr].getvalue(event.nodeIdx, "href"));
 	                    } catch (e) { }
 	                }
 	                else if (szCommand == "copy" && szSubCommand == "ViewMailListMove") {
 	                    try {
-	                        window.parent.frames("right").copy_on_dragdrop(eval(treeviewStr).getvalue(event.nodeIdx, "href"));
+	                        window.parent.frames("right").copy_on_dragdrop(window[treeviewStr].getvalue(event.nodeIdx, "href"));
 	                    } catch (e) { }
 	                }
 	            }
 	            else {
 	                if (szCommand == "move" && szSubCommand == "ViewMailListMove") {
 	                    try {
-	                        window.parent.frames("right").document.Script.move_on_dragdrop(eval(treeviewStr).getvalue(event.nodeIdx, "href"));
+	                        window.parent.frames("right").document.Script.move_on_dragdrop(window[treeviewStr].getvalue(event.nodeIdx, "href"));
 	                    } catch (e) { }
 	                }
 	                else if (szCommand == "copy" && szSubCommand == "ViewMailListMove") {
 	                    try {
-	                        window.parent.frames("right").document.Script.copy_on_dragdrop(eval(treeviewStr).getvalue(event.nodeIdx, "href"));
+	                        window.parent.frames("right").document.Script.copy_on_dragdrop(window[treeviewStr].getvalue(event.nodeIdx, "href"));
 	                    } catch (e) { }
 	                }
 	            }
@@ -362,7 +362,7 @@
 	                xmlHTTP_Unread = createXMLHttpRequest();
 	                var xmlpara = createXmlDom();
 	                var objNode;
-                	var href = eval(treeviewStr).getvalue(eval(treeviewStr).selectedIndex(), "href");
+                	var href = window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "href");
                 	
                 	createNodeInsert(xmlpara, objNode, "DATA");
 	                createNodeAndInsertText(xmlpara, objNode, "URL", href);
@@ -385,16 +385,16 @@
 	                return;
 	            if (xmlHTTP_Unread.status >= 200 && xmlHTTP_Unread.status < 300) {
             		var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "DATA")[0]);
-	                var caption = eval(treeviewStr).getvalue(eval(treeviewStr).selectedIndex(), "foldername");
+	                var caption = window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "foldername");
 	
-	                if (get_unreadend_2010.href == eval(treeviewStr).getvalue(eval(treeviewStr).selectedIndex(), "href")) {
+	                if (get_unreadend_2010.href == window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "href")) {
 	                    if (unreadcount == "0") {
-	                    	eval(treeviewStr).putcaption(eval(treeviewStr).selectedIndex(), caption);
-	                    	eval(treeviewStr).putstyle(eval(treeviewStr).selectedIndex(), "font-weight : ''");
+	                    	window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption);
+	                    	window[treeviewStr].putstyle(window[treeviewStr].selectedIndex(), "font-weight : ''");
 	                    }
 	                    else {
-	                    	eval(treeviewStr).putcaption(eval(treeviewStr).selectedIndex(), caption + "(" + unreadcount + ")");
-	                    	eval(treeviewStr).putstyle(eval(treeviewStr).selectedIndex(), "font-weight : bold");
+	                    	window[treeviewStr].putcaption(window[treeviewStr].selectedIndex(), caption + "(" + unreadcount + ")");
+	                    	window[treeviewStr].putstyle(window[treeviewStr].selectedIndex(), "font-weight : bold");
 	                    }
 	                    
 	                    var pageSrc = parent.frames["right"].document.location.toString();
@@ -648,7 +648,7 @@
 			    document.getElementById("mailbox_delete").style.display = "";
 	        	
 	        	detailView();
-	            eval(treeviewStr).select(1);
+	        	window[treeviewStr].select(1);
 	        }
 	        
 	        function showProgress() {
@@ -758,9 +758,9 @@
 		    //편지함 모두 읽기
 		    function folder_ReadChange(pGubun){
 		    	var xmlHTTP = createXMLHttpRequest();
-		    	var nodeIdx = eval(treeviewStr).selectedIndex();
-	            var href = eval(treeviewStr).getvalue(nodeIdx, "href");
-	            var foldername = eval(treeviewStr).getvalue(nodeIdx, "foldername");
+		    	var nodeIdx = window[treeviewStr].selectedIndex();
+	            var href = window[treeviewStr].getvalue(nodeIdx, "href");
+	            var foldername = window[treeviewStr].getvalue(nodeIdx, "foldername");
 	            var isRead = "FALSE";
 	            
 	            if (pGubun == "R") {
@@ -798,11 +798,11 @@
 		    
 		    function mailbox_export(){
 		    	try {
-		    		var nodeIdx = eval(treeviewStr).selectedIndex();
-		    		var folderPath = eval(treeviewStr).getvalue(nodeIdx, "href");
+		    		var nodeIdx = window[treeviewStr].selectedIndex();
+		    		var folderPath = window[treeviewStr].getvalue(nodeIdx, "href");
 		    		
 		    		if (typeof (parent.frames["right"].g_moveUrl) == "undefined" || parent.frames["right"].g_moveUrl != folderPath) {
-		            	var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(eval(treeviewStr).getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(folderPath);
+		            	var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(folderPath);
 		            	
 		            	if (shareId != "") {
 		            		url += "&shareId=" + encodeURIComponent(shareId);
@@ -822,11 +822,11 @@
 		    
 		    function mailbox_import(){
 		    	try {
-		    		var nodeIdx = eval(treeviewStr).selectedIndex();
-		    		var folderPath = eval(treeviewStr).getvalue(nodeIdx, "href");
+		    		var nodeIdx = window[treeviewStr].selectedIndex();
+		    		var folderPath = window[treeviewStr].getvalue(nodeIdx, "href");
 		    		
 		    		if (typeof (parent.frames["right"].g_moveUrl) == "undefined" || parent.frames["right"].g_moveUrl != folderPath) {
-		            	var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(eval(treeviewStr).getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(folderPath);
+		            	var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(folderPath);
 		            	
 		            	if (shareId != "") {
 		            		url += "&shareId=" + encodeURIComponent(shareId);
@@ -843,8 +843,8 @@
 		    
 		   function mailbox_delete() {
 			   try {
-				   var nodeIdx = eval(treeviewStr).selectedIndex();
-		    	   var folderPath = eval(treeviewStr).getvalue(nodeIdx, "href");
+				   var nodeIdx = window[treeviewStr].selectedIndex();
+		    	   var folderPath = window[treeviewStr].getvalue(nodeIdx, "href");
 		    	   
 		    	   var trashBoxURL = "${pDeleteBoxID}";
 			        
@@ -903,9 +903,9 @@
 		   
 			function delete_mail_complete() {
 				if (xmlHTTP2 != null && deltype != null && xmlHTTP2.readyState == 4) {
-					var nodeIdx = eval(treeviewStr).selectedIndex();
-					var foldername = eval(treeviewStr).getvalue(nodeIdx, "foldername");
-					var href = eval(treeviewStr).getvalue(nodeIdx, "href");
+					var nodeIdx = window[treeviewStr].selectedIndex();
+					var foldername = window[treeviewStr].getvalue(nodeIdx, "foldername");
+					var href = window[treeviewStr].getvalue(nodeIdx, "href");
 					
 					HiddenMailProgressNew();
 					HiddenFolderMenu();
@@ -1059,7 +1059,7 @@
 			        LoadEmailTree2(nodeTreeXml);
 			        
 			    } else {
-			    	eval(treeviewStr).select(1);
+			    	window[treeviewStr].select(1);
 			    }
 			    
 			    HiddenFolderMenu();

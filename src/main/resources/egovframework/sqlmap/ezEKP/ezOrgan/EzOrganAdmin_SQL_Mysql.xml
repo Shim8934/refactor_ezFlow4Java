@@ -52,6 +52,11 @@
 		<result property="cn" 									column="CN" 							columnIndex="1"/>	
 	</resultMap>
 	
+	<resultMap id="userExt4List" class="OrganUserVO">
+		<result property="cn" 									column="CN" 							columnIndex="1"/>	
+		<result property="extensionAttribute4" 					column="extensionAttribute4" 			columnIndex="2"/>	
+	</resultMap>
+	
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			{CALL EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
@@ -1445,7 +1450,7 @@
                  ('A60','0  ','수신처상태','0','ProcessYN Flag','수신처상태','수신처상태','수신처상태',#tenantID#, #companyID#),
                  ('A60','A  ','도착','1','도착 (Arrived)','Arrived','到着','到达',#tenantID#, #companyID#),
                  ('A60','E  ','전송실패','1','전송 실패 (Error)','Error','送信エラー','传输失败',#tenantID#, #companyID#),
-                 ('A60','H  ','회송','1','회송 (HweSong)','Return','回送','返回',#tenantID#, #companyID#),
+                 ('A60','H  ','회송','1','회송 (HweSong)','Return','返送','返回',#tenantID#, #companyID#),
                  ('A60','I  ','접수','1','접수 (Inter..)','Reception progress','受付','收到',#tenantID#, #companyID#),
                  ('A60','N  ','대기','1','발신 대기 (Not Yet)','No receipt','待機','待机',#tenantID#, #companyID#),
                  ('A60','O  ','발송의뢰','1','발송 의뢰 (Offered)','Offered','送信依頼','发送请求',#tenantID#, #companyID#),
@@ -1523,7 +1528,7 @@
                  ('A02','022','대외접수','1','대외문서접수함','Receipt(outside)','対外受付','对外接收',#tenantID#, #companyID#),
                  ('A02','023','대외발송','1','대외문서발송함','Sending(outside)','対外送信','对外发送',#tenantID#, #companyID#),
                  ('A02','031','반송','1','반송','Rejection','差し戻し','退回',#tenantID#, #companyID#),
-                 ('A02','032','회송','1','회송','Returning','回送','退回',#tenantID#, #companyID#),
+                 ('A02','032','회송','1','회송','Returning','返送','退回',#tenantID#, #companyID#),
                  ('A03','0  ','결재방법','0','결재방법','결재방법',null,null,#tenantID#, #companyID#),
                  ('A03','001','결재','1','일반','Approval','決裁','审批',#tenantID#, #companyID#),
                  ('A03','002','확인','0','확인','Confirmation','回覧','確認',#tenantID#, #companyID#),
@@ -1555,8 +1560,8 @@
                  ('A04','011','도착','1','도착','Arrived','到着','到达',#tenantID#, #companyID#),
                  ('A04','012','지정','1','지정','Designated','未受付','未接收',#tenantID#, #companyID#),
                  ('A04','013','접수','1','접수','Received','受付','接收',#tenantID#, #companyID#),
-                 ('A04','014','배부','1','배부','Distributed','配付','发行',#tenantID#, #companyID#),
-                 ('A04','015','회송','1','회송','Returned','回送','退回',#tenantID#, #companyID#),
+                 ('A04','014','배부','1','배부','Distributed','転送','发行',#tenantID#, #companyID#),
+                 ('A04','015','회송','1','회송','Returned','返送','退回',#tenantID#, #companyID#),
                  ('A04','016','접수','1','수신진행','Received','受信進行','进行接收',#tenantID#, #companyID#),
                  ('A04','017','수신완료','1','수신완료','Completed(receipt)','受信完了','接收完成',#tenantID#, #companyID#),
                  ('A04','018','발신','1','수신부서미접수','Sending','未受付','未接收',#tenantID#, #companyID#),
@@ -1584,7 +1589,7 @@
                  ('A17','001','일반의견','1','일반의견','General','一般','一般意见',#tenantID#, #companyID#),
                  ('A17','002','반송의견','1','반송의견','Rejection','差し戻し','退回意见',#tenantID#, #companyID#),
                  ('A17','003','보류의견','1','보류의견','Holding','保留意見','保存意见',#tenantID#, #companyID#),
-                 ('A17','004','회송의견','1','회송의견','Returning','回送','退回意见',#tenantID#, #companyID#),
+                 ('A17','004','회송의견','1','회송의견','Returning','返送','退回意见',#tenantID#, #companyID#),
                  ('A17','005','지시사항','1','지시사항','지시사항','指示','说明',#tenantID#, #companyID#),
                  ('A17','006','메모','1','메모','메모','メモ','备忘录',#tenantID#, #companyID#),
                  ('A18','0  ','결재날짜순서','1','리스트ORDERBY','결재날짜순서','결재날짜순서','결재날짜순서',#tenantID#, #companyID#),
@@ -1643,9 +1648,9 @@
 			('SA02', '020',		'신청',					'Application',			'施行',		'执行',		'0',	'시행',		#companyID#,	#tenantID#),
 			('SA02', '022',		'대외문서접수',				'Receipt(outside)',		'対外受付',	'对外接收',	'0',	'대외접수',	#companyID#,	#tenantID#),
 			('SA02', '023',		'대외문서발송',				'Sending(outside)',		'対外送信',	'对外发送',	'0',	'대외발송',	#companyID#,	#tenantID#),
-			('SA02', '024',		'수신배부',				'Distributed',				'配付',		'배부_ZH',		'1',	'배부',		#companyID#,	#tenantID#),
+			('SA02', '024',		'수신배부',				'Distributed',				'転送',		'배부_ZH',		'1',	'배부',		#companyID#,	#tenantID#),
 			('SA02', '031',		'반송',					'Rejection',			'差し戻し',	'退回',		'0',	'반송',		#companyID#,	#tenantID#),
-			('SA02', '032',		'회송',					'Returning',			'回送',	'退回',		'0',	'회송',		#companyID#,	#tenantID#),
+			('SA02', '032',		'회송',					'Returning',			'返送',	'退回',		'0',	'회송',		#companyID#,	#tenantID#),
            ('SA03','0  ','결재방법','결재방법',null,null,'0','결재방법',#companyID#, #tenantID# ),
            ('SA03','001','결재','Approval','決裁','审批','1','일반',#companyID#, #tenantID# ),
            ('SA03','002','확인','Confirmation','確認','確認','1','확인',#companyID#, #tenantID# ),
@@ -1800,7 +1805,7 @@
 			('SL06', '006', '문서발송', '문서발송', '文書送信', '문서발송', '1', '결재알림시 사용', #companyID#, #tenantID#),
 			('SL06', '007', '수신문서', '수신문서', '受信文書', '수신문서', '1', '결재알림시 사용', #companyID#, #tenantID#),
 			('SL06', '008', '지정문서', '지정문서', '指定文書', '지정문서', '1', '결재알림시 사용', #companyID#, #tenantID#),
-			('SL06', '009', '회송문서', '회송문서', '回送文書', '회송문서', '1', '결재알림시 사용', #companyID#, #tenantID#),
+			('SL06', '009', '회송문서', '회송문서', '返送文書', '회송문서', '1', '결재알림시 사용', #companyID#, #tenantID#),
 			('SL06', '010', '문서회수', '문서회수', '文書引き戻し', '문서회수', '1', '결재알림시 사용', #companyID#, #tenantID#),
 			('SL06', '011', '결재노티', '결재노티', '決済完了通知', '결재노티', '1', '결재알림시 사용', #companyID#, #tenantID#),
 			('ST01', '0  ', '재기안 의견유무', '재기안 의견유무', '재기안 의견유무', '재기안 의견유무', '1', '재기안시 반송의견 삭제 유/무( Y : 삭제 or N : 삭제안함 )', #companyID#, #tenantID#),
@@ -1815,10 +1820,10 @@
             ('SA04','006','회수','Withdrew','引き戻し','回收', '1','회수',#companyID#,#tenantID#),
             ('SA04','010','완료','Completed','完了','完成','1','완료', #companyID#,#tenantID#),
             ('SA04','011','도착','Arrived','到着','到达', '1','도착',#companyID#,#tenantID#),
-            ('SA04','012','미접수','Designated','未受付','未接收', '1','지정',#companyID#,#tenantID#),
+            ('SA04','012','지정','Designated','指定','未接收', '1','지정',#companyID#,#tenantID#),
             ('SA04','013','접수','Received','受付','接收', '1','접수',#companyID#,#tenantID#),
-            ('SA04','014','배부','Distributed','配付','发行', '1','배부',#companyID#,#tenantID#),
-            ('SA04','015','회송','Returned','回送','退回','1','회송',#companyID#,#tenantID#),
+            ('SA04','014','배부','Distributed','転送','发行', '1','배부',#companyID#,#tenantID#),
+            ('SA04','015','회송','Returned','返送','退回','1','회송',#companyID#,#tenantID#),
             ('SA04','016','접수','Received','受信進行','进行接收', '1','수신진행',#companyID#,#tenantID#),
             ('SA04','017','수신완료','Completed(receipt)','受信完了','接收完成', '1','수신완료',#companyID#,#tenantID#),
             ('SA04','018','발신','Sending','未受付','未接收', '1','수신부서미접수',#companyID#,#tenantID#),
@@ -1951,11 +1956,11 @@
                ('066',1,'수신자',100,'TBL_HISTORYRECEIPTINFO','ReceiptDeptName',null,null,'수신처이력리스트','수신처','Dept.','受信者氏名','收信创建名',#tenantID#, #companyID#),
                ('066',2,'상태',80,'TBL_HISTORYRECEIPTINFO','Status',null,null,'수신처이력리스트','상태','Status','ステータス','状态',#tenantID#, #companyID#),
                ('066',3,'일자',100,'TBL_HISTORYRECEIPTINFO','StatusDate',null,null,'수신처이력리스트','일자','Date','日','日期',#tenantID#, #companyID#),
-               ('067',1,'배부번호',70,'TBL_DOCDELIVERY','sn',null,null,'배부대장리스트','배부번호','SN','配付番号','分配數量',#tenantID#, #companyID#),
+               ('067',1,'배부번호',70,'TBL_DOCDELIVERY','sn',null,null,'배부대장리스트','배부번호','SN','転送番号','分配數量',#tenantID#, #companyID#),
                ('067',2,'문서번호',120,'TBL_DOCDELIVERY','DocNumber',null,null,'배부대장리스트','문서번호','Doc. No.','登録番号','註冊號',#tenantID#, #companyID#),
                ('067',3,'제목',200,'TBL_DOCDELIVERY','DocTitle',null,null,'배부대장리스트','제목','Title','タイトル','标题',#tenantID#, #companyID#),
-               ('067',4,'배부일자',130,'TBL_DOCDELIVERY','ReceiptDate',null,null,'배부대장리스트','배부일자','ReceiptDate','配付日時','分派日期',#tenantID#, #companyID#),
-               ('067',5,'배부과',80,'TBL_DOCDELIVERY','Organ',null,null,'배부대장리스트','배부과','Organ','配付課','分佈及',#tenantID#, #companyID#),
+               ('067',4,'배부일자',130,'TBL_DOCDELIVERY','ReceiptDate',null,null,'배부대장리스트','배부일자','ReceiptDate','転送日時','分派日期',#tenantID#, #companyID#),
+               ('067',5,'배부과',80,'TBL_DOCDELIVERY','Organ',null,null,'배부대장리스트','배부과','Organ','転送課','分佈及',#tenantID#, #companyID#),
                ('067',6,'처리과',80,'TBL_DOCDELIVERY','ManageDept',null,null,'배부대장리스트','처리과','Manage Dept.','処理課','加工',#tenantID#, #companyID#),
                ('067',7,'인수자',80,'TBL_DOCDELIVERY','ChargeName',null,null,'배부대장리스트','인수자','Charge Name','引受者','引受者',#tenantID#, #companyID#),
                ('081',1,'제목',300,'TBL_APRDOCINFO','DocTitle',null,null,'관리자 진행문서','제목','Title','タイトル','标题',#tenantID#, #companyID#),
@@ -2138,14 +2143,13 @@
                  (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) 
           VALUES
                  ('S001', 1, '제목', 'Title', 'タイトル', '标题', 300, 'VAPRDOINGDOCLIST', 'DocTitle', NULL, NULL, '결재할 문서', '제목', #companyID#, #tenantID#),
-                 ('S001', 2, '회사', 'Company', '会社', '公司', 135, 'VAPRDOINGDOCLIST', 'companyName', NULL, NULL, '결재할 문서', '회사', #companyID#, #tenantID#),
-                 ('S001', 3, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 135, 'VAPRDOINGDOCLIST', 'WriterDeptName', NULL, NULL, '결재할 문서', '기안부서', #companyID#, #tenantID#),
-                 ('S001', 4, '기안자', 'Drafter', '起案者', '起草人', 70, 'VAPRDOINGDOCLIST', 'WriterName', NULL, NULL, '결재할 문서', '기안자', #companyID#, #tenantID#),
-                 ('S001', 5, '기안일시', 'Date(draft)', '起案日時', '起草日期', 160, 'VAPRDOINGDOCLIST', 'StartDate', NULL, NULL, '결재할 문서', '기안일시', #companyID#, #tenantID#),
-                 ('S001', 6, '상태', 'Status', 'ステータス', '状态', 50, 'VAPRDOINGDOCLIST', 'FunctionTypeName', NULL, NULL, '결재할 문서', '상태', #companyID#, #tenantID#),
-                 ('S001', 7, '문서명', 'Form title', '文書名', '文件名', 100, 'VAPRDOINGDOCLIST', 'FormName', NULL, NULL, '결재할 문서', '양식명', #companyID#, #tenantID#),
-                 ('S001', 8, '첨부', 'Attach', '添付', '附件', 50, 'VAPRDOINGDOCLIST', 'HASATTACHYN', NULL, NULL, '결재할 문서', '첨부', #companyID#, #tenantID#),
-                 ('S001', 9, '공개', 'Public', '公開', '公开', 50, 'VAPRDOINGDOCLIST', 'ISPUBLIC', NULL, NULL, '결재할 문서', '공개', #companyID#, #tenantID#),
+                 ('S001', 2, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 135, 'VAPRDOINGDOCLIST', 'WriterDeptName', NULL, NULL, '결재할 문서', '기안부서', #companyID#, #tenantID#),
+                 ('S001', 3, '기안자', 'Drafter', '起案者', '起草人', 70, 'VAPRDOINGDOCLIST', 'WriterName', NULL, NULL, '결재할 문서', '기안자', #companyID#, #tenantID#),
+                 ('S001', 4, '수신일자', 'ProcessDate', '到着日付', '接收日', 160, 'VAPRDOINGDOCLIST', 'StartDate', NULL, NULL, '결재할 문서', '기안일시', #companyID#, #tenantID#),
+                 ('S001', 5, '상태', 'Status', 'ステータス', '状态', 50, 'VAPRDOINGDOCLIST', 'FunctionType', NULL, NULL, '결재할 문서', '상태', #companyID#, #tenantID#),
+                 ('S001', 6, '문서명', 'Form title', '文書名', '文件名', 100, 'VAPRDOINGDOCLIST', 'FormName', NULL, NULL, '결재할 문서', '양식명', #companyID#, #tenantID#),
+                 ('S001', 7, '첨부', 'Attach', '添付', '附件', 50, 'VAPRDOINGDOCLIST', 'HASATTACHYN', NULL, NULL, '결재할 문서', '첨부', #companyID#, #tenantID#),
+                 ('S001', 8, '공개', 'Public', '公開', '公开', 50, 'VAPRDOINGDOCLIST', 'ISPUBLIC', NULL, NULL, '결재할 문서', '공개', #companyID#, #tenantID#),
                  ('S002', 1, '제목', 'Title', 'タイトル', '标题', 300, 'VAPRWILLDOCLIST', 'DocTitle', NULL, NULL, '기안한 문서', '제목', #companyID#, #tenantID#),
                  ('S002', 2, '회사', 'Company', '会社', '公司', 135, 'VAPRWILLDOCLIST', 'companyName', NULL, NULL, '기안한 문서', '회사', #companyID#, #tenantID#),
                  ('S002', 3, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 135, 'VAPRWILLDOCLIST', 'WriterDeptName', NULL, NULL, '기안한 문서', '기안부서', #companyID#, #tenantID#),
@@ -2508,7 +2512,7 @@
                    ('P07',6,'제목',200,null,null,'DocTitle','Default',null,null,'Title','タイトル','标题',#tenantID#, #companyID#),
                    ('P07',7,'받은 처리과코드',120,null,null,'ManageDeptID','Default',null,null,'ManageDeptID','された処理とコード','接受治疗和代码',#tenantID#, #companyID#),
                    ('P07',8,'받은 처리과명',150,null,null,'ManageDept','Default',null,null,'ManageDept','された処理科名','而接受治疗名',#tenantID#, #companyID#),
-                   ('P07',9,'배부일자',120,null,null,'DeliveryD','Default',null,null,'ReceiptDate','配付日時','分派日期',#tenantID#, #companyID#),
+                   ('P07',9,'배부일자',120,null,null,'DeliveryD','Default',null,null,'ReceiptDate','転送日時','分派日期',#tenantID#, #companyID#),
                    ('P07',10,'인수자',120,null,null,'ChargeName','Default',null,null,'Charge Name','引受者','引受者',#tenantID#, #companyID#),
                    ('001',1,'순번',40,null,null,'dtSerialNum','dtSerialNum','기록물 대장',null,'No.','順番','序号',#tenantID#, #companyID#),
                    ('001',2,'등록구분',120,'TBL_SEPERATEATTACH','TBL_SEPERATEATTACH.RegisterType','RegisterType','dtRegisterType','기록물 대장',null,'RegisterType','登録区分','招生区分',#tenantID#, #companyID#),
@@ -4509,7 +4513,21 @@
 				EXTENSIONATTRIBUTE15 >= #v_EXTATTR15#
 		]]>
 	</update>
- 	 
+	
+	<select id="EzOrganAdminDAO.getDeptAddJobUserList" parameterClass="Map" resultMap="userExt4List">
+		<![CDATA[
+			SELECT
+				CN,
+				EXTENSIONATTRIBUTE4
+			FROM
+				TBL_USERMASTER
+			WHERE
+				(EXTENSIONATTRIBUTE4 LIKE CONCAT(#v_DEPTID#, ':%') OR EXTENSIONATTRIBUTE4 LIKE CONCAT('%;', #v_DEPTID#, ':%'))
+			AND
+				TENANT_ID = #v_TENANT_ID#
+		]]>
+	</select>
+	
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}
      </procedure>

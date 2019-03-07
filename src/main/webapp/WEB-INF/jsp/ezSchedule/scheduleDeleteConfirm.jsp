@@ -28,17 +28,17 @@
 		    
 		    function Schedule_Confirm(id) {
 		    	if (confirm("<spring:message code='ezSchedule.t209' />")) {
+			        var ResourceDel = "FALSE";
 			        if (radio1.checked) {
 			            optionStr[0] = "0";
 			        } else {
 			            optionStr[0] = "1";
+				        /* 2018-12-17 김민성 - 부모창에서 confirm창 뜨도록 변경 */
+			            if (ResourceInfo != "0") {
+			                confirm("<spring:message code='ezSchedule.t1300' />") ? ResourceDel = "TRUE" : ResourceDel = "FALSE";
+			            }
 			        }
 			        
-			        /* 2018-12-17 김민성 - 부모창에서 confirm창 뜨도록 변경 */
-			        var ResourceDel = "FALSE";
-		            if (ResourceInfo != "0") {
-		                confirm("<spring:message code='ezSchedule.t1300' />") ? ResourceDel = "TRUE" : ResourceDel = "FALSE";
-		            }
 		            
 		            optionStr[1] = ResourceDel; 
 			        

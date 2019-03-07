@@ -540,12 +540,18 @@
 		 }
 		 
 		function reload() {
-			
+			var SDate = new Date();
+	        var EDate = new Date();
+	        $("#startDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $("#endDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+	        $("#startDatepicker").datepicker('setDate', SDate);
+	        $("#endDatepicker").datepicker('setDate', EDate);
+			$("#startDatepicker").datepicker('disable');
+	        $("#endDatepicker").datepicker('disable');
+	        
 			$(":checkbox[id=usedate]").prop("checked", false);
 			usedate = false;
 			$("#checkboxAll").prop("checked", false);
-			$("#startDatepicker").datepicker('disable');
-	        $("#endDatepicker").datepicker('disable');
 	        
 	        $("#DocNumber").val("");
 			$("#DocTitle").val("");
@@ -656,7 +662,7 @@
 	        var approval_admin_popup_choicedept_dialogArguments = new Array();
 	        
 	        function bt_OK_onclick() {
-	        	
+	        	if (document.getElementsByName("SDeptName")[0].value != "") {
 	        	 if (CrossYN()) {
 	        		 	approval_admin_popup_choicedept_dialogArguments[0] = "one";
 		                approval_admin_popup_choicedept_dialogArguments[1] = bt_OK_onclick_Complete;
@@ -670,6 +676,7 @@
 		                    window.location.reload(false);
 		                }
 		            }
+	        	}
 			}
 	        
 	        function bt_OK_onclick_Complete(retVal) { 
@@ -693,7 +700,7 @@
 			        }
 			        $("#checkboxAll").prop("checked", false);
 	        	} else {
-		            alert("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1676'/>");
+		            alert("<spring:message code='ezApprovalG.t1676'/>");
 	        		strMoveListIDInfo = "";
 					selectelem = null;
 					$("#checkboxAll").prop("checked", false);
@@ -703,7 +710,7 @@
 	        }
 	        
 	        function bt_All_onclick() {
-				
+	        	if (document.getElementsByName("SDeptName")[0].value != "") {
 	        	 if (CrossYN()) {
 	        		 	approval_admin_popup_choicedept_dialogArguments[0] = "all";
 		                approval_admin_popup_choicedept_dialogArguments[1] = bt_All_onclick_Complete;
@@ -717,6 +724,7 @@
 		                    window.location.reload(false);
 		                }
 		            }
+	        	}
 	        }
 	        
 	        function bt_All_onclick_Complete(retVal) {
@@ -725,7 +733,7 @@
 				if(popupselTContName!=undefined && popupselTContName != "" ) {
 				if (popupselTContName == null || popupselTContName == '' 
 	        			|| $("select[name=selSContName]").val() == null || $("select[name=selSContName]").val() == '') {
-	                alert("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1676'/>");
+	                alert("<spring:message code='ezApprovalG.t1676'/>");
 	                
 	        	}
 				else {
@@ -737,7 +745,7 @@
 				}
 				        
 	        } else {
-	            alert("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1676'/>");
+	            alert("<spring:message code='ezApprovalG.t1676'/>");
         		strMoveListIDInfo = "";
 				selectelem = null;
 				$(":checkbox[name=myCheckbox]").prop("checked", false);
@@ -822,11 +830,28 @@
 			    document.getElementById("mailPanel").style.display = "none";
 			    document.getElementById("MailProgress").style.display = "none";
 			}
+			function keyword_Clear() {
+		        document.getElementsByName('drafterdept')[0].value = "";
+		        document.getElementsByName('drafterdept')[0].id = "";
+		        getDocListjson(1);
+		    }
+			function all_keyword_Clear() {
+		        document.getElementsByName('SDeptName')[0].value = "";
+		        document.getElementsByName('SDeptName')[0].id = "";
+		        document.getElementsByName('drafterdept')[0].value = "";
+		        document.getElementsByName('drafterdept')[0].id = "";
+		        $("select[name=selSContName]").val("");
+		        ScontID = "";
+		        totalCount = "";
+		        $('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
+		        makePageSelPage();
+		    }
 	    </script>
 	</head>
 	
 	<body class="mainbody" onLoad="javascript:window_onload()">
 		<h1><spring:message code='ezApprovalG.t1678'/><span id="listInfo"></span></h1>
+		<span style="float:right; margin-top: -20px;"><spring:message code='ezApproval.psb01'/></span>
 		<input type="hidden" id="ListCompany" value="${userInfo.companyID }" >
 		<!-- 2018-08-02 김보미 - 검색테이블 ui 수정 -->	
 		<!-- <table style="width:100%;">		
@@ -916,7 +941,7 @@
 							<spring:message code='ezApprovalG.kes04'/>  
 						</td>
 						<td style="width:17%;">
-							<input type="text" id="" name="SDeptName" style="width: 72%; height: 23px;" readonly="readonly" />
+							<input type="text" id="" name="SDeptName" style="width: 72%; height: 23px;" readonly="readonly" onmousedown="all_keyword_Clear()"/>
 			 	            <a class="imgbtn" name="SDeptSelect"><span onclick="bt_SDeptSelect_onclick()"><spring:message code='ezApprovalG.t105'/></span></a>
 						</td>
 						<td style="width:6%;">
@@ -943,7 +968,7 @@
 							<spring:message code='ezApproval.t437'/>
 						</td>
 						<td>
-							<input type="text" id="" name="drafterdept" style="width: 72%; height: 23px;" maxlength="50" readonly="readonly"/>
+							<input type="text" id="" name="drafterdept" style="width: 72%; height: 23px;" maxlength="50" readonly="readonly" onmousedown="keyword_Clear()"/>
 							<a class="imgbtn" name="TDeptSelect"><span id = "spandept" onclick="bt_TDeptSelect_onclick(this)"><spring:message code='ezApprovalG.t105'/></span></a>
 						</td>
 						<td>
