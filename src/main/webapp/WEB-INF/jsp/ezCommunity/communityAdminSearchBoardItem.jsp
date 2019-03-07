@@ -541,11 +541,11 @@
 			function SelectBoard() {
 			    if (CrossYN()) {
 			        boardselect_dialogArguments[1] = SelectBoard_Complete;
-			        var OpenWin = GetOpenWindow("/ezCommunity/boardSelect.do?code=" + code, "BoardSelect", 340, 656);
+			        var OpenWin = GetOpenWindow("/ezCommunity/boardSelect.do?code=" + code, "BoardSelect", 355, 600);
 			        try { OpenWin.focus(); } catch (e) { }
 			    } else {
-			        var feature = "DialogHeight:656px;DialogWidth:340px;scroll:no;status:no;help:no;edge:sunken";
-			        feature = feature + GetShowModalPosition(340, 656);
+			        var feature = "DialogHeight:600px;DialogWidth:355px;scroll:no;status:no;help:no;edge:sunken";
+			        feature = feature + GetShowModalPosition(355, 600);
 			        var ret = window.showModalDialog("/ezCommunity/boardSelect.do?code=" + code, "", feature);
 			        
 			        if (typeof (ret) != "undefined") {

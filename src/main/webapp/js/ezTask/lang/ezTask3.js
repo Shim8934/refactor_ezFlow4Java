@@ -70,3 +70,4 @@ var strLang70	=	"機関の指定が正しくありません。";
 var strLang71 = "期間";
 var strLang72 = "終了日を指定しない";
 var strLang73 = "保存";
+var strLang47 = "回";

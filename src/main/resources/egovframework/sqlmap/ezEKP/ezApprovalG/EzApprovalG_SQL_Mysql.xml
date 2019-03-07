@@ -8738,11 +8738,11 @@
 							   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="7">
 							   			<isEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
 							   				ORDER BY 
-							   						$v_ORDEROPTION$
+							   						$v_ORDEROPTION$ , DOCNO DESC
 							   			</isEqual>
 							   			<isNotEqual property="v_ORDEROPTIONVALUE"  compareValue="enddate">
 							   	 			ORDER BY
-							   	 			 		$v_ORDEROPTION$ , ENDDATE DESC
+							   	 			 		$v_ORDEROPTION$, ENDDATE DESC
 							   			</isNotEqual>
 							   		</isGreaterEqual>
 							   		<isLessThan  property="v_ORDEROPTIONLENGTH" compareValue="7">
@@ -8752,7 +8752,7 @@
 							   	</isNotEmpty>
 							   	<isEmpty property="v_ORDEROPTION">
 							   		ORDER BY 
-							   				ENDDATE DESC
+							   				ENDDATE DESC  , DOCNO DESC
 							   	</isEmpty>
 								<isNotEqual property="alFlag" compareValue="1">
 							   	LIMIT #v_PAGESIZE#
@@ -8769,7 +8769,7 @@
 				<isGreaterEqual property="v_ORDEROPTIONLENGTH2" compareValue="7">
 				<isEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
 					 ORDER BY 
-					 		$v_ORDEROPTION2$
+					 		$v_ORDEROPTION2$  , DOCNO
 				</isEqual>
 				<isNotEqual property="v_ORDEROPTIONVALUE2" compareValue="enddate">
 					 ORDER BY 
@@ -8778,12 +8778,12 @@
 				</isGreaterEqual>
 				<isLessThan property="v_ORDEROPTIONLENGTH2" compareValue="7">
 					ORDER BY 
-							$v_ORDEROPTION2$, ENDDATE
+							$v_ORDEROPTION2$ , ENDDATE
 				</isLessThan>
 				</isNotEmpty>
 				<isEmpty property="v_ORDEROPTION2">
 				 ORDER BY 
-				 		ENDDATE
+				 		ENDDATE  , DOCNO
 				</isEmpty>
 	</select>
 	
@@ -13898,6 +13898,8 @@
      	    TBL_APRDOCINFO.COMPANYID = #companyID#
      AND 
      		FUNCTIONTYPE <> '004' 
+     AND 
+     		FUNCTIONTYPE <> '011' 
      AND 
      		APRSTATE = '002' 
     ]]>
@@ -25133,42 +25135,42 @@
    		 	$v_PSUBQUERY$
    		</isGreaterThan>
    		<isGreaterThan property="v_ORDEROPTIONLENGTH" compareValue="0">
-   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="8">
-   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="linkdate">
-   			ORDER BY 
-   				$v_ORDEROPTION$ 
-   		</isEqual>
-   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="linkdate">
-   		ORDER BY 
-   			$v_ORDEROPTION$, LINKDATE DESC 
-   		</isNotEqual>
-   		</isGreaterEqual>
-   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="8">
-   		ORDER BY  
-   			$v_ORDEROPTION$ , LINKDATE DESC
-   		</isLessThan>
+	   		<isGreaterEqual property="v_ORDEROPTIONLENGTH" compareValue="8">
+		   		<isEqual property="v_ORDEROPTIONVALUE" compareValue="linkdate">
+		   			ORDER BY 
+		   				$v_ORDEROPTION$ 
+		   		</isEqual>
+		   		<isNotEqual property="v_ORDEROPTIONVALUE" compareValue="linkdate">
+			   		ORDER BY 
+			   			$v_ORDEROPTION$, LINKDATE DESC 
+		   		</isNotEqual>
+	   		</isGreaterEqual>
+	   		<isLessThan property="v_ORDEROPTIONLENGTH" compareValue="8">
+		   		ORDER BY  
+		   			$v_ORDEROPTION$ , LINKDATE DESC
+	   		</isLessThan>
    		</isGreaterThan>
    		<isLessEqual property="v_ORDEROPTIONLENGTH" compareValue="0">
-   		ORDER BY LINKDATE DESC 
+   			ORDER BY LINKDATE DESC 
    		</isLessEqual>
    			LIMIT #v_PQUERYSIZESUB#, #v_PLISTCOUNT#
    		) A 
          
       	<isGreaterThan property="v_ORDEROPTIONLENGTH2" compareValue="0">
-   		<isGreaterEqual property="v_ORDEROPTIONLENGTH2" compareValue="8">
-   		<isEqual property="v_ORDEROPTIONVALUE2" compareValue="linkdate">
-   			ORDER BY $v_ORDEROPTION2$
-   		</isEqual>
-   		<isNotEqual property="v_ORDEROPTIONVALUE2" compareValue="linkdate">
-   		ORDER BY $v_ORDEROPTION2$, LINKDATE
-   		</isNotEqual>
-   		</isGreaterEqual>
-   		<isLessThan property="v_ORDEROPTIONLENGTH2" compareValue="8">
-   		ORDER BY $v_ORDEROPTION2$, LINKDATE
-   		</isLessThan>
+	   		<isGreaterEqual property="v_ORDEROPTIONLENGTH2" compareValue="8">
+		   		<isEqual property="v_ORDEROPTIONVALUE2" compareValue="linkdate">
+		   			ORDER BY $v_ORDEROPTION2$
+		   		</isEqual>
+		   		<isNotEqual property="v_ORDEROPTIONVALUE2" compareValue="linkdate">
+		   			ORDER BY $v_ORDEROPTION2$, LINKDATE
+		   		</isNotEqual>
+	   		</isGreaterEqual>
+	   		<isLessThan property="v_ORDEROPTIONLENGTH2" compareValue="8">
+	   			ORDER BY $v_ORDEROPTION2$, LINKDATE
+	   		</isLessThan>
    		</isGreaterThan>
    		<isLessEqual property="v_ORDEROPTIONLENGTH2" compareValue="0">
-   		ORDER BY LINKDATE DESC
+   			ORDER BY LINKDATE
    		</isLessEqual>
    	</select>
    	
@@ -25267,7 +25269,7 @@
    		</isLessThan>
    		</isGreaterThan>
    		<isLessEqual property="v_ORDEROPTIONLENGTH2" compareValue="0">
-   		ORDER BY LINKDATE DESC
+   		ORDER BY LINKDATE
    		</isLessEqual>
    	</select>
    	
@@ -28295,6 +28297,22 @@
     	AND
     		TENANT_ID = #v_TENANTID#
     </select>
+    
+   	 <select id="EzApprovalG.getTmpDocHref" parameterClass="Map" resultClass="String">
+    	SELECT
+    		HREF
+    	FROM
+    		TBL_TMPAPRDOCINFO
+    	WHERE
+    		sn = #tmpSN#
+   		AND
+    		COMPANYID = #companyID#
+    	AND
+    		TENANT_ID = #tenantId#
+    	AND
+    		OWNERID = #id#
+    </select>
+    
     <insert id="EzApprovalG.insertHesongOpinion" parameterClass="Map">
     	INSERT INTO
     		TBL_ENDAPROPINIONINFO
@@ -28302,4 +28320,27 @@
     		VALUES
     			(#v_ORGDOCID#, #v_USERID#, #v_OPINIONGB#, #v_CONTENT#, #v_USERNAME#, #v_USERNAME2#, #v_USERJOBTITLE#, #v_USERJOBTITLE2#, #v_USERDEPTID#, #v_USERDEPTNAME#, #v_USERDEPTNAME2# , #v_ORGOPINIONSN#, #v_TENANTID#, #companyID#)
     </insert>
+    
+   	 <select id="EzApprovalG.getTmpHref" parameterClass="Map" resultClass="String">
+        SELECT
+            href
+        FROM
+            tbl_tmpaprdocinfo
+        WHERE
+            ownerid = #v_PUSERID#
+            AND   sn		= #v_PSN#
+            AND   tenant_id = #v_TENANTID#
+            AND   companyid = #companyID#
+    </select>
+    
+	 <select id="EzApprovalG.getTmpDocList" parameterClass="Map" resultClass="String">
+		SELECT
+			DOCID
+		FROM
+			TBL_APRDOCINFO
+		WHERE
+			HREF = #href#
+		AND   tenant_id = #v_TENANTID#
+        AND   companyid = #companyID#
+    </select>
 </sqlMap>

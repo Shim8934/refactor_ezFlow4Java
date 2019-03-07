@@ -1323,6 +1323,16 @@ function config_repeat_resource() {
 		} 	   
 	}
     
+    // 2019-03-06 김민성 - 일정등록 > 자원 반복예약 수정시 자원 예약 정보 가져오도록
+    if(g_data["recurrence"] != null) {
+    	var xmlinDoc = null;
+    	xmlinDoc = createXmlDom();
+    	xmlinDoc = loadXMLString(g_data["recurrence"]);
+
+    	g_data["startTime"] = getNodeText(SelectNodes(xmlinDoc, "recurrence/startDateTime")[0]);
+    	g_data["endTime"] = getNodeText(SelectNodes(xmlinDoc, "recurrence/endDateTime")[0]);
+    }
+    
     g_data["ftDay"] = "";
 
     var pAlldaycheck = "";

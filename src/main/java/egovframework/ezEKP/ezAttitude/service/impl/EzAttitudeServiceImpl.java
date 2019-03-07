@@ -1365,17 +1365,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[0].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1384,17 +1388,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[1].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1403,17 +1411,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[2].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1422,17 +1434,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[3].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1441,17 +1457,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[4].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1460,17 +1480,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[5].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1479,17 +1503,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[6].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
