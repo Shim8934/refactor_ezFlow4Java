@@ -2058,7 +2058,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		if (pageID == null || pageID.equals("")) {
 			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
 				String menuLang = xmlDom.getElementsByTagName("LANG").item(i).getTextContent();
-				if (userInfo.getLang().equals(menuLang)) {
+				String useFlag = xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent();
+				
+				if (userInfo.getLang().equals(menuLang) && useFlag.equals("Y")) {
 					pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
 				}
 			}

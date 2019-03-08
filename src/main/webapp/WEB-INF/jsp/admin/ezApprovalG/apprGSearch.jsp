@@ -69,7 +69,13 @@
 		            autoSize: true,
 		            showOn: "both",
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-		            buttonImageOnly: true
+		            buttonImageOnly: true,
+		            beforeShow: function(input) {
+		    		    var i_offset= $(input).offset();
+		    		    setTimeout(function(){
+		    		       $('#ui-datepicker-div').css({'left': i_offset.left + 85});
+		    		    })
+		    		} 
 		        });
 				
 		        $("#Edatepicker").datepicker({
@@ -78,7 +84,13 @@
 		            autoSize: true,
 		            showOn: "both",
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-		            buttonImageOnly: true
+		            buttonImageOnly: true,
+		            beforeShow: function(input) {
+		    		    var i_offset= $(input).offset();
+		    		    setTimeout(function(){
+		    		       $('#ui-datepicker-div').css({'left': i_offset.left + 85});
+		    		    })
+		    		} 
 		        });
 
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
