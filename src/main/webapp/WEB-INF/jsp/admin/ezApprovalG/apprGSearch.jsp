@@ -14,7 +14,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
-		
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
 	        var xmldoc = createXmlDom();
@@ -60,6 +59,7 @@
 	            	$(".approvalS").hide();
 	            }
 	            
+	            setAutoCompleteOff(); //#15157 자동완성 방지 메소드 추가
 	        });
 	
 	        function initdatepicker() {
@@ -705,6 +705,14 @@
 		        
 		        RtnVal[1] = new Date(nowYear, nowMonth, nowDay);
 		        return RtnVal;
+		    }
+		    
+		  	//#15157 자동완성 방지 메소드 추가
+		    function setAutoCompleteOff() {
+		    	var inputAry = document.getElementsByTagName("input");
+		    	for (var i = 0; i < inputAry.length; i++) {
+		    		inputAry[i].setAttribute("autocomplete", "off");
+		    	}
 		    }
 		</script>
 	</head>
