@@ -190,7 +190,7 @@
 		        	parent.frames["left"].groupRefresh();
 		    }
 					
-		    function del_group() {		
+		    function del_group() {
 		    	var strListInfo = "";
 		    	var checkId = $("input[name=chk_group]:checked");
 		    	
@@ -211,9 +211,9 @@
 		        }
 		
 		        var count = strListInfo.split(';').length - 1;
-		
+		        */
 		        if (!confirm(count + "<spring:message code='ezSchedule.t254' />"))
-		            return; */
+		            return; 
 
 		        $.ajax({
 		    		type : "POST",

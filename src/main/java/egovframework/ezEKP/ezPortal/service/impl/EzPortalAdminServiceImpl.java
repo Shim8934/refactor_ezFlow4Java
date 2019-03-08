@@ -2538,24 +2538,39 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
-	public String getBeforeUsedPage(String uID, String companyID, int tenantId) {
+	public List<String> getBeforeUsedPage(String uID, String companyID, int tenantId) {
 		logger.debug("getBeforeUsedPage started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("uID", uID);
 		map.put("companyID", companyID);
 		map.put("tenantId", tenantId);
 		
-		String beforeUsedPage = ezPortalAdminDAO.getBeforeUsedPage(map);
+		List<String> beforeUsedPage = ezPortalAdminDAO.getBeforeUsedPage(map);
 		
 		logger.debug("getBeforeUsedPage ended");
 		return beforeUsedPage;
 	}
 	
 	@Override
-	public void updateNotUsePage(String uID, String companyID, int tenantId) {
+	public String getThemeUID(String uID, String companyID, int tenantId) {
+		logger.debug("getThemeUID started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("uID", uID);
+		map.put("companyID", companyID);
+		map.put("tenantId", tenantId);
+		
+		String getThemeUID = ezPortalAdminDAO.getThemeUID(map);
+		
+		logger.debug("getThemeUID ended");
+		return getThemeUID;
+	}
+	
+	@Override
+	public void updateNotUsePage(String uID, String themeUID, String companyID, int tenantId) {
 		logger.debug("updateNotUsePage started");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("uID", uID);
+		map.put("themeUID", themeUID);
 		map.put("companyID", companyID);
 		map.put("tenantId", tenantId);
 		
@@ -2563,4 +2578,5 @@ public class EzPortalAdminServiceImpl extends EgovAbstractServiceImpl implements
 		
 		logger.debug("updateNotUsePage ended");
 	}
+
 }
