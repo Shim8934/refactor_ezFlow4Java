@@ -677,8 +677,8 @@
 	
 		    function SelectBoard() {
 		        var url	= "/ezCommunity/boardSelect.do";
-		        var feature = "status:no;dialogWidth:340px;dialogHeight:656px;help:no;scroll:no;edge:sunken";
-		        feature = feature + GetShowModalPosition(340, 656);
+		        var feature = "status:no;dialogWidth:355px;dialogHeight:600px;help:no;scroll:no;edge:sunken";
+		        feature = feature + GetShowModalPosition(355, 600);
 		        var ret = window.showModalDialog(url, "", feature);	
 							
 		        if (typeof(ret) == "undefined") {

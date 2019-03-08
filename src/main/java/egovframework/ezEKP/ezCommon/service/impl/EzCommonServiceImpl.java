@@ -1546,4 +1546,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addTblPortalThemeUserIsDefault() throws Exception {
 		ezCommonDAO.addTblPortalThemeUserIsDefault();
 	}
+	
+	@Override
+	public void updateListOptionData() throws Exception {
+		ezCommonDAO.updateListOptionData();
+	}
 }
