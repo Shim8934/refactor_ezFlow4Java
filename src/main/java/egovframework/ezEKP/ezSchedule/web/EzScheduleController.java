@@ -34,18 +34,14 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.util.MapTimeZoneCache;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -66,7 +62,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.ibm.icu.util.Calendar;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -894,8 +889,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		    	try {
 		    		String resultCode = "";
 		    		String serverFlag = "dotNet";
-		    		//String serverDomain = config.getProperty("");
-		    		String serverDomain = "http://dev.mail.kttelecop.co.kr";
+		    		String serverDomain = config.getProperty("dotNetUrl");
 		    		
 					String groupMemberIdParam = "userId=" + URLEncoder.encode(memberId, "UTF-8");
 					String mainTypeParam = "type=" + URLEncoder.encode("schedule", "UTF-8");
