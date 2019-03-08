@@ -587,7 +587,10 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
 		}
-		
+		//uID의 언어로 현재 사용중인 uID불러오기 (+++테마 uid도 추가 필요)
+		String beforeUsedPage = ezPortalAdminService.getBeforeUsedPage(uID, userInfo.getCompanyID(), userInfo.getTenantId());
+		//기존에 사용중인 uID는 사용하지 않도록 변경
+		ezPortalAdminService.updateNotUsePage(beforeUsedPage, userInfo.getCompanyID(), userInfo.getTenantId());
 		ezPortalAdminService.topSetUsePage2(uID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("useTopPage ended");

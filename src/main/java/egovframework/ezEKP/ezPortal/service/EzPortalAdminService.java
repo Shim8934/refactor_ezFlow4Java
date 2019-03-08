@@ -127,5 +127,9 @@ public interface EzPortalAdminService {
 	public void updateSubMenuItemSetOrder (int columnPos, String uID, String ownerPageID, int tenantID) throws Exception;
 	
 	public void removeSubMenuItem (String uID, String parentUID, String pageID, int tenantID) throws Exception;
+
+	public String getBeforeUsedPage(String uID, String companyID, int tenantId);
+
+	public void updateNotUsePage(String uID, String companyID, int tenantId);
 	
 }
