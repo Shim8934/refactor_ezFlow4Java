@@ -1850,7 +1850,7 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 				
 				/*----------------------*/									
 				vo.setTotalRep(count);	
-				//vo.setEndDate(newEndDate);
+				vo.setEndDate(newEndDate);
 			} else {
 				
 				String endD = vo.getEndDate();
