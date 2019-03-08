@@ -30,6 +30,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -118,8 +119,10 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGWebPartVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGgetDeptStacticsVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprUserContInfoVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -161,6 +164,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Resource(name = "EzApprovalGKlibService")
 	private EzApprovalGKlibService ezApprovalGKlibService;
+	
+	@Resource(name = "EzPersonalService")
+	private EzPersonalService ezPersonalService;
+	
+	@Resource(name = "EzEmailService")
+	private EzEmailService ezEmailService;
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzApprovalGServiceImpl.class);
 	
@@ -27901,5 +27910,105 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		ezApprovalGDAO.setHesongCabinetID(map);
 		logger.debug("setHesongCabinetID ended");
+	}
+	
+	@Override
+	public String sendMailToNextAprMember(String docID, HttpServletRequest request, String loginCookie, LoginVO userInfo, String orgCompanyID, int tenantID) throws Exception {
+		logger.debug("sendMailToNextAprMember started.");
+		//결재완료, 결재문서도착, 수신문서도착(미구현), 수신부서결재완료(미구현)
+		String result = "";
+		String mode = "APR";
+		String docInfo = getDocInfo(docID, mode, "ALL", userInfo, orgCompanyID, userInfo.getTenantId(), "", "");
+		
+		if (docInfo.equals("<DATA></DATA>")) {
+			mode = "END";
+			docInfo = getDocInfo(docID, mode, "ALL", userInfo, orgCompanyID, userInfo.getTenantId(), "", "");
+		}
+		
+		Document xmlDom = commonUtil.convertStringToDocument(docInfo);
+		String formID = xmlDom.getElementsByTagName("FORMID").item(0).getTextContent();
+		String aprLineInfo = getAprLineInfo(docID, userInfo.getId(), formID, orgCompanyID, userInfo.getLang(), tenantID, userInfo.getOffset(), "", "", "", mode);
+		
+		String targetUserID = "";
+		String targetUserName = "";
+		String targetUserEmail = "";
+		String targetUserDeptID = "";
+		String targetUserCompanyID = "";
+		if (mode.equals("APR")) {
+			Document xmlDom2 = commonUtil.convertStringToDocument(aprLineInfo);
+			int lineCnt = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().getLength();
+			
+			for (int k = 0; k < lineCnt; k++) {
+				String aprState = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(12).getTextContent();
+				if (aprState.equals("002")) {
+					targetUserID = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(4).getTextContent();
+					targetUserName = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(13).getTextContent();
+					targetUserDeptID = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(6).getTextContent();
+					targetUserCompanyID = xmlDom2.getElementsByTagName("ROWS").item(0).getChildNodes().item(k).getChildNodes().item(0).getChildNodes().item(10).getTextContent();
+					break;
+				}
+			}
+		} else {
+			targetUserID = xmlDom.getElementsByTagName("WRITERID").item(0).getTextContent();
+			targetUserName = xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent();
+		}
+		
+		targetUserEmail = ezOrganService.getPropertyValue(targetUserID, "mail", tenantID);
+		
+		logger.debug("target : " + targetUserID + "/" + targetUserName + "/" + targetUserEmail);
+		
+		InternetAddress from = new InternetAddress();
+		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+		from.setAddress(userInfo.getEmail());
+		
+		InternetAddress to = new InternetAddress();
+		to.setPersonal(targetUserName, "UTF-8");
+		to.setAddress(targetUserEmail);
+		
+    	String Subject = "";
+    	StringBuffer bodyContent = new StringBuffer();
+    	
+    	bodyContent.append("<DIV id=\"msgBody\" style=\"font-size: 13px; font-family: " + messageSource.getMessage("main.t246", userInfo.getLocale()) + ";\" name=\"urn:schemas:httpmail:textdescription\">");
+    	bodyContent.append("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
+    	
+    	if (mode.equals("APR")) {
+    		Subject = messageSource.getMessage("ezEmail.csj12", userInfo.getLocale()) + " " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent(); //[결재문서도착알림] + DOCTITLE
+    		bodyContent.append("<span style='font-size:13pt; font-weight:bold;'>" + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span>");
+    		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj14", userInfo.getLocale()) + "</span>");
+    		bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getRemoteHost() + "/ezApprovalG/approvui.do?");
+    		bodyContent.append("docID=" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
+    		bodyContent.append("&id=" + targetUserID + "&name=" + targetUserName + "&deptID=" + targetUserDeptID);
+    		bodyContent.append("&allFlag=0&mailchk=Y&orgCompanyID=" + targetUserCompanyID);
+    		bodyContent.append("' onclick ='javascript:mail_link();' style='cursor: pointer; font-size: 15px; color: blue;' target='_blank'><br>");
+    		bodyContent.append(messageSource.getMessage("ezEmail.csj15", userInfo.getLocale())); //결재 문서 바로가기 링크
+    		bodyContent.append("</a><br><br>");
+    		bodyContent.append("<span style='font-size:13pt; font-weight:bold;'>" + messageSource.getMessage("ezEmail.csj16", userInfo.getLocale()) + "</span><br>");
+    		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
+    		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
+    		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
+    	} else {
+    		Subject = messageSource.getMessage("ezEmail.csj06", userInfo.getLocale()) + " " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent(); //[결재완료알림] + DOCTITLE
+    		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj17", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "</span><br>");
+    		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj18", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span><br>");
+    		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
+    	}
+    	
+    	bodyContent.append("</td></tr></table></DIV>");
+    	
+		String xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
+    	Document notiDoc = commonUtil.convertStringToDocument(xmlApprovNotiConfig);
+		String saveSendBoxFlag = notiDoc.getElementsByTagName("SAVEMAILFLAG").item(0).getTextContent().trim();
+		
+		boolean flag;
+    	if (saveSendBoxFlag.equals("Y")) {
+    		flag = true;
+    	} else {
+    		flag = false;
+    	}
+    	
+    	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, Subject, bodyContent.toString(), flag);
+		
+		logger.debug("sendMailToNextAprMember ended.");
+		return result;
 	}
 }
