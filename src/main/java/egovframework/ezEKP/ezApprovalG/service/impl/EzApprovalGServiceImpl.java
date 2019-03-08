@@ -27975,7 +27975,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     		Subject = messageSource.getMessage("ezEmail.csj12", userInfo.getLocale()) + " " + xmlDom.getElementsByTagName("DOCTITLE").item(0).getTextContent(); //[결재문서도착알림] + DOCTITLE
     		bodyContent.append("<span style='font-size:13pt; font-weight:bold;'>" + xmlDom.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "</span>");
     		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj14", userInfo.getLocale()) + "</span>");
-    		bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getRemoteHost() + "/ezApprovalG/approvui.do?");
+    		bodyContent.append("<a id='approv_a' href ='" + (request.isSecure() ? "https:" : "http:") + "//" + request.getServerName() + (request.getServerPort() == 80 ? "" : ":" + request.getServerPort()) + "/ezApprovalG/approvui.do?");
     		bodyContent.append("docID=" + xmlDom.getElementsByTagName("DOCID").item(0).getTextContent());
     		bodyContent.append("&id=" + targetUserID + "&name=" + targetUserName + "&deptID=" + targetUserDeptID);
     		bodyContent.append("&allFlag=0&mailchk=Y&orgCompanyID=" + targetUserCompanyID);
