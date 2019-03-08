@@ -548,7 +548,7 @@
 		SET 
 			NAME = '수신일자', 
 			NAME2 = 'ProcessDate', 
-			NAME3 = '到着日付', 
+			NAME3 = '到着日時', 
 			NAME4 = '接收日' 
 		WHERE 
 			LISTTYPE = 'S001' 
