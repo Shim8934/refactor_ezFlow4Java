@@ -624,6 +624,14 @@ public class EzPortalAdminDAO extends EgovAbstractDAO {
 	public void removeMenuItem_D3 (Map<String, Object> map) {
 		delete("EzPortalAdminDAO.removeMenuItem_D3", map);
 	}
+
+	public String getBeforeUsedPage(Map<String, Object> map) {
+		return (String) select("EzPortalAdminDAO.getBeforeUsedPage", map);
+	}
+
+	public void updateNotUsePage(Map<String, Object> map) {
+		update("EzPortalAdminDAO.updateNotUsePage", map);
+	}
 	
 }
 
