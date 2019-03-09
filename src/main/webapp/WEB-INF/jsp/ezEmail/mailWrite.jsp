@@ -1190,14 +1190,12 @@
 	        }
 	        var xmlHTTP = createXMLHttpRequest();
 	        var xmlpara = createXmlDom();
-	        var xmlstring = "<DocID>" + DocID + "</DocID>";
-	        xmlpara = loadXMLString(xmlstring);
 	        if (Target == "APPROVALG")
-	            xmlHTTP.open("GET", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
+	            xmlHTTP.open("GET", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx?DocID=" + DocID, false);
 	        else
-	            xmlHTTP.open("GET", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
+	            xmlHTTP.open("GET", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx?DocID=" + DocID, false);
 	        xmlHTTP.withCredentials = true;
-	        xmlHTTP.send(xmlpara);
+	        xmlHTTP.send();
 
 	        if (xmlHTTP.status == 200) {
 	            var ReturnXML = loadXMLString(xmlHTTP.responseText);
