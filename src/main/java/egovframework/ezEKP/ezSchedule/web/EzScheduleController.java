@@ -2252,8 +2252,8 @@ public class EzScheduleController extends EgovFileMngUtil {
         if (vo == null) {
         	logger.error("Schedule not found.");
 			model.addAttribute("title", egovMessageSource.getMessage("ezSchedule.t342", locale));
-			model.addAttribute("mainContent", egovMessageSource.getMessage("ezSchedule.gha01", locale));
-			model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+			model.addAttribute("mainContent", egovMessageSource.getMessage("ezSchedule.gha03", locale));
+			model.addAttribute("subContent", egovMessageSource.getMessage("ezSchedule.gha04", locale));
 			return "ezCommon/error";
         }
         
