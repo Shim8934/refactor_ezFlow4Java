@@ -1,10 +1,14 @@
 package egovframework.ezEKP.ezSchedule.web;
 
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,8 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
@@ -57,6 +63,15 @@ public class EzScheduleAdminController {
 			
 	@Autowired
 	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EzCommonService ezCommonService;
+	
+	@Autowired
+	private Properties config;
+	
+	@Autowired
+	private EzEmailUtil ezEmailUtil;
 	
 	/**
 	 * 관리자 일정관리 메인화면 호출함수
@@ -347,7 +362,7 @@ public class EzScheduleAdminController {
 	@RequestMapping(value="/admin/ezSchedule/scheduleSaveHoliday.do")
 	@ResponseBody
 	public void scheduleSaveHoliday(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
-		
+		String resultCode = "";
 		logger.debug("============ scheduleSaveHoliday started ============");
 		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
@@ -369,7 +384,45 @@ public class EzScheduleAdminController {
 			ezScheduleAdminService.scheduleSaveHoliday(holidayName, holidayName2, holidayFlag, holidayDate, holidayRepeat, isSolar, isRepeat, isRest, companyID, loginSimpleVO.getTenantId());
 		} else {
 			ezScheduleAdminService.scheduleUpdateHoliday(holidayName, holidayName2, holidayFlag, holidayDate, holidayRepeat, isSolar, isRepeat, isRest, companyID, loginSimpleVO.getTenantId(), holidayID);
-		}		
+		}
+		
+		String dotNetTotalNotification = ezCommonService.getTenantConfig("dotNetTotalNotification", loginSimpleVO.getTenantId());
+	    logger.debug("dotNetTotalNotification=" + dotNetTotalNotification);
+		
+	    if(dotNetTotalNotification.equalsIgnoreCase("yes")) {
+	    	String holidayNameParam = "holidayName=" + URLEncoder.encode(holidayName, "UTF-8");
+			String holidayName2Param = "holidayName2=" + URLEncoder.encode(holidayName2, "UTF-8");
+			String holidayDateParam = "holidayDate=" + URLEncoder.encode(holidayDate, "UTF-8");
+			String isSolarParam = "isSolar=" + URLEncoder.encode(isSolar, "UTF-8");
+			String isRepeatParam = "isRepeat=" + URLEncoder.encode(isRepeat, "UTF-8");
+			String isRestParam = "isRest=" + URLEncoder.encode(isRest, "UTF-8");
+			String companyIDParam = "companyID=" + URLEncoder.encode(companyID, "UTF-8");
+			String holidayRepeatParam = "holidayRepeat=" + URLEncoder.encode(holidayRepeat, "UTF-8");
+			String typeParam = "type=" + URLEncoder.encode(type, "UTF-8");
+			String holidayIDParam = "holidayID=" + URLEncoder.encode(holidayID, "UTF-8");
+	    
+			String inputParams = holidayNameParam + "&" + holidayName2Param + "&" + holidayDateParam + "&" +
+					isSolarParam + "&" + isRepeatParam + "&" + isRestParam + "&" + companyIDParam + "&" +
+					holidayRepeatParam + "&" + typeParam + "&" + holidayIDParam;
+			
+			logger.debug("inputParams=" + inputParams);
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/ezSchedule/scheduleSaveHoliday";
+			String webServiceResultResponse = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+			logger.debug("response=" + webServiceResultResponse);
+
+			if (webServiceResultResponse != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject responseObj = (JSONObject)jsonParser.parse(webServiceResultResponse);
+
+				resultCode = (String)responseObj.get("resultCode");
+				logger.debug("resultCode=" + resultCode);
+			}
+	    
+	    }
+	    
+	    
 	}
 	
 	/**
