@@ -628,6 +628,8 @@ row = sheet.createRow(0);
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		statApprVO.setTenantID(userInfo.getTenantId());
+		statApprVO.setStartDate(statApprVO.getStartDate() + " 00:00:01");
+		statApprVO.setEndDate(statApprVO.getEndDate() + " 23:59:59");
 		
 		String result = ezStatisticsAdminService.getSearchList(statApprVO);
 		
