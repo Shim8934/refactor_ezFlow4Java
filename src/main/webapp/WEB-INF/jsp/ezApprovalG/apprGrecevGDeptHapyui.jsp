@@ -950,29 +950,35 @@
 		                IsSkipDrafter = "FALSE";
 		            }
 		            
-		            if (approvalFlag == "S") {
-			            if (ret[4] != undefined) {
-			                var g_SelCabXml = ret[4];
-			                var xmlCab = createXmlDom();
-			                xmlCab = loadXMLString(g_SelCabXml);
-			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
-			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
-		                }
-		            	
-			            tempSecurity = ret[7];
-		                tempUrgent = ret[8];
-		                pSummery = ret[9];
-		                tempSecurityDate = ret[14];
-		                pPublicityCode = ret[11];
-		                
-		                tempKeep = ret[16];
-	                	tempItemName = ret[17];
-	                	tempItemName2 = ret[18];
-	                	pPageNum = "1";
-	                	pLimitRange = "1";
-	                	pSpecialRecordCode = "1";
-	                	tempPublic = ret[11];
-	                	SetDocOption(ret[20]);
+		            if (ret[4] != undefined) {
+		                var g_SelCabXml = ret[4];
+		                var xmlCab = createXmlDom();
+		                xmlCab = loadXMLString(g_SelCabXml);
+		                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
+		                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+	                }
+	            	
+		            tempSecurity = ret[7];
+	                tempUrgent = ret[8];
+	                pSummery = ret[9];
+	                tempSecurityDate = ret[14];
+	                pPublicityCode = ret[11];
+	                pPublicityYN = ret[21];
+	                
+// 	                tempKeep = ret[16];
+//                 	tempItemName = ret[17];
+//                 	tempItemName2 = ret[18];
+                	pPageNum = ret[13];
+                	pLimitRange = ret[12];
+                	pSpecialRecordCode = ret[10];
+//                 	tempPublic = ret[11];
+//                 	SetDocOption(ret[20]);
+					if (nonElecRec == "Y") {
+		            	nonElecRecInfoXml = ret[23];
+		            	nonSepAttachLVXml = ret[24];
+		            	g_szSCListXml = ret[25];
+		            	sepAttachCheckYN = ret[26];
+		            	setNonElecRecInfo(nonElecRecInfoXml);
 		            }
 		            
 		        }

@@ -1600,6 +1600,9 @@ function SaveDraftDocInfo()
             createNodeAndInsertText(xmlpara, objNode, "WRITERDEPTNAME2", "");
             createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[11]);
             createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName);
+            //부서합의할 때, 원기안부서 기록물등록대장에 합의부서 문서가 보이는 오류때문에 아래부분 추가. 2019-03-11 홍대표
+            createNodeAndInsertText(xmlpara, objNode, "CABINETID", cabinetID);
+            createNodeAndInsertText(xmlpara, objNode, "TASKCODE", TaskCode);
             createNodeAndInsertText(xmlpara, objNode, "DOCNUMCODE", pDocNumCode);
 
             //createNodeAndInsertText(xmlpara, objNode, "PMEMBERNAME", arr_userinfo[11]);
