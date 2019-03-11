@@ -115,7 +115,7 @@
 			initToggleList(document.getElementById("left"), "h2", "ul", "li");
 		</script> -->
 		<div style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:1000;
-		    background:none rgba(0,0,0,0.4); display:none;" class="progressPanel">&nbsp;
+		    background:none rgba(0,0,0,0.4); display:none;" class="progressPanel" id="progressPanel">&nbsp;
 		</div>
 	</body>
 </html>

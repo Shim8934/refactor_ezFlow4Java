@@ -13899,6 +13899,8 @@
      AND 
      		FUNCTIONTYPE <> '004' 
      AND 
+     		FUNCTIONTYPE <> '011' 
+     AND 
      		APRSTATE = '002' 
     ]]>
 	</select>

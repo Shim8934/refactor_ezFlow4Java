@@ -14,7 +14,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
-		
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
 	        var xmldoc = createXmlDom();
@@ -60,6 +59,7 @@
 	            	$(".approvalS").hide();
 	            }
 	            
+	            setAutoCompleteOff(); //#15157 자동완성 방지 메소드 추가
 	        });
 	
 	        function initdatepicker() {
@@ -69,7 +69,13 @@
 		            autoSize: true,
 		            showOn: "both",
 		            buttonImage: "/images/ImgIcon/calendar-month.png",
-		            buttonImageOnly: true
+		            buttonImageOnly: true,
+		            beforeShow: function(input) {
+		    		    var i_offset= $(input).offset();
+		    		    setTimeout(function(){
+		    		       $('#ui-datepicker-div').css({'left': i_offset.left + 85});
+		    		    })
+		    		} 
 		        });
 				
 		        $("#Edatepicker").datepicker({
@@ -78,7 +84,13 @@
 		            autoSize: true,
 		            showOn: "both",
 		            buttonImage: "/images/ImgIcon/calendar-month.png",
-		            buttonImageOnly: true
+		            buttonImageOnly: true,
+		            beforeShow: function(input) {
+		    		    var i_offset= $(input).offset();
+		    		    setTimeout(function(){
+		    		       $('#ui-datepicker-div').css({'left': i_offset.left + 85});
+		    		    })
+		    		} 
 		        });
 
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
@@ -218,7 +230,7 @@
 		        } */
 		        
 		        if (draftfrom != "" && draftto == "") {
-		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm02'/>");
+		        	OpenAlertUI("<spring:message code='ezApprovalG.kRbm02'/>");
 		        	return;
 		        } else if (draftfrom == "" && draftto != "" ) {
 		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm01'/>");
@@ -693,6 +705,14 @@
 		        
 		        RtnVal[1] = new Date(nowYear, nowMonth, nowDay);
 		        return RtnVal;
+		    }
+		    
+		  	//#15157 자동완성 방지 메소드 추가
+		    function setAutoCompleteOff() {
+		    	var inputAry = document.getElementsByTagName("input");
+		    	for (var i = 0; i < inputAry.length; i++) {
+		    		inputAry[i].setAttribute("autocomplete", "off");
+		    	}
 		    }
 		</script>
 	</head>

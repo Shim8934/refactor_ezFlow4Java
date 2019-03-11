@@ -521,6 +521,7 @@
 // 					CurPage = CurPage - 1;
 // 				}
 
+		    	prevShow_Clear();
 		    	getBoardList();
 		    }
 		    

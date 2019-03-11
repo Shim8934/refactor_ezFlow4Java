@@ -64,6 +64,7 @@
 			var sStartDate;
 			var sEndDate;
 			var typeCal;
+			var isCalendarView = true;
 			
 			//2018-06-08 구해안 left checkbox checkall			
 			function chk_all(){
@@ -94,69 +95,139 @@
 			
 			//2018-06-18 구해안 checkbox에 대한 css 변환 함수
 			function chk_DisplayChange() {
-				var chk_str =  "";
-				var chk_total = $("input[name=chk_schedule]:checked").length;
-				var chk_fullLength = $("input[name=chk_schedule]").length;
-
-				if (typeCal == 0) {		
-					$("input[name=chk_schedule]").each(function(index){
-						var chk_eachVal1 = $(this).val();
-						var chk_type=$(this).data("schedule-type")
-						
-						$('.td_list td[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){							
-							$(value).addClass('chk_noneDisplay');
+				if (isCalendarView) {
+					var chk_str =  "";
+					var chk_total = $("input[name=chk_schedule]:checked").length;
+					var chk_fullLength = $("input[name=chk_schedule]").length;
+	
+					if (typeCal == 0) {		
+						$("input[name=chk_schedule]").each(function(index){
+							var chk_eachVal1 = $(this).val();
+							var chk_type=$(this).data("schedule-type")
+							
+							$('.td_list td[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){							
+								$(value).addClass('chk_noneDisplay');
+							});
 						});
-					});
-					$("input[name=chk_schedule]:checked").each(function(index) {
-						var test = $(this).val();
-						var chk_type = $(this).data("schedule-type");
-						
-						$('.td_list td[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-							$(value).removeClass('chk_noneDisplay');
+						$("input[name=chk_schedule]:checked").each(function(index) {
+							var test = $(this).val();
+							var chk_type = $(this).data("schedule-type");
+							
+							$('.td_list td[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+								$(value).removeClass('chk_noneDisplay');
+							});
+						});					
+					} else if (typeCal == 1) {
+						$("input[name=chk_schedule]").each(function(index){
+							var chk_eachVal1 = $(this).val();
+							var chk_type = $(this).data("schedule-type");
+							
+							$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+								$(value).addClass('chk_noneDisplay');
+							});
 						});
-					});					
-				} else if (typeCal == 1) {
-					$("input[name=chk_schedule]").each(function(index){
-						var chk_eachVal1 = $(this).val();
-						var chk_type = $(this).data("schedule-type");
-						
-						$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-							$(value).addClass('chk_noneDisplay');
+						$("input[name=chk_schedule]:checked").each(function(index) {
+							var test = $(this).val();
+							var chk_type = $(this).data("schedule-type");
+							
+							$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+								$(value).removeClass('chk_noneDisplay');
+							});
+						});	
+					} else {
+						$("input[name=chk_schedule]").each(function(index){
+							var chk_eachVal1 = $(this).val();
+							var chk_type = $(this).data("schedule-type");
+							
+							$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+								$(value).addClass('chk_noneDisplay');
+							});
 						});
-					});
-					$("input[name=chk_schedule]:checked").each(function(index) {
-						var test = $(this).val();
-						var chk_type = $(this).data("schedule-type");
-						
-						$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-							$(value).removeClass('chk_noneDisplay');
-						});
-					});	
+						$("input[name=chk_schedule]:checked").each(function(index) {
+							var test = $(this).val();
+							var chk_type = $(this).data("schedule-type");
+							
+							$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+								$(value).removeClass('chk_noneDisplay');
+							});						
+						});	
+					}
+					
+					if(chk_total > 0 && chk_total < chk_fullLength) {
+						$('#select-all').prop('checked',false);					
+					} else if(chk_total == chk_fullLength) {
+						$('#select-all').prop('checked',true);	
+					} else if(chk_total == 0){
+						chk_str += $('#select-all').val();
+					}
 				} else {
-					$("input[name=chk_schedule]").each(function(index){
-						var chk_eachVal1 = $(this).val();
-						var chk_type = $(this).data("schedule-type");
-						
-						$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-							$(value).addClass('chk_noneDisplay');
+					isCalendarView = true;
+					window.open("/ezSchedule/scheduleMain.do?funCode=2", "right");
+					
+					var chk_str =  "";
+					var chk_total = $("input[name=chk_schedule]:checked").length;
+					var chk_fullLength = $("input[name=chk_schedule]").length;
+	
+					if (typeCal == 0) {		
+						$("input[name=chk_schedule]").each(function(index){
+							var chk_eachVal1 = $(this).val();
+							var chk_type=$(this).data("schedule-type")
+							
+							$('.td_list td[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){							
+								$(value).addClass('chk_noneDisplay');
+							});
 						});
-					});
-					$("input[name=chk_schedule]:checked").each(function(index) {
-						var test = $(this).val();
-						var chk_type = $(this).data("schedule-type");
-						
-						$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
-							$(value).removeClass('chk_noneDisplay');
-						});						
-					});	
-				}
-				
-				if(chk_total > 0 && chk_total < chk_fullLength) {
-					$('#select-all').prop('checked',false);					
-				} else if(chk_total == chk_fullLength) {
-					$('#select-all').prop('checked',true);	
-				} else if(chk_total == 0){
-					chk_str += $('#select-all').val();
+						$("input[name=chk_schedule]:checked").each(function(index) {
+							var test = $(this).val();
+							var chk_type = $(this).data("schedule-type");
+							
+							$('.td_list td[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+								$(value).removeClass('chk_noneDisplay');
+							});
+						});					
+					} else if (typeCal == 1) {
+						$("input[name=chk_schedule]").each(function(index){
+							var chk_eachVal1 = $(this).val();
+							var chk_type = $(this).data("schedule-type");
+							
+							$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+								$(value).addClass('chk_noneDisplay');
+							});
+						});
+						$("input[name=chk_schedule]:checked").each(function(index) {
+							var test = $(this).val();
+							var chk_type = $(this).data("schedule-type");
+							
+							$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+								$(value).removeClass('chk_noneDisplay');
+							});
+						});	
+					} else {
+						$("input[name=chk_schedule]").each(function(index){
+							var chk_eachVal1 = $(this).val();
+							var chk_type = $(this).data("schedule-type");
+							
+							$('div[ownerid = "'+chk_eachVal1+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+								$(value).addClass('chk_noneDisplay');
+							});
+						});
+						$("input[name=chk_schedule]:checked").each(function(index) {
+							var test = $(this).val();
+							var chk_type = $(this).data("schedule-type");
+							
+							$('div[ownerid = "'+test+'"][scheduletype = "'+chk_type+'"]',parent.frames["right"].document).each(function(index, value){
+								$(value).removeClass('chk_noneDisplay');
+							});						
+						});	
+					}
+					
+					if(chk_total > 0 && chk_total < chk_fullLength) {
+						$('#select-all').prop('checked',false);					
+					} else if(chk_total == chk_fullLength) {
+						$('#select-all').prop('checked',true);	
+					} else if(chk_total == 0){
+						chk_str += $('#select-all').val();
+					}
 				}
 			}
 			
@@ -298,7 +369,6 @@
 
 		        switch (v_data) {
 		            case 2:		// Schedule
-		            	$('.lnbUL:eq(0)').css('pointer-events','');
 		                window.open("/ezSchedule/scheduleMain.do?funCode=2", "right");
 		                break;
 
@@ -308,19 +378,19 @@
 
 		            case 5:		// schedule group management 
 		            	$('.checkSelect').each(function() {
-				            $(this).prop('checked',true);			            
+				            $(this).prop('checked',false);			            
 				        });
-		            	$('#select-all').prop('checked',true);
-		            	$('.lnbUL:eq(0)').css('pointer-events','none');
+		            	isCalendarView = false;
+		            	$('#select-all').prop('checked',false);
 		                window.open("/ezSchedule/scheduleManageGroup.do", "right")
 		                break;
 
 		            case 6:		// schedule search
 		            	$('.checkSelect').each(function() {
-				            $(this).prop('checked',true);			            
+				            $(this).prop('checked',false);			            
 				        });
-		            	$('#select-all').prop('checked',true);
-		            	$('.lnbUL:eq(0)').css('pointer-events','none');
+		            	isCalendarView = false;
+		            	$('#select-all').prop('checked',false);
 		                window.open("/ezSchedule/scheduleSearch.do", "right")
 		                break;
 
@@ -330,18 +400,18 @@
 
 		            case 10:	// Search public search
 		            	$('.checkSelect').each(function() {
-				            $(this).prop('checked',true);			            
+				            $(this).prop('checked',false);			            
 				        });
-		            	$('#select-all').prop('checked',true);
-		            	$('.lnbUL:eq(0)').css('pointer-events','none');
+		            	isCalendarView = false;
+		            	$('#select-all').prop('checked',false);
 		                window.open("/ezSchedule/schedulePublicSearch.do", "right");
 		                break;
 		            case 11:		// Search public calendar
 		            	$('.checkSelect').each(function() {
-				            $(this).prop('checked',true);			            
+				            $(this).prop('checked',false);			            
 				        });
-		            	$('#select-all').prop('checked',true);
-		            	$('.lnbUL:eq(0)').css('pointer-events','none');
+		            	isCalendarView = false;
+		            	$('#select-all').prop('checked',false);
 		                window.open("/ezSchedule/scheduleConfigMain.do?flag=schedule", "right");
 		                break;
 		        }

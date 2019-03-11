@@ -193,9 +193,13 @@
 	            for (var i = 0; i < xmldomNodes.length; i++) {
 	                var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 	                tid = tid.substring(1, 37);
-	                strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" +
-	                "<span class = 'groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
-	                strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;display:none;height:100%;width:300px;padding-top:5px;padding-bottom:3px'></DIV></td></tr>";
+	                if (i == 0) {
+	                	strHTML += "<tr><td><h2 style='border-top:0px; cursor:pointer;' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")'>"
+	                } else {
+	                	strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>"
+	                }
+	                strHTML += "<span class = 'groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
+	                strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:310px;overflow-x:hidden;padding-top:10px;padding-bottom:10px;'></DIV></td></tr>";
 	            }
 	            strHTML += "</table>";
 
@@ -253,7 +257,7 @@
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
-	    <div class="box" style="width: 320px; height: 550px; overflow: auto; word-break: break-all" id="TopBoardsList"></div>
+	    <div class="box" style="height: 485px; overflow: auto; word-break: break-all" id="TopBoardsList"></div>
 	    <div class="btnpositionNew">
 	        <a class="imgbtn" name="Submit" onclick="Select()"><span><spring:message code = 'ezCommunity.t278' /></span></a>
 	    </div>

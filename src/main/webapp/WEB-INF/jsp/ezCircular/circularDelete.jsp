@@ -646,7 +646,8 @@
 // 					CurPage = CurPage - 1;
 // 				}
 
-	        	getBoardList();
+	        	prevShow_Clear();
+		    	getBoardList();
 	        }
 	        
 	        //2018-07-17 김보미 - 프로그래스바		
