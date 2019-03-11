@@ -748,3 +748,41 @@ function scroll() {
 		}
 	}
 }
+
+// 2019-03-07 김민성 - 회람 이동/삭제 후 미리보기 이벤트 수정
+function prevShow_Clear() {
+    if (pPreviewShow_HOW == "W") {
+    	var sentDateStr = document.body.querySelector("#PreContent_RayerW #sentDateStr");
+        document.getElementById("Preview_HeaderW").style.display = "none";
+        document.getElementById("ifrmPreViewW").src = strLang29;
+        
+        if (sentDateStr != null) {
+        	sentDateStr.style.display = "none";
+        }
+        
+        var innerFrame  = document.getElementById("ifrmPreView" + pPreviewShow_HOW);
+        innerFrame.onload = function () {
+        	var innerDoc = innerFrame.contentDocument || innerFrame.contentWindow.document;
+        	if (innerDoc.getElementById("ifrmviewEmptyText").innerText == "") {
+        		innerDoc.getElementById("ifrmviewEmptyText").innerText = strLang28;
+        	}
+        }
+    }
+    else if(pPreviewShow_HOW == "H"){
+    	var sentDateStr = document.body.querySelector("#PreContent_RayerH #sentDateStr");
+        document.getElementById("Preview_HeaderH").style.display = "none";
+        document.getElementById("ifrmPreViewH").src = strLang29;
+        
+        if (sentDateStr != null) {
+        	sentDateStr.style.display = "none";
+        }
+        
+        var innerFrame  = document.getElementById("ifrmPreView" + pPreviewShow_HOW);
+        innerFrame.onload = function () {
+        	var innerDoc = innerFrame.contentDocument || innerFrame.contentWindow.document;
+        	if (innerDoc.getElementById("ifrmviewEmptyText").innerText == "") {
+        		innerDoc.getElementById("ifrmviewEmptyText").innerText = strLang28;
+        	}
+        }
+    }
+}

@@ -400,6 +400,16 @@
 		        	]]>
         		</isEqual>
         	</isEqual>
+        	<isEqual property="chkValue" compareValue="memo">
+	        	<![CDATA[
+        			memo LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="chkValue" compareValue="creatorname">
+	        	<![CDATA[
+        			creatorname LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        	]]>
+        	</isEqual>
         </isNotEqual>
 	</select>
 
@@ -458,6 +468,16 @@
 	        			personname2 LIKE CONCAT(CONCAT('%', #filter#), '%')
 		        	]]>
         		</isEqual>
+        	</isEqual>
+        	<isEqual property="chkValue" compareValue="memo">
+	        	<![CDATA[
+        			memo LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="chkValue" compareValue="creatorname">
+	        	<![CDATA[
+        			creatorname LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        	]]>
         	</isEqual>
         </isNotEqual>
 	</select>
@@ -523,6 +543,16 @@
 		        	]]>
         		</isEqual>
         	</isEqual>
+        	<isEqual property="chkValue" compareValue="memo">
+	        	<![CDATA[
+        			memo LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="chkValue" compareValue="creatorname">
+	        	<![CDATA[
+        			creatorname LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        	]]>
+        	</isEqual>
         </isNotEqual>
 	</select>
 	
@@ -567,6 +597,16 @@
 	        			personname2 LIKE CONCAT(CONCAT('%', #filter#), '%')
 		        	]]>
         		</isEqual>
+        	</isEqual>
+        	<isEqual property="chkValue" compareValue="memo">
+	        	<![CDATA[
+        			memo LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        	]]>
+        	</isEqual>
+        	<isEqual property="chkValue" compareValue="creatorname">
+	        	<![CDATA[
+        			creatorname LIKE CONCAT(CONCAT('%', #filter#), '%')
+	        	]]>
         	</isEqual>
         </isNotEqual>
 	</select>
