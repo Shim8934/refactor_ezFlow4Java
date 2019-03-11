@@ -384,21 +384,100 @@ function show_repetition_info() {
 	
 	switch (szType) {
 		case "4":
-			repeatinfo += "" + strLang123 + "";
+			var selType = getNodeText(SelectNodes(xmlinDoc, "recurrence/selType")[0]);
+			if(selType == "0") {			// 매일마다
+				var interval = getNodeText(SelectNodes(xmlinDoc, "recurrence/interval")[0]);
+				
+				if(interval == "1") {
+					repeatinfo += "" + strLang123;
+				}
+				else {
+					repeatinfo += "" + interval + strLang550;
+				}
+			}
+			else {
+				repeatinfo += "" + strLang551;
+			}
 			break;
 		case "5":
-			repeatinfo += "" + strLang124 + "";
+			var interval = getNodeText(SelectNodes(xmlinDoc, "recurrence/interval")[0]);
+			
+			var resdayList = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfWeek")[0]);
+			resdayList = resdayList.substring(0, resdayList.length - 1);
+			
+			if(interval == "1") {		// 매주
+				repeatinfo += "" + strLang124 + " ";
+			}
+			else {
+				repeatinfo += " " + interval + strLang552 + " ";
+			}
+			repeatinfo += " " + resdayList.replace("0", strLang270).replace("1", strLang271).replace("2", strLang272).replace("3", strLang273).replace("4", strLang274).replace("5", strLang275).replace("6", strLang276);
 			break;
 		case "6":
-			repeatinfo += "" + strLang97 + "";
+			var selType = getNodeText(SelectNodes(xmlinDoc, "recurrence/selType")[0]);
+			var interval = getNodeText(SelectNodes(xmlinDoc, "recurrence/interval")[0]);
+			
+			if(selType == "0") {
+				var dayOfMonth = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfMonth")[0]);
+				if(interval == "1") {
+					repeatinfo += "" + strLang97 + " " + dayOfMonth + strLang270;
+				}
+				else {
+					repeatinfo += interval + strLang553 + " " + dayOfMonth + strLang270;
+				}
+			}
+			else {
+				var byPosition = getNodeText(SelectNodes(xmlinDoc, "recurrence/byPosition")[0]);
+				var daysOfWeek = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfWeek")[0]);
+				
+				if(interval == "1") {
+					repeatinfo += strLang97 + " ";
+				}
+				else {
+					repeatinfo += interval + strLang553 + " ";
+				}
+				
+				repeatinfo += byPosition.replace("-1", strLang558).replace("1", strLang554).replace("2", strLang555).replace("3", strLang556).replace("4", strLang557);
+				if(daysOfWeek.length < 2) {
+					repeatinfo += " " + daysOfWeek.replace("0", strLang561).replace("1", strLang562).replace("2", strLang563).replace("3", strLang564).replace("4", strLang565).replace("5", strLang566).replace("6", strLang567);
+				}
+				else if(daysOfWeek.length < 6){
+					repeatinfo += " " + strLang560;
+				}
+				else {
+					repeatinfo += " " + strLang559;
+				}
+			}
 			break;
 		case "7":
-			repeatinfo += "" + strLang98 + "";
+			var selType = getNodeText(SelectNodes(xmlinDoc, "recurrence/selType")[0]);
+			var month = getNodeText(SelectNodes(xmlinDoc, "recurrence/monthsOfYear")[0]);
+			
+			if(selType == "0") {
+				var day = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfMonth")[0]);
+				
+				repeatinfo += "" + strLang98 + " " + month + strLang271 + " " + day + strLang278;
+			}
+			else {
+				var byPosition = getNodeText(SelectNodes(xmlinDoc, "recurrence/byPosition")[0]);
+				var daysOfWeek = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfWeek")[0]);
+				
+				repeatinfo += "" + strLang98 + " " + month + strLang271 + " ";
+				repeatinfo += byPosition.replace("-1", strLang558).replace("1", strLang554).replace("2", strLang555).replace("3", strLang556).replace("4", strLang557) + " ";
+				if(daysOfWeek.length < 2) {
+					repeatinfo += daysOfWeek.replace("0", strLang561).replace("1", strLang562).replace("2", strLang563).replace("3", strLang564).replace("4", strLang565).replace("5", strLang566).replace("6", strLang567);
+				}
+				else if(daysOfWeek.length < 6) {
+					repeatinfo += " " + strLang560;
+				}
+				else {
+					repeatinfo += " " + strLang559;
+				}
+			}
 			break;
 	}
 	
-	repeatinfo += ", " + strLang125 + "";
-	
+	repeatinfo += ", " + strLang125;
 	if (document.getElementById("AllDay").checked == true) {
 	    repeatinfo += "" + strLang126 + "";
 	} else {

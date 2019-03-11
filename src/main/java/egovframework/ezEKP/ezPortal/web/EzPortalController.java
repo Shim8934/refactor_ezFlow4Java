@@ -2941,7 +2941,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		
 		for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
 			if (xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent() != null && xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim().equals("Y")) {
-				resultHTML += "<script>var SelectedItems ="+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"</script>";
+				resultHTML += "<script>var SelectedItems ='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"'</script>";
 				resultHTML += "<dl id='"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"' onclick=\"setValueNew('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', '"+xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent().trim()+"', this)\" ondblclick=\"selectItem('"+xmlDom.getElementsByTagName("UID_").item(i).getTextContent()+"', this)\">";
 				resultHTML	+= "<dt>";
 				resultHTML	+= "<div class='onimg'></div>";
