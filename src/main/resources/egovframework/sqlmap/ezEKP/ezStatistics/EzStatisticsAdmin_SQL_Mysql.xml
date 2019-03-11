@@ -924,7 +924,7 @@
                      	  		WRITERID WRITERIDB  ,
                                 WRITERDEPTID WRITERDEPTIDB  ,
                                 IFNULL(COUNT(*) , 0) DENDCNT  ,
-                                time_to_sec(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s'))) DENDTIME,
+                                AVG(time_to_sec(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s')))) DENDTIME,
                                 TENANT_ID ,
                                 COMPANYID
                             FROM 
@@ -951,7 +951,7 @@
                      	  		WRITERID WRITERIDB  ,
                                 WRITERDEPTID WRITERDEPTIDB  ,
                                 IFNULL(COUNT(*) , 0) SENDCNT  ,
-                                time_to_sec(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s'))) SENDTIME  ,
+                                AVG(time_to_sec(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s')))) SENDTIME  ,
                                 TENANT_ID ,
                                 COMPANYID
                             FROM 
@@ -1114,7 +1114,7 @@
                      	  	( SELECT 
                      	  		FORMID FORMIDB  ,
                                 IFNULL(COUNT(*) , 0) DENDCNT  ,
-                                time_to_sec(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s'))) DENDTIME  ,
+                                AVG(time_to_sec(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s')))) DENDTIME  ,
                                 TENANT_ID ,
                                 COMPANYID
                               FROM 
@@ -1139,7 +1139,7 @@
                      	  	( SELECT 
                      	  		FORMID FORMIDB  ,
                                 IFNULL(COUNT(*) , 0) SENDCNT  ,
-                                time_to_sec(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s'))) SENDTIME ,
+                                AVG(time_to_sec(timediff(str_to_date(ENDDATE, '%Y-%m-%d %H:%i:%s'), str_to_date(STARTDATE, '%Y-%m-%d %H:%i:%s')))) SENDTIME ,
                                 TENANT_ID ,
                                 COMPANYID
                               FROM 

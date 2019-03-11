@@ -1437,7 +1437,7 @@ logger.debug("map.toString()" + map.toString());
 				
 				sb.append("</TR>\n");
 			} else { 
-				if (menuItemMenuItemType.equals("0")) {
+				if (menuItemMenuItemType.equals("0") && !menuItemDisplayName.equals(" ")) {
 					/*System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + sb.toString());*/
 					sb.append(getMenuItemHTML(pCallingMenuID, menuItemUID, userInfo));
 				} else {

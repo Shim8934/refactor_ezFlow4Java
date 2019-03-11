@@ -868,8 +868,14 @@ function paging(p_page, p_nowblock) {
     DocList.SetHeaderOnClick("lvDocList_HeaderClick");      
     DocList.SetRowOnClick("lvtDoclist_SelChange");           
     DocList.SetRowOnDblClick("lvtDoclist_onSel_DBclick");      
-    DocList.SetUrgentFlag(true);                            
-    DocList.SetSecurityFlag(true);
+    DocList.SetUrgentFlag(true);
+    //2019-03-07 천성준 - 개인문서함에 페이징이 생기면 보안결재문서처럼 ROW색이 회색이 되는현상 시간없어서 임시로 처리함
+    if (typeof(LoadSquery) != "undefined") {
+	    if (LoadSquery != "usercontlist")
+	    	DocList.SetSecurityFlag(true);
+    } 
+    else 
+    	DocList.SetSecurityFlag(true);
     DocList.DataSource(ListViewNode);                             
     DocList.DataBind("lvtDoclist");                          
     DocList = null;

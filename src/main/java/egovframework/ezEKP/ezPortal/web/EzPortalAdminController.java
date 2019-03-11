@@ -587,7 +587,19 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		if (req.getParameter("uID") != null && !req.getParameter("uID").equals("")) {
 			uID = req.getParameter("uID");
 		}
-		
+		//uID의 언어로 현재 사용중인 uID불러오기
+		List<String> beforeUsedPageList = ezPortalAdminService.getBeforeUsedPage(uID, userInfo.getCompanyID(), userInfo.getTenantId());
+		if (beforeUsedPageList != null && beforeUsedPageList.size() > 0) {
+			for (int i = 0; i < beforeUsedPageList.size(); i++) {	
+				String beforeTheme = ezPortalAdminService.getThemeUID(beforeUsedPageList.get(i), userInfo.getCompanyID(), userInfo.getTenantId());
+				String afterTheme = ezPortalAdminService.getThemeUID(uID, userInfo.getCompanyID(), userInfo.getTenantId());
+				//언어가 같고 테마가 같을경우에만 중복될 수 없다.
+				if (beforeTheme.equals(afterTheme)) {
+					//기존에 사용중인 uID는 사용하지 않도록 변경
+					ezPortalAdminService.updateNotUsePage(beforeUsedPageList.get(i), beforeTheme, userInfo.getCompanyID(), userInfo.getTenantId());				
+				}
+			}
+		}
 		ezPortalAdminService.topSetUsePage2(uID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("useTopPage ended");
@@ -2058,7 +2070,9 @@ public class EzPortalAdminController extends EgovFileMngUtil {
 		if (pageID == null || pageID.equals("")) {
 			for (int i=0; i<xmlDom.getElementsByTagName("UID_").getLength(); i++) {
 				String menuLang = xmlDom.getElementsByTagName("LANG").item(i).getTextContent();
-				if (userInfo.getLang().equals(menuLang)) {
+				String useFlag = xmlDom.getElementsByTagName("USEFLAG").item(i).getTextContent();
+				
+				if (userInfo.getLang().equals(menuLang) && useFlag.equals("Y")) {
 					pageID = xmlDom.getElementsByTagName("UID_").item(i).getTextContent();
 				}
 			}

@@ -1623,12 +1623,21 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						String calcuDate = nsdf.format(newCal.getTime());
 						
 						//if (calcuDate.compareTo(startDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
-						if ((newCal.compareTo(sDate_cal) >= 0) && (newCal.compareTo(eDate_cal) <= 0)) {
-							//row 추가
-							if (!rList.contains(calcuDate)) {
-								mapDateAndRepeatCount.put(calcuDate, count);
+						if (info[0].equals("0")) {
+							if ((newCal.compareTo(sDate_cal) >= 0) && (calcuDate.compareTo(currentEndDate.substring(0,10)) <= 0)) {
+								//row 추가
+								if (!rList.contains(calcuDate)) {
+									mapDateAndRepeatCount.put(calcuDate, count);
+								}
 							}
-						}
+						} else {
+							if ((newCal.compareTo(sDate_cal) >= 0) && (newCal.compareTo(eDate_cal) <= 0)) {
+								//row 추가
+								if (!rList.contains(calcuDate)) {
+									mapDateAndRepeatCount.put(calcuDate, count);
+								}
+							}
+						}	
 					}
 					
 					date_cal.add(Calendar.DATE, 1 - date_cal.get(Calendar.DATE));
@@ -1691,10 +1700,19 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 						
 						String calcuDate = nsdf.format(newCal.getTime());
 						
-						if ((newCal.compareTo(sDate_cal) >= 0) && (newCal.compareTo(eDate_cal) <= 0)) {
-							//row 추가
-							if (!rList.contains(calcuDate)) {
-								mapDateAndRepeatCount.put(calcuDate, count);
+						if (info[0].equals("0")) {
+							if ((newCal.compareTo(sDate_cal) >= 0) && (calcuDate.compareTo(currentEndDate.substring(0,10)) <= 0)) {
+								//row 추가
+								if (!rList.contains(calcuDate)) {
+									mapDateAndRepeatCount.put(calcuDate, count);
+								}
+							}
+						} else {
+							if ((newCal.compareTo(sDate_cal) >= 0) && (newCal.compareTo(eDate_cal) <= 0)) {
+								//row 추가
+								if (!rList.contains(calcuDate)) {
+									mapDateAndRepeatCount.put(calcuDate, count);
+								}
 							}
 						}
 					}
@@ -1865,8 +1883,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 							isFirst = false;
 	
 							if (generated) {
-								newEndDate = nsdf.format(newCal.getTime()) + " 23:59:59";
-								count++;
+								String calcuDate = nsdf.format(newCal.getTime());
+									if (calcuDate.compareTo(sdf.format(sdf.parse(vo.getEndDate())).substring(0,10)) <= 0) {
+										newEndDate = nsdf.format(newCal.getTime()) + " 23:59:59";
+										count++;
+									}
 							}
 							
 							date_cal.add(Calendar.DATE, 1 - date_cal.get(Calendar.DATE));
@@ -1924,8 +1945,11 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 							isFirst = false;
 							
 							if (generated) {
-								newEndDate = nsdf.format(newCal.getTime()) + " 23:59:59";
-								count++;
+								String calcuDate = nsdf.format(newCal.getTime());
+								if (calcuDate.compareTo(sdf.format(sdf.parse(vo.getEndDate())).substring(0,10)) <= 0) {
+									newEndDate = nsdf.format(newCal.getTime()) + " 23:59:59";
+									count++;
+								}
 							}
 							
 							date_cal.add(Calendar.DATE, 1 - date_cal.get(Calendar.DATE));
