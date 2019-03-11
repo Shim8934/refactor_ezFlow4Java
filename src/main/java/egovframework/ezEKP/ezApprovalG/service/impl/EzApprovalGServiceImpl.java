@@ -8398,11 +8398,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				ezApprovalGDAO.insertOptionInfo(map);
 				
 				if (docXML.getElementsByTagName("ROW").item(k).getChildNodes().item(9).getTextContent().equals("004")) {
-					String orgDocID = ezApprovalGDAO.getAprOrgDocID(map);
-					map.put("v_ORGDOCID", orgDocID);
-					int opinionCnt = ezApprovalGDAO.getEndAprOpinionCnt(map);
-					map.put("v_ORGOPINIONSN", opinionCnt + 1);
-					ezApprovalGDAO.insertHesongOpinion(map);
+					//부서합의  회송의견 처리하기 위해 분기 추가. 2019-03-06 홍대표
+					map.put("v_habDocID", docID);
+					List<ApprGDocListVO> habDocInfo = ezApprovalGDAO.getLastHabYuiDocState(map);
+					map.remove("v_habDocID");
+					
+					if(!(habDocInfo.size() > 0 && habDocInfo.get(0).getDocState().equals("012"))) {
+						String orgDocID = ezApprovalGDAO.getAprOrgDocID(map);
+						map.put("v_ORGDOCID", orgDocID);
+						int opinionCnt = ezApprovalGDAO.getEndAprOpinionCnt(map);
+						map.put("v_ORGOPINIONSN", opinionCnt + 1);
+						ezApprovalGDAO.insertHesongOpinion(map);
+					}
 				}
 			}
 			
@@ -8920,7 +8927,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         	start = Integer.parseInt(doc.getElementsByTagName("PAGESIZE").item(0).getTextContent());
         } else {
         	end = Integer.parseInt(recordListVO.getPageSize()) * Integer.parseInt(recordListVO.getPageNO());
-        	start = end - Integer.parseInt(recordListVO.getPageSize()) + 1;
+         	start = end - Integer.parseInt(recordListVO.getPageSize()) + 1;
         }
         
         
@@ -24771,14 +24778,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_PDOCID", pOrgDocID);
 				map.put("v_PDEPTID", pDeptID);
 				List<ApprGDocListVO> aprTypeList = ezApprovalGDAO.doHabyuiHesongTypeS(map);
+				String aprType = aprTypeList.get(0).getAprType();
 				
-				if (aprTypeList.get(0).getAprType().equals(staATBuSeuSoonChaHyubJo)) {
+				if (aprType.equals(staATBuSeuSoonChaHyubJo)) {
                     result = doBansong(pOrgDocID, docID, pDeptID,  staASWheSong, dirPath, pDeptID, pOrgCompanyID, lang, userInfo, curDocNum);//2011.03.28 개인병렬합의시 대리결재자가 반송시 대리결재자 정보 추가
 					if (result.toUpperCase().equals("FALSE")) {
 						rtnVal = false;
 					}
-				} else if(aprTypeList.get(0).getAprType().equals(staATBuSeuByungRyulHyubJo)) {
-					// 부서병렬합의에서 회송일 경우, 결재선에서 합의부서 상태값을 015로 넣어주기 위해 추가. 2019-03-05 홍대표
+				} else if(aprType.equals(staATBuSeuByungRyulHyubJo)) {
+					// 부서병렬합의에서 회송일 경우, 결재선에서 합의부서 상태값을 015로 넣어주기 위해 추가. 추후 else를 이걸로 수정해도 될듯. 2019-03-05 홍대표
 					result = doApprove(pOrgDocID, pDeptID, staASWheSong, ezOrganService.getPropertyValue(pDeptID, "DisplayName", tenantID), ezOrganService.getPropertyValue(pDeptID, "DisplayName2", tenantID), dirPath, pDeptID, "", pOrgCompanyID, lang, userInfo, curDocNum, "", "");
 
 					if (result.toUpperCase().equals("FALSE")) {
@@ -24802,7 +24810,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				//같은 회사 일 때
-				if (companyID.equals(pOrgCompanyID)) {
+				//부서 병렬합의 회송일 경우 파생된 문서정보를 삭제하도록 수정. 2019-03-07 홍대표
+				if (companyID.equals(pOrgCompanyID) && !aprType.equals(staATBuSeuByungRyulHyubJo)) {
 
 					map.put("v_APRSTATE1", staASWheSong);
 					map.put("v_APRSTATE2", staASJinHang);
