@@ -2145,7 +2145,7 @@
                  ('S001', 1, '제목', 'Title', 'タイトル', '标题', 300, 'VAPRDOINGDOCLIST', 'DocTitle', NULL, NULL, '결재할 문서', '제목', #companyID#, #tenantID#),
                  ('S001', 2, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 135, 'VAPRDOINGDOCLIST', 'WriterDeptName', NULL, NULL, '결재할 문서', '기안부서', #companyID#, #tenantID#),
                  ('S001', 3, '기안자', 'Drafter', '起案者', '起草人', 70, 'VAPRDOINGDOCLIST', 'WriterName', NULL, NULL, '결재할 문서', '기안자', #companyID#, #tenantID#),
-                 ('S001', 4, '수신일자', 'ProcessDate', '到着日付', '接收日', 160, 'VAPRDOINGDOCLIST', 'StartDate', NULL, NULL, '결재할 문서', '기안일시', #companyID#, #tenantID#),
+                 ('S001', 4, '수신일자', 'ProcessDate', '到着日時', '接收日', 160, 'VAPRDOINGDOCLIST', 'StartDate', NULL, NULL, '결재할 문서', '기안일시', #companyID#, #tenantID#),
                  ('S001', 5, '상태', 'Status', 'ステータス', '状态', 50, 'VAPRDOINGDOCLIST', 'FunctionType', NULL, NULL, '결재할 문서', '상태', #companyID#, #tenantID#),
                  ('S001', 6, '문서명', 'Form title', '文書名', '文件名', 100, 'VAPRDOINGDOCLIST', 'FormName', NULL, NULL, '결재할 문서', '양식명', #companyID#, #tenantID#),
                  ('S001', 7, '첨부', 'Attach', '添付', '附件', 50, 'VAPRDOINGDOCLIST', 'HASATTACHYN', NULL, NULL, '결재할 문서', '첨부', #companyID#, #tenantID#),
