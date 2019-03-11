@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -17,7 +18,6 @@
 	    var publicityCode 	= "${publicityCode}";	//공개여부 - G는 대민공개여부
 	    var securityCode  	= "${securityCode}";	//보안등급
 	    var urgentApproval 	= "${urgentApproval}";	//긴급결재
-	    var summary 		= "${summary}";			//요약정보
 	    //G버전 전용
 	    var specialRecordCode 	= "${specialRecordCode}";	//특수기록물
 	    var securityApproval 	= "${securityApproval}";	//보안결재
@@ -28,6 +28,7 @@
 	    var storagePeriod 	= "${storagePeriod}";	//보존기간
 	    var taskCode 		= "${taskCode}";		//분류코드ID
 	    var itemName 		= "${itemName}";		//분류코드명
+	    //요약정보는 TEXTAREA에 직접세팅
 	    
 	    window.onload = function () {
 	        try {
@@ -144,10 +145,8 @@
 	    		if (securityApproval != "") {
 	    			$("#securityApproval_span").text(securityApproval);
 	    		}
-	    		if (summary.trim() != "") {
-	    			$("#summary_txta").text(summary);
-	    		} else {
-	    			$("#summary_txta").attr("disabled", true);
+	    		if ($("#summary_txta").text().trim() == "") {
+ 	    			$("#summary_txta").attr("disabled", true);
 	    		}
 	    	} else {
 	    		if (taskCode != "" && itemName != "") {
@@ -171,10 +170,8 @@
 	    		if (storagePeriod != "") {
 	    			$("#storagePeriod_span").text(storagePeriod + "<spring:message code='ezApprovalG.t456'/>");
 	    		}
-	    		if (summary.trim() != "") {
-	    			$("#summary_txta").text(summary);
-	    		} else {
-	    			$("#summary_txta").attr("disabled", true);
+	    		if ($("#summary_txta").text().trim() == "") {
+ 	    			$("#summary_txta").attr("disabled", true);
 	    		}
 	    	}
 	    }
@@ -264,6 +261,6 @@
 			</tr>
 		</table>
 		<h2><spring:message code='ezApprovalG.t1203'/></h2>
-		<textarea id="summary_txta" style="resize:none;" readonly="readonly"></textarea>
+		<textarea id="summary_txta" style="resize:none;" readonly="readonly"><c:out value="${summary}"/></textarea>
 	</body>
 </html>

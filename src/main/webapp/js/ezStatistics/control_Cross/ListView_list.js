@@ -640,7 +640,12 @@ function ListView() {
 
                 objTr.setAttribute(strData, strValue);
             }
-
+            
+            var titleId = objTr.getAttribute("data2");
+            if (titleId != null) {
+            	objTr.setAttribute("title", titleId);
+            }
+            
             if (GetElementsByTagName(oRows[i], "MESSAGE")[0] != undefined) {
                 var strData = GetElementsByTagName(oRows[i], "MESSAGE")[0].tagName;
                 var strValue = "";

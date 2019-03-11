@@ -477,6 +477,10 @@ function CalendarView(pTagetID,chk_str) {
     		var dragType = ui.draggable.children().attr("datetype");
     		var dropDay = $(this).attr("day");
     		
+    		if (dragDay.substring(4, 14) == dropDay) {
+    			return;
+    		}
+    		
     		if (dragType == "2") {
     			dragDay += "ALL";
     		}
@@ -501,6 +505,11 @@ function CalendarView(pTagetID,chk_str) {
     			var dragId  = ui.draggable.attr("scheduleid");
     			var dropDay = $(this).attr("id");
     			var dragDay = ui.draggable.attr("id");
+    			
+    			if (dragDay.substring(4, 14) == dropDay.substring(0, 10)) {
+    				return;
+    			}
+    			
     			dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));	
     			dragDay = changeDateFormat(dragDay);
     			
@@ -525,7 +534,13 @@ function CalendarView(pTagetID,chk_str) {
     			var dropId  = $(this).attr("Id");
     			var dropDay = dropId.substring(3, dropId.indexOf("_Value"));
     			var dragDay = ui.draggable.attr("id");
+    			
     			dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));
+    			
+    			if (dragDay == dropDay) {
+    				return;
+    			}
+    			
     			dragDay = changeDateFormat(dragDay);
     			dropDay = changeDateFormat(dropDay);
     			
