@@ -422,7 +422,7 @@
 		                
 
 	                    //2019.03.04 유은정 - 게시판 적용
-	                    if (parent.opener.getNoticePortletList != undefined) {
+	                    if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
 	                    	parent.opener.getNoticePortletList();
 	                    }
 	                    

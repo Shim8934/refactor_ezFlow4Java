@@ -262,7 +262,7 @@
 				                        Get_Favoritelist();
 				                        
 				                        //2019.02.28 유은정 : 포탈개인화 즐겨찾기 양식에서 포틀릿 정보 가져오는 매서드 추가
-				                        if (parent.opener.getApprovalList != undefined) { 
+				                        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
 				        		        	parent.opener.getFavoriteForms();
 				        		        }
 				                    } else {
@@ -270,7 +270,7 @@
 				                        Get_Favoritelist();
 				                        
 				          		      	//2019.02.28 유은정 : 포탈개인화 즐겨찾기 양식에서 포틀릿 정보 가져오는 매서드 추가
-				                        if (parent.opener.getApprovalList != undefined) { 
+				                        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
 				        		        	parent.opener.getFavoriteForms();
 				        		        }
 				                    }
