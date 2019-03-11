@@ -108,9 +108,9 @@
 						return;
 					}
 					
-					if (parent.opener.getPollPortletList != undefined) {
+					if (parent.opener != null && parent.opener.getPollPortletList != undefined) {
 						parent.opener.getPollPortletList();
-					} else if (parent.opener.opener.getPollPortletList != undefined) {
+					} else if (parent.opener.opener != null && parent.opener.opener.getPollPortletList != undefined) {
 						parent.opener.opener.getPollPortletList();
 					}
 					
@@ -127,9 +127,9 @@
 				    window.open("/ezPersonal/pollResult.do?itemSeq=" + itemseq, "", "height=400px,width=455px, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
 				}
 				
-				if (parent.opener.getPollPortletList != undefined) {
+				if (parent.opener != null && parent.opener.getPollPortletList != undefined) {
 					parent.opener.getPollPortletList();
-				} else if (parent.opener.opener.getPollPortletList != undefined) {
+				} else if (parent.opener.opener != null && parent.opener.opener.getPollPortletList != undefined) {
 					parent.opener.opener.getPollPortletList();
 				} else {
 					opener.location.reload();
@@ -138,7 +138,7 @@
 			}
 			
 		    function vote_poll_Complete() {
-		    	if (parent.opener.getPollPortletList != undefined) {
+		    	if (parent.opener != null && parent.opener.getPollPortletList != undefined) {
 					parent.opener.getPollPortletList();
 				} else {
 					document.location.reload();

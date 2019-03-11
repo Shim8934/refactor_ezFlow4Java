@@ -7605,6 +7605,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (rtnVal.equals("ERROR")) {
 					falseCnt++;
 				} else {
+					ezApprovalGService.sendMailToNextAprMember(xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), request, loginCookie, userInfo, orgCompanyID, userInfo.getTenantId());
 					trueCnt++;
 				}
 			}

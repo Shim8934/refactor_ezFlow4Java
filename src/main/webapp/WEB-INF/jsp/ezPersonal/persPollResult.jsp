@@ -65,7 +65,7 @@
         	function close_btn() {
 	            if(ReturnFunction!= null) {
 	            	if(parent != null) {
-	            		if (parent.getPollPortletList != undefined) {
+	            		if (parent.opener != null && parent.getPollPortletList != undefined) {
 	            			parent.getPollPortletList();
 						} else {
 	                		parent.location.reload();
@@ -73,7 +73,7 @@
 	            	}
 	            	
 	            	if(paparent != null) {
-	            		if (paparent.getPollPortletList != undefined) {
+	            		if (paparent != null && paparent.getPollPortletList != undefined) {
 	            			paparent.getPollPortletList();
 						} else {
 		            		paparent.location.reload();

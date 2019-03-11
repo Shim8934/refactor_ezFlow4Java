@@ -1443,7 +1443,7 @@ logger.debug("map.toString()" + map.toString());
 				
 				sb.append("</TR>\n");
 			} else { 
-				if (menuItemMenuItemType.equals("0")) {
+				if (menuItemMenuItemType.equals("0") && !menuItemDisplayName.equals(" ")) {
 					sb.append(getMenuItemHTML(pCallingMenuID, menuItemUID, userInfo));
 				} else {
 					sb.append(getRenderedTopMenuHTMLInsert(pCallingMenuID, menuItemUID, "", "view", userInfo, userInfo.getTenantId()));

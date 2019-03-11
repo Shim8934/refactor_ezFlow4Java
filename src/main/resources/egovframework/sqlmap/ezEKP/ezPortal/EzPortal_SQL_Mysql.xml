@@ -1669,6 +1669,8 @@
 				B.TENANT_ID = #tenantID#
             AND
                 A.COMPANYID = B.COMPANYID 
+            AND
+            	A.USEFLAG = 'Y'
             ORDER BY
                 DISPLAYNAME ASC
             LIMIT
