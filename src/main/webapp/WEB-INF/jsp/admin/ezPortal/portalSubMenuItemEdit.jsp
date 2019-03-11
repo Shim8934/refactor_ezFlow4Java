@@ -164,6 +164,9 @@
 						toggle_tbl3_1.style.display = "none";
 						toggle_tbl3_2.style.display = "none";
 						toggle_tbl3_3.style.display = "none";
+						document.getElementById("menu_1").setAttribute("class", "on");
+						document.getElementById("menu_2").setAttribute("class", "off");
+						document.getElementById("menu_3").setAttribute("class", "off");
 						break;
 					case "2":
 						menu_1.src = "/images/tap_portal01.gif";
@@ -178,6 +181,9 @@
 						toggle_tbl3_1.style.display = "none";
 						toggle_tbl3_2.style.display = "none";
 						toggle_tbl3_3.style.display = "none";
+						document.getElementById("menu_1").setAttribute("class", "off");
+						document.getElementById("menu_2").setAttribute("class", "on");
+						document.getElementById("menu_3").setAttribute("class", "off");
 						break;
 					case "3":
 						menu_1.src = "/images/tap_portal01.gif";
@@ -192,6 +198,9 @@
 						toggle_tbl3_1.style.display = "";
 						toggle_tbl3_2.style.display = "";
 						toggle_tbl3_3.style.display = "";
+						document.getElementById("menu_1").setAttribute("class", "off");
+						document.getElementById("menu_2").setAttribute("class", "off");
+						document.getElementById("menu_3").setAttribute("class", "on");
 						break;
 				}
 			}
