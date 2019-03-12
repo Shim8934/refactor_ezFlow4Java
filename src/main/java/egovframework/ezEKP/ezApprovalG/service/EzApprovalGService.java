@@ -589,5 +589,7 @@ public interface EzApprovalGService {
 	public void setHesongCabinetID(String docID, String companyID, int tenantId) throws Exception;
 	
 	public String sendMailToNextAprMember(String docID, HttpServletRequest request, String loginCookie, LoginVO userInfo, String orgCompanyID, int tenantID) throws Exception;
+
+	void setHesongBansongCabinetID(String docID, String cabinetID,String taskCode, String companyID, int tenantId) throws Exception;
 	
 }
