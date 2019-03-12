@@ -245,7 +245,7 @@
 		                alert("<spring:message code='ezOrgan.t196' />");
 		                return;
 		            } else {
-		            	if (confirm("<spring:message code='ezOrgan.pjg01' />")) {
+		            	if (confirm("<spring:message code='ezOrgan.hsb01' />")) {
 				            _RowObject = document.getElementById(_RowObject.id);
 		
 				            if (document.getElementById("AddJobList").childNodes.length == 1) {
