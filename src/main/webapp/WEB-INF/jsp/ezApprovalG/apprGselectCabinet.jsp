@@ -50,6 +50,10 @@
 	        var UserLang = "${userInfo.lang}";
 	        var RetValue;
 	        var ReturnFunction;
+	        //반송,회송 대장등록시 기록물철 선택해주기 위해 추가
+	        var hesongFlag = "${hesongFlag}";
+	        var regDocId = "${regDocId}";
+	        
 	        window.onload = function () {
 	            try {
 	                RetValue = parent.selectcabinet_cross_dialogArguments[0];
@@ -87,7 +91,7 @@
 	            var nowYear = date.getFullYear();
 	            
 	            //2018-05-18 강민수92 셀렉트 박스 추가
-	            for (var i = nowYear + 5; i >= nowYear - 5; i--) {
+	            for (var i = nowYear; i >= nowYear - 7; i--) {
 	            	$('#selYear').append("<option value='" + i + "'>" + i + "</option>")
 	            }
 				
@@ -309,16 +313,22 @@
 	        SelListView.DataSource(oList);
 	        SelListView.DataBind("SelCabinetList");
 	    }
+	        
 	    function cmdCancel_onclick() {
 	        if (ReturnFunction != null) {
-	            ReturnFunction(rtnVal);
-	            window.close();
+	        	if (regDocId != null && regDocId != undefined) {
+		            window.close();
+	        	} else {
+		            ReturnFunction(rtnVal);
+		            window.close();
+	        	}
 	        }
 	        else {
 	            rtnVal[0] = "FALSE";
 	            window.close();
 	        }
 	    }
+	    
 	    function cmdConfirm_onclick() {
 	        var List = new ListView();
 	        List.LoadFromID("DivDivCabinetList");
@@ -326,6 +336,13 @@
 	        if (totalRows.length > 0) {
 	            rtnVal[0] = "TRUE";
 	            rtnVal[1] = GetSelCabInfoXml();
+	            
+	            var xml = createXmlDom();
+	            xml = loadXMLString(rtnVal[1]);
+	            
+	            var regCabinetId = getNodeText(SelectNodes(SelectNodes(xml, "CABINETINFO/CABINET")[0], "CABINETID")[0]);
+	            var regTaskCode = getNodeText(SelectNodes(SelectNodes(xml, "CABINETINFO/CABINET")[0], "TASKCODE")[0]);
+	            
 	            if (g_InitFlag == "0") {
 	                if (document.getElementById("chkTransfer").checked) {
 	                    rtnVal[2] = "1";
@@ -334,7 +351,34 @@
 	                    rtnVal[2] = "0";
 	                }
 	            }
-	            if (ReturnFunction != null) {
+	            
+	            //반송, 회송문서 대장등록시 철 변경
+	            if (regDocId != null && regDocId != undefined && regDocId != "" && regCabinetId != null && regCabinetId != undefined && regCabinetId != "") {
+		            	$.ajax({
+	            		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezApprovalG/setHesongBansongCabinetInfo.do",
+			    		data : {
+			    				docID  : regDocId,
+			    				cabinetID : regCabinetId,
+								taskCode : regTaskCode
+			    				},
+			    		success: function(xml) {
+			    			if (hesongFlag == "Y") {
+				    			ReturnFunction(regDocId, "Y");
+			    			} else {
+				    			ReturnFunction(regDocId, "");
+			    			}
+			    		},
+			    		error : function(error) {
+			    			alert("대장등록에 실패하였습니다.");
+			    			window.close();
+			    		}
+	            	});
+	            }
+	            
+	            if (ReturnFunction != null && (regDocId == null || regDocId == undefined || regDocId == "")) {
 	                ReturnFunction(rtnVal);
 	                window.close();
 	            }
