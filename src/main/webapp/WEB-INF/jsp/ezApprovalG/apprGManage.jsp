@@ -105,6 +105,8 @@
 		    var selRowChangeFlag = false;
 		    var orgCompanyID = "";
 		    
+		    var selectcabinet_cross_dialogArguments = new Array();
+		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -1420,30 +1422,29 @@
 		        if (tr.getAttribute("DATA10") == "015") {
 		        	if (Ans) {
 		            	//2019-02-18 기안원문서철과 비교해서 다르면 다시 세팅
-		            	
-		            	var result = "";
-		            	$.ajax({
-		            		type : "POST",
-				    		dataType : "text",
-				    		async : false,
-				    		url : "/ezApprovalG/setHesongCabinetInfo.do",
-				    		data : {
-				    				docID  : tr.getAttribute("DATA1")
-				    				},
-				    		success: function(xml){
-				    			RemoveDocCabinet(tr.getAttribute("DATA1"), "Y");
-				    		},
-				    		error : function(error) {
-// 				    			OpenAlertUI(strLang936 + "<spring:message code='ezApprovalG.t933'/>");
-				    			alert(strLang936 + "<spring:message code='ezApprovalG.t933'/>");
-				    		}
-		            	});
+		            	//2019-03-11 위의 주석내용 삭제 후 철정보 다시 세팅하도록 수정
+						var para = new Array();
+				        var url = "/ezApprovalG/selectCabinet.do?initFlag=1&hesongFlag=Y&docId=" + tr.getAttribute("DATA1");
+				
+				        selectcabinet_cross_dialogArguments[0] = para;
+				        selectcabinet_cross_dialogArguments[1] = RemoveDocCabinet;
+				
+				        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1000, 620));
+				        try { OpenWin.focus(); } catch (e) { }
 		                openergetDocInfo();
 		            }
 		        }
 		        else {
 		            if (Ans) {
-		                RemoveDocCabinet(tr.getAttribute("DATA1"), "");
+						var para = new Array();
+				        var url = "/ezApprovalG/selectCabinet.do?initFlag=1&docId=" + tr.getAttribute("DATA1");
+				
+				        selectcabinet_cross_dialogArguments[0] = para;
+				        selectcabinet_cross_dialogArguments[1] = RemoveDocCabinet;
+				
+				        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1000, 620));
+				        try { OpenWin.focus(); } catch (e) { }
+
 		                openergetDocInfo();
 		            }
 		        }

@@ -3185,4 +3185,8 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public ArrayList<String> getTmpDocList(Map<String, Object> map) throws Exception {
 		return (ArrayList<String>) list("EzApprovalG.getTmpDocList", map);
 	}
+	
+	public void setHesongBansongCabinetID(Map<String, Object> map) {
+		update("EzApprovalG.setHesongBansongCabinetID", map);
+	}
 }
