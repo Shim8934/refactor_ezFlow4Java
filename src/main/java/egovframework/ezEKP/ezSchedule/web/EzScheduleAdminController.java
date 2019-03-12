@@ -269,7 +269,7 @@ public class EzScheduleAdminController {
 	@RequestMapping(value="/admin/ezSchedule/scheduleDelHoliday.do")
 	@ResponseBody
 	public void scheduleDelHoliday(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
-		
+		String resultCode = "";
 		logger.debug("============ scheduleDelHoliday started ============");
 		
 		loginSimpleVO = commonUtil.userInfoSimple(loginCookie);
@@ -277,6 +277,31 @@ public class EzScheduleAdminController {
 		String hID = request.getParameter("holidayID");
 		
 		ezScheduleAdminService.scheduleDelHoliday(hID, loginSimpleVO.getTenantId());
+		
+		String dotNetTotalNotification = ezCommonService.getTenantConfig("dotNetTotalNotification", loginSimpleVO.getTenantId());
+	    logger.debug("dotNetTotalNotification=" + dotNetTotalNotification);
+		
+	    if(dotNetTotalNotification.equalsIgnoreCase("yes")) {
+	    	
+			String holidayIDParam = "holidayID=" + URLEncoder.encode(hID, "UTF-8");
+	    
+			String inputParams = holidayIDParam;
+			
+			logger.debug("inputParams=" + inputParams);
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/ezSchedule/scheduleDeleteHoliday";
+			String webServiceResultResponse = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+
+			logger.debug("response=" + webServiceResultResponse);
+
+			if (webServiceResultResponse != null) {
+				JSONParser jsonParser = new JSONParser();
+				JSONObject responseObj = (JSONObject)jsonParser.parse(webServiceResultResponse);
+
+				resultCode = (String)responseObj.get("resultCode");
+				logger.debug("resultCode=" + resultCode);
+			}
+	    }
 	}
 	
 	/**
@@ -381,7 +406,7 @@ public class EzScheduleAdminController {
 		String holidayID = request.getParameter("holidayID");
 		
 		if (type.equals("0")) {
-			ezScheduleAdminService.scheduleSaveHoliday(holidayName, holidayName2, holidayFlag, holidayDate, holidayRepeat, isSolar, isRepeat, isRest, companyID, loginSimpleVO.getTenantId());
+			holidayID = ezScheduleAdminService.scheduleSaveHoliday(holidayName, holidayName2, holidayFlag, holidayDate, holidayRepeat, isSolar, isRepeat, isRest, companyID, loginSimpleVO.getTenantId());
 		} else {
 			ezScheduleAdminService.scheduleUpdateHoliday(holidayName, holidayName2, holidayFlag, holidayDate, holidayRepeat, isSolar, isRepeat, isRest, companyID, loginSimpleVO.getTenantId(), holidayID);
 		}
@@ -419,10 +444,7 @@ public class EzScheduleAdminController {
 				resultCode = (String)responseObj.get("resultCode");
 				logger.debug("resultCode=" + resultCode);
 			}
-	    
 	    }
-	    
-	    
 	}
 	
 	/**

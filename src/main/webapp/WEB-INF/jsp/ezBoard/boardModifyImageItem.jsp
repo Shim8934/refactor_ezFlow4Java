@@ -201,7 +201,7 @@
 						});
 	                    
 	                     //2019.03.04 유은정 - 포토갤러리 포틀릿 리스트 업데이트 되도록 수정
-			            if (parent.opener.opener.photoBoardMovePage != undefined) {
+			            if (parent.opener.opener != null && parent.opener.opener.photoBoardMovePage != undefined) {
 			            	parent.opener.opener.photoBoardMovePage(null);
 			            }
 	                }
