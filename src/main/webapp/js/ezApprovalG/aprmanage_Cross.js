@@ -1,4 +1,4 @@
-﻿﻿var beforeJob = "0";
+﻿﻿﻿var beforeJob = "0";
 var pDocTypeValue = "000";
 var pageSize = "10";
 var CallPage = "Right";
@@ -2644,11 +2644,11 @@ function RemoveDocCabinet(tempDocID, FLAG) {
     }
     else {
         if (FLAG == "") {
-        	if (RtnVal == "RESETLINE") {
-        		var pAlertContent = strLangBae1;
-        	} else {
+//        	if (RtnVal == "RESETLINE") {
+//        		var pAlertContent = strLangBae1;
+//        	} else {
         		var pAlertContent = strLang901;
-        	}
+//        	}
         	
         }
         else {

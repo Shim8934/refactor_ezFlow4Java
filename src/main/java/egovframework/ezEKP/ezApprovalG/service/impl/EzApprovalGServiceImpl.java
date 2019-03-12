@@ -28245,4 +28245,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("sendMailToNextAprMember ended.");
 		return result;
 	}
+	
+	@Override
+	public void setHesongBansongCabinetID(String docID, String cabinetID, String taskCode, String companyID, int tenantId) throws Exception {
+		logger.debug("setHesongBansongCabinetID started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("docID", docID);
+		map.put("cabinetID", cabinetID);
+		map.put("taskCode", taskCode);
+		map.put("companyID", companyID);
+		map.put("tenantId", tenantId);
+		
+		ezApprovalGDAO.setHesongBansongCabinetID(map);
+		logger.debug("setHesongBansongCabinetID ended");
+	}
 }
