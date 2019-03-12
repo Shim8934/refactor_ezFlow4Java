@@ -10,20 +10,19 @@
 		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css">
 		<style>
 			.groupBoard {
-				width:266px;
+				width:276px;
 				overflow:hidden;
 				text-overflow:ellipsis;
 				display: inline-block;
 			}
-			.node_div span {
-				width:266px;
+			.node_div {
 				overflow:hidden;
 				text-overflow:ellipsis;
 			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCommunity/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
@@ -234,8 +233,13 @@
 			    for (var i = 0; i < xmldomNodes.length; i++) {
 			        var tid = SelectSingleNodeValue(xmldomNodes[i], "DATA1");
 			        tid = tid.substring(1, 37);
-			        strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
-			        strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='padding-top:5px;display:none;height:100%;width:300px;overflow-x:hidden;'></DIV></td></tr>";
+			        //strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</h2></td></tr>";
+			        if (i == 0) {
+						strHTML += "<tr><td><h2 style='border-top:0px; cursor:pointer;' id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
+			        } else {
+			        	strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
+			        }
+			        strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:310px;overflow-x:hidden;padding-top:10px;padding-bottom:10px;'></DIV></td></tr>";
 			    }
 			    
 			    strHTML += "</table>";
@@ -254,7 +258,7 @@
                 <li><span onclick="window.close()"></span></li>
             </ul>
         </div>
-        <div class="box" style="height: 485px; overflow: auto; word-break: break-all;border-top:0px" id="TopBoardsList"></div>
+        <div class="box" style="height: 485px; overflow: auto; word-break: break-all;" id="TopBoardsList"></div>
         <div class="btnpositionNew">
             <a class="imgbtn" name="Submit" onclick="Select()"><span><spring:message code = 'ezCommunity.t278' /></span></a>
         </div>

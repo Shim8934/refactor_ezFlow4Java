@@ -262,7 +262,8 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				switch (info[2]) {
 					case "0" :
 						while (true) {
-							if (date_cal.compareTo(lastDateOfCalendar) > 0) break;
+							if (date_cal.compareTo(eDate_cal) > 0) break;
+							//if (date_cal.compareTo(lastDateOfCalendar) > 0) break;
 							if (maxCount == count) break;
 							
 							boolean generated = false;
