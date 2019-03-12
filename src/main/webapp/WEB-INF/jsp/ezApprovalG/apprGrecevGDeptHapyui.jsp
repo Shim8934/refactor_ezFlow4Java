@@ -693,7 +693,8 @@
 		    function CheckAprLine(Ans) {
 		        DivPopUpHidden();
 		        if (Ans) {
-		            btnApprovalInfo("9");
+		            //기록물철 선택과정에서 버그가 있어 파라미터를 14로 수정. 2019-03-12 홍대표
+		        	btnApprovalInfo("14");
 		            return;
 		        }
 		        else {
