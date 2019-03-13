@@ -114,7 +114,7 @@
         <result property="extensionAttribute10" 	column="EXTENSIONATTRIBUTE10" 	columnIndex="28"/>
         <result property="docNo" 					column="DOCNO" 					columnIndex="29"/>
         <result property="writerDeptID"				column="WRITERDEPTID"				columnIndex="30"/>
-         <result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="31"/>
+		<result property="writerCompanyID" 		column="WRITERCOMPANYID" 		columnIndex="31"/>
 	</resultMap>
 	
 	<!-- baonk added -->
@@ -366,7 +366,7 @@
                 ]]>
                 <isEqual property="v_isAllGroupBoard" compareValue="Y">
 	                <![CDATA[
-	                	LISTTYPE = 1
+	                	LISTTYPE = '1'
 	                ]]>
                 </isEqual>
                 <isNotEqual property="v_isAllGroupBoard" compareValue="Y">
@@ -399,7 +399,7 @@
                     ]]>
                 <isEqual property="v_isAllGroupBoard" compareValue="Y">
 	                <![CDATA[
-	                	LISTTYPE = 1
+	                	LISTTYPE = '1'
 	                ]]>
                 </isEqual>
                 <isNotEqual property="v_isAllGroupBoard" compareValue="Y">
@@ -428,7 +428,7 @@
 				]]>
                 <isEqual property="v_isAllGroupBoard" compareValue="Y">
 	                <![CDATA[
-	                	LISTTYPE = 1
+	                	LISTTYPE = '1'
 	                ]]>
                 </isEqual>
                 <isNotEqual property="v_isAllGroupBoard" compareValue="Y">
