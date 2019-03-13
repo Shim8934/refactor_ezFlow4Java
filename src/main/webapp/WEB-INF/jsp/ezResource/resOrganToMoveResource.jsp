@@ -131,6 +131,11 @@
 			    		},
 			    		url : "/ezResource/moveResourceToOtherResourceGroup.do",
 			    		success: function(text){
+			    			/* var selectedLabel = $('#res'+pOrgBrdID,parent.parent.opener.parent.frames["left"].document);
+			    			var targetLabel = $('#res'+p_TargetID,parent.parent.opener.parent.frames["left"].document);
+			    			if (targetLabel.lastElementChild.style.display == "inline-block") {
+				    			selectedLabel.insertAfter(targetLabel);
+			    			}; */
 			    			window.opener.RefreshPageDoc();
 							window.location.reload(false);
 			    		},

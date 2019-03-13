@@ -25,6 +25,7 @@
 			var g_bSaved = false;
 			var menuindex = "<c:out value = '${menuIndex}' />";
 		    var pNoneActiveX = "${noneActiveX}";
+		    var isOnload = true;
 			window.onload = function()
 			{
 				toggle_menu(menuindex);
@@ -139,15 +140,19 @@
 				}
 				*/
 				
-				if (pmode == "new" && g_bSaved == false)
+				if (!isOnload && pmode == "new" && g_bSaved == false)
 				{
 					if (pIndex.toString() != "1")
 					{
 						alert("<spring:message code='ezPortal.t83'/>");
+						document.getElementById("menu_1").setAttribute("class", "on");
+						document.getElementById("menu_2").setAttribute("class", "off");
+						document.getElementById("menu_3").setAttribute("class", "off");
 						return;
 					}
-				}
+				} 
 				
+				isOnload = false; 
 				// 이미지 변경
 				switch(pIndex.toString())
 				{
@@ -203,6 +208,8 @@
 						document.getElementById("menu_3").setAttribute("class", "on");
 						break;
 				}
+				
+				
 			}
 			
 			function RemoveParameter(pParamName)
@@ -889,7 +896,7 @@
             <input type="hidden" name="mailgubun" id="mailgubun" />
 		</form>
 		<script type="text/javascript">
-    		selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+    		//selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		</script>
 	</body>

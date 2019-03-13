@@ -28217,6 +28217,16 @@
             AND   companyid = #companyID#
     </select>
     
+    <update id="EzApprovalG.setHesongBansongCabinetID" parameterClass="Map">
+    	update
+		    tbl_expaprdocinfo
+		set
+		    cabinetid = #cabinetID#, taskcode = #taskCode#
+		WHERE
+		    docid = #docID#
+		    AND   companyid = #companyID#
+		    AND   tenant_id = #tenantId#
+    </update>
 	 <select id="EzApprovalG.getTmpDocList" parameterClass="Map" resultClass="String">
 		SELECT
 			DOCID
