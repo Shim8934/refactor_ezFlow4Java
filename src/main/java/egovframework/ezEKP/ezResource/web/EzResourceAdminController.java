@@ -275,10 +275,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		
 		String brdID = "";
 		String companyID = "";
-		ResGetSubClsListVO getBrdInfo = new ResGetSubClsListVO();
 		String langPrimary = "";
 		String langSecondary = "";
-		
 		
 		langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
@@ -290,7 +288,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			companyID = req.getParameter("selCompanyID");
 		}
 			
-		getBrdInfo = ezResourceAdminService.getBrdInfo(Integer.parseInt(brdID), companyID, userInfo.getTenantId());
+		ResGetSubClsListVO getBrdInfo = ezResourceAdminService.getBrdInfo(Integer.parseInt(brdID), companyID, userInfo.getTenantId());
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("getBrdInfo", getBrdInfo);
@@ -483,14 +481,15 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 * 자원관리 분류순서조정 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardPostRegBoardOrder.do", method = RequestMethod.GET)
-	public String gwBoardPostRegBoardOrder(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model, Locale locale,HttpServletResponse resp) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String gwBoardPostRegBoardOrder(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model, Locale locale,HttpServletResponse resp) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
 		}
 		
 		StringBuilder tempStr = new StringBuilder();
+		StringBuilder pSubBrdLstBld = new StringBuilder();
 		String pWrnMsg = "";
 		String strRtnXML = "";
 		String strBrdStep = "";
@@ -498,7 +497,6 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		String strBrdID = "";
 		String strBrdNm = "";
 		String strTmp = "";
-		String pSubBrdLst = "";
 		String brdID = "";
 		String upNm = "";
 		String upLevel = "";
@@ -507,7 +505,6 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		String companyID = "";
 		int intSubClsCnt = 0;
 		
-	
 		brdID = req.getParameter("brdID");
 		upNm = req.getParameter("brdNm");
 		upLevel = req.getParameter("brdLevel");
@@ -554,10 +551,10 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 						strTmp = "";
 					}
 					
-					pSubBrdLst = pSubBrdLst + "<OPTION STEP= " + strBrdStep;
-					pSubBrdLst = pSubBrdLst + "  COUNT= " + strBrdCount;
-                    pSubBrdLst = pSubBrdLst + "  VALUE= " + strBrdID + " " + strTmp + ">";
-                    pSubBrdLst = pSubBrdLst + strBrdNm + "</OPTION>";
+					pSubBrdLstBld.append("<OPTION STEP= " + strBrdStep);
+					pSubBrdLstBld.append("  COUNT= " + strBrdCount);
+					pSubBrdLstBld.append("  VALUE= " + strBrdID + " " + strTmp + ">");
+					pSubBrdLstBld.append(strBrdNm + "</OPTION>");
 				}
 			}
 		} else {
@@ -573,7 +570,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		model.addAttribute("upCount", upCount);
 		model.addAttribute("selCompanyID", companyID);
 		model.addAttribute("pWrnMsg", pWrnMsg);
-		model.addAttribute("subBrdLst", pSubBrdLst);
+		model.addAttribute("subBrdLst", pSubBrdLstBld.toString());
 		model.addAttribute("intSubClsCnt", intSubClsCnt);
 		
 		return "admin/ezResource/resGwBoardPostRegBoardOrder";

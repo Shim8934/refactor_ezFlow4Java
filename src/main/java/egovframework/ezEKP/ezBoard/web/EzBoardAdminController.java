@@ -589,7 +589,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			try {
 				File tempFile = new File(realPath + tempFilePath + commonUtil.separator + "S_" + commonUtil.detectPathTraversal(fileName));
 				
-				if (tempFile != null) {
+				if (tempFile.exists()) {
 					tempFile.delete();
 				}
 				

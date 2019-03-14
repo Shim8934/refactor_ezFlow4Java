@@ -534,27 +534,24 @@ public class EzResourceController extends EgovFileMngUtil {
 		logger.debug("adminFg="+adminFg);
 		
 		//brdNm = brdNm.replace("chr(38)", "&");
-		String childBrd = ezResourceService.getItemList(loginCookie,brdID);
-		logger.debug("childBrd="+childBrd);
+		StringBuilder childBrdBld = new StringBuilder();
+		childBrdBld.append(ezResourceService.getItemList(loginCookie,brdID));
+		logger.debug("childBrd=" + childBrdBld.toString());
 		 
 		List<ResGetItemListVO>	list = ezResourceService.getBrdMainList(brdID, userInfo.getCompanyID(), userInfo.getPrimary(), userInfo.getTenantId());
-
+		
 		brdCount = list.size();
-		logger.debug("brdCount="+brdCount);
-		for (int i=0; i<brdCount; i++) {
-			childBrd += list.get(i).getBrd_ID() + "/" + list.get(i).getBrd_Nm() + "/" + list.get(i).getApproveFlag() + ",";
+		
+		logger.debug("brdCount=" + brdCount);
+		
+		for (int i = 0; i < brdCount; i++) {
+			childBrdBld.append(list.get(i).getBrd_ID() + "/" + list.get(i).getBrd_Nm() + "/" + list.get(i).getApproveFlag() + ",");
 		}
 		
 		ScheduleConfigVO scheduleConfigVO = ezScheduleService.getScheduleConfig(userInfo.getId(), userInfo.getTenantId());
-		int startDay = 0;
+		int startDay = scheduleConfigVO != null ? scheduleConfigVO.getStartDay() : 7;
 		
-		if (scheduleConfigVO != null) {
-			startDay = scheduleConfigVO.getStartDay();
-		} else {
-			startDay = 7;
-		}
-		
-		model.addAttribute("childBrd", childBrd);
+		model.addAttribute("childBrd", childBrdBld.toString());
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("brdNm", brdNm);
 		model.addAttribute("accessCode", accessCode);
@@ -1333,7 +1330,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 		}
 		
-		ResBrdVO resBrdVO = ezResourceService.getBrd(Integer.valueOf(resID), userInfo.getCompanyID(), userInfo.getTenantId());
+		ResBrdVO resBrdVO = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (userInfo.getPrimary().equals("1")) {
 			brdName = resBrdVO.getBrdNm();
@@ -1576,7 +1573,7 @@ public class EzResourceController extends EgovFileMngUtil {
 					cDate = cDate.substring(0, 10);
 					startDateTime = selSd + " " + cTime + ":00:00";
 					endDateTime = selEd + " " + cTime + ":30:00";
-					allDay = "1";				// 2018-08-06 김민성 - 종일일정 클릭 시 기간 하루종일로 변경
+					allDay = "1"; // 2018-08-06 김민성 - 종일일정 클릭 시 기간 하루종일로 변경
 				} else {
 					startDateTime = selSd;
 					endDateTime = selEd;
@@ -1588,7 +1585,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			}
 		}
 		
-		ResBrdVO resBrdVO = ezResourceService.getBrd(Integer.valueOf(resID), userInfo.getCompanyID(), userInfo.getTenantId());
+		ResBrdVO resBrdVO = ezResourceService.getBrd(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (userInfo.getPrimary().equals("1")) {
 			brdName = resBrdVO.getBrdNm();
@@ -2013,9 +2010,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 자원예약 부서 선택 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleSelectDept.do", method = RequestMethod.GET)
-	public String scheduleSelectDept(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
-		
+	public String scheduleSelectDept(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) {
 		return "/ezResource/resScheduleSelectDept";
 	}
 	

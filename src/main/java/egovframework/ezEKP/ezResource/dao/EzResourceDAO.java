@@ -302,7 +302,7 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (String) select("EzResourceDAO.getResourceOrder", map);
 	}
 	
-	public void ChangeResourceOrder(Map<String, Object> map) throws Exception {
+	public void changeResourceOrder(Map<String, Object> map) throws Exception {
 		update("EzResourceDAO.ChangeResourceOrder", map);
 	}
 	

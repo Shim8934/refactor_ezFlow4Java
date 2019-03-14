@@ -160,8 +160,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_PRIMARY", primary);
 		map.put("v_TENANTID", tenantID);
 		
-		String[] boardIDs = boardIdList.split(";");
-		String rtnValue = "";
+		String[] boardIDs      = boardIdList.split(";");
+		StringBuilder rtnValue = new StringBuilder();
 		
 		for (int k = 0; k < boardIdListCount; k++) {
 			map.put("v_BOARDID", boardIDs[k]);
@@ -170,15 +170,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			if (boardGroupID != null && !boardGroupID.equals("")) {
 				map.put("v_BOARDGROUPID", boardGroupID);
-				
-				rtnValue = rtnValue + ezBoardDAO.getBoardName(map) + ";";
+				rtnValue.append(ezBoardDAO.getBoardName(map) + ";");
 			} else {
-				rtnValue = rtnValue + egovMessageSource.getMessage("ezBoard.hyj01", locale);;
+				rtnValue.append(egovMessageSource.getMessage("ezBoard.hyj01", locale));
 			}
 		}
 
 		logger.debug("get_parentBoardName ended");
-		return rtnValue;
+		return rtnValue.toString();
 	}
 
 	@Override
@@ -255,9 +254,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		// 나의게시물, 임시보관함, 게시물 승인의 경우 게시판 ID가 없음
 		if (!ezBoardVO.getBoardType().equals("2") && ezBoardVO.getBoardId() != null) {
-			BoardPropertyVO boardProp = new BoardPropertyVO();
-			
-			boardProp = getBoardProperty(ezBoardVO.getBoardId(), ezBoardVO.getTenantID());
+			BoardPropertyVO boardProp = getBoardProperty(ezBoardVO.getBoardId(), ezBoardVO.getTenantID());
 			
 			if (boardProp.getBoardGroupID() != null) {
 				BoardPropertyVO boardGroupProp = getBoardProperty(boardProp.getBoardGroupID(), ezBoardVO.getTenantID());
@@ -716,9 +713,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		// 게시판검색 기능의 경우 게시판 ID가 'all'로 들어감
 		if (!ezBoardVO.getBoardType().equals("2") && ezBoardVO.getBoardId() != null && !ezBoardVO.getBoardId().equalsIgnoreCase("all")) {
-			BoardPropertyVO boardProp = new BoardPropertyVO();
-			
-			boardProp = getBoardProperty(ezBoardVO.getBoardId(), ezBoardVO.getTenantID());
+			BoardPropertyVO boardProp = getBoardProperty(ezBoardVO.getBoardId(), ezBoardVO.getTenantID());
 			
 			if (boardProp != null && boardProp.getBoardGroupID() != null) {
 				BoardPropertyVO boardGroupProp = getBoardProperty(boardProp.getBoardGroupID(), ezBoardVO.getTenantID());
@@ -775,8 +770,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("start", startRowNum);
 		map.put("perCount", perCount);
 		
-		BoardPropertyVO boardProp = new BoardPropertyVO();
-		boardProp = getBoardProperty(boardID, tenantID);
+		BoardPropertyVO boardProp = getBoardProperty(boardID, tenantID);
 		
 		if (boardProp.getBoardGroupID() != null) {
 			BoardPropertyVO boardGroupProp = getBoardProperty(boardProp.getBoardGroupID(), tenantID);
@@ -793,7 +787,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		resultXML.append("<DOCLIST>");
 		
 		int totalCount = getReaderListCount(boardID, itemID, userID, lang, tenantID);
-		int totalPage = (int) Math.floor(totalCount / perCount);
+		int totalPage = (int) ((float)totalCount / perCount);
 		if(totalCount % 10 != 0){
 			totalPage = totalPage + 1;
 		}
@@ -2200,8 +2194,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		
-		BoardPropertyVO boardProp = new BoardPropertyVO();
-		boardProp = getBoardProperty(boardID, tenantID);
+		BoardPropertyVO boardProp = getBoardProperty(boardID, tenantID);
 		
 		if (boardProp.getBoardGroupID() != null) {
 			BoardPropertyVO boardGroupProp = getBoardProperty(boardProp.getBoardGroupID(), tenantID);
@@ -2553,14 +2546,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			return retValue;
 		}
 		
-		String pAccessID = pUserID;
+		StringBuilder pAccessBld = new StringBuilder();
+		pAccessBld.append(pUserID);
+		
 		String[] reverseDeptPath = ezOrganService.getDeptFullPath(pDeptID, tenantID).split(",");
 		for (int i = reverseDeptPath.length -1; i >= 0 ; i--) {
-			pAccessID += "," + reverseDeptPath[i];
+			pAccessBld.append("," + reverseDeptPath[i]);
 			if (i == 0) {
-				pAccessID += ",everyone"; 
+				pAccessBld.append(",everyone");
 			}
 		}
+		
+		String pAccessID   = pAccessBld.toString();
 		String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
 		
 		/* 2018-10-16 홍승비 - 그룹사게시판 표출을 제어하는 showAllGroupBoard 플래그 설정 */
@@ -2585,7 +2582,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 				if (tempBrdBoardTreeList != null && tempBrdBoardTreeList.size() > 0) {
 					for (BoardTreeVO k : tempBrdBoardTreeList) {
-						if (brdBoardTreeList.size() > 0) {
+						if (!brdBoardTreeList.isEmpty()) {
 							int tempCnt = 0;
 							
 							for (BoardTreeVO h : brdBoardTreeList) {
@@ -2607,13 +2604,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			if (pMode != 0) {
 				List<BoardVO> boardTreeList = ezBoardAdminService.getBoardTree_Get2(pAccessID.split(",")[i].trim(), pRootBoardID, tenantID);
 				
-				if (boardTreeList.size() > 0) {
+				if (!boardTreeList.isEmpty()) {
+					StringBuilder strForbiddenBoardIDListBld = new StringBuilder();
 					for (int r = 0; r < boardTreeList.size(); r++) {
 						boardID = boardTreeList.get(r).getBoardId();
-						if (strForbiddenBoardIDList.indexOf(boardID.split(",")[0]) == -1) {
-							strForbiddenBoardIDList += boardID.trim();
+						if (strForbiddenBoardIDListBld.indexOf(boardID.split(",")[0]) == -1) {
+							strForbiddenBoardIDListBld.append(boardID.trim());
 						}
 					}
+					
+					strForbiddenBoardIDList = strForbiddenBoardIDListBld.toString();
 				}
 			}
 		}
@@ -2646,35 +2646,19 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			result.append("<NODE>");
 			
-			if (pRootBoardID.equals("top")) {
-				if (pStrLang.equals("")) {
-					result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</VALUE>");
-				} else {
-					result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</VALUE>");
-				}        	
+			if (pStrLang.equals("")) {
+				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</VALUE>");
 			} else {
-				if (pStrLang.equals("")) {
-					result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</VALUE>");
-				} else {
-					result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</VALUE>");
-				}        	
+				result.append("<VALUE>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</VALUE>");
 			}
 			
 			result.append("<STYLE><![CDATA[]]></STYLE>");
 			result.append("<DATA1>" + brdBoardTreeList.get(i).getBoardId() + "</DATA1>");
 			
-			if (pRootBoardID.equals("top")) {
-				if (pStrLang.equals("")) {
-					result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</DATA2>");
-				} else {
-					result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</DATA2>");
-				}            
+			if (pStrLang.equals("")) {
+				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</DATA2>");
 			} else {
-				if (pStrLang.equals("")) {
-					result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName()) + "</DATA2>");
-				} else {
-					result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</DATA2>");
-				}            
+				result.append("<DATA2>" + commonUtil.cleanValue(brdBoardTreeList.get(i).getBoardName2()) + "</DATA2>");
 			}
 			
 			result.append("<DATA3>" + pRootBoardID + "</DATA3>");
@@ -2791,7 +2775,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		String resultSize = "";
 
 		if (mhtSize > 1048576) {
-			resultSize = String.valueOf(mhtSize / 1024 / 102.4 / 10) + " MB";
+			resultSize = String.valueOf((double)mhtSize / 1024 / 102.4 / 10) + " MB";
 		} else if (mhtSize > 1024) {
 			resultSize = String.valueOf(mhtSize / 102.4 / 10) + " KB";
 		} else {
@@ -3175,8 +3159,6 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 						FileUtils.moveFile(file, fileinfo);
 						file.delete();
 					}
-					
-					file = null;
 				}
 				
 				fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
@@ -3231,12 +3213,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 		}
 		
-		InputStream stream = null;
-		OutputStream bos = null;
-		
-		try {
-			stream = new ByteArrayInputStream(strHTML.getBytes("UTF-8"));
-			bos = new FileOutputStream(realPath + stordFilePathReal + commonUtil.separator + mhtFilePath);
+		try (
+			InputStream stream = new ByteArrayInputStream(strHTML.getBytes("UTF-8"));
+			OutputStream bos = new FileOutputStream(realPath + stordFilePathReal + commonUtil.separator + mhtFilePath)
+			) {
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[2048];
@@ -3244,20 +3224,14 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			while ((bytesRead = stream.read(buffer, 0, 2048)) != -1) {
 				bos.write(buffer, 0, bytesRead);
 			}
-			
-			ret = true;
-		} catch (Exception e) {
-			ret = false;
-		} finally {
-			if(bos != null){
-				bos.close();
-			}
-			
-			if(stream != null){
-				stream.close();
-			}
 		}
-
+		catch (RuntimeException e) {
+			throw e;
+		}
+		catch (Exception e) {
+			ret = false;
+		}
+		
 		logger.debug("saveMHT ended");
 		return ret;
 	}
