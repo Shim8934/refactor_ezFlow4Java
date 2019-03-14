@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -77,8 +78,8 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(restUrl);
 		
 		if (param != null) {
-			for(String key : param.keySet()){
-				builder.queryParam(key, param.get(key));
+			for(Entry<String, Object> entry : param.entrySet()){
+				builder.queryParam(entry.getKey(), entry.getValue());
 			}
 		}
 		
@@ -364,12 +365,27 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		rest.execute(builder.build().encode().toUri(), HttpMethod.GET, requestCallback, responseExtractor);
 	}
 	
-	private class MultipartFileResource extends InputStreamResource {
+	private static class MultipartFileResource extends InputStreamResource {
 		private String filename;
 		
 		public MultipartFileResource(InputStream inputStream, String filename) {
 			super(inputStream);
 			this.filename = filename;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (! super.equals(obj)) {
+				return false;
+			}
+			
+			MultipartFileResource fobj = (MultipartFileResource) obj;
+			return filename.equals(fobj.getFilename()); 
+		}
+		
+		@Override
+		public int hashCode() {
+			return 42 + filename.hashCode();
 		}
 		
 		@Override
@@ -383,7 +399,7 @@ public class EzSurveyRestServiceImpl implements EzSurveyRestService {
 		}
 	}
 	
-	private class BnkResourceHttpMessageConverter extends ResourceHttpMessageConverter {
+	private static class BnkResourceHttpMessageConverter extends ResourceHttpMessageConverter {
 		@Override
 		protected Long getContentLength(Resource resource, MediaType contentType) throws IOException {
 			Long contentLength = super.getContentLength(resource, contentType);
