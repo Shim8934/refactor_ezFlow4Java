@@ -448,14 +448,14 @@ public class EzSurveyGWController {
 			String serverName   = request.getHeader("host-name") != null ? request.getHeader("host-name")         : "";
 			String userId       = surveyItem.get("userId")       != null ? surveyItem.get("userId").toString()    : "";
 			
-			logger.debug("ServerName: " + serverName + " || survey id: " + surveyId + " || draft mode: " + draftMode + " || User id: " + userId + " || question list: " + questions.toJSONString() + " || survey information: " + infor.toJSONString());
-			
-			if (serverName.equals("") || userId.equals("") || ((questions == null || questions.size() == 0) && draftMode == 0) || infor == null || infor.toJSONString().equals("")) {
+			if (serverName.equals("") || userId.equals("") || (questions.isEmpty() && draftMode == 0) || infor == null || infor.toJSONString().equals("")) {
 				logger.debug("Parameter error!");
 				result.put("status", "error");
 				result.put("code", 1);
 				return result;
 			}
+			
+			logger.debug("ServerName: " + serverName + " || survey id: " + surveyId + " || draft mode: " + draftMode + " || User id: " + userId + " || question list: " + questions.toJSONString() + " || survey information: " + infor.toJSONString());
 			
 			String title            = infor.get("title")      != null ? infor.get("title").toString()              : "";
 			String purpose          = infor.get("purpose")    != null ? infor.get("purpose").toString()            : "";

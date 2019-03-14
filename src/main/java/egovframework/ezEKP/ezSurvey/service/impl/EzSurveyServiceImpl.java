@@ -1159,18 +1159,19 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		
 		for (int i = 0; i < responses.size(); i++) {
 			JSONObject responseObj = (JSONObject)responses.get(i);
-			int questionType       = ((Long)responseObj.get("type")).intValue();
-			JSONArray answers      = ((JSONArray)responseObj.get("answers"));
-			int questionLevel      = ((Long)responseObj.get("questionLevel")).intValue();
-			String companyId       = userInfo.getCompanyID();
-			int tenantId           = userInfo.getTenantId();
-			String userId          = userInfo.getId();
 			
-			if (responseObj == null || responseObj.size() == 0) {
+			if (responseObj.isEmpty()) {
 				result.put("status", "error");
 				result.put("code", 1);
 				return result;
 			}
+			
+			int questionType  = ((Long)responseObj.get("type")).intValue();
+			JSONArray answers = ((JSONArray)responseObj.get("answers"));
+			int questionLevel = ((Long)responseObj.get("questionLevel")).intValue();
+			String companyId  = userInfo.getCompanyID();
+			int tenantId      = userInfo.getTenantId();
+			String userId     = userInfo.getId();
 			
 			for (int j = 0; j < answers.size(); j++, responseId++) {
 				JSONObject answerObject = (JSONObject) answers.get(j);

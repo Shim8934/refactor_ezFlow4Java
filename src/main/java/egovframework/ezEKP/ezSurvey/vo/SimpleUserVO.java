@@ -134,7 +134,7 @@ public class SimpleUserVO implements Serializable {
 	public boolean equals(Object object) {
 		if (object instanceof SimpleUserVO) {
 			SimpleUserVO obj = (SimpleUserVO) object;
-			return userId == obj.userId && deptId == obj.deptId;
+			return userId.equals(obj.userId) && deptId.equals(obj.deptId);
 		}
 		else {
 			return false;
