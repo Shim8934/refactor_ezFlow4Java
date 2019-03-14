@@ -234,9 +234,11 @@ function organtreeview(thisobjid, elobjid) {
                 if (toggleel.className.indexOf("sub_iconLNB tree_plus") >= 0) {
                 	//toggleel.src = g_baseImage["minus_normal"];
                 	toggleel.className = "sub_iconLNB tree_minus";
-                } else {
+                } else if(toggleel.className.indexOf("sub_iconLNB tree_minus") >= 0){
                 	//toggleel.src = g_baseImage["minus_end"];
                 	toggleel.className = "sub_iconLNB tree_plus";
+                } else {
+                	childel.style.display = "none";
                 }
                     
                 if (childel.innerHTML == "") {
@@ -252,7 +254,7 @@ function organtreeview(thisobjid, elobjid) {
                 if (toggleel.className.indexOf("sub_iconLNB tree_minus") >= 0) {
                 	//toggleel.src = g_baseImage["plus_normal"];
                 	toggleel.className = "sub_iconLNB tree_plus";
-                } else {
+                } else if(toggleel.className.indexOf("sub_iconLNB tree_minus") >= 0){
                 	//toggleel.src = g_baseImage["plus_end"];
                 	toggleel.className = "sub_iconLNB tree_plus";
                 }
@@ -276,9 +278,11 @@ function organtreeview(thisobjid, elobjid) {
                 if (toggleel.className.indexOf("sub_iconLNB tree_plus") >= 0) {
                 	//toggleel.src = g_baseImage["minus_normal"];
                 	toggleel.className = "sub_iconLNB tree_minus";
-                } else {
+                } else if(toggleel.className.indexOf("sub_iconLNB tree_minus") >= 0){
                 	//toggleel.src = g_baseImage["minus_end"];
                 	toggleel.className = "sub_iconLNB tree_minus";
+                } else {
+                	childel.style.display = "none";
                 }
                     
                 if (childel.innerHTML == "") {
@@ -292,7 +296,7 @@ function organtreeview(thisobjid, elobjid) {
                 if (toggleel.className.indexOf("sub_iconLNB tree_minus") >= 0) {	
                 	//toggleel.src = g_baseImage["plus_normal"];
                 	toggleel.className = "sub_iconLNB tree_plus";
-                } else {
+                } else if(toggleel.className.indexOf("sub_iconLNB tree_minus") >= 0){
                 	//toggleel.src = g_baseImage["plus_end"];
                 	toggleel.className = "sub_iconLNB tree_plus";
                 }
