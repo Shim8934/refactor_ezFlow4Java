@@ -7700,7 +7700,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String companyName = request.getParameter("companyName");
 		String companyName2 = request.getParameter("companyName2");
 		
-		Cookie cookieID0 = new Cookie("APRUI0", deptID);
+		Cookie cookieID0 = new Cookie("APRUI0", URLEncoder.encode(deptID, "utf-8"));
     	cookieID0.setPath("/");
     	response.addCookie(cookieID0);
     	
@@ -7728,7 +7728,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
     	cookieID6.setPath("/");
     	response.addCookie(cookieID6);
     	
-    	Cookie cookieID7 = new Cookie("APRUI7", companyID);
+    	Cookie cookieID7 = new Cookie("APRUI7", URLEncoder.encode(companyID, "utf-8"));
     	cookieID7.setPath("/");
     	response.addCookie(cookieID7);
     	

@@ -146,7 +146,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		if (companyID != null && !companyID.equals("") && deptID != null && !deptID.equals("")) {
-			Cookie cookieID0 = new Cookie("APRUI0", userInfo.getDeptID());
+			Cookie cookieID0 = new Cookie("APRUI0", URLEncoder.encode(userInfo.getDeptID(), "utf-8"));
 	    	cookieID0.setPath("/");
 	    	resp.addCookie(cookieID0);
 	    	
@@ -174,7 +174,7 @@ public class EzPortalController extends EgovFileMngUtil {
 	    	cookieID6.setPath("/");
 	    	resp.addCookie(cookieID6);
 	    	
-	    	Cookie cookieID7 = new Cookie("APRUI7", userInfo.getCompanyID());
+	    	Cookie cookieID7 = new Cookie("APRUI7", URLEncoder.encode(userInfo.getCompanyID(), "utf-8"));
 	    	cookieID7.setPath("/");
 	    	resp.addCookie(cookieID7);
 		}

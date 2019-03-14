@@ -302,7 +302,7 @@ public class CommonUtil {
 			for (int k = 0; k < cookie.length; k++) {
 				switch (cookie[k].getName()) {
 				case "APRUI0":
-					user.setDeptID(cookie[k].getValue());
+					user.setDeptID(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI1":
 					user.setDeptName1(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
@@ -323,7 +323,7 @@ public class CommonUtil {
 					user.setTitle2(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				case "APRUI7":
-					user.setCompanyID(cookie[k].getValue());
+					user.setCompanyID(URLDecoder.decode(cookie[k].getValue(), "utf-8"));
 					break;
 				}
 			}
