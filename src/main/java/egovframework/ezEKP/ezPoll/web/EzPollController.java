@@ -122,8 +122,9 @@ public class EzPollController extends EgovFileMngUtil {
 		String [] filePath = null;
 		ObjectMapper om = new ObjectMapper();
 		List<PollAnswerVO> listOptions = null;
-		StringBuffer strXML = new StringBuffer();
-		StringBuffer strXMLRange = new StringBuffer();
+		StringBuilder listOfTargetBld = new StringBuilder();
+		StringBuilder strXML = new StringBuilder();
+		StringBuilder strXMLRange = new StringBuilder();
 		strXMLRange.append("<RANGE>"); 
 		String params = (request.getParameter("params") != null) ? request.getParameter("params") : "";
 		String searchStr = (request.getParameter("search") != null) ? request.getParameter("search") : "";
@@ -178,12 +179,11 @@ public class EzPollController extends EgovFileMngUtil {
 			        			"\" nm2=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName2()) + "\">" + commonUtil.cleanValue(organDeptVO.getCn()) + "</DATA>");
 			        	
 			        	if (loginVO.getPrimary().equals("1")) {
-			        		listOfTarget += organDeptVO.getDisplayName1() + ",";
+			        		listOfTargetBld.append(organDeptVO.getDisplayName1() + ",");
 			        	}
 			        	else {
-			        		listOfTarget += organDeptVO.getDisplayName2() + ",";
+			        		listOfTargetBld.append(organDeptVO.getDisplayName2() + ",");
 			        	}
-			        	
 			        }
 			        
 			        strXMLRange.append("</DEPT>"); 
@@ -199,16 +199,17 @@ public class EzPollController extends EgovFileMngUtil {
 		        				+ commonUtil.cleanValue(userVo.getId()) + "</DATA>");
 		        		
 			        	if (loginVO.getPrimary().equals("1")) {
-			        		listOfTarget += userVo.getDisplayName1() + ",";
+			        		listOfTargetBld.append(userVo.getDisplayName1() + ",");
 			        	}
 			        	else {
-			        		listOfTarget += userVo.getDisplayName2() + ",";
+			        		listOfTargetBld.append(userVo.getDisplayName2() + ",");
 			        	}
-		        		
-		        	}		        	
+		        	}
 		        	
 		        	strXMLRange.append("</MEMBER>");
 		        }
+		        
+		        listOfTarget = listOfTargetBld.toString();
 		        
 		        if (listOfTarget.endsWith(",")) {
 		        	listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 1);
@@ -260,10 +261,10 @@ public class EzPollController extends EgovFileMngUtil {
 			        			"\" nm2=\"" + commonUtil.cleanValue(organDeptVO.getDisplayName2()) + "\">" + commonUtil.cleanValue(organDeptVO.getCn()) + "</DATA>");
 			        	
 			        	if (loginVO.getPrimary().equals("1")) {
-			        		listOfTarget += organDeptVO.getDisplayName1() + ",";
+			        		listOfTargetBld.append(organDeptVO.getDisplayName1() + ",");
 			        	}
 			        	else {
-			        		listOfTarget += organDeptVO.getDisplayName2() + ",";
+			        		listOfTargetBld.append(organDeptVO.getDisplayName2() + ",");
 			        	}
 			        	
 			        }
@@ -288,31 +289,32 @@ public class EzPollController extends EgovFileMngUtil {
 		        				+ commonUtil.cleanValue(user.getId()) + "</DATA>");
 		        		
 			        	if (loginVO.getPrimary().equals("1")) {
-			        		listOfTarget += user.getDisplayName1() + ",";
+			        		listOfTargetBld.append(user.getDisplayName1() + ",");
 			        	}
 			        	else {
-			        		listOfTarget += user.getDisplayName2() + ",";
+			        		listOfTargetBld.append(user.getDisplayName2() + ",");
 			        	}
-		        		
-		        	}		        	
+		        	}
 		        	
 		        	strXMLRange.append("</MEMBER>");
 		        }
 		        
+		        listOfTarget = listOfTargetBld.toString();
+		        
 		        if (listOfTarget.endsWith(",")) {
 		        	listOfTarget = listOfTarget.substring(0, listOfTarget.length() - 1);
-		        }				
+		        }
 			}
 			
 		}
 		
-		strXMLRange.append("</RANGE>");		
-			
+		strXMLRange.append("</RANGE>");
+		
 		model.addAttribute("optList", om.writeValueAsString(listOptions));
 		model.addAttribute("mode", mode);
 		model.addAttribute("content", content);
 		model.addAttribute("filePath", strXML.toString());
-		model.addAttribute("targetPath", strXMLRange.toString());		
+		model.addAttribute("targetPath", strXMLRange.toString());
 		model.addAttribute("params", params);
 		model.addAttribute("searchStr", searchStr);
 		model.addAttribute("searchN", searchN);	
@@ -719,7 +721,6 @@ public class EzPollController extends EgovFileMngUtil {
 		String deptID =	loginVO.getDeptID();
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
 		String brdId = request.getParameter("brdId") != null ? request.getParameter("brdId") : "";
-		int totalUsers = 0;		
 		int totalVotes = 0;
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		int compareEnd = 0;
@@ -1579,14 +1580,12 @@ public class EzPollController extends EgovFileMngUtil {
 		
 		String realPath = request.getServletContext().getRealPath("");
 		String[] pFileName = new String[cnt];
-        Long[] fileSize = new Long[cnt];        
-        String[] resultUpload = new String[cnt];
+        Long[] fileSize = new Long[cnt];
         String[] sGUID = new String[cnt];
-        String[] pUploadSN = new String[cnt];        
+        String[] pUploadSN = new String[cnt];
         String useExtension = ezCommonService.getTenantConfig("USE_FileExtension", loginSimpleVO.getTenantId());
 
         for (int i = 0; i < cnt; i++) {
-            resultUpload[i] = "false";
             sGUID[i] = UUID.randomUUID().toString();
             pUploadSN[i] = "{" + sGUID[i] + "}";
         }
@@ -1641,9 +1640,9 @@ public class EzPollController extends EgovFileMngUtil {
 				strXML.append("<DATA3><![CDATA[OK]]></DATA3>");
             }
         }
-        strXML.append("</NODES></ROOT>");        
+        strXML.append("</NODES></ROOT>");
        
-        logger.debug("Upload file finishes!");        
+        logger.debug("Upload file finishes!");
         return strXML.toString();
     }
 	
@@ -2023,13 +2022,9 @@ public class EzPollController extends EgovFileMngUtil {
 		int tenantId = loginVO.getTenantId();
 		int qstId = -1;
 		int numberOfUnVotedUsers = 0;
-		int target = 0;
-		if(request.getParameter("target") != null){
-			target = Integer.parseInt(request.getParameter("target"));
-		}
 		
 		if (request.getParameter("qstId") != null) {
-			qstId =	Integer.parseInt(request.getParameter("qstId"));			
+			qstId =	Integer.parseInt(request.getParameter("qstId"));
 		}
 		
 		//Get all users for this question
@@ -2153,19 +2148,11 @@ public class EzPollController extends EgovFileMngUtil {
 		int tenantId = loginVO.getTenantId();
 		String companyID = loginVO.getCompanyID();
 		int qstId =	Integer.parseInt(request.getParameter("qstId"));
-		int target = 0;
-		if(request.getParameter("target") != null){
-			target = Integer.parseInt(request.getParameter("target"));
-		}
 	
 		//Get all related users for this question
 		//해당 투표 대상자 전체 인원을 얻어옴. 2018-06-04 홍대표
 		List<LoginVO> listofUnseenUsers = ezPollService.getAllUsersInfoForQstM(tenantId, qstId, companyID);
-		List<LoginVO> listofSeenUsers = new ArrayList<LoginVO>();
-		
-		//Get all of seen users
-//		List<String> listOfSeenUsers = ezPollService.getNumberOfSeenUsers(qstId, tenantId);
-		listofSeenUsers = ezPollService.getInfoOfSeenUsers(tenantId, qstId, companyID);
+		List<LoginVO> listofSeenUsers = ezPollService.getInfoOfSeenUsers(tenantId, qstId, companyID);
 		
 		int numberOfSeenUsers = listofSeenUsers.size();
 		listofUnseenUsers.removeAll(listofSeenUsers);
@@ -2212,7 +2199,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		//Sort list of seen users
-		if (listofSeenUsers.size() > 0) {
+		if (!listofSeenUsers.isEmpty()) {
 			if (loginVO.getPrimary().equals("1")) {
 				Collections.sort(listofSeenUsers, (LoginVO user1, LoginVO user2) -> {
 			        return user1.getDisplayName1().compareTo(user2.getDisplayName1());		        
@@ -2226,7 +2213,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		//Sort list of unseen users
-		if (listofUnseenUsers.size() > 0) {
+		if (!listofUnseenUsers.isEmpty()) {
 			if (loginVO.getPrimary().equals("1")) {
 				Collections.sort(listofUnseenUsers, (LoginVO user1, LoginVO user2) -> {
 			        return user1.getDisplayName1().compareTo(user2.getDisplayName1());		        
@@ -2386,13 +2373,14 @@ public class EzPollController extends EgovFileMngUtil {
  		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
  		String pAutoSaveTime = mailGeneralVO.getKeepDeleteLength() == null ? "0" : mailGeneralVO.getKeepDeleteLength();
  		String pMailSenderNM = EgovStringUtil.isEmpty(mailGeneralVO.getMailSenderNm()) ? userInfo.getDisplayName2() : mailGeneralVO.getMailSenderNm();
- 		String mailSendObject = "<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>";
+ 		StringBuilder mailSendObjectBld = new StringBuilder();
+ 		mailSendObjectBld.append("<option value='NONE'>" + egovMessageSource.getMessage("ezEmail.t99000032", locale) + "</option>");
  		
  		if (pMailSenderNM != null && !pMailSenderNM.trim().equals("")) {
  			String[] senderList = pMailSenderNM.split("\\|!\\-@\\-!\\|");
  			
  	 		for (String pSenderNM : senderList) {
- 	 			mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
+ 	 			mailSendObjectBld.append("<option value='" + pSenderNM + "'>" + pSenderNM + "</option>");
  	 		}
  		}
         logger.debug("pAutoSaveTime=" + pAutoSaveTime + ",pMailSenderNM=" + pMailSenderNM);
@@ -2591,7 +2579,7 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("pBigAttachDownloadPeriod", pBigAttachDownloadPeriod);
 		model.addAttribute("pAutoSaveTime", pAutoSaveTime);
 		model.addAttribute("pAttachWarning", pAttachWarning);
-		model.addAttribute("mailSendObject", mailSendObject);
+		model.addAttribute("mailSendObject", mailSendObjectBld.toString());
 		model.addAttribute("mailInnerDomain", mailInnerDomain);
 		model.addAttribute("inMailColor", inMailColor);
 		model.addAttribute("outMailColor", outMailColor);
@@ -2941,11 +2929,11 @@ public class EzPollController extends EgovFileMngUtil {
 		String fileSize_ = "";
 		
         if (fileSize / 1024 / 1024 >= 1) {
-        	fileSize_ = String.format("%.2f", (double)(fileSize / 1024 / 1024 * 10) / 10);
+        	fileSize_ = String.format("%.2f", ((double)fileSize / 1024 / 1024 * 10) / 10);
         	fileSize_ = fileSize_ + "MB";
         }
         else if (fileSize / 1024 >= 1) {
-        	fileSize_ = String.format("%.2f", (double)(fileSize / 1024));
+        	fileSize_ = String.format("%.2f", ((double)fileSize / 1024));
         	fileSize_ = fileSize_ + "KB";
         }
         else {
