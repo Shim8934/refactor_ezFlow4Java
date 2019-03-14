@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezCabinet.service.impl;
 
 import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -495,8 +496,8 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 		int attachId                       = ezCabinetDAO.getMaxAttachId(map) + 1;
 		File file                          = new File(realPath + commonUtil.detectPathTraversal(cabinetPath));
 		
-		if (!file.exists()) {
-			file.mkdir();
+		if (!file.exists() && !file.mkdir()) {
+			throw new IOException();
 		}
 		
 		for (int i = 0; i < totalCnt; i++, attachId++) {
@@ -518,7 +519,9 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 				try {
 					for (CabinetAttachFileVO fileAttach : fileList) {
 						File tempFile = new File(realPath + commonUtil.detectPathTraversal(fileAttach.getFilePath()));
-						tempFile.delete();
+						if (!tempFile.delete()) {
+							throw new IOException();
+						}
 					}
 					
 					logger.debug("Not enough storage to upload these files!");
@@ -777,16 +780,12 @@ public class EzCabinetServiceImpl_h implements EzCabinetService_h {
 	
 	@Override
 	public JSONObject modifyShareUserList(JSONArray listUsers, String actMode, String cabinetId, LoginVO userInfo) throws Exception {
-		JSONObject result = new JSONObject();
-		
 		if (actMode.equals("delete")) {
-			result = deleteShareUserList(listUsers, cabinetId, userInfo);
+			return deleteShareUserList(listUsers, cabinetId, userInfo);
 		}
 		else {
-			result = modifyShareUserList(listUsers, cabinetId, userInfo);
+			return modifyShareUserList(listUsers, cabinetId, userInfo);
 		}
-		
-		return result;
 	}
 	
 	@SuppressWarnings("unchecked")

@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezCabinet.service.impl;
 
 import java.util.Map;
 import java.util.Properties;
+import java.util.Map.Entry;
 import javax.servlet.http.HttpServletRequest;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -75,8 +76,8 @@ public class EzCabinetRestServiceImpl_m implements EzCabinetRestService_m {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(restUrl);
 		
 		if (param != null) {
-			for(String key : param.keySet()){
-				builder.queryParam(key, param.get(key));
+			for (Entry<String, Object> entry : param.entrySet()) {
+				builder.queryParam(entry.getKey(), entry.getValue());
 			}
 		}
 		

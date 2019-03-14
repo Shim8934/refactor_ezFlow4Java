@@ -239,6 +239,7 @@ public class CabinetVO {
 			case 8  : mdlOrder = 2; break;
 			case 9  : mdlOrder = 9; break;
 			case 11 : mdlOrder = 7; break;
+			default : mdlOrder = 1;
 		}
 		
 		return mdlOrder;

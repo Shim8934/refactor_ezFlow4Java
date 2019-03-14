@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -91,8 +92,8 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(restUrl);
 		
 		if (param != null) {
-			for(String key : param.keySet()){
-				builder.queryParam(key, param.get(key));
+			for (Entry<String, Object> entry : param.entrySet()) {
+				builder.queryParam(entry.getKey(), entry.getValue());
 			}
 		}
 		
@@ -481,16 +482,31 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		param.put("listCntSize", listCntSize);
 		param.put("currentPage", currentPage);
 		
-		JSONObject resultBody     = getJsonResult(url, param, request, "get", null);
+		JSONObject resultBody = getJsonResult(url, param, request, "get", null);
 		return resultBody;
 	}
 	
-	private class MultipartFileResource extends InputStreamResource {
+	private static class MultipartFileResource extends InputStreamResource {
 		private String filename;
 		
 		public MultipartFileResource(InputStream inputStream, String filename) {
 			super(inputStream);
 			this.filename = filename;
+		}
+		
+		@Override
+		public boolean equals(Object obj) {
+			if (!super.equals(obj)) {
+				return false;
+			}
+			
+			MultipartFileResource fobj = (MultipartFileResource) obj;
+			return filename.equals(fobj.getFilename());
+		}
+		
+		@Override
+		public int hashCode() {
+			return 53 + filename.hashCode();
 		}
 		
 		@Override
@@ -504,7 +520,7 @@ public class EzCabinetRestServiceImpl implements EzCabinetRestService {
 		}
 	}
 	
-	private class BnkResourceHttpMessageConverter extends ResourceHttpMessageConverter {
+	private static class BnkResourceHttpMessageConverter extends ResourceHttpMessageConverter {
 		@Override
 		protected Long getContentLength(Resource resource, MediaType contentType) throws IOException {
 			Long contentLength = super.getContentLength(resource, contentType);

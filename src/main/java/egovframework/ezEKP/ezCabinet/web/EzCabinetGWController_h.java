@@ -630,6 +630,7 @@ public class EzCabinetGWController_h {
 			case 8 : getMoreAddressDetail(result, columnList, primary, tenantId)  ; break;
 			case 9 : getMoreJournalDetail(result, columnList, primary, tenantId)  ; break;
 			case 11: getMoreResourceDetail(result, columnList, primary, tenantId) ; break;
+			default: break;
 		}
 	}
 	

@@ -168,12 +168,12 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		map.put("tenantId",  tenantId);
 		
 		List<CabinetModuleVO> listModule       = new ArrayList<>();
-		List<CabinetModuleVO> listActiveModule = new ArrayList<>();
+		List<CabinetModuleVO> listActiveModule = null;
 		
 		//Get all admin modules
 		List<CabinetModuleVO> listAllModule = ezCabinetAdminDAO.getModuleListForAdmin(map);
 		
-		if (listAllModule == null || listAllModule.size() == 0) {
+		if (listAllModule == null || listAllModule.isEmpty()) {
 			//Auto insert data
 			listAllModule = new ArrayList<>();
 			listModule.add(new CabinetModuleVO(companyId, "resrc" , 1, tenantId));
@@ -193,11 +193,11 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		else {
 			listActiveModule      = listAllModule.stream().filter(module -> module.getActiveStatus() == 1).collect(Collectors.toList());
 			List<String> typeList = listActiveModule.stream().map(CabinetModuleVO::getModuleType).collect(Collectors.toList());
-			if (listActiveModule.size() > 0) {
+			if (!listActiveModule.isEmpty()) {
 				map.put("typeList", typeList);
 				listModule = ezCabinetDAO.getModuleListForUser(map);
 				
-				if (listModule != null && listModule.size() > 0) {
+				if (listModule != null && !listModule.isEmpty()) {
 					if (listModule.size() == listActiveModule.size()) {
 						return listModule;
 					}
@@ -543,9 +543,9 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		List<CabinetVO> listReceivedCabinet = ezCabinetDAO.getReceivedCabinetListForPermission(map);
 		List<String> cabinetPathList        = listReceivedCabinet.stream().filter(i -> i.getSubPermission() == 1).map(CabinetVO::getCabinetPath).collect(Collectors.toList());
-		List<Integer> totalSharedCabinet    = new ArrayList<>();
+		List<Integer> totalSharedCabinet    = null;
 		
-		if (cabinetPathList.size() > 0) {
+		if (!cabinetPathList.isEmpty()) {
 			List<String> pathList = new ArrayList<>(new HashSet<>(cabinetPathList));
 			map.put("pathList", pathList);
 			totalSharedCabinet    = ezCabinetDAO.getReceivedCabinetIdListForPermission(map);
@@ -867,8 +867,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		
 		File file = new File(pDirPath);
 		
-		if (!file.exists()) {
-			file.mkdir();
+		if (!file.exists() && !file.mkdir()) {
+			throw new IOException();
 		}
 		
 		int dotPos     = pFileName.lastIndexOf(".");
@@ -1508,8 +1508,8 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 			int totalCnt                       = attachList.size();
 			int attachId                       = ezCabinetDAO.getMaxAttachId(map) + 1;
 			
-			if (!file.exists()) {
-				file.mkdir();
+			if (!file.exists() && !file.mkdir()) {
+				throw new IOException();
 			}
 			
 			for (int i = 0; i < totalCnt; i++, attachId++) {
@@ -1528,7 +1528,9 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 					try {
 						for (CabinetAttachFileVO fileAttach : fileList) {
 							File tempFile = new File(realPath + commonUtil.detectPathTraversal(fileAttach.getFilePath()));
-							tempFile.delete();
+							if (!tempFile.delete()) {
+								throw new IOException();
+							}
 						}
 						
 						logger.debug("Not enough storage to upload these files!");
@@ -1588,7 +1590,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		String password     = commonUtil.getMailPassword();
 		String domainName   = ezCommonService.getTenantConfig("DomainName", tenantId);
 		String userEmail    = userId + "@" + domainName;
-		int dotPos          = fileName.lastIndexOf(".");
+		int dotPos          = fileName.lastIndexOf('.');
 		String extend       = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
 		String newName      = UUID.randomUUID().toString() + "." + extend;
 		String pDirPath     = realPath + cabinetPath;
@@ -1598,13 +1600,13 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		logger.debug("userEmail: " + userEmail);
 		logger.debug("UID: " + uId + " || Folder path: " + folderPath + " || File name: " + fname);
 		
-		int index     = strIndex != null ? Integer.parseInt(strIndex) : -1;
-		int uid       = uId      != null ? Integer.parseInt(uId)      : -1;
 		IMAPAccess ia = null;
 		
 		try {
-			ia       = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
-			Folder f = ia.getFolder(folderPath);
+			int index = Integer.parseInt(strIndex);
+			int uid   = Integer.parseInt(uId)     ;
+			ia        = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"), userEmail, password, egovMessageSource, locale, ezEmailUtil);
+			Folder f  = ia.getFolder(folderPath);
 			
 			if (f == null || !f.exists()) {
 				logger.error("Folder not found. folderPath=" + folderPath);
@@ -1658,6 +1660,9 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 					}
 				}
 			}
+		}
+		catch (RuntimeException e) {
+			throw e;
 		}
 		catch (Exception e5) {
 			throw e5;
@@ -2020,7 +2025,6 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 	@SuppressWarnings("unchecked")
 	@Override
 	public JSONObject savePhotoBoard(int cabinetId, String realPath, String title, String summary, String boardTitle, String mode, String createUser, String createDate, String descript, String boardId, String boardItemId, Locale locale, LoginVO userInfo) throws Exception {
-		JSONObject result      = new JSONObject();
 		int tenantId           = userInfo.getTenantId();
 		String companyId       = userInfo.getCompanyID();
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -2051,7 +2055,7 @@ public class EzCabinetServiceImpl extends EgovFileMngUtil implements EzCabinetSe
 		}
 		
 		//Save attach files
-		result = cabinetService_h.saveListAttachFiles(attachList, itemId, realPath, "", "", locale, userInfo);
+		JSONObject result = cabinetService_h.saveListAttachFiles(attachList, itemId, realPath, "", "", locale, userInfo);
 		if (!result.get("status").equals("ok")) {
 			return result;
 		}

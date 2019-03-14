@@ -48,9 +48,10 @@ public class EzCabinetController_h {
 			String messageCode = "";
 			
 			switch(reasonCode) {
-				case 1: messageCode = "ezCabinet.t160"; break;
-				case 2: messageCode = "ezCabinet.t08" ; break;
-				case 3: messageCode = "ezCabinet.err2"; break;
+				case 1 : messageCode = "ezCabinet.t160"; break;
+				case 2 : messageCode = "ezCabinet.t08" ; break;
+				case 3 : messageCode = "ezCabinet.err2"; break;
+				default: messageCode = "ezCabinet.t160"; break;
 			}
 			
 			model.addAttribute("reasonMessage", messageCode);

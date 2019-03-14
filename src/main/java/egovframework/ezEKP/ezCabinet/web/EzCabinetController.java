@@ -274,9 +274,7 @@ public class EzCabinetController {
 	public String jsonGetCompanyTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId       = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
-		JSONObject resultObj   = new JSONObject();
-		
-		resultObj = cabinetRestService.getCompanyTree(request, userInfo.getId(), companyId);
+		JSONObject resultObj   = cabinetRestService.getCompanyTree(request, userInfo.getId(), companyId);
 		
 		return resultObj.toString();
 	}
@@ -430,9 +428,7 @@ public class EzCabinetController {
 		logger.debug("jsonMyCabinetTree start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String currentNode   = request.getParameter("cabinetNode") != null ? request.getParameter("cabinetNode") : "";
-		JSONObject resultObj = new JSONObject();
-		
-		resultObj            = cabinetRestService.getMyCabinetTree(request, currentNode, user.getId());
+		JSONObject resultObj = cabinetRestService.getMyCabinetTree(request, currentNode, user.getId());
 		
 		logger.debug("jsonMyCabinetTree end");
 		return resultObj.toString();
@@ -444,9 +440,7 @@ public class EzCabinetController {
 		logger.debug("jsonAllCabinetTree start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String currentNode   = request.getParameter("cabinetNode") != null ? request.getParameter("cabinetNode") : "";
-		JSONObject resultObj = new JSONObject();
-		
-		resultObj            = cabinetRestService.getAllCabinetTree(request, currentNode, user.getId());
+		JSONObject resultObj = cabinetRestService.getAllCabinetTree(request, currentNode, user.getId());
 		
 		logger.debug("jsonAllCabinetTree end");
 		return resultObj.toString();
@@ -458,9 +452,7 @@ public class EzCabinetController {
 		logger.debug("jsonRelatedCabinetTree start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String currentNode   = request.getParameter("cabinetNode") != null ? request.getParameter("cabinetNode") : "";
-		JSONObject resultObj = new JSONObject();
-		
-		resultObj            = cabinetRestService.getRelatedCabinetTree(request, user.getId(), currentNode);
+		JSONObject resultObj = cabinetRestService.getRelatedCabinetTree(request, user.getId(), currentNode);
 		
 		logger.debug("jsonRelatedCabinetTree end");
 		return resultObj.toString();
@@ -471,9 +463,7 @@ public class EzCabinetController {
 	public String jsonSharedCabinetTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("jsonSharedCabinetTree start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
-		JSONObject resultObj = new JSONObject();
-		
-		resultObj            = cabinetRestService.getSharedCabinetTree(request, user.getId());
+		JSONObject resultObj = cabinetRestService.getSharedCabinetTree(request, user.getId());
 		
 		logger.debug("jsonSharedCabinetTree end");
 		return resultObj.toString();
@@ -485,9 +475,7 @@ public class EzCabinetController {
 		logger.debug("jsonMyShareCabinetTree start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String currentNode   = request.getParameter("cabinetNode") != null ? request.getParameter("cabinetNode") : "";
-		JSONObject resultObj = new JSONObject();
-		
-		resultObj            = cabinetRestService.getMyShareCabinetTree(request, user.getId(), currentNode);
+		JSONObject resultObj = cabinetRestService.getMyShareCabinetTree(request, user.getId(), currentNode);
 		
 		logger.debug("jsonMyShareCabinetTree end");
 		return resultObj.toString();
@@ -519,9 +507,7 @@ public class EzCabinetController {
 		logger.debug("jsonGetSubCabinetNodes start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
 		String nodeId        = request.getParameter("nodeId")  != null ? request.getParameter("nodeId") : "";
-		JSONObject resultObj = new JSONObject();
-		
-		resultObj            = cabinetRestService.getCabinetSubNodes(request, user.getId(), nodeId);
+		JSONObject resultObj = cabinetRestService.getCabinetSubNodes(request, user.getId(), nodeId);
 		
 		logger.debug("jsonGetSubCabinetNodes end");
 		return resultObj.toString();

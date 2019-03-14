@@ -36,15 +36,15 @@ public class EzCabinetGWController_m {
 	
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/apprv", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveRelatedApproval(@RequestBody JSONObject apprContent, Locale locale, HttpServletRequest request) throws Exception {
-		String serverName      = request.getHeader("host-name")          != null ? request.getHeader("host-name")          : "";
-		String approvalContent = apprContent.get("content").toString()   != null ? apprContent.get("content").toString()   : "";
-		String userId          = apprContent.get("userId").toString()    != null ? apprContent.get("userId").toString()    : "";
-		String mode            = apprContent.get("mode").toString()      != null ? apprContent.get("mode").toString()      : "";
-		String title           = apprContent.get("title").toString()     != null ? apprContent.get("title").toString()     : "";
-		String summary         = apprContent.get("summary").toString()   != null ? apprContent.get("summary").toString()   : "";
-		String attach          = apprContent.get("attach").toString()    != null ? apprContent.get("attach").toString()    : "";
-		String other           = apprContent.get("other").toString()     != null ? apprContent.get("other").toString()     : "";
-		String cabinetId       = apprContent.get("cabinetId").toString() != null ? apprContent.get("cabinetId").toString() : "";
+		String serverName      = request.getHeader("host-name") != null ? request.getHeader("host-name")          : "";
+		String approvalContent = apprContent.get("content")     != null ? apprContent.get("content").toString()   : "";
+		String userId          = apprContent.get("userId")      != null ? apprContent.get("userId").toString()    : "";
+		String mode            = apprContent.get("mode")        != null ? apprContent.get("mode").toString()      : "";
+		String title           = apprContent.get("title")       != null ? apprContent.get("title").toString()     : "";
+		String summary         = apprContent.get("summary")     != null ? apprContent.get("summary").toString()   : "";
+		String attach          = apprContent.get("attach")      != null ? apprContent.get("attach").toString()    : "";
+		String other           = apprContent.get("other")       != null ? apprContent.get("other").toString()     : "";
+		String cabinetId       = apprContent.get("cabinetId")   != null ? apprContent.get("cabinetId").toString() : "";
 		JSONObject result      = new JSONObject();
 		
 		logger.debug("ServerName: " + serverName + " || Content: " + approvalContent + " || userId: " + userId + " || mode: " + mode+ " ||  cabinetId: " + cabinetId + " || doctitle: " + title + " || summary: " + summary + " || lstAttachLink: " + attach + " || otherAttachLk: " + other);
@@ -75,19 +75,19 @@ public class EzCabinetGWController_m {
 	
 	@RequestMapping(value="/rest/ezcabinet/relate-item/save/jounl", method=RequestMethod.PUT, produces="application/json;charset=utf-8")
 	public JSONObject saveRelatedJournal(@RequestBody JSONObject jContent, Locale locale, HttpServletRequest request) throws Exception {
-		String serverName      = request.getHeader("host-name")             != null ? request.getHeader("host-name")               : "";
-		String userId          = jContent.get("userId").toString()          != null ? jContent.get("userId").toString()            : "";
-		String mode            = jContent.get("mode").toString()            != null ? jContent.get("mode").toString()              : "";
-		String cabinetId       = jContent.get("cabinetId").toString()       != null ? jContent.get("cabinetId").toString()         : "";
-		String title           = jContent.get("title").toString()           != null ? jContent.get("title").toString()             : "";
-		String summary         = jContent.get("summary").toString()         != null ? jContent.get("summary").toString()           : "";
-		String journalTitle    = jContent.get("journalTitle").toString()    != null ? jContent.get("journalTitle").toString()      : "";
-		String createDate      = jContent.get("createDate").toString()      != null ? jContent.get("createDate").toString()        : ""; 
-		String journalWriter   = jContent.get("journalWriter").toString()   != null ? jContent.get("journalWriter").toString()     : ""; 
-		String journalType     = jContent.get("journalType").toString()     != null ? jContent.get("journalType").toString()       : ""; 
-		String journalContent  = jContent.get("content").toString()         != null ? jContent.get("content").toString()           : "";
-		String formName        = jContent.get("formName").toString()        != null ? jContent.get("formName").toString()          : ""; 
-		String attach          = jContent.get("attach").toString()          != null ? jContent.get("attach").toString()            : "";
+		String serverName      = request.getHeader("host-name")  != null ? request.getHeader("host-name")               : "";
+		String userId          = jContent.get("userId")          != null ? jContent.get("userId").toString()            : "";
+		String mode            = jContent.get("mode")            != null ? jContent.get("mode").toString()              : "";
+		String cabinetId       = jContent.get("cabinetId")       != null ? jContent.get("cabinetId").toString()         : "";
+		String title           = jContent.get("title")           != null ? jContent.get("title").toString()             : "";
+		String summary         = jContent.get("summary")         != null ? jContent.get("summary").toString()           : "";
+		String journalTitle    = jContent.get("journalTitle")    != null ? jContent.get("journalTitle").toString()      : "";
+		String createDate      = jContent.get("createDate")      != null ? jContent.get("createDate").toString()        : ""; 
+		String journalWriter   = jContent.get("journalWriter")   != null ? jContent.get("journalWriter").toString()     : ""; 
+		String journalType     = jContent.get("journalType")     != null ? jContent.get("journalType").toString()       : ""; 
+		String journalContent  = jContent.get("content")         != null ? jContent.get("content").toString()           : "";
+		String formName        = jContent.get("formName")        != null ? jContent.get("formName").toString()          : ""; 
+		String attach          = jContent.get("attach")          != null ? jContent.get("attach").toString()            : "";
 		
 		JSONObject result      = new JSONObject();
 		

@@ -729,7 +729,7 @@ public class EzCabinetGWController {
 		
 		try {
 			LoginVO userInfo          = commonUtil.getUserForGw(userId, serverName);
-			CabinetSimpleVO mycabinet = new CabinetSimpleVO();
+			CabinetSimpleVO mycabinet = null;
 					
 			if (cabinetId.equals("") || cabinetId.equals("root")) {
 				mycabinet = cabinetService.getMyCabinetTreeNormal(userInfo);
