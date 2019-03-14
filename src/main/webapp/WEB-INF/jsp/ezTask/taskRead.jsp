@@ -1580,7 +1580,7 @@
 				                
 				                for (i = 0; i < dateArray.length; i++) {		                	
 				                    if($.inArray(test, dateArray) != -1) {		                        
-				                        return [true, 'css-class-to-highlight', 'tooltipText'];
+				                        return [true, 'css-class-to-highlight', ''];
 				                    }
 				                }
 				                return [true];

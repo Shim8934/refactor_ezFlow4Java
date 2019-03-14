@@ -740,7 +740,23 @@ public class EzEmailUtil {
                 logger.debug("still folded subject=" + subject);
                 
                 subject = subject.replace("\\\r\n ", "");                
-            }            
+            }
+
+            // Mac Outlook 보낸 메일의 제목이 decoding 되지 않은 패턴을 찾아 다시 decoding한다.
+            // 대괄호와 같은 문자와 한글이 혼용될 때 아래의 오른쪽 부분과 같이 제대로 디코딩되지 않는 경우가 발생함.
+            // RFC2047에 따른 인코딩이 한 줄에 여러 개가 있는 형태여서 JavaMail에서 문제가 발생하는 것으로 추정됨.
+            // Re: [캠코선박운용]메일 오류 => Re: [=?UTF-8?B?7Lqg7L2U7ISg67CV7Jq07Jqp?=]=?UTF-8?B?66mU7J28?=  오류
+            // Re: 회신: [ 캠코선박운용] 메신저 오류 => Re: 회신: [=?UTF-8?B?IOy6oOy9lOyEoOuwleyatOyaqQ==?=]  메신저 오류
+            Pattern pattern = Pattern.compile("=\\?(.*?)\\?=");
+            Matcher matcher = pattern.matcher(subject);
+
+            while (matcher.find()) {
+                String encData = matcher.group();
+                String decData = MimeUtility.decodeText(encData);
+                logger.debug("encData:" + encData + ",decData:" + decData);
+
+                subject = subject.replace(encData, decData);
+            }
         }
         
         return subject;
