@@ -2020,7 +2020,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	    logger.debug("dotNetTotalNotification=" + dotNetTotalNotification);
 	    String serverFlag = "dotNet";
 		//String serverDomain = config.getProperty("");
-		String serverDomain = ezCommonService.getTenantConfig("DomailName", loginVO.getTenantId());
+		String serverDomain = ezCommonService.getTenantConfig("DomainName", loginVO.getTenantId());
 	    
 	    if (attendantId != null) {
 			for (int i=0; i < attendantId.getLength(); i++) {								
