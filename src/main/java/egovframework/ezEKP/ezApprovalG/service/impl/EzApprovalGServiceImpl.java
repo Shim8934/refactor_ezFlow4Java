@@ -2089,6 +2089,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		String orgDocNumCode = "";
 		String docNumCode = "";
 		String extFileName = "";
+		//String docNumZeroCnt = getDocNumZeroCnt(companyID, tenantID); //문서채번 자릿수 맞춰주는거 혹시모르니까 구현만 해놈 
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("companyID", companyID);
@@ -2110,6 +2111,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				docNumCode = deptID + getNDigitNum(sn, 6);
 				
 				docNo = commonUtil.cleanValue(deptName) + "-" + sn;
+				//docNo = commonUtil.cleanValue(deptName) + "-" + createDocNO(sn , docNumZeroCnt); //문서채번 자릿수 맞춰주는거 혹시모르니까 구현만 해놈
+				
 				if (orgDocNumCode == null || orgDocNumCode.trim().equals("") || !gFlag.equals("G")) {
 //					docNo = commonUtil.cleanValue(deptName) + "-" + sn;
 					
@@ -2247,6 +2250,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         		
         		org.jsoup.nodes.Document doc = Jsoup.parse(content);
         		doc.getElementById("docnumber").html(docNo);
+        		
+        		for (int i = 1; i < 10; i++) {
+        			if (doc.getElementById("1sign" + i) != null) {
+        				doc.getElementById("1sign" + i).html("");
+        			}
+        			if (doc.getElementById("1jikwe" + i) != null) {
+        				doc.getElementById("1jikwe" + i).html("");
+        			}
+        			if (doc.getElementById("1seumyungdate" + i) != null) {
+        				doc.getElementById("1seumyungdate" + i).html("");
+        			}
+        		}
         		
         		String tempHtml = doc.outerHtml();
         		String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
@@ -20275,7 +20290,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				String[] bujae = bujaeInfo.split(":");
 				
 				if (bujae.length >= 5) {
-					if (nowDate.compareTo(bujae[5] + bujae[6]) <= 0) {
+					String endDate = bujae[5] + ":" + bujae[6];
+					String startDate = bujae[3] + ":" + bujae[4];
+					if (nowDate.compareTo(endDate) <= 0 && nowDate.compareTo(startDate) >= 0) {
 						if (!chkFirst) {
 							rtnVal = "'" + doc.getElementsByTagName("DATA2").item(k).getTextContent() + "'";
 							chkFirst = true;
