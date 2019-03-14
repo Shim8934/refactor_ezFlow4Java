@@ -1476,15 +1476,20 @@
 					
 		            if (tmpStartDate <= "${nowDate}" && tmpEndDate >= "${nowDate}") {
 		                return true;
+		            } else if(tmpStartDate < "${nowDate}" && tmpEndDate < "${nowDate}"){
+		            	setBujaeOff();
+				        return false;
 		            }
 		        } else if (proxyInfo != null && proxyInfo != "") {
 		        	var strDate = "${proxyInfo.startDate}";
 		        	var endDate = "${proxyInfo.endDate}";
 		            if (strDate <= "${nowDate}" && endDate >= "${nowDate}") {
 		                return true;
+		            }else if(strDate < "${nowDate}" && endDate < "${nowDate}"){
+		            	setBujaeOff();
+				        return false;
 		            }
 		        }
-		        setBujaeOff();
 		        return false;
 		    }
 		    function setpause(numberMillis) {
