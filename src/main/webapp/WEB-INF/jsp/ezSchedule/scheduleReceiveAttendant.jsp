@@ -18,7 +18,7 @@
 			var ReturnFunction;
 			var serverFlag = "<c:out value='${serverFlag}' />";
 			var receiveList = "<c:out value='${receiveList}' />";
-			var dotnetURL = "<c:out value='${dotnetURL}' />";
+			var dotnetURL = "<c:out value='${serverName}' />";
 			
 			window.onload = function () {
 			    try {
