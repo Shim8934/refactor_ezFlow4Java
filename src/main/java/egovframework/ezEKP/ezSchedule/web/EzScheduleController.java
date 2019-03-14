@@ -903,7 +903,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 				     }
 					String subjectParam = "subject=" + URLEncoder.encode("["+groupName+"] " + description, "UTF-8");
 					String etcDataParam = "etcData=";
-					String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezSchedule/scheduleReceiveMember.do?serverFlag="+serverFlag, "UTF-8");
+					String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezConn/scheduleReceiveMember.do?serverFlag="+serverFlag, "UTF-8");
 					String mobileLinkURLParam = "mobileLinkURL=" + URLEncoder.encode("/Schedule/schedule_receive_member.aspx", "UTF-8");
 					String viewTypeParam = "viewType=" + URLEncoder.encode("popup", "UTF-8");
 					String viewWidthParam = "viewWidth=" + URLEncoder.encode("730", "UTF-8");
@@ -1027,7 +1027,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 				     }
 					String subjectParam = "subject=" + URLEncoder.encode("["+groupName+"] " + description, "UTF-8");
 					String etcDataParam = "etcData=";
-					String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezSchedule/scheduleReceiveMember.do?serverFlag="+serverFlag, "UTF-8");
+					String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezConn/scheduleReceiveMember.do?serverFlag="+serverFlag, "UTF-8");
 					String mobileLinkURLParam = "mobileLinkURL=" + URLEncoder.encode("/Schedule/schedule_receive_member.aspx", "UTF-8");
 					String viewTypeParam = "viewType=" + URLEncoder.encode("popup", "UTF-8");
 					String viewWidthParam = "viewWidth=" + URLEncoder.encode("730", "UTF-8");

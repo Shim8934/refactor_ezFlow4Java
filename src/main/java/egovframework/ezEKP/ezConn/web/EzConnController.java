@@ -57,7 +57,7 @@ public class EzConnController {
 						"/ezConn/mailMain.do", "/ezConn/scheduleMain.do", "/ezConn/scheduleWrite.do",
 						"/ezConn/admin/organMain.do", "/ezConn/admin/scheduleMain.do", "/ezConn/scheduleRead.do",
 						"/ezConn/scheduleConfig.do", "/ezConn/mailConfig.do", "/ezConn/addressConfig.do",
-						"/ezConn/scheduleReceiveAttendant.do"
+						"/ezConn/scheduleReceiveAttendant.do", "/ezConn/scheduleReceiveMember.do"
 						})
 	public void mailMain(
 					@RequestParam String id,
@@ -208,7 +208,7 @@ public class EzConnController {
 				} else if (cmd != null && cmd.equals("mailRead")) {
 					String mailFullPath = request.getParameter("mailFullPath");
 					
-					resultPage = "/ezEmail/mailRead.do?URL=" + URLEncoder.encode(mailFullPath, "UTF-8");
+					resultPage = "/ezEmail/mailRead.do?PNFlag=Y&CONTENTCLASS=IPM.Note&URL=" + URLEncoder.encode(mailFullPath, "UTF-8");
 				} else if (requestUri.equals("/ezConn/scheduleMain.do")) {
 					resultPage = "/ezSchedule/scheduleIndex.do?funCode=2";
 				} else if (requestUri.equals("/ezConn/scheduleWrite.do")) {
@@ -230,6 +230,9 @@ public class EzConnController {
 				} else if (requestUri.equals("/ezConn/scheduleReceiveAttendant.do")) {
 					String serverFlag = request.getParameter("serverFlag");
 					resultPage = "/ezSchedule/scheduleReceiveAttendant.do?serverFlag=" + serverFlag;
+				} else if (requestUri.equals("/ezConn/scheduleReceiveMember.do")) {
+					String serverFlag = request.getParameter("serverFlag");
+					resultPage = "/ezSchedule/scheduleReceiveMember.do?serverFlag=" + serverFlag;
 				} else {																
 					String funCode = request.getParameter("funCode") != null ? request.getParameter("funCode") : "";
 					if(funCode.equalsIgnoreCase("")) {
