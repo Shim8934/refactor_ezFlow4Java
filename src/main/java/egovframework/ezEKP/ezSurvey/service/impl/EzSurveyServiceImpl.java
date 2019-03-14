@@ -1161,7 +1161,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		for (int i = 0; i < responses.size(); i++) {
 			JSONObject responseObj = (JSONObject)responses.get(i);
 			
-			if (responseObj.isEmpty()) {
+			if (responseObj == null || responseObj.isEmpty()) {
 				result.put("status", "error");
 				result.put("code", 1);
 				return result;
