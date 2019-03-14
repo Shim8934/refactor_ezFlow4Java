@@ -56,7 +56,8 @@ public class EzConnController {
 	@RequestMapping(value={
 						"/ezConn/mailMain.do", "/ezConn/scheduleMain.do", "/ezConn/scheduleWrite.do",
 						"/ezConn/admin/organMain.do", "/ezConn/admin/scheduleMain.do", "/ezConn/scheduleRead.do",
-						"/ezConn/scheduleConfig.do", "/ezConn/mailConfig.do", "/ezConn/addressConfig.do"
+						"/ezConn/scheduleConfig.do", "/ezConn/mailConfig.do", "/ezConn/addressConfig.do",
+						"/ezConn/scheduleReceiveAttendant.do"
 						})
 	public void mailMain(
 					@RequestParam String id,
@@ -226,6 +227,9 @@ public class EzConnController {
 					resultPage = "/ezSchedule/scheduleRead.do?id=" + scheduleid + "&date=" + date + "&repeatcount=" + repeatcount;
 				} else if (requestUri.equals("/ezConn/scheduleConfig.do")) {
 					resultPage = "/ezSchedule/scheduleConfigMain.do?flag=schedule";
+				} else if (requestUri.equals("/ezConn/scheduleReceiveAttendant.do")) {
+					String serverFlag = request.getParameter("serverFlag");
+					resultPage = "/ezSchedule/scheduleReceiveAttendant.do?serverFlag=" + serverFlag;
 				} else {																
 					String funCode = request.getParameter("funCode") != null ? request.getParameter("funCode") : "";
 					if(funCode.equalsIgnoreCase("")) {

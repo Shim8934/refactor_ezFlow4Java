@@ -1980,12 +1980,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 						String senderNameParam = "";
 						if (loginVO.getLang().equals("1")) {
 					    	 senderNameParam = "senderName=" + URLEncoder.encode(v_attendantName, "UTF-8");
-					     } else {
+					    } else {
 					    	 senderNameParam = "senderName=" + URLEncoder.encode(v_attendantName2, "UTF-8");
-					     }
+					    }
 						String subjectParam = "subject=" + URLEncoder.encode(title, "UTF-8");
 						String etcDataParam = "etcData=";
-						String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezSchedule/scheduleReceiveAttendant.do?serverFlag=" + serverFlag, "UTF-8");
+						String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezConn/scheduleReceiveAttendant.do?serverFlag=" + serverFlag, "UTF-8");
 						String mobileLinkURLParam = "mobileLinkURL=" + URLEncoder.encode("/Schedule/schedule_receive_attendant.aspx", "UTF-8");
 						String viewTypeParam = "viewType=" + URLEncoder.encode("popup", "UTF-8");
 						String viewWidthParam = "viewWidth=" + URLEncoder.encode("730", "UTF-8");
