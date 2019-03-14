@@ -18,6 +18,7 @@
 			var ReturnFunction;
 			var serverFlag = "<c:out value='${serverFlag}' />";
 			var receiveList = "<c:out value='${receiveList}' />";
+			var dotnetURL = "<c:out value='${dotnetURL}' />";
 			
 			window.onload = function () {
 			    try {
@@ -57,7 +58,7 @@
 				var url = "/ezSchedule/scheduleAcceptAttendant.do";
 				
 				if (serverFlag == "dotNet") {
-					url = "http://dev.mail.kttelecop.co.kr/ezSchedule/scheduleAcceptAttendant.do";
+					url = dotnetURL + "/ezSchedule/scheduleAcceptAttendant.do";
 				}
 				
 				$.ajax({
