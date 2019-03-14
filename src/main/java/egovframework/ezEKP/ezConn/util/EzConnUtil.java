@@ -8,6 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,7 +20,8 @@ import org.springframework.stereotype.Component;
 public class EzConnUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzConnUtil.class);
 	
-	private static final String apb = "SEK6Y8B5LAUBED0BO1040F4C0F8B1FD2";
+	@Value("#{cryptos['EzConnUtil.apb']}")
+	private String apb;
     private static final String iv = "HFYFOBM3IAN6G092";
 
 	public String encryptAES(String s) throws Exception {

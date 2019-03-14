@@ -8,6 +8,7 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,7 +20,8 @@ import org.springframework.stereotype.Component;
 public class EzWebfolderUtil {
 	private static final Logger logger = LoggerFactory.getLogger(EzWebfolderUtil.class);
 	
-	private static final String apb = "BEE6A8052A1BAD5BB1E40F4C0F8B1FD2";
+	@Value("#{cryptos['EzWebfolderUtil.apb']}")
+	private String apb;
     private static final String iv = "5F1F6B63AAA65002";
 
 	public String encryptAES(String s) throws Exception {

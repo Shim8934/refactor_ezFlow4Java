@@ -1001,9 +1001,6 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 	    	String userId = requestObject.get("userid") != null ? (String)requestObject.get("userid") : "";
 	    	String pw = requestObject.get("pw") != null ? (String)requestObject.get("pw") : "";
 	    	int tenantId = 0;
-
-	    	System.out.println(webfolderUtil.encryptAES("yy9320"));
-	    	System.out.println(webfolderUtil.encryptAES("qkrdus93!"));
 	    	
 	    	userId = webfolderUtil.decryptAES(userId);
 			pw = webfolderUtil.decryptAES(pw);
