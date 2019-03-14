@@ -2397,6 +2397,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
         String selCompany = (request.getParameter("companyID") != null ? request.getParameter("companyID") : "");
 		String topID = "";
 		String deptTreeTopId = "";
+		String packageType = commonUtil.getPackageType(user.getTenantId());
 		
 		if (user.getRollInfo().indexOf("c=1") == -1) {
 			topID = user.getCompanyID();
@@ -2416,6 +2417,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		String useWebfolder = ezCommonService.getTenantConfig("useWebfolder", user.getTenantId());
 		
+		model.addAttribute("packageType", packageType);
 		model.addAttribute("userID", userID);
 		model.addAttribute("companyID", selCompany);
 		model.addAttribute("topID", topID);
