@@ -18,6 +18,7 @@
 	    </style>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var g_SelectedObj = null;
 			var g_UID = "";
@@ -175,35 +176,56 @@
 				}
 				
 				var mgrStr = "";
+				var langStr = "";
 				if( lang=="1")
 				{
 					mgrStr = "<spring:message code='ezPortal.t401'/>";
+					langStr = "<spring:message code='ezPortal.t403'/>";
 				} else if( lang=="2")
 				{
 					mgrStr = "<spring:message code='ezPortal.t402'/>";
+					langStr = "<spring:message code='ezPortal.t404'/>";
 				} else if( lang=="3")
 				{
 					mgrStr = "<spring:message code='ezPortal.t4023'/>";
+					langStr = "<spring:message code='ezPortal.t4093'/>";					
 				} 
 				
 				if (confirm(mgrStr))
 				{
-				    var xmlhttp = createXMLHttpRequest();
-					xmlhttp.open("POST", "/admin/ezPortal/setLang.do?uID=" + g_UID + "&lang=" +  lang, false);
-					xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
-					xmlhttp.send();
+					var setLang = true;
+					$(".mainlist tr").each(function(){
+						var useTxt = $(this).children("td").eq(3).text();
+						if (useTxt != null && useTxt != "") {//사용중인것중에
+							if (langStr == $(this).children("td").eq(4).text()) {//언어비교 
+								var themeStr = trim(g_SelectedObj.children[2].textContent);
+								if (themeStr == $(this).children("td").eq(2).text().trim()) {//테마비교
+									alert("<spring:message code='ezPortal.kbm03'/>");
+									setLang = false;
+									return;
+								}
+							}
+						}
+					})
 					
-					if (xmlhttp.responseText == "OK")
-					{
-						alert("<spring:message code='ezPortal.t412'/>");
-						document.location.reload();
+					if(setLang){
+					    var xmlhttp = createXMLHttpRequest();
+						xmlhttp.open("POST", "/admin/ezPortal/setLang.do?uID=" + g_UID + "&lang=" +  lang, false);
+						xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
+						xmlhttp.send();
+						
+						if (xmlhttp.responseText == "OK")
+						{
+							alert("<spring:message code='ezPortal.t412'/>");
+							document.location.reload();
+						}
+						else
+						{
+							alert("<spring:message code='ezPortal.t243'/>" + xmlhttp.responseText);
+						}
+						
+						xmlhttp = null;
 					}
-					else
-					{
-						alert("<spring:message code='ezPortal.t243'/>" + xmlhttp.responseText);
-					}
-					
-					xmlhttp = null;
 				}
 			}
 		</script>

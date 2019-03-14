@@ -414,7 +414,7 @@
 		            var pTop = (pheight - boardWidth) / 2;
 		            var pLeft = (pwidth - boardHeight) / 2;
 		
-		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4") {
+		            if (ret[2] == "2" || ret[2] == "3" || ret[2] == "4" || ret[2] == "7") {
 		                alert(strLang337);
 		            }
 		            else {

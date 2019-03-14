@@ -94,5 +94,6 @@ public interface EzCommonService {
 	
 	public void createJmochaMailCopyright() throws Exception;
 
+	public void updateListOptionData() throws Exception;
 }
 

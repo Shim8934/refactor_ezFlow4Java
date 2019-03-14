@@ -802,14 +802,33 @@ function DailyDisposal( xmlDoc, nPattern )
 				{
 					iNumber = 1;
 			    }
-			    rtvString = iNumber + strLang550 + " " + rtvString;
+			    /* 2019-03-08 홍승비 - 일정작성 > 자원반복설정 메세지 표시형식 통일(일단위) */
+			    rtvString = rtvString.replace(",", "");
+			    if (iNumber == 1) { // 매일
+			    	if (rtvString.indexOf(strLang126) > -1) { // 하루종일
+			    		rtvString = strLang122 + strLang123 + " " + rtvString;
+			    	} else {
+			    		rtvString = strLang122 + strLang123 + " " + strLang125 + " " + rtvString;
+			    	}
+			    } else {
+			    	if (rtvString.indexOf(strLang126) > -1) {
+			    		rtvString = strLang122 + iNumber + strLang550 + " " + rtvString;
+			    	} else {
+			    		rtvString = strLang122 + iNumber + strLang550 + " " + strLang125 + " " + rtvString;
+			    	}
+			    }
 				createNodeAndInsertText(xmlDoc, objNode, "interval", iNumber);	
 				createNodeAndInsertText(xmlDoc, objNode, "selType", 0);	
 			}
 		}
 		else
-		{
-		    rtvString = strLang551 + " " + rtvString;
+		{ // 반복주기 : 매일(평일)
+			rtvString = rtvString.replace(",", "");
+			if (rtvString.indexOf(strLang126) > -1) {
+				rtvString = strLang122 + strLang551 + " " + rtvString;
+			} else {
+				rtvString = strLang122 + strLang551 + " " + strLang125 + " " + rtvString;
+		    }
 			createNodeAndInsertText(xmlDoc, objNode, "interval",1);		
 			createNodeAndInsertText(xmlDoc, objNode, "selType",1);
 			createNodeAndInsertText(xmlDoc, objNode, "daysOfWeek",g_Days["workdays"]);		
@@ -873,7 +892,23 @@ function WeeklyDisposal( xmlDoc, nPattern )
 				return false;
 			}
 			var tmpDays = szDays.substring(0, szDays.length - 1);
-			rtvString = iNumber + strLang552 + " " + tmpDays.replace("0", strLang270).replace("1", strLang271).replace("2", strLang272).replace("3", strLang273).replace("4", strLang274).replace("5", strLang275).replace("6", strLang276) + " " + rtvString;
+			
+			/* 2019-03-08 홍승비 - 일정작성 > 자원반복설정 메세지 표시형식 통일(주단위) */
+			rtvString = rtvString.replace(",", "");
+			if (iNumber == 1) { // 매주
+				if (rtvString.indexOf(strLang126) > -1) { // 하루종일
+					rtvString = strLang122 + strLang124 + " " + tmpDays.replace("0", strLang270).replace("1", strLang271).replace("2", strLang272).replace("3", strLang273).replace("4", strLang274).replace("5", strLang275).replace("6", strLang276) + " " + rtvString;
+				} else {
+					rtvString = strLang122 + strLang124 + " " + tmpDays.replace("0", strLang270).replace("1", strLang271).replace("2", strLang272).replace("3", strLang273).replace("4", strLang274).replace("5", strLang275).replace("6", strLang276) + " " + strLang125 + rtvString;
+				}
+			} else {
+				if (rtvString.indexOf(strLang126) > -1) {
+					rtvString = strLang122 + iNumber + strLang552 + " " + tmpDays.replace("0", strLang270).replace("1", strLang271).replace("2", strLang272).replace("3", strLang273).replace("4", strLang274).replace("5", strLang275).replace("6", strLang276) + " " + rtvString;
+				} else {
+					rtvString = strLang122 + iNumber + strLang552 + " " + tmpDays.replace("0", strLang270).replace("1", strLang271).replace("2", strLang272).replace("3", strLang273).replace("4", strLang274).replace("5", strLang275).replace("6", strLang276) + " " + strLang125 + rtvString;
+				}
+			}
+			
 			createNodeAndInsertText(xmlDoc, objNode, "daysOfWeek", szDays);		
 			
 		}
@@ -927,7 +962,21 @@ function MonthlyDisposal( xmlDoc, nPattern )
 				document.getElementById("list_MonthlyDays").value = 1;
 			createNodeAndInsertText(xmlDoc, objNode, "daysOfMonth", document.getElementById("list_MonthlyDays").value);
 
-			rtvString = iMonth + strLang553 + " " + iDays + strLang270 + " " + rtvString;
+			/* 2019-03-08 홍승비 - 일정작성 > 자원반복설정 메세지 표시형식 통일(월단위) */
+			rtvString = rtvString.replace(",", "");
+			if (iNumber == 1) { // 매월
+				if (rtvString.indexOf(strLang126) > -1) { // 하루종일
+					rtvString = strLang122 + strLang97 + " " + iDays + strLang270 + " " + rtvString;
+				} else {
+					rtvString = strLang122 + strLang97 + " " + iDays + strLang270 + " " +strLang125 + rtvString;
+				}
+			} else {
+				if (rtvString.indexOf(strLang126) > -1) {
+					rtvString = strLang122 + iMonth + strLang553 + " " + iDays + strLang270 + " " + rtvString;
+				} else {
+					rtvString = strLang122 + iMonth + strLang553 + " " + iDays + strLang270 + " " + strLang125 + rtvString;
+				}
+			}
 		}
 		else
 		{
@@ -938,9 +987,22 @@ function MonthlyDisposal( xmlDoc, nPattern )
 			createNodeAndInsertText(xmlDoc, objNode, "interval", document.getElementById("list_MonthInterval2").value);		
 			createNodeAndInsertText(xmlDoc, objNode, "selType",  1);
 			createNodeAndInsertText(xmlDoc, objNode, "byPosition", document.getElementById("list_MonthlyEach").value);
-
-			rtvString = document.getElementById("list_MonthInterval2").value + strLang554 + " " + document.getElementById("list_MonthlyEach").value.replace("1", strLang554).replace("2", strLang555).replace("3", strLang556).replace("4", strLang557).replace("-1", strLang558) + " " + document.getElementById("list_MonthlyDay").value.replace("8", strLang559).replace("9", strLang560).replace("0", strLang561).replace("1", strLang562).replace("2", strLang563).replace("3", strLang564).replace("4", strLang565).replace("5", strLang566).replace("6", strLang567) + " " + strLang568 + " " + rtvString;
-
+			
+			rtvString = rtvString.replace(",", "");
+			if (document.getElementById("list_MonthInterval2").value == 1) { // 매월
+				if (rtvString.indexOf(strLang126) > -1) { // 하루종일
+					rtvString = strLang122 + strLang97 + " " + document.getElementById("list_MonthlyEach").value.replace("-1", strLang558).replace("1", strLang554).replace("2", strLang555).replace("3", strLang556).replace("4", strLang557) + " " + document.getElementById("list_MonthlyDay").value.replace("8", strLang559).replace("9", strLang560).replace("0", strLang561).replace("1", strLang562).replace("2", strLang563).replace("3", strLang564).replace("4", strLang565).replace("5", strLang566).replace("6", strLang567) + " " + rtvString;
+				} else {
+					rtvString = strLang122 + strLang97 + " " + document.getElementById("list_MonthlyEach").value.replace("-1", strLang558).replace("1", strLang554).replace("2", strLang555).replace("3", strLang556).replace("4", strLang557) + " " + document.getElementById("list_MonthlyDay").value.replace("8", strLang559).replace("9", strLang560).replace("0", strLang561).replace("1", strLang562).replace("2", strLang563).replace("3", strLang564).replace("4", strLang565).replace("5", strLang566).replace("6", strLang567) + " " + strLang125 + rtvString;
+				}
+			} else {
+				if (rtvString.indexOf(strLang126) > -1) {
+					rtvString = strLang122 + document.getElementById("list_MonthInterval2").value + strLang553 + " " + document.getElementById("list_MonthlyEach").value.replace("-1", strLang558).replace("1", strLang554).replace("2", strLang555).replace("3", strLang556).replace("4", strLang557) + " " + document.getElementById("list_MonthlyDay").value.replace("8", strLang559).replace("9", strLang560).replace("0", strLang561).replace("1", strLang562).replace("2", strLang563).replace("3", strLang564).replace("4", strLang565).replace("5", strLang566).replace("6", strLang567) + " " + rtvString;
+				} else {
+					rtvString = strLang122 + document.getElementById("list_MonthInterval2").value + strLang553 + " " + document.getElementById("list_MonthlyEach").value.replace("-1", strLang558).replace("1", strLang554).replace("2", strLang555).replace("3", strLang556).replace("4", strLang557) + " " + document.getElementById("list_MonthlyDay").value.replace("8", strLang559).replace("9", strLang560).replace("0", strLang561).replace("1", strLang562).replace("2", strLang563).replace("3", strLang564).replace("4", strLang565).replace("5", strLang566).replace("6", strLang567) + " " + strLang125 + rtvString;
+				}
+			}
+			
 			if( list_MonthlyDay.value == 8 )
 			{
 			    createNodeAndInsertText(xmlDoc, objNode, "daysOfWeek",  g_Days["workdays"]);
@@ -1001,7 +1063,13 @@ function YearlyDisposal( xmlDoc, nPattern )
 				document.getElementById("list_YearlyDays").value = 1;
 			createNodeAndInsertText(xmlDoc, objNode, "daysOfMonth", document.getElementById("list_YearlyDays").value);
 
-			rtvString = strLang98 + " " + document.getElementById("list_Month").value + strLang271 + " " + iNumber + strLang278 + " " + rtvString;
+			/* 2019-03-08 홍승비 - 일정작성 > 자원반복설정 메세지 표시형식 통일(년단위) */
+			rtvString = rtvString.replace(",", "");
+			if (rtvString.indexOf(strLang126) > -1) { // 하루종일
+				rtvString = strLang122 + strLang98 + " " + document.getElementById("list_Month").value + strLang271 + " " + iNumber + strLang278 + " " + rtvString;
+			} else {
+				rtvString = strLang122 + strLang98 + " " + document.getElementById("list_Month").value + strLang271 + " " + iNumber + strLang278 + " " + strLang125 + rtvString;
+			}
 		}
 		else
 		{
@@ -1021,7 +1089,13 @@ function YearlyDisposal( xmlDoc, nPattern )
 			{
 				createNodeAndInsertText(xmlDoc, objNode, "daysOfWeek", document.getElementById("list_YearlyDay").value);
 			}
-		    rtvString = strLang98 + " " + document.getElementById("list_Month2").value + strLang279 + "  " + document.getElementById("list_YearlyEach").value.replace("1", strLang554).replace("2", strLang555).replace("3", strLang556).replace("4", strLang557).replace("-1", strLang558) + " " + document.getElementById("list_YearlyDay").value.replace("8", strLang559).replace("9", strLang560).replace("0", strLang561).replace("1", strLang562).replace("2", strLang563).replace("3", strLang564).replace("4", strLang565).replace("5", strLang566).replace("6", strLang567) + +rtvString;
+		    
+		    rtvString = rtvString.replace(",", "");
+		    if (rtvString.indexOf(strLang126) > -1) { // 하루종일
+		    	rtvString = strLang122 + strLang98 + " " + document.getElementById("list_Month2").value + strLang279 + "  " + document.getElementById("list_YearlyEach").value.replace("-1", strLang558).replace("1", strLang554).replace("2", strLang555).replace("3", strLang556).replace("4", strLang557) + " " + document.getElementById("list_YearlyDay").value.replace("8", strLang559).replace("9", strLang560).replace("0", strLang561).replace("1", strLang562).replace("2", strLang563).replace("3", strLang564).replace("4", strLang565).replace("5", strLang566).replace("6", strLang567) + " " + rtvString;
+		    } else {
+		    	rtvString = strLang122 + strLang98 + " " + document.getElementById("list_Month2").value + strLang279 + "  " + document.getElementById("list_YearlyEach").value.replace("-1", strLang558).replace("1", strLang554).replace("2", strLang555).replace("3", strLang556).replace("4", strLang557) + " " + document.getElementById("list_YearlyDay").value.replace("8", strLang559).replace("9", strLang560).replace("0", strLang561).replace("1", strLang562).replace("2", strLang563).replace("3", strLang564).replace("4", strLang565).replace("5", strLang566).replace("6", strLang567) + " " + strLang125 +rtvString;
+		    }
 		}
 		
 	}

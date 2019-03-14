@@ -80,7 +80,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			result.put("data", obj);
 			
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -117,6 +117,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			result.put("code", 0);			
 			result.put("data", opt);			
 		} catch (Exception e) {			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");			
@@ -155,7 +156,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MOptionGWController
 			result.put("data", opt);
 			
 		} catch (Exception e) {
-			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");

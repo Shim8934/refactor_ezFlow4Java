@@ -34,18 +34,14 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.Recur;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
-import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.WeekDay;
 import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.RRule;
 import net.fortuna.ical4j.util.MapTimeZoneCache;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -66,7 +62,6 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.ibm.icu.util.Calendar;
-import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
@@ -894,8 +889,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		    	try {
 		    		String resultCode = "";
 		    		String serverFlag = "dotNet";
-		    		//String serverDomain = config.getProperty("");
-		    		String serverDomain = "http://dev.mail.kttelecop.co.kr";
+		    		String serverDomain = config.getProperty("dotNetUrl");
 		    		
 					String groupMemberIdParam = "userId=" + URLEncoder.encode(memberId, "UTF-8");
 					String mainTypeParam = "type=" + URLEncoder.encode("schedule", "UTF-8");
@@ -909,9 +903,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 				     }
 					String subjectParam = "subject=" + URLEncoder.encode("["+groupName+"] " + description, "UTF-8");
 					String etcDataParam = "etcData=";
-					String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezSchedule/scheduleReceiveMember.do?serverFlag="+serverFlag, "UTF-8");
+					String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezConn/scheduleReceiveMember.do?serverFlag="+serverFlag, "UTF-8");
 					String mobileLinkURLParam = "mobileLinkURL=" + URLEncoder.encode("/Schedule/schedule_receive_member.aspx", "UTF-8");
-					String viewTypeParam = "viewType=" + URLEncoder.encode("layer", "UTF-8");
+					String viewTypeParam = "viewType=" + URLEncoder.encode("popup", "UTF-8");
 					String viewWidthParam = "viewWidth=" + URLEncoder.encode("730", "UTF-8");
 					String viewHeightParam = "viewHeight=" + URLEncoder.encode("370", "UTF-8");
 					
@@ -1019,7 +1013,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		    		String resultCode = "";
 		    		String serverFlag = "dotNet";
 		    		//String serverDomain = config.getProperty("");
-		    		String serverDomain = "http://dev.mail.kttelecop.co.kr";
+		    		String serverDomain = ezCommonService.getTenantConfig("dotNetUrl", loginVO.getTenantId());
 		    		
 					String groupMemberIdParam = "userId=" + URLEncoder.encode(memberId, "UTF-8");
 					String mainTypeParam = "type=" + URLEncoder.encode("schedule", "UTF-8");
@@ -1033,9 +1027,9 @@ public class EzScheduleController extends EgovFileMngUtil {
 				     }
 					String subjectParam = "subject=" + URLEncoder.encode("["+groupName+"] " + description, "UTF-8");
 					String etcDataParam = "etcData=";
-					String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezSchedule/scheduleReceiveMember.do?serverFlag="+serverFlag, "UTF-8");
+					String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezConn/scheduleReceiveMember.do?serverFlag="+serverFlag, "UTF-8");
 					String mobileLinkURLParam = "mobileLinkURL=" + URLEncoder.encode("/Schedule/schedule_receive_member.aspx", "UTF-8");
-					String viewTypeParam = "viewType=" + URLEncoder.encode("layer", "UTF-8");
+					String viewTypeParam = "viewType=" + URLEncoder.encode("popup", "UTF-8");
 					String viewWidthParam = "viewWidth=" + URLEncoder.encode("730", "UTF-8");
 					String viewHeightParam = "viewHeight=" + URLEncoder.encode("370", "UTF-8");
 					
@@ -1967,7 +1961,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	    logger.debug("dotNetTotalNotification=" + dotNetTotalNotification);
 	    String serverFlag = "dotNet";
 		//String serverDomain = config.getProperty("");
-		String serverDomain = "http://dev.mail.kttelecop.co.kr";
+		String serverDomain = ezCommonService.getTenantConfig("dotNetUrl", loginVO.getTenantId());
 	    
 	    if (attendantId != null) {
 			for (int i=0; i < attendantId.getLength(); i++) {								
@@ -1986,14 +1980,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 						String senderNameParam = "";
 						if (loginVO.getLang().equals("1")) {
 					    	 senderNameParam = "senderName=" + URLEncoder.encode(v_attendantName, "UTF-8");
-					     } else {
+					    } else {
 					    	 senderNameParam = "senderName=" + URLEncoder.encode(v_attendantName2, "UTF-8");
-					     }
+					    }
 						String subjectParam = "subject=" + URLEncoder.encode(title, "UTF-8");
 						String etcDataParam = "etcData=";
-						String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezSchedule/scheduleReceiveAttendant.do?serverFlag=" + serverFlag, "UTF-8");
+						String linkURLParam = "linkURL=" + URLEncoder.encode(serverDomain + "/ezConn/scheduleReceiveAttendant.do?serverFlag=" + serverFlag, "UTF-8");
 						String mobileLinkURLParam = "mobileLinkURL=" + URLEncoder.encode("/Schedule/schedule_receive_attendant.aspx", "UTF-8");
-						String viewTypeParam = "viewType=" + URLEncoder.encode("layer", "UTF-8");
+						String viewTypeParam = "viewType=" + URLEncoder.encode("popup", "UTF-8");
 						String viewWidthParam = "viewWidth=" + URLEncoder.encode("730", "UTF-8");
 						String viewHeightParam = "viewHeight=" + URLEncoder.encode("370", "UTF-8");
 						
@@ -2258,8 +2252,8 @@ public class EzScheduleController extends EgovFileMngUtil {
         if (vo == null) {
         	logger.error("Schedule not found.");
 			model.addAttribute("title", egovMessageSource.getMessage("ezSchedule.t342", locale));
-			model.addAttribute("mainContent", egovMessageSource.getMessage("ezSchedule.gha01", locale));
-			model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+			model.addAttribute("mainContent", egovMessageSource.getMessage("ezSchedule.gha03", locale));
+			model.addAttribute("subContent", egovMessageSource.getMessage("ezSchedule.gha04", locale));
 			return "ezCommon/error";
         }
         
@@ -2533,12 +2527,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginVO = commonUtil.userInfo(loginCookie);
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 		String serverFlag = request.getParameter("serverFlag");
+		String dotnetURL = ezCommonService.getTenantConfig("dotNetUrl", loginVO.getTenantId());
 		
 		List<ScheduleReceiveListVO> rList = ezScheduleService.getReceiveList(loginVO.getId(), loginVO.getTenantId(), offSetMin, loginVO.getCompanyID());
 		
 		model.addAttribute("receiveList", rList);
 		model.addAttribute("userInfo", loginVO);
 		model.addAttribute("serverFlag", serverFlag);
+		model.addAttribute("dotnetURL", dotnetURL);
 		
 		return "ezSchedule/scheduleReceiveAttendant";
 	}
@@ -2575,12 +2571,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 		loginVO = commonUtil.userInfo(loginCookie);
 		String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
 		String serverFlag = request.getParameter("serverFlag");
+		String dotnetURL = ezCommonService.getTenantConfig("dotNetUrl", loginVO.getTenantId());
 				
 		List<ScheduleGroupListVO> iList = ezScheduleService.getInviteScheduleGroupList(loginVO.getId(), loginVO.getTenantId(), offSetMin, loginVO.getCompanyID());
 		
 		model.addAttribute("receiveList", iList);
 		model.addAttribute("userInfo", loginVO);
 		model.addAttribute("serverFlag", serverFlag);
+		model.addAttribute("dotnetURL", dotnetURL);
 		
 		return "ezSchedule/scheduleReceiveMember";
 	}

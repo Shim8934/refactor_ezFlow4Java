@@ -1427,4 +1427,8 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		ezCommonDAO.createJmochaMailCopyright();
 	}
 	
+	@Override
+	public void updateListOptionData() throws Exception {
+		ezCommonDAO.updateListOptionData();
+	}
 }

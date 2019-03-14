@@ -4624,6 +4624,30 @@ public class EzApprovalGController extends EgovFileMngUtil{
                 returnQuery += " AND TBL_EXPAPRDOCINFO.URGENTAPPROVAL = '" + xmlDomSub.getElementsByTagName("URGENTAPPROVAL").item(0).getTextContent() + "' ";
             }
             
+            if (tempQuery.indexOf("RECVSTARTDATE;") != -1) {
+            	if (!dbType.equals("mysql")) {
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE >= TO_DATE('" + xmlDomSub.getElementsByTagName("RECVSTARTDATE").item(0).getTextContent()+ " 00:00:01' ,'YYYY-MM-DD HH24:MI:SS') ";
+            	} else {
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE >= STR_TO_DATE('" + xmlDomSub.getElementsByTagName("RECVSTARTDATE").item(0).getTextContent()+ " 00:00:01' , '%Y-%m-%d %H:%i:%s') ";
+            	}
+            }
+            
+            if (tempQuery.indexOf("RECVENDDATE;") != -1) {
+            	if (!dbType.equals("mysql")) {
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= TO_DATE('" + xmlDomSub.getElementsByTagName("RECVENDDATE").item(0).getTextContent()+ " 00:00:01' ,'YYYY-MM-DD HH24:MI:SS') ";
+            	} else {
+            		returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.PROCESSDATE <= STR_TO_DATE('" + xmlDomSub.getElementsByTagName("RECVENDDATE").item(0).getTextContent()+ " 00:00:01' , '%Y-%m-%d %H:%i:%s') ";
+            	}
+            }
+            
+            if (tempQuery.indexOf("SENTDEPTNAME;") != -1) {
+            	returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.SENTDEPTNAME LIKE '%" + xmlDomSub.getElementsByTagName("SENTDEPTNAME").item(0).getTextContent() + "%' ";
+            }
+            
+            if (tempQuery.indexOf("RECEIVEDDEPTNAME;") != -1) {
+            	returnQuery += " AND TBL_APRRECEIPTPROCESSINFO.RECEIVEDDEPTNAME LIKE '%" + xmlDomSub.getElementsByTagName("RECEIVEDDEPTNAME").item(0).getTextContent() + "%' ";
+            }
+            
             if (searchStatus != null && !searchStatus.equals("") && !searchStatus.equals("ALL")) {
             	returnQuery += " AND APRSTATE = '" + searchStatus + "' ";
             }
@@ -4850,6 +4874,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String initFlag = request.getParameter("initFlag");
+		//반송회송문서 대장등록할때 철선택 해주기 위해추가
+		String docId = request.getParameter("docId");
+		String hesongFlag = request.getParameter("hesongFlag");
+		
+		if (docId != null && docId != "undefined") {
+			model.addAttribute("regDocId", docId);
+		}
+		
+		if (hesongFlag != null && hesongFlag != "undefined") {
+			model.addAttribute("hesongFlag", hesongFlag);
+		}
 		
 		model.addAttribute("initFlag", initFlag);
 		model.addAttribute("userInfo", userInfo);
@@ -5374,6 +5409,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		String type = request.getParameter("type");
+		String searchType = request.getParameter("searchType");
+		if(searchType != null && searchType.equals("4")){
+			searchType = "recDept";
+		}
 		String susinAdmin = "";
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 
@@ -5391,6 +5430,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("susinAdmin", susinAdmin);
 		model.addAttribute("monthEndDay", monthEndDay);
 		model.addAttribute("initDate", initDate);
+		model.addAttribute("searchType", searchType);
 		
 		logger.debug("setSearchInfo ended");
 		
@@ -7392,6 +7432,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				if (rtnVal.equals("ERROR")) {
 					falseCnt++;
 				} else {
+					ezApprovalGService.sendMailToNextAprMember(xmlDom.getElementsByTagName("DOCID").item(k).getTextContent(), request, loginCookie, userInfo, orgCompanyID, userInfo.getTenantId());
 					trueCnt++;
 				}
 			}
@@ -8915,5 +8956,31 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		ezApprovalGService.setHesongCabinetID(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("setHesongCabinetInfo ended.");
+	}
+	
+	/* 
+	 * 회송문서의 철정보를  선택한 철 정보로 변경
+	 * */
+	@SuppressWarnings("null")
+	@RequestMapping(value = "/ezApprovalG/setHesongBansongCabinetInfo.do")
+	@ResponseBody
+	public void setHesongBansongCabinetInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("setHesongBansongCabinetInfo started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String docID = request.getParameter("docID");
+		String cabinetID = request.getParameter("cabinetID");
+		String taskCode = request.getParameter("taskCode");
+		logger.debug("docID = " + docID + ", cabinetID = " + cabinetID + ", taskCode = " + taskCode);
+		
+		//철정보 변경을 못하면 에러처리하기위해
+		if (docID == null || cabinetID == null || taskCode == null) {
+			Exception Exception = null;
+			throw Exception;
+		}
+		
+		ezApprovalGService.setHesongBansongCabinetID(docID, cabinetID, taskCode, userInfo.getCompanyID(), userInfo.getTenantId());
+		
+		logger.debug("setHesongBansongCabinetInfo ended.");
 	}
 }

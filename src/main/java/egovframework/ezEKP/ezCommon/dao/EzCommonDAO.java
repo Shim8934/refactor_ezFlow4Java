@@ -396,6 +396,18 @@ public class EzCommonDAO extends EgovAbstractDAO{
 			logger.debug("jmocha_mail_copyright doesn't exist. creating the table...");
 			
 			update("EzCommonDAO.createJmochaMailCopyright");
+
+	public void updateListOptionData() {
+		try {
+			if ((int) select("EzCommonDAO.checkListOptionData1") > 0) {
+				update("EzCommonDAO.updateListOptionData1");
+			}
+			if ((int) select("EzCommonDAO.checkListOptionData2") > 0) {
+				update("EzCommonDAO.updateListOptionData2");
+			}
+		} catch (Exception e) {
+			logger.debug("updateListOptionData() ERROR...");
+			e.printStackTrace();
 		}
 	}
 }
