@@ -1654,7 +1654,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			grsNo = cBoardGet1.getNo();
 			
 		} else {
-			response.encodeRedirectURL("/error.do");
+			throw new Exception();
 		}
 		
 		String previousTitle = egovMessageSource.getMessage("ezCommunity.t191", userInfo.getLocale());
@@ -4331,7 +4331,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		ezCommunityService.setAsRead(userInfo, boardID, itemID);
 		
 		if (item == null) {
-			return response.encodeRedirectURL("/error.do");
+			throw new Exception();
 		}
 		
 		if (EgovDateUtil.getDaysDiff(commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd"), userInfo.getOffset(), false), item.getParentWriteDate().substring(0, 10)) > 0) {
