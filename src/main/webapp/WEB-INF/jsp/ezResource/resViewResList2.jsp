@@ -83,7 +83,7 @@
 	    	var xmlhttp2 = createXMLHttpRequest();
 		    function schedule_get_holiday() {
 		        xmlhttp2 = createXMLHttpRequest();
-		        xmlhttp2.open("POST", "/ezSchedule/scheduleGetHoliday.do?COMPANYID=VIEW", true);
+		        xmlhttp2.open("GET", "/ezSchedule/scheduleGetHoliday.do?COMPANYID=VIEW", true);
 		        xmlhttp2.onreadystatechange = event_schedule_get_holiday;
 		        xmlhttp2.send();
 		    }

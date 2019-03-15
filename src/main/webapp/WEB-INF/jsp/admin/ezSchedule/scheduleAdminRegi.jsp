@@ -30,7 +30,7 @@
 	
 			function schedule_get_regiUse() {
 			    $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezSchedule/scheduleGetRegi.do",

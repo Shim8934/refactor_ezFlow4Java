@@ -30,6 +30,7 @@
 	        	selectedCompanyID = $("#ListCompany").val();
 	            $.ajax({
 	            	url : "/admin/ezSchedule/scheduleGetShareManage.do",
+	            	type : "GET",
 	            	dataType : "xml",
 	            	async : true,
 	            	cache : false,
@@ -144,6 +145,7 @@
 				if(confirm("<spring:message code='ezSchedule.t33' />")){
 					$.ajax({
 						url : "/admin/ezSchedule/scheduleDelShareDept.do",
+						type : "POST",
 						dataType : "html",
 						async : false,
 						data : {

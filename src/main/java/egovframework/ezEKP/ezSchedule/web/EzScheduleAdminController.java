@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -61,7 +62,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 메인화면 호출함수
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleMain.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleMain.do", method = RequestMethod.GET)
 	public String  scheduleAdminMain() throws Exception {
 		
 		logger.debug("============ scheduleAdminMain started ============");
@@ -72,7 +73,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 왼쪽화면 호출함수
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleLeft.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleLeft.do", method = RequestMethod.GET)
 	public String  scheduleAdminLeft(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		
 		logger.debug("============ scheduleAdminLeft started ============");
@@ -91,7 +92,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 일정공유관리 화면
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleAdminShareManage.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleAdminShareManage.do", method = RequestMethod.GET)
 	public String  scheduleAdminShareManage(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		
 		logger.debug("============ scheduleAdminShareManage started ============");
@@ -122,7 +123,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 일정공유관리 리스트 데이터
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleGetShareManage.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value="/admin/ezSchedule/scheduleGetShareManage.do", method = RequestMethod.GET, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String  scheduleGetShareManage(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, HttpServletRequest request) throws Exception {
 		
@@ -144,7 +145,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 일정공유관리 작성 팝업
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleAdminPopupShareDept.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleAdminPopupShareDept.do", method = RequestMethod.GET)
 	public String  scheduleAdminPopupShareDept(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
 		
 		logger.debug("============ scheduleAdminPopupShareDept started ============");
@@ -160,7 +161,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 일정공유관리 리스트 삭제
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleDelShareDept.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleDelShareDept.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void  scheduleDelShareDept(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
@@ -175,7 +176,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 일정공유관리 저장 버튼 클릭
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleSaveShareDept.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleSaveShareDept.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String scheduleSaveShareDept(@CookieValue("loginCookie") String loginCookie, LoginVO loginVO, OrganDeptVO organDeptVO, HttpServletRequest request) throws Exception {
 		
@@ -220,7 +221,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 기념일관리
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleAdminHolidayManage.do")	
+	@RequestMapping(value="/admin/ezSchedule/scheduleAdminHolidayManage.do", method = RequestMethod.GET)	
 	public String scheduleAdminHolidayManage(@CookieValue("loginCookie") String loginCookie, OrganDeptVO organDeptVO, Model model, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleAdminHolidayManage started ============");
@@ -260,7 +261,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 기념일관리 기념일 삭제
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleDelHoliday.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleDelHoliday.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void scheduleDelHoliday(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
@@ -276,7 +277,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 기념일관리 사용여부 체크박스 선택
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleChangeHolidayUse.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleChangeHolidayUse.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void scheduleChangeHolidayUse(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
@@ -293,7 +294,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 기념일관리 기념일 등록 팝업
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleAdminPopupHoliday.do")	
+	@RequestMapping(value="/admin/ezSchedule/scheduleAdminPopupHoliday.do", method = RequestMethod.GET)	
 	public String scheduleAdminPopupHoliday(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ scheduleAdminPopupHoliday started ============");
@@ -343,7 +344,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 기념일관리 기념일 등록 버튼 클릭
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleSaveHoliday.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleSaveHoliday.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void scheduleSaveHoliday(@CookieValue("loginCookie") String loginCookie, Model model, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
@@ -372,7 +373,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 음력날짜 사용
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleAdminLunarUse.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleAdminLunarUse.do", method = RequestMethod.GET)
 	public String  scheduleAdminLunarUse(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
 		
 		logger.debug("============ scheduleAdminLunarUse started ============");
@@ -406,7 +407,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 음력날짜 사용여부 변경
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleSaveLunarUse.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleSaveLunarUse.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String scheduleSaveLunarUse(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		
@@ -439,7 +440,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 이전날짜 등록관리
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleAdminRegi.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleAdminRegi.do", method = RequestMethod.GET)
 	public String  scheduleAdminRegi(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
 		
 		logger.debug("============ scheduleAdminRegi started ============");
@@ -474,7 +475,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 이전날짜 등록관리 사용여부 변경
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleSaveRegi.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleSaveRegi.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String scheduleSaveRegi(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, HttpServletRequest request) throws Exception {
 		

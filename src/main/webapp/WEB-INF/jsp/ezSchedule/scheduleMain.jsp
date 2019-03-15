@@ -104,7 +104,7 @@
 		    
 		    function schedule_get_holiday() {		        
 		        $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezSchedule/scheduleGetHoliday.do",
@@ -188,7 +188,7 @@
 		    function schedule_get_lunaruse() {
 		    	if (uselang != 3) {
 				    $.ajax({
-			    		type : "POST",
+			    		type : "GET",
 			    		dataType : "text",
 			    		async : false,
 			    		url : "/ezSchedule/scheduleGetLunarUse.do",

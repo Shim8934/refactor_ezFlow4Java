@@ -382,7 +382,7 @@
 			    selDate = date;			    
 
 			    $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezSchedule/scheduleNewWebPartList.do",

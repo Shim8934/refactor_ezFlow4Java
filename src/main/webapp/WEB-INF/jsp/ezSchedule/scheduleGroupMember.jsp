@@ -19,7 +19,7 @@
 		    function show_personinfo(userid) {
 		    	var deptID = "";
 		    	$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "text",
 					async : false,
 					url : "/ezSchedule/scheduleGetCumDeptID.do",
