@@ -10298,21 +10298,19 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		map.put("href", href);
 		
-		if (href.indexOf(".hwp") > -1) {
-			ArrayList<String> docList = ezApprovalGDAO.getTmpDocList(map);
-			for (String s : docList) {
-				map.put("v_DocID", s);
-				//기존 임시저장문서 지우기
-				ezApprovalGDAO.aprDeleteDocInfo(map);
-				ezApprovalGDAO.aprDeleteDocInfo2(map);
-				ezApprovalGDAO.aprDeleteDocInfo3(map);
-				ezApprovalGDAO.aprDeleteDocInfo4(map);
-				ezApprovalGDAO.aprDeleteDocInfo5(map);
-				ezApprovalGDAO.aprDeleteDocInfo6(map);
-				ezApprovalGDAO.aprDeleteDocInfo7(map);
-				ezApprovalGDAO.aprDeleteDocInfo8(map);
-				ezApprovalGDAO.aprDeleteDocInfo9(map);
-			}
+		ArrayList<String> docList = ezApprovalGDAO.getTmpDocList(map);
+		for (String s : docList) {
+			map.put("v_DocID", s);
+			//기존 임시저장문서 지우기
+			ezApprovalGDAO.aprDeleteDocInfo(map);
+			ezApprovalGDAO.aprDeleteDocInfo2(map);
+			ezApprovalGDAO.aprDeleteDocInfo3(map);
+			ezApprovalGDAO.aprDeleteDocInfo4(map);
+			ezApprovalGDAO.aprDeleteDocInfo5(map);
+			ezApprovalGDAO.aprDeleteDocInfo6(map);
+			ezApprovalGDAO.aprDeleteDocInfo7(map);
+			ezApprovalGDAO.aprDeleteDocInfo8(map);
+			ezApprovalGDAO.aprDeleteDocInfo9(map);
 		}
 		
 		ezApprovalGDAO.deleteTmpDocInfo(map);

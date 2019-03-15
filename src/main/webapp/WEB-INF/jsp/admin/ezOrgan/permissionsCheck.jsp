@@ -54,6 +54,7 @@
 		    var isfirst = true;
 		    var deptTreeTopId = "${deptTreeTopId}";
 			var isAdmin = "${isAdmin}";
+			var packageType = "${packageType}";
 			
 		    $(document).ready(function(){
 		    	try {
@@ -1079,69 +1080,75 @@
 			                <DATA1>g</DATA1>
 			            </CELL>
 			        </ROW>
-			        <ROW>
-			            <CELL>            
-			                <VALUE><spring:message code='ezOrgan.t292'/></VALUE>
-			                <DATA1>a</DATA1>
-			            </CELL>
-			        </ROW>
-			        <c:if test="${approvalFlag eq 'G'}">
-			        <ROW>
-			            <CELL>            
-			                <VALUE><spring:message code='ezOrgan.t294'/></VALUE>
-			                <DATA1>i</DATA1>
-			            </CELL>
-			        </ROW>
+			        <c:if test="${packageType eq 'standard'}">
+				        <ROW>
+				            <CELL>            
+				                <VALUE><spring:message code='ezOrgan.t292'/></VALUE>
+				                <DATA1>a</DATA1>
+				            </CELL>
+				        </ROW>
+				        <c:if test="${approvalFlag eq 'G'}">
+				        <ROW>
+				            <CELL>            
+				                <VALUE><spring:message code='ezOrgan.t294'/></VALUE>
+				                <DATA1>i</DATA1>
+				            </CELL>
+				        </ROW>
+				        </c:if>
 			        </c:if>
-			        <ROW>
-			            <CELL>            
-			                <VALUE><spring:message code='ezOrgan.t297'/></VALUE>
-			                <DATA1>n</DATA1>
-			            </CELL>
-			        </ROW>
-			        <ROW>
-			            <CELL>            
-			                <VALUE><spring:message code='ezOrgan.t296'/></VALUE>
-			                <DATA1>l</DATA1>
-			            </CELL>
-			        </ROW>
-			        <c:if test="${approvalForDoc == 'Y'}">
-			        <ROW>
-			            <CELL>
-			                <VALUE><spring:message code='ezOrgan.lhj1'/></VALUE>
-			                <DATA1>ff</DATA1>
-			            </CELL>
-			        </ROW>
-			        </c:if>
-                    <c:if test="${approvalFlag != 'S'}">
-			        <ROW>
-			            <CELL>            
-			                <VALUE><spring:message code='ezOrgan.t301'/></VALUE>
-			                <DATA1>w</DATA1>
-			            </CELL>
-			        </ROW>
-			        <ROW>
-			            <CELL>            
-			                <VALUE><spring:message code='ezOrgan.t300'/></VALUE>
-			                <DATA1>m</DATA1>
-			            </CELL>
-			        </ROW>   
-                    </c:if>
-                    <c:if test="${useWebfolder == 'YES'}">
-                    <ROW>
-			            <CELL>            
-			                <VALUE><spring:message code='ezOrgan.t303'/></VALUE>
-			                <DATA1>wf</DATA1>
-			            </CELL>
-			        </ROW>
-			        </c:if>
-			        <c:if test="${use_attitude == 'YES'}">
-                    <ROW>
-			            <CELL>            
-			                <VALUE><spring:message code='ezOrgan.kbm01' /></span></VALUE>
-			                <DATA1>a1</DATA1>
-			            </CELL>
-			        </ROW>
+			        <c:if test="${packageType ne 'mail'}">
+				        <ROW>
+				            <CELL>            
+				                <VALUE><spring:message code='ezOrgan.t297'/></VALUE>
+				                <DATA1>n</DATA1>
+				            </CELL>
+				        </ROW>
+					</c:if>
+			        <c:if test="${packageType eq 'standard'}">
+				        <ROW>
+				            <CELL>            
+				                <VALUE><spring:message code='ezOrgan.t296'/></VALUE>
+				                <DATA1>l</DATA1>
+				            </CELL>
+				        </ROW>
+				        <c:if test="${approvalForDoc == 'Y'}">
+				        <ROW>
+				            <CELL>
+				                <VALUE><spring:message code='ezOrgan.lhj1'/></VALUE>
+				                <DATA1>ff</DATA1>
+				            </CELL>
+				        </ROW>
+				        </c:if>
+	                    <c:if test="${approvalFlag != 'S'}">
+				        <ROW>
+				            <CELL>            
+				                <VALUE><spring:message code='ezOrgan.t301'/></VALUE>
+				                <DATA1>w</DATA1>
+				            </CELL>
+				        </ROW>
+				        <ROW>
+				            <CELL>            
+				                <VALUE><spring:message code='ezOrgan.t300'/></VALUE>
+				                <DATA1>m</DATA1>
+				            </CELL>
+				        </ROW>   
+	                    </c:if>
+	                    <c:if test="${useWebfolder == 'YES'}">
+	                    <ROW>
+				            <CELL>            
+				                <VALUE><spring:message code='ezOrgan.t303'/></VALUE>
+				                <DATA1>wf</DATA1>
+				            </CELL>
+				        </ROW>
+				        </c:if>
+				        <c:if test="${use_attitude == 'YES'}">
+	                    <ROW>
+				            <CELL>            
+				                <VALUE><spring:message code='ezOrgan.kbm01' /></span></VALUE>
+				                <DATA1>a1</DATA1>
+				            </CELL>
+				        </ROW>
+				        </c:if>
 			        </c:if>
 				</ROWS>
 			</LISTVIEWDATA>
