@@ -68,6 +68,16 @@ var strLang69	=	"저장하였습니다.";
 var strLang70	=	"시작시간은 종료시간보다 빨라야합니다.";
 /*2018-05-24 구해안*/
 var strLang71   =   "기간";
-var strLang72   =   "종료일 지정 안함.";
+var strLang72   =   "종료일 지정 안함";
 var strLang73   =   "저장";
 var strLang47 = "회";
+var strLang74 = "매일(평일)";
+var strLang75 = "일마다";
+var strLang76 = "주마다";
+var strLang77 = "개월마다";
+var strLang78 = "일";
+var strLang79 = "첫째"
+var strLang80 = "둘째"
+var strLang81 = "셋째"
+var strLang82 = "넷째"
+var strLang83 = "마지막"

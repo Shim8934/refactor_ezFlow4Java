@@ -1194,6 +1194,10 @@
 			}
 		    
 		    function syncOrganAccounts() {
+		    	if (!confirm("<spring:message code='ezOrgan.lhm7' />")){
+					return;
+				}
+		    	
 		    	showProgress();
 		    	
 	            $.ajax({
@@ -1219,6 +1223,10 @@
 		    }
 		    
 		    function syncWithBizmekaTalkAccounts() {
+		    	if (!confirm("<spring:message code='ezOrgan.lhm7' />")){
+					return;
+				}
+		    	
 	            $.ajax({
 	            	type : "POST",
 	            	dataType : "text",

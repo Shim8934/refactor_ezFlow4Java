@@ -822,65 +822,71 @@ function show_repetition_info()
 	
 	switch (info[2])
 	{
-		case "0":
+		case "0":					// 매일
 			{
-				if(info[3] == '0'){				
+				if(info[3] == '0') {				// 매일(평일)
+					repeatinfo += strLang45;
+				}
+				else if(info[3] == '1'){				// 매일
 					repeatinfo += strLang34;
-				}else{
+				}
+				else{										// 매일(N일 마다)
 					repeatinfo += info[3] + strLang81 + " ";
 				}			
 			}
 			break;
 		case "1":
 			{
-				if(info[3] == '1'){				
-					repeatinfo += strLang35;
-				}else{
+				if(info[3] == '1'){						// 매주
+					repeatinfo += strLang35 + " ";
+				}else{												// N주 마다
 					repeatinfo += info[3] + strLang82 + " ";
-					if(info[4]){
-						
-						for (var i = 0; i< info[4].length; i++){
-							
-							switch (info[4]){
-							case "0":
-								repeatinfo += strLang48;
-								break;
-							case "1":
-								repeatinfo += strLang49;
-								break;
-							case "2":
-								repeatinfo += strLang50;
-								break;
-							case "3":
-								repeatinfo += strLang51;
-								break;
-							case "4":
-								repeatinfo += strLang55;
-								break;
-							case "5":
-								repeatinfo += strLang53;
-								break;
-							case "6":
-								repeatinfo += strLang54;
-								break;
-							}
-						}
+				}
+
+				for (var i = 0; i< info[4].length; i++){
+					if(i != 0) {
+						repeatinfo += ", ";
 					}
-					
+					var idx = info[4].substr(i, 1);
+
+					switch (idx){
+					case "0":
+						repeatinfo += strLang48;
+						break;
+					case "1":
+						repeatinfo += strLang49;
+						break;
+					case "2":
+						repeatinfo += strLang50;
+						break;
+					case "3":
+						repeatinfo += strLang51;
+						break;
+					case "4":
+						repeatinfo += strLang52;
+						break;
+					case "5":
+						repeatinfo += strLang53;
+						break;
+					case "6":
+						repeatinfo += strLang54;
+						break;
+					}
 				}
 				
 			}
 			break;
 	    case "2":
 	        {
-		    	if(info[3] == '1'){
-		    		
-					repeatinfo += info[4] + strLang83 + " ";
-					repeatinfo += info[5] + strLang80 + " ";
-		    		
-				}else{					
-					repeatinfo += info[4] + strLang83 + " ";
-					console.log('info[5] : ' + info[5]);
+		    	if(info[4] == '1') {				// 매월
+		    		repeatinfo += strLang36 + " ";
+		    	}
+		    	else {									// N개월마다
+		    		repeatinfo += info[4] + strLang83 + " ";
+		    	}
+		    	if(info[3] == '1'){					// 날짜
+		    		repeatinfo += info[5] + strLang80;
+				}else{									// 요일
 					for (var i = 0; i< info[5].length; i++){
 						switch (info[5]){
 						case "1":
@@ -905,25 +911,25 @@ function show_repetition_info()
 						var idx = info[6].substr(i, 1);
 						switch (idx) {
 						case "0":
-							repeatinfo += strLang48;
+							repeatinfo += strLang60;
 							break;
 						case "1":
-							repeatinfo += strLang49;
+							repeatinfo += strLang61;
 							break;
 						case "2":
-							repeatinfo += strLang50;
+							repeatinfo += strLang62;
 							break;
 						case "3":
-							repeatinfo += strLang51;
+							repeatinfo += strLang63;
 							break;
 						case "4":
-							repeatinfo += strLang52;
+							repeatinfo += strLang64;
 							break;
 						case "5":
-							repeatinfo += strLang53;
+							repeatinfo += strLang65;
 							break;
 						case "6":
-							repeatinfo += strLang54;
+							repeatinfo += strLang66;
 							break;
 						}
 					}
@@ -934,11 +940,9 @@ function show_repetition_info()
 		case "3":
 			{
 				if(info[3] == '1'){
-		    		
 					repeatinfo += strLang37 + " ";
 					repeatinfo += info[4] + strLang122 + " ";
-					repeatinfo += info[5] + strLang81;
-		    		
+					repeatinfo += info[5] + strLang80;
 				} else {	
 					repeatinfo += strLang37 + " ";
 					repeatinfo += info[4] + strLang122 + " ";
@@ -966,25 +970,25 @@ function show_repetition_info()
 						var idx = info[6].substr(i, 1);
 						switch (idx) {
 						case "0":
-							repeatinfo += strLang48;
+							repeatinfo += strLang60;
 							break;
 						case "1":
-							repeatinfo += strLang49;
+							repeatinfo += strLang61;
 							break;
 						case "2":
-							repeatinfo += strLang50;
+							repeatinfo += strLang62;
 							break;
 						case "3":
-							repeatinfo += strLang51;
+							repeatinfo += strLang63;
 							break;
 						case "4":
-							repeatinfo += strLang52;
+							repeatinfo += strLang64;
 							break;
 						case "5":
-							repeatinfo += strLang53;
+							repeatinfo += strLang65;
 							break;
 						case "6":
-							repeatinfo += strLang54;
+							repeatinfo += strLang66;
 							break;
 						}
 					}

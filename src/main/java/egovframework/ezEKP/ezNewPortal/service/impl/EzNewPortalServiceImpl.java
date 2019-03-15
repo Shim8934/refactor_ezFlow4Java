@@ -1665,12 +1665,15 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		menuUrl = commonUtil.detectPathTraversal(menuUrl);
 		menuUrl = specialCharacterToEmptyString(menuUrl);
 		
-		String iconUrl = commonUtil.stripScriptTags(map.get("iconUrl").toString());
-		iconUrl = commonUtil.detectPathTraversal(iconUrl);
-		iconUrl = specialCharacterToEmptyString(iconUrl);
+		if (map.get("iconUrl") != null) {
+			String iconUrl = commonUtil.stripScriptTags(map.get("iconUrl").toString());
+			iconUrl = commonUtil.detectPathTraversal(iconUrl);
+			iconUrl = specialCharacterToEmptyString(iconUrl);
+			
+			map.put("iconUrl", iconUrl);
+		}
 		
 		map.put("menuUrl", menuUrl);
-		map.put("iconUrl", iconUrl);
 		
 		//tbl_portal_menu
 		int menuId = ezNewPortalDAO.insertMenu(map);
