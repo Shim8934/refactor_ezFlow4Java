@@ -417,10 +417,20 @@
 						break;
 				    case "2":
 				    	if(info[3] == '1'){
-							repeatinfo += info[4] + strLang83 + " ";
+				    		if(info[4] == '1') {
+								repeatinfo += strLang36 + " ";
+				    		}
+				    		else {
+				    			repeatinfo += info[4] + strLang83 + " ";
+				    		}
 							repeatinfo += info[5] + strLang80 + " ";
 						}else{					
-							repeatinfo += info[4] + strLang83 + " ";
+							if(info[4] == '1') {
+								repeatinfo += strLang36 + " ";
+							}
+							else {
+								repeatinfo += info[4] + strLang83 + " ";
+							}
 							for (var i = 0; i< info[5].length; i++){
 								var weekNumberInfo = makeStringWeekNumber(info[5]);
 								repeatinfo += weekNumberInfo; 
@@ -440,7 +450,7 @@
 						if (info[3] == '1'){
 							repeatinfo += strLang37 + " ";
 							repeatinfo += info[4] + strLang122 + " ";
-							repeatinfo += info[5] + strLang81;
+							repeatinfo += info[5] + strLang80;
 						} else {	
 							repeatinfo += strLang37 + " ";
 							repeatinfo += info[4] + strLang122 + " ";
