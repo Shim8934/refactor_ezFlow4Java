@@ -1660,30 +1660,52 @@
 			)
 	</insert>
 	
-	<select id="ezAttitudeDAO.getIsAttitude" parameterClass="Map" resultClass="String">
-		<![CDATA[
-		select
-			count(*)
-		from
-			tbl_attitude
-		where
-			tenant_id = #tenantId#
-		and
-			company_id = #companyId#
-		and
-			writer_id = #writerId#
-		]]>
-		<isNotEmpty property="typeIdArr" prepend="and">
-			<iterate prepend="type_id IN" property="typeIdArr" open="(" close=")" conjunction=",">
-				#typeIdArr[]#
-			</iterate>
-		</isNotEmpty>
-		<![CDATA[
-		and
-			start_date >= TO_DATE((#checkStartDate# || ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
-		and
-			start_date <= TO_DATE((#checkStartDate# || ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
-		]]>
+	<select id="ezAttitudeDAO.getIsAttitude" parameterClass="Map" resultClass="String" remapResults="true">
+		<isEqual property="isOutCheck" compareValue="true">
+			<![CDATA[
+			select
+				attitude_id
+			from
+				tbl_attitude
+			where
+				tenant_id = #tenantId#
+			and
+				company_id = #companyId#
+			and
+				writer_id = #writerId#
+			and
+				type_id = #typeId#
+			and
+				start_date >= TO_DATE((#checkStartDate# || ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
+			and
+				start_date <= TO_DATE((#checkStartDate# || ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
+			]]>		
+		</isEqual>
+		<isNotEqual property="isOutCheck" compareValue="true">
+			<![CDATA[
+			select
+				count(*)
+			from
+				tbl_attitude
+			where
+				tenant_id = #tenantId#
+			and
+				company_id = #companyId#
+			and
+				writer_id = #writerId#
+			]]>
+			<isNotEmpty property="typeIdArr" prepend="and">
+				<iterate prepend="type_id IN" property="typeIdArr" open="(" close=")" conjunction=",">
+					#typeIdArr[]#
+				</iterate>
+			</isNotEmpty>
+			<![CDATA[
+			and
+				start_date >= TO_DATE((#checkStartDate# || ' 00:00:00'), 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
+			and
+				start_date <= TO_DATE((#checkStartDate# || ' 23:59:59'), 'YYYY-MM-DD HH24:MI:SS') - #offsetMin# / (24 * 60)
+			]]>
+		</isNotEqual>
 	</select>
 	
 	<select id="ezAttitudeDAO.getSearchListCount" parameterClass="Map" resultClass="int">
