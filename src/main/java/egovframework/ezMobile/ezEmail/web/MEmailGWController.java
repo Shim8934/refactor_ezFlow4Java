@@ -62,8 +62,11 @@ import javax.mail.internet.MimePart;
 import javax.mail.internet.MimeUtility;
 import javax.servlet.http.HttpServletRequest;
 
+import egovframework.ezEKP.ezEmail.vo.*;
+import net.sf.cglib.core.Local;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.crypto.tls.ServerName;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -95,11 +98,6 @@ import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
-import egovframework.ezEKP.ezEmail.vo.MailColorVO;
-import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
-import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
-import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
-import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.web.EzEmailMailReadController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -5589,5 +5587,156 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		
 		return result;
 	}
+
+	@RequestMapping(value = "/mobile/ezemail/recpCheck/{messageId}/users/{userId:.+}",
+            method = RequestMethod.POST,
+            produces = "application/json;charset=utf-8")
+    public Object recpCheckMail(HttpServletRequest request,
+                                @RequestBody JSONObject getData,
+                                @PathVariable String messageId,
+                                @PathVariable String userId) {
+	    LOGGER.debug("mobile g/w mail recpCheckMail started.");
+        LOGGER.debug("userId=" + userId + "getData=" + getData);
+
+        JSONObject returnObj = null;
+        IMAPAccess ia = null;
+
+        try {
+            JSONArray unreadArr = new JSONArray();
+            JSONObject readObj = null;
+
+            String serverName = request.getHeader("x-user-host");
+            MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
+            String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+            String userEmail = userInfo.getUserId() + "@" + domainName;
+            String password = jspw;
+            String lang = commonUtil.getTwoLetterLangFromLangNum(userInfo.getLang());
+            Locale locale = new Locale(lang);
+
+            Long uid = Long.parseLong(messageId);
+
+            LOGGER.debug("userEmail=" + userEmail + ", uid=" + uid);
+
+            ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+                    userEmail, password, egovMessageSource, locale, ezEmailUtil);
+
+            Folder f = ia.getFolder(ezEmailUtil.getSentFolderId(locale));
+            f.open(Folder.READ_ONLY);
+            Message message = ((IMAPFolder)f).getMessageByUID(uid);
+
+            if (message == null) {
+                LOGGER.debug("message not found. uid=" + uid);
+            } else {
+
+                String mimeMassageId = ((MimeMessage)message).getMessageID() == null ?
+                                                "" : ((MimeMessage)message).getMessageID();
+                LOGGER.debug("mimeMessageId=" + mimeMassageId);
+
+                // get readList
+                List<MailReadVO> readList = ezEmailService.getMailReadList(userInfo.getTenantId(), userId, mimeMassageId);
+
+                // get all recipients from email message
+                Address[] addresses = message.getAllRecipients();
+
+                // get aliasAddressMap from addresses and readList
+                List<String> addressList = new ArrayList<String>();
+
+                for (Address address : addresses) {
+                    if (((InternetAddress)address).getAddress() != null) {
+                        addressList.add(((InternetAddress)address).getAddress());
+                    }
+                }
+
+                for (MailReadVO mailReadObj : readList) {
+                    addressList.add(mailReadObj.getReaderEmail());
+                }
+
+                Map<String, String> aliasAddressMap = ezEmailService.getAliasAddressMap(addressList, userInfo.getTenantId());
+
+                List<String> tempMailList = new ArrayList<String>();
+
+                // recipients from mail message
+                for (Address address : addresses) {
+                    returnObj = new JSONObject();
+                    readObj = new JSONObject();
+                    String email = ((InternetAddress)address).getAddress();
+                    String name = ((InternetAddress)address).getPersonal() == null ?
+                            ((InternetAddress)address).getAddress() : ((InternetAddress)address).getPersonal();
+
+                    if (email != null) {
+                        JSONObject recpJson = new JSONObject();
+
+                        recpJson.put("email", email);
+                        recpJson.put("name", name);
+
+                        if (aliasAddressMap.containsKey(email)) {
+                            email = aliasAddressMap.get(email);
+                        }
+
+                        String readDate = "unread";
+
+                        for (MailReadVO vo : readList) {
+
+                            if (aliasAddressMap.containsKey(vo.getReaderEmail())) {
+                                if (aliasAddressMap.get(vo.getReaderEmail()).equalsIgnoreCase(email)) {
+                                    readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffSet(), false);
+                                    break;
+                                }
+                            } else {
+                                if (vo.getReaderEmail().equalsIgnoreCase(email)) {
+                                    readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffSet(), false);
+                                    break;
+                                }
+                            }
+                        }
+
+                        recpJson.put("date", readDate);
+
+                        String status = "";
+
+                        /*
+                        for (MailCancelVO vo : cancelList) {
+                            if (vo.getReaderEmail().equalsIgnoreCase(email)) {
+                                if (vo.getStatus() != null && !vo.getStatus().equalsIgnoreCase("")) {
+                                    status = vo.getStatus();
+                                } else {
+                                    status = "0";
+                                }
+
+                                break;
+                            }
+                        }*/
+
+                        recpJson.put("cancel", status);
+
+                        if (readDate.equalsIgnoreCase("unread")) {
+                            unreadArr.add(recpJson);
+                        } else {
+                            unreadArr.add(recpJson);
+                            //readObj.put("read", recpJson);
+                        }
+
+                        tempMailList.add(email);
+                    }
+
+                    returnObj.put("data", unreadArr);
+                }
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            returnObj.put("data", "error");
+        } finally {
+            if (ia != null) {
+                ia.close();
+            }
+        }
+
+        LOGGER.debug("returnValue=" + returnObj.toJSONString());
+	    LOGGER.debug("mobile g/w mail recpCheckMail ended.");
+
+	    return returnObj;
+    }
 	
 }
