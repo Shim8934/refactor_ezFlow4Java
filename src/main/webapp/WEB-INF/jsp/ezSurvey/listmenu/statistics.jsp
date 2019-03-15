@@ -28,7 +28,14 @@
 		<div class="surveydetail-body" id="mainSurveyBody">
 			<div class="surveyinfo-wrap">
 				<div class="survey-nminfo">
-					<div class="survey-title"><c:out value="${data.title}"/></div>
+					<div class="survey-title">
+						<c:out value="${data.title}"/>
+						<c:if test = "${adminYN eq 'Y' }">
+							<span id="downloadBtn" style="cursor:pointer;float:right;">
+								<img src="/images/icon_adddownload.gif" width="16" height="16" style="vertical-align:middle">
+							</span>
+						</c:if>
+					</div>
 				</div>
 			</div>
 			
@@ -68,6 +75,9 @@
 				</div>
 			</div>
 		</div>
+		<form id="exportGantt" name="exportGantt" method="post" style="display:none;">
+			<input name="surveyId">
+		</form>
 		
 		<script type="text/javascript">
 		var LegenNavi = function() {
@@ -120,13 +130,25 @@
 						  "#d41e47", "#4c64ae", "#01539c", "#f05f7c", "#00b3ca", "#bd8139", "#d9c622", "#4a2431", "#d41e47", "#eb148d"];
 			
 			startStatistic(questionStatistic);
-			
+
+			function exportData() {
+				$("input[name='surveyId']").val(questionStatistic[0]["surveyId"]);
+				document.exportGantt.action = "/ezSurvey/exportResultExcel.do";
+				document.exportGantt.method = "POST";
+				document.exportGantt.submit();
+			}
+
 			function startStatistic(questions) {
 				setBodyHeight();
 				window.addEventListener("load", function(e) {setBodyHeight();}, false);
 				window.addEventListener("resize", function(e) {setBodyHeight();}, false);
 				document.getElementById("closeRespondentl").onclick   = function(e) {togglePanel("respondentPanel");};
 				document.getElementById("closeTxtResponse").onclick   = function(e) {togglePanel("textPanel");};
+				
+				if(document.getElementById("downloadBtn")) {
+					document.getElementById("downloadBtn").addEventListener("click", function(e) {exportData();}, false);
+				}
+
 				window.addEventListener("beforeunload", function(e) {closeAllPopups();}, false);
 				
 				showRespondentStatistic();

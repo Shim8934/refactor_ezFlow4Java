@@ -827,6 +827,12 @@ public class EzSurveyGWController {
 			Long surveyId    = Long.parseLong(itemId);
 			String realPath  = request.getServletContext().getRealPath("");
 			result           = surveyService.getSurveyStatistic(surveyId, realPath, userInfo);
+			// 2019-03-05 황윤호 권한 체크 (전체 | 회사 | 설문)
+			String adminYN = "N";
+			if(userInfo.getRollInfo().contains("c=1") || userInfo.getRollInfo().contains("k=1") || userInfo.getRollInfo().contains("l=1")){ 
+				adminYN = "Y";
+				result.put("adminYN", adminYN);
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
