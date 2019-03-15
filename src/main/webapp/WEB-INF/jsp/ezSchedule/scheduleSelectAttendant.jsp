@@ -1287,7 +1287,7 @@
 
 		        $.ajax({
 					url : '/ezSchedule/getDeptUserList.do',
-					method : 'POST',
+					method : 'GET',
 					async : false,
 					dataType : "xml",
 					data : {

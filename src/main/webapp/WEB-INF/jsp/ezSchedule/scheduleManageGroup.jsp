@@ -25,7 +25,7 @@
 				    
 		    function getGroupList() {
 		    	$.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "xml",
 		    		async : true,
 		    		url : "/ezSchedule/scheduleGroupList.do",		    		
@@ -95,7 +95,7 @@
 		        document.getElementById("Group_View").appendChild(DIV_Description);
 		        
 		        $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "xml",
 		    		async : false,
 		    		data : {

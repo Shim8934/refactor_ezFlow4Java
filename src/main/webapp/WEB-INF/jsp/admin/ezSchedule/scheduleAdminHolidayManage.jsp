@@ -33,7 +33,7 @@
 		    	_RowObject = null;
 		    	
 		        $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "text",
 		    		async : true,
 		    		url : "/ezSchedule/scheduleGetHoliday.do",

@@ -201,7 +201,7 @@
 		    function DisplayScheduleList( objTrNode, ownerID ) {
 				$.ajax({
 					url : '/ezSchedule/scheduleAttendantList.do',
-					method : 'POST',
+					method : 'GET',
 					dataType : "text",
 					async : false,
 					data : {

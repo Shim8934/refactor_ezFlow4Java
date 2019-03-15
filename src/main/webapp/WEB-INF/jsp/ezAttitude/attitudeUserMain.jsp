@@ -344,7 +344,7 @@
 			function scheduleGetLunarUse() {
 				if (uselang != 3) {
 				    $.ajax({
-			    		type : "POST",
+			    		type : "GET",
 			    		dataType : "text",
 			    		async : false,
 			    		url : "/ezSchedule/scheduleGetLunarUse.do",
