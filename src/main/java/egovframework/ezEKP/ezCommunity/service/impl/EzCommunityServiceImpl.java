@@ -1661,7 +1661,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		if (notResponse == 0) {
 			response.getWriter().write("<script language='javascript'>\n");
 			//response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
-			response.getWriter().write("document.location.href = '/ezCommunity/pollRes.do?code=" + code + "&pollManagerID=" + pollManagerID + "&pollState=" + pollState + "';\n");		
+			response.getWriter().write("document.location.href = '/ezCommunity/pollRes.do?code=" + commonUtil.stripScriptTags(code) + "&pollManagerID=" + commonUtil.stripScriptTags(pollManagerID) + "&pollState=" + commonUtil.stripScriptTags(pollState) + "';\n");		
 			response.getWriter().write("</script>");
 			response.getWriter().flush();
 		} else {
@@ -1689,7 +1689,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		response.setContentType("text/html; charset=UTF-8");
 		
 		response.getWriter().write("<script language='javascript'>\n");
-		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + pClubNo + "';\n");
+		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + commonUtil.stripScriptTags(pClubNo) + "';\n");
 		response.getWriter().write("</script>");
 		response.getWriter().flush();
 	}
