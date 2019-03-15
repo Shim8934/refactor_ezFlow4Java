@@ -24891,8 +24891,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				}
 				
 				//같은 회사 일 때
-				//부서 병렬합의 회송일 경우 파생된 문서정보를 삭제하도록 수정. 2019-03-07 홍대표
-				if (companyID.equals(pOrgCompanyID) && !aprType.equals(staATBuSeuByungRyulHyubJo)) {
+				//부서합의 회송일 경우 파생된 문서정보를 삭제하도록 재수정. 2019-03-15 홍대표
+				if (companyID.equals(pOrgCompanyID) && !aprType.equals(staATBuSeuSoonChaHyubJo) && !aprType.equals(staATBuSeuByungRyulHyubJo)) {
 
 					map.put("v_APRSTATE1", staASWheSong);
 					map.put("v_APRSTATE2", staASJinHang);
