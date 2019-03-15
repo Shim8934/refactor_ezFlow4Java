@@ -1577,7 +1577,7 @@
 		            }
 		        }        
 		        if (DraftFlag == "REDRAFT" && ListType == "21") {
-					RemoveTmpDoc(DocSN);
+					//RemoveTmpDoc(DocSN);
 		        }
 		
 		        var rtnVal = SaveTMPFile(AutoSave);

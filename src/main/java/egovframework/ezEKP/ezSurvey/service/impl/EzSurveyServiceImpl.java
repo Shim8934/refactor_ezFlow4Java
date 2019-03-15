@@ -4,6 +4,7 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -239,13 +240,14 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	public String saveUploadFile(List<MultipartFile> multiFileLists, JSONArray nameArray, String realPath, int tenantId) throws Exception {
 		String pFileName   = (String)((JSONObject)nameArray.get(0)).get("originalFilename");
 		pFileName = commonUtil.detectPathTraversal(pFileName);
-		String cabinetPath = getSurveyDirPath(tenantId);
-		String pDirPath    = realPath + cabinetPath;
+		String surveyPath  = getSurveyDirPath(tenantId);
+		String pDirPath    = realPath + surveyPath;
 		
 		File file = new File(pDirPath);
 		
-		if (!file.exists()) {
-			file.mkdir();
+		if (!file.exists() && !file.mkdir()) {
+			logger.debug("Can not create file!");
+			throw new IOException();
 		}
 		
 		int dotPos     = pFileName.lastIndexOf(".");
@@ -253,12 +255,12 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		String newName = UUID.randomUUID().toString() + "." + extend;
 		writeUploadedFile(multiFileLists.get(0), newName, pDirPath);
 		
-		return cabinetPath + newName;
+		return surveyPath + newName;
 	}
 	
 	@Override
 	public void deleteAttachFile(String filePath, String realPath, int tenantId) throws Exception {
-		String pDirPath = realPath + filePath;
+		String pDirPath = realPath + commonUtil.detectPathTraversal(filePath);
 		File file       = new File(pDirPath);
 		
 		if (file.exists()) {
@@ -275,7 +277,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 	public void getDownloadedFile(String fileName, String filePath, String realPath, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		String _fileName = fileName;
 		_fileName        = CommonUtil.getEncodedFileNameForDownload(userAgent, _fileName);
-		File file        = new File(realPath + filePath);
+		File file        = new File(realPath + commonUtil.detectPathTraversal(filePath));
 		
 		if (!file.exists()) {
 			throw new FileNotFoundException(fileName);
@@ -607,7 +609,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		ezSurveyDAO.updateSurveyItem(survey);
 	}
 	
-	private synchronized void saveAttachFile(String realPath, JSONObject attachObj, long targetId, String companyId, int tenantId, String targetType, long surveyId, List<AttachVO> totalAttach) {
+	private synchronized void saveAttachFile(String realPath, JSONObject attachObj, long targetId, String companyId, int tenantId, String targetType, long surveyId, List<AttachVO> totalAttach) throws Exception {
 		AttachVO attach = new AttachVO();
 		String fileName = attachObj.get("fname").toString();
 		
@@ -616,7 +618,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			attach.setFurl(fileUrl);
 		}
 		else {
-			String filePath = attachObj.get("fpath").toString();
+			String filePath = commonUtil.detectPathTraversal(attachObj.get("fpath").toString());
 			File attFile    = new File(realPath + filePath);
 			long fileSize   = attFile.length();
 			attach.setFpath(filePath);
@@ -668,7 +670,6 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		creatorName = creatorName.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_");
 		
 		SurveyItemSearchVO searchVO = new SurveyItemSearchVO(pageMode, listCntSize, tenantId, userId, primary, offsetMinute, title, creatorName, startDate, endDate, sqlQuery, srchMode, srchOption, userMode);
-		List<SurveyVO> itemList     = new ArrayList<>();
 		
 		if (pageMode.equals("processing") || pageMode.equals("finish") || pageMode.equals("all")) {
 			List<Long> listReceivedSurvey = getUserReceivedSurveyList(userInfo, 0);
@@ -684,7 +685,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		currentPage = currentPage == 0         ? 1          : currentPage;
 		startPoint  = (currentPage - 1) * listCntSize;
 		searchVO.setStartPoint(startPoint);
-		itemList    = ezSurveyDAO.getTotalReceivedSurveyItems(searchVO);
+		List<SurveyVO> itemList = ezSurveyDAO.getTotalReceivedSurveyItems(searchVO);
 		
 		result.put("itemList",    itemList);
 		result.put("totalPages",  totalPages);
@@ -942,7 +943,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 				travelNode(1, logicPath, logicMap, currentPath);
 				
 				//Find enable question list
-				List<Long> remainPath = logicPath.get(0).stream().map(elm -> new Long(elm)).collect(Collectors.toList());
+				List<Long> remainPath = logicPath.get(0).stream().map(elm -> Long.valueOf(elm)).collect(Collectors.toList());
 				for (int i = 1; i < logicPath.size(); i++) {
 					remainPath.retainAll(logicPath.get(i));
 				}
@@ -981,7 +982,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 			}
 			else {
 				for (long nextQsId : nodeList) {
-					List<Long> clonePath = currentPath.stream().map(elm -> new Long(elm)).collect(Collectors.toList());
+					List<Long> clonePath = currentPath.stream().map(elm -> Long.valueOf(elm)).collect(Collectors.toList());
 					travelNode(nextQsId, logicPath, logicMap, clonePath);
 				}
 			}
@@ -1160,7 +1161,7 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 		for (int i = 0; i < responses.size(); i++) {
 			JSONObject responseObj = (JSONObject)responses.get(i);
 			
-			if (responseObj.isEmpty()) {
+			if (responseObj == null || responseObj.isEmpty()) {
 				result.put("status", "error");
 				result.put("code", 1);
 				return result;
@@ -1220,6 +1221,10 @@ public class EzSurveyServiceImpl extends EgovFileMngUtil implements EzSurveyServ
 						response.setRankingLevel(rankingLevel);
 						response.setOptionId(rankingOptionId);
 						break;
+					default:
+						result.put("status", "error");
+						result.put("code", 9);
+						return result;
 				}
 				
 				totalUsers.add(addRespondent(surveyId, responseId, timeUTC, userInfo));

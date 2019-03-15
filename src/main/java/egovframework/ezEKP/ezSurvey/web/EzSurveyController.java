@@ -184,9 +184,10 @@ public class EzSurveyController extends EgovFileMngUtil {
 			String messageCode = "";
 			
 			switch(reasonCode) {
-				case 1: messageCode = "ezSurvey.err1"; break;
-				case 2: messageCode = "ezSurvey.err2"; break;
-				case 3: messageCode = "ezSurvey.err3"; break;
+				case 1 : messageCode = "ezSurvey.err1"; break;
+				case 2 : messageCode = "ezSurvey.err2"; break;
+				case 3 : messageCode = "ezSurvey.err3"; break;
+				default: messageCode = "ezSurvey.err1"; break;
 			}
 			
 			model.addAttribute("reasonMessage", messageCode);
@@ -220,9 +221,10 @@ public class EzSurveyController extends EgovFileMngUtil {
 			String messageCode = "";
 			
 			switch(reasonCode) {
-				case 1: messageCode = "ezSurvey.err1"; break;
-				case 2: messageCode = "ezSurvey.err2"; break;
-				case 3: messageCode = "ezSurvey.err3"; break;
+				case 1:  messageCode = "ezSurvey.err1"; break;
+				case 2:  messageCode = "ezSurvey.err2"; break;
+				case 3:  messageCode = "ezSurvey.err3"; break;
+				default: messageCode = "ezSurvey.err1"; break;
 			}
 			
 			model.addAttribute("reasonMessage", messageCode);
@@ -258,9 +260,10 @@ public class EzSurveyController extends EgovFileMngUtil {
 			String messageCode = "";
 			
 			switch(reasonCode) {
-				case 1: messageCode = "ezSurvey.err1"; break;
-				case 2: messageCode = "ezSurvey.err2"; break;
-				case 3: messageCode = "ezSurvey.err3"; break;
+				case 1 : messageCode = "ezSurvey.err1"; break;
+				case 2 : messageCode = "ezSurvey.err2"; break;
+				case 3 : messageCode = "ezSurvey.err3"; break;
+				default: messageCode = "ezSurvey.err1"; break;
 			}
 			
 			model.addAttribute("reasonMessage", messageCode);
@@ -286,11 +289,12 @@ public class EzSurveyController extends EgovFileMngUtil {
 			String messageCode = "";
 			
 			switch(reasonCode) {
-				case 1: messageCode = "ezSurvey.err1"; break;
-				case 2: messageCode = "ezSurvey.err2"; break;
-				case 3: messageCode = "ezSurvey.err3"; break;
-				case 6: messageCode = "ezSurvey.err6"; break;
-				case 7: messageCode = "ezSurvey.err7"; break;
+				case 1 : messageCode = "ezSurvey.err1"; break;
+				case 2 : messageCode = "ezSurvey.err2"; break;
+				case 3 : messageCode = "ezSurvey.err3"; break;
+				case 6 : messageCode = "ezSurvey.err6"; break;
+				case 7 : messageCode = "ezSurvey.err7"; break;
+				default: messageCode = "ezSurvey.err1"; break;
 			}
 			
 			model.addAttribute("reasonMessage", messageCode);
@@ -472,9 +476,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 	public String jsonGetCompanyTree(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId       = request.getParameter("companyId") != null ? request.getParameter("companyId") : "";
-		JSONObject resultObj   = new JSONObject();
-		
-		resultObj = surveyRestService.getCompanyTree(request, userInfo.getId(), companyId);
+		JSONObject resultObj   = surveyRestService.getCompanyTree(request, userInfo.getId(), companyId);
 		
 		return resultObj.toString();
 	}
@@ -593,7 +595,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		return resultObj.toString();
 	}
 	
-	@RequestMapping(value="/ezSurvey/downloadAttachFile", produces="application/zip")
+	@RequestMapping(value="/ezSurvey/downloadAttachFile", produces="application/zip", method=RequestMethod.GET)
 	public void responeDownloadFile(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("responeDownloadFile is running!");
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);

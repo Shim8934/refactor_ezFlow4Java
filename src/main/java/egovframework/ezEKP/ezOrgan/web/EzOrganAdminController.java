@@ -9,7 +9,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.CopyOption;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -79,6 +82,8 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 public class EzOrganAdminController extends EgovFileMngUtil {
 	
     private static final Logger logger = LoggerFactory.getLogger(EzOrganAdminController.class);
+
+	private static final CopyOption REPLACE_EXISTING = null;
             
 	@Autowired	
 	private CommonUtil commonUtil;
@@ -1851,6 +1856,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			fileName = fileName.replace("+", "%2b");
 			fileName = fileName.replace(";", "%3b");
 			String extension = fileName.substring(fileName.lastIndexOf(".") + 1, fileName.lastIndexOf(".") + 1 + 3);
+			logger.debug("file extension is : " + extension);
 			fileName = userID + "_" + guid + ".";
 
 			if (mode.equals("PICTURE")) {
@@ -3566,5 +3572,56 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		logger.debug("getJobOptionInfo ended.");
 		return rtnXml;
+	}
+	
+	@RequestMapping(value = "/admin/ezOrgan/saveUserImagebyTemp.do",produces="application/json;charset=utf-8")
+	@ResponseBody
+	public JSONObject saveUserImagebyTemp(@CookieValue("loginCookie") String loginCookie, OrganUserVO vo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+	    logger.debug("saveUserImagebyTemp started.");
+	    
+	    LoginVO userInfo = commonUtil.userInfo(loginCookie);
+	    String realPath = request.getServletContext().getRealPath("");
+	    String thumpPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator;// comonUtil.separator : /
+	    String tempFilename = vo.getExtensionAttribute2();
+	    String fileName[] = tempFilename.split("\\.");
+	    String fileType = fileName[(fileName.length)-1];
+	    
+	    String cn = vo.getCn();
+	    String newFileName = cn + "." + fileType;
+	    String tempFilePath = thumpPath + tempFilename; 
+	    String newFilePath = thumpPath + newFileName;
+	    vo.setExtensionAttribute2(newFileName);
+	    String result = "";
+	    JSONObject resultMap = new JSONObject();
+	    
+		result = saveUserInfo(loginCookie, vo, request, response, locale);
+		resultMap.put("status", result);
+		
+		File oldFile =new File(tempFilePath);
+        File newFile =new File(newFilePath);
+        
+        Path oldFilePathC = Paths.get(tempFilePath);
+
+        logger.debug("oldfile is " + oldFile + " ,newfile is " + newFile);
+        
+        boolean isMoved = false;
+        
+        if (!Files.exists(oldFilePathC)) {
+        	logger.debug("oldfile is not exists");
+			isMoved = oldFile.renameTo(newFile);
+		} else {
+			logger.debug("oldfile is exists.");
+			// cn.jpg형태의 기존 파일 지우고 새로운 파일을 cn.jpg로 renameTo
+			newFile.delete();
+			isMoved = oldFile.renameTo(newFile);
+		}
+        
+        if (isMoved != true) {
+        	logger.debug("saveUserImagebyTemp, tempImage to 'cn.etc' rename fail.");
+        }
+        resultMap.put("fileName", newFileName);
+	    
+	    logger.debug("saveUserImagebyTemp ended.");
+	    return resultMap;
 	}
 }

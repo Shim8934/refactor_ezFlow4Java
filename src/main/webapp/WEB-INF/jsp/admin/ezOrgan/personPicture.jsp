@@ -194,16 +194,19 @@
 					var fileName = document.getElementById("imagefile").value;
 				}
 				
-				
+				/* 관리자가 사용자 프로필 이미지 수정후 저장시, temp파일 지우고 cn.jpg형식으로 수정  */
 				$.ajax({
 					type : "POST",
 					dataType : "text",
-					url : "/admin/ezOrgan/saveUserInfo.do",
+					url : "/admin/ezOrgan/saveUserImagebyTemp.do",
 					data : {parentCn : "", cn : RetValue, prop : "", extensionAttribute2 : fileName},
-					success : function(result){
-						if(result != "OK"){
+					success : function(resultMap){
+						var data = JSON.parse(resultMap);
+						var status = data.status;
+						if(status != "OK"){
 							alert("<spring:message code='ezOrgan.t119' />");
 						}else{
+							fileName = data.fileName;
 							if (ReturnFunction != null){
 				                ReturnFunction(fileName);
 							}else{

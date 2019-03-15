@@ -382,7 +382,7 @@
 	        }
 	        
 	        function makeRepetitionScheduleString(startDate, endDate, repetitionInfo) {
-				var repeatinfo = "[";
+	        	var repeatinfo = strLang33;
 				var info = repetitionInfo.split("|");
 				var repetitionType = info[2];
 				
@@ -425,10 +425,20 @@
 						break;
 				    case "2":
 				    	if(info[3] == '1'){
-							repeatinfo += info[4] + strLang83 + " ";
+				    		if(info[4] == '1') {
+								repeatinfo += strLang36 + " ";
+				    		}
+				    		else {
+				    			repeatinfo += info[4] + strLang83 + " ";
+				    		}
 							repeatinfo += info[5] + strLang80 + " ";
 						}else{					
-							repeatinfo += info[4] + strLang83 + " ";
+							if(info[4] == '1') {
+								repeatinfo += strLang36 + " ";
+							}
+							else {
+								repeatinfo += info[4] + strLang83 + " ";
+							}
 							for (var i = 0; i< info[5].length; i++){
 								var weekNumberInfo = makeStringWeekNumber(info[5]);
 								repeatinfo += weekNumberInfo; 
@@ -436,7 +446,7 @@
 							repeatinfo += " ";
 							for (var i = 0; i < info[6].length; i++) {
 								var idx = info[6].substr(i, 1);
-								var dayOfWeekStringInfo = makeStringDayofWeekInfo(idx);
+								var dayOfWeekStringInfo = makeStringDayofWeekInfo2(idx);
 								if (i>0) {
 									repeatinfo += strLangGHA1;
 								}
@@ -448,7 +458,7 @@
 						if (info[3] == '1'){
 							repeatinfo += strLang37 + " ";
 							repeatinfo += info[4] + strLang122 + " ";
-							repeatinfo += info[5] + strLang81;
+							repeatinfo += info[5] + strLang80;
 						} else {	
 							repeatinfo += strLang37 + " ";
 							repeatinfo += info[4] + strLang122 + " ";
@@ -459,7 +469,7 @@
 							repeatinfo += " ";
 							for (var i = 0; i < info[6].length; i++) {
 								var idx = info[6].substr(i, 1);
-								var dayOfWeekStringInfo = makeStringDayofWeekInfo(idx);
+								var dayOfWeekStringInfo = makeStringDayofWeekInfo2(idx);
 								if (i>0) {
 									repeatinfo += strLangGHA1;
 								}
@@ -469,25 +479,23 @@
 					break;
 				}	
 
-				repeatinfo += "] ";
+				repeatinfo += " ";
 				
 				if (info[1] == "1") {					// 하루종일 일정
-					repeatinfo += "[" + strLang39;
+					repeatinfo += strLang39;
 				} else {
-					repeatinfo += "[" + startDate.substring(11,16) + " ~ " +endDate.substring(11,16);
+					repeatinfo += strLang38 + startDate.substring(11,16) + " ~ " +endDate.substring(11,16);
 				}
 				
-				repeatinfo += "] ";
+				repeatinfo += " ";
 				
 				if (info[0] == -1) {
-				    repeatinfo += " [" + startDate.substring(0,10) + " ~ " + strLang46;
+				    repeatinfo += " " + strLang79 + " : " + startDate.substring(0,10) + " ~ " + strLang46;
 				} else if (info[0] == 0){
-					repeatinfo += " [" + startDate.substring(0,10) + " ~ " + endDate.substring(0,10);
+					repeatinfo += " " + strLang79 + " : " + startDate.substring(0,10) + " ~ " + endDate.substring(0,10);
 				} else {
-					repeatinfo += " [" + startDate.substring(0,10) + " ~ " + info[0] + strLang47;
+					repeatinfo += " " + strLang79 + " : " + startDate.substring(0,10) + " ~ " + info[0] + strLang47;
 				}
-				
-				repeatinfo += "]";
 				
 				return repeatinfo;
 			}
@@ -515,6 +523,34 @@
 						break;
 					case "6":
 						dayOfWeekString = strLang54;
+						break;
+				}
+				return dayOfWeekString;
+			}
+	        
+	        function makeStringDayofWeekInfo2(dayOfWeek) {
+				var dayOfWeekString;
+				switch (dayOfWeek){
+					case "0":
+						dayOfWeekString = strLang60;
+						break;
+					case "1":
+						dayOfWeekString = strLang61;
+						break;
+					case "2":
+						dayOfWeekString = strLang62;
+						break;
+					case "3":
+						dayOfWeekString = strLang63;
+						break;
+					case "4":
+						dayOfWeekString = strLang64;
+						break;
+					case "5":
+						dayOfWeekString = strLang65;
+						break;
+					case "6":
+						dayOfWeekString = strLang66;
 						break;
 				}
 				return dayOfWeekString;
