@@ -1246,24 +1246,44 @@
 	                }
 	                else {
 	                    if (listContentArry != "") {
+                            var listid = "";
+
+                            if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
+                                listid = "MsgToList";
+                            }
+                            else if (pListView.id == "ListViewMsgCC" || pListView == "MsgCCList") {
+                                listid = "MsgCCList";
+                            }
+                            else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
+                                listid = "MsgBCCList";
+                            }
+                            var getlistview = new ListView();
+                            getlistview.LoadFromID(listid);
+                            
+                            var listview = new ListView();
+                            listview.LoadFromID(listid);
+                            
+                            var MaxID = 0;
+                            var MaxCntNum = 0;
+                            var InitTr = listview.GetDataRows();
+                            var trSize = InitTr.length;
+                            for (var j = 0  ; j < trSize; j++) {
+                                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+                                if (MaxID < curnum) {
+                                    MaxID = curnum;
+                                    MaxCntNum = j;
+                                }
+                            }
+                            
+                            if (MaxCntNum != 0)
+                                MaxCntNum = MaxCntNum + 1;
+                            
 	                        for (var i = 0; i < listContentArry.length; i++) {
-	                            var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
-	                            var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
-	                            var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
+	                        	var currentContent = document.getElementById(listContentArry[i]);
+	                            var strName = currentContent.getAttribute("_data4");
+	                            var strDeptNM = currentContent.getAttribute("_data5");
+	                            var strEmail = currentContent.getAttribute("_data3");
 	
-	                            var listid = "";
-	
-	                            if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
-	                                listid = "MsgToList";
-	                            }
-	                            else if (pListView.id == "ListViewMsgCC" || pListView == "MsgCCList") {
-	                                listid = "MsgCCList";
-	                            }
-	                            else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
-	                                listid = "MsgBCCList";
-	                            }
-	                            var getlistview = new ListView();
-	                            getlistview.LoadFromID(listid);
 	                            var IsInsert = CheckMailReceiver(strEmail, "3");
 	
 	                            if (!IsInsert) {
@@ -1278,23 +1298,7 @@
 	                                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                                Resultxml = loadXMLString(pparsingXML2);
 	
-	                                var listview = new ListView();
-	                                listview.LoadFromID(listid);
-	
-	                                var MaxID = 0;
-	                                var InitTr = listview.GetDataRows();
-	                                var MaxCntNum = 0;
-	                                for (var j = 0  ; j < InitTr.length  ; j++) {
-	                                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                                    if (MaxID < curnum) {
-	                                        MaxID = curnum;
-	                                        MaxCntNum = j;
-	                                    }
-	                                }
-	
-	                                var objTr = listview.AddRow(InitTr.length);
-	                                if (MaxCntNum != 0)
-	                                    MaxCntNum = MaxCntNum + 1;
+	                                var objTr = listview.AddRow(trSize);
 	                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                                listview.AddDataRow(objTr, Resultxml);
 	
@@ -1304,7 +1308,10 @@
 	                                    document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                                    document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                                }
-	
+	                                
+	                                MaxID++;
+	                                MaxCntNum++;
+	                                trSize++
 	                            }
 	                        }
 	
