@@ -500,7 +500,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("scheduleGet End");
-		return reVal.toString();
+		return reVal;
 	}
 	
 	
@@ -1177,9 +1177,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 자원 일정 상세정보 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleRead.do", method = RequestMethod.GET)
-	public String scheduleRead(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
+	public String scheduleRead(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model, Locale locale) throws Exception {
 		logger.debug("scheduleRead Start");
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String editor = config.getProperty("EDITOR");
 		String nonActiveX = "YES";
@@ -1405,8 +1405,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 자원 예약 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleAdd.do", method = RequestMethod.GET)
-	public String scheduleAdd(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, HttpServletRequest req, Model model, Locale locale) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String scheduleAdd(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model, Locale locale) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String editor = config.getProperty("EDITOR");
 		String noneActiveX = "YES";
 		String resID = "";
@@ -1663,8 +1663,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 자원 양식 등록 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleManageForm.do", method = RequestMethod.GET)
-	public String scheduleManageForm(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,HttpServletRequest req,Model model) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String scheduleManageForm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req,Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String resID = "";
 		String brdName = "";
@@ -1691,8 +1691,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 자원 반복 등록 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleRepetition.do", method = RequestMethod.GET)
-	public String scheduleRepetition(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String scheduleRepetition(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
 		return "/ezResource/resScheduleRepetition";
@@ -1752,8 +1752,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/scheduleGetForm.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String scheduleGetForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String scheduleGetForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
 		String resID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
@@ -1770,8 +1770,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 승인요청 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleApprovList.do", method = RequestMethod.GET)
-	public String scheduleApprovList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String scheduleApprovList(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String resID = "";
 		String brdNm = "";
 		String startDate = "";
@@ -1816,8 +1816,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/scheduleSaveForm.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String scheduleSaveForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie,LoginVO userInfo) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String scheduleSaveForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		String resID = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
 		String brdNm = xmlDom.getDocumentElement().getChildNodes().item(1).getTextContent();
@@ -1836,8 +1836,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/scheduleDelForm.do", method = RequestMethod.POST)
 	@ResponseBody
-	public String scheduleDelForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie,LoginVO userInfo) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String scheduleDelForm(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		try {
 			String delCode = xmlDom.getElementsByTagName("RESID").item(0).getTextContent();
@@ -1853,8 +1853,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 자원예약 자원선택 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleAddSelect.do", method = RequestMethod.GET)
-	public String scheduleAddSelect(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo, Model model, HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String scheduleAddSelect(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String brdID = "";
 		String brdNm = "";
@@ -1905,8 +1905,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/scheduleAddGetACL.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String scheduleAddGetACL(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String scheduleAddGetACL(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String brdID = "";
 		String ret = "";
 		
@@ -1921,9 +1921,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/scheduleAddOk.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String scheduleAddOk(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req, @RequestBody String xmlStr) throws Exception {
+	public String scheduleAddOk(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req, @RequestBody String xmlStr) throws Exception {
 		logger.debug("scheduleAddOk Start");
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String cmd = "";
 		String typeVal = "";
 		String companyID = "";
@@ -2000,8 +2000,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 자원예약 사용자 선택 화면 호출 함수
 	 */
 	@RequestMapping(value = "/ezResource/scheduleSelectUser.do", method = RequestMethod.GET)
-	public String scheduleSelectUser(@CookieValue("loginCookie") String loginCookie,LoginVO userInfo,Model model, HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String scheduleSelectUser(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest req) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		model.addAttribute("userInfo", userInfo);
 		return "/ezResource/resScheduleSelectUser";
 	}
@@ -2019,8 +2019,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/getDeptMemberList.do", method = RequestMethod.GET, produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String getDeptMemberList(@RequestBody String data, HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie,LoginVO userInfo) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String getDeptMemberList(@RequestBody String data, HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
 		
 		String deptID = doc.getElementsByTagName("deptID").item(0).getTextContent();
@@ -2046,8 +2046,8 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/updateApprovalFlag.do", method = RequestMethod.POST, produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String updateApprovalFlag(@RequestBody String xmlStr, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
-		userInfo = commonUtil.userInfo(loginCookie);
+	public String updateApprovalFlag(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document dom = commonUtil.convertStringToDocument(xmlStr);
 		try {
 			String companyID = dom.getElementsByTagName("COMPANYID").item(0).getTextContent();
@@ -2069,10 +2069,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/timeDupCheck.do", method = RequestMethod.POST, produces="text/xml;charset=utf-8")
 	@ResponseBody
-	public String timeDupCheck(@RequestBody String xmlStr, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	public String timeDupCheck(@RequestBody String xmlStr, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("timeDupCheck started");
-
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String ret = "";
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
@@ -2174,10 +2173,10 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/sendMail.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String sendMail(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
+	public String sendMail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
 		logger.debug("sendMail started");
 		
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
@@ -2237,10 +2236,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	 * 자원관리 승인 후 알림 발송 실행 함수
 	 */
 	@RequestMapping(value = "/ezResource/sendMailToUser.do", method = RequestMethod.POST)
-	public void sendMailToUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
+	public void sendMailToUser(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, @RequestBody String xmlStr) throws Exception {
 		logger.debug("sendMailToUser started");
-
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
 		
@@ -2299,11 +2297,11 @@ public class EzResourceController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "/ezResource/changeResourceOrder.do", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public void changeResourceOrder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+	public void changeResourceOrder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ changeResourceOrder started ============");
 		
-		loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		
 		String selectedResourceId = request.getParameter("selectedResourceId");
 		String targetResourceId = request.getParameter("targetResourceId");
@@ -2314,10 +2312,10 @@ public class EzResourceController extends EgovFileMngUtil {
 	}
 	
 	@RequestMapping(value = "ezResource/resOrganToMoveResource.do", method = RequestMethod.GET)
-	public String resOrganToMoveResource(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+	public String resOrganToMoveResource(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
 		logger.debug("============ resOrganToMoveResource ended ============");
 		
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("serverName", req.getServerName());
@@ -2328,11 +2326,11 @@ public class EzResourceController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "/ezResource/moveResourceToOtherResourceGroup.do", method = RequestMethod.POST, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public void moveResourceToOtherResourceGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+	public void moveResourceToOtherResourceGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ moveResourceToOtherResourceGroup started ============");
 		
-		loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		
 		String originResourceGroupId = request.getParameter("originResourceGroupId");
 		String selectedResourceGroupId = request.getParameter("selectedResourceGroupId");
@@ -2343,11 +2341,11 @@ public class EzResourceController extends EgovFileMngUtil {
 	
 	@RequestMapping(value = "/ezResource/isResourceGroupManager.do", method = RequestMethod.GET, produces = "text/html;charset=UTF-8")
 	@ResponseBody
-	public String isResourceGroupManager(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+	public String isResourceGroupManager(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		
 		logger.debug("============ moveResourceToOtherResourceGroup started ============");
 		
-		loginVO = commonUtil.userInfo(loginCookie);
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		
 		String selectedResourceGroupId = request.getParameter("selectedResourceGroupId");
 			
@@ -2362,9 +2360,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/callManagerDepthNodeForMoveResource.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String callManagerDepthNode(@RequestBody String xmlStr,HttpServletRequest req,Model model, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	public String callManagerDepthNode(@RequestBody String xmlStr,HttpServletRequest req,Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("callManagerDepthNode Start");
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String selectFlag = "";
 		StringBuilder strXML = new StringBuilder();
