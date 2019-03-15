@@ -85,8 +85,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 * 자원관리 메인화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezResource/resourceMain.do", method = RequestMethod.GET)
-	public String resourceMain(LoginVO userInfo, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String resourceMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -101,8 +101,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 * 자원관리 좌측화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardListManagelistLeft.do", method = RequestMethod.GET)
-	public String gwBoardListManagelistLeft(LoginVO userInfo, @CookieValue("loginCookie") String loginCookie, HttpServletRequest req,Model model) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String gwBoardListManagelistLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req,Model model) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -129,8 +129,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 * 자원관리 센터화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardListManagelistCenter.do", method = RequestMethod.GET)
-	public String gwBoardListManagelistCenter(LoginVO userInfo, @CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String gwBoardListManagelistCenter(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -144,9 +144,9 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/callManagerDepthNode.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String callManagerDepthNode(@RequestBody String xmlStr,HttpServletRequest req,Model model, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+	public String callManagerDepthNode(@RequestBody String xmlStr,HttpServletRequest req,Model model, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("callManagerDepthNode Start");
-		userInfo = commonUtil.checkAdmin(loginCookie);
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -266,8 +266,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 * 자원관리 일반설정 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardListRegComBoard.do", method = RequestMethod.GET)
-	public String gwBoardListRegComBoard(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String gwBoardListRegComBoard(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -305,8 +305,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/callBrdMod.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String callBrdMod(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlStr) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String callBrdMod(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlStr) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -320,8 +320,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 * 자원관리 하위분류등록 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardListRegSubBoard.do", method = RequestMethod.GET)
-	public String gwBoardListRegSubBoard(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String gwBoardListRegSubBoard(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -377,8 +377,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/callBrdNew.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String callBrdNew(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,@RequestBody String xmlStr) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String callBrdNew(@CookieValue("loginCookie") String loginCookie,@RequestBody String xmlStr) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -392,8 +392,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 * 자원관리 권한설정 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardPostRegBoardRightMain.do", method = RequestMethod.GET)
-	public String gwBoardPostRegRightMain(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model, Locale locale) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String gwBoardPostRegRightMain(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model, Locale locale) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -465,8 +465,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 * 자원관리 권한설정 - 사용자추가 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezResource/popup/gwBoardPostRegBoardRight.do", method = RequestMethod.GET)
-	public String gwBoardPostRegRight(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String gwBoardPostRegRight(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -581,8 +581,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/callBrdStep.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String callBrdStep(LoginVO userInfo,@CookieValue("loginCookie") String  loginCookie,HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String callBrdStep(@CookieValue("loginCookie") String  loginCookie,HttpServletRequest req) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -601,8 +601,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 * 자원관리 분류이동 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardPostBoardMove.do", method = RequestMethod.GET)
-	public String gwBoardPostBoardMove(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model, Locale locale, HttpServletResponse resp) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String gwBoardPostBoardMove(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model, Locale locale, HttpServletResponse resp) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -657,8 +657,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 * 자원관리 분류이동 -  대상선택 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezResource/organ.do", method = RequestMethod.GET)
-	public String organ(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String organ(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -674,8 +674,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/callBrdMove.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String callBrdMove(LoginVO userInfo,@CookieValue("loginCookie") String  loginCookie,HttpServletRequest req) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String callBrdMove(@CookieValue("loginCookie") String  loginCookie, HttpServletRequest req) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -693,8 +693,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 * 자원관리 분류삭제 화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezResource/gwBoardPostBoardDel.do", method = RequestMethod.GET)
-	public String gwBoardPostBoardDel(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model,Locale locale,HttpServletResponse resp) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String gwBoardPostBoardDel(@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model,Locale locale,HttpServletResponse resp) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -760,8 +760,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/callBrdDel.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String callBrdDel(@RequestBody String xmlStr, LoginVO userInfo,@CookieValue("loginCookie") String  loginCookie) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String callBrdDel(@RequestBody String xmlStr, @CookieValue("loginCookie") String  loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
@@ -776,8 +776,8 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/admin/ezResource/callBrdMng.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String callBrdMng(@RequestBody String xmlStr, LoginVO userInfo,@CookieValue("loginCookie") String  loginCookie) throws Exception {
-		userInfo = commonUtil.checkAdmin(loginCookie);
+	public String callBrdMng(@RequestBody String xmlStr, @CookieValue("loginCookie") String  loginCookie) throws Exception {
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
 		
 		if (userInfo == null) {
 			return "cmm/error/adminDenied";
