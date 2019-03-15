@@ -1377,8 +1377,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		response.setContentType("text/html; charset=UTF-8");
 		
 		response.getWriter().write("<script language='javascript'>\n");
-		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
-		response.getWriter().write("</script>");
+		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + commonUtil.stripScriptTags(code) + "';\n");
+		response.getWriter().write("</script>");	
 		response.getWriter().flush();
 	}
 
@@ -1438,7 +1438,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/html; charset=UTF-8");
 		response.getWriter().write("<script language='javascript'>\n");
-		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + code + "';\n");
+		response.getWriter().write("document.location.href = '/ezCommunity/pollMain.do?code=" + commonUtil.stripScriptTags(code) + "';\n");
 		response.getWriter().write("</script>");
 		response.getWriter().flush();
 	}

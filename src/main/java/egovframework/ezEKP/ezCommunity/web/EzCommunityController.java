@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -2610,8 +2611,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		//cache 문제로 인한 ? 랜덤값 추가
-		result = result + "?" + new Random().nextInt(50);
-
+		result = result + "?" + new SecureRandom().nextInt(50);
+		
 		model.addAttribute("tempLogoPath", result);
 		logger.debug("adminLogoUpload ended.");
 		logger.debug("result======" + result);
@@ -2638,7 +2639,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		}
 		
 		//cache 문제로 인한 ? 랜덤값 추가
-		result = result + "?" + new Random().nextInt(50);
+		result = result + "?" + new SecureRandom().nextInt(50);
 
 		model.addAttribute("tempThumbPath", result);
 		logger.debug("adminThumbUpload ended.");

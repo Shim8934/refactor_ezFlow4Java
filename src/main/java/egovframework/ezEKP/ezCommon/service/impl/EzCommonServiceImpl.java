@@ -14,6 +14,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -222,7 +223,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	 */
 	private String createBoundary() throws Exception{
         String strBoundary = "Boundary-=_";
-        Random Rnd = new Random();
+        SecureRandom Rnd = new SecureRandom();
 
         while (strBoundary.length() < 39) {
             int nch = Rnd.nextInt(9)+1; 
