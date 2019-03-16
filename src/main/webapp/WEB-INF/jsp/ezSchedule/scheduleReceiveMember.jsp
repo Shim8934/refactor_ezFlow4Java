@@ -15,7 +15,7 @@
 			var parentwin = null;
 			var ReturnFunction;
 			var serverFlag = "<c:out value='${serverFlag}' />";
-			var dotnetURL = "<c:out value='${dotnetURL}' />";
+			var dotnetURL = "<c:out value='${serverName}' />";
 			
 			window.onload = function () {
 			    try {

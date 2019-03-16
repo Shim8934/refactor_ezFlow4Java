@@ -10,6 +10,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
+import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
@@ -37,6 +38,8 @@ public interface EzEmailService {
 	public List<MailDeleteVO> getMailDelete(int tenantId, String userId) throws Exception;
 	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName) throws Exception;
 	public void deleteMailDelete(int tenantId, String pUserID, String pFolderPath) throws Exception;
+	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception;
+	public void deleteOrphanedMailBlobListWithSleep(List<MailBlobVO> orphanedMailBlobList) throws Exception;
 	public List<MailDeleteVO> getMailDeleteList() throws Exception;
 	public List<MailReservationVO> getMailReserved(int tenantId, String pUserId) throws Exception;
 	public List<MailReservationVO> getMailReserved2() throws Exception;
