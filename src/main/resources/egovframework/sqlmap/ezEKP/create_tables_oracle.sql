@@ -20647,12 +20647,6 @@ ALTER TRIGGER "EZEKP2017"."TRG_TBL_TASKCOMMENT" ENABLE;
   ALTER TABLE "EZEKP2017"."JAMES_MAIL" ADD FOREIGN KEY ("MAILBOX_ID")
 	  REFERENCES "EZEKP2017"."JAMES_MAILBOX" ("MAILBOX_ID") ON DELETE CASCADE DEFERRABLE ENABLE;
 --------------------------------------------------------
---  Ref Constraints for Table JAMES_MAIL_BLOB
---------------------------------------------------------
-
-  ALTER TABLE "EZEKP2017"."JAMES_MAIL_BLOB" ADD FOREIGN KEY ("MAILBOX_ID", "MAIL_UID")
-	  REFERENCES "EZEKP2017"."JAMES_MAIL" ("MAILBOX_ID", "MAIL_UID") ON DELETE CASCADE DEFERRABLE ENABLE;
---------------------------------------------------------
 --  Ref Constraints for Table JAMES_MAIL_PROPERTY
 --------------------------------------------------------
 
