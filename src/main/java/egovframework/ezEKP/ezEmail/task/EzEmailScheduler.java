@@ -60,6 +60,7 @@ import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -251,18 +252,14 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		logger.debug("deleteMailBlob started.");
 		
 		String schedulerId = config.getProperty("config.SchedulerServer");
-		String dbType = globals.getProperty("Globals.DbType");
-		
-		logger.debug("dbType=" + dbType);
 		
 		// 1번 서버가 james_mail 테이블과 james_mail_blob 테이블을 조인하여 james_mail에 없는 blob 레코드를 삭제하는 작업을 수행한다.
 		if (schedulerId != null && schedulerId.equals("1")) {
-
-            String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteMailBlob";
-
-            String response = ezEmailUtil.getWebServiceResult(requestURL, null);
-
-            logger.debug("response=" + response);
+			List<MailBlobVO> orphanedMailBlobList = ezEmailService.getOrphanedMailBlobList();
+			
+			logger.debug("orphanedMailBlobList count=" + orphanedMailBlobList.size());
+			
+			ezEmailService.deleteOrphanedMailBlobListWithSleep(orphanedMailBlobList);
 		}
 		
 		logger.debug("deleteMailBlob ended.");

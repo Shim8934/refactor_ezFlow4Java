@@ -41,12 +41,14 @@ import com.sun.mail.imap.IMAPFolder;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.dao.EzEmailDAO;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.task.EzEmailAsync;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
@@ -99,7 +101,34 @@ public class EzEmailServiceImpl implements EzEmailService {
 	
 	@Resource(name="egovMessageSource")
     private EgovMessageSource egovMessageSource;
+	
+	@Autowired
+	private EzEmailDAO ezEmailDAO;
 
+	@Override
+	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception {
+		return ezEmailDAO.getOrphanedMailBlobList();
+	}
+	
+	@Override
+	public void deleteOrphanedMailBlobListWithSleep(List<MailBlobVO> orphanedMailBlobList) throws Exception {
+		int count = 1;
+		
+		try {
+			for (MailBlobVO mailBlobVO : orphanedMailBlobList) {
+				logger.debug("Deleting mailBlobId=" + mailBlobVO.getMailBlobId() + ",count=" + count++);
+				
+				ezEmailDAO.deleteOrphanedMailBlob(mailBlobVO);
+				
+				Thread.sleep(500);
+			}
+		// Tomcat shutdown 등에 의해 Exception이 발생한 경우엔 현재까지 삭제한 내용이 롤백되지
+		// 않도록 리턴한다.
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	@Override
 	public List<MailGeneralVO> getMailGeneral(int tenantId, String userId) throws Exception {
 		logger.debug("getMailGeneral started. tenantId=" + tenantId + ",userId=" + userId);
