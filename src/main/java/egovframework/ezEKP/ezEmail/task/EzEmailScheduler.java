@@ -60,6 +60,7 @@ import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EmailImportance;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
 import egovframework.ezEKP.ezEmail.vo.MailReservationVO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
@@ -241,29 +242,27 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		
 		logger.debug("deleteAllUserMail scheduler ended.");
 	}
-	
+
+    /**
+     * james_mail_blob 삭제로 변경
+     * @throws Exception
+     */
 	@Scheduled(fixedDelay = 600000, initialDelay = 60000)
-	public void deleteMailDeletedUser() throws Exception {
-		logger.debug("deleteMailDeletedUser started.");
+	public void deleteMailBlob() throws Exception {
+		logger.debug("deleteMailBlob started.");
 		
 		String schedulerId = config.getProperty("config.SchedulerServer");
-		String dbType = globals.getProperty("Globals.DbType");
 		
-		logger.debug("dbType=" + dbType);
-		
-		// 1번 서버가 삭제된 사용자의 메일 목록을 보관한 james_mail_deleted_user 테이블의 레코드와
-		// james_mail_blob 테이블의 레코드를 삭제하는 작업을 수행한다.
+		// 1번 서버가 james_mail 테이블과 james_mail_blob 테이블을 조인하여 james_mail에 없는 blob 레코드를 삭제하는 작업을 수행한다.
 		if (schedulerId != null && schedulerId.equals("1")) {
-			if (dbType.equals("mysql")) {
-	            String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/deleteMailDeletedUser";
-	                        
-	            String response = ezEmailUtil.getWebServiceResult(requestURL, null); 
-	            
-	            logger.debug("response=" + response);       			
-			}
+			List<MailBlobVO> orphanedMailBlobList = ezEmailService.getOrphanedMailBlobList();
+			
+			logger.debug("orphanedMailBlobList count=" + orphanedMailBlobList.size());
+			
+			ezEmailService.deleteOrphanedMailBlobListWithSleep(orphanedMailBlobList);
 		}
 		
-		logger.debug("deleteMailDeletedUser ended.");
+		logger.debug("deleteMailBlob ended.");
 	}
 	
 	/**
