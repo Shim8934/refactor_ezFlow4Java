@@ -402,7 +402,7 @@
 			function SetAttachmentInfo() {
 				var xmlhttp = createXMLHttpRequest();
 		        var xmldom = createXmlDom();
-		        xmlhttp.open("POST", "/ezCircular/getItemAttachments.do?pcircularId=" + circularID, false);
+		        xmlhttp.open("GET", "/ezCircular/getItemAttachments.do?pcircularId=" + circularID, false);
 		        xmlhttp.send();
 		        xmldom = loadXMLString(xmlhttp.responseText);
 		        xmlhttp = null;

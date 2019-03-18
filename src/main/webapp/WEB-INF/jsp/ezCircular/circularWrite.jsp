@@ -288,10 +288,12 @@
 					}
 
 		    		$.ajax ({
-		 			   	url : '/ezCircular/circularSaveTemp.do?mode=temp',
+		 			   	url : '/ezCircular/circularSaveTemp.do',
 		                type : 'POST',
 		                dataType : 'text',
-		                data : {	title : document.getElementById("title").value,
+		                data : {	
+		                			mode : "temp",
+		                			title : document.getElementById("title").value,
 		                			importance : document.getElementById("importance").value,
 		                			option : option,
 		                			receiverList : receiverList,
