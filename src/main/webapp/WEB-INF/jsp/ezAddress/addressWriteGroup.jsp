@@ -1055,7 +1055,7 @@
 
 	    	var emailname = document.getElementById("emailname").value;
 	        var pTextEmail = TrimText(document.getElementById("emailaddr").value);
-	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+	        var regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 	    	
 	        if (emailname == "") {
 	            alert("<spring:message code='ezAddress.t349' />");
