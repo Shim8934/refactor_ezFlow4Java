@@ -298,13 +298,13 @@
                        A.BRD_EXPLAIN brd_explain ,
                        A.BRD_ACCESS brd_access ,
                        A.ATTACH_SIZE attach_size ,
-                       ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
+                       ( SELECT NVL(COUNT(BRD_ID) , 0) 
                          FROM TBL_RS_BRD 
                          WHERE BRD_UPPER = A.BRD_ID
                        AND Brd_Company = #v_P_CompanyID#
                        AND Brd_GB = '1'
                        AND TENANT_ID = #tenantID# ) sub_clscnt ,
-                       ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
+                       ( SELECT NVL(COUNT(BRD_ID) , 0) 
                        FROM TBL_RS_BRD 
                      WHERE  BRD_UPPER = A.BRD_ID
                          AND Brd_Company = #v_P_CompanyID#
@@ -333,13 +333,13 @@
                          A.BRD_EXPLAIN brd_explain ,
                          A.BRD_ACCESS brd_access ,
                          A.ATTACH_SIZE attach_size ,
-               ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
+               ( SELECT NVL(COUNT(BRD_ID) , 0) 
                FROM TBL_RS_BRD 
                          WHERE  BRD_UPPER = A.BRD_ID
                          AND Brd_Company = #v_P_CompanyID#
                          AND Brd_GB = '1'
                      AND TENANT_ID = #tenantID# ) sub_clscnt ,
-               ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
+               ( SELECT NVL(COUNT(BRD_ID) , 0) 
                FROM TBL_RS_BRD 
                WHERE  BRD_UPPER = A.BRD_ID
                AND Brd_Company = #v_P_CompanyID#
@@ -348,7 +348,7 @@
                '0' Access_Lvl ,
                A.APPROVEFLAG 
           FROM TBL_RS_BRD A
-          WHERE Brd_Upper = IFNULL(#v_P_ParentID#,0)
+          WHERE Brd_Upper = NVL(#v_P_ParentID#,0)
           AND Brd_Company = #v_P_CompanyID#
           AND TENANT_ID = #tenantID#
           ORDER BY Brd_Step
@@ -368,13 +368,13 @@
                A.BRD_EXPLAIN brd_explain ,
                A.BRD_ACCESS brd_access ,
                A.ATTACH_SIZE attach_size ,
-               ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
+               ( SELECT NVL(COUNT(BRD_ID) , 0) 
                FROM TBL_RS_BRD 
                WHERE BRD_UPPER = A.BRD_ID
                AND Brd_Company = #v_P_CompanyID#
                AND Brd_GB = '1' 
                AND TENANT_ID = #tenantID# ) sub_clscnt ,
-               ( SELECT IFNULL(COUNT(BRD_ID) , 0) 
+               ( SELECT NVL(COUNT(BRD_ID) , 0) 
                FROM TBL_RS_BRD 
                WHERE  BRD_UPPER = A.BRD_ID
                AND Brd_Company = #v_P_CompanyID#
@@ -383,7 +383,7 @@
                '0' Access_Lvl ,
                A.APPROVEFLAG 
           FROM TBL_RS_BRD A
-          WHERE Brd_Upper = IFNULL(#v_P_ParentID#,0)
+          WHERE Brd_Upper = NVL(#v_P_ParentID#,0)
           AND Brd_Company = #v_P_CompanyID#
           AND Brd_GB = '1'
           AND TENANT_ID = #tenantID#
@@ -722,7 +722,7 @@
   	<insert id="MResourceDAO.addResSch" parameterClass="Map" >
 		<selectKey keyProperty="v_PNUM" resultClass="Integer">
 			SELECT
-				(IFNULL(MAX(num) , 0) + 1) 
+				(NVL(MAX(num) , 0) + 1) 
 		    FROM
 		    	TBL_RS_SCHEDULE 
     		WHERE  
@@ -741,8 +741,8 @@
      		VALUES
      			( #v_POWNERID#, #v_PNUM#, #v_PPNUM#, #v_PCOMPANYID#, #v_PWRITERID#, #v_PDEPTNM#, #v_POWNERNM#, #v_PTITLE#
      			, #v_PLOCATION#, #v_PTIMEDISPLAY#, STR_TO_DATE(#v_PSTARTDATE#,'%Y-%m-%d %T'), STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T')
-     			, #v_PALLDAY#, #v_PALERTTIME#, #v_PCONTENT#, #v_PIMPORTANCE#, IFNULL(#v_PREFLAG#,'0'), IFNULL(#v_PGRESFLAG#,' '), STR_TO_DATE(#v_PWRITEDAY#, '%Y-%m-%d %T')
-     			, #v_PENTRYLIST#, IFNULL(#v_PCHARACTERID#,0), #v_PATTACHFLAG#, IFNULL(#v_PAPPROVEFLAG#,'0'), #v_PSCHEDULEID#, #tenantID# )
+     			, #v_PALLDAY#, #v_PALERTTIME#, #v_PCONTENT#, #v_PIMPORTANCE#, NVL(#v_PREFLAG#,'0'), NVL(#v_PGRESFLAG#,' '), STR_TO_DATE(#v_PWRITEDAY#, '%Y-%m-%d %T')
+     			, #v_PENTRYLIST#, NVL(#v_PCHARACTERID#,0), #v_PATTACHFLAG#, NVL(#v_PAPPROVEFLAG#,'0'), #v_PSCHEDULEID#, #tenantID# )
 		]]>
 	</insert>
 	
@@ -762,8 +762,8 @@
 		</isNotEmpty>
 		<![CDATA[
                 ALERTTIME = #v_PALERTTIME#,
-                APPROVEFLAG = IFNULL(#v_PAPPROVEFLAG#,'0'),
-                ALLDAY = IFNULL(#v_PALLDAY#,'0'),             
+                APPROVEFLAG = NVL(#v_PAPPROVEFLAG#,'0'),
+                ALLDAY = NVL(#v_PALLDAY#,'0'),             
                 IMPORTANCE = #v_PIMPORTANCE#
 			WHERE
            		COMPANYID = #v_PCOMPANYID#
@@ -874,7 +874,7 @@
 	<select id="EzResourceDAO.resScheMaxNum" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
 			SELECT
-				IFNULL(MAX(num) , 0) + 1 
+				NVL(MAX(num) , 0) + 1 
 			FROM
 				TBL_RS_SCHEDULE 
 			WHERE  
@@ -1321,10 +1321,10 @@
 	                holidayname2,
 	                holidaydate,
 	                DATE_FORMAT(holidaydate, '%Y/%m/%d') calendarday ,
-	                ifnull(issolar, '0') issolar,
-	                ifnull(isrepeat, '0') isrepeat,
-	                ifnull(isuse, '0') isuse,
-	                ifnull(isrest, '0') isrest,
+	                NVL(issolar, '0') issolar,
+	                NVL(isrepeat, '0') isrepeat,
+	                NVL(isuse, '0') isuse,
+	                NVL(isrest, '0') isrest,
 	                usecompany
 	           	from 
 					tbl_holidaylist
@@ -1341,10 +1341,10 @@
 		                holidayname2,
 		                holidaydate,
 		                DATE_FORMAT(holidaydate, '%Y/%m/%d') calendarday ,
-		                ifnull(issolar, '0') issolar,
-		                ifnull(isrepeat, '0') isrepeat,
-		                ifnull(isuse, '0') isuse,
-		                ifnull(isrest, '0') isrest,
+		                NVL(issolar, '0') issolar,
+		                NVL(isrepeat, '0') isrepeat,
+		                NVL(isuse, '0') isuse,
+		                NVL(isrest, '0') isrest,
 		                usecompany
 		           	from 
 		           		tbl_holidaylist 
@@ -1362,10 +1362,10 @@
 		                holidayname2,
 		                holidaydate,
 		                DATE_FORMAT(holidaydate, '%Y/%m/%d') calendarday ,
-		                ifnull(issolar, '0') issolar,
-		                ifnull(isrepeat, '0') isrepeat,
-		                ifnull(isuse, '0') isuse,
-		                ifnull(isrest, '0') isrest,
+		                NVL(issolar, '0') issolar,
+		                NVL(isrepeat, '0') isrepeat,
+		                NVL(isuse, '0') isuse,
+		                NVL(isrest, '0') isrest,
 		                usecompany
 					from 
 						tbl_holidaylist 
