@@ -105,8 +105,8 @@
 		<br>
 		<div id="mainmenu">
 			<ul>
-				<li class="important"><span onClick="return cmdAdd_onclick()"><spring:message code="ezResource.t110" /></span></li>
-				<li><span class="icon16 icon16_delete" onClick="return cmdDel_onclick()"></span></li>
+				<li><span onClick="return cmdAdd_onclick()"><spring:message code="ezResource.t110" /></span></li>
+				<li><span onClick="return cmdDel_onclick()"><spring:message code="ezResource.t65" /></span></li>
 			</ul>
 		</div>
 		<script type="text/javascript">
