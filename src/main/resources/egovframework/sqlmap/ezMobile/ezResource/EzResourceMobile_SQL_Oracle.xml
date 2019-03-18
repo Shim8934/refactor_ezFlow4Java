@@ -402,8 +402,8 @@
                 A.title TITLE  ,
                 LOCATION ,
                 TIMEDISPLAY ,
-                DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-                DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+                TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+                TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
                 ALERTTIME ,
                 REFLAG ,
                 GRESFLAG ,
@@ -411,7 +411,7 @@
                 IMPORTANCE ,
                 ENTRYLIST ,
                 ALLDAY ,
-                DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+                TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
                 ATTACHFLAG ,
                 CHARACTERID ,
                 APPROVEFLAG ,
@@ -428,9 +428,9 @@
 			ON
 				A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
           	WHERE
-				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
+				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
-				STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T') <= ENDDATE
+				STR_TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
 			AND 
 				COMPANYID = #v_PCOMPANYID#
 			AND 
@@ -458,8 +458,8 @@
                 A.title title  ,
                 LOCATION ,
                 TIMEDISPLAY ,
-                DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-                DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+                TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+                TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
                 ALERTTIME ,
                 REFLAG ,
                 GRESFLAG ,
@@ -467,7 +467,7 @@
                 IMPORTANCE ,
                 ENTRYLIST ,
                 ALLDAY ,
-                DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+                TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
                 ATTACHFLAG ,
                 CHARACTERID ,
                 APPROVEFLAG ,
@@ -504,8 +504,8 @@
                 A.title title  ,
                 LOCATION ,
                 TIMEDISPLAY ,
-                DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-                DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+                TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+                TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
                 ALERTTIME ,
                 REFLAG ,
                 GRESFLAG ,
@@ -513,7 +513,7 @@
                 IMPORTANCE ,
                 ENTRYLIST ,
                 ALLDAY ,
-                DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+                TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
                 ATTACHFLAG ,
                 CHARACTERID ,
                 APPROVEFLAG ,
@@ -553,8 +553,8 @@
                 A.title title  ,
                 LOCATION ,
                 TIMEDISPLAY ,
-                DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-                DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+                TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+                TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
                 ALERTTIME ,
                 REFLAG ,
                 GRESFLAG ,
@@ -562,7 +562,7 @@
                 IMPORTANCE ,
                 ENTRYLIST ,
                 ALLDAY ,
-                DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+                TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
                 ATTACHFLAG ,
                 CHARACTERID ,
                 APPROVEFLAG ,
@@ -579,9 +579,9 @@
 			ON
 				A.WRITERID = B.CN AND A.TENANT_ID = B.TENANT_ID
           	WHERE
-				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
+				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
-				STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T') <= ENDDATE
+				STR_TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
 				
 			AND 
 				COMPANYID = #v_PCOMPANYID#
@@ -612,8 +612,8 @@
                 A.title title  ,
                 A.LOCATION ,
                 A.TIMEDISPLAY ,
-                DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-                DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+                TO_CHAR(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+                TO_CHAR(A.ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
                 A.ALERTTIME ,
                 A.REFLAG ,
                 A.GRESFLAG ,
@@ -622,7 +622,7 @@
                 A.ENTRYLIST ,
                 A.ALLDAY ,
                 A.CONTENT ,
-                DATE_FORMAT(A.WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+                TO_CHAR(A.WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
                 A.ATTACHFLAG ,
                 A.CHARACTERID ,
                 A.APPROVEFLAG ,
@@ -740,8 +740,8 @@
      			, REFLAG, GRESFLAG, WRITEDAY, ENTRYLIST, CHARACTERID, ATTACHFLAG, APPROVEFLAG, SCHEDULEID, TENANT_ID )
      		VALUES
      			( #v_POWNERID#, #v_PNUM#, #v_PPNUM#, #v_PCOMPANYID#, #v_PWRITERID#, #v_PDEPTNM#, #v_POWNERNM#, #v_PTITLE#
-     			, #v_PLOCATION#, #v_PTIMEDISPLAY#, STR_TO_DATE(#v_PSTARTDATE#,'%Y-%m-%d %T'), STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T')
-     			, #v_PALLDAY#, #v_PALERTTIME#, #v_PCONTENT#, #v_PIMPORTANCE#, NVL(#v_PREFLAG#,'0'), NVL(#v_PGRESFLAG#,' '), STR_TO_DATE(#v_PWRITEDAY#, '%Y-%m-%d %T')
+     			, #v_PLOCATION#, #v_PTIMEDISPLAY#, STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS'), STR_TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS')
+     			, #v_PALLDAY#, #v_PALERTTIME#, #v_PCONTENT#, #v_PIMPORTANCE#, NVL(#v_PREFLAG#,'0'), NVL(#v_PGRESFLAG#,' '), STR_TO_DATE(#v_PWRITEDAY#, 'YYYY-MM-DD HH24:MI:SS')
      			, #v_PENTRYLIST#, NVL(#v_PCHARACTERID#,0), #v_PATTACHFLAG#, NVL(#v_PAPPROVEFLAG#,'0'), #v_PSCHEDULEID#, #tenantID# )
 		]]>
 	</insert>
@@ -754,8 +754,8 @@
             	TITLE = #v_PTITLE#,
 		]]>	
 		<isEqual property="v_PREFLAG" compareValue="0">               
-                STARTDATE = STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T'),
-                ENDDATE = STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T'),
+                STARTDATE = STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS'),
+                ENDDATE = STR_TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS'),
         </isEqual>
         <isNotEmpty property="v_POWNERID">				
 				 CONTENT = #v_PCONTENT#,
@@ -842,8 +842,8 @@
 	        	TITLE ,
 	        	LOCATION ,
 	        	TIMEDISPLAY ,
-	        	STR_TO_DATE(#v_PSTARTDATE#,'%Y-%m-%d %T') startDate ,
-	        	STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') endDate ,
+	        	STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS') startDate ,
+	        	STR_TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') endDate ,
 	        	ALERTTIME ,
 	        	CONTENT ,
 	        	IMPORTANCE ,
@@ -851,7 +851,7 @@
 	         	GRESFLAG ,
 	        	ENTRYLIST ,
 	        	ALLDAY ,
-	        	STR_TO_DATE(#v_PNOWDATE#,'%Y-%m-%d %T') writeDay ,
+	        	STR_TO_DATE(#v_PNOWDATE#, 'YYYY-MM-DD HH24:MI:SS') writeDay ,
 	        	#v_PCOMPANYID# companyID ,
 	         	CHARACTERID ,
 	         	ATTACHFLAG ,
@@ -950,9 +950,9 @@
                 A.title title  ,
                 A.LOCATION ,
                 A.TIMEDISPLAY ,
-                DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-                DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
-                DATE_FORMAT(A.STARTDATE, '%Y-%m-%d') DATE ,
+                TO_CHAR(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+                TO_CAR(A.ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
+                TO_CHAR(A.STARTDATE, 'YYYY-MM-DD') DATE ,
                 A.ownerID VALUE  ,
                 A.ALERTTIME ,
                 A.REFLAG ,
@@ -961,7 +961,7 @@
                 A.IMPORTANCE ,
                 A.ENTRYLIST ,
                 A.ALLDAY ,
-                DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+                TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
                 A.ATTACHFLAG ,
                 A.CHARACTERID ,
                 A.APPROVEFLAG ,
@@ -1032,9 +1032,9 @@
 			ON
 				A.OWNERID = C.BRD_ID AND A.TENANT_ID = C.TENANT_ID	
           	WHERE
-				A.STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
+				A.STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
-				STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T') <= A.ENDDATE
+				STR_TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= A.ENDDATE
 			AND 
 				A.COMPANYID = #v_PCOMPANYID#
 				]]>
@@ -1070,9 +1070,9 @@
             	A.title title  ,
             	A.LOCATION ,
             	A.TIMEDISPLAY ,
-            	DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-            	DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
-            	DATE_FORMAT(A.STARTDATE, '%Y-%m-%d') DATE ,
+            	TO_CHAR(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+            	TO_CHAR(A.ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
+            	TO_CHAR(A.STARTDATE, 'YYYY-MM-DD') DATE ,
                 A.ownerID VALUE  ,
             	A.ALERTTIME ,
             	A.REFLAG ,
@@ -1081,7 +1081,7 @@
             	A.IMPORTANCE ,
             	A.ENTRYLIST ,
             	A.ALLDAY ,
-            	DATE_FORMAT(A.WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+            	TO_CHAR(A.WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
             	A.ATTACHFLAG ,
             	A.companyID ,
             	A.CHARACTERID ,
@@ -1119,7 +1119,7 @@
 			ON
 				A.OWNERID = D.BRD_ID AND A.TENANT_ID = D.TENANT_ID		
 			WHERE
-				A.STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
+				A.STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
 				A.COMPANYID = #v_PCOMPANYID#
 			        	]]>
@@ -1131,7 +1131,7 @@
 			AND
 				REFLAG = '1'
 			AND
-				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
+				( STR_TO_DATE(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') >= ENDDATETIME )
 						]]>
 			<isEmpty property="v_POWNERID">
 			AND 
@@ -1155,8 +1155,8 @@
             	TITLE ,
             	LOCATION ,
             	TIMEDISPLAY ,
-            	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-            	DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+            	TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+            	TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
             	ALERTTIME ,
             	REFLAG ,
             	GRESFLAG ,
@@ -1164,7 +1164,7 @@
             	IMPORTANCE ,
             	ENTRYLIST ,
             	ALLDAY ,
-            	DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+            	TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
             	ATTACHFLAG ,
             	CHARACTERID ,
             	SCH.APPROVEFLAG ,
@@ -1180,9 +1180,9 @@
 			AND
 				SCH.TENANT_ID = BRD.TENANT_ID	
 			WHERE
-				STARTDATE <= STR_TO_DATE(#v_pStartDate#, '%Y-%m-%d %T')
+				STARTDATE <= STR_TO_DATE(#v_pStartDate#, 'YYYY-MM-DD HH24:MI:SS')
         	AND
-        		STR_TO_DATE(#v_pEndDate#, '%Y-%m-%d %T') <= ENDDATE
+        		STR_TO_DATE(#v_pEndDate#, 'YYYY-MM-DD HH24:MI:SS') <= ENDDATE
         	AND
         		COMPANYID = #v_pCompanyID#
         	AND 
@@ -1210,8 +1210,8 @@
              	TITLE ,
              	LOCATION ,
              	TIMEDISPLAY ,
-             	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-             	DATE_FORMAT(ENDDATE, '%Y-%m-%d %T') ENDDATE ,
+             	TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+             	TO_CHAR(ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
              	ALERTTIME ,
              	REFLAG ,
              	GRESFLAG ,
@@ -1219,7 +1219,7 @@
              	IMPORTANCE ,
              	ENTRYLIST ,
              	ALLDAY ,
-             	DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+             	TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
              	ATTACHFLAG ,
              	CHARACTERID ,
              	SCH.ApproveFlag ,
@@ -1235,7 +1235,7 @@
 			AND
 				SCH.TENANT_ID = BRD.TENANT_ID	
         	WHERE
-        		STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
+        		STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND 
 				COMPANYID = #v_PCOMPANYID#
 							]]>
@@ -1257,7 +1257,7 @@
     <select id="MResourceDAO.getDeletedRepScheduleDate" parameterClass="Map" resultClass="String">
         <![CDATA[
         	SELECT
-	        	DATE_FORMAT(STARTDATE, '%Y-%m-%d %T') STARTDATE
+	        	TO_CHAR(STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE
 	        FROM 
 	        	TBL_RS_SCHEDULE 
 			WHERE
@@ -1283,8 +1283,8 @@
 				OWNERID, 
 				NUM, 
 				COMPANYID, 
-				DATE_FORMAT(STARTDATETIME, '%Y-%m-%d %T') STARTDATETIME, 
-				DATE_FORMAT(ENDDATETIME, '%Y-%m-%d %T') ENDDATETIME, 
+				TO_CHAR(STARTDATETIME, 'YYYY-MM-DD HH24:MI:SS') STARTDATETIME, 
+				TO_CHAR(ENDDATETIME, 'YYYY-MM-DD HH24:MI:SS') ENDDATETIME, 
 				REWAY, 
 				RENUM, 
 				REDAY, 
@@ -1320,7 +1320,7 @@
 	                holidayname,
 	                holidayname2,
 	                holidaydate,
-	                DATE_FORMAT(holidaydate, '%Y/%m/%d') calendarday ,
+	                TO_CHAR(holidaydate, 'YYYY/MM/DD') calendarday ,
 	                NVL(issolar, '0') issolar,
 	                NVL(isrepeat, '0') isrepeat,
 	                NVL(isuse, '0') isuse,
@@ -1340,7 +1340,7 @@
 		                holidayname,
 		                holidayname2,
 		                holidaydate,
-		                DATE_FORMAT(holidaydate, '%Y/%m/%d') calendarday ,
+		                TO_CHAR(holidaydate, 'YYYY/MM/DD') calendarday ,
 		                NVL(issolar, '0') issolar,
 		                NVL(isrepeat, '0') isrepeat,
 		                NVL(isuse, '0') isuse,
@@ -1361,7 +1361,7 @@
 		                holidayname,
 		                holidayname2,
 		                holidaydate,
-		                DATE_FORMAT(holidaydate, '%Y/%m/%d') calendarday ,
+		                TO_CHAR(holidaydate, 'YYYY-MM-DD') calendarday ,
 		                NVL(issolar, '0') issolar,
 		                NVL(isrepeat, '0') isrepeat,
 		                NVL(isuse, '0') isuse,
@@ -1427,9 +1427,9 @@
                 A.title title  ,
                 A.LOCATION ,
                 A.TIMEDISPLAY ,
-                DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-                DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
-                DATE_FORMAT(A.STARTDATE, '%Y-%m-%d') DATE ,
+                TO_CHAR(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+                TO_CHAR(A.ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
+                TO_CHAR(A.STARTDATE, 'YYYY-MM-DD') DATE ,
                 A.ownerID VALUE  ,
                 A.ALERTTIME ,
                 A.REFLAG ,
@@ -1438,7 +1438,7 @@
                 A.IMPORTANCE ,
                 A.ENTRYLIST ,
                 A.ALLDAY ,
-                DATE_FORMAT(WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+                TO_CHAR(WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
                 A.ATTACHFLAG ,
                 A.CHARACTERID ,
                 A.APPROVEFLAG ,
@@ -1470,9 +1470,9 @@
 			ON
 				D.BRD_ID = C.BRD_UPPER AND D.BRD_COMPANY = C.BRD_COMPANY AND D.TENANT_ID = C.TENANT_ID		
           	WHERE
-				A.STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
+				A.STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
-				STR_TO_DATE(#v_PENDDATE#, '%Y-%m-%d %T') <= A.ENDDATE
+				STR_TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') <= A.ENDDATE
 			AND 
 				A.COMPANYID = #v_PCOMPANYID#
 			AND 
@@ -1518,9 +1518,9 @@
             	A.title title  ,
             	A.LOCATION ,
             	A.TIMEDISPLAY ,
-            	DATE_FORMAT(A.STARTDATE, '%Y-%m-%d %T') STARTDATE ,
-            	DATE_FORMAT(A.ENDDATE, '%Y-%m-%d %T') ENDDATE ,
-            	DATE_FORMAT(A.STARTDATE, '%Y-%m-%d') DATE ,
+            	TO_CHAR(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
+            	TO_CHAR(A.ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
+            	TO_CHAR(A.STARTDATE, 'YYYY-MM-DD') DATE ,
                 A.ownerID VALUE  ,
             	A.ALERTTIME ,
             	A.REFLAG ,
@@ -1529,7 +1529,7 @@
             	A.IMPORTANCE ,
             	A.ENTRYLIST ,
             	A.ALLDAY ,
-            	DATE_FORMAT(A.WRITEDAY, '%Y-%m-%d %T') WRITEDAY ,
+            	TO_CHAR(A.WRITEDAY, 'YYYY-MM-DD HH24:MI:SS') WRITEDAY ,
             	A.ATTACHFLAG ,
             	A.companyID ,
             	A.CHARACTERID ,
@@ -1572,7 +1572,7 @@
 			ON
 				E.BRD_ID = D.BRD_UPPER AND E.BRD_COMPANY = D.BRD_COMPANY AND E.TENANT_ID = D.TENANT_ID			
 			WHERE
-				A.STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
+				A.STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, 'YYYY-MM-DD HH24:MI:SS')
 			AND
 				A.COMPANYID = #v_PCOMPANYID#
 			AND 
@@ -1598,7 +1598,7 @@
 			AND
 				REFLAG = '1'
 			AND
-				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
+				( STR_TO_DATE(#v_PENDDATE#,'YYYY-MM-DD HH24:MI:SS') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#, 'YYYY-MM-DD HH24:MI:SS') >= ENDDATETIME )
 						]]>
 			<isNotEmpty property="v_WRITERNAME">
 			AND 
