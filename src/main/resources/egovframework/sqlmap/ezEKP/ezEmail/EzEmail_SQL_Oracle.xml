@@ -10,6 +10,7 @@
 	<typeAlias  alias="MailReadVO" type="egovframework.ezEKP.ezEmail.vo.MailReadVO"/>
 	<typeAlias  alias="MailCancelVO" type="egovframework.ezEKP.ezEmail.vo.MailCancelVO"/>
 	<typeAlias  alias="MailPOP3VO" type="egovframework.ezEKP.ezEmail.vo.MailPOP3VO"/>
+	<typeAlias  alias="MailBlobVO" type="egovframework.ezEKP.ezEmail.vo.MailBlobVO"/>
 	
 	<resultMap id="mailGeneral" class="MailGeneralVO">
 		<result property="listCount" column="LISTCOUNT" columnIndex="1"/>
@@ -91,6 +92,10 @@
 		<result property="deleteYN" column="DeleteYN" columnIndex="6"/>
 		<result property="pop3SslYN" column="POP3SSLYN" columnIndex="7"/>
 		<result property="saveTofolder" column="SAVETOFOLDER" columnIndex="8"/>
+	</resultMap>
+	
+	<resultMap id="mailBlob" class="MailBlobVO">
+		<result property="mailBlobId" column="MAIL_BLOB_ID" />
 	</resultMap>
 	
 	<procedure id="EzEmailDAO.getMailGeneral" parameterClass="Map" resultMap="mailGeneral">
@@ -204,6 +209,25 @@
 	<procedure id="EzEmailDAO.setMailColor" parameterClass="Map">
 		{CALL EZEMAIL.EZSP_SETMAILCOLOR(#v_IMPORTANCE#, #v_INMAIL#, #v_OUTMAIL#)}
 	</procedure>
+	
+	<select id="EzEmailDAO.getOrphanedMailBlobList" resultMap="mailBlob">
+		<![CDATA[
+			SELECT MAIL_BLOB_ID
+			FROM JAMES_MAIL_BLOB a
+			LEFT OUTER JOIN JAMES_MAIL b
+			ON a.MAILBOX_ID = b.MAILBOX_ID
+			AND a.MAIL_UID = b.MAIL_UID 
+			WHERE b.MAILBOX_ID IS NULL
+			ORDER BY MAIL_BLOB_ID
+       	]]>
+	</select>
+	
+	<delete id="EzEmailDAO.deleteOrphanedMailBlob" parameterClass="MailBlobVO">
+		<![CDATA[
+			DELETE FROM JAMES_MAIL_BLOB 
+			WHERE MAIL_BLOB_ID = #mailBlobId#
+       	]]>
+	</delete>
 	
 	<select id="EzEmailDAO.getMailReserved2" resultMap="mailReservation2">
 		<![CDATA[
