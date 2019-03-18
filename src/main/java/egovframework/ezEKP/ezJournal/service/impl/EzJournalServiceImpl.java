@@ -739,8 +739,8 @@ public class EzJournalServiceImpl implements EzJournalService {
 			
 			for (int i = 0; i < attach.length; i++) {
 				String[] files = attach[i].split(":");
-				String filePath = files[0];
-				String fileName = files[1];
+				String filePath = commonUtil.detectPathTraversal(files[0]);
+				String fileName = commonUtil.detectPathTraversal(files[1]);
 				String fileSize = files[2];
 				String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 				
@@ -970,8 +970,8 @@ public class EzJournalServiceImpl implements EzJournalService {
 			
 			for (int i = 0; i < attach.length; i++) {
 				String[] files = attach[i].split(":");
-				String filePath = files[0];
-				String fileName = files[1];
+				String filePath = commonUtil.detectPathTraversal(files[0]);
+				String fileName = commonUtil.detectPathTraversal(files[1]);
 				String fileSize = files[2];
 				String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
 				

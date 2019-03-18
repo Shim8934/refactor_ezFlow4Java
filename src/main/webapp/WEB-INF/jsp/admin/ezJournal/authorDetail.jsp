@@ -276,7 +276,6 @@
 	   				url:"/admin/ezJournal/authorDeptList.do",
 	   				data:{"userId":$(elem).attr("id")},
 	   				success: function(result){
-	   					console.log(result);
 	   					lpDepts = [];
 	   					lpDeptNames = [];
 	   					$("#authorDeptList").html(result);
