@@ -171,7 +171,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정관리 왼쪽화면 호출함수
 	 */
-	@RequestMapping(value="/ezSchedule/scheduleLeft.do")
+	@RequestMapping(value="/ezSchedule/scheduleLeft.do", method = RequestMethod.GET)
 	public String  scheduleLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
 		
 		logger.debug("============ scheduleLeft started ============");
@@ -2686,7 +2686,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
         	pDirPath = pDirPath + commonUtil.separator;
         }
-        File file = new File(pDirPath + "uploadFile");
+        File file = new File(commonUtil.detectPathTraversal(pDirPath + "uploadFile"));
 
         if (!file.exists()) {
         	file.mkdir();        

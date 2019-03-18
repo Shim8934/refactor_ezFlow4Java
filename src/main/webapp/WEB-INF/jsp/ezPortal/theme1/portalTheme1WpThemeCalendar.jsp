@@ -108,7 +108,7 @@
 	                    }
 	
 	
-	                    document.getElementById("scheduleTitle" + count).innerHTML = TITLE;
+	                    document.getElementById("scheduleTitle" + count).innerHTML = MakeXMLString(TITLE);
 	                    document.getElementById("scheduleTitle" + count).style.cursor = "pointer";
 	                    document.getElementById("scheduleTitle" + count).onclick = new Function("open_schedule('" + SCHEDULEID + "','" + SCHEDULETYPE + "','" + DATETYPE + "','" + REPEATCOUNT + "','" + STARTDATE + "')")
 	                    count++;
