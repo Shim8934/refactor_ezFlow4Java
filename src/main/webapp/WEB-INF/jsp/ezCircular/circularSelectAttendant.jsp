@@ -1787,7 +1787,7 @@
 				$
 						.ajax({
 							url : '/ezCircular/getcircularDeptList.do',
-							type : 'POST',
+							type : 'GET',
 							dataType : "json",
 							data : {},
 							success : function(result) {

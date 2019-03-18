@@ -86,7 +86,7 @@
 	        
 	        function LoadEmailTree() {	
 	        	$.ajax({
-            		type : "POST",
+            		type : "GET",
             		url : "/ezCircular/getCircularFolderList.do",
             		async : false,
             		dataType : "json",
@@ -194,7 +194,7 @@
 	        
 	        function getNewCircularCount() {
 	        	$.ajax({
-					type : "POST",
+					type : "GET",
 					dataType : "json",
 					async : false,
 					url : "/ezCircular/getListCount.do",

@@ -89,7 +89,7 @@
 		    	opener.LoadEmailTree();
 		    	
 		    	$.ajax({
-            		type : "POST",
+            		type : "GET",
             		url : "/ezCircular/getCircularFolderList.do",
             		async : false,
             		dataType : "json",
