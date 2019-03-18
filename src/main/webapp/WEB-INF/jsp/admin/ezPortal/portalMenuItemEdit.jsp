@@ -271,7 +271,13 @@
 				
 				g_bSaved = true;
 				
-				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=2&parentUID=203";
+				var menuType = "<c:out value='${menuType}'/>";
+				
+				if (menuType != "") {
+					location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=2&parentUID=" + menuType;
+				} else {
+					location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=2&parentUID=" + parentuid;
+				}
 			}
 			
 			function CheckDuplicate(paramname) {
@@ -310,7 +316,13 @@
 				
 				g_bSaved = true;
 				
-				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=2&parentUID=203";
+				var menuType = "<c:out value='${menuType}'/>";
+				
+				if (menuType != "") {
+					location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=2&parentUID=" + menuType;
+				} else {
+					location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=2&parentUID=" + parentuid;
+				}
 			}
 			
 			function AddRight() {
@@ -345,8 +357,13 @@
 				xmlhttp = null;
 				
 				g_bSaved = true;
+				var menuType = "<c:out value='${menuType}'/>";
 				
-				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3&parentUID=203";
+				if (menuType != "") {
+					location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3&parentUID=" + menuType;
+				} else {
+					location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3&parentUID=" + parentuid;
+				}
 			}
 		    var selecttarget_dialogArguments = new Array();
 			function SelectID() {
@@ -388,8 +405,13 @@
 				xmlhttp = null;
 				
 				g_bSaved = true;
+				var menuType = "<c:out value='${menuType}'/>";
 				
-				location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3&parentUID=203";
+				if (menuType != "") {
+					location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3&parentUID=" + menuType;
+				} else {
+					location.href = "/admin/ezPortal/menuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=3&parentUID=" + parentuid;
+				}
 			}
 			
 			// 지정된 값인 경우에만 작성 가능하도록 설정
