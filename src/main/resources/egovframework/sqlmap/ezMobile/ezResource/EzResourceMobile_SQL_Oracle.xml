@@ -438,9 +438,9 @@
 			AND
 				REFLAG = '0'
 			AND 
-                ( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
+                ( B.DISPLAYNAME LIKE CONCAT(CONCAT('%', #v_WRITERNAME#), '%') OR B.DISPLAYNAME2 LIKE CONCAT(CONCAT('%', #v_WRITERNAME#), '%') )
 			AND 
-				( B.DESCRIPTION LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR B.DESCRIPTION2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
+				( B.DESCRIPTION LIKE CONCAT(CONCAT('%', #v_WRITERDEPT#), '%') OR B.DESCRIPTION2 LIKE CONCAT(CONCAT('%', #v_WRITERDEPT#), '%') )
 			AND
 				A.TENANT_ID = #tenantID#	
 			ORDER BY
@@ -1484,7 +1484,7 @@
 			AND
             	( C.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND C.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )	
 			OR 
-				C.OWNERID = #v_PUSERID# OR C.OWNERID LIKE CONCAT('%', ',' , #v_PUSERID#) OR C.OWNERID LIKE CONCAT(#v_PUSERID#, ',' , '%') )
+				C.OWNERID = #v_PUSERID# OR C.OWNERID LIKE CONCAT(CONCAT(CONCAT('%', '),' ), #v_PUSERID#) OR C.OWNERID LIKE CONCAT(CONCAT(CONCAT(#v_PUSERID#, '),' ), '%') )
 			</isNotEqual>
 			<isNotEmpty property="v_POWNERID">				
 			AND 
@@ -1496,7 +1496,7 @@
 			</isNotEmpty>	
 			<isNotEmpty property="v_WRITERNAME">
 			AND 
-                ( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )	    
+                ( B.DISPLAYNAME LIKE CONCAT(CONCAT('%', #v_WRITERNAME#), '%') OR B.DISPLAYNAME2 LIKE CONCAT(CONCAT('%', #v_WRITERNAME#), '%') )	    
 			</isNotEmpty>
 			<![CDATA[
 			AND
@@ -1584,7 +1584,7 @@
 			AND
             	( D.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND D.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )
 			 OR 
-			 	D.OWNERID = #v_PUSERID# OR D.OWNERID LIKE CONCAT('%', ',' , #v_PUSERID#) OR D.OWNERID LIKE CONCAT(#v_PUSERID#, ',' , '%') )
+			 	D.OWNERID = #v_PUSERID# OR D.OWNERID LIKE CONCAT(CONCAT(CONCAT('%', '),' ), #v_PUSERID#) OR D.OWNERID LIKE CONCAT(CONCAT(CONCAT(#v_PUSERID#, '),' ), '%') )
 			 </isNotEqual>
 			<isNotEmpty property="v_POWNERID">				
 			AND
@@ -1602,7 +1602,7 @@
 						]]>
 			<isNotEmpty property="v_WRITERNAME">
 			AND 
-                ( B.DISPLAYNAME LIKE CONCAT('%', #v_WRITERNAME#, '%') OR B.DISPLAYNAME2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )	    
+                ( B.DISPLAYNAME LIKE CONCAT(CONCAT('%', #v_WRITERNAME#), '%') OR B.DISPLAYNAME2 LIKE CONCAT(CONCAT('%', #v_WRITERNAME#), '%') )	    
 			</isNotEmpty>
 			<![CDATA[
 			AND 
@@ -1643,7 +1643,7 @@
       		AND
             	( A.BRD_UPPER IN (SELECT B.RESID FROM TBL_RS_RESACL B WHERE (B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone') AND A.TENANT_ID = B.TENANT_ID AND B.ACCESS_LVL = '1' )
             OR
-            	A.OWNERID = #v_PUSERID# OR A.OWNERID LIKE CONCAT('%', ',' , #v_PUSERID#) OR A.OWNERID LIKE CONCAT(#v_PUSERID#, ',' , '%') )
+            	A.OWNERID = #v_PUSERID# OR A.OWNERID LIKE CONCAT(CONCAT(CONCAT('%', ',)' ), #v_PUSERID#) OR A.OWNERID LIKE CONCAT(CONCAT(CONCAT(#v_PUSERID#, '),' ), '%') )
 			</isNotEqual>
 			<![CDATA[
 			AND
@@ -1701,7 +1701,7 @@
 			FROM 
 				TBL_RS_BRD
 			WHERE 
-				( OWNERID = #userId# OR OWNERID LIKE CONCAT('%', ',', #userId#) OR OWNERID LIKE CONCAT(#userId#, ',', '%') )
+				( OWNERID = #userId# OR OWNERID LIKE CONCAT(CONCAT(CONCAT('%', '),'), #userId#) OR OWNERID LIKE CONCAT(CONCAT(CONCAT(#userId#, '),'), '%') )
 			AND 
 				TENANT_ID = #tenantId#  
 			AND
