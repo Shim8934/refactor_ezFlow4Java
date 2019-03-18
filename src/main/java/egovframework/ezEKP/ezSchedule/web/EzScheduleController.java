@@ -2044,7 +2044,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 					    }
 						String subjectParam = "subject=" + URLEncoder.encode(title, "UTF-8");
 						String etcDataParam = "etcData=";
-						String linkURLParam = "linkURL=" + URLEncoder.encode(request.getScheme() + "://" +  serverDomain + "/ezConn/scheduleReceiveMember.do?serverFlag="+serverFlag, "UTF-8");
+						String linkURLParam = "linkURL=" + URLEncoder.encode(request.getScheme() + "://" +  serverDomain + "/ezConn/scheduleReceiveAttendant.do?serverFlag="+serverFlag, "UTF-8");
 						String mobileLinkURLParam = "mobileLinkURL=" + URLEncoder.encode("/Schedule/schedule_receive_attendant.aspx", "UTF-8");
 						String viewTypeParam = "viewType=" + URLEncoder.encode("popup", "UTF-8");
 						String viewWidthParam = "viewWidth=" + URLEncoder.encode("730", "UTF-8");

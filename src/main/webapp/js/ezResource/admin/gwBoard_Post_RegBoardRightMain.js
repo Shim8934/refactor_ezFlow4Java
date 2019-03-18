@@ -1,4 +1,4 @@
-﻿var L_AclText = "";
+﻿﻿var L_AclText = "";
 var L_AclValue = "";
 var L_ACLERRORMESSAGE = "" + strLang30 + "";
 
