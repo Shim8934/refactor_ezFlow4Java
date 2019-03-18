@@ -76,18 +76,25 @@
 				var indexV			= objthis.selectedIndex;
 				var strAclLvl;// = CrossYN() ? objthis.options[indexV].getAttribute("Access_lvl") : objthis.options[indexV].Access_lvl;
 	
-				if (CrossYN()) {
-				    strAclLvl = objthis.options[indexV].getAttribute("Access_lvl");
-				} else {
-				    strAclLvl = objthis.options[indexV].getAttribute("Access_lvl");
-				    if (strAclLvl == undefined) {
-				        strAclLvl = objthis.options[indexV].Access_lvl;
-				    }
+				if(objthis.options[indexV].getAttribute("dept_yn") == "Y") {				// ì íí ì»¬ë¼ì´ ì ì  í¹ì everyone
+					brd_mng1.disabled = false;
+					if (CrossYN()) {
+					    strAclLvl = objthis.options[indexV].getAttribute("Access_lvl");
+					} else {
+					    strAclLvl = objthis.options[indexV].getAttribute("Access_lvl");
+					    if (strAclLvl == undefined) {
+					        strAclLvl = objthis.options[indexV].Access_lvl;
+					    }
+					}
+		
+					if ( strAclLvl == "1" ) {	
+						brd_mng1.checked = true;
+					} else {
+						brd_mng2.checked = true;
+					}
 				}
-	
-				if ( strAclLvl == "1" ) {	
-					brd_mng1.checked = true;
-				} else {
+				else {
+					brd_mng1.disabled = true;
 					brd_mng2.checked = true;
 				}
 			}
