@@ -34,6 +34,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
@@ -109,26 +111,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception {
 		return ezEmailDAO.getOrphanedMailBlobList();
 	}
-	
-	@Override
-	public void deleteOrphanedMailBlobListWithSleep(List<MailBlobVO> orphanedMailBlobList) throws Exception {
-		int count = 1;
 		
-		try {
-			for (MailBlobVO mailBlobVO : orphanedMailBlobList) {
-				logger.debug("Deleting mailBlobId=" + mailBlobVO.getMailBlobId() + ",count=" + count++);
-				
-				ezEmailDAO.deleteOrphanedMailBlob(mailBlobVO);
-				
-				Thread.sleep(500);
-			}
-		// Tomcat shutdown 등에 의해 Exception이 발생한 경우엔 현재까지 삭제한 내용이 롤백되지
-		// 않도록 리턴한다.
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-	
 	@Override
 	public List<MailGeneralVO> getMailGeneral(int tenantId, String userId) throws Exception {
 		logger.debug("getMailGeneral started. tenantId=" + tenantId + ",userId=" + userId);
