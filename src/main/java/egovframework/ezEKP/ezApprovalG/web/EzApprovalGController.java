@@ -8981,7 +8981,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 부서(병렬,순차)합의 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/recevGDeptHapyui.do")
+	@RequestMapping(value = "/ezApprovalG/recevGDeptHapyui.do", method = RequestMethod.GET)
 	public String recevGDeptHapyui(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("recevGDeptHapyui started");
 
