@@ -3,16 +3,10 @@ package egovframework.let.user.login.web;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -29,6 +23,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.LocaleResolver;
@@ -109,7 +104,7 @@ public class LoginController {
 	 * @exception Exception
 	 */
     
-    @RequestMapping(value="/user/login/login.do")
+    @RequestMapping(value="/user/login/login.do", method=RequestMethod.GET)
 	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model) throws Exception {
         String serverName = request.getServerName();
         int tenantId = loginService.getTenantId(serverName);
@@ -151,7 +146,7 @@ public class LoginController {
 	 * @return result - 로그인결과(세션정보)
 	 * @exception Exception
 	 */
-    @RequestMapping(value="/user/login/actionLogin.do")
+    @RequestMapping(value="/user/login/actionLogin.do", method=RequestMethod.POST)
     public String actionLogin(Locale locale, @ModelAttribute("loginVO") LoginVO loginVO, HttpSession session, HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
     	logger.debug("=========================================== login ============================================");
     	
@@ -721,7 +716,7 @@ public class LoginController {
 	 * @return String
 	 * @exception ExceptionactionLogout
 	 */
-    @RequestMapping(value="/user/login/actionLogout.do")
+    @RequestMapping(value="/user/login/actionLogout.do", method=RequestMethod.GET)
 	public String actionLogout(HttpServletRequest request, HttpServletResponse response, ModelMap model) throws Exception {
         String serverName = request.getServerName();
         int tenantId = loginService.getTenantId(serverName);
@@ -769,7 +764,7 @@ public class LoginController {
        	return "redirect:/user/login/login.do"; 
     }
     
-    @RequestMapping(value="/user/login/actionLogoutWithRedirectUri.do")
+    @RequestMapping(value="/user/login/actionLogoutWithRedirectUri.do", method=RequestMethod.GET)
 	public void actionLogoutWithRedirectUri(
 					@RequestParam("redirectUri") String redirectUri,
 					HttpServletRequest request,
@@ -793,7 +788,7 @@ public class LoginController {
     	response.sendRedirect(redirectUri);
     }
     
-    @RequestMapping(value = "/user/login/setPassword.do")
+    @RequestMapping(value = "/user/login/setPassword.do", method=RequestMethod.POST)
     public void setPassword(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletResponse response) throws Exception{
     	userInfo = commonUtil.userInfo(loginCookie);
 
@@ -810,7 +805,7 @@ public class LoginController {
     	}
     }
         
-    @RequestMapping(value = "/user/login/changeExPassword.do", produces = "text/html; charset=utf-8")
+    @RequestMapping(value = "/user/login/changeExPassword.do", produces = "text/html; charset=utf-8", method=RequestMethod.POST)
 	@ResponseBody
     public String changeExPassword(@ModelAttribute("loginVO") LoginVO loginVO, HttpServletRequest request, HttpServletResponse response) throws Exception{
     	logger.debug("=========================================== changePassword ============================================");
