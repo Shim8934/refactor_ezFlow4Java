@@ -951,7 +951,7 @@
                 A.LOCATION ,
                 A.TIMEDISPLAY ,
                 TO_CHAR(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
-                TO_CAR(A.ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
+                TO_CHAR(A.ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
                 TO_CHAR(A.STARTDATE, 'YYYY-MM-DD') DATE ,
                 A.ownerID VALUE  ,
                 A.ALERTTIME ,
