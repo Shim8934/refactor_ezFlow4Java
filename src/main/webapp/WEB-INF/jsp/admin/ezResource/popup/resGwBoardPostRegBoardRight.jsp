@@ -648,59 +648,6 @@
 	                }
 	                var listid = "MsgToList";
 	            }
-	    		
-			    function dept_select() {
-					var organTree = new TreeView();
-		            organTree.LoadFromID("FromTreeView");
-		
-		            var nodeIdx = organTree.GetSelectNode();
-		            
-		            if(nodeIdx != -1) {
-		            	var IsInsert = CheckMailReceiver(nodeIdx.GetNodeData("cn"), "3");
-		            	if(!IsInsert) {
-		            		var strId = nodeIdx.GetNodeData("cn");
-		            		var strName = nodeIdx.NodeName;
-		            		var pparsingXML = "";
-		        	        var pparsingXML2 = "";
-		        	        
-		        	        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-		
-		                    pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
-		                    pparsingXML = pparsingXML + "<DATA2><![CDATA[" + strName + "]]></DATA2>";
-		                    pparsingXML = pparsingXML + "<DATA9><![CDATA[" + "D" + "]]></DATA9>";
-		                    pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + "]]></VALUE></CELL></ROW>";
-		                    pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
-		                    Resultxml = loadXMLString(pparsingXML2);
-		                    
-		                    var listid = "MsgToList";
-		                    var listview = new ListView();
-		                    listview.LoadFromID(listid);
-		                    
-		                    var MaxID = 0;
-		                    var InitTr = listview.GetDataRows();
-		                    var MaxCntNum = 0;
-		                    for (var j = 0  ; j < InitTr.length  ; j++) {
-		                        var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-		                        if (MaxID < curnum) {
-		                            MaxID = curnum;
-		                            MaxCntNum = j;
-		                        }
-		                    }
-		                    
-		                    var objTr = listview.AddRow(InitTr.length);
-		                    if (MaxCntNum != 0)
-		                        MaxCntNum = MaxCntNum + 1;
-		                    SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
-		                    listview.AddDataRow(objTr, Resultxml);
-		
-		                    var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
-		                    for (var y = 0; y < _tdlength; y++) {
-		                        document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
-		                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
-		                    }
-		            	}
-		            }
-				}
 	    
 	            function CheckMailReceiver(selRow, option) {
 	                var rtnValue = false;
@@ -1090,23 +1037,19 @@
 	        	if (Check_Everyone.checked) {
 		            SelectedACL = new makeArray(totalLen + 1);
 	            	if (totalLen == 0) {
-	                	SelectedACL[1] = "1^everyone^everyone^D";
+	                	SelectedACL[1] = "1^everyone^everyone";
 	            	} else {
 	                	for (var i = 0; i < totalLen; i++) {
 	                    	var strTxt = GetAttribute(totalRows[i], "DATA2");
 	                    	var strId = GetAttribute(totalRows[i], "DATA1");
-	                    	var strDept = "Y";
-	                    	if(GetAttribute(totalRows[i], "DATA9") == "D") {
-	                    		strDept = GetAttribute(totalRows[i], "DATA9");
-	                    	}
 
 	                    	if (strTxt.charAt(0) == " ") {
 		                        strTxt = strTxt.substr(1);
 		                    }
 
-	                    	SelectedACL[i + 1] = "1^" + strId + "^" + strTxt + "^" + strDept;
+	    	                SelectedACL[i + 1] = "1^" + strId + "^" + strTxt;
 	        	            if (totalLen == i + 1) {
-	            	            SelectedACL[i + 2] = "1^" + pCompanyID + "^everyone^" + strDept;
+	            	            SelectedACL[i + 2] = "1^" + pCompanyID + "^everyone";
 	                	    }
 	                	}
 	        	    }
@@ -1115,11 +1058,7 @@
 		            for (var i = 0; i < totalLen; i++) {
 	    	            var strTxt = GetAttribute(totalRows[i], "DATA2");
 	                	var strId = GetAttribute(totalRows[i], "DATA1");
-	                	var strDept = "Y";
-                    	if(GetAttribute(totalRows[i], "DATA9") == "D") {
-                    		strDept = GetAttribute(totalRows[i], "DATA9");
-                    	}
-	                	SelectedACL[i + 1] = "1^" + strId + "^" + strTxt + "^" + strDept;
+	                	SelectedACL[i + 1] = "1^" + strId + "^" + strTxt;
 	            	}
 	        	}
 
@@ -1315,10 +1254,7 @@
                                             	</td>
                                             	<td>
                                                 	<div style="float: right; margin-right: 5px;">
-                                                    		<a class="imgbtn"><span onclick="infoview_click()"><spring:message code="ezSchedule.t1052" /></span></a>
-                                                	</div>
-                                            		<div style="float: right; margin-right: 5px;">
-                                                    	<a href="#" class="imgbtn"><span onclick="dept_select()"><spring:message code="ezEmail.t596" /></span></a>
+                                                    	<a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code="ezSchedule.t1052" /></span></a>
                                                 	</div>
                                             	</td>
                                         	</tr>
