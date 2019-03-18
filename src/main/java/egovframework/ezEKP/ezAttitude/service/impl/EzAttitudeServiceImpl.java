@@ -560,7 +560,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			String orderCell, String orderOption, String offsetMin, String primary) throws Exception {
 		LOGGER.debug("getAttitudeUserConfigList started");
 		
-		int limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+		int limit = (Integer.parseInt(pageNum) - 1) * Integer.parseInt(listSize);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("tenantId", tenantId);
@@ -685,8 +685,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("endPoint", endPoint);
 		map.put("type", type);
 		if (startPoint != null && endPoint != null && !startPoint.equals("") && !endPoint.equals("")) {
-			map.put("startRow", Integer.valueOf(startPoint) + 1);
-			map.put("endRow", Integer.valueOf(startPoint) + Integer.valueOf(endPoint));
+			map.put("startRow", Integer.parseInt(startPoint) + 1);
+			map.put("endRow", Integer.parseInt(startPoint) + Integer.parseInt(endPoint));
 		}
 		
 		if (adminFlag.equals("false")){
@@ -958,7 +958,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		int limit = 0;
 		if (pageNum != null && !pageNum.equals("")) {
-			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+			limit = (Integer.parseInt(pageNum) - 1) * Integer.parseInt(listSize);
 			
 			map.put("startRow", limit + 1);
 			map.put("endRow", limit + Integer.valueOf(listSize));
@@ -1136,7 +1136,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("paging started.");
 		
 		if (!listSize.equals("")) {
-			int size = Integer.valueOf(listSize);
+			int size = Integer.parseInt(listSize);
 			int limit = (Integer.valueOf(pageNum) - 1) * size;
 			
 			if (totalList.size() < limit + size) {
@@ -1755,7 +1755,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		List<AttitudeStatisVO> list = new ArrayList<AttitudeStatisVO>();
 		for (int months = 1; months < 13; months++) {
 			Calendar cal = Calendar.getInstance();
-			cal.set(Integer.valueOf(year), months - 1, 1);
+			cal.set(Integer.parseInt(year), months - 1, 1);
 			
 			String endTime = "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH) + " 23:59:59";
 			map.put("endTime", endTime);
@@ -1824,7 +1824,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 		int limit = 0;
 		if (pageNum != null && !pageNum.equals("")) {
-			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+			limit = (Integer.parseInt(pageNum) - 1) * Integer.parseInt(listSize);
 			map.put("startRow", (limit + 1));
 			map.put("endRow", (limit + Integer.valueOf(listSize)));
 		}
