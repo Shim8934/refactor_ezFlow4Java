@@ -76,25 +76,18 @@
 				var indexV			= objthis.selectedIndex;
 				var strAclLvl;// = CrossYN() ? objthis.options[indexV].getAttribute("Access_lvl") : objthis.options[indexV].Access_lvl;
 	
-				if(objthis.options[indexV].getAttribute("dept_yn") == "Y") {				// ì íí ì»¬ë¼ì´ ì ì  í¹ì everyone
-					brd_mng1.disabled = false;
-					if (CrossYN()) {
-					    strAclLvl = objthis.options[indexV].getAttribute("Access_lvl");
-					} else {
-					    strAclLvl = objthis.options[indexV].getAttribute("Access_lvl");
-					    if (strAclLvl == undefined) {
-					        strAclLvl = objthis.options[indexV].Access_lvl;
-					    }
-					}
-		
-					if ( strAclLvl == "1" ) {	
-						brd_mng1.checked = true;
-					} else {
-						brd_mng2.checked = true;
-					}
+				if (CrossYN()) {
+				    strAclLvl = objthis.options[indexV].getAttribute("Access_lvl");
+				} else {
+				    strAclLvl = objthis.options[indexV].getAttribute("Access_lvl");
+				    if (strAclLvl == undefined) {
+				        strAclLvl = objthis.options[indexV].Access_lvl;
+				    }
 				}
-				else {
-					brd_mng1.disabled = true;
+	
+				if ( strAclLvl == "1" ) {	
+					brd_mng1.checked = true;
+				} else {
 					brd_mng2.checked = true;
 				}
 			}
@@ -112,8 +105,8 @@
 		<br>
 		<div id="mainmenu">
 			<ul>
-				<li class="important"><span onClick="return cmdAdd_onclick()"><spring:message code="ezResource.t110" /></span></li>
-				<li><span class="icon16 icon16_delete" onClick="return cmdDel_onclick()"></span></li>
+				<li><span onClick="return cmdAdd_onclick()"><spring:message code="ezResource.t110" /></span></li>
+				<li><span onClick="return cmdDel_onclick()"><spring:message code="ezResource.t65" /></span></li>
 			</ul>
 		</div>
 		<script type="text/javascript">

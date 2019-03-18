@@ -1,4 +1,4 @@
-﻿var L_AclText = "";
+﻿﻿var L_AclText = "";
 var L_AclValue = "";
 var L_ACLERRORMESSAGE = "" + strLang30 + "";
 
@@ -130,7 +130,7 @@ function SetAddACLList(objAddList) {
 		
 		if (!IsExist) {
 		    if (CrossYN()) {
-		        AddUser.setAttribute("Dept_YN", pCurrAcl[3]);
+		        AddUser.setAttribute("Dept_YN", "Y");
 		        AddUser.setAttribute("SDA_YN", "Y");
 		        AddUser.setAttribute("Member_nam", pCurrAcl[2]);
 		        AddUser.setAttribute("Member_ID", pCurrAcl[1]);
@@ -140,18 +140,14 @@ function SetAddACLList(objAddList) {
 		        	brd_mng2.checked = true;
 		        }
 		    } else {
-		    	AddUser.Dept_YN = pCurrAcl[3];
+		        AddUser.Dept_YN = "Y";
 		        AddUser.SDA_YN = "Y";
 		        AddUser.Member_nam = pCurrAcl[2];
 		        AddUser.Member_ID = pCurrAcl[1];
 		        AddUser.Access_lvl = "2";
 		    }
 			AddUser.text = pCurrAcl[2] + " - (" + strLang35 + "";
-			
-			if(pCurrAcl[3] == "D") {
-				brd_mng1.disabled = true;
-			}
-			
+
 			objUserList.options[User_Cnt] = AddUser;
 
 		}
