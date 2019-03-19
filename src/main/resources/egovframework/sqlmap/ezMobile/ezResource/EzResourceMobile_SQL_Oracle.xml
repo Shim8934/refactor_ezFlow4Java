@@ -952,7 +952,7 @@
                 A.TIMEDISPLAY ,
                 TO_CHAR(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
                 TO_CHAR(A.ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
-                TO_CHAR(A.STARTDATE, 'YYYY-MM-DD') DATE ,
+                TO_CHAR(A.STARTDATE, 'YYYY-MM-DD') "DATE" ,
                 A.ownerID VALUE  ,
                 A.ALERTTIME ,
                 A.REFLAG ,
@@ -1053,8 +1053,6 @@
 			<![CDATA[   	
 			AND
 				A.TENANT_ID = #tenantID#	
-			GROUP BY
-				A.NUM
 			ORDER BY
 				STARTDATE ASC,
 				ENDDATE DESC 
@@ -1072,7 +1070,7 @@
             	A.TIMEDISPLAY ,
             	TO_CHAR(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
             	TO_CHAR(A.ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
-            	TO_CHAR(A.STARTDATE, 'YYYY-MM-DD') DATE ,
+            	TO_CHAR(A.STARTDATE, 'YYYY-MM-DD') "DATE" ,
                 A.ownerID VALUE  ,
             	A.ALERTTIME ,
             	A.REFLAG ,
@@ -1429,7 +1427,7 @@
                 A.TIMEDISPLAY ,
                 TO_CHAR(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
                 TO_CHAR(A.ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
-                TO_CHAR(A.STARTDATE, 'YYYY-MM-DD') DATE ,
+                TO_CHAR(A.STARTDATE, 'YYYY-MM-DD') "DATE" ,
                 A.ownerID VALUE  ,
                 A.ALERTTIME ,
                 A.REFLAG ,
@@ -1484,7 +1482,7 @@
 			AND
             	( C.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND C.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )	
 			OR 
-				C.OWNERID = #v_PUSERID# OR C.OWNERID LIKE CONCAT(CONCAT(CONCAT('%', '),' ), #v_PUSERID#) OR C.OWNERID LIKE CONCAT(CONCAT(CONCAT(#v_PUSERID#, '),' ), '%') )
+				C.OWNERID = #v_PUSERID# OR C.OWNERID LIKE CONCAT(CONCAT('%', ','), #v_PUSERID#) OR C.OWNERID LIKE CONCAT(CONCAT(#v_PUSERID#, ','), '%') )
 			</isNotEqual>
 			<isNotEmpty property="v_POWNERID">				
 			AND 
@@ -1520,7 +1518,7 @@
             	A.TIMEDISPLAY ,
             	TO_CHAR(A.STARTDATE, 'YYYY-MM-DD HH24:MI:SS') STARTDATE ,
             	TO_CHAR(A.ENDDATE, 'YYYY-MM-DD HH24:MI:SS') ENDDATE ,
-            	TO_CHAR(A.STARTDATE, 'YYYY-MM-DD') DATE ,
+            	TO_CHAR(A.STARTDATE, 'YYYY-MM-DD') "DATE" ,
                 A.ownerID VALUE  ,
             	A.ALERTTIME ,
             	A.REFLAG ,
@@ -1584,7 +1582,7 @@
 			AND
             	( D.BRD_UPPER IN (SELECT R.RESID FROM TBL_RS_RESACL R WHERE (R.MEMBER_ID = #v_PCOMPANYID# OR R.MEMBER_ID= #v_PDEPTID# OR R.MEMBER_ID = #v_PUSERID# OR R.MEMBER_ID = 'everyone') AND D.TENANT_ID = R.TENANT_ID AND R.ACCESS_LVL = '1' )
 			 OR 
-			 	D.OWNERID = #v_PUSERID# OR D.OWNERID LIKE CONCAT(CONCAT(CONCAT('%', '),' ), #v_PUSERID#) OR D.OWNERID LIKE CONCAT(CONCAT(CONCAT(#v_PUSERID#, '),' ), '%') )
+			 	D.OWNERID = #v_PUSERID# OR D.OWNERID LIKE CONCAT(CONCAT('%', ',' ), #v_PUSERID#) OR D.OWNERID LIKE CONCAT(CONCAT(#v_PUSERID#, ',' ), '%') )
 			 </isNotEqual>
 			<isNotEmpty property="v_POWNERID">				
 			AND
@@ -1643,7 +1641,7 @@
       		AND
             	( A.BRD_UPPER IN (SELECT B.RESID FROM TBL_RS_RESACL B WHERE (B.MEMBER_ID = #v_PUSERCOMPANY# OR B.MEMBER_ID= #v_PUSERDEPT# OR B.MEMBER_ID = #v_PUSERID# OR B.MEMBER_ID = 'everyone') AND A.TENANT_ID = B.TENANT_ID AND B.ACCESS_LVL = '1' )
             OR
-            	A.OWNERID = #v_PUSERID# OR A.OWNERID LIKE CONCAT(CONCAT(CONCAT('%', ',)' ), #v_PUSERID#) OR A.OWNERID LIKE CONCAT(CONCAT(CONCAT(#v_PUSERID#, '),' ), '%') )
+            	A.OWNERID = #v_PUSERID# OR A.OWNERID LIKE CONCAT(CONCAT('%', ','), #v_PUSERID#) OR A.OWNERID LIKE CONCAT(CONCAT(#v_PUSERID#, ','), '%') )
 			</isNotEqual>
 			<![CDATA[
 			AND
@@ -1701,7 +1699,7 @@
 			FROM 
 				TBL_RS_BRD
 			WHERE 
-				( OWNERID = #userId# OR OWNERID LIKE CONCAT(CONCAT(CONCAT('%', '),'), #userId#) OR OWNERID LIKE CONCAT(CONCAT(CONCAT(#userId#, '),'), '%') )
+				( OWNERID = #userId# OR OWNERID LIKE CONCAT(CONCAT('%', ','), #userId#) OR OWNERID LIKE CONCAT(CONCAT(#userId#, ','), '%') )
 			AND 
 				TENANT_ID = #tenantId#  
 			AND
