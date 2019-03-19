@@ -2431,9 +2431,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
-		String newGuid = xmldom.getElementsByTagName("NEWGUID").item(0).getTextContent();
 		String attachLimit = xmldom.getElementsByTagName("ATTACHLIMIT").item(0).getTextContent();
-		logger.debug("url=" + url + ",newGuid=" + newGuid + ",attachLimit=" + attachLimit);
+		logger.debug("url=" + url + ",attachLimit=" + attachLimit);
 		
 		String folderPath = url.split("/")[0];
 		String uidStr = url.split("/")[1];
@@ -2568,6 +2567,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								MimeBodyPart part = (MimeBodyPart)ezEmailUtil.getAttachPart(message, i + 1);
 
 								if (part != null) {
+									// 동일한 이름의 첨부파일을 처리할 수 있도록 GUID를 직접 생성하는 것으로 수정함. (기존에는 XML 패러메터로 넘어오는 값을 사용).
+									String newGuid = UUID.randomUUID().toString();
+									newGuid = "{" + newGuid + "}";		
+									
 									String orgFileName = attachedFileList.get(i).get("filename");
 									String fileName = newGuid + "_" + orgFileName;
 

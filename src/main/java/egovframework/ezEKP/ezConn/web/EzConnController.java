@@ -204,7 +204,7 @@ public class EzConnController {
 				} else if (requestUri.equals("/ezConn/addressConfig.do")) {
 					resultPage = "/ezEmail/mailConfig.do?flag=address";					
 				} else if (requestUri.equals("/ezConn/mailConfig.do")) {
-					resultPage = "/ezEmail/mailConfig.do?flag=email";					
+					resultPage = "/ezEmail/mailConfig.do?flag=email&dotnetFlag=yes";					
 				} else if (cmd != null && cmd.equals("mailRead")) {
 					String mailFullPath = request.getParameter("mailFullPath");
 					

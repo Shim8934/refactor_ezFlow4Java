@@ -148,29 +148,29 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람문서함 폴더트리 호출 Method
 	 */
-	@RequestMapping(value="/ezCircular/getCircularFolderList.do")
-	public String getCircularFolderList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		logger.debug("getCircularFolderList started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		StringBuilder rootFolderXML = new StringBuilder();
-		
-		List<CircularFolderVO> list = ezCircularService.getTopFolder(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
-		
-		for (int i=0; i < list.size(); i++) {
-			rootFolderXML.append("<node imgidx='1' caption='" + 
-					list.get(i).getCircularFolderName() + "' foldername='" + 
-					list.get(i).getCircularFolderName() + "' fullcaption='_NONE' href='" + 
-					list.get(i).getCircularFolderID() + "'></node>");
-		}
-		
-		model.addAttribute("rootFolderXML", rootFolderXML.toString());
-		
-		logger.debug("getCircularFolderList ended.");
-
-		return "json";
-	}
+//	@RequestMapping(value="/ezCircular/getCircularFolderList.do")
+//	public String getCircularFolderList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+//		logger.debug("getCircularFolderList started.");
+//		
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+//		
+//		StringBuilder rootFolderXML = new StringBuilder();
+//		
+//		List<CircularFolderVO> list = ezCircularService.getTopFolder(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+//		
+//		for (int i=0; i < list.size(); i++) {
+//			rootFolderXML.append("<node imgidx='1' caption='" + 
+//					list.get(i).getCircularFolderName() + "' foldername='" + 
+//					list.get(i).getCircularFolderName() + "' fullcaption='_NONE' href='" + 
+//					list.get(i).getCircularFolderID() + "'></node>");
+//		}
+//		
+//		model.addAttribute("rootFolderXML", rootFolderXML.toString());
+//		
+//		logger.debug("getCircularFolderList ended.");
+//
+//		return "json";
+//	}
 	
 	/**
 	 * 회람문서함관리 및 회람판에서 이동 호출 함수

@@ -96,7 +96,7 @@
 			    </tr>
 			</table>
 			<div class="btnpositionJsp" style="width: 436px">
-			    <a class="imgbtn" onclick="Change_Click()"><span><spring:message code='ezSchedule.t4' /></span></a>
+			    <a class="imgbtn" onclick="Change_Click()"><span><spring:message code='ezSchedule.t157' /></span></a>
 			    <a class="imgbtn" onclick="Cancel_Click()"><span><spring:message code='ezSchedule.t5' /></span></a>
 			</div>
 		    <script type="text/javascript">
