@@ -11,6 +11,7 @@
 	    <script type = "text/javascript">
 	        var pUse_Editor = "${userEditor}";
 	        var pNoneActiveX = "${noneActiveX}";
+	        var dotnetFlag = "${dotnetFlag}";
 	        
 	        window.onload = window_onload;
 	        document.onselectstart = function () { return false; };
@@ -35,7 +36,7 @@
 	            var pSelectTab = obj.getAttribute("divname");
 	            switch (pSelectTab) {
 	                case "MailEnv_div1":
-	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailGeneral.do";
+	                    document.getElementById("MailEnv_ifrm").src = "/ezEmail/mailGeneral.do?dotnetFlag=" + dotnetFlag;
 	                    break;
 	                case "MailEnv_div2":
 	                        document.getElementById("MailEnv_ifrm").src = "/ezAddress/addressConfig.do";
