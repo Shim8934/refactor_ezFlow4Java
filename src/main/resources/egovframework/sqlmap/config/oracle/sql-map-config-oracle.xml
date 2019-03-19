@@ -97,4 +97,6 @@
     <sqlMap resource="egovframework/sqlmap/ezEKP/ezNewPortal/EzNewPortalAdmin_SQL_Oracle.xml"/>
 	<!-- 오라클 모바일 자원관리 -->
 	<sqlMap resource="egovframework/sqlmap/ezMobile/ezResource/EzResourceMobile_SQL_Oracle.xml"/>
+	<!-- 전자결재 -->
+    <sqlMap resource="egovframework/sqlmap/ezMobile/ezApprovalG/EzApprovalGMobile_SQL_Oracle.xml"/>
 </sqlMapConfig>
