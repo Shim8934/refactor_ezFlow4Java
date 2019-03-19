@@ -12947,6 +12947,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 									userTitles[k + 1] = arr2[1].trim();
 									userTitles2[k + 1] = arr2[2].trim();
 								}
+							} else {
+								userTitles[k + 1] = "";
+								userTitles2[k + 1] = "";
 							}
 						}
 						
