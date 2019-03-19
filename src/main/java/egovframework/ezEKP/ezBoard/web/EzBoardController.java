@@ -340,9 +340,9 @@ public class EzBoardController extends EgovFileMngUtil{
         modelMap.addAttribute("userInfo", userInfo);
         modelMap.addAttribute("resultCount", resultCount);
         modelMap.addAttribute("resultXML", resultXML);
-        modelMap.addAttribute("func",func);
-        modelMap.addAttribute("subFunc",subFunc);
-        modelMap.addAttribute("qstId",qstId);        
+        modelMap.addAttribute("func", commonUtil.stripScriptTags(func));
+        modelMap.addAttribute("subFunc", commonUtil.stripScriptTags(subFunc));
+        modelMap.addAttribute("qstId", commonUtil.stripScriptTags(qstId));        
         modelMap.addAttribute("photoType",photoType);
         modelMap.addAttribute("redirectBoardID",redirectBoardID);
         modelMap.addAttribute("redirectBoardGroupID", redirectBoardGroupID.toString());
@@ -912,13 +912,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (boardPropertyVO.getButtonHidden() == null) {
 			boardInfo.setButtonHidden("N");
 		} else {
-			boardInfo.setButtonHidden(boardPropertyVO.getButtonHidden());
+			boardInfo.setButtonHidden(commonUtil.stripScriptTags(boardPropertyVO.getButtonHidden()));
 		}
 		
 		if (boardPropertyVO.getBoardType() == null) {
 			boardInfo.setBoardType("");
 		} else {
-			boardInfo.setBoardType(boardPropertyVO.getBoardType());
+			boardInfo.setBoardType(commonUtil.stripScriptTags(boardPropertyVO.getBoardType()));
 		}
 		
 		BoardPropertyVO boardProperty = ezBoardService.getBoardProperty(pBoardID, userInfo.getTenantId());
@@ -947,7 +947,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardName", commonUtil.cleanValue(pBoardName));
-		model.addAttribute("boardID", pBoardID);
+		model.addAttribute("boardID", commonUtil.stripScriptTags(pBoardID));
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("use_ocs", use_ocs);

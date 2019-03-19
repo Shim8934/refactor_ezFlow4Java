@@ -622,7 +622,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
-		model.addAttribute("pageID", pageID);
+		model.addAttribute("pageID", commonUtil.stripScriptTags(pageID));
 		model.addAttribute("parentPageID", parentPageID);
 		model.addAttribute("editMode", editMode);
 		model.addAttribute("viewMode", viewMode);
@@ -631,7 +631,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("displayName2", displayName2);
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
-		model.addAttribute("mode", mode);
+		model.addAttribute("mode", commonUtil.stripScriptTags(mode));
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("skinExist", skinExist);
 		model.addAttribute("script1", script1);
@@ -820,9 +820,9 @@ public class EzPortalController extends EgovFileMngUtil {
 		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
 		model.addAttribute("displayName", displayName);
 		model.addAttribute("displayName2", displayName2);
-		model.addAttribute("mode", mode);
+		model.addAttribute("mode", commonUtil.stripScriptTags(mode));
 		model.addAttribute("parentPageID", parentPageID);
-		model.addAttribute("pageID", pageID);
+		model.addAttribute("pageID", commonUtil.stripScriptTags(pageID));
 		model.addAttribute("baseType", baseType);
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);

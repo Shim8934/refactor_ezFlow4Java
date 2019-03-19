@@ -162,7 +162,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         	subCode = "1";
         }
         
-		model.addAttribute("funCode", funCode);
+		model.addAttribute("funCode", commonUtil.stripScriptTags(funCode));
 		model.addAttribute("subCode", subCode);		
 		
 		return "/ezSchedule/scheduleIndex";

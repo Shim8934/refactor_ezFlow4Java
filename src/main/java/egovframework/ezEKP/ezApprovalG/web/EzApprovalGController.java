@@ -221,7 +221,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("apprGLeftVOList", apprGLeftVOList);
-		model.addAttribute("listType", listType);
+		model.addAttribute("listType", commonUtil.stripScriptTags(listType));
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("containers", containers.toString());
 		model.addAttribute("viewLeftCount", viewLeftCount);
@@ -404,7 +404,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		model.addAttribute("openYear", openYear);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("useMobile", useMobile);
-		model.addAttribute("listType", listType);
+		model.addAttribute("listType", commonUtil.stripScriptTags(listType));
 		model.addAttribute("proxyInfo", proxyInfo);
 		model.addAttribute("forceCallBackYN", forceCallBackYN);
 		model.addAttribute("relayG_type", relayG_type);
