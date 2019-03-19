@@ -92,11 +92,11 @@
             		type : "POST",
             		url : "/ezCircular/getCircularFolderList.do",
             		async : false,
-            		dataType : "json",
+            		dataType : "text",
             		data : {},
             		success : function(result) {
             			$("#RootFolderXML").html("");
-	            		$("#RootFolderXML").append(result.rootFolderXML);
+	            		$("#RootFolderXML").append(result);
             		}
 	        	});
 	        	
