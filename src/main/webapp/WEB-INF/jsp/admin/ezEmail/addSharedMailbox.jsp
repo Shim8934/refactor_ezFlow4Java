@@ -413,7 +413,7 @@
 	                return;
 	            }
 	            
-	            var regex=/^[a-z0-9\_\-\.]+$/;
+	            var regex = /^[a-z0-9\_\-\.]+$/;
 	            
 	            if (regex.test(document.getElementById("TextId").value.trim()) === false) {
 	            	alert("<spring:message code='ezEmail.sharedMailbox12' />");
