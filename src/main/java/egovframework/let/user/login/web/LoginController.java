@@ -104,7 +104,7 @@ public class LoginController {
 	 * @exception Exception
 	 */
     
-    @RequestMapping(value="/user/login/login.do", method=RequestMethod.GET)
+    @RequestMapping(value="/user/login/login.do", method={RequestMethod.GET, RequestMethod.POST})
 	public String loginView(HttpServletRequest request,	HttpServletResponse response, ModelMap model) throws Exception {
         String serverName = request.getServerName();
         int tenantId = loginService.getTenantId(serverName);
