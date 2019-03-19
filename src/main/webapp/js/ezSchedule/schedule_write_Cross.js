@@ -1265,8 +1265,9 @@ function manage_resource_Complete(rtn) {
         createNodeInsert(xmlDoc, objNode, "PARAMETER");
         createNodeAndInsertText(xmlDoc, objNode, "NUM", "");
         createNodeAndInsertText(xmlDoc, objNode, "OWNERID", "");
-        if (g_data["recurrence"] != "") {
+        if (g_data["recurrence"] != null && g_data["recurrence"] != "") {
             g_data["recurrence"] = "";
+            g_data["str"] = "";
             g_data["recur_del"] = xmlDoc.xml;
 
         }
@@ -1328,7 +1329,7 @@ function config_repeat_resource() {
 	}
     
     // 2019-03-06 김민성 - 일정등록 > 자원 반복예약 수정시 자원 예약 정보 가져오도록
-    if(g_data["recurrence"] != null) {
+    if(g_data["recurrence"] != null && g_data["recurrence"] != "") {
     	var xmlinDoc = null;
     	xmlinDoc = createXmlDom();
     	xmlinDoc = loadXMLString(g_data["recurrence"]);

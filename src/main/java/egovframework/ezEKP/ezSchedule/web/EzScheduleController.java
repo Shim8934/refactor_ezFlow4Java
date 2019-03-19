@@ -1923,6 +1923,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		loginVO = commonUtil.userInfo(loginCookie);	
 		int result = 0;
+		Locale locale = loginVO.getLocale();
 						
         String pageFrom = request.getParameter("pageFrom");
 		if (pageFrom == null) pageFrom = "";
@@ -2042,7 +2043,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 					    } else {
 					    	 senderNameParam = "senderName=" + URLEncoder.encode(v_attendantName2, "UTF-8");
 					    }
-						String subjectParam = "subject=" + URLEncoder.encode(title, "UTF-8");
+						String subjectParam = "subject=" + URLEncoder.encode("["+msg.getMessage("main.t203", locale)+"] " + title, "UTF-8");
 						String etcDataParam = "etcData=";
 						String linkURLParam = "linkURL=" + URLEncoder.encode(request.getScheme() + "://" +  serverDomain + "/ezConn/scheduleReceiveAttendant.do?serverFlag="+serverFlag, "UTF-8");
 						String mobileLinkURLParam = "mobileLinkURL=" + URLEncoder.encode("/Schedule/schedule_receive_attendant.aspx", "UTF-8");

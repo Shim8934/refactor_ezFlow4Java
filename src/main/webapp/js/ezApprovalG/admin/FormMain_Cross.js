@@ -502,6 +502,11 @@ function MakeFormMHTXML_Detail() {
         var Div = document.createElement("DIV");
         Div.innerHTML = message.GetEditorContent();
         
+        //태그프리 에디터일 경우 FIELD클래스의 불필요한 문자제거 2019-03-19 홍대표
+        if (useEditor === "TAGFREE") {
+        	Div.innerHTML = Div.innerHTML.replace(/class=".*?FIELD.*?"/g, 'class="FIELD"');
+        }
+        
         if (message.GetEditorContent().indexOf("BodyContent") > -1)
             BODY.innerHTML = XMLInfo.replace(/\r\n/g, "").replace( /\n/g, "").replace(/\r/g, "") + Div.innerHTML;
         else {
