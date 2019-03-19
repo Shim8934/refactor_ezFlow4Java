@@ -49,7 +49,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeView.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
 			var pUserID = "${userInfo.id}";
-		    var pListTypeValue = "${listType}";
+		    var pListTypeValue = '<c:out value="${listType}"/>';
 		    var PresentOpen = "APPROVAL";
 		    var CompanyID = '${userInfo.companyID}';
 		    var CompanyName = '${userInfo.companyName}';

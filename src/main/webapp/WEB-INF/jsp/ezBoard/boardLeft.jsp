@@ -38,9 +38,9 @@
 	        var SelectedBoardParentBoardID = "";
 	        var RedirectBoardGroupID = "${redirectBoardGroupID}";
 	        var RedirectBoardID = "${redirectBoardID}";
-	        var Func = "${func}";
-	        var subFunc = "${subFunc}";
-	        var qstId = "${qstId}";
+	        var Func = '<c:out value="${func}"/>';
+	        var subFunc = '<c:out value="${subFunc}"/>';
+	        var qstId = '<c:out value="${qstId}"/>';
 	        var PhotoType = "${photoType}";
 	        var g_ReadyState = "";
 	        var first = 1;

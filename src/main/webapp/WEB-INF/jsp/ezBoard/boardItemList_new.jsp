@@ -16,7 +16,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezBoard/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezBoard/PreviewItem.js')}"></script>
 		<script type="text/javascript">
-			var pBoardID = "${boardID}";
+			var pBoardID = '<c:out value="${boardID}"/>';
 		    var SSUserID = "${userInfo.id}";    
 		    var CurPage = "${boardInfo.page}";
 		    var totalPage = "${boardInfo.totalPage}";
@@ -37,7 +37,7 @@
 		    var totalCount = "0";
 		    var OrderOption = "";
 		    var OrderCell = "";
-		    var pBoardType = "${boardInfo.boardType}";
+		    var pBoardType = '<c:out value="${boardInfo.boardType}"/>';
 		    var USE_OCS = "${use_ocs}";
 		    var Use_OneLineCount = "${use_oneLineCount}";
 		    var previewType = "";
@@ -66,7 +66,7 @@
 		    var starttime;
 		    var endtime;
 		    var pAdminType = "y";
-		    var pButtonHidden = "${boardInfo.buttonHidden}";
+		    var pButtonHidden = '<c:out value="${boardInfo.buttonHidden}"/>';
 		    var pNoneActiveX = "YES";
 		    var useRunTime = "${useRunTime}"
 			var window_onunload_Event = false;

@@ -63,7 +63,7 @@
 		    var formURL = "";
 		    var formDocType = "";
 		    var pDocInfoValue = "1";
-		    var pListTypeValue = "${listType}";
+		    var pListTypeValue = '<c:out value="${listType}"/>';
 		    var pListTypeName = "LISTTYPE";
 		    var pDocTypeName = "DOCTYPE";
 		    var pUserID = arr_userinfo[1];
