@@ -14,13 +14,11 @@
 	<select id="MApprovalG.getDoApproveList" parameterClass="Map" resultClass="MApprGDocInfoVO" remapResults="true">
 		<isEqual property="type" compareValue="DO">
 			<![CDATA[
-			-- (MySQL > Oracle Convert) ROWNUM 서브쿼리로 변경 UNION ALL 이라서 하나 더 추가함.
 			SELECT A.* FROM (
 			SELECT LIST.* FROM (
 				SELECT 
 					DOCID,
 					DOCTITLE,
-					-- DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE, (MySQL > Oracle Convert)
 					TO_CHAR(STARTDATE + (INTERVAL #offset# MINUTE),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
 					WRITERNAME$lang$ WRITERNAME,
 					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
@@ -63,7 +61,6 @@
 								TENANT_ID = #tenantID# 
 							)
 	   			AND
-	   				-- STARTDATE < #lastDate# (MySQL > Oracle Convert)
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				APRMEMBERID IN ($id$) 
@@ -73,11 +70,6 @@
 	   				APRMEMBERSN <> 1
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
-			/* (MySQL > Oracle Convert)
-				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
-			*/ 
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
@@ -88,7 +80,6 @@
 				SELECT 
 					DOCID,
 					DOCTITLE,
-					-- DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE, (MySQL > Oracle Convert)
 					TO_CHAR(STARTDATE + (INTERVAL #offset# MINUTE),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
 					WRITERNAME$lang$ WRITERNAME,
 					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
@@ -131,7 +122,6 @@
 								TENANT_ID = #tenantID# 
 							)
 	   			AND
-	   				-- STARTDATE < #lastDate# (MySQL > Oracle Convert)
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				APRMEMBERID IN ($id$) 
@@ -141,27 +131,14 @@
 	   				APRMEMBERSN <> 1
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
-			/* (MySQL > Oracle Convert)
-				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
-			*/ 
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
 			<![CDATA[
-				
 				) as LIST
 				ORDER BY 
 					LIST.STARTDATE DESC
-
-			/* (MySQL > Oracle Convert)
-				ORDER BY 
-					STARTDATE DESC
-				LIMIT
-					#listSize#
-			*/
 				) A
 				WHERE 
 					ROWNUM <= #listSize#
@@ -169,24 +146,10 @@
 		</isEqual>
 		<isEqual property="type" compareValue="DRAFT">
 			<![CDATA[
-			/* (MySQL > Oracle Convert)
-				MySQL에서 LIMIT와 Oracle의 Rownum 정렬 문제로 서브쿼리로 변경하고,
-				Rownum을 제일 마지막으로 변경함.
-				
-				-------변경구조------
-				SELECT A.*
-				FROM (
-					SELECT *
-					FROM EX_TABLE
-					ORDER BY COLUMN
-				) A
-				WHERE ROWNUM < 10
-			*/ 
 			SELECT A.* FROM (
 				SELECT 
 					DOCID,
 					DOCTITLE,
-					-- DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE, (MySQL > Oracle Convert)
 					TO_CHAR(STARTDATE + (INTERVAL #offset# MINUTE),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
 					WRITERNAME$lang$ WRITERNAME,
 					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
@@ -226,7 +189,6 @@
 								TENANT_ID = #tenantID# 
 							)
 	   			AND
-	   				-- STARTDATE < #lastDate# (MySQL > Oracle Convert)
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND 
 		         	APRMEMBERSN = 1 
@@ -238,24 +200,11 @@
 		         	DocState <> '017'
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
-			/* (MySQL > Oracle Convert)
-				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
-			*/ 
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
 			<![CDATA[
-			
-			/* (MySQL > Oracle Convert)
-				ORDER BY 
-					STARTDATE DESC
-				LIMIT
-					#listSize#
-			*/
-			
 				ORDER BY
 					STARTDATE DESC
 			) A
@@ -266,12 +215,10 @@
 		</isEqual>
 		<isEqual property="type" compareValue="ING">
 			<![CDATA[
-			-- (MySQL > Oracle Convert) ROWNUM 서브쿼리로 변경
 			SELECT A.* FROM (
 				SELECT 
 					DISTINCT DOCID,
 					DOCTITLE,
-					-- DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE, (MySQL > Oracle Convert)
 					TO_CHAR(STARTDATE + (INTERVAL #offset# MINUTE),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
 					WRITERNAME$lang$ WRITERNAME,
 					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
@@ -312,7 +259,6 @@
 								TENANT_ID = #tenantID# 
 							)
 	   			AND
-	   				-- STARTDATE < #lastDate# (MySQL > Oracle Convert)
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				APRMEMBERID = #userId# 
@@ -324,23 +270,11 @@
 					AprState != '001'
 		    </isEqual>
 			<isNotEmpty property="searchText" prepend="AND">
-			/* (MySQL > Oracle Convert)
-				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
-			*/ 
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
 			<![CDATA[
-			
-			/* (MySQL > Oracle Convert)
-				ORDER BY 
-					STARTDATE DESC
-				LIMIT
-					#listSize#
-			*/
 				ORDER BY 
 					STARTDATE DESC
 			) A
@@ -349,12 +283,10 @@
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="END">
-		-- (MySQL > Oracle Convert) ROWNUM 서브쿼리로 변경
 		SELECT ENDT.* FROM (
 			SELECT
 				DISTINCT A.DOCID,
 				A.DOCTITLE,
-				-- DATE_ADD(DATE_FORMAT(A.ENDDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE, (MySQL > Oracle Convert)
 				TO_CHAR(STARTDATE + (INTERVAL #offset# MINUTE),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
 				A.WRITERNAME$lang$ WRITERNAME,
 				A.WRITERDEPTNAME$lang$ WRITERDEPTNAME,
@@ -442,7 +374,6 @@
 	   			AND
 	   				C.DELFLAG IS NULL
 	   			AND
-	   				-- A.ENDDATE < #lastDate# (MySQL > Oracle Convert)
 	   				A.ENDDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				B.APRMEMBERID = #userId# 
@@ -458,24 +389,11 @@
 					E.CODE1 ='A02'
 		   	</isEqual>
 			<isNotEmpty property="searchText" prepend="AND">
-			/* (MySQL > Oracle Convert)
-				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
-			*/ 
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
 			<![CDATA[
-			
-			/* (MySQL > Oracle Convert)
-				ORDER BY 
-					ENDDATE DESC
-				LIMIT
-					#listSize#
-			*/
-			
 				ORDER BY 
 					ENDDATE DESC
 			) ENDT
@@ -486,13 +404,11 @@
 		</isEqual>
 		<isEqual property="type" compareValue="SHARE">
 			<![CDATA[
-			-- (MySQL > Oracle Convert) ROWNUM 서브쿼리로 변경 UNION ALL 이라서 하나 더 추가함.
 			SLEECT A.* FROM (
 			SELECT LIST.* FROM (
 				SELECT 
 					DOCID,
 					DOCTITLE,
-					-- DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE, (MySQL > Oracle Convert)
 					TO_CHAR(STARTDATE + (INTERVAL #offset# MINUTE),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
 					WRITERNAME$lang$ WRITERNAME,
 					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
@@ -535,7 +451,6 @@
 								TENANT_ID = #tenantID# 
 							)
 	   			AND
-	   				-- STARTDATE < #lastDate# (MySQL > Oracle Convert)
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
@@ -545,11 +460,6 @@
 	   				APRMEMBERSN <> 1
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
-			/* (MySQL > Oracle Convert)
-				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
-			*/ 
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
@@ -560,7 +470,6 @@
 				SELECT 
 					DOCID,
 					DOCTITLE,
-					-- DATE_ADD(DATE_FORMAT(STARTDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) STARTDATE, (MySQL > Oracle Convert)
 					TO_CHAR(STARTDATE + (INTERVAL #offset# MINUTE),'YYYY-MM-DD HH24:MI:SS') STARTDATE,
 					WRITERNAME$lang$ WRITERNAME,
 					WRITERDEPTNAME$lang$ WRITERDEPTNAME,
@@ -603,7 +512,6 @@
 								TENANT_ID = #tenantID# 
 							)
 	   			AND
-	   				-- STARTDATE < #lastDate# (MySQL > Oracle Convert)
 	   				STARTDATE < TO_DATE(#lastDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
@@ -613,31 +521,17 @@
 	   				APRMEMBERSN <> 1
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
-			/* (MySQL > Oracle Convert)
-				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
-			*/ 
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
 			<![CDATA[
 				) as LIST
-				
 				ORDER BY 
 					LIST.STARTDATE DESC
 				) A
-				
-			/* (MySQL > Oracle Convert)
-				ORDER BY 
-					STARTDATE DESC
-				LIMIT
-					#listSize#
-			*/
 				WHERE 
 					ROWNUM <= #listSize#
-				
 			]]>
 		</isEqual>
 	</select>
@@ -683,7 +577,6 @@
 	   			AND 
 	   				APRMEMBERID IN ($id$) 
 	   			AND 
-	   				-- STARTDATE < #nowDate# (MySQL > Oracle Convert)
 	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				APRTYPE <> '015'
@@ -691,11 +584,6 @@
 	   				APRMEMBERSN <> 1
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
-			/* (MySQL > Oracle Convert)
-				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
-			*/
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
@@ -736,7 +624,6 @@
 								TENANT_ID = #tenantID# 
 							)
 	   			AND
-	   				-- STARTDATE < #nowDate# (MySQL > Oracle Convert)
 	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				APRMEMBERID IN ($id$) 
@@ -745,12 +632,7 @@
 	   			AND
 	   				APRMEMBERSN <> 1
 			]]>
-			<isNotEmpty property="searchText" prepend="AND"> 
-			/* (MySQL > Oracle Convert)
-				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				WRITERNAME LIKE CONCAT('%', #searchText#, '%')) 
-			*/
+			<isNotEmpty property="searchText" prepend="AND">
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
@@ -796,7 +678,6 @@
 	   			AND
 	   				APRMEMBERID = #userId# 
 	   			AND 
-	   				-- STARTDATE < #nowDate# (MySQL > Oracle Convert)
 	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				APRTYPE <> '015'
@@ -804,11 +685,6 @@
 		         	DocState <> '017'
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
-			/* (MySQL > Oracle Convert)
-				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
-			*/ 
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
@@ -852,7 +728,6 @@
 	   			AND
 	   				APRMEMBERID = #userId# 
 	   			AND 
-	   				-- STARTDATE < #nowDate# (MySQL > Oracle Convert)
 	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				APRTYPE <> '015'
@@ -862,11 +737,6 @@
 					AprState != '001'
 		    </isEqual>
 			<isNotEmpty property="searchText" prepend="AND">
-			/* (MySQL > Oracle Convert)
-				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
-			*/
 			 	(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
@@ -951,7 +821,6 @@
 	   			AND
 	   				C.DELFLAG IS NULL
 	   			AND
-	   				-- A.ENDDATE < #nowDate# (MySQL > Oracle Convert)
 	   				A.ENDDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				B.APRMEMBERID = #userId# 
@@ -963,11 +832,6 @@
 					F.CODE1 ='A04'
 		   	</isEqual>
 			<isNotEmpty property="searchText" prepend="AND">
-			/* (MySQL > Oracle Convert)
-				(A.DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				A.WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
-			*/ 
 				(A.DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
 					OR 
 				A.WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
@@ -1013,7 +877,6 @@
 	   			AND 
 	   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
 	   			AND 
-	   				-- STARTDATE < #nowDate# (MySQL > Oracle Convert)
 	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				APRTYPE <> '015'
@@ -1021,11 +884,6 @@
 	   				APRMEMBERSN <> 1
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
-			/* (MySQL > Oracle Convert)
-				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
-			*/ 
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
@@ -1066,7 +924,6 @@
 								TENANT_ID = #tenantID# 
 							)
 	   			AND
-	   				-- STARTDATE < #nowDate# (MySQL > Oracle Convert)
 	   				STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
@@ -1076,11 +933,6 @@
 	   				APRMEMBERSN <> 1
 			]]>
 			<isNotEmpty property="searchText" prepend="AND">
-			/* (MySQL > Oracle Convert)
-				(DOCTITLE LIKE CONCAT('%', #searchText#, '%') 
-					OR 
-				WRITERNAME LIKE CONCAT('%', #searchText#, '%'))
-			*/ 
 				(DOCTITLE LIKE CONCAT(CONCAT('%', #searchText#), '%') 
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
@@ -1106,7 +958,6 @@
 		   			AND 
 		   				APRMEMBERID IN ($id$) 
 		   			AND 
-		   				-- STARTDATE < #nowDate# (MySQL > Oracle Convert)
 	   					STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 		   			AND
 		   				APRTYPE <> '015' 
@@ -1124,7 +975,6 @@
 		   			AND
 		   				COMPANYID = #companyID#
 		   			AND
-		   				-- STARTDATE < #nowDate# (MySQL > Oracle Convert)
 	   					STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 		   			AND
 		   				APRMEMBERID IN ($id$) 
@@ -1145,7 +995,6 @@
 		   			AND
 		   				APRMEMBERID = #userId# 
 		   			AND 
-		   				-- STARTDATE < #nowDate# (MySQL > Oracle Convert)
 	   					STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 		   			AND
 		   				APRTYPE <> '015'
@@ -1163,7 +1012,6 @@
 		   			AND
 		   				APRMEMBERID = #userId# 
 		   			AND 
-		   				-- STARTDATE < #nowDate# (MySQL > Oracle Convert)
 	   					STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 		   			AND
 		   				APRTYPE <> '015'
@@ -1228,7 +1076,6 @@
 	   			AND
 	   				C.DELFLAG IS NULL
 	   			AND
-	   				-- A.ENDDATE < #nowDate# (MySQL > Oracle Convert)
 	   				A.ENDDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 	   			AND
 	   				B.APRMEMBERID = #userId# 
@@ -1255,7 +1102,6 @@
 			   			AND 
 			   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
 			   			AND 
-			   				-- STARTDATE < #nowDate# (MySQL > Oracle Convert)
 	   						STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 			   			AND
 			   				APRTYPE <> '015' 
@@ -1273,7 +1119,6 @@
 			   			AND
 			   				COMPANYID = #companyID#
 			   			AND
-			   				-- STARTDATE < #nowDate# (MySQL > Oracle Convert)
 	   						STARTDATE < TO_DATE(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
 			   			AND
 			   				APRMEMBERID IN (SELECT OWNERID FROM TBL_PS_SHAREAPPROVAL WHERE TENANTID = #tenantID# AND SHAREUSERID = #userId#) 
@@ -1302,10 +1147,6 @@
 					WHEN (A.APRMEMBERDEPTNAME$lang$ = '' OR A.APRMEMBERDEPTNAME$lang$ IS NULL) THEN A.APRMEMBERDEPTNAME
 					ELSE A.APRMEMBERDEPTNAME$lang$
 				END APRMEMBERDEPTNAME,
-				/* (MySQL > Oracle Convert)
-	          	DATE_ADD(DATE_FORMAT(A.RECEIVEDDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) RECEIVEDDATE,
-	          	DATE_ADD(DATE_FORMAT(A.PROCESSDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) PROCESSDATE,
-	          	*/
 	          	TO_CHAR(A.RECEIVEDDATE + (INTERVAL #offset# MINUTE),'YYYY-MM-DD HH24:MI:SS') RECEIVEDDATE,
 	          	TO_CHAR(A.PROCESSDATE + (INTERVAL #offset# MINUTE),'YYYY-MM-DD HH24:MI:SS') PROCESSDATE,
 				CASE 
@@ -1365,10 +1206,6 @@
 					WHEN (A.APRMEMBERDEPTNAME$lang$ = '' OR A.APRMEMBERDEPTNAME$lang$ IS NULL) THEN A.APRMEMBERDEPTNAME
 					ELSE A.APRMEMBERDEPTNAME$lang$
 				END APRMEMBERDEPTNAME,
-				/* (MySQL > Oracle Convert)
-	          	DATE_ADD(DATE_FORMAT(A.RECEIVEDDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) RECEIVEDDATE,
-	          	DATE_ADD(DATE_FORMAT(A.PROCESSDATE,'%Y-%m-%d %H:%i:%s'), INTERVAL #offset# MINUTE) PROCESSDATE,
-	          	*/
 	          	TO_CHAR(A.RECEIVEDDATE + (INTERVAL #offset# MINUTE),'YYYY-MM-DD HH24:MI:SS') RECEIVEDDATE,
 	          	TO_CHAR(A.PROCESSDATE + (INTERVAL #offset# MINUTE),'YYYY-MM-DD HH24:MI:SS') PROCESSDATE,
 				CASE 
@@ -1428,7 +1265,6 @@
 		   				COMPANYID = #companyID#
 		   			AND
 		   				DOCID = #docID#
-		   			-- LIMIT 1 (MySQL > Oracle Convert)
 		   			AND
 		   				ROWNUM = 1
 				]]>
@@ -1445,7 +1281,6 @@
 		   				COMPANYID = #companyID#
 		   			AND
 		   				DOCID = #docID#
-		   			-- LIMIT 1 (MySQL > Oracle Convert)
 		   			AND
 		   				ROWNUM = 1
 				]]>
@@ -1463,7 +1298,6 @@
 	   				COMPANYID = #companyID#
 	   			AND
 	   				DOCID = #docID#
-	   			-- LIMIT 1 (MySQL > Oracle Convert)
 	   			AND
 	   				ROWNUM = 1
 			]]>
@@ -1480,7 +1314,6 @@
 	   				COMPANYID = #companyID#
 	   			AND
 	   				DOCID = #docID#
-	   			-- LIMIT 1 (MySQL > Oracle Convert)
 	   			AND
 	   				ROWNUM = 1
 			]]>
@@ -1497,7 +1330,6 @@
 	   				COMPANYID = #companyID#
 	   			AND
 	   				DOCID = #docID#
-	   			-- LIMIT 1 (MySQL > Oracle Convert)
 	   			AND
 	   				ROWNUM = 1
 			]]>
@@ -1515,7 +1347,6 @@
 		   				COMPANYID = #companyID#
 		   			AND
 		   				DOCID = #docID#
-		   			-- LIMIT 1 (MySQL > Oracle Convert)
 		   			AND
 		   				ROWNUM = 1
 				]]>
@@ -1532,7 +1363,6 @@
 		   				COMPANYID = #companyID#
 		   			AND
 		   				DOCID = #docID#
-		   			-- LIMIT 1 (MySQL > Oracle Convert)
 		   			AND
 		   				ROWNUM = 1
 				]]>
@@ -1643,40 +1473,6 @@
 	<select id="MApprovalG.getAttachList" parameterClass="Map" resultClass="MApprGAttachInfoVO">
 		<isNotEqual property="type" compareValue="END">
 			<![CDATA[
-			-- (MySQL > Oracle Convert) Oracle은 UNION에 Order By 오류남.
-			/* 
-				(SELECT
-					DISPLAYNAME attachName,
-					ATTACHFILEHREF attachHref,
-					ATTACHFILESIZE attachFileSize
-				FROM
-					TBL_APRATTACHINFO
-				WHERE
-					TENANT_ID = #tenantID# 
-				AND
-					COMPANYID = #companyID#
-				AND
-					DOCID = #docID#
-				ORDER BY
-					ATTACHFILESN)
-					
-				UNION ALL
-				
-				(SELECT
-					ATTACHDOCNAME attachName,
-					ATTACHDOCURL attachHref,
-					0 attachFileSize
-				FROM
-					TBL_APRDOCATTACHINFO
-				WHERE
-					TENANT_ID = #tenantID# 
-				AND
-					COMPANYID = #companyID#
-				AND
-					DOCID = #docID#
-				ORDER BY
-					ATTACHSN)
-				*/
 				SELECT 
 					attachName,
 					attachHref,
@@ -1717,40 +1513,6 @@
 		</isNotEqual>
 		<isEqual property="type" compareValue="END">
 			<![CDATA[
-			-- (MySQL > Oracle Convert) Oracle은 UNION에 Order By 오류남.
-			/* 
-				(SELECT
-					DISPLAYNAME attachName,
-					ATTACHFILEHREF attachHref,
-					ATTACHFILESIZE attachFileSize
-				FROM
-					TBL_ENDATTACHINFO
-				WHERE
-					TENANT_ID = #tenantID# 
-				AND
-					COMPANYID = #companyID#
-				AND
-					DOCID = #docID#
-				ORDER BY
-					ATTACHFILESN)
-					
-				UNION ALL
-				
-				(SELECT
-					ATTACHDOCNAME attachName,
-					ATTACHDOCURL attachHref,
-					0 attachFileSize
-				FROM
-					TBL_ENDAPRDOCATTACHINFO
-				WHERE
-					TENANT_ID = #tenantID#
-				AND
-					COMPANYID = #companyID#
-				AND
-					DOCID = #docID#
-				ORDER BY
-					ATTACHSN)
-			*/
 			SELECT
 				attachName,
 				attachHref,
@@ -1859,7 +1621,6 @@
 				<isNotEmpty property="aprMemberSN" prepend="AND">
 					APRMEMBERSN = #aprMemberSN#
 				</isNotEmpty>
-					-- LIMIT 1 (MySQL > Oracle Convert)
 		   			AND
 		   				ROWNUM = 1
 			</isEqual>
@@ -1901,7 +1662,7 @@
 				<isNotEmpty property="aprMemberSN" prepend="AND">
 					APRMEMBERSN = #aprMemberSN#
 				</isNotEmpty>
-					-- LIMIT 1 (MySQL > Oracle Convert)
+				<![CDATA[
 		   			AND
 		   				ROWNUM = 1
 		   		]]>
@@ -1941,7 +1702,6 @@
 					COMPANYID = #companyID#
 				AND
 					DOCID = #docID#
-				-- LIMIT 1 (MySQL > Oracle Convert)
 	   			AND
 	   				ROWNUM = 1
 			]]>
@@ -1980,7 +1740,6 @@
 					COMPANYID = #companyID#
 				AND
 					DOCID = #docID#
-				-- LIMIT 1 (MySQL > Oracle Convert)
 	   			AND
 	   				ROWNUM = 1
 			]]>
@@ -2068,7 +1827,6 @@
 				AND  
 					F.CODE1 ='A04'
 		   	</isEqual>
-			-- LIMIT 1 (MySQL > Oracle Convert)
 	   			AND
 	   				ROWNUM <= 1
 		</isEqual>
@@ -2111,7 +1869,6 @@
 				<isNotEmpty property="aprMemberSN" prepend="AND">
 					APRMEMBERSN = #aprMemberSN#
 				</isNotEmpty>
-					-- LIMIT 1 (MySQL > Oracle Convert)
 		   			AND
 		   				ROWNUM <= 1
 			</isEqual>
@@ -2153,7 +1910,6 @@
 				<isNotEmpty property="aprMemberSN" prepend="AND">
 					APRMEMBERSN = #aprMemberSN#
 				</isNotEmpty>
-					-- LIMIT 1 (MySQL > Oracle Convert)
 		   			AND
 		   				ROWNUM <= 1
 			</isNotEqual>
@@ -2267,8 +2023,6 @@
 					COMPANYID = #companyID#
 				AND
 					DOCID = #docID#
-			
-				-- LIMIT 1 (MySQL > Oracle Convert)
 	   			AND
 	   				ROWNUM = 1
 		]]>
