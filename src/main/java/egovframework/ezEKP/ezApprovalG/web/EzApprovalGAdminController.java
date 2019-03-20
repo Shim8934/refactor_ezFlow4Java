@@ -1749,7 +1749,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 분류,단위업무관리 분류삭제 시 하위노드 여부 체크 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryNodeExist.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/getTaskCategoryNodeExist.do", produces = "text/html;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getTaskCategoryNodeExist(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getTaskCategoryNodeExist started.");
@@ -1771,7 +1771,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재G관리 분류,단위업무관리 분류삭제 실행함수
 	 * 전자결재관리 분류코드관리 체계삭제 실행함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCategory.do", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/removeTaskCategory.do", produces = "text/html;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String removeTaskCategory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("removeTaskCategory started.");
@@ -3538,7 +3538,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	 * 전자결재 관리자 HWP양식작성기 연동정보 저장 실행함수
 	 */
 	/*HWP연동정보 xml파일로 저장, HWP문서 내부에 저장된 연동정보 사용중이라 주석처리*/
-	@RequestMapping(value = "/admin/ezApprovalG/formConnSave.do")
+	@RequestMapping(value = "/admin/ezApprovalG/formConnSave.do", method = RequestMethod.POST)
 	public String formConnSave(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("formConnSave started.");
 		
@@ -3576,7 +3576,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "admin/ezApprovalG/approvGAdminPopupChoiceDept";
 	}
 	
-	@RequestMapping(value = "/admin/ezApprovalG/adminBujae.do")
+	@RequestMapping(value = "/admin/ezApprovalG/adminBujae.do", method = RequestMethod.GET)
 	public String manageBujae(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Locale locale, Model model) throws Exception{
 		logger.debug("adminBujae started");
 
@@ -3676,7 +3676,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재 부재자설정 끄기 Method
 	 */	
-	@RequestMapping(value = "/admin/ezApprovalG/saveBujae.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/saveBujae.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveBujae(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("saveBujae started");
@@ -3720,7 +3720,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자페이지 > 전자결재 > 부재자 설정 관리 > 부재자 지정 호출 Method
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/selectPerson.do")
+	@RequestMapping(value = "/admin/ezApprovalG/selectPerson.do", method = RequestMethod.GET)
 	public String selectPerson(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("selectPerson started");
 
@@ -3746,7 +3746,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 관리자페이지 > 전자결재 > 부재자 설정 관리 > 대리 결재자 지정 호출 Method
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/DselectPerson.do")
+	@RequestMapping(value = "/admin/ezApprovalG/DselectPerson.do", method = RequestMethod.GET)
 	public String DselectPerson(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("selectPerson started");
 
@@ -3778,7 +3778,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "/admin/ezApprovalG/apprGDSelectPerson";
 	}
 	
-	@RequestMapping(value = "/admin/ezApprovalG/checkSubstitute.do")
+	@RequestMapping(value = "/admin/ezApprovalG/checkSubstitute.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Map<String,Object> checkSubstitute(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Locale locale, HttpServletRequest request) throws Exception{
 		logger.debug("adminBujae started");
@@ -3887,7 +3887,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return mapJson;
 	}
 	
-	@RequestMapping(value = "/admin/ezApprovalG/aprDeptName.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/aprDeptName.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	public String aprDeptName(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("aprDeptName started");
 		
@@ -3898,7 +3898,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "/admin/ezApprovalG/apprGaprDeptName";
 	}
 	
-	@RequestMapping(value = "/admin/ezApprovalG/docNumZeroCnt.do")
+	@RequestMapping(value = "/admin/ezApprovalG/docNumZeroCnt.do", method = RequestMethod.GET)
 	public String docNumZeroCnt(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("docNumZeroCnt started");
 		
@@ -3926,7 +3926,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "/admin/ezApprovalG/apprGDocNumZeroCnt";
 	}
 	
-	@RequestMapping(value = "/admin/ezApprovalG/getDocNumZeroCnt.do")
+	@RequestMapping(value = "/admin/ezApprovalG/getDocNumZeroCnt.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String getDocNumZeroCnt(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("getDocNumZeroCnt started");
@@ -3940,7 +3940,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return rtnVal;
 	}
 	
-	@RequestMapping(value = "/admin/ezApprovalG/setDocNumZeroCnt.do")
+	@RequestMapping(value = "/admin/ezApprovalG/setDocNumZeroCnt.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String setDocNumZeroCnt(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("setDocNumZeroCnt started");
