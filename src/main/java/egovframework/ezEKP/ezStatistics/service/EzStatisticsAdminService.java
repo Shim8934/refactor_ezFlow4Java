@@ -28,6 +28,8 @@ public interface EzStatisticsAdminService {
 
 	public void dailyFormCountLog(StatApprVO statApprVO) throws Exception;
 	
+	public void customApprStatisticsBatch() throws Exception;
+	
 	public Map<String, Object> getMailLogList(String tenantId, String pageNo, String pageSize, String mailLogType, String searchStartTime,
 				String searchEndTime, String searchField, String searchValue, String isPrimaryLang, String companyId) throws Exception;
 
