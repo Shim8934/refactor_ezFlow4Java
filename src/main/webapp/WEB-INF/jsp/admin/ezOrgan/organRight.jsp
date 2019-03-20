@@ -1898,8 +1898,6 @@
 					<li id="companybutton2"><span onClick="del_company()"><spring:message code='ezOrgan.t78' /></span></li>
 					<li id="usermenu10"><span onClick="del_dept()"><spring:message code='ezOrgan.t81' /></span></li>
 					<li id="usermenu8"><span onClick="mov_dept()"><spring:message code='ezOrgan.t82' /></span></li>
-					<c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>
-					<c:if test="${use_approvalG != 'YES'}">style="display:none;"</c:if>
 					<li id="usermenu4"><span onClick="mod_sign()"><spring:message code='ezOrgan.t89' /></span></li>
 				</c:if>
 				<li id="usermenu6"><span onClick="mail_manage()"><spring:message code='ezOrgan.t91' /></span></li>
