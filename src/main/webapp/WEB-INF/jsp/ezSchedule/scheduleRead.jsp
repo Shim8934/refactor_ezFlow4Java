@@ -739,8 +739,7 @@
 	                                <spring:message code='ezSchedule.t316' />
 	                            </th>
 	                            <td class="pos1">
-	                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 50px;" align="left">	                                
-	                                    <!-- <asp:Literal ID="LiteralAttach" runat="server"></asp:Literal> -->	                                    
+	                                <div id="attachedfileDIV" style="margin-top: 0px; overflow: auto; padding-top: 0px;height: 50px;" align="left">
 	                                    <c:forEach var="item" items="${attachList}" varStatus="status">
 	                                    	<div style="margin-top:3px;height:20px">
 	                                    		<c:set var="imagePath" value="/images/file.gif" />
