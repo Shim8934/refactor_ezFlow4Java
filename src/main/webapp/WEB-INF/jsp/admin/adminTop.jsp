@@ -12,6 +12,9 @@
 			var useHWP = "${useHWP}";
 			function window_onload(){
 				process();
+				document.getElementById("adminTopTitle").addEventListener("click", function() {
+					parent.frames["bottom"].location.href = "/admin/ezNewPortal/portalMain.do";
+				});
 			}
 			
 			function process() {
@@ -104,6 +107,10 @@
 				    case "menu30":
 				    	parent.frames["bottom"].location.href = "/admin/ezAttitude/attitudeMain.do";
 				    	break;
+					// 메일관리
+					case "menu31":
+						parent.frames["bottom"].location.href = "/admin/ezEmail/adminMailMain.do";
+						break;
 				}
 			}
 			
@@ -142,9 +149,10 @@
 			</script>
         </c:if>
 		<form method="post">
-			<h1 title="logo"><spring:message code="ezBoard.t84" /></h1>
+			<%-- <h1 title="logo"><spring:message code="ezBoard.t84" /></h1> --%>
 			<div id="adminmenu">
-		    	<ul>		    		
+				<div class="adminTopTitle" id="adminTopTitle"><spring:message code="ezBoard.t84" /></div>
+		    	<ul style="padding-left:150px;">
                     <c:if test="${firstScreen_Mail == 'YES'}">
                     	<li><span id="menu10" onClick="menu_change(70, event)"><spring:message code="main.t22" /></span></li>
                     	<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li> 
@@ -155,16 +163,13 @@
 		      			<c:if test="${use_portal == 'YES' && packageType == 'standard'}">
 		      				<li><span id="menu10" onClick="menu_change(0, event)"><spring:message code="main.t22" /></span></li>
 		      			</c:if>
-		      					      
-                    	<c:if test="${packageType == 'standard'}">
-		      				<li><span id="menu01" onClick="menu_change(70, event)"><spring:message code="main.t7" /></span></li>
-                    	</c:if>
                     	
-		      			<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t23" /></span></li>
+		      			<li><span id="menu02" onClick="menu_change(170, event)"><spring:message code="main.t8" /></span></li>
+		      			<li><span id="menu31" onClick="menu_change(170, event)"><spring:message code="main.t78" /></span></li>
 		      			
 		      			<c:if test="${packageType != 'mail'}">      
 			      			<li><span id="menu08" onClick="menu_change(275, event)"><spring:message code="ezSchedule.t1010" /></span></li>
-			      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="main.t12" /></span></li>
+			      			<li><span id="menu06" onClick="menu_change(365, event)"><spring:message code="ezBoard.t0006" /></span></li>
 		      			</c:if>
 		      			
 		      			<%-- 전자결재 --%>

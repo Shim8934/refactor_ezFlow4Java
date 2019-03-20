@@ -193,6 +193,7 @@
 	<body class="mainbody">
 	    <h1>
 	    	<spring:message code='ezAttitude.t2' />
+		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
 	    	<select class="companySelect" name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
 				<c:forEach var="item" items="${list}">
 				<option value="<c:out value='${item.cn}'/>"><c:out value='${item.displayName}'/></option>

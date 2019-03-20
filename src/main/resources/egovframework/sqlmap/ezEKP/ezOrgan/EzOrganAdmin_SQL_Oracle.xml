@@ -42,7 +42,8 @@
 		<result property="extensionAttribute10" 				column="extensionAttribute10" 			columnIndex="8"/>
 		<result property="extensionAttribute102" 				column="extensionAttribute102" 			columnIndex="9"/>
 		<result property="extensionAttribute14" 				column="extensionAttribute14" 			columnIndex="10"/>
-		<result property="updateDT" 							column="UpdateDT" 						columnIndex="11"/>
+		<result property="mobile" 								column="mobile" 						columnIndex="11"/>
+		<result property="updateDT" 							column="UpdateDT" 						columnIndex="12"/>
 	</resultMap>
 	
 	<resultMap id="userCnList" class="OrganUserVO">
@@ -4753,62 +4754,82 @@
 	<select id="EzOrganAdminDAO.getAddJobList" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			SELECT
-				CN ,
-             	CASE
-             		#v_LANGDATA#
-                WHEN
-                	'1'
-                THEN
-                	DISPLAYNAME
-                ELSE
-                	DISPLAYNAME2
-                END
-                	DISPLAYNAME  ,
-             	CASE
-             		#v_LANGDATA#
-                WHEN
-                	'1'
-                THEN
-                	DESCRIPTION
-                ELSE
-                	DESCRIPTION2
-                END
-                	DESCRIPTION  ,
-             	CASE
-             		#v_LANGDATA#
-                WHEN
-                	'1'
-                THEN
-                	TITLE
-                ELSE
-                	TITLE2
-                END
-                	TITLE  ,
-             	mail ,
-             	TelephoneNumber ,
-             	CASE
-             		#v_LANGDATA#
-                WHEN
-                	'1'
-                THEN
-                	COMPANY
-                ELSE
-                	COMPANY2
-                END
-                	COMPANY  ,
-             	EXTENSIONATTRIBUTE4 
-        	FROM
-        		TBL_USERMASTER 
-			WHERE
-				NULLIF(EXTENSIONATTRIBUTE4, null) IS NOT NULL
-       		AND
-       			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
-            AND 
-                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                
-       		AND
-       			TENANT_ID = #v_TENANT_ID#	
-      		ORDER BY
-      			DISPLAYNAME
+				*
+			FROM
+			(
+				SELECT
+					ROWNUM AS RNUM,
+					CN ,
+					DISPLAYNAME  ,
+					DESCRIPTION  ,
+					TITLE  ,
+					mail ,
+					TelephoneNumber ,
+					COMPANY  ,
+					EXTENSIONATTRIBUTE4 
+				FROM
+					(
+						SELECT
+							CN ,
+							CASE
+								#v_LANGDATA#
+								WHEN
+									'1'
+								THEN
+									DISPLAYNAME
+								ELSE
+									DISPLAYNAME2
+							END
+							DISPLAYNAME  ,
+							CASE
+								#v_LANGDATA#
+								WHEN
+									'1'
+								THEN
+									DESCRIPTION
+								ELSE
+									DESCRIPTION2
+							END
+							DESCRIPTION  ,
+							CASE
+								#v_LANGDATA#
+								WHEN
+									'1'
+								THEN
+									TITLE
+								ELSE
+									TITLE2
+							END
+							TITLE  ,
+							mail ,
+							TelephoneNumber ,
+							CASE
+								#v_LANGDATA#
+								WHEN
+									'1'
+								THEN
+									COMPANY
+								ELSE
+									COMPANY2
+							END
+							COMPANY  ,
+							EXTENSIONATTRIBUTE4 
+						FROM
+							TBL_USERMASTER 
+						WHERE
+							NULLIF(EXTENSIONATTRIBUTE4, null) IS NOT NULL
+						AND
+							PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+						AND 
+							CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                
+						AND
+							TENANT_ID = #v_TENANT_ID#
+						ORDER BY
+							DISPLAYNAME
+						) WHERE ROWNUM <= #v_ENDROW#
+					)
+					WHERE 
+						RNUM > #v_STARTNUM# 
 		]]>
 	</select>
 	
@@ -4817,7 +4838,26 @@
 			{CALL EZSP_GETPROXYUSERINFO(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
-	
+
+	<select id="EzOrganAdminDAO.getAddJobCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT (CN) 
+			FROM
+				TBL_USERMASTER 
+			WHERE
+				NULLIF(EXTENSIONATTRIBUTE4, NULL) IS NOT NULL
+			AND
+				PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+			AND 
+				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                      
+			AND
+				TENANT_ID = #v_TENANT_ID#
+			ORDER BY
+				DISPLAYNAME
+		]]>
+	</select>
+
 	<select id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">
 		<![CDATA[
 			SELECT
@@ -5121,6 +5161,7 @@
 			SELECT
 				X.rnum ,
 				X.CN , 
+				X.MOBILE ,
                 X.DISPLAYNAME ,
                 X.DISPLAYNAME2 ,
                 X.DESCRIPTION ,
@@ -5135,6 +5176,7 @@
 				SELECT
 					ROWNUM AS rnum ,
 					A.CN ,
+					A.MOBILE ,
 	                A.DISPLAYNAME ,
 	                A.DISPLAYNAME2 ,
 	                A.DESCRIPTION ,
@@ -5149,6 +5191,7 @@
 					(
 					SELECT
 						CN ,
+						MOBILE,
 		                DISPLAYNAME ,
 		                DISPLAYNAME2 ,
 		                DESCRIPTION ,
@@ -6109,7 +6152,7 @@
 	SELECT * FROM (
 		SELECT * FROM (
 			SELECT 
-				ROWNUM,
+				ROWNUM NUM,
 				A.CN,
 				A.DISPLAYNAME,
 				A.DISPLAYNAME2,
@@ -6221,7 +6264,7 @@
 					ROWNUM <= (#v_PAGENUM# + #v_PAGESIZE#)
 					) X
 				 	WHERE
-				 		ROWNUM > (#v_PAGENUM#)
+				 		NUM > (#v_PAGENUM#)
 			]]>
 				ORDER BY
 					USERTYPE, CN
@@ -6320,123 +6363,117 @@
 		</isEqual>
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleUserListCnt2" parameterClass="Map" resultClass="int" remapResults="true">
-	SELECT COUNT(*) FROM (
-		SELECT * FROM (
+	SELECT COUNT(*) 
+	FROM (
+		SELECT 
+			A.CN,
+			A.DISPLAYNAME,
+			A.DISPLAYNAME2,
+			A.DEPARTMENT,
+			A.DESCRIPTION,
+			A.DESCRIPTION2,
+			A.TELEPHONENUMBER,
+			A.TITLE,
+			A.TITLE2,
+			A.USERTYPE
+		FROM (
 			SELECT 
-				ROWNUM,
-				A.CN,
-				A.DISPLAYNAME,
-				A.DISPLAYNAME2,
-				A.DEPARTMENT,
-				A.DESCRIPTION,
-				A.DESCRIPTION2,
-				A.TELEPHONENUMBER,
-				A.TITLE,
-				A.TITLE2,
-				A.USERTYPE
-			FROM (
-				SELECT 
-					TBL_USERMASTER.CN,
-					TBL_USERMASTER.DISPLAYNAME,
-					TBL_USERMASTER.DISPLAYNAME2,
-					TBL_USERMASTER.DEPARTMENT,
-					TBL_USERMASTER.DESCRIPTION,
-					TBL_USERMASTER.DESCRIPTION2,
-					NVL(TBL_USERMASTER.TELEPHONENUMBER, ' ') AS TELEPHONENUMBER,
-					TBL_USER_JOBMASTER.DISPLAYNAME AS TITLE,
-					TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2,
-					'user' AS USERTYPE
-				FROM 
-					TBL_USERMASTER
-				<isEqual property="v_TYPE" compareValue="001">
-				<![CDATA[
-					JOIN 
-						TBL_USER_JOBMASTER
-					ON 
-						TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
-					AND 
-						TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
-					AND 
-						TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
-					WHERE
-						TBL_USER_JOBMASTER.TYPE = #v_TYPE#
-					AND
-						TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
-				]]>
-				</isEqual>
-				<isEqual property="v_TYPE" compareValue="002">
-				<![CDATA[
-					JOIN 
-						TBL_USER_JOBMASTER
-					ON 
-						TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
-					AND 
-						TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
-					AND 
-						TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
-					WHERE
-						TBL_USER_JOBMASTER.TYPE = #v_TYPE#
-					AND
-						TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
-				]]>
-				</isEqual>
-					AND
-						TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
-					AND
-						TBL_USERMASTER.TENANT_ID = #v_TENANTID#
-					AND 
-		                TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
-				<isEqual property="v_TYPE" compareValue="001">
-					UNION ALL
-					
-					SELECT
-						TBL_USERMASTER.CN,
-					    TBL_USERMASTER.DISPLAYNAME,
-					    TBL_USERMASTER.DISPLAYNAME2,
-					    TBL_ADDJOBMASTER.DEPTID AS DEPARTMENT,
-					    TBL_DEPTMASTER.DISPLAYNAME AS DESCRIPTION,
-					    TBL_DEPTMASTER.DISPLAYNAME2 AS DESCRIPTION2,
-					    NVL(TBL_USERMASTER.TELEPHONENUMBER, ' ') AS TELEPHONENUMBER,
-					    TBL_ADDJOBMASTER.TITLE,
-					    TBL_ADDJOBMASTER.TITLE2,
-					    'addJob' AS USERTYPE
-					FROM
-						TBL_USER_JOBMASTER
-					JOIN 
-						TBL_ADDJOBMASTER
-					ON
-						TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.JOBID
-					AND
-						TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
-					JOIN
-						TBL_USERMASTER
-					ON
-						TBL_USERMASTER.CN = TBL_ADDJOBMASTER.CN
-					AND
-						TBL_USERMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
-					JOIN
-						TBL_DEPTMASTER
-					ON
-						TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
-					AND
-						TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
-					WHERE
-						TBL_USER_JOBMASTER.JOBID = #v_JOBID#
-					AND
-						TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
-				</isEqual>
-					) A
-				<isNotEmpty property="v_SUBQUERY">
-					$v_SUBQUERY$
-				</isNotEmpty>
+				TBL_USERMASTER.CN,
+				TBL_USERMASTER.DISPLAYNAME,
+				TBL_USERMASTER.DISPLAYNAME2,
+				TBL_USERMASTER.DEPARTMENT,
+				TBL_USERMASTER.DESCRIPTION,
+				TBL_USERMASTER.DESCRIPTION2,
+				NVL(TBL_USERMASTER.TELEPHONENUMBER, ' ') AS TELEPHONENUMBER,
+				TBL_USER_JOBMASTER.DISPLAYNAME AS TITLE,
+				TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2,
+				'user' AS USERTYPE
+			FROM 
+				TBL_USERMASTER
+			<isEqual property="v_TYPE" compareValue="001">
 			<![CDATA[
-				) B
+				JOIN 
+					TBL_USER_JOBMASTER
+				ON 
+					TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
+				AND 
+					TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+				AND 
+					TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
 				WHERE
-					ROWNUM <= (#v_PAGENUM# + #v_PAGESIZE#)
-					) X
-				 	WHERE
-				 		ROWNUM > (#v_PAGENUM#)
+					TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+				AND
+					TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
 			]]>
+			</isEqual>
+			<isEqual property="v_TYPE" compareValue="002">
+			<![CDATA[
+				JOIN 
+					TBL_USER_JOBMASTER
+				ON 
+					TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
+				AND 
+					TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+				AND 
+					TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+				WHERE
+					TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+				AND
+					TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
+			]]>
+			</isEqual>
+				AND
+					TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+				AND
+					TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+				AND 
+	                TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+			<isEqual property="v_TYPE" compareValue="001">
+				UNION ALL
+				
+				SELECT
+					TBL_USERMASTER.CN,
+				    TBL_USERMASTER.DISPLAYNAME,
+				    TBL_USERMASTER.DISPLAYNAME2,
+				    TBL_ADDJOBMASTER.DEPTID AS DEPARTMENT,
+				    TBL_DEPTMASTER.DISPLAYNAME AS DESCRIPTION,
+				    TBL_DEPTMASTER.DISPLAYNAME2 AS DESCRIPTION2,
+				    NVL(TBL_USERMASTER.TELEPHONENUMBER, ' ') AS TELEPHONENUMBER,
+				    TBL_ADDJOBMASTER.TITLE,
+				    TBL_ADDJOBMASTER.TITLE2,
+				    'addJob' AS USERTYPE
+				FROM
+					TBL_USER_JOBMASTER
+				JOIN 
+					TBL_ADDJOBMASTER
+				ON
+					TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.JOBID
+				AND
+					TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+				JOIN
+					TBL_USERMASTER
+				ON
+					TBL_USERMASTER.CN = TBL_ADDJOBMASTER.CN
+				AND
+					TBL_USERMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+				JOIN
+					TBL_DEPTMASTER
+				ON
+					TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+				AND
+					TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
+				WHERE
+					TBL_USER_JOBMASTER.JOBID = #v_JOBID#
+				AND
+					TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
+			</isEqual>
+				) A
+			<isNotEmpty property="v_SUBQUERY">
+				$v_SUBQUERY$
+			</isNotEmpty>
+		<![CDATA[
+			)
+		]]>
 	</select>
 	
 	<select id="EzOrganAdminDAO.selectTitleCnt" parameterClass="Map" resultClass="int" remapResults="true">
@@ -6548,7 +6585,18 @@
 				EXTENSIONATTRIBUTE15 >= #v_EXTATTR15#
 		]]>
 	</update>
-	
+
+	<select id="EzOrganAdminDAO.getCompanyName" parameterClass="map" resultClass="String">
+		SELECT
+			EXTENSIONATTRIBUTE3
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			TENANT_ID = #v_TENANT_ID#
+		AND
+			CN = #v_CN#
+	</select>
+
 	<select id="EzOrganAdminDAO.getDeptAddJobUserList" parameterClass="Map" resultMap="userExt4List">
 		<![CDATA[
 			SELECT
@@ -6586,5 +6634,4 @@
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_UPDATETHUMNAILPROFILE" parameterClass="Map">
        {CALL talk_SP_CONN_UPDATETHUMNAILPROFILE(#TENANT_ID#)}
      </procedure>
- 
 </sqlMap>

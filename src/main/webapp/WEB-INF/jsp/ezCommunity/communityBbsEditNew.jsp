@@ -140,8 +140,8 @@
 	 	 					        window.opener.parent.left.getBoardList();
 	 	 					    }
 	 						    
-	 	 					    window.opener.location.reload(false);
-	 	 					    window.close();
+	 	 					  window.opener.location.reload(false);
+	 	 					  window.close();
 	 	 					}
 	 					},
 	 					error : function(xhr, status, error) {
@@ -287,7 +287,7 @@
 				<td style="height:20px;">
 					<div id="menu">
 						<ul>
-							<li><span onClick="SaveMHT_onclick();" ><spring:message code = "ezCommunity.t155"/></span></li>
+							<li><span onClick="SaveMHT_onclick();" ><spring:message code = "ezCommunity.t20"/></span></li>
 						</ul>
 					</div>
 					<div id="close">

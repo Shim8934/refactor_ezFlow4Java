@@ -1220,3 +1220,15 @@ function schedule_get_holiday() {
 		}		    		
     });
 }
+
+var notice_all_close = function () {
+	var popupList = parent.document.getElementsByClassName("popup_notice");
+	var popupListCount = popupList.length;
+	
+	for (var i = 0; i < popupListCount; i++) {
+		var popupId = popupList[0].id; 
+		var popup = parent.document.getElementById(popupId);
+		
+		popup.parentNode.removeChild(popup);
+	}
+}

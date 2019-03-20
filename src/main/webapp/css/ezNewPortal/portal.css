@@ -532,6 +532,7 @@ nav > .countBox .hidden_nav_count_off {position: absolute; right: 0px; top: 6px;
 
 /* aside */
 aside { margin:20px 0px 0px 0px; float:right; width:100px; height:592px; z-index:9; overflow:visible; background: #fff; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); font-family: Malgun Gothic, Gulim, Arial, Helvetica, sans-serif;}
+
 .linkBtn_open{ margin:0px; padding:0px; position:absolute; right:82px; top:-10px; cursor:pointer;}
 #linkBtn_open img{margin-top: 18px; position: relative; z-index: 1000;}
 .linkBtn_close{margin:0px; padding:0px; position:absolute; right:0px; top:-10px; cursor:pointer;}
@@ -543,8 +544,8 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:592px; z-index
 .aside_quick .quickmenu li .txt {display:block; width:78px ;text-align:center; color:#333; font-size:12px; height:30px;letter-spacing:0px; overflow:hidden; margin:0 auto; padding:2px 0px 0px 0px; word-break: break-all;line-height:15px;}
 .aside_link{ margin:0px; padding:0px; overflow:hidden;}
 .aside_link .linkmenu_title{ margin:0px; padding:0px; width:100px; height:30px; background:#8c8c8c; line-height:28px; text-align:center; color:#fff; font-size:13px; font-weight:bold;}
-.aside_link .linkmenu{ margin:0px; padding:0px; list-style:none; height:230px;}
-.aside_link .linkmenu .linkText{ margin:0px; padding:0px 7px 0px 7px; font-size:12px; color:#333; background:url(/images/ezNewPortal/linkBul.png) no-repeat 91px center; line-height:45px; height:45px; border-bottom:1px solid #e7e7e7; cursor:pointer;overflow: hidden;text-overflow: ellipsis;white-space: nowrap}
+.aside_link .linkmenu{ margin:0px; padding:0px; list-style:none; height:370px;}
+.aside_link .linkmenu .linkText{display: block; cursor: pointer; width: 100px; border-bottom: 1px solid #e7e7e7; text-align: center;}
 .aside_link .linkBtn{ margin:0px; padding:0px; height:30px; background:#f3f3f3;}
 .aside_link .linkBtn .btnLay{ margin:0 auto; padding:4px 0px 0px 0px; height:30px; width:45px; box-sizing:border-box; display:flex;}
 .aside_link .linkBtn .linkBtn_pre{ margin:0px; padding:0px; display:inline-block; cursor:pointer;}
@@ -1103,7 +1104,7 @@ aside { margin:20px 0px 0px 0px; float:right; width:100px; height:592px; z-index
 #theme3Body .aside_quick .quickmenu_title{ margin:0px; padding:0px; width:100px; height:48px; background:#404b50; line-height:44px; text-align:center; color:#fff; font-size:13px; font-weight:bold;}
 #theme3Body .aside_link{ margin:0px; padding:0px; overflow:hidden; border-bottom-left-radius:5px;-webkit-border-bottom-left-radius:5px;-moz-border-bottom-left-radius:5px; border-bottom-right-radius:5px;-webkit-border-bottom-right-radius:5px;-moz-border-bottom-right-radius:5px;}
 #theme3Body .aside_link .linkmenu_title{ margin:0px; padding:0px; width:100px; height:30px; background:#bfc0c0; line-height:28px; text-align:center; color:#fff; font-size:13px; font-weight:bold;}
-#theme3Body .aside_link .linkmenu{ margin:0px; padding:0px; list-style:none; height:230px; background:#ffffff;}
+#theme3Body .aside_link .linkmenu{ margin:0px; padding:0px; list-style:none; height:370px; background:#ffffff;}
 #theme3Body .aside_link .linkBtn{ margin:0px; padding:0px; height:30px; background:#f0f1f2;}
 #theme3Body .aside_link .linkBtn .btnLay{ margin:0 auto; padding:4px 0px 0px 0px; height:30px; width:47px; box-sizing:border-box;}
 #theme3Body .aside_link .linkBtn .linkBtn_pre{ margin:0px 1px 0px 0px; padding:0px; display:inline-block; cursor:pointer;}

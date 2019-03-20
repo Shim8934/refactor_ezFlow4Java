@@ -154,7 +154,7 @@
 	  				data : {
 	  					deptID : tempDeptID ,
 	  					cell : "company;description;displayName;title;telephoneNumber",
-	  					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department",
+	  					prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;department;userType",
 	  					page : CurPage ,
 	  					type : "user"
 	  				} ,
@@ -371,6 +371,12 @@
 	    	            Sub_TD1.style.textAlign = "left";
 	        	        Sub_TD1.setAttribute("class", "name");
 	            	    var pDisplayName = "";
+	            	    
+	            	    if( !pSeach && $(M_TR).attr("_DATA11" ) == "addJob"){
+		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
+		            	} else if( pSeach && $(M_TR).attr("_DATA10") == "addJob" ){
+		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
+		            	}
 		                
 	                	pDisplayName += M_TR.getAttribute("_DATA4") == "" ? "" : M_TR.getAttribute("_DATA4");
 	                	pDisplayName += M_TR.getAttribute("_DATA6") == "" ? "" : "[" + M_TR.getAttribute("_DATA6") + "]";
@@ -450,7 +456,14 @@
 	                        M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA4");
 
 	                    	var M_TR_TD3 = document.createElement("TD");
-							M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                    	
+	                    	var jobName = "";
+	                        if($(M_TR).attr("_DATA10") == "addJob"){
+			            		jobName += "<spring:message code='ezOrgan.psb03'/> ";
+			            	}	      
+	                        
+	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        M_TR_TD3.innerHTML = jobName;
 	                    	M_TR_TD3.style.width = "80px";
 
 		                    var M_TR_TD4 = document.createElement("TD");
@@ -472,7 +485,14 @@
 
 		                    var M_TR_TD2 = document.createElement("TD");
 	    	                M_TR_TD2.style.width = "80px";
-	        	            M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+
+	                    	var jobName = "";
+	                        if($(M_TR).attr("_DATA11") == "addJob"){
+			            		jobName += "<spring:message code='ezOrgan.psb03'/> ";
+			            	}	      
+	                        
+	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        M_TR_TD2.innerHTML = jobName;
 
 	            	        var M_TR_TD3 = document.createElement("TD");
 	                	    M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
@@ -528,7 +548,7 @@
 					data : {
 						search : document.getElementById("search_type").value + "::" + keyword.value,
 						cell : "company;description;displayName;title;telephoneNumber;" + document.getElementById("search_type").value,
-						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2",
+						prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;userType",
 						page : CurPage ,
 						type : "user"
 					} ,

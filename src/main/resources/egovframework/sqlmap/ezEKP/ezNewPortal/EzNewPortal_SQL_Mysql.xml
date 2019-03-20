@@ -71,6 +71,8 @@
 <result property="itemSeq"              column="ITEMSEQ"  nullValue=""/>
 <result property="pollTitle"            column="POLLTITLE" nullValue=""/>
 <result property="pollSelectionCount"   column="POLLSELECTIONCOUNT" nullValue=""/>
+<result property="startDate"   			column="STARTDATE" nullValue=""/>
+<result property="endDate"   			column="ENDDATE" nullValue=""/>
 <result property="answer1"              column="ANSWER1" nullValue=""/>
 <result property="answer2"              column="ANSWER2" nullValue=""/>
 <result property="answer3"              column="ANSWER3" nullValue=""/>
@@ -197,6 +199,7 @@ LIMIT #limit#
 SELECT
 	 A.ITEMSEQ ,
      STARTDATE ,
+     ENDDATE,
      POLLSELECTIONCOUNT ,
      POLLTITLE ,
      POLLTITLE2 ,
@@ -225,7 +228,9 @@ AND
 WHERE
 	COMPANYID = #companyId#
 AND
-	ENDDATE IS NULL
+	STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
+AND
+	ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
 AND
    	A.TENANT_ID = #tenantId#	
 ORDER BY
@@ -328,6 +333,8 @@ SELECT
     quicklinkname2, 
     quicklinkname3, 
     linktype, 
+    linktypeurl, 
+    linktype, 
     linktypeurl,
     url,
     quicksize
@@ -337,11 +344,12 @@ FROM (
 	    Q.quicklinkname, 
 	    Q.quicklinkname2, 
 	    Q.quicklinkname3, 
-	    Q.linktype,
+	    Q.linktype, 
 	    Q.linktypeurl, 
 	    Q.url,
 	    Q.size_ as quicksize,
-	    IFNULL(USER.view_flag, IFNULL(DEPT.view_flag, IFNULL(COMP.view_flag, IFNULL(EVERY.view_flag, 'N')))) as viewflag
+	    IFNULL(USER.view_flag, IFNULL(DEPT.view_flag, IFNULL(COMP.view_flag, IFNULL(EVERY.view_flag, 'N')))) as viewflag,
+	    Q.linkorder
 	FROM 
 		tbl_ps_quicklink as Q
 	LEFT JOIN
@@ -378,11 +386,11 @@ FROM (
 		EVERY.accessid = 'everyone'
 	WHERE 
 		Q.TENANT_ID = #tenantId#
-	ORDER BY
-	    Q.REGDATE DESC
 	) acl
 WHERE
 	viewflag = 'Y'
+ORDER BY
+	LINKORDER ASC
 LIMIT #limit#
 OFFSET #offset#
 ]]>	

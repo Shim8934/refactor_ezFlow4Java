@@ -5,69 +5,75 @@
 <html>
 	<head>
 		<title><spring:message code="ezOrgan.t228" /></title>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
-	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">		
-	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
-	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>	    
-	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="${util.addVer('ezOrgan.e2', 'msg')}" type="text/css">
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var ReturnFunction;
 			var confirmStr;
-			
+
 			$(document).ready(function(){
 				try {
-					confirmStr = opener.inputpassword_dialogArguments[0];
-	                ReturnFunction = opener.inputpassword_dialogArguments[1];
-	            } catch (e) {}     
+					ReturnFunction = opener.inputpassword_dialogArguments[1];
+				} catch (e) {}     
 			});		
-			
+
 			function OK_Click(){
 				if (NewPassword.value == "") {
 					alert("<spring:message code='ezOrgan.t229' />");
 					document.getElementById('NewPassword').focus();
 					return;
 				}
+
 				if (!CheckPassword(document.getElementById('NewPassword').value)) {
 					alert("<spring:message code='main.jjh04'/>");
 					document.getElementById('NewPassword').focus();
 					return;
 				}
+
 				if (NewPassword.value != ConfirmPassword.value) {
 					alert("<spring:message code='ezOrgan.t230' />");
 					document.getElementById('ConfirmPassword').focus();
 					return;
 				}
-			    if (ReturnFunction != null) {
-			    	if (confirm(confirmStr)){
-						ReturnFunction(NewPassword.value);
-		            }
-			    } else {
-			        window.returnValue = NewPassword.value;
-			    }
-			    
+
+				if (ReturnFunction != null) {
+					ReturnFunction(NewPassword.value);
+				} else {
+					window.returnValue = NewPassword.value;
+				}
 				window.close();
 			}
-	    </script>
+
+			function enterCheck(event) {
+				if (event.keyCode == "13") {
+					OK_Click();
+				} 
+			}
+		</script>
 	</head>
 	<body class="popup">
 		<h1><spring:message code="ezOrgan.t231" /></h1>
 		<div id="close">
-            <ul>
-                <li><span onclick="window.close()"></span></li>
-            </ul>
-        </div>
-		<table class="content"> 
-		  <tr> 
-		    <th><spring:message code="ezOrgan.t232" /></th>
-		    <td><input id=NewPassword type=password style="width:98%" maxlength="50"></td>
-		  </tr>        
-		  <tr> 
-		    <th><spring:message code="ezOrgan.t233" /></th>
-		    <td><input id=ConfirmPassword type=password style="width:98%" maxlength="50"></td>
-		  </tr>        
+			<ul>
+				<li><span onclick="window.close()"></span></li>
+			</ul>
+		</div>
+		<div style="margin-top: 5px; color: #393939;"><span>▒ <spring:message code='main.jjh04'/></span></div>
+		<table class="content" style="margin-top: 3px"> 
+			<tr>
+				<th><spring:message code="ezOrgan.t232" /></th>
+				<td><input id=NewPassword type=password style="width:98%" maxlength="50"></td>
+			</tr>
+			<tr> 
+				<th><spring:message code="ezOrgan.t233" /></th>
+				<td><input id=ConfirmPassword type=password style="width:98%" maxlength="50" onkeydown="enterCheck(event)"></td>
+			</tr>
 		</table>
-		  <div class="btnpositionNew">
-		    <a class="imgbtn" onClick="OK_Click()"><span><spring:message code="ezOrgan.t124" /></span></a>
+		<div class="btnpositionNew">
+			<a class="imgbtn" onClick="OK_Click()"><span><spring:message code="ezOrgan.t124" /></span></a>
 		</div>
 	</body>
 </html>

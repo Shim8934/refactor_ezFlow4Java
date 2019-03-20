@@ -52,6 +52,7 @@
 	<body class="mainbody"> 
 		<h1>
 			<spring:message code='ezJournal.t2' />
+		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" name="companyId" onchange="journal_get_formuse(this.value)">
             	<c:forEach items="${compList}" var="company">
 	            	<option value="${company.companyId }"

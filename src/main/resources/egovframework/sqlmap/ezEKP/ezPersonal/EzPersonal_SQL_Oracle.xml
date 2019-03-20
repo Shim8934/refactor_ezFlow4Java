@@ -399,49 +399,44 @@
 	<select id="EzPersonalDAO.getCurrentPoll" parameterClass="Map"  resultClass="PersonalLightPollVO">
 		<![CDATA[
 			SELECT
-				* 
-        	FROM
-        		( SELECT
-        			 A.ITEMSEQ ,
-                     STARTDATE ,
-                     POLLSELECTIONCOUNT ,
-                     POLLTITLE ,
-                     POLLTITLE2 ,
-                     ANSWER1 ,
-                     ANSWER2 ,
-                     ANSWER3 ,
-                     ANSWER4 ,
-                     ANSWER5 ,
-                     ANSWER6 ,
-                     ANSWER7 ,
-                     ANSWER8 ,
-                     ANSWER9 ,
-                     ANSWER10 ,
-                     NVL(B.RESULT, 0) Result  
-        		FROM
-        			TBL_PS_LIGHTPOLL A
-               	LEFT JOIN
-               		TBL_PS_LIGHTPOLLRESULT B
-               	ON
-               		A.TENANT_ID = B.TENANT_ID
-               	AND
-               		A.ITEMSEQ = B.ITEMSEQ
-               	AND
-               		USERID = #v_pUserID#
-       			WHERE
-       				( 	COMPANYID = UPPER(#v_pCompanyID#)
-                	OR
-                		COMPANYID = 'Top' )
-                	AND
-                		STARTDATE < to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
-                	AND
-                		ENDDATE IS NULL
-                	AND
-                		A.TENANT_ID = #tenantID#	
-        			ORDER BY
-        				A.ITEMSEQ DESC )
-        		WHERE
-        			ROWNUM <= 1
+       			 A.ITEMSEQ ,
+                 STARTDATE ,
+                 POLLSELECTIONCOUNT ,
+                 POLLTITLE ,
+                 POLLTITLE2 ,
+                 ANSWER1 ,
+                 ANSWER2 ,
+                 ANSWER3 ,
+                 ANSWER4 ,
+                 ANSWER5 ,
+                 ANSWER6 ,
+                 ANSWER7 ,
+                 ANSWER8 ,
+                 ANSWER9 ,
+                 ANSWER10 ,
+                 NVL(B.RESULT, 0) Result  
+       		FROM
+       			TBL_PS_LIGHTPOLL A
+           	LEFT JOIN
+           		TBL_PS_LIGHTPOLLRESULT B
+           	ON
+           		A.TENANT_ID = B.TENANT_ID
+           	AND
+           		A.ITEMSEQ = B.ITEMSEQ
+           	AND
+           		USERID = #v_pUserID#
+   			WHERE
+   				COMPANYID = #v_pCompanyID#
+            AND
+            	STARTDATE <= TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
+            AND
+            	ENDDATE >=  TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:SS')
+            AND
+               	A.TENANT_ID = #tenantID#
+           	AND
+           		ROWNUM = 1	
+       		ORDER BY
+       			A.ITEMSEQ DESC
 		]]>
 	</select>
 	
@@ -591,21 +586,23 @@
 		<![CDATA[
 			SELECT
 				ITEMSEQ ,
-             	WIDTH ,
-             	HEIGHT ,
-             	POSITION 
-        	FROM
-        		TBL_PS_POPUP 
-       		WHERE
-       			( 	COMPANYID = 'Top'
-                OR
-                	COMPANYID = #v_pCompanyID# )
-            AND
-            	STARTDATE <= to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
-            AND
-            	ENDDATE >= to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
-            AND
-            	TENANT_ID = #tenantID#	
+				WIDTH ,
+				HEIGHT ,
+				POSITION 
+			FROM
+				TBL_PS_POPUP 
+			WHERE
+				( 		COMPANYID = 'Top'
+					OR
+						COMPANYID = #v_pCompanyID# )
+			AND
+				STARTDATE <= to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+			AND
+				ENDDATE >= to_date(#nowDate#, 'YYYY-MM-DD HH24:MI:SS')
+			AND
+				TENANT_ID = #tenantID#
+			AND	
+				INUSE = 1
 		]]>
 	</select>
 	

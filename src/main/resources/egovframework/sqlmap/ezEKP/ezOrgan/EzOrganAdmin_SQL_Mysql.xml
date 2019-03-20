@@ -20,7 +20,7 @@
 		<result property="company" 								column="COMPANYNAME" 					columnIndex="7"/>		
 		<result property="title1" 								column="T1" 							columnIndex="8"/>		
 		<result property="title2" 								column="T2" 							columnIndex="9"/>		
-		<result property="jobID" 								column="JOBID" 							columnIndex="10"/>
+		<result property="jobID" 								column="JOBID" 							columnIndex="10"/>		
 	</resultMap>
 	
 	<resultMap id="permissionList" class="OrganUserVO">
@@ -45,7 +45,8 @@
 		<result property="extensionAttribute10" 				column="extensionAttribute10" 			columnIndex="8"/>
 		<result property="extensionAttribute102" 				column="extensionAttribute102" 			columnIndex="9"/>
 		<result property="extensionAttribute14" 				column="extensionAttribute14" 			columnIndex="10"/>
-		<result property="updateDT" 							column="UpdateDT" 						columnIndex="11"/>
+		<result property="mobile" 								column="mobile" 						columnIndex="11"/>
+		<result property="updateDT" 							column="UpdateDT" 						columnIndex="12"/>
 	</resultMap>
 	
 	<resultMap id="userCnList" class="OrganUserVO">
@@ -3178,6 +3179,8 @@
        			TENANT_ID = #v_TENANT_ID#	
       		ORDER BY
       			DISPLAYNAME
+      		LIMIT
+      			#v_STARTNUM#, #v_COUNT#
 		]]>
 	</select>
 	
@@ -3186,6 +3189,25 @@
 			{CALL EZSP_GETPROXYUSERINFO(#v_USERID#, #cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)}
 		]]>
 	</procedure> -->
+	
+	<select id="EzOrganAdminDAO.getAddJobCount" parameterClass="Map" resultClass="Integer">
+		<![CDATA[
+			SELECT
+				COUNT (CN) 
+        	FROM
+        		TBL_USERMASTER 
+			WHERE
+				NULLIF(EXTENSIONATTRIBUTE4, '') IS NOT NULL
+       		AND
+       			PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+            AND 
+                CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                      
+       		AND
+       			TENANT_ID = #v_TENANT_ID#	
+      		ORDER BY
+      			DISPLAYNAME
+		]]>
+	</select>
 	
 	<select id="EzOrganDAO.getProxyUserInfo" parameterClass="Map" resultClass="OrganProxyVO">
 		<![CDATA[
@@ -3442,6 +3464,7 @@
 		<![CDATA[
 			SELECT
 				CN ,
+				MOBILE ,
                 DISPLAYNAME ,
                 DISPLAYNAME2 ,
                 DESCRIPTION ,
@@ -4804,7 +4827,18 @@
 				EXTENSIONATTRIBUTE15 >= #v_EXTATTR15#
 		]]>
 	</update>
-	
+
+	<select id="EzOrganAdminDAO.getCompanyName" parameterClass="map" resultClass="String">
+		SELECT
+			EXTENSIONATTRIBUTE3
+		FROM
+			TBL_DEPTMASTER
+		WHERE
+			TENANT_ID = #v_TENANT_ID#
+		AND
+			CN = #v_CN#
+	</select>
+
 	<select id="EzOrganAdminDAO.getDeptAddJobUserList" parameterClass="Map" resultMap="userExt4List">
 		<![CDATA[
 			SELECT
@@ -4818,7 +4852,7 @@
 				TENANT_ID = #v_TENANT_ID#
 		]]>
 	</select>
-	
+
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}
      </procedure>
@@ -4842,5 +4876,4 @@
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_UPDATETHUMNAILPROFILE" parameterClass="Map">
        {CALL talk_SP_CONN_UPDATETHUMNAILPROFILE(#TENANT_ID#)}
      </procedure>
- 
 </sqlMap>

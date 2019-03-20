@@ -68,6 +68,7 @@
 	<body class="mainbody">
 		<h1 class="adminH1">
 			<spring:message code='ezNewPortal.t054' />
+		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany"></select>
 		</h1>
 		<div id="mainmenu">

@@ -46,7 +46,19 @@
 					
 					return;	
 				}
-	
+				
+				if (document.frmCommunityBasicInfo.c_clubdesc.value == "") {
+					alert("커뮤니티 소개를 입력 해주세요.");
+					document.frmCommunityBasicInfo.c_clubdesc.value.focus();
+					return;	
+				}
+				
+				if (document.frmCommunityBasicInfo.c_clubdesc.value.length > 2000) {
+					alert("<spring:message code = 'ezCommunity.t1009' />");
+					document.frmCommunityBasicInfo.c_clubdesc.value.focus();
+					return;	
+				}
+				
 				selA = parseInt(document.frmCommunityBasicInfo.cCateA[document.frmCommunityBasicInfo.cCateA.selectedIndex].value);
 				selB = parseInt(document.frmCommunityBasicInfo.cCateB[document.frmCommunityBasicInfo.cCateB.selectedIndex].value);
 				selC = parseInt(document.frmCommunityBasicInfo.cCateC[document.frmCommunityBasicInfo.cCateC.selectedIndex].value);
@@ -77,12 +89,13 @@
 							type : "POST",
 							async : false,
 							url : "/admin/ezCommunity/admCommunityInfoEditOk.do",
-							data : {code	:	code,
-									clubName	:	document.frmCommunityBasicInfo.txt_CommunityName.value,
-									cCateA	:	xSelA,
-									cCateB	:	xSelB,
-									cCateC	:	xSelC
-								   },
+							data : {code     : code,
+									clubName : document.frmCommunityBasicInfo.txt_CommunityName.value,
+									clubDesc : document.frmCommunityBasicInfo.c_clubdesc.value,
+									cCateA   : xSelA,
+									cCateB   : xSelB,
+									cCateC   : xSelC
+									},
 							success : function(result) {
 								if (result == "OK") {
 									//document.frmCommunityBasicInfo.submit();
@@ -203,8 +216,8 @@
 				<tr>
 					<th><spring:message code = 'ezCommunity.t1529' /><spring:message code = 'ezCommunity.t18' /></th>
 					<td style="padding:0px;">
-					<textarea id="c_clubdesc" name="c_clubdesc" style="Width:97%; Height:120px; cursor:default; border:none; 
-						font: 9pt <spring:message code = 'ezCommunity.t19' /> resize:none;" readonly><c:out value = '${club.c_ClubDesc}' /></textarea></td>
+					<textarea id="c_clubdesc" maxlength="2000" name="c_clubdesc" style="Width:97%; Height:120px; cursor:default; border:none; 
+						font: 9pt <spring:message code = 'ezCommunity.t19' /> resize:none;"><c:out value = '${club.c_ClubDesc}' /></textarea></td>
 				</tr>
 			</table>
 

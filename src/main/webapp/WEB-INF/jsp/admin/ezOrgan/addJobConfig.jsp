@@ -162,7 +162,7 @@
 			        	dataType : "text",
 			        	url : "/ezOrgan/getSearchList.do",
 			        	async : false,
-			        	data : {search : "cn::" + cn, cell : "company;description;displayname;title;telephonenumber;"+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute2', type : 'user', adminOrgan : "y"},
+			        	data : {search : "cn::" + cn, cell : "company;description;displayname;title;telephonenumber;"+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype', type : 'user', adminOrgan : "y"},
 			        	success : function(xml){	
 			        		result=loadXMLString(xml);
 			        		var headerData = createXmlDom();
@@ -199,7 +199,7 @@
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype", type : "user"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
@@ -357,8 +357,10 @@
 	                    for (var i = 0; i < xmlDom.documentElement.getElementsByTagName("ROW").length; i++) {
 	                        LISTVIEWDATA = LISTVIEWDATA + "<ROW><CELL>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "<VALUE>";
-	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
-	                        LISTVIEWDATA = LISTVIEWDATA + " (" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE")[i])) + ")";
+	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DISPLAYNAME")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "changeComTapString" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("COMPANY")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + "changeDeptTapString" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DESCRIPTION")[i]));
+	                        LISTVIEWDATA = LISTVIEWDATA + " (" + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("TITLE")[i])+ ")");
 	                        LISTVIEWDATA = LISTVIEWDATA + "</VALUE>";
 	                        LISTVIEWDATA = LISTVIEWDATA + "<DATA1>";
 	                        LISTVIEWDATA = LISTVIEWDATA + MakeXMLString(getNodeText(xmlDom.documentElement.getElementsByTagName("DEPARTMENT")[i]));
@@ -526,6 +528,13 @@
 	                    Sub_TD1.style.textAlign = "left";
 	                    Sub_TD1.setAttribute("class", "name");
 	                    var pDisplayName = "";
+	                    
+	                    if( !pSeach && $(M_TR).attr("_DATA19" ) == "addJob"){
+		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
+		            	} else if( pSeach && $(M_TR).attr("_DATA19") == "addJob" ){
+		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
+		            	}
+	                    
 	                    if ("<c:out value='${use_ocs}'/>" == "YES") {
 	                        pDisplayName += "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>";
 	                    }
@@ -613,7 +622,14 @@
 	                            M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA4");
 	                        }
 	                        var M_TR_TD3 = document.createElement("TD");
-	                        M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        
+	                        var jobName = "";
+	                        if($(M_TR).attr("_DATA19") == "addJob"){
+			            		jobName += "<spring:message code='ezOrgan.psb03'/> ";
+			            	}	      
+	                        
+	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        M_TR_TD3.innerHTML = jobName;
 	                        M_TR_TD3.style.width = "80px";
 
 	                        var M_TR_TD4 = document.createElement("TD");
@@ -638,7 +654,13 @@
 	                        }
 	                        var M_TR_TD2 = document.createElement("TD");
 	                        M_TR_TD2.style.width = "80px";
-	                        M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        var jobName = "";
+	                        if($(M_TR).attr("_DATA19") == "addJob"){
+			            		jobName += "<spring:message code='ezOrgan.psb03'/> ";
+			            	}	      
+	                        
+	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        M_TR_TD2.innerHTML = jobName;
 
 	                        var M_TR_TD3 = document.createElement("TD");
 	                        M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
@@ -723,11 +745,9 @@
 		                alert("<spring:message code='ezOrgan.t249' />");
 		                return;
 		            }
-		            
-// 		            var titleName = document.getElementById("txt_TitleName").value.trim();
+
 		            
  					if (jobTitle.trim() == "") {
-// 						document.getElementById("txt_TitleName").focus();
 						alert("<spring:message code='ezOrgan.kyj07' />");
 						return;
 					}
@@ -746,14 +766,32 @@
 		            
 		            if (bFlag) {
 		                alert(strLang25);
-		                pAddFlag = true;
 		            } else {
+		            	var compName = new Array();
+				        $.ajax({
+				        	type : "POST",
+				        	dataType : "text",
+				        	url : "/admin/ezOrgan/addJobCompanyName.do",
+				        	async : false,
+				        	data : {displayName : dept[0]},
+				        	success : function(data){
+				        		compName = data.split(":");
+				        	}
+				        });
 		                pparsingXML2 = "";
 		                pparsingXML = "";
 		                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 		                pparsingXML = pparsingXML + "<ROW><CELL>";
 // 		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(dept[1]) + " (" + MakeXMLString(document.getElementById("txt_TitleName").value) + " : " + MakeXMLString(document.getElementById("txt_TitleName2").value) + ")</VALUE>";
- 		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(dept[1]) + " (" + MakeXMLString(jobTitle) + " : " + MakeXMLString(jobTitle2) + ")</VALUE>";
+ 		                pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(GetAttribute(p_ListOrderObject, "_data11"));
+ 		               	pparsingXML = pparsingXML + "changeComTapString" + compName[0];
+ 		               	pparsingXML = pparsingXML + "changeDeptTapString" + MakeXMLString(dept[1]) + " (" ;
+ 		               	if(compName[1] === "1") {
+ 		               		pparsingXML = pparsingXML + MakeXMLString(jobTitle);
+ 		               	} else {
+ 		               		pparsingXML = pparsingXML + MakeXMLString(jobTitle2);
+ 		               	}
+ 		               	pparsingXML = pparsingXML + ")</VALUE>";
 		                pparsingXML = pparsingXML + "<DATA1>" + MakeXMLString(dept[0]) + "</DATA1>";
 		                pparsingXML = pparsingXML + "<DATA2>" + MakeXMLString(GetAttribute(p_ListOrderObject, "_data2")) + "</DATA2>";
 // 		                pparsingXML = pparsingXML + "<DATA3>" + MakeXMLString(document.getElementById("txt_TitleName").value) + "</DATA3>";
@@ -844,11 +882,11 @@
 	            }
 	            
 	            try {
- 			    	window.opener.location.reload(true);
+ 			    	window.opener.AddJob_List();
+ 			    	window.close();
  			    } catch (e) {
+ 			    	window.close();
  			    }
-	            
-	            window.close();
 	        }
 		    
 		    var rgParams = new Array();
@@ -972,7 +1010,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",		        	
 		        	data : {search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, cell : "company;description;displayname;title;telephonenumber;" + document.getElementById("search_type").value, 
-		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user", adminOrgan : "y"},
+		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype", type : "user", adminOrgan : "y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var usedefault;		                
@@ -1108,7 +1146,7 @@
 			    	flag = true;
 			    	rtnVal = "<select id='titleSelector' style='width:100%;height:25px;' onchange='jobChange()'>";
 			    	for (i = 0; i < oRows.length; i++) {
-			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[2],"VALUE") != "N") {
+			    		if (SelectSingleNodeValue(GetChildNodes(oRows[i])[3],"VALUE") != "N") {
 				    		if (flag) {
 // 					    		jobID = SelectSingleNodeValue(GetChildNodes(oRows[i])[0],"VALUE");
 // 					    		jobTitle = SelectSingleNodeValue(GetChildNodes(oRows[i])[1],"VALUE");

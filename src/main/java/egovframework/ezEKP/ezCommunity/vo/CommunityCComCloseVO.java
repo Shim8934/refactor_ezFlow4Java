@@ -23,7 +23,13 @@ public class CommunityCComCloseVO {
 	String userName;
 	/** 사용자ID(다국어)*/
 	String userName2;
-
+	/** 2018-01-16 김혜정 카테고리 c_name 추가 */
+	String c_name;
+	/** 2018-01-24 김혜정 마스터 커뮤니티 승인여부 추가 */
+	String c_ClubConfirmType;
+	/** 2018-01-24 김혜정 커뮤니티 공개 여부 추가 */
+	String c_ClubGubun;
+	
 	/* 2018-06-22 홍승비 - 쿼리 변경으로 사용하지 않는 b_clubname필드 제거 */
 	
 	public String getC_ClubNo() {
@@ -92,5 +98,22 @@ public class CommunityCComCloseVO {
 	public void setUserName2(String userName2) {
 		this.userName2 = userName2;
 	}
-	
+	public String getC_name() {
+		return c_name;
+	}
+	public void setC_name(String c_name) {
+		this.c_name = c_name;
+	}
+	public String getC_ClubConfirmType() {
+		return c_ClubConfirmType;
+	}
+	public void setC_ClubConfirmType(String c_ClubConfirmType) {
+		this.c_ClubConfirmType = c_ClubConfirmType;
+	}
+	public String getC_ClubGubun() {
+		return c_ClubGubun;
+	}
+	public void setC_ClubGubun(String c_ClubGubun) {
+		this.c_ClubGubun = c_ClubGubun;
+	}
 }

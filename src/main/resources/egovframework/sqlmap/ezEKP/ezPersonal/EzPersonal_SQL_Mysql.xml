@@ -331,7 +331,7 @@
                     POLLTITLE ,
                     POLLTITLE2 ,
                     STARTDATE ,
-                    IFNULL(EndDate, DATE_FORMAT('1900-01-01', '%Y-%m-%d %H:%i:%s')) EndDate  
+                    EndDate  
        			FROM
        				TBL_PS_LIGHTPOLL 
       			WHERE
@@ -351,7 +351,7 @@
        						POLLTITLE ,
        						POLLTITLE2 ,
        						STARTDATE ,
-       						IFNULL(ENDDATE, DATE_FORMAT('1900-01-01', '%Y-%m-%d %H:%i:%s')) EndDate  
+       						EndDate  
 				FROM
 					TBL_PS_LIGHTPOLL 
 				WHERE
@@ -398,9 +398,9 @@
    			WHERE
    				COMPANYID = #v_pCompanyID#
             AND
-            	STARTDATE < DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
+            	STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
             AND
-            	ENDDATE IS NULL
+            	ENDDATE >=  DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
             AND
                	A.TENANT_ID = #tenantID#	
        		ORDER BY
@@ -554,19 +554,21 @@
 		<![CDATA[
 			SELECT
 				ITEMSEQ ,
-             	WIDTH ,
-             	HEIGHT ,
-             	POSITION 
-        	FROM
-        		TBL_PS_POPUP 
-       		WHERE
-               	COMPANYID = #v_pCompanyID# 
-            AND
-            	STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
-            AND
-            	ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
-            AND
-            	TENANT_ID = #tenantID#	
+				WIDTH ,
+				HEIGHT ,
+				POSITION 
+			FROM
+				TBL_PS_POPUP 
+			WHERE
+				COMPANYID = #v_pCompanyID# 
+			AND
+				STARTDATE <= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
+			AND
+				ENDDATE >= DATE_FORMAT(#nowDate#, '%Y-%m-%d %H:%i:%s')
+			AND
+				TENANT_ID = #tenantID#
+			AND
+				INUSE = 1
 		]]>
 	</select>
 	
@@ -583,7 +585,9 @@
              	REGUSERID ,
              	VIEW_FLAG ,
              	SIZE_ ,
+             	LINKORDER,
              	REGDATE
+
         	FROM
         		TBL_PS_QUICKLINK A
             JOIN
@@ -598,8 +602,6 @@
        			A.TENANT_ID = #tenantID#
             AND
                 B.TENANT_ID = #tenantID#
-            ORDER BY
-                A.REGDATE DESC
 		]]>
 	</select>
 	
@@ -625,31 +627,31 @@
 	<select id="EzPersonalDAO.getPollInfo" parameterClass="Map"  resultClass="PersonalLightPollVO">
 		<![CDATA[
 			SELECT
-				ITEMSEQ ,
-             	STARTDATE ,
-             	IFNULL(ENDDATE, DATE_FORMAT('1900-01-01', '%Y-%m-%d %H:%i:%s')) EndDate  ,
-             	POLLSELECTIONCOUNT ,
-             	POLLTITLE ,
-	            POLLTITLE2 ,
-	            ANSWER1 ,
-	            ANSWER2 ,
-	            ANSWER3 ,
-	            ANSWER4 ,
-	            ANSWER5 ,
-	            ANSWER6 ,
-	            ANSWER7 ,
-	            ANSWER8 ,
-	            ANSWER9 ,
-	            ANSWER10 
-        	FROM
-        		TBL_PS_LIGHTPOLL 
-       		WHERE
-       			ITEMSEQ = #v_pItemSeq#
-       		AND
-       			TENANT_ID = #tenantID#	
+				ITEMSEQ,
+				STARTDATE,
+				EndDate,
+				POLLSELECTIONCOUNT,
+				POLLTITLE,
+				POLLTITLE2,
+				ANSWER1,
+				ANSWER2,
+				ANSWER3,
+				ANSWER4,
+				ANSWER5,
+				ANSWER6,
+				ANSWER7,
+				ANSWER8,
+				ANSWER9,
+				ANSWER10
+			FROM
+				TBL_PS_LIGHTPOLL
+			WHERE
+				ITEMSEQ = #v_pItemSeq#
+			AND
+				TENANT_ID = #tenantID#	
 		]]>
-	</select>		
-	
+	</select>
+
 	<select id="EzPersonalDAO.getPollResult" parameterClass="Map"  resultClass="PersonalLightPollVO">
 		<![CDATA[
 			SELECT

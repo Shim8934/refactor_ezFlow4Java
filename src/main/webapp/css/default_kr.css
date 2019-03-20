@@ -1254,7 +1254,7 @@ form{display:inline;margin:0}
 .mainlist_free{table-layout:fixed; border:0 none !important;font-family:malgun gothic, Verdana, Arial, Helvetica, sans-serif;font-size:12px; border-spacing:0; border-collapse:collapse;}
 /* fomace */
 .mainlist_free tr td{height:23px}
-.mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:8px 4px; border-top:1px solid #e8e8e8;border-bottom:1px solid #e8e8e8; font-weight:normal; background-color: #f8f8fa;}
+.mainlist_free tr th{text-align:left;border:0px;text-decoration:none; color:#333; font-size:12px; padding:8px 4px; border-top:1px solid #e2e3e6;border-bottom:1px solid #e2e3e6; font-weight:normal; background-color: #f1f3f5;}
 .mainlist_free tr th.title{width:100%; text-align:left;}
 
 .mainlist_free tr td{ border:0px; font-weight:normal; font-size:12px; color:#5b5a5a; padding:4px 4px; line-height:150%; border-bottom:1px solid #efefef; border-spacing:0;}
@@ -2533,7 +2533,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 /*.confirmation {line-height:normal !important;} style 제거 */
 .node_div .tree_arrow_up{background-position:0px -156px; width:16px; height:16px; display:inline-block; margin: 7px 0px 0px 0px; cursor:pointer;}
 .admin_left_title { position:relative; height:52px; background:#3d8fea; font-family:Malgun Gothic, "맑은 고딕"; line-height:52px; font-size:20px; font-weight:bold; color:#fff; padding: 0px 0px 0px 20px;} /* 타이틀 텍스트 공통영역 */
-.companySelect {margin-left:10px; height:31px; float:right; border:1px solid #bbb;}
+.companySelect {margin-left:10px; height:26px; /* float:right; */ border:1px solid #bbb;}
 
 /* icon16 */
 .icon16{ background:url(../images/ImgIcon/icon16.png) no-repeat !important; background-color: transparent !important; vertical-align: top !important; overflow: hidden; } /* icon16 통합아이콘 */
@@ -3481,6 +3481,15 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li .srvyInfo02{display:inline-block; width:16px; height:16px; background-position:-16px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo03{display:inline-block; width:16px; height:16px; background-position:-32px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo04{display:inline-block; width:16px; height:16px; background-position:-48px -110px !important; margin:6px 8px 0px 0px;}
+
+/* 검색 */
+.searchForm{float:right;font-weight:normal;color:black; position:relative;margin-right:17px;}
+.searchBtn{ position:absolute; right:-19px; top:-2px;}
+.searchinputBox{width:135px;}
+
+/* 유은정 - 메뉴명 개수 | 회사 선택 이미지 위치*/
+.title_bar {margin-left:5px;vertical-align:middle;}
+.title_bar img {vertical-align:sub;}
 
 /* 20190207 조진호 - error page 추가*/
 .error_wrap{ overflow:hidden; border:1px solid #dedede; width:600px; margin:80px auto; padding:80px;}
