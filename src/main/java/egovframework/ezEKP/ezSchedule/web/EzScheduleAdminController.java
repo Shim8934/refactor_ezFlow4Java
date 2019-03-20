@@ -492,6 +492,7 @@ public class EzScheduleAdminController {
 			if (cID == null || cID.equals("")){
 				cID = loginSimpleVO.getCompanyID();
 			}
+			cID = commonUtil.detectPathTraversal(cID);
 			String regi = request.getParameter("PREVIOSLYREGIUSE");
 			
 			String count = ezScheduleService.scheduleGetRegi(cID, loginSimpleVO.getTenantId());
