@@ -377,7 +377,7 @@ public class EzCommunityAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezCommunity/closeCommunityInfo.do")
 	public String closeCommunityInfo(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
-		logger.debug("commInfo started.");
+		logger.debug("closeCommunityInfo started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String offSetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
@@ -392,7 +392,7 @@ public class EzCommunityAdminController {
 		
 		model.addAttribute("club", club);
 		
-		logger.debug("commInfo started.");
+		logger.debug("closeCommunityInfo started.");
 		
 		return "/admin/ezCommunity/closeCommunityInfo";
 	}
