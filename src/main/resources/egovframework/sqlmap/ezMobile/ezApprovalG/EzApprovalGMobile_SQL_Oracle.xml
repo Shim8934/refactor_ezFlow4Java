@@ -14,7 +14,9 @@
 	<select id="MApprovalG.getDoApproveList" parameterClass="Map" resultClass="MApprGDocInfoVO" remapResults="true">
 		<isEqual property="type" compareValue="DO">
 			<![CDATA[
-			SELECT * FROM (
+			-- (MySQL > Oracle Convert) ROWNUM 서브쿼리로 변경 UNION ALL 이라서 하나 더 추가함.
+			SELECT A.* FROM (
+			SELECT LIST.* FROM (
 				SELECT 
 					DOCID,
 					DOCTITLE,
@@ -148,14 +150,39 @@
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
+			<![CDATA[
+				
 				) as LIST
+				ORDER BY 
+					LIST.STARTDATE DESC
+
+			/* (MySQL > Oracle Convert)
 				ORDER BY 
 					STARTDATE DESC
 				LIMIT
 					#listSize#
+			*/
+				) A
+				WHERE 
+					ROWNUM <= #listSize#
+			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="DRAFT">
 			<![CDATA[
+			/* (MySQL > Oracle Convert)
+				MySQL에서 LIMIT와 Oracle의 Rownum 정렬 문제로 서브쿼리로 변경하고,
+				Rownum을 제일 마지막으로 변경함.
+				
+				-------변경구조------
+				SELECT A.*
+				FROM (
+					SELECT *
+					FROM EX_TABLE
+					ORDER BY COLUMN
+				) A
+				WHERE ROWNUM < 10
+			*/ 
+			SELECT A.* FROM (
 				SELECT 
 					DOCID,
 					DOCTITLE,
@@ -220,13 +247,27 @@
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
+			<![CDATA[
+			
+			/* (MySQL > Oracle Convert)
 				ORDER BY 
 					STARTDATE DESC
 				LIMIT
 					#listSize#
+			*/
+			
+				ORDER BY
+					STARTDATE DESC
+			) A
+			WHERE 
+				ROWNUM <= #listSize#
+				
+			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="ING">
 			<![CDATA[
+			-- (MySQL > Oracle Convert) ROWNUM 서브쿼리로 변경
+			SELECT A.* FROM (
 				SELECT 
 					DISTINCT DOCID,
 					DOCTITLE,
@@ -292,12 +333,24 @@
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
+			<![CDATA[
+			
+			/* (MySQL > Oracle Convert)
 				ORDER BY 
 					STARTDATE DESC
 				LIMIT
 					#listSize#
+			*/
+				ORDER BY 
+					STARTDATE DESC
+			) A
+			WHERE
+				ROWNUM <= #listSize#
+			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="END">
+		-- (MySQL > Oracle Convert) ROWNUM 서브쿼리로 변경
+		SELECT ENDT.* FROM (
 			SELECT
 				DISTINCT A.DOCID,
 				A.DOCTITLE,
@@ -414,14 +467,28 @@
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
-			ORDER BY 
-				ENDDATE DESC
-			LIMIT
-				#listSize#
+			<![CDATA[
+			
+			/* (MySQL > Oracle Convert)
+				ORDER BY 
+					ENDDATE DESC
+				LIMIT
+					#listSize#
+			*/
+			
+				ORDER BY 
+					ENDDATE DESC
+			) ENDT
+			WHERE
+				ROWNUM <= #listSize#
+				
+			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="SHARE">
 			<![CDATA[
-			SELECT * FROM (
+			-- (MySQL > Oracle Convert) ROWNUM 서브쿼리로 변경 UNION ALL 이라서 하나 더 추가함.
+			SLEECT A.* FROM (
+			SELECT LIST.* FROM (
 				SELECT 
 					DOCID,
 					DOCTITLE,
@@ -555,11 +622,23 @@
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
+			<![CDATA[
 				) as LIST
+				
+				ORDER BY 
+					LIST.STARTDATE DESC
+				) A
+				
+			/* (MySQL > Oracle Convert)
 				ORDER BY 
 					STARTDATE DESC
 				LIMIT
 					#listSize#
+			*/
+				WHERE 
+					ROWNUM <= #listSize#
+				
+			]]>
 		</isEqual>
 	</select>
 	
@@ -1351,7 +1430,7 @@
 		   				DOCID = #docID#
 		   			-- LIMIT 1 (MySQL > Oracle Convert)
 		   			AND
-		   				ROWNUM <= 1
+		   				ROWNUM = 1
 				]]>
 			</isEqual>
 			<isNotEqual property="mode" compareValue="APR">
@@ -1368,7 +1447,7 @@
 		   				DOCID = #docID#
 		   			-- LIMIT 1 (MySQL > Oracle Convert)
 		   			AND
-		   				ROWNUM <= 1
+		   				ROWNUM = 1
 				]]>
 			</isNotEqual>
 		</isEqual>
@@ -1386,7 +1465,7 @@
 	   				DOCID = #docID#
 	   			-- LIMIT 1 (MySQL > Oracle Convert)
 	   			AND
-	   				ROWNUM <= 1
+	   				ROWNUM = 1
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="DRAFT">
@@ -1403,7 +1482,7 @@
 	   				DOCID = #docID#
 	   			-- LIMIT 1 (MySQL > Oracle Convert)
 	   			AND
-	   				ROWNUM <= 1
+	   				ROWNUM = 1
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="END">
@@ -1420,7 +1499,7 @@
 	   				DOCID = #docID#
 	   			-- LIMIT 1 (MySQL > Oracle Convert)
 	   			AND
-	   				ROWNUM <= 1
+	   				ROWNUM = 1
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="SHARE">
@@ -1438,7 +1517,7 @@
 		   				DOCID = #docID#
 		   			-- LIMIT 1 (MySQL > Oracle Convert)
 		   			AND
-		   				ROWNUM <= 1
+		   				ROWNUM = 1
 				]]>
 			</isEqual>
 			<isNotEqual property="mode" compareValue="APR">
@@ -1455,7 +1534,7 @@
 		   				DOCID = #docID#
 		   			-- LIMIT 1 (MySQL > Oracle Convert)
 		   			AND
-		   				ROWNUM <= 1
+		   				ROWNUM = 1
 				]]>
 			</isNotEqual>
 		</isEqual>
@@ -1564,6 +1643,8 @@
 	<select id="MApprovalG.getAttachList" parameterClass="Map" resultClass="MApprGAttachInfoVO">
 		<isNotEqual property="type" compareValue="END">
 			<![CDATA[
+			-- (MySQL > Oracle Convert) Oracle은 UNION에 Order By 오류남.
+			/* 
 				(SELECT
 					DISPLAYNAME attachName,
 					ATTACHFILEHREF attachHref,
@@ -1595,10 +1676,49 @@
 					DOCID = #docID#
 				ORDER BY
 					ATTACHSN)
+				*/
+				SELECT 
+					attachName,
+					attachHref,
+					attachFileSize
+				FROM (
+					SELECT
+						DISPLAYNAME attachName,
+						ATTACHFILEHREF attachHref,
+						ATTACHFILESIZE attachFileSize,
+						ATTACHFILESN ATTACHSN
+					FROM
+						TBL_APRATTACHINFO
+					WHERE
+						TENANT_ID = #tenantID# 
+					AND
+						COMPANYID = #companyID#
+					AND
+						DOCID = #docID#
+						
+					UNION ALL
+					
+					SELECT
+						ATTACHDOCNAME attachName,
+						ATTACHDOCURL attachHref,
+						0 attachFileSize,
+						ATTACHSN
+					FROM
+						TBL_APRDOCATTACHINFO
+					WHERE
+						TENANT_ID = #tenantID# 
+					AND
+						COMPANYID = #companyID#
+					AND
+						DOCID = #docID#
+				) LIST
+				ORDER BY ATTACHSN
 			]]>
 		</isNotEqual>
 		<isEqual property="type" compareValue="END">
 			<![CDATA[
+			-- (MySQL > Oracle Convert) Oracle은 UNION에 Order By 오류남.
+			/* 
 				(SELECT
 					DISPLAYNAME attachName,
 					ATTACHFILEHREF attachHref,
@@ -1630,6 +1750,43 @@
 					DOCID = #docID#
 				ORDER BY
 					ATTACHSN)
+			*/
+			SELECT
+				attachName,
+				attachHref,
+				attachFileSize
+			FROM (
+				SELECT
+					DISPLAYNAME attachName,
+					ATTACHFILEHREF attachHref,
+					ATTACHFILESIZE attachFileSize,
+					ATTACHFILESN ATTCHSN
+				FROM
+					TBL_ENDATTACHINFO
+				WHERE
+					TENANT_ID = #tenantID# 
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+					
+				UNION ALL
+				
+				SELECT
+					ATTACHDOCNAME attachName,
+					ATTACHDOCURL attachHref,
+					0 attachFileSize,
+					ATTACHSN
+				FROM
+					TBL_ENDAPRDOCATTACHINFO
+				WHERE
+					TENANT_ID = #tenantID#
+				AND
+					COMPANYID = #companyID#
+				AND
+					DOCID = #docID#
+			) LIST
+			ORDER BY ATTACHSN
 			]]>
 		</isEqual>
 	</select>
@@ -1702,8 +1859,9 @@
 				<isNotEmpty property="aprMemberSN" prepend="AND">
 					APRMEMBERSN = #aprMemberSN#
 				</isNotEmpty>
-					LIMIT
-						1
+					-- LIMIT 1 (MySQL > Oracle Convert)
+		   			AND
+		   				ROWNUM = 1
 			</isEqual>
 			<isNotEqual property="mode" compareValue="APR">
 				<![CDATA[
@@ -1745,7 +1903,8 @@
 				</isNotEmpty>
 					-- LIMIT 1 (MySQL > Oracle Convert)
 		   			AND
-		   				ROWNUM <= 1
+		   				ROWNUM = 1
+		   		]]>
 			</isNotEqual>
 		</isEqual>
 		<isEqual property="type" compareValue="ING">
@@ -1784,7 +1943,7 @@
 					DOCID = #docID#
 				-- LIMIT 1 (MySQL > Oracle Convert)
 	   			AND
-	   				ROWNUM <= 1
+	   				ROWNUM = 1
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="DRAFT">
@@ -1823,7 +1982,7 @@
 					DOCID = #docID#
 				-- LIMIT 1 (MySQL > Oracle Convert)
 	   			AND
-	   				ROWNUM <= 1
+	   				ROWNUM = 1
 			]]>
 		</isEqual>
 		<isEqual property="type" compareValue="END">
@@ -2074,7 +2233,6 @@
    </delete>
    
    <select id="MApprovalG.getAprMemberSn" parameterClass="Map" resultClass="MApprGDocInfoVO">
-		
 			<![CDATA[
 				SELECT
 					DOCID,
@@ -2109,11 +2267,11 @@
 					COMPANYID = #companyID#
 				AND
 					DOCID = #docID#
-			]]>
+			
 				-- LIMIT 1 (MySQL > Oracle Convert)
 	   			AND
-	   				ROWNUM <= 1
-		
+	   				ROWNUM = 1
+		]]>
 		</select>
 	<select id="MApprovalG.getCheckAprState" parameterClass="Map" resultClass="Integer">
 		<isEqual property="mode" compareValue="APR">
