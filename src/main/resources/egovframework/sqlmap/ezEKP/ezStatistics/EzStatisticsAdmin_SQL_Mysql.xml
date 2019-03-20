@@ -1204,4 +1204,551 @@
 		]]>
 	</delete>
 	
+	<insert id="EzStatisticsAdminDAO.insertCustomDocBatch" >
+	<![CDATA[
+	
+		
+		INSERT INTO TBL_DAILYDOCCOUNTLOG ( 
+						REGDATE, DEPTID, DEPTNAME, USERID, USERNAME, DRAFTINGCNT, DRAFTENDCNT, DRAFTTIME, SUSININGCNT, SUSINENDCNT, SUSINTIME, RETURNCNT, TENANT_ID, COMPANYID
+					)
+		        
+		 (SELECT 
+     			TODAY ,
+              	DEPARTMENT ,
+              	DESCRIPTION ,
+              	CN , 
+              	DISPLAYNAME ,
+              	DINGCNT ,
+              	DENDCNT ,
+              	DENDTIME ,
+              	SINGCNT ,
+              	SENDCNT ,
+              	SENDTIME ,
+              	RETUNCNT ,
+              	TENANT_ID ,
+              	COMPANYID 
+       		  FROM 
+       		  	   ( SELECT 
+				   
+				
+						 CN ,
+	                   DISPLAYNAME ,
+	                   DESCRIPTION ,
+	                   DEPARTMENT  ,
+	                     IFNULL(DINGCNT, 0) DINGCNT  ,
+	                     IFNULL(SINGCNT, 0) SINGCNT  ,
+	                     IFNULL(DENDCNT, 0) DENDCNT  ,
+	                     IFNULL(SENDCNT, 0) SENDCNT  ,
+	                     IFNULL(DENDTIME, 0) DENDTIME  ,
+	                     IFNULL(SENDTIME, 0) SENDTIME  ,
+	                     IFNULL(RETUNCNT, 0) RETUNCNT  ,
+	                     TENANT_ID ,
+	                     COMPANYID , 
+
+                         TODAY
+              		 FROM 
+              		 	  						  
+						  ( 
+							
+							select 
+								TBA.CN, 
+								TSB.DISPLAYNAME, 
+								TSB.DESCRIPTION, 
+								TBA.DEPARTMENT, 
+								TBA.TENANT_ID, 
+								TBA.COMPANYID, 
+								DINGCNT  ,
+								SINGCNT  ,
+								DENDCNT  ,
+								SENDCNT  ,
+								DENDTIME  ,
+								SENDTIME  ,
+								RETUNCNT  ,
+                                TBA.TODAY
+							
+							from 
+								(SELECT 
+									TAS.CN, 
+									
+									TAS.DEPARTMENT, 
+									TAS.TENANT_ID, 
+									TAS.COMPANYID, 
+									TAS.TODAY
+								FROM
+									(SELECT 
+											WRITERID CN, 
+											
+											
+											WRITERDEPTID DEPARTMENT, 
+											TENANT_ID TENANT_ID, 
+											COMPANYID, 
+											DATE_FORMAT(STARTDATE, '%Y-%m-%d') TODAY
+										FROM 
+											TBL_APRDOCINFO
+										WHERE
+											STARTDATE is not null
+										AND
+											WRITERID is not null
+										AND
+											WRITERDEPTID is not null
+																													
+									UNION
+										SELECT 
+											WRITERID, 
+											
+											WRITERDEPTID, 
+											TENANT_ID, 
+											COMPANYID,
+											DATE_FORMAT(ENDDATE, '%Y-%m-%d') TODAY
+											
+										FROM 
+											TBL_ENDAPRDOCINFO
+										WHERE
+											ENDDATE is not null
+										AND
+											WRITERID is not null
+										AND
+											WRITERDEPTID is not null
+										
+									) TAS
+									
+									GROUP BY CN, DEPARTMENT, TENANT_ID, COMPANYID, TODAY
+									 
+										
+								) TBA 
+									
+						  JOIN
+							
+									TBL_USERMASTER TSB
+								ON
+									TBA.TENANT_ID = TSB.TENANT_ID
+								AND
+									TBA.COMPANYID = TSB.PHYSICALDELIVERYOFFICENAME
+								AND 
+									TBA.CN = TSB.CN       
+                            
+                            
+                                
+                                
+                     LEFT JOIN
+
+
+					 
+                     	  ( SELECT 
+                     			WRITERID WRITERIDA  ,
+                                WRITERDEPTID WRITERDEPTIDA  ,
+								
+								
+                                IFNULL(COUNT(*) , 0) DINGCNT  ,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                DATE_FORMAT(STARTDATE, '%Y-%m-%d') NOWDATE
+                            FROM 
+                            	TBL_APRDOCINFO 
+                            WHERE  
+                            	DOCSTATE = '001'
+                            AND 
+                            	STARTDATE IS NOT NULL
+                            
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID,
+                                DATE_FORMAT(STARTDATE, '%Y-%m-%d')) TBB   
+                     ON 
+                     		TBA.TENANT_ID = TBB.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBB.COMPANYID
+                     AND
+                     		TBA.CN = TBB.WRITERIDA
+					 AND	
+							TBA.DEPARTMENT = TBB.WRITERDEPTIDA
+					 AND
+							TBA.TODAY = TBB.NOWDATE
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     			WRITERID WRITERIDA  ,
+                                WRITERDEPTID WRITERDEPTIDA2  ,
+                                IFNULL(COUNT(*) , 0) SINGCNT  ,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                DATE_FORMAT(STARTDATE, '%Y-%m-%d') NOWDATE
+                            FROM 
+                            	TBL_APRDOCINFO 
+                            WHERE  
+                            	DOCSTATE = '011'
+                            AND 
+                            	STARTDATE IS NOT NULL
+                           
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID,
+                                DATE_FORMAT(STARTDATE, '%Y-%m-%d')) TBB2   
+                     ON 
+                     		TBA.TENANT_ID = TBB2.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBB2.COMPANYID
+                     AND
+                     		TBA.CN = TBB2.WRITERIDA
+					 AND	
+							TBA.DEPARTMENT = TBB2.WRITERDEPTIDA2
+					 AND
+							TBA.TODAY = TBB2.NOWDATE
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     	  		WRITERID WRITERIDB  ,
+                                WRITERDEPTID WRITERDEPTIDB  ,
+                                IFNULL(COUNT(*) , 0) DENDCNT  ,
+                                AVG(TIMESTAMPDIFF(SECOND, STARTDATE, ENDDATE)) DENDTIME,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                DATE_FORMAT(ENDDATE, '%Y-%m-%d') NOWDATE
+                            FROM 
+                            	TBL_ENDAPRDOCINFO
+                            WHERE  
+                            	DOCSTATE = '001'
+                            
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID,
+                                DATE_FORMAT(ENDDATE, '%Y-%m-%d')) TBC 
+                     ON 
+                    		TBA.TENANT_ID = TBC.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBC.COMPANYID
+                     AND
+                     		TBA.CN = TBC.WRITERIDB
+					 AND	
+							TBA.DEPARTMENT = TBC.WRITERDEPTIDB
+					 AND
+							TBA.TODAY = TBC.NOWDATE
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     	  		WRITERID WRITERIDB  ,
+                                WRITERDEPTID WRITERDEPTIDB2  ,
+                                IFNULL(COUNT(*) , 0) SENDCNT  ,
+                                AVG(TIMESTAMPDIFF(SECOND, STARTDATE, ENDDATE)) SENDTIME,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                DATE_FORMAT(ENDDATE, '%Y-%m-%d') NOWDATE
+                            FROM 
+                            	TBL_ENDAPRDOCINFO 
+                            WHERE  
+                            	DOCSTATE = '011'
+                            
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID,
+                                DATE_FORMAT(ENDDATE, '%Y-%m-%d')) TBC2 
+                     ON 
+                     		TBA.TENANT_ID = TBC2.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBC2.COMPANYID
+                     AND
+                     		TBA.CN = TBC2.WRITERIDB
+					 AND	
+							TBA.DEPARTMENT = TBC2.WRITERDEPTIDB2
+					 AND
+							TBA.TODAY = TBC2.NOWDATE
+                     LEFT JOIN 
+                     	  ( SELECT 
+                     	  		WRITERID WRITERIDC  ,
+                                WRITERDEPTID WRITERDEPTIDC  ,
+                                IFNULL(COUNT(*) , 0) RETUNCNT  ,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                DATE_FORMAT(STARTDATE, '%Y-%m-%d') NOWDATE
+                            FROM 
+                            	TBL_APRDOCINFO 
+                            WHERE  
+                            	FUNCTIONTYPE = '004'
+                            AND 
+                            	STARTDATE IS NOT NULL
+                            
+                            GROUP BY 
+                            	WRITERID,
+                            	WRITERDEPTID,
+                            	TENANT_ID,
+                                COMPANYID,
+                                DATE_FORMAT(STARTDATE, '%Y-%m-%d')) TBD   
+                     ON 
+                     		TBA.TENANT_ID = TBD.TENANT_ID
+                     AND
+                     		TBA.COMPANYID = TBD.COMPANYID
+                     AND
+                     		TBA.CN = TBD.WRITERIDC 
+                     AND	
+							TBA.DEPARTMENT = TBD.WRITERDEPTIDC
+					 AND
+							TBA.TODAY = TBD.NOWDATE ) AA) asd)
+                            
+						
+                            
+						
+	]]>
+	</insert>
+	
+	
+	<insert id="EzStatisticsAdminDAO.insertCustomFormBatch" >
+		<![CDATA[
+	
+			INSERT INTO TBL_DAILYFORMCOUNTLOG ( 
+				REGDATE, FORMID, FORMNAME, FORMCONTID, FORMCONTNAME, DRAFTINGCNT, DRAFTENDCNT, DRAFTTIME, SUSININGCNT, SUSINENDCNT, SUSINTIME, RETURNCNT, TENANT_ID, COMPANYID 
+			)
+     		
+     			(SELECT 
+     				TODAY ,
+              		FORMID ,
+	              	FORMNAME ,
+	              	FORMCONTID ,
+	              	FORMCONTNAME ,
+	              	DINGCNT ,
+	              	DENDCNT ,
+	              	DENDTIME ,
+	              	SINGCNT ,
+	              	SENDCNT ,
+	              	SENDTIME ,
+	              	RETUNCNT ,
+	              	TENANT_ID ,
+	              	COMPANYID
+       			FROM 
+       				( SELECT 
+       					FORMCONTID ,
+                     	FORMCONTNAME ,
+                     	FORMID ,
+                     	FORMNAME ,
+                     	IFNULL(DINGCNT, 0) DINGCNT  ,
+                     	IFNULL(SINGCNT, 0) SINGCNT  ,
+                     	IFNULL(DENDCNT, 0) DENDCNT  ,
+                     	IFNULL(SENDCNT, 0) SENDCNT  ,
+                     	IFNULL(RETUNCNT, 0) RETUNCNT  ,
+                     	IFNULL(DENDTIME, 0) DENDTIME  ,
+                     	IFNULL(SENDTIME, 0) SENDTIME  ,
+                     	TENANT_ID  ,
+                     	COMPANYID ,
+                        TODAY
+              		  FROM 
+              		  	( 
+							SELECT
+								TSC.FORMCONTID, 
+                                TBA.FORMID, 
+                                TSB.FORMNAME, 
+                                TSC.FORMCONTNAME, 
+                                TBA.TENANT_ID, 
+                                TBA.COMPANYID, 
+                                TBA.TODAY,
+								DINGCNT  ,
+								SINGCNT  ,
+								DENDCNT  ,
+								SENDCNT  ,
+								RETUNCNT  ,
+								DENDTIME  ,
+								SENDTIME                                  
+							FROM 
+								(
+									SELECT 
+										FORMID, 
+										TENANT_ID, 
+										COMPANYID,
+										TODAY
+                                    FROM
+										(SELECT 
+												
+												FORMID, 
+												TENANT_ID, 
+												COMPANYID, 
+												DATE_FORMAT(STARTDATE, '%Y-%m-%d') TODAY
+										FROM 
+												TBL_APRDOCINFO
+										WHERE
+												STARTDATE is not null
+										AND
+												FORMID is not null
+										
+																					
+										UNION
+											SELECT 
+												
+												FORMID, 
+												TENANT_ID, 
+												COMPANYID,
+												DATE_FORMAT(ENDDATE, '%Y-%m-%d') TODAY
+												
+											FROM 
+												TBL_ENDAPRDOCINFO
+											WHERE
+												ENDDATE is not null
+											AND
+												FORMID is not null
+											
+										)AA
+									GROUP BY FORMID, TENANT_ID, COMPANYID, TODAY
+							) TBA
+                                
+							JOIN
+								TBL_FORMINFO TSB
+                            ON
+								TBA.TENANT_ID = TSB.TENANT_ID
+							AND
+								TBA.COMPANYID = TSB.COMPANYID
+							AND 
+								TBA.FORMID = TSB.FORMID
+							                                                            
+	                      JOIN 
+								TBL_FORMCONTAINER TSC
+                          ON
+								TBA.TENANT_ID = TSC.TENANT_ID
+							AND
+								TBA.COMPANYID = TSC.COMPANYID
+							AND 
+								TSB.FORMCONTID = TSC.FORMCONTID
+							
+		                  LEFT JOIN 
+		                  	( SELECT 
+		                  		FORMID FORMIDA  ,
+                                IFNULL(COUNT(*) , 0) DINGCNT ,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                DATE_FORMAT(STARTDATE, '%Y-%m-%d') NOWDATE
+                              FROM 
+                              	TBL_APRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = '001'
+                              AND 
+                              	STARTDATE IS NOT NULL
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+                              	COMPANYID,
+                                DATE_FORMAT(STARTDATE, '%Y-%m-%d')) TBB   
+                          ON 
+                          	TBA.TENANT_ID = TBB.TENANT_ID
+                          AND
+                          	TBA.COMPANYID = TBB.COMPANYID
+                          AND
+                          	TBA.FORMID = TBB.FORMIDA
+                          AND
+							TBA.TODAY = TBB.NOWDATE   
+                     	  
+                          LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDA  ,
+                                IFNULL(COUNT(*) , 0) SINGCNT  ,
+                                TENANT_ID ,
+                                COMPANYID , 
+                                DATE_FORMAT(STARTDATE, '%Y-%m-%d') NOWDATE
+                              FROM 
+                              	TBL_APRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = '011'
+                              AND 
+                              	STARTDATE IS NOT NULL
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+                              	COMPANYID, 
+                                DATE_FORMAT(STARTDATE, '%Y-%m-%d')) TBB2 
+                      	  ON 
+                      	  	TBA.TENANT_ID = TBB2.TENANT_ID
+                      	  AND
+                      	  	TBA.COMPANYID = TBB2.COMPANYID
+                          AND
+                      	  	TBA.FORMID = TBB2.FORMIDA
+						  AND
+							TBA.TODAY = TBB2.NOWDATE
+                     	  LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDB  ,
+                                IFNULL(COUNT(*) , 0) DENDCNT  ,
+                               AVG(TIMESTAMPDIFF(SECOND, STARTDATE, ENDDATE)) DENDTIME ,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                DATE_FORMAT(ENDDATE, '%Y-%m-%d') NOWDATE
+                              FROM 
+                              	TBL_ENDAPRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = '001'
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+                              	COMPANYID,
+                                DATE_FORMAT(ENDDATE, '%Y-%m-%d')) TBC 
+                      	  ON 
+                      	  	TBA.TENANT_ID = TBC.TENANT_ID
+                      	  AND
+                      	  	TBA.COMPANYID = TBC.COMPANYID
+                          AND
+                      	  	TBA.FORMID = TBC.FORMIDB
+						  AND
+							TBA.TODAY = TBC.NOWDATE
+                     	  LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDB  ,
+                                IFNULL(COUNT(*) , 0) SENDCNT  ,
+                                AVG(TIMESTAMPDIFF(SECOND, STARTDATE, ENDDATE)) SENDTIME ,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                DATE_FORMAT(ENDDATE, '%Y-%m-%d') NOWDATE
+                              FROM 
+                              	TBL_ENDAPRDOCINFO 
+                              WHERE  
+                              	DOCSTATE = '011'
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+                              	COMPANYID,
+                                DATE_FORMAT(ENDDATE, '%Y-%m-%d')) TBC2 
+                      	  ON 
+                      	  	TBA.TENANT_ID = TBC2.TENANT_ID
+                      	  AND
+                      	  	TBA.COMPANYID = TBC2.COMPANYID
+                          AND
+                      	  	TBA.FORMID = TBC2.FORMIDB
+						  AND
+							TBA.TODAY = TBC2.NOWDATE
+                     	  LEFT JOIN 
+                     	  	( SELECT 
+                     	  		FORMID FORMIDA  ,
+                                IFNULL(COUNT(*) , 0) RETUNCNT  ,
+                                TENANT_ID ,
+                                COMPANYID ,
+                                DATE_FORMAT(STARTDATE, '%Y-%m-%d') NOWDATE
+                              FROM 
+                              	TBL_APRDOCINFO 
+                              WHERE  
+                              	FUNCTIONTYPE = '004'
+                              AND
+                              	STARTDATE IS NOT NULL 
+                              GROUP BY 
+                              	FORMID,
+                              	TENANT_ID,
+                              	COMPANYID,
+                                DATE_FORMAT(STARTDATE, '%Y-%m-%d')) TBD   
+                          ON 
+                          	TBA.TENANT_ID = TBD.TENANT_ID
+                          AND
+                            TBA.COMPANYID = TBD.COMPANYID
+                          AND
+                            TBA.FORMID = TBD.FORMIDA 
+						  AND
+							TBA.TODAY = TBD.NOWDATE) AA) asd)
+                            
+                            
+                            
+		]]>
+	</insert>
+	<delete id="EzStatisticsAdminDAO.deleteCustomDocBatch" >
+		DELETE FROM TBL_DAILYDOCCOUNTLOG
+	</delete>
+	<delete id="EzStatisticsAdminDAO.deleteCustomFormBatch" >
+		DELETE FROM TBL_DAILYFORMCOUNTLOG
+	</delete>
+	
 </sqlMap>
