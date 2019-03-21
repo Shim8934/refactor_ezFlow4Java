@@ -1159,7 +1159,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	}
 	
 	/** 기록물철등록부 업무담당자 지정  */
-	@RequestMapping(value = "/ezApprovalG/setTaskChrger.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/setTaskChrger.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	public String setTaskChrger(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setTaskChrger started");
 		
@@ -1173,7 +1173,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	}
 	
 	/** 기록물철등록부 업무담당자지정 상세내용  */
-	@RequestMapping(value = "/ezApprovalG/getTaskCharger.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getTaskCharger.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getTaskCharger(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
 		logger.debug("getTaskCharger started");
@@ -1189,7 +1189,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	}
 	
 	/** 기록물철등록부 업무담당자지정 저장  */
-	@RequestMapping(value = "/ezApprovalG/saveCabRoleInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/saveCabRoleInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveCabRoleInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model, @RequestBody String xmlPara) throws Exception{
 		logger.debug("saveCabRoleInfo started");
