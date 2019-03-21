@@ -3354,10 +3354,6 @@ function addReceiverFromList(iWhich, receiverlist) {
         recvName = receiverlist["name"][nCnt1];
         recvEmail = receiverlist["email"][nCnt1];
         recvHref = receiverlist["href"][nCnt1];
-
-        if ( recvEmail == "a@a.com" ) {
-        	continue;
-        }
         
         if (!increaseReceiverCount(recvType, recvHref)) {
     		return;
