@@ -311,6 +311,8 @@ var strLangSharedMailbox01 = "공유사서함";
 var strLangSharedMailbox02 = "암호를 변경하시겠습니까?";
 var strLangSharedMailbox03 = "암호를 변경하였습니다.";
 
+var strLangReceiverCount01 = "수신인은 최대 ";
+var strLangReceiverCount02 = "명까지 가능합니다.";
 
 function GetLocalTime(Offset , pDateTime)
 {

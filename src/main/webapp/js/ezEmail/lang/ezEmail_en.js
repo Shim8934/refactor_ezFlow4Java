@@ -311,6 +311,8 @@ var strLangSharedMailbox01 = "Shared mailbox";
 var strLangSharedMailbox02 = "Do you want to change password?";
 var strLangSharedMailbox03 = "Changed password.";
 
+var strLangReceiverCount01 = "The maximum number of recipients is ";
+var strLangReceiverCount02 = ".";
 
 function GetLocalTime(Offset , pDateTime)
 {

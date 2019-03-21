@@ -80,6 +80,9 @@
 	        var selTab = "";
 	        var selSpan = "";
 	        var divListArry = [];
+	        var receiverCount = 0;
+	        var groupAddressCountMap = {};
+	        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -422,13 +425,15 @@
 		        else {
 		            var oldReceiverData;
 		            if (ReturnFunction!=null)
-		                oldReceiverData = RetValue
+		                oldReceiverData = RetValue;
 		            else
 		                oldReceiverData = window.dialogArguments;
 		
 		            addReceiverToList(oldReceiverData["to"], "ListViewMsgTo");
 		            addReceiverToList(oldReceiverData["cc"], "ListViewMsgCC");
 		            addReceiverToList(oldReceiverData["bcc"], "ListViewMsgBCC");
+		            receiverCount = oldReceiverData["receiverCount"];
+		            groupAddressCountMap = oldReceiverData["groupAddressCountMap"];
 		        }
 		    }
 		    function addReceiverToList(receiverData, receiverList) {
@@ -899,6 +904,7 @@
 	                }
 	            }
 	        }
+	        
 	        function InsertReceiver(pListView) {
 	            try {
 	                if (inputTabButton.children[0].getAttribute("class") == "tabon") {
@@ -957,6 +963,12 @@
 	                            IsInsert = CheckMailReceiver(strEmail, "3");
 	
 	                        if (!IsInsert) {
+	                        	if (type == "") {
+	                        		if (!increaseReceiverCount(pAddressType, pAddressID)) {
+						        		return;
+						        	}
+	                        	}
+	                        	
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
 	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1042,6 +1054,12 @@
 	                        var IsInsert = CheckMailReceiver(strEmail, "3");
 	
 	                        if (!IsInsert) {
+	                        	if (type == "") {
+	                        		if (!increaseReceiverCount()) {
+						        		return;
+						        	}
+	                        	}
+	                        	
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
 	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1121,6 +1139,12 @@
 	                        var IsInsert = CheckMailReceiver(strEmail, "3");
 	
 	                        if (!IsInsert) {
+	                        	if (type == "") {
+	                        		if (!increaseReceiverCount()) {
+						        		return;
+						        	}
+	                        	}
+	                        	
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
 	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1200,6 +1224,12 @@
 	                    var IsInsert = CheckMailReceiver(strEmail, "3");
 	
 	                    if (!IsInsert) {
+	                    	if (type == "") {
+	                    		if (!increaseReceiverCount()) {
+					        		return;
+					        	}
+	                    	}
+	                    	
 	                        pparsingXML = "";
 	                        pparsingXML = "<LISTVIEWDATA2><ROWS>";
 	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strDeptNM) + "</DATA1>";
@@ -1282,6 +1312,12 @@
 	                            var IsInsert = CheckMailReceiver(strEmail, "3");
 	
 	                            if (!IsInsert) {
+	                            	if (type == "") {
+	                            		if (!increaseReceiverCount()) {
+							        		return;
+							        	}
+	                            	}
+	                            	
 	                                pparsingXML2 = "";
 	                                pparsingXML = "";
 	                                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1334,6 +1370,12 @@
                             var IsInsert = CheckMailReceiver(strEmail, "3");
 	
 	                        if (!IsInsert) {
+	                        	if (type == "") {
+	                        		if (!increaseReceiverCount()) {
+						        		return;
+						        	}
+	                        	}
+	                        	
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
 	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1478,6 +1520,10 @@
 	            var arrRows = selList.GetSelectedRows();
 	            var strName = "";
 	            for (var i = 0; i < arrRows.length; i++) {
+	            	if (type == "") {
+	            		decreaseReceiverCount(arrRows[i].getAttribute("data2"), arrRows[i].getAttribute("data4"));
+	            	}
+	                
 	                selList.DeleteRow(arrRows[i].id);
 	            }
 	        }
@@ -2479,6 +2525,12 @@
 	                    for (var i = 0; i < count; i++) {
 	                        var IsInsert = CheckMailReceiver(mail_select_dlmember_cross_dialogArguments[0]["email"][i], "3");
 	                        if (!IsInsert) {
+	                        	if (type == "") {
+	                        		if (!increaseReceiverCount()) {
+						        		return;
+						        	}
+	                        	}
+	                        	
 	                        	pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + "</DATA1>";
 	                            pparsingXML = pparsingXML + "<DATA2>" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "</DATA2>";
@@ -2531,6 +2583,12 @@
 	                    for (var i = 0; i < count; i++) {
 	                        var IsInsert = CheckMailReceiver(mail_select_dlmember_cross_dialogArguments[0]["email"][i], "3");
 	                        if (!IsInsert) {
+	                        	if (type == "") {
+	                        		if (!increaseReceiverCount()) {
+						        		return;
+						        	}
+	                        	}
+	                        	
 	                        	pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + "</DATA1>";
 	                            pparsingXML = pparsingXML + "<DATA2>" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "</DATA2>";
@@ -2583,6 +2641,12 @@
 	                        //var IsInsert = CheckMailReceiver(rtnValue["email"][i], "3");
 	                        var IsInsert = CheckMailReceiver(mail_select_dlmember_cross_dialogArguments[0]["email"][i], "3");
 	                        if (!IsInsert) {
+	                        	if (type == "") {
+	                        		if (!increaseReceiverCount()) {
+						        		return;
+						        	}
+	                        	}
+	                        	
 	                        	pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + "</DATA1>";
 	                            pparsingXML = pparsingXML + "<DATA2>" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "</DATA2>";
@@ -2700,6 +2764,12 @@
 	                        targetList = null;
 	                    }
 	                    if (!bFlag) {
+	                    	if (type == "") {
+	                    		if (!increaseReceiverCount()) {
+					        		return;
+					        	}
+                        	}
+	                    	
 	                        var listid = "";
 	                        if (m_selectedWindow.id == "ListViewMsgTo") {
 	                            listid = "MsgToList";
@@ -2763,6 +2833,12 @@
 	                        targetList = null;
 	                    }
 	                    if (!bFlag) {
+	                    	if (type == "") {
+	                    		if (!increaseReceiverCount()) {
+					        		return;
+					        	}
+                        	}
+	                    	
 	                        var listid = "";
 	                        if (m_selectedWindow.id == "ListViewMsgTo") {
 	                            listid = "MsgToList";
@@ -2848,15 +2924,20 @@
 	                    if (bFlag) {
 	                        return;
 	                    }
-	                    else {
-	                        pparsingXML = "<LISTVIEWDATA2><ROWS>";
-	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strDeptNM) + "</DATA1>";
-	                        pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
-	                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
-	                        pparsingXML = pparsingXML + "<DATA4>" + strSIP + "</DATA4>";
-	                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strDeptNM) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
-	                        pparsingXML = pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                    }
+	                    
+	                    if (type == "") {
+	                    	if (!increaseReceiverCount()) {
+				        		return;
+				        	}
+                    	}
+	                    
+                        pparsingXML = "<LISTVIEWDATA2><ROWS>";
+                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strDeptNM) + "</DATA1>";
+                        pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
+                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
+                        pparsingXML = pparsingXML + "<DATA4>" + strSIP + "</DATA4>";
+                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strDeptNM) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+                        pparsingXML = pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	
 	                    Resultxml = loadXMLString(pparsingXML);
 	
@@ -3288,7 +3369,13 @@
                         return;
                     }
                 }
-
+				
+                if (type == "") {
+                	if (!increaseReceiverCount()) {
+		        		return;
+		        	}
+            	}
+                
                 for (var j = 0  ; j < InitTr.length  ; j++) {
                     var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
                     if (MaxID < curnum)
@@ -3620,6 +3707,64 @@
 	        	}
 	        }
 	        
+	        function getGroupAddressMemberCount(addressId) {
+	        	var count = $.ajax({
+	            	type : "GET",
+	            	dataType : "text",
+	            	url : "/ezAddress/getGroupAddressMemberCount.do",
+	            	data : {id : addressId},
+	            	async : false
+	            }).responseText;
+	        	
+	        	return parseInt(count);
+	        }
+	        
+	        function increaseReceiverCount(pType, pHref) {
+	        	if (typeof pType !== 'undefined' && typeof pHref !== 'undefined') {
+	        		if (pType == "mailgroup") {
+	        			var addressId = pHref.split("|!|")[0];
+	        			var count = getGroupAddressMemberCount(addressId);
+	        			
+	        			if (mailMaxReceiverCount < receiverCount + count) {
+	        				alert("수신인은 최대 " + mailMaxReceiverCount + "명까지 가능합니다.");
+	        	            return false;
+	        			}
+	        			
+	        			groupAddressCountMap[addressId] = count;
+	        			receiverCount += count;
+	        		} else {
+	        			if (mailMaxReceiverCount < receiverCount + 1) {
+	        				alert("수신인은 최대 " + mailMaxReceiverCount + "명까지 가능합니다.");
+	        	            return false;
+	        			}
+	        			
+	        			receiverCount += 1;
+	        		}
+	        	} else {
+	        		if (mailMaxReceiverCount < receiverCount + 1) {
+	        			alert("수신인은 최대 " + mailMaxReceiverCount + "명까지 가능합니다.");
+	                    return false;
+	        		}
+	        		
+	        		receiverCount += 1;
+	        	}
+	        	
+	        	return true;
+	        }
+
+	        function decreaseReceiverCount(pType, pHref) {
+	        	if (typeof pType !== 'undefined' && typeof pHref !== 'undefined') {
+	        		if (pType == "mailgroup") {
+	        	    	var addressId = pHref.split("|!|")[0];
+	        	    	receiverCount -= groupAddressCountMap[addressId];
+	        	    	delete groupAddressCountMap[addressId];
+	        	    } else {
+	        	    	receiverCount -= 1;
+	        	    }
+	        	} else {
+	        		receiverCount -= 1;
+	        	}
+	        }
 	    </script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">

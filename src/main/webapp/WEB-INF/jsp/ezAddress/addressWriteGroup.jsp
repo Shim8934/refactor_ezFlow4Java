@@ -69,6 +69,8 @@
 	        var strLang_1 = "<spring:message code='ezAddress.t315' />";
 	        var strLang_2 = "<spring:message code='ezAddress.jsh04' />";
 	        var selSpan = "";
+	        var receiverCount = 0;
+	        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
 	        
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
@@ -656,6 +658,7 @@
 	            var strName = "";
 	
 	            for (var i = 0; i < arrRows.length; i++) {
+	            	decreaseReceiverCount();
 	                selList.DeleteRow(arrRows[i].id);
 	            }
 	        }
@@ -864,50 +867,44 @@
 	                        var pparsingXML2 = "";
 	
 	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	                        var strName = arrRows[i].cells[0].innerText
+	                        var strName = arrRows[i].cells[0].innerText;
 	                        var strEmail = GetAttribute(arrRows[i], "DATA3");
 	                        var strKey = GetAttribute(arrRows[i], "DATA1");
 	                        var strType = GetAttribute(arrRows[i], "DATA2");
-	
+	                        
+	                        if (strType == "mailgroup") {
+	                            alert(strName + ": " + strLang43);
+	                            continue;
+	                        }
+	                        
 	                        if (strEmail.trim() == "") {
 	                            alert(strName + "<spring:message code='ezAddress.t277' />")
 	                            continue;
 	                        }
-	                        if (strName.trim() == "")
-	                            strName = strEmail;
-	
-	                        if (strEmail.trim() == "mail") {
-	                            continue;
-	                        }
-	
-	                        if (strType.indexOf("group") > -1) {
-	                            alert(strLang43);
-	                            continue;
-	                        }
 	
 	                        var listid = "MsgToList";
-	
 	                        var targetList = new ListView();
 	                        targetList.LoadFromID(listid);
 	
 	                        var bFlag = targetList.ExistRow("DATA2", strEmail);
 	                        if (bFlag) {
-	                            alert(strName + "<spring:message code='ezAddress.t1101' />");
 	                            continue;
 	                        }
-	                        if (strType == "group") {
-	                            alert(strLang43);
-	                            continue;
+							
+	                        if (!increaseReceiverCount()) {
+	                        	return;
 	                        }
-	
-	                        else {
-	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1><![CDATA[" + strName + "]]></DATA1>";
-	                            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
-	                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strDeptNM + "]]></DATA3>";
-	                            pparsingXML = pparsingXML + "<DATA4>" + strEmail + "</DATA4>";
-	                            pparsingXML = pparsingXML + "<DATA5>" + strType + "</DATA5>";
-	                            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " <" + strEmail + ">" + "]]></VALUE></CELL></ROW>";
+	                        
+                       		if (strName.trim() == "") {
+	                            strName = strEmail;
 	                        }
+                       		
+                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1><![CDATA[" + strName + "]]></DATA1>";
+                            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
+                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strDeptNM + "]]></DATA3>";
+                            pparsingXML = pparsingXML + "<DATA4>" + strEmail + "</DATA4>";
+                            pparsingXML = pparsingXML + "<DATA5>" + strType + "</DATA5>";
+                            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " <" + strEmail + ">" + "]]></VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
 	
@@ -953,6 +950,10 @@
 		                
 		                console.log(nodeIdx);
 		                if (!bFlag) {
+		                	if (!increaseReceiverCount()) {
+	                        	return;
+	                        }
+		                	
 		                    pparsingXML2 = "";
 	                        pparsingXML = "";
 	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1001,12 +1002,11 @@
 		                    getlistview.LoadFromID("MsgToList");
 		                    var bFlag = getlistview.ExistRow("DATA2", strEmail);
 		
-		                    if (bFlag) {
-		                        alert(strName + "<spring:message code='ezAddress.t1101' />");
-		                        continue;
-		                    }
-		                    else {
-		
+		                    if (!bFlag) {
+		                    	if (!increaseReceiverCount()) {
+		                        	return;
+		                        }
+		                    	
 		                        pparsingXML2 = "";
 		                        pparsingXML = "";
 		                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1097,7 +1097,11 @@
 
                 return;
             }
-
+			
+            if (!increaseReceiverCount()) {
+            	return;
+            }
+            
             pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
             pparsingXML = pparsingXML + "<ROW><CELL><DATA1><![CDATA[" + strName + "]]></DATA1>";
             pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
@@ -1954,6 +1958,19 @@
 	        	}
 	        }
 	        
+	        function increaseReceiverCount() {
+        		if (mailMaxReceiverCount < receiverCount + 1) {
+        			alert(strLangGroupMemberCount01 + mailMaxReceiverCount + strLangGroupMemberCount02);
+                    return false;
+        		}
+        		
+        		receiverCount += 1;
+	        	return true;
+	        }
+
+	        function decreaseReceiverCount() {
+	        	receiverCount -= 1;
+	        }
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden">
