@@ -48,18 +48,18 @@
 		</style>
 		
 		<script type="text/javascript" >
-			var circularID = "${result.circularID}";
-			var circularUserID = "${result.memberID}";
-			var updateStatus = "${result.updateStatus}";
-			var status = "${result.status}";
-			var userInfoID = "${userInfo.id}";
-			var option = "${result.option}";
-			var type = "${type}";
-			var wcompanyID = "${result.companyID}"
-			var ucompanyID = "${userInfo.companyID}";
+			var circularID = "<c:out value='${result.circularID}'/>";
+			var circularUserID = "<c:out value='${result.memberID}'/>";
+			var updateStatus = "<c:out value='${result.updateStatus}'/>";
+			var status = "<c:out value='${result.status}'/>";
+			var userInfoID = "<c:out value='${userInfo.id}'/>";
+			var option = "<c:out value='${result.option}'/>";
+			var type = "<c:out value='${type}'/>";
+			var wcompanyID = "<c:out value='${result.companyID}'/>"
+			var ucompanyID = "<c:out value='${userInfo.companyID}'/>";
 			var attachList = "";
-			var deptID = "${deptID}";
-			var company = "${company}"
+			var deptID = "<c:out value='${deptID}'/>";
+			var company = "<c:out value='${company}'/>"
 
 			$(document).ready(function() {
 				if(circularID == "") {
@@ -80,7 +80,7 @@
 	            document.getElementById("divCross").style.height = window.innerHeight - 340 + "px";
 // 	            document.getElementById("divCross").style.width = window.innerWidth - 40 + "px";
 	            
-				if ("${attachList}" != "") {
+				if ("<c:out value='${attachList}'/>" != "") {
 					attachList = true;
 				}
 
@@ -562,7 +562,7 @@
 		                        <!-- <li id="circular_bar" style="background:none; padding-right:2px;margin-left:3px" alt=""><img src="/images/i_bar.gif" ></li> -->
 		                     </c:if>
 
-               	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[${myCommentCount}/${totalCommentCount }]</span></li>
+               	    		<li><span onclick="openCircularComment()" id="commentCount"><spring:message code='ezCircular.t180' />[<c:out value='${myCommentCount}'/>/<c:out value='${totalCommentCount }'/>]</span></li>
 	                        
 	                        <li><span onclick="circularConfirmList()"><spring:message code='ezCircular.kmsc01' /></span></li>
 	                        <c:if test="${result.memberID == userInfo.id}">
@@ -598,9 +598,9 @@
                     	</tr>
                     	<tr>
 							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t122' /></th>
-	       					<td style="padding-left: 4px;" ><div id="writer"  onclick="OpenUserInfo()" style="vertical-align: middle; cursor: pointer;"> ${result.memberName }</div></td>
+	       					<td style="padding-left: 4px;" ><div id="writer"  onclick="OpenUserInfo()" style="vertical-align: middle; cursor: pointer;"> <c:out value='${result.memberName }'/></div></td>
 							<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezBoard.t5007' /></th> 
- 							<td style="padding-left: 6px;"><div id="printStatus">${result.regDate }</div></td>
+ 							<td style="padding-left: 6px;"><div id="printStatus"><c:out value='${result.regDate }'/></div></td>
 						</tr>
                     	<tr>
 	                        <th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t115' /></th>
@@ -636,7 +636,7 @@
                     	</tr>
 						<tr>
 		        			<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t74' /></th>
-	       					<td><div id="statusNum" style="padding-left: 4px;">${result.confirmCount} / ${result.confirmTotalCount}</div></td>
+	       					<td><div id="statusNum" style="padding-left: 4px;"><c:out value='${result.confirmCount}'/> / <c:out value='${result.confirmTotalCount}'/></div></td>
 	         				<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezCircular.t124' /></th>
 		            		<td>
 		            			<c:choose>
@@ -668,7 +668,7 @@
 		            		</td>
 		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezPoll.t161' /></th>
 		            		<td>
-		            			<div id="endDate" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
+		            			<div id="endDate" style="padding-left: 4px;"><c:out value='${fn:substring(result.endDate,0,16) }'/></div>
 		            		</td>
 		        		</tr>
 	        		</table>
@@ -714,7 +714,7 @@
                                     		<c:if test="${item.fileType == 'ecm'}">
                                     			<c:set var="imagePath" value="/images/ecm.png" />
                                     		</c:if>	                                    		
-                                    		<img src="${imagePath}" />&nbsp;<a href="/ezCircular/downloadAttach.do?circularFileID=${item.circularFileID}" id="regData_${status.count}" style="vertical-align:text-bottom;">${item.fileName} (${item.fileTranSize})</a>
+                                    		<img src="${imagePath}" />&nbsp;<a href="/ezCircular/downloadAttach.do?circularFileID=${item.circularFileID}" id="regData_${status.count}" style="vertical-align:text-bottom;"><c:out value='${item.fileName}'/> (<c:out value='${item.fileTranSize}'/>)</a>
                                     	</div>
                                     </c:forEach>
                                 </div>
@@ -742,18 +742,18 @@
  							<th style="padding-left:10px"><spring:message code='ezCircular.t32' /></th> 
  							<td style="padding-left:4px; width:100%" colspan="3">
  								<div id="printTitle">
- 									${result.title}
+ 									<c:out value='${result.title}'/>
  								</div>
  							</td> 
 						</tr>
 						<tr style="height:25px">
 							<th style="padding-left: 10px;"><spring:message code='ezCircular.t122' /></th>
 	       					<td style="padding-left: 4px;">								
-	         					<div id="writer" >${result.memberName }</div>
+	         					<div id="writer" ><c:out value='${result.memberName }'/></div>
 	         				</td>
 							<th style="padding-left:10px"><spring:message code='ezBoard.t5007' /></th> 
  							<td style="padding-left:6px">
- 								<div id="printStatus">${result.regDate }</div>
+ 								<div id="printStatus"><c:out value='${result.regDate }'/></div>
  							</td> 
 						</tr>
 						<tr style="height:25px"> 
@@ -791,7 +791,7 @@
 						<tr style="height:25px">
 							<th style="padding-left:10px"><spring:message code='ezCircular.t74' /></th>
 	       					<td style="padding-left: 4px;">								
-	         					<div id="statusNum">${result.confirmCount} / ${result.confirmTotalCount}</div>
+	         					<div id="statusNum"><c:out value='${result.confirmCount}'/> / <c:out value='${result.confirmTotalCount}'/></div>
 	         				</td>
 							<th style="padding-left:10px"><spring:message code='ezCircular.t124' /></th> 
  							<td style="padding-left:4px">
@@ -825,7 +825,7 @@
 		            		</td>
 		            		<th style="width:10%; -webkit-column-width:15%;"><spring:message code='ezPoll.t161' /></th>
 		            		<td>
-		            			<div id="endDate" style="padding-left: 4px;">${fn:substring(result.endDate,0,16) }</div>
+		            			<div id="endDate" style="padding-left: 4px;"><c:out value='${fn:substring(result.endDate,0,16) }'/></div>
 		            		</td>
 						</tr>
 					</table>

@@ -38,7 +38,7 @@
 		</style>
 		
 	    <script type="text/javascript">
-	        var SSUserID = "${userInfo.id}";  
+	        var SSUserID = "<c:out value='${userInfo.id}'/>";  
 	        var pBoardType = "";
 	        var CurPage = "1";
 	        var Use_OneLineCount = "NO";

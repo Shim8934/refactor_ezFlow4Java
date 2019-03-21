@@ -38,7 +38,7 @@
 		</style>
 		
 	    <script type="text/javascript">
-	        var SSUserID = "${userInfo.id}";  
+	        var SSUserID = "<c:out value='${userInfo.id}'/>";  
 	        var pBoardType = "";
 	        var CurPage = "1";
 	        var Use_OneLineCount = "NO";
@@ -326,7 +326,7 @@
 	                    document.getElementById("BoardList_TH_1").style.width = (tempno.length * 10) + "px";
 	                }
 	
-	                if ("${useOcs}" == "YES" && lstCnt > 0) {
+	                if ("<c:out value='${useOcs}'/>" == "YES" && lstCnt > 0) {
 	                    check_presence();
 	                }
 	
