@@ -859,12 +859,14 @@
 			                    }
 			                }
 			                catch (e) { }
+			                
+			                /* 2019-03-19 홍승비 - 게시물 재전송 시 새로고침 동작 수정 */
 			                if (pMode == "boardContent" || pMode == "boardAttach") {
 			                    try {
 			                        if (typeof (window.parent.parent.SuccessBoard) == null || typeof (window.parent.parent.SuccessBoard) == "undefined") {
 			                            var checkboard = window.parent.location.toString();
 			                            if (checkboard.indexOf("mailReadContent.do") < 0) {
-			                                window.parent.parent.location.reload(false);
+			                                window.opener.opener.location.reload(false);
 			                            }
 			                        }
 			                    }

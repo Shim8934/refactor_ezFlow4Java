@@ -25,6 +25,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -718,5 +719,20 @@ row = sheet.createRow(0);
 		logger.debug("statisticsUser ended");
 		
 		return "ezStatistics/statisticsUser";
+	}
+	/**
+	 * 수동 통계 배치 동작
+	 */
+	@RequestMapping(value = "/ezStatistics/customApprStatisticsBatch.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String customApprStatisticsBatch() throws Exception {
+		logger.debug("customApprStatisticsBatch started");
+		
+		ezStatisticsAdminService.customApprStatisticsBatch();
+		
+		
+		logger.debug("customApprStatisticsBatch ended");
+		
+		return "success";
 	}
 }
