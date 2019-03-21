@@ -53,6 +53,7 @@
 	        var RetValue;
 	        var ReturnFunction;
 	        var deptClickFlag; // 2018-05-11 (문성업) 직원 맴버를 전원 클릭하는 것 같은 효과를 나타내는 마우스 효과 (수정)
+	        var deptID = "<c:out value='${deptID}'/>";
 	        
 	        document.onselectstart = function () { return false; };
 	        if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
@@ -136,7 +137,7 @@
 	            	var xmlHTTP = createXMLHttpRequest();
 	            	var objNode;
 	            	createNodeInsert(xmlpara, objNode, "DATA");
-	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptID}");
+	            	createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptID);
 	            	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
 	            	createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 	            	xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);

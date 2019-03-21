@@ -38,6 +38,7 @@
             //2018-07-17 김보미 - 프로그래스바
             var startTime = "";
             var endTime = "";
+            var listHeader = "<c:out value='${listHeader}'/>";
 		    
 		    document.onselectstart = function () { return false; };
 		    
@@ -54,7 +55,7 @@
 
 		        var height = parseInt(document.documentElement.clientHeight - 234);
 		        document.getElementById("divList").style.height = height + "px";
-		        getSearchList_after(loadXMLString("${listHeader}"));
+		        getSearchList_after(loadXMLString(listHeader));
 		    }
 		    
 		    window.onresize = function () {

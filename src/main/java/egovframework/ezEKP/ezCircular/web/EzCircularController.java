@@ -1156,6 +1156,8 @@ public class EzCircularController extends EgovFileMngUtil {
 			}
 			
 			result.setTitle(result.getTitle().replaceAll("\\\\", "\\\\\\\\"));
+			result.setTitle(commonUtil.stripScriptTags(result.getTitle()));
+			result.setContent(commonUtil.stripScriptTags(result.getContent()));
 			
 			List<CircularListVO> list = ezCircularService.getCircularUserList(Integer.parseInt(circularID), "", "", userInfo.getTenantId(), userInfo.getOffset());
 
@@ -1419,6 +1421,9 @@ public class EzCircularController extends EgovFileMngUtil {
 	        	
 	        	model.addAttribute("attachList", aList);
 	        }
+	        
+	        // 2019-03-21 김민성 - secure coding(XSS)
+	        //result.setContent(commonUtil.stripScriptTags(result.getContent()));
 	
 			model.addAttribute("userInfo", userInfo);
 			model.addAttribute("result", result);
@@ -2328,6 +2333,10 @@ public class EzCircularController extends EgovFileMngUtil {
     	List<CircularCommentVO> circularCommentList = ezCircularService.getCircularComment(circularCommentVO, searchType, searchValue, userInfo.getId(), commentType, userInfo.getOffset(), userInfo.getTenantId());
     	int totalCommentCount = ezCircularService.getCommentCount(circularCommentVO.getCircularID(), userInfo.getId(), "totalComment", userInfo.getTenantId());
 		int myCommentCount = ezCircularService.getCommentCount(circularCommentVO.getCircularID(), userInfo.getId(), "myComment", userInfo.getTenantId());
+		
+		for(int i=0; i<circularCommentList.size(); i++) {
+			circularCommentList.get(i).setCircularComment(commonUtil.cleanValue(circularCommentList.get(i).getCircularComment()));
+		}
 
     	logger.debug("getCircularComment ended.");
     	

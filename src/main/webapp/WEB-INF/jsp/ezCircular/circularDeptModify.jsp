@@ -21,19 +21,19 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 	    <script type="text/javascript">
 	    	var userid = "";
-    		var circularBMId = "${circularBMId}";
-    		var title = "${title}";
-    		var userID = "${userID}";
-   			var userName = "${userName}"
-			var userName2 = "${userName2}"
-			var listSize = "${listSize}";
+    		var circularBMId = "<c:out value='${circularBMId}'/>";
+    		var title = "<c:out value='${title}'/>";
+    		var userID = "<c:out value='${userID}'/>";
+   			var userName = "<c:out value='${userName}'/>";
+			var userName2 = "<c:out value='${userName2}'/>";
+			var listSize = "<c:out value='${listSize}";
     		
 	    	window.onload = function() {				
 	    		window.resizeTo(450 + (window.outerWidth - window.innerWidth), 275 + (window.outerHeight - window.innerHeight));
 	    		
-	    		document.getElementById("title").value = "${title}";
-	        	document.getElementById("receiverlist").innerHTML = "${userName}";
-	        	document.getElementById("receiverID").innerHTML = "${userID}";
+	    		document.getElementById("title").value = "<c:out value='${title}'/>";
+	        	document.getElementById("receiverlist").innerHTML = "<c:out value='${userName}'/>";
+	        	document.getElementById("receiverID").innerHTML = "<c:out value='${userID}'/>";
 	        	
 				g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
 	        	
