@@ -60,11 +60,7 @@
 		<result property="characterID"			column="CHARACTERID"			columnIndex="18"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
 		<result property="ownerNm"				column="OWNERNM"				columnIndex="20"/>
-		<result property="ownerNm2"			    column="OWNERNM2"			    columnIndex="21"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
-		<result property="deptNm2"				column="DEPTNM2"				columnIndex="23"/>
-		<result property="jobTitle"				column="JOBTITLE"				columnIndex="24"/>
-		<result property="jobTitle2"			column="JOBTITLE2"				columnIndex="25"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="21"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO"            id="resGetScheduleListMainVO">
@@ -343,7 +339,7 @@
 					WHERE Brd_Upper = IFNULL(#v_P_ParentID#,0)
 					AND Brd_Company = #v_P_CompanyID#
 					AND TENANT_ID = #tenantID#
-					ORDER BY Brd_Step
+					ORDER BY Brd_GB, Brd_Step
 				]]>
 			</isEqual>
 			<isNotEqual property="v_P_TreeType" compareValue="0">
@@ -594,56 +590,10 @@
                 ATTACHFLAG ,
                 CHARACTERID ,
                 APPROVEFLAG ,
-                BB.OWNERNM  ,
-                BB.OWNERNM2  ,
-                BB.DEPTNM  ,
-                BB.DEPTNM2  ,
-                BB.JOBTITLE  ,
-                BB.JOBTITLE2  
+                OWNERNM  ,
+                DEPTNM  
            	FROM 
            		TBL_RS_SCHEDULE A
-			JOIN
-				(	SELECT 
-						d.DISPLAYNAME OWNERNM  ,
-						d.DISPLAYNAME2 OWNERNM2  ,
-						d.DESCRIPTION DEPTNM  ,
-						d.DESCRIPTION2 DEPTNM2  ,
-						d.TITLE JOBTITLE  ,
-						d.TITLE2 JOBTITLE2  ,
-						D.CN ,
-	                    D.TENANT_ID
-					FROM 
-						TBL_USERMASTER D
-					WHERE 
-						D.TENANT_ID = #tenantID# AND D.physicaldeliveryofficename = #v_PCOMPANYID#
-					UNION ALL
-					SELECT 
-						B.DISPLAYNAME OWNERNM  ,
-						B.DISPLAYNAME2 OWNERNM2  ,
-						C.DISPLAYNAME DEPTNM  ,
-						C.DISPLAYNAME2 DEPTNM2  ,
-						AA.TITLE JOBTITLE  ,
-						AA.TITLE2 JOBTITLE2 ,
-						B.CN ,
-	                    B.TENANT_ID
-					FROM 
-						TBL_USERMASTER B 
-					INNER JOIN 
-						TBL_ADDJOBMASTER AA 
-					ON 
-						AA.CN = B.CN 
-					AND 
-						AA.TENANT_ID = B.TENANT_ID       
-					RIGHT JOIN 
-						TBL_DEPTMASTER C
-					ON 
-						AA.DEPTID = C.CN
-					AND 
-						B.TENANT_ID = C.TENANT_ID 
-					WHERE 
-						AA.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# ) BB
-			ON
-				A.WRITERID = BB.CN AND A.TENANT_ID = BB.TENANT_ID
           	WHERE
 				STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND
@@ -653,15 +603,15 @@
 			AND 
 				A.OWNERID = #v_POWNERID#
 			AND
-				A.DEPTNM = BB.DEPTNM
-			AND
 				REFLAG = '0'
 			AND 
-                ( BB.OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') OR BB.OWNERNM2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
+                ( OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%')  )
 			AND 
-				( BB.DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR BB.DEPTNM2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
+				( DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
 			AND
 				A.TENANT_ID = #tenantID#	
+			GROUP BY
+				A.NUM
 			ORDER BY
 				STARTDATE ASC,
 				ENDDATE DESC 
@@ -730,6 +680,8 @@
 				SCH.OWNERID = BRD.BRD_ID 
 			AND
 				SCH.TENANT_ID = BRD.TENANT_ID	
+			AND
+				SCH.COMPANYID = BRD.BRD_COMPANY
 			WHERE
 				STARTDATE <= STR_TO_DATE(#v_pStartDate#, '%Y-%m-%d %T')
         	AND
@@ -771,54 +723,10 @@
             	A.companyID ,
             	CHARACTERID ,
             	APPROVEFLAG ,
-            	A.OWNERNM  ,
-            	A.DEPTNM  
+                OWNERNM  ,
+                DEPTNM  
 			FROM
 				TBL_RS_SCHEDULE A
-			JOIN
-				( SELECT 
-						d.DISPLAYNAME OWNERNM  ,
-						d.DISPLAYNAME2 OWNERNM2  ,
-						d.DESCRIPTION DEPTNM  ,
-						d.DESCRIPTION2 DEPTNM2  ,
-						d.TITLE JOBTITLE  ,
-						d.TITLE2 JOBTITLE2  ,
-						D.CN ,
-	                    D.TENANT_ID
-					FROM 
-						TBL_USERMASTER D
-					WHERE 
-						D.TENANT_ID = #tenantID# AND D.physicaldeliveryofficename = #v_PCOMPANYID#
-					UNION ALL
-					SELECT 
-						B.DISPLAYNAME OWNERNM  ,
-						B.DISPLAYNAME2 OWNERNM2  ,
-						CC.DISPLAYNAME DEPTNM  ,
-						CC.DISPLAYNAME2 DEPTNM2  ,
-						AA.TITLE JOBTITLE  ,
-						AA.TITLE2 JOBTITLE2 ,
-						B.CN ,
-	                    B.TENANT_ID
-					FROM 
-						TBL_USERMASTER B 
-					INNER JOIN 
-						TBL_ADDJOBMASTER AA 
-					ON 
-						AA.CN = B.CN 
-					AND 
-						AA.TENANT_ID = B.TENANT_ID       
-					RIGHT JOIN 
-						TBL_DEPTMASTER CC
-					ON 
-						AA.DEPTID = CC.CN
-					AND 
-						B.TENANT_ID = CC.TENANT_ID 
-					WHERE 
-						AA.TENANT_ID = #tenantID# AND CC.EXTENSIONATTRIBUTE2 = #v_PCOMPANYID# ) BB   
-			ON
-				A.writerID = BB.CN
-			AND
-				A.TENANT_ID = BB.TENANT_ID	
 			JOIN
 				TBL_RS_SCHEDULERepetition C 
 			ON 
@@ -838,9 +746,9 @@
 			AND
 				( STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') <= ENDDATETIME OR STR_TO_DATE(#v_PENDDATE#,'%Y-%m-%d %T') >= ENDDATETIME )
 			AND
-				( A.OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') OR BB.OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') OR BB.OWNERNM2 LIKE CONCAT('%', #v_WRITERNAME#, '%') )
+				( OWNERNM LIKE CONCAT('%', #v_WRITERNAME#, '%') )
 			AND
-				( A.DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR BB.DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') OR BB.DEPTNM2 LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
+				( DEPTNM LIKE CONCAT('%', #v_WRITERDEPT#, '%') )
 			AND 
 				A.TENANT_ID = #tenantID#	
 			GROUP BY
@@ -884,6 +792,8 @@
 				SCH.OWNERID = BRD.BRD_ID
 			AND
 				SCH.TENANT_ID = BRD.TENANT_ID	
+			AND
+				SCH.COMPANYID = BRD.BRD_COMPANY				
         	WHERE
         		STARTDATE <= STR_TO_DATE(#v_PSTARTDATE#, '%Y-%m-%d %T')
 			AND 
@@ -950,6 +860,7 @@
 				BRD_COMPANY = #v_PCOMPANYID#
 			AND
 				TENANT_ID = #tenantID#
+			ORDER BY BRD_STEP
 			LIMIT
 				#v_PTOPCNT#
 		]]>
@@ -1433,30 +1344,35 @@
 	<select id="EzResourceDAO.getDeptID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				D.department
-			FROM 
-				TBL_USERMASTER D
-			WHERE 
-				D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID# and d.cn = #writerID#
-			UNION ALL
-			SELECT 
-				C.cn as department
-			FROM 
-				TBL_USERMASTER B 
-			INNER JOIN 
-				TBL_ADDJOBMASTER A 
-			ON 
-				A.CN = B.CN 
-			AND 
-				A.TENANT_ID = B.TENANT_ID       
-			RIGHT JOIN 
-				TBL_DEPTMASTER C
-			ON 
-				A.DEPTID = C.CN
-			AND 
-				B.TENANT_ID = C.TENANT_ID   
-			WHERE 
-				A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# and C.displayname = #deptNm# AND B.CN = #writerID#
+				DEPARTMENT
+			FROM(
+				SELECT 
+					D.department
+				FROM 
+					TBL_USERMASTER D
+				WHERE 
+					D.TENANT_ID = #tenantID# AND D.PHYSICALDELIVERYOFFICENAME = #companyID# and d.cn = #writerID#
+				UNION ALL
+				SELECT 
+					C.cn as department
+				FROM 
+					TBL_USERMASTER B 
+				INNER JOIN 
+					TBL_ADDJOBMASTER A 
+				ON 
+					A.CN = B.CN 
+				AND 
+					A.TENANT_ID = B.TENANT_ID       
+				RIGHT JOIN 
+					TBL_DEPTMASTER C
+				ON 
+					A.DEPTID = C.CN
+				AND 
+					B.TENANT_ID = C.TENANT_ID   
+				WHERE 
+					A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# and C.displayname = #deptNm# AND B.CN = #writerID#
+			) E
+			LIMIT 1
 		]]>
 	</select>
 	
@@ -1864,6 +1780,8 @@
     		BRD_ID = #v_P_ownerID#
     	AND
     		TENANT_ID = #tenantID#	
+    	AND
+    		BRD_COMPANY = #v_P_companyID#
 	</select>
 	
 	<insert id="EzResourceDAO.addRessch" parameterClass="Map">
@@ -1979,7 +1897,7 @@
 	<select id="EzResourceDAO.getAdmFlag" parameterClass="Map" resultMap="resGetAdminFlagVO">
 		<![CDATA[
 			SELECT
-				member_id, access_lvl 
+				member_id, min(access_lvl) as access_lvl 
       		FROM
       			TBL_RS_RESACL 
       		WHERE
@@ -1987,20 +1905,9 @@
       		AND
       			resid = #resID#
 			AND
-				IF((SELECT
-						COUNT(*)
-						FROM
-							TBL_RS_RESACL
-						WHERE
-			      			companyid = #companyID#
-			      		AND
-			      			resid = #resID#
-						AND
-							member_id = 'everyone'
-						AND
-							access_lvl = '1'
-						AND
-                			TENANT_ID = #tenantID#) > 0, member_id = 'everyone', member_id = #memberID#)
+					( MEMBER_ID = #memberID#
+			OR
+					MEMBER_ID = 'everyone' )
             AND
                 TENANT_ID = #tenantID#
 		]]>
@@ -2082,4 +1989,109 @@
 				TENANT_ID = #tenantID# 
         ]]>
     </select>
+    
+    <select id="EzResourceDAO.getResourceOrder" parameterClass="map" resultClass="String">
+		<![CDATA[
+			select 
+				brd_step
+            from 
+				tbl_rs_brd
+			where
+				brd_id = #resourceId#
+			and
+				tenant_id = #tenantId#
+			and
+				brd_company = #brd_company#	 		
+			and
+				brd_upper = #upperResourceId#
+			and
+				brd_gb = '2'
+		]]>
+	</select>
+	
+	<update id="EzResourceDAO.ChangeResourceOrder" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_rs_brd
+			set
+				brd_step = #resourceOrder#
+			where
+				brd_upper = #upperResourceId#
+			and
+				tenant_id = #tenantId#
+			and
+				brd_company = #brd_company#	
+			and 
+				brd_id = #resourceId#
+		]]>
+	</update>
+	
+	<select id="EzResourceDAO.getMaxBrdStepInSelectedResourceGroup" parameterClass="map" resultClass="String">
+		<![CDATA[
+			select 
+				max(brd_step)
+            from 
+				tbl_rs_brd
+			where
+				tenant_id = #tenantId#
+			and
+				brd_company = #brd_company#	 		
+			and
+				brd_upper = #upperResourceGroupId#
+			and
+				brd_gb = '2'
+			group by
+				brd_upper
+		]]>
+	</select>
+	
+	<update id="EzResourceDAO.moveResourceToOtherResourceGroup" parameterClass="map">
+		<![CDATA[
+			update
+				tbl_rs_brd
+			set
+				brd_upper = #selectedResourceGroupId#,
+				brd_step = #brd_step#
+			where				
+				tenant_id = #tenantId#
+			and
+				brd_company = #brd_company#	
+			and 
+				brd_id = #originResourceGroupId#
+		]]>
+	</update>
+	
+	<select id="EzResourceDAO.isResourceGroupManager" parameterClass="map" resultClass="String">
+		<![CDATA[
+			select 
+				case when count(*) >= 1 then 1 else 0 end as result
+            from 
+				tbl_rs_resacl a
+			where exists
+				(
+				 select 
+					1				 
+				 from 
+				 	tbl_rs_resacl b 
+				 where 
+				 	a.resid = b.resid 
+				 and 
+				 	a.companyid = b.companyid 
+				 and 
+				 	a.tenant_id = b.tenant_id 
+				 and 
+				 	a.member_id = b.member_id 
+				 and 
+				 	a.COMPANYID= #brd_company#
+				 and 
+				 	a.TENANT_ID= #tenantId#
+				 and 
+				 	a.resid=#selectedResourceGroupId# 
+				 and
+				 	a.access_lvl = '1'
+				 and 
+				 	(a.member_id=#userId# or a.member_id = 'everyone')
+				 )
+		]]>
+	</select>
 </sqlMap>

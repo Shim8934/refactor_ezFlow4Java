@@ -92,7 +92,7 @@ function CalendarView(pTagetID,chk_str) {
 
                     for (var i = 0; i < tempmemorial.length; i++) {
                         memorial = tempmemorial[i];
-                        if (uselang == "1") {
+                        if (primaryLang == "1") {
                             if (i == tempmemorial.length - 1)
                                 holidayname += memorial.name;
                             else
@@ -110,7 +110,7 @@ function CalendarView(pTagetID,chk_str) {
 
                     for (var i = 0; i < tempyearmemorial.length; i++) {
                         yearmemorial = tempyearmemorial[i];
-                        if (uselang == "1") {
+                        if (primaryLang == "1") {
                             if (i == tempyearmemorial.length - 1)
                                 holidayname2 += yearmemorial.name;
                             else
@@ -474,7 +474,16 @@ function CalendarView(pTagetID,chk_str) {
     		var typeCal = 0;
     		var dragId  = ui.draggable.children().attr("scheduleid");
     		var dragDay = ui.draggable.children().attr("id");
+    		var dragType = ui.draggable.children().attr("datetype");
     		var dropDay = $(this).attr("day");
+    		
+    		if (dragDay.substring(4, 14) == dropDay) {
+    			return;
+    		}
+    		
+    		if (dragType == "2") {
+    			dragDay += "ALL";
+    		}
     		
     		if (updateDragSchedule(typeCal, dragId, dragDay, dropDay)) {
     			RefreshView();
@@ -496,6 +505,11 @@ function CalendarView(pTagetID,chk_str) {
     			var dragId  = ui.draggable.attr("scheduleid");
     			var dropDay = $(this).attr("id");
     			var dragDay = ui.draggable.attr("id");
+    			
+    			if (dragDay.substring(4, 14) == dropDay.substring(0, 10)) {
+    				return;
+    			}
+    			
     			dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));	
     			dragDay = changeDateFormat(dragDay);
     			
@@ -520,7 +534,13 @@ function CalendarView(pTagetID,chk_str) {
     			var dropId  = $(this).attr("Id");
     			var dropDay = dropId.substring(3, dropId.indexOf("_Value"));
     			var dragDay = ui.draggable.attr("id");
+    			
     			dragDay = dragDay.substring(4, dragDay.lastIndexOf("_"));
+    			
+    			if (dragDay == dropDay) {
+    				return;
+    			}
+    			
     			dragDay = changeDateFormat(dragDay);
     			dropDay = changeDateFormat(dropDay);
     			
@@ -645,7 +665,7 @@ function MonthData(oThisDate, TDIndex) {
 
     for (var i = 0; i < tempmemorial.length; i++) {
         memorial = tempmemorial[i];
-        if (uselang == "1") {
+        if (primaryLang == "1") {
             if (i == tempmemorial.length - 1)
                 holidayname += memorial.name;
             else
@@ -663,7 +683,7 @@ function MonthData(oThisDate, TDIndex) {
 
     for (var i = 0; i < tempyearmemorial.length; i++) {
         yearmemorial = tempyearmemorial[i];
-        if (uselang == "1") {
+        if (primaryLang == "1") {
             if (i == tempyearmemorial.length - 1)
                 holidayname2 += yearmemorial.name;
             else
@@ -1033,7 +1053,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
 
         for (var i = 0; i < tempmemorial.length; i++) {
             memorial = tempmemorial[i];
-            if (uselang == "1") {
+            if (primaryLang == "1") {
                 if (i == tempmemorial.length - 1)
                     holidayname += memorial.name;
                 else
@@ -1051,7 +1071,7 @@ function WeekData(startOfWeek, dayOfWeek, pCnt) {
 
         for (var i = 0; i < tempyearmemorial.length; i++) {
             yearmemorial = tempyearmemorial[i];
-            if (uselang == "1") {
+            if (primaryLang == "1") {
                 if (i == tempyearmemorial.length - 1)
                     holidayname2 += yearmemorial.name;
                 else

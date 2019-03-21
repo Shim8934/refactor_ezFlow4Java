@@ -23,6 +23,9 @@
 	    .tabpart01UL li {
 	    	height:20px;
 	    	color:#777;
+			white-space: nowrap;
+		    text-overflow: ellipsis;
+		    overflow: hidden;
 	    }
 	    </style>
 	    <script type="text/javascript">
@@ -38,6 +41,8 @@
 				*/
 				clearTimeout(timer);
 				timer = setTimeout(resizeMenuTab, delay);
+				
+				resizeIframe(document.getElementById("FBoard_ifrm"));
 			}
 			
 	        window.onload = function () {
@@ -98,7 +103,10 @@
 						}
 						Tab1_SelectID = "overSpan";
 					}
-					document.getElementById("tabpart01UL").style.display = "none";	
+					/* 2018-12-04 홍승비- '...'탭이 없는 경우 접근 시 스크립트 에러 수정 */
+					if (document.getElementById("tabpart01UL") !== null) {
+						document.getElementById("tabpart01UL").style.display = "none";
+					}	
 				}
 	        }
 	        function GetMyBoardItem() {
@@ -363,6 +371,16 @@
 	                }
 	            }
 	        }
+	        
+	        /* 2019-01-31 홍승비 - 즐겨찾기 > 권한설정 화면 리사이즈 시 스크롤 발생 높이 조정 */
+	        function resizeIframe(obj) {
+		        if (obj.contentWindow.location.href.indexOf("/ezBoard/boardACL.do") > -1) {
+		        	obj.style.height = (document.documentElement.clientHeight - 85) + "px";
+		        } else {
+		        	obj.style.height = "100%";
+		        }
+	        }
+	        
 	    </script>
 	</head>
 	<!-- <body class="mainbody" style="height: 89%;"> -->
@@ -373,7 +391,7 @@
 		        <div class="portlet_tabpart01_top" id="tab1"></div>
 		    </div>
 		</div>    
-	    <iframe id="FBoard_ifrm" style="width: 100%; height: 100%;" frameborder="0"></iframe>
+	    <iframe id="FBoard_ifrm" style="width: 100%; height: 100%;" onload="resizeIframe(this)" frameborder="0"></iframe>
 	</body>
 	<input type="hidden" id="curBoardID" namd="curBoardID" value=""/>
 </html>

@@ -576,6 +576,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
 		map.put("offsetMin", offsetMin);
+		map.put("startRow", limit + 1);
+		map.put("endRow", limit + Integer.valueOf(listSize));
 		if (primary.equals("1")) {
 			primary = "";
 		}
@@ -682,6 +684,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("startPoint", startPoint);
 		map.put("endPoint", endPoint);
 		map.put("type", type);
+		if (startPoint != null && endPoint != null && !startPoint.equals("") && !endPoint.equals("")) {
+			map.put("startRow", Integer.valueOf(startPoint) + 1);
+			map.put("endRow", Integer.valueOf(startPoint) + Integer.valueOf(endPoint));
+		}
 		
 		if (adminFlag.equals("false")){
 			map.put("userId", userId);
@@ -948,16 +954,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAttitudeList2 started");
 		
 		String offsetMin = commonUtil.getMinuteUTC(offset);
-		int limit = 0;
+		Map<String, Object> map = new HashMap<String, Object>();
 		
+		int limit = 0;
 		if (pageNum != null && !pageNum.equals("")) {
 			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+			
+			map.put("startRow", limit + 1);
+			map.put("endRow", limit + Integer.valueOf(listSize));
 		}
 		
 		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
 		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 		
-		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
 		map.put("searchDeptId", searchDeptId);
@@ -973,6 +982,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("tenantId", tenantId);
 		map.put("limit", limit);
 		map.put("deptIdList", deptIdList);
+
 		if (primary.equals("1")) {
 			primary = "";
 		}
@@ -1125,7 +1135,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("paging started.");
 		
-		if (listSize != "") {
+		if (!listSize.equals("")) {
 			int size = Integer.valueOf(listSize);
 			int limit = (Integer.valueOf(pageNum) - 1) * size;
 			
@@ -1165,6 +1175,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		/*2018-05-08 이효진 holidayList 생성*/
 		//회사 기념일
 		List<HolidayVO> holidayList = getHolidayList("rest", companyId, tenantId);
+		//임시 저장
+		List<HolidayVO> tempHolidayList = new ArrayList<HolidayVO>();
 		//근태휴무일
 		AttitudeConfigVO attitudeConfig = getAttitudeConfig(tenantId, companyId);
 		String checkDay[] = attitudeConfig.getClosedDay().split(",");
@@ -1224,9 +1236,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 						HolidayVO vo2 = new HolidayVO();
 						vo2.setHolidayDate(vo1.getHolidayDate().replace(startYear, endYear));
 						
-						holidayList.add(vo2);
+						tempHolidayList.add(vo2);
 					}
 				}
+			}
+		}
+		
+		if (tempHolidayList != null) {
+			for (HolidayVO vo3 : tempHolidayList) {
+				holidayList.add(vo3);
 			}
 		}
 		
@@ -1251,17 +1269,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[0].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1270,17 +1292,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[1].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1289,17 +1315,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[2].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1308,17 +1338,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[3].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1327,17 +1361,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[4].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1346,17 +1384,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[5].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1365,17 +1407,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[6].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1579,6 +1625,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		map.put("userId", userId);
+		if (attModId.indexOf("_") > 0) {
+			attModId = attModId.split("_")[0];
+		}
 		map.put("attModId", attModId);
 		map.put("offset", offset);
 		if (lang.equals("1")) {
@@ -1771,16 +1820,18 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public List<ModApplHistoryVO> getAttitudeHistoryList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String orderCell, String orderOption, String offset, String pageNum, String listSize, String companyId, int tenantId, String deptId, List<String> deptIdList, String primary) throws Exception {
 		LOGGER.debug("getAttitudeHistoryList started");
 		
+		Map<String, Object> map = new HashMap<String, Object>();
+
 		int limit = 0;
-		
 		if (pageNum != null && !pageNum.equals("")) {
 			limit = (Integer.valueOf(pageNum) - 1) * Integer.valueOf(listSize);
+			map.put("startRow", (limit + 1));
+			map.put("endRow", (limit + Integer.valueOf(listSize)));
 		}
 		
 		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
 		searchEndDate = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
 		
-		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
 		map.put("deptId", deptId);
@@ -2083,7 +2134,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	            type = "G";
 	        }
 	
-	        if(page.equals(null) || page.equals("")){
+	        if(page == null || page.equals("")){
 	            page = "1";
 	        }
 	        
@@ -2337,12 +2388,22 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     }
     
     @Override
-    public String getIsAttitude(String typeId, String writerId, String startDate, String offset, String companyId, int tenantId) throws Exception {
+    public String getIsAttitude(String typeId, String writerId, String startDate, String offset, String companyId, int tenantId, String isOutCheck) throws Exception {
     	LOGGER.debug("getIsAttitude started");
+    	Map<String,Object> map = new HashMap<String, Object>();
     	
     	if (typeId.equals("A01") || typeId.equals("A02")) {
     		typeId = "A01,A02";
-    	} else if (typeId.equals("A03") || typeId.equals("A08")) {
+    	} 
+    	else if (typeId.equals("A03") && !isOutCheck.equals("true")) {// 퇴근은 여러번 찍을 수 있으므로 조회시 조퇴여부만 확인한다.
+    		typeId = "A08";
+    	}
+    	else if (typeId.equals("A03") && isOutCheck.equals("true")) {// 퇴근은 여러번 찍을 수 있으므로 등록시 퇴근여부만 확인한다.
+    		typeId = "A03";
+    		map.put("typeId", typeId);
+    		map.put("isOutCheck", isOutCheck);
+    	}
+    	else if (typeId.equals("A08")) {
     		typeId = "A03,A08";
     	}
     	
@@ -2350,7 +2411,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
     	}
     	
-    	Map<String,Object> map = new HashMap<String, Object>();
     	map.put("typeIdArr", typeId.split(","));
     	map.put("writerId", writerId);
     	map.put("offsetMin", commonUtil.getMinuteUTC(offset));

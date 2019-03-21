@@ -1149,7 +1149,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
 		String contID = request.getParameter("contID");
 		String companyID = request.getParameter("comID");
-		String primary = userInfo.getPrimary();
+		String primary = userInfo.getLang();
 		
 		String result = ezApprovalGAdminService.getContainerUseDeptInfo(contID, companyID, primary, userInfo.getTenantId());
 		
@@ -3352,11 +3352,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}
 		}
 		
-		if (request.getParameter("deptName") != null && !request.getParameter("deptName").equals("")) {
+		if (request.getParameter("drafterdept") != null && !request.getParameter("drafterdept").equals("")) {
 			if (!subQuery.toString().equals("")) {
 				subQuery.append(" AND ");
 			}			
-			subQuery.append(" (TBL_ENDAPRDOCINFO.writerDeptName LIKE '%" + request.getParameter("deptName") + "%' OR TBL_ENDAPRDOCINFO.writerDeptName2 LIKE '%" + request.getParameter("deptName") + "%')");
+			subQuery.append(" (TBL_ENDAPRDOCINFO.WRITERDEPTID = '" + request.getParameter("drafterdept")+"')");
 		}
 		
 		if (request.getParameter("formID") != null && !request.getParameter("formID").equals("")) {
@@ -3717,7 +3717,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return result;
 	}
 	/**
-	 * 전자결재 결재환경설정 부재자설정 지정 호출 Method
+	 * 관리자페이지 > 전자결재 > 부재자 설정 관리 > 부재자 지정 호출 Method
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/selectPerson.do")
 	public String selectPerson(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
@@ -3743,7 +3743,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 전자결재 결재환경설정 부재자설정 지정 호출 Method
+	 * 관리자페이지 > 전자결재 > 부재자 설정 관리 > 대리 결재자 지정 호출 Method
 	 */
 	@RequestMapping(value = "/admin/ezApprovalG/DselectPerson.do")
 	public String DselectPerson(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{

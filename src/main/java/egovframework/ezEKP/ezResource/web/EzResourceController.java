@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
@@ -38,6 +39,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
+import egovframework.ezEKP.ezResource.service.EzResourceAdminService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
@@ -51,6 +53,7 @@ import egovframework.ezEKP.ezResource.vo.ResSelectFormIDVO;
 import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleConfigVO;
 import egovframework.let.user.login.service.LoginService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -102,6 +105,9 @@ public class EzResourceController extends EgovFileMngUtil {
 	
 	@Resource(name="EzScheduleService")
 	private EzScheduleService ezScheduleService;
+	
+	@Resource(name="EzResourceAdminService")
+	private EzResourceAdminService ezResourceAdminService;
 	
 	/**
 	 * 자원관리 메인 화면 호출 함수
@@ -233,16 +239,16 @@ public class EzResourceController extends EgovFileMngUtil {
 				nodes.item(i).setTextContent("TRUE");
 				nodes1.item(i).removeChild((Node) nodes4.item(i));
 				
-				if(nodes2.item(0).getTextContent().equals("")) {
+				if(nodes2.item(0).getTextContent() == null || nodes2.item(0).getTextContent().equals("")) {
 					nodes2.item(0).setTextContent("<![CDATA[]]>");
 				}
-				if(nodes5.item(i).getTextContent().equals("")) {
+				if(nodes5.item(i).getTextContent() == null || nodes5.item(i).getTextContent().equals("")) {
 					nodes5.item(i).setTextContent("<![CDATA[]]>");
 				}
-				if(nodes6.item(i).getTextContent().equals("")) {
+				if(nodes6.item(i).getTextContent() == null || nodes6.item(i).getTextContent().equals("")) {
 					nodes6.item(i).setTextContent("<![CDATA[]]>");
 				}
-				if(nodes7.item(i).getTextContent().equals("")) {
+				if(nodes7.item(i).getTextContent() == null || nodes7.item(i).getTextContent().equals("")) {
 					nodes7.item(i).setTextContent("<![CDATA[]]>");
 				}
 				
@@ -386,10 +392,10 @@ public class EzResourceController extends EgovFileMngUtil {
 							resultXML += "<owner_nm>"+orderXML.getElementsByTagName("owner_nm").item(i).getTextContent()+"</owner_nm>";
 							resultXML += "<dept_name>"+"<![CDATA["+ orderXML.getElementsByTagName("dept_name").item(i).getTextContent()+"]]></dept_name>";
 							resultXML += "<writeDay>"+orderXML.getElementsByTagName("writeDay").item(i).getTextContent()+"</writeDay>";
-							resultXML += "<owner_nm2>"+orderXML.getElementsByTagName("owner_nm2").item(i).getTextContent()+"</owner_nm2>";
-							resultXML += "<dept_name2>"+"<![CDATA["+ orderXML.getElementsByTagName("dept_name2").item(i).getTextContent()+"]]></dept_name2>";
-							resultXML += "<jobtitle>"+"<![CDATA["+orderXML.getElementsByTagName("jobtitle").item(i).getTextContent()+"]]></jobtitle>";
-							resultXML += "<jobtitle2>"+"<![CDATA[" +orderXML.getElementsByTagName("jobtitle2").item(i).getTextContent()+"]]></jobtitle2>";
+							resultXML += "<owner_nm2>"+"</owner_nm2>";
+							resultXML += "<dept_name2>"+"</dept_name2>";
+							resultXML += "<jobtitle>"+"</jobtitle>";
+							resultXML += "<jobtitle2>"+"</jobtitle2>";
 							resultXML += "</appointment>";
 						} 
 					}
@@ -470,10 +476,14 @@ public class EzResourceController extends EgovFileMngUtil {
 						resultXML1 += "<owner_nm>"+tempXML.getElementsByTagName("owner_nm").item(i).getTextContent()+"</owner_nm>";
 						resultXML1 += "<dept_name>"+"<![CDATA[" +tempXML.getElementsByTagName("dept_name").item(i).getTextContent()+"]]></dept_name>";
 						resultXML1 += "<writeDay>"+tempXML.getElementsByTagName("writeDay").item(i).getTextContent()+"</writeDay>";
-						resultXML1 += "<owner_nm2>"+tempXML.getElementsByTagName("owner_nm2").item(i).getTextContent()+"</owner_nm2>";
+						resultXML1 += "<owner_nm2>"+"</owner_nm2>";
+						resultXML1 += "<dept_name2>"+"</dept_name2>";
+						resultXML1 += "<jobtitle>"+"</jobtitle>";
+						resultXML1 += "<jobtitle2>"+"</jobtitle2>";
+						/*resultXML1 += "<owner_nm2>"+tempXML.getElementsByTagName("owner_nm2").item(i).getTextContent()+"</owner_nm2>";
 						resultXML1 += "<dept_name2>"+"<![CDATA["+tempXML.getElementsByTagName("dept_name2").item(i).getTextContent()+"]]></dept_name2>";
 						resultXML1 += "<jobtitle>"+"<![CDATA["+tempXML.getElementsByTagName("jobtitle").item(i).getTextContent()+"]]></jobtitle>";
-						resultXML1 += "<jobtitle2>"+"<![CDATA["+tempXML.getElementsByTagName("jobtitle2").item(i).getTextContent()+"]]></jobtitle2>";
+						resultXML1 += "<jobtitle2>"+"<![CDATA["+tempXML.getElementsByTagName("jobtitle2").item(i).getTextContent()+"]]></jobtitle2>";*/
 						resultXML1 += "<count>"+tempXML.getElementsByTagName("count").item(i).getTextContent()+"</count>";
 						resultXML1 += "</appointment>";
 					}
@@ -701,7 +711,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		strBrdID = resBrd.getBrdID();
 		strBrdExplain = resBrd.getBrdExplain();
-		strResLocation = resBrd.getResLocation();
+		strResLocation = commonUtil.cleanValue(resBrd.getResLocation());		// 2018-11-16 김민성 - 자원위치 특수문자, 태그 처리
 		strOwnDeptID = resBrd.getOwnDeptID();
 		strOwnerID = ownerList[0];
 		ownerCall = resBrd.getOwnerCall();
@@ -1331,11 +1341,12 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdName = resBrdVO.getBrdNm2();
 		}
 		
-		startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
-		endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd aa h:mm:ss", "");
+		// 2019-01-15 김민성 - 자원관리 - 자원관리 예약 시간 조회 12시간->24시간제로 변경
+		//startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd hh:mm:ss", "");
+		//endDateTime = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd hh:mm:ss", "");
 
-		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
-		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd aa h:mm:ss", "yyyy-M-d H:mm", "");
+		checkSDT = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd hh:mm:ss", "yyyy-M-d H:mm", "");
+		checkEDT = EgovDateUtil.convertDate(endDateTime, "yyyy-MM-dd hh:mm:ss", "yyyy-M-d H:mm", "");
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("editor", editor);
@@ -2216,10 +2227,6 @@ public class EzResourceController extends EgovFileMngUtil {
 	    	String emailAddress = resInfo.get(i).getMailAddress();
 	    	String accessName = resInfo.get(i).getOwnerNm();
 	    	
-	    	if (accessName.indexOf("(") > -1) {
-	    		accessName = accessName.split("(")[0];
-	    	}
-	    	
 	    	InternetAddress to = new InternetAddress();
 	    	to.setPersonal(accessName, "UTF-8");
 	    	to.setAddress(emailAddress);
@@ -2282,7 +2289,7 @@ public class EzResourceController extends EgovFileMngUtil {
     	String accessName = resInfo.getOwnerNm(); 
     	
     	if (accessName.indexOf("(") > -1) {
-    		accessName = accessName.split("(")[0];
+    		accessName = accessName.split("\\(")[0];
     	}
     	
     	InternetAddress to = new InternetAddress();
@@ -2293,5 +2300,184 @@ public class EzResourceController extends EgovFileMngUtil {
         ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
         
         logger.debug("sendMailToUser ended");
+	}
+	
+	@RequestMapping(value = "/ezResource/changeResourceOrder.do", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public void changeResourceOrder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ changeResourceOrder started ============");
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		
+		String selectedResourceId = request.getParameter("selectedResourceId");
+		String targetResourceId = request.getParameter("targetResourceId");
+		String upperResourceId = request.getParameter("upperResourceId");
+			
+		ezResourceService.changeResourceOrder(selectedResourceId, targetResourceId, loginVO.getTenantId(), loginVO.getCompanyID(), upperResourceId);
+		logger.debug("============ changeResourceOrder ended ============");
+	}
+	
+	@RequestMapping(value = "ezResource/resOrganToMoveResource.do")
+	public String resOrganToMoveResource(LoginVO userInfo,@CookieValue("loginCookie") String loginCookie,HttpServletRequest req,Model model) throws Exception {
+		logger.debug("============ resOrganToMoveResource ended ============");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("serverName", req.getServerName());
+		
+		logger.debug("============ resOrganToMoveResource ended ============");
+		return "ezResource/resOrganToMoveResource";
+	}
+	
+	@RequestMapping(value = "/ezResource/moveResourceToOtherResourceGroup.do", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public void moveResourceToOtherResourceGroup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ moveResourceToOtherResourceGroup started ============");
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		
+		String originResourceGroupId = request.getParameter("originResourceGroupId");
+		String selectedResourceGroupId = request.getParameter("selectedResourceGroupId");
+			
+		ezResourceService.moveResourceToOtherResourceGroup(originResourceGroupId, selectedResourceGroupId, loginVO.getTenantId(), loginVO.getCompanyID());
+		logger.debug("============ moveResourceToOtherResourceGroup ended ============");
+	}
+	
+	@RequestMapping(value = "/ezResource/isResourceGroupManager.do", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String isResourceGroupManager(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, LoginVO loginVO) throws Exception {
+		
+		logger.debug("============ moveResourceToOtherResourceGroup started ============");
+		
+		loginVO = commonUtil.userInfo(loginCookie);
+		
+		String selectedResourceGroupId = request.getParameter("selectedResourceGroupId");
+			
+		String isManger = ezResourceService.isResourceGroupManager(selectedResourceGroupId, loginVO.getId(),loginVO.getTenantId(), loginVO.getCompanyID());
+		
+		logger.debug("============ moveResourceToOtherResourceGroup ended ============");
+		return isManger;
+	}
+	
+	/**
+	 * 자원관리 관리자 정보 실행 함수
+	 */
+	@RequestMapping(value = "/ezResource/callManagerDepthNodeForMoveResource.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String callManagerDepthNode(@RequestBody String xmlStr,HttpServletRequest req,Model model, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("callManagerDepthNode Start");
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String selectFlag = "";
+		StringBuilder strXML = new StringBuilder();
+		Document xmlRet = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		
+		if (req.getParameter("flag") != null) {
+			selectFlag = req.getParameter("flag");
+		}
+		logger.debug("xmlStr="+xmlStr);
+		String ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
+		xmlRet = commonUtil.convertStringToDocument(ret);
+		
+		if (xmlRet.getElementsByTagName("EXPANDED").getLength() <= 0) {
+			strXML.append("<PARADATA>");
+			strXML.append("<DATA>0</DATA>");
+			strXML.append("<DATA>"+userInfo.getDeptID()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getDeptName1()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getId()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getDisplayName1()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getTitle1()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getPhone()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getCompanyName1()+"</DATA>");
+			strXML.append("<DATA></DATA>");
+			strXML.append("<DATA></DATA>");
+			strXML.append("<DATA>"+userInfo.getCompanyID()+"</DATA>");
+			strXML.append("<DATA>"+userInfo.getCompanyName2()+"</DATA>");
+			strXML.append("<ISCOMPANY>Y</ISCOMPANY>");
+			strXML.append("</PARADATA>");
+			
+			ezResourceAdminService.addClsData(strXML.toString(), userInfo.getTenantId());
+			
+			ret = ezResourceService.getSubClsTree(xmlStr, userInfo.getPrimary(), userInfo.getCompanyID(), userInfo.getDeptID(), userInfo.getId(), userInfo.getTenantId());
+			
+			xmlRet = commonUtil.convertStringToDocument(ret);
+		}
+		
+		XPath xpath = XPathFactory.newInstance().newXPath();
+		NodeList nodes = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/EXPANDED", xmlRet, XPathConstants.NODESET);
+		NodeList nodes1 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE", xmlRet, XPathConstants.NODESET);
+		NodeList nodes2 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/SETNODEICONBYNAME", xmlRet, XPathConstants.NODESET);
+		NodeList nodes3 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA12", xmlRet, XPathConstants.NODESET);
+		NodeList nodes4 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/ISLEAF", xmlRet, XPathConstants.NODESET);
+		NodeList nodes5 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/SELECT", xmlRet, XPathConstants.NODESET);
+		NodeList nodes16 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA8", xmlRet, XPathConstants.NODESET);
+		NodeList nodes17 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA9", xmlRet, XPathConstants.NODESET);
+		NodeList nodes18 = (NodeList)xpath.evaluate("TREEVIEWDATA/NODE/DATA10", xmlRet, XPathConstants.NODESET);
+			
+		NodeList nodes7 = (NodeList)xpath.evaluate("NODES/NODE/EXPANDED", xmlRet, XPathConstants.NODESET);
+		NodeList nodes8 = (NodeList)xpath.evaluate("NODES/NODE", xmlRet, XPathConstants.NODESET);
+		NodeList nodes9 = (NodeList)xpath.evaluate("NODES/NODE/DATA12", xmlRet, XPathConstants.NODESET);
+		NodeList nodes10 = (NodeList)xpath.evaluate("NODES/NODE/ISLEAF", xmlRet, XPathConstants.NODESET);
+		NodeList nodes11 = (NodeList)xpath.evaluate("NODES/NODE/SETNODEICONBYNAME", xmlRet, XPathConstants.NODESET);
+		NodeList nodes13 = (NodeList)xpath.evaluate("NODES/NODE/DATA8", xmlRet, XPathConstants.NODESET);
+		NodeList nodes14 = (NodeList)xpath.evaluate("NODES/NODE/DATA9", xmlRet, XPathConstants.NODESET);
+		NodeList nodes15 = (NodeList)xpath.evaluate("NODES/NODE/DATA10", xmlRet, XPathConstants.NODESET);
+			
+		if (nodes.getLength() != 0) {
+			for (int i=0; i<nodes.getLength(); i++) {
+				nodes1.item(i).removeChild((Node) nodes2.item(i));
+				
+				if (nodes3.item(i).getTextContent().equals("0")) {
+					nodes4.item(i).setTextContent("TRUE");
+				}
+				
+				if(nodes5.item(i).getTextContent().equals("")) {
+					nodes5.item(i).setTextContent(" ");
+				}
+				
+				if(nodes16.item(i).getTextContent().equals("")) {
+					nodes16.item(i).setTextContent(" ");
+				}
+				if(nodes17.item(i).getTextContent().equals("")) {
+					nodes17.item(i).setTextContent(" ");
+				}
+				if(nodes18.item(i).getTextContent().equals("")) {
+					nodes18.item(i).setTextContent(" ");
+				}
+					
+				//좌측 리로드할때는 선택 안되도록
+				if (selectFlag.equals("SELECT_NO")) {
+					if (nodes5.getLength() != 0) {
+						nodes1.item(i).removeChild((Node) nodes5.item(i));
+					}
+				}
+			}
+		}
+		if (nodes7.getLength() != 0) {
+			for (int i=0; i<nodes7.getLength(); i++) {
+				nodes8.item(i).removeChild((Node) nodes11.item(i));
+				
+				if (nodes9.item(i).getTextContent().equals("0")) {
+					nodes10.item(i).setTextContent("TRUE");
+				}
+				if(nodes13.item(i).getTextContent().equals("")) {
+					nodes13.item(i).setTextContent(" ");
+				}
+				if(nodes14.item(i).getTextContent().equals("")) {
+					nodes14.item(i).setTextContent(" ");
+				}
+				if(nodes15.item(i).getTextContent() == null || nodes15.item(i).getTextContent().equals("")) {
+					nodes15.item(i).setTextContent(" ");
+				}
+				
+			}
+		}
+		
+		logger.debug("xmlRet="+commonUtil.convertDocumentToString(xmlRet));
+		logger.debug("callManagerDepthNode End");
+		return commonUtil.convertDocumentToString(xmlRet);
 	}
 }

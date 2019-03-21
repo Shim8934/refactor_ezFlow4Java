@@ -246,4 +246,8 @@ public class EzWebFolderDAO extends EgovAbstractDAO {
 	public List<FolderSimpleVO> getAllSimpleShareFolder(Map<String, Object> map) {
 		return (List<FolderSimpleVO>)list("EzWebFolderDAO.getAllSimpleShareFolder", map);
 	}
+	
+	public void updateFileExt(Map<String, Object> map) {
+		update("EzWebFolderDAO.updateFileExt", map);
+	}
 }

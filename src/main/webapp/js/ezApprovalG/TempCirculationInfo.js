@@ -11,7 +11,7 @@ function btn_AprDeptTempletDelCC_onclick() {
         var ListViewLen = pAPRTemplist.GetSelectedRows();
 
         if (ListViewLen.length < 1) {
-            var pAlertContent = linealt15;
+            var pAlertContent = linealt18;
             OpenAlertUI(pAlertContent);
             return;
         }
@@ -162,7 +162,7 @@ function SetGongRamList(pstrXML) {
             
             strRows += "<ROW>";
             strRows += "<CELL>";
-            strRows += "<VALUE>" + i + "</VALUE>";
+            strRows += "<VALUE>" + (listnodes.length+1-i) + "</VALUE>";
             strRows += "<DATA1>" + "" + "</DATA1>";
             strRows += "<DATA2>" + "" + "</DATA2>";
             strRows += "<DATA3>" + pDocID + "</DATA3>";

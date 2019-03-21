@@ -90,7 +90,7 @@
 <%--                     	<span>${subject}</span> --%>
 <!--                 	</div> -->
         	        <div class="question" style="overflow-y:hidden;width:378px">
-	        	        <p><spring:message code='ezPersonal.t2000' />:</p>
+	        	        <p><spring:message code='ezPersonal.t240' />:</p>
                     	<span title='${subject}'>${subjectCont}</span>
                 	</div>
             	</td>

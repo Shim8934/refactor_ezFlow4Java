@@ -1359,9 +1359,9 @@ function SaveDraftDocInfo_ilban(pState)
 	var g_SepAttachLVXml = "";
 	g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
 	if (!g_SepAttachLVXml)
-	    createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", "");
+	    createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
 	else
-	    createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", GetSepAttParamXml(g_SepAttachLVXml));
+	    createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", GetSepAttParamXml(g_SepAttachLVXml));
 
 	createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
 
@@ -1764,13 +1764,17 @@ function SaveTMPDocInfo(AutoSave, saveflag, pState, phtml) {
         createNodeAndInsertText(xmlpara, objNode, "TASKCODE", TaskCode);
         createNodeAndInsertText(xmlpara, objNode, "DOCNUMCODE", DocNumCode);
         createNodeAndInsertText(xmlpara, objNode, "ORGDOCNUMCODE", "");
+        createNodeAndInsertText(xmlpara, objNode, "FORMHREF", FormHref);
+        createNodeAndInsertText(xmlpara, objNode, "DOCSN", DocSN);
+        createNodeAndInsertText(xmlpara, objNode, "LISTTYPE", ListType);
+        createNodeAndInsertText(xmlpara, objNode, "DRAFTFLAG", DraftFlag);
 
         var g_SepAttachLVXml = "";
         g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
         if (!g_SepAttachLVXml)
-            createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", "");
+            createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
         else
-            createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", GetSepAttParamXml(g_SepAttachLVXml));
+            createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", GetSepAttParamXml(g_SepAttachLVXml));
 
         createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
         createNodeAndInsertText(xmlpara, objNode, "SECURITYAPPROVAL", tempSecurityDate);

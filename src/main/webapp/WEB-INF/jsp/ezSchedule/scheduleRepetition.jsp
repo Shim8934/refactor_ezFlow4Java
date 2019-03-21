@@ -58,6 +58,7 @@
 		        datepicker();
 		        datetimepicker();
 		        var repetition = RetValue["REPETITION"];
+		        var allday = RetValue["ALLDAYCHECK"];
 		    				
 		    	if (repetition != "")
 		    	{
@@ -79,6 +80,12 @@
 		    		
 		    		if (info[1] == "1")
 		    			alldaycheck.checked = true;
+		    		
+					var m_objStartTime = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+		    		
+		    		var iDateNumber = m_objStartTime.getDate();
+		            var iWeekdayNumber = m_objStartTime.getDay();
+		            var iMonthNumber = m_objStartTime.getMonth();
 		    			
 		    		showMainPattern(info[2]);
 		    		
@@ -93,6 +100,7 @@
 		    					id0D1.checked = true;
 		    					txt_De.value = info[3];
 		    				}
+		    				document.getElementById("day" + iWeekdayNumber).checked = true;
 		    			break;
 		    			case "1":
 		    				mpWeekly.checked = true;
@@ -110,14 +118,30 @@
 		    					idOM1.checked = true;
 		    					list_MonthInterval.value = info[4];
 		    					list_MonthlyDays.value = info[5];
+		    					
+		    					var nEach = parseInt(iDateNumber / 7);
+					            document.getElementById("list_MonthlyEach").selectedIndex = nEach;
+					            SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);
 		    				}
 		    				else
 		    				{
+		    					document.getElementById("list_MonthlyDays").value = iDateNumber;
+		    					
 		    					id0M2.checked = true;
 		    					list_MonthInterval2.value = info[4];
 		    					list_MonthlyEach.value = info[5];
 		    					list_MonthlyDay.value = info[6];
 		    				}
+		    				document.getElementById("day" + iWeekdayNumber).checked = true;			// 매주 체크
+		    				
+				            document.getElementById("list_YearlyDays").value = iDateNumber;
+				            
+				            document.getElementById("list_Month").selectedIndex = iMonthNumber;
+				            document.getElementById("list_Month2").selectedIndex = iMonthNumber;
+				            
+				            var nEach = parseInt(iDateNumber / 7);
+				            document.getElementById("list_YearlyEach").selectedIndex = nEach;
+				            SetWeekdayDropDown(list_YearlyDay, iWeekdayNumber);							// 매년 체크
 		    			break;
 		    			case "3":
 		    				mpYearly.checked = true;
@@ -127,7 +151,12 @@
 		    					list_Month.value = info[4];
 		    					list_YearlyDays.value = info[5];
 		    					
+		    					document.getElementById("list_Month2").selectedIndex = iMonthNumber;
 		    					
+		    					var nEach = parseInt(iDateNumber / 7);
+					            document.getElementById("list_YearlyEach").selectedIndex = nEach;
+					            
+					            SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);
 		    				}
 		    				else
 		    				{
@@ -135,12 +164,85 @@
 		    					list_Month2.value = info[4];
 		    					list_YearlyEach.value = info[5];
 		    					list_YearlyDay.value = info[6];
+		    					
+		    					 document.getElementById("list_Month").selectedIndex = iMonthNumber;
+		    					 
+		    					 document.getElementById("list_YearlyDays").value = iDateNumber;
 		    				}
+		    				document.getElementById("day" + iWeekdayNumber).checked = true;			// 매주 체크
+		    				
+		    				document.getElementById("list_MonthlyDays").value = iDateNumber;
+		    				
+		    				document.getElementById("list_MonthlyEach").selectedIndex = nEach;
+		    				SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);						// 매월 체크
 		    		}
+		    		
+		    		if(info[2] == "0" || info[2] == "1") {
+			    		SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);
+			            SetWeekdayDropDown(list_YearlyDay, iWeekdayNumber);
+			            
+			            document.getElementById("list_MonthlyDays").value = iDateNumber;
+			            document.getElementById("list_YearlyDays").value = iDateNumber;
+		
+			            document.getElementById("list_Month").selectedIndex = iMonthNumber;
+			            document.getElementById("list_Month2").selectedIndex = iMonthNumber;
+		
+			            var nEach = parseInt(iDateNumber / 7);
+			            document.getElementById("list_MonthlyEach").selectedIndex = nEach;
+			            document.getElementById("list_YearlyEach").selectedIndex = nEach;
+		    		}
+		    	}
+		    	else {
+		    		if(allday == true) {			// 일정작성 탭에서 하루종일 체크하고 반복 클릭 시
+		    			alldaycheck.checked = true;
+		    		}
+		    	
+		    		// 2019-02-20 김민성 - 일정반복 데이터 없을 때 해당 요일 체크되도록 수정
+		    		try {
+		                m_objStartTime = new Date(RetValue["SDATE"].split(' ')[0].split('-')[0], parseInt(RetValue["SDATE"].split(' ')[0].split('-')[1]) - 1, RetValue["SDATE"].split(' ')[0].split('-')[2], RetValue["SDATE"].split(' ')[1].split(':')[0], RetValue["SDATE"].split(' ')[1].split(':')[1], 0, 0);
+		            } catch (e) {
+		                m_objStartTime = new Date(RetValue["SDATE"]);
+		            }  
+		    	
+		            var iDateNumber = m_objStartTime.getDate();
+		            var iWeekdayNumber = m_objStartTime.getDay();
+		            var iMonthNumber = m_objStartTime.getMonth();
+
+		    		document.getElementById("day" + iWeekdayNumber).checked = true;
+		    		SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);
+		            SetWeekdayDropDown(list_YearlyDay, iWeekdayNumber);
+		            
+		            document.getElementById("list_MonthlyDays").value = iDateNumber;
+		            document.getElementById("list_YearlyDays").value = iDateNumber;
+	
+		            document.getElementById("list_Month").selectedIndex = iMonthNumber;
+		            document.getElementById("list_Month2").selectedIndex = iMonthNumber;
+	
+		            var nEach = parseInt(iDateNumber / 7);
+		            document.getElementById("list_MonthlyEach").selectedIndex = nEach;
+		            document.getElementById("list_YearlyEach").selectedIndex = nEach;
 		    	}
 		    	allDayTime();
 		    	clearAllDay();
 		    }
+		    
+		    function SetWeekdayDropDown(ddDay, value)
+		    {
+		    	var iList;
+		    	var iLength = ddDay.length;
+		        
+		    	for (iList = 0; iList < iLength; iList++)
+		    	{  
+		    		if (ddDay[iList].value == value)
+		    		{ 
+		    			ddDay[iList].selected = true;
+		    			
+		    			return;
+		    		}
+		    	}						
+		    	return;
+		    }
+		    
 		    function KeEventControl(obj) {
 		        useragt = navigator.userAgent.toUpperCase();
 		        if (useragt.indexOf("SAFARI") > 0 && useragt.indexOf("CHROME") < 0) //사파리 브라우저일 경우
@@ -198,6 +300,12 @@
 		    	        return;
 		    	    }
 		    	}
+		    	
+		    	// 시작시간과 종료시간이 00시 00분이면 무조건 하루종일로
+		    	if(stime == "00:00" && etime == "00:00") {
+		    		document.getElementById("alldaycheck").checked = true;
+		    	}
+		    	
 		    	var allDayString = "";
 		    	var scheduleTerm = "";	
 		    	var occurrenceTerm = "";			
@@ -252,7 +360,6 @@
 		    			if (txt_De.value == parseInt(txt_De.value) && parseInt(txt_De.value) > 0){
 		    				
 		    				repetition += "|" + parseInt(txt_De.value);	
-		    				console.log(repetition + ' text_De.value : '+txt_De.value + ' parseInt : ' + parseInt(txt_De.value));
 		    			}		    				
 		    			else {		    				
 			    				alert("<spring:message code='ezSchedule.t62' />");
@@ -383,7 +490,7 @@
 		    			repetition += "|1";
 		    			repetition += "|" + list_Month.value;
 		    			
-		    			recurString = recurString + " " + getMonthString(parseInt(list_Month.value)) + list_YearlyDays.value + strLang80;					
+		    			recurString = recurString + " " + getMonthString(parseInt(list_Month.value)) + " " + list_YearlyDays.value + strLang80;					
 		    			
 		    			if (list_YearlyDays.value == parseInt(list_YearlyDays.value) && parseInt(list_YearlyDays.value) > 0 &&
 		    				parseInt(list_YearlyDays.value) < 32)
@@ -811,6 +918,11 @@
 		    
 		        sTimeTemp = $('#Stimepicker').val();
 		        eTimeTemp = $('#Etimepicker').val();
+
+		        // 시작시간과 종료시간이 00시 00분이면 무조건 하루종일로
+		        if(sTimeTemp == "00:00" && eTimeTemp == "00:00") {
+		        	document.getElementById("alldaycheck").checked = true;
+		        }
 		    }
 		    		    
 		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
@@ -840,59 +952,61 @@
 		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
 		    }
 		    
+		    function setTimePickerReadOnly() {
+		    	$('#Stimepicker').attr('disabled','disabled');
+	    		$('#Etimepicker').attr('disabled','disabled');
+		    }
 		    
-		    //CheckPreviously 함수 사용을 위해 schedule_write_Corss.js 호출하고  스크립트에 포함된 함수인 check_time 삭제. 
+			function setTimePickerModifiable() {
+				$('#Stimepicker').removeAttr('disabled');
+	    		$('#Etimepicker').removeAttr('disabled');
+		    }
 		    
-		    //2017-11-01 #9736  일정반복설정시, 시작일과 종료일을 반대로 지정해도 경고없이 등록되는 현상 
-		   /*  function check_time() {
-		        var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-		        var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-
-		        var startYear = startDate.split("-")[0];
-		        var startMonth = startDate.split("-")[1];
-		        var startDay = startDate.split("-")[2];
-		        var endYear = endDate.split("-")[0];
-		        var endMonth = endDate.split("-")[1];
-		        var endDay = endDate.split("-")[2];
-		        var stime = $('#Stimepicker').val()
-
-		        var shour, sminute;
-		        var ehour, eminute;
-
-		        shour = stime.split(":")[0];
-		        sminute = stime.split(":")[1];
-
-		        var etime = $('#Etimepicker').val()
-
-		        ehour = etime.split(":")[0];
-		        eminute = etime.split(":")[1];
-
-		        if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) > parseInt(endDay))) {
-		            return false;
-		        }
-		        else if (startYear > endYear || (startYear == endYear && parseInt(startMonth) > parseInt(endMonth)) || (startYear == endYear && parseInt(startMonth) == parseInt(endMonth) && parseInt(startDay) == parseInt(endDay))) {
-		            if (document.getElementById("alldaycheck").checked == false) {
-		                if (shour > ehour || (shour == ehour && sminute >= eminute)) {
-		                    return false;
-		                }
-		                else
-		                    return true;
-		            }
-		            return true;
-		        }
-		        
-		        return true;
-		    } */
-	    	/* 2018.02.23 김기하  */
 		    function allDayTime(){
 	    		if(document.getElementById("alldaycheck").checked == true){
 	    			sTimeTemp = $('#Stimepicker').val();
 		    		eTimeTemp = $('#Etimepicker').val();
 		    		$('#Stimepicker').timepicker("setTime", "00:00");
 		    		$('#Etimepicker').timepicker("setTime", "00:00");
-		    	}else{
+		    		
+		    		setTimePickerReadOnly();
+		    	}else if(sTimeTemp != null){
+		    		setTimePickerModifiable();
+		    		
 		    		$('#Stimepicker').timepicker("setTime", sTimeTemp);
 		    		$('#Etimepicker').timepicker("setTime", eTimeTemp);
+		    	}
+		    	else {
+		    		setTimePickerModifiable();
+		    		
+					var now = new Date();
+		        	
+		        	//시작시간
+		        	var startTime;
+		        	var hour = now.getHours();
+		        	var time = now.getMinutes();
+		        	
+		        	if (parseInt(time) < 30) {
+		        		startTime = hour + ":00:00";
+		        	} else {
+		        		startTime = hour + ":30:00";
+		        	}
+		        	
+		        	//종료시간
+		        	var endTime;
+		        	now.setMinutes(now.getMinutes() + 30);
+		        	
+		        	hour = now.getHours();
+		        	time = now.getMinutes();
+		        	
+		        	if (parseInt(time) < 30) {
+		        		endTime = hour + ":00:00";
+		        	} else {
+		        		endTime = hour + ":30:00";
+		        	}
+		        	
+		        	$('#Stimepicker').timepicker('setTime', startTime);
+		        	$('#Etimepicker').timepicker('setTime', endTime);
 		    	}
 		    }
 		    
@@ -903,6 +1017,7 @@
 		    		}
 		    		if($('#Stimepicker').val() == "00:00" && $('#Etimepicker').val() == "00:00"){
 		    			$("#alldaycheck").prop("checked", true);
+		    			setTimePickerReadOnly();
 		    		}
 		    	});
 		    	$('#Etimepicker').change(function(){
@@ -911,56 +1026,12 @@
 		    		}
 		    		if(($('#Stimepicker').val() == "00:00") && ($('#Etimepicker').val() == "00:00")){
 		    			$("#alldaycheck").prop("checked", true);
+		    			setTimePickerReadOnly();
 		    		}
 		    	});
 		    	
 		    	
-		    }
-		    //2018-07-31 구해안 두 날짜 사이 날짜들 구하는 함수
-		   /*  function getDateRange(startDate, endDate, listDate) {
-		        var dateMove = new Date(startDate);
-		        var strDate = startDate;
-
-			        if (startDate == endDate) {
-			            var strDate = dateMove.toISOString().slice(0,10);
-			            listDate.push(strDate);
-			       	}else{
-
-		            while (strDate < endDate) {
-		                var strDate = dateMove.toISOString().slice(0, 10);
-		                listDate.push(strDate);
-		                dateMove.setDate(dateMove.getDate() + 1);
-		            }
-		        }
-		        return listDate;
-		    };
-		    
-		    function checkRangeRepe(){
-		    	var listDate = [];
-		    	
-		    	var startDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-		    	var endDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-
-		        getDateRange(startDate, endDate, listDate);
-		        
-
-		        $.ajax({
-					type : "POST",
-					dataType : "text",
-					traditional : true,
-					async : false,
-					url : "/ezSchedule/scheduleCheckRange.do",
-					data : { 
-						startDate  : startDate,
-						endDate    : endDate,
-						listDate   : listDate
-					},
-					success: function(result){
-						
-					}
-				});
-	            
-		    } */
+		    }	
 
 		</script>
 	</head>

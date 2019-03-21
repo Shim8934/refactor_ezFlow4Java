@@ -101,6 +101,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String langStr = request.getParameter("langStr");
 	    	String listCnt = "10";
+	    	
+	    	LOGGER.debug("userId : " + userId);
+	    	LOGGER.debug("langStr : " + langStr);
 	    				
 			Map<String, Object> resultMap = mResourceService.getScheduleMainList(info, listCnt, langStr);
 
@@ -110,6 +113,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -133,13 +137,14 @@ public class MResourceGWController extends EgovFileMngUtil {
 		try {
 			
 			String serverName = request.getHeader("x-user-host");
-			MCommonVO info = mOptionService.commonInfo(serverName, request.getParameter("userId"));
+			String userId = request.getParameter("userId");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();			
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
 			String companyId = info.getCompanyId();
     	
-	    	String ownerId = request.getParameter("ownerId");;	    	
+	    	String ownerId = request.getParameter("ownerId");
 	    	String writerDt = info.getDeptId();	    	
 	    	String offset = info.getOffSet();
 	    	String favoriteYn = "N";
@@ -147,11 +152,16 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String langStr = request.getParameter("langStr");
 	    	
 			LOGGER.debug("info.getLang() ?? " + info.getLang());
+			LOGGER.debug("type : " + type);
+			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("startDate : " + startDate);
+			LOGGER.debug("endDate : " + endDate);
+			LOGGER.debug("ownerId : " + ownerId);
 			
 	    	Map<String, Object> resultMap = mResourceService.getScheduleList(ownerId, companyId, startDate, endDate, writerDt, tenantId, offset, "", "", "", "", "", langStr);
 			
 	    	if(ownerId != null && !ownerId.equals("")) {
-	    		List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(request.getParameter("userId"), companyId, tenantId, langStr);
+	    		List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(userId, companyId, tenantId, langStr);
 		    	if(list.size() > 0) {
 		    		for (MResourceScheduleVO mResourceScheduleVO : list) {
 						if(mResourceScheduleVO.getResId() != null) {
@@ -182,6 +192,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -222,6 +233,10 @@ public class MResourceGWController extends EgovFileMngUtil {
 			Map<String, Object> resultMap = new HashMap<String, Object>();
 			String adminYn = "N";
 			
+			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("brdId : " + brdId);
+			LOGGER.debug("langStr : " + langStr);
+			
 			/*if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
 				authYn = "A";
 			}*/
@@ -255,6 +270,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -281,6 +297,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 			int tenantId = info.getTenantId();
 			String companyId = info.getCompanyId();
 			String langStr = request.getParameter("langStr");
+			
+			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("langStr : " + langStr);
 				
 			List<MResourceScheduleVO> list = mResourceService.getResFavoriteList(userId, companyId, tenantId, langStr);
 
@@ -290,6 +309,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -321,6 +341,13 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String dept = info.getDeptId();
 			String startDate = request.getParameter("startDate");
 			String endDate = request.getParameter("endDate");
+			
+			LOGGER.debug("resourceId : " + resourceId);
+			LOGGER.debug("scheduleId : " + scheduleId);
+			LOGGER.debug("repDate : " + repDate);
+			LOGGER.debug("langStr : " + langStr);
+			LOGGER.debug("startDate : " + startDate);
+			LOGGER.debug("endDate : " + endDate);
  
 			MResourceScheduleVO resVO = mResourceService.getResScheduleDetail(resourceId, scheduleId, companyId, tenantId, langStr);
 
@@ -383,6 +410,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -417,6 +445,13 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String writerDt = "";
 			String sDate = startDate.substring(0, 10);
 			String eDate = endDate.substring(0, 10);
+			
+			LOGGER.debug("resourceId : " + resourceId);
+			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("startDate : " + startDate);
+			LOGGER.debug("endDate : " + endDate);
+			LOGGER.debug("ownerId : " + ownerId);
+			LOGGER.debug("num : " + num);
 
 			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, companyId, tenantId);
 			
@@ -442,6 +477,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -497,6 +533,15 @@ public class MResourceGWController extends EgovFileMngUtil {
 			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, companyId, tenantId);			
 			String resApproveFlag = resVO.getResApproveFlag();
 			
+			LOGGER.debug("resourceId : " + resourceId);
+			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("startDate : " + startDate);
+			LOGGER.debug("endDate : " + endDate);
+			LOGGER.debug("importance : " + importance);
+			LOGGER.debug("title : " + title);
+			LOGGER.debug("content : " + content);
+			LOGGER.debug("allDay : " + allDay);
+			LOGGER.debug("reFlag : " + reFlag);
 			LOGGER.debug("resApproveFlag: " + resApproveFlag);
 			
 			if(resApproveFlag.equals("1")) {
@@ -511,6 +556,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -554,6 +600,16 @@ public class MResourceGWController extends EgovFileMngUtil {
 			MResourceScheduleVO resVO = mResourceService.getResBrdDetail(ownerId, companyId, tenantId);			
 			String resApproveFlag = resVO.getResApproveFlag();
 			
+			LOGGER.debug("resourceId : " + resourceId);
+			LOGGER.debug("scheduleId : " + scheduleId);
+			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("startDate" + startDate);
+			LOGGER.debug("endDate : " + endDate);
+			LOGGER.debug("importance : " + importance);
+			LOGGER.debug("title : " + title);
+			LOGGER.debug("content : " + content);
+			LOGGER.debug("reFlag : " + reFlag);
+			LOGGER.debug("allDay : " + allDay);
 			LOGGER.debug("resApproveFlag: " + resApproveFlag);
 			
 			if(resApproveFlag.equals("1")) {
@@ -568,6 +624,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -601,6 +658,13 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String reFlag = request.getParameter("reFlag");
 			String offset = info.getOffSet();
 			
+			LOGGER.debug("resourceId : " + resourceId);
+			LOGGER.debug("scheduleId : " + scheduleId);
+			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("startDate" + startDate);
+			LOGGER.debug("endDate : " + endDate);
+			LOGGER.debug("reFlag : " + reFlag);
+			
 			mResourceService.delResSch(companyId, resourceId, scheduleId, startDate, endDate, offset, reFlag, tenantId);
 
 			result.put("status", "ok");
@@ -609,6 +673,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -633,6 +698,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
+			
+			LOGGER.debug("resourceId : " + resourceId);
+			LOGGER.debug("userId : " + userId);
 
 			mResourceService.delResFavor(resourceId, userId, tenantId);
 
@@ -642,6 +710,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -666,7 +735,8 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String serverName = request.getHeader("x-user-host");
 			String userId = (String) jsonObject.get("userId");
 			
-			LOGGER.debug("userId: " + userId);
+			LOGGER.debug("resourceId : " + resourceId);
+			LOGGER.debug("userId : " + userId);
 			
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			int tenantId = info.getTenantId();
@@ -680,6 +750,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -709,12 +780,16 @@ public class MResourceGWController extends EgovFileMngUtil {
 			cID = "VIEW";	
 			List<ResScheGetHolidayVO> getHoliday = mResourceService.getTholiday(cID.trim(), info.getCompanyId(), info.getTenantId());
 			
+			LOGGER.debug("userId : " + userId);
+			LOGGER.debug("companyID : " + cID);
+			
 			result.put("status", "ok");
 			result.put("code", 0);			
 			result.put("data", getHoliday);
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -759,6 +834,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 				authYn = "A";
 			}*/
 	    	
+			LOGGER.debug("userId: " + userId);
 	    	LOGGER.debug("serverName: " + serverName);
 	    	LOGGER.debug("tenantId: " + tenantId);
 	    	LOGGER.debug("startDate: " + startDate);
@@ -768,6 +844,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 	    	LOGGER.debug("offset: " + offset);
 	    	LOGGER.debug("writerName: " + writerName);
 	    	LOGGER.debug("approveType: " + approveType);
+	    	LOGGER.debug("langStr: " + langStr);
 
 	    	Map<String, Object> resultMap = mResourceService.getScheduleApprList(ownerId, companyId, startDate, endDate, userId, deptId, writerName, approveType, tenantId, offset, "", "", "", "", langStr, authYn);
 				    	
@@ -777,6 +854,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -815,6 +893,11 @@ public class MResourceGWController extends EgovFileMngUtil {
 			/*if (info.getRollInfo().contains("c=1") || info.getRollInfo().contains("k=1")) {
 				authYn = "A";
 			}*/
+			
+			LOGGER.debug("resourceId: " + resourceId);
+			LOGGER.debug("userId: " + userId);
+	    	LOGGER.debug("startDate: " + startDate);
+	    	LOGGER.debug("endDate: " + endDate);
 	    	
 	    	Map<String, Object> resultMap = mResourceService.getScheduleApprList(resourceId, companyId, startDate, endDate, userId, deptId, "", "1", tenantId, offset, "Y", "", sDate, eDate, info.getLang(), authYn);
 			
@@ -830,6 +913,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -856,6 +940,11 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String approve = jsonObject.get("approveType").toString();
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			
+			LOGGER.debug("resourceId: " + resourceId);
+			LOGGER.debug("scheduleId: " + scheduleId);
+			LOGGER.debug("userId: " + userId);
+	    	LOGGER.debug("approve: " + approve);
+			
 			ezResourceService.updateSchedule(Integer.parseInt(scheduleId), resourceId, info.getCompanyId(), approve, info.getTenantId());
 
 			result.put("status", "ok");
@@ -864,6 +953,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -892,6 +982,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			String loginCookie = (String) jsonObject.get("loginCookie");
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
 			
+			LOGGER.debug("userId" + userId);
 			LOGGER.debug("ownerID" + ownerID);
 			LOGGER.debug("num" + num);
 			LOGGER.debug("startDateTime" + startDateTime);
@@ -938,10 +1029,6 @@ public class MResourceGWController extends EgovFileMngUtil {
 		    	String emailAddress = resInfo.get(i).getMailAddress();
 		    	String accessName = resInfo.get(i).getOwnerNm();
 		    	
-		    	if (accessName.indexOf("(") > -1) {
-		    		accessName = accessName.split("(")[0];
-		    	}
-		    	
 		    	InternetAddress to = new InternetAddress();
 		    	to.setPersonal(accessName, "UTF-8");
 		    	to.setAddress(emailAddress);
@@ -955,6 +1042,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -989,6 +1077,9 @@ public class MResourceGWController extends EgovFileMngUtil {
 				authYn = "A";
 			}*/
 			
+			LOGGER.debug("userId" + userId);
+			LOGGER.debug("langStr" + langStr);
+			
 			List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdList(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -996,6 +1087,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");
@@ -1036,6 +1128,8 @@ public class MResourceGWController extends EgovFileMngUtil {
 			LOGGER.debug("userCompany: " + userCompany);
 			LOGGER.debug("brdCompany: " + brdCompany);
 			LOGGER.debug("userId: " + userId);
+			LOGGER.debug("langStr: " + langStr);
+			LOGGER.debug("ownerId: " + ownerId);
 			
 			String authCheck = "N";
 			
@@ -1096,6 +1190,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 		} catch (Exception e) {
 			
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);			
 			result.put("data", "");

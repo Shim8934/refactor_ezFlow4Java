@@ -121,6 +121,7 @@
 		    var rsa = new RSAKey();
 		    var orgCompanyID = "${orgCompanyID}";
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+		    var mailShareId = "${mailShareId}";
 		    
 		    window.onload = function () {		    	
 		        if (pUseBackGround == "TRUE") {
@@ -160,13 +161,10 @@
 				                pAttachListXml = loadXMLString(getXmlString(pAttachListXml));
 				
 				            var objAttachNodes = SelectNodes(pAttachListXml, "LISTVIEWDATA/ROWS/ROW");
-	
+				            
+							/* 2019-01-22 홍승비 - 게시물 수정, 임시저장 시 첨부파일의 경로 전체가 특문 치환되는 오류 수정 */
 				            for (var i = 0; i < objAttachNodes.length; i++) {
-				                if (pMode == "boardContent" || pMode == "boardAttach"){
-				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + "|";
-				                }else{
-				                    attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + "|";
-				                }
+								 attachxml += getNodeText(SelectNodes(objAttachNodes[0], "DATA2")[i]) + "|";
 				            }
 			            }
 			        }
@@ -260,13 +258,18 @@
 		            case "MailEnv_div3":
 		                {
 		                    if (pUseBackGround == "TRUE") {
-		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 430 + "PX";
+		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 330 + "PX";
 		                        if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
 		                            document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
 		                    }
 		                    else {
-		                    	if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
-		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                    	if ("${boardInfo.guBun}" == "2") {
+				                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                    	} else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
+				                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
+		                    	} else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
+				        	        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+		                    	}
 		                    }
 		                    break;
 		                }
@@ -597,8 +600,12 @@
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "COMPANYNAME2", MakeXMLString(SSCompanyName2));
 		        }
 		        else {
+		            /* 2019-03-07 홍승비 - 익명게시판 표시이름 체크 시 앞뒤공백 제거 강화(일본어 전각문자 공백 체크) */
 		            var nickname = document.getElementById("txtNickName").value;
-		            if (nickname == "") nickname = "<spring:message code='ezBoard.t286' />";
+		        	var nickname2 = ReplaceText(nickname, "　", " ");
+		            if (trim(nickname) == "" || trim(nickname2) == "") {
+		            	nickname = "<spring:message code='ezBoard.t286' />";
+		            }
 
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERID", "");
 		            createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "WRITERNAME", MakeXMLString(nickname));
@@ -852,12 +859,14 @@
 			                    }
 			                }
 			                catch (e) { }
+			                
+			                /* 2019-03-19 홍승비 - 게시물 재전송 시 새로고침 동작 수정 */
 			                if (pMode == "boardContent" || pMode == "boardAttach") {
 			                    try {
 			                        if (typeof (window.parent.parent.SuccessBoard) == null || typeof (window.parent.parent.SuccessBoard) == "undefined") {
 			                            var checkboard = window.parent.location.toString();
 			                            if (checkboard.indexOf("mailReadContent.do") < 0) {
-			                                window.parent.parent.location.reload(false);
+			                                window.opener.opener.location.reload(false);
 			                            }
 			                        }
 			                    }
@@ -1006,29 +1015,43 @@
 		        var FileName = "";
 		        var FileURL = "";
 		        var ItemID = "";
-		        MailxmlHTTP.open("POST", "/ezEmail/mailReadBoard.do", false);
-		
+		        var requestUrl = "/ezEmail/mailReadBoard.do";
+		        
+		        if (typeof(mailShareId) != "undefined" && mailShareId != "") {
+            		requestUrl += "?shareId=" + encodeURIComponent(mailShareId);
+				}
+		        
+		        MailxmlHTTP.open("POST", requestUrl, false);
 		        MailxmlHTTP.send(strQuery);
+		        
 		        if (MailxmlHTTP.status == 200) {
 		            var mailXml = loadXMLString(MailxmlHTTP.responseText);
 		            document.getElementById('txtTitle').value = "<spring:message code='ezBoard.t409' />" + getNodeText(mailXml.getElementsByTagName("SUBJECT").item(0));
-		            var Content = "<P>&nbsp;<br></P><br><DIV><br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t410' />"+"</B>-----</DIV><DIV><B>"+"<spring:message code='ezBoard.t411' />"+"</B>" + getNodeText(mailXml.getElementsByTagName("DATE").item(0)) + "</DIV>";
+		            var Content = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		            Content += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t410' /></B>-----</p>";
+		            Content += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t411' /></B>" + getNodeText(mailXml.getElementsByTagName("DATE").item(0)) + "</p>";
+		            
 		            if (getNodeText(mailXml.getElementsByTagName("COMMENT").item(0)) != "") {
-		                Content = Content + "<DIV><B>"+"<spring:message code='ezBoard.t412' /></B>" + ReplaceText(getNodeText(mailXml.getElementsByTagName("FROMNAME").item(0)), "\\\"", "");
-		                Content = Content + "  (" + getNodeText(mailXml.getElementsByTagName("COMMENT").item(0)) + ") </DIV>";
+		                Content += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t412' /></B>" + ReplaceText(getNodeText(mailXml.getElementsByTagName("FROMNAME").item(0)), "\\\"", "");
+		                Content += "  (" + getNodeText(mailXml.getElementsByTagName("COMMENT").item(0)) + ") </p>";
+		            } else {
+		                Content += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t412' /></B>" + ReplaceText(ReplaceText(getNodeText(mailXml.getElementsByTagName("FROMNAME").item(0)), "<", "&lt"), ">", "&gt;") + "</p>";
 		            }
-		            else
-		                Content = Content + "<DIV><B>"+"<spring:message code='ezBoard.t412' />"+"</B>" + ReplaceText(ReplaceText(getNodeText(mailXml.getElementsByTagName("FROMNAME").item(0)), "<", "&lt"), ">", "&gt;") + "</DIV>";
 		
-		            Content = Content + "<DIV><B>"+"<spring:message code='ezBoard.t413' />"+"</B>" + getNodeText(mailXml.getElementsByTagName("SUBJECT").item(0)) + "</DIV><P><br><br>" + getNodeText(mailXml.getElementsByTagName("HTMLDESCRIPTION").item(0)) + "</P>";
+		            Content += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B>" + getNodeText(mailXml.getElementsByTagName("SUBJECT").item(0)) + "</p>";
+		            Content += "<p " + defaultFontAndSize + "></p><p " + defaultFontAndSize + "></p>";
+		            Content += "<p " + defaultFontAndSize + ">" + getNodeText(mailXml.getElementsByTagName("HTMLDESCRIPTION").item(0)) + "</p>";
 		            Content = ReplaceText(Content, "id=doctitle", "");
 		            Content = ReplaceText(Content, "id=\"doctitle\"", "");
 		            Content = ReplaceText(Content, "id=\'doctitle\'", "");
+			            
 		            if (Content.indexOf("id=\"_BigAttachListHtml\"") != -1) {
 		            	Content = ReplaceText(Content, "<td width=\"75%\"", "<td width=\"65%\"");
 		            	Content = ReplaceText(Content, "<td width=\"30%\"", "<td width=\"35%\"");
 		            }
 		            
+		            Content = '<div '+defaultFontAndSize+'>' + Content + '</div>';
+			
 		            message.SetEditorContent(Content);
 		            
 		            if (mailXml.getElementsByTagName("OVERSIZE").length > 0) {
@@ -1256,7 +1279,7 @@
 		                var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
 		                var strRet = "";
 		                for (i = 0; i < nodes.length; i++) {
-		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
+		                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "");
 		                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
 		                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
 		                    	filepath = filepath + ".ezd";
@@ -1290,7 +1313,7 @@
 			                var nodes = SelectNodes(xml, "ROOT/NODES/NODE");
 			                var strRet = "";
 			                for (i = 0; i < nodes.length; i++) {
-			                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]);
+			                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "");
 			                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
 			                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
 			                    	filepath = filepath + ".ezd";
@@ -1429,9 +1452,21 @@
 		                        
 		                        htmlData = "<body free>" + htmlData + "</body>";
 		                        if (gubun != "2"){
-		                            htmlData = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----<br><B>"+"<spring:message code='ezBoard.t424' />"+"</B>" + strWriteDate + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B>"+"<spring:message code='ezBoard.t413' />"+"</B>" + "<c:out value = '${boardListVO.title}' />" + "<br><br>" + htmlData;
+		                        	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t424' /></B>" + strWriteDate + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t425' /></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B><c:out value = '${boardListVO.title}' /></p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		                        	htmlData = replyHeader + htmlData;
 		                        }else{
-		                            htmlData = "<br><br>-----<B>[&nbsp;"+"<spring:message code='ezBoard.t423' />"+"</B>-----<br><B>"+"<spring:message code='ezBoard.t424' />"+"</B>" + strWriteDate + "<br><B>"+"<spring:message code='ezBoard.t425' />"+"</B>" + strWriterFakeName + "<br><B><spring:message code='ezBoard.t413' /></B>" + "<c:out value = '${boardListVO.title}' />" + "<br><br>" + htmlData;
+		                        	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezBoard.t423' /></B>-----</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t424' /></B>" + strWriteDate + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t425' /></B>" + strWriterFakeName + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezBoard.t413' /></B><c:out value = '${boardListVO.title}' /></p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		                        	htmlData = replyHeader + htmlData;
 		                        }
 		                        message.SetEditorContent(htmlData);
 		                    }else {
@@ -1533,23 +1568,31 @@
 		            case "MailEnv_div1":
 		                document.getElementById("tab01").style.display = "";
 		                document.getElementById("tab02").style.display = "none";
-		                if ("${boardInfo.guBun}" == "2")
+		                if ("${boardInfo.guBun}" == "2") {
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
-		                else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
+		                } else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
-		                else if (pUrl.toLowerCase().indexOf(".hwp") < 0) 
+		                } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+		                }
 		                break;
 		            case "MailEnv_div3":
 		                document.getElementById("tab01").style.display = "none";
 		                document.getElementById("tab02").style.display = "";
 		                if (pUseBackGround == "TRUE") {
 		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 330 + "PX";
-		                    if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0)
+		                    if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
 		                        document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 600 + "PX";
+		                    }
 		                }
-		                else{
-		                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                else {
+		                	 if ("${boardInfo.guBun}" == "2") {
+		                    	document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 350 + "PX";
+		                    } else if ("${docID}" != "" && pUrl.toLowerCase().indexOf(".hwp") < 0) {
+			                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 500 + "PX";
+		                    } else if (pUrl.toLowerCase().indexOf(".hwp") < 0) { 
+			                    document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - 320 + "PX";
+		                    }
 		                }
 		        }
 		        

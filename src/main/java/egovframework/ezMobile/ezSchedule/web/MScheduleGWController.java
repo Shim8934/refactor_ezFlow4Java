@@ -36,6 +36,7 @@ import egovframework.ezEKP.ezSchedule.vo.AttachListVO;
 import egovframework.ezEKP.ezSchedule.vo.AttendantListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleGroupListVO;
 import egovframework.ezEKP.ezSchedule.vo.ScheduleInfoVO;
+import egovframework.ezEKP.ezSchedule.vo.ScheduleReceiveListVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
 import egovframework.ezMobile.ezSchedule.service.MScheduleService;
@@ -887,6 +888,179 @@ public class MScheduleGWController extends EgovFileMngUtil {
 		}
 		
 		LOGGER.debug("MOBILE G/W SCHEDULE [POST /mobile/ezschedule/board-schedules] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정(참석자) 초대 리스트
+	 */
+	@RequestMapping(value="/mobile/ezschedule/schedules/users/{userId:.+}/attendant/invitationList", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject mScheduleAttendantInvitationList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/attendant/invitationList] started.");
+		
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		
+		try {
+			LOGGER.debug("userId : " + userId);
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			int tenantId = info.getTenantId();
+			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
+			String companyId = info.getCompanyId();
+			
+			LOGGER.debug("tenantId : " + tenantId + "  offSetMin : " + offSetMin + "  companyId : " + companyId);
+			
+			List<ScheduleReceiveListVO> scheduleReceiveList = ezScheduleService.getReceiveList(userId, tenantId, offSetMin, companyId);
+			
+			for (ScheduleReceiveListVO scheduleReceiveListVO : scheduleReceiveList) {
+				LOGGER.debug("scheduleId : " + scheduleReceiveListVO.getScheduleId());
+			}
+			
+			data.put("scheduleReceiveList", scheduleReceiveList);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/attendant/invitationList] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정(그룹) 초대 리스트
+	 */
+	@RequestMapping(value="/mobile/ezschedule/schedules/users/{userId:.+}/group/invitationList", method= RequestMethod.GET, produces="application/json;charset=utf-8")
+	public JSONObject mScheduleGroupInvitationList(@PathVariable String userId, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/group/invitationList] started.");
+		
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		
+		try {
+			LOGGER.debug("userId : " + userId);
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			int tenantId = info.getTenantId();
+			String offSetMin = commonUtil.getMinuteUTC(info.getOffSet());
+			String companyId = info.getCompanyId();
+			
+			LOGGER.debug("tenantId : " + tenantId + "  offSetMin : " + offSetMin + "  companyId : " + companyId);
+			
+			List<ScheduleGroupListVO> scheduleGroupList = ezScheduleService.getInviteScheduleGroupList(userId, tenantId, offSetMin, companyId);
+			
+			for (ScheduleGroupListVO ScheduleGroupListVO : scheduleGroupList) {
+				LOGGER.debug("groupId : " + ScheduleGroupListVO.getGroupId());
+			}
+			
+			data.put("scheduleGroupList", scheduleGroupList);
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/group/invitationList] ended.");
+		
+		return result;
+	}
+	
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정(참석자) 초대 참석여부
+	 */
+	@RequestMapping(value="/mobile/ezschedule/schedules/users/{userId:.+}/attendant/status", method= RequestMethod.PATCH, produces="application/json;charset=utf-8")
+	public JSONObject mScheduleIsAcceqptAttendantInvitation(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/attendant/status] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			LOGGER.debug("userId : " + userId);
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			int tenantId = info.getTenantId();
+			String[] scheduleIdList = jsonParam.get("scheduleIdList").toString().split(",");
+			String displayName = jsonParam.get("displayName").toString();
+			String displayName2 = jsonParam.get("displayName2").toString();
+			String status = jsonParam.get("status").toString();
+			
+			for (String scheduleId : scheduleIdList) {
+				LOGGER.debug("scheduleId : " + scheduleId);
+			}
+			LOGGER.debug("tenantId : " + tenantId + "  displayName : " + displayName + "  status : " + status);
+			
+			for (int i=0; i < scheduleIdList.length; i++) {
+				ezScheduleService.updateAttendant(scheduleIdList[i], userId, displayName, displayName2, status, tenantId);
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);			
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/attendant/status] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * 모바일 G/W 일정관리 [GET] 일정 초대 참석여부
+	 */
+	@RequestMapping(value="/mobile/ezschedule/schedules/users/{userId:.+}/group/status", method= RequestMethod.PATCH, produces="application/json;charset=utf-8")
+	public JSONObject mScheduleIsAcceqptGroupInvitation(@PathVariable String userId, @RequestBody JSONObject jsonParam, HttpServletRequest request) throws Exception {		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/group/status.");
+		
+		JSONObject result = new JSONObject();
+		
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfo(serverName, userId);
+			
+			int tenantId = info.getTenantId();
+			String[] groupIdList = jsonParam.get("groupIdList").toString().split(",");
+			String status = jsonParam.get("status").toString();
+			
+			for (String groupId : groupIdList) {
+				LOGGER.debug("groupId : " + groupId);
+			}
+			LOGGER.debug("tenantId : " + tenantId + "  status : " + status);
+			
+			for (int i=0; i < groupIdList.length; i++) {
+				ezScheduleService.updateScheduleMember(groupIdList[i], userId, status, tenantId);
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);			
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("MOBILE G/W SCHEDULE [GET /mobile/ezschedule/schedules/users/{userId:.+}/group/status] ended.");
 		
 		return result;
 	}

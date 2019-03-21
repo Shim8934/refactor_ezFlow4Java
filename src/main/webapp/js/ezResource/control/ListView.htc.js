@@ -578,10 +578,10 @@ function ListView(thisobjid, elobjid) {
 
                     if ((HComment == j) && (coltext == "Y")) {
                         coltext = "<img src='/images/board_comment.gif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-                        listHtml += "<td style='overflow: hidden; text-overflow:ellipsis;padding-left:0px;" + color + "'  id='" + TABLENAME + "row_" + i + "_col" + j + "' align='center' noWrap>";
+                        listHtml += "<td style='overflow: hidden; text-overflow:ellipsis;" + color + "'  id='" + TABLENAME + "row_" + i + "_col" + j + "' align='center' noWrap>";
                     }
                     else {
-                        listHtml += "<td style='overflow: hidden; text-overflow:ellipsis;padding-left:0px;" + color + "'  id='" + TABLENAME + "row_" + i + "_col" + j + "' align='left' noWrap>";
+                        listHtml += "<td style='overflow: hidden; text-overflow:ellipsis;" + color + "'  id='" + TABLENAME + "row_" + i + "_col" + j + "' align='left' noWrap>";
                     }
 
                     listHtml += coltext;
@@ -644,10 +644,10 @@ function ListView(thisobjid, elobjid) {
 
                     if ((HComment == j) && (coltext == "Y")) {
                         coltext = "<img src='/images/board_comment.gif'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
-                        listHtml += "<td style='overflow: hidden; text-overflow:ellipsis;padding-left:0px;" + color + "'  id='" + TABLENAME + "row_" + i + "_col" + j + "' align='center' noWrap>";
+                        listHtml += "<td style='overflow: hidden; text-overflow:ellipsis;" + color + "'  id='" + TABLENAME + "row_" + i + "_col" + j + "' align='center' noWrap>";
                     }
                     else {
-                        listHtml += "<td style='overflow: hidden; text-overflow:ellipsis;padding-left:0px;" + color + "'  id='" + TABLENAME + "row_" + i + "_col" + j + "' align='left' noWrap>";
+                        listHtml += "<td style='overflow: hidden; text-overflow:ellipsis;" + color + "'  id='" + TABLENAME + "row_" + i + "_col" + j + "' align='left' noWrap>";
                     }
 
                     listHtml += coltext;

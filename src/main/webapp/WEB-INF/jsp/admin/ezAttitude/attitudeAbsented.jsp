@@ -64,6 +64,9 @@
 		        } else {
 		    		if (adminCompany != null) {
 		    			$('#ListCompany').val(adminCompany);
+		    			if (document.getElementById("ListCompany").selectedIndex < 0) {
+				            document.getElementById("ListCompany").selectedIndex = 0;
+		    			}
 		    		} else {
 			            document.getElementById("ListCompany").selectedIndex = 0;
 		    		}

@@ -75,7 +75,7 @@ public interface EzOrganAdminService {
 	
 	public void insertDBData_user(OrganUserVO vo, String oriPass) throws Exception;
 
-	public void addJob(String userID, String titleInfo, int tenantID) throws Exception;
+	public void addJob(String userID, String titleInfo, String jobID, int tenantID) throws Exception;
 	
     public void deleteJob(String userID, String titleInfo, int tenantID) throws Exception;	
 
@@ -89,16 +89,6 @@ public interface EzOrganAdminService {
 	
 	public int getUserCount(int tenantID,String keycode,String keyword,String companyId) throws Exception;
 	
-	public String mailAddDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception;
-	
-	public String mailUpdateDistributionList(String domain, String job, String job2, String companyId, int tenantID, String cn) throws Exception;
-	
-	public String getDistributionUserName (int tenantID, String groupName, String companyId) throws Exception;
-
-	public String mailDelDistributionList(int tenantID, String cn, String companyId) throws Exception;
-	
-	public String deleteTargetAddressUser (int tenantID, String groupName, String memberID, String companyID) throws Exception;
-	
 	public void updateProperty(String cn, String column, String number, String pClass, int tenantID, String mCondition) throws Exception;
 	
 	public String setTitle(String type, String cn, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception;
@@ -111,11 +101,15 @@ public interface EzOrganAdminService {
 	
 	public String deleteTitle(String type, String jobID, String companyID, int tenantID) throws Exception;
 	
-	public String getTitleUserList(String type, String jobID, String primary, String companyID, int tenantID) throws Exception;
+	public String getTitleUserList(String type, String jobID, String pageSize, String pageNum, String searchType, String searchValue, String primary, String companyID, int tenantID) throws Exception;
 	
 	public int getTitleListCnt(String type, String companyID, int tenantID) throws Exception;
 	
 	public int getTitleUserListCnt(String type, String jobID, String companyID, int tenantID) throws Exception;
 
 	public int getTitleCnt(String type, String jobID, String mode, String displayName, String displayName2, String companyID, int tenantID) throws Exception;
+	
+	public String getJobOptionInfo(String type, String companyID, int tenantID) throws Exception;
+	
+	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception;
 }

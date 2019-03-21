@@ -14,6 +14,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script>
 	    	var returnFunction;
+	    	var shareId = "${shareId}";
 	    	
 	        window.onload = function () {
 	        	returnFunction = parent.address_selectAddress_dialogArguments[1];
@@ -29,12 +30,18 @@
 	         * get address list of the mail.
 	         */
 	        function getMailAddressList() {
+	        	var requestUrl ="/ezEmail/getMailAddressList.do";
+	        	
+	        	if (typeof(shareId) != "undefined" && shareId != "") {
+	        		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+				}
+	        	
 	        	$.ajax({
 	        		type : "POST",
 	   				dataType : "json",
 	   				async : false,
 	   				data : {url : "${url}"},
-	   				url : "/ezEmail/getMailAddressList.do",
+	   				url : requestUrl,
 	   				success : function(result) {
 	   					if (result.status != "ok") {
 	   						alert("<spring:message code='ezEmail.lhm14' />");

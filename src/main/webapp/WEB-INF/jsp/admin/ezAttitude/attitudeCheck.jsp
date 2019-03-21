@@ -64,6 +64,9 @@
 		        } else {
 		    		if (adminCompany != null) {
 		    			$('#ListCompany').val(adminCompany);
+		    			if (document.getElementById("ListCompany").selectedIndex < 0) {
+				            document.getElementById("ListCompany").selectedIndex = 0;
+		    			}
 		    		} else {
 			            document.getElementById("ListCompany").selectedIndex = 0;
 		    		}
@@ -286,7 +289,7 @@
 	    			$("#searchTitle").val("");
 	    			$("#Sdatepicker").val("${searchStartDate}");
 	    			$("#Edatepicker").val("${searchEndDate}");
-	    			$("select[id='searchAttitudeType']").val('total');
+	    			$("select[id='searchAttitudeType']").val('ALL');
 	    			
 	    			searchUserName = "";
 	    			searchDeptName = "";

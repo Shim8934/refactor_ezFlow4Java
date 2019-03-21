@@ -161,6 +161,7 @@
 	        var nonElecRecInfoXml = "", nonSepAttachLVXml = "", sepAttachCheckYN = "";
 	        var useReceiveDocNo = "${useReceiveDocNo}";
 	        var orgCompanyID = "<c:out value='${userInfo.companyID}'/>";
+	        var docNumZeroCnt = "${docNumZeroCnt}";
 	        
 	        window.onload = function () {
 	            try {
@@ -650,7 +651,8 @@
 		                }
 	                }
 	
-	                if ("${approvalPWD}" != "N") {
+	                //if ("${approvalPWD}" != "N") {
+	                if (CheckUsePassword()) {
 	                    var chkpass = chk_Passwd();
 	                    if (chkpass == "False") {
 	                        var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
@@ -691,10 +693,14 @@
 	                    }
 	
 	                    var rtnval;
-	                    if (LastSignSN == 1 || DraftLastFlag)
-	                        rtnval = getDocNumber(arr_userinfo[4], "");
-	                    else
-	                        rtnval = getDocNumber(arr_userinfo[4], "be");
+	                    if (LastSignSN == 1 || DraftLastFlag) {
+	                        //rtnval = getDocNumber(arr_userinfo[4], "", docNumZeroCnt);
+	                        rtnval = getDocNumberNew(arr_userinfo[4], "", docNumZeroCnt);
+	                    }
+	                    else {
+	                        //rtnval = getDocNumber(arr_userinfo[4], "be", docNumZeroCnt);
+	                        rtnval = getDocNumberNew(arr_userinfo[4], "be", docNumZeroCnt);
+	                    }
 	
 	                    if (!rtnval) {
 	                        var pAlertContent = "[<spring:message code='ezApprovalG.t1384'/>";
@@ -1092,32 +1098,46 @@
 				    alert("ezdraftui_hwp.btnAddSepAttach_onclick()::" + e.description);
 				}
 			}
-	
+			//2019-01-18 천성준 - 새 HWP 분리첨부 XML파싱 소스 생성
 			function GetSepAttParamXml(g_SepAttachLVXml) {
-			    try {
-			        var rtnXml = new ActiveXObject("Microsoft.XMLDOM");
-			        var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
-			        var sepAtt, Data, i;
-			        
-			        if (g_SepAttachLVXml != "") {
-			            var sepLVXml = new ActiveXObject("Microsoft.XMLDOM");
-			            sepLVXml = loadXMLString(g_SepAttachLVXml);
-			            var rows = SelectNodes(sepLVXml, "LISTVIEWDATA/ROWS/ROW")
-			            for (i = 0; i < rows.length; i++) {
-			                sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
-			                Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "CABINETID", getNodeText(rows.item(i).childNodes(0).selectSingleNode("DATA1")));
-			                Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "TITLE", getNodeText(rows.item(i).childNodes(1).selectSingleNode("VALUE")));
-			                Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "NUMOFPAGE", getNodeText(rows.item(i).childNodes(4).selectSingleNode("VALUE")));
-			                Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "REGTYPE", getNodeText(rows.item(i).childNodes(0).selectSingleNode("DATA2")));
-			                Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "SUMMARY", getNodeText(rows.item(i).childNodes(6).selectSingleNode("VALUE")));
-			                Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "AVTYPE", getNodeText(rows.item(i).childNodes(0).selectSingleNode("DATA3")));
-			
-			            }
-			        }
-			        return getXmlString(rtnXml);
-			    } catch (e) {
-			        alert("ezdraftui_hwp.GetSepAttParamXml()::" + e.description);
-			    }
+				try {
+					var sepAtt, Data;
+					var rtnXml = createXmlDom();
+					var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
+					
+					if (g_SepAttachLVXml != "") {
+						var sepLVXml = createXmlDom();
+							sepLVXml = loadXMLString(g_SepAttachLVXml);
+							
+						var pRows = SelectNodes(sepLVXml, "LISTVIEWDATA/ROWS/ROW");
+						if (pRows) {
+							for (var i = 0; i < pRows.length; i++) {
+				                sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
+				                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID",	getNodeText(pRows.item(i).childNodes(0).selectSingleNode("DATA1")));
+		                		Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", 	getNodeText(pRows.item(i).childNodes(1).selectSingleNode("VALUE")));
+				                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE",	getNodeText(pRows.item(i).childNodes(4).selectSingleNode("VALUE")));
+				                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", 	getNodeText(pRows.item(i).childNodes(0).selectSingleNode("DATA2")));
+				                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY",	getNodeText(pRows.item(i).childNodes(6).selectSingleNode("VALUE")));
+				                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE",	getNodeText(pRows.item(i).childNodes(0).selectSingleNode("DATA3")));
+				            }
+						} else {
+							var oRows = sepLVXml.getElementsByTagName("ROW");
+							for (var i = 0; i < oRows.length; i++) {
+								sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
+		            			Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(GetChildNodes(oRows[i])[0], "DATA1"));
+				                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", 	SelectSingleNodeValue(GetChildNodes(oRows[i])[1], "VALUE"));
+				                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(GetChildNodes(oRows[i])[4], "VALUE"));
+				                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", 	SelectSingleNodeValue(GetChildNodes(oRows[i])[0], "DATA2"));
+				                Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", 	SelectSingleNodeValue(GetChildNodes(oRows[i])[6], "VALUE"));
+			                	Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", 	SelectSingleNodeValue(GetChildNodes(oRows[i])[0], "DATA3"));
+							}
+						}
+					}
+					
+					return getXmlString(rtnXml);
+				} catch (e) {
+					alert("ezdraftui_hwp.GetSepAttParamXml() : " + e.description);
+				}
 			}
 	
 			function btnhistory_onclick() {
@@ -1246,7 +1266,7 @@
 			            }
 			        }
 			    } catch (e) {
-			        alert("ezdraftui_hwp.GetSepAttParamXml()::" + e.description);
+			        alert("ezdraftui_hwp.btnApprovalInfo()::" + e.description);
 			    }
 			}
 	
@@ -1291,9 +1311,10 @@
 			            setFirstDrafterAuto();
 			        }
 			
-			        if (ListType == "21" && DraftFlag == "REDRAFT") {
-			            RemoveTmpDoc(DocSN);
-			        }
+			        //임시저장문서 삭제와 생성을 동시에
+// 			        if (ListType == "21" && DraftFlag == "REDRAFT") {
+// 			            RemoveTmpDoc(DocSN);
+// 			        }
 			
 			        var rtnVal = SaveTMPFile();
 			        if (rtnVal == "TRUE") {
@@ -1360,6 +1381,28 @@
 	    	    for(bytes=i=0; c=s.charCodeAt(i++); bytes += c >> 11? 3 : c >> 7 ? 2 : 1);
 	    	    return bytes;
 	    	}
+	    	
+	    	/* 2019-01-02 천성준 #14647
+    		     결재암호 사용유무 조회 (Y / N)
+		    */
+		    function CheckUsePassword() {
+		    	var result = "";
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getApprovalPWD.do",
+		    		success: function(text) {
+		    			result = text;
+		    		}        			
+		    	});
+		    	
+		    	if (result != "N") {
+		    		return true;
+		    	} else {
+		    		return false;
+		    	}
+		    }
 	    </script>
 	</head>
 	<body class="popup">

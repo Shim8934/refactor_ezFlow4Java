@@ -2931,6 +2931,8 @@
 				FROM
 					TBL_C_CLUB
 				WHERE
+					companyid = #companyID#
+				AND
 					tenant_id = #tenantID#
 				) T1
 			WHERE
@@ -4356,7 +4358,7 @@
 <!-- 	<procedure id="EzCommunityDAO.todayCopGet1"												resultClass="String"> -->
 <!-- 		{CALL EZSP_TODAYCOP_GET1(#cv_1,javaType=java.sql.ResultSet,jdbcType=ORACLECURSOR,mode=OUT#)} -->
 <!-- 	</procedure>	 -->
-	<select id="EzCommunityDAO.todayCopGet1"					parameterClass="Integer"		resultClass="Integer">
+	<select id="EzCommunityDAO.todayCopGet1"					parameterClass="Map"		resultClass="Integer">
 		<![CDATA[
 			SELECT
 				NVL(COUNT(*), 0) CNT
@@ -4364,6 +4366,8 @@
 				TBL_C_CLUB
 			WHERE
 				c_adminconfirm = 'Y'
+			AND
+				companyid = #companyID#
 			AND
 				tenant_id = #tenantID# 
 		]]>

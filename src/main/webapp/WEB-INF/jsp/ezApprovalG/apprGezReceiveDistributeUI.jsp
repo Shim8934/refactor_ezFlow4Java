@@ -66,7 +66,7 @@
 	        var linealt13 = "<spring:message code='ezApprovalG.t2001'/>";
 	        var linealt14 = "<spring:message code='ezApprovalG.t322'/>";
 	        var linealt15 = "<spring:message code='ezApprovalG.t323'/>";
-	        var linealt16 = "<spring:message code='ezApprovalG.t324'/>";
+	        var linealt16 = "<spring:message code='ezApprovalG.psb324'/>";
 	        var linealt17 = "<spring:message code='ezApprovalG.t1178'/>";
 	        var Cabinet1 = "<spring:message code='ezApprovalG.t379'/>";
 	        var Cabinet2 = "<spring:message code='ezApprovalG.t572'/>";
@@ -355,6 +355,11 @@
 	                return;
 	            }
 	        }
+	        if (!isReceiverChk(treeView.GetSelectNode().GetNodeData("CN"))) {
+	            var pAlertContent = strLang1101 + strLang1102;
+	            OpenAlertUI(pAlertContent);
+	            return;
+	        }
 	        if (lastRowIdx < 1) {
 	            strXML = "<LISTVIEWDATA><HEADERS>";
 	            strXML = strXML + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t428'/>" + "</NAME><WIDTH>156</WIDTH></HEADER>";
@@ -610,8 +615,6 @@
 	        try {
 	
 	            if (innserdeptid == arr_userinfo[4] && "${USE_SELFDISTRIBUTE}" == "N") {
-	                var pAlertContent = "<spring:message code='ezApprovalG.t2000'/>";
-	                OpenAlertUI(pAlertContent);
 	                selfInsert = true;
 	            }
 	
@@ -682,52 +685,54 @@
 	                return;
 	            }
 	        }
-	        if (lastRowIdx < 1) {
-	            strXML = "<LISTVIEWDATA><HEADERS>";
-	            strXML = strXML + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t428'/>" + "</NAME><WIDTH>156</WIDTH></HEADER>";
-	            strXML = strXML + "</HEADERS><ROWS><ROW><CELL>";
-	            strXML = strXML + "<VALUE>" + MakeXMLString(STRDEPTNAME) + "</VALUE>";
-	            strXML = strXML + "<DATA1>" + STRDEPTID + "</DATA1>";
-	            strXML = strXML + "<DATA2>" + "" + "</DATA2>";
-	            strXML = strXML + "<DATA3>" + "" + "</DATA3>";
-	            strXML = strXML + "<DATA4>" + MakeXMLString(STRDEPTNAME) + "</DATA4>";
-	            strXML = strXML + "<DATA5>" + MakeXMLString(STRDEPTNAME) + "</DATA5>";
-	            strXML = strXML + "</CELL></ROW></ROWS></LISTVIEWDATA>";
-	            objXML = loadXMLString(strXML);
-	            document.getElementById("APRLINE1").innerHTML = "";
-	            var listview = new ListView();
-	            listview.SetID("listAPRLINE1");
-	            listview.SetMulSelectable(false);
-	            listview.SetRowOnDblClick("btn_DeptDel_onclick");
-	            listview.DataSource(objXML);
-	            listview.DataBind("APRLINE1");
-	        } else {
-	            var listview = new ListView();
-	            listview.LoadFromID("listAPRLINE1");
-	            var InitTr = listview.GetDataRows();
-	            var MaxID = 0;
-	
-	            for (var j = 0  ; j < InitTr.length  ; j++) {
-	                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                if (MaxID < curnum)
-	                    MaxID = curnum;
-	            }
-	            strXML = "<ROW><CELL><VALUE>" + MakeXMLString(STRDEPTNAME) + "</VALUE>";
-	            strXML = strXML + "<DATA1>" + STRDEPTID + "</DATA1>";
-	            strXML = strXML + "<DATA2>" + "" + "</DATA2>";
-	            strXML = strXML + "<DATA3>" + "" + "</DATA3>";
-	            strXML = strXML + "<DATA4>" + MakeXMLString(STRDEPTNAME) + "</DATA4>";
-	            strXML = strXML + "<DATA5>" + MakeXMLString(STRDEPTNAME) + "</DATA5>";
-	            strXML = strXML + "</CELL></ROW>";
-	            if (listview.GetSelectedRows().length == 0) {
-	                var objTr = listview.AddRow(0);
-	                SetAttribute(objTr, "id", "listAPRLINE1" + "_TR_" + eval(MaxID + 1));
-	                listview.AddDataRow(objTr, loadXMLString(strXML));
-	            } else {
-	                var objTr = listview.AddRow(Number(listview.GetSelectedIndexes().split(',')[0]));
-	                SetAttribute(objTr, "id", "listAPRLINE1" + "_TR_" + eval(MaxID + 1));
-	                listview.AddDataRow(objTr, loadXMLString(strXML));
-	            }
+	        if (isReceiverChk(STRDEPTID)) {
+		        if (lastRowIdx < 1) {
+		            strXML = "<LISTVIEWDATA><HEADERS>";
+		            strXML = strXML + "<HEADER><NAME>" + "<spring:message code='ezApprovalG.t428'/>" + "</NAME><WIDTH>156</WIDTH></HEADER>";
+		            strXML = strXML + "</HEADERS><ROWS><ROW><CELL>";
+		            strXML = strXML + "<VALUE>" + MakeXMLString(STRDEPTNAME) + "</VALUE>";
+		            strXML = strXML + "<DATA1>" + STRDEPTID + "</DATA1>";
+		            strXML = strXML + "<DATA2>" + "" + "</DATA2>";
+		            strXML = strXML + "<DATA3>" + "" + "</DATA3>";
+		            strXML = strXML + "<DATA4>" + MakeXMLString(STRDEPTNAME) + "</DATA4>";
+		            strXML = strXML + "<DATA5>" + MakeXMLString(STRDEPTNAME) + "</DATA5>";
+		            strXML = strXML + "</CELL></ROW></ROWS></LISTVIEWDATA>";
+		            objXML = loadXMLString(strXML);
+		            document.getElementById("APRLINE1").innerHTML = "";
+		            var listview = new ListView();
+		            listview.SetID("listAPRLINE1");
+		            listview.SetMulSelectable(false);
+		            listview.SetRowOnDblClick("btn_DeptDel_onclick");
+		            listview.DataSource(objXML);
+		            listview.DataBind("APRLINE1");
+		        } else {
+		            var listview = new ListView();
+		            listview.LoadFromID("listAPRLINE1");
+		            var InitTr = listview.GetDataRows();
+		            var MaxID = 0;
+		
+		            for (var j = 0  ; j < InitTr.length  ; j++) {
+		                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                if (MaxID < curnum)
+		                    MaxID = curnum;
+		            }
+		            strXML = "<ROW><CELL><VALUE>" + MakeXMLString(STRDEPTNAME) + "</VALUE>";
+		            strXML = strXML + "<DATA1>" + STRDEPTID + "</DATA1>";
+		            strXML = strXML + "<DATA2>" + "" + "</DATA2>";
+		            strXML = strXML + "<DATA3>" + "" + "</DATA3>";
+		            strXML = strXML + "<DATA4>" + MakeXMLString(STRDEPTNAME) + "</DATA4>";
+		            strXML = strXML + "<DATA5>" + MakeXMLString(STRDEPTNAME) + "</DATA5>";
+		            strXML = strXML + "</CELL></ROW>";
+		            if (listview.GetSelectedRows().length == 0) {
+		                var objTr = listview.AddRow(0);
+		                SetAttribute(objTr, "id", "listAPRLINE1" + "_TR_" + eval(MaxID + 1));
+		                listview.AddDataRow(objTr, loadXMLString(strXML));
+		            } else {
+		                var objTr = listview.AddRow(Number(listview.GetSelectedIndexes().split(',')[0]));
+		                SetAttribute(objTr, "id", "listAPRLINE1" + "_TR_" + eval(MaxID + 1));
+		                listview.AddDataRow(objTr, loadXMLString(strXML));
+		            }
+		        }
 	        }
 	    }
 	    function isExistDept(ExtFlag) {
@@ -799,7 +804,7 @@
 	        }
 	        return rtnVal;
 	    }
-	    function isReceiverChk(DeptID) {
+	    /* function isReceiverChk(DeptID) {
 	        var xmlhttp = createXMLHttpRequest();
 	        var xmlpara = createXmlDom();
 	
@@ -814,7 +819,7 @@
 	            return false;
 	        else
 	            return true;
-	    }
+	    } */
 	    function removeAllReception() {
 	        var listview = new ListView();
 	        listview.LoadFromID("listAPRLINE1");
@@ -875,8 +880,14 @@
 	            }
 	            if (ListViewLen.length == 1) {
 	                if (GetAttribute(ListViewLen[0], "id") == "listAPRLINE1_TR_noItems") {
-	                    alert("<spring:message code='ezApprovalG.pjj31'/>");
-	                    return;
+	                	if(tempmode == 'MODIFY'){
+		                    alert("<spring:message code='ezApprovalG.pjj31'/>");
+		                    return;
+	                	}
+	                	if(tempmode == 'NEW'){
+		                    alert("<spring:message code='ezApprovalG.psb31'/>");
+		                    return;
+	                	}
 	                }
 	            }
 	
@@ -1353,6 +1364,32 @@
 	            alert("ezReceiveDistributeUI_Cross_SetBaeBuList::" + e.description);
 	        }
 	    }
+	    /* 수발신담당자 체크로직 */
+	    function isReceiverChk(DeptID)
+	    {
+	    	var result = "";
+	    	
+	    	$.ajax({
+	    		type : "POST",
+	    		dataType : "text",
+	    		async : false,
+	    		url : "/ezApprovalG/receiverChk.do",
+	    		data : {
+	    				deptID   : DeptID 
+	    				},
+	    		success: function(text){
+	    			result = text;
+	    		},
+	    		error : function () {
+	    			result = "false";
+	    		}
+	    	});
+	    	
+	    	if(result == "false") 
+	    	    return false;
+	    	else
+	    	    return true;
+	    }
 	    </script>
 	    <style>
 	    	.mainlist tr th {border-top:0px}
@@ -1365,40 +1402,41 @@
                 <li><span onclick="return btnCancel_onclick()"></span></li>
             </ul>
         </div>
+	    <%-- 2019-01-10 천성준 - [배부부서]라는 최상단의 탭인데 하나밖에 없는데 쓸모가 있을까 하여 주석처리함
 	    <div class="portlet_tabpart02" style="margin-bottom:10px">
 	        <div class="portlet_tabpart02_top" id="tab1">
 	            <p id="showAprLine"><span divname="Lineinfo" id="1tab1" class="tabover"><spring:message code='ezApprovalG.t427'/></span></p>
 	        </div>
-	    </div>
+	    </div> 
+	    --%>
 	    <table>
 	        <tr>
 	            <td style="vertical-align: top;">
-	                <div class="portlet_tabpart01" style="margin-top: 3px; text-align: right;">
+	                <div class="portlet_tabpart01" style="margin-top: 0px; text-align: right;">
 	                    <div class="portlet_tabpart01_top" id="tab3">
 	                        <p><span id="3tab1" divname="Organ"><spring:message code='ezApprovalG.t232'/></span></p>
 	                        <p><span id="3tab2" divname="Save"><spring:message code='ezApprovalG.G0001'/></span></p>
 	                    </div>
 	                </div>
 	                <div id="Organ">
-	                    <div style="overflow: auto; height: 550px; width: 395px; background-color: #FFFFFF; border: 1px solid #ddd;border-top:0px" id="TreeView"></div>
+	                    <div style="overflow: auto; height: 455px; width: 380px; background-color: #FFFFFF; border: 1px solid #ddd;border-top:0px" id="TreeView"></div>
 	                </div>
 	                <!-- 즐겨찾기 -->
-	                <div id="ReceptTemp" style="display: none; padding-left: 5px">
+	                <div id="ReceptTemp" style="display: none;">
 	                    <table>
 	                        <tr>
-	                            <td style="background-color: #f8f8f8; padding: 4px 0 3px 0; background-color: #ffffff; height: 20px;">
+	                            <td style="background-color: #f8f8f8; padding: 3px 0 3px 0; background-color: #ffffff; height: 20px;">
 	                                <h2 class="h2_dot"><spring:message code='ezApprovalG.G0003'/></h2>
 	                                <div class="border_gray">
-	                                    <div id="RecSaveList" style="border: 0px; Width: 388px; Height: 237px; OVERFLOW: AUTO; margin: 0px 1px 1px 1px; padding-top: 0px;">
-	                                    </div>
+	                                    <div id="RecSaveList" style="border: 0px; Width: 380px; Height: 200px; OVERFLOW: AUTO;"></div>
 	                                </div>
 	                            </td>
 	                        </tr>
 	                        <tr>
 	                            <td style="background-color: transparent; text-align: center; height: 30px;">
-	                                <table class="content" style="margin-bottom: 5px; width: 100%;">
+	                                <table class="content" style="margin-bottom: 3px; width: 100%;">
 	                                    <tr>
-	                                        <td style="text-align: center; padding-top:1.5px;">
+	                                        <td style="text-align: center; padding-top:3px;">
 	                                            <a class="imgbtn imgbck"><span id="Span3" onclick="return btn_AprDeptTempletDel_onclick()"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t266'/></span></a>
 	                                            <a class="imgbtn imgbck"><span id="Span4" onclick="return btn_AprDeptTempletSave_onclick('MODIFY')"><spring:message code='ezApprovalG.G0001'/> <spring:message code='ezApprovalG.t269'/></span></a>
 	                                            <a class="imgbtn imgbck"><span onclick="return btn_AprDeptTempletAdd_onclick()" style="width: 60px;"><spring:message code='ezApprovalG.t336'/></span></a>
@@ -1410,15 +1448,9 @@
 	                        <tr>
 	                            <td style="vertical-align: top;">
 	                                <div class="border_gray">
-	                                    <div id="RecSaveDetail" style="Width: 388px; Height: 237px; OVERFLOW: AUTO; border: 0px; margin: 0px 1px 1px 1px; padding-top: 0px;">
-	                                    </div>
+	                                    <div id="RecSaveDetail" style="Width: 380px; Height: 181px; OVERFLOW: AUTO; border: 0px;"></div>
 	                                </div>
 	                            </td>
-	                        </tr>
-	                    </table>
-	                    <table style="width: 100%;">
-	                        <tr>
-	                            <td style="text-align: left; height: 30px;">
 	                        </tr>
 	                    </table>
 	                </div>
@@ -1432,13 +1464,13 @@
 	                </div>
 	            </td>
 	            <td style="vertical-align: top;">
-	                <h2 class="h2_dot" style="padding-top:6px;padding-bottom:3px;float:left"><spring:message code='ezApprovalG.t432'/></h2>
+	                <h2 class="h2_dot" style="padding-top:3px;padding-bottom:3px;float:left"><spring:message code='ezApprovalG.t432'/></h2>
 	                <div style="float:right;">
-	                    <a class="imgbtn imgbck" style="padding-right: 5px; margin-top: 5px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><c:if test="${approvalFlag == 'S'}"><spring:message code='ezApprovalG.t308'/></c:if><c:if test="${approvalFlag == 'G'}"><spring:message code='ezApprovalG.G0009'/></c:if></span></a>
+	                    <a class="imgbtn imgbck" style="margin-top: 3px;"><span id="Span5" onclick="return btn_AprDeptTempletSave_onclick('NEW')"><spring:message code='ezApprovalG.G0009'/></span></a>
 	                </div>
 	                <div style="clear:both"></div>
 	                <div class="listview">
-	                    <div id="APRLINE1" style="border: 0; Width: 550px; Height: 550px; overflow: auto;"></div>
+	                    <div id="APRLINE1" style="border: 0; Width: 370px; Height: 455px; overflow: auto;"></div>
 	                </div>
 	            </td>
 	        </tr>

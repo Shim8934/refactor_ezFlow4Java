@@ -185,6 +185,11 @@
 				}
 				
 				initProgressBar(taskstatus, completerate);
+				
+				var agent = navigator.userAgent.toLowerCase(); 
+				if(window.screen.height < 910 && agent.indexOf("chrome") == -1) {
+					$("#tablecomment2Div").height(375);
+				}
 		    });
 		    
 		    window.onresize = function () {
@@ -405,7 +410,7 @@
 			function downloadAll(checks) {
 				if (checks.item(suffix)) {
 					if (checks.item(suffix).checked) {
-						location.href = "/ezTask/downloadAttach.do?filePath=" + GetAttribute(checks.item(suffix), "filePath") + "&fileName=" + encodeURIComponent(GetAttribute(checks.item(suffix++), "fileName"));
+						location.href = "/ezTask/downloadAttach.do?filePath=" + encodeURIComponent(GetAttribute(checks.item(suffix), "filePath")) + "&fileName=" + encodeURIComponent(GetAttribute(checks.item(suffix++), "fileName"));
 						setTimeout(function () { downloadAll(checks) }, 1000);
 					} else {
 						suffix++;
@@ -455,15 +460,17 @@
 					repetition_Delete();
 				} 
 				else {
-					delete_task();
+					if (confirm("<spring:message code='ezTask.t106' />")) {
+						delete_task();
+					}
 				}
 			}
 			
 			var deltaskid = "";
 			function delete_task() {
-				if (!confirm("<spring:message code='ezTask.t106' />")) {
+				/* if (confirm("<spring:message code='ezTask.t106' />")) {
 					return;
-				}	
+				} */	
 				
 				deltaskid = taskid + ";";
 				
@@ -490,21 +497,18 @@
 			function repetition_Delete() {
 				task_delete_confirm_cross_dialogArguments[0] = "";
 	        	task_delete_confirm_cross_dialogArguments[1] = deleteTask_Complete;
-	            GetOpenWindow("/ezTask/taskDeleteConfirm.do", "task_delete_confirm_Cross", 400, 170);				
+	            GetOpenWindow("/ezTask/taskDeleteConfirm.do", "task_delete_confirm_Cross", 500, 170);				
 			}
 
 			function deleteTask_Complete(ret) {				
 				if (ret == "0") {
 					once_Delete_Task();
-				} else {
+				} else if (ret == "1") {
 					delete_task();
 				}								
 			}
 
 			function once_Delete_Task() {
-	        	if (!confirm("<spring:message code='ezTask.t106' />"))
-	                return;
-		            
 	            $.ajax({
 					type : "POST",
 					dataType : "text",
@@ -621,7 +625,7 @@
 						var commentBgColor = 1;
 						var taskCommentList = "<tr>"
 							taskCommentList += "<td colspan='3'>"
-							taskCommentList += "<div style='width: 100%; overflow:auto; height:398px;border:1px solid rgb(225,225,225);'>";
+							taskCommentList += "<div id='tablecomment2Div' style='width: 100%; overflow:auto; height:398px;border:1px solid rgb(225,225,225);'>";
 							taskCommentList += "<table id='tablecomment2' class='layout' style='border: 0px;width:100%;height:0%;'>"
 						taskCommentList += "<colgroup><col width='20%' /><col width='62%' /><col width='18%' /></colgroup>";
 						list.forEach(function(vo, index) {
@@ -1576,7 +1580,7 @@
 				                
 				                for (i = 0; i < dateArray.length; i++) {		                	
 				                    if($.inArray(test, dateArray) != -1) {		                        
-				                        return [true, 'css-class-to-highlight', 'tooltipText'];
+				                        return [true, 'css-class-to-highlight', ''];
 				                    }
 				                }
 				                return [true];

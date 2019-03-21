@@ -333,13 +333,13 @@ function CheckPassword(str){
 	var pw = str;
 	var num = pw.search(/[0-9]/g);
 	var eng = pw.search(/[a-z]/ig);
-	var spe = pw.search(/[`~!@@#$%^&*|₩₩₩'₩";:₩/?]/gi);				 
+	var spe = pw.search(/[^0-9a-z]/gi);
 	
 	if (pw.length < 8 || pw.length > 50) {
 		return false;
 	}
 	
-	if (pw.search(/₩s/) != -1) {
+	if (pw.search(/\s/) != -1) {
 		return false;
 	}
 	

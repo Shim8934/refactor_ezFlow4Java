@@ -223,6 +223,16 @@
 		              				EXTENSIONATTRIBUTE2 <> CN
 		              		]]>
               			</isEmpty>
+              			
+              			<isEmpty property="displayTrashDept">
+              				<![CDATA[
+		              			AND
+		              				EXTENSIONATTRIBUTE1 NOT LIKE 'trash\_dept\_%' 
+		              			AND 
+		              				CN NOT LIKE 'trash\_dept\_%'
+		              		]]>
+              			</isEmpty>
+              			
               			AND
               				TENANT_ID = #v_TENANT_ID#	 ) A
         	ORDER BY A.EXTENSIONATTRIBUTE15, A.DISPLAYNAME
@@ -1268,8 +1278,68 @@
         		TENANT_ID = #v_TENANT_ID#	
 		]]>
 	</delete>
-		
+	
 	<select id="EzOrganDAO.getBirthUserList" parameterClass="Map" resultClass="OrganUserVO">
+		<![CDATA[
+			SELECT
+				displayname$lang$ AS displayname, 
+				cn,
+				title$lang$ AS title,
+				birth,
+				birthtype
+			FROM
+				TBL_USERMASTER
+			WHERE
+				((birth LIKE CONCAT('%-', #month#, '-%') AND birthtype = 'Y')
+			OR
+				(birth <> '' AND birthtype = 'N'))
+			AND
+				tenant_id = #tenantId#
+			AND
+				physicaldeliveryofficename = #companyId#
+			AND
+				cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
+				
+			UNION ALL
+			
+			SELECT
+				C.displayname$lang$ AS displayname, 
+				A.cn,
+				A.title$lang$ AS title,
+				C.birth,
+				C.birthtype AS birthtype
+			FROM
+				TBL_ADDJOBMASTER A
+			JOIN
+				TBL_DEPTMASTER B
+			ON
+				A.tenant_id = B.tenant_id
+			AND
+				A.deptid = B.cn
+			AND
+				B.extensionattribute2 = #companyId#
+			JOIN
+				TBL_USERMASTER C
+			ON
+				A.tenant_id = C.tenant_id
+			AND
+				A.cn = C.cn
+			WHERE
+				((C.birth LIKE CONCAT('%-', #month#, '-%') AND C.birthtype = 'Y')
+			OR
+				(C.birth <> '' AND C.birthtype = 'N'))
+			AND
+				A.tenant_id = #tenantId#
+			AND
+				C.physicaldeliveryofficename <> #companyId#
+			AND
+				A.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE tenant_id = #tenantId#)
+			ORDER BY
+				SUBSTR(birth, 8, 10)
+		]]>
+	</select>
+		
+	<!-- <select id="EzOrganDAO.getBirthUserList" parameterClass="Map" resultClass="OrganUserVO">
 		<![CDATA[
 			(SELECT
 				CN ,
@@ -1337,7 +1407,7 @@
 			ORDER BY
 				substr(birth, 8, 10));
 		]]>
-	</select>
+	</select> -->
 	
 	<select id="EzOrganDAO.organSearch" parameterClass="Map" resultMap="deptTreeInfo">
 		<isEqual property="type" compareValue="U">
@@ -1351,6 +1421,8 @@
             $strSQLForMySQL$
             AND 
                 CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
+            AND 
+            	DEPARTMENT NOT LIKE 'shared\_mailbox\_%'
             AND 
                 A.TENANT_ID = #v_TENANT_ID# $strSQLCom$
             <![CDATA[
@@ -1374,7 +1446,10 @@
 		      		'user' as type
 		      	FROM	
 					TBL_USERMASTER B INNER JOIN TBL_ADDJOBMASTER A ON A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID 
-	            $strSQLForMySQL$ AND A.TENANT_ID = #v_TENANT_ID# $strSQLAddjobCom$
+	            $strSQLForMySQL$ 
+	            AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
+	            AND A.TENANT_ID = #v_TENANT_ID# 
+	            $strSQLAddjobCom$
 	            
 	            <isNotEmpty property="companyId">
 		    	AND 
@@ -1397,7 +1472,9 @@
 					'group' as type
 				FROM
 					TBL_DEPTMASTER 
-                $strSQLForMySQL$ AND TENANT_ID = #v_TENANT_ID#
+                $strSQLForMySQL$ 
+                AND CN NOT LIKE 'shared\_mailbox\_%' 
+                AND TENANT_ID = #v_TENANT_ID#
                 
                 <isNotEmpty property="companyId">
 	    		AND 
@@ -1415,7 +1492,9 @@
 	    		'group' as type
 	    	FROM
 	    		TBL_DEPTMASTER 
-            $strSQLForMySQL$ AND TENANT_ID = #v_TENANT_ID# $strSQLCom$
+            $strSQLForMySQL$ 
+            AND CN NOT LIKE 'shared\_mailbox\_%' 
+            AND TENANT_ID = #v_TENANT_ID# $strSQLCom$
             $strSizeForMySQL$
 	    </isEqual>
 	</select>
@@ -1441,6 +1520,8 @@
                          AND 
                              CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                      
                          AND 
+                             DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
+                         AND 
                              A.TENANT_ID = #v_TENANT_ID#
 		            	 AND
 		            		 CN <> 'masteradmin'
@@ -1458,7 +1539,9 @@
 						TBL_ADDJOBMASTER A
 					ON
 						a.cn = b.cn AND a.tenant_id = b.tenant_id
-						$strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+						$strSQL$ 
+						AND DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
+						AND A.TENANT_ID = #v_TENANT_ID#
 						$strSQLAddjobCom$
 						)  AA
 					LIMIT #startRowForMySQL#, #count#
@@ -1481,6 +1564,8 @@
 			AND
 				CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
 			AND
+				DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
+			AND
 				A.TENANT_ID = #v_TENANT_ID#
 
 			UNION ALL
@@ -1498,6 +1583,8 @@
 				A.CN = B.CN AND A.TENANT_ID = B.TENANT_ID
 				$strSQL$
 			AND 
+				DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
+			AND 
 				A.TENANT_ID = #v_TENANT_ID#
 
 			UNION ALL
@@ -1509,7 +1596,9 @@
 					'group' as type
 				FROM
 					TBL_DEPTMASTER A	
-                $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+                $strSQL$ 
+                AND CN NOT LIKE 'shared\_mailbox\_%' 
+                AND A.TENANT_ID = #v_TENANT_ID#
                 ) AA
             LIMIT #startRowForMySQL#, #count#
 			]]>
@@ -1523,7 +1612,9 @@
 	    		'group' as type
 	    	FROM
 	    		TBL_DEPTMASTER A
-            $strSQL$ AND A.TENANT_ID = #v_TENANT_ID#
+            $strSQL$ 
+            AND CN NOT LIKE 'shared\_mailbox\_%' 
+            AND A.TENANT_ID = #v_TENANT_ID#
             LIMIT #startRowForMySQL#, #count#
 			]]>
 	      </isEqual>
@@ -1542,6 +1633,8 @@
 				AND 
 					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
 				AND 
+					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
+				AND 
 					A.TENANT_ID = #v_TENANT_ID# $strSQLCom$
 
 				UNION ALL
@@ -1554,6 +1647,8 @@
 				ON
 					a.cn = b.cn and a.tenant_id = b.tenant_id
 					$strSQL$ 
+				AND 
+					DEPARTMENT NOT LIKE 'shared\_mailbox\_%' 
 				AND 
 					A.TENANT_ID = #v_TENANT_ID# $strSQLAddjobCom$
 				) A
@@ -1825,5 +1920,23 @@
 		AND
 			TENANT_ID = #v_TENANT_ID#		
 	</select>
-
+	
+	<select id="EzOrganDAO.getSharedMailboxSearchList" parameterClass="Map" resultClass="OrganUserVO">
+		SELECT
+			CN,
+           	DISPLAYNAME,
+           	MAIL,
+           	COMPANY
+      	FROM
+      		TBL_USERMASTER 
+      	WHERE
+      		DEPARTMENT = #deptId#
+      	AND
+      		(CN LIKE #searchValue# OR DISPLAYNAME LIKE #searchValue#)
+      	AND
+      		TENANT_ID = #tenantId#
+		ORDER BY
+			CN
+	</select>
+	
 </sqlMap>

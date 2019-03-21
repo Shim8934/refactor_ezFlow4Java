@@ -11,23 +11,33 @@
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
 			var signNo = '${signNo}';
-			var content = '${content}';
+			var content = opener.message.GetEditorContent();
+			var replaceContent = "";
+			var userObj = ${userObj};
 			
 			window.onload = function () {
+				reContent(); // 사용자 정보 replace
+
 				signPreviewChange();
 			}
 	        
-	        function signPreviewChange() {
-	        	var preIframe = $(".signPreViewIframe");
-	        	var txtDisplay = "block";
-	        	var iframeDisplay = "none";
-	        	//var strLang = typeof(userLang) == "undefined" ? 1 : userLang;
-	        	
-	        	if (content !== undefined) {
-		        	preIframe.get(0).contentWindow.document.body.innerHTML = content;
-	        	}
-	        	
-	        }
+			function signPreviewChange() {
+				var preIframe = $(".signPreViewIframe");
+				
+				if (content !== undefined) {
+					preIframe.get(0).contentWindow.document.body.innerHTML = replaceContent;
+				}
+			}
+			
+			function reContent() {
+				replaceContent = content.replace(/[$]/g, '&#36;');
+				
+				$.each(userObj, function(key, value){
+				    var replaceKey = '&#36;{' + key + '}';
+				    
+				    replaceContent = replaceContent.replace(new RegExp(replaceKey,"gi"), value);
+				});
+			}
 		</script>
 	
 	</head>

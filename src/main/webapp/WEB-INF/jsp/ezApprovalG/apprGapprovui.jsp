@@ -109,6 +109,7 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    arr_userinfo[17]  = "${userInfo.primary}";
 		    var pCompanyID = "${userInfo.companyID}";
 		    var KuyjeType = "002";
 		    var signDateFormat = "${optSignDateFormat}";
@@ -615,7 +616,8 @@
 		            }
 		        }
 		        if (!isjunkyul) {
-		            if ("${approvalPWD}" != "N") {
+		            //if ("${approvalPWD}" != "N") {
+		            if (CheckUsePassword()) {
 		                chk_Passwd(pingUserID, btnApprove_chkpassword_Complete);
 		            }
 		            else
@@ -671,6 +673,7 @@
 		            }
 		        }
 		        
+		        var habYuiAprStateFlag = true;
 		        if (addLastKyulJeYN != "0") {
 		        	var hDocID ;
 					if (pDraftFlag == "HABYUI") {
@@ -691,6 +694,21 @@
                 			totalMemSN = result;
                 		}
                 	});
+		        	
+		        	$.ajax({
+                		type : "POST",
+                		dataType : "text",
+                		async : false,
+                		url : "/ezApprovalG/checkHabYuiState.do",
+                		data : {
+                				docID     : hDocID,
+                				},
+                		success : function(result) {
+                			if (result == "FALSE") {
+                				habYuiAprStateFlag = false;
+                			}
+                		}
+                	});
 		        }
 		        
 		        // getDocNumber를 이용한 문서번호 채번
@@ -698,10 +716,11 @@
 		        	if (approvalFlag == "S") {
 		        		// '현재진행 중인 결재가 개인순차합의가 아닌 경우' 추가
 		        		// 마지막 결재자가 합의인 경우 totalMemSN 값으로 해당 조건절 사용.
-			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7) || pAprLineType == strAprType4 || totalMemSN > 0) {
+			            if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7 && habYuiAprStateFlag) || pAprLineType == strAprType4 || totalMemSN > 0) {
 			                if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
 			                    var rtnval;
-			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+			                    //rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+			                    rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
 			                    if (!rtnval) {
 			                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
 			                        OpenAlertUI(pAlertContent);
@@ -716,7 +735,8 @@
 			            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
 			                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 			                    var rtnval;
-			                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+			                    //rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+			                    rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
 			                    if (!rtnval) {
 			                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
 			                        OpenAlertUI(pAlertContent);
@@ -737,8 +757,8 @@
 				            	// 1 : 결재, 2 : 확인, 4 : 전결, 16 : 대결, 18 : 기안, 19 : 검토
 				                if (pAprLineType == strAprType18 || pAprLineType == strAprType19 || pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType16 || pAprLineType == strAprType2) {
 				                    var rtnval;
-				                    rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
-				                    
+				                    //rtnval = getDocNumber(drafterDeptid, "", docNumZeroCnt);
+				                    rtnval = getDocNumberNew(drafterDeptid, "", docNumZeroCnt);
 				                    if (!rtnval) {
 				                        var pAlertContent = "[" + "<spring:message code='ezApprovalG.t32'/>";
 				                        OpenAlertUI(pAlertContent);
@@ -814,7 +834,7 @@
 		        if (rtnVal != "TRUE")  {
 		        	if (pDraftFlag != "SUSIN") {
 		        		if (approvalFlag == "S") {
-		        			if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7) || pAprLineType == strAprType4 || totalMemSN > 0) {
+		        			if ((LastKyulSN == pAprMemberSN && lastHabYuiSN != 0 && pAprLineType != strAprType8 && pAprLineType != strAprType7  && habYuiAprStateFlag) || pAprLineType == strAprType4 || totalMemSN > 0) {
 		        				if (pAprLineType == strAprType1 || pAprLineType == strAprType4 || pAprLineType == strAprType8) {
 		        					rollbackDocNumber(drafterDeptid, "", pDocID);
 		        				}
@@ -974,7 +994,8 @@
 		    function btnReject_onclick_Complete(Ans) {
 		        DivPopUpHidden();
 		        if (!Ans) return;
-		        if ("${approvalPWD}" != "N") {
+		        //if ("${approvalPWD}" != "N") {
+		        if (CheckUsePassword()) {
 		            chk_Passwd(pingUserID, btnReject_chkpassword_Complete);
 		        } else {
 		            openOpinionUI("BanSong", btnReject_option_Complete);
@@ -1068,7 +1089,8 @@
 		    function btnStay_onclick_Complete(Ans) {
 		        DivPopUpHidden();
 		        if (!Ans) return;
-		        if ("${approvalPWD}" != "N") {
+		        //if ("${approvalPWD}" != "N") {
+		        if (CheckUsePassword()) {
 		            chk_Passwd(pingUserID, btnStay_chkpassword_Complete);
 		        }
 		        else
@@ -1117,11 +1139,15 @@
 		            else {
 		                process_AfterApprove("3");
 		            }
+		        } else if (ret == "cancel") {
+		            var pAlertContent = "<spring:message code='ezApprovalG.t392'/>";
+		            OpenAlertUI(pAlertContent);
 		        }
 		    }
 		    function btnJunKyul_onclick()
 		    {
-		        if ("${approvalPWD}" != "N") {
+		        //if ("${approvalPWD}" != "N") {
+		        if (CheckUsePassword()) {
 		            var checkpass = chk_Passwd(pingUserID);
 		            if (checkpass == "False") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
@@ -1470,7 +1496,7 @@
 		        ezapprovalinfo_dialogArguments[0] = parameter;
 		        ezapprovalinfo_dialogArguments[1] = btnApprovalInfo_Complete;
 
-		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun +"&orgCompanyID=" + pCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
 		        
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
@@ -1857,7 +1883,7 @@
 		        for (var i = 0; i < rows.length; i++) {
 		        	var dataNodes = GetChildNodes(rows[i]);
 			        objRow = createNodeAndAppandNode(xmlpara, objRoot, objRow, "ROW");
-					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[0], "VALUE").trim());
+					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "NAME", SelectSingleNodeValue(dataNodes[1], "VALUE").trim() + (SelectSingleNodeValue(dataNodes[2], "VALUE").trim() == "" ? "<spring:message code='ezApprovalG.lhj18'/>" : ""));
 					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTID", SelectSingleNodeValue(dataNodes[0], "DATA1").trim());
 					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "DEPTNAME", SelectSingleNodeValue(dataNodes[0], "DATA2").trim());
 					createNodeAndAppandNodeText(xmlpara, objRow, objDocinfoNode, "EXTRECEPTYN", SelectSingleNodeValue(dataNodes[0], "DATA3").trim());
@@ -1874,19 +1900,44 @@
 		    
 		    function redrawMappingSign() {
 		    	if (approvalFlag == "S") {
-			        var reMappingAprLine = getAprLineList("${isUsed}");
-			        
-			        //참조가 END인 경우 종료된 문서임으로 굳이 sign이나 수신처를 remap할 필요가 없다.
-			        if (reMappingAprLine != "END") {
-				        SReAprLineSingMapping(reMappingAprLine);
+		    		//공유결재 - 결재, 전결 일때만 사인칸을 다시그리도록 조건추가
+		    		if (pAprLineType == strAprType1 || pAprLineType == strAprType4) {
+				        var reMappingAprLine = getAprLineList("${isUsed}");
 				        
-				        if (pSuSinFlag == "Y") {
-					        var reMappingReceipt = getReceiptList();
+				        //참조가 END인 경우 종료된 문서임으로 굳이 sign이나 수신처를 remap할 필요가 없다.
+				        if (reMappingAprLine != "END") {
+					        SReAprLineSingMapping(reMappingAprLine);
 					        
-					        setRecevInfo(reMappingReceipt);
+					        if (pSuSinFlag == "Y") {
+						        var reMappingReceipt = getReceiptList();
+						        
+						        setRecevInfo(reMappingReceipt);
+					        }
 				        }
-			        }
+		    		}
 		        }
+		    }
+		    
+		    /* 2019-01-02 천성준 #14647
+		            결재암호 사용유무 조회 (Y / N)
+		    */
+		    function CheckUsePassword() {
+		    	var result = "";
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getApprovalPWD.do",
+		    		success: function(text) {
+		    			result = text;
+		    		}        			
+		    	});
+		    	
+		    	if (result != "N") {
+		    		return true;
+		    	} else {
+		    		return false;
+		    	}
 		    }
 		</script>
 	</head>

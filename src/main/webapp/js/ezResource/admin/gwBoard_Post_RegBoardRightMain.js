@@ -1,4 +1,4 @@
-﻿var L_AclText = "";
+﻿﻿var L_AclText = "";
 var L_AclValue = "";
 var L_ACLERRORMESSAGE = "" + strLang30 + "";
 
@@ -150,6 +150,11 @@ function SetAddACLList(objAddList) {
 
 			objUserList.options[User_Cnt] = AddUser;
 
+		}
+		else {
+			setTimeout(function() {
+				alert(strLangkmsr01);
+			}, 200);
 		}
 	}
 }

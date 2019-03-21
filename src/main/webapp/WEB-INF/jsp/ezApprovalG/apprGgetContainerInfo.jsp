@@ -92,6 +92,9 @@
  	        var orgCompanyID = "";
  	       	var ext;
  	        var pListTypeValue;
+ 	        var isSearch = false;
+ 	     	//개인문서함 엑셀내보내기시에 필요한 파일명.
+ 	        var excelFileName = "${excelFileName}";
  	        
 	        document.onselectstart = function () { return false; };
 	
@@ -275,7 +278,7 @@
 	            } catch (e) {
 	            }
 	            
-	            if (approvalFlag != 'G') {
+	            if (approvalFlag != 'G' &&  LoadSquery != 'usercontlist') {
 		            AddOption(sel_status, '<spring:message code="ezApprovalG.t1434"/>', 'H');
 		            AddOption(sel_status,'<spring:message code="ezApprovalG.t1422"/>', 'I');
 		            AddOption(sel_status, '<spring:message code="ezApprovalG.t1687"/>', 'N');
@@ -577,6 +580,7 @@
 		    }
 		
 		    function SearchCondi_onclick_Complete(returnvalue) {
+		    	isSearch = true;
 	    	   for(var i =0; i < returnvalue.length; i++) {
 					if (returnvalue[i] == null) {
 						returnvalue[i] = "";
@@ -742,7 +746,8 @@
 		
 		        if (tr.getAttribute("DATA10") != "" && tr.getAttribute("DATA10") >= GetTodayDate()) {
 		            if (CheckAprLine(tr.getAttribute("DATA1")) == "TRUE") {
-		                if ("${approvalPWD}" != "N") {
+		                //if ("${approvalPWD}" != "N") {
+		                if (CheckUsePassword()) {
 		                    chk_Passwd(UserID);
 		                }
 		                else {
@@ -980,6 +985,47 @@
 			                encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
 			                "&OO=" + encodeURI(OrderOption) + "&allFG=" + AllFG ;
 		        	} else {
+		        		var myApprFrom = condition[7];
+		        		var myApprTo = condition[8];
+		        		var apprFrom = condition[5];
+	        			var apprTo = condition[6];
+	        			var draftFrom = condition[3];
+	        			var draftTo = condition[4];
+	        			var searchStatus = $("#sel_status").val();
+	        			if(searchStatus && searchStatus != "ALL"){
+	        				subCondition += "PROCESSYN = '" + searchStatus + "'";
+	        			}
+	        			
+		        		if(condition[7] != "" && condition[6] == "") {
+		        			condition[15] = condition[7].substring(0,4);
+		        			condition[16] = condition[7].substring(5,7);
+		        			condition[17] = condition[7].substring(8,10);
+		        			
+		        			condition[18] = condition[8].substring(0,4);
+		        			condition[19] = condition[8].substring(5,7);
+		        			condition[20] = condition[8].substring(8,10);
+		        		}
+		        		
+		        		if(condition[6] != "" && condition[7] == "") {
+		        			condition[9] = condition[5].substring(0,4);
+		        			condition[10] = condition[5].substring(5,7);
+		        			condition[11] = condition[5].substring(8,10);
+		        			
+		        			condition[12] = condition[6].substring(0,4);
+		        			condition[13] = condition[6].substring(5,7);
+		        			condition[14] = condition[6].substring(8,10);
+		        		}
+		        		
+		        		if(condition[4] != "" && condition[5] == "") {
+		        			condition[3] = draftFrom.substring(0,4);
+		        			condition[4] = draftFrom.substring(5,7);
+		        			condition[5] = draftFrom.substring(8,10);
+		        			
+		        			condition[6] = draftTo.substring(0,4);
+		        			condition[7] = draftTo.substring(5,7);
+		        			condition[8] = draftTo.substring(8,10);
+		        		} 
+		        		
 		                url += "?listType=SEARCH&P0=" + encodeURI(condition[0]) + "&P1=" +
 		                encodeURI(condition[1]) + "&P2=" + encodeURI(condition[2]) + "&P3=" + encodeURI(condition[3]) +
 		                "&P4=" + encodeURI(condition[4]) + "&P5=" + encodeURI(condition[5]) + "&P6=" + encodeURI(condition[6]) +
@@ -991,7 +1037,18 @@
 		                "&P22=" + encodeURI(condition[22]) + "&P23=" + encodeURI(condition[23]) + "&P24=" + encodeURI(ContainerID) +
 		                "&PN=" + encodeURI(tempPageNum) + "&PS=" + encodeURI(tempPageSize) + "&OC=" + encodeURI(OrderCell) +
 		                "&OO=" + encodeURI(OrderOption) + "&SQ=" + encodeURI(subCondition)+ "&allFG=" + AllFG ;
-		             }
+		            
+		               for(var i=3; i<=20; i++) {
+		                	condition[i] = "";
+		                }
+		                
+		                condition[7] = myApprFrom;
+		        		condition[8] = myApprTo;
+		        		condition[5] = apprFrom;
+	        			condition[6] = apprTo;
+	        			condition[3] = draftFrom;
+	        			condition[4] = draftTo;
+		        	}
 		        	window.frames["saveExcel"].location.href = url;
                 }
 		    }
@@ -1137,7 +1194,7 @@
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
 	
-		        if (document.getElementById("sel_year").value.toLowerCase() == "all") {
+		        if (document.getElementById("sel_year").value.toLowerCase() == "all" && isSearch == false) {
 		        	var nowyear = nowDate.substring(0,4);
 		            var nowmonth = parseInt(nowDate.substring(5,7));
 		            var nowday = parseInt(nowDate.substring(8,10)); 
@@ -1163,7 +1220,8 @@
 	            		period = condition[15]+strLang1028+" "+condition[16]+strLang1029+" "+condition[17]+strLang1030+" ~ "+condition[18]+strLang1028+" "+condition[19]+strLang1029+" "+condition[20]+strLang1030;
 	            	} else {
 	            		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
-	            	}
+	            	} 
+	            	
 		        }
 		        else {
 		        	if (GetSelectVal("sel_year") != "ALL" || GetSelectVal("who_year") != "ALL") {
@@ -1172,6 +1230,18 @@
 		                else
 				            period = document.getElementById("who_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("who_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
 		            }		        
+	            	//2019-01-24 김민성 - 검색시 기간 설정 수정
+	            	else {
+		            	if(condition[3] != null && condition[3] != "") {
+			            	period = condition[3].substring(0,4)+strLang1028+" "+parseInt(condition[3].substring(5,7))+strLang1029+" "+parseInt(condition[3].substring(8,10))+strLang1030+" ~ "+condition[4].substring(0,4)+strLang1028+" "+parseInt(condition[4].substring(5,7))+strLang1029+" "+parseInt(condition[4].substring(8,10))+strLang1030;
+		            	}
+		            	else if(condition[5] != null && condition[5] != "") {
+		            		period = condition[5].substring(0,4)+strLang1028+" "+parseInt(condition[5].substring(5,7))+strLang1029+" "+parseInt(condition[5].substring(8,10))+strLang1030+" ~ "+condition[6].substring(0,4)+strLang1028+" "+parseInt(condition[6].substring(5,7))+strLang1029+" "+parseInt(condition[6].substring(8,10))+strLang1030;
+		            	}
+		            	else if(condition[7] != null && condition[7] != "") {
+		            		period = condition[7].substring(0,4)+strLang1028+" "+parseInt(condition[7].substring(5,7))+strLang1029+" "+parseInt(condition[7].substring(8,10))+strLang1030+" ~ "+condition[8].substring(0,4)+strLang1028+" "+parseInt(condition[8].substring(5,7))+strLang1029+" "+parseInt(condition[8].substring(8,10))+strLang1030;
+		            	}
+	            	}
 		        }
 		
 		        document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + NodeListLen + " </span>" + strLang943 + " - " + period + "]";
@@ -1259,6 +1329,8 @@
 		        }
 		        PagingHTML += "</div>";
 		        td_Create1(PagingHTML);
+		        
+		        isSearch = false;
 		    }
 		    function goToPageByNum(Value) {
 		        curpage = Value;
@@ -1559,6 +1631,28 @@
 		    function onSelect_Status() {
 		    	GetDocSearch();
 		    }
+		    
+		    /* 2019-01-02 천성준 #14647
+		            결재암호 사용유무 조회 (Y / N)
+		    */
+		    function CheckUsePassword() {
+		    	var result = "";
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getApprovalPWD.do",
+		    		success: function(text) {
+		    			result = text;
+		    		}        			
+		    	});
+		    	
+		    	if (result != "N") {
+		    		return true;
+		    	} else {
+		    		return false;
+		    	}
+		    }
 	    </script>
 	</head>
 	<body class="mainbody" style="margin-top: 0px">
@@ -1613,7 +1707,7 @@
 	            	<select id="sel_year" name="sel_year" style="height:29px;" onchange="onSelect_Year(this);">
 		            	<option value="ALL"><spring:message code='ezApprovalG.kmsg01'/></option>
 		        	</select>
-		        	<c:if test = "${approvalFlag != 'G'}">
+		        	<c:if test = "${approvalFlag != 'G' && sQuery != 'usercontlist'}">
 		        		<div id="sel_status_div" style="display:inline;">
 						<select id="sel_status" name="sel_status" onchange="onSelect_Status(this);">    
 							<option value="ALL"><spring:message code='ezPoll.t104'/></option>

@@ -60,6 +60,24 @@
 	            try {
 	                parent.DocumentComplete();
 	                document.execCommand("AutoUrlDetect", false, false);
+	                document.querySelector("div").addEventListener("paste", function(e) {
+	                    e.preventDefault();
+	                    var text = '';
+	                    if (e.clipboardData) {
+	                    	text = (e.originalEvent || e).clipboardData.getData('text/plain');
+
+	                        document.execCommand('insertText', false, text);
+	                    }
+	                    else if (window.clipboardData) {
+	                    	text = window.clipboardData.getData('Text');
+							
+	                    	var selection = window.getSelection();
+
+							if (!selection.rangeCount) return false;
+							
+                            selection.getRangeAt(0).insertNode(document.createTextNode(text));
+	                    }
+	                });
 	            }
 	            catch (e)
 	            { }
@@ -292,7 +310,9 @@
 	                                document.getElementById("body").innerHTML = "";
 	                            }
 	                        }
-	                        Conent_contentEditable(document.getElementById('div_Content'));
+	                        if (parent.isUsed != "reuse"){
+		                        Conent_contentEditable(document.getElementById('div_Content'));
+	                        }
 	                        var SelectRows = document.getElementById('div_Content').getElementsByTagName("SELECT");
 	                        for (var i = 0; i < SelectRows.length; i++) {
 	                            SelectRows.item(i).onchange = function () { SelectOnchange(this); };
@@ -313,23 +333,25 @@
 	                            DocTitleObj = document.getElementById("doctitle");
 	
 	                        var EditorHeight = 500;
-	                        if (document.getElementById("body") != null) {
-	                            if (BODYTag.getAttribute("tagfreeheight")) {
-	                                EditorHeight = BODYTag.getAttribute("tagfreeheight");
-	                            }
-	                            div_BODY.innerHTML = BODYTag.innerHTML;
-	                        }
-	                        if (document.getElementById("body") != null) {
-	                            if (BODYTag.getAttribute("editor") == null) {
-	                                isEditor = true;
-	                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectEditor.do?type=APPROVALG&height=" + EditorHeight + "&isUsed=${isUsed}' frameborder='0'></ifrmae>";
-	                            }
-	                            else {
-	                                try {
-	                                	isEditor = false;
-	                                    Conent_contentEditable(document.getElementById('body'));
-	                                } catch (e) { }
-	                            }
+	                        if (parent.isUsed != "reuse"){
+		                        if (document.getElementById("body") != null) {
+		                            if (BODYTag.getAttribute("tagfreeheight")) {
+		                                EditorHeight = BODYTag.getAttribute("tagfreeheight");
+		                            }
+		                            div_BODY.innerHTML = BODYTag.innerHTML;
+		                        }
+		                        if (document.getElementById("body") != null) {
+		                            if (BODYTag.getAttribute("editor") == null) {
+		                                isEditor = true;
+		                                BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px; height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectApprovalEditor.do?type=APPROVALG&height=" + EditorHeight + "&isUsed=${isUsed}' frameborder='0'></ifrmae>";
+		                            }
+		                            else {
+		                                try {
+		                                	isEditor = false;
+		                                    Conent_contentEditable(document.getElementById('body'));
+		                                } catch (e) { }
+		                            }
+		                        }
 	                        }
 	                    }
 	
@@ -389,7 +411,7 @@
 	                        if (BODYTag.getAttribute("editor") == null) {
 	                            isEditor = true;
 	                            BODYTag.innerHTML = "<iframe id='iframe_content' name='iframe_content' class='viewbox' style='width:100%;margin:0px;padding:0px;" +
-	                                                "height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
+	                                                "height:" + EditorHeight + "px;' scrolling='no' src='/ezEditor/selectApprovalEditor.do?height=" + EditorHeight + "' frameborder='0'></ifrmae>";
 	                        }
 	                        else {
 	                            try {
@@ -727,6 +749,7 @@
 	        function Editor_Complete() {
 	            try {
 	                iframe_content.SetEditorContent(div_BODY.innerHTML);
+// 	                iframe_content.SetEditorContent();
 	                if (isConDoc) {
 	                    parent.Conn_Initial();
 	                }

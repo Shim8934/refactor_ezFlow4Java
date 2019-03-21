@@ -111,6 +111,10 @@
 	        		/* 2018-07-10 김민성 - 자원 수정시 특수문자 처리 */
 	            	document.getElementById("importance1").value = "${importance}";
 	            	document.getElementById("title").value = title;
+	            	
+	            	if(allDay == "1") {
+	            		document.getElementById("AllDay").checked = true;
+	            	}
 	        	}
 	        	if (document.getElementById("AllDay").checked) {
 		            document.getElementById("Stimepicker").style.display = "none";
@@ -192,6 +196,13 @@
 		                }	
 		            }
 		        }
+	        	
+	        	if(cmd == "mod") {
+	        		if(sDT.substring(14,19) == "12:00" && eDT.substring(14,19) == "11:59") {
+	        			document.getElementById("AllDay").checked = true;	        			
+	        			display_time_Unshow();
+	        		}
+	        	}
 		    }
 			
 		    window.onresize = function () {

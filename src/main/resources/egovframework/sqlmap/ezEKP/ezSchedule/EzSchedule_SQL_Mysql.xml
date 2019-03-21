@@ -141,6 +141,7 @@
 		<result property="dateType"			column="DATETYPE"			columnIndex="9"/>
 		<result property="startDate"		column="STARTDATE"			columnIndex="10"/>
 		<result property="endDate"			column="ENDDATE"			columnIndex="11"/>
+		<result property="repetition"		column="REPETITION"			columnIndex="12"/>
 	</resultMap>
 
 	<resultMap class="OrganUserVO" id="organUserVO">
@@ -237,8 +238,7 @@
 	<!-- checked -->
 	<select id="EzScheduleDAO.getScheduleList" parameterClass="Map" resultMap="scheduleListVO">
 		<![CDATA[
-			select a.* from
-			(select 
+			select 
 				scheduleid,
 				parentid,
 				ownerid,
@@ -272,7 +272,7 @@
         	from 
         		tbl_schedule
        		where  
-       			ownerid in ($v_INDILIST$)
+       			(ownerid in ($v_INDILIST$)
             and 
             	(            		
             		(startdate >= #v_PSTARTDATE# and startdate <= #v_PENDDATE#) 
@@ -292,46 +292,14 @@
             	title like concat('%',REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
             ]]>
             </isNotEmpty>
-            <isNotEmpty property="v_PKEYWORD">and $v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')</isNotEmpty>            		
-        	order by startdate asc) a
-        	UNION
-        	<![CDATA[
-        	select b.* from
-        	(select 
-				scheduleid,
-				parentid,
-				ownerid,
-				ownername,
-				ownername2,
-				creatorid,
-				creatorname,
-				creatorname2,				
-				date_add(createdate, interval +#v_OFFSETMIN# minute) as createdate,
-				modifierid,
-				modifiername,
-				modifiername2,				
-				date_add(modifydate, interval +#v_OFFSETMIN# minute) as modifydate,
-				scheduletype,
-				importance,
-				hasattendant,
-				hasattach,
-				hascomment,
-				isreadonly,
-				ispublic,
-				datetype,				
-				date_add(startdate, interval +#v_OFFSETMIN# minute) as startdate,				
-				date_add(enddate, interval +#v_OFFSETMIN# minute) as enddate,
-				repetition,
-				repetitiondelete,
-				title,
-				location,
-				contentpath,
-				'' as groupname,
-				companyid
-        	from 
-        		tbl_schedule
-       		where  
-       			ownerid in ($v_PIDLIST$)
+            <isNotEmpty property="v_PKEYWORD">
+            and 
+            	$v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')
+            </isNotEmpty>
+            <![CDATA[
+        	)
+        	or  
+       			(ownerid in ($v_PIDLIST$)
        		and
         		companyid = #v_COMPANYID#        	     	
         	and 
@@ -384,7 +352,8 @@
             ]]>
             </isNotEmpty>
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ like concat('%',#v_PKEYWORD#,'%')</isNotEmpty>            		
-        	order by startdate asc) b
+        		)
+          order by startdate asc
 	</select>
 	<!-- checked -->
 	<select id="EzScheduleDAO.getMyGroupList" parameterClass="map" resultMap="scheduleGroupListVO">
@@ -578,6 +547,8 @@
 		<![CDATA[
 			 select 
 			 	A.memberid,
+			 	E.GROUPNAME,
+			 	E.DESCRIPTION,
              	case #v_LANG#
                     when '1' then A.memberName                 
         			when '2' then A.memberName2
@@ -626,7 +597,9 @@
 							WHERE  
 							A.TENANT_ID = #v_TENANTID# AND C.EXTENSIONATTRIBUTE2 = #v_COMPANYID#) BB 
             	ON 
-				A.memberid = BB.cn 
+				A.memberid = BB.cn
+				JOIN TBL_SCHEDULEGROUP E
+				ON A.GROUPID = E.GROUPID
 				WHERE 
 				A.groupid = #v_GROUPID#
 				AND 
@@ -1003,7 +976,8 @@
              	b.location as location,
              	b.datetype as datetype,
              	date_add(b.startdate, interval +#v_OFFSETMIN# minute) as startdate,
-             	date_add(b.enddate, interval +#v_OFFSETMIN# minute) as enddate
+             	date_add(b.enddate, interval +#v_OFFSETMIN# minute) as enddate,
+             	b.repetition as repetition
         	from
         		tbl_attendant a join tbl_schedule b on a.scheduleid = b.scheduleid and a.tenant_id = b.tenant_id
         	where
@@ -1098,6 +1072,39 @@
 			) values (
 				#v_SCHEDULEID#,		#v_STARTDATE#,			#v_STARTDATE#,			#v_TENANTID#,			#v_COMPANYID#
 			)
+   		]]>
+	</insert>
+	<insert id="EzScheduleDAO.insertScheduleRepeDelChild" parameterClass="map">
+		<![CDATA[
+			insert into tbl_schedulerepetition_del(
+				scheduleid,			startdate, 				enddate,				tenant_id,				companyid
+			) 
+			select 
+				scheduleid ,		#v_STARTDATE#,			#v_STARTDATE#,			#v_TENANTID#,			#v_COMPANYID#
+			from 
+				tbl_schedule 
+			where 
+				parentid = #v_SCHEDULEID#
+   		]]>
+	</insert>
+	
+	<insert id="EzScheduleDAO.insertAttendantScheduleDel" parameterClass="map">
+		<![CDATA[
+			insert into tbl_schedulerepetition_del(
+				scheduleid,			startdate, 				enddate,				tenant_id,				companyid
+			)
+			select 
+				s.scheduleid ,		d.startdate,			d.enddate,			s.tenant_id,			s.companyid
+			from 
+				tbl_schedule s
+			inner join
+				tbl_schedulerepetition_del d
+			on
+				(s.parentid = d.scheduleid and s.tenant_id = d.tenant_id and s.companyid = d.companyid)
+			where 
+				s.parentid = #v_SCHEDULEID#
+			and
+				s.tenant_id = #v_TENANTID#
    		]]>
 	</insert>
 	<!-- checked -->
@@ -1255,6 +1262,17 @@
 				tbl_schedulerepetition_del
 	   		where  
 	   			scheduleid = #v_SCHEDULEID#
+	   		and
+	   			tenant_id = #v_TENANTID#
+	   	]]>		
+	</delete>
+	
+	<delete id="EzScheduleDAO.deleteScheduleRepeChild" parameterClass="map">
+		<![CDATA[
+			delete from
+				tbl_schedulerepetition_del
+	   		where  
+	   			scheduleid in (select scheduleid from tbl_schedule where parentid = #v_SCHEDULEID#)
 	   		and
 	   			tenant_id = #v_TENANTID#
 	   	]]>		

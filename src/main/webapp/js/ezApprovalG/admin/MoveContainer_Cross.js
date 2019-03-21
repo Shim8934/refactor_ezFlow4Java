@@ -470,7 +470,7 @@ function getDocListjson(pageNum) {
 	var docnumber = $("#DocNumber").val();
 	var doctitle = $("#DocTitle").val();
 	var drafter = $("#drafter").val();
-	var drafterdept = $("#drafterdept").val();
+	var drafterdept = document.getElementsByName("drafterdept")[0].id;
 	console.log("drafterdept :: "+drafterdept);
 	if (!$("#usedate").prop("checked")) {
 		searchStartTime = "";
@@ -497,7 +497,7 @@ function getDocListjson(pageNum) {
 					drafter    : drafter,//기안자
 					aprFrom    : searchStartTime,//완료일자
 					aprTo      : searchEndTime,//완료일자
-					deptName   : drafterdept,//기안부서
+					drafterdept   : drafterdept,//기안부서
 					pSelectTab : pSelectTab//탭구분	
 				},
 				success : function(res) {
@@ -537,6 +537,9 @@ function getDocListjson(pageNum) {
 					CurPage = res.currPage;
 					totalPage = res.totalPage;
 					totalCount = res.totalcnt;
+					if(totalCount === 0 && totalPage === 0) {
+						totalPage = 1;
+					}					
 					searchStartTime = res.startdate;
 					searchEndTime = res.endDate;
 					
@@ -564,6 +567,7 @@ function getDocListjson(pageNum) {
 		makePageSelPage();
 		} else {
 			alert(text2);
+			HiddenMailProgress();				// 2019-01-02 김민성 - 검색결과 없을시 프로그레스바 계속 나타나는 현상 수정
 		}
 }
 

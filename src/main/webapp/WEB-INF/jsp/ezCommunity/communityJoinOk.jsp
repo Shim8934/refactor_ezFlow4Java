@@ -228,7 +228,8 @@
 							window.onload = function() {
 								//2018-07-04 김보미 - 커뮤니티명 길 경우 처리
 // 							    document.getElementById("pMessageContent").innerHTML = "<c:out value = '${clubVO.c_ClubName}' />" + " Community" + "<spring:message code = 'ezCommunity.t1093' />"  + "<spring:message code = 'ezCommunity.t1094' />" + "<br />" + "<spring:message code = 'ezCommunity.t1095' />";
-							    document.getElementById("pMessageContent").innerHTML = "<span id='clubName'><c:out value = '${clubVO.c_ClubName}' /></span>" + " Community" + "<spring:message code = 'ezCommunity.t1093' />"  + "<spring:message code = 'ezCommunity.t1094' />" + "<br />" + "<spring:message code = 'ezCommunity.t1095' />";
+							    document.getElementById("pMessageContent").innerHTML = "<span id='clubName'><c:out value = '${clubVO.c_ClubName}' /></span>" + " <spring:message code='ezCommunity.t1529'/>" + "<spring:message code = 'ezCommunity.t1093' />"  + "<spring:message code = 'ezCommunity.t1094' />" + "<br />" + "<spring:message code = 'ezCommunity.t1095' />";
+							    
 							    var clubName = "<c:out value = '${clubVO.c_ClubName}' />";
 							    if (getByteLength(clubName) > 50) {
 						    		$("#clubName").css({"width":"305px","display":"inline-block", "overflow":"hidden", "text-overflow":"ellipsis", "white-space":"nowrap", "margin-bottom":"-5px" });

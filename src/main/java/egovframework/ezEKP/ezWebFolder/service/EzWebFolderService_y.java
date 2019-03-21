@@ -85,5 +85,9 @@ public interface EzWebFolderService_y {
 	FileVO getFolderFileDetailForExplorer(String fldFile, String fldFileId, String userId, int tenantId ,String comId ,String offset, String primary) throws Exception;
 	
 	JSONObject fileUpdateOverwrite (List<MultipartFile> multiFileLists, JSONArray nameArray, LoginVO userInfo, String folderId ,JSONArray fileIdArray, String realPath, int tenantId) throws Exception;
+
+	public String setAuthLoginTokenSql(String userId, String token, int tenantId, int device) throws Exception;
+
+	public int existsTokenCheck(String userId, String token,  int tenantId) throws Exception ;
 	
 }

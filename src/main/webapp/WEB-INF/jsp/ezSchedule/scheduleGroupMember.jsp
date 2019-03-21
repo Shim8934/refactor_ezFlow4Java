@@ -150,7 +150,9 @@
 					    		async : false,
 					    		data : {
 					    			groupID : groupid,
-					    			memberList : JSON.stringify(memberList)
+					    			memberList : JSON.stringify(memberList),
+					    			displayName : "<c:out value='${userInfo.displayName1}' />",
+									displayName2 : "<c:out value='${userInfo.displayName2}' />"
 					    		},
 					    		url : "/ezSchedule/scheduleAddMember.do",
 					    		success: function(text){
@@ -297,7 +299,9 @@
 				    		async : false,
 				    		data : {
 				    			groupID : groupid,
-				    			memberList : JSON.stringify(memberList)
+				    			memberList : JSON.stringify(memberList),
+				    			displayName : "<c:out value='${userInfo.displayName1}' />",
+								displayName2 : "<c:out value='${userInfo.displayName2}' />"
 				    		},
 				    		url : "/ezSchedule/scheduleAddMember.do",
 				    		success: function(text){

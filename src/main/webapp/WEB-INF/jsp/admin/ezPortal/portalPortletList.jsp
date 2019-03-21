@@ -27,6 +27,8 @@
 			var g_PortalGubun = "${portalGubun}";
 			var g_intPage  = "${intPage}";
 			var g_totalPage= "${totalPage}";
+			var BlockSize = 10;
+			var pageNum = 1;
 			var g_PortletCategoryXML = "${portletCategoryXML}";
 			var g_PortalPageCategoryXML = "${portalPageCategoryXML}";
 			var g_PortalPageGubun = "${portalPageGubun}";   // 포탈페이지 구분
@@ -64,6 +66,7 @@
 				}
 	
 				xmldom = null;
+				makePageSelPage();
 			}
 			
 			function setValue(pUID, pObj) {
@@ -117,6 +120,101 @@
 				if (window.event.keyCode == 13)
 					btnSearch_onClick();
 			}
+			
+			function makePageSelPage() {
+		        var strtext;
+		        var PagingHTML = "";
+		        document.getElementById("tblPageRayer").innerHTML = "";
+		        strtext = "<div class='pagenavi'>";
+		        PagingHTML += strtext;
+		        
+		        if (g_totalPage > 1 && g_intPage != 1) {
+		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+		            PagingHTML += strtext;
+		        } else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        if (g_totalPage > BlockSize) {
+		            if (g_intPage > BlockSize) {
+		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
+		                PagingHTML += strtext;
+		            } else {
+		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+		                PagingHTML += strtext;
+		            }
+		        } else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        var MaxNum;
+		        var i;
+		        var startNum = (parseInt((g_intPage - 1) / BlockSize) * BlockSize) + 1;
+		        if (g_totalPage >= (startNum + parseInt(BlockSize))) {
+		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
+		        } else {
+		            MaxNum = g_totalPage;
+		        }
+		        
+		        for (i = startNum; i <= MaxNum; i++) {
+		            if (i == g_intPage) {
+		                strtext = "<span class='on'>" + i + "</span>";
+		                PagingHTML += strtext;
+		            } else {
+		                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+		                PagingHTML += strtext;
+		            }
+		        }
+		        if (i == 1) {
+	            	strtext = "<span class='on'>" + i + "</span>";
+                    PagingHTML += strtext;
+	            }
+		        
+		        if (g_totalPage > BlockSize) {
+		            if (g_totalPage >= parseInt(((parseInt((g_intPage - 1) / BlockSize) + 1) * BlockSize) + 1)) {
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
+		                PagingHTML += strtext;
+		            } else {
+		                strtext = "";
+		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+		                PagingHTML += strtext;
+		            }
+		        } else {
+		            strtext = "";
+		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        if (g_totalPage > 1 && g_totalPage != 1 && (g_totalPage != g_intPage)) {
+		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + g_totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
+		            PagingHTML += strtext;
+		        } else {
+		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
+		            PagingHTML += strtext;
+		        }
+		        
+		        PagingHTML += "</div>";
+		        document.getElementById("tblPageRayer").innerHTML = PagingHTML;
+		    }
+			
+			function goToPageByNum(Value) {
+		        pageNum = Value;
+		        makePageSelPage();
+		        pageChange(pageNum);
+		    }
+			
+			function selafterBlock() {
+		        pageNum = ((parseInt((g_intPage - 1) / BlockSize) + 1) * BlockSize) + 1;
+		        pageChange(pageNum);
+		    }
+			
+			function selbeforeBlock() {
+		        pageNum = ((parseInt(g_intPage / BlockSize) - 1) * BlockSize) + 1;
+		        pageChange(pageNum);
+		    }
 			
 			// 페이지 이동
 			function goToPage( r_value )
@@ -227,7 +325,7 @@
 			</tr>
 		</table>
 		</div>
-		<div class="page">
+		<%-- <div class="page">
 			<c:choose>
 				<c:when test="${intPage != '1'}">
 					<img src="/images/page_previous.gif" align="absmiddle" hspace="2" onClick="goToPage('front')" style="cursor:pointer"> <spring:message code='ezPortal.t253'/>${totalPage}<spring:message code='ezPortal.t254'/>
@@ -246,13 +344,13 @@
   					<img src="/images/page_next.gif" align="absmiddle" hspace="2" onClick="goToPage('next')">
   				</c:otherwise>
   			</c:choose>  			
-  		</div>
+  		</div> --%>
   		<br>
-  		<div style="width:100%; border: 1px solid #e8e8e8; border-bottom:0px;">
+  		<div style="width:100%; height:530px; /* border: 1px solid #e8e8e8; */ border-bottom:0px;">
 		<table class="mainlist" style="width:100%;">	
 		<tr>
-			<th style="width: 300px; border-top:0px;"><spring:message code='ezPortal.t130'/></th>
-			<th style="border-top:0px;"><spring:message code='ezPortal.t260'/></th>
+			<th style="width: 300px; border-top:1px solid #e8e8e8;"><spring:message code='ezPortal.t130'/></th>
+			<th style="border-top:1px solid #e8e8e8;"><spring:message code='ezPortal.t260'/></th>
 		</tr>
 		</table>		
 		<table class="mainlist" style="width:100%">
@@ -262,5 +360,6 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		</div>
+		<div id="tblPageRayer"></div>
 	</body>
 </html>

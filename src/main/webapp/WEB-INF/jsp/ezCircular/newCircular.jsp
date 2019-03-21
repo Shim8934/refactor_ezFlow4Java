@@ -73,7 +73,7 @@
 	
 	        window.onresize = function () {
 	            var height = parseInt(document.documentElement.clientHeight - 320);
-	            Window_resize()
+	            Window_resize();
 	        };
 	        
 	        document.onselectstart = function () { return false; };
@@ -96,7 +96,7 @@
 		    $(document).ready(function() {
 		    	var clickOutside;
 		    	
-		    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
+		    	if (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
 		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
 		    	} else {
 		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
@@ -536,7 +536,7 @@
 // 	        	if ((pageCnt - strListArr.length + 1) % 10 == 0) {
 // 					CurPage = CurPage - 1;
 // 				}
-
+				prevShow_Clear();
 		    	getBoardList();
 		    }
 		
@@ -561,10 +561,11 @@
 	                    return;
 	                }
 	            } else if (type == "quick") {
-	            	if ($.trim($("#txt_keyword").val()) == "") {
-			        	alert("<spring:message code='ezCircular.t189' />");
-			            return;
-			        }
+	            	//공백으로 검색할 수 없습니다.는 검색키워드를 입력해주세요에 포함되는 의미라서 주석처리.
+// 	            	if ($.trim($("#txt_keyword").val()) == "") {
+// 			        	alert("<spring:message code='ezCircular.t189' />");
+// 			            return;
+// 			        }
 
 	                if (document.getElementById("txt_keyword").value == "") {
 	                    alert("<spring:message code='ezCircular.t91'/>");
@@ -693,7 +694,7 @@
 	    <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 	
 	    <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
-	        <div style="width:100%; overflow:AUTO;" id="divList">
+	        <div style="width:100%; overflow-x:auto; overflow-y:hidden;" id="divList">
 	             <div id="lvBoardList"></div> 
 	        </div>
 	        <div id="tblPageRayer" style="text-align:center"></div>
@@ -712,7 +713,7 @@
 	                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
 	                        <p class="mail_title" style="margin-left: 0px;">
 	                            <span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
-	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
+	                                <img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
 	                        <dl class="mail_item">
@@ -738,7 +739,7 @@
 	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
 	                        <p class="mail_title">
 	                            <span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
-	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
+	                                <img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
 	                        <dl class="mail_item">

@@ -1,4 +1,4 @@
-function TreeViewinitialize(targetDeptID, TopDeptID, tProperty, ServerName) {
+function TreeViewinitialize(targetDeptID, TopDeptID, tProperty, ServerName, displayTrashDept) {
     try {
         var xmlpara = createXmlDom();
         var xmlTree = createXmlDom();
@@ -8,7 +8,11 @@ function TreeViewinitialize(targetDeptID, TopDeptID, tProperty, ServerName) {
         createNodeAndInsertText(xmlpara, objNode, "DEPTID", targetDeptID);
         createNodeAndInsertText(xmlpara, objNode, "TOPID", TopDeptID);
         createNodeAndInsertText(xmlpara, objNode, "PROP", tProperty);
-
+        
+        if (displayTrashDept) {
+        	createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
+        }
+        
         xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
         xmlHTTP.send(xmlpara);
 

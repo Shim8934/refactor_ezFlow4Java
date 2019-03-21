@@ -313,7 +313,7 @@ public interface EzApprovalGService {
 	
 	public String getUserRecRight(String recID, String sepAttNo, String userID, String companyID, int tenantID) throws Exception;
 	
-	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String flag, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception;
+	public String setCabinetReject(String docID, String deptID, String deptName, String deptName2, String dirPath, String realPath, String flag, String companyID, String lang, int tenantID, String offSet, Locale locale) throws Exception;
 	
 	public String gongRamSave(Document xmlDom, String dirPath, String companyID, String lang, int tenantID, String offSet) throws Exception;
 	
@@ -399,7 +399,7 @@ public interface EzApprovalGService {
 
 	public String getKeepType(String lang, int tenantId, String companyID) throws Exception;
 
-	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String lang, String approvalFlag) throws Exception;
+	public List<ApprGTaskVO> getCodeContainer(int tenantId, String companyID, String deptID, String primaryLang, String approvalFlag, String lang) throws Exception;
 
 	public String getUserContTree(String id, String ParentContID, String deptName, String companyID, String lang, int tenantId, Locale locale) throws Exception;
 
@@ -583,4 +583,13 @@ public interface EzApprovalGService {
 	public List<String> getShareOwnerId(String userID, int tenantID) throws Exception;
 	
 	public int getCheckAprState(String docID, String userID, String docState, String aprMemberSN, String companyID, int tenantID) throws Exception;
+	
+	public String checkHabYuiState(String docID, String companyID, int tenantID) throws Exception;
+	
+	public void setHesongCabinetID(String docID, String companyID, int tenantId) throws Exception;
+	
+	public String sendMailToNextAprMember(String docID, HttpServletRequest request, String loginCookie, LoginVO userInfo, String orgCompanyID, int tenantID) throws Exception;
+
+	void setHesongBansongCabinetID(String docID, String cabinetID,String taskCode, String companyID, int tenantId) throws Exception;
+	
 }

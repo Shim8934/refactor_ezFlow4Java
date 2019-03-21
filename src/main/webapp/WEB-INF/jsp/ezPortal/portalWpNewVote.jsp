@@ -151,20 +151,20 @@
 					}
 				}
 			}
-		</script>						
+		</script>
 	</head>
 	<body>
 		<section class="body_bg1">
 			<article class="portletbox pollbox">
-   				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt" style="display: inline-block;"><spring:message code='main.t2002' /></span> <span id="todayVotes" style="position: absolute; top: 14px; left: 41px;" class="tab_num"> (<c:out value='${totalVoteToday}'/>)</span><span class="btn_more" onclick="viewQstList()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span></div>
+   				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt" style="display: inline-block;"><spring:message code='main.t2002' /></span> <span id="todayVotes" style="position: absolute; top: 14px; left: 41px;" class="tab_num"> (<c:out value='${totalVoteToday}'/>)</span><span class="btn_more" onclick="viewQstList()"><img src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span></div>
   				<div class="pollcont" style="overflow-y: hidden; overflow-x: hidden;">
  	 				<c:choose>
   						<c:when test="${qstId != -1}">
   							<p class="qusetion">
    								<span class="btn_blue" onclick="vote_poll()"><span><spring:message code='main.t2001' /></span></span><span title="<c:out value='${qstTitle}'/>" style="margin-left:3px; text-overflow: ellipsis;"><c:out value='${qstTitle}'/></span>
     						</p>
-      						<c:forEach var="_option" items="${listOptions}" varStatus="loop">     
-      							<div class="poll_list1"> 								    
+      						<c:forEach var="_option" items="${listOptions}" varStatus="loop">
+      							<div class="poll_list1">
 		               				<div style="display: inline-block; width: 100%; font-size: 12px; ">
 		               					<div style="float:left; display: block;">${loop.index + 1}. </div>
 		               					<div class="Pt_QstOptTitleDiv" title="<c:out value ="${_option.content}" />"><c:out value ="${_option.content}" /></div>
@@ -174,7 +174,7 @@
 		               							<div id="info<c:out value ="${_option.ansId}" />" class="Pt_QstInfoDiv">&nbsp${_option.votesNumber}<spring:message code = 'ezPoll.t166'/>/</div>
 		               						</c:when>
 		               						<c:otherwise>
-		               							<div id="info<c:out value ="${_option.ansId}" />" class="Pt_QstInfoDivOff">&nbsp${_option.votesNumber}<spring:message code = 'ezPoll.t166'/>/</div>		               							
+		               							<div id="info<c:out value ="${_option.ansId}" />" class="Pt_QstInfoDivOff">&nbsp${_option.votesNumber}<spring:message code = 'ezPoll.t166'/>/</div>
 		               						</c:otherwise>
 		               					</c:choose>
 		               					
@@ -183,30 +183,30 @@
 	               					<c:choose>
 	               						<c:when test="${seeResultBefore == 1}">
 			               					<div class="graphbar1" id="divGraph<c:out value ="${_option.ansId}" />">
-				               					<p id="graph<c:out value ="${_option.ansId}" />" class="gx_bar11" ></p>           					
-				               				</div>				               				
+				               					<p id="graph<c:out value ="${_option.ansId}" />" class="gx_bar11" ></p>
+				               				</div>
 	               						</c:when>
 	               						<c:otherwise>
 	               							<div class="graphbar1" style="display: none;" id="divGraph<c:out value ="${_option.ansId}" />">
-				               					<p id="graph<c:out value ="${_option.ansId}" />" class="gx_bar11" ></p>           					
+				               					<p id="graph<c:out value ="${_option.ansId}" />" class="gx_bar11" ></p>
 				               				</div>
 		               						<div id="space<c:out value ="${_option.ansId}" />" style="display: inline-block;"></div>
 	               						</c:otherwise>
-	               					</c:choose>		               				
+	               					</c:choose>
 
-		               				<script type="text/javascript">		               					
+		               				<script type="text/javascript">
 			               					var voteNum = ${_option.votesNumber};
-			               					var optionID = ${_option.ansId};		               					
-			               					votesArr.push([optionID, voteNum]);	  
+			               					var optionID = ${_option.ansId};
+			               					votesArr.push([optionID, voteNum]);
 			               					totalVotes = totalVotes + voteNum;
-			               			</script>  	
-			               		</div>              		             		         			              			
+			               			</script>
+			               		</div>
       						</c:forEach>
   						</c:when>
   						<c:otherwise>
     						<div class="nodata_portlet">
 	    						<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>
-    							<p><spring:message code='main.t261' /></p>
+    							<p><spring:message code='main.t00026' /></p>
     						</div>
   						</c:otherwise>
   					</c:choose>

@@ -63,6 +63,9 @@
 		                createNodeAndInsertText(xmlpara, objNode, "TOPID", companyID);
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
+		            
+		            createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
+		            
 		            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 		            xmlHTTP.send(xmlpara);
 		
@@ -255,7 +258,7 @@
 		        else if (adCount == 1) {
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+		            var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -280,7 +283,7 @@
 		                if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 		                    g_xmlHTTP = createXMLHttpRequest();
-		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		                    g_xmlHTTP.send(strQuery);
@@ -292,7 +295,7 @@
 		        if (rgParams["deptid"] != "") {
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -346,12 +349,11 @@
 		        var selRow = tr[0];
 		        if ("${buJaeId}" == selRow.getAttribute("DATA2")) {
 					if ("${type}" != "EMP") {
-						//2018-08-10 êµ¬í´ì ëì¤ì resource ì¶ê°
 						alert("<spring:message code='main.t0629'/>");
 						return;
 					}
 		        }
-		     	//2018-08-10 ì ììì ë¶ìë¥¼ ë½ì¼ë©´ ìëê³  ë¶ì¬ìì ë¶ìë¥¼ ë½ìì¼ íë¤.
+		     	//2018-08-10 대리 수신자 기능 미구현으로 주석처리
 		        /* if (type == "Proxy") {
 		            if ("${userInfo.deptID}" != selRow.getAttribute("DATA3")) {
 		                alert("<spring:message code='ezPersonal.t400'/>");

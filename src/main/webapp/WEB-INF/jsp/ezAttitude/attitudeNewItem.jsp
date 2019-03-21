@@ -293,7 +293,7 @@
 				
 				//휴무일이 있는 경우 근태를 등록하지 못하게 변경
 				if (attRegCheck() && holidayAttReg == "0") {
-					if (selectType != "A07" && selectType != "A09" && selectType != "A10" ) { //휴근, 출장, 파견은 휴무근태등록 허용안함 상태에도 휴무일포함해서 등록되도록
+					if (selectType != "A07" && selectType != "A09" && selectType != "A10" && selectType != "A04" ) { //휴근, 출장, 파견, 외근은 휴무근태등록 허용안함 상태에도 휴무일포함해서 등록되도록
 						alert("<spring:message code='ezAttitude.t154'/>");
 						return;
 	 				} 
@@ -383,15 +383,17 @@
 						holidayAttReg = result.attitudeConfigVO.closedDateAttitude;
 						closedDay = result.attitudeConfigVO.closedDay.split(",");
 						for (var i = 0; i < result.holidayList.length; i++) {
-							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
-								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
-																  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
-																  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
-							} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
-								yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
-																		  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
-																		  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
-																		  result.holidayList[i].isRest == 1 ? true : false));
+							if (result.holidayList[i].holidayDate != null) {
+								if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
+									memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
+																	  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
+																	  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
+								} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+									yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
+																			  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
+																			  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
+																			  result.holidayList[i].isRest == 1 ? true : false));
+								}
 							}
 						}
 					}

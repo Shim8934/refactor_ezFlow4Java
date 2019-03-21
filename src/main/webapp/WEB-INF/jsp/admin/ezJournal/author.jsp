@@ -20,21 +20,32 @@
 				parent.frames["right"].location.href = url+"?companyId="+val;
 			}
 			
-			function insertAuth() {			
+			function insertAuth() {
 				var url = "/admin/ezJournal/authorView.do";
 				var companyId = document.getElementById("companyId").value;
 				url+="?companyId="+companyId;
-				window.open(url, "authorView", GetOpenWindowfeature(520, 200));
+				
+		    	if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
+					window.open(url, "authorView", GetOpenWindowfeature(523, 203));
+				} else {
+					window.open(url, "authorView", GetOpenWindowfeature(520, 200));
+				}
 			}
 			
-			function updateAuth() {			
+			function updateAuth() {
 				var userId = selectedUser;
 				var url = "/admin/ezJournal/authorView.do";
 				var companyId = document.getElementById("companyId").value;
 				url+="?companyId="+companyId;
+				
 				if (userId) {
 					url+="&userId="+userId+"&userName="+selectedUserName;
-					window.open(url, "authorView", GetOpenWindowfeature(520, 200));
+					
+					if (navigator.userAgent.toLowerCase().indexOf("chrome") != -1) {
+						window.open(url, "authorView", GetOpenWindowfeature(523, 203));
+					} else {
+						window.open(url, "authorView", GetOpenWindowfeature(520, 200));
+					}
 				} else {
 					alert("<spring:message code='ezPortal.t85' />");
 				}

@@ -320,10 +320,12 @@
 		                    cmdOK_onclick3("TBENDAPRLINEINFO.AprMemberSN:1:NOT");
 		                    break;
 		                case "MYDEPTCONT":
-		                		document.getElementById('myDeptCont0').onclick();
+	                		//document.getElementById('myDeptCont0').onclick();
+	                		document.getElementById('myDeptCont0').parentElement.onclick();	//#14477
 		                    break;
 		                case "ITEMCONT":
-		                	document.getElementById('itemList0').onclick();
+		                	//document.getElementById('itemList0').onclick();
+		                	document.getElementById('itemList0').parentElement.onclick(); //#14477
 		                    break;
 		                case "DEPTCONT":
 		                    break;
@@ -462,7 +464,8 @@
 				                    parent.frames["right"].checkBujaeInfo();
 				                }
 				                else if (listtype == "10") {
-				                    parent.frames["right"].passValLeftMenu("10");
+				                	parent.frames.right.document.location.href = "/ezApprovalG/aprManage.do?listType=" + listtype  + "&SubQuery=" + escape(SubQuery) + "&tmpValue=" + escape(tmpValue);
+				                	parent.frames["right"].passValLeftMenu("10");
 				                   // parent.frames["right"].checkBujaeInfo();
 				                }
 				                else if (listtype == "99") {

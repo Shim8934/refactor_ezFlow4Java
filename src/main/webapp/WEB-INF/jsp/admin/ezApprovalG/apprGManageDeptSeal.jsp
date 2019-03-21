@@ -272,7 +272,7 @@
 		    } */
 	        
 		    function selectCompanyID() {
-	            TreeViewinitialize("", $("#ListCompany option:selected").val(), "", "<c:out value='${serverName}'/>");
+	            TreeViewinitialize("", $("#ListCompany option:selected").val() + "/other", "", "<c:out value='${serverName}'/>", $("#ListCompany option:selected").val());
 		    }
 		</script>
 	</head>

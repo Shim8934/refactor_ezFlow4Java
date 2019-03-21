@@ -3,14 +3,11 @@ package egovframework.ezEKP.ezSchedule.service.impl;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -240,26 +237,33 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					maxCount = -1;
 				}
 												
-				Calendar sDate_cal = Calendar.getInstance();
-				Calendar eDate_cal = Calendar.getInstance();
 				Calendar date_cal = Calendar.getInstance();
-				Calendar date_Ecal = Calendar.getInstance();
 				
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 				SimpleDateFormat nsdf = new SimpleDateFormat("yyyy-MM-dd");
 				
-				sDate_cal.setTime(sdf.parse(orgStartDate));
+				Date scheduleStartDate = sdf.parse(vo.getStartDate());
+				
+				date_cal.setTime(scheduleStartDate);
+				
+				Calendar scheduleCalendar = Calendar.getInstance();
+				scheduleCalendar.setTime(date_cal.getTime());
+				
+				Calendar firstDateOfThisCalendar = Calendar.getInstance();
+				firstDateOfThisCalendar.setTime(sdf.parse(orgStartDate));
+				
+				Calendar lastDateOfCalendar = Calendar.getInstance();
+				lastDateOfCalendar.setTime(sdf.parse(orgEndDate));
+				
+				Calendar calculatedScheduleEndDateCalendar = Calendar.getInstance();
+				Calendar eDate_cal = Calendar.getInstance();
 				eDate_cal.setTime(sdf.parse(endDate));
-				date_cal.setTime(sdf.parse(vo.getStartDate()));
-				
-				String tmpEndDateStr = vo.getStartDate().substring(0, 10) + endDate.substring(10);
-				
-				date_Ecal.setTime(sdf.parse(tmpEndDateStr));
 				
 				switch (info[2]) {
 					case "0" :
 						while (true) {
 							if (date_cal.compareTo(eDate_cal) > 0) break;
+							//if (date_cal.compareTo(lastDateOfCalendar) > 0) break;
 							if (maxCount == count) break;
 							
 							boolean generated = false;
@@ -294,97 +298,110 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 							}
 						}
 					break;
-					//2018-07-27 구해안 주간반복 반복설정 버그로 인해 수정 
 					case "1" :
-						/*int weekcount = 6 - date_cal.get(Calendar.DAY_OF_WEEK) - 1;*/
-						List<Integer> wDay = new ArrayList<Integer>();
-						if(info[4] != null && !info[4].trim().equals("")){
+						
+						String isExistEndDate = info[0];
+						String isAllday = info[1];
+						String weeklyInterval = info[3];
+						String dayInfo = info[4];
+						
+						List<Integer> repeatDayList = new ArrayList<Integer>();
+						//repeatDayList = setDayInfo(dayInfo);
+						
+						if(dayInfo != null && !dayInfo.trim().equals("")){
 							char[] yoilArr = new char[info[4].length()]; // 스트링을 담을 배열
 
-							for (int j = 0; j < info[4].length(); j++) {
-								yoilArr[j] = info[4].charAt(j);					
+							for (int j = 0; j < dayInfo.length(); j++) {
+								yoilArr[j] = dayInfo.charAt(j);					
 							}
-							int yoilNum;
+							int yoiltoNumber;
 							for (char yoil : yoilArr) {
 								
-								yoilNum = yoil - 48;
-								wDay.add(yoilNum); 
+								yoiltoNumber = yoil - 48;
+								repeatDayList.add(yoiltoNumber); 
 							}
 						}
 								
-						/*if (wDay != null && wDay.size() > 0) {
-							maxCount = maxCount * wDay.size();
-						}*/
-						count=1;
-						maxCount += 1;
-						Calendar tempEDate_cal = Calendar.getInstance();
+						int MAXSCHEDULECOUNT = 1000;
+						int weeklyMaxCount = maxCount * repeatDayList.size();
 						
 						while (true) {
-							if (date_cal.compareTo(eDate_cal) > 0) {
-								tempEDate_cal.setTime(eDate_cal.getTime());
-								tempEDate_cal.add(Calendar.DATE, (Integer.parseInt(info[3])) * 7);
-									if(date_cal.compareTo(tempEDate_cal) > 0) {
-										break;
-									}
+							if (scheduleCalendar.compareTo(lastDateOfCalendar) > 0) {
+								//TODO boolean 리턴함수
+								calculatedScheduleEndDateCalendar.setTime(lastDateOfCalendar.getTime());
+								calculatedScheduleEndDateCalendar.add(Calendar.DATE, (Integer.parseInt(weeklyInterval)) * 7);
+								if(scheduleCalendar.compareTo(calculatedScheduleEndDateCalendar) > 0) {
+									break;
+								}
 							}
-							if (maxCount == count) break;
 							
-//							boolean generated = false;
+							if (Integer.parseInt(isExistEndDate) > 0) {
+								if (weeklyMaxCount <= count) break;
+							} 
 							
-//							if (generated) {
-								//카운트가 늘어나면서
-								String calcuDate = nsdf.format(date_cal.getTime());
+							if (count > MAXSCHEDULECOUNT) {
+								break;
+							}
+							
+							String scheduleDate = nsdf.format(scheduleCalendar.getTime());
 								
-								//if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {	
-									if(info[0].equals("0")){
-										
-												for (Integer yoil : wDay) {
-													
-													date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
-													calcuDate = nsdf.format(date_cal.getTime());
-													if (!rList.contains(calcuDate)) {
-														if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0 && date_cal.getTime().compareTo(sdf.parse(endDate)) <= 0) {
-														ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
-														tempResultList.add(rVo);
-													}
-													
-												}
-												date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
-										}
-									}else{
-										
-										//row 추가
-											for (Integer yoil : wDay) {
-												date_cal.set(Calendar.DAY_OF_WEEK,yoil+1);
-												calcuDate = nsdf.format(date_cal.getTime());
-												if (!rList.contains(calcuDate)) {
-													if (date_cal.getTime().compareTo(sdf.parse(vo.getStartDate())) >= 0){
-														ScheduleInfoVO rVo = addRepeatRow(vo, date_cal.getTime(), count, info[1]);									
-														tempResultList.add(rVo);
-													}
-												}
-											date_cal.set(Calendar.DAY_OF_WEEK,wDay.get(0)+1);
+								if(isExistEndDate.equals("0")){ //isExistEndDate Code "0" : 종료일 있음
+									//TODO makeFunction
+									for (int k = 0; k < repeatDayList.size(); k++) {
+										scheduleCalendar.set(Calendar.DAY_OF_WEEK,repeatDayList.get(k)+1);
+										scheduleDate = nsdf.format(scheduleCalendar.getTime());
+										if (scheduleCalendar.getTime().compareTo(scheduleStartDate) >= 0 && scheduleCalendar.getTime().compareTo(sdf.parse(endDate)) <= 0) {
+											if (!rList.contains(scheduleDate)) {
+												count++;
+												int weeklyCount = (int) Math.ceil(count / (double)repeatDayList.size());
+												ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), weeklyCount, isAllday);									
+												tempResultList.add(rVo);
+											} else {
+												count++;
 											}
+										}
 									}
-								//}
-								//요일이 여러개일 경우 하나씩 세팅해줘야된다
-								
-//							}
-							
-							/*if (weekcount == 0) {
-								date_cal.add(Calendar.DATE, (Integer.parseInt(info[3]) - 1) * 7 + 1);
-								weekcount = 6;
-							} else {
-								date_cal.add(Calendar.DATE, 1);
-								weekcount--;
-							}*/
-							date_cal.add(Calendar.DATE, (Integer.parseInt(info[3])) * 7);
-							count++;
+								} else if (Integer.parseInt(isExistEndDate) > 0) { //isExistEndDate Code > 0 : 숫자만큼 일정을 반복
+									for (int k = 0; k < repeatDayList.size(); k++) {
+										scheduleCalendar.set(Calendar.DAY_OF_WEEK,repeatDayList.get(k)+1);
+										scheduleDate = nsdf.format(scheduleCalendar.getTime());
+										if (scheduleCalendar.getTime().compareTo(scheduleStartDate) >= 0 && scheduleCalendar.getTime().compareTo(sdf.parse(endDate)) <= 0) {
+											if (weeklyMaxCount > count) {
+												if (!rList.contains(scheduleDate)) {
+													count++;
+													int weeklyCount = (int) Math.ceil(count / (double)repeatDayList.size());
+													ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), weeklyCount, isAllday);									
+													tempResultList.add(rVo);
+												} else {
+													count++;
+												}
+											} else {
+												break;
+											}
+										} 
+									}
+								} else { //isExistEndDate Code "-1" : 종료일 없음
+									for (int k = 0; k < repeatDayList.size(); k++) {
+										scheduleCalendar.set(Calendar.DAY_OF_WEEK,repeatDayList.get(k)+1);
+										scheduleDate = nsdf.format(scheduleCalendar.getTime());
+										if (scheduleCalendar.getTime().compareTo(scheduleStartDate) >= 0 && scheduleCalendar.getTime().compareTo(sdf.parse(endDate)) <= 0) {
+											if (!rList.contains(scheduleDate)) {
+												count++;
+												int weeklyCount = (int) Math.ceil(count / (double)repeatDayList.size());
+												ScheduleInfoVO rVo = addRepeatRow(vo, scheduleCalendar.getTime(), weeklyCount, isAllday);									
+												tempResultList.add(rVo);
+											} else {
+												count++;
+											}
+										}
+									}
+								}
+							scheduleCalendar.add(Calendar.DATE, (Integer.parseInt(weeklyInterval)) * 7);
 						}						
 					break;	
 					
 					case "2" :
-						while (true) {						
+						while (true) {
 							int year = date_cal.get(Calendar.YEAR);
 							int month = date_cal.get(Calendar.MONTH) + 1;
 
@@ -431,11 +448,21 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 
 								String calcuDate = nsdf.format(newCal.getTime());
 								
-								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {
-									//row 추가
-									if (!rList.contains(calcuDate)) {
-										ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
-										resultList.add(rVo);
+								if (info[0].equals("0")) {
+									if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0) {
+										//row 추가
+										if (!rList.contains(calcuDate)) {
+											ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+											resultList.add(rVo);
+										}
+									}
+								} else {
+									if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {
+										//row 추가
+										if (!rList.contains(calcuDate)) {
+											ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+											resultList.add(rVo);
+										}
 									}
 								}
 							}
@@ -450,7 +477,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 							int year = date_cal.get(Calendar.YEAR);
 							int month = Integer.parseInt(info[4]);
 									
-							if (year > eDate_cal.get(Calendar.YEAR)) break;
+							if (year > lastDateOfCalendar.get(Calendar.YEAR)) break;
 							if (maxCount == count) break;
 							
 							boolean generated = false;
@@ -500,11 +527,21 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 								
 								String calcuDate = nsdf.format(newCal.getTime());
 								
-								if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0) {
-									//row 추가
-									if (!rList.contains(calcuDate)) {
-										ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
-										resultList.add(rVo);
+								if (info[0].equals("0")) {
+									if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(endDate.substring(0,10)) <= 0 && calcuDate.compareTo(vo.getStartDate().substring(0,10)) >= 0) {
+										//row 추가
+										if (!rList.contains(calcuDate)) {
+											ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+											resultList.add(rVo);
+										}
+									}
+								} else {
+									if (calcuDate.compareTo(orgStartDate.substring(0,10)) >= 0 && calcuDate.compareTo(orgEndDate.substring(0,10)) <= 0 && calcuDate.compareTo(vo.getStartDate().substring(0,10)) >= 0) {
+										//row 추가
+										if (!rList.contains(calcuDate)) {
+											ScheduleInfoVO rVo = addRepeatRow(vo, newCal.getTime(), count, info[1]);
+											resultList.add(rVo);
+										}
 									}
 								}
 							}
@@ -544,14 +581,16 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				svo = resultList.get(i);
 				svoId = svo.getScheduleId();
 				svoRepetition = svo.getRepetition();
-				if (svoRepetition.equals("") || svoRepetition == null) {
+				if (svoRepetition.equals("") || svoRepetition.equals(" ") || svoRepetition == null) {
 					continue;
 				} else {
 					info = svo.getRepetition().split("\\|");
 					
 					if (i+1 == resultCount && Integer.parseInt(info[0]) < 1){
-						if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+						if (svo.getEndDate().equals(svo.getRealEndDate())) {
+							if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
 							svoIndex.add(i);
+							}
 						}
 						break;
 					} else if (i+1 == resultCount) {
@@ -561,8 +600,10 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					svoIdAfter = svoAfter.getScheduleId();
 					
 					if (!svoId.equals(svoIdAfter) && Integer.parseInt(info[0]) < 1) {
-						if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
-							svoIndex.add(i);
+						if (svo.getEndDate().equals(svo.getRealEndDate())) {
+							if (svo.getEndDate().substring(10).equals(" 00:00:00.0")) {
+								svoIndex.add(i);
+							}
 						}
 					}
 				}
@@ -609,6 +650,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		innerVO.setEndDate(dateTime2);
 		innerVO.setDateType(newDateType + "");
 		innerVO.setRepeatCount(count);			
+		innerVO.setRealEndDate(vo.getEndDate());
 		
 		return innerVO; 
 	}
@@ -1100,6 +1142,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_SCHEDULEID", scheduleId);
 		map.put("v_TENANTID", tenantID);
 				
+		ezScheduleDAO.deleteScheduleRepeChild(map);
 		ezScheduleDAO.deleteScheduleAttach(map);
 		ezScheduleDAO.deleteAttendant(map);
 		ezScheduleDAO.deleteSchedule(map);
@@ -1209,6 +1252,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		
 		if (status.equals("1")) {
 			ezScheduleDAO.insertAttendantSchedule(map);
+			ezScheduleDAO.insertAttendantScheduleDel(map);
 		}
 	}
 
@@ -1235,6 +1279,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		map.put("v_COMPANYID", companyID);
 		
 		ezScheduleDAO.insertScheduleRepeDel(map);
+		ezScheduleDAO.insertScheduleRepeDelChild(map);
 	}
 
 	@Override
@@ -1265,9 +1310,9 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	}
 
 	@Override
-	public void copySchedule(String dragId, String startDate, String endDate, String defaultPath, String offset,int tenantId, String companyId) throws Exception {
+	public void copySchedule(String dragId, String startDate, String endDate, String defaultPath, String offSetMin, int tenantId, String companyId) throws Exception {
 		
-		ScheduleInfoVO info = getScheduleInfo(dragId, offset, tenantId, companyId);
+		ScheduleInfoVO info = getScheduleInfo(dragId, offSetMin, tenantId, companyId);
 		
 		String[] Repetition = info.getRepetition().split("\\|");
 		String dateType = Repetition[1].equals("0") ? "1" : "2"; //info[0]이면시간지정
@@ -1311,7 +1356,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 		copyAttach(scheduleId, defaultPath, attachPath, attachList, tenantId);
 		
 		//Save attendList
-		List<AttendantListVO> attendList = getAttendantList(dragId, offset, tenantId, companyId);
+		List<AttendantListVO> attendList = getAttendantList(dragId, offSetMin, tenantId, companyId);
 		for (int i = 0; i < attendList.size(); i++) {
 			String attendantId = attendList.get(i).getAttendantId();
 			String attendantName = attendList.get(i).getAttendantName();

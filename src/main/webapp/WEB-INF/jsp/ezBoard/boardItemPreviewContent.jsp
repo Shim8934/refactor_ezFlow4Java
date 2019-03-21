@@ -153,7 +153,8 @@
 	            var xmldomNodes = SelectNodes(xmldom, "NODES/NODE");
 	            var regData = GetbrowserLanguage();
 	
-	            strAttach += "<div class='previewmail_addfile' id='ifrmPreViewRayer' style='margin-bottom:10px;'>";
+	            /* 2019-01-03 홍승비 - 게시물 미리보기 > 첨부파일 영역 다국어 폰트 적용되도록 수정 */
+	            strAttach += "<div class='previewmail_addfile' id='ifrmPreViewRayer' style='margin-bottom:10px; font-family:<spring:message code='ezEmail.sjw01'/>'>";
 	
 	            var totalSize = 0;
 	            for (var j = 0; j < xmldomNodes.length; j++) {
@@ -177,7 +178,7 @@
 // 	                filename = ReplaceText(filename, "%7e", "~");
 // 	                filename = ReplaceText(filename, "%3d", "=");
 	               // filepath = "/upload_board/" + filepath;
-	                filesize = parseInt(getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize2")));
+	                filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 	
 	                var strTarget = "target=''";
 	                var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();

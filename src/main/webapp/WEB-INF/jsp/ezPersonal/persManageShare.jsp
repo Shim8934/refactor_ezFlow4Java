@@ -47,7 +47,16 @@
 				} else {
 					$(this).addClass("trClick").find("input[type=checkbox]").prop("checked", true);
 				}
-			})
+			});
+			
+			//체크박스로 클릭하면 체크가 되지 않는 문제로 추가.
+			$(document).on('click', '#shareApprovalList input[type=checkbox]:not(#checkboxAll)', function(){
+				if ($(this).prop("checked")) {
+					$(this).prop("checked", false);
+				} else {
+					$(this).prop("checked", true);
+				}
+			});
 			
 			window.onload = function() {
 				shareSetList();
@@ -74,7 +83,7 @@
 				var strHTML = "";
 				
 				if (listLength == 0) {
-					strHTML = "<tr id='noItem'><td colspan='5' style='text-align: center'>데이터가 없습니다.</td></tr>";	
+					strHTML = "<tr id='noItem'><td colspan='5' style='text-align: center'><spring:message code='ezApprovalG.bhs21'/></td></tr>";	
 				} else {
 					for (var i = 0; i < listdom.getElementsByTagName("ROW").length; i++) {
 						strHTML += "<tr data1='" + getNodeText(listdom.getElementsByTagName("SHAREUSERID")[i]) + "'>";
@@ -165,9 +174,13 @@
 	</head>
 	<body>
 		<br>
+		<span class="txt">▒ <spring:message code='ezApprovalG.bhs08' /></span><br/>
+		<span class="txt">▒ <spring:message code='ezApprovalG.bhs09' /></span><br/>
+	   	<%--
 	    <h2 class="txt">▒ <spring:message code='ezApprovalG.bhs08'/></h2>
-	    <h2 class="txt" style="margin-top:3px">▒ <spring:message code='ezApprovalG.bhs09'/></h2>
-	    <table class="mainlist" style="width:750px;">
+	    <h2 class="txt" style="margin-top:3px">▒ <spring:message code='ezApprovalG.bhs09'/></h2> 
+	    --%>
+	    <table class="mainlist" style="width:750px; margin-top: 10px;">
 	    	<tbody>
 	    		<tr>
 	    			<td style="padding-left:0px; border-bottom:0;">

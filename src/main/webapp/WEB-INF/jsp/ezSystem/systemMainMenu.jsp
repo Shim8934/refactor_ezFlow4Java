@@ -28,6 +28,9 @@
 			}
 			
 			function update_Sys_Param() {
+				
+				checkUseSession();
+				
 				var paramArray
 					= [
 						{ name : "BigSizeMailAttachDelDay", value : document.getElementById("BigSizeMailAttachDelDay").value.trim() },
@@ -61,9 +64,15 @@
 				    alert("<spring:message code='ezSystem.x0005'/>: <spring:message code='ezEmail.t99000066'/>");
 				    return;
 				} else if (!paramArray[4].value.match(/^\d+$/)) {
+				    alert("<spring:message code='ezSystem.x0038'/>: <spring:message code='ezEmail.t99000066'/>");
+				    return;
+				} else if (!paramArray[5].value.match(/^\d+$/)) {
 				    alert("<spring:message code='ezSystem.x0006'/>: <spring:message code='ezEmail.t99000066'/>");
 				    return;
-				}		
+				} else if (!paramArray[15].value.match(/^\d+$/)) {
+					alert("<spring:message code='ezSystem.lsh001'/>: <spring:message code='ezEmail.t99000066'/>");
+				    return;
+				}	
 						
 				var jsonStr = JSON.stringify(paramArray);
 				
@@ -88,6 +97,17 @@
 					}
 				});	
 			}
+			
+			function checkUseSession() {
+				
+				$.ajax({
+					type : "GET",
+					url : "/admin/ezSystem/checkUseSession.do",
+					dataType: "json",
+					success : function(result) {
+					}
+				});
+			}
 		</script>
 	</head>
 	<body class="mainbody">
@@ -95,16 +115,22 @@
 	    <table class="content">
 	        <tbody>
 	            <tr><th><spring:message code="main.kms1"/></th><th><spring:message code="main.kms3"/></th></tr>
-	            <c:if test="${configMap.useSession ne null and configMap.useSession ne ''}">
-		            <tr><th><spring:message code="ezSystem.lsh001"/></th><td><input id="useSession" minlength="1" type="text" value="${configMap.useSession}"> (<spring:message code="ezSystem.kyj5"/>)</td></tr>
-	            </c:if>
+	            
+	            <c:choose>
+	            	<c:when test="${configMap.useSession ne null and configMap.useSession ne ''}">
+	            		<tr><th><spring:message code="ezSystem.lsh001"/></th><td><input id="useSession" minlength="1" type="text" value="${configMap.useSession}"> (<spring:message code="ezSystem.lsh002"/>)</td></tr>
+	            	</c:when>
+	            	<c:otherwise>
+	            		<tr><th><spring:message code="ezSystem.lsh001"/></th><td><input id="useSession" minlength="1" type="text" value="0" > (<spring:message code="ezSystem.lsh002"/>)</td></tr>
+	            	</c:otherwise>
+	            </c:choose>
 	            <tr><th><spring:message code="ezSystem.x0001"/></th><td><input id="BigSizeMailAttachDelDay" maxlength="3" type="text" value="${configMap.BigSizeMailAttachDelDay}"> (<spring:message code="ezSystem.x0010"/>)</td></tr>          
 	            <tr><th><spring:message code="ezSystem.x0002"/></th><td><input id="totBigSizeMailAttachLimit" maxlength="4" type="text" value="${configMap.totBigSizeMailAttachLimit}"> (<spring:message code="ezSystem.x0011"/>, <spring:message code="ezSystem.x0019"/>)</td></tr>
 	            <tr><th><spring:message code="ezSystem.x0003"/></th><td><input id="MailAttachLimit" maxlength="3" type="text" value="${configMap.MailAttachLimit}"> (<spring:message code="ezSystem.x0011"/>)</td></tr>                              
 	            <tr <c:if test="${isDotNetAdmin == true}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0005"/></th><td><input id="ExpirePassPeriod" maxlength="3" type="text" value="${configMap.ExpirePassPeriod}"> (<spring:message code="ezSystem.x0010"/>, <spring:message code="ezSystem.x0014"/>)</td></tr>
 	            <tr <c:if test="${isDotNetAdmin == true}">style="display:none;"</c:if>><th><spring:message code="ezSystem.x0038"/></th><td><input id="MaxAllowedCountOfLoginFail" maxlength="4" type="text" value="${configMap.MaxAllowedCountOfLoginFail}"> (<spring:message code="ezSystem.x0014"/>)</td></tr>            
 	            <tr><th><spring:message code="ezSystem.x0006"/></th><td><input id="INDIVIDUALMAILUSER" maxlength="3" type="text" value="${configMap.INDIVIDUALMAILUSER}"> (<spring:message code="ezSystem.x0015"/>)</td></tr>
-	            <tr><th><spring:message code="ezSystem.x0007"/></th><td><select id="IS_READ_DELETE"><option <c:if test="${configMap.IS_READ_DELETE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.IS_READ_DELETE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td><td></tr>
+	            <tr><th><spring:message code="ezSystem.x0007"/></th><td><select id="IS_READ_DELETE"><option <c:if test="${configMap.IS_READ_DELETE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezSystem.hsb01"/></option><option <c:if test="${configMap.IS_READ_DELETE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezSystem.hsb02"/></option></select></td></tr>
 	            <tr><th><spring:message code="ezSystem.x0008"/></th><td><select id="PrimaryLang" style="display:none;"><option <c:if test="${configMap.PrimaryLang == '1'}">selected="selected"</c:if> value="1"><spring:message code="ezPersonal.s81"/></option><option <c:if test="${configMap.PrimaryLang == '3'}">selected="selected"</c:if> value="3"><spring:message code="ezPersonal.s84"/></option></select>	
 	           			<select id="PrimaryTimeZone">
          					<option value="000|-12:00">(GMT-12:00) <spring:message code='ezPersonal.s5'/></option>
@@ -209,7 +235,7 @@
 					</td>
 				</tr>
 	            <tr><th><spring:message code="ezSystem.x0009"/></th><td><input id="USE_FileExtension" type="text" value="${configMap.USE_FileExtension}"> (<spring:message code="ezSystem.x0012"/>, <spring:message code="ezSystem.x0013"/>: jpg,doc,xls)</td></tr>
-	            <tr><th><spring:message code="ezSystem.x0016"/></th><td><input id="LicenseKey" size="60" maxlength="60" type="text" value="${configMap.LicenseKey}"> (<spring:message code="ezSystem.x0017"/>: ${licensedUserCount}, <spring:message code="ezSystem.x0018"/>: ${userCount})</td></tr>
+	            <tr><th><spring:message code="ezSystem.x0016"/></th><td><input id="LicenseKey" maxlength="200" type="text" value="${configMap.LicenseKey}" style="width:40%" /> (<spring:message code="ezSystem.x0017"/>: ${licensedUserCount}, <spring:message code="ezSystem.x0018"/>: ${userCount})</td></tr>
 	            <tr><th><spring:message code="ezSystem.x0020"/></th><td><select id="Use_FromAddress"><option <c:if test="${configMap.Use_FromAddress == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.Use_FromAddress == null or configMap.Use_FromAddress == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
 	            <tr><th><spring:message code="ezSystem.lhj1"/></th><td><select id="Use_HTMLMode"><option <c:if test="${configMap.USE_HTMLMODE == null or configMap.USE_HTMLMODE == 'YES'}">selected="selected"</c:if> value="YES"><spring:message code="ezQuestion.t103"/></option><option <c:if test="${configMap.USE_HTMLMODE == 'NO'}">selected="selected"</c:if> value="NO"><spring:message code="ezQuestion.t104"/></option></select></td></tr>
 

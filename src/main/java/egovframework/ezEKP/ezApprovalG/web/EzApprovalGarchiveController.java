@@ -1808,27 +1808,27 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
                 TempQuery = xmldomsub.getElementsByTagName("ROOT").item(0).getChildNodes().item(0).getTextContent();
 
                 if (TempQuery.indexOf("DOCNO;") != -1) {
-                    ReturnQuery += " AND DOCNO LIKE '%'DOCNO'%' ";
+                    ReturnQuery += " AND DOCNO LIKE '%"+ xmldomsub.getElementsByTagName("DOCNO").item(0).getTextContent() + "%' ";
                 }
                 if (TempQuery.indexOf("DOCTITLE;") != -1) {
-                    ReturnQuery += " AND DocTitle LIKE '%'DOCTITLE'%' ";
+                    ReturnQuery += " AND DocTitle LIKE '%"+ xmldomsub.getElementsByTagName("DOCTITLE").item(0).getTextContent() + "%' ";
                 }
                 if (p_UserLang.equals("2")) {
                     if (TempQuery.indexOf("WRITERNAME;") != -1) {
-                        ReturnQuery += " AND WRITERNAME" + p_UserLang + " LIKE '%'WRITERNAME'%' ";
+                        ReturnQuery += " AND WRITERNAME" + p_UserLang + " LIKE '%" + xmldomsub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
                     }
                 } else {
                     if (TempQuery.indexOf("WRITERNAME;") != -1) {
-                        ReturnQuery += " AND WRITERNAME LIKE '%'WRITERNAME'%' ";
+                        ReturnQuery += " AND WRITERNAME LIKE '%" + xmldomsub.getElementsByTagName("WRITERNAME").item(0).getTextContent() + "%' ";
                     }
                 }
                
                 if (commonUtil.getDatabaseType().equalsIgnoreCase("oracle")) {
 	                if (TempQuery.indexOf("STARTDATEAF;") != -1) {
-	                    ReturnQuery += " AND LINKDATE >= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'YYYY-MM-DD HH24:MI:SS') ";
+	                    ReturnQuery += " AND LINKDATE >= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + " '  ,'YYYY-MM-DD HH24:MI:SS') ";
 	                }
 	                if (TempQuery.indexOf("STARTDATEBF;") != -1) {
-	                    ReturnQuery += " AND LINKDATE <= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'YYYY-MM-DD HH24:MI:SS')";
+	                    ReturnQuery += " AND LINKDATE <= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("STARTDATEBF").item(0).getTextContent(), userInfo.getOffset(), false) + " '  ,'YYYY-MM-DD HH24:MI:SS')";
 	                }
 	                if (TempQuery.indexOf("ENDDATEAF;") != -1) {
 	                    ReturnQuery += " AND ENDDATE >= " + "TO_DATE('" + commonUtil.getDateStringInUTC(xmldomsub.getElementsByTagName("ENDDATEAF").item(0).getTextContent(), userInfo.getOffset(), false) + "'  ,'YYYY-MM-DD HH24:MI:SS')";
@@ -1852,28 +1852,28 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
                 }
                 
                 if (TempQuery.indexOf("FORMID;") != -1) {
-                    ReturnQuery += " AND TBENDAPRDOCINFO.FormID = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
+                    ReturnQuery += " AND TBL_ENDAPRDOCINFO.FormID = '" + xmldomsub.getElementsByTagName("FORMID").item(0).getTextContent() + "' ";
                 }
                 if (p_UserLang.equals("2")) {
                     if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                        ReturnQuery += " AND WriterDeptName" + p_UserLang + " LIKE '%'WRITERDEPTNAME'%' ";
+                        ReturnQuery += " AND WriterDeptName" + p_UserLang + " LIKE '%" + xmldomsub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                     }
                 } else {
                     if (TempQuery.indexOf("WRITERDEPTNAME;") != -1) {
-                        ReturnQuery += " AND WriterDeptName LIKE '%'WRITERDEPTNAME'%' ";
+                        ReturnQuery += " AND WriterDeptName LIKE '%" + xmldomsub.getElementsByTagName("WRITERDEPTNAME").item(0).getTextContent() + "%' ";
                     }
                 }
                 if (TempQuery.indexOf("KAPR;") != -1) {
-                    ReturnQuery += " AND TBEXPENDAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
+                    ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
                 }
                 if (TempQuery.indexOf("KEND;") != -1) {
-                    ReturnQuery += " AND TBEXPAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
+                    ReturnQuery += " AND TBL_EXPAPRDOCINFO.keyword LIKE '%'KEYWORD'%' ";
                 }
                 if (TempQuery.indexOf("CAPR;") != -1) {
-                    ReturnQuery += " AND TBEXPENDAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
+                    ReturnQuery += " AND TBL_EXPENDAPRDOCINFO.itemcode = " + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + " ";
                 }
                 if (TempQuery.indexOf("CEND;") != -1) {
-                    ReturnQuery += " AND TBEXPAPRDOCINFO.itemcode = '" + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + "' ";
+                    ReturnQuery += " AND TBL_EXPAPRDOCINFO.itemcode = " + xmldomsub.getElementsByTagName("ITEMCODE").item(0).getTextContent() + " ";
                 }
 
                 pSubQuery = ReturnQuery;
@@ -2665,7 +2665,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String type = request.getParameter("type");
 		String userName = request.getParameter("userName");
 		String userDeptName = request.getParameter("userDeptName");
-		String errMsg = request.getParameter("tempCabinetID");
+		String errMsg = request.getParameter("errMsg");
 		
 		if (userDeptName == null) {
 			userDeptName = "";

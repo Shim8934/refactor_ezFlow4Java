@@ -27,6 +27,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityDAO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCClubUserVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityMyCommunityVO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezPortal.dao.EzPortalDAO;
 import egovframework.ezEKP.ezPortal.service.EzPortalService;
 import egovframework.ezEKP.ezPortal.vo.PortalFirstMainListVO;
@@ -63,6 +64,7 @@ import egovframework.ezEKP.ezPortal.vo.PortalUrlPortletVO;
 import egovframework.ezEKP.ezPortal.vo.PortalUseTopMenuID2VO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzPortalService")
@@ -84,6 +86,9 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 	
 	@Resource(name = "EzBoardService")
 	private EzBoardService ezBoardService;
+	
+	@Resource(name = "EzOrganService")
+	private EzOrganService ezOrganService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -150,7 +155,7 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		String temp = uID;
-		String parentTopMenuID = "";
+		String parentTopMenuID = null;
 		int count = 0;
 		
 		while (count < 10) {
@@ -159,15 +164,15 @@ public class EzPortalServiceImpl extends EgovAbstractServiceImpl implements EzPo
 			map.put("companyID", companyID);
 			parentTopMenuID = ezPortalDAO.topGetTopParentPageID(map);
 			
-			if (parentTopMenuID != null && parentTopMenuID.toLowerCase().trim().equals("top")) {
+			if (parentTopMenuID == null || parentTopMenuID.toLowerCase().trim().equals("top")) {
 				break;
 			}
+			
 			temp = parentTopMenuID;
 			count ++;
 		}
 
 		logger.debug("topGetTopParentPageID ended");
-		
 		return temp;
 	}
 	
@@ -1188,14 +1193,15 @@ logger.debug("map.toString()" + map.toString());
 	
 	public String getRenderedTopMenuHTML (String topMenuID, String accessIDList, String mode, String skinNum, LoginVO userInfo, String theme, int tenantID) throws Exception {
 		logger.debug("getRenderedTopMenuHTML started");
-
-		if (mode.equals("view")) {
+		
+		// 20190104 조진호 - accessIDList가 항상 empty string으로 오기 때문에 필요 없는 부분이라 주석처리
+		/*if (mode.equals("view")) {
 			String cacheValue = checkCacheValue(topMenuID, getAccessList(userInfo), userInfo.getTenantId());
 			
 			if (cacheValue != null && !cacheValue.equals("")) {
 				return cacheValue;
 			}
-		}
+		}*/
 		
 		if (skinNum != null && !skinNum.equals("")) {
 			userInfo.setSkinNum(skinNum);
@@ -1298,9 +1304,10 @@ logger.debug("map.toString()" + map.toString());
 		String strPage = sb.toString();
 		sb = null;
 		
-		if (mode.equals("view")) {
+		// 20190104 조진호 - 항상 업데이트가 될 필요가 없기에 주석처리
+		/*if (mode.equals("view")) {
 			updateCacheValue(topMenuID, getAccessList(userInfo), strPage, userInfo.getTenantId());
-		}
+		}*/
 
 		logger.debug("getRenderedTopMenuHTML ended");
 		
@@ -1316,17 +1323,16 @@ logger.debug("map.toString()" + map.toString());
 		
 		int count = 0;
 		
-		strSQL = "SELECT * FROM TBL_TOPMENU_ITEMS  WHERE PageUID = '" + pTopMenuID + "' AND ColumnPos = " + pColumnIndex + " AND TENANT_ID = " + userInfo.getTenantId();
+		strSQL = "SELECT * FROM TBL_TOPMENU_ITEMS WHERE PageUID='" + pTopMenuID + "' AND ColumnPos=" + pColumnIndex + " AND TENANT_ID=" + userInfo.getTenantId();
 		
 		while (count < 10) {
 			parentTopMenuID = getParentUID(parentTopMenuID, userInfo.getTenantId(), userInfo.getCompanyID());
 			
-			if (parentTopMenuID.toLowerCase().trim().equals("top")) {
+			if (parentTopMenuID == null || parentTopMenuID.toLowerCase().trim().equals("top")) {
 				break;
 			}
 			
-			String param = String.valueOf(count);
-			strSQL += " UNION ALL SELECT * FROM TBL_TOPMENU_ITEMS  WHERE PageUID = '" + param + "' AND ColumnPos = " + parentTopMenuID + " AND TENANT_ID = " + userInfo.getTenantId();
+			strSQL += " UNION ALL SELECT * FROM TBL_TOPMENU_ITEMS WHERE PageUID='" + parentTopMenuID + "' AND ColumnPos=" + pColumnIndex + " AND TENANT_ID=" + userInfo.getTenantId();
 			count ++;
 		}
 		
@@ -1381,7 +1387,7 @@ logger.debug("map.toString()" + map.toString());
 		
 		int count = 0;
 		
-		strSQL = "SELECT * FROM TBL_TopMenu_Items  WHERE PageUID = '" + pTopMenuID + "' AND ColumnPos = " + pColumnIndex + " AND TENANT_ID = " + userInfo.getTenantId();
+		strSQL = "SELECT * FROM TBL_TopMenu_Items WHERE PageUID = '" + pTopMenuID + "' AND ColumnPos = " + pColumnIndex + " AND TENANT_ID = " + userInfo.getTenantId();
 		
 		while (count < 10) {
 			Map<String, Object> map = new HashMap<String, Object>();
@@ -1392,12 +1398,11 @@ logger.debug("map.toString()" + map.toString());
 			
 			parentTopMenuID = ezPortalDAO.getParentUID(map);
 			
-			if (parentTopMenuID.toLowerCase().trim().equals("top")) {
+			if (parentTopMenuID == null || parentTopMenuID.toLowerCase().trim().equals("top")) {
 				break;
 			}
 			
-			String param = String.valueOf(count);
-			strSQL += " UNION ALL SELECT * FROM TBL_TopMenu_Items  WHERE PageUID = '" + param + "' AND ColumnPos = " + parentTopMenuID + " AND TENANT_ID = " + userInfo.getTenantId();
+			strSQL += " UNION ALL SELECT * FROM TBL_TopMenu_Items WHERE PageUID='" + parentTopMenuID + "' AND ColumnPos=" + pColumnIndex + " AND TENANT_ID=" + userInfo.getTenantId();
 			count ++;
 		}
 		
@@ -1432,7 +1437,7 @@ logger.debug("map.toString()" + map.toString());
 				
 				sb.append("</TR>\n");
 			} else { 
-				if (menuItemMenuItemType.equals("0")) {
+				if (menuItemMenuItemType.equals("0") && !menuItemDisplayName.equals(" ")) {
 					/*System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ " + sb.toString());*/
 					sb.append(getMenuItemHTML(pCallingMenuID, menuItemUID, userInfo));
 				} else {
@@ -2011,11 +2016,31 @@ logger.debug("map.toString()" + map.toString());
 	
 	public String getUtilMenuHTML (String pCallingMenuID, String pUID, LoginVO userInfo) throws Exception {
 		logger.debug("getUtilMenuHTML started");
-
 		List<PortalMenuItemItemsMenuItemsVO> result = getUtilMenuHtml(pUID, pCallingMenuID, userInfo.getTenantId());
 		StringBuilder sb = new StringBuilder();
-		sb.append("<article class='utmenu'>\n");
-		sb.append("<ul>\n");
+		
+		// 20181126 조진호 - 마지막 로그인 시각을 탑메뉴 오른쪽 상단에 표기
+		String packageType = commonUtil.getPackageType(userInfo.getTenantId());
+		if(packageType.equalsIgnoreCase("mail") || packageType.equalsIgnoreCase("basic")) {
+			String lastLogin = ezOrganService.getLastLogin(userInfo.getId(), userInfo.getTenantId());
+			String loginIP = "";
+			if (lastLogin != null) {
+				lastLogin = EgovDateUtil.convertDate(lastLogin, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "");
+				lastLogin = commonUtil.getDateStringInUTC(lastLogin, userInfo.getOffset(), false);
+				loginIP = ezOrganService.getLoginIP(userInfo.getId(), userInfo.getTenantId());
+			} else {
+				lastLogin = "";
+				loginIP = "";
+			}
+			
+			sb.append("<article class='utmenu'>\n");
+			sb.append("<ul>\n");
+			sb.append("<li title=" + loginIP + ">" + egovMessageSource.getMessage("main.t00016", userInfo.getLocale()) + " " + lastLogin + "</li>");
+			// 끝
+		} else {
+			sb.append("<article class='utmenu'>\n");
+			sb.append("<ul>\n");
+		}
 		
 		String lastLogout = "";
 		logger.debug("resultSize="+result.size());
@@ -2331,7 +2356,9 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 				sb.append("<li><img src='" + imageNormalImagePath + "'");
 				
 				if (imageOverImagePath != null && !imageOverImagePath.equals("")) {
-					sb.append(" id=\"" + imageNormalImagePath.substring(imageNormalImagePath.lastIndexOf("/") + 1).split("\\.")[0] + "\" onmouseover=\"img_onMouseOver('" + imageOverImagePath + "', this);\" onmouseout=\"img_onMouseOut(this);\"");
+					sb.append(" id=\"" + imageNormalImagePath.substring(imageNormalImagePath.lastIndexOf("/") + 1).split("\\.")[0] + "\"");
+					sb.append(" data1=\"" + imageNormalImagePath + "\"");
+					sb.append(" data2=\"" + imageOverImagePath + "\"");
 				}
 				
 				if (imageLinkURL != null && !imageLinkURL.equals("")) {
@@ -2349,6 +2376,7 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 					sb.append(" height='" + imageImageHeight + "'");
 				}
 				
+				sb.append(" title=\"" + menuItemDisplayName + "\"");
 				sb.append("></li>\n");
 				strHTML = sb.toString();
 				
@@ -2393,7 +2421,8 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 			userInfo.setTableViewOption(pTableViewOption);
 		}
 		
-		if (pMode.equals("view")) {
+		// 20190104 조진호 - getAccessList(userInfo)의 데이터가 ACCESSIDLIST와 상이하고, 없는 테이블(TBL_PORTAL_ACL)을 사용하여 주석처리
+		/*if (pMode.equals("view")) {
 			if (!checkViewRightBln(pPortalPageID, getAccessList(userInfo), userInfo.getTenantId())) {
 				return "<table width=100% height=100% border=0><tr><td align=center>" + egovMessageSource.getMessage("ezPortal.t286", userInfo.getLocale()) + "</td></tr></table>";
 			}
@@ -2403,7 +2432,7 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 			if (cacheValue != null && !cacheValue.trim().equals("")) {
 				return cacheValue;
 			}
-		}
+		}*/
 		
 		StringBuilder sb = new StringBuilder();
 		String pageWidth, pageHeight, pageColumnLength, pageColumnSplit;
@@ -2525,9 +2554,10 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 			sb.append("</div>");
 		}
 		
-		if (pMode.equals("view")) {
+		// 20190104 조진호 - 항상 업데이트가 될 필요가 없기에 주석처리
+		/*if (pMode.equals("view")) {
 			updateCacheValue(pPortalPageID, getAccessList(userInfo), sb.toString(), userInfo.getTenantId());
-		}
+		}*/
 		
 		logger.debug("sb="+sb.toString());
 		logger.debug("getRenderedPortalPageHTML ended");
@@ -2692,23 +2722,17 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		logger.debug("getTopParentPageIDStr started");
 
 		String temp = pPortalPageID;
-		String parentPortalPageID = "";
-		String previousPageID = pPortalPageID;
+		String parentPortalPageID = null;
 		int count = 0;
 		
 		while (count < 10) {
 			parentPortalPageID = getTopParentPageID(temp, tenantID, companyID);
 			
-			if (parentPortalPageID != null && parentPortalPageID.toLowerCase().trim().equals("top")) {
+			if (parentPortalPageID == null || parentPortalPageID.toLowerCase().trim().equals("top")) {
 				break;
 			}
-			if (parentPortalPageID == null || parentPortalPageID.trim().equals("")) {
-				temp = previousPageID;
-				break;
-			} else {
-				previousPageID = temp;
-				temp = parentPortalPageID;
-			}
+			
+			temp = parentPortalPageID;
 			count++;
 		}
 
@@ -2727,25 +2751,23 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		String parentPortalPageID = pPortalPageID;
 		int count = 0;
 		
-		strSQL = "SELECT * FROM TBL_PORTALPAGE_ITEMS  WHERE PAGEUID = '"+pPortalPageID+"' AND COLUMNPOS = " + pColumnIndex +" AND TENANT_ID = " + userInfo.getTenantId();
+		strSQL = "SELECT * FROM TBL_PORTALPAGE_ITEMS WHERE PAGEUID='" + pPortalPageID + "' AND COLUMNPOS=" + pColumnIndex + " AND TENANT_ID=" + userInfo.getTenantId();
 		
 		while (count < 10) {
 			parentPortalPageID = getPortalParentUID(parentPortalPageID, userInfo.getTenantId(), userInfo.getCompanyID());
 			
-			if (parentPortalPageID != null && parentPortalPageID.toLowerCase().trim().equals("top")) {
+			if (parentPortalPageID == null || parentPortalPageID.toLowerCase().trim().equals("top")) {
 				break;
 			}
-			//String param = String.valueOf(count);
-			String param = parentPortalPageID;
-			strSQL += " UNION ALL SELECT * FROM TBL_PORTALPAGE_ITEMS  WHERE PAGEUID = '" + param + "' AND COLUMNPOS = " + pColumnIndex +" AND TENANT_ID = " + userInfo.getTenantId();
+			
+			strSQL += " UNION ALL SELECT * FROM TBL_PORTALPAGE_ITEMS WHERE PAGEUID='" + parentPortalPageID + "' AND COLUMNPOS=" + pColumnIndex + " AND TENANT_ID=" + userInfo.getTenantId();
 			count ++;
 		}
 		
-		if (userInfo.isRootPage() == true) {
+		if (userInfo.isRootPage()) {
 			result = getTBLPortalPageItemsT(strSQL);
 		} else {
 			result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageIDStr(pPortalPageID, userInfo.getTenantId(), userInfo.getCompanyID()));
-			
 		}
 		
 		if (result == null) {
@@ -2754,22 +2776,24 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		
 		boolean loadFlag = true;
 		
-		for (int i=0; i<result.size(); i++) {
-			int portletType = result.get(i).getPortletType();
-			String portletUID = result.get(i).getuID();
-			String portletPageUID = result.get(i).getPageUID();
-			String portletDisplayName = result.get(i).getDisplayName();
-			int portletWidth = result.get(i).getWidth();
-			int portletHeight = result.get(i).getHeight();
-			int portletCanRemove = result.get(i).getCanRemove();
-			int portletCanResize = result.get(i).getCanResize();
-			int portletCanReplace = result.get(i).getCanRemove();
-			int portletPaddingLeft = result.get(i).getLeftMargin();
-			int portletPaddingRight = result.get(i).getRightMargin();
-			int portletPaddingTop = result.get(i).getTopMargin();
-			int portletPaddingBottom = result.get(i).getBottomMargin();
-			String portletOwnerPageUID = result.get(i).getOwnerPageUID();
-			String portletMandatory = result.get(i).getMandatory();
+		for (int i = 0; i < result.size(); i++) {
+			PortalTBLPortalPageItemsVO vo = result.get(i);
+			
+			int portletType = vo.getPortletType();
+			String portletUID = vo.getuID();
+			String portletPageUID = vo.getPageUID();
+			String portletDisplayName = vo.getDisplayName();
+			int portletWidth = vo.getWidth();
+			int portletHeight = vo.getHeight();
+			int portletCanRemove = vo.getCanRemove();
+			int portletCanResize = vo.getCanResize();
+			int portletCanReplace = vo.getCanRemove();
+			int portletPaddingLeft = vo.getLeftMargin();
+			int portletPaddingRight = vo.getRightMargin();
+			int portletPaddingTop = vo.getTopMargin();
+			int portletPaddingBottom = vo.getBottomMargin();
+			String portletOwnerPageUID = vo.getOwnerPageUID();
+			String portletMandatory = vo.getMandatory();
 			String portletMoveURL = "";
 
 			if (pMode.equals("edit")) {
@@ -2877,17 +2901,21 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		String parentPortalPageID = pCallingPageID;
 		int count = 0;
 		   
-		strSQL = "SELECT * FROM TBL_PortalPage_Items  WHERE  TENANT_ID ='"+userInfo.getTenantId()+"' AND PageUID = '"+pPortalPageID+"' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + getItemLastPageID(pPortalPageID, userInfo.getTenantId()) + "'" ;
+		strSQL = "SELECT * FROM TBL_PortalPage_Items WHERE TENANT_ID='" + userInfo.getTenantId() + "' AND PageUID='" + pPortalPageID + "' AND ColumnPos=" + pColumnIndex 
+				+ " AND OwnerPageUID='" + getItemLastPageID(pPortalPageID, userInfo.getTenantId()) + "'";
 		
 		while (count < 10) {
 			parentPortalPageID = getPortalParentUID(parentPortalPageID, userInfo.getTenantId(), userInfo.getCompanyID());
 			
-			String param = parentPortalPageID;
-			strSQL += " UNION ALL SELECT * FROM TBL_PortalPage_Items  WHERE TENANT_ID = '"+userInfo.getTenantId()+"' AND PageUID = '" + pPortalPageID + "' AND ColumnPos = " + pColumnIndex + " AND OwnerPageUID = '" + param +"'";
+			if (parentPortalPageID == null || parentPortalPageID.toLowerCase().trim().equals("top")) {
+				break;
+			}
+			
+			strSQL += " UNION ALL SELECT * FROM TBL_PortalPage_Items WHERE TENANT_ID='" + userInfo.getTenantId() + "' AND PageUID='" + pPortalPageID + "' AND ColumnPos=" + pColumnIndex + " AND OwnerPageUID='" + parentPortalPageID + "'";
 			count ++;
 		}
 		
-		if (userInfo.isRootPage() == true) {
+		if (userInfo.isRootPage()) {
 			result = getTBLPortalPageItemsT(strSQL);
 		} else {
 			result = getTBLPortalPageItemsF(strSQL, userInfo.getId(), getTopParentPageID(pPortalPageID, userInfo.getTenantId(), userInfo.getCompanyID()));
@@ -2899,21 +2927,23 @@ System.out.println("pCallingMenuID : " + pCallingMenuID + ", pUID : " + pUID);
 		
 		for (int i=0; i<result.size(); i++) {
 			String portletWidthStr = "";
-			int portletType = result.get(i).getPortletType();
-			String portletUID = result.get(i).getuID();
-			String portletPageUID = result.get(i).getPageUID();
-			String portletDisplayName = result.get(i).getDisplayName();
-			int portletWidth = result.get(i).getWidth();
-			int portletHeight = result.get(i).getHeight();
-			int portletCanRemove = result.get(i).getCanRemove();
-			int portletCanResize = result.get(i).getCanResize();
-			int portletCanReplace = result.get(i).getCanRemove();
-			int portletPaddingLeft = result.get(i).getLeftMargin();
-			int portletPaddingRight = result.get(i).getRightMargin();
-			int portletPaddingTop = result.get(i).getTopMargin();
-			int portletPaddingBottom = result.get(i).getBottomMargin();
-			String portletOwnerPageUID = result.get(i).getOwnerPageUID();
-			String portletMandatory = result.get(i).getMandatory();
+			PortalTBLPortalPageItemsVO vo = result.get(i);
+			
+			int portletType = vo.getPortletType();
+			String portletUID = vo.getuID();
+			String portletPageUID = vo.getPageUID();
+			String portletDisplayName = vo.getDisplayName();
+			int portletWidth = vo.getWidth();
+			int portletHeight = vo.getHeight();
+			int portletCanRemove = vo.getCanRemove();
+			int portletCanResize = vo.getCanResize();
+			int portletCanReplace = vo.getCanRemove();
+			int portletPaddingLeft = vo.getLeftMargin();
+			int portletPaddingRight = vo.getRightMargin();
+			int portletPaddingTop = vo.getTopMargin();
+			int portletPaddingBottom = vo.getBottomMargin();
+			String portletOwnerPageUID = vo.getOwnerPageUID();
+			String portletMandatory = vo.getMandatory();
 			String portletMoveURL = "";
 			
 			if (pMode.equals("edit")) {

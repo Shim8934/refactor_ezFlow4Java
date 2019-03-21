@@ -262,7 +262,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			sb.append("<tr>");
 			sb.append("<td>" + (clubList.size() - ((curPage - 1) * comNoPerPage) - iOutputCount) + "</td>");
 			sb.append("<td style='width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;><nobr style='width:400px;overflow:hidden;text-overflow:ellipsis;'>");
-			sb.append("<a href=\"javascript:open_info('" + club.getC_ClubNo().trim() + "')\">" + club.getC_ClubName() + "</a>");
+			sb.append("<a href=\"javascript:open_info('" + club.getC_ClubNo().trim() + "')\">" + commonUtil.cleanValue(club.getC_ClubName()) + "</a>");
 			sb.append("</nobr></td>");
 			sb.append("<td>" + commonUtil.cleanValue(club.getUserName()) + "(");
 			sb.append(commonUtil.cleanValue(club.getC_SysopID().trim()) + ")");

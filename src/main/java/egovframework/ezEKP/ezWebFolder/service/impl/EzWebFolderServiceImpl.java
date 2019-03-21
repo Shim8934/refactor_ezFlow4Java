@@ -123,7 +123,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		return ezWebFolderDAO.getFileByFileId(map);
 	}
 
-	private FileTypeVO getFileTypeByFileExt(String extend, int tenantId) throws Exception {
+	@Override
+	public FileTypeVO getFileTypeByFileExt(String extend, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("extension", extend);
 		map.put("tenantId",  tenantId);
@@ -1034,11 +1035,11 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 	
 	@Override
-	public String getMaxFileID(int tenantId) throws Exception {
+	public synchronized String getMaxFileID(int tenantId) throws Exception {
 		int currentMaxFileId = -1;
 		String result        = getFileSequence(tenantId);
-		currentMaxFileId     = result.equals("")        ? 1 : Integer.parseInt(result);
-		currentMaxFileId     = (currentMaxFileId == -1) ? 1 : (currentMaxFileId + 1);
+		currentMaxFileId     = result.equals("")        ? 10000000 : Integer.parseInt(result);
+		currentMaxFileId     = (currentMaxFileId == -1) ? 10000000 : (currentMaxFileId + 1);
 		return Integer.toString(currentMaxFileId);
 	}
 	
@@ -1236,4 +1237,20 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		
 		return ezWebFolderDAO.getAllSimpleShareFolder(map);
 	}
+
+	@Override
+	public void updateFileExt(String fileId, String newFilePath, String fileExt, String realFileExt, String timeUTC, int tenantId) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("fileId",   fileId);
+		map.put("filePath",   newFilePath);
+		map.put("fileExt",     fileExt);
+		map.put("realFileExt", realFileExt);
+		map.put("tenantId", tenantId);
+		map.put("timeUTC", timeUTC);
+		
+		ezWebFolderDAO.updateFileExt(map);
+		
+	}
+	
+	
 }

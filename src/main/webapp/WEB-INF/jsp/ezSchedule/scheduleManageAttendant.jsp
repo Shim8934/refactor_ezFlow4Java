@@ -22,8 +22,21 @@
 		    var ownerid = "<c:out value='${ownerId}'/>";
 								
 		    function show_personinfo(userid) {
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezSchedule/scheduleGetCumDeptID.do",
+					data : { 						
+						userID : userid
+					},
+					success: function(result){
+						deptID = result;
+					}
+				});
+		    	
 		        var feature = GetOpenPosition(420, 450);
-		        window.open("/ezCommon/showPersonInfo.do?id=" + userid, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+		        window.open("/ezCommon/showPersonInfo.do?id=" + userid + "&dept="+deptID, "", "height=450px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 			
 		    var OpenWin;

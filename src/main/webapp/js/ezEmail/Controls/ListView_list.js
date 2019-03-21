@@ -250,6 +250,7 @@ function ListView() {
             return;
         }
         var objElm = document.getElementById(pTagetID);
+       
         if (objElm) {
             var oTable = document.createElement("TABLE");
             oTable.id = _thisID;
@@ -442,6 +443,21 @@ function ListView() {
         var oHeaders = _dataSource.getElementsByTagName("HEADER");
         var colCount = oHeaders.length;
         var strToday = GetTodayDate();
+
+        // 2018-12-04 김민성 - 관리자 > 조직도/메일관리 > 공용배포그룹관리 > 데이터 없을 때 처리
+        if(_rowCount == 0 && ( _thisID == "lvUserList" || _thisID =="sharedMailbox")) {
+        	 var objTr = document.createElement("TR");
+             objTr.setAttribute("id", _thisID + "_TR_" + "noItems");
+             oTbody.appendChild(objTr);
+             var oText = document.createTextNode(strLang700);
+             var objTd = document.createElement("TD");
+             objTd.align = "center";
+             objTd.colSpan = colCount;
+             objTd.appendChild(oText);
+             objTr.appendChild(objTd);
+
+             return oTbody;
+        }
         for (var i = 0; i < oRows.length; i++) {
             var objTr = document.createElement("TR");
             objTr.setAttribute("id", _thisID + "_TR_" + i);

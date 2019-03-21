@@ -881,7 +881,7 @@ function searchUserList(search)
   try{
     var searchdoc = document.getElementById("textUser");
 	var strSearch = searchdoc.value + "";
-	if (textUser.value =="")
+	if (strSearch =="")
 	{
 	  	var pAlertContent = linealt3;
 		OpenAlertUI(pAlertContent);
@@ -926,7 +926,7 @@ function searchUserListCC(search)
 	try{
 		var searchdoc = document.getElementById("textUserCC");
 		var strSearch = searchdoc.value + "";
-		if (textUser.value =="")
+		if (strSearch == "")
 		{
 			var pAlertContent = linealt3;
 			OpenAlertUI(pAlertContent);

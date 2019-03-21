@@ -368,7 +368,8 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 										.queryParam("userId", user.getId())
-										.queryParam("newName", newName);
+										.queryParam("newName", newName)
+										.queryParam("webFlag","web");
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

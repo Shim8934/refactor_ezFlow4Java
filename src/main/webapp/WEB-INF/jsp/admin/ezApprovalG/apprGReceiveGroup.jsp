@@ -35,7 +35,7 @@
 		    	document.getElementById("SCompID").value = "<c:out value='${companyID}'/>";
 
 	            Tree_setconfig();
-	            TreeViewinitialize("", "<c:out value='${topID}'/>", "extensionAttribute2;displayName", "<c:out value='${serverName}'/>");
+	            TreeViewinitialize("", "<c:out value='${topID}'/>", "extensionAttribute2;displayName", "<c:out value='${serverName}'/>", null, null, true);
 	        	InitlvtDeptListView();
 	        	InitlvtDeptSelectListView();
 

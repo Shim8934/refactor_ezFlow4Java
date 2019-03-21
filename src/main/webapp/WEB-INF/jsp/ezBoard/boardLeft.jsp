@@ -15,6 +15,12 @@
 				width:158px;
 				overflow:hidden;
 				text-overflow:ellipsis;
+				display:inline-block;
+			}
+			.arrowSpan {
+				width:42px;
+				height:33px;
+				display:inline-block;
 			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -129,12 +135,29 @@
 		    };
 		    function BoardRedirect() {
 		        var spans = document.getElementById("TopBoardsList").getElementsByTagName("div");
+		        var redirectOK = "";
 		        for (var i = 0 ; i < spans.length ; i++) {
 		            if (spans[i].getAttribute("value") == RedirectBoardGroupID) {
 		                LoadTreeViewByPath(spans[i], RedirectBoardID, RedirectBoardGroupID);
+		                redirectOK = "OK";
 		            }
 		        }
+		        
+		        /* 2018-12-04 홍승비 - 접근권한 없는 게시판에 포탈 포틀릿 등으로 접근 시, 오류메세지 표출하도록 수정 */
+		        if (redirectOK != "OK") {
+					var rightFrameDoc = "";
+		        	if (typeof window.parent.frames["right"] == "undefined") {
+		        		rightFrameDoc = rightFrame.document;
+		        	} else {
+		        		rightFrameDoc = window.parent.frames["right"].document;
+		        	}
+		        	
+		        	rightFrameDoc.head.innerHTML = "<link rel='stylesheet' href='${util.addVer('ezBoard.i1', 'msg')}' type='text/css'>";
+		        	rightFrameDoc.body.className = "mainbody";
+		        	rightFrameDoc.body.innerHTML = "<div style='margin-top:100px;text-align:center'><spring:message code='ezBoard.t272'/></div>";	
+				}
 		    }
+		    
 		    function LoadTreeViewByPath(pObjSpan, pBoardID, pBoardGroupID) {
 		        pObjSpan.parentElement.onclick();
 		        var TreeCtrl = getFirstChild(pObjSpan.parentElement);
@@ -819,11 +842,15 @@
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 		    
+		    /* 2019-02-14 홍승비 - 좌측 게시판리스트의 펼치기 화살표 클릭 시 하위게시판 불러오도록 수정*/
+		    function spanClick(divID) {
+		    	document.getElementById(divID).click();
+		    }
 	 
 	    </script>
 	</head>
 	<body class="leftbody" style="overflow: auto; height:100%">
-	    <div id="left" style="overflow: auto">
+	    <div id="left" style="overflow-x: hidden; overflow-y: auto;">
 	        <div class="left_board" title="<spring:message code='ezBoard.t116'/>"><span><spring:message code='ezBoard.t116'/></span></div>
 	        <c:if test="${MyBoardTopFlag != 'NO'}">
 	        	<div class="fList" onclick="favoriteList()">
@@ -858,6 +885,7 @@
        			        document.write("<h2 class='off'>");
            				document.write("<div id='TreeCtr" + i + "' class='groupBoard' value='" + $(this).find("DATA1").text() + "' onclick='TopBoard_onclick(\"TreeCtrl" + i + "\", \"" + $(this).find("DATA1").text()
            					+ "\")'>" + $(this).find("DATA2").text() + "</div>"); 
+           				document.write("<span class='arrowSpan' onclick='spanClick(\"TreeCtr" + i + "\")'></span>");
            				document.write("</h2>\n");
            				document.write("<ul class='off'>\n");
            				document.write("<div  class='tree' name='BoardTree' id='TreeCtrl" + i + "obj' style='width: auto; height: 100%; padding-bottom: 20px; padding-left: 10px; overflow-x: hidden; overflow-y: auto;'></div>\n");

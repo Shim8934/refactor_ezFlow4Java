@@ -120,7 +120,7 @@
 		        mail_selectfolder_cross_dialogArguments[1] = search_mailbox_complete;
 		        mail_selectfolder_cross_dialogArguments[2] = idx;
 		
-		        var OpenWin = GetOpenWindow("/ezEmail/mailSelectFolder.do", "mail_selectfolder_cross", 400, 355);
+		        var OpenWin = GetOpenWindow("/ezEmail/mailSelectFolder.do", "mail_selectfolder_cross", 470, 355);
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		    function search_mailbox_complete(mailBoxInfo) {

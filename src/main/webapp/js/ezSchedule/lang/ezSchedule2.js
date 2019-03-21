@@ -41,7 +41,7 @@ var strLang41 = "Item deleted : "
 var strLang42 = " occurrences"
 var strLang43 = " - "
 var strLang44 = " characters are length of limit."
-var strLang45 = "Daily(Week)(";
+var strLang45 = "Daily(Week)";
 var strLang46 = "Do not set the end date";
 var strLang47 = "occurrences";
 var strLang48 = "Sun";
@@ -79,7 +79,7 @@ var strLang79 = "Period"
 var strLang80 = "."
 var strLang81 = "days recurrently"
 var strLang82 = "week(s) recurrently"
-var strLang83 = " month(s) recurrently"
+var strLang83 = "month(s) recurrently"
 var strLang84 = "Please select the item you want to delete"
 var strLang85 = "Deletion was successful."
 var strLang86 = "Delete failed."
@@ -171,12 +171,14 @@ var strLangKMS1 = "You can only repeat more than 100 times.";
 / * 2018-07-16 * /
 var strLang276 = "Please select one group to view members";
 //2018.10.24
-var strLangKHJ1 = "날짜를 지정해 주세요.";
-var strLangKHJ2 = "시작일을 지정해 주세요.";
-var strLangKHJ3 = "종료일을 지정해 주세요.";
-var strLangKHJ4 = "시작일을 종료일보다 빠르게 지정하세요.";
-var strLangKHJ5 = "ICS파일을 가져오기를 완료했습니다.";
-var strLangKHJ6 = "ICS파일 형식에 맞지 않습니다.";
-var strLangKHJ7 = "ICS파일을 저장하는중 에러발생";
+var strLangKHJ1 = "Please specify a date.";
+var strLangKHJ2 = "Please specify a start date.";
+var strLangKHJ3 = "Please specify an end date.";
+var strLangKHJ4 = "Select start date earlier than end date.";
+var strLangKHJ5 = "Import of ics files completed successfully.";
+var strLangKHJ6 = "Invalid ics file format.";
+var strLangKHJ7 = "Error while saving ics file";
 //2018-11-12
 var strLangKHJ8 = "No right.";
+//2018-02-22
+var strLangGHA1 = ", ";

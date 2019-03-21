@@ -231,7 +231,8 @@
 		}
 		
 		function ipListAddPopUp() {
-			var url = "/ezSystem/systemAddAccessList.do";
+			var companyId = document.getElementById("ListCompany").value;
+			var url = "/ezSystem/systemAddAccessList.do?companyId=" + companyId;
 			var ipPopUp = window.open(url, "ipPopUp", GetOpenWindowfeature(970, 600));
 		}
 		

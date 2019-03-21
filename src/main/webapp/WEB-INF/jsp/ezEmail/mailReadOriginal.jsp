@@ -8,6 +8,9 @@
 		<title><spring:message code='ezEmail.t551' /></title>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
+		<script type="text/javascript">
+			var shareId = "${shareId}";
+		</script>
 		<style> 
 			p { margin-bottom: 0; margin-top: 0; } 
 		</style>

@@ -16,10 +16,9 @@
 			var ReturnFunction;
 			var RetValue;
 			var approvalFlag = "${approvalFlag}";
+			var isAdd = true;
 			
 			$(document).ready(function(){
-				var RetValue;
-				
 			    if (CrossYN()){
 			    	try {
 			        	ReturnFunction = opener.deptinfo_dialogArguments[1];
@@ -28,11 +27,24 @@
 			    }else{
 			    	RetValue = window.dialogArguments;
 			    }
+			    
+			    if(approvalFlag === "G") {
+			    	var content = document.getElementsByClassName("content")[0];
+			    	var btnSpace = document.getElementsByClassName("btnpositionNew")[0];
+			    	
+			    	var windowHeight = window.outerHeight - window.innerHeight;
+			    	windowHeight += content.offsetTop;
+			    	windowHeight += content.offsetHeight + 10;
+			    	windowHeight += btnSpace.offsetHeight;
+			    	
+			    	window.resizeTo(window.outerWidth, windowHeight);
+			    }
 
 			    if(RetValue[1] == ""){
 					subtitle.innerText = "<spring:message code='ezOrgan.t80' />";
 			        ParentID.value = RetValue[0];
 				}else{
+			    	isAdd = false;
 					subtitle.innerText = "<spring:message code='ezOrgan.t209' />";
 			        DeptID.value = RetValue[0];
 					DeptID.readOnly = true;
@@ -99,49 +111,43 @@
 			   }
 			});
 			
-			function Check_ID(pValue){
-				for(var iCnt = 0 ; iCnt < pValue.length ; iCnt++){
-					if (pValue.charCodeAt(iCnt) >= 65 && pValue.charCodeAt(iCnt) <= 90) {
-						// A-Z
-					} else if (pValue.charCodeAt(iCnt) >= 97 && pValue.charCodeAt(iCnt) <= 122) {
-						// a-z
-					} else if (pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57) {
-						// 0-9
-					} else if (pValue.charCodeAt(iCnt) == 45) {
-		                // -
-		            } else if (pValue.charCodeAt(iCnt) == 95) {
-                        // _
-                    } else {
-						return false;
-					}
-				}				
-				return true;
+			function Check_ID(pValue, isAdd) {
+				// 인사연동 시 부서 ID에 대문자가 포함되어 있는 경우가 있어, 부서 추가 시에만 대문자를 넣지 못하도록 함.
+				var regex = /^[a-zA-Z0-9\_\-\.]+$/;
+				
+				if (isAdd) {
+					regex = /^[a-z0-9\_\-\.]+$/;
+				}
+				
+				return regex.test(pValue);
 			}
 			
-			function OK_Click(){
-	            for (var i = 0; i < document.getElementById("DeptID").value.length; i++) {
-	                if (document.getElementById("DeptID").value.charCodeAt(i) >= 65 && document.getElementById("DeptID").value.charCodeAt(i) <= 90) {
-	                	OpenAlertUI("<spring:message code='ezOrgan.x0003'/>");
-	                    return;
-	                }
-	            }
-				if (DeptID.value == ""){
+			function OK_Click() {
+				if (DeptID.value == "") {
                 	OpenAlertUI("<spring:message code='ezOrgan.t210'/>");
 					return;
-				}				
-				if (DeptID.value.length < 3){
+				}
+				
+				if (DeptID.value.length < 3) {
                 	OpenAlertUI("<spring:message code='ezOrgan.t211'/>");
 					return;
-				}				
-				if (!Check_ID(DeptID.value)){
+				}
+				
+				if (!Check_ID(DeptID.value, isAdd)) {
                 	OpenAlertUI("<spring:message code='ezOrgan.t212'/>");
 					return;
-				}				
-				if (DeptName.value.trim() == ""){
+				}
+				
+				if (DeptName.value.trim() == "") {
                 	OpenAlertUI("<spring:message code='ezOrgan.t213'/>");
 					return;
 				}
-												
+				
+				if (!SortNum.value.match(/^\d*$/)) {
+					OpenAlertUI("<spring:message code='ezOrgan.t226' />: <spring:message code='ezEmail.t99000066'/>");
+					return;
+				}
+				
 				var parentCn;
 				var extensionattribute8 = "0";
 				/* 2017-12-29 장진혁 - 조직도에서 기본적으로 해당 부서를 수신처로 등록할 수 있게 수정 */
@@ -205,6 +211,23 @@
 		            DivPopUpShow(300, 205, url);
 		        }
 		    }
+		    
+		    var selectperson_cross_dialogArguments = new Array();
+	        
+	        function selectDeptMaster() {
+	            var type = "selDeptMaster";
+	            selectperson_cross_dialogArguments[1] = selectDeptMasterComplete;
+	            
+	            var OpenWin = window.open("/ezPersonal/selectPerson.do?type=" + type, "selDeptMaster", GetOpenWindowfeature(760, 535));
+	            try { OpenWin.focus(); } catch (e) { }
+	        }
+	
+	        function selectDeptMasterComplete(rtnValue) {
+	        	if (typeof (rtnValue) != "undefined") {
+	            	document.getElementById("Manager").value = rtnValue;
+	        	}
+	        }
+		    
 		    function OpenAlertUI_Complete() {
 		        DivPopUpHidden();
 		    }
@@ -260,7 +283,10 @@
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t225' /></th> 
-		    	<td><input type="text" id=Manager style="width:97%" maxlength="50"></td> 
+		    	<td>
+		    		<input type="text" id=Manager style="width:75%" maxlength="50">
+		    		<a id="ReceiverSelect" class="imgbtn imgbck" style="width:16%; padding-left: 10px;" onClick="selectDeptMaster()"><span style="width:80%;text-align:center;"><spring:message code='ezEmail.t488' /></span></a>
+		    	</td> 
 		  	</tr> 
 		  	<tr> 
 		    	<th><spring:message code='ezOrgan.t226' /></th> 

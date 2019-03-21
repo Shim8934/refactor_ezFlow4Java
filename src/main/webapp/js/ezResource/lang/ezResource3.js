@@ -162,18 +162,18 @@ var strLang303 = "年";
 var strLang304 = "月";
 var strLang305 = "日";
 var strLang306 = "終日";
-var strLang307 = "許可";
-var strLang308 = "不可";
+var strLang307 = "承認";
+var strLang308 = "未承認";
 var strLang310 = "時";
 var strLang311 = "分";
 var strLang400 = "人";
 var strLang401 = "検索結果";
 var strLang500 = "データが存在しません。";
-var strLang550 = "日";
-var strLang551 = "毎日（平日）";
-var strLang552 = "週";
-var strLang553 = "月";
-var strLang554 = "第一";
+var strLang550 = "日ごとに";
+var strLang551 = "毎日(平日)";
+var strLang552 = "週ごとに";
+var strLang553 = "ヶ月ごとに";
+var strLang554_1 = "ヶ月ごとに";
 var strLang554 = "第一";
 var strLang555 = "第二";
 var strLang556 = "第三";
@@ -195,7 +195,7 @@ var strLang571 = "予約者";
 var strLang572 = "繰り返し";
 var strLang573 = "時間";
 var strLang535 = "データが存在しません。";
-var strLang580 = "繰り返し周期の設定範囲 : ";
+var strLang580 = "期間 : ";
 var strLang581 = "終了日を指定しない";
 var strLang582 = "回";
 var strLang583 = "期間の指定が正しくありません。";
@@ -208,3 +208,6 @@ var strLangLHM04 = "キャンセル";
 
 //2018.2.21 강민수92 추가
 var strLangKMS1 = "繰り返し設定は100回まで可能です。";
+
+//2019-01-16 김민성 - 관리자 > 자원관리 추가
+var strLangkmsr01 = "既に追加されている権限者です。";

@@ -308,6 +308,7 @@
 							window.opener.getLeftCount();
 							window.opener.refresh_onclick();
 							window.close();
+		                	alert("<spring:message code='ezBoard.t10033'/>");	
 		                },
 		                error: function() {
 		                	alert("<spring:message code='ezCircular.t102'/>");	
@@ -317,11 +318,12 @@
 	    	}
 
 	    	/* 2018-09-17 김민성 - 에디터 폰트 설정값 로직 수정 */
-			function Editor_Complete() {
-    	    	if(mode != "write")
+ 			function Editor_Complete() {
+    	    	if(mode != "write") {
 		    		message.SetEditorContent(sigBody.innerHTML);
-    	    	else
-					message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
+    	    	} else {
+    	    		message.SetEditorContent("");
+    	    	}
     	    }
 			
 			function btn_Close() {

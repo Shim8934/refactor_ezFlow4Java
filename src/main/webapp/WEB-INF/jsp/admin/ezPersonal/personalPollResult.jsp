@@ -39,7 +39,7 @@
 			<tr>
 		    	<td>
 		        	<div class="question" style="overflow-y:auto;width:375px">
-			        	<p><spring:message code = 'ezPersonal.t2000' />:</p>
+			        	<p><spring:message code = 'ezPersonal.t240' />:</p>
 		                <span><c:out value = '${subject}' /></span>
 		            </div>
 		        </td>

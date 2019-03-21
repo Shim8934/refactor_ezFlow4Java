@@ -708,8 +708,9 @@ public class EzJournalGWController {
 					String fileType = vo.getFileName().substring(vo.getFileName().lastIndexOf(".") + 1).toLowerCase();
 					vo.setFileType(fileType);
 					vo.setFileEncodeName(URLEncoder.encode(vo.getFileName(), "UTF-8"));
-						
-					String fileSize = commonUtil.byteCalculation(Long.toString(vo.getFileSize()));
+					vo.setFilePath(URLEncoder.encode(vo.getFilePath(), "UTF-8"));
+
+					String fileSize = commonUtil.getSizeWithUnit(vo.getFileSize());
 					vo.setFileTransSize(fileSize);
 					LOGGER.debug("##fileType: " + vo.getFileType() + ", EncodeFileName: " + vo.getFileEncodeName() + ", transSize: " + vo.getFileTransSize());
 				}
@@ -825,7 +826,7 @@ public class EzJournalGWController {
 	 * 업무일지 G/W [PUT] 수신 확인 처리
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value="/rest/ezjournal/viewers/{userId}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
+	@RequestMapping(value="/rest/ezjournal/viewers/{userId:.+}", method= RequestMethod.PUT, produces="application/json;charset=UTF-8")
 	public JSONObject receiveOKJournal(@PathVariable String userId, HttpServletRequest request) throws Exception {
 		LOGGER.debug("ezJournal G/W receiveOKJournal started.");
 		LOGGER.debug("userId=" + userId);
@@ -1799,7 +1800,7 @@ public class EzJournalGWController {
 			String curPage = request.getParameter("curPage");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			if (companyId.equals("") || companyId == null) {
+			if (companyId == null || companyId.equals("")) {
 				companyId = info.getCompanyId();
 			}
 			String lang = commonUtil.getMultiData(info.getLang(), info.getTenantId());

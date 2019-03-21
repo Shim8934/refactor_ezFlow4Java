@@ -27,7 +27,7 @@
 			.warning_wrap dd.count .pointRed{ color:#ff0000; font-weight:bold; display:inline-block; font-family: Malgun Gothic, Meiryo UI; font-size:15px;}
 			.warning_wrap dd{color:#8e8e8e; font-size:12px; padding:0px 0px 2px 0px; margin:0px;letter-spacing:-1px;}
 			
-			.password_reset{ margin:0 auto; padding:0px; width:385px;}
+			.password_reset{ margin:0 auto; padding:0px; width:405px;}
 			.password_reset .passwordTitle{ margin:0px; padding:0px; font-family:Malgun Gothic, Meiryo UI; font-size:17px; color:#000; text-align:center; line-height:25px;}
 			.password_reset .passwordTitle span{ display:inline-block; color:#006be4; font-family:Malgun Gothic, Meiryo UI; font-size:17px;}
 			.password_reset .passwordForm{ margin:15px 0px; padding:8px 5px; list-style:none; border-top:1px solid #000; border-bottom:1px solid #000;}
@@ -51,9 +51,11 @@
 			function actionLogin() {
 			    if (document.loginForm.id.value =="") {
 			        alert("<spring:message code='main.jjs02'/>");
+			        document.loginForm.id.focus();
 			        return;
 			    } else if (document.loginForm.password.value =="") {
 			        alert("<spring:message code='main.jjs01'/>");
+			        document.loginForm.password.focus();
 			        return;
 			    } else {
 			    	var frm = document.loginForm;
@@ -197,12 +199,12 @@
 		    		success: function(text){
 		    			if (text == 'OK') {
 		    				alert("<spring:message code='ezPersonal.t197'/>");			            	
+			    			window.top.location.href = '/user/login/login.do';
 		    			} else if (text == 'LOGINERROR') {
 		    				alert("<spring:message code='ezPersonal.t946'/>");		    				
 		    			} else {
 		    				alert("<spring:message code='fail.common.login'/>");
 		    			}
-		    			window.top.location.href = '/user/login/login.do';
 		    		},
 		    		error: function(err){
 		    			alert("<spring:message code='ezPersonal.t198'/>");
@@ -224,7 +226,7 @@
 	                    <fieldset>		                    	
 	                    	<p class="logo"><img src="/images/kr/login/logo.gif"></p>   
 	                        <p class="id">
-	                        	<input id="uid" name="id" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />
+	                        	<input id="uid" name="id" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) document.loginForm.password.focus();" />
 	                        </p>		                 
 	                        <p class="pw">
 	                        	<input id="upw" name="password" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />

@@ -106,9 +106,9 @@
 		        MakeListXML(pDocType);
 		        
 		        if (approvalFlag == "G") {
-			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", "aprG");
+			        TreeViewinitialize("", companyID, "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", "aprG", null, true);
 		        } else {
-			        TreeViewinitialize("", companyID+"/other", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}");
+			        TreeViewinitialize("", companyID+"/other", "extensionAttribute2;extensionAttribute3;extensionAttribute9;displayName", "${serverName}", true);
 		        }
 		        $("#tr_setAutoItemCode").hide();
 		        
@@ -203,6 +203,7 @@
 	                    //위임전결
 // 		                    document.getElementById("ApvForm_sub6").style.display = "";
 	                    document.getElementById("rootTD").style.display = "";
+	                    message.SetEditorContent('');
 	                } else {
 // 		                    document.getElementById("btn_OpinionSave").style.display = "";
 	                }
@@ -297,11 +298,10 @@
 		            var objNode;
 		            createNodeInsert(xmlpara, objNode, "DATA");
 		            createNodeAndInsertText(xmlpara, objNode, "DEPTID", deptid);
-
 		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyID}");
-
 		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
-		
+		            createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
+		            
 		            var xmlHTTP = createXMLHttpRequest();
 		            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 		            xmlHTTP.send(xmlpara);
@@ -1053,7 +1053,7 @@
 	                                <iframe id="message" class="viewbox" src="/admin/ezApprovalG/HWPEditor.do?type=ADMIN" name="message" frameborder="0" style="padding: 0; height: 99%; width: 1030px; overflow: auto;"></iframe>
                         		</c:when>
                         		<c:otherwise>
-	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectEditor.do?type=ADMIN&height=770&formID=${formID}" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
+	                                <iframe id="message" class="viewbox" src="/admin/ezEditor/selectApprovalEditor.do?type=ADMIN&height=770&formID=${formID}" name="message" frameborder="0" style="padding: 0; height: 99%; width: 800px; overflow: auto;"></iframe>
                         		</c:otherwise>
                         	</c:choose>
                         </td>

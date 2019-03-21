@@ -173,7 +173,7 @@ var strLang550 = "Day";
 var strLang551 = "Weekdays";
 var strLang552 = "Week";
 var strLang553 = "Month";
-var strLang554 = "Month";
+var strLang554_1 = "Month";
 var strLang554 = "First";
 var strLang555 = "Second";
 var strLang556 = "Third";
@@ -208,3 +208,6 @@ var strLangLHM04 = "Cancel";
 
 //2018.2.21 강민수92 추가
 var strLangKMS1 = "Repeat is impossible if it's more than 100 times.";
+
+//2019-01-16 김민성 - 관리자 > 자원관리 추가
+var strLangkmsr01 = "User is already added.";

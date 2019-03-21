@@ -54,6 +54,7 @@
 	        var pUserID = arr_userinfo[1];
 	        var pUse_Editor = "${useEditor}";
 			var ext = "hwp";
+			var orgCompanyID = "<c:out value='${orgCompanyID}' />";
 			
 	        window.onresize = function () {
 	            HwpCtrl.style.height = null;
@@ -179,13 +180,16 @@
 				return RtnVal;
 			}
 			
+			//한글 pc저장이 안돼서 저장방식 변경
+			 function FileDown(docTitle) {
+	            var pDocID_mht = pDocID;
+	            AttachDownFrame.location.href = "/ezApprovalG/downloadAttachDbClick.do?type=APPROVALGMHT&fileName=" + encodeURIComponent(docTitle + ".hwp") + "&docID=" + pDocID_mht + "&docStatus=" + "END";
+	        }
 	
 			function btnSave_onclick() {
-				HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
-			    HwpCtrl.SetDocumentInfo(pFormID);
 			    var hwpDoctitle = HwpCtrl.GetFieldText("doctitle").replace("\r\n", "");
 			    hwpDoctitle = hwpDoctitle.replace(/\\/ig, '').replace(/\//ig, '').replace(/:/ig, '').replace(/\*/ig, '').replace(/\?/ig, '').replace(/“/ig, '').replace(/</ig, '').replace(/>/ig, '').replace(/|/ig, '').replace("“", "").replace("|", "");
-			    HwpCtrl.SaveFile("", hwpDoctitle);
+				FileDown(hwpDoctitle);
 			}
 	
 			function btnMail_onclick() {
@@ -440,6 +444,7 @@
 	                        <td>
 	                            <div id="lstAttachLink" style="height: 65px;"></div>
 	                            <iframe id="ifrmDownload" name="ifrmDownload" src="about:blank" width="0" height="0" style="display: none;"></iframe>
+	                            <iframe name="AttachDownFrame" id="AttachDownFrame" src="about:blank" width="0" height="0" frameborder="0" marginheight="0" marginwidth="0" scrolling="no" style="display: none"></iframe>
 	                        </td>
 	                    </tr>
 	                </table>

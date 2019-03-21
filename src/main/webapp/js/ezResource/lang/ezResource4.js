@@ -199,7 +199,7 @@ var strLang550 = "天";
 var strLang551 = "平日";
 var strLang552 = "周";
 var strLang553 = "月";
-var strLang554 = "月";
+var strLang554_1 = "月";
 var strLang554 = "第一";
 var strLang555 = "第二";
 var strLang556 = "第三";
@@ -242,3 +242,6 @@ var strLangLHM04 = "취소";
 
 //2018.2.21 강민수92 추가
 var strLangKMS1 = "100회 이하만 반복가능합니다.";
+
+//2019-01-16 김민성 - 관리자 > 자원관리 추가
+var strLangkmsr01 = "이미 추가된 이용자입니다.";

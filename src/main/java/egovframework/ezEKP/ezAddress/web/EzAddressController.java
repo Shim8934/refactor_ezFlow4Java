@@ -527,11 +527,11 @@ public class EzAddressController{
 				if (!useAnyoneEdit.equals("YES")) {
 					if (folderType.equals("C")) {
 						if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
-							return "NO_AUTHORITY";
+							return "NO_AUTHORITY_C";
 						}
 					} else if (folderType.equals("D")) {
 						if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1)) {
-							return "NO_AUTHORITY";
+							return "NO_AUTHORITY_D";
 						}
 					}
 				}
@@ -547,11 +547,11 @@ public class EzAddressController{
 					//관리자인지 체크
 					if (folderType.equals("C")) {
 						if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1)) {
-							return "NO_AUTHORITY";
+							return "NO_AUTHORITY_C";
 						}
 					} else if (folderType.equals("D")) {
 						if (!(userInfo.getRollInfo().indexOf("c=1") > -1 || userInfo.getRollInfo().indexOf("k=1") > -1 || userInfo.getRollInfo().indexOf("g=1") > -1)) {
-							return "NO_AUTHORITY";
+							return "NO_AUTHORITY_D";
 						}
 					}
 				}

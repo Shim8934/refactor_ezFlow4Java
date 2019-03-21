@@ -57,7 +57,7 @@ var strLang95 = "반복회수를 정확히 입력해 주십시오."
 var strLang97 = "매월"
 var strLang98 = "매년"
 var strLang100 = "시작날짜와 끝날짜를 정확하게 입력해주십시오."
-var strLang101 = "약속시간을 정확하게 입력해주십시오."
+var strLang101 = "예약시간을 정확하게 입력해주십시오."
 var strLang102 = "시작날짜"
 var strLang103 = "끝날짜"
 var strLang104 = "주"
@@ -74,7 +74,7 @@ var strLang118 = "라는 이름을 찾을 수 없습니다."
 var strLang122 = "반복주기 : "
 var strLang123 = "매일"
 var strLang124 = "매주"
-var strLang125 = "약속시간 : "
+var strLang125 = "예약시간 : "
 var strLang126 = "하루종일"
 var strLang127 = "오"
 var strLang128 = "반복 제거에 실패하였습니다."
@@ -173,7 +173,7 @@ var strLang550 = "일마다";
 var strLang551 = "매일(평일)";
 var strLang552 = "주마다";
 var strLang553 = "개월마다";
-var strLang554 = "개월";
+var strLang554_1 = "개월";
 var strLang554 = "첫째";
 var strLang555 = "둘째";
 var strLang556 = "셋재";
@@ -208,3 +208,6 @@ var strLangLHM04 = "취소";
 
 //2018.2.21 강민수92 추가
 var strLangKMS1 = "100회 이하만 반복가능합니다.";
+
+//2019-01-16 김민성 - 관리자 > 자원관리 추가
+var strLangkmsr01 = "이미 추가된 권한자입니다.";

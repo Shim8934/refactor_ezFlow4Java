@@ -148,7 +148,7 @@
 		        if (CrossYN()) {
 		            addpoll_cross_dialogArguments[0] = document.getElementById("ListCompany").value;
 		            addpoll_cross_dialogArguments[1] = add_poll_Complete;
-		            var AddPoll_Cross = window.open("/admin/ezPersonal/addPoll.do", "AddPoll_Cross", GetOpenWindowfeature(450, 500));
+		            var AddPoll_Cross = window.open("/admin/ezPersonal/addPoll.do", "AddPoll_Cross", GetOpenWindowfeature(470, 500));
 		            try { AddPoll_Cross.focus(); } catch (e) {
 		            }
 		        } else {

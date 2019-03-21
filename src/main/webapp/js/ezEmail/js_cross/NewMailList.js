@@ -256,8 +256,13 @@ function MakeListInfoHTML(ConentObject) {
                 _TR.setAttribute("_contentclass", p_ContentClass);
                 _TR.setAttribute("_isdraft", p_IsDraft);
                 _TR.setAttribute("securemail", p_SecureMail);
-                _TR.setAttribute("draggable", true);
-                _TR.ondragstart = function () { drag(event) };
+                
+                if (shareId != "" && deletePermission != "Y") {
+                	_TR.setAttribute("draggable", false);
+                } else {
+                	_TR.setAttribute("draggable", true);
+                	_TR.ondragstart = function () { drag(event) };
+                }
             
                 var _TDCheckBox = document.createElement("TD");
                 _TDCheckBox.style.width = "22px";
@@ -438,9 +443,11 @@ function MakeListInfoHTML(ConentObject) {
                     	_TDColumSpan.style.padding = "7px 3px";
                     	_TDColumSpan.innerHTML = innerHTML;
                     	
-                    	if(useMailWriteSenderClick == "YES") {
-                    		_TDColumSpan.onclick = function (event) { event_senderNameClick(this.parentElement, event); };
-                    		_TDColumSpan.ondblclick = function (event) { event_senderNameDBClick(event); };
+                    	if (useMailWriteSenderClick == "YES") {
+                    		if (shareId == "" || (shareId != "" && sendPermission == "Y")) {
+                    			_TDColumSpan.onclick = function (event) { event_senderNameClick(this.parentElement, event); };
+                    			_TDColumSpan.ondblclick = function (event) { event_senderNameDBClick(event); };
+                    		}
                     	}
                     	
                     	_TR.lastChild.innerHTML = "";
@@ -690,8 +697,14 @@ function viewReceivers(obj) {
         xmlhttp_MailReceiverList = null;
         
         var strQuery = "<MESSAGEID>" + decodeURIComponent(parentHref) + "</MESSAGEID>";
+        var requestUrl = "/ezEmail/mailGetReceiveList.do";
+        
+    	if (typeof(shareId) != "undefined" && shareId != "") {
+    		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    	}
+        
         xmlhttp_MailReceiverList = createXMLHttpRequest();
-        xmlhttp_MailReceiverList.open("POST", "/ezEmail/mailGetReceiveList.do", true);
+        xmlhttp_MailReceiverList.open("POST", requestUrl, true);
         xmlhttp_MailReceiverList.onreadystatechange = function() { getReaderCount(parentId); }
         xmlhttp_MailReceiverList.send(strQuery);
 		
@@ -863,8 +876,6 @@ function GetListInfo(HeaderObject, ContentObject) {
     
     pStart = (pageCount * (curPage - 1));
     pEnd = ((curPage) * pageCount) - 1;
-    if (pEnd > MaxCount && MaxCount != 0)
-        pEnd = MaxCount;
         
     if (pStart >= MaxCount && pEnd >= MaxCount && MaxCount != 0) {
         curPage = Math.ceil(MaxCount / pageCount);
@@ -883,14 +894,20 @@ function GetListInfo(HeaderObject, ContentObject) {
     pOldSearchKeyword = SearchKeyword;
     createNodeAndInsertText(xmlpara, objNode, "SEARCH", SearchKeyword);
     createNodeAndInsertText(xmlpara, objNode, "START", pStart);
-    if(p_ListorderValue == "GROUPSUBLIST")
-        createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
-    else
-        createNodeAndInsertText(xmlpara, objNode, "END", pEnd);
-
+    
+    if (p_ListorderValue == "GROUPSUBLIST") {
+    	createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
+    } else {
+    	createNodeAndInsertText(xmlpara, objNode, "END", pEnd);
+    }
+    
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
     
     var _url = "/ezEmail/mailGetList.do";
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	_url += "?shareId=" + encodeURIComponent(shareId);
+    }
     
     if (useReceivingChk) {
     	_url = "/ezEmail/getReceiverMailList.do";
@@ -902,7 +919,9 @@ function GetListInfo(HeaderObject, ContentObject) {
     GetList_HTTP.send(xmlpara);
     GetListInfo_HeaderObject = HeaderObject;
     GetListInfo_ContentObject = ContentObject;
-    ShowMailProgress();
+    if (!importExportMode) {
+    	ShowMailProgress();
+    }
 }
 var p_ListorderType_SUB;
 var p_ListOrderby_SUB;
@@ -942,14 +961,23 @@ function GetListInfo_SUB(HeaderObject, ContentObject) {
     createNodeAndInsertText(xmlpara, objNode, "END", "ALL");
     
     createNodeAndInsertText(xmlpara, objNode, "VIEWSELECTINDEX", select.selectedIndex);
-
+    
+    var url = "/ezEmail/mailGetList.do";
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	url += "?shareId=" + encodeURIComponent(shareId);
+    }
+    
     GetList_HTTP_SUB = createXMLHttpRequest();
-    GetList_HTTP_SUB.open("POST", "/ezEmail/mailGetList.do", true);
+    GetList_HTTP_SUB.open("POST", url, true);
     GetList_HTTP_SUB.onreadystatechange = GetListIevent_ongetxmlcomplete_SUB;
     GetList_HTTP_SUB.send(xmlpara);
     GetListInfo_HeaderObject = HeaderObject;
     GetListInfo_ContentObject = ContentObject;
-    ShowMailProgress();
+    
+    if (!importExportMode) {
+    	ShowMailProgress();
+    }
 }
 
 function GetListIevent_ongetxmlcomplete() {
@@ -980,7 +1008,9 @@ function GetListIevent_ongetxmlcomplete() {
             
             isScrollMailList();
             
-            HiddenMailProgress();
+            if (!importExportMode) {
+            	HiddenMailProgress();
+            }
            /* if (typeof (searchMode) != "undefined") {
             	searchMode = false;
             }*/
@@ -1027,7 +1057,9 @@ function GetListIevent_ongetxmlcomplete_SUB() {
     if (GetList_HTTP_SUB != null && GetList_HTTP_SUB.readyState == 4) {
         if (GetList_HTTP_SUB.status >= 200 && GetList_HTTP_SUB.status < 300) {
             MakeListInfoHTML_SUB(GetListInfo_HeaderObject, GetListInfo_ContentObject);
-            HiddenMailProgress();
+            if (!importExportMode) {
+            	HiddenMailProgress();
+            }
             try { p_ListorderValue = pGroupListClickObject.getAttribute("mode"); } catch (e) { }
             GetList_HTTP_SUB = null;
         }
@@ -1138,7 +1170,11 @@ function MailListRefreshByTimeout() {
 function MailListRefresh() {
 	ContextMenuHidden();
 	
-	parent.frames["left"].detailView();
+	if (typeof(shareId) != "undefined" && shareId != "") {
+		parent.frames["left"].detailView(shareId);
+	} else {
+		parent.frames["left"].detailView();
+	}
     
     if (p_ListorderValue != "SENT" && p_ListorderValue != "SUBJECT") {
         goToPageByNum(MailList.getAttribute("curPage"));

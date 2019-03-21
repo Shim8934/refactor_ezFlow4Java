@@ -46,6 +46,8 @@
                			TBL_SCHEDULE_PUBLIC_DEPT A INNER JOIN TBL_USERMASTER B ON A.usercn = B.cn
                		WHERE
                			A.tenant_id = #v_TENANTID#	
+               		and
+						a.companyID = #v_COMPANYID#
 			) PUBLIC_DEPARTMEN
 		]]>
 	</select>
@@ -62,15 +64,17 @@
                 usercn = #v_USERID#
             and
                 departmentcn = #v_DEPTID#
+            and
+        		companyid = #v_COMPANYID#
         ]]>
     </select>
 	
 	<insert id="EzScheduleAdminDAO.scheduleSaveShareDept" parameterClass="map">
 		<![CDATA[
 			INSERT INTO TBL_SCHEDULE_PUBLIC_DEPT(
-				USERCN, 		USERNAME, 		USERNAME2, 		DEPARTMENTCN, 	DEPARTMENTNAME, 	DEPARTMENTNAME2,	TENANT_ID 
+				USERCN, 		USERNAME, 		USERNAME2, 		DEPARTMENTCN, 	DEPARTMENTNAME, 	DEPARTMENTNAME2,	TENANT_ID 	 , companyID
 			) VALUES (
-				#v_USERID#,		#v_USERNAME#,	#v_USERNAME2#,	#v_DEPTID#,		#v_DEPTNAME#,		#v_DEPTNAME2#,		#v_TENANTID#			
+				#v_USERID#,		#v_USERNAME#,	#v_USERNAME2#,	#v_DEPTID#,		#v_DEPTNAME#,		#v_DEPTNAME2#,		#v_TENANTID#	,		#v_COMPANYID#	
 			)
 		]]>			
 	</insert>

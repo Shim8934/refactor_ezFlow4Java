@@ -393,4 +393,9 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public String getPhysicalDeliveryOfficeName(Map<String, Object> map) {
 		return (String) select("EzOrganDAO.getPhysicalDeliveryOfficeName", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<OrganUserVO> getSharedMailboxSearchList(Map<String, Object> map) {
+		return (List<OrganUserVO>) list("EzOrganDAO.getSharedMailboxSearchList", map);
+	}
 }

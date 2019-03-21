@@ -202,7 +202,7 @@ function getBoardComment() {
 				}
 				boardCommentList += "</td>";
 				boardCommentList += "<td style='text-align:left;vertical-align:middle;padding:10px;word-wrap:break-word;line-height:1.5'>"
-									+ vo.content + "&nbsp;&nbsp;";
+									+ MakeXMLString(vo.content) + "&nbsp;&nbsp;";
 					
 				if ( typeof userInfoID == "undefined") {
 				    userInfoID = "";    	

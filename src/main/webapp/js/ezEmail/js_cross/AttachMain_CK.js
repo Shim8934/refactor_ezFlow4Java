@@ -254,6 +254,10 @@ function AppendFileAttachInfo(ret) {
 		                            			+ "&folderPath=" + encodeURIComponent(folderPath)
 		                            			+ "&filename=" + encodeURIComponent(filename);
                         		
+                        		if (typeof(shareId) != "undefined" && shareId != "") {
+                        			reqUrl += "&shareId=" + encodeURIComponent(shareId);
+						    	}
+                        		
                         		$(this).attr('_href', reqUrl);
 	                    	
  		                    	dadiframe.FileDownload(this, parseInt(partIdx), parseInt(msgId), isBig); 
@@ -358,6 +362,10 @@ function AppendFileAttachInfo(ret) {
 			                            			+ "mode=Attach"
 			                            			+ "&folderPath=" + encodeURIComponent(folderPath)
 			                            			+ "&filename=" + encodeURIComponent(filename);
+                            		
+                            		if (typeof(shareId) != "undefined" && shareId != "") {
+                            			reqUrl += "&shareId=" + encodeURIComponent(shareId);
+    						    	}
                             		
                             		$(this).attr('_href', reqUrl);
                             		

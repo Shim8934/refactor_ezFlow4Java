@@ -69,7 +69,14 @@
 		    var pUse_Editor = "${useEditor}";
 		    var pStartday = "${startDay}";		    
 		    select_memorialDays("${lang}");
+		    var dayView = "";
 		    
+	    	 /* 2019-01-11 김민성 - 접근 권한 없는 경우 메시지 출력 수정 */
+		    if(pAdminFg == "") {
+		    	var msg = "<spring:message code='ezResource.t58' />";
+		        window.location.href = "/ezResource/nonResList.do?msg=" + encodeURIComponent(msg);
+		    }
+	    	 
 	    	document.onselectstart = function () { return false; };
 	    	
 	    	//baonk added
@@ -195,10 +202,12 @@
 		            if (type == "WEEK") {
 	    	            document.getElementById("TR_Line2").style.display = "";
 	        	        weekonload(date.getFullYear(), parseInt(date.getMonth()) + 1, date.getDate());
+	        	        $('body').css('overflowY', 'hidden');
 		            }
 		            else if (type == "TODAY") {
 	    	            document.getElementById("TR_Line2").style.display = "";
 	        	        todayonlaod(date.getFullYear(), parseInt(date.getMonth()) + 1, date.getDate());
+	        	        $('body').css('overflowY', 'auto');
 	            	}
 	        	} else {
 	            	document.getElementById("TR_Line2").style.display = "none";
@@ -227,10 +236,19 @@
 	    	}
 
 	    	window.onresize = function () {
-	        	if (navigator.userAgent.indexOf("Chrome") > -1)
-		            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 110 + "px";
-		        else
-	    	        document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 130 + "px";
+	    		if(Mod == "WEEK") {
+		        	if (navigator.userAgent.indexOf("Chrome") > -1)
+			            document.getElementById("res_Div").style.height = document.documentElement.clientHeight - 185 + "px";
+			        else
+		    	        document.getElementById("res_Div").style.height = document.documentElement.clientHeight - 190 + "px";
+		        	scroll();
+	    		}
+	    		//else if(Mod == "TODAY") {
+	    			if (navigator.userAgent.indexOf("Chrome") > -1)
+		                document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 110 + "px";
+		            else
+	    	            document.getElementById("mainlistlayout").style.height = document.documentElement.clientHeight - 130 + "px";
+	    		//}
 	    	}
 
 	    	function btnAdd_Click() {
@@ -325,13 +343,13 @@
 							$("#brdNm").html(result.resBrd.brdNm);
 						} else {
 							$("#ownerNm").html(result.resBrd.ownerNm2 + " (" + result.resBrd.ownDeptNm2 + ")");
-							$("#ownerNm").attr("ownerID", "mins99");
+							$("#ownerNm").attr("ownerID", ownerID);
 							$("#submanager").html(result.resBrd.ownDeptNm2);
 							$("#brdNm").html(result.resBrd.brdNm2);
 						} */
-						$("#brdNm").html(result.resBrd.brdNm);
-						$("#ownerCall").html(result.resBrd.ownerCall);
-						$("#resLocation").html(result.resBrd.resLocation);					
+						$("#brdNm").html(MakeXMLString(result.resBrd.brdNm));
+						$("#ownerCall").html(MakeXMLString(result.resBrd.ownerCall));
+						$("#resLocation").html(MakeXMLString(result.resBrd.resLocation));					
 						
 						$("#ownerInfo").html(strOwnerList);
 						
@@ -347,7 +365,7 @@
 						
 						var resbrdExc = "";
 						if (result.resBrd.brdExplain != null) {
-							resbrdExc = result.resBrd.brdExplain.replace(/(?:\r\n|\r|\n)/g, '<br />');
+							resbrdExc = MakeXMLString(result.resBrd.brdExplain);
 						}
 						
 						$("#brdExplain").html(resbrdExc);
@@ -390,8 +408,8 @@
     			<li id="ToDaybtn"><span onClick="setweek_onload('TODAY');"><spring:message code="ezResource.t251" /></span></li>
     			<li id="Weekbtn"><span onClick="setweek_onload('WEEK');"><spring:message code="ezResource.t253" /></span></li>
     			<!-- 2018-06-05 구해안 허가,비허가 오른쪽으로 ui 수정 -->
-      			<li style="background:none;float:right;cursor:default">&nbsp;<img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
 				<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_no.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t370" /></li>
+      			<li style="background:none;float:right;cursor:default"><img src="/images/calendar/icon_resource_ok.png" style="vertical-align:middle">&nbsp;<spring:message code="ezResource.t369" /></li>
   				</span>
   			</ul>
 		</div>
@@ -410,7 +428,7 @@
         	</tr>
         	<tr>
             	<td style="vertical-align:top;">
-                	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;overflow-y: auto;overflow-x:hidden;" >
+                	<div id="mainlistlayout" style="width:100%;height:780px;margin-top:10px;" >
                 		<table style="width:100%;">
                     		<tr id="weeklyline">
                 				<td colspan="2" style="text-align:center;font-weight: bold;font-size:14px;height:35px;background-color: #f0f6ff;">
@@ -495,7 +513,7 @@
 					</tr>
 					<tr>
 						<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
-						<td><div style="overflow: auto; height: 200px;word-break:break-all" id="brdExplain"></div></td>
+						<td><div style="overflow-y: auto; height: 200px; word-break:break-all; white-space:pre-wrap;" id="brdExplain"></div></td>
 					</tr>
 	         	</table>
 	         </div>	

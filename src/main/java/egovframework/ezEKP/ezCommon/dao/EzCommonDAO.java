@@ -338,4 +338,68 @@ public class EzCommonDAO extends EgovAbstractDAO{
 	public void insertUseSession(Map<String, Object> map) {
 		insert ("EzCommonDAO.insertUseSession", map);
 	}
+	
+	public void addUserMasterPasswordUpdateDT() throws Exception {
+		try {
+			select("EzCommonDAO.checkUserMasterPasswordUpdateDT");
+		} catch (Exception e) {
+			logger.debug("tbl_usermaster PASSWORD_UPDATEDT column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addUserMasterPasswordUpdateDT");
+		}
+	}
+
+	public void addJobMasterJobID() throws Exception {
+		try {
+			select("EzCommonDAO.checkAddJobMasterJobID");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster jobid column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addAddJobMasterJobID");
+		}
+	}
+
+	public void createWebfolderToken() {
+		try {
+			select("EzCommonDAO.checkWebfolderToken");
+		} catch (Exception e) {
+			logger.debug("tbl_webfolder_token doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createTblWebfolderToken");
+		}
+	}
+	
+	public void addUserMasterMailBoxQuota() {
+		try {
+			select("EzCommonDAO.checkUserMasterMailBoxQuota");
+		} catch (Exception e) {
+			logger.debug("tbl_usermaster mailBoxQuota doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addUserMasterMailBoxQuota");
+		}
+	}
+	
+	public void addJournalFormDelFlag() {
+		try {
+			select("EzCommonDAO.checkJournalFormDelFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_journal_form JournalFormDelFlag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addJournalFormDelFlag");
+		}
+	}
+	
+	public void updateListOptionData() {
+		try {
+			if ((int) select("EzCommonDAO.checkListOptionData1") > 0) {
+				update("EzCommonDAO.updateListOptionData1");
+			}
+			if ((int) select("EzCommonDAO.checkListOptionData2") > 0) {
+				update("EzCommonDAO.updateListOptionData2");
+			}
+		} catch (Exception e) {
+			logger.debug("updateListOptionData() ERROR...");
+			e.printStackTrace();
+		}
+	}
 }

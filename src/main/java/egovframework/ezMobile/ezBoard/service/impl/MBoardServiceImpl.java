@@ -179,6 +179,7 @@ public class MBoardServiceImpl implements MBoardService {
 		String type = mBoardInfoVO.getType();
 		String apprFlag = mBoardInfoVO.getApprFlag();
 		String boardGroupID = mBoardInfoVO.getBoardGroupID();
+		String url = mBoardInfoVO.getUrl();
 	    String deptPathOrgan="";
 	    
 	    for (int ch=0; ch<deptPathCode.split(",").length; ch++) {
@@ -238,6 +239,9 @@ public class MBoardServiceImpl implements MBoardService {
 				mBoardInfoVO.setIsAllGroupBoard("Y");
 			}
 		}
+		
+		/* 2018-11-15 홍승비 - 게시판의 URL값 설정 */
+		mBoardInfoVO.setUrl(url);
 		
 	    if (mBoardInfoVO.getBoardID().equals("{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}")) {
 	    	mBoardInfoVO.setAccess_FG("1");

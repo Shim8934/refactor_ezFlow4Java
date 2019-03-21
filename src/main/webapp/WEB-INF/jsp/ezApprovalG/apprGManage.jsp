@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezApprovalG.hyj02'/></title>
+		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<!-- <link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}"> -->
@@ -104,6 +104,8 @@
 		    var currentpage = 1;
 		    var selRowChangeFlag = false;
 		    var orgCompanyID = "";
+		    
+		    var selectcabinet_cross_dialogArguments = new Array();
 		    
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -348,6 +350,12 @@
 		        	change_statusCell();
 		        }
 		        
+				if ($("#presentcell").html() != undefined) {
+                    if ($("#presentcell").html().trim() == "") {
+						$("#presentcell").html("<spring:message code='ezApprovalG.t1747'/>");
+                    }
+                    document.title = $("#presentcell").html();
+		        }
 		    }
 			
 		    function change_statusCell() {
@@ -383,6 +391,12 @@
 		        	AddOption(sel_status, '<spring:message code="ezApprovalG.F0031"/>', "R");
 		        	AddOption(sel_status, '<spring:message code="ezApproval.t155"/>', "S");
 		        	AddOption(sel_status, strLangAprState21, "V");
+		        } else if (pListTypeValue == "11") {
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t1422"/>', "002");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t50"/>', "005");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t49"/>', "004");
+		        	AddOption(sel_status, '<spring:message code="ezApprovalG.t66"/>', "006");
+		        	AddOption(sel_status, '<spring:message code="ezApproval.t497"/>', "015");
 		        } else {
 		        	$('#sel_status_div').hide();
 		        }
@@ -446,7 +460,7 @@
 		    
 		    function onSelect_Status() {
 		    	pageNum = 1;
-		        if (pListTypeValue == "1" || pListTypeValue == "2" || pListTypeValue == "3") {
+		        if (pListTypeValue == "1" || pListTypeValue == "2" || pListTypeValue == "3" || pListTypeValue == "11") {
 		            getDocList();
 		        } else if (pListTypeValue == "4") {
 		        	getReceivedDocList();
@@ -515,7 +529,7 @@
 		            if (GetBujaeFlag())
 		                return;
 		            if (pListTypeValue == "1" || pListTypeValue == "11") { //listTypeValue = 11(공유결재문서)
-						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
 							alert("<spring:message code='ezApprovalG.bhs23'/>");
 							getDocList();
 							return;
@@ -710,7 +724,7 @@
 		            //2018-10-31 배현상, 공유결재자 중복 결재 방지 처리
 		            if (tempFlag == 0 || tempFlag == 1) {
 		            	//첫번째 문서가 모두결재인 경우에는 결재창을 열지 않도록 변경
-						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
 							alert("<spring:message code='ezApprovalG.bhs23'/>");
 							getDocList();
 							return;
@@ -799,7 +813,7 @@
 		            }
 		        }
 		        
-		        if ((pListTypeValue == "1" || pListTypeValue == "11") && checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+		        if ((pListTypeValue == "1" || pListTypeValue == "11") && checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
 		        	alert("<spring:message code='ezApprovalG.bhs23'/>");
 					getDocList();
 					return;
@@ -853,7 +867,7 @@
 		        if (Ans) {
 			        var pCurSelRow = oArrRows[0];
 			        if (pListTypeValue == "1" || pListTypeValue == "11" || pListTypeValue == "2") {
-						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+						if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"), pCurSelRow.getAttribute("ORGCOMPANYID"))){
 							alert("<spring:message code='ezApprovalG.bhs23'/>");
 							getDocList();
 							return;
@@ -985,7 +999,7 @@
 			    } else {
 			    	if (oArrRows != 0) {
 		                var pCurSelRow = oArrRows[0];
-		                if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"))){
+		                if (checkAprState(pCurSelRow.getAttribute("DATA1"), pCurSelRow.getAttribute("DATA12"), pCurSelRow.getAttribute("DATA4"), pCurSelRow.getAttribute("APRMEMBERSN"),pCurSelRow.getAttribute("ORGCOMPANYID"))){
 							alert("<spring:message code='ezApprovalG.bhs23'/>");
 							getDocList();
 							return;
@@ -1307,6 +1321,8 @@
 		        var pOrgDocID = tr.getAttribute("DATA7");
 		        var pHref = tr.getAttribute("DATA3");
 		        var openLocation;
+		        var pOrgCompanyID = tr.getAttribute("ORGCOMPANYID");
+		        var pDocTitle = tr.firstChild.textContent;
 		        
 		        // 2018.07.06 (KLIB) - ezd 확장자 처리
 		        var pHrefExt = pHref.substr(pHref.length - 3, pHref.length).toLowerCase();
@@ -1324,7 +1340,8 @@
 		        } else {
 	                openLocation = "/ezApprovalG/ezSimsaG.do";
 		        }
-		        openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pHref) + "&orgDocID=" + encodeURI(pOrgDocID);
+		        openLocation = openLocation + "?docID=" + encodeURI(pDocID) + "&docHref=" + encodeURI(pHref) + "&orgDocID=" + encodeURI(pOrgDocID) + 
+		        		"&orgCompanyID=" + encodeURI(pOrgCompanyID) + "&docTitle=" + encodeURI(pDocTitle);
 		        var param = "status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left;
 		        window.open(openLocation, "enforce", param);
 		    }
@@ -1403,14 +1420,31 @@
 		        var oArrRows = DocList.GetSelectedRows();
 		        var tr = oArrRows[0];
 		        if (tr.getAttribute("DATA10") == "015") {
-		            if (Ans) {
-		                RemoveDocCabinet(tr.getAttribute("DATA1"), "Y");
+		        	if (Ans) {
+		            	//2019-02-18 기안원문서철과 비교해서 다르면 다시 세팅
+		            	//2019-03-11 위의 주석내용 삭제 후 철정보 다시 세팅하도록 수정
+						var para = new Array();
+				        var url = "/ezApprovalG/selectCabinet.do?initFlag=1&hesongFlag=Y&docId=" + tr.getAttribute("DATA1");
+				
+				        selectcabinet_cross_dialogArguments[0] = para;
+				        selectcabinet_cross_dialogArguments[1] = RemoveDocCabinet;
+				
+				        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1000, 620));
+				        try { OpenWin.focus(); } catch (e) { }
 		                openergetDocInfo();
 		            }
 		        }
 		        else {
 		            if (Ans) {
-		                RemoveDocCabinet(tr.getAttribute("DATA1"), "");
+						var para = new Array();
+				        var url = "/ezApprovalG/selectCabinet.do?initFlag=1&docId=" + tr.getAttribute("DATA1");
+				
+				        selectcabinet_cross_dialogArguments[0] = para;
+				        selectcabinet_cross_dialogArguments[1] = RemoveDocCabinet;
+				
+				        var OpenWin = window.open(url, "selectCabinet", GetOpenWindowfeature(1000, 620));
+				        try { OpenWin.focus(); } catch (e) { }
+
 		                openergetDocInfo();
 		            }
 		        }
@@ -1441,15 +1475,20 @@
 					
 		            if (tmpStartDate <= "${nowDate}" && tmpEndDate >= "${nowDate}") {
 		                return true;
+		            } else if(tmpStartDate < "${nowDate}" && tmpEndDate < "${nowDate}"){
+		            	setBujaeOff();
+				        return false;
 		            }
 		        } else if (proxyInfo != null && proxyInfo != "") {
 		        	var strDate = "${proxyInfo.startDate}";
 		        	var endDate = "${proxyInfo.endDate}";
 		            if (strDate <= "${nowDate}" && endDate >= "${nowDate}") {
 		                return true;
+		            }else if(strDate < "${nowDate}" && endDate < "${nowDate}"){
+		            	setBujaeOff();
+				        return false;
 		            }
 		        }
-		        setBujaeOff();
 		        return false;
 		    }
 		    function setpause(numberMillis) {
@@ -1563,7 +1602,7 @@
 		        setsearchinfo_cross_dialogArguments[0] = para;
 		        setsearchinfo_cross_dialogArguments[1] = SearchCondi_onclick_Complete;
 		        var type = "APR";
-		        OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do?type=" + type, "setsearchInfo_Cross", GetOpenWindowfeature(510, 375));
+		        OpenWin2 = window.open("/ezApprovalG/setSearchInfo.do?type=" + type+ "&searchType="+pListTypeValue, "setsearchInfo_Cross", GetOpenWindowfeature(510, 375));
 		        try { OpenWin2.focus(); } catch (e) { }
 		    }
 		
@@ -1731,6 +1770,22 @@
 				    if (typeof (condition[16]) != "undefined" && condition[16] != "") {
 				        TYPE += condition[16];
 				        DATA += condition[17];
+				    }
+				    if (typeof (condition[25]) != "undefined" && condition[25] != "") {
+				    	TYPE += "RECVSTARTDATE;"
+				        DATA += "<RECVSTARTDATE>" + condition[25] + "</RECVSTARTDATE>";
+				    }
+				    if (typeof (condition[26]) != "undefined" && condition[26] != "") {
+				    	TYPE += "RECVENDDATE;"
+				        DATA += "<RECVENDDATE>" + condition[26] + "</RECVENDDATE>";
+				    }
+				    if (typeof (condition[27]) != "undefined" && condition[27] != "") {
+				    	TYPE += "SENTDEPTNAME;"
+				        DATA += "<SENTDEPTNAME>" + condition[27] + "</SENTDEPTNAME>";
+				    }
+				    if (typeof (condition[28]) != "undefined" && condition[28] != "") {
+				    	TYPE += "RECEIVEDDEPTNAME;"
+				        DATA += "<RECEIVEDDEPTNAME>" + condition[28] + "</RECEIVEDDEPTNAME>";
 				    }
 				}
 				SQLPARADATA = "<ROOT><TYPE>" + TYPE + "</TYPE><DATA>" + DATA + "</DATA></ROOT>";
@@ -1995,7 +2050,7 @@
     			}
 		    }
 			
-			function checkAprState(pDocID, docState, OrgAprUserID, aprMemberSN) {
+			function checkAprState(pDocID, docState, OrgAprUserID, aprMemberSN, pOrgCompanyID) {
 		    	var result = "";
 		    	
 		    	$.ajax({
@@ -2008,7 +2063,7 @@
 		    			docState : docState,
 		    			userID : OrgAprUserID,
 		    			aprMemberSN : aprMemberSN,
-		    			orgCompanyID : orgCompanyID
+		    			orgCompanyID : pOrgCompanyID
 		    		},
 		    		success : function(text) {
 		    			result = text;

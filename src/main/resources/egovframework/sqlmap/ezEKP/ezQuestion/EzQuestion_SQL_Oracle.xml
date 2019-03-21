@@ -268,13 +268,21 @@
 								AND
 									B.tenant_id = #tenantID#
 								AND
+									A.COMPANYID = #companyID#
+								AND
 									(B.response_range = '0'
-								AND
-									TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:ss') BETWEEN TO_DATE(A.poll_startdate, 'yyyy-MM-DD HH24:MI:ss')
-								AND
-									TO_DATE(A.poll_enddate, 'yyyy-MM-DD HH24:MI:ss') + A.post_term)
+									AND
+										TO_DATE(#nowDate#, 'yyyy-MM-dd HH24:MI:ss') 
+									BETWEEN 
+										TO_DATE(A.poll_startdate, 'yyyy-MM-DD HH24:MI:ss')
+									AND
+										TO_DATE(A.poll_enddate, 'yyyy-MM-DD HH24:MI:ss') + A.post_term)
 								OR
-									(A.user_id = #v_PUSERID#)
+									(A.user_id = #v_PUSERID#
+									AND
+										A.tenant_id = #tenantID#
+									AND
+										A.COMPANYID = #companyID#)
 								)
 		]]>
 		
@@ -349,6 +357,8 @@
 						A.tenant_id = D.tenant_id
 					AND
 						A.tenant_id = #tenantID#
+					AND
+						A.COMPANYID = #companyID#
 		]]>
 		
 		<isNotEmpty property="v_PTITLE">
@@ -1410,13 +1420,24 @@
 					AND
 						(B.response_range = '0'
 						AND
-							TO_DATE(#nowDate#, 'yyyy-MM-DD HH24:MI:ss') BETWEEN TO_DATE(A.poll_startdate,'yyyy-MM-DD HH24:MI:ss') AND TO_DATE(A.poll_enddate ,'yyyy-MM-DD HH24:MI:ss') + A.post_term
+							TO_DATE(#nowDate#, 'yyyy-MM-DD HH24:MI:ss') 
+						BETWEEN 
+							TO_DATE(A.poll_startdate,'yyyy-MM-DD HH24:MI:ss') 
+						AND
+							TO_DATE(A.poll_enddate ,'yyyy-MM-DD HH24:MI:ss') + A.post_term
 						)
 					AND
 						A.TENANT_ID = #tenantID#
 					AND
-						B.TENANT_ID = #tenantID#		
-					OR (A.USER_ID = #v_PUSERID# AND A.tenant_id = #tenantID#)
+						B.TENANT_ID = #tenantID#
+					AND
+						A.COMPANYID = #companyID#	
+					OR 
+						(A.USER_ID = #v_PUSERID# 
+						AND
+							A.tenant_id = #tenantID#
+						AND
+							A.COMPANYID = #companyID#)
 					)
 		]]>
 		<isNotEmpty property="v_PTITLE">
@@ -1489,7 +1510,9 @@
 					AND
 						A.tenant_id = D.tenant_id
 					AND
-						A.tenant_id = #tenantID#			
+						A.tenant_id = #tenantID#	
+					AND
+						A.COMPANYID = #companyID#		
       				)
 		]]>
 		
@@ -1587,9 +1610,9 @@
 			<![CDATA[
 				INSERT INTO
 					TBL_POLL_ITEM
-        			(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, TITLE, CONTENT, POST_DATE,  POST_TERM, ITEM_REF, ITEM_LEVEL, ITEM_STEP, ITEM_IMP, HASATTACH, ITEM_GB, POLL_STARTDATE, POLL_ENDDATE, COMPLETE_FLAG, TENANT_ID)
+        			(BRD_ID, ITEM_NO, USER_ID, USER_NM, USER_NM2, USER_EMAIL, TITLE, CONTENT, POST_DATE,  POST_TERM, ITEM_REF, ITEM_LEVEL, ITEM_STEP, ITEM_IMP, HASATTACH, ITEM_GB, POLL_STARTDATE, POLL_ENDDATE, COMPLETE_FLAG, TENANT_ID, COMPANYID)
         		VALUES
-        			(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#, to_date(#v_pPostDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_pPostTerm#, #v_pItemRef#, 0, 0, #v_pItemImp#, 0, 1, #v_pSDate#, #v_pEdate#, 'N', #tenantID#)
+        			(#v_pstrBrdID#, #v_pItemNo#, #v_pUserID#, #v_pUserNM#, #v_pUserNM2#, #v_pUserEmail#, #v_pTitle#, #v_pContent#, to_date(#v_pPostDate#, 'yyyy-MM-dd HH24:MI:SS'), #v_pPostTerm#, #v_pItemRef#, 0, 0, #v_pItemImp#, 0, 1, #v_pSDate#, #v_pEdate#, 'N', #tenantID#, #v_companyID#)
 			]]>
 		</isNotEqual>
 		

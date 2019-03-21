@@ -17,6 +17,7 @@
 	        var userdeptid = "";
 	        var deptid = "";
 	        var ReturnFunction;
+	        var companyID = opener.selectedCompanyID
 	        
 	        var schedule_select_secretary_cross_dialogArguments = new Array();
 	        function select_person() {
@@ -116,7 +117,8 @@
 	        		url : "/admin/ezSchedule/scheduleSaveShareDept.do",
 	        		data : {
 	        			userID : userid,
-	        			deptID : deptid
+	        			deptID : deptid,
+	        			companyID : companyID
 	        		},
 	        		success : function(text){
 	        			if (text == "SUCCESS") {

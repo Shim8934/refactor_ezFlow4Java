@@ -62,15 +62,18 @@ public class EzStatisticsMailUserController {
 		}
 		
 		String topid = "";
+		String adminOrganVal = "n";
 		
 		if (userInfo.getRollInfo().indexOf("c=1") == -1) {
 			topid = userInfo.getCompanyID();
 		} else {
-			topid = "Top";
+			topid = "Top/organ"; // 전체관리자 조직도 전체 트리 보여줌
+			adminOrganVal = "y"; // 전체관리자 조직도 전체 검색
 		}
 		
 		model.addAttribute("companyID", topid);				
 		model.addAttribute("deptID", userInfo.getDeptID());
+		model.addAttribute("adminOrganVal", adminOrganVal);	
 		
 		return "ezStatistics/statisticsMailUser";
 	}

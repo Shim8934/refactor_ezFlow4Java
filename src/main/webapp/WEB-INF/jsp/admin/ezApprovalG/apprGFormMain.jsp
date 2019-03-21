@@ -185,6 +185,7 @@
 		            createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value = '${companyID}' />");
 // 		            createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2");
 					createNodeAndInsertText(xmlpara, objNode, "PROP", "extensionAttribute2;displayName1;displayName2");
+					createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	
 		            var xmlHTTP = createXMLHttpRequest();
 		            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);

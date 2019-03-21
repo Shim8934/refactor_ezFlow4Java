@@ -12,6 +12,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>	    	    
 		<script type="text/javascript" language="javascript">
 			var pBoardID = "<c:out value='${boardID}'/>";
+			var isAllGroupBoard = "${isAllGroupBoard}";
 	    	
 	    	$(document).ready(function(){
 	    		if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -33,7 +34,11 @@
 	            	type : "POST",
 	            	dataType : "text",
 	            	url : "/admin/ezBoard/setUnderBoardAcl.do",
-	            	data : {boardID : pBoardID, type : type},
+	            	data : {
+	            		boardID : pBoardID,
+	            		type : type,
+	            		isAllGroupBoard : isAllGroupBoard
+	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79' />")
 		                window.close();

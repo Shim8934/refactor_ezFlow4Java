@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TimeZone;
@@ -97,6 +98,8 @@ import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDistributionVO;
 import egovframework.ezEKP.ezEmail.vo.MailGeneralVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.ezEKP.ezEmail.web.EzEmailMailReadController;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -224,7 +227,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				folder.put("fullName", f.getFullName());
 				folder.put("unReadCount", f.getUnreadMessageCount());
 				
-				if (f.list().length > 0) {
+				if (f.listSubscribed().length > 0) {
 					folder.put("hasSub", true);
 				} else {
 					folder.put("hasSub", false);
@@ -259,7 +262,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	/**
 	 * 모바일 G/W 이메일 [GET] 왼쪽 슬라이드 메뉴에 공유 편지함 목록 조회
 	 */
-	/*@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/shared-folders-list/users/{userId:.+}", method= RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object mMailSharedFolderList(HttpServletRequest request, @PathVariable String userId) {
 		LOGGER.debug("MOBILE G/W MAIL mMailSharedFolderList started.");		
@@ -317,7 +320,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					folder.put("fullName", f.getFullName());
 					folder.put("unReadCount", f.getUnreadMessageCount());
 
-					if (f.list().length > 0) {
+					if (f.listSubscribed().length > 0) {
 						folder.put("hasSub", true);
 					} else {
 						folder.put("hasSub", false);
@@ -354,12 +357,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		LOGGER.debug("MOBILE G/W MAIL mMailSharedFolderList ended.");
 		
 		return result;
-	}*/
+	}
 	
 	/**
 	 * 유저의 공유 사서함 권한 가져오기
 	 */
-	/*@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value="/mobile/ezemail/users/{userId:.+}/share/{shareId:.+}", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public Object getShareMailBoxPermissionInfo(HttpServletRequest request, @PathVariable String userId, @PathVariable String shareId) {		
 		LOGGER.debug("MOBILE G/W MAIL getShareMailBoxPermissionInfo started.");
@@ -393,7 +396,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		LOGGER.debug("MOBILE G/W MAIL getShareMailBoxPermissionInfo ended.");
 		
 		return result;
-	}*/
+	}
 	
 	/**
 	 * 모바일 G/W 이메일 [GET] (받은,보낸,임시,지운,개인,기타) 편지함 메일 리스트
@@ -799,6 +802,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", info.getTenantId());
 			String mUseMailAddrAutoComplete = ezCommonService.getTenantConfig("mobileUseMailAddrAutoComplete", info.getTenantId());
+			String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", info.getTenantId());
 			OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, info.getPrimary(), info.getTenantId());
 			
 			String userEmail = info.getUserId() + "@" + domainName;
@@ -1368,6 +1372,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			data.put("fromAddressHtml", fromAddressHtml);
 			data.put("mailAttachLimit", mailAttachLimit);
 			data.put("mUseMailAddrAutoComplete", mUseMailAddrAutoComplete); //20180712 조진호 - 모바일에서 수신자 자동완성기능 사용여부
+			data.put("attachFileNameMaxLength", attachFileNameMaxLength); //20190114 조진호 - 첨부파일명 길이제한
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -4758,12 +4763,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					int start, int count, int[] searchCount, String folderID) {
 		LOGGER.debug("getAddressSearch started");
 		LOGGER.debug("getAddressSearch searchTarget=" + searchTarget + ",filterName=" + filterName
-				+ ",filterValue=" + filterValue + ",start=" + start + ",count=" + count);
+				+ ",filterValue=" + filterValue + ",start=" + start + ",count=" + count + ",folderID=" + folderID);
 		
         String returnValue = "";
        
         try {
-        	
+        	/* 
+        	 * service.getSearchList 사용
         	String[] ownerIds = null;
         	List<String> ownerIdList = new ArrayList<>();
         	
@@ -4787,12 +4793,24 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
             
         	for (String ownerId : ownerIds) {
         		LOGGER.debug("getAddressSearch ownerId=" + ownerId);
+        	}*/
+        	
+        	String ownerId = "";
+        	
+        	if (searchTarget.contains("company")) {
+        		ownerId = userInfo.getCompanyId();
+        	} else if (searchTarget.contains("department")) {
+        		ownerId = userInfo.getDeptId();
+        	} else if (searchTarget.contains("personal")) {
+        		ownerId = userInfo.getUserId();
         	}
         	
             String pFilter = filterName + "," + filterValue;
                         
-            searchCount[0] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, filterName + ",");
-            searchCount[1] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, pFilter);            
+            //searchCount[0] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, filterName + ",");
+            //searchCount[1] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, pFilter);    
+            searchCount[0] = ezAddressService.getAddressCount(userInfo.getTenantId(), folderID, ownerId, pFilter);
+            searchCount[1] = ezAddressService.getAddressCount(userInfo.getTenantId(), folderID, ownerId, pFilter);
             
             // start와 end(getAddressSearch를 호출 하는 곳에서 +1을 해주어 count값은 1로 넘어온다)값이 각각 0으로 넘어오는 경우 전체리스트를 출력하기 위해 count에 searchCount 대입 
             if(start == 0 && count == 1){
@@ -4800,8 +4818,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
             }
             // 끝
             
-            List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, count, start);
-            
+            //List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, count, start);
+            List<AddressVO> addressInfoList = ezAddressService.getAddressList(userInfo.getTenantId(), folderID, ownerId, "", pFilter, count, start);
+
             StringBuilder sb = new StringBuilder();
             sb.append("<LISTVIEWDATA><ROWS>");
             for (AddressVO addressInfo : addressInfoList) {
@@ -4914,7 +4933,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	
 	private String convertDownloadInlineImageURLtoCid(String htmlStr, String downloadInlineUri) {
 		downloadInlineUri = downloadInlineUri.replace(".", "\\.");
-		String regex = "src=\"" + downloadInlineUri + ".*?contentId=%3C(.*?)%3E\"";				
+		String regex = "src=\"" + downloadInlineUri + ".*?contentId=%3C(.*?)%3E.*?\"";				
 		Pattern pat = Pattern.compile(regex, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher mat = pat.matcher(htmlStr);
 				

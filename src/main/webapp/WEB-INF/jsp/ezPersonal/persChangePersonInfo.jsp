@@ -97,7 +97,7 @@
 			    
 			    function btnPhoto_onclick() {
 			        var wWeight = "474";
-			        var wHeight = "280";
+			        var wHeight = "304";
 	
 			        var heigth = window.screen.availHeight;
 			        var width = window.screen.availWidth;
@@ -107,18 +107,31 @@
 	
 			        if (CrossYN()) {
 			            personpicture_cross_dialogArguments[1] = btnPhoto_onclick_Complete;
-			            var OpenWin = window.open("/ezPersonal/personPicture.do", "PersonPicture_Cross", GetOpenWindowfeature(474, 280));
+			            var OpenWin = window.open("/ezPersonal/personPicture.do", "PersonPicture_Cross", GetOpenWindowfeature(474, 304));
 			            try { OpenWin.focus(); } catch (e) { }
 			        }
 			        else {
 			            var ret;
-			            ret = window.showModalDialog("/ezPersonal/personPicture.do", "", "dialogWidth:474px;dialogHeight:280px;dialogleft:" + left + "px;dialogtop:" + top + "px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no");
+			            ret = window.showModalDialog("/ezPersonal/personPicture.do", "", "dialogWidth:474px;dialogHeight:304px;dialogleft:" + left + "px;dialogtop:" + top + "px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no");
 			            window.location.reload(true);
 			        }
 			    }
 			    
+			    /* 2018-12-07 홍승비 - 사원 사진 등록, 변경 시 사진 div만 리로드하도록 수정 */
 			    function btnPhoto_onclick_Complete() {
-			        window.location.reload(true);
+// 					$.ajax({
+// 			    		type : "POST",
+// 			    		dataType : "html",
+// 			    		url : "/ezPersonal/getUserPhoto.do",
+// 			    		success : function(result) {
+// 							document.getElementById("LiteralPhoto").innerHTML = result;
+// 						},
+// 			    		error : function() {
+// 							window.location.reload(true);
+// 			    		}
+// 			    	});
+					//변경된 파일이 확장자가 같을 경우 이미지 캐시가 남아있어 변경되지 않는것처럼 보이는 현상 때문에 reload
+					window.location.reload(true);
 			    }
 	
 			    var address_zip_select_dialogArguments = new Array();
@@ -191,20 +204,28 @@
 			    }
 			    
 			    function ButtonDeleteClick() {
-					$.ajax({
-			    		type : "POST",
-			    		dataType : "html",
-			    		url : "/ezPersonal/deletePicture.do",
-			    		success : function(result) {
-			    			 if (result == "OK") {
-			    				var literalPhoto = document.getElementById("LiteralPhoto"); 
-			    				literalPhoto.innerHTML = "<image id=myimg <spring:message code='ezPersonal.i1'/>>";
-			    			} 
-						},
-			    		error : function() {
-			    			alert("<spring:message code='ezPersonal.t190'/>");
-			    		}
-			    	});
+			    	var imgName = document.getElementById("myimg").src; //현재 이미지 src
+			    	imgName = imgName.substr(imgName.lastIndexOf("/") + 1);
+			    	
+			    	var dImgName = "<spring:message code='ezPersonal.i1'/>"; //기본 이미지(사진이 없을 경우) src
+			    	dImgName = dImgName.substring(dImgName.lastIndexOf("/") + 1, dImgName.lastIndexOf("."));
+			    	
+			    	if (imgName.indexOf(dImgName) < 0 && confirm("<spring:message code='ezPersonal.psb01'/>")) {
+						$.ajax({
+				    		type : "POST",
+				    		dataType : "html",
+				    		url : "/ezPersonal/deletePicture.do",
+				    		success : function(result) {
+				    			 if (result == "OK") {
+				    				var literalPhoto = document.getElementById("LiteralPhoto"); 
+				    				literalPhoto.innerHTML = "<image id=myimg <spring:message code='ezPersonal.i1'/>>";
+				    			} 
+							},
+				    		error : function() {
+				    			alert("<spring:message code='ezPersonal.t190'/>");
+				    		}
+				    	});
+			    	}
 			     }
 			    
 				function PassWordChange() {
@@ -423,7 +444,7 @@
 		        </tr>
         		<tr> 
             		<th><spring:message code='ezPersonal.t1820'/><br><spring:message code='ezPersonal.t182'/></th> 
-            		<td colspan="3"><textarea id="txtInfo" style="WIDTH:99.3%;HEIGHT:80px;margin-top:3px;margin-bottom:3px; resize:none;" maxlength="450">${txtInfo}</textarea></td> 
+            		<td colspan="3"><textarea id="txtInfo" style="WIDTH:99.1%;HEIGHT:80px;margin-top:3px;margin-bottom:3px; padding-right:0px; resize:none;" maxlength="450">${txtInfo}</textarea></td> 
         		</tr> 
     		</table> 
     		<div class="btnpositionJsp">

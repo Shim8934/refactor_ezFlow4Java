@@ -417,153 +417,95 @@ public class EzPersonalServiceImpl extends EgovAbstractServiceImpl  implements E
 		return ezPersonalDAO.getNoticeListUser(map);
 	}
 
-	public String getBirthUserList(String companyID, String curMon, int tenantID) throws Exception {
-		logger.debug("getBirthUserList started");
-
+	@Override
+	public List<OrganUserVO> getBirthUserList(String companyId, int tenantId, int month, String lang) throws Exception {
+		logger.debug("getBirthUserList started.");
+		
+		String monthStr = "";
+		
+		if (month < 10) {
+			monthStr = "0" + month;
+		} else {
+			monthStr = String.valueOf(month);
+		}
+		
 		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("month", monthStr);
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		
-		map.put("v_COMPANYID", companyID);
-		map.put("v_TENANT_ID", tenantID);
+		List<OrganUserVO> tempList = ezOrganDAO.getBirthUserList(map);
+		List<OrganUserVO> birthdayList = new ArrayList<OrganUserVO>();
 		
-		List<OrganUserVO> list = ezOrganDAO.getBirthUserList(map); 
-		
-		String solarValue = "";
-		StringBuilder result = new StringBuilder("<DATA>");
-		
-		List<OrganUserVO> tempList = new ArrayList<OrganUserVO>();
-		
-		//음력->양력으로 변환한 리스트
-		for (OrganUserVO orgranUserInfo : list) {
-			solarValue = orgranUserInfo.getBirth();
-			if (orgranUserInfo.getBirthType().equals("N")) {
-				String[] birthArray = solarValue.split("-");
-				solarValue = changeSolarCalendar(Integer.parseInt(birthArray[0]), Integer.parseInt(birthArray[1]), Integer.parseInt(birthArray[2]), false);
-				
-				if (!solarValue.equals("FALSE")) {
-					solarValue = solarValue.substring(0, 10);
-				}
-				
-				orgranUserInfo.setBirth(solarValue);
-			}
+		for (OrganUserVO vo : tempList) {
+			String birthType = vo.getBirthType();
 			
-			tempList.add(orgranUserInfo);
-		}	
+			if (birthType.equals("Y")) {
+				birthdayList.add(vo);
+			} else {
+				String toSolarDate = convertLunarToSolar(vo.getBirth(), month);
+				
+				if (!toSolarDate.equals("")) {
+					vo.setBirth(toSolarDate);
+					birthdayList.add(vo);
+				}
+			}
+		}
 		
-		//오름차순으로 정렬!
-		Collections.sort(tempList, new Comparator<OrganUserVO>() {
+		Collections.sort(birthdayList, new Comparator<OrganUserVO>() {
 			@Override
 			public int compare(OrganUserVO o1, OrganUserVO o2) {
 				return o1.getBirth().split("-")[2].compareTo(o2.getBirth().split("-")[2]);
 			}
 		});
 		
-		for (OrganUserVO orgranUserInfo : tempList) {	
-			solarValue = orgranUserInfo.getBirth();
-			
-			if (!solarValue.equals("FALSE")) {
-				if (curMon.equals(solarValue.substring(5, 7))) {
-					result.append("<ROW>");
-					
-					for (Field field : orgranUserInfo.getClass().getDeclaredFields()) {
-						field.setAccessible(true);
-						String data = String.valueOf(field.get(orgranUserInfo));
-						
-						if(data == null || data.equals(null) || data.equals("null")){
-							data = "";
-						}
-						
-						if (field.getName().toUpperCase().equals("BIRTH")) {
-							result.append("<" + field.getName().toUpperCase() + ">");
-							result.append(solarValue.substring(5, 10));
-							
-							result.append("</" + field.getName().toUpperCase() + ">");
-							result.append("<BIRTHDAY>");
-							result.append(solarValue.substring(8, 10));
-							result.append("</BIRTHDAY>");
-						} else {
-							result.append("<" + field.getName().toUpperCase() + ">");
-							result.append(commonUtil.cleanValue(data));
-							result.append("</" + field.getName().toUpperCase() + ">");
-						}
-					}
-					
-					result.append("</ROW>");
-				}
-			}
-		}
+		logger.debug("getBirthUserList ended.");
 		
-		result.append("</DATA>");
-
-		logger.debug("getBirthUserList ended");
-		return result.toString();
+		return birthdayList;
 	}
 	
-	public String changeSolarCalendar(int pYear, int mon, int day, boolean bDay) {
-		logger.debug("changeSolarCalendar started");
-
-		Calendar cal = Calendar.getInstance();
-		int year = cal.get(Calendar.YEAR);
-		logger.debug("pYear="+pYear + ",mon="+mon+",day="+day+",bDay="+bDay);
+	public String convertLunarToSolar (String birthday, int compMonth) {
+		logger.debug("convertLunarToSolar started.");
 		
-		//int nYoonMonth;
-		//윤달이 껴있는 경우
-		/*if (monthsInYear(year) > 12) {
-			// 해당 년도의 윤월을 계산 (추후 수정)
-			nYoonMonth = 0;
-			
-			if (bDay) {
-				mon ++;
-			} 
-			if (mon > nYoonMonth) {
-				mon ++;
-			}
-		}*/
-		
-		if (day > daysInMonth(mon, year)) {
-			if (pYear % 4 != 0 && mon != 2) {
-				return "FALSE";
-			}
-		}
-		
-		//음력->양력으로 변환
-		String month = ((mon < 10) ? "0"+String.valueOf(mon) : String.valueOf(mon));
-		String days = ((day < 10) ? "0"+String.valueOf(day) : String.valueOf(day));
+		String result = "";
 		ChineseCalendar cc = new ChineseCalendar();
-		cc.set(ChineseCalendar.EXTENDED_YEAR, year+2637);
-		cc.set(ChineseCalendar.MONTH, Integer.parseInt(month)-1);
-		cc.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(days));
+		Calendar cal = Calendar.getInstance();
 		
+		cc.set(ChineseCalendar.EXTENDED_YEAR, Integer.parseInt(birthday.substring(0, 4)) + 2637);
+		
+		String monthStr = birthday.substring(5,7);
+		int month = 0;
+		
+		if (monthStr.indexOf("0") == 0) { //1월~9월까지는 앞에 0이 붙기때문에 제거해야함.
+			monthStr = monthStr.substring(1);
+		}
+		
+		month = Integer.parseInt(monthStr);
+		
+		cc.set(ChineseCalendar.MONTH, month - 1);
+		cc.set(ChineseCalendar.DAY_OF_MONTH, Integer.parseInt(birthday.substring(8)));
+
 		cal.setTimeInMillis(cc.getTimeInMillis());
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		result = sdf.format(cal.getTime());
 		
-		int y = cal.get(Calendar.YEAR); 
-		int m = cal.get(Calendar.MONTH)+1; 
-		int d = cal.get(Calendar.DAY_OF_MONTH); 
+		String monthComp = String.valueOf(compMonth);
 		
-		StringBuffer ret = new StringBuffer();
+		String chineseMonth = result.substring(5, 7);
 		
-		if( y < 1000 ) 
-			ret.append( "0" ) ; 
-		else if( y < 100 ) 
-			ret.append( "00" ) ; 
-		else if( y < 10 ) 
-			ret.append( "000" ) ; 
-		ret.append( y + "-") ; 
-		
-		if( m < 10 ) {
-			ret.append( "0" ) ; 
+		if (chineseMonth.indexOf("0") == 0) {
+			chineseMonth = chineseMonth.substring(1);
 		}
 		
-		ret.append( m + "-") ; 
-		
-		if( d < 10 ) {
-			ret.append( "0" ) ; 
+		if (!chineseMonth.equals(monthComp)) {
+			result = "";
 		}
 		
-		ret.append( d ) ; 
+		logger.debug("convertLunarToSolar ended.");
 		
-		logger.debug("sbresult="+ret.toString());
-		logger.debug("changeSolarCalendar ended");
-	    return ret.toString();
+		return result;
 	}
 	
 	//현재 연대에 있는 지정된 연도의 월 수를 반환(윤년, 평년)

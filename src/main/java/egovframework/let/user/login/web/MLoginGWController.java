@@ -147,11 +147,14 @@ public class MLoginGWController {
     				String notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, uid, "notUseMobileLogin");
     				String adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, uid, "adminOrderNotUsedMobileLogin");
     				
+    				notUseAllMobileLogin = notUseAllMobileLogin.equals("") ? "0" : notUseAllMobileLogin;
+    				adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
+    				
     				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
     					LOGGER.debug("cannot use mobile login. userId=" + uid);
     					
     					result.put("status", "error");
-    					result.put("code", "6");			
+    					result.put("code", "6");
     					result.put("data", "cannot use mobile login.");
     					
     					return result;
@@ -162,14 +165,14 @@ public class MLoginGWController {
     						String inputParams = "userId=" + uid + "&deviceId=" + deviceId;
     						LOGGER.debug("userId=" + uid + ",deviceId=" + deviceId);
     						
-    						String requestURL = "/ezTalkGate/getUserMobileDeviceInfo";
+    						String requestURL = "/ezTalkGate/getUserMobileDeviceUsedInfo";
     						String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
     						LOGGER.debug("getResult=" + getResult);
     						
     						JSONParser parser = new JSONParser();
     						JSONObject resultObj = (JSONObject) parser.parse(getResult);
-    						
-    						if (resultObj.get("data").equals("1")) {
+
+    						if (Integer.valueOf(String.valueOf(resultObj.get("data"))) > 0) {
     							LOGGER.debug("this device cannot use. userId=" + uid);
     							
     							result.put("status", "error");
@@ -177,6 +180,24 @@ public class MLoginGWController {
     							result.put("data", "this device cannot use.");
     							
     							return result;
+    						} else { 
+    							// 0이지만 그전 사용자의 config 확인
+    							String oldUserId = String.valueOf(resultObj.get("oldUserId"));
+    							notUseAllMobileLogin = ezCommonService.getUserConfigInfo(tenantId, oldUserId, "notUseMobileLogin");
+    							adminOrderNotUsedMobileLogin = ezCommonService.getUserConfigInfo(tenantId, oldUserId, "adminOrderNotUsedMobileLogin");
+    		    				
+    		    				notUseAllMobileLogin = notUseAllMobileLogin.equals("") ? "0" : notUseAllMobileLogin;
+    		    				adminOrderNotUsedMobileLogin = adminOrderNotUsedMobileLogin.equals("") ? "0" : adminOrderNotUsedMobileLogin;
+    						
+    		    				if (adminOrderNotUsedMobileLogin.equals("1") || notUseAllMobileLogin.equals("1")) {
+    		    					LOGGER.debug("cannot use mobile login. oldUserId=" + oldUserId);
+    		    					
+    		    					result.put("status", "error");
+    		    					result.put("code", "6");
+    		    					result.put("data", "cannot use mobile login.");
+    		    					
+    		    					return result;
+    		    				}
     						}
     					}
     				}
@@ -219,7 +240,21 @@ public class MLoginGWController {
 					}
 				}
     			if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
-
+    				// 공유사서함 기능을 사용할 경우 공유사서함 계정으로의 로그인을 막는다.
+    	    		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+    	    		
+    	    		if (useSharedMailbox.equals("YES")) {
+    	    			if (resultVO.getDeptID() != null && resultVO.getDeptID().startsWith("shared_mailbox_")) {
+    	    				LOGGER.debug("Cannot login with shared mailbox account.");
+    	    				
+    	    				result.put("status", "error");
+    		    			result.put("code", "3");			
+    		    			result.put("data", "user does not exist");
+    		    			
+    	        	        return result;
+    	    			}
+    	    		}
+    				
     				int check = checkState(tenantId, uid, numberOfLoginFailPermit);
                 	
                 	// 해당 사용자의 로그인이 블록되지 않은 경우
@@ -251,9 +286,18 @@ public class MLoginGWController {
         						cal.add(Calendar.DATE, realPeriod);
         						
         						baseDT = cal.getTime();
-        						Date lastDT = resultVO.getUpdateDT();
+        						Date passwordUpdateDT = resultVO.getPassword_updatedt();
+        						
+    							if (passwordUpdateDT == null) {
+    								passwordUpdateDT = resultVO.getUpdateDT();
+    							}
+    		            	
+    							LOGGER.debug("passwordUpdateDT=" + passwordUpdateDT);
+    							LOGGER.debug("baseDT=" + baseDT);
+        						
         						//오늘 기준 6개월전 날짜, 마지막 개인정보 수정일자 간 뺄셈
-        						diff = EgovDateUtil.getDaysDiff(baseDT, lastDT);	    			
+        						diff = EgovDateUtil.getDaysDiff(baseDT, passwordUpdateDT);	    			
+    							LOGGER.debug("diff=" + diff);
         					}	        	
         				}        	        	
         				//0보다 작아지면 패스워드 변경기한 Expired
@@ -466,6 +510,7 @@ public class MLoginGWController {
     			}
     		}
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", "1");			
 			result.put("data", "fail");
@@ -537,7 +582,7 @@ public class MLoginGWController {
 				result.put("code", "1");
 				result.put("data", "device info update fail");
 
-				LOGGER.debug("device info update fail devId=" + devId);
+				LOGGER.debug("device info update fail." + userId + ", devId=" + devId);
 			}
 			
 		} catch (Exception e) {

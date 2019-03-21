@@ -26,6 +26,7 @@
 	
 			var offsetMin = "${offsetMin}";
 			var individualMailUser = parseInt("${individualMailUser}");
+			var shareId = "${shareId}";
 			
 		    var RetValue;
 		    var ReturnFunction;
@@ -60,6 +61,8 @@
 		        }
 		        
 		      	$('#Stimepicker').timepicker('setTime', NowDate);
+		      	$("#Stimepicker").keydown(function(event) {event.preventDefault();});
+		      	
 		    });
 		    
 		    $(function () {
@@ -153,6 +156,11 @@
 		            document.getElementById("Stimepicker").disabled = true;
 		            $("#Sdatepicker").datepicker('disable');
 		        }	
+		        
+		        if (shareId == "") {
+		        	document.getElementById("reserveTitle").style.display = "";
+		        	document.getElementById("reserveTable").style.display = "";
+		        }
 		        
 		        if (individualMailUser > 0) {
 
@@ -376,8 +384,8 @@
 				</td>
 			</tr>
 		</table>
-		<h2 style="margin-top:10px"><spring:message code='ezEmail.t373' /></h2>
-		<table class="content" style="border-top:none;width:100%;">
+		<h2 id="reserveTitle" style="display:none;margin-top:10px"><spring:message code='ezEmail.t373' /></h2>
+		<table id="reserveTable" class="content" style="display:none;border-top:none;width:100%;">
 			<tr>
 				<td>
 					<input type="checkbox" value="1" id="deliverySend" onclick="ReservedSend(this);">

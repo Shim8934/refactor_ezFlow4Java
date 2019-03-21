@@ -10,7 +10,7 @@
         		<div class="title_nb">
             		<span class="tl_nb"></span><span class="tr_nb"></span><span class="title_txt"><spring:message code='main.t1007' /></span>
             		<span class="btn_more" onclick="Boardmore_btnClick()">
-                		<img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />">
+                		<img src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />">
             		</span>
         		</div>
         		<div class="photocont">

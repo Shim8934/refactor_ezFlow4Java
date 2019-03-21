@@ -190,7 +190,7 @@
 		        	parent.frames["left"].groupRefresh();
 		    }
 					
-		    function del_group() {		
+		    function del_group() {
 		    	var strListInfo = "";
 		    	var checkId = $("input[name=chk_group]:checked");
 		    	
@@ -211,9 +211,9 @@
 		        }
 		
 		        var count = strListInfo.split(';').length - 1;
-		
+		        */
 		        if (!confirm(count + "<spring:message code='ezSchedule.t254' />"))
-		            return; */
+		            return; 
 
 		        $.ajax({
 		    		type : "POST",
@@ -225,12 +225,14 @@
 		    		url : "/ezSchedule/scheduleDelGroup.do",
 		    		success: function(text){
 		    			alert(count + "<spring:message code='ezSchedule.t256' />");
-			            window.location.reload(false);		    				    			
+			            window.location.reload(false);
 		    		},
 		    		error: function(err){
 		    			alert("<spring:message code='ezSchedule.t255' />");
 		    		}
 		        });
+		        
+		        parent.frames["left"].groupRefresh();
 		    }
 					
 		    function show_groupinfo() {

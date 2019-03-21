@@ -51,7 +51,7 @@
 		            document.body.style.UserSelect = 'none';
 		        }
 
-		        var height = parseInt(document.documentElement.clientHeight - 215);
+		        var height = parseInt(document.documentElement.clientHeight - 245);
 
 		        document.getElementById("list").style.height = height + "px";
 		        if (changeTab == "taskre") {
@@ -64,6 +64,9 @@
 		        	ChangeTab(document.getElementById("1tab1"));
 		        	$("#1tab1").click();
 		        }
+
+		        document.getElementById("todo_BODY").style.height = height + "px";
+		        scroll();
 		        
 		        selectelem = "";
 		    }
@@ -73,9 +76,22 @@
 		        event.returnValue = false;
 		    }
 		    
+		    window.onresize = function () {
+		    	if (navigator.userAgent.indexOf("Chrome") > -1) {
+		            document.getElementById("todo_BODY").style.height = document.documentElement.clientHeight - 245 + "px";
+		            document.getElementById("list").style.height = document.documentElement.clientHeight - 211 + "px";
+		    	}
+		    	else {
+	    	        document.getElementById("todo_BODY").style.height = document.documentElement.clientHeight - 250 + "px";
+	    	        document.getElementById("list").style.height = document.documentElement.clientHeight - 216 + "px";
+		    	}
+    	        scroll();
+		    }
+		    
 // 		    document.onselectstart = function () { return false; };
 		    
-		    function select_row(elem) {		    	
+		    function select_row(elem) {		    
+		    	
 				if ($("#checkboxAll").is(":checked")) {					
 					if ($("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked") == true && selectelem != null) {//전체 선택 후 개별 선택 시 선택한것 해제
 						$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", false);
@@ -103,7 +119,7 @@
 				}
 
 				// 체크 후 체크박스 눌러서 체크 해제할 때
-		        if (selectelem != null) {
+		        if (selectelem != null && selectelem != elem) {
 					if ($("#checkboxAll").is(":checked")) {
 			        	$("input[taskid='" + $(elem).attr("taskid") + "']").prop("checked", false);
 			        	$(".row_body[taskid='" + $(elem).attr("taskid") + "']").css("background", "#ffffff");
@@ -139,7 +155,6 @@
 		        
 	        	feature = GetOpenPosition(790, 810);
 	        	
-	        	/*2018-05-18 구해안 윈도우 창 크기 개선*/
                 window.open("/ezTask/taskRead.do?taskID=" + taskid + "&repeatCount=" + repeatcount + "&date=" + date, "", "height = 820px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 	
@@ -297,17 +312,21 @@
 			var strListInfo = "";
 			var strListIdInfo = "";
 
-			function chk_onselect(obj) {
+			function chk_onselect(obj, event) {
+				event.stopPropagation();
 				if (obj.checked) {
 		            strListInfo += $(obj).attr("taskID") + ";";
 		            strListIdInfo += $(obj).attr("creatorID") + ";";
-		            selectelem = null;
+		            selectelem = obj.parentNode.parentNode;
+		            obj.parentNode.parentNode.style.backgroundColor = "#edf4fd";
 		        } else {
 		            strListInfo = ReplaceText(strListInfo, $(obj).attr("taskID") + ";", "");
 		            strListIdInfo = ReplaceText(strListIdInfo, $(obj).attr("creatorID") + ";", "");
-		            selectelem = obj.parentNode.parentNode;
+		            selectelem = null;
+		            obj.parentNode.parentNode.style.backgroundColor = "#ffffff";
 		        }
 		    }
+			
 
 			function ReplaceText(orgStr, findStr, replaceStr) {
 		        var re = new RegExp(findStr, "gi");		        
@@ -316,14 +335,16 @@
 
 			function show_page() {
 // 			    selectelem = null;				
-			    var length = list_body.children[1].rows.length;
+			    var length = list_body2.children[1].rows.length;
 			    var progress_th = document.getElementById("_thprogress");
+			    var progress_td = document.getElementById("_tdprogress");
 				var column_prg = document.getElementById("col_progress");
+				var column_prg2 = document.getElementById("col_progress2");
 				var flagType = 0;
 
 			    // 리스트 다시 가져올때 기존에 있던 것 삭제
 			    for (var i = 3; i < length; i++) {
-			        list_body.children[1].removeChild(list_body.children[1].rows[3]);			    	
+			        list_body2.children[1].removeChild(list_body2.children[1].rows[3]);			    	
 			    }
 
 			    var tr = "";
@@ -336,6 +357,7 @@
 			    	 }
 			    	 else {
 			    		 column_prg.style.width = "130px";
+			    		 column_prg2.style.width = "130px";
 			    		 progress_th.innerHTML = "<spring:message code='ezTask.t120' />";
 			    	 }
 			    }
@@ -369,7 +391,7 @@
 				        tr.setAttribute("startdate", startdate);
 	
 				        tr.cells[0].innerHTML += "<input name='myCheckbox' type='checkbox' taskID='" + SelectSingleNodeValue(node, "TASKID") + "' creatorID='" + SelectSingleNodeValue(node, "CREATORID") + "_" + i + 
-				        "'onclick='chk_onselect(this)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
+				        "'onclick='chk_onselect(this, event)' style='width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 0px; vertical-align:middle'>"
 	
 				        if (SelectSingleNodeValue(node, "IMPORTANCE") == "3")
 				            tr.cells[1].innerHTML += "<img src='/images/ImgIcon/icon-highimportance.gif'>";
@@ -459,6 +481,7 @@
 				        
 				        if (type !== "3") {			        	
 				    		column_prg.style.width = "130px";
+				    		column_prg2.style.width = "130px";
 				    		progress_th.innerHTML = "<spring:message code='ezTask.t120' />";
 				        	var completerate = SelectSingleNodeValue(node, "COMPLETERATE");
 					        var span = document.createElement("SPAN");
@@ -472,7 +495,7 @@
 					        
 					        setNodeText(tr.cells[9], startdate);
 					        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
-					        list_body.children[1].appendChild(tr);
+					        list_body2.children[1].appendChild(tr);
 					        
 					        if (type == "2" && flagType == 1) {
 					        	span.innerHTML= "<spring:message code='ezTask.t999' />";
@@ -502,10 +525,12 @@
 				        }
 				        else {			        	
 				    		column_prg.style.width = "0px";
-				    		progress_th.innerHTML = "";				        			        				        	
+				    		progress_th.innerHTML = "";				
+				    		column_prg2.style.width = "0px";
+				    		progress_td.innerHTML = "";		
 					        setNodeText(tr.cells[9], startdate);
 					        tr.cells[10].innerHTML = "<B>" + enddate + "</B>";
-					        list_body.children[1].appendChild(tr);
+					        list_body2.children[1].appendChild(tr);
 				        }
 				        
 						onTaskCount++;
@@ -535,6 +560,7 @@
 		            
 			    }
 
+			    scroll();
 			    $(".progressbar").css("display", "inline-table");	
 			    
 			}
@@ -919,7 +945,26 @@
 					$(".row_body").css("background", "");
 				}
 		    }
-		  
+		    
+		    function scroll() {
+		    	var BoardList_BODYHeight = document.getElementById("list_body2").clientHeight;
+		    	var BoardListDivHeight = document.getElementById("list").clientHeight;
+		    	
+		    	 if (BoardList_BODYHeight + 34 < BoardListDivHeight) {
+		    		if ($("#todo_HEAD tr th#forScroll").length > 0) {
+		    			$("#todo_HEAD tr th#forScroll").remove();
+		    		}
+		    	} else {
+		    		if ($("#todo_HEAD tr th#forScroll").length < 1) {
+		    			
+		    			$("#todo_HEAD tr").append("<th></th>");
+		    			
+		    				var lastTh = $("#todo_HEAD tr th").last();
+		    				lastTh.attr("id", "forScroll");
+		    				lastTh.css("width", "8px");
+		    		}
+		    	}
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -954,7 +999,6 @@
 		<br />
 		<div id="mainmenu">
 			<ul>
-				<!-- 2018-05-24 구해안 이미지 이동 -->
 				<li><span id="pn_img" onClick="WriteTask()"><spring:message code='ezTask.t113' /></span></li>
 				<li><span onClick="DeleteTask()"><spring:message code='ezTask.t115' /></span></li>
 				<li><span onClick="RefreshView()"><spring:message code='ezTask.t116' /></span></li>
@@ -984,11 +1028,11 @@
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
 		
-		<table style="WIDTH: 100%;overflow:AUTO;" id="list">
+		<table style="WIDTH: 100%;" id="list">
 			<tr>
 				<td style="WIDTH: 100%;HEIGHT: 100%;vertical-align:top">
 					<%-- 2018-04-24 김민성 - 업무명, 메모 길이 조절  --%>
-					<!-- 2018-05-24 구해안 - 업무구분,완료율,시작일,종료일 사이간격 띄우기 -->
+					<div>
 					<table class="mainlist" id="list_body" style="WIDTH: 100%;table-layout:fixed; min-width:800px;">
 						<col style ="width:30px;">
 						<col style ="width:50px;">
@@ -998,22 +1042,17 @@
 							<col style = "width:80%;">
 							<col style ="width:30px;">
 							<col style ="width:25%;">
-							<%-- <col >
-							<col style ="width:50px;">
-							<col style ="width:140px;"> --%>
 						</c:if>
 						<c:if test="${useTodoMemo == 'NO'}">
 							<col style = "width:80%;">
 							<col style = "width:30px;">
 							<col style = "width:25%;">
-							<%-- <col >
-							<col style ="width:50px;">
-							<col style ="width:30px;"> --%>
 						</c:if>
 		                <col style ="width:120px;">
 						<col style ="width:130px;" id="col_progress">
 						<col style ="width:120px;">
 						<col style ="width:120px;">
+						<tbody id="todo_HEAD">
 						<tr>
 							<th style="text-align:center"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding: 0px; margin-top: 0px; margin: 0px; vertical-align:middle;"/></th>
 							<th style="text-align:center;"><img src="/images/ImgIcon/view-importance.gif"></th>
@@ -1027,13 +1066,13 @@
 							<c:if test="${useTodoMemo == 'NO'}">
 								<th ></th>
 							</c:if>
-		                    <!-- 2018-05-16 구해안 업무구분과 완료율 간격 조정 -->
 		                    <!-- 18-05-24 김민성 - 중요도 이미지로 수정 -->
 		                    <th style="padding-left:14px"><spring:message code='ezTask.t2003'/></th>		                    
 							<th id="_thprogress"  style="text-align:center;padding-right: 12px;"><spring:message code='ezTask.t120' /></th>						
 							<th style="text-align:center;"><spring:message code='ezTask.t121'/></th>
 							<th style="text-align:center;"><spring:message code='ezTask.t9002'/></th>
 						</tr>
+						</tbody>
 						<tr class="row_body" id="row_body" style="display:none;" startdate="" onclick="select_row(this)">
 							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="white-space:nowrap;cursor:pointer;text-align:center;" ondblclick="ReadTask(this)"></td>
@@ -1047,6 +1086,28 @@
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 							<td class="tr_Read" style="cursor:pointer;white-space:nowrap;text-align:center;" ondblclick="ReadTask(this)"></td>
 						</tr>
+				    </table>
+				    </div>
+				    <div id="todo_BODY" style="overflow-y:auto;">
+				    <table class="mainlist" id="list_body2" style="WIDTH: 100%;table-layout:fixed; min-width:800px;">
+						<col style ="width:30px;">
+						<col style ="width:50px;">
+						<col style ="width:20px;">
+						<col style ="width:100px;">
+						<c:if test="${useTodoMemo == 'YES'}">
+							<col style = "width:80%;">
+							<col style ="width:30px;">
+							<col style ="width:25%;">
+						</c:if>
+						<c:if test="${useTodoMemo == 'NO'}">
+							<col style = "width:80%;">
+							<col style = "width:30px;">
+							<col style = "width:25%;">
+						</c:if>
+		                <col style ="width:120px;">
+						<col style ="width:130px;" id="col_progress2">
+						<col style ="width:120px;">
+						<col style ="width:120px;">
 						<tr id="tr_ing" style="text-align:center;">
 							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t204' /></td>
 						</tr>
@@ -1057,7 +1118,7 @@
 							<td colspan="11" style="padding-top:4px;height:24px"><spring:message code='ezTask.t200915' /></td>
 						</tr>
 				    </table>
-
+				    </div>
 				</td>
 				<td style="width:5px;">&nbsp;</td>
 				<td style="vertical-align:top;width:182px"></td>

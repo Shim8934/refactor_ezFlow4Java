@@ -42,6 +42,7 @@
 		    var isbigyn = "N";
 			var alertCnt = 1;
 			var currUid = 0;
+		    var shareId = "${shareId}";
 		    
 		    function onDrop(evt) {
 		       
@@ -679,7 +680,7 @@
         </div>
         <div id="lstAttachLink" ondragenter="onDragEnter(event)"  ondragover="onDragOver(event)" ondrop="onDrop(event)" style="overflow:auto;">
         </div>
-        <input id="file" type="file" onchange="filechange(event);this.value=null;return false;" multiple="multiple" style="width:1px;height:1px;display:none;" />
+        <input id="file" type="file" onchange="filechange(event);return false;" multiple="multiple" style="width:1px;height:1px;display:none;" />
         <input type="hidden" value="업로드" onclick ="fileupload()" />
   </body>
 </html>

@@ -489,6 +489,9 @@
 	        function groupRefresh() {
 	        	frm.submit();
 	        } 
+	        function leftRefresh() {
+	        	frm2.submit();
+	        } 
 		</script>
 	</head>
 
@@ -551,7 +554,7 @@
 				</label>
 				<c:if test='${!empty groupList}'>
 					<c:forEach var="group" items="${groupList}">
-						<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${group.groupName }" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t375'/>${group.groupName }</span>
+						<label class="IDcontainer" onchange="chk_DisplayChange()"><span class="chk_tooltip" title="${group.groupName }" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"><spring:message code='ezSchedule.t375'/><c:out value="${group.groupName }" escapeXml="true"/></span>
 						  <input type="checkbox" checked="checked" name="chk_schedule" data-schedule-type="7" value="${group.groupId }" class="checkSelect">
 						  <span class="checkmark" style="background-color:#e9de13;"></span>
 						</label>
@@ -576,5 +579,6 @@
 	    </script>
 	    <!-- 2018-11-01 김보미 - 일정그룹 추가시 left바에 그룹 바로 보이도록 -->
 	    <form id="frm" action="/ezSchedule/scheduleLeft.do?funCode=5"></form>
+	    <form id="frm2" action="/ezSchedule/scheduleLeft.do?"></form>
 	</body>
 </html>

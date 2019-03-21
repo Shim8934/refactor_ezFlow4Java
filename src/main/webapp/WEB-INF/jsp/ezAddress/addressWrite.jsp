@@ -227,7 +227,7 @@
 		        }
 				
 		        var pTextEmail = TrimText(document.getElementById("TextEmail").value);
-		        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{1,100})\.([0-9a-zA-Z]{1,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+		        var regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 		        if (pTextEmail != "" && regex.test(pTextEmail) === false) {
 		            alert("<spring:message code='ezAddress.t1100' />");
 		            document.getElementById("TextEmail").value = pTextEmail;
@@ -279,8 +279,11 @@
 		            else if (xmlHTTP.responseText == "PRE") {
 		            	alert("<spring:message code='ezAddress.t225' />");
 		            }		            
-		            else if (xmlHTTP.responseText == "NO_AUTHORITY") {
-		            	alert("<spring:message code='ezAddress.t1' />");
+		            else if (xmlHTTP.responseText == "NO_AUTHORITY_D") {
+		            	alert("<spring:message code='ezAddress.t999900003' />");
+		            }
+		            else if (xmlHTTP.responseText == "NO_AUTHORITY_C") {
+		            	alert("<spring:message code='ezAddress.t999900004' />");
 		            }
 		            else {
 		            	if (addressid == "") {
@@ -542,7 +545,7 @@
 		    </tr>
 		    <tr style="height:74px;">
 		      <th style="height:74px;"><spring:message code='ezAddress.t91' /></th>
-		      <td colSpan="3" style="height:74px;"><textarea id="TextMemo" name="TextMemo" style="width:100%;height:69px;word-break:break-all;resize: none;" class="txtClass"><c:out value="${addressInfo.sMemo}"></c:out> </textarea></td>
+		      <td colSpan="3" style="height:74px;"><textarea id="TextMemo" name="TextMemo" style="width:100%;height:69px;word-break:break-all;resize: none;" class="txtClass"><c:out value="${addressInfo.sMemo}"></c:out></textarea></td>
 		    </tr>
 		    <tr style="display:none;height:62px;">
 		      <th><spring:message code='ezAddress.t298' /></th>

@@ -50,6 +50,8 @@
 	            	if (result != "FALSE") {
 	                	var msgRtn = result; //"<div id=msgbody><div>" +result + "</div></div>";
 	                	message.SetEditorContent(msgRtn);
+	            	} else {
+	            		message.SetEditorContent('');	
 	            	}
 	            	isComplete = true;
 	    	    }

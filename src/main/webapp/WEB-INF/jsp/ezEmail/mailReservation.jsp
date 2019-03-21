@@ -53,9 +53,28 @@
 					alert("<spring:message code='ezEmail.t604' />");
 				}
 			}
-		    function View_ReservationMail(pMessageID) {
-		        pUrl = "/ezEmail/mailEdit.do?cmd=EDIT&messageid=" + encodeURIComponent(pMessageID);
-		        var newwin = GetOpenWindow(pUrl, "", 890, 840, "yes");
+			
+			function View_ReservationMail(pMessageID, pSendDate) {
+		    	var date = pSendDate.split(" ");
+		    	var yyyymmdd = date[0].split("-");
+		    	var hms = date[1].split(":");
+		    	
+		    	var sendDate = new Date(yyyymmdd[0], yyyymmdd[1]-1, yyyymmdd[2], hms[0], hms[1], "00");
+		    	var nowDate = new Date();
+		    	var gap = sendDate.getTime() - nowDate.getTime();
+		    	var pWidth = "";
+		    	var pHeight = "";
+		    	if(gap/1000/60 < 30) {
+		    		pUrl = "/ezEmail/mailMessage.do?messageid=" + encodeURIComponent(pMessageID);
+		    		pWidth = 380;
+		    		pHeight = 111;
+		    	} else {
+		    		pUrl = "/ezEmail/mailEdit.do?cmd=EDIT&messageid=" + encodeURIComponent(pMessageID);
+		    		pWidth = 890;
+		    		pHeight = 840;
+		    	}
+		        
+		        var newwin = GetOpenWindow(pUrl, "", pWidth, pHeight, "yes");
 		        newwin.focus();
 		    }
 		    
@@ -84,7 +103,7 @@
 				</tr>
 				<c:forEach var="item" items="${list}">
 					<tr>
-						<td  title="${item.subject}" style="text-overflow:ellipsis; overflow:hidden;white-space:nowrap;"><span id="${item.messageId}" style="cursor:pointer;" onClick="View_ReservationMail('${item.messageId}')">
+						<td  title="${item.subject}" style="text-overflow:ellipsis; overflow:hidden;white-space:nowrap;"><span id="${item.messageId}" style="cursor:pointer;" onClick="View_ReservationMail('${item.messageId}', '${item.sendDate}')">
 							<script>removeTag('${item.subject}', '${item.messageId}')</script></span></td>
 						<td style="width:150px;white-space:nowrap;text-align:center;">${item.sendDate}</td>
 						<td style="text-align:center;width:100px;white-space:nowrap;"><a href="#" class="imgbtn imgbtn_h imgbck"><span  onClick="cancel_mail('${item.messageId}', this)"><spring:message code='ezEmail.t39' /></span></a></td>

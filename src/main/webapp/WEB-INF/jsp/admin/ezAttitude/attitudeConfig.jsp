@@ -24,6 +24,9 @@
 		        } else {
 		    		if (adminCompany != null) {
 		    			$('#ListCompany').val(adminCompany);
+		    			if (document.getElementById("ListCompany").selectedIndex < 0) {
+				            document.getElementById("ListCompany").selectedIndex = 0;
+		    			}
 		    		} else {
 			            document.getElementById("ListCompany").selectedIndex = 0;
 		    		}
@@ -50,7 +53,7 @@
 	            	dataType : "json",
 	            	data : {companyId : encodeURIComponent($("#ListCompany").val())},
 	            	success : function(result) {
-	            		attitudeConfigSet(result);
+		            		attitudeConfigSet(result);
 	            	},
 	            	error : function() {
 	            		alert("<spring:message code='ezAttitude.t175' />");
@@ -59,6 +62,9 @@
 	        }
 	        
 	        function attitudeConfigSet(result) {
+	        	$('input:checkbox').prop('checked', false);
+	        	$('input:radio').prop('checked', false);
+	        	
         		//근무시간
         		$('#startTime').val(result.workStartTime);
         		$('#endTime').val(result.workEndTime);

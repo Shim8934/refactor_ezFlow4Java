@@ -42,7 +42,7 @@
 	            if (startdate != "") {
 	            }
 	            
-	            var wPosition = "<c:out value = '${position}' />";
+	            var wPosition = "<c:out value = '${personalPopupVO.position}' />";
 	
 	            if (wPosition == 0)
 	                document.getElementById("selectPos").selectedIndex = 0;
@@ -59,7 +59,11 @@
 	            else if (wPosition == 6)
 	                document.getElementById("selectPos").selectedIndex = 2;
 	        }
-			
+				        
+	        window.onresize = function () {
+        		document.getElementById("addPopEditor").style.height = document.documentElement.clientHeight - 293 + "PX";
+		    }
+	        
 		   $(function () {
 		        $("#Sdatepicker").datepicker({
 		            changeMonth: true,
@@ -216,6 +220,11 @@
 				
 				var tmpStartDateTime = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00:01";
 			    var tmpEndDateTime = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59:59";
+			    
+			    if (tmpStartDateTime > tmpEndDateTime) {
+		        	alert("<spring:message code='ezResource.dateChk' />");
+		        	return;
+		        }
 
 				$.ajax({
 		        	type : "POST",
@@ -353,7 +362,7 @@
   					</tr> 
   					<tr> 
     					<th><spring:message code = 'ezPersonal.t155' /></th> 
-   						<td style="padding:3px; height:325px">
+   						<td id="addPopEditor" style="padding:3px; height:405px">
     						<iframe id="message" class="viewbox"  name="message" src="/ezEditor/selectEditor.do" style="padding:0px; height:100%; width:100%; overflow:auto;border:none; margin-bottom:-3px;"></iframe>
     					</td> 
   					</tr>

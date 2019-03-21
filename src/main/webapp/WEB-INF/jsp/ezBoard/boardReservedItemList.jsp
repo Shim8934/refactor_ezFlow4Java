@@ -127,9 +127,6 @@
 							itemList += strListInfoSplit[j].split("@")[1] + ";";
 						}
 			        }
-		        	
-					console.log("boardArrayList[" + i + "] = " + boardArrayList[i]);
-					console.log("itemList = " + itemList);
 					
 					xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(boardId) + "&itemList=" + encodeURIComponent(itemList), false);
 		        	xmlhttp.send();

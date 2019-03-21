@@ -105,7 +105,17 @@
             getpersonalstatistics();
         }
 
-        function getpersonalstatistics() {
+        function getpersonalstatistics(mode) {
+        	/* #14421 - 천성준 (시작일이 종료일이 느린경우, 종료일이 시작일보다 빠른경우) 두날짜를 맞추는 로직 추가 */
+        	var sDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+        	var eDate = $("#Sdatepicker2").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+        	if (sDate > eDate) {
+        		if (typeof(mode) != "undefined" && mode != null) {
+	        		if (mode == "sDate") {$("#Sdatepicker2").val($("#Sdatepicker").val());}
+	        		if (mode == "eDate") {$("#Sdatepicker").val($("#Sdatepicker2").val());}
+        		}
+        	}
+        	
             xmlHttp = createXMLHttpRequest();
             var xmlDoc = createXmlDom();
 
@@ -313,9 +323,9 @@
             	</c:forEach>
             </select>&nbsp;
             <span id="topmenu" style="width: 500px"><spring:message code='ezStatistics.t1002'/> : 
-            <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" onchange="getpersonalstatistics()" readonly="readonly">
+            <input type="text" id="Sdatepicker" style="width: 80px; text-align: center" onchange="getpersonalstatistics('sDate')" readonly="readonly">
                     ~ 
-            <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" onchange="getpersonalstatistics()" readonly="readonly">
+            <input type="text" id="Sdatepicker2" style="width: 80px; text-align: center" onchange="getpersonalstatistics('eDate')" readonly="readonly">
                 </span>
             </td>
             <td>

@@ -72,18 +72,6 @@ public interface EzEmailAdminLetterService {
 	public void updateDisplayNameLetter(String displayname, String displayname2, String letterNo) throws Exception;
 
 	/**
-	 * 편지지 수정 - 편지지 순서 (수아)
-	 * @param letterOrder, letterNo (편지지 순서, 편지지 번호)
-	 */
-	public void updateOrderLetter(String letterOrder, String letterNo) throws Exception;
-
-	/**
-	 * 편지지 수정 - 편지지함 (수아)
-	 * @param letterNo, letterBoxNo (편지지 번호, 편지지함 번호)
-	 */
-	public void updateBoxLetter(String letterNo, String letterBoxNo) throws Exception;
-	
-	/**
 	 * 편지지 삭제 (수아)
 	 * @param letterNo (편지지 번호)
 	 */

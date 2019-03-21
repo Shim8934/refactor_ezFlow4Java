@@ -119,12 +119,14 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		String userEditor = "";
 		String noneActiveX = "YES";
+		String dotnetFlag = request.getParameter("dotnetFlag");
 		
 		userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useOnlyInnerMail", ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
+		model.addAttribute("dotnetFlag", dotnetFlag);
 		
 		logger.debug("mailConfig ended.");
 		return "ezEmail/mailConfig";
@@ -151,7 +153,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String keepDeleteLength = mailGeneralVO.getKeepDeleteLength() == null ? "" : mailGeneralVO.getKeepDeleteLength();
 		String previewSubtree = mailGeneralVO.getPreviewSubTree() == null ? "" : mailGeneralVO.getPreviewSubTree();
 		String mailSendObject = "";
-
+		String dotnetFlag = request.getParameter("dotnetFlag");
+		
 		if (keepDeleteLength.equals("30")) {
 			keepDeleteLength = "60";
 		}
@@ -191,6 +194,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		model.addAttribute("previewSubTree", previewSubtree);
 		model.addAttribute("usePreviewSubTree", usePreviewSubTree);
+		model.addAttribute("dotnetFlag", dotnetFlag);
 		
 		logger.debug("mailGeneral ended.");
 		
@@ -293,9 +297,27 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
-		
 		String userEmail = userInfo.getId() + "@" + domainName;
-		logger.debug("userEmail=" + userEmail);
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("mailGetUse ended.");
+					
+					return "";
+				}
+				
+				userEmail = shareId + "@" + domainName;
+			}
+		}
+		
+		logger.debug("userId=" + userInfo.getId() + ",userEmail=" + userEmail);
 		
 		IMAPAccess ia = null;
 		
@@ -391,10 +413,15 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 
 		String forwardAddress = doc.getElementsByTagName("ADDRESS").item(0).getTextContent();
-
+		String checkMyAddress = forwardAddress;
 		String strResult = "Error";
+		
+		List<String> realAddress = ezEmailService.aliasMailCheck(forwardAddress);
+		if (realAddress != null && realAddress.size() > 0) {
+			checkMyAddress = realAddress.get(0);
+		}
 
-		if (!forwardAddress.equalsIgnoreCase(userEmail)) {
+		if (!checkMyAddress.equalsIgnoreCase(userEmail)) {
 			try {				
 				InternetAddress internetAddress = new InternetAddress(forwardAddress);
 				strResult = setMailForwardAddress(userEmail, internetAddress.getAddress());

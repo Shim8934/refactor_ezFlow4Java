@@ -48,7 +48,6 @@ function chk_scheduleCSS() {
 			});
 		});					
 	}else if(typeCal == 1) {
-		console.log('주보기진입');
 		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
 			var chk_eachVal1 = $(this).val();
 			var chk_type=$(this).data("schedule-type");
@@ -66,7 +65,6 @@ function chk_scheduleCSS() {
 			});			
 		});	
 	}else{
-		console.log('일보기진입');
 		$("input[name=chk_schedule]",parent.frames["left"].document).each(function(index){
 			var chk_eachVal1 = $(this).val();
 			var chk_type=$(this).data("schedule-type");
@@ -723,7 +721,13 @@ function CalMonthDataBind(oAppointment) {
         if (oAppointment.DateType != 2 && (getThisDate > getOrgStartDate && getThisDate < getOrgEndDate)) {
         	pTime = strLang39;
             pSubject = oAppointment.Subject;
-        } else if (oAppointment.DateType != 2) {
+        } else if (oAppointment.DateType != 2 && (getThisDate > getOrgStartDate && getThisDate == getOrgEndDate)) {
+        	pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+            pSubject = oAppointment.dtendDisplay+ " " + oAppointment.Subject + " " ;
+        } else if (oAppointment.DateType != 2 && (getThisDate < getOrgEndDate && getThisDate == getOrgStartDate)) {
+        	pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
+            pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
+        } else if (oAppointment.DateType != 2 && (getThisDate == getOrgEndDate && getThisDate == getOrgStartDate)) {
         	pTime = oAppointment.dtstartDisplay + " - " + oAppointment.dtendDisplay
             pSubject = oAppointment.dtstartDisplay+ " " + oAppointment.Subject + " " ;
         } else {

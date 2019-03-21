@@ -964,7 +964,7 @@
         		var oTr = document.createElement("TR");
         		var oTh = document.createElement("TH");
         		var oTd, oRadioBtn;
-        		oTh.innerHTML = "<a class='imgbtn'><span id='horizon_" + horizon_no + "' onclick='DelHorizon(this)'><spring:message code='ezQuestion.t177' /></span></a> <input onclick='CleareText(this)' type='text' value='<spring:message code='ezQuestion.t910026' />' style='width:70px;' maxlength='50' />";
+        		oTh.innerHTML = "<a class='imgbtn'><span id='horizon_" + horizon_no + "' onclick='DelHorizon(this)'><spring:message code='ezQuestion.t177' /></span></a> <input onclick='CleareText(this)' type='text' value='<spring:message code='ezQuestion.t910026' /> " + horizon_no + "' style='width:70px;' maxlength='50' />";
         		oTr.appendChild(oTh);
         		for (var i = 0; i < table.childNodes[0].childNodes.length - 1; i++) {
             		oTd = document.createElement("TD");
@@ -996,7 +996,7 @@
             		oTr = table.childNodes[i];
             		if (i == 0) {
                 		oTh = document.createElement("TH");
-                		oTh.innerHTML = "<a class='imgbtn'><span onclick='DelVertical(this)'><spring:message code='ezQuestion.t177' /></span></a><br/><input onclick='CleareText(this)' type='text' value='<spring:message code='ezQuestion.t910027' />' style='width:70px;' maxlength='50'/>";
+                		oTh.innerHTML = "<a class='imgbtn'><span onclick='DelVertical(this)'><spring:message code='ezQuestion.t177' /></span></a><br/><input onclick='CleareText(this)' type='text' value='<spring:message code='ezQuestion.t910027' /> " + vertical_no + "' style='width:70px;' maxlength='50'/>";
                 		oTh.setAttribute("style", "text-align:center;width:150px;");
                 		oTr.appendChild(oTh);
             		} else {

@@ -14,7 +14,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
-		
 		<script type="text/javascript">
 			var xmlhttp = createXMLHttpRequest();
 	        var xmldoc = createXmlDom();
@@ -60,6 +59,7 @@
 	            	$(".approvalS").hide();
 	            }
 	            
+	            setAutoCompleteOff(); //#15157 자동완성 방지 메소드 추가
 	        });
 	
 	        function initdatepicker() {
@@ -69,7 +69,13 @@
 		            autoSize: true,
 		            showOn: "both",
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-		            buttonImageOnly: true
+		            buttonImageOnly: true,
+		            beforeShow: function(input) {
+		    		    var i_offset= $(input).offset();
+		    		    setTimeout(function(){
+		    		       $('#ui-datepicker-div').css({'left': i_offset.left + 85});
+		    		    })
+		    		} 
 		        });
 				
 		        $("#Edatepicker").datepicker({
@@ -78,7 +84,13 @@
 		            autoSize: true,
 		            showOn: "both",
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-		            buttonImageOnly: true
+		            buttonImageOnly: true,
+		            beforeShow: function(input) {
+		    		    var i_offset= $(input).offset();
+		    		    setTimeout(function(){
+		    		       $('#ui-datepicker-div').css({'left': i_offset.left + 85});
+		    		    })
+		    		} 
 		        });
 
 		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
@@ -203,7 +215,7 @@
 		        apprfrom = document.getElementById("S1datepicker").value;
 		        apprto = document.getElementById("E1datepicker").value;
 		        
-		        if (draftfrom != "" && draftto != "") {
+		        /* if (draftfrom != "" && draftto != "") {
 		            if (draftfrom > draftto) {
 		                OpenAlertUI("<spring:message code ='ezApprovalG.t1326' /><br><spring:message code ='ezApprovalG.t1327' />");
 		                return;
@@ -213,6 +225,36 @@
 		        if (apprfrom != "" && apprto != "") {
 		            if (apprfrom > apprto) {
 		                OpenAlertUI("<spring:message code ='ezApprovalG.t1328' /><br><spring:message code ='ezApprovalG.t1327' />");
+		                return;
+		            }
+		        } */
+		        
+		        if (draftfrom != "" && draftto == "") {
+		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm02'/>");
+		        	return;
+		        } else if (draftfrom == "" && draftto != "" ) {
+		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm01'/>");
+		        	return;
+		        }
+		        
+		        if (apprfrom != "" && apprto == "") {
+		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm04'/>");
+		        	return;
+		        } else if (apprfrom == "" && apprto != "" ) {
+		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm03'/>");
+		        	return;
+		        }
+		        
+		        if (draftfrom != "" && draftto != "") {
+		            if (draftfrom > draftto) {
+		                OpenAlertUI("<spring:message code='ezApprovalG.psb03'/>");
+		                return;
+		            }
+		        }
+		
+		        if (apprfrom != "" && apprto != "") {
+		            if (apprfrom > apprto) {
+		                OpenAlertUI("<spring:message code='ezApprovalG.psb04'/>");
 		                return;
 		            }
 		        }
@@ -664,6 +706,14 @@
 		        RtnVal[1] = new Date(nowYear, nowMonth, nowDay);
 		        return RtnVal;
 		    }
+		    
+		  	//#15157 자동완성 방지 메소드 추가
+		    function setAutoCompleteOff() {
+		    	var inputAry = document.getElementsByTagName("input");
+		    	for (var i = 0; i < inputAry.length; i++) {
+		    		inputAry[i].setAttribute("autocomplete", "off");
+		    	}
+		    }
 		</script>
 	</head>
 	<body class="popup">
@@ -686,7 +736,7 @@
 	            <th><spring:message code ='ezApprovalG.t442' /></th>
 	            <td>
 	                <input type="text" id="FormName" name="FormName" style="width: 200px;" disabled>
-	                <a class="imgbtn imgbck"><span onclick="return btn_FormSelect_onclick()"><spring:message code ='ezApprovalG.t442' /></span></a>
+	                <a class="imgbtn imgbck"><span onclick="return btn_FormSelect_onclick()"><spring:message code ='ezApproval.t113' /></span></a>
 	            </td>
 	        </tr>
 	        <tr id="DOCNUM" class = 'approvalG'>

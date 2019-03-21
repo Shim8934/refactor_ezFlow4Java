@@ -91,7 +91,7 @@
                             listXML += "<table width='146px' border='0' cellpadding='1' cellspacing='1' style='margin-top:5px'>";
                             listXML += "<tr><td class='photo_tit' style='cursor:pointer;'  onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriterID").trim() + "\", event)'>";
                             
-                            var title = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "Title").trim();
+                            var title = MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "Title").trim());
                             var oneLineCnt = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "ONELINECNT");
                             var writeDate = SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[idx], "WriteDate");
                             

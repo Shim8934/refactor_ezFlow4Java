@@ -52,6 +52,9 @@
 	    		//parent.frames[1].location.href = "/admin/ezSystem/sysMonitor.do";
 	    		parent.frames[1].location.href = "/admin/ezSystem/sysREST.do";
 	    		break;	    		
+	    	case "MODMONITOR":
+	    		parent.frames[1].location.href = "/admin/ezSystem/systemModuleMonitor.do";
+	    		break;
 	    }
     }
 
@@ -89,9 +92,17 @@
 	            </h2>
             </c:if>
             
-            <h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span>
+            <c:if test="${cChk == '1' }">
+	            <h2><span id="SYSMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('SYSMONITOR')" ><spring:message code='ezSystem.pjg08' /></span>
+	            <ul class="on"></ul>
+	            </h2>
+            </c:if>
+            <c:if test="${useModuleUsage == 'YES'}">
+            <h2><span id="MODMONITOR" style="display:inline-block;width:100%;" onClick="menu_change('MODMONITOR')" ><spring:message code='ezSystem.kbh1' /></span>
             <ul class="on"></ul>
-            </h2>            
+            </h2>
+            </c:if>
+            
       	</div>
         <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");

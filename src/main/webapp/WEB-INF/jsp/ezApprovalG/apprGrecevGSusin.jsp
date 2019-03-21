@@ -90,6 +90,7 @@
 		    arr_userinfo[14]  = "${userInfo.title2}";
 		    arr_userinfo[15]  = "${userInfo.deptName1}";
 		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    arr_userinfo[17]  = "${userInfo.primary}";
 		    var pCompanyID = "${userInfo.companyID}";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
@@ -126,6 +127,7 @@
 		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
 		    var useReceiveDocNo = "${useReceiveDocNo}";
 			var wAprMemberSN = "1";
+			var docNumZeroCnt = "${docNumZeroCnt}";
 		    
 		    $(document).ready(function(){
 				if (approvalFlag == 'S') {
@@ -277,14 +279,17 @@
 		        setFirstDrafter();
 		        
 		        if (SignCount < 1) {
-		            pGubun = "12";
+		        	if (approvalFlag == "G") {
+			            pGubun = "12";
+			            if (CrossYN())
+			                document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.t1406'/>";
+			            else
+			                document.getElementById("btnRJunkyul").childNodes[0].innerText = "<spring:message code='ezApprovalG.t1406'/>";
+		        	} else {
+		        		document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.csj001'/>";
+		        	}
 		            document.getElementById("btnSetAprLine").style.display = "none";
 		            document.getElementById("btnSendDraft").style.display = "none";
-		            if (CrossYN())
-		                document.getElementById("btnRJunkyul").childNodes[0].textContent = "<spring:message code='ezApprovalG.t1406'/>";
-		            else
-		                document.getElementById("btnRJunkyul").childNodes[0].innerText = "<spring:message code='ezApprovalG.t1406'/>";
-		
 		            document.getElementById("btntotaldocinfo").style.display = "none";
 		        }
 		        getGongRamDocInfo();
@@ -490,7 +495,8 @@
 		            return;
 		        }
 		        else {
-		            if ("${approvalPWD}" != "N") {
+		            //if ("${approvalPWD}" != "N") {
+		            if (CheckUsePassword()) {
 		                chk_Passwd();
 		            } else {
 		                check_skipdraft();
@@ -574,7 +580,7 @@
 		    function saveSuSinDocInfo() {
 		        var rtnval = true;
 		        if (approvalFlag == "G") {
-		        	rtnval = getRecvDocNumber(arr_userinfo[4]);
+		        	rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 		        }
 		        if (!rtnval) {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t2101'/>";
@@ -860,7 +866,7 @@
 		        ezreceivedistributeui_cross_dialogArguments[0] = parameter;
 		        ezreceivedistributeui_cross_dialogArguments[1] = btnDistribute_onclick_Complete;
 		
-		        DivPopUpShow(1000, 760, "/ezApprovalG/ezReceiveDistributeUI.do");
+		        DivPopUpShow(800, 600, "/ezApprovalG/ezReceiveDistributeUI.do");
 		    }
 		    function btnDistribute_onclick_Complete(ret) {
 		        DivPopUpHidden();
@@ -892,7 +898,7 @@
 		        ezreceiveassignui_cross_dialogArguments[0] = parameter;
 		        ezreceiveassignui_cross_dialogArguments[1] = btnAssign_onclick_Complete;
 		
-		        DivPopUpShow(605, 375, "/ezApprovalG/ezReceiveAssignUI.do"); //460
+		        DivPopUpShow(800, 600, "/ezApprovalG/ezReceiveAssignUI.do"); //460
 		    }
 		
 		    function btnAssign_onclick_Complete(ret) {
@@ -1017,17 +1023,20 @@
 		    	}
 		    	
 		        var RecevState = getDocRecevState();
-		        if (RecevState != "011" && RecevState != "012" && RecevState != "014") {
-		            if (RecevState == "015") {
-		                var pAlertContent = strLang912;
-		                OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
-		            }
-		            else if (RecevState == "013") {
-		                var pAlertContent = strLang913;
-		                OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
-		            }
-		            return false;
-		        }
+		        
+		        if (isReDraft != "Y") {
+			        if (RecevState != "011" && RecevState != "012" && RecevState != "014") {
+			            if (RecevState == "015") {
+			                var pAlertContent = strLang912;
+			                OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+			            }
+			            else if (RecevState == "013") {
+			                var pAlertContent = strLang913;
+			                OpenAlertUI(pAlertContent, OpenAlertUI_Close_Complete);
+			            }
+			            return false;
+			        }
+			    }
 		
 		        var Resultxml;
 		
@@ -1388,7 +1397,7 @@
 		        	alert("<spring:message code='ezApprovalG.pjg04'/>");
 		        	window.close();
 		        } else {
-		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1130, 750));
+		        	var OpenWin = window.open("/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&orgCompanyID=" + orgCompanyID + "&docType=" + pDocType, "ezApprovalInfo", GetOpenWindowfeature(1144, 750));
 		        	try { OpenWin.focus(); } catch (e) { }
 		        }
 
@@ -1532,6 +1541,28 @@
 		    	
 		    	return result == "FALSE" ? true : false;
 		    }
+		    
+		    /* 2019-01-02 천성준 #14647
+			     결재암호 사용유무 조회 (Y / N)
+			*/
+			function CheckUsePassword() {
+				var result = "";
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/getApprovalPWD.do",
+					success: function(text) {
+						result = text;
+					}        			
+				});
+				
+				if (result != "N") {
+					return true;
+				} else {
+					return false;
+				}
+			}
 		</script>
 	</head>
 	<body class="popup" style="height:100%;">

@@ -30,12 +30,12 @@
 					   ev.data.preventDefault(true);
 					});
 			    }
-			    
 		    });
 		    
 		    // Setdata 후 실행 함수.
 		    CKEDITOR.on( 'afterSetData', function( ev ) {
 		    });
+    
 		    
 			// 에디터 커맨드 실행
 			function ExecuteCommand(commandName) {
@@ -48,12 +48,24 @@
 			
 			function SetEditorContent(Data) {
 				try {
-	              	  CKEDITOR.instances.editor1.setData(Data);
-	                	if (type == "APPROVAL" || type == "APPROVALG") {
-	                		if ("${isUsed}" != "reuse") {
-	                    		Set_CellLocked();
-	                		}
+					if (Data === '' || Data === undefined) {
+						var pTag = document.createElement('p');
+						pTag.style.fontSize = defaultFontSize;
+						pTag.style.fontFamily = defaultFontFamily;
+						
+						console.log('pTag', pTag.outerHTML);
+					}
+					
+					if (CKEDITOR.instances.editor1.mode === "source") {
+						CKEDITOR.instances.editor1.setData(Data);
+					} else {
+						CKEDITOR.instances.editor1.editable().setHtml(Data);
+					}
+	                if (type == "APPROVAL" || type == "APPROVALG") {
+	                	if ("${isUsed}" != "reuse") {
+	                    	Set_CellLocked();
 	                	}
+	                }
 	            } catch (e) { }
 			}
 
@@ -305,11 +317,11 @@
 			if (useHTMLMode == "NO") {
 				CKEDITOR.config.removePlugins = "sourcearea";
 			}
-			
 			CKEDITOR.config.imageUploadUrl = uploadUrl;
 			CKEDITOR.config.contentsCss = "/js/ezEditor/ckEditor/contents.css";
 		    CKEDITOR.config.font_defaultLabel = defaultFontFamily;
 		    CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";
+		    CKEDITOR.config.fontSize_defaultLabel = defaultFontSize;
 		    CKEDITOR.config.language = "<spring:message code='main.t0619' />";
 		</script>
 	</body>

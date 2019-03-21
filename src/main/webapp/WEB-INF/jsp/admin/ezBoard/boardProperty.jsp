@@ -23,6 +23,7 @@
 	        var orgAPPRFLAG = $.trim("<c:out value='${model.apprFlag}'/>");
 	        var parentBoardID =  "<c:out value='${model.parentBoardID}'/>";
 	        var primary = "<c:out value='${primary}'/>";
+	        var isAllGroupBoard = "<c:out value='${isAllGroupBoard}'/>";
 	        var xmlhttp = createXMLHttpRequest();
 	        var ApprUserList = "";
 	        var selectTargetListXML = "";
@@ -40,9 +41,8 @@
 	    	};
         
 			$(document).ready(function(){
-				if ("${use_portal}" != "YES") {
-	                $("#trPortlet").css("display","none");
-				}
+				$("#trPortlet").css("display","none");
+
 	            if (portlet == "Y") {
 	                $("#chkPortletBoard").prop("checked",true);
 	            }
@@ -119,6 +119,7 @@
 	            }
 			});
 			
+			/* 2019-02-18 홍승비 - 일반설정 저장 시 각 필드 문자, 숫자 입력 제한 적용 */
 			function Save() {
 	            if ($.trim($("#txtBoardName").val()) == "") {
 	                alert("<spring:message code='ezBoard.t144'/>");
@@ -177,17 +178,29 @@
 	                FormFlag = "N";
 				}
 	            
-	            if ($("#chkPermanent").is(":checked")) {
-	                Expires = "-1"
+	            // 게시만료일 /* 2019-03-04 홍승비 - 게시판그룹인 경우 게시만료일 체크 분기 타지 않도록 수정 */
+	            if ($("#chkPermanent").is(":checked") || parentBoardID == "top") {
+	                Expires = "-1";
 	            } else {
-	                Expires = $("#txtExpires").val();
+	            	if (!$("#txtExpires").val().match(/^\d+$/)) {
+					    alert("<spring:message code='ezBoard.t156'/>: <spring:message code='ezEmail.t99000066'/>");
+					    return;
+					} else {
+	                	Expires = $("#txtExpires").val();
+	                }
 	            }
 
+	            // 만료게시물 정책
 	            var iDeleteAfter = "-1";
-	            if ($("#usedeleteafter").is(":checked") && $("#deleteafter").val() == "") {
-	                alert("<spring:message code='ezBoard.t146'/>");
-	                $("#deleteafter").focus();
-	                return;
+	            if ($("#usedeleteafter").is(":checked")) {
+		            if ($("#deleteafter").val() == "") {
+		                alert("<spring:message code='ezBoard.t146'/>");
+		                $("#deleteafter").focus();
+		                return;
+		            } else if (!$("#deleteafter").val().match(/^\d+$/)) {
+						alert("<spring:message code='ezBoard.t159'/>: <spring:message code='ezEmail.t99000066'/>");
+					    return;
+		            }
 	            }
 	            
 	            var url = $("#txtURL").val().trim();
@@ -225,9 +238,14 @@
 	                iDeleteAfter = $("#deleteafter").val();
 	            }
 	            
+	            // 첨부크기제한
 	            if (AttachMax == "") {
 	            	AttachMax = "5";
+	            } else if (!AttachMax.match(/^\d+$/)) {
+					alert("<spring:message code='ezBoard.t167'/>: <spring:message code='ezEmail.t99000066'/>");
+					return;
 	            }
+	            
 	            if (Expires == "") {
 	            	Expires = "30";
 	            }
@@ -268,22 +286,38 @@
 	            	}	            		
 	            });
 	        }
+			
+			/* 2019-02-20 홍승비 - 게시만료일 체크여부에 따라 입력필드 표시 수정 */
 			function chkPermanent_onclick() {
 	            if (chkPermanent.checked) {
 	                chkExpires.checked = false;
 	                txtExpires.value = "";
+	                txtExpires.readOnly = true;
 	            } else {
 	                chkExpires.checked = true;
 	                txtExpires.value = "365";
+	                txtExpires.readOnly = false;
 	            }
-	        }			
+	        }
 			function chkExpires_onclick() {
 	            if (chkExpires.checked) {
 	                chkPermanent.checked = false;
 	                txtExpires.value = "365";
+	                txtExpires.readOnly = false;
 	            } else {
 	                chkPermanent.checked = true;
 	                txtExpires.value = "";
+	                txtExpires.readOnly = true;
+	            }
+	        }
+			
+			/* 2019-02-20 홍승비 - 만료게시물 정책 체크여부에 따라 입력필드 표시 수정 */
+			function chkDeleteAfter_onclick() {
+	            if (document.getElementById("usedeleteafter").checked) {
+	                document.getElementById("deleteafter").readOnly = false;
+	            } else {
+	            	document.getElementById("deleteafter").value = "";
+	            	document.getElementById("deleteafter").readOnly = true;
 	            }
 	        }
 			
@@ -482,7 +516,7 @@
 			    
 			    selecttarget_cross_dialogArguments[0] = receiverData;
 			    selecttarget_cross_dialogArguments[1] = SelectTarget_Complete;
-			    var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget2.do", "SelectTarget_Cross2", GetOpenWindowfeature(1144, 590));
+			    var SelectTarget_Cross = window.open("/admin/ezBoard/selectTarget2.do?isAllGroupBoard=" + isAllGroupBoard, "SelectTarget_Cross2", GetOpenWindowfeature(1144, 590));
 			    try { SelectTarget_Cross.focus(); } catch (e) {}
 			}
 			
@@ -734,6 +768,13 @@
 	            <th><spring:message code="ezBoard.t154"/></th>
 	            <td><c:out value='${model.boardNo}' /></td>
 	        </tr>
+	        <%-- 2018-11-22 홍승비 - 그룹사게시판 옵션 사용 여부 표기 --%>
+	        <c:if test="${isAllGroupBoard == 'Y'}">
+		        <tr style="${style2}">
+		        	<th style="border-left:none; border-bottom:none;"><spring:message code ="ezCircular.t118" /> <spring:message code ="ezBoard.hsb05" /></th>
+					<td style="border-top:1px solid #dedede; vertical-align: bottom;"><input type="checkbox" name="allGroupBoard" id="allGroupBoard" disabled checked><spring:message code ="ezBoard.hsb03" /> <spring:message code ="ezBoard.hsb04" /></td>
+		        </tr>
+	        </c:if>
 	        <tr style="${style}">
 	            <th><spring:message code="ezBoard.t155"/></th>
 	            <td>
@@ -747,7 +788,7 @@
 		                <input type="checkbox" id="chkPermanent" onclick="chkPermanent_onclick()" checked />
 		                <spring:message code="ezBoard.t157"/>
 		                <input type="checkbox" id="chkExpires" onclick="chkExpires_onclick()" />
-		                <input type="text" id="txtExpires" value="365" style="width: 35px" />
+		                <input type="text" id="txtExpires" style="width: 35px" readonly />
 		                <spring:message code="ezBoard.t158"/>
 	            	</c:if>
 	                <c:if test="${model.itemExpires != '-1'}">   
@@ -764,9 +805,9 @@
 		            <th><spring:message code="ezBoard.t159"/></th>
 		            <td>
 		            	<spring:message code="ezBoard.t160"/>
-	                	<input type="inputbox" id="deleteafter" style="width: 50px;height:20px;margin-top:3px"/>
+	                	<input type="inputbox" id="deleteafter" style="width: 50px;height:20px;margin-top:3px" readonly />
 	                	<spring:message code="ezBoard.t161"/><br/>
-	                	<input type="checkbox" id="usedeleteafter"/>
+	                	<input type="checkbox" id="usedeleteafter" onclick="chkDeleteAfter_onclick()"/>
 	                	<spring:message code="ezBoard.t162"/>
 	                </td>
 	            </c:if>
@@ -776,7 +817,7 @@
 	            		<spring:message code="ezBoard.t160"/>
 	                	<input type="inputbox" id="deleteafter" style="width: 50px;height:20px;margin-top:3px" value="<c:out value='${model.deleteAfter}' />"/>
 	                	<spring:message code="ezBoard.t161"/><br/>
-	                	<input type="checkbox" id="usedeleteafter" checked />
+	                	<input type="checkbox" id="usedeleteafter" onclick="chkDeleteAfter_onclick()" checked />
 	                	<spring:message code="ezBoard.t162"/>
 	                </td>
 	            </c:if>
@@ -847,7 +888,7 @@
 	                	<input type="checkbox" id="chkURLBoard" onclick="checkboardtype()" />
 	                	URL<spring:message code="ezBoard.t0006"/>
 	                </c:if>
-	                 <input type="text" id="txtURL" style="width: 74%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />                
+	                 <input type="text" id="txtURL" style="width: 73%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />                
 	            </td>
 	        </tr>
 	        <tr id="tr3" style="${style}">

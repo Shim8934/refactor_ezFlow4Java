@@ -619,6 +619,9 @@
     "table_split_row": "Line splitting",
     "cell_horizontal_size": "Equal width",
     "cell_vertical_size": "Equal height",
+    "table_lock": "Table lock",
+    "cell_lock": "Cell lock",
+    "border_visualize": "Show hidden border",
     "table_background_color": "grid color",
     "table_border_style": "Line style",
     "menuToolName": "Tools",
@@ -727,7 +730,11 @@
     "notFoundTextErrorMessage": "String not found.",
     "errorParsingError" : "An error occurred during conversion.",
     "pasteParsingError" : "An error occurred while pasting.",
-    "invalidBrowserError" : "Unsupported browser."
+    "invalidBrowserError" : "Unsupported browser.",
+    "notSetCellLockNameError" : "The lock name is not set."
+  },
+  "confirmMessage" : {
+    "newRemoveContentMessage" : "This will remove the currently entered content.\nDo you want to proceed?"
   },
   "processingMessage" : "Processing ...",
   "paragraphInsert": "Paragraph Insert",

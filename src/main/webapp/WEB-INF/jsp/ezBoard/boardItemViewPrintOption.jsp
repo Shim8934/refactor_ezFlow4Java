@@ -83,8 +83,10 @@
 		            rvalue[1] = "N";
 		        
 		        if(ReturnFunction != null) {
-					parent.printOption_close();	        	
+		        	ReturnFunction(rvalue);
+					parent.printOption_close();
 		        } else {
+		        	window.returnValue = rvalue;
 		        	window.close();	
 		        }
 		    }
@@ -114,8 +116,10 @@
 		    	} 
 		        
 		        if(ReturnFunction != null) {
-					parent.printOption_close();	        	
+		        	ReturnFunction(rvalue);
+					parent.printOption_close();
 		        } else {
+		        	window.returnValue = rvalue;
 		        	window.close();	
 		        }
 		    }
@@ -123,20 +127,23 @@
 		        rvalue[0] = "N";
 		        rvalue[1] = "N";
 		        if(ReturnFunction != null) {
-					parent.printOption_close();	        	
+		        	ReturnFunction(rvalue);
+					parent.printOption_close();
 		        } else {
+		        	window.returnValue = rvalue;
 		        	window.close();	
 		        }
 		    }
-		
-		    window.onunload = function () {
+		    
+		    /* 2019-02-23 홍승비 - 크롬 브라우저 버전업데이트 대응을 위해 unload시 동작 주석처리 */
+/* 		    window.onunload = function () {
 		        if (ReturnFunction != null) {
 		            ReturnFunction(rvalue);
 		        }
 		        else {
 		            window.returnValue = rvalue;
 		        }
-		    }
+		    } */
 		    
 		    function btn_close() {
 		    	ReturnFunction = null;

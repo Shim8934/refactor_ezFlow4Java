@@ -479,7 +479,7 @@
 	        function quick_add() {
 	        	var pQname = document.getElementById("qname").value.trim();
 	            var pQemail = document.getElementById("qemail").value.trim();
-	        	var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+	            var regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 	            
                 if (pQname == "") {
                 	document.getElementById("qname").focus();
@@ -551,8 +551,12 @@
 	            		alert("<spring:message code='ezAddress.t225' />");
 	            		return;
 	            	}
-	            	else if (xmlHTTP.responseText == "NO_AUTHORITY") {
-	            		alert("<spring:message code='ezAddress.t1' />");
+	            	else if (xmlHTTP.responseText == "NO_AUTHORITY_D") {
+	            		alert("<spring:message code='ezAddress.t999900003' />");
+	            		window.location.href = window.location.href;
+	            	}
+	            	else if (xmlHTTP.responseText == "NO_AUTHORITY_C") {
+	            		alert("<spring:message code='ezAddress.t999900004' />");
 	            		window.location.href = window.location.href;
 	            	}
 	            	else {

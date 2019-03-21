@@ -74,7 +74,7 @@
 		                }
 
 		                listHTML += "</dl>";
-		                listHTML += "<span class='btn_more' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/kr/main/btn_more02.gif' width='35' height='20' alt='more'></span>";
+		                listHTML += "<span class='btn_more' onclick='Boardmore_NewBoardSTD_btnClick()'><img src='/images/<spring:message code='main.t00025' />/main/btn_more02.gif' width='35' height='20' alt='more'></span>";
 
 		                document.getElementById("BoardTab").innerHTML = listHTML;
 		                pBoardID_NewBoardSTD = document.getElementById("Board0").getAttribute("DATA1");

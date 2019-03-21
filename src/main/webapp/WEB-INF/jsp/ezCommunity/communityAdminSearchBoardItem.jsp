@@ -65,9 +65,6 @@
 			}
 	
 		    $(function () {
-		    	$("#txtTitle").val("${title}");
-		    	$("#txtAbstracts").val("${abstracts}");
-		    	$("#txtWriterName").val("${writerName}");
 		    	var xmldoc = loadXMLString('${strXML}');
     			var listXML = '';
     			
@@ -97,7 +94,8 @@
 					listXML += "<tr id='rowdata'>";
 					listXML += "<td style='padding:0'><input type='checkbox' name='chk' id='chk"+i+"' onclick='checkBox_checked(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardID").trim() + "\", event)'></td>";
 					listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "BoardName").trim() + "</td>";
-					listXML += "<td title='" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`") + "' style='cursor:pointer;text-overflow:ellipsis; overflow:hidden; word-break:break-all' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + bTag + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'><nobr>" + bTag + strEmergent + strSpace + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Title").trim() + "</nobr></td>";
+					listXML += "<td title='" + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Abstract").trim().replace("'", "`")) + "' style='cursor:pointer;text-overflow:ellipsis; overflow:hidden; word-break:break-all' onclick='ItemRead_onclick(\"" + pBoardID + "\", \"" + pBoardName + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "ItemID").trim() + "\", \"" + bTag + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", event)'><nobr>"
+						+ bTag + strEmergent + strSpace + MakeXMLString(SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "Title").trim()) + "</nobr></td>";
 					listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptName").trim() + "</td>";
 					listXML += "<td><div style='cursor:pointer' onclick='MemberInfo_onclick(\"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterID").trim() + "\", \"" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterDeptID").trim() + "\")'>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriterName").trim() + "</div></td>";
 		    		listXML += "<td>" + SelectSingleNodeValue(SelectNodes(xmldoc,"NODES/NODE")[i], "WriteDate").split(' ')[0] + "</td>";
@@ -193,12 +191,12 @@
 	
 			function search() {
 			    if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "") {
-			        alert("<spring:message code = 'ezCommunity.t421' />");
+			        alert("<spring:message code = 'ezSystem.x0035' />");
 					return;
 			    }
 			    
 	            if ($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() == "" && $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() != "") {
-					alert("<spring:message code = 'ezCommunity.t421' />");
+					alert("<spring:message code = 'ezSystem.x0036' />");
 			        return;
 			    }
 	            
@@ -206,14 +204,13 @@
 	                alert("<spring:message code = 'ezCommunity.t1459' />");
 			        return;
 			    }
-					
-				var title, writerName, strAbstract, searchStart, searchEnd, boardname;
-				title = document.getElementById("txtTitle").value;
-				writerName = document.getElementById("txtWriterName").value;
-				strAbstract = document.getElementById("txtAbstract").value;
-				searchStart = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-				searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-				boardname = document.getElementById("txtBoardName").value;
+				
+				var title = document.getElementById("txtTitle").value;
+				var writerName = document.getElementById("txtWriterName").value;
+				var strAbstract = document.getElementById("txtAbstract").value;
+				var searchStart = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+				var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+				var boardname = document.getElementById("txtBoardName").value;
 	
 				if (boardname == "") {
 				    alert("<spring:message code = 'ezCommunity.t289' />");
@@ -225,6 +222,12 @@
 					return;
 				}
 				
+				/* 2019-01-10 홍승비 - 커뮤니티 게시판그룹 대상으로 검색 시 경고문구 발생하도록 수정 */
+				if (getParentBoardID(pBoardID) == "top") {
+					alert("<spring:message code = 'ezCommunity.t356' />");
+					return;
+				}
+				
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 				url += "&boardID=" + encodeURIComponent(pBoardID);
 				url += "&title=" + encodeURIComponent(title);
@@ -233,7 +236,7 @@
 				url += "&searchStart=" + searchStart;
 				url += "&searchEnd=" + searchEnd;
 				url += "&code=" + code;
-				url += "&boardname=" + boardname;
+				url += "&boardname=" + encodeURIComponent(boardname);
 				url += "&gubun=" + gubun;
 				
 				window.location.href = url;
@@ -378,20 +381,19 @@
 	
 			function prevPage_onclick() {
 				newPage = parseInt(CurPage) - 1;
-	
-				var title, writerName, abstract, searchStart, searchEnd, boardname;
-				title = document.getElementById("txtTitle").value;
-				writerName = document.getElementById("txtWriterName").value;
-				abstract = document.getElementById("txtAbstract").value;
+				
+				var title = document.getElementById("txtTitle").value;
+				var writerName = document.getElementById("txtWriterName").value;
+				var txtAbstract = document.getElementById("txtAbstract").value;
 				var searchStart = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-				boardname = document.getElementById("txtBoardName").value;
+				var boardname = document.getElementById("txtBoardName").value;
 	
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 				url += "&boardID=" + pBoardID;
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
-				url += "&abstract=" + encodeURIComponent(abstract);
+				url += "&abstract=" + encodeURIComponent(txtAbstract);
 				url += "&searchStart=" + searchStart;
 				url += "&searchEnd=" + searchEnd;
 				url += "&code=" + code;
@@ -411,20 +413,19 @@
 	
 			function nextPage_onclick() {
 				newPage = parseInt(CurPage) + 1;
-	
-				var title, writerName, abstract, searchStart, searchEnd, boardname;
-				title = document.getElementById("txtTitle").value;
-				writerName = document.getElementById("txtWriterName").value;
-				abstract = document.getElementById("txtAbstract").value;
+				
+				var title = document.getElementById("txtTitle").value;
+				var writerName = document.getElementById("txtWriterName").value;
+				var txtAbstract = document.getElementById("txtAbstract").value;
 				var searchStart = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-				boardname = document.getElementById("txtBoardName").value;
+				var boardname = document.getElementById("txtBoardName").value;
 	
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 				url += "&boardID=" + pBoardID;
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
-				url += "&abstract=" + encodeURIComponent(abstract);
+				url += "&abstract=" + encodeURIComponent(txtAbstract);
 				url += "&searchStart=" + searchStart;
 				url += "&searchEnd=" + searchEnd;
 				url += "&code=" + code;
@@ -442,23 +443,24 @@
 				}
 			}
 	
+			/* 2019-02-19 홍승비 - 페이징 변수명 수정 */
 	        function moveToPage(CurPage) {
 				//if(window.event.keyCode == 13)
 				//{
 				//	var newPage = txt_PageInputNum.value;	
 	            //}
-				var title, writerName, abstract, searchStart, searchEnd, boardname;
-				title = document.getElementById("txtTitle").value;
-				writerName = document.getElementById("txtWriterName").value;
-				abstract = document.getElementById("txtAbstract").value;
+				var title = document.getElementById("txtTitle").value;
+				var writerName = document.getElementById("txtWriterName").value;
+				var txtAbstract = document.getElementById("txtAbstract").value;
 				var searchStart = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
-				boardname = document.getElementById("txtBoardName").value;
+				var boardname = document.getElementById("txtBoardName").value;
+				
 				var url = "/ezCommunity/adminSearchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
 				url += "&boardID=" + pBoardID;
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
-				url += "&abstract=" + encodeURIComponent(abstract);
+				url += "&abstract=" + encodeURIComponent(txtAbstract);
 				url += "&searchStart=" + searchStart;
 				url += "&searchEnd=" + searchEnd;
 				url += "&code=" + code;
@@ -539,17 +541,17 @@
 			function SelectBoard() {
 			    if (CrossYN()) {
 			        boardselect_dialogArguments[1] = SelectBoard_Complete;
-			        var OpenWin = GetOpenWindow("/ezCommunity/boardSelect.do?code=" + code, "BoardSelect", 340, 656);
+			        var OpenWin = GetOpenWindow("/ezCommunity/boardSelect.do?code=" + code, "BoardSelect", 355, 600);
 			        try { OpenWin.focus(); } catch (e) { }
 			    } else {
-			        var feature = "DialogHeight:656px;DialogWidth:340px;scroll:no;status:no;help:no;edge:sunken";
-			        feature = feature + GetShowModalPosition(340, 656);
+			        var feature = "DialogHeight:600px;DialogWidth:355px;scroll:no;status:no;help:no;edge:sunken";
+			        feature = feature + GetShowModalPosition(355, 600);
 			        var ret = window.showModalDialog("/ezCommunity/boardSelect.do?code=" + code, "", feature);
 			        
 			        if (typeof (ret) != "undefined") {
 			            pBoardID = ret[0];
 			            txtBoardName.value = ret[2];
-			            GetboardInfo();
+			            getParentBoardID(pBoardID);
 			        }
 			    }
 			}
@@ -557,24 +559,27 @@
 			function SelectBoard_Complete(ret) {
 			    pBoardID = ret[0];
 			    txtBoardName.value = ret[2];
-			    GetboardInfo();
+			    getParentBoardID(pBoardID);
 			}
 			
-			function GetboardInfo() {
-			    var xmlhttp_boardInfo = createXMLHttpRequest();
-			    xmlhttp_boardInfo.open("POST", "/ezCommunity/getBoardInfo.do?boardID=" + encodeURIComponent(pBoardID), false);
-			    xmlhttp_boardInfo.send();
-	
-			    if (xmlhttp_boardInfo.status == 200) {
-	                if(CrossYN()) {
-	                    gubun = GetElementsByTagName(xmlhttp_boardInfo.responseXML, "GUBUN")[0].textContent;
-	                } else {
-	                    gubun = GetElementsByTagName(xmlhttp_boardInfo.responseXML, "GUBUN")[0].text;
-	                }
-	            }
-	
-			    xmlhttp_boardInfo = null;
-			}
+			/* 2019-01-10 홍승비 - 커뮤니티 게시판정보 가져오는 함수 제거(컨트롤러에 구현 안됨), 게시판그룹여부 체크하는 함수 추가 */
+		    function getParentBoardID(pBoardID) {
+				var result = "";
+				
+		    	  $.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommunity/getParentBoardID.do",
+						data : {
+							boardID : encodeURIComponent(pBoardID)
+						},
+						success: function(text){
+							result = text;
+						}
+					});
+		    	  return result;
+		    }
 			
 			function OpenRightMenu(pIndex) {
 				if (pBoardID == "" && pIndex == 6) {
@@ -734,11 +739,6 @@
 		            }
 		        }
 		        
-		        if (i == 1) {
-	            	strtext = "<span class='off'>" + i + "</span>";
-                    PagingHTML += strtext;
-	            }
-		        
 		        if (totalPage > BlockSize) {
 		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
 		                strtext = "";
@@ -829,19 +829,19 @@
 			<tr>
 			    <th><spring:message code = 'ezCommunity.t418' /></th>
 			    <td><input type="text" id="txtBoardName" readonly ="readonly" style="width:200px">
-			      <a class="imgbtn"><span onClick="SelectBoard()"><spring:message code = 'ezCommunity.t351' /></span></a></td>
+			      <a class="imgbtn"><span onClick="SelectBoard()"><spring:message code = 'ezCommunity.t352' /></span></a></td>
 		  	</tr>
 		  	<tr>
 			    <th><spring:message code = 'ezCommunity.t138' /></th>
-			    <td><input type="text" id="txtWriterName" style="width:100px" onkeydown="return onkey_down()"></td>
+			    <td><input type="text" id="txtWriterName" style="width:100px" onkeydown="return onkey_down()" value="<c:out value='${writerName}'/>"></td>
 		  	</tr>
 		 	<tr>
 			    <th  ><spring:message code = 'ezCommunity.t124' /></th>
-			    <td><input type="text" id="txtTitle" style="width:400px" onkeydown="return onkey_down()"></td>
+			    <td><input type="text" id="txtTitle" style="width:400px" onkeydown="return onkey_down()"  value="<c:out value='${title}'/>"></td>
 		 	</tr>
 		  	<tr>
 			    <th  ><spring:message code = 'ezCommunity.t433' /></th>
-			    <td><input type="text" id="txtAbstract" style="width:400px" onkeydown="return onkey_down()"></td>
+			    <td><input type="text" id="txtAbstract" style="width:400px" onkeydown="return onkey_down()" value="<c:out value='${abstracts}'/>"></td>
 		  	</tr>
 		  	<tr>
 			    <th  ><spring:message code = 'ezCommunity.t434' /></th>

@@ -557,9 +557,18 @@ public class EzBoardController extends EgovFileMngUtil{
 	        	strXMLRange.append("<MEMBER>"); 
 	        	
 	        	for (String userID : userIdList) {
+	        		//개인 대상 특정할 경우 겸직 처리하기 위해 수정. 2018-11-27 홍대표.
+	        		String deptID = "";
+	        		String tmpUserID = userID;
+	        		if(userID.indexOf("|") != -1) {
+	        			userID = tmpUserID.split("\\|")[0];
+	        			deptID = tmpUserID.split("\\|")[1];
+	        		}
+	        		
 	        		LoginVO user = loginService.selectReceiver(userID, userInfo.getTenantId());
-	        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(user.getDisplayName1()) + 
-		        			"\" nm2=\"" + commonUtil.cleanValue(user.getDeptName1()) + "\">" + commonUtil.cleanValue(user.getId()) + "</DATA>");
+	        		strXMLRange.append("<DATA id=\"" + commonUtil.cleanValue(user.getId()) + "\" nm=\"" + commonUtil.cleanValue(user.getDisplayName1())
+		        			+ "\" nm2=\"" + commonUtil.cleanValue(user.getDeptName1()) + "\" deptid=\"" + commonUtil.cleanValue(deptID) + "\">"
+	        				+ commonUtil.cleanValue(user.getId()) + "</DATA>");
 	        		
 		        	if (userInfo.getPrimary().equals("1")) {
 		        		listOfTarget += user.getDisplayName1() + ",";
@@ -616,6 +625,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			for (int i = 0; i < pUserCnt; i++) {
 				String userID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("id").getTextContent();
+				String deptID = doc.getElementsByTagName("MEMBER").item(0).getChildNodes().item(i).getAttributes().getNamedItem("deptid").getTextContent();
+				
+				userID = userID + "|" + deptID;
 				targetUsers += userID + ",";
 			}
 			
@@ -990,6 +1002,10 @@ public class EzBoardController extends EgovFileMngUtil{
 				boardInfo.setBoardName(strProp.getBoardName2());
 			} else {
 				boardInfo.setBoardName(strProp.getBoardName());
+			}
+			/* 2018-12-18 홍승비 - 마이게시판의 다국어 저장을 위한 속성 추가 */
+			if (strProp.getBoardName2() != null) {
+				boardInfo.setBoardName2(strProp.getBoardName2());
 			}
 			
 			boardInfo.setReplyNotify(strProp.getReplyNotify());
@@ -2772,6 +2788,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String orderOption1 = "";
 		String orderOption2 = "";
 		String strMultiData = commonUtil.getMultiData(boardVO.getLang(), userInfo.getTenantId());
+		String anonyMsg = "";
 		
 		BoardListVO boardListVO = new BoardListVO();
 		
@@ -2852,8 +2869,16 @@ public class EzBoardController extends EgovFileMngUtil{
 		resultXML.append("</HEADERS>");
 		resultXML.append("<ROWS>");
 		
+		/* 2018-11-28 홍승비 - 새게시물 리스트의 익명게시물 부서칼럼 '익명'으로 표출 */
+		anonyMsg = egovMessageSource.getMessage("ezBoard.t249", userInfo.getLocale()).split(";")[0];
+		
 		for (int j = 0; j < dlength; j++) {
 			resultXML.append("<ROW>");
+			
+			if (String.valueOf(boardList.get(j).get("GUBUN")).equals("2")) {
+				boardList.get(j).replace("WRITERDEPTNAME", anonyMsg);
+			}
+			
 			for (i = 0; i < hlength; i++) {
 				resultXML.append("<CELL>");
 				fieldName = headerList.get(i).getColName().toUpperCase();
@@ -3522,6 +3547,11 @@ public class EzBoardController extends EgovFileMngUtil{
 			model.addAttribute("commentCount", commentCount);
 		}
 		
+		/* 2019-01-31 홍승비 - 게시물 보기 시 게시자 이름 특문처리 (익명게시판 오류수정) */
+		if (boardItem.getWriterName() != null && !boardItem.getWriterName().equals("")) {
+			boardItem.setWriterName(commonUtil.htmlUnescape(boardItem.getWriterName()));
+		}
+		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardItem", boardItem);
@@ -3811,7 +3841,13 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (mode.equals("temp")) {
 			ezBoardService.setAsRead(userInfo, boardID, itemID);
 		}
-
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			model.addAttribute("mailShareId", request.getParameter("mailShareId"));
+		}
+		
 		model.addAttribute("boardInfo", boardInfo);
 		model.addAttribute("boardListVO", boardListVO);
 		model.addAttribute("boardAttributeListVO", boardAttributeListVO);
@@ -4365,7 +4401,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			resultXML.append("<GUID>" + boardAttachVOList.get(i).getGuid().trim() + "</GUID>");
 			resultXML.append("<FilePath>" + commonUtil.cleanValue(boardAttachVOList.get(i).getFilePath()) + "</FilePath>");
 			resultXML.append("<FileName>" + commonUtil.cleanValue(boardAttachVOList.get(i).getFileName()) + "</FileName>");
-			resultXML.append("<FileSize>" + getProperSizeDisplay(boardAttachVOList.get(i).getFileSize()) + "</FileSize>");
+			resultXML.append("<FileSize>" + commonUtil.getSizeWithUnit(Double.parseDouble(boardAttachVOList.get(i).getFileSize())) + "</FileSize>");
 			resultXML.append("<FileSize2>" + boardAttachVOList.get(i).getFileSize() + "</FileSize2>");
 			resultXML.append("</NODE>");
 		}
@@ -6318,11 +6354,12 @@ public class EzBoardController extends EgovFileMngUtil{
 			reservedList = ezBoardService.getReservedItemList(userInfo.getId(), startRow, endRow, sortBy, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getOffset(), userInfo.getCompanyID(), userInfo.getTenantId());
 		}
 		
+		/* 2019-01-07 홍승비 - split의 정규식 표현 및 페이징 연산 수정 */
 		if (totalCount > 0) {
 			if (totalCount > boardInfo.getSs_board_maxRows()) {
 				String temp = String.valueOf(totalCount / boardInfo.getSs_board_maxRows());
 				if (temp.indexOf(".") != 0) {
-					totalPage = Integer.parseInt(temp.split(".")[0] + 1);
+					totalPage = Integer.parseInt(temp.split("\\.")[0]) + 1;
 				} else {
 					totalPage = Integer.parseInt(temp);
 				}
@@ -6422,10 +6459,14 @@ public class EzBoardController extends EgovFileMngUtil{
 		String userID = request.getParameter("pUserID");
 		String listCount = request.getParameter("pListCount");
 		String preView = request.getParameter("pPreView");
-		int tempCount = 10;
+		int tempCount;
 		
+		/* 2019-02-28 홍승비 - listCount 파라미터가 null인 경우 기존 리스트카운트를 가져오도록 수정 (디폴트 20)*/
 		if (listCount != null) {
 			tempCount = Integer.parseInt(listCount);
+		} else {
+			BoardConfigVO tempVO = ezBoardService.getPersonalCount(userInfo);
+			tempCount = tempVO.getListCount();
 		}
 		
 		String result = ezBoardService.setBoardConfig(userID, tempCount, preView, userInfo.getTenantId());
@@ -6987,7 +7028,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		BoardListVO boardItem = ezBoardService.getBrdGetItemInfo(boardID, itemID, commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId()), userInfo.getTenantId());
 		
 		String strURL = "Item_View_New('" + boardID + "','" + itemID + "','" + boardInfo.getGuBun() + "');";
-        strURL = "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
+        strURL = "<span id='board_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
 		
         String strDate = commonUtil.getDateStringInUTC(boardItem.getWriteDate(), userInfo.getOffset(), false); 
         strDate += "( " + userInfo.getOffset().split("\\|")[1] + " )";
@@ -7110,7 +7151,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		Document doc = commonUtil.convertStringToDocument(strXML);
 		String title = doc.getElementsByTagName("Title").item(0).getTextContent();
 		String strURL =  "javascript:Item_View_New('" + boardID + "','" + itemID + "');";
-        strURL = "<span style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
+        strURL = "<span id='board_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onClick=\"" + strURL + "\">";
         
         StringBuilder bodyContent = new StringBuilder();
         
@@ -7164,7 +7205,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		// 게시판ID, 게시물ID로 어느 회사에서 쓴것인지 확인 -> 현재 자신의 companyID와 다르다면 alert 후 창 닫음
 		String strURL = "javascript:Item_View_APPR('" + boardID + "','" + itemID + "','" + gubun + "');";
-        strURL = "<a style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
+        strURL = "<a id='board_a' style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
         
         StringBuilder bodyContent = new StringBuilder();
         
@@ -7219,7 +7260,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			// 게시판ID, 게시물ID로 어느 회사에서 쓴것인지 확인 -> 현재 자신의 companyID와 다르다면 alert 후 창 닫음
 			String strURL = "javascript:Item_View_APPR('" + boardListVO.getBoardID() + "','" + tempItemID + "','" + boardListVO.getGuBun() + "');";
-	        strURL = "<a style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
+	        strURL = "<a id='board_a' style='color:blue;text-decoration:underline;cursor:pointer;' onClick=" + strURL + ">";
 	        
 	        StringBuilder bodyContent = new StringBuilder();
 	        
@@ -8170,6 +8211,22 @@ public class EzBoardController extends EgovFileMngUtil{
 			}
 		}
 		logger.debug("downloadAttachAll ended.");
+	}
+	
+	/**
+	 * 2019-01-15 홍승비 - 게시물의 수정일(updateDate)만을 업데이트
+	 * */
+	@RequestMapping(value = "/ezBoard/modUpdateDate.do")
+	@ResponseBody
+	public void modUpdateDate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("modUpdateDate started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String itemID = request.getParameter("itemID");
+		
+		ezBoardService.modUpdateDate(commonUtil.getTodayUTCTime(""), itemID, userInfo.getTenantId());
+		
+		logger.debug("modUpdateDate ended.");
 	}
 
 }

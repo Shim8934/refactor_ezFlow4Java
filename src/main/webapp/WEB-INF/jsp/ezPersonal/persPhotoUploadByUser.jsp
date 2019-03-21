@@ -6,8 +6,9 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript">
+	    	var timestampSecond = Math.floor(+ new Date() / 1000);
 			window.parent.frames.imagefile.value = "${filePath}";
-	    	window.parent.frames.preview.src = "${filePath2}";
+	    	window.parent.frames.preview.src = "${filePath2}"+"&timestamp="+timestampSecond;
 		</script>
 	</head>
 </html>

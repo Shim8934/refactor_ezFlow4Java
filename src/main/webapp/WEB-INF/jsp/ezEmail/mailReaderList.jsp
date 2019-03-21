@@ -15,6 +15,7 @@
 	    <script>
 	        var _url = decodeURIComponent('${url}');
 	        var isReadDelete = "${isReadDelete}";
+	        var shareId = "${shareId}";
 	        var docWidth = window.outerWidth;
 	        var docHeight = window.outerHeight;
 	        
@@ -57,7 +58,14 @@
 	                    return;
 	                }
 	            }
-	            g_xmlHttp.open("POST", "/ezEmail/mailCancelSend.do", false);
+	            
+	            var requestUrl = "/ezEmail/mailCancelSend.do";
+	            
+	        	if (typeof(shareId) != "undefined" && shareId != "") {
+	        		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	        	}
+	            
+	            g_xmlHttp.open("POST", requestUrl, false);
 	            g_xmlHttp.onreadystatechange = mail_cancelsend_after;
 	            g_xmlHttp.send(xmlDom);
 	        }
@@ -92,8 +100,14 @@
 	            MailReceiverListXML = null;
 	            xmlhttp_MailReceiverList = null;
 	            var strQuery = "<MESSAGEID>" + decodeURIComponent(_url) + "</MESSAGEID>";
+	            var requestUrl = "/ezEmail/mailGetReceiveList.do";
+	            
+	        	if (typeof(shareId) != "undefined" && shareId != "") {
+	        		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	        	}
+	            
 	            xmlhttp_MailReceiverList = createXMLHttpRequest();
-	            xmlhttp_MailReceiverList.open("POST", "/ezEmail/mailGetReceiveList.do", true);
+	            xmlhttp_MailReceiverList.open("POST", requestUrl, true);
 	            xmlhttp_MailReceiverList.onreadystatechange = event_xmlhttp_MailReceiverList_Complete;
 	            xmlhttp_MailReceiverList.send(strQuery);
 	        }

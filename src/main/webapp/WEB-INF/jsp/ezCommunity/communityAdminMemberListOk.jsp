@@ -80,8 +80,8 @@
 			<tr>
 				<th><spring:message code = 'ezCommunity.t523' /></th>
 				<td>
-					<c:if test="${memberInfoVO.deptName != '' }">
-						${memberInfoVO.deptName}
+					<c:if test="${memberInfo.deptName != '' }">
+						${memberInfo.deptName}
 					</c:if>
 				</td>
 			</tr>

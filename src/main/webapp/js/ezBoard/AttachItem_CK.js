@@ -198,7 +198,7 @@ function AddAttachFileInfoXmlParsing(resultXML) {
             if (getNodeText(GetChildNodes(nodes[i])[1]) != "denied") {
                 pstrXML += "<ROW><CELL><VALUE><![CDATA[" + getNodeText(GetChildNodes(nodes[i])[2]) + "]]></VALUE>";//파일명
                 pstrXML += "<DATA1><![CDATA[" + getNodeText(GetChildNodes(nodes[i])[2]) + "]]></DATA1>"; //파일명
-                pstrXML += "<DATA2><![CDATA[" + getNodeText(GetChildNodes(nodes[i])[0]) + "]]></DATA2>"; //저장될 파일명
+                pstrXML += "<DATA2><![CDATA[" + getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "") + "]]></DATA2>"; //저장될 파일명
                 pstrXML += "<DATA3></DATA3>";
                 pstrXML += "<DATA4></DATA4>";
                 pstrXML += "<DATA5>Y</DATA5>";

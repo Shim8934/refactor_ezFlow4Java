@@ -305,6 +305,8 @@
 				a.company_id = #companyId#
 			and
 				a.tenant_id = #tenantId#
+			and
+				a.form_del_flag is null
 			order by a.form_id desc, d.DISPLAYNAME$lang$ asc
 		]]>
 	</select>
@@ -330,6 +332,8 @@
 					a.tenant_id = #tenantId#	
 				and
 					a.company_id = #companyId#
+				and
+					form_del_flag is null
 			]]>
 		</isEmpty>
 		<isNotEmpty property="deptId">
@@ -355,6 +359,8 @@
 					a.tenant_id = #tenantId#
 				and
 					a.company_id = #companyId#
+				and
+					a.form_del_flag is null
 				order by orderNo, form_id
 			]]>
 		</isNotEmpty>
@@ -603,7 +609,50 @@
 			) AA
 		ORDER BY 8 ASC, 1 ASC
 	</select>
-
+	
+	<!-- 해당부서의 사원수 -->
+	<select id="getDeptUserListCount" parameterClass="Map" resultClass="Integer">
+			select count(*) AS count from 
+		(	select
+				CN as user_id
+			from 
+				tbl_usermaster
+			where
+				TENANT_ID = #tenantId#
+			and
+				PHYSICALDELIVERYOFFICENAME = #companyId#
+			and
+			    CN not in (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#) 
+			<isNotEqual property="key" compareValue="DEPARTMENT">
+				and 
+					$key$ like '%' || #value# || '%'
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT">
+				and 
+					$key$ = #value#
+			</isEqual>
+		union all 
+			select
+	        	A.CN as user_id
+			from
+				tbl_addjobmaster B
+			join
+				tbl_usermaster A on A.CN = B.CN and A.TENANT_ID = B.TENANT_ID
+			join
+				tbl_deptmaster C on B.DEPTID = C.CN and B.TENANT_ID = C.TENANT_ID
+			where
+				B.TENANT_ID = #tenantId#
+			<isNotEqual property="key" compareValue="DEPARTMENT">
+				and 
+					A.$key$ like '%' || #value# || '%'
+			</isNotEqual>
+			<isEqual property="key" compareValue="DEPARTMENT">
+				and 
+					B.DEPTID = #value#
+			</isEqual>
+		) AA
+	</select>
+	
 	<!-- 양식 상세정보 -->
 	<select id="getJournalFormInfo" parameterClass="map" resultMap="getJournalFormInfoVO">
 		select
@@ -650,16 +699,18 @@
 	</delete>
 
 	<!-- 양식 삭제 -->
-	<delete id="deleteJournalForm" parameterClass="map">
-		delete from
+	<update id="deleteJournalForm" parameterClass="map">
+		update
 			tbl_journal_form
+		set
+			form_del_flag = 'Y'
 		where
 			form_id = #formId#
 		and
 			company_id = #companyId#
 		and
 			tenant_id = #tenantId#
-	</delete>
+	</update>
 
 	<!-- 사원의 열람권한을 저장하는 쿼리 -->
 	<insert id="insertAuthDept" parameterClass="Map">

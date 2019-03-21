@@ -13,13 +13,13 @@
 	    <script type="text/javascript">
 	        var ImageCount = "${imageCount}";
 	        var BoardID = "${boardID}";
-	
+			var ItemID = "${itemID}";
 	        var ImageID = "";
 	        var DelCount = 0;
 	        var ImageFilePath = "";
 	
-	        window.onload = function ()
-	        {
+	        window.onload = function () {
+	        	document.getElementById("allImageList").addEventListener("click", click_image);
 	        };
 	
 	        function btn_Delete_Onclick() {
@@ -68,8 +68,21 @@
 	
 	            if (resultText == "OK") {
 	                alert("<spring:message code='ezBoard.t1019'/>");
-	                window.opener.page_reload();
-	                window.close();
+	                
+	                /* 2019-01-15 홍승비 - 사진삭제 후 DB에 게시물 수정일자 업데이트 */
+                    $.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/modUpdateDate.do",
+						data : {
+							itemID  : ItemID
+						},
+						success : function(result) {
+							window.opener.page_reload();
+							window.close();
+						}
+					});
 	            }
 	            else
 	                alert("<spring:message code='ezBoard.t1020'/>");
@@ -104,6 +117,18 @@
 	                inputEle.checked = false;
 	            }
 	        }
+	        
+	        function click_image(event) {
+	        	var imageElem = event.target;
+	        	
+	        	if(imageElem.nodeName == "IMG") {
+		        	var checkboxElem = imageElem.previousElementSibling;
+		        	
+		        	checkboxElem.checked = !checkboxElem.checked;
+		        	
+		        	checkMainFg(checkboxElem);
+	        	}
+	        }
 	    </script>
 	</head>
 	<body class="popup">
@@ -128,7 +153,7 @@
 	        </tr>
 	        <tr>
 	            <td>
-	                <div class="layout" style="padding-top:10px;padding-bottom:10px;overflow-y:scroll;height:410px;">
+	                <div class="layout" style="padding-top:10px;padding-bottom:10px;overflow-y:scroll;height:410px;" id="allImageList">
 	                	<c:set var="result" value="${fn:split(listImages, '|')}"/>
 	                	<c:set var="imageID" value="${fn:split(imageID, ';')}"/>
 	                	<c:set var="content" value="${fn:split(imageContent, ';')}"/>

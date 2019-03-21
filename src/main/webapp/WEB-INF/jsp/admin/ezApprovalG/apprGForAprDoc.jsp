@@ -155,8 +155,8 @@
 	                if (lstCnt == "") {
 	                	lstCnt = 0;
 	                }
-	                
 	                totalPage = Math.ceil(new Number(lstCnt / pageSize));
+	                
 	                pTotalCnt = lstCnt;
 	                makePageSelPage();
 	
@@ -336,6 +336,11 @@
 	                    PagingHTML += strtext;
 	                }
 	            }
+	            
+		        if (i == 1) {
+		        	strtext = "<span class='on'>" + i + "</span>";
+		            PagingHTML += strtext;
+		        }	            
 	            
 	            if (totalPage > BlockSize) {
 	                if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {

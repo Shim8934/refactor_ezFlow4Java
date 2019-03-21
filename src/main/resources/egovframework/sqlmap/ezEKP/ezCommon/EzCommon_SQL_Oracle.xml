@@ -398,12 +398,12 @@
 	 	CREATE TABLE JMOCHA_MAIL_SIGNATURE_TEMPLATE 
 		(
 		  SIGN_NO NUMBER NOT NULL 
-		, CONTENT LONG VARCHAR 
+		, CONTENT LONG 
 		, DISPLAYNAME VARCHAR2(45) 
 		, DISPLAYNAME2 VARCHAR2(45) 
 		, TENANT_ID NUMBER DEFAULT 0 NOT NULL 
 		, COMPANY_ID VARCHAR2(45) 
-		, CONSTRAINT JMOCHA_MAIL_SIGNATURE_TEMPLATE_PK PRIMARY KEY 
+		, CONSTRAINT SIGNATURE_TEMPLATE_PK PRIMARY KEY 
 		  (
 		    SIGN_NO 
 		  )
@@ -440,4 +440,157 @@
 		 )
 	</statement>
 	
+	<select id="EzCommonDAO.checkUserMasterPasswordUpdateDT" resultClass="String">
+		<![CDATA[
+			SELECT 
+				PASSWORD_UPDATEDT
+			FROM 
+				TBL_USERMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addUserMasterPasswordUpdateDT"> 
+		ALTER TABLE 
+			TBL_USERMASTER
+		ADD 
+			PASSWORD_UPDATEDT DATE DEFAULT NULL
+	</statement>
+	
+	<insert id="EzCommonDAO.insertUseSession" parameterClass="Map">
+		INSERT INTO tbl_tenant_config
+		(tenant_id, property_name, property_value, description, config_name, regdate)
+		VALUES
+		(#tenantID#, #confName#, #property_value#, #description#, #config_name#, sysdate)
+	</insert>
+	
+	<select id="EzCommonDAO.checkAddJobMasterJobID" resultClass="String">
+		<![CDATA[
+			SELECT 
+				JOBID
+			FROM 
+				TBL_ADDJOBMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addAddJobMasterJobID"> 
+		ALTER TABLE 
+			TBL_ADDJOBMASTER
+		ADD 
+			JOBID VARCHAR2(100) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderToken">
+		<![CDATA[
+			SELECT 
+			    userId
+			FROM 
+			    TBL_webfolder_token
+			where 
+			    ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblWebfolderToken"> 
+		CREATE TABLE tbl_webfolder_token (
+		  "USERID" varchar2(32) NOT NULL,
+		  "LTOKEN" varchar2(128) DEFAULT NULL,
+		  "REGDATA" date DEFAULT NULL,
+		  "COMPID" varchar2(32) DEFAULT NULL,
+		  "TENANTID" varchar2(45) NOT NULL,
+		  "DEVICE" varchar2(128) DEFAULT NULL,
+		  PRIMARY KEY ("USERID","TENANTID")
+		) 
+	</statement>
+	
+	<select id="EzCommonDAO.checkUserMasterMailBoxQuota" resultClass="String">
+		<![CDATA[
+			SELECT
+				MAILBOXQUOTA, MAILBOXUSAGE
+			FROM
+				TBL_USERMASTER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addUserMasterMailBoxQuota">
+		ALTER TABLE
+			TBL_USERMASTER
+		ADD (
+			MAILBOXQUOTA VARCHAR(50) DEFAULT NULL,
+			MAILBOXUSAGE VARCHAR(50) DEFAULT NULL
+			)
+	</statement>
+	
+	<select id="EzCommonDAO.checkJournalFormDelFlag" resultClass="String">
+		<![CDATA[
+			SELECT
+				form_del_flag
+			FROM
+				TBL_JOURNAL_FORM
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addJournalFormDelFlag">
+		ALTER TABLE
+			TBL_JOURNAL_FORM
+		ADD (
+			form_del_flag VARCHAR(10) DEFAULT NULL
+			)
+	</statement>
+	
+	<select id="EzCommonDAO.checkListOptionData1" resultClass="int" remapResults="true">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			TBL_LISTOPTION 
+		WHERE 
+			LISTTYPE = 'S001' 
+		AND 
+			COLNAME = 'StartDate' 
+		AND 
+			NAME = '기안일시'
+	</select>
+	<select id="EzCommonDAO.checkListOptionData2" resultClass="int" remapResults="true">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			TBL_LISTOPTION 
+		WHERE 
+			LISTTYPE = 'S001' 
+		AND 
+			COLNAME = 'FunctionTypeName' 
+	</select>
+	
+	<update id="EzCommonDAO.updateListOptionData1">
+		UPDATE 
+			TBL_LISTOPTION 
+		SET 
+			NAME = '수신일자', 
+			NAME2 = 'ProcessDate', 
+			NAME3 = '到着日時', 
+			NAME4 = '接收日' 
+		WHERE 
+			LISTTYPE = 'S001' 
+		AND 
+			COLNAME = 'StartDate' 
+		AND 
+			NAME = '기안일시'
+	</update>
+	<update id="EzCommonDAO.updateListOptionData2">
+		UPDATE 
+			TBL_LISTOPTION 
+		SET 
+			COLNAME = 'FunctionType' 
+		WHERE 
+			LISTTYPE = 'S001' 
+		AND 
+			COLNAME = 'FunctionTypeName'
+	</update>
 </sqlMap>

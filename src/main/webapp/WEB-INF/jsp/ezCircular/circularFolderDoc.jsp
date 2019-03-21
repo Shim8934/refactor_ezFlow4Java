@@ -98,14 +98,13 @@
 		    $(document).ready(function() {
 		    	var clickOutside;
 		    	
-		    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
+		    	if (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
 		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
 		    	} else {
 		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
 		    	}	    	
 		    	
 		    	clickOutside.mouseup(function (e) {
-		    		console.log("1")
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    	
@@ -114,12 +113,10 @@
 		    	});
 		    	
 		    	$(parent.document).mouseup(function (e) {
-		    		console.log("2")
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    	
 		    	$(document).mouseup(function (e) {
-		    		console.log("3")
 		    		MailOptionHiddenOutside(e);
 		    	});
 		    	
@@ -524,6 +521,7 @@
 // 					CurPage = CurPage - 1;
 // 				}
 
+		    	prevShow_Clear();
 		    	getBoardList();
 		    }
 		    
@@ -661,13 +659,12 @@
 	    <h1>${folderName}<span id="lstCnt"></span><span id="mailBoxInfo"></span>
 	        <span style="float:right;font-weight:normal;color:black;">
 	        	<!-- 2018-07-12 김민성 - 회람판 검색 select box로 수정 -->
-	        	<select id="searchType" style="width: 65px; height: 27px; border: 1px solid #cbcbcb; vertical-align: middle; ">
+	        	<select id="searchType" style="width: 65px; height: 27px; border: 1px solid #cbcbcb; ">
 	        		<option value="subject"><spring:message code='ezCircular.t32'/></option>
 	        		<option value="writer"><spring:message code='ezCircular.t166'/></option>
 	        	</select>
 	        	<%-- <input name="searchType" id="Radio1" type="radio" value="subject" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t32'/>
 				<input name="searchType" id="Radio2" type="radio" value="writer" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align: middle;">&nbsp;<spring:message code='ezCircular.t166'/> --%>
-	        	&nbsp;
 				<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
 				<a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
 	        </span>
@@ -720,7 +717,7 @@
 	    <div style="width: 100%; height: 8px; background-color: #808080; position: absolute; z-index: 10000; display: none;" id="ResizeBarW"></div>
 	
 	    <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
-	        <div style="width:100%; overflow:AUTO;" id="divList">
+	        <div style="width:100%; overflow-x:auto; overflow-y:hidden;" id="divList">
 	             <div id="lvBoardList"></div>
 	        </div>
 	        <div id="tblPageRayer" style="text-align:center"></div>
@@ -738,7 +735,7 @@
 	                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
 	                        <p class="mail_title" style="margin-left: 0px;">
 	                            <span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
-	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
+	                                <img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
 	                        <dl class="mail_item">
@@ -765,7 +762,7 @@
 	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
 	                        <p class="mail_title">
 	                            <span class="icon_btn"><span onclick="CircularReadOpen();" style="cursor: pointer; padding-right: 5px;">
-	                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
+	                                <img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
 	                        </p>
 	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
 	                        <dl class="mail_item">

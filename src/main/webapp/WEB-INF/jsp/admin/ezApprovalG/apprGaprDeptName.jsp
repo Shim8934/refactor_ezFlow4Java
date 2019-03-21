@@ -35,13 +35,8 @@
     }
     }  
     function btn_CancelAprDeptTempletName_onclick() {
-        if (ReturnFunction != null) {
-            ReturnFunction("cancel");
-        }
-        else {
-            window.returnValue = "cancel";
-            window.close();
-        }
+        window.returnValue = "cancel";
+        window.close();    	
     }
     
     var RetValue;

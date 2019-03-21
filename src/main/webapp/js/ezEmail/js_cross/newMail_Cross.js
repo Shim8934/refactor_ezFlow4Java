@@ -229,8 +229,14 @@ function do_Attach_Add(ocx_file, forceBigFileUpload) {
         if (extFlag)
             alert(strLang323);
         
+        var requestUrl = "/ezEmail/mailInterAttachCK.do";
+        
+    	if (typeof(shareId) != "undefined" && shareId != "") {
+    		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    	}
+        
         xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
-        xmlhttp.open("POST", "/ezEmail/mailInterAttachCK.do", false);
+        xmlhttp.open("POST", requestUrl, false);
         xmlhttp.send(xmlDoc.xml);
 
         if (xmlhttp.status == "200") {
@@ -932,9 +938,15 @@ function Save_onClick_Complete(ReturnValue) {
                 }
 
                 g_saveHttp = createXMLHttpRequest();
-
+                
+                var requestUrl = "/ezEmail/mailInterSend.do";
+                
+                if (typeof(shareId) != "undefined" && shareId != "") {
+            		requestUrl += "?shareId=" + encodeURIComponent(shareId);
+				}
+                
                 if (!isClosedSave) {
-                    g_saveHttp.open("POST", "/ezEmail/mailInterSend.do", true);
+                    g_saveHttp.open("POST", requestUrl, true);
                     event_SaveonClick.savemode = Save_onClick_Complete.savemode;
 
                     if (Save_onClick_Complete.savemode == "sendsave" || (Save_onClick_Complete.savemode == "tempsave" && !isAutoSave)) {
@@ -946,7 +958,7 @@ function Save_onClick_Complete(ReturnValue) {
                     g_saveHttp.send(xmlDoc);
                 }
                 else {
-                    g_saveHttp.open("POST", "/ezEmail/mailInterSend.do", false);
+                    g_saveHttp.open("POST", requestUrl, false);
                     g_saveHttp.send(xmlDoc);
                 }
                 xmlDoc = null;
@@ -1234,6 +1246,8 @@ function NameCertify_onClick(returnFunction) {
     CompletBccisEnd = false;
     CompletCancelBtn = false;
     ToTalCompletEmailAddress();
+    // 20181127 조진호 - 검색 후에 검색 리스트가 계속 보이는 현상 수정
+    $(".ui-autocomplete").css('display', 'none');
     return true;
 }
 
@@ -1318,9 +1332,9 @@ function GetMailAddresses(name) {
     createNodeAndInsertText(xmlDOM, objNode, "DLTYPE", "group");
     createNodeAndInsertText(xmlDOM, objNode, "FIELD", "AddressID,SNAME,SEMAIL,STYPE");
     createNodeAndInsertText(xmlDOM, objNode, "ADDFILTER", name);
+    createNodeAndInsertText(xmlDOM, objNode, "SHAREDMAILBOXSEARCH", "displayname::" + name);
     xmlHTTP.open("POST", "/ezEmail/mailNameCheck.do", false);
     xmlHTTP.send(xmlDOM);
-
 
     xmlDOM = loadXMLString(xmlHTTP.responseText);
     var rows = SelectNodes(xmlDOM, "RESULT/ORGAN/ROW");
@@ -1386,6 +1400,19 @@ function GetMailAddresses(name) {
         m_addrBook["href"][count + adCount] = "";
         m_addrBook["company"][count + adCount] = strLang114;
         m_addrBook["dept"][count + adCount] = "";
+        m_addrBook["title"][count + adCount] = "";
+    }
+    
+    adCount += rows.length;
+    rows = SelectNodes(xmlDOM, "RESULT/SHAREDMAILBOX/ROW");
+    
+    for (var count = 0 ; count < rows.length ; count++) {
+        m_addrBook["type"][count + adCount] = "email";
+        m_addrBook["name"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("VALUE")[0]);
+        m_addrBook["email"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA3")[0]);
+        m_addrBook["href"][count + adCount] = "";
+        m_addrBook["company"][count + adCount] = getNodeText(GetChildNodes(rows[count])[0].getElementsByTagName("DATA4")[0]);
+        m_addrBook["dept"][count + adCount] = strLangSharedMailbox01;
         m_addrBook["title"][count + adCount] = "";
     }
     
@@ -2036,7 +2063,7 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
     }
 }
 
-function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
+function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
 	AttachFlag = true;
     var xmlHTTP = createXMLHttpRequest();
     xmlHTTP.open("GET", "/ezBoard/getItemInfo.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
@@ -2071,9 +2098,13 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
         htmlData = ReplaceText(htmlData, "<P>", "<DIV>");
         htmlData = ReplaceText(htmlData, "</P>", "</DIV>");
         htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
-        if (pRetransType != "boardAttach")
-            document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" + "<br><br><hr></hr><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender + "<br><B>" + strLang120 + "</B>" + MakeXMLString(eSubject.value) + "<br><br>" + htmlData;
 
+        if (pRetransType != "boardAttach") {
+            document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" +
+            	"<br><br><hr></hr><DIV style='font-family:"+ pFont + "'><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender +
+            	"<br><B>" + strLang120 + "</B>" + MakeXMLString(eSubject.value) + "</DIV><br><br>" + htmlData;
+        }
+        
         xmlHTTP.open("POST", "/ezBoard/getItemAttachmentsMail.do?itemID=" + encodeURIComponent(pItemID) + "&mode=" + pRetransType + "&conLocation=" + encodeURIComponent(Rurl) + "&title=" + encodeURIComponent(getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0])), false);
         xmlHTTP.send();
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
@@ -2140,7 +2171,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType) {
     }
 }
 
-function GetBoardItemInfo_New3(pBoardID, pItemID) {
+function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
     AttachFlag = true;
     var xmlHTTP = createXMLHttpRequest();
     xmlHTTP.open("GET", "/ezCommunity/getItemInfo.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
@@ -2174,7 +2205,9 @@ function GetBoardItemInfo_New3(pBoardID, pItemID) {
         htmlData = ReplaceText(htmlData, "<P>", "<DIV>");
         htmlData = ReplaceText(htmlData, "</P>", "</DIV>");
         htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
-        document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" + "<br><br><hr></hr><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender + "<br><B>" + strLang120 + "</B>" + eSubject.value + "<br><br>" + htmlData;
+        document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" +
+        	"<br><br><hr></hr><DIV style='font-family:"+ pFont + "'><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender +
+        	"<br><B>" + strLang120 + "</B>" + eSubject.value + "<br><br></DIV>" + htmlData;
 
         xmlHTTP.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + pItemID, false);
         xmlHTTP.send();
@@ -2892,11 +2925,25 @@ function Option_onClick() {
     letteroption_cross_dialogArguments[1] = Option_onClick_Complete;
     letteroption_cross_dialogArguments[2] = DivPopUpHidden;
     
-    if (individualmailuser != "0") {
-        DivPopUpShow(410, 325, "/ezEmail/letterOption.do");
-    } else {
-        DivPopUpShow(410, 250, "/ezEmail/letterOption.do");
-    }
+    var requestUrl = "/ezEmail/letterOption.do";
+    
+    if (typeof(shareId) != "undefined" && shareId != "") {
+    	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+    	
+    	if (individualmailuser != "0") {
+	        DivPopUpShow(410, 250, requestUrl);
+	    } else {
+	        DivPopUpShow(410, 175, requestUrl);
+	    }
+	} else {
+		if (individualmailuser != "0") {
+	        DivPopUpShow(410, 325, requestUrl);
+	    } else {
+	        DivPopUpShow(410, 250, requestUrl);
+	    }
+	}
+    
+    
 }
 
 function Option_onClick_Complete(m_rgParams4PostOption) {

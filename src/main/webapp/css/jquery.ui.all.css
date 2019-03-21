@@ -8,5 +8,5 @@
  *
  * http://docs.jquery.com/UI/Theming
  */
-@import "/JQuery/dateControls/jquery.ui.base.css";
-@import "/JQuery/dateControls/jquery.ui.theme.css";
+@import "/js/jquery/dateControls/jquery.ui.base.css";
+@import "/js/jquery/dateControls/jquery.ui.theme.css";

@@ -180,6 +180,7 @@
 			
 			function btnTakeOwner_Click_Complete(retVal) {
 				if (typeof (retVal) != "undefined") {
+					retVal = JSON.parse(retVal);
 					//document.getElementById("Owner").innerHTML = retVal["ownerName"][0] + "(" + retVal["ownerName1"][0] + ")";
 					//document.getElementById("subOwner").innerHTML = "";
 					document.getElementById("Owner").innerHTML = "";
@@ -285,7 +286,7 @@
         				</tr>
         				<tr>
           					<th> <spring:message code="ezResource.t148"/></th>
-          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="${resLocation}" style="width: 100%" maxlength="100"></td>
+          					<td colspan="3"><input type="text" name="ResLocation" id="ResLocation" value="<c:out value='${resLocation}'/>" style="width: 100%" maxlength="100"></td>
         				</tr>
         				<tr>
 							<th> <spring:message code="ezResource.t149"/></th>

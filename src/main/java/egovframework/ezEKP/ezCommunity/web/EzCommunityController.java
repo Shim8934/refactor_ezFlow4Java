@@ -647,7 +647,7 @@ public class EzCommunityController extends EgovFileMngUtil{
         model.addAttribute("boardName", boardInfo.getBoardName());
         model.addAttribute("title", title);
         model.addAttribute("writerName", writerName);
-        model.addAttribute("abstract", abstracts);
+        model.addAttribute("abstracts", abstracts);
         model.addAttribute("searchStart", searchStart);
         model.addAttribute("searchEnd", searchEnd);
         model.addAttribute("pPage", pPage);
@@ -761,7 +761,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		String pItemID = "", pReservedItem = "", pUrl = "", pDocID = "", expireDays = "";
-		String hasAttach = "NO";
 		String uploadFilePath = commonUtil.getUploadPath("upload_community.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		String publicModulus = egovFileScrty.getPbm();
 		String publicExponent = "10001";
@@ -790,9 +789,23 @@ public class EzCommunityController extends EgovFileMngUtil{
 			attachFileNameMaxLength = "100";
 		}
 		
+		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", userInfo.getLocale()) + "'";
+		
+		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
+		if (userInfo.getLang().equals("1")) {
+			String editorFontStyle = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+			
+			if (!editorFontStyle.equals("")) {
+				String fontFamily = editorFontStyle.split("\\|")[0];
+				String fontSize = editorFontStyle.split("\\|")[1];
+				
+				defaultFontAndSize = "style='font-size:" + fontSize + ";font-family:" + fontFamily + "'";
+			}
+		}
+		
 		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, pBoardID);
 		
-		ezCommunityService.newBoardItem(item, boardInfo, userInfo, pItemID, pBoardID, pUrl, pMode, expireDays, hasAttach, model);
+		ezCommunityService.newBoardItem(item, boardInfo, userInfo, pItemID, pBoardID, pUrl, pMode, expireDays, model);
 		
 		model.addAttribute("editor", ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId()));
 		model.addAttribute("pUploadFilePath", uploadFilePath);
@@ -805,10 +818,10 @@ public class EzCommunityController extends EgovFileMngUtil{
 		model.addAttribute("strNow", commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false));
 		model.addAttribute("pUrl", pUrl);
 		model.addAttribute("pMode", pMode);
-		model.addAttribute("hasAttach", hasAttach);
 		model.addAttribute("isCrossBrowser", isCrossBrowser);
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		model.addAttribute("endDate", item.getEndDate());
+		model.addAttribute("defaultFontAndSize", defaultFontAndSize);
 		
 		logger.debug("item.endDate: " + item.getEndDate());
 		
@@ -2134,7 +2147,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		String code = request.getParameter("code");
 		String pollManagerID = request.getParameter("pollManagerID");
-		String pollState = request.getParameter("pollState");
+		String pollState = URLDecoder.decode(request.getParameter("pollState"), "utf-8");
 		
 		//TODO 2016-12-15 이효진 사용되지 않음
 //		int userLevel = ezCommunityService.pollResGet1(userInfo.getId(), code, tenantID);
@@ -2528,9 +2541,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 			return "cmm/error/egovError";
 		}
 		
-		//커뮤니티 소개글 저장할때 줄바꿈이 안되서, \r\n을 <br>태그로 치환
-		clubVO.setC_ClubDesc(clubVO.getC_ClubDesc().replaceAll("\r\n", "<br>"));
-		
+		/* 2019-01-29 홍승비 - 개행문자 <br>태그로 치환하는 부분 제거 */
 		ezCommunityService.adminBasicOkUpdate(clubVO, code, userInfo.getTenantId());
 		
 		model.addAttribute("code", code);
@@ -3106,7 +3117,6 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String parentBoardID = request.getParameter("parentBoardID");
 		String boardGroupID = request.getParameter("boardGroupID");
 		String code = request.getParameter("code");
-		
 		String orgBoardParameters = request.getParameter("orgBoardParameters");
 		
 		if (request.getParameter("page") != null) {
@@ -3176,7 +3186,8 @@ public class EzCommunityController extends EgovFileMngUtil{
         model.addAttribute("totalPage", totalPage);
         model.addAttribute("title", title);
         model.addAttribute("writerName", writerName);
-        model.addAttribute("abstract", abstracts);
+        model.addAttribute("abstracts", abstracts);
+        model.addAttribute("pPage", pPage);
         
 		return "ezCommunity/communityAdminSearchBoardItem";
 	}
@@ -3297,7 +3308,8 @@ public class EzCommunityController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		CommunityCClubUserVO clubUser = null;
 		
-		String propList = "extensionAttribute2;company;displayName;title;mail;telephoneNumber;mobile;info;homePhone;facsimileTelephoneNumber;postalCode;streetAddress";
+		/* 2018-12-03 홍승비 - 카뮤니티 멤버의 부서명 Prop으로 가져오도록 수정, 사용하지 않는 prop 제거 */
+		String propList = "displayName;telephoneNumber;mobile;facsimileTelephoneNumber;postalCode;streetAddress;description";
 		int userMode = 0;
 		boolean existOutList = false;
 		
@@ -3325,12 +3337,19 @@ public class EzCommunityController extends EgovFileMngUtil{
 		memberInfo.setCompanyAddress(xmldom.getElementsByTagName("STREETADDRESS").item(0).getTextContent());
 		memberInfo.setUserName(xmldom.getElementsByTagName("DISPLAYNAME").item(0).getTextContent());
 		memberInfo.setCompanyTel(xmldom.getElementsByTagName("TELEPHONENUMBER").item(0).getTextContent());
+		//memberInfo.setDeptName(xmldom.getElementsByTagName("DESCRIPTION").item(0).getTextContent());
 		
-		// 이미 여기서 부서명을 받아오고 있는데여???
+		/* 2019-03-05 홍승비 - 커뮤니티 팝업홈 > 관리메뉴 > 회원정보가 사간겸직에 대응하도록 수정 */
 		logger.debug("getMemberInfo(" + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
 		CommunityMemberInfoVO memberInfoVO = ezCommunityService.getMemberInfo(companyID, cID, userInfo.getTenantId());
 		
 		if (memberInfoVO != null) {
+			if (userInfo.getPrimary().equals("1")) {
+				memberInfo.setDeptName(memberInfoVO.getDeptName());
+			} else {
+				memberInfo.setDeptName(memberInfoVO.getDeptName2());
+			}
+			
 			logger.debug("adminMemberListOkGet(" + code + ", " + companyID + ", " + cID + ", " + userInfo.getTenantId() + ")");
 			clubUser = ezCommunityService.adminMemberListOkGet(code, cID, companyID, userInfo.getTenantId());
 			
@@ -4666,6 +4685,31 @@ public class EzCommunityController extends EgovFileMngUtil{
 		logger.debug("getItemViewNew ended.");
 		
 		return "<DATA>" + result + "</DATA>";
+	}
+	
+	/**
+	 * 2019-01-10 홍승비 - 커뮤니티 게시판 > 부모게시판ID 리턴하는 함수 추가
+	 */
+	@RequestMapping(value = "/ezCommunity/getParentBoardID.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getParentBoardID(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getParentBoardID started.");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);		
+		String boardID = request.getParameter("boardID");
+		String result = "";
+		
+		CommunityBoardPropertyVO boardInfo = ezCommunityService.getBoardInfo(userInfo, boardID);
+		
+		if(boardInfo != null) {
+			if (boardInfo.getParentBoardID() != null && !boardInfo.getParentBoardID().equals("")) {
+				result = boardInfo.getParentBoardID();
+			}
+		}
+		
+		logger.debug("getParentBoardID ended.");
+		
+		return result;
 	}
 }
 

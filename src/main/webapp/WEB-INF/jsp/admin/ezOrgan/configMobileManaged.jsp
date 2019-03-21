@@ -42,18 +42,44 @@
 			xhttp.send();
 		}
 		
+		// 기기 삭제 버튼 
+	    function deleteDevice(devid) {
+			if (confirm("<spring:message code='ezPortal.t54' />")) {
+		    	xhttp = createXMLHttpRequest();
+		    	xhttp.onreadystatechange = loader;
+				xhttp.open("POST", "/ezPersonal/deleteMobileDeviceManaged.do?userId=" + userId + "&pDevId=" + devid);
+				xhttp.send();
+			}
+	    }
+		
+		// 기기별 사용여부 selectBox changed
+	    function selectChange(devid, obj) {
+            setDevice(devid, obj.options[obj.selectedIndex].value);
+	    }
+		
+		// 기기별 사용여부 selectBox changed
+	    function setDevice(devId, state) {
+	    	xhttp = createXMLHttpRequest();
+			xhttp.onreadystatechange = loader;
+			xhttp.open("POST", "/ezPersonal/setMobileDeviceInfo.do?userId=" + userId + "&pDevId=" + devId + "&pState=" + state);
+			xhttp.send();
+	    }
+		
 		function loader() {
 			xhttp.onreadystatechange = function() {
 			    if (this.readyState == 4 && this.status == 200) {
-			       	if (xhttp.getResponseHeader("customStatus") == "OK") {
+					var response = xhttp.getResponseHeader("Result");
+					
+			    	if (response == "OK") {
 			    	   	alert("<spring:message code='ezOrgan.kyj03' />");
-			    	   	cancel_onclick();
+			       	} else if (response == "DELETE") { 
+			       		window.location.reload(true);
 			       	} else {
 			    		alert("<spring:message code='ezOrgan.kyj04' />");
 			    	}
-			       
-			       xhttp = null;
-			    }
+			    	
+			    	xhttp = null;
+			    } 
 			};
 		}
 		
@@ -63,7 +89,7 @@
 		}	
 		</script>
 	</head>
-	<body class="popup" >
+	<body class="popup" style="height:100%;">
 		<h1 style="height:30px;"><spring:message code = 'ezPersonal.t998' /></h1>
 		<div id="close">
             <ul>
@@ -88,8 +114,56 @@
 		</table>
 		<div class="btnposition">
 		    <a class="imgbtn">
-		    	<span onClick="return setUserMobileInfo()"><spring:message code='ezOrgan.t124' /></span>
+		    	<span onClick="return setUserMobileInfo()"><spring:message code='ezPersonal.t34' /></span>
 		    </a>
 		</div>
+		<br/>
+		<table class="mainlist" id="deviceTbl" style="white-space: nowrap; width:100%; overflow-x: hidden; overflow-y: auto;">
+            <tr>
+                <th width='50%'><spring:message code="ezPersonal.kyj01" /></th>
+                <th width='15%'><spring:message code="ezPersonal.t513" /></th>
+                <th width='15%'><spring:message code="ezApproval.t367" /></th>
+                <th width='15%'><spring:message code="ezPersonal.kyj02" /></th>
+            </tr>
+            <c:if test="${deviceInfo ne null}">
+	    		<c:forEach items="${deviceInfo}" var="list">
+		            <c:set var="notUsed" value="${list.notUsed}"></c:set>
+                    <c:set var="deviceType" value="${list.devType}"></c:set>
+                    <c:set var="type" value="${list.type}"></c:set>
+		            <tr height=24px bgcolor=ffffff>
+                    <td>
+                        <c:choose>
+                            <c:when test="${deviceType eq 'Andr'}">Android</c:when>
+                            <c:when test="${deviceType eq 'IPHO'}">iPhone</c:when>
+                            <c:otherwise>${deviceType}</c:otherwise>
+                        </c:choose>
+                        ${list.subType}
+                        <c:choose>
+                            <c:when test="${list.type eq 'talk'}">(<spring:message code="main.kyj01" />)</c:when>
+                            <c:otherwise>(<spring:message code="main.kyj02" />)</c:otherwise>
+                        </c:choose>
+                    </td>
+						<td>
+							<select name="selectbox" id='selectChangeState' onchange='selectChange("${list.devId}",this)'>
+								<option value='0' <c:if test="${notUsed eq 0}"> selected="selected" </c:if>><spring:message code="ezPersonal.t937" /></option>
+								<option value='2' <c:if test="${notUsed ne 0}"> selected="selected" </c:if>><spring:message code="ezPersonal.t1000" /></option>
+							</select>
+						</td>
+						<td>${list.regDate}</td>
+						<td class='btnposition' style="text-align:left;">
+							<a class="imgbtn">
+								<span style='cursor:pointer;' onclick="deleteDevice('${list.devId}')"><spring:message code="ezPersonal.t99" /></span>
+							</a>
+						</td>
+					</tr>
+	    		</c:forEach>
+    		</c:if>
+    		<c:if test="${deviceInfo eq null}">
+    			<tr height=24px bgcolor=ffffff>
+    				<td colspan="4" align="center"><spring:message code='ezOrgan.kyj09' /></td>
+    			</tr>
+    		</c:if>
+        </table>
+		<br/><br/>
 	</body>
 </html>
