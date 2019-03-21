@@ -3728,7 +3728,7 @@
 	        			var count = getGroupAddressMemberCount(addressId);
 	        			
 	        			if (mailMaxReceiverCount < receiverCount + count) {
-	        				alert("수신인은 최대 " + mailMaxReceiverCount + "명까지 가능합니다.");
+	        				alert(strLangReceiverCount01 + mailMaxReceiverCount + strLangReceiverCount02);
 	        	            return false;
 	        			}
 	        			
@@ -3736,7 +3736,7 @@
 	        			receiverCount += count;
 	        		} else {
 	        			if (mailMaxReceiverCount < receiverCount + 1) {
-	        				alert("수신인은 최대 " + mailMaxReceiverCount + "명까지 가능합니다.");
+	        				alert(strLangReceiverCount01 + mailMaxReceiverCount + strLangReceiverCount02);
 	        	            return false;
 	        			}
 	        			
@@ -3744,7 +3744,7 @@
 	        		}
 	        	} else {
 	        		if (mailMaxReceiverCount < receiverCount + 1) {
-	        			alert("수신인은 최대 " + mailMaxReceiverCount + "명까지 가능합니다.");
+	        			alert(strLangReceiverCount01 + mailMaxReceiverCount + strLangReceiverCount02);
 	                    return false;
 	        		}
 	        		

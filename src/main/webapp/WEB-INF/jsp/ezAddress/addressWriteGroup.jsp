@@ -398,6 +398,11 @@
 	        		alert("<spring:message code='ezSchedule.t197' />");
 	        		return;
 	        	}
+	        	
+	        	if (mailMaxReceiverCount < receiverCount + 1) {
+        			alert(strLangGroupMemberCount01 + mailMaxReceiverCount + strLangGroupMemberCount02);
+                    return;
+        		}
 	
                 var xmlHTTP = createXMLHttpRequest();
                 var xmlDom = createXmlDom();
@@ -595,6 +600,8 @@
 	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " <" + strEmail + ">" + "]]></VALUE></CELL></ROW>";
 	            }
 	            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+	            
+	            receiverCount = ReturnXMLRow.length;
 	
 	            var Resultxml = loadXMLString(pparsingXML2);
 	            var listview = new ListView();
