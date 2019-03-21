@@ -56,7 +56,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderController.class);
 
-	@RequestMapping(value = "/ezWebFolder/webfolderMain.do")
+	@RequestMapping(value = "/ezWebFolder/webfolderMain.do", method = RequestMethod.GET)
 	public String webfolderMain(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, Model model) {
 		logger.debug("webfolderMain start");
 		
@@ -87,7 +87,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return "ezWebFolder/webfolderMain";
 	}
 
-	@RequestMapping(value="/ezWebFolder/webfolderLeft.do")
+	@RequestMapping(value="/ezWebFolder/webfolderLeft.do", method = RequestMethod.GET)
 	public String webfolderLeft(@CookieValue("loginCookie") String loginCookie,ModelMap modelMap, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception{
 		logger.debug("webfolderLeft start");
 		LoginSimpleVO userInfo    = commonUtil.userInfoSimple(loginCookie);
@@ -117,7 +117,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return "ezWebFolder/webfolderLeft";
 	}
 
-	@RequestMapping(value="/ezWebFolder/webfolderConfig.do")
+	@RequestMapping(value="/ezWebFolder/webfolderConfig.do", method = RequestMethod.GET)
 	public String webfolderConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("webfolderConfig start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -146,14 +146,14 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return "ezWebFolder/webfolderConfig";
 	}
 	
-	@RequestMapping(value="/ezWebFolder/deptChiefSetting.do")
+	@RequestMapping(value="/ezWebFolder/deptChiefSetting.do", method = RequestMethod.GET)
 	public String deptChiefConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("deptChiefConfig start");
 		logger.debug("deptChiefConfig end");
 		return "ezWebFolder/deptChiefConfig";
 	}
 	
-	@RequestMapping(value="/ezWebFolder/wefolderGeneral.do")
+	@RequestMapping(value="/ezWebFolder/wefolderGeneral.do", method = RequestMethod.GET)
 	public String webfolderGeneral(@CookieValue("loginCookie") String loginCookie,  HttpServletRequest request, Model model) throws Exception {
 		logger.debug("webfolderGeneral start");
 		
@@ -243,7 +243,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return resultBody.toString();
 	}
 
-	@RequestMapping(value="/ezWebFolder/downloadAttach.do", produces="application/zip")
+	@RequestMapping(value="/ezWebFolder/downloadAttach.do", method = RequestMethod.GET, produces="application/zip")
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttach start");
 		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
@@ -287,7 +287,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		logger.debug("downloadAttach end");
 	}
 
-	@RequestMapping(value="/ezWebFolder/deleteConfirm.do")
+	@RequestMapping(value="/ezWebFolder/deleteConfirm.do", method = RequestMethod.GET)
 	public String deleteFileConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("deleteFileConfirm start");
 		String listFileId = request.getParameter("fileList") != null ? request.getParameter("fileList") : "";
@@ -335,7 +335,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return resultBody.toString();
 	}
 
-	@RequestMapping(value="/ezWebFolder/fileRenameConfirm.do")
+	@RequestMapping(value="/ezWebFolder/fileRenameConfirm.do", method = RequestMethod.GET)
 	public String fileRenameConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("fileRenameConfirm start");
 		String fileId = request.getParameter("fileId") != null ? request.getParameter("fileId") : "";
@@ -386,7 +386,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return resultBody.toString();
 	}
 
-	@RequestMapping(value="/ezWebFolder/fileMoveConfirm.do")
+	@RequestMapping(value="/ezWebFolder/fileMoveConfirm.do", method = RequestMethod.GET)
 	public String fileMoveConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("fileMoveConfirm start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);

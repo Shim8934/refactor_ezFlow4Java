@@ -34,7 +34,7 @@ public class EzWebFolderController_y {
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzWebFolderController_y.class);
 	
-	@RequestMapping(value="/ezWebFolder/main.do")
+	@RequestMapping(value="/ezWebFolder/main.do", method = RequestMethod.GET)
 	public String main (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		LOGGER.debug("main started");
@@ -55,7 +55,7 @@ public class EzWebFolderController_y {
 	}
 	
 	// getFolderList /ezwebfolder/users/{userId}/folder-tree에 가는 메소드 
-	@RequestMapping(value = "/ezWebFolder/folderList.do")
+	@RequestMapping(value = "/ezWebFolder/folderList.do", method = RequestMethod.POST)
 	public @ResponseBody String getFolderList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model ){
 		LOGGER.debug("getFolderList started");
@@ -75,12 +75,11 @@ public class EzWebFolderController_y {
 		
 		LOGGER.debug("getFolderList ended");
 		return resultBody.toString();
-		
 	}
 	
 	// 파일 리스트 가져오기 
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/ezWebFolder/fileList.do")
+	@RequestMapping(value = "/ezWebFolder/fileList.do", method = RequestMethod.POST)
 	public @ResponseBody String getFileList (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		LOGGER.debug("getFileList started");
@@ -147,7 +146,7 @@ public class EzWebFolderController_y {
 		return resultBody.toString();
 	}
 	
-	@RequestMapping( value ="/ezWebFolder/folderManage.do")
+	@RequestMapping( value ="/ezWebFolder/folderManage.do", method = RequestMethod.GET)
 	public String folderManage (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp , Model model ) throws Exception {
 		LOGGER.debug("folderControll started");
@@ -165,14 +164,14 @@ public class EzWebFolderController_y {
 	}
 	
 	// 새폴더 생성 레이어팝업
-	@RequestMapping( value ="/ezWebFolder/inputNameDlg.do")
+	@RequestMapping( value ="/ezWebFolder/inputNameDlg.do", method = RequestMethod.GET)
 	public String inputNameDlg (@CookieValue("loginCookie") String loginCookie, HttpServletRequest requtest,
 			HttpServletResponse resp , Model model ) throws Exception {
 		return "ezWebFolder/newFolderInput";
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping( value ="/ezWebFolder/insertFolder.do") 
+	@RequestMapping( value ="/ezWebFolder/insertFolder.do", method = RequestMethod.POST) 
 	public @ResponseBody String insertFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		LOGGER.debug("insertFolder started");
@@ -225,9 +224,9 @@ public class EzWebFolderController_y {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@RequestMapping( value ="/ezWebFolder/updateFolder.do") 
+	@RequestMapping( value ="/ezWebFolder/updateFolder.do", method = RequestMethod.POST) 
 	public @ResponseBody String updateFolder (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
-			HttpServletResponse resp, Model model )throws Exception {
+			HttpServletResponse resp, Model model ) throws Exception {
 		LOGGER.debug("updateFolder started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
@@ -278,7 +277,7 @@ public class EzWebFolderController_y {
 	}
 	
 	
-	@RequestMapping( value ="/ezWebFolder/folderDelete.do") 
+	@RequestMapping( value ="/ezWebFolder/folderDelete.do", method = RequestMethod.GET) 
 	public String folderDelete (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		return "ezWebFolder/folderDelete";
@@ -334,7 +333,7 @@ public class EzWebFolderController_y {
 	}
 	
 	
-	@RequestMapping( value ="/ezWebFolder/folderMove.do") 
+	@RequestMapping( value ="/ezWebFolder/folderMove.do", method = RequestMethod.GET) 
 	public String folderMove (@CookieValue("loginCookie") String loginCookie, HttpServletRequest request,
 			HttpServletResponse resp, Model model )throws Exception {
 		return "ezWebFolder/folderMoveJsTree";

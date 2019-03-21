@@ -100,8 +100,8 @@
 					type: "POST",
 					url: "/ezWebFolder/getHiddenSharedList.do",
 					data: {
-						"pageNum"           : pagination.currentPage(),
-						"pageSize"          : pagination.listSize(),
+						"pageNum"  : pagination.currentPage(),
+						"pageSize" : pagination.listSize(),
 					},
 					dataType: "JSON",
 					async: true,

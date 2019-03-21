@@ -809,7 +809,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			FileVO fileVO    = getFileByFileId(fileIDList[0], offset, tenantId);
 			String _fileName = fileVO.getFileName();
 			_fileName        = CommonUtil.getEncodedFileNameForDownload(userAgent, _fileName);
-			File file        = new File(realPath + fileVO.getFilePath());
+			File file        = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
 			
 			if (!file.exists()) {
 				throw new FileNotFoundException(fileVO.getFileName());
@@ -867,7 +867,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				for (int i = 0; i < fileIDList.length; i++) {
 					//New zip entry and copying input stream with file to zipOutputStream, after all closing streams
 					FileVO fileVO    = getFileByFileId(fileIDList[i], offset, tenantId);
-					File file        = new File(realPath + fileVO.getFilePath());
+					File file        = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
 					
 					if (!file.exists()) {
 						throw new FileNotFoundException(fileVO.getFileName());
@@ -960,7 +960,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		zipOutputStream.closeEntry();
 		
 		for (FileVO innerFile : filesInFolder) {
-			File file = new File(realPath + innerFile.getFilePath());
+			File file = new File(realPath + commonUtil.detectPathTraversal(innerFile.getFilePath()));
 			
 			if (!file.exists()) {
 				throw new FileNotFoundException(innerFile.getFileName());
@@ -1174,13 +1174,13 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				fileVO.setUpdateDate(timeUTC);
 				
 				String fileName = fileVO.getFileName();
-				int dotPos      = fileName.lastIndexOf(".");
+				int dotPos      = fileName.lastIndexOf('.');
 				String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
 				String newName  = UUID.randomUUID().toString() + "." + extend;
 				String newPath  = getWebFolderDirPath(userInfo.getTenantId()) + newName;
-				File srcFile    = new File(realPath + fileVO.getFilePath());
-				File destFile   = new File(realPath  + newPath);
-				destFile.getParentFile().mkdirs(); 
+				File srcFile    = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));
+				File destFile   = new File(realPath + newPath);
+				destFile.getParentFile().mkdirs();
 				destFile.createNewFile();
 				
 				FileUtils.copyFile(srcFile, destFile);
