@@ -75,7 +75,7 @@
 				</div>
 			</div>
 		</div>
-		<form id="exportGantt" name="exportGantt" method="post" style="display:none;">
+		<form id="exportSurvey" name="exportSurvey" method="post" style="display:none;">
 			<input name="surveyId">
 		</form>
 		
@@ -133,9 +133,9 @@
 
 			function exportData() {
 				$("input[name='surveyId']").val(questionStatistic[0]["surveyId"]);
-				document.exportGantt.action = "/ezSurvey/exportResultExcel.do";
-				document.exportGantt.method = "POST";
-				document.exportGantt.submit();
+				document.exportSurvey.action = "/ezSurvey/exportResultExcel.do";
+				document.exportSurvey.method = "POST";
+				document.exportSurvey.submit();
 			}
 
 			function startStatistic(questions) {

@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezSurvey.web;
 
+import java.io.PrintWriter;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -653,14 +654,13 @@ public class EzSurveyController extends EgovFileMngUtil {
 	@ResponseBody
 	public void exportResultExcel(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model, Locale locale) throws Exception {
 		logger.debug("jspGetStatisticsPage started");
-		LoginSimpleVO user    = commonUtil.userInfoSimple(loginCookie);
-		String itemId         = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
-		JSONObject result     = surveyRestService.getSurveyStatistic(request, user.getId(), itemId);
-
+		LoginSimpleVO user     = commonUtil.userInfoSimple(loginCookie);
+		String itemId          = request.getParameter("surveyId") != null ? request.getParameter("surveyId") : "";
+		JSONObject result      = surveyRestService.getSurveyStatistic(request, user.getId(), itemId);
 		JSONObject surveyData  = (JSONObject)result.get("data");
 		JSONArray questionData = (JSONArray)result.get("questions");
 
-
+		
 		// surveyData parsing
 		/** 익명/비익명 */
 		int annoynumous    = ((Long)surveyData.get("annoynymous")).intValue();
@@ -670,7 +670,22 @@ public class EzSurveyController extends EgovFileMngUtil {
 		int allUser        = ((Long)surveyData.get("usersCnt")).intValue();
 		/** 설문제목 */
 		String surveyTitle = (String)surveyData.get("title");
+		/** 관리자 권한 */	
+		String adminYN     = (String) result.get("adminYN");
 
+		// 2019-03-21 황윤호
+		// 관리자 권한이 없을 경우, 설문 권한 보기 제한.
+		if(adminYN.equals("N")) {
+			// 한글 처리
+			response.setContentType("text/html; charset=UTF-8");
+			PrintWriter out = response.getWriter();
+			out.println("<script>");
+			out.println("alert('" + egovMessageSource.getMessage("ezSurvey.t106", locale) +"');");
+			out.println("window.close();");
+			out.println("</script>");
+			return;
+		}
+		
 		// questionData parsing
 		List<QuestionVO> surveyResultData = new ArrayList<QuestionVO>();
 		for(int i=0; i<questionData.size(); i++) {
