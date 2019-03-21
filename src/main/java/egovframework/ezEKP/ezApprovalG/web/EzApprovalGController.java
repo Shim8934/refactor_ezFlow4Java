@@ -3768,9 +3768,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 
 		if (flag != null) {
 			if (flag.equals("Y")) {
-				String pwdType = ezApprovalGService.getApprovalPWD2(dUserID, userInfo.getTenantId(), userInfo.getCompanyID());
+				String pType = ezApprovalGService.getApprovalPWD2(dUserID, userInfo.getTenantId(), userInfo.getCompanyID());
 				
-				if (pwdType.equals("L")) {
+				if (pType.equals("L")) {
 					orgPassword = ezOrganService.getEncPassword(dUserID, userInfo.getTenantId());
 					
 					if (orgPassword.trim().equals(password)) {
@@ -7701,34 +7701,50 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String companyName2 = request.getParameter("companyName2");
 		
 		Cookie cookieID0 = new Cookie("APRUI0", URLEncoder.encode(deptID, "utf-8"));
+		cookieID0.setHttpOnly(true);
     	cookieID0.setPath("/");
+    	cookieID0.setSecure(true);
     	response.addCookie(cookieID0);
     	
     	Cookie cookieID1 = new Cookie("APRUI1", URLEncoder.encode(deptName, "utf-8"));
+    	cookieID1.setHttpOnly(true);
+    	cookieID1.setSecure(true);
     	cookieID1.setPath("/");
     	response.addCookie(cookieID1);
     	
     	Cookie cookieID2 = new Cookie("APRUI2", URLEncoder.encode(deptName2, "utf-8"));
+    	cookieID2.setHttpOnly(true);
+    	cookieID2.setSecure(true);
     	cookieID2.setPath("/");
     	response.addCookie(cookieID2);
     	
     	Cookie cookieID3 = new Cookie("APRUI3", URLEncoder.encode(companyName, "utf-8"));
+    	cookieID3.setHttpOnly(true);
+    	cookieID3.setSecure(true);
     	cookieID3.setPath("/");
     	response.addCookie(cookieID3);
     	
     	Cookie cookieID4 = new Cookie("APRUI4", URLEncoder.encode(companyName2, "utf-8"));
+    	cookieID4.setHttpOnly(true);
+    	cookieID4.setSecure(true);
     	cookieID4.setPath("/");
     	response.addCookie(cookieID4);
     	
     	Cookie cookieID5 = new Cookie("APRUI5", URLEncoder.encode(title, "utf-8"));
+    	cookieID5.setHttpOnly(true);
+    	cookieID5.setSecure(true);
     	cookieID5.setPath("/");
     	response.addCookie(cookieID5);
     	
     	Cookie cookieID6 = new Cookie("APRUI6", URLEncoder.encode(title2, "utf-8"));
+    	cookieID6.setHttpOnly(true);
+    	cookieID6.setSecure(true);
     	cookieID6.setPath("/");
     	response.addCookie(cookieID6);
     	
     	Cookie cookieID7 = new Cookie("APRUI7", URLEncoder.encode(companyID, "utf-8"));
+    	cookieID7.setHttpOnly(true);
+    	cookieID7.setSecure(true);
     	cookieID7.setPath("/");
     	response.addCookie(cookieID7);
     	

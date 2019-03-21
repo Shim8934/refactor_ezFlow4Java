@@ -6,12 +6,14 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -1730,10 +1732,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String categoryDesc = request.getParameter("categoryDesc");
 		String pCode = request.getParameter("pCode");
 		String companyID = request.getParameter("companyID");
+		SecureRandom secRandom = new SecureRandom();
 		
 		if (approvalFlag.equals("S") && categoryCode.equals("")) {
-			String tempCategoryCode1 = Character.toString((char)((int)(Math.random()*26) + 65)) + Character.toString((char)((Math.random()*26) + 65));
-			String tempCategoryCode2 = Integer.toString((int)(Math.random()*1000000));
+			String tempCategoryCode1 = Character.toString((char)(secRandom.nextInt(26) + 65)) + Character.toString((char)(secRandom.nextInt(26) + 65));
+			String tempCategoryCode2 = Integer.toString(secRandom.nextInt(1000000));
 			logger.debug("tempCategoryCode1 = " + tempCategoryCode1);
 			logger.debug("tempCategoryCode2 = " + tempCategoryCode2);
 			categoryCode = tempCategoryCode1 + tempCategoryCode2;

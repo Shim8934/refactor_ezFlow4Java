@@ -13,11 +13,10 @@ import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import javax.annotation.Resource;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -25,11 +24,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
-
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGAdminService;
 import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -878,11 +875,12 @@ public class EzApprovalGRelayScheduler {
 		String result = "";
 		try {
 	       	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	       	factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			factory.setValidating(false);
 			factory.setNamespaceAware(true);
-	
+			
 			DocumentBuilder builder = factory.newDocumentBuilder();
-	
+			
 			// the "parse" method also validates XML, will throw an exception if misformatted
 	    	builder.parse(new InputSource(strFilePath));
 	    	
@@ -898,6 +896,7 @@ public class EzApprovalGRelayScheduler {
 		boolean result = false;
 		try {
 	       	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	       	factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			factory.setValidating(false);
 			factory.setNamespaceAware(true);
 	
@@ -919,14 +918,14 @@ public class EzApprovalGRelayScheduler {
 			boolean result = false;
             try {
             	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            	factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         		factory.setValidating(false);
         		factory.setNamespaceAware(true);
-
         		DocumentBuilder builder = factory.newDocumentBuilder();
-
+        		
         		// the "parse" method also validates XML, will throw an exception if misformatted
             	Document xmlDoc = builder.parse(new InputSource(pDocPath));
-
+            	
                 if (xmlDoc.getElementsByTagName("pack") != null)
                     result = true;
                 if (xmlDoc.getElementsByTagName("header") != null)

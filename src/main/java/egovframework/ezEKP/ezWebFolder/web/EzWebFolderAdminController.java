@@ -55,7 +55,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderAdminController.class);
 	
-	@RequestMapping(value = "/admin/ezWebFolder/webFolderConfig.do")
+	@RequestMapping(value = "/admin/ezWebFolder/webFolderConfig.do", method = RequestMethod.GET)
 	public String webFolderConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("webFolderConfig start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -69,7 +69,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "admin/ezWebFolder/webfolderConfig";
 	}
 	
-	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminLeft.do")
+	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminLeft.do", method = RequestMethod.GET)
 	public String webfolderAdminLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("webfolderAdminLeft start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -104,7 +104,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "admin/ezWebFolder/webfolderAdminLeft";
 	}
 
-	@RequestMapping(value="/admin/ezWebFolder/deleteFolderConfirm.do")
+	@RequestMapping(value="/admin/ezWebFolder/deleteFolderConfirm.do", method = RequestMethod.GET)
 	public String deleteFolderConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("deleteFolderConfirm start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -125,7 +125,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "admin/ezWebFolder/folderDelete";
 	}
 	
-	@RequestMapping(value="/admin/ezWebFolder/recycleBin.do")
+	@RequestMapping(value="/admin/ezWebFolder/recycleBin.do", method = RequestMethod.GET)
 	public String getRecycleBin(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model )throws Exception {
 		logger.debug("getRecycleBin start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -141,7 +141,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "admin/ezWebFolder/recycleBin";
 	}
 	
-	@RequestMapping(value="/admin/ezWebFolder/folderMoveConfirm.do")
+	@RequestMapping(value="/admin/ezWebFolder/folderMoveConfirm.do", method = RequestMethod.GET)
 	public String folderMoveConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("folderMoveConfirm start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -185,7 +185,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "admin/ezWebFolder/folderMove";
 	}
 
-	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminRight.do")
+	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminRight.do", method = RequestMethod.GET)
 	public String webfolderAdminRight(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("webfolderAdminRight start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
@@ -221,7 +221,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "admin/ezWebFolder/webfolderCompanyConfig";
 	}
 
-	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminPersonal.do")
+	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminPersonal.do", method = RequestMethod.GET)
 	public String webfolderAdminPersonal(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("webfolderAdminPersonal start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -257,7 +257,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "admin/ezWebFolder/webfolderPersonalConfig";
 	}
 
-	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminCompanyFolder.do")
+	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminCompanyFolder.do", method = RequestMethod.GET)
 	public String webfolderCompanyFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("webfolderCompanyFolder start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
@@ -294,7 +294,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "admin/ezWebFolder/webfolderCompanyFolder";
 	}
 
-	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminCompanyFile.do")
+	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminCompanyFile.do", method = RequestMethod.GET)
 	public String webfolderCompanyFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("webfolderCompanyFile start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
@@ -340,7 +340,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "admin/ezWebFolder/webfolderCompanyFile";
 	}
 	
-	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminDeptFile.do")
+	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminDeptFile.do", method = RequestMethod.GET)
 	public String webfolderDeptFile(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("webfolderDeptFile start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -384,7 +384,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "admin/ezWebFolder/webfolderDeptFile";
 	}
 	
-	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminFileHistory.do")
+	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminFileHistory.do", method = RequestMethod.GET)
 	public String webfolderFileHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("webfolderFileHistory start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
@@ -1052,7 +1052,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return resultBody.toString();
 	}
 
-	@RequestMapping(value="/admin/ezWebFolder/targetSelect.do")
+	@RequestMapping(value="/admin/ezWebFolder/targetSelect.do", method = RequestMethod.GET)
 	public String selectTarget(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("selectTarget start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
@@ -1091,7 +1091,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return "admin/ezWebFolder/targetSelect";
 	}
 
-	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminDeptFolder.do")
+	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminDeptFolder.do", method = RequestMethod.GET)
 	public String webfolderDeptFolder(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
 		logger.debug("webfolderDeptFolder start");
 		LoginSimpleVO user   = commonUtil.userInfoSimple(loginCookie);
@@ -1390,7 +1390,7 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 		return resultBody.toString();
 	}
 	
-	@RequestMapping(value="/admin/ezWebFolder/downloadExcel.do")
+	@RequestMapping(value="/admin/ezWebFolder/downloadExcel.do", method = RequestMethod.GET)
 	public void downloadExcelReport(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadExcelReport start");
 		String fileName    = request.getParameter("fileName");
@@ -1433,12 +1433,12 @@ public class EzWebFolderAdminController extends EgovFileMngUtil {
 	/**
 	 * 웹폴더관리자 상단 Top Frame - 2018-05-08 장진혁
 	 */
-	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminTop.do")
+	@RequestMapping(value="/admin/ezWebFolder/webfolderAdminTop.do", method = RequestMethod.GET)
 	public String webfolderAdminTop() throws Exception {
-		logger.debug("webfolderAdminTop started");		
+		logger.debug("webfolderAdminTop started");
 		
 		logger.debug("webfolderAdminTop ended");
 		
-		return "admin/ezWebFolder/webfolderAdminTop";		
+		return "admin/ezWebFolder/webfolderAdminTop";
 	}
 }

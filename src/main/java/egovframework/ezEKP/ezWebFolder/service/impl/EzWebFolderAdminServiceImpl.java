@@ -700,7 +700,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
 				String newName  = UUID.randomUUID().toString() + "." + extend;
 				String newPath  = ezWebFolderService.getWebFolderDirPath(userInfo.getTenantId()) + newName;
-				File srcFile    = new File(realPath + file.getFilePath());
+				File srcFile    = new File(realPath + commonUtil.detectPathTraversal(file.getFilePath()));
 				File destFile   = new File(realPath  + newPath);
 				destFile.getParentFile().mkdirs(); 
 				destFile.createNewFile();
@@ -739,9 +739,8 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 			FileUtils.cleanDirectory(file); 
 		}
 		
-		
 		if (file2.exists()) {
-			int pos         = fileName.lastIndexOf(".");
+			int pos         = fileName.lastIndexOf('.');
 			String extend   = fileName.substring(pos + 1);
 			String mainName = fileName.substring(0, pos);
 			int k           = 1;
