@@ -295,7 +295,8 @@
 				B.APRTYPE,
 				E.CODE2 FUNCTIONTYPE,
 				C.URGENTAPPROVAL,
-				A.companyID
+				A.companyID,
+				A.ENDDATE
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
@@ -395,7 +396,7 @@
 			</isNotEmpty>
 			<![CDATA[
 				ORDER BY 
-					ENDDATE DESC
+					A.ENDDATE DESC
 			) ENDT
 			WHERE
 				ROWNUM <= #listSize#
@@ -543,7 +544,7 @@
 					COUNT(*)
 				FROM ( 
 				SELECT 
-					*
+					DOCID
 				FROM 
 					VAPRDOINGDOCLIST 
 	   			WHERE
@@ -592,7 +593,7 @@
 				UNION ALL
 				
 				SELECT 
-					*
+					DOCID
 				FROM 
 					VENDCHAMJODOCINFO 
 	   			WHERE
@@ -642,7 +643,7 @@
 		<isEqual property="type" compareValue="DRAFT">
 			<![CDATA[
 				SELECT 
-					COUNT(*)
+					COUNT(DOCID)
 				FROM 
 					VAPRWILLDOCLIST 
 	   			WHERE
@@ -693,8 +694,7 @@
 		<isEqual property="type" compareValue="ING">
 			<![CDATA[
 				SELECT 
-					COUNT(DISTINCT DOCID,
-								   APRTYPE)
+					COUNT(DISTINCT DOCID)
 				FROM 
 					VAPRWILLDOCLIST 
 	   			WHERE
@@ -843,7 +843,7 @@
 					COUNT(*)
 				FROM ( 
 				SELECT 
-					*
+					DOCID
 				FROM 
 					VAPRDOINGDOCLIST 
 	   			WHERE
@@ -892,7 +892,7 @@
 				UNION ALL
 				
 				SELECT 
-					*
+					DOCID
 				FROM 
 					VENDCHAMJODOCINFO 
 	   			WHERE
@@ -948,7 +948,7 @@
 						COUNT(*)
 					FROM 
 					(SELECT
-						*
+						DOCID
 					FROM
 						VAPRDOINGDOCLIST 
 		   			WHERE
@@ -967,7 +967,7 @@
 		   			UNION ALL
 				
 					SELECT 
-						*
+						DOCID
 					FROM 
 						VENDCHAMJODOCINFO 
 		   			WHERE
@@ -983,7 +983,7 @@
 		   			AND
 		   				APRMEMBERSN <> 1) LIST ) aprDoCount,
 				(SELECT 
-						COUNT(*)
+						COUNT(DOCID)
 					FROM 
 						VAPRWILLDOCLIST 
 		   			WHERE
@@ -1001,8 +1001,7 @@
 		   			AND 
 			         	DocState <> '017') aprDraftCount,
 				(SELECT 
-						COUNT(DISTINCT DOCID,
-								   APRTYPE)
+						COUNT(DISTINCT DOCID)
 					FROM 
 						VAPRWILLDOCLIST 
 		   			WHERE
@@ -1022,8 +1021,7 @@
 				    </isEqual>
 		   				) aprIngCount,
 			(SELECT
-				COUNT(DISTINCT A.DOCID,
-					  		   B.APRTYPE)
+				COUNT(DISTINCT A.DOCID)
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
@@ -1089,10 +1087,10 @@
 		   	<isEqual property="useShareApproval" compareValue="YES">
 			   	<![CDATA[
 				   	,(	SELECT 
-							COUNT(*)
+							COUNT(DOCID)
 						FROM 
 						(SELECT
-							*
+							DOCID
 						FROM
 							VAPRDOINGDOCLIST 
 			   			WHERE
@@ -1111,7 +1109,7 @@
 			   			UNION ALL
 					
 						SELECT 
-							*
+							DOCID
 						FROM 
 							VENDCHAMJODOCINFO 
 			   			WHERE
@@ -1128,6 +1126,7 @@
 			   				APRMEMBERSN <> 1) LIST ) aprShareCount
 				]]>
 		   	</isEqual>
+		   	FROM DUAL
 	</select>
 	
 	<select id="MApprovalG.getAprLineInfo" parameterClass="Map" resultClass="MApprGAprLineInfoVO">
@@ -1522,7 +1521,7 @@
 					DISPLAYNAME attachName,
 					ATTACHFILEHREF attachHref,
 					ATTACHFILESIZE attachFileSize,
-					ATTACHFILESN ATTCHSN
+					ATTACHFILESN ATTACHSN
 				FROM
 					TBL_ENDATTACHINFO
 				WHERE
