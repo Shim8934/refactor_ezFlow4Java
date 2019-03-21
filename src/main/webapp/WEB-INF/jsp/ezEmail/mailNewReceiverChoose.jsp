@@ -2798,8 +2798,8 @@
 	                            if (MaxID < curnum)
 	                                MaxID = curnum;
 	                        }
-	                        var objTr = listview.AddRow(MaxID);
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        var objTr = listview.AddRow(InitTr.length);
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	
 	                        document.getElementById(listid).className = "receiver_list";
@@ -2867,8 +2867,8 @@
 	                            if (MaxID < curnum)
 	                                MaxID = curnum;
 	                        }
-	                        var objTr = listview.AddRow(MaxID);
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        var objTr = listview.AddRow(InitTr.length);
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	
 	                        document.getElementById(listid).className = "receiver_list";
@@ -2879,7 +2879,9 @@
 	                        }
 	                    }
 	                }
-	            } catch (e) { }
+	            } catch (e) {
+	            	console.error(" groupmember_click_Complete : " + e.description);
+	            }
 	        }
 	        function dept_select() {
 	            var organTree = new TreeView();
@@ -2954,7 +2956,7 @@
 	                    }
 	
 	                    var objTr = listview.AddRow(InitTr.length);
-	                    SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                    SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                    listview.AddDataRow(objTr, Resultxml);
 	
 	                    document.getElementById(listid).className = "receiver_list";
@@ -3382,7 +3384,7 @@
                         MaxID = curnum;
                 }
                 var objTr = listview.AddRow(InitTr.length);
-                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
                 listview.AddDataRow(objTr, Resultxml);
 
                 document.getElementById(listid).className = "receiver_list";

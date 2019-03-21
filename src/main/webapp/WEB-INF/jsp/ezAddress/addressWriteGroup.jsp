@@ -1121,9 +1121,9 @@
                     MaxID = curnum;
             }
 
-            var objTr = listview.AddRow(0);
-            var trid = listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1);
-            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+            var objTr = listview.AddRow(InitTr.length);
+            var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1);
+            SetAttribute(objTr, "id", trid);
             listview.AddDataRow(objTr, Resultxml);
             document.getElementById(trid).style.whiteSpace = "nowrap";
             document.getElementById("emailname").value = "";
