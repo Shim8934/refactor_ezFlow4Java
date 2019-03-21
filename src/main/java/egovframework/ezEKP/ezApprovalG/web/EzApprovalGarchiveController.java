@@ -12,6 +12,7 @@ import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -2477,9 +2478,10 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		}
 		
 		xmlData = xmlData.replace("<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">", "");
-	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();  
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 	    DocumentBuilder builder = factory.newDocumentBuilder();  
-        xmlDom = builder.parse( new InputSource( new StringReader(xmlData) ) );  
+        xmlDom = builder.parse( new InputSource( new StringReader(xmlData) ) );
 		
 		String sendID = xmlDom.getElementsByTagName("send-id").item(0).getTextContent();
 		String receiveID = xmlDom.getElementsByTagName("receive-id").item(0).getTextContent();
