@@ -281,7 +281,6 @@ function CalendarMiniDataSource() {
 		data : {
 			STARTDATE : sStartDate,
 			ENDDATE : sEndDate,
-			APP : "0",
 			GROUPID : groupid,
 			IDLIST : (idlist == "") ? idtype : idlist
 		},
