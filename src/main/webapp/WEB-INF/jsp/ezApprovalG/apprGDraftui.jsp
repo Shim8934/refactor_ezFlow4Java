@@ -1166,10 +1166,10 @@
 					case '10':
 						keepperiodText = "10년";
 						break;
-					case '30':
+					case '20':
 						keepperiodText = "30년";
 						break;
-					case '35':
+					case '30':
 						keepperiodText = "준영구";
 						break;
 					case '40':
