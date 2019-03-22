@@ -2750,7 +2750,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안 문서첨부 업무담당자 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/selectUser.do")
+	@RequestMapping(value = "/ezApprovalG/selectUser.do", method = RequestMethod.GET)
 	public String selectUser() throws Exception{
 		return "ezApprovalG/apprGselectUser";
 	}
