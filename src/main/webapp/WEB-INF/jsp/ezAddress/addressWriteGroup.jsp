@@ -240,7 +240,6 @@
 	        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////페이지 네이션 추가
 	        function goToPageByNum(Value) {
 	            page = Value;
-	            makePageSelPage();
 	            movePage(page);
 	        }
 	        function selbeforeBlock() {
@@ -296,7 +295,7 @@
 	        function td_Create1(strtext) {
 	            document.getElementById("tblPageRayer").innerHTML = strtext;
 	        }
-	        var BlockSize = "5";
+	        var BlockSize = 5;
 	        function makePageSelPage() {
 	            var strtext;
 	            var PagingHTML = "";
@@ -326,8 +325,8 @@
 	            var MaxNum;
 	            var i;
 	            var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
-	            if (totalPage >= (startNum + parseInt(BlockSize))) {
-	                MaxNum = (startNum + parseInt(BlockSize)) - 1;
+	            if (totalPage >= (startNum + BlockSize)) {
+	                MaxNum = (startNum + BlockSize) - 1;
 	            }
 	            else {
 	                MaxNum = totalPage;
@@ -544,7 +543,7 @@
 	                    pListXML_Info = xml;
                     	pSeach = true;
                     	DisplayUserImageList();
-                    	makePageSelPage();
+                    	makePageSelPage2();
                     	/* 2018-09-03 홍승비 - 검색 완료 후에 pSeach 플래그 false로 되돌림(pSeach가 true를 유지해서 '검색결과'가 고정되므로) */
                     	pSeach = false;
                 	}
@@ -672,6 +671,7 @@
 	
 	        function TreeViewNodeClick() {
 	            CurPage = "1";
+	            issearch = false;
 	            listContentArry = new Array();
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
@@ -1728,7 +1728,7 @@
 	            dropelement = "";
 	        }
 	
-	        var BlockSize2 = 10;
+	        var BlockSize2 = 5;
 	        function td_Create2(strtext) {
 	            document.getElementById("tblPageRayer2").innerHTML = strtext;
 	        }
@@ -1764,8 +1764,8 @@
 	            var MaxNum2;
 	            var i;
 	            var startNum2 = (parseInt((pageNum2 - 1) / BlockSize2) * BlockSize2) + 1;
-	            if (totalPage2 >= (startNum2 + parseInt(BlockSize2))) {
-	                MaxNum2 = (startNum2 + parseInt(BlockSize2)) - 1;
+	            if (totalPage2 >= (startNum2 + BlockSize2)) {
+	                MaxNum2 = (startNum2 + BlockSize2) - 1;
 	            }
 	            else {
 	                MaxNum2 = totalPage2;
@@ -1816,7 +1816,6 @@
 		    	listContentArry = new Array();
 		    	
 	            CurPage = Value;
-	            makePageSelPage2();
 	            movePage2(CurPage);
 	        }
 	        function selbeforeBlock2() {
@@ -1846,7 +1845,11 @@
 	        function movePage2(newPage2) {
 	            if (parseInt(newPage2) > 0 && parseInt(newPage2) <= parseInt(totalPage2)) {
 	                CurPage = newPage2;
-	                displayUserList();
+	                if (issearch) {
+	                	search_click("re_search");
+	                } else {
+	                	displayUserList();
+	                }
 	            }
 	        }
 	        function prevPage_onclick2() {
