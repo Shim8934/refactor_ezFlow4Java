@@ -339,7 +339,7 @@
 	        function movePage(newPage) {	
 	            // 20060628 준호수정
 	            // 숫자 아닌 문자 들어갔을 경우 에러 남.
-	    		var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent("${mode}")
+	    		var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent('<c:out value="${mode}"/>')
 				            + "&sRadio=" + encodeURIComponent("${sRadio}")
 				            + "&code=" + encodeURIComponent(code)
 				            + "&keyword=" + "${keyword}"
