@@ -398,7 +398,7 @@
 	        		return;
 	        	}
 	        	
-	        	if (mailMaxReceiverCount < receiverCount + 1) {
+	        	if (mailMaxReceiverCount < receiverCount) {
         			alert(strLangGroupMemberCount01 + mailMaxReceiverCount + strLangGroupMemberCount02);
                     return;
         		}
