@@ -843,8 +843,8 @@
 			    idDatepicker.daynamesLong = "<spring:message code = 'ezCommunity.t441'/>";
 			    idDatepicker.monthnamesShort = "1;2;3;4;5;6;7;8;9;10;11;12";
 			    idDatepicker.monthnamesLong = "1<spring:message code = 'ezCommunity.t442'/>";
-			    idDatepicker.isoDateUTF = "${startDateTime}";
-			    idDatepicker.isoEndDateUTF = "${endDateTime}";
+			    idDatepicker.isoDateUTF = '<c:out value="${startDateTime}"/>';
+			    idDatepicker.isoEndDateUTF = '<c:out value="${endDateTime}"/>';
 			    idDatepicker.ready();
 			}
 		</script>
