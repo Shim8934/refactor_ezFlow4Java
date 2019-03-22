@@ -2339,9 +2339,8 @@ public class EzEmailAdminController {
 		logger.debug("mailCopyrightData started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		String useCopyright = commonUtil.getTenantConfigRest("useCopyright", userInfo.getId(), request); // 수취인안내설정 사용여부
-		if (useCopyright == null || useCopyright.equals("")) {
+		String useCopyright =  ezCommonService.getTenantConfig("useCopyright", userInfo.getTenantId()); // 수취인안내설정 사용여부
+		if (useCopyright.equals("")) {
 			useCopyright = "YES";
 		}
 		logger.debug("useCopyright=" + useCopyright);

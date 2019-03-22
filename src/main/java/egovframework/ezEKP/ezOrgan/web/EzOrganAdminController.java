@@ -183,7 +183,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		logger.debug("useSignatureTemplate=" + useSignatureTemplate);
 
 		String useCopyrightMenu = ezCommonService.getTenantConfig("useCopyrightMenu", user.getTenantId());
-		if (useCopyrightMenu == null || useCopyrightMenu.equals("")) {
+		if (useCopyrightMenu.equals("")) {
 			useCopyrightMenu = "NO";
 		}
 		logger.debug("useCopyrightMenu=" + useCopyrightMenu);
