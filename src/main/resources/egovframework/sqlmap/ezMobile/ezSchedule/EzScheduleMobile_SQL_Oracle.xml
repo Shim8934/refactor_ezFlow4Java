@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="ezScheduleMobile">
+
+	<typeAlias alias="MScheduleInfoVO" 					type="egovframework.ezMobile.ezSchedule.vo.MScheduleInfoVO"/>
+    
+    <resultMap class="MScheduleInfoVO" id="MScheduleInfoVO">
+		<result property="scheduleId"		column="SCHEDULEID"			columnIndex="1"/>
+		<result property="parentId"			column="PARENTID"			columnIndex="2"/>
+		<result property="ownerId"			column="OWNERID"			columnIndex="3"/>
+		<result property="ownerName"		column="OWNERNAME"			columnIndex="4"/>
+		<result property="ownerName2"		column="OWNERNAME2"			columnIndex="5"/>
+		<result property="creatorId"		column="CREATORID"			columnIndex="6"/>
+		<result property="creatorName"		column="CREATORNAME"		columnIndex="7"/>
+		<result property="creatorName2"		column="CREATORNAME2"		columnIndex="8"/>
+		<result property="createDate"		column="CREATEDATE"			columnIndex="9"/>
+		<result property="modifierId"		column="MODIFIERID"			columnIndex="10"/>
+		<result property="modifierName"		column="MODIFIERNAME"		columnIndex="11"/>
+		<result property="modifierName2"	column="MODIFIERNAME2"		columnIndex="12"/>
+		<result property="modifyDate"		column="MODIFYDATE"			columnIndex="13"/>
+		<result property="scheduleType"		column="SCHEDULETYPE"		columnIndex="14"/>
+		<result property="importance"		column="IMPORTANCE"			columnIndex="15"/>
+		<result property="hasAttendant"		column="HASATTENDANT"		columnIndex="16"/>
+		<result property="hasAttach"		column="HASATTACH"			columnIndex="17"/>
+		<result property="hasComment"		column="HASCOMMENT"			columnIndex="18"/>
+		<result property="isReadOnly"		column="ISREADONLY"			columnIndex="19"/>
+		<result property="isPublic"			column="ISPUBLIC"			columnIndex="20"/>
+		<result property="dateType"			column="DATETYPE"			columnIndex="21"/>
+		<result property="startDate"		column="STARTDATE"			columnIndex="22"/>
+		<result property="endDate"			column="ENDDATE"			columnIndex="23"/>
+		<result property="repetition"		column="REPETITION"			columnIndex="24"/>
+		<result property="repetitionDel"	column="REPETITIONDELETE"	columnIndex="25"/>
+		<result property="title"			column="TITLE"				columnIndex="26"/>
+		<result property="location"			column="LOCATION"			columnIndex="27"/>
+		<result property="contentPath"		column="CONTENTPATH"		columnIndex="28"/>		
+	</resultMap>
+    
+    <select id="MScheduleDAO.scheduleContentPath" parameterClass="Map" resultClass="String">
+    	<![CDATA[
+	    	SELECT
+	    		contentpath    		
+			FROM
+				TBL_SCHEDULE
+			WHERE
+				scheduleid = #v_SCHEDULEID#
+			AND
+				tenant_id = #v_TENANTID#
+		]]>	
+  	</select>
+  	
+    <select id="MScheduleDAO.scheduleInfo" parameterClass="Map" resultMap="MScheduleInfoVO">
+    	<![CDATA[
+			select
+				scheduleid,
+				parentid,
+	            ownerid,
+	            ownername,
+	            ownername2,	            
+	            creatorid,
+	            creatorname,
+	            creatorname2,
+	            TO_DATE(createdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS createdate,
+	            modifierid,
+	            modifiername,
+	            modifiername2,	            
+	            TO_DATE(modifydate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS modifydate,
+	            scheduletype,
+	            importance,
+	            hasattendant,
+	            hasattach,
+	            hascomment,
+	            isreadonly,
+	            ispublic,
+	            datetype,
+	            TO_DATE(startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+	            TO_DATE(enddate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS enddate,
+	            repetition,
+	            repetitiondelete,
+	            title,
+	            location,
+	            contentpath
+			from 
+				tbl_schedule
+	       	where  
+	       		scheduleid = #v_SCHEDULEID#
+	       	and
+	       		tenant_id = #v_TENANTID#
+		]]>
+  	</select>
+</sqlMap>
+
