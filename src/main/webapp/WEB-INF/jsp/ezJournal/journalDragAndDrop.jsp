@@ -16,9 +16,9 @@
 		<script type="text/javascript">
 			var lstAttachLink = document.getElementById("lstAttachLink");
 		    var isfileup = false;
-		    var mode = "${mode}";
-		    var journalId = "${journalId}";
-		    var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
+		    var mode = "<c:out value='${mode}'/>";
+		    var journalId = "<c:out value='${journalId}'/>";
+		    var attachFileNameMaxLength = Number("<c:out value='${attachFileNameMaxLength}'/>");
 		    
 		    function onDragEnter(evt) {
 		        evt.dataTransfer.dropEffect = "copy";

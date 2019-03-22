@@ -2240,7 +2240,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	 * 
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprDeptName.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/aprDeptName.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	public String aprDeptName(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("aprDeptName started");
 		
