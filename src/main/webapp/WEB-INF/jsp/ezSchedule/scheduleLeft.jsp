@@ -412,7 +412,7 @@
 		        switch (v_data) {
 		            case 2:		// Schedule
 		            	$('#IDClick').css('pointer-events','');		            
-		                window.open("/ezSchedule/scheduleMain.do?funCode=2", "right");
+		                window.open("/ezSchedule/scheduleMain.do", "right");
 		                break;
 
 		            case 3:		// Task
