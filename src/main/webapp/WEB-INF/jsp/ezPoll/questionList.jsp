@@ -21,23 +21,23 @@
 			var strLang40 		  = "<spring:message code = 'ezPoll.t168'/>";
 			var strLang41 		  = "<spring:message code = 'ezPoll.t169'/>";
 			var strLang42 		  = "<spring:message code = 'ezPoll.t170'/>";
-			var currentPage		  = ${currPage};  		
-			var totalPages 		  = ${totalPages}; 		
-		    var totalQuestions 	  = ${totalQuestions};  
+			var currentPage		  = "<c:out value='${currPage}'/>";
+			var totalPages 		  = "<c:out value='${totalPages}'/>";
+		    var totalQuestions 	  = "<c:out value='${totalQuestions}'/>";
 		    var blockSize 		  = 10;
 		    var status_processing = "<spring:message code = 'ezPoll.t101'/>";
-		    var status_finish 	  = "<spring:message code = 'ezPoll.t102'/>";		   
-			var brdID			  = ${brdID};	
+		    var status_finish 	  = "<spring:message code = 'ezPoll.t102'/>";
+			var brdID			  = "<c:out value='${brdID}'/>";
 			var primary 		  = "<c:out value='${primary}'/>";
 			var searchParam	  	  = "<c:out value='${strSearch}'/>";
 			var radioBttn		  = "<c:out value='${mode}'/>";
 			var userID 			  = "<c:out value='${userID}'/>";
-			var seeCheck 		  = "<c:out value='${seeCheck}'/>";	
+			var seeCheck 		  = "<c:out value='${seeCheck}'/>";
 			//var deleteBttn 	  = "<c:out value='${deleteBttn}'/>";
 			var checkedArr		  = [];					
 			var chkDelete		  = 0;
 			var tenantId		  =  "<c:out value='${tenantID}'/>";
-			var admin 			  = "<c:out value='${adminPrivilege}'/>";	
+			var admin 			  = "<c:out value='${adminPrivilege}'/>";
 			var stompClient 	  = null;
 		    
 		    window.onunload = function() {

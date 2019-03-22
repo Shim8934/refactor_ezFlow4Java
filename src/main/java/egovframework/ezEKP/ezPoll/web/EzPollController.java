@@ -15,12 +15,10 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.joda.time.DateTime;
@@ -43,7 +41,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.w3c.dom.Document;
-
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezBoard.service.EzBoardService;
@@ -323,15 +320,14 @@ public class EzPollController extends EgovFileMngUtil {
 		model.addAttribute("configEndTime", endTime);
 		model.addAttribute("tenantId", loginVO.getTenantId());
 		
-		
 		logger.debug("question create finishes!");
 		return "/ezPoll/createPoll";
 	}
-
+	
 	@RequestMapping(value="/ezPoll/pollList.do", method = RequestMethod.GET)
 	public String getQuestion(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, RedirectAttributes redirectAttributes, HttpSession session) throws Exception {
-		logger.debug("get question is running!");				
-		LoginVO loginVO = commonUtil.userInfo(loginCookie);		
+		logger.debug("get question is running!");
+		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		String userID = loginVO.getId();
 		String companyID = loginVO.getCompanyID();
 		int currPage = 1;
@@ -566,22 +562,22 @@ public class EzPollController extends EgovFileMngUtil {
 
 	@RequestMapping(value="/ezPoll/pollComplete.do", method = RequestMethod.POST)
 	public String qstComplete(@CookieValue("loginCookie") String loginCookie, HttpServletRequest req, PollAnswerVO pollAnswerVO, PollQuestionVO pollQuestionVO, ModelMap model, HttpServletResponse response) throws Exception {		
-		logger.debug("Question complete is running!");		
+		logger.debug("Question complete is running!");
 		LoginVO loginVO = commonUtil.userInfo(loginCookie);
 		int tenantID = loginVO.getTenantId();
-		String userID = loginVO.getId();		
-		String companyID = loginVO.getCompanyID();		
-		String numberOfOptions = req.getParameter("numberOfOptions");		
-		//String qstTitle = commonUtil.cleanValue(req.getParameter("qst_title"));	
-		String qstTitle = req.getParameter("qst_title");	
-		String qstContent = req.getParameter("hidContent");		
+		String userID = loginVO.getId();
+		String companyID = loginVO.getCompanyID();
+		String numberOfOptions = req.getParameter("numberOfOptions");
+		//String qstTitle = commonUtil.cleanValue(req.getParameter("qst_title"));
+		String qstTitle = req.getParameter("qst_title");
+		String qstContent = req.getParameter("hidContent");
 		String filePath = req.getParameter("hidFilePath");
 		int secretVote = Integer.parseInt(req.getParameter("hidSecreteVote"));
 		String endDate = req.getParameter("hidEndDate");
 		String startDate = req.getParameter("hidStartDate");
-		String createDate = req.getParameter("hidCreateDate"); //20180109		
+		String createDate = req.getParameter("hidCreateDate"); //20180109
 		int numberOfMultiSelect = Integer.parseInt(req.getParameter("multiSelectNumber"));
-		String range = req.getParameter("RangeXMLStr");		
+		String range = req.getParameter("RangeXMLStr");
 		int resultFirst = Integer.parseInt(req.getParameter("hidResultFirst"));
 		String qstModifyInfo = req.getParameter("hidModifyInfo");
 		int setDate = Integer.parseInt(req.getParameter("hidSetDate"));
@@ -709,7 +705,7 @@ public class EzPollController extends EgovFileMngUtil {
 		}
 		
 		logger.debug("Question complete finishes!");
-		return "forward:/ezPoll/pollList.do";
+		return "redirect:/ezPoll/pollList.do";
 	}
 	
 	@RequestMapping(value="/ezPoll/pollVote.do", method = RequestMethod.GET)
@@ -752,7 +748,7 @@ public class EzPollController extends EgovFileMngUtil {
 		pollQuestionVO = ezPollService.getQuestionByIdAndTenantId(qstId, tenantId);
 		
 		if (pollQuestionVO == null) {		
-			redirectAttributes.addAttribute("brdID", 6);			
+			redirectAttributes.addAttribute("brdID", 6);
 			return "redirect:/ezPoll/pollList.do";
 		}	
 		
@@ -3074,7 +3070,7 @@ public class EzPollController extends EgovFileMngUtil {
 		ezPollService.updateEndDateForQst(qstId, tenantID, endDate);
 		
 		logger.debug("Updating question end-date finishes!");
-		return "forward:/ezPoll/pollList.do";
+		return "redirect:/ezPoll/pollList.do";
 	}
 
 }

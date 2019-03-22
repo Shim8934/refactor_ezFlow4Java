@@ -47,7 +47,7 @@
 	    </style>
 	    <script type="text/javascript">
 		//	var companyId = "${info.companyID}"; 
-			var userId = "${userId}";
+			var userId = "<c:out value='${userId}'/>";
 			//트리조직도 JSON
 	   		var treeContent;
 	    	// 수신자
@@ -57,7 +57,7 @@
 	    	// 일지함아이디
 	    	var typeId = "<c:out value='${typeId}'/>";
 	    	// 부서아이디
-	    	var deptId = "${info.deptID}";
+	    	var deptId = "<c:out value='${info.deptID}'/>";
 	    	// 첨부파일 최대용량
 	    	var AttachLimit = 5;
 	    	var mode = "<c:out value='${mode}'/>";
