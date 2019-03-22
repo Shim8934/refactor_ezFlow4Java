@@ -206,9 +206,9 @@
 	        }
 	        
 	        function movePage(newPage) {	
-				var href = "/ezCommunity/commViewMember.do?sRadio="+encodeURIComponent("${sRadio}")
+				var href = "/ezCommunity/commViewMember.do?sRadio="+encodeURIComponent('<c:out value="${sRadio}"/>')
 					+"&code="+encodeURIComponent("${code}")
-					+"&keyword="+encodeURIComponent("${keyword}")
+					+"&keyword="+encodeURIComponent('<c:out value="${keyword}"/>')
 					+"&block="+encodeURIComponent("${nowBlock}");
 				
 	            if(parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {

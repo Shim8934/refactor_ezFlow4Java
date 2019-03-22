@@ -339,7 +339,6 @@ function CalendarMiniDataSource(XmlNode) {
 		data : {
 			STARTDATE : sStartDate,
 			ENDDATE : sEndDate,
-			APP : idtype,
 			GROUPID : groupid,
 			IDLIST : (idlist == "") ? idtype : idlist
 		},

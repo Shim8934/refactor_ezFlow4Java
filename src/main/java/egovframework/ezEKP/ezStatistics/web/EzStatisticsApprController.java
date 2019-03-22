@@ -720,4 +720,19 @@ row = sheet.createRow(0);
 		
 		return "ezStatistics/statisticsUser";
 	}
+	/**
+	 * 수동 통계 배치 동작
+	 */
+	@RequestMapping(value = "/ezStatistics/customApprStatisticsBatch.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String customApprStatisticsBatch() throws Exception {
+		logger.debug("customApprStatisticsBatch started");
+		
+		ezStatisticsAdminService.customApprStatisticsBatch();
+		
+		
+		logger.debug("customApprStatisticsBatch ended");
+		
+		return "success";
+	}
 }

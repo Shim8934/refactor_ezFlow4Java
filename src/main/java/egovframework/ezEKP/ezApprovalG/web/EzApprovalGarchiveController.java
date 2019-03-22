@@ -1058,7 +1058,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	}
 	
 	/** 기록물철등록부 수정버튼*/
-	@RequestMapping(value = "/ezApprovalG/changeCabinetInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/changeCabinetInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	public String changeCabinetInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("changeCabinetInfo started");
 		
@@ -1133,7 +1133,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	}
 	
 	/** 기록물철등록부 검색 화면 */
-	@RequestMapping(value = "/ezApprovalG/searchCab.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/searchCab.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	public String searchCab(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("searchCab started");
 		
@@ -1454,7 +1454,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	}
 	
 	/** 전자결재 G 서명등록*/
-	@RequestMapping(value = "ezApprovalG/saveSingInfo.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "ezApprovalG/saveSingInfo.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveSingInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("saveSingInfo started");

@@ -781,10 +781,11 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 			boardPropertyVO.setGuBun("6");
 		}
 		
-		/* 2018-11-15 홍승비 - 그룹사게시판 여부 판별하여 값을 전달 */
-		if (boardPropertyVO.getParentBoardID() != null && !boardPropertyVO.getParentBoardID().equals("top")) {
-			BoardPropertyVO parentProp = ezBoardService.getBoardProperty(boardPropertyVO.getParentBoardID(), userInfo.getTenantId());
-			if (parentProp.getGuBun() != null && parentProp.getGuBun().equals("99")) {
+		/* 2019-03-21 홍승비 - 게시판이 속한 그룹게시판이 구분값 99인지 확인하여 isAllGroupBoard값 셋팅 */
+		String boardGroupID = boardPropertyVO.getBoardGroupID();
+		if (boardGroupID != null) { // 부모가 top인 게시판들(그룹)은 그룹아이디가 없다.
+			BoardPropertyVO strGroupProp = ezBoardService.getBoardProperty(boardGroupID, userInfo.getTenantId());
+			if (strGroupProp.getGuBun() != null && strGroupProp.getGuBun().equals("99")) {
 				isAllGroupBoard = "Y";
 			} else {
 				isAllGroupBoard = "N";

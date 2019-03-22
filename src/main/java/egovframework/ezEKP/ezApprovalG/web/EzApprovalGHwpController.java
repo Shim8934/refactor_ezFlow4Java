@@ -408,7 +408,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 한글기안기 결재문서 메일발송 시 첨부파일로 떨구기
 	 */	
-	@RequestMapping(value = "/ezApprovalG/mail_interuploadX_Server.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	@RequestMapping(value = "/ezApprovalG/mail_interuploadX_Server.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String mail_interuploadX_Server(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception {
 		LOGGER.debug("mail_interuploadX_Server started");
@@ -882,7 +882,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 발송의뢰문서 발송 발송 저장 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/saveEndFileHwp.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
+	@RequestMapping(value = "/ezApprovalG/saveEndFileHwp.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String saveEndFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		LOGGER.debug("saveEndFileHwp started");

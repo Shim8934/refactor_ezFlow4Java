@@ -119,12 +119,14 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		
 		String userEditor = "";
 		String noneActiveX = "YES";
+		String dotnetFlag = request.getParameter("dotnetFlag");
 		
 		userEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 
 		model.addAttribute("userEditor", userEditor);
 		model.addAttribute("noneActiveX", noneActiveX);
 		model.addAttribute("useOnlyInnerMail", ezCommonService.getTenantConfig("UseOnlyInnerMail", userInfo.getTenantId()));
+		model.addAttribute("dotnetFlag", dotnetFlag);
 		
 		logger.debug("mailConfig ended.");
 		return "ezEmail/mailConfig";
@@ -151,7 +153,8 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		String keepDeleteLength = mailGeneralVO.getKeepDeleteLength() == null ? "" : mailGeneralVO.getKeepDeleteLength();
 		String previewSubtree = mailGeneralVO.getPreviewSubTree() == null ? "" : mailGeneralVO.getPreviewSubTree();
 		String mailSendObject = "";
-
+		String dotnetFlag = request.getParameter("dotnetFlag");
+		
 		if (keepDeleteLength.equals("30")) {
 			keepDeleteLength = "60";
 		}
@@ -191,6 +194,7 @@ public class EzEmailConfigController extends EgovFileMngUtil {
 		model.addAttribute("useOnlyInnerMail", useOnlyInnerMail);
 		model.addAttribute("previewSubTree", previewSubtree);
 		model.addAttribute("usePreviewSubTree", usePreviewSubTree);
+		model.addAttribute("dotnetFlag", dotnetFlag);
 		
 		logger.debug("mailGeneral ended.");
 		

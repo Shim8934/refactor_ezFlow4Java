@@ -11,3 +11,5 @@ var strLang103 = "検索語を入力してください。";
 var strLang91002 = "ツリービューリストのIDが指定されていません。";
 var strLang91003 = "ツリービューのデータが指定されていません。";
 var strLang91004 = "ツリービューのIDが指定されていません。";
+var strLangGroupMemberCount01 = "グループメンバーは";
+var strLangGroupMemberCount02 = "人まで追加可能です。";

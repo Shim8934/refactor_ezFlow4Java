@@ -30,9 +30,9 @@
 			var CurPage = "${pPage}";
 			var totalPage = "${totalPage}";
 			var strListInfo = "";
-			var code = "${code}"
-			var pBoardID = "${boardInfo.boardID}";
-			var pSortBy = "${pSortBy}";
+			var code = '<c:out value="${code}"/>';
+			var pBoardID = '<c:out value="${boardInfo.boardID}"/>';
+			var pSortBy = '<c:out value="${pSortBy}"/>';
 			var totalCount = "${totalCount}";
 			var ListInfo = "";
 // 			var pUse_Editor = "${ Use_Editor }";

@@ -120,7 +120,10 @@
 		    var secureReadCount = "${secureMaxReadCount}";
 		    var secureReadDate = "${secureMaxReadDate}";
 		    var folderPath = "${draftsFolderName}";
-		    
+		    var receiverCount = 0;
+	        var groupAddressCountMap = {};
+	        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
+	        
 			function window_onload() {
 	            if (!CrossYN()) {
 	                document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
@@ -535,10 +538,14 @@
 			        newElem = PrepareMailTag( iType, "email", mailName, pemail, "");
 				    var IsInsert = CheckMailReceiver(newElem);
 		    		
-				    if(!IsInsert)
-				    {
+				    if(!IsInsert) {
+				    	if (!increaseReceiverCount()) {
+			        		return;
+			        	}
+				    	
 			            validDIV.appendChild( newElem );
 			        }
+			        
 			        formName = "";
 			        g_bDirty = true;
 			    }	
@@ -872,7 +879,12 @@
 								newElem = PrepareMailTag("0", addressType, ui.item.value,
 										ui.item.email, href);
 								IsInsert_MsgTo = CheckMailReceiver(newElem);
+								
 								if (!IsInsert_MsgTo) {
+									if (!increaseReceiverCount(addressType, href)) {
+						        		return;
+						        	}
+									
 									MsgToGot.appendChild(newElem);
 									document.getElementById("MsgTo").value = "";
 									IsInsert_MsgTo = true;
@@ -945,7 +957,12 @@
 								newElem = PrepareMailTag("1", addressType, ui.item.value,
 										ui.item.email, href);
 								IsInsert_MsgCC = CheckMailReceiver(newElem);
+								
 								if (!IsInsert_MsgCC) {
+									if (!increaseReceiverCount(addressType, href)) {
+						        		return;
+						        	}
+									
 									MsgCCGot.appendChild(newElem);
 									document.getElementById("MsgCC").value = "";
 									IsInsert_MsgCC = true;
@@ -1018,7 +1035,12 @@
 								newElem = PrepareMailTag("2", addressType, ui.item.value,
 										ui.item.email, href);
 								IsInsert_MsgBCC = CheckMailReceiver(newElem);
+								
 								if (!IsInsert_MsgBCC) {
+									if (!increaseReceiverCount(addressType, href)) {
+						        		return;
+						        	}
+									
 									MsgBCCGot.appendChild(newElem);
 									document.getElementById("MsgBCC").value = "";
 									IsInsert_MsgBCC = true;
