@@ -730,7 +730,11 @@ public class EzEmailUtil {
                         rawHeader = rawHeader.replace(charSet, "gbk");
                                                 
                         subject = MimeUtility.decodeText(rawHeader);
-                    }                        
+                    } else if (charSet.equals("iso-2022-jp")) {
+                        rawHeader = rawHeader.replace(charSet, "cp50220");
+                                                
+                        subject = MimeUtility.decodeText(rawHeader);
+                    }                                                
                 }
             }
             
@@ -1021,6 +1025,13 @@ public class EzEmailUtil {
                 logger.debug("originalFilename changed gb2312 to gbk.");
                 
                 filename = MimeUtility.decodeText(originalFilename);
+            // 일본어 파일명에 원형 숫자가 포함되면 문자가 깨져서 cp50220으로 변환하도록 함.
+            } else if (originalFilename != null && originalFilename.startsWith("=?iso-2022-jp")) {
+                originalFilename = originalFilename.replace("iso-2022-jp", "cp50220");
+                
+                logger.debug("originalFilename changed iso-2022-jp to cp50220.");
+                
+                filename = MimeUtility.decodeText(originalFilename);
             } else if (filename != null) {
 				if (isPureAscii(filename)) {
 				    // Content-Disposition 헤더에 있는 filename 속성의 값이 Non-Ascii 문자를 포함할 경우에는 직접 디코딩을 처리한다.
@@ -1140,6 +1151,19 @@ public class EzEmailUtil {
 							logger.debug("text/html changed gb2312 to gbk.");
 							
 							strContent = new String(buf, "gbk");
+						}											
+					}
+				} else if (contentType.toLowerCase().contains("iso-2022-jp")) {
+					if (strContent.contains("�")) {
+						InputStream is = getContentInputStream(part);
+						
+						if (is.available() > 0) {
+							byte[] buf = new byte[is.available()];
+							is.read(buf);
+							
+							logger.debug("text/html changed iso-2022-jp to cp50220.");
+							
+							strContent = new String(buf, "cp50220");
 						}											
 					}
 				}
@@ -1273,8 +1297,6 @@ public class EzEmailUtil {
 							}											
 						}
 					} else if (contentType.toLowerCase().contains("gb2312")) {
-			            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
-			            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.								
 						if (strContent.contains("�")) {
 							InputStream is = getContentInputStream(part);
 							
@@ -1287,8 +1309,20 @@ public class EzEmailUtil {
 								strContent = new String(buf, "gbk");
 							}											
 						}
-					}					
-					
+					} else if (contentType.toLowerCase().contains("iso-2022-jp")) {
+						if (strContent.contains("�")) {
+							InputStream is = getContentInputStream(part);
+							
+							if (is.available() > 0) {
+								byte[] buf = new byte[is.available()];
+								is.read(buf);
+								
+								logger.debug("text/plain changed iso-2022-jp to cp50220.");
+								
+								strContent = new String(buf, "cp50220");
+							}											
+						}
+					}															
 				// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
 				// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
 				} catch (Exception e) {

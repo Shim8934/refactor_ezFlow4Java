@@ -2367,8 +2367,8 @@
 	                            }
 	                        }
 	                        
-	                        var objTr = listview.AddRow(MaxID);
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        var objTr = listview.AddRow(InitTr.length);
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	                       
 	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
@@ -2449,7 +2449,7 @@
                     return;
                 }
                 
-                var emailMatch = new RegExp(/^[^/@]{1,30}@[A-Za-z0-9]{2,30}\.[A-Za-z0-9]{2,30}/g);
+                var emailMatch = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
                 if (!emailMatch.test(document.getElementById("emailaddr").value) && document.getElementById("emailaddr").value != "") {
                     alert(strLang198);
                     return;
@@ -2486,7 +2486,7 @@
 	              }
 	              
 	              var objTr = listview.AddRow(InitTr.length);
-	              SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	              SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	              listview.AddDataRow(objTr, Resultxml);
 	
 	              var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;

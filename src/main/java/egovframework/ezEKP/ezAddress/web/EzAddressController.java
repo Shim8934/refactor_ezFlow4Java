@@ -663,6 +663,11 @@ public class EzAddressController{
 		String userNM = userInfo.getDisplayName1();
 		String userNM2 = userInfo.getDisplayName2();
 		String useOcs = config.getProperty("config.USE_OCS");
+		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", userInfo.getTenantId());
+		
+		if (mailMaxReceiverCount.equals("")) {
+			mailMaxReceiverCount = "200";
+		}
 		
 		model.addAttribute("addressId", addressId);
 		model.addAttribute("folderId", folderId);
@@ -673,11 +678,12 @@ public class EzAddressController{
 		model.addAttribute("userNM2", userNM2);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
 		
 		logger.debug("addressWriteGroup ended.");
 		logger.debug("addressId=" + addressId + ",folderId=" + folderId + ",ownerId=" + ownerId + ",folderType=" + folderType
 				 + ",changeKey=" + changeKey + ",userNM=" + userNM + ",userNM2=" + userNM2 + ",useOcs=" + useOcs
-				 + ",userInfo=" + userInfo);
+				 + ",userInfo=" + userInfo + ",mailMaxReceiverCount=" + mailMaxReceiverCount);
 		
 		return "ezAddress/addressWriteGroup";
 	}
@@ -1193,6 +1199,39 @@ public class EzAddressController{
 		logger.debug("addressGetGroupEmailList ended. returnValue=" + returnValue);
 		
 		return returnValue;
+	}
+	
+	/**
+	 * 그룹주소 멤버 수 구하기
+	 */
+	@RequestMapping(value = "/ezAddress/getGroupAddressMemberCount.do", produces="text/plain; charset=utf-8")
+	@ResponseBody
+	public String getGroupAddressMemberCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {		
+		logger.debug("getGroupAddressMemberCount started.");
+		logger.debug("itemId=" + request.getParameter("itemId"));
+		logger.debug("folderPath=" + request.getParameter("folderPath"));
+		
+		int result = 0;
+		
+		try {
+			String pAddressId = request.getParameter("id");
+			
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			AddressVO addressInfo = ezAddressService.getAddressInfo(userInfo.getTenantId(), userInfo.getPrimary(), pAddressId);
+			String address = addressInfo.getsMemo();
+			
+			if (address != null && !address.trim().equals("")) {
+				String[] addressRows = address.split(";");
+				result = addressRows.length;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		logger.debug("getGroupAddressMemberCount ended. result=" + result);
+		return String.valueOf(result);
 	}
 	
 	/**

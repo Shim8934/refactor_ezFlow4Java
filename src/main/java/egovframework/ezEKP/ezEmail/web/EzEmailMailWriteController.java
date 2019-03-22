@@ -916,7 +916,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            StringBuilder sb = new StringBuilder();
 			            sb.append("<hr tabindex=\"-1\">");
 			            sb.append("<p " + defaultFontAndSize + ">");
-			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage).replaceAll("<a@a.com>", ""))));
+			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
 			            sb.append("</p>");
 			            
 			            //set received date
@@ -933,11 +933,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            sb.append("</p>");
 			            //to-do
 			            sb.append("<p " + defaultFontAndSize + ">");
-			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo.replaceAll("<a@a.com>", ""))));
+			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
 			            sb.append("</p>");
 			            
 			            sb.append("<p " + defaultFontAndSize + ">");
-			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc.replaceAll("<a@a.com>", ""))));
+			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
 			            sb.append("</p>");
 			            
 			            String orgMessageSubject = ezEmailUtil.getSubject(orgMessage);	
@@ -1184,6 +1184,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", loginInfo.getTenantId());
+		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", loginInfo.getTenantId());
+		
+		if (mailMaxReceiverCount.equals("")) {
+			mailMaxReceiverCount = "200";
+		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
@@ -1261,6 +1266,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 추가
 		model.addAttribute("drafts", ezEmailUtil.getDraftsFolderId(locale)); // 임시보관함 스트링 추가 (윤진) 
 		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
+		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
 		
 		//업무일지 아이디
 		model.addAttribute("journalId", journalId);
@@ -2881,7 +2887,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String userAccount = userId + "@" + domainName;
 		String mailId = userId;
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
-
+		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", userInfo.getTenantId());
+		
+		if (mailMaxReceiverCount.equals("")) {
+			mailMaxReceiverCount = "200";
+		}
+		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -3874,6 +3885,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		            
 		        } else if (cmd.equalsIgnoreCase("SEND")) {
 		        	logger.debug("Sending the message");
+		    		
+		    		int receiverCount = message.getAllRecipients().length;
+		    		
+		    		if (Integer.parseInt(mailMaxReceiverCount) < receiverCount) {
+		    			logger.debug("Receiver count is over. max=" + mailMaxReceiverCount + ",receiverCount=" + receiverCount);
+		    			throw new Exception("RECEIVERCOUNTOVER");
+		    		}
 		        	
 //					String strCheckReadUrl = ""; //외부메일수신확인 관련 URL. GetSystemConfigValue("APPREADCHECK_URL").ToString();
 			        Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
@@ -4306,6 +4324,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					}
 					
 					pResult = pResult.substring(0, pResult.length() - 1);
+				} else if (e.getMessage().indexOf("RECEIVERCOUNTOVER") > -1) {
+					pResult = egovMessageSource.getMessage("ezEmail.receiverCount01", locale) + mailMaxReceiverCount + egovMessageSource.getMessage("ezEmail.receiverCount02", locale);
 				} else { // retry
 					e.printStackTrace();
 					
@@ -5021,13 +5041,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String ruleKind = request.getParameter("ruleKind") == null ? "" : request.getParameter("ruleKind").trim();
 		String useOcs = config.getProperty("config.USE_OCS") == null ? "" : config.getProperty("config.USE_OCS");
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
-
+		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", userInfo.getTenantId());
+		
+		if (mailMaxReceiverCount.equals("")) {
+			mailMaxReceiverCount = "200";
+		}
+		
 		model.addAttribute("defaultWin", defaultWin);
 		model.addAttribute("type", type);
 		model.addAttribute("ruleKind", ruleKind);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
+		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
 		
 		logger.debug("mailNewReceiverChoose ended.");
 		return "ezEmail/mailNewReceiverChoose";

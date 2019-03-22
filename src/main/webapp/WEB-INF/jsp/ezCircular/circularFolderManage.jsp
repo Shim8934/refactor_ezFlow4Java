@@ -92,10 +92,10 @@
             		type : "GET",
             		url : "/ezCircular/getCircularFolderList.do",
             		async : false,
-            		dataType : "json",
-            		data : {},
+            		dataType : "text",
             		success : function(result) {
             			$("#PostTreeView").html("");
+            			$("#PostTreeView").html(result);
 	            		
             			PostTreeView = new TreeView('PostTreeView', 'PostTreeView');
                         
