@@ -168,7 +168,6 @@
 	    var searchStartDate = "${searchStartDate}";
 	    var searchEndDate = "${searchEndDate}";
 	    var shareId = "${shareId}";
-	    
 	    // ezPMS 프로젝트 아이디
 	    var ezPMSProjectId = "${ezPMSProjectId}";
 	    // ezPMS 게시판 아이디
@@ -178,7 +177,10 @@
 	    var ezPMSToUserId = "${pmsToUserId}";
 	    var ezPMSUserIdType = "${pmsUserIdType}";
 	    var ezPMSTaskId = "${pmsTaskId}";
-	    
+	    var receiverCount = 0;
+        var groupAddressCountMap = {};
+        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
+        
 	    window.onload = function () {
 	        if (!CrossYN()) {
 	            document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
@@ -796,6 +798,10 @@
 	            var IsInsert = CheckMailReceiver(newElem);
 	
 	            if (!IsInsert) {
+	            	if (!increaseReceiverCount()) {
+	            		return;
+	            	}
+	            	
 	                switch (iType) {
 	                    case 0:
 	                        MsgToGot.appendChild(newElem);
@@ -1902,6 +1908,10 @@
 									ui.item.email, href);
 							IsInsert_MsgTo = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgTo) {
+								if (!increaseReceiverCount(addressType, href)) {
+				            		return;
+				            	}
+								
 								MsgToGot.appendChild(newElem);
 								document.getElementById("MsgTo").value = "";
 								IsInsert_MsgTo = true;
@@ -1975,6 +1985,10 @@
 									ui.item.email, href);
 							IsInsert_MsgCC = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgCC) {
+								if (!increaseReceiverCount(addressType, href)) {
+				            		return;
+				            	}
+								
 								MsgCCGot.appendChild(newElem);
 								document.getElementById("MsgCC").value = "";
 								IsInsert_MsgCC = true;
@@ -2048,6 +2062,10 @@
 									ui.item.email, href);
 							IsInsert_MsgBCC = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgBCC) {
+								if (!increaseReceiverCount(addressType, href)) {
+				            		return;
+				            	}
+								
 								MsgBCCGot.appendChild(newElem);
 								document.getElementById("MsgBCC").value = "";
 								IsInsert_MsgBCC = true;

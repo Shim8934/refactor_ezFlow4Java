@@ -119,6 +119,7 @@
 		    var pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
 		    var TaskCode = "";
+		    var keepperiod = ""; // 보존년한 2019-03-22 임민석
 		    var DocNumCode = "";
 		    var SummaryFlag = false;
 		    var btnReceivLineEnable = false;
@@ -1143,6 +1144,42 @@
 		        field.innerHTML = PublicText;
 		    }
 			
+			// 보존연한 적용 2019-03-22 임민석(전자결재G)
+			function setKeepPeriod() {
+				var fields = message.GetFieldsList();
+		        var field = message.GetListItem(fields, "keepperiod");
+		        
+		        if (!field) return;
+		        
+		        var keepperiodText = "";
+		        
+		        switch (keepperiod) {
+					case '01':
+						keepperiodText = "1년";
+						break;
+					case '03':
+						keepperiodText = "3년";
+						break;
+					case '05':
+						keepperiodText = "5년";
+						break;
+					case '10':
+						keepperiodText = "10년";
+						break;
+					case '20':
+						keepperiodText = "30년";
+						break;
+					case '30':
+						keepperiodText = "준영구";
+						break;
+					case '40':
+						keepperiodText = "영구";
+						break;
+				}
+		        
+		        field.innerHTML = keepperiodText;
+			}
+			
 		    /*기존의 공개여부 함수 2018-04-04 김은석 수정*/
 		    function setPublicFlag2() {
 		        var fields = message.GetFieldsList();
@@ -1466,6 +1503,7 @@
 			                xmlCab = loadXMLString(g_SelCabXml);
 			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+			                keepperiod = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/KEEPPERIOD");
 		                }
 		
 		                tempSecurity = ret[7];
@@ -1487,6 +1525,7 @@
 			                	tempPublic = "N";
 			                }
  			                setPublicFlag();
+ 			                setKeepPeriod();
 			                // setPublicFlag2();
 			                
 			                if (nonElecRec == "Y") {

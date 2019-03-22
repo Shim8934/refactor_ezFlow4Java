@@ -311,6 +311,8 @@ var strLangSharedMailbox01 = "共有メールボックス";
 var strLangSharedMailbox02 = "パスワードを変更しますか?";
 var strLangSharedMailbox03 = "パスワードを変更しました。";
 
+var strLangReceiverCount01 = "受信者は";
+var strLangReceiverCount02 = "人まで設定可能です。";
 
 function GetLocalTime(Offset , pDateTime)
 {
