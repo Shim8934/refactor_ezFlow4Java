@@ -803,7 +803,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", info.getTenantId());
 			String mUseMailAddrAutoComplete = ezCommonService.getTenantConfig("mobileUseMailAddrAutoComplete", info.getTenantId());
 			String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", info.getTenantId());
-			if (attachFileNameMaxLength == null || attachFileNameMaxLength.equals("")) {
+			if (attachFileNameMaxLength.equals("")) {
 				attachFileNameMaxLength = "100"; // default
 			}
 			OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, info.getPrimary(), info.getTenantId());
