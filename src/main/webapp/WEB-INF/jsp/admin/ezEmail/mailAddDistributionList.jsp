@@ -2372,8 +2372,8 @@
 	                            }
 	                        }
 	                        
-	                        var objTr = listview.AddRow(MaxID);
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        var objTr = listview.AddRow(InitTr.length);
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	                       
 	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
@@ -2491,7 +2491,7 @@
 	              }
 	              
 	              var objTr = listview.AddRow(InitTr.length);
-	              SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	              SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	              listview.AddDataRow(objTr, Resultxml);
 	
 	              var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
