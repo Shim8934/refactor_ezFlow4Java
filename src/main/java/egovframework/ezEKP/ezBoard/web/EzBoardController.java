@@ -4451,10 +4451,12 @@ public class EzBoardController extends EgovFileMngUtil{
 	public void boardAttachDown(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("boardAttachDown started");
 
-		String filePath = request.getParameter("filePath");
-		String fileName = request.getParameter("fileName");
-		String attID = request.getParameter("attID");
+		String filePath = commonUtil.detectPathTraversal(request.getParameter("filePath"));
+		String fileName = commonUtil.detectPathTraversal(request.getParameter("fileName"));
+		String attID = commonUtil.detectPathTraversal(request.getParameter("attID"));
 		String realPath = commonUtil.getRealPath(request);
+		
+		logger.debug("FilePath: " + filePath + " || File Name: " + fileName);
 		
 		if (attID != null && !attID.equals("")) {
 			downFile(request, response, realPath + filePath, attID);
@@ -5714,8 +5716,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String type = request.getParameter("type");
-		String boardID = request.getParameter("boardID");
-		String fileName = request.getParameter("fileName");
+		String boardID = commonUtil.detectPathTraversal(request.getParameter("boardID"));
+		String fileName = commonUtil.detectPathTraversal(request.getParameter("fileName"));
 	//	String realPath = commonUtil.getRealPath(request);
 		String pSignatureDir = commonUtil.getUploadPath("upload_board.ROOT", userInfo.getTenantId());
 		String filePath = "";
