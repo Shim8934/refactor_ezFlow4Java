@@ -53,10 +53,10 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 	    <script type="text/javascript">
 		    var pUploadFilePath = "${uploadFilePath}";
-		    var pBoardID = "${boardID}";
+		    var pBoardID = "<c:out value='${boardID}'/>";
 		    var pBoardName = "${boardInfo.boardName}";
-		    var pMode = "${mode}";
-		    var orgMode = "${mode}";
+		    var pMode = "<c:out value='${mode}'/>";
+		    var orgMode = "<c:out value='${mode}'/>";
 		    var pModeOld = "";
 		    var MHTLoadComplete = "";
 		    var SSUserID = "${userInfo.id}";
@@ -2063,7 +2063,7 @@
 			                        <li><span onclick="SaveItem('save');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
-			                        <li><span onclick="SaveItem('${mode}');"><spring:message code='ezBoard.t98' /></span></li>
+			                        <li><span onclick="SaveItem('<c:out value="${mode}"/>');"><spring:message code='ezBoard.t98' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
 	                    	<c:if test="${boardInfo.guBun != '3'}">

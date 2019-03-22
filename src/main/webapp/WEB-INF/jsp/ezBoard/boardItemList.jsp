@@ -61,20 +61,20 @@
 		    var Delete_FG = "${boardInfo.delete_FG}";
 		    var BrdName = "${boardName}";
 		    var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
-		    var pSortBy = "${boardInfo.sortBy}";
+		    var pSortBy = "<c:out value='${boardInfo.sortBy}'/>";
 		    var url = "${boardInfo.url}";
 		    var ShowAdjacent = "";
 		    var gubun = "${boardInfo.guBun}";
 		    var OrderOption = "";
 		    var OrderCell = "";
-		    var pBoardType = "${boardInfo.boardType}";
+		    var pBoardType = "<c:out value='${boardInfo.boardType}'/>";
 		    var USE_OCS = "${use_ocs}";
 		    var useRunTime = "${useRunTime}"
 		    var Use_OneLineCount = "${use_oneLineCount}";
 		    var pUse_Editor = "${use_Editor}";
 		    var SQLPARADATA = "";
-		    var pAdminType = "${boardInfo.adminType}";
-		    var pButtonHidden = "${boardInfo.buttonHidden}";
+		    var pAdminType = "<c:out value='${boardInfo.adminType}'/>";
+		    var pButtonHidden = "<c:out value='${boardInfo.buttonHidden}'/>";
 		    if (url != "") {
 		        window.location.href = url;
 		    }

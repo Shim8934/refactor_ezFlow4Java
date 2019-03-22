@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -27,8 +28,8 @@
 		<script language="javascript">
 		    var xmlhttp = createXMLHttpRequest();
 		    var selectedBoard = "";
-		    var ItemIDList = "${itemIDList}";
-		    var BoardIDList = "${boardID}";
+		    var ItemIDList = "<c:out value='${itemIDList}'/>";
+		    var BoardIDList = "<c:out value='${boardID}'/>";
 		    var oldguBun = "${guBun}";
 		    var newguBun = "";
 		    var xmlDom_treeview = createXmlDom();

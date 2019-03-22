@@ -34,7 +34,7 @@
 	    <script type="text/javascript">
 	        var pMode = "NEW";
 	        var AttachLimit = "${boardInfo.attachSizeLimit}";
-	        var pBoardID = "${boardID}";
+	        var pBoardID = "<c:out value='${boardID}'/>";
 	        var pUrl = "${url}";
 	        var PhotoBoard = "N";
 	        var spanimagename = "";

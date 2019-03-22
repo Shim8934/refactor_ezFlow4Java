@@ -3607,8 +3607,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		BoardListVO boardListVO = new BoardListVO();
 		
 		boolean saveMHTResult = false;
-		boardListVO.setFilePath(doc.getElementsByTagName("FILEPATH").item(0).getTextContent());
-		boardListVO.setItemID(doc.getElementsByTagName("ITEMID").item(0).getTextContent());
+		boardListVO.setFilePath(commonUtil.detectPathTraversal(doc.getElementsByTagName("FILEPATH").item(0).getTextContent()));
+		boardListVO.setItemID(commonUtil.detectPathTraversal(doc.getElementsByTagName("ITEMID").item(0).getTextContent()));
 		boardListVO.setBoardID(doc.getElementsByTagName("BOARDID").item(0).getTextContent());
 		boardListVO.setWriterID(doc.getElementsByTagName("WRITERID").item(0).getTextContent());
 		boardListVO.setTopWriterID(doc.getElementsByTagName("TOPWRITERID").item(0).getTextContent());

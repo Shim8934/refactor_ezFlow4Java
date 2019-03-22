@@ -766,6 +766,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	   String pCountFlag = req.getParameter("countFlag");
 	   // 마이게시판 가져올때 companyID 조건 추가
 	   String resultXML = getMyBoardTreeConfig(userInfo.getId(), pRootTreeID, commonUtil.getMultiData(lang, userInfo.getTenantId()), userInfo.getCompanyID(), userInfo.getTenantId());
+	   resultXML = commonUtil.stripScriptTags(resultXML);
 	   
 	   if (ezCommonService.getTenantConfig("USE_BOARD_LEFTMENU_COUNT", userInfo.getTenantId()).equals("YES") && pCountFlag != null && pCountFlag.equals("YES")) {
 		   Document doc = commonUtil.convertStringToDocument(resultXML);
@@ -4801,8 +4802,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	@ResponseBody
 	public String setMyBoardsConfig(@RequestBody String xmlPara, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("setMyBoardsConfig started");
-
-		Document doc = commonUtil.convertStringToDocument(xmlPara);
+		
+		String stripXml = commonUtil.stripScriptTags(xmlPara);
+		Document doc = commonUtil.convertStringToDocument(stripXml);
 		
 		userInfo = commonUtil.userInfo(loginCookie);
 		

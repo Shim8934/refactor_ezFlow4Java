@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	<title>${caption}</title>
+	<title><c:out value='${caption}'/></title>
 		<link rel="stylesheet" href="${util.addVer('ezEmail.c1', 'msg')}" type="text/css">
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>  
 		<script type="text/javascript">
@@ -53,7 +53,7 @@
 	      <table>
 	        <tr>
 	          <td  class="cimg"></td>
-	          <td  class="ctxt" ><span id="LabelMessage">${message}</span></td>
+	          <td  class="ctxt" ><span id="LabelMessage"><c:out value='${message}'/></span></td>
 	        </tr>
 	      </table>
 	 	</div>
@@ -61,7 +61,7 @@
 	<div class="popup_noti_btnarea"> 
 	    <div class="btnposition">
 	    <c:forEach var="item" items="${buttonNamesArray}" varStatus="status">
-	    	<input type='button' id='${status.index}' style='' value='${item}' onclick='Button_Onclick(this)'>
+	    	<input type='button' id='${status.index}' style='' value='<c:out value="${item}"/>' onclick='Button_Onclick(this)'>
 	    </c:forEach> 	                 
 <%-- 	        <input type='button' id='0' style='' value='${buttonName0}' onclick='Button_Onclick(this)'> 	                    --%>
 <%-- 	        <input type='button' id='1' style='' value='${buttonName1}' onclick='Button_Onclick(this)'> 	                    --%>
