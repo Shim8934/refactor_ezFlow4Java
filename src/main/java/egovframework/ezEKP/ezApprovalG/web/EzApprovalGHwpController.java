@@ -25,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 
@@ -70,7 +71,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 * @throws Exception
 	 * 전자결재 한글기안기 오픈
 	 */
-	@RequestMapping(value = "/ezApprovalG/draftuiHWP.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/draftuiHWP.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	public String draftuiHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("draftuiHWP started");
 		
@@ -157,7 +158,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	 * @throws Exception
 	 * 전자결재 한글결재 오픈
 	 */
-	@RequestMapping(value = "/ezApprovalG/approvuiHWP.do")
+	@RequestMapping(value = "/ezApprovalG/approvuiHWP.do", method = RequestMethod.GET)
 	public String approvuiHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("approvuiHWP started");
 
@@ -297,7 +298,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 전자결재 문서정보이력 상세보기
 	 */	
-	@RequestMapping(value = "/ezApprovalG/docViewerHWP.do")
+	@RequestMapping(value = "/ezApprovalG/docViewerHWP.do", method = RequestMethod.GET)
 	public String docViewerHWP(HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("docViewerHWP started");
 
@@ -313,7 +314,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 
 	 */	
-	@RequestMapping(value = "/ezApprovalG/ezviewAprHWP.do")
+	@RequestMapping(value = "/ezApprovalG/ezviewAprHWP.do", method = RequestMethod.GET)
 	public String ezviewAprHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezviewAprHWP started");
 
@@ -407,7 +408,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 한글기안기 결재문서 메일발송 시 첨부파일로 떨구기
 	 */	
-	@RequestMapping(value = "/ezApprovalG/mail_interuploadX_Server.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/mail_interuploadX_Server.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public String mail_interuploadX_Server(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara, HttpServletRequest request) throws Exception {
 		LOGGER.debug("mail_interuploadX_Server started");
@@ -522,7 +523,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 전자결재 한글양식 정보 버튼 
 	 */	
-	@RequestMapping(value = "/ezApprovalG/ezDocInfoG_View.do")
+	@RequestMapping(value = "/ezApprovalG/ezDocInfoG_View.do", method = RequestMethod.GET)
 	public String ezDocInfoG_View(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezDocInfoG_View started");
 
@@ -602,7 +603,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 전자결재 한글양식 결재완료 문서 보기
 	 */	
-	@RequestMapping(value = "/ezApprovalG/ezViewEnd_HWP.do")
+	@RequestMapping(value = "/ezApprovalG/ezViewEnd_HWP.do", method = RequestMethod.GET)
 	public String ezViewEnd_HWP(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezViewEnd_HWP started");
 
@@ -696,7 +697,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	
 	
 	
-	@RequestMapping(value = "/ezApprovalG/ezRecevGSusinHWP.do")
+	@RequestMapping(value = "/ezApprovalG/ezRecevGSusinHWP.do", method = RequestMethod.GET)
 	public String ezRecevGSusinHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezRecevGSusinHWP started");
 
@@ -791,7 +792,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	}	
 	
 	
-	@RequestMapping(value = "/ezApprovalG/ezDeptRecevUI_HWP.do")
+	@RequestMapping(value = "/ezApprovalG/ezDeptRecevUI_HWP.do", method = RequestMethod.GET)
 	public String ezDeptRecevUI_HWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezDeptRecevUI_HWP started");
 
@@ -840,7 +841,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	}
 	
 
-	@RequestMapping(value = "/ezApprovalG/ezSimsaG_HWP.do")
+	@RequestMapping(value = "/ezApprovalG/ezSimsaG_HWP.do", method = RequestMethod.GET)
 	public String ezSimsaG_HWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezSimsaG_HWP started");
 
@@ -881,7 +882,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 발송의뢰문서 발송 발송 저장 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/saveEndFileHwp.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/saveEndFileHwp.do", produces = "text/xml;charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public String saveEndFile(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		LOGGER.debug("saveEndFileHwp started");
@@ -927,7 +928,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 직인의뢰접수HWP화면 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezConvOutHWP.do")
+	@RequestMapping(value = "/ezApprovalG/ezConvOutHWP.do", method = RequestMethod.GET)
 	public String ezConvOutHWP(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		LOGGER.debug("ezConvOutHWP started.");
 		
@@ -957,7 +958,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 	/**
 	 * 결재문서 > 저장버튼 다운로드
 	 */
-	@RequestMapping(value = "/ezApprovalG/downloadHWPdoc.do")
+	@RequestMapping(value = "/ezApprovalG/downloadHWPdoc.do", method = RequestMethod.GET)
 	public void downloadAttach(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		
 		LOGGER.debug("============ downloadHWPdoc started ============");

@@ -164,7 +164,7 @@ public class CommonUtil {
 	    	String parentFolder1 = "../";
 	    	String parentFolder2 = "..\\";
 	    	
-	    	if (filePath.contains(parentFolder1) || filePath.contains(parentFolder2)) {
+	    	if (filePath.contains(parentFolder1) || filePath.contains(parentFolder2) || filePath.toUpperCase().contains("WEB-INF")) {
 	    		logger.debug("PathTraversal detected. filePath=" + filePath);
 	    		
 	    		throw new Exception("PathTraversal detected.");
