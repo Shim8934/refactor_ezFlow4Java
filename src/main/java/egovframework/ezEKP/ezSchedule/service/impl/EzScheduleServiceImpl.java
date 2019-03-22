@@ -982,7 +982,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 				}
 			}
 			//일정 정보 저장
-			schedulePath = mhtPath + schedulePath;
+			schedulePath = commonUtil.detectPathTraversal(mhtPath + schedulePath);
 			
 			Map<String, Object> map = new HashMap<String, Object>();
 			
@@ -1021,7 +1021,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 					String filePath = files[0];
 					String fileSize = files[2];
 					
-					filePath = uploadFilePath + commonUtil.separator + filePath;
+					filePath = commonUtil.detectPathTraversal(uploadFilePath + commonUtil.separator + filePath);
 	
 					attachMap.put("v_SCHEDULEID", scheduleId);
 					attachMap.put("v_FILENAME", fileName);
@@ -1121,7 +1121,7 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 			String filePath = files[0];
 			String fileSize = files[2];
 			
-			filePath = uploadFilePath + commonUtil.separator + filePath;
+			filePath = commonUtil.detectPathTraversal(uploadFilePath + commonUtil.separator + filePath);
 
 			attachMap.put("v_SCHEDULEID", scheduleid);
 			attachMap.put("v_FILENAME", fileName);

@@ -1948,6 +1948,8 @@ public class EzScheduleController extends EgovFileMngUtil {
 	    } else {
 	    	defaultPath = commonUtil.getRealPath(request) + contentPath;
 	    }
+	    defaultPath = commonUtil.detectPathTraversal(defaultPath);
+	    
 	    if (scheduleid == null || scheduleid.equals("")) {
         	//insertSchedule
         	result = ezScheduleService.insertSchedule(ownerid, ownername, ownername2, creatorid, creatorname, creatorname2, scheduletype, importance, ispublic, datetype, startdate, enddate, repetition, title, location, content, attach, 
@@ -2735,7 +2737,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 			fileName = filePath; 
 		}
 		
-		String fullFilePath = realPath + uploadFilePath + filePath;
+		String fullFilePath = commonUtil.detectPathTraversal(realPath + uploadFilePath + filePath);
 
 		downFile(request, response, fullFilePath, fileName);	
 	}
@@ -3337,7 +3339,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 		
 		//반복일정
 		if (info.getDateType().equals("3")) {
-			String defaultPath  = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", tenantId);
+			String defaultPath  = commonUtil.detectPathTraversal(commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_schedule.ROOT", tenantId));
 			String delStartDate;
 			
 			if (typeCal.equals("0")) { 
