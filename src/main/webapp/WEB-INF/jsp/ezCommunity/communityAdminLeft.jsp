@@ -36,7 +36,7 @@
 			var beforeThis;
 			var topThis;
 			var colorflg=false;	
-			var code = "<c:out value = '${code}' />";
+			var code = "<c:out value = '${code}'/>";
 		    var num = "<c:out value = '${num}' />";
 			var clickboard = "<c:out value = '${clickBoard}' />";
 			var boardid = "<c:out value = '${boardID}' />";
@@ -287,11 +287,11 @@
 				var url = "";
 				switch(idx) {
 					case 1:
-						url = "/ezCommunity/adminBasic.do?code=${code}"  ;
+						url = "/ezCommunity/adminBasic.do?code=" + code;
 						break;
 					
 					case 2:
-						url = "/ezCommunity/adminLogo.do?code=${code}";
+						url = "/ezCommunity/adminLogo.do?code=" + code;
 						break;
 						
 					case 3:
@@ -299,7 +299,7 @@
 						
 					case 4:
 						if ("${club.c_ClubConfirmType}" == '3') {
-							url = "/ezCommunity/adminMemPermit.do?code=${code}";
+							url = "/ezCommunity/adminMemPermit.do?code=" + code;
 						} else {
 							alert("<spring:message code = 'ezCommunity.t486' />");								
 							return false;
@@ -307,27 +307,27 @@
 						break;
 						
 					case 5:
-						url = "/ezCommunity/adminNoticeMail.do?code=${code}" ;
+						url = "/ezCommunity/adminNoticeMail.do?code=" + code;
 						break;	
 						
 					case 6:
-						url = "/ezCommunity/adminOuterList.do?code=${code}" ;
+						url = "/ezCommunity/adminOuterList.do?code=" + code;
 						break;
 						
 					case 7:
-						url = "/ezCommunity/adminMemberList.do?code=${code}&mode=delete" ;
+						url = "/ezCommunity/adminMemberList.do?code=" + code + "&mode=delete" ;
 						break;	
 						
 					case 8:
-						url = "/ezCommunity/adminMemberList.do?code=${code}&mode=master" ;
+						url = "/ezCommunity/adminMemberList.do?code=" + code + "&mode=master" ;
 						break;	
 						
 					case 9:
-						url = "/ezCommunity/adminCommClose.do?code=${code}";
+						url = "/ezCommunity/adminCommClose.do?code=" + code;
 					    break;
 					    
 				    case 10:
-				        url = "/ezCommunity/adminHomeBoard.do?code=${code}";
+				        url = "/ezCommunity/adminHomeBoard.do?code=" + code;
 				        break;
 				}
 				
