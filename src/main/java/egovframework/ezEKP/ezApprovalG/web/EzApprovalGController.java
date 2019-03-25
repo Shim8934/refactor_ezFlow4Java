@@ -9001,11 +9001,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orgDeptId = request.getParameter("orgDeptId");
 		String orgCabinetId = request.getParameter("orgCabinetId");
 		String userRealDeptId = ezOrganService.getUserOrgDeptId(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
-		System.out.println("뽝 : " + orgDeptId); 
-		System.out.println("뽝 : " + orgCabinetId); 
-		
-		System.out.println("현재 부서 : " + userInfo.getDeptName());
-		System.out.println("사용자 원부서 : " + userRealDeptId);
 		
 		List<OrganUserVO> list = ezOrganAdminService.getUserAddJobList(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
 		
