@@ -2265,7 +2265,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         String realPath = commonUtil.getRealPath(request);
 		String filePath = realPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "encodeinfo.xml";
 		
-		File file = new File (filePath);
+		File file = new File (commonUtil.detectPathTraversal(filePath));
 		String FileText = "";
 		StringBuilder result = new StringBuilder();
 
