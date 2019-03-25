@@ -370,16 +370,16 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-			File file = new File(dir);
+			File file = new File(commonUtil.detectPathTraversal(dir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File newFile = new File(docFile);
+			File newFile = new File(commonUtil.detectPathTraversal(docFile));
 			
 			if (!newFile.exists()) {
-				File orgFile = new File(orgDocFile);
+				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
 				
 				FileUtils.copyFile(orgFile, newFile);
 			}
@@ -471,7 +471,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			copyPath = copyPath + commonUtil.separator + "tempFileUpload";
 		}
 
-		File f = new File(pDirTempPath);
+		File f = new File(commonUtil.detectPathTraversal(pDirTempPath));
 
 		// 파일을 업로드할 폴더가 존재하지 않으면 생성한다.            
 		if (!f.exists()) {
@@ -490,7 +490,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				FileOutputStream fos = null;
 
 				try {
-					File nameFile = new File(saveLocalPath + "__.txt");
+					File nameFile = new File(commonUtil.detectPathTraversal(saveLocalPath + "__.txt"));
 					fos = new FileOutputStream(nameFile);
 					fos.write(base64OrgFileName.getBytes("ISO-8859-1"));
 				} catch (Exception e) {
@@ -502,8 +502,8 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				}
 			}
 
-			File file2 = new File(pDirTempPath + commonUtil.separator + newfilename);
-			File file3 = new File(realPath +  commonUtil.separator + sFileHref );
+			File file2 = new File(commonUtil.detectPathTraversal(pDirTempPath + commonUtil.separator + newfilename));
+			File file3 = new File(commonUtil.detectPathTraversal(realPath +  commonUtil.separator + sFileHref ));
 
 			if (!file2.exists()) {
 				FileUtils.copyFile(file3, file2);
@@ -736,16 +736,16 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-			File file = new File(dir);
+			File file = new File(commonUtil.detectPathTraversal(dir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File newFile = new File(docFile);
+			File newFile = new File(commonUtil.detectPathTraversal(docFile));
 			
 			if (!newFile.exists()) {
-				File orgFile = new File(orgDocFile);
+				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
 				InputStream orgFileInputStream;
 
 				// 2018.06.21 - KLIB으로 암호화된 파일일 때는 복호화 하여 저장
@@ -896,13 +896,14 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 		String path = commonUtil.getRealPath(request) +  commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
 		try {
-			File file = new File(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID));
+			File file = new File(commonUtil.detectPathTraversal(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
 			String saveFileName = path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator + docID + ".hwp";
+			saveFileName = commonUtil.detectPathTraversal(saveFileName);
 			byte[] documentBytes = Base64.decodeBase64(formText);
 			
 			// 2018.08.23 KLIB 암호화

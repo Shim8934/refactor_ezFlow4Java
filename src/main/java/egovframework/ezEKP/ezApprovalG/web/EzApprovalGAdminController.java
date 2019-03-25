@@ -898,7 +898,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("path : " + path);
 		
 		try {
-			File file = new File(path);
+			File file = new File(commonUtil.detectPathTraversal(path));
 			BufferedReader br = new BufferedReader(new FileReader(file));
 			String line = null;
 	
@@ -2258,7 +2258,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String currentDate = commonUtil.getTodayUTCTime("yyyyMMddHHmmss");
 		String fileExt = multiFile.getOriginalFilename().substring(multiFile.getOriginalFilename().lastIndexOf("."));
 		
-		File dir = new File(realPath + dirPath);
+		File dir = new File(commonUtil.detectPathTraversal(realPath + dirPath));
 		
         if (!dir.exists()) {
         	dir.mkdirs();
