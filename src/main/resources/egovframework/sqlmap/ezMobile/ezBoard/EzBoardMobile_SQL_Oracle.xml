@@ -111,7 +111,6 @@
 		]]>
 	</select>
 	
-	<!-- clob 타입은  union 이 되지 않아  on 사용하여 쿼리 수정-->
 	<select id="MBoardDAO.getBoardItemList" parameterClass="Map" resultClass="MBoardItemVO">
 		<![CDATA[
 			SELECT
@@ -127,6 +126,7 @@
 					TO_DATE(A.startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
 					TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
 					A.parentwritedate,
+					TO_NUMBER(A.parentwritedate) as orderparentwritedate,
 					A.importance,
 					A.title,
 					A.readcount,
@@ -146,143 +146,239 @@
 						tenant_id = A.tenant_id
 					AND
 						itemid = A.itemid) onelinecnt,
-					A.upperitemidtree,
-					TO_CHAR(A.upperitemidtree) AS orderupperitemidtree,
-					A.docno,
-					'' AS notice,
-					A.maincontent,
-					A.extensionattribute6,
-					A.extensionattribute7,
-					A.extensionattribute8,
-					A.extensionattribute9,
-					A.extensionattribute10,
-					(SELECT
-						gubun
-					FROM
-						TBL_BOARD_BOARDINFO B
-					WHERE
-						B.tenant_id = #tenantID#
-					AND
-						B.boardid = A.boardid) AS gubun
-				FROM
-					TBL_BOARD_ITEM A
-				LEFT OUTER JOIN
-					(SELECT
-						COUNT(userid) AS totalcount, 
-						itemid,
-						tenant_id 
-					FROM
-						TBL_BOARD_ITEM_READ
-					WHERE
-						tenant_id = #tenantID#
-					AND
-						userid = #userID#
-					AND
-						boardid = #boardID#
-					GROUP BY
-						itemid,
-						tenant_id ) D
-					ON
-						A.tenant_id = D.tenant_id
-					AND
-						A.itemid = D.itemid
-					WHERE
-						A.tenant_id = #tenantID#
-					AND
-						boardid = #boardID#
+						TO_CHAR(A.upperitemidtree) as upperitemidtree,
+						A.docno,
+						'' AS notice,
+						TO_CHAR(A.maincontent) as maincontent,
+						A.extensionattribute6,
+						A.extensionattribute7,
+						A.extensionattribute8,
+						A.extensionattribute9,
+						A.extensionattribute10,
+						(SELECT
+							gubun
+						FROM
+							TBL_BOARD_BOARDINFO B
+						WHERE
+							B.tenant_id = #tenantID#
+						AND
+							B.boardid = A.boardid) AS gubun
+						FROM
+							TBL_BOARD_ITEM A
+						LEFT OUTER JOIN
+							(SELECT
+								COUNT(userid) AS totalcount, 
+								itemid,
+								tenant_id 
+							FROM
+								TBL_BOARD_ITEM_READ
+							WHERE
+								tenant_id = #tenantID#
+							AND
+								userid = #userID#
+							AND
+								boardid = #boardID#
+							GROUP BY
+								itemid,
+								tenant_id ) D
+							ON
+								A.tenant_id = D.tenant_id
+							AND
+								A.itemid = D.itemid
+							WHERE
+								A.tenant_id = #tenantID#
+							AND
+								boardid = #boardID#
 			]]>
+			
 			<isEqual property="apprFlag" compareValue="Y">
 				<![CDATA[
 					AND
 						A.apprflag = 'Y'
 				]]>
 			</isEqual>
-			<isNotEmpty property="pSearchText">
+	        
+	        <isNotEmpty property="pSearchText">
+	            <![CDATA[
+	                AND
+	                    (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                        OR
+	                    A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	            ]]>
+	        </isNotEmpty>
+			
+			<isEqual property="gubun" compareValue="1">
+	            <![CDATA[
+	                AND
+	                    startdate <= #nowDate#
+	                AND
+	                    enddate > #nowDate#
+	            ]]>
+	        </isEqual>           
+			
+			<isEqual property="gubun" compareValue="2">
+				 <![CDATA[
+					AND
+						startdate <= #nowDate#
+					AND
+						enddate > #nowDate#
+					AND
+						D.totalcount IS NULL
+				]]> 
+			</isEqual>
+				
+			<isEqual property="gubun" compareProperty="3">
 				<![CDATA[
 					AND
-						(A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%') 
-							OR 
-						A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))
-			]]>
-			</isNotEmpty>
+						startdate <= #nowDate#
 					AND
-						(
-							(
-							<isEqual property="gubun" compareValue="1">
-								<![CDATA[
-									startdate <= #nowDate#
-								AND
-									enddate > #nowDate#
-								]]>
-							</isEqual>
-							
-							<isEqual property="gubun" compareValue="2">
-								 <![CDATA[
-									startdate <= #nowDate#
-								AND
-									enddate > #nowDate#
-								AND
-									D.totalcount IS NULL
-								]]> 
-							</isEqual>
-								
-							<isEqual property="gubun" compareProperty="3">
-								<![CDATA[
-									startdate <= #nowDate#
-								AND
-									enddate < #nowDate#
-								]]>
-							</isEqual>
-							
-							<isNotEmpty property="parentWriteDate">
-								<![CDATA[
-								AND
-									parentwritedate = #parentWriteDate#
-								]]>
-							</isNotEmpty>
-							
-							<isNotEmpty property="upperitemidtree">
-								<![CDATA[
-								AND
-									TO_CHAR(upperitemidtree) > #upperitemidtree#
-								]]>
-							</isNotEmpty>
-							)
-						OR
-							(
-							<![CDATA[
-									startdate <= #nowDate#
-								AND
-									enddate > #nowDate#
-							]]>
-							<isNotEmpty property="parentWriteDate">
-								<![CDATA[
-								AND
-									parentwritedate < #parentWriteDate#
-								]]>
-							</isNotEmpty>
-							)
-						)
+						enddate < #nowDate#
+				]]>
+			</isEqual>
+	        
+	        <isNotEmpty property="parentWriteDate">
+	            <![CDATA[
+	                AND
+	                    parentwritedate = #parentWriteDate#
+	            ]]>
+	        </isNotEmpty>
+	        <isNotEmpty property="upperitemidtree">
+	            <![CDATA[
+	                AND
+	                    TO_CHAR(upperitemidtree) > #upperitemidtree#
+	            ]]>        
+	        </isNotEmpty>
+			
 			<![CDATA[
-				ORDER BY
-					PARENTWRITEDATE DESC, orderupperitemidtree)
+	            UNION 
+	              SELECT 
+	                A.boardid,
+	                A.itemid,
+	                A.writerid,
+	                A.writername,
+	                A.writerdeptname,
+	                A.writercompanyname,
+	                TO_DATE(A.startdate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS startdate,
+	                TO_DATE(A.writedate, 'YYYY-MM-DD HH24:MI:SS')+(#offset#/(60*24)) AS writedate,
+	                A.parentwritedate,
+	                TO_NUMBER(A.parentwritedate) as orderparentwritedate,
+	                A.importance,
+	                A.title,
+	                A.readcount,
+	                A.attachments,
+	                A.itemlevel,
+	                A.abstract,
+	                CASE WHEN D.totalcount IS NULL THEN '0' ELSE '1' END readflag,
+	                A.extensionattribute5,
+	                A.writername2,
+	                A.writerdeptname2,
+	                A.writercompanyname2,
+	                (SELECT 
+	                    COUNT(*)  
+	                FROM 
+	                    TBL_BOARD_ONELINEREPLY
+	                WHERE  
+	                    tenant_id = A.tenant_id
+	                AND
+	                    itemid = A.itemid) onelinecnt,
+	                    TO_CHAR(A.upperitemidtree) as upperitemidtree,
+	                    A.docno,
+	                    '' AS notice,
+	                    TO_CHAR(A.maincontent) as maincontent,
+	                    A.extensionattribute6,
+	                    A.extensionattribute7,
+	                    A.extensionattribute8,
+	                    A.extensionattribute9,
+	                    A.extensionattribute10,
+	                    (SELECT
+	                        gubun
+	                    FROM
+	                        TBL_BOARD_BOARDINFO B
+	                    WHERE
+	                        B.tenant_id = #tenantID#
+	                    AND
+	                        B.boardid = A.boardid) AS gubun
+	                    FROM
+	                        TBL_BOARD_ITEM A
+	                    LEFT OUTER JOIN
+	                        (SELECT
+	                            COUNT(userid) AS totalcount, 
+	                            itemid,
+	                            tenant_id 
+	                        FROM
+	                            TBL_BOARD_ITEM_READ
+	                        WHERE
+	                            tenant_id = #tenantID#
+	                        AND
+	                            userid = #userID#
+	                        AND
+	                            boardid = #boardID#
+	                        GROUP BY
+	                            itemid,
+	                            tenant_id ) D
+	                        ON
+	                            A.tenant_id = D.tenant_id
+	                        AND
+	                            A.itemid = D.itemid
+	                        WHERE
+	                            A.tenant_id = #tenantID#
+	                        AND
+	                            boardid = #boardID#  
+	            ]]>
+	                            
+	            <isEqual property="apprFlag" compareValue="Y">
+	                <![CDATA[
+	                    AND
+	                        A.apprflag = 'Y'
+	                ]]>
+	            </isEqual>
+	        
+	            <isNotEmpty property="pSearchText">
+	                <![CDATA[
+	                    AND
+	                        (A.title LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%')
+	                            OR
+	                        A.writerName LIKE CONCAT(CONCAT('%' ,#pSearchText#), '%'))    
+	                ]]>
+	            </isNotEmpty>                
+	            
+	            <![CDATA[
+	                AND
+	                    startdate <= #nowDate#
+	                AND
+	                    enddate > #nowDate#
+	            ]]>        
+	            <isNotEmpty property="parentWriteDate">
+	                <![CDATA[
+	                    AND
+	                        parentwritedate < #parentWriteDate# 
+	                ]]>
+	            </isNotEmpty>
+	             <![CDATA[             
+	                ORDER BY
+	                    orderparentwritedate DESC, UPPERITEMIDTREE)
 			WHERE
 				ROWNUM <= #listSize#
-			]]>
+            ]]>
 	</select>
 	
 	<select id="MBoardDAO.getNoticePostItemList" parameterClass="Map" resultClass="MBoardItemVO">
-		<![CDATA[
 			SELECT
 				*
 			FROM
 				(
 				SELECT
-					ROWNUM AS rnum,
-					T1.*
+					*
 				FROM
 					(
-					SELECT 
+					SELECT
+					<isEqual property="apprFlag" compareValue="Y">
+						ROW_NUMBER() OVER ( ORDER BY A.ParentWriteDate, A.WriteDate DESC  ) rnum,
+					</isEqual>
+					<isEmpty property="apprFlag">
+						ROW_NUMBER() OVER ( ORDER BY A.NotiNo ASC, A.ParentWriteDate DESC, A.WriteDate DESC  ) rnum,
+					</isEmpty>
+					<![CDATA[
 						A.boardid ,
 						A.itemid ,
 						A.writerid ,
@@ -349,26 +445,17 @@
 					<![CDATA[
 						AND
 							A.apprflag = 'Y'
-						ORDER BY
-							A.parentwritedate,
-							A.writedate DESC
 					]]>
 				</isEqual>
-				
-				<isEqual property="apprFlag" compareValue="N">
-					<![CDATA[
-						ORDER BY
-							A.notino ASC,
-							A.parentwritedate,
-							A.writedate DESC
-					]]>
-				</isEqual>
-				
+						ORDER BY 
+							A.NotiNo ASC, 
+							A.ParentWriteDate DESC, 
+							A.WriteDate DESC
 		<![CDATA[
 					) T1
-				WHERE ROWNUM <= #endRow#
+				WHERE rnum <= #endRow#
 				) T2
-			WHERE T2.rnum >= #startRow#
+			WHERE rnum >= #startRow#
 		]]>
 	</select>
 	
