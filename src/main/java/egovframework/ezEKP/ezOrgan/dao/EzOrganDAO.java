@@ -398,4 +398,8 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public List<OrganUserVO> getSharedMailboxSearchList(Map<String, Object> map) {
 		return (List<OrganUserVO>) list("EzOrganDAO.getSharedMailboxSearchList", map);
 	}
+	
+	public String getUserOrgDeptId(Map<String, Object> map) throws Exception {
+		return (String) select("EzOrganDAO.getUserOrgDeptId", map);
+	}
 }
