@@ -924,7 +924,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mode = "APR";
 		String docID = isTmpDoc;
 		
-		File file = new File (dirPath);
+		File file = new File (commonUtil.detectPathTraversal(dirPath));
 		
 		if(!file.exists()) {
 			file.mkdirs();
@@ -2178,8 +2178,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// uploadFile, tempUploadFile 디렉토리 경로
 		String upd = dirPath + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
 		String tempUpd = dirPath + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator;
-		File uFile = new File(upd);
-		File tFile = new File(tempUpd);
+		File uFile = new File(commonUtil.detectPathTraversal(upd));
+		File tFile = new File(commonUtil.detectPathTraversal(tempUpd));
 		
 		if (uFile.isDirectory()) {
 			uFile.mkdir();
@@ -2279,8 +2279,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		// uploadFile, tempUploadFile 디렉토리 경로
 		String upd = dirPath + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID) + commonUtil.separator;
 		String tempUpd = dirPath + companyID + commonUtil.separator + "tempUploadFile" + commonUtil.separator;
-		File uFile = new File(upd);
-		File tFile = new File(tempUpd);
+		File uFile = new File(commonUtil.detectPathTraversal(upd));
+		File tFile = new File(commonUtil.detectPathTraversal(tempUpd));
 		
 		if (uFile.isDirectory()) {
 			uFile.mkdir();
@@ -2391,7 +2391,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (ezApprovalGService.isLinkedAttachFile(attachHref)) {
 			rtnVal = "TRUE";
 			logger.debug("is linked attach file: {}", attachHref);
-		} else if (new File(fileSpec).exists()) {
+		} else if (new File(commonUtil.detectPathTraversal(fileSpec)).exists()) {
 			deleteFile(fileSpec);
 			rtnVal = "TRUE";
 		} else {
@@ -2465,17 +2465,17 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			String upd = dirPath + userInfo.getCompanyID() + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(fileDocID) + commonUtil.separator;
 			String fileName = xmlDom.getElementsByTagName("DATA1").item(k).getTextContent().split("/")[xmlDom.getElementsByTagName("DATA1").item(k).getTextContent().split("/").length - 1];
 			
-			File filePath = new File(dirPath);
+			File filePath = new File(commonUtil.detectPathTraversal(dirPath));
 			
 	        if (!filePath.exists()) {
 	        	filePath.mkdirs();
 	        }
         
-			File file = new File(dirPath + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile" + commonUtil.separator + fileName);
+			File file = new File(commonUtil.detectPathTraversal(dirPath + userInfo.getCompanyID() + commonUtil.separator + "tempUploadFile" + commonUtil.separator + fileName));
 			
 			if (file.isFile()) {
 				if (file.exists()) {
-					FileUtils.copyFile(file, new File(upd + fileName));
+					FileUtils.copyFile(file, new File(commonUtil.detectPathTraversal(upd + fileName)));
 				}  
 			}
 			
@@ -3326,8 +3326,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		OutputStream bos = null;
 		
 		try {
-			File file = new File(path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000");
-			File file1 = new File(path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID));
+			File file = new File(commonUtil.detectPathTraversal(path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000"));
+			File file1 = new File(commonUtil.detectPathTraversal(path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID)));
 	
 			if (!file.exists()) {
 				file.mkdirs();
@@ -3339,7 +3339,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			String tmpPath = path + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + "1000" + commonUtil.separator + ezApprovalGService.getDocDir(docID);
 			
-			File file2 = new File(tmpPath + commonUtil.separator + "TMP");
+			File file2 = new File(commonUtil.detectPathTraversal(tmpPath + commonUtil.separator + "TMP"));
 			
 			if (!file2.exists()) {
 				file2.mkdirs();
@@ -3353,7 +3353,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 			}
 			
-			bos = new FileOutputStream(saveFileName);
+			bos = new FileOutputStream(commonUtil.detectPathTraversal(saveFileName));
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[BUFF_SIZE];
@@ -3621,7 +3621,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("<<<saveDir : " + saveDir);
 		
 		try {
-			File file = new File(saveDir);
+			File file = new File(commonUtil.detectPathTraversal(saveDir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
@@ -3633,7 +3633,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 			}
 
-			bos = new FileOutputStream(saveFileName);
+			bos = new FileOutputStream(commonUtil.detectPathTraversal(saveFileName));
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[BUFF_SIZE];
@@ -4403,7 +4403,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		InputStream inpStream = null;
 		String zipFilePath = null;
 		try{
-			File sourceDir = new File(realPath + commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID);
+			File sourceDir = new File(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID));
 			
 			if (sourceDir.exists()) {
 				sourceDir.delete();
@@ -4444,16 +4444,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				targetPath = path2 + targetPath.replace(commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()), "");
 				
 				String dir = targetPath.substring(0, targetPath.lastIndexOf(commonUtil.separator));
-				File file1 = new File(dir);
+				File file1 = new File(commonUtil.detectPathTraversal(dir));
 	
 				if (!file1.exists()) {
 					file1.mkdirs();
 				}
 	
-				File file2 = new File(targetPath);
+				File file2 = new File(commonUtil.detectPathTraversal(targetPath));
 	
 				if (!file2.exists()) {
-					File file3 = new File(sourcePath);
+					File file3 = new File(commonUtil.detectPathTraversal(sourcePath));
 					FileUtils.copyFile(file3, file2);
 				}
 			}
@@ -4462,7 +4462,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 			byte[] buffer = new byte[1024];
 	
-			zout = new ZipOutputStream(new FileOutputStream(new File(realPath + zipFilePath)));
+			zout = new ZipOutputStream(new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + zipFilePath))));
 			
 			for (int k = 0; k < filePaths.length; k++) {
 				String fileName = fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
@@ -4475,12 +4475,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					fileExt = filePaths[k].substring(0, filePaths[k].lastIndexOf("."));
 					fileExt = fileExt.substring(fileExt.lastIndexOf(".") + 1);
 					// 암호화된 파일의 바이트를 읽어온 후 복호화
-					byte[] encryptedFileBytes = Files.readAllBytes(new File(realPath + filePaths[k]).toPath());
+					byte[] encryptedFileBytes = Files.readAllBytes(new File(commonUtil.detectPathTraversal(realPath + filePaths[k])).toPath());
 					// 인풋스트림에서 복호화한 바이트 배열을 쓰도록 한다.
 					inpStream = new ByteArrayInputStream(klibUtil.decrypt(encryptedFileBytes));
 				} else {
 					// ezd 확장자가 아니라면 FileInputStream 으로 파일 자체를 읽도록 한다.
-					inpStream = new FileInputStream(new File(realPath + filePaths[k]));
+					inpStream = new FileInputStream(new File(commonUtil.detectPathTraversal(realPath + filePaths[k])));
 				}
 				
 				if (fileName.indexOf("." + fileExt) == -1) {
@@ -4734,16 +4734,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-			File file = new File(dir);
+			File file = new File(commonUtil.detectPathTraversal(dir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File newFile = new File(docFile);
+			File newFile = new File(commonUtil.detectPathTraversal(docFile));
 			
 			if (!newFile.exists()) {
-				File orgFile = new File(orgDocFile);
+				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
 				
 				FileUtils.copyFile(orgFile, newFile);
 			}
@@ -5015,16 +5015,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			docFile = dirPath + docFile.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-			File file = new File(dir);
+			File file = new File(commonUtil.detectPathTraversal(dir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File newFile = new File(docFile);
+			File newFile = new File(commonUtil.detectPathTraversal(docFile));
 			
 			if (!newFile.exists()) {
-				File orgFile = new File(orgDocFile);
+				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
 				
 				FileUtils.copyFile(orgFile, newFile);
 			}
@@ -5243,16 +5243,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator, "");
 			
 			String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-			File file = new File(dir);
+			File file = new File(commonUtil.detectPathTraversal(dir));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
-			File newFile = new File(docFile);
+			File newFile = new File(commonUtil.detectPathTraversal(docFile));
 			
 			if (!newFile.exists()) {
-				File orgFile = new File(orgDocFile);
+				File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
 				
 				FileUtils.copyFile(orgFile, newFile);
 			}
@@ -5674,16 +5674,16 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				docFile = dirPath + docFile.replace( commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()), "");
 				
 				String dir = docFile.substring(0, docFile.lastIndexOf(commonUtil.separator) + 1);
-				File file = new File(dir);
+				File file = new File(commonUtil.detectPathTraversal(dir));
 				
 				if (!file.exists()) {
 					file.mkdirs();
 				}
 				
-				File newFile = new File(docFile);
+				File newFile = new File(commonUtil.detectPathTraversal(docFile));
 				
 				if (!newFile.exists()) {
-					File orgFile = new File(orgDocFile);
+					File orgFile = new File(commonUtil.detectPathTraversal(orgDocFile));
 					
 					FileUtils.copyFile(orgFile, newFile);
 				}
@@ -7576,7 +7576,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		OutputStream bos = null;
 		
 		try {
-		File file = new File(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID));
+		File file = new File(commonUtil.detectPathTraversal(path + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)));
 		
 		if (!file.exists()) {
 			file.mkdirs();
@@ -7586,7 +7586,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 			stream = new ByteArrayInputStream(formText.getBytes("UTF-8"));
 			
-			bos = new FileOutputStream(saveFileName);
+			bos = new FileOutputStream(commonUtil.detectPathTraversal(saveFileName));
 			
 			int bytesRead = 0;
 			byte[] buffer = new byte[BUFF_SIZE];
@@ -7967,7 +7967,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String strPath = commonUtil.getRealPath(request)+ commonUtil.getUploadPath("upload_common.ROOT", userInfo.getTenantId()) + commonUtil.separator + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).substring(0,10).replace("-", "") ;
 		FileOutputStream stream = null;
 		try{
-		File file = new File(strPath);
+		File file = new File(commonUtil.detectPathTraversal(strPath));
 		
 		if (!file.exists()) {
 			file.mkdirs();
@@ -7982,7 +7982,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	     
 	    
 //	     stream = new FileOutputStream("E:\\test2\\aaaaa.png");
-	     stream = new FileOutputStream(strPath+commonUtil.separator+docID+".png");
+	     stream = new FileOutputStream(commonUtil.detectPathTraversal(strPath+commonUtil.separator+docID+".png"));
 	     stream.write(file2);
 		}  catch (FileNotFoundException fnfe) {
 			logger.debug("fnfe: {}", fnfe);
@@ -8230,12 +8230,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		}
 		
 		try {
-			File file = new File(realPath + dirPath2);
+			File file = new File(commonUtil.detectPathTraversal(realPath + dirPath2));
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 
-			File file2 = new File(realPath + dirPath);
+			File file2 = new File(commonUtil.detectPathTraversal(realPath + dirPath));
 			if (!file2.exists()) {
 				file2.mkdirs();
 			}
@@ -8252,7 +8252,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				fileBytes = pHTML.getBytes("UTF-8");
 			}
 			
-			Path outputFile = Paths.get(realPath + dirPath + commonUtil.separator + fileName);
+			Path outputFile = Paths.get(commonUtil.detectPathTraversal(realPath + dirPath + commonUtil.separator + fileName));
 			Files.write(outputFile, fileBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -8392,7 +8392,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		path += commonUtil.separator + subFolder + commonUtil.separator;
 		
-		File file = new File(realPath + path);
+		File file = new File(commonUtil.detectPathTraversal(realPath + path));
 		
 		if (!file.exists()) {
 			file.mkdirs();
@@ -8404,7 +8404,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		String saveFilePath = path + docTitle + ".mht";
 		
-		FileUtils.copyFile(new File(realPath + docHref), new File(realPath + saveFilePath));
+		FileUtils.copyFile(new File(commonUtil.detectPathTraversal(realPath + docHref)), new File(commonUtil.detectPathTraversal(realPath + saveFilePath)));
 
 		logger.debug("savePCTmpFile ended");
 		
@@ -8628,7 +8628,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			//기관명 명시해주기 
 			sb.append(deptID.split(":")[1] + " : ");
 			
-			try (BufferedReader br = new BufferedReader(new FileReader(new File(filePath)))) {
+			try (BufferedReader br = new BufferedReader(new FileReader(new File(commonUtil.detectPathTraversal(filePath))))) {
 				String readLine = "";
 				
 				while ((readLine = br.readLine()) != null) {
