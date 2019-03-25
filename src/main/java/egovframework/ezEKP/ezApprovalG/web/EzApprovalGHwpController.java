@@ -187,6 +187,10 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 			userInfo.setCompanyID(orgCompanyID);
 		}
 		
+		if (docID == null) {
+			docID = "";
+		}
+		
 		if (mailChk == null) {
 			mailChk = "";
 		}
@@ -218,7 +222,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
         	allFlag = "0";
         }
         
-        if (docID != null && !docID.equals("")) {
+        if (!docID.equals("")) {
 			String proxyUser = ezApprovalGService.getProxyUser(userInfo.getId(), "1", userInfo.getTenantId(), userInfo.getOffset());
 			String[] proxyUserArray = proxyUser.split(",");
 			boolean checkPermission = true;
@@ -417,15 +421,16 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
 
-		String sGUID = xmlDom.getElementsByTagName("guid").item(0).getTextContent();
 		String sFileTitle = xmlDom.getElementsByTagName("name").item(0).getTextContent();
 		String sFileData = xmlDom.getElementsByTagName("filedata").item(0).getTextContent();
 		String sExt = xmlDom.getElementsByTagName("ext").item(0).getTextContent();
-		String sFolder = xmlDom.getElementsByTagName("dir").item(0).getTextContent();
-		String sPrefix = xmlDom.getElementsByTagName("prefix").item(0).getTextContent();
-
+		//2019.03.25 천성준 - 사용안해서 일단 주석
+		//String sGUID = xmlDom.getElementsByTagName("guid").item(0).getTextContent();
+		//String sFolder = xmlDom.getElementsByTagName("dir").item(0).getTextContent();
+		//String sPrefix = xmlDom.getElementsByTagName("prefix").item(0).getTextContent();
+		
+		//String filename = sFileTitle;
 		String pBigFileUpload = sFileData;
-		String filename = sFileTitle;
 		String newguid = UUID.randomUUID().toString();
 		String newfilename = newguid + "." + sExt;
 		String newwindowid = xmlDom.getElementsByTagName("newid").item(0).getTextContent();
@@ -480,7 +485,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 
 		String saveLocalPath = pDirTempPath + commonUtil.separator + newfilename;
 		String orgFileName = sFileTitle + "." + sExt;            
-		long fileSize = 0;
+		//long fileSize = 0; //2019.03.25 천성준 - 사용안해서 일단 주석
 		if (useExtension.toLowerCase().indexOf(sExt.toLowerCase()) == -1 && !useExtension.equals("*")) {
 			extResult = "denied";
 		} else {

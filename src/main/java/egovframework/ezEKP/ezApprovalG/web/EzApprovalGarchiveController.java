@@ -1209,7 +1209,8 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	public String searchDelivery(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("searchDelivery started");
 		
-		userInfo = commonUtil.aprUserInfo(loginCookie);
+		//2019.03.25 천성준 - 사용안해서 일단 주석
+		//userInfo = commonUtil.aprUserInfo(loginCookie);
 		
 		logger.debug("searchDelivery ended");
 		return "ezApprovalG/apprGsearchDelivery";
@@ -1782,7 +1783,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	public void getUserContListSave(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Model model, @RequestBody String xmlPara) throws Exception{
 		logger.debug("getUserContListSave started");
 		
-		StringBuilder resultExcel = new StringBuilder();
+		//StringBuilder resultExcel = new StringBuilder(); //2019.03.25 천성준 - 사용안해서 일단 주석
 		String excelValue = "";
 		
 		userInfo = commonUtil.aprUserInfo(loginCookie);
@@ -2223,7 +2224,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 	@ResponseBody
 	public String searchOrganGListData(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, @RequestBody String xmlPara) throws Exception {
 		logger.debug("searchOrganGListData started");
-		userInfo = commonUtil.userInfo(loginCookie);
+		//userInfo = commonUtil.userInfo(loginCookie); //2019.03.25 천성준 - 사용안해서 일단 주석
 		
 		Document xmlDom = commonUtil.convertStringToDocument(xmlPara);
         String keyword = xmlDom.getDocumentElement().getChildNodes().item(0).getTextContent();
