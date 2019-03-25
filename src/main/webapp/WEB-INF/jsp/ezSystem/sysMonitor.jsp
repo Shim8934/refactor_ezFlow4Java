@@ -387,6 +387,15 @@
 	    		
  	    		for (var i = 0; i < ioInfo.length; i++) {
 	    			diskTarget = Object.keys(ioInfo[i]);
+	    			
+	    			// fd, dm 디스크 관련 정보는 보여줄 필요가 없어서 차트에 나타나지 않도록 처리함
+	    			for (var j = diskTarget.length - 1; j > -1; j--) {
+	    				if (diskTarget[j].startsWith("write_fd") || diskTarget[j].startsWith("read_fd")
+	    						|| diskTarget[j].startsWith("write_dm") || diskTarget[j].startsWith("read_dm")) {
+	    					diskTarget.splice(j, 1);
+	    				}
+	    			}
+	    			
 	    			ioInfo[i].time = current;
 	    			diskioData.push(ioInfo[i]);
 	    		} 	    		
