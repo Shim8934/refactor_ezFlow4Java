@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -15,11 +14,11 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/control_Cross/ListView_list.js')}" ></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/TreeViewCtrl_Cross.js')}"></script>
 	    <script type="text/javascript" id="clientEventHandlersJS">
-	        var pDeptID = "<c:out value='${deptID}'/>";
-	        var pContType = "<c:out value='${contType}'/>";
-	        var pSN = "<c:out value='${sn}'/>";
-	        var pCompanyID = "<c:out value='${companyID}'/>";
-	        var pInfoXML = "<c:out value='${infoXML}'/>";
+	        var pDeptID = "${deptID}";
+	        var pContType = "${contType}";
+	        var pSN = "${sn}";
+	        var pCompanyID = "${companyID}";
+	        var pInfoXML = "${infoXML}";
 	        var labelcolor = "c6c6c6";
 	        var xmlhttp = createXMLHttpRequest();
 	        var xmlDoc = createXmlDom();

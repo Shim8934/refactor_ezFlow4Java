@@ -20,11 +20,11 @@
 	    <script type="text/javascript" id="clientEventHandlersJS">
 	        var xmlhttp = createXMLHttpRequest();
 	        var xmldoc = createXmlDom();
-	        var lastdate = "<c:out value='${monthEndDay}'/>";
+	        var lastdate = "${monthEndDay}";
 	        var arr_userinfo = new Array();
-	        arr_userinfo[0] = "<c:out value='${userInfo.deptID}'/>";
-	        var initdate = "<c:out value='${initDate}'/>";
-	        var listType = "<c:out value='${listtype}'/>";
+	        arr_userinfo[0] = "${userInfo.deptID}";
+	        var initdate = "${initDate}";
+	        var listType = "${listtype}";
 	        var ReturnFunction;	        
 	
 	        document.onselectstart = function () {
@@ -43,7 +43,7 @@
 	                    ReturnFunction = parent.ezStatisticsSearch_dialogArguments[1];
 	                } catch (e) { }
 	            }
-	            if ("<c:out value='${aprFlag}'/>" == "END") {
+	            if ("${aprFlag}" == "END") {
 	                document.getElementById("ENDDATETR").style.display = "";
 	                document.getElementById("DOCNUM").style.display = "";
 	            }
@@ -52,7 +52,7 @@
 	                document.getElementById("DOCNUM").style.display = "NONE";
 	            }
 	
-	            if ("<c:out value='${aprFlag}'/>" == "APR2") {
+	            if ("${aprFlag}" == "APR2") {
 	                document.getElementById("DOCNUM").style.display = "";
 	                document.getElementById("KEYWORDTR").style.display = "";
 	                document.getElementById("FormN").style.display = "";
@@ -328,7 +328,7 @@
 		        RtnVal[1] = DocTitle.value;
 		        RtnVal[2] = drafter.value;
 		
-		        if ("<c:out value='${aprFlag}'/>" == "END") {
+		        if ("${aprFlag}" == "END") {
 		            RtnVal[3] = "";
 		            RtnVal[4] = "";
 		            RtnVal[5] = initdate.substring(0, 10) + " 00:00:01";
@@ -440,7 +440,7 @@
 		        RtnVal[0] = DocNumber.value;
 		        RtnVal[1] = DocTitle.value;
 		        RtnVal[2] = drafter.value;
-		        if ("<c:out value='${aprFlag}'/>" == "END") {
+		        if ("${aprFlag}" == "END") {
 		            RtnVal[3] = "";
 		            RtnVal[4] = "";
 		            RtnVal[5] = sYear + "-" + sMonth + "-" + sDay + " 00:00:01";
@@ -517,7 +517,7 @@
 		        RtnVal[1] = DocTitle.value;
 		        RtnVal[2] = drafter.value;
 		
-		        if ("<c:out value='${aprFlag}'/>" == "END") {
+		        if ("${aprFlag}" == "END") {
 		            RtnVal[3] = "";
 		            RtnVal[4] = "";
 		            RtnVal[5] = sYear + "-" + sMonth + "-" + sDay + " 00:00:01";

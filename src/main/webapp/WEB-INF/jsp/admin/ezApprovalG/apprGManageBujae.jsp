@@ -20,20 +20,20 @@
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" />
 		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 		<script type="text/javascript">
-			var deptid = "<c:out value='${deptID}'/>";
-			var userid = "<c:out value='${userID}'/>";
-			var startdate = "<c:out value='${startDate}'/>";
-			var enddate = "<c:out value='${endDate}'/>";
-			var orguserid = "<c:out value='${userInfo.id}'/>";
-			var BReason = "<c:out value='${bReason}'/>";
+			var deptid = "${deptID}";
+			var userid = "${userID}";
+			var startdate = "${startDate}";
+			var enddate = "${endDate}";
+			var orguserid = "${userInfo.id}";
+			var BReason = "${bReason}";
 			var gIsAppoint = "1";
 			var gIsProxyUser = false;
-			var proxydeptid = "<c:out value='${proxyDeptID}'/>";
-			var proxyuserid = "<c:out value='${proxyUserID}'/>";
+			var proxydeptid = "${proxyDeptID}";
+			var proxyuserid = "${proxyUserID}";
 			var proxystartdate = "";
 		    var proxyenddate = "";
-		    var Roll = "<c:out value='${userInfo.rollInfo}'/>";
-		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
+		    var Roll = "${userInfo.rollInfo}";
+		    var approvalFlag = "${approvalFlag}";
 		    var buJaeId = "";
 		    var buJaedeptid = "";
 		    var proxybuJaeId = "";
@@ -92,7 +92,7 @@
 		            buttonImageOnly: true
 		        });
 		        
-		    	var uploadSDate = "<c:out value='${startDate}'/>";
+		    	var uploadSDate = "${startDate}";
 
 	        	var sYear = uploadSDate.substring(0, 4);
 				var sMonth = uploadSDate.substring(5, 7);
@@ -100,7 +100,7 @@
 				var sHour = uploadSDate.substring(11, 13);
 				var sMin = uploadSDate.substring(14, 16);
 
-				var uploadEDate = "<c:out value='${endDate}'/>";
+				var uploadEDate = "${endDate}";
 				var eYear = uploadEDate.substring(0, 4);
 				var eMonth = uploadEDate.substring(5, 7);
 				var eDay = uploadEDate.substring(8, 10);
@@ -324,7 +324,7 @@
 		    function check_enddate() {
 		        if (!gIsAppoint && document.getElementById("TextName").value == "")
 		            return false;
-		        var initdate = "<c:out value='${initDate}'/>";
+		        var initdate = "${initDate}";
 		        var strCurrDate = initdate.substr(0, 10);
 		        var strStartDate = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 		        var strEndDate = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();

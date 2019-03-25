@@ -35,7 +35,7 @@
 	        var approvalFlag = "<c:out value = '${approvalFlag}' />";
 	        var SearchCond = new Array();
 	        var type = "<c:out value ='${type}' />";
-	        var useEditApprDoc = "<c:out value='${useEditApprDoc}'/>";
+	        var useEditApprDoc = "${useEditApprDoc}";
 	
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {

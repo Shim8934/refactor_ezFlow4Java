@@ -15,12 +15,12 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ezForm_Cross.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/admin/ModApprovalDoc.js')}"></script>
 	<script type="text/javascript">
-	var companyID = "<c:out value='${companyID}'/>";
-	var filePath = "<c:out value='${url}'/>";
-	var docID = "<c:out value='${docID}'/>";
+	var companyID = "${companyID}";
+	var filePath = "${url}";
+	var docID = "${docID}";
 	var htmlData = "";
     var WorkData = "";
-    var useEditor = "<c:out value='${useEditor}'/>";
+    var useEditor = "${useEditor}";
     var formHTML = "";
 	
 	$(document).ready(function() {
@@ -74,7 +74,7 @@
 					<tbody>
 						<tr>
 							<td style="height:770px; vertical-align:top">
-								<iframe id="message" class="viewbox" src="/admin/ezEditor/selectApprovalEditor.do?type=ADMIN&height=770&formID=<c:out value='${docID}'/>" name="message" frameborder="0" style="padding:0; height:99%; width:800px; overflow:auto;"></iframe>
+								<iframe id="message" class="viewbox" src="/admin/ezEditor/selectApprovalEditor.do?type=ADMIN&height=770&formID=${docID}" name="message" frameborder="0" style="padding:0; height:99%; width:800px; overflow:auto;"></iframe>
 							</td>
 							<td id="rootTD" name="rootTD" style="width:100%; vertical-align:top; text-align:left; padding-left:10px; display:none"></td>
 						</tr>

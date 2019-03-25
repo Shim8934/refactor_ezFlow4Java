@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -13,9 +12,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/control_Cross/ListView_list.js')}" ></script>
 	    <script type="text/javascript">
-	        var pDeptID = "<c:out value='${deptID}'/>";
-	        var pDeptNm = "<c:out value='${deptName}'/>";
-	        var pCompanyID = "<c:out value='${companyID}'/>";
+	        var pDeptID = "${deptID}";
+	        var pDeptNm = "${deptName}";
+	        var pCompanyID = "${companyID}";
 	        var xmlhttp = createXMLHttpRequest();
 	        var listview = new ListView();
 	        var pSelectedIndex = 0;

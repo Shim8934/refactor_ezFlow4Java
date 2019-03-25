@@ -36,7 +36,7 @@
 		    var beforeHTML = "";
 		    var FormProcSpelling = "0";
 		    var approvalFlag = "<c:out value = '${approvalFlag}' />";
-		    var useEditor = "<c:out value='${useEditor}'/>";
+		    var useEditor = "${useEditor}";
 		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {

@@ -57,7 +57,7 @@
 	    var text1 = "<spring:message code='ezStatistics.t1008'/>";
 	    var text2 = "<spring:message code='ezApproval.t345'/>";
 	    var deleteTimes = 0;		    
-	    var pUse_Editor = "<c:out value='${useEditor}'/>";
+	    var pUse_Editor = "${useEditor}";
 	    
 	    var CurPage = "";
 		var totalPage = "";

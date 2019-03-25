@@ -21,9 +21,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/TreeView.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/ListView_list.js')}"></script>
 		<script type="text/javascript">
-		    var type = "<c:out value='${type}'/>";
+		    var type = "${type}";
 		    var ReturnFunction;
-		    var userID = "<c:out value='${userInfo.id}'/>";
+		    var userID = "${userInfo.id}";
 		    window.onload = function () {
 		        try {
 		            ReturnFunction = parent.selectperson_cross_dialogArguments1[1];
@@ -52,14 +52,14 @@
 		
 		            if (type == "Proxy") {
 		                createNodeInsert(xmlpara, objNode, "DATA");
-		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${userInfo.deptID}'/>");
-		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${userInfo.deptID}'/>");
+		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
+		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "${userInfo.deptID}");
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
 		            else {
 		                createNodeInsert(xmlpara, objNode, "DATA");
-		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "<c:out value='${userInfo.deptID}'/>");
-		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "<c:out value='${userInfo.companyID}'/>");
+		                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
+		                createNodeAndInsertText(xmlpara, objNode, "TOPID", "${userInfo.companyID}");
 		                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
 		            }
 		            
@@ -356,7 +356,7 @@
 		        var buJaeId = selRow.getAttribute("DATA2");
 		        
 		        if (type == "Proxy") {
-		            if ("<c:out value='${userInfo.deptID}'/>" != selRow.getAttribute("DATA3")) {
+		            if ("${userInfo.deptID}" != selRow.getAttribute("DATA3")) {
 		                alert("<spring:message code='ezPersonal.t400'/>");
 		                return;
 		            }

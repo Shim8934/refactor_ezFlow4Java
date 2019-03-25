@@ -35,7 +35,7 @@
 			var gMultiDataNum = "";
 			var returnFunction
 			var approvalFlag = "<c:out value = '${approvalFlag}' />";
-			var parentContName = "<c:out value='${parentName}'/>"
+			var parentContName = "${parentName}"
 			
 			if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 			    window.onblur = function () {

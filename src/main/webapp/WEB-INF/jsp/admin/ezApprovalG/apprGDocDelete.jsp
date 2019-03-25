@@ -46,7 +46,7 @@
 		    var ListIdx;
 		    var text1 = "<spring:message code='ezStatistics.t1008'/>";
 		    var deleteTimes = 0;		    
-		    var pUse_Editor = "<c:out value='${useEditor}'/>";
+		    var pUse_Editor = "${useEditor}";
 		    
 		    var CurPage = "";
 			var totalPage = "";
