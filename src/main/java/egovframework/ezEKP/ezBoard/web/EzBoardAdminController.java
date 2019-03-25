@@ -193,6 +193,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		String accessName1 = user.getDeptName1() + "(" + user.getCompanyName1()	+ ", " + user.getDeptName1() + ")";
 		String accessName2 = user.getDeptName2() + "(" + user.getCompanyName2()	+ ", " + user.getDeptName2() + ")";
 		String uID = user.getId();
+		String boardGroupId = boardPropertyVO.getBoardGroupID();
 		
 		boardPropertyVO.setBoardGroupName(groupName1);
 		boardPropertyVO.setBoardGroupName2(groupName2);
@@ -202,6 +203,7 @@ public class EzBoardAdminController extends EgovFileMngUtil {
 		boardPropertyVO.setCompanyID(user.getCompanyID());
 		boardPropertyVO.setTenantID(user.getTenantId());
 		boardPropertyVO.setLoginVO(user);
+		boardPropertyVO.setBoardGroupID(commonUtil.stripScriptTags(boardGroupId));
 
 		logger.debug("createBoardGroup ended");
 		
