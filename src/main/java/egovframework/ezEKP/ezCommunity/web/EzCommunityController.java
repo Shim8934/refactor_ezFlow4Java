@@ -2461,7 +2461,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		
 		if (boardGroupAdmin_FG.equals("OK") || userInfo.getRollInfo().toLowerCase().indexOf("c=1") > -1 || userInfo.getRollInfo().toLowerCase().indexOf("k=1") > -1) {
 			pMode = 0;
-		} else {
+		} else { 
 			pMode = 1;
 		}
 
@@ -2879,7 +2879,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		String boardGroupName2 = request.getParameter("boardGroupName2");
 		String code = request.getParameter("code");
 		
-		ezCommunityService.createBoardGroup(code, boardGroupID, boardGroupName, boardGroupName2, userInfo);
+		ezCommunityService.createBoardGroup(code, commonUtil.stripScriptTags(boardGroupID), boardGroupName, boardGroupName2, userInfo);
 	}
 	
 	/**
@@ -3005,7 +3005,7 @@ public class EzCommunityController extends EgovFileMngUtil{
 		//첨부 용량 제한 [이성우]
 		String comatt = "10";
 		
-		ezCommunityService.createBoardInsert(code, boardID, boardName, boardName2, parentBoardID, boardGroupID, comatt, userInfo);
+		ezCommunityService.createBoardInsert(code, commonUtil.stripScriptTags(boardID), boardName, boardName2, parentBoardID, boardGroupID, comatt, userInfo);
 	}
 	
 	/**

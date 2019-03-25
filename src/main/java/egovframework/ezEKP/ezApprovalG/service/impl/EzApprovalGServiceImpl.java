@@ -2268,7 +2268,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
         		String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
         		
         		try {
-        			outputStream = new FileOutputStream(new File(docFilePath));
+        			outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(docFilePath)));
         			output = new OutputStreamWriter(outputStream);
         			output.write(convertedMHT);
         		} catch (Exception e) {
@@ -2524,7 +2524,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			// 2018.08.29 KLIB 기록물등록대장에서 공람발송 시에 복호화되도록 수정
 			if (isEncryptedByKlib) {
-				Path targetPath = Paths.get(target);
+				Path targetPath = Paths.get(commonUtil.detectPathTraversal(target));
 				
 				byte[] targetBytes = Files.readAllBytes(targetPath);
 				byte[] decryptBytes = klibUtil.decrypt(targetBytes);
@@ -6561,8 +6561,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					}
 				}
 				
-				tempHwp = new File(formURL).getParentFile() + commonUtil.separator + docID + "_backup.hwp";
-				FileUtils.copyFile(new File(formURL), new File(tempHwp));
+				tempHwp = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + docID + "_backup.hwp";
+				FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempHwp)));
 				
 				if (aprStateSign.equals("011")) {
 					if (totalLineSN == Integer.parseInt(signNum.trim()) && (aprType.equals("016") || aprType.equals("001")) && !aprType.equals("007")) {
@@ -6779,7 +6779,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	private void rollBackHwp(String formURL, String tempHwp) throws Exception {
 		logger.debug("rollBackHwp started");
 
-		FileUtils.copyFile(new File(tempHwp), new File(formURL));
+		FileUtils.copyFile(new File(commonUtil.detectPathTraversal(tempHwp)), new File(commonUtil.detectPathTraversal(formURL)));
 		deleteFile(tempHwp);
 
 		logger.debug("rollBackHwp ended");
@@ -7392,10 +7392,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		try {
 			convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, userInfo.getLocale());
-			tempMht = new File(formURL).getParentFile() + commonUtil.separator + docID + "_backup.mht";
-			FileUtils.copyFile(new File(formURL), new File(tempMht));
+			tempMht = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + docID + "_backup.mht";
+			FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempMht)));
 			
-			outputStream = new FileOutputStream(new File(formURL));
+			outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(formURL)));
 			output = new OutputStreamWriter(outputStream);
 			
 			output.write(convertedMHT);
@@ -7729,7 +7729,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	private void rollBackMHT(String formURL, String tempMht) throws Exception {
 		logger.debug("rollBackMHT started");
 
-		FileUtils.copyFile(new File(tempMht), new File(formURL));
+		FileUtils.copyFile(new File(commonUtil.detectPathTraversal(tempMht)), new File(commonUtil.detectPathTraversal(formURL)));
 		deleteFile(tempMht);
 
 		logger.debug("rollBackMHT ended");
@@ -8647,7 +8647,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			String target = dirPath + commonUtil.separator + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + "history" + commonUtil.separator +
 					getDocDir(docID) + commonUtil.separator + docID.trim() + getNDigitNum(attachSN, 4) + getNDigitNum(String.valueOf(strSN), 4) + docXML.getElementsByTagName("ATTACHFILENAME").item(0).getTextContent();
 			// history 디렉토리로 copy
-			FileUtils.copyFile(new File(source), new File(target));
+			FileUtils.copyFile(new File(commonUtil.detectPathTraversal(source)), new File(commonUtil.detectPathTraversal(target)));
 			// DB에 저장될 target 경로 재설정
 			target = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator + companyID + commonUtil.separator + "uploadFile" + commonUtil.separator + oldYear + commonUtil.separator + "history" + commonUtil.separator +
 					getDocDir(docID) + commonUtil.separator + docID.trim() + getNDigitNum(attachSN, 4) + getNDigitNum(String.valueOf(strSN), 4) + docXML.getElementsByTagName("ATTACHFILENAME").item(0).getTextContent();
@@ -10321,7 +10321,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		ezApprovalGDAO.deleteTmpDocInfo7(map);
 		ezApprovalGDAO.deleteTmpDocInfo8(map);
 		
-		File file = new File(path + href);
+		File file = new File(commonUtil.detectPathTraversal(path + href));
 		file.delete();
 		
 		rtnVal = "<RESULT>TRUE</RESULT>";
@@ -14821,10 +14821,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		try {
 			String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, userInfo.getRealPath(), userInfo.getLocale());
-			String tempMht = new File(formURL).getParentFile() + commonUtil.separator + orgDocID + "_backup.mht";
-			FileUtils.copyFile(new File(formURL), new File(tempMht));
+			String tempMht = new File(commonUtil.detectPathTraversal(formURL)).getParentFile() + commonUtil.separator + orgDocID + "_backup.mht";
+			FileUtils.copyFile(new File(commonUtil.detectPathTraversal(formURL)), new File(commonUtil.detectPathTraversal(tempMht)));
 			
-			outputStream = new FileOutputStream(new File(formURL));
+			outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(formURL)));
 			output = new OutputStreamWriter(outputStream);
 			
 			output.write(convertedMHT);
@@ -16502,7 +16502,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				
 				String tempHtml = doc.outerHtml();
 				
-				try (OutputStream outputStream = new FileOutputStream(new File(realPath + docHref)); 
+				try (OutputStream outputStream = new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + docHref))); 
 						OutputStreamWriter output = new OutputStreamWriter(outputStream);) {
 					String convertedMHT = ezCommonService.startHtml2Mht(tempHtml, realPath, locale);
 					
@@ -16722,15 +16722,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("copyFile started");
 
 		if (!dirPath.trim().equals("")) {
-			File file = new File(dirPath);
+			File file = new File(commonUtil.detectPathTraversal(dirPath));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 		}
 		try {
-			File src = new File(source);
-			File des = new File(target);
+			File src = new File(commonUtil.detectPathTraversal(source));
+			File des = new File(commonUtil.detectPathTraversal(target));
 			
 			FileUtils.copyFile(src, des);
 			
@@ -16750,15 +16750,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("copyDecryptFileForKlib started");
 
 		if (!dirPath.trim().equals("")) {
-			File file = new File(dirPath);
+			File file = new File(commonUtil.detectPathTraversal(dirPath));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 		}
 		try {
-			File src = new File(source);
-			File des = new File(target);
+			File src = new File(commonUtil.detectPathTraversal(source));
+			File des = new File(commonUtil.detectPathTraversal(target));
 			
 			byte[] descryptedBytes = klibUtil.decrypt(Files.readAllBytes(src.toPath()));
 			ByteArrayInputStream inputStream = new ByteArrayInputStream(descryptedBytes);
@@ -18325,7 +18325,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					String extFileName = getExtendedFileName(fileName);
 					String fileURL = dirPath + commonUtil.separator + fileName.replace(commonUtil.getUploadPath("upload_approvalG.ROOT", tenantID) + commonUtil.separator, "");
 					
-					File file = new File(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID));
+					File file = new File(commonUtil.detectPathTraversal(dirPath + companyID + commonUtil.separator + "doc" + commonUtil.separator + commonUtil.getTodayUTCTime("yyyy") + commonUtil.separator + "1000" + commonUtil.separator + getDocDir(docID)));
 					
 					// 2018.06.27 - KLIB 암호화 파일이면 .ezd 확장자 제거
 					boolean isEncryptedForKlib = fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT);
@@ -26084,7 +26084,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //                        xmlDom.getElementsByTagName("content").item(i).getAttributes().getNamedItem("content-type").setNodeValue(objMsg.AddAttachment(strPath, "", "").Fields["urn:schemas:httpmail:content-media-type"].Value.ToString();
 
 						byte[] bytes;
-						File file = new File(mapPath + strPath);
+						File file = new File(commonUtil.detectPathTraversal(mapPath + strPath));
 
 						// 2018.08.26 KLIB 복호화
 						if (strPath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
@@ -26127,13 +26127,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		 String strFilePath = mapPath + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "ExDocSendMsg" + commonUtil.separator + strDocID + ".xml";
 
-		 File file = new File (mapPath  + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "ExDocSendMsg");
+		 File file = new File (commonUtil.detectPathTraversal(mapPath  + commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "ExDocSendMsg"));
 		 
 		 if (!file.exists()) {
 			 file.mkdirs();
 		 }
 		 
-         File FI = new File(strFilePath);
+         File FI = new File(commonUtil.detectPathTraversal(strFilePath));
 
          if (FI.exists()) {
         	 FI.delete();
@@ -26163,13 +26163,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		for (int i = 1; i <= 99; i++) {
 			strResult = strFileName + getNDigitNum(Integer.toString(i), 2) + ".xml";
 			
-		      File FI = new File(realPath + strPath);
+		      File FI = new File(commonUtil.detectPathTraversal(realPath + strPath));
 		      
 		      if (!FI.exists()) {
 		    	  FI.mkdirs();
 			  }
 		      
-		      File file = new File(realPath + strPath + strResult);
+		      File file = new File(commonUtil.detectPathTraversal(realPath + strPath + strResult));
 		         
 		      exist = file.exists();
 		      
@@ -26181,7 +26181,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		try {
-			File fos = new File(realPath + strPath + strResult);
+			File fos = new File(commonUtil.detectPathTraversal(realPath + strPath + strResult));
 			
 		    if (!fos.exists()) {
 		    	fos.delete();
@@ -26452,7 +26452,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							strSource = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "ExDocDown" + commonUtil.separator + domXML.getElementsByTagName("ATTACHURL").item(i).getTextContent();
                             strTarget = strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID) + commonUtil.separator  + strNewID.trim()  + getNDigitNum(domXML.getElementsByTagName("ATTACHSN").item(i).getTextContent(), 4) + strAttachName;
                             
-                            File dir = new File(strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID));
+                            File dir = new File(commonUtil.detectPathTraversal(strXmlDirPath + commonUtil.separator + strCompanyID + commonUtil.separator + "uploadFile" + commonUtil.separator + nYear + commonUtil.separator  + getDocDir(strNewID)));
                             
                             if (!dir.exists()) {
                             	dir.mkdirs();
@@ -26461,12 +26461,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                             FileOutputStream output = null;
                             try {
                                 // 복사할 대상 파일을 지정해준다.
-                                File file = new File(strSource);
+                                File file = new File(commonUtil.detectPathTraversal(strSource));
                                  
                                 // FileInputStream 는 File object를 생성자 인수로 받을 수 있다.         
                                 input = new FileInputStream(file);
                                 // 복사된 파일의 위치를 지정해준다.
-                                output = new FileOutputStream(new File(strTarget));
+                                output = new FileOutputStream(new File(commonUtil.detectPathTraversal(strTarget)));
                                              
                                 int readBuffer = 0;
                                 byte [] buffer = new byte[512];
@@ -26591,7 +26591,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              strResult = "<?xml version=\"1.0\" encoding=\"euc-kr\"?><!DOCTYPE pack SYSTEM \"pack.dtd\">";
              strResult = strResult + strTemp.replace("&amp;", "&");
              
-             File ackFile = new File(config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator +"files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator +"data" + commonUtil.separator +"sendtemp" + commonUtil.separator + strFileName);
+             File ackFile = new File(commonUtil.detectPathTraversal(config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator +"files" + config.getProperty("upload_relay.ROOT") + commonUtil.separator +"data" + commonUtil.separator +"sendtemp" + commonUtil.separator + strFileName));
              
          	if( ackFile.exists()) {
          		ackFile.delete();
@@ -26611,7 +26611,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
          } 
 	}
 
-	private String getFileName(String strFileName, String strFolderName, int tenantID) {
+	private String getFileName(String strFileName, String strFolderName, int tenantID) throws Exception {
 		String strPath = config.getProperty("relay_root") + commonUtil.separator + "fileroot" + commonUtil.separator + tenantID + commonUtil.separator + "files"
 				+ config.getProperty("upload_relay.ROOT") + commonUtil.separator + "data" + commonUtil.separator + strFolderName + commonUtil.separator;
 		String strResult = "";
@@ -26619,13 +26619,13 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		for (int i = 1; i <= 99; i++) {
 			strResult = strFileName + getNDigitNum(Integer.toString(i), 2) + ".xml";
 
-			File FI = new File(strPath);
+			File FI = new File(commonUtil.detectPathTraversal(strPath));
 
 			if (!FI.exists()) {
 				FI.mkdirs();
 			}
 
-			File file = new File(strPath + strResult);
+			File file = new File(commonUtil.detectPathTraversal(strPath + strResult));
 
 			if (!file.exists()) {
 				return strResult;
