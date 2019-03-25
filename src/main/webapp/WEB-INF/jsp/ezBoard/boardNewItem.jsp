@@ -86,7 +86,7 @@
 		    var strWriterFakeName = "${strWriterFakeName}";
 		    var pAttachListXml = "";
 		    var AttachLimit = "${boardInfo.attachSizeLimit}";
-			var pReservedItem = "${reservedItem}";
+			var pReservedItem = "<c:out value='${reservedItem}'/>";
 		    var strUserRank = "${userInfo.title1}";
 		    var strUserRank2 = "${userInfo.title2}";
 		    var strUserPhone = "${userInfo.phone}";

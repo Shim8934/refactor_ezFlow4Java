@@ -65,13 +65,13 @@
 		</style>
 		
 		<script type="text/javascript">
-			var pItemID = "${boardItemVo.itemID}";
+			var pItemID = "<c:out value='${boardItemVo.itemID}'/>";
 			var pBoardID = "${boardItemVo.boardID}";
 			var userInfoID = "${userInfo.id}";
 			var commentType = "totalComment";
 			var gubun = "${gubun}";
-			var Reply_FG = "${Reply_FG}";
-			var OneLineReplyFlag = "${OneLineReplyFlag}";
+			var Reply_FG = "<c:out value='${Reply_FG}'/>";
+			var OneLineReplyFlag = "<c:out value='${OneLineReplyFlag}'/>";
 			var BoardAdmin_FG = "${boardInfo.boardAdmin_FG}";
 			var BoardGroupAdmin_FG = "${boardInfo.boardGroupAdmin_FG}";
 			var checkpassword_dialogArguments = new Array();

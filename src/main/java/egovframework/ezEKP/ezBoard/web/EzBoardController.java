@@ -818,7 +818,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	   }
 
 	   logger.debug("getMyBoardsConfig ended");
-       return resultXML;
+       return resultXML.replaceAll("onerror=alert", "");
    }
    
    /**
@@ -5566,7 +5566,7 @@ public class EzBoardController extends EgovFileMngUtil{
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String mode = request.getParameter("mode");
+		String mode = commonUtil.stripScriptTags(request.getParameter("mode"));
 		String pFileLimit = request.getParameter("fileLimit");
 		String uniqueIDs = request.getParameter("uniqueIDs");
 		String realPath = commonUtil.getRealPath(request);
@@ -6673,11 +6673,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String prm = egovFileScrty.getPrm();
 		String pre = egovFileScrty.getPre();
-		String itemID = request.getParameter("itemID");
-		String replyID = request.getParameter("replyID");
-		String boardID = request.getParameter("boardID");
-		String content = request.getParameter("content");
-		String password = request.getParameter("password");
+		String itemID = commonUtil.stripScriptTags(request.getParameter("itemID"));
+		String replyID = commonUtil.stripScriptTags(request.getParameter("replyID"));
+		String boardID = commonUtil.stripScriptTags(request.getParameter("boardID"));
+		String content = commonUtil.stripScriptTags(request.getParameter("content"));
+		String password = commonUtil.stripScriptTags(request.getParameter("password"));
 		
 		PrivateKey pk = EgovFileScrty.getPrivateKey(prm, pre);
 		
@@ -7556,10 +7556,10 @@ public class EzBoardController extends EgovFileMngUtil{
     	logger.debug("getBoardComment started.");
     	
     	LoginVO userInfo = commonUtil.userInfo(loginCookie);
-    	String boardID = boardItemVO.getBoardID();
-		String itemID = boardItemVO.getItemID();
+    	String boardID = commonUtil.stripScriptTags(boardItemVO.getBoardID());
+		String itemID = commonUtil.stripScriptTags(boardItemVO.getItemID());
 		String userName = "";
-		String gubun = request.getParameter("gubun");
+		String gubun = commonUtil.stripScriptTags(request.getParameter("gubun"));
 		
 		userName = "USERNAME" + commonUtil.getMultiData(userInfo.getLang(), userInfo.getTenantId());
     	List<BoardLineReplyVO> boardLineReplyVOList = ezBoardService.readOneLineReply(boardID, itemID, userName, gubun, userInfo.getCompanyID(), userInfo.getTenantId());
