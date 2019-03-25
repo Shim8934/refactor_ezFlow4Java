@@ -178,10 +178,12 @@ public class CommonUtil {
 	 * strip <object>,<applet>,<script> tags
 	 */	
     public String stripScriptTags(String src) {
-		Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-		Matcher m = p.matcher(src);
-		src = m.replaceAll("");
-				
+    	if (src != null && !src.isEmpty()) {
+			Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+			Matcher m = p.matcher(src);
+			src = m.replaceAll("");
+    	}
+    	
 		return src;		
 	}
     
