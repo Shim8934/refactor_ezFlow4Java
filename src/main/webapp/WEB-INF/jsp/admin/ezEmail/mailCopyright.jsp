@@ -61,7 +61,7 @@
 			</table>
 			
 			<div>
-				<textarea id="copyrightTextArea" placeholder = "내용을 입력해주세요."></textarea>
+				<textarea id="copyrightTextArea" placeholder = "<spring:message code='ezEmail.letter15' />"></textarea>
 			</div>
 			
 			<!-- 수취인안내설정 예시 -->
