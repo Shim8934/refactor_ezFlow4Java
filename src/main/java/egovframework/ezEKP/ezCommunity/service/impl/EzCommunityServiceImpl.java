@@ -2437,7 +2437,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			pSignatureDir = commonUtil.getUploadPath("upload_community.ROOT", tenantID);
 		}
 		
-		String pResult = pSignatureDir + commonUtil.separator + pFileName;
+		String pResult = commonUtil.detectPathTraversal(pSignatureDir + commonUtil.separator + pFileName);
 		
 		logger.debug("getCommunityThumInfo ended.");		
 		return pResult;

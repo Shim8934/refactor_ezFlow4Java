@@ -13,7 +13,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 	    <script type="text/javascript">	
-	    var P_CompanyID = "${CompanyID}";
+	    var P_CompanyID = "<c:out value='${CompanyID}'/>";
 	    var ReturnFunction1 = "";
 	    var ReturnFunction2 = "";
 	    var para = new Array();

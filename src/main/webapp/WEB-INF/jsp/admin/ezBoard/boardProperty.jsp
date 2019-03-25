@@ -274,7 +274,7 @@
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
 	            		
-	            		if ("${adminType}" == "y") {
+	            		if ("<c:out value='${adminType}'/>" == "y") {
 	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + BoardID;
 	            			return;	            			
 	            		} else {

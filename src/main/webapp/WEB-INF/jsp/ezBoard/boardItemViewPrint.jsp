@@ -29,10 +29,10 @@
 			var fontSize = new Array("10px", "12px", "15px", "20px", "30px");
 			var curFontSize = 1;
 			var pItemID = "${itemID}";
-			var pBoardID= "${boardID}";
+			var pBoardID= "<c:out value='${boardID}'/>";
 			var pBoardName = "${boardInfo.boardName}";
-		    var eOneline = "${oneLine}";
-		    var eAttach = "${attach}";
+		    var eOneline = "<c:out value='${oneLine}'/>";
+		    var eAttach = "<c:out value='${attach}'/>";
 			var strWriterID = "${boardItem.writerID}";
 			var strWriterName = "${boardItem.writerName}";
 			var strWriterDeptName = "${boardItem.writerDeptName}";
