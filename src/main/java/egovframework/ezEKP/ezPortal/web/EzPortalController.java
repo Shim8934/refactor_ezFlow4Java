@@ -1989,7 +1989,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		Collections.sort(resultQuickLinkMenuList, new Comparator<PersonalGetQuickLinkMenuVO>() {
 		    public int compare(PersonalGetQuickLinkMenuVO o1, PersonalGetQuickLinkMenuVO o2) {
-		        return o1.getRegDate().compareTo(o2.getRegDate());
+		        return o2.getRegDate().compareTo(o1.getRegDate());
 		    }
 		});
 		for (PersonalGetQuickLinkMenuVO personalGetQuickLinkMenuVO : resultQuickLinkMenuList) {
