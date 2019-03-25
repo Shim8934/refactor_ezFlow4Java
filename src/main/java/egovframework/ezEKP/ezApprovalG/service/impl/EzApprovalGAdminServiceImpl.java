@@ -1503,7 +1503,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			sb.append("<DATA1>" + vo.getSealNum() + "</DATA1>");
 			sb.append("<DATA2>" + vo.getSealPath() + "</DATA2>");
 			sb.append("<DATA3>" + commonUtil.cleanValue(vo.getRegUserID()) + "</DATA3>");
-			File file = new File(realPath + vo.getSealPath());
+			File file = new File(commonUtil.detectPathTraversal(realPath + vo.getSealPath()));
 			if ( !file.exists() ) {
 				sb.append("<DATA4>false</DATA4></CELL>");
 			} else {
@@ -1637,7 +1637,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 				sb.append("<CELL><VALUE>" + vo.getRegUserName2() + "</VALUE></CELL>");
 			}
 			
-			File file = new File(realPath + vo.getSealPath());
+			File file = new File(commonUtil.detectPathTraversal(realPath + vo.getSealPath()));
 			
 			if (!file.exists()) {
 				sb.insert(sb.indexOf("</DATA3>") + 8, "<DATA4>false</DATA4>");
@@ -2471,13 +2471,13 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			saveFileName = saveFileFolder + commonUtil.separator + formID + ".mht";
 			
 			try {
-				File fileFolder = new File(saveFileFolder);
+				File fileFolder = new File(commonUtil.detectPathTraversal(saveFileFolder));
 				
 				if (!fileFolder.exists()) {
 					fileFolder.mkdirs();
 				}
 				
-				File file = new File(saveFileName);
+				File file = new File(commonUtil.detectPathTraversal(saveFileName));
 				if (file.exists()) {
 					strBeforeMHT = FileUtils.readFileToString(file);
 				}
@@ -2747,12 +2747,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			if (!formMhtInfo.equals(""))	 {
 				saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht";
 				
-				File file = new File(saveFileName);
+				File file = new File(commonUtil.detectPathTraversal(saveFileName));
 				
 				if (file.exists()) {
 					strBeforeMHT = FileUtils.readFileToString(file);
 				} else {
-					new File(saveFileName.substring(0, saveFileName.lastIndexOf(commonUtil.separator))).mkdirs();
+					new File(commonUtil.detectPathTraversal(saveFileName.substring(0, saveFileName.lastIndexOf(commonUtil.separator)))).mkdirs();
 				}
 				
 				FileWriter fw = new FileWriter(file);
@@ -2783,8 +2783,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 //		FileOutputStream stream = null;
 		
 		try {
-			File fileFolder = new File(saveFileFolder);
-			File file = new File(saveFileName);
+			File fileFolder = new File(commonUtil.detectPathTraversal(saveFileFolder));
+			File file = new File(commonUtil.detectPathTraversal(saveFileName));
 			
 			if (!fileFolder.exists()) {
 				fileFolder.mkdirs();
@@ -2866,8 +2866,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			FileOutputStream stream = null;
 			
 			try {
-				File fileFolder = new File(saveFileFolder);
-				File file = new File(saveFileName);
+				File fileFolder = new File(commonUtil.detectPathTraversal(saveFileFolder));
+				File file = new File(commonUtil.detectPathTraversal(saveFileName));
 				
 				if (!fileFolder.exists()) {
 					fileFolder.mkdirs();
@@ -3146,12 +3146,12 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 			if (!formMhtInfo.equals("")) {
 				saveFileName = realPath + path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + result + ".hwp";
 				
-				File file = new File(saveFileName);
+				File file = new File(commonUtil.detectPathTraversal(saveFileName));
 				
 				if (file.exists()) {
 					strBeforeMHT = FileUtils.readFileToString(file);
 				} else {
-					new File(saveFileName.substring(0, saveFileName.lastIndexOf(commonUtil.separator))).mkdirs();
+					new File(commonUtil.detectPathTraversal(saveFileName.substring(0, saveFileName.lastIndexOf(commonUtil.separator)))).mkdirs();
 				}
 				
 				FileOutputStream stream = null;
@@ -3802,8 +3802,8 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		FileWriter fileWriter = null;
 		
 		try {
-			File fileFolder = new File(saveFileFolder);
-			File file = new File(saveFileName);
+			File fileFolder = new File(commonUtil.detectPathTraversal(saveFileFolder));
+			File file = new File(commonUtil.detectPathTraversal(saveFileName));
 			
 			if (!fileFolder.exists()) {
 				fileFolder.mkdirs();
