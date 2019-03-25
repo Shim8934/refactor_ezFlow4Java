@@ -5392,12 +5392,12 @@
 						TBL_RECORD.RegisterDate <= TO_DATE(#regEndDate#, 'YYYY.MM.DD HH24:MI:SS')
 					]]>
 				</isNotEmpty>
-				<![CDATA[
-					 AND   
-					 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL)
-				     OR      
-				     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#))
-			     ]]>
+<!-- 				<![CDATA[ -->
+<!-- 					 AND    -->
+<!-- 					 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL) -->
+<!-- 				     OR       -->
+<!-- 				     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#)) -->
+<!-- 			     ]]> -->
 				<isNotEmpty property="sc" prepend="AND">
 						TBL_RECORD.RecordID IN (SELECT 
 													RecordID 
@@ -12316,12 +12316,12 @@
 				TBL_RECORD.RegisterDate <= TO_DATE(#regEndDate#, 'YYYY.MM.DD HH24:MI:SS')
 			]]>
 		</isNotEmpty>
-		<![CDATA[
-			 AND   
-			 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL)
-		     OR      
-		     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#))
-	     ]]>
+<!-- 		<![CDATA[ -->
+<!-- 			 AND    -->
+<!-- 			 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL) -->
+<!-- 		     OR       -->
+<!-- 		     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#)) -->
+<!-- 	     ]]> -->
 		<isNotEmpty property="sc" prepend="AND">
 				TBL_RECORD.RecordID IN (SELECT 
 											RecordID 
@@ -28239,5 +28239,23 @@
 			HREF = #href#
 		AND   tenant_id = #v_TENANTID#
         AND   companyid = #companyID#
+    </select>
+     <select id="EzApprovalG.getDeptIdOfCabinet" parameterClass="Map" resultClass="String">
+		SELECT
+		    processdeptcode
+		FROM
+		    tbl_cabinetclass
+		WHERE
+		    cabinetclassno = (
+		        SELECT
+		            cabinetclassno
+		        FROM
+		            tbl_cabinet
+		        WHERE
+           			cabinetid = #cabinetId#
+					AND   tenant_id = #tenantId#
+			        AND   companyid = #companyID#
+		    )
+
     </select>
 </sqlMap>

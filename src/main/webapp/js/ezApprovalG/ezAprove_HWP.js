@@ -584,7 +584,7 @@ function SaveApproveInfo(pApproveFlag)
 
 	createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
 	createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", tempKeep);
-	createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", tempPublic);
+	createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", pPublicityYN);
 	createNodeAndInsertText(xmlpara, objNode, "PROXYUSERID", pingUserID);
 
 	createNodeAndInsertText(xmlpara, objNode, "ITEMCODE", tempItemCode);
@@ -621,6 +621,7 @@ function SaveApproveInfo(pApproveFlag)
 	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", pOrgAprUserName2);
 	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName2);
 	createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
+	createNodeAndInsertText(xmlpara, objNode, "PUBLICITYYN", pPublicityYN);
 	
 	if (nonElecRec == "Y") {
 		var NonElecXML = createXmlDom();

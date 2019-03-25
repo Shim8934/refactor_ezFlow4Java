@@ -1088,6 +1088,19 @@ function SaveDraftDocInfo_susin() {
 
 var inssepattach_cross_dialogArguments = new Array();
 function btnAddSepAttach_onclick() {
+	var deptCheckFlag = checkDeptAndCabinetId();
+	
+	if (deptCheckFlag == "3") {
+		alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+		return;
+	} else if (deptCheckFlag == "4") {
+		alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+		return;
+	} else if (deptCheckFlag == "2") {
+		alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+		return;
+	}
+	
 	if (cabinetID == "") {
 		var pAlertContent = strLang731;
 		OpenAlertUI(pAlertContent);          
