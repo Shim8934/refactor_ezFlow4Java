@@ -2089,7 +2089,7 @@
 		ORDER BY
 			CN
 	</select>
-
+	
 	<select id="EzOrganDAO.getDeptMasterName" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -2110,5 +2110,18 @@
 			AND
 				TENANT_ID = #v_TENANT_ID#
 		]]>
+	</select>
+	
+	<select id="EzOrganDAO.getUserOrgDeptId" parameterClass="Map" resultClass="String">
+		SELECT
+			department
+		FROM 
+			TBL_USERMASTER
+		WHERE
+			CN = #userID#
+		AND
+			TENANT_ID = #tenantID#		
+		AND
+			PHYSICALDELIVERYOFFICENAME = #companyID#		
 	</select>
 </sqlMap>

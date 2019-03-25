@@ -402,4 +402,8 @@ public class EzOrganDAO extends EgovAbstractDAO {
 	public String getDeptMasterName(Map<String, Object> map) {
 		return (String) select("EzOrganDAO.getDeptMasterName", map);
 	}
+	
+	public String getUserOrgDeptId(Map<String, Object> map) throws Exception {
+		return (String) select("EzOrganDAO.getUserOrgDeptId", map);
+	}
 }

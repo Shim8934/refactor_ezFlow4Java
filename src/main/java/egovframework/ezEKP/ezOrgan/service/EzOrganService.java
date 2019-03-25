@@ -94,4 +94,6 @@ public interface EzOrganService {
 	public int getDeptMemberListCount(String deptID, boolean containLow, String primary, int tenantID) throws Exception;
 	
 	public String getPhysicalDeliveryOfficeName(String userID,  String property, int tenantID) throws Exception;
+
+	String getUserOrgDeptId(String userID, int tenantID, String companyID) throws Exception;
 }

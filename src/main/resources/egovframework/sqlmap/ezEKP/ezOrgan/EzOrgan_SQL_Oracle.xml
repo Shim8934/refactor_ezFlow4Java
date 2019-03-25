@@ -2061,4 +2061,39 @@
 			CN
 	</select>
 	
+	<select id="EzOrganDAO.getDeptMasterName" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				CASE 
+					#v_LANGDATA#
+				WHEN
+					'1'
+				THEN
+					DISPLAYNAME
+				ELSE
+					DISPLAYNAME2
+				END
+					EXTENSIONATTRIBUTE9
+			FROM
+				TBL_USERMASTER
+			WHERE
+				CN = #extensionAttribute9#
+			AND
+				TENANT_ID = #v_TENANT_ID#
+		]]>
+	</select>
+	
+	<select id="EzOrganDAO.getUserOrgDeptId" parameterClass="Map" resultClass="String">
+		SELECT
+			department
+		FROM 
+			TBL_USERMASTER
+		WHERE
+			CN = #userID#
+		AND
+			TENANT_ID = #tenantID#		
+		AND
+			PHYSICALDELIVERYOFFICENAME = #companyID#		
+	</select>
+	
 </sqlMap>

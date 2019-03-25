@@ -3229,7 +3229,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (ArrayList<String>) list("EzApprovalG.getTmpDocList", map);
 	}
 	
-	public void setHesongBansongCabinetID(Map<String, Object> map) {
+	public void setHesongBansongCabinetID(Map<String, Object> map) throws Exception {
 		update("EzApprovalG.setHesongBansongCabinetID", map);
+	}
+
+	public String getDeptIdOfCabinet(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getDeptIdOfCabinet", map);
 	}
 }

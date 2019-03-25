@@ -2208,6 +2208,18 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		return ezOrganDAO.getPhysicalDeliveryOfficeName(map);
 	}
+	
+	@Override
+	public String getUserOrgDeptId(String userID, int tenantID, String companyID) throws Exception {
+		logger.debug("getUserOrgDeptId started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
+		logger.debug("getUserOrgDeptId ended");
+		
+		return ezOrganDAO.getUserOrgDeptId(map);
+	}
 }
 
 

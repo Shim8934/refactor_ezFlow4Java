@@ -166,7 +166,7 @@
 
                         document.getElementById("Z").checked = true;
                         checkValue = "Z";
-                        LinkTypeURL = LinkTypeURL;
+                        LinkTypeURL = url;
                     }
 				}
 	        }
