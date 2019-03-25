@@ -1910,4 +1910,17 @@
 			CN
 	</select>
 	
+	<select id="EzOrganDAO.getUserOrgDeptId" parameterClass="Map" resultClass="String">
+		SELECT
+			department
+		FROM 
+			TBL_USERMASTER
+		WHERE
+			CN = #userID#
+		AND
+			TENANT_ID = #tenantID#		
+		AND
+			PHYSICALDELIVERYOFFICENAME = #companyID#		
+	</select>
+	
 </sqlMap>
