@@ -387,6 +387,15 @@
 	    		
  	    		for (var i = 0; i < ioInfo.length; i++) {
 	    			diskTarget = Object.keys(ioInfo[i]);
+	    			
+	    			// fd, dm 디스크 관련 정보는 보여줄 필요가 없어서 차트에 나타나지 않도록 처리함
+	    			for (var j = diskTarget.length - 1; j > -1; j--) {
+	    				if (diskTarget[j].startsWith("write_fd") || diskTarget[j].startsWith("read_fd")
+	    						|| diskTarget[j].startsWith("write_dm") || diskTarget[j].startsWith("read_dm")) {
+	    					diskTarget.splice(j, 1);
+	    				}
+	    			}
+	    			
 	    			ioInfo[i].time = current;
 	    			diskioData.push(ioInfo[i]);
 	    		} 	    		
@@ -468,7 +477,7 @@
 			    		type: "line",
 			    		target: ["Cpu", "Memory"]
 			    	});
-			    	cpuMemoryChart.render(false);
+			    	cpuMemoryChart.render(true);
 
 			    	// 디스크 입출력 y축을 동적으로 변하게 하기 위한 부분
 	 		    	diskioChart.axis(0).update(diskioData);
@@ -518,7 +527,7 @@
 			    		type: "tooltip",
 			    		brush: [1]
 			    	})
-			    	diskioChart.render(false); 
+			    	diskioChart.render(true); 
 			    	
 			    	networkChart.axis(0).update(networkData);
 			    	networkChart.axis(0).updateGrid("x", {
@@ -580,10 +589,10 @@
 			    		type: "line",
 			    		target: ["Receive", "Transfer"]
 			    	});
-			    	networkChart.render(false);
+			    	networkChart.render(true);
 			    	
 			    	filesysChart.axis(0).update(fileSysData);	   
-			    	filesysChart.render(false);				 
+			    	filesysChart.render(true);				 
 			 }			 
 			// 최초 그래프 생성		 
 			 setGraphForm(); 	    	
