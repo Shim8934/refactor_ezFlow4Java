@@ -2704,14 +2704,21 @@ public class EzEmailUtil {
 				|| part.isMimeType("multipart/report")
 				|| part.isMimeType("multipart/related")) {
 			Multipart mp = (Multipart)part.getContent();
-			Part p = mp.getBodyPart(index);
+			Part p = null;
+			String fileName = null;
 			
-			String fileName = p.getFileName();
-			
-			logger.debug("fileName=" + fileName);
+			try {
+				p = mp.getBodyPart(index);
+				
+				fileName = p.getFileName();
+				
+				logger.debug("fileName=" + fileName);
+			} catch (ArrayIndexOutOfBoundsException e) {
+				e.printStackTrace();
+			}
 			
 			if (fileName != null
-					|| (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))) {
+					|| (p != null && p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))) {
 				logger.debug("getAttachPart ended.");
 				
 				return p;
