@@ -603,6 +603,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			}
         }
     
+        if (mode == null) {
+        	mode = "APR";
+        }
      
         logger.debug("docID = " + docID + ", mode =" + mode + ", tenantID=" + tenantID);       
 		// c=1 : 전체관리자, k=1 : 회사관리자, f=1 : 문서조회관리자
@@ -3364,6 +3367,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			
 			ret ="TRUE";
 		} catch (Exception e) {
+			e.printStackTrace();
 			ret = "FALSE";
 		} finally {
 		   if (bos != null) {
@@ -3840,7 +3844,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String tempUserID = userInfo.getId();
 		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
 		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID() + commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator;
-		String docDir = docID.substring(docID.length() - 3);
 		String approvalPWD = ezApprovalGService.getApprovalPWD(uID, userInfo.getTenantId(), userInfo.getCompanyID());
 		String addLastKyulJeYN = ezCommonService.getTenantConfig("addLastKyulJeYN", userInfo.getTenantId());
 		String agreeReturnType = ezCommonService.getTenantConfig("PersonalAgreeReturnType", userInfo.getTenantId());
@@ -3859,6 +3862,10 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String docNumZeroCnt = ezApprovalGService.getDocNumZeroCnt(userInfo.getCompanyID(), userInfo.getTenantId());
 		String orgDocID = request.getParameter("orgDocID");
 		
+		if (docID == null) {
+			docID = "";
+		}
+		
 		if (orgDocID == null) {
 			orgDocID = "";
 		}
@@ -3866,6 +3873,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		if (mailChk == null) {
 			mailChk = "";
 		}
+		
+		String docDir = docID.substring(docID.length() - 3);
 
 		if (docDir.substring(0, 1).equals("0")) {
 			docDir = docDir.substring(docDir.length() - 2);
@@ -4711,6 +4720,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String approvalPWD = ezApprovalGService.getApprovalPWD(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
 		String optSignDateFormat = ezApprovalGService.getOptionInfo("A15", "002", userInfo, "CODE");
 		String optisSplit = "";
+		int isReceived = 0;
 		
 		if (approvalFlag.equals("S")) {
 			optisSplit = ezApprovalGService.getOptionInfo("SA33", "001", userInfo, "CODE");
@@ -4755,12 +4765,11 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
 				return "main/warning";
 			}
+			
+			// 접수된 문서인지 확인하기.
+			// return 값이 1 이상이면 접수된 문서로 판단.
+			isReceived = ezApprovalGService.checkReceivedDoc(docID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 		}
-		
-		// 접수된 문서인지 확인하기.
-		// return 값이 1 이상이면 접수된 문서로 판단.
-		
-		int isReceived = ezApprovalGService.checkReceivedDoc(docID.trim(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		String isNonElecRec = "";
 		if (approvalFlag.equals("G")) {
@@ -7342,8 +7351,6 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orderOption = request.getParameter("orderOption");
 		String searchQuery = request.getParameter("searchQuery");
 		
-		userInfo = commonUtil.aprUserInfo(loginCookie);
-		
 		String result = ezApprovalGService.getAprDocList(pListType, pUserID, pUserDeptID, pPageSize, pPageNum, orderCell, orderOption, companyID, searchQuery, userInfo.getLang(), userInfo.getTenantId(), userInfo.getOffset());
 
 		logger.debug("getPortletAprDocList ended");
@@ -7546,7 +7553,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	public String ezReceiptInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("ezReceiptInfo started");
 		
-		userInfo = commonUtil.aprUserInfo(loginCookie);
+		//userInfo = commonUtil.aprUserInfo(loginCookie); //2019.03.25 천성준 - 사용안해서 일단 주석
 		String docID = request.getParameter("docID");
 		String ext = request.getParameter("ext");
 		
@@ -8991,7 +8998,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 		//철정보 변경을 못하면 에러처리하기위해
 		if (docID == null || cabinetID == null || taskCode == null) {
-			Exception Exception = null;
+			Exception Exception = new Exception();
 			throw Exception;
 		}
 		

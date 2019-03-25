@@ -378,7 +378,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String deptList = request.getParameter("deptList");
 		String companyID = request.getParameter("companyID");
 		
-		if (contDept == "") {
+		if (contDept.equals("")) {
 			contDept = "none";
 		}
 
@@ -3710,7 +3710,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 //				proxyInfo2 = proxyInfo.split(":")[0] + ":" + proxyInfo.split(":")[1] + ":" + proxyInfo.split(":")[3] + ":" + proxyInfo.split(":")[4];
 //			}
 						
-			if (proxyInfo.split("|")[0].trim().equals("")) {
+			if (proxyInfo.split("\\|")[0].trim().equals("")) {
 				result = ezOrganService.delProxyUserInfo(buJaeId, userInfo.getTenantId());
 			} else {
 				result = ezOrganService.setProxyUserInfo(buJaeId, proxyInfo.split("\\|")[0], proxyInfo.split("\\|")[1], proxyInfo.split("\\|")[2], proxyInfo.split("\\|")[3], proxyInfo.split("\\|")[4], userInfo.getTenantId(), userInfo.getOffset());
@@ -3868,7 +3868,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 			}
 		}
 		
-		if (bReason.trim().equals("")) {
+		if (bReason != null && bReason.trim().equals("")) {
 			bReason = egovMessageSource.getMessage("ezPersonal.t35", locale);
 		}
 		
