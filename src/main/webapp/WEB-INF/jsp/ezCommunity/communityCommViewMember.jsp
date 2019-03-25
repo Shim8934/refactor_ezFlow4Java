@@ -221,9 +221,9 @@
 			} */
 
 			function goToPage(page) {
-				var href = "/ezCommunity/commViewMember.do?sRadio="+encodeURIComponent("${sRadio}")
-					+"&code="+encodeURIComponent("${code}")
-					+"&keyword="+encodeURIComponent("${keyword}")
+				var href = "/ezCommunity/commViewMember.do?sRadio="+encodeURIComponent('<c:out value="${sRadio}"/>')
+					+"&code="+encodeURIComponent('<c:out value="${code}"/>')
+					+"&keyword="+encodeURIComponent('<c:out value="${keyword}"/>')
 					+"&block="+encodeURIComponent("${nowBlock}");
 					
 				if (page == "front") {

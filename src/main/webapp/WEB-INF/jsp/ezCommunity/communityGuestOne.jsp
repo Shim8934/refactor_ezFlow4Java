@@ -353,9 +353,9 @@
 	        //########################################페이지네이션 변경 ##############################################
 		    function goToPage(page) {
 		        var href = "/ezCommunity/guestOne.do?bName=" + encodeURIComponent("${mode}")
-					+ "&sRadio=" + encodeURIComponent("${sRadio}")
-					+ "&code=" + encodeURIComponent("${code}")
-					+ "&keyword=" + "${keyword}"
+					+ "&sRadio=" + encodeURIComponent('<c:out value="${sRadio}"/>')
+					+ "&code=" + encodeURIComponent('<c:out value="${code}"/>')
+					+ "&keyword=" + '<c:out value="${keyword}"/>'
 					+ "&block=" + encodeURIComponent("${nowBlock}");
 
 		        if (page == "front") {
