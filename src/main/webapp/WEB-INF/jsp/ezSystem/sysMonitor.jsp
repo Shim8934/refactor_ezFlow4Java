@@ -468,7 +468,7 @@
 			    		type: "line",
 			    		target: ["Cpu", "Memory"]
 			    	});
-			    	cpuMemoryChart.render(false);
+			    	cpuMemoryChart.render(true);
 
 			    	// 디스크 입출력 y축을 동적으로 변하게 하기 위한 부분
 	 		    	diskioChart.axis(0).update(diskioData);
@@ -518,7 +518,7 @@
 			    		type: "tooltip",
 			    		brush: [1]
 			    	})
-			    	diskioChart.render(false); 
+			    	diskioChart.render(true); 
 			    	
 			    	networkChart.axis(0).update(networkData);
 			    	networkChart.axis(0).updateGrid("x", {
@@ -580,10 +580,10 @@
 			    		type: "line",
 			    		target: ["Receive", "Transfer"]
 			    	});
-			    	networkChart.render(false);
+			    	networkChart.render(true);
 			    	
 			    	filesysChart.axis(0).update(fileSysData);	   
-			    	filesysChart.render(false);				 
+			    	filesysChart.render(true);				 
 			 }			 
 			// 최초 그래프 생성		 
 			 setGraphForm(); 	    	
