@@ -2357,7 +2357,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 			char intxt[] = new char[saveXML.toString().length()];
 			saveXML.toString().getChars(0, saveXML.toString().length(), intxt, 0); // 입력하고자 하는 문자열을 문자 배열 intxt에 저장
 
-			File file = new File(realPath + savePath);
+			File file = new File(commonUtil.detectPathTraversal(realPath + savePath));
 			FileOutputStream fop = new FileOutputStream(file);
 			// get the content in bytes
 			fop.write(saveXML.toString().getBytes("euc-kr"));
@@ -2466,7 +2466,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		FileOutputStream fop = null;
 		
 		try {
-			File file = new File(path);
+			File file = new File(commonUtil.detectPathTraversal(path));
 			fop = new FileOutputStream(file);
 			fop.write(xmlData.getBytes("utf-8"));
 			fop.flush();

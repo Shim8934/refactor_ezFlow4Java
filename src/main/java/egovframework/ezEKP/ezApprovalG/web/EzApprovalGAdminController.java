@@ -2538,13 +2538,13 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String companyPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + companyID;
 		String encodeInfo = "";
 		
-		File fileDir = new File(realPath + companyPath);
+		File fileDir = new File(commonUtil.detectPathTraversal(realPath + companyPath));
 		
 		if (!fileDir.exists()) {
 			fileDir.mkdirs();
 		}
 		
-		File file = new File(realPath + companyPath + commonUtil.separator + "encodeinfo.xml");
+		File file = new File(commonUtil.detectPathTraversal(realPath + companyPath + commonUtil.separator + "encodeinfo.xml"));
 		encodeInfo = FileUtils.readFileToString(file);
 		
 		model.addAttribute("encodeInfo", encodeInfo);
@@ -2574,7 +2574,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String returnString = "<ENCODEINFO><SIGN>" + optionValue1 + "</SIGN><ENCODE>" + optionValue2 + "</ENCODE><NONE>" + optionValue3 + "</NONE></ENCODEINFO>";
 		 
 		try {
-			File cFile = new File(realPath + dirPath + commonUtil.separator + companyID);
+			File cFile = new File(commonUtil.detectPathTraversal(realPath + dirPath + commonUtil.separator + companyID));
 			if (!cFile.isDirectory()) {
 				boolean _flag = cFile.mkdirs();
 				if (!_flag) {
@@ -2582,7 +2582,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 				}
 			}
 			
-			File file = new File(realPath + dirPath + commonUtil.separator + companyID + commonUtil.separator + "encodeinfo.xml");
+			File file = new File(commonUtil.detectPathTraversal(realPath + dirPath + commonUtil.separator + companyID + commonUtil.separator + "encodeinfo.xml"));
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
 			writer.write(returnString);
 			writer.flush();

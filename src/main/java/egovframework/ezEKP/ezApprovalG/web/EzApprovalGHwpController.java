@@ -911,7 +911,7 @@ public class EzApprovalGHwpController extends EgovFileMngUtil{
 				saveFileName += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 			}
 			
-			Files.write(Paths.get(saveFileName), documentBytes, StandardOpenOption.TRUNCATE_EXISTING);
+			Files.write(Paths.get(commonUtil.detectPathTraversal(saveFileName)), documentBytes, StandardOpenOption.TRUNCATE_EXISTING);
 
 			result = "SUCCESS";
 		} catch (Exception e) {
