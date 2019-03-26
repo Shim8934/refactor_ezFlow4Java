@@ -991,8 +991,12 @@ function event_xmlhttp_mailPreview_Complete() {
             if (USE_OCS == "YES") {
                 pOCS = "<img src='/images/presence/unknown.gif' id='" + GetGUID() + "' onload=\"PresenceControl('" + pFromemail + "',this);\" style='vertical-align:middle;padding-right:5px;'/>";
             }
-
-            pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + pFromname + "\"</span>";
+            
+            if(pFromname == ""){
+            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>&nbsp;" + pFromname + "</span>";
+            } else {
+            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + pFromname + "\"</span>";
+            }
 
             //pMailSenderHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromname) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + ConvertStringForHTML(pFromname) + "\"</span>";
 
