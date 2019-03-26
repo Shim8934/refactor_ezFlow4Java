@@ -4427,7 +4427,9 @@
 		    TBL_CABINET.TRANSDELAYFLAG,
 		    TBL_CABINET.TITLE,
 		    TBL_CABINET.TITLE2,
-		    VTASKCLASS.KEEPINGPERIOD,
+		   	<!--  단위업무가 아닌 기록물철 자체의 보존연한을 가져오게 수정 2019-03-22 임민석 -->
+		    TBL_CABINET.KEEPINGPERIOD,
+		    <!-- VTASKCLASS.KEEPINGPERIOD, -->
 		    VTASKCLASS.DISPLAYRECFLAG,
 		    VTASKCLASS.DISPLAYRECTRASTIME,
 		    VTASKCLASS.SC1,
@@ -4498,7 +4500,8 @@
 			    TBL_CABINETCLASS.TITLE,
 			    TBL_CABINETCLASS.TITLE2,
 			    TBL_CABINETCLASS.COMPANYID,
-			    TBL_CABINETCLASS.TENANT_ID
+			    TBL_CABINETCLASS.TENANT_ID,
+			    TBL_CABINETCLASS.KEEPINGPERIOD
 		      FROM
 		      	TBL_CABINETCLASS 
 			  INNER JOIN
@@ -5369,12 +5372,12 @@
 						TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y-%m-%d %H:%i:%s')
 					]]>
 				</isNotEmpty>
-				<![CDATA[
-					 AND   
-					 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL)
-				     OR      
-				     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#))
-			     ]]>
+<!-- 				<![CDATA[ -->
+<!-- 					 AND    -->
+<!-- 					 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL) -->
+<!-- 				     OR       -->
+<!-- 				     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#)) -->
+<!-- 			     ]]> -->
 				<isNotEmpty property="sc" prepend="AND">
 						TBL_RECORD.RecordID IN (SELECT 
 													RecordID 
@@ -12308,12 +12311,12 @@
 			TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y-%m-%d %H:%i:%s')
 		]]>
 	</isNotEmpty>
-	<![CDATA[
-		 AND   
-		 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL)
-	     OR      
-	     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#))
-     ]]>
+<!-- 	<![CDATA[ -->
+<!-- 		 AND    -->
+<!-- 		 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL) -->
+<!-- 	     OR       -->
+<!-- 	     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#)) -->
+<!--      ]]> -->
 	<isNotEmpty property="sc" prepend="AND">
 			TBL_RECORD.RecordID IN (SELECT 
 										RecordID 
@@ -28124,5 +28127,23 @@
 			HREF = #href#
 		AND   tenant_id = #v_TENANTID#
         AND   companyid = #companyID#
+    </select>
+    <select id="EzApprovalG.getDeptIdOfCabinet" parameterClass="Map" resultClass="String">
+		SELECT
+		    ownerdeptid
+		FROM
+		    tbl_cabinetclass
+		WHERE
+		    cabinetclassno = (
+		        SELECT
+		            cabinetclassno
+		        FROM
+		            tbl_cabinet
+		        WHERE
+           			cabinetid = #cabinetId#
+					AND   tenant_id = #tenantId#
+			        AND   companyid = #companyID#
+		    )
+
     </select>
 </sqlMap>

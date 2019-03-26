@@ -28045,4 +28045,15 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		ezApprovalGDAO.setHesongBansongCabinetID(map);
 		logger.debug("setHesongBansongCabinetID ended");
 	}
+	
+	@Override
+	public String getDeptIdOfCabinet(String orgCabinetId, int tenantId, String companyID) throws Exception {
+		logger.debug("getDeptIdOfCabinet started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cabinetId", orgCabinetId);
+		map.put("companyID", companyID);
+		map.put("tenantId", tenantId);
+		logger.debug("getDeptIdOfCabinet ended");
+		return ezApprovalGDAO.getDeptIdOfCabinet(map);
+	}
 }
