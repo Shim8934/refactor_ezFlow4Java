@@ -307,7 +307,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("serverName", serverName);
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
-		model.addAttribute("tCheck", commonUtil.stripScriptTags(tCheck));
+		model.addAttribute("tCheck", tCheck);
 		model.addAttribute("title", title);
 		model.addAttribute("topID", topID);
 		model.addAttribute("approvalFlag", approvalFlag);
@@ -459,11 +459,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
 		model.addAttribute("title", title);
-		model.addAttribute("isInsUp", commonUtil.stripScriptTags(tCheck));
-		model.addAttribute("contID", commonUtil.stripScriptTags(contID));
-		model.addAttribute("formID", commonUtil.stripScriptTags(formID));
+		model.addAttribute("isInsUp", tCheck);
+		model.addAttribute("contID", contID);
+		model.addAttribute("formID", formID);
 		model.addAttribute("docType", docType);
-		model.addAttribute("companyID", commonUtil.stripScriptTags(companyID));
+		model.addAttribute("companyID", companyID);
 		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("formMain ended.");
@@ -526,11 +526,11 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("primary", primary);
 		model.addAttribute("secondary", secondary);
 		model.addAttribute("title", title);
-		model.addAttribute("isInsUp", commonUtil.stripScriptTags(tCheck));
-		model.addAttribute("contID", commonUtil.stripScriptTags(contID));
-		model.addAttribute("formID", commonUtil.stripScriptTags(formID));
+		model.addAttribute("isInsUp", tCheck);
+		model.addAttribute("contID", contID);
+		model.addAttribute("formID", formID);
 		model.addAttribute("docType", docType);
-		model.addAttribute("companyID", commonUtil.stripScriptTags(companyID));
+		model.addAttribute("companyID", companyID);
 		if (type != null && type.equals("HWP")) {
 			model.addAttribute("useEditor", "HWP");
 			model.addAttribute("ext", "hwp");
@@ -777,7 +777,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("connStringFlag", connStringFlag);
 		model.addAttribute("queryType", queryType);
 		model.addAttribute("keyKind", keyKind);
-		model.addAttribute("companyID", commonUtil.stripScriptTags(companyID));
+		model.addAttribute("companyID", companyID);
 		
 		logger.debug("formConnInfo ended");
 
@@ -832,7 +832,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	public String formPreview(HttpServletRequest request, Model model) throws Exception {
 		String docHref = request.getParameter("href");
 		 
-		model.addAttribute("docHref", commonUtil.stripScriptTags(docHref));
+		model.addAttribute("docHref", docHref);
 		
 		return "admin/ezApprovalG/apprGFormPreview";
 	}
@@ -1231,9 +1231,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String companyID = request.getParameter("companyID");
 		String deptName = request.getParameter("deptName");
 		
-		model.addAttribute("deptID", commonUtil.stripScriptTags(deptID));
-		model.addAttribute("companyID", commonUtil.stripScriptTags(companyID));
-		model.addAttribute("deptName", commonUtil.stripScriptTags(deptName));
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("companyID", companyID);
+		model.addAttribute("deptName", deptName);
 		model.addAttribute("userInfo", userInfo);
 		
 		logger.debug("manageSpecialCont ended");
@@ -1282,10 +1282,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("codeXML = " + codeXML);
 		logger.debug("infoXML = " + infoXML);
 		
-		model.addAttribute("deptID", commonUtil.stripScriptTags(deptID));
-		model.addAttribute("contType", commonUtil.stripScriptTags(contType));
-		model.addAttribute("sn", commonUtil.stripScriptTags(sn));
-		model.addAttribute("companyID", commonUtil.stripScriptTags(companyID));
+		model.addAttribute("deptID", deptID);
+		model.addAttribute("contType", contType);
+		model.addAttribute("sn", sn);
+		model.addAttribute("companyID", companyID);
 		model.addAttribute("codeXML", codeXML);
 		model.addAttribute("infoXML", infoXML);
 		
@@ -1679,7 +1679,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		}
 		
 		model.addAttribute("title", title);
-		model.addAttribute("tCheck", commonUtil.stripScriptTags(tCheck));
+		model.addAttribute("tCheck", tCheck);
 		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("taskCategoryInsert ended.");
@@ -1830,7 +1830,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("title", title);
-		model.addAttribute("tCheck", commonUtil.stripScriptTags(tCheck));
+		model.addAttribute("tCheck", tCheck);
 		model.addAttribute("approvalFlag", approvalFlag);
 		
 		logger.debug("taskCodeInsert ended.");
@@ -2214,7 +2214,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("checkIE", checkIE);
-		model.addAttribute("pDeptYN", commonUtil.stripScriptTags(pDeptYN));
+		model.addAttribute("pDeptYN", pDeptYN);
 		
 		logger.debug("ezSealInfo ended.");
 
@@ -2806,7 +2806,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("list", resultList);
 		model.addAttribute("approvalFlag", approvalFlag);
-		model.addAttribute("type", commonUtil.stripScriptTags(type));
+		model.addAttribute("type", type);
 		model.addAttribute("useEditApprDoc", useEditApprDoc);
 		
 		logger.debug("forAprDoc ended.");
@@ -2836,9 +2836,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		logger.debug("docID : " + docID);
 		logger.debug("pURL : " + pURL);
 		
-		model.addAttribute("docID", commonUtil.stripScriptTags(docID));
-		model.addAttribute("url" , commonUtil.stripScriptTags(pURL));
-		model.addAttribute("companyID", commonUtil.stripScriptTags(companyID));
+		model.addAttribute("docID", docID);
+		model.addAttribute("url" , pURL);
+		model.addAttribute("companyID", companyID);
 		model.addAttribute("useEditor", useEditor);
 		
 		logger.debug("modifyAprDoc ended.");
@@ -3011,7 +3011,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
 		model.addAttribute("list", resultList);
-		model.addAttribute("type", commonUtil.stripScriptTags(type));
+		model.addAttribute("type", type);
 		
 		logger.debug("forDoc ended.");
 		
@@ -3111,7 +3111,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("approvalFlag", approvalFlag);
-		model.addAttribute("aprFlag", commonUtil.stripScriptTags(ingFlag));
+		model.addAttribute("aprFlag", ingFlag);
 		model.addAttribute("initDate", initDate);
 		
 		logger.debug("search ended.");
@@ -3401,7 +3401,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		model.addAttribute("totalcnt",totalcnt);
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("currPage", currentPage);
-		model.addAttribute("pSelectTab", commonUtil.stripScriptTags(pSelectTab));
+		model.addAttribute("pSelectTab", pSelectTab);
 		
 		
 		logger.debug("subQuery  :: "+subQuery);
@@ -3445,8 +3445,8 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		String endDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		
-		model.addAttribute("aprFlag", commonUtil.stripScriptTags(aprFlag));
-		model.addAttribute("listType", commonUtil.stripScriptTags(listType));
+		model.addAttribute("aprFlag", aprFlag);
+		model.addAttribute("listType", listType);
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
 		model.addAttribute("monthEndDay", endDate.substring(5, 7));
@@ -3738,7 +3738,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		String uploadPortalPath = commonUtil.getUploadPath("upload_portal.ROOT", userInfo.getTenantId()) + commonUtil.separator;
 		
-		model.addAttribute("type", commonUtil.stripScriptTags(type));
+		model.addAttribute("type", type);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 
@@ -3770,10 +3770,10 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		
 		logger.debug("***companyID*** : " + buJaeCompanyID);
 		
-		model.addAttribute("buJaeId", commonUtil.stripScriptTags(buJaeId));
-		model.addAttribute("buJaedeptid",commonUtil.stripScriptTags(buJaedeptid));
+		model.addAttribute("buJaeId", buJaeId);
+		model.addAttribute("buJaedeptid",buJaedeptid);
 		model.addAttribute("buJaeCompanyID",buJaeCompanyID);
-		model.addAttribute("type", commonUtil.stripScriptTags(type));
+		model.addAttribute("type", type);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("uploadPortalPath", uploadPortalPath);
 
