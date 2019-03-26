@@ -201,7 +201,7 @@
             
             function moveToPage(sCurPage) {
                 if(parseInt(sCurPage) > 0 && parseInt(sCurPage) <= parseInt(sTotalPage)) {
-					window.location.href = "/admin/ezCommunity/closeCom.do?bName=&sRadio=" + encodeURIComponent("${sRadio}") + "&code=" + encodeURIComponent("${code}") + "&keyword=" + encodeURIComponent("${keyword}") + "&block=" + encodeURIComponent("${nowBlock}") + "&goToPage=" + sCurPage;
+					window.location.href = "/admin/ezCommunity/closeCom.do?bName=&sRadio=" + encodeURIComponent("${sRadio}") + "&code=" + encodeURIComponent("${code}") + "&keyword=" + encodeURIComponent('<c:out value="${keyword}"/>') + "&block=" + encodeURIComponent("${nowBlock}") + "&goToPage=" + sCurPage;
 				}
 			}
             //########################################페이지네이션 변경 ##############################################

@@ -93,7 +93,7 @@
 						flag = "name";
 					}
 					
-					window.location.href="/ezCommunity/adminMemberList.do?code=${code}&mode=${mode}&flag=" + flag + "&ser=" + searchText;
+					window.location.href="/ezCommunity/adminMemberList.do?code=" + '<c:out value="${code}"/>' + "&mode=${mode}&flag=" + flag + "&ser=" + searchText;
 				}
 			}
 		</script>

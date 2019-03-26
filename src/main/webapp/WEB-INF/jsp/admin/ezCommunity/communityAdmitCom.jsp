@@ -206,7 +206,7 @@
             
             function moveToPage(sCurPage) {
                 if(parseInt(sCurPage) > 0 && parseInt(sCurPage) <= parseInt(sTotalPage)) {
-					window.location.href = "/admin/ezCommunity/admitCom.do?bName=&sRadio=${sRadio}&code=${code}&keyword=" + make_searchstring("${keyword}") + "&block=${nowBlock}&goToPage=" + sCurPage;
+					window.location.href = "/admin/ezCommunity/admitCom.do?bName=&sRadio=${sRadio}&code=${code}&keyword=" + make_searchstring('<c:out value="${keyword}"/>') + "&block=${nowBlock}&goToPage=" + sCurPage;
 				}
 			}
 		          //########################################페이지네이션 변경 ##############################################
