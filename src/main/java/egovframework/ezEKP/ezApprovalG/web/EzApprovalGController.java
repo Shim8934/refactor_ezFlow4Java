@@ -4745,7 +4745,13 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			if (!newFile.exists()) {
 				File orgFile = new File(orgDocFile);
 				
-				FileUtils.copyFile(orgFile, newFile);
+				// KLIB 복호화
+				if (orgDocFile.endsWith("." + EzApprovalGKlibServiceImpl.ENCRYPTED_FILE_EXT)) {
+					byte[] orgBytes = Files.readAllBytes(orgFile.toPath());
+					FileUtils.writeByteArrayToFile(newFile, klibUtil.decrypt(orgBytes));
+				} else {
+					FileUtils.copyFile(orgFile, newFile);
+				}
 			}
 		}
 		
@@ -8195,21 +8201,27 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String mode = doc.getElementsByTagName("mode").item(0).getTextContent();
 		String pHTML = doc.getElementsByTagName("pHtml").item(0).getTextContent().replace("\r\n", "\n").replace("\n", "\r\n");
 
-		String oldYear = ezApprovalGService.getDocHrefYear(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String companyId = userInfo.getCompanyID();
+		int tenantId = userInfo.getTenantId();
+		
+		String oldYear = ezApprovalGService.getDocHrefYear(docID, companyId, tenantId);
 		String fileName = docID + "-" + commonUtil.getTodayUTCTime("yyyyMMddHHmmss")+ "." + mode;
-		String dirPath = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID)  + commonUtil.separator + "history" ;
-		String dirPath2 = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId()) + commonUtil.separator + userInfo.getCompanyID()  +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + ezApprovalGService.getDocDir(docID);
+		String uploadApprovalRoot = commonUtil.getUploadPath("upload_approvalG.ROOT", userInfo.getTenantId());
+		String docDirName = ezApprovalGService.getDocDir(docID);
+		String dirPath = uploadApprovalRoot + commonUtil.separator + companyId +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + docDirName + commonUtil.separator + "history" ;
+		String dirPath2 = uploadApprovalRoot + commonUtil.separator + companyId +  commonUtil.separator + "doc" + commonUtil.separator + oldYear + commonUtil.separator + docDirName;
 		String realPath = commonUtil.getRealPath(request);
 		
-		String originFileExt = ezApprovalGService.getDocExt(docID, userInfo.getCompanyID(), userInfo.getTenantId());
+		String originFileExt = ezApprovalGService.getDocExt(docID, companyId, tenantId);
 		boolean useKlibEncryption = false;
+		boolean useKlibBackup = false;
 		
 		// KLIB 암호화 처리 (마지막 결재자가 편집모드를 사용했을 때의 히스토리 파일은 결재 완료 프로세스가 끝낸 후에 저장되기 때문에 암호화가 안 되는 상태로 저장됨, 때문에 암호화하여 히스토리 파일을 저장해야함)
 		// .ezd 확장자가 붙어있으면 결재완료된 문서로 판단함
 		if (EzApprovalGKlibService.ENCRYPTED_FILE_EXT.equalsIgnoreCase(originFileExt)) {
-			if ("yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlib", userInfo.getTenantId()))) {
+			if ("yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlib", tenantId))) {
+				useKlibBackup = "yes".equalsIgnoreCase(ezCommonService.getTenantConfig("useApprovalKlibBackup", tenantId));
 				useKlibEncryption = true;
-				fileName += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 			}
 		}
 		
@@ -8228,12 +8240,19 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		
 			if (mode.equals("hwp")) {
 				fileBytes = Base64.decodeBase64(pHTML);
-				
-				if (useKlibEncryption) {
-					fileBytes = klibUtil.encrypt(fileBytes);
-				}
 			} else {
 				fileBytes = pHTML.getBytes("UTF-8");
+			}
+			
+			if (useKlibEncryption) {
+				if (useKlibBackup) {
+					Path backupDir = Paths.get(realPath, uploadApprovalRoot, companyId, EzApprovalGKlibService.BACKUP_DIR_NAME, "doc", oldYear, docDirName, "history");
+					Files.createDirectories(backupDir);
+					Files.write(backupDir.resolve(fileName), fileBytes, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+				}
+				
+				fileBytes = klibUtil.encrypt(fileBytes);
+				fileName += "." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT;
 			}
 			
 			Path outputFile = Paths.get(realPath + dirPath + commonUtil.separator + fileName);

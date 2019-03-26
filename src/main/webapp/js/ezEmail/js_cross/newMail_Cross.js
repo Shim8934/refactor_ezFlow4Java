@@ -1914,11 +1914,12 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 	            var filepath = SelectSingleNodeValue(AttachRows[i], "ATTACHFILEHREF");
 	            var filename = SelectSingleNodeValue(AttachRows[i], "ATTACHNAME");
 	            var filesize = SelectSingleNodeValue(AttachRows[i], "ATTACHFILESIZE");
-	            if (filesize == "0" && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "hwp") {
+	            var fileExt = getOriginalFileExtension(filepath);
+	            if (filesize == "0" && fileExt == "hwp") {
 	                filename = filename + ".hwp";
 	                filesize = strLang116;
 	            }
-	            else if ((filesize == "0" || filesize == "") && filepath.substring(filepath.toLowerCase().lastIndexOf(".") + 1) == "mht") {
+	            else if ((filesize == "0" || filesize == "") && fileExt == "mht") {
 	                filename = filename + ".mht";
 	                filesize = strLang116;
 	            }
@@ -2085,6 +2086,23 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 >>>>>>> master*/
         }
     }
+}
+
+function getOriginalFileExtension(filePath) {
+	var pathLength = filePath.length;
+	var lastIndexOfDot = filePath.lastIndexOf(".");
+
+	if (lastIndexOfDot < 0) {
+		return "";
+	}
+
+	var ext = trim_Cross(filePath.substr(lastIndexOfDot + 1, filePath.length).toLowerCase());
+
+	if (ext === "ezd") {
+		return getOriginalFileExtension(filePath.substr(0, lastIndexOfDot));
+	}
+
+	return ext;
 }
 
 function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {

@@ -40,12 +40,12 @@
 		        var oArrRows = listview.GetSelectedRows();
 		        pUrl = oArrRows[0].getAttribute("DATA2");
 		        Arguments[0] = oArrRows[0].getAttribute("DATA2");
-		        var fileExt = pUrl.substr(pUrl.length - 3, pUrl.length).toLowerCase();
+		        var fileExt = getOriginalFileExtension(pUrl.toLowerCase());
 		        
 		        if (fileExt == "doc") {
 		            pUrl = "DocViewerWord.aspx?DocHref=" + escapenew(Arguments[0]);
 		        }
-		        else if (fileExt == "hwp" || fileExt == "ezd") {
+		        else if (fileExt == "hwp") {
 		        	//hwp사용안함
 		            if (CrossYN()) {
 // 		                pUrl = "DocViewerHWP_Cross.aspx?DocHref=" + escapenew(Arguments[0]);
@@ -64,6 +64,22 @@
 		            }
 		        }
 		        openwindow(pUrl, "", 800, 550);
+		    }
+		    function getOriginalFileExtension(filePath) {
+		    	var pathLength = filePath.length;
+		    	var lastIndexOfDot = filePath.lastIndexOf(".");
+
+		    	if (lastIndexOfDot < 0) {
+		    		return "";
+		    	}
+
+		    	var ext = trim_Cross(filePath.substr(lastIndexOfDot + 1, filePath.length).toLowerCase());
+
+		    	if (ext === "ezd") {
+		    		return getOriginalFileExtension(filePath.substr(0, lastIndexOfDot));
+		    	}
+
+		    	return ext;
 		    }
 		    function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
 		        try {

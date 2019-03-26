@@ -700,7 +700,12 @@
 	                                    var docID = tempStr[tempStr.length - 1].replace(AttachUrlA2, '');
 	                                    var openLocation;
 	                                    
-	                                    if (AttachUrlA2 == ".hwp" || AttachUrlA2 == ".ezd") {
+	                                    if (AttachUrlA2.lastIndexOf(".ezd") === AttachUrlA2.length - 5) {
+	                                    	docID = docID.substr(0, docID.lastIndexOf("."));
+	                                    	AttachUrlA2 = "." + getOriginalFileExtension(AttachUrlA1)
+	                                    }
+	                                    
+	                                    if (AttachUrlA2 == ".hwp") {
 	                                    	if (isIE()) {
 	                                    		openLocation = "/ezApprovalG/ezViewEnd_HWP.do";
 	                                    	} else {
@@ -723,6 +728,22 @@
 	                    }
 		            }
 		        }
+		    }
+		    function getOriginalFileExtension(filePath) {
+		    	var pathLength = filePath.length;
+		    	var lastIndexOfDot = filePath.lastIndexOf(".");
+
+		    	if (lastIndexOfDot < 0) {
+		    		return "";
+		    	}
+
+		    	var ext = trim_Cross(filePath.substr(lastIndexOfDot + 1, filePath.length).toLowerCase());
+
+		    	if (ext === "ezd") {
+		    		return getOriginalFileExtension(filePath.substr(0, lastIndexOfDot));
+		    	}
+
+		    	return ext;
 		    }
 		    //START
 		    function ViewDoc_onclick() {

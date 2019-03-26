@@ -121,14 +121,31 @@ public class KlibUtil {
 	 */
 	@SuppressWarnings("unused")
 	private static class LocalTestCipher implements Cipher {
+		private static final byte[] SALT = "LOCAL_TEST_ENCRYPTED".getBytes();
+
 		@Override
 		public byte[] encrypt(byte[] originBytes) {
-			return Arrays.reverse(originBytes);
+			return Arrays.concatenate(SALT, Arrays.reverse(originBytes));
 		}
 
 		@Override
 		public byte[] decrypt(byte[] encryptedBytes) {
-			return Arrays.reverse(encryptedBytes);
+			int removedSaltLength = encryptedBytes.length - SALT.length;
+
+			if (removedSaltLength < 0) {
+				throw new RuntimeException("is not encrypted bytes");
+			}
+
+			byte[] saltBytes = new byte[SALT.length];
+			System.arraycopy(encryptedBytes, 0, saltBytes, 0, SALT.length);
+
+			if (!Arrays.areEqual(saltBytes, SALT)) {
+				throw new RuntimeException("is not encrypted bytes");
+			}
+
+			byte[] removedSaltBytes = new byte[removedSaltLength];
+			System.arraycopy(encryptedBytes, SALT.length, removedSaltBytes, 0, removedSaltLength);
+			return Arrays.reverse(removedSaltBytes);
 		}
 	}
 
