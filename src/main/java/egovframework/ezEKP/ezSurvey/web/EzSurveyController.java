@@ -685,17 +685,11 @@ public class EzSurveyController extends EgovFileMngUtil {
 			out.println("</script>");
 			return;
 		}
-		
+
 		// questionData parsing
-		List<QuestionVO> surveyResultData = new ArrayList<QuestionVO>();
-		for(int i=0; i<questionData.size(); i++) {
-			JSONObject jObject           = (JSONObject) questionData.get(i);
-			ObjectMapper objectMapper    = new ObjectMapper();
-			QuestionVO questionVO        = objectMapper.readValue(jObject.toString(), QuestionVO.class);
-			surveyResultData.add(questionVO);
-		}
-
-
+		ObjectMapper objectMapper         = new ObjectMapper();
+		List<QuestionVO> surveyResultData = objectMapper.readValue(questionData.toString(), objectMapper.getTypeFactory().constructCollectionType(List.class, QuestionVO.class));
+	
 		// Excel 객체 생성
 		XSSFWorkbook workbook = new XSSFWorkbook();
 
@@ -865,27 +859,28 @@ public class EzSurveyController extends EgovFileMngUtil {
 				case 1: // 단일선택 질문
 				case 2: // 다중선택 질문
 				case 9: // 드롭다운 질문
-					// 보기갯수
-					bogiCount = qVO.getOption().size();
 					resultTot = 0;
 
-					for(int i = 0; i < bogiCount; i ++) {
-						if(qVO.getOption().get(i).getResponses()!= null){
-							resultTot += qVO.getOption().get(i).getResponses().size();
+					// 질문 응답 전체 참여자
+					for(OptionVO optVO:qVO.getOption()) {
+						if(optVO.getResponses() != null) {
+							resultTot += optVO.getResponses().size();
 						}
 					}
-					for(int i = 0; i < bogiCount; i++) {
+
+					// 매치된 값으로 sheet 생성
+					for(OptionVO optVO:qVO.getOption()) {
 						// 응답자수
 						int responCount = 0;
 						rowCount++;
 						row = sheet.createRow(rowCount);
 						// 보기 질문
-						row.createCell(0).setCellValue(qVO.getOption().get(i).getContent());
+						row.createCell(0).setCellValue(optVO.getContent());
 						row.getCell(0).setCellStyle(sentenceStyle);
 						
 						// 응답자수
-						if(qVO.getOption().get(i).getResponses()!= null){
-							responCount = qVO.getOption().get(i).getResponses().size();
+						if(optVO.getResponses()!= null){
+							responCount = optVO.getResponses().size();
 						} 
 						row.createCell(13).setCellValue(responCount + egovMessageSource.getMessage("ezSurvey.t102", locale));
 						row.getCell(13).setCellStyle(taskNameStyle);
@@ -962,23 +957,19 @@ public class EzSurveyController extends EgovFileMngUtil {
 					break;
 				case 5: // 단답 질문
 				case 6: // 문장 질문
-					// 답변갯수
 					if(qVO.getResponses() != null) {
-						bogiCount = qVO.getResponses().size();
-						for(int i = 0; i < bogiCount; i++) {
+						for(ResponseVO rVO:qVO.getResponses()) {
 							rowCount++;
 							row = sheet.createRow(rowCount);
 							sheet.addMergedRegion(new CellRangeAddress(rowCount, rowCount, 0, 13));
 							// 답변
-							row.createCell(0).setCellValue(qVO.getResponses().get(i).getTexts());
+							row.createCell(0).setCellValue(rVO.getTexts());
 							row.getCell(0).setCellStyle(sentenceStyle);
 						}
 					}
 					break;
 				case 7: // 슬라이드 질문
-					// 보기갯수
 					if(qVO.getResponses() != null) {
-						bogiCount      = qVO.getResponses().size();
 						// 단위
 						int unit       = (int) qVO.getUnit();
 						// 슬라이드 시작값
@@ -1076,16 +1067,7 @@ public class EzSurveyController extends EgovFileMngUtil {
 		}
 		
 		sheet.autoSizeColumn(0);
-		/*
-		// 셀병합
-		sheet.addMergedRegion(new CellRangeAddress(3, 4, 0, 0));
 
-		// 열/행 고정
-		sheet.createFreezePane(19, 6);
-	
-		// 열 너비 설정
-		sheet.setColumnWidth(0, 2000);
-		*/
 		response.setContentType("application/vnd.ms-excel");
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + encodedFileName + ".xlsx\"");
 		workbook.write(response.getOutputStream());
