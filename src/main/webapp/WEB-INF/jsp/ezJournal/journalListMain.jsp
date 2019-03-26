@@ -79,8 +79,8 @@
 </style>
 
 <script type="text/javascript">
-			var listType = "${listType}";
-			var typeId = "${typeId}";
+			var listType = "<c:out value='${listType}'/>";
+			var typeId = "<c:out value='${typeId}'/>";
 			var pAdminType  = "n";
 			var currentPage = 1;
 			var listCnt = "${journalEnv.listCnt}";

@@ -385,6 +385,7 @@ public class EzJournalController extends EgovFileMngUtil {
 						file.put("pFileName", file.get("fileName"));
 					//	file.put("fileName", file.get("fileName"));
 						String filePath = file.get("filePath").toString();
+						
 						filePath = filePath.substring(filePath.indexOf("{"), filePath.indexOf("}") + 1);
 						file.put("pUploadSN", filePath);
 						file.put("resultUpload", "true");

@@ -613,15 +613,15 @@
 	                    <ul>
 	                    	<c:choose>
 	                    		<c:when test="${mode eq 'reuse'}">
-			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t73' /></span></li>
+			                        <li><span onclick="btn_Save('<c:out value='${mode}'/>');"><spring:message code='ezJournal.t73' /></span></li>
 			                        <li><span onclick="btn_TempSave('reuse')"><spring:message code='ezJournal.t74' /></span></li>
 	                    		</c:when>
 	                    		<c:when test="${mode eq 'modify'}">
-			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t26' /></span></li>
+			                        <li><span onclick="btn_Save('<c:out value='${mode}'/>');"><spring:message code='ezJournal.t26' /></span></li>
 	                    		</c:when>
 	                    		<c:otherwise>
 	                    			<!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezJournal.t73 => t26 -->
-			                        <li><span onclick="btn_Save('${mode}');"><spring:message code='ezJournal.t26' /></span></li>
+			                        <li><span onclick="btn_Save('<c:out value='${mode}'/>');"><spring:message code='ezJournal.t26' /></span></li>
 			                        <li><span onclick="btn_TempSave('temp')"><spring:message code='ezJournal.t74' /></span></li>
 	                    		</c:otherwise>
 	                    	</c:choose>
@@ -701,7 +701,7 @@
 	        </tr>
 	        <tr>
   				<td>
-   					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px;" src="/ezJournal/dragAndDrop.do?mode=${mode}&journalId=${journalId}"></iframe>
+   					<iframe id="dadiframe" name="dadiframe" style="width: 100%; height: 100%; border: 0px;" src="/ezJournal/dragAndDrop.do?mode='<c:out value='${mode}'/>'&journalId='<c:out value='${journalId}'/>'"></iframe>
   				</td>
   			</tr>
 	    </table>
