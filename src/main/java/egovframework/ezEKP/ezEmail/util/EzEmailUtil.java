@@ -2713,6 +2713,9 @@ public class EzEmailUtil {
 				fileName = p.getFileName();
 				
 				logger.debug("fileName=" + fileName);
+			// mixed 파트 내 related 파트에 첨부파일이 있는 경우 다운로드 시 ArrayIndexOutOfBoundsException이 발생함.
+			// 이 경우 아래 else 문에서 재귀적 호출에 의해 처리되도록 함.
+			// docs/eml/mixed 파트내 related 파트에 첨부파일이 있는 메일.eml 참조
 			} catch (ArrayIndexOutOfBoundsException e) {
 				e.printStackTrace();
 			}
