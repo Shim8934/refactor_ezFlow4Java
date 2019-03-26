@@ -3989,7 +3989,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    											if (contentId != null && !contentIdSet.contains(contentId)) {
 	    											    logger.debug("Adding ContentId=" + contentId);
 	    											    
-	    												relatedPart.addBodyPart(existingRelatedSubPart);						
+	    												relatedPart.addBodyPart(existingRelatedSubPart);	
+	    											// related 파트 안에 첨부 파일이 있는 경우가 있어 추가함.
+	    											} else if ((existingRelatedSubPart.getDisposition() != null && existingRelatedSubPart.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
+	    	    											|| existingRelatedSubPart.isMimeType("application/*")) {
+	    												mixedPart.addBodyPart(existingRelatedSubPart);
 	    											}
 	    										}				
 	    									}

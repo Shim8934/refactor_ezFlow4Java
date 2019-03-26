@@ -387,7 +387,7 @@
             AND
             	U.PHYSICALDELIVERYOFFICENAME = #companyID#
             ORDER BY
-                Q.REGDATE ASC
+                Q.REGDATE DESC          	
 		]]>
 	</select>
 	
