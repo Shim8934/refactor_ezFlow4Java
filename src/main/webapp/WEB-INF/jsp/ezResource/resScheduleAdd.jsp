@@ -24,13 +24,13 @@
 			<%-- var g_DD = "<%=Request.QueryString["dd"]%>";
 	    	var g_MM = "<%=Request.QueryString["mm"]%>";
 	    	var g_YY = "<%=Request.QueryString["yy"]%>"; --%>
-	    	var dayView = "${dayView}";
+	    	var dayView = "<c:out value='${dayView}'/>";
 	    	if (!dayView) {
 	    		dayView = 0;
 	    	}
 	    	var reFlag; 
 	    	var importanceVal;
-	    	var g_fromStr		= "${fromStr}";
+	    	var g_fromStr		= "<c:out value='${fromStr}'/>";
 	    	var s_userID		= "${userInfo.id}";
 	    	var ss_companyID	= "${userInfo.companyID}";
 	    	var ss_deptNM		= "";
@@ -52,10 +52,10 @@
 	    	var org_ownerID		= "${ownerID}";
 	    	var pnumVal			= "${pNum}";
 	    	var writerIDVal		= "${writerID}";
-	    	var cmd				= "${cmdStr}";
+	    	var cmd				= "<c:out value='${cmdStr}'/>";
 	    	var typeVal			= "${typeVal}";
-	    	var startDateVal	= "${startDateVal}";
-	    	var endDateVal		= "${endDateVal}";
+	    	var startDateVal	= "<c:out value='${startDateVal}'/>";
+	    	var endDateVal		= "<c:out value='${endDateVal}'/>";
 	    	var gFlagVal		= "${gresFlag}";
 	    	var uploadPath		= "${scheduleFilePath}";
 	    	var org_companyID	= ss_companyID;

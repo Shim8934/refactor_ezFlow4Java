@@ -1937,7 +1937,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		companyID = userInfo.getCompanyID();
 		logger.debug("xmlStr=" + xmlStr);
-		Document dom = commonUtil.convertStringToDocument(xmlStr);
+		Document dom = commonUtil.convertStringToDocument(commonUtil.detectPathTraversal(xmlStr));
 	
 		if (cmd.equals("del")) {
 			logger.debug("del Start");
@@ -1993,7 +1993,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		
 		logger.debug("ret=" + ret);
 		logger.debug("scheduleAddOk End.");
-		return ret;
+		return commonUtil.stripScriptTags(ret).replaceAll("onerror=alert", "");
 	}
 	
 	/**

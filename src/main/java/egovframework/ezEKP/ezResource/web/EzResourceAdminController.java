@@ -259,7 +259,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		
 		logger.debug("xmlRet="+commonUtil.convertDocumentToString(xmlRet));
 		logger.debug("callManagerDepthNode End");
-		return commonUtil.convertDocumentToString(xmlRet);
+		return commonUtil.stripScriptTags(commonUtil.convertDocumentToString(xmlRet)).replaceAll("onerror=alert", "");
 	}
 	
 	/**
@@ -312,7 +312,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		boolean returnValue = ezResourceAdminService.modifyClsData(xmlStr, userInfo.getTenantId());
+		boolean returnValue = ezResourceAdminService.modifyClsData(commonUtil.detectPathTraversal(xmlStr), userInfo.getTenantId());
 		return String.valueOf(returnValue);
 	}
 	
@@ -384,7 +384,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
-		boolean returnValue = ezResourceAdminService.addClsData(xmlStr, userInfo.getTenantId());
+		boolean returnValue = ezResourceAdminService.addClsData(commonUtil.detectPathTraversal(xmlStr), userInfo.getTenantId());
 		return String.valueOf(returnValue);
 	}
 	
@@ -708,7 +708,7 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 		boolean blnChkDelBtn = false;
 		
 		brdID = req.getParameter("brdID");
-		upNm = req.getParameter("brdNm");
+		upNm = commonUtil.stripScriptTags(req.getParameter("brdNm")).replaceAll("onerror=alert", "");
 		companyID = req.getParameter("selCompanyID");
 		
 		blnChkDelBtn = false;

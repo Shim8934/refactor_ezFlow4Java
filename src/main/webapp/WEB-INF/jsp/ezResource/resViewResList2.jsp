@@ -53,9 +53,9 @@
 			.calendar_layer .btn ul li span{display:inline-block; background:url(images/calendar/btn_calendar_r.gif) no-repeat right top; padding:0px 8px 0px 3px; font-weight:normal; color:#555555;}
 		</style>
 		<script type="text/javascript">
-			var pBrdid = "${brdID}";
-	    	var pBrdnm = "<c:out value='${brdNm}' escapeXml='false'/>";
-	    	var pAccessCode = "${accessCode}";
+			var pBrdid = "<c:out value='${brdID}'/>";
+	    	var pBrdnm = "<c:out value='${brdNm}'/>";
+	    	var pAccessCode = "<c:out value='${accessCode}'/>";
 	    	var pCompanyID = "${companyID}";
 	    	var pUserID = "${userID}";
 	    	var pDeptID = "${deptID}";
