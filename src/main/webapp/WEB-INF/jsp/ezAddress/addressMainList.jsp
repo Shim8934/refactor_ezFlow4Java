@@ -676,7 +676,7 @@
 	        var xmlHTTP = createXMLHttpRequest();
 	        
 	        function clickImport() {
-	        	if (!useAnyoneEdit == "YES") {
+	        	if (useAnyoneEdit != "YES") {
 	        		if (deptAdmin != "Y" && pFolderType == "D") {
 		        		alert("<spring:message code='ezAddress.t1' />");
 		                return;

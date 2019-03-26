@@ -2718,14 +2718,24 @@ public class EzEmailUtil {
 				|| part.isMimeType("multipart/report")
 				|| part.isMimeType("multipart/related")) {
 			Multipart mp = (Multipart)part.getContent();
-			Part p = mp.getBodyPart(index);
+			Part p = null;
+			String fileName = null;
 			
-			String fileName = p.getFileName();
-			
-			logger.debug("fileName=" + fileName);
+			try {
+				p = mp.getBodyPart(index);
+				
+				fileName = p.getFileName();
+				
+				logger.debug("fileName=" + fileName);
+			// mixed 파트 내 related 파트에 첨부파일이 있는 경우 다운로드 시 ArrayIndexOutOfBoundsException이 발생함.
+			// 이 경우 아래 else 문에서 재귀적 호출에 의해 처리되도록 함.
+			// docs/eml/mixed 파트내 related 파트에 첨부파일이 있는 메일.eml 참조
+			} catch (ArrayIndexOutOfBoundsException e) {
+				e.printStackTrace();
+			}
 			
 			if (fileName != null
-					|| (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))) {
+					|| (p != null && p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))) {
 				logger.debug("getAttachPart ended.");
 				
 				return p;
