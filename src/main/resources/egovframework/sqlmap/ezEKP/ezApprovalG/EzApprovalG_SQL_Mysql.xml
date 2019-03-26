@@ -28130,7 +28130,7 @@
     </select>
     <select id="EzApprovalG.getDeptIdOfCabinet" parameterClass="Map" resultClass="String">
 		SELECT
-		    processdeptcode
+		    ownerdeptid
 		FROM
 		    tbl_cabinetclass
 		WHERE
