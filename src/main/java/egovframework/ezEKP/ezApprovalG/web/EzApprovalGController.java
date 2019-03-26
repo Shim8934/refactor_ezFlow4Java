@@ -2691,7 +2691,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return "ezApprovalG/apprGshowProgress";
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/getTransList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezApprovalG/getTransList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getTransList() throws Exception{
 		//TODO: 닷net버전이 미구현 된거같음 미구현 + 사용안함
@@ -3496,7 +3496,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 얼럿트 표출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezAprAlertLong.do")
+	@RequestMapping(value = "/ezApprovalG/ezAprAlertLong.do", method = RequestMethod.GET)
 	public String ezAprAlertLong() throws Exception{
 		return "ezApprovalG/apprGezAprAlertLong";
 	}
@@ -4830,7 +4830,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 수신처내용 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/recevEndContent.do")
+	@RequestMapping(value = "/ezApprovalG/recevEndContent.do", method = RequestMethod.GET)
 	public String recevEndContent() {
 		return "ezApprovalG/apprGrecevEndContent";
 	}
@@ -5348,7 +5348,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 모두결재 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezAprAllAlert.do")
+	@RequestMapping(value = "/ezApprovalG/ezAprAllAlert.do", method = RequestMethod.GET)
 	public String ezAprAllAlert() throws Exception{
 		logger.debug("ezAprAllAlert started.");
 		logger.debug("ezAprAllAlert ended.");
@@ -5483,7 +5483,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 특수목록위치 추가 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/insSpecialList.do")
+	@RequestMapping(value = "/ezApprovalG/insSpecialList.do", method = RequestMethod.GET)
 	public String insSpecialList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo,Model model) throws Exception{
 		logger.debug("insSpecialList started");
 		
@@ -6417,7 +6417,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/aprEndOpinion.do")
+	@RequestMapping(value = "/ezApprovalG/aprEndOpinion.do", method = RequestMethod.GET)
 	public String aprEndOpinion() throws Exception{
 		logger.debug("aprEndOpinion started");  
 		logger.debug("aprEndOpinion ended");  
@@ -7361,7 +7361,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 철생성 비치기록물 변경 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/insDisplayInfo.do")
+	@RequestMapping(value = "/ezApprovalG/insDisplayInfo.do", method = RequestMethod.GET)
 	public String insDisplayInfo() throws Exception{
 		logger.debug("insDisplayInfo started");
 		logger.debug("insDisplayInfo ended");
@@ -8077,7 +8077,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재정보 수신처 민원인주소입력 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprDeptAddressUserName.do")
+	@RequestMapping(value = "/ezApprovalG/aprDeptAddressUserName.do", method = RequestMethod.GET)
 	public String aprDeptAddressUserName() throws Exception{
 		logger.debug("aprDeptAddressUserName started");
 		logger.debug("aprDeptAddressUserName ended");
@@ -8087,7 +8087,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재정보 수신처 민원인상세주소입력 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/aprDeptAddressName.do")
+	@RequestMapping(value = "/ezApprovalG/aprDeptAddressName.do", method = RequestMethod.GET)
 	public String aprDeptAddressName() throws Exception{
 		logger.debug("aprDeptAddressName started");
 		logger.debug("aprDeptAddressName ended");
@@ -8665,7 +8665,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * @return 중계문서 재전송 요청 의견 호출
 	 */
-	@RequestMapping(value = "/ezApprovalG/ezRetOpinon.do")
+	@RequestMapping(value = "/ezApprovalG/ezRetOpinon.do", method = RequestMethod.GET)
 	public String ezRetOpinon() throws Exception {
 		logger.debug("ezRetOpinon started");
 

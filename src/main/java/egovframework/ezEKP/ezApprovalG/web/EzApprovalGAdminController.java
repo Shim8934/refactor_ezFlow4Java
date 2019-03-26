@@ -920,7 +920,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 양식등록 ActiveX 다운로드 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/progressAdmin.do")
+	@RequestMapping(value = "/admin/ezApprovalG/progressAdmin.do", method = RequestMethod.GET)
 	public String progressAdmin(Model model) {
 		logger.debug("progressAdmin started.");
 
@@ -1221,7 +1221,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재관리 문서함관리 특수문서함 호출
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/manageSpecialCont.do")
+	@RequestMapping(value = "/admin/ezApprovalG/manageSpecialCont.do", method = RequestMethod.GET)
 	public String manageSpecialCont(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("manageSpecialCont started");
 		
@@ -1244,7 +1244,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재관리 문서함관리 특수문서함 목록 호출
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/specialContListInfo.do")
+	@RequestMapping(value = "/admin/ezApprovalG/specialContListInfo.do", method = RequestMethod.POST)
 	public String specialContListInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("specialContListInfo started.");
 		
@@ -1265,7 +1265,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재관리 문서함관리 특수문서함 추가,수정화면 호출
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/manageSpecialContInfo.do")
+	@RequestMapping(value = "/admin/ezApprovalG/manageSpecialContInfo.do", method = RequestMethod.GET)
 	public String manageSpecialContInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("manageSpecialContInfo started.");
 		
@@ -1297,7 +1297,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재관리 문서함관리 특수문서함 추가/수정 실행함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/specialContAdd.do")
+	@RequestMapping(value = "/admin/ezApprovalG/specialContAdd.do", method = RequestMethod.POST)
 	public String specialContAdd(@CookieValue("loginCookie") String loginCookie, ApprGContInfoVO apprGContInfoVO, Model model) throws Exception {
 		logger.debug("specialContAdd started.");
 		
@@ -1315,7 +1315,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재관리 문서함관리 특수문서함 삭제 실행함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/specialContDelete.do")
+	@RequestMapping(value = "/admin/ezApprovalG/specialContDelete.do", method = RequestMethod.POST)
 	public String specialContDelete(@CookieValue("loginCookie") String loginCookie, ApprGContInfoVO vo, Model model) throws Exception {
 		logger.debug("specialContDelete started");
 		
@@ -1333,7 +1333,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재관리 문서함관리 특수문서함 순서변경 실행함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/specialContChangeSN.do")
+	@RequestMapping(value = "/admin/ezApprovalG/specialContChangeSN.do", method = RequestMethod.POST)
 	public String specialContChangeSN(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("specialContChangeSN started");
 		
@@ -3204,7 +3204,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재g 관리자 문서이동 문서함 문서 표출
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/getDocList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/getDocList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String getDocList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getDocList started");
@@ -3461,7 +3461,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재g 관리자 문서삭제 메인화면 호출
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/docDelete.do")
+	@RequestMapping(value = "/admin/ezApprovalG/docDelete.do", method = RequestMethod.GET)
 	public String docDelete (@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
 		logger.debug("docDelete started");
 		
@@ -3499,7 +3499,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재g 관리자 문서삭제 삭제 로직
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/delDocList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/delDocList.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String delDocList(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception {
 		logger.debug("delDocList started");
