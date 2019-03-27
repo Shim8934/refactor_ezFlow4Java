@@ -774,7 +774,7 @@
             	document.getElementById("hidStartDate").value = L_StartDate + " " + L_StartTime ; 
             	document.getElementById("hidEndDate").value = L_EndDate + " " + L_EndTime ;
             	document.getElementById("hidCreateDate").value = getCurrTime();
-            	document.getElementById("hidContent").innerHTML = message.GetEditorContent();     	       	
+            	document.getElementById("hidContent").textContent = message.GetEditorContent();
 		    	var listtable = document.getElementById("filelist");
 		    	var filelist = GetChildNodes(listtable);		    	
 				

@@ -448,7 +448,7 @@
 		    
 		    //목록 버튼 눌렀을 때, 해당 필터와 페이지로 보여주기 위함.
 		    function paginationProcess(){
-		    	var pollType = ${pollType};
+		    	var pollType = "<c:out value='${pollType}'/>";
 				var gotoList = ${gotoList};
 				if(gotoList === 1){
 					pollType = pollType == 0 ? 1 : pollType;

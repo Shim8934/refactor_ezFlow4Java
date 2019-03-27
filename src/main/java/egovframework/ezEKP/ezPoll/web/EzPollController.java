@@ -570,7 +570,7 @@ public class EzPollController extends EgovFileMngUtil {
 		String numberOfOptions = req.getParameter("numberOfOptions");
 		//String qstTitle = commonUtil.cleanValue(req.getParameter("qst_title"));
 		String qstTitle = req.getParameter("qst_title");
-		String qstContent = req.getParameter("hidContent");
+		String qstContent = commonUtil.stripScriptTags(req.getParameter("hidContent"));
 		String filePath = req.getParameter("hidFilePath");
 		int secretVote = Integer.parseInt(req.getParameter("hidSecreteVote"));
 		String endDate = req.getParameter("hidEndDate");
@@ -868,6 +868,7 @@ public class EzPollController extends EgovFileMngUtil {
 			for(int i = 0; i < listOfPollUserAndAnswer.size(); i++){
 				if (listOfPollUserAndAnswer.get(i).getUserId().equals(user.getId())) {
 					iterator.remove();
+					break;
 				}
 			}
 		}
