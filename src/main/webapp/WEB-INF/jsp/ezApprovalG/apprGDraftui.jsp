@@ -494,8 +494,20 @@
 		        }
 		    }
 		    function btnSendDraft_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					return;
+				} else if (deptCheckFlag == "2") {
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					return;
+				}
+		    	
 		        try {
-		        	
 		        	if (isEditorComplete == true) {
 		        		if (pDraftFlag == "REDRAFT" && checkAprState() && ListType != "21") {
 		        			alert("<spring:message code='ezApprovalG.bhs23'/>");
@@ -981,6 +993,16 @@
 		        }
 		    }
 		    function btnAprDocAttach_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					return;
+				}
+				
 		        var ret = openAaprDocAttachUI();
 		    }
 		    function btnOpinion_onclick() {
@@ -1267,6 +1289,16 @@
 		    }
 		    var inssepattach_cross_dialogArguments = new Array();
 		    function btnAddSepAttach_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					return;
+				}
+				
 		        if (cabinetID.trim() == "") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t48'/>";
 		            OpenAlertUI(pAlertContent);
@@ -1373,6 +1405,16 @@
 		
 		    var ezapprovalinfo_dialogArguments = new Array();
 		    function btnApprovalInfo(pGubun) {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					return;
+				}
+				
 		    	if (pDraftFlag == "REDRAFT" && checkAprState() && ListType != "21") {
 		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
 	    			window.returnValue = "CLOSE";
@@ -1722,6 +1764,24 @@
 		    	
 		    	return result == "FALSE" ? true : false;
 		    }
+	        
+	    	function checkDeptAndCabinetId() {
+	    		var result;
+            	$.ajax({
+            		type : "POST",
+            		dataType : "text",
+            		async : false,
+            		url : "/ezApprovalG/checkDeptAndCabinetId.do",
+            		data : {
+            				orgDeptId : arr_userinfo[4],
+            				orgCabinetId : cabinetID
+            				},
+            		success : function(text){
+            			result = text;
+            		}
+            	});
+            	return result;
+	    	}
 		</script>
 	</head>
 	<body class="popup" onbeforeunload="return window_onbeforeunload()" style="height:100%;">
