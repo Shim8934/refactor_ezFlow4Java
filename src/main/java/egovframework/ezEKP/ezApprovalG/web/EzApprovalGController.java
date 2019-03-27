@@ -4976,7 +4976,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	//잘못만들었지만 쓰일수도있어서 냅둠
+	//mht 문서유통 중계문서 수신에 쓰임
 	@RequestMapping(value = "/ezApprovalG/recevG.do")
 	public String recevG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("recevG started.");
@@ -9001,13 +9001,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String orgDeptId = request.getParameter("orgDeptId");
 		String orgCabinetId = request.getParameter("orgCabinetId");
 		String userRealDeptId = ezOrganService.getUserOrgDeptId(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		
 		List<OrganUserVO> list = ezOrganAdminService.getUserAddJobList(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
 		
 		// 1 : 정상 , 2 : 기록물철 변경, 3 : 겸직변경 필요, 4 : 부서변경 or 겸직삭제
 		//기안창의 부서와 현재 유저의 부서정보 비교
 		if (userInfo.getDeptID().equals(orgDeptId)) {
-			if (!orgCabinetId.equals("")) {
+			if (!orgCabinetId.equals("") && approvalFlag.equals("G")) {
 				String cabinetDept = ezApprovalGService.getDeptIdOfCabinet(orgCabinetId, userInfo.getTenantId(), userInfo.getCompanyID()).trim();
 				System.out.println("cabinetDept : " + cabinetDept);
 				System.out.println("orgDeptId : " + orgDeptId);
