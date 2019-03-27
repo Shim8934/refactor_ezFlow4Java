@@ -644,14 +644,9 @@
                     j++;
                 }  
                 
-<<<<<<< HEAD
-                /* if (SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length == 0) {
-                	var str = "<spring:message code = 'ezCommunity.t926' />";
-=======
                 /* 
                 if (SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length == 0) {
                 	var str = "<spring:message code = 'main.t00026' />";
->>>>>>> personalizedPortal
                 	document.getElementById("mycommunity").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='height:430px;text-align:center;'><img style='margin-top:160px' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>" + str + "</div></div>";
                 } */
                 //document.getElementById("tblPageRayer").style.display = "none";
