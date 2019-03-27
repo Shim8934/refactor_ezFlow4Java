@@ -3071,7 +3071,7 @@ h2, #menu span {font-size: 12px;}
 .popup-body {padding: 15px;}
 .popup-wrapdiv {max-height: 156px; overflow-y: auto; overflow-x: hidden;}
 .logicMapWrap {height: 565px; padding: 5px; overflow: auto;}
-.logicTree {height: 100%; width: 100%;}
+.logicTree {height: 100% !important; width: 100%;}
 .searchPanel, .userPanel, .logicPanel, .respondentPanel, .textPanel {z-index: 2000; position: fixed; border:1px solid #666; background-color: #fff;; border-radius: 5px; height: auto;}
 .searchPanel, .userPanel {width: 464px;}
 .searchPanel h1 {margin-top: 0px !important;}
