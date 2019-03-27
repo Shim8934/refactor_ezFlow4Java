@@ -587,4 +587,71 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 		return returnData;
 	}
 	
+	@Override
+	public String getCopyrightText(int tenantId) throws Exception {
+		logger.debug("getCopyrightText started. tenantId=" + tenantId);
+
+		String inputParams = "tenantId=" + tenantId;
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getCopyright";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		String copyrightText = null;
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONObject result = (JSONObject)responseObj.get("result");
+					
+					if (result != null) {
+						copyrightText = (String)result.get("copyrightText");
+					}
+				}
+			}
+		}
+		
+		logger.debug("getCopyrightText ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		return copyrightText;
+	}
+	
+	@Override
+	public int saveMailCopyright(String copyrightText, String useCopyright, int tenantId) throws Exception {
+		logger.debug("saveMailCopyright started. useCopyright=" + useCopyright + ",tenantId=" + tenantId);
+
+		String inputParams = "tenantId=" + tenantId + "&copyrightText=" + URLEncoder.encode(copyrightText, "UTF-8") 
+				+ "&useCopyright=" + useCopyright;
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/updateCopyright";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+		
+		String resultCode = "Error";
+		int reasonCode = -100; 
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+			}
+		}
+		
+		logger.debug("saveMailCopyright ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		return reasonCode;		
+	}
 }

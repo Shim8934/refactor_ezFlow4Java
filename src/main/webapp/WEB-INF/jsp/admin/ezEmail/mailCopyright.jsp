@@ -90,8 +90,8 @@
 				url : "/admin/ezEmail/mailCopyrightData.do",
 				dataType : "json",
 				success : function(data) {
-					var copyrightText = data[0].copyrightText;
-					var useCopyright = data[0].useCopyright;
+					var copyrightText = data.copyrightText;
+					var useCopyright = data.useCopyright;
 					
 					$("#copyrightTextArea").val(copyrightText);
 					
@@ -110,20 +110,24 @@
 		// 저장 
 		function saveBtn() {
 			var copyrightText = $("#copyrightTextArea").val();
-			var useCopyright = $("input[name=copyrightRadio]:checked").val()
+			var useCopyright = $("input[name=copyrightRadio]:checked").val();
 			
 			$.ajax({
-				type:"post",
-				url:"/admin/ezEmail/mailCopyrightSave.do",
-				data:{
+				type : "post",
+				url :" /admin/ezEmail/mailCopyrightSave.do",
+				data : {
 					"copyrightText" : copyrightText, 
 					"useCopyright" : useCopyright
 				},
-				success:function() {
-					alert("<spring:message code='main.sp10' />");
-					getData();
+				success : function(data) {
+					if (data === "OK") {
+						alert("<spring:message code='main.sp10' />");
+						getData();
+					} else {
+						alert("error");
+					}
 				},
-				error:function() {
+				error : function() {
 					alert("error");
 				}
 			});

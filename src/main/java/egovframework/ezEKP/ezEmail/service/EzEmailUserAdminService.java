@@ -138,5 +138,9 @@ public interface EzEmailUserAdminService {
 	public int updateGroupMove(String oldGroupEmailAddress, String newGroupEmailAddress, String targetEmail) throws Exception;
 	
 	public List<String> getUserDistributionList (String userEmailAddress) throws Exception;
+	
+	public int saveMailCopyright(String copyrightText, String useCopyright, int tenantId) throws Exception;
+	
+	public String getCopyrightText(int tenantId) throws Exception;
 
 }
