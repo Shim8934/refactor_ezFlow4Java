@@ -38,8 +38,8 @@
 		var filelist = [];
 		var strSuccess  = "<spring:message code='ezWebFolder.t27' />";
 		var pEnd =10;
-		var folderId = "${folderId}";
-		var folderType = "${folderType}";
+		var folderId = "<c:out value='${folderId}'/>";
+		var folderType = "<c:out value='${folderType}'/>";
 		var resultErr1 = "<spring:message code='ezWebFolder.t306'/>";
 		var resultErr2 = "<spring:message code='ezWebFolder.t305'/>";
 		var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
