@@ -289,7 +289,7 @@
             <isNotEmpty property="v_SEARCHTITLE">
             <![CDATA[
             and 
-            	title like '%'||(REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')||'%'
+            	title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
             ]]>
             </isNotEmpty> 
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ LIKE '%'||#v_PKEYWORD#||'%' </isNotEmpty>            		
@@ -382,7 +382,7 @@
             <isNotEmpty property="v_SEARCHTITLE">
             <![CDATA[
             and 
-            	title like concat('%',concat(REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_'),'%')
+            	title like '%'|| (REPLACE(REPLACE(#v_SEARCHTITLE#,'%','\%'),'_','\_')) ||'%'
             ]]>
             </isNotEmpty>
             <isNotEmpty prepend="AND" property="v_PKEYWORD"> $v_PFILTER$ LIKE '%'||#v_PKEYWORD#||'%' </isNotEmpty>            		
