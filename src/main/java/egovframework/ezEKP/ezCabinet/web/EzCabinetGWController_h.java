@@ -133,7 +133,7 @@ public class EzCabinetGWController_h {
 				case "displayname": sqlQuery = "display_name"   ; break;
 				case "description": sqlQuery = "department_name"; break;
 				case "cn"         : sqlQuery = "cn"             ; break;
-				default: sqlQuery = searchOpt;
+				default: sqlQuery = "display_name";
 			}
 			
 			List<SimpleUserVO> list = cabinetService_h.getShareUserList(cabinetId, userId, sqlQuery, searchValue, primary, userInfo.getTenantId());
@@ -276,7 +276,7 @@ public class EzCabinetGWController_h {
 			switch(srchOption) {
 				case "displayname": sqlQuery = primary.equals("1") ? srchOption : "displayname2" ; break;
 				case "description": sqlQuery = primary.equals("1") ? srchOption : "description2" ; break;
-				default: sqlQuery = srchOption;
+				default: sqlQuery = "displayname";
 			}
 			
 			int startPoint                 = (currentPage - 1) * 50;

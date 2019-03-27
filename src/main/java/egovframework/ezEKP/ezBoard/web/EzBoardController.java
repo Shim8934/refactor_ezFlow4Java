@@ -3448,6 +3448,11 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String pReservedItem = request.getParameter("pReservedItem");
+		//2018.08.08 캐비넷 추가
+		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
+		if (use_cabinet.equals("YES")) {
+			use_cabinet = cabinetAdminService.checkModuleActive("board", userInfo);
+		}
 		
 		location = request.getParameter("location");
 		
@@ -3575,6 +3580,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("guBun", guBun);
 		model.addAttribute("publicModulus", publicModulus);
 		model.addAttribute("publicExponent", publicExponent);
+		model.addAttribute("useCabinet", use_cabinet);
 
 		logger.debug("getBoardItemView ended");
         return "ezBoard/boardItemView";
