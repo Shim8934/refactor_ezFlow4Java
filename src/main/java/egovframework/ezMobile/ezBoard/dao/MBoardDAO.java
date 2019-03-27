@@ -89,7 +89,7 @@ public class MBoardDAO extends EgovAbstractDAO {
 	}
 	
 	public String checkIfBoardGroupAdmin(Map<String, Object> map) throws Exception{
-		int ret = (int) select("EzBoardAdminDAO.checkIfBoardGroupAdmin", map);
+		int ret = (int) select("MBoardDAO.checkIfBoardGroupAdmin", map);
 		
 		if (ret > 0 ) {
 			return "OK";

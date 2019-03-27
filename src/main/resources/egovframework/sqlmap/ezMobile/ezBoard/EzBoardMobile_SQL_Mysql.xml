@@ -1194,8 +1194,7 @@
               AND 
                   ( AccessID = #userID#
                       OR AccessID = #deptID#
-                      OR AccessID = #companyID# 
-                      OR AccessID = 'everyone' )
+                      OR AccessID = #companyID# )
                AND 
                   BoardID = IFNULL(( SELECT 
 	                                      BoardGroupID 
