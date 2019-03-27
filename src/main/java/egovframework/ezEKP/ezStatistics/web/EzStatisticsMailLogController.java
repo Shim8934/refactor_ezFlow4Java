@@ -210,6 +210,17 @@ public class EzStatisticsMailLogController {
 		String startDate = request.getParameter("searchStartTime");
 		String endDate = request.getParameter("searchEndTime");
 		String companyId = request.getParameter("companyId");
+		String orgSearchValue = searchValue;
+		
+		if (searchField != null && (searchField.equals("recipientEmail") || searchField.equals("senderEmail"))) {
+			String realEmailAddress = ezEmailUtil.getRealEmailAddress(searchValue);
+			
+			logger.debug("realEmailAddress=" + realEmailAddress);
+			
+			if (realEmailAddress != null && !realEmailAddress.isEmpty()) {
+				searchValue = realEmailAddress;
+			}
+		}
 		
 		if (!searchStartTime.isEmpty()) {
 			searchStartTime = searchStartTime.replaceAll("[^0-9]", "");
@@ -299,7 +310,7 @@ public class EzStatisticsMailLogController {
 		model.addAttribute("totalPage", totalPage);
 		model.addAttribute("currentPage", currentPage);
 		model.addAttribute("searchField", searchField);
-		model.addAttribute("searchValue", searchValue);
+		model.addAttribute("searchValue", orgSearchValue);
 		model.addAttribute("isPrimaryLang", isPrimaryLang);
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);

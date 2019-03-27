@@ -28231,4 +28231,22 @@
 		AND   tenant_id = #v_TENANTID#
         AND   companyid = #companyID#
     </select>
+     <select id="EzApprovalG.getDeptIdOfCabinet" parameterClass="Map" resultClass="String">
+		SELECT
+		    ownerdeptid
+		FROM
+		    tbl_cabinetclass
+		WHERE
+		    cabinetclassno = (
+		        SELECT
+		            cabinetclassno
+		        FROM
+		            tbl_cabinet
+		        WHERE
+           			cabinetid = #cabinetId#
+					AND   tenant_id = #tenantId#
+			        AND   companyid = #companyID#
+		    )
+
+    </select>
 </sqlMap>
