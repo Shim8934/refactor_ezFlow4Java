@@ -693,8 +693,10 @@
 		</isEqual>
 		<isEqual property="type" compareValue="ING">
 			<![CDATA[
+			SELECT COUNT(*)
+			FROM (
 				SELECT 
-					COUNT(DISTINCT DOCID)
+					DISTINCT DOCID, APRTYPE
 				FROM 
 					VAPRWILLDOCLIST 
 	   			WHERE
@@ -741,6 +743,7 @@
 					OR 
 				WRITERNAME LIKE CONCAT(CONCAT('%', #searchText#), '%'))
 			</isNotEmpty>
+			)
 		</isEqual>
 		<isEqual property="type" compareValue="END">
 			SELECT
@@ -1000,8 +1003,11 @@
 		   				APRTYPE <> '015'
 		   			AND 
 			         	DocState <> '017') aprDraftCount,
-				(SELECT 
-						COUNT(DISTINCT DOCID)
+			(
+				SELECT COUNT(*)
+				FROM (
+				SELECT 
+						DISTINCT DOCID, APRTYPE
 					FROM 
 						VAPRWILLDOCLIST 
 		   			WHERE
@@ -1019,9 +1025,13 @@
 						AND	    
 							AprState != '001'
 				    </isEqual>
-		   				) aprIngCount,
-			(SELECT
-				COUNT(DISTINCT A.DOCID)
+		    	)
+			) aprIngCount,
+			(
+			SELECT COUNT(*)
+			FROM (
+			SELECT
+				DISTINCT A.DOCID, B.APRTYPE
 			FROM
 				TBL_ENDAPRDOCINFO A
 			LEFT OUTER JOIN
@@ -1083,7 +1093,9 @@
 					E.CODE1 ='SA02'
 				AND  
 					F.CODE1 ='A04'
-		   	</isEqual>) aprEndCount
+		   	</isEqual>
+		   	)
+		   	) aprEndCount
 		   	<isEqual property="useShareApproval" compareValue="YES">
 			   	<![CDATA[
 				   	,(	SELECT 
