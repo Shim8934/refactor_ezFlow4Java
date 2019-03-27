@@ -2099,6 +2099,19 @@ function SaveDraftDocInfo_susin() {
 
 var inssepattach_cross_dialogArguments = new Array();
 function btnAddSepAttach_onclick() {
+	var deptCheckFlag = checkDeptAndCabinetId();
+	
+	if (deptCheckFlag == "3") {
+		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		return;
+	} else if (deptCheckFlag == "4") {
+		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		return;
+	} else if (deptCheckFlag == "2") {
+		alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+		return;
+	}
+	
     if (cabinetID == "") {
         var pAlertContent = strLang731;
         OpenAlertUI(pAlertContent);
