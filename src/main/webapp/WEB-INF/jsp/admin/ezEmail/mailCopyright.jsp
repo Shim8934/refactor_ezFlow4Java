@@ -42,11 +42,11 @@
 			<span class="txt">▒ <spring:message code='ezEmail.ksa06'/></span><br><br>
 			<table class="content" style="width:100%;">
 				<tr>
-					<th rowspan="2" style="width: 60px;"><spring:message code='ezSystem.jje4'/></th>
+					<th rowspan="2" style="width: 60px;"><spring:message code='ezOrgan.kyj01'/></th>
 					<td>&nbsp;
 						<label id="radioFalse">
 							<input name="copyrightRadio" type="radio" id="copyRadio0" value="NO">
-							<span style="vertical-align:middle;">&nbsp;<spring:message code='ezEmail.t99000009'/></span>
+							<span style="vertical-align:middle;">&nbsp;<spring:message code='ezOrgan.kyj02'/></span>
 						</label>
 					</td>
 			    </tr>
@@ -54,14 +54,14 @@
 					<td>&nbsp;
 						<label id="radioTrue">
 							<input name="copyrightRadio" type="radio" id="copyRadio1"  value="YES">
-							<span style="vertical-align:middle;">&nbsp;<spring:message code='ezBoard.t162'/></span>
+							<span style="vertical-align:middle;">&nbsp;<spring:message code='ezOrgan.t161'/></span>
 						</label>
 					</td>
 				</tr>
 			</table>
 			
 			<div>
-				<textarea id="copyrightTextArea" placeholder = "<spring:message code='ezEmail.letter15' />"></textarea>
+				<textarea id="copyrightTextArea" maxlength="1000" placeholder="<spring:message code='ezEmail.letter15' />(<spring:message code='ezEmail.ksu09' />)"></textarea>
 			</div>
 			
 			<!-- 수취인안내설정 예시 -->
