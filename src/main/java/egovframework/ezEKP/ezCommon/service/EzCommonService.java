@@ -165,5 +165,6 @@ public interface EzCommonService {
 
 	public int checkDeptId(String userID, String deptID, String tenantId);
 
+	public void createRsFavoriteTable();
 }
 

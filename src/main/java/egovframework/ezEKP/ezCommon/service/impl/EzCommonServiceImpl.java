@@ -1690,4 +1690,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		logger.debug("checkDeptId ended");
 		return result;
 	}
+
+	@Override
+	public void createRsFavoriteTable() {
+		ezCommonDAO.createRsFavoriteTable();
+	}
 }

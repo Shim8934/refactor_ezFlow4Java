@@ -164,11 +164,11 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	    	ezCommonService.createJmochaMailCopyright();
 	    	ezCommonService.createJamesMailDeletedId();
 	    	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
+    		ezCommonService.createRsFavoriteTable(); // 2019-03-28 이석화 - 모바일 오라클 자원관리 즐겨찾기 테이블 생성
 	    	ezCommonService.addQuickLinkLinkOrder();
 	    	ezCommonService.addComCloseCompanyId();
 	    	ezCommonService.addWebfolderTotalLimit();
 	    	ezCommonService.addMemoExtensionColumns(); // 2019-05-14 이석화 - 큰 메모 기능 추가로 컬럼 추가
-			ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
 	    	ezCommonService.addMsgInMailSearch(); 
 			ezCommonService.addFormVersion();
 	    	ezCommonService.addAddJobMasterProxy();
