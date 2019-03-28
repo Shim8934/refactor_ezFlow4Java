@@ -277,7 +277,7 @@ function GetDocSearch() {
     createNodeAndInsertText(xmlpara, objNode, "PageNum", curpage);
     createNodeAndInsertText(xmlpara, objNode, "PageSize", PageSize);
     createNodeAndInsertText(xmlpara, objNode, "DocState", "");
-    createNodeAndInsertText(xmlpara, objNode, "searchStatus", "ALL");
+    createNodeAndInsertText(xmlpara, objNode, "searchStatus", "DOCATT");
     createNodeAndInsertText(xmlpara, objNode, "orderCell", OrderCell);
     createNodeAndInsertText(xmlpara, objNode, "orderOption", OrderOption);
     createNodeAndInsertText(xmlpara, objNode, "pSubQuery", "");
