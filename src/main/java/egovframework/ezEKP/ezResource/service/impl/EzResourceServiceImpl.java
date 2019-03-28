@@ -1919,18 +1919,18 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         String strStyle = "font-weight:normal;height:10px;";
         
         returnXML += "<NODE>";
-        returnXML += makeXMLElement(strValue, "VALUE", true);
+        returnXML += makeXMLElement(strValue, "VALUE", false);
         returnXML += makeXMLElement(strStyle, "STYLE", false);
         returnXML += makeXMLElement(strData1, "DATA1", false);
-        returnXML += makeXMLElement(strData2, "DATA2", true);
+        returnXML += makeXMLElement(strData2, "DATA2", false);
         returnXML += makeXMLElement(strData3, "DATA3", false);
         returnXML += makeXMLElement(strData4, "DATA4", false);
         returnXML += makeXMLElement(strData5, "DATA5", false);
         returnXML += makeXMLElement(strData6, "DATA6", false);
         returnXML += makeXMLElement(strData7, "DATA7", false);
-        returnXML += makeXMLElement(strData8, "DATA8", true);
+        returnXML += makeXMLElement(strData8, "DATA8", false);
         returnXML += makeXMLElement(strData9, "DATA9", true);
-        returnXML += makeXMLElement(strData10, "DATA10", true);
+        returnXML += makeXMLElement(strData10, "DATA10", false);
         returnXML += makeXMLElement(strData11, "DATA11", false);
         returnXML += makeXMLElement(strData12, "DATA12", false);
         returnXML += makeXMLElement(strData13, "DATA13", false);
