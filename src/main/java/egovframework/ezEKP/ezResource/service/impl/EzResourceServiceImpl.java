@@ -1929,7 +1929,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         returnXML += makeXMLElement(strData6, "DATA6", false);
         returnXML += makeXMLElement(strData7, "DATA7", false);
         returnXML += makeXMLElement(strData8, "DATA8", false);
-        returnXML += makeXMLElement(strData9, "DATA9", false);
+        returnXML += makeXMLElement(strData9, "DATA9", true);
         returnXML += makeXMLElement(strData10, "DATA10", false);
         returnXML += makeXMLElement(strData11, "DATA11", false);
         returnXML += makeXMLElement(strData12, "DATA12", false);
