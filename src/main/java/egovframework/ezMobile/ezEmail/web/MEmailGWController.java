@@ -3025,7 +3025,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			} else {
 				f.open(Folder.READ_WRITE);
 				
-				LOGGER.error("folderId = " + folderId + ", uid = " + uid);
+				LOGGER.debug("folderId = " + folderId + ", uid = " + uid);
 				
 				Message message = null;
 				
