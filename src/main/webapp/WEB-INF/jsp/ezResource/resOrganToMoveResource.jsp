@@ -207,6 +207,9 @@
 				TreeView.putchildxml(nodeIdx,  xmlRtn);
 			}
 		</script>
+		<style type="text/css">
+			.node_normal, .node_selected {line-height:34px;}
+		</style>
 	</head>
 	<body class="popup">
 		<h1><spring:message code="ezResource.t119" /></h1>

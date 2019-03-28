@@ -1373,6 +1373,38 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
     	insert("EzOrganAdminDAO.insertCompanyInfo_I22", map);
     }
     
+    public void insertCompanyInfo_I23(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I23", map);
+    }
+    
+    public void insertCompanyInfo_I24(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I24", map);
+    }
+    
+    public void insertCompanyInfo_I25(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I25", map);
+    }
+    
+    public void insertCompanyInfo_I26(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I26", map);
+    }
+    
+    public void insertCompanyInfo_I27(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I27", map);
+    }
+    
+    public void insertCompanyInfo_I28(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I28", map);
+    }
+    
+    public void insertCompanyInfo_I29(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I29", map);
+    }
+    
+    public void insertCompanyInfo_I30(Map<String, Object> map) throws Exception {
+    	insert("EzOrganAdminDAO.insertCompanyInfo_I30", map);
+    }
+    
     public void insertCompanyInfo_IKMS(Map<String, Object> map) throws Exception {
     	insert("EzOrganAdminDAO.insertCompanyInfo_IKMS", map);
     }
@@ -2150,7 +2182,19 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public int getTitleCnt(Map<String, Object> map) throws Exception {
 		return (int) select("EzOrganAdminDAO.selectTitleCnt", map);
 	}
+
+	public int getAddJobCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzOrganAdminDAO.getAddJobCount", map);
+	}
 	
+	public void setAddJobCount(Map<String, Object> map) throws Exception{
+		update("EzOrganAdminDAO.getAddJobCount", map);
+	}
+
+	public String getCompanyName(Map<String, Object> map) throws Exception {
+		return (String) select ("EzOrganAdminDAO.getCompanyName", map);
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<OrganUserVO> getDeptAddJobUserList(Map<String, Object> map) throws Exception {
 		return (List<OrganUserVO>) list("EzOrganAdminDAO.getDeptAddJobUserList", map);

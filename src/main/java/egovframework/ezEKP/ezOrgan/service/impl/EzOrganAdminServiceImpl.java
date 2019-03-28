@@ -94,7 +94,7 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 	
 	@Override
-	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID) throws Exception {
+	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID, int totalCount, int pageSize, int startRow, int endRow) throws Exception {
 	    logger.debug("getAddJobList started");
 	    logger.debug("companyID=" + companyID + ",strLang=" + strLang + ",tenantID=" + tenantID);
 	    
@@ -103,6 +103,12 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		map.put("v_TENANT_ID", tenantID);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_LANGDATA", strLang);
+		map.put("v_TOTALCOUNT", totalCount);
+		map.put("v_PAGESIZE", pageSize);
+		map.put("v_STARTROW", startRow);
+		map.put("v_ENDROW", endRow);
+		map.put("v_STARTNUM", startRow - 1);
+        map.put("v_COUNT", endRow - startRow + 1);
 		
 		List<OrganUserVO> addJobList = ezOrganAdminDao.getAddJobList(map);
 		
@@ -732,6 +738,17 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				
 				//회사 생성시 서브 메뉴 아이템 insert
 				ezOrganAdminDao.insertCompanyInfo_I22(map1);
+				
+				//회사 생성시 포탈 개인화 기본값 설정 insert
+				ezOrganAdminDao.insertCompanyInfo_I23(map1);
+				ezOrganAdminDao.insertCompanyInfo_I24(map1);
+				ezOrganAdminDao.insertCompanyInfo_I25(map1);
+				ezOrganAdminDao.insertCompanyInfo_I26(map1);
+				ezOrganAdminDao.insertCompanyInfo_I27(map1);
+				ezOrganAdminDao.insertCompanyInfo_I28(map1);
+				ezOrganAdminDao.insertCompanyInfo_I29(map1);
+				ezOrganAdminDao.insertCompanyInfo_I30(map1);
+				
             // 로컬 등록이 실패하면 JMocha User Repository에 등록한 것을 삭제한다.
             } catch (Exception e) {
                 e.printStackTrace();
@@ -1407,10 +1424,10 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		logger.debug("setTitle ended. result = " + rtnVal);
 		return rtnVal;
 	}
-
+	
 	@Override
 	public String getTitleList(String type, String companyID, int tenantID) throws Exception {
-		logger.debug("getTitleList started.");
+		logger.debug("getTitlePageList started.");
 
 		StringBuffer rtnVal = new StringBuffer();
 		
@@ -1421,9 +1438,13 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 		
 		List<OrganJobVO> jobList = ezOrganAdminDao.getTitleList(map);
 		
+		int totalCnt = ezOrganAdminDao.getTitleListCnt(map);
+		
+		rtnVal.append("<LISTVIEWDATA>");
+		rtnVal.append("<TOTALCOUNT>" + totalCnt + "</TOTALCOUNT>");
+		rtnVal.append("<ROWS>");
+		
 		if (jobList != null && jobList.size() > 0) {
-			rtnVal.append("<LISTVIEWDATA><ROWS>");
-			
 			for (int i = 0; i < jobList.size(); i++) {
 				rtnVal.append("<ROW>");
 				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName() + "]]></VALUE>");
@@ -1432,21 +1453,19 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				rtnVal.append("<DATA3>" + jobList.get(i).getSort()  + "</DATA3>");
 				rtnVal.append("<DATA4><![CDATA[" + jobList.get(i).getCompanyID() + "]]></DATA4></CELL>");
 				rtnVal.append("<CELL><VALUE><![CDATA[" + jobList.get(i).getDisplayName2() + "]]></VALUE></CELL>");
-				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getUseFlag() + "</VALUE></CELL>");
 				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getSort() + "</VALUE></CELL>");
+				rtnVal.append("<CELL><VALUE>" + jobList.get(i).getUseFlag() + "</VALUE></CELL>");
 				rtnVal.append("</ROW>");
 			}
-			
-			rtnVal.append("</ROWS></LISTVIEWDATA>");
-		} else {
-			rtnVal.append("<LISTVIEWDATA><ROWS></ROWS></LISTVIEWDATA>");
 		}
 		
-		logger.debug("getTitleList ended.");
+		rtnVal.append("</ROWS></LISTVIEWDATA>");
+		
+		logger.debug("getTitlePageList ended.");
 		
 		return rtnVal.toString();
 	}
-
+	
 	@Override
 	public String getTitleInfo(String type, String jobID, String companyID, int tenantID) throws Exception {
 		logger.debug("getTitleInfo started.");
@@ -1509,19 +1528,23 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
-	public String deleteTitle(String type, String jobID, String companyID, int tenantID) throws Exception {
+	public String deleteTitle(String type, String jobIDList, String companyID, int tenantID) throws Exception {
 		logger.debug("deleteTitle started.");
 		
 		String rtnVal = "";
-
-		Map<String, Object> map = new HashMap<String, Object>();
-		map.put("v_TYPE", type);
-		map.put("v_JOBID", jobID);
-		map.put("v_COMPANYID", companyID);
-		map.put("v_TENANTID", tenantID);
 		
 		try {
-			ezOrganAdminDao.deleteTitle(map);
+			for (String jobID : jobIDList.split(";")) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("v_TYPE", type);
+				map.put("v_JOBID", jobID);
+				map.put("v_COMPANYID", companyID);
+				map.put("v_TENANTID", tenantID);
+				
+				ezOrganAdminDao.deleteTitle(map);
+			}
+			
 			rtnVal = "TRUE";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -1586,7 +1609,6 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 				rtnVal.append("<CELL><VALUE><![CDATA["+ userList.get(i).getTelephoneNumber() +"]]></VALUE></CELL>");
 				rtnVal.append("</ROW>");
 			}
-			
 			rtnVal.append("</ROWS></LISTVIEWDATA>");
 		} else {
 			rtnVal.append("<LISTVIEWDATA><TOTALCOUNT>0</TOTALCOUNT><ROWS></ROWS></LISTVIEWDATA>");
@@ -1680,8 +1702,57 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 	}
 
 	@Override
+	public void updateDBData_user_new(List<OrganUserVO> vo) throws Exception {
+	
+		logger.debug("updateDBData_user_new started");
+		for(OrganUserVO userVO : vo) {
+			if (userVO.getDisplayName2() == null || userVO.getDisplayName2().equals("")) {
+				userVO.setDisplayName2(userVO.getDisplayName());
+			}
+
+			if (userVO.getTitle2() == null || userVO.getTitle2().equals("")) {
+				userVO.setTitle2(userVO.getTitle());
+			}
+
+			if (userVO.getExtensionAttribute102() == null || userVO.getExtensionAttribute102().equals("")) {
+				userVO.setExtensionAttribute102(userVO.getExtensionAttribute10());
+			}
+			ezOrganAdminDao.updateDBData_user(userVO);
+		}
+		logger.debug("updateDBData_user_new ended");
+	}
+
+	@Override
+	public int getAddJobCount(String companyID, int tenantId, String strLang) throws Exception {
+		logger.debug("getAddJobCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_COMPANYID", companyID);
+		map.put("v_TENANT_ID", tenantId);
+		map.put("strLang", strLang);
+
+		logger.debug("getAddJobCount ended");
+		return ezOrganAdminDao.getAddJobCount(map);
+	}
+
 	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception {
 		return ezOrganAdminDao.getAllUserCnList(tenantID);
+	}
+
+	@Override
+	public String getCompanyName(String displayName, int tenantID) throws Exception {
+		logger.debug("getCompanyName started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_CN", displayName);
+		map.put("v_TENANT_ID", tenantID);
+
+		String companyName = ezOrganAdminDao.getCompanyName(map);
+
+		logger.debug("getCompanyName ended");
+		return companyName;
 	}
 	
 	private void deleteUserAddJob(String deptId, int tenantId) throws Exception {
@@ -1711,5 +1782,4 @@ public class EzOrganAdminServiceImpl implements EzOrganAdminService {
 			}
     	}
     }
-	
 }

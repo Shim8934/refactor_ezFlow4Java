@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 
@@ -40,6 +41,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DeadlockLoserDataAccessException;
 import org.springframework.stereotype.Service;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -940,7 +942,7 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
         } else if (type.equals("COMMUNITYNOTI")) {
         	url = commonUtil.getUploadPath("upload_community.MAINBOARD", tenantID) + commonUtil.separator + request.getParameter("href");
         } else if (type.equals("SCHEDULECONTENT")) {
-        	url = commonUtil.getUploadPath("upload_schedule.ROOT", tenantID) + itemID;        	
+        	url = commonUtil.getUploadPath("upload_schedule.ROOT", tenantID) + itemID;
         } else if (type.equals("TASKCONTENT") || type.equals("TASKCONTENT2")) {
         	url = commonUtil.getUploadPath("upload_task.ROOT", tenantID) + commonUtil.separator + itemID;
         }
@@ -1270,6 +1272,11 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 	
 	@Override
+	public void createReformFlagColumn() throws Exception {
+		ezCommonDAO.createReformFlagColumn();
+	}
+	
+	@Override
 	public String getCompanyConfig(int tenantID, String companyID, String property) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
         map.put("property", property.toUpperCase());
@@ -1342,6 +1349,72 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 		
 		logger.debug("deleteCompanyConfig ended");
 	}
+	
+	@Override
+	public void setMultiLoginUser(int tenantID, String userID, String loginTime) throws Exception {
+		logger.debug("insertMultiLoginUser started");
+		
+		//멀티로그인 시간을 비교해서 이전 이용자가 없다면 인서트
+		//이전 이용자가 있다면 업데이트한다 
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("userID", userID);
+		map.put("loginTime", loginTime);
+		
+		try {
+			ezCommonDAO.deleteMultiLoginUser(map);
+			ezCommonDAO.insertMultiLoginUser(map);
+		} catch (DeadlockLoserDataAccessException e) {
+			//데드락이 발생하면 실패한 작업 다시 실행
+			
+			Thread.sleep(1000);
+			
+			ezCommonDAO.deleteMultiLoginUser(map);
+			ezCommonDAO.insertMultiLoginUser(map);
+		}
+		
+		logger.debug("insertMultiLoginUser ended");
+	}
+	
+	@Override
+	public String selectMultiLoginTime(int tenantID, String userID) throws Exception {
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("userID", userID);
+		
+		return Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
+	}
+	
+	@Override
+	public boolean matchMultiLoginTime(int tenantID, String userID, String loginTime) throws Exception {
+		logger.debug("matchMultiLoginTime started");
+		
+		// 멀티 로그인 시간을 비교해서 새로운 로그인 유저가 없다면 true 새로운 로그인 유저가 있다면 false
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("tenantID", tenantID);
+		map.put("userID", userID);
+		
+		String pre_loginTime = Optional.ofNullable(ezCommonDAO.selectMultiLoginUser(map)).orElse("");
+		
+		logger.debug("matchMultiLoginTime ended");
+		
+		if(loginTime.equals(pre_loginTime)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	@Override
+	public void createTblUserMultiLogin() throws Exception {
+		ezCommonDAO.createTblUserMultiLogin();
+	}
 
 	@Override
 	public void addMailToJMochaDistribution() throws Exception {
@@ -1413,13 +1486,65 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	}
 
 	@Override
+	public void addJmochaMailGenenalPreviewMailImage() throws Exception {
+		ezCommonDAO.addJmochaMailGenenalPreviewMailImage();
+	}
+	
+	@Override
+	public void addPortalThemePortletIsFixed() throws Exception {
+		ezCommonDAO.addPortalThemePortletIsFixed();
+	}
+	
+	@Override
 	public void addUserMasterMailBoxQuota() throws Exception {
 		ezCommonDAO.addUserMasterMailBoxQuota();
+	}
+
+	@Override
+	public void addHolidayFlag() throws Exception {
+		ezCommonDAO.addHolidayFlag();
+	}
+	
+	@Override
+	public void createPortalThemePortlet() throws Exception {
+		ezCommonDAO.createPortalThemePortlet();
+	}
+	
+	@Override
+	public void addHolidayRepeat() throws Exception {
+		ezCommonDAO.addHolidayFlag();
+	}
+	
+	@Override
+	public void insertPortalThemePortletInitdata() throws Exception {
+		ezCommonDAO.insertPortalThemePortletInitdata();
 	}
 	
 	@Override
 	public void addJournalFormDelFlag() throws Exception {
 		ezCommonDAO.addJournalFormDelFlag();
+	}
+
+	@Override
+	public void updateTaskUrl() throws Exception {
+		ezCommonDAO.updateTaskUrl();
+	}
+
+	@Override
+	public void addPortalPortletUserPortletUsed() throws Exception {
+		ezCommonDAO.addPortalPortletUserPortletUsed();
+		
+	}
+
+	@Override
+	public void addPortalPortletUserThemeId() throws Exception {
+		ezCommonDAO.addPortalPortletUserThemeId();
+		
+	}
+
+	@Override
+	public void addTblPortalThemeUserIsDefault() throws Exception {
+		ezCommonDAO.addTblPortalThemeUserIsDefault();
 	}
 	
 	@Override

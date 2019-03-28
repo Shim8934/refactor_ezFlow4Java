@@ -305,6 +305,7 @@
 	                checkValue = obj.value;
 	                LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
 	            }
+	            console.log(LinkTypeURL);
 	        }
 	        
 	        function btn_ok() {

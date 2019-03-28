@@ -303,7 +303,7 @@
 		<table>
 			<tr>
 		    	<td style="vertical-align:top;"><h2><spring:message code = 'ezApprovalG.t232' /></h2>
-		      		<div class="box" style="OVERFLOW:auto;width:250px; HEIGHT:463px" id="TreeView"></div>
+		      		<div class="box" style="overflow-x: hidden; overflow-y: auto; width:250px; HEIGHT:463px" id="TreeView"></div>
 		      	</td>
 		
 		    	<td style="width:25px;text-align:center;">

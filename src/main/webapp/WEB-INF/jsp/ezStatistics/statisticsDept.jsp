@@ -36,7 +36,7 @@
 	                changeYear: true,
 	                autoSize: true,
 	                showOn: "both",
-	                buttonImage: "/images/ImgIcon/calendar-month.gif",
+	                buttonImage: "/images/ImgIcon/calendar-month.png",
 	                buttonImageOnly: true
 	            });
 	            $("#Sdatepicker2").datepicker({
@@ -44,7 +44,7 @@
 	                changeYear: true,
 	                autoSize: true,
 	                showOn: "both",
-	                buttonImage: "/images/ImgIcon/calendar-month.gif",
+	                buttonImage: "/images/ImgIcon/calendar-month.png",
 	                buttonImageOnly: true
 	            });
 	            var NowDate = new Date();
@@ -529,7 +529,7 @@
 	    <table style="width: 1150px;height:630px ;border:1px solid #ddd">
 	      <tr>
 	          <td style="vertical-align: top">
-	              <div style="width: 300px; height: 630px; overflow-x: auto; overflow-y: auto;border-right:1px solid #ddd;" id="TreeView"></div>
+	              <div style="width: 300px; height: 630px; overflow-x: hidden; overflow-y: auto; border-right:1px solid #ddd;" id="TreeView"></div>
 	          </td>
 	          <td style="padding-left:20px;padding-right:20px;width: 100%; text-align: center">
 	              <div id="viewdata">

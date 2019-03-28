@@ -163,6 +163,8 @@
 		                Rtnval[2] = selRow.getAttribute("DATA1");
 		                Rtnval[3] = selRow.childNodes[0].innerText;
 		                
+		                Rtnval["reformflag"] = selRow.getAttribute("reformflag");
+		                
 		                if (ReturnFunction != null) {
 		                    ReturnFunction(Rtnval);
 		                } else {
@@ -258,9 +260,19 @@
 				    				if (type == "2") {
 				                        OpenAlertUI("<spring:message code='ezApprovalG.t804'/>");
 				                        Get_Favoritelist();
+				                        
+				                        //2019.02.28 유은정 : 포탈개인화 즐겨찾기 양식에서 포틀릿 정보 가져오는 매서드 추가
+				                        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
+				        		        	parent.opener.getFavoriteForms();
+				        		        }
 				                    } else {
 				                        OpenAlertUI(strLang1003);
 				                        Get_Favoritelist();
+				                        
+				          		      	//2019.02.28 유은정 : 포탈개인화 즐겨찾기 양식에서 포틀릿 정보 가져오는 매서드 추가
+				                        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
+				        		        	parent.opener.getFavoriteForms();
+				        		        }
 				                    }
 				    			} else {
 				    				OpenAlertUI("<spring:message code='ezApprovalG.t180'/>");
@@ -520,7 +532,7 @@
 	    <table id="formtable" style="margin-top: 5px;width: 697px;display:none">
 	        <tr>
 	            <td rowspan="2" style="vertical-align: top;">
-	                <div id="TreeView" style="height: 384px; width: 280px; overflow-x: auto; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff; padding: 4px,6px,6px,4px"></div>
+	                <div id="TreeView" style="height: 384px; width: 280px; overflow-x: hidden; overflow-y: auto; BORDER: #ddd 1px solid; BACKGROUND-COLOR: #ffffff; padding: 4px,6px,6px,4px"></div>
 	            </td> 
 	            <td style="padding-left: 5px; vertical-align: top;">
 	                <div class="border_gray" style="border-bottom: 0px; width:408px;"> 

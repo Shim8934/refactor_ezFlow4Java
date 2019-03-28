@@ -176,7 +176,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 				rootFolderXML.append("<node imgidx='1'");
 				
 				if (folderUnreadMessageCount > 0) {
-					rootFolderXML.append(" caption='" + displayName + "(" + folderUnreadMessageCount + ")'");
+					rootFolderXML.append(" caption='" + displayName + "'");
+					rootFolderXML.append(" foldercount='" + folderUnreadMessageCount + "'");
 				} else {
 					rootFolderXML.append(" caption='" + displayName + "'");
 				}
@@ -326,6 +327,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		
 		logger.debug("showMailLeft ended.");
 		
+		if(funCode.equals("2")) {
+			return "ezAddress/addressLeft";
+		}
 		return "ezEmail/mailLeft";
 	}
 	
@@ -396,7 +400,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					
 					if (bcount.equals("-1")) {
 						if (fd.getUnreadMessageCount() > 0) {
-							subFolderXML.append(" caption='" + displayName + "(" + fd.getUnreadMessageCount() + ")'");
+							subFolderXML.append(" caption='" + displayName + "'");
+							subFolderXML.append(" foldercount='" + fd.getUnreadMessageCount() + "'");
 						} else {
 							subFolderXML.append(" caption='" + displayName + "'");
 						}
@@ -448,7 +453,8 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 					
 					if (bcount.equals("-1")) {
 						if (fd.getUnreadMessageCount() > 0) {
-							subFolderXML.append(" caption='" + displayName + "(" + fd.getUnreadMessageCount() + ")'");
+							subFolderXML.append(" caption='" + displayName + "'");
+							subFolderXML.append(" foldercount='" + fd.getUnreadMessageCount() + "'");
 						} else {
 							subFolderXML.append(" caption='" + displayName + "'");
 						}

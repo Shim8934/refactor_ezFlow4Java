@@ -284,5 +284,55 @@
 				TABLE_NAME NOT REGEXP #notTableNames#
 		</isNotEmpty>
 	</select>
+	
+	<delete id="EzSystemAdminDAO.deleteWebfolderLog" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_WEBFOLDER_LOG
+            WHERE
+            	TENANT_ID = #v_TENANT_ID#	
+            AND
+            	CREATE_DATE < SUBDATE(DATE(NOW()), #v_KEEP_LOG_PERIOD#)
+		]]>
+	</delete>
 		
+	<insert id="EzSystemAdminDAO.insertMultiLoginType" parameterClass="java.util.Map">
+		INSERT INTO
+			TBL_COMPANY_CONFIG (TENANT_ID, COMPANY_ID, PROPERTY_NAME, PROPERTY_VALUE)
+		VALUES
+			(#tenantID#, #companyID#, 'useMultiLogin', #multiLoginType#)
+	</insert>
+	
+	<update id="EzSystemAdminDAO.updateMultiLoginType" parameterClass="java.util.Map">
+		UPDATE
+			TBL_COMPANY_CONFIG
+		SET
+			PROPERTY_VALUE = #multiLoginType#
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			COMPANY_ID = #companyID#
+		AND
+			PROPERTY_NAME = 'useMultiLogin'
+	</update>
+
+	<update id="EzSystemAdminDAO.updateMenuChange" parameterClass="java.util.Map">
+		UPDATE 
+			TBL_PORTAL_MENU_COMP 
+		SET 
+			MENU_USED = #menuUse#
+		WHERE 
+			COMPANY_ID = #companyID# 
+		AND 
+			TENANT_ID = #tenantID#
+		<isNotEqual property="flagType" compareValue="all" >
+			<isNotEqual property="packageType" compareValue="standard" prepend="and">
+				MENU_ID IN 
+				<iterate property="menuId" open="(" close=")" conjunction=",">
+					#menuId[]#
+				</iterate>
+			</isNotEqual>
+		</isNotEqual>
+	</update>
+	
 </sqlMap>

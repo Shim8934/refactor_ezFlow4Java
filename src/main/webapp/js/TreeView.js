@@ -101,13 +101,14 @@ function TreeNode() {
         //부모노드의 점선 이미지와 동일하게 세팅한다.
         var arrParentDotImg = GetParentDotImg(pParentNode);
         for (var i = 0; i < arrParentDotImg.length - 1; i++) {
-            var imgDot = arrParentDotImg[i].cloneNode(true);
+           /* var imgDot = arrParentDotImg[i].cloneNode(true);
             imgDot.border = "0";
             imgDot.style.width = TreeIconSizes["width"];
             imgDot.style.height = TreeIconSizes["height"];
-            imgDot.className = "DOT";
+            imgDot.className = "DOT";*/
 
-            treeDiv.innerHTML += imgDot.outerHTML;
+            //treeDiv.innerHTML += imgDot.outerHTML;
+        	treeDiv.innerHTML += "<span class='sub_iconLNB tree_blank'></span>";
         }
 
         //부모노드가 마지막 노드인지 확인한다.
@@ -123,13 +124,13 @@ function TreeNode() {
 
         //자신의 노드 레벨에 맞게 점선 삽입		
         for (var i = iParentImgCnt; i < this.NodeLevel; i++) {
-            var imgDot = document.createElement("IMG");
+           /* var imgDot = document.createElement("IMG");
             imgDot.border = "0";
             imgDot.style.width = TreeIconSizes["width"];
             imgDot.style.height = TreeIconSizes["height"];
-            imgDot.className = "DOT";
+            imgDot.className = "DOT";*/
 
-            if (i < this.NodeLevel) {
+            /*if (i < this.NodeLevel) {
                 if (bParentEndNode)
                     imgDot.src = TreeIcons["node_space"];
                 else
@@ -140,18 +141,19 @@ function TreeNode() {
                 imgDot.src = TreeIcons["dot_continue"];
 
             if (i == this.NodeLevel - 1 && pEndNode == true)
-                imgDot.src = TreeIcons["dot_end"];
+                imgDot.src = TreeIcons["dot_end"];*/
 
 
-            treeDiv.innerHTML += imgDot.outerHTML;
+            //treeDiv.innerHTML += imgDot.outerHTML;
+        	treeDiv.innerHTML += "<span class='sub_iconLNB tree_blank'></span>"
         }
 
         //노드 아이콘 생성
         var imgNode = document.createElement("IMG");
-        imgNode.id = "imgNode_" + this.NodeID;
+        /* imgNode.id = "imgNode_" + this.NodeID;
         imgNode.border = "0";
         imgNode.style.width = TreeIconSizes["width"];
-        imgNode.style.height = TreeIconSizes["height"];
+        imgNode.style.height = TreeIconSizes["height"];*/
 
         //자식 노드를 가지고 있는 노드인지 체크
         var strIsLeaf = GetAttribute(treeDiv, "ISLEAF");
@@ -175,22 +177,32 @@ function TreeNode() {
             imgNode.src = pUseAgency ? TreeIcons["node_agency"] : TreeIcons["node_plus"];
             
         */
+        var spanNode = document.createElement("span");
+        spanNode.id = "imgNode_" + this.NodeID;
+        
         if (strIsLeaf == "TRUE")
-            imgNode.src = TreeIcons["node_end"];
+            //imgNode.src = TreeIcons["node_end"];
+        	spanNode.className = "sub_iconLNB tree_blank"; 
         else if (bExpanded)
-        	imgNode.src = TreeIcons["node_minus"];
+        	//imgNode.src = TreeIcons["node_minus"];
+        	spanNode.className = "sub_iconLNB tree_minus"; 
         else
-            imgNode.src = TreeIcons["node_plus"];            
+            //imgNode.src = TreeIcons["node_plus"];
+        	spanNode.className = "sub_iconLNB tree_plus"; 
             
         var strTreeID = this.NodeID.substring(0, this.NodeID.indexOf("_"));
 
         //노드 Request Data 이벤트 Attach
         if (pRequestHandler != "" && strIsLeaf.toUpperCase() == "FALSE") {
-            imgNode.style.cursor = "pointer";
-            imgNode.setAttribute("onClick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + imgNode.id + "\");");
+            //imgNode.style.cursor = "pointer";
+            //imgNode.setAttribute("onClick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + imgNode.id + "\");");
+        	spanNode.setAttribute("onClick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + spanNode.id + "\");");
         }
 
-        treeDiv.innerHTML += imgNode.outerHTML;
+        //treeDiv.innerHTML += imgNode.outerHTML;
+        
+        treeDiv.innerHTML += spanNode.outerHTML;
+        
         //
         //노드 아이콘 생성
         var subImgNode = document.createElement("IMG");
@@ -201,8 +213,9 @@ function TreeNode() {
         subImgNode.src = pUseAgency ? TreeImages["iconcomp"] : TreeImages["base"];
         if (IMAGETYPE == "BOARD")
             subImgNode.src = TreeImages["iconboard"];
-        treeDiv.innerHTML += subImgNode.outerHTML;
-        //
+        
+        //treeDiv.innerHTML += subImgNode.outerHTML;
+        treeDiv.innerHTML += "<span class='sub_iconLNB tree_folder'></span>";
 
         //노드 이름 SPAN 생성
         var spnNode = document.createElement("SPAN");
@@ -211,14 +224,14 @@ function TreeNode() {
 
         spnNode.id = "spn_" + this.NodeID;
         spnNode.name = "spn_" + strTreeID;
-        spnNode.className = TreeClasses["normal"];
+        spnNode.className = "node_normal";
         spnNode.style.display = "inline-block";
-        if(CrossYN()) {
+        /*if(CrossYN()) {
             spnNode.style.paddingTop = "0px";        	
         }
         
-        spnNode.style.paddingLeft = "1px";
-
+        spnNode.style.paddingLeft = "1px";*/
+        
         if (color != "" && color != "TREE" && color != "BOARD")
             spnNode.style.color = color;
             //spnNode.setAttribute("style", "color:" + color);
@@ -244,11 +257,14 @@ function TreeNode() {
 
             if (pRequestHandler == "")
                 pRequestHandler = "null";
-
-            if (pNodeDblClick != "")
-                spnNode.setAttribute("ondblclick", "pNodeDblClick(\"" + this.NodeID + "\", \"" + this.NodeName + "\"); treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + imgNode.id + "\");");
-            else
-                spnNode.setAttribute("ondblclick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + imgNode.id + "\");");
+            
+            if (pNodeDblClick != "") {
+                //spnNode.setAttribute("ondblclick", "pNodeDblClick(\"" + this.NodeID + "\", \"" + this.NodeName + "\"); treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + imgNode.id + "\");");
+                spnNode.setAttribute("ondblclick", "pNodeDblClick(\"" + this.NodeID + "\", \"" + this.NodeName + "\"); treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + spanNode.id + "\");");
+            } else {
+               // spnNode.setAttribute("ondblclick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + imgNode.id + "\");");
+                spnNode.setAttribute("ondblclick", "treeicon_toggle(\"" + this.NodeID + "\", \"" + strTreeID + "\", " + pRequestHandler + ", \"" + spanNode.id + "\");");
+            }
         }
 
         treeDiv.innerHTML += spnNode.outerHTML;
@@ -497,13 +513,23 @@ function TreeView() {
                 }
                 //트리노드 생성
                 var treeNode = organNode.CreateTreeNode(arrNodes[i], bEndNode, pNode, _useAgency, _nodeClick, _nodeDblClick, _requestDataHandler);
-                if (pLevel == 0)
+                if (pLevel == 0) {
                 //Level이 0인 노드(회사)는 트리 DIV에 append
-                    pNode.appendChild(treeNode);
-                else {
+                	var spanNode = document.createElement("Span");
+                	var spanNode2 = document.createElement("Span");
+                	spanNode2.appendChild(treeNode);
+                	spanNode.appendChild(spanNode2);
+                	
+                    pNode.appendChild(spanNode);
+                } else {
                     //Level이 1 이상인 노드는 하위 노드용 DIV에 append
+                	var spanNode = document.createElement("Span");
+                	var spanNode2 = document.createElement("Span");
+                	spanNode2.appendChild(treeNode);
+                	spanNode.appendChild(spanNode2);
+                	
                     var subDiv = pNode.childNodes[pNode.childNodes.length - 1];
-                    subDiv.appendChild(treeNode);
+                    subDiv.appendChild(spanNode);
                 }
 
                 //자식 노드 Recursion
@@ -635,11 +661,17 @@ function TreeView() {
 function treeicon_toggle(pNodeID, pTreeID, callbackFunc, pNodeIconID) {
     var objNodeIcon = document.getElementById(pNodeIconID);
     //puls 로 통일  2010.04.07
+    
     if (objNodeIcon) {
-        if (objNodeIcon.src.indexOf(TreeIcons["node_plus"]) > 0)
+    	if (objNodeIcon.className == "sub_iconLNB tree_plus")
+            objNodeIcon.className = "sub_iconLNB tree_minus";
+        else if (objNodeIcon.className == "sub_iconLNB tree_minus")
+        	objNodeIcon.className = "sub_iconLNB tree_plus";
+    	
+       /* if (objNodeIcon.src.indexOf(TreeIcons["node_plus"]) > 0)
             objNodeIcon.src = TreeIcons["node_minus"];
         else if (objNodeIcon.src.indexOf(TreeIcons["node_minus"]) > 0)
-            objNodeIcon.src = TreeIcons["node_plus"];
+            objNodeIcon.src = TreeIcons["node_plus"];*/
     }
 
 
@@ -671,9 +703,14 @@ function node_select(pNodeID, pNodeNM, pTreeID, callbackFunc) {
         //objSpan.setAttribute("style", "color:" + eval(preSelectID).getAttribute("DATA4", "0"));
     }
 
+    /* 2018-12-12 홍승비 - 게시판명이 기본 색상(rgb(0, 0, 0))인 경우, 푸른색으로 볼드처리 */
     if (pNodeID != "" && pNodeID != "undefined") {
         var objSpan = document.getElementById("spn_" + pNodeID);
         objSpan.className = TreeClasses["selected"];
+        
+        if (objSpan.style.color == "rgb(0, 0, 0)") {
+        	objSpan.style.color = "";
+        }
 
         //if (objSpan.getAttribute("style") != "")
         //    objSpan.removeAttribute("style");

@@ -848,7 +848,7 @@ function save_task() {
 			}				
 						
 	        parent.DivPopUpHidden();
-
+	        // left메뉴 카운트 업데이트
 	        if (mode == "1") {
 	        	parent.RefreshView();
 	        	parent.location.reload();
@@ -856,7 +856,13 @@ function save_task() {
 	        	parent.load_bodyhtml();
 				parent.getTaskAttachList();
 	        } else {
-	        	opener.location.reload();
+	        	try {
+	        		opener.getTaskList();
+	        	} catch(e) {
+	        		opener.parent.frames["left"].getTaskList();
+	        		window.close();
+	        	}
+	        	
 	        }
 	        
 	        //parent.taskReadJson();

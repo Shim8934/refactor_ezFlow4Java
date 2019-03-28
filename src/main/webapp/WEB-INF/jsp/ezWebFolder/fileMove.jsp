@@ -15,11 +15,14 @@
 	<script type="text/javascript">
 		var primary        = "<c:out value='${primary}'/>";
 		var fileList       = "<c:out value='${fileIdList}'/>";
+		var folderList     = "<c:out value='${folderIdList}'/>";
 		var selectedFolder = null;
 		var selectedLevel  = null;
 		var currentFolders = [];
 		var arrSubFolder   = [];
 		var mode           = "<c:out value='${mode}'/>";
+		var functionType   = "";
+		var targetId 	   = "";
 		
 		window.onbeforeunload = function() {
 			parent.closeAllPopup();
@@ -110,7 +113,7 @@
 			
 			var imgElmt2 = document.createElement("img");
 			imgElmt2.setAttribute("class", "webfolderImg");
-			imgElmt2.src = "/images/webfolder/fldr.png";
+			imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
 			
 			var spanFolderName = document.createElement("span");
 			spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
@@ -259,6 +262,14 @@
 			wClose();
 		}
 		
+		function afterSuccessForDup(dupFolder) {
+			if (dupFolder != "" || dupFolder != null) {
+				parent.leftFolderCPMV(functionType, dupFolder, targetId);
+			}
+			parent.refreshView();
+			wClose();
+		}
+		
 		function fileCopy() {
 			var type = document.querySelector('input[name=treeType]:checked').value;
 			
@@ -267,7 +278,7 @@
 				return;
 			}
 			
-			if (type != "share" && selectedLevel == '0') {
+			if (type == "comp" && selectedLevel == '0') {
 				alert("<spring:message code='ezWebFolder.t18'/>");
 				return;
 			}
@@ -277,11 +288,15 @@
 				return;
 			}
 			
+			functionType = "cp";
+			targetId = selectedFolder; 
+			
 			$.ajax({
 				type: "POST",
 				url: "/ezWebFolder/moveFile.do",
 				data: {
 					"fileList" : fileList,
+					"folderList" : folderList,
 					"folderId" : selectedFolder,
 					"mode"     : "copy"
 				},
@@ -290,10 +305,23 @@
 				success : function(data) {
 					var code = data.code;
 					
+					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 start
+					if (code == 0 || code == 8) {
+						if (data.folderErrorArray) {
+							alert("<spring:message code='ezWebFolder.t245' />");
+							
+							if (code == 0) {
+								afterSuccess();
+								return;
+							}
+						}
+					}
+					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 end
+					
 					switch(code) {
 						case 0: 
 							alert("<spring:message code='ezWebFolder.t248'/>");
-							afterSuccess();
+							afterSuccessForDup(folderList);
 							break;
 						case 1:
 							alert("<spring:message code='ezWebFolder.t306'/>");
@@ -306,6 +334,41 @@
 							break;
 						case 4:
 							alert("<spring:message code='ezWebFolder.t250' />");
+							break;
+						case 8:
+							var folderArr = new Array();
+							folderArr = folderList.split(',');
+							var infoArray = data.duplicateInfoArray;
+							
+							var dirDupInfo = infoArray.filter( 
+								function(ele) {
+									return ele.newType ==="DIRECTORY";
+								}		
+							).map( // 배열 내의 모든 요소 각각에 대하여 주어진 함수 결과를 모아 새로운 배열 반환
+								function(ele) {
+									return ele.newId;
+								}
+							);
+							
+							var nEquFolder = folderArr.filter(
+								function(ele) {
+									return dirDupInfo.indexOf(ele) == -1;
+								}		
+							)
+							
+							var dupFolder = ""; 
+							// -1 인거는 같지 않은거 이동시키는 로직을 처리해야ㅎ하는거 
+							if (nEquFolder != null || nEquFolder != undefined || nEquFolder.length != 0) {
+								dupFolder = nEquFolder.toString();
+							}
+							
+							parent.duplicateFile.process({
+								workType: "copy",
+								infoArray: data.duplicateInfoArray, 
+								folderId: selectedFolder
+							});
+							
+							afterSuccessForDup(dupFolder);
 							break;
 					}
 				},
@@ -323,7 +386,7 @@
 				return;
 			}
 			
-			if (type != "share" && selectedLevel == '0') {
+			if (type == "comp" && selectedLevel == '0') {
 				alert("<spring:message code='ezWebFolder.t18'/>");
 				return;
 			}
@@ -333,11 +396,15 @@
 				return;
 			}
 			
+			functionType = "mv";
+			targetId = selectedFolder;
+			
 			$.ajax({
 				type: "POST",
 				url: "/ezWebFolder/moveFile.do",
 				data: {
 					"fileList"   : fileList,
+					"folderList" : folderList,
 					"folderId"   : selectedFolder,
 					"privileges" : mode,
 					"mode"       : "move"
@@ -347,10 +414,23 @@
 				success : function(data) {
 					var code = data.code;
 					
+					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 start
+					if (code == 0 || code == 8) {
+						if (data.folderErrorArray) {
+							alert("<spring:message code='ezWebFolder.t245' />");
+							
+							if (code == 0) {
+								afterSuccess();
+								return;
+							}
+						}
+					}
+					// 이 부분만큼은 리펙토링 꼭 해야된다 코드 진짜 이상하다 end
+					
 					switch(code) {
 						case 0: 
 							alert("<spring:message code='ezWebFolder.t247'/>");
-							afterSuccess();
+							afterSuccessForDup(folderList);
 							break;
 						case 1:
 							alert("<spring:message code='ezWebFolder.t306'/>");
@@ -363,6 +443,41 @@
 							break;
 						case 4:
 							alert("<spring:message code='ezWebFolder.t243' />");
+							break;
+						case 8:
+							var folderArr = new Array();
+							folderArr = folderList.split(',');
+							var infoArray = data.duplicateInfoArray;
+							
+							var dirDupInfo = infoArray.filter( 
+								function(ele) {
+									return ele.newType ==="DIRECTORY";
+								}		
+							).map( // 배열 내의 모든 요소 각각에 대하여 주어진 함수 결과를 모아 새로운 배열 반환
+								function(ele) {
+									return ele.newId;
+								}
+							);
+							
+							var nEquFolder = folderArr.filter(
+								function(ele) {
+									return dirDupInfo.indexOf(ele) == -1;
+								}		
+							)
+							
+							var dupFolder = ""; 
+							// -1 인거는 같지 않은거 이동시키는 로직을 처리해야ㅎ하는거 
+							if (nEquFolder != null || nEquFolder != undefined || nEquFolder.length != 0) {
+								dupFolder = nEquFolder.toString();
+							}
+							
+							parent.duplicateFile.process({
+								workType: "move",
+								infoArray: data.duplicateInfoArray, 
+								folderId: selectedFolder
+							});
+							
+							afterSuccessForDup(dupFolder);
 							break;
 					}
 				},

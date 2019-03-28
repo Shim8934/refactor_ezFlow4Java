@@ -154,18 +154,16 @@
 		    </table><br />
 		    <div id="mainmenu">
 		        <ul id="tb_Parent">
-		            <li>
-		                <span onclick="GetSubBoards()">
-		                    <spring:message code="ezBoard.t205"/>
-		                </span>
+		        	<li>
+		                <span class="icon16 icon16_refresh" onclick="GetSubBoards()"></span>
 		            </li>
 		            <li>
-		                <span onclick="MoveUp_onclick()" style="padding-top:5px">
+		                <span onclick="MoveUp_onclick()">
 		                    <img src="/images/ImgIcon/prev.gif" style="margin-top: -2px;" alt="<spring:message code='main.sp07'/>" />
 		                </span>
 		            </li>
 		            <li>
-		                <span onclick="MoveDown_onclick()" style="padding-top:5px">
+		                <span onclick="MoveDown_onclick()">
 		                    <img src="/images/ImgIcon/next.gif" style="margin-top: -2px;" alt="<spring:message code='main.sp08'/>" />
 		                </span>
 		            </li>

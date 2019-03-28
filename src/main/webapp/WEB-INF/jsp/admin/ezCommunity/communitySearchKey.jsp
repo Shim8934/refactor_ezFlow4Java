@@ -7,14 +7,19 @@
 	<head>
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
 		<link rel="stylesheet" href="${util.addVer('ezCommunity.i1', 'msg')}" type="text/css">
 		<style>
-		.mainlist tr th:first-child{
-			padding-left: 10px;
+		.idSpan select {vertical-align: middle; height: 22px; margin-left: 2px;}
+		.categorySpan {
+			height: 18px; margin: 0px; padding: 0px 6px; line-height: 18px;
+			text-align: center; background: #999; color: #ffffff; font-size: 12px;
+			border-radius: 2px; -webkit-border-radius: 2px; -moz-border-radius: 2px; display: inline-block;
 		}
-		.mainlist tr td:first-child{
-			padding-left: 10px;
-		}
+		.count {color: #ff6c00; margin: 0px 8px;}
+		#mainListBody tr:hover {background-color: #f4f5f5;}
+		#mainListBody tr td {overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor:pointer;}
+		
 		</style>
 		<script type="text/javascript" src="${util.addVer('ezCommunity.e1', 'msg')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -23,9 +28,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		
 		<script type="text/javascript">
-			var sCurPage = "<c:out value = '${curPage}' />";
-			var sTotalPage = "<c:out value = '${totalPage}' />";
-			var totalCount = "<c:out value = '${totalCount}' />";
+			var selectedTabId  = "";
+			var pCurPage       = 1;
+			var pTotalPage     = 0;
+			var pTotalCnt      = 0;
+			var pBlockSize     = 10;
+			var categoryColors = ["#ff6868", "#ff68c4", "#d668ff", "#a868ff", "#6f68ff", 
+								"#3d78ff", "#4d8fcc", "#0dbeff", "#6dabad", "#4dc689", 
+								"#81bc3d", "#ffc71e", "#ff8f1e", "#bd6438"];
 			
 			document.onselectstart = function () {
 				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
@@ -35,34 +45,30 @@
 				}
 			};	
 			
+			window.onload = function () {
+				communityList();
+			};
+			
+			var infoPopup;
 			function view_CommunityInfo(pcode) {
- 				var pheight = window.screen.availHeight;
+				closeInfoPopup();
+				
+				var pheight = window.screen.availHeight;
 				var pwidth = window.screen.availWidth;
 				var pTop = (pheight - 430) / 2;
 				var pLeft = (pwidth - 500) / 2; 
-				window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
+				
+				if (selectedTabId == "openCommu") {
+					infoPopup = window.open("/admin/ezCommunity/admCommunityInfoEdit.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=390,width=480,top=" + pTop + ",left=" + pLeft, "");
+				}
+				else {
+					infoPopup = window.open("/admin/ezCommunity/closeCommunityInfo.do?code=" + pcode, "", "location=1,toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=295,width=480,top=" + pTop + ",left=" + pLeft, "");
+				}
 			}
 			
-			function prevPage_onclick() {
-				newPage = parseInt(sCurPage) - 1;
-				
-				if(newPage > 0) {
-					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + encodeURIComponent('${query}') + "&page=" + newPage.toString();
-				}
-			}
-	
-			function nextPage_onclick() {
-				newPage = parseInt(sCurPage) + 1;
-				
-				if(newPage <= parseInt(sTotalPage)) {
-					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + encodeURIComponent('${query}') + "&page=" + newPage.toString();
-				}
-			}
-	
-			function moveToPage(sCurPage) {
-	            if(parseInt(sCurPage) > 0 && parseInt(sCurPage) <= parseInt(sTotalPage)) {
-					window.location.href = "/admin/ezCommunity/searchKey.do?select=${select}&query=" + encodeURIComponent('${query}') + "&page=" + sCurPage;
-				}
+			// 커뮤니티 정보 팝업 닫기 메소드
+			function closeInfoPopup() {
+				if (infoPopup) { infoPopup.close(); }
 			}
 			
 			function get_search_CommunityInfo(e) {
@@ -77,190 +83,513 @@
 			}
 			
 			function search_CommunityInfo() {
-			    var strSelect = document.getElementById("QuerySelect").value;
-			    var strQuery = document.getElementById("txt_SearchQuery").value;
-	
-				if( strQuery == "") {
+				var strQuery = document.getElementById("txt_SearchQuery").value;
+				
+				if(strQuery == "") {
 					//2016-07-13 이효진 OpenAlertUI화면 alert로 대체
  					//OpenAlertUI("<spring:message code = 'ezCommunity.t75' />");
 					alert("<spring:message code = 'ezCommunity.t75' />");
 					return;
 				}
 				
-				window.location.href = "/admin/ezCommunity/searchKey.do?select=" + encodeURIComponent(strSelect) + "&query=" + encodeURIComponent(strQuery);
+				pCurPage = 1;
+				communityList();
 			}
 			
 			/* 2018-07-18 홍승비 - 관리자단 커뮤니티 마스터 사원정보 겸직에 대응 가능하도록 수정, 스크립트 오류 수정(.js import) */
-			function openinfo_userinfo(pCN, pDept) {
-			    var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=438";
+			function openinfo_userinfo(obj) {
+				var feature = "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=0,width=420,height=438";
 			    feature = feature + GetOpenPosition(420, 438);
-			    window.open("/ezCommon/showPersonInfo.do?id=" + pCN + "&dept=" + pDept, "", feature);
+			    window.open("/ezCommon/showPersonInfo.do?id=" + obj.getAttribute("sysId") + "&dept=" + obj.getAttribute("deptId"), "", feature);
 			}
 			
-			//########################################페이지네이션 변경 ##############################################
-	        var BlockSize = 10;
-	        function td_Create1(strtext) {
-	            document.getElementById("tblPageRayer").innerHTML = strtext; //document.all.tblPageNum1.innerHTML + strtext;
-	        }
-	        
-	        function makePageSelPage() {
-	            var strtext;
-	            var PagingHTML = "";
-	            document.getElementById("tblPageRayer").innerHTML = "";
-	            document.getElementById("TitleInfo").innerHTML = " - [" + strLang82 + "<span style='color:#017BEC;font-weight:bold;'> " + totalCount + " </span>" + strLang83 + "]";
-	            strtext = "<div class='pagenavi'>";
-	            PagingHTML += strtext;
-	            var pageNum = sCurPage;
-	            
-	            if (sTotalPage > 1 && pageNum != 1) {
-	                strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
-	                PagingHTML += strtext;
-	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
-	                PagingHTML += strtext;
-	            }
-	            
-	            if (sTotalPage > BlockSize) {
-	                if (pageNum > BlockSize) {
-	                    strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
-	                    PagingHTML += strtext;
-	                } else {
-	                    strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
-	                    PagingHTML += strtext;
-	                }
-	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
-	                PagingHTML += strtext;
-	            }
-	            
-	            var MaxNum;
-	            var i;
-	            var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
-	            
-	            if (sTotalPage >= (startNum + parseInt(BlockSize))) {
-	                MaxNum = (startNum + parseInt(BlockSize)) - 1;
-	            } else {
-	                MaxNum = sTotalPage;
-	            }
-	            
-	            for (i = startNum; i <= MaxNum; i++) {
-	                if (i == pageNum) {
-	                    strtext = "<span class='on'>" + i + "</span>";
-	                    PagingHTML += strtext;
-	                } else {
-	                    strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
-	                    PagingHTML += strtext;
-	                }
-	            }
-	            
-                if (MaxNum == 0) {
-	            	PagingHTML += "<span class=\"on\">" + 1 + "</span>";
-	            }
-                
-	            if (sTotalPage > BlockSize) {
-	                if (sTotalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-	                    strtext = "";
-	                    strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
-	                    PagingHTML += strtext;
-	                }
-	                else {
-	                    strtext = "";
-	                    strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
-	                    PagingHTML += strtext;
-	                }
-	            } else {
-	                strtext = "";
-	                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
-	                PagingHTML += strtext;
-	            }
-	            
-	            if (sTotalPage > 1 && sTotalPage != 1 && (sTotalPage != pageNum)) {
-	                strtext = "<span class='btnimg' onclick='return goToPageByNum(" + sTotalPage + ")'><img src='/images/sub/btn_n_next.gif'></span>";
-	                PagingHTML += strtext;
-	            } else {
-	                strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
-	                PagingHTML += strtext;
-	            }
-	            
-	            PagingHTML += "</div>";
-	            td_Create1(PagingHTML);
-	        }
-	        
-	        function goToPageByNum(Value) {
-	            sCurPage = Value;
-	            makePageSelPage();
-				moveToPage(sCurPage);
-	        }
-	        
-	        function selbeforeBlock() {
-	            var pageNum = parseInt(sCurPage);
-	            pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
-	            goToPageByNum(pageNum);    
-	        }
-	        
-	        function selbeforeBlock_one() {
-	            var pageNum = parseInt(sCurPage);
-	            
-	            if (parseInt(pageNum - 1) > 0) {
-	                goToPageByNum(parseInt(pageNum - 1));
-	            } else {
-	                return;
-	            }
-	        }
-	        
-	        function selafterBlock() {
-	            var pageNum = parseInt(sCurPage);
-	            pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
-	            goToPageByNum(pageNum);
-	        }
-	        
-	        function selafterBlock_one() {
-	            var pageNum = parseInt(sCurPage);
-	            
-	            if( parseInt(pageNum + 1) <= sTotalPage) {
-	                goToPageByNum(parseInt(pageNum + 1));
-	            } else {
-	                return;
-	            }
-	        }
-	        //########################################페이지네이션 변경 ##############################################
-	        
-	        //2018-08-06 김보미 - 페이지 위치 고정
-		    $(window).on("resize", function(){
-	            windowResize();
-	        });
-		    
-		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 172;
-	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-	        		height = height - 30;
-	        	}
-	        	document.getElementById("contentlist").style.height = height + "px";
-	        	document.getElementById("contentlist").style.overflow = "auto";
-	        }
-		    
-		    $(function(){
-	    		windowResize();
-		    });
+			// (개설된 커뮤니티 / 폐쇄한 커뮤니티 ) 탭 이동 관련 이벤트
+			function Tab1_NewTabIni(pTabNodeID) {
+				var mainTabNode = document.getElementById(pTabNodeID);
+				var nodeList    = mainTabNode.children;
+				
+				var length = nodeList.length;
+				for (var i = 0; i < length; i++) {
+					var pTagElmt    = nodeList[i];
+					var spanTagElmt = pTagElmt.firstElementChild;
+					
+					spanTagElmt.onmouseover = function() {tab1_MouserOver(this);};
+					spanTagElmt.onmouseout  = function() {tab1_MouserOut(this); };
+					spanTagElmt.onclick     = function() {tab1_MouseClick(this);};
+					
+					if (i == 0) {spanTagElmt.className = "tabon"; selectedTabId = spanTagElmt.id;}
+				}
+			}
+			
+			function tab1_MouserOver(obj) {
+				obj.className = "tabover";
+			}
+			
+			function tab1_MouserOut(obj) {
+				if (selectedTabId != obj.id) {
+					obj.className = "";
+				}
+			}
+			
+			function tab1_MouseClick(obj) {
+				obj.className = "tabon";
+				var selectedTabElmt = document.getElementById(selectedTabId);
+				
+				if (obj.id != selectedTabId) {
+					if (selectedTabId != "" && selectedTabElmt != null) {
+						selectedTabElmt.className = "";
+					}
+					
+					obj.className = "tabon";
+					selectedTabId  = obj.id;
+					ChangeTab(obj);
+				}
+			}
+			
+			function ChangeTab(obj) {
+				document.getElementById("txt_SearchQuery").value = "";
+				document.getElementsByName("cCateA")[0].value = "0";
+				
+				pCurPage = 1;
+				communityList();
+			}
+			
+			// (개설된 커뮤니티 / 폐쇄한 커뮤니티 ) 리스트 호출
+			function communityList() {
+				if (selectedTabId == "openCommu") {
+					openCommunityList();
+				}
+				else {
+					closedCommunityList();
+				}
+			}
+			
+			// 개설된 커뮤니티  리스트 호출
+			function openCommunityList() {
+				$.ajax({
+					type : "POST",
+					dataType: "json",
+					url : "/admin/ezCommunity/openCommunityList.do",
+					async : false,
+					data : 
+					{
+						pageNum     : pCurPage,
+						searchType  : document.getElementsByName("cCateA")[0].value,
+						searchValue : document.getElementById("txt_SearchQuery").value 
+					},
+					success : function (data) {
+						pCurPage   = data.pageNum;
+						pTotalPage = data.totalPage;
+						pTotalCnt  = data.totalCount;
+						
+						var html = "";
+						
+						if (pTotalCnt < 1) {
+							html += "<tr>";
+							html += "    <td colspan='9' style='text-align:center;'><spring:message code = 'main.t00026' /></td>"
+							html += "</tr>";
+						}
+						else {
+							var itemNum = ((pCurPage - 1) * 10) + 1 ;
+							
+							data.clubList.forEach(function(item, index){
+								html += "<tr ondblclick=view_CommunityInfo('" + item.c_ClubNo  + "');>";
+								html += "<td style='width: 35px;'>" + itemNum + "</td>";
+								html += "<td style='width: 105px;'>" + getCategorySpan(item.c_name) + "</td>";
+								html += "<td style='width: 38%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
+								
+								if (item.c_ClubConfirmType == "2") { //유형
+									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t13' /></td>";
+								} else {
+									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t14' /></td>";
+								}
+								
+								if (item.c_ClubGubun == "2") { //공개여부
+									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t66' /></td>";
+								} else {
+									html += "<td style='width: 10%;'><spring:message code = 'ezCommunity.t67' /></td>";
+								}
+								
+								html += "<td style='width: 10%;'><span sysId='"+ item.c_SysopID +"' deptId='" + item.deptID + "' onclick=openinfo_userinfo(this)>" + item.userName + "</span></td>"; //마스터이름
+								html += "<td style='width: 10%;'>"  + item.c_RegDate.substring(0, 10) + "</td>"; //생성일
+								html += "<td style='width: 85px;'>";
+								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconLineup.gif'></span>";
+								html +=     "<span class='count' style='margin-right: 8px;'>" + item.c_MemberCnt + "</span>";
+								html +=     "<span class='icon'><img src='/images/kr/community/categoryBox_iconPost.gif'></span>";
+								html +=     "<span class='count'>" + item.itemCnt + "</span>";
+								html += "</td>";
+								html += "<td style='width: 45px;'><span class='icon16 icon16_delete' style='margin: 0px 0px 0px 15px; padding: 0px;' onclick=closeBtnClick('" + item.c_ClubNo + "')></span></td>";
+								html += "</tr>";
+								
+								itemNum++;
+							});
+						}
+						
+						$("#idSpan").css("display", "");
+						$("#mainListHeader1").css("display", "");
+						$("#mainListHeader2").css("display", "none");
+						$("#mainListBody").empty().append(html);
+						
+						makePageSelPage();
+						scroll();
+					},
+					error : function(e) {
+						console.log("error");
+					}
+				});
+			}
+			
+			function closedCommunityList() {
+				$.ajax({
+					type : "POST",
+					dataType: "json",
+					url : "/admin/ezCommunity/closedCommunityList.do",
+					async : false,
+					data :
+					{
+						pageNum     : pCurPage,
+						searchValue : document.getElementById("txt_SearchQuery").value
+					},
+					success : function (data) {
+						pCurPage   = data.pageNum;
+						pTotalPage = data.totalPage;
+						pTotalCnt  = data.totalCount;
+						
+						var html = "";
+						
+						if (pTotalCnt < 1) {
+							html += "<tr>";
+							html += "    <td colspan='5' style='text-align:center;'><spring:message code = 'main.t00026' /></td>"
+							html += "</tr>";
+						}
+						else {
+							var itemNum = ((pCurPage - 1) * 10) + 1 ;
+							
+							data.clubList.forEach(function(item, index){
+								html += "<tr ondblclick=view_CommunityInfo('" + item.c_ClubNo  + "');>";
+								html += "<td style='width: 35px;'>" + itemNum + "</td>";
+								html += "<td style='width: 29%;'>" + MakeXMLString(item.c_ClubName) + "</td>";
+								html += "<td style='width: 50%;'>" + MakeXMLString(item.closeReason) + "</td>"; //폐쇄사유
+								html += "<td style='width: 10%;'>" + item.userName + "</td>"; //마스터이름
+								html += "<td style='width: 10%;'>" + item.applicationDate.substring(0, 10) + "</td>"; //신청일
+								html += "</tr>";
+								
+								itemNum++;
+							});
+						}
+						
+						$("#idSpan").css("display", "none");
+						$("#mainListHeader1").css("display", "none");
+						$("#mainListHeader2").css("display", "");
+						$("#mainListBody").empty().append(html);
+						
+						makePageSelPage();
+						scroll();
+					},
+					error : function(e) {
+						console.log("error");
+					}
+				});
+			}
+			
+			// 페이지네이션 
+			function td_Create1(strtext) {
+				document.getElementById("tblPageRayer").innerHTML = strtext;
+			}
+			
+			function makePageSelPage() {
+				document.getElementById("tblPageRayer").innerHTML = "";
+				document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>";
+				
+				var strtext = "<div class='pagenavi'>";
+				var PagingHTML = "";
+				
+				PagingHTML += strtext;
+				var pageNum = pCurPage;
+				
+				if (pTotalPage > 1 && pageNum != 1) {
+					strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif'></span>";
+					PagingHTML += strtext;
+				}
+				
+				if (pTotalPage > pBlockSize) {
+					if (pageNum > pBlockSize) {
+						strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif'></span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+						PagingHTML += strtext;
+					}
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif'></span>";
+					PagingHTML += strtext;
+				}
+				
+				var MaxNum;
+				var i;
+				var startNum = (parseInt((pageNum - 1) / pBlockSize) * pBlockSize) + 1;
+				
+				if (pTotalPage >= (startNum + parseInt(pBlockSize))) {
+					MaxNum = (startNum + parseInt(pBlockSize)) - 1;
+				} else {
+					MaxNum = pTotalPage;
+				}
+				
+				for (i = startNum; i <= MaxNum; i++) {
+					if (i == pageNum) {
+						strtext = "<span class='on'>" + i + "</span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
+						PagingHTML += strtext;
+					}
+				}
+				
+				if (MaxNum == 0) {
+					PagingHTML += "<span class=\"on\">" + 1 + "</span>";
+				}
+				
+				if (pTotalPage > pBlockSize) {
+					if (pTotalPage >= parseInt(((parseInt((pageNum - 1) / pBlockSize) + 1) * pBlockSize) + 1)) {
+						strtext = "";
+						strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif'></span>";
+						PagingHTML += strtext;
+					} else {
+						strtext = "";
+						strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
+						PagingHTML += strtext;
+					}
+				} else {
+					strtext = "";
+					strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif'></span>";
+					PagingHTML += strtext;
+				}
+				
+				if (pTotalPage > 1 && pTotalPage != 1 && (pTotalPage != pageNum)) {
+					strtext = "<span class='btnimg' onclick='return goToPageByNum(" + pTotalPage + ")'><img src='/images/sub/btn_n_next.gif'></span>";
+					PagingHTML += strtext;
+				} else {
+					strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif'></span>";
+					PagingHTML += strtext;
+				}
+				
+				PagingHTML += "</div>";
+				td_Create1(PagingHTML);
+			}
+			
+			function goToPageByNum(Value) {
+				pCurPage = Value;
+				communityList();
+				//makePageSelPage();
+				//moveToPage(pCurPage);
+			}
+			
+			function selbeforeBlock() {
+				var pageNum = parseInt(pCurPage);
+				pageNum = ((parseInt(pageNum / pBlockSize) - 1) * pBlockSize) + 1;
+				goToPageByNum(pageNum);
+			}
+			
+			function selbeforeBlock_one() {
+				var pageNum = parseInt(pCurPage);
+				
+				if (parseInt(pageNum - 1) > 0) {
+					goToPageByNum(parseInt(pageNum - 1));
+				} else {
+					return;
+				}
+			}
+			
+			function selafterBlock() {
+				var pageNum = parseInt(pCurPage);
+				pageNum = ((parseInt((pageNum - 1) / pBlockSize) + 1) * pBlockSize) + 1;
+				goToPageByNum(pageNum);
+			}
+			
+			function selafterBlock_one() {
+				var pageNum = parseInt(pCurPage);
+				
+				if( parseInt(pageNum + 1) <= pTotalPage) {
+					goToPageByNum(parseInt(pageNum + 1));
+				} else {
+					return;
+				}
+			}
+			
+			//2018-08-06 김보미 - 페이지 위치 고정
+			$(window).on("resize", function(){
+				windowResize();
+			});
+			
+			function windowResize() {
+				/* var height = document.documentElement.clientHeight - 202;
+				if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+					height = height - 30;
+				}
+					document.getElementById("contentlist").style.height = height + "px";
+					document.getElementById("contentlist").style.overflow = "auto"; */
+				
+				document.getElementById("ListBody").style.height = (document.documentElement.clientHeight - 250) + "px"; 
+				scroll();
+			}
+			
+			$(function(){
+				windowResize();
+			});
+			
+			// 페이지 스크롤 메소드
+			function scroll() {
+				var headerElmt;
+				var headerTrElmt;
+				
+				if (selectedTabId == "openCommu") {
+					headerElmt = document.getElementById("mainListHeader1");
+					headerTrElmt = document.getElementById("mainListHeaderTr1");
+				}
+				else {
+					headerElmt   = document.getElementById("mainListHeader2");
+					headerTrElmt = document.getElementById("mainListHeaderTr2");
+				}
+				
+				var headerWidth = headerElmt.clientWidth;
+				var bodyWidth   = document.getElementById("mainListBody").clientWidth;
+				var scrollWidth = headerWidth - bodyWidth;
+				
+				var scrollElmt = document.getElementById("forScroll");
+				if (scrollElmt) {
+					scrollElmt.parentNode.removeChild(scrollElmt);
+				}
+				
+				if (scrollWidth > 0) {
+					var thElmt   = document.createElement("th");
+					thElmt.setAttribute("id", "forScroll");
+					thElmt.style.width = "8px";
+					
+					headerTrElmt.appendChild(thElmt);
+				}
+			}
+			
+			// 개설된 커뮤니티 리스트 폐쇄 버튼 이벤트 메소드
+			function closeBtnClick(code) {
+				closeInfoPopup();
+				
+				setTimeout(function() {
+					if (confirm("<spring:message code = 'ezCommunity.t59' />")) {
+						$.ajax({
+							type : "POST",
+							dataType : "json",
+							url : "/admin/ezCommunity/commAdminCloseAll.do",
+							async : false,
+							data : {code : code},
+							success : function(result) {
+								alert("<spring:message code = 'ezCommunity.t56' />");
+								
+								var rowCount = document.getElementById("mainListBody").rows.length;
+								if (((rowCount - 1 ) == 0) && pCurPage > 1) {
+									pCurPage = pCurPage - 1;
+								}
+								
+								openCommunityList();
+								window.parent.parent.frames[0].getApplicationListCount();
+							},
+							error : function(e) {
+								console.log("error");
+							}
+						});
+					}
+				}, 100);
+			}
+			
+			// 카테고리 요소 생성
+			function getCategorySpan(cateName) {
+				var retVal = "";
+				
+				switch(cateName){
+					case "t1496":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1496' />";
+						break;
+					case "t1497":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[1] + "'><spring:message code = 'ezCommunity.t1497' />";
+						break;
+					case "t1498":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[2] + "'><spring:message code = 'ezCommunity.t1498' />";
+						break;
+					case "t1499":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[3] + "'><spring:message code = 'ezCommunity.t1499' />";
+						break;
+					case "t1500":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[4] + "'><spring:message code = 'ezCommunity.t1500' />";
+						break;
+					case "t1501":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[5] + "'><spring:message code = 'ezCommunity.t1501' />";
+						break;
+					case "t1502":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[6]  + "'><spring:message code = 'ezCommunity.t1502' />";
+						break;
+					case "t1503":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[7]  + "'><spring:message code = 'ezCommunity.t1503' />";
+						break;
+					case "t1504":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[8] + "'><spring:message code = 'ezCommunity.t1504' />";
+						break;
+					case "t1505":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[9] + "'><spring:message code = 'ezCommunity.t1505' />";
+						break;
+					case "t1506":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[10] + "'><spring:message code = 'ezCommunity.t1506' />";
+						break;
+					case "t1507":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[11] + "'><spring:message code = 'ezCommunity.t1507' />";
+						break;
+					case "t1508":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[12] + "'><spring:message code = 'ezCommunity.t1508' />";
+						break;
+					case "t1509":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1509' />";
+						break;
+					case "t1510":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1510' />";
+						break;
+					case "t1511":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1511' />";
+						break;
+					case "t1512":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1512' />";
+						break;
+					case "t1513":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1513' />";
+						break;
+					case "t1514":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1514' />";
+						break;
+					case "t1515":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1515' />";
+						break;
+					case "t1516":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1516' />";
+						break;
+					case "t1517":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1517' />";
+						break;
+					case "t1518":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1518' />";
+						break;
+					case "t1519":
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1519' />";
+						break;
+				}
+				
+				retVal += "</span>";
+				
+				return retVal;
+			}
 		</script>
 	</head>
-	<body class="mainbody" onload = "makePageSelPage()">
-		<h1><spring:message code = 'ezCommunity.t1117' /><span id="TitleInfo" style="color:#666;font-weight:normal;"></span></h1>
-		<form name="adm_search_key" method="post" ID="Form1">
-	    	<table class="content">
-				<tr>
-					<th ><spring:message code = 'ezCommunity.t31' /></th>
-			  		<td>
-						<select id="QuerySelect" name="QuerySelect" style="vertical-align:middle; height: 22px; margin-left:2px;">
-							<option selected value="pCommunityName"><spring:message code = 'ezCommunity.t9991' /></option>
-							<option value="pCommuintyDesc" ><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></option>
-						</select>
-						
-						<input name="text" type="text" style="WIDTH:200px;vertical-align:middle; height: 22px;" id="txt_SearchQuery" onKeyPress="return get_search_CommunityInfo(event)"> 
-						<a class="imgbtn imgbck" style="vertical-align:middle; margin-bottom:0px;"><span onClick="search_CommunityInfo()"><spring:message code = 'ezCommunity.t31' /></span></a>
-			  		</td>
-				</tr>
-			</table>
+	<body class="mainbody">
+		<h1><spring:message code = 'ezCommunity.khj02' /><span id="TitleInfo"></span></h1>
 		
 			<%--<div class="page">
 			<img src="/images/page_previous.gif" width="15" height="16" align="absmiddle" id="td_Previous"  onClick="prevPage_onclick()">
@@ -268,39 +597,64 @@
 			<input type="text" id="txt_inputPageNum" style="WIDTH:35px" value='${ iPage }' onKeyDown="moveToPage()">
 			<img src="/images/page_next.gif" width="15" height="16" align="absmiddle" id="Img1"  onClick="nextPage_onclick()"></div>--%>
 			
-			<br />
-			<div id="contentlist" style="width:100%; overflow: auto;">
-				<div>
-					<table class="mainlist" style="width:100%">
-						<tr>
-							<th style="width:70px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
-							<th style="width:250px;"><spring:message code = 'ezCommunity.t9991' /></th>
-							<th><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></th>
-							<th style="width:100px;"><spring:message code = 'ezCommunity.t33' /></th>
-							<th style="width:80px;"><spring:message code = 'ezCommunity.t78' /></th>
-						</tr>
-						<c:if test="${clubList ne null && clubList ne ''}">
-							<c:forEach var = "club" items = "${clubList }" varStatus="status">
-								<tr>
-									<td style="width:50px; height:23px"><c:out value='${totalCount - ((curPage -1) * 10) - status.index }' /></td>
-									<!--// 20100108 : 보안 처리, 관련 추가작업(XSS)-->
-									<td style="cursor:pointer; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><nobr ><c:out value = '${club.c_ClubName }' /></nobr></td>
-									<td style="cursor:pointer; width:300px; text-overflow:ellipsis; white-space:nowrap; overflow:hidden" onClick="view_CommunityInfo('${club.c_ClubNo}')"><c:out value = '${club.c_ClubDesc}' /></td>
-									<td style="cursor:pointer; width:80px" onClick="openinfo_userinfo('${club.c_SysopID}',  '${club.deptID}')"><c:out value = '${club.userName}' /></td>
-									<td style="width:80px"><c:out value = '${fn:substring(club.c_RegDate, 0, 10) }' /></td>
-								</tr>
-							</c:forEach>
-						</c:if>
-						<c:if test="${clubList eq null || clubList eq ''}">
-							<tr>
-								<td colspan="5" style="text-align:center;"><spring:message code = 'main.t00026' /></td>
-							</tr>
-						</c:if>	
-					</table>
+			<div class="portlet_tabpart01">
+				<div class="portlet_tabpart01_top" id="tab1">
+					<p><span id="openCommu"><spring:message code = 'ezCommunity.khj03' /></span></p>
+					<p><span id="closeCommu"><spring:message code = 'ezCommunity.khj04' /></span></p>
 				</div>
 			</div>
-			<br />
+			<script type="text/javascript">
+				Tab1_NewTabIni("tab1");
+			</script>
+			
+			<table class="content" style="margin: 10px 0px;">
+				<tr>
+					<th style="background-color: #f1f3f5; border: 1px solid #e2e3e6;"><spring:message code = 'ezCommunity.t1431' /></th>
+					<td style="border: 1px solid #e2e3e6;">
+						<span id="idSpan" class="idSpan">${idSpanValue}</span>
+						
+						<select id="QuerySelect" name="QuerySelect" style="vertical-align: middle; height: 22px;">
+							<option selected value="pCommunityName"><spring:message code = 'ezCommunity.t9991' /></option>
+							<%-- <option value="pCommuintyDesc" ><spring:message code = 'ezCommunity.t1529' /> <spring:message code = 'ezCommunity.t18' /></option> --%>
+						</select>
+						
+						<input name="text" type="text" style="WIDTH:200px; vertical-align:middle; height: 22px;" id="txt_SearchQuery" onKeyPress="return get_search_CommunityInfo(event)"> 
+						<a class="imgbtn imgbck" style="vertical-align: middle; margin-bottom:0px;"><span onClick="search_CommunityInfo()"><spring:message code = 'ezCommunity.t31' /></span></a>
+			  		</td>
+				</tr>
+			</table>
+			
+			<div id="contentlist" style="width: 100%; overflow: auto; margin-top: 5px;">
+				<div id="ListHeader">
+					<table id="mainListHeader1" class="mainlist" style="width: 100%">
+						<tr id="mainListHeaderTr1">
+							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
+							<th style="width: 105px;"><spring:message code ='ezCommunity.t11' /></th>
+							<th style="width: 38%;"><spring:message code = 'ezCommunity.t9991' /></th>
+							<th style="width: 10%;"><spring:message code = 'ezCommunity.t65' /></th>
+							<th style="width: 10%;"><spring:message code = 'ezCommunity.t15' /></th>
+							<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
+							<th style="width: 10%;"><spring:message code = 'ezCommunity.t78' /></th>
+							<th style="width: 85px;"><spring:message code = 'ezCommunity.khj05' /></th>
+							<th style="width: 45px;"></th>
+						</tr>
+					</table>
+					<table id="mainListHeader2" class="mainlist" style="width: 100%; display: none;">
+						<tr id="mainListHeaderTr2">
+							<th style="width: 35px; height:23px"><spring:message code = 'ezCommunity.t32' /></th>
+							<th style="width: 29%;"><spring:message code = 'ezCommunity.t9991' /></th>
+							<th style="width: 50%;"><spring:message code = 'ezCommunity.t71' /></th>
+							<th style="width: 10%;"><spring:message code = 'ezCommunity.t33' /></th>
+							<th style="width: 10%;"><spring:message code = 'ezCommunity.t550' /></th>
+						</tr>
+					</table>
+				</div>
+				<div id="ListBody" style="height: 341px; overflow-y: auto;">
+					<table id="mainListBody" class="mainlist" style="width: 100%"></table>
+				</div>
+			</div>
+			
 			<div id="tblPageRayer"></div>
-		</form>
+		
 	</body>
 </html>

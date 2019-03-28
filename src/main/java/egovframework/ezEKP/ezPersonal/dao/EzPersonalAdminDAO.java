@@ -6,8 +6,10 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
@@ -216,4 +218,64 @@ public class EzPersonalAdminDAO extends EgovAbstractDAO {
 		delete("EzPersonalAdmin.EZSP_SETEMPLOYEEMONTH_D", map);
 	}
 	
+	public PersonalLightPollConfigVO getLightPollConfig(Map<String, Object> map) throws Exception {
+		return (PersonalLightPollConfigVO) select("EzPersonalAdmin.EZSP_getLightPollConfig", map);
+	}
+	
+	public void insertLightPollConfig(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_insertLightPollConfig", map);
+	}
+	
+	public void setLightPollConfig(Map<String, Object> map) throws Exception {
+		update("EzPersonalAdmin.EZSP_setLightPollConfig", map);
+	}
+	
+	public PersonalPopopConfigVO getPopupConfig(Map<String, Object> map) throws Exception {
+		return (PersonalPopopConfigVO) select("EzPersonalAdmin.EZSP_getPopupConfig", map);
+	}
+	
+	public void insertPopupConfig(Map<String, Object> map) throws Exception {
+		insert("EzPersonalAdmin.EZSP_insertPopupConfig", map);
+	}
+	
+	public void setPopupConfig(Map<String, Object> map) throws Exception {
+		update("EzPersonalAdmin.EZSP_setPopupConfig", map);
+	}
+	
+	public int getPopupCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzPersonalAdmin.EZSP_GETPOPUPCOUNT", map);
+	}
+	
+	public void setPopupUse(Map<String, Object> map) throws Exception {
+		update("EzPersonalAdmin.EZSP_SETPOPUPUSE", map);
+	}
+
+	public void updateQuickLinkOrder(Map<String, Object> map) {
+		update("EzPersonalAdmin.EZSP_SETQUICKLINKITEM_ORDER", map);
+	}
+
+	public int getQuickLinkMaxOrder(Map<String, Object> map) {
+		return (int)select("EzPersonalAdmin.EZSP_GETQUICKLINKMAXORDER", map);
+	}
+	
+
+	public void updateSliderImageOrder(Map<String, Object> map) {
+		update("EzPersonalAdmin.EZSP_SETSLIDERIMAGEITEM_ORDER", map);
+	}
+
+	public void updatePoll_U1(Map<String, Object> map) {
+		update("EzPersonalAdmin.EZSP_UPDATEPOLL_U1", map);
+	}
+	
+	public void updatePoll_U2(Map<String, Object> map) {
+		update("EzPersonalAdmin.EZSP_UPDATEPOLL_U2", map);
+	}
+
+	public void updatePoll_Result(Map<String, Object> map) {
+		delete("EzPersonalAdmin.EZSP_UPDATE_RESULT", map);
+	}
+
+	public int checkJoinPoll(Map<String, Object> map) {
+		return (int) select("EzPersonalAdmin.EZSP_CheckJoinPoll", map);
+	}
 }

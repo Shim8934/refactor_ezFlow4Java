@@ -145,6 +145,8 @@ public class CommunityClubVO {
 	String email;
 	/** 2018-07-18 홍승비 - 마스터 부서ID 추가 */
 	String deptID;
+	/** 2018-11-13 김민성 - 카테고리 c_name 추가 */
+	String c_name;
 	
 	public String getC_ClubNo() {
 		return c_ClubNo;
@@ -578,5 +580,10 @@ public class CommunityClubVO {
 	public void setDeptID(String deptID) {
 		this.deptID = deptID;
 	}
-	
+	public String getC_name() {
+		return c_name;
+	}
+	public void setC_name(String c_name) {
+		this.c_name = c_name;
+	}
 }

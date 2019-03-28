@@ -663,6 +663,11 @@
 	                    location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	                else
 	                    location.href = "/ezBoard/boardItemListThumbnail.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
+	            } else if (pType == "7") {
+	            	 if (pParentNeed == "Y")
+						location.href = "/ezBoard/boardItemListMovie.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
+	                else
+	                    location.href = "/ezBoard/boardItemListMovie.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	            }
 	            else {
 	                if(pParentNeed == "Y")
@@ -858,17 +863,17 @@
 	                <li><span onclick="goBoardList()"><spring:message code='ezBoard.t72'/></span></li>
 	                <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 				</c:if>
-            	<li><span onclick="SelectTarget()"><spring:message code='ezBoard.t602'/></span></li>
+            	<li class="important"><span onclick="SelectTarget()"><spring:message code='ezBoard.t602'/></span></li>
             	<li><span onclick="SaveACL()"><spring:message code='ezBoard.t98'/></span></li>
                 <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
-            	<li><span onclick="DeleteACL('one')"><spring:message code='ezBoard.t89'/></span></li>
-            	<li><span onclick="DeleteACL('type')"><spring:message code='ezBoard.t603'/></span></li>
-            	<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
             <%-- 2019-01-22 홍승비 - 그룹사게시판 -> 권한설정기능 표출, 권한복사 숨김 --%>
 			<c:if test="${isAllGroupBoard != 'Y'}">
             	<li><span onclick="AclCopy()"><spring:message code='ezBoard.t604'/></span></li>
 			</c:if>
             	<li><span onclick="UnderBoardCopy()"><spring:message code='ezBoard.t605'/></span></li>
+            	<li><span onclick="DeleteACL('type')"><spring:message code='ezBoard.t603'/></span></li>
+            	<li><span onclick="DeleteACL('one')"><spring:message code='ezBoard.t89'/></span></li>
+            	<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
             </ul>
         </div>
         <script type="text/javascript">

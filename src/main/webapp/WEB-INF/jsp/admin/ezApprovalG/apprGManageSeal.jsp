@@ -28,7 +28,7 @@
 		    var OrderCell = "";
 		    
 		    $(document).ready(function(){
-		        SCompID.value = pCompanyID;
+		        ListCompany.value = pCompanyID;
 		        
 		        InitListView();
 		        getSealList();
@@ -276,8 +276,8 @@
 		    }
 		    
 		    function selectCompanyID() {
-		        if (pCompanyID != document.getElementById("SCompID").value) {
-		            pCompanyID = document.getElementById("SCompID").value;
+		        if (pCompanyID != document.getElementById("ListCompany").value) {
+		            pCompanyID = document.getElementById("ListCompany").value;
 		            InitListView();
 		            getSealList();
 		        }
@@ -316,15 +316,22 @@
 	</xml>
 
 	<body  class="mainbody">
-		<h1><spring:message code = 'ezApprovalG.t1283' /></h1>
+		<h1>
+			<spring:message code = 'ezApprovalG.t1283' />
+			<select id="ListCompany" name="SCompID" class="companySelect" onChange="selectCompanyID()">
+	        	<c:forEach var="item" items="${list}">
+            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+            	</c:forEach>
+	        </select>
+		</h1>
 		<div id="mainmenu">
 		  	<ul>
-		  		<b><spring:message code = 'ezApprovalG.t1276' /></b>
+		  		<%-- <b><spring:message code = 'ezApprovalG.t1276' /></b>
 		        <select id="SCompID" name="SCompID" onChange="selectCompanyID()">
 		        	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
-		        </select><br /><br />
+		        </select><br /><br /> --%>
 		        <li id="GetEDMSXML"><span onClick="return btnAdd_onclick()" ><spring:message code = 'ezApprovalG.t1261' /></span></li>
 		    	<li id="SearchCondi"><span onClick="return btnInfo_onclick()"><spring:message code = 'ezApprovalG.t1284' /></span></li>		    	
 		  	</ul>

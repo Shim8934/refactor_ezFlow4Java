@@ -95,6 +95,26 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getAprPortletList_progress(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletList_progress", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getAprPortletList_reject(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletList_reject", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getAprPortletList_draft(Map<String, Object> map) throws Exception{
+		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletList_draft", map);
+	}	
+	
+	@SuppressWarnings("unchecked")
+	public List<ApprGDocListVO> getAprPortletList_progressDtl(Map<String, Object> map) throws Exception {
+		return (List<ApprGDocListVO>) list("EzApprovalG.getAprPortletList_progressDtl", map);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<ApprGAprLineVO> getAprLineInfo(Map<String, Object> map) throws Exception{
 		return (List<ApprGAprLineVO>) list("EzApprovalG.getAprLineInfo", map);
 	}
@@ -3003,6 +3023,11 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (int) select("EzApprovalG.getCountDoingDocInfo", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getPortletApprGapTime(Map<String, Object> map) throws Exception {
+		return (Map<String, Object>) select("EzApprovalG.getPortletApprGapTime", map);
+	}
+	
 	public String getDocExt(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getDocExt", map);
 	}
@@ -3065,9 +3090,23 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	public List<ApprGRecordTempVO> selectSpecialInfoNonElecRec(Map<String, Object> map) throws Exception {
 		return (List<ApprGRecordTempVO>) list("EzApprovalG.selectSpecialInfoNonElecRec", map);
 	}
+	
 	public int getLinkedAttachFileCount(Map<String, Object> map) throws Exception {
 		return (int) select("EzApprovalG.getLinkedAttachFileCount", map);
 	}
+	
+	public String getReformFlag(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getReformFlag", map);
+	}
+	
+	public String getReformFlagForTempDoc(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getReformFlagForTempDoc", map);
+	}
+	
+	public ApprGFormVO getReformInfoForApprovalDocument(Map<String, Object> map) throws Exception {
+		return (ApprGFormVO) select("EzApprovalG.getReformInfoForApprovalDocument", map);
+	}
+	
 	public void susinNonElecRecDocDel1(Map<String, Object> map) throws Exception {
 		delete("EzApprovalG.susinNonElecRecDocDel1", map);
 	}
@@ -3088,6 +3127,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 	public void susinNonElecRecDocDel7(Map<String, Object> map) throws Exception {
 		delete("EzApprovalG.susinNonElecRecDocDel7", map);
+	}
+	@SuppressWarnings("unchecked")
+	public List<Map<String, Object>> getPortletApprMemeberList(Map<String, Object> map) throws Exception {
+		return (List<Map<String, Object>>)list("EzApprovalG.getPortletApprMemeberList", map); 
 	}
 	public String getExtAttr1(Map<String, Object> map) throws Exception{
 		return (String)select("EzApprovalG.getExtAttr1", map);

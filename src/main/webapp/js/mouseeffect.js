@@ -84,14 +84,22 @@ function mouseOver_Sub2()
 {
 	if( prevSelMenu2 != this )
 	{
-		this.className = "on";
+		if (this.className == "important") {			
+			this.className = "important on";
+		} else {
+			this.className = "on";
+		}
 	}
 }
 function mouseOut_Sub2()
 {
 	if( prevSelMenu2 != this )
 	{
-		this.className = "off";
+		if (this.className == "important") {
+			this.className = "important off";
+		} else {
+			this.className = "off";
+		}
 	}
 }
 ////////////////////////////////////////////////////////////////////////
@@ -216,7 +224,11 @@ function mouseOver_Sub()
 {	
 	if( prevSelMenu != this )
 	{
-		this.className = "on ing";
+		if (this.className.indexOf("important") > -1) {
+			this.className = "important on ing";
+		} else {
+			this.className = "on ing";
+		}
 	}
 }
 
@@ -224,7 +236,11 @@ function mouseOut_Sub()
 {
 	if( prevSelMenu != this )
 	{
-		this.className = "off";
+		if (this.className.indexOf("important") > -1) {
+			this.className = "important off";
+		} else {
+			this.className = "off";
+		}
 	}
 }
 

@@ -1602,7 +1602,7 @@
 			
 			function GetObject() {
 				i_icd2.SetDocumentDisp(window.document);
-                i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/ezPortal/componentListTransfer.do";
+                i_icd2.xmlURL = "http://" + document.location.hostname + ":" + location.port + "/ezNewPortal/componentListTransfer.do";
                 i_icd2.CheckVersion();
                 var nCount = i_icd2.nNeedDownload;
 

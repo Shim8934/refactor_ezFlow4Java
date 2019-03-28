@@ -29,7 +29,7 @@ import egovframework.ezEKP.ezCommunity.vo.CommunityOneLineReplyVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzCommunityService {
-	public List<CommunityCBoardVO> bbsListGet2(String bName, String primary, String pKeyword, String sRadio, int tenantID) throws Exception;
+	public List<CommunityCBoardVO> bbsListGet2(String bName, String primary, String pKeyword, String sRadio, int tenantID, String companyID) throws Exception;
 	
 	public List<CommunityCBoardVO> bbsViewNewGet2(String bName, int tenantID) throws Exception;
 	
@@ -261,7 +261,8 @@ public interface EzCommunityService {
 	
 	public int pollETCViewGet(String questionID, int tenantID) throws Exception;
 	
-	public int commViewMemberGet2(String code, String primary, String keyword, String sRadio, int tenantID) throws Exception;
+	/* 2018-11-26 홍승비 - 커뮤니티 회원목록 카운트에 companyID 조건 추가 */
+	public int commViewMemberGet2(String code, String primary, String keyword, String sRadio, String companyID, int tenantID) throws Exception;
 	
 	public int adminMemPermitGet1(String code, int tenantID) throws Exception;
 	
@@ -285,7 +286,8 @@ public interface EzCommunityService {
 
 	public int adminMemberListOkGetE(String code, String cID, int tenantID) throws Exception;	
 
-	public int bbsListGet1(String bName, String primary, String pKeyword, String sRadio, int tenantID) throws Exception;
+	/* 2018-11-23 홍승비 - 커뮤니티 공지사항에 companyID 조건 추가 */
+	public int bbsListGet1(String bName, String primary, String pKeyword, String sRadio, String companyID, int tenantID) throws Exception;
 	
 	public int getReservedItemListCount(String id, int tenantID) throws Exception;
 	
@@ -344,7 +346,7 @@ public interface EzCommunityService {
 
 	public void adminMemberListOkGoSe(String mode, String code, String cID, String cNm, int tenantID) throws Exception;
 	
-	public void adminCommCloseOkInsert(String code, String commName, String commName2, String sysopID, String companyName, String todayTime, String reason, String closeState, int tenantID) throws Exception;
+	public void adminCommCloseOkInsert(String code, String commName, String commName2, String sysopID, String companyName, String companyId, String todayTime, String reason, String closeState, int tenantID) throws Exception;
 
 	public void joinOkSet1(String code, String id, String todayTime, String companyID, int tenantID) throws Exception;
 	

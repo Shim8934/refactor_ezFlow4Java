@@ -14,7 +14,7 @@ import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzSystemAdminService {
 	public List<SysParamVO> getSysParam(int tenantID) throws Exception;
-	public void updateSysParam(int tenantId, List<Map<String, String>> list, Locale locale) throws Exception;
+	public void updateSysParam(int tenantId, List<Map<String, String>> list, Locale locale, String companyID) throws Exception;
 	public List<ConnectionInfoVO> getLoginHist(int tenantID, String offset, int startPage, int maxItemPerPage, 
 			String keyword, String keycode, String lang, String startDate, String endDate, String companyId) throws Exception;
 	public int getLoginHistCount(int tenantID, String offset, String keyword, String keycode, 
@@ -34,4 +34,7 @@ public interface EzSystemAdminService {
 	public void deleteAccessId(String accessNo) throws Exception;
 	public void insertAccessId(int tenantID, String cn) throws Exception;
 	public ModuleSizeVO getModuleUsage(List<String> moduleNames, String realPath, LoginVO userInfo) throws Exception;
+	public void deleteWebfolderLog (int keepLogPeriod, int tenantID) throws Exception;
+	public void setMultiLoginType(String multiLoginType, int tenantID, String companyID, String editType) throws Exception;
+	public void updateNewPortalMenuByPackageType(String newPackageType, int tenantID, String companyID) throws Exception;
 }

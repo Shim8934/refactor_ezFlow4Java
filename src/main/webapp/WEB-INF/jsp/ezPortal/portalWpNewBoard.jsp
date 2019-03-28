@@ -5,8 +5,26 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">	
+		<style>
+			.portlet_list li {
+				cursor:pointer;
+				background:none;
+				display:inline-block;
+				width:118px;
+				height:180px;
+			}
+			.noticeImg {
+				cursor:pointer;
+				width:118px;
+				height:155px;
+			}
+			.noticeSpan {
+				display:block;
+			}
+		</style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<section  class="body_bg1">
+		<%-- <section  class="body_bg1">
       		<article class="portlet_notice">
         		<p class="title"><img src="/images/<spring:message code='main.t00025' />/main/notice_title.gif" alt=""> <span onclick='Boardmore_NewBoard_btnClick()' class="btn_more"><img src="/images/<spring:message code='main.t00025' />/main/btn_more01.gif" alt="more"></span></p>
         		<dl class="notice_tab">
@@ -19,22 +37,7 @@
       		</article>
 		</section>
 
-		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css">
-		<style>
-			.notice_tab {
-				background-color: #f9f9f9;
-				border: 1px solid #e8e8e8;
-			}
- 			.notice_tab dt {
-				margin: -1px -1px 0px -1px;
-				height: 27px;
-			}
-			.notice_tab dt.on {
-				margin: -1px -1px 0px -1px;
-				height: 27px;
-				padding: 0px 5px;
-			}
-		</style>
+		<link href="${util.addVer('main.e6', 'msg')}" rel="stylesheet" type="text/css"> --%>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
     		var pBoardID_NewBoard = "${pCompanyBoard}";
@@ -46,7 +49,7 @@
 			
         	document.onselectstart = function () { return false; };
         
-	        function window_onload_Newboard(){
+	        window.onload = function(){
     	        if (navigator.userAgent.indexOf('Firefox') != -1) {
         	        document.body.style.MozUserSelect = 'none';
             	    document.body.style.WebkitUserSelect = 'none';
@@ -62,12 +65,14 @@
 				if ("${pCompanyBoard }" == "") {
 					document.getElementById("Board0_Newboard").style.display = "none";
 				}
-				if ("${pDeptBoardID }" == "") {
+				//newPortal에 ID값 주석처리되있음
+				/* if ("${pDeptBoardID }" == "") {
 					document.getElementById("Board1_Newboard").style.display = "none";
 				}
 				if ("${pNewsBoardID }" == "") {
 					document.getElementById("Board2_Newboard").style.display = "none";
-				}
+				} */
+				
 				/* 2018-12-11 홍승비 - 포틀릿에 게시판이 하나도 등록되어있지 않은 경우 nodata 이미지 표출 */
 				if ("${pCompanyBoard }" == "" && "${pDeptBoardID }" == "" && "${pNewsBoardID }" == "") {
 					var nodata = "<div class='nodata_portlet '>";
@@ -80,12 +85,14 @@
         	}
         	var xmlhttp_getBoardList_NewBoard = createXMLHttpRequest();
         	
+        	/* 2018-09-14 홍승비 - 포틀릿에 표출되는 게시판에서 공지사항 리스트 제거 */
         	function getBoardList_NewBoard() {
                 $.ajax({
     	        	type : "POST",
     	        	dataType : "text",
     	        	url : "/ezBoard/getBoardList.do",
     	        	data : {
+    	        		type : "portletBoard",
     	        		boardType   : "1", 
 					 	boardId 	 : pBoardID_NewBoard, 
 					    pageNum 	 : "1", 
@@ -106,12 +113,12 @@
             	
             	try {
                 	if (xml == "") {
-	                    var nodata = "<div class='nodata_portlet '>";
+	                    /* var nodata = "<div class='nodata_portlet '>";
     	                nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
         	            nodata += "<p>" + strLang2_NewBoard + "</p></div>";
 
             	        document.getElementById("BoardList_NewBoard").innerHTML = nodata;
-                	    return;
+                	    return; */
                 	}
                 	document.getElementById("BoardList_NewBoard").innerHTML = "";
                 	var listHTML = "";
@@ -120,55 +127,137 @@
 	                var RowCnt = xmldom.getElementsByTagName("ROW").length;
                 
     	            if (RowCnt > 0) {
-        	            if (RowCnt > 4) {
-            	            RowCnt = 4;
-        	            }
-
-                	    var pfirstItemID = "";
-                    
-                        pfirstItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(0));                        
-                       	var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
-                        boardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("GUBUN").item(0));
-                       	
-                        listHTML = "<dl onclick=\"openDoc('" + pfirstItemID + "')\" class='nt_pic' style='cursor:pointer; overflow:visible;'>";
+    	            	/* 2018-09-11 홍승비 - 포틀릿에 표시되는 게시물의 수는 3개로 고정 */
+        	            /* if (RowCnt > 6) {
+            	            	RowCnt = 6;
+            	            }*/
+						if (RowCnt > 3) {
+        	            	RowCnt = 3;
+    	            	}
+            	        
+        	            /* 2018-08-21 장진혁 - 포틀릿 변경으로 주석처리 */
+                	    /* var pfirstItemID = "";                    
+                        pfirstItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("VALUE").item(0));                       	
+                        listHTML = "<dl onclick=\"openDoc('" + pfirstItemID + "')\" class='nt_pic' style='cursor:pointer'>"; */
+                        // 57d12c4101f94c38fde0d2ce60edd7e7a9470e06: listHTML = "<dl onclick=\"openDoc('" + pfirstItemID + "')\" class='nt_pic' style='cursor:pointer; overflow:visible;'>";
 
                         /* 2018-07-12 홍승비 - 포탈 포틀릿 게시판 제목 특수문자 처리 */
-                        var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0)));
+                        /* 2018-08-21 장진혁 - 포틀릿 변경으로 주석처리 */
+                        /* var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("TITLE").item(0)));
                         listHTML += "<dt class='tit'><strong>" + DOCTITLE + "</strong></dt>";
                         listHTML += "<dd class='photo'><img src='/images/" + strLang1_NewBoard + "/main/notice_pic.jpg' width='83' height='54' alt=''></dd>";
                         listHTML += "<dd id='content' class='txt'></dd>";
                         listHTML += "</dl>";
-
-                        listHTML += "<ul class=\"mainlist \">";
+                        listHTML += "<ul class=\"mainlist \">";  */
                         
-                        for (var i = 1; i < RowCnt; i++) {
+                        var FboardMainContent = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("DATA12").item(0));
+                        boardType = getNodeText(xmldom.getElementsByTagName("ROW").item(0).getElementsByTagName("GUBUN").item(0));
+                        
+                        //for (var i = 1; i < RowCnt; i++) {
+                        for (var i = 0; i < RowCnt; i++) {
                             var DOCTITLE = MakeXMLString(getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("TITLE").item(0)));
                             var pItemID = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("VALUE").item(0));
+                            var newItemFlag = getNodeText(xmldom.getElementsByTagName("ROW").item(i).getElementsByTagName("DATA7").item(0));
+                            var notiNewText = "";
+                            var imgSrc = "";
                             
-                            listHTML += "<li  style='cursor:pointer' onclick=\"openDoc('" + pItemID + "')\" >" + DOCTITLE + "</li>";
+                            if (newItemFlag == "Y") {
+                            	notiNewText = "N";
+                            	newItemFlag = "noti_new";
+                            }
+                            
+                          //  listHTML += "<li  style='cursor:pointer' onclick=\"openDoc('" + pItemID + "')\" >" + DOCTITLE + "</li>";
+                          /* 2018-09-11 홍승비 - 게시물의 이미지와 제목을 화면에 뿌려주도록 수정 */
+							$.ajax({
+								type : "POST",
+								dataType : "text",
+								async : false,
+								url : "/ezBoard/getContentInfo.do",
+								data : { type   : "BOARDCONTENT",
+										 docID   : pItemID 
+									   },
+								success: function(filePath){
+									imgSrc = getMhtImg(pItemID, filePath);
+									
+									// mht 내부에 사진이 없는 경우, 디폴트 이미지 사용함
+									if (imgSrc == "") {
+										imgSrc = "/images/kr/main/notiImg0" + (i + 1) + ".png";
+									}
+									
+									listHTML += "<li class='notiLI'><dl class='notiDL0" + (i + 1) + "' onclick=\"openDoc('" + pItemID + "')\">";
+									listHTML += "<dt class='noti_num'>" + (i + 1) + "</dt><dt class='" + newItemFlag + "'>" + notiNewText + "</dt>";
+									listHTML += "<dd class='noti_text'>" + DOCTITLE + "</dd></dl></li>";
+								}
+							});
                         }
+                     //   listHTML += "</ul>";
+                     
+                     // 게시물이 3개 미만이라면, 디폴트 게시물 이미지를 대신 표출한다.
+                     if (RowCnt < 3) {
+						for (i = RowCnt; i < 3; i++) {
+							listHTML += "<li class='notiLI'><p class='noti_nodata'></p></li>";
+                    	 }
+                     }
                         
-                        listHTML += "</ul>";
+					document.getElementById("BoardList_NewBoard").innerHTML = listHTML;
                         
-                        document.getElementById("BoardList_NewBoard").innerHTML = listHTML;
-						
+                        /* 2018-09-11 홍승비 - 게시물의 내용(content)을 화면에 표출하는 부분 주석처리 */
+						/* 
                         if (boardType == "3" || boardType == "4") {
                         	document.getElementById("content").innerHTML = FboardMainContent;	
                         } else {
                         	getContent(pfirstItemID);
                         }
-                        
+                         */
 	                } else {
-                    	var nodata = "<div class='nodata_portlet '>";
+                    	/* var nodata = "<div class='nodata_portlet '>";
                     	nodata += "<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>";
                     	nodata += "<p>" + strLang2_NewBoard + "</p></div>";
 
-                    	document.getElementById("BoardList_NewBoard").innerHTML = nodata;
+                    	document.getElementById("BoardList_NewBoard").innerHTML = nodata; */
+                    	
+	                	var listHTML = "";
+					    listHTML += "<dl class='nodata'>";
+	                	listHTML += "<dt><img src='/images/kr/main/nodata.png'></dt>";
+	                	listHTML += '<dd>"' + strLang2_NewBoard + '"</dd>';
+	                	listHTML += "</dl>";
+	                	
+	                	document.getElementById("BoardList_NewBoard").innerHTML = listHTML;
                 	}
             	} catch (e) {
             		
             	}
         	}
+			
+			/* 2018-09-11 홍승비 - mht파일 내부의 첫번째 이미지 경로를 리턴하는 함수 */
+			function getMhtImg(pItemID, filePath) {
+				var imgMht = "";
+				var imgSrc = "";
+				
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezCommon/mhtToHTMLContent.do",
+					data : { type   : "BOARDCONTENT", 
+							 itemID : pItemID,
+							 href   : filePath 
+						   },
+					success: function(result){			
+						imgMht = result.substr(result.indexOf('<img src="'));
+						imgMht = imgMht.substring((imgMht.indexOf('"') + 1), imgMht.indexOf(">"));
+						imgMht = imgMht.substring(0, imgMht.indexOf('"'));
+						
+						if(imgMht == "") {
+							imgSrc = "";
+						} else {
+							imgSrc = imgMht;
+						}
+					}
+				});
+				
+				return imgSrc;
+			}
 			
 			function openDoc(pItemID) {
 	            var pheight = window.screen.availHeight;
@@ -187,7 +276,13 @@
 					pLeft = (pwidth - 764) / 2;
 					
 	                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height="+ height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
-            	} else {
+            	} else if (boardType == "7") {
+            		pTop = (pheight - 679) / 2;
+					pLeft = (pwidth - 764) / 2;
+					
+	                window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=764,top=" + pTop + ",left=" + pLeft, "");
+            	}
+				else {
 	                if (CrossYN())
     	                window.open("/ezBoard/boardItemView.do?showAdjacent=&itemID=" + pItemID + "&boardID=" + pBoardID_NewBoard, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
         	        else
@@ -284,7 +379,7 @@
     	    }
 
         	function refresh_onclick() {
-            	if (document.getElementById("Board0_Newboard").className == "on") {
+            	/* if (document.getElementById("Board0_Newboard").className == "on") {
                 	pBoardID_NewBoard = document.getElementById("Board0_Newboard").getAttribute("DATA1");
                 	getBoardList_NewBoard();
             	} else if (document.getElementById("Board1_Newboard").className == "on") {
@@ -293,7 +388,8 @@
             	} else {
                 	pBoardID_NewBoard = document.getElementById("Board2_Newboard").getAttribute("DATA1");
                 	getBoardList_NewBoard();
-            	}
+            	} */
+        		getBoardList_NewBoard();
         	}
         	
         	/* 2018-09-04 홍승비 - 탭메뉴 마우스오버 시 하이라이트 설정 */
@@ -306,6 +402,32 @@
 	        	}
 	        }
 	        
-        	window_onload_Newboard();
-	</script>
+	        // window.onload로 해당 함수기능 이동하여 주석처리 
+        	// window_onload_Newboard();
+		</script>
+	</head>
+	<body>
+		<div class="layDIV">
+            <dl class="portlet_title">
+                <dt class="portletText">${pCompanyBDNM}</dt>
+                <dd class="portletPlus" onclick='Boardmore_NewBoard_btnClick()'><img src="/images/kr/main/portlet_Plus.png"></dd>
+            </dl>
+            <ul class="noti_portlet_list" id="BoardList_NewBoard">
+                
+            </ul>
+        </div>
+		<!-- 2018-08-21 장진혁 포틀릿 변경으로 주석처리 -->
+		<%-- <section  class="body_bg1">
+      		<article class="portlet_notice">
+        		<p class="title"><img src="/images/<spring:message code='main.t00025' />/main/notice_title.gif" alt=""> <span onclick='Boardmore_NewBoard_btnClick()' class="btn_more"><img src="/images/<spring:message code='main.t00025' />/main/btn_more01.gif" alt="more"></span></p>
+        		<dl class="notice_tab">
+          			<dt id="Board0_Newboard" DATA1="${pCompanyBoard}" TYPE="${pCompanyType}" onclick="boardChangeTab_Newboard(this)" class="on"><span>${pCompanyBDNM}</span></dt>
+          			<dt id="Board1_Newboard" DATA1="${pDeptBoardID}" TYPE="${pDeptType}" onclick="boardChangeTab_Newboard(this)"><span>${pDeptBDNM}</span></dt>
+          			<dt id="Board2_Newboard" DATA1="${pNewsBoardID}" TYPE="${pNewsType}" onclick="boardChangeTab_Newboard(this)"><span>${pNewsBDNM}</span></dt>
+        		</dl>
+          		<div id="BoardList_NewBoard" >
+        		</div>
+      		</article>
+		</section> --%>
+	</body>
 </html>

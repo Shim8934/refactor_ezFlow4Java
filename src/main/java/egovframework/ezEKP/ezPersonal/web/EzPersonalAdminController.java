@@ -11,6 +11,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -18,6 +19,9 @@ import javax.annotation.Resource;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +31,8 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -35,14 +41,20 @@ import org.w3c.dom.Document;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezNewPortal.service.EzNewPortalService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -84,6 +96,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	@Autowired
 	private EzPersonalAdminService ezPersonalAdminService;
 	
+	@Autowired
+	private EzNewPortalService ezNewPortalService;
 	/**
 	 * 초기화면 메인화면 호출 함수
 	 */
@@ -321,23 +335,29 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickLink 목록 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkList.do", produces = "text/xml; charset=utf-8")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/getQuickLinkList.do", produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public String getQuickLinkList(@CookieValue("loginCookie") String loginCookie) throws Exception {
+	public JSONObject getQuickLinkList(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("getQuickLinkList started");
-
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String result = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang());
-
+		List<PersonalQuickLinkVO> list = ezPersonalAdminService.getQuickLinkList(userInfo, userInfo.getLang());
+		
+		JSONObject json = new JSONObject();
+		json.put("list", list);
+		
 		logger.debug("getQuickLinkList ended");
-		return result;
+		return json;
 	}
 	
 	/**
 	 * 초기화면 QuickLink 등록,수정화면 호출 함수
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/admin/ezPersonal/addQuickLink.do")
-	public String addQuickLink(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+	@ResponseBody
+	public JSONObject addQuickLink(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("addQuickLink started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -347,31 +367,35 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			mode = request.getParameter("mode");
 		}
 		
-		model.addAttribute("strUserLang", commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()));
-		model.addAttribute("primary", userInfo.getPrimary());
-		model.addAttribute("mode", mode);
-		model.addAttribute("host", userInfo.getServerName());
-		model.addAttribute("lang", userInfo.getLang());
+		JSONObject json = new JSONObject();
+		json.put("strUserLang", commonUtil.getMultiData(userInfo.getLang(),userInfo.getTenantId()));
+		json.put("primary", userInfo.getPrimary());
+		json.put("mode", mode);
+		json.put("lang", userInfo.getLang());
 		
 		logger.debug("addQuickLink ended");
-		return "admin/ezPersonal/personalAddQuickLink";
+		return json;
 	}
 	
 	/**
 	 * 초기화면 QuickLink 수정화면 내용 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/getQuickLink.do", produces = "text/xml; charset=utf-8")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/getQuickLink.do", produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public String getQuickLink(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
+	public JSONObject getQuickLink(@CookieValue("loginCookie") String loginCookie,HttpServletRequest request) throws Exception {
 		logger.debug("getQuickLink started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String quickLinkID = request.getParameter("pQuickLinkID");
 		
-		String result = ezPersonalAdminService.getQuickLink(quickLinkID, userInfo.getTenantId());
-
+		PersonalQuickLinkVO quickLinkVO = ezPersonalAdminService.getQuickLink(quickLinkID, userInfo.getTenantId());
+		
+		JSONObject json = new JSONObject();
+		json.put("quickLinkVO", quickLinkVO);
+		
 		logger.debug("getQuickLink ended");
-		return result;
+		return json;
 	}
 	
 	/**
@@ -470,6 +494,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		int currentPage = 1, pageSize = 15;
 		String progressPollFlag = "false";
+		String progressSDate = "";
+		String progressEDate = "";
 		StringBuilder result = new StringBuilder();
 		
 		String companyID = request.getParameter("companyID");
@@ -477,53 +503,63 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		if (request.getParameter("page") != null) {
 			currentPage = Integer.parseInt(request.getParameter("page"));
 		}
-		
+
+		PersonalLightPollVO progressFlagVO = ezNewPortalService.getPollPortlet(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId(), userInfo.getOffset());
+		if(progressFlagVO != null) {
+			progressPollFlag = "true";
+			progressSDate = progressFlagVO.getStartDate();
+			progressEDate = progressFlagVO.getEndDate();
+		}
+
 		int totalCount = ezPersonalAdminService.getPollCount(companyID, userInfo.getTenantId());
 		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
 		List<PersonalLightPollVO> list = ezPersonalAdminService.getPollList(companyID, totalCount, pageSize, (currentPage - 1) * pageSize, userInfo.getTenantId());
-		
+
 		result.append("<LISTVIEWDATA>");
 		result.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
 		result.append("<PAGECNT>" + pageCount + "</PAGECNT>");
 		result.append("<CURPAGE>" + currentPage + "</CURPAGE>");
 		result.append("<ROWS>");
-		
+
 		for (int i = 0; i < list.size(); i++) {
 			PersonalLightPollVO vo = list.get(i);
 			result.append("<ROW>");
 			result.append("<CELL>"); 
-			result.append("<VALUE>" + (totalCount - (pageSize * (currentPage-1)+i)) + "</VALUE>");
-			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
+			result.append("<VALUE>" + vo.getItemSeq() +"</VALUE>");
+			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");								// itemSeq
+			result.append("</CELL>");
+			result.append("<CELL>"); 
+			result.append("<VALUE>" + (totalCount - (pageSize * (currentPage-1)+i)) + "</VALUE>");	// number
 			result.append("</CELL>");
 			result.append("<CELL>");
-			result.append("<VALUE>" + commonUtil.cleanValue(vo.getPollTitle()) + "</VALUE>");
+			result.append("<VALUE>" + commonUtil.cleanValue(vo.getPollTitle()) + "</VALUE>");		// title
 			result.append("</CELL>");
 			result.append("<CELL>");
-			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
+			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");	// startDate
 			result.append("</CELL>");
 			result.append("<CELL>");
-			
-			if (commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).indexOf("1900-01-01") > -1) {
-				result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t244", userInfo.getLocale()) + "</VALUE>");
-				progressPollFlag = "true";
+			result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
+			result.append("</CELL>");
+
+			// 진행여부
+			result.append("<CELL>");
+			if(vo.getProgress() == 1) {
+				result.append("<VALUE>" + "1" + "</VALUE>");	// 진행중
+				result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			} else {
-				result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false).substring(0, 10) + "</VALUE>");
+				result.append("<VALUE>" + "0" + "</VALUE>");	// 삭제
+				result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			}
-			
-			result.append("</CELL>");
-			result.append("<CELL>");
-			result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t99", userInfo.getLocale()) + "</VALUE>");
-			result.append("<TYPE>" + "BTN" + "</TYPE>");
-			result.append("<FUNC>" + "del_poll" + "</FUNC>");
-			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			result.append("</ROW>");
 		}
-		
+
 		result.append("</ROWS>");
 		result.append("<PROFLAG>" + progressPollFlag + "</PROFLAG>");
+		result.append("<PROFLAGSDATE>" + progressSDate + "</PROFLAGSDATE>");
+		result.append("<PROFLAGEDATE>" + progressEDate + "</PROFLAGEDATE>");
 		result.append("</LISTVIEWDATA>");
-		
+
 		logger.debug("managePollList ended");
 		return result.toString();
 	}
@@ -532,16 +568,27 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickPoll 등록화면 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/addPoll.do")
-	public String addPoll(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String addPoll(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request, PersonalLightPollVO infoVO) throws Exception {
 		logger.debug("addPoll started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
+		String flag = "";
+		String itemSeq = "";
+		if(request.getParameter("flag") != null) {
+			flag = request.getParameter("flag");
+		}
+		if (request.getParameter("itemSeq") != null) {
+			itemSeq = request.getParameter("itemSeq");
+			infoVO = ezPersonalAdminService.getPollInfo(itemSeq, userInfo.getTenantId());
+			model.addAttribute("infoVO", infoVO);
+		} 
 		
 		model.addAttribute("langPrimary", langPrimary);
 		model.addAttribute("langSecondary", langSecondary);
+		model.addAttribute("flag", flag);
 
 		logger.debug("addPoll ended");
 		return "admin/ezPersonal/personalAddPoll";
@@ -557,8 +604,17 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Document doc = commonUtil.convertStringToDocument(data);
+		String itemSeq;
+		itemSeq = doc.getElementsByTagName("ITEMSEQ").item(0).getTextContent();
 		
-		String result = ezPersonalAdminService.insertPoll(doc, userInfo.getTenantId());
+		String result = "";
+		if(itemSeq.equals("")){
+			// 생성
+			result = ezPersonalAdminService.insertPoll(doc, userInfo.getTenantId());
+		} else {
+			// 수정
+			result = ezPersonalAdminService.updatePoll(doc, userInfo.getTenantId());
+		}
 
 		logger.debug("savePoll ended");
 		return result;
@@ -573,9 +629,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("delPoll started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String itemSeq = request.getParameter("itemSeq");
+		String pollList = request.getParameter("pollList");
 		
-		String result = ezPersonalAdminService.deletePoll(itemSeq, userInfo.getTenantId());
+		String result = ezPersonalAdminService.deletePoll(pollList, userInfo.getTenantId());
 
 		logger.debug("delPoll ended");
 		return result;
@@ -592,9 +648,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String subject = "", title = "";
 		
 		String itemSeq = request.getParameter("itemSeq");
-		
-		
-		
+
 		PersonalLightPollVO infoVO = ezPersonalAdminService.getPollInfo(itemSeq, userInfo.getTenantId());
 		
 		if (userInfo.getPrimary().equals("2") && infoVO.getPollTitle2() != null) {
@@ -704,26 +758,43 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String companyID = request.getParameter("companyID");
 		
+		int currentPage = 1, pageSize = 15;
 		
-		List<PersonalPopupVO> list = ezPersonalAdminService.getPopupList(companyID, userInfo.getTenantId());
+		if (request.getParameter("page") != null) {
+			currentPage = Integer.parseInt(request.getParameter("page"));
+		}
+
+		int totalCount = ezPersonalAdminService.getPopupCount(companyID, userInfo.getTenantId());
+		int pageCount = (int)((totalCount + pageSize - 1) / pageSize);
+		
+		List<PersonalPopupVO> list = ezPersonalAdminService.getPopupList(companyID, totalCount, pageSize, (currentPage - 1 ) * pageSize, userInfo.getTenantId());
 		
 		StringBuilder result = new StringBuilder();
 		
 		result.append("<LISTVIEWDATA>");
+		result.append("<TOTALCNT>" + totalCount + "</TOTALCNT>");
+		result.append("<PAGECNT>" + pageCount + "</PAGECNT>");
+		result.append("<CURPAGE>" + currentPage + "</CURPAGE>");
 		result.append("<ROWS>");
 		
 		//2018-08-08  김보미 - rownumber추가
-		int i = list.size();
+		int i=0;
 		for (PersonalPopupVO vo : list) {
 			result.append("<ROW>");
-			result.append("<CELL>");
-			//2018-08-08  김보미 - rownumber추가
-//			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
-			result.append("<VALUE>" + i + "</VALUE>");
-			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
+			result.append("<CELL>"); 
+			result.append("<VALUE>" + vo.getItemSeq() +"</VALUE>");
+			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");								// itemSeq
 			result.append("<DATA2>" + vo.getWidth() + "</DATA2>");
 			result.append("<DATA3>" + vo.getHeight() + "</DATA3>");
 			result.append("<DATA4>" + vo.getPosition() + "</DATA4>");
+			result.append("<PROGRESS>" + vo.getProgress() + "</PROGRESS>");
+			result.append("<INUSE>" + vo.getInUse() + "</INUSE>");
+			result.append("</CELL>");
+			result.append("<CELL>");
+			//2018-08-08  김보미 - rownumber추가
+//			result.append("<VALUE>" + vo.getItemSeq() + "</VALUE>");
+			result.append("<VALUE>" + (totalCount - (pageSize * (currentPage-1)+i)) + "</VALUE>");
+			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
@@ -739,20 +810,15 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
-			result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t169", userInfo.getLocale()) + "</VALUE>");
-			result.append("<TYPE>" + "BTN" + "</TYPE>");
-			result.append("<FUNC>" + "mod_popup" + "</FUNC>");
+			result.append("<VALUE>" + vo.getProgress() + "</VALUE>");
 			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
 			result.append("</CELL>");
 			
 			result.append("<CELL>");
-			result.append("<VALUE>" + egovMessageSource.getMessage("ezPersonal.t99", userInfo.getLocale()) + "</VALUE>");
-			result.append("<TYPE>" + "BTN" + "</TYPE>");
-			result.append("<FUNC>" + "del_popup" + "</FUNC>");
-			result.append("<DATA1>" + vo.getItemSeq() + "</DATA1>");
+			result.append("<VALUE>" + vo.getInUse() + "</VALUE>");
 			result.append("</CELL>");
 			result.append("</ROW>");
-			i--;
+			i++;
 		}
 		
 		result.append("</ROWS>");
@@ -774,11 +840,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		
 		String langPrimary = ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId());
 		String langSecondary = ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId());
-		
 		String companyID = request.getParameter("companyID");
-		
 		String initDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm"), userInfo.getOffset(), false);
-		
+		String flag = request.getParameter("flag");
+
 		if (request.getParameter("itemSeq") != null) {
 			itemSeq = request.getParameter("itemSeq");
 			
@@ -787,8 +852,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 			// &quot의 경우 FE에서 string을 감쌀 때 쌍따옴표를 사용하고 있기 때문에 따옴표로 변경
 			vo.setContent(vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\'").replace("&apos;", "\'"));
 		} else {
-			vo.setWidth(300);
-			vo.setHeight(350);
+			vo.setWidth(600);
+			vo.setHeight(600);
 		}
 		
 		model.addAttribute("langPrimary", langPrimary);
@@ -798,6 +863,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("isoUTFstartDate", commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false));
 		model.addAttribute("isoUTFEndDate", commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false));
 		model.addAttribute("personalPopupVO", vo);
+		model.addAttribute("flag", flag);
 
 		logger.debug("addPopupCK ended");
 		return "admin/ezPersonal/personalAddPopupCK";
@@ -837,9 +903,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		logger.debug("deletePopup started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String itemSeq = request.getParameter("itemSeq");
+		String popupList = request.getParameter("popupList");
 		
-		ezPersonalAdminService.deletePopup(itemSeq, userInfo.getTenantId());
+		ezPersonalAdminService.deletePopup(popupList, userInfo.getTenantId());
 
 		logger.debug("deletePopup ended");
 		return "OK";
@@ -855,6 +921,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String itemSeq = request.getParameter("itemSeq");
 		String title = "";
+		String flag = "";
+		if (request.getParameter("flag") != null) {
+			flag = request.getParameter("flag");
+		}
 		
 		vo = ezPersonalAdminService.getPopupInfo(itemSeq, userInfo.getTenantId());
 		vo.setStartDate(commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false));
@@ -872,6 +942,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("title", title);
 		model.addAttribute("content", content);
 		model.addAttribute("user", userInfo.getId());
+		model.addAttribute("flag", flag);
+		model.addAttribute("skinValue", vo.getSkinValue());
+		model.addAttribute("wHeight", vo.getHeight());
+		model.addAttribute("wWidth", vo.getWidth());
 		
 		logger.debug("showPopup ended");
 		return "admin/ezPersonal/personalShowPopup";
@@ -881,12 +955,30 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 이달의우수사원메뉴 호출 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/employeeOfMonth.do")
-	public String employeeOfMonth(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+	public String employeeOfMonth(@CookieValue("loginCookie") String loginCookie) throws Exception {
 		logger.debug("employeeOfMonth started");
-
+		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
-		List<PersonalEmpMonthVO> list = ezPersonalAdminService.getEmpMonth(userInfo.getCompanyID(), userInfo.getTenantId());
+		logger.debug("employeeOfMonth ended");
+		return "admin/ezPersonal/personalEmployeeOfMonth";
+	}
+	
+	/**
+	 * 초기화면 이달의우수사원메뉴 리스트 호출 함수
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/getEmployeeOfMonthList.do", produces = "application/json; charset=utf-8")
+	@ResponseBody
+	public JSONObject getEmployeeOfMonthList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getEmployeeOfMonthList started");
+		
+		String year = request.getParameter("year");
+		logger.debug("year: " + year);
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		List<PersonalEmpMonthVO> list = ezPersonalAdminService.getEmpMonth(year, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		for (PersonalEmpMonthVO vo : list) {
 			if (userInfo.getPrimary().equals("2")) {
@@ -895,12 +987,20 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 				vo.setDescription(vo.getDescription2());
 				vo.setCompany(vo.getCompany2());
 			}
+			
+			if (vo.getFilePath() != null && !vo.getFilePath().equals("")) {
+				vo.setFilePath("/ezCommon/downloadAttach.do?&filePath=" + commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + vo.getFilePath());
+			}
+			else{
+				vo.setFilePath("/images/kr/main/employee_default.png");
+			}
 		}
 		
-		model.addAttribute("list", list);
-
-		logger.debug("employeeOfMonth ended");
-		return "admin/ezPersonal/personalEmployeeOfMonth";
+		JSONObject json = new JSONObject();
+		json.put("list", list);
+		
+		logger.debug("getEmployeeOfMonthList ended");
+		return json;
 	}
 	
 	/**
@@ -917,7 +1017,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 초기화면 이달의우수사원 등록,삭제 실행 함수
+	 * 초기화면 이달의우수사원 등록,수정,삭제 실행 함수
 	 */
 	@RequestMapping(value = "/admin/ezPersonal/setEmployeeMonth.do")
 	@ResponseBody
@@ -958,9 +1058,9 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 슬라이드이미지 목록 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/getSlider.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/getSlider.do", produces = "application/json; charset=utf-8")
 	@ResponseBody
-	public String getSlider(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+	public List<PersonalSliderImageVO> getSlider(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getSlider started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -971,8 +1071,8 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		}
 		logger.debug("sliderID="+sliderID);
 		
-		String result = ezPersonalAdminService.getSlider(sliderID, userInfo);
-
+		List<PersonalSliderImageVO> result = ezPersonalAdminService.getSlider(sliderID, userInfo);
+		
 		logger.debug("getSlider ended");
 		return result;
 	}
@@ -1003,7 +1103,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("secondary", secondary);
 
 		logger.debug("selectImage ended");
-		return "admin/ezPersonal/personalSelectImage";
+		return "admin/ezPersonal/personalSelectImages";
 	}
 	
 	/**
@@ -1104,8 +1204,10 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		String mode = request.getParameter("mode");
 		// 18-05-10 김민성 - 슬라이드 이미지 등록 URL 컬럼 추가
 		String url = request.getParameter("url");
+		// 18-11-28 문성업 - 슬라이디 하용여부 파라미터 추가
+		String isUse = request.getParameter("isUse");
 		
-		ezPersonalAdminService.setSliderImage(sliderID, displayName, displayName2, sliderPath, fileName, mode, userInfo, url);
+		ezPersonalAdminService.setSliderImage(sliderID, displayName, displayName2, sliderPath, fileName, mode, userInfo, url, isUse);
 
 		logger.debug("saveSlider ended");
 		return "OK";
@@ -1157,17 +1259,22 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	/**
 	 * 초기화면 QuickLink 삭제 실행 함수
 	 */
-	@RequestMapping(value = "/admin/ezPersonal/delQuickLink.do", produces = "text/xml; charset=utf-8")
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/delQuickLink.do", produces = "application/json; charset=UTF-8")
 	@ResponseBody
-	public String  delQuickLink(@CookieValue("loginCookie") String loginCookie, @RequestBody String data) throws Exception {
+	public JSONObject  delQuickLink(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("delQuickLink started");
 
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		Document doc = commonUtil.convertStringToDocument(data);
-		ezPersonalAdminService.delQuickLink(doc.getElementsByTagName("pQuickLinkID").item(0).getTextContent(), userInfo.getTenantId());
-
+		
+		String pQuickLinkID = request.getParameter("pQuickLinkID");
+		ezPersonalAdminService.delQuickLink(pQuickLinkID, userInfo.getTenantId());
+		
+		JSONObject json = new JSONObject();
+		json.put("result", "OK");
+		
 		logger.debug("delQuickLink ended");
-		return "OK";
+		return json;
 	}
 	
 	/**
@@ -1269,5 +1376,252 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 		model.addAttribute("strXML", strXML);
 
 		return "/admin/ezPortal/portalPortletImageUpload";
+	}
+
+
+	/** 
+	 * 빠른설문 config 조회 함수  
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/getLightPollConfig.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject getLightPollConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getLightPollConfig started");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		PersonalLightPollConfigVO configVO = ezPersonalAdminService.getLightPollConfig(userInfo.getId(), userInfo.getTenantId());
+		JSONObject json = new JSONObject();
+		json.put("configVO", configVO);
+		logger.debug("getLightPollConfig ended");
+		return json;
+	}
+
+	/**
+	 * 빠른설문 config 저장 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/setLightPollConfig.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public String setLightPollConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam String isPreview) throws Exception {
+		logger.debug("setLightPollConfig started");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		ezPersonalAdminService.setLightPollConfig(userInfo.getId(), isPreview, userInfo.getTenantId());
+		logger.debug("setLightPollConfig ended");
+		return null;
+	}
+
+
+	/** 
+	 *빠른설문 itemseq 조회 함수  
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/getPollItem.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject getPollItem(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam String itemseq) throws Exception {
+		logger.debug("getPollItem started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		PersonalLightPollVO pollVO = ezPersonalAdminService.getPollInfo(itemseq, userInfo.getTenantId());
+		
+		// 다국어 처리
+		if (userInfo.getPrimary().equals("2") && pollVO.getPollTitle2() != null) {
+			pollVO.setPollTitle(pollVO.getPollTitle2());
+		} 
+		List<PersonalLightPollVO> pollResultVO = ezPersonalAdminService.getPollResult(itemseq, userInfo.getTenantId());
+		int totalCount = 0;
+		for (PersonalLightPollVO vo : pollResultVO) {
+			totalCount += vo.getCount();
+		}
+		for (PersonalLightPollVO vo : pollResultVO) {
+			vo.setPercent((int)(vo.getCount() / totalCount * 100));
+		}
+		
+		JSONObject json = new JSONObject();
+		json.put("pollVO", pollVO);
+		json.put("pollResultVO", pollResultVO);
+		json.put("totalCount", totalCount);
+		logger.debug("getPollItem ended");
+		return json;
+	}
+	
+	/** 
+	 * 팝업공지 config 조회 함수  
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/getPopupConfig.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject getPopupConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getPopupConfig started");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		PersonalPopopConfigVO configVO = ezPersonalAdminService.getPopupConfig(userInfo.getId(), userInfo.getTenantId());
+		JSONObject json = new JSONObject();
+		json.put("configVO", configVO);
+		logger.debug("getPopupConfig ended");
+		return json;
+	}
+
+
+	/**
+	 * 팝업공지 config 저장 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/setPopupConfig.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public String setPopupConfig(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam String isPreview) throws Exception {
+		logger.debug("setPopupConfig started");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+
+		String msg = ezPersonalAdminService.setPopupConfig(userInfo.getId(), isPreview, userInfo.getTenantId());
+		logger.debug("setPopupConfig ended");
+		return msg;
+	}
+
+
+	/**
+	 * 팝업공지 사용여저장 함수
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/setPopupUse.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public String setPopupUse(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestParam String itemSeq, @RequestParam String inUse) throws Exception {
+		logger.debug("setPopupUse started");
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+
+		String msg = ezPersonalAdminService.setPopupUse(userInfo.getCompanyID(), userInfo.getTenantId(), itemSeq, inUse);
+		logger.debug("setPopupUse ended");
+		return msg;
+	}
+	/**
+	 * 초기화면 QuickLink 순서 변경
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/updateQuickLinkOrder.do", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject updateQuickLinkOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject jsonParam) throws Exception {
+		logger.debug("updateQuickLinkOrder started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		JSONObject json = new JSONObject();
+		JSONParser jp = new JSONParser();
+		jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+		
+		JSONArray linkOrderList = (JSONArray) jsonParam.get("linkOrderList");
+		ezPersonalAdminService.updateQuickLinkOrder(linkOrderList, userInfo.getTenantId());
+		
+		json.put("result", "OK");
+		
+		logger.debug("updateQuickLinkOrder ended");
+		return json;
+	}
+	
+	/**
+	 * 초기화면 슬라이디 이미지 순서 변경
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/updateSliderImageOrder.do", produces = "application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject updateSliderImageOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject jsonParam) throws Exception {
+		logger.debug("updateSliderImageOrder started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		JSONObject json = new JSONObject();
+		JSONParser jp = new JSONParser();
+		jsonParam = (JSONObject) jp.parse(jsonParam.toJSONString());
+		
+		JSONArray sliderImageList = (JSONArray) jsonParam.get("slierImageList");
+		ezPersonalAdminService.updateSliderImageOrder(sliderImageList, userInfo.getTenantId());
+		json.put("result", "OK");
+		
+		logger.debug("updateSliderImageOrder end");
+		return json;
+	}
+
+
+	/** 
+	 * 현재 진행중인 설문조사 get
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/getOnUsePoll.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject getOnUsePoll(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getOnUsePoll started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		PersonalLightPollVO progressVO = ezNewPortalService.getPollPortlet(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getId(), userInfo.getOffset());
+		JSONObject json = new JSONObject();
+		if(progressVO == null) {
+			json.put("progressFlag", "FALSE");
+		} else {
+			json.put("progressFlag", "OK");
+			json.put("progressVO", progressVO);
+		}
+
+		logger.debug("getOnUsePoll ended");
+		return json;
+	}
+
+
+	/** 
+	 * 현재 진행중인 설문조사 get
+	 */
+	@RequestMapping(value = "/admin/ezPersonal/checkJoinPoll.do", method = RequestMethod.POST, produces="text/plain; charset=UTF-8")
+	@ResponseBody
+	public String checkJoinPoll(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("checkJoinPoll started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String itemSeq = "";
+		if(request.getParameter("itemseq") != null) {
+			itemSeq = request.getParameter("itemseq");
+		}
+
+		String msg = "OK";
+		msg = ezPersonalAdminService.checkJoinPoll(userInfo.getId(), userInfo.getTenantId(), itemSeq);
+
+		logger.debug("checkJoinPoll ended");
+		return msg;
+	}
+	
+	/**
+	 * 팝업공지 공지사항 공지사항 본문화면 호출 함수
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value = "/admin/ezPersonal/showLayerPopup.do", method = RequestMethod.POST, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject showLayerPopup(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, @RequestBody JSONObject jsonParam, PersonalPopupVO vo, Model model) throws Exception {
+		logger.debug("showLayerPopup started");
+		
+		JSONObject json = new JSONObject();
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String itemSeq = jsonParam.get("itemSeq").toString();
+		String title = "";
+		String flag = "";
+		
+		if (request.getParameter("flag") != null) {
+			flag = request.getParameter("flag");
+		}
+		
+		vo = ezPersonalAdminService.getPopupInfo(itemSeq, userInfo.getTenantId());
+		vo.setStartDate(commonUtil.getDateStringInUTC(vo.getStartDate(), userInfo.getOffset(), false));
+		vo.setEndDate(commonUtil.getDateStringInUTC(vo.getEndDate(), userInfo.getOffset(), false));
+		String content = vo.getContent().replace("\r\n", "").replace("\n", "").replace("&lt;", "<").replace("&gt;", ">").replace("&quot;", "\"").replace("&apos;", "\'");
+		
+		
+		if (userInfo.getPrimary().equals("2") && !vo.getTitle2().equals("")) {
+			title = vo.getTitle2();
+		} else {
+			title = vo.getTitle();
+		}
+		
+		json.put("itemSeq", itemSeq);
+		json.put("title", title);
+		json.put("content", content);
+		json.put("height", jsonParam.get("height"));
+		json.put("width", jsonParam.get("width"));
+		json.put("vertical", jsonParam.get("vertical"));
+		json.put("horizontal", jsonParam.get("horizontal"));
+		json.put("flag", flag);
+		json.put("skinValue", vo.getSkinValue());
+		json.put("userId", userInfo.getId());
+		
+		logger.debug("showLayerPopup ended");
+		return json;
 	}
 }

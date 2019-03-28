@@ -325,6 +325,54 @@ public class EzPollController extends EgovFileMngUtil {
 		logger.debug("question create finishes!");
 		return "/ezPoll/createPoll";
 	}
+	
+	/**
+	 * 투표 메인 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezPoll/pollMain.do")
+	public String qstMain(HttpServletRequest request, ModelMap model) throws Exception{
+		logger.debug("pollMain Start");
+		String qstId = request.getParameter("qstId");
+		
+		if (qstId != null) {
+			qstId = commonUtil.detectPathTraversal(qstId);
+			qstId = commonUtil.stripScriptTags(qstId);
+		}
+		
+		model.addAttribute("qstId", qstId);
+		logger.debug("pollMain End");
+		return "/ezPoll/pollMain";
+	}
+	
+	/**
+	 * 투표 레프트 메뉴 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezPoll/pollLeft.do")
+	public String qstLeft(HttpServletRequest request, ModelMap model) throws Exception{
+		logger.debug("pollLeft Start");
+		String qstId = request.getParameter("qstId");
+		
+		if (qstId != null) {
+			qstId = commonUtil.detectPathTraversal(qstId);
+			qstId = commonUtil.stripScriptTags(qstId);
+		}
+		
+		model.addAttribute("qstId", qstId);
+		
+		logger.debug("pollLeft End");
+		return "/ezPoll/pollLeft";
+	}
+	
+	/**
+	 * 투표 환경설정 메뉴 화면 호출 함수
+	 */
+	@RequestMapping(value="/ezPoll/pollConfig.do")
+	public String getConfig() throws Exception{
+		logger.debug("pollConfig Start");
+		
+		logger.debug("pollConfig End");
+		return "/ezPoll/pollConfig";
+	}
 
 	@RequestMapping(value="/ezPoll/pollList.do")
 	public String getQuestion(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request, RedirectAttributes redirectAttributes, HttpSession session) throws Exception {

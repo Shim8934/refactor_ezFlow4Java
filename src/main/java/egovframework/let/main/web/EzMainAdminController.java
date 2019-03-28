@@ -46,7 +46,8 @@ public class EzMainAdminController {
 		String use_journal = ezCommonService.getTenantConfig("USE_JOURNAL", userInfo.getTenantId());
 		//2018-09-18 유은정 - ezPMS 추가
 		String use_ezPMS = ezCommonService.getTenantConfig("USE_ezPMS", userInfo.getTenantId());
-		
+		/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가  */
+		String use_community = ezCommonService.getTenantConfig("USE_COMMUNITY", userInfo.getTenantId());
 		String AdminActiveX = config.getProperty("config.AdminActiveX");
 		String useHWP = ezCommonService.getTenantConfig("useHWP", userInfo.getTenantId());
 		String use_cabinet = ezCommonService.getTenantConfig("useCabinet", userInfo.getTenantId());
@@ -61,6 +62,8 @@ public class EzMainAdminController {
 		model.addAttribute("use_journal", use_journal);
 		//2018-09-18 유은정 - ezPMS 추가
 		model.addAttribute("use_ezPMS", use_ezPMS);
+		/* 2018-09-19 홍승비 - 커뮤니티 사용여부 컨피그 추가  */
+		model.addAttribute("use_community", use_community);
 		
 		if (firstScreenMail == null || firstScreenMail.equals("")) {
 			model.addAttribute("firstScreen_Mail", "NO");
@@ -72,9 +75,24 @@ public class EzMainAdminController {
 		if (use_journal == null || use_journal.equals("")) {
 			model.addAttribute("use_journal", "YES");
 		}
+		if (use_community == null || use_community.equals("")) {
+			model.addAttribute("use_community", "YES");
+		}
+		
+		//baonk added
+		if (userInfo.getRollInfo().indexOf("c=1") == -1 && userInfo.getRollInfo().indexOf("k=1") == -1 && userInfo.getRollInfo().indexOf("wf=1") != -1) {
+			model.addAttribute("isWFAdmin", "1");
+		}
+		//end
+		
+		String useActiveX = ezCommonService.getTenantConfig("useActiveX", userInfo.getTenantId());
+		if(useActiveX == null || useActiveX.equals("")) {
+			useActiveX = "NO";
+		}
 		
 		model.addAttribute("AdminActiveX", AdminActiveX);
 		model.addAttribute("useHWP", useHWP);
+		model.addAttribute("useActiveX", useActiveX);
 		
         String packageType = commonUtil.getPackageType(userInfo.getTenantId());
         

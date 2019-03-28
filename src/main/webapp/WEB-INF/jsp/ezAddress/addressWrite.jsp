@@ -447,8 +447,8 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
-		<form method="post" runat="server">
-		  <div id="menu">
+		<form method="post">
+		  <div id="menu" style="margin-bottom:19px;">
 		    <ul>
 		      <!-- 2018-05-30 구해안 그룹웨어 모듈 '등록','저장후닫기' => '저장'으로 통일  ezAddress.t339 => t300 -->
 		      <li><span onClick="insert_address()"><spring:message code='ezAddress.t300' /></span></li>
@@ -507,7 +507,7 @@
               <c:if test="${primaryLang == '1' && userLang == '1'}">
               	<c:if test="${useZipCodeSearch == 'YES'}">
               	<input type="text" id="TextComZip" name="TextComZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sCompanyZip}"/>">
-              	<a href="#" class="imgbtn imgbck" style="margin-top:1px"><span  onClick="zip_find(0);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
+              	<a class="imgbtn imgbck" style="margin-top:1px"><span  onClick="zip_find(0);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
               	</c:if>
               	<c:if test="${useZipCodeSearch == 'NO'}">
               		<input type="text" id="TextComZip" name="TextComZip" style="width:70px" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sCompanyZip}"/>">&nbsp;
@@ -528,7 +528,7 @@
               <c:if test="${primaryLang == '1' && userLang == '1'}">
               	<c:if test="${useZipCodeSearch == 'YES'}">
               		<input type="text" id="TextHomeZip" name="TextHomeZip" style="width:70px" readonly="readonly" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sHomeZip}"/>">
-              		<a href="#" class="imgbtn imgbck" style="margin-top:1px"><span  onClick="zip_find(1);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
+              		<a class="imgbtn imgbck" style="margin-top:1px"><span  onClick="zip_find(1);" style="vertical-align:middle;"><spring:message code='ezAddress.t26' /></span></a>
               	</c:if>
               	<c:if test="${useZipCodeSearch == 'NO'}">
               		<input type="text" id="TextHomeZip" name="TextHomeZip" style="width:70px" class="txtClass" style="margin-top:2px;" value="<c:out value="${addressInfo.sHomeZip}"/>">&nbsp;
@@ -554,8 +554,8 @@
 		          <tr>
 		            <td class="pos1"><div id="attachedfileDIV" class="file2"></div></td>
 		            <td class="pos2">
-		                <a href="#" class="imgbtn"><span id="btn_AttachAdd" onClick="attach_Add()"><spring:message code='ezAddress.t342' /></span></a><br>
-		                <a href="#" class="imgbtn"><span id="btn_AttachDel" onClick="attach_Delete()"><spring:message code='ezAddress.t343' /></span></a></td>
+		                <a class="imgbtn"><span id="btn_AttachAdd" onClick="attach_Add()"><spring:message code='ezAddress.t342' /></span></a><br>
+		                <a class="imgbtn"><span id="btn_AttachDel" onClick="attach_Delete()"><spring:message code='ezAddress.t343' /></span></a></td>
 		          </tr>
 		        </table>
 		      </td>

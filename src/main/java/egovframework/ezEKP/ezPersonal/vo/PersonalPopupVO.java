@@ -21,6 +21,14 @@ public class PersonalPopupVO {
 	private String content;
 	/** 공지 위치*/
 	private String position;
+	/** 진행중 여부(0: x, 1: 진행중)*/
+	private int progress;
+	/** 사용여부 on/off (0: off, 1: on)*/
+	private int inUse;
+	/** 스킨번호 (default 0)*/
+	private int skinValue;
+	
+
 	public String getCompanyID() {
 		return companyID;
 	}
@@ -80,5 +88,23 @@ public class PersonalPopupVO {
 	}
 	public void setPosition(String position) {
 		this.position = position;
+	}
+	public int getProgress() {
+		return progress;
+	}
+	public void setProgress(int progress) {
+		this.progress = progress;
+	}
+	public int getInUse() {
+		return inUse;
+	}
+	public void setInUse(int inUse) {
+		this.inUse = inUse;
+	}
+	public int getSkinValue() {
+		return skinValue;
+	}
+	public void setSkinValue(int skinValue) {
+		this.skinValue = skinValue;
 	}
 }

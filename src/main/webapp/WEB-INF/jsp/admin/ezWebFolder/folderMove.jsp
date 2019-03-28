@@ -105,7 +105,7 @@
 			
 			var imgElmt2 = document.createElement("img");
 			imgElmt2.setAttribute("class", "webfolderImg");
-			imgElmt2.src = "/images/webfolder/fldr.png";
+			imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
 			
 			var spanFolderName = document.createElement("span");
 			spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
@@ -270,6 +270,9 @@
 					break;
 				case 7:
 					alert("<spring:message code='ezWebFolder.t250'/>");
+					break;
+				case 8:
+					alert("<spring:message code='webfolder.duplicate.foldermanage.error'/>");
 					break;
 			}
 		}

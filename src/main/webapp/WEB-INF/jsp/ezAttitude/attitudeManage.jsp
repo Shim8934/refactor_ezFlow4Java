@@ -83,7 +83,7 @@
 					changeYear : true,
 					autoSize : true,
 					showOn : "both",
-					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImage : "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly : true
 				});
 				
@@ -92,7 +92,7 @@
 					changeYear : true,
 					autoSize : true,
 					showOn : "both",
-					buttonImage : "/images/ImgIcon/calendar-month.gif",
+					buttonImage : "/images/ImgIcon/calendar-month.png",
 					buttonImageOnly : true
 				});
 
@@ -136,7 +136,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			    $("#Edatepicker").datepicker({
@@ -144,7 +144,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			});
@@ -216,7 +216,7 @@
 	        
 	        function windowResize() {
 	        	var height = document.documentElement.clientHeight - 92 - document.getElementById("mainmenu").clientHeight;
-	        	document.getElementById("contentlist").style.height = (height - 100) + "px";
+	        	document.getElementById("contentlist").style.height = (height - 118) + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
 	        
@@ -839,8 +839,8 @@
 	</head>
 	<body class="mainbody">
 		<h1><p style="padding-left:5px"><spring:message code='ezAttitude.t73'/></p></h1>
-	    <div class="portlet_tabpart01" style="margin-bottom:16px;">
-	        <div class="portlet_tabpart01_top" id="tab1">
+	    <div class="portlet_tabnew01" style="margin-bottom:16px;">
+	        <div class="portlet_tabnew01_top" id="tab1">
 	            <p><span id="modify" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t5'/></span></p>
 	            <p><span id="absent" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t6'/></span></p>
 	            <p><span id="history" style="width:100px; text-align: center;"><spring:message code='ezAttitude.t57'/></span></p>
@@ -849,11 +849,10 @@
 	    <div>
 	    	<div id="mainmenu">
 				<ul>
-					<li><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
+					<li class="important"><span onclick="addAtt();"><spring:message code='ezAttitude.t51'/></span></li>
 		      		<li><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></li>
-					<li><span onclick="refresh();"><spring:message code='ezAttitude.t122'/></span></li>
-		      		<li><span onclick="searchPopup();"><spring:message code='ezAttitude.t121'/></span></li>
-					<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
+		      		<li><span class="icon16 icon16_search" onclick="searchPopup();"></span></li>
+					<li onclick="refresh();"><span class="icon16 icon16_refresh"></span></li>
 					<li>						
 		      			<select name="ListDept" id="ListDept" onchange="dept_change()" style="padding-right:40px; width:100%; height:28px;">
 		      				<option value="ALL" selected><spring:message code='ezAttitude.t124'/></option>
@@ -868,7 +867,7 @@
 		      	<div id="miniTitle" style="margin-bottom:10px;padding-left:2px;margin-top:15px"><spring:message code='ezAttitude.t74'/></div>
 		  	</div>
 	    </div>
-	    <div id="contentlist" style="width:100%; overflow:auto; height:660px;">
+	    <div id="contentlist" style="width:100%; overflow:auto; height:642px;">
 			<table class="mainlist" style="width:100%;">
 				<thead></thead>
 				<tbody></tbody>

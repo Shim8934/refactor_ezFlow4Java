@@ -154,7 +154,7 @@
 			<tr>
 				<td width="195" valign="top">
 					<h2><spring:message code='ezWebFolder.t205' /></h2>
-					<div style="overflow:auto; width:280px; height:270px; background-color:#ffffff; white-space: nowrap; padding:0;" id="TreeView" class="box"></div>
+					<div style="overflow-x: hidden; overflow-y: auto; width:280px; height:270px; background-color:#ffffff; white-space: nowrap; padding:0;" id="TreeView" class="box"></div>
 				</td>
 				<td width="30" align="center" valign="middle">
 					<div><img src="/images/arr_right.gif" width="16" height="16" vspace="3" onclick="add_dept();" style="cursor:pointer"></div>

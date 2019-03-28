@@ -91,9 +91,9 @@
 		            _RowObject.childNodes.item(2).style.backgroundColor = "#ffffff";
 		        }
 		        _RowObject = obj;
-		        obj.childNodes.item(0).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(1).style.backgroundColor = "#edf4fd";
-		        obj.childNodes.item(2).style.backgroundColor = "#edf4fd";
+		        obj.childNodes.item(0).style.backgroundColor = "#f1f8ff";
+		        obj.childNodes.item(1).style.backgroundColor = "#f1f8ff";
+		        obj.childNodes.item(2).style.backgroundColor = "#f1f8ff";
 		        tempid = obj.getAttribute("backgroundid");
 		        MakeDescription(obj.id);
 		    }
@@ -278,11 +278,11 @@
 		<h1><spring:message code="ezBoard.t5006"/></h1>
 		<div id="mainmenu">
 	    	<ul>
-	        	<li><span id ="NEW" onclick="btn_Select(this)"><spring:message code="ezBoard.t321"/></span></li>
-	        	<li><span onclick="sliderdelete();"><spring:message code="ezBoard.t89"/></span></li>
-	        	<li><span onclick="Reload();"><spring:message code="ezBoard.t205"/></span></li>
-	        	<li><span onclick="Priority_UP();" style="padding-top:5px"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code='ezBoard.t493'/>"/></span></li>
-	        	<li><span onclick="Priority_DOWN();" style="padding-top:5px"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code='ezBoard.t494'/>" /></span></li>
+	        	<li class="important"><span id ="NEW" onclick="btn_Select(this)"><spring:message code="ezBoard.t321"/></span></li>
+	        	<li><span class="icon16 icon16_delete" onclick="sliderdelete();"></span></li>
+	        	<li><span class="icon16 icon16_refresh" onclick="Reload();"></span></li>
+	        	<li><span onclick="Priority_UP();"><img src="/images/ImgIcon/prev.gif"  style="margin-top:-2px;" alt="<spring:message code='ezBoard.t493'/>"/></span></li>
+	        	<li><span onclick="Priority_DOWN();"><img src="/images/ImgIcon/next.gif"  style="margin-top:-2px;" alt="<spring:message code='ezBoard.t494'/>" /></span></li>
 	    	</ul>
 	    </div>
 	    <table style="width:750px;height:385px;" border="0">

@@ -574,13 +574,24 @@
 	        }
 	        return str_temp;
 	    }
+	    
+	    function btn_cancel() {
+	    	window.close();
+	    }
 	    </script>
 		<style>
 	    	.mainlist tr th {border-top:0px}
 	    </style>
 	</head>
-	<body class="popup" style="margin-left: 0px; margin-top: 0px">
-	    <h1 style="height: 30px;"><spring:message code='ezApprovalG.t711'/></h1>
+	<!-- <body class="popup" style="margin-left: 0px; margin-top: 0px"> -->
+	<body class="popup">
+		<div id="close">
+            <ul>
+                <li><span id="btn_CancelAprLineTempletName" name="btn_CancelAprLineTempletName" onclick="btn_cancel()"></span></li>
+            </ul>
+        </div>
+		<%-- <h1 style="height: 30px;"><spring:message code='ezApprovalG.t711'/></h1> --%>
+	    <h1 id="h1Title"><spring:message code='ezApprovalG.t711'/></h1>
 	    <div id="close">
             <ul>
                 <li><span onclick="return cmdCancel_onclick()"></span></li>
@@ -728,7 +739,7 @@
 	            <a class="imgbtn" style="vertical-align: middle;" onclick="return cmdConfirm_onclick()"><span><spring:message code='ezApprovalG.t20'/></span></a>
 	        </h2>
 	    </div>
-	    <div style="width: 1106px; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
+	    <div style="width: 1000px; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 			<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>

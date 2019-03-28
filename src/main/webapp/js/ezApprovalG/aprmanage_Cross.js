@@ -801,6 +801,16 @@ function openDraftUI(pDraftFlag, pCurSelRow) {
         openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
         openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
         openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
+        
+//        // FormBuilder
+//        if (window.reformflag == null) {
+//        	// reformflag null 값이라면
+//        	reformflag = GetAttribute(pCurSelRow, "REFORMFLAG");
+//        }
+//        
+//    	if (reformflag.length > 0) {
+//            openLocation += "&reformflag=" + encodeURI(reformflag);
+//    	}
     } else {
     	if (!isIE()) {
             alert("한글양식은 IE에서만 기안 할 수 있습니다.");
@@ -974,6 +984,8 @@ function openForm_Complete(ret) {
     getformcont_Cross_OpenWin.close();
     formURL = ret[0];
     formDocType = ret[1];
+    reformflag = ret["reformflag"];
+    
     if (formURL != "cancel") {
         openDraftUI("DRAFT", "");
     }
@@ -1708,37 +1720,41 @@ function makePageSelPage() {
         period = document.getElementById("sel_year").value + strLang1028 + " 1" + strLang1029 + " 1" + strLang1030 + " ~ " + document.getElementById("sel_year").value + strLang1028 + " 12" + strLang1029 + " 31" + strLang1030;
     }
     //document.getElementById("presentcell").innerHTML = " - " + localValue;
-    document.getElementById("TitleInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;font-weight:bold;'> " + pTotalCnt + " </span>" + strLang943 + " - " + period + "]";
+    document.getElementById("TitleInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;font-weight:bold;'>" + pTotalCnt + "</span>&nbsp;/ " + period;
 
     try {
     	if (ViewLeftCount == "YES" && ($("#sel_status option:selected").val() == "ALL" || $("#sel_status option:selected").val() == undefined)) {
+    		if (pTotalCnt == "0") {    			
+    			pTotalCnt = "";
+    		}
+    		
     		switch (pListTypeValue) {
     		case "1":
-    			parent.frames["left"].document.getElementById("count1").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count1").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "2":
-    			parent.frames["left"].document.getElementById("count3").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count3").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "3":
-    			parent.frames["left"].document.getElementById("count2").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count2").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "4":
-    			parent.frames["left"].document.getElementById("count4").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count4").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "6":
-    			parent.frames["left"].document.getElementById("count6").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count6").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "7":
-    			parent.frames["left"].document.getElementById("count7").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count7").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "21":
-    			parent.frames["left"].document.getElementById("count21").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count21").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "99":
-    			parent.frames["left"].document.getElementById("count99").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count99").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		case "11":
-    			parent.frames["left"].document.getElementById("count11").innerHTML = "(" + pTotalCnt + ")";
+    			parent.frames["left"].document.getElementById("count11").innerHTML = "&nbsp;&nbsp;" + pTotalCnt;
     			break;
     		}
     	}
@@ -2072,7 +2088,7 @@ function setbuttonenable() {
         document.getElementById("tbtnSimsa").style.display = "none";
         
 		if (approvalFlag == "G") {
-			if(pListTypeValue == "4") {
+			if(pListTypeValue == "4" && useHWP == 'YES') {
 				document.getElementById("tbtnNonElecRec").style.display = "";
 			}
 		}
@@ -2843,6 +2859,16 @@ function openServerDraftUI(pDraftFlag, pCurSelRow) {
     	openLocation = "/ezApprovalG/draftui.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
     	openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
     	openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]) + "&docSN=" + encodeURI(pDocSN);
+    	
+        // FormBuilder
+        if (window.reformflag == null) {
+        	// reformflag null 값이라면
+        	reformflag = GetAttribute(pCurSelRow, "REFORMFLAG");
+        }
+        
+    	if (reformflag.length > 0) {
+            openLocation += "&reformflag=" + encodeURI(reformflag);
+    	}
     } else {
     	if (!isIE()) {
     		//노티문구가 잘못되었음. 아무래도 한글양식은 IE에서만 지원가능합니다 라고 바꿔야할듯

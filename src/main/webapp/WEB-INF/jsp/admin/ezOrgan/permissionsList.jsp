@@ -26,13 +26,16 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" language="javascript">
 			var pUse_Editor = "<c:out value='${use_editor}'/>";
-	    	var totalCnt = 0;
-	        var CurPage = 1;
-	        var totalPage = 0;
-	        var pageSize = 15;
-	        var BlockSize = 10;
-	    	
-	        document.onselectstart = function () {
+			var totalCnt = 0;
+			var CurPage = 1;
+			var totalPage = 0;
+			var pageSize = 15;
+			var BlockSize = 10;
+			var isAdmin = ${isAdmin};
+			var testObj = {};
+			var type = "";
+
+			document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 	                return false;
 	            else
@@ -45,20 +48,20 @@
 	        var type = "c=1";
 	    	
 			$(document).ready(function() {
-			    if (${isAdmin}) {
-			    	type = 'c=1';
-			        Permissions_List();
-			    } else {
-		            document.getElementById("Permission_sub1").style.display = "none";
-		            document.getElementById("1tab2").click();
-		            type = 'k=1';
-		            Permissions_List();			        
-			    }
-			    
-			    //2018-08-06 김보미 - 페이지 위치 고정
-			    windowResize();
+				if (isAdmin) {
+					type = 'c=1';
+					Permissions_List();
+				} else {
+					document.getElementById("Permission_sub1").style.display = "none";
+					document.getElementById("1tab2").click();
+					type = 'k=1';
+					Permissions_List();
+				}
+
+				//2018-08-06 김보미 - 페이지 위치 고정
+				windowResize();
 			});
-			
+
 			function searchList() {
 				CurPage = 1;
 				Permissions_List();
@@ -104,17 +107,142 @@
 		                var listview = new ListView();
 		                listview.SetID("lvPermissionList");
 		                listview.SetMulSelectable(false);
-		                listview.SetRowOnDblClick("Permissions_View");
+		                listview.SetRowOnClick("Permissions_View");
+		                // 2019-01-09 황윤호 (권한관리 Db클릭 메서드 안쓰기로 함)
+		                //listview.SetRowOnDblClick("PermissionsDb_View");
 		                listview.SetHeightFree(true);
 		                listview.DataSource(headerData);
 		                listview.DataBind("AdminListView");
+		                checkbox_header();
+		                
+		                var a = document.getElementById("lvPermissionList_TR_0");
+		                
+		                if (a== null || a == "") {
+		                	
+		                } else {
+		                	a.style.backgroundColor = "rgb(255, 255, 255)";
+		                	a.setAttribute("selected", "false");
+		                	$("#lvPermissionList_TR_0").mouseout(function(){
+		                		$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
+		                	});
+		                }
+		                rowListSelect();
+		                checkItems();
 		                makePageSelPage();
+		                setFucntion();
 		        	},
 		        	error : function(error){
 		        	    alert("<spring:message code='ezOrgan.t2' />" + error);
 		        	}
 		        });		        
 		    }
+			
+			function Permissions_View(obj) {
+				var className = window.event.target.getAttribute('class');
+				if(className === 'checks') {
+					return;
+				}
+
+				var doc = window.document;
+				itemseq = document.getElementById(obj).getAttribute("DATA1");
+				if(itemseq == "0") {
+					return;
+				}
+
+				
+				if(checkFlag) {
+					if($("#"+itemseq).prop("checked")) {
+						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				} else {
+					$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+					$(".checks").prop("checked",false);
+					if($("#" + itemseq).is(":checked")) {
+						$("#" + obj + " td").css("background-color", "rgb(255, 255, 255)");
+						$("#" + itemseq).prop("checked", false);
+					} else {
+						$("#" + obj + " td").css("background-color", "rgb(241, 248, 255)");
+						$("#" + itemseq).prop("checked", true);
+					}
+				}
+
+				checkItems();
+			} 
+			
+			var cnt;
+			function checkbox_header() {
+				var doc = window.document;
+				var th = doc.getElementById("lvPermissionList_TH_0");
+				var acList = doc.getElementById("lvPermissionList");
+				
+				th.innerHTML = "<input type= 'checkbox' id = 'checkAll' onchange= 'checkboxHeaderClick()'></input>";
+				
+				cnt = acList.children[1].childElementCount;
+				
+				var i = 0;
+				for (i; i < cnt; i++) {
+					var seq = acList.children[1].children[i].children[0].innerHTML;
+					
+					if (seq == "<spring:message code = 'ezOrgan.0hun07' />") {
+						
+					} else {
+						acList.children[1].children[i].children[0].innerHTML = "<input type='checkbox' name='checks' class='checks' id='" 
+						+ seq 
+						+ "' value='" 
+						+ seq 
+						+ "' onchange='inputFunc(event,"
+						+ seq + ")'></input>";
+					}
+				} 
+			}
+			
+			var checkFlag = false;
+			function checkboxHeaderClick() {
+				var doc = window.document;
+				var acList = doc.getElementById("lvPermissionList");
+				// 데이터가 있을 경우에만
+				if(acList.children[1].children[0].id !== 'lvPermissionList_TR_noItems'){
+					if (checkFlag) {
+						checkFlag = false;
+						$(".checks").prop("checked", false);
+						$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+					} else {
+						checkFlag = true;
+						$(".checks").prop("checked", true);
+						$("#contentlist tr td").css("background-color", "rgb(241, 248, 255)");
+					}
+					checkItems();
+				}
+			}
+			
+			var rowList = new Array();
+			function checkItems() {
+				rowList = [];
+				$("input:checkbox[name='checks']").each(function(){
+					if($(this).is(":checked")){
+						rowList.push(this.value);
+					}
+				});
+			}
+			
+			function inputFunc(event, itemseq) {
+				checkItems();
+				
+				$("#contentlist tr td").css("background-color", "rgb(255, 255, 255)");
+
+				for (var i = 0; i < rowList.length; i++) {
+					var objID = $("#" + rowList[i])[0].parentNode.parentNode.id;
+					$("#" + objID + " td").css("background-color", "rgb(241, 248, 255)");
+					$("#" + rowList[i]).prop("checked", true);
+				}
+			}
+			
+			var itemseq;
+			
 			
 		    function td_Create1(strtext) {
 		        document.getElementById("tblPageRayer").innerHTML = strtext;
@@ -164,10 +292,11 @@
 		    }
 			
 			function makePageSelPage() {
+				checkFlag = false;
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang23 + "<span style='color:#017BEC;'> " + totalCnt + " </span>" + strLang24 + "]";
+		        document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span style='color:#017BEC;'>" + totalCnt + "</span>";
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;
@@ -246,27 +375,21 @@
 		        td_Create1(PagingHTML);
 		    }
 			
-			function Permissions_View() {
-		        var listview = new ListView();
-		        listview.LoadFromID("lvPermissionList");
-
-		        if (listview.GetSelectedRows().length == 0) {
-		            alert(strLang13);
-		            return;
-		        }
-		        
-		        var id = listview.GetSelectedRows()[0].getAttribute("DATA1");
-
-		        if (CrossYN()) {
-		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?userID=" + encodeURI(id) + "&companyID=" + document.getElementById("ListCompany").value, "Permissions_Check", GetOpenWindowfeature(970, 580));
-		            try { OpenWin.focus(); } catch (e) { }
-		        } else {
-		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?userID=" + encodeURI(id) + "&companyID=" + document.getElementById("ListCompany").value, "", "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(970, 580));
-		        }
-		    }
+			//추가, 삭제, 메일 버튼을 선택하는 함수
+			function setFucntion() {
+				var doc  = window.document;
+				var add  = doc.getElementById("add");
+				var del  = doc.getElementById("del");
+				var mail = doc.getElementById("email");
+				
+				add.addEventListener("click", Permissions_Add);
+				del.addEventListener("click", Choose_Del);
+				mail.addEventListener("click", email_onclick);
+			}
 			
 			var Tab1_SelectID = "";
 		    function Tab1_MouserOver(obj) {
+		    	//checkFlag = false;
 		        obj.className = "tabover";
 		    }
 		    
@@ -296,7 +419,9 @@
 		        type = pSelectTab + "=1";
 
 		        CurPage = 1;
+		        checkFlag = false;
 		        clearSearchVal();
+		        rowList = [];
 		        Permissions_List();
 		    }
 			
@@ -319,19 +444,19 @@
 		    }
 			
 			var permissions_check_dialogArguments = new Array();
-		    function Permissions_Add() {
+		    var Permissions_Add = function() {
 		        var listview = new ListView();
 		        listview.LoadFromID("lvPermissionList");
 		        var Params = new Array();
 		        var result = "";
-		        
+		       
 		        if (CrossYN()) {
 		            permissions_check_dialogArguments[0] = Params;
 		            permissions_check_dialogArguments[1] = Permissions_Add_Complete;
-		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value, "Permissions_Check", GetOpenWindowfeature(970, 580));
+		            var OpenWin = window.open("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), "Permissions_Check", GetOpenWindowfeature(1000, 620));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
-		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value, Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(970, 580));
+		            window.showModalDialog("/admin/ezOrgan/permissionsCheck.do?companyID=" + document.getElementById("ListCompany").value + "&DelType="+encodeURI(DelType) + "&type="+encodeURI(type), Params, "dialogHeight:580px; dialogWidth:970px; status:no;scroll:no; help:no; edge:sunken; resizable:no" + GetShowModalPosition(1000, 620));
 		            clearSearchVal();
 		            Permissions_List();
 		        }
@@ -342,80 +467,113 @@
 		        Permissions_List();
 		    }
 
-		    function Permissions_Del(mode) {
-		        var listview = new ListView();
-		        listview.LoadFromID("lvPermissionList");
-		        var cData = "";
+			function Permissions_Del(mode) {			
+ 
+				var dataList = new Array();
+				var dataList2 = new Array();
+				var dataList3 = new Array();
+				var dataList4 = new Array();
 
-		        if (listview.GetSelectedRows().length == 0) {
-		            alert(strLang13);
-		            return;
-		        }
+				$("input[name='checks']:checked").each(function(){
+					dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
+					dataList2.push(this.parentElement.parentElement.getAttribute("DATA2"));
+					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
+					dataList4.push(this.parentElement.parentElement.getAttribute("DATA5"));
+				}); 
+				
+				
+				/* // 선택된 사원이 없을 경우
+				if (dataList.length == 0) {
+					alert(strLang13);
+					return;
+				} */
 
-		        if (mode == "ALL") {
-		        	cData = listview.GetSelectedRows()[0].getAttribute("DATA3") + strLang19 + " " + "<spring:message code='ezAddress.t362' />" + strLang20;		                
-	            } else {
-	            	cData = listview.GetSelectedRows()[0].getAttribute("DATA3") + strLang19 + document.getElementById(clickTabID).innerText + " " + strLang20;
-	            }
+				/* // 권한 전체삭제
+				var cData = "";
+				if (mode == "ALL") {
+					cData = "["+dataList3+"]" + strLang19 + " " + "<spring:message code='ezAddress.t362' />" + strLang20;
+				} else {
+					cData = "["+dataList3+"]" + strLang19 + document.getElementById(clickTabID).innerText + " " + strLang20;
+				} */
+
+				//if (confirm(cData)) {
+					for (var i =0; i< dataList.length; i++) {
+						if (mode == "ALL") {
+							dataList2[i] = "";
+						} else {
+							var tempDelType = DelType;
+							var DelValue = tempDelType + "=1";
+
+							if (tempDelType == "") {
+								tempDelType = "c=0";
+							} else {
+								tempDelType = tempDelType + "=0";
+							}
+							dataList2[i] = dataList2[i].replace(DelValue, tempDelType);
+						}
+					}
+
+					jQuery.ajaxSettings.traditional = true; 
+
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						url : "/admin/ezOrgan/saveUserPermissionInfo.do",
+						async : false,
+						data : {
+							cn : dataList, 
+							extensionAttribute1: dataList2
+						},
+						success : function(result){
+							if (mode == "ALL") {
+								Permissions_List();
+							} else {
+								Permissions_List();
+							}
+						},
+						error : function(){
+							alert(strLang15);
+						}
+					});
+				//}
+				
+			}
+
+		    var email_onclick = function() {
+
+		        /* var listview = new ListView();
+		        listview.LoadFromID("lvPermissionList"); */
 		        
-		        if (confirm(cData)) {
-		        	var data2;
-		        	
-		            if (mode == "ALL") {
-		            	data2 = "c=0;k=0;g=0;a=0;i=0;n=0;l=0;w=0;m=0;";		                
-		            } else {
-		                var tempDelType = DelType;
-		                var DelValue = tempDelType + "=1";
-		                
-		                if (tempDelType == "") {
-		                    tempDelType = "c=0";
-		                } else {
-		                    tempDelType = tempDelType + "=0";
-		                }
-		                data2 = listview.GetSelectedRows()[0].getAttribute("DATA2").replace(DelValue, tempDelType);		                
-		            }
+		        var dataList3 = new Array();
+				var dataList4 = new Array();
+				
+				$("input[name='checks']:checked").each(function(){
+					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
+					dataList4.push(this.parentElement.parentElement.getAttribute("DATA4"));
+				});
 
-		            $.ajax({
-		            	type : "POST",
-		            	dataType : "html",
-		            	url : "/admin/ezOrgan/saveUserInfo.do",
-		            	async : false,
-		            	data : {parentCn : "", cn : listview.GetSelectedRows()[0].getAttribute("DATA1"), extensionAttribute1 : data2},
-		            	success : function(result){
-		            		if (mode == "ALL") {
-			                    alert(strLang21);
-		            		} else {
-			                    alert(strLang22);
-		            		}
-		            	},
-		            	error : function(){
-		            		alert(strLang15);
-		            	}
-		            });
-		        }
-		        CurPage = 1;
-		        Permissions_List();
-		    }
-		    
-		    function email_onclick() {
-
-		        var listview = new ListView();
-		        listview.LoadFromID("lvPermissionList");
-
-		        if (listview.GetSelectedRows().length == 0) {
+		        /* if (listview.GetSelectedRows().length == 0) {
 		            alert(strLang13);
 		            return;
-		        }
+		        } */
+		        
+		     // 선택된 사원이 없을 경우
+				if (dataList3.length == 0) {
+					alert(strLang13);
+					return;
+				}
 
 		        var pheight = window.screen.availHeight;
 		        var conHeight = pheight * 0.8;
 		        var pwidth = window.screen.availWidth;
 		        var pTop = (pheight - conHeight) / 2;
 		        var pLeft = (pwidth - 890) / 2;
+		        var MsgTo = new Array();
 
-
-		        var MsgTo = "\"" + GetAttribute(listview.GetSelectedRows()[0],"DATA3") + "\" <" + GetAttribute(listview.GetSelectedRows()[0],"DATA4") + ">";
-
+		        for (var i =0; i<dataList3.length; i++) {
+			        MsgTo[i] = "\"" + dataList3[i]+ "\" <" +dataList4[i]+ ">";
+		        }
+		        console.log(MsgTo);
 		        /* 2017-01-02 이효민사원
 		        if (CrossYN() || pNoneActiveX == "YES") {
 		            window.open("/myoffice/ezEmail/mail_write_Cross.aspx?cmd=NEW&msgTo=" + encodeURIComponent(MsgTo), "",
@@ -431,7 +589,7 @@
 		            }
 		        } */
 		        window.open("/ezEmail/mailWrite.do?cmd=NEW&msgto=" + encodeURIComponent(MsgTo), "",
-                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1");
+                        "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no, resizable=1"); 
 		    }
 		    
 		    function clearSearchVal () {
@@ -451,12 +609,71 @@
 	        	document.getElementById("contentlist").style.height = height + "px";
 	        	document.getElementById("contentlist").style.overflow = "auto";
 	        }
+		    
+		    var delete_confirm_cross_dialogArguments;
+		    var Choose_Del = function() {
+		    	var dataList = new Array();
+				var dataList2 = new Array();
+				var dataList3 = new Array();
+				var dataList4 = new Array();
+				var types = document.getElementById(clickTabID).innerText;
+
+				$("input[name='checks']:checked").each(function(){
+					dataList.push(this.parentElement.parentElement.getAttribute("DATA1"));
+					dataList2.push(this.parentElement.parentElement.getAttribute("DATA2"));
+					dataList3.push(this.parentElement.parentElement.getAttribute("DATA3"));
+					dataList4.push(this.parentElement.parentElement.getAttribute("DATA5"));
+				});
+				
+				testObj.dataList = dataList;
+				testObj.dataList2 = dataList2;
+				testObj.dataList3 = dataList3;
+				testObj.dataList4 = dataList4;
+				typeStyle = types;
+
+				// 선택된 사원이 없을 경우
+				if (dataList.length == 0) {
+					alert(strLang13);
+					return;
+				}
+				
+		    	GetOpenWindow("/admin/ezOrgan/chooseDeletege.do?type=" + types,"chooseDeletege", 600, 200);
+		    }
+		    
+		    /* function choose_Del_complete(data) {
+		    	console.log(data);
+		    	Permissions_Del(data);
+		    } */
+
+			// 등록, 수정 , 삭제 후 rowSelect 선택 method
+			function rowListSelect() {
+				var len = rowList.length;
+				for (var i = 0; i < len; i++) {
+					var tempItemSeq = rowList.pop();
+					if (document.getElementById(tempItemSeq) != null) {
+						$("#" + tempItemSeq).prop("checked", true);
+						var tempID = $("#" + tempItemSeq)[0].parentNode.parentNode.id;
+						$("#" + tempID + " td").css("background-color",
+								"rgb(241, 248, 255)");
+					}
+				}
+
+				if (checkFlag) {
+					$("#checkAll").prop("checked", true);
+				} else {
+					$("#checkAll").prop("checked", false);
+				}
+			}
 	    </script>
 	</head>
 	<body class="mainbody">
 	    <xml id="listviewheader" style="display:none">
 			<LISTVIEWDATA>
 		    	<HEADERS>
+		    	    <HEADER>
+						<WIDTH>24</WIDTH>
+						<STYLE>border-top:0px;</STYLE>
+					</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t218' /></NAME>
 		        		<WIDTH>15%</WIDTH>
@@ -469,7 +686,7 @@
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t69' /></NAME>
-		        		<WIDTH>10%</WIDTH>
+		        		<WIDTH>9%</WIDTH>
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
@@ -479,12 +696,12 @@
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t91' /></NAME>
-		        		<WIDTH>25%</WIDTH>
+		        		<WIDTH>20%</WIDTH>
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
 		        		<NAME><spring:message code='ezOrgan.t95' /></NAME>
-		        		<WIDTH>10%</WIDTH>
+		        		<WIDTH>15%</WIDTH>
 		        		<STYLE>border-top:0px;</STYLE>
 		      		</HEADER>
 		      		<HEADER>
@@ -497,37 +714,39 @@
 		</xml>
 	
 	    <form id="Form1" method="post">
-		    <h1><spring:message code='ezOrgan.t00005' /><span id="mailBoxInfo"></span></h1>
-		    <div id="mainmenu">
-			    <span><b><spring:message code='ezOrgan.t00006' /> : </b></span>    		           
-	            <select id="ListCompany" onchange="company_change()">
+		    <h1>
+		    	<spring:message code='ezOrgan.t00005' /><span id="mailBoxInfo"></span>
+		    	<span class="title_bar"><img src="/images/name_bar.gif"></span>
+		    	<select class="companySelect" id="ListCompany" onchange="company_change()">
 	            	<c:forEach var="item" items="${list}">
 	            		<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
 	            	</c:forEach>
 	            </select>
 	            
+	            <span class="searchForm">
+	            	<select id="searchType" style="width:80px;height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
+						<option selected="" value="displayname"><spring:message code='ezOrgan.t67' /></option>
+						<option value="cn"><spring:message code='ezOrgan.t218' /></option>
+						<option value="title"><spring:message code='ezOrgan.t69' /></option>
+						<option value="description"><spring:message code='ezOrgan.t68' /></option>
+						<option value="mail"><spring:message code = 'ezOrgan.t91' /></option>
+						<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
+						<option value="company"><spring:message code= 'ezOrgan.t123' /></option>
+					</select>
+					
+					<input id="searchValue" onkeypress="if(event.keyCode==13) {searchList(); return false;}" onfocus="clearSearchVal();" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;">
+					<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onclick="searchList()"></a>
+	            </span>
+		    </h1>
+		    <div id="mainmenu">
 		        <ul style="margin-top:15px;">
-		            <li><span onClick="Permissions_Add()"><spring:message code='ezOrgan.t00007' /></span></li>
+		            <li class="important"><span id="add"><spring:message code='ezOrgan.mse3' /></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		            <li><span onClick="Permissions_Del('MOD')"><spring:message code='ezOrgan.t00008' /></span></li>
-		            <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li>
+		            <%-- <li><span onClick="Permissions_Del('ALL')"><spring:message code='ezOrgan.t00009' /></span></li> --%>
+		            <!-- <li><span class="icon16 icon16_delete" onClick="Permissions_Del('MOD')"></span></li> -->
+		            <li><span class="icon16 icon16_delete" id="del"></span></li>
 		            <!-- <li style="padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		            <li><span onClick="email_onclick()"><spring:message code='ezOrgan.t00010' /></span></li>
-		            
-		            <span style="float: right; font-weight: normal; color: black; clear:inherit;margin-left:1px">
-		            	<select id="searchType" style="width:80px;">
-							<option selected="" value="displayname"><spring:message code='ezOrgan.t67' /></option>
-							<option value="cn"><spring:message code='ezOrgan.t218' /></option>
-							<option value="title"><spring:message code='ezOrgan.t69' /></option>
-							<option value="description"><spring:message code='ezOrgan.t68' /></option>
-							<option value="mail"><spring:message code = 'ezOrgan.t91' /></option>
-							<option value="telephonenumber"><spring:message code='ezOrgan.t95' /></option>
-							<option value="company"><spring:message code= 'ezOrgan.t123' /></option>
-						</select>
-						
-						<input id="searchValue" onkeypress="if(event.keyCode==13) {searchList(); return false;}" onfocus="clearSearchVal();" style="height: 29px;border: 1px solid #cbcbcb; border-right:0px;">
-						<a href="#" style="float: right"><img src="/images/bsearch_new.gif" border="0" onclick="searchList()" style="height:29px;"></a>
-		            </span>
+		            <li id="email"><span class="icon16 icon16_mail_gray"></span></li>
 		        </ul>
 		    </div>
 		    <script type="text/javascript">
@@ -538,19 +757,25 @@
 	                <p id="Permission_sub1"><span divname="c" id="1tab1"><spring:message code='ezOrgan.t291' /></span></p>
 	                <p id="Permission_sub2"><span divname="k" id="1tab2"><spring:message code='ezOrgan.t293' /></span></p>
 	                <p id="Permission_sub3"><span divname="g" id="1tab3"><spring:message code='ezOrgan.t295' /></span></p>
-	                <p id="Permission_sub4"><span divname="a" id="1tab4"><spring:message code='ezOrgan.t292' /></span></p>
-	                <p id="Permission_sub5" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="i" id="1tab5"><spring:message code='ezOrgan.t294' /></span></p>
-	                <p id="Permission_sub6"><span divname="n" id="1tab6"><spring:message code='ezOrgan.t297' /></span></p>
-	                <p id="Permission_sub7"><span divname="l" id="1tab7"><spring:message code='ezOrgan.t296' /></span></p>
-	                <p id="Permission_sub8" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="w" id="1tab8"><spring:message code='ezOrgan.t301' /></span></p>
-	                <p id="Permission_sub9" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="m" id="1tab9"><spring:message code='ezOrgan.t300' /></span></p>
-	                <c:if test="${approvalForDoc == 'Y'}">
-	                	<p id="Permission_sub10"><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
+	                <c:if test="${packageType == 'standard'}">
+	                	<p id="Permission_sub4"><span divname="a" id="1tab4"><spring:message code='ezOrgan.t292' /></span></p>
+		                <p id="Permission_sub5" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="i" id="1tab5"><spring:message code='ezOrgan.t294' /></span></p>
 	                </c:if>
-	                <c:if test="${useWebfolder == 'YES'}">
-	                <p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
+	                <c:if test="${packageType != 'mail'}">
+		                <p id="Permission_sub6"><span divname="n" id="1tab6"><spring:message code='ezOrgan.t297' /></span></p>
 	                </c:if>
-	                <p id="Permission_sub12" <c:if test="${use_attitude != 'YES'}">style="display:none;"</c:if>><span divname="wa" id="1tab12"><spring:message code='ezOrgan.kbm01' /></span></p>
+	                <c:if test="${packageType == 'standard'}">
+		                <p id="Permission_sub7"><span divname="l" id="1tab7"><spring:message code='ezOrgan.t296' /></span></p>
+		                <p id="Permission_sub8" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="w" id="1tab8"><spring:message code='ezOrgan.t301' /></span></p>
+		                <p id="Permission_sub9" <c:if test="${approvalFlag == 'S'}">style="display:none;"</c:if>><span divname="m" id="1tab9"><spring:message code='ezOrgan.t300' /></span></p>
+		                <c:if test="${approvalForDoc == 'Y'}">
+		                	<p id="Permission_sub10"><span divname="f" id="1tab10"><spring:message code='ezOrgan.lhj1' /></span></p>
+		                </c:if>
+		                <c:if test="${useWebfolder == 'YES'}">
+		                <p id="Permission_sub11"><span divname="wf" id="1tab11"><spring:message code='ezOrgan.t303' /></span></p>
+		                </c:if>
+		                <p id="Permission_sub12" <c:if test="${use_attitude != 'YES'}">style="display:none;"</c:if>><span divname="wa" id="1tab12"><spring:message code='ezOrgan.kbm01' /></span></p>
+	                </c:if>
 		        </div>
 		    </div>
 		    <!-- 2018-08-06 김보미 - 페이지 위치 고정 -->
@@ -562,7 +787,7 @@
 			        <div id="AdminListView" style="border: 0px solid #ddd; Width: 100%; Height:540px; /* overflow-x: auto; */ BACKGROUND-COLOR: white; /* overflow-y:auto; */"></div>
 			    </div>
 			</div>
-		    <div id="tblPageRayer" style="Width:100%;text-align:center;margin-top:10px"></div>
+		    <div id="tblPageRayer" style="Width:100%;text-align:center;"></div>
 		</form>         
 	</body>
 	<script type="text/javascript">

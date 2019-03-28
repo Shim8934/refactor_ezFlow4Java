@@ -178,7 +178,8 @@
 		        else if (RtnVal == "1") {
 		
 		            if (allFlag == "1")
-		                btnStay_onclick();
+		                //btnStay_onclick();
+		            	LoadNextDocument("\n<spring:message code='ezApprovalG.t2'/>");
 		            else if (allFlag == "2")
 		                LoadNextDocument("\n<spring:message code='ezApprovalG.t2'/>");
 			    }
@@ -410,6 +411,11 @@
 				        btnClose_onclick();
 				        Btnflag = "false";
 				        ChangeBtnState();
+				        
+				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+				        	parent.opener.getApprovalList("doing");
+				        }
 				        return;
 				    }
 		        }
@@ -423,6 +429,11 @@
 				        btnClose_onclick();
 				        Btnflag = "false";
 				        ChangeBtnState();
+				        
+				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+				        	parent.opener.getApprovalList("doing");
+				        }
 				        return;
 				    }
 		        }
@@ -436,6 +447,11 @@
 				        btnClose_onclick();
 				        Btnflag = "false";
 				        ChangeBtnState();
+				        
+				      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+				        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+				        	parent.opener.getApprovalList("doing");
+				        }
 				        return;
 				    }
 		        }
@@ -1026,6 +1042,10 @@
 			
 			        try {
 			            window.opener.Refresh_Window();
+			        } catch (e) { }
+			        
+			        try {
+			            window.opener.getApprGraph("appr");
 			        } catch (e) { }
 			    }
 	

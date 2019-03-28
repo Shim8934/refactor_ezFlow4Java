@@ -298,6 +298,28 @@
 				                window.opener.refresh_onclick();
 				            } catch (e) {
 				            }
+				            
+				            //2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
+							if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
+								parent.opener.photoBoardMovePage(null);
+							}
+				            
+				            // 게시판 포틀릿 리스트 업데이트 되도록 수정
+				            if (parent.opener.getBoardPortletInfo != undefined) {
+				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+				            	var customBoardCount = customBoardList.length;
+				            	
+				            	for (var i = 0; i < customBoardCount; i++) {
+				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+				            		
+				            		if (boardId == pBoardID) {
+				            			var portletId = customBoardList[i].parentElement.id;
+				            			portletId = portletId.substring(0, portletId.indexOf("P"));
+				            			parent.opener.getBoardPortletInfo(portletId);
+				            		}
+				            	}
+			            	}
+							
 				            window.close();
 				        }
 				    }
@@ -773,6 +795,28 @@
 		                        window.opener.refresh_onclick();
 		                    } catch (e) {
 		                    }
+		                    
+		                  	//2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
+							if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
+								parent.opener.photoBoardMovePage();
+							}
+			                
+							// 게시판 포틀릿 리스트 업데이트 되도록 수정
+				            if (parent.opener.getBoardPortletInfo != undefined) {
+				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+				            	var customBoardCount = customBoardList.length;
+				            	
+				            	for (var i = 0; i < customBoardCount; i++) {
+				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+				            		
+				            		if (boardId == pBoardID) {
+				            			var portletId = customBoardList[i].parentElement.id;
+				            			portletId = portletId.substring(0, portletId.indexOf("P"));
+				            			parent.opener.getBoardPortletInfo(portletId);
+				            		}
+				            	}
+			           		}
+							
 		                    window.close();
 		                }
 		                else {
@@ -781,7 +825,7 @@
 		                    
 		                    pleft = (pwidth - swidth) / 2;
 				            ptop = (pheight - sheight) / 2;
-				            
+				          
 		                    window.open("/ezBoard/boardItemDelete.do?itemID=" + pItemID + "&boardID=" + pBoardID + "&mod=" + pMod, "", "height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft + ",status = no, toolbar=no, menubar=no,location=no, resizable=1");
 		                }
 		            }
@@ -803,7 +847,7 @@
 		                
 			            pleft = (pwidth - swidth) / 2;
 			            ptop = (pheight - sheight) / 2;
-			            
+			            //2019.03.04 유은정 - 게시판 포틀릿 리스트 업데이트 되도록 수정
 		                window.open("/ezBoard/modifyImageItem.do?imageID=" + document.getElementById("mainimages").name + "&boardID=" + pBoardID + "&itemID=" + pItemID + "&page=" + pPage + "&mod=image&guBun=" + gubun, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=yes,resizable=1,height=" + sheight + ",width=" + swidth + ",top=" + ptop + ",left=" + pleft, "");
 		            }
 		        }
@@ -1030,16 +1074,70 @@
 		                var feature = "status:no;dialogWidth:" + swidth + "px;dialogHeight:" + sheight + "px;help:no;scroll:no;edge:sunken";
 		
 		                var ret = window.showModalDialog("/ezBoard/photoAlbumEdit.do", params, feature);
-		                if (ret == "OK")
-		                    page_reload();
+		                if (ret == "OK") {
+		                	//2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
+							if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
+								parent.opener.photoBoardMovePage();
+							}
+			                
+							// 게시판 포틀릿 리스트 업데이트 되도록 수정
+				            if (parent.opener.getBoardPortletInfo != undefined) {
+				            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+				            	var customBoardCount = customBoardList.length;
+				            	
+				            	for (var i = 0; i < customBoardCount; i++) {
+				            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+				            		
+				            		if (boardId == pBoardID) {
+				            			var portletId = customBoardList[i].parentElement.id;
+				            			portletId = portletId.substring(0, portletId.indexOf("P"));
+				            			parent.opener.getBoardPortletInfo(portletId);
+				            		}
+				            	}
+				            }
+							
+				            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+								parent.opener.getBoardList_NewBoardSTD();
+							}
+				            
+		                	page_reload();
+		                }
 		
 		            }
 		           
 		        }
 		        function btn_albumEdit_Complete(ret) {
 		            DivPopUpHidden();
-		            if (ret == "OK")
-		                page_reload();
+		            
+		            if (ret == "OK") {
+	                	//2019.03.04 유은정 - 포토갤러리 포틀릿에도 리스트 업데이트 되도록 수정
+						if (parent.opener != null && parent.opener.photoBoardMovePage != undefined) {
+							parent.opener.photoBoardMovePage();
+						}
+		                
+						// 게시판 포틀릿 리스트 업데이트 되도록 수정
+			            if (parent.opener.getBoardPortletInfo != undefined) {
+			            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
+			            	var customBoardCount = customBoardList.length;
+			            	
+			            	for (var i = 0; i < customBoardCount; i++) {
+			            		var boardId = customBoardList[i].querySelector(".portletPlus").getAttribute("data1");
+			            		
+			            		if (boardId == pBoardID) {
+			            			var portletId = customBoardList[i].parentElement.id;
+			            			portletId = portletId.substring(0, portletId.indexOf("P"));
+			            			parent.opener.getBoardPortletInfo(portletId);
+			            		}
+			            	}
+			            }
+						
+			            if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+							parent.opener.getBoardList_NewBoardSTD();
+						}
+			            
+			            page_reload();
+		            }
+		                
 		        }
 		        
 		        /* 2018-06-01 홍승비 - 페이징 코드 수정, 도달 불가능 코드 삭제 */

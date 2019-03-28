@@ -17,11 +17,13 @@ import org.springframework.stereotype.Service;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommunity.dao.EzCommunityAdminDAO;
 import egovframework.ezEKP.ezCommunity.service.EzCommunityAdminService;
+import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzCommunityAdminService")
@@ -44,12 +46,13 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	private static final Logger logger = LoggerFactory.getLogger(EzCommunityAdminServiceImpl.class);
 
 	@Override
-	public int aspCloseComGet2(String keyword, String sRadio, String companyID, int tenantID) throws Exception {
+	public int aspCloseComGet2(String keyword, String sRadio, String lang, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCloseComGet2 started.");
-		
+		logger.debug("v_S_RADIOL" + sRadio);
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD",  keyword);
 		map.put("v_S_RADIO",  sRadio);
+		map.put("v_USERINFO_LANG", lang);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -68,17 +71,16 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
 	@Override
-	public List<CommunityCComCloseVO> aspCloseComGet1(String keyword, String sRadio, String s, String lang, String sort1, String sort2, String companyID, int tenantID) throws Exception {
+	public List<CommunityCComCloseVO> aspCloseComGet1(String keyword, String sRadio, String lang, int pageNum, String offSetMin, String companyID, int tenantID) throws Exception {
 		logger.debug("aspCloseGet1 started.");
 		logger.debug("keyword=" + keyword + ", sRadio=" + sRadio);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD", keyword);
 		map.put("v_S_RADIO", sRadio);
-		map.put("v_S", s);
 		map.put("v_USERINFO_LANG", lang);
-		map.put("v_SORT1", sort1);
-		map.put("v_SORT2", sort2);
+		map.put("v_STARTROW", 10 * (pageNum - 1));
+		map.put("v_OFFSETMIN", offSetMin);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -193,12 +195,13 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(총 n개 카운트) */
 	@Override
-	public int aspAdmitComGet2(String keyword, String sRadio, String companyID, int tenantID) throws Exception {
+	public int aspAdmitComGet2(String keyword, String sRadio, String lang, String companyID, int tenantID) throws Exception {
 		logger.debug("aspAdmitComGet2 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD", keyword);
 		map.put("v_S_RADIO", sRadio);
+		map.put("v_USERINFO_LANG", lang);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -217,16 +220,15 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) */
 	@Override
-	public List<CommunityClubVO> aspAdmitComGet1(String keyword, String sRadio, String s, String lang, String sort1, String sort2, String companyID, int tenantID) throws Exception {
+	public List<CommunityClubVO> aspAdmitComGet1(String keyword, String sRadio, String lang, int pageNum, String offSetMin, String companyID, int tenantID) throws Exception {
 		logger.debug("aspAdmitComGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_KEYWORD", keyword);
 		map.put("v_S_RADIO", sRadio);
-		map.put("v_S", s);
 		map.put("v_USERINFO_LANG", lang);
-		map.put("v_SORT1", sort1);
-		map.put("v_SORT2", sort2);
+		map.put("v_STARTROW", 10 * (pageNum - 1));
+		map.put("v_OFFSETMIN", offSetMin);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -260,13 +262,13 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 			}
 			
 			sb.append("<tr>");
-			sb.append("<td>" + (clubList.size() - ((curPage - 1) * comNoPerPage) - iOutputCount) + "</td>");
-			sb.append("<td style='width:400px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;><nobr style='width:400px;overflow:hidden;text-overflow:ellipsis;'>");
+			sb.append("<td width='35px;'>" + (clubList.size() - ((curPage - 1) * comNoPerPage) - iOutputCount) + "</td>");
+			sb.append("<td style='width: 50%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;><nobr style='width:400px;overflow:hidden;text-overflow:ellipsis;'>");
 			sb.append("<a href=\"javascript:open_info('" + club.getC_ClubNo().trim() + "')\">" + commonUtil.cleanValue(club.getC_ClubName()) + "</a>");
 			sb.append("</nobr></td>");
-			sb.append("<td>" + commonUtil.cleanValue(club.getUserName()) + "(");
+			sb.append("<td style='width: 10%;'>" + commonUtil.cleanValue(club.getUserName()) + "(");
 			sb.append(commonUtil.cleanValue(club.getC_SysopID().trim()) + ")");
-			sb.append("<td>" + club.getC_RegDate().substring(0, 10) + "</td>");
+			sb.append("<td style='width: 10%;'>" + club.getC_RegDate().substring(0, 10) + "</td>");
 			sb.append("</tr>");
 			
 			iOutputCount++;
@@ -354,7 +356,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", lang);
-		map.put("v_STRSELECT", select.toUpperCase());
+		map.put("v_STRSELECT", select);
 		map.put("v_STRQUERY", query);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
@@ -368,14 +370,15 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 
 	/* 관리자 > 커뮤니티검색화면 표출(하단 리스트) 시 companyID 조건 추가, deptID 가져오기 */
 	@Override
-	public List<CommunityClubVO> aspSearchKeyGet1(String primary, int iQueryCount, String select, String query, String companyID, int tenantID) throws Exception {
+	public List<CommunityClubVO> aspSearchKeyGet1(String primary, int pageNum, String select, String query, String offSetMin, String companyID, int tenantID) throws Exception {
 		logger.debug("aspSearchKeyGet1 started.");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("primary", primary);
-		map.put("v_IQUERYCOUNT", iQueryCount);
-		map.put("v_STRSELECT", select.toUpperCase());
+		map.put("v_STARTROW", 10 * (pageNum - 1));
+		map.put("v_STRSELECT", select);
 		map.put("v_STRQUERY", query);
+		map.put("v_OFFSETMIN", offSetMin);
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
@@ -421,8 +424,9 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 
 	@Override
-	public String admCommunityInfoEditOk(String lang, String cCateA, String cCateB, String cCateC, String clubName, String code, int tenantID) throws Exception {
+	public String admCommunityInfoEditOk(String lang, String cCateA, String cCateB, String cCateC, String clubName, String clubDesc, String code, int tenantID) throws Exception {
 		logger.debug("admCommunityInfoEditOk started.");
+		logger.debug("clubDesc=" + clubDesc);
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_USERINFO_LANG", lang);
@@ -430,6 +434,7 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		map.put("v_C_CATE_B", cCateB);
 		map.put("v_C_CATE_C", cCateC);
 		map.put("v_C_CLUBNAME", clubName);
+		map.put("v_C_CLUBDESC", clubDesc);
 		map.put("v_CODE", code);
 		map.put("tenantID", tenantID);
 		
@@ -495,5 +500,204 @@ public class EzCommunityAdminServiceImpl extends EgovAbstractServiceImpl impleme
 		}
 		
 		logger.debug("createCommunityAdmitSendMail ended.");
+	}
+
+	@Override
+	public String adminBbsList(LoginVO userInfo, List<CommunityCBoardVO> cBoardList, String code, int curPage, String bName, int comNoPerPage) throws Exception {
+		StringBuilder strHTML = new StringBuilder();
+		int iColSpan = 5;
+		
+		if (bName.equals("tbl_c_clubpds") || bName.equals("tbl_c_clubpds1")) {
+			iColSpan = 6;
+		}
+		
+		strHTML.append("<tr>");
+		strHTML.append("<th width=\"60px\" >" + egovMessageSource.getMessage("ezCommunity.t32", userInfo.getLocale()) + "</th>");
+		strHTML.append("<th>" + egovMessageSource.getMessage("ezCommunity.t170", userInfo.getLocale()) + "</th>");
+		strHTML.append("<th width=\"70px\">" + egovMessageSource.getMessage("ezCommunity.t138", userInfo.getLocale()) + "</th>");
+		strHTML.append("<th width=\"90px\">" +  egovMessageSource.getMessage("ezCommunity.t171", userInfo.getLocale()) + "</th>");
+		
+		if (iColSpan == 6) {
+			strHTML.append("<th width=\"45px\">" + egovMessageSource.getMessage("ezCommunity.t172", userInfo.getLocale()) + "</th>");
+		}
+		
+		strHTML.append("<th width=\"60px\">" + egovMessageSource.getMessage("ezCommunity.t173", userInfo.getLocale()) + "</th>");
+		strHTML.append("</tr>");
+		
+		int iOutputCount = 1;
+		int iList = 0;
+		int itemNum = ((curPage - 1) * 10) + 1;
+//		String pURL = "";
+		
+		for (CommunityCBoardVO cBoard : cBoardList) {
+			iList++;
+			
+			if (iList <= (curPage - 1) * comNoPerPage) {
+				continue;
+			}
+			if ( iOutputCount > comNoPerPage) {
+				break;
+			}
+			
+			strHTML.append("<tr ondblclick=btn_bbsView('" + cBoard.getNo() + "','" + bName + "')>");
+			strHTML.append("<td width=\"60px\">");
+			
+			if (!bName.equals("tbl_c_clubnotice") && !bName.equals("tbl_c_notice")) {
+				if (cBoard.getRe_Level() > 0) {
+					strHTML.append("<font color=\"#A4A4A4\">" + itemNum + "</font>");
+				} else {
+					strHTML.append(itemNum);
+				}
+			} else {
+				strHTML.append(itemNum);
+			}
+			
+			strHTML.append("</td>");
+			strHTML.append("<td class=\"t2\" style=\"overflow: hidden; cursor: pointer; text-overflow: ellipsis;\" >");
+			strHTML.append("<nobr>");
+			
+			if (!bName.equals("tbl_c_clubnotice") && !bName.equals("tbl_c_notice")) {
+				if (cBoard.getRe_Level() > 0) {
+					 int wid = 10 * cBoard.getRe_Level();
+					 
+                     strHTML.append("<img src=\"/images/dum.gif\" width=\"" + wid + "\" height=\"1\" border=\"0\">"); 
+                     strHTML.append("<img src=\"/images/i_rep.gif\" alt border=\"0\" VALIGN=\"TOP\">"); 
+				}
+			}
+			
+			String nowDate = commonUtil.getTodayUTCTime("");
+			nowDate = EgovDateUtil.addDay(nowDate, -1, "yyyy-MM-dd HH:mm:ss");
+
+			if (cBoard.getWriteDay().compareTo(nowDate) >= 0) {
+				strHTML.append("<img src=\"/images/i_new.gif\" alt border=\"0\">&nbsp;");
+			}
+			
+			strHTML.append(commonUtil.cleanValue(cBoard.getTitle().trim())+"</nobr></td>");
+			
+			if (userInfo.getPrimary().equals("1")) {
+				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName().trim() + "</td>");
+			} else {
+				strHTML.append("<td class=\"t1\" width=\"70px\" >" + cBoard.getUserName2().trim() + "</td>");
+			}
+			
+			strHTML.append("<td class=\"t1\" width=\"90px\" >" + cBoard.getWriteDay().substring(0, 10) + "</td>");
+			 
+			/*String localPdsPath = "";*/
+			if (iColSpan == 6) {
+				//TODO 2016-04-26 이효진 사용하는 곳이 아직 없어서 주석처리
+				/*String file = cBoard.getCharFileName();
+				
+				if (bName.equals("c_clubpds")) {
+					localPdsPath = config.getProperty("upload_community.PDS");	
+				} else {
+					localPdsPath = config.getProperty("upload_community.PDS1");
+				}*/
+			
+				strHTML.append("<td class=\"t1\" >");
+				
+				if (cBoard.getCharFileName().equals("")) {
+					strHTML.append("<img src=\"/images/i_save01.gif\" width=\"12\" height=\"12\" border=\"0\">");
+				}
+				
+				strHTML.append("</td>");
+			}
+			
+			strHTML.append("<td class=\"t1\" width=\"60px\" >" + cBoard.getReadNum() + "</td>");
+			strHTML.append("</tr>");
+			
+			iOutputCount++;
+			itemNum++;
+		}
+		
+		if (cBoardList.size() == 0) {
+			strHTML.append("<tr>");
+			strHTML.append("<td colspan='5' style='text-align:center;'>" + egovMessageSource.getMessage("main.t00026", userInfo.getLocale()) + "</td>");
+			strHTML.append("</tr>");
+		}
+		
+		return strHTML.toString();
+	}
+	
+	//2018-02-06 김혜정 - 폐쇄된 커뮤니티 갯수
+	@Override
+	public int getClosedCommuListCount(String lang, Locale locale, String searchValue, String companyId, int tenantId) throws Exception {
+		logger.debug("getClosedCommuListCount started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_PCLOSESTATE", egovMessageSource.getMessage("ezCommunity.t38", locale));
+		map.put("v_STRQUERY", searchValue);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		int result = ezCommunityAdminDAO.getClosedCommuListCount(map);
+		
+		logger.debug("getClosedCommuListCount ended.");
+		
+		return result;
+	}
+
+	//2018-02-06 김혜정 - 폐쇄된 커뮤니티 리스트
+	@Override
+	public List<CommunityCComCloseVO> getClosedCommuList(String primary, Locale locale, int pageNum, String searchValue, String offSetMin, String companyId, int tenantId) throws Exception {
+		logger.debug("getClosedCommuList started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("primary", primary);
+		map.put("v_PCLOSESTATE", egovMessageSource.getMessage("ezCommunity.t38", locale));
+		map.put("v_STRQUERY", searchValue);
+		map.put("v_STARTROW", 10 * (pageNum - 1));
+		map.put("v_OFFSETMIN", offSetMin);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		List<CommunityCComCloseVO> list = ezCommunityAdminDAO.getClosedCommuList(map);
+		
+		logger.debug("getClosedCommuList ended.");
+		
+		return list;
+	}
+
+	//2019-01-17 김헤정 - 폐쇄된 커뮤니티 리스트 상세정보
+	@Override
+	public CommunityCComCloseVO closeCommunityInfo(String lang, String code, String offSetMin, String companyId, int tenantId) throws Exception {
+		logger.debug("closeCommunityInfo ended.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_USERINFO_LANG", lang);
+		map.put("v_CODE", code);
+		map.put("v_OFFSETMIN", offSetMin);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		CommunityCComCloseVO vo = ezCommunityAdminDAO.closeCommunityInfo(map);
+		
+		logger.debug("closeCommunityInfo ended.");
+		return vo;
+	}
+	
+	//2019-01-18 김혜정 - 커뮤니티 관리자 > 폐쇄 실행
+	@Override
+	public void adminCommCloseAll(String code, String reason, Locale locale, int tenantId) throws Exception {
+		logger.debug("adminCommCloseAll started.");
+		
+		aspCommCloseAllDel(code, tenantId);
+		aspAdminCommCloseAllUpdate(code, locale, reason, tenantId);
+		
+		logger.debug("adminCommCloseAll ended.");
+	}
+	
+	private void aspAdminCommCloseAllUpdate(String code, Locale locale, String reason, int tenantId) throws Exception {
+		logger.debug("aspAdminCommCloseAllUpdate started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CODE", code);
+		map.put("v_REASON", reason);
+		map.put("v_PCLOSESTATE", egovMessageSource.getMessage("ezCommunity.t38", locale));
+		map.put("tenantID", tenantId);
+		
+		ezCommunityAdminDAO.aspAdminCommCloseAllUpdate(map);
+		
+		logger.debug("aspAdminCommCloseAllUpdate ended.");
 	}
 }

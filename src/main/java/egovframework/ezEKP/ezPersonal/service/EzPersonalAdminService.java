@@ -1,13 +1,19 @@
 package egovframework.ezEKP.ezPersonal.service;
 
 import java.util.List;
+import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzPersonalAdminService {
@@ -16,9 +22,9 @@ public interface EzPersonalAdminService {
 	
 	List<PersonalLightPollVO> getPollList(String companyID, int totalCount, int pageSize, int start, int tenantID) throws Exception;
 	
-	List<PersonalPopupVO> getPopupList(String companyID, int tenantID) throws Exception;
+	List<PersonalPopupVO> getPopupList(String companyID, int totalCount, int pageSize, int start, int tenantID) throws Exception;
 	
-	List<PersonalEmpMonthVO> getEmpMonth(String companyID, int tenantID) throws Exception;
+	List<PersonalEmpMonthVO> getEmpMonth(String year, String companyID, int tenantID) throws Exception;
 	
 	List<PersonalLightPollVO> getPollResult(String itemSeq, int tenantID) throws Exception;
 	
@@ -34,9 +40,9 @@ public interface EzPersonalAdminService {
 	
 	String updateNotice(String companyID, String title, String title2, String content, Integer itemSeq, int tenantID) throws Exception;
 	
-	String getQuickLinkList(LoginVO loginVO, String lang) throws Exception;
+	List<PersonalQuickLinkVO> getQuickLinkList(LoginVO loginVO, String lang) throws Exception;
 	
-	String getQuickLink(String quickLinkID, int tenantID) throws Exception;
+	PersonalQuickLinkVO getQuickLink(String quickLinkID, int tenantID) throws Exception;
 	
 	String getQuickLinkACL(String quickLinkID, int tenantID) throws Exception;
 	
@@ -44,7 +50,7 @@ public interface EzPersonalAdminService {
 	
 	String deletePoll(String itemSeq, int tenantID) throws Exception;
 	
-	String getSlider(String sliderID, LoginVO userInfo) throws Exception;
+	List<PersonalSliderImageVO> getSlider(String sliderID, LoginVO userInfo) throws Exception;
 	
 	String statusChangeSlider1(String sliderID, String isUse, String mode, int tenantID) throws Exception;
 
@@ -66,10 +72,29 @@ public interface EzPersonalAdminService {
 
 	void setEmpMonth(String type, String userID, String deptID, String term, LoginVO userInfo) throws Exception;
 
-	void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo, String url) throws Exception;
+	void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo, String url, String isUse) throws Exception;
 
 	void deleteSlider(String sliderID, int tenantID) throws Exception;
 
 	void delQuickLink(String quickLinkID, int tenantID) throws Exception;
 
+	PersonalLightPollConfigVO getLightPollConfig(String userId, int tenantId) throws Exception;
+
+	void setLightPollConfig(String userId, String isPreview, int tenantId) throws Exception;
+
+	PersonalPopopConfigVO getPopupConfig(String userId, int tenantId) throws Exception;
+
+	String setPopupConfig(String userId, String isPreview, int tenantId) throws Exception;
+
+	int getPopupCount(String companyID, int tenantID) throws Exception;
+
+	String setPopupUse(String companyID, int tenantID, String itemSeq, String inUse);
+
+	void updateQuickLinkOrder(JSONArray linkOrderList, int tenantId) throws Exception;
+
+	void updateSliderImageOrder(JSONArray sliderImageList, int tenantId) throws Exception;
+
+	String updatePoll(Document doc, int tenantID) throws Exception;
+
+	String checkJoinPoll(String userId, int tenantID, String itemSeq) throws Exception;
 }

@@ -192,9 +192,9 @@
 			<input type="hidden" name="content" value="">
 		</form>
 		
-		<table class="layout" style="height:707px">
+		<table class="layout">
 			<tr>
-				<td style="height:20px;">
+				<td style="height: 10px; vertical-align: top;">
 					<div id="menu">
 						<ul>
 							<c:if test="${bName == 'tbl_c_board'}">
@@ -202,7 +202,7 @@
 							</c:if>
 							<c:if test="${strWriterID == userInfo.id ||fn:indexOf(userInfo.rollInfo, 'c=1') > -1 || fn:indexOf(userInfo.rollInfo, 'k=1') > -1}">
 								<li id="btn_Modify"><span  onclick="btn_Modify_Onclick()" ><spring:message code='ezCommunity.t6' /></span></li>
-								<li id="btn_Delete"><span  onclick="btn_Delete_Onclick()" ><spring:message code='ezCommunity.t208' /></span></li>
+								<li id="btn_Delete"><span class="icon16 popup_icon16_delete" onclick="btn_Delete_Onclick()"></span></li>
 		          			</c:if>
 						</ul>
 					</div>
@@ -235,7 +235,7 @@
       			</td>
   			</tr>
   			<tr>
-				<td style="padding-top:10px;height:70%" id="ItemOverflow">
+				<td style="padding-top:10px;height:580px" id="ItemOverflow">
 					<iframe id="message" class="viewbox" name="message" style="padding:0; height:100%; width:100%; overflow:auto; border:1px solid #ddd;"></iframe>
     			</td>
   			</tr>

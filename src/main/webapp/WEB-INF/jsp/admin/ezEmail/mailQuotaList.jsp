@@ -60,7 +60,7 @@
 		        var strtext;
 		        var PagingHTML = "";
 		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("listInfo").innerHTML = " &nbsp;[" + strLang7 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang8 + "]";
+		        document.getElementById("listInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
 		        strtext = "<div class='pagenavi'>";
 		        PagingHTML += strtext;
 		        var pageNum = CurPage;

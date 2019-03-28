@@ -44,14 +44,19 @@
 		    			    	var pDiv, pId, pValue;
 		    			        var h2 = window.parent.frames[0].document.getElementsByTagName("h2");
 
+		    			        /* 2018-12-28 홍승비 - 게시판그룹명 > div -> span 태그로 변경된 부분 id 찾도록 수정 */
 		    			        for(var i = 0; i < h2.length; i++){
 		    			            if (h2[i].getAttribute("class") == "on"){
-		    			                pId = h2[i].getElementsByTagName("div")[0].id;
+		    			                pId = h2[i].getElementsByClassName("h2Title")[0].id;
 		    			                pId = pId.replace("TreeCtr", "TreeCtrl");
-		    			                pValue = h2[i].getElementsByTagName("div")[0].getAttribute("value");
+		    			                pValue = h2[i].getElementsByClassName("h2Title")[0].getAttribute("value");
+		    			                
+		    			             	// 열려있는 게시판그룹 닫히는 부분 수정
+										// window.parent.frames[0].TopBoard_onclick(pId, pValue);
+		 		    			     	window.parent.frames[0].treeViewRefresh(pId, pValue);
+		 		    			     	break;
 		    			            }
 		    			        }
-		    			        window.parent.frames[0].TopBoard_onclick(pId, pValue);
 		    			        window.location.reload(true);
 	    					}
 	    				}

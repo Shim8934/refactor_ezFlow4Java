@@ -32,8 +32,8 @@ public class EzScheduleAdminDAO extends EgovAbstractDAO {
 		update("EzScheduleAdminDAO.scheduleChangeHolidayUse", map);
 	}
 
-	public void scheduleSaveHoliday(Map<String, Object> map) throws Exception {
-		insert("EzScheduleAdminDAO.scheduleSaveHoliday", map);
+	public String scheduleSaveHoliday(Map<String, Object> map) throws Exception {
+		return (String) insert("EzScheduleAdminDAO.scheduleSaveHoliday", map);
 	}
 
 	public void scheduleUpdateHoliday(Map<String, Object> map) throws Exception {

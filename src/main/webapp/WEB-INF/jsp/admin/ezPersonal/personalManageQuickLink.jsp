@@ -7,14 +7,22 @@
 		<title></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('main.e4', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		
+		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezPersonal.h1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/admin/adminManageQuickLink.js')}"></script>
 		<script type="text/javascript">
-			var Strmessage = "<spring:message code = 'ezPersonal.t1022' />";
-	        var xmlhttp = null;
+			var xmlhttp = null;
+			var userLang;                     //언어
+			var mode;                         //new, modify
+			var guid;
+			var mainTitleId;
+			var subTitle1Id;
+			var subTitle2Id;
 			
 			document.onselectstart = function () {
 	        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -22,284 +30,30 @@
 	        else
 	            return true;
 			};
-			
-	        $(document).ready(function() {
-	        	$.ajax({
-	        		type : "POST",
-	        		url : "/admin/ezPersonal/getQuickLinkList.do",
-	        		dataType : "text",
-	        		success : function(result) {
-	        			event_QuickList(loadXMLString(result));
-	        		}
-	        	});
-	        });
-	        
-	        function event_QuickList(result) {
-	            try {
-	                document.getElementById("AccessList").innerHTML = "";
-	                var xmldom = result;
-	                var headerData = createXmlDom();
-	                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
-					
-	                if (CrossYN()) {
-	                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-	                    var Node = headerData.importNode(xmlRtn, true);
-	                    headerData.documentElement.appendChild(Node);
-	                } else {
-	                    var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-	                    headerData.documentElement.appendChild(xmlRtn);
-	                }
-	
-	                var listview = new ListView();
-	                listview.SetID("AccessListView");
-	                listview.SetSelectFlag(false);
-	                listview.SetMulSelectable(true);
-	                listview.SetRowOnDblClick("QuickList_onDblclick");
-	                listview.DataSource(headerData);
-	                listview.DataBind("AccessList");
-	                //listview.DataSource(xmldom);
-	                listview.RowDataBind();
-	                xmldomNode = null;
-	                xmldom = null;
-	                
-	                //2018-08-09 김보미 - 데이터가 없을 경우 출력
-	                if (headerData.getElementsByTagName("ROW").length == 0) {
-	                	var TR_noItems = "<tr id='Link_TR_noItems'><td style='text-align: center;' colspan='8'>" + "<spring:message code = 'ezPersonal.t20005' />" + "</td></tr>";
-		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
-	                }
-	            } catch (e) {
-	
-	            }
-	        }
-	        var addquicklink_dialogArguments = new Array();
-	        function btn_Select() {
-	            if (CrossYN()) {
-	                addquicklink_dialogArguments[0] = "";
-	                addquicklink_dialogArguments[1] = btn_Select_Complete;
-	                
-	                //크롬일때 alert창 크기때문에 크롬일때 구별
-		            var agent = navigator.userAgent.toLowerCase();
-		            if (agent.indexOf("chrome") != -1) {
-		            	//2018-08-03 김보미 - alert창 크기때문에 팝업 사이즈 조정
-		            	//var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(450, 682));	
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(460, 682));	
-		            } else {
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=new", "AddQuickLink", GetOpenWindowfeature(415, 670));
-		            }
-	                
-	                try { AddQuickLink.focus(); } catch (e) {
-	                }
-	            } else {
-	                var rtnValue = window.showModalDialog("/admin/ezPersonal/addQuickLink.do?mode=new", "", "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(415, 670));
-	                window.location.reload();
-	            }
-	        }
-	
-	        function btn_Select_Complete() {
-	            window.location.reload();
-	        }
-	
-	        function QuickList_onDblclick() {
-	            var listview = new ListView();
-	            listview.LoadFromID("AccessListView");
-	            var listviewSelected = listview.GetSelectedRows();
-	            if (listviewSelected == "") {
-	                alert(Strmessage);
-	                return;
-	            }
-	
-	            if (CrossYN()) {
-	                addquicklink_dialogArguments[0] = listviewSelected[0].getAttribute("data1");
-	                addquicklink_dialogArguments[1] = btn_Select_Complete;
-	                
-		            //2018-08-03 김보미 - alert창 크기때문에 팝업 사이즈 조정
- 	                //var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 680));
-		            var agent = navigator.userAgent.toLowerCase();
-		            if (agent.indexOf("chrome") != -1) {
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(460, 682));	
-		            } else {
-		            	var AddQuickLink = window.open("/admin/ezPersonal/addQuickLink.do?mode=modify", "AddQuickLink", GetOpenWindowfeature(415, 670));
-		            }
-	                try { AddQuickLink.focus(); } catch (e) {
-	                }
-	                
-	            } else {
-	                var rtnValue = window.showModalDialog("/admin/ezPersonal/addQuickLink.do?mode=modify", listviewSelected[0].getAttribute("data1"), "dialogHeight:620px;dialogwidth:400px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(415, 625));
-	                window.location.reload();
-	            }
-	        }
-	
-	        function btn_Del() {
-	            var listview = new ListView();
-	            listview.LoadFromID("AccessListView");
-	            var listviewSelected = listview.GetSelectedRows();
-	            if (listviewSelected == "") {
-	                alert(Strmessage);
-	                return;
-	            }
-	
-	            if (!confirm("<spring:message code = 'ezPersonal.t00003' />")) {
-	            	return;
-	            }
-	
-	            var xmlpara = createXmlDom();
-	            var objNode;
-	            createNodeInsert(xmlpara, objNode, "PARAMETER");
-	            createNodeAndInsertText(xmlpara, objNode, "pQuickLinkID", listviewSelected[0].getAttribute("data1"));
-	
-	            xmlhttp = null;
-	            xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/admin/ezPersonal/delQuickLink.do", false);
-	            xmlhttp.send(xmlpara);
-	
-	            if (xmlhttp != null && xmlhttp.readyState == 4) {
-	                if (xmlhttp.statusText == "OK") {
-	                    alert("<spring:message code = 'ezPersonal.t00004' />");
-	                    window.location.reload();
-	                }
-	            }
-	        }
+			$(document).ready(function() {
+				makeList();
+			});
 		</script>
 	</head>
 	<body class="mainbody">
-		<c:choose>
-			<c:when test="${lang == '1'}">
-				<xml id="listviewheader" style ="display:none">
-					<LISTVIEWDATA>
-						<HEADERS>
-					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' /></NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-					      	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-							<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-					     	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1023' />Type</NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME>URL</NAME>
-					        	<WIDTH>70</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1024' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1025' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1026' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					    </HEADERS>
-					</LISTVIEWDATA>
-				</xml>
-			</c:when>
-			<c:when test="${lang == '2'}">
-				<xml id="listviewheader" style ="display:none">
-					<LISTVIEWDATA>
-						<HEADERS>
-					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s81' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-							<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-					     	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1023' />Type</NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME>URL</NAME>
-					        	<WIDTH>70</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1024' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1025' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1026' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					    </HEADERS>
-					</LISTVIEWDATA>
-				</xml>
-			</c:when>
-			<c:otherwise>
-				<xml id="listviewheader" style ="display:none">
-					<LISTVIEWDATA>
-						<HEADERS>
-					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s84' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-					    	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s81' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-							<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.jjs03' />(<spring:message code = 'ezPersonal.s82' />)</NAME>
-					        	<WIDTH>40</WIDTH>
-					      	</HEADER>
-					     	<HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1023' />Type</NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME>URL</NAME>
-					        	<WIDTH>70</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1024' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1025' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					        <HEADER>
-					        	<NAME><spring:message code = 'ezPersonal.t1026' /></NAME>
-					        	<WIDTH>50</WIDTH>
-					      	</HEADER>
-					    </HEADERS>
-					</LISTVIEWDATA>
-				</xml>
-			</c:otherwise>
-		</c:choose>
+		<h1><spring:message code ="ezPersonal.khj1" /></h1>
 
+		<!-- 빠른 링크 리스트 영역 -->
+		<div class="admin_quicklink">
+			<ul id="mainlist"></ul>
+		</div>	
 		
-		<h1>Quick Link</h1>
-		<div id="mainmenu">
-			<ul>
-		    	<li><span onclick="btn_Select()"><spring:message code = 'ezPersonal.t105' /></span></li>
-		    	<!-- <li style="background:none; padding-right:2px; cursor: default;"><img src="/images/i_bar.gif" alt=""></li> -->
-		        <li><span onclick="QuickList_onDblclick()"><spring:message code = 'ezPersonal.t169' /></span></li>
-		        <li><span onclick="btn_Del()"><spring:message code = 'ezPersonal.t99' /></span></li>
-			</ul>
-		</div>
-		<script type="text/javascript">
-	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-	    </script>
-	    <table class="mainlist" style="width:100%;">
-	        <div id=AccessList style ="WIDTH:100%; border-right:1px solid #e8e8e8; border-left:1px solid #e8e8e8;"></div>
-	    </table>
+		<!-- 빠른 링크 추가 영역 -->
+		<xml id="listviewheader" style="display: none;"></xml>
+		<iframe name="ifrm" src="about:blank" style="display: none;"></iframe>
+		<form method="post" id="form" name="form" enctype="multipart/form-data" action="/admin/ezPersonal/typeImageUpload.do?guid=" target="ifrm" style ="display:none">
+			<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="width: 1px; height: 1px;" accept=".jpg, .gif, .png" />
+			<input type="hidden" name="boardid" id="boardid" />
+			<input type="hidden" name="maxsize" id="maxsize" />
+			<input type="hidden" name="mode" id="mode" value="PHOTO"/>
+			<input type="hidden" name="cnt" id="cnt" />
+			<input type="hidden" name="guid" id="guid"  />
+			<input type="hidden" name="mailgubun" id="mailgubun" />
+		</form>
 	</body>
 </html>

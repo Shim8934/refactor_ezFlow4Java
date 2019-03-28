@@ -47,6 +47,8 @@ public class CircularListVO {
 	private String shareStatus;
 	/** 회사Id */
 	private String companyID;
+	/** 작성자 사진 파일  **/
+	private String userImageFile;
 
 	public int getCircularID() {
 		return circularID;
@@ -186,4 +188,11 @@ public class CircularListVO {
 	public void setCompanyID(String companyID) {
 		this.companyID = companyID;
 	}
+	public String getUserImageFile() {
+		return userImageFile;
+	}
+	public void setUserImageFile(String userImageFile) {
+		this.userImageFile = userImageFile;
+	}
+	
 }
