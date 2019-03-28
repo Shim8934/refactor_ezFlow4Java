@@ -2177,7 +2177,7 @@
 		  	</div>	
 		</div>
 		
-		<div style="WIDTH:100%;HEIGHT:230px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+		<div style="WIDTH:100%;HEIGHT:315px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 			<div id="lvAprLine" ></div>
 		</div>		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
