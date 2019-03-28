@@ -569,11 +569,11 @@
 		        function ItemRead_onclick(obj) {
 		            var feature = GetOpenWindowfeature(765, 700);
 		            if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-		                window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
+		                window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 		            } else if (obj.getAttribute("DATA10") == "7" ) {
-			        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
+			        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 			        }  else{
-                    	window.open("/ezBoard/boardNewItem.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
+                    	window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 		            }
 		            
 		            /* 2018-07-09 홍승비 - 승인게시판 게시물 읽기 시 즉각적으로 폰트 변화하도록 수정 */
@@ -586,7 +586,7 @@
 		
 		        function CheckIfHasReplies() {
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + strListInfo, false);
+		            xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + encodeURIComponent(strListInfo), false);
 		            xmlhttp.send();
 		            if (xmlhttp.responseText == "FALSE") {
 		                xmlhttp = null;
@@ -597,7 +597,7 @@
 		        }
 		        function DeleteItem() {
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/deleteItem.do?itemList=" + strListInfo + "&mode=" + pMode, false);
+		            xmlhttp.open("POST", "/ezBoard/deleteItem.do?itemList=" + encodeURIComponent(strListInfo) + "&mode=" + pMode, false);
 		            xmlhttp.send();
 		
 		            if (xmlhttp.responseText == "NO") {
@@ -661,7 +661,7 @@
 		            }
 		            arrList = null;
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + pBoardID + "&itemIDList=" + strItemList, false);
+		            xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + encodeURIComponent(pBoardID) + "&itemIDList=" + encodeURIComponent(strItemList), false);
 		            xmlhttp.send();
 		            xmlhttp = null;
 		            refresh_onclick();
@@ -674,7 +674,7 @@
 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 		    }
 		    function ReservationItem_onclick() {
-		        var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
+		        var OrgBoardParameters = "page=" + CurPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType;
 		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + escape(OrgBoardParameters) + "&boardType=" + pBoardType;
 		    }
 		
@@ -905,12 +905,12 @@
 		                }
 		
 		                if (ret[2] == "3" || ret[2] == "4") {
-		                    window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+		                    window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", feature, "");
 		                } else if (ret[2] == "7" ) {
 							var feature = GetOpenWindowfeature(765, 679);
-		                	window.open("/ezBoard/newBoardItemMovie.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+		                	window.open("/ezBoard/newBoardItemMovie.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", feature, "");
 		                } else {
-	                        window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+	                        window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", feature, "");
 		                }
 		            }
 		        }
@@ -925,12 +925,12 @@
 		            }
 		            var feature = GetOpenWindowfeature(765, 820);
 		            if(ret[2] == "3" || ret[2] == "4") {
-		                window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+		                window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", feature, "");
 		            } else if (ret[2] == "7" ) {
 						var feature = GetOpenWindowfeature(765, 700);
-	                	window.open("/ezBoard/newBoardItemMovie.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+	                	window.open("/ezBoard/newBoardItemMovie.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", feature, "");
 	                } else {
-	                    window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+	                    window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", feature, "");
 		            }
 		        }
 		    }
@@ -939,12 +939,12 @@
 		        obj = selobj;
 		        var feature = GetOpenWindowfeature(765, 820);
 		        if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
+		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 		        } else if (obj.getAttribute("DATA10") == "7" ) {
 		        	feature = GetOpenWindowfeature(765, 700);
-		        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
+		        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 		        } else {
-	                window.open("/ezBoard/boardNewItem.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
+	                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 		        }
 		    }
 	    </script>

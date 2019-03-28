@@ -2090,7 +2090,7 @@ function GetDocumentInfo(DocID, DocHref, ImagCnt, Target) {
 function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
 	AttachFlag = true;
     var xmlHTTP = createXMLHttpRequest();
-    xmlHTTP.open("GET", "/ezBoard/getItemInfo.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+    xmlHTTP.open("GET", "/ezBoard/getItemInfo.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
     xmlHTTP.send("");
 
     if (xmlHTTP.status == 200) {
@@ -2122,13 +2122,14 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
         htmlData = ReplaceText(htmlData, "<P>", "<DIV>");
         htmlData = ReplaceText(htmlData, "</P>", "</DIV>");
         htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
+
         if (pRetransType != "boardAttach") {
             document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" +
             	"<br><br><hr></hr><DIV style='font-family:"+ pFont + "'><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender +
             	"<br><B>" + strLang120 + "</B>" + MakeXMLString(eSubject.value) + "</DIV><br><br>" + htmlData;
         }
         
-        xmlHTTP.open("POST", "/ezBoard/getItemAttachmentsMail.do?itemID=" + pItemID + "&mode=" + pRetransType + "&conLocation=" + encodeURIComponent(Rurl) + "&title=" + encodeURIComponent(getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0])), false);
+        xmlHTTP.open("POST", "/ezBoard/getItemAttachmentsMail.do?itemID=" + encodeURIComponent(pItemID) + "&mode=" + pRetransType + "&conLocation=" + encodeURIComponent(Rurl) + "&title=" + encodeURIComponent(getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0])), false);
         xmlHTTP.send();
         var ReturnXML = loadXMLString(xmlHTTP.responseText);
         var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");
@@ -2197,7 +2198,7 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
 function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
     AttachFlag = true;
     var xmlHTTP = createXMLHttpRequest();
-    xmlHTTP.open("GET", "/ezCommunity/getItemInfo.do?boardID=" + pBoardID + "&itemID=" + pItemID, false);
+    xmlHTTP.open("GET", "/ezCommunity/getItemInfo.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID), false);
     xmlHTTP.send("");
 
     if (xmlHTTP.status == 200) {

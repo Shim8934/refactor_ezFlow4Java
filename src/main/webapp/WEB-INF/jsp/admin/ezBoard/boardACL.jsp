@@ -525,7 +525,7 @@
 	            CheckBoxInit();
 	
 	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/admin/ezBoard/getACL.do?boardID=" + pBoardID + "&accessID=" + selectedTargetID, false);
+	            xmlhttp.open("POST", "/admin/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID) + "&accessID=" + selectedTargetID, false);
 	            xmlhttp.send();
 	
 	            var xmldom = createXmlDom();
@@ -654,26 +654,26 @@
 	        function goBoardList() {
 	            if (pType == "3") {
 	                if(pParentNeed == "Y")
-	                    location.href = "/ezBoard/boardItemListPhoto.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
+	                    location.href = "/ezBoard/boardItemListPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	                else
-	                    location.href = "/ezBoard/boardItemListPhoto.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
+	                    location.href = "/ezBoard/boardItemListPhoto.do?adminType=y&boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	            }
 	            else if (pType == "4") {
 	                if (pParentNeed == "Y")
-	                    location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
+	                    location.href = "/ezBoard/boardItemListThumbnail.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	                else
-	                    location.href = "/ezBoard/boardItemListThumbnail.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
+	                    location.href = "/ezBoard/boardItemListThumbnail.do?adminType=y&boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	            } else if (pType == "7") {
 	            	 if (pParentNeed == "Y")
-						location.href = "/ezBoard/boardItemListMovie.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
+						location.href = "/ezBoard/boardItemListMovie.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	                else
-	                    location.href = "/ezBoard/boardItemListMovie.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
+	                    location.href = "/ezBoard/boardItemListMovie.do?adminType=y&boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	            }
 	            else {
 	                if(pParentNeed == "Y")
-	                    location.href = "/ezBoard/boardItemList.do?boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
+	                    location.href = "/ezBoard/boardItemList.do?boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	                else
-	                    location.href = "/ezBoard/boardItemList.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
+	                    location.href = "/ezBoard/boardItemList.do?adminType=y&boardID=" + encodeURIComponent(pBoardID) + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	            }
 	        }
 	        
@@ -692,7 +692,7 @@
 	            pwidth = parseInt(pwidth) / 2;
 	            pheigth = pheigth - 330;
 	            pwidth = pwidth - 350;
-	            window.open("/admin/ezBoard/boardAclList.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=660,width=700px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
+	            window.open("/admin/ezBoard/boardAclList.do?boardID=" + encodeURIComponent(pBoardID) + "&parentBoardID=" + encodeURIComponent(pParentBoardID), "", "height=660,width=700px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 	        
 	        /* 2019-01-28 홍승비 - 권한전파 시 그룹사게시판 파라미터 전달, 사용하지 않는 부모게시판 파라미터 제거 */
@@ -703,7 +703,7 @@
 	            pwidth = parseInt(pwidth) / 2;
 	            pheigth = pheigth - 192;
 	            pwidth = pwidth - 260;
-	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + pBoardID + "&isAllGroupBoard=${isAllGroupBoard}", "", "height=170,width=458px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
+	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + encodeURIComponent(pBoardID) + "&isAllGroupBoard=${isAllGroupBoard}", "", "height=170,width=458px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 	    </script>
 		</head>

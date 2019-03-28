@@ -189,6 +189,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (req.getParameter("photoType") != null && !req.getParameter("photoType").equals("")) {
 			photoType = req.getParameter("photoType");	
 		}
+
+		boardID = boardID.replace("{", "%7B").replace("}", "%7D");
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("photoType", photoType);
@@ -1171,7 +1173,7 @@ public class EzBoardController extends EgovFileMngUtil{
     		}
     	}
 
-		logger.debug("getBoardList ended");
+    	logger.debug("getBoardList ended");
         return resultXML.toString();
     }
     
@@ -6076,6 +6078,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String itemID = request.getParameter("itemID");
 		String boardID = request.getParameter("boardID");
+		String boardIDEncode = URLEncoder.encode(boardID);
 		String g_ImageUrl = "";
 		String listImages = "";
 		String imageID = "";
@@ -6091,7 +6094,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[7] + "|";
+			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardIDEncode + "&fileName=" + URLEncoder.encode(g_ImageUrl.split("/")[7]) + "|";
 			imageID += photoViewList.get(k).getImageID() + ";";
 			imageContent += photoViewList.get(k).getFileContent() + ";";
 			mainFg += photoViewList.get(k).getFlag().trim() + ";";
@@ -6145,7 +6148,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + URLEncoder.encode(g_ImageUrl.split("/")[7], "UTF-8") + "|";
+			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + URLEncoder.encode(boardID) + "&fileName=" + URLEncoder.encode(g_ImageUrl.split("/")[7], "UTF-8") + "|";
 			imageID += photoViewList.get(k).getImageID() + ";";
 			imageContent += photoViewList.get(k).getFileContent() + ";";
 			

@@ -70,7 +70,7 @@
 		    }
 
 			function CheckIfAnonyBoard(pBoardID) {
-				xmlhttp.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + pBoardID, false);
+				xmlhttp.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
 				if(ret.indexOf("anonyboard") != -1) return true;
@@ -78,7 +78,7 @@
 			}
 			
 			function CheckIfCanWrite(pBoardID) {
-				xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + pBoardID, false);
+				xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
 				if(ret.indexOf("<WRITE>true</WRITE>") != -1) return true;
@@ -134,7 +134,7 @@
 			}
 			
 			function TopBoard_onclick(obj, ID, items) {
-			    var rootBoardID = "{" +ID+ "}";
+			    var rootBoardID = encodeURIComponent("{" +ID+ "}");
 			    var num = obj.split("TreeCtrl");
 			
 			    if (document.getElementById(obj).style.display != "none") {
@@ -157,7 +157,7 @@
 			}
 			
 			function GetSubBoard(pRootBoardID, pSubFlag) {
-				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0&pExcludeBoardID=" + BoardID + "&isAdminLeft=" + isAdminLeft, false);
+				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + encodeURIComponent(pRootBoardID) + "&subFlag=" + pSubFlag + "&selectFlag=0&pExcludeBoardID=" + encodeURIComponent(BoardID) + "&isAdminLeft=" + isAdminLeft, false);
 				xmlhttp.send();
 				
 				return xmlhttp.responseXML;
