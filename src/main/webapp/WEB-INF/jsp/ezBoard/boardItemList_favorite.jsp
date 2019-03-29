@@ -233,7 +233,7 @@
                     		ChangeTab(document.getElementById("1tab0"));	
 	                    }
 	                }
-	                else {
+	                else { // 사용자가 설정한 즐겨찾기가 없는 경우, 디폴트로 새게시물 표출
 	                    var _p = document.createElement("P");
 	                    _p.id = "FBoard_sub0";
 	
@@ -241,17 +241,13 @@
 	                    _span.id = "1tab0";
 	                    _span.setAttribute("divname", "FBoard_div0");
 	                    _span.setAttribute("DATA1", "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}");
-	                    if (userLang == "1")
-	                        _span.setAttribute("DATA2", "<spring:message code='ezBoard.t480'/>");
-	                    else
-	                        _span.setAttribute("DATA2", "New BoardItem");
+						_span.setAttribute("DATA2", "<spring:message code='ezBoard.t480'/>");
 	                    _span.setAttribute("DATA5", "0");
 	                    _span.innerHTML = "<spring:message code='ezBoard.t480'/>";
 	
 	                    _p.appendChild(_span);
 	                    document.getElementById("tab1").appendChild(_p);
-
-	                    	
+                    	
 	                    if (xmlnode.length > 0) {
 	                       	Tab1_NewTabIni("tab1");
 	                    }	 	                    
