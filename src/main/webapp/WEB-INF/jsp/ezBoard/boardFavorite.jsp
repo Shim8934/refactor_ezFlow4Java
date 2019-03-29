@@ -55,11 +55,16 @@
         	                strHTML += "<td style='width:12%;text-align:center; padding-right:20px;'><input type='checkbox' BoardID='" + getNodeText(listdom.getElementsByTagName("BOARDID")[i]) + "' onclick='event_statuschange(this);'></td>";
                     	}
                     	
-        	            if (strPrimary == "1") {
-	           		        strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + getNodeText(listdom.getElementsByTagName("BOARDNAME")[i]) + "</td>";
-        	            } else {
-	           		        strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + getNodeText(listdom.getElementsByTagName("BOARDNAME2")[i]) + "</td>";
-        	            }
+                    	/* 2019-03-29 홍승비 - 새게시물 다국어 메세지 수정 */
+                    	if (getNodeText(listdom.getElementsByTagName("BOARDID")[i]) == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
+							strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'><spring:message code='ezBoard.t480'/></td>";
+                    	} else {
+	        	            if (strPrimary == "1") {
+								strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + getNodeText(listdom.getElementsByTagName("BOARDNAME")[i]) + "</td>";
+	        	            } else {
+		           		        strHTML += "<td style='width:60%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + getNodeText(listdom.getElementsByTagName("BOARDNAME2")[i]) + "</td>";
+	        	            }
+                    	}
                     	strHTML += "<td style='width:28%; white-space:nowrap; text-overflow:ellipsis; overflow:hidden;'>" + parentBoardName[i] + "</td>";
                     	strHTML += "</tr>";
                 	}
