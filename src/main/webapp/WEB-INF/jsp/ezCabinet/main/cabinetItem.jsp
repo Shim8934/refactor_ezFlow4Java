@@ -15,14 +15,14 @@
 		<h1 id="cabInfo">
 			<c:out value='${cabinet.cabinetName}'/>
 			<span id="cabinetInfo" class="cabTtlInf"></span>
-			<span class="topSearchSpan">
+			<span class="searchForm">
 				<select id="searchCheck">
 					<option value="title" selected><spring:message code='ezCabinet.t51'/></option>
 					<option value="summary"       ><spring:message code='ezCabinet.t52'/></option>
 				</select>
 				
 				<input name="keyword" type="text" id="ssInput">
-				<a id="searchBttn"><img src="/images/bsearch_new.gif"></a>
+				<a id="searchBttn" class="searchBtn"><img src="/images/bsearch_new2.gif"></a>
 			</span>
 		</h1>
 		
@@ -30,31 +30,36 @@
 			<ul>
 				<c:choose>
 					<c:when test="${cabinet.permission == '2'}">
-						<li id="addBttn"><a><span><spring:message code='ezCabinet.t45'/></span></a></li>
-						<li id="delBttn"><a><span><spring:message code='ezCabinet.t46'/></span></a></li>
+						<li id="addBttn" class="important"><a><span style="color: #0470e4;"><spring:message code='ezCabinet.t45'/></span></a></li>
 						<li id="movBttn"><a><span><spring:message code='ezCabinet.t47'/></span></a></li>
-						<li id="refBttn"><a><span><spring:message code='ezCabinet.t48'/></span></a></li>
-						<li id="schBttn"><a><span><spring:message code='ezCabinet.t49'/></span></a></li>
 						<li id="shaBttn"><a><span><spring:message code='ezCabinet.t50'/></span></a></li>
+						<li id="schBttn"><a><span class="icon16 icon16_search"></span></a></li>
+						<li id="delBttn"><a><span class="icon16 icon16_delete"></span></a></li>
+						<li id="refBttn"><a><span class="icon16 icon16_refresh"></span></a></li>
 					</c:when>
 					<c:when test="${cabinet.permission == '1'}">
-						<li id="addBttn"><a><span><spring:message code='ezCabinet.t45'/></span></a></li>
-						<li id="delBttn"><a><span><spring:message code='ezCabinet.t46'/></span></a></li>
+						<li id="addBttn" class="important"><a><span style="color: #0470e4;"><spring:message code='ezCabinet.t45'/></span></a></li>
 						<li id="movBttn"><a><span><spring:message code='ezCabinet.t47'/></span></a></li>
-						<li id="refBttn"><a><span><spring:message code='ezCabinet.t48'/></span></a></li>
-						<li id="schBttn"><a><span><spring:message code='ezCabinet.t49'/></span></a></li>
+						<li id="schBttn"><a><span class="icon16 icon16_search"></span></a></li>
+						<li id="delBttn"><a><span class="icon16 icon16_delete"></span></a></li>
+						<li id="refBttn"><a><span class="icon16 icon16_refresh"></span></a></li>
 					</c:when>
 					<c:otherwise>
-						<li id="refBttn"><a><span><spring:message code='ezCabinet.t48'/></span></a></li>
-						<li id="schBttn"><a><span><spring:message code='ezCabinet.t49'/></span></a></li>
+						<li id="schBttn"><a><span class="icon16 icon16_search"></span></a></li>
+						<li id="refBttn"><a><span class="icon16 icon16_refresh"></span></a></li>
 					</c:otherwise>
 				</c:choose>
-				<li id="right">
-					<img src="${config.previewMode == 'off' ? '/images/kr/cm/btn_onnoframe.gif'     : '/images/kr/cm/btn_noframe.gif'}"     class="btnimg cabinet" id="preViewNone"  >
-					<img src="${config.previewMode == 'h'   ? '/images/kr/cm/btn_onbottomframe.gif' : '/images/kr/cm/btn_bottomframe.gif'}" class="btnimg cabinet" id="preViewBottom">
-					<img src="${config.previewMode == 'w'   ? '/images/kr/cm/btn_onleftframe.gif'   : '/images/kr/cm/btn_leftframe.gif'}"   class="btnimg cabinet" id="preViewleft"  >
-					<img src="/images/kr/cm/btn_arrow_down.gif" role="off" id="sltView">
-				</li>
+				
+				<div id="right" class="sub_frameIcon" style="float:right">
+					<div class="sub_frameIconUL">
+						<p class="frameIconLI"><span class="${config.previewMode == 'off' ? 'icon16 btn_onnoframe'     : 'icon16 btn_noframe'}"     id="preViewNone"  ></span></p>
+						<p class="frameIconLI"><span class="${config.previewMode == 'h'   ? 'icon16 btn_onbottomframe' : 'icon16 btn_bottomframe'}" id="preViewBottom"></span></p>
+						<p class="frameIconLI"><span class="${config.previewMode == 'w'   ? 'icon16 btn_onleftframe'   : 'icon16 btn_leftframe'}"   id="preViewleft"  ></span></p>
+					</div>
+					<div class="sub_frameIconUL02">
+						<p class="frameIconLI"><span class="icon16 btn_arrow_down" role="off" id="sltView"></span></p>
+					</div>
+				</div>
 			</ul>
 		</div>
 		

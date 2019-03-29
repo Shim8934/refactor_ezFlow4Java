@@ -160,7 +160,7 @@ var CabinetNavi = function() {
 		
 		function setHeaderInfo() {
 			var headerElmt = document.getElementById(_headerId);
-			if (headerElmt) {headerElmt.innerHTML = " - [" + _messages.total + "<span> " + _totalRows + " </span>" + _messages.item + "]";}
+			if (headerElmt) {headerElmt.innerHTML = "<span> " + _totalRows + " </span>";}
 		}
 		
 		function setSearchCallBack(functionName) {_searchCallBack = functionName;}

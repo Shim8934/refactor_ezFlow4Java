@@ -8,77 +8,92 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezCabinet.css', 'msg')}"       type="text/css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css">
+		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 	</head>
 	
-	<body class="leftbody" style="overflow: auto; height: 100%;">
-		<div id="left">
-			<div class="left_cabinet"><span><spring:message code='ezCabinet.t01'/></span></div>
-			
-			<!-- 나의 캐비넷  -->
-			<h2 id="myCabinet" class="on"><span><spring:message code='ezCabinet.t02'/></span></h2>
-			<ul class="on">
-				<div id="cabinetTree" class="cabinetTree"></div>
-				<!-- 캐비넷  관리 -->
-				<h3 id="cabinetManagement" class="cabManag"><span><spring:message code='ezCabinet.t03'/></span></h3>
-			</ul>
-			
-			<!-- 연동 캐비넷 -->
-			<h2 id="relatedCabinet"><span><spring:message code='ezCabinet.t32'/></span></h2>
-			<ul class="off"><div id="cabinetModulesTree" class="cabinetTree2"></div></ul>
-			
-			<!-- 공유한 캐비넷 -->
-			<h2 id="shareCabinet"><span><spring:message code='ezCabinet.t157'/></span></h2>
-			<ul class="off"><div id="myShareTree" class="cabinetTree2"></div></ul>
-			
-			<!-- 공유받은 캐비넷 -->
-			<h2 id="sharedCabinet"><span><spring:message code='ezCabinet.t05'/></span></h2>
-			<ul class="off"><div id="cabinetShareTree" class="cabinetTree2"></div></ul>
-			
-			<!-- 용량보기 -->
-			<div class="volumeDiv">
-				<p class="volume_num"><img src="/images/volume_num.png"></p>
-				<p class="volume_graph" id="myProgress">
-					<c:choose>
-						<c:when test="${percent > 90}"                 ><span id="myBar" class="myBar_red"    style="width: ${percent < 100 ? percent : 100}%;"></span></c:when>
-						<c:when test="${percent <= 90 && percent > 70}"><span id="myBar" class="myBar_orange" style="width: ${percent}%;"                      ></span></c:when>
-						<c:when test="${percent <= 70 && percent > 60}"><span id="myBar" class="myBar_yellow" style="width: ${percent}%;"                      ></span></c:when>
-						<c:when test="${percent <= 60 && percent > 0}" ><span id="myBar" class="myBar_green"  style="width: ${percent}%;"                      ></span></c:when>
-						<c:when test="${percent == 0}"                 ><span id="myBar" class="myBar_white"  style="width: 0%;"                               ></span></c:when>
-					</c:choose>
-				</p>
-				<dl class="volumeDL">
-					<c:choose>
-						<c:when test="${capacityType == 0}">
-							<dt id="useVol"><c:out value='${useVolume}'/><span> / <spring:message code='ezCabinet.t114'/></span></dt>
-							<dd id="usePer" style="color: #0470e4;">0%</dd>
-						</c:when>
-						<c:otherwise>
-							<dt id="useVol"><c:out value='${useVolume}'/><span> / <c:out value="${totalCapacity}"/>MB</span></dt>
-							<dd id="usePer" style="color: #0470e4;"><c:out value="${percent > 100 ? 100 : percent}"/>%</dd>
-						</c:otherwise>
-					</c:choose>
-				</dl>
+	<body class="newLeft">
+		<div id="left" class="lnb">
+			<div class="left_title">
+				<spring:message code='ezCabinet.t01'/>
+				<span id="cabinetConfig" class="sub_iconLNB tree_leftconfig" title="<spring:message code="ezCabinet.t06"/>"></span>
 			</div>
 			
-			<!-- 환경설정 -->
-			<h3 id="cabinetConfig"><span><spring:message code="ezCabinet.t06"/></span></h3>
+			<div class="cabinetListBox">
+				<!-- 나의 캐비넷  -->
+				<h2 id="myCabinet" class="on"><span class="sub_iconLNB tree_arrow_up"></span><span><spring:message code='ezCabinet.t02'/></span></h2>
+				<ul class="lnbUL">
+					<div id="cabinetTree" class="cabinetTree"></div>
+					<!-- 캐비넷  관리 -->
+					<li><span class="sub_iconLNB tree_manage" style="float:left"></span><span id="cabinetManagement" class="list_text"><spring:message code='ezCabinet.t03'/></span></li>
+				</ul>
+				
+				<!-- 연동 캐비넷 -->
+				<h2 id="relatedCabinet"><span class="sub_iconLNB tree_arrow_up"></span><span><spring:message code='ezCabinet.t32'/></span></h2>
+				<ul class="lnbUL off"><div id="cabinetModulesTree" class="cabinetTree2"></div></ul>
+				
+				<!-- 공유한 캐비넷 -->
+				<h2 id="shareCabinet"><span class="sub_iconLNB tree_arrow_up"></span><span><spring:message code='ezCabinet.t157'/></span></h2>
+				<ul class="lnbUL off"><div id="myShareTree" class="cabinetTree2"></div></ul>
+				
+				<!-- 공유받은 캐비넷 -->
+				<h2 id="sharedCabinet"><span class="sub_iconLNB tree_arrow_up"></span><span><spring:message code='ezCabinet.t05'/></span></h2>
+				<ul class="lnbUL off"><div id="cabinetShareTree" class="cabinetTree2"></div></ul>
+			</div>
+			
+			<!-- 용량보기 -->
+			<div class="mail_space">
+				<span class="mail_spaceText">
+					<spring:message code="ezCabinet.t120" />&nbsp;
+					<c:choose>
+						<c:when test="${capacityType == 0}">
+							<%-- <dt id="useVol"><c:out value='${useVolume}'/><span> / <spring:message code='ezCabinet.t114'/></span></dt> --%>
+							<span id="usePer">0%</span>
+						</c:when>
+						<c:otherwise>
+							<%-- <dt id="useVol"><c:out value='${useVolume}'/><span> / <c:out value="${totalCapacity}"/>MB</span></dt> --%>
+							<span id="usePer"><c:out value="${percent > 100 ? 100 : percent}"/>%</span>
+						</c:otherwise>
+					</c:choose>
+				</span>
+				<span id="myProgress">
+					<c:choose>
+						<c:when test="${percent > 90}"                 ><span id="myBar" class="mailBar myBar_red"    style="width: ${percent < 100 ? percent : 100}%;"></span></c:when>
+						<c:when test="${percent <= 90 && percent > 70}"><span id="myBar" class="mailBar myBar_orange" style="width: ${percent}%;"                      ></span></c:when>
+						<c:when test="${percent <= 70 && percent > 60}"><span id="myBar" class="mailBar myBar_yellow" style="width: ${percent}%;"                      ></span></c:when>
+						<c:when test="${percent <= 60 && percent > 0}" ><span id="myBar" class="mailBar myBar_green"  style="width: ${percent}%;"                      ></span></c:when>
+						<c:when test="${percent == 0}"                 ><span id="myBar" class="mailBar myBar_white"  style="width: 0%;"                               ></span></c:when>
+					</c:choose>
+				</span>
+			</div>
 		</div>
 		
-		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')             }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')          }"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')   }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')      }"></script>
+		<script type="text/javascript" src="${util.addVer('ezCabinet.lang', 'msg')                }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCabinet/cabinetTree.js')         }"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 		<script type="text/javascript">
 			var CabUserLeft = function() {
 				var cabinetTree = new CabinetTree();
 				var relatedTree = new CabinetTree();
 				var shareTree   = new CabinetTree();
 				var myShareTree = new CabinetTree();
+				
+				window.addEventListener("load", init, false);
+				window.addEventListener("resize", resizeWindow, false);
+				
 				setButtons();
+				
+				function init() {
+					$(".cabinetListBox").mCustomScrollbar({theme : "dark"});
+					resizeWindow();
+				}
+				
+				function resizeWindow() {
+					$(".cabinetListBox").height(window.innerHeight - 105);
+				}
 				
 				function setButtons() {
 					document.onselectstart = function(e) {return false;}
-					initToggleList(document.getElementById("left"), "h2", "ul", "li");
 					
 					cabinetTree.setTreeInfo({
 						treeId     : "cabinetTree",
@@ -106,6 +121,26 @@
 				
 				function handleErrorTree(errorUrl) {window.parent.frames["right"].location.href = errorUrl;}
 				
+				function openCabinet(obj) {
+					var leftDivElmt = document.getElementById("left");
+					var h2Elmt      = leftDivElmt.querySelectorAll("h2");
+					var ulElmt      = leftDivElmt.querySelectorAll("ul");
+					
+					var len = h2Elmt.length;
+					
+					for (var i = 0; i < len; i++) {
+						if (h2Elmt[i].getAttribute("class") == "on") {
+							h2Elmt[i].className = "off";
+							ulElmt[i].className = "lnbUL off";
+						}
+						
+						if (h2Elmt[i].getAttribute("id") == obj) {
+							h2Elmt[i].className = "on";
+							ulElmt[i].className = "lnbUL";
+						}
+					}
+				}
+				
 				function getCabinet(obj) {
 					var cabinetId = obj.getAttribute("role");
 					window.parent.frames["right"].location.href = "/ezCabinet/myCabinet.do?cabinetId=" + cabinetId;
@@ -117,6 +152,8 @@
 				}
 				
 				function getMyCabinet()  {
+					openCabinet("myCabinet");
+					
 					var cabinetTreeElmt = document.getElementById("cabinetTree");
 					var spanElmt        = cabinetTreeElmt.querySelector("span[level='0']");
 					if (spanElmt) {spanElmt.click();}
@@ -157,6 +194,8 @@
 				}
 				
 				function getRelatedCabinet() {
+					openCabinet("relatedCabinet");
+					
 					relatedTree.setTreeInfo({
 						treeId     : "cabinetModulesTree",
 						treeType   : "cabinet",
@@ -172,6 +211,8 @@
 				}
 				
 				function getSharedCabinet() {
+					openCabinet("sharedCabinet");
+					
 					shareTree.setTreeInfo({
 						treeId     : "cabinetShareTree",
 						treeType   : "cabinet",
@@ -188,6 +229,8 @@
 				}
 				
 				function getMyShareCabinet() {
+					openCabinet("shareCabinet");
+					
 					myShareTree.setTreeInfo({
 						treeId     : "myShareTree",
 						treeType   : "cabinet",
@@ -226,7 +269,7 @@
 							var capacityType      = result["capacityType"];
 							var percent           = result["usedRate"] > 100 ? 100 : result["usedRate"];
 							var pElmt             = document.getElementById("myProgress");
-							var userVolElmt       = document.getElementById("useVol");
+							//var userVolElmt       = document.getElementById("useVol");
 							var usedPerElmt       = document.getElementById("usePer");
 							var spanElmt          = document.createElement("span");
 							pElmt.innerHTML       = "";
@@ -235,21 +278,21 @@
 							if (capacityType == 0) {
 								usedPerElmt.textContent = "0%";
 								spanElmt.style.width    = "0%";
-								userVolElmt.innerHTML   = getFileSize(result["totalUsed"]) + "<span>/ " + CabinetMessages.strNolimit + "</span>";
+								//userVolElmt.innerHTML   = getFileSize(result["totalUsed"]) + "<span>/ " + CabinetMessages.strNolimit + "</span>";
 							}
 							else {
 								usedPerElmt.textContent = percent + "%";
 								spanElmt.style.width    = percent + "%";
-								userVolElmt.innerHTML   = getFileSize(result["totalUsed"]) + "<span>/ " + result['totalCapacity'] + "MB</span>";
+								//userVolElmt.innerHTML   = getFileSize(result["totalUsed"]) + "<span>/ " + result['totalCapacity'] + "MB</span>";
 							}
 							
 							var colorClass = "myBar_green";
 							
 							switch (true) {
-								case percent > 90 : colorClass = "myBar_red"   ; break;
-								case percent > 70 : colorClass = "myBar_orange"; break;
-								case percent > 60 : colorClass = "myBar_yellow"; break;
-								case percent == 0 : colorClass = "myBar_white" ; break;
+								case percent > 90 : colorClass = "mailBar myBar_red"   ; break;
+								case percent > 70 : colorClass = "mailBar myBar_orange"; break;
+								case percent > 60 : colorClass = "mailBar myBar_yellow"; break;
+								case percent == 0 : colorClass = "mailBar myBar_white" ; break;
 							}
 							
 							spanElmt.className = colorClass;

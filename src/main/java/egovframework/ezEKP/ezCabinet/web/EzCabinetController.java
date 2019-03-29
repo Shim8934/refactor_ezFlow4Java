@@ -169,7 +169,7 @@ public class EzCabinetController {
 		
 		JSONObject configObj = cabinetRestService.getUserPreviewConfig(request, user.getId());
 		
-		if (((Long)configObj.get("status")).intValue() == 0) {
+		if (((Long)configObj.get("code")).intValue() == 0) {
 			JSONObject userConfig = (JSONObject)configObj.get("config");
 			model.addAttribute("config", userConfig);
 		}

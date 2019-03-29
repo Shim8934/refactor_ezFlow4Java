@@ -58,22 +58,22 @@ var CabinetItem = function() {
 		
 		switch(mode) {
 			case "off":
-				document.getElementById("preViewNone").src   = "/images/kr/cm/btn_onnoframe.gif";
-				document.getElementById("preViewBottom").src = "/images/kr/cm/btn_bottomframe.gif";
-				document.getElementById("preViewleft").src   = "/images/kr/cm/btn_leftframe.gif";
+				document.getElementById("preViewNone").className   = "icon16 btn_onnoframe";
+				document.getElementById("preViewBottom").className = "icon16 btn_bottomframe";
+				document.getElementById("preViewleft").className   = "icon16 btn_leftframe";
 				cabinetPreview.resizeDestroy();
 				break;
 			case "w":
-				document.getElementById("preViewNone").src   = "/images/kr/cm/btn_noframe.gif";
-				document.getElementById("preViewBottom").src = "/images/kr/cm/btn_bottomframe.gif";
-				document.getElementById("preViewleft").src   = "/images/kr/cm/btn_onleftframe.gif";
+				document.getElementById("preViewNone").className   = "icon16 btn_noframe";
+				document.getElementById("preViewBottom").className = "icon16 btn_bottomframe";
+				document.getElementById("preViewleft").className   = "icon16 btn_onleftframe";
 				cabinetPreview.resizeByWidth();
 				if (slTrElmt) {itemClickHandler(slTrElmt);}
 				break;
 			case "h":
-				document.getElementById("preViewNone").src   = "/images/kr/cm/btn_noframe.gif";
-				document.getElementById("preViewBottom").src = "/images/kr/cm/btn_onbottomframe.gif";
-				document.getElementById("preViewleft").src   = "/images/kr/cm/btn_leftframe.gif";
+				document.getElementById("preViewNone").className   = "icon16 btn_noframe";
+				document.getElementById("preViewBottom").className = "icon16 btn_onbottomframe";
+				document.getElementById("preViewleft").className   = "icon16 btn_leftframe";
 				cabinetPreview.resizeByHeight();
 				if (slTrElmt) {itemClickHandler(slTrElmt);}
 				break;
@@ -280,7 +280,7 @@ var CabinetItem = function() {
 		if (leftFogPanel) {leftFrame.body.removeChild(leftFogPanel);}
 		if (rightFrame.getElementById("ui-datepicker-div")) {rightFrame.getElementById("ui-datepicker-div").style.display = "none";}
 		
-		leftFrame.body.style.overflow = "auto";
+		//leftFrame.body.style.overflow = "auto";
 	}
 	
 	function clearSearchDate() {
