@@ -577,7 +577,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("orderOption", orderOption);
 		map.put("offsetMin", offsetMin);
 		map.put("startRow", limit + 1);
-		map.put("endRow", limit + Integer.valueOf(listSize));
+		map.put("endRow", limit + Integer.parseInt(listSize));
 		if (primary.equals("1")) {
 			primary = "";
 		}
@@ -961,7 +961,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			limit = (Integer.parseInt(pageNum) - 1) * Integer.parseInt(listSize);
 			
 			map.put("startRow", limit + 1);
-			map.put("endRow", limit + Integer.valueOf(listSize));
+			map.put("endRow", limit + Integer.parseInt(listSize));
 		}
 		
 		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
@@ -1137,7 +1137,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		if (!listSize.equals("")) {
 			int size = Integer.parseInt(listSize);
-			int limit = (Integer.valueOf(pageNum) - 1) * size;
+			int limit = (Integer.parseInt(pageNum) - 1) * size;
 			
 			if (totalList.size() < limit + size) {
 				LOGGER.debug("1page param = " + limit + ", " + totalList.size());
@@ -1826,7 +1826,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		if (pageNum != null && !pageNum.equals("")) {
 			limit = (Integer.parseInt(pageNum) - 1) * Integer.parseInt(listSize);
 			map.put("startRow", (limit + 1));
-			map.put("endRow", (limit + Integer.valueOf(listSize)));
+			map.put("endRow", (limit + Integer.parseInt(listSize)));
 		}
 		
 		searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);

@@ -466,7 +466,7 @@
 			*/
 			function getHolidayList() {
 				$.ajax({
-					type : "get",
+					type : "GET",
 					dataType : "json",
 					async : true,
 					url : "/ezAttitude/getHolidayList.do",
