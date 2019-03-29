@@ -3135,6 +3135,9 @@ function NameChange_onClick_Complete(rgParams) {
         changedReceiverList.removeChild(checkname_cross_dialogArguments[3].parentElement);
     } else if (rgParams["recipientTDData"] == "change") {
         length = rgParams["returnedRecipientName"].length;
+        
+        if (length == 0) {return; }
+        
         for (count1 = 0; count1 < length; count1++) {
         	if (!increaseReceiverCount(rgParams["returnedRecipientType"][count1], rgParams["returnedRecipientHref"][count1])) {
         		return;
@@ -3144,7 +3147,8 @@ function NameChange_onClick_Complete(rgParams) {
                 rgParams["returnedRecipientEmail"][count1], rgParams["returnedRecipientHref"][count1]);
             checkname_cross_dialogArguments[3].parentElement.insertAdjacentElement("afterEnd", newElem);
         }
-        return;
+        
+        changedReceiverList.removeChild(checkname_cross_dialogArguments[3].parentElement);
     }
 }
 function GetAddrFormat(receiveCol) {
