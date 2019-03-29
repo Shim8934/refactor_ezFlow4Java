@@ -820,6 +820,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				msgto = request.getParameter("msgto").trim().replaceAll("&lt;", "<").replaceAll("&gt;", ">").replaceAll("&quot;", "\"");
 			}
 
+            if (jsonObject.get("msgTo") != null) {
+                msgto = (String) jsonObject.get("msgTo");
+            }
+
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userEmail, password, egovMessageSource, locale, ezEmailUtil);
 			ia.makeTopLevelFolders();
@@ -951,7 +955,38 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		        			if (((InternetAddress)address).getAddress().equalsIgnoreCase(msgto)) {
 								to = ezEmailUtil.getStringListOfAddresses(new Address[]{address}, true);
 								break;
-		        			}
+		        			} else {
+                                // 재작성시 메세지에서 수신인을 뽑아내어 넣어준다.
+                                if (msgto.equals("")) {
+                                    addresses = orgMessage.getRecipients(Message.RecipientType.TO);
+                                    String[] rawHeaders = orgMessage.getHeader("From");
+                                    String rawHeader = rawHeaders != null ? rawHeaders[0] : "";
+                                    boolean isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
+
+                                    if (isPureAscii) {
+                                        rawHeaders = orgMessage.getHeader("To");
+                                        rawHeader = rawHeaders != null ? rawHeaders[0] : "";
+                                        isPureAscii = ezEmailUtil.isPureAscii(rawHeader);
+                                    }
+
+                                    to = ezEmailUtil.getStringListOfAddresses(addresses, isPureAscii);
+
+                                    // retrieve the CC addresses from the reply message.
+                                    addresses = orgMessage.getRecipients(Message.RecipientType.CC);
+
+                                    if (addresses != null) {
+                                        rawHeaders = orgMessage.getHeader("Cc");
+                                        rawHeader = rawHeaders != null ? rawHeaders[0] : "";
+                                        cc = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(rawHeader));
+                                    }
+
+                                    // retrieve the BCC addresses from the reply message.
+                                    addresses = orgMessage.getRecipients(Message.RecipientType.BCC);
+                                    bcc = ezEmailUtil.getStringListOfAddresses(addresses, true);
+
+                                    break;
+                                }
+                            }
 		        		}
 		        		
 		        		subject = orgMessage.getSubject();
@@ -5589,31 +5624,49 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 	}
 
 	@RequestMapping(value = "/mobile/ezemail/recpCheck/{messageId}/users/{userId:.+}",
-            method = RequestMethod.POST,
-            produces = "application/json;charset=utf-8")
+                    method = RequestMethod.POST,
+                    produces = "application/json;charset=utf-8")
     public Object recpCheckMail(HttpServletRequest request,
                                 @RequestBody JSONObject getData,
                                 @PathVariable String messageId,
                                 @PathVariable String userId) {
-	    LOGGER.debug("mobile g/w mail recpCheckMail started.");
+	    LOGGER.debug("MOBILE G/W MAIL recpCheckMail started.");
         LOGGER.debug("userId=" + userId + "getData=" + getData);
 
-        JSONObject returnObj = null;
+        JSONObject returnObj = new JSONObject();
         IMAPAccess ia = null;
 
         try {
-            JSONArray unreadArr = new JSONArray();
-            JSONObject readObj = null;
+            JSONArray dataArray = new JSONArray();
 
             String serverName = request.getHeader("x-user-host");
             MCommonVO userInfo = mOptionService.commonInfo(serverName, userId);
             String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
             String userEmail = userInfo.getUserId() + "@" + domainName;
+            String mailId = userId;
             String password = jspw;
             String lang = commonUtil.getTwoLetterLangFromLangNum(userInfo.getLang());
             Locale locale = new Locale(lang);
-
             Long uid = Long.parseLong(messageId);
+
+            String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+            if (useSharedMailbox.equals("YES")) {
+                String shareId = (String) getData.get("shareId");
+                LOGGER.debug("shareId=" + shareId + ", userId=" + userId + ", userInfo.getUserId=" + userInfo.getUserId());
+
+                if (shareId != null && !shareId.equals("")) {
+                    if (!ezEmailService.checkUserShareId(userId, shareId, 2, userInfo.getTenantId())) {
+                        LOGGER.debug("the user cannot access the shareId.");
+                        LOGGER.debug("mailGetReceiveList ended.");
+
+                        return "";
+                    }
+
+                    mailId = shareId;
+                    userEmail = shareId + "@" + domainName;
+                }
+            }
 
             LOGGER.debug("userEmail=" + userEmail + ", uid=" + uid);
 
@@ -5626,14 +5679,21 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 
             if (message == null) {
                 LOGGER.debug("message not found. uid=" + uid);
+
+                returnObj.put("data", "");
+                returnObj.put("status", "ok");
+                returnObj.put("code", 2);
             } else {
 
                 String mimeMassageId = ((MimeMessage)message).getMessageID() == null ?
                                                 "" : ((MimeMessage)message).getMessageID();
                 LOGGER.debug("mimeMessageId=" + mimeMassageId);
 
-                // get readList
-                List<MailReadVO> readList = ezEmailService.getMailReadList(userInfo.getTenantId(), userId, mimeMassageId);
+                // get readList(수신확인)
+                List<MailReadVO> readList = ezEmailService.getMailReadList(userInfo.getTenantId(), mailId, mimeMassageId);
+
+                // get cancelList(회수)
+                List<MailCancelVO> cancelList = ezEmailService.getMailCancelList(mimeMassageId);
 
                 // get all recipients from email message
                 Address[] addresses = message.getAllRecipients();
@@ -5653,12 +5713,11 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 
                 Map<String, String> aliasAddressMap = ezEmailService.getAliasAddressMap(addressList, userInfo.getTenantId());
 
+                // 이미 처리한 메일 주소 리스트
                 List<String> tempMailList = new ArrayList<String>();
 
                 // recipients from mail message
                 for (Address address : addresses) {
-                    returnObj = new JSONObject();
-                    readObj = new JSONObject();
                     String email = ((InternetAddress)address).getAddress();
                     String name = ((InternetAddress)address).getPersonal() == null ?
                             ((InternetAddress)address).getAddress() : ((InternetAddress)address).getPersonal();
@@ -5678,11 +5737,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
                         for (MailReadVO vo : readList) {
 
                             if (aliasAddressMap.containsKey(vo.getReaderEmail())) {
+
                                 if (aliasAddressMap.get(vo.getReaderEmail()).equalsIgnoreCase(email)) {
                                     readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffSet(), false);
                                     break;
                                 }
                             } else {
+
                                 if (vo.getReaderEmail().equalsIgnoreCase(email)) {
                                     readDate = commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffSet(), false);
                                     break;
@@ -5694,9 +5755,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 
                         String status = "";
 
-                        /*
                         for (MailCancelVO vo : cancelList) {
+
                             if (vo.getReaderEmail().equalsIgnoreCase(email)) {
+
                                 if (vo.getStatus() != null && !vo.getStatus().equalsIgnoreCase("")) {
                                     status = vo.getStatus();
                                 } else {
@@ -5705,28 +5767,119 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 
                                 break;
                             }
-                        }*/
-
-                        recpJson.put("cancel", status);
-
-                        if (readDate.equalsIgnoreCase("unread")) {
-                            unreadArr.add(recpJson);
-                        } else {
-                            unreadArr.add(recpJson);
-                            //readObj.put("read", recpJson);
                         }
 
+                        recpJson.put("cancel", status);
+                        // 중복제거를 위한 처리한 메일주소들을 담는다.
                         tempMailList.add(email);
+                        dataArray.add(recpJson);
                     }
 
-                    returnObj.put("data", unreadArr);
                 }
 
+                // readList
+                for (MailReadVO vo : readList) {
+
+                    String realEmailAddress = vo.getReaderEmail();
+
+                    // readList의 reader 주소가 alias 주소인 경우 real(account) 주소로 바꾸어 비교한다.
+                    if (aliasAddressMap.containsKey(realEmailAddress)) {
+                        realEmailAddress = aliasAddressMap.get(realEmailAddress);
+                    }
+
+                    if (!tempMailList.contains(realEmailAddress)) {
+                        JSONObject recpJson = new JSONObject();
+
+                        String readerEmail = vo.getReaderEmail();
+                        String readerName = vo.getReaderName();
+
+                        recpJson.put("email", readerEmail);
+                        recpJson.put("name", readerName);
+                        vo.setReadDate(commonUtil.getDateStringInUTC(vo.getReadDate(), userInfo.getOffSet(), false));
+                        recpJson.put("date", vo.getReadDate());
+
+                        String status = "";
+
+                        for (MailCancelVO mailCancelVO : cancelList) {
+
+                            if (mailCancelVO.getReaderEmail().equalsIgnoreCase(realEmailAddress)) {
+
+                                if (mailCancelVO.getStatus() != null && !mailCancelVO.getStatus().equals("")) {
+                                    status = mailCancelVO.getStatus();
+                                } else {
+                                    status = "0";
+                                }
+
+                                break;
+                            }
+                        }
+
+                        recpJson.put("cancel", status);
+                        tempMailList.add(realEmailAddress);
+                        dataArray.add(recpJson);
+                    }
+                }
+
+                String companyDomainName = ezCommonService.getCompanyConfig(userInfo.getTenantId(), userInfo.getCompanyId(), "DomainName");
+
+                // cancelList
+                for (MailCancelVO vo : cancelList) {
+
+                    if (!tempMailList.contains(vo.getReaderEmail())) {
+                        JSONObject recpJson = new JSONObject();
+                        String readerEmail = vo.getReaderEmail();
+                        String readerName = vo.getReaderName() == null ? readerEmail : vo.getReaderName();
+
+                        String status = "";
+
+                        if (vo.getStatus() != null && !vo.getStatus().equals("")) {
+                            status = vo.getStatus();
+                        } else {
+                            status = "0";
+                        }
+
+                        LOGGER.debug("canceled email readerEmail=" + readerEmail);
+
+                        // 회사별 이메일 도메인명이 설정되어 있으면 Account 이메일 주소 대신에 Primary 이메일 주소로 표시한다.
+                        if (!companyDomainName.isEmpty()) {
+                            String emailId = null;
+
+                            int atSignIndex = readerEmail.indexOf("@");
+
+                            if (atSignIndex != -1) {
+                                emailId = readerEmail.substring(0, atSignIndex);
+
+                                OrganUserVO readerInfo = ezOrganAdminService.getUserInfo(emailId, userInfo.getPrimary(), userInfo.getTenantId());
+
+                                if (readerInfo != null && readerInfo.getMail() != null) {
+                                    readerEmail = readerInfo.getMail();
+                                }
+                            }
+                        }
+
+                        recpJson.put("email", readerEmail);
+                        recpJson.put("name", readerName);
+                        recpJson.put("date", "unread");
+                        recpJson.put("cancel", status);
+
+                        dataArray.add(recpJson);
+                    }
+                }
+
+                returnObj.put("subject", message.getSubject());
+                returnObj.put("data", dataArray);
+                returnObj.put("status", "ok");
+                returnObj.put("code", 0);
             }
+
+            f.close(true);
 
         } catch (Exception e) {
             e.printStackTrace();
-            returnObj.put("data", "error");
+
+            returnObj.put("data", "fail");
+            returnObj.put("status", "error");
+            returnObj.put("code", 1);
         } finally {
             if (ia != null) {
                 ia.close();
@@ -5734,7 +5887,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
         }
 
         LOGGER.debug("returnValue=" + returnObj.toJSONString());
-	    LOGGER.debug("mobile g/w mail recpCheckMail ended.");
+	    LOGGER.debug("MOBILE G/W MAIL recpCheckMail ended.");
 
 	    return returnObj;
     }
