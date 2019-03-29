@@ -325,7 +325,7 @@
 	        function selectnode(event) {
 	        	if (!event) event = window.event;
 				/* 2018-08-06 장진혁 스크립트 오류로 undefined 걸름 */
-	        	if (event != undefined) {
+	        	if (typeof(event) !== "undefined") {
 		        	if (event.which != 3) {
 					    var nodeIdx = window[treeviewStr].selectedIndex();
 					    var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "href"));
@@ -745,7 +745,8 @@
 			}	
 		    
  			function event_folderMenu(event){
-		    	
+ 				event.preventDefault();
+ 				
 		    	if (!event) event = window.event;
 		        var EventMouseX = event.clientX;
 		        var EventMouseY = event.clientY;

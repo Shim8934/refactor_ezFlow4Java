@@ -3147,7 +3147,7 @@ function NameChange_onClick_Complete(rgParams) {
                 rgParams["returnedRecipientEmail"][count1], rgParams["returnedRecipientHref"][count1]);
             checkname_cross_dialogArguments[3].parentElement.insertAdjacentElement("afterEnd", newElem);
         }
-        
+
         changedReceiverList.removeChild(checkname_cross_dialogArguments[3].parentElement);
     }
 }
