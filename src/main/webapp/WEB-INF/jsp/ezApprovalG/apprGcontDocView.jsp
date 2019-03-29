@@ -21,12 +21,12 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/sendMail_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/aprmanage_Cross.js')}"></script>
 		<script type="text/javascript" ID="clientEventHandlersJS">
-		    var pDocID = '${docID}';
-		    var pDocHref = '${docHref}';
-		    var pListSusin = '${listSusin}';
-		    var porgDocID = '${orgDocID}';
-		    var pFormID = '${formID}';
-		    var pTitle = '${docTitle}';
+		    var pDocID = "<c:out value ='${docID}'/>";
+		    var pDocHref = "<c:out value ='${docHref}'/>";
+		    var pListSusin = "<c:out value ='${listSusin}'/>";
+		    var porgDocID = "<c:out value ='${orgDocID}'/>";
+		    var pFormID = "<c:out value ='${formID}'/>";
+		    var pTitle = "<c:out value ='${docTitle}'/>";
 		    var pOpinionFlag;
 		    var pListTypeValue = 4;
 		    var flag = false;
@@ -34,41 +34,41 @@
 		    var NextOpinionFlag = true;
 		    var doctitle = "";
 		    var pOrgAttach = "";
-		    var pendDir = "${endDir}";
+		    var pendDir = "${endDir}'/>";
 		    var xmlhttp = createXMLHttpRequest();
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";
 		    arr_userinfo[9]  = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
-		    var companyID = "${userInfo.companyID}";
+		    arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+		    arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
+		    var companyID = "<c:out value ='${userInfo.companyID}'/>";
 		    var pUserID = arr_userinfo[1];
-		    var SignCheckFlag = "${signCheck}";
-		    var pUse_Editor = "${editor}";
-		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
-		    var admin = "${admin}";
-		    var formDocType = "${formDocType}";
-		    var formUrl = "${formUrl}";
-		    var docState = "${docState}";
-		    var WhoKyulCNT = "${whoKyulCount}";
-		    var checkPwdFlag = "${checkPwdFlag}";
-		    var ext = "${ext}";
+		    var SignCheckFlag = "<c:out value ='${signCheck}'/>";
+		    var pUse_Editor = "<c:out value ='${editor}'/>";
+		    var approvalFlag = "<c:out value ='${approvalFlag}'/>";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
+		    var admin = "<c:out value ='${admin}'/>";
+		    var formDocType = "<c:out value ='${formDocType}'/>";
+		    var formUrl = "<c:out value ='${formUrl}'/>";
+		    var docState = "<c:out value ='${docState}'/>";
+		    var WhoKyulCNT = "<c:out value ='${whoKyulCount}'/>";
+		    var checkPwdFlag = "<c:out value ='${checkPwdFlag}'/>";
+		    var ext = "<c:out value ='${ext}'/>";
 		    var opinionFlag;
 		    var includeOpinion = false;
-		    var signImageType = "${signImageType}";
-		    var orgCompanyID = "${orgCompanyID}";
+		    var signImageType = "<c:out value ='${signImageType}'/>";
+		    var orgCompanyID = "<c:out value ='${orgCompanyID}'/>";
 		    
 		    $(function () {
 			    if ("${pass}" != "<RESULT>TRUE</RESULT>" && abtnReusedmin != 'Y') {
@@ -114,7 +114,7 @@
 		                document.getElementById("btnWhoKyul").style.display = "none";
 		            }
 		            
-		            if ("${pass}" != "<RESULT>TRUE</RESULT>" && admin != 'Y') {
+		            if ("<c:out value ='${pass}'/>" != "<RESULT>TRUE</RESULT>" && admin != 'Y') {
 	                	QuitWindow();
 		            }
 		            else {
@@ -184,7 +184,7 @@
 		            }
 		        }
 		        
-		        if ("${uFlag}" == "m03")
+		        if ("<c:out value ='${uFlag}'/>" == "m03")
 		            setAttachInfo(pDocID, "APR", lstAttachLink);
 		        else
 		            setAttachInfo(pDocID, "END", lstAttachLink);

@@ -20,14 +20,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/conn_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/html2canvas.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
-		    var	DocID = '${docID}';
-		    var	DocHref = '${docHref}';
-		    var	OpinionFlag = '${opinionFlag}';
-		    var	ListTypeValue = '${listType}';
-		    var	ListSusin = '${listSusin}';
-		    var pDocState =  '${docState}';
-		    var pOrgDocID = '${orgDocID}';
-		    var isOpinion = '${isOpinion}';
+		    var	DocID = "<c:out value ='${docID}'/>";
+		    var	DocHref = "<c:out value ='${docHref}'/>";
+		    var	OpinionFlag = "<c:out value ='${opinionFlag}'/>";
+		    var	ListTypeValue = "<c:out value ='${listType}'/>";
+		    var	ListSusin = "<c:out value ='${listSusin}'/>";
+		    var pDocState =  "<c:out value ='${docState}'/>";
+		    var pOrgDocID = "<c:out value ='${orgDocID}'/>";
+		    var isOpinion = "<c:out value ='${isOpinion}'/>";
 		    var pDocID;
 		    var pDocHref;
 		    var pOpinionFlag;
@@ -42,32 +42,32 @@
 		    var AppenAprDocAttachList = "";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";
 		    arr_userinfo[9]  = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+		    arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
 		    pUserID = arr_userinfo[1];
-		    var approvalFlag = "${approvalFlag}";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
-	        var callBackType = "${callBackType}";
-		    var pHasOpinion = "${hasOpinionYN}";
+		    var approvalFlag = "<c:out value ='${approvalFlag}'/>";     //전자결재 일반/공공 여부 (G : 공공 , S : 일반)
+	        var callBackType = "<c:out value ='${callBackType}'/>";
+		    var pHasOpinion = "<c:out value ='${hasOpinionYN}'/>";
 		    var pOpinionType = "Show";
-		    var pMailEditor = "${crossEditor}";
-		    var signImageType = "${signImageType}";
-		    var pMode = "${mode}";
-		    var forceCallBackYN = "${forceCallBackYN}";
-		    var ext = "${ext}";
-		    var orgCompanyID = "${orgCompanyID}";
+		    var pMailEditor = "<c:out value ='${crossEditor}'/>";
+		    var signImageType = "<c:out value ='${signImageType}'/>";
+		    var pMode = "<c:out value ='${mode}'/>";
+		    var forceCallBackYN = "<c:out value ='${forceCallBackYN}'/>";
+		    var ext = "<c:out value ='${ext}'/>";
+		    var orgCompanyID = "<c:out value ='${orgCompanyID}'/>";
 		    
 		    $(function () {
 		      	if(approvalFlag == "G") {
@@ -90,7 +90,7 @@
 		                btnClose_onclick();
 		                return;
 		            }
-		            if (pDocState == "015" && pOrgDocID.length >= 20 && "${listType}" == "99") {
+		            if (pDocState == "015" && pOrgDocID.length >= 20 && "<c:out value ='${listType}'/>" == "99") {
 		                document.getElementById("btnGongRam").style.display = "";
 		                pOpinionType = "";
 		            }

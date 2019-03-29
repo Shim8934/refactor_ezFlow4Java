@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -26,10 +27,10 @@
 	        var g_DDeptName = "";
 	        var g_DTaskCode = "";
 	        var g_DTaskName = "";
-	        var g_SDeptCode = "${userInfo.deptID}";
-	    	var g_SDeptName = "${userInfo.deptName}";
-	        var CompanyID = "${userInfo.companyID}";
-	        var UserLang = "${userInfo.lang}";
+	        var g_SDeptCode = "<c:out value ='${userInfo.deptID}'/>";
+	    	var g_SDeptName = "<c:out value ='${userInfo.deptName}'/>";
+	        var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
+	        var UserLang = "<c:out value ='${userInfo.lang}'/>";
 	        var date = new Date();
             var nowYear = date.getFullYear();
 	        document.onselectstart = function () { return false; };

@@ -15,8 +15,8 @@
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/viewRecInfo_Cross.js')}"></script>
 <script type="text/javascript" ID="clientEventHandlersJS">
-    var CompanyID = "${userInfo.companyID}";
-    var strLang = "${userInfo.lang}";
+    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
+    var strLang = "<c:out value='${userInfo.lang}'/>";
     var OrderCell = "";
 </script>
 </head>

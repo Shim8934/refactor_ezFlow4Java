@@ -25,27 +25,27 @@
 		var pAprSate;
 		var arr_userinfo = new Array();
 		arr_userinfo[0]  = "user";								// 사용자-부서구분
-		arr_userinfo[1]  = "${userInfo.id}";              // 사용자ID
-		arr_userinfo[2]  = "${userInfo.displayName}";         // 사용자명
-		arr_userinfo[3]  = "${userInfo.title}";               // 사용자 직위
-		arr_userinfo[4]  = "${userInfo.deptID}";              // 사용자 부서 ID    
-		arr_userinfo[5]  = "${userInfo.deptName}";            // 사용자 부서 이름
-		arr_userinfo[6]  = "${userInfo.jikChek}";             // 사용자 직책            
-		arr_userinfo[8]  = "${userInfo.email}";               // E-Mail Address 
+		arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";              // 사용자ID
+		arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";         // 사용자명
+		arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";               // 사용자 직위
+		arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";              // 사용자 부서 ID    
+		arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";            // 사용자 부서 이름
+		arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";             // 사용자 직책            
+		arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";               // E-Mail Address 
 		arr_userinfo[9]  = "";
-		arr_userinfo[10] = "${susinAdmin}";                  // 수신 접수담당자
+		arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";                  // 수신 접수담당자
 		// 2010.08.11 다국어
-		arr_userinfo[11]  = "${userInfo.displayName1}";		// 사용자명(P)
-		arr_userinfo[12]  = "${userInfo.displayName2}";		// 사용자명(S)
-		arr_userinfo[13]  = "${userInfo.title1}";				// 사용자 직위(P)
-		arr_userinfo[14]  = "${userInfo.title2}";				// 사용자 직위(S)
-		arr_userinfo[15]  = "${userInfo.deptName1}";			// 사용자 부서 이름(P)
-		arr_userinfo[16]  = "${userInfo.deptName2}";			// 사용자 부서 이름(S)
-		var companyID = "${userInfo.companyID}";// 수신 접수담당자
+		arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";		// 사용자명(P)
+		arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";		// 사용자명(S)
+		arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";				// 사용자 직위(P)
+		arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";				// 사용자 직위(S)
+		arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";			// 사용자 부서 이름(P)
+		arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";			// 사용자 부서 이름(S)
+		var companyID = "<c:out value ='${userInfo.companyID}'/>";// 수신 접수담당자
 		    var OrderCell = "";
 		var pUserID = arr_userinfo[1];
 		// 수정(2006.01.12) : 발송의뢰 선택 시 회사의 문서과를 디폴트로 보여주도록 수정
-		var pMDeptInfo = "${mDeptInfo}";
+		var pMDeptInfo = "<c:out value ='${mDeptInfo}'/>";
 		var rtnVal = new Array("");
 		var ReturnFunction;
 		var g_xmlHTTP = null;
@@ -85,7 +85,7 @@
 		        }
 				
 				Tree_setconfig();
-				TreeViewinitialize(InitTreeVal, companyID, "", "${serverName}");	
+				TreeViewinitialize(InitTreeVal, companyID, "", "<c:out value ='${serverName}'/>");	
 					  
 				rtnVal[0] = "cancel";
 				rtnVal[1] = "";

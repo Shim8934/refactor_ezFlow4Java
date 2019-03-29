@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html style="height:97%;">
 	<head>
@@ -18,34 +19,34 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
-		    var pDocID = "${docID}";
-		    var pDocHref = "${docHref}";
-		    var pOrgDocID = "${orgDocID}";
+		    var pDocID = "<c:out value = '${docID}'/>";
+		    var pDocHref = "<c:out value = '${docHref}'/>";
+		    var pOrgDocID = "<c:out value = '${orgDocID}'/>";
 		    var pUserID;
 		    var flag = false;
 		    var flag2 = false;
 		    var stampFlag = false;
 		    var NostampFlag = false;
 		    var modeflag = false;
-		    var companyID = "${userInfo.companyID}";
-		    var companyName = "${userInfo.companyName}";
+		    var companyID = "<c:out value = '${userInfo.companyID}'/>";
+		    var companyName = "<c:out value = '${userInfo.companyName}'/>";
 		    var maxwidth = 659;
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[1]  = "<c:out value = '${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value = '${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";
 		    arr_userinfo[9]  = companyID;
-		    arr_userinfo[11]  = "${userInfo.displayName}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
+		    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName}'/>";
+		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";
 		    pUserID = arr_userinfo[1];
 		    var is_Enc = "NONE";
 		    var isExternal = false;
@@ -82,11 +83,11 @@
 		    arrDelFiles[0] = "c:\\" + pDocID + ".xml";
 		    arrDelFiles[1] = "c:\\" + pOrgDocID + ".xml";
 		    var flag = false;
-		    var pUse_Editor = "${useEditor}";
+		    var pUse_Editor = "<c:out value = '${useEditor}'/>";
 		    var PrtBodyContent;
 		    var orgCompanyID = "";
 		    var ext = "mht";
-		    var docTitle = "${docTitle}";
+		    var docTitle = "<c:out value = '${docTitle}'/>";
 		    
 		    function btnPrint_onclick() {
 		        PrintClick("Cross", pDocID, "");
@@ -95,7 +96,7 @@
 		        if (flag == false) {
 		            flag = true;
 		
-		            if ("${pass}" != "<RESULT>TRUE</RESULT>") {
+		            if ("<c:out value = '${pass}'/>" != "<RESULT>TRUE</RESULT>") {
 		                QuitWindow();
 		            }
 		            else {

@@ -27,11 +27,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		<script type="text/javascript">
 		    var pWriterDeptID;
-		    var pDocID = "${docID}";
+		    var pDocID = "<c:out value = '${docID} '/>";
 		    var pFormHref = new String("");
 		    var pFormID = new String();
 		    var zFormID = new String();
-		    var pUserID = "${userInfo.id}";
+		    var pUserID = "<c:out value = '${userInfo.id} '/>";
 		    var pHasAttachYN = new String("N");
 		    var pHasOpinionYN = new String("N");
 		    var CurrentDate
@@ -59,36 +59,36 @@
 		    var docAccess = false;
 		    var pCurSelRow;
 		    var pSusinDocURL = "";
-		    var pOrg_orgDocID = "${orgDocID}";
+		    var pOrg_orgDocID = "<c:out value = '${orgDocID} '/>";
 		    var chkOK = false;
-		    var isReDraft = "${isReDraft}";
+		    var isReDraft = "<c:out value = '${isReDraft} '/>";
 		    var LastSignNo;
 		    var AppendFileAttach = "";
 		    var AppenAprDocAttachList = "";
 		    var btnSendDraftEnable = "false";
 		    var gPublic = "";
 		    var s_nCallCnt = false; 
-		    var sCompanyID   = '${userInfo.companyID}';
+		    var sCompanyID   = "<c:out value = '${userInfo.companyID} '/>";
 		    var CurAprType = "";
 		    var NextAprType = "";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";								
-		    arr_userinfo[1]  = "${userInfo.id}";							
-		    arr_userinfo[2]  = "${userInfo.displayName1}";
-		    arr_userinfo[3]  = "${userInfo.title1}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName1}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
-		    arr_userinfo[8]  = "${userInfo.email}";             
+		    arr_userinfo[1]  = "<c:out value = '${userInfo.id} '/>";							
+		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName1} '/>";
+		    arr_userinfo[3]  = "<c:out value = '${userInfo.title1} '/>";
+		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID} '/>";
+		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName1} '/>";
+		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek} '/>";
+		    arr_userinfo[8]  = "<c:out value = '${userInfo.email} '/>";             
 		    arr_userinfo[9]  = sCompanyID;
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";		
-		    var pCompanyID = "${userInfo.companyID}";
-		    var companyID = "${userInfo.companyID}";
+		    arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1} '/>";
+		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2} '/>";
+		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1} '/>";
+		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2} '/>";
+		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1} '/>";
+		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";		
+		    var pCompanyID = "<c:out value = '${userInfo.companyID} '/>";
+		    var companyID = "<c:out value = '${userInfo.companyID} '/>";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "", pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
 		    var TaskCode = "";
@@ -98,30 +98,30 @@
 		    var pDocNumCode, pOrgDocNumCode, pDocNo;
 		    var maxwidth = 659;							
 		    var KuyjeType = "002";
-		    var signDateFormat = "${optSignDateFormat}";
-		    var isSplit = "${optIsSplit}";
-		    var SplitKind = "${optSplitKind}";
-		    var sihangURL = "${sihangURL}";
+		    var signDateFormat = "<c:out value = '${optSignDateFormat} '/>";
+		    var isSplit = "<c:out value = '${optIsSplit} '/>";
+		    var SplitKind = "<c:out value = '${optSplitKind} '/>";
+		    var sihangURL = "<c:out value = '${sihangURL} '/>";
 		    var pReadPC = false;
 		    var arrDelFiles = new Array();
-		    var g_DraftFlag = "${draftFlag}";
-		    var g_RetFlag = "${retFlag}";
+		    var g_DraftFlag = "<c:out value = '${draftFlag} '/>";
+		    var g_RetFlag = "<c:out value = '${retFlag} '/>";
 		    var SignType = new Array();
 		    var SignName = new Array();
 		    var SignContent = new Array();
 		    var isExtDoc = "N";   
 		    var pGubun;
-		    var pUse_Editor = "${useEditor}";
+		    var pUse_Editor = "<c:out value = '${useEditor} '/>";
 		    var g_szUserID = arr_userinfo[8];
-		    var g_senderinfo = '${userInfo.companyID}' + ", " + "${userInfo.deptName1}" + ", " + "${userInfo.title1}";
-		    var approvalFlag  = '${approvalFlag}';
+		    var g_senderinfo = "<c:out value = '${userInfo.companyID} '/>" + ", " + "<c:out value = '${userInfo.deptName1} '/>" + ", " + "<c:out value = '${userInfo.title1} '/>";
+		    var approvalFlag  = "<c:out value = '${approvalFlag} '/>";
 		    var ext = "hwp";
-		    var nonElecRec = "${isNonElecRec}";
+		    var nonElecRec = "<c:out value = '${isNonElecRec} '/>";
 		    var nonElecRecInfoXml = "", nonSepAttachLVXml = "", g_szSCListXml = "", sepAttachCheckYN = "";
-		    var dirPath = "${approvalRoot}";
-		    var useReceiveDocNo = "${useReceiveDocNo}";
+		    var dirPath = "<c:out value = '${approvalRoot} '/>";
+		    var useReceiveDocNo = "<c:out value = '${useReceiveDocNo} '/>";
 		    var orgCompanyID = "";
-		    var docNumZeroCnt = "${docNumZeroCnt}";
+		    var docNumZeroCnt = "<c:out value = '${docNumZeroCnt} '/>";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -1063,12 +1063,12 @@
 		
 			function btnRJunkyul_onclick() {
 			    var Resultxml;
-			    var UserID = "${userInfo.id}";
-			    var DisplayName =  "${userInfo.displayName}";
-			    var DepID = "${userInfo.deptID}";
-			    var DeptName = "${userInfo.deptName}";
-			    var Position =  "${userInfo.title}";
-			    var CompanyID = '${userInfo.companyID}';
+			    var UserID = "<c:out value = '${userInfo.id} '/>";
+			    var DisplayName =  "<c:out value = '${userInfo.displayName} '/>";
+			    var DepID = "<c:out value = '${userInfo.deptID} '/>";
+			    var DeptName = "<c:out value = '${userInfo.deptName} '/>";
+			    var Position =  "<c:out value = '${userInfo.title} '/>";
+			    var CompanyID = "<c:out value = '${userInfo.companyID} '/>";
 			    var d = new Date();
 			    var RecieveDay = d.getFullYear() + "." + (d.getMonth() + 1) + "." + d.getDate();
 			
@@ -1487,7 +1487,7 @@
             		async : false,
             		url : "/ezConn/insertApprovConn.do",
             		data : {
-            				htmlPK : "${htmlPK}",
+            				htmlPK : "<c:out value = '${htmlPK} '/>",
             				docID : pDocID,
             				writerID : arr_userinfo[1],
             				formID : pFormID
@@ -1639,7 +1639,7 @@
 	        <tr>
 	            <td style="padding-bottom: 10px">
 	                <div style="height: 100%" id="form1">
-	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "${hwpToolbar}", "");</script>
+	                    <script language='JavaScript'>ezHwpCtrl_ActiveX("HwpCtrl", "3", "0", "<c:out value = '${hwpToolbar} '/>", "");</script>
 	                </div>
 	            </td>
 	        </tr>

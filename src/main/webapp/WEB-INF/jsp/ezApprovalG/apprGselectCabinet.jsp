@@ -18,41 +18,41 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezApprovalG/MiscFunc_Cross.js')}"></script>
 	    <script type="text/javascript" id="clientEventHandlersJS">
 	        var OrderCell = "";
-	        var g_InitFlag = "${initFlag}";
+	        var g_InitFlag = "<c:out value='${initFlag}'/>";
 	        var bDisplayFlag = "0";
 	        var bSpecialFlag = "0";
 	        var arrTask = new Array();
 	        var rtnVal = new Array();
 	        var g_SelCabID = "";
 	        var AdminYN = "FALSE";
-	        var szRoleInfo = "${userInfo.rollInfo}";
+	        var szRoleInfo = "<c:out value='${userInfo.rollInfo}'/>";
 	        var g_bRecAdmin = false;
 	        var g_bDeptCharger = false;
 	        var xmlhttp = createXMLHttpRequest();
-	        var pUserID = "${userInfo.id}";
-	        var CompanyID = "${userInfo.companyID}";
+	        var pUserID = "<c:out value='${userInfo.id}'/>";
+	        var CompanyID = "<c:out value='${userInfo.companyID}'/>";
 	        var arr_userinfo = new Array();
 	        arr_userinfo[0] = "user";
-	        arr_userinfo[1] = "${userInfo.id}";
-	        arr_userinfo[2] = "${userInfo.displayName}";
-	        arr_userinfo[3] = "${userInfo.title}";
-	        arr_userinfo[4] = "${userInfo.deptID}";
-	        arr_userinfo[5] = "${userInfo.deptName}";
-	        arr_userinfo[6] = "${userInfo.jikChek}";
-	        arr_userinfo[8] = "${userInfo.email}";
+	        arr_userinfo[1] = "<c:out value='${userInfo.id}'/>";
+	        arr_userinfo[2] = "<c:out value='${userInfo.displayName}'/>";
+	        arr_userinfo[3] = "<c:out value='${userInfo.title}'/>";
+	        arr_userinfo[4] = "<c:out value='${userInfo.deptID}'/>";
+	        arr_userinfo[5] = "<c:out value='${userInfo.deptName}'/>";
+	        arr_userinfo[6] = "<c:out value='${userInfo.jikChek}'/>";
+	        arr_userinfo[8] = "<c:out value='${userInfo.email}'/>";
 	        arr_userinfo[9] = CompanyID;
-	        arr_userinfo[11] = "${userInfo.displayName1}";
-	        arr_userinfo[12] = "${userInfo.displayName2}";
-	        arr_userinfo[13] = "${userInfo.title1}";
-	        arr_userinfo[14] = "${userInfo.title2}";
-	        arr_userinfo[15] = "${userInfo.deptName1}";
-	        arr_userinfo[16] = "${userInfo.deptName2}";
-	        var UserLang = "${userInfo.lang}";
+	        arr_userinfo[11] = "<c:out value='${userInfo.displayName1}'/>";
+	        arr_userinfo[12] = "<c:out value='${userInfo.displayName2}'/>";
+	        arr_userinfo[13] = "<c:out value='${userInfo.title1}'/>";
+	        arr_userinfo[14] = "<c:out value='${userInfo.title2}'/>";
+	        arr_userinfo[15] = "<c:out value='${userInfo.deptName1}'/>";
+	        arr_userinfo[16] = "<c:out value='${userInfo.deptName2}'/>";
+	        var UserLang = "<c:out value='${userInfo.lang}'/>";
 	        var RetValue;
 	        var ReturnFunction;
 	        //반송,회송 대장등록시 기록물철 선택해주기 위해 추가
-	        var hesongFlag = "${hesongFlag}";
-	        var regDocId = "${regDocId}";
+	        var hesongFlag = "<c:out value='${hesongFlag}'/>";
+	        var regDocId = "<c:out value='${regDocId}'/>";
 	        
 	        window.onload = function () {
 	            try {
@@ -448,7 +448,7 @@
 	            createcabinet_cross_dialogArguments[0] = para;
 	            createcabinet_cross_dialogArguments[1] = btnCreateCab_onclick_Complete;
 	
-	            if ("${userInfo.lang}" == "2" || "${userInfo.lang}" == "3") { 
+	            if ("<c:out value='${userInfo.lang}'/>" == "2" || "<c:out value='${userInfo.lang}'/>" == "3") { 
 	            	DivPopUpShow(440, 435, url);
 	            } else { 
 	            	DivPopUpShow(440, 435, url);

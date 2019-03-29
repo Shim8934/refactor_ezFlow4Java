@@ -53,7 +53,7 @@
     arr_userinfo[14]  = "<c:out value = '${userInfo.title2} '/>";
     arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1} '/>";
     arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";		
-    var UserLang = "${userInfo.lang}";
+    var UserLang = "<c:out value = '${userInfo.lang} '/>";
     var pUserID			= arr_userinfo[1];
     var pUserName		= arr_userinfo[2];
     var pUserJobTitle	= arr_userinfo[3];

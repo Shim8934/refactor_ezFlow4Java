@@ -27,14 +27,14 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Circulation.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/nonElecRec.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
-		    var FormHref	=	"${formURL}";
-		    var DraftFlag	=	"${draftFlag}";
-		    var DocType		=	"${formDocType}";
-		    var SusinSN		=	"${susinSN}";
-		    var DocState	=	"${docState}";
-		    var ListType	=	"${listType}";
-		    var AprState    =   "${aprState}";
-		    var pEndDocHref	=   "${dirPath}";
+		    var FormHref	=	"<c:out value ='${formURL}'/>";
+		    var DraftFlag	=	"<c:out value ='${draftFlag}'/>";
+		    var DocType		=	"<c:out value ='${formDocType}'/>";
+		    var SusinSN		=	"<c:out value ='${susinSN}'/>";
+		    var DocState	=	"<c:out value ='${docState}'/>";
+		    var ListType	=	"<c:out value ='${listType}'/>";
+		    var AprState    =   "<c:out value ='${aprState}'/>";
+		    var pEndDocHref	=   "<c:out value ='${dirPath}'/>";
 		    var pFormHref = new String("");
 		    var pFormID = new String();
 		    var pDocID = new String("");
@@ -73,7 +73,7 @@
 		    var pDocTitle;
 		    var pMaxFileSize ='5';
 		    var isExtDoc = "N";
-		    var isTmpDocID = "${isTmpDoc}";
+		    var isTmpDocID = "<c:out value ='${isTmpDoc}'/>";
 		    var gPublic = "";
 		    var draftFlag = false;
 		    var btnSendDraftEnable = "false";
@@ -86,33 +86,33 @@
 		    var pLClass = "";
 		    var pMClass = "";
 		    var pLCasn, pMCasn, pPer, pLClsn, pMClsn;
-		    var approvalFlag = "${approvalFlag}";
+		    var approvalFlag = "<c:out value ='${approvalFlag}'/>";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
-		    arr_userinfo[2]  = "${userInfo.displayName}";
-		    arr_userinfo[3]  = "${userInfo.title}";
-		    arr_userinfo[4]  = "${userInfo.deptID}";
-		    arr_userinfo[5]  = "${userInfo.deptName}";
-		    arr_userinfo[6]  = "${userInfo.jikChek}";
+		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
+		    arr_userinfo[2]  = "<c:out value ='${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value ='${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value ='${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value ='${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value ='${userInfo.jikChek}'/>";
 		    arr_userinfo[7] = "N";
-		    arr_userinfo[8]  = "${userInfo.email}";
+		    arr_userinfo[8]  = "<c:out value ='${userInfo.email}'/>";
 		    arr_userinfo[9]  = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";
-		    arr_userinfo[12]  = "${userInfo.displayName2}";
-		    arr_userinfo[13]  = "${userInfo.title1}";
-		    arr_userinfo[14]  = "${userInfo.title2}";
-		    arr_userinfo[15]  = "${userInfo.deptName1}";
-		    arr_userinfo[16]  = "${userInfo.deptName2}";
-		    arr_userinfo[17]  = "${userInfo.primary}";
-		    var pCompanyID = "${userInfo.companyID}";
+		    arr_userinfo[10] = "<c:out value ='${susinAdmin}'/>";
+		    arr_userinfo[11]  = "<c:out value ='${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value ='${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value ='${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value ='${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value ='${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value ='${userInfo.deptName2}'/>";
+		    arr_userinfo[17]  = "<c:out value ='${userInfo.primary}'/>";
+		    var pCompanyID = "<c:out value ='${userInfo.companyID}'/>";
 		    var pUserID = arr_userinfo[1];
 		    var KuyjeType = "002";
-		    var signDateFormat = "${optSignDateFormat}";
-		    var isSplit = "${optisSplit}";
-		    var SplitKind = "${optSplitKind}";
-		    var sihangURL = "${sihangURL}";
+		    var signDateFormat = "<c:out value ='${optSignDateFormat}'/>";
+		    var isSplit = "<c:out value ='${optisSplit}'/>";
+		    var SplitKind = "<c:out value ='${optSplitKind}'/>";
+		    var sihangURL = "<c:out value ='${sihangURL}'/>";
 		    var CurAprType = "";
 		    var NextAprType = "";
 		    var pSummery = "", pSpecialRecordCode = "", pPublicityCode = "", pPublicityYN = "";
@@ -129,35 +129,35 @@
 		    var HapyuiArea = 0;
 		    var AprLineArea = 0;
 		    var CheckGubun = "1";
-		    var DocSN = "${docSN}";
+		    var DocSN = "<c:out value ='${docSN}'/>";
 		    var AutoSave = "save";//자동임시저장
 		    var Saveflag = false;//임시저장Flag
 		    var pPageType = "DRAFTUI";
-		    var pUse_Editor = "${useEditor}";
+		    var pUse_Editor = "<c:out value ='${useEditor}'/>";
 		    /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
 		    var SummaryOuterReceiverList = "";
 		    var checkdocinfo = false;
-		    var junGyulFlag = "${junGyulFlag}";
-		    var draftJunGyulFlag = "${draftJunGyulFlag}";
-		    var pSignImage_Size = "${signImageSize}";
-		    var docNumZeroCnt = "${docNumZeroCnt}";
-			var beforeUrl = "${beforeUrl}";
+		    var junGyulFlag = "<c:out value ='${junGyulFlag}'/>";
+		    var draftJunGyulFlag = "<c:out value ='${draftJunGyulFlag}'/>";
+		    var pSignImage_Size = "<c:out value ='${signImageSize}'/>";
+		    var docNumZeroCnt = "<c:out value ='${docNumZeroCnt}'/>";
+			var beforeUrl = "<c:out value ='${beforeUrl}'/>";
 			//회람
 			var type = "ING";
 			var pGongRamDocID = "";
-			var signImageType = "${signImageType}";
-			var isUsed = "${isUsed}";
-			var beforeDocID = "${beforeDocID}";
-			var addLastKyulJeYN = "${addLastKyulJeYN}";
+			var signImageType = "<c:out value ='${signImageType}'/>";
+			var isUsed = "<c:out value ='${isUsed}'/>";
+			var beforeDocID = "<c:out value ='${beforeDocID}'/>";
+			var addLastKyulJeYN = "<c:out value ='${addLastKyulJeYN}'/>";
 			var totalMemSN = "0";
-			var apprReuseConfig = "${apprReuseConfig}";
-			var agreeResultType = "${agreeResultType}";
+			var apprReuseConfig = "<c:out value ='${apprReuseConfig}'/>";
+			var agreeResultType = "<c:out value ='${agreeResultType}'/>";
 			var curDocNum = "";
 			var isEditorComplete = false;
-			var orgCompanyID = "${userInfo.companyID}";
+			var orgCompanyID = "<c:out value ='${userInfo.companyID}'/>";
 			var isHWP = "";
 			var ext = "mht";
-			var nonElecRec = "${nonElecRec}";
+			var nonElecRec = "<c:out value ='${nonElecRec}'/>";
 			var nonElecRecInfoXml = "";
 			var nonSepAttachLVXml = "";
 			var wAprMemberSN = "1";
@@ -542,7 +542,7 @@
 			            var fields = message.GetFieldsList();
 			            pDocTitle = trim_Cross(message.GetDocTitle());
 			            
-			            var mustField = message.getMustFieldsInsert("${userInfo.lang}");
+			            var mustField = message.getMustFieldsInsert("<c:out value ='${userInfo.lang}'/>");
 			            if (mustField && mustField != ""){
  			            	var pAlertContent = "<spring:message code='ezApprovalG.psb131'/>";
  			            	pAlertContent = pAlertContent.replace("@@", mustField);

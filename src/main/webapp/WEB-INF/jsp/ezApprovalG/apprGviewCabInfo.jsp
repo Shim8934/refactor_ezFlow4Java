@@ -23,8 +23,8 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ViewCabInfo_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script ID="clientEventHandlersJS" type="text/javascript">
-		    var CompanyID = "${userInfo.companyID}";
-		    var UserLang = "${userInfo.lang}";
+		    var CompanyID = "<c:out value='${userInfo.companyID}'/>";
+		    var UserLang = "<c:out value='${userInfo.lang}'/>";
 		    var OrderCell="";
 		</script>
 	</head>

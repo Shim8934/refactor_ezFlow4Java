@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <!DOCTYPE html>
 <html>
 	<head>
@@ -11,13 +13,13 @@
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}"></script>
 	    <script type="text/javascript">	
-	        var pDocID = "${docID}";
-	        var pType = "${type}";
-	        var orgCompanyID = "${orgCompanyID}";
+	        var pDocID = "<c:out value='${docID}'/>";
+	        var pType = "<c:out value='${type}'/>";
+	        var orgCompanyID = "<c:out value='${orgCompanyID}'/>";
 	        var ReturnFunction;
 	        window.onload = function ()
 	        {
-	        	if ("${pass}" != "<RESULT>TRUE</RESULT>") {
+	        	if ("<c:out value='${pass}'/>" != "<RESULT>TRUE</RESULT>") {
 		    		QuitWindow();
 			    }
 	        	

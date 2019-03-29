@@ -28,11 +28,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 		<script type="text/javascript">
-		    var pDocID = "${docID}";
-		    var pDeptID = "${deptID}";
-		    var pDocState = "${docState}";
-		    var pAprState = "${aprState}";
-		    var ChildDocInfo = "${childDocInfo}";
+		    var pDocID = "<c:out value ='${docID}'/>";
+		    var pDeptID = "<c:out value ='${deptID}'/>";
+		    var pDocState = "<c:out value ='${docState}'/>";
+		    var pAprState = "<c:out value ='${aprState}'/>";
+		    var ChildDocInfo = "<c:out value ='${childDocInfo}'/>";
 		    var xmlhttp = createXMLHttpRequest();	
 		    var FLAG;
 		    var pDocInfoValue = "1";
@@ -63,7 +63,7 @@
 		                getAprLine("");
 		                return;
 		            }
-		            if ('${approvalFlag}' == 'G') {
+		            if ("<c:out value ='${approvalFlag}'/>" == 'G') {
 		            	if (pDocState == "011") {
 		                	document.getElementById("tdGongRam").style.display = "";
 		            	}
@@ -215,7 +215,7 @@
 		
 		                var str2 = "tagsub4.src" + "=" + "\"/images/tab_appsub4a.gif\"";
 		                eval(str2);
-		                if ('${approvalFlag}' == 'G') {
+		                if ("<c:out value ='${approvalFlag}'/>" == 'G') {
 			                var str3 = "tagsub5.src" + "=" + "\"/images/tab_appsub5a.gif\"";
 			                eval(str3);
 		                }
@@ -232,7 +232,7 @@
 		
 		                var str2 = "tagsub4.src" + "=" + "\"/images/tab_appsub4.gif\"";
 		                eval(str2);
-		                if ('${approvalFlag}' == 'G') {
+		                if ("<c:out value ='${approvalFlag}'/>" == 'G') {
 			                var str3 = "tagsub5.src" + "=" + "\"/images/tab_appsub5a.gif\"";
 			                eval(str3);
 		                }

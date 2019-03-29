@@ -25,29 +25,29 @@
 		<script type="text/javascript" ID="clientEventHandlersJS">
 		    var xmlhttp = createXMLHttpRequest();
 		    var xmldoc = createXmlDom();
-		    var lastdate = "${monthEndDay}";
-		    var initdate = "${initDate}";
+		    var lastdate = "<c:out value='${monthEndDay}'/>";
+		    var initdate = "<c:out value='${initDate}'/>";
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0]  = "user";								
-		    arr_userinfo[1]  = "${userInfo.id}";              
-		    arr_userinfo[2]  = "${userInfo.displayName}";         
-		    arr_userinfo[3]  = "${userInfo.title}";               
-		    arr_userinfo[4]  = "${userInfo.deptID}";              
-		    arr_userinfo[5]  = "${userInfo.deptName}";            
-		    arr_userinfo[6]  = "${userInfo.jikChek}";                         
-		    arr_userinfo[8]  = "${userInfo.email}";               
+		    arr_userinfo[1]  = "<c:out value='${userInfo.id}'/>";              
+		    arr_userinfo[2]  = "<c:out value='${userInfo.displayName}'/>";         
+		    arr_userinfo[3]  = "<c:out value='${userInfo.title}'/>";               
+		    arr_userinfo[4]  = "<c:out value='${userInfo.deptID}'/>";              
+		    arr_userinfo[5]  = "<c:out value='${userInfo.deptName}'/>";            
+		    arr_userinfo[6]  = "<c:out value='${userInfo.jikChek}'/>";                         
+		    arr_userinfo[8]  = "<c:out value='${userInfo.email}'/>";               
 		    arr_userinfo[9]  = "";
-		    arr_userinfo[10] = "${susinAdmin}";
-		    arr_userinfo[11]  = "${userInfo.displayName1}";		
-		    arr_userinfo[12]  = "${userInfo.displayName2}";		
-		    arr_userinfo[13]  = "${userInfo.title1}";				
-		    arr_userinfo[14]  = "${userInfo.title2}";				
-		    arr_userinfo[15]  = "${userInfo.deptName1}";			
-		    arr_userinfo[16]  = "${userInfo.deptName2}";		
+		    arr_userinfo[10] = "<c:out value='${susinAdmin}'/>";
+		    arr_userinfo[11]  = "<c:out value='${userInfo.displayName1}'/>";		
+		    arr_userinfo[12]  = "<c:out value='${userInfo.displayName2}'/>";		
+		    arr_userinfo[13]  = "<c:out value='${userInfo.title1}'/>";				
+		    arr_userinfo[14]  = "<c:out value='${userInfo.title2}'/>";				
+		    arr_userinfo[15]  = "<c:out value='${userInfo.deptName1}'/>";			
+		    arr_userinfo[16]  = "<c:out value='${userInfo.deptName2}'/>";		
 		    var ReturnFunction;
-		    var Type = "${type}";
+		    var Type = "<c:out value='${type}'/>";
 		    var ReturnFunction;
-		    var approvalFlag = "${approvalFlag}";
+		    var approvalFlag = "<c:out value='${approvalFlag}'/>";
 		    var openPageInfo;
 		    window.onload = function () {
 		        try {

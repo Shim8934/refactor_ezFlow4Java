@@ -26,8 +26,8 @@
 	<script ID="clientEventHandlersJS"  type="text/javascript">
 		var OrderCell = "";    
 	   	var xmlhttp = createXMLHttpRequest();
-	    var pUserID = "${userInfo.id}";
-	    var CompanyID = "${userInfo.companyID}";
+	    var pUserID = "<c:out value = '${userInfo.id} '/>";
+	    var CompanyID = "<c:out value = '${userInfo.companyID} '/>";
 	    var arr_userinfo = new Array();
 	    arr_userinfo[0]  = "user";
 	    arr_userinfo[1]  = "<c:out value = '${userInfo.id}'/>";

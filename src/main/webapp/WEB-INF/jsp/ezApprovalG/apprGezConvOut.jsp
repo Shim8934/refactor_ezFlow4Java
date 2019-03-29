@@ -17,9 +17,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		
 		<script type="text/javascript">
-			var pDocID = '${docID}';
-	        var pDocHref = '${docHref}';
-	        var pUserID = "${userInfo.id}";
+			var pDocID = "<c:out value ='${docID}'/>";
+	        var pDocHref = "<c:out value ='${docHref}'/>";
+	        var pUserID = "<c:out value ='${userInfo.id}'/>";
 	        var flag = false;
 	        var newDocID = "";
 	        var stampFlag = false;
@@ -30,7 +30,7 @@
 	        
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0] = "user";
-		    arr_userinfo[1]  = "${userInfo.id}";
+		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
 		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName} '/>";
 		    arr_userinfo[3]  = "<c:out value = '${userInfo.title} '/>";
 		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID} '/>";

@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -23,7 +24,7 @@
 	        document.onselectstart = function () {
 	            var ret = false;
 	            var obj = event.srcElement;
-	            var useAllowTextSelection = "${useAllowTextSelection}";
+	            var useAllowTextSelection = "<c:out value ='${useAllowTextSelection}'/>";
 	            
 	            try {
 	            	if(useAllowTextSelection == "YES" || useAllowTextSelection == "") {
@@ -58,7 +59,7 @@
 	            return ret;
 	        };
 // 	        var XmlBodyATT = createXmlDom();
-	        var pEditor = "${editor}";
+	        var pEditor = "<c:out value ='${editor}'/>";
 	        var isConDoc = false;
 	        var isEditor = false;
 	        window.onload = function () {
