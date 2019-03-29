@@ -161,14 +161,14 @@
 	                if (gubun == "2") {
 	                	if(CrossYN()) {
 	                		checkpassword_dialogArguments[1] = btn_Delete_Onclick_Complete;
-	                        var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+	                        var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(340, 200));
 	                        try {
 	                        	OpenWin.focus();
 	                        } catch (e) { }
 	                	} else {
 	                		var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
 		                    feature = feature + GetShowModalPosition(330, 200);
-		                    var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + pItemID, "", feature);
+		                    var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "", feature);
 
 	                		if (typeof (ret) == "undefined") {
 		                        alert("<spring:message code = 'ezCommunity.t901' />");
@@ -187,7 +187,7 @@
 		                    }
 		                    
 		                    var xmlhttp = createXMLHttpRequest();
-			 			    xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
+			 			    xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + encodeURIComponent(pItemID) + ";", false);
 			 			    xmlhttp.send();
 			 			    xmlhttp = null;
 			 			    
@@ -208,7 +208,7 @@
                     }
                     
                     var xmlhttp = createXMLHttpRequest();
-	 			    xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
+	 			    xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + encodeURIComponent(pItemID) + ";", false);
 	 			    xmlhttp.send();
 	 			    xmlhttp = null;
 	 			    
@@ -223,7 +223,7 @@
 	        
 	        function CheckIfHasReplies() {
 			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + pItemID + ";", false);
+				xmlhttp.open("POST", "/ezCommunity/checkIfHasReply.do?itemList=" + encodeURIComponent(pItemID) + ";", false);
 				xmlhttp.send();
 				
 				if (xmlhttp.responseText == "TRUE") {
@@ -259,7 +259,7 @@
 	            }
 
 	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
+	            xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + encodeURIComponent(pItemID) + ";", false);
 	            xmlhttp.send();
 	            xmlhttp = null;
 	            try {
@@ -281,7 +281,7 @@
 				    return;
 				}
 	            
-                window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply"
+                window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=reply"
 	        }
 
 	        function btn_Modify_Onclick() {
@@ -301,12 +301,12 @@
 	            	if (CrossYN()) {
 						checkpassword_dialogArguments = new Array();
 	                    checkpassword_dialogArguments[1] = btn_Modify_Onclick_Complete;
-	                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "CheckPassWord", GetOpenWindowfeature(340, 200));
+	                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "CheckPassWord", GetOpenWindowfeature(340, 200));
 	                    try { OpenWin.focus(); } catch (e) { }
 	            	} else {
 	 					var feature = "status:no;dialogWidth:330px;dialogHeight:200px;help:no;scroll:no";
 	                    feature = feature + GetShowModalPosition(330, 200);
-	                    var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + pItemID, "", feature);
+	                    var ret = window.showModalDialog("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "", feature);
 	                    
 	                    if (typeof (ret) == "undefined") {
 	                        alert("<spring:message code = 'ezCommunity.t939' />");
@@ -322,7 +322,7 @@
 	                        return;
 	                    }
 	                    
-	                    window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+	                    window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem;
 
 	            	}
 	            } else {
@@ -331,9 +331,9 @@
 	                    return;
 					}	                 
 	                 if (CrossYN()) {
-	                     window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+	                     window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem;
 	                 } else {
-                         window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;
+                         window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem;
 	                 }
 	            }
 	        }
@@ -357,7 +357,7 @@
                     return;
                 }
 
-                window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=" + pReservedItem;	            
+                window.location.href = "/ezCommunity/newBoardItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=" + pReservedItem;	            
 	        }
 
 	        function btn_Copy_Onclick() {
@@ -376,7 +376,7 @@
     			var top = (pheigth - wHeight) / 2;
 				//2018-07-13 김보미 - 파라메터 추가
 // 	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code, "", "height=600,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
-	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + pItemID + ";" + "&boardID=" + pBoardID + "&code=" + code + "&treeCtrl=" + treeCtrl, "", "height=600,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
+	            window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(pItemID) + ";" + "&boardID=" + encodeURIComponent(pBoardID) + "&code=" + code + "&treeCtrl=" + treeCtrl, "", "height=600,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + top + ",left = " + left, "");
 	        }
 
 	        function btnClose_onclick() {
@@ -387,7 +387,7 @@
 	            var xmlhttp = createXMLHttpRequest();
 	            var xmldom = createXmlDom();
 
-	            xmlhttp.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + pItemID, false);
+	            xmlhttp.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(pItemID), false);
 	            xmlhttp.send();
 
 	            xmldom = loadXMLString(xmlhttp.responseText);
@@ -564,7 +564,7 @@
 	            var pTop = (pheight - conHeight) / 2;
 	            var pLeft = (pwidth - 890) / 2;
 
-                var szUrl = "/ezEmail/mailWrite.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&cmd=Community";
+                var szUrl = "/ezEmail/mailWrite.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&cmd=Community";
 
 	            window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px, width = 890px, status = no, toolbar=no, menubar=no,location=no,resizable=1");
 	            window.close();
@@ -579,7 +579,7 @@
 		        var width = window.screen.availWidth;
 		        var left = (width - 620) / 2;
 		        var top = (heigth - 425) / 2;
-		        var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
+		        var szHref = "/ezCommunity/itemReadList.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID);
 		        var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
 		        if (CrossYN()) {
 		            item_readlist_cross_dialogArguments[0] = "";
@@ -681,13 +681,13 @@
 	                if (gubun == "2") {
                         checkreplypassword_dialogArguments = new Array();
                         checkreplypassword_dialogArguments[1] = delete_onelinereply_Complete;
-                        var OpenWin = window.open("/ezCommunity/checkReplyPassword.do?itemID=" + pItemID + "&replyID=" + pReplyID, "checkReplyPassword", GetOpenWindowfeature(340, 200));
+                        var OpenWin = window.open("/ezCommunity/checkReplyPassword.do?itemID=" + encodeURIComponent(pItemID) + "&replyID=" + encodeURIComponent(pReplyID), "checkReplyPassword", GetOpenWindowfeature(340, 200));
                         try {
                         	OpenWin.focus();
                         } catch (e) { }
                         
 	                } else {
-	                    xmlhttp.open("POST", "/ezCommunity/checkOneLineOwner.do?replyID=" + pReplyID, false);
+	                    xmlhttp.open("POST", "/ezCommunity/checkOneLineOwner.do?replyID=" + encodeURIComponent(pReplyID), false);
 	                    xmlhttp.send();
 
 	                    if (xmlhttp.responseText.substr(0, 2) != "OK") {
@@ -699,7 +699,7 @@
 	                    	return;
 	                    }
 
-	                    xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + pReplyID + "&gubun=" + gubun, false);
+	                    xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + encodeURIComponent(pReplyID) + "&gubun=" + gubun, false);
 	                    xmlhttp.send();
 	                    getOneLineReply();
 	                    xmlhttp = null;
@@ -709,7 +709,7 @@
                     	return;
                     }
 
-	                xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + pReplyID + "&gubun=" + gubun, false);
+	                xmlhttp.open("POST", "/ezCommunity/deleteOneLineReply.do?replyID=" + encodeURIComponent(pReplyID) + "&gubun=" + gubun, false);
 	                xmlhttp.send();
 	                getOneLineReply();
 	                xmlhttp = null;
@@ -786,7 +786,7 @@
 	            var pTop = (pheight - 520) / 2;
 	            var pLeft = (pwidth - 500) / 2;
 
-	            window.open("/myoffice/ezBoardSTD/BoardHistoryList.aspx?itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=500,width=587, status = no, toolbar=no, menubar=no, scrollbars=1,location=no, resizable=0, top=" + pTop + ", left=" + pLeft, "");
+	            window.open("/myoffice/ezBoardSTD/BoardHistoryList.aspx?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "", "height=500,width=587, status = no, toolbar=no, menubar=no, scrollbars=1,location=no, resizable=0, top=" + pTop + ", left=" + pLeft, "");
 	        }
 
 	        function UpdateUserList() {
@@ -795,7 +795,7 @@
 	            var pTop = (pheight - 520) / 2;
 	            var pLeft = (pwidth - 400) / 2;
 
-	            var strUrl = "/ezCommunity/updateUserList.do?itemID=" + pItemID + "&pBoardID=" + pBoardID;
+	            var strUrl = "/ezCommunity/updateUserList.do?itemID=" + encodeURIComponent(pItemID) + "&pBoardID=" + encodeURIComponent(pBoardID);
 	            var strstate = "status:no;dialogHeight: 390px;dialogWidth: 520px;help: no;resizable:no"
 
 	            window.open(strUrl, "", "width=400, height=400, resizable=yes, scrollbars=yes , top=" + pTop + ", left=" + pLeft, "");

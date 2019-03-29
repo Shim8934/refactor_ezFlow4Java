@@ -412,6 +412,7 @@
 		                    _li.style.height = "69px";
 		                    
 		                    if (trim_Cross(URL) != "") {
+		                    	URL = URL.replace(/{/gi, "%7B").replace(/}/gi, "%7D");
 		                        _li.onclick = new Function("openURL('" + URL + "', '"+ SIZE +"');");
 		                    }
 		                    

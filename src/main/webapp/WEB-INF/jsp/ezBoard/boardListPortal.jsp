@@ -23,7 +23,7 @@
 			function MiniGotoList() {
 				//try {
 					//window.parent.top.frames("main").location.href = "/ezBoard/boardMainRedirect.do?boardID=" + BoardID;
-				window.parent.top.frames[0].location.href = "/ezBoard/boardMainRedirect.do?boardID=" + BoardID;
+				window.parent.top.frames[0].location.href = "/ezBoard/boardMainRedirect.do?boardID=" + encodeURIComponent(BoardID);
 				//} catch (e) {}
 			}
 			
@@ -42,7 +42,7 @@
 		        pwidth = parseInt(pwidth) / 2;
 		        pheigth = pheigth - 340;
 		        pwidth = pwidth - 359;
-		        window.open("/ezBoard/boardItemView.do?showAdjacent=1&itemID=" + pItemID + "&boardID=" + pBoardID, "", "height=657,width=720px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
+		        window.open("/ezBoard/boardItemView.do?showAdjacent=1&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pBoardID), "", "height=657,width=720px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 		    }
 		    
 		    function initsize() {

@@ -42,7 +42,7 @@
         treeView.DataBind("TopBoardsList");
     }
     function GetSubBoard(pRootBoardID, pSubFlag) {
-        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0", false);
+        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + encodeURIComponent(pRootBoardID) + "&subFlag=" + pSubFlag + "&selectFlag=0", false);
         xmlhttp.send();
         return xmlhttp.responseXML;
     }   

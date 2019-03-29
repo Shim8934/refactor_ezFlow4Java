@@ -208,6 +208,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", attitudeVO);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -367,6 +368,7 @@ public class EzAttitudeGWController {
 	         result.put("code", 0);
 	         result.put("data", deptList);
 	      } catch (Exception e) {
+	    	 e.printStackTrace();
 	         result.put("code", 1);
 	         result.put("status", "error");
 	         result.put("data", "");
@@ -400,6 +402,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", userList);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
@@ -448,6 +451,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", resultList);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -471,6 +475,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -510,6 +515,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", attitudeConfigInfo);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -561,6 +567,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -594,6 +601,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", attitudeTypeList);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -623,6 +631,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -658,6 +667,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -686,6 +696,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", typeInfo);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -719,6 +730,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -751,6 +763,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -785,6 +798,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -831,6 +845,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -863,6 +878,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", vo);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -899,6 +915,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -932,6 +949,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1139,6 +1157,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", holidayList);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1256,6 +1275,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", formVO);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1320,6 +1340,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", update);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", update);
@@ -1595,6 +1616,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", authorlist);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
@@ -1630,6 +1652,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "success");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
@@ -1664,6 +1687,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", "");
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
@@ -1695,6 +1719,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", authDeptlist);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
@@ -1730,6 +1755,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", authDeptlist);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("code", 1);
 			result.put("status", "error");
 			result.put("data", "");
@@ -1766,6 +1792,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1795,6 +1822,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", resultList);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1823,6 +1851,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", resultList);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -1893,6 +1922,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", data);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");
@@ -2019,6 +2049,7 @@ public class EzAttitudeGWController {
 			result.put("code", 0);
 			result.put("data", returnValue);
 		} catch (Exception e) {
+			e.printStackTrace();
 			result.put("status", "error");
 			result.put("code", 1);
 			result.put("data", "");

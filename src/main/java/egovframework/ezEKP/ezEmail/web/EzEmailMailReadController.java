@@ -764,7 +764,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
 		htmlBody = m.replaceAll("");
-        	
+		htmlBody = htmlBody.replace("{", "%7B").replace("}", "%7D");
+		
 		// 2018-08-03 황윤호 추가
         String memoFlag = "";
         if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
@@ -882,7 +883,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
-		model.addAttribute("htmlBody", bodyInfoList.get(0));
+		String htmlBody = bodyInfoList.get(0).replace("{", "%7B").replace("}", "%7D");
+		model.addAttribute("htmlBody", htmlBody);
 		
 		logger.debug("readMailOriginal ended.");
 		
@@ -2123,6 +2125,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
 		htmlBody = m.replaceAll("");
+		htmlBody = htmlBody.replace("{", "%7B").replace("}", "%7D");
         		
 		// 2018-08-03 황윤호 추가
         String memoFlag = "";

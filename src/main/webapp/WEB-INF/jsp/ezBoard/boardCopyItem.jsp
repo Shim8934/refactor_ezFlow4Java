@@ -101,7 +101,7 @@
 // 		            alert("<spring:message code='ezBoard.t354'/>");
 		            return;
 		        }
-		        xmlhttp.open("POST", "/ezBoard/copyItem.do?orgItemIDList=" + ItemIDList + "&orgBoardID=" + BoardID + "&destBoardID=" + pDestBoardID, false);
+		        xmlhttp.open("POST", "/ezBoard/copyItem.do?orgItemIDList=" + encodeURIComponent(ItemIDList) + "&orgBoardID=" + encodeURIComponent(BoardID) + "&destBoardID=" + encodeURIComponent(pDestBoardID), false);
 		        xmlhttp.send();
 		        if (xmlhttp.responseText.indexOf("OK") > -1) {
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t355'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t355'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
@@ -131,7 +131,7 @@
 		        }
 		    }
 		    function CheckIfCanWrite(pBoardID) {
-		        xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + pBoardID, false);
+		        xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp.send();
 		        var ret = xmlhttp.responseText;
 		        if (ret.indexOf("<WRITE>true</WRITE>") != -1) return true;
@@ -139,7 +139,7 @@
 		    }
 		    function CheckIfAnonyBoard(pBoardID) {
 		        var xmlhttp2 = createXMLHttpRequest();
-		        xmlhttp2.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + pBoardID, false);
+		        xmlhttp2.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp2.send();
 		        var retval = "0";
 		        if (xmlhttp2.responseText.indexOf("anonyboard") > -1)
@@ -242,7 +242,7 @@
 		        treeView.DataBind(obj);
 		    }
 		    function GetSubBoard(pRootBoardID, pSubFlag) {
-		        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0", false);
+		        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + encodeURIComponent(pRootBoardID) + "&subFlag=" + pSubFlag + "&selectFlag=0", false);
 		        xmlhttp.send();
 		        return xmlhttp.responseXML;
 		    }

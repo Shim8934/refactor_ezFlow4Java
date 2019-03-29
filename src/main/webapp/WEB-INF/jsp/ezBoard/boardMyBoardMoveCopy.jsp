@@ -30,7 +30,7 @@
 	        };
 	        function GetMyBoardItem(pRootTreeID) {
 	            var xmlhttp4 = createXMLHttpRequest();
-	            xmlhttp4.open("POST", "/ezBoard/getMyBoardsConfig.do?rootTreeID=" + pRootTreeID, false);
+	            xmlhttp4.open("POST", "/ezBoard/getMyBoardsConfig.do?rootTreeID=" + encodeURIComponent(pRootTreeID), false);
 	            xmlhttp4.send();
 	            var ret = xmlhttp4.responseXML;
 	            xmlhttp4 = null;

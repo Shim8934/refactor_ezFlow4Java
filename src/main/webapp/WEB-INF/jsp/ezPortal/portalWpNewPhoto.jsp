@@ -106,7 +106,7 @@
 						
 	            	    //2016-08-18 urc 수정
 	                	//var imgSrc = document.location.protocol + "//" + document.location.hostname + "/myoffice/Common/ezCommon_InterFace.aspx?TYPE=BOARDTHUM&BOARDID=" + escape(BoardID) + "&FILENAME=" + Imgsrc.substring(Imgsrc.lastIndexOf("/") + 1, Imgsrc.length);
-						var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(BoardID) + "&fileName=" + Imgsrc.substring(Imgsrc.lastIndexOf("/") + 1, Imgsrc.length);
+						var imgSrc = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + encodeURI(BoardID) + "&fileName=" + encodeURIComponent(Imgsrc.substring(Imgsrc.lastIndexOf("/") + 1), Imgsrc.length);
 
 						/* 2018-08-21 장진혁 포틀릿 변경으로 주석처리 */
 	                	/* _span1.innerHTML = "<img src='" + imgSrc + "' width='107px' height='75px' onclick='ItemRead_onclick(this)' DATA1='" + BoardID + "' DATA2='" + ItemID + "'>"; */
@@ -206,11 +206,11 @@
 	    	    	var height = 785;
 	    	    }
 
-		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1"), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
+		        window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + height + ",width=764,top=" + pTop + ",left=" + pLeft, "");
 		    }
 	    	
 	    	function Boardmore_btnClick() {
-		        window.open("/ezBoard/boardMainRedirect.do?boardID=" + pBoardID_NewPhoto, "main", "");
+		        window.open("/ezBoard/boardMainRedirect.do?boardID=" + encodeURIComponent(pBoardID_NewPhoto), "main", "");
 		    }
 	    	
 	    	function refresh_onclick() {
