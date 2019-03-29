@@ -8,7 +8,7 @@
 .leftbody ul:not(:last-child) li:last-child {border-bottom: none;}
 #mainmenu >ul >li >img {margin-right: -2px;}
 .mainbody.notover {overflow: hidden !important;}
-.cabinetListBox {overflow:hidden; padding-right: 0;}
+.cabinetListBox, .adminListBox {overflow:hidden; padding-right: 0;}
 
 .bnkCabSelect {background-color: #e9f1ff; cursor: pointer;}
 .bnkCabNormal:hover {background-color: #f4f5f5; cursor: pointer;}

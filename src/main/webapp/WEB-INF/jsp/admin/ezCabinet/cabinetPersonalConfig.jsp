@@ -11,17 +11,18 @@
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}"      type="text/css"/>
 	</head>
 	<body class="mainbody notover">
-		<h1><spring:message code='ezCabinet.t10'/><span id="cabinetTtlInf" class="cabTtlInf"></span></h1>
+		<h1>
+			<spring:message code='ezCabinet.t10'/>
+			<span id="cabinetTtlInf" class="cabTtlInf"></span>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select id="companyList" class="companySelect">
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+			</select>
+		</h1>
+		
 		<div class="cabiMain">
-			<div class="compSelect" id="companySelect">
-				<span><b><spring:message code='ezCabinet.t13'/></b></span>
-				<select id="companyList">
-					<c:forEach var="item" items="${list}">
-						<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-					</c:forEach>
-				</select>
-			</div>
-			
 			<div id="mainmenu">
 				<ul>
 					<li><a><span><spring:message code='ezCabinet.t48' /></span></a></li>

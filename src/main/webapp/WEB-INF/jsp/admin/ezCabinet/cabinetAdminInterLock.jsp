@@ -11,17 +11,17 @@
 		<link rel="stylesheet" href="${util.addVer('/css/ezCabinet/cabinet.css')}" type="text/css"/>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code='ezCabinet.t155'/></h1>
+		<h1>
+			<spring:message code='ezCabinet.t155'/>
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
+			<select id="companyList" class="companySelect">
+				<c:forEach var="item" items="${list}">
+					<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+				</c:forEach>
+			</select>
+		</h1>
+		
 		<div class="cabiMain">
-			<div class="compSelect" id="companySelect">
-				<span><b><spring:message code='ezCabinet.t13'/></b></span>
-				<select id="companyList">
-					<c:forEach var="item" items="${list}">
-						<option value="<c:out value='${item.cn}'/>" ${item.cn == userCompany ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-					</c:forEach>
-				</select>
-			</div>
-			
 			<table class="cabTable2">
 				<tr>
 					<th><spring:message code="ezCabinet.t156"/></th>
