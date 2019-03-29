@@ -136,21 +136,21 @@
 	                        _span.setAttribute("name", "FBoard_div");
 	                        _span.setAttribute("DATA1", BoardId);
 	                        
+	                        /* 2019-03-29 홍승비 - 새게시물 다국어 메세지 수정 */
 	                        if (BoardId == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-	                        	BoardName = "<spring:message code='ezBoard.t480'/>";
-	                        	BoardName2 = "<spring:message code='ezBoard.hyj09'/>";
-	                        }
-
-	                        if (userLang == "1")
-	                            _span.setAttribute("DATA2", BoardName);
-	                        else
-	                            _span.setAttribute("DATA2", BoardName2);
+								_span.setAttribute("DATA2", "<spring:message code='ezBoard.t480'/>");
+								_span.innerHTML = "<spring:message code='ezBoard.t480'/>";
+                        	} else {
+		                        if (userLang == "1") { // primary값에 따라 다국어 설정
+									_span.setAttribute("DATA2", BoardName);
+									_span.innerHTML = BoardName;
+		                        } else {
+		                            _span.setAttribute("DATA2", BoardName2);
+		                            _span.innerHTML = BoardName2;
+								}
+                        	}
 	                        _span.setAttribute("DATA5", BoardType);
-	                        if (userLang == "1")
-	                            _span.innerHTML = BoardName;
-	                        else
-	                            _span.innerHTML = BoardName2;
-	
+	                        
 	                        _p.appendChild(_span);
 	                        document.getElementById("tab1").appendChild(_p);
 	
