@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezApprovalG.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -1403,6 +1404,26 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public void aprMakeTmp2Ing8(Map<String, Object> map) throws Exception{
 		insert("EzApprovalG.aprMakeTmp2Ing8", map);
+	}
+	
+	public void aprMakeTmp2Ing9(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.aprMakeTmp2Ing9", map);
+	}
+	
+	public void aprMakeTmp2Ing10(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.aprMakeTmp2Ing10", map);
+	}
+	
+	public void aprMakeTmp2Ing11(Map<String, Object> map) throws Exception{
+		insert("EzApprovalG.aprMakeTmp2Ing11", map);
+	}
+	
+	public int checkTmpDocHasGongRam(Map<String, Object> map) throws Exception{
+		return (int) select("EzApprovalG.checkTmpDocHasGongRam", map);
+	}
+	
+	public String getTmpDocID(Map<String, Object> map) throws Exception{
+		return (String) select("EzApprovalG.getTmpDocID", map);
 	}
 	
 	public void setUserFormInfo(Map<String, Object> map) throws Exception{
@@ -3117,5 +3138,59 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	
 	public void insertReuseAttachFileInfo(Map<String, Object> map) throws Exception {
 		insert("EzApprovalG.insertReuseAttachFileInfo", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> getReceiptPointNameList(Map<String, Object> map) throws Exception {
+		return (ArrayList<String>) list("EzApprovalG.getReceiptPointNameList", map);
+	}
+
+	public String getOrgLastAprMemberName(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getOrgLastAprMemberName", map);
+	}
+
+	public String getreceiverName(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getreceiverName", map);
+	}
+	
+	public int checkHabYuiState(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.checkHabYuiState", map);
+	}
+	
+	public void setHesongCabinetID(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.setHesongCabinetID", map);
+	}
+	
+	public String getAprOrgDocID(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getAprOrgDocID", map);
+	}
+	
+	public int getEndAprOpinionCnt(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalG.getEndAprOpinionCnt", map);
+	}
+	
+	public void insertHesongOpinion(Map<String, Object> map) throws Exception {
+		insert("EzApprovalG.insertHesongOpinion", map);
+	}
+
+	public String getTmpDocHref(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getTmpDocHref", map);
+	}
+	
+	public String getTmpHref(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getTmpHref", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public ArrayList<String> getTmpDocList(Map<String, Object> map) throws Exception {
+		return (ArrayList<String>) list("EzApprovalG.getTmpDocList", map);
+	}
+	
+	public void setHesongBansongCabinetID(Map<String, Object> map) throws Exception {
+		update("EzApprovalG.setHesongBansongCabinetID", map);
+	}
+
+	public String getDeptIdOfCabinet(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getDeptIdOfCabinet", map);
 	}
 }

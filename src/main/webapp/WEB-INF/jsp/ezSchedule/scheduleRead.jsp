@@ -11,6 +11,7 @@
         <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
         <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>        
+        <script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
 		<title>
 			<spring:message code='ezSchedule.t298'/>
 			<c:if test="${scheduleInfo.scheduleType == 1}"><spring:message code='ezSchedule.t321' /></c:if>
@@ -47,6 +48,11 @@
 			var _otherid = "<c:out value='${otherid}' />";
 	        var pUse_Editor = "CK";
 	        var ResourceInfo = "<c:out value='${resourceCnt}' />";	        
+	        var ResourceDel = "FALSE";
+	        var isReceive = "<c:out value='${isReceive}' />";
+	        var repetitionInfo = "<c:out value='${repetitionInfo}' />";
+	        var startDate = "<c:out value='${scheduleInfo.startDate}' />";
+	        var endDate = "<c:out value='${scheduleInfo.endDate}' />";
 	        
 	        <%-- var parentid = "<%= _parentid %>"; --%>			
 			<%-- var admin = "<%= _admin %>"; --%>
@@ -85,6 +91,13 @@
 				});
 	            
 	            window.onresize();
+	            
+	            if (isReceive == 'Y') {
+	            	if (repetitionInfo.length > 0) {
+			            timeString = makeRepetitionScheduleString(startDate, endDate, repetitionInfo);
+			            $('#LabelDate').text(timeString);
+	            	}
+	            }
 	        }
 	
 	        window.onresize = function () {
@@ -177,13 +190,16 @@
 	        function repetiton_check() {	
 	        	schedule_delete_confirm_cross_dialogArguments[0] = "";
 	        	schedule_delete_confirm_cross_dialogArguments[1] = deleteSchedule_Complete;
-	            GetOpenWindow("/ezSchedule/scheduleDeleteConfirm.do", "schedule_delete_confirm_Cross", 500, 170);
+	            GetOpenWindow("/ezSchedule/scheduleDeleteConfirm.do?resourceInfo="+ResourceInfo, "schedule_delete_confirm_Cross", 500, 170);
 	        }
 	        
 	        function deleteSchedule_Complete(ret) {	        	
-				if (ret == "0") {
+	        	var optionStr = ret[0];
+	        	ResourceDel = ret[1];
+	        	
+				if (optionStr == "0") {
 					once_delete_schedule();
-				} else if (ret == "1") {
+				} else if (optionStr == "1") {
 					delete_schedule();
 				} 
 		    }
@@ -202,10 +218,11 @@
 	            //if (!confirm("<spring:message code='ezSchedule.t209' />"))
 	            //    return;
 	
-	            var ResourceDel = "FALSE";;
+	            /* 2018-12-17 김민성 - 부모창에서 confirm창 뜨도록 변경 */
+	            /* var ResourceDel = "FALSE";;
 	            if (ResourceInfo != "0") {
 	                confirm("<spring:message code='ezSchedule.t1300' />") ? ResourceDel = "TRUE" : ResourceDel = "FALSE";
-	            }           
+	            }  */          
 	            
 	            $.ajax({
 					type : "POST",
@@ -355,6 +372,203 @@
 	            document.body.appendChild(form);
 	            form.submit();
 	        }
+	        
+	        function makeRepetitionScheduleString(startDate, endDate, repetitionInfo) {
+	        	var repeatinfo = strLang33;
+				var info = repetitionInfo.split("|");
+				var repetitionType = info[2];
+				
+				switch (repetitionType) {
+					case "0":
+						if (info[3] == '0') {
+							repeatinfo += strLang45;
+						} else if (info[3] == '1') {
+							repeatinfo += strLang34;
+						} else {
+							repeatinfo += info[3] + strLang81;
+						}
+						break;
+					case "1":
+						if(info[3] == '1'){				
+							repeatinfo += strLang35 + " ";
+							if(info[4]){
+								for (var i = 0; i< info[4].length; i++){
+									var eachDayOfWeek = info[4].substr(i, 1);
+									var dayOfWeekStringInfo = makeStringDayofWeekInfo(eachDayOfWeek);
+									if (i>0) {
+										repeatinfo += strLangGHA1;
+									}
+									repeatinfo += dayOfWeekStringInfo;
+								}
+							}
+						}else{
+							repeatinfo += info[3] + strLang82 + " ";
+							if(info[4]){
+								for (var i = 0; i< info[4].length; i++){
+									var eachDayOfWeek = info[4].substr(i, 1);
+									var dayOfWeekStringInfo = makeStringDayofWeekInfo(eachDayOfWeek);
+									if (i>0) {
+										repeatinfo += strLangGHA1;
+									}
+									repeatinfo += dayOfWeekStringInfo;
+								}
+							}
+						}
+						break;
+				    case "2":
+				    	if(info[3] == '1'){
+				    		if(info[4] == '1') {
+								repeatinfo += strLang36 + " ";
+				    		}
+				    		else {
+				    			repeatinfo += info[4] + strLang83 + " ";
+				    		}
+							repeatinfo += info[5] + strLang80 + " ";
+						}else{					
+							if(info[4] == '1') {
+								repeatinfo += strLang36 + " ";
+							}
+							else {
+								repeatinfo += info[4] + strLang83 + " ";
+							}
+							for (var i = 0; i< info[5].length; i++){
+								var weekNumberInfo = makeStringWeekNumber(info[5]);
+								repeatinfo += weekNumberInfo; 
+							}
+							repeatinfo += " ";
+							for (var i = 0; i < info[6].length; i++) {
+								var idx = info[6].substr(i, 1);
+								var dayOfWeekStringInfo = makeStringDayofWeekInfo2(idx);
+								if (i>0) {
+									repeatinfo += strLangGHA1;
+								}
+								repeatinfo += dayOfWeekStringInfo;
+							}
+						}
+						break;
+					case "3":
+						if (info[3] == '1'){
+							repeatinfo += strLang37 + " ";
+							repeatinfo += info[4] + strLang122 + " ";
+							repeatinfo += info[5] + strLang80;
+						} else {	
+							repeatinfo += strLang37 + " ";
+							repeatinfo += info[4] + strLang122 + " ";
+							for (var i = 0; i< info[5].length; i++){
+								var weekNumberInfo = makeStringWeekNumber(info[5]);
+								repeatinfo += weekNumberInfo;
+							}
+							repeatinfo += " ";
+							for (var i = 0; i < info[6].length; i++) {
+								var idx = info[6].substr(i, 1);
+								var dayOfWeekStringInfo = makeStringDayofWeekInfo2(idx);
+								if (i>0) {
+									repeatinfo += strLangGHA1;
+								}
+								repeatinfo += dayOfWeekStringInfo;
+							}
+						}
+					break;
+				}	
+
+				repeatinfo += " ";
+				
+				if (info[1] == "1") {					// 하루종일 일정
+					repeatinfo += strLang39;
+				} else {
+					repeatinfo += strLang38 + startDate.substring(11,16) + " ~ " +endDate.substring(11,16);
+				}
+				
+				repeatinfo += " ";
+				
+				if (info[0] == -1) {
+				    repeatinfo += " " + strLang79 + " : " + startDate.substring(0,10) + " ~ " + strLang46;
+				} else if (info[0] == 0){
+					repeatinfo += " " + strLang79 + " : " + startDate.substring(0,10) + " ~ " + endDate.substring(0,10);
+				} else {
+					repeatinfo += " " + strLang79 + " : " + startDate.substring(0,10) + " ~ " + info[0] + strLang47;
+				}
+				
+				return repeatinfo;
+			}
+	        
+	        function makeStringDayofWeekInfo(dayOfWeek) {
+				var dayOfWeekString;
+				switch (dayOfWeek){
+					case "0":
+						dayOfWeekString = strLang48;
+						break;
+					case "1":
+						dayOfWeekString = strLang49;
+						break;
+					case "2":
+						dayOfWeekString = strLang50;
+						break;
+					case "3":
+						dayOfWeekString = strLang51;
+						break;
+					case "4":
+						dayOfWeekString = strLang52;
+						break;
+					case "5":
+						dayOfWeekString = strLang53;
+						break;
+					case "6":
+						dayOfWeekString = strLang54;
+						break;
+				}
+				return dayOfWeekString;
+			}
+	        
+	        function makeStringDayofWeekInfo2(dayOfWeek) {
+				var dayOfWeekString;
+				switch (dayOfWeek){
+					case "0":
+						dayOfWeekString = strLang60;
+						break;
+					case "1":
+						dayOfWeekString = strLang61;
+						break;
+					case "2":
+						dayOfWeekString = strLang62;
+						break;
+					case "3":
+						dayOfWeekString = strLang63;
+						break;
+					case "4":
+						dayOfWeekString = strLang64;
+						break;
+					case "5":
+						dayOfWeekString = strLang65;
+						break;
+					case "6":
+						dayOfWeekString = strLang66;
+						break;
+				}
+				return dayOfWeekString;
+			}
+			
+			function makeStringWeekNumber(number) {
+				var weekNumber;
+				switch (number){
+					case "1":
+						weekNumber = strLang55;
+						break;
+					case "2":
+						weekNumber = strLang56;
+						break;
+					case "3":
+						weekNumber = strLang57;
+						break;
+					case "4":
+						weekNumber = strLang58;
+						break;
+					case "5":
+						weekNumber = strLang59;
+						break;
+				}
+				return weekNumber;
+			}
 		</script>
 	</head>
 	
@@ -460,8 +674,8 @@
 	                            <th style="white-space:nowrap">
 	                                <spring:message code='ezSchedule.t311' />
 	                            </th>
-	                            <td colspan="3" width="100%">
-	                                <div style="overflow-y: auto; height: 30px; padding-top: 2px" id="LabelAttendant">	                                
+	                            <td colspan="3" width="100%" style="overflow-y:auto; height:30px; padding-top:1px; padding-bottom:1px;">
+	                                <div style="max-height:30px;" id="LabelAttendant">	                                
 	                                	<c:forEach var="item" items="${attendantList}" varStatus="status">	                                		  		
 	                                	 	<span title="<spring:message code='ezSchedule.t162'/>" style="cursor:pointer" onclick="show_personinfo('${item.attendantId}')">
 	                                	 		<!-- 2018-08-08 김보미 -->
@@ -484,8 +698,8 @@
 	                            <th style="white-space:nowrap">
 	                                <spring:message code='ezSchedule.t312' />
 	                            </th>
-	                            <td style="white-space:nowrap">
-	                                <div id="LabelDate">
+	                            <td >
+	                                <div id="LabelDate" style="word-break: break-all;overflow-y: auto;height: 17px;padding-top: 2px;">
 	                                    <!-- <asp:Label ID="LabelDate" runat="server"></asp:Label> -->
 	                                    <c:out value="${dateString}" />
 	                                </div>

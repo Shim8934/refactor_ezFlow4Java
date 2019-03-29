@@ -1,0 +1,712 @@
+Return-Path: <inoryu@ryobi-sol.co.jp>
+X-Jmocha-Country-Code: JP
+Delivered-To: ikjun@kaoni.com
+Received: from 192.168.0.5 (EHLO spam.kaoni.com) ([192.168.0.5])
+          by gw.kaoni.com (JMOCHA ESMTP Server) with ESMTP ID 1503262096
+          for <ikjun@kaoni.com>;
+          Thu, 07 Mar 2019 15:57:30 +0900 (KST)
+Received: from external ([210.172.124.102])
+	by spam.kaoni.com (1.0) id x276vLj007FC;
+	Thu, 07 Mar 2019 15:57:21 +0900
+X-SmartFilter: UNIQ,B77992E811845CB1C4E27D166F1A882A,x276vLj007FC
+X-SmartFilter: FROM,x276vLj007FC,inoryu@ryobi-sol.co.jp
+Received: (qmail 986 invoked from network); 7 Mar 2019 15:57:21 +0900
+Received: from unknown (HELO mfilter.ryobi-sol.co.jp) (210.172.124.112)
+  by 192.168.8.112 with SMTP; 7 Mar 2019 15:57:21 +0900
+Received: from inoryu7 ([172.16.123.29]) by m-FILTER with ESMTP; Thu, 7 Mar 2019 15:49:23 +0900
+From: =?UTF-8?B?5LqV5LiK56uc5LiA?= <inoryu@ryobi-sol.co.jp>
+To: =?UTF-8?B?J+ydtOqyveyVhCc=?= <yika@kaoni.com>,
+        =?UTF-8?B?J+OCq+OCquODs+OCouOCpO+8ieOCuOODp+ODsyDjgqTjg6vjgrDjgqnjg7Mn?= <ikjun@kaoni.com>
+Cc: =?UTF-8?B?J+Wwj+W3neOAgOiytOWtkCc=?= <takako@ryobi-sol.co.jp>,
+        =?UTF-8?B?J+WuieeUsOOAgOe+juS9syc=?= <noriyasu@ryobi-sol.co.jp>,
+        =?UTF-8?B?J1JTT0wp5bKh6YOo44CA5rOw5LmLJw==?= <okabe@ryobi-sol.co.jp>,
+        =?UTF-8?B?J1JTT0wp5Lq66KaLIOaIkOW9pic=?= <hitomi@ryobi-sol.co.jp>
+References: <006801d4d411$a7d147b0$f773d710$@ryobi-sol.co.jp> <1479429655.48511.1551927394326@gw.kaoni.com>
+In-Reply-To: <1479429655.48511.1551927394326@gw.kaoni.com>
+Subject: =?UTF-8?B?UkU6IFItR1fvvJrmnKznlarnkrDlooPjga7jg4fjg7zjgr/liYrpmaTkvp3poLw=?=
+Date: Thu, 7 Mar 2019 15:49:22 +0900
+Message-ID: <002801d4d4b1$e5c74a10$b155de30$@ryobi-sol.co.jp>
+MIME-Version: 1.0
+Content-Type: multipart/related;
+	boundary="----=_NextPart_000_0029_01D4D4FD.55B18A20"
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHYE79r0i1k7hdxJ73ob9c/JNNRngMEVesEpeEYypA=
+Content-Language: ja
+
+This is a multipart message in MIME format.
+
+------=_NextPart_000_0029_01D4D4FD.55B18A20
+Content-Type: multipart/alternative;
+	boundary="----=_NextPart_001_002A_01D4D4FD.55B18A20"
+
+
+------=_NextPart_001_002A_01D4D4FD.55B18A20
+Content-Type: text/plain;
+	charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09DQoNCiDmnKzjg6Hjg7zjg6vjga7mt7vku5jjg5XjgqHj
+gqTjg6vjga/jg5Hjgrnjg6/jg7zjg4nku5jjgY16aXDjg5XjgqHjgqTjg6vjgavjgabmmpfl
+j7fljJbjgZXjgozjgabjgYrjgorjgb7jgZnjgIINCiDjg5Hjgrnjg6/jg7zjg4njga/liKXj
+g6Hjg7zjg6vjgavjgabjgZTmoYjlhoXjgYTjgZ/jgZfjgb7jgZnjgIINCg0KPT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09DQoNCg0K44Kk44GV44KTDQoNCiANCg0K44OG44K544OI5a6f5pa944Gv
+57WC44KP44KK44G+44GX44Gf44Gu44Gn44CB44G+44Ga44Gv5YmK6Zmk5a++5b+c44KS44GK
+6aGY44GE44GE44Gf44GX44G+44GZ44CCDQoNCiANCg0K5o+Q5L6b5riI44G/DQoNCuODu+eu
+oeeQhuiAheaDheWgsQ0KDQrjg7vlsqHlsbHkuqTpgJrjga7jg57jgqTjgrDjg6zjg7zjgrfj
+g6fjg7Pjg4fjg7zjgr8NCg0KIA0KDQrmnKrmj5DkvpsNCg0K44O7UkhE44Gu44Oe44Kk44Kw
+44Os44O844K344On44Oz44OH44O844K/DQoNCuOAgOOAgOKGkua6luWCmeS4reOBquOBruOB
+p+OAgeS7iuOBl+OBsOOCieOBj+OBiuW+heOBoeOBj+OBoOOBleOBhOOAgg0KDQogDQoNCuOC
+iOOCjeOBl+OBj+OBiumhmOOBhOOBhOOBn+OBl+OBvuOBmeOAgg0KDQogDQoNCiANCg0KRnJv
+bTog7J206rK97JWEIDx5aWthQGthb25pLmNvbT4gDQpTZW50OiBUaHVyc2RheSwgTWFyY2gg
+NywgMjAxOSAxMTo1NyBBTQ0KVG86IOS6leS4iuernOS4gCA8aW5vcnl1QHJ5b2JpLXNvbC5j
+by5qcD47IOOCq+OCquODs+OCouOCpO+8ieOCuOODp+ODsyDjgqTjg6vjgrDjgqnjg7MgPGlr
+anVuQGthb25pLmNvbT4NCkNjOiDlsI/lt53jgIDosrTlrZAgPHRha2Frb0ByeW9iaS1zb2wu
+Y28uanA+OyDlronnlLDjgIDnvo7kvbMgPG5vcml5YXN1QHJ5b2JpLXNvbC5jby5qcD47IFJT
+T0wp5bKh6YOo44CA5rOw5LmLIDxva2FiZUByeW9iaS1zb2wuY28uanA+OyBSU09MKeS6uuim
+iyDmiJDlvaYgPGhpdG9taUByeW9iaS1zb2wuY28uanA+DQpTdWJqZWN0OiDov5Tkv6E6IFIt
+R1fvvJrmnKznlarnkrDlooPjga7jg4fjg7zjgr/liYrpmaTkvp3poLwNCg0KIA0KDQrkupXk
+uIrjgZXjgpMNCg0K44GK5LiW6Kmx44Gr44Gq44KK44G+44GZ44CCDQoNCiANCg0K44GU5oyH
+56S644Gu44GG44Gh44KC44GG5LiA44Gk44GK5Ly644GE44GX44Gf44GE44Gu44GM44GC44KK
+44G+44GZ44CCDQoNCiANCg0KIA0KDQrvvJ7vvJ7imIXjgr/jgqTjg5/jg7PjgrDoqr/mlbTl
+vozjgavlr77lv5zvvIgz5pyIN+aXpeWkleaWueOBi+OCieWJiumZpO+8iQ0KDQrjgIDjgIDj
+gIDigLvmmI7ml6Xjga7mqZ/lmajplqLpgKPjga7jg4bjgrnjg4jlrozkuoblvozjgavlrp/m
+lr0NCg0K44CA44CA44CA5Yil6YCU44Oh44O844Or44GX44G+44GZ44CCDQoNCiANCg0K44CA
+4p6h44CA5pys5pel44Gu5Y2I5YmN5Lit44OH44O844K/44KS5Yid5pyf5YyW44GZ44KL44Go
+5qmf5Zmo6Zai6YCj44Gu44OG44K544OI44GM44Gn44GN44Gq44GP44Gq44KL44Gd44GG44Gn
+44GZ44CCDQoNCuOAgOOAgOOAgOODh+ODvOOCv+OBr+ODkeODvOODhOOBlOOBqOOBq+WJiumZ
+pOOBp+OBr+OBquOBj+OBpuWIneacn+WMluOCkuihjOOBo+OBpuOBi+OCieW/heimgeOBquOD
+h+ODvOOCv+OCkuWGjeWPluOCiui+vOOBv+OBqOOBhOOBhuaJi+mghuOBp+ihjOOCj+OCjOOC
+i+OBruOBoOOBneOBhuOBp+OBmeOAgg0KDQog44CA44CA44Gn44GZ44Gu44Gn44CB5qmf5Zmo
+6Zai6YCj44Gu44OG44K544OI44GM57WC44KP44KJ44KM44Gm44GL44KJRELjgpLliJ3mnJ/l
+jJbjgZfjgarjgZHjgozjgbDjgarjgonjgarjgYTjgajjgYTjgYbloLHlkYrjgpLlj5fjgZHj
+gb7jgZfjgZ/jgIINCg0KIA0KDQrjgZTnorroqo3jgojjgo3jgZfjgY/jgYrpoZjjgYToh7Tj
+gZfjgb7jgZnjgIINCg0KIA0KDQogDQoNCiANCg0KIA0KDQogDQoNCiANCg0KIA0KDQogIF9f
+X19fICANCg0K5beu5Ye65Lq6IDog5LqV5LiK56uc5LiAIDxpbm9yeXVAcnlvYmktc29sLmNv
+LmpwPg0KDQrpgIHkv6Hml6XmmYIgOiAyMDE5LTAzLTA2IDIwOjQyOjIyICggKzA5OjAwICkN
+Cg0K5a6b5YWIIDog44Kr44Kq44Oz44Ki44Kk77yJ44KkIOOCreODp+ODs+OCoiA8eWlrYUBr
+YW9uaS5jb20+LOOCq+OCquODs+OCouOCpO+8ieOCuOODp+ODsyDjgqTjg6vjgrDjgqnjg7Mg
+PGlranVuQGthb25pLmNvbT4NCg0KQ0MgOiDlsI/lt53jgIDosrTlrZAgPHRha2Frb0ByeW9i
+aS1zb2wuY28uanA+LOWuieeUsOOAgOe+juS9syA8bm9yaXlhc3VAcnlvYmktc29sLmNvLmpw
+PixSU09MKeWyoemDqOOAgOazsOS5iyA8b2thYmVAcnlvYmktc29sLmNvLmpwPixSU09MKeS6
+uuimiyDmiJDlvaYgPGhpdG9taUByeW9iaS1zb2wuY28uanA+LOS6leS4iiDnq5zkuIAgPGlu
+b3J5dUByeW9iaS1zb2wuY28uanA+DQoNCuS7tuWQjSA6IFItR1fvvJrmnKznlarnkrDlooPj
+ga7jg4fjg7zjgr/liYrpmaTkvp3poLwNCg0KIA0KDQrjgrjjg6fjg7PjgZXjgpPjgIHjgqTj
+gZXjgpMNCg0K5qyh44Gu5YaF5a6544Gn44GK6aGY44GE44GX44Gf44GE44Go6ICD44GI44Gm
+44GK44KK44G+44GZ44CCDQoNCuWJiumZpOOBl+OBpuOBr+OBvuOBmuOBhOODh+ODvOOCv+OA
+geWJiumZpOOBl+OBquOBhOOBqOOBhOOBkeOBquOBhOODh+ODvOOCv+OBjA0KDQrjgYLjgorj
+gb7jgZfjgZ/jgonjgZTpgKPntaHjgY/jgaDjgZXjgYTjgIINCg0K4piF44Om44O844K244O8
+5qmf6IO977yIM+aciDfml6VBTeOBi+OCieWJiumZpO+8iQ0KDQrjg7vku4rmnIjjga7lhKrn
+p4DnpL7lk6ENCg0K44CA55S75YOP5beu44GX5pu/44GIDQoNCuODu+ODnuODi+ODpeOCouOD
+q+OBruacgOaWsOWMlg0KDQrjg7vjgqLjg4njg6zjgrnluLPjga7liYrpmaQNCg0K44O75pel
+56iL566h55CG44Gv5YmK6ZmkDQoNCuOAgOaXpeeoi+euoeeQhuOBruWGjeW6puWPlui+vA0K
+DQrjg7tUT0RP44Gv5YmK6ZmkDQoNCuODu+mbu+WtkOaxuuijgeOBr+WJiumZpA0KDQrjgIDm
+p5jlvI/jga4xMOeorumhnuOBr+aui+OBmQ0KDQrjg7vmjrLnpLrmnb/jga/liYrpmaQNCg0K
+44O76Zu75a2Q44Ki44Oz44Kx44O844OI44Gv5YmK6ZmkDQoNCuODu+OCs+ODn+ODpeODi+OD
+huOCo+OBr+WJiumZpA0KDQrjg7voqK3lgpnnrqHnkIbjga/liYrpmaQNCg0K44CA6Kit5YKZ
+566h55CG44Gu5YaN5bqm5Y+W6L6844CB6ZqO5bGk5qeL5oiQ5L2c5oiQDQoNCuODu+Wbnuim
+p+adv+OBr+WJiumZpA0KDQrjg7vjg4Hjg6Pjg4Pjg4jjga/liYrpmaQNCg0KLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCg0K4piF566h55CG6ICF5qmf6IO977yIM+aciDfm
+l6VBTeOBi+OCieWJiumZpO+8iQ0KDQril4/liJ3mnJ/nlLvpnaINCg0K44O7UXVpY2sgTGlu
+a+OBr+WJiumZpA0KDQrjg7tRdWljayBQb2xs44Gv5YmK6ZmkDQoNCuODu+ODneODg+ODl+OC
+ouODg+ODl+OBiuefpeOCieOBm+OBr+WJiumZpA0KDQrjg7vku4rmnIjjga7lhKrnp4DnpL7l
+k6Hjga/liYrpmaQNCg0K44O744K544Op44Kk44OJ55S75YOP44Gv5YmK6ZmkDQoNCuKXj+e1
+hOe5lOWbsw0KDQrjg7vmqKnpmZDnrqHnkIbjga/liJ3mnJ/ljJYNCg0K44O76YCA6IG36ICF
+566h55CG44Gv5YmK6ZmkDQoNCuKXj+aXpeeoi+euoeeQhg0KDQrjg7vml6XnqIvlhbHmnInn
+rqHnkIbjga/liYrpmaQNCg0K44O76KiY5b+15pel44Gu566h55CG44Gv5Yid5pyf5YyWDQoN
+CuKXj+aOsuekuuadv+euoeeQhg0KDQrjg7vmjrLnpLrmnb/jga/liJ3mnJ/ljJYNCg0K4peP
+6Zu75a2Q5rG66KOBDQoNCuODu+anmOW8j+OBrjEw56iu6aGe44Gv5q6L44GX44CB5Yid5pyf
+5YyWDQoNCuKXj+OCs+ODn+ODpeODi+ODhuOCow0KDQrjg7vjgrPjg5/jg6Xjg4vjg4bjgqPj
+ga/liJ3mnJ/ljJYNCg0K4peP6Kit5YKZ566h55CGDQoNCuODu+ioreWCmeeuoeeQhuOBruWG
+jeW6puWPlui+vOOAgemajuWxpOani+aIkOS9nOaIkA0KDQril4/jgrfjgrnjg4bjg6ANCg0K
+44O744K344K544OG44Og44Gv5Yid5pyf5YyWDQoNCuKXj+e1seioiA0KDQrjg7vntbHoqIjj
+ga/liJ3mnJ/ljJYNCg0KLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCg0K4piF
+44K/44Kk44Of44Oz44Kw6Kq/5pW05b6M44Gr5a++5b+c77yIM+aciDfml6XlpJXmlrnjgYvj
+gonliYrpmaTvvIkNCg0K44CA4oC75piO5pel44Gu5qmf5Zmo6Zai6YCj44Gu44OG44K544OI
+5a6M5LqG5b6M44Gr5a6f5pa9DQoNCuOAgOOAgOWIpemAlOODoeODvOODq+OBl+OBvuOBmeOA
+gg0KDQrjg7vkurrkuovpgKPmkLrjg4fjg7zjgr/jga7liYrpmaQNCg0K44O75Lq65LqL6YCj
+5pC644OH44O844K/44Gu5pyA5paw44Gu5Y+W6L68DQoNCuODu+ODoeODvOODq+mWoumAo+OB
+ruWJiumZpA0KDQrjg7vlhbHmnInjg6Hjg7zjg6vjg5zjg4Pjgq/jgrnjga7liYrpmaQNCg0K
+44O75YWx5pyJ44Oh44O844Or44Oc44OD44Kv44K544Gu5YaN5bqm5Y+W6L68DQoNCuODu+OD
+oeODvOODquODs+OCsOODquOCueODiOOBruWJiumZpA0KDQrjg7vjg6Hjg7zjg6rjg7PjgrDj
+g6rjgrnjg4jjga7lho3luqblj5bovrwNCg0K44KI44KN44GX44GP44GK6aGY44GE44GE44Gf
+44GX44G+44GZ44CCDQoNCg0KDQoNCiANCg0K
+
+------=_NextPart_001_002A_01D4D4FD.55B18A20
+Content-Type: text/html;
+	charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D<BR>
+<BR>
+ =E6=9C=AC=E3=83=A1=E3=83=BC=E3=83=AB=E3=81=AE=E6=B7=BB=E4=BB=98=E3=83=95=E3=82=A1=E3=82=A4=E3=83=AB=E3=81=AF=E3=83=91=E3=82=B9=E3=83=AF=E3=83=BC=E3=83=89=E4=BB=98=E3=81=8Dzip=E3=83=95=E3=82=A1=E3=82=A4=E3=83=AB=E3=81=AB=E3=81=A6=E6=9A=97=E5=8F=B7=E5=8C=96=E3=81=95=E3=82=8C=E3=81=A6=E3=81=8A=E3=82=8A=E3=81=BE=E3=81=99=E3=80=82<BR>
+ =E3=83=91=E3=82=B9=E3=83=AF=E3=83=BC=E3=83=89=E3=81=AF=E5=88=A5=E3=83=A1=E3=83=BC=E3=83=AB=E3=81=AB=E3=81=A6=E3=81=94=E6=A1=88=E5=86=85=E3=81=84=E3=81=9F=E3=81=97=E3=81=BE=E3=81=99=E3=80=82<BR>
+<BR>
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D<BR>
+<BR>
+<BR>
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" =
+xmlns:o=3D"urn:schemas-microsoft-com:office:office" =
+xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:x=3D"urn:schemas-microsoft-com:office:excel" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" =
+xmlns=3D"http://www.w3.org/TR/REC-html40"><head><meta =
+http-equiv=3DContent-Type content=3D"text/html; charset=3Dutf-8"><meta =
+name=3DGenerator content=3D"Microsoft Word 15 (filtered medium)"><!--[if =
+!mso]><style>v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style><![endif]--><style><!--
+/* Font Definitions */
+@font-face
+	{font-family:"Cambria Math";
+	panose-1:2 4 5 3 5 4 6 3 2 4;}
+@font-face
+	{font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=E3=82=AF;
+	panose-1:2 11 4 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+@font-face
+	{font-family:"=EF=BC=AD=EF=BC=B3 =
+=EF=BC=B0=E3=82=B4=E3=82=B7=E3=83=83=E3=82=AF";
+	panose-1:2 11 6 0 7 2 5 8 2 4;}
+@font-face
+	{font-family:"\@=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=E3=82=AF";
+	panose-1:2 11 4 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:"\@=EF=BC=AD=EF=BC=B3 =
+=EF=BC=B0=E3=82=B4=E3=82=B7=E3=83=83=E3=82=AF";}
+@font-face
+	{font-family:"Meiryo UI";
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:"Malgun Gothic";
+	panose-1:2 11 5 3 2 0 0 2 0 4;}
+@font-face
+	{font-family:"\@Meiryo UI";}
+@font-face
+	{font-family:"\@Malgun Gothic";}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0mm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"=EF=BC=AD=EF=BC=B3 =
+=EF=BC=B0=E3=82=B4=E3=82=B7=E3=83=83=E3=82=AF";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:#0563C1;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:#954F72;
+	text-decoration:underline;}
+p.msonormal0, li.msonormal0, div.msonormal0
+	{mso-style-name:msonormal;
+	margin:0mm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"=EF=BC=AD=EF=BC=B3 =
+=EF=BC=B0=E3=82=B4=E3=82=B7=E3=83=83=E3=82=AF";}
+span.19
+	{mso-style-type:personal-reply;
+	font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=E3=82=AF;
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=E3=82=AF;}
+@page WordSection1
+	{size:612.0pt 792.0pt;
+	margin:99.25pt 30.0mm 30.0mm 30.0mm;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026">
+<v:textbox inset=3D"5.85pt,.7pt,5.85pt,.7pt" />
+</o:shapedefaults></xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]--></head><body lang=3DJA =
+link=3D"#0563C1" vlink=3D"#954F72"><div class=3DWordSection1><p =
+class=3DMsoNormal><span =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'>=E3=82=A4=E3=81=95=E3=82=93<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p class=3DMsoNormal><span =
+lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'><o:p>&nbsp;</o:p></span></p><p class=3DMsoNormal><span =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'>=E3=83=86=E3=82=B9=E3=83=88=E5=AE=9F=E6=96=BD=E3=81=AF=E7=B5=82=
+=E3=82=8F=E3=82=8A=E3=81=BE=E3=81=97=E3=81=9F=E3=81=AE=E3=81=A7=E3=80=81=E3=
+=81=BE=E3=81=9A=E3=81=AF=E5=89=8A=E9=99=A4=E5=AF=BE=E5=BF=9C=E3=82=92=E3=81=
+=8A=E9=A1=98=E3=81=84=E3=81=84=E3=81=9F=E3=81=97=E3=81=BE=E3=81=99=E3=80=82=
+<span lang=3DEN-US><o:p></o:p></span></span></p><p =
+class=3DMsoNormal><span lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'><o:p>&nbsp;</o:p></span></p><p class=3DMsoNormal><span =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'>=E6=8F=90=E4=BE=9B=E6=B8=88=E3=81=BF<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p class=3DMsoNormal><span =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'>=E3=83=BB=E7=AE=A1=E7=90=86=E8=80=85=E6=83=85=E5=A0=B1<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p class=3DMsoNormal><span =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'>=E3=83=BB=E5=B2=A1=E5=B1=B1=E4=BA=A4=E9=80=9A=E3=81=AE=E3=83=9E=
+=E3=82=A4=E3=82=B0=E3=83=AC=E3=83=BC=E3=82=B7=E3=83=A7=E3=83=B3=E3=83=87=E3=
+=83=BC=E3=82=BF<span lang=3DEN-US><o:p></o:p></span></span></p><p =
+class=3DMsoNormal><span lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'><o:p>&nbsp;</o:p></span></p><p class=3DMsoNormal><span =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'>=E6=9C=AA=E6=8F=90=E4=BE=9B<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p class=3DMsoNormal><span =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'>=E3=83=BB<span =
+lang=3DEN-US>RHD</span>=E3=81=AE=E3=83=9E=E3=82=A4=E3=82=B0=E3=83=AC=E3=83=
+=BC=E3=82=B7=E3=83=A7=E3=83=B3=E3=83=87=E3=83=BC=E3=82=BF<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p class=3DMsoNormal><span =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'>=E3=80=80=E3=80=80=E2=86=92=E6=BA=96=E5=82=99=E4=B8=AD=E3=81=AA=
+=E3=81=AE=E3=81=A7=E3=80=81=E4=BB=8A=E3=81=97=E3=81=B0=E3=82=89=E3=81=8F=E3=
+=81=8A=E5=BE=85=E3=81=A1=E3=81=8F=E3=81=A0=E3=81=95=E3=81=84=E3=80=82<spa=
+n lang=3DEN-US><o:p></o:p></span></span></p><p class=3DMsoNormal><span =
+lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'><o:p>&nbsp;</o:p></span></p><p class=3DMsoNormal><span =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'>=E3=82=88=E3=82=8D=E3=81=97=E3=81=8F=E3=81=8A=E9=A1=98=E3=81=84=
+=E3=81=84=E3=81=9F=E3=81=97=E3=81=BE=E3=81=99=E3=80=82<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p class=3DMsoNormal><span =
+lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'><o:p>&nbsp;</o:p></span></p><p class=3DMsoNormal><span =
+lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:=E6=B8=B8=E3=82=B4=E3=82=B7=E3=83=83=
+=E3=82=AF'><o:p>&nbsp;</o:p></span></p><p class=3DMsoNormal><b><span =
+lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:"Calibri",sans-serif'>From:</span><=
+/b><span lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:"Calibri",sans-serif'> =
+</span><span style=3D'font-size:11.0pt;font-family:"Malgun =
+Gothic",sans-serif'>=EC=9D=B4=EA=B2=BD=EC=95=84</span><span lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:"Calibri",sans-serif'> =
+&lt;yika@kaoni.com&gt; <br><b>Sent:</b> Thursday, March 7, 2019 11:57 =
+AM<br><b>To:</b> </span><span =
+style=3D'font-size:11.0pt'>=E4=BA=95=E4=B8=8A=E7=AB=9C=E4=B8=80</span><sp=
+an lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:"Calibri",sans-serif'> =
+&lt;inoryu@ryobi-sol.co.jp&gt;; </span><span =
+style=3D'font-size:11.0pt'>=E3=82=AB=E3=82=AA=E3=83=B3=E3=82=A2=E3=82=A4=EF=
+=BC=89=E3=82=B8=E3=83=A7=E3=83=B3</span><span =
+style=3D'font-size:11.0pt;font-family:"Calibri",sans-serif'> =
+</span><span =
+style=3D'font-size:11.0pt'>=E3=82=A4=E3=83=AB=E3=82=B0=E3=82=A9=E3=83=B3<=
+/span><span lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:"Calibri",sans-serif'> =
+&lt;ikjun@kaoni.com&gt;<br><b>Cc:</b> </span><span =
+style=3D'font-size:11.0pt'>=E5=B0=8F=E5=B7=9D=E3=80=80=E8=B2=B4=E5=AD=90<=
+/span><span lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:"Calibri",sans-serif'> =
+&lt;takako@ryobi-sol.co.jp&gt;; </span><span =
+style=3D'font-size:11.0pt'>=E5=AE=89=E7=94=B0=E3=80=80=E7=BE=8E=E4=BD=B3<=
+/span><span lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:"Calibri",sans-serif'> =
+&lt;noriyasu@ryobi-sol.co.jp&gt;; RSOL)</span><span =
+style=3D'font-size:11.0pt'>=E5=B2=A1=E9=83=A8=E3=80=80=E6=B3=B0=E4=B9=8B<=
+/span><span lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:"Calibri",sans-serif'> =
+&lt;okabe@ryobi-sol.co.jp&gt;; RSOL)</span><span =
+style=3D'font-size:11.0pt'>=E4=BA=BA=E8=A6=8B</span><span =
+style=3D'font-size:11.0pt;font-family:"Calibri",sans-serif'> =
+</span><span style=3D'font-size:11.0pt'>=E6=88=90=E5=BD=A6</span><span =
+lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:"Calibri",sans-serif'> =
+&lt;hitomi@ryobi-sol.co.jp&gt;<br><b>Subject:</b> </span><span =
+style=3D'font-size:11.0pt'>=E8=BF=94=E4=BF=A1</span><span lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:"Calibri",sans-serif'>: =
+R-GW</span><span =
+style=3D'font-size:11.0pt'>=EF=BC=9A=E6=9C=AC=E7=95=AA=E7=92=B0=E5=A2=83=E3=
+=81=AE=E3=83=87=E3=83=BC=E3=82=BF=E5=89=8A=E9=99=A4=E4=BE=9D=E9=A0=BC</sp=
+an><span lang=3DEN-US =
+style=3D'font-size:11.0pt;font-family:"Calibri",sans-serif'><o:p></o:p></=
+span></p><p class=3DMsoNormal><span =
+lang=3DEN-US><o:p>&nbsp;</o:p></span></p><div><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E4=BA=95=E4=B8=8A=E3=81=95=E3=82=93<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=81=8A=E4=B8=96=E8=A9=B1=E3=81=AB=E3=81=AA=E3=82=8A=E3=81=BE=E3=81=
+=99=E3=80=82<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+lang=3DEN-US style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'><o:p>&nbsp;</o:p></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=81=94=E6=8C=87=E7=A4=BA=E3=81=AE=E3=81=86=E3=81=A1=E3=82=82=E3=81=
+=86=E4=B8=80=E3=81=A4=E3=81=8A=E4=BC=BA=E3=81=84=E3=81=97=E3=81=9F=E3=81=84=
+=E3=81=AE=E3=81=8C=E3=81=82=E3=82=8A=E3=81=BE=E3=81=99=E3=80=82<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span lang=3DEN-US =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'><o:p>&nbsp;</o:p></span></p><p><span lang=3DEN-US =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'><o:p>&nbsp;</o:p></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=EF=BC=9E=EF=BC=9E=E2=98=85=E3=82=BF=E3=82=A4=E3=83=9F=E3=83=B3=E3=82=
+=B0=E8=AA=BF=E6=95=B4=E5=BE=8C=E3=81=AB=E5=AF=BE=E5=BF=9C=EF=BC=88<span =
+lang=3DEN-US>3</span>=E6=9C=88<span =
+lang=3DEN-US>7</span>=E6=97=A5=E5=A4=95=E6=96=B9=E3=81=8B=E3=82=89=E5=89=8A=
+=E9=99=A4=EF=BC=89<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=80=80=E3=80=80=E3=80=80=E2=80=BB=E6=98=8E=E6=97=A5=E3=81=AE=E6=A9=
+=9F=E5=99=A8=E9=96=A2=E9=80=A3=E3=81=AE=E3=83=86=E3=82=B9=E3=83=88=E5=AE=8C=
+=E4=BA=86=E5=BE=8C=E3=81=AB=E5=AE=9F=E6=96=BD<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=80=80=E3=80=80=E3=80=80=E5=88=A5=E9=80=94=E3=83=A1=E3=83=BC=E3=83=
+=AB=E3=81=97=E3=81=BE=E3=81=99=E3=80=82<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span lang=3DEN-US =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'><o:p>&nbsp;</o:p></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=80=80=E2=9E=A1=E3=80=80=E6=9C=AC=E6=97=A5=E3=81=AE=E5=8D=88=E5=89=
+=8D=E4=B8=AD=E3=83=87=E3=83=BC=E3=82=BF=E3=82=92=E5=88=9D=E6=9C=9F=E5=8C=96=
+=E3=81=99=E3=82=8B=E3=81=A8=E6=A9=9F=E5=99=A8=E9=96=A2=E9=80=A3=E3=81=AE=E3=
+=83=86=E3=82=B9=E3=83=88=E3=81=8C=E3=81=A7=E3=81=8D=E3=81=AA=E3=81=8F=E3=81=
+=AA=E3=82=8B=E3=81=9D=E3=81=86=E3=81=A7=E3=81=99=E3=80=82<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=80=80=E3=80=80=E3=80=80=E3=83=87=E3=83=BC=E3=82=BF=E3=81=AF=E3=83=
+=91=E3=83=BC=E3=83=84=E3=81=94=E3=81=A8=E3=81=AB=E5=89=8A=E9=99=A4=E3=81=A7=
+=E3=81=AF=E3=81=AA=E3=81=8F=E3=81=A6=E5=88=9D=E6=9C=9F=E5=8C=96=E3=82=92=E8=
+=A1=8C=E3=81=A3=E3=81=A6=E3=81=8B=E3=82=89=E5=BF=85=E8=A6=81=E3=81=AA=E3=83=
+=87=E3=83=BC=E3=82=BF=E3=82=92=E5=86=8D=E5=8F=96=E3=82=8A=E8=BE=BC=E3=81=BF=
+=E3=81=A8=E3=81=84=E3=81=86=E6=89=8B=E9=A0=86=E3=81=A7=E8=A1=8C=E3=82=8F=E3=
+=82=8C=E3=82=8B=E3=81=AE=E3=81=A0=E3=81=9D=E3=81=86=E3=81=A7=E3=81=99=E3=80=
+=82<span lang=3DEN-US><o:p></o:p></span></span></p><div =
+id=3DMailSignSent><div><p><span lang=3DEN-US =
+style=3D'font-size:10.0pt;font-family:"Meiryo UI"'>&nbsp;</span><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=80=80=E3=80=80=E3=81=A7=E3=81=99=E3=81=AE=E3=81=A7=E3=80=81=E6=A9=
+=9F=E5=99=A8=E9=96=A2=E9=80=A3=E3=81=AE=E3=83=86=E3=82=B9=E3=83=88=E3=81=8C=
+=E7=B5=82=E3=82=8F=E3=82=89=E3=82=8C=E3=81=A6=E3=81=8B=E3=82=89<span =
+lang=3DEN-US>DB</span>=E3=82=92=E5=88=9D=E6=9C=9F=E5=8C=96=E3=81=97=E3=81=
+=AA=E3=81=91=E3=82=8C=E3=81=B0=E3=81=AA=E3=82=89=E3=81=AA=E3=81=84=E3=81=A8=
+=E3=81=84=E3=81=86=E5=A0=B1=E5=91=8A=E3=82=92=E5=8F=97=E3=81=91=E3=81=BE=E3=
+=81=97=E3=81=9F=E3=80=82<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span lang=3DEN-US =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'><o:p>&nbsp;</o:p></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=81=94=E7=A2=BA=E8=AA=8D=E3=82=88=E3=82=8D=E3=81=97=E3=81=8F=E3=81=
+=8A=E9=A1=98=E3=81=84=E8=87=B4=E3=81=97=E3=81=BE=E3=81=99=E3=80=82<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span lang=3DEN-US =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'><o:p>&nbsp;</o:p></span></p><p><span lang=3DEN-US =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'><o:p>&nbsp;</o:p></span></p><p><span lang=3DEN-US =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'><o:p>&nbsp;</o:p></span></p><p><span lang=3DEN-US =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'><o:p>&nbsp;</o:p></span></p><p><span lang=3DEN-US =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'><o:p>&nbsp;</o:p></span></p><p><span lang=3DEN-US =
+style=3D'font-size:10.5pt;font-family:"Malgun =
+Gothic",sans-serif'>&nbsp;<o:p></o:p></span></p><p><span lang=3DEN-US =
+style=3D'font-size:10.5pt;font-family:"Malgun =
+Gothic",sans-serif'>&nbsp;<o:p></o:p></span></p></div></div><div =
+class=3DMsoNormal align=3Dcenter style=3D'text-align:center'><span =
+lang=3DEN-US style=3D'font-size:10.0pt;font-family:"Meiryo UI"'><hr =
+size=3D2 width=3D"100%" align=3Dcenter></span></div><p><b><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E5=B7=AE=E5=87=BA=E4=BA=BA<span lang=3DEN-US> : =
+</span></span></b><span style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E4=BA=95=E4=B8=8A=E7=AB=9C=E4=B8=80<span lang=3DEN-US> =
+&lt;inoryu@ryobi-sol.co.jp&gt;<o:p></o:p></span></span></p><p><b><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E9=80=81=E4=BF=A1=E6=97=A5=E6=99=82<span lang=3DEN-US> : =
+</span></span></b><span lang=3DEN-US =
+style=3D'font-size:10.0pt;font-family:"Meiryo UI"'>2019-03-06 20:42:22 ( =
++09:00 )<o:p></o:p></span></p><p><b><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E5=AE=9B=E5=85=88<span lang=3DEN-US> : </span></span></b><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=82=AB=E3=82=AA=E3=83=B3=E3=82=A2=E3=82=A4=EF=BC=89=E3=82=A4 =
+=E3=82=AD=E3=83=A7=E3=83=B3=E3=82=A2<span lang=3DEN-US> =
+&lt;yika@kaoni.com&gt;,</span>=E3=82=AB=E3=82=AA=E3=83=B3=E3=82=A2=E3=82=A4=
+=EF=BC=89=E3=82=B8=E3=83=A7=E3=83=B3 =
+=E3=82=A4=E3=83=AB=E3=82=B0=E3=82=A9=E3=83=B3<span lang=3DEN-US> =
+&lt;ikjun@kaoni.com&gt;<o:p></o:p></span></span></p><p><b><span =
+lang=3DEN-US style=3D'font-size:10.0pt;font-family:"Meiryo UI"'>CC : =
+</span></b><span style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E5=B0=8F=E5=B7=9D=E3=80=80=E8=B2=B4=E5=AD=90<span lang=3DEN-US> =
+&lt;takako@ryobi-sol.co.jp&gt;,</span>=E5=AE=89=E7=94=B0=E3=80=80=E7=BE=8E=
+=E4=BD=B3<span lang=3DEN-US> =
+&lt;noriyasu@ryobi-sol.co.jp&gt;,RSOL)</span>=E5=B2=A1=E9=83=A8=E3=80=80=E6=
+=B3=B0=E4=B9=8B<span lang=3DEN-US> =
+&lt;okabe@ryobi-sol.co.jp&gt;,RSOL)</span>=E4=BA=BA=E8=A6=8B =
+=E6=88=90=E5=BD=A6<span lang=3DEN-US> =
+&lt;hitomi@ryobi-sol.co.jp&gt;,</span>=E4=BA=95=E4=B8=8A =
+=E7=AB=9C=E4=B8=80<span lang=3DEN-US> =
+&lt;inoryu@ryobi-sol.co.jp&gt;<o:p></o:p></span></span></p><p><b><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E4=BB=B6=E5=90=8D<span lang=3DEN-US> : </span></span></b><span =
+lang=3DEN-US style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>R-GW</span><span style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=EF=BC=9A=E6=9C=AC=E7=95=AA=E7=92=B0=E5=A2=83=E3=81=AE=E3=83=87=E3=83=
+=BC=E3=82=BF=E5=89=8A=E9=99=A4=E4=BE=9D=E9=A0=BC<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p class=3DMsoNormal =
+style=3D'margin-bottom:12.0pt'><span lang=3DEN-US =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'><o:p>&nbsp;</o:p></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=82=B8=E3=83=A7=E3=83=B3=E3=81=95=E3=82=93=E3=80=81=E3=82=A4=E3=81=
+=95=E3=82=93<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E6=AC=A1=E3=81=AE=E5=86=85=E5=AE=B9=E3=81=A7=E3=81=8A=E9=A1=98=E3=81=
+=84=E3=81=97=E3=81=9F=E3=81=84=E3=81=A8=E8=80=83=E3=81=88=E3=81=A6=E3=81=8A=
+=E3=82=8A=E3=81=BE=E3=81=99=E3=80=82<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E5=89=8A=E9=99=A4=E3=81=97=E3=81=A6=E3=81=AF=E3=81=BE=E3=81=9A=E3=81=
+=84=E3=83=87=E3=83=BC=E3=82=BF=E3=80=81=E5=89=8A=E9=99=A4=E3=81=97=E3=81=AA=
+=E3=81=84=E3=81=A8=E3=81=84=E3=81=91=E3=81=AA=E3=81=84=E3=83=87=E3=83=BC=E3=
+=82=BF=E3=81=8C<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=81=82=E3=82=8A=E3=81=BE=E3=81=97=E3=81=9F=E3=82=89=E3=81=94=E9=80=
+=A3=E7=B5=A1=E3=81=8F=E3=81=A0=E3=81=95=E3=81=84=E3=80=82<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E2=98=85=E3=83=A6=E3=83=BC=E3=82=B6=E3=83=BC=E6=A9=9F=E8=83=BD=EF=BC=
+=88<span lang=3DEN-US>3</span>=E6=9C=88<span =
+lang=3DEN-US>7</span>=E6=97=A5<span =
+lang=3DEN-US>AM</span>=E3=81=8B=E3=82=89=E5=89=8A=E9=99=A4=EF=BC=89<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E4=BB=8A=E6=9C=88=E3=81=AE=E5=84=AA=E7=A7=80=E7=A4=BE=E5=93=
+=A1<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=80=80=E7=94=BB=E5=83=8F=E5=B7=AE=E3=81=97=E6=9B=BF=E3=81=88<span=
+ lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E3=83=9E=E3=83=8B=E3=83=A5=E3=82=A2=E3=83=AB=E3=81=AE=E6=9C=
+=80=E6=96=B0=E5=8C=96<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E3=82=A2=E3=83=89=E3=83=AC=E3=82=B9=E5=B8=B3=E3=81=AE=E5=89=
+=8A=E9=99=A4<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E6=97=A5=E7=A8=8B=E7=AE=A1=E7=90=86=E3=81=AF=E5=89=8A=E9=99=
+=A4<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=80=80=E6=97=A5=E7=A8=8B=E7=AE=A1=E7=90=86=E3=81=AE=E5=86=8D=E5=BA=
+=A6=E5=8F=96=E8=BE=BC<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo UI"'>=E3=83=BB<span =
+lang=3DEN-US>TODO</span>=E3=81=AF=E5=89=8A=E9=99=A4<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E9=9B=BB=E5=AD=90=E6=B1=BA=E8=A3=81=E3=81=AF=E5=89=8A=E9=99=
+=A4<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=80=80=E6=A7=98=E5=BC=8F=E3=81=AE<span =
+lang=3DEN-US>10</span>=E7=A8=AE=E9=A1=9E=E3=81=AF=E6=AE=8B=E3=81=99<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E6=8E=B2=E7=A4=BA=E6=9D=BF=E3=81=AF=E5=89=8A=E9=99=A4<span=
+ lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E9=9B=BB=E5=AD=90=E3=82=A2=E3=83=B3=E3=82=B1=E3=83=BC=E3=83=
+=88=E3=81=AF=E5=89=8A=E9=99=A4<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E3=82=B3=E3=83=9F=E3=83=A5=E3=83=8B=E3=83=86=E3=82=A3=E3=81=
+=AF=E5=89=8A=E9=99=A4<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E8=A8=AD=E5=82=99=E7=AE=A1=E7=90=86=E3=81=AF=E5=89=8A=E9=99=
+=A4<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=80=80=E8=A8=AD=E5=82=99=E7=AE=A1=E7=90=86=E3=81=AE=E5=86=8D=E5=BA=
+=A6=E5=8F=96=E8=BE=BC=E3=80=81=E9=9A=8E=E5=B1=A4=E6=A7=8B=E6=88=90=E4=BD=9C=
+=E6=88=90<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E5=9B=9E=E8=A6=A7=E6=9D=BF=E3=81=AF=E5=89=8A=E9=99=A4<span=
+ lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E3=83=81=E3=83=A3=E3=83=83=E3=83=88=E3=81=AF=E5=89=8A=E9=99=
+=A4<span lang=3DEN-US><o:p></o:p></span></span></p><p><span lang=3DEN-US =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>--------------------------------<o:p></o:p></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E2=98=85=E7=AE=A1=E7=90=86=E8=80=85=E6=A9=9F=E8=83=BD=EF=BC=88<span=
+ lang=3DEN-US>3</span>=E6=9C=88<span lang=3DEN-US>7</span>=E6=97=A5<span =
+lang=3DEN-US>AM</span>=E3=81=8B=E3=82=89=E5=89=8A=E9=99=A4=EF=BC=89<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E2=97=8F=E5=88=9D=E6=9C=9F=E7=94=BB=E9=9D=A2<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo UI"'>=E3=83=BB<span =
+lang=3DEN-US>Quick Link</span>=E3=81=AF=E5=89=8A=E9=99=A4<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo UI"'>=E3=83=BB<span =
+lang=3DEN-US>Quick Poll</span>=E3=81=AF=E5=89=8A=E9=99=A4<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E3=83=9D=E3=83=83=E3=83=97=E3=82=A2=E3=83=83=E3=83=97=E3=81=
+=8A=E7=9F=A5=E3=82=89=E3=81=9B=E3=81=AF=E5=89=8A=E9=99=A4<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E4=BB=8A=E6=9C=88=E3=81=AE=E5=84=AA=E7=A7=80=E7=A4=BE=E5=93=
+=A1=E3=81=AF=E5=89=8A=E9=99=A4<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E3=82=B9=E3=83=A9=E3=82=A4=E3=83=89=E7=94=BB=E5=83=8F=E3=81=
+=AF=E5=89=8A=E9=99=A4<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E2=97=8F=E7=B5=84=E7=B9=94=E5=9B=B3<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E6=A8=A9=E9=99=90=E7=AE=A1=E7=90=86=E3=81=AF=E5=88=9D=E6=9C=
+=9F=E5=8C=96<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E9=80=80=E8=81=B7=E8=80=85=E7=AE=A1=E7=90=86=E3=81=AF=E5=89=
+=8A=E9=99=A4<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E2=97=8F=E6=97=A5=E7=A8=8B=E7=AE=A1=E7=90=86<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E6=97=A5=E7=A8=8B=E5=85=B1=E6=9C=89=E7=AE=A1=E7=90=86=E3=81=
+=AF=E5=89=8A=E9=99=A4<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E8=A8=98=E5=BF=B5=E6=97=A5=E3=81=AE=E7=AE=A1=E7=90=86=E3=81=
+=AF=E5=88=9D=E6=9C=9F=E5=8C=96<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E2=97=8F=E6=8E=B2=E7=A4=BA=E6=9D=BF=E7=AE=A1=E7=90=86<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E6=8E=B2=E7=A4=BA=E6=9D=BF=E3=81=AF=E5=88=9D=E6=9C=9F=E5=8C=
+=96<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E2=97=8F=E9=9B=BB=E5=AD=90=E6=B1=BA=E8=A3=81<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E6=A7=98=E5=BC=8F=E3=81=AE<span =
+lang=3DEN-US>10</span>=E7=A8=AE=E9=A1=9E=E3=81=AF=E6=AE=8B=E3=81=97=E3=80=
+=81=E5=88=9D=E6=9C=9F=E5=8C=96<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E2=97=8F=E3=82=B3=E3=83=9F=E3=83=A5=E3=83=8B=E3=83=86=E3=82=A3<span=
+ lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E3=82=B3=E3=83=9F=E3=83=A5=E3=83=8B=E3=83=86=E3=82=A3=E3=81=
+=AF=E5=88=9D=E6=9C=9F=E5=8C=96<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E2=97=8F=E8=A8=AD=E5=82=99=E7=AE=A1=E7=90=86<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E8=A8=AD=E5=82=99=E7=AE=A1=E7=90=86=E3=81=AE=E5=86=8D=E5=BA=
+=A6=E5=8F=96=E8=BE=BC=E3=80=81=E9=9A=8E=E5=B1=A4=E6=A7=8B=E6=88=90=E4=BD=9C=
+=E6=88=90<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E2=97=8F=E3=82=B7=E3=82=B9=E3=83=86=E3=83=A0<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E3=82=B7=E3=82=B9=E3=83=86=E3=83=A0=E3=81=AF=E5=88=9D=E6=9C=
+=9F=E5=8C=96<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E2=97=8F=E7=B5=B1=E8=A8=88<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E7=B5=B1=E8=A8=88=E3=81=AF=E5=88=9D=E6=9C=9F=E5=8C=96<span=
+ lang=3DEN-US><o:p></o:p></span></span></p><p><span lang=3DEN-US =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>--------------------------------<o:p></o:p></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E2=98=85=E3=82=BF=E3=82=A4=E3=83=9F=E3=83=B3=E3=82=B0=E8=AA=BF=E6=95=
+=B4=E5=BE=8C=E3=81=AB=E5=AF=BE=E5=BF=9C=EF=BC=88<span =
+lang=3DEN-US>3</span>=E6=9C=88<span =
+lang=3DEN-US>7</span>=E6=97=A5=E5=A4=95=E6=96=B9=E3=81=8B=E3=82=89=E5=89=8A=
+=E9=99=A4=EF=BC=89<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=80=80=E2=80=BB=E6=98=8E=E6=97=A5=E3=81=AE=E6=A9=9F=E5=99=A8=E9=96=
+=A2=E9=80=A3=E3=81=AE=E3=83=86=E3=82=B9=E3=83=88=E5=AE=8C=E4=BA=86=E5=BE=8C=
+=E3=81=AB=E5=AE=9F=E6=96=BD<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=80=80=E3=80=80=E5=88=A5=E9=80=94=E3=83=A1=E3=83=BC=E3=83=AB=E3=81=
+=97=E3=81=BE=E3=81=99=E3=80=82<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E4=BA=BA=E4=BA=8B=E9=80=A3=E6=90=BA=E3=83=87=E3=83=BC=E3=82=
+=BF=E3=81=AE=E5=89=8A=E9=99=A4<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E4=BA=BA=E4=BA=8B=E9=80=A3=E6=90=BA=E3=83=87=E3=83=BC=E3=82=
+=BF=E3=81=AE=E6=9C=80=E6=96=B0=E3=81=AE=E5=8F=96=E8=BE=BC<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E3=83=A1=E3=83=BC=E3=83=AB=E9=96=A2=E9=80=A3=E3=81=AE=E5=89=
+=8A=E9=99=A4<span lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E5=85=B1=E6=9C=89=E3=83=A1=E3=83=BC=E3=83=AB=E3=83=9C=E3=83=
+=83=E3=82=AF=E3=82=B9=E3=81=AE=E5=89=8A=E9=99=A4<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E5=85=B1=E6=9C=89=E3=83=A1=E3=83=BC=E3=83=AB=E3=83=9C=E3=83=
+=83=E3=82=AF=E3=82=B9=E3=81=AE=E5=86=8D=E5=BA=A6=E5=8F=96=E8=BE=BC<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E3=83=A1=E3=83=BC=E3=83=AA=E3=83=B3=E3=82=B0=E3=83=AA=E3=82=
+=B9=E3=83=88=E3=81=AE=E5=89=8A=E9=99=A4<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=83=BB=E3=83=A1=E3=83=BC=E3=83=AA=E3=83=B3=E3=82=B0=E3=83=AA=E3=82=
+=B9=E3=83=88=E3=81=AE=E5=86=8D=E5=BA=A6=E5=8F=96=E8=BE=BC<span =
+lang=3DEN-US><o:p></o:p></span></span></p><p><span =
+style=3D'font-size:10.0pt;font-family:"Meiryo =
+UI"'>=E3=82=88=E3=82=8D=E3=81=97=E3=81=8F=E3=81=8A=E9=A1=98=E3=81=84=E3=81=
+=84=E3=81=9F=E3=81=97=E3=81=BE=E3=81=99=E3=80=82<span =
+lang=3DEN-US><o:p></o:p></span></span></p></div><table =
+class=3DMsoNormalTable border=3D0 cellpadding=3D0><tr><td =
+style=3D'padding:.75pt .75pt .75pt .75pt'><p class=3DMsoNormal><span =
+lang=3DEN-US style=3D'border:solid windowtext 1.0pt;padding:0mm'><img =
+width=3D100 height=3D100 style=3D'width:1.0416in;height:1.0416in' =
+id=3D"_x0000_i1026" src=3D"cid:~WRD000.jpg" =
+alt=3D"=E3=82=A4=E3=83=A1=E3=83=BC=E3=82=B8=E3=81=AF=E5=B7=AE=E5=87=BA=E4=
+=BA=BA=E3=81=AB=E3=82=88=E3=81=A3=E3=81=A6=E5=89=8A=E9=99=A4=E3=81=95=E3=82=
+=8C=E3=81=BE=E3=81=97=E3=81=9F=E3=80=82"></span><span =
+lang=3DEN-US><o:p></o:p></span></p></td></tr></table><p =
+class=3DMsoNormal><span =
+lang=3DEN-US><o:p>&nbsp;</o:p></span></p></div></body></html>
+------=_NextPart_001_002A_01D4D4FD.55B18A20--
+
+------=_NextPart_000_0029_01D4D4FD.55B18A20
+Content-Type: application/zip;
+ name="~WRD000.zip"
+Content-Transfer-Encoding: base64
+Content-Disposition: inline;
+ filename="~WRD000.zip"
+
+UEsDBBQADwAIACt/Z07Y9R++0AEAADcDAAALAAAAfldSRDAwMC5qcGd5oiDE/RS9/PrGSoHj
+sJlSmybpAVPF5WzBKxEkWaHvaXXrCXlThGUXspdsM0UsPNgjS+NGehvwlLy/h1bhGVvUYLkn
+xitGZrOboDbDLJ8I5ItX64B5ntMACz2ceGOHuJ5yC8zzIURBB+nx7ZmdD1mv+u1lfaOueN97
+COBU87et6kLYzNQ96jo8QJF1HXV0AuT5iwAaLX9hbQzYZ52aDg0mrQxV0CuDNt1h2VRhLKxh
+zfg0bM79JTCRmpi/eMPWb9f7E9NoTPA5e2GkFeUKC8pEWYkSgHoLuN5w6Wje+KLBEoraX5gv
+ALHYv+YaY/5woHLq3aCTNkwinR/5+FM5blgBDyhNc9X9La2IEMZ77c6PMz3omb1NzZemNmSp
+o6sg0yJOomOWs3KNyiXfud82Z+d0UhXxuGLwsH9HoEkRp6ERRnDy1n7Tn9r+l4A0dWmoSdKu
+KT1MRfh5odsH21sn7Itgr860LPKjJeshFXtp5cLw3WenB2OWbxodhToqWvTa1va+JBdBgkrb
+eWrgeId7Pf5+tvPXUBEjbmxKARoGQbRN/6cA2Sk5i5HDusch2nF/Eyr11vOoPnoNdZEB2d9h
+l6JUKEoGkau95hkbZxMCIFaXzFBLBwjY9R++0AEAADcDAABQSwECFAAUAA8ACAArf2dO2PUf
+vtABAAA3AwAACwAAAAAAAAAAAAAAAAAAAAAAfldSRDAwMC5qcGdQSwUGAAAAAAEAAQA5AAAA
+CQIAAAAA
+------=_NextPart_000_0029_01D4D4FD.55B18A20--
+
+
+

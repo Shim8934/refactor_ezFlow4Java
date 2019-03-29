@@ -15,6 +15,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezCircular/ListView_list.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezCircular/PreviewItem.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
@@ -55,6 +56,11 @@
 		        document.getElementById("divList").style.height = height + "px";
 		        getSearchList_after(loadXMLString("${listHeader}"));
 		    }
+		    
+		    window.onresize = function () {
+	            var height = parseInt(document.documentElement.clientHeight - 320);
+	            Window_resize2();
+	        };
 			
 		    $(function () {
 		        $("#Sdatepicker").datepicker({
@@ -555,7 +561,7 @@
 			}
 		</script>
 	</head>
-	<body class="mainbody"> 
+	<body class="mainbody" style="overflow:hidden;"> 
 		<form method="post"> 
 			<h1><spring:message code='ezCircular.t8' /></h1> 
 		  	<table style="width:100%" class="content">  
@@ -620,7 +626,7 @@
 		  	</table> --%>
 		</form>
 		<span id="MailListRayer" style="border: 0px solid blue; width: 100%; height: 100%; vertical-align: top; overflow: hidden; display: inline-block;">
-	        <div style="width:100%; overflow:AUTO;" id="divList">
+	        <div style="width:100%; overflow-x:auto; overflow-y:hidden;" id="divList">
 	             <div id="lvBoardList"></div> 
 	        </div>
 	        <div id="tblPageRayer" style="text-align:center"></div>

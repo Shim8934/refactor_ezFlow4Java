@@ -87,6 +87,11 @@ public interface EzCommonService {
 	public void createWebfolderToken() throws Exception;
 
 	public void addUserMasterPasswordUpdateDT() throws Exception;
+	
+	public void addUserMasterMailBoxQuota() throws Exception;
 
+	public void addJournalFormDelFlag() throws Exception;
+
+	public void updateListOptionData() throws Exception;
 }
 

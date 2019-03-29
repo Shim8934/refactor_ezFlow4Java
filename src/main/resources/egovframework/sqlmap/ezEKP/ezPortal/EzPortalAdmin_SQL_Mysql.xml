@@ -2281,7 +2281,58 @@
       			( #v_pUID#, #v_pPAGEUID#, #v_pOWNERPAGEUID#, #v_pCREATORID#, #v_pUSERNAME#, #v_pCHANGEFLAG#, #v_pUSERPAGEUID#, #tenantID# )
 		]]>
 	</insert>
-
+	
+	<select id="EzPortalAdminDAO.getBeforeUsedPage" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				uid_
+			FROM
+				TBL_TOPMENU_GENERAL
+			WHERE
+				lang = ( SELECT A.LANG FROM TBL_TOPMENU_GENERAL A WHERE A.UID_ = #uID# AND A.companyid = #companyID# AND A.tenant_id = #tenantId# )
+			AND
+				useflag = 'Y'
+			AND
+				tenant_id = #tenantId#
+			AND
+				companyid = #companyID#
+		]]>
+	</select>
+	<select id="EzPortalAdminDAO.getThemeUID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT 
+				THEMEUID
+			FROM
+				TBL_TOPMENU_GENERAL
+			WHERE
+				lang = ( SELECT A.LANG FROM TBL_TOPMENU_GENERAL A WHERE A.UID_ = #uID# AND A.companyid = #companyID# AND A.tenant_id = #tenantId# )
+			AND
+				UID_ = #uID#
+			AND
+				tenant_id = #tenantId#
+			AND
+				companyid = #companyID#
+		]]>
+	</select>
+	
+	<update id="EzPortalAdminDAO.updateNotUsePage" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_TOPMENU_GENERAL
+			SET
+				USEFLAG = NULL
+			WHERE
+				uid_ = #uID#
+			AND
+				tenant_id = #tenantId#
+			AND
+				companyid = #companyID#
+			AND
+				USEFLAG is not null
+			AND
+				THEMEUID = #themeUID#
+		]]>
+	</update>
 </sqlMap>
 
 

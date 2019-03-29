@@ -41,6 +41,8 @@
 				*/
 				clearTimeout(timer);
 				timer = setTimeout(resizeMenuTab, delay);
+				
+				resizeIframe(document.getElementById("FBoard_ifrm"));
 			}
 			
 	        window.onload = function () {
@@ -134,21 +136,21 @@
 	                        _span.setAttribute("name", "FBoard_div");
 	                        _span.setAttribute("DATA1", BoardId);
 	                        
+	                        /* 2019-03-29 홍승비 - 새게시물 다국어 메세지 수정 */
 	                        if (BoardId == "{FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF}") {
-	                        	BoardName = "<spring:message code='ezBoard.t480'/>";
-	                        	BoardName2 = "<spring:message code='ezBoard.hyj09'/>";
-	                        }
-
-	                        if (userLang == "1")
-	                            _span.setAttribute("DATA2", BoardName);
-	                        else
-	                            _span.setAttribute("DATA2", BoardName2);
+								_span.setAttribute("DATA2", "<spring:message code='ezBoard.t480'/>");
+								_span.innerHTML = "<spring:message code='ezBoard.t480'/>";
+                        	} else {
+		                        if (userLang == "1") { // primary값에 따라 다국어 설정
+									_span.setAttribute("DATA2", BoardName);
+									_span.innerHTML = BoardName;
+		                        } else {
+		                            _span.setAttribute("DATA2", BoardName2);
+		                            _span.innerHTML = BoardName2;
+								}
+                        	}
 	                        _span.setAttribute("DATA5", BoardType);
-	                        if (userLang == "1")
-	                            _span.innerHTML = BoardName;
-	                        else
-	                            _span.innerHTML = BoardName2;
-	
+	                        
 	                        _p.appendChild(_span);
 	                        document.getElementById("tab1").appendChild(_p);
 	
@@ -369,6 +371,16 @@
 	                }
 	            }
 	        }
+	        
+	        /* 2019-01-31 홍승비 - 즐겨찾기 > 권한설정 화면 리사이즈 시 스크롤 발생 높이 조정 */
+	        function resizeIframe(obj) {
+		        if (obj.contentWindow.location.href.indexOf("/ezBoard/boardACL.do") > -1) {
+		        	obj.style.height = (document.documentElement.clientHeight - 85) + "px";
+		        } else {
+		        	obj.style.height = "100%";
+		        }
+	        }
+	        
 	    </script>
 	</head>
 	<!-- <body class="mainbody" style="height: 89%;"> -->
@@ -379,7 +391,7 @@
 		        <div class="portlet_tabpart01_top" id="tab1"></div>
 		    </div>
 		</div>    
-	    <iframe id="FBoard_ifrm" style="width: 100%; height: 100%;" frameborder="0"></iframe>
+	    <iframe id="FBoard_ifrm" style="width: 100%; height: 100%;" onload="resizeIframe(this)" frameborder="0"></iframe>
 	</body>
 	<input type="hidden" id="curBoardID" namd="curBoardID" value=""/>
 </html>

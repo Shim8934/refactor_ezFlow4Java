@@ -252,7 +252,7 @@ function CheckOpinionExist() {
             btn_OpinionAdd.textContent = strLang389;
         }
         else {
-        	document.getElementById("bbtn_OpinionCancel").style.display = "";
+//        	document.getElementById("bbtn_OpinionCancel").style.display = "";
             for (var i = 0 ; i < pTotalRowsLen ; i++) {
                 if (pUserID == trim_Cross(GetAttribute(pTotalRows[i], "DATA2"))) {
                 	document.getElementById("btn_OpinionAdd").textContent = strLang390;
@@ -586,12 +586,25 @@ function deleteOpinion(pSelectedRow) {
                 var pInformationContent = "" + strLang406 + "";
                 var Rtnval = OpenInformationUI2(pInformationContent, deleteOpinion_Complete);
                 if (Rtnval) {
-                    var selIdx = GetAttribute(tr, "id");
-                    OpinionList.DeleteRow(selIdx);
-                    document.getElementById("txt_OpinionContent").value = "";
-                    document.getElementById("btn_OpinionAdd").textContent = strLang389;
-                    document.getElementById("btn_OpinionCancel").textContent = strLang10;
-                    OpinionAddFlag = 0;
+	                var selIdx = GetAttribute(tr, "id");
+	                OpinionList.DeleteRow(selIdx);
+	                if (OpinionList.GetRowCount() == 0) {
+	                	var objTr = document.createElement("TR");
+	                	objTr.setAttribute("id", "OpinionList_TR_noItems");
+	                	var oText = document.createTextNode(strLang944);
+	                	var objTd = document.createElement("TD");
+	                	objTd.align = "center";
+	                	objTd.setAttribute("colSpan", 4);
+	                	objTd.appendChild(oText);
+	                	objTr.appendChild(objTd);
+	                	document.getElementById("OpinionList").getElementsByTagName("tbody")[0].appendChild(objTr);
+	                }
+	                document.getElementById("txt_OpinionContent").value = "";
+	                document.getElementById("btn_OpinionAdd").textContent = strLang389;
+	                document.getElementById("btn_OpinionCancel").textContent = strLang10;
+	                document.getElementById("bbtn_OpinionDel").style.display = "none";
+	                document.getElementById("bbtn_OpinionCancel").style.display = "";
+	                OpinionAddFlag = 0;
                 }
             }
         }
@@ -624,6 +637,7 @@ function deleteOpinion_Complete(Rtnval) {
         document.getElementById("btn_OpinionAdd").textContent = strLang389;
         document.getElementById("btn_OpinionCancel").textContent = strLang10;
         document.getElementById("bbtn_OpinionDel").style.display = "none";
+        document.getElementById("bbtn_OpinionCancel").style.display = "";
         OpinionAddFlag = 0;
     }
 }

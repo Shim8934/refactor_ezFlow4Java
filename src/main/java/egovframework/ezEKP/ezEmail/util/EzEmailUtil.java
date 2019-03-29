@@ -71,6 +71,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.io.IOUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -315,6 +316,22 @@ public class EzEmailUtil {
 		return name;
 	}
 	
+	public String changeCharSet(String rawHeader, String oldCharSet, String newCharSet) {
+		if (rawHeader.startsWith("=?")) {
+			int secondQuestionPos = rawHeader.indexOf("?", 2);
+			
+			if (secondQuestionPos > -1) {
+                String charSet = rawHeader.substring(2, secondQuestionPos).toLowerCase();
+                
+                if (charSet.equals(oldCharSet)) {
+                	rawHeader = rawHeader.replace(charSet, newCharSet);	                        
+                }                
+			}
+		}
+		
+		return rawHeader;
+	}
+	
 	/**
 	 * 메일의 From 헤더로부터 보낸 사람의 이름을 반환한다. 이름을 반환할 수 없는 경우엔 이메일 주소를 대신 반환한다. 
 	 * 예외가 발생하였거나 유효한 From 헤더값이 존재하지 않는 경우엔 empty string을 반환한다.
@@ -349,6 +366,20 @@ public class EzEmailUtil {
 						
 						addressStr = decodeNonAsciiBytes(rawBytes);
 					} else {
+	                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
+	                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
+						String newFromHeader = changeCharSet(fromHeader, "gb2312", "gbk");
+						
+						// gb2312에서 gbk로 변경된 경우
+						if (!newFromHeader.equals(fromHeader)) {
+				            int endPos = newFromHeader.indexOf("?=", 2);
+				            
+				            // 주소 부분을 제외한 이름 파트만 분리한다.
+				            if (endPos > -1) {
+					            addressStr = newFromHeader.substring(0, endPos + 2);
+				            }
+						}
+												
 						// decoding is needed for the name part
 						// ex) =?UTF-8?B?44WC44WC?=
 						//     =?utf-8?B?Z2lzYTE=?=
@@ -519,6 +550,64 @@ public class EzEmailUtil {
 		return stringList;
 	}
 	
+	public String getStringListOfAddresses(Address[] addresses, String[] recipientHeaderArray, boolean isPureAscii) {
+		String stringList = "";
+		
+		if (addresses != null) {
+			StringBuilder addressBuilder = new StringBuilder();
+			for (int i = 0; i < addresses.length; i++) {
+				Address address = addresses[i];
+				String addressStr = ((InternetAddress)address).getAddress(); // email address part				
+				String name = ((InternetAddress)address).getPersonal(); // name part
+				
+				if (name != null) {
+					try {
+						// if the name contains Non-Ascii characters(violating the standard), 
+						// try to decode it by examining the characters.
+						if (!isPureAscii) {
+							byte[] rawBytes = name.getBytes("iso-8859-1");
+							
+							name = decodeNonAsciiBytes(rawBytes);
+						}
+						else {						
+							if (recipientHeaderArray != null) {
+								String recipientHeader = recipientHeaderArray[i];
+								
+			                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
+			                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
+								String newHeader = changeCharSet(recipientHeader, "gb2312", "gbk");
+								
+								// gb2312에서 gbk로 변경된 경우
+								if (!newHeader.equals(recipientHeader)) {
+						            int endPos = newHeader.indexOf("?=", 2);
+						            
+						            // 주소 부분을 제외한 이름 파트만 분리한다.
+						            if (endPos > -1) {
+						            	name = newHeader.substring(0, endPos + 2);
+						            }
+								}										
+							}
+							
+							name = MimeUtility.decodeText(name);
+						}
+					} catch (UnsupportedEncodingException e) {
+					}
+					
+					addressBuilder.append(name + " <" + addressStr + ">");					
+				}
+				else {
+					addressBuilder.append(addressStr + " <" + addressStr + ">");
+				}
+				
+				addressBuilder.append(",");
+			}
+			stringList = addressBuilder.toString();
+			stringList = stringList.substring(0, stringList.length() - 1);
+		}
+		
+		return stringList;
+	}
+	
 	public String getSubject(Message message) throws Exception {
         String subject = message.getSubject();
         
@@ -631,11 +720,17 @@ public class EzEmailUtil {
                     
                     if (charSet.equals("ks_c_5601-1987")) {
                         rawHeader = rawHeader.replace(charSet, "ms949");
-                        
-//                        logger.debug("subject changed ks_c_5601-1987 to ms949.");
-                        
+                                                
                         subject = MimeUtility.decodeText(rawHeader);
-                    }                        
+                    } else if (charSet.equals("gb2312")) {
+                        rawHeader = rawHeader.replace(charSet, "gbk");
+                                                
+                        subject = MimeUtility.decodeText(rawHeader);
+                    } else if (charSet.equals("iso-2022-jp")) {
+                        rawHeader = rawHeader.replace(charSet, "cp50220");
+                                                
+                        subject = MimeUtility.decodeText(rawHeader);
+                    }                                                
                 }
             }
             
@@ -650,7 +745,23 @@ public class EzEmailUtil {
                 logger.debug("still folded subject=" + subject);
                 
                 subject = subject.replace("\\\r\n ", "");                
-            }            
+            }
+
+            // Mac Outlook 보낸 메일의 제목이 decoding 되지 않은 패턴을 찾아 다시 decoding한다.
+            // 대괄호와 같은 문자와 한글이 혼용될 때 아래의 오른쪽 부분과 같이 제대로 디코딩되지 않는 경우가 발생함.
+            // RFC2047에 따른 인코딩이 한 줄에 여러 개가 있는 형태여서 JavaMail에서 문제가 발생하는 것으로 추정됨.
+            // Re: [캠코선박운용]메일 오류 => Re: [=?UTF-8?B?7Lqg7L2U7ISg67CV7Jq07Jqp?=]=?UTF-8?B?66mU7J28?=  오류
+            // Re: 회신: [ 캠코선박운용] 메신저 오류 => Re: 회신: [=?UTF-8?B?IOy6oOy9lOyEoOuwleyatOyaqQ==?=]  메신저 오류
+            Pattern pattern = Pattern.compile("=\\?(.*?)\\?=");
+            Matcher matcher = pattern.matcher(subject);
+
+            while (matcher.find()) {
+                String encData = matcher.group();
+                String decData = MimeUtility.decodeText(encData);
+                logger.debug("encData:" + encData + ",decData:" + decData);
+
+                subject = subject.replace(encData, decData);
+            }
         }
         
         return subject;
@@ -904,6 +1015,19 @@ public class EzEmailUtil {
                 logger.debug("originalFilename changed ks_c_5601-1987 to ms949.");
                 
                 filename = MimeUtility.decodeText(originalFilename);
+            } else if (originalFilename != null && originalFilename.startsWith("=?gb2312")) {
+                originalFilename = originalFilename.replace("gb2312", "gbk");
+                
+                logger.debug("originalFilename changed gb2312 to gbk.");
+                
+                filename = MimeUtility.decodeText(originalFilename);
+            // 일본어 파일명에 원형 숫자가 포함되면 문자가 깨져서 cp50220으로 변환하도록 함.
+            } else if (originalFilename != null && originalFilename.startsWith("=?iso-2022-jp")) {
+                originalFilename = originalFilename.replace("iso-2022-jp", "cp50220");
+                
+                logger.debug("originalFilename changed iso-2022-jp to cp50220.");
+                
+                filename = MimeUtility.decodeText(originalFilename);
             } else if (filename != null) {
 				if (isPureAscii(filename)) {
 				    // Content-Disposition 헤더에 있는 filename 속성의 값이 Non-Ascii 문자를 포함할 경우에는 직접 디코딩을 처리한다.
@@ -960,7 +1084,7 @@ public class EzEmailUtil {
 				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
 				
 				if (shareId != null) {
-					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+					aitem += "','" + URLEncoder.encode(shareId, "UTF-8");
 				}
 				
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' \"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
@@ -1010,6 +1134,32 @@ public class EzEmailUtil {
 							logger.debug("text/html changed ks_c_5601-1987 to ms949.");
 							
 							strContent = new String(buf, "ms949");
+						}											
+					}
+				} else if (contentType.toLowerCase().contains("gb2312")) {
+					if (strContent.contains("�")) {
+						InputStream is = getContentInputStream(part);
+						
+						if (is.available() > 0) {
+							byte[] buf = new byte[is.available()];
+							is.read(buf);
+							
+							logger.debug("text/html changed gb2312 to gbk.");
+							
+							strContent = new String(buf, "gbk");
+						}											
+					}
+				} else if (contentType.toLowerCase().contains("iso-2022-jp")) {
+					if (strContent.contains("�")) {
+						InputStream is = getContentInputStream(part);
+						
+						if (is.available() > 0) {
+							byte[] buf = new byte[is.available()];
+							is.read(buf);
+							
+							logger.debug("text/html changed iso-2022-jp to cp50220.");
+							
+							strContent = new String(buf, "cp50220");
 						}											
 					}
 				}
@@ -1142,8 +1292,33 @@ public class EzEmailUtil {
 								strContent = new String(buf, "ms949");
 							}											
 						}
-					}
-					
+					} else if (contentType.toLowerCase().contains("gb2312")) {
+						if (strContent.contains("�")) {
+							InputStream is = getContentInputStream(part);
+							
+							if (is.available() > 0) {
+								byte[] buf = new byte[is.available()];
+								is.read(buf);
+								
+								logger.debug("text/plain changed gb2312 to gbk.");
+								
+								strContent = new String(buf, "gbk");
+							}											
+						}
+					} else if (contentType.toLowerCase().contains("iso-2022-jp")) {
+						if (strContent.contains("�")) {
+							InputStream is = getContentInputStream(part);
+							
+							if (is.available() > 0) {
+								byte[] buf = new byte[is.available()];
+								is.read(buf);
+								
+								logger.debug("text/plain changed iso-2022-jp to cp50220.");
+								
+								strContent = new String(buf, "cp50220");
+							}											
+						}
+					}															
 				// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
 				// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
 				} catch (Exception e) {
@@ -1160,6 +1335,9 @@ public class EzEmailUtil {
 				}				
 			}
 			
+			strContent = commonUtil.cleanValue(strContent);
+			
+			strContent = convertSpaceToNBSP(strContent);
 			String tempText = strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
 			StringBuilder tempText2 = new StringBuilder();
 			String[] tempTexts = tempText.split("<br />");
@@ -1169,6 +1347,8 @@ public class EzEmailUtil {
 			for (int i=0; i<tempTexts.length; i++) {
 				if (!tempTexts[i].equals("")) {
 					tempText2.append("<p " + defaultFontAndSize + ">" + tempTexts[i] + "</p>");
+				} else {
+					tempText2.append("<p " + defaultFontAndSize + ">&nbsp;</p>");
 				}
 			}
 			
@@ -1267,6 +1447,17 @@ public class EzEmailUtil {
 					if (tempList.get(4).equals("OK")) {
 						isAttach = "OK";
 					}
+				// 료비에서 온 메일 중에 related 파트안에 인라인으로 첨부파일이 있는 메일이 있어 추가함.
+				} else if (p.isMimeType("application/*")) { 
+					List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
+					htmlBody += tempList.get(0);
+					pAttachListHtml += tempList.get(1);
+					filesize = (Double.parseDouble(filesize) + Double.parseDouble(tempList.get(2))) + "";
+					filecnt = (Integer.parseInt(filecnt) + Integer.parseInt(tempList.get(3))) + "";
+					
+					if (tempList.get(4).equals("OK")) {
+						isAttach = "OK";
+					}					
 				} else {
 					logger.debug("contentType=" + p.getContentType());
 					logger.debug("disposition=" + p.getDisposition());
@@ -1286,8 +1477,9 @@ public class EzEmailUtil {
 					if (p.isMimeType("text/plain")) {
 						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 						htmlBody += tempList.get(0);						
-					} else if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE)) {
-						
+					// 료비에서 온 메일 중에 related 파트안에 인라인으로 첨부파일이 있는 메일이 있음. 이 경우 위에서 MIME Type이 application인 경우
+					// 이미 첨부파일로 추가되었기 때문에 중복 추가되지 않도록 하기 위해 !p.isMimeType("application/*") 조건을 추가함.
+					} else if (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.INLINE) && !p.isMimeType("application/*")) {						
 						extraMap.put("includeInlineAsAttachment", true);
 						List<String> tempList = getBodyInfo(p, folderPath, uid, i, attachedFileList, locale, extraMap);
 						htmlBody += tempList.get(0);
@@ -1350,7 +1542,7 @@ public class EzEmailUtil {
 				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
 				
 				if (shareId != null) {
-					aitem += "&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+					aitem += "','" + URLEncoder.encode(shareId, "UTF-8");
 				}
 				
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' onclick=\"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
@@ -2309,9 +2501,13 @@ public class EzEmailUtil {
 					}
 					
 					// 코린도에서 수신한 메일 중 multipart/related 안에 첨부 파일이 있는 경우가 있어
-					// Content-Disposition: attachment 헤더가 있는 경우도 추가함
+					// Content-Disposition: attachment 헤더가 있는 경우도 추가함.
+					// 료비에서 온 메일 중에 related 파트안에 인라인으로 첨부파일이 있는 메일이 있어 이 경우
+					// Forward시 첨부되도록 하기 위해 || p.isMimeType("application/*") 조건을 추가함.
 					if (((MimePart)p).getContentID() != null
-							|| (includeAttachment && p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))) {
+							|| (includeAttachment 
+									&& ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT)) 
+											|| p.isMimeType("application/*")))) {
 						dest.addBodyPart(p);	
 						isAdded = true;
 					}
@@ -2509,14 +2705,24 @@ public class EzEmailUtil {
 				|| part.isMimeType("multipart/report")
 				|| part.isMimeType("multipart/related")) {
 			Multipart mp = (Multipart)part.getContent();
-			Part p = mp.getBodyPart(index);
+			Part p = null;
+			String fileName = null;
 			
-			String fileName = p.getFileName();
-			
-			logger.debug("fileName=" + fileName);
+			try {
+				p = mp.getBodyPart(index);
+				
+				fileName = p.getFileName();
+				
+				logger.debug("fileName=" + fileName);
+			// mixed 파트 내 related 파트에 첨부파일이 있는 경우 다운로드 시 ArrayIndexOutOfBoundsException이 발생함.
+			// 이 경우 아래 else 문에서 재귀적 호출에 의해 처리되도록 함.
+			// docs/eml/mixed 파트내 related 파트에 첨부파일이 있는 메일.eml 참조
+			} catch (ArrayIndexOutOfBoundsException e) {
+				e.printStackTrace();
+			}
 			
 			if (fileName != null
-					|| (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))) {
+					|| (p != null && p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))) {
 				logger.debug("getAttachPart ended.");
 				
 				return p;
@@ -2809,6 +3015,42 @@ public class EzEmailUtil {
 		
 		return innerDomainList;
 	}
+	
+	/**
+	 * 개인의 Alias 이메일 주소가 지정될 경우 실제 이메일 주소가 반환된다.
+	 * @param emailAddress
+	 * @return
+	 */
+	public String getRealEmailAddress(String emailAddress) throws Exception {
+        String result = "";
+        
+        String addressParam = "address=" + URLEncoder.encode(emailAddress, "UTF-8");
+        String inputParams = addressParam;
+        
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getAliasMail";
+        
+        String response = getWebServiceResult(requestURL, inputParams);
+        
+        logger.debug("response=" + response);
+        
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+            
+            String resultCode = (String)responseObj.get("resultCode");
+            
+            if (resultCode.equalsIgnoreCase("OK")) {
+                JSONArray resultArray = (JSONArray)responseObj.get("result");
+                
+                // 개인의 Alias 이메일 주소일 경우 반환되는 주소는 하나이어야 한다.
+                if (resultArray != null && resultArray.size() == 1) {
+                    result = (String)resultArray.get(0);
+                }
+            }
+        }
+        
+        return result;
+    }
 	
 	/**
 	 * 특정 메일 도메인에 대한 메일박스 디폴트 용량을 MB단위로 반환한다.
@@ -4090,6 +4332,10 @@ public class EzEmailUtil {
 			}
 		}
 		logger.debug("outerMailInsertAddress end.");
+	}
+	
+	public String convertSpaceToNBSP(String src) {
+		return src.replace(" ", "&nbsp;");
 	}
 }
 

@@ -17,7 +17,8 @@ function setPanelPointer() {
 			setGadgetPosition();
 
 			defaultPointer();
-		}
+		},
+		scroll: false 
 	}).on("mouseup", function() {
 		$(".noteBlock").css("visibility", "hidden");
 		$("#open-memo").css("visibility", "visible");
@@ -111,6 +112,7 @@ function layerClose() {
     		$("#open-memo").css("display", "");
     	} else {
     		$("#open-memo").css("display", "none");
+    		setGadgetPositionResize();
     	}
     	
     });	
@@ -619,11 +621,12 @@ function setGadgetPosition() {
 	var gadgetStatus = $("#open-memo").css("display");
 	
 	if (gadgetStatus != "none") {
-    	var topString = $("#open-memo").css("top");
-    	var leftString = $("#open-memo").css("left");
+		// 2019-01-04 김민성 - IE 메모 가젯 오류 수정
+		var topString = $("#open-memo").offset().top;
+		var leftString = $("#open-memo").offset().left;
 		
-    	var topPIndex = topString.indexOf("p");
-		var leftPIndex = leftString.indexOf("p");
+    	/*var topPIndex = topString.indexOf("p");
+		var leftPIndex = leftString.indexOf("p");*/
 		
 		var windowHeight = parseInt(window.innerHeight);
     	var windowWidth = parseInt(window.innerWidth);
@@ -631,8 +634,10 @@ function setGadgetPosition() {
     	var outHeight = parseInt($("#open-memo").height());
     	var outWidth = parseInt($("#open-memo").width());
 		
-		var gadgetBottom = windowHeight - outHeight - parseInt(topString.substr(0, topPIndex));
-		var gadgetRight = windowWidth - outWidth - parseInt(leftString.substr(0, leftPIndex));
+    	var gadgetBottom = windowHeight - outHeight - topString;
+		var gadgetRight = windowWidth - outWidth - leftString;
+		/*var gadgetBottom = windowHeight - outHeight - parseInt(topString.substr(0, topPIndex));
+		var gadgetRight = windowWidth - outWidth - parseInt(leftString.substr(0, leftPIndex));*/
     	
 		$.ajax({
 			type : "POST",
@@ -670,20 +675,22 @@ function getGadgetPosition(memoConfigVO) {
  */
 function setGadgetPositionResize() {
 	
-	var stringBottom = $("#open-memo").css("bottom");
-	var stringRight = $("#open-memo").css("right");
+	var bottom = $("#open-memo").offset().bottom;
+	var right = $("#open-memo").offset().right;
+	/*var stringBottom = $("#open-memo").css("bottom");
+	var stringRight = $("#open-memo").css("right");*/
 	
 	var windowHeight = parseInt(window.innerHeight);
 	var windowWidth = parseInt(window.innerWidth);
 	
-	var bottomPIndex = stringBottom.indexOf("p");
-	var rightPIndex = stringRight.indexOf("p");
+	/*var bottomPIndex = stringBottom.indexOf("p");
+	var rightPIndex = stringRight.indexOf("p");*/
 	
 	var width = parseInt($("#open-memo").width());
 	var height = parseInt($("#open-memo").height());
 	
-	var bottom = parseInt(stringBottom.substr(0, bottomPIndex));
-	var right = parseInt(stringRight.substr(0, rightPIndex));
+	/*var bottom = parseInt(stringBottom.substr(0, bottomPIndex));
+	var right = parseInt(stringRight.substr(0, rightPIndex));*/
 	
 	if (bottom < 0) {
 		$("#open-memo").css({"top" : "auto", "bottom" : 15 });
@@ -986,8 +993,14 @@ function browserResize() {
 		var doc = window.document;
 		// 브라우저 넓이
 		var w = window.innerWidth;
+		if(w < 340) {
+			w = 340;
+		}
 		// 브라우저 높이
 		var h = window.innerHeight;
+		if(h < 425) {
+			h = 425;
+		}
 		// memoListBox element
 		var mLBOX = doc.getElementById("mLBox");
 		// layer-popup element
@@ -1030,7 +1043,7 @@ function browserResize() {
 			mLBox.style.width = w + "px";
 			mLBox.style.height = (h - 130) + "px";
 			memoMain.style.width = w + "px";
-			memoMain.style.height = (h - 150) + "px";
+			memoMain.style.height = (h - 135) + "px";
 			popup.style.width = w + "px";
 			popup.style.height = (h - 45) + "px";
 			
@@ -1041,14 +1054,17 @@ function browserResize() {
 			 */
 			if(((w>popupLeft) && (w < popupLeft + popupWidth)) || ((h>popupTop) && (h < popupTop + popupHeight))){
 				mLBox.style.width = w + "px";
-				mLBox.style.height = (h - 130) + "px";
+				mLBox.style.height = (h - 120) + "px";
 				memoMain.style.width = w + "px";
-				memoMain.style.height = (h - 150) + "px";
+				memoMain.style.height = (h - 120) + "px";
 				popup.style.width = w + "px";
 				popup.style.height = (h - 45) + "px";
 				popup.style.left = "0px";
 				popup.style.top = "55px";
 			}
 		}
+		
+		// 빈메모 resize 이벤트 추가
+		emptyMemoResize();
 	}
 }

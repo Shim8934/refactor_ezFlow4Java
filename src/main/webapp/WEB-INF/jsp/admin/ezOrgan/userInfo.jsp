@@ -92,12 +92,10 @@
 	                RetValue = window.dialogArguments;
 	            }
 	            
-	            if (RetValue[4] != "") {
-	            	if (RetValue[5] != "" && RetValue[5] == "addJob") {
-	            		companyID = getUserCompanyID(RetValue[2]);
-	            	} else {
-			        	companyID = RetValue[4];
-	            	}
+	            if (RetValue[2] != "") {
+            		companyID = getUserCompanyID(RetValue[2]);
+		        } else {
+            		companyID = RetValue[4];
 		        }
 
 	            /* dhlee: Safari에서 영문 입력이 되지 않아 제거함.
@@ -135,11 +133,9 @@
 		            document.getElementById('btn_PhotoAdd').style.display = "none";
 		            document.getElementById('btn_PhotoDel').style.display = "none";
 		            
-		            getJobOptionInfo("001");
-		            getJobOptionInfo("002");
-                	titleChange();
-                	positionChange();
-		        }else{
+		            getJobInfoInit();
+		            
+		        } else {
 		            OrgUserID = RetValue[2];
 		            document.getElementById("DeptName").value = RetValue[1];
 		            document.getElementById("UserID").value = OrgUserID;
@@ -180,6 +176,7 @@
 			                document.getElementById("DeptName2").value = SelectSingleNodeValueNew(xmlDom, "DATA/DESCRIPTION2").trim();
 			                document.getElementById("SocialNum").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE14").trim();
 			                document.getElementById("txtBirth").value = SelectSingleNodeValueNew(xmlDom, "DATA/BIRTH").trim();
+			                document.getElementById("userPhotoYN").value = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE2").trim();
 			                
 			                try {
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE7").trim() != "") {
@@ -189,18 +186,23 @@
 				                } else {
 				                	getJobOptionInfo("001");
 				                }
-				                
+			                } catch(e) {
+			                	console.error(e.message);
+			                }
+			                try {
 				                if (SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim() != "") {
 				                	pUserPositionID = SelectSingleNodeValueNew(xmlDom, "DATA/EXTENSIONATTRIBUTE8").trim();
-				                	getJobOptionInfo("002");
+				    		    	getJobOptionInfo("002");
 				                	document.getElementById(pUserPositionID).selected = "true";
 				                } else {
-				                	getJobOptionInfo("002");
+				    		    	getJobOptionInfo("002");
 				                }
-			                } catch(e) {}
+			                } catch(e) {
+			                	console.error(e.message);
+			                }
 			                
-		                	titleChange();
-		                	positionChange();
+			                titleChange();
+			                positionChange();
 			                
 			                if (SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == "Y" || SelectSingleNodeValueNew(xmlDom, "DATA/BIRTHTYPE").trim() == ""){
 			                    eval("birth_S").checked = true;
@@ -300,32 +302,12 @@
 		            }
 		        }
 		    }
+		    
 		    function Check_ID(pValue) {
-		        for (var iCnt = 0 ; iCnt < pValue.length ; iCnt++) {
-		            if (pValue.charCodeAt(iCnt) >= 65 && pValue.charCodeAt(iCnt) <= 90) {
-		                // A-Z
-		            }
-		            else if (pValue.charCodeAt(iCnt) >= 97 && pValue.charCodeAt(iCnt) <= 122) {
-		                // a-z
-		            }
-		            else if (pValue.charCodeAt(iCnt) >= 48 && pValue.charCodeAt(iCnt) <= 57) {
-		                // 0-9
-		            }
-		            else if (pValue.charCodeAt(iCnt) == 45) {
-		                // -
-		            }
-		            else if (pValue.charCodeAt(iCnt) == 46) {
-		                // .
-		            }
-                    else if (pValue.charCodeAt(iCnt) == 95) {
-                        // _
-                    }		            
-		            else {
-		                return false;
-		            }
-		        }
-		        return true;
-		    }
+				var regex = /^[a-z0-9\_\-\.]+$/;
+				
+				return regex.test(pValue);
+			}
 		    
 			function showProgress() {
 			    document.getElementById("progressPanel").style.display = "";
@@ -345,15 +327,6 @@
 		        if (document.getElementById("UserID").value == "") {
 		            alert("<spring:message code='ezOrgan.t253' />");
 		            return;
-		        }
-		        // 2009.11.10 - 아이디 대문자 체크
-		        if ("<c:out value='${checkID}'/>" == "YES") {
-		            for (i = 0; i < document.getElementById("UserID").value.length; i++) {
-		                if (document.getElementById("UserID").value.charCodeAt(i) >= 65 && document.getElementById("UserID").value.charCodeAt(i) <= 90) {
-		                    alert("<spring:message code='ezOrgan.t308' />");
-		                    return;
-		                }
-		            }
 		        }
 		        if (document.getElementById("UserID").value.length < 3) {
 		            alert("<spring:message code='ezOrgan.t254' />");
@@ -412,6 +385,12 @@
 		            alert("<spring:message code='ezOrgan.t265' />");
 		            return;
 		        }
+		        
+		        if (!SortNum.value.match(/^\d*$/)) {
+		        	alert("<spring:message code='ezOrgan.t226' />: <spring:message code='ezEmail.t99000066'/>");
+					return;
+				}
+		        
 		        // 표준모듈 (2007.02.21) 수정 : 사용자 추가일 경우만, 체크한다.
 		        if (RetValue[2] == "") {
 		            if (MailAlias.value != "" && MailAlias.value.indexOf("@") != -1) {
@@ -531,6 +510,7 @@
 		        //if (CrossYN()) {
 	            personpicture_cross_dialogArguments[0] = document.getElementById("UserID").value;
 	            personpicture_cross_dialogArguments[1] = btnPhoto_onclick_Complete;
+	            personpicture_cross_dialogArguments[2] = document.getElementById("userPhotoYN").value;
 	            DivPopUpShow(415, 285, "/admin/ezOrgan/personPicture.do");
 		        <%-- }else {
 		            if (navigator.appName.indexOf("Microsoft") > -1)
@@ -575,9 +555,18 @@
 					}
 				});
 		    }
-		    
+		    // 직위/직책 정보 init
+		    function getJobInfoInit() {
+		    	getJobOptionInfo("001");
+		    	getJobOptionInfo("002");
+		    	titleChange();
+		    	positionChange();
+		    }
+		    // 직위/직책 조회 (pType ==> 001:직위, 002:직책)
 		    function getJobOptionInfo(pType) {
-		    	var xmldom; 
+		    	var xmldom;
+		    	var _html = "";
+		    	var pUserJobID = "";
 		    	
 		    	$.ajax({
 					type : "POST",
@@ -595,79 +584,69 @@
 					}
 				});
 		    	
-		    	var _select;
+	    		if (pType == "001") {
+	    			_html += "<select id='titleSelector' style='width:100%;height:25px;' onchange='titleChange()'>";
+	    			pUserJobID = pUserTitleID;
+	    		} else {
+	    			_html += "<select id='positionSelector' style='width:100%;height:25px;' onchange='positionChange()'>";
+	    			pUserJobID = pUserPositionID;
+	    		}
+	    		
+	    		// option (해당없음) 표출
+   				_html += "<option id='' nmval='' nmval2=''>(<spring:message code='ezApprovalG.t852' />)</option>";
+	    		
 		    	var oRows = SelectNodes(xmldom, "DATA/ROWS/ROW");
 		    	if (oRows.length > 0) {
-		    		if (pType == "001") {
-		    			_select = "<select id='titleSelector' style='width:100%;height:25px;' onchange='titleChange()'>";
+		    		for (var i = 0; i < oRows.length; i++) {
+		    			var pUseFlag	= SelectSingleNodeValueNew(oRows[i], "USEFLAG");
+		    			var pJobID 		= SelectSingleNodeValueNew(oRows[i], "JOBID");
+		    			var pJobName 	= SelectSingleNodeValueNew(oRows[i], "NAME1");
+		    			var pJobName2 	= SelectSingleNodeValueNew(oRows[i], "NAME2");
 		    			
-		    			for (var i = 0; i < oRows.length; i++) {
-		    				if (SelectSingleNodeValueNew(oRows[i], "USEFLAG") != "N" || SelectSingleNodeValueNew(oRows[i], "JOBID") == pUserTitleID) {
-				    			_select += "<option id='" + SelectSingleNodeValueNew(oRows[i], "JOBID") + "' nmval='" + SelectSingleNodeValueNew(oRows[i], "NAME1") + "' nmval2='" + SelectSingleNodeValueNew(oRows[i], "NAME2") + "'>";
-				    			
-				    			if ("${userPrimary}" == "1") {
-					    			_select += SelectSingleNodeValueNew(oRows[i], "NAME1");
-				    			} else {
-					    			_select += SelectSingleNodeValueNew(oRows[i], "NAME2");
-				    			}
-				    			_select += "</option>";
-		    				}
-			    		}
-		    			_select += "</select>";
-		    			
-		    			document.getElementById("JobTitleOption").innerHTML = _select;
-		    			
-		    		} else {
-		    			_select = "<select id='positionSelector' style='width:100%;height:25px;' onchange='positionChange()'>";
-		    			
-		    			for (var i = 0; i < oRows.length; i++) {
-		    				if (SelectSingleNodeValueNew(oRows[i], "USEFLAG") != "N" || SelectSingleNodeValueNew(oRows[i], "JOBID") == pUserPositionID) {
-				    			_select += "<option id='" + SelectSingleNodeValueNew(oRows[i], "JOBID") + "' nmval='" + SelectSingleNodeValueNew(oRows[i], "NAME1") + "' nmval2='" + SelectSingleNodeValueNew(oRows[i], "NAME2") + "'>";
-				    			
-				    			if ("${userPrimary}" == "1") {
-					    			_select += SelectSingleNodeValueNew(oRows[i], "NAME1");
-				    			} else {
-					    			_select += SelectSingleNodeValueNew(oRows[i], "NAME2");
-				    			}
-				    			_select += "</option>";
-		    				}
-			    		}
-		    			_select += "</select>";
-		    			
-		    			document.getElementById("JobPositionOption").innerHTML = _select;
+		    			if (pUseFlag != "N" || pJobID == pUserJobID) {
+		    				_html += "<option id='" + pJobID + "' nmval='" + pJobName + "' nmval2='" + pJobName2 + "'>";
+		    				
+		    				if ("${userPrimary}" == "1") {
+		    					_html += pJobName;
+			    			} else {
+			    				_html += pJobName2;
+			    			}
+		    				_html += "</option>";
+		    			}
 		    		}
+		    		_html += "</select>";
 		    	} else {
-		    		if (pType == "001") {
-		    			document.getElementById("JobTitleOption").innerHTML = "<select id='titleSelector' style='width:100%;height:25px;'></select>";
-		    		} else {
-		    			document.getElementById("JobPositionOption").innerHTML = "<select id='positionSelector' style='width:100%;height:25px;'></select>";
-		    		}
+		    		_html += "</select>";
 		    	}
+		    	
+	    		if (pType == "001") {
+		    		document.getElementById("JobTitleOption").innerHTML = _html;
+	    		} else {
+		    		document.getElementById("JobPositionOption").innerHTML = _html;
+	    		}
 		    }
+		    
 		    function titleChange() {
-		    	var target = document.getElementById("titleSelector");
-		    	var option = target.options[target.options.selectedIndex];
-		    	if (typeof (option) != "undefined") {
-			    	jobTitleID = option.id;
-			    	jobTitleName = option.getAttribute("nmval");
-			    	jobTitleName2 = option.getAttribute("nmval2");
+		    	if ($("#titleSelector option:selected").length > 0) {
+		    		jobTitleID 		= $("#titleSelector option:selected").attr("id");
+		    		jobTitleName 	= $("#titleSelector option:selected").attr("nmval");
+		    		jobTitleName2 	= $("#titleSelector option:selected").attr("nmval2");
 		    	} else {
-			    	jobTitleID = "";
-			    	jobTitleName = "";
-			    	jobTitleName2 = "";
+		    		jobTitleID 		= "";
+			    	jobTitleName 	= "";
+			    	jobTitleName2 	= "";
 		    	}
 		    }
+		    
 		    function positionChange() {
-		    	var target = document.getElementById("positionSelector");
-		    	var option = target.options[target.options.selectedIndex];
-		    	if (typeof (option) != "undefined") {
-			    	jobPositionID = option.id;
-			    	jobPositionName = option.getAttribute("nmval");
-			    	jobPositionName2 = option.getAttribute("nmval2");
+		    	if ($("#positionSelector option:selected").length > 0) {
+		    		jobPositionID 		= $("#positionSelector option:selected").attr("id");
+		    		jobPositionName 	= $("#positionSelector option:selected").attr("nmval");
+		    		jobPositionName2 	= $("#positionSelector option:selected").attr("nmval2");
 		    	} else {
-			    	jobPositionID = "";
-			    	jobPositionName = "";
-			    	jobPositionName2 = "";
+		    		jobPositionID 		= "";
+		    		jobPositionName 	= "";
+		    		jobPositionName2 	= "";
 		    	}
 		    }
 		    
@@ -865,7 +844,8 @@
 	                <input id="HomeAddr" style="WIDTH: 100%;" maxlength="150"/>
 	            </td>
 	        </tr>
-	    </table>   
+	    </table>
+	    <input type="hidden" id="userPhotoYN">
 	    <div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>
 	    <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
 	        <iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>

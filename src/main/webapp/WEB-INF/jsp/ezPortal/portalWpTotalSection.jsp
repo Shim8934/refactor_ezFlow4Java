@@ -40,7 +40,7 @@
     				</dl>
     				<div class="bottom"></div>
     			</div>
-    			<div class="personal_content" style="${isCircularUsed == 'Y' ? '' : 'display:none'}">
+    			<div class="personal_content" style="${useCircular == 'YES' ? '' : 'display:none'}">
 					<a id="NewMail" onClick="btnSumming_click(this)">
 						<ul>
 							<li class="count">
@@ -97,7 +97,7 @@
 						<ul>
 							<li class="count">
 								<div>
-									<span><c:if test="${fn:length(pollNum) > 2}">99+</c:if><c:if test="${fn:length(pollNum) <= 2}">${pollNum}</c:if></span>
+									<span><c:if test="${pollNum > 99}">99+</c:if><c:if test="${pollNum <= 99}">${pollNum}</c:if></span>
 								</div>
 							</li>
                     		<c:choose>
@@ -110,7 +110,7 @@
                     		</c:choose>
 						</ul>						
 					</a>
-					<c:if test="${isCircularUsed == 'Y'}">
+					<c:if test="${useCircular == 'YES'}">
 					<a id="Circular" onClick="btnSumming_click(this)">
 						<ul class="last">
 							<li class="count">
@@ -221,32 +221,11 @@
 			select {
 				-webkit-appearance: none; border:1px solid #d5e0ef;min-height:20px;margin:0;padding: .1em .1em; background: url(/images/next.gif) no-repeat 97% 50%; padding-right:18px;background-color: white;
 			}
+			
 			select::-ms-expand {
 			    display: none;
 			}
-		</style>
-		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/jindo.all.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/selectbox.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/scrollbox.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>		
-		<script type="text/javascript">
-		 	var UserOffset = "${userOffset}";
-		</script>
-		<c:choose>
-			<c:when test="${checkBrowser == true}">
-				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_IEEIP.js')}"></script>
-			</c:when>
-			<c:otherwise>
-				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_EIP.js')}"></script>
-			</c:otherwise>
-		</c:choose>
-		
-		<script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
-		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		<style>
+			
 			#atti_area span{
 				width:35px;
 				margin-left:7px;
@@ -278,23 +257,33 @@
 				height:20px;
 				font-family: Malgun Gothic, Meiryo UI;
 			}
-		</style>   
+		</style>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Holiday.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezAttitude/Calendar.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/jindo.all.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/selectbox.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezSchedule/scrollbox.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>		
+		<c:choose>
+			<c:when test="${checkBrowser == true}">
+				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_IEEIP.js')}"></script>
+			</c:when>
+			<c:otherwise>
+				<script type="text/javascript" src="${util.addVer('/js/ezSchedule/Calendar/CalendarMini_EIP.js')}"></script>
+			</c:otherwise>
+		</c:choose>
+		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/raphael-min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
+			var UserOffset = "${userOffset}";
 		    var pMode = "P";
 		    var date = "";
 		    var strLang1_total = "<spring:message code='main.t00025' />";
 		    var strLang2_total = "<spring:message code='main.t00026' />";
 		    var pUse_Editor = "${useEditor}";
 			var isCircularUsed = "${isCircularUsed}";
-		    
-			$(document).ready(function(){
-				if (isCircularUsed != 'Y') {
-					$(".personal_content a ul").css({'width': 100/$(".personal_content a ul").length + '%'});
-					$(".personal_content a ul:last").attr("class","last");
-					$(".personal_content").show();
-				}
-			});
-		    
 		    var year = sDate.getFullYear();
 		 	var mon = leadingZeros((sDate.getMonth() + 1), 2);
 		 	var day = sDate.getDate();		 	
@@ -305,6 +294,7 @@
 			var afterAlertDate = "";
 			var overTime = "";
 			var isUseAttMenuItem = "${isUseAttMenuItem}";
+			var timeDiff;
 			
 		    function window_onload_total() {
 			    if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -351,9 +341,6 @@
 		            overflowY: "scroll" // auto, scroll
 		        });
 
-// 		        draw_clock();
-// 		        yourClock();
-
 		        try { top.onresize() } catch (e) { }
 		        
 		        //ajax로 각 모듈 counting 및 list 호출
@@ -361,6 +348,12 @@
 		        getnewapprovalcount();		        
 		        getScheduleList(nowDay, pMode);
 		        getNewCircularCount();
+		        
+		        if (isCircularUsed != 'Y') {
+					$(".personal_content a ul").css({'width': 100/$(".personal_content a ul").length + '%'});
+					$(".personal_content a ul:last").attr("class","last");
+					$(".personal_content").show();
+				}
 			}
 
 			function open_schedule(scheduleid, scheduletype, datetype, repeatcount, date, pageFrom) {
@@ -993,7 +986,7 @@
 								$("#inAttiBtn").removeClass("out").addClass("lateIn");
 								$("#inAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 		    				} else if (result[i].typeId == "A03") {
-		    					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter");
+//	 	    					$("#outAttiBtn").attr("onclick", "").unbind("mouseenter"); //퇴근은 여러번 찍을 수 있다.
 								$("#outAttiBtn").removeClass("out").addClass("in");
 								$("#outAttiBtn").text(result[i].startDate.split(" ")[1].substring(0,5));
 		    				}
@@ -1018,13 +1011,13 @@
 		    	
 		    	beforeAlertDate = new Date();
 		    	var dateAlert = nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + (nowAttiTime.getMonth() + 1) + "<spring:message code='ezAttitude.t67'/> " + (nowAttiTime.getDate()) + "<spring:message code='ezAttitude.t68'/> " + leadingZeros(nowAttiTime.getHours(), 2) + ":" + leadingZeros(nowAttiTime.getMinutes(), 2) + ":"+ leadingZeros(nowAttiTime.getSeconds(), 2);
-		    	var saveFlag = confirm("<spring:message code='ezAttitude.t69'/> " + dateAlert + "<spring:message code='ezAttitude.t70'/>");
-		    	if (!saveFlag) {
-		    		afterAlertDate = new Date();
-		    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
-		    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
-		    		return;
-		    	} 
+// 		    	var saveFlag = confirm("<spring:message code='ezAttitude.t69'/> " + dateAlert + "<spring:message code='ezAttitude.t70'/>");
+// 		    	if (!saveFlag) {
+// 		    		afterAlertDate = new Date();
+// 		    		overTime = (afterAlertDate.getTime() - beforeAlertDate.getTime());
+// 		    		nowAttiTime.setMilliseconds(nowAttiTime.getMilliseconds() + overTime);
+// 		    		return;
+// 		    	} 
 		    	$.ajax({
 		    		type : "POST",
 		    		async : true,
@@ -1056,15 +1049,17 @@
 					},
 					success : function(result) {
 						for (var i = 0; i < result.holidayList.length; i++) {
-							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
-								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
-																  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
-																  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
-							} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
-								yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
-																		  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
-																		  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
-																		  result.holidayList[i].isRest == 1 ? true : false));
+							if (result.holidayList[i].holidayDate != null) {
+								if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
+									memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
+																	  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
+																	  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
+								} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+									yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
+																			  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
+																			  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
+																			  result.holidayList[i].isRest == 1 ? true : false));
+								}
 							}
 						}
 						closedDay = result.attitudeConfigVO.closedDay.split(",");
@@ -1109,10 +1104,12 @@
 		 	function checkAttitude(obj) {
 				var returnValue = getIsAttitude(obj.getAttribute("type"));
 				
-				if (returnValue == 0) {
+				if (returnValue == 0) { //해당근태가 없거나, 퇴근일 경우는 근태등록되게
 					addAttitude(obj);
 				} else {
-					alert("<spring:message code='ezAttitude.t169'/>");
+					if (obj.getAttribute("type") === "A08" || obj.getAttribute("type") === "A03") { //퇴근,조퇴일때 조퇴,퇴근이 있는 경우 경고창
+						alert("<spring:message code='ezAttitude.t169'/>");					
+					}
 					getAttitudeList();
 	    			try{parent.frames["right"].getAttitudeMainList();}catch(e){}
 				}
@@ -1167,20 +1164,23 @@
 	    		}
 	    		
 	    		$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
+	    		var clientTime = new Date();
+	    		timeDiff = nowAttiTime.getTime() - clientTime.getTime();
 	    	}
 		    
 		    function attiClock() {
 		        var h, m;
 		        var s;
 		        var time = " ";
+		        var nowClientTime = new Date();
+		        var nowServerTime = new Date(nowClientTime.getTime() + timeDiff);
 		        
-		        nowAttiTime.setSeconds(nowAttiTime.getSeconds() + 1);
-		        time = leadingZeros(nowAttiTime.getHours(), 2) + ':' + leadingZeros(nowAttiTime.getMinutes(), 2) + ':' + leadingZeros(nowAttiTime.getSeconds(), 2);
+		        time = leadingZeros(nowServerTime.getHours(), 2) + ':' + leadingZeros(nowServerTime.getMinutes(), 2) + ':' + leadingZeros(nowServerTime.getSeconds(), 2);
 		        document.getElementById("timeFlow").innerHTML = time;
 		        if (time == "00:00:00") {
 		        	$("#todayTime").html(nowAttiTime.getFullYear() + "<spring:message code='ezAttitude.t66'/> " + leadingZeros((nowAttiTime.getMonth() + 1), 2) + "<spring:message code='ezAttitude.t67'/> " + leadingZeros(nowAttiTime.getDate(), 2) + "<spring:message code='ezAttitude.t68'/>");
 		        }
-		        gizmo = setTimeout("attiClock()", 1000);
+		        gizmo = setTimeout("attiClock()", 500);
 		        
 		    }
 		    

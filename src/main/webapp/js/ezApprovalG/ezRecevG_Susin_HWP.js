@@ -1088,6 +1088,19 @@ function SaveDraftDocInfo_susin() {
 
 var inssepattach_cross_dialogArguments = new Array();
 function btnAddSepAttach_onclick() {
+	var deptCheckFlag = checkDeptAndCabinetId();
+	
+	if (deptCheckFlag == "3") {
+		alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+		return;
+	} else if (deptCheckFlag == "4") {
+		alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+		return;
+	} else if (deptCheckFlag == "2") {
+		alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+		return;
+	}
+	
 	if (cabinetID == "") {
 		var pAlertContent = strLang731;
 		OpenAlertUI(pAlertContent);          
@@ -1117,32 +1130,47 @@ function btnAddSepAttach_onclick() {
 		SetDocumentElement(HwpCtrl, "SepAttachLVXml", g_SepAttachLVXml)
 	}
 }
-
-function GetSepAttParamXml(g_SepAttachLVXml)
-{
-    var rtnXml = createXmlDom();
-
-    var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
-    var sepAtt, Data, i;
-    if (g_SepAttachLVXml != "") {
-        var sepLVXml = createXmlDom();
-        sepLVXml = loadXMLString(g_SepAttachLVXml);
-        var rows = SelectNodes(sepLVXml, "LISTVIEWDATA/ROWS/ROW");
-        for (i = 0; i < rows.length; i++) {
-
-            sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
-            Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "CABINETID", getNodeText(rows.item(i).childNodes(0).selectSingleNode("DATA1")));
-            Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "TITLE", getNodeText(rows.item(i).childNodes(1).selectSingleNode("VALUE")));
-            Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "NUMOFPAGE", getNodeText(rows.item(i).childNodes(4).selectSingleNode("VALUE")));
-            Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "REGTYPE", getNodeText(rows.item(i).childNodes(0).selectSingleNode("DATA2")));
-            Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "SUMMARY", getNodeText(rows.item(i).childNodes(6).selectSingleNode("VALUE")));
-            Data = createNodeAndAppandNodeText(sepLVXml, root, Data, "AVTYPE", getNodeText(rows.item(i).childNodes(0).selectSingleNode("DATA3")));
-
-        }
-    }
-    return getXmlString(rtnXml);
+//2019-01-18 천성준 - 새 HWP 분리첨부 XML파싱 소스 생성
+function GetSepAttParamXml(g_SepAttachLVXml) {
+	try {
+		var sepAtt, Data;
+		var rtnXml = createXmlDom();
+		var root = createNodeInsert(rtnXml, root, "SEPATTACHINFO");
+		
+		if (g_SepAttachLVXml != "") {
+			var sepLVXml = createXmlDom();
+				sepLVXml = loadXMLString(g_SepAttachLVXml);
+				
+			var pRows = SelectNodes(sepLVXml, "LISTVIEWDATA/ROWS/ROW");
+			if (pRows) {
+				for (var i = 0; i < pRows.length; i++) {
+					sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
+					Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID",	getNodeText(pRows.item(i).childNodes(0).selectSingleNode("DATA1")));
+					Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", 	getNodeText(pRows.item(i).childNodes(1).selectSingleNode("VALUE")));
+					Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE",	getNodeText(pRows.item(i).childNodes(4).selectSingleNode("VALUE")));
+					Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", 	getNodeText(pRows.item(i).childNodes(0).selectSingleNode("DATA2")));
+					Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY",	getNodeText(pRows.item(i).childNodes(6).selectSingleNode("VALUE")));
+					Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE",	getNodeText(pRows.item(i).childNodes(0).selectSingleNode("DATA3")));
+				}
+			} else {
+				var oRows = sepLVXml.getElementsByTagName("ROW");
+				for (var i = 0; i < oRows.length; i++) {
+					sepAtt = createNodeAndAppandNode(sepLVXml, root, sepAtt, "SEPATTACH");
+					Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "CABINETID", SelectSingleNodeValue(GetChildNodes(oRows[i])[0], "DATA1"));
+					Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "TITLE", 	SelectSingleNodeValue(GetChildNodes(oRows[i])[1], "VALUE"));
+					Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "NUMOFPAGE", SelectSingleNodeValue(GetChildNodes(oRows[i])[4], "VALUE"));
+					Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "REGTYPE", 	SelectSingleNodeValue(GetChildNodes(oRows[i])[0], "DATA2"));
+					Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "SUMMARY", 	SelectSingleNodeValue(GetChildNodes(oRows[i])[6], "VALUE"));
+					Data = createNodeAndAppandNodeText(sepLVXml, sepAtt, Data, "AVTYPE", 	SelectSingleNodeValue(GetChildNodes(oRows[i])[0], "DATA3"));
+				}
+			}
+		}
+		
+		return getXmlString(rtnXml);
+	} catch (e) {
+		alert("ezrecevG_susinui_hwp.GetSepAttParamXml() : " + e.description);
+	}
 }
-
 function SetSepAttParamXmlNull(g_SepAttachLVXml) {
 	var sepAtt, Data, i;
 	if(g_SepAttachLVXml != "") {

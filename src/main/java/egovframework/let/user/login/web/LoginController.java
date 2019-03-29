@@ -325,6 +325,16 @@ public class LoginController {
 		
 		// 사용자가 입력한 암호가 맞는 경우
         if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
+        	// 공유사서함 기능을 사용할 경우 공유사서함 계정으로의 로그인을 막는다.
+    		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+    		
+    		if (useSharedMailbox.equals("YES")) {
+    			if (deptId != null && deptId.startsWith("shared_mailbox_")) {
+    				logger.debug("Cannot login with shared mailbox account.");
+    				model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
+        	        return "forward:/user/login/login.do";
+    			}
+    		}
         	
         	// masteradmin의 암호로 로그인 가능하여 masteradmin 암호가 맞는 경우
         	// usermaster 테이블의 ip정보/loginCount는 업데이트하지 않고 접속 로그정보만 저장한다.
@@ -507,8 +517,8 @@ public class LoginController {
 	            	model.addAttribute("message2", errorMsg2);
 	            	model.addAttribute("message3", errorMsg3);
 	            	model.addAttribute("message4", errorMsg4);
-	            	model.addAttribute("message5", errorMsg4);
-	            	model.addAttribute("message6", errorMsg4);
+	            	model.addAttribute("message5", errorMsg5);
+	            	model.addAttribute("message6", errorMsg6);
 	            	model.addAttribute("isWrongPass", "Y");
 	            	
 	            	return "forward:/user/login/login.do";
@@ -599,19 +609,19 @@ public class LoginController {
         		for (int i = 0; i < ipBandList.size(); i++) {
         			getAccess = ipBandList.get(i).getAccess();
         			
-        			if (!getAccess.equals("NO")) {
-        				String ipListIp[] = ipBandList.get(i).getIpAddress().split("\\."); // *(대역)이 있을 수도 있으니 하나하나 검사해야됨
-            			for (int j = 0; j < clientIP.length; j++) {
-            				if (ipListIp[j].equals(clientIP[j]) || ipListIp[j].equals("*")) {
-            					checkCnt++;
-            				}
-            			}
-            			
-            			if (checkCnt == 4) {
-            				returnValue = true;
-            			}
-            			checkCnt = 0;
+    				String ipListIp[] = ipBandList.get(i).getIpAddress().split("\\."); // *(대역)이 있을 수도 있으니 하나하나 검사해야됨
+        			for (int j = 0; j < clientIP.length; j++) {
+        				if (ipListIp[j].equals(clientIP[j]) || ipListIp[j].equals("*")) {
+        					checkCnt++;
+        				}
         			}
+        			
+        			if (checkCnt == 4 && getAccess.equals("NO")) {
+        				return false;
+        			} else if (checkCnt == 4){
+        				returnValue = true;
+        			}
+        			checkCnt = 0;
         		}
         		
         	} else { // 대역이 등록 안돼있으면 무조건 false (useIPAccess컨피그 사용O -> id체크X -> 부서체크X -> 등록된 대역도 없으므로)

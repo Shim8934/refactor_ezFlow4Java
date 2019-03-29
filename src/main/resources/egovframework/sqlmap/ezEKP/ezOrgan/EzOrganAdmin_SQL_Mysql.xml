@@ -20,6 +20,7 @@
 		<result property="company" 								column="COMPANYNAME" 					columnIndex="7"/>		
 		<result property="title1" 								column="T1" 							columnIndex="8"/>		
 		<result property="title2" 								column="T2" 							columnIndex="9"/>		
+		<result property="jobID" 								column="JOBID" 							columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap id="permissionList" class="OrganUserVO">
@@ -51,6 +52,11 @@
 		<result property="cn" 									column="CN" 							columnIndex="1"/>	
 	</resultMap>
 	
+	<resultMap id="userExt4List" class="OrganUserVO">
+		<result property="cn" 									column="CN" 							columnIndex="1"/>	
+		<result property="extensionAttribute4" 					column="extensionAttribute4" 			columnIndex="2"/>	
+	</resultMap>
+	
 	<!-- <procedure id="EzOrganAdminDAO.insertDBData_company" parameterClass="Map">
 		<![CDATA[
 			{CALL EZSP_INSERTDBDATA_COMPANY(#v_CN#, #v_DISPLAYNAME#, #v_DISPLAYNAME2#, #v_MAIL#, #v_PARENTCN#, #v_LDAPPATH#)}
@@ -68,6 +74,9 @@
 					</isEqual>
 					<isEqual property="search_keycode" compareValue="userId">
 						CN LIKE CONCAT('%', #search_keyword#,'%')
+					</isEqual>
+					<isEqual property="search_keycode" compareValue="quota">
+						((MAILBOXUSAGE / MAILBOXQUOTA) * 100) >= #search_keyword#
 					</isEqual>
 			</isNotEmpty>
 		</isNotEmpty>
@@ -403,7 +412,9 @@
                         		' ' DISPLAYNAMEPRINTABLE  ,
                         		POSITIONCD ,
                         		BIRTH ,
-                        		BIRTHTYPE 
+                        		BIRTHTYPE ,
+                        		MAILBOXUSAGE,
+                        		MAILBOXQUOTA
              FROM
              	TBL_USERMASTER 
              WHERE
@@ -509,7 +520,9 @@
 		                        ' ' DISPLAYNAMEPRINTABLE  ,
 		                        POSITIONCD ,
 		                        BIRTH ,
-		                        BIRTHTYPE 
+		                        BIRTHTYPE ,
+		                        MAILBOXQUOTA,
+		                        MAILBOXUSAGE
 		          FROM
 		          		TBL_USERMASTER
                   WHERE
@@ -1036,13 +1049,13 @@
 			(#menuItemUUID40#,'203',null,#topMenuKoUUID#,'커뮤니티','커뮤니티en',null,6,'80e37141-1c98-40b4-a7dc-8298e1abdce0','/ezCommunity/communityMain.do','main',null,' ',#tenantID#),
 			(#menuItemUUID41#,'204','89c88f6b-b68e-45a8-9a2b-58817f6d6cab',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID42#,'204',#menuItemUUID17#,#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
-			(#menuItemUUID43#,'203',null,#topMenuKoUUID#,'일정관리','Schedule',null,3,'c76829c2-94a9-48e5-b281-c4a8df65afcb','/ezSchedule/scheduleIndex.do?funCode=2','main',null,' ',#tenantID#),
+			(#menuItemUUID43#,'203',null,#topMenuKoUUID#,'일정관리','Schedule',null,3,'c76829c2-94a9-48e5-b281-c4a8df65afcb','/ezSchedule/scheduleIndex.do','main',null,' ',#tenantID#),
 			(#menuItemUUID44#,'203',null,#topMenuKoUUID#,'자원관리','자원관리',null,7,'55500da7-0de3-4e2c-8acc-e52cbd8bbee8','/ezResource/resMain.do',null,null,null,#tenantID#),
 			(#menuItemUUID45#,'202',null,#topMenuEnUUID#,'Help','Help',null,4,null,'/ezPortal/help/help.do','helpWindow',null,'height=700px,width=1000px, status = no, toolbar=no, menubar=no, location=no, resizable=0',#tenantID#),
 			(#menuItemUUID46#,'204',#menuItemUUID43#,#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID47#,'204','c4cb8eef-6f1c-4c7b-b8cb-de1cd5196da9',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID48#,'204','52bd442b-58c4-4f2e-aadf-3cf6264631a5',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
-			(#menuItemUUID49#,'203',null,#topMenuEnUUID#,'Schedule','Schedule',null,3,'388f0b77-9c53-42d5-b860-7eb1e74db215','/ezSchedule/scheduleIndex.do?funCode=2',null,null,null,#tenantID#),
+			(#menuItemUUID49#,'203',null,#topMenuEnUUID#,'Schedule','Schedule',null,3,'388f0b77-9c53-42d5-b860-7eb1e74db215','/ezSchedule/scheduleIndex.do',null,null,null,#tenantID#),
 			(#menuItemUUID50#,'204','f96d5cd6-17f3-4765-9657-f1d18475ba4b',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID51#,'204','f78914fe-351f-473b-87da-ed967bce5060',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID52#,'204','64f696d4-4b57-445a-aadf-1e171ae7bcb8',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
@@ -1074,7 +1087,7 @@
 			(#menuItemUUID79#,'204',#menuItemUUID37#,#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID80#,'204','b8d8195c-c484-4409-a9bd-89e93d76e262',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID81#,'204','68be0f39-94ad-4b46-8ff5-304bdfddb47a',#topMenuKoUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
-			(#menuItemUUID82#,'203',null,#topMenuJaUUID#,'日程管理','Schedule',null,3,'ecb5c796-bfce-46a0-9c42-801eca04b31b','/ezSchedule/scheduleIndex.do?funCode=2',null,null,null,#tenantID#),
+			(#menuItemUUID82#,'203',null,#topMenuJaUUID#,'日程管理','Schedule',null,3,'ecb5c796-bfce-46a0-9c42-801eca04b31b','/ezSchedule/scheduleIndex.do',null,null,null,#tenantID#),
 			(#menuItemUUID83#,'204','517efcdf-3e2d-4588-ba6f-14eebeee48d9',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
 			(#menuItemUUID84#,'202',null,#topMenuJaUUID#,'組織','組織',null,2,null,'/ezPersonal/personSearch.do',null,null,'height=560px,width=750px, status = no, toolbar=no, menubar=no,location=no, resizable=0',#tenantID#),
 			(#menuItemUUID85#,'204','109faf7e-faf4-464f-8206-c19a3880a206',#topMenuEnUUID#,null,null,null,null,null,null,null,null,null,#tenantID#),
@@ -1437,7 +1450,7 @@
                  ('A60','0  ','수신처상태','0','ProcessYN Flag','수신처상태','수신처상태','수신처상태',#tenantID#, #companyID#),
                  ('A60','A  ','도착','1','도착 (Arrived)','Arrived','到着','到达',#tenantID#, #companyID#),
                  ('A60','E  ','전송실패','1','전송 실패 (Error)','Error','送信エラー','传输失败',#tenantID#, #companyID#),
-                 ('A60','H  ','회송','1','회송 (HweSong)','Return','回送','返回',#tenantID#, #companyID#),
+                 ('A60','H  ','회송','1','회송 (HweSong)','Return','返送','返回',#tenantID#, #companyID#),
                  ('A60','I  ','접수','1','접수 (Inter..)','Reception progress','受付','收到',#tenantID#, #companyID#),
                  ('A60','N  ','대기','1','발신 대기 (Not Yet)','No receipt','待機','待机',#tenantID#, #companyID#),
                  ('A60','O  ','발송의뢰','1','발송 의뢰 (Offered)','Offered','送信依頼','发送请求',#tenantID#, #companyID#),
@@ -1515,7 +1528,7 @@
                  ('A02','022','대외접수','1','대외문서접수함','Receipt(outside)','対外受付','对外接收',#tenantID#, #companyID#),
                  ('A02','023','대외발송','1','대외문서발송함','Sending(outside)','対外送信','对外发送',#tenantID#, #companyID#),
                  ('A02','031','반송','1','반송','Rejection','差し戻し','退回',#tenantID#, #companyID#),
-                 ('A02','032','회송','1','회송','Returning','回送','退回',#tenantID#, #companyID#),
+                 ('A02','032','회송','1','회송','Returning','返送','退回',#tenantID#, #companyID#),
                  ('A03','0  ','결재방법','0','결재방법','결재방법',null,null,#tenantID#, #companyID#),
                  ('A03','001','결재','1','일반','Approval','決裁','审批',#tenantID#, #companyID#),
                  ('A03','002','확인','0','확인','Confirmation','回覧','確認',#tenantID#, #companyID#),
@@ -1527,7 +1540,7 @@
                  ('A03','008','개인순차합의','1','개인순차협조','Agreement(personal)','個人順次合意','个人顺序协议',#tenantID#, #companyID#),
                  ('A03','009','개인병렬합의','1','개인병렬협조','Parallel agreement(personal)','個人並列合意','个人并行协议',#tenantID#, #companyID#),
                  ('A03','011','부서순차합의','1','부서순차협조','Sequential agreement(dept.)','部署順次合意','顺序协议(部门)',#tenantID#, #companyID#),
-                 ('A03','012','부서병렬합의','1','부서병렬협조','Parallel agreement(dept.)','個人並列合意','并行的协议(部门)',#tenantID#, #companyID#),
+                 ('A03','012','부서병렬합의','1','부서병렬협조','Parallel agreement(dept.)','部署並列合意','并行的协议(部门)',#tenantID#, #companyID#),
                  ('A03','013','사전감사','0','감사','Pre-audit','監査','审查',#tenantID#, #companyID#),
                  ('A03','014','수신','0','제일제당수신','Receipt','受信','收件',#tenantID#, #companyID#),
                  ('A03','015','공람','0','후결','Display','回覧','传阅',#tenantID#, #companyID#),
@@ -1547,8 +1560,8 @@
                  ('A04','011','도착','1','도착','Arrived','到着','到达',#tenantID#, #companyID#),
                  ('A04','012','지정','1','지정','Designated','未受付','未接收',#tenantID#, #companyID#),
                  ('A04','013','접수','1','접수','Received','受付','接收',#tenantID#, #companyID#),
-                 ('A04','014','배부','1','배부','Distributed','配付','发行',#tenantID#, #companyID#),
-                 ('A04','015','회송','1','회송','Returned','回送','退回',#tenantID#, #companyID#),
+                 ('A04','014','배부','1','배부','Distributed','転送','发行',#tenantID#, #companyID#),
+                 ('A04','015','회송','1','회송','Returned','返送','退回',#tenantID#, #companyID#),
                  ('A04','016','접수','1','수신진행','Received','受信進行','进行接收',#tenantID#, #companyID#),
                  ('A04','017','수신완료','1','수신완료','Completed(receipt)','受信完了','接收完成',#tenantID#, #companyID#),
                  ('A04','018','발신','1','수신부서미접수','Sending','未受付','未接收',#tenantID#, #companyID#),
@@ -1576,7 +1589,7 @@
                  ('A17','001','일반의견','1','일반의견','General','一般','一般意见',#tenantID#, #companyID#),
                  ('A17','002','반송의견','1','반송의견','Rejection','差し戻し','退回意见',#tenantID#, #companyID#),
                  ('A17','003','보류의견','1','보류의견','Holding','保留意見','保存意见',#tenantID#, #companyID#),
-                 ('A17','004','회송의견','1','회송의견','Returning','回送','退回意见',#tenantID#, #companyID#),
+                 ('A17','004','회송의견','1','회송의견','Returning','返送','退回意见',#tenantID#, #companyID#),
                  ('A17','005','지시사항','1','지시사항','지시사항','指示','说明',#tenantID#, #companyID#),
                  ('A17','006','메모','1','메모','메모','メモ','备忘录',#tenantID#, #companyID#),
                  ('A18','0  ','결재날짜순서','1','리스트ORDERBY','결재날짜순서','결재날짜순서','결재날짜순서',#tenantID#, #companyID#),
@@ -1622,9 +1635,9 @@
 			('SA02', '001',		'품의',					'Draft',				'稟議',			'评价',			'1',	'품의',		#companyID#,	#tenantID#),
 			('SA02', '002',		'협조',					'Agreement(personal)',	'協力',			'合作',			'1',	'협조',		#companyID#,	#tenantID#),
 			('SA02', '003',		'감사',					'Audit',				'遵法監視',		'监督',			'0',	'준법감시',	#companyID#,	#tenantID#),
-			('SA02', '004',		'심사',					'심사_EN',				'심사_JA',		'심사_ZH',		'1',	'심사',		#companyID#,	#tenantID#),
+			('SA02', '004',		'심사',					'Request send',				'審査',		'심사_ZH',		'1',	'심사',		#companyID#,	#tenantID#),
 			('SA02', '011',		'수신',					'Receipt',				'受信',		'收件',		'1',	'수신',		#companyID#,	#tenantID#),
-			('SA02', '012',		'협조/합의',				'기안문_EN',				'기안문_JA',	'기안문_ZH',	'1',	'기안문',	#companyID#,	#tenantID#),
+			('SA02', '012',		'협조/합의',				'Draft',				'合意',	'기안문_ZH',	'1',	'기안문',	#companyID#,	#tenantID#),
 			('SA02', '013',		'시행',					'Enforcement',			'施行',		'执行',		'0',	'시행',		#companyID#,	#tenantID#),
 			('SA02', '014',		'감사(검사부)',				'Audit(dept.)',			'監査',		'审查',		'0',	'감사',		#companyID#,	#tenantID#),
 			('SA02', '015',		'공람',					'Display',				'回覧',		'传阅',		'0',	'회람',		#companyID#,	#tenantID#),
@@ -1635,9 +1648,9 @@
 			('SA02', '020',		'신청',					'Application',			'施行',		'执行',		'0',	'시행',		#companyID#,	#tenantID#),
 			('SA02', '022',		'대외문서접수',				'Receipt(outside)',		'対外受付',	'对外接收',	'0',	'대외접수',	#companyID#,	#tenantID#),
 			('SA02', '023',		'대외문서발송',				'Sending(outside)',		'対外送信',	'对外发送',	'0',	'대외발송',	#companyID#,	#tenantID#),
-			('SA02', '024',		'수신배부',				'배부_EN',				'배부_JA',		'배부_ZH',		'1',	'배부',		#companyID#,	#tenantID#),
+			('SA02', '024',		'수신배부',				'Distributed',				'転送',		'배부_ZH',		'1',	'배부',		#companyID#,	#tenantID#),
 			('SA02', '031',		'반송',					'Rejection',			'差し戻し',	'退回',		'0',	'반송',		#companyID#,	#tenantID#),
-			('SA02', '032',		'회송',					'Returning',			'回送',	'退回',		'0',	'회송',		#companyID#,	#tenantID#),
+			('SA02', '032',		'회송',					'Returning',			'返送',	'退回',		'0',	'회송',		#companyID#,	#tenantID#),
            ('SA03','0  ','결재방법','결재방법',null,null,'0','결재방법',#companyID#, #tenantID# ),
            ('SA03','001','결재','Approval','決裁','审批','1','일반',#companyID#, #tenantID# ),
            ('SA03','002','확인','Confirmation','確認','確認','1','확인',#companyID#, #tenantID# ),
@@ -1649,7 +1662,7 @@
            ('SA03','008','개인순차합의','Agreement(personal)','個人順次合意','个人顺序协议','1','개인순차협조',#companyID#, #tenantID# ),
            ('SA03','009','개인병렬합의','Parallel agreement(personal)','個人並列合意','个人并行协议','1','개인병렬협조',#companyID#, #tenantID# ),
            ('SA03','011','부서순차합의','Sequential agreement(dept.)','部署順次合意','顺序协议(部门)','1','부서순차협조',#companyID#, #tenantID# ),
-           ('SA03','012','부서병렬합의','Parallel agreement(dept.)','個人並列合意','并行的协议(部门)','1','부서병렬협조',#companyID#, #tenantID# ),
+           ('SA03','012','부서병렬합의','Parallel agreement(dept.)','部署並列合意','并行的协议(部门)','1','부서병렬협조',#companyID#, #tenantID# ),
            ('SA03','013','사전감사','Pre-audit','監査','审查','0','감사',#companyID#, #tenantID# ),
            ('SA03','014','수신','Receipt','受信','收件','0','제일제당수신',#companyID#, #tenantID# ),
            ('SA03','015','회람','Circular reference','回覧','传阅','0','회람',#companyID#, #tenantID# ),
@@ -1792,7 +1805,7 @@
 			('SL06', '006', '문서발송', '문서발송', '文書送信', '문서발송', '1', '결재알림시 사용', #companyID#, #tenantID#),
 			('SL06', '007', '수신문서', '수신문서', '受信文書', '수신문서', '1', '결재알림시 사용', #companyID#, #tenantID#),
 			('SL06', '008', '지정문서', '지정문서', '指定文書', '지정문서', '1', '결재알림시 사용', #companyID#, #tenantID#),
-			('SL06', '009', '회송문서', '회송문서', '回送文書', '회송문서', '1', '결재알림시 사용', #companyID#, #tenantID#),
+			('SL06', '009', '회송문서', '회송문서', '返送文書', '회송문서', '1', '결재알림시 사용', #companyID#, #tenantID#),
 			('SL06', '010', '문서회수', '문서회수', '文書引き戻し', '문서회수', '1', '결재알림시 사용', #companyID#, #tenantID#),
 			('SL06', '011', '결재노티', '결재노티', '決済完了通知', '결재노티', '1', '결재알림시 사용', #companyID#, #tenantID#),
 			('ST01', '0  ', '재기안 의견유무', '재기안 의견유무', '재기안 의견유무', '재기안 의견유무', '1', '재기안시 반송의견 삭제 유/무( Y : 삭제 or N : 삭제안함 )', #companyID#, #tenantID#),
@@ -1807,10 +1820,10 @@
             ('SA04','006','회수','Withdrew','引き戻し','回收', '1','회수',#companyID#,#tenantID#),
             ('SA04','010','완료','Completed','完了','完成','1','완료', #companyID#,#tenantID#),
             ('SA04','011','도착','Arrived','到着','到达', '1','도착',#companyID#,#tenantID#),
-            ('SA04','012','미접수','Designated','未受付','未接收', '1','지정',#companyID#,#tenantID#),
+            ('SA04','012','지정','Designated','指定','未接收', '1','지정',#companyID#,#tenantID#),
             ('SA04','013','접수','Received','受付','接收', '1','접수',#companyID#,#tenantID#),
-            ('SA04','014','배부','Distributed','配付','发行', '1','배부',#companyID#,#tenantID#),
-            ('SA04','015','회송','Returned','回送','退回','1','회송',#companyID#,#tenantID#),
+            ('SA04','014','배부','Distributed','転送','发行', '1','배부',#companyID#,#tenantID#),
+            ('SA04','015','회송','Returned','返送','退回','1','회송',#companyID#,#tenantID#),
             ('SA04','016','접수','Received','受信進行','进行接收', '1','수신진행',#companyID#,#tenantID#),
             ('SA04','017','수신완료','Completed(receipt)','受信完了','接收完成', '1','수신완료',#companyID#,#tenantID#),
             ('SA04','018','발신','Sending','未受付','未接收', '1','수신부서미접수',#companyID#,#tenantID#),
@@ -1855,7 +1868,7 @@
                ('013',4,'부서',130,'TBL_APRLINEINFO','AprMemberDeptName',null,null,'결재선정보(코딩)','부서명','Dept.','部署','部门',#tenantID#, #companyID#),
                ('013',5,'결재유형',120,'TBL_APRLINEINFO','AprType',null,null,'결재선정보(코딩)','결재방법','Type','処理類型','批准类型',#tenantID#, #companyID#),
                ('013',6,'결재상태',70,'TBL_APRLINEINFO','AprState',null,null,'결재선정보(코딩)','결재상태','Status','ステータス','批准状态',#tenantID#, #companyID#),
-               ('013',7,'결재일시',120,'TBL_APRLINEINFO','ProcessDate',null,null,'결재선정보(코딩)','결재일시','Date','処理日時','批准日',#tenantID#, #companyID#),
+               ('013',7,'결재일시',140,'TBL_APRLINEINFO','ProcessDate',null,null,'결재선정보(코딩)','결재일시','Date','処理日時','批准日',#tenantID#, #companyID#),
                ('021',1,'순번',35,'TBL_RECEIPTPOINTINFO','DeptMemberSN',null,null,'수신처정보(진행)','순번','No.','順番','序号',#tenantID#, #companyID#),
                ('021',2,'수신자명',200,'TBL_RECEIPTPOINTINFO','ReceiptPointName',null,null,'수신처정보(진행)','수신부서명','Dept.','受信部署名','收信部门名',#tenantID#, #companyID#),
                ('021',3,'수신자성명',200,'TBL_RECEIPTPOINTINFO','ReceiptMemberName',null,null,'수신처정보(진행)','수신자성명','Name','受信者氏名','收信创建名',#tenantID#, #companyID#),
@@ -1943,11 +1956,11 @@
                ('066',1,'수신자',100,'TBL_HISTORYRECEIPTINFO','ReceiptDeptName',null,null,'수신처이력리스트','수신처','Dept.','受信者氏名','收信创建名',#tenantID#, #companyID#),
                ('066',2,'상태',80,'TBL_HISTORYRECEIPTINFO','Status',null,null,'수신처이력리스트','상태','Status','ステータス','状态',#tenantID#, #companyID#),
                ('066',3,'일자',100,'TBL_HISTORYRECEIPTINFO','StatusDate',null,null,'수신처이력리스트','일자','Date','日','日期',#tenantID#, #companyID#),
-               ('067',1,'배부번호',70,'TBL_DOCDELIVERY','sn',null,null,'배부대장리스트','배부번호','SN','配付番号','分配數量',#tenantID#, #companyID#),
+               ('067',1,'배부번호',70,'TBL_DOCDELIVERY','sn',null,null,'배부대장리스트','배부번호','SN','転送番号','分配數量',#tenantID#, #companyID#),
                ('067',2,'문서번호',120,'TBL_DOCDELIVERY','DocNumber',null,null,'배부대장리스트','문서번호','Doc. No.','登録番号','註冊號',#tenantID#, #companyID#),
                ('067',3,'제목',200,'TBL_DOCDELIVERY','DocTitle',null,null,'배부대장리스트','제목','Title','タイトル','标题',#tenantID#, #companyID#),
-               ('067',4,'배부일자',130,'TBL_DOCDELIVERY','ReceiptDate',null,null,'배부대장리스트','배부일자','ReceiptDate','配付日時','分派日期',#tenantID#, #companyID#),
-               ('067',5,'배부과',80,'TBL_DOCDELIVERY','Organ',null,null,'배부대장리스트','배부과','Organ','配付課','分佈及',#tenantID#, #companyID#),
+               ('067',4,'배부일자',130,'TBL_DOCDELIVERY','ReceiptDate',null,null,'배부대장리스트','배부일자','ReceiptDate','転送日時','分派日期',#tenantID#, #companyID#),
+               ('067',5,'배부과',80,'TBL_DOCDELIVERY','Organ',null,null,'배부대장리스트','배부과','Organ','転送課','分佈及',#tenantID#, #companyID#),
                ('067',6,'처리과',80,'TBL_DOCDELIVERY','ManageDept',null,null,'배부대장리스트','처리과','Manage Dept.','処理課','加工',#tenantID#, #companyID#),
                ('067',7,'인수자',80,'TBL_DOCDELIVERY','ChargeName',null,null,'배부대장리스트','인수자','Charge Name','引受者','引受者',#tenantID#, #companyID#),
                ('081',1,'제목',300,'TBL_APRDOCINFO','DocTitle',null,null,'관리자 진행문서','제목','Title','タイトル','标题',#tenantID#, #companyID#),
@@ -2130,14 +2143,13 @@
                  (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) 
           VALUES
                  ('S001', 1, '제목', 'Title', 'タイトル', '标题', 300, 'VAPRDOINGDOCLIST', 'DocTitle', NULL, NULL, '결재할 문서', '제목', #companyID#, #tenantID#),
-                 ('S001', 2, '회사', 'Company', '会社', '公司', 135, 'VAPRDOINGDOCLIST', 'companyName', NULL, NULL, '결재할 문서', '회사', #companyID#, #tenantID#),
-                 ('S001', 3, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 135, 'VAPRDOINGDOCLIST', 'WriterDeptName', NULL, NULL, '결재할 문서', '기안부서', #companyID#, #tenantID#),
-                 ('S001', 4, '기안자', 'Drafter', '起案者', '起草人', 70, 'VAPRDOINGDOCLIST', 'WriterName', NULL, NULL, '결재할 문서', '기안자', #companyID#, #tenantID#),
-                 ('S001', 5, '기안일시', 'Date(draft)', '起案日時', '起草日期', 160, 'VAPRDOINGDOCLIST', 'StartDate', NULL, NULL, '결재할 문서', '기안일시', #companyID#, #tenantID#),
-                 ('S001', 6, '상태', 'Status', 'ステータス', '状态', 50, 'VAPRDOINGDOCLIST', 'FunctionTypeName', NULL, NULL, '결재할 문서', '상태', #companyID#, #tenantID#),
-                 ('S001', 7, '문서명', 'Form title', '文書名', '文件名', 100, 'VAPRDOINGDOCLIST', 'FormName', NULL, NULL, '결재할 문서', '양식명', #companyID#, #tenantID#),
-                 ('S001', 8, '첨부', 'Attach', '添付', '附件', 50, 'VAPRDOINGDOCLIST', 'HASATTACHYN', NULL, NULL, '결재할 문서', '첨부', #companyID#, #tenantID#),
-                 ('S001', 9, '공개', 'Public', '公開', '公开', 50, 'VAPRDOINGDOCLIST', 'ISPUBLIC', NULL, NULL, '결재할 문서', '공개', #companyID#, #tenantID#),
+                 ('S001', 2, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 135, 'VAPRDOINGDOCLIST', 'WriterDeptName', NULL, NULL, '결재할 문서', '기안부서', #companyID#, #tenantID#),
+                 ('S001', 3, '기안자', 'Drafter', '起案者', '起草人', 70, 'VAPRDOINGDOCLIST', 'WriterName', NULL, NULL, '결재할 문서', '기안자', #companyID#, #tenantID#),
+                 ('S001', 4, '수신일자', 'ProcessDate', '到着日時', '接收日', 160, 'VAPRDOINGDOCLIST', 'StartDate', NULL, NULL, '결재할 문서', '기안일시', #companyID#, #tenantID#),
+                 ('S001', 5, '상태', 'Status', 'ステータス', '状态', 50, 'VAPRDOINGDOCLIST', 'FunctionType', NULL, NULL, '결재할 문서', '상태', #companyID#, #tenantID#),
+                 ('S001', 6, '문서명', 'Form title', '文書名', '文件名', 100, 'VAPRDOINGDOCLIST', 'FormName', NULL, NULL, '결재할 문서', '양식명', #companyID#, #tenantID#),
+                 ('S001', 7, '첨부', 'Attach', '添付', '附件', 50, 'VAPRDOINGDOCLIST', 'HASATTACHYN', NULL, NULL, '결재할 문서', '첨부', #companyID#, #tenantID#),
+                 ('S001', 8, '공개', 'Public', '公開', '公开', 50, 'VAPRDOINGDOCLIST', 'ISPUBLIC', NULL, NULL, '결재할 문서', '공개', #companyID#, #tenantID#),
                  ('S002', 1, '제목', 'Title', 'タイトル', '标题', 300, 'VAPRWILLDOCLIST', 'DocTitle', NULL, NULL, '기안한 문서', '제목', #companyID#, #tenantID#),
                  ('S002', 2, '회사', 'Company', '会社', '公司', 135, 'VAPRWILLDOCLIST', 'companyName', NULL, NULL, '기안한 문서', '회사', #companyID#, #tenantID#),
                  ('S002', 3, '기안부서', 'Dept.(draft)', '起案部署', '起草部门', 135, 'VAPRWILLDOCLIST', 'WriterDeptName', NULL, NULL, '기안한 문서', '기안부서', #companyID#, #tenantID#),
@@ -2500,7 +2512,7 @@
                    ('P07',6,'제목',200,null,null,'DocTitle','Default',null,null,'Title','タイトル','标题',#tenantID#, #companyID#),
                    ('P07',7,'받은 처리과코드',120,null,null,'ManageDeptID','Default',null,null,'ManageDeptID','された処理とコード','接受治疗和代码',#tenantID#, #companyID#),
                    ('P07',8,'받은 처리과명',150,null,null,'ManageDept','Default',null,null,'ManageDept','された処理科名','而接受治疗名',#tenantID#, #companyID#),
-                   ('P07',9,'배부일자',120,null,null,'DeliveryD','Default',null,null,'ReceiptDate','配付日時','分派日期',#tenantID#, #companyID#),
+                   ('P07',9,'배부일자',120,null,null,'DeliveryD','Default',null,null,'ReceiptDate','転送日時','分派日期',#tenantID#, #companyID#),
                    ('P07',10,'인수자',120,null,null,'ChargeName','Default',null,null,'Charge Name','引受者','引受者',#tenantID#, #companyID#),
                    ('001',1,'순번',40,null,null,'dtSerialNum','dtSerialNum','기록물 대장',null,'No.','順番','序号',#tenantID#, #companyID#),
                    ('001',2,'등록구분',120,'TBL_SEPERATEATTACH','TBL_SEPERATEATTACH.RegisterType','RegisterType','dtRegisterType','기록물 대장',null,'RegisterType','登録区分','招生区分',#tenantID#, #companyID#),
@@ -2748,7 +2760,7 @@
 				(#menuItemSUID40#,#menuItemUUID17#,#topMenuEnUUID#,'In process','In process',2,' ','/ezApproval/apprMain.do?listType=3','main',' ',#tenantID#),
 				(#menuItemSUID41#,#menuItemUUID93#,#topMenuEnUUID#,'Dept.receipt folder','Dept.receipt folder',3,' ','/ezApprovalG/apprGMain.do?listType=4','main',' ',#tenantID#),
 				(#menuItemSUID42#,#menuItemUUID61#,#topMenuJaUUID#,'予約掲示','予約掲示',3,' ','/ezBoard/boardMain.do?subFunc=2','main',' ',#tenantID#),
-				(#menuItemSUID43#,#menuItemUUID43#,#topMenuKoUUID#,'업무관리','ToDo',1,' ','/ezSchedule/scheduleIndex.do?funCode=3','main',' ',#tenantID#);
+				(#menuItemSUID43#,#menuItemUUID43#,#topMenuKoUUID#,'업무관리','ToDo',1,' ','/ezSchedule/scheduleIndex.do?funCode=3','main',' ',#tenantID#)
     </insert>
   
 	<delete id="EzOrganAdminDAO.retireDBData" parameterClass="Map">
@@ -2955,7 +2967,8 @@
                 END
                 	COMPANYNAME  ,
              	A.TITLE T1  ,
-             	A.TITLE2 T2  
+             	A.TITLE2 T2,
+             	A.JOBID  
         	FROM
         		TBL_ADDJOBMASTER A
             JOIN
@@ -3282,7 +3295,6 @@
     </update>
      
     <update id="EzOrganAdminDAO.moveGroupUser_U" parameterClass="Map">
-        <![CDATA[
             UPDATE
                 TBL_USERMASTER
             SET 
@@ -3293,12 +3305,30 @@
                 COMPANY = (SELECT EXTENSIONATTRIBUTE3 FROM (SELECT EXTENSIONATTRIBUTE3 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
                 COMPANY2 = (SELECT COMPNM2 FROM (SELECT COMPNM2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#) AA),
                 UPDATEDT = #timeUTC#,
-                EXTENSIONATTRIBUTE15 = 0
+                EXTENSIONATTRIBUTE15 = 0,
+                <isNotEmpty property="initPermission">
+                	EXTENSIONATTRIBUTE1 = #initPermission#
+                </isNotEmpty>
+                <isEmpty property="initPermission">
+                	EXTENSIONATTRIBUTE1 = (
+                	SELECT 
+                		EXTENSIONATTRIBUTE1
+       				FROM 
+	                	(SELECT 
+	                		REPLACE(REPLACE(REPLACE(EXTENSIONATTRIBUTE1, 'g=1', 'g=0'), 'a=1', 'a=0'), 'm=1', 'm=0') AS EXTENSIONATTRIBUTE1
+	                	FROM 
+	                		TBL_USERMASTER
+	                	WHERE
+			                CN = #v_CN#
+			            AND
+			                TENANT_ID = #v_TENANT_ID#
+		                ) b
+		            )
+                </isEmpty>
             WHERE
                 CN = #v_CN#
             AND
                 TENANT_ID = #v_TENANT_ID#  
-        ]]>
     </update>
  	
 	<!-- <procedure id="EzOrganAdminDAO.getRetireEntryInfo" parameterClass="Map" resultClass="OrganUserVO">
@@ -3422,6 +3452,18 @@
 	    ]]>    		 				
 	</select>
 	
+	<select id="EzOrganAdminDAO.allUserList" parameterClass="int" resultMap="userCnList">
+		<![CDATA[
+			SELECT
+				*
+			FROM
+				TBL_USERMASTER a
+            WHERE
+				a.tenant_id = #tenantID#
+	    	ORDER BY cn
+	    ]]>
+	</select>
+
     <select id="EzOrganAdminDAO.userCount" parameterClass="int" resultClass="int">
         <![CDATA[
             SELECT 
@@ -3600,6 +3642,8 @@
 	  		<isNotNull property="info" prepend=","> <![CDATA[info = #info#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute7" prepend=","> <![CDATA[extensionAttribute7 = #extensionAttribute7#]]></isNotNull>
 	  		<isNotNull property="extensionAttribute8" prepend=","> <![CDATA[extensionAttribute8 = #extensionAttribute8#]]></isNotNull>
+	  		<isNotNull property="mailboxUsage" prepend=","> <![CDATA[mailboxUsage = #mailboxUsage#]]></isNotNull>
+	  		<isNotNull property="mailboxQuota" prepend=","> <![CDATA[mailboxQuota = #mailboxQuota#]]></isNotNull>
 	  	</dynamic>
 	  	<![CDATA[
       		WHERE
@@ -3639,8 +3683,10 @@
         DELETE FROM
             TBL_ADDJOBMASTER
         WHERE  
+		<isNotNull property="v_CN">
             cn = #v_CN#
         AND 
+        </isNotNull>
             deptid = #v_DEPTID#
         AND 
             TENANT_ID = #v_TENANT_ID#
@@ -3842,7 +3888,9 @@
 			CN,
 			displayName,
 			department,
-			description
+			description,
+			mailboxquota,
+			mailboxusage
 		FROM 
 	    	TBL_USERMASTER	
         WHERE 
@@ -4033,6 +4081,19 @@
 		AND
 			TENANT_ID = #v_TENANTID#
 	</update>
+	<update id="EzOrganAdminDAO.updateTitle3" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ADDJOBMASTER
+			SET
+				TITLE = #v_DISPLAYNAME#,
+				TITLE2 = #v_DISPLAYNAME2#
+			WHERE
+				JOBID = #v_JOBID#
+			AND
+				TENANT_ID = #v_TENANTID#
+		]]>
+	</update>
 	<delete id="EzOrganAdminDAO.deleteTitle" parameterClass="Map">
 	<![CDATA[
 		DELETE FROM
@@ -4048,6 +4109,7 @@
 	]]>
 	</delete>
 	<select id="EzOrganAdminDAO.selectTitleUserList" parameterClass="Map" resultClass="OrganUserVO" remapResults="true">
+	SELECT * FROM (
 		SELECT 
 			TBL_USERMASTER.CN,
 			TBL_USERMASTER.DISPLAYNAME,
@@ -4057,7 +4119,8 @@
 			TBL_USERMASTER.DESCRIPTION2,
 			TBL_USERMASTER.TELEPHONENUMBER,
 			TBL_USER_JOBMASTER.DISPLAYNAME AS TITLE,
-			TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2
+			TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2,
+			'user' AS USERTYPE
 		FROM 
 			TBL_USERMASTER
 		<isEqual property="v_TYPE" compareValue="001">
@@ -4098,6 +4161,55 @@
 				TBL_USERMASTER.TENANT_ID = #v_TENANTID#
 			AND 
                 TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+		<isEqual property="v_TYPE" compareValue="001">
+			UNION ALL
+			
+			SELECT
+				TBL_USERMASTER.CN,
+			    TBL_USERMASTER.DISPLAYNAME,
+			    TBL_USERMASTER.DISPLAYNAME2,
+			    TBL_ADDJOBMASTER.DEPTID AS DEPARTMENT,
+			    TBL_DEPTMASTER.DISPLAYNAME AS DESCRIPTION,
+			    TBL_DEPTMASTER.DISPLAYNAME2 AS DESCRIPTION2,
+			    TBL_USERMASTER.TELEPHONENUMBER,
+			    TBL_ADDJOBMASTER.TITLE,
+			    TBL_ADDJOBMASTER.TITLE2,
+			    'addJob' AS USERTYPE
+			FROM
+				TBL_USER_JOBMASTER
+			JOIN 
+				TBL_ADDJOBMASTER
+			ON
+				TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.JOBID
+			AND
+				TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+			JOIN
+				TBL_USERMASTER
+			ON
+				TBL_USERMASTER.CN = TBL_ADDJOBMASTER.CN
+			AND
+				TBL_USERMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+			JOIN
+				TBL_DEPTMASTER
+			ON
+				TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+			AND
+				TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.JOBID = #v_JOBID#
+			AND
+				TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
+		</isEqual>
+		) AS A
+		<isNotEmpty property="v_SUBQUERY">
+			$v_SUBQUERY$
+		</isNotEmpty>
+			ORDER BY
+				USERTYPE, CN
+		<isNotEmpty property="v_PAGESIZE">
+			LIMIT
+				#v_PAGENUM#, #v_PAGESIZE#
+		</isNotEmpty>
 	</select>
 	<select id="EzOrganAdminDAO.selectTitleListCnt" parameterClass="Map" resultClass="int" remapResults="true">
 		SELECT
@@ -4111,50 +4223,187 @@
 		AND
 			TENANT_ID = #v_TENANTID#
 	</select>
+	
 	<select id="EzOrganAdminDAO.selectTitleUserListCnt" parameterClass="Map" resultClass="int" remapResults="true">
+		<isEqual property="v_TYPE" compareValue="001">
+			SELECT (
+				SELECT 
+					COUNT(*)
+				FROM
+					TBL_USERMASTER
+				JOIN
+					TBL_USER_JOBMASTER
+				ON 
+					TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
+				AND 
+					TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+				AND 
+					TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+				WHERE
+					TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+				AND
+					TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
+				AND 
+					TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+				AND
+					TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+				AND 
+		            TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+			)+(
+				SELECT
+					COUNT(*)
+				FROM
+					TBL_USER_JOBMASTER
+				JOIN 
+					TBL_ADDJOBMASTER
+				ON
+					TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.JOBID
+				AND
+					TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+				JOIN
+					TBL_USERMASTER
+				ON
+					TBL_USERMASTER.CN = TBL_ADDJOBMASTER.CN
+				AND
+					TBL_USERMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+				JOIN
+					TBL_DEPTMASTER
+				ON
+					TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+				AND
+					TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
+				WHERE
+					TBL_USER_JOBMASTER.JOBID = #v_JOBID#
+				AND
+					TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
+			) AS COUNT
+			FROM
+				DUAL
+		</isEqual>
+		<isEqual property="v_TYPE" compareValue="002">
+			SELECT 
+				COUNT(*)
+			FROM 
+				TBL_USERMASTER
+			JOIN 
+				TBL_USER_JOBMASTER
+			ON 
+				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
+			AND 
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+			AND 
+				TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+			AND
+				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
+			AND 
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+			AND
+				TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+			AND 
+	            TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+		</isEqual>
+	</select>
+	<select id="EzOrganAdminDAO.selectTitleUserListCnt2" parameterClass="Map" resultClass="int" remapResults="true">
+		SELECT COUNT(*) 
+		FROM (
 		SELECT 
-			COUNT(*)
+			TBL_USERMASTER.CN,
+			TBL_USERMASTER.DISPLAYNAME,
+			TBL_USERMASTER.DISPLAYNAME2,
+			TBL_USERMASTER.DEPARTMENT,
+			TBL_USERMASTER.DESCRIPTION,
+			TBL_USERMASTER.DESCRIPTION2,
+			TBL_USERMASTER.TELEPHONENUMBER,
+			TBL_USER_JOBMASTER.DISPLAYNAME AS TITLE,
+			TBL_USER_JOBMASTER.DISPLAYNAME2 AS TITLE2,
+			'user' AS USERTYPE
 		FROM 
 			TBL_USERMASTER
-	<isEqual property="v_TYPE" compareValue="001">
-	<![CDATA[
-		JOIN 
-			TBL_USER_JOBMASTER
-		ON 
-			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
-		AND 
-			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
-		AND 
-			TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
-		WHERE
-			TBL_USER_JOBMASTER.TYPE = #v_TYPE#
-		AND
-			TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
-	]]>
-	</isEqual>
-	<isEqual property="v_TYPE" compareValue="002">
-	<![CDATA[
-		JOIN 
-			TBL_USER_JOBMASTER
-		ON 
-			TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
-		AND 
-			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
-		AND 
-			TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
-		WHERE
-			TBL_USER_JOBMASTER.TYPE = #v_TYPE#
-		AND
-			TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
-	]]>
-	</isEqual>
-		AND 
-			TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
-		AND
-			TBL_USERMASTER.TENANT_ID = #v_TENANTID#
-		AND 
-            TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+		<isEqual property="v_TYPE" compareValue="001">
+		<![CDATA[
+			JOIN 
+				TBL_USER_JOBMASTER
+			ON 
+				TBL_USERMASTER.EXTENSIONATTRIBUTE7 = TBL_USER_JOBMASTER.JOBID
+			AND 
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+			AND 
+				TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+			AND
+				TBL_USERMASTER.EXTENSIONATTRIBUTE7 = #v_JOBID#
+		]]>
+		</isEqual>
+		<isEqual property="v_TYPE" compareValue="002">
+		<![CDATA[
+			JOIN 
+				TBL_USER_JOBMASTER
+			ON 
+				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = TBL_USER_JOBMASTER.JOBID
+			AND 
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = TBL_USER_JOBMASTER.COMPANYID 
+			AND 
+				TBL_USERMASTER.TENANT_ID = TBL_USER_JOBMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.TYPE = #v_TYPE#
+			AND
+				TBL_USERMASTER.EXTENSIONATTRIBUTE8 = #v_JOBID#
+		]]>
+		</isEqual>
+			AND
+				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #v_COMPANYID#
+			AND
+				TBL_USERMASTER.TENANT_ID = #v_TENANTID#
+			AND 
+                TBL_USERMASTER.CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANTID#)
+		<isEqual property="v_TYPE" compareValue="001">
+			UNION ALL
+			
+			SELECT
+				TBL_USERMASTER.CN,
+			    TBL_USERMASTER.DISPLAYNAME,
+			    TBL_USERMASTER.DISPLAYNAME2,
+			    TBL_ADDJOBMASTER.DEPTID AS DEPARTMENT,
+			    TBL_DEPTMASTER.DISPLAYNAME AS DESCRIPTION,
+			    TBL_DEPTMASTER.DISPLAYNAME2 AS DESCRIPTION2,
+			    TBL_USERMASTER.TELEPHONENUMBER,
+			    TBL_ADDJOBMASTER.TITLE,
+			    TBL_ADDJOBMASTER.TITLE2,
+			    'addJob' AS USERTYPE
+			FROM
+				TBL_USER_JOBMASTER
+			JOIN 
+				TBL_ADDJOBMASTER
+			ON
+				TBL_USER_JOBMASTER.JOBID = TBL_ADDJOBMASTER.JOBID
+			AND
+				TBL_USER_JOBMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+			JOIN
+				TBL_USERMASTER
+			ON
+				TBL_USERMASTER.CN = TBL_ADDJOBMASTER.CN
+			AND
+				TBL_USERMASTER.TENANT_ID = TBL_ADDJOBMASTER.TENANT_ID
+			JOIN
+				TBL_DEPTMASTER
+			ON
+				TBL_DEPTMASTER.CN = TBL_ADDJOBMASTER.DEPTID
+			AND
+				TBL_DEPTMASTER.TENANT_ID = TBL_USERMASTER.TENANT_ID
+			WHERE
+				TBL_USER_JOBMASTER.JOBID = #v_JOBID#
+			AND
+				TBL_USER_JOBMASTER.TENANT_ID = #v_TENANTID#
+		</isEqual>
+		) AS A
+		<isNotEmpty property="v_SUBQUERY">
+			$v_SUBQUERY$
+		</isNotEmpty>
 	</select>
+	
 	<select id="EzOrganAdminDAO.selectTitleCnt" parameterClass="Map" resultClass="int" remapResults="true">
 		SELECT
 			COUNT(*)
@@ -4239,7 +4488,7 @@
 				EXTENSIONATTRIBUTE15 = 0,
 				UPDATEDT = #nowDate#
 			WHERE
-				EXTENSIONATTRIBUTE2 = (SELECT * FROM(SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#)AS AA)
+				EXTENSIONATTRIBUTE1 = #v_PARENTCN#
 			AND
 				TENANT_ID = #v_TENANT_ID#
 			AND
@@ -4255,7 +4504,7 @@
 				EXTENSIONATTRIBUTE15 = EXTENSIONATTRIBUTE15 + 1,
 				UPDATEDT = #nowDate#
 			WHERE
-				EXTENSIONATTRIBUTE2 = (SELECT * FROM(SELECT EXTENSIONATTRIBUTE2 FROM TBL_DEPTMASTER WHERE CN=#v_PARENTCN# AND TENANT_ID=#v_TENANT_ID#)AS AA)
+				EXTENSIONATTRIBUTE1 = #v_PARENTCN#
 			AND
 				TENANT_ID = #v_TENANT_ID#
 			AND
@@ -4264,7 +4513,21 @@
 				EXTENSIONATTRIBUTE15 >= #v_EXTATTR15#
 		]]>
 	</update>
- 	 
+	
+	<select id="EzOrganAdminDAO.getDeptAddJobUserList" parameterClass="Map" resultMap="userExt4List">
+		<![CDATA[
+			SELECT
+				CN,
+				EXTENSIONATTRIBUTE4
+			FROM
+				TBL_USERMASTER
+			WHERE
+				(EXTENSIONATTRIBUTE4 LIKE CONCAT(#v_DEPTID#, ':%') OR EXTENSIONATTRIBUTE4 LIKE CONCAT('%;', #v_DEPTID#, ':%'))
+			AND
+				TENANT_ID = #v_TENANT_ID#
+		]]>
+	</select>
+	
      <procedure id="EzOrganAdminDAO.talk_SP_CONN_COMPANY" parameterClass="Map">
        {CALL talk_SP_CONN_COMPANY(#TENANT_ID#)}
      </procedure>

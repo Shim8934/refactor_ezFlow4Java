@@ -139,6 +139,7 @@
 	            xmldom = null;
 	        }
 	
+	        /* 2019-01-28 홍승비 - 권한 저장 시 그룹사게시판 여부 데이터 추가 */
 	        function SaveACL() {
 	            if (selectTargetListXML == "") {
 	                alert("<spring:message code='ezBoard.t600'/>")
@@ -168,6 +169,7 @@
 	                strXML += "<REPLY>" + reply_OK.checked + "</REPLY>";
 	                strXML += "<DELETE>" + delete_OK.checked + "</DELETE>";
 	                strXML += "<POSTNOTICE>" + PostNotice.checked + "</POSTNOTICE>";
+	                strXML += "<ISALLGROUPBOARD>${isAllGroupBoard}</ISALLGROUPBOARD>";
 	                strXML += "</NODE>";
 	                strXML += "</NODES>";
 	                xmldom = loadXMLString(strXML);
@@ -236,6 +238,7 @@
 	            receiverData["selectTargetListXML"] = selectTargetListXML;
 	            selecttarget_dialogArguments[0] = receiverData;
 	            selecttarget_dialogArguments[1] = SelectTarget_Complete;
+	            selecttarget_dialogArguments[2] = "${isAllGroupBoard}";
 	            var SelectTarget = window.open("/admin/ezBoard/selectTarget.do", "SelectTarget", GetOpenWindowfeature(1144, 590));
 	            try { SelectTarget.focus(); } catch (e) {
 	            }
@@ -668,6 +671,7 @@
 	                    location.href = "/ezBoard/boardItemList.do?adminType=y&boardID=" + pBoardID + "&boardName=" + encodeURIComponent(pBoardName) + "&boardType=" + pType;
 	            }
 	        }
+	        
 	        /* 2018-09-03 홍승비 - 권한복사팝업 열리는 위치 수정 */
 	        function AclCopy() {
 	            var listview = new ListView();
@@ -685,6 +689,8 @@
 	            pwidth = pwidth - 350;
 	            window.open("/admin/ezBoard/boardAclList.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=660,width=700px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
+	        
+	        /* 2019-01-28 홍승비 - 권한전파 시 그룹사게시판 파라미터 전달, 사용하지 않는 부모게시판 파라미터 제거 */
 	        function UnderBoardCopy() {
 	            var pheigth = window.screen.availHeight;
 	            var pwidth = window.screen.availWidth;
@@ -692,7 +698,7 @@
 	            pwidth = parseInt(pwidth) / 2;
 	            pheigth = pheigth - 192;
 	            pwidth = pwidth - 260;
-	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + pBoardID + "&parentBoardID=" + pParentBoardID, "", "height=170,width=458px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
+	            window.open("/admin/ezBoard/boardUnderGroupCopy.do?boardID=" + pBoardID + "&isAllGroupBoard=${isAllGroupBoard}", "", "height=170,width=458px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth, "");
 	        }
 	    </script>
 		</head>
@@ -846,28 +852,28 @@
 		<c:if test="${pParentNeed != 'Y'}">
 			<br />
 		</c:if>
-		<%-- 2018-10-17 홍승비 - 그룹사게시판 권한설정 기능 숨김 --%>
-		<c:if test="${isAllGroupBoard != 'Y'}">
-			<div id="mainmenu">
-	            <ul>
-					<c:if test="${adminType == 'y'}">
-		                <li><span onclick="goBoardList()"><spring:message code='ezBoard.t72'/></span></li>
-		                <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
-					</c:if>
-	            	<li><span onclick="SelectTarget()"><spring:message code='ezBoard.t602'/></span></li>
-	            	<li><span onclick="SaveACL()"><spring:message code='ezBoard.t98'/></span></li>
+		<div id="mainmenu">
+            <ul>
+				<c:if test="${adminType == 'y'}">
+	                <li><span onclick="goBoardList()"><spring:message code='ezBoard.t72'/></span></li>
 	                <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
-	            	<li><span onclick="DeleteACL('one')"><spring:message code='ezBoard.t89'/></span></li>
-	            	<li><span onclick="DeleteACL('type')"><spring:message code='ezBoard.t603'/></span></li>
-	            	<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
-	            	<li><span onclick="AclCopy()"><spring:message code='ezBoard.t604'/></span></li>
-	            	<li><span onclick="UnderBoardCopy()"><spring:message code='ezBoard.t605'/></span></li>
-	            </ul>
-	        </div>
-	        <script type="text/javascript">
-		        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-		    </script>
-	    </c:if>
+				</c:if>
+            	<li><span onclick="SelectTarget()"><spring:message code='ezBoard.t602'/></span></li>
+            	<li><span onclick="SaveACL()"><spring:message code='ezBoard.t98'/></span></li>
+                <!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
+            	<li><span onclick="DeleteACL('one')"><spring:message code='ezBoard.t89'/></span></li>
+            	<li><span onclick="DeleteACL('type')"><spring:message code='ezBoard.t603'/></span></li>
+            	<!-- <li style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
+            <%-- 2019-01-22 홍승비 - 그룹사게시판 -> 권한설정기능 표출, 권한복사 숨김 --%>
+			<c:if test="${isAllGroupBoard != 'Y'}">
+            	<li><span onclick="AclCopy()"><spring:message code='ezBoard.t604'/></span></li>
+			</c:if>
+            	<li><span onclick="UnderBoardCopy()"><spring:message code='ezBoard.t605'/></span></li>
+            </ul>
+        </div>
+        <script type="text/javascript">
+	        selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+	    </script>
         <script type="text/javascript">
             try{
                 parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t63'/>";

@@ -10,7 +10,7 @@
 		
 		<section  class="body_bg1">
 			<article class="portletbox pollbox">
-   				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt"><spring:message code='main.t2000' /></span><span class="btn_more" onclick="viewquicklist()"><img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span></div>
+   				<div class="title"><span class="tl"></span><span class="tr"></span> <span class="title_txt"><spring:message code='main.t2000' /></span><span class="btn_more" onclick="viewquicklist()"><img src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />"></span></div>
    				<!-- 18.11.20 qc팀 요청으로 재수정 -->
    				<div class="pollcont">
  	 				<c:choose>
@@ -23,7 +23,7 @@
   						<c:otherwise>	  						
     						<div class="nodata_portlet">
 	    						<p><img width='92' height='84' src='/images/kr/main/nodata_plan.png' /></p>
-    							<p><spring:message code='main.t260' /></p>
+    							<p><spring:message code='main.t00026' /></p>
     						</div>
   						</c:otherwise>
   					</c:choose>

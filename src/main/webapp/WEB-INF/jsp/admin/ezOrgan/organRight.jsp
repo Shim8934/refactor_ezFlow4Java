@@ -27,7 +27,6 @@
 		    var userinfo_dialogArguments = new Array();
 		    var useDisablePopImap = "";
 		    var deptTreeTopId = "${deptTreeTopId}";
-		    var changePassLength = 0;
 		    
 		    document.onselectstart = function(){
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA"){
@@ -59,7 +58,7 @@
 		    
 		    function getDeptFullTree(deptid){
 			    g_xmlHTTP = createXMLHttpRequest();
-				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
+				var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 
 				g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 				g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -179,7 +178,7 @@
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
 				            headerData.documentElement.appendChild(xmlRtn);
 				        }
-		                document.getElementById("OrganListView").innerHTML = "";
+		                document.getElementById("OrganListView").innerHTML = '<table style="width: 100%; height: 30px;" class="popup_mainlist"><tr><th style="white-space:normal;background-color: white;border-top:0px;border-bottom:1px solid #eaeaea"><span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block;"></span></th></tr></table>';
 
 				        var pUserList = new ListView();
 				        pUserList.SetID("lvUserList");
@@ -189,6 +188,11 @@
 				        pUserList.SetHeightFree(true);
 				        pUserList.DataSource(headerData);
 				        pUserList.DataBind("OrganListView");
+				        
+				        var treeView = new TreeView();
+					    treeView.LoadFromID("FromTreeView");
+					    var selnode = treeView.GetSelectNode();
+				        $("#SelectDeptNM").html("<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + selnode.GetNodeData("NodeName") + "" + "-[<span style='color:#017BEC;'>" + $(headerData).find("ROWS ROW").length + strLang24 + "</span>]");
 
 				        moveDisplay(false);
 		        	},
@@ -604,7 +608,7 @@
 					return;
 				}else if (adCount == 1){
 				    g_xmlHTTP = createXMLHttpRequest();
-				    var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";
+				    var strQuery = "<DATA><DEPTID>" + getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 				    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 					g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 					g_xmlHTTP.send(strQuery);
@@ -624,7 +628,7 @@
 					    if (rgParams["deptid"] != "") {
 					        g_xmlHTTP = createXMLHttpRequest();
 					        // 20110412 사용자 추가시 필요 정보 추가처리.
-					        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";					        
+					        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";					        
 					        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 					        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 					        g_xmlHTTP.send(strQuery);
@@ -639,7 +643,7 @@
 		    function deptsearch_click_Complete() {
 		        if (rgParams["deptid"] != "") {
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP></DATA>";		            
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + deptTreeTopId + "</TOPID><PROP>extensionAttribute1;extensionAttribute2;displayName</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";		            
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);
@@ -662,7 +666,7 @@
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",
 		        	async : false,
-		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department", type : "user", adminOrgan : "y"},
+		        	data : {search : search_type.value + "::" + keyword.value, cell : "displayName;description;title", prop : "department;usertype", type : "user", adminOrgan : "y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var listview = new ListView();
@@ -675,14 +679,23 @@
 				            headerData = loadXMLString(listviewheader2.innerHTML.toUpperCase());
 
 				        if (CrossYN()) {
-				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+				        	var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+				            $(xmlRtn.getElementsByTagName("ROW")).each(function(index){
+				            	if($(this).find("DATA4").text() == "addJob"){
+				            		var orgPosition = $(this).find("CELL").eq(2).find("VALUE").text();
+				            		$(this).find("CELL").eq(2).find("VALUE").text("<spring:message code='ezOrgan.psb03'/>"+" "+orgPosition);
+				            	}
+				            });
 				            var Node = headerData.importNode(xmlRtn, true);
 				            headerData.documentElement.appendChild(Node);
+// 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
+// 				            var Node = headerData.importNode(xmlRtn, true);
+// 				            headerData.documentElement.appendChild(Node);
 				        }else{
 				            var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
 				            headerData.documentElement.appendChild(xmlRtn);
 				        }
-		                document.getElementById("OrganListView").innerHTML = "";
+				        document.getElementById("OrganListView").innerHTML = '<table style="width: 100%; height: 30px;" class="popup_mainlist"><tr><th style="white-space:normal;background-color: white;border-top:0px;border-bottom:1px solid #eaeaea"><span id="SelectDeptNM" style="font-weight: normal; width: 380px; height: 18px; white-space: nowrap; overflow: hidden; display: inline-block;"></span></th></tr></table>';
 
 				        var pUserList = new ListView();
 				        pUserList.SetID("lvUserList");
@@ -691,6 +704,11 @@
 				        pUserList.SetHeightFree(true);
 				        pUserList.DataSource(headerData);
 				        pUserList.DataBind("OrganListView");
+				        
+				        var treeView = new TreeView();
+					    treeView.LoadFromID("FromTreeView");
+					    var selnode = treeView.GetSelectNode();
+				        $("#SelectDeptNM").html("<img src=\"/images/OrganTree_cross/ic-open.gif\" style=\"vertical-align:middle;padding-right:3px;\" >" + "<spring:message code='ezOrgan.t101' />" + "" + "-[<span style='color:#017BEC;'>" + $(headerData).find("ROWS ROW").length + strLang24 + "</span>]");
 				        
 				        moveDisplay(true);
 					},
@@ -995,7 +1013,7 @@
 	            if (agent.indexOf("chrome") != -1) {
 			        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=480px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(480, 210));
 	            } else {
-			        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=300px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(480, 210));
+			        window.open("/admin/ezOrgan/configUserQuota.do?id=" + GetAttribute(listview.GetSelectedRows()[0],"DATA2"), "", "height=210px,width=320px,status=no,toolbar=no,menubar=no,location=no,resizable=1" + GetOpenPosition(480, 210));
 	            }
 		        
 		    }
@@ -1037,8 +1055,9 @@
 			function mod_password() {
 		        var listview = new ListView();
 		        listview.LoadFromID("lvUserList");
-
-		        if (listview.GetSelectedRows().length == 0) {
+		        var length = listview.GetSelectedRows().length;
+		        
+		        if (length == 0) {
 					alert("<spring:message code='ezOrgan.t39' />");
 					return;
 				} else if (listview.GetSelectedRows()[0].getAttribute("DATA1") != 'user') {
@@ -1048,12 +1067,11 @@
 		    		alert("<spring:message code='ezOrgan.psb02' />");
 					return;
 			    }
-		        changePassLength = listview.GetSelectedRows().length;
 		        
-		        //2016-04-18 장진혁과장 -- Cross 사용으로 인한 주석처리
+		        inputpassword_dialogArguments[0] = length + "<spring:message code='ezOrgan.t40' />";
 		        inputpassword_dialogArguments[1] = mod_password_Complete;
 		        
-		      //크롬일때 alert창 크기때문에 크롬일때 구별
+		      	//크롬일때 alert창 크기때문에 크롬일때 구별
 	            var agent = navigator.userAgent.toLowerCase();
 	            if (agent.indexOf("chrome") != -1) {
 	            	var OpenWin = window.open("/admin/ezOrgan/inputPassword.do", "InputPassword", GetOpenWindowfeature(467, 185));	
@@ -1276,6 +1294,8 @@
 		            			alert("<spring:message code='ezOrgan.t15' />");
 		            		} else if (result == "DIFF_COMPANY") {
 		            			alert("<spring:message code='ezOrgan.lhm4' />");
+		            		} else if (result == "HASGYUMJIK") {
+		            			alert("<spring:message code='ezOrgan.t15' />");
 		            		} else {
 		            			alert(length + "<spring:message code='ezOrgan.t16' />");
 		            		}
@@ -1367,25 +1387,39 @@
 			}
 		    
 		    function syncOrganAccounts() {
+		    	if (!confirm("<spring:message code='ezOrgan.lhm7' />")){
+					return;
+				}
+		    	
+		    	showProgress();
+		    	
 	            $.ajax({
 	            	type : "POST",
 	            	dataType : "text",
 	            	url : "/admin/ezOrgan/syncOrganAccounts.do",
 	            	async : true,
 	            	success : function(result) {
-	            	    if (result == "OK") {
+	            		hideProgress();
+	            		
+	            		if (result == "OK") {
 	            	        alert("<spring:message code='ezOrgan.lhm6' />");
 	            	    } else {
 	            	        alert("<spring:message code='ezQuestion.t263' />");
 	            	    }
 	            	},
 	            	error : function(error) {
+	            		hideProgress();
+	            		
 	            	    alert("<spring:message code='ezQuestion.t263' /> " + error);
 	            	}
 	            });
 		    }
 		    
 		    function syncWithBizmekaTalkAccounts() {
+		    	if (!confirm("<spring:message code='ezOrgan.lhm7' />")){
+					return;
+				}
+		    	
 	            $.ajax({
 	            	type : "POST",
 	            	dataType : "text",
@@ -1406,8 +1440,6 @@
 		    
 		    // 모바일 설정 함수 
 		    function mobile_managed() {
-		    	var data = "";
-				var mobileOwner = "";
 		    	var listview = new ListView();
 		    	listview.LoadFromID("lvUserList");
 		    	
@@ -1425,19 +1457,29 @@
 	    		}
 		    	
 	    		var trIdx = listview.GetSelectedRows()[0];
-	    		mobileOwner = $(trIdx).children().eq(0).text();
-	    		data = listview.GetSelectedRows()[0].getAttribute("DATA2");
-		    	
+	    		var mobileOwner = $(trIdx).children().eq(0).text();
+	    		var data = listview.GetSelectedRows()[0].getAttribute("DATA2");
 		    	document.getElementById("userSend").value = data;
-		    	
-		    	var agent = navigator.userAgent.toLowerCase();
-		    	
-		    	if (agent.indexOf("chrome") != -1) {
-		    		var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 300));
-		    	} else {
-			    	var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(460, 300));
-		    	}
-		    } 
+
+				var wWeight = "660";
+				var wHeight = "370";
+
+				var heigth = window.screen.availHeight;
+				var width = window.screen.availWidth;
+
+				var left = (width - wWeight) / 2;
+				var top = (heigth - wHeight) / 2;
+
+				if (CrossYN()) {
+					var OpenWin = window.open("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "", GetOpenWindowfeature(wWeight, wHeight));
+					try { OpenWin.focus(); } catch (e) { }
+				} else {
+					var ret = window.showModalDialog("/admin/ezOrgan/configMobileManaged.do?userId=" + data + "&userName=" + mobileOwner, "",
+								"dialogWidth:405px;dialogHeight:280px;dialogleft:" + left + "px;dialogtop:"
+								+ top + "px;toolbar:no;location:no;directories:no;status:no;menubar:no;scroll:no;edge:sunken;help:no");
+					window.location.reload(true);
+				}
+		    }
 		   
 		    // POP3/IMAP 설정 함수
 		    var serUseDisablePopImap_dialogArguments = new Array();
@@ -1694,10 +1736,12 @@
 		        <th style="padding: 3px; text-align: left;vertical-align:top">
 		            <div class="listview" style="margin:10px;margin-bottom:2px">
 		            	<c:if test="${dotNetIntegration != 'YES'}">
-		                <div id="OrganListView" style="border: 0px solid #ddd; Width: 375px; Height: 510px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; "></div>
+			                <div id="OrganListView" style="border: 0px solid #ddd; Width: 375px; Height: 510px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; ">
+			                </div>
 		                </c:if>
 		                <c:if test="${dotNetIntegration == 'YES'}">
-		                <div id="OrganListView" style="border: 0px solid #ddd; Width: 375px; Height: 540px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; "></div>
+			                <div id="OrganListView" style="border: 0px solid #ddd; Width: 375px; Height: 540px; overflow-x: hidden; BACKGROUND-COLOR: white; overflow-y:scroll; ">
+			                </div>
 		                </c:if>
 		            </div>
 		            <div style="height: 5px; overflow: hidden">&nbsp;</div>

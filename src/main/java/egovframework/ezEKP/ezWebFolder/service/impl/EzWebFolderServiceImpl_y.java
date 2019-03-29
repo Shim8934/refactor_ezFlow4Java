@@ -217,11 +217,16 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 
 		List<FileVO> filevo = new ArrayList<FileVO>();
 		
-		if (searchExt != "" || searchStartDate != "" || searchEndDate != ""
-				|| searchCreateName != "" || searchFileName != "") {
+		LOGGER.debug("searchExt:"+searchExt+",searchStartDate:"+searchStartDate+",searchEndDate:"+searchEndDate
+				+",searchCreateName:"+searchCreateName+",searchFileName:"+searchFileName);
+		
+		if (!searchExt.equals("") || !searchStartDate.equals("") || !searchEndDate.equals("")
+				|| !searchCreateName.equals("") || !searchFileName.equals("")) {
 			flag = "1";
+			LOGGER.debug("searchExt"+searchExt+"searchStartDate"+searchStartDate+"searchEndDate"+searchEndDate+
+					"searchCreateName"+searchCreateName+"searchFileName"+searchFileName);
 			
-			if (searchEndDate != "" ) {
+			if (!searchEndDate.equals("") ) {
 				searchStartDate = searchStartDate + " 00:00:00";
 				searchEndDate   = searchEndDate + " 23:59:59";
 			}
@@ -294,11 +299,13 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		
 		List<FileVO> filevo = new ArrayList<FileVO>();
 		
-		if (searchExt != "" || searchStartDate != "" || searchEndDate != ""
-				|| searchCreateName != "" || searchFileName != "") {
+		if (!searchExt.equals("") || !searchStartDate.equals("") || !searchEndDate.equals("")
+				|| !searchCreateName.equals("") || !searchFileName.equals("")) {
 			flag = "1";
+			LOGGER.debug("searchExt"+searchExt+"searchStartDate"+searchStartDate+"searchEndDate"+searchEndDate+
+					"searchCreateName"+searchCreateName+"searchFileName"+searchFileName);
 			
-			if (searchEndDate != "" ) {
+			if (!searchEndDate.equals("") ) {
 				searchStartDate = searchStartDate + " 00:00:00";
 				searchEndDate   = searchEndDate + " 23:59:59";
 			}
@@ -364,16 +371,15 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		int fileTotalCnt = 0;
 		int fldTotalCnt = 0;
 
-		if (searchExt != "" || searchStartDate != "" || searchEndDate != ""
-				|| searchCreateName != "" || searchFileName != "") {
+		if (!searchExt.equals("") || !searchStartDate.equals("") || !searchEndDate.equals("")
+				|| !searchCreateName.equals("") || !searchFileName.equals("")) {
 			flag = "1";
+			LOGGER.debug("searchExt"+searchExt+"searchStartDate"+searchStartDate+"searchEndDate"+searchEndDate+
+					"searchCreateName"+searchCreateName+"searchFileName"+searchFileName);
 			
-			if (searchEndDate != "" ) {
-//				searchStartDate = commonUtil.getDateStringInUTC(searchStartDate + " 00:00:00", offset, true);
-//				searchEndDate   = commonUtil.getDateStringInUTC(searchEndDate + " 23:59:59", offset, true);
+			if (!searchEndDate.equals("") ) {
 				searchStartDate = searchStartDate + " 00:00:00";
 				searchEndDate   = searchEndDate + " 23:59:59";
-				
 			}
 		}
 		
@@ -467,11 +473,13 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		int fileTotalCnt = 0;
 		int fldTotalCnt = 0;
 		
-		if (searchExt != "" || searchStartDate != "" || searchEndDate != ""
-				|| searchCreateName != "" || searchFileName != "") {
+		if (!searchExt.equals("") || !searchStartDate.equals("") || !searchEndDate.equals("")
+				|| !searchCreateName.equals("") || !searchFileName.equals("")) {
 			flag = "1";
+			LOGGER.debug("searchExt"+searchExt+"searchStartDate"+searchStartDate+"searchEndDate"+searchEndDate+
+					"searchCreateName"+searchCreateName+"searchFileName"+searchFileName);
 			
-			if (searchEndDate != "" ) {
+			if (!searchEndDate.equals("") ) {
 				searchStartDate = searchStartDate + " 00:00:00";
 				searchEndDate   = searchEndDate + " 23:59:59";
 			}
@@ -582,7 +590,7 @@ public class EzWebFolderServiceImpl_y extends EgovFileMngUtil implements EzWebFo
 		String result = ezWebFolderDAO_y.insertFolder(map);
 		LOGGER.debug("insert folderId is " + result);
 
-		if (result.equals(null)) {
+		if (result == null) {
 			result = "fail";
 		} 
 

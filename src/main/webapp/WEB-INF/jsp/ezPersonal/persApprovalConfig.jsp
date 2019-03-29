@@ -88,6 +88,14 @@
 		                    document.getElementById("txtOldPassword").focus();
 		                    return;
 		                }
+		                
+		                if (document.getElementById("txtOldPassword").value == document.getElementById("txtNewPassword").value) {
+		                	alert("<spring:message code='ezPersonal.t194'/>");
+		                	document.getElementById("txtNewPassword").value = "";
+		                	document.getElementById("txtNewPassword").focus();
+		                	return;
+		                }
+		                
 		                if (CheckPassword(rsa.encrypt(document.getElementById("txtOldPassword").value), AprPass) == "OK") {
 		                    CheckPwd = true;
 		                } else {
@@ -272,7 +280,8 @@
 			</c:if>
 			<br />
 				<div id="DivApprvalPass" style="display:none">
-					<h2>▒&nbsp;<spring:message code='ezPersonal.t954'/></h2>						
+					<h2>▒&nbsp;<spring:message code='ezPersonal.t954'/></h2>
+					<span class="txt">▒&nbsp;<spring:message code='ezPersonal.lhm30'/></span>
 				    	<table class="content" style="margin-top:10px;width:450px">
 					        <tr id="oldpassTR">
 					            <th><spring:message code='ezPersonal.t949'/></th>

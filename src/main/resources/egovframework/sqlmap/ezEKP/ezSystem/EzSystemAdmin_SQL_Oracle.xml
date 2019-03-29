@@ -305,5 +305,36 @@
 		]]>
 	</insert>
 	
+	<select id="EzSystemAdminDAO.selectModuleSize" parameterClass="java.util.Map" resultClass="java.lang.Long">
+		SELECT
+			SUM(MODULESIZE) AS MODULESIZE
+		FROM (
+			SELECT
+				SUM(AVG_ROW_LEN * NUM_ROWS) AS MODULESIZE
+			FROM
+				USER_TABLES
+			WHERE
+				REGEXP_LIKE (UPPER(TABLE_NAME), UPPER(#tableNames#))
+			<isNotEmpty property="notTableNames">
+				AND
+					NOT REGEXP_LIKE (UPPER(TABLE_NAME), UPPER(#notTableNames#))
+			</isNotEmpty>
+			UNION
+			SELECT
+				SUM(BYTES) AS MODULESIZE
+			FROM
+				USER_SEGMENTS A
+			JOIN
+				USER_INDEXES B
+			ON
+				A.SEGMENT_NAME = B.INDEX_NAME
+			WHERE
+				REGEXP_LIKE (UPPER(TABLE_NAME), UPPER(#tableNames#))
+			<isNotEmpty property="notTableNames">
+				AND
+					NOT REGEXP_LIKE (UPPER(TABLE_NAME), UPPER(#notTableNames#))
+			</isNotEmpty>
+		)
+	</select>
 	
 </sqlMap>

@@ -183,6 +183,208 @@ function getDocNumber(pDeptID, pPrefix, docNumZeroCnt) {
         }
     }
 }
+//문서 번호 작성 함수 (공공버전 일반버전 공통채번 소스개선) 2019-01-07 천성준
+function getDocNumberNew(pDeptID, pPrefix, docNumZeroCnt) {
+	var name;
+	var rtnval;
+	var fields;
+	var docnumber;
+	var SN = "";
+	
+	name = pPrefix + "docnumber";
+	
+	try {
+		if (approvalFlag == "G") {
+			if (pDraftFlag == "SUSIN" && useReceiveDocNo == "NO") {
+				name = "receiptnumber";
+			}
+			
+			if (isHWP == "Y") {
+				if (!HwpCtrl.CheckFieldExist(name)) {
+					return true;
+				}
+				
+				fractionsymbol = HwpCtrl.GetFieldText(name);
+			} else {
+				fields = message.GetFieldsList();
+				
+	        	var field = message.GetListItem(fields, name);
+	        	if (!field) {
+	        		return true;
+	        	}
+	        	
+	        	fractionsymbol = field.textContent;
+			}
+			
+			if (nonElecRec == "Y") {
+				if (pDraftFlag == "SUSIN") {
+					var result = getCabinetSN(pDeptID);
+	    			var dataNodes = GetChildNodes(loadXMLString(result));
+	    	    	SN = getNodeText(dataNodes[0]);
+				} else {
+					SN = fractionsymbol;
+				}
+			} else {
+				var result = getCabinetSN(pDeptID);
+				var dataNodes = GetChildNodes(loadXMLString(result));
+		    	SN = getNodeText(dataNodes[0]);
+			}
+			
+			if (SN == "") {
+				DocNumCode = "";
+	            return false;
+			} else {
+				if (isHWP == "Y") {
+					if (nonElecRec == "Y") {
+						if (pDraftFlag == "SUSIN") {
+							if (fractionsymbol == "") {
+        						fractionsymbol = arr_userinfo[5] + "-";
+        					}
+							
+							var tempNumString = SN;
+							var templen = tempNumString.length;
+							for (var i = 0; i < 6 - templen; i++) {
+								tempNumString = "0" + tempNumString;
+							}
+							
+							DocNumCode = pDeptID + tempNumString;
+							
+							tempNumString = SN;
+							if (tempNumString < Math.pow(10, docNumZeroCnt)) {
+			        			for (var i = 0; i < docNumZeroCnt-SN.length; i++) {
+			        				tempNumString = "0" + tempNumString;
+			        			}
+			        			
+			        			HwpCtrl.SetFieldText(name, fractionsymbol.substr(0, fractionsymbol.lastIndexOf('-') + 1) + tempNumString);
+			        		} else {
+			        			HwpCtrl.SetFieldText(name, fractionsymbol.substr(0, fractionsymbol.lastIndexOf('-') + 1) + tempNumString);
+			        		}
+						} else {
+							DocNumCode = SN;
+						}
+					} else {
+						var tempNumString = SN;
+						var templen = tempNumString.length;
+						for (var i = 0; i < 6 - templen; i++) {
+							tempNumString = "0" + tempNumString;
+						}
+						
+						DocNumCode = pDeptID + tempNumString;
+						
+						tempNumString = SN;
+						if (tempNumString < Math.pow(10, docNumZeroCnt)) {
+		        			for (var i = 0; i < docNumZeroCnt-SN.length; i++) {
+		        				tempNumString = "0" + tempNumString;
+		        			}
+		        			
+		        			HwpCtrl.SetFieldText(name, fractionsymbol.substr(0, fractionsymbol.lastIndexOf('-') + 1) + tempNumString);
+		        		} else {
+		        			HwpCtrl.SetFieldText(name, fractionsymbol.substr(0, fractionsymbol.lastIndexOf('-') + 1) + tempNumString);
+		        		}
+					}
+					
+					if (pDraftFlag == "SUSIN" && useReceiveDocNo == "NO") {
+						if (HwpCtrl.CheckFieldExist("receiptdate")) {
+							if (trim(HwpCtrl.GetFieldText("receiptdate")) == "") {
+								HwpCtrl.SetFieldText("receiptdate", getGyulJeDate());
+							}
+						}
+					} else {
+						if (HwpCtrl.CheckFieldExist("enforcedate")) {
+							if (trim(HwpCtrl.GetFieldText("enforcedate")) == "") {
+								HwpCtrl.SetFieldText("enforcedate", getGyulJeDate());
+							}
+						}
+					}
+					
+					return true;
+				} else {
+					var tempNumString = SN;
+					var templen = tempNumString.length;
+					for (var i = 0; i < 6 - templen; i++) {
+						tempNumString = "0" + tempNumString;
+					}
+					
+					DocNumCode = pDeptID + tempNumString;
+					
+					tempNumString = SN;
+					if (tempNumString < Math.pow(10, docNumZeroCnt)) {
+	        			for (var i = 0; i < docNumZeroCnt-SN.length; i++) {
+	        				tempNumString = "0" + tempNumString;
+	        			}
+	        			
+	        			field.textContent = fractionsymbol + tempNumString;
+	        		} else {
+	        			field.textContent = fractionsymbol + tempNumString
+	        		}
+        			
+        			message.DocumentBodySetAttribute("regnumbercode", tempNumString);
+        			message.DocumentBodySetAttribute("deptid", pDeptID);
+        			
+        			var field = message.GetListItem(fields, "enforcedate");
+        			
+        			if (pDraftFlag == "SUSIN" && useReceiveDocNo == "NO") {
+                        field = message.GetListItem(fields, "receiptdate");
+                    }
+        			
+        			if (field) {
+        				if (trim(field.textContent) == "") {
+        					field.textContent = getGyulJeDate();
+        				}
+        			}
+        			return true;
+				}
+			}
+		} else {
+			fields = message.GetFieldsList();
+        	var field = message.GetListItem(fields, name);
+        	if (!field) {return true;}
+        	
+        	fractionsymbol = field.textContent;
+        	
+        	var result = getCabinetSN(pDeptID);
+        	var dataNodes = GetChildNodes(loadXMLString(result));
+	    	SN = getNodeText(dataNodes[0]);
+	    	
+	    	if (SN == "") {
+	            DocNumCode = "";
+	            return false;
+	        } else {
+	        	var tempNumString = SN;
+        		if (tempNumString < Math.pow(10, docNumZeroCnt)) {
+        			for (var i = 0; i < docNumZeroCnt-SN.length; i++) {
+        				tempNumString = "0" + tempNumString;
+        			}
+        			
+        			field.textContent = fractionsymbol + tempNumString;
+        		} else {
+        			field.textContent = fractionsymbol + tempNumString
+        		}
+        		 
+        		message.DocumentBodySetAttribute("regnumbercode", tempNumString);
+        		message.DocumentBodySetAttribute("deptid", pDeptID);
+        		
+        		var field = message.GetListItem(fields, "enforcedate");
+        		if (field) {
+        			if (trim(field.textContent) == "") {
+        				field.textContent = getGyulJeDate();
+        			}
+        		}
+        		return true;
+	        }
+		}
+	} catch (e) {
+		if (SN != "") {
+			if (isHWP == "Y") {
+				HwpCtrl.SetFieldText(name, fractionsymbol.substr(0, fractionsymbol.lastIndexOf('-') + 1) + SN);
+			} else {
+				field.textContent = fractionsymbol + SN;
+			}
+			rollbackDocNumber(pDeptID, pPrefix, pDocID);
+        	return false;
+		}
+	}
+}
 function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     try {
         var name, docnumber;
@@ -242,4 +444,24 @@ function rollbackDocNumber(pDeptID, pPrefix, pDocID) {
     		field.textContent = fractionsymbol;
     	}
     }
+}
+function getCabinetSN(pDeptID) {
+	var rtnVal = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/getCabinetSN.do",
+		data : {
+			docID : pDocID,
+			deptID : pDeptID,
+			orgCompanyID : orgCompanyID
+		},
+		success: function(xml){
+			rtnVal = xml;
+		}
+	});
+	
+	return rtnVal;
 }

@@ -405,4 +405,19 @@ public class EzStatisticsAdminServiceImpl implements EzStatisticsAdminService {
 		
 		return resultMap;
 	}
+	@Override
+	public void customApprStatisticsBatch() throws Exception {
+		logger.debug("customApprStatisticsBatch started");
+		
+		ezStatisticsAdminDAO.deleteCustomDocBatch();
+		ezStatisticsAdminDAO.insertCustomDocBatch();
+		
+		ezStatisticsAdminDAO.deleteCustomFormBatch();
+		ezStatisticsAdminDAO.insertCustomFormBatch();
+		
+		logger.debug("customApprStatisticsBatch ended");
+		
+		
+	}
+	
 }

@@ -105,6 +105,7 @@
                 createNodeAndInsertText(xmlpara, objNode, "TOPID", companyId);
                 createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
                 createNodeAndInsertText(xmlpara, objNode, "ADMINDIST", "true");
+                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	            xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	            xmlHTTP.send(xmlpara);
 	            ListTypeChangeIcon();
@@ -160,12 +161,19 @@
 	            if (xmlHTTP2 != null && xmlHTTP2.readyState == 4) {
 	                if (xmlHTTP2.statusText == "OK") {
 	                    var result = loadXMLString(xmlHTTP2.responseText);
+	                    
+	                    document.getElementById("TextId").disabled = true;
+	                    
+	                    var mailNode = SelectNodes(result, "DATA/MAIL")[0];
+	                    var mail = getNodeText(mailNode);
+	                    document.getElementById("mailDomain").innerHTML = mail.substring(mail.indexOf("@"));
+	                    
 	                    var Resultxml = "";
 	                    pparsingXML2 = "";
 	                    pparsingXML = "";
 	                    pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                    var nodes = SelectNodes(result, "DATA/ROW");
-	
+	                    
 	                    for (var i = 0 ; i < nodes.length ; i++) {
 	                        if (getNodeText(GetChildNodes(nodes[i])[0]) == "distributionSub") {
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + getNodeText(GetChildNodes(nodes[i])[2]) + "</DATA1>";
@@ -491,9 +499,9 @@
 	                g_xmlHTTP = createXMLHttpRequest();
 	
 	                if (CrossYN()) {
-	                    var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+	                    var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	                } else {
-	                    var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP></DATA>";
+	                    var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>Top</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	                }
 	
 	                g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
@@ -516,7 +524,7 @@
 	                    if (rgParams["deptid"] != "") {
 	                        bSearch = true;
 	                        g_xmlHTTP = createXMLHttpRequest();
-	                        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                        var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	                        g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	                        g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	                        g_xmlHTTP.send(strQuery);
@@ -529,7 +537,7 @@
 	            if (rgParams["deptid"] != "") {
 	                bSearch = true;
 	                g_xmlHTTP = createXMLHttpRequest();
-	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP></DATA>";
+	                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>Top</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	                g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 	                g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 	                g_xmlHTTP.send(strQuery);
@@ -584,9 +592,9 @@
 	                return;
 	            }
 	            
-	            //var regex=/^([\w-]+(?:\.[\w-]+)*)$/;
-	            var regex=/^[a-zA-Z0-9_-]+$/;
-	            if(regex.test(document.all("TextId").value.trim()) === false) {
+	            var regex = /^[a-z0-9\_\-\.]+$/;
+	            
+	            if (!regex.test(document.all("TextId").value.trim())) {
 	            	alert("<spring:message code='ezEmail.lhm13' />");
 	            	return;
 	            }
@@ -2169,6 +2177,61 @@
                 return xmlpara;
             }
 	        
+	        var totalPage = "";
+            var pageNum = "";
+            function goToPageByNum(Value) {
+                page = Value;
+                makePageSelPage();
+                movePage(page);
+            }
+            function selbeforeBlock() {
+                var pageNum = parseInt(page);
+                pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
+                goToPageByNum(pageNum);
+            }
+            function selbeforeBlock_one() {
+                var pageNum = parseInt(page);
+                if (parseInt(pageNum - 1) > 0)
+                    goToPageByNum(parseInt(pageNum - 1));
+                else
+                    return;
+            }
+            function selafterBlock() {
+                var pageNum = parseInt(page);
+                pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
+                goToPageByNum(pageNum);
+            }
+            function selafterBlock_one() {
+                var pageNum = parseInt(page);
+                if (parseInt(pageNum + 1) <= totalPage)
+                    goToPageByNum(parseInt(pageNum + 1));
+                else
+                    return;
+            }
+            function movePage(newPage) {
+                if (parseInt(newPage) > 0 && parseInt(newPage) <= parseInt(totalPage)) {
+                    page = newPage;
+                    if (addrsearh)
+                        AddrSearch_event();
+                    else
+                        address_selectnode("page");
+                }
+            }
+            function prevPage_onclick() {
+                newPage = parseInt(page) - 1;
+                if (newPage > 0) {
+                    page = newPage;
+                    address_selectnode("page");
+                }
+            }
+            function nextPage_onclick() {
+                newPage = parseInt(page) + 1;
+                if (newPage <= parseInt(totalPage)) {
+                    page = newPage;
+                    address_selectnode("page");
+                }
+            }
+            
 	        function td_Create1(strtext) {
                 document.getElementById("tblPageRayer").innerHTML = strtext;
             }
@@ -2304,8 +2367,8 @@
 	                            }
 	                        }
 	                        
-	                        var objTr = listview.AddRow(MaxID);
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        var objTr = listview.AddRow(InitTr.length);
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	                       
 	                        var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
@@ -2386,7 +2449,7 @@
                     return;
                 }
                 
-                var emailMatch = new RegExp(/^[^/@]{1,30}@[A-Za-z0-9]{2,30}\.[A-Za-z0-9]{2,30}/g);
+                var emailMatch = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
                 if (!emailMatch.test(document.getElementById("emailaddr").value) && document.getElementById("emailaddr").value != "") {
                     alert(strLang198);
                     return;
@@ -2423,7 +2486,7 @@
 	              }
 	              
 	              var objTr = listview.AddRow(InitTr.length);
-	              SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	              SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	              listview.AddDataRow(objTr, Resultxml);
 	
 	              var _tdlength = document.getElementById(listid).getElementsByTagName("TD").length;
@@ -2630,13 +2693,14 @@
 		            <tr>
 		                <th><spring:message code='ezEmail.t710' /></th>
 		                <td>
-		                    &nbsp;<input name="TextName" type="text" id="TextName" maxlength="24" class="txtClass" style="width:99%;" value="${textName}">
+		                    <input name="TextName" type="text" id="TextName" maxlength="24" class="txtClass" style="width:100%;" value="${textName}">
 		                </td>
 		            </tr>
 		            <tr>
 		                <th><spring:message code='ezEmail.lhm09' /></th>
 		                <td>
-		                    &nbsp;<input name="TextId" type="text" id="TextId" maxlength="24" class="txtClass" style="width:99%;" value="${cn}">
+		                    <input name="TextId" type="text" id="TextId" maxlength="20" class="txtClass" style="width:40%;" value="${cn}">
+		                    <span id="mailDomain" style="width:60%; font-weight: bold;">@${mailDomain}</span>
 		                </td>
 		            </tr>
 		        </table>

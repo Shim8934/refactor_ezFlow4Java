@@ -2,6 +2,7 @@ package egovframework.ezEKP.ezPersonal.service;
 
 import java.util.List;
 
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetEmpOfMonthVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetPopUpListUserVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalGetQuickLinkMenuVO;
@@ -45,7 +46,7 @@ public interface EzPersonalService {
 
 	public String setApprovNotiMail(String userID, String alert, String complete, String bansong, String callBack, String hesong, String saveMailFlag, int tenantID) throws Exception;
 	
-	public String getBirthUserList(String companyID, String curMon, int tenantID) throws Exception;
+	public List<OrganUserVO> getBirthUserList(String companyId, int tenantId, int month, String lang) throws Exception;
 	
 	public int getPollCount (String pComapnyID, int tenantID) throws Exception;
 	

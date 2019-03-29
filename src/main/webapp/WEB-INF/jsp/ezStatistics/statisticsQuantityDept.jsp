@@ -46,6 +46,7 @@
         createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${deptID}");
         createNodeAndInsertText(xmlpara, objNode, "TOPID", "${companyID}");
         createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+        createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
         xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
         xmlHTTP.send(xmlpara);
         xmlTree = loadXMLString(xmlHTTP.responseText);
@@ -145,6 +146,21 @@
                     tempyear--;
                 }
                 tempyear = selyear + 2;
+            } else if (selyear + 1 == year){
+            	document.getElementById("selyear").innerHTML = "";
+                tempyear = selyear + 1;
+                for (var i = 0; i < 5; i++) {
+                    var option = document.createElement("OPTION");
+                    option.value = tempyear;
+                    option.innerHTML = tempyear;
+
+                    if (selyear == tempyear)
+                        option.selected = true;
+
+                    document.getElementById("selyear").appendChild(option);
+                    tempyear--;
+                }
+                tempyear = selyear + 1;
             }
         }
     }
@@ -431,9 +447,9 @@
             g_xmlHTTP = createXMLHttpRequest();
 
             if (CrossYN())
-                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>${companyID}</TOPID><PROP></PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>${companyID}</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
             else
-                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>${companyID}</TOPID><PROP></PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + xmlDom.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>${companyID}</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 
             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -460,7 +476,7 @@
             if (rgParams["deptid"] != "") {
                 bSearch = true;
                 g_xmlHTTP = createXMLHttpRequest();
-                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>${companyID}</TOPID><PROP>mail</PROP></DATA>";
+                var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>${companyID}</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
                 g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
                 g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
                 g_xmlHTTP.send(strQuery);
@@ -472,7 +488,7 @@
    	 if (deptid != "") {
             bSearch = true;
             g_xmlHTTP = createXMLHttpRequest();
-            var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>${companyID}</TOPID><PROP>mail</PROP></DATA>";
+            var strQuery = "<DATA><DEPTID>" + deptid + "</DEPTID><TOPID>${companyID}</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
             g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
             g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
             g_xmlHTTP.send(strQuery);

@@ -303,5 +303,10 @@ public interface EzBoardService {
 	
 	public List<HashMap<String, Object>> getSearchApprBoardItemList(BoardListVO boardListVO, BoardVO boardVO) throws Exception;
 	
-
+	// 20181210 김윤진 - ezTalk Notice Board ID 가져오기.
+	public String getEzTalkGateNoticeBoardId(String companyID, int tenantID) throws Exception;
+	
+	/* 2019-01-15 홍승비 - 수정일(updateDate)만을 업데이트하는 쿼리 추가 */
+	public void modUpdateDate(String updateDate, String itemID, int tenantID) throws Exception;
+	
 }

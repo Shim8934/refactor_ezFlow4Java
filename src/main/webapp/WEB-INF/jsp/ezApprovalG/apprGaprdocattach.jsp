@@ -129,6 +129,9 @@
 	                        selRow = listview.GetSelectedRows()[count1 - 1];
 	                        listview.DeleteRow(GetAttribute(selRow, "id"));
 	                    }
+	                    if (listview.GetDataRows().length == 0){
+	                    	$("#lvTDoc tbody").append("<tr id='lvTDocList_TR_noItems'><td align='center' colspan='1'>" + strLang944 + "</td></tr>");
+	                    }
 	                }
 	                else
 	                    alert("<spring:message code='ezApprovalG.t360'/>");
@@ -142,6 +145,7 @@
 	                var tr = listview.GetDataRows();
 	                if (tr[0].id.indexOf("noItems") > 0) {
 	                    length = 0;
+	                    delAttachDoc();
 	                    window.close();
 	                }
 	
@@ -251,15 +255,15 @@
 	        <tr>
 	            <td colspan="2" style="vertical-align: top;">
 	                <div class="listview">
-	                    <div id="lvSDoc" style="BORDER: 0; WIDTH: 690px; HEIGHT: 350px; overflow-x: hidden"></div>
+	                    <div id="lvSDoc" style="BORDER: 0; WIDTH: 690px; HEIGHT: 365px; overflow-x: auto"></div>
 	                </div>
 	            </td>
 	            <td style="width: 25px; text-align: center; margin-top: 3px;">
 	                <img src="/images/arr_right.gif" style="cursor: pointer" width="16" height="16" id="arrow_right" onclick="return btnIns_onclick()"><img src="/images/arr_left.gif" style="cursor: pointer" width="16" height="16" id="arrow_left" onclick="return btndel_onclick()">
 	            </td>
 	            <td style="width: 310px; vertical-align: top;">
-	                <div class="listview" style="WIDTH: 310px; HEIGHT: 350px">
-	                    <div id="lvTDoc" style="BORDER: 0; WIDTH: 310px; HEIGHT: 350px; overflow: auto"></div>
+	                <div class="listview" style="WIDTH: 310px; HEIGHT: 365px">
+	                    <div id="lvTDoc" style="BORDER: 0; WIDTH: 310px; HEIGHT: 365px; overflow-x: hidden"></div>
 	                </div>
 	            </td>
 	        </tr>

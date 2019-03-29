@@ -327,10 +327,19 @@ function Schedule_Repetition_onclick_Complete(retVal) {
 
         g_data["recurrence"] = retVal["xml"];
         
-        var sDate = retVal["startTime"];
+        // 2019-02-28 김민성 - 일정관리 연동으로 인한 날짜 데이터 포맷 변경
+        var sDate;
+        var eDate;
+        
+        try {
+        	sDate = new Date(retVal["startTime"].split(' ')[0].split('-')[0], parseInt(retVal["startTime"].split(' ')[0].split('-')[1]) - 1, retVal["startTime"].split(' ')[0].split('-')[2], retVal["startTime"].split(' ')[1].split(':')[0], retVal["startTime"].split(' ')[1].split(':')[1], 0, 0);
+        	eDate = new Date(retVal["endTime"].split(' ')[0].split('-')[0], parseInt(retVal["endTime"].split(' ')[0].split('-')[1]) - 1, retVal["endTime"].split(' ')[0].split('-')[2], retVal["endTime"].split(' ')[1].split(':')[0], retVal["endTime"].split(' ')[1].split(':')[1], 0, 0);
+        } catch (e) {
+        	sDate = new Date(retVal["startTime"]);
+        	eDate = new Date(retVal["endTime"]);
+        }   
+        
         var SetsTime = sDate.getFullYear() + "-" + (sDate.getMonth() + 1) + "-" + sDate.getDate();
-
-        var eDate = retVal["endTime"];
         var SeteTime = eDate.getFullYear() + "-" + (eDate.getMonth() + 1) + "-" + eDate.getDate();
         
         var ssDate = new Date();
@@ -375,21 +384,100 @@ function show_repetition_info() {
 	
 	switch (szType) {
 		case "4":
-			repeatinfo += "" + strLang123 + "";
+			var selType = getNodeText(SelectNodes(xmlinDoc, "recurrence/selType")[0]);
+			if(selType == "0") {			// 매일마다
+				var interval = getNodeText(SelectNodes(xmlinDoc, "recurrence/interval")[0]);
+				
+				if(interval == "1") {
+					repeatinfo += "" + strLang123;
+				}
+				else {
+					repeatinfo += "" + interval + strLang550;
+				}
+			}
+			else {
+				repeatinfo += "" + strLang551;
+			}
 			break;
 		case "5":
-			repeatinfo += "" + strLang124 + "";
+			var interval = getNodeText(SelectNodes(xmlinDoc, "recurrence/interval")[0]);
+			
+			var resdayList = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfWeek")[0]);
+			resdayList = resdayList.substring(0, resdayList.length - 1);
+			
+			if(interval == "1") {		// 매주
+				repeatinfo += "" + strLang124 + " ";
+			}
+			else {
+				repeatinfo += " " + interval + strLang552 + " ";
+			}
+			repeatinfo += " " + resdayList.replace("0", strLang270).replace("1", strLang271).replace("2", strLang272).replace("3", strLang273).replace("4", strLang274).replace("5", strLang275).replace("6", strLang276);
 			break;
 		case "6":
-			repeatinfo += "" + strLang97 + "";
+			var selType = getNodeText(SelectNodes(xmlinDoc, "recurrence/selType")[0]);
+			var interval = getNodeText(SelectNodes(xmlinDoc, "recurrence/interval")[0]);
+			
+			if(selType == "0") {
+				var dayOfMonth = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfMonth")[0]);
+				if(interval == "1") {
+					repeatinfo += "" + strLang97 + " " + dayOfMonth + strLang270;
+				}
+				else {
+					repeatinfo += interval + strLang553 + " " + dayOfMonth + strLang270;
+				}
+			}
+			else {
+				var byPosition = getNodeText(SelectNodes(xmlinDoc, "recurrence/byPosition")[0]);
+				var daysOfWeek = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfWeek")[0]);
+				
+				if(interval == "1") {
+					repeatinfo += strLang97 + " ";
+				}
+				else {
+					repeatinfo += interval + strLang553 + " ";
+				}
+				
+				repeatinfo += byPosition.replace("-1", strLang558).replace("1", strLang554).replace("2", strLang555).replace("3", strLang556).replace("4", strLang557);
+				if(daysOfWeek.length < 2) {
+					repeatinfo += " " + daysOfWeek.replace("0", strLang561).replace("1", strLang562).replace("2", strLang563).replace("3", strLang564).replace("4", strLang565).replace("5", strLang566).replace("6", strLang567);
+				}
+				else if(daysOfWeek.length < 6){
+					repeatinfo += " " + strLang560;
+				}
+				else {
+					repeatinfo += " " + strLang559;
+				}
+			}
 			break;
 		case "7":
-			repeatinfo += "" + strLang98 + "";
+			var selType = getNodeText(SelectNodes(xmlinDoc, "recurrence/selType")[0]);
+			var month = getNodeText(SelectNodes(xmlinDoc, "recurrence/monthsOfYear")[0]);
+			
+			if(selType == "0") {
+				var day = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfMonth")[0]);
+				
+				repeatinfo += "" + strLang98 + " " + month + strLang271 + " " + day + strLang278;
+			}
+			else {
+				var byPosition = getNodeText(SelectNodes(xmlinDoc, "recurrence/byPosition")[0]);
+				var daysOfWeek = getNodeText(SelectNodes(xmlinDoc, "recurrence/daysOfWeek")[0]);
+				
+				repeatinfo += "" + strLang98 + " " + month + strLang271 + " ";
+				repeatinfo += byPosition.replace("-1", strLang558).replace("1", strLang554).replace("2", strLang555).replace("3", strLang556).replace("4", strLang557) + " ";
+				if(daysOfWeek.length < 2) {
+					repeatinfo += daysOfWeek.replace("0", strLang561).replace("1", strLang562).replace("2", strLang563).replace("3", strLang564).replace("4", strLang565).replace("5", strLang566).replace("6", strLang567);
+				}
+				else if(daysOfWeek.length < 6) {
+					repeatinfo += " " + strLang560;
+				}
+				else {
+					repeatinfo += " " + strLang559;
+				}
+			}
 			break;
 	}
 	
-	repeatinfo += ", " + strLang125 + "";
-	
+	repeatinfo += ", " + strLang125;
 	if (document.getElementById("AllDay").checked == true) {
 	    repeatinfo += "" + strLang126 + "";
 	} else {
@@ -402,7 +490,9 @@ function show_repetition_info() {
 	    var reStartMinute = reStartDate.split(" ")[1].split(":")[1];
 	    var reEndMinute = reEndDate.split(" ")[1].split(":")[1];
 
-	    if (Number(reStartHour) < 12) {
+	    if (Number(reStartHour) == 0)
+            reStartHour = 12;
+	   /* if (Number(reStartHour) < 12) {
 	        repeatinfo += "" + strLang246 + " ";
 
 	        if (Number(reStartHour) == 0)
@@ -413,11 +503,13 @@ function show_repetition_info() {
 
 	        if (Number(reStartHour) > 12)
 	            reStartHour = Number(reStartHour) - 12;
-	    }
+	    }*/
 
 	    repeatinfo += reStartHour + ":" + reStartMinute + "" + " ~ " + "";
 
-	    if (Number(reEndHour) < 12) {
+	    if (Number(reEndHour) == 0)
+            reEndHour = 12;
+	    /*if (Number(reEndHour) < 12) {
 	        repeatinfo += "" + strLang246 + " ";
 
 	        if (Number(reEndHour) == 0)
@@ -428,7 +520,7 @@ function show_repetition_info() {
 
 	        if (Number(reEndHour) > 12)
 	            reEndHour = Number(reEndHour) - 12;
-	    }
+	    }*/
 
 	    repeatinfo += reEndHour + ":" + reEndMinute;
 	}

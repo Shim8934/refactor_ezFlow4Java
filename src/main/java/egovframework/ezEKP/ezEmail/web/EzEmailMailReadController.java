@@ -230,6 +230,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (f == null || !f.exists()) {
 				logger.error("Folder not found. folderPath=" + folderPath);
+				model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+				model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+				model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+				return "ezCommon/error";
 			} else {
 				f.open(Folder.READ_WRITE);
 				
@@ -240,6 +244,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 				if (message == null) {
 					logger.error("Message not found. uid=" + uid);
+					model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+					return "ezCommon/error";
 				} else {
 					
 					FetchProfile fp = new FetchProfile();
@@ -265,9 +273,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						fromStr = commonUtil.trimDoubleQuotes(fromStr);
 								
 						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
-						if (fromEmail.equals("a@a.com")){
-							fromEmail = "";
-						}
 					} else {
 						String[] fromHeaders = message.getHeader("From");
 						if (fromHeaders != null) {
@@ -292,19 +297,49 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						String toHeader = message.getHeader("To")[0];
 						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);						
 						String name = null;
+						String[] recipientHeaderArray = null;
 						
-						for(int i=0; i<arrRecipientsTo.length; i++){
-							name = ((InternetAddress)arrRecipientsTo[i]).getPersonal();
-							if(name == null){
-								name = ((InternetAddress)arrRecipientsTo[i]).getAddress();
+						if (toHeader.contains("=?gb2312")) {
+							toHeader = MimeUtility.unfold(toHeader);
+							
+							logger.debug("toHeader=" + toHeader);
+							
+							recipientHeaderArray = toHeader.split(",");
+							
+							for (int i = 0; i < recipientHeaderArray.length; i++) {
+								recipientHeaderArray[i] = recipientHeaderArray[i].trim();
 							}
-							else{
+						}						
+						
+						for (int i = 0; i < arrRecipientsTo.length; i++) {
+							name = ((InternetAddress)arrRecipientsTo[i]).getPersonal();
+							
+							if (name == null) {
+								name = ((InternetAddress)arrRecipientsTo[i]).getAddress();
+							} else {
 								if (!isAscii) {
 									byte[] rawBytes = name.getBytes("iso-8859-1");
 									
 									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
-								}
-								else {
+								} else {
+									if (recipientHeaderArray != null) {
+										String recipientHeader = recipientHeaderArray[i];
+										
+					                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
+					                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
+										String newHeader = ezEmailUtil.changeCharSet(recipientHeader, "gb2312", "gbk");
+										
+										// gb2312에서 gbk로 변경된 경우
+										if (!newHeader.equals(recipientHeader)) {
+								            int endPos = newHeader.indexOf("?=", 2);
+								            
+								            // 주소 부분을 제외한 이름 파트만 분리한다.
+								            if (endPos > -1) {
+								            	name = newHeader.substring(0, endPos + 2);
+								            }
+										}										
+									}
+									
 									name = MimeUtility.decodeText(name);
 								}
 								
@@ -359,18 +394,49 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						String ccHeader = message.getHeader("Cc")[0];
 						boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);												
 						String name = null;
+						String[] recipientHeaderArray = null;
 						
-						for(int i=0; i<arrRecipientsCC.length; i++){
+						if (ccHeader.contains("=?gb2312")) {
+							ccHeader = MimeUtility.unfold(ccHeader);
+							
+							logger.debug("ccHeader=" + ccHeader);
+							
+							recipientHeaderArray = ccHeader.split(",");
+							
+							for (int i = 0; i < recipientHeaderArray.length; i++) {
+								recipientHeaderArray[i] = recipientHeaderArray[i].trim();
+							}
+						}												
+						
+						for (int i = 0; i < arrRecipientsCC.length; i++) {
 							name = ((InternetAddress)arrRecipientsCC[i]).getPersonal();
-							if(name == null) {
+							
+							if (name == null) {
 								name = ((InternetAddress)arrRecipientsCC[i]).getAddress();
 							} else {
 								if (!isAscii) {
 									byte[] rawBytes = name.getBytes("iso-8859-1");
 									
 									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
-								}
-								else {								
+								} else {							
+									if (recipientHeaderArray != null) {
+										String recipientHeader = recipientHeaderArray[i];
+										
+					                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
+					                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
+										String newHeader = ezEmailUtil.changeCharSet(recipientHeader, "gb2312", "gbk");
+										
+										// gb2312에서 gbk로 변경된 경우
+										if (!newHeader.equals(recipientHeader)) {
+								            int endPos = newHeader.indexOf("?=", 2);
+								            
+								            // 주소 부분을 제외한 이름 파트만 분리한다.
+								            if (endPos > -1) {
+								            	name = newHeader.substring(0, endPos + 2);
+								            }
+										}										
+									}
+									
 									name = MimeUtility.decodeText(name);
 								}
 								
@@ -412,10 +478,13 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	
 					// BCC
 					arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
+					
 					if (arrRecipientsBCC != null) {
 						String name = null;
-						for (int i=0; i<arrRecipientsBCC.length; i++){
+						
+						for (int i = 0; i < arrRecipientsBCC.length; i++) {
 							name = ((InternetAddress)arrRecipientsBCC[i]).getPersonal();
+							
 							if (name == null) {
 								name = ((InternetAddress)arrRecipientsBCC[i]).getAddress();
 							} else {
@@ -428,6 +497,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							if (i != 0) {
 								bccStr += ", ";
 							}
+							
 							bccStr += getReceiverHTML(name, ((InternetAddress)arrRecipientsBCC[i]).getAddress(), false);
 						}
 					}
@@ -1002,6 +1072,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				file.delete();
 			}
 			
+			e.printStackTrace();
 		} finally {
 			if (ia != null) {
 				ia.close();
@@ -1162,7 +1233,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		logger.debug("downloadAttachCommon started.");
 		
 		String fileId = request.getParameter("fileid") == null ? "" : request.getParameter("fileid");
+		fileId = commonUtil.detectPathTraversal(fileId);		
 		String fileDate = request.getParameter("filedate") == null ? "" : request.getParameter("filedate");
+		fileDate = commonUtil.detectPathTraversal(fileDate);		
 		String tenantIdStr = request.getParameter("tid") == null ? "0" : request.getParameter("tid");
 			
 		int tenantId = Integer.parseInt(tenantIdStr);
@@ -1518,6 +1591,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		int unread = 0;
 		int importance = 1;
 		IMAPAccess ia = null;
+		Boolean emptyFlag = false;
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -1526,6 +1600,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (f == null || !f.exists()) {
 				logger.error("Folder not found. folderPath=" + folderPath);
+				emptyFlag = true;
 			} else {
 				f.open(Folder.READ_WRITE);
 				Message message = null;
@@ -1536,6 +1611,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 				if (message == null) {
 					logger.error("Message not found. uid=" + uid);
+					emptyFlag = true;
 				} else {
 					FetchProfile fp = new FetchProfile();
 					
@@ -1567,59 +1643,121 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 					logger.debug("From=" + fromStr);
 					
 					arrRecipientsTo = message.getRecipients(Message.RecipientType.TO);
-					if(arrRecipientsTo != null){
+					
+					if (arrRecipientsTo != null) {
 						InternetAddress iAddress = null;
 						String toHeader = message.getHeader("To")[0];
 						boolean isAscii = ezEmailUtil.isPureAscii(toHeader);												
 						String name = null;
+						String[] recipientHeaderArray = null;
 						
-						for(int i=0; i<arrRecipientsTo.length; i++){
+						if (toHeader.contains("=?gb2312")) {
+							toHeader = MimeUtility.unfold(toHeader);
+							
+							logger.debug("toHeader=" + toHeader);
+							
+							recipientHeaderArray = toHeader.split(",");
+							
+							for (int i = 0; i < recipientHeaderArray.length; i++) {
+								recipientHeaderArray[i] = recipientHeaderArray[i].trim();
+							}
+						}
+						
+						for (int i = 0; i < arrRecipientsTo.length; i++) {
 							iAddress = ((InternetAddress)arrRecipientsTo[i]);
 							name = iAddress.getPersonal();
 							if (name == null) {
 								name = iAddress.getAddress();
-							}
-							else {
+							} else {
 								// 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
 								if (!isAscii) {
 									byte[] rawBytes = name.getBytes("iso-8859-1");
 									
 									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
-								}
-								else {								
+								} else {						
+									if (recipientHeaderArray != null) {
+										String recipientHeader = recipientHeaderArray[i];
+										
+					                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
+					                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
+										String newHeader = ezEmailUtil.changeCharSet(recipientHeader, "gb2312", "gbk");
+										
+										// gb2312에서 gbk로 변경된 경우
+										if (!newHeader.equals(recipientHeader)) {
+								            int endPos = newHeader.indexOf("?=", 2);
+								            
+								            // 주소 부분을 제외한 이름 파트만 분리한다.
+								            if (endPos > -1) {
+								            	name = newHeader.substring(0, endPos + 2);
+								            }
+										}										
+									}
+									
 									name = MimeUtility.decodeText(name);
 								}
 							}
 							
 							if (i != 0) {
 								toStr += ";";
-	                        }												
-							toStr += "\""+name+"\" <"+iAddress.getAddress()+">";
+	                        }					
+							
+							toStr += "\""+ name +"\" <" + iAddress.getAddress() + ">";
 						}
 					}
+					
 					logger.debug("TO=" + toStr);
 					
 					arrRecipientsCC = message.getRecipients(Message.RecipientType.CC);
-					if(arrRecipientsCC != null){
+					
+					if (arrRecipientsCC != null) {
 						InternetAddress iAddress = null;
 						String ccHeader = message.getHeader("Cc")[0];
 						boolean isAscii = ezEmailUtil.isPureAscii(ccHeader);																		
 						String name = null;
+						String[] recipientHeaderArray = null;
 						
-						for(int i=0; i<arrRecipientsCC.length; i++){
+						if (ccHeader.contains("=?gb2312")) {
+							ccHeader = MimeUtility.unfold(ccHeader);
+							
+							logger.debug("ccHeader=" + ccHeader);
+							
+							recipientHeaderArray = ccHeader.split(",");
+							
+							for (int i = 0; i < recipientHeaderArray.length; i++) {
+								recipientHeaderArray[i] = recipientHeaderArray[i].trim();
+							}
+						}						
+						
+						for (int i = 0; i < arrRecipientsCC.length; i++) {
 							iAddress = ((InternetAddress)arrRecipientsCC[i]);
 							name = iAddress.getPersonal();
 							if (name == null) {
 								name = iAddress.getAddress();
-							}
-							else {
+							} else {
 								// 표준을 지키지 않고 Non-Ascii 문자가 사용된 경우엔 직접 디코딩을 처리한다.
 								if (!isAscii) {
 									byte[] rawBytes = name.getBytes("iso-8859-1");
 									
 									name = ezEmailUtil.decodeNonAsciiBytes(rawBytes);								
-								}
-								else {																
+								} else {					
+									if (recipientHeaderArray != null) {
+										String recipientHeader = recipientHeaderArray[i];
+										
+					                    // gb2312로 인코딩되어 있다고 기술되어 있지만 gbk에서 
+					                    // 정의되어 있는 글자가 포함되어 디코딩 시 깨지는 문제가 발생하여 gbk로 디코딩 처리하는 코드를 추가함.						
+										String newHeader = ezEmailUtil.changeCharSet(recipientHeader, "gb2312", "gbk");
+										
+										// gb2312에서 gbk로 변경된 경우
+										if (!newHeader.equals(recipientHeader)) {
+								            int endPos = newHeader.indexOf("?=", 2);
+								            
+								            // 주소 부분을 제외한 이름 파트만 분리한다.
+								            if (endPos > -1) {
+								            	name = newHeader.substring(0, endPos + 2);
+								            }
+										}										
+									}
+									
 									name = MimeUtility.decodeText(name);
 								}
 							}
@@ -1627,31 +1765,37 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							if (i != 0) {
 								ccStr += ";";
 	                        }
-							ccStr += "\""+name+"\" <"+iAddress.getAddress()+">";
+							
+							ccStr += "\"" + name + "\" <" + iAddress.getAddress() + ">";
 						}
 					}
+					
 					logger.debug("CC=" + ccStr);
 					
 					arrRecipientsBCC = message.getRecipients(Message.RecipientType.BCC);
-					if(arrRecipientsBCC != null){
+					
+					if (arrRecipientsBCC != null) {
 						InternetAddress iAddress = null;
 						String name = null;
-						for(int i=0; i<arrRecipientsBCC.length; i++){
+												
+						for (int i = 0; i < arrRecipientsBCC.length; i++) {
 							iAddress = ((InternetAddress)arrRecipientsBCC[i]);
 							name = iAddress.getPersonal();
+							
 							if (name == null) {
 								name = iAddress.getAddress();
-							}
-							else {
+							} else {
 								name = MimeUtility.decodeText(name);
 							}
 							
 							if (i != 0) {
 								bccStr += ";";
-	                        }						
-							bccStr += "\""+name+"\" <"+iAddress.getAddress()+">";
+	                        }
+							
+							bccStr += "\"" + name + "\" <" + iAddress.getAddress() + ">";
 						}
 					}
+					
 					logger.debug("BCC=" + bccStr);
 					
 					// received date
@@ -1701,6 +1845,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			if (ia != null) {
 				ia.close();
 			}
+		}
+		
+		if(emptyFlag) {
+			dateStr = "";
+			fromStr = "";
+			fromEmail = "";
+			toStr = "";
+			ccStr = "";
+			bccStr = "";
+			subject = "";
 		}
 		
 		StringBuilder sb = new StringBuilder();
@@ -1809,6 +1963,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     	
     			if (f == null || !f.exists()) {
     				logger.error("Folder not found. folderPath=" + folderPath);
+    				model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+					return "ezCommon/error";
     			} else {
     				f.open(Folder.READ_ONLY);
     				Message message = null;
@@ -1818,6 +1976,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     				
     				if (message == null) {
     					logger.error("Message not found. uid=" + uid);
+    					model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+    					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+    					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+    					return "ezCommon/error";
     				} else {
     					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
     					double size = Double.parseDouble(bodyInfoList.get(2));
@@ -2018,14 +2180,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							personName = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
 						}
-						/**
-						 * 인쇄할 때 보낸 사람, 받는 사람, 참조에 메일 주소가 없는 경우(a@a.com)
-						 * 메일 주소가 나타나지 않도록 처리
-						 */
 						
                         if (propertyValue.equals("YES") || propertyValue.equals("")) {
                             pSender = personName;                                  
-                            pSender += fromAddress.getAddress() == null || ((InternetAddress)fromAddress).getAddress().equals("a@a.com") ? "" : "(" + fromAddress.getAddress() + ")";
+                            pSender += fromAddress.getAddress() == null ? "" : "(" + fromAddress.getAddress() + ")";
 	                    } else {
 	                    	pSender = personName;                                  
 	                    }						
@@ -2051,7 +2209,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 
                             if (propertyValue.equals("YES") || propertyValue.equals("")) {
                                 pReciverTo += personName;
-                                pReciverTo += ((InternetAddress)address).getAddress() == null || ((InternetAddress)address).getAddress().equals("a@a.com") ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";                                                                      
+                                pReciverTo += ((InternetAddress)address).getAddress() == null ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";                                                                      
                             } else {
                                 pReciverTo += personName + "\t";
                             }							
@@ -2075,7 +2233,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							if (propertyValue.equals("YES") || propertyValue.equals("")) {
 								pReciverCc += personName;
-								pReciverCc += ((InternetAddress)address).getAddress() == null || ((InternetAddress)address).getAddress().equals("a@a.com") ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
+								pReciverCc += ((InternetAddress)address).getAddress() == null ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
 							} else {
 								pReciverCc += personName + "\t";								
 							}
@@ -2276,9 +2434,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
-		String newGuid = xmldom.getElementsByTagName("NEWGUID").item(0).getTextContent();
 		String attachLimit = xmldom.getElementsByTagName("ATTACHLIMIT").item(0).getTextContent();
-		logger.debug("url=" + url + ",newGuid=" + newGuid + ",attachLimit=" + attachLimit);
+		logger.debug("url=" + url + ",attachLimit=" + attachLimit);
 		
 		String folderPath = url.split("/")[0];
 		String uidStr = url.split("/")[1];
@@ -2413,6 +2570,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								MimeBodyPart part = (MimeBodyPart)ezEmailUtil.getAttachPart(message, i + 1);
 
 								if (part != null) {
+									// 동일한 이름의 첨부파일을 처리할 수 있도록 GUID를 직접 생성하는 것으로 수정함. (기존에는 XML 패러메터로 넘어오는 값을 사용).
+									String newGuid = UUID.randomUUID().toString();
+									newGuid = "{" + newGuid + "}";		
+									
 									String orgFileName = attachedFileList.get(i).get("filename");
 									String fileName = newGuid + "_" + orgFileName;
 
@@ -2465,8 +2626,9 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	public String mailReadBoardDotNet(@CookieValue("loginCookie") String loginCookie, Locale locale, @RequestBody String bodyData, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception{
 		logger.debug("mailReadBoardDotNet started.");
 		
-		Document xmldom = commonUtil.convertStringToDocument(bodyData);
-		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
+		/*Document xmldom = commonUtil.convertStringToDocument(bodyData);
+		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();*/
+		String url = request.getParameter("url");
 		String newGuid = UUID.randomUUID().toString();
 		newGuid = "{" + newGuid + "}";
 		
@@ -3560,13 +3722,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 */
 	private String getReceiverHTML(String name, String address, boolean isSecureMail){
 		String returnValue = null;
-		/**
-		 * 메일 주소가 없을 경우('a@a.com') 
-		 * 마우스 오버를 해도 메일 주소가 나타나지 않도록 처리.
-		 **/
-		if (address.equals("a@a.com")) { 
-			address = "";
-		}
 		
 		if (isSecureMail) {
 			returnValue = "<span title='" + (address == null? "" : EgovStringUtil.getSpclStrCnvr(address)) + "'>"

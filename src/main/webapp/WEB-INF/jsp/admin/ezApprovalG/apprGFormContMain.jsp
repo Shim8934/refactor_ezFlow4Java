@@ -91,7 +91,7 @@
 			    gManageID = Para[3];
 			    companyID = Para[7];
 			    
-			    if (Para[3] != "ALL" && Para[3] != "none") {
+			    if (Para[3] != "ALL" && ((approvalFlag == "G" && Para[3] != "none") || approvalFlag == "S")) {
 			    	document.getElementById("rdGroup").checked = true;
 			        rdGroup_onclick();
 			        document.getElementById("tbManage").value = Para[6];
@@ -255,7 +255,7 @@
 			    var compDeptid = "";
 
 			    Tree_setconfig();
-			    TreeViewinitialize("", "<c:out value = '${topID}' />/other", "extensionAttribute2;extensionAttribute3", "<c:out value = '${serverName}' />");
+			    TreeViewinitialize("", "<c:out value = '${topID}' />/other", "extensionAttribute2;extensionAttribute3", "<c:out value = '${serverName}' />", null, null, true);
 			}
 			
 			function Tree_setconfig() {

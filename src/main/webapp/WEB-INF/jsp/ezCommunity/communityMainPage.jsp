@@ -442,7 +442,7 @@
                 }
                 
                 if (SelectNodes(SelectNodes(xmldom, "ITEM/DATA")[0], "ROW").length == 0) {
-                	var str = "<spring:message code = 'ezCommunity.t926' />";
+                	var str = "<spring:message code = 'main.t00026' />";
                 	document.getElementById("mycommunity").innerHTML = "<div style='height:20px'>&nbsp;</div><div style='height:430px;text-align:center;'><img style='margin-top:160px' src='/images/kr/main/nodata_plan.png' /><div style='margin-top:10px;color:#d0d0d0;font-weight:bold'>" + str + "</div></div>";
                 }
                 //document.getElementById("tblPageRayer").style.display = "none";
@@ -1308,8 +1308,13 @@
 
 	                var left = (width - wWeight) / 2;
 	                var top = (heigth - wHeight) / 2 - 30;
+	                
+	                /* 2018-12-24 김민성 - 커뮤니티 팝업 해상도 1600*900 이하 height 조절 */
+	                if(wHeight > heigth) {
+                    	wHeight = heigth-100;
+                    }
 
-	                var ret = window.open(url, code, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+	                var ret = window.open(url, code, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 	                
 	                try { ret.focus() } catch (e) { }
 	            }
@@ -1368,17 +1373,22 @@
 	        	commuTitleWidth();
 		    }
 	        
+	        /* 2019-02-24 홍승비 - 커뮤니티 멤버, 게시물 수에 따라 커뮤니티명 길이 조절 수정 */
 			function commuTitleWidth() {
-				var titleWidth = "";
-
+				var titleWidth0 = "";
+				var titleWidth1 = "";
+				
+				// 첫번째 커뮤니티, 두번째 커뮤니티의 이름 길이를 각각 계산하도록 수정, 화면 사이즈 축소 시 두 탭이 찌그러지지 않도록 body에 min-width 부여
 				if (document.getElementById("tagsub1").className != "") {
-					if ($(".tabpartMycommunityTitle").eq(1).width() != null) { //커뮤니티가 2개일 경우 화면을 줄였을때 카테고리별 커뮤니티탭이 아래로 내려왔을경우 짤리는 현상 없게 하기 위해 2번째 커뮤니티 타이틀 너비를 이용한다.
-						titleWidth = $(".tabpartMycommunityTitle").eq(1).width() - $(".tabpartMycommunityTitle dd").eq(1).width() - 40; // 40은 커뮤니티명 앞에 이미지 너비때문에 빼는것. 
-					} else {
-						titleWidth = $(".tabpartMycommunityTitle").eq(0).width() - $(".tabpartMycommunityTitle dd").eq(0).width() - 40;
+					if ($(".tabpartMycommunityTitle").eq(0).width() != null) {
+						titleWidth0 = $(".tabpartMycommunityTitle").eq(0).width() - $(".tabpartMycommunityTitle dd").eq(0).width() - 40; // 40은 커뮤니티명 앞에 이미지 너비때문에 빼는것.
+						$(".tabpartMycommunityTitle dt").eq(0).css("width", titleWidth0 + "px");
 					}
 					
-					$(".tabpartMycommunityTitle dt").css("width", titleWidth + "px");
+					if ($(".tabpartMycommunityTitle").eq(1).width() != null) {
+						titleWidth1 = $(".tabpartMycommunityTitle").eq(1).width() - $(".tabpartMycommunityTitle dd").eq(1).width() - 40;
+						$(".tabpartMycommunityTitle dt").eq(1).css("width", titleWidth1 + "px");
+					} 
 				}
 			}
 			
@@ -1388,7 +1398,7 @@
 			}
 		</script>
 	</head>
-	<body>
+	<body style="min-width:500px;">
 		<div class="main_community">
 			<table style="width:100%" border="0" class="main_communityTop">
 				<tr>

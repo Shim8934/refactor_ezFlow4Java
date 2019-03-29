@@ -230,12 +230,14 @@
 		    	<tr> 
 		      		<th><spring:message code='ezSchedule.t348'/></th> 
 		      		<td style="width:100%">
-		      			<select name="search_field" style="WIDTH: 70px;height:22px"> 
-		          			<option value="title" <c:if test="${filter eq 'title' }">selected</c:if>><spring:message code='ezSchedule.t272'/></option> 
-		          			<option value="location" <c:if test="${filter eq 'location' }">selected</c:if>><spring:message code='ezSchedule.t273'/></option> 
-		        		</select> 
-		        		<input type="text" id="keyword" size="21" value="<c:out value="${keyword}"/>" onkeypress="return search_keypress(event)" style="height:22px" /> 
-		        		<a class="imgbtn imgbck"><span onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
+		      			<div style="vertical-align: middle;height: 74%;width: 100%;">
+			      			<select name="search_field" style="WIDTH: 70px;height:22px"> 
+			          			<option value="title" <c:if test="${filter eq 'title' }">selected</c:if>><spring:message code='ezSchedule.t272'/></option> 
+			          			<option value="location" <c:if test="${filter eq 'location' }">selected</c:if>><spring:message code='ezSchedule.t273'/></option> 
+			        		</select>
+			        		<input type="text" id="keyword" size="21" value="<c:out value="${keyword}"/>" onkeypress="return search_keypress(event)" style="height:22px;vertical-align: top" /> 
+			        		<a class="imgbtn imgbck"><span onClick="search()"><spring:message code='ezSchedule.t24'/></span></a>
+		        		</div>
 		        	</td> 
 		    	</tr> 
 		    	<tr> 

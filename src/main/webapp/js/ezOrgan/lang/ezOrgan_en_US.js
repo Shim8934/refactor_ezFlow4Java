@@ -32,3 +32,5 @@ var strLang31 = "You can not specify a full administrator privileges.";
 var strLang32 = "Are you sure you want to delete all of the authority?";
 var strLang535 = "No Items";
 var strLangLHM01 = "Restoration to the other companies is not supported.";
+var strLangLHM02 = "When you delete an employee, the data associated with that user is deleted and can not be recovered.";
+var strLangLHM03 = "Are you sure you want to delete the selected employees?";

@@ -66,7 +66,6 @@
 	        var userid = "${userInfo.id}";
 	        var deptid = "${userInfo.deptID}";
 	        var companyid = "${userInfo.companyID}";
-	        var userRollInfo = "${userInfo.rollInfo}";
 	        var susinTo = 0;
 	        var AddressTreeView = null;
 	        var UserAgentState = navigator.userAgent.toLowerCase();
@@ -81,6 +80,9 @@
 	        var selTab = "";
 	        var selSpan = "";
 	        var divListArry = [];
+	        var receiverCount = 0;
+	        var groupAddressCountMap = {};
+	        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
 	        
 	        document.onselectstart = function () {
 	            if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
@@ -177,13 +179,7 @@
 	                var objNode;
 	                createNodeInsert(xmlpara, objNode, "DATA");
 	                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
-	                
-	                if (userRollInfo.indexOf("c=1") != -1 && rulekind == "MANAGER") {
-	                	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top/organ");
-	                } else {
-	                	createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
-	                }
-	                
+	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
 	                createNodeAndInsertText(xmlpara, objNode, "PROP", "mail");
 	                xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	                xmlHTTP.send(xmlpara);
@@ -208,6 +204,11 @@
 	            catch (ErrMsg) {
 	                alert(" TreeViewinitialize : " + ErrMsg.description);
 	            }
+	            
+	            if ("${useSharedMailbox}" == "YES") {
+	            	document.getElementById("sharedMailboxTabButton").style.display = "";
+	            }
+	            
 	            if (type == "config") {
 	                if (CrossYN())
 	                    document.getElementById("h1Title").textContent = strLang314 + " <spring:message code='ezEmail.t832' />";
@@ -265,22 +266,9 @@
 					remove_key_event();
 	
 	                document.getElementById("dept_select").style.display = "none";
-	                
-	                // 관리자>조직도 관리>부서추가>부서장 아이디 선택
-	                if (rulekind == "MANAGER") { 
-	                	document.title = "<spring:message code='ezEmail.jje17'/>";
-	                	document.getElementById("h1Title").innerHTML = "<spring:message code='ezEmail.jje17'/>";
-	                	document.getElementById("contactTabButton").style.display = "none";
-	                	document.getElementById("dlTabButton").style.display = "none";
-	                	
-	                }
 	            }
 	            else {
 	                SelectReceiverWindow(eval("${defaultWin}" + "Title"), eval("ListViewMsg" + "${defaultWin}"));
-	            }
-	            
-	            if ("${useSharedMailbox}" == "YES") {
-	            	document.getElementById("sharedMailboxTabButton").style.display = "";
 	            }
 	            
 	            // (수신자 설정 시 drag, drop으로 순서 조정)
@@ -437,13 +425,15 @@
 		        else {
 		            var oldReceiverData;
 		            if (ReturnFunction!=null)
-		                oldReceiverData = RetValue
+		                oldReceiverData = RetValue;
 		            else
 		                oldReceiverData = window.dialogArguments;
 		
 		            addReceiverToList(oldReceiverData["to"], "ListViewMsgTo");
 		            addReceiverToList(oldReceiverData["cc"], "ListViewMsgCC");
 		            addReceiverToList(oldReceiverData["bcc"], "ListViewMsgBCC");
+		            receiverCount = oldReceiverData["receiverCount"];
+		            groupAddressCountMap = oldReceiverData["groupAddressCountMap"];
 		        }
 		    }
 		    function addReceiverToList(receiverData, receiverList) {
@@ -599,7 +589,7 @@
 		        
 		        try {
 		            var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("GET", "/ezEmail/mailGetDistribution.do", false);
+		            xmlHTTP.open("POST", "/ezEmail/mailGetDistribution.do", false);
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
@@ -656,7 +646,7 @@
 		        
 		        try {
 		            var xmlHTTP = createXMLHttpRequest();
-		            xmlHTTP.open("GET", "/ezEmail/getSharedMailboxList.do", false);
+		            xmlHTTP.open("POST", "/ezEmail/getSharedMailboxList.do", false);
 		            xmlHTTP.send("");
 		            
 		            if (xmlHTTP.status != 200) {
@@ -914,6 +904,7 @@
 	                }
 	            }
 	        }
+	        
 	        function InsertReceiver(pListView) {
 	            try {
 	                if (inputTabButton.children[0].getAttribute("class") == "tabon") {
@@ -972,6 +963,12 @@
 	                            IsInsert = CheckMailReceiver(strEmail, "3");
 	
 	                        if (!IsInsert) {
+	                        	if (type == "") {
+	                        		if (!increaseReceiverCount(pAddressType, pAddressID)) {
+						        		return;
+						        	}
+	                        	}
+	                        	
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
 	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1057,6 +1054,12 @@
 	                        var IsInsert = CheckMailReceiver(strEmail, "3");
 	
 	                        if (!IsInsert) {
+	                        	if (type == "") {
+	                        		if (!increaseReceiverCount()) {
+						        		return;
+						        	}
+	                        	}
+	                        	
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
 	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1136,6 +1139,12 @@
 	                        var IsInsert = CheckMailReceiver(strEmail, "3");
 	
 	                        if (!IsInsert) {
+	                        	if (type == "") {
+	                        		if (!increaseReceiverCount()) {
+						        		return;
+						        	}
+	                        	}
+	                        	
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
 	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1215,6 +1224,12 @@
 	                    var IsInsert = CheckMailReceiver(strEmail, "3");
 	
 	                    if (!IsInsert) {
+	                    	if (type == "") {
+	                    		if (!increaseReceiverCount()) {
+					        		return;
+					        	}
+	                    	}
+	                    	
 	                        pparsingXML = "";
 	                        pparsingXML = "<LISTVIEWDATA2><ROWS>";
 	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strDeptNM) + "</DATA1>";
@@ -1256,27 +1271,53 @@
 	                }
 	                else {
 	                    if (listContentArry != "") {
+                            var listid = "";
+
+                            if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
+                                listid = "MsgToList";
+                            }
+                            else if (pListView.id == "ListViewMsgCC" || pListView == "MsgCCList") {
+                                listid = "MsgCCList";
+                            }
+                            else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
+                                listid = "MsgBCCList";
+                            }
+                            var getlistview = new ListView();
+                            getlistview.LoadFromID(listid);
+                            
+                            var listview = new ListView();
+                            listview.LoadFromID(listid);
+                            
+                            var MaxID = 0;
+                            var MaxCntNum = 0;
+                            var InitTr = listview.GetDataRows();
+                            var trSize = InitTr.length;
+                            for (var j = 0  ; j < trSize; j++) {
+                                var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+                                if (MaxID < curnum) {
+                                    MaxID = curnum;
+                                    MaxCntNum = j;
+                                }
+                            }
+                            
+                            if (MaxCntNum != 0)
+                                MaxCntNum = MaxCntNum + 1;
+                            
 	                        for (var i = 0; i < listContentArry.length; i++) {
-	                            var strName = document.getElementById(listContentArry[i]).getAttribute("_data4");
-	                            var strDeptNM = document.getElementById(listContentArry[i]).getAttribute("_data5");
-	                            var strEmail = document.getElementById(listContentArry[i]).getAttribute("_data3");
+	                        	var currentContent = document.getElementById(listContentArry[i]);
+	                            var strName = currentContent.getAttribute("_data4");
+	                            var strDeptNM = currentContent.getAttribute("_data5");
+	                            var strEmail = currentContent.getAttribute("_data3");
 	
-	                            var listid = "";
-	
-	                            if (pListView.id == "ListViewMsgTo" || pListView == "MsgToList") {
-	                                listid = "MsgToList";
-	                            }
-	                            else if (pListView.id == "ListViewMsgCC" || pListView == "MsgCCList") {
-	                                listid = "MsgCCList";
-	                            }
-	                            else if (pListView.id == "ListViewMsgBCC" || pListView == "MsgBCCList") {
-	                                listid = "MsgBCCList";
-	                            }
-	                            var getlistview = new ListView();
-	                            getlistview.LoadFromID(listid);
 	                            var IsInsert = CheckMailReceiver(strEmail, "3");
 	
 	                            if (!IsInsert) {
+	                            	if (type == "") {
+	                            		if (!increaseReceiverCount()) {
+							        		return;
+							        	}
+	                            	}
+	                            	
 	                                pparsingXML2 = "";
 	                                pparsingXML = "";
 	                                pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1288,23 +1329,7 @@
 	                                pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                                Resultxml = loadXMLString(pparsingXML2);
 	
-	                                var listview = new ListView();
-	                                listview.LoadFromID(listid);
-	
-	                                var MaxID = 0;
-	                                var InitTr = listview.GetDataRows();
-	                                var MaxCntNum = 0;
-	                                for (var j = 0  ; j < InitTr.length  ; j++) {
-	                                    var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-	                                    if (MaxID < curnum) {
-	                                        MaxID = curnum;
-	                                        MaxCntNum = j;
-	                                    }
-	                                }
-	
-	                                var objTr = listview.AddRow(InitTr.length);
-	                                if (MaxCntNum != 0)
-	                                    MaxCntNum = MaxCntNum + 1;
+	                                var objTr = listview.AddRow(trSize);
 	                                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                                listview.AddDataRow(objTr, Resultxml);
 	
@@ -1314,7 +1339,10 @@
 	                                    document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
 	                                    document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                                }
-	
+	                                
+	                                MaxID++;
+	                                MaxCntNum++;
+	                                trSize++
 	                            }
 	                        }
 	
@@ -1342,6 +1370,12 @@
                             var IsInsert = CheckMailReceiver(strEmail, "3");
 	
 	                        if (!IsInsert) {
+	                        	if (type == "") {
+	                        		if (!increaseReceiverCount()) {
+						        		return;
+						        	}
+	                        	}
+	                        	
 	                            pparsingXML2 = "";
 	                            pparsingXML = "";
 	                            pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1486,6 +1520,10 @@
 	            var arrRows = selList.GetSelectedRows();
 	            var strName = "";
 	            for (var i = 0; i < arrRows.length; i++) {
+	            	if (type == "") {
+	            		decreaseReceiverCount(arrRows[i].getAttribute("data2"), arrRows[i].getAttribute("data4"));
+	            	}
+	                
 	                selList.DeleteRow(arrRows[i].id);
 	            }
 	        }
@@ -2487,6 +2525,12 @@
 	                    for (var i = 0; i < count; i++) {
 	                        var IsInsert = CheckMailReceiver(mail_select_dlmember_cross_dialogArguments[0]["email"][i], "3");
 	                        if (!IsInsert) {
+	                        	if (type == "") {
+	                        		if (!increaseReceiverCount()) {
+						        		return;
+						        	}
+	                        	}
+	                        	
 	                        	pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + "</DATA1>";
 	                            pparsingXML = pparsingXML + "<DATA2>" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "</DATA2>";
@@ -2539,6 +2583,12 @@
 	                    for (var i = 0; i < count; i++) {
 	                        var IsInsert = CheckMailReceiver(mail_select_dlmember_cross_dialogArguments[0]["email"][i], "3");
 	                        if (!IsInsert) {
+	                        	if (type == "") {
+	                        		if (!increaseReceiverCount()) {
+						        		return;
+						        	}
+	                        	}
+	                        	
 	                        	pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + "</DATA1>";
 	                            pparsingXML = pparsingXML + "<DATA2>" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "</DATA2>";
@@ -2591,6 +2641,12 @@
 	                        //var IsInsert = CheckMailReceiver(rtnValue["email"][i], "3");
 	                        var IsInsert = CheckMailReceiver(mail_select_dlmember_cross_dialogArguments[0]["email"][i], "3");
 	                        if (!IsInsert) {
+	                        	if (type == "") {
+	                        		if (!increaseReceiverCount()) {
+						        		return;
+						        	}
+	                        	}
+	                        	
 	                        	pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
 	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(mail_select_dlmember_cross_dialogArguments[0]["name"][i]) + "</DATA1>";
 	                            pparsingXML = pparsingXML + "<DATA2>" + mail_select_dlmember_cross_dialogArguments[0]["email"][i] + "</DATA2>";
@@ -2708,6 +2764,12 @@
 	                        targetList = null;
 	                    }
 	                    if (!bFlag) {
+	                    	if (type == "") {
+	                    		if (!increaseReceiverCount()) {
+					        		return;
+					        	}
+                        	}
+	                    	
 	                        var listid = "";
 	                        if (m_selectedWindow.id == "ListViewMsgTo") {
 	                            listid = "MsgToList";
@@ -2736,8 +2798,8 @@
 	                            if (MaxID < curnum)
 	                                MaxID = curnum;
 	                        }
-	                        var objTr = listview.AddRow(MaxID);
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        var objTr = listview.AddRow(InitTr.length);
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	
 	                        document.getElementById(listid).className = "receiver_list";
@@ -2771,6 +2833,12 @@
 	                        targetList = null;
 	                    }
 	                    if (!bFlag) {
+	                    	if (type == "") {
+	                    		if (!increaseReceiverCount()) {
+					        		return;
+					        	}
+                        	}
+	                    	
 	                        var listid = "";
 	                        if (m_selectedWindow.id == "ListViewMsgTo") {
 	                            listid = "MsgToList";
@@ -2799,8 +2867,8 @@
 	                            if (MaxID < curnum)
 	                                MaxID = curnum;
 	                        }
-	                        var objTr = listview.AddRow(MaxID);
-	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                        var objTr = listview.AddRow(InitTr.length);
+	                        SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                        listview.AddDataRow(objTr, Resultxml);
 	
 	                        document.getElementById(listid).className = "receiver_list";
@@ -2811,7 +2879,9 @@
 	                        }
 	                    }
 	                }
-	            } catch (e) { }
+	            } catch (e) {
+	            	console.error(" groupmember_click_Complete : " + e.description);
+	            }
 	        }
 	        function dept_select() {
 	            var organTree = new TreeView();
@@ -2856,15 +2926,20 @@
 	                    if (bFlag) {
 	                        return;
 	                    }
-	                    else {
-	                        pparsingXML = "<LISTVIEWDATA2><ROWS>";
-	                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strDeptNM) + "</DATA1>";
-	                        pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
-	                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
-	                        pparsingXML = pparsingXML + "<DATA4>" + strSIP + "</DATA4>";
-	                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strDeptNM) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
-	                        pparsingXML = pparsingXML + "</ROWS></LISTVIEWDATA2>";
-	                    }
+	                    
+	                    if (type == "") {
+	                    	if (!increaseReceiverCount()) {
+				        		return;
+				        	}
+                    	}
+	                    
+                        pparsingXML = "<LISTVIEWDATA2><ROWS>";
+                        pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strDeptNM) + "</DATA1>";
+                        pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
+                        pparsingXML = pparsingXML + "<DATA3><![CDATA[" + MakeXMLString(strDeptNM) + "]]></DATA3>";
+                        pparsingXML = pparsingXML + "<DATA4>" + strSIP + "</DATA4>";
+                        pparsingXML = pparsingXML + "<VALUE>" + MakeXMLString(strDeptNM) + " &lt;" + strEmail + "&gt;" + "</VALUE></CELL></ROW>";
+                        pparsingXML = pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	
 	                    Resultxml = loadXMLString(pparsingXML);
 	
@@ -2881,7 +2956,7 @@
 	                    }
 	
 	                    var objTr = listview.AddRow(InitTr.length);
-	                    SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+	                    SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
 	                    listview.AddDataRow(objTr, Resultxml);
 	
 	                    document.getElementById(listid).className = "receiver_list";
@@ -3266,7 +3341,7 @@
                     alert(strLang197);
                     return;
                 }
-                var emailMatch = new RegExp(/^[^/@]{1,30}@[A-Za-z0-9]{2,30}\.[A-Za-z0-9]{2,30}/g);
+                var emailMatch = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
                 if (!emailMatch.test(document.getElementById("emailaddr").value) && document.getElementById("emailaddr").value != "") {
                     alert(strLang198);
                     return;
@@ -3296,14 +3371,20 @@
                         return;
                     }
                 }
-
+				
+                if (type == "") {
+                	if (!increaseReceiverCount()) {
+		        		return;
+		        	}
+            	}
+                
                 for (var j = 0  ; j < InitTr.length  ; j++) {
                     var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
                     if (MaxID < curnum)
                         MaxID = curnum;
                 }
                 var objTr = listview.AddRow(InitTr.length);
-                SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+                SetAttribute(objTr, "id", listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1));
                 listview.AddDataRow(objTr, Resultxml);
 
                 document.getElementById(listid).className = "receiver_list";
@@ -3389,7 +3470,7 @@
                 dropelement = "";
             }
             
-            var BlockSize2 = 10;
+            var BlockSize2 = 5;
             function td_Create2(strtext) {
                 document.getElementById("tblPageRayer2").innerHTML = strtext;
             }
@@ -3628,6 +3709,64 @@
 	        	}
 	        }
 	        
+	        function getGroupAddressMemberCount(addressId) {
+	        	var count = $.ajax({
+	            	type : "GET",
+	            	dataType : "text",
+	            	url : "/ezAddress/getGroupAddressMemberCount.do",
+	            	data : {id : addressId},
+	            	async : false
+	            }).responseText;
+	        	
+	        	return parseInt(count);
+	        }
+	        
+	        function increaseReceiverCount(pType, pHref) {
+	        	if (typeof pType !== 'undefined' && typeof pHref !== 'undefined') {
+	        		if (pType == "mailgroup") {
+	        			var addressId = pHref.split("|!|")[0];
+	        			var count = getGroupAddressMemberCount(addressId);
+	        			
+	        			if (mailMaxReceiverCount < receiverCount + count) {
+	        				alert(strLangReceiverCount01 + mailMaxReceiverCount + strLangReceiverCount02);
+	        	            return false;
+	        			}
+	        			
+	        			groupAddressCountMap[addressId] = count;
+	        			receiverCount += count;
+	        		} else {
+	        			if (mailMaxReceiverCount < receiverCount + 1) {
+	        				alert(strLangReceiverCount01 + mailMaxReceiverCount + strLangReceiverCount02);
+	        	            return false;
+	        			}
+	        			
+	        			receiverCount += 1;
+	        		}
+	        	} else {
+	        		if (mailMaxReceiverCount < receiverCount + 1) {
+	        			alert(strLangReceiverCount01 + mailMaxReceiverCount + strLangReceiverCount02);
+	                    return false;
+	        		}
+	        		
+	        		receiverCount += 1;
+	        	}
+	        	
+	        	return true;
+	        }
+
+	        function decreaseReceiverCount(pType, pHref) {
+	        	if (typeof pType !== 'undefined' && typeof pHref !== 'undefined') {
+	        		if (pType == "mailgroup") {
+	        	    	var addressId = pHref.split("|!|")[0];
+	        	    	receiverCount -= groupAddressCountMap[addressId];
+	        	    	delete groupAddressCountMap[addressId];
+	        	    } else {
+	        	    	receiverCount -= 1;
+	        	    }
+	        	} else {
+	        		receiverCount -= 1;
+	        	}
+	        }
 	    </script>
 	</head>
 	<body class="popup" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);" style="overflow:hidden">

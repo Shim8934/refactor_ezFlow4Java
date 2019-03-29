@@ -396,6 +396,7 @@ function GetSelCabInfoXml(totalRows) {
 	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETSN", totalRows[i].cells[1].innerText);
 	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "CABINETVOLNO", totalRows[i].cells[2].innerText);
 	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "TASKCODE", totalRows[i].getAttribute("DATA2"));
+	        createNodeAndAppandNodeText(rtnXml, objItem, objData, "KEEPPERIOD", totalRows[i].getAttribute("DATA8"));
 	    }
     }
     return getXmlString(rtnXml);

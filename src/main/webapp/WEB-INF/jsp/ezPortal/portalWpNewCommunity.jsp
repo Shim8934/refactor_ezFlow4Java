@@ -54,8 +54,13 @@
 
 			                var left = (width - wWeight) / 2;
 			                var top = (heigth - wHeight) / 2 - 30;
+			                
+			                /* 2018-12-24 김민성 - 커뮤니티 팝업 해상도 1600*900 이하 height 조절 */
+			                if(wHeight > heigth) {
+		                    	wHeight = heigth-100;
+		                    }
 
-			                var ret = window.open("/ezCommunity/checkCommHome.do?communityCD=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
+			                var ret = window.open("/ezCommunity/checkCommHome.do?communityCD=" + idx, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=" + wHeight + ",width=" + wWeight + ",top=" + top + ",left = " + left);
 						}
 					}
 				});
@@ -97,7 +102,7 @@
         	    <span class="tr"></span>
             	<span class="title_txt"><spring:message code='main.t1006' /></span>
             	<span class="btn_more" onclick="Copmore_btnClick()">
-                	<img src="/images/kr/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />" >
+                	<img src="/images/<spring:message code='main.t00025' />/main/btn_more02.gif" width="35" height="20" alt="<spring:message code='main.t1008' />" >
             	</span>
         	</div>
         	<div id="tblBest" class="communitycont" style="${strHTML != '' ? 'padding-top:0px' : ''}">

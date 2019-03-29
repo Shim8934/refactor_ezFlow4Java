@@ -52,6 +52,7 @@
 	            }
 	
 	            Window_onresize();
+	            makePageSelPage();
 	        }
 	        function search_keypress() {
 	            if (window.event.keyCode == "13")

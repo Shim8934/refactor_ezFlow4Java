@@ -578,7 +578,8 @@
              	URL ,
              	REGUSERID ,
              	VIEW_FLAG ,
-             	SIZE_ 
+             	SIZE_ ,
+             	REGDATE
         	FROM
         		TBL_PS_QUICKLINK A
             JOIN

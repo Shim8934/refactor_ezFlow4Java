@@ -132,7 +132,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		BoardMyFavoriteVO boardMyFavoriteVO = ezBoardDAO.getBoardNewBoardOrder(map);
 		
-		if (boardMyFavoriteVO != null && boardMyFavoriteVO.getBoardId() != null && !boardMyFavoriteVO.equals("")) {
+		/* 2019-01-07 홍승비 - boardMyFavoriteVO에 대한 !equals("") 비교조건 제거 */
+		if (boardMyFavoriteVO != null && boardMyFavoriteVO.getBoardId() != null) {
 			ezBoardDAO.updateMyBoard(boardMyFavoriteVO);
 		} else {
 			ezBoardDAO.insertBoardNewBoardOrder(map);
@@ -719,7 +720,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			boardProp = getBoardProperty(ezBoardVO.getBoardId(), ezBoardVO.getTenantID());
 			
-			if (boardProp.getBoardGroupID() != null) {
+			if (boardProp != null && boardProp.getBoardGroupID() != null) {
 				BoardPropertyVO boardGroupProp = getBoardProperty(boardProp.getBoardGroupID(), ezBoardVO.getTenantID());
 				
 				if (boardGroupProp.getGuBun() != null && boardGroupProp.getGuBun().equals("99")) {
@@ -2160,6 +2161,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		/* 2019-01-07 홍승비 - 예약게시물 페이징 파라미터 누락 수정*/
+		map.put("v_PSTARTROW", startRow);
 		map.put("v_PENDROW", endRow);
 		map.put("v_PUSERID", userID);
 		map.put("lang", lang);
@@ -2167,12 +2170,16 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantID);
 		map.put("nowDate", commonUtil.getTodayUTCTime(""));
+		map.put("rowCount", endRow - (startRow - 1));
+		map.put("limit", startRow - 1);
 		
 		List<BoardListVO> boardListVOs = ezBoardDAO.getReservedItemList(map);
 		
 		for (int k = 0; k < boardListVOs.size(); k++) {
 			boardListVOs.get(k).setStartDate(commonUtil.getDateStringInUTC(boardListVOs.get(k).getStartDate(), offset, false));
 			boardListVOs.get(k).setEndDate(commonUtil.getDateStringInUTC(boardListVOs.get(k).getEndDate(), offset, false));
+			boardListVOs.get(k).setTitle(commonUtil.cleanValue(boardListVOs.get(k).getTitle()));
+			boardListVOs.get(k).setABSTRACT(commonUtil.cleanValue(boardListVOs.get(k).getABSTRACT()));
 		}
 
 		logger.debug("getReservedItemList ended");
@@ -4140,6 +4147,38 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 
 		logger.debug("getSearchApprBoardItemList ended");
 		return ezBoardDAO.getSearchApprBoardItemList(map);
+	}
+
+	@Override
+	public String getEzTalkGateNoticeBoardId(String companyID, int tenantID) throws Exception {
+		logger.debug("getEzTalkGateNoticeBoardId started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		ezBoardDAO.getEzTalkGateNoticeBoardId(map);
+		map.put("v_companyID", companyID);
+		map.put("v_tenantID", tenantID);
+		
+		String resultBoradID = ezBoardDAO.getEzTalkGateNoticeBoardId(map);
+		
+		logger.debug("getEzTalkGateNoticeBoardId ended.");
+		return resultBoradID;
+	}
+	
+	/* 2019-01-15 홍승비 - 게시물의 수정일(updateDate)만을 업데이트하는 메서드 */
+	@Override
+	public void modUpdateDate(String updateDate, String itemID, int tenantID) throws Exception {
+		logger.debug("modUpdateDate started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("updateDate", updateDate);
+		map.put("itemID", itemID);
+		map.put("tenantID", tenantID);
+		
+		ezBoardDAO.modUpdateDate(map);
+		
+		logger.debug("modUpdateDate ended.");
 	}
 
 }

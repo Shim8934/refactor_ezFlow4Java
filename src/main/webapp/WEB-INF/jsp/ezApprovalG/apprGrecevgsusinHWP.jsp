@@ -121,6 +121,7 @@
 		    var dirPath = "${approvalRoot}";
 		    var useReceiveDocNo = "${useReceiveDocNo}";
 		    var orgCompanyID = "";
+		    var docNumZeroCnt = "${docNumZeroCnt}";
 		    
 		    function process_AfterOpen() {
 		        try {
@@ -321,8 +322,8 @@
 			        HwpCtrl.ChangeMode(3);
 					
 			        //2018-10-15 반송 후 배부된 문서의 접수번호 초기화
-			        if (pDraftFlag == "REDRAFT") {
-				        HwpCtrl.SetFieldText("receiptnumber", "");
+			        if (pDraftFlag == "REDRAFT" || pDraftFlag == "SUSIN") {
+				        HwpCtrl.SetFieldText("receiptnumber", "@dp-@nn");
 			        }
 			        
 			        HwpCtrl.SetFieldFocus("doctitle");
@@ -356,7 +357,8 @@
 			            if (isRelay) {
 			                try {
 			                	/* 재발송기능 display:none처리 2018-08-25 */
-			                    /* document.getElementById("btnReqReSend").style.display = ""; */
+			                	/* 재발송요청기능 살림 2019-02-08 */
+			                    document.getElementById("btnReqReSend").style.display = ""; 
 			                    if (getNodeText(pRelayDocInfo.getElementsByTagName("isPKI").item(0)) == "Y") {
 			                        hideProgress();
 			
@@ -429,7 +431,7 @@
 			                var NewIsRelay = GetRelayDocInfo();
 			                if (NewIsRelay) {
 			                	/* 재발송기능 display:none처리 */
-			                    /* btnReqReSend.style.display = ""; */
+			                    btnReqReSend.style.display = "";
 			                } else {
 			                    btnReqReSend.style.display = "none";
 			                }
@@ -520,6 +522,19 @@
 			}
 		
 			function btnSendDraft_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+					return;
+				} else if (deptCheckFlag == "2") {
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					return;
+				}	
+			
 			    try {
 			        var rtnSignInfo;
 			        if (btnSendDraftEnable == "false") {
@@ -587,7 +602,8 @@
 			            return;
 			        }
 			        else {
-			        	if ("${approvalPWD}" != "N") {
+			        	//if ("${approvalPWD}" != "N") {
+			        	if (CheckUsePassword()) {
 			                var chkpass = chk_Passwd();
 			                if (chkpass == "False") {
 			                    var pAlertContent = "<spring:message code='ezApprovalG.t1383'/>";
@@ -666,7 +682,7 @@
 			
 			              var rtnval = true;
 			              //mht는 G일때만 수신채번하게 되잇는데
-			              rtnval = getRecvDocNumber(arr_userinfo[4]);
+			              rtnval = getRecvDocNumber(arr_userinfo[4], docNumZeroCnt);
 			              if (!rtnval) {
 			                  var pAlertContent = "[접수 문서번호]를 가져오지 못했습니다!";
 			                  OpenAlertUI(pAlertContent);
@@ -941,6 +957,19 @@
 			  }
 		
 			  function btnDistribute_onclick() {
+	        	  var deptCheckFlag = checkDeptAndCabinetId();
+	        	  
+				  if (deptCheckFlag == "3") {
+				  	  alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+			  		  return;
+				  } else if (deptCheckFlag == "4") {
+				  	  alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+				  	  return;
+			  	  } else if (deptCheckFlag == "2") {
+				  	  alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					  return;
+				  }  
+			  
 			      var parameter = new Array();
 			      parameter[0] = pDocID;
 			      parameter[1] = pSusinSN;
@@ -949,7 +978,7 @@
 			      parameter[4] = getNodeText(RECEIPTDEPTID);
 			
 			      var url = "/ezApprovalG/ezReceiveDistributeUI.do";
-			      var feature = "status:no;dialogWidth:1000px;dialogHeight:760px;edge:sunken;scroll:no"
+			      var feature = "status:no;dialogWidth:800px;dialogHeight:600px;edge:sunken;scroll:no"
 			      var ret = window.showModalDialog(url, parameter, feature);
 			      if (ret == "true") {
 			          var pAlertContent = "<spring:message code='ezApprovalG.t1419'/>";
@@ -959,13 +988,23 @@
 			  }
 			  
 			  function btnAssign_onclick() {
+	        	  var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				  if (deptCheckFlag == "3") {
+					  alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+					  return;
+				  } else if (deptCheckFlag == "4") {
+					  alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+					  return;
+				  }  
+			  
 			      var parameter = new Array();
 			      parameter[0] = pDocID;
 			      parameter[1] = pSusinSN;
 			      parameter[2] = pAprState;
 			
 				  var url = "/ezApprovalG/ezReceiveAssignUI.do";
-			      var feature = "status:no;dialogWidth:600px;dialogHeight:380px;edge:sunken;scroll:no"
+			      var feature = "status:no;dialogWidth:800px;dialogHeight:600px;edge:sunken;scroll:no"
 			      var ret = window.showModalDialog(url, parameter, feature);
 			      if (ret == "OK") {
 			          var pAlertContent = "<spring:message code='ezApprovalG.t1420'/>";
@@ -976,6 +1015,19 @@
 			}
 		
 			function btnReturn_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+					return;
+				} else if (deptCheckFlag == "2") {
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					return;
+				}	
+			
 			    var pDocSN = "";
 			    if (HwpCtrl.CheckFieldExist("receiptnumber")) {
 			        var fieldValue = trim(HwpCtrl.GetFieldText("receiptnumber"));
@@ -1059,6 +1111,19 @@
 			}
 		
 			function btnRJunkyul_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+					return;
+				} else if (deptCheckFlag == "2") {
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					return;
+				}	
+			
 			    var Resultxml;
 			    var UserID = "${userInfo.id}";
 			    var DisplayName =  "${userInfo.displayName}";
@@ -1223,6 +1288,19 @@
 			}
 		
 			function btnReDistribute_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+					return;
+				} else if (deptCheckFlag == "2") {
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					return;
+				}
+			
 			    var ret = openOpinionUI("BanSong");
 			    if (ret != "cancel" && ret != undefined) {
 			        var xmlpara = createXmlDom();
@@ -1295,6 +1373,16 @@
 		
 		    var ezapprovalinfo_dialogArguments = new Array();
 			function btnApprovalInfo() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+					return;
+				}	
+			
 			    var onlydocinfiview = false;
 			    var parameter = new Array();
 				var chkReceivedDoc = 0;
@@ -1539,6 +1627,46 @@
 					}
 				}
 			}
+			
+			/* 2019-01-02 천성준 #14647
+			     결재암호 사용유무 조회 (Y / N)
+			*/
+			function CheckUsePassword() {
+				var result = "";
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/getApprovalPWD.do",
+					success: function(text) {
+						result = text;
+					}        			
+				});
+				
+				if (result != "N") {
+					return true;
+				} else {
+					return false;
+				}
+			}
+			
+	    	function checkDeptAndCabinetId() {
+	    		var result;
+            	$.ajax({
+            		type : "POST",
+            		dataType : "text",
+            		async : false,
+            		url : "/ezApprovalG/checkDeptAndCabinetId.do",
+            		data : {
+            				orgDeptId : arr_userinfo[4],
+            				orgCabinetId : cabinetID
+            				},
+            		success : function(text){
+            			result = text;
+            		}
+            	});
+            	return result;
+	    	}
 		</script>
 <!-- 		<script type="text/vbscript" language="vbscript"> -->
 <!-- Function ConversionPt(cmm) -->

@@ -25,6 +25,7 @@
 			var g_bSaved = false;
 			var menuindex = "${menuIndex}";
 		    var pNoneActiveX = "${noneActiveX}";
+		    var isOnload = true;
 			window.onload = function()
 			{
 				toggle_menu(menuindex);
@@ -93,10 +94,13 @@
 				xmlhttp.open("POST", "/admin/ezPortal/saveSubMenuItem.do?pageID=" + pageid, false);
 				xmlhttp.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
 				xmlhttp.send(strXML);
-				xmlhttp = null;
 				
 				alert("<spring:message code='ezPortal.t84'/>");
 				g_bSaved = true;
+				if (xmlhttp.status == 200) {
+					window.opener.location.reload(true);
+				}
+				xmlhttp = null;
 				
 				location.href = "/admin/ezPortal/subMenuItemEdit.do?pageID=" + pageid + "&mode=edit&uID=" + uid + "&menuIndex=1";
 			}
@@ -136,15 +140,19 @@
 				}
 				*/
 				
-				if (pmode == "new" && g_bSaved == false)
+				if (!isOnload && pmode == "new" && g_bSaved == false)
 				{
 					if (pIndex.toString() != "1")
 					{
 						alert("<spring:message code='ezPortal.t83'/>");
+						document.getElementById("menu_1").setAttribute("class", "on");
+						document.getElementById("menu_2").setAttribute("class", "off");
+						document.getElementById("menu_3").setAttribute("class", "off");
 						return;
 					}
-				}
+				} 
 				
+				isOnload = false; 
 				// 이미지 변경
 				switch(pIndex.toString())
 				{
@@ -161,6 +169,9 @@
 						toggle_tbl3_1.style.display = "none";
 						toggle_tbl3_2.style.display = "none";
 						toggle_tbl3_3.style.display = "none";
+						document.getElementById("menu_1").setAttribute("class", "on");
+						document.getElementById("menu_2").setAttribute("class", "off");
+						document.getElementById("menu_3").setAttribute("class", "off");
 						break;
 					case "2":
 						menu_1.src = "/images/tap_portal01.gif";
@@ -175,6 +186,9 @@
 						toggle_tbl3_1.style.display = "none";
 						toggle_tbl3_2.style.display = "none";
 						toggle_tbl3_3.style.display = "none";
+						document.getElementById("menu_1").setAttribute("class", "off");
+						document.getElementById("menu_2").setAttribute("class", "on");
+						document.getElementById("menu_3").setAttribute("class", "off");
 						break;
 					case "3":
 						menu_1.src = "/images/tap_portal01.gif";
@@ -189,8 +203,13 @@
 						toggle_tbl3_1.style.display = "";
 						toggle_tbl3_2.style.display = "";
 						toggle_tbl3_3.style.display = "";
+						document.getElementById("menu_1").setAttribute("class", "off");
+						document.getElementById("menu_2").setAttribute("class", "off");
+						document.getElementById("menu_3").setAttribute("class", "on");
 						break;
 				}
+				
+				
 			}
 			
 			function RemoveParameter(pParamName)
@@ -877,7 +896,7 @@
             <input type="hidden" name="mailgubun" id="mailgubun" />
 		</form>
 		<script type="text/javascript">
-    		selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
+    		//selToggleList(document.getElementById("tabnav"), "ul", "li", "1");
 			selToggleList(document.getElementById("menu"), "ul", "li", "0");
 		</script>
 	</body>

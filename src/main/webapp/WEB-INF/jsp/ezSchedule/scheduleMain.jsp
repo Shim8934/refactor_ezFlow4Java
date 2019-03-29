@@ -73,6 +73,7 @@
 		    var pStartday = "<c:out value='${startDay}'/>";
 		    var pUse_Editor = "<c:out value='${useEditor}'/>";
 		    var LunarUse = false;		    
+		    var primaryLang = "<c:out value='${userInfo.primary}'/>";		// 2018-12-26 김민성 - 일정관리 기념일 다국어 처리
 		    select_memorialDays(uselang);
 		    
 		    /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
@@ -243,10 +244,10 @@
 		            schedule_receive_attendant_cross_dialogArguments[0] = this;
 		            schedule_receive_attendant_cross_dialogArguments[1] = windowonload_Complete;
 		           
-		            DivPopUpShow(730,370,"/ezSchedule/scheduleReceiveAttendant.do");
+		            DivPopUpShow(980,470,"/ezSchedule/scheduleReceiveAttendant.do");
 		        	
 		            $("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%'></div>").appendTo(parent.frames["left"].document.body);        	
-		        	var popupX = parent.document.body.clientWidth/2 - (730/2) - 220;
+		        	var popupX = parent.document.body.clientWidth/2 - (730/2) - 305;
 		        	$("#iFramePanel").css("left", popupX);
 
 		            try { OpenWin.focus(); } catch (e) { }
@@ -396,7 +397,7 @@
 		        } else {		        	
 		            var pheight = window.screen.availHeight;
 		            var pwidth = window.screen.availWidth;
-		            var pTop = (pheight - 660) / 2;
+		            var pTop = (pheight - 670) / 2;
 		            var pLeft = (pwidth - 790) / 2;
 		            window.open("/ezSchedule/scheduleRead.do" + "?id=" + encodeURIComponent(scheduleid) + "&otherid=" + encodeURIComponent(otherid) + "&repeatcount=" + repeatcount + "&date=" + date + "&type=" + scheduletype + "&datetype=" + datetype + "&pattern=" + ret, "",
                                 "height = 670px, width = 790px, top=" + pTop.toString() + ", left=" + pLeft.toString() + ",  status = no, toolbar=no, menubar=no,location=no, resizable=no");
@@ -880,9 +881,9 @@
 		    }
 
 		    function open_schedule(scheduleid) {
-		        var feature = GetOpenPosition(790, 660);
+		        var feature = GetOpenPosition(790, 670);
 		        window.open("/ezSchedule/scheduleRead.do?id=" + encodeURIComponent(scheduleid), "",
-					"height = 660px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
+					"height = 670px, width = 790px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 		    }
 
 		    function ShowSchedule() {

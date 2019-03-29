@@ -41,6 +41,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -149,7 +151,40 @@ public class CommonUtil {
     	
     	logger.debug("init ended.");
     }
-	
+
+    /**
+     * Path Traversal 공격을 방지하기 위해 filePath에 ../ 혹은 ..\ 패턴이 있으면
+     * 예외를 발생시킨다.  
+     * @param filePath
+     * @return
+     * @throws Exception
+     */
+    public String detectPathTraversal(String filePath) throws Exception {
+    	if (filePath != null && !filePath.isEmpty()) {
+	    	String parentFolder1 = "../";
+	    	String parentFolder2 = "..\\";
+	    	
+	    	if (filePath.contains(parentFolder1) || filePath.contains(parentFolder2)) {
+	    		logger.debug("PathTraversal detected. filePath=" + filePath);
+	    		
+	    		throw new Exception("PathTraversal detected.");
+	    	}
+    	}
+    	
+    	return filePath;
+    }
+    
+	/** 
+	 * strip <object>,<applet>,<script> tags
+	 */	
+    public String stripScriptTags(String src) {
+		Pattern p = Pattern.compile("<(object|applet|script).*?>|</(object|applet|script).*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher m = p.matcher(src);
+		src = m.replaceAll("");
+				
+		return src;		
+	}
+    
 	public LoginVO userInfo(String loginCookie){
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
@@ -220,7 +255,7 @@ public class CommonUtil {
 		try{
 			String decData = egovFileScrty.decryptAES(loginCookie);
 
-			String[] decDataArray = decData.split("///");
+			String[] decDataArray = decData.split("///", -1);
 			
 			String serverName = decDataArray[0];
 			String userID = decDataArray[1];
@@ -417,6 +452,59 @@ public class CommonUtil {
 		if (compatibleValue != null) {
 			response.setHeader("X-UA-Compatible", compatibleValue);
 		}		
+	}
+	
+	public static String addVer(ServletContext application, String filePath) {		
+		File fileObj = new File(application.getRealPath(filePath));
+		
+		if (fileObj.exists()) {
+			Date lastDate = new Date(fileObj.lastModified());
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			String version = sdf.format(lastDate);
+			
+			filePath += "?v=" + version;
+		}
+		
+		return filePath;
+	}
+	
+	public static String addVer(ServletContext application, HttpServletRequest request, String filePath) {
+		String springMessage = "<spring:message";
+		int startOfSpringMessage = filePath.indexOf(springMessage);
+		
+		if (startOfSpringMessage > -1) {
+			String code = "code='";
+			int startOfCode = filePath.indexOf(code, startOfSpringMessage + springMessage.length());
+			
+			if (startOfCode > -1) {
+				int endOfCode = filePath.indexOf("'", startOfCode + code.length());
+				
+				if (endOfCode > -1) {
+					String codeValue = filePath.substring(startOfCode + code.length(), endOfCode);					
+					String msg = commonUtilInstance.egovMessageSource.getMessage(codeValue, new CookieLocaleResolver().resolveLocale(request));					
+					int endOfSpringMessage = filePath.indexOf(">", endOfCode + 1); 
+					
+					if (endOfSpringMessage > -1) {
+						filePath = filePath.substring(0, startOfSpringMessage) + msg
+									+ filePath.substring(endOfSpringMessage + 1);
+					}
+				}
+			}
+		}
+		
+		File fileObj = new File(application.getRealPath(filePath));
+		
+		if (fileObj.exists()) {
+			Date lastDate = new Date(fileObj.lastModified());
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			String version = sdf.format(lastDate);
+			
+			filePath += "?v=" + version;
+		}
+		
+		return filePath;
 	}
 	
 	public boolean isLoginCookieExists(HttpServletRequest request, HttpServletResponse response) {
@@ -1435,5 +1523,22 @@ public class CommonUtil {
 		}
 
 		return sb.toString();
+	}
+	
+	/**
+	 * returns a string containing size with a size unit(MB or KB or B) 
+	 */
+	public String getSizeWithUnit(double size) {		
+		String strSize;
+
+		if (size > 1024 * 1024) {
+			strSize = Math.floor(size / 1024 / 1024 * 10) / 10 + "MB";
+		} else if (size > 1024) {
+			strSize = (int)(size/1024) + "KB";
+		} else {
+			strSize = (int)size + "B";
+		}
+
+		return strSize;
 	}
 }

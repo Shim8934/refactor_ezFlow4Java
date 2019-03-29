@@ -141,9 +141,9 @@
 .voteIcon_ul .img_description div{display:inline-block; line-height:190%; color:#fff; padding:0px 0 0 8px; font-size:11px; background: url(../../images/kr/main/count_l.png) no-repeat left;}
 .voteIcon_ul .img_description div span{display: inline-block;color: #fff;padding: 2px 10px 0 0px;font-size: 11px;background: url(../../images/kr/main/count_r.gif) no-repeat right;font-weight: bold;}
 .voteInfoDiv{display: block; float: right; margin: 8px 10px 0px 0px; cursor:default; position:relative;}
-.voteInfoDiv ul{display: none; float: right; padding: 0px 7px 3px 0px; position: absolute; top: 45px; right: -9px; width: 220px; background: white; border-radius: 10px; border: 1px solid #cccccc;}
-.voteInfoDiv ul:before{content: '';position: absolute;border-bottom: 14px solid #fff;border-right: 8px solid transparent;border-left: 8px solid transparent;top: -10px;right: 15px;z-index: 2;}
-.voteInfoDiv ul:after{content: '';position: absolute;border-style: solid;border-width: 0px 7px 12px 7px;border-color: #ccc transparent;display: block;width: 0;z-index: 1;top: -12px;right: 16px;}
+.voteInfoDiv ul{display: none; float: right; padding: 0px 7px 3px 0px; position: absolute; top: 45px; right: -3px; width: 214px; background: white; border-radius: 10px; border: 1px solid #cccccc;}
+.voteInfoDiv ul:before{content: '';position: absolute;border-bottom: 14px solid #fff;border-right: 8px solid transparent;border-left: 8px solid transparent;top: -10px;right: 9px;z-index: 2;}
+.voteInfoDiv ul:after{content: '';position: absolute;border-style: solid;border-width: 0px 7px 12px 7px;border-color: #ccc transparent;display: block;width: 0;z-index: 1;top: -12px;right: 10px;}
 .voteFuncIconDiv:last-child .voteIconImg_li{width:63px;}
 /* .voteFuncIconDiv .voteIconImg_li_innerDiv{border-right:1px solid #ddd;} */
 #dateConfirmBtn{font-size: 20px; color: #8d8d8d; cursor: pointer; margin: 0px 0px 0px 26px;}
@@ -153,7 +153,7 @@
 
 .voteIconImg_li{width:45px; float:left;}
 .voteIconImg_li.endDate{position:relative;}
-.voteIconImg_li_info{float:left; list-style:none; width: 200px; padding: 0px 10px; margin: 7px 0px 0px 0px;}
+.voteIconImg_li_info{float:left; list-style:none; width: 200px; padding: 0px 10px; margin: 6px 0px 0px 0px;}
 .voteIconImg_li_info span{width: 150px; color: #0470e4;}
 .voteIconDiv ul li.icon, .voteFuncIconDiv ul li.icon{display:inline-block; width:50px; height:50px; padding:11px 0px 0px 7px; overflow: hidden;}
 /* .voteIconDiv ul li.icon.nosecret{cursor:pointer;} */

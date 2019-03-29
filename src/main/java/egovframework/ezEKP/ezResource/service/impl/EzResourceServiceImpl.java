@@ -591,7 +591,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				ezResourceDAO.modifyResSch_I2(map);
 			}
 		} else {
-			ezResourceDAO.modifyResSch_D2(map);
+			//ezResourceDAO.modifyResSch_D2(map);
 			ezResourceDAO.modifyResSch_U2(map);
 		}
 		logger.debug("modifyResSch End");
@@ -764,10 +764,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			String jobTitle = "";
 			String jobTitle2 = "";
 				
-			if (pType == null || pType.equals("")) {
+			/*if (pType == null || pType.equals("")) {
 				 jobTitle = scheRSDom.getElementsByTagName("jobtitle").item(i).getTextContent();
 				 jobTitle2 = scheRSDom.getElementsByTagName("jobtitle2").item(i).getTextContent();
-			}
+			}*/
 			if (app.equals("0")) {
 				returnStr.append("<appointment>");
 					
@@ -851,12 +851,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<dept_name><![CDATA[" + scheRSDom.getElementsByTagName("dept_name").item(i).getTextContent() + "]]></dept_name>");
 				returnStr.append("<writeDay>"+ writeDay +"</writeDay>");
 					
-				if (pType == null || pType.equals("")) {
+				/*if (pType == null || pType.equals("")) {
 					returnStr.append("<owner_nm2><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm2").item(i).getTextContent() + "]]></owner_nm2>");
 					returnStr.append("<dept_name2><![CDATA[" + scheRSDom.getElementsByTagName("dept_name2").item(i).getTextContent() + "]]></dept_name2>");
 					returnStr.append("<jobtitle><![CDATA[" +jobTitle + "]]></jobtitle>");
 					returnStr.append("<jobtitle2><![CDATA[" + jobTitle2 + "]]></jobtitle2>");
-				}
+				}*/
 				returnStr.append("</appointment>");
 			}
 		}
@@ -1062,6 +1062,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		if (getScheduleListRept.size() > 0) {
 			
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
 			for (int i=0; i< getScheduleListRept.size(); i++) {
 				String reCompanyID = getScheduleListRept.get(i).getCompanyID();
 				int reNum = getScheduleListRept.get(i).getNum();
@@ -1086,12 +1087,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					logger.debug("deletedDateStrList.size=" + deletedDateStrList.size());
 					
 					for (int j=0; j<deletedDateStrList.size(); j++) {
-						deletedDateStrList.set(j, commonUtil.getDateStringInUTC(deletedDateStrList.get(j), offset, false));
+						deletedDateStrList.set(j, (commonUtil.getDateStringInUTC(deletedDateStrList.get(j), offset, false)).substring(0,10));
 					}
 					
 					for (Date[] dateArr : returnRepDateTimes) {
 						// 삭제된 예약이면 넘어감
-						if (deletedDateStrList.contains(format.format(dateArr[0]))) {
+						if (deletedDateStrList.contains(format2.format(dateArr[0]))) {		// 날짜만 비교하도록 수정
 							continue;
 						}
 						
@@ -1118,10 +1119,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						temp.setApproveFlag(getScheduleListRept.get(i).getApproveFlag());
 						temp.setOwnerNm(getScheduleListRept.get(i).getOwnerNm());
 						temp.setDeptNm(getScheduleListRept.get(i).getDeptNm());
-						temp.setOwnerNm2(getScheduleListRept.get(i).getOwnerNm2());
+						/*temp.setOwnerNm2(getScheduleListRept.get(i).getOwnerNm2());
 						temp.setDeptNm2(getScheduleListRept.get(i).getOwnerNm2());
 						temp.setJobTitle(getScheduleListRept.get(i).getJobTitle());
-						temp.setJobTitle2(getScheduleListRept.get(i).getJobTitle2());
+						temp.setJobTitle2(getScheduleListRept.get(i).getJobTitle2());*/
 						
 						getScheduleList.add(temp);
 					}
@@ -1196,12 +1197,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<owner_nm><![CDATA[" + returnDom1.getElementsByTagName("OWNERNM").item(m).getTextContent() + "]]></owner_nm>");
 				returnStr.append("<dept_name><![CDATA[" + returnDom1.getElementsByTagName("DEPTNM").item(m).getTextContent() + "]]></dept_name>");
 				
-				if (pType.equals("")) {
+				/*if (pType.equals("")) {
 					returnStr.append("<owner_nm2><![CDATA[" + returnDom1.getElementsByTagName("OWNERNM2").item(m).getTextContent() + "]]></owner_nm2>");
 					returnStr.append("<dept_name2><![CDATA[" + returnDom1.getElementsByTagName("DEPTNM2").item(m).getTextContent() + "]]></dept_name2>");
 					returnStr.append("<jobtitle><![CDATA[" + returnDom1.getElementsByTagName("JOBTITLE").item(m).getTextContent() + "]]></jobtitle>");
 					returnStr.append("<jobtitle2><![CDATA[" + returnDom1.getElementsByTagName("JOBTITLE2").item(m).getTextContent() + "]]></jobtitle2>");
-				}
+				}*/
 				
 				returnStr.append("</ROW>");
 			}
@@ -1918,18 +1919,18 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         String strStyle = "font-weight:normal;height:10px;";
         
         returnXML += "<NODE>";
-        returnXML += makeXMLElement(strValue, "VALUE", true);
+        returnXML += makeXMLElement(strValue, "VALUE", false);
         returnXML += makeXMLElement(strStyle, "STYLE", false);
         returnXML += makeXMLElement(strData1, "DATA1", false);
-        returnXML += makeXMLElement(strData2, "DATA2", true);
+        returnXML += makeXMLElement(strData2, "DATA2", false);
         returnXML += makeXMLElement(strData3, "DATA3", false);
         returnXML += makeXMLElement(strData4, "DATA4", false);
         returnXML += makeXMLElement(strData5, "DATA5", false);
         returnXML += makeXMLElement(strData6, "DATA6", false);
         returnXML += makeXMLElement(strData7, "DATA7", false);
-        returnXML += makeXMLElement(strData8, "DATA8", true);
+        returnXML += makeXMLElement(strData8, "DATA8", false);
         returnXML += makeXMLElement(strData9, "DATA9", true);
-        returnXML += makeXMLElement(strData10, "DATA10", true);
+        returnXML += makeXMLElement(strData10, "DATA10", false);
         returnXML += makeXMLElement(strData11, "DATA11", false);
         returnXML += makeXMLElement(strData12, "DATA12", false);
         returnXML += makeXMLElement(strData13, "DATA13", false);
@@ -2612,7 +2613,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 			List<String> deletedDateStrListConvertedInUTC  = new ArrayList<String>();
 			for (String date : deletedDateStrList) {
-				date = commonUtil.getDateStringInUTC(date, offset, false);
+				date = commonUtil.getDateStringInUTC(date, offset, false).substring(0,10);
 				deletedDateStrListConvertedInUTC.add(date);
 			}
 			
@@ -2758,7 +2759,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 			List<String> deletedDateStrListConvertedInUTC  = new ArrayList<String>();
 			for (String date : deletedDateStrList) {
-				date = commonUtil.getDateStringInUTC(date, offset, false);
+				date = commonUtil.getDateStringInUTC(date, offset, false).substring(0,10);
 				deletedDateStrListConvertedInUTC.add(date);
 			}
 			
@@ -2784,6 +2785,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("dateList2.size = " + dateList2.size());
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat format2 = new SimpleDateFormat("yyyy-MM-dd");
 		if (deletedList == null || deletedList.size() == 0) {
 			for (Date[] dateVO : dateList) {
 				for (Date[] dateVO2 : dateList2) {
@@ -2806,6 +2808,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 					logger.debug("dateVO[1] : " + format.format(dateVO[1]) + " after? dateVO2[0] : " + format.format(dateVO2[0]));
 					
 					if (!(!dateVO[0].before(dateVO2[1]) || !dateVO[1].after(dateVO2[0]))) {
+						// 삭제된 예약이면 넘어감
+						if (deletedList.contains(format2.format(dateVO[0]))) {		// 날짜만 비교하도록 수정
+							continue;
+						}
 						if (!deletedList.contains(format.format(dateVO2[0]))) {
 							
 							logger.debug("첫번째 조건 : " + (dateVO[0].before(dateVO2[1])));
@@ -3601,6 +3607,77 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("getOwnerInfo ended");
 		return ezResourceDAO.getOwnerInfo(map);
 	}
+	//public void changeResourceOrder(String selectedResourceId, String targetResourceId, int tenantId,String companyID,String upperResourceId);
 	
+	@Override
+	public void changeResourceOrder(String selectedResourceId, String targetResourceId, int tenantId,String companyID,String upperResourceId) throws Exception {
+		logger.debug("changeResourceOrder start");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("resourceId", selectedResourceId);
+		map.put("tenantId", tenantId);
+		map.put("brd_company", companyID);
+		map.put("upperResourceId", upperResourceId);
+
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		map2.put("resourceId", targetResourceId);
+		map2.put("tenantId", tenantId);
+		map2.put("brd_company", companyID);
+		map2.put("upperResourceId", upperResourceId);
+		
+		String SelectedResourceIdOrder = ezResourceDAO.getResourceOrder(map);
+		String TargetResourceIdOrder = ezResourceDAO.getResourceOrder(map2);
+		
+		String tempOrder = SelectedResourceIdOrder;
+		SelectedResourceIdOrder = TargetResourceIdOrder;
+		TargetResourceIdOrder = tempOrder;
+		
+		map.put("resourceOrder", SelectedResourceIdOrder);
+		map2.put("resourceOrder", TargetResourceIdOrder);
+		
+		ezResourceDAO.ChangeResourceOrder(map);
+		ezResourceDAO.ChangeResourceOrder(map2);
+		logger.debug("changeResourceOrder ended");
+	}
+	
+	@Override
+	public void moveResourceToOtherResourceGroup(String originResourceGroupId, String selectedResourceGroupId, int tenantId, String companyID) throws Exception {
+		logger.debug("moveResourceToOtherResourceGroup start");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("brd_company", companyID);
+		map.put("upperResourceGroupId", selectedResourceGroupId);
+		
+		String maxBrdStep = ezResourceDAO.getMaxBrdStepInSelectedResourceGroup(map);
+		
+		Map<String, Object> map2 = new HashMap<String, Object>();
+		
+		map2.put("originResourceGroupId", originResourceGroupId);
+		map2.put("tenantId", tenantId);
+		map2.put("brd_company", companyID);
+		map2.put("selectedResourceGroupId", selectedResourceGroupId);
+		
+		maxBrdStep = maxBrdStep == null ? "0" : maxBrdStep;
+		
+		map2.put("brd_step", String.valueOf(Integer.parseInt(maxBrdStep)+1));
+		
+		ezResourceDAO.moveResourceToOtherResourceGroup(map2);
+		logger.debug("moveResourceToOtherResourceGroup ended");
+	}
+	
+	@Override
+	public String isResourceGroupManager(String selectedResourceGroupId, String userId, int tenantId, String companyID) throws Exception {
+		logger.debug("isResourceGroupManager start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+		map.put("brd_company", companyID);
+		map.put("selectedResourceGroupId", selectedResourceGroupId);
+		
+		String isManager = ezResourceDAO.isResourceGroupManager(map);
+		
+ 		logger.debug("isResourceGroupManager ended");
+		return isManager;
+	}
 }
 

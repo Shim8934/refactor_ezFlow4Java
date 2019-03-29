@@ -12,15 +12,17 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var ReturnFunction;
+			var confirmStr;
 			
 			$(document).ready(function(){
 				try {
+					confirmStr = opener.inputpassword_dialogArguments[0];
 	                ReturnFunction = opener.inputpassword_dialogArguments[1];
 	            } catch (e) {}     
 			});		
 			
 			function OK_Click(){
-				if (NewPassword.value == ""){
+				if (NewPassword.value == "") {
 					alert("<spring:message code='ezOrgan.t229' />");
 					document.getElementById('NewPassword').focus();
 					return;
@@ -30,18 +32,19 @@
 					document.getElementById('NewPassword').focus();
 					return;
 				}
-				if (NewPassword.value != ConfirmPassword.value){
+				if (NewPassword.value != ConfirmPassword.value) {
 					alert("<spring:message code='ezOrgan.t230' />");
 					document.getElementById('ConfirmPassword').focus();
 					return;
 				}
-			    if(ReturnFunction != null){
-			    	if (confirm(opener.changePassLength + "<spring:message code='ezOrgan.t40' />")){
-				        ReturnFunction(NewPassword.value);
+			    if (ReturnFunction != null) {
+			    	if (confirm(confirmStr)){
+						ReturnFunction(NewPassword.value);
 		            }
-			    }else{
+			    } else {
 			        window.returnValue = NewPassword.value;
 			    }
+			    
 				window.close();
 			}
 	    </script>

@@ -216,14 +216,38 @@
 					var companyIdChk = companyID;
 					
 					 if (pageNum == "-1") {
-						var pageSize = "-1";
-						var params = '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
+						 var pageSize = "-1";
+						 var params = '&searchKeycode=' + searchKeycode + '&searchKeyword=' + searchKeyword;
 							params += '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&companyId=' + companyIdChk;
-						var pURL = "/admin/ezEmail/statisticsListExcelExport.do" + "?" + params;
-		
-						saveExcel.location.href = pURL;
-					} else { 
-			    		var pURL = "/admin/ezEmail/statistics_userList.do";
+
+						 var pURL = "/admin/ezEmail/mailBoxQuotaUpdate.do";
+
+						 var leftProgress = window.parent.frames[0].document.getElementsByClassName("progressPanel");
+                         var rightProgress = window.parent.frames[1].document.getElementsByClassName("progressPanel");
+                         leftProgress[0].style.display = "block";
+                         rightProgress[0].style.display = "block";
+						 document.getElementById("progressImg").style.display = "block";
+						 document.getElementById("progressImg").style.top = (document.documentElement.clientHeight / 2) + "px";
+						 document.getElementById("progressImg").style.left = (document.documentElement.clientWidth / 2) - 150 + "px";
+
+						 $.ajax({
+							 url: pURL,
+							 type: "GET",
+							 success: function() {
+								 var pURL = "/admin/ezEmail/statisticsListExcelExport.do" + "?" + params;
+								 leftProgress[0].style.display = "none";
+								 rightProgress[0].style.display = "none";
+								 document.getElementById("progressImg").style.display = "none";
+								 saveExcel.location.href = pURL;
+							 },
+
+							 error: function() {
+								alert(strLang321);
+							}
+						 });
+
+					} else {
+			    		var pURL = "/admin/ezEmail/mailBoxQuotaManageList.do";
 			    		 
 			    		$.ajax({
 			    			 url: pURL
@@ -231,7 +255,10 @@
 			    			,async: false
 			    			,dataType: 'json'
 			    			,data: {
-			    					'searchKeycode' : searchKeycode,'searchKeyword' : searchKeyword,'pageNum' : pageNum, 'companyId' : companyIdChk 
+			    					'searchKeycode' : searchKeycode,
+			    					'searchKeyword' : searchKeyword,
+			    					'pageNum' : pageNum,
+			    					'companyId' : companyIdChk
 			    				   }    
 			    			,success: function(res) {
 			    				var html = "";
@@ -252,7 +279,7 @@
 		   									var progress = res1 / res2 * 100;
 			   								result = Math.floor(progress);
 		   								}
-		   								
+
 	   									html += "<tr>";
 			    						html += "   <td>" + j						   + "</td>";
 			    						html += "	<td title=\'" + i[1] + "'>" + i[1] + "</td>";
@@ -284,14 +311,13 @@
 			    				
 			    				if (res.searchKeycode != null) {
 			    					var idx = parseInt(searchKeycode) - 1;
-				    				$('#searchKeycode option:eq(' + idx + ')').attr('selected','selected');
+				    				$('#searchKeycode option:eq(' + idx + ')').attr('selected', 'selected');
 			    				}
 			    				
 			    				$('#searchKeyword').val(res.searchKeyword);
-			    				
 			    			}
 			    			,error: function(err) {
-			    				alert(err);
+			    				alert(strLang321);
 			    			}
 			    		})
 			    		
@@ -362,19 +388,19 @@
 			  color: #828282;
 			  font-weight:bold;
 			}
-			#myBar_red{
+			#myBar_red {
 			  height: 10px;
 			  background-color: #ff1616;
 			}
-			#myBar_orange{
+			#myBar_orange {
 			  height: 10px;
 			  background-color: #ff7f00;
 			}
-			#myBar_yellow{
+			#myBar_yellow {
 			  height: 10px;
 			  background-color: #ffb600;
 			}
-			#myBar_green{
+			#myBar_green {
 			  height: 10px;
 			  background-color: #4CAF50;
 			}
@@ -391,6 +417,7 @@
 							<option value="userName"><spring:message code="ezStatistics.t1068"></spring:message></option> <!-- 이름 -->
 							<option value="deptName"><spring:message code="ezStatistics.t113"></spring:message></option> <!-- 부서 -->
 							<option value="userId"><spring:message code="ezOrgan.t218"></spring:message></option> <!-- cn -->
+							<option value="quota"><spring:message code="ezEmail.kyj20"/></option> <!-- 사용량(%) -->
 						</select>
 						<input type="text" id="searchKeyword" style="width: 150px; height:22px;" onKeyDown="return keyword_onkeydown(event)"/>
 						<a class="imgbtn" >
@@ -432,5 +459,12 @@
 		</div>
 		<div id="tblPageRayer" style="width:100%;"></div>
 		<iframe id=saveExcel name=saveExcel style="display:none"></iframe>
+        <div style="width:100%; height:100%; position:absolute; top:0; left:0; z-index:1000;
+		    background:none rgba(0,0,0,0.4); display:none;" class="progressPanel">
+            <div style="width:200px; height:110px; border-radius:8px; text-align:center; vertical-align:middle;
+            	display:none; z-index:9000; position:absolute;" id="progressImg">
+                <img src="/images/email/progress_img.gif" style="padding-top:20px;"/>
+            </div>&nbsp;
+        </div>
 	</body>
 </html>

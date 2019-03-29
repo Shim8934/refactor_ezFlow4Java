@@ -113,6 +113,7 @@
 	                createNodeAndInsertText(xmlpara, objNode, "DEPTID", "${userInfo.deptID}");
 	                createNodeAndInsertText(xmlpara, objNode, "TOPID", "Top");
 	                createNodeAndInsertText(xmlpara, objNode, "PROP", "");
+	                createNodeAndInsertText(xmlpara, objNode, "DISPLAYTRASHDEPT", "true");
 	                xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", false);
 	                xmlHTTP.send(xmlpara);
 	                xmlTree = loadXMLString(xmlHTTP.responseText);
@@ -1320,7 +1321,7 @@
             		</td>
         		</tr>
     		</table>
-    		<input type="checkbox" value="x" id="Check_Everyone" name="Check_Everyone" style="display:none"><span class="txt" style="margin-bottom: 3px;display:none "><spring:message code="ezResource.t372" /></span>    		
+    		<input type="checkbox" value="x" id="Check_Everyone" name="Check_Everyone" ><span class="txt" style="margin-bottom: 3px;"><spring:message code="ezResource.t372" /></span>    		
     		<div class="btnpositionNew">
         		<a class="imgbtn" onclick="close_onclick()"><span><spring:message code="ezResource.t15" /></span></a>
     		</div>

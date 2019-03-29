@@ -1,4 +1,4 @@
-﻿﻿var beforeJob = "0";
+﻿﻿﻿var beforeJob = "0";
 var pDocTypeValue = "000";
 var pageSize = "10";
 var CallPage = "Right";
@@ -626,6 +626,8 @@ function getAprLine(tr) {
     	} else {
     		pMode = "APR";
     	}
+    } else if (pListTypeValue == "3") {
+    	pMode = "COD";
     } else {
     	pMode = "APR";
     }
@@ -1171,7 +1173,7 @@ function OpenReceiveENDDraftUI(pCurSelRow, pDraftFlag) {
 function OpenReceiveDistributeUI(pCurSelRow) {
     var parameter = pCurSelRow;
     var url = "/ezApprovalG/ezReceiveDistributeUI.do";
-    var feature = "status:no;dialogWidth:1000px;dialogHeight:740px;edge:sunken;scroll:no";
+    var feature = "status:no;dialogWidth:800px;dialogHeight:600px;edge:sunken;scroll:no";
     feature = feature + GetShowModalPosition(453, 410);
     var ret = window.showModalDialog(url, parameter, feature);
 
@@ -1188,6 +1190,7 @@ function OpenOpinionUI(pSelectedRow, pOpinionFlag) {
         parameter[2] = KuyjeType;
         parameter[3] = "";
         temppSelectedRow = pSelectedRow;
+        parameter[98] = GetAttribute(pSelectedRow, "ORGCOMPANYID");
         //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
         parameter[99] = ext;
         
@@ -1460,6 +1463,8 @@ function getAprDocAproveInfo(tr) {
     	if (pListTypeValue == "7" || pListTypeValue == "8" || pListTypeValue == "9" || pListTypeValue == "99" || pListTypeValue == "10") {
     		pDocID = GetAttribute(tr, "DATA2");
     		pFlag = "END";
+    	} else if (pListTypeValue == "21") {
+    		pFlag = "TMP";
     	} else {
     		pFlag = "APR";
     	}
@@ -1682,6 +1687,8 @@ function makePageSelPage() {
         		period = SearchCond[3] + strLang1028 + " " + SearchCond[4] + strLang1029 + " " + SearchCond[5] + strLang1030 + " ~ " + SearchCond[6] + strLang1028 + " " + SearchCond[7] + strLang1029 + " " + SearchCond[8] + strLang1030;
         	} else if (SearchCond[9] != null && SearchCond[9] != "") {
         		period = SearchCond[9] + strLang1028 + " " + SearchCond[10] + strLang1029 + " " + SearchCond[11] + strLang1030 + " ~ " + SearchCond[12] + strLang1028 + " " + SearchCond[13] + strLang1029 + " " + SearchCond[14] + strLang1030;
+        	} else if (SearchCond[25] != "" && SearchCond[25] != null) {
+        		period = SearchCond[25].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[25].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[25].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[26].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[26].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[26].substring(8, 10)) + strLang1030;
         	} else {
         		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
         	}
@@ -1691,6 +1698,8 @@ function makePageSelPage() {
         		period = SearchCond[5].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[5].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[5].substring(8,10)) + strLang1030 + " ~ " + SearchCond[6].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[6].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[6].substring(8, 10)) + strLang1030;
         	} else if (SearchCond[3] != "" && SearchCond[3] != null) {
         		period = SearchCond[3].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[3].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[3].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[4].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[4].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[4].substring(8, 10)) + strLang1030;
+        	} else if (SearchCond[25] != "" && SearchCond[25] != null) {
+        		period = SearchCond[25].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[25].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[25].substring(8, 10)) + strLang1030 + " ~ " + SearchCond[26].substring(0, 4) + strLang1028 + " " + parseInt(SearchCond[26].substring(5, 7)) + strLang1029 + " " + parseInt(SearchCond[26].substring(8, 10)) + strLang1030;
         	} else {
         		period = (nowyear - 1) + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030 + " ~ " + nowyear + strLang1028 + " " + nowmonth + strLang1029 + " " + nowday + strLang1030;
         	}
@@ -2619,11 +2628,11 @@ function RemoveDocCabinet(tempDocID, FLAG) {
     }
     else {
         if (FLAG == "") {
-        	if (RtnVal == "RESETLINE") {
-        		var pAlertContent = strLangBae1;
-        	} else {
+//        	if (RtnVal == "RESETLINE") {
+//        		var pAlertContent = strLangBae1;
+//        	} else {
         		var pAlertContent = strLang901;
-        	}
+//        	}
         	
         }
         else {

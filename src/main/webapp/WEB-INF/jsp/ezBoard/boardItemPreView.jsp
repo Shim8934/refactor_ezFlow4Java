@@ -273,7 +273,7 @@
 			    <td style="height:20px">
 				    <table class="file">
 				        <tr>
-				          <th><spring:message code='ezBoard.t292'/></th>
+				          <th><spring:message code='ezBoard.t10025'/></th>
 				          <td style="padding-right:0px"><div id="lstAttachLink" style="margin-top:0px;padding-top:0px;OVERFLOW: auto; HEIGHT: 58px; background-color:white; text-align:left"></div></td>
 				          <td id="ItemLevel" style="display:none"></td>
 				        </tr>

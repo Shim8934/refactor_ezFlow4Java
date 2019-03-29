@@ -383,14 +383,6 @@ public class EzEditorController extends EgovFileMngUtil {
 	}
 
 	/**
-	 * 메일 서명관리 ck에디터 이미지 업로드 호출 Method
-	 */
-	@RequestMapping(value = "/ezEditor/ckImageUploadMail.do")
-	public String ckImageUploadMail() {
-		return "ezEditor/ckImageUploadMail";
-	}
-
-	/**
 	 * TagFree에디터 업로드 실행 Method
 	 */
 	@RequestMapping(value = "/ezEditor/tfxUpload.do")

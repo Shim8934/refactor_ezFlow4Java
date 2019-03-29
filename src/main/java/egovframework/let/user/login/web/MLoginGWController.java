@@ -240,7 +240,21 @@ public class MLoginGWController {
 					}
 				}
     			if (resultVO != null && resultVO.getId() != null && !resultVO.getId().equals("")) {
-
+    				// 공유사서함 기능을 사용할 경우 공유사서함 계정으로의 로그인을 막는다.
+    	    		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+    	    		
+    	    		if (useSharedMailbox.equals("YES")) {
+    	    			if (resultVO.getDeptID() != null && resultVO.getDeptID().startsWith("shared_mailbox_")) {
+    	    				LOGGER.debug("Cannot login with shared mailbox account.");
+    	    				
+    	    				result.put("status", "error");
+    		    			result.put("code", "3");			
+    		    			result.put("data", "user does not exist");
+    		    			
+    	        	        return result;
+    	    			}
+    	    		}
+    				
     				int check = checkState(tenantId, uid, numberOfLoginFailPermit);
                 	
                 	// 해당 사용자의 로그인이 블록되지 않은 경우

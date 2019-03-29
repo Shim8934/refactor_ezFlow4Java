@@ -38,7 +38,6 @@
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript">
 			var topid = "<c:out value='${topID}'/>";
-		    var cn = "<c:out value='${userID}'/>";
 		    var deptid = "<c:out value='${userInfo.deptID}'/>";
 		    var g_szAuthor = "";
 		    var g_senderinfo = "<c:out value='${userInfo.companyName1}'/>" + ", " + "<c:out value='${userInfo.deptName1}'/>" + ", " + "<c:out value='${userInfo.title1}'/>";
@@ -51,7 +50,6 @@
 		    var xmlHTTP = createXMLHttpRequest();
 		    var xmlHTTP2 = createXMLHttpRequest();
 		    var ReturnFunction;
-		    var isfirst = true;
 		    var preObj = "";
 		    var adminChk = "<c:out value='${adminChk}'/>"
 		    
@@ -74,8 +72,7 @@
 		            }
 		        } catch (e) { }
 		        
-		        document.getElementById('keyword').value = cn;	
-		        var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP><ADMINCHK>" + adminChk + "</ADMINCHK></DATA>";
+		        var strQuery = "<DATA><DEPTID><c:out value='${userInfo.deptID}'/></DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP><ADMINCHK>" + adminChk + "</ADMINCHK><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 	
 		        xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		        xmlHTTP.onreadystatechange = event_GetDeptTreeInfo;
@@ -102,7 +99,6 @@
 		                treeView.DataBind("TreeView");
 
 		                xmlHTTP = null;
-		                isfirst = false;
 		            } else {
 		                alert("<spring:message code='ezOrgan.t13' />" + xmlHTTP.statusText);
 		                xmlHTTP = null;
@@ -155,44 +151,7 @@
         		+ "<span id='countInfo'></span>";
 		        SelectDeptNM.setAttribute("countinfo", "")
 
-		        if (isfirst && cn != "") {
-		            document.getElementById('search_type').selectedIndex = 1;
-		            
-		            $.ajax({
-			        	type : "POST",
-			        	dataType : "text",
-			        	url : "/ezOrgan/getSearchList.do",
-			        	async : false,
-			        	data : {search : "cn::" + cn, cell : "company;description;displayname;title;telephonenumber;"+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute2', type : 'user'},
-			        	success : function(xml){	
-			        		result=loadXMLString(xml);
-			        		var headerData = createXmlDom();
-		                    headerData = result;
-// 		                    headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
-
-		                    if (CrossYN()) {
-		                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-		                        var Node = headerData.importNode(xmlRtn, true);
-		                        headerData.documentElement.appendChild(Node);
-		                    } else {
-		                        var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-		                        headerData.documentElement.appendChild(xmlRtn);
-		                    }
-		                    pListXML_Info = headerData;
-		                    pSeach = true;
-		                    DisplayUserImageList();
-
-		                    if ("<c:out value='${use_ocs}'/>" == "YES") {
-		                        check_presence();
-		                    }
-			        	},
-			        	error : function(error){
-			        		alert("<spring:message code='ezOrgan.t9' />" + error);
-			        	}
-			        });			           
-		        } else {
-		            displayUserList(nodeIdx.GetNodeData("CN"));
-		        }
+		        displayUserList(nodeIdx.GetNodeData("CN"));
 		    }
 		    
 		    function displayUserList(DeptID) {
@@ -843,9 +802,9 @@
 		            g_xmlHTTP = createXMLHttpRequest();
 
 		            if (CrossYN()) {
-		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP></DATA>";
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).textContent + "</DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		            } else {
-		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP></DATA>";
+		                var strQuery = "<DATA><DEPTID>" + xmlDOM.getElementsByTagName("DATA2").item(0).text + "</DEPTID><TOPID>" + topid + "</TOPID><PROP></PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		            }
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
@@ -867,7 +826,7 @@
 		                if (rgParams["deptid"] != "") {
 		                    bSearch = true;
 		                    g_xmlHTTP = createXMLHttpRequest();
-		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail</PROP></DATA>";
+		                    var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		                    g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		                    g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		                    g_xmlHTTP.send(strQuery);
@@ -879,7 +838,7 @@
 		        if (rgParams["deptid"] != "") {
 		            bSearch = true;
 		            g_xmlHTTP = createXMLHttpRequest();
-		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail</PROP></DATA>";
+		            var strQuery = "<DATA><DEPTID>" + rgParams["deptid"] + "</DEPTID><TOPID>" + topid + "</TOPID><PROP>mail</PROP><DISPLAYTRASHDEPT>true</DISPLAYTRASHDEPT></DATA>";
 		            g_xmlHTTP.open("POST", "/ezOrgan/getDeptTreeInfo.do", true);
 		            g_xmlHTTP.onreadystatechange = event_getDeptFullTree;
 		            g_xmlHTTP.send(strQuery);

@@ -602,7 +602,7 @@ public class IMAPAccess {
 			//         name="=?utf-8?B?NDExMDAwODE1OS5QREY=?="
 		    //    Content-Transfer-Encoding: base64	    											
 			else if ((part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
-						|| (part.isMimeType("application/*") && !(part.getDisposition() != null && part.getDisposition().equalsIgnoreCase(Part.INLINE)))) {
+						|| part.isMimeType("application/*")) {
 				isAttached = true;
 			}			
 		} catch (Exception e) {

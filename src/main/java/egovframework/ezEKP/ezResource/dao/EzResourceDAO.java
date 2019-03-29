@@ -298,5 +298,24 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		delete("EzResourceDAO.modifyResSch_D2", map);
 	}
 	
+	public String getResourceOrder(Map<String, Object> map) throws Exception {
+		return (String) select("EzResourceDAO.getResourceOrder", map);
+	}
+	
+	public void ChangeResourceOrder(Map<String, Object> map) throws Exception {
+		update("EzResourceDAO.ChangeResourceOrder", map);
+	}
+	
+	public String getMaxBrdStepInSelectedResourceGroup(Map<String, Object> map) throws Exception {
+		return (String) select("EzResourceDAO.getMaxBrdStepInSelectedResourceGroup", map);
+	}
+	
+	public void moveResourceToOtherResourceGroup(Map<String, Object> map) throws Exception {
+		update("EzResourceDAO.moveResourceToOtherResourceGroup", map);
+	}
+	
+	public String isResourceGroupManager(Map<String, Object> map) throws Exception {
+		return (String) select("EzResourceDAO.isResourceGroupManager", map);
+	}
 }
 

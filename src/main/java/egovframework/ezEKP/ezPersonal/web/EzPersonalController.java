@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.LocaleResolver;
@@ -180,9 +181,9 @@ public class EzPersonalController extends EgovFileMngUtil {
 		/*	if (proxyInfo.split(":")[0].trim().equals("")) {
 				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
 			} else {
-				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split(":")[0], proxyInfo.split(":")[1], proxyInfo.split(":")[2], proxyInfo.split(":")[3]+":"+proxyInfo.split(":")[4].replace("/", ":"), proxyInfo.split(":")[5]+":"+proxyInfo.split(":")[6].replace("/", ":"), userInfo.getTenantId(), userInfo.getOffset());
+				result = ezOrganService.setProxyUserInfo(userInfo.getId(), p roxyInfo.split(":")[0], proxyInfo.split(":")[1], proxyInfo.split(":")[2], proxyInfo.split(":")[3]+":"+proxyInfo.split(":")[4].replace("/", ":"), proxyInfo.split(":")[5]+":"+proxyInfo.split(":")[6].replace("/", ":"), userInfo.getTenantId(), userInfo.getOffset());
 			}*/
-			if (proxyInfo.split("|")[0].trim().equals("")) {
+			if (proxyInfo.split("\\|")[0].trim().equals("")) {
 				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
 			} else {
 				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split("\\|")[0], proxyInfo.split("\\|")[1], proxyInfo.split("\\|")[2], proxyInfo.split("\\|")[3], proxyInfo.split("\\|")[4], userInfo.getTenantId(), userInfo.getOffset());
@@ -780,29 +781,21 @@ public class EzPersonalController extends EgovFileMngUtil {
 	/**
 	 * 포탈 메인 생일자 리스트 호출 Method
 	 */
-	@RequestMapping(value = "/ezPersonal/mainBirthUserList.do", produces = "text/xml;charset=utf-8")
-	@ResponseBody
-	public String mainBirthUserList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception{
+	@RequestMapping(value = "/ezPersonal/mainBirthUserList.do")
+	public String mainBirthUserList(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, @RequestBody HashMap<String, Integer> paramMap, HttpServletRequest request) throws Exception{
 		logger.debug("mainBirthUserList started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
+		int month = paramMap.get("month");
+		logger.debug("month = " + month);
 		
-		String curMon = "";
-		
-		if (req.getParameter("mon") != null && !req.getParameter("mon").equals("")) {
-			curMon = req.getParameter("mon");
-			if (Integer.parseInt(curMon) < 10 && curMon.length() == 1) {
-				curMon = "0" + curMon;
-			}
-		} else {
-			Calendar cal = Calendar.getInstance();
-			curMon = String.valueOf(cal.get(Calendar.MONTH)+1);
-		}
-		
-		String result = ezPersonalService.getBirthUserList(userInfo.getCompanyID(), curMon, userInfo.getTenantId());
+		List<OrganUserVO> list = ezPersonalService.getBirthUserList(userInfo.getCompanyID(), userInfo.getTenantId(), month, userInfo.getLang());
 
+		model.addAttribute("list", list);
+		
 		logger.debug("mainBirthUserList ended");
-		return result;
+		
+		return "json";
 	}
 	
 	/**
@@ -892,7 +885,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		HashMap <String, String> moduleList = new HashMap<String, String>();
 
 		moduleList.put("/ezEmail/mailMain.do", "mail");
-		moduleList.put("/ezSchedule/scheduleIndex.do?funCode=2", "schedule");
+		moduleList.put("/ezSchedule/scheduleIndex.do", "schedule");
 		moduleList.put("/ezApprovalG/apprGMain.do", "appr");
 		moduleList.put("/ezBoard/boardMain.do", "board");
 		moduleList.put("/ezCommunity/communityMain.do", "community");
@@ -1244,44 +1237,25 @@ public class EzPersonalController extends EgovFileMngUtil {
 	}
 	
 	/**
-	 * 포탈 환경설정 개인정보관리 사진업로드 화면 호출 Method
+	 * 포탈 환경설정 개인정보관리 사진 저장 Method
 	 */
-	@RequestMapping(value = "/ezPersonal/photoUploadByUser.do")
-	public String photoUploadByUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, MultipartHttpServletRequest req, Locale locale) throws Exception {
+	@RequestMapping(value = "/ezPersonal/photoUploadByUser.do", method = RequestMethod.POST)
+	@ResponseBody
+	public void photoUploadByUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest req, Locale locale) throws Exception {
 		logger.debug("photoUploadByUser started");
 
 		userInfo = commonUtil.userInfo(loginCookie);
 		
-		String fileName = "";
+		String fileName = req.getParameter("fileName"); //임시파일명
+		String fileName2 = "";
 		String filePath = "";
 		String filePath2 = "";
 		String realPath = req.getServletContext().getRealPath("");
 		
-		fileName = req.getFile("file1").getOriginalFilename();
-		
-		if (fileName.indexOf(".") != -1) {
-			fileName = fileName.substring(fileName.lastIndexOf(".")+1);
-		} else {
-			fileName = "";
-		}
-		
-		String[] extArr = { "gif", "jpg"};
-		boolean ret = false;
-		
-		for (int i=0; i<extArr.length; i++) {
-			if (fileName.toLowerCase().trim().equals(extArr[i].toLowerCase().trim())) {
-				ret = true;
-				break;
-			}
-		}
-		
-		if (ret == false) {
-			//return "";
-		}
-		
-		fileName = userInfo.getId() + "." + fileName;
-		filePath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + fileName;
-		filePath2 = "/ezCommon/downloadAttach.do?filePath="+commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + fileName;
+		String fileExt = fileName.substring(fileName.lastIndexOf(".")+1);
+		fileName2 = userInfo.getId() + "." + fileExt; //바꿀파일명
+		filePath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + fileName;//임시파일경로
+		filePath2 = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + fileName2;//바꿀파일경로
 		
 		File file = new File(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId())); 
 		
@@ -1289,47 +1263,30 @@ public class EzPersonalController extends EgovFileMngUtil {
 			file.mkdirs();
 		}
 		
-		writeUploadedFile(req.getFile("file1"), fileName, realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()));
+		File tempImageFile = new File(realPath + filePath); 
+		File newImageFile = new File(realPath + filePath2); 
 		
-		File imageFile = new File(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()) + commonUtil.separator + fileName); 
-		
-		if (imageFile.exists()) {
-			BufferedImage bi = ImageIO.read(imageFile);	
-			//화질 개선 코드			
-			Image imgTarget = bi.getScaledInstance(119, 128, Image.SCALE_SMOOTH);
-			int pixels[] = new int[119 * 128]; 
-			PixelGrabber pg = new PixelGrabber(imgTarget, 0, 0, 119, 128, pixels, 0, 119); 
-			try {
-				pg.grabPixels(); // JEPG 포맷의 경우 오랜 시간이 걸린다.
-			} catch (InterruptedException e) {
-				throw new IOException(e.getMessage());
-			} 
-//			BufferedImage destImg = new BufferedImage(119, 128, BufferedImage.TYPE_INT_RGB);
-//			destImg.setRGB(0, 0, 119, 128, pixels, 0, 119); 
-			//기존코드	
-			BufferedImage bufferedImage = new BufferedImage(119, 128, BufferedImage.TYPE_4BYTE_ABGR);
-			bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, Color.WHITE, null);
-			
-			File profileImageFile = new File(realPath + filePath);
-			ImageIO.write(bufferedImage, "png", profileImageFile);
-			
-			File file1 = new File(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()) + commonUtil.separator + fileName);
-			if (file1.exists()) {
-				FileUtils.deleteQuietly(file1);
-			}
-			
-			//썸네일 생성
-			String thumbnailPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId());
-			File thumbnailFolder = new File(thumbnailPath);
-			if (!thumbnailFolder.exists()) {
-				thumbnailFolder.mkdirs();
-			}
-			
-			File thumbnailFile = new File(thumbnailPath + commonUtil.separator + profileImageFile.getName());
-			createThumbnail(profileImageFile, thumbnailFile);
+		if (newImageFile.exists()) {
+			FileUtils.deleteQuietly(newImageFile);
 		}
 		
-		ezOrganAdminService.updateProperty(userInfo.getId(), "extensionAttribute2", fileName, "user", userInfo.getTenantId());
+		if (tempImageFile.exists()) {
+			tempImageFile.renameTo(newImageFile);
+		}
+		
+		File tempThumnailFile = new File(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId()) + commonUtil.separator + fileName); 
+		File newThumnailFile = new File(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId()) + commonUtil.separator + fileName2); 
+		
+		if (newThumnailFile.exists()) {
+			FileUtils.deleteQuietly(newThumnailFile);
+		}
+		
+		if (tempThumnailFile.exists()) {
+			tempThumnailFile.renameTo(newThumnailFile);
+		}
+		
+		
+		ezOrganAdminService.updateProperty(userInfo.getId(), "extensionAttribute2", fileName2, "user", userInfo.getTenantId());
 		
 	    SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         date.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -1338,11 +1295,7 @@ public class EzPersonalController extends EgovFileMngUtil {
         // 비즈메카톡과의 프로필 사진 연동을 위해 updateDT 필드를 갱신한다.
         ezOrganAdminService.updateProperty(userInfo.getId(), "updateDT", nowDate, "user", userInfo.getTenantId());
 		
-		model.addAttribute("filePath", filePath);
-		model.addAttribute("filePath2", filePath2);
-
 		logger.debug("photoUploadByUser ended");
-		return "/ezPersonal/persPhotoUploadByUser";
 	}
 	
 	/**
@@ -1675,16 +1628,14 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 * 포탈 환경설정 개인정보관리 모바일설정 화면 호출 메서드 - 2018.10.22 (yjks)
 	 */
 	@RequestMapping(value = "/ezPersonal/mobileManaged.do")
-	public String mobileManaged(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
-			Model model, HttpServletRequest req, Locale locale) throws Exception {
+	public String mobileManaged(@CookieValue("loginCookie") String loginCookie,	Model model) throws Exception {
 		logger.debug("mobileManaged started");
 
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		int tenantId = userInfo.getTenantId();
 		String userId = userInfo.getId();
 		String inputParams = "userId=" + userId;
-		String getResult = "";
 		logger.debug("inputParams=" + inputParams);
 		
 		JSONParser parser = new JSONParser();
@@ -1692,7 +1643,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		String requestURL = "/ezTalkGate/getUserMobileDeviceList";
 		
-		getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+		String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
 		logger.debug("result=" + getResult);
 		
 		JSONObject resultObj = (JSONObject) parser.parse(getResult);
@@ -1710,7 +1661,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		model.addAttribute("deviceInfo", jsonArr);
 		model.addAttribute("adminOrder", adminOrder);
 		model.addAttribute("notUserMobileLogin", notUserMobileLogin);
-		
+
 		logger.debug("mobileManaged ended");
 		return "/ezPersonal/persPersonMobileManaged";
 	}
@@ -1719,12 +1670,13 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 * 포탈 환경설정 개인정보관리 모바일설정 전체 사용/사용안함 업데이트 메서드 - 2018.10.22 (yjks)
 	 */
 	@RequestMapping(value = "/ezPersonal/setMobileManaged.do")
-	public void setMobileManaged(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
-			Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+	public void setMobileManaged(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("setMobileManaged started");
-		String returnValue = "OK";
 
-		userInfo = commonUtil.userInfo(loginCookie);
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String returnValue = "OK";
 		int tenantId = userInfo.getTenantId();
 		String notUsed = request.getParameter("pNotUsed");
 		String userId = userInfo.getId();
@@ -1755,22 +1707,22 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 * 포탈 환경설정 개인정보관리 모바일설정 모바일 기기 삭제 메서드 - 2018.10.22 (yjks)
 	 */
 	@RequestMapping(value = "/ezPersonal/deleteMobileDeviceManaged.do")
-	public void deleteMobileDeviceManaged(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
-			Model model, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
+	public void deleteMobileDeviceManaged(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("deleteMobileDeviceManaged started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
 		String returnValue = "DELETE";
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String userId = userInfo.getId();
 		String devId = request.getParameter("pDevId");
+		String pUserId = request.getParameter("userId");
+		String userId = pUserId == null ? userInfo.getId() : pUserId;
 		String inputParams = "userId=" + userId + "&devId=" + devId;
-		String getResult = "";
 		logger.debug("inputParams=" + inputParams);
 		
 		try {
 			String requestURL = "/ezTalkGate/deleteUserMobileDevice";
-			
-			getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+			String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
 			logger.debug("getResult=" + getResult);
 		} catch (Exception e) {
 			returnValue = "ERROR";
@@ -1785,24 +1737,23 @@ public class EzPersonalController extends EgovFileMngUtil {
 	 *  포탈 환경설정 개인정보관리 모바일설정 모바일 기기 사용여부 저장 메서드 - 2018.10.22 (yjks)
 	 */
 	@RequestMapping(value= "/ezPersonal/setMobileDeviceInfo.do")
-	public void setMobileDeviceInfo(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, 
-			Model model, HttpServletRequest request, Locale locale, HttpServletResponse response) throws Exception {
+	public void setMobileDeviceInfo(@CookieValue("loginCookie") String loginCookie,
+			HttpServletRequest request, HttpServletResponse response) {
 		logger.debug("setMobileDeviceInfo started");
-		String returnValue = "OK";
 
-		userInfo = commonUtil.userInfo(loginCookie);
-		
-		String userId = userInfo.getId();
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String returnValue = "OK";
+		String pUserId = request.getParameter("userId");
+		String userId = pUserId == null ? userInfo.getId() : pUserId;
 		String devId = request.getParameter("pDevId");
 		String notUsed = request.getParameter("pState");
 		String inputParams = "userId=" + userId + "&devId=" + devId + "&notUsed=" + notUsed;
-		String getResult = "";
 		logger.debug("inputParams=" + inputParams);
 		
 		try {
 			String requestURL = "/ezTalkGate/setMobileDeviceInfo";
-			
-			getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
+			String getResult = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + requestURL, inputParams);
 			logger.debug("getResult=" + getResult);
 		} catch (Exception e) {
 			returnValue = "ERROR";
@@ -1858,5 +1809,98 @@ public class EzPersonalController extends EgovFileMngUtil {
 		
 		logger.debug("getUserPhoto ended");
 		return literalPhoto;
+	}
+	
+	/**
+	 * 포탈 환경설정 개인정보관리 사진 임시저장 Method
+	 */
+	@RequestMapping(value = "/ezPersonal/tempPhotoUploadByUser.do", method = RequestMethod.POST)
+	public String tempPhotoUploadByUser(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, MultipartHttpServletRequest req, Locale locale) throws Exception {
+		logger.debug("tempPhotoUploadByUser started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String fileName = "";
+		String filePath = "";
+		String filePath2 = "";
+		String realPath = req.getServletContext().getRealPath("");
+		
+		fileName = req.getFile("file1").getOriginalFilename();
+		
+		if (fileName.indexOf(".") != -1) {
+			fileName = fileName.substring(fileName.lastIndexOf(".")+1);
+		} else {
+			fileName = "";
+		}
+		
+		String[] extArr = { "gif", "jpg"};
+		boolean ret = false;
+		
+		for (int i=0; i<extArr.length; i++) {
+			if (fileName.toLowerCase().trim().equals(extArr[i].toLowerCase().trim())) {
+				ret = true;
+				break;
+			}
+		}
+		
+		if (ret == false) {
+			//return "";
+		}
+		
+		fileName = "temp_" + userInfo.getId() + "." + fileName;
+		filePath = commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + fileName;
+		filePath2 = "/ezCommon/downloadAttach.do?filePath="+commonUtil.getUploadPath("upload_personal.PHOTO", userInfo.getTenantId()) + commonUtil.separator + fileName;
+		
+		File file = new File(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId())); 
+		
+		if (!file.exists()) {
+			file.mkdirs();
+		}
+		
+		writeUploadedFile(req.getFile("file1"), fileName, realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()));
+		
+		File imageFile = new File(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()) + commonUtil.separator + fileName); 
+		
+		if (imageFile.exists()) {
+			BufferedImage bi = ImageIO.read(imageFile);	
+			//화질 개선 코드			
+			Image imgTarget = bi.getScaledInstance(119, 128, Image.SCALE_SMOOTH);
+			int pixels[] = new int[119 * 128]; 
+			PixelGrabber pg = new PixelGrabber(imgTarget, 0, 0, 119, 128, pixels, 0, 119); 
+			try {
+				pg.grabPixels(); // JEPG 포맷의 경우 오랜 시간이 걸린다.
+			} catch (InterruptedException e) {
+				throw new IOException(e.getMessage());
+			} 
+//			BufferedImage destImg = new BufferedImage(119, 128, BufferedImage.TYPE_INT_RGB);
+//			destImg.setRGB(0, 0, 119, 128, pixels, 0, 119); 
+			//기존코드	
+			BufferedImage bufferedImage = new BufferedImage(119, 128, BufferedImage.TYPE_4BYTE_ABGR);
+			bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, Color.WHITE, null);
+			
+			File profileImageFile = new File(realPath + filePath);
+			ImageIO.write(bufferedImage, "png", profileImageFile);
+			
+			File file1 = new File(realPath + commonUtil.getUploadPath("upload_personal.PHOTOTEMP", userInfo.getTenantId()) + commonUtil.separator + fileName);
+			if (file1.exists()) {
+				FileUtils.deleteQuietly(file1);
+			}
+			
+			//썸네일 생성
+			String thumbnailPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId());
+			File thumbnailFolder = new File(thumbnailPath);
+			if (!thumbnailFolder.exists()) {
+				thumbnailFolder.mkdirs();
+			}
+			
+			File thumbnailFile = new File(thumbnailPath + commonUtil.separator + profileImageFile.getName());
+			createThumbnail(profileImageFile, thumbnailFile);
+		}
+		
+		model.addAttribute("filePath", filePath);
+		model.addAttribute("filePath2", filePath2);
+
+		logger.debug("tempPhotoUploadByUser ended");
+		return "/ezPersonal/persPhotoUploadByUser";
 	}
 }

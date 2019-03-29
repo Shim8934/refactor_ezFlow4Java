@@ -856,11 +856,19 @@
 		        var DocList = new ListView();
 		        DocList.LoadFromID("DocList");
 		        var selRow = DocList.GetSelectedRows();
+		        
 		        if (selRow.length != 0) {
-		            var tr = selRow[0];
-		            SwapSubMenuDisplay("1");
-		            InitGlobals("RECORD", "0", "1");
-		            g_SelCabXml = "<CABINETINFO><CABINET><CABINETID><![CDATA[" + tr.getAttribute("DATA1") + "]]></CABINETID></CABINET></CABINETINFO>";
+		        	SwapSubMenuDisplay("1");
+			        InitGlobals("RECORD", "0", "1");
+			            
+		        	g_SelCabXml = "<CABINETINFO><CABINET>";
+		        			        	
+		        	for(var i = 0; i < selRow.length; i++) {
+		        		g_SelCabXml += "<CABINETID><![CDATA[" + selRow[i].getAttribute("DATA1") + "]]></CABINETID>";
+		        	}
+		        	
+		        	g_SelCabXml += "</CABINET></CABINETINFO>";
+		            
 		            GetRecordList();
 		            $("#tdViewCabList").show();
 		        }
@@ -1330,7 +1338,7 @@
 		        ezreceivedistributeui_cross_dialogArguments[0] = parameter;
 		        ezreceivedistributeui_cross_dialogArguments[1] = btnBaeBu_onclick_Complete;
 		
-		        var OpenWin = window.open(url, "ezReceiveDistributeUI_Cross", GetOpenWindowfeature(1000, 760));
+		        var OpenWin = window.open(url, "ezReceiveDistributeUI_Cross", GetOpenWindowfeature(800, 600));
 		        try { OpenWin.focus(); } catch (e) { }
 		    }
 		

@@ -203,7 +203,7 @@
 // 	                filename = ReplaceText(filename, "%3b", ";");
 // 	                filename = ReplaceText(filename, "%7e", "~");
 // 	                filename = ReplaceText(filename, "%3d", "=");
-	                filesize = parseInt(getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize")));
+	                filesize = getNodeText(SelectSingleNode(xmldomNodes[i], "FileSize"));
 	
 	                var strTarget = "target=''";
 	                var strFileExt = filepath.substr(filepath.lastIndexOf('.')).toLowerCase();
@@ -220,7 +220,7 @@
 	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
 	                //2018-07-12 김보미 - a태그 속성값 추가(파일 모두저장)
 // 	                strAttach += "<a name='filename' href='/ezCircular/downloadAttach.do?circularFileID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
-	                strAttach += "<a name='filename' href='/ezCircular/downloadAttach.do?circularFileID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + "' filePath='" + filepath + "' fileName='" + filename + "'>" + filename + " (" + File_Size(filesize) + ")</a>";
+	                strAttach += '<a name="filename" href="/ezCircular/downloadAttach.do?circularFileID=' + getNodeText(SelectSingleNode(xmldomNodes[i], "CircularFileId")) + '" filePath="' + filepath + '" fileName="' + filename + '">' + filename + ' (' + filesize + ')</a>';
 	                strAttach += "</span>";
 	                strAttach += "</li>";
 	            }
@@ -282,10 +282,16 @@
 		    	$frm.attr('action', "/ezCommunity/downloadAttachAll.do");
 		    	$frm.attr('method', 'post');
 		    	$frm.appendTo('body');
-		
-		    	param1 = $('<input type="hidden" value="' + filePath + '" name="filePath" />');
-		    	param2 = $("<input type='hidden' value='" + JSON.stringify(fileNames) + "' name='fileNames' />");
-		    	param3 = $("<input type='hidden' value='" + JSON.stringify(fileNames2) + "' name='fileNames2' />");
+		    	
+		    	var param1 = $("<input type='hidden' />");
+		    	$(param1).attr("name", "filePath");
+		    	$(param1).val(filePath);
+		    	var param2 = $("<input type='hidden' />");
+		    	$(param2).attr("name", "fileNames");
+		    	$(param2).val(JSON.stringify(fileNames));
+		    	var param3 = $("<input type='hidden' />");
+		    	$(param3).attr("name", "fileNames2");
+		    	$(param3).val(JSON.stringify(fileNames2));
 		    	
 		    	$frm.append(param1).append(param2).append(param3);
 		    	$frm.submit();

@@ -22,8 +22,8 @@
 	<script>
 		var type = "${type}"
 		var signNo = "${signNo}";
-		var displayname = "${displayname}";
-		var displayname2 = "${displayname2}";
+		var displayname = "";
+		var displayname2 = "";
 		var defaultFontAndSize = "${defaultFontAndSize}";
 		var editor = "${editor}";
 		var m_strColorSelect = "#edf4fd";
@@ -124,18 +124,19 @@
 			} 
 			
 			if (disName1Chk && disName2Chk) {
-				var url = "/admin/ezEmail/setSignatureTemplate.do?displayname=" + encodeURIComponent(displayname) + "&displayname2=" + encodeURIComponent(displayname2) + "&content=" + encodeURIComponent(content);
+				var url = "/admin/ezEmail/setSignatureTemplate.do";
+				var params = "displayname=" + encodeURIComponent(displayname) + "&displayname2=" + encodeURIComponent(displayname2) + "&content=" + encodeURIComponent(content);
 				
 				if (type == "modify") {
-					url += "&signNo=" + signNo + "&type=" + type;
+				    params += "&signNo=" + signNo + "&type=" + type;
 				} else {
-					url += "&type=" + type;
+				    params += "&type=" + type;
 				}
 				
 				$.ajax({
 	        		type : "POST",
 	        		url : url,
-	        		datatype : 'json',
+	        		data : params,
 	        		error : function(data) {
 	        			alert("error");
 	        			console.log(data);
@@ -190,8 +191,8 @@
 	    }
 		
 		function modifyDataView() {
-			document.getElementById("displayname").value = displayname;
-			document.getElementById("displayname2").value = displayname2;
+			//document.getElementById("displayname").value = displayname;
+			//document.getElementById("displayname2").value = displayname2;
 			window.message.SetEditorContent(document.getElementById("signatureTemplate").innerHTML);
 		}
 		
@@ -243,11 +244,11 @@
 						</colgroup>
 						<tr>
 							<th style="font-weight: normal"><spring:message code='ezEmail.jje10'/></th>
-							<td><input type="text" id="displayname" name="displayname" maxlength="40" placeholder="<spring:message code='ezEmail.jje08'/>"></td>
+							<td><input type="text" id="displayname" name="displayname" maxlength="40" value="<c:out value='${displayname}'/>" placeholder="<spring:message code='ezEmail.jje08'/>"></td>
 						</tr>
 						<tr>
 							<th style="font-weight: normal"><spring:message code='ezEmail.jje11'/></th>
-							<td><input type="text" id="displayname2" name="displayname2" maxlength="40" placeholder="<spring:message code='ezEmail.jje08'/>"></td>
+							<td><input type="text" id="displayname2" name="displayname2" maxlength="40" value="<c:out value='${displayname2}'/>" placeholder="<spring:message code='ezEmail.jje08'/>"></td>
 						</tr>
 					</table>
 				</div>

@@ -118,6 +118,7 @@ function ListView() {
     this.SetListType = SetListType;
     this.SetOrderbyCol = SetOrderbyCol; // Header order by 노드명 셋팅
     this.SetUnSelected = SetUnSelected;
+    this.setDeleteRow = setDeleteRow;
     
     //사용자 정의 이벤트 지정
     this.SetHeaderOnClick = SetHeaderOnClick;
@@ -1581,9 +1582,18 @@ function SetUnSelected(pTableID) {
 }
 
 function setDeleteRow(nodeId) {
-	var colCount = _dataSource.getElementsByTagName("ROW");
+	var colCount = document.getElementById(nodeId).getElementsByTagName("th").length;
 	var oTable = document.getElementById(nodeId);
 	var oTbody = oTable.lastChild;
+    // 2019.02.26 유은정 전자결재G인 경우에 colspan이 맞지 않는 경우 관련 수정
+	var thCount = 0;
+	var thList = document.getElementById(nodeId).getElementsByTagName("th");
+
+	for (var i = 0; i < colCount; i++) {
+		if (thList[i].style.display != "none") {
+			thCount++;
+		}
+	}
 	
 	var objTr = document.createElement("TR");
     objTr.setAttribute("id", nodeId + "_TR_" + "noItems");
@@ -1591,7 +1601,7 @@ function setDeleteRow(nodeId) {
     var oText = document.createTextNode(strLang944);
     var objTd = document.createElement("TD");
     objTd.align = "center";
-	objTd.setAttribute("colSpan", colCount);
+    objTd.setAttribute("colSpan", thCount);
     objTd.appendChild(oText);
     objTr.appendChild(objTd);
     

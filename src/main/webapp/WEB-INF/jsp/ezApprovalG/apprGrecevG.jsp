@@ -360,6 +360,16 @@
 		    }
 		    var ezreceivedistributeui_cross_dialogArguments = new Array();
 		    function btnDistribute_onclick() {
+		    	var deptCheckFlag = checkDeptAndCabinetId();
+		    	
+		    	if (deptCheckFlag == "3") {
+		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		return;
+		    	} else if (deptCheckFlag == "4") {
+		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		return;
+		    	}
+		    	
 		        var parameter = new Array();
 		        parameter[0] = pDocID;
 		        parameter[1] = pSusinSN;
@@ -370,7 +380,7 @@
 		        ezreceivedistributeui_cross_dialogArguments[0] = parameter;
 		        ezreceivedistributeui_cross_dialogArguments[1] = btnDistribute_onclick_Complete;
 		
-		        DivPopUpShow(1000, 760, "/ezApprovalG/ezReceiveDistributeUI.do");
+		        DivPopUpShow(800, 600, "/ezApprovalG/ezReceiveDistributeUI.do");
 		    }
 		    function btnDistribute_onclick_Complete(ret) {
 		        DivPopUpHidden();
@@ -384,6 +394,16 @@
 		    }
 		    var ezreceiveassignui_cross_dialogArguments = new Array();
 		    function btnAssign_onclick() {
+		    	var deptCheckFlag = checkDeptAndCabinetId();
+		    	
+		    	if (deptCheckFlag == "3") {
+		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		return;
+		    	} else if (deptCheckFlag == "4") {
+		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		return;
+		    	}
+		    	
 		        var parameter = new Array();
 		        parameter[0] = pDocID;
 		        parameter[1] = pSusinSN;
@@ -392,7 +412,7 @@
 		        ezreceiveassignui_cross_dialogArguments[0] = parameter;
 		        ezreceiveassignui_cross_dialogArguments[1] = btnAssign_onclick_Complete;
 		
-		        DivPopUpShow(510, 380, "/ezApprovalG/ezReceiveAssignUI.do");
+		        DivPopUpShow(800, 600, "/ezApprovalG/ezReceiveAssignUI.do");
 		    }
 		    function btnAssign_onclick_Complete(ret) {
 		        DivPopUpHidden();
@@ -410,6 +430,16 @@
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    function btnCabinet_onclick() {
+		    	var deptCheckFlag = checkDeptAndCabinetId();
+		    	
+		    	if (deptCheckFlag == "3") {
+		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		return;
+		    	} else if (deptCheckFlag == "4") {
+		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		return;
+		    	}
+		    	
 		        var para = new Array();
 		        para[0] = cabinetID;
 		        var url = "/ezApprovalG/selectCabinet.do?initFlag=1";
@@ -702,7 +732,7 @@
 		            tempdocnumcode = tempItemCode;
 
 		        var url = "/ezApprovalG/ezApprovalInfo.do?initFlag=1&guBun=" + pGubun + "&docType=" + pDocType;
-		        var feature = "status:no;dialogWidth:1130px;dialogHeight:750px;help:no;scroll:no;;edge:sunken;";
+		        var feature = "status:no;dialogWidth:1144px;dialogHeight:750px;help:no;scroll:no;;edge:sunken;";
 		        var ret = window.showModalDialog(url, parameter, feature);
 		
 		        if (ret != undefined && ret[0] == "OK") {
@@ -870,7 +900,8 @@
 		                return;
 		            }
 		            else {
-		                if ("${approvalPWD}" != "N") {
+		                //if ("${approvalPWD}" != "N") {
+		                if (CheckUsePassword()) {
 		                    var chkpass = chk_Passwd();
 		                    if (chkpass == "False") {
 		                        var pAlertContent = "<spring:message code='ezApprovalG.t27'/>";
@@ -1198,6 +1229,46 @@
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
 		    }
+		    
+		    /* 2019-01-02 천성준 #14647
+			     결재암호 사용유무 조회 (Y / N)
+			*/
+			function CheckUsePassword() {
+				var result = "";
+				$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezApprovalG/getApprovalPWD.do",
+					success: function(text) {
+						result = text;
+					}        			
+				});
+				
+				if (result != "N") {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		    
+	    	function checkDeptAndCabinetId() {
+	    		var result;
+            	$.ajax({
+            		type : "POST",
+            		dataType : "text",
+            		async : false,
+            		url : "/ezApprovalG/checkDeptAndCabinetId.do",
+            		data : {
+            				orgDeptId : arr_userinfo[4],
+            				orgCabinetId : cabinetID
+            				},
+            		success : function(text){
+            			result = text;
+            		}
+            	});
+            	return result;
+	    	}
 		</script>
 	</head>
 	<body class="popup" style="height:100%">

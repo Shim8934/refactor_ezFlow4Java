@@ -448,18 +448,6 @@
 						success : function(res) {
 							if (res.pSelectTab == "completedoclist") {
 								$("#doclist").empty().append(
-											/* 2018-07-31 김보미 - style에 ellipsis 추가 */
-//												  '<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
-//												+ '<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>'
-//												+ '<th style="width:2%;"><img src="/images/newAttach.gif"></th>'
-//												+ '<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
-//												+ '<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>'
-//												+ '<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>'
-//												+ '<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
-//												+ '<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
-//												+ '<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>'
-//												+ '<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>'
-//												+ '<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
 										  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
 										+ '<th style="width:15%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t434"></spring:message></th>'
 										+ '<th style="width:2%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="/images/newAttach.gif"></th>'
@@ -474,19 +462,6 @@
 										)
 								} else {
 									$("#doclist").empty().append(
-											/* 2018-07-31 김보미 - style에 ellipsis 추가 */
-//												  '<th style="width:3%;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
-//												+ '<th style="width:15%;"><spring:message code="ezApproval.t434"></spring:message></th>'
-//												+ '<th style="width:2%;"><img src="/images/newAttach.gif"></th>'
-//												+ '<th style="width:*;"><spring:message code="ezApprovalG.t106"></spring:message></th>'
-//												+ '<th style="width:10%;"><spring:message code="ezApproval.t433"></spring:message></th>'
-//												+ '<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>'
-//												+ '<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>'
-//												+ '<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>'
-//												+ '<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>'
-//												+ '<th style="width:10%;"><spring:message code="ezApproval.t368"></spring:message></th>'
-//												+ '<th style="width:5%;"><spring:message code="ezApprovalG.kes03"></spring:message></th>'
-//												+ '<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>'
 										  '<th style="width:3%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><input id="checkboxAll" type="checkbox" onclick="selectAll()" style="width:13px; height:13px;padding-top: 0px; padding-right: 0px; padding-bottom: 0px; padding-left: 0px; margin-top: 0px; margin-right: 0px; margin-bottom: 0px; margin-left: 4px; vertical-align:middle"/></th>'
 										+ '<th style="width:15%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><spring:message code="ezApproval.t434"></spring:message></th>'
 										+ '<th style="width:2%;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;"><img src="/images/newAttach.gif"></th>'
@@ -515,26 +490,6 @@
 										html += "<tr class='row_body' onclick='select_row(this)' ondblclick='openDoc(this)' docid='docID_" + i.docID + "' id='" + i.docID + "' writerName='" + i.writerName + "' " 
 											 + "DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "' style='cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'"
 											 + "formid='"+i.formID+"' dochref='"+i.href+"' orgdocid='"+i.orgDocID+"' >";
-										/* 2018-07-31 김보미 - style에 ellipsis 추가 */
-										/*html += "   <td><input type ='checkbox' name='myCheckbox' id='" + i.docID + "' onclick='chk_onselect(this)' writerName='" 
-											 + i.writerName + "' DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "'></td>";
-										html += "	<td title=\'" + i.docNo + "'>"	+ i.docNo	+ "</td>";
-										if (i.hasAttachYn != "N") {
-											html += '<td><img src="\/images\/newAttach.gif"></td>';
-										} else {
-											html += "<td>"  +   		 " "   	 				+ "</td>";
-										}
-										html += "	<td>"	+ i.docTitle						+ "</td>";
-										html += "	<td>"	+ i.formName						+ "</td>";
-										html += "	<td>"	+ i.writerDeptName					+ "</td>";
-										html += "	<td>"	+ i.writerName						+ "</td>";
-										html += "	<td>"	+ i.docstateName					+ "</td>";
-										html += "	<td>"	+ i.sendFlag						+ "</td>";
-										html += "	<td>"	+ i.endDate					        + "</td>";
-										if (res.pSelectTab != "completedoclist") {
-											html += "	<td>"	+ i.receiptPointName			+ "</td>";
-										}
-										html += "	<td>"	+ i.isPublic						+ "</td>";*/
 										html += "   <td style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'><input type ='checkbox' name='myCheckbox' id='" + i.docID + "' onclick='chk_onselect(this)' writerName='" 
 											 + i.writerName + "' DocTitle='" + i.docTitle + "' DocNo='" + i.docNo + "' DeptName='" + i.writerDeptName + "'></td>";
 										html += "	<td title=\'" + i.docNo + "' style='white-space: nowrap;overflow: hidden;text-overflow: ellipsis;'>"	+ i.docNo	+ "</td>";
@@ -571,9 +526,7 @@
 							}
 						});
 				
-					if (totalCount > 0) {
-						makePageSelPage();
-					}
+					makePageSelPage();
 			}
 			
 			function chk_onselect(obj) {
@@ -767,6 +720,14 @@
 				$(":checkbox[id=usedate]").prop("checked", false);
 				usedate = false;
 				$("#checkboxAll").prop("checked", false);
+				
+				var SDate = new Date();
+		        var EDate = new Date();
+		        $("#startDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#endDatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#startDatepicker").datepicker('setDate', SDate);
+		        $("#endDatepicker").datepicker('setDate', EDate);
+				
 				$("#startDatepicker").datepicker('disable');
 		        $("#endDatepicker").datepicker('disable');
 		        
@@ -910,9 +871,9 @@
 		        });
 			    
 			    function windowResize() {
-		        	var height = document.documentElement.clientHeight - 235;
-		        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-		        		height = height - 30;
+		        	var height = document.documentElement.clientHeight - 265;
+		        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") == -1) {
+		        		height = height - 5;
 		        	}
 		        	document.getElementById("contentlist").style.height = height + "px";
 		        	document.getElementById("contentlist").style.overflow = "auto";

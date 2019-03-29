@@ -87,8 +87,6 @@ function manage_share_Complete(retVal) {
         case 1:
             if (typeof (retVal) != "undefined") {
 				if (retVal["id"].length != 0) {
-					g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
-
 					if (g_share != null) {
 						for (var i = 0; i < g_share["email"].length; i++) {
 							if (retVal["email"][0] == g_share["email"][i]) {
@@ -102,6 +100,8 @@ function manage_share_Complete(retVal) {
 							}
 						}
 					}
+					
+					g_person = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "email": new Array() };
 
 					if (primary == 1) {
 						setNodeText(document.getElementById("personlist"), retVal["name"][0] + " (" + retVal["deptname"][0] + ")");
@@ -367,35 +367,49 @@ function show_repetition_info()
 	switch (info[2])
 	{
 		case "0":
-			repeatinfo += strLang30;
+			if(info[3] == "1") {
+				repeatinfo += strLang30;
+			}
+			else if(info[3] == "0") {
+				repeatinfo += strLang74;
+			}
+			else {
+				repeatinfo += info[3] + strLang75;
+			}
 			break;
 		case "1":
-			repeatinfo += strLang31;
-			
-		    repeatinfo += " ";
+			if(info[3] == "1") {
+				repeatinfo += strLang31 + " ";
+			}
+			else {
+				repeatinfo += info[3] + strLang76 + " ";
+			}
            for (var i = 0; i < info[4].length; i++) {
+        	   if(i != 0) {
+        		   repeatinfo += ", ";
+        	   }
                var idx = info[4].substr(i, 1);
                switch (idx) {
                    case "0":
-                       repeatinfo += strLang5.split(';')[0] + " ";
+                       repeatinfo += strLang5.split(';')[0];
                        break;
                    case "1":
-                       repeatinfo += strLang5.split(';')[1] + " ";
+                       repeatinfo += strLang5.split(';')[1];
                        break;
                    case "2":
-                       repeatinfo += strLang5.split(';')[2] + " ";
+                       repeatinfo += strLang5.split(';')[2];
                        break;
                    case "3":
-                       repeatinfo += strLang5.split(';')[3] + " ";
+                       repeatinfo += strLang5.split(';')[3];
                        break;
                    case "4":
-                       repeatinfo += strLang5.split(';')[4] + " ";
+                       repeatinfo += strLang5.split(';')[4];
                        break;
                    case "5":
-                       repeatinfo += strLang5.split(';')[5] + " ";
+                       repeatinfo += strLang5.split(';')[5];
                        break;
                    case "6":
-                       repeatinfo += strLang5.split(';')[6] + " ";
+                       repeatinfo += strLang5.split(';')[6];
                        break;
                }
            }
@@ -403,43 +417,118 @@ function show_repetition_info()
 			break;
 	    case "2":
 	        {
-	            repeatinfo += strLang32;
-
-	        /*    repeatinfo += " ";
-	            for (var i = 0; i < info[4].length; i++) {
-	                var idx = info[4].substr(i, 1);
-	                switch (idx) {
-	                    case "0":
-	                        repeatinfo += strLang5.split(';')[0];
-	                        break;
-	                    case "1":
-	                        repeatinfo += strLang5.split(';')[1];
-	                        break;
-	                    case "2":
-	                        repeatinfo += strLang5.split(';')[2];
-	                        break;
-	                    case "3":
-	                        repeatinfo += strLang5.split(';')[3];
-	                        break;
-	                    case "4":
-	                        repeatinfo += strLang5.split(';')[4];
-	                        break;
-	                    case "5":
-	                        repeatinfo += strLang5.split(';')[5];
-	                        break;
-	                    case "6":
-	                        repeatinfo += strLang5.split(';')[6];
-	                        break;
-	                }
-	            }*/
+	    		if(info[4] == "1") {
+	    			repeatinfo += strLang32 + " ";
+	    		}
+	    		else {									// N개월마다
+		    		repeatinfo += info[4] + strLang77 + " ";
+		    	}
+	    		if(info[3] == "1") {
+	    			repeatinfo += info[5] + strLang78;
+	    		}
+	    		else {
+					switch (info[5]){
+					case "1":
+						repeatinfo += strLang79;
+						break;
+					case "2":
+						repeatinfo += strLang80;
+						break;
+					case "3":
+						repeatinfo += strLang81;
+						break;
+					case "4":
+						repeatinfo += strLang82;
+						break;
+					case "5":
+						repeatinfo += strLang83;
+						break;
+					}
+					repeatinfo += " ";
+	    			switch (info[6]) {
+	                case "0":
+	                    repeatinfo += strLang4.split(';')[0];
+	                    break;
+	                case "1":
+	                    repeatinfo += strLang4.split(';')[1];
+	                    break;
+	                case "2":
+	                    repeatinfo += strLang4.split(';')[2];
+	                    break;
+	                case "3":
+	                    repeatinfo += strLang4.split(';')[3];
+	                    break;
+	                case "4":
+	                    repeatinfo += strLang4.split(';')[4];
+	                    break;
+	                case "5":
+	                    repeatinfo += strLang4.split(';')[5];
+	                    break;
+	                case "6":
+	                    repeatinfo += strLang4.split(';')[6];
+	                    break;
+	    			}
+	    		}
 	        }
 			break;
 		case "3":
-			repeatinfo += strLang33;
+			if(info[3] == '1'){
+				var month = info[4]-1;
+				repeatinfo += strLang33 + " ";
+				repeatinfo += strLang3.split(';')[month] + " ";
+				repeatinfo += info[5] + strLang78;
+			}
+			else {
+				var month = info[4]-1;
+				repeatinfo += strLang33 + " ";
+				repeatinfo += strLang3.split(';')[month] + " ";
+				
+				switch (info[5]){
+				case "1":
+					repeatinfo += strLang79;
+					break;
+				case "2":
+					repeatinfo += strLang80;
+					break;
+				case "3":
+					repeatinfo += strLang81;
+					break;
+				case "4":
+					repeatinfo += strLang82;
+					break;
+				case "5":
+					repeatinfo += strLang83;
+					break;
+				}
+				repeatinfo += " ";
+				
+				switch (info[6]) {
+                case "0":
+                    repeatinfo += strLang4.split(';')[0];
+                    break;
+                case "1":
+                    repeatinfo += strLang4.split(';')[1];
+                    break;
+                case "2":
+                    repeatinfo += strLang4.split(';')[2];
+                    break;
+                case "3":
+                    repeatinfo += strLang4.split(';')[3];
+                    break;
+                case "4":
+                    repeatinfo += strLang4.split(';')[4];
+                    break;
+                case "5":
+                    repeatinfo += strLang4.split(';')[5];
+                    break;
+                case "6":
+                    repeatinfo += strLang4.split(';')[6];
+                    break;
+    			}
+			}
 			break;
 	}	
 
-	repeatinfo += ", ";	
 		var sdate, edate;
 		if (g_sdate == null)
 		{	
@@ -466,11 +555,15 @@ function show_repetition_info()
 		}
 	//2018-05-23 구해안 저장 버튼 눌렀을때 startDate 와 endDate 비교 플레그(radioCheck)
 	//strLang71, strLang72 추가
-	repeatinfo += strLang71 + " : ";
+	repeatinfo += ", " + strLang71 + " : ";
 	if(info[0] == '-1'){
 		repeatinfo += sdate + ' ~ ' + strLang72;
-	}else{
+	}
+	else if(info[0] == '0'){
 		repeatinfo += sdate + ' ~ ' + edate;
+	}
+	else {
+		repeatinfo += sdate + ' ~ ' + info[0] + strLang47;
 	}
 	document.getElementById("repeatinfo").innerHTML = repeatinfo;
 }

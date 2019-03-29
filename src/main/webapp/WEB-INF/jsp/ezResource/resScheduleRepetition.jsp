@@ -23,6 +23,8 @@
 		<script type="text/javascript">
 			var lang = "${userInfo.lang}";
 			var pRepetitionFlag = 1; //0:매일, 1:매주, 2:매월, 3:매년 (매주가 default이므로 초기설정)
+			var sTimeTemp = "";
+		    var eTimeTemp = "";
 			
 		    function windows_close() {
 		        window.close();
@@ -32,6 +34,8 @@
 	    	window.onload = function () {
 		        window_onload();
 	        	datepicker();        
+	        	allDayTime();
+	        	clearAllDay();
 	    	}
 	    	
 	    	function KeEventControl(obj) {
@@ -103,6 +107,9 @@
 	        	$('#Etimepicker').timepicker();
 	        	$('#Etimepicker').timepicker('setTime', EDate);
 	        	$('#Etimepicker').timepicker({ 'timeFormat': 'H:i' });
+	        	
+		        sTimeTemp = $('#Stimepicker').val();
+		        eTimeTemp = $('#Etimepicker').val();
 	    	}
 	    	
 	    	$(function () {
@@ -176,6 +183,85 @@
 		        	} 
 	        	}
 	    	}
+	    	
+	    	function setTimePickerReadOnly() {
+		    	$('#Stimepicker').attr('disabled','disabled');
+	    		$('#Etimepicker').attr('disabled','disabled');
+		    }
+		    
+			function setTimePickerModifiable() {
+				$('#Stimepicker').removeAttr('disabled');
+	    		$('#Etimepicker').removeAttr('disabled');
+		    }
+	    	
+	    	/* 2019-02-19 김민성 - 자원관리 하루종일 체크시 시간 00:00로 변경(일정관리와 스펙 맞춤)
+	    								  - 하루종일 체크 해제시 현재 시간 기준 30분 단위 표시로 수정 */
+	    	function allDayTime(){
+	    		if(document.getElementById("alldaycheck").checked == true){
+	    			sTimeTemp = $('#Stimepicker').val();
+		    		eTimeTemp = $('#Etimepicker').val();
+		    		$('#Stimepicker').timepicker("setTime", "00:00");
+		    		$('#Etimepicker').timepicker("setTime", "00:00");
+		    		setTimePickerReadOnly();
+		    	}else if(sTimeTemp != null){
+		    		setTimePickerModifiable();
+		    		
+		    		$('#Stimepicker').timepicker("setTime", sTimeTemp);
+		    		$('#Etimepicker').timepicker("setTime", eTimeTemp);
+		    	}
+		    	else {
+		    		setTimePickerModifiable();
+		    		var now = new Date();
+		        	
+		        	//시작시간
+		        	var startTime;
+		        	var hour = now.getHours();
+		        	var time = now.getMinutes();
+		        	
+		        	if (parseInt(time) < 30) {
+		        		startTime = hour + ":00:00";
+		        	} else {
+		        		startTime = hour + ":30:00";
+		        	}
+		        	
+		        	//종료시간
+		        	var endTime;
+		        	now.setMinutes(now.getMinutes() + 30);
+		        	
+		        	hour = now.getHours();
+		        	time = now.getMinutes();
+		        	
+		        	if (parseInt(time) < 30) {
+		        		endTime = hour + ":00:00";
+		        	} else {
+		        		endTime = hour + ":30:00";
+		        	}
+		        	
+		        	$('#Stimepicker').timepicker('setTime', startTime);
+		        	$('#Etimepicker').timepicker('setTime', endTime);
+		    	}
+		    }
+	    	
+	    	function clearAllDay(){
+		    	$('#Stimepicker').change(function(){
+		    		if($("#alldaycheck").prop("checked") == true){
+		    			$("#alldaycheck").prop("checked", false);
+		    		}
+		    		if($('#Stimepicker').val() == "00:00" && $('#Etimepicker').val() == "00:00"){
+		    			$("#alldaycheck").prop("checked", true);
+		    			setTimePickerReadOnly();
+		    		}
+		    	});
+		    	$('#Etimepicker').change(function(){
+		    		if($("#alldaycheck").prop("checked") == true){
+		    			$("#alldaycheck").prop("checked", false);
+		    		}
+		    		if(($('#Stimepicker').val() == "00:00") && ($('#Etimepicker').val() == "00:00")){
+		    			$("#alldaycheck").prop("checked", true);
+		    			setTimePickerReadOnly();
+		    		}
+		    	});
+		    }
 		</script>
 	</head>
 	<body class="popup">
@@ -193,7 +279,7 @@
       				<td>
        					<input id="Stimepicker" type="text" class="time" style="width:43px;margin-left:3px;text-align:center" />
      					<label for="btnT1"></label>
-     					<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" />
+     					<input type="checkbox" value="1" id="alldaycheck" NAME="alldaycheck" onclick="allDayTime()" />
      					<spring:message code="ezResource.t277"/>
         			</td>
     			</tr>
@@ -241,7 +327,7 @@
       					<input id="txt_We" type="text" name="textfield222" class="textarea" style="width:50px;text-align:center;" value="1">
       					<spring:message code="ezResource.t289"/>
       				</label>
-      				<div>
+      				<div id="daytable">
       					<input type="checkbox" name="day" id="day0" value="0"> <spring:message code="ezResource.t290"/>
 						<input type="checkbox" name="day" id="day1" value="1"> <spring:message code="ezResource.t291"/>
 						<input type="checkbox" name="day" id="day2" value="2"> <spring:message code="ezResource.t292"/>

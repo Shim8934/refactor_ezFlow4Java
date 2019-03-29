@@ -48,6 +48,12 @@
 		
 		        if (repetition != "") {
 		            var info = repetition.split("|");
+		            
+					var m_objStartTime = new Date($("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val());
+		    		
+		    		var iDateNumber = m_objStartTime.getDate();
+		            var iWeekdayNumber = m_objStartTime.getDay();
+		            var iMonthNumber = m_objStartTime.getMonth();
 		
 		            switch (info[0]) {
 		                case "-1":
@@ -91,13 +97,28 @@
 		                        idOM1.checked = true;
 		                        list_MonthInterval.value = info[4];
 		                        list_MonthlyDays.value = info[5];
+		                        
+		                        var nEach = parseInt(iDateNumber / 7);
+					            document.getElementById("list_MonthlyEach").selectedIndex = nEach;
+					            SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);
 		                    }
 		                    else {
 		                        id0M2.checked = true;
 		                        list_MonthInterval2.value = info[4];
 		                        list_MonthlyEach.value = info[5];
 		                        list_MonthlyDay.value = info[6];
+		                        
+		                        document.getElementById("list_MonthlyDays").value = iDateNumber;
 		                    }
+		                    
+							document.getElementById("list_YearlyDays").value = iDateNumber;
+				            
+				            document.getElementById("list_Month").selectedIndex = iMonthNumber;
+				            document.getElementById("list_Month2").selectedIndex = iMonthNumber;
+				            
+				            var nEach = parseInt(iDateNumber / 7);
+				            document.getElementById("list_YearlyEach").selectedIndex = nEach;
+				            SetWeekdayDropDown(list_YearlyDay, iWeekdayNumber);
 		                    break;
 		                case "3":
 		                    mpYearly.checked = true;
@@ -108,15 +129,94 @@
 		
 		                        if (info[6] == "2")
 		                            moonday.checked = true;
+		                        
+								document.getElementById("list_Month2").selectedIndex = iMonthNumber;
+		    					
+		    					var nEach = parseInt(iDateNumber / 7);
+					            document.getElementById("list_YearlyEach").selectedIndex = nEach;
+					            
+					            SetWeekdayDropDown(list_YearlyDay, iWeekdayNumber);
 		                    }
 		                    else {
 		                        optY2.checked = true;
 		                        list_Month2.value = info[4];
 		                        list_YearlyEach.value = info[5];
 		                        list_YearlyDay.value = info[6];
+		                        
+		                        document.getElementById("list_Month").selectedIndex = iMonthNumber;
+		    					 
+		    					document.getElementById("list_YearlyDays").value = iDateNumber;
 		                    }
+							document.getElementById("list_MonthlyDays").value = iDateNumber;
+		    				
+		    				document.getElementById("list_MonthlyEach").selectedIndex = nEach;
+		    				SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);
+		          	  }
+		            
+		            if(info[2] == "0" || info[2] == "1") {
+			    		SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);
+			            SetWeekdayDropDown(list_YearlyDay, iWeekdayNumber);
+			            
+			            document.getElementById("list_MonthlyDays").value = iDateNumber;
+			            document.getElementById("list_YearlyDays").value = iDateNumber;
+		
+			            document.getElementById("list_Month").selectedIndex = iMonthNumber;
+			            document.getElementById("list_Month2").selectedIndex = iMonthNumber;
+		
+			            var nEach = parseInt(iDateNumber / 7);
+			            document.getElementById("list_MonthlyEach").selectedIndex = nEach;
+			            document.getElementById("list_YearlyEach").selectedIndex = nEach;
+		    		}
+		            
+		            if(info[2] != "1") {
+		            	daytable.getElementsByTagName("input").item(iWeekdayNumber).checked = true;
 		            }
 		        }
+		        else {
+		    		try {
+		                m_objStartTime = new Date(m_dialogArguments["SDATE"].split(' ')[0].split('-')[0], parseInt(RetValue["SDATE"].split(' ')[0].split('-')[1]) - 1, RetValue["SDATE"].split(' ')[0].split('-')[2], RetValue["SDATE"].split(' ')[1].split(':')[0], RetValue["SDATE"].split(' ')[1].split(':')[1], 0, 0);
+		            } catch (e) {
+		                m_objStartTime = new Date(m_dialogArguments["SDATE"]);
+		            }  
+		    	
+		            var iDateNumber = m_objStartTime.getDate();
+		            var iWeekdayNumber = m_objStartTime.getDay();
+		            var iMonthNumber = m_objStartTime.getMonth();
+		            
+		            daytable.getElementsByTagName("input").item(iWeekdayNumber).checked = true;
+
+                    list_MonthlyDays.value = iDateNumber;
+		            
+		    		SetWeekdayDropDown(list_MonthlyDay, iWeekdayNumber);
+		            SetWeekdayDropDown(list_YearlyDay, iWeekdayNumber);
+		            
+		            var nEach = parseInt(iDateNumber / 7);
+		            document.getElementById("list_MonthlyEach").selectedIndex = nEach;
+		            document.getElementById("list_YearlyEach").selectedIndex = nEach;
+		            
+		            document.getElementById("list_MonthlyDays").value = iDateNumber;
+		            document.getElementById("list_YearlyDays").value = iDateNumber;
+		            
+		            document.getElementById("list_Month").selectedIndex = iMonthNumber;
+		            document.getElementById("list_Month2").selectedIndex = iMonthNumber;
+		    	}
+		    }
+		    
+		    function SetWeekdayDropDown(ddDay, value)
+		    {
+		    	var iList;
+		    	var iLength = ddDay.length;
+		        
+		    	for (iList = 0; iList < iLength; iList++)
+		    	{  
+		    		if (ddDay[iList].value == value)
+		    		{ 
+		    			ddDay[iList].selected = true;
+		    			
+		    			return;
+		    		}
+		    	}						
+		    	return;
 		    }
 			
 		    /*2018-05-16 구해안 취소버튼 수정*/
@@ -355,7 +455,7 @@
 		                repetition += "|1";
 		                repetition += "|" + list_Month.value;
 						
-		                recurString = recurString + " " + getMonthString(parseInt(list_Month.value)) + list_YearlyDays.value + strLang80;	
+		                recurString = recurString + " " + getMonthString(parseInt(list_Month.value)) + " " + list_YearlyDays.value + strLang80;	
 		                
 		                var enddate0;
 		                var errorMeg;
@@ -405,7 +505,7 @@
 		
 		        rtn["REPETITION"] = repetition;
 		        /*2018-05-16 구해안 task_write_cross */
-		        rtn["REPDISPLAY"] = strLang33 + " " + recurString + " , " + strLang79 + " : " + scheduleTerm;
+		        rtn["REPDISPLAY"] = strLang33 + " " + recurString + ", " + strLang79 + " : " + scheduleTerm;
 		        
 		        if (ReturnFunction != null){
 		            window.parent.timeCheck = true;
@@ -740,6 +840,7 @@
 						<input name="text" type="text" id="txt_De" style="Width:40px;height:18px;text-align: center;" onFocus='window.document.all["optDaily"][0].checked=true;' value="1" maxlength='3'>
 						&nbsp;<spring:message code='ezTask.t39' /></label>
 						<br>
+						<br>
 						<input id="id0D2" type="radio" name="optDaily" style="margin:0px 0px 0px 0px;vertical-align:middle;">
 						<label for="id0D2" accesskey="K" style="vertical-align:middle;"><spring:message code='ezTask.t40' /><u>K</u>)</label>
 					</div>
@@ -775,7 +876,7 @@
 						<input name="Input" id="list_MonthInterval" style="Width:40px;text-align: center;" onFocus='window.document.all["optMonthly"][0].checked=true;' value="1" maxlength="3">
 						&nbsp;<spring:message code='ezTask.t51' />
 						<input name="Input" id="list_MonthlyDays" style="Width:40px;text-align: center;" onFocus='window.document.all["optMonthly"][0].checked=true;' maxlength="2">
-						&nbsp;<spring:message code='ezTask.t52' /><br>
+						&nbsp;<spring:message code='ezTask.t52' /><br><br>
 						<input id="id0M2" type="radio" name='optMonthly' style="margin:0px 0px 0px 0px;vertical-align:middle;">
 						<label for="id0M2" accesskey="E" style="vertical-align:middle"><spring:message code='ezTask.t53' /><u>E</u>)&nbsp;</label>
 						<input name="Input" id="list_MonthInterval2" style="Width:40px;text-align: center;" onFocus='window.document.all["optMonthly"][1].checked=true;' value="1" maxlength="3">
@@ -816,13 +917,14 @@
 						</select>
 						<input name="Input" class="text" id="list_YearlyDays" style="Width:40px;text-align: center;" onFocus='window.document.all["optYearly"][0].checked=true;' maxlength="2">
 						&nbsp;<spring:message code='ezTask.t62' />
-						<c:if test="${userinfo.lang == 3}" >
-							<input type="checkbox" value="1" id="moonday" style="margin:0px 0px 2px 0px;vertical-align:middle;">
+						<c:if test="${userInfo.lang == 1}" >
+							<input type="checkbox" value="1" id="moonday" style="margin:0px 0px 2px 0px;vertical-align:middle;display:none;">
+							<%-- <spring:message code='ezTask.t63' /> --%><br>
 						</c:if>
-						<c:if test="${userinfo.lang != 3}" >
+						<c:if test="${userInfo.lang != 1}" >
 							<input type="checkbox" value="1" id="moonday" style="margin:0px 0px 2px 0px;vertical-align:middle;display:none;">
 						</c:if>
-						<spring:message code='ezTask.t63' /><br>
+						<br>
 						<input id="optY2" type="radio" name="optYearly" value="radiobutton" style="margin:0px 0px 0px 0px;vertical-align:middle;">          
 						<label for="optY2" accesskey="E" style="vertical-align:middle"><spring:message code='ezTask.t53' /><u>E</u>)&nbsp;</label>
 						<select name="select" id="list_Month2" onFocus='window.document.all["optYearly"][1].checked=true;'>

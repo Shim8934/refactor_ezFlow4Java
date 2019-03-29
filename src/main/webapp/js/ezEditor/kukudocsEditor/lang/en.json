@@ -621,6 +621,7 @@
     "cell_vertical_size": "Equal height",
     "table_lock": "Table lock",
     "cell_lock": "Cell lock",
+    "border_visualize": "Show hidden border",
     "table_background_color": "grid color",
     "table_border_style": "Line style",
     "menuToolName": "Tools",
@@ -731,6 +732,9 @@
     "pasteParsingError" : "An error occurred while pasting.",
     "invalidBrowserError" : "Unsupported browser.",
     "notSetCellLockNameError" : "The lock name is not set."
+  },
+  "confirmMessage" : {
+    "newRemoveContentMessage" : "This will remove the currently entered content.\nDo you want to proceed?"
   },
   "processingMessage" : "Processing ...",
   "paragraphInsert": "Paragraph Insert",

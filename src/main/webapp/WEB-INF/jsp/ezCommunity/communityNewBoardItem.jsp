@@ -105,6 +105,7 @@
 			var saveFlag = false;
 			var clickFlag = false;
 			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
+			var defaultFontAndSize  = "${defaultFontAndSize}";
 			
 			<c:if test="${isCrossBrowser != true}">
 			    var objMHT = new ActiveXObject("MhtFormat.Convert");
@@ -676,8 +677,8 @@
 	
 		    function SelectBoard() {
 		        var url	= "/ezCommunity/boardSelect.do";
-		        var feature = "status:no;dialogWidth:340px;dialogHeight:656px;help:no;scroll:no;edge:sunken";
-		        feature = feature + GetShowModalPosition(340, 656);
+		        var feature = "status:no;dialogWidth:355px;dialogHeight:600px;help:no;scroll:no;edge:sunken";
+		        feature = feature + GetShowModalPosition(355, 600);
 		        var ret = window.showModalDialog(url, "", feature);	
 							
 		        if (typeof(ret) == "undefined") {
@@ -823,17 +824,29 @@
 	        		            
 	                            htmlData = "<body free>" + htmlData + "</body>";
 	                            
-	                            if (gubun != "2") {		                            	
-	                            		                            	
+	                            if (gubun != "2") {
+	                            	var tempWriteDate = strWriteDate;
+	                            	
 	                            	if(strParentWriteDate > strWriteDate) {
-	                            		htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strParentWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B><spring:message code='ezCommunity.t885'/></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "<br><br>" + htmlData;
-	                            	} else {
-	                            		htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")<br><B><spring:message code='ezCommunity.t885'/></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "<br><br>" + htmlData;				                         		
+	                            		tempWriteDate = strParentWriteDate;
 	                            	}
-	                            
+	                            	
+	                            	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezCommunity.t1161' /></B>-----</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1162' /></B>" + tempWriteDate + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1163' /></B>" + strWriterName + "(" + strWriterTitle + "," + strWriterDeptName + "," + strWriterCompanyName + ")</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		                        	htmlData = replyHeader + htmlData;
 	                            
 	                            } else {
-	                            	htmlData = "<br><br>-----<B>[&nbsp;<spring:message code='ezCommunity.t1161'/></B>-----<br><B><spring:message code='ezCommunity.t1162'/></B>" + strWriteDate + "<br><B><spring:message code='ezCommunity.t1163'/></B>" + strWriterName + "<br><B><spring:message code='ezCommunity.t885'/></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "<br><br>" + htmlData;
+	                            	var replyHeader = "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + ">-----<B>[&nbsp;<spring:message code='ezCommunity.t1161' /></B>-----</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1162' /></B>" + strWriteDate + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t1163' /></B>" + strWriterName + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + "><B><spring:message code='ezCommunity.t885' /></B>" + ConvMakeXMLString("<c:out value = '${item.title}' />") + "</p>";
+		                        	replyHeader += "<p " + defaultFontAndSize + ">&nbsp;</p><p " + defaultFontAndSize + ">&nbsp;</p>";
+		                        	htmlData = replyHeader + htmlData;
 	                            }
 	                            
 	                            message.SetEditorContent(htmlData);
@@ -1044,7 +1057,7 @@
 							<table class="file">
 								<form name="multicheck">
 									<tr>
-										<th><spring:message code='ezCommunity.t933' /></th>
+										<th><spring:message code='ezCommunity.t141' /></th>
 										<td class="pos1"><script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans", "125%", "100%");</script>
 											<div id="lstAttachLink"
 												style="display: none; OVERFLOW: auto; HEIGHT: 50px;">&nbsp;</div>
@@ -1070,7 +1083,7 @@
 							<table class="file">
 								<form name="multicheck">
 									<tr>
-										<th><spring:message code='ezCommunity.t933' /></th>
+										<th><spring:message code='ezCommunity.t141' /></th>
 										<td class="pos1">
 											<div id="lstAttachLink">&nbsp;</div>
 										</td>

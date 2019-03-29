@@ -105,6 +105,7 @@
 		    var pMode = "new";
 		    var starttime;
 		    var endtime;
+		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
 		
@@ -120,6 +121,14 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
+		        
+		        /* 2019-01-30 홍승비 - 그룹사게시판의 경우, 사용자단에서 권한설정 버튼 숨김 */
+		        if (BoardAdmin_FG == "true" && isAllGroupBoard == "Y") {
+			        if (parent.document.location.href != null && parent.document.location.href.indexOf("/admin/") < 0) {
+						document.getElementById("btn_acl").style.display = "none";
+			        }
+		        }
+		        
 		        var height = parseInt(document.documentElement.clientHeight - 180);
 		        getBoardList();
 		
@@ -183,7 +192,7 @@
 		    $(document).ready(function() {
 		    	var clickOutside;
 		    	
-		    	if (navigator.userAgent.toLowerCase().indexOf("m sie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
+		    	if (navigator.userAgent.toLowerCase().indexOf("msie") != -1 || (navigator.appName == 'Netscape' && navigator.userAgent.search('Trident') != -1)) { 
 		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].document);
 		    	} else {
 		    		clickOutside = $(window.parent.parent.parent.frames['topFrame'].contentWindow.document);
@@ -1197,7 +1206,7 @@
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this);" />
 				</li>
 		        <c:if test="${boardInfo.boardAdmin_FG == 'true'}">
-			      <li><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63'/></span></li> 
+			      <li id="btn_acl"><span onClick="SetBoardAcl()"><spring:message code='ezBoard.t63'/></span></li> 
 		        </c:if>
 		  </ul>
 		</div>
@@ -1248,7 +1257,7 @@
 
     <span id="MailListRayer" style="border: 0px solid blue; width: 0px; height: 0px; vertical-align: top; overflow: hidden; display: inline-block;">
 
-        <div style="width:100%; " id="divList">
+        <div style="width:100%; overflow-x:auto; overflow-y:hidden;" id="divList">
 
             <div id="lvBoardList"></div>
         </div>
@@ -1268,7 +1277,7 @@
                     <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
                         <p class="mail_title" style="margin-left: 0px;">
                             <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
-                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
+                                <img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
                         </p>
                         <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
                         <dl class="mail_item">
@@ -1294,7 +1303,7 @@
                     <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
                         <p class="mail_title">
                             <span class="icon_btn"><span onclick="MailReadOpen();" style="cursor: pointer; padding-right: 5px;">
-                                <img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
+                                <img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
                         </p>
                         <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
                         <dl class="mail_item">

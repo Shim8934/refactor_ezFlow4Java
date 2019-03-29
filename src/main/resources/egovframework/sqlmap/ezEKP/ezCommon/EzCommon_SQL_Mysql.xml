@@ -483,4 +483,88 @@
 		  PRIMARY KEY (`USERID`,`TENANTID`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8
 	</statement>
+	
+	<select id="EzCommonDAO.checkUserMasterMailBoxQuota" resultClass="String">
+		<![CDATA[
+			SELECT
+				MAILBOXQUOTA, MAILBOXUSAGE
+			FROM
+				TBL_USERMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addUserMasterMailBoxQuota">
+		ALTER TABLE
+			TBL_USERMASTER
+		ADD (
+			MAILBOXQUOTA VARCHAR(50) DEFAULT NULL,
+			MAILBOXUSAGE VARCHAR(50) DEFAULT NULL
+			)
+	</statement>
+	
+	<select id="EzCommonDAO.checkJournalFormDelFlag" resultClass="String">
+			SELECT
+				form_del_flag
+			FROM
+				TBL_JOURNAL_FORM
+			LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addJournalFormDelFlag">
+		ALTER TABLE
+			TBL_JOURNAL_FORM
+		ADD (
+			form_del_flag VARCHAR(10) DEFAULT NULL
+			)
+	</statement>
+	
+	<select id="EzCommonDAO.checkListOptionData1" resultClass="int" remapResults="true">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			TBL_LISTOPTION 
+		WHERE 
+			LISTTYPE = 'S001' 
+		AND 
+			COLNAME = 'StartDate' 
+		AND 
+			NAME = '기안일시'
+	</select>
+	<select id="EzCommonDAO.checkListOptionData2" resultClass="int" remapResults="true">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			TBL_LISTOPTION 
+		WHERE 
+			LISTTYPE = 'S001' 
+		AND 
+			COLNAME = 'FunctionTypeName' 
+	</select>
+	
+	<update id="EzCommonDAO.updateListOptionData1">
+		UPDATE 
+			TBL_LISTOPTION 
+		SET 
+			NAME = '수신일자', 
+			NAME2 = 'ProcessDate', 
+			NAME3 = '到着日時', 
+			NAME4 = '接收日' 
+		WHERE 
+			LISTTYPE = 'S001' 
+		AND 
+			COLNAME = 'StartDate' 
+		AND 
+			NAME = '기안일시'
+	</update>
+	<update id="EzCommonDAO.updateListOptionData2">
+		UPDATE 
+			TBL_LISTOPTION 
+		SET 
+			COLNAME = 'FunctionType' 
+		WHERE 
+			LISTTYPE = 'S001' 
+		AND 
+			COLNAME = 'FunctionTypeName'
+	</update>
 </sqlMap>

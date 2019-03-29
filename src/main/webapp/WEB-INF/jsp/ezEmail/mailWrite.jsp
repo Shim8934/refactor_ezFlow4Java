@@ -168,7 +168,10 @@
 	    var searchStartDate = "${searchStartDate}";
 	    var searchEndDate = "${searchEndDate}";
 	    var shareId = "${shareId}";
-	    
+	    var receiverCount = 0;
+        var groupAddressCountMap = {};
+        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
+        
 	    window.onload = function () {
 	        if (!CrossYN()) {
 	            document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
@@ -782,6 +785,10 @@
 	            var IsInsert = CheckMailReceiver(newElem);
 	
 	            if (!IsInsert) {
+	            	if (!increaseReceiverCount()) {
+	            		return;
+	            	}
+	            	
 	                switch (iType) {
 	                    case 0:
 	                        MsgToGot.appendChild(newElem);
@@ -985,23 +992,8 @@
 	        
 	        g_originalHTML = message.GetEditorContent();
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
-	        
-	        mailSignInnerHtml();
 	    }
 
-		// 180517 : 메일 mailsign div에 메일을 작성 후 서명 등록 또는 변경 시 본문 사라지는 현상 수정
-	    function mailSignInnerHtml() {
-			if (mailsel == 0 && gg_cmd != "RESEND") {
-				if (pUse_Editor == "KUKUDOCS") {
-					setTimeout(function() {
-							message.EditorElementSetHtml("MailSign", "");
-					}, 300);
-				} else {
-					message.EditorElementSetHtml("MailSign", "");
-				}
-			}
-	    }
-	
 	    function getJournalToMail(){
 	    	var journal;
 	    	$.ajax ({
@@ -1204,14 +1196,12 @@
 	        }
 	        var xmlHTTP = createXMLHttpRequest();
 	        var xmlpara = createXmlDom();
-	        var xmlstring = "<DocID>" + DocID + "</DocID>";
-	        xmlpara = loadXMLString(xmlstring);
 	        if (Target == "APPROVALG")
-	            xmlHTTP.open("POST", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
+	            xmlHTTP.open("GET", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx?DocID=" + DocID, false);
 	        else
-	            xmlHTTP.open("POST", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx", false);
+	            xmlHTTP.open("GET", "${dotNetUrl}/myoffice/ezApproval/formContainer/aspx/aprattachMail.aspx?DocID=" + DocID, false);
 	        xmlHTTP.withCredentials = true;
-	        xmlHTTP.send(xmlpara);
+	        xmlHTTP.send();
 
 	        if (xmlHTTP.status == 200) {
 	            var ReturnXML = loadXMLString(xmlHTTP.responseText);
@@ -1368,7 +1358,7 @@
 	                document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" + "<br><br><hr></hr><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender + "<br><B>" + strLang120 + "</B>" + MakeXMLString(eSubject.value) + "<br><br>" + htmlData;
 	            }
 
-	            xmlHTTP.open("POST", "${dotNetUrl}/myoffice/ezBoardSTD/interASP/GetItemAttachments.aspx?ItemID=" + pItemID + "&pMode=" + pRetransType + "&conLocation=" + encodeURIComponent(Rurl) + "&title=" + encodeURIComponent(getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0])), false);
+	            xmlHTTP.open("GET", "${dotNetUrl}/myoffice/ezBoardSTD/interASP/GetItemAttachments.aspx?ItemID=" + pItemID + "&pMode=" + pRetransType + "&conLocation=" + encodeURIComponent(Rurl) + "&title=" + encodeURIComponent(getNodeText(SelectNodes(ReturnXML, "NODES/NODE/Title")[0])), false);
 	            xmlHTTP.send();
 	            var ReturnXML = loadXMLString(xmlHTTP.responseText);
 	            var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");
@@ -1468,7 +1458,7 @@
 	            htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
 	            document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" + "<br><br><hr></hr><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender + "<br><B>" + strLang120 + "</B>" + eSubject.value + "<br><br>" + htmlData;
 
-	            xmlHTTP.open("POST", "${dotNetUrl}/myoffice/ezCommunity/aspx/GetItemAttachments.aspx?ItemID=" + pItemID, false);
+	            xmlHTTP.open("GET", "${dotNetUrl}/myoffice/ezCommunity/aspx/GetItemAttachments.aspx?ItemID=" + pItemID, false);
 	            xmlHTTP.send();
 	            var ReturnXML = loadXMLString(xmlHTTP.responseText);
 	            var AttachRows = SelectNodes(ReturnXML, "NODES/NODE");
@@ -1675,12 +1665,6 @@
 	    function keyEventNone(e) {
 	    	e.preventDefault();
 	    }
-	    /* 
-	    $(document).on("click", "#MailSign", function() {
-	    	if (mailsel == 0) {
-				message.EditorElementSetHtml("MailSign", "");
-			}
-	    }) */
 	    
 	    // 20180628 자동완성창의 width 값 고정
 	    jQuery.ui.autocomplete.prototype._resizeMenu = function () {
@@ -1772,6 +1756,10 @@
 									ui.item.email, href);
 							IsInsert_MsgTo = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgTo) {
+								if (!increaseReceiverCount(addressType, href)) {
+				            		return;
+				            	}
+								
 								MsgToGot.appendChild(newElem);
 								document.getElementById("MsgTo").value = "";
 								IsInsert_MsgTo = true;
@@ -1845,6 +1833,10 @@
 									ui.item.email, href);
 							IsInsert_MsgCC = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgCC) {
+								if (!increaseReceiverCount(addressType, href)) {
+				            		return;
+				            	}
+								
 								MsgCCGot.appendChild(newElem);
 								document.getElementById("MsgCC").value = "";
 								IsInsert_MsgCC = true;
@@ -1918,6 +1910,10 @@
 									ui.item.email, href);
 							IsInsert_MsgBCC = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgBCC) {
+								if (!increaseReceiverCount(addressType, href)) {
+				            		return;
+				            	}
+								
 								MsgBCCGot.appendChild(newElem);
 								document.getElementById("MsgBCC").value = "";
 								IsInsert_MsgBCC = true;

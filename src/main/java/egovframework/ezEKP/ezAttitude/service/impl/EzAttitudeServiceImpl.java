@@ -1135,7 +1135,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("paging started.");
 		
-		if (listSize != "") {
+		if (!listSize.equals("")) {
 			int size = Integer.valueOf(listSize);
 			int limit = (Integer.valueOf(pageNum) - 1) * size;
 			
@@ -1175,6 +1175,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		/*2018-05-08 이효진 holidayList 생성*/
 		//회사 기념일
 		List<HolidayVO> holidayList = getHolidayList("rest", companyId, tenantId);
+		//임시 저장
+		List<HolidayVO> tempHolidayList = new ArrayList<HolidayVO>();
 		//근태휴무일
 		AttitudeConfigVO attitudeConfig = getAttitudeConfig(tenantId, companyId);
 		String checkDay[] = attitudeConfig.getClosedDay().split(",");
@@ -1234,9 +1236,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 						HolidayVO vo2 = new HolidayVO();
 						vo2.setHolidayDate(vo1.getHolidayDate().replace(startYear, endYear));
 						
-						holidayList.add(vo2);
+						tempHolidayList.add(vo2);
 					}
 				}
+			}
+		}
+		
+		if (tempHolidayList != null) {
+			for (HolidayVO vo3 : tempHolidayList) {
+				holidayList.add(vo3);
 			}
 		}
 		
@@ -1261,17 +1269,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[0].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1280,17 +1292,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[1].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1299,17 +1315,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[2].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1318,17 +1338,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[3].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1337,17 +1361,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[4].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1356,17 +1384,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[5].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -1375,17 +1407,21 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					if (checkDay[6].equals("1")) {
 						break;
 					} else {
-						for (HolidayVO vo1 : holidayList) {
-							if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
-								isContained = true;
-								break;
-							} else {
-								isContained = false;
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									isContained = true;
+									break;
+								} else {
+									isContained = false;
+								}
 							}
-						}
-						
-						if (!isContained) {
-							result.add(tempDate);
+							
+							if (!isContained) {
+								result.add(tempDate);
+							}
+						} else {
+							result.add(tempDate);							
 						}
 						
 						break;
@@ -2098,7 +2134,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	            type = "G";
 	        }
 	
-	        if(page.equals(null) || page.equals("")){
+	        if(page == null || page.equals("")){
 	            page = "1";
 	        }
 	        
@@ -2352,12 +2388,22 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     }
     
     @Override
-    public String getIsAttitude(String typeId, String writerId, String startDate, String offset, String companyId, int tenantId) throws Exception {
+    public String getIsAttitude(String typeId, String writerId, String startDate, String offset, String companyId, int tenantId, String isOutCheck) throws Exception {
     	LOGGER.debug("getIsAttitude started");
+    	Map<String,Object> map = new HashMap<String, Object>();
     	
     	if (typeId.equals("A01") || typeId.equals("A02")) {
     		typeId = "A01,A02";
-    	} else if (typeId.equals("A03") || typeId.equals("A08")) {
+    	} 
+    	else if (typeId.equals("A03") && !isOutCheck.equals("true")) {// 퇴근은 여러번 찍을 수 있으므로 조회시 조퇴여부만 확인한다.
+    		typeId = "A08";
+    	}
+    	else if (typeId.equals("A03") && isOutCheck.equals("true")) {// 퇴근은 여러번 찍을 수 있으므로 등록시 퇴근여부만 확인한다.
+    		typeId = "A03";
+    		map.put("typeId", typeId);
+    		map.put("isOutCheck", isOutCheck);
+    	}
+    	else if (typeId.equals("A08")) {
     		typeId = "A03,A08";
     	}
     	
@@ -2365,7 +2411,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			startDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), offset, false);
     	}
     	
-    	Map<String,Object> map = new HashMap<String, Object>();
     	map.put("typeIdArr", typeId.split(","));
     	map.put("writerId", writerId);
     	map.put("offsetMin", commonUtil.getMinuteUTC(offset));

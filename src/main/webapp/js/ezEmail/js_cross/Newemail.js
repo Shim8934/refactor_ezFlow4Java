@@ -209,7 +209,18 @@ function new_mail_onclick(fromE) {
 		pUrl += "&shareId=" + encodeURIComponent(shareId);
 	}
 	
-	var newwin = GetOpenWindow(pUrl, "", 890, 840, "yes");
+	var pheight = window.screen.availHeight;
+    var conHeight = pheight * 0.8;
+    var pwidth = window.screen.availWidth;
+    var conWidth = pwidth * 0.8;
+    if (conWidth > 890)
+        conWidth = 890;
+    var pTop = (pheight - conHeight) / 2;
+    var pLeft = (pwidth - 890) / 2;
+    var feature = "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height = " + conHeight + "px,width = " + conWidth + "px, status = no, toolbar=no, menubar=no,location=no,resizable=1";
+    
+    var newwin = window.open(pUrl, "", feature);
+	
     newwin.focus();
 	
 	/* post 방식        mailWriteSender -> mailList.jsp
@@ -859,10 +870,6 @@ function event_xmlhttp_mailPreview_Complete() {
                     var pReceiver_Name = TrimText(pReceiver_.substring(0, Pos1));
                     var pReceiver_Address = TrimText(pReceiver_.substring(Pos1 + 1, Pos2));
                     
-                    if (pReceiver_Address == "a@a.com") {
-                    	pReceiver_Address = "";
-                    }
-                    
                     if (Cnt == 0) {
                         pReceiverHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pReceiver_Address) + "' onclick='show_personinfo(\"" + pReceiver_Address + "\")'>\"" + pReceiver_Name + "\"</span>";
                         
@@ -922,10 +929,6 @@ function event_xmlhttp_mailPreview_Complete() {
                         var pCc_Name = TrimText(pCc_.substring(0, Pos1));
                         var pCc_Address = TrimText(pCc_.substring(Pos1 + 1, Pos2));
                         
-                        if (pCc_Address == "a@a.com") {
-                        	pCc_Address = "";
-                        }
-                        
                         if (Cnt == 0) {
                             pCcHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pCc_Address) + "' onclick='show_personinfo(\"" + pCc_Address + "\")'>\"" + pCc_Name + "\"</span>";
 
@@ -970,18 +973,16 @@ function event_xmlhttp_mailPreview_Complete() {
                 $("#ifrmPreViewW").height($("#ifrmPreViewW").height()-20);
             }
             
-            ///
-
-            if (pFromemail=="a@a.com") {
-            	pFromemail = "";
-            }
-            
             var pOCS = "";
             if (USE_OCS == "YES") {
                 pOCS = "<img src='/images/presence/unknown.gif' id='" + GetGUID() + "' onload=\"PresenceControl('" + pFromemail + "',this);\" style='vertical-align:middle;padding-right:5px;'/>";
             }
-
-            pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + pFromname + "\"</span>";
+            
+            if(pFromname == ""){
+            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>&nbsp;" + pFromname + "</span>";
+            } else {
+            	pMailSenderHtml = pOCS + "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromemail) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + pFromname + "\"</span>";
+            }
 
             //pMailSenderHtml = "<span onmouseover=this.style.color='#164aad' onmouseout=this.style.color='#666'  style='cursor:pointer' title='" + ConvertStringForHTML(pFromname) + "' onclick='show_personinfo(\"" + pFromemail + "\")'>\"" + ConvertStringForHTML(pFromname) + "\"</span>";
 

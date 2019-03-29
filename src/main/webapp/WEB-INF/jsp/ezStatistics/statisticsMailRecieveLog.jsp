@@ -323,7 +323,7 @@
 				var pageSize = "-1"; // 전체
 				var params = 'searchStartTime=' + searchStartTime +'&searchEndTime=' + searchEndTime;
 				 	params += '&searchField=' + searchField + '&searchValue=' + searchValue ; 
-					params += '&pageNo=' + pageNo + '&mailLogType=' + mailLogType + '&pageSize=' + pageSize + "&companyId=" + companyId;
+					params += '&pageNo=' + pageNo + '&mailLogType=' + mailLogType + '&pageSize=' + pageSize + "&companyId=" + companyIdVal;
 				var pURL = "/ezStatistics/statisticsMailLogExcelExport.do" + "?" + params;
 
 				saveExcel.location.href = pURL;
@@ -423,6 +423,8 @@
     function windowResize() {
     	var height = document.documentElement.clientHeight - 177 - document.getElementById("mainmenu").clientHeight;
     	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+    		height = height - 30;
+    	} else {
     		height = height - 30;
     	}
     	document.getElementById("contentlist").style.height = height + "px";

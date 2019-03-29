@@ -26,15 +26,56 @@
 		    var ReturnFunction;
 		    var RetValue;
 	    	var imageName="";
+	    	var userPhoto = "";
 	    	
 			$(document).ready(function(){
 				try {
 		            RetValue = parent.personpicture_cross_dialogArguments[0];
 		            ReturnFunction = parent.personpicture_cross_dialogArguments[1];
+		            userPhoto = parent.personpicture_cross_dialogArguments[2];
+		            if(userPhoto != ""){
+		            	if(CrossYN()){
+							preview.src = "";
+							preview.style.visibility = "hidden";
+							preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userPhoto;
+							preview.style.visibility = "visible";
+						} else {
+							preview.src = "";
+							preview.style.visibility = "hidden";
+							preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userPhoto;
+							preview.style.visibility = "visible";
+						}
+		            }
+		            else {
+		            	preview.src = "";
+						preview.style.visibility = "hidden";
+						preview.src = "/images/default_pic.jpg";
+						preview.style.visibility = "visible";
+		            }
 		        }catch(e){
 		            try {
 		                RetValue = opener.personpicture_cross_dialogArguments[0];
 		                ReturnFunction = opener.personpicture_cross_dialogArguments[1];
+		                userPhoto = opener.personpicture_cross_dialogArguments[2];
+		                if(userPhoto != ""){
+			            	if(CrossYN()){
+							    preview.src = "";
+								preview.style.visibility = "hidden";
+								preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userPhoto;
+								preview.style.visibility = "visible";
+							} else {
+								preview.src = "";
+								preview.style.visibility = "hidden";
+								preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + userPhoto;
+								preview.style.visibility = "visible";
+							}
+			            }
+		                else {
+			            	preview.src = "";
+							preview.style.visibility = "hidden";
+							preview.src = "/images/default_pic.jpg";
+							preview.style.visibility = "visible";
+			            }
 		            } catch (e) {
 		                RetValue = window.dialogArguments;
 		            }
@@ -122,6 +163,23 @@
 		        	document.getElementById("tempFilePath").value = xhr.responseText;
 		        	document.getElementById("imagefile").value = imageName;
 		        }
+		        
+		        if(CrossYN()){
+				    if (document.form.file1.value != "") {
+				        preview.src = "";
+						preview.style.visibility = "hidden";
+						preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + document.getElementById("tempFilePath").value;
+						preview.style.visibility = "visible";
+					}
+				} else {
+					if(imagefile.value != "")
+					{
+						preview.src = "";
+						preview.style.visibility = "hidden";
+						preview.src = "/admin/ezOrgan/getPersonalInfo.do?fileName=" + document.getElementById("imagefile").value;
+						preview.style.visibility = "visible";
+					}
+				}
 		        //returnvalue(xhr.responseText);
 		    }
 			
@@ -136,16 +194,19 @@
 					var fileName = document.getElementById("imagefile").value;
 				}
 				
-				
+				/* 관리자가 사용자 프로필 이미지 수정후 저장시, temp파일 지우고 cn.jpg형식으로 수정  */
 				$.ajax({
 					type : "POST",
 					dataType : "text",
-					url : "/admin/ezOrgan/saveUserInfo.do",
+					url : "/admin/ezOrgan/saveUserImagebyTemp.do",
 					data : {parentCn : "", cn : RetValue, prop : "", extensionAttribute2 : fileName},
-					success : function(result){
-						if(result != "OK"){
+					success : function(resultMap){
+						var data = JSON.parse(resultMap);
+						var status = data.status;
+						if(status != "OK"){
 							alert("<spring:message code='ezOrgan.t119' />");
 						}else{
+							fileName = data.fileName;
 							if (ReturnFunction != null){
 				                ReturnFunction(fileName);
 							}else{
@@ -205,7 +266,7 @@
 		    		<spring:message code='ezOrgan.t241' /><br/>
 		      		119*128px<spring:message code='ezOrgan.t10000' />
 		      		<br/>
-			  		<a class="imgbtn imgbck" style="margin-top:5px"><span onClick="divImageFile_onclick()"><spring:message code='ezOrgan.t244' /></span></a>
+			  		<%-- <a class="imgbtn imgbck" style="margin-top:5px"><span onClick="divImageFile_onclick()"><spring:message code='ezOrgan.t244' /></span></a> --%>
 			  	</td>
 		  	</tr>
 		</table>

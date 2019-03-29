@@ -1,5 +1,6 @@
 package egovframework.ezEKP.ezSystem.dao;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -91,4 +92,11 @@ public class EzSystemAdminDAO extends EgovAbstractDAO {
 		insert("EzSystemAdminDAO.insertAccessId", map);
 	}
 	
+	public long selectModuleSize(String tableNames, String notTableNames) throws Exception {
+		Map<String, String> paramMap = new HashMap<String, String>();
+		paramMap.put("tableNames", tableNames);
+		paramMap.put("notTableNames", notTableNames);
+		
+		return (long) select("EzSystemAdminDAO.selectModuleSize", paramMap);
+	}
 }

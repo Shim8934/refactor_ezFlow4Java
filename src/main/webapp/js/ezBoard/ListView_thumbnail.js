@@ -557,9 +557,12 @@ function ListView() {
                     objTd.style.textAlign = "CENTER";
                 }
 
-                if (strColName == "TITLE")
+                /* 2018-12-27 홍승비 - 썸네일 게시물리스트 제목의 위치 조정 (가로 축소에 대응) */
+                if (strColName == "TITLE") {
                     objTd.style.width = "80%";
-
+                    objTd.style.paddingLeft = "80px";
+                }
+                
                 var oText = document.createTextNode(strName);
                 objTd.appendChild(oText);
 

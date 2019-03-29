@@ -584,7 +584,7 @@ function SaveApproveInfo(pApproveFlag)
 
 	createNodeAndInsertText(xmlpara, objNode, "SECURITY", tempSecurity);
 	createNodeAndInsertText(xmlpara, objNode, "KEEPPERIOD", tempKeep);
-	createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", tempPublic);
+	createNodeAndInsertText(xmlpara, objNode, "PUBLICATION", pPublicityYN);
 	createNodeAndInsertText(xmlpara, objNode, "PROXYUSERID", pingUserID);
 
 	createNodeAndInsertText(xmlpara, objNode, "ITEMCODE", tempItemCode);
@@ -605,9 +605,9 @@ function SaveApproveInfo(pApproveFlag)
 	var g_SepAttachLVXml = "";
 	g_SepAttachLVXml = GetDocumentElement(HwpCtrl, "SepAttachLVXml", true);
 	if (!g_SepAttachLVXml)
-	    createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", "");
+	    createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", "");
 	else
-	    createNodeAndInsertText(xmlpara, objNode, "SPECIALRECORDCODE", GetSepAttParamXml(g_SepAttachLVXml));
+	    createNodeAndInsertText(xmlpara, objNode, "SEPERATEATTACHXML", GetSepAttParamXml(g_SepAttachLVXml));
 
 
 	createNodeAndInsertText(xmlpara, objNode, "SUMMARY", pSummery);
@@ -621,6 +621,7 @@ function SaveApproveInfo(pApproveFlag)
 	createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", pOrgAprUserName2);
 	createNodeAndInsertText(xmlpara, objNode, "ITEMNAME2", tempItemName2);
 	createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
+	createNodeAndInsertText(xmlpara, objNode, "PUBLICITYYN", pPublicityYN);
 	
 	if (nonElecRec == "Y") {
 		var NonElecXML = createXmlDom();
@@ -1498,6 +1499,7 @@ function UpdateDocHistory(pHtml) {
         createNodeAndInsertText(xmlpara, objNode, "PUSERNAME2", arr_userinfo[12]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERJOBTITLE2", arr_userinfo[14]);
         createNodeAndInsertText(xmlpara, objNode, "PUSERDEPTNAME2", arr_userinfo[16]);
+        createNodeAndInsertText(xmlpara, objNode, "ORGCOMPANYID", orgCompanyID);
         
         xmlhttp.open("POST", "/ezApprovalG/updateDocHistory.do", false);
         xmlhttp.send(xmlpara);
