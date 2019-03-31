@@ -114,9 +114,9 @@
             	    resultStr = resultStr.replace(/<br>/gi, "\n");
             	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
             	    resultStr = resultStr.replace(/<hr>/gi, "\n----------------------------------------------------------------------------------------------------");
+            	    resultStr = resultStr.replace(/<.*?>/gi, "");
             	    resultStr = resultStr.replace(/<.*?".*?".*?>/gi, "");
             	    resultStr = resultStr.replace(/<.*?'.*?'.*?>/gi, "");
-            	    resultStr = resultStr.replace(/<.*?>/gi, "");
             	    resultStr = resultStr.replace(/ +/gi, " ");
             	    resultStr = resultStr.replace(/&nbsp;/gi, " ");
             	    resultStr = resultStr.replace(/&lt;/gi, "<");
