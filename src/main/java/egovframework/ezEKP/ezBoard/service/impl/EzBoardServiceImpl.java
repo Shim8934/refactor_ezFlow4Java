@@ -2152,6 +2152,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 		} catch (Exception e) {
 			logger.error("EzBoard :: deleteOneLineReply");
+			e.printStackTrace();
 			rtnValue = "FAIL";
 		}
 		
@@ -2439,6 +2440,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			try {
 				map.put("v_pFileContent", boardListVO.getImageContent());
 			} catch (Exception e) {
+				e.printStackTrace();
 				map.put("v_pFileContent", "");
 			}
 			map.put("v_pImageName", boardListVO.getImageNames());
@@ -3040,6 +3042,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			resultValue = "OK";
 		} catch (Exception e) {
 			TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+			e.printStackTrace();
 			resultValue = "ERROR";
 		}
 
@@ -3292,6 +3295,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	 */
 	public boolean saveMHT(String strHTML, String strMHTFilename, String strBoardID, String strFilePath, String strType, String realPath) throws Exception {
 		logger.debug("saveMHT started");
+		logger.debug("strHTML length : " + strHTML.length());
 
 		String docPath = "";
 		String mhtFilePath = "";
@@ -3334,6 +3338,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			
 			ret = true;
 		} catch (Exception e) {
+			e.printStackTrace();
 			ret = false;
 		} finally {
 			if(bos != null){
@@ -3716,6 +3721,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	
 	public String insertNewItem(Document doc, String pMode, String realPath, LoginVO userInfo) throws Exception {
 		logger.debug("insertNewItem started");
+		logger.debug("pMode : " + pMode);
 
 		BoardListVO boardListVO = new BoardListVO();
 		

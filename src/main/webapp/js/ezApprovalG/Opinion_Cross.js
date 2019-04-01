@@ -717,7 +717,8 @@ function saveOpinionInfo_Complete(Rtnval) {
             return;
         }
         else {
-            autosaveOpinionXMLInfo();
+            //autosaveOpinionXMLInfo();
+        	btn_OpinionAdd_onclick();
         }
     }
 }

@@ -5975,6 +5975,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				rtnValue = "OK";
 			} catch (Exception e) {
 				logger.error("EzBoard :: deleteImageItem");
+				e.printStackTrace();
 				rtnValue = "ERROR";
 			}
 		} else if (mod.equals("Mod")) {
@@ -7411,6 +7412,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				}
 			} catch (Exception e) {
 				logger.debug("uploadBackImage error");
+				e.printStackTrace();
 			}
 		}
 		
@@ -8189,6 +8191,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				try {
 					zos.close();
 				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		}
