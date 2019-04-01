@@ -96,7 +96,7 @@
 		        if (flag == false) {
 		            flag = true;
 		
-		            if ("<c:out value = '${pass}'/>" != "<RESULT>TRUE</RESULT>") {
+		            if ("${pass}" != "<RESULT>TRUE</RESULT>") {
 		                QuitWindow();
 		            }
 		            else {
