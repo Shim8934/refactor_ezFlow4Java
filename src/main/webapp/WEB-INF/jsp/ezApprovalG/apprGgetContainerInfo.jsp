@@ -70,7 +70,7 @@
 	        arr_userinfo[14] = "<c:out value = '${userInfo.title2}'/>";
 	        arr_userinfo[15] = "<c:out value = '${userInfo.deptName1}'/>";
 	        arr_userinfo[16] = "<c:out value = '${userInfo.deptName2}'/>";
-	        var LoadContID = "<c:out value = '${contID}'/>";
+	        var LoadContID = "${contID}";
 	        var LoadSquery = "<c:out value = '${sQuery}'/>";
 	        var GamSaFlag = false;
 	        var CompanyID = "<c:out value = '${userInfo.companyID}'/>";

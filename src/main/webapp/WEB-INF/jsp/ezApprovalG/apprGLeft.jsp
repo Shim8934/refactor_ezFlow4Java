@@ -134,7 +134,7 @@
 		        if(approvalFlag == "S") {
 		        	Tree_setconfig();
 		            var xmlDom2 = createXmlDom();
-		            xmlDom2 = loadXMLString("<c:out value = '${userCont}'/>");
+		            xmlDom2 = loadXMLString("${userCont}");
 		            var treeView = new TreeView();
 		            treeView.SetID("UserContTree");
 		            treeView.SetUseAgency(true);
