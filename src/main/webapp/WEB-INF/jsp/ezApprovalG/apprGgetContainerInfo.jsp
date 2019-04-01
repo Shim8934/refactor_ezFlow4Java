@@ -71,7 +71,7 @@
 	        arr_userinfo[15] = "<c:out value = '${userInfo.deptName1}'/>";
 	        arr_userinfo[16] = "<c:out value = '${userInfo.deptName2}'/>";
 	        var LoadContID = "${contID}";
-	        var LoadSquery = "<c:out value = '${sQuery}'/>";
+	        var LoadSquery = "${sQuery}";
 	        var GamSaFlag = false;
 	        var CompanyID = "<c:out value = '${userInfo.companyID}'/>";
 	        var USE_OCS = "<c:out value = '${useOcs}'/>";
