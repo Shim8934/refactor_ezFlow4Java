@@ -307,7 +307,7 @@
 		        <p class="volume_graph" id='myProgress'><span id='myBar'></span></p>
 		        <dl class="volumeDL" >
 		        	<dt id="useVol"></dt>
-		            <dd id="usePer"></dd>
+		            <dd id="usePer" style="margin-right:5px;"></dd>
 		        </dl>
 		    </div>		    
 			<h3 style="border-top:0px;">

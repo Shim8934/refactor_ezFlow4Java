@@ -2640,101 +2640,33 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		
 		strStartDateTime = EgovDateUtil.convertDate(strStartDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
 		strEndDateTime = EgovDateUtil.convertDate(strEndDateTime, "yyyy-MM-dd HH:mm", "yyyy-MM-dd HH:mm:ss", "");
-		
-		logger.debug("strStartDateTime : " + strStartDateTime);
-		logger.debug("strEndDateTime : " + strEndDateTime);
-		
+
 		String pOwnerID = strPownerID.equals("") ? null : strPownerID;
 		
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		
-		//2018-09-02 구해안 기간이 상이할때 각 사이에 있는 날짜를 하나씩 다 꺼내와서 비교하기 위해 사이에 있는 예약을 다 가져옴
-		String tmpEndDateTime = strStartDateTime.substring(0, 10) + strEndDateTime.substring(10);
-		logger.debug("tmpEndDateTime : " + tmpEndDateTime);
-		
-		Date d1 = format.parse( strStartDateTime );
-		Date d2 = format.parse( strEndDateTime );
-		Date de1 = format.parse( tmpEndDateTime );
-
-		Calendar c1 = Calendar.getInstance();
-		Calendar c2 = Calendar.getInstance();
-		Calendar ce1 = Calendar.getInstance();
-		
-		//Calendar 타입으로 변경 add()메소드로 1일씩 추가해 주기위해 변경
-		c1.setTime( d1 );
-		c2.setTime( d2 );
-		ce1.setTime( de1 );
-
-		//시작날짜와 끝 날짜를 비교해, 시작날짜가 작거나 같은 경우 출력
 		List<Date[]> dateList = new ArrayList<Date[]>();
-		while( c1.compareTo( c2 ) !=1 ){
-
-		//담기
 		dateList.add(new Date[] {
-				d1,
-				de1
+				format.parse(strStartDateTime),
+				format.parse(strEndDateTime)
 		});
-
-		//시작날짜 + 1 일
-		c1.add(Calendar.DATE, 1);
-		d1 = c1.getTime();
-		ce1.add(Calendar.DATE, 1);
-		de1 = ce1.getTime();
-		}
-		
 		
 		boolean isDup = false;
 		
 		//자원의 일반예약 스케줄을 가져옴 TODO: sDate,eDate 수정해야함. -> dateList 정렬후 처음과 끝
 		List<ResDateVO> scheduleDateList = getScheduleDateList(pOwnerID, strPnum, companyID, strEndDateTime, strStartDateTime, offset, tenantID);
 		List<Date[]> dateList2 = new ArrayList<Date[]>();
-		String tmpEndDateTime2 = "";
 		for (ResDateVO dateVO : scheduleDateList) {
-			
-			Date getD1 = format.parse( commonUtil.getDateStringInUTC(dateVO.getStartDate(), offset, false) );
-			Date getD2 = format.parse( commonUtil.getDateStringInUTC(dateVO.getEndDate(), offset, false) );
-			tmpEndDateTime2 = format.format(getD1.getTime()).substring(0, 10) + format.format(getD2.getTime()).substring(10);
-//			tmpEndDateTime2 = dateVO.getStartDate().substring(0, 10) + dateVO.getEndDate().substring(10);
-			logger.debug("tmpEndDateTime2 : " + tmpEndDateTime2);
-//			Date getDe1 = format.parse( commonUtil.getDateStringInUTC(tmpEndDateTime2, offset, false) );
-			Date getDe1 = format.parse(tmpEndDateTime2);
-
-			Calendar getC1 = Calendar.getInstance();
-			Calendar getC2 = Calendar.getInstance();
-			Calendar getCe1 = Calendar.getInstance();
-			
-			//Calendar 타입으로 변경 add()메소드로 1일씩 추가해 주기위해 변경
-			getC1.setTime( getD1 );
-			getC2.setTime( getD2 );
-			getCe1.setTime( getDe1 );
-
-			//시작날짜와 끝 날짜를 비교해, 시작날짜가 작거나 같은 경우 출력
-			while( getC1.compareTo( getC2 ) !=1 ){
-
-			//담기
 			dateList2.add(new Date[] {
-					getD1,
-					getDe1
+					format.parse(commonUtil.getDateStringInUTC(dateVO.getStartDate(), offset, false)),
+					format.parse(commonUtil.getDateStringInUTC(dateVO.getEndDate(), offset, false))
 			});
-//			dateList2.add(new Date[] {
-//					format.parse(commonUtil.getDateStringInUTC(dateVO.getStartDate(), offset, false)),
-//					format.parse(commonUtil.getDateStringInUTC(dateVO.getEndDate(), offset, false))
-//			});
-
-			//시작날짜 + 1 일
-			getC1.add(Calendar.DATE, 1);
-			getD1 = getC1.getTime();
-			getCe1.add(Calendar.DATE, 1);
-			getDe1 = getCe1.getTime();
-			}
 		}
-		logger.debug("일반예약의 dateList2.size() : " + dateList2.size());
 		
 		if (dateList2.size() != 0) {
 			isDup = chkTableRepeat(dateList, dateList2, null, offset);
 			
 			if (isDup) {
-				logger.debug("===예약된 자원이 일반예약일때===");
 				logger.debug("getRepResource End. isDup=" + isDup);
 				return isDup;
 			}
