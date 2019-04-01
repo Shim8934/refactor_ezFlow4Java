@@ -32,7 +32,7 @@
 		    var pDeptID = "<c:out value ='${deptID}'/>";
 		    var pDocState = "<c:out value ='${docState}'/>";
 		    var pAprState = "<c:out value ='${aprState}'/>";
-		    var ChildDocInfo = "<c:out value ='${childDocInfo}'/>";
+		    var ChildDocInfo = "${childDocInfo}";
 		    var xmlhttp = createXMLHttpRequest();	
 		    var FLAG;
 		    var pDocInfoValue = "1";
