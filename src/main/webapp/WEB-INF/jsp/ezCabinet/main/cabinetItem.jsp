@@ -152,7 +152,10 @@
 				<div id="preContentH" class="cabMainPrevH">
 					<div>
 						<div class="prevHeaderCabH" id="previewHeaderH">
-							<span class="notSelected"><spring:message code='ezCabinet.t141'/></span>
+							<dl class="notSelected">
+								<dt><img src="/images/kr/main/noData_sIcon.png"></dt>
+								<dd><spring:message code='ezCabinet.t141'/></dd>
+							</dl>
 						</div>
 					</div>
 				</div>
@@ -162,7 +165,10 @@
 				<div id="preContentW" class="cabMainPrevW">
 					<div>
 						<div class="prevHeaderCabW" id="previewHeaderW">
-							<span class="notSelected"><spring:message code='ezCabinet.t141'/></span>
+							<dl class="notSelected">
+								<dt><img src="/images/kr/main/noData_sIcon.png"></dt>
+								<dd><spring:message code='ezCabinet.t141'/></dd>
+							</dl>
 						</div>
 					</div>
 				</div>

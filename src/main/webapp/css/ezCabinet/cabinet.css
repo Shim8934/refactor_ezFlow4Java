@@ -97,6 +97,9 @@
 .cabPrevItem .ddRes {padding: 0px 0px 2px 70px !important;}
 .zoomDiv {text-align: left; padding: 5px; margin: 0px; line-height: 0px;}
 .zoomDiv >img {cursor: pointer;}
+.notSelected {margin: 0px; padding: 0px; text-align: center; margin-top: 70px;}
+.notSelected dt {margin: 0px; padding: 20px 0px 20px 0px;}
+.notSelected dd {margin: 0px; padding: 0px; font-size: 13px; color: #c0c0c0; font-weight: bold; font-family: malgun gothic;}
 
 .txtSpan {cursor: pointer;}
 .txtSpan:hover {color: #164aad !important; text-decoration: none !important;}

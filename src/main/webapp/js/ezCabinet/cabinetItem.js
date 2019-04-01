@@ -342,7 +342,7 @@ var CabinetItem = function() {
 			parentElmt.removeChild(parentElmt.lastElementChild);
 		}
 		
-		prevHElmt.innerHTML = "<span class='notSelected'>" + CabinetMessages.strSelect4 + "</span>";
+		prevHElmt.innerHTML = "<dl class='notSelected'><dt><img src='/images/kr/main/noData_sIcon.png'></dt><dd>" + CabinetMessages.strSelect4 + "</dd></dl>";
 	}
 	/* Search Panel end*/
 	
@@ -782,13 +782,13 @@ var CabinetItem = function() {
 	}
 	
 	function afterGetItemInfo(data) {
-		var itemInfo    = data.fileDetail;
-		var itemType    = itemInfo["itemType"];
-		var divPrevId   = crrPreMode == "w" ? "previewHeaderW" : "previewHeaderH";
-		var divElmt     = document.getElementById(divPrevId);
-		var noDataSpan  = divElmt.querySelector("span[class='notSelected']");
+		var itemInfo  = data.fileDetail;
+		var itemType  = itemInfo["itemType"];
+		var divPrevId = crrPreMode == "w" ? "previewHeaderW" : "previewHeaderH";
+		var divElmt   = document.getElementById(divPrevId);
+		var noDataDl  = divElmt.querySelector("dl[class='notSelected']");
 		
-		if (noDataSpan) {divElmt.removeChild(noDataSpan); generatePreviewElmt(divElmt);}
+		if (noDataDl) {divElmt.removeChild(noDataDl); generatePreviewElmt(divElmt);}
 		
 		var spanIcon    = divElmt.querySelector("span[class='cabPrevIcon']");
 		var spanSubject = divElmt.querySelector("span[class='cabTitleTxt']");
