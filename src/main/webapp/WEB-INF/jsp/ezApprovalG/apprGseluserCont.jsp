@@ -38,7 +38,7 @@
 
                 Tree_setconfig();
                 var xmlDom = createXmlDom();
-                xmlDom = loadXMLString("<c:out value='${userCont}'/>");
+                xmlDom = loadXMLString('${userCont}');
 
                 var treeView = new TreeView();
                 treeView.SetID("UserContTree");
