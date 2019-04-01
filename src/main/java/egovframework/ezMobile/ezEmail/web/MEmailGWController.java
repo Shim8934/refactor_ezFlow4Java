@@ -107,6 +107,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -328,6 +329,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					mailFolderList.add(folder);
 				}
 
+				
+				MOptionVO opt = mOptionService.optionInfo(shareId, info.getTenantId());
+				if(opt == null) {
+					LOGGER.debug("shareID insertOption start");
+					mOptionService.insertOption(shareId, info.getOffSet(), info.getLang(), "D", "10", "N", info.getTenantId());
+					opt = mOptionService.optionInfo(shareId, info.getTenantId());
+
+					LOGGER.debug("opt: " + opt.toString());
+				}
+				
 				shareMailInfo.put("mailFolderList", mailFolderList);
 				shareMailInfo.put("shareId", shareId);
 				shareMailInfo.put("deletePermission", deletePermission);
@@ -803,6 +814,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", info.getTenantId());
 			String mUseMailAddrAutoComplete = ezCommonService.getTenantConfig("mobileUseMailAddrAutoComplete", info.getTenantId());
 			String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", info.getTenantId());
+			if (attachFileNameMaxLength.equals("")) {
+				attachFileNameMaxLength = "100"; // default
+			}
 			OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, info.getPrimary(), info.getTenantId());
 			
 			String userEmail = info.getUserId() + "@" + domainName;
@@ -3011,7 +3025,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			} else {
 				f.open(Folder.READ_WRITE);
 				
-				LOGGER.error("folderId = " + folderId + ", uid = " + uid);
+				LOGGER.debug("folderId = " + folderId + ", uid = " + uid);
 				
 				Message message = null;
 				
@@ -4766,60 +4780,74 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				+ ",filterValue=" + filterValue + ",start=" + start + ",count=" + count + ",folderID=" + folderID);
 		
         String returnValue = "";
-       
+        String pFilter = "";
+        List<AddressVO> addressInfoList = null;
+        
         try {
-        	/* 
-        	 * service.getSearchList 사용
-        	String[] ownerIds = null;
-        	List<String> ownerIdList = new ArrayList<>();
-        	
-        	if (searchTarget.equalsIgnoreCase("all")) {
-                ownerIds = new String[]{userInfo.getCompanyId(), userInfo.getDeptId(), userInfo.getUserId()};        		
-        	} else {
-	        	if (searchTarget.contains("company")) {
-	        		ownerIdList.add(userInfo.getCompanyId());
-	        	}
-	        	
-	        	if (searchTarget.contains("department")) {
-	        		ownerIdList.add(userInfo.getDeptId());
-	        	}
-	        	
-	        	if (searchTarget.contains("personal")) {
-	        		ownerIdList.add(userInfo.getUserId());
-	        	}
-	        	
-	        	ownerIds = ownerIdList.toArray(new String[0]);
+        	// 메일쓰기 > 받는사람 > 주소록 검색 시 사용
+        	if (searchTarget.equals("all")) {
+            	String[] ownerIds = null;
+            	List<String> ownerIdList = new ArrayList<>();
+            	
+            	if (searchTarget.equalsIgnoreCase("all")) {
+                    ownerIds = new String[]{userInfo.getCompanyId(), userInfo.getDeptId(), userInfo.getUserId()};        		
+            	} else {
+    	        	if (searchTarget.contains("company")) {
+    	        		ownerIdList.add(userInfo.getCompanyId());
+    	        	}
+    	        	
+    	        	if (searchTarget.contains("department")) {
+    	        		ownerIdList.add(userInfo.getDeptId());
+    	        	}
+    	        	
+    	        	if (searchTarget.contains("personal")) {
+    	        		ownerIdList.add(userInfo.getUserId());
+    	        	}
+    	        	
+    	        	ownerIds = ownerIdList.toArray(new String[0]);
+            	}
+                
+            	for (String ownerId : ownerIds) {
+            		LOGGER.debug("getAddressSearch ownerId=" + ownerId);
+            	}
+            	
+            	pFilter = filterName + "," + filterValue;
+            	
+            	searchCount[0] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, filterName + ",");
+                searchCount[1] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, pFilter);   
+            	
+            	// start와 end(getAddressSearch를 호출 하는 곳에서 +1을 해주어 count값은 1로 넘어온다)값이 각각 0으로 넘어오는 경우 전체리스트를 출력하기 위해 count에 searchCount 대입 
+                if(start == 0 && count == 1){
+                	count = searchCount[1];
+                }
+                // 끝
+                
+                addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, count, start);
+        	} else { // 폴더 id가 필요한 주소록에서 사용
+            	String ownerId = "";
+            	
+            	if (searchTarget.contains("company")) {
+            		ownerId = userInfo.getCompanyId();
+            	} else if (searchTarget.contains("department")) {
+            		ownerId = userInfo.getDeptId();
+            	} else if (searchTarget.contains("personal")) {
+            		ownerId = userInfo.getUserId();
+            	}
+            	
+            	pFilter = filterName + "," + filterValue;
+            	
+            	searchCount[0] = ezAddressService.getAddressCount(userInfo.getTenantId(), folderID, ownerId, pFilter);
+                searchCount[1] = ezAddressService.getAddressCount(userInfo.getTenantId(), folderID, ownerId, pFilter);
+        		
+                
+                // start와 end(getAddressSearch를 호출 하는 곳에서 +1을 해주어 count값은 1로 넘어온다)값이 각각 0으로 넘어오는 경우 전체리스트를 출력하기 위해 count에 searchCount 대입 
+                if(start == 0 && count == 1){
+                	count = searchCount[1];
+                }
+                // 끝
+                
+                addressInfoList = ezAddressService.getAddressList(userInfo.getTenantId(), folderID, ownerId, "", pFilter, count, start);
         	}
-            
-        	for (String ownerId : ownerIds) {
-        		LOGGER.debug("getAddressSearch ownerId=" + ownerId);
-        	}*/
-        	
-        	String ownerId = "";
-        	
-        	if (searchTarget.contains("company")) {
-        		ownerId = userInfo.getCompanyId();
-        	} else if (searchTarget.contains("department")) {
-        		ownerId = userInfo.getDeptId();
-        	} else if (searchTarget.contains("personal")) {
-        		ownerId = userInfo.getUserId();
-        	}
-        	
-            String pFilter = filterName + "," + filterValue;
-                        
-            //searchCount[0] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, filterName + ",");
-            //searchCount[1] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, pFilter);    
-            searchCount[0] = ezAddressService.getAddressCount(userInfo.getTenantId(), folderID, ownerId, pFilter);
-            searchCount[1] = ezAddressService.getAddressCount(userInfo.getTenantId(), folderID, ownerId, pFilter);
-            
-            // start와 end(getAddressSearch를 호출 하는 곳에서 +1을 해주어 count값은 1로 넘어온다)값이 각각 0으로 넘어오는 경우 전체리스트를 출력하기 위해 count에 searchCount 대입 
-            if(start == 0 && count == 1){
-            	count = searchCount[1];
-            }
-            // 끝
-            
-            //List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, count, start);
-            List<AddressVO> addressInfoList = ezAddressService.getAddressList(userInfo.getTenantId(), folderID, ownerId, "", pFilter, count, start);
 
             StringBuilder sb = new StringBuilder();
             sb.append("<LISTVIEWDATA><ROWS>");

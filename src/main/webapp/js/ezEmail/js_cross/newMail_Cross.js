@@ -2117,10 +2117,6 @@ function GetBoardItemInfo_New(pBoardID, pItemID, pRetransType, pFont) {
 
         if (Sender.indexOf("(,,)") > -1) Sender = Sender.split("(")[0];
 
-        htmlData = ReplaceText(htmlData, "<P ", "<DIV ");
-        htmlData = ReplaceText(htmlData, "/P>", "/DIV>");
-        htmlData = ReplaceText(htmlData, "<P>", "<DIV>");
-        htmlData = ReplaceText(htmlData, "</P>", "</DIV>");
         htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
         if (pRetransType != "boardAttach") {
             document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" +
@@ -2223,10 +2219,6 @@ function GetBoardItemInfo_New3(pBoardID, pItemID, pFont) {
 
         if (Sender.indexOf("(,,)") > -1) Sender = Sender.split("(")[0];
 
-        htmlData = ReplaceText(htmlData, "<P ", "<DIV ");
-        htmlData = ReplaceText(htmlData, "/P>", "/DIV>");
-        htmlData = ReplaceText(htmlData, "<P>", "<DIV>");
-        htmlData = ReplaceText(htmlData, "</P>", "</DIV>");
         htmlData = ReplaceText(htmlData, "<TD class=FIELD", "<TD");
         document.getElementById("bodyValue").innerHTML = "<DIV style='LINE-HEIGHT: 15pt' ><br /><br /><DIV id='MailSign'></div><br /></DIV>" +
         	"<br><br><hr></hr><DIV style='font-family:"+ pFont + "'><B>" + strLang118 + "</B>" + PostDate + "<br><B>" + strLang119 + "</B>" + Sender +
@@ -3134,6 +3126,9 @@ function NameChange_onClick_Complete(rgParams) {
         changedReceiverList.removeChild(checkname_cross_dialogArguments[3].parentElement);
     } else if (rgParams["recipientTDData"] == "change") {
         length = rgParams["returnedRecipientName"].length;
+        
+        if (length == 0) {return; }
+        
         for (count1 = 0; count1 < length; count1++) {
         	if (!increaseReceiverCount(rgParams["returnedRecipientType"][count1], rgParams["returnedRecipientHref"][count1])) {
         		return;
@@ -3143,7 +3138,8 @@ function NameChange_onClick_Complete(rgParams) {
                 rgParams["returnedRecipientEmail"][count1], rgParams["returnedRecipientHref"][count1]);
             checkname_cross_dialogArguments[3].parentElement.insertAdjacentElement("afterEnd", newElem);
         }
-        return;
+
+        changedReceiverList.removeChild(checkname_cross_dialogArguments[3].parentElement);
     }
 }
 function GetAddrFormat(receiveCol) {

@@ -529,7 +529,7 @@
 					<c:forEach var="list"  items="${resBrdList}" begin="${start}" varStatus="value">
 	  					<tr>
 	    					<td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></td>
-							<td onClick="Item_View('${list.brdID}');"	style="cursor: pointer; word-wrap:break-word;" align="left">
+							<td ondblclick="Item_View('${list.brdID}');"	style="cursor: pointer; word-wrap:break-word;" align="left">
 								<c:if test="${list.approveFlag eq 0}">
 									<img src="../images/OrganTree_cross/ic-Item.gif">
 								</c:if>

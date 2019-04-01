@@ -1592,6 +1592,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		int unread = 0;
 		int importance = 1;
 		IMAPAccess ia = null;
+		Boolean emptyFlag = false;
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -1600,6 +1601,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (f == null || !f.exists()) {
 				logger.error("Folder not found. folderPath=" + folderPath);
+				emptyFlag = true;
 			} else {
 				f.open(Folder.READ_WRITE);
 				Message message = null;
@@ -1610,6 +1612,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 				if (message == null) {
 					logger.error("Message not found. uid=" + uid);
+					emptyFlag = true;
 				} else {
 					FetchProfile fp = new FetchProfile();
 					
@@ -1845,6 +1848,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
+		if(emptyFlag) {
+			dateStr = "";
+			fromStr = "";
+			fromEmail = "";
+			toStr = "";
+			ccStr = "";
+			bccStr = "";
+			subject = "";
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
 		sb.append("<UNREAD><![CDATA[" + unread + "]]></UNREAD>");
@@ -1951,6 +1964,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     	
     			if (f == null || !f.exists()) {
     				logger.error("Folder not found. folderPath=" + folderPath);
+    				model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+					return "ezCommon/error";
     			} else {
     				f.open(Folder.READ_ONLY);
     				Message message = null;
@@ -1960,6 +1977,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     				
     				if (message == null) {
     					logger.error("Message not found. uid=" + uid);
+    					model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+    					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+    					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+    					return "ezCommon/error";
     				} else {
     					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
     					double size = Double.parseDouble(bodyInfoList.get(2));

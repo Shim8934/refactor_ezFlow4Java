@@ -361,6 +361,16 @@
 		    }
 		    var ezreceivedistributeui_cross_dialogArguments = new Array();
 		    function btnDistribute_onclick() {
+		    	var deptCheckFlag = checkDeptAndCabinetId();
+		    	
+		    	if (deptCheckFlag == "3") {
+		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		return;
+		    	} else if (deptCheckFlag == "4") {
+		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		return;
+		    	}
+		    	
 		        var parameter = new Array();
 		        parameter[0] = pDocID;
 		        parameter[1] = pSusinSN;
@@ -385,6 +395,16 @@
 		    }
 		    var ezreceiveassignui_cross_dialogArguments = new Array();
 		    function btnAssign_onclick() {
+		    	var deptCheckFlag = checkDeptAndCabinetId();
+		    	
+		    	if (deptCheckFlag == "3") {
+		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		return;
+		    	} else if (deptCheckFlag == "4") {
+		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		return;
+		    	}
+		    	
 		        var parameter = new Array();
 		        parameter[0] = pDocID;
 		        parameter[1] = pSusinSN;
@@ -411,6 +431,16 @@
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    function btnCabinet_onclick() {
+		    	var deptCheckFlag = checkDeptAndCabinetId();
+		    	
+		    	if (deptCheckFlag == "3") {
+		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		return;
+		    	} else if (deptCheckFlag == "4") {
+		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		return;
+		    	}
+		    	
 		        var para = new Array();
 		        para[0] = cabinetID;
 		        var url = "/ezApprovalG/selectCabinet.do?initFlag=1";
@@ -1222,6 +1252,24 @@
 					return false;
 				}
 			}
+		    
+	    	function checkDeptAndCabinetId() {
+	    		var result;
+            	$.ajax({
+            		type : "POST",
+            		dataType : "text",
+            		async : false,
+            		url : "/ezApprovalG/checkDeptAndCabinetId.do",
+            		data : {
+            				orgDeptId : arr_userinfo[4],
+            				orgCabinetId : cabinetID
+            				},
+            		success : function(text){
+            			result = text;
+            		}
+            	});
+            	return result;
+	    	}
 		</script>
 	</head>
 	<body class="popup" style="height:100%">

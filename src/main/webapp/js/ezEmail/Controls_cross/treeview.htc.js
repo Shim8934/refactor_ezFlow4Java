@@ -147,7 +147,7 @@
     this.onnodeselect = function () { };
 
     this.select = ex_select;
-    function ex_select(nodeIdx) {
+    function ex_select(nodeIdx, event) {
         if (nodeIdx > g_nodeCount || nodeIdx < 1)
             return;
 
@@ -159,7 +159,7 @@
         g_selectedIdx = nodeIdx;
         g_selectedNode = document.getElementById(g_nodeid + nodeIdx);
 
-        window[thisid].onnodeselect();
+        window[thisid].onnodeselect(event);
     }
 
     this.putcaption = ex_putcaption;
@@ -454,15 +454,15 @@
             if (elementid.indexOf(g_toggleid) == 0)
                 this.toggle(elementid.split(g_toggleid)[1]);
             else if (elementid.indexOf(g_nodeid) == 0)
-                this.select(elementid.split(g_nodeid)[1]);
+                this.select(elementid.split(g_nodeid)[1], event);
         }).call(this, event) :
-        (function () {
+        (function (event) {
             var elementid = window.event.srcElement.id;
             if (elementid.indexOf(g_toggleid) == 0)
                 this.toggle(elementid.split(g_toggleid)[1]);
             else if (elementid.indexOf(g_nodeid) == 0)
-                this.select(elementid.split(g_nodeid)[1]);
-        }).call(this);
+                this.select(elementid.split(g_nodeid)[1], event);
+        }).call(this, event);
     }
 
     function event_ondblclick(event) {
