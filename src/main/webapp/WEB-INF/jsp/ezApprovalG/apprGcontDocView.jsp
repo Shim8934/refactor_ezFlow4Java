@@ -114,7 +114,7 @@
 		                document.getElementById("btnWhoKyul").style.display = "none";
 		            }
 		            
-		            if ("<c:out value ='${pass}'/>" != "<RESULT>TRUE</RESULT>" && admin != 'Y') {
+		            if ("${pass}" != "<RESULT>TRUE</RESULT>" && admin != 'Y') {
 	                	QuitWindow();
 		            }
 		            else {
