@@ -593,4 +593,26 @@
 		AND 
 			COLNAME = 'FunctionTypeName'
 	</update>
+	
+	<select id="EzCommonDAO.checkMsgInMailSearch" resultClass="int" >
+		select 
+			count(*) 
+		from (
+			select 
+				column_name
+			from 
+				ALL_TAB_COLUMNS
+			where
+				COLUMN_NAME LIKE 'MESSAGE_ID' 
+			AND 
+				TABLE_NAME = 'JAMES_MAIL_SEARCH')
+	</select>
+	
+	<update id="EzCommonDAO.updateMsgInMailSearch">
+		ALTER TABLE 
+			JAMES_MAIL_SEARCH
+		ADD 
+			MESSAGE_ID VARCHAR(200)
+	</update>
+
 </sqlMap>

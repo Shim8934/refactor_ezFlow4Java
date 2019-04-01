@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezEmail.service.impl;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.security.PrivateKey;
@@ -2954,5 +2955,29 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 		logger.debug("updateDistributionList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		return reasonCode;
+	}
+	
+	@Override
+	public JSONObject recallMailByMessageId(String address, String messageId) {
+		logger.debug("recallMailByMessageId started. address=" + address + ", messageId=" + messageId);
+		JSONObject object = new JSONObject();
+		try {
+			String inputParams = "targetAddress=" + URLEncoder.encode(address, "UTF-8");
+			inputParams += "&" + "messageId=" + URLEncoder.encode(messageId, "UTF-8");
+			logger.debug("inputParams=" + inputParams);
+			
+			String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzHrMaster/recallMailByMessageId", inputParams);
+			logger.debug("strJson=" + strJson);
+			
+			JSONParser parser = new JSONParser();
+			object = (JSONObject)parser.parse(strJson);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+        
+        logger.debug("recallMailByMessageId ended.");
+        return object;
 	}
 }
