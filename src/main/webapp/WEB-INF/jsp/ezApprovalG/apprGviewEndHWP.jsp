@@ -31,7 +31,7 @@
 	        var NextOpinionFlag = true;
 	        var doctitle = "";
 	        var pOrgAttach = "";
-	        var pendDir = "${endDir}<c:out value='${docTitle}'/>";
+	        var pendDir = "<c:out value='${endDir}'/>";
 			var xmlhttp = createXMLHttpRequest();
 			var arr_userinfo = new Array();
 			arr_userinfo[0] = "user";
@@ -104,7 +104,7 @@
 	            HwpCtrl.ezSetRegisterModule("HwpCtrlPathCheckModule");
 	            HwpCtrl.SetSaveMode(1);
 				
-	            if ("<c:out value='${pass}'/>" != "<RESULT>TRUE</RESULT>") {
+	            if ("${pass}" != "<RESULT>TRUE</RESULT>") {
 	                QuitWindow();
 	            } else if (docHref != "") {
 	                showProgress("<spring:message code='ezApprovalG.t368'/>");
