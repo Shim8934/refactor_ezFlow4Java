@@ -107,6 +107,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -328,6 +329,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					mailFolderList.add(folder);
 				}
 
+				
+				MOptionVO opt = mOptionService.optionInfo(shareId, info.getTenantId());
+				if(opt == null) {
+					LOGGER.debug("shareID insertOption start");
+					mOptionService.insertOption(shareId, info.getOffSet(), info.getLang(), "D", "10", "N", info.getTenantId());
+					opt = mOptionService.optionInfo(shareId, info.getTenantId());
+
+					LOGGER.debug("opt: " + opt.toString());
+				}
+				
 				shareMailInfo.put("mailFolderList", mailFolderList);
 				shareMailInfo.put("shareId", shareId);
 				shareMailInfo.put("deletePermission", deletePermission);
@@ -3014,7 +3025,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			} else {
 				f.open(Folder.READ_WRITE);
 				
-				LOGGER.error("folderId = " + folderId + ", uid = " + uid);
+				LOGGER.debug("folderId = " + folderId + ", uid = " + uid);
 				
 				Message message = null;
 				

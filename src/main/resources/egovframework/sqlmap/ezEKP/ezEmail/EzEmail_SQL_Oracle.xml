@@ -218,7 +218,6 @@
 			ON a.MAILBOX_ID = b.MAILBOX_ID
 			AND a.MAIL_UID = b.MAIL_UID 
 			WHERE b.MAILBOX_ID IS NULL
-			ORDER BY MAIL_BLOB_ID
        	]]>
 	</select>
 	

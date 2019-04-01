@@ -297,7 +297,7 @@
 	        function selectnode(event) {
 	        	if (!event) event = window.event;
 				/* 2018-08-06 장진혁 스크립트 오류로 undefined 걸름 */
-	        	if (event != undefined) {
+	        	if (typeof(event) !== "undefined") {
 		        	if (event.which != 3) {
 					    var nodeIdx = window[treeviewStr].selectedIndex();
 					    var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "href"));
@@ -713,7 +713,8 @@
 			}	
 		    
  			function event_folderMenu(event){
-		    	
+ 				event.preventDefault();
+ 				
 		    	if (!event) event = window.event;
 		        var EventMouseX = event.clientX;
 		        var EventMouseY = event.clientY;
@@ -1194,8 +1195,11 @@
 	        
 	        <c:if test="${useSharedMailbox == 'YES'}">
 		        <c:forEach items="${shareInfoList}" var="shareInfo">
-		        	<h2><span onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');" 
-		        			style="width:85%; display:inline-block; overflow:hidden; text-overflow:ellipsis; display:inline-block; white-space:nowrap;" title="${shareInfo.shareName}"><c:out value="${shareInfo.shareName}" /></span></h2>
+		        	<h2>
+		        		<span onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');" 
+		        			style="width:85%; display:inline-block; overflow:hidden; text-overflow:ellipsis; display:inline-block; white-space:nowrap;" title="${shareInfo.shareName}"><c:out value="${shareInfo.shareName}" /></span>
+		        		<span class="arrowSpan" style="width:27px;height:33px;display:inline-block;" onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');"></span>
+		        	</h2>
 		        	<ul>
 		            	<div id="shareTreeView_${shareInfo.shareId}" class="tree" value="${shareInfo.shareId}" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 		        	</ul>
@@ -1220,7 +1224,7 @@
 		        <p class="volume_graph" id='myProgress'><span id='myBar'></span></p>
 		        <dl class="volumeDL" >
 		        	<dt id="useVol"></dt>
-		            <dd id="usePer"></dd>
+		            <dd id="usePer" style="margin-right:5px;"></dd>
 		        </dl>
 		    </div>
 		    <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
