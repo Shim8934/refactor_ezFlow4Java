@@ -60,7 +60,7 @@
 		    var ContainerID;
 		    var PageSize   = 10;
 		    var szRoleInfo = "<c:out value = '${szRoleInfo}'/>";
-		    var Containers = "<c:out value = '${containers}'/>";
+		    var Containers = "${containers}";
 		    var DocList_Flag="";
 		    var DocDeptYN;
 		    var DeptID = "<c:out value = '${userInfo.deptID}'/>";
