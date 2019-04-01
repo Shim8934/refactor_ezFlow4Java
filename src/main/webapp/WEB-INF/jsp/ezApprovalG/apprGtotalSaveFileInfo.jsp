@@ -19,7 +19,7 @@
 	        var ReturnFunction;
 	        window.onload = function ()
 	        {
-	        	if ("<c:out value='${pass}'/>" != "<RESULT>TRUE</RESULT>") {
+	        	if ("${pass}" != "<RESULT>TRUE</RESULT>") {
 		    		QuitWindow();
 			    }
 	        	
