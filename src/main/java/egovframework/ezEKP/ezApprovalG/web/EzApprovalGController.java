@@ -67,8 +67,10 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGLeftVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGSecondApprVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGTaskVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -97,6 +99,9 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	@Resource(name = "crypto") 
     private EgovFileScrty egovFileScrty;
@@ -4415,14 +4420,52 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			File sourceDir = new File(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID));
 			
 			if (sourceDir.exists()) {
+				//2019.03.26 천성준 - 폴더경로 하위에 파일이 존재하면 File삭제 함수가 안돌아서 해당경로에 파일먼저 삭제 후 폴더삭제하도록 로직추가
+				for (File sDirFile : sourceDir.listFiles()) {
+					sDirFile.delete();
+				}
 				sourceDir.delete();
+			}
+			
+			//2019.04.01 천성준 - 첨부파일 이름 중복검사 & 파일이름수정 로직추가
+			ArrayList<String> tmpAry = new ArrayList<>();
+			for (int j = 0; j < fileNames.length; j++) {
+				if (!tmpAry.contains(fileNames[j])) {
+					tmpAry.add(fileNames[j]);
+				} else {
+					int idx = 1;
+					String tmpStr = "";
+					String tmpExt = "";
+					
+					if (fileTypes[j].equals("ATT")) {
+						tmpStr = fileNames[j].substring(0, fileNames[j].lastIndexOf("."));
+						tmpExt = fileNames[j].substring(fileNames[j].lastIndexOf("."));
+					} else {
+						tmpStr = fileNames[j];
+					}
+					
+					while(true) {
+						if (!tmpAry.contains(tmpStr + "(" + idx + ")" + tmpExt)) {
+							tmpAry.add(tmpStr + "(" + idx + ")" + tmpExt);
+							break;
+						} else {
+							idx++;
+						}
+						
+						if (idx > 100) {break;}
+					}
+				}
+			}
+			
+			//2019.04.01 천성준 - 기존에 있던 replace로직 통합 겸 중복검사한 첨부파일이름 재입력
+			for (int i = 0; i < tmpAry.size(); i++) {
+				fileNames[i] = tmpAry.get(i).replace("\\", "").replace("/", "").replace(":", "").replace("?", "").replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
 			}
 			
 			for (int k = 0; k < filePaths.length; k++) {
 				String sourcePath = realPath + filePaths[k];
 				String targetPath = "";
-				String fileName = fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
-		                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
+				String fileName = fileNames[k];
 				
 				if (fileTypes[k].equals("ATT")) {
 					targetPath = commonUtil.getUploadPath("upload_common.DOCDOWNLOAD", userInfo.getTenantId()) + commonUtil.separator + docID + commonUtil.separator + fileName;
@@ -4474,8 +4517,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			zout = new ZipOutputStream(new FileOutputStream(new File(commonUtil.detectPathTraversal(realPath + zipFilePath))));
 			
 			for (int k = 0; k < filePaths.length; k++) {
-				String fileName = fileNames[k].replace("\\", "").replace("/", "").replace(":", "").replace("?", "").
-		                replace('"' + "", "").replace("*", "").replace("<", "").replace(">", "").replace("|", "");
+				String fileName = fileNames[k];
 	
 				// 2018.06.20 - 전자결재 KLIB 암/복호화
 				String fileExt = filePaths[k].substring(filePaths[k].lastIndexOf(".") + 1);
@@ -4980,7 +5022,8 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	//잘못만들었지만 쓰일수도있어서 냅둠
+
+	//mht 문서유통 중계문서 수신에 쓰임
 	@RequestMapping(value = "/ezApprovalG/recevG.do", method = RequestMethod.GET)
 	public String recevG(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("recevG started.");
@@ -6503,7 +6546,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 내보내기, 전체내보내기 호출 Method
 	 */
-	@RequestMapping(value = "/ezApprovalG/excelExportOut.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezApprovalG/excelExportOut.do", method = {RequestMethod.POST, RequestMethod.GET})
 	/*
 	public void excelExportOut(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception{
 		logger.debug("excelExportOut started"); 
@@ -8534,7 +8577,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		return result;
 	}
 	
-	@RequestMapping(value = "/ezApprovalG/checkResend.do", produces = "text/xml;charset=utf-8", method = RequestMethod.POST)
+	@RequestMapping(value = "/ezApprovalG/checkResend.do", produces = "text/plain;charset=utf-8", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkResend(@CookieValue("loginCookie") String loginCookie, @RequestBody String xmlPara) throws Exception {
 		logger.debug("checkResend started");
@@ -8989,5 +9032,56 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		ezApprovalGService.setHesongBansongCabinetID(docID, cabinetID, taskCode, userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		logger.debug("setHesongBansongCabinetInfo ended.");
+	}
+	
+	/* 
+	 * 기안창 기안자 부서 정보와 현재 사용자의 부서 정보가 같은지 체크
+	 * */
+	@RequestMapping(value = "/ezApprovalG/checkDeptAndCabinetId.do")
+	@ResponseBody
+	public String checkDeptAndCabinetId(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		logger.debug("checkDeptAndCabinetId started.");
+		
+		LoginVO userInfo = commonUtil.aprUserInfo(loginCookie);
+		String orgDeptId = request.getParameter("orgDeptId");
+		String orgCabinetId = request.getParameter("orgCabinetId");
+		String userRealDeptId = ezOrganService.getUserOrgDeptId(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		
+		List<OrganUserVO> list = ezOrganAdminService.getUserAddJobList(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
+		
+		// 1 : 정상 , 2 : 기록물철 변경, 3 : 겸직변경 필요, 4 : 부서변경 or 겸직삭제
+		//기안창의 부서와 현재 유저의 부서정보 비교
+		if (userInfo.getDeptID().equals(orgDeptId)) {
+			if (!orgCabinetId.equals("") && approvalFlag.equals("G")) {
+				String cabinetDept = ezApprovalGService.getDeptIdOfCabinet(orgCabinetId, userInfo.getTenantId(), userInfo.getCompanyID()).trim();
+				System.out.println("cabinetDept : " + cabinetDept);
+				System.out.println("orgDeptId : " + orgDeptId);
+				//기안창 부서와 기록물철 부서 정보가 다를경우
+				if (!orgDeptId.equals(cabinetDept)) {
+					//기록물철 정보를 변경하라는 메세지
+					return  "2";
+				}
+			}
+			//정상일경우
+			return "1";
+		} else {
+			//사용자의 원부서와 비교 
+			if (orgDeptId.equals(userRealDeptId)) {
+				//겸직변경 메세지
+				return "3";
+			}
+			
+			for (OrganUserVO userVO : list) {
+				if (orgDeptId.equals(userVO.getDepartment())) {
+					//겸직부서 변경 메세지
+					return "3";
+				}
+			}
+			
+			///여기까지 왔으면 부서가 없는 것
+			// 부서가 변경되거나 겸직부서가 삭제되었습니다 메세지
+			return "4";
+		}
 	}
 }

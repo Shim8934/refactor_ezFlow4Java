@@ -71,6 +71,7 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.io.IOUtils;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -1088,7 +1089,7 @@ public class EzEmailUtil {
 				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
 				
 				if (shareId != null) {
-					aitem += "','&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+					aitem += "','" + URLEncoder.encode(shareId, "UTF-8");
 				}
 				
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' \"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
@@ -1546,7 +1547,7 @@ public class EzEmailUtil {
 				String aitem = URLEncoder.encode(folderPath,"UTF-8") + "','" + uid + "','" + URLEncoder.encode(filename,"UTF-8") + "','" + bodyPartIndex;
 				
 				if (shareId != null) {
-					aitem += "','&shareId=" + URLEncoder.encode(shareId, "UTF-8");
+					aitem += "','" + URLEncoder.encode(shareId, "UTF-8");
 				}
 				
 				pAttachListHtml += " <p class=\"ui-bar\" style=\"border-bottom:1px solid #e2e2e2\"><i class='fa fa-download' aria-hidden='true' onclick=\"javascript:mailFileDown('" + aitem + "');\" style='cursor:pointer'></i>";
@@ -2709,14 +2710,24 @@ public class EzEmailUtil {
 				|| part.isMimeType("multipart/report")
 				|| part.isMimeType("multipart/related")) {
 			Multipart mp = (Multipart)part.getContent();
-			Part p = mp.getBodyPart(index);
+			Part p = null;
+			String fileName = null;
 			
-			String fileName = p.getFileName();
-			
-			logger.debug("fileName=" + fileName);
+			try {
+				p = mp.getBodyPart(index);
+				
+				fileName = p.getFileName();
+				
+				logger.debug("fileName=" + fileName);
+			// mixed 파트 내 related 파트에 첨부파일이 있는 경우 다운로드 시 ArrayIndexOutOfBoundsException이 발생함.
+			// 이 경우 아래 else 문에서 재귀적 호출에 의해 처리되도록 함.
+			// docs/eml/mixed 파트내 related 파트에 첨부파일이 있는 메일.eml 참조
+			} catch (ArrayIndexOutOfBoundsException e) {
+				e.printStackTrace();
+			}
 			
 			if (fileName != null
-					|| (p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))) {
+					|| (p != null && p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))) {
 				logger.debug("getAttachPart ended.");
 				
 				return p;
@@ -3009,6 +3020,42 @@ public class EzEmailUtil {
 		
 		return innerDomainList;
 	}
+	
+	/**
+	 * 개인의 Alias 이메일 주소가 지정될 경우 실제 이메일 주소가 반환된다.
+	 * @param emailAddress
+	 * @return
+	 */
+	public String getRealEmailAddress(String emailAddress) throws Exception {
+        String result = "";
+        
+        String addressParam = "address=" + URLEncoder.encode(emailAddress, "UTF-8");
+        String inputParams = addressParam;
+        
+        String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getAliasMail";
+        
+        String response = getWebServiceResult(requestURL, inputParams);
+        
+        logger.debug("response=" + response);
+        
+        if (response != null) {
+            JSONParser jsonParser = new JSONParser();
+            JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+            
+            String resultCode = (String)responseObj.get("resultCode");
+            
+            if (resultCode.equalsIgnoreCase("OK")) {
+                JSONArray resultArray = (JSONArray)responseObj.get("result");
+                
+                // 개인의 Alias 이메일 주소일 경우 반환되는 주소는 하나이어야 한다.
+                if (resultArray != null && resultArray.size() == 1) {
+                    result = (String)resultArray.get(0);
+                }
+            }
+        }
+        
+        return result;
+    }
 	
 	/**
 	 * 특정 메일 도메인에 대한 메일박스 디폴트 용량을 MB단위로 반환한다.
