@@ -4425,11 +4425,14 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					tmpAry.add(fileNames[j]);
 				} else {
 					int idx = 1;
-					String tmpStr = fileNames[j].substring(0, fileNames[j].lastIndexOf("."));
+					String tmpStr = "";
 					String tmpExt = "";
 					
 					if (fileTypes[j].equals("ATT")) {
+						tmpStr = fileNames[j].substring(0, fileNames[j].lastIndexOf("."));
 						tmpExt = fileNames[j].substring(fileNames[j].lastIndexOf("."));
+					} else {
+						tmpStr = fileNames[j];
 					}
 					
 					while(true) {
