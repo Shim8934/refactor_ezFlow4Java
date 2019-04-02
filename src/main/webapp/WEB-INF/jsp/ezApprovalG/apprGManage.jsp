@@ -1385,10 +1385,18 @@
 		            var tr = oArrRows[0];
 		            
 		            //현재부서정보와 대장등록할 문서의 부서정보가 다르면 리턴 (겸직변경)
-		            if (arr_userinfo[4] != tr.getAttribute("DATA7")) {
-		            	alert("'" + tr.getAttribute("DATA8") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA8") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
-		            	return;
-		            }
+		            //결재할문서(1)과 부서수신함(4)의 부서아이디 DATA가 달라서 변경 
+					if (pListTypeValue == "1") {
+			            if (arr_userinfo[4] != tr.getAttribute("DATA7")) {
+			            	alert("'" + tr.getAttribute("DATA7") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA7") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
+			            	return;
+			            }
+					} else if (pListTypeValue == "4") {
+			            if (arr_userinfo[4] != tr.getAttribute("DATA6")) {
+			            	alert("'" + tr.getAttribute("DATA6") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA6") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
+			            	return;
+			            }
+					}
 		            
 		            var ret = CheckAprLineInfo(tr);
 		            if (ret != "OK") {

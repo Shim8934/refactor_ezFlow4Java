@@ -762,7 +762,13 @@ function save_task() {
     }
     
     var strBody = message.GetEditorContent();
-    strBody = ConvertHTMLtoMHT("<HTML><HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><style>P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }</style></HEAD><BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+    /* 2019-04-01 홍대표 - MHT파일 변환 및 저장 시 예외처리 추가 */
+    try {
+    	strBody = ConvertHTMLtoMHT("<HTML><HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><style>P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }</style></HEAD><BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+    } catch (e) {
+    	alert("<spring:message code='ezCommunity.lhj04'/>");
+    	return;
+    }
     
 	var listtable = dadiframe.document.getElementById("filelist");
 	var filelist = GetChildNodes(listtable);
@@ -994,8 +1000,14 @@ function setAttachFileInfo(strXML) {
 
 function save_taskWork() {
     var content = message.GetEditorContent();
-    content = ConvertHTMLtoMHT("<HTML><HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><style>P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }</style></HEAD><BODY>" + EmbedContentIntoXML(content) + "</BODY>" + "</HTML>");
-
+    /* 2019-04-01 홍대표 - MHT파일 변환 및 저장 시 예외처리 추가 */
+    try {
+    	content = ConvertHTMLtoMHT("<HTML><HEAD><META content=\"text/html; charset=utf-8\" http-equiv=\"Content-Type\"><style>P { MARGIN-BOTTOM: 0mm; MARGIN-TOP: 0mm }</style></HEAD><BODY>" + EmbedContentIntoXML(content) + "</BODY>" + "</HTML>");
+    } catch (e) {
+    	alert("<spring:message code='ezCommunity.lhj04'/>");
+    	return;
+    }
+    
     if (taskid == "") {
     	personContentpath = "";
     }
