@@ -106,13 +106,22 @@
 						pAttachFileList = AttachFileList();
 					}
 					
+					 /* 2019-04-02 홍승비 - MHT파일 변환 및 저장 시 예외처리 추가 */
+					 var messageMHT = "";
+			        try {
+						messageMHT =  message.ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(message.GetEditorContent()) + "</BODY>" + "</HTML>");
+			        } catch (e) {
+			        	alert("<spring:message code='ezCommunity.lhj04'/>");
+	      				return;
+			        }
+			        
 					$.ajax({
 	 					type : "POST",
 	 					dataType : "text",
 	 					async : false,
 	 					url : "/ezCommunity/bbsEditOk.do",
 	 					data : {attachList	:	pAttachFileList,
-	 							content	:	message.ConvertHTMLtoMHT("<HTML>" + "<BODY>" + EmbedContentIntoXML(message.GetEditorContent()) + "</BODY>" + "</HTML>"),
+	 							content	:	messageMHT,
 	 							title	:	title.value,
 	 							textContent	:	message.GetEditorContent(),
 	 							mode	:	pMode,
