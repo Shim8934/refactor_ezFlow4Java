@@ -1924,7 +1924,7 @@
 		</div>
 
 		<div>
-			<div style="border: 1px solid #ddd; height: 530px; width: 30%;  overflow-x: hidden; overflow-y: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
+			<div style="border: 1px solid #ddd; height: 530px; width: 30%;  overflow: auto; background-color: #FFFFFF; float:left;" id="TreeView"></div>
 			<div class="organHeader">
 	 		 	<table id="maillist_user" class="mainlist" style="width:100%;">
 					<tr class="header">

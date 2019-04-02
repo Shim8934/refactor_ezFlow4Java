@@ -333,7 +333,7 @@
 	    <table>
 	        <tr>
 	            <td>
-	                <div class="box" id="TreeView" style="height: 550px; width: 250px; overflow-x: hidden; overflow-y: auto;"></div>
+	                <div class="box" id="TreeView" style="height: 550px; width: 250px; overflow-x: auto; overflow-y: auto;"></div>
 	            </td>
 	            <td style="padding-left: 5px">
 	                <div class="listview">

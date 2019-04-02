@@ -5992,6 +5992,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				rtnValue = "OK";
 			} catch (Exception e) {
 				logger.error("EzBoard :: deleteImageItem");
+				e.printStackTrace();
 				rtnValue = "ERROR";
 			}
 		} else if (mod.equals("Mod")) {
@@ -7428,6 +7429,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				}
 			} catch (Exception e) {
 				logger.debug("uploadBackImage error");
+				e.printStackTrace();
 			}
 		}
 		
@@ -8156,13 +8158,17 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			downFileName = fileNamesArr[0] + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr.length-1) + egovMessageSource.getMessage("ezStatistics.t1067", userInfo.getLocale()) + ".zip";//zip파일명
 			
+			/* 2019-04-02 홍승비 - 중복된 파일명을 덮어쓰지 않고 (1), (2)... 붙이도록 수정 */
+			Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
+			
 			if (fileNamesArr.length != 0) {// 파일이 있으면
-				for (int i = 0; i < fileNamesArr.length; i++) { //파일 길이만큼
+				for (int i = 0; i < fileNamesArr.length; i++) { // 파일 갯수만큼
 					BufferedInputStream bis = null;
 					
 					try {
 						File sourceFile = new File(fullFilePath + fileNamesUIDArr[i]);
 				        bis = new BufferedInputStream(new FileInputStream(sourceFile));
+				        fileNamesArr[i] = commonUtil.getUniqueFileName(fileNamesArr[i], fileNameMap);
 				        ZipEntry zentry = new ZipEntry(fileNamesArr[i]);
 				        zos.putNextEntry(zentry);
 				        
@@ -8206,6 +8212,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				try {
 					zos.close();
 				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		}

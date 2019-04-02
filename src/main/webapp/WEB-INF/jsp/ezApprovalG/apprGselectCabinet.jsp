@@ -317,9 +317,11 @@
 	    function cmdCancel_onclick() {
 	        if (ReturnFunction != null) {
 	        	if (regDocId != null && regDocId != undefined) {
+		            parent.DivPopUpHidden();
 		            window.close();
 	        	} else {
 		            ReturnFunction(rtnVal);
+		            parent.DivPopUpHidden();
 		            window.close();
 	        	}
 	        }

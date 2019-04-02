@@ -95,7 +95,7 @@
 		        listview.LoadFromID("lvAttachList");
 		        var href = listview.GetSelectedRows()[0].getAttribute("DATA1");
 		        var rep = /'/g;
-		        href = "/ezApprovalG/downloadAttach.do?fileName=" + encodeURI(listview.GetSelectedRows()[0].getAttribute("DATA3")) + "&filePath=" + encodeURI(listview.GetSelectedRows()[0].getAttribute("DATA4"));
+		        href = "/ezApprovalG/downloadAttach.do?fileName=" + encodeURIComponent(listview.GetSelectedRows()[0].getAttribute("DATA3")) + "&filePath=" + encodeURIComponent(listview.GetSelectedRows()[0].getAttribute("DATA4"));
 		        document.getElementById("filedown").src = href;
 		    }
 		    function btnrecovery_onclick() {

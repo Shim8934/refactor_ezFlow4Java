@@ -517,7 +517,7 @@
 		  	</tr>
 		  	<tr><td colspan="2" style="padding:2px;"></td></tr>
 		  	<tr>
-			    <td class="box" style="padding-right:4px"><div style="overflow-x: hidden; overflow-y: auto; WIDTH:235px; HEIGHT:380px; margin-bottom:-1px;" id="TreeView" ></div></td>
+			    <td class="box" style="padding-right:4px"><div style="overflow: auto; WIDTH:235px; HEIGHT:380px; margin-bottom:-1px;" id="TreeView" ></div></td>
 			    <td class="listview">
 			        <div id="OrganListView" style="border:0;OVERFLOW: auto; WIDTH: 495px; HEIGHT: 380px; BACKGROUND-COLOR: white"></div>
 				</td>
