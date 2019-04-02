@@ -733,8 +733,8 @@
 			                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
 			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
 			            } else {
-			            	 var tempstr = strBody + "<br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
-				                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
+							var tempstr = strBody + "<br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+							strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
 			            }
 			        }
       			} catch (e) {
