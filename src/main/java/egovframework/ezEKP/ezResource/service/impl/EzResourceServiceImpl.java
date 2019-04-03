@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezResource.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
@@ -25,8 +26,10 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.dao.EzResourceDAO;
+import egovframework.ezEKP.ezResource.service.EzResourceAdminService;
 import egovframework.ezEKP.ezResource.service.EzResourceService;
 import egovframework.ezEKP.ezResource.vo.ResAdminVO;
 import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
@@ -34,6 +37,7 @@ import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResDateVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
+import egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
@@ -62,6 +66,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzOrganService ezOrganService;
+	
+	@Autowired
+	private EzResourceAdminService ezResourceAdminService;
 
 	public List<ResGetAdmSubClsTreeVO> getAdmSubClsTree(String parentID,String companyID, String treeType, int tenantID) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -415,7 +425,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		return ezResourceDAO.selectFormID(map);
 	}
 	
-	public String getAclTblBrd(String companyID, String brdID, String userID, String mode, int tenantID) throws Exception {
+	public String getAclTblBrd(String companyID, String brdID, String userID, String mode, int tenantID, String deptID) throws Exception {
 		logger.debug("getAclTblBrd Start");
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_PCOMPANYID", companyID);
@@ -442,7 +452,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			}
 		}
 		
-		//if (ownerID == null || ownerID.equals("")) {
+		//해안1
+		
 		if(!flag) {
 			brdUpper = ezResourceDAO.getAclTblBrd_S2(map);
 			map.put("v_BRD_UPPER", brdUpper);
@@ -450,34 +461,60 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			logger.debug("brdUpper="+brdUpper);
 			logger.debug("accessLvl="+accessLvl);
 			if (accessLvl != null && accessLvl.trim().equals("1")) {
-				logger.debug("111");
 				result = "Y";
 			} else {
 				if (accessLvl != null && accessLvl.trim().equals("2")) {
-					logger.debug("222");
 					result = "U";
 				} else {
-					 if (mode.equals("everyone")) {
-							map.put("v_PUSERID", "everyone");
-							accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
-							logger.debug("333");
-							if (accessLvl != null && accessLvl.trim().equals("1")) {
-								logger.debug("444");	
-								result = "Y";
+					if (mode.equals("everyone")) {
+						map.put("v_PUSERID", "everyone");
+						accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
+						if (accessLvl != null && accessLvl.trim().equals("1")) {
+							result = "Y";
+						} else {
+							if (accessLvl != null && accessLvl.trim().equals("2")) {
+								String vTenantID = String.valueOf(tenantID);
+								Map<String,Object> deptAccessLvlMap = new HashMap<String, Object>();
+								deptAccessLvlMap.put("IN_DEPT_CN", deptID);
+								deptAccessLvlMap.put("IN_TENANT_ID", vTenantID);
+								deptAccessLvlMap.put("IN_BRD_ID", brdID);
+								logger.debug("deptID : " + deptID + " tenant_id : " + vTenantID + " brd_ID : " + brdID);
+								
+								ezResourceDAO.getDeptAccessLvl(deptAccessLvlMap);
+								
+								String AccessDeptLvl = deptAccessLvlMap.get("OUT_RESULT_ACL").toString();
+								logger.debug("AccessDeptLvl : " + AccessDeptLvl);
+								
+								if (AccessDeptLvl != null && !AccessDeptLvl.equals("") && AccessDeptLvl.equals("1")) {
+									result = "Y";
+								} else {
+									result = "U";
+								}
 							} else {
-								if (accessLvl != null && accessLvl.trim().equals("2")) {
-									logger.debug("555");
+								String vTenantID = String.valueOf(tenantID);
+								Map<String,Object> deptAccessLvlMap = new HashMap<String, Object>();
+								deptAccessLvlMap.put("IN_DEPT_CN", deptID);
+								deptAccessLvlMap.put("IN_TENANT_ID", vTenantID);
+								deptAccessLvlMap.put("IN_BRD_ID", brdID);
+								logger.debug("deptID : " + deptID + " tenant_id : " + vTenantID + " brd_ID : " + brdID);
+								
+								ezResourceDAO.getDeptAccessLvl(deptAccessLvlMap);
+								
+								String AccessDeptLvl = deptAccessLvlMap.get("OUT_RESULT_ACL").toString();
+								logger.debug("AccessDeptLvl : " + AccessDeptLvl);
+								
+								if (AccessDeptLvl != null && !AccessDeptLvl.equals("") && AccessDeptLvl.equals("1")) {
+									result = "Y";
+								} else if (AccessDeptLvl != null && !AccessDeptLvl.equals("") && AccessDeptLvl.equals("2")){
 									result = "U";
 								} else {
-									logger.debug("666");
 									result = "";
 								}
 							}
-							
-						} else {
-							logger.debug("777");
-							result = "";
 						}
+					} else {
+						result = "";
+					}
 				}	
 			}
 		} else {
@@ -1745,20 +1782,61 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public String getAdminFlag(String companyID, String brdID, String userID, int tenantID) throws Exception {
+	public String getAdminFlag(String companyID, String brdID, String userID, int tenantID, String deptID) throws Exception {
 		String accessLvl = "";
 
 		/* 2018-07-13 홍승비 - everyone을 관리자로 설정한 경우 우선적으로 해당 관리자 플래그 받아오도록 수정 */
 		ResGetAdminFlagVO resGetAdminFlag = getAdmFlag(companyID, brdID, userID, tenantID);
-
-		String strXML = "<DATA>"+commonUtil.getQueryResult(resGetAdminFlag)+"</DATA>";
-		Document xmlDom = commonUtil.convertStringToDocument(strXML);
-	
-		if(xmlDom.getElementsByTagName("ROW") != null) {
-			for(int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
-				accessLvl = xmlDom.getElementsByTagName("ACCESSLVL").item(i).getTextContent().trim();
+		
+		if (resGetAdminFlag.getAccessLvl() != null && !resGetAdminFlag.getAccessLvl().equals("")) {
+			String strXML = "<DATA>"+commonUtil.getQueryResult(resGetAdminFlag)+"</DATA>";
+			Document xmlDom = commonUtil.convertStringToDocument(strXML);
+			
+			if(xmlDom.getElementsByTagName("ROW") != null) {
+				for(int i=0; i<xmlDom.getElementsByTagName("ROW").getLength(); i++) {
+					accessLvl = xmlDom.getElementsByTagName("ACCESSLVL").item(i).getTextContent().trim();
+				}
+			}
+			
+			logger.debug("accessLvl : " + accessLvl);
+			
+			if (accessLvl.equals("2")) {
+				//해안
+				String vTenantID = String.valueOf(tenantID);
+				Map<String,Object> deptAccessLvlMap = new HashMap<String, Object>();
+				deptAccessLvlMap.put("IN_DEPT_CN", deptID);
+				deptAccessLvlMap.put("IN_TENANT_ID", vTenantID);
+				deptAccessLvlMap.put("IN_BRD_ID", brdID);
+				logger.debug("deptID : " + deptID + " tenant_id : " + vTenantID + " brd_ID : " + brdID);
+				
+				ezResourceDAO.getDeptAccessLvl(deptAccessLvlMap);
+				
+				String AccessDeptLvl = deptAccessLvlMap.get("OUT_RESULT_ACL").toString();
+				logger.debug("AccessDeptLvl : " + AccessDeptLvl);
+				
+				if (AccessDeptLvl != null && !AccessDeptLvl.equals("") && AccessDeptLvl.equals("1")) {
+					accessLvl = AccessDeptLvl;
+				}
+			}
+		} else {
+			//해안
+ 			String vTenantID = String.valueOf(tenantID);
+			Map<String,Object> deptAccessLvlMap = new HashMap<String, Object>();
+			deptAccessLvlMap.put("IN_DEPT_CN", deptID);
+			deptAccessLvlMap.put("IN_TENANT_ID", vTenantID);
+			deptAccessLvlMap.put("IN_BRD_ID", brdID);
+			logger.debug("deptID : " + deptID + " tenant_id : " + vTenantID + " brd_ID : " + brdID);
+			
+			ezResourceDAO.getDeptAccessLvl(deptAccessLvlMap);
+			
+			String AccessDeptLvl = deptAccessLvlMap.get("OUT_RESULT_ACL").toString();
+			logger.debug("AccessDeptLvl : " + AccessDeptLvl);
+			
+			if (AccessDeptLvl != null && !AccessDeptLvl.equals("")) {
+				accessLvl = AccessDeptLvl;
 			}
 		}
+
 		
 		if(accessLvl.trim().equals("1")) {
 			return "Y";
@@ -2339,10 +2417,10 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public String getACL(String pCompanyID, String pBrdID, String pUserID, String pMode, int tenantID) throws Exception {
+	public String getACL(String pCompanyID, String pBrdID, String pUserID, String pMode, int tenantID, String pDeptID) throws Exception {
 		String aclTblBrd = "";
 		
-		 aclTblBrd = getAclTblBrd(pCompanyID, pBrdID, pUserID, pMode, tenantID);
+		 aclTblBrd = getAclTblBrd(pCompanyID, pBrdID, pUserID, pMode, tenantID, pDeptID);
 			
 		return aclTblBrd;
 	}
