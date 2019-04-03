@@ -916,7 +916,13 @@
 			                if (CurPage == 0) CurPage = 1;
 			                
 	// 		                getBoardList();
-			                refresh_onclick();
+							/* 2019-04-03 홍승비 - 게시물 승인 리스트에서 승인하는 경우에도 좌측 게시물 카운트 갱신되도록 수정 */
+							try { // try ~ catch로 감싸지 않으면 연속된 함수가 동작하지 않음
+								leftCountRf();
+							} catch (e) {}
+				            try {
+				                refresh_onclick();
+				            } catch (e) {}
 						}
 		        	}
 		        }

@@ -287,8 +287,16 @@ function save_schedule(pageFrom)
     var strBody = message.GetEditorContent();
     Doc_ContentHtml.innerHTML = strBody;
     strBody = HTMLtoMHT_MakeTag(Doc_ContentHtml);
-
-    createNodeAndInsertText(xmlDom, objNode, "CONTENT", pidCryptUtil.encodeBase64(ConvertHTMLtoMHT(Signature_ImagePathConvert(strBody)), 64));
+    
+    /* 2019-04-03 홍승비 - MHT파일 변환 및 저장 시 예외처리 추가 */
+    var htmlConv = Signature_ImagePathConvert(strBody);
+	try {
+		htmlConv = ConvertHTMLtoMHT(htmlConv);
+	} catch (e) {
+		alert(strLangHSB1);
+		return;
+	}
+    createNodeAndInsertText(xmlDom, objNode, "CONTENT", pidCryptUtil.encodeBase64(htmlConv, 64));
     
     var realEndDate = new Date(parseInt($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val().substring(0,4),10), 
     						   parseInt($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val().substring(5,7),10)-1, 

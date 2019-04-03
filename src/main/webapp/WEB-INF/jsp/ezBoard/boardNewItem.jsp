@@ -721,20 +721,26 @@
       				strBody = strBody.replace("url(\'/", "url(\'");
       			}
       			
-		        if (trim_Cross(strBody) != "" || pDocID == "") {
-		            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + strBody + "</BODY>" + "</HTML>", "clean");
-		        }
-		        else {
-		            if (pDocID == "")
-		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>", "clean");
-		            else if (pUrl.toLowerCase().indexOf(".mht") > -1) {
-		                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
-		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
-		            } else {
-		            	 var tempstr = strBody + "<br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+      			/* 2019-04-01 홍승비 - MHT파일 변환 및 저장 시 예외처리 추가 */
+      			try {
+			        if (trim_Cross(strBody) != "" || pDocID == "") {
+			            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + strBody + "</BODY>" + "</HTML>", "clean");
+			        }
+			        else {
+			            if (pDocID == "")
+			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>", "clean");
+			            else if (pUrl.toLowerCase().indexOf(".mht") > -1) {
+			                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
 			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
-		            }
-		        }
+			            } else {
+							var tempstr = strBody + "<br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+							strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
+			            }
+			        }
+      			} catch (e) {
+      				alert("<spring:message code='ezCommunity.lhj04'/>");
+      				return;
+      			}
 		        
 				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCCONTENT", strContent);
 
