@@ -192,3 +192,5 @@ var strLangKHA1 = "Company Anniversary";
 var strLangKHA2 = "Statutory Holiday";
 //2018-02-22
 var strLangGHA1 = ", ";
+/* 2019-04-03 */
+var strLangHSB1 = "MHT files to store failed.";

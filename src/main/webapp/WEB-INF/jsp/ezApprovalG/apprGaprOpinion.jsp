@@ -60,6 +60,7 @@
 		    var layerStartX, layerStartY;
 		    var iFramePanel = window.parent.document.getElementById("iFramePanel");
 		    var ext;
+		    var pDocState;
 		    window.onload = function () {
 		        try {
 		            var ua = navigator.userAgent;
@@ -97,6 +98,7 @@
 		            pOrgDocID = RetValue[3];
 		            pWindow = RetValue[5];
 		            pHeSongFlag = RetValue[4];
+		            pDocState = RetValue[6];
 		            
 		            //한글일때 showmodaldialog 로 창이 열리기 때문에 parent로 값을 가져올수 없기때문에 추가
 		            if (orgCompanyID == undefined) {
@@ -115,6 +117,13 @@
 		            else {
 		                document.getElementById("bbtn_OpinionDel").style.display = "none";
 		            }
+		            
+		            if (typeof(pDocState) != "undefined" && (pDocState == "015" || pDocState == "017")) {
+		            	document.getElementById("bbtn_OpinionAdd").style.display = "none";
+		            	document.getElementById("bbtn_OpinionDel").style.display = "none";
+		            	document.getElementById("bbtn_OpinionCancel").style.display = "none";
+		            }
+		            
 		            if (!CrossYN())
 		                window.returnValue = "cancel";
 		        }
