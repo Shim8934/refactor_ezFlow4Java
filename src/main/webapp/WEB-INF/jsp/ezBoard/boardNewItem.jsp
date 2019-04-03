@@ -903,7 +903,7 @@
 		            	}
 		            }
 					
-					if (parnet.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
+					if (parent.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
 						parent.opener.getBoardList_NewBoardSTD();
 					}
 					
