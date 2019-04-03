@@ -447,7 +447,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = btnCabinet_onclick_Complete;
 		
-		        DivPopUpShow(880, 465, "/ezApprovalG/selectCabinet.do?initFlag=1");
+		        DivPopUpShow(1000, 620, "/ezApprovalG/selectCabinet.do?initFlag=1");
 		    }
 		
 		    function btnCabinet_onclick_Complete(rtn) {
