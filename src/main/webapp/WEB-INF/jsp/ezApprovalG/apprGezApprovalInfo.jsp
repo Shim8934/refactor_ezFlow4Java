@@ -54,7 +54,7 @@
 	        arr_userinfo[2] = "<c:out value ='${userInfo.displayName}'/>";      // 사용자명
 	        arr_userinfo[3] = "<c:out value ='${userInfo.title}'/>";            // 사용자 직위
 	        arr_userinfo[4] = "<c:out value ='${userInfo.deptID}'/>";           // 사용자 부서 ID
-	        arr_userinfo[5] = "<c:out value ='${userInfo.deptName}'/>";         // 사용자 부서 이름
+	        arr_userinfo[5] = "${userInfo.deptName}";         // 사용자 부서 이름
 	        arr_userinfo[6] = "<c:out value ='${userInfo.jikChek}'/>";          // 사용자 직책            
 	        arr_userinfo[7] = "N";                                        // 부재중 설정
 	        arr_userinfo[8] = "<c:out value ='${userInfo.email}'/>";            // E-Mail Address 
@@ -64,8 +64,8 @@
 	        arr_userinfo[12] = "<c:out value ='${userInfo.displayName2}'/>"; 	// 사용자명(S)
 	        arr_userinfo[13] = "<c:out value ='${userInfo.title1}'/>"; 			// 사용자 직위(P)
 	        arr_userinfo[14] = "<c:out value ='${userInfo.title2}'/>"; 			// 사용자 직위(S)
-	        arr_userinfo[15] = "<c:out value ='${userInfo.deptName1}'/>"; 		// 사용자 부서 이름(P)
-	        arr_userinfo[16] = "<c:out value ='${userInfo.deptName2}'/>"; 		// 사용자 부서 이름(S)
+	        arr_userinfo[15] = "${userInfo.deptName1}"; 		// 사용자 부서 이름(P)
+	        arr_userinfo[16] = "${userInfo.deptName2}"; 		// 사용자 부서 이름(S)
 	        var CompanyID = "<c:out value ='${userInfo.companyID}'/>";
 	        var companyID = "<c:out value ='${userInfo.companyID}'/>";
 	        var UserLang = "<c:out value ='${userInfo.lang}'/>";
