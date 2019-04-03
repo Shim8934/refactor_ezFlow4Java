@@ -328,7 +328,9 @@
 		            if (pDocHref != "")
 		            {
 		                message.Set_EditorContentURL(pDocHref);
-		                setDocNumFormat("");
+		                if (pDraftFlag != "SUSIN") {
+			                setDocNumFormat(""); // 결재할문서 오픈 시, docnumber 필드 다시 그리는 로직.. 수정 필요
+		                }
 		            }
 		        }
 		    }
