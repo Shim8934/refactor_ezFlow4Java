@@ -2635,7 +2635,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		
-		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail + ",uid=" + uid + ",hasAttachFile=" + hasAttachFile);
 		
 		MimeMessage newMessage = null;
 		IMAPAccess ia = null;
@@ -2813,7 +2813,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					newMessage.setContent(multipart);
 					newMessage.setFlag(Flags.Flag.SEEN, true);
 					AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
-					xmldom.getElementsByTagName("URL").item(0).setTextContent(String.valueOf(uids[0].uid));
+					
+					uid = uids[0].uid;
+					xmldom.getElementsByTagName("URL").item(0).setTextContent(String.valueOf(uid));
 				} else {
 					
 					if (uid == 0) {
@@ -2854,7 +2856,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		
-		logger.debug("mailInterAttach ended.");
+		logger.debug("mailInterAttach ended. uid=" + uid);
 		
 		return returnValue;
 	}

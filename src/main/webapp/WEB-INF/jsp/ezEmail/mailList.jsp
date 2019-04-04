@@ -642,24 +642,33 @@
 
 		    // 메일박스 내보내기 config 확인
 			function mailbox_export() {
-		    	
-				var folderTotalCount = document.getElementById("folderTotalCount").innerText;
-				
-				if (folderTotalCount < 1) {
-			    	alert("<spring:message code='ezEmail.kyj13' />");
-					return;
-				}
-		    	
-		    	var exportType = "MAILBOX";
-		    	
-		    	if (useEncryptZipForEmail == "YES") {
-		    			mailExportOption_onClick(exportType);
-		    	} else {
-			    	if (confirm("<spring:message code='ezEmail.lhm36' />")) {
-			    		mailbox_export_start();
-			    	}
-		    	}
-		    	
+
+                if (folderTotalCount == "") {
+                	setTimeout (function() {
+                		mailbox_export();
+                    }, 1000);
+                } else {
+					console.log('folderTotalCount=' + folderTotalCount);
+					if (folderTotalCount === null || typeof folderTotalCount === "undefined") {
+						// 이 경우가 나오면 안되요.
+						console.log('folderTotalCount is null or undefined');
+						return;
+					} else if (folderTotalCount < 1) {
+						alert("<spring:message code='ezEmail.kyj13' />");
+						return;
+					}
+
+					var exportType = "MAILBOX";
+
+					if (useEncryptZipForEmail == "YES") {
+						mailExportOption_onClick(exportType);
+					} else {
+						if (confirm("<spring:message code='ezEmail.lhm36' />")) {
+							mailbox_export_start();
+						}
+					}
+                }
+
 			}
 		    
 		    // 메일박스 내보내기
