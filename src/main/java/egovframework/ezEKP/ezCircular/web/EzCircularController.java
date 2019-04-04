@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -2737,6 +2738,8 @@ public class EzCircularController extends EgovFileMngUtil {
 
 			downFileName = fileNamesArr2.get(0).toString() + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr2.size() - 1) + egovMessageSource.getMessage("ezCircular.t104", userInfo.getLocale()) +".zip";//zip파일명
 			
+			Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
+			
 			if (fileNamesArr.size() != 0) {// 파일이 있으면
 				for (int i = 0; i < fileNamesArr.size(); i++) { //파일 길이만큼
 					BufferedInputStream bis = null;
@@ -2745,7 +2748,9 @@ public class EzCircularController extends EgovFileMngUtil {
 				       File sourceFile = new File(commonUtil.detectPathTraversal(fullFilePath + fileNamesArr.get(i).toString()));
 	                   
 				        bis = new BufferedInputStream(new FileInputStream(sourceFile));
-				        ZipEntry zentry = new ZipEntry(fileNamesArr2.get(i).toString());
+				        String newFileName = commonUtil.getUniqueFileName(fileNamesArr2.get(i).toString(), fileNameMap);
+				        //ZipEntry zentry = new ZipEntry(fileNamesArr2.get(i).toString());
+				        ZipEntry zentry = new ZipEntry(newFileName);
 				        zos.putNextEntry(zentry);
 				        
 				        byte[] buffer = new byte[bufferSize];
