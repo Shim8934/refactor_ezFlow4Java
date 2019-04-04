@@ -247,6 +247,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception {
 		logger.debug("getListHeader started");
 
+		List<BoardListHeaderVO> listHeaderListVO;
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_LISTCODE", ezBoardVO.getBoardType());
@@ -267,9 +268,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				}
 			}
 		}
+		
+		listHeaderListVO = ezBoardDAO.getListHeader(map);
+		
+		/* 2019-04-04 홍승비 - 좋아요 사용 게시판의 경우 임의로 헤더 조정 */
+		if (ezBoardVO.getLikeFlag() != null && ezBoardVO.getLikeFlag().equals("Y")) {
+			BoardListHeaderVO likeAddListHeaderVO = new BoardListHeaderVO();
+			likeAddListHeaderVO.setColName("LIKECOUNT");
+			listHeaderListVO.add(likeAddListHeaderVO);
+		}
 
 		logger.debug("getListHeader ended");
-		return ezBoardDAO.getListHeader(map);
+		return listHeaderListVO;
 	}
 
 	@Override
@@ -711,7 +721,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Override
 	public List<BoardListHeaderVO> getListHeaderBoardID(BoardVO ezBoardVO) throws Exception {
 		logger.debug("getListHeaderBoardID started");
-
+		
+		List<BoardListHeaderVO> listHeaderListVO;
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("v_PBOARDID", ezBoardVO.getBoardId());
@@ -738,11 +749,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		if (tempString != null && !tempString.equals("")) {
 			logger.debug("getListHeaderBoardID ended");
-			return ezBoardDAO.getListHeaderBoardID(map);
+			listHeaderListVO = ezBoardDAO.getListHeaderBoardID(map);
 		} else {
 			logger.debug("getListHeaderBoardID ended");
-			return ezBoardDAO.getListHeader(map); 
+			listHeaderListVO = ezBoardDAO.getListHeader(map); 
 		}
+		
+		/* 2019-04-04 홍승비 - 좋아요 사용 게시판의 경우 임의로 헤더 조정 */
+		if (ezBoardVO.getLikeFlag() != null && ezBoardVO.getLikeFlag().equals("Y")) {
+			BoardListHeaderVO likeAddListHeaderVO = new BoardListHeaderVO();
+			likeAddListHeaderVO.setColName("LIKECOUNT");
+			listHeaderListVO.add(likeAddListHeaderVO);
+		}
+		
+		return listHeaderListVO;
 	}
 
 	@Override

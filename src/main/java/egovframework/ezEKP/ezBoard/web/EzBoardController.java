@@ -979,6 +979,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			boardInfo.setUrl(strProp.getUrl());
 			boardInfo.setApprMail_FG(strProp.getApprMailFlag());
 			boardInfo.setAttributeYN(strProp.getAttributeYN());
+			boardInfo.setLikeFlag(strProp.getLikeFlag());
 			
 			/* 2018-10-17 홍승비 - 게시판의 그룹게시판이 구분값 99인지 확인하여 게시판 boardInfo에 isAllGroupBoard값 셋팅 */
 			String boardGroupID = strProp.getBoardGroupID();
@@ -1155,6 +1156,9 @@ public class EzBoardController extends EgovFileMngUtil{
     	boardVO.setType(type);
     	boardVO.setLang(userInfo.getLang());
     	boardVO.setTenantID(userInfo.getTenantId());
+    	boardVO.setLikeFlag(boardInfo.getLikeFlag());
+    	
+    	logger.debug("likeFlag in boardVO    ::   " + boardVO.getLikeFlag());
     	
     	if (boardType.equals("4") || boardType.equals("7")) { // 썸네일, 동영상
     		resultXML = getThumbList(boardVO, userInfo, type);
@@ -1191,8 +1195,8 @@ public class EzBoardController extends EgovFileMngUtil{
     	
     	int i = 0;
     	int hlength = headerList.size();
-    	int writeDateSN = 0;    
-    	int titleSN = 0;        
+    	int writeDateSN = 0;
+    	int titleSN = 0;
     	
     	for (i = 0; i < hlength; i++) {
     		if (!boardVO.getOrderCell().equals("") && boardVO.getOrderCell().equals(headerList.get(i).getName())) {
@@ -2004,6 +2008,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		int i = 0;
 		int hlength = headerList.size();
 		
+		
+		
 		for (i = 0; i < hlength; i++) {
 			if (headerList.get(i).getColName().equalsIgnoreCase("ATTACHMENTS")) {
 				continue;
@@ -2089,11 +2095,19 @@ public class EzBoardController extends EgovFileMngUtil{
 				continue;
 			}
 			
-			resultXML.append("<HEADER>");
-			resultXML.append("<NAME>" + vo.getName() + "</NAME>");
-			resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
-			resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
-			resultXML.append("</HEADER>");
+			if (vo.getColName().equalsIgnoreCase("LIKECOUNT")) {
+				resultXML.append("<HEADER>");
+				resultXML.append("<NAME>"+ egovMessageSource.getMessage("ezBoard.hsb10", userInfo.getLocale()) +"</NAME>");
+				resultXML.append("<WIDTH>50</WIDTH>");
+				resultXML.append("<COLNAME>LIKECOUNT</COLNAME>");
+				resultXML.append("</HEADER>");
+			} else {
+				resultXML.append("<HEADER>");
+				resultXML.append("<NAME>"+vo.getName()+"</NAME>");
+				resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
+				resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+				resultXML.append("</HEADER>");
+			}
 		}
 		
 		resultXML.append("</HEADERS>");
@@ -2146,6 +2160,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					
 					resultXML.append("<DATA7>" + boardThumbnailList.get(j).get("ONELINECNT") + "</DATA7>");
 					resultXML.append("<DATA8>" + boardThumbnailList.get(j).get("READFLAG") + "</DATA8>");
+					resultXML.append("<DATA9>" + boardThumbnailList.get(j).get("LIKECONT") + "</DATA9>");
 				}
 				
 				resultXML.append("</CELL>");
@@ -2985,12 +3000,21 @@ public class EzBoardController extends EgovFileMngUtil{
 			resultXML.append("<LISTVIEWDATA>");
 			resultXML.append("<HEADERS>");
 			
+			/* 2019-04-04 홍승비 - 좋아요 칼럼에 다국어 메세지 적용 */
 			for (BoardListHeaderVO vo:headerList) {
-				resultXML.append("<HEADER>");
-				resultXML.append("<NAME>"+vo.getName()+"</NAME>");
-				resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
-				resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
-				resultXML.append("</HEADER>");
+				if (vo.getColName().equalsIgnoreCase("LIKECOUNT")) {
+					resultXML.append("<HEADER>");
+					resultXML.append("<NAME>"+ egovMessageSource.getMessage("ezBoard.hsb10", userInfo.getLocale()) +"</NAME>");
+					resultXML.append("<WIDTH>50</WIDTH>");
+					resultXML.append("<COLNAME>LIKECOUNT</COLNAME>");
+					resultXML.append("</HEADER>");
+				} else {
+					resultXML.append("<HEADER>");
+					resultXML.append("<NAME>"+vo.getName()+"</NAME>");
+					resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
+					resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+					resultXML.append("</HEADER>");
+				}
 			}
 			
 			resultXML.append("</HEADERS>");
@@ -3001,6 +3025,8 @@ public class EzBoardController extends EgovFileMngUtil{
 				for (i = 0; i < hlength; i++) {
 					resultXML.append("<CELL>");
 					fieldName = headerList.get(i).getColName().toUpperCase();
+					
+					logger.debug("fieldName / fieldValue in getItemlist   ::   " + fieldName + fieldValue);
 					
 					if (fieldName.equals("WRITERNAME") || fieldName.equals("WRITERJOBTITLE") || fieldName.equals("WRITERDEPTNAME")) {
 						fieldName = fieldName + strMultiData;
@@ -3058,6 +3084,7 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)noticeList.get(k).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
 						resultXML.append("<ATTACHMENTS>" + noticeList.get(k).get("ATTACHMENTS") + "</ATTACHMENTS>");
 						resultXML.append("<GUBUN>" + noticeList.get(k).get("GUBUN") + "</GUBUN>");
+						resultXML.append("<LIKECOUNT>" + noticeList.get(k).get("LIKECOUNT") + "</LIKECOUNT>");
 					}
 					resultXML.append("</CELL>");
 				}
@@ -3080,12 +3107,21 @@ public class EzBoardController extends EgovFileMngUtil{
 			resultXML.append("<LISTVIEWDATA>");
 			resultXML.append("<HEADERS>");
 			
+			/* 2019-04-04 홍승비 - 좋아요 칼럼에 다국어 메세지 적용 */
 			for (BoardListHeaderVO vo:headerList) {
-				resultXML.append("<HEADER>");
-				resultXML.append("<NAME>" + vo.getName() + "</NAME>");
-				resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
-				resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
-				resultXML.append("</HEADER>");
+				if (vo.getColName().equalsIgnoreCase("LIKECOUNT")) {
+					resultXML.append("<HEADER>");
+					resultXML.append("<NAME>"+ egovMessageSource.getMessage("ezBoard.hsb10", userInfo.getLocale()) +"</NAME>");
+					resultXML.append("<WIDTH>50</WIDTH>");
+					resultXML.append("<COLNAME>LIKECOUNT</COLNAME>");
+					resultXML.append("</HEADER>");
+				} else {
+					resultXML.append("<HEADER>");
+					resultXML.append("<NAME>"+vo.getName()+"</NAME>");
+					resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
+					resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+					resultXML.append("</HEADER>");
+				}
 			}
 			
 			resultXML.append("</HEADERS>");
@@ -3128,6 +3164,8 @@ public class EzBoardController extends EgovFileMngUtil{
 				
 				resultXML.append("<VALUE>" + fieldValue + "</VALUE>");
 				
+				logger.debug("fieldName / fieldValue in getItemListLoop  ::  " + fieldName + " / " + fieldValue);
+				
 				if (i == 0) {
 					resultXML.append("<DATA1>" + boardListItem.get(j).get("BOARDID") + "</DATA1>");
 					resultXML.append("<DATA2>" + boardListItem.get(j).get("ITEMID") + "</DATA2>");
@@ -3163,6 +3201,7 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)boardListItem.get(j).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
 					resultXML.append("<ATTACHMENTS>" + boardListItem.get(j).get("ATTACHMENTS") + "</ATTACHMENTS>");
 					resultXML.append("<GUBUN>" + boardListItem.get(j).get("GUBUN") + "</GUBUN>");
+					resultXML.append("<LIKECOUNT>" + boardListItem.get(j).get("LIKECOUNT") + "</LIKECOUNT>");
 				}
 				resultXML.append("</CELL>");
 			}
@@ -7612,7 +7651,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	        	resultXML.append("</HEADER>");
         	}
         }
-
+        
         resultXML.append("</HEADERS>");
         resultXML.append("<ROWS>");
         resultXML.append("</ROWS>");

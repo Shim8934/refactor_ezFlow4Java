@@ -105,6 +105,7 @@
 		    var starttime;
 		    var endtime;
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+		    var likeFlag = "${boardInfo.likeFlag}";
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
 		    
@@ -308,7 +309,8 @@
 							 orderCell 	 : OrderCell, 
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
-							 type 		 : type
+							 type 		 : type,
+							 likeFlag : likeFlag
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));

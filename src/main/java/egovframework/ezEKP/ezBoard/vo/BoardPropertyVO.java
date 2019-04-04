@@ -135,6 +135,8 @@ public class BoardPropertyVO {
 	private String companyID;
 	/** 2018-10-15 홍승비 - 그룹사게시판 체크용 isAllGroupBoard 추가*/
 	private String isAllGroupBoard;
+	/** 2019-04-04 홍승비 - 게시판 좋아요 기능 플래그 추가 */
+	private String likeFlag;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -522,6 +524,12 @@ public class BoardPropertyVO {
 	}
 	public void setIsAllGroupBoard(String isAllGroupBoard) {
 		this.isAllGroupBoard = isAllGroupBoard;
+	}
+	public String getLikeFlag() {
+		return likeFlag;
+	}
+	public void setLikeFlag(String likeFlag) {
+		this.likeFlag = likeFlag;
 	}
 	
 }

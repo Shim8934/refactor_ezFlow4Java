@@ -52,6 +52,8 @@ public class BoardVO {
 	private String nowDate;
 	/** 게시글 내용*/
 	private String content;
+	/** 2019-04-04 홍승비 - 게시판 좋아요 기능 플래그 추가 */
+	private String likeFlag;
 	
 	public int getSs_board_maxRows() {
 		return ss_board_maxRows;
@@ -202,6 +204,12 @@ public class BoardVO {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public String getLikeFlag() {
+		return likeFlag;
+	}
+	public void setLikeFlag(String likeFlag) {
+		this.likeFlag = likeFlag;
 	}
 	
 }

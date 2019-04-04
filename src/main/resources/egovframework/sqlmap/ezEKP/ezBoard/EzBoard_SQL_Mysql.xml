@@ -1232,7 +1232,15 @@
                   WHERE
                       B.TENANT_ID = #v_TENANTID#
                   AND 
-                      B.BOARDID = A.BOARDID ) as GUBUN
+                      B.BOARDID = A.BOARDID ) as GUBUN,
+				(SELECT 
+                	IFNULL(COUNT(*), 0)  
+    			FROM 
+    				TBL_Board_Like
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) as LIKECOUNT
 			  FROM 
 			  	TBL_BOARD_ITEM A 
 			  LEFT OUTER JOIN 
@@ -1442,7 +1450,15 @@
                   WHERE
                       B.TENANT_ID = #v_TENANTID#
                   AND 
-                      B.BOARDID = A.BOARDID ) as GUBUN
+                      B.BOARDID = A.BOARDID ) as GUBUN,
+				(SELECT 
+                	IFNULL(COUNT(*), 0)  
+    			FROM 
+    				TBL_Board_Like
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) as LIKECOUNT
               FROM 
               	TBL_Board_Item A
               WHERE  
@@ -1897,7 +1913,15 @@
    				A.DOCNO,
    				A.MAINCONTENT,
    				B.FILEPATH,
-   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG
+   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
+   				(SELECT 
+                	IFNULL(COUNT(*), 0)  
+    			FROM 
+    				TBL_Board_Like
+   				WHERE  
+   					TENANT_ID = A.TENANT_ID
+   				AND
+   					ITEMID = A.ItemID) as LIKECOUNT
 			  FROM 
 			  	TBL_BOARD_ITEM A 
 			  INNER JOIN 

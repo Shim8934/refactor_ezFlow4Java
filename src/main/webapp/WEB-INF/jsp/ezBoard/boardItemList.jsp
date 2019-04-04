@@ -107,6 +107,7 @@
 		    var starttime;
 		    var endtime;
 		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+			var likeFlag = "${boardInfo.likeFlag}";
 		    window.onunload = Window_onunload;
 		    var window_onunload_Event = false;
 		    window.onresize = function ()
@@ -365,7 +366,8 @@
 							 orderCell 	 : OrderCell, 
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
-							 type 		 : type
+							 type 		 : type,
+							 likeFlag : likeFlag
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -409,6 +411,8 @@
 		            }
 		            if (document.getElementById("lvBoardList").innerHTML != "")
 		                document.getElementById("lvBoardList").innerHTML = "";
+		            
+		            console.log(xmlDoc);
 		            
 		            var DocList = new ListView();
 		            DocList.SetID("BoardList");

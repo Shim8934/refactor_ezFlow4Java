@@ -101,6 +101,8 @@
 		    var pMode = "new";
 		    var starttime;
 		    var endtime;
+		    var isAllGroupBoard = "${boardInfo.isAllGroupBoard}";
+			var likeFlag = "${boardInfo.likeFlag}";
 		    window.onresize = Window_resize;
 		    document.onselectstart = function () { return false; };
 		    
@@ -122,6 +124,13 @@
 		
 		        if (document.documentElement.clientWidth < 1300) {
 		            document.getElementById("right").style.display = "none";
+		        }
+		        
+		        /* 2019-04-04 홍승비 - 그룹사게시판의 경우, 사용자단에서 권한설정 버튼 숨김 */
+		        if (BoardAdmin_FG == "true" && isAllGroupBoard == "Y") {
+			        if (parent.document.location.href != null && parent.document.location.href.indexOf("/admin/") < 0) {
+						document.getElementById("btn_acl").style.display = "none";
+			        }
 		        }
 		    };
 		    
@@ -296,7 +305,8 @@
 							 orderCell 	 : OrderCell, 
 							 orderOption : OrderOption,
 							 searchQuery : SQLPARADATA,
-							 type 		 : type
+							 type 		 : type,
+							 likeFlag : likeFlag
 							},
 					success: function(xml){
 						getBoardList_after(loadXMLString(xml));
@@ -330,6 +340,10 @@
                     xmlDoc = createXmlDom();
                     xmlDoc.appendChild(listNode);
                 }
+                
+                console.log(xmlDoc);
+                
+                
                 if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
                 var DocList = new ListView();
                 DocList.SetID("BoardList");

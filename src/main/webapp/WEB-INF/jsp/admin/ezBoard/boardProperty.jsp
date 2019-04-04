@@ -24,6 +24,7 @@
 	        var parentBoardID =  "<c:out value='${model.parentBoardID}'/>";
 	        var primary = "<c:out value='${primary}'/>";
 	        var isAllGroupBoard = "<c:out value='${isAllGroupBoard}'/>";
+	        var useBoardLike = "<c:out value='${model.likeFlag}'/>";
 	        var xmlhttp = createXMLHttpRequest();
 	        var ApprUserList = "";
 	        var selectTargetListXML = "";
@@ -49,8 +50,12 @@
 	            if (background == "Y") {
 	                $("#chkbackgroundimage").prop("checked",true);
 	            }
-	            if(FormFlag == "Y") {
+	            if (FormFlag == "Y") {
 	                $("#chkform").prop("checked",true);
+	            }
+	            /* 2019-04-04 홍승비 - 게시판에 좋아요 기능 추가 */
+				if (useBoardLike == "Y") {
+					$("#chkBoardLike").prop("checked",true);
 	            }
 	            if (pAdminType == "y") {
 	                parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t60' />";
@@ -111,6 +116,7 @@
 	                    document.getElementById("deleteAfterTr").style.display = "none";
 	                    document.getElementById("attachLimitTr").style.display = "none";
 	                    document.getElementById("oneLineTr").style.display = "none";
+	                    document.getElementById("trLike").style.display = "none";
 	                }
 	                
 	                if (!$("#chkURLBoard").is(":checked")) {
@@ -178,6 +184,12 @@
 	                FormFlag = "Y";
 	            } else {
 	                FormFlag = "N";
+				}
+	            
+	            if ($("#chkBoardLike").is(":checked")) {
+	            	useBoardLike = "Y";
+	            } else {
+	            	useBoardLike = "N";
 				}
 	            
 	            // 게시만료일 /* 2019-03-04 홍승비 - 게시판그룹인 경우 게시만료일 체크 분기 타지 않도록 수정 */
@@ -271,7 +283,8 @@
 	            		itemExpires:Expires, url:url, guBun:gubun, replyNotify:replynotify, deleteAfter:iDeleteAfter,
 	            		boardColor:brd_color, portlet:portlet, backGround:background,
 	            		formFlag:FormFlag, oneLineReply:oneLineReply, apprFlag:APPRFLAG, orgApprFlag:orgAPPRFLAG,
-	            		apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG, parentBoardID : parentBoardID
+	            		apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG, parentBoardID : parentBoardID,
+	            		likeFlag:useBoardLike
 	            	},
 	            	success : function(){
 	            		alert("<spring:message code='ezBoard.t79'/>");
@@ -438,6 +451,7 @@
                     document.getElementById("oneLineTr").style.display = "none";
                     document.getElementById("trAttribute").style.display = "none";
                     document.getElementById("chkNotifyTr").style.display = "none";
+                    document.getElementById("trLike").style.display = "none";
                     
                     document.getElementById("chkApprBoard").checked = false;
                     checkApprBoard();                   
@@ -448,6 +462,7 @@
                     document.getElementById("chkform").checked = false;
                     document.getElementById("chkNotify").checked = false;
                     document.getElementById("chkOneLine").checked = false;
+                    document.getElementById("chkBoardLike").checked = false;
 	            } else {
 					document.getElementById("txtURL").style.display = "none";
                     document.getElementById("tr1").style.display = "";
@@ -459,6 +474,7 @@
                     document.getElementById("oneLineTr").style.display = "";
                     document.getElementById("trAttribute").style.display = "";
                     document.getElementById("chkNotifyTr").style.display = "";
+                    document.getElementById("trLike").style.display = "";
 	            }
 
 	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명, 동영상게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
@@ -924,6 +940,12 @@
 	            <th><spring:message code="ezBoard.t999020" /></th>
 	            <td>
 	                <input type="checkbox" id="chkApprBoard" onclick="checkApprBoard()"><spring:message code="ezBoard.t162" />
+	            </td>
+	        </tr>
+	         <tr id="trLike" style="${style}">
+	            <th><spring:message code="ezBoard.hsb11" /></th>
+	            <td>
+	                <input type="checkbox" id="chkBoardLike"><spring:message code="ezBoard.t162" />
 	            </td>
 	        </tr>
 	        <tr id="chkApprListMail" style="display:none;">
