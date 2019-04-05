@@ -37,7 +37,18 @@
 			.iPBInnerDiv_Top{display:inline-block; float:right; width:40px; margin-top: 15px;}
 			.iPBInnerDiv_Top i{font-size:25px; color:black; cursor:pointer;}
 			.iPBInnerDiv_TopOff{display:none; float:right; width:40px;}
-			.iPBInnerDiv{height:50px; padding-right: 15px}
+			.iPBInnerDiv{height:50px; padding-right: 15px}	
+			.likeButton {
+				padding:5px;
+				cursor:pointer;
+				display:inline-block;
+				border:1px solid #c7c7c7;
+			    border-radius:2px;
+			}
+			.likeButton:hover {
+				background-color:#f1f8ff;
+				border:1px solid #6793d8;
+			}
 		</style>
 		<script type="text/javascript">
 				window.offscreenBuffering = true;
@@ -110,6 +121,15 @@
 		            /* 2018-07-24 홍승비 - 투표 모듈의 이미지 레이어팝업 포토+썸넬게시물에도 적용 */
 		            addThumbnailEvent();
 		        };
+		        
+		        $(document).ready(function() {
+					/* 2019-04-05 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩과 height 조절 */
+		            if (likeFlag != null && likeFlag == "Y") {
+						$(".MainContentTD").css({"padding" : "15px 0px 4px 0px", "height" : "47px"});
+						$("#MainContent").css("height", "35px");
+		            }
+		        });
+		        
 		        //강민수92 댓글 클릭 이벤트
 			    function btn_One_Line_Reply_Onclick() {
 			    	if (OneLineReplyFlag == "1") {
@@ -1711,21 +1731,21 @@
 		            </td>
 		        </tr>
 		        <tr>
-		        	<td style="padding:15px 0px 5px 0px; height:50px; text-align:center" colspan="3">
-		            	<div id="MainContent" style="height:35px; padding-left:23%; padding-right:24%;"></div>
+		        	<td class="MainContentTD" style="padding:10px 0px; height:83px; text-align:center" colspan="3">
+		            	<div id="MainContent" style="height:60px; padding-left:23%; padding-right:24%;"></div>
 		            </td>
 		        </tr>
 			<%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>
 			<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
 				<tr>
-					<td style="text-align:center; padding-bottom:15px;" colspan="3">
-					  	<span class="likeButton" style="cursor:pointer;" onclick="clickLikeButton()">
+					<td style="text-align:center; padding-bottom:8px;" colspan="3">
+					  	<span class="likeButton" style="cursor:pointer; margin-left:-7px;" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
 						  	<c:choose>
 						  		<c:when test="${isLikeChecked == 'Y'}">
-						  			<img id="likeButtonImg" src="/images/like_on.png" alt="<spring:message code='ezBoard.hsb10'/>"/>
+						  			<img id="likeButtonImg" src="/images/like_on.png"/>
 						  		</c:when>
 						  		<c:otherwise>
-						  			<img id="likeButtonImg" src="/images/like_off.png" alt="<spring:message code='ezBoard.hsb10'/>"/>
+						  			<img id="likeButtonImg" src="/images/like_off.png"/>
 						  		</c:otherwise>
 						  	</c:choose>
 					  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>

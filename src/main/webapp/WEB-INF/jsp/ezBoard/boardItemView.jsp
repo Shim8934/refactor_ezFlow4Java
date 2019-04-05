@@ -20,6 +20,19 @@
 		<script type="text/javascript" src="${util.addVer('/js/rsa/prng4.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
+		<style>
+			.likeButton {
+				padding:5px;
+				cursor:pointer;
+				display:inline-block;
+				border:1px solid #c7c7c7;
+			    border-radius:2px;
+			}
+			.likeButton:hover {
+				background-color:#f1f8ff;
+				border:1px solid #6793d8;
+			}
+		</style>
 		<script  type="text/javascript">
 		    window.onbeforeunload = function () {
 		        try {
@@ -238,6 +251,12 @@
 		                document.getElementById("WriteUserNM").innerHTML = Div.outerHTML;
 		            }
 		            
+		            /* 2019-04-05 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩 상하 조절 */
+		            if (likeFlag != null && likeFlag == "Y") {
+		            	document.getElementsByClassName("pad1")[1].style.padding = "0px";
+						document.getElementById("pad1").style.padding = "10px 0px 0px 0px";
+		            }
+		            
 		            if (g_progresswin) g_progresswin.close();
 		        }
 		        catch (e) {
@@ -298,7 +317,7 @@
 					            }
 					            /* 2019-04-05 홍승비 - 좋아요 버튼 추가로 게시물 본문 세로길이 수정 */
 					        	if (likeFlag != null && likeFlag == "Y") {
-									contentHeight = contentHeight - 20;
+									contentHeight = contentHeight - 28;
 					        	}
 					            document.getElementById("message").style.height = contentHeight + "PX";
 					            document.getElementById("pad1").style.height = contentHeight + "PX";
@@ -310,7 +329,7 @@
 					                contentHeight = document.documentElement.clientHeight - 268;
 					            }
 					            if (likeFlag != null && likeFlag == "Y") {
-									contentHeight = contentHeight - 20;
+									contentHeight = contentHeight - 28;
 					        	}
 					            document.getElementById("message").style.height = contentHeight + "PX";
 					            document.getElementById("pad1").style.height = contentHeight + "PX";
@@ -1527,13 +1546,13 @@
 		<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
 			<tr>
 				<td style="text-align:center;">
-				  	<span class="likeButton" style="cursor:pointer;" onclick="clickLikeButton()">
+				  	<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
 					  	<c:choose>
 					  		<c:when test="${isLikeChecked == 'Y'}">
-					  			<img id="likeButtonImg" src="/images/like_on.png" alt="<spring:message code='ezBoard.hsb10'/>"/>
+					  			<img id="likeButtonImg" src="/images/like_on.png"/>
 					  		</c:when>
 					  		<c:otherwise>
-					  			<img id="likeButtonImg" src="/images/like_off.png" alt="<spring:message code='ezBoard.hsb10'/>"/>
+					  			<img id="likeButtonImg" src="/images/like_off.png"/>
 					  		</c:otherwise>
 					  	</c:choose>
 					  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>

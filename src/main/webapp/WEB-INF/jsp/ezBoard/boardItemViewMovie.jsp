@@ -25,6 +25,17 @@
 					MARGIN-TOP: 0mm;
 					MARGIN-BOTTOM: 0mm;
 				}
+			.likeButton {
+				padding:5px;
+				cursor:pointer;
+				display:inline-block;
+				border:1px solid #c7c7c7;
+			    border-radius:2px;
+			}
+			.likeButton:hover {
+				background-color:#f1f8ff;
+				border:1px solid #6793d8;
+			}
 		</style>
 		<script type="text/javascript">
 				window.offscreenBuffering = true;
@@ -88,6 +99,13 @@
 		               // document.getElementById("WriteUserNM").innerHTML = "${boardItem.writerName}";
 		            }       
 		        };
+		        
+		        $(document).ready(function() {
+					/* 2019-04-05 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩 조절 */
+		            if (likeFlag != null && likeFlag == "Y") {
+						$(".movieTR").css("padding" , "20px 0px 0px 0px");
+		            }
+		        });
 		        
 		        function imageViewInit()
 		        {
@@ -656,7 +674,7 @@
 		  <tr>
 		    <td style="width:100%;  text-align:center; padding-top:10px;" >
 		        <table style="width:100%; border:1px solid #ddd; min-height:450px;">
-		        <tr style="display:table-cell; padding: 20px 0px 0px 0px;">
+		        <tr class="movieTR" style="display:table-cell;">
 		            <td style="display:inline-block;">
 		                <table id="movieTable">
 		                    <tr>  
@@ -671,13 +689,13 @@
 				<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
 					<tr>
 						<td style="text-align:center; padding-bottom:5px;">
-						  	<span class="likeButton" style="cursor:pointer;" onclick="clickLikeButton()">
+						  	<span class="likeButton" style="cursor:pointer;" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
 							  	<c:choose>
 							  		<c:when test="${isLikeChecked == 'Y'}">
-							  			<img id="likeButtonImg" src="/images/like_on.png" alt="<spring:message code='ezBoard.hsb10'/>"/>
+							  			<img id="likeButtonImg" src="/images/like_on.png"/>
 							  		</c:when>
 							  		<c:otherwise>
-							  			<img id="likeButtonImg" src="/images/like_off.png" alt="<spring:message code='ezBoard.hsb10'/>"/>
+							  			<img id="likeButtonImg" src="/images/like_off.png"/>
 							  		</c:otherwise>
 							  	</c:choose>
 						  		<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
