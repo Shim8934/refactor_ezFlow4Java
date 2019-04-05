@@ -988,7 +988,7 @@ reformUseProc.onLoadHandler = function() {
 				 */
 				});
 				
-				if (stageName == "draft" && !isRedraft) {
+				if (stageName == "draft" && (!isRedraft || $(controlElement).val() === "")) {
 					$(controlElement).datepicker('setDate', new Date());
 				}
 			}
@@ -1033,7 +1033,7 @@ reformUseProc.onLoadHandler = function() {
 					'step': timeGap
 				});
 				
-				if (stageName == "draft" && !isRedraft) {
+				if (stageName == "draft" && (!isRedraft || $(controlElement).val() === "")) {
 					$(controlElement).timepicker('setTime', new Date());
 				}
 			}
