@@ -717,4 +717,24 @@ public class EzBoardDAO extends EgovAbstractDAO{
 	public void modUpdateDate(Map<String, Object> map) throws Exception {
 		update("EzBoardDAO.modUpdateDate", map);
 	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 삽입 */
+	public void likeInsert(Map<String, Object> map) throws Exception {
+		insert("EzBoardDAO.likeInsert", map);
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 삭제 */
+	public void likeDelete(Map<String, Object> map) throws Exception {
+		delete("EzBoardDAO.likeDelete", map);
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 여부 체크 */
+	public String likeCheck(Map<String, Object> map) throws Exception {
+		return (String) select("EzBoardDAO.likeCheck", map);
+	}
+	
+	/* 2019-04-05 홍승비 - 좋아요 갯수 가져오기 */
+	public int getlikeCount(Map<String, Object> map) throws Exception {
+		return (int) select("EzBoardDAO.getlikeCount", map);
+	}
 }

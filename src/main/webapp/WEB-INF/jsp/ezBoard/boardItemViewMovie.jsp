@@ -57,6 +57,8 @@
 				var g_progresswin;
 				var OneLineReplyFlag = "${oneLineReplyFlag}";
 				var gubun = "${boardInfo.guBun}";
+				var isLikeChecked = "<c:out value='${isLikeChecked}'/>";
+				var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
 				var commentCount = "${commentCount}";
 		        var ImageCount = "";
 		        var moviePath = "";
@@ -518,6 +520,56 @@
 		            window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURI(pBoardID) + "&itemID=" + encodeURI(pItemID) + "&mode=modify" + "&location=", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=679,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        }
 		    	
+		        /* 2019-04-05 홍승비 - 좋아요 버튼 클릭 동작 */
+			    function clickLikeButton() {
+			    	var mod = "";
+			    	if (isLikeChecked == "Y") {
+			    		mod = "DELETE";
+			    	} else {
+			    		mod = "INSERT";
+			    	}
+			    	
+			    	$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/clickLikeMod.do",
+						data : {
+							mod: mod,
+							itemID : pItemID
+						},
+						success: function(result){
+							isLikeChecked = result;
+							updateLikeCountImg(isLikeChecked);
+						}
+					});
+			    }
+			    
+			    /* 2019-04-05 홍승비 - 좋아요 버튼 이미지 및 좋아요 갯수 업데이트 */
+			    function updateLikeCountImg(isLikeChecked) {
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/getLikeCount.do",
+						data : {
+							itemID : pItemID
+						},
+						success: function(result){
+							if (parseInt(result) > 0) {
+								document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+							} else {
+								document.getElementById("likeCountSpan").innerText = "";
+							}
+							if (isLikeChecked == "Y") {
+					    		document.getElementById("likeButtonImg").src = "/images/like_on.png";
+					    	} else {
+					    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
+					    	}
+						}
+					});
+			    }
+			    
 		</script>
 	</head>
 	<body class="popup">
@@ -604,7 +656,7 @@
 		  <tr>
 		    <td style="width:100%;  text-align:center; padding-top:10px;" >
 		        <table style="width:100%; border:1px solid #ddd; min-height:450px;">
-		        <tr style="display:table-cell;">
+		        <tr style="display:table-cell; padding: 20px 0px 0px 0px;">
 		            <td style="display:inline-block;">
 		                <table id="movieTable">
 		                    <tr>  
@@ -615,6 +667,24 @@
 		           	    </table>
 		            </td>
 		        </tr>
+				<%-- 2019-04-05 홍승비 - 본문 하단에 좋아요 버튼 추가 --%>
+				<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+					<tr>
+						<td style="text-align:center; padding-bottom:5px;">
+						  	<span class="likeButton" style="cursor:pointer;" onclick="clickLikeButton()">
+							  	<c:choose>
+							  		<c:when test="${isLikeChecked == 'Y'}">
+							  			<img id="likeButtonImg" src="/images/like_on.png" alt="<spring:message code='ezBoard.hsb10'/>"/>
+							  		</c:when>
+							  		<c:otherwise>
+							  			<img id="likeButtonImg" src="/images/like_off.png" alt="<spring:message code='ezBoard.hsb10'/>"/>
+							  		</c:otherwise>
+							  	</c:choose>
+						  		<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
+						  	</span>
+						</td>
+					</tr>
+				</c:if>
 		        </table>
 		    </td>
 		  </tr>

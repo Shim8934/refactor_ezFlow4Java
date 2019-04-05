@@ -341,9 +341,6 @@
                     xmlDoc.appendChild(listNode);
                 }
                 
-                console.log(xmlDoc);
-                
-                
                 if (document.getElementById("lvBoardList").innerHTML != "") document.getElementById("lvBoardList").innerHTML = "";
                 var DocList = new ListView();
                 DocList.SetID("BoardList");

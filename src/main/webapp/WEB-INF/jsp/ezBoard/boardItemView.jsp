@@ -57,6 +57,8 @@
 		    var OneLineReplyFlag = "${boardPropertyVO.oneLineReply}";
 		    var commentCount = "${commentCount}";
 			var gubun = "${guBun}";
+			var isLikeChecked = "<c:out value='${isLikeChecked}'/>";
+			var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
 		    var pUse_Editor = "${useEditor}";
 			var pNoneActiveX = "YES";
 		    //추가항목 유무
@@ -294,6 +296,10 @@
 					            } else {
 					                contentHeight = document.documentElement.clientHeight - 268 - addheight;
 					            }
+					            /* 2019-04-05 홍승비 - 좋아요 버튼 추가로 게시물 본문 세로길이 수정 */
+					        	if (likeFlag != null && likeFlag == "Y") {
+									contentHeight = contentHeight - 20;
+					        	}
 					            document.getElementById("message").style.height = contentHeight + "PX";
 					            document.getElementById("pad1").style.height = contentHeight + "PX";
 					        } else {
@@ -303,11 +309,14 @@
 					            } else {
 					                contentHeight = document.documentElement.clientHeight - 268;
 					            }
+					            if (likeFlag != null && likeFlag == "Y") {
+									contentHeight = contentHeight - 20;
+					        	}
 					            document.getElementById("message").style.height = contentHeight + "PX";
 					            document.getElementById("pad1").style.height = contentHeight + "PX";
 					        }
 //	 			        }
-			        }	    	
+			        }
 		    }
 		
 		    function AddLinkTarget() {
@@ -1133,6 +1142,57 @@
 		        }
 		        window.close();
 		    }
+		    
+		    /* 2019-04-05 홍승비 - 좋아요 버튼 클릭 동작 */
+		    function clickLikeButton() {
+		    	var mod = "";
+		    	if (isLikeChecked == "Y") {
+		    		mod = "DELETE";
+		    	} else {
+		    		mod = "INSERT";
+		    	}
+		    	
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/clickLikeMod.do",
+					data : {
+						mod: mod,
+						itemID : pItemID
+					},
+					success: function(result){
+						isLikeChecked = result;
+						updateLikeCountImg(isLikeChecked);
+					}
+				});
+		    }
+		    
+		    /* 2019-04-05 홍승비 - 좋아요 버튼 이미지 및 좋아요 갯수 업데이트 */
+		    function updateLikeCountImg(isLikeChecked) {
+		    	$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/getLikeCount.do",
+					data : {
+						itemID : pItemID
+					},
+					success: function(result){
+						if (parseInt(result) > 0) {
+							document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+						} else {
+							document.getElementById("likeCountSpan").innerText = "";
+						}
+						if (isLikeChecked == "Y") {
+				    		document.getElementById("likeButtonImg").src = "/images/like_on.png";
+				    	} else {
+				    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
+				    	}
+					}
+				});
+		    }
+		    
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden; height:100%;">
@@ -1462,6 +1522,26 @@
 			  </c:otherwise>
 		  </c:choose>
 		  </tr>
+		  
+		<%-- 2019-04-05 홍승비 - 본문 하단, 첨부파일/한줄댓글 상단에 좋아요 버튼 추가 --%>
+		<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+			<tr>
+				<td style="text-align:center;">
+				  	<span class="likeButton" style="cursor:pointer;" onclick="clickLikeButton()">
+					  	<c:choose>
+					  		<c:when test="${isLikeChecked == 'Y'}">
+					  			<img id="likeButtonImg" src="/images/like_on.png" alt="<spring:message code='ezBoard.hsb10'/>"/>
+					  		</c:when>
+					  		<c:otherwise>
+					  			<img id="likeButtonImg" src="/images/like_off.png" alt="<spring:message code='ezBoard.hsb10'/>"/>
+					  		</c:otherwise>
+					  	</c:choose>
+					  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${boardItem.likeCount > 0}"> (<c:out value="${boardItem.likeCount}"/>)</c:if></span>
+				  	</span>
+				</td>
+			</tr>
+		</c:if>
+		  
 		  <c:choose>
 			  <c:when test="${boardPropertyVO.oneLineReply == '1'}">
 <!-- 				  <tr> -->

@@ -412,8 +412,6 @@
 		            if (document.getElementById("lvBoardList").innerHTML != "")
 		                document.getElementById("lvBoardList").innerHTML = "";
 		            
-		            console.log(xmlDoc);
-		            
 		            var DocList = new ListView();
 		            DocList.SetID("BoardList");
 		            DocList.SetMulSelectable(false);

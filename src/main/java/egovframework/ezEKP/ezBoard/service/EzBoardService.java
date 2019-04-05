@@ -31,9 +31,10 @@ public interface EzBoardService {
 	/* 2018-06-27 홍승비 - 즐겨찾기 탭 표출 시 companyID 조건 추가 */
 	public List<BoardMyFavoriteVO> get_favoriteList(String userID, String pMode, String companyID, int tenantID) throws Exception;
 
-	public List<BoardListHeaderVO> getListHeader(BoardVO ezBoardVO) throws Exception;
+	/* 2019-04-05 홍승비 - DB에 존재하지 않는 헤더 임의로 추가하는 경우 다국어 지원을 위해 userInfo 추가 */
+	public List<BoardListHeaderVO> getListHeader(LoginVO userInfo, BoardVO ezBoardVO) throws Exception;
 	
-	public List<BoardListHeaderVO> getListHeaderBoardID(BoardVO ezBoardVO) throws Exception;
+	public List<BoardListHeaderVO> getListHeaderBoardID(LoginVO userInfo, BoardVO ezBoardVO) throws Exception;
 	
 	public List<BoardAttachVO> brdGetItemAttachmentInfo(String pItemID, int tenantID) throws Exception;
 	
@@ -308,5 +309,14 @@ public interface EzBoardService {
 	
 	/* 2019-01-15 홍승비 - 수정일(updateDate)만을 업데이트하는 쿼리 추가 */
 	public void modUpdateDate(String updateDate, String itemID, int tenantID) throws Exception;
+	
+	/* 2019-04-05 홍승비 - 좋아요 삽입 */
+	public void likeInsert(String userID, String itemID, int tenantID) throws Exception;
+	/* 2019-04-05 홍승비 - 좋아요 삭제 */
+	public void likeDelete(String userID, String itemID, int tenantID) throws Exception;
+	/* 2019-04-05 홍승비 - 좋아요 여부 체크 */
+	public String likeCheck(String userID, String itemID, int tenantID) throws Exception;
+	/* 2019-04-05 홍승비 - 좋아요 갯수 가져오기 */
+	public int getLikeCount(String itemID, int tenantID) throws Exception;
 	
 }
