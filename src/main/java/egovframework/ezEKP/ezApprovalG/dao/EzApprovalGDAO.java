@@ -3095,12 +3095,12 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		return (int) select("EzApprovalG.getLinkedAttachFileCount", map);
 	}
 	
-	public String getReformFlag(Map<String, Object> map) throws Exception {
-		return (String) select("EzApprovalG.getReformFlag", map);
+	public String getFormIdOfTempDocument(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getFormIdOfTempDocument", map);
 	}
 	
-	public String getReformFlagForTempDoc(Map<String, Object> map) throws Exception {
-		return (String) select("EzApprovalG.getReformFlagForTempDoc", map);
+	public String getReformFlag(Map<String, Object> map) throws Exception {
+		return (String) select("EzApprovalG.getReformFlag", map);
 	}
 	
 	public ApprGFormVO getReformInfoForApprovalDocument(Map<String, Object> map) throws Exception {

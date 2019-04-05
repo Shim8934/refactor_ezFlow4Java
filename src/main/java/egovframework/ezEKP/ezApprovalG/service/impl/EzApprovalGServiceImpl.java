@@ -32,28 +32,13 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-
-import kr.dogfoot.hwplib.object.HWPFile;
-import kr.dogfoot.hwplib.object.bodytext.Section;
-import kr.dogfoot.hwplib.object.bodytext.control.Control;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositonShapeIdPair;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
-import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
-import kr.dogfoot.hwplib.reader.HWPReader;
-import kr.dogfoot.hwplib.writer.HWPWriter;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -129,6 +114,21 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
+import kr.dogfoot.hwplib.object.HWPFile;
+import kr.dogfoot.hwplib.object.bodytext.Section;
+import kr.dogfoot.hwplib.object.bodytext.control.Control;
+import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
+import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
+import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
+import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositonShapeIdPair;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
+import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
+import kr.dogfoot.hwplib.reader.HWPReader;
+import kr.dogfoot.hwplib.writer.HWPWriter;
 
 @Service("EzApprovalGService")
 public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprovalGService {
@@ -141,6 +141,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Autowired
 	private ApplicationContext context;
+	
+	@Autowired
+	private ServletContext servletContext;
 	
 	@Autowired
 	private Properties config;
@@ -26755,7 +26758,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              	 org.w3c.dom.Element contentElement = objXML.createElement("content");
                  objXML.getElementsByTagName("contents").item(0).appendChild(contentElement);
                  contentElement.setAttribute("content-role", "return");
-                 contentElement.setAttribute("filename", "return.txt");
+                 contentElement.setAttribute("filename", "");
                  contentElement.setAttribute("content-transfer-encoding", "base64");
                  contentElement.setAttribute("content-type", "text/xml");
                  contentElement.setAttribute("charset", "euc-kr");
@@ -27184,6 +27187,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (rtnVal) {
 				result = "<RESLUT>TRUE</RESULT>";
+				
+				// 2019-2-7 재발송요청일경우 완료되면 문서정보 지워줌
+				if (type.equals("req-resend")) {
+					map.put("v_DocID", docID);
+					
+					ezApprovalGDAO.aprDeleteDocInfo(map);
+					ezApprovalGDAO.aprDeleteDocInfo2(map);
+					ezApprovalGDAO.aprDeleteDocInfo3(map);
+					ezApprovalGDAO.aprDeleteDocInfo4(map);
+					ezApprovalGDAO.aprDeleteDocInfo5(map);
+					ezApprovalGDAO.aprDeleteDocInfo6(map);
+					ezApprovalGDAO.aprDeleteDocInfo7(map);
+					ezApprovalGDAO.aprDeleteDocInfo8(map);
+					ezApprovalGDAO.aprDeleteDocInfo9(map);
+				}
+				
 			} else {
 				result = "<RESULT>FALSE</RESULT>";
 			}
@@ -27424,7 +27443,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		parameterMap.put("tenantId", tenantId);
 
 		String reformFlag = ezApprovalGDAO.getReformFlag(parameterMap);
-		
+
+		if (reformFlag == null) {
+			return isReformFromFileSystem(formId, companyId, tenantId);
+		}
+
 		return "Y".equalsIgnoreCase(reformFlag);
 	}
 
@@ -27442,9 +27465,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		parameterMap.put("companyId", companyId);
 		parameterMap.put("tenantId", tenantId);
 
-		String reformFlag = ezApprovalGDAO.getReformFlagForTempDoc(parameterMap);
-		
-		return "Y".equalsIgnoreCase(reformFlag);
+		String formId = ezApprovalGDAO.getFormIdOfTempDocument(parameterMap);
+
+		return isReform(formId, companyId, tenantId);
 	}
 
 	@Override
@@ -27456,8 +27479,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		// formId, reformflag
 		ApprGFormVO reformInfo = (ApprGFormVO) ezApprovalGDAO.getReformInfoForApprovalDocument(parameterMap);
-		
+
+		if (reformInfo.getReformFlag() == null) {
+			reformInfo.setReformFlag(isReformFromFileSystem(reformInfo.getFormID(), companyId, tenantId) ? "Y" : "N");
+		}
+
 		return reformInfo;
+	}
+
+	private boolean isReformFromFileSystem(String formId, String companyId, int tenantId) {
+		String realPath = servletContext.getRealPath("");
+		String approvalUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantId);
+		String reformDirectoryPathStr = String.join(commonUtil.separator, approvalUploadPath, companyId, "form", "reform", formId);
+
+		return Files.exists(Paths.get(realPath).resolve("." + reformDirectoryPathStr));
 	}
 
 	private String createDocNO(String cabinetSN, String docNumZeroCnt) {

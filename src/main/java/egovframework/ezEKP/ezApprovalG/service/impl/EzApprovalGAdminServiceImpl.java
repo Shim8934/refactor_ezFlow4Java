@@ -16,8 +16,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.stream.Stream;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletContext;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -62,6 +64,9 @@ import egovframework.let.utl.sim.service.EgovFileScrty;
 public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzApprovalGAdminService{
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private ServletContext servletContext;
 	
 	@Autowired
 	private EzOrganService ezOrganService;
@@ -2493,19 +2498,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_PREFORMFLAG", useReform ? "Y" : "N");
 
 		if (formID.equals("")) {
-			logger.debug("setFormDataSelect started.");
-			formID = ezApprovalGAdminDAO.setFormDataSelect(map);
-			logger.debug("setFormDataSelect ended.");
-			
-			if (formID == null) {
-				formID = commonUtil.getTodayUTCTime("YYYY") + "000001";
-			} else {
-				if (formID.substring(0,4).equals(commonUtil.getTodayUTCTime("YYYY"))) {
-					formID = Integer.toString((Integer.parseInt(formID) + 1));
-				} else {
-					formID = commonUtil.getTodayUTCTime("YYYY") + "000001";
-				}
-			}
+			formID = generateNextFormId(companyID, userInfo.getTenantId());
 			
 			map.put("v_PURL", path + commonUtil.separator + companyID + commonUtil.separator + "form" + commonUtil.separator + formID + ".mht");
 			map.put("v_PFORMID", formID);
@@ -2816,6 +2809,50 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		logger.debug("saveFormInfo ended.");
 		
 		return formID;
+	}
+	
+	private String generateNextFormId(String companyId, int tenantId) throws Exception {
+		Map<String, Object> parameter = new HashMap<>();
+		String currentYear = commonUtil.getTodayUTCTime("YYYY");
+		String formId;
+
+		parameter.put("companyID", companyId);
+		parameter.put("tenantID", tenantId);
+
+		logger.debug("setFormDataSelect started.");
+		formId = ezApprovalGAdminDAO.setFormDataSelect(parameter);
+		logger.debug("setFormDataSelect ended.");
+
+		if (formId == null) {
+			formId = currentYear + "000001";
+		} else {
+			if (formId.substring(0,4).equals(currentYear)) {
+				formId = Integer.toString((Integer.parseInt(formId) + 1));
+			} else {
+				formId = currentYear + "000001";
+			}
+		}
+
+		// 리폼 양식 관련 파일은 지우지 않기 때문에 폼 아이디가 겹칠 수 있음
+		String realPath = servletContext.getRealPath("");
+		String approvalUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantId);
+		String reformDirectoryPathStr = String.join(commonUtil.separator, approvalUploadPath, companyId, "form", "reform");
+		File reformDirectory = Paths.get(realPath).resolve("." + reformDirectoryPathStr).toFile();
+
+		if (!reformDirectory.exists()) {
+			return formId;
+		}
+
+		String maxReformId = Stream.of(reformDirectory.listFiles(File::isDirectory))
+				.map(File::getName)
+				.max(String::compareTo)
+				.orElse("");
+
+		if (maxReformId.compareTo(formId) >= 0) {
+			formId = Integer.toString((Integer.parseInt(maxReformId) + 1));
+		}
+
+		return formId;
 	}
 	
 	@SuppressWarnings("unchecked")

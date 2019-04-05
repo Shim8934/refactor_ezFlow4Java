@@ -1704,9 +1704,9 @@ public class CommonUtil {
 		try {
 			if(!request.getRequestURI().equals("/user/login/actionLogout.do") && cookies != null) {
 				for(Cookie cookie : cookies) {
-					if(cookie.getName().equalsIgnoreCase("loginCookie")) {
+					if(cookie.getName().equals("loginCookie")) {
 						loginCookie = cookie;
-					} else if(cookie.getName().equalsIgnoreCase("multiLoginCookie")) {
+					} else if(cookie.getName().equals("multiLoginCookie")) {
 						multiLoginCookie = cookie;
 					}
 				}
@@ -1741,6 +1741,7 @@ public class CommonUtil {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+			logger.debug("multilogin fail::: loginCookie = " + loginCookie);
 		}
 		
 		return result;

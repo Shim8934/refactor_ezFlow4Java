@@ -883,12 +883,12 @@
 					} catch (e) {
 					}
 					
-					if (parent.opener.getNoticePortletList != undefined) {
+					if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
 						parent.opener.getNoticePortletList();
 					}
 					
 					// 게시판 포틀릿 리스트 업데이트 되도록 수정
-		            if (parent.opener.getBoardPortletInfo != undefined) {
+		            if (parent.opener != null && parent.opener.getBoardPortletInfo != undefined) {
 		            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
 		            	var customBoardCount = customBoardList.length;
 		            	
@@ -903,7 +903,7 @@
 		            	}
 		            }
 					
-					if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+					if (parent.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
 						parent.opener.getBoardList_NewBoardSTD();
 					}
 					

@@ -192,3 +192,5 @@ var strLangKHA1 = "회사휴무일";
 var strLangKHA2 = "법정공휴일";
 //2018-02-22
 var strLangGHA1 = ", ";
+/* 2019-04-03 */
+var strLangHSB1 = "MHT 파일을 저장하는데 실패하였습니다.";

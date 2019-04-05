@@ -27605,27 +27605,21 @@
 			AND TENANT_ID = #tenantId#
 	</select>
 	
-	<select id="EzApprovalG.getReformFlagForTempDoc" parameterClass="Map" resultClass="String">
+	<select id="EzApprovalG.getFormIdOfTempDocument" parameterClass="Map" resultClass="String">
 		SELECT
-			FORM.REFORMFLAG
+			FORMID
 		FROM
-			TBL_TMPAPRDOCINFO TMP
-		INNER JOIN
-			TBL_FORMINFO FORM
-		ON
-			TMP.COMPANYID = FORM.COMPANYID
-			AND TMP.TENANT_ID = FORM.TENANT_ID
-			AND TMP.FORMID = FORM.FORMID
+			TBL_TMPAPRDOCINFO
 		WHERE
-			TMP.OWNERID = #ownerId#
-			AND TMP.SN = #sn#
-			AND TMP.COMPANYID = #companyId#
-			AND TMP.TENANT_ID = #tenantId#
+			OWNERID = #ownerId#
+			AND SN = #sn#
+			AND COMPANYID = #companyId#
+			AND TENANT_ID = #tenantId#
 	</select>
 	
 	<select id="EzApprovalG.getReformInfoForApprovalDocument" parameterClass="Map" resultClass="ApprGFormVO">
 		SELECT
-			FORMINFO.FORMID,
+			DOCINFO.FORMID,
 			FORMINFO.REFORMFLAG
 		FROM
 			(SELECT DOCID, COMPANYID, TENANT_ID, FORMID
@@ -27633,7 +27627,7 @@
 				UNION
 			SELECT DOCID, COMPANYID, TENANT_ID, FORMID
 			FROM TBL_ENDAPRDOCINFO) DOCINFO
-		JOIN
+		LEFT JOIN
 			TBL_FORMINFO FORMINFO
 		ON
 			FORMINFO.FORMID = DOCINFO.FORMID
