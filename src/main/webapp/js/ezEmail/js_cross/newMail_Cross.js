@@ -3130,27 +3130,13 @@ function NameChange_onClick_Complete(rgParams) {
         if (length == 0) {return; }
         
         for (count1 = 0; count1 < length; count1++) {
-        	newElem = PrepareMailTag(checkname_cross_dialogArguments[3].getAttribute("iType"), rgParams["returnedRecipientType"][count1], rgParams["returnedRecipientName"][count1],
-                    rgParams["returnedRecipientEmail"][count1], rgParams["returnedRecipientHref"][count1]);
-        	
-        	var IsInsert = CheckMailReceiver(newElem);
-        	
-        	if (!IsInsert) {
-        		if (!increaseReceiverCount(rgParams["returnedRecipientType"][count1], rgParams["returnedRecipientHref"][count1])) {
-            		return;
-            	}
-        		
-        		checkname_cross_dialogArguments[3].parentElement.insertAdjacentElement("afterEnd", newElem);
-        	}
-        	
-        	/*
         	if (!increaseReceiverCount(rgParams["returnedRecipientType"][count1], rgParams["returnedRecipientHref"][count1])) {
         		return;
         	}
         	
             newElem = PrepareMailTag(checkname_cross_dialogArguments[3].getAttribute("iType"), rgParams["returnedRecipientType"][count1], rgParams["returnedRecipientName"][count1],
                 rgParams["returnedRecipientEmail"][count1], rgParams["returnedRecipientHref"][count1]);
-            checkname_cross_dialogArguments[3].parentElement.insertAdjacentElement("afterEnd", newElem);*/
+            checkname_cross_dialogArguments[3].parentElement.insertAdjacentElement("afterEnd", newElem);
         }
 
         changedReceiverList.removeChild(checkname_cross_dialogArguments[3].parentElement);
