@@ -218,7 +218,7 @@
 	                        //Div_.style.textAlign = "left";
 	                        if (navigator.userAgent.indexOf('Firefox') != -1)
 	                            Div_.onkeypress = function (event) { var ret = onKeyDownEvent_Element(event, this); if (!ret) return false; };
-	                        Div_.innerHTML = TDRows.item(i).innerHTML;
+	                        Div_.innerHTML = TDRows.item(i).innerHTML.replace(/(<div>|<\/div>)/gi, ""); //2019-04-05 천성준 - 재기안 시, td속 div가 계속 쌓이는 문제때문에 문서 오픈 시, div제거 추가함
 	                        TDRows.item(i).innerHTML = "";
 	                        TDRows.item(i).appendChild(Div_);
 	                    }
