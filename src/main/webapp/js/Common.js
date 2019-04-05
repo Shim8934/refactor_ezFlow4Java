@@ -553,6 +553,14 @@ function GetOfficeVersion()
     return result;
 }
 
+// <c:out>를 통해 변환된 값을 원복시킨다 2019-04-05 임민석
+function replaceEntityCodeToStr(str) {
+	return str.replace("&amp;", "&")
+			  .replace("&lt;", "<")
+			  .replace("&gt;", ">")
+			  .replace("&#039;", "\'")
+			  .replace("&#034;", "\"");
+}
 
 
 
