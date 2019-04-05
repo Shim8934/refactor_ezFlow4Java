@@ -12,6 +12,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/draft_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/draftG_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/signSplit_Cross.js')}"></script>
@@ -497,13 +498,13 @@
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + strLanggarm05);
 					return;
 				} else if (deptCheckFlag == "2") {
-					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + replaceEntityCodeToStr(arr_userinfo[5]) + "'부서의 철로 변경해주시기바랍니다.");
 					return;
 				}
 		    	
@@ -996,10 +997,10 @@
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + strLanggarm05);
 					return;
 				}
 				
@@ -1292,10 +1293,10 @@
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + strLanggarm05);
 					return;
 				}
 				
@@ -1372,7 +1373,7 @@
 		            if (flag == false) {
 		                flag = true;
 		                IsSkipDrafter = "FALSE";
-		                DeptSymbol = getDeptSymbol(arr_userinfo[4], arr_userinfo[5]);
+		                DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
 		                drafterDeptid = arr_userinfo[4];
 		                getDraftInfo();
 		                //재사용이고 문서의 모든정보를 재사용하는 옵션일때
@@ -1408,10 +1409,10 @@
 	        	var deptCheckFlag = checkDeptAndCabinetId();
 	        	
 				if (deptCheckFlag == "3") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "' " + strLanggarm03 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + "'" + strLanggarm04 );
 					return;
 				} else if (deptCheckFlag == "4") {
-					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					alert(strLanggarm02 + " '" + replaceEntityCodeToStr(arr_userinfo[5]) + strLanggarm05);
 					return;
 				}
 				
