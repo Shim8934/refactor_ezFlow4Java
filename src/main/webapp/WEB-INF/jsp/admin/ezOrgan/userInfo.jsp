@@ -349,22 +349,19 @@
 					document.getElementById('Password').focus();
 					return;
 				}	        
-		        if (UserName.value.indexOf("(") != -1 || UserName.value.indexOf(")") != -1) {
-		            alert("<spring:message code='ezOrgan.t258' />");
+		        if (UserName.value.indexOf("(") > -1 || UserName.value.indexOf(")") > -1 || UserName.value.indexOf("&") > -1
+		        		 || UserName.value.indexOf("<") > -1 || UserName.value.indexOf(">") > -1 
+		        		 || UserName.value.indexOf("\"") > -1 || UserName.value.indexOf("'") > -1) {
+		            alert("<spring:message code='ezOrgan.t259' /> (,),&,<,>,\",' <spring:message code='ezOrgan.t260' />");
 		            return;
 		        }
-		        if (UserName.value.indexOf("&") != -1 || UserName.value.indexOf("<") != -1 || UserName.value.indexOf(">") != -1) {
-		            alert("<spring:message code='ezOrgan.t259' /><,> <spring:message code='ezOrgan.t260' />");
+		        if (UserName2.value.indexOf("(") > -1 || UserName2.value.indexOf(")") > -1 || UserName2.value.indexOf("&") > -1
+		        		 || UserName2.value.indexOf("<") > -1 || UserName2.value.indexOf(">") > -1 
+		        		 || UserName2.value.indexOf("\"") > -1 || UserName2.value.indexOf("'") > -1) {
+		            alert("<spring:message code='ezOrgan.t259' /> (,),&,<,>,\",' <spring:message code='ezOrgan.t260' />");
 		            return;
 		        }
-		        if (UserName2.value.indexOf("&") != -1 || UserName2.value.indexOf("<") != -1 || UserName2.value.indexOf(">") != -1) {
-		            alert("<spring:message code='ezOrgan.t259' /><,> <spring:message code='ezOrgan.t260' />");
-		            return;
-		        }
-		        if (document.getElementById("UserID").value.indexOf("&") != -1 || document.getElementById("UserID").value.indexOf("<") != -1 || document.getElementById("UserID").value.indexOf(">") != -1) {
-		            alert("<spring:message code='ezOrgan.t261' /><,> <spring:message code='ezOrgan.t260' />");
-		            return;
-		        }
+		        
 // 		        if (JobTitle.value.indexOf("&") != -1 || JobTitle.value.indexOf("<") != -1 || JobTitle.value.indexOf(">") != -1) {
 // 		            alert("<spring:message code='ezOrgan.t262' /><,> <spring:message code='ezOrgan.t260' />");
 // 		            return;
