@@ -889,9 +889,11 @@
 		<isNotEmpty prepend="AND" property="searchDeptId">
 			A.department = #searchDeptId#
 		</isNotEmpty>
-		<iterate prepend="AND A.department IN" property="deptIdList" open="(" close=")" conjunction=",">
-			#deptIdList[]#
-		</iterate>
+		<isNotEmpty property="deptIdList">
+			<iterate prepend="AND A.department IN" property="deptIdList" open="(" close=")" conjunction=",">
+				#deptIdList[]#
+			</iterate>
+		</isNotEmpty>
 	</select>
 
 	<select id="ezAttitudeAdminDAO.getAttitudeAuthList" parameterClass="Map" resultClass="AttitudeAuthorVO">
