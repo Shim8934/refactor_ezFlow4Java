@@ -769,6 +769,12 @@
 	                            pAlertContent = "<spring:message code='ezApprovalG.t146'/>";
 	                            OpenAlertUI(pAlertContent);
 	                            draftFlag = true;
+	                          
+	              		        //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+	              		        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
+	              		        	parent.opener.getApprovalList("reject");
+	              		        }
+	                            
 	                            window.close();
 	                        } else {
 	                            UndoSignInfo(rtnSignInfo);
@@ -948,13 +954,18 @@
 			    } catch (e) { }
 			
 			    try {
-			        if (bAttachProcess == false)
-			            window.opener.Refresh_Window();
+// 			        if (bAttachProcess == false)
+			        	//Refresh_Window() 사용안함으로 주석처리
+			            //window.opener.Refresh_Window();
 			    } catch (e) { }
 			
 			    try {
 			        bAttachProcess = true;
 			    } catch (e) { }
+			    
+		        try {
+		            window.opener.getApprGraph("appr");
+		        } catch (e) { }
 			}
 	
 			function btn_Attach_onclick() {

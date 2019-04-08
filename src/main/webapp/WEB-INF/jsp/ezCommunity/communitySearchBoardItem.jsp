@@ -142,7 +142,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			    
@@ -151,7 +151,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			    var settime;
@@ -248,7 +248,7 @@
 			    }
 
 			    var url = "/ezCommunity/searchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-			    url += "&boardID=" + pBoardID;
+			    url += "&boardID=" + encodeURIComponent(pBoardID);
 			    url += "&title=" + encodeURIComponent(title);
 			    url += "&writerName=" + encodeURIComponent(writerName);
 			    url += "&abstract=" + encodeURIComponent(strAbstract);
@@ -276,7 +276,7 @@
 		        	GetOpenWindow("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", 750, 721);
 		        }
 		        else {
-	                window.open("/ezCommunity/boardItemView.do?itemID=" + pItemID + "&boardID=" + pItemBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=721,width=750,top=" + pTop + ",left=" + pLeft, "");
+	                window.open("/ezCommunity/boardItemView.do?itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=721,width=750,top=" + pTop + ",left=" + pLeft, "");
 		        }
 		    }
 			
@@ -356,7 +356,7 @@
 
     		            if (pItemID != "") {
    		                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-   		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "checkPassword", GetOpenWindowfeature(340, 200));
+   		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "checkPassword", GetOpenWindowfeature(340, 200));
    		                    
    		                    try {
    		                    	OpenWin.focus();
@@ -377,7 +377,7 @@
 
         		            if (pItemID != "") {
        		                    checkpassword_dialogArguments[1] = DeleteItem_onclick_Complete;
-       		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + pItemID, "checkPassword", GetOpenWindowfeature(340, 200));
+       		                    var OpenWin = window.open("/ezCommunity/checkPassword.do?itemID=" + encodeURIComponent(pItemID), "checkPassword", GetOpenWindowfeature(340, 200));
        		                    
        		                    try {
        		                    	OpenWin.focus();
@@ -426,7 +426,7 @@
 			
 			function CheckIfHasReplies() {
 			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("GET", "/ezCommunity/checkIfHasReply.do?itemList=" + strListInfo, false);
+				xmlhttp.open("GET", "/ezCommunity/checkIfHasReply.do?itemList=" + encodeURIComponent(strListInfo), false);
 				xmlhttp.send();
 				
 				if (xmlhttp.responseText == "TRUE") {
@@ -489,7 +489,7 @@
 	            var strtext;
 	            var PagingHTML = "";
 	            document.getElementById("tblPageRayer").innerHTML = "";
-	            document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang82 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang83 + "]";
+	            document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
 	            strtext = "<div class='pagenavi'>";
 	            PagingHTML += strtext;
 	            var pageNum = CurPage;
@@ -720,7 +720,7 @@
 					arrList = null;		
 				
 					var xmlhttp = createXMLHttpRequest();
-					xmlhttp.open("POST", "/ezCommunity/setRead.do?boardID=" + pBoardID + "&itemIDList=" + strItemList, false);
+					xmlhttp.open("POST", "/ezCommunity/setRead.do?boardID=" + encodeURIComponent(pBoardID) + "&itemIDList=" + encodeURIComponent(strItemList), false);
 					xmlhttp.send();
 					xmlhttp = null;
 					refresh_onclick();
@@ -780,7 +780,7 @@
 				pheigth = pheigth - 200;
 				pwidth = pwidth - 127;
 
-				window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID +"&code=" + code, "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth,"");		
+				window.open("/ezCommunity/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) +"&code=" + code, "", "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=1, top=" + pheigth + ",left = " + pwidth,"");		
 			}
 
 			function BoardItemList() {
@@ -811,7 +811,7 @@
 			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 			
 				var url = "/ezCommunity/searchBoardItemPrint.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-				url += "&boardID=" + pBoardID;
+				url += "&boardID=" + encodeURIComponent(pBoardID);
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
 				url += "&strAbstract=" + encodeURIComponent(strAbstract);
@@ -856,10 +856,10 @@
 			<ul>
 				<li><span onClick="BoardItemList()"><spring:message code='ezCommunity.t987'/></span></li>
 				<li><span onClick="SetRead_onclick()"><spring:message code='ezCommunity.t915'/></span></li>
-				<li><span onClick="DeleteItem_onclick()"><spring:message code='ezCommunity.t208'/></span></li>
+				<li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
 <%-- 				<li><span onClick="CopyItem_onclick()"><spring:message code='ezCommunity.t911'/></span></li> --%>
 <%-- 				<li><span onClick="Print_onclick()"><spring:message code='ezCommunity.t951'/></span></li> --%>
-				<li><span onClick="refresh_onclick()"><spring:message code='ezCommunity.t912'/></span></li>				
+				<li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>				
 			</ul>
 		</div>
 		
@@ -874,7 +874,7 @@
 			</tr>
 			<tr>
 				<th><spring:message code='ezCommunity.t138'/></th>
-				<td><input class="inputText" type="text" id="txtWriterName" style="width:100px" value="<c:out value='${writerName}'/>"></td>
+				<td><input class="inputText" type="text" id="txtWriterName" style="width:100%" value="<c:out value='${writerName}'/>"></td>
 			</tr>
 			<tr>
 				<th><spring:message code='ezCommunity.t124'/></th>
@@ -888,7 +888,7 @@
 				<th><spring:message code='ezCommunity.t434'/></th>
 				<td>
 					<input class="inputText" type="text" id="Sdatepicker" style="width:80px;text-align:center"> ~ <input class="inputText" type="text" id="Edatepicker" style="width:80px;text-align:center">&nbsp;
-					<a class="imgbtn"><span onClick= "btn_PostDate_Clear()" popupLocation='bottomright'><spring:message code='ezCommunity.t444'/></span></a>&nbsp;<a class="imgbtn"><span onClick="search()"><spring:message code='ezCommunity.t31'/></span></a>
+					<a class="imgbtn imgbck"><span onClick= "btn_PostDate_Clear()" popupLocation='bottomright'><spring:message code='ezCommunity.t444'/></span></a>&nbsp;<a class="imgbtn imgbck"><span onClick="search()"><spring:message code='ezCommunity.t31'/></span></a>
 				</td>
 			</tr>
 			<table class="cmhomelist" style="margin-top:10px;width:100%">				

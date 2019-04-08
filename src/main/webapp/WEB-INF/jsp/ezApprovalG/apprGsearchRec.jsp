@@ -74,7 +74,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true,
 		            onClose: function (selectedDate) {
 		            	$("#Edatepicker").datepicker("option", "minDate", selectedDate);
@@ -85,7 +85,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true,
 		            onClose: function (selectedDate) {
 		            	$("#Sdatepicker").datepicker("option", "maxDate", selectedDate);

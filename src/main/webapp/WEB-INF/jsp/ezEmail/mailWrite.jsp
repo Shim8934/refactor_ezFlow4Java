@@ -168,7 +168,7 @@
 	    var searchStartDate = '<c:out value="${searchStartDate}"/>';
 	    var searchEndDate = '<c:out value="${searchEndDate}"/>';
 	    var shareId = '<c:out value="${shareId}"/>';
-	    
+	    var isMailToMe = "${isMailToMe}"; 
 	    var receiverCount = 0;
         var groupAddressCountMap = {};
         var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
@@ -2072,7 +2072,7 @@
 	                	</c:if>
 	                    <tr id="MsgTo_TR">
 	                        <th rowspan="2" style="width:1%">
-	                            <a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick('To')" style="width: 50px; text-align: center;">
+	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('To')" style="width: 50px; text-align: center;">
 	                                <spring:message code='ezEmail.t66' /></span></a>
 	                            <div style="font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe" style="vertical-align: middle"/>
 	                            <label for="toMe" style="margin-left:-3px;margin-top:1px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
@@ -2099,7 +2099,7 @@
 	                    </tr>
 	                    <tr id="MsgCC_TR">
 	                        <th rowspan="2">
-	                            <a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick('CC')" style="width: 50px; text-align: center;"> 
+	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('CC')" style="width: 50px; text-align: center;"> 
 	                                <spring:message code='ezEmail.t594' /></span></a>
 	                            <div onclick="MailBCCView(this);" style="cursor:pointer;" status="off" id="BccViewer">
 	                            <img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span>
@@ -2126,7 +2126,7 @@
 	                    </tr>
 	                    <tr id="MsgBCC_TR"  style="display:none;">
 	                        <th rowspan="2">
-	                            <a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick('BCC')" style="width: 50px; text-align: center;">
+	                            <a class="imgbtn"><span onclick="SelectReceiver_onClick('BCC')" style="width: 50px; text-align: center;">
 	                                <spring:message code='ezEmail.t562' /></span></a>
 	                        </th>
 	                        <td>
@@ -2229,11 +2229,11 @@
                                 <script type="text/javascript">EzHTTPTrans_ActiveX2("EzHTTPTrans","100%", "20");</script>                                
                             </td>
                             <td class="pos2">
-                                <a href="#" class="imgbtn"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
+                                <a class="imgbtn"><span id="btn_AttachAdd" onclick="attach_Add()"><spring:message code='ezEmail.t677' /></span></a>
                                 <br>
-                                <a href="#" class="imgbtn"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
+                                <a class="imgbtn"><span id="btn_bigAttachAdd" onclick="bigattach_Add()"><spring:message code='ezEmail.t663' /></span></a>
                                 <br>
-                                <a href="#" class="imgbtn"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
+                                <a class="imgbtn"><span id="btn_AttachDel" onclick="attach_Delete()"><spring:message code='ezEmail.t678' /></span></a></td>
                         </tr>
                     </table>
                 </td>
@@ -2284,6 +2284,12 @@
 	    	} else {
 	    		document.getElementById("EdtorSize").style.height = document.documentElement.clientHeight - $('#infoTable').height() - 160 + "PX";
 	    	}
+	    	
+	    	 // 내게쓰기 버튼 클릭시  checkobx checked 
+	    	if (isMailToMe == 'YES') {
+	         	document.getElementById('toMe').checked = 'checked';
+	  	        MailToMe_Onclick();
+         	}
 	    </script>
 	</body>
 	<xmp id="AttachXmlList" style="display:none;">

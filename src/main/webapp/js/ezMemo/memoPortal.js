@@ -3,14 +3,14 @@
  */
 function defaultPointer() {
 	$(".noteBlock").css("visibility", "hidden");
-	$("#open-memo").css("visibility", "visible");
+	//$("#open-memo").css("visibility", "visible");
 }
 
 /**
  * noteBlock(노트패널), layer-popup(노트판), open-memo(노트 아이콘)의 포인터 set 메서드
  */
 function setPanelPointer() {
-	$("#open-memo").draggable({
+/*	$("#open-memo").draggable({
 		containment : ".noteBlock",
 		stop : function() {
 
@@ -33,7 +33,19 @@ function setPanelPointer() {
 		} else {
 			$("#layer-popup").css("display", "none");
 		}
-	});
+	});*/
+	$("#open-memo").on("click", function(event) {
+		event.preventDefault();
+		if ("none" == ($("#layer-popup").css("display"))) {
+			//$("#open-memo").css("display", "none");
+			$(".noteBlock").css("visibility", "visible");
+			$("#layer-popup").css("display", "");
+			$("#contextMenuBlock").css("display", "none");
+		} else {
+			$("#layer-popup").css("display", "none");
+			$("#contextMenuBlock").css("display", "");
+		}
+	});	
 
 	$('.memo_wrap').on("mouseup", function() {
 		$(".noteBlock").css("visibility", "hidden");
@@ -107,13 +119,15 @@ function layerClose() {
     $(".memoClose").click(function() {
     	$("#layer-popup").css("display", "none")
 		$(".select_inner").css("display", "none");
-    	
-    	if (userGadget == 1) {
-    		$("#open-memo").css("display", "");
-    	} else {
-    		$("#open-memo").css("display", "none");
-    		setGadgetPositionResize();
-    	}
+    	$("#contextMenuBlock").css("display", "");
+
+/* 컨텍스트 메뉴 작업하면서 주석처리 */
+//    	if (userGadget == 1) {
+//    		$("#open-memo").css("display", "");
+//    	} else {
+//    		$("#open-memo").css("display", "none");
+//    		setGadgetPositionResize();
+//    	}
     	
     });	
 }
@@ -619,91 +633,94 @@ function layerResize() {
  * 퀵메모 위치값 저장 메서드
  * (display !== 'none')일때만
  */
-function setGadgetPosition() {
-	var gadgetStatus = $("#open-memo").css("display");
-	
-	if (gadgetStatus != "none") {
-		// 2019-01-04 김민성 - IE 메모 가젯 오류 수정
-		var topString = $("#open-memo").offset().top;
-		var leftString = $("#open-memo").offset().left;
-		
-    	/*var topPIndex = topString.indexOf("p");
-		var leftPIndex = leftString.indexOf("p");*/
-		
-		var windowHeight = parseInt(window.innerHeight);
-    	var windowWidth = parseInt(window.innerWidth);
-		
-    	var outHeight = parseInt($("#open-memo").height());
-    	var outWidth = parseInt($("#open-memo").width());
-		
-    	var gadgetBottom = windowHeight - outHeight - topString;
-		var gadgetRight = windowWidth - outWidth - leftString;
-		/*var gadgetBottom = windowHeight - outHeight - parseInt(topString.substr(0, topPIndex));
-		var gadgetRight = windowWidth - outWidth - parseInt(leftString.substr(0, leftPIndex));*/
-    	
-		$.ajax({
-			type : "POST",
-			data : {
-				gadgetBottom: gadgetBottom,
-				gadgetRight : gadgetRight
-			}, 
-			dataType: "JSON",
-			url : "/ezMemo/setGadgetPosition.do",
-			success : function(result) {
-				
-			}
-			
-		});
-	}
-	
-}
+/* 컨텍스트 메뉴 작업하면서 주석처리 */
+//function setGadgetPosition() {
+//	var gadgetStatus = $("#open-memo").css("display");
+//	
+//	if (gadgetStatus != "none") {
+//		// 2019-01-04 김민성 - IE 메모 가젯 오류 수정
+//		var topString = $("#open-memo").offset().top;
+//		var leftString = $("#open-memo").offset().left;
+//		
+//    	/*var topPIndex = topString.indexOf("p");
+//		var leftPIndex = leftString.indexOf("p");*/
+//		
+//		var windowHeight = parseInt(window.innerHeight);
+//    	var windowWidth = parseInt(window.innerWidth);
+//		
+//    	var outHeight = parseInt($("#open-memo").height());
+//    	var outWidth = parseInt($("#open-memo").width());
+//		
+//    	var gadgetBottom = windowHeight - outHeight - topString;
+//		var gadgetRight = windowWidth - outWidth - leftString;
+//		/*var gadgetBottom = windowHeight - outHeight - parseInt(topString.substr(0, topPIndex));
+//		var gadgetRight = windowWidth - outWidth - parseInt(leftString.substr(0, leftPIndex));*/
+//    	
+//		$.ajax({
+//			type : "POST",
+//			data : {
+//				gadgetBottom: gadgetBottom,
+//				gadgetRight : gadgetRight
+//			}, 
+//			dataType: "JSON",
+//			url : "/ezMemo/setGadgetPosition.do",
+//			success : function(result) {
+//				
+//			}
+//			
+//		});
+//	}
+//	
+//}
 
 
 /**
  * 퀵메모 위치값 get 메서드
  * @param memoConfigVO
  */
-function getGadgetPosition(memoConfigVO) {
-	
-	var gadgetBottom = memoConfigVO.gadget_bottom;
-	var gadgetRight = memoConfigVO.gadget_right;
-
-	$("#open-memo").css({"bottom" : gadgetBottom, "right" : gadgetRight})
-}
+/* 컨텍스트 메뉴 작업하면서 주석처리 */
+//function getGadgetPosition(memoConfigVO) {
+//	
+//	var gadgetBottom = memoConfigVO.gadget_bottom;
+//	var gadgetRight = memoConfigVO.gadget_right;
+//
+//	$("#open-memo").css({"bottom" : gadgetBottom, "right" : gadgetRight})
+//}
 
 
 /**
  * 윈도우 리사이즈 시, 퀵메모 위치 변경 메서드
  */
-function setGadgetPositionResize() {
-	
-	var bottom = $("#open-memo").offset().bottom;
-	var right = $("#open-memo").offset().right;
-	/*var stringBottom = $("#open-memo").css("bottom");
-	var stringRight = $("#open-memo").css("right");*/
-	
-	var windowHeight = parseInt(window.innerHeight);
-	var windowWidth = parseInt(window.innerWidth);
-	
-	/*var bottomPIndex = stringBottom.indexOf("p");
-	var rightPIndex = stringRight.indexOf("p");*/
-	
-	var width = parseInt($("#open-memo").width());
-	var height = parseInt($("#open-memo").height());
-	
-	/*var bottom = parseInt(stringBottom.substr(0, bottomPIndex));
-	var right = parseInt(stringRight.substr(0, rightPIndex));*/
-	
-	if (bottom < 0) {
-		$("#open-memo").css({"top" : "auto", "bottom" : 15 });
-	} 
-
-	if (right < 0) {
-		$("#open-memo").css({"left" : "auto", "right" : 15 });
-	}
-	
-	setGadgetPosition();
-}
+/* 컨텍스트 메뉴 작업하면서 주석처리 */
+//function setGadgetPositionResize() {
+//	
+//	var bottom = $("#open-memo").offset().bottom;
+//	var right = $("#open-memo").offset().right;
+//	/*var stringBottom = $("#open-memo").css("bottom");
+//	var stringRight = $("#open-memo").css("right");*/
+//	
+//	var windowHeight = parseInt(window.innerHeight);
+//	var windowWidth = parseInt(window.innerWidth);
+//	
+//	/*var bottomPIndex = stringBottom.indexOf("p");
+//	var rightPIndex = stringRight.indexOf("p");*/
+//	
+//	var width = parseInt($("#open-memo").width());
+//	var height = parseInt($("#open-memo").height());
+//	
+//	/*var bottom = parseInt(stringBottom.substr(0, bottomPIndex));
+//	var right = parseInt(stringRight.substr(0, rightPIndex));*/
+//	
+//	if (bottom < 0) {
+//		$("#open-memo").css({"top" : "auto", "bottom" : 15 });
+//	} 
+//
+//	if (right < 0) {
+//		$("#open-memo").css({"left" : "auto", "right" : 15 });
+//	}
+//	
+//	setGadgetPosition();
+//}
 
 
 /**
@@ -919,17 +936,24 @@ function quickMemoDisplay() {
     	success : function(result) {
     		userGadget = result.memoConfigVO.use_gadget;
     		var memoConfig = result.memoConfigVO;
+    		//portalContextMenu.js
+    		
     		if (userGadget == 1) {
     			var layerStatus = $("#layer-popup").css("display");
 
-    			if (layerStatus.indexOf("none") != -1) {
-        			getGadgetPosition(memoConfig);
-        			openMemo.style.display = "block";
-    			}
+//    			if (layerStatus.indexOf("none") != -1) {
+//        			getGadgetPosition(memoConfig);
+//        			openMemo.style.display = "block";
+//    			}
+    			
+    			setMemoFlag('YES');
     			
     		} else {
-    			openMemo.style.display = "none";
+    			if(openMemo !== null) {
+    				openMemo.style.display = "none";	
+    			}
     			document.getElementById("layer-popup").style.display = "none";
+    			setMemoFlag('NO');
     		}
     	}
 	});

@@ -1,0 +1,148 @@
+@CHARSET "UTF-8";
+
+.contextMenuBlock { 
+	visibility:hidden; 
+	margin: 0;
+	padding: 0;
+	width:100%;
+	height:100%;
+	position:absolute;
+	z-index:1000;
+	top:0;
+	left:0;
+}
+.contextMenuBtn{ 
+	z-index:1001; 
+	position:absolute; 
+	text-align:center; 
+	width:72px; 
+	height:72px; 
+	box-sizing:border-box; 
+	background:#0470e4; 
+	cursor:pointer; 
+	border-radius:45px; 
+	-webkit-border-radius:45px; 
+	-moz-border-radius:45px;
+	opacity: 0.7;
+}
+
+/* .contextMenuBtn:hover {
+	opacity: 1;	
+} */
+
+.contextMenu {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background-image: url(/images/contextmenu/menu.png);
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+/* .contextMenu span {
+	border-radius: 5px;
+	margin-bottom: 4px;
+	margin-top: 4px;
+    width: 55%;
+    height: 4px;
+    background: white;
+    display: block;	
+} */
+	
+.popupMenuBtn{ 
+	position:absolute; 
+	bottom:10px; 
+	right:10px; 
+	text-align:center; 
+ 	width:255px; 
+	height:255px;
+/* 	width:235px; 
+	height:235px;  */
+	box-sizing:border-box; 
+	background: #000000; 
+	opacity:0.7; 
+/* 	cursor:pointer; */ 
+	border-radius:135px; 
+	-webkit-border-radius:135px; 
+	-moz-border-radius:135px;
+	box-shadow: 0px 4px 5px 2px rgba(0, 0, 0, 0.35);
+}
+
+.quickMenuBtn {
+/* 	display:flex;	
+	flex-direction: column; */
+	height:100%;
+/* 	justify-content: space-around; */
+	align-items: center;
+}
+
+.quickMenuTop {
+	display: flex;	
+	justify-content: center;
+	align-items: center;
+	height:33%;
+}
+
+.quickMenuMiddle {
+	display: flex;	
+	justify-content: space-between;
+	align-items: center;
+	width: 85%;
+	margin-left:20px;
+	margin-top:-3px;
+	height:40%;	
+}
+
+.quickMenuBottom {
+	display: flex;	
+	justify-content: center;
+	align-items: center;
+	height:25%;
+}
+
+.quickMenuTop_memo {
+	display: flex;	
+	justify-content: center;
+	align-items: center;
+	height:36%;
+}
+
+.quickMenuMiddle_memo {
+	display: flex;	
+	justify-content: space-between;
+	width: 83%;
+	margin-top: -7px;
+	margin-left:23px;
+	height:35%;
+}
+
+.quickMenuBottom_memo {
+	display: flex;	
+	justify-content: space-between;
+	width: 58%;
+	margin-left:55px;
+}
+
+
+.quickMenuBtnDiv {
+	display: flex;
+	flex-direction: column;
+	cursor:pointer;	
+}
+
+.quickMenuBtnDiv span {
+	color: white;
+	max-width: 55px;
+}
+
+.quickMenuBtnDiv div {
+	display: flex;
+	justify-content: center;
+}
+
+.quickMenuBtnDiv:hover span{
+	color: #3398fe;
+	font-weight:600;
+}

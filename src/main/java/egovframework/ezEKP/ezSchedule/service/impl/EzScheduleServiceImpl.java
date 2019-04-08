@@ -58,13 +58,32 @@ public class EzScheduleServiceImpl implements EzScheduleService{
 	private static final Logger logger = LoggerFactory.getLogger(EzScheduleServiceImpl.class);
 
 	@Override
-	public List<ScheGetHolidayVO> getTholiday(String companyId, String userCompany, int tenantId) throws Exception {
+	public List<ScheGetHolidayVO> getTholiday(String companyId, String userCompany, int tenantId, String isRest) throws Exception {
+		logger.debug("===== getTholiday Start =====");
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_COMPANYID", companyId);
 		map.put("v_USERCOMPANY", userCompany);
 		map.put("v_TENANTID", tenantId);
+		map.put("isRest", isRest);
 		
-		return ezScheduleDAO.getTholiday(map);
+		List<ScheGetHolidayVO> List = ezScheduleDAO.getTholiday(map); 
+		logger.debug("===== getTholiday Ended =====");
+		return List;
+	}
+	
+	@Override
+	public List<ScheGetHolidayVO> getTholidayYear(String companyId,String userCompany, int tenantId, String isRest, String holidayYear) throws Exception {
+		logger.debug("===== getTholidayYear Start =====");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_COMPANYID", companyId);
+		map.put("v_USERCOMPANY", userCompany);
+		map.put("v_TENANTID", tenantId);
+		map.put("isRest", isRest);
+		map.put("holidayYear", holidayYear);
+		
+		List<ScheGetHolidayVO> List = ezScheduleDAO.getTholidayYear(map); 
+		logger.debug("===== getTholidayYear Ended =====");
+		return List;
 	}
 
 	@Override

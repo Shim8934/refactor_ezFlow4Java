@@ -84,10 +84,10 @@
 	                }
 	            }
 
-	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명, URL 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
+	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명, URL, 동영상 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
 	            //추가항목
 	            if ("${style}" == "") {
-	                if ($("#chkPhotoBoard").is(":checked") || $("#chkThumbBoard").is(":checked")) {
+	                if ($("#chkPhotoBoard").is(":checked") || $("#chkThumbBoard").is(":checked") || $("#chkMovieBoard").is(":checked")) {
 	                    document.getElementById("trAttribute").style.display = "none";
 	                    document.getElementById("chkNotifyTr").style.display = "none";
 	                    document.getElementById("tr1").style.display = "none";
@@ -164,6 +164,8 @@
 	                gubun = "5";
 	            } else if ($("#chkURLBoard").is(":checked")) {
 	                gubun = "0";
+	            } else if ($("#chkMovieBoard").is(":checked")) {
+	            	gubun = "7";
 	            }
 	            
 	            if ($("#chkbackgroundimage").is(":checked")) {
@@ -275,7 +277,7 @@
 	            		alert("<spring:message code='ezBoard.t79'/>");
 	            		
 	            		if ("<c:out value='${adminType}'/>" == "y") {
-	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + BoardID;
+	            			parent.parent.board_menu.location = "/admin/ezBoard/boardLeft.do?boardID=" + encodeURIComponent(BoardID);
 	            			return;	            			
 	            		} else {
 	            			parent.frames.location = parent.frames.location;
@@ -328,6 +330,7 @@
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
+	                chkMovieBoard.checked = false;
 	            }
 	        /*     if (event.srcElement.id == "chkGroupBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
@@ -344,6 +347,7 @@
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
+	                chkMovieBoard.checked = false;
 
 	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
 	                    if (chkApprBoard.checked) {
@@ -366,12 +370,24 @@
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
+	                chkMovieBoard.checked = false;
 	            }
 	            if (event.srcElement.id == "chkThumbBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
 	            //    chkGroupBoard.checked = false;
 	                chkAnonyBoard.checked = false;
 	                chkPhotoBoard.checked = false;
+	                chkQnABoard.checked = false;
+	                chkURLBoard.checked = false;
+	                chkMovieBoard.checked = false;
+	            }
+	            /* 2018-11-05 홍승비 - 동영상게시판 구분 추가 */
+	            if (event.srcElement.id == "chkMovieBoard" && event.srcElement.checked) {
+	                chkGeneralBoard.checked = false;
+	            //    chkGroupBoard.checked = false;
+	                chkAnonyBoard.checked = false;
+	                chkPhotoBoard.checked = false;
+	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
 	            }
@@ -382,6 +398,7 @@
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkURLBoard.checked = false;
+	                chkMovieBoard.checked = false;
 
 	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
 	                    if (chkApprBoard.checked) {
@@ -406,6 +423,7 @@
 	                chkPhotoBoard.checked = false;
 	                chkThumbBoard.checked = false;
 	                chkQnABoard.checked = false;
+	                chkMovieBoard.checked = false;
 	            }
 	            
 	             if (chkURLBoard.checked == true) {
@@ -442,21 +460,21 @@
                     document.getElementById("chkNotifyTr").style.display = "";
 	            }
 
-	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
-	             if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkAnonyBoard.checked == true) {
+	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명, 동영상게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
+	             if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkAnonyBoard.checked == true || chkMovieBoard.checked == true) {
 	                document.getElementById("chkNotifyTr").style.display = "none";
 	                document.getElementById("chkNotify").checked = false;
 	            } else if (chkURLBoard.checked == false) {
 	                document.getElementById("chkNotifyTr").style.display = "";
 	            }
 	            
-	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkPortletBoard.checked == true) {
+	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkPortletBoard.checked == true || chkMovieBoard.checked == true) {
 	                document.getElementById("trAttribute").style.display = "none";
 	            } else if (chkURLBoard.checked == false) {
 	                document.getElementById("trAttribute").style.display = "";
 	            }
 	            
-	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true) {
+	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkMovieBoard.checked == true) {
 	            	document.getElementById("tr1").style.display = "none";
 	            	document.getElementById("tr2").style.display = "none";
 	                document.getElementById("chkbackgroundimage").checked = false;
@@ -656,6 +674,8 @@
 		            gubun = "0";
 		        } else if (chkQnABoard.checked) {
 		            gubun = "5";
+		        } else if (chkMovieBoard.checked) {
+		        	gubun = "7";
 		        }
 
 		        var para = new Array();
@@ -770,7 +790,7 @@
 	        <%-- 2018-11-22 홍승비 - 그룹사게시판 옵션 사용 여부 표기 --%>
 	        <c:if test="${isAllGroupBoard == 'Y'}">
 		        <tr style="${style2}">
-		        	<th style="border-left:none; border-bottom:none;"><spring:message code ="ezCircular.t118" /> <spring:message code ="ezBoard.hsb05" /></th>
+		        	<th style="border-left:none; border-bottom:none;"><spring:message code ="ezCircular.t118" /> <spring:message code ="ezBoard.hsb05_1" /></th>
 					<td style="border-top:1px solid #dedede; vertical-align: bottom;"><input type="checkbox" name="allGroupBoard" id="allGroupBoard" disabled checked><spring:message code ="ezBoard.hsb03" /> <spring:message code ="ezBoard.hsb04" /></td>
 		        </tr>
 	        </c:if>
@@ -867,6 +887,15 @@
 	                <c:if test="${model.guBun != '4'}">
 	                	<input type="checkbox" id="chkThumbBoard" onclick="checkboardtype()" />
 	                	<spring:message code="ezBoard.t3000"/>
+	                </c:if>
+	                <%-- 2018-11-05 홍승비 - 동영상게시판 구분 추가 --%>
+	                 <c:if test="${model.guBun == '7'}">
+	                	<input type="checkbox" id="chkMovieBoard" onclick="checkboardtype()" checked />
+	                	<spring:message code="ezQuestion.t180"/><spring:message code="ezBoard.t185"/>
+	                </c:if>
+	                 <c:if test="${model.guBun != '7'}">
+	                	<input type="checkbox" id="chkMovieBoard" onclick="checkboardtype()" />
+	                	<spring:message code="ezQuestion.t180"/><spring:message code="ezBoard.t185"/>
 	                </c:if>
 	                
 	                <br>

@@ -9,7 +9,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	    <link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('/css/style.css')}" type="text/css" />
-	    <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
+	    <%-- <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" /> --%>
 	    <style>
 	    	.mainlist tr th {
 	    		border-top:0px;
@@ -33,7 +34,7 @@
 		    var ReturnValue_NameEng = new Array();
 		    var pStartTime = "<c:out value='${startTime}'/>";
 		    var pEndTime = "<c:out value='${endTime}'/>";
-		    var m_strColorSelect = "#edf4fd";
+		    var m_strColorSelect = "#f1f8ff";
 		    var m_strColorOver = "#f4f5f5";
 		    var m_strColorDefault = "#ffffff";
 		    var RetValue;

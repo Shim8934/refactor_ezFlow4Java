@@ -83,6 +83,8 @@
 		<result property="isRest"			column="ISREST"				columnIndex="7"/>
 		<result property="isUse"			column="ISUSE"				columnIndex="8"/>
 		<result property="useCompany"		column="USECOMPANY"			columnIndex="9"/>
+		<result property="holidayFlag"		column="HOLIDAYFLAG"		columnIndex="10"/>
+		<result property="holidayRepeat"	column="HOLIDAYREPEAT"		columnIndex="11"/>
 	</resultMap>
 	
 	<resultMap id="attitudeApplicationDetailVO" class="AttitudeApplicationVO">
@@ -737,11 +739,13 @@
 			    ISREPEAT,
 			    ISREST,
 			    ISUSE,
-			    USECOMPANY
+			    USECOMPANY,
+			    HOLIDAYFLAG,
+			    HOLIDAYREPEAT
 			FROM
-				tbl_holidayList
+				TBL_HOLIDAYLIST
 			WHERE
-				USECOMPANY = #companyId#
+				(USECOMPANY = 'ALL' or USECOMPANY = #companyId#)
 			AND
 				TENANT_ID = #tenantId#
 			AND

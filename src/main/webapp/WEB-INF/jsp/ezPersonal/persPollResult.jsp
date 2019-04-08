@@ -13,30 +13,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<!-- 2018-07-25 김보미 - 투표모듈 css맞추기 위해 추가 -->
 		<link rel="stylesheet" href="${util.addVer('/css/ezPoll/vote.css')}" type="text/css">
-		<style type="text/css">
-        	.question {
-	            background: url(/images/kr/main/popup_pollimg.gif) no-repeat #f2f2f2 0px 0px;
-            	padding: 5px 0px 5px 55px;
-            	margin-top: 0px;
-            	height: 60px;
-            	word-break: break-all;
-            	border: 1px solid #ddd;
-        	}
-        	.question p {
-        		/* 2018-07-27 김보미 */
-	            /* margin: 0px; */
-	            margin: 0px 0px 4px 0px;
-            	padding: 0px;
-            	font-size: 12px;
-            	font-weight: bold;
-            	color: #4a83d5;
-        	}
-        	/* 2018-07-27 김보미 */
-        	.question span {
-        		display: block;
-        		padding-right: 2px;
-        	}
-    	</style>
+		<link rel="stylesheet" href="${util.addVer('/css/admin.css')}">
 		<script type="text/javascript">
 			var ReturnFunction;
 			var parent;
@@ -65,11 +42,19 @@
         	function close_btn() {
 	            if(ReturnFunction!= null) {
 	            	if(parent != null) {
-                		parent.location.reload();
+	            		if (parent.opener != null && parent.getPollPortletList != undefined) {
+	            			parent.getPollPortletList();
+						} else {
+	                		parent.location.reload();
+						}
 	            	}
 	            	
 	            	if(paparent != null) {
-	            		paparent.location.reload();
+	            		if (paparent != null && paparent.getPollPortletList != undefined) {
+	            			paparent.getPollPortletList();
+						} else {
+		            		paparent.location.reload();
+						}
 	            	}
 	            }
             	window.close();
@@ -77,31 +62,28 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden"> 
-  		<h1>Quick Poll</h1>
-  		<div id="close"><ul><li><span onClick="close_btn()"></span></li></ul></div>
-  		<!-- 2018-07-26 김보미 - 테이블 아이디 추가 -->
-    	<!-- <table> -->
-    	<table id="popupContentTb">
-	        <tr>
-    	        <td>
-    	        	<!-- 2018-07-27 김보미 - 스크롤바 생성 제거, ellipsis처리 -->
-<!--         	        <div class="question" style="overflow-y:auto;width:378px"> -->
-<%-- 	        	        <p><spring:message code='ezPersonal.t2000' />:</p> --%>
-<%--                     	<span>${subject}</span> --%>
-<!--                 	</div> -->
-        	        <div class="question" style="overflow-y:hidden;width:378px">
-	        	        <p><spring:message code='ezPersonal.t240' />:</p>
-                    	<span title='${subject}'>${subjectCont}</span>
-                	</div>
-            	</td>
-        	</tr>
-        	<tr style="height:100%">
-            	<td>
-                	<div id="receivelist" style="OVERFLOW-X: hidden; padding:10px;overflow-y:auto;height:225px;width:413px;border-top:0px" class="box"> 
-						${strHtml}                    	
-                	</div>
-            	</td>
-        	</tr>
-    	</table>
+		<h1><spring:message code = 'ezPersonal.hyh1' /></h1>
+		<div id="close">
+			<ul>
+				<li>
+					<span onClick="close_btn()"></span>
+				</li>
+			</ul>
+		</div>
+		<table id="popupContentTb">
+			<tr>
+				<td>
+					<div class="question">
+						<span class="spanPollTitle" title='${subject}'>"${subject}"</span>
+						<span class="spanPollCount">${subjectCont}</span>
+					</div>
+				</td>
+			</tr>
+			<tr style="height: 100%">
+				<td>
+					<div id="receivelist" class="box">${strHtml}</div>
+				</td>
+			</tr>
+		</table>
 	</body>
 </html>

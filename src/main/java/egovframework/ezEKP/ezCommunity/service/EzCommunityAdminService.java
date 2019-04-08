@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import egovframework.ezEKP.ezCommunity.vo.CommunityCBoardVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityCComCloseVO;
 import egovframework.ezEKP.ezCommunity.vo.CommunityClubVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -12,18 +13,18 @@ import egovframework.let.user.login.vo.LoginVO;
 public interface EzCommunityAdminService {
 
 	/* 2018-06-21 홍승비 - 관리자 > 폐쇄승인 커뮤니티 표출(리스트) */
-	List<CommunityCComCloseVO> aspCloseComGet1(String keyword, String sRadio, String s, String lang, String sort1, String sort2, String companyID, int tenantID) throws Exception;
+	List<CommunityCComCloseVO> aspCloseComGet1(String keyword, String sRadio, String lang, int pageNum, String offSetMin, String companyID, int tenantID) throws Exception;
 	
 	/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(리스트) */
-	List<CommunityClubVO> aspAdmitComGet1(String keyword, String sRadio, String s, String multiData, String sort1, String sort2, String companyID, int tenantID) throws Exception;
+	List<CommunityClubVO> aspAdmitComGet1(String keyword, String sRadio, String multiData, int pageNum, String offSetMin, String companyID, int tenantID) throws Exception;
 	
 	/* 관리자 > 커뮤니티검색화면 표출(하단 리스트) 시 companyID 조건 추가 */
-	List<CommunityClubVO> aspSearchKeyGet1(String lang, int iQueryCount, String select, String query, String companyID, int tenantID) throws Exception;
+	List<CommunityClubVO> aspSearchKeyGet1(String lang, int pageNum, String select, String query, String offSetMin, String companyID, int tenantID) throws Exception;
 	
 	CommunityClubVO admCommunityInfoEdit(String lang, String code, int tenantID) throws Exception;
 	
 	/* 관리자 > 커뮤니티 폐쇄승인 표출(총 n개 카운트) 시 companyID 조건 추가 */
-	int aspCloseComGet2(String keyword, String sRadio, String companyID, int tenantID) throws Exception;
+	int aspCloseComGet2(String keyword, String sRadio, String multiData, String companyID, int tenantID) throws Exception;
 
 	String communityCloseCom(List<CommunityCComCloseVO> clubList, int curPage, int comNoPerPage, LoginVO userInfo) throws Exception;
 
@@ -32,7 +33,7 @@ public interface EzCommunityAdminService {
 	String aspCommInfoGet4(String code, int tenantID) throws Exception;
 	
 	/* 2018-06-21 홍승비 - 관리자 > 커뮤니티 신청승인 표출(총 n개 카운트) */
-	int aspAdmitComGet2(String keyword, String sRadio, String companyID, int tenantID) throws Exception;
+	int aspAdmitComGet2(String keyword, String sRadio, String companyID, String multiData, int tenantID) throws Exception;
 
 	String admitCom(List<CommunityClubVO> clubList, int curPage, int comNoPerPage) throws Exception;
 	
@@ -48,7 +49,17 @@ public interface EzCommunityAdminService {
 
 	List<HashMap<String, Object>> aspCommAdmitOkSet2(String code, String lang, String useEzKMS, String comName, int tenantID) throws Exception;
 
-	String admCommunityInfoEditOk(String lang, String cCateA, String cCateB, String cCateC, String clubName, String code, int tenantID) throws Exception;
+	String admCommunityInfoEditOk(String lang, String cCateA, String cCateB, String cCateC, String clubName, String clubDesc, String code, int tenantID) throws Exception;
 	
 	void createCommunityAdmitSendMail(String loginCookie, LoginVO userInfo, List<HashMap<String, Object>> recipientList, boolean isAdmit) throws Exception;
+
+	String adminBbsList(LoginVO userInfo, List<CommunityCBoardVO> cBoardList, String code, int curPage, String bName, int comNoPerPage) throws Exception;
+
+	int getClosedCommuListCount(String multiData, Locale locale, String searchValue, String companyId, int tenantId) throws Exception;
+
+	List<CommunityCComCloseVO> getClosedCommuList(String primary, Locale locale, int pageNum, String searchValue, String offSetMin, String companyId, int tenantId) throws Exception;
+
+	CommunityCComCloseVO closeCommunityInfo(String multiData, String code, String offSetMin, String companyId, int tenantId) throws Exception;
+
+	void adminCommCloseAll(String code, String reason, Locale locale, int tenantId) throws Exception;
 }

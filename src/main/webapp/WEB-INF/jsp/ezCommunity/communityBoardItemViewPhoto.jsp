@@ -40,9 +40,11 @@
 							 itemID	:	pItemID
 						   },
 					success: function(result){
+						var gImageUrlEncode = "${gImageUrl}";
+						gImageUrlEncode = gImageUrlEncode.replace(/{/gi, "%7B").replace(/}/gi, "%7D");
 						//2018-07-05 김보미 - 팝업창에 생기던 스크롤바 내용부분으로 스크롤바 생기게 변경
 // 						html = result;
-						html += "<div class='viewbox'><img src='${gImageUrl}' border=0 width='${gWidth }' height ='${gHeight}' name=zb_target_resize>";
+						html += "<div class='viewbox'><img src='" + gImageUrlEncode + "' border=0 width='${gWidth }' height ='${gHeight}' name=zb_target_resize>";
 						html += result;
 						html += "<div>";
 					}        			
@@ -74,7 +76,7 @@
 	            }
 
 	            var xmlhttp = createXMLHttpRequest();
-	            xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + pItemID + ";", false);
+	            xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + encodeURIComponent(pItemID) + ";", false);
 	            xmlhttp.send();
 	            xmlhttp = null;
 	            
@@ -88,7 +90,7 @@
 	                return;
 	            }
 
-				window.location.href = "/ezCommunity/newBoardItemPhoto.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=modify";
+				window.location.href = "/ezCommunity/newBoardItemPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify";
 	        }
 
 	        function btnClose_onclick() {
@@ -110,7 +112,7 @@
 		        var width = window.screen.availWidth;
 		        var left = (width - 620) / 2;
 		        var top = (heigth - 425) / 2;		        
-		        var szHref = "/ezCommunity/itemReadList.do?boardID=" + pBoardID + "&itemID=" + pItemID;
+		        var szHref = "/ezCommunity/itemReadList.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID);
 	            var strFeature = "status:no;dialogHeight: 425px;dialogWidth: 620px;help: no;resizable:yes";
 		        if (CrossYN()) {
 		            item_readlist_cross_dialogArguments[0] = "";

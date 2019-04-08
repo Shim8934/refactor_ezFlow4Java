@@ -213,7 +213,8 @@
 			                                        var imgUrl = itemVO.extensionAttribute5;
 			                                        
 			                                        /* 2018-05-04 홍승비 - 커뮤니티 팝업홈 메인화면 포토게시물 사진경로 수정 */
-			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + itemVO.boardID + "&fileName=" + imgUrl;
+			                                        imgUrl = imgUrl.replace(/{/gi,"%7B").replace(/}/gi,"%7D");
+			                                        img.src = "/ezCommunity/getCommunityThumInfo.do?type=COMMUNITYBOARD&boardID=" + encodeURIComponent(itemVO.boardID) + "&fileName=" + imgUrl;
 			                                        img.style.width = "68px";
 			                                        img.style.height = "68px";
 
@@ -305,8 +306,8 @@
 	                _img.src = "<spring:message code='main.e14' />";
 	            }
 	            
-	            _img.style.width = "51px";
-	            _img.style.height = "54px";
+	            _img.style.width = "48px";
+	            _img.style.height = "48px";
 
 	            document.getElementById("pic").appendChild(_img);
 				var sConfirmType = "";
@@ -796,9 +797,9 @@
 		        document.getElementById("makeguide").style.display = "none";
 		        document.getElementById("rightfrm").style.height = "659px";
 		        if (chkPhotoBrd != "3") {
-		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + selectedBoardID + "&boardName=" + boardName + "&code=" + code;
+		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemList.do?boardID=" + encodeURIComponent(selectedBoardID) + "&boardName=" + encodeURIComponent(boardName) + "&code=" + code;
 		        } else {
-		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + selectedBoardID + "&boardName=" + boardName + "&code=" + code;
+		            document.getElementById("rightfrm").src = "/ezCommunity/boardItemListPhoto.do?boardID=" + encodeURIComponent(selectedBoardID) + "&boardName=" + encodeURIComponent(boardName) + "&code=" + code;
 		        }
 		        
 		        if (CrossYN()) {
@@ -902,7 +903,7 @@
 		                </div>
 		                
 		                <c:if test="${checkSysop }">
-		                	<div class="admin_menu"><span id="btn_Manager" onclick ="go_menu(this)"><spring:message code='ezCommunity.t565' /></span></div>
+		                	<div class="admin_menu" style="height:auto"><span id="btn_Manager" onclick ="go_menu(this)"><spring:message code='ezCommunity.t565' /></span></div>
 		                </c:if>
 		                
 		            </div>
@@ -946,8 +947,8 @@
         		<iframe id="rightfrm" style="width:100%; height:560px; border:0; display:none" frameborder="0"></iframe>
         		<div class="makeguide" id="makeguide" style="display: none;">
             		<p><img src="<spring:message code='ezCommunity.i5' />"></p>
-            		<p><a href="#" id="btn_Manager_home1" onclick ="go_menu(this)"><img src="<spring:message code='ezCommunity.i6' />" alt="<spring:message code='ezCommunity.t2010' />"></a></p>
-            		<p><a href="#" id="btn_Manager_home2" onclick ="go_menu(this)"><img src="<spring:message code='ezCommunity.i7' />" alt="<spring:message code='ezCommunity.t2011' />"></a></p>
+            		<p><a id="btn_Manager_home1" onclick ="go_menu(this)"><img src="<spring:message code='ezCommunity.i6' />" alt="<spring:message code='ezCommunity.t2010' />"></a></p>
+            		<p><a id="btn_Manager_home2" onclick ="go_menu(this)"><img src="<spring:message code='ezCommunity.i7' />" alt="<spring:message code='ezCommunity.t2011' />"></a></p>
             		<p><img src="/images/kr/community/type1/makeguide_img04.gif"></p>
         		</div>
     		</div>

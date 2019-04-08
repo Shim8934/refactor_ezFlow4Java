@@ -213,8 +213,10 @@ function view() {
 		sort ='date';
 		sortFlag = 'desc';
 	}
+	var searching = document.getElementById("searchInput").value;
+	searching = encodeURIComponent(searching).replace(/%20/g,'+');
 	searchInput = encodeURIComponent(searchInput).replace(/%20/g,'+');
-	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=" + searchInput + "&sort=" + sort + "&sortFlag=" + sortFlag;
+	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=" + searchInput + "&sort=" + sort + "&sortFlag=" + sortFlag +"&searching=" + searching;
 
 	document.location.href = szUrl;
 }
@@ -256,9 +258,7 @@ function makePageSelPage() {
 
 	document.getElementById("tblPageRayer").innerHTML = "";
 	if(document.getElementById("mailBoxInfo") !== null) {
-		document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang8
-		+ "<span style='color:#017BEC;'> " + totalLadder + " </span>"
-		+ strLang9 + "]";
+		document.getElementById("mailBoxInfo").innerHTML = "&nbsp;<span style='color:#017BEC;'>" + totalLadder + "</span>";
 	}
 
 	if (totalPage > 1 && pageNum != 1) {

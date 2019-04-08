@@ -527,6 +527,8 @@
 	            strXML += "<IMAGE_FILENAME>" + MakeXMLString(filename) + "</IMAGE_FILENAME>";
 	            strXML += "<MAINIMAGEID>" + mainImageID + "</MAINIMAGEID>";
 	
+	            /* 2018-11-06 홍승비 - 게시판 체크용 구분값 추가 */
+	            strXML += "<GUBUN>" + gubun + "</GUBUN>";
 	            strXML += "</NODE>";
 	            strXML += "</NODES>";
 	
@@ -548,22 +550,22 @@
 	
 		                if (strItemID == "") {
 		                	xmlhttp = createXMLHttpRequest();
-							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + pBoardID + "&itemID=" + strItemID, false);
+							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(strItemID), false);
 							xmlhttp.send();		
 							xmlhttp = null;
 		                }
 		                if (pMode == "reply") {
 		                	xmlhttp = createXMLHttpRequest();
-						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + strItemID + "&itemTreeID=" + strUpperItemIDTree, false);
+						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(strItemID) + "&itemTreeID=" + strUpperItemIDTree, false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 		                }
 		                if ("${boardInfo.apprMail_FG}" == "Y") {
 		                	xmlhttp = createXMLHttpRequest();
 						    if (pMode != "modify") {
-						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
+						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
 						    } else {
-						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + strItemID, false);
+						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(strItemID), false);
 						    }
 						    xmlhttp.send();
 						    xmlhttp = null;
@@ -600,7 +602,7 @@
 	                xhr = new XMLHttpRequest();
 	                xhr.upload.addEventListener("progress", uploadProgress, false);
 	                xhr.addEventListener("load", uploadComplete, false);
-	                xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+	                xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + encodeURIComponent(pBoardID) + "&fileLimit=" + AttachLimit);
 	                xhr.send(fd);
 	                document.getElementById("progdiv").style.display = "";
 	            }
@@ -820,7 +822,7 @@
 		    		return;	
 	            }
 	            
-	            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + pBoardID +"&uniqueIDs=" + uniqueIDs, false);
+	            xmlhttp.open("POST", "/ezBoard/boardImageUpload.do?mode=DEL&boardID=" + encodeURIComponent(pBoardID) +"&uniqueIDs=" + uniqueIDs, false);
 	            xmlhttp.send(fd);
 	
 	            document.getElementById("checkmenu").checked = false;
@@ -917,7 +919,7 @@
 	                xhr = new XMLHttpRequest();
 	                xhr.upload.addEventListener("progress", uploadProgress, false);
 	                xhr.addEventListener("load", uploadComplete, false);
-	                xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+	                xhr.open("POST", "/ezBoard/boardImageUpload.do?mode=PICTURE&boardID=" + encodeURIComponent(pBoardID) + "&fileLimit=" + AttachLimit);
 	                xhr.send(fd);
 	
 	                document.getElementById("progdiv").style.display = "";

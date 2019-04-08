@@ -7,7 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf=8">
 		<link rel="stylesheet" href="${util.addVer('ezPortal.i2', 'msg')}" type="text/css" />
 		<style type="text/css">
-			td,a {font-family: Arial, gulim;font-size: 9pt;word-break:keep-all; white-space:nowrap; color:#555555; text-decoration:none}
+			td,a {font-family: Arial, malgun gothic;font-size: 9pt;word-break:keep-all; white-space:nowrap; color:#555555; text-decoration:none}
 			.over{
 				padding-left:15px; padding-right:15px; 
 				background-repeat:no-repeat;
@@ -142,7 +142,7 @@
 					<div style="float:left">
 			    		<img src="/images/help/help.gif" width="135">
 					</div>
-					<div style="float:right;font-size:17px;font-family: Malgun Gothic; font-weight: bold; padding:10px;color:white" >ezFlow v6.3.4</div>
+					<div style="float:right;font-size:17px;font-family: Malgun Gothic; font-weight: bold; padding:10px;color:white" >ezFlow v6.4.0.STD_20181217</div>
 					<div style="clear:both"></div>
 				<table onstalled="width:100%;" border="0" style="background:url(/images/help/topmenu_bg.gif) repeat-x; height:26px;">
 			  <tr>

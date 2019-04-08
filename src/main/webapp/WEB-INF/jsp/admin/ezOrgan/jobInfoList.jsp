@@ -13,12 +13,24 @@
 	<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/TreeView.js')}"></script>
-	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/ListView_list.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezOrgan/admin/ListView_list.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-	<style type="text/css">
-		.countColor {
-	    		color:#017BEC;
-    	}
+	<style>
+		.mainview {margin-top: 5px; width:50%; float:left;}
+		.previewH {margin-top: 5px; width:50%; height: 690px; float:right; overflow: hidden;}
+		.previewmail_info {border-bottom: 1px solid #e5e5e5; min-width: 300px;}
+		.previewmail_bar_h {position: relative; float: left; display: inline-block; width: 5px; height: 100%;}
+		.preContent_RayerH {position: absolute; display: inline-block; width: 49%;}
+		.preview_header {padding: 0px; font-weight: bold; height: 11px; line-height: 11px;}
+		.preview_title {display: inline-block; margin-top: -6px; margin-left: 13px;}
+		.preview_count {display: inline-block; margin-top: -6px; color: #017BEC; font-size: 11px;}
+		.preview_content {width: 97%; height: 630px; border: solid 0px green; display: inline-block; padding:10px;}
+		.preview_nodata {position: absolute; display: inline-block; width: 49%; vertical-align: middle; text-align: center; padding-top: 70px; border-top: 1px solid #e5e5e5;}
+		#lvJobList tr td:nth-child(4) {padding-left: 12px;}
+		#lvJobList {min-width: 400px;}
+		#lvJobList tr th:nth-child(4), tr th:nth-child(5) {width: 15%;} 
+		#lvJobUserList {min-width: 360px;}
+		.countColor {color:#017BEC;}
 	</style>
 	<script type="text/javascript">
 		var Tab1_flag = true;
@@ -53,8 +65,6 @@
 			pCompanyID = $("#ListCompany option:selected").val();
 			pCompanyNM = $("#ListCompany option:selected").text();
 			
-			$("#jobTotalInfoRayer").html("");
-				
 			job_list();
 			job_userList();
 		}
@@ -93,25 +103,28 @@
 	            Node = headerData.importNode(xmlRtn, true);
 	            headerData.documentElement.appendChild(Node);
 		    }
-            
+		    
+		    var titleCnt = Number(SelectSingleNodeValueNew(xmlDom, "LISTVIEWDATA/TOTALCOUNT"));
+		    document.getElementById("title_info").textContent = titleCnt;
+		    
             document.getElementById("jobListView").innerHTML = "";
             
             var listview = new ListView();
             listview.SetID("lvJobList");
-            listview.SetMulSelectable(false);
-            //listview.SetRowOnClick("job_userList");
+            listview.SetMulSelectable(true);
             listview.SetRowOnClick("job_userList_click");
-            listview.SetSelectFlag(true);
+            listview.SetSelectFlag(false);
             listview.SetRowOnDblClick("job_view");
             listview.SetHeightFree(true);
             listview.DataSource(headerData);
             listview.DataBind("jobListView");
+            
+            makeUseSwitch();
 		}
 		
 		function job_userList_click() {
 			pCurPage = 1;
 			pSearchValue = "";
-			$("#searchValue").val("");
 			job_userList();
 		}
 		
@@ -132,7 +145,7 @@
 			var oArrRows = jobList.GetSelectedRows();
 			if (oArrRows != 0) {
 				var pJobID = oArrRows[0].getAttribute("DATA1");
-				var pJobNM = oArrRows[0].firstChild.innerText;
+				var pJobNM = oArrRows[0].childNodes[1].textContent;
 				
 				$.ajax({
 	            	type : "POST",
@@ -156,6 +169,9 @@
 	            	}
 	            });
 				
+				document.getElementById("PreContent_RayerH").style.display = "";
+				document.getElementById("preview_nodata").style.display = "none";
+				
 		    	pTotalCnt = Number(SelectSingleNodeValueNew(xmlDom, "LISTVIEWDATA/TOTALCOUNT"));
 				
 				var oRows = SelectNodes(xmlDom, "LISTVIEWDATA/ROWS/ROW");
@@ -171,23 +187,33 @@
 			    	Node = headerData.importNode(xmlRtn, true);
 		            headerData.documentElement.appendChild(Node);
 			    }
-			    
-			    var _html = "<span>&nbsp;" + pJobNM + "-[" + "<span class='countColor'>" + pTotalCnt + "<spring:message code = 'main.t20000'/></span>]</span>";
-			    $("#jobTotalInfoRayer").html(_html);
+				
+				document.getElementById("preview_title").textContent = pJobNM;
+				document.getElementById("preview_count").textContent = pTotalCnt;
+				
+				document.getElementById("jobUserListView").innerHTML = "";
+				
+				var listview = new ListView();
+	            listview.SetID("lvJobUserList");
+	            listview.SetMulSelectable(false);
+	            listview.SetSelectFlag(false);
+	            listview.SetRowOnDblClick("info_user");
+	            listview.SetHeightFree(true);
+	            listview.DataSource(headerData);
+	            listview.DataBind("jobUserListView");
+	            
+	            makePageRayer();
+			} else {
+				document.getElementById("PreContent_RayerH").style.display = "none";
+				document.getElementById("preview_nodata").style.display = "";
+				
+				if (Tab1_SelectID == "001") {
+					document.getElementById("nodata_title").textContent = "<spring:message code = 'ezOrgan.khj01'/>";
+				}
+				else {
+					document.getElementById("nodata_title").textContent = "<spring:message code = 'ezOrgan.khj02'/>";
+				}
 			}
-			
-			document.getElementById("jobUserListView").innerHTML = "";
-			
-			var listview = new ListView();
-            listview.SetID("lvJobUserList");
-            listview.SetMulSelectable(false);
-            listview.SetSelectFlag(false);
-            listview.SetRowOnDblClick("info_user");
-            listview.SetHeightFree(true);
-            listview.DataSource(headerData);
-            listview.DataBind("jobUserListView");
-            
-            makePageRayer();
 		}
 		
 		/* (직위/직책) Row 더블클릭 이벤트 */
@@ -198,11 +224,17 @@
 		/* (추가/수정/삭제) 버튼 이벤트 */
 		var titleInfo_dialogArguments = new Array();
 		function BtnAction(mode) {
-			var pJobID;
-			
+			var type = Tab1_SelectID;
+			var jobIDList = [];
 			var jobList = new ListView();
 				jobList.LoadFromID("lvJobList");
 			
+			var oArrRows = jobList.GetSelectedRows();
+			for (var i = 0; i < oArrRows.length; i ++) {
+				jobIDList.push(oArrRows[i].getAttribute("DATA1"));
+			}
+			
+			/* 수정, 삭제의 경우 선택된 Row가 있나 체크  */
 			if (mode == "Mod" || mode == "Del") {
 				var oArrRows = jobList.GetSelectedRows();
 				if (oArrRows == 0) {
@@ -212,17 +244,25 @@
 						alert("<spring:message code = 'ezOrgan.csj18'/>");
 					}
 					return;
-				} else {
-					pJobID = oArrRows[0].getAttribute("DATA1");
-				}
+				} 
 			}
 			
 			if (mode == "Add" || mode == "Mod") {
-				var url = "/admin/ezOrgan/jobTitlePopupUI.do?type=" + Tab1_SelectID + "&mode=" + mode + "&companyID=" + pCompanyID;
+				// 수정의 경우 선택된 Row 가 하나 이상인지 확인
+				if (mode == "Mod" && jobIDList.length > 1) {
+					if (type == "001") {
+						alert("<spring:message code = 'ezOrgan.khj03'/>");
+					} else if (type == "002") {
+						alert("<spring:message code = 'ezOrgan.khj04'/>");
+					}
+					return;
+				}
+				
+				var url = "/admin/ezOrgan/jobTitlePopupUI.do?type=" + type + "&mode=" + mode + "&companyID=" + pCompanyID;
 				
 				var args = new Array();
 				args[0] = pCompanyNM;
-				args[1] = pJobID;
+				args[1] = jobIDList[0];
 				
 				titleInfo_dialogArguments[0] = args;
 			    titleInfo_dialogArguments[1] = titleInfo_complete;
@@ -231,13 +271,16 @@
 				try { OpenWin.focus(); } catch (e) { }
 				
 			} else if (mode == "Del") {
-				if (!checkTitleUserCnt(pJobID)) {
-					if (Tab1_SelectID == "001") {
-						alert("<spring:message code = 'ezOrgan.csj13'/>");
-					} else {
-						alert("<spring:message code = 'ezOrgan.csj22'/>");
+				var length = jobIDList.length;
+				for (var i = 0; i < length; i++) {
+					if (!checkTitleUserCnt(jobIDList[i])) {
+						if (type == "001") {
+							alert("<spring:message code = 'ezOrgan.csj13'/>");
+						} else if (type == "002") {
+							alert("<spring:message code = 'ezOrgan.csj22'/>");
+						}
+						return;
 					}
-					return;
 				}
 				
 				if (confirm("<spring:message code = 'ezOrgan.pjg01'/>")) {
@@ -248,9 +291,9 @@
 		            	async : false,
 		            	data : 
 		            	{
-		            		jobID 		: pJobID,
-		            		type 		: Tab1_SelectID,
-		            		companyID 	: pCompanyID
+		            		jobIDList : jobIDList.length == 1 ? jobIDList += ";" : jobIDList.join(";"),
+		            		type : type,
+		            		companyID : pCompanyID
 		            	},
 		            	success : function (result) {
 		            		if (result == "TRUE") {
@@ -258,8 +301,6 @@
 		            		} else {
 			            		alert("<spring:message code = 'ezBoard.t55'/>");
 		            		}
-		            		
-		            		$("#jobTotalInfoRayer").html("");
 		            		
 		            		job_list();
 		            		job_userList();
@@ -309,7 +350,7 @@
 			    userinfo_dialogArguments[0] = args;
 			    userinfo_dialogArguments[1] = info_user_complete;
 			    
-			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 520));
+			    var OpenWin = window.open("/admin/ezOrgan/userInfo.do", "UserInfo", GetOpenWindowfeature(830, 440));
 			    try { OpenWin.focus(); } catch (e) { }
 	        }
 		}
@@ -353,7 +394,6 @@
 		
 		/* (직위/직책) 탭 이동 관련 이벤트 1 [리스트 변경] */
 		function ChangeTab(obj) {
-			$("#jobTotalInfoRayer").html("");
 			$("#searchValue").val("");
 			
 			pSearchValue = "";
@@ -404,7 +444,103 @@
 	            }
 	        }
 	    }
-	    
+	    /* Tab관련 메소드들 ↑ */
+		
+		/* 사용여부  스위치  추가 메소드 */
+		function makeUseSwitch() {
+			var table  = document.getElementById("lvJobList");
+			var length = table.rows.length;
+			for (var i = 1; i < length; i++) {
+				var useTd     = table.rows[i].cells[4];
+				if (!useTd) { break; }
+				
+				var labelElmt = document.createElement("label");
+				var inputElmt = document.createElement("input");
+				var spanElmt  = document.createElement("span");
+				
+				labelElmt.className = "switch";
+				spanElmt.className = "slider round";
+				
+				inputElmt.setAttribute("type", "checkbox");
+				
+				if (useTd.textContent == "Y") {
+					inputElmt.setAttribute("checked", "checked");
+				}
+				
+				labelElmt.onclick = function(event) {inUseUpdate(event, this);};
+				
+				useTd.textContent = "";
+				
+				labelElmt.appendChild(inputElmt);
+				labelElmt.appendChild(spanElmt);
+				
+				useTd.appendChild(labelElmt);
+			}
+		}
+		
+		/* 사용여부 업데이트 */
+		function inUseUpdate(event, obj) {
+			event.stopPropagation();
+			//console.log("tagName" + event.target.tagName);
+			
+			if (event.target.tagName == "INPUT") {
+				var selectedTr    = obj.parentElement.parentElement;
+				var selectedInput = obj.firstElementChild;
+				var useFlag;
+				
+				if (selectedInput.getAttribute("checked")) {
+					useFlag = "N";
+				}
+				else {
+					useFlag = "Y";
+				}
+				
+				$.ajax({
+					type : "POST",
+					dataType: "text",
+					url : "/admin/ezOrgan/jobTitleAction.do",
+					async : false,
+					data :
+					{
+						jobID : selectedTr.getAttribute("DATA1"),
+						type : selectedTr.getAttribute("DATA2"),
+						mode : "Mod",
+						sort : selectedTr.getAttribute("DATA3"),
+						useFlag : useFlag,
+						companyID : selectedTr.getAttribute("DATA4"),
+						displayName1 : selectedTr.children[1].textContent,
+						displayName2 : selectedTr.children[2].textContent
+					},
+					success : function(result) {
+						if (useFlag == "Y") {
+							selectedInput.setAttribute("checked", "checked");
+						} else {
+							selectedInput.setAttribute("checked", "");
+						}
+					},
+					error : function(e) {
+						alert("<spring:message code='main.sp12' />");
+					}
+				});
+			}
+		}
+		
+		$(window).on("resize", function(){
+			windowResize();
+		});
+		
+		function windowResize() {
+			var height = document.documentElement.clientHeight;
+			
+			document.getElementById("previewH").style.height = (height - 200) + "px";
+			document.getElementById("jobListView").style.height = (height - 225)+ "px";
+			document.getElementById("jobUserListView").style.height = (height - 273) + "px";
+		}
+		
+		$(function(){
+			windowResize();
+		});
+		
 	    /* 유저리스트 페이징 만드는 함수 */
 	    function makePageRayer() {
 	    	var _html = "<div class='pagenavi'>";
@@ -497,28 +633,28 @@
 		}
 	</script>
 </head>
-<body class="mainbody">
-	<h1><spring:message code='ezOrgan.csj01' /></h1>
+<body class="mainbody" style="overflow: hidden;">
+	<h1>
+		<spring:message code='ezOrgan.csj01' />
+		<span>&nbsp;<span class="countColor" id="title_info"></span></span>
+		<span class="title_bar"><img src="/images/name_bar.gif"></span>
+		<select class="companySelect" id="ListCompany" onChange="companyChange()">
+			<c:forEach var="item" items="${list}">
+				<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+			</c:forEach>
+		</select>
+	</h1>
 	<div id="mainmenu">
-		<span>
-			<b><spring:message code = 'ezApprovalG.t1512' /></b> 
-			<select id="ListCompany" onChange="companyChange()">
-				<c:forEach var="item" items="${list}">
-					<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-				</c:forEach>
-			</select>
-			<br/><br/>
-		</span>
 		<ul>
-			<li><span onClick="BtnAction('Add')"><spring:message code = 'ezAddress.t173'/></span></li>
+			<li class="important"><span onClick="BtnAction('Add')"><spring:message code = 'ezAddress.t173'/></span></li>
 			<li><span onClick="BtnAction('Mod')"><spring:message code = 'ezAddress.t174'/></span></li>
-			<li><span onClick="BtnAction('Del')"><spring:message code = 'ezAddress.t175'/></span></li>
+			<li><span class="icon16 icon16_delete" onClick="BtnAction('Del')"></span></li>
 		</ul>
 	</div>
 	<script type="text/javascript">
 		selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");        
 	</script>
-	<div class="portlet_tabpart01" style="width: 1210px;">
+	<div class="portlet_tabpart01" style="width: 100%;">
 		<div class="portlet_tabpart01_top" id="tab1">
 			<p><span id="001"><spring:message code='ezOrgan.csj02' /></span></p>
 			<p><span id="002"><spring:message code='ezOrgan.csj15' /></span></p>
@@ -527,55 +663,72 @@
 	<script type="text/javascript">
 	    Tab1_NewTabIni("tab1");
 	</script>
-	<table style="margin-top: 5px;">
-		<tr>
-			<td>
-				<div class="listview">
-					<div id="jobListView" style="height: 435px; width: 500px; overflow-y:auto;"></div>
-				</div>
-			</td>
-			<td>
-				<div style="width: 5px;"></div>
-			</td>
-			<td>
-				<div style="border: 1px solid #e8e8e8; border-bottom: 0px; height: 30px;">
-					<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;"></div>
-					<div id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px;">
-						<select id="searchType" style="height: 26px; width: 50px;"><option value="displayname"><spring:message code='main.t76' /></option></select>
-						<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px;">
-						<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.gif" style="width: 26px; height: 26px; margin-top:2px;" border="0" onClick="search()"></a>
+
+	<div class="mainview">
+		<div class="listview" style="border: 0px;">
+			<div id="jobListView" style="height: 658px; width: 100%; overflow:auto;"></div>
+		</div>
+	</div>
+	
+	<div id="previewH" class="previewH">
+		<div class="previewmail_bar_h"></div>
+		<div id="PreContent_RayerH" class="preContent_RayerH" style="display: none;">
+			<div class="previewmail">
+				<div class="previewmail_info">
+					<div id="Preview_HeaderH">
+						<p class="preview_header">
+							<span class="preview_title" id="preview_title"></span>
+							<span class="preview_count" id="preview_count"></span>
+							<span id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px; margin-top: -9px;">
+								<select id="searchType" style="height: 26px; width: 50px;"><option value="displayname"><spring:message code='main.t76' /></option></select>
+								<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; border-right:0px; margin-top:2px;">
+								<a style="float:right; cursor: pointer;"><img src="/images/bsearch_new.gif" style="width: 26px; height: 26px; margin-top:2px;" border="0" onClick="search()"></a>
+							</span>
+						</p>
 					</div>
 				</div>
-				<div class="listview" style="width: 700px; border-bottom: 0px;">
-					<div id="jobUserListView" style="height: 356px; width: 100%; overflow-y:auto;"></div>
+			</div>
+			
+			<div class="preview_content">
+				<div class="listview" style="border-top: 1px solid #ddd; border-left: none; border-right: none; border-bottom: none;">
+					<div id="jobUserListView" style="height: 610px; width: 100%; overflow: auto;"></div>
 				</div>
-				<div id="jobUserListPageRayer" style="border: 1px solid #ddd; border-top: 0px;"></div>
-			</td>
-		</tr>
-	</table>
+				
+				<div id="jobUserListPageRayer" style="border-top: 0px;"></div>
+			</div>
+		</div>
+		
+		<div id="preview_nodata" class="preview_nodata">
+			<dl class="nodata_sIcon">
+				<dt><img src="/images/kr/main/noData_sIcon.png"></dt>
+				<dd id="nodata_title" style="font-family: malgun gothic"></dd>
+			</dl>
+		</div>
+	</div>
 	
 <xml id="listviewheader" style="display:none">
 	<LISTVIEWDATA>
 	   	<HEADERS>
 			<HEADER>
+			<NAME></NAME>
+			<WIDTH>30</WIDTH>
+			<COLNAME>CHECKBOX</COLNAME>
+			</HEADER>
+			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj04' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
-			<WIDTH>100</WIDTH>
-			<STYLE>border-top:0px;</STYLE>
+			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj04' />(<spring:message code='ezApprovalG.t1765'/>)</NAME>
-			<WIDTH>100</WIDTH>
-			<STYLE>border-top:0px;</STYLE>
-			</HEADER>
-			<HEADER>
-			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
-			<WIDTH>50</WIDTH>
-			<STYLE>border-top:0px;</STYLE>
+			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
-			<WIDTH>50</WIDTH>
-			<STYLE>border-top:0px;</STYLE>
+			<WIDTH></WIDTH>
+			</HEADER>
+			<HEADER>
+			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
+			<WIDTH></WIDTH>
 			</HEADER>
     	</HEADERS>
   	</LISTVIEWDATA>
@@ -585,27 +738,26 @@
 	   	<HEADERS>
      		<HEADER>
        		<NAME><spring:message code='ezOrgan.t218' /></NAME>
-			<WIDTH>100</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t67' /></NAME>
-			<WIDTH>100</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t68' /></NAME>
-			<WIDTH>100</WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t69' /></NAME>
-			<WIDTH>100</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t285' /></NAME>
-			<WIDTH>100</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
     	</HEADERS>
@@ -615,24 +767,25 @@
 	<LISTVIEWDATA>
 	   	<HEADERS>
 			<HEADER>
+			<NAME></NAME>
+			<WIDTH>20</WIDTH>
+			<COLNAME>CHECKBOX</COLNAME>
+			</HEADER>
+			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj17' />(<spring:message code='ezApprovalG.t1764'/>)</NAME>
-			<WIDTH>100</WIDTH>
-			<STYLE>border-top:0px;</STYLE>
+			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj17' />(<spring:message code='ezApprovalG.t1765'/>)</NAME>
-			<WIDTH>100</WIDTH>
-			<STYLE>border-top:0px;</STYLE>
-			</HEADER>
-			<HEADER>
-			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
-			<WIDTH>50</WIDTH>
-			<STYLE>border-top:0px;</STYLE>
+			<WIDTH></WIDTH>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.csj06' /></NAME>
-			<WIDTH>50</WIDTH>
-			<STYLE>border-top:0px;</STYLE>
+			<WIDTH></WIDTH>
+			</HEADER>
+			<HEADER>
+			<NAME><spring:message code='ezOrgan.csj05' /></NAME>
+			<WIDTH></WIDTH>
 			</HEADER>
     	</HEADERS>
   	</LISTVIEWDATA>
@@ -642,27 +795,27 @@
 	   	<HEADERS>
      		<HEADER>
        		<NAME><spring:message code='ezOrgan.t218' /></NAME>
-			<WIDTH>100</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t67' /></NAME>
-			<WIDTH>100</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t68' /></NAME>
-			<WIDTH>100</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t1500' /></NAME>
-			<WIDTH>100</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
 			<HEADER>
 			<NAME><spring:message code='ezOrgan.t285' /></NAME>
-			<WIDTH>100</WIDTH>
+			<WIDTH></WIDTH>
 			<STYLE>border-top:0px;</STYLE>
 			</HEADER>
     	</HEADERS>

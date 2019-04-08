@@ -225,7 +225,7 @@
 			            changeYear: true,
 			            autoSize: true,
 			            showOn: "both",
-			            buttonImage: "/images/ImgIcon/calendar-month.gif",
+			            buttonImage: "/images/ImgIcon/calendar-month.png",
 			            buttonImageOnly: true
 			        });
 			        $("#Edatepicker").datepicker({
@@ -233,7 +233,7 @@
 			            changeYear: true,
 			            autoSize: true,
 			            showOn: "both",
-			            buttonImage: "/images/ImgIcon/calendar-month.gif",
+			            buttonImage: "/images/ImgIcon/calendar-month.png",
 			            buttonImageOnly: true
 			        });
 			
@@ -418,7 +418,7 @@
 		            var strtext;
 		            var PagingHTML = "";
 		            document.getElementById("tblPageRayer").innerHTML = "";
-		            document.getElementById("mailBoxInfo").innerHTML = " - [" + strLang41 + "<span style='color:#017BEC;'> " + totalCount + " </span>" + strLang42 + "]";
+		            document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
 		            strtext = "<div class='pagenavi'>";
 		            PagingHTML += strtext;
 		            var pageNum = CurPage;
@@ -568,11 +568,12 @@
 		
 		        function ItemRead_onclick(obj) {
 		            var feature = GetOpenWindowfeature(765, 700);
-		            if(obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-		                window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
-		            }
-		            else{
-                    	window.open("/ezBoard/boardNewItem.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
+		            if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
+		                window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
+		            } else if (obj.getAttribute("DATA10") == "7" ) {
+			        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
+			        }  else{
+                    	window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 		            }
 		            
 		            /* 2018-07-09 홍승비 - 승인게시판 게시물 읽기 시 즉각적으로 폰트 변화하도록 수정 */
@@ -585,7 +586,7 @@
 		
 		        function CheckIfHasReplies() {
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + strListInfo, false);
+		            xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + encodeURIComponent(strListInfo), false);
 		            xmlhttp.send();
 		            if (xmlhttp.responseText == "FALSE") {
 		                xmlhttp = null;
@@ -596,7 +597,7 @@
 		        }
 		        function DeleteItem() {
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/deleteItem.do?itemList=" + strListInfo + "&mode=" + pMode, false);
+		            xmlhttp.open("POST", "/ezBoard/deleteItem.do?itemList=" + encodeURIComponent(strListInfo) + "&mode=" + pMode, false);
 		            xmlhttp.send();
 		
 		            if (xmlhttp.responseText == "NO") {
@@ -660,7 +661,7 @@
 		            }
 		            arrList = null;
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + pBoardID + "&itemIDList=" + strItemList, false);
+		            xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + encodeURIComponent(pBoardID) + "&itemIDList=" + encodeURIComponent(strItemList), false);
 		            xmlhttp.send();
 		            xmlhttp = null;
 		            refresh_onclick();
@@ -673,7 +674,7 @@
 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 		    }
 		    function ReservationItem_onclick() {
-		        var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
+		        var OrgBoardParameters = "page=" + CurPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType;
 		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + escape(OrgBoardParameters) + "&boardType=" + pBoardType;
 		    }
 		
@@ -904,10 +905,12 @@
 		                }
 		
 		                if (ret[2] == "3" || ret[2] == "4") {
-		                    window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
-		                }
-		                else{
-	                        window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+		                    window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", feature, "");
+		                } else if (ret[2] == "7" ) {
+							var feature = GetOpenWindowfeature(765, 679);
+		                	window.open("/ezBoard/newBoardItemMovie.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", feature, "");
+		                } else {
+	                        window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", feature, "");
 		                }
 		            }
 		        }
@@ -922,9 +925,12 @@
 		            }
 		            var feature = GetOpenWindowfeature(765, 820);
 		            if(ret[2] == "3" || ret[2] == "4") {
-		                window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
-		            }else{
-	                    window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mode=new", "", feature, "");
+		                window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", feature, "");
+		            } else if (ret[2] == "7" ) {
+						var feature = GetOpenWindowfeature(765, 700);
+	                	window.open("/ezBoard/newBoardItemMovie.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", feature, "");
+	                } else {
+	                    window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mode=new", "", feature, "");
 		            }
 		        }
 		    }
@@ -933,38 +939,49 @@
 		        obj = selobj;
 		        var feature = GetOpenWindowfeature(765, 820);
 		        if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
-		        }else {
-	                window.open("/ezBoard/boardNewItem.do?boardID=" + obj.getAttribute("DATA1") + "&itemID=" + obj.getAttribute("DATA2") + "&mode=temp" + "&location=TEMP", "", feature, "");
+		            window.open("/ezBoard/boardNewItemTempPhoto.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
+		        } else if (obj.getAttribute("DATA10") == "7" ) {
+		        	feature = GetOpenWindowfeature(765, 700);
+		        	window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
+		        } else {
+	                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&mode=temp" + "&location=TEMP", "", feature, "");
 		        }
 		    }
 	    </script>
 	</head>
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	    <h1><spring:message code='ezBoard.t10030'/><span id="mailBoxInfo"></span>
-	        <span style="float:right;font-weight:normal;color:black;">
+	        <span class="searchForm">
 	         	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 					<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 		    	</select>
-			  <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	          <a href="#" style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+			  <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+	          <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search('quick')"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">
 	        <ul>
-	            <li><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
-	            <!-- <li id="tbar1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-	            <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89'/></span></li>
-	            <!-- <li id="Li1" style="background:none; padding-right:2px;"><img src="/images/i_bar.gif" alt=""></li> -->
-	            <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205'/></span></li>
-	            <li><span id="SearchOption" mode="off" onClick="doLayerPopup(this)"><spring:message code='ezBoard.t188'/></span></li>
-	            <li id="right">
+	            <li class="important"><span onClick="NewItem_onclick()"><spring:message code='ezBoard.t321'/></span></li>
+	            <li><span class="icon16 icon16_search" id="SearchOption" mode="off" onClick="doLayerPopup(this)"></span></li>
+	            <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
+	            <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
+	            <!-- <li id="right">
 	            	<img src="/images/kr/cm/btn_noframe.gif" width="22" height="20" class="btnimg" id="PreViewNone" onclick="PreviewRayerChange('NONE')">
 	            	<img src="/images/kr/cm/btn_bottomframe.gif" width="22" height="20" class="btnimg" id="PreViewBottom" onclick="PreviewRayerChange('W')">
 					<img src="/images/kr/cm/btn_leftframe.gif" width="22" height="20" class="btnimg" id="PreViewleft" onclick="PreviewRayerChange('H')">
 					<img src="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="maillistoptiondiv" onclick="MailOptionView(this, 'N');" />
-				</li>      
+				</li> -->      
+				<div id="right" class="sub_frameIcon" style="float:right">	
+					<div class="sub_frameIconUL">
+					   	<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_bottomframe" id="PreViewBottom" onclick="PreviewRayerChange('W')"></span></p>
+					    <p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
+					</div>
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="maillistoptiondiv" onclick="MailOptionView(this, 'N');"></span></p>  
+					</div>
+				 </div>
 	        </ul>
 	    </div>
 	    <script type="text/javascript">
@@ -1008,63 +1025,55 @@
 	        <div id='runtime' style="color:#666;padding-top:5px"></div>
 	        <div id="tblPageRayer" style="text-align:center"></div>
 	    </span>
-	
-	
-	    <span id="PreviewRayerH" style="border:0px solid red; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
-	        <span id="previewmail_bar_h" class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
-	            <p class="hbar_dotted">
-	                <img src="/images/prevview_hbar_dotted.gif">
-	            </p>
-	        </span>
-	        <span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue;">
-	            <span style="width: 100%; height: 100px; display: block;">
-	                <span class="previewmail_info" style="display: block; width: 100%;">
-	                    <div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; display: none;">
-	                        <p class="mail_title" style="margin-left: 0px;">
-	                            <span class="icon_btn"><span onclick="MailReadOpen_temp();" style="cursor: pointer; padding-right: 5px;">
-	                                <img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" class="title_blodtxt"></span></span>
-	                        </p>
-	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreH_date"><span id="PreH_sub_date" style="display: none;"></span></span></span>
-	                        <dl class="mail_item">
-	                            <dt><spring:message code='ezBoard.t223'/>:
-	                                <span id="PreH_MailReceiver" style="display: inline-block"></span>
-	                            </dt>
-	                        </dl>
-	                    </div>
-	                </span>
+			<div id="PreviewRayerH" style="border:0px; width:500px; height:100%; overflow:hidden; vertical-align:top; display:none; margin-left:-5px;">
+		        <div class="previewmail_bar_h" onmousedown="PreviewH_onMouserDown(event);" style="cursor: w-resize; display: inline-block;">
+		            <p class="hbar_dotted">
+		                <img src="/images/prevview_hbar_dotted.gif">
+		            </p>
+		        </div>
+		        <div id="PreContent_RayerH" style="position: absolute; border: 0px; margin-left:7px;">
+		            <div class="previewmail">
+		                <div class="previewmail_info">
+		                	<dl class="previewmailDL" id="Preview_HeaderH" style="display:none;">
+								<dt class="prepic"><img id="userImgH" src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
+								<dd class="pretext">
+									<ul class="pretextUL">
+										<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreH_subject"><span class="subjectText" id="PreH_sub_subject"></span></span></li>
+										<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t223" /></span> : <span id="PreH_MailReceiver"></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t224" /> : </span><span id="PreH_date"><span id="PreH_sub_date" style="display:none;"></span></span></span></li>
+										
+									</ul>
+								</dd>
+							</dl>
+		                </div>
 	                <iframe id="ifrmPreViewH_photo" name="ifrmPreViewH_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: none;"></iframe>
 	                <iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
-	            </span>
-	        </span>
-	    </span>
-	
-	
-	    <span id="PreviewRayerW" style="border: 0px solid red; width: 100%; height: 300px; overflow: hidden; display: none;">
-	        <span onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
+	            </div>
+	        </div>
+	    </div>
+		<div id="PreviewRayerW" style="border: 0px; width: 100%; height: 300px; overflow: hidden; display: none;">
+			<div onmousedown="PreviewW_onMouserDown(event);" style="cursor: s-resize; width: 100%; display: list-item;" class="previewmail_bar" name="PreviewBar" id="PreviewBar">
 	            <img src="/images/prevview_bar_dotted.gif">
-	        </span>
-	        <span id="PreContent_RayerW" style="display: block;">
-	            <span style="width: 100%; height: 100px; display: block;">
-	                <span class="previewmail_info" style="display: block; width: 100%;">
-	                    <div id="Preview_HeaderW" style="border-bottom: solid 1px #e8e8e8; display: none;">
-	                        <p class="mail_title">
-	                            <span class="icon_btn"><span onclick="MailReadOpen_temp();" style="cursor: pointer; padding-right: 5px;">
-	                                <img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="" border="0"></span></span><span id="PreW_subject"><span id="PreW_sub_subject" class="title_blodtxt"></span></span>
-	                        </p>
-	                        <span class="mail_date" style="margin-right: 10px; display: inline-block;"><span id="PreW_date"><span id="PreW_sub_date"></span></span></span>
-	                        <dl class="mail_item">
-	                            <dt><spring:message code='ezBoard.t223'/>:</dt>
-	                            <dd style="padding-left:44px; margin-top:-20px;"><span id="PreW_MailReceiver" style="display: inline-block"></span>
-	                            </dd>
-	                        </dl>
-	                    </div>
-	                </span>
-	                <iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
-	                <iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
-	            </span>
-	        </span>
-	    </span>
-	
+	        </div>
+	        <div id="PreContent_RayerW" style="display: block;">
+	            <div class="previewmail">
+	                <div class="previewmail_info" style="display: block; width: 100%;">
+	                	<dl class="previewmailDL" id="Preview_HeaderW" style="display:none;">
+							<dt class="prepic"><img id="userImgW" src="/images/kr/main/bestEmployee_pic_none.png" width="55px" height="55px"></dt>
+							<dd class="pretext">
+								<ul class="pretextUL">
+									<li class="preSubject"><span class="popup_open" onclick="MailReadOpen();"><img src="/images/kr/cm/btn_newpopup.gif" title="<spring:message code='ezEmail.t99000001' />" alt="<spring:message code="ezEmail.t99000001" />"></span><span class="subjectText" id="PreW_subject"><span class="subjectText" id="PreW_sub_subject"></span></span></li>
+									<li class="preT_list"><span class="t_left"><span class="cblack"><spring:message code="ezBoard.t223" /></span> : <span id="PreW_MailReceiver"></span></span><span class="t_right"><span class="cblack"><spring:message code="ezBoard.t224" /> : </span><span id="PreW_date"><span id="PreW_sub_date" style="display:none;"></span></span></span></li>
+									
+								</ul>
+							</dd>
+						</dl>
+	                </div>
+					<iframe id="ifrmPreViewW_photo" name="ifrmPreViewW_photo" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0; display:none;"></iframe>
+					<iframe id="ifrmPreViewW" name="ifrmPreViewW" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: 0px solid black; z-index: 0;"></iframe>
+            </div>
+        </div>
+    </div>
+
 		<!-- 2018-06-08 김민성 - 게시판 검색 레이어팝업 변경 -->
 	<div class="jquery-modal blocker current" id="layer_popup" style="display: none;">
 		<div id="srarchpopup" class="popupwrap1 modal" style="margin-bottom: 70px; left: 297.5px; display: inline-block;">

@@ -22,6 +22,7 @@
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/pageNav.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
+	<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 	<script type="text/javascript">
 		var lang      = ${lang};
 		var strErr    = "<spring:message code = 'ezWebFolder.t107'/>";
@@ -206,8 +207,8 @@
 					$('#tblFileList tr td').remove();
 					renderFileListElement(trashCanList);
 					makePageSelPage();
-					document.getElementById("mailBoxInfo").innerHTML = " - [ 폴더 " + "<span style='color:#017BEC;'>" 
-					+ folderCnt +" </span>"+ strLang42 +" / 파일 " + "<span style='color:#017BEC;'>" + fileCnt +" </span>" + strLang42 + "]";
+					document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp; 폴더 " + "<span style='color:#017BEC;'>" 
+					+ folderCnt +" </span> / 파일 " + "<span style='color:#017BEC;'>" + fileCnt +" </span>";
 				},
 				error : function(error) {
 					hideProgress();
@@ -227,7 +228,7 @@
 	            changeYear: true,
 	            autoSize: true,
 	            showOn: "both",
-	            buttonImage: "/images/ImgIcon/calendar-month.gif",
+	            buttonImage: "/images/ImgIcon/calendar-month.png",
 	            buttonImageOnly: true
 	        });
 		
@@ -416,6 +417,8 @@
 						alert("<spring:message code = 'ezWebFolder.t289'/>");
 					} else if (data.code == "4") {
 						alert("<spring:message code = 'ezWebFolder.t290'/>");
+					} else if (data.code == "8") {
+						alert("<spring:message code = 'webfolder.duplicate.restore.error'/>");
 					}
 				},
 				error : function(error) {
@@ -601,7 +604,8 @@
     <div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
         <iframe style="border:none;" id="iFrameLayer"></iframe>
     </div>
-	<div id="searchPanel"class="popup wfSearchPanel" style="display:none;">
+	<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">
+	<div class="popup" style="margin: 0; padding: 5px 10px 10px;">
 		<h1><spring:message code='ezWebFolder.t10'/><spring:message code='ezWebFolder.t123' /></h1> 
 		<div class="wfClose" onclick="doLayerPopup();"><ul><li><span></span></li></ul></div>
 		<div style="margin: 10px 0px 15px;">
@@ -640,7 +644,8 @@
 			<a class="webfolderBttn"><span onclick="search('basic');"><spring:message code='ezWebFolder.t123'/></span></a>
 			<a class="webfolderBttn"><span onclick="doLayerPopup();" ><spring:message code='ezWebFolder.t112'/></span></a>
 		</div>
-	</div>	
+	</div>
+	</div>
 	
 	<div style="width:200px;height:110px; border-radius:8px;text-align:center;vertical-align:middle;display:none;z-index:9000;position:absolute;" id="progressPanel">
 		<img src="/images/email/progress_img.gif" style="padding-top:20px;"/>

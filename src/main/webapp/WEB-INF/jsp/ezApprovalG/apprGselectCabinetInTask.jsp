@@ -537,7 +537,7 @@
 		    }
 		</script>
 	</head>
-	<body class="popup" style="margin-left:0px;margin-top:0px">
+	<body class="popup" style="margin-left:10px;margin-top:8px">
 		<%-- <h1><spring:message code='ezApprovalG.t711'/></h1> --%> <!-- 기록물철 선택 -->
 		<div id="menu">
 			<ul id="trCreateCab" style="display: none">

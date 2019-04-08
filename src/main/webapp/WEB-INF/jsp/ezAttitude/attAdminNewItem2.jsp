@@ -60,7 +60,7 @@
 		            document.body.style.oUserSelect = 'none';
 		            document.body.style.UserSelect = 'none';
 		        }
-				select_memorialDays(uselang);
+				/* select_memorialDays(uselang); */
 				setHoliday();
 				setTypeName();
 			}
@@ -80,7 +80,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        $("#Edatepicker").datepicker({
@@ -88,7 +88,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        
@@ -386,17 +386,41 @@
 						holidayAttReg = result.attitudeConfigVO.closedDateAttitude;
 						closedDay = result.attitudeConfigVO.closedDay.split(",");
 						for (var i = 0; i < result.holidayList.length; i++) {
-							if (result.holidayList[i].holidayDate != null) {
-								if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
-									memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
-																	  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
-																	  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
-								} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
-									yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
-																			  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
-																			  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
-																			  result.holidayList[i].isRest == 1 ? true : false));
-								}
+							var isSolar = "";
+							var holidayFlag = "";
+							var repetition = "";
+							
+							if (result.holidayList[i].isSolar == "1") {
+								isSolar = "1";
+							} else {
+								isSolar = "2";
+							}
+							
+							if (result.holidayList[i].holidayDate == null) {
+								result.holidayList[i].holidayDate = '';
+							}
+							
+							if (result.holidayList[i].holidayRepeat == null) {
+								repetition = '';
+							} else {
+								repetition = result.holidayList[i].holidayRepeat;
+							}
+							
+							if (result.holidayList[i].holidayFlag == 'Y') {
+								holidayFlag = "Y";			                    
+			                } else {
+			                    holidayFlag = "D";
+			                }
+							
+							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
+								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
+																  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
+																  isSolar, result.holidayList[i].isRest == 1 ? true : false, holidayFlag, repetition));
+							} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+								yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
+																		  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
+																		  result.holidayList[i].holidayDate.substring(8,10), isSolar,
+																		  result.holidayList[i].isRest == 1 ? true : false, holidayFlag, repetition));
 							}
 						}
 						form_change();
@@ -649,7 +673,7 @@
 	                    <td style="height: 20px">
 	                        <table id="attiwriteForm" class="content" style="margin-top:5px">
 	                        	<tr id="userName" fixed="fix">
-	                        		<th><a href="#" class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 35px; text-align: center;"><spring:message code='ezAttitude.t219'/></span></a></th>
+	                        		<th><a class="imgbtn"><span onclick="SelectReceiver_onClick()" style="width: 35px; text-align: center;"><spring:message code='ezAttitude.t219'/></span></a></th>
 	                        		<td id="forName"></td>
 	                        	</tr>
 	                        	<tr id="userId" fixed="fix" style="display:none;">

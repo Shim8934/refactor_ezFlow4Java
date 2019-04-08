@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,7 @@ import egovframework.ezEKP.ezSchedule.vo.ScheduleShareVO;
 
 @Service("EzScheduleAdminService")
 public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
+	private static final Logger logger = LoggerFactory.getLogger(EzScheduleAdminServiceImpl.class);
 	
 	@Resource(name="EzScheduleAdminDAO")
 	private EzScheduleAdminDAO ezScheduleAdminDAO;
@@ -75,6 +78,8 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 		map.put("v_TENANTID", tenantId);
 		
 		ezScheduleAdminDAO.scheduleDelHoliday(map);
+		
+		logger.debug("deleted holidayID : " + holidayID);
 	}
 
 	@Override
@@ -88,26 +93,34 @@ public class EzScheduleAdminServiceImpl implements EzScheduleAdminService{
 	}
 
 	@Override
-	public void scheduleSaveHoliday(String holidayName, String holidayName2, String holidayDate, String isSolar, String isRepeat, String isRest, String companyID, int tenantId) throws Exception {
+	public String scheduleSaveHoliday(String holidayName, String holidayName2, String holidayFlag, String holidayDate, String holidayRepeat, String isSolar, String isRepeat, String isRest, String companyID, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_HOLIDAYNAME", holidayName);
 		map.put("v_HOLIDAYNAME2", holidayName2);
+		map.put("v_HOLIDAYFLAG", holidayFlag);
 		map.put("v_HOLIDAYDATE", holidayDate);
+		map.put("v_HOLIDAYREPEAT", holidayRepeat);
 		map.put("v_ISSOLAR", isSolar);
 		map.put("v_ISREPEAT", isRepeat);
 		map.put("v_ISREST", isRest);
 		map.put("v_COMPANYID", companyID);
 		map.put("v_TENANTID", tenantId);
 		
-		ezScheduleAdminDAO.scheduleSaveHoliday(map);
+		String holidayID = ezScheduleAdminDAO.scheduleSaveHoliday(map);
+		
+		logger.debug("Inserted holidayID : " + holidayID);
+	
+		return holidayID;
 	}
 
 	@Override
-	public void scheduleUpdateHoliday(String holidayName, String holidayName2, String holidayDate, String isSolar, String isRepeat, String isRest, String companyID, int tenantId, String holidayID) throws Exception {
+	public void scheduleUpdateHoliday(String holidayName, String holidayName2, String holidayFlag, String holidayDate, String holidayRepeat, String isSolar, String isRepeat, String isRest, String companyID, int tenantId, String holidayID) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("v_HOLIDAYNAME", holidayName);
 		map.put("v_HOLIDAYNAME2", holidayName2);
+		map.put("v_HOLIDAYFLAG", holidayFlag);
 		map.put("v_HOLIDAYDATE", holidayDate);
+		map.put("v_HOLIDAYREPEAT", holidayRepeat);
 		map.put("v_ISSOLAR", isSolar);
 		map.put("v_ISREPEAT", isRepeat);
 		map.put("v_ISREST", isRest);

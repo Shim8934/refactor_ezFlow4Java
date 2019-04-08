@@ -1,0 +1,16 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+body {
+	margin: 0px;
+}
+
+.reform_grid tr:hover {
+	background-color: #f0f0f0;
+	color: black;
+}
+
+p {
+	margin-top: 0px;
+	margin-bottom: 0px;
+}

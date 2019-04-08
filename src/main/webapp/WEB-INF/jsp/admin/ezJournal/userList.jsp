@@ -69,17 +69,17 @@
 	        //부서별 사원 수 출력
 	        function memberCountInfo() {
 	        	var html = "<img src='/images/OrganTree_cross/ic-open.gif' style='vertical-align:middle;padding-right: 3px;'>";
-	        	html += keyword;
+	        	html += "<span id='spn_deptName'>" + keyword + "</span>";
 				if (containLow == "YES") {
 					var expanded = $("li[aria-selected=true]").eq(0).attr("aria-expanded");
 
 					if (expanded != null && expanded != "") { //하위가 있으면
-						html += "-[<span style='color:#017BEC;'>" + totalCount + "<spring:message code='main.t20000'/></span>/<spring:message code='ezAddress.t362' /> <span style='color:#017BEC;'>" + totalCount2 + "<spring:message code='main.t20000'/></span>]";
+						html += "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span> / <span style='color:#017BEC;'>" + totalCount2 + "</span>";
 	        		} else { //하위가 없으면
-	        			html += "-[<span style='color:#017BEC;'>" + totalCount +"<spring:message code='main.t20000'/></span>]";
+	        			html += "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount +"</span>";
 	        		}
 				} else {
-					html += "-[<span style='color:#017BEC;'>" + totalCount + "<spring:message code='main.t20000'/></span>]";
+					html += "&nbsp;&nbsp;<span style='color:#017BEC;'>" + totalCount + "</span>";
 				}
 				$("#selectDeptNM").html(html);
 	        }
@@ -87,7 +87,7 @@
 		<style>
 		</style>
 	</head>
-		<table style="width: 100%; margin-top: -1px;" class="popup_mainlist">
+		<table style="width: 100%; margin-top: -1px; height:35px" class="popup_mainlist">
 			<tbody>
 				<tr>
 			    	<th style="white-space:normal;background-color: white;border-top:0px solid #ddd;border-bottom:1px solid #eaeaea">

@@ -104,7 +104,7 @@
 				
 				var imgElmt2 = document.createElement("img");
 				imgElmt2.setAttribute("class", "webfolderImg");
-				imgElmt2.src = "/images/webfolder/fldr.png";
+				imgElmt2.src = "/images/OrganTree_cross/fldr.gif";
 				
 				var spanFolderName = document.createElement("span");
 				spanFolderName.textContent = primary == "1" ? list["folderName"] : list["folderName2"];
@@ -373,6 +373,9 @@
 							case 3:
 								alert("<spring:message code='ezWebFolder.t300' />");
 								break;
+							case 8:
+								alert(messages.resultErrDuplicateCreate);
+								break;
 						}
 					},
 					error: function (xhr, status, e){
@@ -465,6 +468,9 @@
 								break;
 							case 3:
 								alert("<spring:message code='ezWebFolder.t300' />");
+								break;
+							case 8:
+								alert(messages.resultErrDuplicateRename);
 								break;
 						}
 					},

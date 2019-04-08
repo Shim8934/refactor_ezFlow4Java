@@ -223,6 +223,62 @@
 			.popupJQLayer {
 				padding : 9px 13px 5px
 			}
+			
+			
+			/*리스트형 테이블 관련 css*/
+			.mainlist tr td.borderLeft {
+				border-left :1px solid #e2e2e1;
+			}
+			
+			#contentlist .mainlist tr.sat {
+				background:#f7f9fd;
+			}
+			
+			#contentlist .mainlist tr.sun {
+				background:#fdf7f7;
+			}
+			
+			#contentlist .mainlist tr.today {
+				background:#f0f6ff;
+			}
+			
+			#contentlist .mainlist td span.sat {
+				color:rgb(0, 72, 149);
+			}
+			
+			#contentlist .mainlist td span.sun {
+				color:#ee1c25;
+			}
+			#contentlist .mainlist th.hideTd {
+			    height: 0px;
+			    padding: 0px;
+			    font-size: 0px;
+			    empty-cells: hide;
+			    border: none;
+			}
+			#contentlist .mainlist tr.hideTr {
+			    height: 0px;
+			    width: 0px;
+			    padding: 0px;
+			    margin: 0px;
+			}
+			#attiTableListTB .mainlist th {
+				text-align: center;
+				overflow: hidden; 
+				text-overflow: ellipsis; 
+				white-space: nowrap;
+				border: 1px solid #c8ccd0;
+				background: #e4e8ec;
+			}
+			#attiTableListTB .mainlist td.textCenter {
+				text-align: center;
+			}
+			#attiTableListTB .mainlist td.textLeft {
+				padding-left: 20px;
+			}
+			.iconStrClass {
+				padding-left: 15px;
+			}
 		</style>
 		<script>
 			var pMode = "";
@@ -237,6 +293,8 @@
 			var modChangeDate = "";         //수정신청 변경일자
 			var modContent = "";            //수정신청 내용
 			var pageInfo = "viewCalendar";
+			var week = "<spring:message code='ezAttitude.t140' />";
+			var weekArray;
 			
 			$(function(){
 				authBtn();
@@ -265,13 +323,42 @@
 					
 		        	$("#popup").css("left", popupX);
 		        	$("#popupDay").css("left", popupDayX);
+		        	
+		        	//테이블 리스트 resize조정.
+		        	var height = parseInt(document.documentElement.clientHeight - 235);
+		        	$("#contentlist").css("height", height +"px");
 		        });
+				
+				//리스트형 날짜 클릭시 근태작성창
+				$(document).on('dblclick', '#contentlist .mainlist tr td:nth-child(6n - 5)', function() {
+					pMode = "new";
+					attitudeNewItem(this);
+				});
+				
+				//개인근태일경우 표보기 크롬일경우 테이블 ui틀어짐 조정
+				if (deptFlag != "true") {
+					if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+						$("#attiTableListTB th:eq(5)").css("border-right-color","#e4e8ec");
+						$("#attiTableListTB th:eq(6)").css("width","12px");
+					}
+				}
 			});
 			
 			window.onload = function() {
-				select_memorialDays(uselang); // 공식 휴일 설정 => 언어에 따라 memorialDays에 변수가 담김
+				weekArray = week.split(";");
+				
+				/* select_memorialDays(uselang); */ // 공식 휴일 설정 => 언어에 따라 memorialDays에 변수가 담김
 				
 				scheduleGetLunarUse();
+				
+				
+				CalendarView("attiCalendar");
+				getAttiTypeList();
+				
+				$("#btnTableList span").click();
+				
+	        	var height = parseInt(document.documentElement.clientHeight - 235);
+	        	$("#contentlist").css("height", height +"px");
 			}
 			
 	        /* 2018-08-11 장진혁 - 레이어팝업 생성된 상태에서 backspace 누를시 왼쪽프레임 부분 딤 처리 없애기 */
@@ -307,7 +394,7 @@
 			        changeYear: true,
 			        autoSize: true,
 			        showOn: "both",
-			        buttonImage: "/images/ImgIcon/calendar-month.gif",
+			        buttonImage: "/images/ImgIcon/calendar-month.png",
 			        buttonImageOnly: true
 			    });
 			});
@@ -454,8 +541,14 @@
 					},
 					success : function(result) {
 						$(".statsUL dd").text("0");
+						$(".timeCountR").text("0");
+						
 						for (var i = 0; i < result.length; i++) {
 							$("#" + result[i].typeId).text(result[i].count);
+							
+							if (result[i].typeId == "A02" || result[i].typeId == "A11" || result[i].typeId == "A12" || result[i].typeId == "A13") {
+								$("#F" + result[i].typeId).text(result[i].count);
+							}
 						}
 					}
 				})
@@ -468,29 +561,50 @@
 				$.ajax({
 					type : "GET",
 					dataType : "json",
-					async : true,
+					async : false,
 					url : "/ezAttitude/getHolidayList.do",
 					data : {
 						isRest : "all"
 					},
 					success : function(result) {
 						for (var i = 0; i < result.holidayList.length; i++) {
-							if (result.holidayList[i].holidayDate != null) {
-								if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
-									memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
-																	  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
-																	  result.holidayList[i].isSolar, result.holidayList[i].isRest == 1 ? true : false));
-								} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
-									yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
-																			  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
-																			  result.holidayList[i].holidayDate.substring(8,10), result.holidayList[i].isSolar,
-																			  result.holidayList[i].isRest == 1 ? true : false));
-								}
+							var isSolar = "";
+							var holidayFlag = "";
+							var repetition = "";
+							
+							if (result.holidayList[i].isSolar == "1") {
+								isSolar = "1";
+							} else {
+								isSolar = "2";
+							}
+							
+							if (result.holidayList[i].holidayDate == null) {
+								result.holidayList[i].holidayDate = '';
+							}
+							
+							if (result.holidayList[i].holidayRepeat == null) {
+								repetition = '';
+							} else {
+								repetition = result.holidayList[i].holidayRepeat;
+							}
+							
+							if (result.holidayList[i].holidayFlag == 'Y') {
+								holidayFlag = "Y";			                    
+			                } else {
+			                    holidayFlag = "D";
+			                }
+							
+							if (result.holidayList[i].isRepeat == 1) { //매년 반복되는 경우
+								memorialDays.push(new memorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2, 
+																  result.holidayList[i].holidayDate.substring(5,7), result.holidayList[i].holidayDate.substring(8,10),
+																  isSolar, result.holidayList[i].isRest == 1 ? true : false, holidayFlag, repetition));
+							} else if (result.holidayList[i].isRepeat == 0) { //해당 년에만 적용이 되는 경우
+								yearmemorialDays.push(new yearmemorialDay(result.holidayList[i].holidayName, result.holidayList[i].holidayName2,
+																		  result.holidayList[i].holidayDate.substring(0,4), result.holidayList[i].holidayDate.substring(5,7),
+																		  result.holidayList[i].holidayDate.substring(8,10), isSolar,
+																		  result.holidayList[i].isRest == 1 ? true : false, holidayFlag, repetition));
 							}
 						}
-						
-						CalendarView("attiCalendar");
-						getAttiTypeList();
 					}
 				})
 			}
@@ -1143,7 +1257,7 @@
 				var endTimeList = []; //퇴근시간 배열
 				
 		    	result.forEach(function(vo, index) {
-		    		if (vo.typeId == "A01" || vo.typeId == "A03" || vo.typeId == "A02" || vo.typeId == "A07") { //출근, 퇴근, 지각, 휴근
+		    		if (vo.typeId == "A01" || vo.typeId == "A03" || vo.typeId == "A02" || vo.typeId == "A07" || vo.typeId == "A08") { //출근, 퇴근, 지각, 휴근, 조퇴
 			    		//no, 이름, 출근, 퇴근, 근태유형, 일시, 근무지 및 내용
 		    			if (vo.typeId == "A01") { //출근리스트
 				    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
@@ -1153,7 +1267,7 @@
 				    		objTr.append($("<td style='max-width:8%; width:8%;' title ='" + "<spring:message code='ezAttitude.t231'/>" + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text("<spring:message code='ezAttitude.t231'/>")));
 			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
-		    			} else if (vo.typeId == "A03") { //퇴근
+		    			} else if (vo.typeId == "A03" || vo.typeId == "A08") { //퇴근, 조퇴
 		    				endTimeList.push(vo);
 		    			} else if (vo.typeId == "A02") { //지각
 				    		var objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
@@ -1177,16 +1291,27 @@
 		    		if (objTr) {
 			    		$("#addpopupDay_list tbody").append(objTr);
 		    		}
-	    		});
-		    	
+	    		});		    	
 		    	//퇴근 리스트
 		    	endTimeList.forEach(function(vo, index) {
-		    		$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(11,16) + "</div>");
+		    		if (vo.typeId == "A08") { //조퇴
+			    		$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span class='AttRedText'>" + vo.startDate.substring(11,16) + "</span></div>");
+
+			    		if ($("#TR_" + vo.writerId + " td:eq(4)").text() == "<spring:message code='ezAttitude.t113' />") {//지각이면 "지각,조퇴" 형태로 되게끔.
+		    				$("#TR_" + vo.writerId + " td:eq(4)").html("<div style='width:55px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><spring:message code='ezAttitude.t113' />" + ", " + vo.typeName + "</div>");
+			    			$("#TR_" + vo.writerId + " td:eq(4)").attr("title", "<spring:message code='ezAttitude.t113' />" + ", " + vo.typeName);
+		    			} else {
+		    				$("#TR_" + vo.writerId + " td:eq(4)").html("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.typeName + "</div>");
+			    			$("#TR_" + vo.writerId + " td:eq(4)").attr("title", vo.typeName);
+		    			}
+		    		} else { //퇴근
+			    		$("#TR_" + vo.writerId + " td:eq(3)").html("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'>" + vo.startDate.substring(11,16) + "</div>");
+		    		}
 		    	});
 			}
 			function attitudeList(result) {
 		    	result.forEach(function(vo, index) {
-					if (vo.typeId != "A01" && vo.typeId != "A03" && vo.typeId != "A02" && vo.typeId != "A07") { //출근, 퇴근, 지각, 휴근 이 아니면
+					if (vo.typeId != "A01" && vo.typeId != "A03" && vo.typeId != "A02" && vo.typeId != "A07" && vo.typeId != "A08") { //출근, 퇴근, 지각, 휴근, 조퇴가 아니면
 			    		var contentTrim = $.trim($("<p></p>").html(vo.content).text());
 			    		var statusContent = "";
 			    		
@@ -1521,7 +1646,465 @@
 			//month picker
 		    $('.ui-datepicker-trigger').click(function(){
 		    	$('.ui-datepicker-month').css('display','none');
-		    });			
+		    });	
+			
+			
+			
+			/**
+			* [개인근태현황] 달력형보기, 리스트형보기
+			*/
+			
+			//달력형
+			function getAttitudeCalList() {
+				getAttitudeMainList();
+				
+				$("#attiCalendarTB").css("display","");
+				$("#attiTableListTB").css("display","none");
+				$("#btnCalList").addClass("on");
+				$("#btnTableList").removeClass("on");
+			}
+			
+			//리스트형
+			function getAttitudeTableList() {
+				var curYear = $("#calTitle").text().split("-")[0].trim();
+				var curMonth = $("#calTitle").text().split("-")[1].trim();
+				var startDate = curYear + "-" + curMonth + "-" + "01";
+				var endDate = curYear + "-" + curMonth + "-" + (new Date(curYear, curMonth, 0)).getDate();
+				$.ajax({
+					type : "POST",
+					dataType : "json",
+					async : true,
+					url : "/ezAttitude/getAttitudeList.do",
+					data : {
+						startDate : startDate,
+						endDate : endDate,
+						deptFlag : deptFlag,
+						selectedDeptID : encodeURIComponent(authDeptList.value)
+					},
+					success : function(result) {
+						getAttitudeTableList_after(result, endDate);
+					}
+				})
+				
+				$("#attiCalendarTB").css("display","none");
+				$("#attiTableListTB").css("display","");
+				$("#btnCalList").removeClass("on");
+				$("#btnTableList").addClass("on");
+				
+				//month picker 호출함수    
+			    var WstartDate, WendDate; 
+			    var monthCssHidden = function(){
+					window.setTimeout(function(){
+						 $('.ui-datepicker-month').css('display','none');
+						 $('.ui-datepicker-year').css('margin','0 auto');
+					}, 1);
+				}
+			    var monthCssShow = function(){
+					window.setTimeout(function(){
+						 $('.ui-datepicker-month').css('display','');
+						 $('.ui-datepicker-year').css('margin','');
+					}, 1);
+				}
+			    var removeMonthClass = function(){
+					window.setTimeout(function(){
+						 $('#ui-datepicker-div').removeClass('ui-monthpicker');
+					}, 1);
+				}
+			       
+			    $(".datePick").monthpicker({
+			    	showOn: "both",
+					buttonImage: "/images/ImgIcon/calendar-month.png",
+					buttonImageOnly: true,
+					onSelect: function (dateText, inst) {
+						var iMonth = parseInt($('.datePick').val().substring(5,7),10)-1;
+						var iYear = $('.datePick').val().substring(0,4);
+						var iDay = $('.datePick').val().substring(8,10);
+						
+						var beforeMonth = leadingZeros((sDate.getMonth() + 1), 2) - 1; 	   
+						var beforeYear = sDate.getFullYear();
+						
+						sDate.setFullYear(iYear, iMonth, iDay); 
+						if(iYear == beforeYear && iMonth == beforeMonth){
+							return;   			   
+						}else CalendarView("attiCalendar");
+
+					}
+			    }); 
+			}
+			
+			function getAttitudeTableList_after(result, endDate) {
+				var tbodyHtml = "";
+								
+				//td
+				var cal = new Date();
+				var today = cal.getFullYear() + "-" + (cal.getMonth()+1) + "-" + cal.getDate();
+				var year = endDate.substring(0,4);
+				var month  = endDate.substring(5,7);
+				var endDay = Number(endDate.split("-")[2]) + 1;
+	    		for (var i = 1; i < endDay; i++) {
+	    			//한자리 숫자면 앞에 0을 붙여준다.
+	    			var j = i + "";
+	    			if (j.length == 1) {
+	    				j = "0" + j
+	    			}
+					var oThisDate = new Date(year + "-" + month + "-" + j);
+	    			var memorialResult = setMemorial(oThisDate);
+	    			var isholiday = memorialResult[0];
+	    			var holidayname = memorialResult[1];
+	    			var holidayname2 = memorialResult[2];
+	    			
+	    			//토요일 일요일은 text색상이 다름.
+	    			var dayClass = "";
+	    			var dayIdx = new Date(year + "-" + month + "-" + j).getDay();
+	    			if (dayIdx == 0 || isholiday || (dayIdx != 6 && companyHoliday[dayIdx] == "1")) {
+	    				dayClass = "sun";
+	    			} else if (dayIdx == 6) {
+	    				dayClass = "sat";	
+	    			}
+	    			
+	    			if (year + "-" + month + "-" + j == today) {
+	    				if (isholiday) {
+		    				dayClass = "today sun";
+	    				} else {
+	    					dayClass = "today";
+	    				}
+	    			}
+	    			
+	    			//음력
+					var lunarDate2; // 음력월.음력일 => 달력에 음력일을 표시해주기 위한 변수
+	    			if (LunarUse) {
+						var lunarDate; // 음력 날짜를 저장하기 위한 변수
+						if (year > 1800 && year <= 2101) { // 음력에 대한 날짜 제공은 1800 ~ 2101
+							lunarDate = lunarCalc(year, month, i, 1);
+							
+							lunarDate2 = lunarDate.month + "." + lunarDate.day;
+							if (lunarDate.leapMonth) {
+								lunarDate2 = "윤" + lunarDate2;
+							}
+						}
+	    			}
+	    			
+	    			tbodyHtml += "<tr class='" + dayClass + "' id='" + year + "-" + month + "-" + j + "'>";
+	    			if (LunarUse) {
+    					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%;cursor:pointer' dispdate='" + year + "-" + month + "-" + j + "'><span class='" + dayClass + "'>" + month + "-" + j + " (" + lunarDate2 + ") </span></td>";//날짜
+	    			} else {
+    					tbodyHtml += "<td class='borderLeft textCenter' style='width:12%;cursor:pointer'><span class='" + dayClass + "'>" + month + "-" + j + "</span></td>";//날짜
+	    			}
+	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
+	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
+	    			tbodyHtml += "<td class='borderLeft textCenter' style='width:12%'></td>";
+	    			tbodyHtml += "<td class='borderLeft textLeft' style='width:20%'></td>";
+	    			tbodyHtml += "<td class='borderLeft textLeft'></td>";
+	    			tbodyHtml += "</tr>";
+	    		}
+
+				
+				$("#contentlist .mainlist").html(tbodyHtml);
+				
+				
+				result.forEach(function(vo, index) {
+					//수정신청 아이콘
+	    			var iconStr = "";
+					var iconStrClass = "";
+					if (vo.modAppl  == '2') {
+						iconStr = " <img class='pencil' src='/images/ezAttitude/change.png' />";
+						iconStrClass = "iconStrClass";
+					} else if (vo.modAppl  == '3') {
+						iconStr = " <img class='pencil' src='/images/ezAttitude/change.png' />";
+						iconStrClass = "iconStrClass";
+					}
+					
+					var typeText = $("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").text();
+					//출근, 퇴근, 지각, 휴근, 조퇴
+		    		if (vo.typeId == "A01" || vo.typeId == "A03" || vo.typeId == "A02" || vo.typeId == "A07" || vo.typeId == "A08") { 
+			    		// 출근, 퇴근, 근태유형
+		    			if (vo.typeId == "A01") { //출근리스트
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").html("<span class='" + iconStrClass + "'>" + vo.startDate.substring(11,16) + "</span>" + iconStr);
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", "<spring:message code='ezAttitude.t231' />");
+		    			} else if (vo.typeId == "A02") { //지각
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").html("<span class='AttRedText " + iconStrClass + "'>" + vo.startDate.substring(11,16) + "</span>" + iconStr);
+
+			    			if (typeText != "" || typeText.indexOf("<spring:message code='ezAttitude.t114' />") > -1) {//조퇴면 "지각,조퇴" 형태로 되게끔.
+			    				$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html(vo.typeName + ", " + typeText);
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", vo.typeName + ", " + typeText);
+			    			} else {
+			    				$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html(vo.typeName);
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", vo.typeName);
+			    			}
+		    			} else if (vo.typeId == "A03") { //퇴근
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(2)").html("<span class='" + iconStrClass + "'>" + vo.startDate.substring(11,16) + "<span>" +  iconStr);
+			    		} else if (vo.typeId == "A08") { //조퇴
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(2)").html("<span class='AttRedText " + iconStrClass + "'>" +vo.startDate.substring(11,16) + "</span>" + iconStr);
+			    			if (typeText != "" || typeText.indexOf("<spring:message code='ezAttitude.t113' />") > -1) {//지각이면 "지각,조퇴" 형태로 되게끔.
+			    				$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html(typeText + ", " + vo.typeName);
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", vo.typeName + ", " + typeText);
+			    			} else {
+			    				$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").html(vo.typeName);
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", vo.typeName);
+			    			}
+			    		} else { //휴근
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").html("<span class='AttBlueText " + iconStrClass + "'>" + vo.startDate.substring(11,16) + "</span>" + iconStr);
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(2)").html("<span class='AttBlueText " + iconStrClass + "'>" + vo.endDate.substring(11,16) + "</span>" + iconStr);
+
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").text(vo.typeName);
+			    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", vo.typeName);
+		    			}
+		    		}
+		    		//출근, 퇴근, 지각, 휴근, 조퇴 가 아니면
+		    		else {						
+						if (vo.dateType == '4' || vo.dateType == '5') { //당일이 아닌 여러일일 경우 (외근, 출장, 파견 등의 경우)
+							subDate = calDateRange(vo.startDate.substring(0,10), vo.endDate.substring(0,10)); 
+						    var y = vo.startDate.substr(0, 4);
+						    var m = vo.startDate.substr(5, 2);
+						    var d = vo.startDate.substr(8, 2);
+							betweenDate = new Date(y, (Number(m)-1), d);
+							 
+							for (var j = 0; j<= subDate; j++) {
+								betweenDate.setDate(betweenDate.getDate() + (j == 0 ? 0 : 1)); 
+								var trDay = betweenDate.getFullYear() + "-" + leadingZeros(betweenDate.getMonth() + 1, 2) + "-" + leadingZeros(betweenDate.getDate(), 2);
+					    		
+					    		//근무지 및 사유
+					    		var contentTrim = $.trim($("<p></p>").html(vo.content).text());
+					    		var statusContent = "";
+					    		
+					    		if (vo.typeId == "A04" || vo.typeId == "A09" || vo.typeId == "A10") { //근무지
+						    		statusContent = $("<p></p>").html((vo.region == "" ? "" : vo.region)).text();
+						    	} else {
+						    		statusContent = $("<p></p>").html((contentTrim == "" ? "" : contentTrim)).text();
+						    	}
+				    			
+					    		if ($("#contentlist .mainlist tr#" + trDay + " td:eq(4)").text() != "") { //만약 해당 tr이 이미 존재하면
+					    			var objTds = "";
+					    			//근태유형
+					 				objTds += "<td class='borderLeft textCenter' title='" + vo.typeName + "'>" + vo.typeName + "</td>";
+					 				//일시
+					 				objTds += "<td class='borderLeft textLeft'>";
+					    			if (vo.dateType == 4 && vo.typeId != 'A04') {
+						 				objTds += vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10) + " " +  iconStr;
+						    		}
+					    			else if (vo.typeId == 'A04') {
+						    			if (vo.dateType == 4) {
+							 				objTds += vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10) + " " +  iconStr;
+						    			} else if (vo.dateType == 5) {
+							 				objTds += vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16)+ "</span>\u00a0~\u00a0" + vo.endDate.substring(0,11) + "<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span>" + " " +  iconStr;
+						    			}
+					    			}
+					 				objTds += "</td>";
+						    		//근무지 및 내용
+					 				objTds += "<td class='borderLeft textLeft' title='" + statusContent + "'>" + statusContent + "</td>";
+					    			
+					    			$("#contentlist .mainlist tr#" + trDay).after("<tr>" + objTds + "</tr>");
+					    			
+					    			//rowspan처리
+				    				var rowspanVal = 0;
+					    			if ($("#contentlist .mainlist tr#" + trDay + " td:eq(0)").attr("rowspan") == null || $("#contentlist .mainlist tr#" + trDay + " td:eq(0)").attr("rowspan") == "") {
+					    				rowspanVal = 2;
+					    			} else {
+					    				rowspanVal = Number($("#contentlist .mainlist tr#" + trDay + " td:eq(0)").attr("rowspan")) + 1;
+					    			}
+					    			$("#contentlist .mainlist tr#" + trDay + " td:eq(0)").attr("rowspan",rowspanVal);
+					    			$("#contentlist .mainlist tr#" + trDay + " td:eq(1)").attr("rowspan",rowspanVal);
+					    			$("#contentlist .mainlist tr#" + trDay + " td:eq(2)").attr("rowspan",rowspanVal);
+					    		} else { //만약 해당 tr이 이미 존재하지 않으면
+					    			//근태유형
+					    			var typeText = $("#contentlist .mainlist tr#" + trDay + " td:eq(3)").text();
+					    			//지각이나 조퇴일 경우 "지각,외근" 혹은 "지각,조퇴,외근" 의 형태로 나오게끔
+					    			if (typeText.indexOf("<spring:message code='ezAttitude.t113' />") > -1
+					    					|| typeText.indexOf("<spring:message code='ezAttitude.t114' />") > -1) {
+						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(3)").text(typeText + ", " + vo.typeName);
+						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(3)").attr("title", typeText + ", " + vo.typeName);
+					    			} else {
+						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(3)").text(vo.typeName);
+						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(3)").attr("title", vo.typeName);
+					    			}
+					    			
+						    		//일시
+					    			if (vo.dateType == 4 && vo.typeId != 'A04') {
+						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").html(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10) + " " +  iconStr);
+						    		}
+					    			else if (vo.typeId == 'A04') {
+						    			if (vo.dateType == 4) {
+							    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").html(vo.startDate.substring(0,10)+ "\u00a0~\u00a0" + vo.endDate.substring(0,10) + " " +  iconStr);
+						    			} else if (vo.dateType == 5) {
+							    			$("#contentlist .mainlist tr#" + trDay + " td:eq(4)").html(vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16)+ "</span>\u00a0~\u00a0" + vo.endDate.substring(0,11) + "<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span>" + " " +  iconStr);
+						    			}
+						    		}
+						    		//근무지 및 내용
+						    		if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(5)").html("<div style='max-width::810px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>" + statusContent + "</div></span>");
+						    		} else {
+						    			$("#contentlist .mainlist tr#" + trDay + " td:eq(5)").html("<div style='max-width::773px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>" + statusContent + "</div></span>");
+						    		}
+					    			$("#contentlist .mainlist tr#" + trDay + " td:eq(5)").attr("title",statusContent);
+					    		}
+							}
+						} else {  //여러일이 아닌 당일의 경우 (외근, 출장, 파견, 등등 외에)    		
+// 				    		//근무지 및 사유
+				    		var contentTrim = $.trim($("<p></p>").html(vo.content).text());
+				    		var statusContent = "";
+				    		
+				    		if (vo.typeId == "A04" || vo.typeId == "A09" || vo.typeId == "A10") { //근무지
+					    		statusContent = $("<p></p>").html((vo.region == "" ? "" : vo.region)).text();
+					    	} else {
+					    		statusContent = $("<p></p>").html((contentTrim == "" ? "" : contentTrim)).text();
+					    	}
+				    		
+				    		if ($("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(4)").text() != "") {//만약 해당 tr이 이미 존재하면
+				    			var objTds = "";
+				    			//근태유형
+				 				objTds += "<td class='borderLeft textCenter' title='" + vo.typeName + "'>" + vo.typeName + "</td>";
+				 				//일시
+				 				objTds += "<td class='borderLeft textLeft'>";
+					    		//일시
+				    			if (vo.dateType == 1 || vo.dateType == 2) {
+				    				objTds += vo.startDate.substring(0,10) + " " +  iconStr;
+					    		}
+				    			else if (vo.dateType == 3) {
+				    				objTds += vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16) + "</span>\u00a0~\u00a0<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span>" + " " +  iconStr;
+					    		}
+				 				objTds += "</td>";
+					    		//근무지 및 내용
+				 				objTds += "<td class='borderLeft textLeft' title='" + statusContent + "'>" + statusContent + "</td>";
+				    			
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10)).after("<tr>" + objTds + "</tr>");
+				    			
+				    			//rowspan처리
+			    				var rowspanVal = 0;
+				    			if ($("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(0)").attr("rowspan") == null || $("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(0)").attr("rowspan") == "") {
+				    				rowspanVal = 2;
+				    			} else {
+				    				rowspanVal = Number($("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(0)").attr("rowspan")) + 1;
+				    			}
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(0)").attr("rowspan",rowspanVal);
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(1)").attr("rowspan",rowspanVal);
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(2)").attr("rowspan",rowspanVal);
+				    		} else { //만약 해당 tr이 이미 존재하지 않으면
+				    			//근태유형
+				    			var typeText = $("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").text();
+				    			//지각이나 조퇴일 경우 "지각,외근" 혹은 "지각,조퇴,외근" 의 형태로 나오게끔
+				    			if (typeText.indexOf("<spring:message code='ezAttitude.t113' />") > -1
+				    					|| typeText.indexOf("<spring:message code='ezAttitude.t114' />") > -1) {
+					    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").text(typeText + ", " + vo.typeName);
+					    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", typeText + ", " + vo.typeName);
+				    			} else {
+					    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").text(vo.typeName);
+					    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(3)").attr("title", vo.typeName);
+				    			}
+				    			
+					    		//일시
+				    			if (vo.dateType == 1 || vo.dateType == 2) {
+					    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(4)").html(vo.startDate.substring(0,10) + " " +  iconStr);
+					    		}
+				    			else if (vo.dateType == 3) {
+					    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(4)").html(vo.startDate.substring(0,11) + "<span class='AttBlueText'>" + vo.startDate.substring(11,16) + "</span>\u00a0~\u00a0<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span>" + " " +  iconStr);
+					    		}
+					    		
+					    		//근무지 및 내용
+					    		if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
+					    			$("#contentlist .mainlist tr#" + trDay + " td:eq(5)").html("<div style='max-width::810px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>" + statusContent + "</div></span>");
+					    		} else {
+					    			$("#contentlist .mainlist tr#" + trDay + " td:eq(5)").html("<div style='max-width::773px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'><span>" + statusContent + "</div></span>");
+					    		}
+				    			$("#contentlist .mainlist tr#" + vo.startDate.substring(0,10) + " td:eq(5)").attr("title",statusContent);				    			
+				    		}
+						}
+					}
+				});
+				getAttiStatisList();
+			}
+			
+			function slideTd() {
+				if ($("#slideImg").attr("src") == "/images/ImgIcon/slideLeft.png") {
+					$("#attiStatis").css("height", "");
+					
+					$("#attiStatis").animate({
+						width: "151px"
+					}, 500);
+					
+					$("#slideBtn").animate({
+						right: "147px"
+					}, 500, function(){
+						$("#slideImg").attr("src", "/images/ImgIcon/slideRight.png");
+					});
+				} else {
+					$("#attiStatis").animate({
+						width: "0px"
+					}, 500, function(){
+						$("#attiStatis").css("height", "0px");
+					});
+					
+					$("#slideBtn").animate({
+						right: "2px"
+					}, 500, function(){
+						$("#slideImg").attr("src", "/images/ImgIcon/slideLeft.png");
+					});
+				}
+			}
+			
+			function setMemorial(oThisDate) {
+				var tempyear = oThisDate.getFullYear();
+				var lunarDate; // 음력 날짜를 저장하기 위한 변수
+				var lunarDate2; // 음력월.음력일 => 달력에 음력일을 표시해주기 위한 변수
+				if (tempyear > 1800 && tempyear <= 2101) { // 음력에 대한 날짜 제공은 1800 ~ 2101
+					lunarDate = lunarCalc(tempyear, oThisDate.getMonth() + 1, oThisDate.getDate(), 1);
+					
+					lunarDate2 = lunarDate.month + "." + lunarDate.day;
+					if (lunarDate.leapMonth) {
+						lunarDate2 = "윤" + lunarDate2;
+					}
+				}
+				
+				var tempmemorial = memorialDayCheck(oThisDate, lunarDate); // 날짜에 해당하는 휴일을 가져온다.
+				var tempyearmemorial = yearmemorialDayCheck(oThisDate, lunarDate);
+				
+				var isholiday = false;
+				var holidayname = "";
+				var holidayname2 = "";
+				
+				for (var i = 0; i < tempmemorial.length; i++) {
+			        memorial = tempmemorial[i];
+			        if (uselang == "1") {
+			            if (i == tempmemorial.length - 1) {
+			            	holidayname += memorial.name;
+			            } else {
+			            	holidayname += memorial.name + ", ";
+			            }
+			        } else {
+			            if (i == tempmemorial.length - 1) {
+			            	holidayname += memorial.name2;
+			            } else {
+			            	holidayname += memorial.name2 + ", ";
+			            }
+			        }
+			        if (memorial.holiday) {
+			        	isholiday = true;
+			        }
+			    }
+	
+			    for (var i = 0; i < tempyearmemorial.length; i++) {
+			        yearmemorial = tempyearmemorial[i];
+			        if (uselang == "1") {
+			            if (i == tempyearmemorial.length - 1) {
+			            	holidayname2 += yearmemorial.name;
+			            } else {
+			            	holidayname2 += yearmemorial.name + ", ";
+			            }
+			        } else {
+			            if (i == tempyearmemorial.length - 1) {
+			            	holidayname2 += yearmemorial.name2;
+			            } else {
+			            	holidayname2 += yearmemorial.name2 + ", ";
+			            }
+			        }
+			        if (yearmemorial.holiday) {
+			        	isholiday = true;
+			        }
+		    	}
+			    
+			    var result = [isholiday, holidayname, holidayname2];
+			    
+			    return result;
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0">
@@ -1532,11 +2115,10 @@
 			<h1 id="titleimg"><spring:message code='ezAttitude.t144'/></h1>
 		</c:if>
 		<div id="mainmenu">
-			<ul>
+			<ul class="on">
 				<c:if test="${adminFlag == 'true'}">
 		        	<li id="btnAbsentedList"><span onClick="popupAbsentedList()"><spring:message code='ezAttitude.t6'/></span></li>
 		        	<li id="btnExcelDown"><span onClick="excelDown()"><spring:message code='ezAttitude.t145'/></span></li>
-					<!-- <li id="divisionBar" style="background:none; padding-right:2px; cursor:default;" class="off"><img src="/images/i_bar.gif" alt=""></li> -->
 					<li>
 						<select id="authDeptList" style="width:130px; height:28px;<c:if test="${displayFlag == 'false'}"> display:none </c:if>" onchange="deptChange()">
 							<c:forEach var="dept" items="${deptList}">
@@ -1552,28 +2134,111 @@
 						</select>
 					</li>
 				</c:if>
-				<c:if test="${adminFlag != 'true'}">
-					<select id="authDeptList" style="width:100px; height:28px; display:none;" onchange="deptChange()">
-						<option value="<c:out value='${selectedDeptID}'/>" selected><c:out value='${selectedDeptID}'/></option>
-					</select>
-				</c:if>
-			</ul>
+			<c:if test="${adminFlag != 'true'}">
+				<select id="authDeptList"
+					style="width: 100px; height: 28px; display: none;"
+					onchange="deptChange()">
+					<option value="<c:out value='${selectedDeptID}'/>" selected><c:out
+							value='${selectedDeptID}' /></option>
+				</select>
+			</c:if>
+		</ul>
 		</div>
+
+		<div class="calendar_pagenav" style="width:180px;margin-left:-89px;">
+	        <ul class="contentlayout">
+	            <li class="contentlayout_left" id="preM"></li>
+	            <li class="contentlayout_right" id="preN"></li>
+	            <li class="contentlayout_none"><span class="spanText" id="calTitle"></span>
+	            </li>
+	        </ul>
+	    </div>
+    
+	    <c:if test="${deptFlag != 'true'}">
+		    <div class="mainmenuTab">
+		        <ul class="mainmenuTabUL">
+					<li id="btnTableList"><span onClick="getAttitudeTableList()">표 보기</span></li>
+		            <li id="btnCalList"><span onClick="getAttitudeCalList()">달력보기</span></li>
+		        </ul>
+		    </div>
+		    <div class="timecheck_info">
+		    	<dl class="timeInfo">
+		        	<dt class="timeInfoPic">
+		        		<c:choose>
+							<c:when test="${not empty userInfo.userFileUrl }">
+								<img src="/admin/ezOrgan/getPersonalInfo.do?fileName=${userInfo.userFileUrl }" width="48px" height="48px">
+							</c:when>
+							<c:otherwise>
+								<img src="/images/kr/main/bestEmployee_pic_none.png" width="48px" height="48px">
+							</c:otherwise>
+						</c:choose>
+		        	</dt>
+		            <dd class="timeInfoText"><span>${userInfo.displayName }</span><span>${userInfo.title }</span><span style="color:#aaa9a9">${userInfo.deptName }</span></dd>
+		        </dl>
+		        <dl class="timeIcconDL">
+		        	<dt class="timeIconDT"><img src="/images/ImgIcon/late_icon.png"></dt>
+		            <dd class="timeIconDD">지각 <span class="timeCountR" id="FA02">0</span></dd>
+		        </dl>
+		        <c:if test="${A11typeInfo.isuse eq '1' }">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_day.png"></dt>
+			            <dd class="timeIconDD">연차 <span class="timeCountR" id="FA11">0</span></dd>
+			        </dl>
+		        </c:if>
+		        <c:if test="${A12typeInfo.isuse eq '1' }">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_am.png"></dt>
+			            <dd class="timeIconDD">오전반차 <span class="timeCountR" id="FA12">0</span></dd>
+			        </dl>
+			    </c:if>
+			    <c:if test="${A13typeInfo.isuse eq '1' }">
+			        <dl class="timeIcconDL">
+			        	<dt class="timeIconDT"><img src="/images/ImgIcon/break_pm.png"></dt>
+			            <dd class="timeIconDD">오후반차 <span class="timeCountR" id="FA13">0</span></dd>
+			        </dl>
+			    </c:if>
+		    </div>
+	    </c:if>
 		
-		<table>
+		<!-- 근태관리 달력형 테이블(개인근태현황, 부서근태현황)-->
+		<table id="attiCalendarTB" <c:if test="${deptFlag != 'true'}">style="display:none"</c:if>>
 			<tr>
-				<td style="vertical-align:top; width:91%;">
+				<td style="vertical-align:top; width:100%;">
 					<div style="vertical-align:top;" id="attiCalendar"></div>
 				</td>
 				<td style="vertical-align:top;">
-					<div style="width:8px">&nbsp;</div>
-				</td>
-				<td style="vertical-align:top; width:9%; margin-left:5px;">
-					<div style="vertical-align:top;" class="time_stats" id="attiStatis">
-					</div>
+					<c:if test="${deptFlag != 'true'}">
+						<div style="vertical-align:top;width:0px;height:0px;overflow:hidden;" class="time_stats" id="attiStatis"></div>
+						<div id="slideBtn" style="position:absolute;top:164px;right:2px;"><img id="slideImg" onclick="javascript:slideTd()" src="/images/ImgIcon/slideLeft.png" /></div>
+					</c:if>
+					<c:if test="${deptFlag == 'true'}">
+						<div style="vertical-align:top;" class="time_stats" id="attiStatis"></div>
+					</c:if>	
 				</td>
 			</tr>
-		</table>
+		</table>		
+		
+		<!-- 근태관리 리스트형 테이블(개인근태현황)-->
+		<c:if test="${deptFlag != 'true'}">
+		<div id="attiTableListTB" style="width: 100%;">
+			<table class='mainlist' style='width: 100%;'>
+				<tr>
+					<th style='width:12%'><spring:message code='ezAttitude.t133'/></th>
+					<th style='width:12%'><spring:message code='ezAttitude.t232'/></th>
+					<th style='width:12%'><spring:message code='ezAttitude.t233'/></th> 
+					<th style='width:12%'><spring:message code='ezAttitude.t134'/></th>
+					<th style='width:20%'><spring:message code='ezAttitude.t149'/></th>
+					<th style="width:32%; border-right-color:transparent"><spring:message code='ezAttitude.t46'/></th>
+					<th style='width:8px;border-left:0px;'>&nbsp;</th>
+				</tr> 
+			</table>
+			
+			<div id='contentlist' name='contentlist' style='overflow-y: auto;'>
+				<table class='mainlist' style='width: 100%;'>
+				</table>
+			</div>
+		</div>
+		</c:if>
 		
 		<table class="mainlist" style="width:100%; display:none;" id="ExcelAttList">
 	       	<tr>
@@ -1584,6 +2249,7 @@
 				<th><spring:message code='ezAttitude.t149'/></th>
 			</tr>
 		</table>
+		
 
 		<form id="formAgent" name="formAgent" method="POST" target="saveExcel" action="/ezAttitude/saticGetXlsAtt.do">
 	        <input type="hidden" id="saveExcelData" name="saveExcelData" value=""/>
@@ -1641,12 +2307,12 @@
 				    <tbody style="max-height:466px; display:block; overflow-y:auto;">
 						<tr>
 				    		<th style="height:30px">No.</th>
-				    		<th style="height:30px">이름</th>
-				    		<th style="height:30px">출근시각</th>
-				    		<th style="height:30px">퇴근시각</th>
-				    		<th style="height:30px">근태유형</th>
-				    		<th style="height:30px; text-align:center">일시</th>
-				    		<th style="height:30px; text-align:center">근무지 및 내용</th>
+				    		<th style="height:30px"><spring:message code='ezAttitude.t10'/></th>
+				    		<th style="height:30px"><spring:message code='ezAttitude.t232'/></th>
+				    		<th style="height:30px"><spring:message code='ezAttitude.t233'/></th>
+				    		<th style="height:30px"><spring:message code='ezAttitude.t134'/></th>
+				    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.t149'/></th>
+				    		<th style="height:30px; text-align:center"><spring:message code='ezAttitude.t46'/></th>
 						</tr>
 					</tbody>
 				</table>

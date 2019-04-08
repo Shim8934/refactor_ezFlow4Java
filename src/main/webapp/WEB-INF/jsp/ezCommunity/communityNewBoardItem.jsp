@@ -172,7 +172,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 				
@@ -181,7 +181,7 @@
 		            changeYear: true,
 		            autoSize: true,
 		            showOn: "both",
-		            buttonImage: "/images/ImgIcon/calendar-month.gif",
+		            buttonImage: "/images/ImgIcon/calendar-month.png",
 		            buttonImageOnly: true
 		        });
 		        	
@@ -275,7 +275,7 @@
 	            var filename = "";
 	            var filepath = "";
 
-	            xmlhttp.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + strItemID, false);
+	            xmlhttp.open("GET", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(strItemID), false);
 	            xmlhttp.send();
 
 	            xmldom.async = false;

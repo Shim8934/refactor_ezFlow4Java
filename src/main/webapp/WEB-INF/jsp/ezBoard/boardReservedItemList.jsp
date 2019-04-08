@@ -55,7 +55,7 @@
 	        
 		    function ItemRead_onclick(pItemBoardID, pItemBoardName, pItemID) {
 		        var feature = GetOpenWindowfeature(765, 820);
-	            window.open("/ezBoard/boardNewItem.do?boardID=" + pItemBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=true", "", feature, "");
+	            window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pItemBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=true", "", feature, "");
 		    }
 		
 		    function checkBox_checked(pBoardID, pItemID, evt) {
@@ -127,8 +127,11 @@
 							itemList += strListInfoSplit[j].split("@")[1] + ";";
 						}
 			        }
+		        	
+					/* console.log("boardArrayList[" + i + "] = " + boardArrayList[i]);
+					console.log("itemList = " + itemList); */
 					
-					xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + boardId + "&itemList=" + itemList, false);
+					xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(boardId) + "&itemList=" + encodeURIComponent(itemList), false);
 		        	xmlhttp.send();
 			        if (xmlhttp.responseText == "NO") {
 			            alert("<spring:message code='ezBoard.t265'/>");
@@ -281,8 +284,8 @@
 		<c:when test="${isVpn != 1}">
 			<div id="mainmenu">
 			  <ul>
-			    <li><span onClick="DeleteItem_onclick()"><spring:message code='ezBoard.t89'/></span></li>
-			    <li><span onClick="refresh_onclick()"><spring:message code='ezBoard.t205'/></span></li>
+			    <li><span class="icon16 icon16_delete" onClick="DeleteItem_onclick()"></span></li>
+			    <li><span class="icon16 icon16_refresh" onClick="refresh_onclick()"></span></li>
 			    	<c:if test="${orgBoardParameters != ''}">
 					    <li><span onClick="BoardItemList()"><spring:message code='ezBoard.t206'/></span></li>
 			    	</c:if>

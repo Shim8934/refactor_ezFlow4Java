@@ -39,7 +39,7 @@ public interface EzOrganService {
 	
 	public String getEncPassword(String dUserID, int tenantID) throws Exception;
 	
-	public String getSearchListPagination(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String page, int tenantID, String companyId) throws Exception;
+	public String getSearchListPagination(String searchlist, String celllist, String proplist, String listtype, int i, String lang, String page, int tenantID, String companyId, String adminOrgan) throws Exception;
 	
 	public String updateProperty(String userID, String propName, String propValue, String pClass, int tenantID) throws Exception;
 	

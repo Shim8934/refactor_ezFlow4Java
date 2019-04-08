@@ -48,7 +48,7 @@ function setButtons(mode) {
 		changeYear: true,
 		autoSize: true,
 		showOn: "both",
-		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		buttonImage: "/images/ImgIcon/calendar-month.png",
 		buttonImageOnly: true,
 		dateFormat: "yy-mm-dd"
 	});
@@ -58,7 +58,7 @@ function setButtons(mode) {
 		changeYear: true,
 		autoSize: true,
 		showOn: "both",
-		buttonImage: "/images/ImgIcon/calendar-month.gif",
+		buttonImage: "/images/ImgIcon/calendar-month.png",
 		buttonImageOnly: true,
 		dateFormat: "yy-mm-dd"
 	});
@@ -68,7 +68,9 @@ function setButtons(mode) {
 	
 	var libttns = document.getElementById("mainmenu2").firstElementChild.children;
 	libttns[0].firstElementChild.onclick  = function() {fileDownload();};
-	if (folderLevel != '0') {
+	// root에서 업로드 못하게 하려면 아래 주석을 풀면됨
+//	if (folderLevel != '0') {
+	if (libttns.length === 9) {
 		libttns[1].firstElementChild.onclick  = function() {fileUpload();};
 		libttns[2].firstElementChild.onclick  = function() {fileDelete();};
 		libttns[3].firstElementChild.onclick  = function() {fileRename();};
@@ -100,7 +102,16 @@ function setButtons(mode) {
 	fileUpElmt.onclick      = function() {this.value = null;};
 	
 	var mailPanelElmt       = document.getElementById("mailPanel");
-	mailPanelElmt.onclick   = function() {closeAllPopups();};
+	mailPanelElmt.onclick   = function() {
+		if (window.duplicateFile && duplicateFile.isProcessing()) {
+			duplicateFile.onClosePopup({
+				code: "SKIP",
+				looping: false
+			});
+		}
+		
+		closeAllPopups();
+	};
 	
 	toggleUploadBttn(folderLevel);
 }

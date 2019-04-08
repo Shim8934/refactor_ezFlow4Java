@@ -13,6 +13,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/context/duplicate-file.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/fileFolderDrop.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminTable.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/ezWebFolder/adminFile.js')}"></script>
@@ -133,9 +134,10 @@
 		<div id="mainmenu2" style="position: relative; margin-left: 5px;">
 			<ul>
 				<li id=""><a><span><spring:message code='ezWebFolder.t186'/></span></a></li>
-				<c:if test="${level != '0'}">
+				<!-- root에서 파일업로드 되도록하려면 아래를 주석  -->
+<%-- 				<c:if test="${level != '0'}"> --%>
 					<li id="uploadBttn"><a><span><spring:message code='ezWebFolder.t187'/></span></a></li>
-				</c:if>
+<%-- 				</c:if> --%>
 				<li id=""><a><span><spring:message code='ezWebFolder.t117'/></span></a></li>
 				<li id=""><a><span><spring:message code='ezWebFolder.t118'/></span></a></li>
 				<li id=""><a><span><spring:message code='ezWebFolder.t120'/></span></a></li>
@@ -161,7 +163,8 @@
 			setParameter("<c:out value='${folderId}'/>", "<c:out value='${primary}'/>", "company", "<c:out value='${rootFolder}'/>", "<c:out value='${level}'/>");
 		</script>
 		
-		<div id="searchPanel" class="popup wfSearchPanel" style="display:none;">
+		<div id="searchPanel" class="wfSearchPanel" style="display: none; overflow: hidden;">
+		<div class="popup" style="margin: 0; padding: 5px 10px 10px;">
 			<h1><spring:message code='ezWebFolder.t21'/></h1> 
 			<div id="wfSearchCloseBttn" class="wfClose"><ul><li><span></span></li></ul></div>
 			<div style="margin: 10px 0px 15px;">
@@ -202,6 +205,7 @@
 				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t123'/></span></a>
 				<a class="webfolderBttn"><span><spring:message code='ezWebFolder.t112'/></span></a>
 			</div>
+		</div>
 		</div>
 		
 		<div id="progress-wrp" style="display: none; margin-left: 5px;">

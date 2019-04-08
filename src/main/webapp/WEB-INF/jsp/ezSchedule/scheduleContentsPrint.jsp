@@ -65,7 +65,7 @@
 	
 		    window.onload = function () {
 		    	//2018-08-09 김보미 - 일본어시에 폰트 다르게
-		    	var font = "Gulim, arial, verdana";
+		    	var font = "malgun gothic, arial, verdana";
 		    	if (locale == "ja") {
 		    		font = "Meiryo UI, ＭＳ Ｐゴシック, Arial, Helvetica, sans-serif";
 		    	}

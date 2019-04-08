@@ -89,7 +89,8 @@ public class EzTaskController extends EgovFileMngUtil {
 		int tenantID = userInfo.getTenantId();
 		
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
-
+		String taskFlag = request.getParameter("taskFlag") == null ? "normal" : request.getParameter("taskFlag");
+				
 		TaskConfigVO configVO = ezTaskService.getOriginColor(userID, tenantID);
 		TaskGeneralVO taskGeneralVO = ezTaskService.getTaskGeneral(userInfo.getId(), userInfo.getTenantId());
 
@@ -108,6 +109,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("completeColor", configVO.getCompleteColor());
 		model.addAttribute("useTodoMemo", useTodoMemo);
 		model.addAttribute("taskGeneralVO", taskGeneralVO);
+		model.addAttribute("taskFlag", taskFlag);
 
 		logger.debug("taskMain ended.");
 
@@ -1156,6 +1158,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		String useEditor = ezCommonService.getTenantConfig("EDITOR", userInfo.getTenantId());
 		String useTodoMemo = ezCommonService.getTenantConfig("UseTodoMemo", tenantID);
 		String realPath = commonUtil.detectPathTraversal(commonUtil.getRealPath(request));
+		String flag = request.getParameter("flag") == null ? "" : request.getParameter("flag");
 		
 		String taskID = request.getParameter("taskID");
 		TaskInfoVO taskInfoVO = null;
@@ -1231,6 +1234,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		model.addAttribute("taskAttachList", strAttach.toString());
 		model.addAttribute("startDate", startDate);
 		model.addAttribute("endDate", endDate);
+		model.addAttribute("flag", flag);
 		
 		logger.debug("taskWrite ended.");
 		
@@ -1752,4 +1756,36 @@ public class EzTaskController extends EgovFileMngUtil {
 		
 		return "/ezTask/taskReadPrint";
 	}
+	
+	/** 2019.01.30 유은정 - schedule left와 task left 분리*/
+	@RequestMapping(value = "/ezTask/taskLeft.do")
+	public String taskLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
+		logger.debug("taskLeft started");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userID = userInfo.getId();
+		int tenantID = userInfo.getTenantId();
+		TaskGeneralVO taskGeneralVO = ezTaskService.getTaskGeneral(userID, tenantID);
+
+		if (taskGeneralVO == null) {
+			ezTaskService.taskSaveGeneral(userID, 10, "taskprog", tenantID);
+			taskGeneralVO = ezTaskService.getTaskGeneral(userID, tenantID);
+		}
+		
+		String defaultView = taskGeneralVO.getSelectTaskStatus();
+
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("taskGeneralVO", taskGeneralVO);
+		model.addAttribute("defaultView", defaultView);
+		
+		logger.debug("taskLeft ended");
+		return "/ezTask/taskLeft";
+	}
+	
+	@RequestMapping(value = "/ezTask/taskIndex.do")
+	public String taskIndex(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
+		logger.debug("taskIndex started");
+		logger.debug("taskIndex ended");
+		return "/ezTask/taskIndex";
+	}
+	
 }

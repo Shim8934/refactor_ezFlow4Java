@@ -106,7 +106,7 @@
 						<td  title="${item.subject}" style="text-overflow:ellipsis; overflow:hidden;white-space:nowrap;"><span id="${item.messageId}" style="cursor:pointer;" onClick="View_ReservationMail('${item.messageId}', '${item.sendDate}')">
 							<script>removeTag('${item.subject}', '${item.messageId}')</script></span></td>
 						<td style="width:150px;white-space:nowrap;text-align:center;">${item.sendDate}</td>
-						<td style="text-align:center;width:100px;white-space:nowrap;"><a href="#" class="imgbtn imgbtn_h imgbck"><span  onClick="cancel_mail('${item.messageId}', this)"><spring:message code='ezEmail.t39' /></span></a></td>
+						<td style="text-align:center;width:100px;white-space:nowrap;"><a class="imgbtn imgbtn_h imgbck"><span  onClick="cancel_mail('${item.messageId}', this)"><spring:message code='ezEmail.t39' /></span></a></td>
 					</tr>
 				</c:forEach>
 			</table>

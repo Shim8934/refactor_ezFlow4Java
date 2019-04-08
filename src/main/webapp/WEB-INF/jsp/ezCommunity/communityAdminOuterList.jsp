@@ -104,8 +104,8 @@
 	<body class="mainbody">
 		<h1><spring:message code = 'ezCommunity.t492' /></h1>
 				
-		<div class="subtxt" style="margin-top:10px">
-			<spring:message code = 'ezCommunity.t563' /><span class="point"><c:out value = '${postCount}' /></span><spring:message code = 'ezCommunity.t511' />
+		<div style="margin-top:10px">
+			▒ <spring:message code = 'ezCommunity.t563' /><span class="point"><c:out value = '${postCount}' /></span><spring:message code = 'ezCommunity.t511' />
 		</div>
 		  
 		<table class="popuplist" style ="width:100%;text-align:center;margin-top:10px">

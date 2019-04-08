@@ -178,6 +178,17 @@
 		]]>
 	</select>
 	
+	<select id="EzCommonDAO.checkReformFlagColumn" resultClass="String">
+		<![CDATA[
+			SELECT
+				REFORMFLAG
+			FROM
+				TBL_FORMINFO
+			WHERE
+				ROWNUM = 1
+		]]>
+	</select>
+	
 	<statement id="EzCommonDAO.createTblCompanyConfig"> 
 	    CREATE TABLE "TBL_COMPANY_CONFIG" (
 	        "TENANT_ID" NUMBER(5,0), 
@@ -186,6 +197,13 @@
 		    "PROPERTY_VALUE" NVARCHAR2(2000) NOT NULL ENABLE, 
 		    CONSTRAINT "PK2_TBL_COMPANY_CONFIG" PRIMARY KEY ("TENANT_ID", "COMPANY_ID", "PROPERTY_NAME")
 	    )	
+	</statement>
+	
+	<statement id="EzCommonDAO.createReformFlagColumn">
+		ALTER TABLE
+			TBL_FORMINFO
+		ADD
+			REFORMFLAG CHAR(1) DEFAULT 'N'
 	</statement>
 		
 	<select id="EzCommonDAO.getCompanyConfig" parameterClass="map" resultClass="String">
@@ -242,6 +260,49 @@
 				PROPERTY_NAME = #propertyName#	
 		]]>
 	</update>
+	
+	<insert id="EzCommonDAO.insertMultiLoginUser" parameterClass="map">
+		INSERT INTO TBL_USER_MULTILOGIN (TENANT_ID, USER_ID, LOGIN_TIME)
+		VALUES (#tenantID#, #userID#, #loginTime#)
+	</insert>
+	
+	<delete id="EzCommonDAO.deleteMultiLoginUser" parameterClass="map">
+		DELETE FROM
+			TBL_USER_MULTILOGIN
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID = #userID#
+	</delete>
+	
+	<select id="EzCommonDAO.selectMultiLoginUser" parameterClass="map" resultClass="String">
+		SELECT
+			LOGIN_TIME
+		FROM
+			TBL_USER_MULTILOGIN
+		WHERE
+			TENANT_ID = #tenantID#
+		AND
+			USER_ID = #userID#
+	</select>
+	
+	<select id="EzCommonDAO.checkTblUserMultiLogin" resultClass="String">
+		SELECT
+			LOGIN_TIME
+		FROM
+			TBL_USER_MULTILOGIN
+		WHERE
+			ROWNUM = 1
+	</select>
+	
+	<statement id="EzCommonDAO.createTblUserMultiLogin">
+		CREATE TABLE TBL_USER_MULTILOGIN (
+		    TENANT_ID NUMBER,
+		    USER_ID NVARCHAR2(40),
+		    LOGIN_TIME VARCHAR2(15) NOT NULL,
+		    CONSTRAINT "TBL_USER_MULTILOGIN_PK" PRIMARY KEY (USER_ID, TENANT_ID)
+		)
+	</statement>
 	
 	<select id="EzCommonDAO.checkJMochaDistributionMail" resultClass="String">
 		<![CDATA[
@@ -506,6 +567,17 @@
 		) 
 	</statement>
 	
+	<select id="EzCommonDAO.checkJmochaMailGenenalPreviewMailImage">
+		<![CDATA[
+			SELECT 
+				PREVIEW_MAIL_IMAGE
+			FROM 
+				JMOCHA_MAIL_GENERAL
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
 	<select id="EzCommonDAO.checkUserMasterMailBoxQuota" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -517,6 +589,29 @@
 		]]>
 	</select>
 	
+	<statement id="EzCommonDAO.addJmochaMailGenenalPreviewMailImage"> 
+		ALTER TABLE 
+			JMOCHA_MAIL_GENERAL
+		ADD 
+			PREVIEW_MAIL_IMAGE VARCHAR(10) DEFAULT 'Y'
+	</statement>
+
+	<select id="EzCommonDAO.checkPortalThemePortletIsFixed" resultClass="String">
+		<![CDATA[
+			SELECT 
+				COUNT(IS_FIXED)
+			FROM 
+				TBL_PORTAL_THEME_PORTLET
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addPortalThemePortletIsFixed"> 
+		ALTER TABLE 
+			TBL_PORTAL_THEME_PORTLET
+		ADD 
+			IS_FIXED NUMBER(5,0) DEFAULT 0
+	</statement>
+	
 	<statement id="EzCommonDAO.addUserMasterMailBoxQuota">
 		ALTER TABLE
 			TBL_USERMASTER
@@ -524,6 +619,71 @@
 			MAILBOXQUOTA VARCHAR(50) DEFAULT NULL,
 			MAILBOXUSAGE VARCHAR(50) DEFAULT NULL
 			)
+	</statement>
+	
+	<select id="EzCommonDAO.checkPortalThemePortlet" resultClass="String">
+		<![CDATA[
+			SELECT 
+				theme_id
+			FROM 
+				TBL_PORTAL_THEME_PORTLET
+			where 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createTblPortalThemePortlet">
+	CREATE TABLE TBL_PORTAL_THEME_PORTLET (	
+		"THEME_ID" NUMBER(11,0), 
+		"TENANT_ID" NUMBER(5,0), 
+		"COMPANY_ID" VARCHAR2(100), 
+		"PORTLET_ID" NUMBER(10,0), 
+		"PORTLET_USED" NUMBER(5,0), 
+		"PORTLET_ORDER" NUMBER(11,0), 
+		"MENU_ID" NUMBER(10,0),
+		"IS_FIXED" NUMBER(5,0) DEFAULT 0,
+		PRIMARY KEY ("THEME_ID","TENANT_ID", "COMPANY_ID", "PORTLET_ID")
+	)
+	</statement>
+	
+	<select id="EzCommonDAO.checkHolidayFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+					COLUMN_NAME 
+			FROM 
+					ALL_TAB_COLUMNS
+			WHERE 
+					TABLE_NAME = 'TBL_HOLIDAYLIST'
+			AND 
+					COLUMN_NAME = 'HOLIDAYFLAG'
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addHolidayFlag"> 
+		ALTER TABLE 
+			TBL_HOLIDAYLIST
+		ADD 
+			HOLIDAYFLAG VARCHAR2(45) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkHolidayRepeat" resultClass="String">
+		<![CDATA[
+			SELECT 
+					COLUMN_NAME 
+			FROM 
+					ALL_TAB_COLUMNS
+			WHERE 
+					TABLE_NAME = 'TBL_HOLIDAYLIST'
+			AND 
+					COLUMN_NAME = 'HOLIDAYREPEAT'
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addHolidayRepeat"> 
+		ALTER TABLE 
+			TBL_HOLIDAYLIST
+		ADD 
+			HOLIDAYREPEAT VARCHAR2(45) DEFAULT NULL
 	</statement>
 	
 	<select id="EzCommonDAO.checkJournalFormDelFlag" resultClass="String">
@@ -541,10 +701,102 @@
 		ALTER TABLE
 			TBL_JOURNAL_FORM
 		ADD (
-			form_del_flag VARCHAR(10) DEFAULT NULL
+			form_del_flag VARCHAR2(10) DEFAULT NULL
 			)
 	</statement>
 	
+	<select id="EzCommonDAO.checkTaskUrl" resultClass="String">
+		<![CDATA[
+			SELECT
+				menu_id
+			FROM
+				TBL_PORTAL_MENU
+			WHERE
+				menu_url LIKE '%taskIndex%'
+			AND
+				menu_id = 17
+			AND
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<update id="EzCommonDAO.updateTaskUrl">
+		UPDATE
+			TBL_PORTAL_MENU
+		SET
+			menu_url = '/ezTask/taskIndex.do'
+		WHERE
+			menu_id = 17
+	</update>
+	
+	<select id="EzCommonDAO.checkAddPortalPortletUserPortletUsed">
+		<![CDATA[
+			SELECT
+				portlet_used
+			FROM 
+				TBL_PORTAL_PORTLET_USER
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addPortalPortletUserPortletUsed"> 
+		ALTER TABLE 
+			TBL_PORTAL_PORTLET_USER
+		ADD 
+			PORTLET_USED NUMBER(11, 0) DEFAULT 1
+	</statement>
+	
+	<select id="EzCommonDAO.checkPortalPortletUserThemeId">
+		<![CDATA[
+			SELECT
+				theme_id
+			FROM 
+				TBL_PORTAL_PORTLET_USER
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addPortalPortletUserThemeId"> 
+		ALTER TABLE 
+			TBL_PORTAL_PORTLET_USER
+		ADD 
+			THEME_ID NUMBER(11, 0) DEFAULT 1
+	</statement>
+	
+	<statement id="EzCommonDAO.deletePortalPortletUserPrimaryKey"> 
+		ALTER TABLE 
+			TBL_PORTAL_PORTLET_USER
+		DROP 
+			PRIMARY KEY
+	</statement>
+	
+	<statement id="EzCommonDAO.addPortalPortletUserPrimaryKey"> 
+		ALTER TABLE 
+			TBL_PORTAL_PORTLET_USER
+		ADD CONSTRAINT 
+			TBL_PORTAL_PORTLET_USER_PK PRIMARY KEY(user_id, tenant_id, company_id, portlet_id, theme_id)
+	</statement>
+	
+	<select id="EzCommonDAO.checkAddTblPortalThemeUserIsDefault">
+		<![CDATA[
+			SELECT
+				is_default
+			FROM 
+				TBL_PORTAL_THEME_USER
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addTblPortalThemeUserIsDefault"> 
+		ALTER TABLE 
+			TBL_PORTAL_THEME_USER
+		ADD 
+			is_default NUMBER(11, 0) DEFAULT 0
+	</statement>
+
 	<select id="EzCommonDAO.checkListOptionData1" resultClass="int" remapResults="true">
 		SELECT 
 			COUNT(*) 

@@ -178,6 +178,7 @@
 			        getNonElecInfoSusinInit();
 					document.getElementById("btnAddSepAttach").style.display = "none";
 		        }
+		    	
 		    };
 		    
 		    function getNextDocList()
@@ -952,6 +953,11 @@
 		        btnClose_onclick();
 		        Btnflag = "false";
 		        ChangeBtnState();
+		        
+		        //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+		        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+		        	parent.opener.getApprovalList("doing");
+		        }
 		    }
 		
 		    function openSingUI_Complete(ret) {
@@ -1239,6 +1245,9 @@
 		        } catch (e) { }
 		        try {
 		            window.opener.Refresh_Window();
+		        } catch (e) { }
+		        try {
+		            window.opener.getApprGraph("appr");
 		        } catch (e) { }
 		    };
 		    
@@ -1724,7 +1733,6 @@
 		        message.SetEditable(false);
 		        chkBtnConfirm("2");
 		        modeflag = true;
-		
 		    }
 		    function btnSave_onclick() {
 		        var pDocID_ = "", pDocTitle_ = "";
@@ -1964,11 +1972,11 @@
 		                  <li id="btnAprDocAttach"><span onClick="return btnAprDocAttach_onclick()" ><spring:message code='ezApprovalG.t57'/></span></li>
 			              <li id="btnAddSepAttach" style="display:none"><span onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
 		                  <li id="btnSave" style="display:none"><span onClick="return btnSave_onclick()"  ><spring:message code='ezApprovalG.t1767'/></span></li>
-		                  <li id="btnPrint"><span onClick="return btnPrint_onclick()"  ><spring:message code='ezApprovalG.t60'/></span></li>
 		                  <li id="btnhistory"><span onClick="btnhistory_onclick()" ><spring:message code='ezApprovalG.t61'/></span></li>
-		                  <li id="btnMail"><span onClick="return btnMail_onclick()" ><spring:message code='ezApprovalG.t62'/></span></li>
 		                  <li id="btnConn" style="display:none"><span onClick="return btnConn_onclick()"><spring:message code='ezApprovalG.t63'/></span></li>
 		                  <li id="tbtnTotalSave"><span id="btnTotalSave" onclick="return TotalSave_onclick()"><spring:message code='ezApprovalG.t00008'/></span></li>
+		                  <li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
+		                  <li id="btnMail"><span class="icon16 popup_icon16_mail_gray" onClick="return btnMail_onclick()"></span></li>
 		              </ul>
 				</div>
 			<div id="close"><ul><li><span id="btnClose" onClick="return btnClose_onclick()" ></span></li></ul></div>
@@ -1976,7 +1984,7 @@
 		  </tr>
 		  <tr>
 		      <td style="vertical-align:top;height:90%;">
-		        <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="approvUIcontent.do" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+		        <iframe id="message" class="withoutThisTableTheImageInTheLeftColumnDoesNotRepeatInFirefox"  src="approvUIcontent.do<c:if test="${isReform}">?isReform=${isReform}&formId=${formId}</c:if>" name="message" frameborder="0" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
 		          
 		    </td>
 		  </tr>

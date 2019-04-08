@@ -160,6 +160,7 @@
 			var nonElecRec = "<c:out value ='${nonElecRec}'/>";
 			var nonElecRecInfoXml = "";
 			var nonSepAttachLVXml = "";
+			var reformFlag = "${reformflag}";
 			var wAprMemberSN = "1";
 			
 		    window.onload = function ()
@@ -867,6 +868,11 @@
 		
 		    function Complete_Deaft() {
 		        draftFlag = true;
+		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+		        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
+		        	parent.opener.getApprovalList("reject");
+		        }
+		        
 		        window.close();
 		    }
 		
@@ -875,6 +881,11 @@
 		        if (ListType == "21") {
 		            RemoveTmpDoc(DocSN);
 		        }
+		      //2019.02.21 유은정 : 포탈개인화 결재리스트에서 포틀릿 정보 가져오는 매서드 추가
+		        if (parent.opener != null && parent.opener.getApprovalList != undefined) {
+		        	parent.opener.getApprovalList("reject");
+		        }
+		        
 		        window.close();
 		    }
 		
@@ -1083,6 +1094,9 @@
 		            bAttachProcess = true;
 		        }
 		        catch (e) { }
+		        try {
+		            window.opener.getApprGraph("appr");
+		        } catch (e) { }
 		    }
 		    function btnConn_onclick() {
 		        var pIdx = FormProc.editor.DOM.body.getAttribute("processkey");
@@ -1375,26 +1389,28 @@
 		                DeptSymbol = getDeptSymbol(arr_userinfo[4], replaceEntityCodeToStr(arr_userinfo[5]));
 		                drafterDeptid = arr_userinfo[4];
 		                getDraftInfo();
-		                //재사용이고 문서의 모든정보를 재사용하는 옵션일때
 		                if (isUsed == "reuse" && apprReuseConfig != '1') {
 		                	message.Set_EditorContentURL(beforeUrl);
 		                } else {
-			                if (pFormHref != "") {
-			                    if (pFormHref == "PC") {
-			                        pReadPC = true;
-			                    } else {
-			                        message.Set_EditorContentURL(pFormHref);
-			                    }
-			                    
-			                    if (beforeUrl != "") {
-		                            Insert_ReUse_Content();
-		                        }
-			                }
-			                else {
-			                    DraftFlag = "DRAFT";
-			                    pDraftFlag = "DRAFT";
-			                    message.Set_EditorContentURL(sihangURL);
-			                }
+							if (pFormHref != "") {
+								if (pFormHref == "PC") {
+									pReadPC = true;
+								} else {
+									var len;
+									len = FormHref.lastIndexOf("/");
+									pFormID = FormHref.substr(len + 1, 10);
+									message.Set_EditorContentURL(pFormHref);
+								}
+								
+								if (beforeUrl != "") {
+									Insert_ReUse_Content();
+								}
+							}
+							else {
+								DraftFlag = "DRAFT";
+								pDraftFlag = "DRAFT";
+								message.Set_EditorContentURL(sihangURL);
+							}
 		                }
 		            }
 		        }
@@ -1787,10 +1803,10 @@
 		                <li id="btnAddSepAttach" style="display:none"><span  onClick="btnAddSepAttach_onclick()" ><spring:message code='ezApprovalG.t58'/></span></li>
 		                <li id="btnSave" style="display:none"><span  onClick="return btnSave_onclick()"><spring:message code='ezApprovalG.t59'/></span></li>
 		                <li id="btnConn" style="display:none"><span  onClick="return btnConn_onclick()"  ><spring:message code='ezApprovalG.t157'/></span></li>
-		                <li id="btnPrint"><span  onClick="return btnPrint_onclick()"><spring:message code='ezApprovalG.t60'/></span></li>
 		                <li id="btnhistory"><span  onClick="btnhistory_onclick()"><spring:message code='ezApprovalG.t61'/></span></li>
 		                <li id="btnHelper" style="display:none"><span  onClick="return btnHelper_onclick()"><spring:message code='ezApprovalG.t158'/></span></li>
 		                <li id="btnSaveServer" <c:if test ="${approvalFlag == 'S'}">style="display:none"</c:if>><span onClick="return btnSaveServer_onclick()" ><spring:message code='ezApprovalG.t4000'/></span></li>
+		                <li id="btnPrint"><span class="icon16 popup_icon16_print" onClick="return btnPrint_onclick()"></span></li>
 		            </ul>
 		        </div>        
 		      <div id="close">

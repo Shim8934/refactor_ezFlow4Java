@@ -17,12 +17,23 @@
         	}
 		</script>
 	</head>	
-	<body  class="body_bg1">
+	<%-- <body  class="body_bg1">
     	<article class="gw_banner">
     		<img src="/images/<spring:message code='main.t00025' />/main/manual.gif" width="208" height="168" usemap="#Map_gwb" style="cursor:pointer" onclick="Img_OnClick()">
     			<map name="Map_gwb">
       				<area alt="" shape="rect" coords="252,8,344,47" href="#">
     			</map>
     	</article>
-</body>
+	</body> --%>
+	<body>
+		<div class="layDIV">
+        	<span class="leftImg"><img src="/images/kr/main/bannerImg_left.png"></span>
+            <dl class="bannerText">
+            	<dt class="bText"><spring:message code="ezPortal.pjg06" /></dt>
+                <dt class="sText"><spring:message code="ezPortal.pjg07" /><br><spring:message code="ezPortal.pjg08" /></dt>
+                <dd class="bannerBtn" onclick="Img_OnClick()"><spring:message code="ezPortal.pjg10" /></dd>
+            </dl>
+            <span class="rightImg"><img src="/images/kr/main/bannerImg_right.png"></span>
+        </div>
+	</body>
 </html>

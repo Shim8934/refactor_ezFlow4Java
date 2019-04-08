@@ -216,7 +216,7 @@
 					</div>
 				</td>
 				<td valign="top" style="padding:3px;">
-					<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1040'/><a class="imgbtn imgbck" style="margin:-3px 0px 0px 156px;"><span onClick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t1041'/></span></a></h2>
+					<h2 class="h2_dot" style="font-weight: normal;"><spring:message code='ezApprovalG.t1040'/><a class="imgbtn imgbck" style="margin:-3px 0px 0px 155px;"><span onClick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t1041'/></span></a></h2>
 					<table>
 						<%-- <tr>
 							<th align="left"><a class="imgbtn"><span onClick="return btnFindTask_onclick()"><spring:message code='ezApprovalG.t1041'/></span></a></th>

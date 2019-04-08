@@ -17,6 +17,11 @@
 	    	.mainlist thead tr {
 	    		height: 0px;
 	    	}
+	    	
+	    	.mainlist #MsgToList_THEAD #MsgToList_TH {
+	    		height: 0px;
+	    	}
+	    	
 	    	.mainlist tr td:first-child {
 	    		padding-left:15px;
 	    	}
@@ -1342,7 +1347,7 @@
 	                                            </td>
 	                                            <td>
 	                                                <div style="float: right; margin-right: 5px; position: relative;">
-	                                                    <a href="#" class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
+	                                                    <a class="imgbtn"><span onclick="infoview_click()"><spring:message code='ezEmail.t597' /></span></a>
 	                                                </div>
 	                                            </td>
 	                                        </tr>

@@ -11,397 +11,154 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/admin/adminManagePoll.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezPersonal.h1', 'msg')}"></script>
+		<link rel="stylesheet" href="${util.addVer('/css/admin.css')}">
 		<script type="text/javascript">
 			var totalCount = "";
-	        var progressPollFlag = "";
-	        var TotalCount;
-	        var totalPage = "";
-	        var BlockSize = 10;
-	        var pageNum = 1;
-	        var PageSize = 15;
-	        var progressPollFlag = "false";
-	
-	        var strLang1 = "<spring:message code = 'ezPersonal.t10002' />";
-	        var strLang2 = "<spring:message code = 'ezPersonal.t10000' />";
-	        var strLang3 = "<spring:message code = 'ezPersonal.t10001' />";
-	        var strLang4 = "<spring:message code = 'ezPersonal.t223' />";
-	        var strLang5 = "<spring:message code = 'ezQuestion.t312' />";
-	
+			var progressPollFlag = "";
+			var TotalCount;
+			var totalPage = "";
+			var BlockSize = 10;
+			var pageNum = 1;
+			var PageSize = 15;
+			var progressPollFlag = "false";
+			var progressSDate = "";
+			var progressEDate = "";
+			var strLang1 = "<spring:message code = 'ezPersonal.t10002' />";
+			var strLang2 = "<spring:message code = 'ezPersonal.t10000' />";
+			var strLang3 = "<spring:message code = 'ezPersonal.t10001' />";
+			var strLang4 = "<spring:message code = 'ezPersonal.t223' />";
+			var strLang5 = "<spring:message code = 'ezQuestion.t312' />";
+
+			window.onload = function () {
+				ifrmPreViewH.document.getElementById("ifrmviewEmptyText").innerText = strLanghyh2;
+			}
+
 			document.onselectstart = function () {
-		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
-		            return false;
-		        } else {
-		            return true;
-		        }
+				if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA") {
+					return false;
+				} else {
+					return true;
+				}
 			};
-			
+
 			$(document).ready(function() {
-	            if (document.getElementById("ListCompany").length == 0) {
+				if (document.getElementById("ListCompany").length == 0) {
 					alert("<spring:message code = 'ezPersonal.t106' />");
-	            }
-	            else {
-// 	                document.getElementById("ListCompany").selectedIndex = 0;
-	            }
-	            makelist();
-	            //2018-08-06 김보미 - 페이지 위치 고정
-	            windowResize();
-	        });
-			
-	        function makelist() {
-	            $.ajax({
-	            	type : "POST",
-	            	url : "/admin/ezPersonal/managePollList.do",
-	            	dataType : "text",
-	            	data : {companyID : encodeURIComponent(document.getElementById("ListCompany").value), page : pageNum},
-	            	success : function (result) {
-	            		event_PollList(loadXMLString(result));
-	            	}
-	            });
-	        }
-	        
-		    function event_PollList(result) {
-		        try {
-		            document.getElementById("AccessList").innerHTML = "";
-		            var xmldom = result
-		            var headerData = createXmlDom();
-		            headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
-		
-		            if (CrossYN()) {
-		                var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-		                var Node = headerData.importNode(xmlRtn, true);
-		                headerData.documentElement.appendChild(Node);
-		            } else {
-		                var xmlRtn = result.documentElement.getElementsByTagName("ROWS")[0];
-		                headerData.documentElement.appendChild(xmlRtn);
-		            }
-		            
-		            var listview = new ListView();
-		            listview.SetID("AccessListView");
-		            listview.SetSelectFlag(false);
-		            listview.SetMulSelectable(true);
-		            listview.SetRowOnDblClick("PollList_onDblclick");
-		            listview.DataSource(headerData);
-		            listview.DataBind("AccessList");
-		            //listview.DataSource(xmldom);
-		            listview.RowDataBind();
-		            xmldomNode = null;
-		
-		            if (CrossYN() && navigator.userAgent.indexOf("Trident/7.0") < 0) {
-						TotalCount = parseInt(SelectSingleNodeValueNew(xmldom, "TOTALCNT"));
-						pageNum = parseInt(SelectSingleNodeValueNew(xmldom, "CURPAGE"));
-		            } else if (navigator.userAgent.indexOf("Trident/7.0") > 0) {
-		            	//IE11일때 추가
-		                TotalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
-						pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
-		            } else {
-		                TotalCount = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "TOTALCNT"));
-		                pageNum = parseInt(SelectSingleNodeValueNew(xmldom.documentElement, "CURPAGE"));
-		            }
-		            
-		            //2018-08-02 김보미 - 데이터가 없을 때
-		            if (TotalCount == null || TotalCount == 0) { 
-		            	var TR_noItems = "<tr id='Poll_TR_noItems'><td style='text-align: center;' colspan='5'>" + strLang5 + "</td></tr>";
-		            	$("#AccessListView tbody").eq(0).html(TR_noItems);
-		            }
-		            
-		            totalPage = Math.ceil(new Number(TotalCount / PageSize));
-		            
-		            if (CrossYN()) {
-		                progressPollFlag = SelectSingleNodeValueNew(xmldom, "PROFLAG");
-		            } else {
-		                progressPollFlag = SelectSingleNodeValueNew(xmldom.documentElement, "PROFLAG");
-		            }
-		            
-		            makePageSelPage();
-		        } catch (e) {
-		
-		        }
-		    }
-		    
-		    function PollList_onDblclick(obj) {
-		        var itemseq = document.getElementById(obj).getAttribute("DATA1");
-		        if (itemseq == "0") {
-		            return;
-		        }
-		        
-		        var heigth = window.screen.availHeight;
-		        var width = window.screen.availWidth;
-		        var left = (width - 455) / 2;
-		        var top = (heigth - 400) / 2;
-		
-		        window.open("/ezPersonal/pollResult.do?itemSeq=" + itemseq, "", "height=400px,width=455px, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=" + top + ",left = " + left);
-		    }
-		    
-		    function company_change() {
-		        makelist();
-		    }
-		    
-		    var addpoll_cross_dialogArguments = new Array();
-		    function add_poll() {
-		        if (totalCount != "0" && progressPollFlag == "true") {
-		            if (!confirm("<spring:message code = 'ezPersonal.t234' />")) {
-		                return;
-		            }
-		        }
-		        
-		        if (CrossYN()) {
-		            addpoll_cross_dialogArguments[0] = document.getElementById("ListCompany").value;
-		            addpoll_cross_dialogArguments[1] = add_poll_Complete;
-		            var AddPoll_Cross = window.open("/admin/ezPersonal/addPoll.do", "AddPoll_Cross", GetOpenWindowfeature(470, 500));
-		            try { AddPoll_Cross.focus(); } catch (e) {
-		            }
-		        } else {
-		            rtnValue = window.showModalDialog("/admin/ezPersonal/addPoll.do", document.getElementById("ListCompany").value, "dialogHeight:500px;dialogwidth:430px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(430, 500));
-		
-		            if (typeof (rtnValue) != "undefined") {
-		                company_change();
-		            }
-		        }
-		    }
-	
-	        function add_poll_Complete(rtv) {
-	            if (typeof (rtv) != "undefined") {
-	                company_change();
-	            }
-	        }
-	
-	        function del_poll(poll_number) {
-		    	//2018-09-06  김보미 - rownumber추가
-	            /*if (!confirm(poll_number + "<spring:message code = 'ezPersonal.t236' />")) {
-	                return;
-	            }*/
-		        var row_number = $("tr[data1=" + poll_number + "] td:eq(0)").text();
-		        if (!confirm(row_number + "<spring:message code = 'ezPersonal.t159' />")) {
-		            return;
-		        }
-	            
-	            $.ajax({
-	            	type : "POST",
-	            	url : "/admin/ezPersonal/delPoll.do",
-	            	async : false,
-	            	data : {itemSeq : poll_number},
-	            	dataType : "text",
-	            	success : function(result) {
-	            		if (result != "OK") {
-	            			alert("<spring:message code = 'ezPersonal.t237' />");
-	            		} else {
-	            			alert("<spring:message code = 'ezPersonal.t238' />");
-	            			
-	    	                if (document.getElementById("rowdata") != null && typeof (document.getElementById("rowdata").length) == "undefined" && page != 1) {
-	    	                    pagemove(-1);
-	    	                } else {
-	    	                    makelist();
-	    	                }
-	            		}
-	            	}
-	            });
-	        }
-	        
-		    function td_Create1(strtext) {
-		        document.getElementById("tblPageRayer").innerHTML = strtext;
-		    }
-		    
-		    function makePageSelPage() {
-		        var strtext;
-		        var PagingHTML = "";
-		        document.getElementById("tblPageRayer").innerHTML = "";
-		        document.getElementById("mailBoxInfo").innerHTML = " &nbsp;[" + strLang1 + "<span style='color:#017BEC;'> " + TotalCount + " </span>" + strLang4 + "]";
-		        strtext = "<div class='pagenavi'>";
-		        PagingHTML += strtext;
-		        
-		        if (totalPage > 1 && pageNum != 1) {
-		            strtext = "<span class='btnimg' onclick= 'return goToPageByNum(1)'><img src='/images/sub/btn_p_prev.gif' ></span>";
-		            PagingHTML += strtext;
-		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_p_prev01.gif' ></span>";
-		            PagingHTML += strtext;
-		        }
-		        
-		        if (totalPage > BlockSize) {
-		            if (pageNum > BlockSize) {
-		                strtext = "<span class='btnimg' onclick= 'return selbeforeBlock()'><img src='/images/sub/btn_prev.gif' ></span>";
-		                PagingHTML += strtext;
-		            } else {
-		                strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
-		                PagingHTML += strtext;
-		            }
-		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_prev01.gif' ></span>";
-		            PagingHTML += strtext;
-		        }
-		        
-		        var MaxNum;
-		        var i;
-		        var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
-		        if (totalPage >= (startNum + parseInt(BlockSize))) {
-		            MaxNum = (startNum + parseInt(BlockSize)) - 1;
-		        } else {
-		            MaxNum = totalPage;
-		        }
-		        
-		        for (i = startNum; i <= MaxNum; i++) {
-		            if (i == pageNum) {
-		                strtext = "<span class='on'>" + i + "</span>";
-		                PagingHTML += strtext;
-		            } else {
-		                strtext = "<span onclick='goToPageByNum(" + i + ")'>" + i + "</span>";
-		                PagingHTML += strtext;
-		            }
-		        }
-		        
-		        //2018-08-02 김보미 - 데이터가 하나도 없을때 디폴트 페이징
-	            if (i == 1) {
-	            	strtext = "<span class='on'>" + i + "</span>";
-                    PagingHTML += strtext;
-	            }
-		        
-		        if (totalPage > BlockSize) {
-		            if (totalPage >= parseInt(((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1)) {
-		                strtext = "";
-		                strtext = strtext + "<span class='btnimg' onclick='return selafterBlock()'><img src='/images/sub/btn_next.gif' ></span>";
-		                PagingHTML += strtext;
-		            } else {
-		                strtext = "";
-		                strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
-		                PagingHTML += strtext;
-		            }
-		        } else {
-		            strtext = "";
-		            strtext = strtext + "<span class='btnimg'><img src='/images/sub/btn_next01.gif' ></span>";
-		            PagingHTML += strtext;
-		        }
-		        
-		        if (totalPage > 1 && totalPage != 1 && (totalPage != pageNum)) {
-		            strtext = "<span class='btnimg' onclick='return goToPageByNum(" + totalPage + ")'><img src='/images/sub/btn_n_next.gif' ></span>";
-		            PagingHTML += strtext;
-		        } else {
-		            strtext = "<span class='btnimg'><img src='/images/sub/btn_n_next01.gif' ></span>";
-		            PagingHTML += strtext;
-		        }
-		        
-		        PagingHTML += "</div>";
-		        td_Create1(PagingHTML);
-		    }
-		    
-		    function goToPageByNum(Value) {
-		        pageNum = Value;
-		        makePageSelPage();
-		        makelist();
-		    }
-		    
-		    function selbeforeBlock() {
-		        pageNum = ((parseInt(pageNum / BlockSize) - 1) * BlockSize) + 1;
-		        goToPageByNum(pageNum);
-		    }
-		    
-		    function selbeforeBlock_one() {
-		        if (parseInt(pageNum - 1) > 0) {
-		            goToPageByNum(parseInt(pageNum - 1));
-		        } else {
-		            return;
-		        }
-		    }
-		    
-		    function selafterBlock() {
-		        pageNum = ((parseInt((pageNum - 1) / BlockSize) + 1) * BlockSize) + 1;
-		        goToPageByNum(pageNum);
-		    }
-		    
-		    function selafterBlock_one() {
-		        if (parseInt(pageNum + 1) <= totalPage) {
-		            goToPageByNum(parseInt(pageNum + 1));
-		        } else {
-		            return;
-		        }
-		    }
-		    
-		    function selNum(pselNum) {
-		        pageNum = pselNum;
-		        makelist();
-		    }
-		    
-		    function selNext() {
-		        pageNum = pageNum + 1;
-		        makelist();
-		    }
-		    
-		    function selPrev() {
-		        pageNum = pageNum - 1;
-		        makelist();
-		    }
-		    
-		    function td_Create(strtext) {
-		        tblPageNum.innerHTML = tblPageNum.innerHTML + strtext;
-		    }
-		    
-            //2018-08-06 김보미 - 페이지 위치 고정
-		    $(window).on("resize", function(){
-	            windowResize();
-	        });
-		    
-		    function windowResize() {
-	        	var height = document.documentElement.clientHeight - 122 - document.getElementById("mainmenu").clientHeight;
-	        	if (navigator.userAgent.toUpperCase().indexOf("CHROME") != -1) {
-	        		height = height - 30;
-	        	}
-	        	document.getElementById("contentlist").style.height = height + "px";
-	        	document.getElementById("contentlist").style.overflow = "auto";
-	        }
+				}
+				else {
+				//    document.getElementById("ListCompany").selectedIndex = 0;
+					company_change();
+				}
+				getLightPollConfig();
+				makelist();
+				setFucntion();
+				windowResize();
+			});
+
+			//2018-08-06 김보미 - 페이지 위치 고정
+			$(window).on("resize", function(){
+				 windowResize();
+			});
 		</script>
+		<style type="text/css">
+			.mainbody {overflow:hidden;}
+		</style>
 	</head>
 	<body class = "mainbody">
 		<xml id="listviewheader" style="display: none">
 			<LISTVIEWDATA>
-	    		<HEADERS>
-	      			<HEADER>
-	        			<NAME><spring:message code = 'ezPersonal.t166' /></NAME>
-	        			<WIDTH>40</WIDTH>
-	      			</HEADER>
-	      			<HEADER>
-	        			<NAME><spring:message code = 'ezPersonal.t240' /></NAME>
-	        			<WIDTH></WIDTH>
-	      			</HEADER>
-	      			<HEADER>
-	        			<NAME><spring:message code = 'ezPersonal.t241' /></NAME>
-	        			<WIDTH>100</WIDTH>
-	      			</HEADER>
-	      			<HEADER>
-	        			<NAME><spring:message code = 'ezPersonal.t242' /></NAME>
-	        			<WIDTH>100</WIDTH>
-	      			</HEADER>
-	     			<HEADER>
-	        			<NAME><spring:message code = 'ezPersonal.t99' /></NAME>
-	        			<WIDTH>60</WIDTH>
-	      			</HEADER>
-    			</HEADERS>
-  			</LISTVIEWDATA>
+				<HEADERS>
+					<HEADER>
+						<WIDTH>30</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME><spring:message code = 'ezPersonal.t166' /></NAME>
+						<WIDTH>70</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME><spring:message code = 'ezPersonal.t240' /></NAME>
+						<WIDTH></WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME><spring:message code = 'ezPersonal.t241' /></NAME>
+						<WIDTH>150</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME><spring:message code = 'ezPersonal.t242' /></NAME>
+						<WIDTH>150</WIDTH>
+					</HEADER>
+					<HEADER>
+						<NAME><spring:message code = 'ezPersonal.hyh5' /></NAME>
+						<WIDTH>70</WIDTH>
+					</HEADER>
+				</HEADERS>
+			</LISTVIEWDATA>
 		</xml>
 		
-	    <form method="post">
-	        <h1>Quick Poll<span id="mailBoxInfo" style="display:none"></span></h1>
-	        <div id="mainmenu">
-	        	<span><b><spring:message code = 'ezApprovalG.t1512' /></b> 
-				    <select id="ListCompany" onChange="company_change()">
-			        	<c:forEach var="item" items="${list}">
-							<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-		            	</c:forEach>
-				    </select><br /><br />
-			    </span>
+		<form method="post">
+			<h1><spring:message code = 'ezPersonal.hyh1' /><span id="mailBoxInfo"></span>
+		    	<span class="title_bar"><img src="/images/name_bar.gif"></span>
+				<select class="companySelect" id="ListCompany" onChange="company_change()">
+					<c:forEach var="item" items="${list}">
+						<option value="<c:out value='${item.cn}'/>" ${item.cn == companyId ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+					</c:forEach>
+				</select>
+			</h1>
+			<div id="mainmenu">
 				<ul style="margin-top:15px">	            	
-	                <li><span onclick="add_poll()"><spring:message code = 'ezPersonal.t235' /></span></li>
-	            </ul>
-		  	</div>
-	        
-	        <script type="text/javascript">
-	            selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-	        </script>
-	        <div id="contentlist" style="width:100%; overflow: auto;">
-		        <table class="mainlist" style="width: 100%;">
-		            <div id="AccessList" style="BORDER: 0; WIDTH: 100%"></div>
-		        </table>
-		    </div>
-	        <div id="tblPageRayer"></div>
-	    </form>
+					<li class="important"><span id="add"><spring:message code = 'ezPersonal.hyh2' /></span></li>
+					<li><span id="mod"><spring:message code = 'ezPersonal.hyh3' /></span></li>
+					<li><span class="icon16 icon16_delete" id="del"></span></li>
+					<div class="sub_frameIcon" style="float:right;">	
+						<div class="sub_frameIconUL" style="width:100% !important;">
+							<p class="frameIconLI"><span class="icon16 btn_noframe" id="PreViewNone" onclick="PreviewRayerChange('NONE')"></span></p>
+							<p class="frameIconLI"><span class="icon16 btn_leftframe" id="PreViewleft" onclick="PreviewRayerChange('H')"></span></p>
+						</div>
+					</div>
+				</ul>
+			 </div>
+			
+			<script type="text/javascript">
+				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
+			</script>
+			
+			<div class="mainView" id="mainView" style="float:left">
+				<div id="contentlist" style="width:100%; overflow: auto;">
+					<table class="mainlist" style="width: 100%;">
+						<div id="AccessList" style="border: 0; width: 100%"></div>
+					</table>
+				</div>
+				<div id="tblPageRayer"></div>
+			</div>
+			<div class="previewH" id="previewH" style="float:right;">
+				<span id="PreviewRayerH" style="border:0px solid red; height:100%; overflow:hidden; vertical-align:top;  margin-left:0px;">
+					<span id="previewmail_bar_h" class="previewmail_bar_h" style="display: inline-block; border: 1px solid #e5e5e5; border-top:0px !important; border-bottom:0px !important;">
+						<p class="hbar_dotted" style="width:5px">
+						</p>
+					</span>
+					<span id="PreContent_RayerH" style="position: absolute; border: 0px solid blue; width:550px;">
+						<span style="width: 100%; display: block;">
+							<span class="previewmail_info" style="display: block; width: 100%; border-top: 1px solid #e8e8e8; height:83%;">
+								<div id="Preview_HeaderH" style="border-bottom: solid 1px #e8e8e8; width: 100%; visibility: hidden;">
+									<p class="mail_title" style="margin-left: 0px; color: #333333; font-weight: bold; font-size: 12px; margin: 0px 0px 5px 0px; clear: both; padding: 6px 0px 1px 0px; height: 24px; line-height: 35px;">
+										<span class="icon_btn" style="margin-left:8px;"><span onclick="showPollPage();" style="cursor: pointer; padding-right: 5px;">
+											<img src="/images/kr/cm/btn_newpopup.gif" alt="" border="0"></span></span><span id="PreH_subject"><span id="PreH_sub_subject" style="position:absolute; margin-top:-6px;" class="title_blodtxt"></span></span>
+										<span class="mail_date" style="margin-right: 10px; display: inline-block; float:right;margin-top:-7px;"><span id="PreH_date" style="font-weight:normal;"><span id="PreH_sub_date" style="display: none;"></span></span></span>
+									</p>
+								</div>
+							</span>
+							<iframe id="ifrmPreViewH" name="ifrmPreViewH" src="<spring:message code='main.kms4' />" frameborder="0" style="width: 100%; height: 100%; border: solid 0px green; display: inline-block;"></iframe>
+						</span>
+					</span>
+				</span>
+			</div>
+		</form>
+		
+		<form name="PrevViewFormH" action="/ezPersonal/pollResult.do" method="get" target="ifrmPreViewH" >
+			<input  type="hidden" name="itemSeq" value="">
+			<input  type="hidden" name="flag" value="preview">
+		</form>
 	</body>
 </html>

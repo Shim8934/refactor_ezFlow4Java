@@ -7,7 +7,8 @@
 		<title><spring:message code='ezBoard.t350'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezBoard.i1', 'msg')}" type="text/css" />
-		<link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" />
+		<%-- <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" /> --%>
+		<link rel="stylesheet" href="${util.addVer('main.lhm02', 'msg')}" type="text/css">
 		<style>
 			.groupBoard {
 				width:266px;
@@ -16,7 +17,6 @@
 				display: inline-block;
 			}
 			.node_div span {
-				width:266px;
 				overflow:hidden;
 				text-overflow:ellipsis;
 			}
@@ -102,7 +102,7 @@
 // 		            alert("<spring:message code='ezBoard.t354'/>");
 		            return;
 		        }
-		        xmlhttp.open("POST", "/ezBoard/copyItem.do?orgItemIDList=" + ItemIDList + "&orgBoardID=" + BoardID + "&destBoardID=" + pDestBoardID, false);
+		        xmlhttp.open("POST", "/ezBoard/copyItem.do?orgItemIDList=" + encodeURIComponent(ItemIDList) + "&orgBoardID=" + encodeURIComponent(BoardID) + "&destBoardID=" + encodeURIComponent(pDestBoardID), false);
 		        xmlhttp.send();
 		        if (xmlhttp.responseText.indexOf("OK") > -1) {
 		        	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.t355'/>") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.t355'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
@@ -132,7 +132,7 @@
 		        }
 		    }
 		    function CheckIfCanWrite(pBoardID) {
-		        xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + pBoardID, false);
+		        xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp.send();
 		        var ret = xmlhttp.responseText;
 		        if (ret.indexOf("<WRITE>true</WRITE>") != -1) return true;
@@ -140,7 +140,7 @@
 		    }
 		    function CheckIfAnonyBoard(pBoardID) {
 		        var xmlhttp2 = createXMLHttpRequest();
-		        xmlhttp2.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + pBoardID, false);
+		        xmlhttp2.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp2.send();
 		        var retval = "0";
 		        if (xmlhttp2.responseText.indexOf("anonyboard") > -1)
@@ -191,7 +191,7 @@
 		        treeView.AppendChildNodes(xmlRtn.documentElement, TreeIdx);
 		        
 		        /* 2018-08-06 홍승비 - boardLeft.jsp에서 하위게시판 ellipsis 부분 가져옴 */
-		        var node = document.getElementById(TreeIdx);
+		        /* var node = document.getElementById(TreeIdx);
 		        var title2 = node.getElementsByClassName("node_div");
 		        var nodeLevel = title2[0].getAttribute("nodelevel");
 		        if(nodeLevel > 9) {
@@ -203,7 +203,7 @@
 		        	title3[0].style.width = 266 - 18*nodeLevel +'px';
 		        	title3[0].style.textOverflow = 'ellipsis';
 		        	title3[0].style.overflow = 'hidden';
-		        }
+		        } */
 		    }
 		    function TreeCtrl_onNodeClick(pNodeID, pTreeID) {
 		        var treeNode = new TreeNode();
@@ -243,7 +243,7 @@
 		        treeView.DataBind(obj);
 		    }
 		    function GetSubBoard(pRootBoardID, pSubFlag) {
-		        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0", false);
+		        xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + encodeURIComponent(pRootBoardID) + "&subFlag=" + pSubFlag + "&selectFlag=0", false);
 		        xmlhttp.send();
 		        return xmlhttp.responseXML;
 		    }
@@ -263,7 +263,7 @@
 		            } else {
 		            	strHTML += "<tr><td><h2 id='" + SelectSingleNodeValue(xmldomNodes[i], "DATA1") + "' onclick='TopBoard_onclick(\"TreeCtrl" + i.toString() + "\" ,\"" + tid + "\"" + ", \"" + items + "\"" + ")' style='cursor:pointer'><span class='groupBoard'>" + SelectSingleNodeValue(xmldomNodes[i], "DATA2") + "</span></h2></td></tr>";
 		            }
-		            strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:300px;overflow-x:hidden;padding-top:10px;padding-bottom:10px'></DIV></td></tr>";
+		            strHTML += "<TR id='TreeArea' ><td><DIV id='TreeCtrl" + i.toString() + "' style='display:none;height:100%;width:300px;overflow:hidden;padding-top:10px;padding-bottom:10px'></DIV></td></tr>";
 		        }
 		        strHTML += "</table>";
 		        xmldomNodes = null;

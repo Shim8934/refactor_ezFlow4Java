@@ -8,123 +8,60 @@
 		<title>EmployeeofMonth</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezPersonal.e3', 'msg')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/slick.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/slick-theme.css')}" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('main.e4', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/ListView_list.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-		
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/controls/slick.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezPersonal.h1', 'msg')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezPersonal/admin/adminManageEmployeeOfMonth.js')}"></script>
 		<script type="text/javascript">
+			var nowYear = new Date().getFullYear();
+			var popup;
+			var selectedYear;
+			var selectedTerm;
+			
 			document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
 		        else
 		            return true;
 		    };
-	
-			var select_best_dialogArguments = new Array();
-		    function btn_Select() {
-		        if (CrossYN()) {
-		            select_best_dialogArguments[1] = btn_Select_Complete;
-		            //크롬일때 alert창 크기때문에 크롬일때 구별
-		            var agent = navigator.userAgent.toLowerCase();
-		            if (agent.indexOf("chrome") != -1) {
-		            	var Select_Best = window.open("/admin/ezPersonal/selectBest.do", "SelectBest", GetOpenWindowfeature(460, 200));	
-		            } else {
-		            	var Select_Best = window.open("/admin/ezPersonal/selectBest.do", "SelectBest", GetOpenWindowfeature(400, 200));
-		            }
-		            
-		            try { Select_Best.focus(); } catch (e) {
-		            }
-		        }  else {
-		            var heigth = window.screen.availHeight;
-		            var width = window.screen.availWidth;
-		            var left = (width - 500) / 2;
-		            var top = (heigth - 400) / 2;
-		            var rtnValue = window.showModalDialog("/admin/ezPersonal/selectBest.do", "",
-		                  "dialogHeight:200px;dialogwidth:400px;dialogleft:left = " + left + ";dialogtop:" + top + ", status:no;toolbar:no;location:no;scroll:no;edge:sunken, top=" + top + ",left = " + left);
-		            window.location.reload(false);
-		        } 
-		    }
-	
-		    function btn_Select_Complete(){
-		        window.location.reload(false);
-		    }
-	
-		    function OpenUserInfo(pUserID) {
-		        var heigth = window.screen.availHeight;
-		        var width = window.screen.availWidth;
-		        var left = (width - 500) / 2;
-		        var top = (heigth - 400) / 2;
-		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID, "", "height=438px,width=420px, status = no, toolbar=no, menubar=no,location=no, resizable=1,top=" + top + ",left = " + left);
-		    }
-		    
-		    function btnDel_click(temp) {
-		        if (confirm("<spring:message code = 'ezPersonal.t00003' />")) {
-		            $.ajax({
-		            	type : "POST",
-		            	url : "/admin/ezPersonal/setEmployeeMonth.do",
-		            	async : false,
-		            	data : {type : "DEL", userID : "", deptID : "", term : temp},
-		            	dataType : "text",
-		            	success : function (result) {
-		            		if (result != "OK") {
-				                alert("<spring:message code = 'ezPersonal.t302' />");
-				            } else {
-				                alert("<spring:message code = 'ezPersonal.t00004' />");
-				                window.location.reload(false);
-		            		}
-		            	}
-		            });
-		        }
-		    }
+			$(document).on('ready', function() {
+				getYearList();
+				getEmployeeList(nowYear);
+				
+				$(".regular").on('afterChange', function(event, slick, currentSlide, nextSlide){
+					var centerElmt = document.getElementsByClassName("slick-center")[0];
+					var centerYear = centerElmt.getElementsByClassName("yearSpan")[0].innerHTML;
+					var mainList   = document.getElementById("mainlist");
+					
+					$("#mainlist").fadeOut(100, function() {
+						while (mainList.firstChild) {
+							mainList.removeChild(mainList.firstChild);
+						}
+					})
+					
+					$("#mainlist").fadeIn(100, function() {
+						getEmployeeList(centerYear);
+					});
+				});
+			});
 		</script>
 	</head>
 	<body class = "mainbody">
 		<form id="form1">
-		    <h1><spring:message code = 'ezPersonal.t299' /></h1>
-		
-		    <div id="mainmenu">
-				<ul>
-		            <li><span onClick="btn_Select()"><spring:message code = 'ezPersonal.t105' /></span></li>
-				</ul>
-		    </div>
-		    <script type="text/javascript">
-				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
-			</script>
-		    <div style="width:100%;border-right:1px solid #e8e8e8; border-left:1px solid #e8e8e8;">
-		        <table class="mainlist" style="width:100%;"> 
-					<tr> 
-						<th style="width:10%; text-align:center"><spring:message code = 'ezPersonal.t290' />/<spring:message code = 'ezPersonal.t291' /></th> 
-						<th style="width:20%; text-align:center"><spring:message code = 'ezPersonal.t304' /></th> 
-						<th style="width:20%; text-align:center"><spring:message code = 'ezPersonal.t69' /></th> 
-						<th style="width:20%; text-align:center"><spring:message code = 'ezPersonal.t7' /></th>
-						<th style="width:20%; text-align:center"><spring:message code = 'ezPersonal.t67' /></th> 
-				        <th style="width:10%; text-align:center"></th> 
-					</tr> 
-					<c:if test="${list == '[]'}">
-						<tr>
-							<td colspan="6" style="text-align: center; color:#5b5a5a;">
-		  						<spring:message code='main.t00026'/>
-							</td>
-						</tr>
-					</c:if>
-					<c:forEach var="item" items="${list }">
-						<tr> 
-							<td style="text-align:center">
-								<c:if test="${fn:length(item.term) > 6}">${item.term}</c:if>
-								<c:if test="${fn:length(item.term) <= 6}">${fn:substring(item.term,0,5)}0${fn:substring(item.term,5,6)}</c:if>
-							</td> 
-							<td style="text-align:center">
-								<span style="cursor:pointer;" onclick="OpenUserInfo('${item.cn}')">${item.displayName }</span>
-					        </td> 
-					        <td style="text-align:center">${item.title}</td> 
-							<td style="text-align:center">${item.description}</td> 
-							<td style="text-align:center">${item.company}</td>
-					        <td style="text-align:center"><a class="imgbtn"><span onClick="btnDel_click('${item.term}')" ><spring:message code = 'ezPersonal.t99' /></span></a></td>
-						</tr> 
-					</c:forEach>
-				</table> 
-		    </div>   
+			<h1><spring:message code = 'ezPersonal.t299' /></h1>
+			<div style="width:100%;">
+				<!-- 달력슬라이더 영역 -->
+				<div class="regular calSlider" id="regular"></div>
+				
+				<!-- 이달의우수사원 리스트 영역 -->
+				<ul id="mainlist" class="admin_employeeList"></ul>
+			</div>
 	    </form>
 	</body>
 </html>

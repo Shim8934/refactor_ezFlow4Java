@@ -222,7 +222,7 @@
 				var strtext;
 				var PagingHTML = "";
 				document.getElementById("tblPageRayer").innerHTML = "";
-				document.getElementById("mailBoxInfo").innerHTML = " &nbsp;[" + strLang942 + "<span style='color:#017BEC;'> " + pTotalCnt + " </span>" + strLang943 + "]";
+				document.getElementById("mailBoxInfo").innerHTML = "&nbsp;&nbsp;<span style='color:#017BEC;'>" + pTotalCnt + "</span>";
 				strtext = "<div class='pagenavi'>";
 				PagingHTML += strtext;
 				
@@ -858,13 +858,13 @@
 		</xml>
 		
 	    <h1><spring:message code = 'ezApprovalG.t1324' /><span id="mailBoxInfo"></span>
-	        <span style="float:right;font-weight:normal;color:black;">
+	        <span class="searchForm">
 	        	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezApprovalG.t445'/></option>
 		    	</select>
-			  	<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-	          	<a href="#" style="float:right"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
+			  	<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+	          	<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search()"></a>
 	        </span>
 	    </h1>
 	    <div id="mainmenu">
@@ -874,11 +874,11 @@
 	        <ul>
 	            <li id="GetEDMSXML" style="display:none"><span onclick="return SendEDM_onclick()"><spring:message code = 'ezApprovalG.t522' /></span></li>
 	            <li id="SearchCondi" class = "approvalG"><span onclick="return DisuseItem_onclick()"><spring:message code = 'ezApprovalG.t523' /></span></li>	            
-	            <li id="SearchCondi"><span onclick="return SearchCondi_onclick()"><spring:message code = 'ezApprovalG.t111' /></span></li>
+	            <li id="SearchCondi"><span class="icon16 icon16_search" onclick="return SearchCondi_onclick()"></span></li>
 	        </ul>
 	    </div>
 	
-		<div class="div_scroll" style="width:100%;HEIGHT:360px; overflow:AUTO" id="divList">
+		<div class="div_scroll" style="width:100%;HEIGHT:375px; overflow:AUTO" id="divList">
 	  		<div id="lvtDoclist" ></div>
 		</div>
 	 	<div id="tblPageRayer"></div>
