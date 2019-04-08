@@ -1551,4 +1551,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void updateListOptionData() throws Exception {
 		ezCommonDAO.updateListOptionData();
 	}
+	
+	@Override
+	public void createBoardLike() throws Exception{
+		ezCommonDAO.createBoardLike();
+	}
+	
+	@Override
+	public void addBoardLikeFlag() throws Exception{
+		ezCommonDAO.addBoardLikeFlag();
+	}
 }

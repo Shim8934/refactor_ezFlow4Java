@@ -845,4 +845,44 @@
 		AND 
 			COLNAME = 'FunctionTypeName'
 	</update>
+	
+	<select id="EzCommonDAO.checkTblBoardLike" resultClass="String">
+		<![CDATA[
+			SELECT 
+				LIKEFLAG
+			FROM 
+				TBL_BOARD_BOARDINFO
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	
+	<select id="EzCommonDAO.checkTblBoardInfoLikeFlag" resultClass="String">
+		<![CDATA[
+			SELECT 
+				ITEMID
+			FROM 
+				TBL_BOARD_LIKE
+			WHERE
+			    rownum = 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.createBoardLike"> 
+		CREATE TABLE "EZEKP2017"."TBL_BOARD_LIKE" (
+		 	"ITEMID" NVARCHAR2(40) NOT NULL ENABLE, 
+			"USERID" NVARCHAR2(20) NOT NULL ENABLE, 
+			"LIKEDATE" NVARCHAR2(20), 
+			"TENANT_ID" NUMBER(5,0) NOT NULL ENABLE, 
+			CONSTRAINT "TBL_BOARD_LIKE_PK" PRIMARY KEY ("ITEMID", "USERID", "TENANT_ID")
+		)
+	</statement>
+	
+	<statement id="EzCommonDAO.addBoardLikeFlag"> 
+		ALTER TABLE 
+			TBL_BOARD_BOARDINFO
+		ADD 
+			LIKEFLAG NCHAR(1) DEFAULT NULL
+	</statement>
+	
 </sqlMap>

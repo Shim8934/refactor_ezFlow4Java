@@ -569,4 +569,25 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			e.printStackTrace();
 		}
 	}
+	
+	public void createBoardLike() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardLike");
+		} catch (Exception e) {
+			logger.debug("tbl_board_like doesn't exist. creating the table...");
+			
+			update("EzCommonDAO.createBoardLike");
+		}
+	}
+	
+	public void addBoardLikeFlag() throws Exception {
+		try {
+			select("EzCommonDAO.checkTblBoardInfoLikeFlag");
+		} catch (Exception e) {
+			logger.debug("tbl_board_info likeFlag doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addBoardLikeFlag");
+		}
+	}
+	
 }
