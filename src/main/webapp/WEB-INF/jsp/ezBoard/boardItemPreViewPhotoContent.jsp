@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -28,6 +29,17 @@
 			.iPBInnerDiv_Top i{font-size:25px; color:black; cursor:pointer;}
 			.iPBInnerDiv_TopOff{display:none; float:right; width:40px;}
 			.iPBInnerDiv{height:50px; padding-right: 15px}
+			.likeButton {
+				padding:5px;
+				cursor:pointer;
+				display:inline-block;
+				border:1px solid #c7c7c7;
+			    border-radius:2px;
+			}
+			.likeButton:hover {
+				background-color:#f1f8ff;
+				border:1px solid #6793d8;
+			}
 		</STYLE>
 		<script type="text/javascript">
 		    window.offscreenBuffering = true;
@@ -61,6 +73,8 @@
 		    var g_progresswin;
 		    var OneLineReplyFlag = "";
 			var gubun = "${boardInfo.guBun}";
+	        var isLikeChecked = "<c:out value='${isLikeChecked}'/>";
+			var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
 		    var ImageCount = "";
 		    var viewimage = "";
 		    var pListImage = "";
@@ -87,14 +101,23 @@
 		        /* 2018-07-24 홍승비 - 투표 모듈의 이미지 레이어팝업 포토+썸넬게시물 미리보기에도 적용 */
 	            addThumbnailEvent();
 		    }
+		    
+	        $(document).ready(function() {
+				/* 2019-04-08 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩과 height 조절 */
+	            if (likeFlag != null && likeFlag == "Y") {
+					$(".MainContentTD").css({"padding" : "0px 0px 4px 0px", "height" : "47px"});
+					$("#MainContent").css("height", "35px");
+	            }
+	        });
+	        
 		    function window_resize() {
 		        CurrentHeight = document.documentElement.clientHeight;
-		        if (CurrentHeight < 317)
-		            document.getElementById("trheight").style.height = 317 + "px";
+		        if (CurrentHeight < 300)
+		            document.getElementById("trheight").style.height = 300 + "px";
 		        else
-		            document.getElementById("trheight").style.height = (CurrentHeight - 287) + "px";
-		
+		            document.getElementById("trheight").style.height = (CurrentHeight - 300) + "px";
 		    }
+		    
 	        function generateGuid() {
 	            var result = "";
 	            for (var i = 0, j = 0; j < 32; j++) {
@@ -908,6 +931,57 @@
 		  			$imgPopupDiv.css("overflow", "auto");
 		  		}
 		  	}
+		  	
+		  	 /* 2019-04-08 홍승비 - 좋아요 버튼 클릭 동작 */
+		    function clickLikeButton() {
+		    	var mod = "";
+		    	if (isLikeChecked == "Y") {
+		    		mod = "DELETE";
+		    	} else {
+		    		mod = "INSERT";
+		    	}
+		    	
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/clickLikeMod.do",
+					data : {
+						mod: mod,
+						itemID : pItemID
+					},
+					success: function(result){
+						isLikeChecked = result;
+						updateLikeCountImg(isLikeChecked);
+					}
+				});
+		    }
+		  	 
+		    /* 2019-04-08 홍승비 - 좋아요 버튼 이미지 및 좋아요 갯수 업데이트 */
+		    function updateLikeCountImg(isLikeChecked) {
+		    	$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/getLikeCount.do",
+					data : {
+						itemID : pItemID
+					},
+					success: function(result){
+						if (parseInt(result) > 0) {
+							document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+						} else {
+							document.getElementById("likeCountSpan").innerText = "";
+						}
+						if (isLikeChecked == "Y") {
+				    		document.getElementById("likeButtonImg").src = "/images/like_on.png";
+				    	} else {
+				    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
+				    	}
+					}
+				});
+		    }
+		    
 			</script>
 		</head>
 		<body>
@@ -938,10 +1012,28 @@
 			            </td>
 			        </tr>
 			        <tr>
-			        	<td style="padding:10px 0px; height:88px; text-align:center" colspan="3">
+			        	<td class="MainContentTD" style="padding:10px 0px; height:88px; text-align:center" colspan="3">
 			            	<div id="MainContent" style="height:88px; padding-left:23%; padding-right:24%;"></div>
 			            </td>
 			        </tr>
+		        <%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>
+				<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+					<tr>
+						<td style="text-align:center; padding-top:10px; padding-bottom:12px;" colspan="3">
+						  	<span class="likeButton" style="cursor:pointer; margin-left:-7px;" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
+							  	<c:choose>
+							  		<c:when test="${isLikeChecked == 'Y'}">
+							  			<img id="likeButtonImg" src="/images/like_on.png"/>
+							  		</c:when>
+							  		<c:otherwise>
+							  			<img id="likeButtonImg" src="/images/like_off.png"/>
+							  		</c:otherwise>
+							  	</c:choose>
+						  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${likeCount > 0}"> (<c:out value="${likeCount}"/>)</c:if></span>
+						  	</span>
+						</td>
+					</tr>
+				</c:if>
 			        </table>
 			    </td>
 			  </tr>

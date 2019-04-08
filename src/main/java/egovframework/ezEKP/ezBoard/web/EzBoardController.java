@@ -6511,7 +6511,26 @@ public class EzBoardController extends EgovFileMngUtil{
 	 * 게시판 미리보기게시물 호출 Method
 	 */
 	@RequestMapping(value = "/ezBoard/boardItemPreviewContent.do")
-	public String boardItemPreviewContent() throws Exception {
+	public String boardItemPreviewContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {		
+		logger.debug("boardItemPreviewContent started");
+
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String boardID = request.getParameter("boardID");
+		String itemID = request.getParameter("itemID");
+		String likeCount = request.getParameter("likeCount");
+		
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+			
+		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
+		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
+		
+		model.addAttribute("itemID", itemID);
+		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("likeCount", likeCount);
+		model.addAttribute("isLikeChecked", isLikeChecked);
+		
+		logger.debug("boardItemPreviewContent ended");
 		return "ezBoard/boardItemPreviewContent";
 	}
 	
@@ -7327,6 +7346,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String mode = request.getParameter("mode");
+		String likeCount = request.getParameter("likeCount");
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
@@ -7344,12 +7364,17 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		ezBoardService.setAsRead(userInfo, boardID, itemID);
 
+		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
+		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
+		
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("mode", mode);
 		model.addAttribute("showAdjacent", showAdjacent);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("likeCount", likeCount);
+		model.addAttribute("isLikeChecked", isLikeChecked);
 				
 		logger.debug("boardItemPreViewPhotoContent ended");
 		
@@ -8711,6 +8736,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		String boardID = request.getParameter("boardID");
 		String itemID = request.getParameter("itemID");
 		String mode = request.getParameter("mode");
+		String likeCount = request.getParameter("likeCount");
 		
 		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
 		
@@ -8719,13 +8745,18 @@ public class EzBoardController extends EgovFileMngUtil{
         }
 		
 		ezBoardService.setAsRead(userInfo, boardID, itemID);
-
+		
+		/* 2019-04-05 홍승비 - 해당 게시물에 대해 사용자가 좋아요를 표시했는지 체크 */
+		String isLikeChecked = ezBoardService.likeCheck(userInfo.getId(), itemID, userInfo.getTenantId());
+		
 		model.addAttribute("itemID", itemID);
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("mode", mode);
 		model.addAttribute("showAdjacent", showAdjacent);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("boardInfo", boardInfo);
+		model.addAttribute("likeCount", likeCount);
+		model.addAttribute("isLikeChecked", isLikeChecked);
 				
 		logger.debug("boardItemPreViewMovieContent ended");
 		

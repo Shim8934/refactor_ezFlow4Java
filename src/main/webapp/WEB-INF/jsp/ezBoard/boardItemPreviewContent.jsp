@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -10,6 +11,17 @@
 	    		font-size:12px;
 				text-decoration: none;
 	    	}
+	    	.likeButton {
+				padding:5px;
+				cursor:pointer;
+				display:inline-block;
+				border:1px solid #c7c7c7;
+			    border-radius:2px;
+			}
+			.likeButton:hover {
+				background-color:#f1f8ff;
+				border:1px solid #6793d8;
+			}
 	    </style>
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -25,6 +37,11 @@
 	        var strLang1 = "<spring:message code='ezBoard.t10025'/>";
 	        var strLang2 = "<spring:message code='ezBoard.t10023'/>";
 	        var strLang3 = "<spring:message code='ezBoard.t10024'/>";
+	        var pItemID = "<c:out value='${itemID}'/>";
+	        var isLikeChecked = "<c:out value='${isLikeChecked}'/>";
+			var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
+			var likeCount = "<c:out value='${likeCount}'/>";
+			
 	        window.onload = function () {
 	            document.getElementById("txtContent").style.textAlign = "center";
 	            window.parent.previewItemSet();
@@ -282,12 +299,81 @@
 	            else
 	                suffix = 0;
 	        }
+	        
+	        /* 2019-04-08 홍승비 - 좋아요 버튼 클릭 동작 */
+		    function clickLikeButton() {
+		    	var mod = "";
+		    	if (isLikeChecked == "Y") {
+		    		mod = "DELETE";
+		    	} else {
+		    		mod = "INSERT";
+		    	}
+		    	
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/clickLikeMod.do",
+					data : {
+						mod: mod,
+						itemID : pItemID
+					},
+					success: function(result){
+						isLikeChecked = result;
+						updateLikeCountImg(isLikeChecked);
+					}
+				});
+		    }
+		  	 
+		    /* 2019-04-08 홍승비 - 좋아요 버튼 이미지 및 좋아요 갯수 업데이트 */
+		    function updateLikeCountImg(isLikeChecked) {
+		    	$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/getLikeCount.do",
+					data : {
+						itemID : pItemID
+					},
+					success: function(result){
+						if (parseInt(result) > 0) {
+							document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+						} else {
+							document.getElementById("likeCountSpan").innerText = "";
+						}
+						if (isLikeChecked == "Y") {
+				    		document.getElementById("likeButtonImg").src = "/images/like_on.png";
+				    	} else {
+				    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
+				    	}
+					}
+				});
+		    }
+		    
 	    </script>
 	</head>
 	<body>
 		<div id="txtContent" name="txtContent" style="height:100%;margin-left:5px;margin-right:5px;">
-			<span style="margin-top:50px;height:10px;display:inline-block;"></span>    
+			<span style="margin-top:50px;height:10px;display:inline-block;"></span>
 		</div>
+		
+		<%-- 2019-04-05 홍승비 - 본문 하단, 첨부파일/한줄댓글 상단에 좋아요 버튼 추가 --%>
+		<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+			<div style="text-align:center; padding:15px 0px; min-height:60px">
+			  	<span class="likeButton" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
+				  	<c:choose>
+				  		<c:when test="${isLikeChecked == 'Y'}">
+				  			<img id="likeButtonImg" src="/images/like_on.png" style="vertical-align:text-top;"/>
+				  		</c:when>
+				  		<c:otherwise>
+				  			<img id="likeButtonImg" src="/images/like_off.png" style="vertical-align:text-top;"/>
+				  		</c:otherwise>
+				  	</c:choose>
+				  	<span id="likeCountSpan" style="vertical-align:text-bottom;"><c:if test="${likeCount > 0}"> (<c:out value="${likeCount}"/>)</c:if></span>
+			  	</span>
+			</div>
+		</c:if>
+			
 		<%-- 2018-10-11 - 홍승비 - 모두저장 기능 추가 --%>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" style="display:none"></iframe>
 	</body>

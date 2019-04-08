@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE HTML>
 <html>
 	<head>
@@ -15,6 +16,17 @@
 					MARGIN-TOP: 0mm;
 					MARGIN-BOTTOM: 0mm;
 			  }
+			.likeButton {
+				padding:5px;
+				cursor:pointer;
+				display:inline-block;
+				border:1px solid #c7c7c7;
+			    border-radius:2px;
+			}
+			.likeButton:hover {
+				background-color:#f1f8ff;
+				border:1px solid #6793d8;
+			}
 		</STYLE>
 		<script type="text/javascript">
 		    window.offscreenBuffering = true;
@@ -47,6 +59,8 @@
 		    var pReservedItem = "";
 		    var OneLineReplyFlag = "";
 			var gubun = "${boardInfo.guBun}";
+	        var isLikeChecked = "<c:out value='${isLikeChecked}'/>";
+			var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
 		    var ImageCount = "";
 		    var viewimage = "";
 		    var pListImage = "";
@@ -64,6 +78,13 @@
 		        imageViewInit();
 		        window_resize();
 		    }
+		    
+		    $(document).ready(function() {
+				/* 2019-04-08 홍승비 - 좋아요 버튼이 존재한다면 본문 패딩과 height 조절 */
+	            if (likeFlag != null && likeFlag == "Y") {
+					$("#outerTable").css("min-height", "550px");
+	            }
+	        });
 		    
 		    function window_resize() {
 		        CurrentHeight = document.documentElement.clientHeight;
@@ -274,13 +295,64 @@
                 
 				movieMain(movieID, moviePath, movieName);
 	        }
+	        
+	        /* 2019-04-08 홍승비 - 좋아요 버튼 클릭 동작 */
+		    function clickLikeButton() {
+		    	var mod = "";
+		    	if (isLikeChecked == "Y") {
+		    		mod = "DELETE";
+		    	} else {
+		    		mod = "INSERT";
+		    	}
+		    	
+		    	$.ajax({
+					type : "POST",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/clickLikeMod.do",
+					data : {
+						mod: mod,
+						itemID : pItemID
+					},
+					success: function(result){
+						isLikeChecked = result;
+						updateLikeCountImg(isLikeChecked);
+					}
+				});
+		    }
+		  	 
+		    /* 2019-04-08 홍승비 - 좋아요 버튼 이미지 및 좋아요 갯수 업데이트 */
+		    function updateLikeCountImg(isLikeChecked) {
+		    	$.ajax({
+					type : "GET",
+					dataType : "text",
+					async : false,
+					url : "/ezBoard/getLikeCount.do",
+					data : {
+						itemID : pItemID
+					},
+					success: function(result){
+						if (parseInt(result) > 0) {
+							document.getElementById("likeCountSpan").innerText = "(" + result + ")";
+						} else {
+							document.getElementById("likeCountSpan").innerText = "";
+						}
+						if (isLikeChecked == "Y") {
+				    		document.getElementById("likeButtonImg").src = "/images/like_on.png";
+				    	} else {
+				    		document.getElementById("likeButtonImg").src = "/images/like_off.png";
+				    	}
+					}
+				});
+		    }
+		    
 			</script>
 		</head>
 		<body>
 			<table class="layout" style="border-spacing:0; border-bottom:1px solid #ddd; border:0px; width:100%; margin-top:-1px;">
 			  <tr>
 			    <td style="width:100%;  text-align:center; vertical-align:top;" >
-			        <table style="width:100%; min-height:635px;">
+			        <table id="outerTable" style="width:100%; min-height:635px;">
 				        <tr id="trheight" style="display:table-cell;">
 				            <td style="display:inline-block;">
 				                <table id="movieTable" style="text-align:center; border:0px;">
@@ -296,5 +368,21 @@
 			    </td>
 			  </tr>
 		</table>
+		<%-- 2019-04-05 홍승비 - 본문, 사진소개 하단에 좋아요 버튼 추가 --%>
+		<c:if test="${boardInfo.likeFlag != null && boardInfo.likeFlag == 'Y'}">
+			<div style="text-align:center; margin-top:-45px; margin-bottom:40px;" colspan="3">
+			  	<span class="likeButton" style="cursor:pointer; margin-left:-7px;" onclick="clickLikeButton()" title="<spring:message code='ezBoard.hsb10'/>">
+				  	<c:choose>
+				  		<c:when test="${isLikeChecked == 'Y'}">
+				  			<img id="likeButtonImg" src="/images/like_on.png"/>
+				  		</c:when>
+				  		<c:otherwise>
+				  			<img id="likeButtonImg" src="/images/like_off.png"/>
+				  		</c:otherwise>
+				  	</c:choose>
+			  	<span id="likeCountSpan" style="vertical-align:top;"><c:if test="${likeCount > 0}"> (<c:out value="${likeCount}"/>)</c:if></span>
+			  	</span>
+			</div>
+		</c:if>			
 	</body>
 </html>
