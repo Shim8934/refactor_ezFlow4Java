@@ -8,7 +8,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet"  href="${util.addVer('main.e15', 'msg')}" type="text/css">
 <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-<title><spring:message code="ezSystem.kbh1" /></title>
+<title><spring:message code="ezSystem.kbh21" /></title>
 <style type="text/css">
 	body.mainbody table.content tr:last-child {border-top-style: double;border-top-color: #d2d2d2;}
 	body.mainbody table.content th {width: 26%;}
@@ -31,43 +31,46 @@
 	var setNames = function() {
 		switch (moduleInfo.packageType.toLowerCase()) {
 		case "standard":
-			moduleInfo.names = ["mail", "approval", "schedule", "board", "community", "resource"];
+			moduleInfo.names = ["mail", "approval", "schedule", "board", "community", "resource", "total"];
 			moduleInfo.displaynames = [
-				"<spring:message code='ezSystem.kbh6' />",
-				"<spring:message code='ezSystem.kbh7' />",
-				"<spring:message code='ezSystem.kbh8' />",
-				"<spring:message code='ezSystem.kbh9' />",
-				"<spring:message code='ezSystem.kbh10' />",
-				"<spring:message code='ezSystem.kbh11' />"
+				"<spring:message code='ezSystem.kbh26' />",
+				"<spring:message code='ezSystem.kbh27' />",
+				"<spring:message code='ezSystem.kbh28' />",
+				"<spring:message code='ezSystem.kbh29' />",
+				"<spring:message code='ezSystem.kbh30' />",
+				"<spring:message code='ezSystem.kbh31' />",
+				"<spring:message code='ezSystem.kbh32' />"
 				];
 			break;
 		case "basic":
-			moduleInfo.names = ["mail", "schedule", "board"];
+			moduleInfo.names = ["mail", "schedule", "board", "total"];
 			moduleInfo.displaynames = [
-				"<spring:message code='ezSystem.kbh6' />",
-				"<spring:message code='ezSystem.kbh8' />",
-				"<spring:message code='ezSystem.kbh9' />"
+				"<spring:message code='ezSystem.kbh26' />",
+				"<spring:message code='ezSystem.kbh28' />",
+				"<spring:message code='ezSystem.kbh29' />",
+				"<spring:message code='ezSystem.kbh32' />"
 				];
 			break;
 		case "mail":
-			moduleInfo.names = ["mail"];
+			moduleInfo.names = ["mail", "total"];
 			moduleInfo.displaynames = [
-				"<spring:message code='ezSystem.kbh6' />"
+				"<spring:message code='ezSystem.kbh26' />",
+				"<spring:message code='ezSystem.kbh32' />"
 				];
 			break;
 		}
 		
-		moduleInfo.names.push("total");
-		moduleInfo.displaynames.push("<spring:message code='ezSystem.kbh12' />");
+		/* moduleInfo.names.push("total");
+		moduleInfo.displaynames.push("<spring:message code='ezSystem.kbh32' />"); */
 	}
 	
 	var drawTable = function() {
 		var namesLen = moduleInfo.names.length;
 		var dataHtml = 
-			"<tr><th><spring:message code='ezSystem.kbh2' /></th>" + 
-			"<th><spring:message code='ezSystem.kbh3' /></th>" +
-			"<th><spring:message code='ezSystem.kbh4' /></th>" +
-			"<th><spring:message code='ezSystem.kbh5' /></th></tr>";
+			"<tr><th><spring:message code='ezSystem.kbh22' /></th>" + 
+			"<th><spring:message code='ezSystem.kbh23' /></th>" +
+			"<th><spring:message code='ezSystem.kbh24' /></th>" +
+			"<th><spring:message code='ezSystem.kbh25' /></th></tr>";
 		
 		for(var i = 0; i < namesLen; i++) {
 			dataHtml += "<tr><th>" + moduleInfo.displaynames[i] + "</th><td></td><td></td><td></td></tr>";
@@ -110,7 +113,7 @@
 </script>
 </head>
 <body class="mainbody" style="overflow:hidden;">
-	<h1><spring:message code="ezSystem.kbh1" /></h1>
+	<h1><spring:message code="ezSystem.kbh21" /></h1>
 	<table class="content" id="contentTable">
 	</table>
 </body>
