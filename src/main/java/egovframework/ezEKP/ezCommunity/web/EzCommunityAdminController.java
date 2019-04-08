@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import egovframework.com.cmm.EgovMessageSource;
@@ -551,7 +552,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 신청 승인  리스트 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/admitCom.do")
+	@RequestMapping(value = "/admin/ezCommunity/admitCom.do", method = RequestMethod.POST)
 	public String admitCom(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -607,7 +608,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 폐쇄 승인 리스트  호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/closeCom.do")
+	@RequestMapping(value = "/admin/ezCommunity/closeCom.do", method = RequestMethod.POST)
 	public String closeCom (@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
