@@ -40,6 +40,7 @@ import javax.websocket.Session;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
@@ -48,7 +49,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -144,8 +147,9 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			model.addAttribute("useMailReceiveScreen", useMailReceiveScreen);
 		}
 		
+		MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
+		
 		if (usePreviewSubTree.equals("YES")) {
-			MailGeneralVO mailGeneralVO = ezEmailService.getMailGeneral(loginInfo.getTenantId(), loginInfo.getId()).get(0);
 			String previewSubTree = mailGeneralVO.getPreviewSubTree();
 			model.addAttribute("previewSubTree", previewSubTree);
 		}
@@ -282,6 +286,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		model.addAttribute("useBottomFrameOnly", useBottomFrameOnly);
 		model.addAttribute("useMailBoxBackUp", useMailBoxBackUp);
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
+		model.addAttribute("refreshInterval", mailGeneralVO.getRefreshInterval());
 		
 		String useBizmekaSpambox = ezCommonService.getTenantConfig("UseBizmekaSpambox", loginInfo.getTenantId());
 		
@@ -579,6 +584,85 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 		logger.debug("getFolderUnreadCount ended.");
 		
 		return unreadCountXML;
+	}
+	
+	/**
+	 * 편지함들의 읽지않은 메시지 개수 정보 호출 함수
+	 */
+	@RequestMapping(value="/ezEmail/getAllFolderUnreadCount.do", method=RequestMethod.POST, produces="application/json; charset=utf-8")
+	@ResponseBody
+	public JSONObject getAllFolderUnreadCount(@CookieValue("loginCookie") String loginCookie, Locale locale, @RequestBody String bodyData) throws Exception {
+		logger.debug("getAllFolderUnreadCount started.");
+		logger.debug("bodyData=" + bodyData);
+		
+		JSONObject resultObject = new JSONObject();
+		String resultCode = "OK";
+		IMAPAccess ia = null;
+		
+		try {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject requestObject = (JSONObject) jsonParser.parse(bodyData);
+			JSONArray requestMailboxList = (JSONArray) requestObject.get("mailboxList");
+			JSONArray unreadCountList = new JSONArray();
+			
+			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
+			String password  = userIdAndPassword.get(1);
+			
+			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
+			String userAccount = userInfo.getId() + "@" + domainName;
+			
+			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+			if (useSharedMailbox.equals("YES")) {
+				String shareId = (String) requestObject.get("shareId");
+				
+				if (shareId != null) {
+					logger.debug("shareId=" + shareId);
+					
+					if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, userInfo.getTenantId())) {
+						logger.debug("the user cannot access the shareId.");
+						logger.debug("getFolderUnreadCount ended.");
+						
+						throw new Exception("CANNOT_ACCESS_SHAREID");
+					}
+					
+					userAccount = shareId + "@" + domainName;
+				}
+			}
+			
+			logger.debug("userId=" + userInfo.getId() + ",userAccount=" + userAccount);
+			
+			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
+					userAccount, password, egovMessageSource, locale, ezEmailUtil);
+			
+			JSONObject mailboxObject = null;
+			
+			for (int i = 0; i < requestMailboxList.size(); i++) {
+				String mailboxName = (String) requestMailboxList.get(i);
+				mailboxObject = new JSONObject();
+				
+				mailboxObject.put("href", mailboxName);
+				mailboxObject.put("unreadCount", ia.getUnreadCount(mailboxName));
+				
+				unreadCountList.add(mailboxObject);
+			}
+			
+			resultObject.put("unreadCountList", unreadCountList);
+		} catch (Exception e) {
+			resultCode = e.getMessage();
+			e.printStackTrace();
+		} finally {
+			if (ia != null) {
+				ia.close();
+			}
+		}
+		
+		resultObject.put("resultCode", resultCode);
+		
+		logger.debug("resultObject=" + resultObject.toJSONString());
+		logger.debug("getAllFolderUnreadCount ended.");
+		return resultObject;
 	}
 	
 	/**
