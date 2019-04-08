@@ -1298,14 +1298,7 @@
 	                          B.TENANT_ID = #v_TENANTID#
 	                      AND 
 	                          B.BOARDID = A.BOARDID ) as GUBUN,
-						(SELECT 
-		                	NVL(COUNT(*), 0)  
-		    			FROM 
-		    				TBL_Board_Like
-		   				WHERE  
-		   					TENANT_ID = A.TENANT_ID
-		   				AND
-		   					ITEMID = A.ItemID) as LIKECOUNT
+						NVL(LIKECOUNT, 0) as LIKECOUNT
 	   				  FROM 
 	   				  	TBL_BOARD_ITEM A 
 	   				  LEFT OUTER JOIN 
@@ -1327,6 +1320,21 @@
 	   				  	A.TENANT_ID = D.TENANT_ID
 	   				  AND
 	   				  	A.ITEMID = D.ITEMID
+					LEFT OUTER JOIN
+						(SELECT
+                            COUNT(ITEMID) as LIKECOUNT,
+                            ITEMID,
+                            TENANT_ID
+                        FROM
+                            TBL_BOARD_LIKE
+                        WHERE 
+                            TENANT_ID = #v_TENANTID#
+						GROUP BY
+							ITEMID, TENANT_ID ) L
+						ON
+							A.TENANT_ID = L.TENANT_ID
+                        AND
+                            A.ITEMID = L.ITEMID
 	   				  WHERE
 	   				  	A.TENANT_ID = #v_TENANTID#
 	   				  AND 
@@ -1413,14 +1421,7 @@
 		   				A.EXTENSIONATTRIBUTE8,
 		   				A.EXTENSIONATTRIBUTE9,
 		   				A.EXTENSIONATTRIBUTE10,
-		  				(SELECT 
-		                	NVL(COUNT(*), 0)  
-		    			FROM 
-		    				TBL_Board_Like
-		   				WHERE  
-		   					TENANT_ID = A.TENANT_ID
-		   				AND
-		   					ITEMID = A.ItemID) as LIKECOUNT
+		  				NVL(LIKECOUNT, 0) as LIKECOUNT
 	   				FROM 
 	   					TBL_BOARD_ITEM A 
 	   				LEFT OUTER JOIN 
@@ -1442,6 +1443,21 @@
 	   					A.TENANT_ID = D.TENANT_ID
 	   				AND
 	   					A.ITEMID = D.ITEMID
+	   				LEFT OUTER JOIN
+						(SELECT
+                            COUNT(ITEMID) as LIKECOUNT,
+                            ITEMID,
+                            TENANT_ID
+                        FROM
+                            TBL_BOARD_LIKE
+                        WHERE 
+                            TENANT_ID = #v_TENANTID#
+						GROUP BY
+							ITEMID, TENANT_ID ) L
+						ON
+							A.TENANT_ID = L.TENANT_ID
+                        AND
+                            A.ITEMID = L.ITEMID
 	   				WHERE
 	   					A.TENANT_ID = #v_TENANTID#
 	   				AND 
@@ -2045,14 +2061,7 @@
 		   				A.MAINCONTENT,
 		   				B.FILEPATH,
 		   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
-		   				(SELECT 
-		                	NVL(COUNT(*), 0)  
-		    			FROM 
-		    				TBL_Board_Like
-		   				WHERE  
-		   					TENANT_ID = A.TENANT_ID
-		   				AND
-		   					ITEMID = A.ItemID) as LIKECOUNT
+		   				NVL(LIKECOUNT, 0) as LIKECOUNT
 	   				  FROM 
 	   				  	TBL_BOARD_ITEM A 
 	   				  INNER JOIN 
@@ -2081,6 +2090,21 @@
 	   				  	A.TENANT_ID = D.TENANT_ID
 	   				  AND 
 	   				  	A.ITEMID = D.ITEMID
+					LEFT OUTER JOIN
+						(SELECT
+                            COUNT(ITEMID) as LIKECOUNT,
+                            ITEMID,
+                            TENANT_ID
+                        FROM
+                            TBL_BOARD_LIKE
+                        WHERE 
+                            TENANT_ID = #v_TENANTID#
+						GROUP BY
+							ITEMID, TENANT_ID ) L
+						ON
+							A.TENANT_ID = L.TENANT_ID
+                        AND
+                            A.ITEMID = L.ITEMID
 	   				WHERE 
 	   					A.TENANT_ID = #v_TENANTID#
 	   				AND
@@ -2149,14 +2173,7 @@
 		   				A.MAINCONTENT,
 		   				B.FILEPATH,
 		   				CASE WHEN D.TOTALCOUNT IS NULL THEN '0' ELSE '1' END READFLAG,
-		   				(SELECT 
-							IFNULL(COUNT(*), 0)  
-			   			FROM 
-			   				TBL_Board_Like
-						WHERE  
-							TENANT_ID = A.TENANT_ID
-						AND
-							ITEMID = A.ItemID) as LIKECOUNT
+		   				NVL(LIKECOUNT, 0) as LIKECOUNT
 		   			  FROM 
 		   			  	TBL_BOARD_ITEM A 
 		   			  INNER JOIN 
@@ -2185,6 +2202,21 @@
 		   			  	A.TENANT_ID = D.TENANT_ID
 		   			  AND
 		   			  	A.ITEMID = D.ITEMID
+		   			  LEFT OUTER JOIN
+						(SELECT
+                            COUNT(ITEMID) as LIKECOUNT,
+                            ITEMID,
+                            TENANT_ID
+                        FROM
+                            TBL_BOARD_LIKE
+                        WHERE 
+                            TENANT_ID = #v_TENANTID#
+						GROUP BY
+							ITEMID, TENANT_ID ) L
+						ON
+							A.TENANT_ID = L.TENANT_ID
+                        AND
+                            A.ITEMID = L.ITEMID
 		   			  WHERE  
 		   			  	A.TENANT_ID = #v_TENANTID#
 		   			  AND
@@ -2307,14 +2339,7 @@
        					A.EXTENSIONATTRIBUTE10,
 	   			    	CASE WHEN (I.BOARDNAME$lang$ = '' OR I.BOARDNAME$lang$ IS NULL) THEN I.BOARDNAME ELSE I.BOARDNAME$lang$ END BOARDNAME,
 	   				  	I.GUBUN,
-	   				  	(SELECT 
-		                	IFNULL(COUNT(*), 0)  
-		    			FROM 
-		    				TBL_Board_Like
-		   				WHERE  
-		   					TENANT_ID = A.TENANT_ID
-		   				AND
-		   					ITEMID = A.ItemID) as LIKECOUNT
+	   				  	NVL(LIKECOUNT, 0) as LIKECOUNT
 	   				  FROM 
 	   				  	TBL_BOARD_ITEM A 
 	   				  LEFT OUTER JOIN 
@@ -2335,6 +2360,21 @@
 	   				  	A.TENANT_ID = D.TENANT_ID
 	   				  AND
 	   				  	A.ITEMID = D.ITEMID
+	   				  LEFT OUTER JOIN
+						(SELECT
+                            COUNT(ITEMID) as LIKECOUNT,
+                            ITEMID,
+                            TENANT_ID
+                        FROM
+                            TBL_BOARD_LIKE
+                        WHERE 
+                            TENANT_ID = #v_TENANTID#
+						GROUP BY
+							ITEMID, TENANT_ID ) L
+						ON
+							A.TENANT_ID = L.TENANT_ID
+                        AND
+                            A.ITEMID = L.ITEMID
 	   				  INNER JOIN 
 	   				  	TBL_BOARD_BOARDINFO I  
 	   				  ON 
