@@ -754,7 +754,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			listHeaderListVO = ezBoardDAO.getListHeaderBoardID(map);
 		} else {
 			logger.debug("getListHeaderBoardID ended");
-			listHeaderListVO = ezBoardDAO.getListHeader(map); 
+			listHeaderListVO = ezBoardDAO.getListHeader(map);
 		}
 		
 		/* 2019-04-04 홍승비 - 좋아요 사용 게시판의 경우 임의로 헤더 조정 */

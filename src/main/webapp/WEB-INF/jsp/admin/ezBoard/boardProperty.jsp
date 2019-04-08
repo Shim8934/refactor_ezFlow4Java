@@ -55,7 +55,7 @@
 	            }
 	            /* 2019-04-04 홍승비 - 게시판에 좋아요 기능 추가 */
 				if (useBoardLike == "Y") {
-					$("#chkBoardLike").prop("checked",true);
+					$("#chkBoardLike").prop("checked", true);
 	            }
 	            if (pAdminType == "y") {
 	                parent.document.getElementsByTagName("h1")[0].innerHTML = "<spring:message code='ezBoard.t60' />";

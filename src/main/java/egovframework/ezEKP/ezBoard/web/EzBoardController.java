@@ -2006,8 +2006,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		int i = 0;
 		int hlength = headerList.size();
 		
-		
-		
 		for (i = 0; i < hlength; i++) {
 			if (headerList.get(i).getColName().equalsIgnoreCase("ATTACHMENTS")) {
 				continue;
@@ -2092,10 +2090,11 @@ public class EzBoardController extends EgovFileMngUtil{
 			if (vo.getColName().equalsIgnoreCase("ATTACHMENTS")) {
 				continue;
 			}
+			
 			resultXML.append("<HEADER>");
-			resultXML.append("<NAME>"+vo.getName()+"</NAME>");
-			resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
-			resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+			resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+			resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+			resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
 			resultXML.append("</HEADER>");
 		}
 		
@@ -2149,7 +2148,6 @@ public class EzBoardController extends EgovFileMngUtil{
 					
 					resultXML.append("<DATA7>" + boardThumbnailList.get(j).get("ONELINECNT") + "</DATA7>");
 					resultXML.append("<DATA8>" + boardThumbnailList.get(j).get("READFLAG") + "</DATA8>");
-					resultXML.append("<DATA9>" + boardThumbnailList.get(j).get("LIKECONT") + "</DATA9>");
 				}
 				
 				resultXML.append("</CELL>");
@@ -3062,7 +3060,6 @@ public class EzBoardController extends EgovFileMngUtil{
 						resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)noticeList.get(k).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
 						resultXML.append("<ATTACHMENTS>" + noticeList.get(k).get("ATTACHMENTS") + "</ATTACHMENTS>");
 						resultXML.append("<GUBUN>" + noticeList.get(k).get("GUBUN") + "</GUBUN>");
-						resultXML.append("<LIKECOUNT>" + noticeList.get(k).get("LIKECOUNT") + "</LIKECOUNT>");
 					}
 					resultXML.append("</CELL>");
 				}
@@ -3087,9 +3084,9 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			for (BoardListHeaderVO vo:headerList) {
 				resultXML.append("<HEADER>");
-				resultXML.append("<NAME>"+vo.getName()+"</NAME>");
-				resultXML.append("<WIDTH>"+vo.getWidth()+"</WIDTH>");
-				resultXML.append("<COLNAME>"+vo.getColName()+"</COLNAME>");
+				resultXML.append("<NAME>" + vo.getName() + "</NAME>");
+				resultXML.append("<WIDTH>" + vo.getWidth() + "</WIDTH>");
+				resultXML.append("<COLNAME>" + vo.getColName() + "</COLNAME>");
 				resultXML.append("</HEADER>");
 			}
 			
@@ -3168,7 +3165,6 @@ public class EzBoardController extends EgovFileMngUtil{
 					resultXML.append("<WRITEDATE>" + commonUtil.getDateStringInUTC((String)boardListItem.get(j).get("WRITEDATE"), userInfo.getOffset(), false) + "</WRITEDATE>");
 					resultXML.append("<ATTACHMENTS>" + boardListItem.get(j).get("ATTACHMENTS") + "</ATTACHMENTS>");
 					resultXML.append("<GUBUN>" + boardListItem.get(j).get("GUBUN") + "</GUBUN>");
-					resultXML.append("<LIKECOUNT>" + boardListItem.get(j).get("LIKECOUNT") + "</LIKECOUNT>");
 				}
 				resultXML.append("</CELL>");
 			}
