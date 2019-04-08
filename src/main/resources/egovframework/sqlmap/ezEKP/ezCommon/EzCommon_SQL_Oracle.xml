@@ -849,9 +849,9 @@
 	<select id="EzCommonDAO.checkTblBoardLike" resultClass="String">
 		<![CDATA[
 			SELECT 
-				LIKEFLAG
+				ITEMID
 			FROM 
-				TBL_BOARD_BOARDINFO
+				TBL_BOARD_LIKE
 			WHERE
 			    rownum = 1
 		]]>
@@ -860,9 +860,9 @@
 	<select id="EzCommonDAO.checkTblBoardInfoLikeFlag" resultClass="String">
 		<![CDATA[
 			SELECT 
-				ITEMID
+				LIKEFLAG
 			FROM 
-				TBL_BOARD_LIKE
+				TBL_BOARD_BOARDINFO
 			WHERE
 			    rownum = 1
 		]]>
