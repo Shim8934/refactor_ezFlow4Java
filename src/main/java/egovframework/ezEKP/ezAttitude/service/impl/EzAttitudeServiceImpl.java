@@ -211,6 +211,25 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			resultList.get(i).setRegion(commonUtil.cleanValue(resultList.get(i).getRegion()));
 		}
 		
+		if(!resultList.isEmpty() && deptFlag.equals("true") && startDate.compareTo(commonUtil.getTodayUTCTime("")) <= 0) {
+			map.put("companyId", resultList.get(0).getCompanyId());
+			map.put("searchStartDate", startDate);
+			map.put("searchEndDate", endDate);
+			map.put("searchDeptId", deptIdList.split(",")[0]);
+			List<AdminAttitudeVO> absentresultList = ezAttitudeDAO.getAttitudeAbsentList(map);
+			
+			if(!absentresultList.isEmpty()) {
+				for(AdminAttitudeVO v : absentresultList) {
+					AttitudeVO a = new AttitudeVO();
+					a.setTypeId(v.getTypeId());
+					a.setTypeName(v.getTypeName());
+					a.setWriterId(v.getWriterId());
+					a.setWriterName(v.getUserName());
+					a.setTenantId(v.getTenantId());
+					resultList.add(a);
+				}
+			}
+		} 
 		LOGGER.debug("getAttitudeList ended");
 		
 		return resultList;

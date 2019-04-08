@@ -691,7 +691,7 @@
 						} else if (result[i].modAppl  == '3') {
 							iconStr = " <img class='pencil' src='/images/ezAttitude/change.png' />";
 						}
-						if (result[i].typeId != 'A01' && result[i].typeId != 'A03') {
+						if (result[i].typeId != 'A01' && result[i].typeId != 'A03' && result[i].typeId != null) {
 							startDate = result[i].startDate.split(" ")[0];
 							endDate = (result[i].endDate != undefined ? result[i].endDate.split(" ")[0] : "");
 							
@@ -1283,15 +1283,25 @@
 			    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
 			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttBlueText'>" + vo.startDate.substring(11,16) + "</span>")));
 			    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").html("<span class='AttBlueText'>" + vo.endDate.substring(11,16) + "</span>")));
-				    		objTr.append($("<td style='max-width:8%; width:8%;' title ='" + vo.typeName + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.typeName)));
+			    			objTr.append($("<td style='max-width:8%; width:8%;' title ='" + vo.typeName + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.typeName)));
 			    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    				objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
 		    			}
 		    		}
 		    		
+		    		if (vo.typeId == null || vo.typeId == "") {
+		    			objTr = $("<tr id='TR_" + vo.writerId + "'></tr>").append($("<td style='width:5%'></td>"));
+		    			objTr.append($("<td style='max-width:10%; width:10%;' title ='" + vo.writerName + "234'></td>").append($("<div style='width:60px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text(vo.writerName)));	
+		    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+		    			objTr.append($("<td style='max-width:7%; width:7%;'></td>").append($("<div style='width:55px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+		    			objTr.append($("<td style='max-width:8%; width:8%;' title ='" + "<spring:message code='ezAttitude.t61'/>" + "'></td>").append($("<div style='width:55px; padding-left:8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>").text("<spring:message code='ezAttitude.t61'/>")));
+		    			objTr.append($("<td style='max-width:10%; width:30%;'></td>").append($("<div style='width:75px; padding-left: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+		    			objTr.append($("<td style='width:30%;'></td>").append($("<div style='width:221px; padding-left:5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;'></div>")));
+		    		} 
 		    		if (objTr) {
 			    		$("#addpopupDay_list tbody").append(objTr);
 		    		}
+		    		
 	    		});		    	
 		    	//퇴근 리스트
 		    	endTimeList.forEach(function(vo, index) {
@@ -1312,7 +1322,7 @@
 			}
 			function attitudeList(result) {
 		    	result.forEach(function(vo, index) {
-					if (vo.typeId != "A01" && vo.typeId != "A03" && vo.typeId != "A02" && vo.typeId != "A07" && vo.typeId != "A08") { //출근, 퇴근, 지각, 휴근, 조퇴가 아니면
+					if (vo.typeId != "A01" && vo.typeId != "A03" && vo.typeId != "A02" && vo.typeId != "A07" && vo.typeId != "A08" && vo.typeId != null) { //출근, 퇴근, 지각, 휴근, 조퇴가 아니면
 			    		var contentTrim = $.trim($("<p></p>").html(vo.content).text());
 			    		var statusContent = "";
 			    		

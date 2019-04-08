@@ -181,6 +181,7 @@
 	   					orderOption : orderOption
     				},
 	    			success : function(result) {
+	    				console.log(result)
 	    				$("#userName").text(result.list[0].userName);
 	    				$("#userTitle").text(result.list[0].userTitle);
 	    				$("#userDept").text(result.list[0].deptName);
