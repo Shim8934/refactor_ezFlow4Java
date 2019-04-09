@@ -352,6 +352,22 @@
 		<script type="text/javascript">
 			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 		</script>
+		<!-- 검색 -->
+		<div style="border: 1px solid #e8e8e8; WIDTH:825px; border-bottom: 0px; height: 30px;">
+			<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;">
+				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC;">0</span><spring:message code='ezSystem.kyj2'/>]</span>
+			</div>
+			<div id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px;">
+				<select id="searchType" style="height: 26px; width: 120px;">
+					<option value="displayname"><spring:message code='ezEmail.sharedMailbox18' /></option> <!-- 공유사서함 이름 -->
+					<option value="groupID"><spring:message code='ezEmail.sharedMailbox19' /></option> <!-- 공유사서함 ID -->
+					<option value="memberName"><spring:message code='ezEmail.sharedMailbox25' /></option> <!-- 공유자 이름 -->
+					<option value="memberID"><spring:message code='ezEmail.sharedMailbox26' /></option> <!-- 공유자 ID -->
+				</select>
+				<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px;">
+				<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
+			</div>
+		</div>
 		<table class="mainlist">
 			<tr>
 				<td style="vertical-align:top; border-bottom:0;">
