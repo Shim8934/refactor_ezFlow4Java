@@ -528,7 +528,7 @@
 		    }
 			var rtn
 		    function select_member() {
-		    	rtn = { "flag" : new Array(), "ownerId": new Array(), "ownerDept" : new Array(), "ownerName" : new Array(), "ownerName1" : new Array(), "ownerDeptName" : new Array() };
+		    	rtn = { "flag" : new Array(), "ownerId": new Array(), "ownerDept" : new Array(), "ownerName" : new Array(), "ownerName1" : new Array(), "ownerDeptName" : new Array(), "brdID" : new Array() };
 
 				var listid = "OwnerList";
 				var selList = new ListView();
@@ -1183,9 +1183,31 @@
 	        			var userId = p_ListOrderObject.getAttribute("_data2");
 	        			var currOwner = $("#OwnerList_TR_0").attr("data1");
 	        			var IsInsert = CheckMailReceiver(userId, "3");
+	        			var flag;
 	        			/* if (userId == currOwner) {		// 선택한 유저가 이미 부관리자에 추가된 경우
 	        				alert("<spring:message code='ezQuestion.t18'/>");
 		   				} */
+		   				
+		   			// 2019-04-01 김민성 - 자원 관리자 상위 권한 있을 때만 지정 가능하도록 수정
+		   				$.ajax({
+			        		type : "POST",
+			        		dataType : "text",
+			        		url : "/ezResource/userResPermissionCheck.do",
+			        		async : false,
+			        		data : {
+			        			userID : userId,
+			        			brdID : RetValue["brdID"][0]
+			        		},
+			        		success : function(result) {
+			        			flag = result;
+			        		}
+			        	})
+			        	
+	        			if(flag=="N") {
+	        				alert("<spring:message code='ezResource.kmsr05'/>");
+	           				return;
+	           			}
+		   				
 	        			if(IsInsert) {
 	        				alert("<spring:message code='ezQuestion.t18'/>");
 	        			}
