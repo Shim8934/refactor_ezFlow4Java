@@ -552,7 +552,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 신청 승인  리스트 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/admitCom.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/admin/ezCommunity/admitCom.do", method = RequestMethod.POST)
 	public String admitCom(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
