@@ -23,18 +23,10 @@
 </style>
 <script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
 <script language="javascript" type="text/javascript">
-	var isConDoc = false;
-	var XmlBodyATT = createXmlDom();
 	// reform
 	var args = parent.args;
-	var webEditorDocument = args.webEditorDocument;
 	var reformScriptCode = args.reformScriptCode;
 	var isIE11Mode = args.isIE11Mode;
-	var isDext = args.isDext;
-	var isFormProcessor = args.isFormProcessor;
-	var isNamo = args.isNamo;
-	var isTagfree = args.isTagfree;
-	var CrossEditor = args.CrossEditor2;
 	// reform - end
 	
 	document.onselectstart = function() {
@@ -58,37 +50,32 @@
 						}
 					} else if (pParentNode.nodeName == "BODY" || pParentNode.nodeName == "HTML")
 						break;
-					
 				}
+			} else if (obj.nodeName == "P") {
+				ret = true;
 			}
 		} catch (e) {}
 		return ret;
 	};
+
 	var BODYTag;
 	var BODYHTML;
 	var DocTitleObj;
 	var DocTitleHTML;
 	var _htmlcontent;
 	
-	var isConDoc = false;
 	var isEditor = false;
-	var PreviewDiv = null;
 	
 	var pUse_Editor = "${editor}";
 	var pUse_IE11Browser = "${ie11editor}";
 	
 	window.onload = function() {
 		// reform
-		if (isNamo) {
-			document.getElementById('div_Content').innerHTML = CrossEditor.GetBodyValue("XHTML");
-		} else {
-			document.getElementById('div_Content').innerHTML = webEditorDocument.body.innerHTML;
-		}
+		document.getElementById('div_Content').innerHTML = args.bodyHtml;
 		
 		encryptSQLQuery(document);
 		Set_EditorContentURL("");
 		reformUseProc.onLoadHandler();
-		
 		// reform - end
 	}
 
@@ -131,25 +118,50 @@
 	// reform - end
 	
 	function onKeyDownEvent(e, obj, Maxlength) {
-		var curevent = (typeof event == 'undefined' ? e : event)
+		var curevent = (typeof event == 'undefined' ? e : event);
 		if (curevent.keyCode == "13")
 			return false;
 		else {
 			if (curevent.keyCode != "8" && curevent.keyCode != "46") {
-				if (obj.innerText.length > parseInt(Maxlength))
+				if (obj.textContent.length > parseInt(Maxlength))
 					return false;
 				else
 					return true;
-			}
-			return true;
+			} else if (curevent.keyCode == "8" && navigator.userAgent.indexOf('Firefox') != -1) {
+				if (obj.childNodes.length > 0) {
+					var i = 0;
+					if (obj.childNodes.item(i).nodeName == "#text")
+						i = 1;
+					if (obj.childNodes.item(i).textContent.length == 0)
+						return false;
+					else {
+						
+						if (obj.childNodes.item(i).innerHTML == "&nbsp;")
+							return false;
+						else
+							return true;
+					}
+				} else {
+					if (obj.textContent.length == 0)
+						return false;
+					else {
+						if (obj.innerHTML == "&nbsp;")
+							return false;
+						else
+							return true;
+					}
+				}
+			} else
+				return true;
 		}
 	}
 	function SelectOnchange(obj) {
-		for (var i = 0; i < obj.childNodes.length; i++) {
-			if (obj.value == obj.childNodes.item(i).value)
-				obj.childNodes.item(i).setAttribute("check", "2");
-			else
-				obj.childNodes.item(i).setAttribute("check", "1");
+		for (var i = 0; i < obj.options.length; i++) {
+			if (i == obj.selectedIndex) {
+				obj.options[i].setAttribute("selected", "selected");
+			} else {
+				obj.options[i].removeAttribute("selected");
+			}
 		}
 	}
 	function CheckBoxOnclick(obj) {
@@ -225,22 +237,6 @@
 			if (tempStr.indexOf("MIME-Version: 1.0") > 0) {
 				Set_EditorContentURL(url);
 			} else {
-				/* reform
-				tempXML = loadXMLString(tempStr);
-				XmlBodyATT = GetElementsByTagName(tempXML, 'BODYATTS')[0];
-				XmlBodyDATA = GetElementsByTagName(tempXML, 'BODYDATA')[0];
-				var _DocContentHtml = getNodeText(XmlBodyDATA);
-				var ConXmlDiv = document.createElement("DIV");
-				ConXmlDiv.innerHTML = _DocContentHtml;
-				if (ConXmlDiv.getElementsByTagName("XML").length > 0) {
-				    isConDoc = true;
-				    ConXmlDiv.getElementsByTagName("XML").item(0).style.display = "none";
-				    CONNINFO.innerHTML = ConXmlDiv.getElementsByTagName("XML").item(0).outerHTML;
-				    _DocContentHtml = ConXmlDiv.innerHTML;
-				}
-				 */
-				//                    var _DocContentHtml = webEditorDocument.body.innerHTML;
-				//                    document.getElementById('div_Content').innerHTML = _DocContentHtml; //.replace(/(<p)/igm, '<div').replace(/<\/p>/igm, '</div>');
 				_htmlcontent = document.getElementById('div_Content').innerHTML;
 				var TDRows = document.getElementById('div_Content').getElementsByTagName("TD")
 				for (var i = 0; i < TDRows.length; i++) {
@@ -644,71 +640,6 @@
 
 		return Div.innerHTML;
 	}
-	var Doc_ContentHtml
-	function Get_EditorBodyHTML() {
-		try {
-			var HTML;
-			Doc_ContentHtml = document.createElement("DIV");
-			Doc_ContentHtml.innerHTML = Get_HtmlBody(document.getElementById('div_Content').innerHTML);
-			var EditorContent = isEditor ? iframe_content.GetEditorContent() : document.getElementById("body") == null ? "" : document.getElementById("body").innerHTML;
-			
-			div_BODY.innerHTML = EditorContent;
-			
-			if (!isEditor)
-				EditorContent = Get_HtmlBody(EditorContent);
-			EditorContent = Signature_ImagePathConvert(EditorContent);
-			
-			//body a link tagert attribute set 
-			var Div_ = document.createElement("DIV");
-			Div_.innerHTML = EditorContent;
-			var ATagRows = Div_.getElementsByTagName("A");
-			for (var i = 0; i < ATagRows.length; i++) {
-				ATagRows.item(i).setAttribute("target", "_blank");
-			}
-			EditorContent = Div_.innerHTML;
-			
-			//ê²°ì¬ë¬¸ìë¶ì¬ë£ê¸° ì¤ë¥ ë³´ìì½ë 2013.01.08
-			var Div_ = document.createElement("DIV");
-			Div_.innerHTML = EditorContent;
-			var DivCnt = Div_.getElementsByTagName("*").length;
-			for (var i = 0; i < DivCnt; i++) {
-				if (Div_.getElementsByTagName("*").item(i).id == "body") {
-					Div_.getElementsByTagName("*").item(i).removeAttribute("id");
-					Div_.getElementsByTagName("*").item(i).removeAttribute("class");
-					EditorContent = Div_.innerHTML;
-				}
-				if (Div_.getElementsByTagName("*").item(i).id == "div_Content") {
-					Div_.getElementsByTagName("*").item(i).removeAttribute("id");
-					EditorContent = Div_.innerHTML;
-				}
-			}
-			var bodyObj = null, titleObj = null;
-			var ElementCnt = Doc_ContentHtml.getElementsByTagName("*").length;
-			for (var i = 0; i < ElementCnt; i++) {
-				if (Doc_ContentHtml.getElementsByTagName("*").item(i).id == "body") {
-					bodyObj = Doc_ContentHtml.getElementsByTagName("*").item(i);
-				} else if (Doc_ContentHtml.getElementsByTagName("*").item(i).id == "doctitle") {
-					titleObj = Doc_ContentHtml.getElementsByTagName("*").item(i);
-				}
-				if (bodyObj != null && titleObj != null)
-					break;
-			}
-			if (bodyObj != null && titleObj != null) {
-				bodyObj.innerHTML = EditorContent;
-				if (bodyObj.childNodes.length >= 1) {
-					bodyObj.style.textAlign = "left";
-				}
-				if (DocTitleObj.getAttribute("free") != null) {
-					titleObj.innerHTML = GetDocTitle();
-					titleObj.style.textAlign = "left";
-				}
-			}
-			HTML = HTMLtoMHT_MakeTag(Doc_ContentHtml);
-			return HTML;
-		} catch (e) {
-			return "";
-		}
-	}
 
 	function GetTagList(strTagName) {
 		try {
@@ -731,11 +662,6 @@
 		}
 	}
 
-	var _reUseContent = "";
-	function Editor_ReUseContent(content) {
-		_reUseContent = content;
-	}
-
 	function Editor_Complete() {
 		try {
 			BodyTagsEnabled(div_BODY);
@@ -755,9 +681,6 @@
 			}
 			if (_reUseContent != "")
 				iframe_content.SetEditorContent(_reUseContent);
-			if (isConDoc) {
-				parent.Conn_Initial();
-			}
 			
 		} catch (e) {}
 	}
@@ -784,19 +707,6 @@
 			}
 			return FieldsList;
 		} catch (e) {}
-	}
-	function Conn_Before() {
-		try {
-			div_BODY.innerHTML = iframe_content.GetEditorContent();
-		} catch (e) {}
-	}
-	function Conn_after() {
-		try {
-			iframe_content.SetEditorContent(div_BODY.innerHTML);
-		} catch (e) {}
-	}
-	function Conn_BodyFieldWrite(FieldName, FieldValue) {
-		document.getElementById(FieldName).innerText = FieldValue;
 	}
 </script>
 </head>
