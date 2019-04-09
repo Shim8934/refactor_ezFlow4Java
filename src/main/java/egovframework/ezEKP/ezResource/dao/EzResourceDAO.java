@@ -317,5 +317,9 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	public String isResourceGroupManager(Map<String, Object> map) throws Exception {
 		return (String) select("EzResourceDAO.isResourceGroupManager", map);
 	}
+	
+	public String userResPermissionCheck(Map<String, Object> map) throws Exception {
+		return (String) select("EzResourceDAO.userResPermissionCheck", map);
+	}
 }
 

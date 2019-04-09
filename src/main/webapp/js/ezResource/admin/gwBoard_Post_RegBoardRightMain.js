@@ -75,7 +75,10 @@ function cmdOk_onclick() {
 
 		var rtnXML = xmlhttp.responseText;
 		
-		if (rtnXML != "true"){
+		if(rtnXML == "NO"){
+			alert(strLangkmsr02);
+		}
+		else if (rtnXML != "true"){
 			alert("2." + strLang32 + "");
 		} else {
 			alert("" + strLang33 + "");
