@@ -699,7 +699,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses) throws Exception {
+	public void setMailCancelSend(int tenantId, String primary, String pMessageId, String pUserId, String pSubject, List<String> pInnerAddresses, Locale locale) throws Exception {
 		logger.debug("setMailCancelSend started.");
 		logger.debug("tenantId=" + tenantId + ",primary=" + primary + ",pMessageId=" + pMessageId + ",pUserId=" + pUserId + ",pSubject=" + pSubject);
 		
@@ -736,7 +736,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		//회수처리 함수 호출(비동기)
 		if (recallIdx != null && !recallIdx.equals("") && !recallIdx.equals("0")) {
-			ezEmailAsync.cancelMailDelete(recallIdx, tenantId);
+			ezEmailAsync.cancelMailDelete(recallIdx, tenantId, locale);
 		} else {
 			throw new Exception("Cannot get recallIdx. So, cannot call cancelMailDelete method(Async).");
 		}
@@ -2960,7 +2960,9 @@ public class EzEmailServiceImpl implements EzEmailService {
 	@Override
 	public JSONObject recallMailByMessageId(String address, String messageId) {
 		logger.debug("recallMailByMessageId started. address=" + address + ", messageId=" + messageId);
-		JSONObject object = new JSONObject();
+		
+		JSONObject result = null;
+		
 		try {
 			String inputParams = "targetAddress=" + URLEncoder.encode(address, "UTF-8");
 			inputParams += "&" + "messageId=" + URLEncoder.encode(messageId, "UTF-8");
@@ -2970,14 +2972,16 @@ public class EzEmailServiceImpl implements EzEmailService {
 			logger.debug("strJson=" + strJson);
 			
 			JSONParser parser = new JSONParser();
-			object = (JSONObject)parser.parse(strJson);
-		} catch (UnsupportedEncodingException e) {
-			e.printStackTrace();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+	        
+	        if (((String)object.get("resultCode")).equals("OK") && (Long)object.get("reasonCode") == 0) {
+	        	result = (JSONObject)object.get("result");
+	        }
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
         
         logger.debug("recallMailByMessageId ended.");
-        return object;
+        return result;
 	}
 }
