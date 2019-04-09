@@ -18,8 +18,9 @@
 			var userName = "${userName}";
 			var deptID = "${deptID}";
 			var deptName = "${deptName}";
-			var res_owner = { "flag" : new Array(), "ownerId": new Array(), "ownerDept" : new Array(), "ownerName" : new Array(), "ownerName1" : new Array(), "ownerDeptName" : new Array() };
+			var res_owner = { "flag" : new Array(), "ownerId": new Array(), "ownerDept" : new Array(), "ownerName" : new Array(), "ownerName1" : new Array(), "ownerDeptName" : new Array(), "brdID" : new Array() };
 			var ownerList = JSON.parse('${ownerList}');
+			var strRes_ID = "${strResID}";
 			window.onload = function (){
 				
 				for(var i=0; i<ownerList.length; i++) {
@@ -167,10 +168,11 @@
 			
 			function btnTakeOwner_Click(val) {
 				res_owner["flag"][0] = val;
+				res_owner["brdID"][0] = strRes_ID;
 				
 				select_person_cross_dialogArguments[0] = res_owner;
 				select_person_cross_dialogArguments[1] = btnTakeOwner_Click_Complete;
-				var OpenWin = window.open("/ezResource/selectPerson.do", "selectPerson", GetOpenWindowfeature(1050, 550));
+				var OpenWin = window.open("/ezResource/selectPerson.do", "selectPerson", GetOpenWindowfeature(1000, 550));
 				try { 
 					OpenWin.focus(); 
 				} catch (e) {

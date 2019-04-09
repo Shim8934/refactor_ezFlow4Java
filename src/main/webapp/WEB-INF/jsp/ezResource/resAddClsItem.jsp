@@ -21,7 +21,7 @@
 			var deptName = "<c:out value='${deptName}' />";
 			var displayName = "<c:out value='${displayName}' />";
 			var title = "<c:out value='${title}'/>";
-			var res_owner = { "flag" : new Array(), "ownerId": new Array(), "ownerDept" : new Array(), "ownerName" : new Array(), "ownerName1" : new Array(), "ownerDeptName" : new Array() };
+			var res_owner = { "flag" : new Array(), "ownerId": new Array(), "ownerDept" : new Array(), "ownerName" : new Array(), "ownerName1" : new Array(), "ownerDeptName" : new Array(), "brdID" : new Array() };
 			
 			window.onload = function () {
 				document.getElementById("Brd_NM").focus();
@@ -165,6 +165,7 @@
 			var select_person_cross_dialogArguments = new Array();
 			function btnTakeOwner_Click(val) {
 				res_owner["flag"][0] = val;
+				res_owner["brdID"][0] = strBrd_ID;
 				
 				select_person_cross_dialogArguments[0] = res_owner;
 				select_person_cross_dialogArguments[1] = btnTakeOwner_Click_Complete;
