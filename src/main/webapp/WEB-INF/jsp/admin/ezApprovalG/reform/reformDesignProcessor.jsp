@@ -63,7 +63,7 @@
 				if (type == "mousedown") {
 					// this function needs to be called since webEditorDocument.reform_onClickHandler is cleared
 					// after coming back to DESIGN mode from HTML mode in DEXT5.
-					restoreAfterHTMLSourceEditInDEXT5();
+					restoreAfterHTMLSourceEdit();
 					
 					lastSelectedElement = currElem;
 					
@@ -107,7 +107,7 @@
 
 			function dext_editor_afterchangemode_event(afterMode, preMode, editorID) {
 				if (preMode == "source" && afterMode == "design") {
-					restoreAfterHTMLSourceEditInDEXT5();
+					restoreAfterHTMLSourceEdit();
 					
 					if (IsUIDataBindControlListEmpty()) {
 						addDataBindControlListToUIDataBindControlList();
@@ -368,7 +368,7 @@
 
 			function CE_OnMouseActive(e) {
 				if (e.type == "mousedown") {
-					restoreAfterHTMLSourceEditInNamo();
+					restoreAfterHTMLSourceEdit();
 					
 					var currElem = e.targetNode;
 					lastSelectedElement = currElem;
@@ -382,7 +382,7 @@
 					// true 값을 리턴하면 Namo 에디터가 마우스 이벤트 처리를 하지 않는다.
 					// IE에서는 리폼에서 만든 control일 때 true를 리턴하지 않으면
 					// Namo 에디터가 UI 처리를 직접하기 때문에 true를 반환하도록 한다.
-					if (attValue == "1") {
+					if (attValue == "1" && currElem.tagName !== "SPAN") {
 						moveCursorToElement(currElem);
 						
 						return true;
@@ -396,7 +396,7 @@
 
 			function CE_OnKeyActive(e) {
 				if (e.type == "keyup") {
-					restoreAfterHTMLSourceEditInNamo();
+					restoreAfterHTMLSourceEdit();
 					saveSelection();
 					
 					lastSelectedElement = e.targetNode;
@@ -466,7 +466,7 @@
 			}
 
 			function keyUp(event) {
-				restoreAfterHTMLSourceEditInNamo();
+				restoreAfterHTMLSourceEdit();
 				saveSelection();
 				
 				lastSelectedElement = event.target;
@@ -477,7 +477,7 @@
 			}
 
 			function mouseDown(event) {
-				restoreAfterHTMLSourceEditInNamo();
+				restoreAfterHTMLSourceEdit();
 				
 				var currElem = event.target;
 				lastSelectedElement = currElem;
@@ -485,7 +485,7 @@
 				var attValue = currElem.getAttribute("data-reform_flag");
 				
 				// false 값을 리턴하면 Tagfree 에디터가 마우스 이벤트 처리를 하지 않는다.
-				if (attValue == "1") {
+				if (attValue == "1" && currElem.tagName !== "SPAN") {
 					moveCursorToElement(currElem);
 					
 					return false;
@@ -542,7 +542,7 @@
 			}
 
 			function keyUp(event) {
-				restoreAfterHTMLSourceEditInNamo();
+				restoreAfterHTMLSourceEdit();
 				saveSelection();
 				
 				lastSelectedElement = event.target;
@@ -553,15 +553,14 @@
 			}
 
 			function mouseDown(event) {
-				restoreAfterHTMLSourceEditInNamo();
+				restoreAfterHTMLSourceEdit();
 				
 				var currElem = event.target;
 				lastSelectedElement = currElem;
 				
 				var attValue = currElem.getAttribute("data-reform_flag");
 				
-				// false 값을 리턴하면 Tagfree 에디터가 마우스 이벤트 처리를 하지 않는다.
-				if (attValue == "1") {
+				if (attValue == "1" && currElem.tagName !== "SPAN") {
 					moveCursorToElement(currElem);
 					
 					event.preventDefault();
@@ -578,6 +577,80 @@
 
 			function GetEditorContent() {
 				return kukudocsEditor.GetEditorContent();
+			}
+		</script>
+	</c:when>
+	<c:when test="${editor eq 'CK'}">
+		<link rel="stylesheet" href="${util.addVer('/js/ezEditor/kukudocsEditor/stylesheets/style.css')}" />
+		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-1.9.1.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEditor/kukudocsEditor/externalLib/jquery-ui-1.11.4.min.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/ezEditor/ckEditor/ckeditor.js')}"></script>
+		<script>
+			CKEDITOR.on('instanceReady', function(ev) {
+				// 기존 양식을 로드하는 경우
+				if (parent.reformUrl != "") {
+					// AJAX를 동기식으로 호출하여 양식을 로드한다.
+					SetEditorContentURL(parent.reformUrl);
+				}
+				
+				onFormDocumentLoadHandlerForCK();
+				
+				webEditorDocument.addEventListener("keyup", keyUp);
+				webEditorDocument.addEventListener("mousedown", mouseDown);
+				webEditorDocument.addEventListener("mouseup", mouseUp);
+			});
+			
+			// 에디터 커맨드 실행
+			function ExecuteCommand(commandName) {
+				if (CKEDITOR.instances.ck_reform.mode == 'wysiwyg') {
+					CKEDITOR.instances.ck_reform.execCommand(commandName);
+				}
+			}
+
+			function keyUp(event) {
+				restoreAfterHTMLSourceEdit();
+				saveSelection();
+				
+				lastSelectedElement = event.target;
+			}
+
+			function mouseUp(event) {
+				saveSelection();
+			}
+
+			function mouseDown(event) {
+				restoreAfterHTMLSourceEdit();
+				
+				var currElem = event.target;
+				lastSelectedElement = currElem;
+				
+				var attValue = currElem.getAttribute("data-reform_flag");
+				
+				if (attValue == "1" && currElem.tagName !== "SPAN") {
+					moveCursorToElement(currElem);
+					
+					event.preventDefault();
+				}
+			}
+
+			function SetEditorContentURL(pURL) {
+				var tempXML = createXmlDom();
+				var xmlBodyData = createXmlDom();
+				var tempStr = "";
+				tempStr = ConvertMHTtoHTML(pURL);
+				tempXML = loadXMLString(tempStr);
+				
+				xmlBodyData = GetElementsByTagName(tempXML, 'BODYDATA')[0];
+				CKEDITOR.instances.ck_reform.setData(getNodeText(xmlBodyData));
+			}
+
+			function GetEditorContent() {
+				try {
+					return CKEDITOR.instances.ck_reform.getData();
+				} catch (e) {
+					console.err(e);
+					return "";
+				}
 			}
 		</script>
 	</c:when>
@@ -1070,6 +1143,26 @@
 									});
 								</script>
 							</td>
+						</tr>
+					</table>
+				</c:when>
+				<c:when test="${editor eq 'CK'}">
+					<table id="PreForm" style="overflow: auto; vertical-align: top; border-spacing: 0px;">
+						<tr>
+							<td id="ck_reform" valign="top" style="width: 785px;"></td>
+							<script>
+								CKEDITOR.config.imageUploadUrl = "/ezEditor/ckSimpleUpload.do";
+								CKEDITOR.config.contentsCss = "/js/ezEditor/ckEditor/contents.css";
+								CKEDITOR.config.font_defaultLabel = editorInfo.defaultFontFamily;
+								CKEDITOR.config.font_names = "<spring:message code='main.t0620' />";
+								CKEDITOR.config.fontSize_defaultLabel = editorInfo.defaultFontSize;
+								CKEDITOR.config.language = "<spring:message code='main.t0619' />";
+								CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
+								CKEDITOR.config.resize_enabled = false;
+								CKEDITOR.config.allowedContent = true;
+								
+								CKEDITOR.replace('ck_reform', {height: 750, width: 785});
+							</script>
 						</tr>
 					</table>
 				</c:when>

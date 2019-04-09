@@ -298,6 +298,14 @@
 	                	document.getElementById("btnAddSepAttach").style.display = "none";
 			        }
 			        
+			        //2019-02-28 중계문서일경우 재전송요청 뜨게 수정
+			        var isRelay = GetRelayDocInfo();
+			        if (isRelay) {
+			        	document.getElementById("btnReqReSend").style.display = "";
+// 	                    document.getElementById("btnReqReturn").style.display = "";
+// 			        	document.getElementById("btnDel").style.display = "";
+			        }
+			        
 			        if (pSusinDocURL != "") {
 			            if (pSusinDocURL == "PC") {
 			

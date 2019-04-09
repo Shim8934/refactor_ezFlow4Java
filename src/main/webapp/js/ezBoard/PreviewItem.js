@@ -345,7 +345,6 @@ function ItemPreviewRead_click(obj) {
 var xmlhttp = createXMLHttpRequest();
 var xmlhttp2 = createXMLHttpRequest();
 function ItemPreviewRead(obj) {
-	
 	for (var i = 0; i < obj.childNodes.length; i++) {
 		if (obj.childNodes[i].style.fontWeight == "bold") {
 			obj.childNodes[i].style.fontWeight = "normal";
@@ -862,6 +861,7 @@ function ReplaceText(orgStr, findStr, replaceStr) {
 }
 function Window_resize() {
     if (clickPreviweType == "PHOTO" || clickPreviweType == "MOVIE") {
+    	console.log("......");
         Window_resize_photo();
         return;
     }
@@ -977,17 +977,22 @@ function Window_resize() {
 }
 function Window_resize_photo() {
 	try {
+		 console.log("::--------::");
         if (!isPreviewChange) {
+        	 console.log("::00000::");
             if (parseInt(document.documentElement.clientWidth) < 1000) {
                 document.getElementById("PreViewleft").style.display = "none";
                 if (pPreviewShow_HOW.trim() == "H")
                     pPreviewShow_HOW = "W";
+                console.log("::11111::");
                 PreviewMode_ChangeBtn();
             }
             else {
                 document.getElementById("PreViewleft").style.display = "";
             }
 
+            console.log("::22222::");
+            
             if (document.documentElement.clientWidth < 1300) {
                 PreviewRayerChange("NONE");
                 document.getElementById("right").style.display = "none";
@@ -995,6 +1000,8 @@ function Window_resize_photo() {
             else {
                 document.getElementById("right").style.display = "";
             }
+            
+            console.log("::33333::");
             
             if (pPreviewShow_HOW.trim() == "H") {
             	if (document.documentElement.clientWidth < 1300) {
@@ -1009,6 +1016,8 @@ function Window_resize_photo() {
                 if (pMailListDiv_H == 0 || pMailPreVDiv_H == 0) {
                     pMailListDiv_H = 50; pMailPreVDiv_H = 50;
                 }
+                
+                console.log("::44444::");
                 
                 /* 2019-01-03 홍승비 - 포토/썸네일게시판 리사이즈 시 미리보기 영역 수정 */
                 if (parent.document.getElementById("tab1")) {
@@ -1196,4 +1205,38 @@ function scroll() {
 	if (lastTh.attr("id") == null) {
 		lastTh.css("display", "none");
 	}*/
+}
+
+/* 2019-04-09 홍승비 - 썸네일게시판 앨범형식 보기 시 미리보기 동작 추가 */
+function ItemPreviewRead_AlbumClick(objDiv) {
+	
+	console.log("clientWidth  ::  " + document.documentElement.clientWidth);
+	console.log("g_bPrevShow  ::  " + g_bPrevShow);
+	console.log(objDiv);
+	
+    selobj = objDiv;
+    onclickFlag = true;
+    if (g_bPrevShow) {
+    	ItemPreviewRead_Album(objDiv);
+    }
+}
+function ItemPreviewRead_Album(objDiv) {
+	if (objDiv.getElementsByClassName("albumTitle")[0].style.fontWeight == "bold") {
+		objDiv.getElementsByClassName("albumTitle")[0].style.fontWeight = "normal";
+	}
+	
+    var pboardid = objDiv.getAttribute("DATA1");
+    var pitemid = objDiv.getAttribute("DATA2");
+    
+    console.log("pboardid  ::  " + pboardid);
+    console.log("pitemid  ::  " + pitemid);
+    
+    clickPreviweType = "PHOTO";
+    if (document.getElementById("previewmail_bar_h") != null)
+        document.getElementById("previewmail_bar_h").style.cursor = "default";
+    
+    xmlhttp = createXMLHttpRequest();
+	xmlhttp.open("POST", "/ezBoard/getPreviewItem.do?boardID=" + encodeURIComponent(pboardid) + "&itemID=" + encodeURIComponent(pitemid) + "&mode=" + pMode + "&location=GENERAL", true);
+    xmlhttp.onreadystatechange = event_ItemPreviewRead_photo;
+    xmlhttp.send();
 }

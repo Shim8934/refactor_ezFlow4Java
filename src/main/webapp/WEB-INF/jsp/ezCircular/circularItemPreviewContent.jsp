@@ -279,7 +279,7 @@
 				}
 				
 				var $frm = $("<form></form>");
-		    	$frm.attr('action', "/ezCommunity/downloadAttachAll.do");
+		    	$frm.attr('action', "/ezCircular/downloadAttachAll.do");
 		    	$frm.attr('method', 'post');
 		    	$frm.appendTo('body');
 		    	

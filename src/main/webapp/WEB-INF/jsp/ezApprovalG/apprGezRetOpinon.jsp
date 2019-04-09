@@ -9,8 +9,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
 	    <script type="text/javascript">
 	        var param = new Array();
+    	    var RetValue;
+	        var ReturnFunction;
 	        
 	        function btn_OpinionOK_onclick() {
 	            if (pMessageContent.value == "") {
@@ -21,7 +24,17 @@
 		        param[1] = pMessageContent.value;
 		
 		        window.returnValue = param;
-		        window.close();
+		        
+		        if (ReturnFunction != null) {
+		            var pRetMsg = pMessageContent.value;
+		            pRetMsg = ReplaceText(pRetMsg, "\n", "<br>");
+		            pRetMsg = ReplaceText(pRetMsg, "&", "&amp;");
+		            pRetMsg = ReplaceText(pRetMsg, "<", "&lt;");
+		            pRetMsg = ReplaceText(pRetMsg, ">", "&gt;");
+		            
+		        	ReturnFunction(pRetMsg, RetValue);
+	        		window.close();
+		        }
 		    }
 	        
 		    function btn_OpinionCANCEL_onclick() {
@@ -33,6 +46,17 @@
 		        param[1] = "";
 		
 		        window.returnValue = param;
+		        
+		        
+		        try {
+		        	RetValue = parent.reqResend_dialogArgument[0];
+			        ReturnFunction = parent.reqResend_dialogArgument[1];
+		        } catch (e) {
+		            try {
+		            	RetValue = opener.reqResend_dialogArgument[0];
+				        ReturnFunction = opener.reqResend_dialogArgument[1];
+		            } catch (e) { }
+		        }
 		    }
 	    </script>
 	</head>
@@ -44,7 +68,7 @@
             </ul>
         </div>
 	    <div class="nobox">
-	        <textarea id="pMessageContent" class="textarea" style="Width: 100%; Height: 140px; font-size: 9pt" name="pMessageContent"></textarea>
+	        <textarea id="pMessageContent" class="textarea" style="Width: 97%; Height: 140px; font-size: 9pt" name="pMessageContent"></textarea>
 	    </div>
 	    <div class="btnposition">
 	        <input type="button" value="<spring:message code='ezApprovalG.t1760'/>" name="btn_OpinionOK" id="btn_OpinionOK" onclick="return btn_OpinionOK_onclick()">

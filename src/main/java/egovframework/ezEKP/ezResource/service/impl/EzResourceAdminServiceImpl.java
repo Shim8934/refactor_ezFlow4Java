@@ -14,6 +14,8 @@ import org.w3c.dom.Document;
 
 import egovframework.ezEKP.ezResource.dao.EzResourceAdminDAO;
 import egovframework.ezEKP.ezResource.service.EzResourceAdminService;
+import egovframework.ezEKP.ezResource.service.EzResourceService;
+import egovframework.ezEKP.ezResource.vo.ResBrdListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetSubClsListVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
@@ -26,6 +28,9 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	
 	@Resource(name="EzResourceAdminDAO")
 	private EzResourceAdminDAO ezResourceAdminDAO;
+	
+	@Resource(name="EzResourceService")
+	private EzResourceService ezResourceService;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -472,6 +477,53 @@ public class EzResourceAdminServiceImpl extends EgovAbstractServiceImpl implemen
 			}
 			saveACL(resID, deptYN, SDAYN, memberNam, memberID, accessLvl, companyID, tenantID);
 		}
+		return true;
+	}
+	
+
+	public boolean userResPermissionCheck(String xmlStr, int tenantID) throws Exception {
+		logger.debug("userResPermissionCheck start");
+		
+		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
+		
+		String resID = xmlRes.getElementsByTagName("ROW_DATA").item(0).getAttributes().getNamedItem("ResID").getTextContent();
+		String companyID = xmlRes.getElementsByTagName("ROW_DATA").item(0).getAttributes().getNamedItem("CompanyID").getTextContent();
+		
+		int brdCnt = ezResourceService.getBrdCnt(Integer.parseInt(resID), companyID, tenantID);
+		
+		// 하위 자원이 없으면 삭제 가능
+		if(brdCnt == 0) {
+			return true;
+		}
+		
+		List<ResBrdListVO> brdList = ezResourceService.getBrdList(brdCnt, Integer.parseInt(resID), companyID, "OwnDeptNm", "OwnerNm", "OwnerPosition", "Brd_NM", tenantID);
+		
+		String memberID = "";
+		
+		for(int j=0; j<brdList.size(); j++) {
+			boolean flag = false;
+			String[] ownerList = brdList.get(j).getOwnerID().split(",");
+			for(int k=0; k<ownerList.length; k++) {
+				for (int i=0; i<xmlRes.getElementsByTagName("ROW_DATA").getLength(); i++) {
+					memberID = xmlRes.getElementsByTagName("ROW_DATA").item(i).getAttributes().getNamedItem("Member_ID").getTextContent();
+					
+					// 권한 중 everyone이 있는 경우 true로 리턴
+					if(memberID.equals("everyone")) {
+						return true;
+					}
+					
+					if(memberID.equals(ownerList[k])) {
+						flag = true;
+					}
+				}
+			}
+			
+			if(!flag) {
+				return false;
+			}
+		}
+		
+		logger.debug("userResPermissionCheck end");
 		return true;
 	}
 }
