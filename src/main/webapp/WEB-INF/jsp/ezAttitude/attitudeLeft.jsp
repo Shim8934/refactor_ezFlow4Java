@@ -101,6 +101,28 @@
 	        $(".attitudeListBox").mCustomScrollbar({
         		theme : "dark"
         	});
+	        
+	      	var initClock = setInterval(function(){
+		     		var servert = new Date(serverTime);
+		     		var clientt = new Date();
+		     		
+		     		var serverMonth = (servert.getMonth() + 1);
+		     		serverMonth = serverMonth >= 10 ? serverMonth : '0' + serverMonth;
+					var serverDate = servert.getDate();
+					serverDate = serverDate >= 10 ? serverDate : '0' + serverDate;
+		     		var serverDay = servert.getFullYear() + '' + serverMonth + '' + serverDate;
+		     		
+		     		var clientMonth = (clientt.getMonth() + 1);
+		     		clientMonth = clientMonth >= 10 ? clientMonth : '0' + clientMonth; 
+		     		var clientDate = clientt.getDate();
+		     		clientDate = clientDate >= 10 ? clientDate : '0' + clientDate;
+		     		var clientDay = clientt.getFullYear() + '' + clientMonth + '' + clientDate;
+		     		
+		      		if(serverDay < clientDay) {
+		      			getAttitudeList();
+			     		clearInterval(initClock);
+		      		}
+		      	}, 5000);
 		}
 		
 		 function leadingZeros(n, digits) {
@@ -137,6 +159,13 @@
 							$("#outAttiBtn").removeClass("out").addClass("in");
 							$("#outAttiBtn").html("<span class='sub_iconLNB workIcon'></span>" + "<span class='workT'>"+result[i].startDate.split(" ")[1].substring(0,5)+"</span>");
 	    				}
+	    			}
+	    			
+	    			if(result.length == 0) {
+	    				var a = '<p class="btn_write02" id="outAttiBtn" type="A03" datetype="2" onclick="checkHoliday(this)"><span class="sub_iconLNB workIcon"></span><span class="workT"><spring:message code='ezAttitude.t65'/></span></p>'+
+	    						'<p class="btn_write01" id="inAttiBtn" type="A01" datetype="2" onclick="checkHoliday(this)"><span class="sub_iconLNB workIcon"></span><span class="workT"><spring:message code='ezAttitude.t64'/></span></p>';
+	    				$(".btn_writeBox_work").empty();
+	    				$(".btn_writeBox_work").append(a);
 	    			}
 	    		}
 	    	})
