@@ -72,7 +72,11 @@
 	    		            } else {
 	    		                headerData.documentElement.appendChild(xmlRtn);
 	    		            }
-	    					
+	
+	    		            // 리스트 총 개수
+	    		            var listCount = headerData.getElementsByTagName("ROWS")[0].childElementCount;
+	    		            document.getElementById("listCount").innerHTML = listCount;
+	    		            
 	    		            document.getElementById("sharedMailboxList").innerHTML = "";
 	    		            var pUserList = new ListView();
 	    		            pUserList.SetID("sharedMailbox");
@@ -355,7 +359,7 @@
 		<!-- 검색 -->
 		<div style="border: 1px solid #e8e8e8; WIDTH:825px; border-bottom: 0px; height: 30px;">
 			<div id="jobTotalInfoRayer" style="line-height: 30px; display: inline-block;">
-				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC;">0</span><spring:message code='ezSystem.kyj2'/>]</span>
+				<span>&nbsp;[<spring:message code='main.t252'/> <span style="color:#017BEC;" id="listCount"></span><spring:message code='ezSystem.kyj2'/>]</span>
 			</div>
 			<div id="userSearchRayer" style="float:right; display: inline-block; margin-right: 2px;">
 				<select id="searchType" style="height: 26px; width: 120px;">
