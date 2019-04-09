@@ -130,7 +130,6 @@ function onFormDocumentLoadHandlerForCK() {
 		var editable = editor.editable();
 		// 소스모드에서 위지위그로 바뀔 때 document 객체를 다시 받아와서 이벤트를 삽입해준다
 		if (editable) {
-			webEditorDocument = editor.document.$;
 			onFormDocumentLoadHandler();
 			webEditorDocument.addEventListener("keyup", keyUp);
 			webEditorDocument.addEventListener("mousedown", mouseDown);
@@ -239,6 +238,21 @@ function onFormDocumentLoadHandler() {
 			
 			if (event.keyCode === 8) {
 				if (selection.anchorOffset === 0) {
+					// 쿠쿠닥스 맨 위에 있는 label 맨 앞부분거 지우고 엔터치면 초록색 테두리 남아있는 버그
+					if (isKukudocs) {
+						try {
+							var labelParentElement = targetElement.parentElement;
+							
+							if (labelParentElement.tagName === "P" && [].indexOf.call(labelParentElement.childNodes, targetElement) === 0) {
+								var parentOfParentElement = labelParentElement.parentElement;
+								
+								if (parentOfParentElement.tagName === "BODY" && [].indexOf.call(parentOfParentElement.childNodes, labelParentElement) === 0) {
+									return;
+								}
+							}
+						} catch (e) {}
+					}
+					
 					var dummySibling = webEditorDocument.createElement("img");
 					var cloneTargetElement = targetElement.cloneNode(true);
 					
