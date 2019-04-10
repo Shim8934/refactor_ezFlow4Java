@@ -182,11 +182,22 @@ public class MBoardServiceImpl implements MBoardService {
 		String url = mBoardInfoVO.getUrl();
 	    String deptPathOrgan="";
 	    
-	    for (int ch=0; ch<deptPathCode.split(",").length; ch++) {
+	    /* 2019-04-10 홍승비 - 원회사의 사내겸직이 존재하면 사내겸직부서ID를 권한체크에 포함하도록 수정 */
+		List<String> addJobList = getPDOAddJobDeptID(info.getUserId(), info.getCompanyId(), info.getTenantId());
+		String addJobStr = "";
+		if (addJobList != null && addJobList.size() > 0) {
+			for (int i = 0; i < addJobList.size(); i++) {
+				addJobStr += addJobList.get(i) + ",";
+			}
+		}
+	    
+	    for (int ch = 0; ch < deptPathCode.split(",").length; ch++) {
 	        if (ch == 0) {
 	        	deptPathOrgan += deptPathCode.split(",")[ch].trim();
-	        } else {
-	        	deptPathOrgan += "," + deptPathCode.split(",")[deptPathCode.split(",").length-(ch)].trim();
+	        } else if (ch == (deptPathCode.split(",").length - 3) && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
+				deptPathOrgan += "," + addJobStr + deptPathCode.split(",")[deptPathCode.split(",").length - (ch)].trim();
+			} else {
+	        	deptPathOrgan += "," + deptPathCode.split(",")[deptPathCode.split(",").length - (ch)].trim();
 	        }
 	    }
 	    
@@ -956,10 +967,22 @@ public class MBoardServiceImpl implements MBoardService {
 	    /* 2018-10-05 홍승비 - 변경된 게시판권한 스펙 모바일에도 적용(개인>부서>회사) */
 	    String accessID = info.getUserId();
 		String[] reverseDeptPath = ezOrganService.getDeptFullPath(deptID, tenantID).split(",");
+		
+		/* 2019-04-10 홍승비 - 원회사의 사내겸직이 존재하면 사내겸직부서ID를 권한체크에 포함하도록 수정 */
+		List<String> addJobList = getPDOAddJobDeptID(info.getUserId(), companyID, tenantID);
+		String addJobStr = "";
+		if (addJobList != null && addJobList.size() > 0) {
+			for (int i = 0; i < addJobList.size(); i++) {
+				addJobStr += addJobList.get(i) + ",";
+			}
+		}
+		
 		for (int i = reverseDeptPath.length -1; i >= 0 ; i--) {
 			accessID += "," + reverseDeptPath[i];
 			if (i == 0) {
 				accessID += ",everyone";
+			} else if (i == 3 && !addJobStr.equals("")) {
+				accessID += "," + addJobStr.substring(0, addJobStr.length() - 1);
 			}
 		}
 		
@@ -1266,6 +1289,21 @@ public class MBoardServiceImpl implements MBoardService {
 		map.put("boardID", boardID);
 		map.put("tenantID", tenantID);
 		return mBoardDAO.checkFavorite(map);
+	}
+	
+	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴 */
+	@Override
+	public List<String> getPDOAddJobDeptID(String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("getPDOAddJobDeptID started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("v_pUserID", userID);
+		map.put("v_pCompanyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getPDOAddJobDeptID ended.");
+		return mBoardDAO.getPDOAddJobDeptID(map);
 	}
 	
 }

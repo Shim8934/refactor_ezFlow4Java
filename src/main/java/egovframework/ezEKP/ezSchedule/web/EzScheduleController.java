@@ -1973,13 +1973,13 @@ public class EzScheduleController extends EgovFileMngUtil {
         String enddate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//    	Calendar cal = Calendar.getInstance();
-//    	cal.setTime(sdf.parse(enddate));
-//    	
-//    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
-//    		cal.add(Calendar.MINUTE, -1);        		
-//    		enddate = sdf.format(cal.getTime());
-//    	}
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(sdf.parse(enddate));
+    	
+    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
+    		cal.add(Calendar.MINUTE, -1);        		
+    		enddate = sdf.format(cal.getTime());
+    	}
 
     	startdate = sdf.format(sdf.parse(startdate));
     	enddate = sdf.format(sdf.parse(enddate));
@@ -2307,7 +2307,6 @@ public class EzScheduleController extends EgovFileMngUtil {
         String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
         int tenantId = loginVO.getTenantId();
         String companyID = loginVO.getCompanyID();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         
         //baonk 추가 2018-08-08
         String use_cabinet = ezCommonService.getTenantConfig("useCabinet", loginVO.getTenantId());
@@ -2317,7 +2316,6 @@ public class EzScheduleController extends EgovFileMngUtil {
         
         //일정 상세정보
         ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, tenantId, companyID);
-        
         if (vo == null) {
         	logger.error("Schedule not found.");
 			model.addAttribute("title", egovMessageSource.getMessage("ezSchedule.t342", locale));
@@ -2343,18 +2341,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         					+ vo.getStartDate().substring(11, 16) + " ~ " + vo.getEndDate().substring(11, 16);        		
         	}        	
         } else if (vo.getDateType().equals("2")){
-        	//하루종일 일때 endDate 수정
-        	String realEndDateFormat = "";
-        	if (vo.getEndDate().substring(10).equals(" 00:00:00.0")) {
-        		Date realEndDate = sdf.parse(vo.getEndDate().substring(0,10));
-        		Calendar cal = Calendar.getInstance();
-        		cal.setTime(realEndDate);
-        		cal.add(Calendar.DATE, -1);
-        		realEndDate = cal.getTime();
-        		realEndDateFormat = sdf.format(realEndDate);
-        	}
-        	
-        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + realEndDateFormat + " (" + msg.getMessage("ezSchedule.t280", locale);        	
+        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);        	
         } else {
         	dateString = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16);
         }

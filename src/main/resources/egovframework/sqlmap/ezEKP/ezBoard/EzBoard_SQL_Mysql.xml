@@ -5330,4 +5330,32 @@
 		]]>
 	</update>
 	
+	<select id="EzBoardDAO.getPDOAddJobDeptID" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				AM.DEPTID
+			FROM
+				tbl_usermaster UM
+			INNER JOIN
+				TBL_ADDJOBMASTER AM
+			ON
+				UM.TENANT_ID = AM.TENANT_ID
+			AND
+				UM.CN = AM.CN
+			AND
+				UM.CN = #v_pUserID#
+			AND
+				UM.PHYSICALDELIVERYOFFICENAME = #v_pCompanyID#
+			INNER JOIN
+				TBL_DEPTMASTER DM
+			ON
+				UM.TENANT_ID = DM.TENANT_ID
+			AND
+				AM.DEPTID = DM.CN
+			AND
+				DM.EXTENSIONATTRIBUTE2 = #v_pCompanyID#
+			WHERE
+				UM.TENANT_ID = #v_TENANTID# 
+		]]>
+	</select>
 </sqlMap>

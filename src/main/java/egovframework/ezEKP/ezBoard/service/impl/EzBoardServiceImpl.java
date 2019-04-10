@@ -4275,5 +4275,20 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		
 		logger.debug("modUpdateDate ended.");
 	}
-
+	
+	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴 */
+	@Override
+	public List<String> getPDOAddJobDeptID(String userID, String companyID, int tenantID) throws Exception {
+		logger.debug("getPDOAddJobDeptID started.");
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("v_pUserID", userID);
+		map.put("v_pCompanyID", companyID);
+		map.put("v_TENANTID", tenantID);
+		
+		logger.debug("getPDOAddJobDeptID ended.");
+		return ezBoardDAO.getPDOAddJobDeptID(map);
+	}
+	
 }
