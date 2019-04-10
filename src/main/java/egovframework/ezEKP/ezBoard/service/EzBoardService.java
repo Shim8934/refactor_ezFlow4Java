@@ -309,4 +309,7 @@ public interface EzBoardService {
 	/* 2019-01-15 홍승비 - 수정일(updateDate)만을 업데이트하는 쿼리 추가 */
 	public void modUpdateDate(String updateDate, String itemID, int tenantID) throws Exception;
 	
+	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴 */
+	public List<String> getPDOAddJobDeptID(String userID, String companyID, int tenantID) throws Exception;
+	
 }
