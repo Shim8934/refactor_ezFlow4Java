@@ -978,7 +978,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		for (int ch = 0; ch < deptPath.split(",").length; ch++) {
 			if (ch == 0) { // 0 : userID
 				deptPathOrgan += deptPath.split(",")[ch].trim();
-			} else if (ch == 2 && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
+			} else if (ch == (deptPath.split(",").length - 3) && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
 				deptPathOrgan += "," + addJobStr + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
 			} else {
 				deptPathOrgan += "," + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
@@ -1103,7 +1103,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		for (int ch = 0; ch < deptPath.split(",").length; ch++) {
 			if (ch == 0) {
 				deptPathOrgan += deptPath.split(",")[ch].trim();
-			} else if (ch == 2 && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
+			} else if (ch == (deptPath.split(",").length - 3) && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
 				deptPathOrgan += "," + addJobStr + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
 			} else {
 				deptPathOrgan+="," + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
@@ -4607,7 +4607,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			for (int ch = 0; ch < deptPath.split(",").length; ch++) {
 				if (ch == 0) { // 0 : userID
 					deptPathOrgan += deptPath.split(",")[ch].trim();
-				} else if (ch == 2 && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
+				} else if (ch == (deptPath.split(",").length - 3) && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
 					deptPathOrgan += "," + addJobStr + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
 				} else {
 					deptPathOrgan += "," + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
