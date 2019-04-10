@@ -131,6 +131,16 @@ function SetAddACLList(objAddList) {
 			}
 		}
 		
+		// 부서인 경우 하위 부서 권한전파 활성화
+		if(pCurrAcl[3] == "D") {
+			dept_copy1.disabled = false;
+			dept_copy2.disabled = false;
+		}
+		else {
+			dept_copy1.disabled = true;
+			dept_copy2.disabled = true;
+		}
+		
 		if (!IsExist) {
 		    if (CrossYN()) {
 		        AddUser.setAttribute("Dept_YN", pCurrAcl[3]);
