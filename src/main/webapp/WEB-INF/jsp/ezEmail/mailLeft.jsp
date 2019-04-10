@@ -101,7 +101,12 @@
 		        return new Date().getTime();		        
 		    }
 		    
-		    function setMailListRefreshTimer() { 
+		    function setMailListRefreshTimer() {
+	            if (refreshIntervalTimerId != 0) {
+	                clearInterval(refreshIntervalTimerId);
+	                refreshIntervalTimerId = 0;
+	            }
+	            
 		        if (pSaveInterval != 0) {
 		        	refreshIntervalTimerId = setInterval(function() {
 
