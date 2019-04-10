@@ -124,5 +124,9 @@ public interface EzCommonService {
 
 	public void updateListOptionData() throws Exception;
 
+	public void addQuickLinkLinkOrder() throws Exception;
+	
+	public void addComCloseCompanyId() throws Exception;
+
 }
 
