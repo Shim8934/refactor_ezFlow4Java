@@ -489,7 +489,7 @@ public class LoginController {
         	
         // 사용자가 입력한 암호가 맞지 않는 경우
         } else {     	
-        	logger.debug("password is wrong.");
+        	logger.debug("_uid=" + _uid + ",password is wrong.");
         			
         	//Check login state of the user 
         	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
