@@ -486,6 +486,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String endDate = jsonParam.get("endDate").toString();
 			
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	    	Calendar cal = Calendar.getInstance();
+	    	cal.setTime(sdf.parse(endDate));
+	    	
+	    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
+	    		cal.add(Calendar.MINUTE, -1);        		
+	    		endDate = sdf.format(cal.getTime());
+	    	}
 	
 	    	startDate = sdf.format(sdf.parse(startDate));
 	    	endDate = sdf.format(sdf.parse(endDate));
@@ -547,6 +554,13 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			String endDate = jsonParam.get("endDate").toString();
 				
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+	    	Calendar cal = Calendar.getInstance();
+	    	cal.setTime(sdf.parse(endDate));
+	    	
+	    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
+	    		cal.add(Calendar.MINUTE, -1);        		
+	    		endDate = sdf.format(cal.getTime());
+	    	}
 
 	    	startDate = sdf.format(sdf.parse(startDate));
 	    	endDate = sdf.format(sdf.parse(endDate));
