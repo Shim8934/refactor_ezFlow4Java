@@ -216,4 +216,10 @@ public class MBoardDAO extends EgovAbstractDAO {
 		return (int) select("MBoardDAO.isDeptChk", map);
 	}
 	
+	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<String> getPDOAddJobDeptID(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzBoardDAO.getPDOAddJobDeptID", map);
+	}
+	
 }
