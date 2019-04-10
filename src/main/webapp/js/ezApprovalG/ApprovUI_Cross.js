@@ -860,6 +860,7 @@ function openOpinionUI(ret, CompleteFunction) {
     parameter[2] = KuyjeType;
     parameter[3] = pOrgDocID;
     parameter[5] = window;
+    parameter[6] = docState;
     
     //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
     parameter[99] = ext;
@@ -1270,8 +1271,7 @@ function getApprovInfo() {
                 setMenuBar("btnJunKyul", false);
                 setMenuBar("btnReject", false);
                 setMenuBar("btnStay", false);
-                //setMenuBar("btnOpinion", false); // #15404 - 전자결재 > 결재선에서 참조인 유저가 코멘트를 확인/작성/수정 할 때 부자연스러움
-                setMenuBar("btnOpinion", true); // 2019-04-02 천성준 - 참조자가 알림 확인 창에서 의견을 작성 할 수 있는데 의견버튼이 안보여서 보이게 처리함
+                setMenuBar("btnOpinion", true); // 2019-04-02 천성준 - 참조자가 작성된 의견은 확인이 가능하기에 의견 버튼 표출 
                 setMenuBar("btnFileAttach", false);
                 setMenuBar("btnAprDocAttach", false);
                 setMenuBar("btnEdit", false);

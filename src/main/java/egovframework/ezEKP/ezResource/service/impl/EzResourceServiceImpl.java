@@ -3689,5 +3689,21 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
  		logger.debug("isResourceGroupManager ended");
 		return isManager;
 	}
+	
+	@Override
+	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID) throws Exception {
+		logger.debug("userResPermissionCheck start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userID", userID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantID);
+		map.put("brdID", brdID);
+		
+		String result = ezResourceDAO.userResPermissionCheck(map);
+		
+		logger.debug("userResPermissionCheck end");
+		return result;
+	}
 }
 

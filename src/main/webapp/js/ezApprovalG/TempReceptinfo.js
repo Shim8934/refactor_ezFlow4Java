@@ -511,6 +511,14 @@ function btn_AprDeptTempletSave_onclick(mode) {
     var templisttviewname = "";
     var ListViewLen = "";
     var listview = new ListView();
+    
+    listview.LoadFromID("lvRECEPTLIST");
+    ListViewLen = listview.GetDataRows();
+    
+    if (ListViewLen.length == 0 || GetAttribute(ListViewLen[0], "id") == "lvRECEPTLIST_TR_noItems") {
+		OpenAlertUI(strLangS957);
+        return;
+    }
 
     if (mode == "NEW") {
         listview.LoadFromID("lvRECEPTLIST");

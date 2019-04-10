@@ -325,5 +325,9 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	public void getDeptAccessLvl(Map<String, Object> map) throws Exception {
 		update("EzResourceDAO.getDeptAccessLvl", map);
 	}
+	
+	public String userResPermissionCheck(Map<String, Object> map) throws Exception {
+		return (String) select("EzResourceDAO.userResPermissionCheck", map);
+	}
 }
 

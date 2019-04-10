@@ -88,4 +88,6 @@ public interface EzResourceService {
 	public void moveResourceToOtherResourceGroup(String originResourceGroupId, String selectedResourceGroupId, int tenantId, String companyID) throws Exception;
 	
 	public String isResourceGroupManager(String selectedResourceGroupId, String userId, int tenantId, String companyID) throws Exception;
+	
+	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID) throws Exception;
 }

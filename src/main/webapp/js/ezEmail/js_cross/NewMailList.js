@@ -1275,6 +1275,9 @@ function selbeforeBlock_one() {
 }
 function td_Create1(strtext) {
     document.getElementById("tblPageRayer").innerHTML = strtext;
+    // 페이지 만들때 folderTotalCount를 넣어준다.
+	folderTotalCount = Number($('#folderTotalCount').text());
+	console.log("fc="+folderTotalCount);
 }
 function makePageSelPage() {
     var strtext;
