@@ -2230,7 +2230,7 @@
 	                            <label for="toMe" style="margin-left:-3px;margin-top:1px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 	                        </th>
 	                        <td style="width: 76%">
-	                            <input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="1" style="width: 100%;
+	                            <input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="1" style="width: 100%;
 	                                ime-mode: active;"/>
 	                        </td>
 	                        <td style="width: 1%; border-left: #ffffff 1px solid;">
@@ -2258,7 +2258,7 @@
 	                            </div>
 	                        </th>
 	                        <td style="width: 76%">
-	                            <input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="2" style="width: 100%">
+	                            <input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="2" style="width: 100%">
 	                        </td>
 	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
 	                            <select id="SelectCcAddress" style="width: 106px;height:24px" onchange="simple_select('CC',this)">
@@ -2282,7 +2282,7 @@
 	                                <spring:message code='ezEmail.t562' /></span></a>
 	                        </th>
 	                        <td>
-	                            <input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="3" style="width: 100%">
+	                            <input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="3" style="width: 100%">
 	                        </td>
 	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
 	                            <select id="SelectBCCAddress" style="width: 106px;height:24px" onchange="simple_select('BCC',this)">
