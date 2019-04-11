@@ -277,7 +277,7 @@
 		   									result = 100;
 		   								} else {
 		   									var progress = res1 / res2 * 100;
-			   								result = Math.floor(progress);
+			   								result = Math.round(progress);
 		   								}
 
 	   									html += "<tr>";
@@ -287,12 +287,10 @@
 			    						html += "	<td>"         + Math.floor(i[3] / 1024) 			   + "</td>"; //사용량
 			    						html += "	<td>"         + Math.floor(i[4] / 1024) 			   + "</td>"; //총용량 
 			    						
-			    						if (result >= 90) {				    							
+			    						if (result >= 80) {				    							
 			    							html += "<td><div id='myProgress'><div id='myBar_red' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";
 			    						} else if (result >= 70) { 
 			    							html += "<td><div id='myProgress'><div id='myBar_orange' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";
-			    						} else if (result >= 60) {
-			    							html += "<td><div id='myProgress'><div id='myBar_yellow' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";
 			    						} else {
 			    							html += "<td><div id='myProgress'><div id='myBar_green' style='width:" + result + "%'></div></div><div id='percentage'>" + result + "%</div></td>";
 			    						}
@@ -390,19 +388,15 @@
 			}
 			#myBar_red {
 			  height: 10px;
-			  background-color: #ff1616;
+			  background-color: #ff4040;
 			}
 			#myBar_orange {
-			  height: 10px;
-			  background-color: #ff7f00;
-			}
-			#myBar_yellow {
 			  height: 10px;
 			  background-color: #ffb600;
 			}
 			#myBar_green {
 			  height: 10px;
-			  background-color: #4CAF50;
+			  background-color: #82b9f6;
 			}
 		</style>
 	</head>
