@@ -596,7 +596,14 @@
 			            }
 			            
 			            if (btnSendDraftEnable == "false") {
-			                var pAlertContent = "<spring:message code='ezApprovalG.t139'/>" + "<br>" + "<spring:message code='ezApprovalG.t140'/>";
+			            	var pAlertContent = "";
+			            	//재기안의 경우 결재선 확인하라는 메세지 출력
+			            	if (DraftFlag == "REDRAFT") {
+				                pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
+			            	} else {
+				                pAlertContent = "<spring:message code='ezApprovalG.t139'/>" + "<br>" + "<spring:message code='ezApprovalG.t140'/>";
+			            	}
+			            	
 							OpenInformationUI(pAlertContent, check_btnSendDraft2);
 			                return;
 			            }
