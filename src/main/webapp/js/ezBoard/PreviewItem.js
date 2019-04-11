@@ -380,7 +380,7 @@ function event_ItemPreviewRead_photo() {
             if (document.getElementById("PreViewBottom") != null)
                 document.getElementById("PreViewBottom").style.display = "none";
             if (SelectSingleNodeValueNew(xmldom, "DATA") == "NO") {
-                alert(StringLang999);
+                alert(strLang173);
                 return;
             }
             var WriterID = SelectSingleNodeValueNew(xmldom, "NODES/NODE/WriterID");
