@@ -186,7 +186,7 @@
 		
 		function rebody() {
 			if (type != "modify") {
-				window.message.SetEditorContent("<P " + defaultFontAndSize + "></P><P " + defaultFontAndSize + "></P>");
+				window.message.SetEditorContent("");
 			}
 	    }
 		
