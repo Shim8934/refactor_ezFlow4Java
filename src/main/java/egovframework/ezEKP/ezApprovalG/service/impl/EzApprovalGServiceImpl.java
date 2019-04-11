@@ -32,28 +32,13 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
-
-import kr.dogfoot.hwplib.object.HWPFile;
-import kr.dogfoot.hwplib.object.bodytext.Section;
-import kr.dogfoot.hwplib.object.bodytext.control.Control;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
-import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
-import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositonShapeIdPair;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
-import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
-import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
-import kr.dogfoot.hwplib.reader.HWPReader;
-import kr.dogfoot.hwplib.writer.HWPWriter;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -129,6 +114,21 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
 import egovframework.let.utl.fcc.service.KlibUtil;
+import kr.dogfoot.hwplib.object.HWPFile;
+import kr.dogfoot.hwplib.object.bodytext.Section;
+import kr.dogfoot.hwplib.object.bodytext.control.Control;
+import kr.dogfoot.hwplib.object.bodytext.control.ControlTable;
+import kr.dogfoot.hwplib.object.bodytext.control.ControlType;
+import kr.dogfoot.hwplib.object.bodytext.control.table.Cell;
+import kr.dogfoot.hwplib.object.bodytext.control.table.Row;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.Paragraph;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.ParagraphList;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.CharPositonShapeIdPair;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.charshape.ParaCharShape;
+import kr.dogfoot.hwplib.object.bodytext.paragraph.header.ParaHeader;
+import kr.dogfoot.hwplib.object.summaryInformation.SummaryInformation;
+import kr.dogfoot.hwplib.reader.HWPReader;
+import kr.dogfoot.hwplib.writer.HWPWriter;
 
 @Service("EzApprovalGService")
 public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprovalGService {
@@ -141,6 +141,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	
 	@Autowired
 	private ApplicationContext context;
+	
+	@Autowired
+	private ServletContext servletContext;
 	
 	@Autowired
 	private Properties config;
@@ -3422,8 +3425,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_RECNM2", deptXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent());
 			}
 			
-			if (!docXML.getElementsByTagName("RECEIPTMEMBERID").item(0).getTextContent().equals("")) {
-				try {
+			try {
+				if (!docXML.getElementsByTagName("RECEIPTMEMBERID").item(k).getTextContent().equals("")) {
 					String userInfo = ezOrganService.getPropertyList(docXML.getElementsByTagName("RECEIPTMEMBERID").item(k).getTextContent(), "displayname;displayname2;title;title2", "1", tenantID);
 					Document userXML = commonUtil.convertStringToDocument(userInfo);
 					
@@ -3431,9 +3434,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					recMemNm2 = userXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
 					recMemJobTitle = userXML.getElementsByTagName("TITLE").item(0).getTextContent();
 					recMemJobTitle2 = userXML.getElementsByTagName("TITLE2").item(0).getTextContent();
-				} catch (Exception e) {
-					e.getMessage();
+				} else {
+					recMemNm = "";
+					recMemNm2 = "";
+					recMemJobTitle = "";
+					recMemJobTitle2 = "";
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			
 			map.put("v_ExtRecYN", extYN);
@@ -12942,6 +12950,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 									userTitles[k + 1] = arr2[1].trim();
 									userTitles2[k + 1] = arr2[2].trim();
 								}
+							} else {
+								userTitles[k + 1] = "";
+								userTitles2[k + 1] = "";
 							}
 						}
 						
@@ -24165,6 +24176,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int hlength = listXML.getElementsByTagName("NAME").getLength();
 		
 		for (i = 0; i<hlength; i++) {
+			//2019-03-28 천성준 - 기안 > 문서첨부 > 문서리스트에서 보여줄 헤더만 보이게 필요없는건 빼는로직 추가(추후 문서첨부 로직 재개발 예정)
+			String tmpStr = listXML.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase();
+			if (tmpStr.equals("FORMNAME") || tmpStr.equals("EDMSYN") || tmpStr.equals("DOCSTATENAME") || tmpStr.equals("SENDFLAG") || tmpStr.equals("HASATTACHYN") || tmpStr.equals("ISPUBLIC")) {
+				continue;
+			}
+			
 			resultXML.append("<HEADER>");
 			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(i).getTextContent() + "</NAME>");
 			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(i).getTextContent() + "</WIDTH>");
@@ -24252,6 +24269,10 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<ROW>");
 			for(i=0; i<hlength; i++) {
 				FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase();
+				//2019-03-28 천성준 - 기안 > 문서첨부 > 문서리스트에서 보여줄 데이터만 보이게 필요없는건 빼는로직 추가(추후 문서첨부 로직 재개발 예정)
+				if (FieldName.equals("FORMNAME") || FieldName.equals("EDMSYN") || FieldName.equals("DOCSTATENAME") || FieldName.equals("SENDFLAG") || FieldName.equals("HASATTACHYN") || FieldName.equals("ISPUBLIC")) {
+					continue;
+				}
 				
 				if (FieldName.toUpperCase().equals("FORMNAME") || FieldName.toUpperCase().equals("WRITERNAME") || FieldName.toUpperCase().equals("WRITERJOBTITLE") || FieldName.toUpperCase().equals("WRITERDEPTNAME")) {
 					FieldName = FieldName.toUpperCase() + strMultiData;
@@ -24587,6 +24608,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		boolean SecurityLineFlag = false;	// 보안등급결재선.  true 이면, 보안등급보다 결재선 소속여부가 우선함.
 		String UserSecurityCode = "";
 		
+		boolean docAttachFlag = false; //2019-03-28 천성준 - 문서첨부 리스트 검색인지 체크 Flag. true:기안>문서첨부>검색, false:다른리스트들 검색(추후 문서첨부 리스트 재개발되면 지울예정)
+		
 		 // 수정(2007.06.18) : multidata 기능추가 
 		String strMultiData = commonUtil.getMultiData(lang, tenantID);
 		
@@ -24790,7 +24813,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		if (searchStatus != null && !searchStatus.equals("ALL") && !searchStatus.equals("")) {
-			map.put("v_PROCESSYN", searchStatus);
+			if (searchStatus.equals("DOCATT")) {
+				docAttachFlag = true;
+			} else {
+				map.put("v_PROCESSYN", searchStatus);
+			}
 		}
 		
 		if (pApprovUser != null && !pApprovUser.equals("")) {
@@ -24821,6 +24848,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		int hlength = listXML.getElementsByTagName("ROW").getLength();
 		
 		for (int k = 0; k < hlength; k++) {
+			//2019-03-28 천성준 - 기안 > 문서첨부 > 문서리스트에서 보여줄 헤더만 보이게 필요없는건 빼는로직 추가(추후 문서첨부 로직 재개발 예정)
+			if (docAttachFlag) {
+				String tmpStr = listXML.getElementsByTagName("COLNAME").item(k).getTextContent().toUpperCase();
+				if (tmpStr.equals("FORMNAME") || tmpStr.equals("EDMSYN") || tmpStr.equals("DOCSTATENAME") || tmpStr.equals("SENDFLAG") || tmpStr.equals("HASATTACHYN") || tmpStr.equals("ISPUBLIC")) {
+					continue;
+				}
+			}
+			
 			resultXML.append("<HEADER>");
 			resultXML.append("<NAME>" + listXML.getElementsByTagName("NAME").item(k).getTextContent() + "</NAME>");
 			resultXML.append("<WIDTH>" + listXML.getElementsByTagName("WIDTH").item(k).getTextContent() + "</WIDTH>");
@@ -24886,7 +24921,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			resultXML.append("<ROW>");
 			for(int i=0; i<hlength; i++) {
 				FieldName = listXML.getElementsByTagName("COLNAME").item(i).getTextContent().toUpperCase();
-            		FieldValue = docXML.getElementsByTagName(FieldName).item(k).getTextContent();
+				//2019-03-28 천성준 - 기안 > 문서첨부 > 문서리스트에서 보여줄 데이터만 보이게 필요없는건 빼는로직 추가(추후 문서첨부 로직 재개발 예정)
+				if (docAttachFlag) {
+					if (FieldName.equals("FORMNAME") || FieldName.equals("EDMSYN") || FieldName.equals("DOCSTATENAME") || FieldName.equals("SENDFLAG") || FieldName.equals("HASATTACHYN") || FieldName.equals("ISPUBLIC")) {
+						continue;
+					}
+				}
+				
+        		FieldValue = docXML.getElementsByTagName(FieldName).item(k).getTextContent();
  				resultXML.append("<CELL>");
 				resultXML.append("<VALUE><![CDATA[" + getListField(FieldName, FieldValue, companyID, lang, tenantID, offSet) + "]]></VALUE>");
 			
@@ -24903,6 +24945,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA10><![CDATA[" + docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent() + "]]></DATA10>");
 					resultXML.append("<DATA11><![CDATA[" + docXML.getElementsByTagName("EDMSYN").item(k).getTextContent() + "]]></DATA11>");
 					resultXML.append("<DATA12><![CDATA[" + docXML.getElementsByTagName("DOCSTATE").item(k).getTextContent() + "]]></DATA12>");
+					resultXML.append("<DATA99><![CDATA[" + docXML.getElementsByTagName("FORMNAME").item(k).getTextContent() + "]]></DATA99>"); // 기안 > 문서첨부 >[양식명]을 리스트에서 보여주기위한 DATA99값 추가
 					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
 				}
 				
@@ -26720,7 +26763,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              	 org.w3c.dom.Element contentElement = objXML.createElement("content");
                  objXML.getElementsByTagName("contents").item(0).appendChild(contentElement);
                  contentElement.setAttribute("content-role", "return");
-                 contentElement.setAttribute("filename", "return.txt");
+                 contentElement.setAttribute("filename", "");
                  contentElement.setAttribute("content-transfer-encoding", "base64");
                  contentElement.setAttribute("content-type", "text/xml");
                  contentElement.setAttribute("charset", "euc-kr");
@@ -27149,6 +27192,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (rtnVal) {
 				result = "<RESLUT>TRUE</RESULT>";
+				
+				// 2019-2-7 재발송요청일경우 완료되면 문서정보 지워줌
+				if (type.equals("req-resend")) {
+					map.put("v_DocID", docID);
+					
+					ezApprovalGDAO.aprDeleteDocInfo(map);
+					ezApprovalGDAO.aprDeleteDocInfo2(map);
+					ezApprovalGDAO.aprDeleteDocInfo3(map);
+					ezApprovalGDAO.aprDeleteDocInfo4(map);
+					ezApprovalGDAO.aprDeleteDocInfo5(map);
+					ezApprovalGDAO.aprDeleteDocInfo6(map);
+					ezApprovalGDAO.aprDeleteDocInfo7(map);
+					ezApprovalGDAO.aprDeleteDocInfo8(map);
+					ezApprovalGDAO.aprDeleteDocInfo9(map);
+				}
+				
 			} else {
 				result = "<RESULT>FALSE</RESULT>";
 			}
@@ -27389,7 +27448,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		parameterMap.put("tenantId", tenantId);
 
 		String reformFlag = ezApprovalGDAO.getReformFlag(parameterMap);
-		
+
+		if (reformFlag == null) {
+			return isReformFromFileSystem(formId, companyId, tenantId);
+		}
+
 		return "Y".equalsIgnoreCase(reformFlag);
 	}
 
@@ -27407,9 +27470,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		parameterMap.put("companyId", companyId);
 		parameterMap.put("tenantId", tenantId);
 
-		String reformFlag = ezApprovalGDAO.getReformFlagForTempDoc(parameterMap);
-		
-		return "Y".equalsIgnoreCase(reformFlag);
+		String formId = ezApprovalGDAO.getFormIdOfTempDocument(parameterMap);
+
+		return isReform(formId, companyId, tenantId);
 	}
 
 	@Override
@@ -27421,8 +27484,20 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 
 		// formId, reformflag
 		ApprGFormVO reformInfo = (ApprGFormVO) ezApprovalGDAO.getReformInfoForApprovalDocument(parameterMap);
-		
+
+		if (reformInfo.getReformFlag() == null) {
+			reformInfo.setReformFlag(isReformFromFileSystem(reformInfo.getFormID(), companyId, tenantId) ? "Y" : "N");
+		}
+
 		return reformInfo;
+	}
+
+	private boolean isReformFromFileSystem(String formId, String companyId, int tenantId) {
+		String realPath = servletContext.getRealPath("");
+		String approvalUploadPath = commonUtil.getUploadPath("upload_approvalG.ROOT", tenantId);
+		String reformDirectoryPathStr = String.join(commonUtil.separator, approvalUploadPath, companyId, "form", "reform", formId);
+
+		return Files.exists(Paths.get(realPath).resolve("." + reformDirectoryPathStr));
 	}
 
 	private String createDocNO(String cabinetSN, String docNumZeroCnt) {
@@ -28275,5 +28350,16 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		
 		ezApprovalGDAO.setHesongBansongCabinetID(map);
 		logger.debug("setHesongBansongCabinetID ended");
+	}
+	
+	@Override
+	public String getDeptIdOfCabinet(String orgCabinetId, int tenantId, String companyID) throws Exception {
+		logger.debug("getDeptIdOfCabinet started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("cabinetId", orgCabinetId);
+		map.put("companyID", companyID);
+		map.put("tenantId", tenantId);
+		logger.debug("getDeptIdOfCabinet ended");
+		return ezApprovalGDAO.getDeptIdOfCabinet(map);
 	}
 }

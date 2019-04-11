@@ -615,8 +615,6 @@
                               		WHERE
                               		 	UID_ = #v_UID#
                               		AND
-                              			CREATORID = #v_USERID#
-                              		AND
                               			USERTYPE = #v_USERTYPE#
                               		AND
                               			TENANT_ID = #tenantID#	 )
@@ -629,6 +627,8 @@
 				TBL_PORTLET_URL( UID_, CREATORID, USERTYPE, URL, TENANT_ID )
             VALUES
             	( #v_UID#, #v_USERID#, #v_USERTYPE#, #v_URL#, #tenantID# )
+            ON DUPLICATE KEY UPDATE 
+            	CREATORID = #v_USERID#
 		]]>
 	</insert>
 	
@@ -703,11 +703,7 @@
                             		WHERE
                             			UID_ = #v_UID#
                             		AND
-                            			CREATORID = #v_USERID#
-                            		AND
                             			USERTYPE = #v_USERTYPE#
-                            		AND
-                            			BOARDID = #v_BOARDID#
                             		AND
                             			TENANT_ID = #tenantID#	 )
 		]]>
@@ -720,6 +716,8 @@
  	          ( UID_, CREATORID, USERTYPE, BOARDID, ITEMCOUNT, ITEMFIELDS, TENANT_ID )
            VALUES 
      	      ( #v_UID#, #v_USERID#, #v_USERTYPE#, #v_BOARDID#, #v_ITEMCOUNT#, #v_ITEMFIELDS#, #tenantID# )
+     	   ON DUPLICATE KEY UPDATE 
+            	BOARDID = #v_BOARDID#     	   
 		]]>
 	</insert>
 	

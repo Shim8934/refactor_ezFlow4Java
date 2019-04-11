@@ -155,7 +155,6 @@
                  	   var totalVolume = ""; 
                  	   var useVolume = "";
                  	   var percent = "";
-                 	   var colorClass = "myBar_green";
                  	            
                  	   if (CrossYN()) { 
                  	        totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent;
@@ -176,17 +175,10 @@
                  	   
                  	   //용량 체크(색깔로)
                  	   if (percent >= 80) {
-                 	   		colorClass = "myBar_red";
-                 	       	//$(".volumeDL dd").css("color", "#ff4040");
+                 		  $("#myBar").addClass("danger");
                  	   } else if (percent >= 70) {
-					   		colorClass = "myBar_yellow";
-					   		//$(".volumeDL dd").css("color", "#ff9c00");
-                 	   } else {
-                 		  	colorClass = "myBar_green";
-                 		  	//$(".volumeDL dd").css("color", "#0470e4");
-                 	   }                  		   
-                 	            
-                 	   $("#myBar").addClass(colorClass);
+                 		  $("#myBar").addClass("warning");
+                 	   }                		   
                     }
                 });        	    
 	        }	        
@@ -325,7 +317,7 @@
 	        function selectnode(event) {
 	        	if (!event) event = window.event;
 				/* 2018-08-06 장진혁 스크립트 오류로 undefined 걸름 */
-	        	if (event != undefined) {
+	        	if (typeof(event) !== "undefined") {
 		        	if (event.which != 3) {
 					    var nodeIdx = window[treeviewStr].selectedIndex();
 					    var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "href"));
@@ -745,7 +737,8 @@
 			}	
 		    
  			function event_folderMenu(event){
-		    	
+ 				event.preventDefault();
+ 				
 		    	if (!event) event = window.event;
 		        var EventMouseX = event.clientX;
 		        var EventMouseY = event.clientY;

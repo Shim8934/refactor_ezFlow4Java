@@ -1,23 +1,42 @@
-var joinPoll = function (result, itemSeq) {
+var condition = true;
+var joinPoll = function (e) {
 	var height = window.screen.availHeight;
 	var width = window.screen.availWidth;		
-	var itemseq = itemSeq;
-	
-	if (!result) {
+	var itemseq = document.getElementById('pollBtn').getAttribute('data1');
+
+	checkJoinPoll(itemseq);
+	if (condition) {
 		var top = (height - 370) / 2;
 		var left = (width - 300) / 2;
 		var option = 'toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=400px,width=455px,top=' + top + ',left=' + left;
 		var url = '/ezPersonal/wpLightPoll.do';			
 	} else {
+		alert("이미 참여한 설문입니다.");
 		var top = (height - 455) / 2;
 		var left = (width - 400) / 2;
 		var option = 'height=400px,width=455, status = no, toolbar=no, menubar=no,location=no, resizable=0,top=' + top + ',left = ' + left; 
 		var url = '/ezPersonal/pollResult.do?itemSeq=' + itemseq;
 	}
-	
+
 	window.open(url, '', option, '');
 }
 
+var checkJoinPoll = function(itemSeq) {
+	$.ajax({
+		type: "POST",
+		dataType: "text",
+		async: false,
+		url: "/admin/ezPersonal/checkJoinPoll.do",
+		data: {itemseq: itemSeq},
+		success: function(result) {
+			if(result === "OK") {
+				condition = true;
+			} else {
+				condition = false;
+			}
+		}
+	});
+}
 
 var pollPlus = function () {
 	var height = window.screen.availHeight;
@@ -41,9 +60,10 @@ var assemblePollList = function (poll) {
 	
 	var answerList = poll.answerList;
 	var str = '';
+	var itemSeq = poll.pollInfo.itemSeq;
 	
 	str += '<p class="pollTitle" id="pollTitle"></p>';
-	str += '<p class="pollBtn" id="pollBtn">참여</p>';	
+	str += '<p class="pollBtn" id="pollBtn" data1="' + itemSeq +'">참여</p>';	
 	str += '<div class="pollList">';
 	for (var i=0; i<answerList.length; i++) {
 		if(answerList[i].answer.trim() !== '') {

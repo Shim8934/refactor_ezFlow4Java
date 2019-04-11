@@ -11,3 +11,5 @@ var strLang103 = "Enter your search terms.";
 var strLang91002 = "The id of the list is not specified.";
 var strLang91003 = "No data specified.";
 var strLang91004 = "The treeview's ID is not specified";
+var strLangGroupMemberCount01 = "The maximum number of members is ";
+var strLangGroupMemberCount02 = ".";

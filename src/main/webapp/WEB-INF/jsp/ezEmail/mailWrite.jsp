@@ -169,7 +169,10 @@
 	    var searchEndDate = "${searchEndDate}";
 	    var shareId = "${shareId}";
 	    var isMailToMe = "${isMailToMe}"; 
-	    
+	    var receiverCount = 0;
+        var groupAddressCountMap = {};
+        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
+        
 	    window.onload = function () {
 	        if (!CrossYN()) {
 	            document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
@@ -783,6 +786,10 @@
 	            var IsInsert = CheckMailReceiver(newElem);
 	
 	            if (!IsInsert) {
+	            	if (!increaseReceiverCount()) {
+	            		return;
+	            	}
+	            	
 	                switch (iType) {
 	                    case 0:
 	                        MsgToGot.appendChild(newElem);
@@ -1750,6 +1757,10 @@
 									ui.item.email, href);
 							IsInsert_MsgTo = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgTo) {
+								if (!increaseReceiverCount(addressType, href)) {
+				            		return;
+				            	}
+								
 								MsgToGot.appendChild(newElem);
 								document.getElementById("MsgTo").value = "";
 								IsInsert_MsgTo = true;
@@ -1823,6 +1834,10 @@
 									ui.item.email, href);
 							IsInsert_MsgCC = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgCC) {
+								if (!increaseReceiverCount(addressType, href)) {
+				            		return;
+				            	}
+								
 								MsgCCGot.appendChild(newElem);
 								document.getElementById("MsgCC").value = "";
 								IsInsert_MsgCC = true;
@@ -1896,6 +1911,10 @@
 									ui.item.email, href);
 							IsInsert_MsgBCC = CheckMailReceiver(newElem);
 							if (!IsInsert_MsgBCC) {
+								if (!increaseReceiverCount(addressType, href)) {
+				            		return;
+				            	}
+								
 								MsgBCCGot.appendChild(newElem);
 								document.getElementById("MsgBCC").value = "";
 								IsInsert_MsgBCC = true;
@@ -2059,7 +2078,7 @@
 	                            <label for="toMe" style="margin-left:-3px;margin-top:1px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 	                        </th>
 	                        <td style="width: 76%">
-	                            <input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="1" style="width: 100%;
+	                            <input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="1" style="width: 100%;
 	                                ime-mode: active;"/>
 	                        </td>
 	                        <td style="width: 1%; border-left: #ffffff 1px solid;">
@@ -2087,7 +2106,7 @@
 	                            </div>
 	                        </th>
 	                        <td style="width: 76%">
-	                            <input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="2" style="width: 100%">
+	                            <input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="2" style="width: 100%">
 	                        </td>
 	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
 	                            <select id="SelectCcAddress" style="width: 106px;height:24px" onchange="simple_select('CC',this)">
@@ -2111,7 +2130,7 @@
 	                                <spring:message code='ezEmail.t562' /></span></a>
 	                        </th>
 	                        <td>
-	                            <input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="3" style="width: 100%">
+	                            <input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" tabindex="3" style="width: 100%">
 	                        </td>
 	                        <td style="width: 100px; border-left: #ffffff 1px solid;">
 	                            <select id="SelectBCCAddress" style="width: 106px;height:24px" onchange="simple_select('BCC',this)">

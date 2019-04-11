@@ -555,7 +555,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		//사용자 영역에서만 팝업 공지사항을 오픈한다.
 		if (mode.equals("view") && !viewMode.equals("preview")) {
 			// 팝업 공지사항
-			List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID(), userInfo.getTenantId());
+			List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 			
 			String popUp = "";
 			int popUpWidth = 0;
@@ -823,6 +823,8 @@ public class EzPortalController extends EgovFileMngUtil {
 			portalPageCategoryXML = portalPageCategoryXML.replace("\"", "\\\"");
 		}
 
+		strHTML = strHTML.replace("{", "%7B").replace("}", "%7D");
+		
 		model.addAttribute("strHTML", strHTML);
 		model.addAttribute("pThemeSelectObject", pThemeSelectObject);
 		model.addAttribute("displayName", displayName);
@@ -1088,7 +1090,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		}
 		
 		String parametersXML = ezPortalService.getPortletParameters(uID, userInfo.getTenantId());
-		
+
 		if (pMoveURL != null && !pMoveURL.equals("")) {
 			pMoveURL = pMoveURL + ezPortalService.loadGetParametersXML(pMoveURL, parametersXML, userInfo);
 			
@@ -1110,6 +1112,8 @@ public class EzPortalController extends EgovFileMngUtil {
 					pMoveURL = pMoveURL + "&type=" + type;
 				}
 			}
+
+			pMoveURL = pMoveURL.replace("{", "%7B").replace("}", "%7D");
 			
 			resp.getWriter().write("<script> function window_onload() { window.location.href = \"" + pMoveURL + "\"; } </script>");
 			resp.getWriter().write("<body onload='window_onload()'></body>");
@@ -1704,8 +1708,7 @@ public class EzPortalController extends EgovFileMngUtil {
 			return "/ezPortal/portalWpNewVote";
 		}
 		else {			
-			PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
-			
+			PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 			Document xmlDom = commonUtil.convertStringToDocument("<DATA>"+commonUtil.getQueryResult(result)+"</DATA>");
 			
 			if (result != null) {
@@ -1998,7 +2001,7 @@ public class EzPortalController extends EgovFileMngUtil {
 				}
 			}
 		}
-		
+
 		Collections.sort(realList, new Comparator<PersonalGetQuickLinkMenuVO>() {
 		    public int compare(PersonalGetQuickLinkMenuVO o1, PersonalGetQuickLinkMenuVO o2) {
 		        return o2.getRegDate().compareTo(o1.getRegDate());
@@ -2231,7 +2234,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		int pPollItemSeq = 0;
 		String pPollTitle = "";
 		
-		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		PersonalLightPollVO result = ezPersonalService.getCurrentPoll(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 		
 		if (result != null) {
 			if (result.getResult() > 0) {
@@ -2719,7 +2722,7 @@ public class EzPortalController extends EgovFileMngUtil {
 		//사용자 영역에서만 팝업 공지사항을 오픈한다.
 		if (mode.equals("view") && !viewMode.equals("preview")) {
 			// 팝업 공지사항
-			List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID(), userInfo.getTenantId());
+			List<PersonalGetPopUpListUserVO> infoList = ezPersonalService.getPopUpListUser(userInfo.getCompanyID(), userInfo.getTenantId(), userInfo.getOffset());
 			
 			String popUp = "";
 			int popUpWidth = 0;

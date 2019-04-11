@@ -92,6 +92,7 @@
 <body class="mainbody" marginwidth="0" marginheight="0">
 	<h1>
 		<spring:message code='ezNewPortal.t056' />
+		<span class="title_bar"><img src="/images/name_bar.gif"></span>
 		<select class="companySelect" id="ListCompany"></select>
 	</h1>
 		
@@ -515,20 +516,16 @@
 							$("#portlet" + result[i].portletId + " .updatePortletBtn span").attr("class", "spanOff");
 							$("#portlet" + result[i].portletId + " .deletePortletBtn span").attr("class", "spanOff");
 						}
-						
 						//포틀릿 게시판 설정이 있으면 설정 버튼 활성화
 						if ((result[i].menuId == 4 && result[i].portletId != 10) || !result[i].isGeneral) {
 							$("#portlet" + result[i].portletId).find(".boardSetting").on("click", {"portletId" : result[i].portletId}, openBoardTree);
 						}
-						
 						$("#portlet" + result[i].portletId).find(".updatePortletBtn").on("click", {"portletId" : result[i].portletId}, portletUpdate);
-						
 						if (!result[i].general) {
 							$("#portletMenu" + result[i].portletId).parent().find(".menuSetting").on("click", {"portletId" : result[i].portletId}, openMenuList);
 							$("#portlet" + result[i].portletId).find(".deletePortletBtn").on("click", {"portletId" : result[i].portletId, "menuId" : result[i].menuId}, portletDelete);
 							
 						}
-						
 						//슬라이드 이미지 버튼 활성화
 						if (result[i].portletId == 34) {
 							$("#portlet" + result[i].portletId).find(".slideImageSetting").on("click", {"portletId" : result[i].portletId}, openSlideImageSetting);

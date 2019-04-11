@@ -2182,7 +2182,19 @@ public class EzOrganAdminDAO extends EgovAbstractDAO {
 	public int getTitleCnt(Map<String, Object> map) throws Exception {
 		return (int) select("EzOrganAdminDAO.selectTitleCnt", map);
 	}
+
+	public int getAddJobCount(Map<String, Object> map) throws Exception{
+		return (int) select("EzOrganAdminDAO.getAddJobCount", map);
+	}
 	
+	public void setAddJobCount(Map<String, Object> map) throws Exception{
+		update("EzOrganAdminDAO.getAddJobCount", map);
+	}
+
+	public String getCompanyName(Map<String, Object> map) throws Exception {
+		return (String) select ("EzOrganAdminDAO.getCompanyName", map);
+	}
+
 	@SuppressWarnings("unchecked")
 	public List<OrganUserVO> getDeptAddJobUserList(Map<String, Object> map) throws Exception {
 		return (List<OrganUserVO>) list("EzOrganAdminDAO.getDeptAddJobUserList", map);

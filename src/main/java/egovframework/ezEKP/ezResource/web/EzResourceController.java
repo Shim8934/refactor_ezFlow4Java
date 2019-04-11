@@ -881,6 +881,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("approveFlag", strApproveFlag);
 		model.addAttribute("langPrimary", ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("langSecondary", ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("strResID", resID); 
 		
 		return "/ezResource/resModClsItem";
 	}
@@ -2485,5 +2486,34 @@ public class EzResourceController extends EgovFileMngUtil {
 		logger.debug("xmlRet="+commonUtil.convertDocumentToString(xmlRet));
 		logger.debug("callManagerDepthNode End");
 		return commonUtil.convertDocumentToString(xmlRet);
+	}
+	
+	@RequestMapping(value = "/ezResource/userResPermissionCheck.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String userResPermission(HttpServletRequest request, Model model, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("userResPermissionCheck Start");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userID = "";
+		if(request.getParameter("userID") != null) {
+			userID = request.getParameter("userID");
+		}
+		
+		String brdID = "";
+		if(request.getParameter("brdID") != null) {
+			brdID = request.getParameter("brdID");
+		}
+
+		String result = ezResourceService.userResPermissionCheck(userID, userInfo.getCompanyID(), userInfo.getTenantId(), brdID);
+		
+		logger.debug("result : " + result);
+		logger.debug("userResPermissionCheck end");
+		if(result.equals("1")) {
+			return "Y";
+		}
+		else {
+			return "N";
+		}
 	}
 }

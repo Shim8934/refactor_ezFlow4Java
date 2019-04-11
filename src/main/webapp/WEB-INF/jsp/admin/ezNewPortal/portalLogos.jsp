@@ -25,6 +25,7 @@
 	<body class="mainbody">
 		<h1>
 			<spring:message code='ezNewPortal.t057' />
+			<span class="title_bar"><img src="/images/name_bar.gif"></span>
 			<select class="companySelect" id="ListCompany"></select>
 		</h1>
 		<div class="loginLogo" style="margin-top:30px">
@@ -35,6 +36,9 @@
 				<div class="logoContent">
 					<c:if test="${adminCheck eq true }">
 						<div id = "imgLogin" class='btnpositionJsp'><a class='imgbtn updateLogoBtn'><span><spring:message code='ezNewPortal.t058' /></span></a> <a class='imgbtn deleteLogoBtn'><span><spring:message code='ezNewPortal.t059' /></span></a></div>
+					</c:if>
+					<c:if test="${adminCheck eq false }">
+						<div class='btnpositionJsp'></div>
 					</c:if>
 					<ul>
 						<li class="logoTitle"><spring:message code='ezNewPortal.t060' /></li>
@@ -134,11 +138,9 @@
 						var logoDefault = result[i].logoDefault;
 						
 						if (logoType == "L") {
-							
-							document.getElementsByClassName("loginLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = logoUrl;
-							
 							var adminCheck = "${adminCheck}";
 							
+							document.getElementsByClassName("loginLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = logoUrl;
 							if (adminCheck == "true") {
 								if (!logoDefault) {
 									document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
@@ -220,14 +222,17 @@
 	    				
 	    				if (logoType == "L") {
 	    					document.getElementsByClassName("loginLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = result;
-							document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
-							document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
+	    					
+	    					if (document.getElementById("imgLogin")) {
+								document.getElementById("imgLogin").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
+								document.getElementById("imgLogin").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
+	    					}
 	    				} else if (logoType == "P") {
 	    					document.getElementsByClassName("portalLogo")[0].querySelectorAll(".logoIcon")[0].querySelector("img").src = result;
+	    					
 							document.getElementById("imgTop").querySelectorAll(".updateLogoBtn")[0].querySelector("span").textContent = "<spring:message code='ezNewPortal.t067' />";
 							document.getElementById("imgTop").querySelectorAll(".deleteLogoBtn")[0].style.display = "inline-block";
 	    				}
-	    	
 	    			}
     			} else {
     				alert("<spring:message code = 'ezCommunity.lhj03' /> (jpg, png, bmp, jpeg, gif)");

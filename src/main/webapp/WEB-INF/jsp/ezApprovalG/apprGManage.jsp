@@ -1383,6 +1383,21 @@
 		        var oArrRows = DocList.GetSelectedRows();
 		        if (oArrRows.length > 0) {
 		            var tr = oArrRows[0];
+		            
+		            //현재부서정보와 대장등록할 문서의 부서정보가 다르면 리턴 (겸직변경)
+		            //결재할문서(1)과 부서수신함(4)의 부서아이디 DATA가 달라서 변경 
+					if (pListTypeValue == "1") {
+			            if (arr_userinfo[4] != tr.getAttribute("DATA7")) {
+			            	alert("'" + tr.getAttribute("DATA7") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA7") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
+			            	return;
+			            }
+					} else if (pListTypeValue == "4") {
+			            if (arr_userinfo[4] != tr.getAttribute("DATA6")) {
+			            	alert("'" + tr.getAttribute("DATA6") + "'부서의 문서입니다. \n'" + tr.getAttribute("DATA6") + "'부서로 겸직변경 후 대장등록해주시기 바랍니다.");
+			            	return;
+			            }
+					}
+		            
 		            var ret = CheckAprLineInfo(tr);
 		            if (ret != "OK") {
 		                var pAlertContent = "<spring:message code='ezApprovalG.t1727'/>" + "<br>" +
@@ -2078,13 +2093,13 @@
 	<body class="mainbody" style="margin-top:0px;">	
 		<h1 class="title_h1">
 			<span id="presentcell"></span><span id="TitleInfo" style="color:#666;font-weight:normal;"></span>
-		    <span style="float:right;font-weight:normal;color:black;">
+		    <span class="searchForm">
 		    	<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 		    		<option selected value="rad_Subject"><spring:message code='ezApprovalG.t106'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezApprovalG.t445'/></option>
 		    	</select>
-			    <input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-		        <a style="float:right;"><img src="/images/bsearch_new.gif" border="0" onClick="search()"></a>
+			    <input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px" onkeypress="onkeydown_start_search();" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+		        <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search()"></a>
 		    </span>
 		</h1>
 		<div id="mainmenu">
@@ -2170,7 +2185,7 @@
 		  	</div>	
 		</div>
 		
-		<div style="WIDTH:100%;HEIGHT:230px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
+		<div style="WIDTH:100%;HEIGHT:315px; font-size:92%; OVERFLOW-Y:AUTO;" id="div_AprLine">
 			<div id="lvAprLine" ></div>
 		</div>		
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	

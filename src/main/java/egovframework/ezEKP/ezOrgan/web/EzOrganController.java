@@ -297,7 +297,7 @@ public class EzOrganController {
 				infoXML = ezOrganService.getSearchList(searchlist, celllist, proplist, listtype, 100, lang, companyId, tenantID, noAddJob);
 			}
 		} else {
-			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID, companyId);
+			infoXML = ezOrganService.getSearchListPagination(searchlist, celllist, proplist, listtype, 100, lang, page, tenantID, companyId, adminOrgan);
 		}
 		
 		Document doc = commonUtil.convertStringToDocument(infoXML);

@@ -11,6 +11,7 @@
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery-ui.css')}">
 		<link rel="stylesheet" href="/css/ezMemo/jquery.mCustomScrollbar.css">
 		<link rel="stylesheet" href="${util.addVer('/css/ezMemo/memo.css')}">
+		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/popup.css')}">
 		<!-- 컨텍스트 메뉴 관련 -->
 		<link rel="stylesheet" href="${util.addVer('/css/contextMenu.css')}">
 		<link rel="stylesheet" href="${util.addVer('/css/font-awesome-5.0.10/css/fontawesome-all.css')}">
@@ -37,6 +38,8 @@
 	 			padding:2px 2px;
 	 			border:1px solid #ffffff;
 			}
+			
+			#noticePopupArea {visibility:hidden;position:absolute;top:0;left:0;}
     	</style>
 		<script type="text/javascript">
 			var topHeight = "${topHeight}";
@@ -66,7 +69,7 @@
 		        // 컨텍스트 메뉴 관련
 		        //contextMenuRePosition();
 		    }
-		 	
+
 		    function Div_Close() {
 		        document.getElementById("popup_layer").style.display = "none";
 		    }
@@ -114,14 +117,15 @@
 	</head>
 	<body style="margin:0px 0px 0px 0px;padding: 0px 0px 0px 0px;overflow:hidden;">
 		<div style="height:56px;"><iframe src="/ezNewPortal/newPortalTopMenu.do" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;min-height:1080px;" frameborder="0"></iframe></div>
-		<iframe src="<c:out value='${mainUrl }'/>" name="main" id="mainFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;height:100%;overflow:auto;" frameborder="0"></iframe>
+		<iframe src="<c:out value='${mainUrl }'/>" name="main" id="mainFrame" style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;height:100%;overflow:auto;" frameborder="0"></iframe>
 		<%-- <div style="height:${topHeight}px"><iframe src="${topUrl}" name="top" id="topFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe></div>
 		<iframe src="${mainUrl}" name="main" id="mainFrame"  style="margin:0px 0px 0px 0px; padding:0px 0px 0px 0px;border:none;width:100%;" frameborder="0"></iframe> --%>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1005; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
 		<div class="layerpopup"  style="z-index: 2000; position: absolute;display: none;" id="iFramePanel">
     		<iframe src="<spring:message code='main.kms4' />" style="border:none;" id="iFrameLayer"></iframe>
 		</div>
-		
+
+		<div id="noticePopupArea"></div>
   		<div id="contextMenuBlock" class="contextMenuBlock">
 			<div id="contextMenuBtn" class="contextMenuBtn" style="display: block;visibility:hidden;">
 				<div class="contextMenu"></div>
@@ -135,10 +139,9 @@
 				</div>
 			</div>			
 		</div>
-				
+
  		<!-- memo note -->
 		<div id="noteBlock" class="noteBlock">
-			
 			<!-- 메모 레이어 -->
 			<div id="layer-popup" class="memo_wrap layerControl" style="display:none;">
 				<div class="memo_header_wrapper">

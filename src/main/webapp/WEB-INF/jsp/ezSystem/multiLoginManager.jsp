@@ -14,6 +14,7 @@
 <body class="mainbody" style="overflow:hidden;">
 	<h1>
 		<spring:message code="ezSystem.kbh08" />
+		<span class="title_bar"><img src="/images/name_bar.gif"></span>
 		<select class="companySelect" id="companyList">
 			<c:forEach var="company" items="${companyList}">
 				<option value="${company.cn }" ${company.cn eq companyID ? 'selected' : ''}><c:out value='${company.displayName}'/></option>

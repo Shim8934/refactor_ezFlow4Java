@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
+import egovframework.ezEKP.ezEmail.vo.MailBlobVO;
 import egovframework.ezEKP.ezEmail.vo.MailCancelVO;
 import egovframework.ezEKP.ezEmail.vo.MailColorVO;
 import egovframework.ezEKP.ezEmail.vo.MailDeleteVO;
@@ -54,10 +55,19 @@ public class EzEmailDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception {
+		return (List<MailBlobVO>)list("EzEmailDAO.getOrphanedMailBlobList");
+	}
+	
+	public void deleteOrphanedMailBlob(MailBlobVO mailBlobVO) throws Exception {
+		delete("EzEmailDAO.deleteOrphanedMailBlob", mailBlobVO);
+	}
+	
+	@SuppressWarnings("unchecked")
 	public List<MailDeleteVO> getMailDeleteList() throws Exception {
 		return (List<MailDeleteVO>)list("EzEmailDAO.getMailDeleteList");
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<MailReservationVO> getMailReserved(Map<String, Object> map) throws Exception {
 		return (List<MailReservationVO>)list("EzEmailDAO.getMailReserved", map);

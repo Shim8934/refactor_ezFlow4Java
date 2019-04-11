@@ -275,7 +275,7 @@
 	            var filename = "";
 	            var filepath = "";
 
-	            xmlhttp.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + strItemID, false);
+	            xmlhttp.open("POST", "/ezCommunity/getItemAttachments.do?itemID=" + encodeURIComponent(strItemID), false);
 	            xmlhttp.send();
 
 	            xmldom.async = false;
@@ -516,17 +516,22 @@
 
 		        var strBody = message.GetEditorContent();
 		        
-		        if (trim_Cross(strBody) != "" || pDocID == "") {
-		            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
-		        } else {
-		            if (pDocID == "") {
-		            	strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
-		            } else {
-		                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
-		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>");
-		            }
+		        /* 2019-04-02 홍승비 - MHT파일 변환 및 저장 시 예외처리 추가 */
+		        try {
+			        if (trim_Cross(strBody) != "" || pDocID == "") {
+			            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+			        } else {
+			            if (pDocID == "") {
+			            	strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>");
+			            } else {
+			                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>");
+			            }
+			        }
+		        } catch (e) {
+		        	alert("<spring:message code='ezCommunity.lhj04'/>");
+      				return;
 		        }
-		        
 		        createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "CONTENT", strBody);
 		        
 		        if (gubun == "2") {

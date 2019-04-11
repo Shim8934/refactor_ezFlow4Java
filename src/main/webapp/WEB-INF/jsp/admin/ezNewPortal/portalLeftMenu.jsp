@@ -25,13 +25,21 @@
 			<div class="admin_left_title" title="<spring:message code='ezNewPortal.t053' />"><spring:message code='ezNewPortal.t053' /></div>
 			<div class="adminListBox" style="overflow:hidden; padding-right: 0;">
 				<!-- themes -->
-				<h2><span class = "leftMenu_btn" id = "themes"><spring:message code='ezNewPortal.t054' /></span><ul></ul></h2>
-				<!-- menus -->	
-				<h2><span class = "leftMenu_btn" id = "menus"><spring:message code='ezNewPortal.t055' /></span><ul></ul></h2>
-				<!-- portlets -->	
-				<h2><span class = "leftMenu_btn" id = "portlets"><spring:message code='ezNewPortal.t056' /></span><ul></ul></h2>
-				<!-- logos -->	
-				<h2><span class = "leftMenu_btn" id = "logos"><spring:message code='ezNewPortal.t057' /></span><ul></ul></h2>
+				<h2 class="on"><span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezPortal.jjh01' /></span></h2>
+				<ul class="lnbUL">
+					<li><span class = "list_text leftMenu_btn" id = "themes"><spring:message code='ezNewPortal.t054' /></span></li>
+					<li><span class = "list_text leftMenu_btn" id = "menus"><spring:message code='ezNewPortal.t055' /></span></li>
+					<li><span class = "list_text leftMenu_btn" id = "portlets"><spring:message code='ezNewPortal.t056' /></span></li>
+					<li><span class = "list_text leftMenu_btn" id = "logos"><spring:message code='ezNewPortal.t057' /></span></li>
+				</ul>
+				<h2 class="on"><span class="sub_iconLNB tree_arrow_up"></span><span class="h2Title"><spring:message code='ezPortal.jjh02' /></span></h2>
+				<ul class="lnbUL">
+					<li><span  class = "list_text" onClick="goPage(8)"><spring:message code='ezPersonal.khj1' /></span></li>
+					<li><span  class = "list_text" onClick="goPage(3)"><spring:message code = 'ezPersonal.hyh1' /></span></li>
+					<li><span  class = "list_text" onClick="goPage(4)"><spring:message code = 'main.t67' /></span></li>
+					<li><span  class = "list_text" onClick="goPage(7)"><spring:message code = 'main.t68' /></span></li>
+					<li><span  class = "list_text" onClick="goPage(9)"><spring:message code = 'main.t10000' /></span></li>
+				</ul>
 			</div>
 		</div>
 	</body>
@@ -83,6 +91,48 @@
         $( window ).resize(function() {
         	leftResize();
     	});
+        
+        function goPage(idx) {
+			var url = "";
+		    switch (idx) {
+		        case 1:
+		            url = "/admin/ezPersonal/manageNotice.do";
+		            break;
+
+		        case 2:
+		            if (CrossYN())
+		                url = "/myoffice/ezPersonal/Link/ManageCompanyLink_Cross.aspx";
+		            else {
+		                url = "/myoffice/ezPersonal/Link/ManageCompanyLink.aspx";
+		            }
+		            break;
+
+		        case 3:
+		            url = "/admin/ezPersonal/managePoll.do";
+		            break;
+
+		        case 4:
+		            url = "/admin/ezPersonal/managePopup.do";
+		            break;
+
+		        case 5:
+		            url = "/myoffice/ezPersonal/SuperPersonal/ManageSuperPersonal.aspx";
+		            break;
+
+		        case 7:
+		            url = "/admin/ezPersonal/employeeOfMonth.do";
+		            break;
+
+		        case 8:
+		            url = "/admin/ezPersonal/manageQuickLink.do";
+		            break;
+
+		        case 9:
+		            url = "/admin/ezPersonal/sliderImages.do";
+		            break;
+		    }
+			parent.frames["right"].location.href = url;
+		}
 		
 	</script>
 </html>

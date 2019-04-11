@@ -1141,7 +1141,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			if(!authYn.equals("A")) {
 				
 				List<MResourceGetAdmSubClsTreeVO> list = mResourceService.getResApprBrdListCheck(brdCompany, userId, userCompany, userDept , tenantId, langStr, authYn);
-				if(ownerId != "" || !ownerId.equals("1")) {
+				if(!ownerId.equals("") && !ownerId.equals("1")) {
 					for(int i=0; i<list.size(); i++) {
 						if(list.get(i).getBrdId().equals(ownerId)) {
 							authCheck = "Y";
@@ -1159,7 +1159,7 @@ public class MResourceGWController extends EgovFileMngUtil {
 			
 			// 2018-10-31 김민성 - 자원 관리자 권한 가진 자원이 있는지 체크
 			List<String> adminResList = mResourceService.getResAdminAuth(userId, tenantId, brdCompany);
-			if(ownerId != "") {
+			if(!ownerId.equals("")) {
 				for(int i=0; i<adminResList.size(); i++) {
 					if(adminResList.get(i).equals(ownerId)) {
 						adminYn = "Y";

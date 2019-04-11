@@ -1072,7 +1072,7 @@
 				displayname AS deptname,
 				cn AS deptid,
 				'yes' AS mine,
-				'M' AS authtype
+				unistr('M') AS authtype
 			FROM
 				TBL_DEPTMASTER
 			WHERE
@@ -1093,7 +1093,7 @@
 				D.DISPLAYNAME AS dept_name,
 				D.CN AS dept_id,
 				'add' AS mine,
-				'M' AS authtype
+				unistr('M') AS authtype
 			FROM 
 				TBL_DEPTMASTER D
 			RIGHT JOIN 

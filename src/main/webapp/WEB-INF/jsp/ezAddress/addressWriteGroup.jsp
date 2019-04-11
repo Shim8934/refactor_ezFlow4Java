@@ -69,6 +69,8 @@
 	        var strLang_1 = "<spring:message code='ezAddress.t315' />";
 	        var strLang_2 = "<spring:message code='ezAddress.jsh04' />";
 	        var selSpan = "";
+	        var receiverCount = 0;
+	        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
 	        
 	        document.onselectstart = function () { return false; };
 	        window.onload = function () {
@@ -238,7 +240,6 @@
 	        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////페이지 네이션 추가
 	        function goToPageByNum(Value) {
 	            page = Value;
-	            makePageSelPage();
 	            movePage(page);
 	        }
 	        function selbeforeBlock() {
@@ -294,7 +295,7 @@
 	        function td_Create1(strtext) {
 	            document.getElementById("tblPageRayer").innerHTML = strtext;
 	        }
-	        var BlockSize = "5";
+	        var BlockSize = 5;
 	        function makePageSelPage() {
 	            var strtext;
 	            var PagingHTML = "";
@@ -324,8 +325,8 @@
 	            var MaxNum;
 	            var i;
 	            var startNum = (parseInt((pageNum - 1) / BlockSize) * BlockSize) + 1;
-	            if (totalPage >= (startNum + parseInt(BlockSize))) {
-	                MaxNum = (startNum + parseInt(BlockSize)) - 1;
+	            if (totalPage >= (startNum + BlockSize)) {
+	                MaxNum = (startNum + BlockSize) - 1;
 	            }
 	            else {
 	                MaxNum = totalPage;
@@ -396,6 +397,11 @@
 	        		alert("<spring:message code='ezSchedule.t197' />");
 	        		return;
 	        	}
+	        	
+	        	if (mailMaxReceiverCount < receiverCount) {
+        			alert(strLangGroupMemberCount01 + mailMaxReceiverCount + strLangGroupMemberCount02);
+                    return;
+        		}
 	
                 var xmlHTTP = createXMLHttpRequest();
                 var xmlDom = createXmlDom();
@@ -537,7 +543,7 @@
 	                    pListXML_Info = xml;
                     	pSeach = true;
                     	DisplayUserImageList();
-                    	makePageSelPage();
+                    	makePageSelPage2();
                     	/* 2018-09-03 홍승비 - 검색 완료 후에 pSeach 플래그 false로 되돌림(pSeach가 true를 유지해서 '검색결과'가 고정되므로) */
                     	pSeach = false;
                 	}
@@ -593,6 +599,8 @@
 	                pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " <" + strEmail + ">" + "]]></VALUE></CELL></ROW>";
 	            }
 	            pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
+	            
+	            receiverCount = ReturnXMLRow.length;
 	
 	            var Resultxml = loadXMLString(pparsingXML2);
 	            var listview = new ListView();
@@ -656,12 +664,14 @@
 	            var strName = "";
 	
 	            for (var i = 0; i < arrRows.length; i++) {
+	            	decreaseReceiverCount();
 	                selList.DeleteRow(arrRows[i].id);
 	            }
 	        }
 	
 	        function TreeViewNodeClick() {
 	            CurPage = "1";
+	            issearch = false;
 	            listContentArry = new Array();
 	            var treeView = new TreeView();
 	            treeView.LoadFromID("FromTreeView");
@@ -864,50 +874,44 @@
 	                        var pparsingXML2 = "";
 	
 	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
-	                        var strName = arrRows[i].cells[0].innerText
+	                        var strName = arrRows[i].cells[0].innerText;
 	                        var strEmail = GetAttribute(arrRows[i], "DATA3");
 	                        var strKey = GetAttribute(arrRows[i], "DATA1");
 	                        var strType = GetAttribute(arrRows[i], "DATA2");
-	
+	                        
+	                        if (strType == "mailgroup") {
+	                            alert(strName + ": " + strLang43);
+	                            continue;
+	                        }
+	                        
 	                        if (strEmail.trim() == "") {
 	                            alert(strName + "<spring:message code='ezAddress.t277' />")
 	                            continue;
 	                        }
-	                        if (strName.trim() == "")
-	                            strName = strEmail;
-	
-	                        if (strEmail.trim() == "mail") {
-	                            continue;
-	                        }
-	
-	                        if (strType.indexOf("group") > -1) {
-	                            alert(strLang43);
-	                            continue;
-	                        }
 	
 	                        var listid = "MsgToList";
-	
 	                        var targetList = new ListView();
 	                        targetList.LoadFromID(listid);
 	
 	                        var bFlag = targetList.ExistRow("DATA2", strEmail);
 	                        if (bFlag) {
-	                            alert(strName + "<spring:message code='ezAddress.t1101' />");
 	                            continue;
 	                        }
-	                        if (strType == "group") {
-	                            alert(strLang43);
-	                            continue;
+							
+	                        if (!increaseReceiverCount()) {
+	                        	return;
 	                        }
-	
-	                        else {
-	                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1><![CDATA[" + strName + "]]></DATA1>";
-	                            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
-	                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strDeptNM + "]]></DATA3>";
-	                            pparsingXML = pparsingXML + "<DATA4>" + strEmail + "</DATA4>";
-	                            pparsingXML = pparsingXML + "<DATA5>" + strType + "</DATA5>";
-	                            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " <" + strEmail + ">" + "]]></VALUE></CELL></ROW>";
+	                        
+                       		if (strName.trim() == "") {
+	                            strName = strEmail;
 	                        }
+                       		
+                            pparsingXML = pparsingXML + "<ROW><CELL><DATA1><![CDATA[" + strName + "]]></DATA1>";
+                            pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
+                            pparsingXML = pparsingXML + "<DATA3><![CDATA[" + strDeptNM + "]]></DATA3>";
+                            pparsingXML = pparsingXML + "<DATA4>" + strEmail + "</DATA4>";
+                            pparsingXML = pparsingXML + "<DATA5>" + strType + "</DATA5>";
+                            pparsingXML = pparsingXML + "<VALUE><![CDATA[" + strName + " <" + strEmail + ">" + "]]></VALUE></CELL></ROW>";
 	                        pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA2>";
 	                        Resultxml = loadXMLString(pparsingXML2);
 	
@@ -953,6 +957,10 @@
 		                
 		                console.log(nodeIdx);
 		                if (!bFlag) {
+		                	if (!increaseReceiverCount()) {
+	                        	return;
+	                        }
+		                	
 		                    pparsingXML2 = "";
 	                        pparsingXML = "";
 	                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1001,12 +1009,11 @@
 		                    getlistview.LoadFromID("MsgToList");
 		                    var bFlag = getlistview.ExistRow("DATA2", strEmail);
 		
-		                    if (bFlag) {
-		                        alert(strName + "<spring:message code='ezAddress.t1101' />");
-		                        continue;
-		                    }
-		                    else {
-		
+		                    if (!bFlag) {
+		                    	if (!increaseReceiverCount()) {
+		                        	return;
+		                        }
+		                    	
 		                        pparsingXML2 = "";
 		                        pparsingXML = "";
 		                        pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
@@ -1055,7 +1062,7 @@
 
 	    	var emailname = document.getElementById("emailname").value;
 	        var pTextEmail = TrimText(document.getElementById("emailaddr").value);
-	        var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+	        var regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 	    	
 	        if (emailname == "") {
 	            alert("<spring:message code='ezAddress.t349' />");
@@ -1097,7 +1104,11 @@
 
                 return;
             }
-
+			
+            if (!increaseReceiverCount()) {
+            	return;
+            }
+            
             pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
             pparsingXML = pparsingXML + "<ROW><CELL><DATA1><![CDATA[" + strName + "]]></DATA1>";
             pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
@@ -1117,9 +1128,9 @@
                     MaxID = curnum;
             }
 
-            var objTr = listview.AddRow(0);
-            var trid = listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1);
-            SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxID).substring(0, listview.GetSelectedRowID(MaxID).lastIndexOf('_') + 1) + eval(MaxID + 1));
+            var objTr = listview.AddRow(InitTr.length);
+            var trid = listview.GetSelectedRowID(InitTr.length).substring(0, listview.GetSelectedRowID(InitTr.length).lastIndexOf('_') + 1) + eval(MaxID + 1);
+            SetAttribute(objTr, "id", trid);
             listview.AddDataRow(objTr, Resultxml);
             document.getElementById(trid).style.whiteSpace = "nowrap";
             document.getElementById("emailname").value = "";
@@ -1716,7 +1727,7 @@
 	            dropelement = "";
 	        }
 	
-	        var BlockSize2 = 10;
+	        var BlockSize2 = 5;
 	        function td_Create2(strtext) {
 	            document.getElementById("tblPageRayer2").innerHTML = strtext;
 	        }
@@ -1752,8 +1763,8 @@
 	            var MaxNum2;
 	            var i;
 	            var startNum2 = (parseInt((pageNum2 - 1) / BlockSize2) * BlockSize2) + 1;
-	            if (totalPage2 >= (startNum2 + parseInt(BlockSize2))) {
-	                MaxNum2 = (startNum2 + parseInt(BlockSize2)) - 1;
+	            if (totalPage2 >= (startNum2 + BlockSize2)) {
+	                MaxNum2 = (startNum2 + BlockSize2) - 1;
 	            }
 	            else {
 	                MaxNum2 = totalPage2;
@@ -1804,7 +1815,6 @@
 		    	listContentArry = new Array();
 		    	
 	            CurPage = Value;
-	            makePageSelPage2();
 	            movePage2(CurPage);
 	        }
 	        function selbeforeBlock2() {
@@ -1834,7 +1844,11 @@
 	        function movePage2(newPage2) {
 	            if (parseInt(newPage2) > 0 && parseInt(newPage2) <= parseInt(totalPage2)) {
 	                CurPage = newPage2;
-	                displayUserList();
+	                if (issearch) {
+	                	search_click("re_search");
+	                } else {
+	                	displayUserList();
+	                }
 	            }
 	        }
 	        function prevPage_onclick2() {
@@ -1953,6 +1967,19 @@
 	        	}
 	        }
 	        
+	        function increaseReceiverCount() {
+        		if (mailMaxReceiverCount < receiverCount + 1) {
+        			alert(strLangGroupMemberCount01 + mailMaxReceiverCount + strLangGroupMemberCount02);
+                    return false;
+        		}
+        		
+        		receiverCount += 1;
+	        	return true;
+	        }
+
+	        function decreaseReceiverCount() {
+	        	receiverCount -= 1;
+	        }
 	    </script>
 	</head>
 	<body class="popup" style="overflow: hidden">
@@ -2143,7 +2170,7 @@
 	                        <table style="border-collapse: collapse; border-spacing: 0; padding: 0px; margin-top:3px;">
 	                            <tr>
 	                                <td class="box" style="border-right: 0px">
-	                                    <div style="height: 470px; width: 220px; overflow-x: hidden; overflow-y: auto;" id="TreeView"></div>
+	                                    <div style="height: 470px; width: 220px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 	                                </td>	                                
 	                                <td id ="OrganListView" class="listview" style="overflow-y: auto; overflow-x: auto;">
 	                                    <table style="width: 100%; back" class="popup_mainlist">

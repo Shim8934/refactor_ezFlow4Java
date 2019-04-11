@@ -120,7 +120,10 @@
 		    var secureReadCount = "${secureMaxReadCount}";
 		    var secureReadDate = "${secureMaxReadDate}";
 		    var folderPath = "${draftsFolderName}";
-		    
+		    var receiverCount = 0;
+	        var groupAddressCountMap = {};
+	        var mailMaxReceiverCount = parseInt("${mailMaxReceiverCount}");
+	        
 			function window_onload() {
 	            if (!CrossYN()) {
 	                document.all.EzHTTPTrans.SetBigLang = "${userLang}" == "1" ? 1 : 0;
@@ -535,10 +538,14 @@
 			        newElem = PrepareMailTag( iType, "email", mailName, pemail, "");
 				    var IsInsert = CheckMailReceiver(newElem);
 		    		
-				    if(!IsInsert)
-				    {
+				    if(!IsInsert) {
+				    	if (!increaseReceiverCount()) {
+			        		return;
+			        	}
+				    	
 			            validDIV.appendChild( newElem );
 			        }
+			        
 			        formName = "";
 			        g_bDirty = true;
 			    }	
@@ -872,7 +879,12 @@
 								newElem = PrepareMailTag("0", addressType, ui.item.value,
 										ui.item.email, href);
 								IsInsert_MsgTo = CheckMailReceiver(newElem);
+								
 								if (!IsInsert_MsgTo) {
+									if (!increaseReceiverCount(addressType, href)) {
+						        		return;
+						        	}
+									
 									MsgToGot.appendChild(newElem);
 									document.getElementById("MsgTo").value = "";
 									IsInsert_MsgTo = true;
@@ -945,7 +957,12 @@
 								newElem = PrepareMailTag("1", addressType, ui.item.value,
 										ui.item.email, href);
 								IsInsert_MsgCC = CheckMailReceiver(newElem);
+								
 								if (!IsInsert_MsgCC) {
+									if (!increaseReceiverCount(addressType, href)) {
+						        		return;
+						        	}
+									
 									MsgCCGot.appendChild(newElem);
 									document.getElementById("MsgCC").value = "";
 									IsInsert_MsgCC = true;
@@ -1018,7 +1035,12 @@
 								newElem = PrepareMailTag("2", addressType, ui.item.value,
 										ui.item.email, href);
 								IsInsert_MsgBCC = CheckMailReceiver(newElem);
+								
 								if (!IsInsert_MsgBCC) {
+									if (!increaseReceiverCount(addressType, href)) {
+						        		return;
+						        	}
+									
 									MsgBCCGot.appendChild(newElem);
 									document.getElementById("MsgBCC").value = "";
 									IsInsert_MsgBCC = true;
@@ -1139,7 +1161,7 @@
 		                <div style="font-weight:normal; "><INPUT id="toMe" onclick="MailToMe_Onclick();" value="" type="checkbox" name="toMe"/>
 		                <label for="toMe" style="margin-left:-3px; cursor:pointer" ><spring:message code='ezEmail.t99000010' /></label></div>
 		            </th>
-		            <td style="width:76%"><input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="1" style="WIDTH:99%;ime-mode:active;"></td>
+		            <td style="width:76%"><input type="text" name="MsgTo" id="MsgTo" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="1" style="WIDTH:99%;ime-mode:active;"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
 		                <select id="SelectToAddress" style="WIDTH:100px" onchange="simple_select('TO',this)">
 		                </select>
@@ -1153,7 +1175,7 @@
 		            <th rowspan="2"  ><a class="imgbtn"><span onClick="SelectReceiver_onClick('CC')" style="width:50px; text-align: center;"><spring:message code='ezEmail.t594' /></span></a>
 		                <div onclick="MailBCCView(this);" style="cursor:pointer;" status="off" id="BccViewer"><img src="/images/ImgIcon/groupplus.gif" align="absmiddle"/><span><spring:message code='ezEmail.t562' /></span></div>
 		            </th>
-		            <td style="width:76%"><input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="2" style="WIDTH:99%"></td>
+		            <td style="width:76%"><input type="text" name="MsgCC" id="MsgCC" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="2" style="WIDTH:99%"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
 		                <select id="SelectCcAddress" style="WIDTH:100px" onchange="simple_select('CC',this)">
 		                </select>
@@ -1165,7 +1187,7 @@
 		          </tr>
 		          <tr id="MsgBCC_TR" style="display:none;">
 		            <th rowspan="2" ><a class="imgbtn"><span onClick="SelectReceiver_onClick('BCC')"><spring:message code='ezEmail.t562' /></span></a></th>
-		            <td style="width:76%"><input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeyup="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="3" style="WIDTH:99%"></td>
+		            <td style="width:76%"><input type="text" name="MsgBCC" id="MsgBCC" class="width100percent" onkeypress="return on_keydown(event)" onblur="onblurOnRecipientInputField(this.value)" TABINDEX="3" style="WIDTH:99%"></td>
 		            <td style="width:100px;BORDER-LEFT: #ffffff 1px solid;">
 		                <select id="SelectBCCAddress" style="WIDTH:100px" onchange="simple_select('BCC',this)">
 		                </select>

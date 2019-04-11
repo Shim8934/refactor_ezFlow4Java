@@ -8,6 +8,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<link href="${util.addVer('main.portal', 'msg')}" rel="stylesheet" type="text/css">
+		<link rel="stylesheet" href="${util.addVer('/css/ezPersonal/popup.css')}">
         <script type="text/javascript" src="${util.addVer('/js/ezPortal/string_component.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezPortal/functionLib.js')}"></script>			
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -16,27 +17,12 @@
 		<script type="text/javascript" src="${util.addVer('/js/jquery-ui/jquery-ui.min.js')}"></script>		
 		<script type="text/javascript" src="/js/Kaoni_ActiveX.js"></script>
 		<style type="text/css">
-			#editBtn {
-				float: right;
-			}
-			
-			#editBtn img {
-				width: 19px;
-				height: 19px;
-				margin-right: 10px;
-				margin-top: 8px;
-				cursor: pointer;
-			}
-			
-			#editMenuBtn {
-				display: none;
-			}
-			
+			#editBtn {float: right;}
+			#editBtn img {width: 19px;height: 19px;margin-right: 10px;	margin-top: 8px;cursor: pointer;}
+			#editMenuBtn {display: none;}
 			.ui-sortable-helper {border-left:1px dashed #898989; border-top : 1px dashed #898989;}
-			
 			#logoUrl {width:106px; height:42px;}
-			
-			.icon_topmenu frame_set {}
+			.popup_notice{display:inline-block;position:absolute;}
 		</style>
 	</head>
 	<body>
@@ -47,7 +33,7 @@
 		</c:if>
 
 		<div style="width:100%;height:100%;position:absolute;top:0;left:0;z-index:1000;display:none;" id="progressPanel">&nbsp;</div>
-		
+		<div id="popupArea"></div>
 		<script type="text/javascript">
 		
 		var newPortalTopMenu = {
@@ -106,6 +92,7 @@
 					//window.open(menuUrl, 'main', '');
 					// 클릭하면 창닫기.
 					subMenuClickEvent('off', menuUrl);
+					notice_all_close();
 				});
 			});
 			
@@ -429,8 +416,10 @@
 			var toggleMenu = document.getElementById('toggleMenu').children;
 			toggleMenu.forEach(function (item, index) {
 				var menuUrl = newPortalTopMenu.menuListObj['menu_' + item.id].menuUrl;
+				
 				item.addEventListener('click', function () {
 					subMenuClickEvent('off', menuUrl);
+					notice_all_close();
 					//window.open(menuUrl, 'main', '');
 				});
 			});				
@@ -643,44 +632,87 @@
 		
 		var getNotiPopup = function () {
 			var notiList = JSON.parse('${popupNotiList}');
+			var position0Count = 0;
+			var position1Count = 0;
+			var position2Count = 0;
+			var position3Count = 0;
+			var position4Count = 0;
+			var position5Count = 0;
 			
-			if (notiList != null || notiList.length != 0) {
+			if (notiList != null && notiList.length != 0) {
 				for (var i = 0; i < notiList.length; i++) {
 					var notiInfo = notiList[i];
+					var index = 0;
+					var wPosition = notiInfo.position;
 					
-					openNotiPopup(notiInfo.itemSeq, notiInfo.width, notiInfo.height, notiInfo.position);
+					if (wPosition == 0) {
+						index = ++position0Count;
+					} else if (wPosition == 1) {
+						index = ++position1Count;
+					} else if (wPosition == 2) {
+						index = ++position2Count;
+					} else if (wPosition == 3) {
+						index = ++position3Count;
+					} else if (wPosition == 4) {
+						index = ++position4Count;
+					} else if (wPosition == 5) {
+						index = ++position5Count;
+					} else if (wPosition == 6) {
+						index = ++position6Count;
+					} else {
+						idex = i;
+					}
+					
+					openNotiPopup(notiInfo.itemSeq, notiInfo.width, notiInfo.height, notiInfo.position, index);
+					
 				}
+				
+				document.getElementById("menu_toggle").style.display = "none";
+				var topMenuFull = document.getElementById('topMenuFull');
+				var topFrame = parent.document.getElementById('topFrame');
+				var bodyTag = document.getElementsByTagName('Body')[0];
+				
+				var screenHeight = screen.height;
+				topFrame.style.position = 'relative';
+				topFrame.style.minHeight = screenHeight+"px";
+				bodyTag.style.backgroundColor = 'rgba(0, 0, 0, 0.3)';
+				
+				var popupArea = document.getElementById("popupArea");
+				popupArea.style.height = (screenHeight - 57) + "px";
+				popupArea.style.width = "100%";
+				showProgress("notice");
 			}
+			
 		}
 		
 		//위치 지정하여 팝업 열기 --- 팝업 공지사항
-		var openNotiPopup = function (popup_number, wWidth, wHeight, wPosition) {
+		var openNotiPopup = function (popup_number, wWidth, wHeight, wPosition, index) {
 		    var wVertical, wHorizontal;
-		    
+		    console.log(index);
 			if(wPosition == 0) {
-		        wVertical = Math.floor(screen.height/2) - (wHeight/2); 
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
+		        wVertical = Math.floor(window.innerHeight/2) - (wHeight/2) - 90 + (index*10);
+		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
 		    } else if(wPosition == 1) {
-		        wVertical = 100; 
-		        wHorizontal = 100;
+		        wVertical = 100 + (index*10); 
+		        wHorizontal = 100 + (index*10);
 		    } else if(wPosition == 2) {
-		        wVertical = screen.height - wHeight - 100; 
-		        wHorizontal = 100;
+		        wVertical = screen.height - wHeight - 100 + (index*10); 
+		        wHorizontal = 100 + (index*10);
 		    } else if(wPosition == 3) {
-		        wVertical = 100; 
-		        wHorizontal = screen.width - wWidth - 100;
+		        wVertical = 100 + (index*10); 
+		        wHorizontal = screen.width - wWidth - 100 + (index*10);
 		    } else if(wPosition == 4) {
-		        wVertical = screen.height - wHeight - 100; 
-		        wHorizontal = screen.width - wWidth - 100;
+		        wVertical = screen.height - wHeight - 100 + (index*10); 
+		        wHorizontal = screen.width - wWidth - 100 + (index*10);
 		    } else if(wPosition == 5) {
-		        wVertical = 100; 
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
+		        wVertical = 100 + (index*10); 
+		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
 		    } else if(wPosition == 6) {
-		        wVertical = screen.height - wHeight - 100; 
-		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2);
+		        wVertical = screen.height - wHeight - 100 - (index*10); 
+		        wHorizontal = Math.floor(screen.width/2) - (wWidth/2) + (index*10);
 		    } else {
-		        wVertical = 0; 
-		        wHorizontal = 0;
+		        wVertical = 0 + (index*10); 
+		        wHorizontal = 0 + (index*10);
 		    }
 
 		    if(wVertical < 0)
@@ -691,9 +723,190 @@
 
 		    if (navigator.userAgent.indexOf("Safari") > 0 && navigator.userAgent.indexOf("Chrome") == -1)
 		        wHeight = eval(wHeight) - 60;
-
-		    window.open("/admin/ezPersonal/showPopup.do?itemSeq=" + popup_number + 
-					"&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0");
+ 			
+		    var request = new XMLHttpRequest();
+		    request.open('POST', '/admin/ezPersonal/showLayerPopup.do');
+		    request.setRequestHeader('Content-Type', 'application/json');
+		    var resultHTML = "";
+		    
+		    request.onload = function () {
+		    	if (request.status >= 200 && request.status < 400) {
+		    		var result = JSON.parse(request.responseText);
+		    		var wHeight = result.height;
+		    		var wWidth = result.width;
+		    		var wLeft = result.horizontal;
+		    		var wTop = result.vertical;
+		    		
+		    		var popupDiv = document.createElement("div");
+		    		popupDiv.id = "popup" + popup_number
+		    		popupDiv.className = "popup_notice popup_type" + result.skinValue;
+		    		
+		    		var formElement = document.createElement("form");
+		    		formElement.style.height = "100%";
+		    		
+		    		var layoutDiv = document.createElement("div");
+		    		layoutDiv.className = "popup_noticeLayout";
+		    		
+		    		var titleDl = document.createElement("dl");
+		    		titleDl.className = "popup_noticeTitle";
+		    		
+		    		var titleDt = document.createElement("dt");
+		    		titleDt.className = "title_type" + result.skinValue;
+		    		
+		    		var titleDd = document.createElement("dd");
+		    		titleDd.className = "name_type" + result.skinValue;
+		    		titleDd.textContent = result.title;
+		    		
+		    		titleDl.appendChild(titleDt);
+		    		titleDl.appendChild(titleDd);
+		    		
+		    		var contentDiv = document.createElement("div");
+		    		contentDiv.className = "popup_noticeList";
+		    		contentDiv.innerHTML = result.content;
+		    		
+		    		var btnDiv = document.createElement("div");
+		    		btnDiv.className = "notice_btn";
+		    		
+		    		var btnPElem = document.createElement("p");
+		    		btnPElem.className = "btn_checkbox";
+		    		
+		    		var checkInput = document.createElement("input");
+		    		checkInput.type = "checkbox";
+		    		checkInput.setAttribute("name", "checkbox");
+		    		checkInput.className = "inp_noticeCheck";
+		    		checkInput.id = "inp_noticeCheck" + popup_number;
+		    		
+		    		var labelElem = document.createElement("label");
+		    		labelElem.className = "name_type" + result.skinValue;
+		    		labelElem.setAttribute("for", "inp_noticeCheck");
+		    		labelElem.textContent = "<spring:message code = 'ezPersonal.t267' />";
+		    		
+		    		var closePElem = document.createElement("p");
+		    		closePElem.className = "notice_btnClose close_type" + result.skinValue;
+		    		closePElem.id = "closeBtn" + popup_number;
+		    		
+		    		btnPElem.appendChild(checkInput);
+		    		btnPElem.appendChild(labelElem);
+		    		btnDiv.appendChild(btnPElem);
+		    		
+		    		layoutDiv.appendChild(titleDl);
+		    		layoutDiv.appendChild(contentDiv);
+		    		layoutDiv.appendChild(btnDiv);
+		    		formElement.appendChild(layoutDiv);
+		    		popupDiv.appendChild(closePElem);
+		    		popupDiv.appendChild(formElement);
+		    		/* resultHTML += "<div id='popup" + popup_number + "' class='popup_notice popup_type" + result.skinValue + "'>";
+		    		resultHTML += "<form style='height:100%'>";
+		    		resultHTML += "<div class='popup_noticeLayout'>";
+		    		resultHTML += "<dl class='popup_noticeTitle'>";
+		    		resultHTML += "<dt class='title_type" + result.skinValue + "'></dt>";
+		    		resultHTML += "<dd class='name_type" + result.skinValue + "'>" + result.title + "</dd>";
+		    		resultHTML += "</dl>";
+		    		resultHTML += "<div class='popup_noticeList'>" + result.content + "</div>";
+		    		resultHTML += "<div class='notice_btn'><p class='btn_checkbox'>";
+		    		resultHTML += "<input type='checkbox' name='checkbox' class='inp_noticeCheck' id='inp_noticeCheck" + popup_number + "'/>";
+		    		resultHTML += "<label class='name_type" + result.skinValue + "' for='inp_noticeCheck'><spring:message code = 'ezPersonal.t267' /></label></p>";
+		    		resultHTML += '<p class="notice_btnClose close_type' + result.skinValue + '" id="closeBtn' + popup_number + '">&nbsp;</p>';
+		    		resultHTML += "</div></div></form></div>";
+		    		 */
+		    		 
+		    		//document.getElementById("popupArea").appendChild(popupDiv);
+		    		document.getElementById("popupArea").appendChild(popupDiv);
+		    		//$("#popupArea").append(resultHTML);
+		    		
+		    		document.getElementById("popup" + popup_number).style.height = wHeight - 40 + "px";
+		    		document.getElementById("popup" + popup_number).style.width = wWidth - 40 + "px";
+		    		document.getElementById("popup" + popup_number).style.left = wLeft + "px";
+		    		document.getElementById("popup" + popup_number).style.top = wTop + "px";
+		    		document.getElementById("popup" + popup_number).style.zIndex = index + 1;
+		    		document.getElementById("popup" + popup_number).addEventListener("click", changeZIndex);
+		    		document.getElementById("inp_noticeCheck" + popup_number).addEventListener("change", function() {
+		    			notice_close(popup_number, result.userId, "checkbox");
+		    		});
+		    		
+		    		document.getElementById("closeBtn" + popup_number).addEventListener("click", function() {
+		    			notice_close(popup_number, result.userId, "btn");
+		    		});
+		    		
+		    		var popupContent = document.getElementById("popup" + popup_number).getElementsByClassName("popup_noticeList")[0];
+		    		popupContent.style.height = document.getElementById("popup" + popup_number).clientHeight - 175 + "px";
+		    		
+					$("#popup" + popup_number).draggable({
+						containment : "#popupArea",
+						cancel : ".popup_noticeList",
+						scroll: false 
+					});
+		    	}
+		    }
+		    
+		    var data = JSON.stringify({
+		    	height : wHeight,
+		    	width : wWidth,
+		        vertical : wVertical,
+		        horizontal : wHorizontal,
+		        itemSeq : popup_number
+			});
+			
+			request.send(data);
+		    /* window.open("/admin/ezPersonal/showPopup.do?itemSeq=" + popup_number + 
+					"&answer=", "", "height=" + wHeight + "px,width=" + wWidth + "px, left=" + wHorizontal + "px, top=" + wVertical + "px, status = no, toolbar=no, menubar=no,location=no, resizable=0"); */
+		}
+		
+		var changeZIndex = function () {
+			var popupList = document.getElementsByClassName("popup_notice");
+			var popupListCount = popupList.length;
+			var popupId = this.id;
+			var popupZIndex = Number(this.style.zIndex);
+			
+			for (var i = 0; i < popupListCount; i++) {
+				var popup = popupList[i];
+				var compPopupZIndex = Number(popup.style.zIndex);
+				
+				if (popupZIndex <= compPopupZIndex) {
+					popupZIndex = compPopupZIndex + 1;
+				}
+				
+			}
+			
+			this.style.zIndex = popupZIndex;
+		}
+		
+		var notice_close = function (popupId, userId, position) {
+			var isChecked = document.getElementById("inp_noticeCheck" + popupId).checked;
+			
+			if (isChecked) {
+				setCookie("POPUP_" + popupId + "_" + userId, "1", 1); 
+			}
+			
+			var popupList = document.getElementsByClassName("popup_notice");
+			
+			var popup = document.getElementById("popup" + popupId);
+			popup.parentNode.removeChild(popup);
+			
+			if (popupList.length < 1) {
+				hideProgress();
+				var topFrame = parent.document.getElementById('topFrame');
+				document.getElementsByTagName("body")[0].style.backgroundColor = "";
+				topFrame.style.position = "";
+			}
+		}
+		
+		var notice_all_close = function () {
+			var popupList = document.getElementsByClassName("popup_notice");
+			var popupListCount = popupList.length;
+			
+			for (var i = 0; i < popupListCount; i++) {
+				var popupId = popupList[0].id; 
+				var popup = document.getElementById(popupId);
+				
+				popup.parentNode.removeChild(popup);
+			}
+		}
+		
+		function setCookie(name, value, expiredays) {
+			var todayDate = new Date();
+			todayDate.setDate( todayDate.getDate() + expiredays );
+			document.cookie = name + "=" + encodeURIComponent( value ) + "; path=/; expires=" + todayDate.toGMTString() + ";"
 		}
 		
 		var officeBugPatch = function() {
@@ -746,7 +959,14 @@
 			
 		}
  		
- 		var showProgress = function() {
+ 		var showProgress = function(position) {
+ 			
+ 			if (position == "notice") {
+ 				document.getElementById("progressPanel").style.height = "56px"; 
+ 			} else {
+ 				document.getElementById("progressPanel").style.height = "100%";
+ 			}
+ 			
 		    document.getElementById("progressPanel").style.display = "block";
 		    document.getElementById("progressPanel").style.opacity = 0.5;
 		    document.getElementById("progressPanel").style.background = "rgba(0,0,0,0.7)";

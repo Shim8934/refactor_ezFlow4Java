@@ -213,8 +213,10 @@ function view() {
 		sort ='date';
 		sortFlag = 'desc';
 	}
+	var searching = document.getElementById("searchInput").value;
+	searching = encodeURIComponent(searching).replace(/%20/g,'+');
 	searchInput = encodeURIComponent(searchInput).replace(/%20/g,'+');
-	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=" + searchInput + "&sort=" + sort + "&sortFlag=" + sortFlag;
+	var szUrl = "/ezLadder/ladderMain.do?mode=" + mode + "&currPage=" + currPage + "&searchSelect=" + searchSelect + "&searchInput=" + searchInput + "&sort=" + sort + "&sortFlag=" + sortFlag +"&searching=" + searching;
 
 	document.location.href = szUrl;
 }

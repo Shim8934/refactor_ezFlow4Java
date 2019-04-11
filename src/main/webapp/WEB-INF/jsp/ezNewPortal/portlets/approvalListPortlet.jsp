@@ -265,7 +265,14 @@
 		        pArgument[1] = pHref;
 		        pArgument[2] = pDraftFlag;
 		        pArgument[3] = "";
-	
+				
+		        if (CheckFormConnFlag(pDocID, orgCompanyID)) {
+		            var pAlertContent = "<spring:message code='ezApprovalG.t1726'/>";
+		            //OpenAlertUI(pAlertContent);
+		            alert(pAlertContent);
+		            return;
+		        }
+		        
 		        var openLocation = "";
 		        var tempDocState = "001";
 		        var SusinSn = "0";
@@ -403,6 +410,29 @@
 		        window.open(wfileLocation, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + height + ",width=" + width + ",top=" + top + ",left = " + left);
 		    }
 			
+		    function CheckFormConnFlag(docID, companyID) {
+		    	var result = "";
+		    	
+		    	$.ajax({
+		    		type : "POST",
+		    		dataType : "text",
+		    		async : false,
+		    		url : "/ezApprovalG/getFormConnFlag.do",
+		    		data : {
+		    			docID : docID,
+		    			companyID : companyID
+		    		},
+		    		success: function(xml){
+		    			result = xml;
+		    		}
+		    	});
+		    	
+		        if (getNodeText(loadXMLString(result).documentElement) == "Y")
+		            return true;
+		        else
+		            return false;
+		    }
+		    
 			getApprovalList("doing");
 		</script>
 	</body>

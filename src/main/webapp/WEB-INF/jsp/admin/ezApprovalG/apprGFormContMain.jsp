@@ -91,7 +91,7 @@
 			    gManageID = Para[3];
 			    companyID = Para[7];
 			    
-			    if (Para[3] != "ALL" && Para[3] != "none") {
+			    if (Para[3] != "ALL" && ((approvalFlag == "G" && Para[3] != "none") || approvalFlag == "S")) {
 			    	document.getElementById("rdGroup").checked = true;
 			        rdGroup_onclick();
 			        document.getElementById("tbManage").value = Para[6];
@@ -493,7 +493,7 @@
 	        <tr>
 	            <td valign="top" style="width:43%; max-width: 336px;">
 	            	<div><h2 class="h2_dot"><span style="min-width: 45px;"><spring:message code = 'main.t8' /></span></h2></div>
-	                <div id="TreeView" style="border: #ddd 1px solid;width: 100%; height: 404px; background-color: #ffffff;overflow-x: hidden; overflow-y: auto;"></div>
+	                <div id="TreeView" style="border: #ddd 1px solid;width: 100%; height: 404px; background-color: #ffffff;overflow:auto"></div>
 	            </td>
 	            <td class = 'approvalG' align="center" style="width:5%">
 	            	<img id="btnManage" style="cursor:pointer; display:none" src="../../images/kr/cm/arr_right.gif" width="16" height="16" onclick="btnManage_onclick()"><br><br>

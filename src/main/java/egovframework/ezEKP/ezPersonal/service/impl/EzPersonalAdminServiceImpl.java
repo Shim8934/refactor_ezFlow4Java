@@ -11,6 +11,8 @@ import java.util.TimeZone;
 
 import javax.annotation.Resource;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +25,10 @@ import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezPersonal.dao.EzPersonalAdminDAO;
 import egovframework.ezEKP.ezPersonal.service.EzPersonalAdminService;
 import egovframework.ezEKP.ezPersonal.vo.PersonalEmpMonthVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalLightPollVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalNoticeVO;
+import egovframework.ezEKP.ezPersonal.vo.PersonalPopopConfigVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalPopupVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalQuickLinkVO;
 import egovframework.ezEKP.ezPersonal.vo.PersonalSliderImageVO;
@@ -182,64 +186,30 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public String getQuickLinkList(LoginVO userInfo, String lang) throws Exception {
+	public List<PersonalQuickLinkVO> getQuickLinkList(LoginVO userInfo, String lang) throws Exception {
 		logger.debug("getQuickLinkList started");
 
-		StringBuilder result = new StringBuilder();
-		
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("tenantID", userInfo.getTenantId());
 		map.put("companyID", userInfo.getCompanyID());
+		map.put("lang", userInfo.getLang());
 		
 		List<PersonalQuickLinkVO> list = ezPersonalAdminDAO.getQuickLinkList(map);
-		
-		result.append("<LISTVIEWDATA>");
-		result.append("<ROWS>");
-		
-		for(PersonalQuickLinkVO vo : list) {
-			result.append("<ROW>");
+		for (PersonalQuickLinkVO vo : list) {
+			vo.setRegDate(commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false));
 			
-			if (lang.equals("1")) {
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName()) + "</VALUE>");
-				result.append("<DATA1>" + commonUtil.cleanValue(vo.getQuickLinkID()) + "</DATA1></CELL>");
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName2()) + "</VALUE></CELL>");
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName3()) + "</VALUE></CELL>");
-			} else if (lang.equals("2")) {
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName2()) + "</VALUE>");
-				result.append("<DATA1>" + commonUtil.cleanValue(vo.getQuickLinkID()) + "</DATA1></CELL>");
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName()) + "</VALUE></CELL>");
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName3()) + "</VALUE></CELL>");
-			} else if (lang.equals("3")) {
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName3()) + "</VALUE>");
-				result.append("<DATA1>" + commonUtil.cleanValue(vo.getQuickLinkID()) + "</DATA1></CELL>");
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName()) + "</VALUE></CELL>");
-				result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getQuickLinkName2()) + "</VALUE></CELL>");
+			if (vo.getModiDate() != null) {
+				vo.setModiDate(commonUtil.getDateStringInUTC(vo.getModiDate(), userInfo.getOffset(), false));
 			}
-			
-			result.append("<CELL><VALUE>" + vo.getLinkType() + "</VALUE></CELL>");
-			result.append("<CELL><VALUE><![CDATA[" + vo.getUrl() + "]]></VALUE></CELL>");
-			result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false) + "</VALUE></CELL>");
-			
-			if (vo.getModiDate() == null) {
-				result.append("<CELL><VALUE>" + " " + "</VALUE></CELL>");
-			} else {
-				result.append("<CELL><VALUE>" + commonUtil.getDateStringInUTC(vo.getModiDate(), userInfo.getOffset(), false) + "</VALUE></CELL>");
-			}
-			
-			result.append("<CELL><VALUE>" + commonUtil.cleanValue(vo.getDisplayName()) + "</VALUE></CELL>");
-			result.append("</ROW>");
 		}
 		
-		result.append("</ROWS>");
-		result.append("</LISTVIEWDATA>");
-
 		logger.debug("getQuickLinkList ended");
-		return result.toString();
+		return list;
 	}
 
 	@Override
-	public String getQuickLink(String quickLinkID, int tenantID) throws Exception {
+	public PersonalQuickLinkVO getQuickLink(String quickLinkID, int tenantID) throws Exception {
 		logger.debug("getQuickLink started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -249,10 +219,10 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		PersonalQuickLinkVO vo = ezPersonalAdminDAO.getQuickLink(map);
 		
-		String result = "<DATA>" + commonUtil.getQueryResult(vo) + "</DATA>";
+		//String result = "<DATA>" + commonUtil.getQueryResult(vo) + "</DATA>";
 
 		logger.debug("getQuickLink ended");
-		return result;
+		return vo;
 	}
 
 	@Override
@@ -306,7 +276,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String pUrl= doc.getElementsByTagName("pURL").item(0).getTextContent();
 		String pSize= doc.getElementsByTagName("pSize").item(0).getTextContent();
 		
-		setQuickLinkListXML(pQuickLinkID, pQuickLinkName, pQuickLinkName2, pQuickLinkName3, pLinkType, pLinkTypeURL, pMode, pUrl, pSize, userInfo.getId(), userInfo.getTenantId());
+		setQuickLinkListXML(pQuickLinkID, pQuickLinkName, pQuickLinkName2, pQuickLinkName3, pLinkType, pLinkTypeURL, pMode, pUrl, pSize, userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (doc.getElementsByTagName("node").getLength() == 0) {
 			setQuickLinkACL(pQuickLinkID, "", "", "", "", "DEL", userInfo.getTenantId()); 
@@ -352,13 +322,15 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		logger.debug("getPollList started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
+		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
 		map.put("v_pCompanyID", companyID);
 		map.put("v_pTotal", totalCount);
 		map.put("v_pCount", pageSize);
 		map.put("v_pStart", start);
 		map.put("tenantID", tenantID);
-
+		map.put("nowDate", nowDate);
+		
 		logger.debug("getPollList ended");
 		return ezPersonalAdminDAO.getPollList(map);
 	}
@@ -371,46 +343,52 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		String selectCount = doc.getElementsByTagName("NUM").item(0).getTextContent();
 		String pollTitle = doc.getElementsByTagName("TITLE").item(0).getTextContent();
 		String pollTitle2 = doc.getElementsByTagName("TITLE2").item(0).getTextContent();
-		
+		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+
 		if (pollTitle2.equals("")) {
 			pollTitle2 = pollTitle;
 		}
-		
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_pCompanyID", companyID.toUpperCase());
+
+		map.put("v_pCompanyID", companyID);
 		map.put("v_pSelectionCount", selectCount);
 		map.put("v_pPollTitle", pollTitle);
 		map.put("v_pPollTitle2", pollTitle2);
-		
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
 		String nowDate = date.format(new Date());
-		
+
 		map.put("nowDate", nowDate);
 		map.put("tenantID", tenantID);
-		
+
 		for (int i = 0; i < Integer.parseInt(selectCount); i++) {
 			map.put("v_pAnswer" + (i + 1), doc.getElementsByTagName("ANSWER").item(i).getTextContent());
 		}
-		
+
 		for (int i = Integer.parseInt(selectCount); i < 10; i++) {
 			map.put("v_pAnswer" + (i + 1), " ");
 		}
-		
+
 		try {
+			// 진행중인 설문 종료일 업데이트
 			if (companyID != null && companyID.equals("Top")) {
 				ezPersonalAdminDAO.insertPoll_U1(map);
 			} else {
 				ezPersonalAdminDAO.insertPoll_U2(map);
 			}
-			
+
+			// 새로운 설문 삽입
 			if (companyID != null && companyID.equals("Top")) {
 				ezPersonalAdminDAO.insertPoll_I1(map);
 			} else {
 				ezPersonalAdminDAO.insertPoll_I2(map);
 			}
-			
+
 			logger.debug("insertPoll ended");
 			return "OK";
 		} catch (Exception e) {
@@ -419,17 +397,19 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public String deletePoll(String itemSeq, int tenantID) throws Exception {
+	public String deletePoll(String pollList, int tenantID) throws Exception {
 		logger.debug("deletePoll started");
-
+		
 		try {
-			Map<String, Object> map = new HashMap<String, Object>();
-			
-			map.put("v_pItemSeq", itemSeq);
-			map.put("tenantID", tenantID);
-			
-			ezPersonalAdminDAO.deletePoll_D(map);
-			ezPersonalAdminDAO.deletePoll(map);
+			for (String itemSeq : pollList.split(";")) {
+				Map<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("v_pItemSeq", itemSeq);
+				map.put("tenantID", tenantID);
+				
+				ezPersonalAdminDAO.deletePoll_D(map);
+				ezPersonalAdminDAO.deletePoll(map);
+			}
 			
 			logger.debug("deletePoll ended");
 			return "OK";
@@ -465,15 +445,22 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public List<PersonalPopupVO> getPopupList(String companyID, int tenantID) throws Exception {
+	public List<PersonalPopupVO> getPopupList(String companyID, int totalCount, int pageSize, int start, int tenantID) throws Exception {
 		logger.debug("getPopupList started");
 
+		String nowDate = commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss");
+
 		Map<String, Object> map = new HashMap<String, Object>();
-		
+
 		map.put("v_pCompanyID", companyID);
-		map.put("tenantID", tenantID);	
+		map.put("v_pTotal", totalCount);
+		map.put("v_pCount", pageSize);
+		map.put("v_pStart", start);
+		map.put("tenantID", tenantID);
+		map.put("nowDate", nowDate);
 
 		logger.debug("getPopupList ended");
+
 		return ezPersonalAdminDAO.getPopupList(map);
 	}
 
@@ -506,6 +493,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pTitle2", vo.getTitle2());
 		map.put("v_pContent", vo.getContent().replace("\"", "\'"));
 		map.put("tenantID", tenantID);
+		map.put("skinValue", vo.getSkinValue());
 
 		ezPersonalAdminDAO.insertPopup(map);
 		logger.debug("insertPopup ended");
@@ -527,30 +515,32 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_pTitle2", vo.getTitle2());
 		map.put("v_pContent", vo.getContent().replace("\"", "\'"));
 		map.put("tenantID", tenantID);
+		map.put("skinValue", vo.getSkinValue());
 
 		ezPersonalAdminDAO.updatePopup(map);
 		logger.debug("updatePopup ended");
 	}
 
 	@Override
-	public void deletePopup(String itemSeq, int tenantID) throws Exception {
+	public void deletePopup(String popupList, int tenantID) throws Exception {
 		logger.debug("deletePopup started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
-		
-		map.put("v_pItemSeq", itemSeq);
-		map.put("tenantID", tenantID);
-
+		for(String itemSeq : popupList.split(";")) {
+			map.put("v_pItemSeq", itemSeq);
+			map.put("tenantID", tenantID);
+			ezPersonalAdminDAO.deletePopup(map);
+		}
 		logger.debug("deletePopup ended");
-		ezPersonalAdminDAO.deletePopup(map);
 	}
 
 	@Override
-	public List<PersonalEmpMonthVO> getEmpMonth(String companyID, int tenantID) throws Exception {
+	public List<PersonalEmpMonthVO> getEmpMonth(String year, String companyID, int tenantID) throws Exception {
 		logger.debug("getEmpMonth started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
 		
+		map.put("v_pYear", year);
 		map.put("v_pCompanyID", companyID);
 		map.put("tenantID", tenantID);
 
@@ -573,6 +563,9 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		
 		if (type != null && type.equals("INS")) {
 			ezPersonalAdminDAO.setEmployeeMonth_I(map);
+		} else if (type != null && type.equals("UPD")) {
+			ezPersonalAdminDAO.setEmployeeMonth_D(map);
+			ezPersonalAdminDAO.setEmployeeMonth_I(map);
 		} else {
 			ezPersonalAdminDAO.setEmployeeMonth_D(map);
 		}
@@ -581,7 +574,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 	}
 
 	@Override
-	public String getSlider(String sliderID, LoginVO userInfo) throws Exception {
+	public List<PersonalSliderImageVO> getSlider(String sliderID, LoginVO userInfo) throws Exception {
 		logger.debug("getSlider started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -592,10 +585,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("tenantID", userInfo.getTenantId());
 		
 		List<PersonalSliderImageVO> list = ezPersonalAdminDAO.getSliderList(map);
-		
-		StringBuilder result = new StringBuilder();
-		
-		// 18-05-10 김민성 - 관리자 > 슬라이드 이미지 url 추가
+		/*// 18-05-10 김민성 - 관리자 > 슬라이드 이미지 url 추가
 		if (sliderID.equals(" ")) {
 			result.append("<LISTVIEWDATA>");
 			result.append("<HEADERS>");
@@ -617,6 +607,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				result.append("<DATA5>" + vo.getSn() + "</DATA5>");
 				result.append("</CELL>");
 				
+				logger.debug("resulttest: "+commonUtil.cleanValue(vo.getSliderID())+"||"+commonUtil.cleanValue(vo.getImagePath().trim())+"||"+commonUtil.cleanValue(vo.getRegUserID())+"||"+commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false)+"||"+vo.getSn());
 				if (userInfo.getPrimary().equals("1")) {
 					result.append("<CELL>");
 					result.append("<VALUE>" + commonUtil.cleanValue(vo.getSliderName()) + "</VALUE>");
@@ -626,7 +617,6 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 					result.append("<VALUE>" + commonUtil.cleanValue(vo.getSliderName2()) + "</VALUE>");
 					result.append("</CELL>");
 				}
-				
 				result.append("<CELL>");
 				result.append("<VALUE>" + commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false) + "</VALUE>");
 				result.append("</CELL>");
@@ -635,6 +625,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 				result.append("<VALUE>" + commonUtil.cleanValue(vo.getUrl()) + "</VALUE>");
 				result.append("</CELL>");
 				result.append("</ROW>");
+				logger.debug("resulttest2: "+commonUtil.cleanValue(vo.getSliderName())+"||"+commonUtil.cleanValue(vo.getSliderName2())+"||"+commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false)+"||"+commonUtil.cleanValue(vo.getUrl()));
 			}
 			
 			result.append("</ROWS>");
@@ -648,16 +639,25 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 					result.append("</DATA>");
 				}
 			}
-		}
-		
-		logger.debug("result="+result.toString());
+		}*/
+		// 2018-11-14 문성업 - 데이터 그대로 전달 가능하게 수정
+			for (PersonalSliderImageVO vo : list) {
+				vo.setRegDate(commonUtil.getDateStringInUTC(vo.getRegDate(), userInfo.getOffset(), false));
+			
+				if (userInfo.getPrimary().equals("1")) {
+					vo.setSliderName(commonUtil.cleanValue(vo.getSliderName()) );
+				} else {
+					vo.setSliderName2(commonUtil.cleanValue(vo.getSliderName2()) );
+				}
+			}
+		logger.debug("Objects"+list);
 		logger.debug("getSlider ended");
-		return result.toString();
+		return list;
 	}
 
 	// 18-05-10 김민성 - 슬라이드 이미지 등록 URL 컬럼 추가
 	@Override
-	public void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo, String url) throws Exception {
+	public void setSliderImage(String sliderID, String displayName, String displayName2, String sliderPath, String fileName, String mode, LoginVO userInfo, String url, String isUse) throws Exception {
 		logger.debug("setSliderImage started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -669,6 +669,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_IMAGEPATH", sliderPath);
 		map.put("v_REGUSERID", userInfo.getId());
 		map.put("v_URL", url);
+		map.put("v_ISUSE", isUse);
 		
 		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		date.setTimeZone(TimeZone.getTimeZone("GMT"));
@@ -794,7 +795,7 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		logger.debug("delQuickLink ended");
 	}
 
-	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String linkType, String linkTypeURL, String mode, String url, String size, String userID, int tenantID) throws Exception {
+	private void setQuickLinkListXML(String quickLinkID, String quickLinkName, String quickLinkName2, String quickLinkName3, String linkType, String linkTypeURL, String mode, String url, String size, String userID, String companyID, int tenantID) throws Exception {
 		logger.debug("setQuickLinkListXML started");
 
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -816,8 +817,13 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		map.put("v_REGUSERID", userID);
 		map.put("v_SIZE", size);
 		map.put("tenantID", tenantID);
+		map.put("companyID", companyID);
 		
 		if (mode != null && mode.equals("new")) {
+			int max = ezPersonalAdminDAO.getQuickLinkMaxOrder(map);
+			map.put("V_LINKORDER", max);
+			logger.debug("max: " + max);
+			
 			ezPersonalAdminDAO.setQuickLinkItem_I(map);
 		} else {
 			ezPersonalAdminDAO.setQuickLinkItem_U(map);
@@ -846,5 +852,255 @@ public class EzPersonalAdminServiceImpl extends EgovAbstractServiceImpl implemen
 		}
 
 		logger.debug("setQuickLinkACL ended");
+	}
+
+	@Override
+	public PersonalLightPollConfigVO getLightPollConfig(String userId, int tenantId) throws Exception {
+		logger.debug("getLightPollConfig started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+
+		PersonalLightPollConfigVO configVO = ezPersonalAdminDAO.getLightPollConfig(map);
+		if(configVO == null) {
+			// insert 후 다시 조회
+			logger.debug("insertLightPollConfig started");
+			ezPersonalAdminDAO.insertLightPollConfig(map);
+			configVO = ezPersonalAdminDAO.getLightPollConfig(map);
+			logger.debug("insertLightPollConfig ended");
+		}
+		logger.debug("getLightPollConfig ended");
+		return configVO;
+	}
+	
+	@Override
+	public void setLightPollConfig(String userId, String isPreview, int tenantId) throws Exception {
+		logger.debug("setLightPollConfig started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("isPreview", isPreview);
+		map.put("tenantId", tenantId);
+
+		ezPersonalAdminDAO.setLightPollConfig(map);
+		logger.debug("setLightPollConfig ended");
+	}
+
+	@Override
+	public PersonalPopopConfigVO getPopupConfig(String userId, int tenantId) throws Exception {
+		logger.debug("getPopupConfig started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantId", tenantId);
+
+		PersonalPopopConfigVO configVO = ezPersonalAdminDAO.getPopupConfig(map);
+		if(configVO == null) {
+			// insert 후 다시 조회
+			logger.debug("insertPopupConfig started");
+			ezPersonalAdminDAO.insertPopupConfig(map);
+			configVO = ezPersonalAdminDAO.getPopupConfig(map);
+			logger.debug("insertPopupConfig ended");
+		}
+		logger.debug("getPopupConfig ended");
+		return configVO;
+	}
+
+	@Override
+	public String setPopupConfig(String userId, String isPreview, int tenantId) throws Exception {
+		try {
+			logger.debug("setPopupConfig started");
+			Map<String, Object> map = new HashMap<String, Object>();
+
+			map.put("userId", userId);
+			map.put("isPreview", isPreview);
+			map.put("tenantId", tenantId);
+			ezPersonalAdminDAO.setPopupConfig(map);
+
+			logger.debug("setPopupConfig ended");
+			return "OK";
+		} catch (Exception e) {
+			return "Error" + e.getMessage();
+		}
+	}
+	
+	@Override
+	public int getPopupCount(String companyID, int tenantID) throws Exception {
+		logger.debug("getPopupCount started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_pCompanyID", companyID);
+		map.put("v_pMode", "A");
+		map.put("tenantID", tenantID);
+
+		logger.debug("getPopupCount ended");
+		return ezPersonalAdminDAO.getPopupCount(map);
+	}
+
+	@Override
+	public String setPopupUse(String companyID, int tenantID, String itemSeq, String inUse) {
+		try {
+			logger.debug("setPopupUse ended");
+			Map<String, Object> map = new HashMap<String, Object>();
+
+			map.put("companyID", companyID);
+			map.put("tenantID", tenantID);
+			map.put("itemSeq", itemSeq);
+			map.put("inUse", inUse);
+
+			ezPersonalAdminDAO.setPopupUse(map);
+
+			logger.debug("setPopupUse ended");
+			return "OK";
+		} catch (Exception e) {
+			return "Error" + e.getMessage();
+		}
+	}
+	
+	@Override
+	public void updateQuickLinkOrder(JSONArray linkOrderList, int tenantId) throws Exception {
+		logger.debug("updateQuickLinkOrder started");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("tenantId", tenantId);
+		
+		for (Object item : linkOrderList) {
+			if (item instanceof JSONObject) {
+				JSONObject linkInfo = (JSONObject) item;
+				map.put("v_QUICKLINKID", linkInfo.get("linkId"));
+				map.put("v_LINKORDER", linkInfo.get("linkOrder"));
+				
+				logger.debug("linkId: " + linkInfo.get("linkId"));
+				logger.debug("linkOrder: " + linkInfo.get("linkOrder"));
+				
+				ezPersonalAdminDAO.updateQuickLinkOrder(map);
+			}
+		}
+		logger.debug("updateQuickLinkOrder ended");
+	}
+	
+	@Override
+	public void updateSliderImageOrder(JSONArray sliderImageList, int tenantId){
+		logger.debug("updateSliderImageOrder started");
+		
+		Map<String, Object> map = new HashMap<>();
+		map.put("tenantId", tenantId);
+		
+		for (Object item : sliderImageList) {
+			if(item instanceof JSONObject) {
+				JSONObject sliderInfo = (JSONObject) item;
+				map.put("v_SLIDERID", sliderInfo.get("sliderID"));
+				map.put("v_SN", sliderInfo.get("sn"));
+				
+				logger.debug("v_SLIDERID: " + sliderInfo.get("sliderID"));
+				logger.debug("v_SN: " + sliderInfo.get("sn"));
+				
+				ezPersonalAdminDAO.updateSliderImageOrder(map);
+			}
+		}
+		logger.debug("updateSliderImageOrder end");
+	}
+
+	@Override
+	public String updatePoll(Document doc, int tenantID) throws Exception {
+		logger.debug("updatePoll started");
+
+		String companyID = doc.getElementsByTagName("COMPID").item(0).getTextContent();
+		String selectCount = doc.getElementsByTagName("NUM").item(0).getTextContent();
+		String pollTitle = doc.getElementsByTagName("TITLE").item(0).getTextContent();
+		String pollTitle2 = doc.getElementsByTagName("TITLE2").item(0).getTextContent();
+		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
+		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
+		String itemSeq = doc.getElementsByTagName("ITEMSEQ").item(0).getTextContent();
+		String updateFlag = doc.getElementsByTagName("UPDATEFLAG").item(0).getTextContent();
+
+		if (pollTitle2.equals("")) {
+			pollTitle2 = pollTitle;
+		}
+
+		Map<String, Object> map = new HashMap<String, Object>();
+
+		map.put("v_pCompanyID", companyID);
+		map.put("v_pSelectionCount", selectCount);
+		map.put("v_pPollTitle", pollTitle);
+		map.put("v_pPollTitle2", pollTitle2);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("itemSeq", itemSeq);
+
+		SimpleDateFormat date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		date.setTimeZone(TimeZone.getTimeZone("GMT"));
+		String nowDate = date.format(new Date());
+
+		map.put("nowDate", nowDate);
+		map.put("tenantID", tenantID);
+
+		for (int i = 0; i < Integer.parseInt(selectCount); i++) {
+			map.put("v_pAnswer" + (i + 1), doc.getElementsByTagName("ANSWER").item(i).getTextContent());
+		}
+
+		int startPoint = Integer.parseInt(selectCount);
+		StringBuilder sbQuery = new StringBuilder();
+		for (int i = startPoint; i < 10; i++) {
+			map.put("v_pAnswer" + (i + 1), " ");
+			sbQuery.append(i+1);
+			sbQuery.append(",");
+		}
+
+		if(startPoint != 10){
+			sbQuery.deleteCharAt(sbQuery.length() - 1);
+		} else {
+			sbQuery.append(-1);
+		}
+
+		try {
+			// 현재 진행중인 설문 종료시간 업데이트
+			if(updateFlag.equals("yes")){
+				if (companyID != null && companyID.equals("Top")) {
+					ezPersonalAdminDAO.insertPoll_U1(map);
+				} else {
+					ezPersonalAdminDAO.insertPoll_U2(map);
+				}
+			}
+
+			// 수정된 설문 업데이트
+			if (companyID != null && companyID.equals("Top")) {
+				ezPersonalAdminDAO.updatePoll_U1(map);
+			} else {
+				ezPersonalAdminDAO.updatePoll_U2(map);
+			}
+
+			// Result 설문 없는것 삭제
+			map.put("sbQuery", sbQuery.toString());
+			ezPersonalAdminDAO.updatePoll_Result(map);
+			logger.debug("updatePoll ended");
+			return "OK";
+		} catch (Exception e) {
+			return "ERROR : " + e.getMessage();
+		}
+	}
+
+	@Override
+	public String checkJoinPoll(String userId, int tenantID, String itemSeq) throws Exception {
+		logger.debug("checkJoinPoll started");
+
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("tenantID", tenantID);
+		map.put("itemSeq", itemSeq);
+
+		int cnt = ezPersonalAdminDAO.checkJoinPoll(map);
+
+		String result = "";
+		if(cnt == 0) {
+			result = "OK";
+		} else {
+			result = "NO";
+		}
+
+		logger.debug("checkJoinPoll ended");
+		return result;
 	}
 }

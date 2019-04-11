@@ -89,7 +89,7 @@ public class MBoardDAO extends EgovAbstractDAO {
 	}
 	
 	public String checkIfBoardGroupAdmin(Map<String, Object> map) throws Exception{
-		int ret = (int) select("EzBoardAdminDAO.checkIfBoardGroupAdmin", map);
+		int ret = (int) select("MBoardDAO.checkIfBoardGroupAdmin", map);
 		
 		if (ret > 0 ) {
 			return "OK";
@@ -214,6 +214,12 @@ public class MBoardDAO extends EgovAbstractDAO {
 		map.put("id", id);
 		map.put("tenantID", tenantID);
 		return (int) select("MBoardDAO.isDeptChk", map);
+	}
+	
+	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴하는 쿼리 */
+	@SuppressWarnings("unchecked")
+	public List<String> getPDOAddJobDeptID(Map<String, Object> map) throws Exception {
+		return (List<String>) list("EzBoardDAO.getPDOAddJobDeptID", map);
 	}
 	
 }

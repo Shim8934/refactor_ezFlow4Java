@@ -506,11 +506,11 @@
 		            var pLeft = (pwidth - 765) / 2;
 		
 		            if (obj.getAttribute("DATA10") == "3" || obj.getAttribute("DATA10") == "4") {
-		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=793,width=764,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemViewPhoto.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=793,width=764,top=" + pTop + ",left=" + pLeft, "");
 		            } else if (obj.getAttribute("DATA10") == "7") {
-						window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=764,top=" + pTop + ",left=" + pLeft, "");
+						window.open("/ezBoard/boardItemViewMovie.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=679,width=764,top=" + pTop + ",left=" + pLeft, "");
 		            } else {
-	                    window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + obj.getAttribute("DATA2") + "&boardID=" + obj.getAttribute("DATA1") + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+	                    window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		            
 		            /* 2018-07-09 홍승비 - 승인게시판 게시물 읽기 시 즉각적으로 폰트 변화하도록 수정 */
@@ -523,7 +523,7 @@
 		
 		        function CheckIfHasReplies() {
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + strListInfo, false);
+		            xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + encodeURIComponent(strListInfo), false);
 		            xmlhttp.send();
 		            if (xmlhttp.responseText == "FALSE") {
 		                xmlhttp = null;
@@ -534,7 +534,7 @@
 		        }
 		        function DeleteItem() {
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + selobj.getAttribute("DATA1") + "&itemList=" + strListInfo, false);
+		            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")) + "&itemList=" + encodeURIComponent(strListInfo), false);
 		            xmlhttp.send();
 		
 		            if (xmlhttp.responseText == "NO") {
@@ -590,7 +590,7 @@
 		            }
 		            arrList = null;
 		            var xmlhttp = createXMLHttpRequest();
-		            xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + pBoardID + "&itemIDList=" + strItemList, false);
+		            xmlhttp.open("POST", "/ezBoard/setRead.do?boardID=" + encodeURIComponent(pBoardID) + "&itemIDList=" + encodeURIComponent(strItemList), false);
 		            xmlhttp.send();
 		            xmlhttp = null;
 		            refresh_onclick();
@@ -604,7 +604,7 @@
 		        window.open("/ezCommon/showPersonInfo.do?id=" + pUserID + "&dept=" + pDeptID, "", feature);
 		    }
 		    function ReservationItem_onclick() {
-		        var OrgBoardParameters = "page=" + CurPage + "&boardID=" + pBoardID + "&sortBy=&boardType=" + pBoardType;
+		        var OrgBoardParameters = "page=" + CurPage + "&boardID=" + encodeURIComponent(pBoardID) + "&sortBy=&boardType=" + pBoardType;
 		        window.location.href = "/ezBoard/boardReservedItemList.do?orgBoardParameters=" + escape(OrgBoardParameters) + "&boardType=" + pBoardType;
 		    }
 		
@@ -707,7 +707,7 @@
 	            pwidth = pwidth - 127;
 	            var feature = "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 	            feature = feature += GetOpenPosition(355, 600);
-	            window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + selobj.getAttribute("DATA1"), "", feature, "");
+	            window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")), "", feature, "");
 	        }
 	        var moveboarditem_cross_dialogArguments = new Array();
 	        function MoveItem_onclick() {
@@ -730,7 +730,7 @@
 	
 	            if (CrossYN()) {
 	                moveboarditem_cross_dialogArguments[1] = MoveItem_onclick_Complete;
-	                var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + selobj.getAttribute("DATA1"), "MoveBoardItem_Cross", GetOpenWindowfeature(355, 600));
+	                var OpenWin = window.open("/ezBoard/moveBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")), "MoveBoardItem_Cross", GetOpenWindowfeature(355, 600));
 	                try { OpenWin.focus(); } catch (e) { }
 	            }
 	            else {
@@ -740,7 +740,7 @@
 	                pwidth = parseInt(pwidth) / 2;
 	                pheigth = pheigth - 200;
 	                pwidth = pwidth - 127;
-	                var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + strItemList + "&boardID=" + selobj.getAttribute("DATA1"), "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
+	                var ret = window.showModalDialog("/ezBoard/moveBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(selobj.getAttribute("DATA1")), "", "DialogHeight:600px;DialogWidth:355px;status:no;help:no;edge:sunken;scroll:no");
 	
 	                if (typeof (ret) != "undefined") {
 	                    if (ret == "OK") {
@@ -890,7 +890,7 @@
 		        
 		        if (pFlag == "C") {
 		        	if(confirm("<spring:message code='ezBoard.pjg02'/>")){
-			            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + strItemList + "&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
+			            var OpenWin = window.open("/ezBoard/boardApprOpinion.do?itemList=" + encodeURIComponent(strItemList) + "&mode=" + pFlag, "BoardApprOpinion", GetOpenWindowfeature(540, 300));
 			            try { OpenWin.focus(); } catch (e) { }
 		        	}
 		        }
@@ -898,7 +898,7 @@
 		        	
 		        	if(confirm("<spring:message code='ezBoard.pjg01'/>")){
 			            var xmlhttp = createXMLHttpRequest();
-			            xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + strItemList + "&mode=" + pFlag, false);
+			            xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + encodeURIComponent(strItemList) + "&mode=" + pFlag, false);
 			            xmlhttp.send();
 			
 			            if (xmlhttp.responseText == "OK") {
@@ -918,7 +918,13 @@
 			                if (CurPage == 0) CurPage = 1;
 			                
 	// 		                getBoardList();
-			                refresh_onclick();
+							/* 2019-04-03 홍승비 - 게시물 승인 리스트에서 승인하는 경우에도 좌측 게시물 카운트 갱신되도록 수정 */
+							try { // try ~ catch로 감싸지 않으면 연속된 함수가 동작하지 않음
+								leftCountRf();
+							} catch (e) {}
+				            try {
+				                refresh_onclick();
+				            } catch (e) {}
 						}
 		        	}
 		        }
@@ -944,13 +950,13 @@
 	</head>
 	<body class="mainbody" style="overflow:hidden;" onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 	    <h1><spring:message code='ezBoard.t999001'/><span id="mailBoxInfo"></span>
-	        <span style="float:right;font-weight:normal;color:black;">
+	        <span class="searchForm">
 				<select id="selectType" style="width:80px; height:27px; border-color: #c8c8c8;">
 		    		<option selected value="rad_Subject"><spring:message code='ezBoard.t208'/></option>
 		    		<option value="rad_Writer"><spring:message code='ezBoard.t223'/></option>
 		    	</select>
-				<input id="txt_keyword" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
-				<a style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="search('quick')"></a>
+				<input id="txt_keyword" class="searchinputBox" style="height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onkeypress="onkeydown_start_search(event)" onselectstart="event.cancelBubble=true;event.returnValue=true"  onmousedown="keyword_Clear();"/> 
+				<a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="search('quick')"></a>
 			</span>
 	    </h1>
 	    <div id="mainmenu">

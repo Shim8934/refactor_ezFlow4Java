@@ -173,7 +173,7 @@
 			            }
 	
 			            var xmlhttp = createXMLHttpRequest();
-			            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + "&mode=MOVIE", false);
+			            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + "&mode=MOVIE", false);
 			            xmlhttp.send();
 	
 			            if (xmlhttp.responseText == "NO") {
@@ -479,7 +479,7 @@
 		            }
 		            else {
 		                var xmlhttp = createXMLHttpRequest();
-		                xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + pItemID + ";&mode=" + pFlag, false);
+		                xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + encodeURIComponent(pItemID) + ";&mode=" + pFlag, false);
 		                xmlhttp.send();
 		
 		                if (xmlhttp.responseText == "OK") {

@@ -54,7 +54,19 @@
 		    var isfirst = true;
 		    var deptTreeTopId = "${deptTreeTopId}";
 			var isAdmin = "${isAdmin}";
+			var delType = "<c:out value='${DelType}'/>";
+			var type = "<c:out value='${type}'/>";
+			var companyId = "<c:out value='${companyID}'/>";
+			var totalCnt = 0;
+	        var CurPage = 1;
+	        var totalPage = 0;
+	        var pageSize = 1000;
+	        var BlockSize = 10;
+	        var orginArry = new Array();
+	        var extraArry = new Array();
+	        var deleteArry = new Array();
 			var packageType = "${packageType}";
+
 			
 		    $(document).ready(function(){
 		    	try {
@@ -94,6 +106,8 @@
 		        if (isAdmin == "false") {
 		        	$("#lvPermissionBasic").find("tbody tr:first").css("display","none");
 		        }
+		        
+		        Permissions_List();
 		    });
 		    
 		    function ListTypeChangeIcon() {
@@ -173,6 +187,7 @@
 		    }
 		    
 		    function TreeViewNodeClick() {
+		        p_ListOrderObject = null;
 		        var treeView = new TreeView();
 		        treeView.LoadFromID("FromTreeView");
 		        nodeIdx = treeView.GetSelectNode();
@@ -180,6 +195,44 @@
         		+ "<span id='spn_deptName' title='" + nodeIdx.GetNodeData("VALUE") + "'>" + nodeIdx.GetNodeData("VALUE") + "</span>"
         		+ "<span id='countInfo'></span>";
 		        SelectDeptNM.setAttribute("countinfo", "")
+		        
+		        if (delType == "c") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t291' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t291' />";
+		        } else if (delType == "k") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t293' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t293' />";
+		        } else if (delType == "g"){
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t295' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t295' />";
+		        } else if (delType == "a") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t292' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t292' />";
+		        } else if (delType == "i") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t294' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t294' />";
+		        } else if (delType == "n") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t297' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t297' />";
+		        } else if (delType == "l") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t296' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t296' />";
+		        } else if (delType == "w") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t301' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t301' />";
+		        } else if (delType == "m") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t300' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t300' />";
+		        } else if (delType == "f") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.lhj1' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.lhj1' />";
+		        } else if (delType == "wf") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t303' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t303' />";
+		        } else if (delType == "wa") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.kbm01' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.kbm01' />";
+		        }
 
 		        //if (cn != "") {
 		        if (isfirst && cn != "") {
@@ -191,7 +244,7 @@
 			        	dataType : "text",
 			        	url : "/ezOrgan/getSearchList.do",
 			        	async : false,
-			        	data : {search : "cn::" + cn, cell : "company;description;displayname;title;telephonenumber;"+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute2', type : 'user', adminOrgan : "y", noAddJob : "Y"},
+			        	data : {search : "cn::" + cn, cell : "company;description;displayname;title;telephonenumber;"+ document.getElementById("search_type").value, prop : 'mail;displayName;description;title;company;telephoneNumber;extensionAttribute1', type : 'user', adminOrgan : "y", noAddJob : "Y"},
 			        	success : function(xml){
 			        		result=loadXMLString(xml);
 			        		var headerData = createXmlDom();
@@ -224,11 +277,50 @@
 		    }
 		    
 		    function displayUserList(DeptID) {
-		        $.ajax({
+		        // 2018-12-20 권한명에 따라 권한 리스트 텍스트 출력 - 문성업 
+		        if (delType == "c") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t291' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t291' />";
+		        } else if (delType == "k") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t293' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t293' />";
+		        } else if (delType == "g"){
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t295' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t295' />";
+		        } else if (delType == "a") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t292' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t292' />";
+		        } else if (delType == "i") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t294' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t294' />";
+		        } else if (delType == "n") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t297' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t297' />";
+		        } else if (delType == "l") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t296' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t296' />";
+		        } else if (delType == "w") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t301' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t301' />";
+		        } else if (delType == "m") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t300' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t300' />";
+		        } else if (delType == "f") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.lhj1' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.lhj1' />";
+		        } else if (delType == "wf") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.t303' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.t303' />";
+		        } else if (delType == "wa") {
+		        	document.getElementById("authorText").innerText = "<spring:message code='ezOrgan.kbm01' />";
+		        	document.getElementById("PermissionStr").innerText = "<spring:message code='ezOrgan.kbm01' />";
+		        }
+		        
+		    	$.ajax({
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getDeptMemberList.do",
-		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2;usertype", type : "user", noAddJob : "Y"},
+		        	data : {deptID : DeptID, cell : "company;description;displayName;title;telephoneNumber", prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute1;extensionAttribute2;usertype", type : "user", noAddJob : "Y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var headerData = createXmlDom();
@@ -354,7 +446,8 @@
 	                    M_TR.style.cursor = "pointer";
 	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
-	                    M_TR.onclick = function () { event_listclick(this); };                    
+	                    M_TR.onclick = function () { event_listclick(this); };
+	                    M_TR.ondblclick = function () { event_listdblclick(this)};
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };
 	                    
@@ -399,6 +492,13 @@
 	                    Sub_TD1.style.textAlign = "left";
 	                    Sub_TD1.setAttribute("class", "name");
 	                    var pDisplayName = "";
+	                    
+	                    if( !pSeach && $(M_TR).attr("_DATA20" ) == "addJob"){
+		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
+		            	} else if( pSeach && $(M_TR).attr("_DATA19") == "addJob" ){
+		            		pDisplayName += "<spring:message code='ezOrgan.psb03'/> ";
+		            	}
+	                    
 	                    if ("<c:out value='${use_ocs}'/>" == "YES") {
 	                        pDisplayName += "<span><img src='/images/Presence/unknown.gif' id= '" + GetGUID() + ",type=smtp' style='vertical-align:middle;margin-right:3px;'  onload='PresenceControl(\"" + M_TR.getAttribute("_DATA3") + "\",this);'/></span>";
 	                    }
@@ -449,6 +549,7 @@
  	                    M_TR.onmouseover = function () { event_listMover(this); };
 	                    M_TR.onmouseout = function () { event_listMout(this); };
 	                    M_TR.onclick = function () { event_listclick(this); };
+	                    M_TR.ondblclick = function () { event_listdblclick(this)};
 	                    M_TR.setAttribute("draggable", true);
 	                    M_TR.onselectstart = function () { return false; };
 	                    
@@ -485,7 +586,14 @@
 	                            M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA4");
 	                        }
 	                        var M_TR_TD3 = document.createElement("TD");
-	                        M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        
+	                        var jobName = "";
+	                        if($(M_TR).attr("_DATA19") == "addJob"){
+			            		jobName += "<spring:message code='ezOrgan.psb03'/> ";
+			            	}	      
+	                        
+	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        M_TR_TD3.innerHTML = jobName;
 	                        M_TR_TD3.style.width = "80px";
 
 	                        var M_TR_TD4 = document.createElement("TD");
@@ -510,7 +618,13 @@
 	                        }
 	                        var M_TR_TD2 = document.createElement("TD");
 	                        M_TR_TD2.style.width = "80px";
-	                        M_TR_TD2.innerHTML = M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        var jobName = "";
+	                        if($(M_TR).attr("_DATA20") == "addJob"){
+			            		jobName += "<spring:message code='ezOrgan.psb03'/> ";
+			            	}	      
+	                        
+	                        jobName += M_TR.getAttribute("_DATA6") == "" ? "" : M_TR.getAttribute("_DATA6");
+	                        M_TR_TD2.innerHTML = jobName;
 
 	                        var M_TR_TD3 = document.createElement("TD");
 	                        M_TR_TD3.innerHTML = M_TR.getAttribute("_DATA8") == "" ? "" : M_TR.getAttribute("_DATA8");
@@ -598,10 +712,14 @@
 	                    listContentArry[listContentArry.length] = p_ListOrderObject.getAttribute("id");
 	                }
 	            }
-	            Permissions_Check(GetAttribute(p_ListOrderObject, "_data2"));
-	        }
+	            //Permissions_Check(GetAttribute(p_ListOrderObject, "_data2")); 
+	        } 
 	        
-	        function Permissions_Check(UserID) {
+	        //더블 클릭 할 때
+	        function event_listdblclick(elem) {
+	        	InsertReceiver("lvPermissionList");
+	        }
+	        /* function Permissions_Check(UserID) {
 	            var listview = new ListView();
 	            listview.LoadFromID("lvUserList");
 
@@ -663,10 +781,126 @@
 		                pAclList.DataBind("UserAclList");
 					}
 				});
-	        }
+	        } */
 	        
-	        function InsertReceiver() {
-	            var pparsingXML = "";
+	        //선택한 사원을 오른쪽 리스트에 삽입할 때
+	        function InsertReceiver(elem) {
+	        	var listid = "lvPermissionBasic";
+	        	var getlistview = new ListView();
+	            getlistview.LoadFromID(listid);
+	        	var pparsingXML2 = "";
+        		var pparsingXML = "";
+	            var arrRows = getlistview.GetSelectedRows();
+	            var length = arrRows.length;
+	            var dataMatch = "";
+	            var pattern = new RegExp(delType);
+	            
+	            var addJob = "";
+	            if (pSeach){
+		            addJob = GetAttribute(p_ListOrderObject, "_data19");
+	            } else {
+		            addJob = GetAttribute(p_ListOrderObject, "_data20");
+	            }
+	            
+	            if (p_ListOrderObject == null || p_ListOrderObject == "") {
+	                alert(strLang13);
+	                return;
+	            } else if(addJob == "addJob"){
+	            	alert("<spring:message code='ezOrgan.psb01' />");
+	                return;
+	            } else {
+	            	var strId = p_ListOrderObject.getAttribute("_data2");
+	            	var strName = p_ListOrderObject.getAttribute("_data4");
+	            	var strMail = p_ListOrderObject.getAttribute("_data3");
+	            	var strData = p_ListOrderObject.getAttribute("_data9");
+	            	var strDept = p_ListOrderObject.getAttribute("_data14");
+	            	
+	            	if (strData == null || strData == "") {
+	            		strData = "c=0;k=0;g=0;a=0;n=0;l=0;f=0;w=0;wf=0;wa=0";
+	            	}
+	            	
+	            	var _listView = new ListView();
+	            	_listView.LoadFromID("lvPermissionList");
+	            	var arrRows = _listView.GetDataRows();
+	            	
+	            	for (var i =0; i < arrRows.length; i++) {
+	            		if (strId == arrRows[i].getAttribute("data1")){
+	            			alert("<spring:message code='ezOrgan.mse2' />");
+	            			return;
+	            		}
+	            	}
+	            	
+	            	for (var i=0; i < deleteArry.length; i++) {
+	            		if(strId == deleteArry[i].data1){
+	            			console.log(deleteArry[i].data1);
+	            			deleteArry.splice(i, 1);
+	            			console.log(deleteArry);
+	            		}
+	            	}
+	            	
+	            	
+	            	dataMatch = pattern.exec(strData);
+	            	
+	            	//권한관리 type 데이터 값이 없을 때
+	            	if (dataMatch == null || dataMatch == "") {
+	            		strData += delType + "=0";
+	            	}
+	            	
+	            	        var extraInfo = new Object();
+			                var tempDelType = delType;
+			                var DelValue = tempDelType + "=1";
+			                
+			                if (tempDelType == "") {
+			                    tempDelType = "c=0";
+			                } else {
+			                    tempDelType = tempDelType + "=0";
+			                }
+			                
+			               
+			                strData = strData.replace(tempDelType, DelValue);
+			                
+			                extraInfo.data1 = strId;
+			                extraInfo.data2 = strData;
+			                
+			                extraArry.push(extraInfo);
+			                
+			                dataMatch = "";
+			                
+			                console.log(extraArry);
+			                pparsingXML2 = "";
+		            		pparsingXML = "";
+		            		pparsingXML2 = "<LISTVIEWDATA><ROWS>";
+		            		pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + strId + "</DATA1>";
+		            		pparsingXML = pparsingXML + "<DATA2>" + strData + "</DATA2>";
+		            		pparsingXML = pparsingXML + "<DATA3>" + strName + "</DATA3>";
+		            		pparsingXML = pparsingXML + "<DATA4>" + strMail + "</DATA4>";
+		            		pparsingXML = pparsingXML + "<VALUE>" + strName + "</VALUE></CELL>";
+		            		pparsingXML = pparsingXML + "<CELL><VALUE>" + strDept + "</VALUE></CELL></ROW>";
+		            		pparsingXML2 = pparsingXML2 + pparsingXML + "</ROWS></LISTVIEWDATA>";
+		            		Resultxml = loadXMLString(pparsingXML2);
+			                
+		            		var listview = new ListView();
+		            		listview.LoadFromID("lvPermissionList");
+		            		
+		            		var MaxID = 0;
+		        		    var InitTr = listview.GetDataRows();
+		            		var MaxCntNum = 0;
+		            		for (var j = 0  ; j < InitTr.length  ; j++) {
+		                		var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+		                		if (MaxID < curnum) {
+		                    		MaxID = curnum;
+		                    		MaxCntNum = j;
+		                		}
+		            		}
+		            		
+		            		var objTr = listview.AddRow(InitTr.length);
+		        		    if (MaxCntNum != 0)
+				                MaxCntNum = MaxCntNum + 1;
+		            		SetAttribute(objTr, "id", listview.GetSelectedRowID(MaxCntNum).substring(0, listview.GetSelectedRowID(MaxCntNum).lastIndexOf('_') + 1) + eval(MaxID + 1));
+		            		listview.AddDataRow(objTr, Resultxml);
+	            }
+	        	
+	            /* var pparsingXML = "";
 	            var pparsingXML2 = "";
 	            var strSIP = "";
 	            var pAddFlag = false;
@@ -734,16 +968,43 @@
 	                        document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
 	                    }
 	                }
-	            }
+	            } */
 	        }
 
 	        function DeleteReceiver() {
-	            var listid = "lvAclList";
+	            var listid = "lvPermissionList";
 	            var selList = new ListView();
 	            selList.LoadFromID(listid);
 
 	            var arrRows = selList.GetSelectedRows();
-	            var strName = "";
+	            var strId = arrRows[0].getAttribute("data1");
+	            var strData = arrRows[0].getAttribute("data2")
+	            
+	            var tempDelType = delType;
+			    var DelValue = tempDelType + "=0";
+			                
+			    if (tempDelType == "") {
+			        tempDelType = "c=0";
+			    } else {
+			        tempDelType = tempDelType + "=1";
+			    }
+			    strData = strData.replace(tempDelType, DelValue);
+			    
+			    for (var i=0; i < extraArry.length; i++) {
+            		if(strId == extraArry[i].data1){
+            			console.log(extraArry[i].data1);
+            			extraArry.splice(i, 1);
+            			console.log(extraArry);
+            		}
+            	}
+			    
+			    var deleteInfo = new Object();
+			    deleteInfo.data1 = strId;
+			    deleteInfo.data2 = strData;
+			    
+			    deleteArry.push(deleteInfo);
+			    
+			    console.log(deleteArry);
 
 	            for (var i = 0; i < arrRows.length; i++) {
 	                selList.DeleteRow(arrRows[i].id);
@@ -884,18 +1145,18 @@
 		    }
 		    
 		    function search_click(){
+				p_ListOrderObject = null;
 				if (keyword.value == ""){
 					alert("<spring:message code='ezOrgan.t56' />");
 					keyword.focus();
 					return;
 				}			   
-			    				
 				$.ajax({
 		        	type : "POST",
 		        	dataType : "text",
 		        	url : "/ezOrgan/getSearchList.do",		        	
 		        	data : {search : document.getElementById("search_type").value + "::" + document.getElementById("keyword").value, cell : "company;description;displayname;title;telephonenumber;" + document.getElementById("search_type").value, 
-		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute2", type : "user", adminOrgan : "y", noAddJob : "Y"},
+		        			prop : "mail;displayName;description;title;company;telephoneNumber;extensionAttribute1;extensionAttribute2;userType", type : "user", adminOrgan : "y", noAddJob : "Y"},
 		        	success : function(xml){
 		        		result=loadXMLString(xml);
 		        		var usedefault;		                
@@ -940,12 +1201,52 @@
 		    
 		    function search_press(){
 				if (window.event.keyCode == "13"){
+					p_ListOrderObject = null;
 					search_click();
 				}
 			}
 		    
 		    function OK_Click() {
-	            var PermissionList = new ListView();
+		    	var totalArry = new Array();
+		    	var data1 = new Array();
+		    	var data2 = new Array();
+		    	
+		    	totalArry = extraArry.concat(deleteArry);
+		    	
+		        for (var i=0; i<totalArry.length; i++){
+		        	data1.push(totalArry[i].data1);
+			        data2.push(totalArry[i].data2);
+		        }
+
+				if(data1.length == 0 || data2.length == 0) {
+					if(document.getElementById('lvPermissionList').children[1].childElementCount == 0) {
+						alert("등록할 사원을 선택해주세요.");
+						return;
+					}
+					alert(strLang14);
+					window.close();
+					return;
+		        }
+				jQuery.ajaxSettings.traditional = true; 
+		        $.ajax({
+	            	type : "POST",
+	            	dataType : "text",
+	            	url : "/admin/ezOrgan/saveStoreUserInfo.do",
+	            	async : false,
+	            	data : {parentCn : "", cn : data1, extensionAttribute1 : data2},
+	            	success : function(result){
+	            		 alert(strLang14);
+	            	
+	            	if (ReturnFunction!=null) {
+	     	            ReturnFunction();
+	     	        }
+	            		window.close();
+	            	},
+	            	error : function(){
+	            		alert(strLang15);
+	            	}
+	            });
+	            /* var PermissionList = new ListView();
 	            PermissionList.LoadFromID("lvPermissionBasic");
 
 	            var Acllistview = new ListView();
@@ -988,7 +1289,7 @@
 	            	error : function(){
 	            		alert(strLang15);
 	            	}
-	            });
+	            }); */
 	        }
 		    
 	        function setOrganListType(pListType) {
@@ -1037,7 +1338,70 @@
 	          	}
 	        	
 	        	$("#spn_deptName").css("width", deptNameWidth);
-	        }		        
+	        }
+		    
+	        function Permissions_List() {
+		        $.ajax({
+		        	type : "POST",
+		        	dataType : "text",
+		        	url : "/admin/ezOrgan/getPopUpPermissionsList.do",		        	
+		        	data : {companyID : companyId, type : type, pageNum : CurPage, pageSize : pageSize, searchType : "", searchValue : ""},
+		        	success : function(xml){
+		        		result=loadXMLString(xml);
+		        		if (result.xml != "") {
+		                    if (result.documentElement.getElementsByTagName("TOTALCNT")[0] != null) {
+		                        totalCnt = getNodeText(result.documentElement.getElementsByTagName("TOTALCNT")[0]);
+		                        totalPage = Math.ceil(new Number(totalCnt / pageSize));
+		                    }
+		                } else {
+		                    totalCnt = 0;
+		                    totalPage = 0;
+		                }
+		                var xmldom = result;
+		                var headerData = createXmlDom();
+		                headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		                
+		                if (CrossYN()) {
+		                    var xmlRtn = xmldom.documentElement.getElementsByTagName("ROWS")[0];
+		                    var Node = headerData.importNode(xmlRtn, true);
+		                    headerData.documentElement.appendChild(Node);
+		                } else {
+		                    var xmlRtn = xmldom.documentElement.getElementsByTagName("ROWS")[0];
+		                    headerData.documentElement.appendChild(xmlRtn);
+		                }
+
+		                document.getElementById("PermissionPopUpList").innerHTML = "";
+
+		                var listview = new ListView();
+		                listview.SetID("lvPermissionList");
+		                listview.SetMulSelectable(false);
+		                //listview.SetRowOnClick("PermissionsPopUp_View");
+		                listview.SetRowOnDblClick("DeleteReceiver");
+		                listview.SetHeightFree(true);
+		                listview.DataSource(headerData);
+		                listview.DataBind("PermissionPopUpList");
+		                
+		                var a = document.getElementById("lvPermissionList_THEAD");
+		                var noclick = document.getElementById("lvPermissionList_TR_0");
+		                
+		                if (noclick == null || noclick == "") {
+		                	a.style.display = "none";
+		                } else {
+			                noclick.style.backgroundColor = "rgb(255, 255, 255)";
+			                noclick.setAttribute("selected", "false");
+			                $("#lvPermissionList_TR_0").mouseout(function(){
+			                	$("#lvPermissionList_TR_0").css("background-color", "rgb(255, 255, 255)");
+		                });
+		                }
+		                a.style.display = "none";
+		               
+		                
+		        	},
+		        	error : function(error){
+		        	    alert("<spring:message code='ezOrgan.mse8'/>" + error);
+		        	}
+		        });		        
+		    }
 	    </script>
 	</head>
 	<body class="popup">
@@ -1154,9 +1518,7 @@
 			</LISTVIEWDATA>
 		</xml>
 	    <div id="menu">
-	        <ul>
-	            <li><span onclick="OK_Click()"><spring:message code='ezOrgan.t167'/></span></li>
-	        </ul>
+	       <div id ="authorText" style="font-weight: bold; margin-top: 10px;"></div>
 	    </div>
 	    <div id="close">
 	        <ul>
@@ -1205,7 +1567,7 @@
 	                <table style="margin-top: 4px;">
 	                    <tr>
 	                        <td class="box">
-	                            <div style="width: 250px; height: 473px; overflow-x: hidden; overflow-y: auto;" id="TreeView"></div>
+	                            <div style="width: 250px; height: 473px; overflow-x: auto; overflow-y: auto;" id="TreeView"></div>
 	                        </td>
 	                        <td></td>
 	                        <td class="listview" style="width: 426px" id="orglistView">
@@ -1241,38 +1603,49 @@
 	                        </td>    
 	                    </tr>
 	                </table>
-	            </td>        
-	            <td style="vertical-align:top; padding-top:4px; padding-left:8px;">
+	            </td>
+	                 <td style="width: 30px; text-align: center;">                            
+	                            <img src="/images/kr/cm/arr_right.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver(this)"><br>
+	                            <img src="/images/kr/cm/arr_left.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()">
+	                 </td>   
+	            <td style="vertical-align:top; padding-top:4px; padding-left:4
+	            px;">
 	                <table>
 	                    <tr>
 	                        <td>
 	                            <h2 id="Permission" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="margin-left:1px; border-bottom:0px;">
-	                                <span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezOrgan.t00011'/></span>
+	                                <%-- <span style="min-width: 45px;" id="PermissionStr"><spring:message code='ezOrgan.t00011'/></span> --%>
+	                                <span style="min-width: 45px;" id="PermissionStr"></span>
 	                            </h2>
 	                            <div class="receiver_borderbox" style="border-top: 1px solid #565b66; margin-top:1px;">
-	                                <div id="PermissionBasic" style="width: 250px; Height: 210px; overflow-x: auto; overflow-y: auto;" ondblclick="InsertReceiver()"></div>
-	                            </div>
+	                                <!-- <div id="PermissionBasic" style="width: 250px; Height: 210px; overflow-x: auto; overflow-y: auto;" ondblclick="InsertReceiver()"></div> -->
+	                                <div id="PermissionPopUpList" style="width: 250px; Height: 475px; overflow-x: auto; overflow-y: auto;"></div>
+	                            </div> 
 	                        </td>
 	                    </tr>
 	                    <tr>
-	                        <td style="text-align:center; padding-top:1px;">
+	                        <!-- <td style="text-align:center; padding-top:1px;">
 	                            <img src="../../../images/kr/cm/arr_down.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="InsertReceiver()" />
 	                            <img src="../../../images/kr/cm/arr_up.gif" alt="" width="16" height="16" vspace="2" border="0" style="cursor: pointer;" onclick="DeleteReceiver()" />
-	                        </td>
+	                        </td> -->
 	                    </tr>
 	                    <tr>
-	                        <td>
+	                        <%-- <td>
 	                            <h2 id="UserAcl" class="receiver_tltype01" onclick="SelectReceiverWindow(ToTitle,ListViewMsgTo)" style="margin-left:1px; border-bottom:0px;">
 	                                <span style="min-width: 45px;" id="Span1"><spring:message code='ezOrgan.t00012'/></span>
 	                            </h2>
+	                            
 	                            <div class="receiver_borderbox" style="border-top: 1px solid #565b66;">
 	                                <div id="UserAclList" style="width: 250px; Height: 211px; overflow-x: auto; overflow-y: auto;" ondblclick="DeleteReceiver()"></div>
 	                            </div>
-	                        </td>
+	                        </td> --%>
 	                    </tr>
 	                </table>                                      
 	            </td>
 	        </tr>
 	    </table>
+	    <div class="btnposition btnpositionNew">
+	        <a class="imgbtn" onclick="OK_Click()"><span><spring:message code='ezOrgan.t167'/></span></a>
+	    </div>
 	</body>	
 </html>

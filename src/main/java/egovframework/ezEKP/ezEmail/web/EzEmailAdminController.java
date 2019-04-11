@@ -2322,5 +2322,66 @@ public class EzEmailAdminController {
 	
 		return content;
 	}
+
+	/**
+	 * 조직도관리 메인화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezEmail/adminMailMain.do")
+	public String organMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
+		logger.debug("adminMailMain started.");
+		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
+
+		if (userInfo == null) {
+			logger.debug("portalMain accessDenied.");
+			return "cmm/error/adminDenied";
+		} else {
+			logger.debug("adminMailMain ended.");
+			return "admin/ezEmail/adminMailMain";
+		}
+	}
 	
+	/**
+	 * 조직도관리 왼쪽화면 호출 함수
+	 */
+	@RequestMapping(value = "/admin/ezEmail/adminMailLeft.do")
+	public String organLeft(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LoginVO user = commonUtil.userInfo(loginCookie);
+		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());
+		String cChk = "0";
+		String kChk = "0";
+		
+		if (user.getRollInfo().indexOf("c=1") != -1) { // 전체 관리자
+			cChk = "1";
+		}
+		
+		if (user.getRollInfo().indexOf("k=1") != -1) { // 회사 관리자
+			kChk = "1";
+		}
+		
+		// set useLetter
+		String useLetter = ezCommonService.getTenantConfig("useLetter", user.getTenantId());
+		if (useLetter == null || useLetter.equals("")) {
+			useLetter = "NO";
+		}
+				
+		logger.debug("useLetter=" + useLetter);
+		
+		String useSignatureTemplate = ezCommonService.getTenantConfig("useSignatureTemplate", user.getTenantId());
+		if (useSignatureTemplate == null || useSignatureTemplate.equals("")) {
+			useSignatureTemplate = "NO";
+		}
+		
+		logger.debug("useSignatureTemplate=" + useSignatureTemplate);
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", user.getTenantId());
+		
+		model.addAttribute("dotNetIntegration", dotNetIntegration);
+		model.addAttribute("useLetter", useLetter);
+		model.addAttribute("useSignatureTemplate", useSignatureTemplate);
+		model.addAttribute("useSharedMailbox", useSharedMailbox);
+		model.addAttribute("cChk", cChk);
+		model.addAttribute("kChk", kChk);
+		
+		return "admin/ezEmail/adminMailLeft";
+	}
 }

@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -144,29 +145,29 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 회람문서함 폴더트리 호출 Method
 	 */
-	@RequestMapping(value="/ezCircular/getCircularFolderList.do")
-	public String getCircularFolderList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
-		logger.debug("getCircularFolderList started.");
-		
-		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		
-		StringBuilder rootFolderXML = new StringBuilder();
-		
-		List<CircularFolderVO> list = ezCircularService.getTopFolder(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
-		
-		for (int i=0; i < list.size(); i++) {
-			rootFolderXML.append("<node imgidx='1' caption='" + 
-					list.get(i).getCircularFolderName() + "' foldername='" + 
-					list.get(i).getCircularFolderName() + "' fullcaption='_NONE' href='" + 
-					list.get(i).getCircularFolderID() + "'></node>");
-		}
-		
-		model.addAttribute("rootFolderXML", rootFolderXML.toString());
-		
-		logger.debug("getCircularFolderList ended.");
-
-		return "json";
-	}
+//	@RequestMapping(value="/ezCircular/getCircularFolderList.do")
+//	public String getCircularFolderList(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+//		logger.debug("getCircularFolderList started.");
+//		
+//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+//		
+//		StringBuilder rootFolderXML = new StringBuilder();
+//		
+//		List<CircularFolderVO> list = ezCircularService.getTopFolder(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+//		
+//		for (int i=0; i < list.size(); i++) {
+//			rootFolderXML.append("<node imgidx='1' caption='" + 
+//					list.get(i).getCircularFolderName() + "' foldername='" + 
+//					list.get(i).getCircularFolderName() + "' fullcaption='_NONE' href='" + 
+//					list.get(i).getCircularFolderID() + "'></node>");
+//		}
+//		
+//		model.addAttribute("rootFolderXML", rootFolderXML.toString());
+//		
+//		logger.debug("getCircularFolderList ended.");
+//
+//		return "json";
+//	}
 	
 	/**
 	 * 회람문서함관리 및 회람판에서 이동 호출 함수
@@ -2681,7 +2682,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 2018-07-12 김보미 - 모두저장(압축파일 내려받기)
 	 */
-	@RequestMapping(value="/ezCommunity/downloadAttachAll.do", produces="text/plain; charset=UTF-8")
+	@RequestMapping(value="/ezCircular/downloadAttachAll.do", produces="text/plain; charset=UTF-8")
 	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachAll started.");
@@ -2728,6 +2729,8 @@ public class EzCircularController extends EgovFileMngUtil {
 
 			downFileName = fileNamesArr2.get(0).toString() + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr2.size() - 1) + egovMessageSource.getMessage("ezCircular.t104", userInfo.getLocale()) +".zip";//zip파일명
 			
+			Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
+			
 			if (fileNamesArr.size() != 0) {// 파일이 있으면
 				for (int i = 0; i < fileNamesArr.size(); i++) { //파일 길이만큼
 					BufferedInputStream bis = null;
@@ -2736,7 +2739,9 @@ public class EzCircularController extends EgovFileMngUtil {
 				       File sourceFile = new File(fullFilePath + fileNamesArr.get(i).toString());
 	                   
 				        bis = new BufferedInputStream(new FileInputStream(sourceFile));
-				        ZipEntry zentry = new ZipEntry(fileNamesArr2.get(i).toString());
+				        String newFileName = commonUtil.getUniqueFileName(fileNamesArr2.get(i).toString(), fileNameMap);
+				        //ZipEntry zentry = new ZipEntry(fileNamesArr2.get(i).toString());
+				        ZipEntry zentry = new ZipEntry(newFileName);
 				        zos.putNextEntry(zentry);
 				        
 				        byte[] buffer = new byte[bufferSize];

@@ -721,20 +721,26 @@
       				strBody = strBody.replace("url(\'/", "url(\'");
       			}
       			
-		        if (trim_Cross(strBody) != "" || pDocID == "") {
-		            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + strBody + "</BODY>" + "</HTML>", "clean");
-		        }
-		        else {
-		            if (pDocID == "")
-		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>", "clean");
-		            else if (pUrl.toLowerCase().indexOf(".mht") > -1) {
-		                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
-		                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
-		            } else {
-		            	 var tempstr = strBody + "<br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+      			/* 2019-04-01 홍승비 - MHT파일 변환 및 저장 시 예외처리 추가 */
+      			try {
+			        if (trim_Cross(strBody) != "" || pDocID == "") {
+			            strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + strBody + "</BODY>" + "</HTML>", "clean");
+			        }
+			        else {
+			            if (pDocID == "")
+			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(strBody) + "</BODY>" + "</HTML>", "clean");
+			            else if (pUrl.toLowerCase().indexOf(".mht") > -1) {
+			                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
 			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
-		            }
-		        }
+			            } else {
+							var tempstr = strBody + "<br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+							strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
+			            }
+			        }
+      			} catch (e) {
+      				alert("<spring:message code='ezCommunity.lhj04'/>");
+      				return;
+      			}
 		        
 				createNodeAndAppandNodeText(xmlDom, objSubNode, objDataNode, "DOCCONTENT", strContent);
 
@@ -790,13 +796,13 @@
 		                if (document.getElementById("chk_reservation").checked == false) {
 		                    if (strItemID == "") {
 		                        xmlhttp = createXMLHttpRequest();
-		                        xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
 		                        xmlhttp.send();
 		                        xmlhttp = null;
 		                    }
 		                    if (pMode == "reply") {
 		                        xmlhttp = createXMLHttpRequest();
-		                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID + "&itemTreeID=" + strUpperItemIDTree, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID) + "&itemTreeID=" + strUpperItemIDTree, false);
 		                        xmlhttp.send();
 		                        xmlhttp = null;
 		                    }
@@ -809,9 +815,9 @@
 		                    xmlhttp = createXMLHttpRequest();
 		
 		                    if (pMode != "modify") {
-		                        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(newID), false);
 		                    } else {
-		                        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + strItemID, false);
+		                        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(strItemID), false);
 		                    }
 		                        
 		                    xmlhttp.send();
@@ -859,12 +865,14 @@
 			                    }
 			                }
 			                catch (e) { }
+			                
+			                /* 2019-03-19 홍승비 - 게시물 재전송 시 새로고침 동작 수정 */
 			                if (pMode == "boardContent" || pMode == "boardAttach") {
 			                    try {
 			                        if (typeof (window.parent.parent.SuccessBoard) == null || typeof (window.parent.parent.SuccessBoard) == "undefined") {
 			                            var checkboard = window.parent.location.toString();
 			                            if (checkboard.indexOf("mailReadContent.do") < 0) {
-			                                window.parent.parent.location.reload(false);
+			                                window.opener.opener.location.reload(false);
 			                            }
 			                        }
 			                    }
@@ -875,12 +883,12 @@
 					} catch (e) {
 					}
 					
-					if (parent.opener.getNoticePortletList != undefined) {
+					if (parent.opener != null && parent.opener.getNoticePortletList != undefined) {
 						parent.opener.getNoticePortletList();
 					}
 					
 					// 게시판 포틀릿 리스트 업데이트 되도록 수정
-		            if (parent.opener.getBoardPortletInfo != undefined) {
+		            if (parent.opener != null && parent.opener.getBoardPortletInfo != undefined) {
 		            	var customBoardList = parent.opener.document.getElementsByClassName("customBoard");
 		            	var customBoardCount = customBoardList.length;
 		            	
@@ -895,7 +903,7 @@
 		            	}
 		            }
 					
-					if (parent.opener.getBoardList_NewBoardSTD != undefined) {
+					if (parent.opener != null && parent.opener.getBoardList_NewBoardSTD != undefined) {
 						parent.opener.getBoardList_NewBoardSTD();
 					}
 					
@@ -997,14 +1005,14 @@
 		        var pTop = (pheight - 720) / 2;
 		        var pLeft = (pwidth - 765) / 2;
 		        if (gubun != "2")
-		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
+		            window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=720,width=744,top=" + pTop + ",left=" + pLeft, "");
 		        else {
 		            var ua = navigator.userAgent;
 		            if (ua.indexOf("Safari") > 0 && ua.indexOf("Chrome") == -1) {
-		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=640,width=744,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=640,width=744,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		            else {
-		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + pBoardID, "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=690,width=744,top=" + pTop + ",left=" + pLeft, "");
+		                window.open("/ezBoard/boardItemPreView.do?guBun=" + gubun + "&boardID=" + encodeURIComponent(pBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=0,height=690,width=744,top=" + pTop + ",left=" + pLeft, "");
 		            }
 		        }
 		    }
@@ -1349,7 +1357,7 @@
 		    }
 		    function GetBoardInfo() {
 		        var xmlhttp_boardinfo = createXMLHttpRequest();
-		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + pBoardID, false);
+		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp_boardinfo.send();
 		        if (xmlhttp_boardinfo.status == 200) {
 		            pBoardName = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "BOARDNAME")[0]);
@@ -1657,7 +1665,7 @@
 		                    if (!confirm("<spring:message code='ezBoard.t10053' />"))
 		                        return;
 		                    else {
-		                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + ret[0] + "&mode=new&bType=SELECT";
+		                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&bType=SELECT";
 		                        return;
 		                    }
 		                }
@@ -1665,7 +1673,7 @@
 		                    if (!confirm("<spring:message code='ezBoard.t10054' />"))
 		                        return;
 		                    else {
-		                        document.location.href = "/ezBoard/newBoardItem.do?boardID=" + ret[0] + "&mode=new&boardNM=" + ret[1] + "&bType=SELECT";
+		                        document.location.href = "/ezBoard/newBoardItem.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&boardNM=" + ret[1] + "&bType=SELECT";
 		                        return;
 		                    }
 		                }
@@ -1718,7 +1726,7 @@
 	                    if (!confirm("<spring:message code='ezBoard.t10053' />"))
 	                        return;
 	                    else {
-	                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + ret[0] + "&mode=new&bType=SELECT";
+	                        document.location.href = "/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&bType=SELECT";
 	                        return;
 	                    }
 	                }
@@ -1726,7 +1734,7 @@
 	                    if (!confirm("<spring:message code='ezBoard.t10054' />"))
 	                        return;
 	                    else {
-	                        document.location.href = "/ezBoard/NewBoardItem.do?boardID=" + ret[0] + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
+	                        document.location.href = "/ezBoard/NewBoardItem.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
 	                        return;
 	                    }
 	                }

@@ -79,7 +79,7 @@
 				var pTop = (pheight - 720) / 2;
 				var pLeft = (pwidth - 765) / 2;
 				
-			    window.open("/ezCommunity/newBoardItem.do?boardID=" + pItemBoardID + "&itemID=" + pItemID + "&mode=modify" + "&reservedItem=true", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
+			    window.open("/ezCommunity/newBoardItem.do?boardID=" + encodeURIComponent(pItemBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=modify" + "&reservedItem=true", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=720,width=765,top=" + pTop + ",left=" + pLeft, "");
 			}
 
 			function checkBox_checked(pItemID, e) {
@@ -119,7 +119,7 @@
 
 			function DeleteItem() {
 			    var xmlhttp = createXMLHttpRequest();
-				xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + strListInfo, false);
+				xmlhttp.open("POST", "/ezCommunity/deleteItem.do?itemList=" + encodeURIComponent(strListInfo), false);
 				xmlhttp.send();
 				xmlhttp = null;
 				window.location.reload();

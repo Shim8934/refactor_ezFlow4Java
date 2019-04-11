@@ -189,6 +189,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		if (req.getParameter("photoType") != null && !req.getParameter("photoType").equals("")) {
 			photoType = req.getParameter("photoType");	
 		}
+
+		boardID = boardID.replace("{", "%7B").replace("}", "%7D");
 		
 		model.addAttribute("boardID", boardID);
 		model.addAttribute("photoType", photoType);
@@ -932,9 +934,20 @@ public class EzBoardController extends EgovFileMngUtil{
 		String deptPath = userInfo.getDeptPathCode();
 		String deptPathOrgan = "";
 		
+		/* 2019-04-10 홍승비 - 원회사의 사내겸직이 존재하면 사내겸직부서ID를 관리자 권한체크에 포함하도록 수정 */
+		List<String> addJobList = ezBoardService.getPDOAddJobDeptID(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String addJobStr = "";
+		if (addJobList != null && addJobList.size() > 0) {
+			for (int i = 0; i < addJobList.size(); i++) {
+				addJobStr += addJobList.get(i) + ",";
+			}
+		}
+		
 		for (int ch = 0; ch < deptPath.split(",").length; ch++) {
-			if (ch == 0) {
+			if (ch == 0) { // 0 : userID
 				deptPathOrgan += deptPath.split(",")[ch].trim();
+			} else if (ch == (deptPath.split(",").length - 3) && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
+				deptPathOrgan += "," + addJobStr + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
 			} else {
 				deptPathOrgan += "," + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
 			}
@@ -1045,18 +1058,29 @@ public class EzBoardController extends EgovFileMngUtil{
 		}
 		
 		String deptPath = userInfo.getDeptPathCode();
-		String deptPathOrgan="";
+		String deptPathOrgan = "";
 		
-		for (int ch=0; ch<deptPath.split(",").length; ch++) {
-			if (ch==0)
-				deptPathOrgan+=deptPath.split(",")[ch].trim();
-			else
-				deptPathOrgan+=","+deptPath.split(",")[deptPath.split(",").length-(ch)].trim();
+		List<String> addJobList = ezBoardService.getPDOAddJobDeptID(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String addJobStr = "";
+		if (addJobList != null && addJobList.size() > 0) {
+			for (int i = 0; i < addJobList.size(); i++) {
+				addJobStr += addJobList.get(i) + ",";
+			}
 		}
 		
-		String userDeptPath = deptPathOrgan+",everyone";
+		for (int ch = 0; ch < deptPath.split(",").length; ch++) {
+			if (ch == 0) {
+				deptPathOrgan += deptPath.split(",")[ch].trim();
+			} else if (ch == (deptPath.split(",").length - 3) && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
+				deptPathOrgan += "," + addJobStr + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
+			} else {
+				deptPathOrgan+="," + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
+			}
+		}
 		
-		for (int i=0; i<userDeptPath.split(",").length; i++) {
+		String userDeptPath = deptPathOrgan + ",everyone";
+		
+		for (int i = 0; i < userDeptPath.split(",").length; i++) {
 			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
 			
 			if (boardInfoTemp == null) {
@@ -1171,7 +1195,7 @@ public class EzBoardController extends EgovFileMngUtil{
     		}
     	}
 
-		logger.debug("getBoardList ended");
+    	logger.debug("getBoardList ended");
         return resultXML.toString();
     }
     
@@ -4528,7 +4552,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String boardID = request.getParameter("boardID");
 		String strACLXML = "";
-		String userDeptPath = userInfo.getDeptPathCode() + ",everyone";
 		
 		if (ezBoardAdminService.checkIfBoardGroupAdmin(boardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId()).equals("OK")) {
 			strACLXML = "<NODES><NODE><ACCESS>1</ACCESS><BOARDADMIN>true</BOARDADMIN><LIST>true</LIST><READ>true</READ><WRITE>true</WRITE><REPLY>true</REPLY><DELETE>true</DELETE><INHERIT>false</INHERIT><POSTNOTICE></POSTNOTICE></NODE></NODES>";
@@ -4537,10 +4560,35 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			BoardPropertyVO boardPropertyVO = null;
 			
-			for (int k = 0; k < userDeptPath.split(",").length; k++) {
-				boardPropertyVO = ezBoardAdminService.getACL(boardID, userDeptPath.split(",")[k], userInfo.getTenantId());
+			String deptPath = userInfo.getDeptPathCode();
+			String deptPathOrgan = "";
+			
+			/* 2019-04-10 홍승비 - 게시물 권한체크 시 우선순위 변경 (사용자 > 원부서(사간겸직부서) > 사내겸직부서 > 회사 > top > everyone) */
+			List<String> addJobList = ezBoardService.getPDOAddJobDeptID(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+			String addJobStr = "";
+			if (addJobList != null && addJobList.size() > 0) {
+				for (int i = 0; i < addJobList.size(); i++) {
+					addJobStr += addJobList.get(i) + ",";
+				}
+			}
+			
+			for (int ch = 0; ch < deptPath.split(",").length; ch++) {
+				if (ch == 0) { // 0 : userID
+					deptPathOrgan += deptPath.split(",")[ch].trim();
+				} else if (ch == (deptPath.split(",").length - 3) && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
+					deptPathOrgan += "," + addJobStr + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
+				} else {
+					deptPathOrgan += "," + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
+				}
+			}
+			
+			String userDeptPath = deptPathOrgan + ",everyone";
+			
+			for (int i = 0; i < userDeptPath.split(",").length; i++) {
+				BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(boardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
 				
-				if (boardPropertyVO != null) {
+				if (boardInfoTemp != null) {
+					boardPropertyVO = boardInfoTemp;
 					break;
 				}
 			}
@@ -5973,6 +6021,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				rtnValue = "OK";
 			} catch (Exception e) {
 				logger.error("EzBoard :: deleteImageItem");
+				e.printStackTrace();
 				rtnValue = "ERROR";
 			}
 		} else if (mod.equals("Mod")) {
@@ -6076,6 +6125,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String itemID = request.getParameter("itemID");
 		String boardID = request.getParameter("boardID");
+		String boardIDEncode = URLEncoder.encode(boardID);
 		String g_ImageUrl = "";
 		String listImages = "";
 		String imageID = "";
@@ -6091,7 +6141,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + g_ImageUrl.split("/")[7] + "|";
+			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardIDEncode + "&fileName=" + URLEncoder.encode(g_ImageUrl.split("/")[7]) + "|";
 			imageID += photoViewList.get(k).getImageID() + ";";
 			imageContent += photoViewList.get(k).getFileContent() + ";";
 			mainFg += photoViewList.get(k).getFlag().trim() + ";";
@@ -6145,7 +6195,7 @@ public class EzBoardController extends EgovFileMngUtil{
 			int idx = filePath.lastIndexOf(commonUtil.separator);
 			
 			g_ImageUrl = filePath.substring(0, idx + 1) + filePath.substring(idx + 1).replace("+", "%20");
-			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + boardID + "&fileName=" + URLEncoder.encode(g_ImageUrl.split("/")[7], "UTF-8") + "|";
+			listImages += "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUM&boardID=" + URLEncoder.encode(boardID) + "&fileName=" + URLEncoder.encode(g_ImageUrl.split("/")[7], "UTF-8") + "|";
 			imageID += photoViewList.get(k).getImageID() + ";";
 			imageContent += photoViewList.get(k).getFileContent() + ";";
 			
@@ -7408,6 +7458,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				}
 			} catch (Exception e) {
 				logger.debug("uploadBackImage error");
+				e.printStackTrace();
 			}
 		}
 		
@@ -8136,13 +8187,17 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			downFileName = fileNamesArr[0] + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr.length-1) + egovMessageSource.getMessage("ezStatistics.t1067", userInfo.getLocale()) + ".zip";//zip파일명
 			
+			/* 2019-04-02 홍승비 - 중복된 파일명을 덮어쓰지 않고 (1), (2)... 붙이도록 수정 */
+			Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
+			
 			if (fileNamesArr.length != 0) {// 파일이 있으면
-				for (int i = 0; i < fileNamesArr.length; i++) { //파일 길이만큼
+				for (int i = 0; i < fileNamesArr.length; i++) { // 파일 갯수만큼
 					BufferedInputStream bis = null;
 					
 					try {
 						File sourceFile = new File(fullFilePath + fileNamesUIDArr[i]);
 				        bis = new BufferedInputStream(new FileInputStream(sourceFile));
+				        fileNamesArr[i] = commonUtil.getUniqueFileName(fileNamesArr[i], fileNameMap);
 				        ZipEntry zentry = new ZipEntry(fileNamesArr[i]);
 				        zos.putNextEntry(zentry);
 				        
@@ -8186,6 +8241,7 @@ public class EzBoardController extends EgovFileMngUtil{
 				try {
 					zos.close();
 				} catch (Exception e) {
+					e.printStackTrace();
 				}
 			}
 		}

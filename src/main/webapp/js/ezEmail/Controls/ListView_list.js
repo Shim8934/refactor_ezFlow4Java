@@ -504,8 +504,15 @@ function ListView() {
                 var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
                 var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
 
+                // 2019-01-15 황윤호 조직도 겸직 리스트 수정
+                var addJobFlag = false;
+                if(strValue.indexOf('changeComTapString') && strValue.indexOf('changeDeptTapString')) {
+                	strValue = strValue.replace('changeComTapString', ' ');
+                	strValue = strValue.replace('changeDeptTapString', '<br />');
+	                addJobFlag = true;
+                }
                 var oText = document.createTextNode(strValue);
-                var objTd = document.createElement("TD");
+            	var objTd = document.createElement("TD");
 
                 var strColType = "";
                 if (oHeaders.length > 0)
@@ -590,8 +597,17 @@ function ListView() {
                     }
                 }
 
-                if (strColType != "checkbox")
-                    objTd.appendChild(oText);
+                // 2019-01-15 황윤호 조직도 겸직 리스트 수정
+                if(addJobFlag) {
+                	var temp = oText.textContent;
+                    if (strColType != "checkbox"){
+                    	objTd.innerHTML = temp;
+                    }
+                } else {
+                	if (strColType != "checkbox") {
+                		objTd.appendChild(oText);
+                	}
+                }
                 objTr.appendChild(objTd);
 
                 objTd = null;
@@ -635,6 +651,13 @@ function ListView() {
             var strValue = SelectSingleNodeValue(oCells[j], "VALUE");
             var strStyle = SelectSingleNodeValue(oCells[j], "STYLE");
             var strClass = SelectSingleNodeValue(oCells[j], "CLASSNAME");
+            // 2019-01-15 황윤호 조직도 겸직 리스트 수정
+            var addJobFlag = false;
+            if(strValue.indexOf('changeComTapString') && strValue.indexOf('changeDeptTapString')) {
+            	strValue = strValue.replace('changeComTapString', ' ');
+            	strValue = strValue.replace('changeDeptTapString', '<br />');
+                addJobFlag = true;
+            }
             var oText = document.createTextNode(strValue);
             var objTd = document.createElement("TD");
 
@@ -664,7 +687,13 @@ function ListView() {
                 objTd.onmouseout = new Function("td_mouseout(this)");
             }
             
-            objTd.appendChild(oText);
+            // 2019-01-15 황윤호 조직도 겸직 리스트 수정
+            if(addJobFlag) {
+            	var temp = oText.textContent;
+                objTd.innerHTML = temp;
+            } else {
+            	objTd.appendChild(oText);
+            }
             objTr.appendChild(objTd);
             
             objTr.draggable = "true";

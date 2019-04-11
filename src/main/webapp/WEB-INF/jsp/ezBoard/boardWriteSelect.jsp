@@ -64,9 +64,9 @@
         		switch (SelectedBoardType) {
             		case "0":        
                 		if (CrossYN() || pNoneActiveX == "YES") {
-                    		window.open("/ezBoard/boardNewItem.do?boardID=" + SelectedBoardID + "&mode=new", "", feature, "");
+                    		window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&mode=new", "", feature, "");
                 		} else {
-                        	window.open("/ezBoard/boardNewItem.do?boardID=" + SelectedBoardID + "&mode=new", "", feature, "");
+                        	window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&mode=new", "", feature, "");
 	                	}
                 		
 	                	break;
@@ -76,7 +76,7 @@
 		                var pwidth = window.screen.availWidth;
 		                var pTop = (pheight - 720) / 2;
 		                var pLeft = (pwidth - 765) / 2;
-		                window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + SelectedBoardID + "&mode=new", "", feature, "");
+		                window.open("/ezBoard/newBoardItemPhoto.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&mode=new", "", feature, "");
 		                break;
 		            case "6":
 		            	var pUrl = "/ezBoard/boardAlertDialog.do?CAPTION=" + encodeURIComponent("<spring:message code='ezBoard.garm02' />") + "&MESSAGE=" + encodeURIComponent("<spring:message code='ezBoard.garm02'/>") + "&BUTTONNAMES=" + encodeURIComponent("<spring:message code='ezBoard.t14' />");
@@ -90,10 +90,10 @@
 		            default:
 		                var feature = GetOpenWindowfeature(765, 820);
 		                if (CrossYN() || pNoneActiveX == "YES") {
-		                    window.open("/ezBoard/boardNewItem.do?boardID=" + SelectedBoardID + "&mode=new", "", feature, "");
+		                    window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&mode=new", "", feature, "");
 		                }
 		                else {
-		                	window.open("/ezBoard/boardNewItem.do?boardID=" + SelectedBoardID + "&mode=new", "", feature, "");
+		                	window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&mode=new", "", feature, "");
 		                }
 		                
 		                break;
@@ -103,7 +103,7 @@
 			}
 
 			function CheckIfAnonyBoard(pBoardID) {
-				xmlhttp.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + pBoardID, false);
+				xmlhttp.open("POST", "/ezBoard/checkIfAnonyBoard.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
 				if(ret.indexOf("anonyboard") != -1) return true;
@@ -112,7 +112,7 @@
 			
 			function CheckIfCanWrite(pBoardID)
 			{
-				xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + pBoardID, false);
+				xmlhttp.open("POST", "/ezBoard/getACL.do?boardID=" + encodeURIComponent(pBoardID), false);
 				xmlhttp.send();
 				var ret = xmlhttp.responseText;
 				if(ret.indexOf("<WRITE>true</WRITE>") != -1) return true;
@@ -227,7 +227,7 @@
 			
 			function GetSubBoard(pRootBoardID, pSubFlag)
 			{
-				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + pRootBoardID + "&subFlag=" + pSubFlag + "&selectFlag=0&pExcludeBoardID=" + BoardID, false);
+				xmlhttp.open("POST", "/ezBoard/getSubBoards.do?rootBoardID=" + encodeURIComponent(pRootBoardID) + "&subFlag=" + pSubFlag + "&selectFlag=0&pExcludeBoardID=" + encodeURIComponent(BoardID), false);
 				xmlhttp.send();
 				
 				return xmlhttp.responseXML;

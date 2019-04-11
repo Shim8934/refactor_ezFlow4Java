@@ -181,6 +181,45 @@
 		    	<th id="mailtitle"><spring:message code='ezOrgan.t288'/></th>
 		    	<td colspan="3"><span id="MailAlias" style="WIDTH:100%"></span></td>
 		  	</tr> 
-		</table>	
+		</table><br/>		
+		<h2><spring:message code='ezOrgan.t290'/></h2>
+		<table class="content">
+			<tr>
+		    	<th><spring:message code='ezOrgan.t291'/></th>
+		    	<td nowrap style="padding-right:127px"><input type="checkbox" value="c" id="Check1" disabled=true /></td>
+		    	<th><spring:message code='ezOrgan.t292'/></th>
+		    	<td style="padding-right:127px" ><input type="checkbox" value="a" id="Check2" disabled=true /></td>
+		  	</tr>
+		  	<tr>
+		    	<th><spring:message code='ezOrgan.t293'/></th>
+		    	<td><input type="checkbox" value="k" id="Check3" disabled=true /></td>
+		    	<th><spring:message code='ezOrgan.t294'/></th>
+		    	<td><input type="checkbox" value="i" id="Check4" disabled=true /></td>
+		  	</tr>
+		  	<tr>
+		    	<th><spring:message code='ezOrgan.t295'/></th>
+		    	<td><input type="checkbox" value="g" id="Check5" disabled=true /></td>
+		    	<th><spring:message code='ezOrgan.t296'/></th>
+		    	<td><input type="checkbox" value="l" id="Check6" disabled=true /></td>
+		  	</tr>
+		  	<tr>
+		    	<th><spring:message code='ezOrgan.t297'/></th>
+		    	<td><input type="checkbox" value="n" id="Check7" disabled=true /></td>
+		    	<th><spring:message code='ezOrgan.t299'/></th>
+		    	<td><input type="checkbox" value="t" id="Check10" disabled=true /></td>
+		  	</tr>
+		  	<tr>
+		    	<th><spring:message code='ezOrgan.t300'/></th>
+		    	<td><input type="checkbox" value="m" id="Check8" disabled=true /></td>
+		    	<th><spring:message code='ezOrgan.t301'/></th>
+		    	<td><input type="checkbox" value="w" id="Check9" disabled=true /></td>
+		  	</tr>
+		   	<tr style="display:none">
+		    	<th><spring:message code='ezOrgan.t304'/></th>
+		    	<td><input type="checkbox" value="h" id="Check11" /></td>
+		    	<th style="display:none"><spring:message code='ezOrgan.t299'/></th>
+		    	<td style="display:none"><input type="checkbox" value="x" id="Check12" /></td>
+		  	</tr>
+		</table>
 	</body>
 </html>

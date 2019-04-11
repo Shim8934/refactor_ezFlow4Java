@@ -277,9 +277,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 						fromStr = commonUtil.trimDoubleQuotes(fromStr);
 								
 						fromEmail = ((InternetAddress)arrFroms[0]).getAddress();
-						if (fromEmail.equals("a@a.com")){
-							fromEmail = "";
-						}
 					} else {
 						String[] fromHeaders = message.getHeader("From");
 						if (fromHeaders != null) {
@@ -756,7 +753,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
 		htmlBody = m.replaceAll("");
-        	
+		htmlBody = htmlBody.replace("{", "%7B").replace("}", "%7D");
+		
 		// 2018-08-03 황윤호 추가
         String memoFlag = "";
         if (ezCommonService.getTenantConfig("useMemo", userInfo.getTenantId()).equalsIgnoreCase("YES")) {
@@ -874,7 +872,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
-		model.addAttribute("htmlBody", bodyInfoList.get(0));
+		String htmlBody = bodyInfoList.get(0).replace("{", "%7B").replace("}", "%7D");
+		model.addAttribute("htmlBody", htmlBody);
 		
 		logger.debug("readMailOriginal ended.");
 		
@@ -1607,6 +1606,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		IMAPAccess ia = null;
 		String fromId = "";
 		String senderProfileImageName = "";
+		Boolean emptyFlag = false;
 		
 		try {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
@@ -1615,6 +1615,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			
 			if (f == null || !f.exists()) {
 				logger.error("Folder not found. folderPath=" + folderPath);
+				emptyFlag = true;
 			} else {
 				f.open(Folder.READ_WRITE);
 				Message message = null;
@@ -1625,6 +1626,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 				
 				if (message == null) {
 					logger.error("Message not found. uid=" + uid);
+					emptyFlag = true;
 				} else {
 					FetchProfile fp = new FetchProfile();
 					
@@ -1894,6 +1896,16 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 			}
 		}
 		
+		if(emptyFlag) {
+			dateStr = "";
+			fromStr = "";
+			fromEmail = "";
+			toStr = "";
+			ccStr = "";
+			bccStr = "";
+			subject = "";
+		}
+		
 		StringBuilder sb = new StringBuilder();
 		sb.append("<DATA>");
 		sb.append("<UNREAD><![CDATA[" + unread + "]]></UNREAD>");
@@ -2001,6 +2013,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     	
     			if (f == null || !f.exists()) {
     				logger.error("Folder not found. folderPath=" + folderPath);
+    				model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+					return "ezCommon/error";
     			} else {
     				f.open(Folder.READ_ONLY);
     				Message message = null;
@@ -2010,6 +2026,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
     				
     				if (message == null) {
     					logger.error("Message not found. uid=" + uid);
+    					model.addAttribute("title", egovMessageSource.getMessage("ezEmail.t565", locale));
+    					model.addAttribute("mainContent", egovMessageSource.getMessage("ezEmail.t99000081", locale));
+    					model.addAttribute("subContent", egovMessageSource.getMessage("ezEmail.t99000082", locale));
+    					return "ezCommon/error";
     				} else {
     					bodyInfoList = ezEmailUtil.getBodyInfo(message, folderPath, uid, -1, null, locale, extraMap);
     					double size = Double.parseDouble(bodyInfoList.get(2));
@@ -2094,6 +2114,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
         Pattern p = Pattern.compile("<base\\s+href.*?>", Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(htmlBody);
 		htmlBody = m.replaceAll("");
+		htmlBody = htmlBody.replace("{", "%7B").replace("}", "%7D");
         		
 		// 2018-08-03 황윤호 추가
         String memoFlag = "";
@@ -2216,14 +2237,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							personName = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
 						}
-						/**
-						 * 인쇄할 때 보낸 사람, 받는 사람, 참조에 메일 주소가 없는 경우(a@a.com)
-						 * 메일 주소가 나타나지 않도록 처리
-						 */
 						
                         if (propertyValue.equals("YES") || propertyValue.equals("")) {
                             pSender = personName;                                  
-                            pSender += fromAddress.getAddress() == null || ((InternetAddress)fromAddress).getAddress().equals("a@a.com") ? "" : "(" + fromAddress.getAddress() + ")";
+                            pSender += fromAddress.getAddress() == null ? "" : "(" + fromAddress.getAddress() + ")";
 	                    } else {
 	                    	pSender = personName;                                  
 	                    }						
@@ -2249,7 +2266,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 
                             if (propertyValue.equals("YES") || propertyValue.equals("")) {
                                 pReciverTo += personName;
-                                pReciverTo += ((InternetAddress)address).getAddress() == null || ((InternetAddress)address).getAddress().equals("a@a.com") ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";                                                                      
+                                pReciverTo += ((InternetAddress)address).getAddress() == null ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";                                                                      
                             } else {
                                 pReciverTo += personName + "\t";
                             }							
@@ -2273,7 +2290,7 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							
 							if (propertyValue.equals("YES") || propertyValue.equals("")) {
 								pReciverCc += personName;
-								pReciverCc += ((InternetAddress)address).getAddress() == null || ((InternetAddress)address).getAddress().equals("a@a.com") ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
+								pReciverCc += ((InternetAddress)address).getAddress() == null ? "\t" : "(" + ((InternetAddress)address).getAddress() + ")\t";
 							} else {
 								pReciverCc += personName + "\t";								
 							}
@@ -2474,9 +2491,8 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 		
 		Document xmldom = commonUtil.convertStringToDocument(bodyData);
 		String url = xmldom.getElementsByTagName("URL").item(0).getTextContent();
-		String newGuid = xmldom.getElementsByTagName("NEWGUID").item(0).getTextContent();
 		String attachLimit = xmldom.getElementsByTagName("ATTACHLIMIT").item(0).getTextContent();
-		logger.debug("url=" + url + ",newGuid=" + newGuid + ",attachLimit=" + attachLimit);
+		logger.debug("url=" + url + ",attachLimit=" + attachLimit);
 		
 		String folderPath = url.split("/")[0];
 		String uidStr = url.split("/")[1];
@@ -2611,6 +2627,10 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								MimeBodyPart part = (MimeBodyPart)ezEmailUtil.getAttachPart(message, i + 1);
 
 								if (part != null) {
+									// 동일한 이름의 첨부파일을 처리할 수 있도록 GUID를 직접 생성하는 것으로 수정함. (기존에는 XML 패러메터로 넘어오는 값을 사용).
+									String newGuid = UUID.randomUUID().toString();
+									newGuid = "{" + newGuid + "}";		
+									
 									String orgFileName = attachedFileList.get(i).get("filename");
 									String fileName = newGuid + "_" + orgFileName;
 
@@ -3759,13 +3779,6 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 	 */
 	private String getReceiverHTML(String name, String address, boolean isSecureMail){
 		String returnValue = null;
-		/**
-		 * 메일 주소가 없을 경우('a@a.com') 
-		 * 마우스 오버를 해도 메일 주소가 나타나지 않도록 처리.
-		 **/
-		if (address.equals("a@a.com")) { 
-			address = "";
-		}
 		
 		if (isSecureMail) {
 			returnValue = "<span title='" + (address == null? "" : EgovStringUtil.getSpclStrCnvr(address)) + "'>"

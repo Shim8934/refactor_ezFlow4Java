@@ -24,8 +24,11 @@ public class PersonalGetQuickLinkMenuVO {
 	/** */
 	private String size_;
 	/** */
+
+	private String linkOrder;
+
 	private String regDate;
-	
+
 	public String getRegDate() {
 		return regDate;
 	}
@@ -97,5 +100,11 @@ public class PersonalGetQuickLinkMenuVO {
 	}
 	public void setSize_(String size_) {
 		this.size_ = size_;
+	}
+	public String getLinkOrder() {
+		return linkOrder;
+	}
+	public void setLinkOrder(String linkOrder) {
+		this.linkOrder = linkOrder;
 	}
 }

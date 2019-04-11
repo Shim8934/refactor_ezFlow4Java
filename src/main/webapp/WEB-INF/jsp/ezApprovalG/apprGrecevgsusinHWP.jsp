@@ -298,6 +298,14 @@
 	                	document.getElementById("btnAddSepAttach").style.display = "none";
 			        }
 			        
+			        //2019-02-28 중계문서일경우 재전송요청 뜨게 수정
+			        var isRelay = GetRelayDocInfo();
+			        if (isRelay) {
+			        	document.getElementById("btnReqReSend").style.display = "";
+// 	                    document.getElementById("btnReqReturn").style.display = "";
+// 			        	document.getElementById("btnDel").style.display = "";
+			        }
+			        
 			        if (pSusinDocURL != "") {
 			            if (pSusinDocURL == "PC") {
 			
@@ -522,6 +530,19 @@
 			}
 		
 			function btnSendDraft_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+					return;
+				} else if (deptCheckFlag == "2") {
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					return;
+				}	
+			
 			    try {
 			        var rtnSignInfo;
 			        if (btnSendDraftEnable == "false") {
@@ -944,6 +965,19 @@
 			  }
 		
 			  function btnDistribute_onclick() {
+	        	  var deptCheckFlag = checkDeptAndCabinetId();
+	        	  
+				  if (deptCheckFlag == "3") {
+				  	  alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+			  		  return;
+				  } else if (deptCheckFlag == "4") {
+				  	  alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+				  	  return;
+			  	  } else if (deptCheckFlag == "2") {
+				  	  alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					  return;
+				  }  
+			  
 			      var parameter = new Array();
 			      parameter[0] = pDocID;
 			      parameter[1] = pSusinSN;
@@ -962,6 +996,16 @@
 			  }
 			  
 			  function btnAssign_onclick() {
+	        	  var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				  if (deptCheckFlag == "3") {
+					  alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+					  return;
+				  } else if (deptCheckFlag == "4") {
+					  alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+					  return;
+				  }  
+			  
 			      var parameter = new Array();
 			      parameter[0] = pDocID;
 			      parameter[1] = pSusinSN;
@@ -979,6 +1023,19 @@
 			}
 		
 			function btnReturn_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+					return;
+				} else if (deptCheckFlag == "2") {
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					return;
+				}	
+			
 			    var pDocSN = "";
 			    if (HwpCtrl.CheckFieldExist("receiptnumber")) {
 			        var fieldValue = trim(HwpCtrl.GetFieldText("receiptnumber"));
@@ -1062,6 +1119,19 @@
 			}
 		
 			function btnRJunkyul_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+					return;
+				} else if (deptCheckFlag == "2") {
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					return;
+				}	
+			
 			    var Resultxml;
 			    var UserID = "${userInfo.id}";
 			    var DisplayName =  "${userInfo.displayName}";
@@ -1226,6 +1296,19 @@
 			}
 		
 			function btnReDistribute_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+					return;
+				} else if (deptCheckFlag == "2") {
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					return;
+				}
+			
 			    var ret = openOpinionUI("BanSong");
 			    if (ret != "cancel" && ret != undefined) {
 			        var xmlpara = createXmlDom();
@@ -1298,6 +1381,16 @@
 		
 		    var ezapprovalinfo_dialogArguments = new Array();
 			function btnApprovalInfo() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n겸직부서를'" + arr_userinfo[5] + "'부서로 변경하시거나 접수창을 새로 띄워주시기바랍니다." );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert("접수창의 부서정보가 '" + arr_userinfo[5] + "'부서로 되어있습니다. \n사용자의 부서가 변경되거나 겸직이 삭제되었으니 접수창을 새로 띄워주시기바랍니다.");
+					return;
+				}	
+			
 			    var onlydocinfiview = false;
 			    var parameter = new Array();
 				var chkReceivedDoc = 0;
@@ -1564,6 +1657,24 @@
 					return false;
 				}
 			}
+			
+	    	function checkDeptAndCabinetId() {
+	    		var result;
+            	$.ajax({
+            		type : "POST",
+            		dataType : "text",
+            		async : false,
+            		url : "/ezApprovalG/checkDeptAndCabinetId.do",
+            		data : {
+            				orgDeptId : arr_userinfo[4],
+            				orgCabinetId : cabinetID
+            				},
+            		success : function(text){
+            			result = text;
+            		}
+            	});
+            	return result;
+	    	}
 		</script>
 <!-- 		<script type="text/vbscript" language="vbscript"> -->
 <!-- Function ConversionPt(cmm) -->

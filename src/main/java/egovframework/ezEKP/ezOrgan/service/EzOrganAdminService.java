@@ -8,6 +8,8 @@ import java.util.List;
 
 
 
+
+
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.user.login.vo.LoginVO;
@@ -16,7 +18,7 @@ public interface EzOrganAdminService {
 	
 	public List<OrganDeptVO> getCompanyList(String lang, int tenantID) throws Exception;
 	
-	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID) throws Exception;
+	public List<OrganUserVO> getAddJobList(String companyID, String strLang, int tenantID, int totalCount, int pageSize, int startRow, int endRow) throws Exception;
 	
 	public List<OrganUserVO> getUserAddJobList(String cn, String strLang, int tenantID) throws Exception;
 	
@@ -99,7 +101,7 @@ public interface EzOrganAdminService {
 
 	public String updateTitle(String type, String jobID, String displayName, String displayName2, String useFlag, int sort, String companyID, int tenantID) throws Exception;
 	
-	public String deleteTitle(String type, String jobID, String companyID, int tenantID) throws Exception;
+	public String deleteTitle(String type, String jobIDList, String companyID, int tenantID) throws Exception;
 	
 	public String getTitleUserList(String type, String jobID, String pageSize, String pageNum, String searchType, String searchValue, String primary, String companyID, int tenantID) throws Exception;
 	
@@ -110,6 +112,12 @@ public interface EzOrganAdminService {
 	public int getTitleCnt(String type, String jobID, String mode, String displayName, String displayName2, String companyID, int tenantID) throws Exception;
 	
 	public String getJobOptionInfo(String type, String companyID, int tenantID) throws Exception;
-	
+
+	public void updateDBData_user_new(List<OrganUserVO> vo) throws Exception;
+
+	public int getAddJobCount(String companyID, int tenantId, String strLang) throws Exception;
+
 	public List<OrganUserVO> getAllUserCnList(int tenantID) throws Exception;
+
+	public String getCompanyName(String displayName, int tenantID) throws Exception;
 }

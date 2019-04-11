@@ -166,7 +166,7 @@
 
                         document.getElementById("Z").checked = true;
                         checkValue = "Z";
-                        LinkTypeURL = LinkTypeURL;
+                        LinkTypeURL = url;
                     }
 				}
 	        }
@@ -305,6 +305,7 @@
 	                checkValue = obj.value;
 	                LinkTypeURL = document.getElementById(checkValue).getAttribute("src");
 	            }
+	            console.log(LinkTypeURL);
 	        }
 	        
 	        function btn_ok() {

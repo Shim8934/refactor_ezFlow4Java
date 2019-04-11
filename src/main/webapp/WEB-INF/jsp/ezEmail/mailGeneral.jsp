@@ -18,6 +18,7 @@
 		    var MailQuater;
 		    var previewSubTree = "${previewSubTree}";
 		    var usePreviewSubTree = "${usePreviewSubTree}";
+		    var dotnetFlag = "${dotnetFlag}";
 		    
 		    window.onload = function()
 		    {
@@ -110,7 +111,6 @@
 				var xmlHTTP = createXMLHttpRequest();
 				var url = "/ezEmail/mailGeneralSave.do?MODE=ALL" ;
 			    var previewSubTreeSlb = $("#previewSubTreeSlb option:selected").val();
-			    var previewSubTreeStatus = window.parent.parent.frames["left"].previewSubTree;
 				var sendStr = "<DATA><LISTCOUNT>" + listcount.value + "</LISTCOUNT><REFRESHINTERVAL>" + refreshinterval.value + "</REFRESHINTERVAL>"+
 				                "<KEEPDELETELENGTH>" + document.getElementById("AutoSaveTime").value + "</KEEPDELETELENGTH>"+
 				                "<PREVIEWMODE>" + document.getElementById("PreviewMode").value + "</PREVIEWMODE>"+
@@ -128,10 +128,13 @@
 				xmlHTTP.open("POST", url, false);
 				xmlHTTP.setRequestHeader("Content-Type", "text/xml; charset=utf-8");
                 xmlHTTP.send(sendStr + "</DATA>");
-
-                if ((typeof previewSubTreeStatus != "undefined") && previewSubTreeStatus != previewSubTreeSlb) {
-                	var type = previewSubTreeSlb;
-                	window.parent.parent.frames["left"].previewSubTreeCall(type);
+				
+                if(dotnetFlag != "yes"){
+                	var previewSubTreeStatus = window.parent.parent.frames["left"].previewSubTree;
+                    if ((typeof previewSubTreeStatus != "undefined") && previewSubTreeStatus != previewSubTreeSlb) {
+                    	var type = previewSubTreeSlb;
+                    	window.parent.parent.frames["left"].previewSubTreeCall(type);
+                    }
                 }
                 
 				if (Gubun == "1") {

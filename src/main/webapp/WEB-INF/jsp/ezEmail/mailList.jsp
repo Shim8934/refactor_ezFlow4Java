@@ -642,24 +642,33 @@
 
 		    // 메일박스 내보내기 config 확인
 			function mailbox_export() {
-		    	
-				var folderTotalCount = document.getElementById("folderTotalCount").innerText;
-				
-				if (folderTotalCount < 1) {
-			    	alert("<spring:message code='ezEmail.kyj13' />");
-					return;
-				}
-		    	
-		    	var exportType = "MAILBOX";
-		    	
-		    	if (useEncryptZipForEmail == "YES") {
-		    			mailExportOption_onClick(exportType);
-		    	} else {
-			    	if (confirm("<spring:message code='ezEmail.lhm36' />")) {
-			    		mailbox_export_start();
-			    	}
-		    	}
-		    	
+
+                if (folderTotalCount == "") {
+                	setTimeout (function() {
+                		mailbox_export();
+                    }, 1000);
+                } else {
+					console.log('folderTotalCount=' + folderTotalCount);
+					if (folderTotalCount === null || typeof folderTotalCount === "undefined") {
+						// 이 경우가 나오면 안되요.
+						console.log('folderTotalCount is null or undefined');
+						return;
+					} else if (folderTotalCount < 1) {
+						alert("<spring:message code='ezEmail.kyj13' />");
+						return;
+					}
+
+					var exportType = "MAILBOX";
+
+					if (useEncryptZipForEmail == "YES") {
+						mailExportOption_onClick(exportType);
+					} else {
+						if (confirm("<spring:message code='ezEmail.lhm36' />")) {
+							mailbox_export_start();
+						}
+					}
+                }
+
 			}
 		    
 		    // 메일박스 내보내기
@@ -1086,7 +1095,7 @@
 	</head>
 	<body style="overflow:hidden;" id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);"  onmousemove="MailPreviewResize(event);" onmouseup="MailPreviewEnd(event);">
 		<h1>${folderName}<span id="mailBoxInfo"></span>
-	      <span style="float:right;font-weight:normal;color:black;">
+	      <span class="searchForm">
               <select name="searchCheck" id="searchCheck" class="text" style="height: 27px; margin-right: 0px; border: 1px solid #cbcbcb;">
                   <option selected value="SUBJECT"><spring:message code="ezEmail.t98" /></option>
                   <c:if test="${isSentItems != true}">
@@ -1100,8 +1109,8 @@
                   </c:if>
               </select>
 			  
-			  <input name="keyword" class="Mail_Input" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
-	          <a style="float:right"><img src="../../images/bsearch_new.gif" border="0" onClick="start_search()"></a>
+			  <input name="keyword" class="searchinputBox" style="ime-mode: active;height: 27px;border: 1px solid #cbcbcb; border-right:0px;" onKeyPress="onkeydown_start_search(event);"  onmousedown="keyword_Clear();" /> 
+	          <a class="searchBtn"><img src="/images/bsearch_new2.gif" border="0" onClick="start_search()"></a>
 	      </span>
 	    </h1>	
         <div id="mainmenu">

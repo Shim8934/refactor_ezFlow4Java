@@ -778,7 +778,7 @@ function addAttitude(obj, themeId) {
 
 function getHolidayList() {
 	$.ajax({
-		type:"POST",
+		type:"GET",
 		dataType : "json",
 		async : true,
 		url : "/ezAttitude/getHolidayList.do",
@@ -1219,4 +1219,16 @@ function schedule_get_holiday() {
 			CalendarMiniDataSource();
 		}		    		
     });
+}
+
+var notice_all_close = function () {
+	var popupList = parent.document.getElementsByClassName("popup_notice");
+	var popupListCount = popupList.length;
+	
+	for (var i = 0; i < popupListCount; i++) {
+		var popupId = popupList[0].id; 
+		var popup = parent.document.getElementById(popupId);
+		
+		popup.parentNode.removeChild(popup);
+	}
 }

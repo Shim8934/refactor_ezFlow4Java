@@ -13,12 +13,13 @@
 		
 		<script type="text/javascript">
 			window.onload = function () {	        	
-	        	window.resizeTo(550, 360 + window.outerHeight - window.innerHeight);
+	        	//window.resizeTo(550, 360 + window.outerHeight - window.innerHeight);
 	        	
 				var agent = navigator.userAgent.toLowerCase(); 
 				if (!CrossYN() || agent.search( "trident" ) > -1 ) {
 					document.getElementById("c_clubdesc").style.marginBottom = "0px";
 				}
+				
 			}
 			
 			var code = "<c:out value = '${code}' />";
@@ -28,10 +29,10 @@
 					var result = confirm("<spring:message code = 'ezCommunity.t59' />");
 					
 					if (result) {
-						window.location.href = "/admin/ezCommunity/commCloseAll.do?code=" + code;
+						window.location.href = "/admin/ezCommunity/commCloseAll.do?type=popUp&code=" + code;
 						
 					} else {
-						alert("<spring:message code = 'ezCommunity.t60' />");
+						//alert("<spring:message code = 'ezCommunity.t60' />");
 						self.close();
 					}
 					
@@ -39,10 +40,10 @@
 					var result = confirm("<spring:message code = 'ezCommunity.t61' />");
 					
 					if (result) {
-						window.location.href = "/admin/ezCommunity/commAdmitOk.do?code=" + code + "&pDivi=AdmitOK&name=" + encodeURIComponent('<c:out value = '${clubVO.c_ClubName}' />');
+						window.location.href = "/admin/ezCommunity/commAdmitOk.do?type=popUp&code=" + code + "&pDivi=AdmitOK&name=" + encodeURIComponent('<c:out value = '${clubVO.c_ClubName}' />');
 						
 					} else {
-						alert("<spring:message code = 'ezCommunity.t62' />");
+						//alert("<spring:message code = 'ezCommunity.t62' />");
 						self.close();
 					}
 				}
@@ -55,9 +56,9 @@
 					var result = confirm("<spring:message code = 'ezCommunity.t63' />");
 				
 					if (result) {
-						window.location.href = "/admin/ezCommunity/commAdmitOk.do?code=" + code + "&pDivi=AdmitCancel";
+						window.location.href = "/admin/ezCommunity/commAdmitOk.do?type=popUp&code=" + code + "&pDivi=AdmitCancel";
 					} else {
-						alert("<spring:message code = 'ezCommunity.t62' />");
+						//alert("<spring:message code = 'ezCommunity.t62' />");
 						self.close();
 					}
 				}
@@ -67,8 +68,15 @@
 	<body class="popup" >
 		<form method="post" name="mod" action="admin_basic_ok.asp">
 			<input type="hidden" name="code" value="<c:out value = '${code }' />">
-	
-	   		<h1 style="height:45px;"><spring:message code = 'ezCommunity.t64' /></h1>
+			
+			<c:choose>
+				<c:when test="${type == 'Del' }">
+					<h1 id="popUpTitle" style="height:45px;"><spring:message code = 'ezCommunity.t39' /></h1>
+				</c:when>
+				<c:otherwise>
+					<h1 id="popUpTitle" style="height:45px;"><spring:message code = 'ezCommunity.t25' /> / <spring:message code = 'ezCommunity.t44' /></h1>
+				</c:otherwise>
+			</c:choose>
 	   		<div id="close">
 	            <ul>
 	                <li><span onclick="window.close()"></span></li>
@@ -111,9 +119,25 @@
 					<td> <c:out value = '${strCategory}' /></td>
 				</tr>
 				<tr> 
-					<th><spring:message code = 'ezCommunity.t65' /></th>
+					<th><spring:message code = 'ezCommunity.t12' /></th>
 					<td>
-					
+						<c:choose>
+							<c:when test="${clubVO.c_ClubConfirmType == '2' }">
+								<spring:message code = 'ezCommunity.t13' />
+							</c:when>
+							
+							<c:otherwise>
+								<c:if test="${clubVO.c_ClubConfirmType == '3' }">
+									<spring:message code = 'ezCommunity.t14' />
+								</c:if>
+							</c:otherwise>
+						</c:choose>
+						
+					</td>
+				</tr>
+				<tr> 
+					<th><spring:message code = 'ezCommunity.t15' /></th>
+					<td>
 						<c:choose>
 							<c:when test="${clubVO.c_ClubGubun == '2' }">
 								<spring:message code = 'ezCommunity.t66' />

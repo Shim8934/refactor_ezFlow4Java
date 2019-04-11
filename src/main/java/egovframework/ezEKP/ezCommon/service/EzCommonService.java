@@ -109,7 +109,7 @@ public interface EzCommonService {
 	public void addHolidayRepeat() throws Exception;
 	
 	public void createPortalThemePortlet() throws Exception;
-
+	
 	public void insertPortalThemePortletInitdata() throws Exception;
 	
 	public void addJournalFormDelFlag() throws Exception;
@@ -123,6 +123,10 @@ public interface EzCommonService {
 	public void addTblPortalThemeUserIsDefault() throws Exception;
 
 	public void updateListOptionData() throws Exception;
+
+	public void addQuickLinkLinkOrder() throws Exception;
+	
+	public void addComCloseCompanyId() throws Exception;
 
 }
 
