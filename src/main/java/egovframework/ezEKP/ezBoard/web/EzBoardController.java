@@ -3372,6 +3372,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			String userDeptPath = deptPathOrgan + ",everyone";
 			
+			logger.debug("accessCheck userDeptPath in web    ::    " + userDeptPath);
+			
 			if (boardType == null || boardType.toUpperCase().equals("")) {
 				boardType = "GENERAL";
 			}
@@ -6246,6 +6248,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("useEditor", useEditor);
+		/* 2019-04-12 홍승비 - 마이게시판 댓글갯수 누락 수정 */
+		model.addAttribute("use_oneLineCount", "YES");
 
 		logger.debug("boardItemListMyList ended");
 		return "ezBoard/boardItemListMyList";
