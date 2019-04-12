@@ -1587,8 +1587,6 @@
 			    		refreshFlag = "N";
 			    	}
 			    }
-			    
->>>>>>> personalizedPortal
 		</script>
 	</head>
 	<body class="popup">
