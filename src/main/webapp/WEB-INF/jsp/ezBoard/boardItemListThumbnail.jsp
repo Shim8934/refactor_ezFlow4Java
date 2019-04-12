@@ -81,6 +81,7 @@
 		.albumThumbImg {
 			height: 100%;
 			max-height: 100px;
+			min-height: 100px;
 			width: auto;
 			border-radius: 3px;
 		}
@@ -497,7 +498,7 @@
 					}
                 	listXML += title + "</span></p>";
                 	
-                	listXML += "<p style='text-align:center;'><img class='albumThumbImg' src='" + imgSrc + "'/></p>";
+                	listXML += "<p style='text-align:center; overflow:hidden;'><img class='albumThumbImg' src='" + imgSrc + "'/></p>";
                 	listXML += "</div>";
                 }
                 
