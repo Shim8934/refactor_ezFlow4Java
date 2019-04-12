@@ -470,7 +470,6 @@ function CheckOpinionType() {
 function InitOpinionInfo() {
     try {
         var objXML = createXmlDom();
-        var pMode = "APR";
         
         if (typeof(pDocState) != "undefined" && (pDocState == "015" || pDocState == "017")) {
 	        $.ajax({
