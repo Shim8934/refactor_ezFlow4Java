@@ -585,7 +585,7 @@ function MakeFormRecevGroupXML_Detail() {
     var selRow = lvtFormView.GetDataRows();
     if (selRow.length > 0) {
         if (selRow.length == 1 && (GetAttribute(selRow[0], "id") != null ? GetAttribute(selRow[0], "id").indexOf("_TR_noItems") : -1) > -1)
-            return;
+            return "<PARAMETER><DATAS></DATAS></PARAMETER>";
 
         for (i = 0; i < selRow.length; i++) {
             subNode = createNodeAndAppandNodeText(xmlpara, objNode, objNode2, "DATA", "");

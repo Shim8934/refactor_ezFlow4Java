@@ -576,21 +576,54 @@
 		                lvtFormView.DeleteRow(GetAttribute(selRow[i], "id"));
 		            }
 		        }
-		        else {
+		        
+		        if (lvtFormView.GetDataRows().length <= 0) {
+		        	var objTr = document.createElement("TR");
+		        	objTr.setAttribute("id", "lvtForm_TR_noItems");
+		        		
+		        	var oText = document.createTextNode(strLang944);
+		        	var objTd = document.createElement("TD");
+		        	objTd.align = "center";
+		        	
+		        	var colCount = document.getElementById("lvtForm").getElementsByTagName("th").length;
+		        	objTd.setAttribute("colSpan", colCount);
+		        	objTd.appendChild(oText);
+		        	objTr.appendChild(objTd);
+		        	
+		        	document.getElementById("lvtForm").appendChild(objTr);
 		        }
+		        
 		        lvtFormView = null;
 		    }
 		
 		    function deleteAllCont_onclick() {
-		        var selRow = listview.GetRowCount();
-		
-		        if (selRow > 0) {
+		    	var lvtFormView = new ListView();
+		        lvtFormView.LoadFromID("lvtForm");
+		        
+		        var selRow = lvtFormView.GetRowCount();
+		        if (selRow > 0 && lvtFormView.GetDataRows()[0].id != "lvtForm_TR_noItems") {
 		            while (true) {
 		                if (listview.GetRowCount() < 1)
 		                    break;
 		
 		                listview.DeleteRow(listview.GetSelectedRowID(0));
 		            }
+		        }
+		        
+		        if (lvtFormView.GetDataRows().length <= 0) {
+		        	var objTr = document.createElement("TR");
+		        	objTr.setAttribute("id", "lvtForm_TR_noItems");
+		        		
+		        	var oText = document.createTextNode(strLang944);
+		        	var objTd = document.createElement("TD");
+		        	objTd.align = "center";
+		        	
+		        	var colCount = document.getElementById("lvtForm").getElementsByTagName("th").length;
+		        	objTd.setAttribute("colSpan", colCount);
+		        	objTd.appendChild(oText);
+		        	objTr.appendChild(objTd);
+		        	
+		        	document.getElementById("lvtForm").appendChild(objTr);
 		        }
 		    }
 		
