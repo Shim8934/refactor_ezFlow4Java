@@ -381,7 +381,7 @@
 		                    alert(strLang337);
 		                }
 		                else {
-		                	var requestUrl = "/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL);
+		                	var requestUrl = "/ezBoard/boardNewItem.do?mode=new1&boardID=" + encodeURIComponent(pBoardID) + "&url=" + encodeURIComponent(g_paramURL);
 		                	
 		                	if (typeof(shareId) != "undefined" && shareId != "") {
 		                		requestUrl += "&mailShareId=" + encodeURIComponent(shareId);
@@ -423,7 +423,7 @@
 		            	if (dotNetIntegration == "YES") {
 		            		requestUrl = "${dotNetUrl}/myoffice/ezBoardSTD/NewBoardItem.aspx?BoardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL) + "&pagetype=POPUP&javaflag=true";
 		            	} else {
-		            		requestUrl = "/ezBoard/boardNewItem.do?mode=new1&boardID=" + pBoardID + "&url=" + encodeURIComponent(g_paramURL);
+		            		requestUrl = "/ezBoard/boardNewItem.do?mode=new1&boardID=" + encodeURIComponent(pBoardID) + "&url=" + encodeURIComponent(g_paramURL);
 		            	}
 	                	
 	                	if (typeof(shareId) != "undefined" && shareId != "") {

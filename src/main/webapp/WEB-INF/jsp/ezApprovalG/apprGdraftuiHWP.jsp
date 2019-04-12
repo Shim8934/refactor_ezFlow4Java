@@ -609,10 +609,16 @@
 	                }
 	
 	                if (btnSendDraftEnable == "false") {
-	                    var pAlertContent = "<spring:message code='ezApprovalG.t1398'/>" + "<br>" + "<spring:message code='ezApprovalG.t1399'/>";
+	                	var pAlertContent = "";
+		            	//재기안의 경우 결재선 확인하라는 메세지 출력
+		            	if (pDraftFlag == "REDRAFT") {
+							pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
+		            	} else {
+		                    pAlertContent = "<spring:message code='ezApprovalG.t1398'/>" + "<br>" + "<spring:message code='ezApprovalG.t1399'/>";
+		            	}
+		            	
 	                    OpenAlertUI(pAlertContent);
 	                    btnApprovalInfo(1);
-	                    
 	                    return;
 	                }
 	                

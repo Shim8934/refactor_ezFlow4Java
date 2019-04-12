@@ -155,7 +155,6 @@
                  	   var totalVolume = ""; 
                  	   var useVolume = "";
                  	   var percent = "";
-                 	   var colorClass = "myBar_green";
                  	            
                  	   if (CrossYN()) { 
                  	        totalVolume = GetChildNodes(SelectNodes(result, "DATA/ROW")[0])[0].textContent;
@@ -176,17 +175,10 @@
                  	   
                  	   //용량 체크(색깔로)
                  	   if (percent >= 80) {
-                 	   		colorClass = "myBar_red";
-                 	       	//$(".volumeDL dd").css("color", "#ff4040");
+                 		  $("#myBar").addClass("danger");
                  	   } else if (percent >= 70) {
-					   		colorClass = "myBar_yellow";
-					   		//$(".volumeDL dd").css("color", "#ff9c00");
-                 	   } else {
-                 		  	colorClass = "myBar_green";
-                 		  	//$(".volumeDL dd").css("color", "#0470e4");
-                 	   }                  		   
-                 	            
-                 	   $("#myBar").addClass(colorClass);
+                 		  $("#myBar").addClass("warning");
+                 	   }                		   
                     }
                 });        	    
 	        }	        
