@@ -618,3 +618,29 @@ function btnClose_onclick() {
 function btnSave_onclick() {
     SaveFormInfo();
 }
+//고정수신처 부서 등록 시, 수발신담당자 유/무 체크
+function isReceiverChk(DeptID)
+{
+	var result = "";
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezApprovalG/receiverChk.do",
+		data : {
+				deptID   : DeptID 
+				},
+		success: function(text){
+			result = text;
+		},
+		error : function () {
+			result = "false";
+		}
+	});
+			
+	if(result == "false") 
+	    return false;
+	else
+	    return true;
+}

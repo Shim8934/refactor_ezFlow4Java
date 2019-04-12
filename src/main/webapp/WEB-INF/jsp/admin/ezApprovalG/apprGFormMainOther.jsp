@@ -422,6 +422,12 @@
                     OpenAlertUI(pAlertContent);
                     return;
                 }
+		        //고정수신처 부서 등록 시, 수발신 담당자 유/무 체크
+		        if (!isReceiverChk(treeNode.GetNodeData("CN"))) {
+		            var pAlertContent = strLang1101 + strLang1102;
+		            OpenAlertUI(pAlertContent);
+		            return;
+		        }
 		        
 		        if (DuplicateFlag) {
 		            AprLineAddDept(treeNode.GetNodeData("VALUE"), treeNode.GetNodeData("CN"), "D");
@@ -460,7 +466,7 @@
 		    function chkAllDept(aDeptID, aDeptName) {
 		        try {
 		            var DuplicateFlag = DuplicateAprDeptCheck(aDeptID);
-		            if (DuplicateFlag)
+		            if (DuplicateFlag && isReceiverChk(aDeptID))
 		                AprLineAddDept(aDeptName, aDeptID, "D");
 		
 		            var xmlHTTP = createXMLHttpRequest();
@@ -478,7 +484,6 @@
 		            xmlNodes = loadXMLString(xmlHTTP.responseText);
 		
 		            var objNodes = SelectNodes(xmlNodes, "NODES/NODE");
-		
 		            if (objNodes.length > 0) {
 		                for (var i = 0; i < objNodes.length; i++) {
 		                    chkAllDept(objNodes[i].getElementsByTagName("CN")[0].childNodes[0].nodeValue, objNodes[i].getElementsByTagName("VALUE")[0].childNodes[0].nodeValue);
