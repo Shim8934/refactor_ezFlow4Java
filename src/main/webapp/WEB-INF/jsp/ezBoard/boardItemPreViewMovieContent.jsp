@@ -103,7 +103,7 @@
 				    return;
 				}
 	            
-	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&itemID=" + pItemID + "&mode=reply"
+	            window.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(pItemID) + "&mode=reply"
 	        }
 	     
 	      	  function OneLineReply_onkeydown(e) {
