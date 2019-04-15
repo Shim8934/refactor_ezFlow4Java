@@ -323,6 +323,55 @@
 		            });
 	            }
 		    }
+		    
+		    function search_click() {
+				var searchType = document.getElementById("searchType").value;
+		    	var searchValue = document.getElementById("searchValue").value;
+		    	searchValue = searchValue.replaceAll(" ","") == "" ? "" : searchValue;
+		    	
+		    	$.ajax({
+					type : "post",
+					dataType: 'text',
+					data : {"searchType":searchType, "searchValue":searchValue, "compId":companyId},
+					url : "/admin/ezEmail/getSharedMailboxListSearchByItem.do",
+					success: function(result) {
+	    				if (result === "NO_PERMISSION") {
+	    					alert("<spring:message code='ezOrgan.t302' />");
+	    				} else if (result === "ERROR") {
+	    					alert("<spring:message code='ezEmail.sharedMailbox07' />");
+	    				} else {
+	    					document.getElementById("sharedMailboxUser").innerHTML = "";
+	    					var resultXml = loadXMLString(result);
+	    					var headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+	    		            var xmlRtn = resultXml.documentElement.getElementsByTagName("ROWS")[0];
+	    					
+	    		            if (CrossYN()) {
+	    		                var Node = headerData.importNode(xmlRtn, true);
+	    		                headerData.documentElement.appendChild(Node);
+	    		            } else {
+	    		                headerData.documentElement.appendChild(xmlRtn);
+	    		            }
+	
+	    		            // 리스트 총 개수
+	    		            var listCount = headerData.getElementsByTagName("ROWS")[0].childElementCount;
+	    		            document.getElementById("listCount").innerHTML = listCount;
+	    		            
+	    		            document.getElementById("sharedMailboxList").innerHTML = "";
+	    		            var pUserList = new ListView();
+	    		            pUserList.SetID("sharedMailbox");
+	    		            pUserList.SetRowOnDblClick("modSharedMailbox");
+	    		            pUserList.SetRowOnClick("viewSharedMailboxInfo");
+	    		            pUserList.SetSelectFlag(false);
+	    		            pUserList.SetHeightFree(true);
+	    		            pUserList.DataSource(headerData);
+	    		            pUserList.DataBind("sharedMailboxList");
+	    				}
+	    			},
+	    			error: function(err) {
+	    				alert("<spring:message code='ezEmail.sharedMailbox07' />");
+	    			}
+		    	});
+		    }
 		</script>
 	</head>
 	<body class="mainbody">
@@ -368,7 +417,7 @@
 					<option value="memberName"><spring:message code='ezEmail.sharedMailbox25' /></option> <!-- 공유자 이름 -->
 					<option value="memberID"><spring:message code='ezEmail.sharedMailbox26' /></option> <!-- 공유자 ID -->
 				</select>
-				<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px;">
+				<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px;">
 				<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
 			</div>
 		</div>

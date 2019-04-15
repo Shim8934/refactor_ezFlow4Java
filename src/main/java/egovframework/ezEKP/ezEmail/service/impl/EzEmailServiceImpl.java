@@ -2677,6 +2677,54 @@ public class EzEmailServiceImpl implements EzEmailService {
 		return list;
 	}
 	
+	
+	@Override
+	public List<MailSharedMailboxVO> getSharedMailboxListSearchByItem(String companyId, int tenantId, String searchType, String searchValue) throws Exception {
+		logger.debug("getSharedMailboxListSearchByItem started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchType=" + searchType + ",searchValue=" + searchValue);
+		
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", tenantId);
+		List<MailSharedMailboxVO> list = new ArrayList<>();
+		
+		if (useSharedMailbox.equals("YES")) {
+			String deptId = "shared_mailbox_" + companyId;
+			
+			String inputParams = "tenantId=" + tenantId + "&deptId=" + URLEncoder.encode(deptId, "UTF-8") 
+					+ "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8") + "&searchType=" + URLEncoder.encode(searchType, "UTF-8");
+			
+			String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getSharedMailboxListSearchByItem";
+			String strJson = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+			logger.debug("strJson=" + strJson);
+
+			JSONParser parser = new JSONParser();
+			JSONObject object = (JSONObject)parser.parse(strJson);
+			
+			if (object.get("resultCode").equals("OK")) {
+	        	JSONArray array = (JSONArray)object.get("result");
+	        	
+	        	if (array != null) {
+	        		int length = array.size();
+	        		
+	        		MailSharedMailboxVO vo = null;
+	        		
+	        		for (int i = 0; i < length; i++) {
+	        			JSONObject sharedMailbox = (JSONObject)array.get(i);
+	        			vo = new MailSharedMailboxVO();
+	        			
+	        			vo.setShareId((String)sharedMailbox.get("shareId"));
+	        			vo.setShareMail((String)sharedMailbox.get("shareMail"));
+	        			vo.setShareName((String)sharedMailbox.get("shareName"));
+	        			
+	        			list.add(vo);
+	        		}
+	        	}
+	        }
+		}
+		
+		logger.debug("getSharedMailboxListSearchByItem ended. listSize=" + list.size());
+		return list;
+	}
+	
 	@Override
 	public JSONArray selectAllSignatureTemplate(String companyId, String tenantId) throws Exception {
 		logger.debug("selectAllSignatureTemplate started.");

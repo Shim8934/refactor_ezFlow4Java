@@ -2006,6 +2006,67 @@ public class EzEmailAdminController {
 		}
 	}
 	
+	/**
+	 * 공유사서함 조건별 검색
+	 */
+	@RequestMapping(value = "/admin/ezEmail/getSharedMailboxListSearchByItem.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String getSharedMailboxListSearch(@CookieValue("loginCookie") String loginCookie, Locale locale, HttpServletRequest request, Model model) throws Exception {
+		logger.debug("getSharedMailboxListSearch started.");
+		
+		String returnData = "";
+		
+		try {
+			// 관리자 권한체크
+			LoginVO auth = commonUtil.checkAdmin(loginCookie);
+			
+			if (auth == null) {
+				returnData = "NO_PERMISSION";
+				logger.debug("getSharedMailboxListSearch ended. returnData=" + returnData);
+				
+				return returnData;
+			}
+			
+			String userId = auth.getId();
+			String compId = request.getParameter("compId");
+			int tenantId = auth.getTenantId();
+			String searchType = request.getParameter("searchType");
+			String searchValue = request.getParameter("searchValue");
+			logger.debug("userId=" + userId + ",compId=" + compId + ",tenantId=" + tenantId + ",searchType=" + searchType 
+					+ ",searchValue=" + searchValue);
+			
+			List<MailSharedMailboxVO> sharedMailboxList = ezEmailService.getSharedMailboxListSearchByItem(compId, auth.getTenantId(), searchType, searchValue);
+			logger.debug("sharedMailboxList size=" + sharedMailboxList.size());
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (MailSharedMailboxVO vo : sharedMailboxList) {
+				sb.append("<ROW><CELL>");
+
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getShareName()));
+				sb.append("</VALUE>");
+
+				sb.append("<DATA1>");
+				sb.append(commonUtil.cleanValue(vo.getShareId()));
+				sb.append("</DATA1>");
+
+				sb.append("</CELL></ROW>");
+			}
+
+			sb.append("</ROWS></LISTVIEWDATA>");
+			
+			returnData = sb.toString();
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("getSharedMailboxListSearch ended.");
+		return returnData;
+	}
+	
 	private String checkLicenseKey(int tenantID, String domain) throws Exception {
 		String licenseKey = ezCommonService.getTenantConfig("LicenseKey", tenantID);
 		

@@ -105,6 +105,7 @@ public interface EzEmailService {
 	public String delSharedMailboxAllUser(String shareId, int tenantId) throws Exception;
 	public String setSharedMailboxUsers(String shareId, JSONArray userList, int tenantId) throws Exception;
 	public List<MailSharedMailboxVO> getSharedMailboxSearchList(String companyId, int tenantId, String searchValue) throws Exception;
+	public List<MailSharedMailboxVO> getSharedMailboxListSearchByItem(String companyId, int tenantId, String searchType, String searchValue) throws Exception;
 	public MailSharedMailboxUserVO getSharedMailboxPermissionInfo(String shareId, int tenantId, String userId) throws Exception;
 	public int deleteUserFromAllSharedMailbox(String userId, int tenantId) throws Exception;
 	public JSONArray selectAllSignatureTemplate(String companyId, String tenantId) throws Exception;
