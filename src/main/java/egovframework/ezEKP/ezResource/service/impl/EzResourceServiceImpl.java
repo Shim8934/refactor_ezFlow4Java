@@ -26,6 +26,9 @@ import org.w3c.dom.NodeList;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganAdminDAO;
+import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganAdminService;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezResource.dao.EzResourceDAO;
@@ -58,6 +61,12 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	@Resource(name="EzResourceDAO")
 	private EzResourceDAO ezResourceDAO;
 	
+	@Autowired
+	private EzOrganDAO ezOrganDao;
+	
+	@Autowired
+	private EzOrganAdminDAO ezOrganAdminDao;
+	
 	@Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
 	
@@ -66,6 +75,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	
 	@Autowired
 	private CommonUtil commonUtil;
+	
+	@Autowired
+	private EzOrganAdminService ezOrganAdminService;
 	
 	@Autowired
 	private EzOrganService ezOrganService;
@@ -445,7 +457,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		logger.debug("ownerID="+ownerID);
 		
 		boolean flag = false;
-		String[] ownerList = ownerID.split(",");
+		String[] ownerList = ownerID.split(",");			// 자원 관리자 체크
 		for(int i=0; i<ownerList.length; i++) {
 			if(userID.equals(ownerList[i])) {
 				flag = true;
@@ -460,64 +472,119 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
 			logger.debug("brdUpper="+brdUpper);
 			logger.debug("accessLvl="+accessLvl);
-			if (accessLvl != null && accessLvl.trim().equals("1")) {
-				result = "Y";
+			if (accessLvl != null && accessLvl.trim().equals("1")) {		// 유저의 권한 체크
+				logger.debug("user accessLvl = admin");
+				return "Y";
 			} else {
 				if (accessLvl != null && accessLvl.trim().equals("2")) {
+					logger.debug("user accessLvl = user");
 					result = "U";
-				} else {
-					if (mode.equals("everyone")) {
-						map.put("v_PUSERID", "everyone");
+				} 
+
+				if (mode.equals("everyone")) {							// 'everyone' 권한 체크	
+					map.put("v_PUSERID", "everyone");
+					accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
+					if (accessLvl != null && accessLvl.trim().equals("1")) {
+						logger.debug("everyone accessLvl = admin");
+						return "Y";
+					} else {
+						if (accessLvl != null && accessLvl.trim().equals("2")) {
+							logger.debug("everyone accessLvl = user");
+							result = "U";
+						}
+
+						String deptPath = ezOrganService.getDeptPath(deptID, tenantID);			// 부서 권한 체크
+						List<String> deptIds = new ArrayList<String>();
+						Collections.addAll(deptIds, deptPath.split(","));
+						deptIds.remove(0);				// companyID 삭제
+						Collections.reverse(deptIds);
+						
+						map.put("v_PUSERID", deptIds.get(0));
 						accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
-						if (accessLvl != null && accessLvl.trim().equals("1")) {
-							result = "Y";
-						} else {
+							
+						if(accessLvl != null && accessLvl.trim().equals("1")) {
+							logger.debug("user dept accessLvl = admin");
+							return "Y";
+						}
+						else {
 							if (accessLvl != null && accessLvl.trim().equals("2")) {
-								String vTenantID = String.valueOf(tenantID);
-								Map<String,Object> deptAccessLvlMap = new HashMap<String, Object>();
-								deptAccessLvlMap.put("IN_DEPT_CN", deptID);
-								deptAccessLvlMap.put("IN_TENANT_ID", vTenantID);
-								deptAccessLvlMap.put("IN_BRD_ID", brdID);
-								logger.debug("deptID : " + deptID + " tenant_id : " + vTenantID + " brd_ID : " + brdID);
-								
-								ezResourceDAO.getDeptAccessLvl(deptAccessLvlMap);
-								
-								String AccessDeptLvl = deptAccessLvlMap.get("OUT_RESULT_ACL").toString();
-								logger.debug("AccessDeptLvl : " + AccessDeptLvl);
-								
-								if (AccessDeptLvl != null && !AccessDeptLvl.equals("") && AccessDeptLvl.equals("1")) {
-									result = "Y";
-								} else {
-									result = "U";
-								}
-							} else {
-								String vTenantID = String.valueOf(tenantID);
-								Map<String,Object> deptAccessLvlMap = new HashMap<String, Object>();
-								deptAccessLvlMap.put("IN_DEPT_CN", deptID);
-								deptAccessLvlMap.put("IN_TENANT_ID", vTenantID);
-								deptAccessLvlMap.put("IN_BRD_ID", brdID);
-								logger.debug("deptID : " + deptID + " tenant_id : " + vTenantID + " brd_ID : " + brdID);
-								
-								ezResourceDAO.getDeptAccessLvl(deptAccessLvlMap);
-								
-								String AccessDeptLvl = deptAccessLvlMap.get("OUT_RESULT_ACL").toString();
-								logger.debug("AccessDeptLvl : " + AccessDeptLvl);
-								
-								if (AccessDeptLvl != null && !AccessDeptLvl.equals("") && AccessDeptLvl.equals("1")) {
-									result = "Y";
-								} else if (AccessDeptLvl != null && !AccessDeptLvl.equals("") && AccessDeptLvl.equals("2")){
-									result = "U";
-								} else {
-									result = "";
+								logger.debug("user dept accessLvl = user");
+								result = "U";
+							}
+							// 부서 상위 권한 체크
+							deptIds.remove(0);				// 현재 부서ID 삭제
+							String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
+							
+							map.put("v_PUSERID", newDeptPath);
+							List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+
+							if(deptAclList != null) {
+								for(int i=0; i<deptAclList.size(); i++) {
+									if(deptAclList.get(i).getAccessLvl().equals("1")) {
+										logger.debug("user upper dept accessLvl = admin");
+										return "Y";
+									}
+									else {
+										logger.debug("user upper dept accessLvl = user");
+										result = "U";
+									}
 								}
 							}
 						}
-					} else {
-						result = "";
+						
+						// 사내 겸직 권한 체크
+						List<OrganUserVO> userAddJobList = ezOrganAdminService.getUserAddJobList(userID, "1", tenantID);
+
+						if(userAddJobList.size() > 0) {
+							for(int i=0; i<userAddJobList.size(); i++) {
+								String addJobDeptPath = ezOrganService.getDeptPath(userAddJobList.get(i).getDepartment(), tenantID);
+								List<String> addJobDeptIds = new ArrayList<String>();
+								Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
+								addJobDeptIds.remove(0);				// companyID 삭제
+								Collections.reverse(addJobDeptIds);
+								
+								map.put("v_PUSERID", addJobDeptIds.get(0));
+								accessLvl = ezResourceDAO.getAclTblBrd_S3(map);
+									
+								if(accessLvl != null && accessLvl.trim().equals("1")) {
+									logger.debug("user addjob dept accessLvl = admin");
+									return "Y";
+								}
+								else {
+									if (accessLvl != null && accessLvl.trim().equals("2")) {
+										logger.debug("user addjob dept accessLvl = user");
+										result = "U";
+									} 
+									// 부서 상위 권한 체크
+									addJobDeptIds.remove(0);				// 현재 부서ID 삭제
+									String newDeptPath = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+									
+									map.put("v_PUSERID", newDeptPath);
+									List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+									
+									if(deptAclList != null) {
+										for(int j=0; j<deptAclList.size(); j++) {
+											if(deptAclList.get(j).getAccessLvl().equals("1")) {
+												logger.debug("user addjob upper dept accessLvl = admin");
+												return "Y";
+											}
+											else {
+												logger.debug("user addjob upper dept accessLvl = user");
+												result = "U";
+											}
+										}
+									}
+								}
+							}
+						}
 					}
-				}	
+				} else {
+					logger.debug("This user does not have access.");
+					result = "";
+				}
 			}
 		} else {
+			logger.debug("user brd accessLvl = admin");
 			result = "Y";
 		}
 		logger.debug("result="+result);
@@ -1784,6 +1851,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	@Override
 	public String getAdminFlag(String companyID, String brdID, String userID, int tenantID, String deptID) throws Exception {
 		String accessLvl = "";
+		
 
 		/* 2018-07-13 홍승비 - everyone을 관리자로 설정한 경우 우선적으로 해당 관리자 플래그 받아오도록 수정 */
 		ResGetAdminFlagVO resGetAdminFlag = getAdmFlag(companyID, brdID, userID, tenantID);
@@ -1798,9 +1866,11 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				}
 			}
 			
-			logger.debug("accessLvl : " + accessLvl);
+			logger.debug("everyone or user accessLvl : " + accessLvl);
 			
-			if (accessLvl.equals("2")) {
+			if(accessLvl.equals("1")) {			// everyone 혹은 user 권한이 관리자 이면 Y 리턴, 그 외 U + 부서권한 체크
+				return "Y";
+			} /*else {
 				//해안
 				String vTenantID = String.valueOf(tenantID);
 				Map<String,Object> deptAccessLvlMap = new HashMap<String, Object>();
@@ -1817,9 +1887,102 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				if (AccessDeptLvl != null && !AccessDeptLvl.equals("") && AccessDeptLvl.equals("1")) {
 					accessLvl = AccessDeptLvl;
 				}
+			} */
+			/*else {		// 아이디 혹은 everyone에서 관리자 권한 있을 때
+				return "Y";
+			}*/
+		} else {	//부서의 관리자 권한 확인
+			Map<String,Object> map = new HashMap<String, Object>();
+			map.put("v_PCOMPANYID", companyID);
+			map.put("v_BRD_UPPER", brdID);
+			map.put("tenantID", tenantID);
+			
+			String deptPath = ezOrganService.getDeptPath(deptID, tenantID);
+			List<String> deptIds = new ArrayList<String>();
+			Collections.addAll(deptIds, deptPath.split(","));
+			deptIds.remove(0);				// companyID 삭제
+			Collections.reverse(deptIds);
+			
+			map.put("v_PUSERID", deptIds.get(0));
+			String deptAccLvl = ezResourceDAO.getAclTblBrd_S3(map);
+				
+			if(deptAccLvl != null && deptAccLvl.trim().equals("1")) {
+				logger.debug("user dept accessLvl = admin");
+				return "Y";
 			}
-		} else {
-			//해안
+			else {
+				if (deptAccLvl != null && deptAccLvl.trim().equals("2")) {
+					logger.debug("user dept accessLvl = user");
+					accessLvl = "2";
+				}
+				// 부서 상위 권한 체크
+				deptIds.remove(0);				// 현재 부서ID 삭제
+				String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
+				
+				map.put("v_PUSERID", newDeptPath);
+				List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+
+				if(deptAclList != null) {
+					for(int i=0; i<deptAclList.size(); i++) {
+						if(deptAclList.get(i).getAccessLvl().equals("1")) {
+							logger.debug("user upper dept accessLvl = admin");
+							return "Y";
+						}
+						else {
+							logger.debug("user upper dept accessLvl = user");
+							accessLvl = "2";
+						}
+					}
+				}
+			}
+			
+			// 사내 겸직 권한 체크
+			List<OrganUserVO> userAddJobList = ezOrganAdminService.getUserAddJobList(userID, "1", tenantID);
+
+			if(userAddJobList.size() > 0) {
+				for(int i=0; i<userAddJobList.size(); i++) {
+					String addJobDeptPath = ezOrganService.getDeptPath(userAddJobList.get(i).getDepartment(), tenantID);
+					List<String> addJobDeptIds = new ArrayList<String>();
+					Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
+					addJobDeptIds.remove(0);				// companyID 삭제
+					Collections.reverse(addJobDeptIds);
+					
+					map.put("v_PUSERID", addJobDeptIds.get(0));
+					String addJobAccLvl = ezResourceDAO.getAclTblBrd_S3(map);
+						
+					if(addJobAccLvl != null && addJobAccLvl.trim().equals("1")) {
+						logger.debug("user addjob dept accessLvl = admin");
+						return "Y";
+					}
+					else {
+						if (addJobAccLvl != null && addJobAccLvl.trim().equals("2")) {
+							logger.debug("user addjob dept accessLvl = user");
+							accessLvl = "2";
+						} 
+						// 부서 상위 권한 체크
+						addJobDeptIds.remove(0);				// 현재 부서ID 삭제
+						String newDeptPath = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+						
+						map.put("v_PUSERID", newDeptPath);
+						List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+						
+						if(deptAclList != null) {
+							for(int j=0; j<deptAclList.size(); j++) {
+								if(deptAclList.get(j).getAccessLvl().equals("1")) {
+									logger.debug("user addjob upper dept accessLvl = admin");
+									return "Y";
+								}
+								else {
+									logger.debug("user addjob upper dept accessLvl = user");
+									accessLvl = "2";
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			/* //해안
  			String vTenantID = String.valueOf(tenantID);
 			Map<String,Object> deptAccessLvlMap = new HashMap<String, Object>();
 			deptAccessLvlMap.put("IN_DEPT_CN", deptID);
@@ -1834,7 +1997,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 			
 			if (AccessDeptLvl != null && !AccessDeptLvl.equals("")) {
 				accessLvl = AccessDeptLvl;
-			}
+			} */
 		}
 
 		

@@ -12,6 +12,7 @@ import egovframework.ezEKP.ezResource.vo.ResBrdVO;
 import egovframework.ezEKP.ezResource.vo.ResDateVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdmSubClsTreeVO;
 import egovframework.ezEKP.ezResource.vo.ResGetAdminFlagVO;
+import egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetItemListVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleRepetitionVO;
 import egovframework.ezEKP.ezResource.vo.ResGetScheduleVO;
@@ -328,6 +329,11 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public String userResPermissionCheck(Map<String, Object> map) throws Exception {
 		return (String) select("EzResourceDAO.userResPermissionCheck", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<ResGetClsAclListVO> getDeptAcl(Map<String, Object> map) {
+		return (List<ResGetClsAclListVO>) list("EzResourceDAO.getDeptAcl", map);
 	}
 }
 

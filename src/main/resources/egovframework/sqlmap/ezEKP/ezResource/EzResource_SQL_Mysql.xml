@@ -14,6 +14,7 @@
     <typeAlias  alias="ResAdminVO"         						type="egovframework.ezEKP.ezResource.vo.ResAdminVO"/>
     <typeAlias  alias="ResDateVO"         						type="egovframework.ezEKP.ezResource.vo.ResDateVO"/>
     <typeAlias  alias="OrganUserVO"         						type="egovframework.ezEKP.ezOrgan.vo.OrganUserVO"/>
+	<typeAlias  alias="ResGetClsAclListVO" 					type="egovframework.ezEKP.ezResource.vo.ResGetClsAclListVO"/>
 	
 	<resultMap class="ResGetAdmSubClsTreeVO"       id="resGetAdmSubClsTreeVO">
 		<result property="brdID"				column="BRD_ID"					columnIndex="1"/>
@@ -271,7 +272,15 @@
 		<result property="allDay"				column="ALLDAY"					columnIndex="14"		nullValue=""/>
 	</resultMap>
 	
-	<parameterMap class="map" id="deptAccessLvlParam">
+	<resultMap class="ResGetClsAclListVO" 	id="resGetClsAclListVO">
+		<result property="deptYn"					column="DEPT_YN"				columnIndex="1" nullValue=""/>
+		<result property="sdaYn"					column="SDA_YN"					columnIndex="2" nullValue=""/>
+		<result property="memberNam"				column="MEMBER_NAM"			    columnIndex="3" nullValue=""/>
+		<result property="memberID"				    column="MEMBER_ID"				columnIndex="4" nullValue=""/>
+		<result property="accessLvl"				column="ACCESS_LVL"			    columnIndex="5" nullValue=""/>
+	</resultMap>
+	
+	<!-- <parameterMap class="map" id="deptAccessLvlParam">
 		<parameter property="IN_DEPT_CN" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
 		<parameter property="IN_TENANT_ID" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
 		<parameter property="IN_BRD_ID" jdbcType="VARCHAR" javaType="java.lang.String" mode="IN"/>
@@ -282,7 +291,7 @@
 		<![CDATA[
 			{CALL GETRESOURCEACL(?,?,?,?)}
 		]]>	
-	</procedure>
+	</procedure> -->
 	
 	<select id="EzResourceDAO.getAdmSubClsTree" parameterClass="Map" resultMap="resGetAdmSubClsTreeVO">
 		<isEmpty property="v_P_ParentID">
@@ -2122,6 +2131,29 @@
 				 and 
 				 	(a.member_id=#userId# or a.member_id = 'everyone')
 				 )
+		]]>
+	</select>
+	
+	<select id="EzResourceDAO.getDeptAcl" parameterClass="Map"  resultMap="resGetClsAclListVO">
+		<![CDATA[
+			SELECT
+				DEPT_YN , 
+				SDA_YN ,
+				MEMBER_NAM ,
+				MEMBER_ID ,
+				ACCESS_LVL 
+        	FROM
+        		TBL_RS_RESACL 
+       		WHERE
+       			RESID = #v_BRD_UPPER#
+       		AND
+       			COMPANYID = #v_PCOMPANYID#
+       		AND 
+       			TENANT_ID = #tenantID#	
+       		AND
+       			SDA_Yn = 'Y'
+       		AND
+       			MEMBER_ID in ( $v_PUSERID$ )
 		]]>
 	</select>
 	
