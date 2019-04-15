@@ -3404,6 +3404,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			String userDeptPath = deptPathOrgan + ",everyone";
 			
+			logger.debug("accessCheck userDeptPath in web    ::    " + userDeptPath);
+			
 			if (boardType == null || boardType.toUpperCase().equals("")) {
 				boardType = "GENERAL";
 			}
