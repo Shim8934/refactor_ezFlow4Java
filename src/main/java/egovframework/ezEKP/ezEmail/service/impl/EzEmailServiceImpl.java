@@ -1761,6 +1761,59 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		return distributionList;
 	}
+
+	@Override
+	public List<MailDistributionVO> getDistributionSearchListByItem(String companyId, int tenantId, String searchValue, String searchType) throws Exception {
+		logger.debug("getDistributionSearchListByItem started.");
+		logger.debug("companyId=" + companyId + ",tenantId=" + tenantId + ",searchValue=" + searchValue + ",searchType=" + searchType);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String inputParams = "companyId=" + URLEncoder.encode(companyId, "UTF-8");
+		inputParams += "&domain=" + URLEncoder.encode(domain, "UTF-8");
+		inputParams += "&searchType=" + URLEncoder.encode(searchType, "UTF-8");
+		inputParams += "&searchValue=" + URLEncoder.encode(searchValue, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getDistributionSearchListByItem";			
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100;
+		List<MailDistributionVO> distributionList = new ArrayList<MailDistributionVO>();	
+		
+		if (response != null) {
+			JSONParser jsonParser = new JSONParser();
+			JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+
+			resultCode = (String)responseObj.get("resultCode");		
+			
+			if (resultCode.equals("OK")) {
+				reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+				
+				if (reasonCode == 0) {
+					JSONArray resultArray = (JSONArray)responseObj.get("result");
+					
+					for (int i=0; i<resultArray.size(); i++) {
+						MailDistributionVO vo = new MailDistributionVO();
+						
+						JSONObject obj = (JSONObject)resultArray.get(i);
+						
+						vo.setName((String)obj.get("distributionName"));
+						vo.setId((String)obj.get("distributionId"));
+						vo.setMail((String)obj.get("distributionMail"));
+						
+						distributionList.add(vo);
+					}
+				}
+			}
+		}
+		
+		logger.debug("getDistributionSearchListByItem ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		logger.debug(distributionList.toString());
+		
+		return distributionList;
+	}
 	
 	@Override
 	public MailSignatureVO getInitMailSignature(int tenantId) throws Exception {

@@ -684,6 +684,80 @@ public class EzEmailAdminController {
 
 		return result;
 	}
+	
+	/**
+	 * 공용배포그룹 조건별 검색
+	 */
+	@RequestMapping(value = "/admin/ezEmail/mailGetDistributionSearchByItem.do", produces = "text/xml;charset=utf-8")
+	@ResponseBody
+	public String mailGetDistributionSearchByItem(
+			@CookieValue("loginCookie") String loginCookie, Locale locale,
+			Model model, @RequestBody String bodyData) throws Exception {
+		logger.debug("mailGetDistributionSearchByItem started.");
+
+		// 관리자 권한체크
+		LoginVO auth = commonUtil.checkAdmin(loginCookie);
+		if (auth == null) {
+			return "cmm/error/adminDenied";
+		}
+
+		String returnData = "";
+		try {
+			Document doc = commonUtil.convertStringToDocument(bodyData);
+			String cn = doc.getElementsByTagName("CN").item(0).getTextContent();
+			String companyId = doc.getElementsByTagName("COMPID").item(0).getTextContent();
+			String searchType = doc.getElementsByTagName("SEARCHTYPE").item(0).getTextContent();
+			String searchValue = doc.getElementsByTagName("SEARCHVALUE").item(0).getTextContent();
+			int tenantID = auth.getTenantId();
+			logger.debug("companyId=" + companyId + ", searchType=" + searchType + ",searchValue=" + searchValue);
+			
+			List<MailDistributionVO> distributionTotalList = null;
+			if (searchValue == null || searchValue.equals("")) {
+				//모든 공용배포그룹
+				distributionTotalList = ezEmailService
+						.getDistributionList(companyId, auth.getTenantId());
+			} else {
+				// 공용배포그룹 조건으로 검색
+				distributionTotalList = ezEmailService
+						.getDistributionSearchListByItem(companyId, tenantID, searchValue, searchType);
+			}
+			
+			StringBuilder sb = new StringBuilder();
+			sb.append("<LISTVIEWDATA><ROWS>");
+
+			for (MailDistributionVO vo : distributionTotalList) {
+				sb.append("<ROW><CELL>");
+
+				sb.append("<VALUE>");
+				sb.append(commonUtil.cleanValue(vo.getName()));
+				sb.append("</VALUE>");
+
+				sb.append("<DATA1>");
+				sb.append(commonUtil.cleanValue(vo.getId()));
+				sb.append("</DATA1>");
+
+				sb.append("<DATA2>");
+				sb.append(commonUtil.cleanValue(vo.getMail()));
+				sb.append("</DATA2>");
+
+				sb.append("</CELL></ROW>");
+			}
+
+			sb.append("</ROWS></LISTVIEWDATA>");
+
+			returnData = sb.toString();
+
+		} catch (Exception e) {
+			returnData = "ERROR";
+			e.printStackTrace();
+		}
+
+		logger.debug("returnData=" + returnData);
+		logger.debug("mailGetDistributionSearchByItem ended.");
+
+		return returnData;
+	}
+
 
 	/**
 	 * 메일 기본설정 (관리자) 화면 호출 함수

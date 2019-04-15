@@ -256,6 +256,60 @@
 		                company_change();
 		        }
 		    }
+		    function search_click() {
+				var searchType = document.getElementById("searchType").value;
+		    	var searchValue = document.getElementById("searchValue").value;
+		    	searchValue = searchValue.replaceAll(" ","") == "" ? "" : searchValue;
+		
+		        var xmlDom = createXmlDom();
+		        var xmlHTTP = createXMLHttpRequest();
+		        var objRoot;
+		        createNodeInsert(xmlDom, objRoot, "DATA");
+		        createNodeAndInsertText(xmlDom, objRoot, "CN", null);
+		        createNodeAndInsertText(xmlDom, objRoot, "COMPID", companyId);
+		        createNodeAndInsertText(xmlDom, objRoot, "SEARCHTYPE", searchType);
+		        createNodeAndInsertText(xmlDom, objRoot, "SEARCHVALUE", searchValue);
+			
+		        xmlHTTP.open("POST", "/admin/ezEmail/mailGetDistributionSearchByItem.do", false);
+		        xmlHTTP.send(xmlDom);
+		        var stateVlaue = "";
+		        
+		        if (CrossYN())
+		            stateVlaue = xmlHTTP.responseXML.documentElement.textContent.substr(0, 5)
+		        else
+		            stateVlaue = xmlHTTP.responseXML.documentElement.text.substr(0, 5)
+		            
+		        if (xmlHTTP.status != 200 || stateVlaue == "ERROR")
+		            alert("<spring:message code='ezEmail.t50' />");
+		        else {
+		            var headerData = createXmlDom();
+		            headerData = loadXMLString(listviewheader.innerHTML.toUpperCase());
+		
+		            if (CrossYN()) {
+		                var xmlRtn = xmlHTTP.responseXML.documentElement.getElementsByTagName("ROWS")[0];
+		                var Node = headerData.importNode(xmlRtn, true);
+		                headerData.documentElement.appendChild(Node);
+		            }
+		            else {
+		                var xmlRtn = xmlHTTP.responseXML.documentElement.getElementsByTagName("ROWS")[0];
+		                headerData.documentElement.appendChild(xmlRtn);
+		            }
+		            document.getElementById("OrganListView").innerHTML = "";
+		            
+		            // 리스트 총 개수
+		            var listCount = headerData.getElementsByTagName("ROWS")[0].childElementCount;
+		            document.getElementById("listCount").innerHTML = listCount;
+		            
+		            var pUserList = new ListView();
+		            pUserList.SetID("lvUserList");
+		            pUserList.SetRowOnDblClick("mod_dl");
+		            pUserList.SetRowOnClick("View_dl");
+		            pUserList.SetSelectFlag(false);
+		            pUserList.SetHeightFree(true);
+		            pUserList.DataSource(headerData);
+		            pUserList.DataBind("OrganListView");
+		        }
+		    } // search_onclick END
 		</script>
 	</head>
 	<body class="mainbody">
@@ -299,7 +353,7 @@
 					<option value="memberName"><spring:message code='ezEmail.distribution01' /></option> <!-- 구성원이름 -->
 					<option value="memberID"><spring:message code='ezEmail.distribution02' /></option> <!-- 구성원아이디 -->
 				</select>
-				<input id="searchValue" onkeypress="if(event.keyCode==13) {search(); return false;}" onfocus="keyword_Clear(this);" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px;">
+				<input id="searchValue" onkeypress="if(event.keyCode==13) {search_click(); return false;}" autocomplete="off" style="height: 26px; border: 1px solid #cbcbcb; margin-top:2px;">
 				<a class="imgbtn" style="vertical-align:middle"><span onclick="search_click()"><spring:message code="ezStatistics.t36" /></span></a>
 			</div>
 		</div>
