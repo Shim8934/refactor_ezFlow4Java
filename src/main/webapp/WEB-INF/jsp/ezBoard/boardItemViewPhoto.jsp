@@ -83,6 +83,8 @@
 				var gubun = "${boardInfo.guBun}";
 				var isLikeChecked = "<c:out value='${isLikeChecked}'/>";
 				var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
+				var likeCount = "${boardItem.likeCount}";
+				var likeCountAfter = 0;
 				var commentCount = "${commentCount}";
 				var refreshFlag = "N";
 		        var ImageCount = "";
@@ -1615,6 +1617,7 @@
 							itemID : pItemID
 						},
 						success: function(result){
+							likeCountAfter = result;
 							if (parseInt(result) > 0) {
 								document.getElementById("likeCountSpan").innerText = "(" + result + ")";
 							} else {
@@ -1636,7 +1639,7 @@
 			    	nowCommentCount = nowCommentCount.substring(nowCommentCount.indexOf("[") + 1, nowCommentCount.indexOf("]"));
 			    	
 			    	// 댓글의 수가 달라졌고, 부모창의 주소가 게시판인 경우(새게시물 제외)에만 플래그값 변경
-			    	if ((commentCount != nowCommentCount) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
+			    	if (((likeCount != likeCountAfter) || (commentCount != nowCommentCount)) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
 			    		refreshFlag = "Y";
 			    	} else {
 			    		refreshFlag = "N";
