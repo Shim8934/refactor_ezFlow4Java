@@ -319,4 +319,7 @@ public interface EzBoardService {
 	/* 2019-04-05 홍승비 - 좋아요 갯수 가져오기 */
 	public int getLikeCount(String itemID, int tenantID) throws Exception;
 	
+	/* 2019-04-10 홍승비 - 사용자가 원회사이고 사내겸직이 존재하면 사내겸직부서ID를 리턴 */
+	public List<String> getPDOAddJobDeptID(String userID, String companyID, int tenantID) throws Exception;
+	
 }

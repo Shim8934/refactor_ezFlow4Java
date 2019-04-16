@@ -84,6 +84,7 @@
 				var isLikeChecked = "<c:out value='${isLikeChecked}'/>";
 				var likeFlag = "<c:out value='${boardInfo.likeFlag}'/>";
 				var commentCount = "${commentCount}";
+				var refreshFlag = "N";
 		        var ImageCount = "";
 		        var viewimage = "";
 		        var pListImage = "";
@@ -404,6 +405,15 @@
 		        	//리프레쉬 할 이유가 없는거 같음
 // 		            refresh_onclick();
 		        };
+		        
+		        /* 2019-04-12 홍승비 - 댓글 갯수 갱신 시 게시물리스트 갱신 */
+				window.onbeforeunload = function () {
+					checkRefreshFlag();
+					if (refreshFlag == "Y") {
+						window.opener.getBoardList();
+					}
+			    };
+			    
 				function btnClose_onclick()
 				{
 					window.close();
@@ -1617,6 +1627,20 @@
 					    	}
 						}
 					});
+				}
+					
+			    /* 2019-04-12 홍승비 - 게시물 갱신 조건 체크 */
+			    function checkRefreshFlag () {
+			    	var nowCommentCount = document.getElementById("commentCount").innerText;
+			    	var opnenerHref = window.opener.location.href;
+			    	nowCommentCount = nowCommentCount.substring(nowCommentCount.indexOf("[") + 1, nowCommentCount.indexOf("]"));
+			    	
+			    	// 댓글의 수가 달라졌고, 부모창의 주소가 게시판인 경우(새게시물 제외)에만 플래그값 변경
+			    	if ((commentCount != nowCommentCount) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
+			    		refreshFlag = "Y";
+			    	} else {
+			    		refreshFlag = "N";
+			    	}
 			    }
 			    
 		</script>

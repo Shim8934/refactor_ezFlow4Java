@@ -304,6 +304,19 @@
 	                    // 2018.10.15 필드도 free 속성일 시에 수정 가능하도록 수정
 	                    parent.FieldsAvailable();
 	
+	                    if (parent.pDraftFlag != "REDRAFT" || parent.pFormID !== "") {
+		                    $.ajax({
+			                	type: "GET",
+			                	dataType: "text",
+			                	url: "/ezApprovalG/getReformFlag.do",
+			                	data: { formHref: url },
+			                	async: false,
+			                	success: function (result) {
+			                		isReform = result === "Y";
+			                	}
+			                });
+	                    }
+	                    
 	                    if (parent.pDraftFlag != "REDRAFT") {
   							var Body_innerHTML = "";
 	                        if (document.getElementById("body") != null) {

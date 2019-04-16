@@ -461,7 +461,7 @@
 	                    if (!confirm("<spring:message code='ezBoard.t10055'/>"))
 	                        return;
 	                    else {
-                            document.location.href = "/ezBoard/boardNewItem.do?boardID=" + ret[0] + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
+                            document.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
 	                    }
 	                }
 	                pBoardID = ret[0];

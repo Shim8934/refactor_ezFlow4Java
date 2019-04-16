@@ -61,6 +61,8 @@
 		    var iFramePanel = window.parent.document.getElementById("iFramePanel");
 		    var ext;
 		    var pDocState;
+		    var pMode = "APR";
+		    
 		    window.onload = function () {
 		        try {
 		            var ua = navigator.userAgent;
@@ -209,7 +211,7 @@
 		                    document.getElementById("txt_OpinionContent").readOnly = true;
 		                }
 		                else {
-		                    if (pUserID == GetAttribute(pSelectedRow[0], "DATA2") && pDisplay != "Show") {
+		                    if (pUserID == GetAttribute(pSelectedRow[0], "DATA2") && pDisplay != "Show" && pMode == "APR") {
 		                        setNodeText(document.getElementById("btn_OpinionAdd") , "<spring:message code='ezApprovalG.t269'/>");
 		                        document.getElementById("btn_OpinionAdd").disabled = false;
 		                        document.getElementById("btn_OpinionDel").disabled = false;

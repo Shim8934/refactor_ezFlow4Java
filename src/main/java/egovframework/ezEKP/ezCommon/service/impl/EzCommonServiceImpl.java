@@ -1561,4 +1561,14 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addBoardLikeFlag() throws Exception{
 		ezCommonDAO.addBoardLikeFlag();
 	}
+
+	@Override
+	public void addQuickLinkLinkOrder() throws Exception {
+		ezCommonDAO.addQuickLinkLinkOrder();
+	}
+
+	@Override
+	public void addComCloseCompanyId() throws Exception {
+		ezCommonDAO.addComCloseCompanyId();
+	}
 }

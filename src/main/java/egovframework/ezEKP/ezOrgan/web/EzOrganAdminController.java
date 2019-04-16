@@ -156,6 +156,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.updateListOptionData(); //2019-03-06 천성준 - 전자결재 회람수신함 관련 리스트헤더 데이터 임시 업데이트문
     	ezCommonService.addBoardLikeFlag(); // 2019-04-05 홍승비 - 게시판 좋아요 기능 관련 테이블 생성 및 칼럼 추가
     	ezCommonService.createBoardLike();
+    	ezCommonService.addQuickLinkLinkOrder();
+    	ezCommonService.addComCloseCompanyId();
     	
     	logger.debug("init ended.");
     }

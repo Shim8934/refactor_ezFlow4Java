@@ -3989,10 +3989,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_OFFSET",offset);
 		map.put("v_PSTRLANG", lang);
 		
-		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
-		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
-		map.put("v_N", messageSource.getMessage("ezApprovalG.t1687", locale));
-		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));
+//		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
+//		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
+//		map.put("v_N", messageSource.getMessage("ezApprovalG.t1687", locale));
+//		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));
 		
 		List<ApprGDocListVO> list = ezApprovalGAdminDAO.getContDocListjson(map);
 		
@@ -4058,10 +4058,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_OFFSET",offset);
 		map.put("v_PSTRLANG", lang);
 		
-		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
-		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
-		map.put("v_N", messageSource.getMessage("ezApprovalG.t1687", locale));
-		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));	
+//		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
+//		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
+//		map.put("v_N", messageSource.getMessage("ezApprovalG.t1687", locale));
+//		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));	
 		
 		List<ApprGDocListVO> list = ezApprovalGAdminDAO.getDeleteDocListjson(map);
 		

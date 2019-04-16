@@ -128,5 +128,9 @@ public interface EzCommonService {
 	
 	public void addBoardLikeFlag() throws Exception;
 
+	public void addQuickLinkLinkOrder() throws Exception;
+	
+	public void addComCloseCompanyId() throws Exception;
+
 }
 

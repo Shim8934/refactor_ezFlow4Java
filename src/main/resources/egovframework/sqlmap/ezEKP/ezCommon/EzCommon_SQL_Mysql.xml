@@ -846,4 +846,38 @@
 			LIKEFLAG VARCHAR(2) DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkQuickLinkLinkOrder">
+		<![CDATA[
+			SELECT
+				LINKORDER
+			FROM 
+				TBL_PS_QUICKLINK
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addQuickLinkLinkOrder"> 
+		ALTER TABLE 
+			TBL_PS_QUICKLINK
+		ADD 
+			LINKORDER INT(11) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkComCloseCompanyId">
+		<![CDATA[
+			SELECT
+				COMPANYID
+			FROM 
+				TBL_C_COMCLOSE
+			LIMIT 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addComCloseCompanyId"> 
+		ALTER TABLE 
+			TBL_C_COMCLOSE
+		ADD 
+			COMPANYID VARCHAR(100) DEFAULT NULL
+	</statement>
+	
 </sqlMap>

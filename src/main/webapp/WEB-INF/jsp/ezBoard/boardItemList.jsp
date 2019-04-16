@@ -676,7 +676,9 @@
 		            window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(obj.getAttribute("DATA2")) + "&boardID=" + encodeURIComponent(obj.getAttribute("DATA1")) + "&location=GENERAL", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
 		        }
 		    }
-		    function NoticeRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {
+		    
+		    /*  2019-04-12 홍승비 - 사용되지 않는 함수 주석처리 */
+/* 		    function NoticeRead_onclick(pItemBoardID, pItemBoardName, pItemID, pUserID, evt) {
 		        if (Read_FG != "true") {
 		            OpenAlertUI("<spring:message code='ezBoard.t194' />");
 		            return;
@@ -696,7 +698,8 @@
 		        else {
 		            window.open("/ezBoard/boardItemView.do?showAdjacent=" + ShowAdjacent + "&itemID=" + encodeURIComponent(pItemID) + "&boardID=" + encodeURIComponent(pItemBoardID), "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=1,resizable=1,height=720,width=790,top=" + pTop + ",left=" + pLeft, "");
 		        }
-		    }
+		    } */
+		    
 		    var checkpassword_dialogArguments = new Array();
 		   	var strItemList = "";
 		    function DeleteItem_onclick() {

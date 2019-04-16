@@ -589,5 +589,25 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			update("EzCommonDAO.addBoardLikeFlag");
 		}
 	}
+
+	public void addQuickLinkLinkOrder() {
+		try {
+			select("EzCommonDAO.checkQuickLinkLinkOrder");
+		} catch (Exception e) {
+			logger.debug("tbl_ps_quicklink linkorder doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addQuickLinkLinkOrder");
+		}
+	}
+
+	public void addComCloseCompanyId() {
+		try {
+			select("EzCommonDAO.checkComCloseCompanyId");
+		} catch (Exception e) {
+			logger.debug("tbl_c_comclose companyid doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addComCloseCompanyId");
+		}
+	}
 	
 }

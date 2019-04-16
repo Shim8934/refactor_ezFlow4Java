@@ -885,4 +885,40 @@
 			LIKEFLAG NCHAR(1) DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkQuickLinkLinkOrder">
+		<![CDATA[
+			SELECT
+				LINKORDER
+			FROM 
+				TBL_PS_QUICKLINK
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addQuickLinkLinkOrder"> 
+		ALTER TABLE 
+			TBL_PS_QUICKLINK
+		ADD 
+			LINKORDER NUMBER(11,0) DEFAULT NULL
+	</statement>
+	
+	<select id="EzCommonDAO.checkComCloseCompanyId">
+		<![CDATA[
+			SELECT
+				COMPANYID
+			FROM 
+				TBL_C_COMCLOSE
+			WHERE 
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addComCloseCompanyId"> 
+		ALTER TABLE 
+			TBL_C_COMCLOSE
+		ADD 
+			COMPANYID NVARCHAR2(20) DEFAULT NULL
+	</statement>
+	
 </sqlMap>

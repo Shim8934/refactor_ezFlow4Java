@@ -1951,7 +1951,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 if (docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().equals("ALL") || docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().equals("none")) {
                 	rtnXML.append("<DATA6>ALL</DATA6>");
                 } else {
-                	if (approvalFlag.equals("S")) {
+                	if (approvalFlag.equals("S") || ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent(), "DisplayName", tenantID) == null) {
                 		rtnXML.append("<DATA6> </DATA6>");
                 	} else {
                 		//ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().toUpperCase() -> toUpperCase() 삭제, 오라클 버전 개발 시 오라클은 mysql과 다르게 대소문자를 구분하기 때문
@@ -3425,8 +3425,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_RECNM2", deptXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent());
 			}
 			
-			if (!docXML.getElementsByTagName("RECEIPTMEMBERID").item(0).getTextContent().equals("")) {
-				try {
+			try {
+				if (!docXML.getElementsByTagName("RECEIPTMEMBERID").item(k).getTextContent().equals("")) {
 					String userInfo = ezOrganService.getPropertyList(docXML.getElementsByTagName("RECEIPTMEMBERID").item(k).getTextContent(), "displayname;displayname2;title;title2", "1", tenantID);
 					Document userXML = commonUtil.convertStringToDocument(userInfo);
 					
@@ -3434,9 +3434,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					recMemNm2 = userXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
 					recMemJobTitle = userXML.getElementsByTagName("TITLE").item(0).getTextContent();
 					recMemJobTitle2 = userXML.getElementsByTagName("TITLE2").item(0).getTextContent();
-				} catch (Exception e) {
-					e.getMessage();
+				} else {
+					recMemNm = "";
+					recMemNm2 = "";
+					recMemJobTitle = "";
+					recMemJobTitle2 = "";
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			
 			map.put("v_ExtRecYN", extYN);
