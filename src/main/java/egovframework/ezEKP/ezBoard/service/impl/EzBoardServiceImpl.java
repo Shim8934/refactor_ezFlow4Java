@@ -2555,12 +2555,23 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			return retValue;
 		}
 		
+		/* 2019-04-16 홍승비 - 원회사의 사내겸직이 존재하면 사내겸직부서ID를 권한체크에 포함하도록 수정 */
+		List<String> addJobList = getPDOAddJobDeptID(pUserID, pCompanyID, tenantID);
+		String addJobStr = "";
+		if (addJobList != null && addJobList.size() > 0) {
+			for (int i = 0; i < addJobList.size(); i++) {
+				addJobStr += addJobList.get(i) + ",";
+			}
+		}
+		
 		String pAccessID = pUserID;
 		String[] reverseDeptPath = ezOrganService.getDeptFullPath(pDeptID, tenantID).split(",");
 		for (int i = reverseDeptPath.length -1; i >= 0 ; i--) {
 			pAccessID += "," + reverseDeptPath[i];
 			if (i == 0) {
 				pAccessID += ",everyone"; 
+			} else if (i == 3 && !addJobStr.equals("")) {
+				pAccessID += "," + addJobStr.substring(0, addJobStr.length() - 1);
 			}
 		}
 		String strRollInfo = ezOrganService.getPropertyValue(pUserID, "extensionattribute1", tenantID);
@@ -2581,7 +2592,18 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				brdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, "everyone", pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, 0, 0, showAllGroupBoard);            
 			} else {
 				// 게시판 권한 추가시 하위부서 권한 상관없이 리스트가 보여지던 현상 수정
-				int isEqaulDept = pAccessID.split(",")[i].trim().equalsIgnoreCase(pDeptID) ? 1 : 0;
+				/* 2019-04-16 홍승비 - 원회사의 사내겸직도 isEqaulDept값을 체크하도록 수정 */
+				int isEqaulDept = 0;
+				String tempDeptList = addJobStr + pDeptID;
+				for (int j = 0; j < tempDeptList.split(",").length; j++) {
+					if(pAccessID.split(",")[i].trim().equalsIgnoreCase(tempDeptList.split(",")[j])) {
+						isEqaulDept = 1;
+						break;
+					} else {
+						isEqaulDept = 0;
+					}
+				}
+				
 				int isDept = ezBoardDAO.isDeptChk(pAccessID.split(",")[i].trim(), tenantID);
 				List<BoardTreeVO> tempBrdBoardTreeList = ezBoardAdminService.brdBoardTree(pRootBoardID, pAccessID.split(",")[i].trim(), pMode, pSelectBy, pExcludeBoardID, pCompanyID, tenantID, isDept, isEqaulDept, showAllGroupBoard);
 
