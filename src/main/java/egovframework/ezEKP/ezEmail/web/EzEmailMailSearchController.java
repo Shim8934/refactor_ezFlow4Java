@@ -191,7 +191,7 @@ public class EzEmailMailSearchController {
 		}
 		
 		for (int i = 0; i < nListKeyword.getLength(); i++) {
-			keywordArray[i] = doc.getElementsByTagName("KEYWORD").item(i).getTextContent();
+			keywordArray[i] = EgovStringUtil.getHtmlStrCnvr(doc.getElementsByTagName("KEYWORD").item(i).getTextContent());
 		}
 		
 		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
