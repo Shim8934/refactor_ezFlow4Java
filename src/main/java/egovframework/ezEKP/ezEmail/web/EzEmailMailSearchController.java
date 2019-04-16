@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
 
 import com.sun.mail.imap.IMAPFolder;
 
@@ -179,10 +180,20 @@ public class EzEmailMailSearchController {
 		Document doc = commonUtil.convertStringToDocument(bodyData);
 		
 		String mailFolder = doc.getElementsByTagName("MAILFOLDER").item(0).getTextContent();
-		String keyword = doc.getElementsByTagName("KEYWORD").item(0).getTextContent();
-		keyword = EgovStringUtil.getHtmlStrCnvr(keyword);
+
+		NodeList  nListCategory = doc.getElementsByTagName("CATEGORY");
+		NodeList  nListKeyword = doc.getElementsByTagName("KEYWORD");
+		String[] categoryArray = new String[nListCategory.getLength()] ;
+		String[] keywordArray = new String[nListKeyword.getLength()] ;
 		
-		String category = doc.getElementsByTagName("CATEGORY").item(0).getTextContent();
+		for (int i = 0; i < nListCategory.getLength(); i++) {
+			categoryArray[i] = doc.getElementsByTagName("CATEGORY").item(i).getTextContent();
+		}
+		
+		for (int i = 0; i < nListKeyword.getLength(); i++) {
+			keywordArray[i] = doc.getElementsByTagName("KEYWORD").item(i).getTextContent();
+		}
+		
 		String startDate = doc.getElementsByTagName("STARTDATE").item(0).getTextContent();
 		String endDate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 		String prop = doc.getElementsByTagName("PORP").item(0).getTextContent();
@@ -247,7 +258,7 @@ public class EzEmailMailSearchController {
 			}
 			
 			Map<String, Object> extraMap = new HashMap<String, Object>();
-			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, category, keyword, startDateObj, endDateObj, true, 
+			messages = ezEmailUtil.searchFolder(ia, userEmail, folder, categoryArray, keywordArray, startDateObj, endDateObj, true, 
 					false, false, sortTypeSpecifier, isAscending, startIndex, listCount, false, extraMap, userInfo.getTenantId());
 			
 			totalCount = (int) extraMap.get("totalCount");
