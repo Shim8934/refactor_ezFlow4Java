@@ -225,7 +225,7 @@ function SaveFormInfo() {
     if (arrFormRecevGroup[0] == "TRUE") {
         formRecevGroup = arrFormRecevGroup[1];
     } else {
-        OpenAlertUI(arrFormRecevGroup[2]);
+        OpenAlertUI(strLangCSJ02);
         document.getElementById("1tab5").click();
         return;
     }
@@ -547,29 +547,18 @@ function MakeFormWorkFlow_Detail() {
 }
 
 function MakeFormRecevGroupXML() {
-    var pDataCheck = false;
-    var pErrorMsg = "";
-    var retValue = new Array();
-
-    var lvtFormView = new ListView();
-    lvtFormView.LoadFromID("lvtForm");
-
-    var selRow = lvtFormView.GetDataRows();
-
-    
-        pDataCheck = true;
-
-    if (pDataCheck) {
-        retValue[0] = "TRUE";
-        retValue[1] = MakeFormRecevGroupXML_Detail();
-        retValue[2] = "";
-    }
-    else {
-        retValue[0] = "FALSE";
-        retValue[1] = "";
-        retValue[2] = pErrorMsg;
-    }
-    return retValue;
+	var rtnVal = new Array();
+	var xmlData = MakeFormRecevGroupXML_Detail();
+	
+	if (xmlData == "FALSE") {
+		rtnVal[0] = "FALSE";
+		rtnVal[1] = "";
+	} else {
+		rtnVal[0] = "TRUE";
+		rtnVal[1] = xmlData;
+	}
+	
+	return rtnVal;
 }
 
 function MakeFormRecevGroupXML_Detail() {
@@ -588,6 +577,11 @@ function MakeFormRecevGroupXML_Detail() {
             return "<PARAMETER><DATAS></DATAS></PARAMETER>";
 
         for (i = 0; i < selRow.length; i++) {
+        	if (GetAttribute(selRow[i], "data2").trim() != "") { //DEPTID
+        		if (!userInfoChk(GetAttribute(selRow[i], "data2"), GetAttribute(selRow[i], "data1"))) { //DEPTID, USERID
+        			return "FALSE";
+        		} 
+        	}
             subNode = createNodeAndAppandNodeText(xmlpara, objNode, objNode2, "DATA", "");
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTID", GetAttribute(selRow[i], "data1"));
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTSN", (i + 1));
@@ -595,6 +589,7 @@ function MakeFormRecevGroupXML_Detail() {
             createNodeAndAppandNodeText(xmlpara, subNode, objNode2, "DEPTNAME", selRow[i].cells[0].innerText);
         }
     }
+    
     return getXmlString(xmlpara.childNodes[0]);
 }
 
@@ -643,4 +638,28 @@ function isReceiverChk(DeptID)
 	    return false;
 	else
 	    return true;
+}
+//양식 저장 시, 기존에 고정수신처로 등록 되어있는 사람의 부서정보가 일치하는지 체크
+function userInfoChk(userID, deptID) {
+	var xmlpara = createXmlDom();
+	
+	$.ajax({
+		type : "POST",
+		dataType : "text",
+		async : false,
+		url : "/ezOrgan/getADInfos.do",
+		data : {
+				cn   : userID,
+				prop : "DEPARTMENT"
+				},
+		success: function(xml) {
+			xmlpara = loadXMLString(xml);
+		}
+	});
+	
+	if (SelectSingleNodeValueNew(xmlpara, "DATA/DEPARTMENT") == deptID) {
+		return true;
+	} else {
+		return false;
+	}
 }
