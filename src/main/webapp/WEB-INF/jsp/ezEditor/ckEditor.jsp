@@ -49,7 +49,7 @@
 			function SetEditorContent(Data) {
 				try {
 					if (Data === "") {
-						Data = "<p " + defaultFontAndSize + "><br></p><p " + defaultFontAndSize + "><br></p>";
+						Data = "<p " + defaultFontAndSize + "><br></p><p " + defaultFontAndSize + "></p>";
 					}
 					
 					if (CKEDITOR.instances.editor1.mode === "source") {
