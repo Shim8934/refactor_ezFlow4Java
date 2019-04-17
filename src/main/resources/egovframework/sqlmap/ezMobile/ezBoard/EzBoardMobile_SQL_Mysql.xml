@@ -1192,9 +1192,34 @@
               AND 
                   BoardAdmin_FG = 'true'
               AND 
-                  ( AccessID = #userID#
-                      OR AccessID = #deptID#
-                      OR AccessID = #companyID# )
+                  (AccessID = #userID#
+                   OR AccessID = #deptID#
+                   OR AccessID = #companyID#
+                   OR ACCESSID IN (
+					SELECT
+						AM.DEPTID
+                    FROM
+						tbl_usermaster UM
+                    INNER JOIN
+						TBL_ADDJOBMASTER AM
+                    ON
+						UM.TENANT_ID = AM.TENANT_ID
+					AND
+						UM.CN = AM.CN
+                    AND
+						UM.CN = #userID#
+					AND
+						UM.PHYSICALDELIVERYOFFICENAME = #companyID#
+					INNER JOIN
+						TBL_DEPTMASTER DM
+					ON
+						UM.TENANT_ID = DM.TENANT_ID
+                    AND
+						AM.DEPTID = DM.CN
+					AND
+						DM.EXTENSIONATTRIBUTE2 = #companyID#
+					WHERE
+						UM.TENANT_ID = #tenantID# ))
                AND 
                   BoardID = IFNULL(( SELECT 
 	                                      BoardGroupID 

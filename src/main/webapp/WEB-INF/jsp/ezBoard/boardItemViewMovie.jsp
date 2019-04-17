@@ -57,6 +57,7 @@
 				var g_progresswin;
 				var OneLineReplyFlag = "${oneLineReplyFlag}";
 				var gubun = "${boardInfo.guBun}";
+				var refreshFlag = "N";
 				var commentCount = "${commentCount}";
 		        var ImageCount = "";
 		        var moviePath = "";
@@ -173,7 +174,7 @@
 			            }
 	
 			            var xmlhttp = createXMLHttpRequest();
-			            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + pBoardID + "&itemList=" + pItemID + "&mode=MOVIE", false);
+			            xmlhttp.open("POST", "/ezBoard/deleteItem.do?boardID=" + encodeURIComponent(pBoardID) + "&itemList=" + encodeURIComponent(pItemID) + "&mode=MOVIE", false);
 			            xmlhttp.send();
 	
 			            if (xmlhttp.responseText == "NO") {
@@ -196,6 +197,14 @@
 				
 		        window.onunload = function () {
 		        };
+			    /* 2019-04-12 홍승비 - 댓글 갯수 갱신 시 게시물리스트 갱신 */
+				window.onbeforeunload = function () {
+					checkRefreshFlag();
+					if (refreshFlag == "Y") {
+						window.opener.getBoardList();
+					}
+			    };
+			    
 				function btnClose_onclick()
 				{
 					window.close();
@@ -479,7 +488,7 @@
 		            }
 		            else {
 		                var xmlhttp = createXMLHttpRequest();
-		                xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + pItemID + ";&mode=" + pFlag, false);
+		                xmlhttp.open("POST", "/ezBoard/apprBoardItem.do?itemList=" + encodeURIComponent(pItemID) + ";&mode=" + pFlag, false);
 		                xmlhttp.send();
 		
 		                if (xmlhttp.responseText == "OK") {
@@ -517,7 +526,21 @@
 		            
 		            window.open("/ezBoard/boardNewItemTempMovie.do?boardID=" + encodeURI(pBoardID) + "&itemID=" + encodeURI(pItemID) + "&mode=modify" + "&location=", "", "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=679,width=765,top=" + pTop + ",left=" + pLeft, "");
 		        }
-		    	
+			    
+			    /* 2019-04-12 홍승비 - 게시물 갱신 조건 체크 */
+			    function checkRefreshFlag () {
+			    	var nowCommentCount = document.getElementById("commentCount").innerText;
+			    	var opnenerHref = window.opener.location.href;
+			    	nowCommentCount = nowCommentCount.substring(nowCommentCount.indexOf("[") + 1, nowCommentCount.indexOf("]"));
+			    	
+			    	// 댓글의 수가 달라졌고, 부모창의 주소가 게시판인 경우(새게시물 제외)에만 플래그값 변경
+			    	if ((commentCount != nowCommentCount) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
+			    		refreshFlag = "Y";
+			    	} else {
+			    		refreshFlag = "N";
+			    	}
+			    }
+			    
 		</script>
 	</head>
 	<body class="popup">

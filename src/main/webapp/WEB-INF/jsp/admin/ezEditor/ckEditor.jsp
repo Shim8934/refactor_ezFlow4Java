@@ -39,16 +39,12 @@
 	
 	        function SetEditorContent(Data) {
 	            try {
-					if (Data === '' || Data === undefined) {
-						var pTag = document.createElement('p');
-						pTag.style.fontSize = defaultFontSize;
-						pTag.style.fontFamily = defaultFontFamily;
-						
-						CKEDITOR.instances.editor1.setData(pTag.outerHTML);	
-					} else {
-						//CKEDITOR.instances.editor1.setData(Data);
-						CKEDITOR.instances.editor1.editable().setHtml(Data);
+	            	if (Data === "") {
+						Data = "<p " + defaultFontAndSize + "><br></p><p " + defaultFontAndSize + "><br></p>";
 					}
+	            	
+					CKEDITOR.instances.editor1.editable().setHtml(Data);
+					
 	                if ("${type}" == "APPROVAL" || "${type}" == "APPROVALG"){
 	                    Set_CellLocked();
 	                }
@@ -451,6 +447,7 @@
 	    <script type="text/javascript">
 	    	var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
+			var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 			
 	        CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
 	        CKEDITOR.config.height = parseInt("${height}") - 120 + "px";

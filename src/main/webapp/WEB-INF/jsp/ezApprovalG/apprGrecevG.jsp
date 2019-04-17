@@ -73,6 +73,8 @@
 		    var maxwidth = 659;
 		    var RootURL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port;  
 		    var arr_userinfo = new Array();
+		    var retValue = "";
+		    
 		    arr_userinfo[0]  = "user";
 		    arr_userinfo[1]  = "<c:out value = '${userInfo.id}'/>";
 		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName1}'/>";
@@ -185,6 +187,11 @@
 		    }
 		
 		    function FieldsAvailable() {
+	            var isRelay = GetRelayDocInfo();
+	            if (isRelay) {
+	            	document.getElementById("btnReqReSend").style.display = ""; 
+	            }
+	            
 		        if (ConvertYN == "N") {
 		            pGubun = "11";
 		            setProperty();
@@ -200,6 +207,7 @@
 		            }
 		        }
 		    }
+		    
 		    function DocumentComplete() {
 		        if (flag == false) {
 		            flag = true;
@@ -577,7 +585,7 @@
 		                alert(strLang1031);
 		            }
 		            else {
-		                window.open("/ezBoard/boardNewItem.do?boardID=" + pBoardID + "&mod=new&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pFormHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,resizable=yes,scrollbars=no');
+		                window.open("/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(pBoardID) + "&mod=new&pbrdGbn=SiteNewBoard&pFromScreen=Mail&docID=" + pDocID + "&url=" + pFormHref, '', "top=" + pTop.toString() + ", left=" + pLeft.toString() + ',height=870,width=765,resizable=yes,scrollbars=no');
 		            }
 		        }
 		    }

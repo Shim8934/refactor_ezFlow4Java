@@ -566,12 +566,14 @@ function AprLineAddDept(nodeIdx, tr) {
 
     var tr = listview.GetSelectedRows();
     var InitTr = listview.GetDataRows();
-
     var MaxID = 0;
-    for (var j = 0; j < InitTr.length; j++) {
-        var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-        if (MaxID < curnum)
-            MaxID = curnum;
+    
+    if (InitTr.length > 0 && InitTr[0].id.indexOf("noItems") == -1) {
+	    for (var j = 0; j < InitTr.length; j++) {
+	        var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+	        if (MaxID < curnum)
+	            MaxID = curnum;
+	    }
     }
 
     if (tr.length == 0) {
@@ -2580,11 +2582,13 @@ function AddOrgan(_OrganId, _OrganName) {
         var tr = listview.GetSelectedRows();
         var InitTr = listview.GetDataRows();
         var MaxID = 0;
-
-        for (var j = 0; j < InitTr.length; j++) {
-            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
-            if (MaxID < curnum)
-                MaxID = curnum;
+        
+        if (InitTr.length > 0 && InitTr[0].id.indexOf("noItems") == -1) {
+	        for (var j = 0; j < InitTr.length; j++) {
+	            var curnum = Number(listview.GetSelectedRowID(j).substring(listview.GetSelectedRowID(j).lastIndexOf('_') + 1), listview.GetSelectedRowID(j).length);
+	            if (MaxID < curnum)
+	                MaxID = curnum;
+	        }
         }
 
         if (tr.length == 0) {

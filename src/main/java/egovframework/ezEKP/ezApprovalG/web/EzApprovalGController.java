@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpRequest;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -1045,6 +1046,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("draftui ended.");
 
 		return "ezApprovalG/apprGDraftui";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getReformFlag.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String getReformFlag(String formHref, HttpServletRequest request) throws Exception {
+		return ezApprovalGService.isReform(formHref) ? "Y" : "N";
 	}
 	
 	/**

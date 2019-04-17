@@ -948,9 +948,20 @@ public class EzBoardController extends EgovFileMngUtil{
 		String deptPath = userInfo.getDeptPathCode();
 		StringBuilder deptPathOrganBld = new StringBuilder();
 		
+		/* 2019-04-10 홍승비 - 원회사의 사내겸직이 존재하면 사내겸직부서ID를 관리자 권한체크에 포함하도록 수정 */
+		List<String> addJobList = ezBoardService.getPDOAddJobDeptID(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String addJobStr = "";
+		if (addJobList != null && addJobList.size() > 0) {
+			for (int i = 0; i < addJobList.size(); i++) {
+				addJobStr += addJobList.get(i) + ",";
+			}
+		}
+		
 		for (int ch = 0; ch < deptPath.split(",").length; ch++) {
-			if (ch == 0) {
+			if (ch == 0) { // 0 : userID
 				deptPathOrganBld.append(deptPath.split(",")[ch].trim());
+			} else if (ch == (deptPath.split(",").length - 3) && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
+				deptPathOrganBld.append("," + addJobStr + deptPath.split(",")[deptPath.split(",").length - (ch)].trim());
 			} else {
 				deptPathOrganBld.append("," + deptPath.split(",")[deptPath.split(",").length - (ch)].trim());
 			}
@@ -1063,10 +1074,20 @@ public class EzBoardController extends EgovFileMngUtil{
 		String deptPath = userInfo.getDeptPathCode();
 		StringBuilder deptPathOrganBld = new StringBuilder ();
 		
-		for (int ch=0; ch<deptPath.split(",").length; ch++) {
-			if (ch==0) {
-				deptPathOrganBld.append(deptPath.split(",")[ch].trim());
+		List<String> addJobList = ezBoardService.getPDOAddJobDeptID(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+		String addJobStr = "";
+		if (addJobList != null && addJobList.size() > 0) {
+			for (int i = 0; i < addJobList.size(); i++) {
+				addJobStr += addJobList.get(i) + ",";
 			}
+		}
+		
+		for (int ch = 0; ch < deptPath.split(",").length; ch++) {
+			if (ch == 0) {
+				deptPathOrganBld.append(deptPath.split(",")[ch].trim());
+			}else if (ch == (deptPath.split(",").length - 3) && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
+				deptPathOrganBld.append("," + addJobStr + deptPath.split(",")[deptPath.split(",").length - (ch)].trim());
+			} 
 			else {
 				deptPathOrganBld.append(","+deptPath.split(",")[deptPath.split(",").length-(ch)].trim());
 			}
@@ -1074,7 +1095,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String userDeptPath = deptPathOrganBld.toString() + ",everyone";
 		
-		for (int i=0; i<userDeptPath.split(",").length; i++) {
+		for (int i = 0; i < userDeptPath.split(",").length; i++) {
 			BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(pBoardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
 			
 			if (boardInfoTemp == null) {
@@ -3367,6 +3388,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			String userDeptPath = deptPathOrgan.toString() + ",everyone";
 			
+			logger.debug("accessCheck userDeptPath in web    ::    " + userDeptPath);
+			
 			if (boardType == null || boardType.toUpperCase().equals("")) {
 				boardType = "GENERAL";
 			}
@@ -4550,7 +4573,6 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		String boardID = request.getParameter("boardID");
 		String strACLXML = "";
-		String userDeptPath = userInfo.getDeptPathCode() + ",everyone";
 		
 		if (ezBoardAdminService.checkIfBoardGroupAdmin(boardID, userInfo.getId(), userInfo.getDeptID(), userInfo.getCompanyID(), userInfo.getTenantId()).equals("OK")) {
 			strACLXML = "<NODES><NODE><ACCESS>1</ACCESS><BOARDADMIN>true</BOARDADMIN><LIST>true</LIST><READ>true</READ><WRITE>true</WRITE><REPLY>true</REPLY><DELETE>true</DELETE><INHERIT>false</INHERIT><POSTNOTICE></POSTNOTICE></NODE></NODES>";
@@ -4559,10 +4581,35 @@ public class EzBoardController extends EgovFileMngUtil{
 		} else {
 			BoardPropertyVO boardPropertyVO = null;
 			
-			for (int k = 0; k < userDeptPath.split(",").length; k++) {
-				boardPropertyVO = ezBoardAdminService.getACL(boardID, userDeptPath.split(",")[k], userInfo.getTenantId());
+			String deptPath = userInfo.getDeptPathCode();
+			String deptPathOrgan = "";
+			
+			/* 2019-04-10 홍승비 - 게시물 권한체크 시 우선순위 변경 (사용자 > 원부서(사간겸직부서) > 사내겸직부서 > 회사 > top > everyone) */
+			List<String> addJobList = ezBoardService.getPDOAddJobDeptID(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+			String addJobStr = "";
+			if (addJobList != null && addJobList.size() > 0) {
+				for (int i = 0; i < addJobList.size(); i++) {
+					addJobStr += addJobList.get(i) + ",";
+				}
+			}
+			
+			for (int ch = 0; ch < deptPath.split(",").length; ch++) {
+				if (ch == 0) { // 0 : userID
+					deptPathOrgan += deptPath.split(",")[ch].trim();
+				} else if (ch == (deptPath.split(",").length - 3) && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
+					deptPathOrgan += "," + addJobStr + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
+				} else {
+					deptPathOrgan += "," + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
+				}
+			}
+			
+			String userDeptPath = deptPathOrgan + ",everyone";
+			
+			for (int i = 0; i < userDeptPath.split(",").length; i++) {
+				BoardPropertyVO boardInfoTemp = ezBoardAdminService.getACL(boardID, userDeptPath.split(",")[i].trim(), userInfo.getTenantId());
 				
-				if (boardPropertyVO != null) {
+				if (boardInfoTemp != null) {
+					boardPropertyVO = boardInfoTemp;
 					break;
 				}
 			}
@@ -6227,6 +6274,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("useEditor", useEditor);
+		/* 2019-04-12 홍승비 - 마이게시판 댓글갯수 누락 수정 */
+		model.addAttribute("use_oneLineCount", "YES");
 
 		logger.debug("boardItemListMyList ended");
 		return "ezBoard/boardItemListMyList";

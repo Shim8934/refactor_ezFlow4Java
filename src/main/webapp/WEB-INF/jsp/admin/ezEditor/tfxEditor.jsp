@@ -12,6 +12,10 @@
 		<script  type="text/javascript">
 			function SetEditorContent(Data) {
 	            try {
+	            	if (Data === "") {
+						Data = "<p " + defaultFontAndSize + "><br></p>";
+					}
+	            	
 	                xfe.setBodyValue(Data);
 	            } catch (e) { }
 	        }
@@ -386,6 +390,7 @@
 	    <script type="text/javascript">
 	    	var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
+			var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 	    	var userLang = "${userInfo.lang}";
 	    	var lang = "";
 	    	

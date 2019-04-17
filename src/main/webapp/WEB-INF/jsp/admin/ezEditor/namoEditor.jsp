@@ -173,6 +173,10 @@
 
         function SetEditorContent(Data) {
             try {
+            	if (Data === "") {
+					Data = "<p " + defaultFontAndSize + "><br></p>";
+				}
+            	
                 CrossEditor.SetBodyValue(Data);
 //                 Set_CellLocked();
 
@@ -385,6 +389,7 @@
         var CrossEditor = new NamoSE("Namo");
         var defaultFontFamily = "${defaultFontFamily}";
 		var defaultFontSize = "${defaultFontSize}";
+		var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 		
 		CrossEditor.params.UploadFileExecutePath = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
 		CrossEditor.params.Height = (height - 10) + "px";

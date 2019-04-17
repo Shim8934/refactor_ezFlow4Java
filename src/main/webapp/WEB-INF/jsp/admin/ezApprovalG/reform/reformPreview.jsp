@@ -12,6 +12,7 @@
 <script language="javascript" type="text/javascript">
 	var args = window.opener.argsForDialog;
 	var mainHtml = args.mainHtml;
+	var bodyHtml = args.bodyHtml;
 	var completionHandlerForDialog = args.completionHandlerForDialog;
 	var pDraftFlag = "DRAFT";
 	

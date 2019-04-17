@@ -13,6 +13,10 @@
 <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 <style type="text/css">
+html {
+	overflow: hidden;
+}
+
 .tbl_type {
 	border: 0
 }

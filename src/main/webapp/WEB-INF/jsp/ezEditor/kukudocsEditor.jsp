@@ -20,6 +20,10 @@
 	        }
 			
 			function SetEditorContent(Data) {
+				if (Data === "") {
+					Data = "<p " + defaultFontAndSize + "><br></p>";
+				}
+				
 				kukudocsEditor.SetEditorContent(Data);
 			}
 			
@@ -35,7 +39,6 @@
 	 	            
 	 	    		var line = data.split("\n");
 	 	            var textData = "";
-	 	            var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 	 	            
 	 	            for (var i = 0; i < line.length; i++) {
 	 	            	if (line[i].trim() === "") {
@@ -146,6 +149,7 @@
 			// 디폴트 폰트 설정
 			var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
+			var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 			
 			// 폰트 크기 리스트 설정
 			var fontSize = [

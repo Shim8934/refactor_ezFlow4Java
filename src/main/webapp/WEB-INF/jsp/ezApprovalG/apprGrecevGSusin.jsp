@@ -275,8 +275,6 @@
 
 		        setAutoProperty();
 		        process_AfterOpen();
-		
-		        setFirstDrafter();
 		        
 		        if (SignCount < 1) {
 		        	if (approvalFlag == "G") {
@@ -291,6 +289,8 @@
 		            document.getElementById("btnSetAprLine").style.display = "none";
 		            document.getElementById("btnSendDraft").style.display = "none";
 		            document.getElementById("btntotaldocinfo").style.display = "none";
+		        } else {
+		        	setFirstDrafter();
 		        }
 		        getGongRamDocInfo();
 		        var g_SepAttachLVXml = "";

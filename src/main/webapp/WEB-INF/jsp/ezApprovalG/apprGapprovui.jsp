@@ -381,7 +381,7 @@
 		    function CheckOpinionYN_Complete(Ans) {
 		        DivPopUpHidden();
 		        if (Ans)
-		            openOpinionUI("Display", CheckOpinionYN_Complete_Complete);
+		            openOpinionUI("", CheckOpinionYN_Complete_Complete);
 		        else {
 		            if (pDraftFlag == "SUSIN")
 		                getSusinSNInfo();

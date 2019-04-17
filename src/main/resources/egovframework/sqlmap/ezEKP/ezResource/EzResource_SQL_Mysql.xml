@@ -2094,4 +2094,35 @@
 				 )
 		]]>
 	</select>
+	
+	<select id="EzResourceDAO.userResPermissionCheck" parameterClass="map" resultClass="String">
+		<![CDATA[
+			select 
+				case when count(*) >= 1 then 1 else 0 end as result
+			from 
+				tbl_rs_resacl a
+			where exists
+				(
+				 select 
+					1				 
+				 from 
+					tbl_rs_resacl b 
+				 where 
+					a.resid = b.resid 
+				 and 
+					a.companyid = b.companyid 
+				 and 
+					a.tenant_id = b.tenant_id 
+				 and 
+					a.member_id = b.member_id 
+				 and 
+					a.COMPANYID= #companyID#
+				 and 
+					a.TENANT_ID= #tenantID#
+				 and 
+					a.resid = #brdID#
+				 and 
+				 	( a.member_id = #userID# or a.member_id = 'everyone') )
+			 ]]>
+	</select>
 </sqlMap>
