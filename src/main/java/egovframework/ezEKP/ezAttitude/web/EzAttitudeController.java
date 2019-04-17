@@ -3583,4 +3583,122 @@ public class EzAttitudeController {
 		
 		LOGGER.debug("excelAnnualListExport ended.");
 	}
+	
+	/**
+	 * 연차수정신청
+	 */
+	@RequestMapping(value = "/ezAttitude/attitudeCancelAnnual.do")
+	public String attitudeCancelAnnual(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/attitudeCancelAnnual started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String font = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+		
+		String userId = userInfo.getId();
+		String attitudeId = request.getParameter("attitudeId");
+		String typeId = request.getParameter("typeId");
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudetypes/" + typeId +"/forms/form";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		JSONObject formVO = new JSONObject();
+		JSONObject attitudeVO = new JSONObject();
+		
+		if (status.equals("ok")) {
+			formVO = (JSONObject) resultBody.get("data");
+			
+			model.addAttribute("formInfo", formVO);
+			
+			url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId; // 근태상세정보 GW 호출
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("userId", userId)
+					.queryParam("attitudeId", attitudeId);
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			LOGGER.debug("status : " + status);
+			
+			if (status.equals("ok")) {
+				attitudeVO = (JSONObject) resultBody.get("data");
+				model.addAttribute("attitudeInfo", attitudeVO);
+			}
+		} 
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("font", font);
+		
+		LOGGER.debug("/ezAttitude/attitudeCancelAnnual ended");
+		return "/ezAttitude/attitudeCancelAnnual";
+	}
+	
+	/**
+	 * 근태수정현황 등록
+	 */
+	@RequestMapping(value="/ezAttitude/saveCancelAnnual.do" , method= RequestMethod.POST)
+	@ResponseBody
+	public String saveCancelAnnual(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=false)String attitudeId,
+			@RequestParam(required=false)String content) throws Exception {
+		LOGGER.debug("saveCancelAnnual started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId + "/saveCancelAnnual";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("content", content)
+				.queryParam("offset", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String data = resultBody.get("data").toString();
+
+		LOGGER.debug("saveCancelAnnual ended");
+		
+		return data;
+	}
 }

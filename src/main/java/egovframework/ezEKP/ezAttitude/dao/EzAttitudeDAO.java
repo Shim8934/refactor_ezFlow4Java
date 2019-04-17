@@ -411,4 +411,9 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
     	return (Map<String, Object>) select("ezAttitudeDAO.getMonthlyAnnualList", map);
     }
     
+    @SuppressWarnings("unchecked")
+    public void saveCancelAnnual(Map<String, Object> map) throws Exception {
+		insert("ezAttitudeDAO.saveCancelAnnual", map);
+	}
+    
 }
