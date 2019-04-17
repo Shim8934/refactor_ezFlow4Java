@@ -2469,4 +2469,39 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/monthlyAnnual] ended.");
 		return result;
 	}
+	
+	/**
+	 * G/W 근태관리 [POST] 연차취소신청 등록
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}/saveCancelAnnual", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject saveCancelAnnual(@PathVariable String attitudeId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="userId", required=true) String userId,
+			@RequestParam(value="offset", required=true) String offset,
+			@RequestParam(value="content", required=true) String content) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/saveCancelAnnual] started.");
+		
+		JSONObject result = new JSONObject();
+		String status = "exception";
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+
+			status = ezAttitudeService.saveCancelAnnual(attitudeId, companyId, tenantId, userId, info.getUserName(), 
+					info.getUserName2(), info.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), 
+					info.getDeptName2(), "0", content, offset);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", status);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", status);
+		}
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/saveCancelAnnual] ended.");
+		return result;
+	}
 }

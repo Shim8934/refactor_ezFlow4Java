@@ -238,7 +238,13 @@
 		    			html += "</td>";
 		    			html += "<td style='width:15%'>" + vo.typeName + "</td>";
 		    			html += "<td style='width:12%'>" + Number(vo.annualCnt) + "</td>";
-		    			html += "<td style='width:44%'>" + content + "</td>";
+		    			html += "<td style='width:20%'>" + content + "</td>";
+		    			html += "<td style='width:12%'>" + "</td>";
+		    			if(vo.modAppl == "0") {
+			    			html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"attitudeCancelAnnual('" + vo.attitudeId + "','" + vo.typeId + "')\"><span>취소신청</span></a>" +"</td>";
+		    			} else {
+		    				html += "<td style='width:12%'>신청</td>";
+		    			}
 		    			html += "</tr>";
 			    		$("#contentlist .mainlist tbody").after(html);
 			    		
@@ -357,6 +363,22 @@
 		    	exportExcelframe.location.href="/ezAttitude/excelUserAnnualExport.do?year=" + selyear;
 		    	exportExcelframe.target="_blank";
 			}
+			
+			/**
+			* [개인근태현황, 부서근태현황] 연차취소신청
+			*/
+			function attitudeCancelAnnual(attitudeId, typeId) {
+				var pAttitudeId = attitudeId; 
+				var pTypeId = typeId;
+				if (CrossYN()) {
+					var OpenWin = window.open("/ezAttitude/attitudeCancelAnnual.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(672, 640));
+					
+					try { OpenWin.focus(); } catch (e) { }
+				} else {
+					rtnValue = window.showModalDialog("/ezAttitude/attitudeCancelAnnual.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", 
+					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+				}
+			}
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0">
@@ -418,7 +440,9 @@
 			                    <th style="width: 25%; padding-left:15px; cursor: pointer;" colname="START_DATE"><span><spring:message code='ezAttitude.t107' /></span></th>
 			                    <th style="width: 15%; cursor: pointer;" colname="TYPE_NAME"><span><spring:message code='ezAttitude.t35' /></span></th>
 			                    <th style="width: 12%; cursor: pointer;" colname="annualCnt"><span><spring:message code='ezAttitude.t252' /></span></th>
-			                    <th style="width: 44%;"><span><spring:message code='ezAttitude.t264' /></span></th>
+			                    <th style="width: 20%;"><span><spring:message code='ezAttitude.t264' /></span></th>
+			                    <th style="width: 12%;"><span>결재상태</span></th>
+			                    <th style="width: 12%;"><span>취소신청</span></th>
 			                </tr>
 			            </table>
 			            <div id="contentlist" name="contentlist" style="height: 520px; overflow-y: auto;">

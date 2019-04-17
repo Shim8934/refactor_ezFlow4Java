@@ -1630,6 +1630,7 @@
 			    D.TYPE_NAME$primary$ as typeName,
 			    C.ATTITUDE_ID as attitudeId,
 			    C.CONTENT as content,
+			    C.MODAPPL as modAppl,
 			    ifnull( 
 						CASE
 						   WHEN C.TYPE_ID = 'A11' THEN to_days(C.END_DATE) - to_days(C.START_DATE)

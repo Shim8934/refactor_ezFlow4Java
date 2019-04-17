@@ -151,4 +151,7 @@ public interface EzAttitudeService {
 	void changeAllAnnual(Map<String, Object> map) throws Exception;
 
 	public Map<String, Object> getMonthlyAnnualList(String userId, String offset, String startDate, String endDate, int tenantId) throws Exception;
+	
+	public String saveCancelAnnual(String attitudeId, String companyId, int tenantId, String userId, String writerName, String writerName2, String writerTitle , String writerTitle2, 
+			String writerDeptId, String writerDeptName, String writerDeptName2, String delFlag, String content,String offset) throws Exception;
 }

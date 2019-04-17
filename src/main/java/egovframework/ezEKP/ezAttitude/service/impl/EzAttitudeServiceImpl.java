@@ -2793,4 +2793,59 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getMonthlyAnnualList ended");
 		return ezAttitudeDAO.getMonthlyAnnualList(map);
 	}
+	
+	@Override
+	public String saveCancelAnnual(String attitudeId, String companyId,
+			int tenantId, String userId, String writerName, String writerName2, String writerTitle
+			, String writerTitle2, String writerDeptId, String writerDeptName, String writerDeptName2
+			, String delFlag, String content,String offset) throws Exception {
+		LOGGER.debug("saveCancelAnnual started");
+		
+		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("attitudeId", attitudeId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("writerId", userId);
+		map.put("writerName", writerName);
+		map.put("writerName2", writerName2);
+		map.put("writerTitle", writerTitle);
+		map.put("writerTitle2", writerTitle2);
+		map.put("writerDeptId", writerDeptId);
+		map.put("writerDeptName", writerDeptName);
+		map.put("writerDeptName2", writerDeptName2);
+		map.put("delFlag", delFlag);
+		map.put("content", content);
+		map.put("apprStatus", "0");
+		map.put("offset", offset);
+		map.put("modappl", "1");
+		map.put("applDate", commonUtil.getTodayUTCTime(""));
+		
+		/*이미 신청된 항목이 있는지, 
+		 * 이미 신청된 항목의 상태가 
+		 * 승인, 반려 상태인지 확인
+		 * */
+		
+		int modAppl = ezAttitudeDAO.getAttModApp(map);
+		
+		if (modAppl == 0 || modAppl == 4) {
+			map.put("modappl", "1");
+		} else if (modAppl == 3) {
+			map.put("modappl", "2");
+		}
+		//신청된 항목이 존재 할 때
+		if (modAppl == 1 || modAppl == 2) {
+			return "fail";
+		}
+		
+		/*근태수정신청 저장*/
+		ezAttitudeDAO.saveCancelAnnual(map);
+		/*attitude modappl수정*/
+		ezAttitudeDAO.setAttModApp(map);
+		
+		LOGGER.debug("saveCancelAnnual ended");
+		
+		return "success";
+	}
 }

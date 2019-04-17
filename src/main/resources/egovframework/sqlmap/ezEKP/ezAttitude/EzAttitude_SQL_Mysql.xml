@@ -1839,4 +1839,55 @@
 				)
 		]]>
 	</select>
+	
+	<insert id="ezAttitudeDAO.saveCancelAnnual" parameterClass="map">
+		<![CDATA[
+			INSERT INTO 
+				tbl_attitude_annual_canappl(
+					ATTITUDE_ID,
+					APPL_CNT, 
+					COMPANY_ID, 
+					TENANT_ID, 
+					WRITER_ID, 
+					WRITER_NAME, 
+					WRITER_NAME2, 
+					WRITER_TITLE, 
+					WRITER_TITLE2, 
+					WRITER_DEPT_ID, 
+					WRITER_DEPT_NAME,
+					WRITER_DEPT_NAME2,
+					APPR_STATUS,
+					CONTENT,
+					APPL_DATE
+				)
+				VALUES(
+					#attitudeId#,
+					(
+					SELECT 
+						IFNULL(MAX(a.APPL_CNT) + 1, 0)
+					FROM
+						tbl_attitude_annual_canappl a
+					WHERE
+						TENANT_ID = #tenantId#
+		        	AND
+		        		COMPANY_ID = #companyId#
+		        	AND
+		        		ATTITUDE_ID = #attitudeId#
+					),
+					#companyId#, 
+					#tenantId#, 
+					#writerId#, 
+					#writerName#, 
+					#writerName2#, 
+					#writerTitle#, 
+					#writerTitle2#, 
+					#writerDeptId#, 
+					#writerDeptName#,
+					#writerDeptName2#,
+					#apprStatus#,
+					#content#,
+					#applDate#
+				)
+		]]>
+	</insert>
 </sqlMap>
