@@ -232,7 +232,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
     			saveImage = outputImage.createGraphics();
     			saveImage.drawImage(inputImage, 0, 0, 198, 140, null);
     			
-    			File newThumbnail = new File(logoPath + logoThumbnailFileName);
+    			File newThumbnail = new File(commonUtil.detectPathTraversal(logoPath + logoThumbnailFileName));
     			ImageIO.write(outputImage, "png", newThumbnail);
             } catch (Exception e) {
             	throw e;
@@ -7268,9 +7268,6 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 	}
 	
 	public void copyAttachments(String pOrgFilePath, String pDestFilePath, String pDestBoardID, String pRef) throws Exception {
-        String orgFilePath = commonUtil.detectPathTraversal(pRef + pOrgFilePath);
-        String destFilePath = commonUtil.detectPathTraversal(pRef + pDestFilePath);
-
         File destdir = new File(commonUtil.detectPathTraversal(pRef + pDestBoardID));
         if (!destdir.exists()) {
         	destdir.mkdir();
@@ -7280,8 +7277,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
         	destdir2.mkdir();
         }
         
-        File orgFile = new File(orgFilePath);
-        File destFile = new File(destFilePath);
+        File orgFile = new File(commonUtil.detectPathTraversal(pRef + pOrgFilePath));
+        File destFile = new File(commonUtil.detectPathTraversal(pRef + pDestFilePath));
         
         FileCopyUtils.copy(orgFile, destFile);
 	}
@@ -7520,7 +7517,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		
 		for (CommunityBoardDeleteItemVO k : boardInfoList) {
 			logger.debug("deleteBoardPath :  " + realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID());
-			Path docPath = Paths.get(realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID());
+			Path docPath = Paths.get(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID()));
 			
 			//커뮤니티 게시판 디렉토리 하위 이미지, 게시물 관련 파일 모두 지우기
 			try {
@@ -7577,8 +7574,8 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		for (CommunityBoardDeleteItemVO k : boardItemList) {
-			Path docPath = Paths.get(realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID()
-					+ commonUtil.separator + "doc" + commonUtil.separator + k.getItemID() + ".mht");
+			Path docPath = Paths.get(commonUtil.detectPathTraversal(realPath + commonUtil.getUploadPath("upload_community.ROOT", k.getTenantID()) + commonUtil.separator + k.getBoardID()
+					+ commonUtil.separator + "doc" + commonUtil.separator + k.getItemID() + ".mht"));
 			
 			Files.deleteIfExists(docPath);
 			
@@ -7589,7 +7586,7 @@ public class EzCommunityServiceImpl extends EgovAbstractServiceImpl implements E
 			List<String> filePathList = ezCommunityDAO.getCopyItemAttach(map);
 			
 			for (String h : filePathList) {
-				Path filePath = Paths.get(realPath + h);
+				Path filePath = Paths.get(commonUtil.detectPathTraversal(realPath + h));
 				
 				Files.deleteIfExists(filePath);
 			}

@@ -1758,7 +1758,7 @@ public class EzTaskController extends EgovFileMngUtil {
 	}
 	
 	/** 2019.01.30 유은정 - schedule left와 task left 분리*/
-	@RequestMapping(value = "/ezTask/taskLeft.do")
+	@RequestMapping(value = "/ezTask/taskLeft.do", method = RequestMethod.GET)
 	public String taskLeft(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
 		logger.debug("taskLeft started");
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -1781,7 +1781,7 @@ public class EzTaskController extends EgovFileMngUtil {
 		return "/ezTask/taskLeft";
 	}
 	
-	@RequestMapping(value = "/ezTask/taskIndex.do")
+	@RequestMapping(value = "/ezTask/taskIndex.do", method = RequestMethod.GET)
 	public String taskIndex(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, LoginVO loginVO) throws Exception {
 		logger.debug("taskIndex started");
 		logger.debug("taskIndex ended");

@@ -1257,13 +1257,10 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("fileMove started.");
 		logger.debug("beforeFilePath = " + beforeFilePath + " || afterFilePath = " + afterFilePath);
 		
-		beforeFilePath = commonUtil.detectPathTraversal(beforeFilePath);
-		afterFilePath = commonUtil.detectPathTraversal(afterFilePath);
-		
-		File file = new File(beforeFilePath);
+		File file = new File(commonUtil.detectPathTraversal(beforeFilePath));
 
 		try {
-			file.renameTo(new File(afterFilePath));			
+			file.renameTo(new File(commonUtil.detectPathTraversal(afterFilePath)));			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -1275,9 +1272,8 @@ public class EzTaskServiceImpl extends FileCopyUtils implements EzTaskService {
 		logger.debug("deleteDirectory ended.");
 		
 		String dirPath = pDirpath + "uploadFile" + commonUtil.separator + taskID + "_uploadFile";
-		dirPath = commonUtil.detectPathTraversal(dirPath);
 		
-		File directoryFile = new File(dirPath);
+		File directoryFile = new File(commonUtil.detectPathTraversal(dirPath));
 		File[] deleteFileList = directoryFile.listFiles();
 
 		if (directoryFile.exists()) {
