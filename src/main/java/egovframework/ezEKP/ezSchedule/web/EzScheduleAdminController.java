@@ -589,7 +589,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 기념일 등록 탭 페이지(게시판 참조)
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleAdminHolidayTab.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleAdminHolidayTab.do", method = RequestMethod.GET)
 	public String  scheduleAdminHolidayTab(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
 		
 		logger.debug("============ scheduleAdminHolidayTab started ============");
@@ -632,7 +632,7 @@ public class EzScheduleAdminController {
 	/**
 	 * 관리자 일정관리 기념일 등록 탭 페이지(게시판 참조)
 	 */
-	@RequestMapping(value="/admin/ezSchedule/scheduleAdminPopupHolidayRepeat.do")
+	@RequestMapping(value="/admin/ezSchedule/scheduleAdminPopupHolidayRepeat.do", method = RequestMethod.GET)
 	public String  scheduleAdminPopupHolidayRepeat(@CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
 		
 		logger.debug("============ scheduleAdminPopupHolidayRepeat started ============");

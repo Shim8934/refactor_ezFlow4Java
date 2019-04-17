@@ -571,7 +571,7 @@
 		    	
 		    	
 		        $.ajax({
-		    		type : "POST",
+		    		type : "GET",
 		    		dataType : "json",
 		    		async : true,
 		    		url : "/ezSchedule/scheduleGetHolidayJsonYear.do",
