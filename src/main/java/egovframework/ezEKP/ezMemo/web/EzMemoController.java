@@ -64,7 +64,7 @@ public class EzMemoController {
 	/**
 	 * 메모 메인페이지 호출
 	 * */
-	@RequestMapping(value = "/ezMemo/memoMainPage.do")
+	@RequestMapping(value = "/ezMemo/memoMainPage.do", method = RequestMethod.GET)
 	public String memoMainPage(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoMainPage started.");
 		
@@ -75,7 +75,7 @@ public class EzMemoController {
 	/**
 	 * 메모 메인페이지 호출
 	 * */
-	@RequestMapping(value = "/ezMemo/memoConfig.do")
+	@RequestMapping(value = "/ezMemo/memoConfig.do", method = RequestMethod.GET)
 	public String memoConfig(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoConfig started.");
 		
@@ -86,7 +86,7 @@ public class EzMemoController {
 	/**
 	 * 메모 레프트 메뉴 호출
 	 * */
-	@RequestMapping(value = "/ezMemo/memoLeft.do")
+	@RequestMapping(value = "/ezMemo/memoLeft.do", method = RequestMethod.GET)
 	public String memoLeft(@CookieValue("loginCookie") String loginCookie, ModelMap modelMap, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("memoLeft started.");
 		
