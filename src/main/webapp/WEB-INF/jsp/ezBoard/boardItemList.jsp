@@ -971,7 +971,6 @@
 		        feature = feature += GetOpenPosition(355,600);
 		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "", feature, "");
 		        copyboarditem_cross_dialogArguments[1] = CopyItem_onclick_Complete;
-		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "", feature, "");
 		    }
 		    /* 2019-04-17 홍승비 - 복사 후 좌측 게시물카운트 갱신 */
 		    function CopyItem_onclick_Complete(ret) {
