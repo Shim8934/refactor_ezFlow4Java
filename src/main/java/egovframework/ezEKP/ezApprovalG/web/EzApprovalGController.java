@@ -9218,7 +9218,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/* 
 	 * 기안창 기안자 부서 정보와 현재 사용자의 부서 정보가 같은지 체크
 	 * */
-	@RequestMapping(value = "/ezApprovalG/checkDeptAndCabinetId.do")
+	@RequestMapping(value = "/ezApprovalG/checkDeptAndCabinetId.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkDeptAndCabinetId(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("checkDeptAndCabinetId started.");
