@@ -267,7 +267,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정관리 휴일 함수 호출 함수
 	 */
-	@RequestMapping(value = "/ezSchedule/scheduleGetHolidayJson.do", produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/ezSchedule/scheduleGetHolidayJson.do", produces = "application/json; charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public List<ScheGetHolidayVO> scheduleGetHolidayText(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		
@@ -293,7 +293,7 @@ public class EzScheduleController extends EgovFileMngUtil {
 	/**
 	 * 일정관리 년도별 휴일 함수 호출 함수
 	 */
-	@RequestMapping(value = "/ezSchedule/scheduleGetHolidayJsonYear.do", produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/ezSchedule/scheduleGetHolidayJsonYear.do", produces = "application/json; charset=utf-8", method = RequestMethod.GET)
 	@ResponseBody
 	public List<ScheGetHolidayVO> scheduleGetHolidayYear(HttpServletRequest request, HttpServletResponse response, @CookieValue("loginCookie") String loginCookie) throws Exception {
 		
