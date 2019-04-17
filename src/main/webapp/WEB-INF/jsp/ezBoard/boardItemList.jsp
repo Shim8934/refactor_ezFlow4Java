@@ -929,6 +929,7 @@
 		    }
 		
 		    /* 2018-07-11 홍승비 - 게시물 복사 시 guBun 파라미터 추가 */
+		    var copyboarditem_cross_dialogArguments = new Array();
 		    function CopyItem_onclick() {
 		        if (Read_FG != "true") {
 		            alert("<spring:message code='ezBoard.t202' />");
@@ -969,6 +970,20 @@
 		        var feature = "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 		        feature = feature += GetOpenPosition(355,600);
 		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "", feature, "");
+		        copyboarditem_cross_dialogArguments[1] = CopyItem_onclick_Complete;
+		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + strItemList + "&boardID=" + pBoardID + "&guBun=" + gubun, "", feature, "");
+		    }
+		    /* 2019-04-17 홍승비 - 복사 후 좌측 게시물카운트 갱신 */
+		    function CopyItem_onclick_Complete(ret) {
+		        if (typeof (ret) != "undefined") {
+		            if (ret == "OK") {
+			            try {
+							leftCountRf();
+						} catch (e) {}
+		                window.location.reload();
+		                window.close();
+		            }
+		        }
 		    }
 		
 		    var moveboarditem_cross_dialogArguments = new Array();
