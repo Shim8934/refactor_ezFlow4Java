@@ -85,7 +85,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 왼쪽 커뮤니티 신청 관리 카운트 호출함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/getApplicationListCount.do")
+	@RequestMapping(value = "/admin/ezCommunity/getApplicationListCount.do", method = RequestMethod.POST)
 	public String getApplicationListCount(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("getApplicationListCount started.");
 		
@@ -216,7 +216,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 개설된 커뮤니티  리스트  호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/openCommunityList.do")
+	@RequestMapping(value = "/admin/ezCommunity/openCommunityList.do", method = RequestMethod.POST)
 	public String openCommunityList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("openCommunityList started.");
 		
@@ -273,7 +273,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 폐쇄한 커뮤니티  리스트  호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/closedCommunityList.do")
+	@RequestMapping(value = "/admin/ezCommunity/closedCommunityList.do", method = RequestMethod.POST)
 	public String closedCommunityList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("closedCommunityList started.");
 		
@@ -463,7 +463,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 커뮤니티 관리 > 폐쇄 실행함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/commAdminCloseAll.do")
+	@RequestMapping(value = "/admin/ezCommunity/commAdminCloseAll.do", method = RequestMethod.POST)
 	public String commAdminCloseAll(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -530,7 +530,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 커뮤니티 신청관리  페이지 호출 함수
 	*/
-	@RequestMapping(value = "/admin/ezCommunity/applicationList.do")
+	@RequestMapping(value = "/admin/ezCommunity/applicationList.do", method = RequestMethod.GET)
 	public String applicationList(@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		logger.debug("applicationList started.");
 		
@@ -608,7 +608,7 @@ public class EzCommunityAdminController {
 	/**
 	 * 폐쇄 승인 리스트  호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezCommunity/closeCom.do")
+	@RequestMapping(value = "/admin/ezCommunity/closeCom.do", method = {RequestMethod.GET, RequestMethod.POST})
 	public String closeCom (@CookieValue("loginCookie") String loginCookie, ModelMap model, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		

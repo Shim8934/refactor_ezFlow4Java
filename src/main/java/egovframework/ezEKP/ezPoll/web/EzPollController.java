@@ -327,7 +327,7 @@ public class EzPollController extends EgovFileMngUtil {
 	/**
 	 * 투표 메인 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezPoll/pollMain.do")
+	@RequestMapping(value="/ezPoll/pollMain.do", method = RequestMethod.GET)
 	public String qstMain(HttpServletRequest request, ModelMap model) throws Exception{
 		logger.debug("pollMain Start");
 		String qstId = request.getParameter("qstId");
@@ -345,7 +345,7 @@ public class EzPollController extends EgovFileMngUtil {
 	/**
 	 * 투표 레프트 메뉴 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezPoll/pollLeft.do")
+	@RequestMapping(value="/ezPoll/pollLeft.do", method = RequestMethod.GET)
 	public String qstLeft(HttpServletRequest request, ModelMap model) throws Exception{
 		logger.debug("pollLeft Start");
 		String qstId = request.getParameter("qstId");
@@ -364,7 +364,7 @@ public class EzPollController extends EgovFileMngUtil {
 	/**
 	 * 투표 환경설정 메뉴 화면 호출 함수
 	 */
-	@RequestMapping(value="/ezPoll/pollConfig.do")
+	@RequestMapping(value="/ezPoll/pollConfig.do", method = RequestMethod.GET)
 	public String getConfig() throws Exception{
 		logger.debug("pollConfig Start");
 		
