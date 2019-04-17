@@ -966,7 +966,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "admin/ezApprovalG/reform/reformPreview";
 	}
 	
-	@RequestMapping(value = "/admin/ezApprovalG/reformPreviewContent.do")
+	@RequestMapping(value = "/admin/ezApprovalG/reformPreviewContent.do", method = RequestMethod.POST)
 	public String reformPreviewContent(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("reformPreviewContent started.");
 		
@@ -1024,7 +1024,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재G관리 양식등록 ActiveX 다운로드 목록 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/componentListTransfer.do", produces="text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezApprovalG/componentListTransfer.do", produces="text/xml;charset=utf-8" , method = RequestMethod.GET)
 	@ResponseBody
 	public String componentListTransfer(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("componentListTransfer started.");
@@ -3578,7 +3578,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 	/**
 	 * 전자결재g 관리자 문서이동 검색 호출
 	 */
-	@RequestMapping(value = "/admin/ezApprovalG/ezStatisticsSearch.do")
+	@RequestMapping(value = "/admin/ezApprovalG/ezStatisticsSearch.do", method = RequestMethod.GET)
 	public String ezStatisticsSearch(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("ezStatisticsSearch started");
 		
