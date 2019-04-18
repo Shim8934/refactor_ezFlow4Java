@@ -1291,8 +1291,8 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			updateFileName(oldFile.getFileId(), oldFile.getFileName(), currentTimeUTC, tenantId);
 			
 			// nio gazuaaaaa!!!!!
-			Path sourcePath = Paths.get(servletContext.getRealPath(newFile.getFilePath()));
-			Path destPath = Paths.get(servletContext.getRealPath(oldFile.getFilePath()));
+			Path sourcePath = Paths.get(servletContext.getRealPath(commonUtil.detectPathTraversal(newFile.getFilePath())));
+			Path destPath = Paths.get(servletContext.getRealPath(commonUtil.detectPathTraversal(oldFile.getFilePath())));
 
 			// copy file
 			Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
@@ -1359,7 +1359,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 				
 				String fileName = fileVO.getFileName();
 				int dotPos      = fileName.lastIndexOf('.');
-				String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
+				String extend   = dotPos == -1 ? ".none" : commonUtil.detectPathTraversal(fileName.substring(dotPos + 1));
 				String newName  = webfolderUtil.generateFilePath(extend);
 				String newPath  = getWebFolderDirPath(userInfo.getTenantId()) + newName;
 				File srcFile    = new File(realPath + commonUtil.detectPathTraversal(fileVO.getFilePath()));

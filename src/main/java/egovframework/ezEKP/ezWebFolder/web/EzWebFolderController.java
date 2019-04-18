@@ -194,7 +194,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return "ezWebFolder/webfolderGeneral";
 	}
 	
-	@RequestMapping(value = "/ezWebFolder/fileDuplicateConfirm.do")
+	@RequestMapping(value = "/ezWebFolder/fileDuplicateConfirm.do", method = RequestMethod.GET)
 	public String fileDuplicateConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("fileDuplicateConfirm start");
 
