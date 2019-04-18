@@ -2340,4 +2340,30 @@ public class EzNewPortalServiceImpl implements EzNewPortalService {
 		
 		return value;
 	}
+	
+	@Override
+	public int getApprovalDoingListCount(String userId, String companyId, int tenantId, String offset, String approvalFlag, String lang) throws Exception {
+		LOGGER.debug("getApprovalDoingListCount started.");
+		LOGGER.debug("userId = " + userId + " || companyId = " + companyId + " || tenantId = " + tenantId);
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("offset",commonUtil.getMinuteUTC(offset));
+		
+		/*대리결제 표시 위해 추가 2019-03-05*/
+		String userIDs = "'" + userId + "'";
+		String proxyOption = "";
+		proxyOption = ezApprovalGService.getIsUse("A23", "001", companyId, lang, tenantId);
+
+		if (proxyOption.equals("1")) {
+			userIDs = ezApprovalGService.getProxyUser(userId, lang, tenantId, offset);
+		}
+		map.put("userIDs", userIDs);
+		
+		int doingListCount = ezNewPortalDAO.getApprovalDoingListCount(map);
+		
+		return doingListCount;
+	}
 }

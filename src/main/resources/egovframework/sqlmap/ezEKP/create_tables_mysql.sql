@@ -3503,7 +3503,6 @@ CREATE TABLE `tbl_c_comclose` (
   `CLOSESTATE` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `CLOSESTATE2` varchar(100) DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT '0',
-  `COMPANYID` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`C_CLUBNO`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
