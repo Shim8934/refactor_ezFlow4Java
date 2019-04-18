@@ -1884,11 +1884,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 
         if (scheduleid.equals("")) {
 	        //Set ownername and ownername2
-	        if (scheduletype.equals("1")) {
+	        /*if (scheduletype.equals("1")) {				// 2019-04-15 김민성 - 비서일정 구분을 위해 주석처리함
 	        	ownername = creatorname;
 	        	ownername2 = creatorname2;
 	        }
-	        else if (scheduletype.equals("2") || scheduletype.equals("3")) {
+	        else */
+        	if (scheduletype.equals("2") || scheduletype.equals("3")) {
 	        	String organName = ezOrganService.getPropertyValue(ownerid, "displayname", loginVO.getTenantId());
 	        	
 	        	if (organName.equals(ownername)) {
@@ -1911,13 +1912,13 @@ public class EzScheduleController extends EgovFileMngUtil {
         String enddate = doc.getElementsByTagName("ENDDATE").item(0).getTextContent();
 
     	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//    	Calendar cal = Calendar.getInstance();
-//    	cal.setTime(sdf.parse(enddate));
-//    	
-//    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
-//    		cal.add(Calendar.MINUTE, -1);        		
-//    		enddate = sdf.format(cal.getTime());
-//    	}
+    	Calendar cal = Calendar.getInstance();
+    	cal.setTime(sdf.parse(enddate));
+    	
+    	if (cal.get(Calendar.HOUR) == 0 && cal.get(Calendar.MINUTE) == 0) {        		
+    		cal.add(Calendar.MINUTE, -1);        		
+    		enddate = sdf.format(cal.getTime());
+    	}
 
     	startdate = sdf.format(sdf.parse(startdate));
     	enddate = sdf.format(sdf.parse(enddate));
@@ -2245,11 +2246,9 @@ public class EzScheduleController extends EgovFileMngUtil {
         String offSetMin = commonUtil.getMinuteUTC(loginVO.getOffset());
         int tenantId = loginVO.getTenantId();
         String companyID = loginVO.getCompanyID();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         
         //일정 상세정보
         ScheduleInfoVO vo = ezScheduleService.getScheduleInfo(_scheduleid, offSetMin, tenantId, companyID);
-        
         if (vo == null) {
         	logger.error("Schedule not found.");
 			model.addAttribute("title", egovMessageSource.getMessage("ezSchedule.t342", locale));
@@ -2275,18 +2274,7 @@ public class EzScheduleController extends EgovFileMngUtil {
         					+ vo.getStartDate().substring(11, 16) + " ~ " + vo.getEndDate().substring(11, 16);        		
         	}        	
         } else if (vo.getDateType().equals("2")){
-        	//하루종일 일때 endDate 수정
-        	String realEndDateFormat = "";
-        	if (vo.getEndDate().substring(10).equals(" 00:00:00.0")) {
-        		Date realEndDate = sdf.parse(vo.getEndDate().substring(0,10));
-        		Calendar cal = Calendar.getInstance();
-        		cal.setTime(realEndDate);
-        		cal.add(Calendar.DATE, -1);
-        		realEndDate = cal.getTime();
-        		realEndDateFormat = sdf.format(realEndDate);
-        	}
-        	
-        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + realEndDateFormat + " (" + msg.getMessage("ezSchedule.t280", locale);        	
+        	dateString = vo.getStartDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale) + " ~ " + vo.getEndDate().substring(0,10) + " (" + msg.getMessage("ezSchedule.t280", locale);        	
         } else {
         	dateString = vo.getStartDate().substring(0,16) + " ~ " + vo.getEndDate().substring(0,16);
         }
@@ -3086,8 +3074,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 								//시작시간 00시  설정
 								dtStartCal.set(Calendar.HOUR_OF_DAY, 0);
 								
-								//끝날짜 00시  설정
-								dtEndCal.set(Calendar.HOUR_OF_DAY, 0);
+								//구글은 다음날로 나오므로 하루전 23시 59분으로 설정
+								dtEndCal.add(Calendar.DATE, -1);
+								dtEndCal.set(Calendar.HOUR_OF_DAY, 23);
+								dtEndCal.set(Calendar.MINUTE, 59);
+								
 							}
 						}
 						else {
@@ -3129,15 +3120,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 							if (dtStart.getParameters().toString().indexOf("VALUE=DATE") > -1) { //하루종일
 								info[1] = "1";
 								
-								if (info[0].equals("0")) {
-									dtEndCal.add(Calendar.DATE, 1); //종료일 있을 때에는 다음날로 설정
-								}
 								
 								//시작시간 00시
 								dtStartCal.set(Calendar.HOUR_OF_DAY, 0);
 								
-								//끝날짜 00시
-								dtEndCal.set(Calendar.HOUR_OF_DAY, 0);
+								//구글은 다음날로 나오므로 하루전 23시 59분으로 설정
+								dtEndCal.add(Calendar.DATE, -1);
+								dtEndCal.set(Calendar.HOUR_OF_DAY, 23);
+								dtEndCal.set(Calendar.MINUTE, 59);
 								
 							}
 							else { //시간지정

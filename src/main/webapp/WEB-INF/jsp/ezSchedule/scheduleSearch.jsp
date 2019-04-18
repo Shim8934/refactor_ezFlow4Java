@@ -2,7 +2,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html>
 	<head>
@@ -308,7 +307,7 @@
 	            		<c:if test="${item.dateType != '2'}">${fn:substring(item.startDate,0,16)}</c:if>	            		
 	            	</td> 
 	            	<td style="width:140px">
-	            		<c:if test="${item.dateType == '2'}"><jsp:useBean id="rEndDate" class="java.util.Date"/><fmt:parseDate var="pEndDate" value="${fn:substring(item.endDate,0,16)}" pattern="yyyy-MM-dd HH:mm" /><c:set target="${rEndDate}" property="time" value="${pEndDate.time-(1000*60*60*23) }" /><fmt:formatDate value="${rEndDate}" pattern="yyyy-MM-dd" /> (<spring:message code='ezSchedule.t280'/></c:if>
+	            		<c:if test="${item.dateType == '2'}">${fn:substring(item.endDate,0,10)} (<spring:message code='ezSchedule.t280'/></c:if>
 	            		<c:if test="${item.dateType != '2'}">${fn:substring(item.endDate,0,16)}</c:if>	
 	            	</td>
 		    	</tr>

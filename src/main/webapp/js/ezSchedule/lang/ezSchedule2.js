@@ -182,3 +182,5 @@ var strLangKHJ7 = "Error while saving ics file";
 var strLangKHJ8 = "No right.";
 //2018-02-22
 var strLangGHA1 = ", ";
+/* 2019-04-03 */
+var strLangHSB1 = "MHT files to store failed.";

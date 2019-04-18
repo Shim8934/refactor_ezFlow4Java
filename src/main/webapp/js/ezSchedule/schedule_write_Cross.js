@@ -287,13 +287,16 @@ function save_schedule(pageFrom)
     var strBody = message.GetEditorContent();
     Doc_ContentHtml.innerHTML = strBody;
     strBody = HTMLtoMHT_MakeTag(Doc_ContentHtml);
-
-    createNodeAndInsertText(xmlDom, objNode, "CONTENT", pidCryptUtil.encodeBase64(ConvertHTMLtoMHT(Signature_ImagePathConvert(strBody)), 64));
     
-    var realEndDate = new Date(parseInt($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val().substring(0,4),10), 
-    						   parseInt($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val().substring(5,7),10)-1, 
-    						   parseInt($("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val().substring(8),10)+1);
-    var realEndDateRealFormat = realEndDate.getFullYear() + "-" + leadingZeros((realEndDate.getMonth() + 1), 2) + "-" + leadingZeros((realEndDate.getDate()), 2);
+    /* 2019-04-03 홍승비 - MHT파일 변환 및 저장 시 예외처리 추가 */
+    var htmlConv = Signature_ImagePathConvert(strBody);
+	try {
+		htmlConv = ConvertHTMLtoMHT(htmlConv);
+	} catch (e) {
+		alert(strLangHSB1);
+		return;
+	}
+    createNodeAndInsertText(xmlDom, objNode, "CONTENT", pidCryptUtil.encodeBase64(htmlConv, 64));
 
 	if ($.trim(repetition) == "")
 	{		
@@ -301,7 +304,7 @@ function save_schedule(pageFrom)
 		{
 			createNodeAndInsertText(xmlDom, objNode, "DATETYPE", "2");
 			createNodeAndInsertText(xmlDom, objNode, "STARTDATE", $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 00:00");
-			createNodeAndInsertText(xmlDom, objNode, "ENDDATE", realEndDateRealFormat + " 00:00");
+			createNodeAndInsertText(xmlDom, objNode, "ENDDATE", $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val() + " 23:59");
 		}
 		else
 		{
@@ -2127,16 +2130,4 @@ function makeResRepetition(startDate, endDate) {
 	createNodeAndInsertText(recurrenceDom, objNode, "endDateTime", endDate);
 	
 	g_data["recurrence"] = getXmlString(recurrenceDom);
-}
-
-//leading zero 함수 추가
-function leadingZeros(n, digits) {
-    var zero = '';
-    n = n.toString();
-
-    if (n.length < digits) {
-        for (var i = 0; i < digits - n.length; i++)
-            zero = '0' + zero;
-    }
-    return zero + n;
 }

@@ -804,6 +804,22 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	
 		        		Address[] addresses = null;
 		        		if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL")) {
+		        			// 료비에서 다음과 같은 메일이 와서 메일주소 파싱 시 에러 발생함.
+		        			// 그래서 To, Cc 헤더에서 mailto: 제거하도록 함.
+		        			// To: =?ISO-2022-JP?B?GyRCTj5IdxsoQkhEGyRCNzJHTztZRTkbKEI=?= <mailto:gunma@ryobi-holdings.jp>, 
+		        			// =?ISO-2022-JP?B?GyRCTj5IdyVIJWklcyU5JV0hPCVINzJHTztZRTkbKEI=?= <gunma@ryobi-holdings.jp>
+		        			String[] toHeaders = replyMessage.getHeader("To");
+		        			
+		        			if (toHeaders != null) {
+			        			replyMessage.setHeader("To", toHeaders[0].replace("mailto:", ""));
+		        			}
+		        			
+		        			String[] ccHeaders = replyMessage.getHeader("Cc");
+		        			
+		        			if (ccHeaders != null) {
+			        			replyMessage.setHeader("Cc", ccHeaders[0].replace("mailto:", ""));
+		        			}
+		        			
 							// retrieve the TO addresses from the reply message.
 							addresses = replyMessage.getRecipients(Message.RecipientType.TO);
 							String[] rawHeaders = orgMessage.getHeader("From");
@@ -2628,7 +2644,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		
-		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail + ",uid=" + uid + ",hasAttachFile=" + hasAttachFile);
 		
 		MimeMessage newMessage = null;
 		IMAPAccess ia = null;
@@ -2806,7 +2822,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					newMessage.setContent(multipart);
 					newMessage.setFlag(Flags.Flag.SEEN, true);
 					AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
-					xmldom.getElementsByTagName("URL").item(0).setTextContent(String.valueOf(uids[0].uid));
+					
+					uid = uids[0].uid;
+					xmldom.getElementsByTagName("URL").item(0).setTextContent(String.valueOf(uid));
 				} else {
 					
 					if (uid == 0) {
@@ -2847,7 +2865,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		
-		logger.debug("mailInterAttach ended.");
+		logger.debug("mailInterAttach ended. uid=" + uid);
 		
 		return returnValue;
 	}

@@ -465,11 +465,12 @@ function ListView() {
                 if(strColName == "DocTitle")
                     _titleIdx = i;
                 
-                if (strColName == "ProcessDate") {
+                //2019-04-09 천성준 - (#15424) 공람정보 팝업에서 결재일시 잘려나오는것 때문에 width +20px해주는거 같은데 지금은 UI가 바뀌어서 필요없음 
+                /*if (strColName == "ProcessDate") {
                 	if (CrossYN() && navigator.userAgent.search('rv:11.0') == -1) {
                 		strWidth = parseInt(strWidth) + parseInt("20");		
                 	}
-                }
+                }*/
                 
                 var objTd = document.createElement("TH");
 
