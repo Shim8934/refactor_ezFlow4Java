@@ -36,7 +36,7 @@ public class EzApprovalGReformController extends EgovFileMngUtil {
 	@Value("#{config['config.reformServerURL']}")
 	private String reformServerUrl;
 
-	@RequestMapping(value = "/reform/getDataSourceList.do", produces = "application/json")
+	@RequestMapping(value = "/reform/getDataSourceList.do", method = RequestMethod.GET, produces = "application/json")
 	@ResponseBody
 	public String getDataSourceList(HttpServletRequest request) throws Exception {
 		logger.debug("getDataSourceList started.");
