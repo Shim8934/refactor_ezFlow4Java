@@ -138,6 +138,12 @@
 	    		makeoptionyear();
    			});
 	    	
+    		$(document).on('click', '.mainlist .attitudeView', function(){
+    			var attitudeId = $(this).closest("tr").attr("id");
+    			var typeId = $(this).closest("tr").attr("typeId");
+    			attitudeItemView(attitudeId , typeId);
+    		})
+	    	
 	    	//년도 selectBox
 	    	function makeoptionyear() {
 	            var tempyear = year;
@@ -222,9 +228,10 @@
 	    		if (Number(list[0].annualCnt) > 0) {
 		    		list.forEach(function(vo, index) {
 		    			var content = $.trim($("<p></p>").html(vo.content).text());
-		    			html = "<tr id='" + vo.attitudeId + "'>";
+		    			html = "<tr id='" + vo.attitudeId + "' typeId='" + vo.typeId + "'>";
 			    		html += "<td style='width:60px'>" + i + "</td>";
 			    		html += "<td style='width:25%'>";
+			    		html += "<a class='link attitudeView'>";
 		    			if (vo.typeId === "A11") { //연차
 			    			html += vo.startDate.substr(0,10) + " ~ " + vo.endDate.substr(0,10);
 			    			annualCnt ++;
@@ -235,6 +242,7 @@
 		    				html += vo.startDate.substr(0,10);
 		    				afternoonCnt ++;
 		    			}
+		    			html += "</a>";
 		    			html += "</td>";
 		    			html += "<td style='width:15%'>" + vo.typeName + "</td>";
 		    			html += "<td style='width:12%'>" + Number(vo.annualCnt) + "</td>";
@@ -379,6 +387,23 @@
 					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
 				}
 			}
+			
+			/**
+			* [개인근태현황, 부서근태현황] 근태상세보기
+			*/
+			function attitudeItemView(attitudeId, typeId) {
+				var pAttitudeId = attitudeId; 
+				var pTypeId = typeId;
+				if (CrossYN()) {
+					var OpenWin = window.open("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(672, 640));
+					
+					try { OpenWin.focus(); } catch (e) { }
+				} else {
+					rtnValue = window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", 
+					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+				}
+			}
+			
 		</script>
 	</head>
 	<body class="mainbody" style="overflow:auto;" marginwidth="0" marginheight="0">

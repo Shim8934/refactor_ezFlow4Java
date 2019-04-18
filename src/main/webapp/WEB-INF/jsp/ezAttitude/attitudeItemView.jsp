@@ -144,6 +144,22 @@
 				window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height=" + conHeight + "px, width=890px, status=no, toolbar=no, menubar=no, location=no, resizable=1");
 				window.close();
 			}
+			
+			/**
+			* [개인근태현황, 부서근태현황] 연차취소신청
+			*/
+			function attitudeCancelAnnual() {
+				if (CrossYN()) {
+					var OpenWin = window.open("/ezAttitude/attitudeCancelAnnual.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(672, 640));
+					
+					try { OpenWin.focus(); } catch (e) { }
+				} else {
+					rtnValue = window.showModalDialog("/ezAttitude/attitudeCancelAnnual.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", 
+					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+				}
+				openWin.opener = window.opener;
+				window.close();
+			}
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -183,9 +199,16 @@
 	            </table>
 	            <div class="btnpositionNew" id="menuTable">
 	            	<c:if test="${userId == attitudeInfo.writerId}">
-						<a class="imgbtn"><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.t162'/></span></a>
-                        <a class="imgbtn"><span onclick="modifyAttitude()"><spring:message code='ezAttitude.t163'/></span></a>
-                        <a class="imgbtn"><span onclick="deleteAttitude()"><spring:message code='ezAttitude.t164'/></span></a>
+	            		<c:choose>
+	            			<c:when test="${attitudeInfo.typeId == 'A11' || attitudeInfo.typeId == 'A12' || attitudeInfo.typeId == 'A13'}">
+	            				<a class="imgbtn"><span onclick="attitudeCancelAnnual()">취소신청</span></a>
+                       		</c:when>
+                       		<c:otherwise>
+								<a class="imgbtn"><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.t162'/></span></a>
+                       			<a class="imgbtn"><span onclick="modifyAttitude()"><spring:message code='ezAttitude.t163'/></span></a>
+                       			<a class="imgbtn"><span onclick="deleteAttitude()"><spring:message code='ezAttitude.t164'/></span></a>
+                       		</c:otherwise>
+                        </c:choose>
 					</c:if>
 	            </div>
 	        </div>
