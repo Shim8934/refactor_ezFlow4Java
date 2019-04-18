@@ -31,19 +31,19 @@
 		    var arr_userinfo = new Array();
 		    arr_userinfo[0] = "user";
 		    arr_userinfo[1]  = "<c:out value ='${userInfo.id}'/>";
-		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName} '/>";
-		    arr_userinfo[3]  = "<c:out value = '${userInfo.title} '/>";
-		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID} '/>";
-		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName} '/>";
-		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek} '/>";
-		    arr_userinfo[8]  = "<c:out value = '${userInfo.email} '/>";
+		    arr_userinfo[2]  = "<c:out value = '${userInfo.displayName}'/>";
+		    arr_userinfo[3]  = "<c:out value = '${userInfo.title}'/>";
+		    arr_userinfo[4]  = "<c:out value = '${userInfo.deptID}'/>";
+		    arr_userinfo[5]  = "<c:out value = '${userInfo.deptName}'/>";
+		    arr_userinfo[6]  = "<c:out value = '${userInfo.jikChek}'/>";
+		    arr_userinfo[8]  = "<c:out value = '${userInfo.email}'/>";
 	        arr_userinfo[9] = companyID;
-	        arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1} '/>";
-		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2} '/>";
-		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1} '/>";
-		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2} '/>";
-		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1} '/>";
-		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2} '/>";
+	        arr_userinfo[11]  = "<c:out value = '${userInfo.displayName1}'/>";
+		    arr_userinfo[12]  = "<c:out value = '${userInfo.displayName2}'/>";
+		    arr_userinfo[13]  = "<c:out value = '${userInfo.title1}'/>";
+		    arr_userinfo[14]  = "<c:out value = '${userInfo.title2}'/>";
+		    arr_userinfo[15]  = "<c:out value = '${userInfo.deptName1}'/>";
+		    arr_userinfo[16]  = "<c:out value = '${userInfo.deptName2}'/>";
 		    
 	        var sealPath = ""
 	        var sealName = ""

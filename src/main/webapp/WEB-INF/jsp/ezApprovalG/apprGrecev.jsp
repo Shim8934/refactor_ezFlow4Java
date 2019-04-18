@@ -22,7 +22,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/CheckLines_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/SendMailApprove.js')}"></script>
 		<script type="text/javascript" id="clientEventHandlersJS" >
-			var pDocID = "<c:out value = '${docID} '/>";
+			var pDocID = "<c:out value = '${docID}'/>";
 			var DraftFlag = "<c:out value = '${draftFlag}'/>";
 			var pFormHref = new String("");
 			var pFormID = new String();

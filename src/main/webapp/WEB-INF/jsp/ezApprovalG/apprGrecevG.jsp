@@ -25,7 +25,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/appandbody_Cross.js')}"></script>
 		<script type="text/javascript"ID="clientEventHandlersJS">
 		    var pWriterDeptID;
-		    var pDocID = "<c:out value = '${docID} '/>";
+		    var pDocID = "<c:out value = '${docID}'/>";
 		    var pFormHref = new String("");
 		    var pFormID = new String();
 		    var zFormID = new String();
