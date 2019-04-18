@@ -323,8 +323,31 @@
 		    }
 		    function DocumentComplete2() {
 		        var URL = encodeURI(pFormHref);
-		        document.getElementById('message2').src = "/ezCommon/mhtToHTMLContent.do?href=" + URL;
-		        document.getElementById('message2').setAttribute("onload", "javascript:FieldsAvailable2();");
+		        try {
+		   	    	var html = "";
+					$.ajax({
+						type : "POST",
+						dataType : "text",
+						async : false,
+						url : "/ezCommon/mhtToHTMLContent.do",
+						data : { href: URL },
+						success: function(result){
+							html = result;
+						}
+					});
+					
+					var doc = document.getElementById('message2').contentWindow.document;
+					doc.open();
+					doc.write(html);
+					doc.close();
+					var message2 = $('message2'); 
+					message2.html(html);
+					FieldsAvailable2();
+		   	    } catch (e) {
+		   	        alert(e.description);
+		   	    }
+		        // document.getElementById('message2').src = "/ezCommon/mhtToHTMLContent.do?href=" + URL;
+		        // document.getElementById('message2').setAttribute("onload", "javascript:FieldsAvailable2();");
 		    }
 		    function btnFileAttach_onclick() {
 		        var ret = openFileAttachUI();

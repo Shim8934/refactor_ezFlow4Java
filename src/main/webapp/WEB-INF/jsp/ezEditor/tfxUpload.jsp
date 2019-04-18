@@ -14,7 +14,7 @@
 				
 				if (strImagePath != undefined && strImagePath != "") {
 					
-					var strLocation = "${sUploadedPath}";
+					var strLocation = "<c:out value='${sUploadedPath}'/>";
 					
 					if(strLocation) {						
 						
@@ -64,6 +64,6 @@
 	</head>
 	<body>
 		<div id="divContentType"><c:out value="${sContentType}"/></div>
-		<div id="divImagePath">${sUploadedPath}</div>
+		<div id="divImagePath"><c:out value="${sUploadedPath}"/></div>
 	</body>
 </html>

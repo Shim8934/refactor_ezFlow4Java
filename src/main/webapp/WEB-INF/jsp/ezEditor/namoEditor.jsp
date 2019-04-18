@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 <html>
@@ -8,9 +9,9 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezEditor/namoEditor/js/namo_scripteditor.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript">
-		var userLang = "${userInfo.lang}";
-		var type = "${type}";
-		var height = "${height}";
+		var userLang = "<c:out value='${userInfo.lang}'/>";
+		var type = "<c:out value='${type}'/>";
+		var height = "<c:out value='${height}'/>";
 		var editorLoadFlag = false;
 		
         function OnInitCompleted(e) {
@@ -147,7 +148,7 @@
             try {
                 CrossEditor.SetBodyValue(Data);
                 if (type == "APPROVAL" || type == "APPROVALG") {
-            		if ("${isUsed}" != "reuse") {
+            		if ("<c:out value='${isUsed}'/>" != "reuse") {
             			Set_CellLocked();
             		}
             	}
@@ -436,10 +437,10 @@
 	<body style="margin: 0px; padding: 0px;">
 	    <script type="text/javascript">
 	        var CrossEditor = new NamoSE("Namo");
-	        var useHTMLMode = "${useHTMLMode}";
-	        var defaultFontFamily = "${defaultFontFamily}";
-			var defaultFontSize = "${defaultFontSize}";
-			var uploadUrl = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
+	        var useHTMLMode = "<c:out value='${useHTMLMode}'/>";
+	        var defaultFontFamily = "<c:out value='${defaultFontFamily}'/>";
+			var defaultFontSize = "<c:out value='${defaultFontSize}'/>";
+			var uploadUrl = "<c:out value='${serverUrl}'/>/ezEditor/namoUpload.do?type=" + type;
 			
 	        if (type == "APPROVAL" || type == "APPROVALG") {
 				CrossEditor.params.Height = height + "px";
