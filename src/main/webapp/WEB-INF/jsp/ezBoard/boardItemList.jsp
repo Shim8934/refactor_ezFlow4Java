@@ -969,8 +969,8 @@
 		        pwidth = pwidth - 127;
 		        var feature = "height=600px,width=355px, status = no, toolbar=no, menubar=no, location=no, resizable=0, top=" + pheigth + ",left = " + pwidth;
 		        feature = feature += GetOpenPosition(355,600);
+				copyboarditem_cross_dialogArguments[1] = CopyItem_onclick_Complete;
 		        window.open("/ezBoard/copyBoardItem.do?itemIDList=" + encodeURIComponent(strItemList) + "&boardID=" + encodeURIComponent(pBoardID) + "&guBun=" + gubun, "", feature, "");
-		        copyboarditem_cross_dialogArguments[1] = CopyItem_onclick_Complete;
 		    }
 		    /* 2019-04-17 홍승비 - 복사 후 좌측 게시물카운트 갱신 */
 		    function CopyItem_onclick_Complete(ret) {

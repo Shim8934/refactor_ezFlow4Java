@@ -191,4 +191,6 @@ public interface EzNewPortalService {
 	public void deleteSlideImage(int tenantId, String companyId, String slideId) throws Exception;
 	//관리자 슬라이드 이미지 포틀릿의 슬라이드 이미지 순서변경
 	public void updateSlideOrder(JSONArray slideList, String companyId,	int tenantId) throws Exception;
+
+	public int getApprovalDoingListCount(String userId, String companyId, int tenantId, String offset, String approvalFlag, String lang) throws Exception;
 }
