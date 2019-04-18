@@ -739,7 +739,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 				
 				String fileName = file.getFileName();
 				int dotPos      = fileName.lastIndexOf(".");
-				String extend   = dotPos == -1 ? ".none" : fileName.substring(dotPos + 1);
+				String extend   = dotPos == -1 ? ".none" : commonUtil.detectPathTraversal(fileName.substring(dotPos + 1));
 				String newName  = webfolderUtil.generateFilePath(extend);
 				String newPath  = ezWebFolderService.getWebFolderDirPath(userInfo.getTenantId()) + newName;
 				File srcFile    = new File(realPath + commonUtil.detectPathTraversal(file.getFilePath()));
@@ -945,7 +945,7 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		String _fileName = CommonUtil.getEncodedFileNameForDownload(userAgent, fileName);
 		String dirPath   = ezWebFolderService.getWebFolderDirPath(tenantId);
 		dirPath          = realPath + dirPath + "temp" + commonUtil.separator;
-		File file        = new File(dirPath + fileName);
+		File file        = new File(dirPath + commonUtil.detectPathTraversal(fileName));
 		
 		if (!file.exists()) {
 			throw new FileNotFoundException(fileName);

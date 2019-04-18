@@ -968,7 +968,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 이달의우수사원메뉴 리스트 호출 함수
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezPersonal/getEmployeeOfMonthList.do", produces = "application/json; charset=utf-8")
+	@RequestMapping(value = "/admin/ezPersonal/getEmployeeOfMonthList.do", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public JSONObject getEmployeeOfMonthList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
 		logger.debug("getEmployeeOfMonthList started");
@@ -1491,7 +1491,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 QuickLink 순서 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezPersonal/updateQuickLinkOrder.do", produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/admin/ezPersonal/updateQuickLinkOrder.do", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject updateQuickLinkOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject jsonParam) throws Exception {
 		logger.debug("updateQuickLinkOrder started");
@@ -1515,7 +1515,7 @@ public class EzPersonalAdminController extends EgovFileMngUtil {
 	 * 초기화면 슬라이디 이미지 순서 변경
 	 */
 	@SuppressWarnings("unchecked")
-	@RequestMapping(value = "/admin/ezPersonal/updateSliderImageOrder.do", produces = "application/json; charset=UTF-8")
+	@RequestMapping(value = "/admin/ezPersonal/updateSliderImageOrder.do", method = RequestMethod.POST, produces = "application/json; charset=UTF-8")
 	@ResponseBody
 	public JSONObject updateSliderImageOrder(@CookieValue("loginCookie") String loginCookie, @RequestBody JSONObject jsonParam) throws Exception {
 		logger.debug("updateSliderImageOrder started");

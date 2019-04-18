@@ -7550,7 +7550,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	 * 전자결재G 포틀릿 결재리스트 표출 Method - 수정버전
 	 * 박종균
 	 */
-	@RequestMapping(value = "/ezApprovalG/getPortletAprList.do")
+	@RequestMapping(value = "/ezApprovalG/getPortletAprList.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Object getPortletAprList(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramData, LoginVO userInfo) throws Exception{
 		logger.debug("getPortletAprList is started");
@@ -7577,7 +7577,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재 포틀릿 결재할 문서 시간 표시 Method
 	 * */
-	@RequestMapping(value = "/ezApprovalG/getPortletApprGapTime.do")
+	@RequestMapping(value = "/ezApprovalG/getPortletApprGapTime.do", method = RequestMethod.POST)
 	@ResponseBody
 	public Object getPortletApprGapTime(@CookieValue("loginCookie") String loginCookie, @RequestBody Map<String, Object> paramData, LoginVO userInfo) throws Exception {
 		logger.debug("getPortletApprGapTime is started.");

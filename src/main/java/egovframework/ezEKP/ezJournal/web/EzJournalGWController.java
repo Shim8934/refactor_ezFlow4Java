@@ -1046,7 +1046,7 @@ public class EzJournalGWController {
     	
 		InputStream stream = null;
 		OutputStream bos = null;
-		String stordFilePathReal = (stordFilePath == null ? "" : stordFilePath);
+		String stordFilePathReal = (stordFilePath == null ? "" : commonUtil.detectPathTraversal(stordFilePath));
 		
 		try {
 		    File cFile = new File(stordFilePathReal);
@@ -1124,7 +1124,7 @@ public class EzJournalGWController {
 					for (int i=0; i<data.length; i++) {
 						String sGUID = commonUtil.detectPathTraversal(data[i].split(":")[0]);
 						String fileName = commonUtil.detectPathTraversal(data[i].split(":")[1]);
-						String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+						String extension = commonUtil.detectPathTraversal(fileName.substring(fileName.lastIndexOf(".") + 1));
 						LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 						
 						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
@@ -1141,7 +1141,7 @@ public class EzJournalGWController {
 					for (int i=0; i<data.length; i++) {
 						String sGUID = commonUtil.detectPathTraversal(data[i].split(":")[0]);
 						String fileName = commonUtil.detectPathTraversal(data[i].split(":")[1]);
-						String extension = fileName.substring(fileName.lastIndexOf(".") + 1);
+						String extension = commonUtil.detectPathTraversal(fileName.substring(fileName.lastIndexOf(".") + 1));
 						LOGGER.debug("sGUID:" + sGUID + ",fileName:" + fileName);
 						
 						File file = new File(pDirPath + commonUtil.separator + filePath + commonUtil.separator + sGUID + "." + extension);
@@ -1202,7 +1202,7 @@ public class EzJournalGWController {
 					String filePath = filePathList.get(i);
 					String fileName = fileNameList.get(i);
 					
-					String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + filePath;
+					String fullFilePath = realPath + uploadFilePath + commonUtil.separator + "uploadFile" + commonUtil.detectPathTraversal(filePath);
 					
 					LOGGER.debug("fullFilePath : " + fullFilePath);
 					

@@ -8286,7 +8286,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 동영상게시판 호출 Method
 	 */
-	@RequestMapping(value = "/ezBoard/boardItemListMovie.do")
+	@RequestMapping(value = "/ezBoard/boardItemListMovie.do", method = RequestMethod.GET)
 	public String boardItemListMovie(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("boardItemListMovie started");
 
@@ -8349,7 +8349,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 게시판 동영상게시물 게시하기 호출 Method
 	 */
-	@RequestMapping(value = "/ezBoard/newBoardItemMovie.do")
+	@RequestMapping(value = "/ezBoard/newBoardItemMovie.do", method = RequestMethod.GET)
 	public String newBoardItemMovie(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("newBoardItemMovie started");
 
@@ -8389,7 +8389,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 동영상게시판 동영상과 썸네일 업로드
 	 */
-	@RequestMapping(value = "/ezBoard/boardMovieUpload.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezBoard/boardMovieUpload.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String MovieUpload(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("MovieUpload started");
@@ -8418,9 +8418,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			String delServerPath = realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", userInfo.getTenantId());
 			String imagePath = "";
 			String s_imagePath = "";
-
-			imagePath = delServerPath + commonUtil.separator + uniqueID;
-			s_imagePath = delServerPath + commonUtil.separator + "s_" + uniqueID;
+			imagePath = commonUtil.detectPathTraversal(delServerPath + commonUtil.separator + uniqueID);
+			s_imagePath = commonUtil.detectPathTraversal(delServerPath + commonUtil.separator + "s_" + uniqueID);
 			File file = new File(imagePath);
 			File file1 = new File(s_imagePath);
 			
@@ -8450,7 +8449,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		strXML.append("<ROOT><NODES>");
 		
-		if (pFileLimit != null && pFileLimit.equals("0") || pFileLimit.equals("")) {
+		if (pFileLimit != null && (pFileLimit.equals("0") || pFileLimit.equals(""))) {
 			pFileLimit = "2";
 		}
 		
@@ -8509,7 +8508,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 동영상게시판 동영상과 썸네일 업로드
 	 */
-	@RequestMapping(value = "/ezBoard/boardMovieThumb.do", produces = "text/xml; charset=utf-8")
+	@RequestMapping(value = "/ezBoard/boardMovieThumb.do", method = RequestMethod.POST, produces = "text/xml; charset=utf-8")
 	@ResponseBody
 	public String MovieThumbUpload(MultipartHttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws Exception {
 		logger.debug("MovieThumbUpload started");
@@ -8517,7 +8516,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		userInfo = commonUtil.userInfo(loginCookie);
 		
 		String pFileLimit = request.getParameter("fileLimit");
-		String thumbnailID = request.getParameter("thumbnailID");
+		String thumbnailID = commonUtil.detectPathTraversal(request.getParameter("thumbnailID"));
 		String realPath = commonUtil.getRealPath(request);
 		String dirPath = "";
 		String serverPath = "";
@@ -8538,7 +8537,7 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		strXML.append("<ROOT><NODES>");
 		
-		if (pFileLimit != null && pFileLimit.equals("0") || pFileLimit.equals("")) {
+		if (pFileLimit != null && (pFileLimit.equals("0") || pFileLimit.equals(""))) {
 			pFileLimit = "2";
 		}
 		
@@ -8569,7 +8568,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 동영상게시판 게시물 호출 Method
 	 */
-	@RequestMapping(value = "/ezBoard/boardItemViewMovie.do")
+	@RequestMapping(value = "/ezBoard/boardItemViewMovie.do", method = RequestMethod.GET)
 	public String boardItemViewMovie(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("boardItemViewMovie started");
 
@@ -8689,7 +8688,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 동영상게시판 동영상정보 가져오기
 	 */
-	@RequestMapping(value = "/ezBoard/getBoardMovieInfo.do")
+	@RequestMapping(value = "/ezBoard/getBoardMovieInfo.do", method = RequestMethod.GET)
 	public void getBoardMovieInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("getBoardMovieInfo started");
 
@@ -8721,7 +8720,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 동영상게시판 앨범수정
 	 */
-	@RequestMapping(value = "/ezBoard/movieAlbumEdit.do")
+	@RequestMapping(value = "/ezBoard/movieAlbumEdit.do", method = RequestMethod.GET)
 	public String movieAlbumEdit() {
 		return "ezBoard/boardMovieAlbumEdit";
 	}
@@ -8729,7 +8728,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	/**
 	 * 동영상게시판 동영상수정
 	 */
-	@RequestMapping(value = "/ezBoard/modifyMovieItem.do")
+	@RequestMapping(value = "/ezBoard/modifyMovieItem.do", method = RequestMethod.GET)
 	public String modifyMovieItem(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model) throws Exception {
 		logger.debug("modifyMovieItem started");
 
@@ -8768,7 +8767,7 @@ public class EzBoardController extends EgovFileMngUtil{
 	}
 
 	/** 동영상게시판 미리보기 호출 */
-	@RequestMapping(value = "/ezBoard/boardItemPreViewMovieContent.do")
+	@RequestMapping(value = "/ezBoard/boardItemPreViewMovieContent.do", method = RequestMethod.GET)
 	public String boardItemPreViewMovieContent(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("boardItemPreViewMovieContent started");
 

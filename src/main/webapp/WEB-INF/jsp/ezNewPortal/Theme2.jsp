@@ -669,7 +669,7 @@
 	
 	function schedule_get_holiday_top() {
 	    $.ajax({
-			type : "POST",
+			type : "GET",
 			dataType : "text",
 			async : true,
 			url : "/ezSchedule/scheduleGetHoliday.do",

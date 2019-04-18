@@ -9,13 +9,13 @@
 		<script type="text/javascript">
 			window.onload = function()
 			{
-				if ("${resultCode}" == "1") {
+				if ("<c:out value='${resultCode}'/>" == "1") {
 					alert("<spring:message code='ezBoard.hyj02'/>");
 					return;
-				} else if ("${resultCode}" == "2") {
+				} else if ("<c:out value='${resultCode}'/>" == "2") {
 					alert("<spring:message code='main.t4000'/>");
 					return;
-				} else if ("${resultCode}" == "3") {
+				} else if ("<c:out value='${resultCode}'/>" == "3") {
 					alert("<spring:message code='ezEmail.lhm29'/>");
 					return;
 				}
@@ -65,6 +65,6 @@
 		</script>
 	</head>
 	<body>		
-		<div id="divImagePath">${sUploadedPath}</div>				
+		<div id="divImagePath"><c:out value="${sUploadedPath}"/></div>
 	</body>
 </html>

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <html>
 	<head>
@@ -101,7 +102,7 @@
 		<script type="text/javascript">
 			// 언어 설정
 			var lang = "";
-			var userLang = "${userInfo.lang}";
+			var userLang = "<c:out value='${userInfo.lang}'/>";
 			
 			switch (userLang) {
 		    	case "1": 
@@ -122,7 +123,7 @@
 	    	}
 			
 			// html 모드 사용 여부 설정
-			var useHTMLMode = "${useHTMLMode}" == "NO" ? false : true;
+			var useHTMLMode = "<c:out value='${useHTMLMode}'/>" == "NO" ? false : true;
 			
 			// 메뉴 설정			
 			var customAlignMenu = ['about','print','undo','redo','text_paste','textFormatCopy','textFormatPaste','link','unlink','image','symbol','horizontal','numbered_list','bullet_list','outdent','indent',
@@ -147,8 +148,8 @@
 	        }
 			
 			// 디폴트 폰트 설정
-			var defaultFontFamily = "${defaultFontFamily}";
-			var defaultFontSize = "${defaultFontSize}";
+			var defaultFontFamily = "<c:out value='${defaultFontFamily}'/>";
+			var defaultFontSize = "<c:out value='${defaultFontSize}'/>";
 			var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 			
 			// 폰트 크기 리스트 설정

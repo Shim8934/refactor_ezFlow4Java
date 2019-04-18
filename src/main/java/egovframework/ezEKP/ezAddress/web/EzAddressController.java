@@ -1204,7 +1204,7 @@ public class EzAddressController{
 	/**
 	 * 그룹주소 멤버 수 구하기
 	 */
-	@RequestMapping(value = "/ezAddress/getGroupAddressMemberCount.do", produces="text/plain; charset=utf-8")
+	@RequestMapping(value = "/ezAddress/getGroupAddressMemberCount.do", method = RequestMethod.GET, produces="text/plain; charset=utf-8")
 	@ResponseBody
 	public String getGroupAddressMemberCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {		
 		logger.debug("getGroupAddressMemberCount started.");

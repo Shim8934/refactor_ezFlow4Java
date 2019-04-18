@@ -2400,8 +2400,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			tempFilePath += strFilePath.substring(strFilePath.lastIndexOf("{"), strFilePath.length());
 			tempFilePath = tempFilePath.substring(0, tempFilePath.lastIndexOf(".") + 1) + "png";
 			
-			File file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath);
-			File s_file = new File(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + tempFilePath);
+			File file = new File(commonUtil.detectPathTraversal(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + strFilePath));
+			File s_file = new File(commonUtil.detectPathTraversal(boardListVO.getRealPath() + boardListVO.getFilePath() + commonUtil.separator + tempFilePath));
 			
 			// 썸네일파일의 고유 ID는 동영상 파일과 같고, 파일명에 's_'가 추가된 .png 파일
 			strFilePath = commonUtil.getUploadPath("upload_board.ROOT", boardListVO.getTenantID()) + commonUtil.separator + boardListVO.getBoardID() + commonUtil.separator + "uploadFile" + boardListVO.getExtensionAttribute5().replace("tempUploadFile", "");
@@ -2409,8 +2409,8 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			tempFilePath += strFilePath.substring(strFilePath.lastIndexOf("{"), strFilePath.length());
 			tempFilePath = tempFilePath.substring(0, tempFilePath.lastIndexOf(".") + 1) + "png";
 			
-			File mvFile = new File(boardListVO.getRealPath() + commonUtil.separator + strFilePath);
-			File s_mvfile = new File(boardListVO.getRealPath() + commonUtil.separator + tempFilePath);
+			File mvFile = new File(commonUtil.detectPathTraversal(boardListVO.getRealPath() + commonUtil.separator + strFilePath));
+			File s_mvfile = new File(commonUtil.detectPathTraversal(boardListVO.getRealPath() + commonUtil.separator + tempFilePath));
 			
 			if(!mvFile.exists()){
 				FileUtils.copyFile(file, mvFile);
@@ -2834,7 +2834,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 		resultXML.append("<NODES>");
 		
 		if (boardItemVO.getMode().equals("boardAttach")) {
-			File file = new File(boardItemVO.getFilePath() + boardItemVO.getConLocation());
+			File file = new File(boardItemVO.getFilePath() + commonUtil.detectPathTraversal(boardItemVO.getConLocation()));
 			
 			String fileExtension = boardItemVO.getConLocation().substring(boardItemVO.getConLocation().lastIndexOf("."));
 			//tempUploadFile을 저장할 때 게시판의 제목으로 저장합니다. 이때 파일명으로 사용할 수 없는 특수문자(8개)가 게시판 제목으로 있을 경우 file을 저장할 수 없어 오류가 발생 
@@ -2843,7 +2843,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 					commonUtil.separator + "{" + UUID.randomUUID().toString() + "}_" + commonUtil.detectPathTraversal(boardItemTitle + fileExtension);
 			long mhtSize = file.length();
 			
-			FileUtils.copyFile(file, new File(boardItemVO.getFilePath() + newFilePath));
+			FileUtils.copyFile(file, new File(commonUtil.detectPathTraversal(boardItemVO.getFilePath()) + newFilePath));
 			
 			resultXML.append("<NODE>");
 			resultXML.append("<ItemID>" + boardItemVO.getItemID() + "</ItemID>");
@@ -2859,7 +2859,7 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			newFilePath = commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", boardItemVO.getTenantID()) +
 					commonUtil.separator + "{" + UUID.randomUUID().toString() + "}" + newFilePath.substring(newFilePath.indexOf("_"));
 			newFilePath = commonUtil.detectPathTraversal(newFilePath);
-			FileUtils.copyFile(new File(boardItemVO.getFilePath() + filePath), new File(boardItemVO.getFilePath() + newFilePath));
+			FileUtils.copyFile(new File(commonUtil.detectPathTraversal(boardItemVO.getFilePath()) + filePath), new File(boardItemVO.getFilePath() + newFilePath));
 			
 			resultXML.append("<NODE>");
 			resultXML.append("<ItemID>" + boardAttachVOs.get(k).getItemID() + "</ItemID>");

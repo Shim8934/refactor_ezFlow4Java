@@ -1219,7 +1219,7 @@ public class EzJournalController extends EgovFileMngUtil {
 	/**
 	 * 업무일지 모든 첨부파일 다운로드
 	 */
-	@RequestMapping(value = "/ezJournal/journalAllAttachDown.do")
+	@RequestMapping(value = "/ezJournal/journalAllAttachDown.do", method = RequestMethod.GET)
 	public void journalAllAttachDown(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("journalAllAttachDown started");
 		

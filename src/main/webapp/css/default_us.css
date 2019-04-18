@@ -3485,6 +3485,15 @@ input[type=range]::-ms-tooltip {display: none;}
 .upage-ul li .srvyInfo03{display:inline-block; width:16px; height:16px; background-position:-32px -110px !important; margin:6px 8px 0px 0px;}
 .upage-ul li .srvyInfo04{display:inline-block; width:16px; height:16px; background-position:-48px -110px !important; margin:6px 8px 0px 0px;}
 
+/* 검색 */
+.searchForm{float:right;font-weight:normal;color:black; position:relative;margin-right:17px;}
+.searchBtn{ position:absolute; right:-19px; top:-2px;}
+.searchinputBox{width:135px;}
+
+/* 유은정 - 메뉴명 개수 | 회사 선택 이미지 위치*/
+.title_bar {margin-left:5px;vertical-align:middle;}
+.title_bar img {vertical-align:sub;}
+
 /* 20190207 조진호 - error page 추가*/
 .error_wrap{ overflow:hidden; border:1px solid #dedede; width:600px; margin:80px auto; padding:80px;}
 .error_wrap p{ margin:0px; padding:0px; font-family:arial; text-align:center;}
@@ -3492,3 +3501,8 @@ input[type=range]::-ms-tooltip {display: none;}
 .error_wrap dt,dd{ margin:0px; padding:0px; letter-spacing:-1px;}
 .error_wrap dt{ font-size:26px; color:#333; padding:0px 0px 5px 0px;}
 .error_wrap dd{color:#666; font-size:18px; padding:0px 0px 0px 0px;}
+
+.tree_admin_dotlist{ background-position:-234px -104px; width:16px; height:16px; display:inline-block; margin: 0px 0px 0px 0px; cursor:pointer;} /* tree 관리자 리스트 도트아이콘 */
+.lnb h2.on + .leftList { visibility: visible; height: auto !important;}
+.lnb .leftList { visibility: hidden; height: 0px !important; list-style-type: none; padding: 0;  margin: 0; width: 100%; overflow: hidden;}
+.lnb .leftList li { padding: 4px 20px; cursor: pointer;}

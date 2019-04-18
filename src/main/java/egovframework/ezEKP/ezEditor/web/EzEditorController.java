@@ -259,9 +259,7 @@ public class EzEditorController extends EgovFileMngUtil {
 		 * letterId + "/images"; }
 		 */
 
-		filePath = commonUtil.detectPathTraversal(filePath);
-
-		File file = new File(realPath + filePath);
+		File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
 		if (!file.exists()) {
 			file.mkdirs();
 		}
@@ -271,7 +269,7 @@ public class EzEditorController extends EgovFileMngUtil {
 
 		writeUploadedFile(multiFile, fileName, realPath + filePath);
 
-		File imageFile = new File(realPath + filePath + commonUtil.separator + fileName);
+		File imageFile = new File(commonUtil.detectPathTraversal(realPath + filePath + commonUtil.separator + fileName));
 
 		if (imageFile.exists()) {
 			// Checking CMYK
@@ -291,7 +289,7 @@ public class EzEditorController extends EgovFileMngUtil {
 				}
 
 				// Stream the image file (the original CMYK image)
-				ImageInputStream input = ImageIO.createImageInputStream(new File(realPath + filePath + commonUtil.separator + fileName));
+				ImageInputStream input = ImageIO.createImageInputStream(imageFile);
 				reader.setInput(input);
 
 				// Read the image raster
@@ -303,7 +301,7 @@ public class EzEditorController extends EgovFileMngUtil {
 				// Fill the new image with the old raster
 				bi.getRaster().setRect(raster);
 			} else {
-				bi = ImageIO.read(new File(realPath + filePath + commonUtil.separator + fileName));
+				bi = ImageIO.read(new File(commonUtil.detectPathTraversal(realPath + filePath + commonUtil.separator + fileName)));
 			}
 
 			width = bi.getWidth();
@@ -321,9 +319,7 @@ public class EzEditorController extends EgovFileMngUtil {
 		BufferedImage img = null;
 
 		try {
-			filename = commonUtil.detectPathTraversal(filename);
-			
-			img = ImageIO.read(new File(filename));
+			img = ImageIO.read(new File(commonUtil.detectPathTraversal(filename)));
 		} catch (Exception e) {
 			result = true;
 		}
@@ -373,9 +369,7 @@ public class EzEditorController extends EgovFileMngUtil {
 			filePath = filePath + commonUtil.separator + today;
 		}
 
-		filePath = commonUtil.detectPathTraversal(filePath);
-		
-		File file = new File(realPath + filePath);
+		File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
 
 		if (!file.exists()) {
 			file.mkdirs();
@@ -428,9 +422,7 @@ public class EzEditorController extends EgovFileMngUtil {
 		}
 		logger.debug("filePath : " + filePath);
 		
-		filePath = commonUtil.detectPathTraversal(filePath);
-
-		File file = new File(realPath + filePath);
+		File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
 		if (!file.exists()) {
 			file.mkdirs();
 		}
@@ -506,9 +498,7 @@ public class EzEditorController extends EgovFileMngUtil {
 			}
 			logger.debug("filePath : " + filePath);
 
-			filePath = commonUtil.detectPathTraversal(filePath);
-			
-			File file = new File(realPath + filePath);
+			File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
 
 			if (!file.exists()) {
 				file.mkdirs();
@@ -519,7 +509,7 @@ public class EzEditorController extends EgovFileMngUtil {
 			try {
 				Decoder decoder = Base64.getDecoder();
 				byte[] imageByte = decoder.decode(fileData);
-				fileOuputStream = new FileOutputStream(realPath + filePath + commonUtil.separator + fileName);
+				fileOuputStream = new FileOutputStream(commonUtil.detectPathTraversal(realPath + filePath + commonUtil.separator + fileName));
 				fileOuputStream.write(imageByte);
 				fileOuputStream.flush();
 
@@ -626,9 +616,7 @@ public class EzEditorController extends EgovFileMngUtil {
 						filePath = filePath + commonUtil.separator + today;
 					}
 
-					filePath = commonUtil.detectPathTraversal(filePath);
-					
-					File file = new File(realPath + filePath);
+					File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
 					if (!file.exists()) {
 						file.mkdirs();
 					}
@@ -639,11 +627,11 @@ public class EzEditorController extends EgovFileMngUtil {
 					writeUploadedFile(multiFile, fileName, realPath + filePath);
 
 					String urlFilePath = filePath + commonUtil.separator + fileName;
-					File imageFile = new File(realPath + urlFilePath);
+					File imageFile = new File(commonUtil.detectPathTraversal(realPath + urlFilePath));
 
 					if (imageFile.exists()) {
 						try {
-							BufferedImage bi = ImageIO.read(new File(realPath + urlFilePath));
+							BufferedImage bi = ImageIO.read(new File(commonUtil.detectPathTraversal(realPath + urlFilePath)));
 							width = bi.getWidth();
 							height = bi.getHeight();
 						} catch (Exception e) {
@@ -756,7 +744,7 @@ public class EzEditorController extends EgovFileMngUtil {
 						String fileName = UUID.randomUUID() + "." + fileType;
 
 						filePath = filePath + commonUtil.separator + today;
-						File file = new File(realPath + filePath);
+						File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
 
 						if (!file.exists()) {
 							file.mkdirs();
@@ -764,7 +752,7 @@ public class EzEditorController extends EgovFileMngUtil {
 
 						Decoder decoder = Base64.getDecoder();
 						byte[] imageByte = decoder.decode(fileData);
-						fileOuputStream = new FileOutputStream(realPath + filePath + commonUtil.separator + fileName);
+						fileOuputStream = new FileOutputStream(commonUtil.detectPathTraversal(realPath + filePath + commonUtil.separator + fileName));
 						fileOuputStream.write(imageByte);
 						fileOuputStream.flush();
 
@@ -807,9 +795,7 @@ public class EzEditorController extends EgovFileMngUtil {
 				}
 				logger.debug("filePath : " + filePath);
 
-				filePath = commonUtil.detectPathTraversal(filePath);
-				
-				File file = new File(realPath + filePath);
+				File file = new File(commonUtil.detectPathTraversal(realPath + filePath));
 
 				if (!file.exists()) {
 					file.mkdirs();

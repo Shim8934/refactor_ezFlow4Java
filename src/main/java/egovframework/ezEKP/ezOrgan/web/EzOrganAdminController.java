@@ -1774,14 +1774,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			serverPath = realPath + commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + userID + commonUtil.separator;
 		}
 		
-		File file = new File(serverPath);
+		File file = new File(commonUtil.detectPathTraversal(serverPath));
 			
 		if (!file.exists()) {
 			file.mkdirs();
 		}
 		
 		if (!mode.equals("TEMP")) {
-			File file1 = new File(tempPath);
+			File file1 = new File(commonUtil.detectPathTraversal(tempPath));
 			
 			if (!file1.exists()) {
 				file1.mkdirs();
@@ -1798,7 +1798,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		
 		try {
 			stream = request.getInputStream();
-			bos = new FileOutputStream(serverPath+fileName);
+			bos = new FileOutputStream(commonUtil.detectPathTraversal(serverPath + fileName));
 			int bytesRead = 0;
 			byte[] buffer = new byte[BUFF_SIZE];
 			
@@ -1826,13 +1826,13 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		//썸네일 생성
         if (mode.equals("PICTURE")) {
         	String thumbnailPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId());
-        	File file2 = new File(serverPath + fileName);
-			File thumbnailFolder = new File(thumbnailPath);
+        	File file2 = new File(commonUtil.detectPathTraversal(serverPath + fileName));
+			File thumbnailFolder = new File(commonUtil.detectPathTraversal(thumbnailPath));
 			if (!thumbnailFolder.exists()) {
 				thumbnailFolder.mkdirs();
 			}
 			
-			File thumbnailFile = new File(thumbnailPath + commonUtil.separator + file2.getName());
+			File thumbnailFile = new File(commonUtil.detectPathTraversal(thumbnailPath + commonUtil.separator + file2.getName()));
 			createThumbnail(file2, thumbnailFile);
         }
 		
@@ -1883,14 +1883,14 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 				serverPath = realPath + commonUtil.getUploadPath("upload_approvalG.SIGNIMGS", userInfo.getTenantId()) + commonUtil.separator + userID + commonUtil.separator;
 			}
 						
-			File file = new File(serverPath);
+			File file = new File(commonUtil.detectPathTraversal(serverPath));
 			
 			if (!file.exists()) {
 				file.mkdirs();
 			}
 			
 			if (!mode.equals("TEMP")) {
-				File file1 = new File(tempPath);
+				File file1 = new File(commonUtil.detectPathTraversal(tempPath));
 				
 				if (!file1.exists()) {
 					file1.mkdirs();
@@ -1898,7 +1898,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 			}
 
 			writeUploadedFile(multiFile, fileName + extension, tempPath);
-			File imageFile = new File(tempPath + fileName + extension);			
+			File imageFile = new File(commonUtil.detectPathTraversal(tempPath + fileName + extension));			
 
 			BufferedImage bi = ImageIO.read(imageFile);
 			/*2018-04-12이효진  bi.getType으로 지정시 color변경되어 TYPE_4BYTE_ABGR로 지정*/
@@ -1908,7 +1908,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 //            bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, null);
             bufferedImage.createGraphics().drawImage(bi, 0, 0, 119, 128, Color.WHITE, null);
             
-            File file2 = new File(serverPath + fileName + "png");
+            File file2 = new File(commonUtil.detectPathTraversal(serverPath + fileName + "png"));
             ImageIO.write(bufferedImage, "png", file2);
             //임시 저장 파일 삭제
             deleteFile(tempPath + fileName + extension);
@@ -1916,12 +1916,12 @@ public class EzOrganAdminController extends EgovFileMngUtil {
             //썸네일 생성
             if (mode.equals("PICTURE")) {
             	String thumbnailPath = realPath + commonUtil.getUploadPath("upload_personal.PHOTOTHUMBNAIL", userInfo.getTenantId());
-    			File thumbnailFolder = new File(thumbnailPath);
+    			File thumbnailFolder = new File(commonUtil.detectPathTraversal(thumbnailPath));
     			if (!thumbnailFolder.exists()) {
     				thumbnailFolder.mkdirs();
     			}
     			
-    			File thumbnailFile = new File(thumbnailPath + commonUtil.separator + file2.getName());
+    			File thumbnailFile = new File(commonUtil.detectPathTraversal(thumbnailPath + commonUtil.separator + file2.getName()));
     			createThumbnail(file2, thumbnailFile);
             }
             
@@ -3641,7 +3641,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 권한관리 팝업관리 리스트 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/getPopUpPermissionsList.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/getPopUpPermissionsList.do", method = RequestMethod.POST, produces = "text/xml;charset=utf-8")
 	@ResponseBody
 	public String getPopUpPermissionsList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 	    logger.debug("getPermissionsPopUpList started.");
@@ -3700,7 +3700,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 권한 등록/삭제
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/saveUserPermissionInfo.do", produces = "text/plain; charset=UTF-8")
+	@RequestMapping(value = "/admin/ezOrgan/saveUserPermissionInfo.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
 	@ResponseBody
 	public String saveUserPermissionInfo(@CookieValue("loginCookie") String loginCookie, String[] cn, String[] extensionAttribute1) throws Exception{
 		logger.debug("saveUserPermissionInfo started.");
@@ -3750,7 +3750,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 권한 추가/수정/삭제
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/saveStoreUserInfo.do", produces = "text/plain; charset=UTF-8")
+	@RequestMapping(value = "/admin/ezOrgan/saveStoreUserInfo.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
 	@ResponseBody
 	public String saveStoreUserPermissionInfo(@CookieValue("loginCookie") String loginCookie, String parentCn, String[] cn, String[] extensionAttribute1) throws Exception{
 		logger.debug("saveStoreUserPermissionInfo started.");
@@ -3802,7 +3802,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 권한관리 삭제 메뉴 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/chooseDeletege.do")
+	@RequestMapping(value = "/admin/ezOrgan/chooseDeletege.do", method = RequestMethod.GET)
 	public String chooseDeletege(HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 
 		String type = (request.getParameter("type") != null ? request.getParameter("type") : "");
@@ -3814,7 +3814,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 겸직관리 겸직등록 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/addJobUserModify.do")	
+	@RequestMapping(value = "/admin/ezOrgan/addJobUserModify.do", method = RequestMethod.GET)
 	public String addJobUserModify(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("addJobUserModify started.");
 
@@ -3858,7 +3858,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 	/**
 	 * 조직도관리 겸직관리 겸직등록 화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezOrgan/addJobCompanyName.do", produces = "text/plain; charset=UTF-8")
+	@RequestMapping(value = "/admin/ezOrgan/addJobCompanyName.do", method = RequestMethod.POST, produces = "text/plain; charset=UTF-8")
 	@ResponseBody
 	public String addJobCompanyName(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("addJobCompanyName started.");
@@ -3877,7 +3877,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		return companyName;
 	}
 
-	@RequestMapping(value = "/admin/ezOrgan/saveUserImagebyTemp.do",produces="application/json;charset=utf-8")
+	@RequestMapping(value = "/admin/ezOrgan/saveUserImagebyTemp.do", method = RequestMethod.POST, produces="application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject saveUserImagebyTemp(@CookieValue("loginCookie") String loginCookie, OrganUserVO vo, HttpServletRequest request, HttpServletResponse response, Locale locale) throws Exception {
 	    logger.debug("saveUserImagebyTemp started.");
@@ -3900,8 +3900,8 @@ public class EzOrganAdminController extends EgovFileMngUtil {
 		result = saveUserInfo(loginCookie, vo, request, response, locale);
 		resultMap.put("status", result);
 		
-		File oldFile =new File(tempFilePath);
-        File newFile =new File(newFilePath);
+		File oldFile =new File(commonUtil.detectPathTraversal(tempFilePath));
+        File newFile =new File(commonUtil.detectPathTraversal(newFilePath));
         
         Path oldFilePathC = Paths.get(tempFilePath);
 
