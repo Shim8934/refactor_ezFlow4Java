@@ -1098,7 +1098,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 기안시 리폼 HTML
 	 */
-	@RequestMapping(value = "/ezApprovalG/reform/draftHtml.do")
+	@RequestMapping(value = "/ezApprovalG/reform/draftHtml.do", method = RequestMethod.GET)
 	public String reformDraftHtml(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws IOException {
 		logger.debug("reformDraftHtml started.");
 		
@@ -1135,7 +1135,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 결재 리폼 HTML
 	 */
-	@RequestMapping(value = "/ezApprovalG/reform/approveHtml.do")
+	@RequestMapping(value = "/ezApprovalG/reform/approveHtml.do", method = RequestMethod.GET)
 	public String reformApproveHtml(HttpServletRequest request, Model model, @CookieValue("loginCookie") String loginCookie, LoginVO userInfo) throws IOException {
 		logger.debug("reformApproveHtml started.");
 		
@@ -1161,7 +1161,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/**
 	 * 전자결재G 폼빌더 useProcessor selectionDialog 페이지
 	 */
-	@RequestMapping(value = "/ezApprovalG/reform/selectionDialog.do")
+	@RequestMapping(value = "/ezApprovalG/reform/selectionDialog.do", method = RequestMethod.GET)
 	public String reformStyleDialog() throws Exception {
 		logger.debug("selectionDialog started.");
 		logger.debug("selectionDialog ended.");
@@ -9183,7 +9183,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/* 
 	 * 회송문서의 철정보를 원문서 정보로 변경
 	 * */
-	@RequestMapping(value = "/ezApprovalG/setHesongCabinetInfo.do")
+	@RequestMapping(value = "/ezApprovalG/setHesongCabinetInfo.do", method = RequestMethod.POST)
 	@ResponseBody
 	public void setHesongCabinetInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("setHesongCabinetInfo started.");
