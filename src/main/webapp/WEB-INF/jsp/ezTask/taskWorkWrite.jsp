@@ -65,7 +65,7 @@
 	                }
 	                catch (e) { }
 				} else {
-					message.SetEditorContent("<P " + defaultFontAndSize + "></P>");
+					message.SetEditorContent("");
 				}
 			}
 			

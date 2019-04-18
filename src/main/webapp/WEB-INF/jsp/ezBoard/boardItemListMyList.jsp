@@ -79,6 +79,7 @@
 	        var SQLPARADATA = "";
 	        var pMode = "new";
 	        var pAdminType = "n";
+	        var Use_OneLineCount = "${use_oneLineCount}";
 	        var pUse_Editor = "${useEditor}";
 	        var pNoneActiveX = "YES";
 	        var starttime;

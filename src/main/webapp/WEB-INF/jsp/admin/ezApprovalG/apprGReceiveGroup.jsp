@@ -250,6 +250,22 @@
 		                } catch (e) {
 		                    subItem.parentElement.removeChild(subItem);
 		                }
+		                
+		                if (lvtDeptSelect.GetDataRows().length <= 0) {
+				        	var objTr = document.createElement("TR");
+				        	objTr.setAttribute("id", "lvtDeptSelForm_TR_noItems");
+				        		
+				        	var oText = document.createTextNode(strLang944);
+				        	var objTd = document.createElement("TD");
+				        	objTd.align = "center";
+				        	
+				        	var colCount = document.getElementById("lvtDeptSelForm").getElementsByTagName("th").length;
+				        	objTd.setAttribute("colSpan", colCount);
+				        	objTd.appendChild(oText);
+				        	objTr.appendChild(objTd);
+				        	
+				        	document.getElementById("lvtDeptSelForm").appendChild(objTr);
+				        }
 		            }
 		        }
 		    }
@@ -282,6 +298,22 @@
 		                    }
 		                }
 		            }
+		            
+		            if (lvtDeptSelect.GetDataRows().length <= 0) {
+			        	var objTr = document.createElement("TR");
+			        	objTr.setAttribute("id", "lvtDeptSelForm_TR_noItems");
+			        		
+			        	var oText = document.createTextNode(strLang944);
+			        	var objTd = document.createElement("TD");
+			        	objTd.align = "center";
+			        	
+			        	var colCount = document.getElementById("lvtDeptSelForm").getElementsByTagName("th").length;
+			        	objTd.setAttribute("colSpan", colCount);
+			        	objTd.appendChild(oText);
+			        	objTr.appendChild(objTd);
+			        	
+			        	document.getElementById("lvtDeptSelForm").appendChild(objTr);
+			        }
 		        }
 		    }
 		    
@@ -322,6 +354,7 @@
 				            //document.getElementById("pGroupID").innerText = "";
 				            document.getElementById("pGroupName2").innerText = "";
 				            document.getElementById("pGroupName").value = "";
+				            lvtDept_SelChange();
 				        }
 		        	}		        	
 		        });
@@ -351,6 +384,7 @@
 				            //pGroupID.innerText = "";
 				            pGroupName2.innerText = "";
 				            pGroupName.value = "";
+				            lvtDept_SelChange();
 				        }
 		        	}		        	
 		        });
@@ -387,6 +421,7 @@
 					            pGroupName2.innerText = "";
 					            pGroupName.value = "";
 					            lvtDeptSelect.DataSource("");
+					            lvtDept_SelChange();
 					        } else {
 					        	//2016-05-13 장진혁과장 -- UI 팝업창 alert로 교체
 					            //OpenAlertUI("<spring:message code='ezApprovalG.t1564'/>");

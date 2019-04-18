@@ -146,7 +146,12 @@
 
         function SetEditorContent(Data) {
             try {
+            	if (Data === "") {
+					Data = "<p " + defaultFontAndSize + "><br></p>";
+				}
+            	
                 CrossEditor.SetBodyValue(Data);
+                
                 if (type == "APPROVAL" || type == "APPROVALG") {
             		if ("<c:out value='${isUsed}'/>" != "reuse") {
             			Set_CellLocked();
@@ -286,7 +291,6 @@
  	            
  	    		var line = data.split("\n");
  	            var textData = "";
- 	            var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
  	            
  	            for (var i = 0; i < line.length; i++) {
  	            	if (line[i].trim() === "") {
@@ -440,6 +444,7 @@
 	        var useHTMLMode = "<c:out value='${useHTMLMode}'/>";
 	        var defaultFontFamily = "<c:out value='${defaultFontFamily}'/>";
 			var defaultFontSize = "<c:out value='${defaultFontSize}'/>";
+			var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 			var uploadUrl = "<c:out value='${serverUrl}'/>/ezEditor/namoUpload.do?type=" + type;
 			
 	        if (type == "APPROVAL" || type == "APPROVALG") {

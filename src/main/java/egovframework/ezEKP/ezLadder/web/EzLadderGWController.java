@@ -674,16 +674,4 @@ public class EzLadderGWController {
 		
 		return result;
 	}
-	
-	private boolean checkExist(String filePath) {		
-		File f = new File(filePath);
-		
-		if (f.exists() && !f.isDirectory()) { 
-			return true;
-		}
-		else {
-			return false;
-		}
-	}
-	
 }

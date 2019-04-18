@@ -829,20 +829,22 @@ public class EzLadderServiceImpl implements EzLadderService {
 		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t004", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
 		bodyContent.append("</div>");
 				
-		// 참여자에게 메일 발송
-		InternetAddress from = new InternetAddress();
-		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-		from.setAddress(userInfo.getEmail());
-		InternetAddress[] toArr = new InternetAddress[cnt];
-		
-		for (int i=0; i<cnt; i++) {
-			OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(receiverID[i].trim(), userInfo.getPrimary(), userInfo.getTenantId());
-						
-			InternetAddress to = new InternetAddress();
-			to.setPersonal(receiverName[i].trim(), "UTF-8");
-			to.setAddress(AccessUserInfo.getMail());
-			toArr[i] = to;
+		if(cnt > 0) {
+			// 참여자에게 메일 발송
+			InternetAddress from = new InternetAddress();
+			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+			from.setAddress(userInfo.getEmail());
+			InternetAddress[] toArr = new InternetAddress[cnt];
+			
+			for (int i=0; i<cnt; i++) {
+				OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(receiverID[i].trim(), userInfo.getPrimary(), userInfo.getTenantId());
+				
+				InternetAddress to = new InternetAddress();
+				to.setPersonal(receiverName[i].trim(), "UTF-8");
+				to.setAddress(AccessUserInfo.getMail());
+				toArr[i] = to;
+			}
+			ezEmailService.sendMail(logCookie, from, toArr, null, null, subject, bodyContent.toString(), false);
 		}
-		ezEmailService.sendMail(logCookie, from, toArr, null, null, subject, bodyContent.toString(), false);
 	}
 }

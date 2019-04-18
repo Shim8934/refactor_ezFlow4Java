@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.HttpRequest;
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -1045,6 +1046,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		logger.debug("draftui ended.");
 
 		return "ezApprovalG/apprGDraftui";
+	}
+	
+	@RequestMapping(value = "/ezApprovalG/getReformFlag.do", method = RequestMethod.GET)
+	@ResponseBody
+	public String getReformFlag(String formHref, HttpServletRequest request) throws Exception {
+		return ezApprovalGService.isReform(formHref) ? "Y" : "N";
 	}
 	
 	/**
@@ -9218,7 +9225,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 	/* 
 	 * 기안창 기안자 부서 정보와 현재 사용자의 부서 정보가 같은지 체크
 	 * */
-	@RequestMapping(value = "/ezApprovalG/checkDeptAndCabinetId.do")
+	@RequestMapping(value = "/ezApprovalG/checkDeptAndCabinetId.do", method = RequestMethod.POST)
 	@ResponseBody
 	public String checkDeptAndCabinetId(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		logger.debug("checkDeptAndCabinetId started.");

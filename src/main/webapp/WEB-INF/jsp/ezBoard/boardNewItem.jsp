@@ -1467,7 +1467,7 @@
 		                        document.getElementById("txtTitle").focus();
 		                    }
 		                    
-		                    message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
+		                    message.SetEditorContent("");
 		                }
 		            } else {
 		                if (pUrl == "") {
@@ -1703,7 +1703,7 @@
 		                else {
 		                    if (OpenWin == null)
 		                        document.getElementById("txtTitle").focus();
-		                    message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
+		                    message.SetEditorContent("");
 		                }
 		
 		                if (pUseBackGround.toUpperCase() == "TRUE") {
@@ -1764,7 +1764,7 @@
 	                else {
 	                    if (OpenWin == null)
 	                        document.getElementById("txtTitle").focus();
-	                    message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
+	                    message.SetEditorContent("");
 	                }
 	
 	                if (pUseBackGround.toUpperCase() == "TRUE") {

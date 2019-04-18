@@ -305,6 +305,19 @@
 	                    // 2018.10.15 필드도 free 속성일 시에 수정 가능하도록 수정
 	                    parent.FieldsAvailable();
 	
+	                    if (parent.pDraftFlag != "REDRAFT" || parent.pFormID !== "") {
+		                    $.ajax({
+			                	type: "GET",
+			                	dataType: "text",
+			                	url: "/ezApprovalG/getReformFlag.do",
+			                	data: { formHref: url },
+			                	async: false,
+			                	success: function (result) {
+			                		isReform = result === "Y";
+			                	}
+			                });
+	                    }
+	                    
 	                    if (parent.pDraftFlag != "REDRAFT") {
   							var Body_innerHTML = "";
 	                        if (document.getElementById("body") != null) {
@@ -612,10 +625,17 @@
 	            for (var i = 0; i < SelectRows.length; i++) {
 	                for (var j = 0; j < SelectRows.item(i).childNodes.length; j++) {
 	                    if (SelectRows.item(i).childNodes.item(j).nodeType == "1") {
-	                        if (SelectRows.item(i).childNodes.item(j).getAttribute("check") == "2")
+	                        /* if (SelectRows.item(i).childNodes.item(j).getAttribute("check") == "2")
 	                            SelectRows.item(i).childNodes.item(j).outerHTML = SelectRows.item(i).childNodes.item(j).outerHTML.replace("option ", "option selected ");
 	                        else {
 	                            SelectRows.item(i).childNodes.item(j).outerHTML = SelectRows.item(i).childNodes.item(j).outerHTML.replace("selected=\"\"", "");
+	                        } */
+	                        //2019-04-08 - 일괄결재로 완료된문서 재사용>임시저장 시, select박스의 option selected속성이 해제되는 현상 수정 #15360
+	                        if (SelectRows.item(i).childNodes.item(j).outerHTML.indexOf("option selected") > -1) {
+	                        	SelectRows.item(i).childNodes.item(j).removeAttribute("selected");
+	                        	SelectRows.item(i).childNodes.item(j).setAttribute("selected", "selected");
+	                        } else {
+	                        	SelectRows.item(i).childNodes.item(j).removeAttribute("selected");
 	                        }
 	                    }
 	                }

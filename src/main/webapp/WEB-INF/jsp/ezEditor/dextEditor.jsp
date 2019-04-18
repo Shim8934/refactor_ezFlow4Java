@@ -339,6 +339,11 @@
 	    	var defaultFontFamily = "<c:out value='${defaultFontFamily}'/>";
 			var defaultFontSize = "<c:out value='${defaultFontSize}'/>";
 			
+			// visible 상관 없이 로드
+			DEXT5.util.DEXT5_CheckEditorVisible = function() {
+				return 1;
+			}
+			
 	        DEXT5.config.DialogWindow = parent.window;
 	        DEXT5.config.RemoveItem = "about";
 	        if (type == "ADMIN") {

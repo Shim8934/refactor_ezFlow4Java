@@ -783,6 +783,12 @@ public class EzResourceAdminController extends EgovFileMngUtil {
 			return "cmm/error/adminDenied";
 		}
 		
+		boolean check = ezResourceAdminService.userResPermissionCheck(xmlStr, userInfo.getTenantId());
+		
+		if(!check) {
+			return "NO";
+		}
+			
 		boolean result = ezResourceAdminService.saveACLLst(xmlStr, userInfo.getTenantId());
 		
 		return String.valueOf(result);

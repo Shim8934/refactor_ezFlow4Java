@@ -21,11 +21,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rng.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/rsa/rsa.js')}"></script>
 		<script  type="text/javascript">
-		    window.onbeforeunload = function () {
-		        try {
-		            window.opener.document.Script.refresh_onclick2();
-		        } catch (e) { }
-		    };
 		    window.offscreenBuffering = true;
 		    var fontSize = new Array("10px", "12px", "15px", "20px", "30px");
 		    var curFontSize = 1;
@@ -57,6 +52,7 @@
 		    var OneLineReplyFlag = "${boardPropertyVO.oneLineReply}";
 		    var commentCount = "${commentCount}";
 			var gubun = "${guBun}";
+			var refreshFlag = "N";
 		    var pUse_Editor = "${useEditor}";
 			var pNoneActiveX = "YES";
 		    //추가항목 유무
@@ -263,6 +259,14 @@
 		
 		    window.onresize = function () {
 				resizeMessageFrame();
+		    };
+		    
+		    /* 2019-04-12 홍승비 - 댓글 갯수 갱신 시 게시물리스트 갱신 */
+			window.onbeforeunload = function () {
+				checkRefreshFlag();
+				if (refreshFlag == "Y") {
+					window.opener.getBoardList();
+				}
 		    };
 		    
 		    /* 2018-12-26 홍승비 - 저해상도 대응을 위해 리사이즈 함수 분리 */
@@ -1133,6 +1137,21 @@
 		        }
 		        window.close();
 		    }
+		    
+		    /* 2019-04-12 홍승비 - 게시물 갱신 조건 체크 */
+		    function checkRefreshFlag () {
+		    	var nowCommentCount = document.getElementById("commentCount").innerText;
+		    	var opnenerHref = window.opener.location.href;
+		    	nowCommentCount = nowCommentCount.substring(nowCommentCount.indexOf("[") + 1, nowCommentCount.indexOf("]"));
+		    	
+		    	// 댓글의 수가 달라졌고, 부모창의 주소가 게시판인 경우(새게시물 제외)에만 플래그값 변경
+		    	if ((commentCount != nowCommentCount) && (window.opener.location.href.indexOf("/ezBoard/") > -1) && (window.opener.location.href.indexOf("boardItemList_new") == -1)) {
+		    		refreshFlag = "Y";
+		    	} else {
+		    		refreshFlag = "N";
+		    	}
+		    }
+		    
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden; height:100%;">
