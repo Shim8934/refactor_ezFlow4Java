@@ -68,7 +68,7 @@ public class EzApprovalGReformController extends EgovFileMngUtil {
 		return result;
 	}
 
-	@RequestMapping(value = "/reform/getEncryptedSQLQuery.do", params = { "sqlQuery" })
+	@RequestMapping(value = "/reform/getEncryptedSQLQuery.do", method = RequestMethod.POST, params = { "sqlQuery" })
 	@ResponseBody
 	public String getEncryptedSQLQuery(HttpServletRequest request) throws Exception {
 		logger.debug("getEncryptedSQLQuery started.");
