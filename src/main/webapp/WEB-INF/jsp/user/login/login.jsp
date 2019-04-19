@@ -235,13 +235,13 @@
 		<div class="login_wrapper">
 			<div class="login_layout">
         		<div class="login_form">	                
-	                <form id="loginForm" name="loginForm" method="post">
+	                <form style="display: inherit;" id="loginForm" name="loginForm" method="post">
 	                	<input type="hidden" name="publicModulus" value="${publicModulus}"/>
 	                	<input type="hidden" name="publicExponent" value="${publicExponent}"/>
 	                	<input type="hidden" name="encryptID" />
 	                	<input type="hidden" name="encryptPass"/>
 	                	
-	                    <fieldset>		                    	
+	                    <fieldset>
 	                    	<p class="logo"><img src="<c:out value='${logoUrl }'/>"></p>   
 	                        <p class="id">
 	                        	<input id="uid" name="id" style="ime-mode:disabled;" class="input_text" type="text" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) document.loginForm.password.focus();" />
@@ -249,20 +249,23 @@
 	                        <p class="pw">
 	                        	<input id="upw" name="password" class="input_text" type="password" onchange="if(this.value.length!=0){this.className='input_text focus'}" onblur="if (this.value.length==0) {this.className='input_text'}else {this.className='input_text focusnot'};" onfocus="this.className='input_text focus'" onKeyPress="if(event.keyCode==13) actionLogin();" />
 	                        </p>	                        
-	                        <img src="/images/kr/login/btn_login.gif" id="LoginButton"  tabindex="3" border="0" class="btn_login" class="btn_login" onclick="javascript:actionLogin()" style="cursor:pointer">
 	                        <p class="saveid">
-	                        	<input type="checkbox" value="" id="checkId" name="checkId" class="inp_checkbox" />
-	                        	<label for="checkId">
-	                        		<span></span>
-	                        		ID Save
+	                        	<input type="checkbox" value="" id="checkId" name="checkId" />
+	                        	<label for="checkId"><span></span>ID Save</label>
+	                        </p>
+	                        <p class="btn_login">
+	                        	<input name="LoginButton" type="submit" id="LoginButton" value="Login" border="0" tabindex="3" class="btn_login" style="display: none;">
+	                        	<label for="LoginButton" class="btn_login" onclick="javascript:actionLogin()" style="cursor:pointer">
+	                        		<span id="LoginBtnSpan" style="font-size:24px;">LOGIN</span>
 	                        	</label>
-	                        </p>	                        	                        
+	                        </p>
+	                        <p class="address">COPYRIGHT (C) KAONI. All RIGHT RESERVED.</p>
 	                    </fieldset>
 	                    <input type="hidden" name="message" value="${message}" />		                    
 				    </form>
-				</div>															
+				</div>	
+				<div class="login_formBg"></div>														
 			</div>
-			<footer style="min-height: 40px"><p style="font-family: Malgun Gothic, Meiryo UI">Copyright &copy; 2000-2018 KAONI  All Rights reserved</p></footer>
 		</div>				
 		<div class="noti_layer" style="position:absolute;top:295px;left:800px;display:none;" id="divCapsLock">
 			<span class="arrow">
