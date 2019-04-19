@@ -238,6 +238,7 @@
 	                SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");	                
 	                var chkPhotoBrd = treeNode.GetNodeData("DATA5");
 	                var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
+		            var orgBoardTitle = document.getElementById("spn_" + pNodeID).title;
 				    var orgItemCount = orgBoardName.substring(orgBoardName.lastIndexOf("(") + 1, orgBoardName.length - 1);
 
 	                if (RedirectBoardID != "") {
@@ -259,7 +260,12 @@
 						},
 						success: function(resultCount) {
 							if (orgItemCount != resultCount) {
-								var newNodeName =  orgBoardName.substr(0, treeNode.NodeName.lastIndexOf("(") + 1) + resultCount + ")";
+								var newNodeName = "";
+								if (resultCount > 0) {
+									newNodeName =  orgBoardTitle + "(" + resultCount + ")";
+								} else {
+									newNodeName =  orgBoardTitle;
+								}
 								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
 							}
 						},

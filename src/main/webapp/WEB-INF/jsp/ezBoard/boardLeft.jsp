@@ -436,6 +436,7 @@
 		            var SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
 		            var chkPhotoBrd = treeNode.GetNodeData("DATA5");
 		            var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
+		            var orgBoardTitle = document.getElementById("spn_" + pNodeID).title;
 				    var orgItemCount = orgBoardName.substring(orgBoardName.lastIndexOf("(") + 1, orgBoardName.length - 1);
 				    
 		            /* 2018-08-07 홍승비 - url게시판 접근 후 window.parent.frames["right"]이 undefined인 경우, 다른 방법으로 게시판 접근 */
@@ -479,7 +480,12 @@
 						},
 						success: function(resultCount) {
 							if (orgItemCount != resultCount) {
-								var newNodeName =  orgBoardName.substr(0, treeNode.NodeName.lastIndexOf("(") + 1) + resultCount + ")";
+								var newNodeName = "";
+								if (resultCount > 0) {
+									newNodeName =  orgBoardTitle + "(" + resultCount + ")";
+								} else {
+									newNodeName =  orgBoardTitle;
+								}
 								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
 							}
 						},
