@@ -1943,11 +1943,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 
         if (scheduleid.equals("")) {
 	        //Set ownername and ownername2
-	        if (scheduletype.equals("1")) {
+	        /*if (scheduletype.equals("1")) {				// 2019-04-15 김민성 - 비서일정 구분을 위해 주석처리함
 	        	ownername = creatorname;
 	        	ownername2 = creatorname2;
 	        }
-	        else if (scheduletype.equals("2") || scheduletype.equals("3")) {
+	        else */
+        	if (scheduletype.equals("2") || scheduletype.equals("3")) {
 	        	String organName = ezOrganService.getPropertyValue(ownerid, "displayname", loginVO.getTenantId());
 	        	
 	        	if (organName.equals(ownername)) {
