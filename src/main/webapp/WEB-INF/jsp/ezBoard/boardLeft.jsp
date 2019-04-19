@@ -435,7 +435,9 @@
 		            var SelectedBoardID = treeNode.GetNodeData("DATA1");
 		            var SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");
 		            var chkPhotoBrd = treeNode.GetNodeData("DATA5");
-		            
+		            var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
+				    var orgItemCount = orgBoardName.substring(orgBoardName.lastIndexOf("(") + 1, orgBoardName.length - 1);
+				    
 		            /* 2018-08-07 홍승비 - url게시판 접근 후 window.parent.frames["right"]이 undefined인 경우, 다른 방법으로 게시판 접근 */
 				  	if (typeof window.parent.frames["right"] == "undefined") {
 						if (chkPhotoBrd == 3) {
@@ -465,6 +467,26 @@
 			                }
 			           }
 					}
+		            
+		            /* 2019-04-19 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신 */
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/getItemCount.do",
+						data : {
+							boardID : SelectedBoardID
+						},
+						success: function(resultCount) {
+							if (orgItemCount != resultCount) {
+								var newNodeName =  orgBoardName.substr(0, treeNode.NodeName.lastIndexOf("(") + 1) + resultCount + ")";
+								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
+							}
+						},
+						error: function() {
+							return;
+						}
+					});
 		        }
 		        catch (e) {
 		            alert(e.description);

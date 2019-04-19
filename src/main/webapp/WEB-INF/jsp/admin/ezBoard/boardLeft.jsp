@@ -237,14 +237,36 @@
 	                SelectedBoardID = treeNode.GetNodeData("DATA1");
 	                SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");	                
 	                var chkPhotoBrd = treeNode.GetNodeData("DATA5");
+	                var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
+				    var orgItemCount = orgBoardName.substring(orgBoardName.lastIndexOf("(") + 1, orgBoardName.length - 1);
 
 	                if (RedirectBoardID != "") {
 	                    if (RedirectBoardGroupID != "") {	                    	
 	                        window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + SelectedBoardParentBoardID + "&tabID=1tab2";
 	                    }
-	                }else{                	
+	                } else {                	
 	                    window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + SelectedBoardID + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + SelectedBoardParentBoardID;
 	                }
+	                
+	                /* 2019-04-19 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신 */
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/getItemCount.do",
+						data : {
+							boardID : SelectedBoardID
+						},
+						success: function(resultCount) {
+							if (orgItemCount != resultCount) {
+								var newNodeName =  orgBoardName.substr(0, treeNode.NodeName.lastIndexOf("(") + 1) + resultCount + ")";
+								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
+							}
+						},
+						error: function() {
+							return;
+						}
+					});
 	            }
 	            catch (e) {
 	                alert(e.description);

@@ -1438,12 +1438,12 @@
 		    				});	
 		                    var htmlData = message.GetEditorContentURL(fullPath);
 		                    message.SetEditorContent(htmlData);
-		                } else {  /* 2019-04-12 홍승비 - 본문이 없는 경우 p태그 안에 br태그 넣어주도록 수정 */
+		                } else {
 		                    if (OpenWin == null){
 		                        document.getElementById("txtTitle").focus();
 		                    }
 		                    
-		                    message.SetEditorContent("<p " + defaultFontAndSize + "><br></p>");
+		                    message.SetEditorContent("");
 		                }
 		            } else {
 		                if (pUrl == "") {

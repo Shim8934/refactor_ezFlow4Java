@@ -804,6 +804,22 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	
 		        		Address[] addresses = null;
 		        		if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL")) {
+		        			// 료비에서 다음과 같은 메일이 와서 메일주소 파싱 시 에러 발생함.
+		        			// 그래서 To, Cc 헤더에서 mailto: 제거하도록 함.
+		        			// To: =?ISO-2022-JP?B?GyRCTj5IdxsoQkhEGyRCNzJHTztZRTkbKEI=?= <mailto:gunma@ryobi-holdings.jp>, 
+		        			// =?ISO-2022-JP?B?GyRCTj5IdyVIJWklcyU5JV0hPCVINzJHTztZRTkbKEI=?= <gunma@ryobi-holdings.jp>
+		        			String[] toHeaders = replyMessage.getHeader("To");
+		        			
+		        			if (toHeaders != null) {
+			        			replyMessage.setHeader("To", toHeaders[0].replace("mailto:", ""));
+		        			}
+		        			
+		        			String[] ccHeaders = replyMessage.getHeader("Cc");
+		        			
+		        			if (ccHeaders != null) {
+			        			replyMessage.setHeader("Cc", ccHeaders[0].replace("mailto:", ""));
+		        			}
+		        			
 							// retrieve the TO addresses from the reply message.
 							addresses = replyMessage.getRecipients(Message.RecipientType.TO);
 							String[] rawHeaders = orgMessage.getHeader("From");
