@@ -149,13 +149,15 @@
 			* [개인근태현황, 부서근태현황] 연차취소신청
 			*/
 			function attitudeCancelAnnual() {
+				var openWin = null;
 				if (CrossYN()) {
-					var OpenWin = window.open("/ezAttitude/attitudeCancelAnnual.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", GetOpenWindowfeature(672, 640));
+					openWin = window.open("/ezAttitude/attitudeCancelAnnual.do?attitudeId=" + attitudeId + "&typeId=" + typeId, "", GetOpenWindowfeature(672, 640));
 					
-					try { OpenWin.focus(); } catch (e) { }
+					try { openWin.focus(); } catch (e) { }
 				} else {
-					rtnValue = window.showModalDialog("/ezAttitude/attitudeCancelAnnual.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", 
+					openWin = window.showModalDialog("/ezAttitude/attitudeCancelAnnual.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", 
 					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
+					try { openWin.focus(); } catch (e) { }
 				}
 				openWin.opener = window.opener;
 				window.close();
