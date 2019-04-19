@@ -73,10 +73,9 @@
 .volumeDiv .volumeBar {width: 80%;}
 .volumeDiv .volumes {text-align:center; margin-top:10px; margin-bottom:5px; font-weight: bold; font-family: dotum;} */
 
-.myBar_red    {background-color: #ff1616     !important;}
-.myBar_orange {background-color: #ff7f00     !important;}
-.myBar_yellow {background-color: #ffb600     !important;}
-.myBar_green  {background-color: #4CAF50     !important;}
+.myBar_red    {background-color: #ff4040     !important;}
+.myBar_orange {background-color: #ff9c00     !important;}
+.myBar_blue   {background-color: #82b9f6     !important;}
 .myBar_white  {background-color: transparent !important;}
 
 .cabSelectConf {width: 50px;}

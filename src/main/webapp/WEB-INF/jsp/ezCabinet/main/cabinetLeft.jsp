@@ -57,10 +57,9 @@
 				</span>
 				<span id="myProgress">
 					<c:choose>
-						<c:when test="${percent > 90}"                 ><span id="myBar" class="mailBar myBar_red"    style="width: ${percent < 100 ? percent : 100}%;"></span></c:when>
-						<c:when test="${percent <= 90 && percent > 70}"><span id="myBar" class="mailBar myBar_orange" style="width: ${percent}%;"                      ></span></c:when>
-						<c:when test="${percent <= 70 && percent > 60}"><span id="myBar" class="mailBar myBar_yellow" style="width: ${percent}%;"                      ></span></c:when>
-						<c:when test="${percent <= 60 && percent > 0}" ><span id="myBar" class="mailBar myBar_green"  style="width: ${percent}%;"                      ></span></c:when>
+						<c:when test="${percent >= 80}"                ><span id="myBar" class="mailBar myBar_red"    style="width: ${percent < 100 ? percent : 100}%;"></span></c:when>
+						<c:when test="${percent >= 70 && percent < 80}"><span id="myBar" class="mailBar myBar_orange" style="width: ${percent}%;"                      ></span></c:when>
+						<c:when test="${percent >   0 && percent < 70}"><span id="myBar" class="mailBar myBar_blue"   style="width: ${percent}%;"                      ></span></c:when>
 						<c:when test="${percent == 0}"                 ><span id="myBar" class="mailBar myBar_white"  style="width: 0%;"                               ></span></c:when>
 					</c:choose>
 				</span>
@@ -286,13 +285,12 @@
 								//userVolElmt.innerHTML   = getFileSize(result["totalUsed"]) + "<span>/ " + result['totalCapacity'] + "MB</span>";
 							}
 							
-							var colorClass = "myBar_green";
+							var colorClass = "mailBar myBar_blue";
 							
 							switch (true) {
-								case percent > 90 : colorClass = "mailBar myBar_red"   ; break;
-								case percent > 70 : colorClass = "mailBar myBar_orange"; break;
-								case percent > 60 : colorClass = "mailBar myBar_yellow"; break;
-								case percent == 0 : colorClass = "mailBar myBar_white" ; break;
+								case percent >= 80 : colorClass = "mailBar myBar_red"   ; break;
+								case percent >= 70 : colorClass = "mailBar myBar_orange"; break;
+								case percent ==  0 : colorClass = "mailBar myBar_white" ; break;
 							}
 							
 							spanElmt.className = colorClass;
