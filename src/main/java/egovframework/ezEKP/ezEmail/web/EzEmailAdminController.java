@@ -2333,7 +2333,7 @@ public class EzEmailAdminController {
 	/**
 	 * 조직도관리 메인화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/adminMailMain.do")
+	@RequestMapping(value = "/admin/ezEmail/adminMailMain.do", method = RequestMethod.GET)
 	public String organMain(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception{
 		logger.debug("adminMailMain started.");
 		LoginVO userInfo = commonUtil.checkAdmin(loginCookie);
@@ -2350,7 +2350,7 @@ public class EzEmailAdminController {
 	/**
 	 * 조직도관리 왼쪽화면 호출 함수
 	 */
-	@RequestMapping(value = "/admin/ezEmail/adminMailLeft.do")
+	@RequestMapping(value = "/admin/ezEmail/adminMailLeft.do", method = RequestMethod.GET)
 	public String organLeft(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		LoginVO user = commonUtil.userInfo(loginCookie);
 		String dotNetIntegration = ezCommonService.getTenantConfig("dotNetIntegration", user.getTenantId());
