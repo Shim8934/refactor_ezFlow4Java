@@ -2659,6 +2659,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ezApprovalGDAO.aprMakeTmp2Ing10(map);	//TBL_APRLINEINFO
 					ezApprovalGDAO.aprMakeTmp2Ing11(map);	//TBL_EXPAPRLINE
 				}
+				//첨부파일 변경내역이 있으면 그 변경 내역을 새로 생성된 문서의 변경내역으로 바꿔준다.
+				ezApprovalGDAO.aprMakeTmp2Ing12(map);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
