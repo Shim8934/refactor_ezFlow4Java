@@ -2504,7 +2504,7 @@
 		            <h2 class="h2_dot"><spring:message code='ezApproval.t334'/></h2>
 		            <table class="content" style="margin-top:4px">
 		                <tr>
-		                    <th><spring:message code='ezApproval.t706'/></th>
+		                    <th><spring:message code='ezApproval.t335'/></th>
 		                    <td>
 		                        <table>
 		                            <tr>
