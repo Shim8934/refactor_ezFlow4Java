@@ -490,6 +490,12 @@
 	            	for (var i = 0 ; i < ItemArray[0].length ; i++) {
 		                SaveSchedule_onClick(cmd, ItemArray[0][i]);
 		            }
+	            	
+	            	// 2019-04-19 김민성 - 자원 동시에 예약 시 모든 자원 예약 후 화면 새로고침 되도록 수정
+	            	if (!setApprovFlag) {
+	        		    window_onUnload();
+	        		    window.close();
+	        		}
 	    	    }
 	        	return check;
 	    	}
