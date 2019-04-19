@@ -47,8 +47,6 @@
 				
 				if (topid != "Top"){
 					companybutton1.style.display = "none";
-					companybutton2.style.display = "none";
-					companybutton3.style.display = "none";
 				}
 				selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 				windowResize();

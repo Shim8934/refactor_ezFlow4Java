@@ -48,12 +48,8 @@
 			
 			function SetEditorContent(Data) {
 				try {
-					if (Data === '' || Data === undefined) {
-						var pTag = document.createElement('p');
-						pTag.style.fontSize = defaultFontSize;
-						pTag.style.fontFamily = defaultFontFamily;
-						
-						console.log('pTag', pTag.outerHTML);
+					if (Data === "") {
+						Data = "<p " + defaultFontAndSize + "><br></p><p " + defaultFontAndSize + "></p>";
 					}
 					
 					if (CKEDITOR.instances.editor1.mode === "source") {
@@ -61,6 +57,7 @@
 					} else {
 						CKEDITOR.instances.editor1.editable().setHtml(Data);
 					}
+					
 	                if (type == "APPROVAL" || type == "APPROVALG") {
 	                	if ("${isUsed}" != "reuse") {
 	                    	Set_CellLocked();
@@ -87,7 +84,6 @@
 	 	            
 	 	    		var line = data.split("\n");
 	 	            var textData = "";
-	 	            var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 	 	            
 	 	            for (var i = 0; i < line.length; i++) {
 	 	            	if (line[i].trim() === "") {
@@ -291,6 +287,7 @@
 			var useHTMLMode = "${useHTMLMode}";
 			var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
+			var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 			var uploadUrl = "/ezEditor/ckSimpleUpload.do?type=" + type;
 			
 			if (type == "APPROVAL" || type == "APPROVALG") {

@@ -270,23 +270,23 @@
 						if (strItemID == "")
 						{
 						    xmlhttp = createXMLHttpRequest();
-							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
+							xmlhttp.open("POST", "/ezBoard/sendPostNotiMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
 							xmlhttp.send();		
 							xmlhttp = null;
 						}
 						if (pMode == "reply")
 						{
 						    xmlhttp = createXMLHttpRequest();
-						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid + "&itemTreeID=" + strUpperItemIDTree, false);
+						    xmlhttp.open("POST", "/ezBoard/sendReplyNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid) + "&itemTreeID=" + encodeURIComponent(strUpperItemIDTree), false);
 						    xmlhttp.send();
 						    xmlhttp = null;
 						}
 						if ("${boardInfo.apprMail_FG}" == "Y") {
 						    xmlhttp = createXMLHttpRequest();
 						    if (pMode != "modify") {
-						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
+						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
 						    } else {
-						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + itemid, false);
+						        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + encodeURIComponent(pBoardID) + "&itemID=" + encodeURIComponent(itemid), false);
 						    }
 						    xmlhttp.send();
 						    xmlhttp = null;
@@ -340,7 +340,7 @@
 		            xhr = new XMLHttpRequest();
 		            xhr.upload.addEventListener("progress", uploadProgress, false);
 		            xhr.addEventListener("load", uploadComplete, false);
-		            xhr.open("POST", "/ezBoard/boardMovieUpload.do?mode=MOVIE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+		            xhr.open("POST", "/ezBoard/boardMovieUpload.do?mode=MOVIE&boardID=" + encodeURIComponent(pBoardID) + "&fileLimit=" + AttachLimit);
 		            xhr.send(fd);
 		            document.getElementById("progdiv").style.display = "";
 		        }
@@ -406,7 +406,7 @@
 		    		return;	
 	            }
 	            
-	            xmlhttp.open("POST", "/ezBoard/boardMovieUpload.do?mode=DEL&boardID=" + pBoardID +"&uniqueID=" + uniqueID, false);
+	            xmlhttp.open("POST", "/ezBoard/boardMovieUpload.do?mode=DEL&boardID=" + encodeURIComponent(pBoardID) +"&uniqueID=" + encodeURIComponent(uniqueID), false);
 	            xmlhttp.send(fd);
 	            
 				pAttachListXml = "";
@@ -461,7 +461,7 @@
 	                    if (!confirm("<spring:message code='ezBoard.t10055'/>"))
 	                        return;
 	                    else {
-                            document.location.href = "/ezBoard/boardNewItem.do?boardID=" + ret[0] + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
+                            document.location.href = "/ezBoard/boardNewItem.do?boardID=" + encodeURIComponent(ret[0]) + "&mode=new&boardName=" + ret[1] + "&bType=SELECT";
 	                    }
 	                }
 	                pBoardID = ret[0];
@@ -472,7 +472,7 @@
 	        }
 		    function GetBoardInfo() {
 		        var xmlhttp_boardinfo = createXMLHttpRequest();
-		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + pBoardID, false);
+		        xmlhttp_boardinfo.open("POST", "/ezBoard/getBoardInfo.do?boardID=" + encodeURIComponent(pBoardID), false);
 		        xmlhttp_boardinfo.send();
 		        if (xmlhttp_boardinfo.status == 200) {
 		            pBoardName = getNodeText(SelectNodes(loadXMLString(xmlhttp_boardinfo.responseText), "BOARDNAME")[0]);

@@ -3503,7 +3503,6 @@ CREATE TABLE `tbl_c_comclose` (
   `CLOSESTATE` varchar(100) CHARACTER SET utf8mb4 DEFAULT NULL,
   `CLOSESTATE2` varchar(100) DEFAULT NULL,
   `TENANT_ID` decimal(22,0) NOT NULL DEFAULT '0',
-  `COMPANYID` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`TENANT_ID`,`C_CLUBNO`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -5413,22 +5412,6 @@ CREATE TABLE `tbl_expendaprline` (
   `COMPANYID` varchar(20) NOT NULL,
   PRIMARY KEY (`TENANT_ID`,`COMPANYID`,`ORGUSERID`,`APRMEMBERSN`,`DOCID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Table structure for table `tbl_ezoms_usercount`
---
-
-DROP TABLE IF EXISTS `tbl_ezoms_usercount`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `tbl_ezoms_usercount` (
-  `SERVERNAME` varchar(50) NOT NULL,
-  `CURRENTUSERNUM` int(11) NOT NULL DEFAULT '0',
-  `FIRSTUSERNUM` int(11) NOT NULL DEFAULT '0',
-  `ADMINEMAIL` tinyblob,
-  PRIMARY KEY (`SERVERNAME`)
-) ENGINE=FEDERATED DEFAULT CHARSET=utf8 CONNECTION='mysql://ezEKP2017:ezflow2018!@211.253.139.136:3306/ezoms/customer_usercount';
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --

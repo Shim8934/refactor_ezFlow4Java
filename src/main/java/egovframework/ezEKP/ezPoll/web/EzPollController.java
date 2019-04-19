@@ -919,6 +919,7 @@ public class EzPollController extends EgovFileMngUtil {
 			for(int i = 0; i < listOfPollUserAndAnswer.size(); i++){
 				if (listOfPollUserAndAnswer.get(i).getUserId().equals(user.getId())) {
 					iterator.remove();
+					break; //다중 투표 시 이미 제거한 상태에서 또 제거하게 되면 에러가 발생하게 되어 추가.
 				}
 			}
 		}

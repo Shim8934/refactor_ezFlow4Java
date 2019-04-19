@@ -1951,7 +1951,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 if (docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().equals("ALL") || docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().equals("none")) {
                 	rtnXML.append("<DATA6>ALL</DATA6>");
                 } else {
-                	if (approvalFlag.equals("S")) {
+                	if (approvalFlag.equals("S") || ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent(), "DisplayName", tenantID) == null) {
                 		rtnXML.append("<DATA6> </DATA6>");
                 	} else {
                 		//ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().toUpperCase() -> toUpperCase() 삭제, 오라클 버전 개발 시 오라클은 mysql과 다르게 대소문자를 구분하기 때문
@@ -23796,6 +23796,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PPARENTCONTID", ParentContID);
 		
 		List<ApprUserContInfoVO> userContlist = ezApprovalGDAO.getUserContTree(map);
+		
+		// tbl_usercont에 다국어가 고려되어 있지 않아서 메시지 프로퍼티로부터 다시 받아 userContName을 set한다. 2019-04-18 임민석
+		for(ApprUserContInfoVO vo : userContlist) {
+			vo.setUserContName(messageSource.getMessage("ezApproval.t848", locale));
+		}
+		
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
         

@@ -381,7 +381,7 @@
 		    function CheckOpinionYN_Complete(Ans) {
 		        DivPopUpHidden();
 		        if (Ans)
-		            openOpinionUI("Display", CheckOpinionYN_Complete_Complete);
+		            openOpinionUI("", CheckOpinionYN_Complete_Complete);
 		        else {
 		            if (pDraftFlag == "SUSIN")
 		                getSusinSNInfo();
@@ -1233,8 +1233,20 @@
 		    }
 		
 		    function btnClose_onclick() {
-		        window.close();
+		    	if (FirstHtml != "") {
+		    		var pInformationContent = "<spring:message code='ezApprovalG.t148'/>" + "<br>" + "<spring:message code='ezApprovalG.t149'/>";
+				    OpenInformationUI(pInformationContent, btnClose_onclick_Complete);
+		    	} else {
+			        window.close();
+		    	}
 		    }
+		    
+		    function btnClose_onclick_Complete(rtn) {
+		    	DivPopUpHidden();
+		        if (rtn)
+		            window.close();	    	
+		    }
+		    
 		    window.onbeforeunload = function () {
 		        try {
 		            if (pAprLineType == "<spring:message code='ezApprovalG.t19'/>")
