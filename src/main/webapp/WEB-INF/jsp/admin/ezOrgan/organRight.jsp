@@ -1793,8 +1793,8 @@
 
 			var windowResize = function() {
 				var doc = window.document;
-				var height = window.innerHeight * 0.8 - 72;
-				doc.getElementById('TreeView').style.height = height + "px";
+				var height = window.innerHeight * 0.8 - 62;
+				doc.getElementById('TreeView').style.height = (height + 9.6) + "px";
 				doc.getElementsByClassName('OrganListView')[0].style.height = (height -63) + "px";
 			}
 
@@ -1955,10 +1955,11 @@
 			</div>
 		</div>	
 		<c:if test="${dotNetIntegration != 'YES'}">
-			<div class="moveWrap" style="width:69%; vertical-align:middle; text-align:center; float:right; border: 1px solid #ddd;background-color: #f8f8fa;">
+			<div class="moveWrap" style="width:69%; vertical-align:middle; text-align:center; float:right; border: 1px solid #ddd;background-color: #f8f8fa; padding:5px 0px;">
 				<span class="upBtn" id="upBtn"><img src="/images/admin/arrowUp.png"/></span>
 				<span class="downBtn" id="downBtn"><img src="/images/admin/arrowDown.png"/></span>
-				<span class="saveBtn" id="saveBtn" name="MoveConfirm"><img src="/images/admin/saveBtn.png"/></span>
+				<span class="btnpositionJsp"><a class="imgbtn" id="saveBtn"><span><spring:message code='ezOrgan.t104' /></span></a></span>
+				<!--<span class="imgbtn" id="saveBtn" ><spring:message code='ezOrgan.t104' /></span>-->
 				<%-- <img style="cursor:pointer;" <spring:message code='ezOrgan.i2' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t102' /></span>
 				<img style="cursor:pointer;" <spring:message code='ezOrgan.i3' />>&nbsp;<span style="padding-top:5px; display: inline-block;"><spring:message code='ezOrgan.t103' /></span>
 				<a class="imgbtn order" name="MoveConfirm"><span onClick="MoveConfirm_onclick()"><spring:message code='ezOrgan.t104' /></span></a> --%>
