@@ -1036,7 +1036,7 @@ public class EzSystemAdminController {
 				.body(moduleSizeVO);
 	}
 	
-	@RequestMapping(value = "/admin/ezSystem/multiLoginManager.do")
+	@RequestMapping(value = "/admin/ezSystem/multiLoginManager.do", method = RequestMethod.GET)
 	public String multiLoginManager(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
 		logger.debug("multiLoginManager started");
 		

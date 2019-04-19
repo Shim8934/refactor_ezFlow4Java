@@ -28,7 +28,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezMemo/jquery.mCustomScrollbar.js')}"></script>
 	    
 		<script type="text/javascript" >
-	        var items = "${resultCount}";
+	        var items = "<c:out value='${resultCount}'/>";
 	        var rightFrame = "";
 	        
 		    window.onresize = function () {
