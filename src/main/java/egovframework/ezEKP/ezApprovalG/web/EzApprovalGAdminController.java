@@ -585,7 +585,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "admin/ezApprovalG/apprGFormMainOther";
 	}
 	
-	@RequestMapping(value = "/admin/ezApprovalG/reformDesignProcessor.do")
+	@RequestMapping(value = "/admin/ezApprovalG/reformDesignProcessor.do", method = RequestMethod.GET)
 	public String reformDesignProcessor(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
 		logger.debug("reformDesignProcessor started.");
 
@@ -624,7 +624,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "admin/ezApprovalG/reform/reformDesignProcessor";
 	}
 	
-	@RequestMapping(value = "admin/ezApprovalG/reformStyleDialog.do")
+	@RequestMapping(value = "admin/ezApprovalG/reformStyleDialog.do", method = RequestMethod.GET)
 	public String reformStyleDialog() throws Exception {
 		logger.debug("reformStyleDialog started.");
 		logger.debug("reformStyleDialog ended.");
@@ -640,7 +640,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "admin/ezApprovalG/reform/reformDataBindControlDialog";
 	}
 	
-	@RequestMapping(value = "admin/ezApprovalG/reformSelectValueDialog.do")
+	@RequestMapping(value = "admin/ezApprovalG/reformSelectValueDialog.do", method = RequestMethod.GET)
 	public String reformSelectValueDialog() throws Exception {
 		logger.debug("reformSelectValueDialog started.");
 		logger.debug("reformSelectValueDialog ended.");
@@ -648,7 +648,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "admin/ezApprovalG/reform/reformSelectValueDialog";
 	}
 	
-	@RequestMapping(value = "admin/ezApprovalG/reformParamControlListDialog.do")
+	@RequestMapping(value = "admin/ezApprovalG/reformParamControlListDialog.do", method = RequestMethod.GET)
 	public String reformParamControlListDialog() throws Exception {
 		logger.debug("reformParamControlListDialog started.");
 		logger.debug("reformParamControlListDialog ended.");
@@ -656,7 +656,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "admin/ezApprovalG/reform/reformParamControlListDialog";
 	}
 	
-	@RequestMapping(value = "admin/ezApprovalG/reformDisplayColumnDialog.do")
+	@RequestMapping(value = "admin/ezApprovalG/reformDisplayColumnDialog.do", method = RequestMethod.GET)
 	public String reformDisplayColumnDialog() throws Exception {
 		logger.debug("reformDisplayColumnDialog started.");
 		logger.debug("reformDisplayColumnDialog ended.");
@@ -958,7 +958,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		return "admin/ezApprovalG/apprGFormPreview";
 	}
 	
-	@RequestMapping(value = "/admin/ezApprovalG/reformPreview.do")
+	@RequestMapping(value = "/admin/ezApprovalG/reformPreview.do", method = RequestMethod.GET)
 	public String reformPreview() throws Exception {
 		logger.debug("reformPreview started.");
 		logger.debug("reformPreview ended.");
