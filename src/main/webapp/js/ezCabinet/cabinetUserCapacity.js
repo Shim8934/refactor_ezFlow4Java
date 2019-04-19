@@ -462,9 +462,16 @@
 			});
 		}
 		else {
+			var barColor = "#82b9f6";
+			switch (true) {
+				case completerate >= 80 : barColor = "#ff4040"    ; break;
+				case completerate >= 70 : barColor = "#ff9c00"    ; break;
+				case completerate ==  0 : barColor = "transparent"; break;
+			}
+			
 			$(".bar[usedrate='" + barID + "']").LineProgressbar({
 				percentage: completerate,
-				fillBackgroundColor: '#3498db',
+				fillBackgroundColor: barColor,
 				backgroundColor: '#EEEEEE',
 				radius: '10px',
 				height: '10px',
