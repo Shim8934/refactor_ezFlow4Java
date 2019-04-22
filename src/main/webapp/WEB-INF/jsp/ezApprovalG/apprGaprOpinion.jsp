@@ -279,7 +279,7 @@
 		</style>
 	</head>
 	<body class="popup">
-	    <h1 style="cursor:move;" onmousedown="layerStart()" onmouseup="layerStop()" onmousemove="layerMove()">
+	    <h1>
 	        <spring:message code='ezApprovalG.t55'/>
 	        <span id="TDHeSongMsg" style="font-size: 8pt; display: none">*
 	            <spring:message code='ezApprovalG.t422'/>
