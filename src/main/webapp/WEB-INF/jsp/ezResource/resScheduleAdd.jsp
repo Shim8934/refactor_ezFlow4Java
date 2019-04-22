@@ -225,7 +225,18 @@
 	            	autoSize: true,
 	            	showOn: "both",
 	            	buttonImage: "/images/ImgIcon/calendar-month.png",
-	            	buttonImageOnly: true
+	            	buttonImageOnly: true,
+	            	onSelect : function(dateText, inst) {
+		            	var startD = new Date(inst.lastVal);
+		            	var endD = new Date($("#Edatepicker").datepicker().val());
+		            	var dateDiff = (endD - startD)/1000/24/60/60;
+		            	
+		            	var nowSDate = dateText.split('-');
+		            	var nowSDate2 = new Date(nowSDate[0], nowSDate[1]-1, nowSDate[2]);
+		            	nowSDate2.setDate(nowSDate2.getDate() + dateDiff);
+
+		            	$("#Edatepicker").datepicker('setDate', nowSDate2);
+		            }
 	        	});
 	        	$("#Edatepicker").datepicker({
 	            	changeMonth: true,
@@ -479,6 +490,12 @@
 	            	for (var i = 0 ; i < ItemArray[0].length ; i++) {
 		                SaveSchedule_onClick(cmd, ItemArray[0][i]);
 		            }
+	            	
+	            	// 2019-04-19 김민성 - 자원 동시에 예약 시 모든 자원 예약 후 화면 새로고침 되도록 수정
+	            	if (!setApprovFlag) {
+	        		    window_onUnload();
+	        		    window.close();
+	        		}
 	    	    }
 	        	return check;
 	    	}

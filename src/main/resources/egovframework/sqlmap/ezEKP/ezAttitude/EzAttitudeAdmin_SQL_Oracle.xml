@@ -168,7 +168,7 @@
 					WHERE
 						TBL_USERMASTER.tenant_id = #tenantId#
 					AND 
-						cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+						cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 				]]>
 				
 				<isNotEmpty prepend="AND" property="companyId">
@@ -241,7 +241,7 @@
 			WHERE
 				TBL_USERMASTER.tenant_id = #tenantId#
 			AND 
-				TBL_USERMASTER.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+				TBL_USERMASTER.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
 				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #companyId#
 		]]>
@@ -705,6 +705,8 @@
 					AND
 						A.company_id = #companyId#
 					AND
+						A.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+					AND
 						(
 							(A.start_date >= to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.start_date <= to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS')) 
 						OR
@@ -785,6 +787,8 @@
 			AND
 				A.company_id = #companyId#
 			AND
+				A.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
 				(
 					(A.start_date >= to_date(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') AND A.start_date <= to_date(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
 				OR
@@ -853,6 +857,8 @@
 				A.tenant_id = #tenantId#
 			AND
 				A.physicaldeliveryofficename = #companyId#
+			AND
+				A.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
 				B.start_date IS NULL
 		]]>
@@ -1234,6 +1240,8 @@
 				A.TENANT_ID = #tenantId#
 			AND
 				A.TYPE_ID = #typeId#
+			AND
+				A.WRITER_ID NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 		]]>
 		<isNotEmpty property="userId">
 			AND
@@ -1338,6 +1346,8 @@
 						(appr_date >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS') 
 						  AND
 						  appr_date <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
+					AND
+						writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 				]]>
 				<isNotEmpty prepend="AND" property="searchUserName">
 					<![CDATA[
@@ -1396,6 +1406,8 @@
 				(appr_date >= TO_DATE(#searchStartDate#, 'YYYY-MM-DD HH24:MI:SS')
 				  AND
 				  appr_date <= TO_DATE(#searchEndDate#, 'YYYY-MM-DD HH24:MI:SS'))
+			AND
+				writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 		]]>
 		<isNotEmpty prepend="AND" property="searchUserName">
 			WRITER_NAME LIKE '%' || #searchUserName# || '%'

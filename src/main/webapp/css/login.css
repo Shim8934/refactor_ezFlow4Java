@@ -3,52 +3,50 @@
 
 * { position:relative;}
 html { height:100%; }
-body {height:100%; margin:0; color:#444444; font-family:Malgun Gothic, Meiryo UI;}
-input,button { margin:0; outline:none; color:#444444; font-family:Malgun Gothic, Meiryo UI; }
+body {height:100%; margin:0;}
+input,button { margin:0; outline:none; color:#4f5964; font-family:Malgun Gothic,"맑은 고딕", Arial, sans-serif  !important; }
 img { border:0 none; vertical-align:top; }
 hr,caption,legend  { display:none; }
 address { font-style:normal; }
 article,aside,canvas,details,footer,header,hgroup,menu,nav,section,summary,address {  display:block; }
 
-.login_body{margin:0px; padding:0px; background-color: white;}
-.login_wrapper{height:786px; vertical-align:top; background:url(/images/kr/login/login_wrapper_bg.png) repeat-x;}
-.login_layout{width:1140px; height:785px; margin:0px auto; padding:0px; background:url(/images/kr/login/login_layout_bg.png) no-repeat center center;}
+.login_body { margin: 0px; padding: 0px; height: 100%; background: url(/images/kr/login/login_layout_bg.png) #c2cacd repeat-x bottom center; z-index: 10; }
+.login_wrapper{width:100%; height:100%; min-height:600px; overflow:hidden;}
+.login_layout { position: absolute; top: 50%; left: 50%; width: 500px; height: 540px; margin: -300px 0px 0px -250px; padding: 0px; }
 
-.login_form {float:right; width:320px; height:365px; margin:205px 150px 0px 0px; padding:0px; background:#FFF; font-family:Malgun Gothic, Meiryo UI; box-shadow: 0 0 50px 5px rgba(0, 0, 0, 0.19);}
+
+.login_form { width: 500px; height: 540px; padding: 0px; background: #FFF; border-radius: 14px; -webkit-border-radius: 14px; -moz-border-radius: 14px; box-shadow: 0px 0px 10px rgba(132,146,153,0.75); font-family: Malgun Gothic,"맑은 고딕", Arial, sans-serif; z-index:10;}
 .login_form .title{width:173px; height:66px; margin:62px auto 30px; padding:0;}
-.login_form form {width:227px; margin:0 auto 24px; padding:0}
-.login_form form fieldset {margin:0; padding:0px 47px; border:0; clear:both;}
+
+.login_form form { width: 340px; margin: 0px auto 24px; padding: 0 }
+.login_form form fieldset {margin:0; padding:0; border:0; clear:both;}
 .login_form legend {visibility:hidden; position:absolute; top:0; left:0; width:1px; height:1px; font-size:0; line-height:0}
 
 .txt_form{width:220px; float:left;}
 
-.logo{width:137px; height:38px; margin:55px auto 50px;}
-.id{width:227px; height:41px; margin:0px 0px 8px 0px; padding:0px 0px 0px 0px; background:url(/images/kr/login/input_bg_id.gif) #f1f1f1 18px center no-repeat; border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;}
-.pw{width:227px; height:41px; margin:0px 0px 15px 0px; padding:0px 0px 0px 0px; background:url(/images/kr/login/input_bg_pw.gif) #f1f1f1 18px center no-repeat; border-radius:5px;-webkit-border-radius:5px;-moz-border-radius:5px;}
-.btn_login {width:227px; height:41px; margin:0px 0px 15px 0px; padding:0px;}
+.logo{width:288px; height:38px; margin:70px auto 56px; text-align:center;}
+.id { width: 306px; height: 55px; margin: 0px auto 15px auto; padding: 0px 0px 0px 0px; background: url(/images/kr/login/input_bg_id.png) #96a4aa 14px center no-repeat; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
+.pw { width: 306px; height: 55px; margin: 0px auto 15px auto; padding: 0px 0px 0px 0px; background: url(/images/kr/login/input_bg_pw.png) #96a4aa 14px center no-repeat; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
+.btn_login  { margin:0px; padding:0px; }
+.login_form .btn_login { display: block; width: 306px; height: 65px; line-height: 65px; margin: 0px auto 0px auto; padding: 0px 0px 0px 0px; background: #1543a9; text-align: center; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; box-sizing: border-box; cursor: pointer; font-size: 24px; color: #fff; }
+.login_form .btn_login:hover { background: #0e2e74; }
+.login_form .btn_login:active { background: #0e2e74; }
 
-#uid {background:url(/images/kr/login/txt_id.gif) no-repeat 0px 14px; width:178px; height:41px; margin:0px 0px 0px 46px; padding:0px 5px 0px 0px; line-height:21px; color:#777; font-size:14px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}
-#upw {background:url(/images/kr/login/txt_pw.gif) no-repeat 0px 14px; width:178px; height:41px;  margin:0px 0px 0px 46px; padding:0px 5px 0px 0px; line-height:21px; color:#777; font-size:14px; border:0px solid #fff; border-radius:5px; -webkit-border-radius:5px; -moz-border-radius:5px;}
+#uid { background: url(/images/kr/login/txt_id.gif) no-repeat 0px 20px; width: 215px; height: 54px; margin: 0px 0px 0px 55px; padding: 0px 5px 0px 5px; color: #ffffff; font-size: 18px; border: 0px solid #fff; border-radius: 0px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
+#upw { background: url(/images/kr/login/txt_pw.gif) no-repeat 0px 20px; width: 215px; height: 54px; margin: 0px 0px 0px 55px; padding: 0px 5px 0px 5px; color: #ffffff; font-size: 18px; border: 0px solid #fff; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; }
 
 .input_text.focus,
-.input_text.focusnot { background:#f1f1f1 !important;}
+.input_text.focusnot { background: #96a4aa !important; }
 
-.saveid {float:right; margin:0px 10px 0px 0px; padding:0px;}
+.saveid { margin: 0px 18px 20px 34px; padding: 0px; }
 .saveid input[type="checkbox"] {display:none;}
-.saveid input[type="checkbox"] + label {color:#000000; font-size:12px; font-family:Malgun Gothic, Meiryo UI; cursor:pointer;}
-.saveid input[type="checkbox"] + label span {display:inline-block;width:14px;height:12px;margin:-2px 5px 0 0;vertical-align:middle;background:url(/images/kr/login/bg_check.png) left top no-repeat;cursor:pointer;}
-.saveid input[type="checkbox"]:checked + label span {background:url(/images/kr/login/bg_check.png) -14px top no-repeat;}
+.saveid input[type="checkbox"] + label {display:inline-block; color:#595757; font-size:16px; cursor:pointer; vertical-align:top;}
+.saveid input[type="checkbox"] + label span {display:inline-block;width:27px;height:28px;margin:-5px 10px 0 0;vertical-align:middle;background:url(/images/kr/login/bg_check.png) left top no-repeat;cursor:pointer;}
+.saveid input[type="checkbox"]:checked + label span {background:url(/images/kr/login/bg_check.png) -34px top no-repeat;}
 
-/*.banner{overflow:hidden; clear:both; list-style:none; margin:56px 0px 30px 0px; padding:0px;}
-.banner li{float:left; font-size:13px; color:#010101; cursor:pointer;}
-.banner li span{display:inline-block; vertical-align:middle;}
-.banner li span.icon{margin:0px 5px 0px 0px; padding:0px;}
-.banner_bar{float:left; width:1px; height:20px; margin:10px 22px; padding:0px;}
+.address {padding-top:55px; color: #aaaaaa; font-size: 12px; text-align:center;}
 
-.help{margin:0px; padding:0px; text-align:center; font-size:12px; color:#a0a0a0; font-family:"맑은고딕", Malgun Gothic, "돋움", Dotum, "굴림", Gulim, Arial, Helvetica, sans-serif; cursor:pointer;}
-.help span{display:inline-block; vertical-align:middle;}
-.help span.icon{margin:0px 5px 0px 0px;}
-.help span.txt{border-bottom:1px solid #a0a0a0;}*/
+.login_formBg { position: absolute; left: 50%; top: 50%; width: 900px; height: 815px; margin: -274px 0px 0px -250px; background: url(/images/kr/login/bg_loginform.png) no-repeat left top; overflow: hidden; z-index: 1; }
 
-footer{font-size:12px; color:darkgray;}
-footer p{margin:20px 0px 0px 0px; padding:0px; text-align:center;}
+footer{font-size:14px; color:#c3c3c3; display: none; }
+footer p{margin:18px 0px 0px 0px; padding:0px; text-align:center;}

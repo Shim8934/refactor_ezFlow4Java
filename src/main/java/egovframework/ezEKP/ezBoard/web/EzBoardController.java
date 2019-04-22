@@ -8799,5 +8799,36 @@ public class EzBoardController extends EgovFileMngUtil{
 		
 		logger.debug("modUpdateDate ended.");
 	}
+
+	/** 2019-04-19 홍승비 - 게시판의 게시물 갯수만을 리턴하는 함수 */
+	@RequestMapping(value = "/ezBoard/getItemCount.do", method = RequestMethod.GET)
+	@ResponseBody
+	public int getItemCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getItemCount started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String boardID = request.getParameter("boardID");
+		int intCount = 0;
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
+		
+		myFavoriteVO.setBoardId(boardID);
+		myFavoriteVO.setUserId(userInfo.getId());
+		myFavoriteVO.setType("1");
+		myFavoriteVO.setTenantID(userInfo.getTenantId());
+		myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
+		
+		if (boardInfo.getGuBun().equals("4")) {
+			intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
+		} else if (boardInfo.getGuBun().equals("5")) {
+			myFavoriteVO.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG());
+			intCount = ezBoardService.getQNABrdTotalItemCount(myFavoriteVO);
+		} else {
+			intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
+		}
+		
+		logger.debug("getItemCount ended.");
+		return intCount;
+	}
 }
 

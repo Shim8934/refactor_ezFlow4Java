@@ -1233,7 +1233,7 @@
 		    }
 		
 		    function btnClose_onclick() {
-		    	if (FirstHtml != "") {
+		    	if (editedFlag) {
 		    		var pInformationContent = "<spring:message code='ezApprovalG.t148'/>" + "<br>" + "<spring:message code='ezApprovalG.t149'/>";
 				    OpenInformationUI(pInformationContent, btnClose_onclick_Complete);
 		    	} else {
@@ -1681,7 +1681,7 @@
 	    			btnClose_onclick();
 		        }
 		    }
-		
+			var editedFlag = false;
 		    function btnEdit_onclick()
 		    {
 		    	if (checkAprState()) {
@@ -1735,6 +1735,7 @@
 		            if (FirstHtml == "")
 		                FirstHtml = beforeHtml;
 			        btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t44'/>";
+			        editedFlag = true;
 		        }
 		        else {
 		            message.Set_EditorInputBodyHTML(modifiOrgBody);
@@ -1831,6 +1832,7 @@
 			}
 		    
 		    function checkAprState() {
+		    	editedFlag = false;
 		    	var result = "";
 		    	
 		    	if (approvalFlag == "S") {
@@ -1851,7 +1853,6 @@
 			    		}
 			    	});
 		    	}
-		    	
 		    	return result == "FALSE" ? true : false;
 		    }
 		    
