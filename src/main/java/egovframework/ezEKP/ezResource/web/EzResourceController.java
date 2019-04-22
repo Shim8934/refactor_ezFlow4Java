@@ -2494,12 +2494,17 @@ public class EzResourceController extends EgovFileMngUtil {
 			userID = request.getParameter("userID");
 		}
 		
+		String deptID = "";
+		if(request.getParameter("deptID") != null) {
+			deptID = request.getParameter("deptID");
+		}
+
 		String brdID = "";
 		if(request.getParameter("brdID") != null) {
 			brdID = request.getParameter("brdID");
 		}
 
-		String result = ezResourceService.userResPermissionCheck(userID, userInfo.getCompanyID(), userInfo.getTenantId(), brdID);
+		String result = ezResourceService.userResPermissionCheck(userID, userInfo.getCompanyID(), userInfo.getTenantId(), brdID, deptID);
 		
 		logger.debug("result : " + result);
 		logger.debug("userResPermissionCheck end");

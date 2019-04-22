@@ -2184,7 +2184,8 @@
 				 and 
 					a.resid = #brdID#
 				 and 
-				 	( a.member_id = #userID# or a.member_id = 'everyone') )
+					 ( a.member_id = #userID# or a.member_id = 'everyone' or a.member_id = #deptID# )
+				 )
 			 ]]>
 	</select>
 </sqlMap>

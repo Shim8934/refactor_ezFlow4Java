@@ -3854,7 +3854,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID) throws Exception {
+	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID, String deptID) throws Exception {
 		logger.debug("userResPermissionCheck start");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -3862,9 +3862,75 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		map.put("brdID", brdID);
+		map.put("deptID", deptID);
 		
 		String result = ezResourceDAO.userResPermissionCheck(map);
 		
+		if(result.equals("1")) {
+			return result;
+		}
+		
+		String deptPath = ezOrganService.getDeptPath(deptID, tenantID);	
+		List<String> deptIds = new ArrayList<String>();
+		Collections.addAll(deptIds, deptPath.split(","));
+		deptIds.remove(0);				// companyID 삭제
+		Collections.reverse(deptIds);
+		deptIds.remove(0);				// 부서 ID 삭제
+		
+		// 상위 부서 권한 체크
+		String newDeptPath = "'" + String.join(",", deptIds).trim().replace(",", "', '") + "'";
+		
+		map.put("v_BRD_UPPER", brdID);
+		map.put("v_PCOMPANYID", companyID);
+		
+		map.put("v_PUSERID", newDeptPath);
+		List<ResGetClsAclListVO> deptAclList = ezResourceDAO.getDeptAcl(map);
+		
+		if(deptAclList.size() > 0) {
+			for(int i=0; i<deptAclList.size(); i++) {
+				if(deptAclList.get(i).getSdaYn().equals("Y")) {
+					return "1";
+				}
+			}
+		}
+		
+		
+		// 사내 겸직 권한 체크
+		List<OrganUserVO> userAddJobList = ezOrganAdminService.getUserAddJobList(userID, "1", tenantID);
+
+		if(userAddJobList.size() > 0) {
+			for(int i=0; i<userAddJobList.size(); i++) {
+				String addJobDeptPath = ezOrganService.getDeptPath(userAddJobList.get(i).getDepartment(), tenantID);
+				List<String> addJobDeptIds = new ArrayList<String>();
+				Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
+				addJobDeptIds.remove(0);				// companyID 삭제
+				Collections.reverse(addJobDeptIds);
+				
+				map.put("deptID", addJobDeptIds.get(0));
+				
+				String result2 = ezResourceDAO.userResPermissionCheck(map);	
+				
+				if(result2.equals("1")) {
+					return result2;
+				}
+				
+				addJobDeptIds.remove(0);			// deptID 삭제
+
+				String newDeptPath2 = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+					
+				map.put("v_PUSERID", newDeptPath2);
+				List<ResGetClsAclListVO> deptAclList2 = ezResourceDAO.getDeptAcl(map);
+				
+				if(deptAclList2.size() > 0) {
+					for(int j=0; j<deptAclList.size(); j++) {
+						if(deptAclList2.get(j).getSdaYn().equals("Y")) {
+							return "1";
+						}
+					}
+				}
+			}
+		}
+
 		logger.debug("userResPermissionCheck end");
 		return result;
 	}

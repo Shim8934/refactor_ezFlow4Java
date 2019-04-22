@@ -89,5 +89,5 @@ public interface EzResourceService {
 	
 	public String isResourceGroupManager(String selectedResourceGroupId, String userId, int tenantId, String companyID) throws Exception;
 	
-	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID) throws Exception;
+	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID, String deptID) throws Exception;
 }
