@@ -1418,6 +1418,10 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 		insert("EzApprovalG.aprMakeTmp2Ing11", map);
 	}
 	
+	public void aprMakeTmp2Ing12(Map<String, Object> map) throws Exception{
+		update("EzApprovalG.aprMakeTmp2Ing12", map);
+	}
+	
 	public int checkTmpDocHasGongRam(Map<String, Object> map) throws Exception{
 		return (int) select("EzApprovalG.checkTmpDocHasGongRam", map);
 	}

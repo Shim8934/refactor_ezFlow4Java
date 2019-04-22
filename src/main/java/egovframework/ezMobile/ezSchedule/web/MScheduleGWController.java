@@ -415,7 +415,7 @@ public class MScheduleGWController extends EgovFileMngUtil {
 			
 			String chkSchedulePublic = ezCommonService.getTenantConfig("chkSchedulePublic", info.getTenantId());
 			
-			if(chkSchedulePublic == "ON") {
+			if(chkSchedulePublic.equals("ON")) {
 				// isPublic =
 			}
 			result.put("isPublic", isPublic);

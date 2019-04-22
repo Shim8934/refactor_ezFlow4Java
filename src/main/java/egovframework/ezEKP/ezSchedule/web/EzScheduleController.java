@@ -1884,11 +1884,12 @@ public class EzScheduleController extends EgovFileMngUtil {
 
         if (scheduleid.equals("")) {
 	        //Set ownername and ownername2
-	        if (scheduletype.equals("1")) {
+	        /*if (scheduletype.equals("1")) {				// 2019-04-15 김민성 - 비서일정 구분을 위해 주석처리함
 	        	ownername = creatorname;
 	        	ownername2 = creatorname2;
 	        }
-	        else if (scheduletype.equals("2") || scheduletype.equals("3")) {
+	        else */
+        	if (scheduletype.equals("2") || scheduletype.equals("3")) {
 	        	String organName = ezOrganService.getPropertyValue(ownerid, "displayname", loginVO.getTenantId());
 	        	
 	        	if (organName.equals(ownername)) {
@@ -3073,8 +3074,11 @@ public class EzScheduleController extends EgovFileMngUtil {
 								//시작시간 00시  설정
 								dtStartCal.set(Calendar.HOUR_OF_DAY, 0);
 								
-								//끝날짜 00시  설정
-								dtEndCal.set(Calendar.HOUR_OF_DAY, 0);
+								//구글은 다음날로 나오므로 하루전 23시 59분으로 설정
+								dtEndCal.add(Calendar.DATE, -1);
+								dtEndCal.set(Calendar.HOUR_OF_DAY, 23);
+								dtEndCal.set(Calendar.MINUTE, 59);
+								
 							}
 						}
 						else {
@@ -3116,15 +3120,14 @@ public class EzScheduleController extends EgovFileMngUtil {
 							if (dtStart.getParameters().toString().indexOf("VALUE=DATE") > -1) { //하루종일
 								info[1] = "1";
 								
-								if (info[0].equals("0")) {
-									dtEndCal.add(Calendar.DATE, 1); //종료일 있을 때에는 다음날로 설정
-								}
 								
 								//시작시간 00시
 								dtStartCal.set(Calendar.HOUR_OF_DAY, 0);
 								
-								//끝날짜 00시
-								dtEndCal.set(Calendar.HOUR_OF_DAY, 0);
+								//구글은 다음날로 나오므로 하루전 23시 59분으로 설정
+								dtEndCal.add(Calendar.DATE, -1);
+								dtEndCal.set(Calendar.HOUR_OF_DAY, 23);
+								dtEndCal.set(Calendar.MINUTE, 59);
 								
 							}
 							else { //시간지정

@@ -178,7 +178,18 @@
 		            autoSize: true,
 		            showOn: "both",
 		            buttonImage: "/images/ImgIcon/calendar-month.gif",
-		            buttonImageOnly: true
+		            buttonImageOnly: true,
+		            onSelect : function(dateText, inst) {
+		            	var startD = new Date(inst.lastVal);
+		            	var endD = new Date($("#Edatepicker").datepicker().val());
+		            	var dateDiff = (endD - startD)/1000/24/60/60;
+		            	
+		            	var nowSDate = dateText.split('-');
+		            	var nowSDate2 = new Date(nowSDate[0], nowSDate[1]-1, nowSDate[2]);
+		            	nowSDate2.setDate(nowSDate2.getDate() + dateDiff);
+
+		            	$("#Edatepicker").datepicker('setDate', nowSDate2);
+		            }
 		        });
 		        $("#Edatepicker").datepicker({
 		            changeMonth: true,

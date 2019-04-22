@@ -3404,6 +3404,8 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			String userDeptPath = deptPathOrgan + ",everyone";
 			
+			logger.debug("accessCheck userDeptPath in web    ::    " + userDeptPath);
+			
 			if (boardType == null || boardType.toUpperCase().equals("")) {
 				boardType = "GENERAL";
 			}
@@ -6259,6 +6261,8 @@ public class EzBoardController extends EgovFileMngUtil{
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("useRunTime", useRunTime);
 		model.addAttribute("useEditor", useEditor);
+		/* 2019-04-12 홍승비 - 마이게시판 댓글갯수 누락 수정 */
+		model.addAttribute("use_oneLineCount", "YES");
 
 		logger.debug("boardItemListMyList ended");
 		return "ezBoard/boardItemListMyList";
@@ -8279,5 +8283,36 @@ public class EzBoardController extends EgovFileMngUtil{
 		logger.debug("modUpdateDate ended.");
 	}
 
+	/** 2019-04-19 홍승비 - 게시판의 게시물 갯수만을 리턴하는 함수 */
+	@RequestMapping(value = "/ezBoard/getItemCount.do", method = RequestMethod.GET)
+	@ResponseBody
+	public int getItemCount(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request) throws Exception {
+		logger.debug("getItemCount started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String boardID = request.getParameter("boardID");
+		int intCount = 0;
+		BoardPropertyVO boardInfo = getBoardInfo(boardID, userInfo);
+		BoardMyFavoriteVO myFavoriteVO = new BoardMyFavoriteVO();
+		
+		myFavoriteVO.setBoardId(boardID);
+		myFavoriteVO.setUserId(userInfo.getId());
+		myFavoriteVO.setType("1");
+		myFavoriteVO.setTenantID(userInfo.getTenantId());
+		myFavoriteVO.setNowDate(commonUtil.getTodayUTCTime(""));
+		
+		if (boardInfo.getGuBun().equals("4")) {
+			intCount = ezBoardService.getThumbNailCount(myFavoriteVO);
+		} else if (boardInfo.getGuBun().equals("5")) {
+			myFavoriteVO.setBoardAdmin_FG(boardInfo.getBoardAdmin_FG());
+			intCount = ezBoardService.getQNABrdTotalItemCount(myFavoriteVO);
+		} else {
+			intCount = ezBoardService.getBrdTotalItemCount(myFavoriteVO);
+		}
+		
+		logger.debug("getItemCount ended.");
+		return intCount;
+	}
+	
 }
 
