@@ -3658,7 +3658,8 @@ public class EzAttitudeController {
 	@ResponseBody
 	public String saveCancelAnnual(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=false)String attitudeId,
-			@RequestParam(required=false)String content) throws Exception {
+			@RequestParam(required=false)String content,
+			@RequestParam(required=false)String reference) throws Exception {
 		LOGGER.debug("saveCancelAnnual started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -3700,5 +3701,66 @@ public class EzAttitudeController {
 		LOGGER.debug("saveCancelAnnual ended");
 		
 		return data;
+	}
+	
+	/**
+	 * 참조자 조직도 호출 Method
+	 */
+	@RequestMapping(value = "/ezAttitude/attitudeSelectReference.do")
+	public String circularSelectAttendant(@CookieValue("loginCookie") String loginCookie, Model model) throws Exception {
+		LOGGER.debug("attitudeSelectReference started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		LOGGER.debug("attitudeSelectReference ended");
+		
+		model.addAttribute("userID", userInfo.getId());
+		model.addAttribute("deptID", userInfo.getDeptID()); //baonk added
+		
+		return "/ezAttitude/attitudeSelectReference";
+	}
+	
+	/**
+	 * 연차취소신청삭제
+	 */
+	@RequestMapping(value="/ezAttitude/deleteCancelAnnual.do" , method= RequestMethod.POST)
+	@ResponseBody
+	public String deleteCancelAnnual(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=false)String attitudeId) throws Exception {
+		LOGGER.debug("deleteCancelAnnual started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/deleteCancelAnnual";
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("attitudeId", attitudeId);
+		
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+
+		LOGGER.debug("deleteCancelAnnual ended");
+		return status;
 	}
 }

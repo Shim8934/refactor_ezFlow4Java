@@ -2848,4 +2848,39 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		return "success";
 	}
+	
+	@Override
+	public int deleteCancelAnnual(String companyId, int tenantId, String attitudeId) throws Exception {
+		LOGGER.debug("deleteCancelAnnual started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		int modAppl = 0;
+		int data = 1;
+		
+		map.put("attitudeId", attitudeId);
+		map.put("attModId", attitudeId);
+		modAppl = ezAttitudeDAO.getAttModApp(map);
+		if (modAppl == 1) {
+			map.put("modappl", "0");
+		} else if (modAppl == 2) {
+			map.put("modappl", "3");
+		}
+		String apprStatus = ezAttitudeDAO.checkCanApplStatus(map);
+		if (apprStatus != null && !apprStatus.equals("0")) {
+			data = 0;
+		} else {
+			/*근태 수정신청 삭제.*/
+			ezAttitudeDAO.delCanAppl(map);
+			/*근태 수정신청이 삭제되고 원본 근태에 대해 수정신청 개수가 0개 일 때 원본 근태를 수정 가능한 상태로 변경.*/
+			ezAttitudeDAO.resetAttModApp(map);
+		}
+
+		LOGGER.debug("deleteCancelAnnual ended");
+		
+		return data;
+	}
 }

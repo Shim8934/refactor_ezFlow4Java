@@ -1898,4 +1898,58 @@
 				)
 		]]>
 	</insert>
+	
+	<select id="ezAttitudeDAO.checkCanApplStatus" parameterClass="Map" resultClass="String">
+		<![CDATA[
+			SELECT
+				appr_status as APPR_STATUS
+			FROM 
+				jmocha.tbl_attitude_annual_canappl
+			where 
+				COMPANY_ID = #companyId#
+			and 
+				TENANT_ID = #tenantId#
+			and
+				ATTITUDE_ID = #attModId#
+		]]>
+		<!-- applCnt가 없으면 제일 큰 거 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
+		<isNotEmpty property="applCnt">
+			and
+				APPL_CNT = #applCnt#
+		</isNotEmpty>
+		<isEmpty property="applCnt">
+			order by
+				APPL_CNT DESC
+			limit 
+				1
+		</isEmpty>
+	</select>
+	
+	<delete id="ezAttitudeDAO.delCanAppl" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM 
+				TBL_ATTITUDE_ANNUAL_CANAPPL
+          	WHERE
+          		TENANT_ID = #tenantId#
+          	AND
+        		COMPANY_ID = #companyId#
+          	AND
+          		ATTITUDE_ID = #attModId#
+          	AND
+          		APPL_CNT = (SELECT 
+          						* 
+          				    FROM
+          				    	(
+          				    	SELECT
+          							MAX(APPL_CNT)
+	          					FROM
+	          						TBL_ATTITUDE_ANNUAL_CANAPPL
+	          					WHERE
+	          						TENANT_ID = #tenantId#
+					          	AND
+					        		COMPANY_ID = #companyId#
+					          	AND
+					          		ATTITUDE_ID = #attModId#)t)
+		]]>
+	</delete>
 </sqlMap>

@@ -154,4 +154,6 @@ public interface EzAttitudeService {
 	
 	public String saveCancelAnnual(String attitudeId, String companyId, int tenantId, String userId, String writerName, String writerName2, String writerTitle , String writerTitle2, 
 			String writerDeptId, String writerDeptName, String writerDeptName2, String delFlag, String content,String offset) throws Exception;
+
+	public int deleteCancelAnnual(String companyId, int tenantId, String attitudeId) throws Exception;
 }

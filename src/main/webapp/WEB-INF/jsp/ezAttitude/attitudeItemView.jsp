@@ -146,7 +146,7 @@
 			}
 			
 			/**
-			* [개인근태현황, 부서근태현황] 연차취소신청
+			* [개인연차현황] 연차취소신청
 			*/
 			function attitudeCancelAnnual() {
 				var openWin = null;
@@ -161,6 +161,38 @@
 				}
 				openWin.opener = window.opener;
 				window.close();
+			}
+			
+			//취소신청삭제
+			function deleteCancelAnnual() {
+				
+				var obj = new Object();
+		    	obj.attitudeId = attitudeId; 
+		    	
+				var delFlag = confirm("<spring:message code='ezAttitude.t160'/>");
+				if (delFlag) {
+					$.ajax({
+						type : "POST",
+						async : true,
+						url : "/ezAttitude/deleteCancelAnnual.do",
+						dataType : "text",
+						data : obj,
+						error: function(xhr, status, error){
+					    	alert("<spring:message code='ezAttitude.t83'/>");
+					    },
+					    success : function(json){
+					    	if (json == "error") {
+					    		alert("<spring:message code='ezAttitude.t175'/>");
+					    	}
+				            try {
+				            	window.opener.getUserAnnualList();
+								window.opener.parent.frames["left"].getAttitudeList();
+				            } catch (e) { 
+				            }
+				            window.close();
+					    }
+					})
+				}
 			}
 		</script>
 	</head>
@@ -203,7 +235,14 @@
 	            	<c:if test="${userId == attitudeInfo.writerId}">
 	            		<c:choose>
 	            			<c:when test="${attitudeInfo.typeId == 'A11' || attitudeInfo.typeId == 'A12' || attitudeInfo.typeId == 'A13'}">
-	            				<a class="imgbtn"><span onclick="attitudeCancelAnnual()">취소신청</span></a>
+	            				<c:choose>
+	            					<c:when test="${attitudeInfo.modAppl == '0'}">
+	            						<a class="imgbtn"><span onclick="attitudeCancelAnnual()">취소신청</span></a>
+                       				</c:when>
+                       				<c:otherwise>
+                       					<a class="imgbtn"><span onclick="deleteCancelAnnual()">삭제</span></a>
+                       				</c:otherwise>
+                        		</c:choose>
                        		</c:when>
                        		<c:otherwise>
 								<a class="imgbtn"><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.t162'/></span></a>

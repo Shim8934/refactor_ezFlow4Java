@@ -2504,4 +2504,41 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/saveCancelAnnual] ended.");
 		return result;
 	}
+	
+	/**
+	 * G/W 근태관리 [DELETE] 연차취소신청 삭제
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/deleteCancelAnnual", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteCancelAnnual(@PathVariable String userId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="attitudeId", required=false) String attitudeId) {
+			
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deleteCancelAnnual] started.");
+		
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		JSONObject attJson = new JSONObject();
+		
+		int status = 0;
+		
+		try{
+			status = ezAttitudeService.deleteCancelAnnual(companyId, tenantId, attitudeId);
+			
+			if (status == 1) {
+				result.put("status", "ok");
+			} else {
+				result.put("status", "error");
+			}
+			result.put("code", 0);
+			result.put("data", status);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", status);
+		}
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deleteCancelAnnual] ended.");
+		return result;
+	}
 }

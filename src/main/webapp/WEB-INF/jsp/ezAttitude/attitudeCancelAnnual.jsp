@@ -58,9 +58,28 @@
 		    }
 			
 			function setHtml() {
+				var tempHtml = "";
+				tempHtml += "<tr>";
+				tempHtml += "<th rowspan='2' style='border-bottom:0px'>참조자</th>";
+				tempHtml += "<td colspan='7' id ='itemList' style='padding-left:2px;'>";
+				tempHtml += "<a class='imgbtn imgbck'><span id='clickbtn' onclick='_manage_attendant()'>선택</span></a>";
+				tempHtml += "</td>";
+				tempHtml += "</tr>";
+				tempHtml += "<tr>";
+				tempHtml += "<td colspan='3' id ='itemList' style='border-bottom:0px'>";
+				tempHtml += "<input name='Input' id='receiverinput' style='WIDTH: 100%;-moz-box-sizing:border-box;box-sizing:border-box; display:none;' onkeyup='return on_keydown(event)'>";
+				tempHtml += "<div id='receiverlist' style='OVERFLOW-Y: auto; HEIGHT: 28px; display: inline;'></div>";
+				tempHtml += "<div id='receiverlist2' style='OVERFLOW-Y: auto; HEIGHT: 17px; display:none;'></div>";
+				tempHtml += "<div id='receiverID' style='OVERFLOW-Y: auto; HEIGHT: 17px; display:none;'></div>";
+				tempHtml += "</td>";
+				tempHtml += "</tr>";
+				
+				
 				$("#attiInfoView").append(formHtml);
 				
 				$("#attiInfoView tr td *").remove();
+				
+				$("#attiInfoView").append(tempHtml);
 				
 				//유형명
             	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&#39;", "'"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
@@ -98,6 +117,7 @@
 				var obj = new Object();
 				obj.attitudeId = attitudeId;
 		    	obj.content = message.GetEditorContent();
+		    	obj.reference = g_attendant;
 				$.ajax({
 					type : "POST",
 					async : true,
@@ -132,6 +152,119 @@
 				window.open(szUrl, "", "top=" + pTop.toString() + ", left=" + pLeft.toString() + ", height=" + conHeight + "px, width=890px, status=no, toolbar=no, menubar=no, location=no, resizable=1");
 				window.close();
 			}
+			
+			function _manage_attendant() {
+			    check_name("attendant");
+			}
+			
+			var g_attendant = null;
+			var namelength = 0;
+			var checknametype = "";
+			var schedule_select_attendant_dialogArguments = new Array();
+			function check_name(type) {
+			    if (type != undefined)
+			        checknametype = type;
+			    else
+			        checknametype = "";
+
+			    var name = document.getElementById("receiverinput").value;
+			    name = ReplaceText(name, ",", ";");
+
+			    var names = name.split(";");
+			    namelength = names.length;
+
+			    for (; i < names.length; i++) {
+			        names[i] = TrimText(names[i]);
+
+			        if (names[i] == "")
+			            continue;
+
+			        var adCount = 0;        
+			        var xmlDOM = createXmlDom();
+			        
+			        $.ajax({
+			    		type : "POST",
+			    		dataType : "text",
+			    		async : false,
+			    		url : "/ezOrgan/getSearchList.do",
+			    		data : {
+			    			search : "displayName::" + names[i],
+			    			cell   : "company;description;title;displayName;mail",
+			    			prop   : "displayName;description",
+			    			type   : "user"
+			    		},
+			    		success: function(xml){
+			    			xmlDOM = loadXMLString(xml);
+			                adCount = xmlDOM.getElementsByTagName("ROW").length;    			
+			    		}    		
+			    	});
+
+			        if (adCount == 0) {
+			            alert("'" + names[i] + "'" + strLang21);
+			            continue;
+			        } else if (adCount == 1) {
+			            if (g_attendant == null)
+			                g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
+
+			            if (getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]) != userid) {
+			                var length = g_attendant["name"].length;
+
+			                for (var j = 0; j < length; j++) {
+			                    if (g_attendant["id"][j] == getNodeText(xmlDOM.getElementsByTagName("DATA2")[0])) {
+			                        alert(strLang22);
+			                        return;
+			                    }
+			                }
+			            } else {
+			                alert(strLang24);
+			                return;
+			            }
+
+			            g_attendant["name"][length] = getNodeText(GetChildNodes(SelectNodes(xmlDOM, "LISTVIEWDATA/ROWS/ROW")[0])[3])
+			            g_attendant["id"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA2")[0]);
+			            g_attendant["deptname"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA7")[0]);
+			            g_attendant["name1"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA5")[0]);
+			            g_attendant["name2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA6")[0]);
+			            g_attendant["deptname2"][length] = getNodeText(xmlDOM.getElementsByTagName("DATA8")[0]);
+
+			            if (length == 0) {
+			            	document.getElementById("receiverlist").innerHTML = g_attendant["name"][length];
+			            	document.getElementById("receiverlist2").innerHTML = g_attendant["name2"][length];            	
+			            }
+			            else {
+			            	document.getElementById("receiverlist").innerHTML += ", " + g_attendant["name"][length];
+			            	document.getElementById("receiverlist2").innerHTML += ", " + g_attendant["name2"][length];
+			            }
+			        } else {
+			            var rgParams = new Array();
+			            rgParams["addrBook"] = xmlDOM;
+			            rgParams["name"] = "";
+			            rgParams["id"] = "";
+			            rgParams["deptname"] = "";
+			            rgParams["name1"] = "";
+			            rgParams["name2"] = "";
+			            rgParams["deptname2"] = "";
+
+			            checkname_cross_dialogArguments[0] = rgParams;       
+			            checkname_cross_dialogArguments[1] = check_name_Complete;
+			            DivPopUpShow(610, 293, "/ezSchedule/checkName.do");
+			            i++;
+			            return;
+			        }
+			    }
+			    document.getElementById("receiverinput").value = "";
+			    i = 0;
+			    if (checknametype != "")
+			        manage_attendant_after();
+			}
+			
+			function manage_attendant_after() {
+			    schedule_select_attendant_dialogArguments[0] = g_attendant;
+			    schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
+
+			    GetOpenWindow("/ezAttitude/attitudeSelectReference.do", "schedule_select_attendant", 970, 680);
+			}
+			
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden;">
@@ -171,7 +304,7 @@
 	            </table>
 	            <div class="btnpositionNew" id="menuTable">
 	            	<c:if test="${userId == attitudeInfo.writerId}">
-						<a class="imgbtn"><span onclick="saveCancelAnnual();">취소신청</span></a>
+						<a class="imgbtn"><span onclick="saveCancelAnnual();">저장</span></a>
 					</c:if>
 	            </div>
 	        </div>

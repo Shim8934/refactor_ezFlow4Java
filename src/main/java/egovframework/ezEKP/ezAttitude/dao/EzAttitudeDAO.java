@@ -416,4 +416,12 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		insert("ezAttitudeDAO.saveCancelAnnual", map);
 	}
     
+    @SuppressWarnings("unchecked")
+    public String checkCanApplStatus(Map<String, Object> map) throws Exception {
+    	return (String) select("ezAttitudeDAO.checkCanApplStatus", map);
+    }
+    
+    public void delCanAppl(Map<String, Object> map) throws Exception {
+		delete("ezAttitudeDAO.delCanAppl", map);
+	}
 }
