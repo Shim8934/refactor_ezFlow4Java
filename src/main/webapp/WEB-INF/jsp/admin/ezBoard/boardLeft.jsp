@@ -283,10 +283,14 @@
 	                SelectedBoardID = treeNode.GetNodeData("DATA1");
 	                SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");	                
 	                var chkPhotoBrd = treeNode.GetNodeData("DATA5");
-	                var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
-		            var orgBoardTitle = document.getElementById("spn_" + pNodeID).title;
-				    var orgItemCount = orgBoardName.substring(orgBoardName.lastIndexOf("(") + 1, orgBoardName.length - 1);
-
+		            var orgBoardTitle = treeNode.GetNodeData("DATA2"); // personalizedPortal용 변수 설정
+		            var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
+				    var orgItemCount = orgBoardName.substring(orgBoardTitle.length + 1, orgBoardName.length);
+				    
+				    if (orgBoardTitle == orgBoardName) {
+				    	orgItemCount = 0;
+				    }
+				    
 	                if (RedirectBoardID != "") {
 	                    if (RedirectBoardGroupID != "") {	                    	
 	                        window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&tabID=1tab2";
@@ -308,9 +312,9 @@
 							if (orgItemCount != resultCount) {
 								var newNodeName = "";
 								if (resultCount > 0) {
-									newNodeName =  orgBoardTitle + "(" + resultCount + ")";
+									newNodeName = orgBoardTitle + " " + resultCount;
 								} else {
-									newNodeName =  orgBoardTitle;
+									newNodeName = orgBoardTitle;
 								}
 								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
 							}
