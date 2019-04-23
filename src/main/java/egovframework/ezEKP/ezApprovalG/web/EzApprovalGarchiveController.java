@@ -1405,11 +1405,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
 		String Subject = request.getParameter("Subject");
 		String Content = request.getParameter("Content");
         boolean flag;
-		StringBuilder bodyContent = new StringBuilder();
-        
-        bodyContent.append(Content);
         
         String content = commonUtil.createNotiMailContent(Content, userInfo.getTenantId(), userInfo.getLocale()); 
+        
     	InternetAddress from = new InternetAddress();
     	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
     	from.setAddress(userInfo.getEmail());
@@ -1429,7 +1427,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
     		flag = false;
     	}
     	
-    	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to1}, null, null, Subject, Content, flag);
+    	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to1}, null, null, Subject, content, flag);
     	
     	logger.debug("mail_intersend ended");
 	}
