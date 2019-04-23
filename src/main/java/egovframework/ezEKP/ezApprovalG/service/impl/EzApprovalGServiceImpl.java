@@ -25743,6 +25743,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		for (int i=0; i < doc.body().getElementsByTag("body").size(); i++) {
 			for (int j=0; j< doc.body().getElementsByTag("body").get(i).childNodeSize(); j++) {
 				org.jsoup.nodes.Node childNode2 = doc.body().getElementsByTag("body").get(i).childNode(j);
+				org.jsoup.nodes.Node parentNode = childNode2.parentNode();
+				String parentNodeStyle = parentNode.attr("style");
 				
 				if (doc.body().getElementsByTag("body").get(i).childNode(j).nodeName().equals("#text")) {
 					String parentText = doc.select(childNode2.parent().nodeName()).text();
@@ -25752,45 +25754,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						Element el = doc.createElement("p");
 						el.text(tempContext);
 						
-						if (childNode2.parentNode().hasAttr("style")) {
-							if (childNode2.parentNode().attr("style").indexOf("font-family") > -1) {
-								style.append(childNode2.parentNode().attr("style").toString().substring(childNode2.parentNode().attr("style").toString().indexOf("font-family"), childNode2.parentNode().attr("style").toString().indexOf(";", childNode2.parentNode().attr("style").toString().indexOf("font-family"))+1));
+						if (parentNode.hasAttr("style")) {
+							if (parentNodeStyle.indexOf("font-family") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("font-family"), parentNodeStyle.indexOf(";", parentNodeStyle.indexOf("font-family")) + 1));
 							}
-						}
-						
-						if (childNode2.parentNode().hasAttr("style")) {
-							if (childNode2.parentNode().attr("style").toLowerCase().indexOf("font-size") > -1) {
-								style.append(childNode2.parentNode().attr("style").toString().toLowerCase().substring(childNode2.parentNode().attr("style").toString().toLowerCase().indexOf("font-size"), childNode2.parentNode().attr("style").toString().indexOf(";", childNode2.parentNode().attr("style").toString().toLowerCase().indexOf("font-size"))+1));
+							if (parentNodeStyle.toLowerCase().indexOf("font-size") > -1) {
+								style.append(parentNodeStyle.toLowerCase().substring(parentNodeStyle.toLowerCase().indexOf("font-size"), parentNodeStyle.indexOf(";", parentNodeStyle.toLowerCase().indexOf("font-size")) + 1));
 							}
-						}
-						
-						if (childNode2.parentNode().hasAttr("style")) {
-							if (childNode2.parentNode().attr("style").indexOf("font-style") > -1) {
-								style.append(childNode2.parentNode().attr("style").toString().substring(childNode2.parentNode().attr("style").toString().indexOf("font-style"), childNode2.parentNode().attr("style").toString().indexOf(";", childNode2.parentNode().attr("style").toString().indexOf("font-style"))+1));
+							if (parentNodeStyle.indexOf("font-style") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("font-style"), parentNodeStyle.indexOf(";", parentNodeStyle.indexOf("font-style")) + 1));
 							}
-						}
-						
-						if (childNode2.parentNode().hasAttr("style")) {
-							if (childNode2.parentNode().attr("style").indexOf("font-weight") > -1) {
-								style.append(childNode2.parentNode().attr("style").toString().substring(childNode2.parentNode().attr("style").toString().indexOf("font-weight"), childNode2.parentNode().attr("style").toString().indexOf(";", childNode2.parentNode().attr("style").toString().indexOf("font-weight"))+1));
+							if (parentNodeStyle.indexOf("font-weight") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("font-weight"), parentNodeStyle.indexOf(";", parentNodeStyle.indexOf("font-weight")) + 1));
 							}
-						}
-						
-						if (childNode2.parentNode().hasAttr("style")) {
-							if (childNode2.parentNode().attr("style").indexOf("text-align") > -1) {
-								style.append(childNode2.parentNode().attr("style").toString().toLowerCase().substring(childNode2.parentNode().attr("style").toString().indexOf("text-align"), childNode2.parentNode().attr("style").toString().indexOf(";", childNode2.parentNode().attr("style").toString().indexOf("text-align"))+1));
+							if (parentNodeStyle.indexOf("text-align") > -1) {
+								style.append(parentNodeStyle.toLowerCase().substring(parentNodeStyle.indexOf("text-align"), parentNodeStyle.indexOf(";", parentNodeStyle.indexOf("text-align")) + 1));
 							}
-						}
-						
-						if (childNode2.parentNode().hasAttr("style")) {
-							if (childNode2.parentNode().attr("style").indexOf("text-indent") > -1) {
-								style.append(childNode2.parentNode().attr("style").toString().substring(childNode2.parentNode().attr("style").toString().indexOf("text-indent"), childNode2.parentNode().attr("style").toString().indexOf(";", childNode2.parentNode().attr("style").toString().indexOf("text-indent"))+1));
+							if (parentNodeStyle.indexOf("text-indent") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("text-indent"), parentNodeStyle.indexOf(";", parentNodeStyle.indexOf("text-indent")) + 1));
 							}
-						}
-						
-						if (childNode2.parentNode().hasAttr("style")) {
-							if (childNode2.parentNode().attr("style").indexOf("text-decoration") > -1) {
-								style.append(childNode2.parentNode().attr("style").toString().substring(childNode2.parentNode().attr("style").toString().indexOf("text-decoration"), childNode2.parentNode().attr("style").toString().indexOf(";", childNode2.parentNode().attr("style").toString().indexOf("text-decoration"))+1));
+							if (parentNodeStyle.indexOf("text-decoration") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("text-decoration"), parentNodeStyle.indexOf(";", parentNodeStyle.indexOf("text-decoration")) + 1));
 							}
 						}
 						
@@ -25803,49 +25787,50 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		for (int i=0; i < doc.body().getElementsByTag("div").size(); i++) {
-			for (int j=0; j< doc.body().getElementsByTag("div").get(i).childNodeSize(); j++) {
-				org.jsoup.nodes.Node parentNode = doc.body().getElementsByTag("div").get(i);
-				if (doc.body().getElementsByTag("div").get(i).childNode(j).nodeName().equals("#text")) {
+			org.jsoup.nodes.Node parentNode = doc.body().getElementsByTag("div").get(i);
+			String parentNodeStyle = parentNode.attr("style");
+			String parentText = doc.body().getElementsByTag("div").get(i).text();
+			for (int j=0; j< parentNode.childNodeSize(); j++) {
+				if (parentNode.childNode(j).nodeName().equals("#text")) {
 					int m =0;
 					if (i == 0) {
 						m = i;
 					} else {
 						m = i-1;
 					}
-					String parentText = doc.body().getElementsByTag("div").get(i).text();
-					String tempContext = doc.body().getElementsByTag("div").get(i).childNode(j).toString().replace("\n", "");
+					String tempContext = parentNode.childNode(j).toString().replace("\n", "");
 					
 					if (!tempContext.equals("") && !parentText.equals(tempContext)) {
 						Element el = doc.createElement("p");
 						el.text(tempContext);
 						
 						if (parentNode.hasAttr("style")) {
-							if (parentNode.attr("style").indexOf("font-family") > -1) {
-								style.append(parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-family"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-family"))+1) + " ");
+							if (parentNodeStyle.indexOf("font-family") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("font-family"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-family")) + 1) + " ");
 							}
 							
-							if (parentNode.attr("style").indexOf("font-size") > -1) {
-								style.append(parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-size"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-size"))+1) + " ");
+							if (parentNodeStyle.indexOf("font-size") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("font-size"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-size")) + 1) + " ");
 							}
 							
-							if (parentNode.attr("style").indexOf("font-style") > -1) {
-								style.append(parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-style"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-style"))+1) + " ");
+							if (parentNodeStyle.indexOf("font-style") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("font-style"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-style")) + 1) + " ");
 							}
 							
-							if (parentNode.attr("style").indexOf("font-weight") > -1) {
-								style.append(parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-weight"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-weight"))+1) + " ");
+							if (parentNodeStyle.indexOf("font-weight") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("font-weight"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-weight")) + 1) + " ");
 							}
 							
-							if (parentNode.attr("style").indexOf("text-align") > -1) {
-								style.append(parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("text-align"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("text-align"))+1) + " ");
+							if (parentNodeStyle.indexOf("text-align") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("text-align"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("text-align")) + 1) + " ");
 							}
 							
-							if (parentNode.attr("style").indexOf("text-indent") > -1) {
-								style.append(parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("text-indent"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("text-indent"))+1) + " ");
+							if (parentNodeStyle.indexOf("text-indent") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("text-indent"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("text-indent")) + 1) + " ");
 							}
 							
-							if (parentNode.attr("style").indexOf("text-decoration") > -1) {
-								style.append(parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("text-decoration"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("text-decoration"))+1) + " ");
+							if (parentNodeStyle.indexOf("text-decoration") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("text-decoration"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("text-decoration")) + 1) + " ");
 							}
 						}
 						
@@ -25853,39 +25838,41 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							el.attr("style",style.toString());
 						}
 						
-						doc.body().getElementsByTag("div").get(i).childNode(j).replaceWith(el);
+						parentNode.childNode(j).replaceWith(el);
 						style.setLength(0);
 					}
 				} else {
-					if (parentNode.childNode(j).childNode(0).toString() != null) {
-						if (doc.body().getElementsByTag("div").get(i).text().replace(" ", "").equals(parentNode.childNode(j).childNode(0).toString().replace(" ", "").replace("\n", ""))) {
-							if (parentNode.childNode(j).hasAttr("style")) {
-								if (parentNode.childNode(j).attr("style").toLowerCase().indexOf("font-family") > -1) {
-									style.append((parentNode.childNode(j).attr("style").toString().substring(parentNode.childNode(j).attr("style").toString().indexOf("font-family"), parentNode.childNode(j).attr("style").toString().indexOf(";",parentNode.childNode(j).attr("style").toString().indexOf("font-family"))+1 )) + " ");
+					org.jsoup.nodes.Node childNode = parentNode.childNode(j);
+					String childNodeStyle = childNode.attr("style");
+					if (childNode.childNode(0).toString() != null) {
+						if (parentText.replace(" ", "").equals(childNode.childNode(0).toString().replace(" ", "").replace("\n", ""))) {
+							if (childNode.hasAttr("style")) {
+								if (childNodeStyle.toLowerCase().indexOf("font-family") > -1) {
+									style.append((childNodeStyle.substring(childNodeStyle.indexOf("font-family"), childNodeStyle.indexOf(";",childNodeStyle.indexOf("font-family")) + 1 )) + " ");
 								} 
 								
-								if (parentNode.childNode(j).attr("style").toLowerCase().indexOf("font-size") > -1) {
-									style.append((parentNode.childNode(j).attr("style").toString().substring(parentNode.childNode(j).attr("style").toString().indexOf("font-size"), parentNode.childNode(j).attr("style").toString().indexOf(";",parentNode.childNode(j).attr("style").toString().indexOf("font-size"))+1)) + " ");
+								if (childNodeStyle.toLowerCase().indexOf("font-size") > -1) {
+									style.append((childNodeStyle.substring(childNodeStyle.indexOf("font-size"), childNodeStyle.indexOf(";",childNodeStyle.indexOf("font-size")) + 1)) + " ");
 								} 
 								
-								if (parentNode.childNode(j).attr("style").toLowerCase().indexOf("font-style") > -1) {
-									style.append((parentNode.childNode(j).attr("style").toString().substring(parentNode.childNode(j).attr("style").toString().indexOf("font-style"), parentNode.childNode(j).attr("style").toString().indexOf(";",parentNode.childNode(j).attr("style").toString().indexOf("font-style"))+1)) + " ");
+								if (childNodeStyle.toLowerCase().indexOf("font-style") > -1) {
+									style.append((childNodeStyle.substring(childNodeStyle.indexOf("font-style"), childNodeStyle.indexOf(";",childNodeStyle.indexOf("font-style")) + 1)) + " ");
 								} 
 								
-								if (parentNode.childNode(j).attr("style").toLowerCase().indexOf("font-weight") > -1) {
-									style.append((parentNode.childNode(j).attr("style").toString().substring(parentNode.childNode(j).attr("style").toString().indexOf("font-weight"), parentNode.childNode(j).attr("style").toString().indexOf(";",parentNode.childNode(j).attr("style").toString().indexOf("font-weight"))+1)) + " ");
+								if (childNodeStyle.toLowerCase().indexOf("font-weight") > -1) {
+									style.append((childNodeStyle.substring(childNodeStyle.indexOf("font-weight"), childNodeStyle.indexOf(";",childNodeStyle.indexOf("font-weight")) + 1)) + " ");
 								} 
 								
-								if (parentNode.childNode(j).attr("style").toLowerCase().indexOf("text-align") > -1) {
-									style.append((parentNode.childNode(j).attr("style").toString().substring(parentNode.childNode(j).attr("style").toString().indexOf("text-align"), parentNode.childNode(j).attr("style").toString().indexOf(";",parentNode.childNode(j).attr("style").toString().indexOf("text-align"))+1)) + " ");
+								if (childNodeStyle.toLowerCase().indexOf("text-align") > -1) {
+									style.append((childNodeStyle.substring(childNodeStyle.indexOf("text-align"), childNodeStyle.indexOf(";",childNodeStyle.indexOf("text-align")) + 1)) + " ");
 								} 
 								
-								if (parentNode.childNode(j).attr("style").toLowerCase().indexOf("text-indent") > -1) {
-									style.append((parentNode.childNode(j).attr("style").toString().substring(parentNode.childNode(j).attr("style").toString().indexOf("text-indent"), parentNode.childNode(j).attr("style").toString().indexOf(";",parentNode.childNode(j).attr("style").toString().indexOf("text-indent"))+1)) + " ");
+								if (childNodeStyle.toLowerCase().indexOf("text-indent") > -1) {
+									style.append((childNodeStyle.substring(childNodeStyle.indexOf("text-indent"), childNodeStyle.indexOf(";",childNodeStyle.indexOf("text-indent")) + 1)) + " ");
 								} 
 								
-								if (parentNode.childNode(j).attr("style").toLowerCase().indexOf("text-decoration") > -1) {
-									style.append((parentNode.childNode(j).attr("style").toString().substring(parentNode.childNode(j).attr("style").toString().indexOf("text-decoration"), parentNode.childNode(j).attr("style").toString().indexOf(";",parentNode.childNode(j).attr("style").toString().indexOf("text-decoration"))+1)) + " ");
+								if (childNodeStyle.toLowerCase().indexOf("text-decoration") > -1) {
+									style.append((childNodeStyle.substring(childNodeStyle.indexOf("text-decoration"), childNodeStyle.indexOf(";",childNodeStyle.indexOf("text-decoration")) + 1)) + " ");
 								} 
 								
 								parentNode.attr("style",style.toString());
@@ -25893,35 +25880,35 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								
 							} else {
 								if (parentNode.hasAttr("style")) {
-									if (parentNode.attr("style").toString().indexOf("font-family") > -1) {
-										style.append((parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-family"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-family"))+1)) + " ");
+									if (parentNodeStyle.indexOf("font-family") > -1) {
+										style.append((parentNodeStyle.substring(parentNodeStyle.indexOf("font-family"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-family")) + 1)) + " ");
 									}
 									
-									if (parentNode.attr("style").toString().indexOf("font-Size") > -1) {
-										style.append((parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-Size"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-Size"))+1)) + " ");
+									if (parentNodeStyle.indexOf("font-Size") > -1) {
+										style.append((parentNodeStyle.substring(parentNodeStyle.indexOf("font-Size"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-Size")) + 1)) + " ");
 									}
 									
-									if (parentNode.attr("style").toString().indexOf("font-style") > -1) {
-										style.append((parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-style"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-style"))+1)) + " ");
+									if (parentNodeStyle.indexOf("font-style") > -1) {
+										style.append((parentNodeStyle.substring(parentNodeStyle.indexOf("font-style"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-style")) + 1)) + " ");
 									}
 									
-									if (parentNode.attr("style").toString().indexOf("font-weight") > -1) {
-										style.append((parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-weight"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-weight"))+1)) + " ");
+									if (parentNodeStyle.indexOf("font-weight") > -1) {
+										style.append((parentNodeStyle.substring(parentNodeStyle.indexOf("font-weight"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-weight")) + 1)) + " ");
 									}
 									
-									if (parentNode.attr("style").toString().indexOf("text-align") > -1) {
-										style.append((parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("text-align"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("text-align"))+1)) + " ");
+									if (parentNodeStyle.indexOf("text-align") > -1) {
+										style.append((parentNodeStyle.substring(parentNodeStyle.indexOf("text-align"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("text-align")) + 1)) + " ");
 									}
 									
-									if (parentNode.attr("style").toString().indexOf("text-indent") > -1) {
-										style.append((parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("text-indent"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("text-indent"))+1)) + " ");
+									if (parentNodeStyle.indexOf("text-indent") > -1) {
+										style.append((parentNodeStyle.substring(parentNodeStyle.indexOf("text-indent"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("text-indent")) + 1)) + " ");
 									}
 									
-									if (parentNode.attr("style").toString().indexOf("text-decoration") > -1) {
-										style.append((parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("text-decoration"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("text-decoration"))+1)) + " ");
+									if (parentNodeStyle.indexOf("text-decoration") > -1) {
+										style.append((parentNodeStyle.substring(parentNodeStyle.indexOf("text-decoration"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("text-decoration")) + 1)) + " ");
 									}
 									
-									parentNode.childNode(j).attr("style",style.toString());
+									childNode.attr("style",style.toString());
 									style.setLength(0);
 								}
 							}
