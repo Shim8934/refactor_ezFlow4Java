@@ -1407,9 +1407,9 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
         boolean flag;
 		StringBuilder bodyContent = new StringBuilder();
         
-        bodyContent.append("<DIV id=\"msgBody\" style=\"font-size: 13px; font-family: " + messageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
         bodyContent.append(Content);
-        bodyContent.append("</DIV>");
+        
+        String content = commonUtil.createNotiMailContent(Content, userInfo.getTenantId(), userInfo.getLocale()); 
     	InternetAddress from = new InternetAddress();
     	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
     	from.setAddress(userInfo.getEmail());
@@ -1429,7 +1429,7 @@ public class EzApprovalGarchiveController extends EgovFileMngUtil {
     		flag = false;
     	}
     	
-    	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to1}, null, null, Subject, bodyContent.toString(),flag);
+    	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to1}, null, null, Subject, Content, flag);
     	
     	logger.debug("mail_intersend ended");
 	}

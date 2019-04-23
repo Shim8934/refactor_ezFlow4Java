@@ -28049,7 +28049,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     	String Subject = "";
     	StringBuffer bodyContent = new StringBuffer();
     	
-    	bodyContent.append("<DIV id=\"msgBody\" style=\"font-size: 13px; font-family: " + messageSource.getMessage("main.t246", userInfo.getLocale()) + ";\" name=\"urn:schemas:httpmail:textdescription\">");
     	bodyContent.append("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
     	
     	if (mode.equals("APR")) {
@@ -28074,7 +28073,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
     	}
     	
-    	bodyContent.append("</td></tr></table></DIV>");
+    	bodyContent.append("</td></tr></table>");
+    	
+    	String content = commonUtil.createNotiMailContent(bodyContent.toString(), tenantID, userInfo.getLocale());
     	
 		String xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
     	Document notiDoc = commonUtil.convertStringToDocument(xmlApprovNotiConfig);
@@ -28087,7 +28088,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     		flag = false;
     	}
     	
-    	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, Subject, bodyContent.toString(), flag);
+    	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, Subject, content, flag);
 		
 		logger.debug("sendMailToNextAprMember ended.");
 		return result;
