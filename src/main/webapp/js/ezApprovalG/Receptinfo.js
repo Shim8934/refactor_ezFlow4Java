@@ -319,35 +319,35 @@ function event_RdisplayUserList(xml) {
             }
 }
 //#############################################################################################################################################수신처 리스트 삭제 이벤트
-function AprDeptDel_onclick() {
-    var listview = new ListView();
-    listview.LoadFromID("lvRECEPTLIST");
-    var CurSelRow = listview.GetSelectedRows();
-
-    var DeleteState;
-
-    if (CurSelRow.length == 0) return;
-
-    if (CurSelRow.length != 0) {
-        for (var i = 0; i < CurSelRow.length; i++) {
-            DeleteState = DeptRowDelelte(listview.GetSelectedIndexes().split(',')[0], listview.GetDataRows());
-            if (DeleteState == "Y") {
-                listview.DeleteRow(CurSelRow[i].getAttribute("id"));
-            }
-        }
-        var AprDeptInfo = loadXMLString(APRDeptResortList());
-
-        document.getElementById('RECEPTLIST').innerHTML = "";
-        var listview = new ListView();
-        listview.SetID("lvRECEPTLIST");
-        listview.SetMulSelectable(false);
-        listview.SetHeightFree(true);
-        listview.SetRowOnDblClick("AprDeptDel_onclick");
-        listview.DataSource(AprDeptInfo);
-        listview.DataBind("RECEPTLIST");
-        listview.SetSelectFlag(false);
-    }
-}
+//function AprDeptDel_onclick() {
+//    var listview = new ListView();
+//    listview.LoadFromID("lvRECEPTLIST");
+//    var CurSelRow = listview.GetSelectedRows();
+//
+//    var DeleteState;
+//
+//    if (CurSelRow.length == 0) return;
+//
+//    if (CurSelRow.length != 0) {
+//        for (var i = 0; i < CurSelRow.length; i++) {
+//            DeleteState = DeptRowDelelte(listview.GetSelectedIndexes().split(',')[0], listview.GetDataRows());
+//            if (DeleteState == "Y") {
+//                listview.DeleteRow(CurSelRow[i].getAttribute("id"));
+//            }
+//        }
+//        var AprDeptInfo = loadXMLString(APRDeptResortList());
+//
+//        document.getElementById('RECEPTLIST').innerHTML = "";
+//        var listview = new ListView();
+//        listview.SetID("lvRECEPTLIST");
+//        listview.SetMulSelectable(false);
+//        listview.SetHeightFree(true);
+//        listview.SetRowOnDblClick("AprDeptDel_onclick");
+//        listview.DataSource(AprDeptInfo);
+//        listview.DataBind("RECEPTLIST");
+//        listview.SetSelectFlag(false);
+//    }
+//}
 //#############################################################################################################################################수신처 리스트 삭제 이벤트
 function DeptRowDelelte(SelectIndex, ColRow) {
     var RowDelCheck;
@@ -2039,7 +2039,7 @@ function AprDeptDel_onclick() {
 		objTd.appendChild(oText);
 		objTr.appendChild(objTd);
 		
-		document.getElementById("lvRECEPTLIST").appendChild(objTr);
+		document.getElementById("lvRECEPTLIST").getElementsByTagName("tbody")[0].appendChild(objTr);
     }
 
     /* 2015-06-30 표준모듈:추가(외부수신자요약) - KSK */
@@ -2432,6 +2432,21 @@ function DeleteRecAll() {
                 alert(e.description);
             }
         }
+        
+        var objTr = document.createElement("TR");
+		objTr.setAttribute("id", "lvRECEPTLIST_TR_noItems");
+    		
+		var oText = document.createTextNode(strLang944);
+		var objTd = document.createElement("TD");
+		objTd.align = "center";
+		
+		var colCount = document.getElementById("lvRECEPTLIST").getElementsByTagName("th").length;
+		objTd.setAttribute("colSpan", colCount);
+		objTd.appendChild(oText);
+		objTr.appendChild(objTd);
+		
+		document.getElementById("lvRECEPTLIST").getElementsByTagName("tbody")[0].appendChild(objTr);
+		
     } catch (e) {
         alert("Receptinfo.js.DeleteRecAll()::" + e.description);
     }
