@@ -7,7 +7,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link rel="stylesheet" href="${util.addVer('ezApprovalG.e2', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('ezApprovalG.e1', 'msg')}" ></script>
-		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Opinion_Cross2.js')}"></script><!-- 2로수정 -->
+		<script type="text/javascript" src="${util.addVer('/js/ezApprovalG/Opinion_New_Cross.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -50,10 +50,8 @@
 		function btn_OpinionCancel_onclick() {
 			if (ReturnFunction != null) {
 				ReturnFunction("cancel");
-				window.close();
 			} else {
 				window.returnValue = "cancel";
-				window.close();
 			}
 		}
 		
@@ -70,7 +68,6 @@
 				} else {
 					window.returnValue = returnValue;
 				}
-				window.close();
 			} else {
 				var pAlertContent = strLang402;
 	            OpenAlertUI(pAlertContent, btn_OpinionSave_onclick_complete);

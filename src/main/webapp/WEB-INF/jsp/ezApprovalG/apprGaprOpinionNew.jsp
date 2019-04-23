@@ -275,29 +275,6 @@
 			}
 		}
 	
-		// 의견창 위치이동 관련
-		var move_on, frameLeft, frameTop, layerStartX, layerStartY;
-	    var iFramePanel = window.parent.document.getElementById("iFramePanel");
-		function layerStart() {
-	    	layerStartX = event.clientX;
-	    	layerStartY = event.clientY;
-	    	move_on = true;
-	    }
-		// 의견창 위치이동 관련
-	    function layerMove() {
-	    	if(move_on == true) {
-	    		if(iFramePanel.offsetLeft > 0 && ((event.clientX - layerStartX + iFramePanel.offsetLeft) > 5) && ((event.clientX - layerStartX + iFramePanel.offsetLeft + iFramePanel.offsetWidth) < 1145)) {
-	    			iFramePanel.style.left = (event.clientX - layerStartX + iFramePanel.offsetLeft) + "px";
-	    		}
-	    		if(iFramePanel.offsetTop > 0 && ((event.clientY - layerStartY + iFramePanel.offsetTop) > 5) && ((event.clientY - layerStartY + iFramePanel.offsetTop + iFramePanel.offsetHeight) < 990)) {
-	    			iFramePanel.style.top = (event.clientY - layerStartY + iFramePanel.offsetTop) + "px";
-	    		}
-	    	}
-	    }
-		// 의견창 위치이동 관련
-	    function layerStop() {
-			move_on = false;
-	    }
 		</script>
 		<style type="text/css">
 			.mainlist tr th {
@@ -318,9 +295,7 @@
 		</style>
 	</head>
 	<body class="popup">
-	    <h1 style="cursor:move;" onmousedown="layerStart()" onmouseup="layerStop()" onmousemove="layerMove()">
-	        <spring:message code='ezApprovalG.t55'/>
-	    </h1>
+	    <h1><spring:message code='ezApprovalG.t55'/></h1>
 	    
 	    <div id="close">
             <ul><li><span onclick="return btn_OpinionCancel_onclick()"></span></li></ul>
