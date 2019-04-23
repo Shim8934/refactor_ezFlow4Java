@@ -329,6 +329,11 @@
 		    	var searchValue = document.getElementById("searchValue").value;
 		    	searchValue = searchValue.replaceAll(" ","") == "" ? "" : searchValue;
 		    	
+		    	if (searchValue == "") {
+		    		companyChange();
+		    		return;
+		    	}
+		    	
 		    	$.ajax({
 					type : "post",
 					dataType: 'text',
