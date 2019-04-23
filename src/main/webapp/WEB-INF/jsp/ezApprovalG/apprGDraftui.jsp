@@ -231,7 +231,9 @@
 		            		//임시보관함일경우 사인 초기화??
 		            		setFirstDrafter(isUsed, "");
 		            	} else {
-		            		getFormRecv();	
+		            		if(approvalFlag == "G") {
+		            			getFormRecv();	
+		            		}       		
 		            	}
 		            	
 		                //getFormRecv();

@@ -283,7 +283,14 @@
 	                SelectedBoardID = treeNode.GetNodeData("DATA1");
 	                SelectedBoardParentBoardID = treeNode.GetNodeData("DATA3");	                
 	                var chkPhotoBrd = treeNode.GetNodeData("DATA5");
-
+		            var orgBoardTitle = treeNode.GetNodeData("DATA2"); // personalizedPortal용 변수 설정
+		            var orgBoardName = document.getElementById("spn_" + pNodeID).innerText;
+				    var orgItemCount = orgBoardName.substring(orgBoardTitle.length + 1, orgBoardName.length);
+				    
+				    if (orgBoardTitle == orgBoardName) {
+				    	orgItemCount = 0;
+				    }
+				    
 	                if (RedirectBoardID != "") {
 	                    if (RedirectBoardGroupID != "") {	                    	
 	                        window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID) + "&tabID=1tab2";
@@ -291,6 +298,31 @@
 	                }else{                	
 	                    window.parent.frames["board_main"].location.href = "/admin/ezBoard/boardConfig.do?boardID=" + encodeURIComponent(SelectedBoardID) + "&boardName=" + encodeURIComponent(treeNode.GetNodeData("DATA2")) + "&boardType=" + chkPhotoBrd + "&parentBoardID=" + encodeURIComponent(SelectedBoardParentBoardID);
 	                }
+	                
+	                /* 2019-04-19 홍승비 - 하위게시판 진입 시 해당 게시판 좌측리스트의 게시물 카운트 갱신 */
+			    	$.ajax({
+						type : "GET",
+						dataType : "text",
+						async : false,
+						url : "/ezBoard/getItemCount.do",
+						data : {
+							boardID : SelectedBoardID
+						},
+						success: function(resultCount) {
+							if (orgItemCount != resultCount) {
+								var newNodeName = "";
+								if (resultCount > 0) {
+									newNodeName = orgBoardTitle + " " + resultCount;
+								} else {
+									newNodeName = orgBoardTitle;
+								}
+								document.getElementById("spn_" + pNodeID).innerText = newNodeName;
+							}
+						},
+						error: function() {
+							return;
+						}
+					});
 	            }
 	            catch (e) {
 	                alert(e.description);
