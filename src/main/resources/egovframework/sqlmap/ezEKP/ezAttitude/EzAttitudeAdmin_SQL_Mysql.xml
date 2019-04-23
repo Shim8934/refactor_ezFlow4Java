@@ -176,7 +176,7 @@
 			WHERE
 				TBL_USERMASTER.tenant_id = #tenantId#
 			AND 
-				cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+				cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 		]]>
 		
 		<isNotEmpty prepend="AND" property="companyId">
@@ -242,7 +242,7 @@
 			WHERE
 				TBL_USERMASTER.tenant_id = #tenantId#
 			AND 
-				TBL_USERMASTER.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE)
+				TBL_USERMASTER.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
 				TBL_USERMASTER.PHYSICALDELIVERYOFFICENAME = #companyId#
 		]]>
@@ -697,6 +697,8 @@
 			AND
 				A.company_id = #companyId#
 			AND
+				A.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
 				(
 					(A.start_date >= #searchStartDate# AND A.start_date <= #searchEndDate#) 
 				OR
@@ -775,6 +777,8 @@
 			AND
 				A.company_id = #companyId#
 			AND
+				A.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
 				(
 					(A.start_date >= #searchStartDate# AND A.start_date <= #searchEndDate#) 
 				OR
@@ -843,6 +847,8 @@
 				A.tenant_id = #tenantId#
 			AND
 				A.physicaldeliveryofficename = #companyId#
+			AND
+				A.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
 				B.start_date IS NULL
 		]]>
@@ -1213,6 +1219,8 @@
 				A.TENANT_ID = #tenantId#
 			AND
 				A.TYPE_ID = #typeId#
+			AND
+				A.WRITER_ID NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 		]]>
 		<isNotEmpty property="userId">
 			AND
@@ -1307,6 +1315,8 @@
 			AND
 				tenant_id = #tenantId#
 			AND
+				writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
 				(appr_date >= #searchStartDate# 
 				  AND
 				  appr_date <= #searchEndDate#)
@@ -1362,6 +1372,8 @@
 				(appr_date >= #searchStartDate# 
 				  AND
 				  appr_date <= #searchEndDate#)
+			AND
+				writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 		]]>
 		<isNotEmpty prepend="AND" property="searchUserName">
 			WRITER_NAME LIKE CONCAT('%', #searchUserName#, '%')

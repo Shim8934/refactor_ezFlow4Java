@@ -9265,5 +9265,33 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			return "4";
 		}
 	}
+	
+	/**
+	 * 전자결재G 기안 의견버튼 호출 Method_New
+	 */
+	@RequestMapping(value = "/ezApprovalG/aprOpinionNew.do", method = RequestMethod.GET)
+	public String aprOpinionNew(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("aprOpinionNew started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("aprOpinionNew ended.");
+		return "ezApprovalG/apprGaprOpinionNew";
+	}
+	/**
+	 * 전자결재G 기안 의견내용 작성 팝업 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/aprOpinionPopup.do", method = RequestMethod.GET)
+	public String aprOpinionPopup(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("aprOpinionPopup started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		logger.debug("aprOpinionPopup ended.");
+		
+		return "ezApprovalG/apprGaprOpinionPopup";
+	}
 }
 

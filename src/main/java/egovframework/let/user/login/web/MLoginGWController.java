@@ -5,6 +5,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -29,6 +30,9 @@ import org.springframework.web.bind.annotation.RestController;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezSystem.service.EzSystemAdminService;
+import egovframework.ezEKP.ezSystem.vo.AccessIdVO;
+import egovframework.ezEKP.ezSystem.vo.IPBandVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
@@ -62,6 +66,9 @@ public class MLoginGWController {
     
     @Resource(name="EzCommonService")
 	private EzCommonService ezCommonService;
+    
+    @Resource(name="EzSystemAdminService")
+	private EzSystemAdminService EzSystemAdminService;
         
     /** CRYPTO */
     @Resource(name="crypto") 
@@ -140,6 +147,24 @@ public class MLoginGWController {
     			
     			return result;
     		} else {
+        		String ipip = request.getHeader("ip") == null ? ClientUtil.getClientIP(request) : request.getHeader("ip");
+        		resultVO.setIp(ipip);
+        		LOGGER.debug("ipipipipipip = " + ipip);
+        		LOGGER.debug("ipipipipipip1 = " + request.getHeader("ip"));
+        		LOGGER.debug("ipipipipipip2 = " + ClientUtil.getClientIP(request));
+        		
+    			// 로그인 후 IP 주소 체크
+				boolean ipAddressChk = ipAccessCheck(resultVO);
+				LOGGER.debug("ipAddressChk=" + ipAddressChk);
+				
+				if (!ipAddressChk) {
+					result.put("status", "error");
+	    			result.put("code", "7");			
+	    			result.put("data", "user does not exist");
+	    			
+	    			return result;
+				}
+    			
     			// 모바일 사용 설정 확인 
     			String useMobileManagemant = ezCommonService.getTenantConfig("useMobileManagemant", tenantId);
     			
@@ -627,6 +652,78 @@ public class MLoginGWController {
         		return currentNumber;
         	}
         } 
+    }
+    
+    public boolean ipAccessCheck(LoginVO loginVO) throws Exception {
+    	LOGGER.debug("ipAccessCheck start");
+    	
+    	String useIPAccess = ezCommonService.getTenantConfig("useIPAccess", loginVO.getTenantId());
+    	useIPAccess = useIPAccess.equals("") ? "NO" : useIPAccess;
+		boolean returnValue = false;
+    	
+    	if (useIPAccess.equals("NO")) {
+    		LOGGER.debug("ipAccessCheck ended.");
+    		return true;
+    	} else { // uerIPAccess 사용하면 IP, ID 체크
+    		String topID = loginVO.getCompanyID();
+    		String deptID = loginVO.getDeptID();
+    		String primary = loginVO.getPrimary();
+    		int tenantID = loginVO.getTenantId();
+    		String clientIp[] = loginVO.getIp().split("\\.");
+    		List<AccessIdVO> accessIdList = EzSystemAdminService.getAllAccessList(primary, tenantID, topID);
+    		List<AccessIdVO> accessDeptList = EzSystemAdminService.getAllAccessListDept(primary, tenantID, topID);
+    		List<IPBandVO> ipBandList = EzSystemAdminService.getAllIPBand(tenantID);
+    		
+    		// ID 먼저 체크
+    		if (!(accessIdList == null || accessIdList.size() == 0)) {
+    			for (int i = 0; i < accessIdList.size(); i++) {
+    				String getListId = accessIdList.get(i).getCn();
+    				if (loginVO.getId().equals(getListId)) {
+    					LOGGER.debug("id checked");
+    					return true;
+    				}
+    			}
+    		}
+    		
+    		// 부서 체크
+    		if (!(accessDeptList == null || accessDeptList.size() == 0)) {
+    			for (int i = 0; i < accessIdList.size(); i++) {
+    				String getListDept = accessDeptList.get(i).getCn();
+    				if (deptID.equals(getListDept) || topID.equals(getListDept)) {
+    					LOGGER.debug("dept checked");
+    					return true;
+    				}
+    			}
+    		}
+    		
+    		// IP 대역 체크
+    		String getAccess = "NO";
+    		int checkCnt = 0;
+    		if (!(ipBandList == null || ipBandList.size() == 0)) {
+    			for (int i = 0; i < ipBandList.size(); i++) {
+    				getAccess = ipBandList.get(i).getAccess();
+    				
+    				String ipListIp[] = ipBandList.get(i).getIpAddress().split("\\.");
+    				for (int j = 0; j < clientIp.length; j++) {
+    					if (ipListIp[j].equals(clientIp[j]) || ipListIp[j].equals("*")) {
+    						checkCnt++;
+    					}
+    				}
+    				
+    				if (checkCnt == 4 && getAccess.equals("NO")) {
+    					return false;
+    				} else if (checkCnt == 4) {
+    					returnValue = true;
+    				}
+    				checkCnt = 0;
+    			} 
+    		} else { // 대역이 등록 안되어있으면 무조건 false (userIPAccess컨피그 사용O -> id체크X -> 부서체크X -> 등록된 대역도 없으므로)
+    			return false;
+    		}
+    	}
+
+    	LOGGER.debug("ipAccessCheck ended.");
+    	return returnValue;
     }
     
 }
