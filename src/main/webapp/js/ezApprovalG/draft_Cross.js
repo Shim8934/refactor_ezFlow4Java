@@ -1491,7 +1491,11 @@ function setRecevInfo(ret) {
 
     var field = message.GetListItem(fields, "recipients");
     if (field) {
-        setNodeText(field , precipents);
+    	if (SummaryOuterReceiverList != "") {
+            setNodeText(field , SummaryOuterReceiverList);
+        }else{
+        	setNodeText(field , precipents);
+        }
     }
 }
 
