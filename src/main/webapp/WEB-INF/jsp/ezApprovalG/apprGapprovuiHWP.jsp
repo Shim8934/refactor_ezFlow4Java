@@ -387,7 +387,8 @@
 			        var Ans = OpenInformationUI(pInformationContent);
 		
 			        if (Ans) {
-			            openOpinionUI("Display");
+			            //openOpinionUI("Display");
+			        	openOpinionUI_New("");
 			        }
 			    }
 		
@@ -842,7 +843,8 @@
 						}
 			        }
 			
-			        var ret = openOpinionUI("BanSong");
+			        //var ret = openOpinionUI("BanSong");
+			        var ret = openOpinionUI_New("BanSong");
 			        if (ret != "cancel" && ret != undefined ) {
 			            UpdateLineHistory();
 			
@@ -877,6 +879,10 @@
 						    }
 			                process_AfterApprove("2");
 			            }
+			        } else if (ret == "cancel" || ret == undefined) {
+			        	var pAlertContent = "<spring:message code='ezApprovalG.t38'/>";
+			        	OpenAlertUI(pAlertContent);
+				        return;
 			        }
 			    }
 	
@@ -899,8 +905,8 @@
 					    }
 			        }
 			
-			        var ret = openOpinionUI("BoRyu");
-			
+			        //var ret = openOpinionUI("BoRyu");
+			        var ret = openOpinionUI_New("BoRyu");
 			        if (ret != "cancel" && ret != undefined) {
 			            UpdateLineHistory();
 			            var RtnVal = SaveApproveInfo("3");
@@ -913,6 +919,10 @@
 					    else {
 					        process_AfterApprove("3");
 					    }
+			        } else if (ret == "cancel" || ret == undefined) {
+			        	var pAlertContent = "<spring:message code='ezApprovalG.t392'/>";
+			        	OpenAlertUI(pAlertContent);
+				        return;
 			        }
 			    }
 	
@@ -1011,7 +1021,8 @@
 			    }
 	
 			    function btnOpinion_onclick() {
-			        openOpinionUI("");
+			        //openOpinionUI("");
+			    	openOpinionUI_New("");
 			    }
 	
 			    function btnFileAttach_onclick() {

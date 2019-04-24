@@ -435,7 +435,8 @@
 		            chk_Passwd(pUserID, Reject_ChkPassword);
 		        }
 		        else {
-		            openOpinionUI("BanSong");
+		            //openOpinionUI("BanSong");
+		        	openOpinionUI_New("BanSong");
 		        }
 		    }
 		    function Reject_ChkPassword(chkpass) {
@@ -448,7 +449,8 @@
 		        else if (chkpass == "cancel")
 		            return;
 		
-		        openOpinionUI("BanSong");
+		        //openOpinionUI("BanSong");
+		        openOpinionUI_New("BanSong");
 		    }
 		
 		    var apropinion_cross_dialogArguments = new Array();
@@ -465,6 +467,25 @@
 		        apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
 		
 		        DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
+		    }
+		    
+		    function openOpinionUI_New(pOpinionType) {
+		    	try {
+		    		var parameter = new Array();
+		    		parameter[0] = pDocID;		//DOCID
+		    		parameter[1] = pOpinionType;//OPINIONTYPE NAME
+		    		parameter[2] = "";			//DRAFTFLAG
+		    		parameter[3] = "";			//DOCSTATE
+		    		parameter[4] = orgCompanyID;//ORGCOMPANYID
+		    		parameter[99] = ext;		//EXT
+		    		
+		    		apropinion_cross_dialogArguments[0] = parameter;
+	    			apropinion_cross_dialogArguments[1] = openOpinionUI_Complete;
+		    		
+		    		DivPopUpShow(530, 520, "/ezApprovalG/aprOpinionNew.do");
+		    	} catch (e) {
+		    		alert("openOpinionUI_New ::: " + e.description);
+		    	}
 		    }
 		
 		    function openOpinionUI_Complete(ret) {

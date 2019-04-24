@@ -1243,6 +1243,57 @@ function OpenOpinionUI_Complete(ret) {
     }
 }
 
+function openOpinionUI_New(pSelectedRow, pOpinionType) {
+	try {
+		var parameter = new Array();
+		parameter[0] = GetAttribute(pSelectedRow, "DATA1");//DOCID
+		parameter[1] = pOpinionType;//OPINIONTYPE NAME
+		parameter[2] = "";			//DRAFTFLAG 
+		parameter[3] = GetAttribute(pSelectedRow, "DATA9");//DOCSTATE
+		parameter[4] = GetAttribute(pSelectedRow, "ORGCOMPANYID");//ORGCOMPANYID
+		parameter[99] = ext;		//EXT
+		
+		temppSelectedRow = pSelectedRow;
+		
+		apropinion_cross_dialogArguments[0] = parameter;
+		apropinion_cross_dialogArguments[1] = openOpinionUI_New_Complete;
+		
+		var url = "/ezApprovalG/aprOpinionNew.do";
+		var OpenWin = window.open(url, "AprOpinion_Cross", GetOpenWindowfeature(530, 520));
+        try { OpenWin.focus(); } catch (e) { }
+	} catch (e) {
+		alert("openOpinionUI_New ::: " + e.description);
+	}
+}
+function openOpinionUI_New_Complete(ret) {
+	try {
+		if (ret != "cancel") {
+	        if (pListTypeValue == "4") {
+	            switch (GetAttribute(temppSelectedRow, "DATA9")) {
+	                case "012":
+	                    setHeSongHapyuiDocInfo(temppSelectedRow);
+	                    break;
+	                case "011":
+	                    setHeSongDocInfo(temppSelectedRow);
+	                    break;
+	            }
+	        }
+	        else {
+	            switch (GetAttribute(temppSelectedRow, "DATA12")) {
+	                case "012":
+	                    setHeSongHapyuiDocInfo(temppSelectedRow);
+	                    break;
+	                case "011":
+	                    setHeSongDocInfo(temppSelectedRow);
+	                    break;
+	            }
+	        }
+	    }
+	} catch (e) {
+		alert("openOpinionUI_New_Complete ::: " + e.description);
+	}
+}
+
 function setHeSongHapyuiDocInfo(pSelectedRow) {
     try {
         var objRoot;
