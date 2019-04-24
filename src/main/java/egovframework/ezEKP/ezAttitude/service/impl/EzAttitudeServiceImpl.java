@@ -12,6 +12,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -24,6 +25,7 @@ import com.ibm.icu.text.DecimalFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.util.ExcelCellRef;
@@ -43,8 +45,11 @@ import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
 
@@ -56,10 +61,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	private CommonUtil commonUtil;
 	
 	@Autowired
+	private EzOrganService ezOrganService;
+	
+	@Autowired
 	private EzEmailService ezEmailService;
 	
 	@Autowired
+	private EzPersonalService ezPersonalService;
+	
+	@Autowired
 	private EzAttitudeDAO ezAttitudeDAO;
+	
+	@Autowired
+	private EgovMessageSource messageSource;
 	
 	@Resource(name = "EzOrganDAO")
 	private EzOrganDAO ezOrganDAO;
@@ -2843,7 +2857,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		ezAttitudeDAO.saveCancelAnnual(map);
 		/*attitude modappl수정*/
 		ezAttitudeDAO.setAttModApp(map);
-		
+		/*근태정보 가져오기*/
+		//getAttitudeInfo(attitudeId, offset, "", tenantId);
 		LOGGER.debug("saveCancelAnnual ended");
 		
 		return "success";
@@ -2882,5 +2897,77 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("deleteCancelAnnual ended");
 		
 		return data;
+	}
+	
+	@Override
+	public String sendMailToReference(AttitudeVO vo, String attitudeId, String idList, HttpServletRequest request, String loginCookie, LoginVO userInfo, String orgCompanyID, int tenantID) throws Exception {
+		
+		LOGGER.debug("sendMailToReference started.");
+		
+		String result = "";
+		
+		InternetAddress from = new InternetAddress();
+		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+		from.setAddress(userInfo.getEmail());
+		
+		String[] ids = idList.split(",");
+		
+		InternetAddress[] to = new InternetAddress[ids.length];
+		
+		for(int i = 0; i < ids.length; i++) {
+			String targetUserID = ids[i];
+			String targetUserName = "";
+			String targetUserEmail = "";
+			String targetUserDeptID = "";
+			String targetUserCompanyID = "";
+			
+			targetUserEmail = ezOrganService.getPropertyValue(targetUserID, "mail", tenantID);
+			targetUserName = ezOrganService.getPropertyValue(targetUserID, "displayName", tenantID);
+			
+			InternetAddress tempTo = new InternetAddress();
+			tempTo.setPersonal(targetUserName, "UTF-8");
+			tempTo.setAddress(targetUserEmail);
+			
+			LOGGER.debug("target : " + targetUserID + "/" + targetUserName + "/" + targetUserEmail);
+			
+			to[i] = tempTo;
+			
+		}
+		
+		String attitudeDate = "";
+		if(vo.getTypeId().equals("A11")) {
+			attitudeDate = vo.getStartDate().substring(0, 10) + "~" + vo.getEndDate().substring(0, 10);
+		} else  {
+			attitudeDate = vo.getStartDate().substring(0, 10);
+		}
+		
+    	String Subject = "";
+    	StringBuffer bodyContent = new StringBuffer();
+    	
+    	Subject = "[연차취소신청알림]" + " " + attitudeDate; //[연차취소신청알림] + attitudeDate
+    	
+    	bodyContent.append("<DIV id=\"msgBody\" style=\"font-size: 13px; font-family: " + messageSource.getMessage("main.t246", userInfo.getLocale()) + ";\" name=\"urn:schemas:httpmail:textdescription\">");
+    	bodyContent.append("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + "기간" + ": " + attitudeDate + "</span><br>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + "유형" + ": " + vo.getTypeName() + "</span><br>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + "신청자" + ": " + userInfo.getDisplayName() + "</span><br>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + "신청일" + ": " + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false) + "</span><br>");
+    	bodyContent.append("</td></tr></table></DIV>");
+    	
+		String xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
+    	Document notiDoc = commonUtil.convertStringToDocument(xmlApprovNotiConfig);
+		String saveSendBoxFlag = notiDoc.getElementsByTagName("SAVEMAILFLAG").item(0).getTextContent().trim();
+		
+		boolean flag;
+    	if (saveSendBoxFlag.equals("Y")) {
+    		flag = true;
+    	} else {
+    		flag = false;
+    	}
+    	
+    	ezEmailService.sendMail(loginCookie, from, to, null, null, Subject, bodyContent.toString(), flag);
+		
+    	LOGGER.debug("sendMailToReference ended.");
+		return result;
 	}
 }

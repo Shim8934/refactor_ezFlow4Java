@@ -3,6 +3,8 @@ package egovframework.ezEKP.ezAttitude.service;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.json.simple.JSONObject;
 
 import egovframework.ezEKP.ezAttitude.vo.AdminAttitudeVO;
@@ -20,6 +22,7 @@ import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.user.login.vo.LoginVO;
 
 public interface EzAttitudeService {
 	public AttitudeVO getAttitudeInfo(String attitudeId, String offset, String lang, int tenantId) throws Exception;
@@ -156,4 +159,7 @@ public interface EzAttitudeService {
 			String writerDeptId, String writerDeptName, String writerDeptName2, String delFlag, String content,String offset) throws Exception;
 
 	public int deleteCancelAnnual(String companyId, int tenantId, String attitudeId) throws Exception;
+
+	public String sendMailToReference(AttitudeVO vo, String attitudeId, String idList, HttpServletRequest request, String loginCookie, LoginVO userInfo, String orgCompanyID, int tenantID) throws Exception;
+	
 }

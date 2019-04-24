@@ -54,6 +54,7 @@ import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -2479,8 +2480,12 @@ public class EzAttitudeGWController {
 			@RequestParam(value="tenantId", required=true) int tenantId,
 			@RequestParam(value="userId", required=true) String userId,
 			@RequestParam(value="offset", required=true) String offset,
+			@RequestParam(value="idList", required=false) String idList,
+			@RequestParam(value="loginCookie", required=false) String loginCookie,
 			@RequestParam(value="content", required=true) String content) {
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/saveCancelAnnual] started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		JSONObject result = new JSONObject();
 		String status = "exception";
@@ -2491,6 +2496,8 @@ public class EzAttitudeGWController {
 			status = ezAttitudeService.saveCancelAnnual(attitudeId, companyId, tenantId, userId, info.getUserName(), 
 					info.getUserName2(), info.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), 
 					info.getDeptName2(), "0", content, offset);
+			AttitudeVO vo = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getPrimary(), tenantId);
+			ezAttitudeService.sendMailToReference(vo, attitudeId, idList, request, loginCookie, userInfo, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);

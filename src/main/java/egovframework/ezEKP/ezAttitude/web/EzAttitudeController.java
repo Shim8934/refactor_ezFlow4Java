@@ -3659,7 +3659,7 @@ public class EzAttitudeController {
 	public String saveCancelAnnual(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=false)String attitudeId,
 			@RequestParam(required=false)String content,
-			@RequestParam(required=false)String reference) throws Exception {
+			@RequestParam(required=false)String idList) throws Exception {
 		LOGGER.debug("saveCancelAnnual started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -3686,6 +3686,8 @@ public class EzAttitudeController {
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("userId", userInfo.getId())
 				.queryParam("content", content)
+				.queryParam("idList", idList)
+				.queryParam("loginCookie", loginCookie)
 				.queryParam("offset", offsetMin);
 		
 		RestTemplate rest = new RestTemplate();
