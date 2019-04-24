@@ -19,6 +19,36 @@ function openOpinionViewUI_Complete() {
     DivPopUpHidden();
 }
 
+function openOpinionUI_New(pOpinionType, CompleteFunction) {
+	try {
+		var parameter = new Array();
+		parameter[0] = pDocID;		//DOCID
+		parameter[1] = pOpinionType;//OPINIONTYPE NAME
+		parameter[2] = "";			//DRAFTFLAG 
+		parameter[3] = "";			//DOCSTATE
+		parameter[4] = orgCompanyID;//ORGCOMPANYID
+		parameter[99] = ext;		//EXT
+		
+		apropinion_cross_dialogArguments[0] = parameter;
+		if (typeof(CompleteFunction) != "undefined") {
+			apropinion_cross_dialogArguments[1] = CompleteFunction; 
+		} else {
+			apropinion_cross_dialogArguments[1] = openOpinionUI_New_Complete;
+		}
+		
+		DivPopUpShow(530, 520, "/ezApprovalG/aprOpinionNew.do");
+	} catch (e) {
+		alert("openOpinionUI_New ::: " + e.description);
+	}
+}
+function openOpinionUI_New_Complete(ret) {
+	try {
+		DivPopUpHidden();
+	} catch (e) {
+		alert("openOpinionUI_New_Complete ::: " + e.description);
+	}
+}
+
 //Form Processor 문서정보를 Load하는 함수
 function LoadpzFormDocInfo() {
     flag = true;
@@ -51,7 +81,8 @@ function LoadpzFormDocInfo() {
 function LoadpzFormDocInfo_Complete(Ans) {
     DivPopUpHidden();
     if (Ans) {
-        openOpinionViewUI();
+        //openOpinionViewUI();
+    	openOpinionUI_New("Show");
     }
 }
 

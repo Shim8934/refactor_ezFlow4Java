@@ -2205,8 +2205,6 @@ public class EzResourceController extends EgovFileMngUtil {
         
         StringBuilder bodyContent = new StringBuilder();
 
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
-        
         if (userInfo.getPrimary().equals("1")) {
         	bodyContent.append(userInfo.getDisplayName() +"[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
         } else {
@@ -2215,10 +2213,9 @@ public class EzResourceController extends EgovFileMngUtil {
         
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900003", userInfo.getLocale()) + " : " +resInfo.get(0).getBrdNm()); 
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " +startDateTime + "&nbsp;~&nbsp;" + endDateTime);
-        bodyContent.append("</DIV>");
         
         String subject = "[" + egovMessageSource.getMessage("ezResource.t171", userInfo.getLocale()) + " : " + resInfo.get(0).getBrdNm() + "] " + title;
-        
+        String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
         
     	InternetAddress from = new InternetAddress();
     	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -2232,7 +2229,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	    	to.setPersonal(accessName, "UTF-8");
 	    	to.setAddress(emailAddress);
 	        	
-	        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+	        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
     	}
         logger.debug("sendMail ended");
         
@@ -2259,8 +2256,6 @@ public class EzResourceController extends EgovFileMngUtil {
         ResGetSendMailToUserVO resInfo =  ezResourceService.getSendMailToUser(resID, Integer.parseInt(num), userInfo.getTenantId());
 		
         StringBuilder bodyContent = new StringBuilder();
-
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
         
         if (approve.equals("1")) {
         	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900007", userInfo.getLocale()));
@@ -2273,7 +2268,6 @@ public class EzResourceController extends EgovFileMngUtil {
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " 
         		+ commonUtil.getDateStringInUTC(resInfo.getStartDate(), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" 
         		+ commonUtil.getDateStringInUTC(resInfo.getEndDate(), userInfo.getOffset(), false));
-        bodyContent.append("</DIV>");
         
         String subject = "";
         if (approve.equals("1")) {
@@ -2281,6 +2275,7 @@ public class EzResourceController extends EgovFileMngUtil {
         } else {
         	subject = "["+egovMessageSource.getMessage("ezResource.t9900012", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
         }
+        String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
         
     	InternetAddress from = new InternetAddress();
     	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -2298,7 +2293,7 @@ public class EzResourceController extends EgovFileMngUtil {
     	to.setAddress(emailAddress);
         	
         
-        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
         
         logger.debug("sendMailToUser ended");
 	}

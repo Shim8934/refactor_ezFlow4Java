@@ -40,11 +40,11 @@
 			pOpinionMod = RetValue[0];
 			pOpinionContent = RetValue[1];
 			
+			document.getElementById("txt_OpinionContent").focus();
+			
 			if (pOpinionMod == "MOD") {
 				document.getElementById("txt_OpinionContent").value = pOpinionContent;
 			}
-			
-			document.getElementById("txt_OpinionContent").focus();
 		};
 		
 		function btn_OpinionCancel_onclick() {
