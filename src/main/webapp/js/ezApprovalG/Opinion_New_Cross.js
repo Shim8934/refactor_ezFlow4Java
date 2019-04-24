@@ -425,8 +425,9 @@ function getAprOpinionXML(pOpContent) {
 	            var cell = GetChildNodes(objNodes[i]);
 	            var cellzero = GetChildNodes(cell[0]);
 	            var KyljeaUserID = getNodeText(cellzero[4]);
-	
-	            if (KyljeaUserID == pUserID && getNodeText(cell[5]) == strLang18) {
+	            var KyljeaAprState = getNodeText(cellzero[12]);
+	            
+	            if (KyljeaUserID == pUserID && (KyljeaAprState == strAprState2 || KyljeaAprState == strAprState5)) {
 	            	ppUserDeptID = getNodeText(cellzero[6]);
 	            	ppUserDeptName = getNodeText(cell[3]);
 	            	ppUserDeptName2 = getNodeText(cellzero[16]);
