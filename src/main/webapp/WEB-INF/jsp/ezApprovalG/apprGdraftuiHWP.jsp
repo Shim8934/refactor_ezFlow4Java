@@ -386,7 +386,8 @@
 			
 			                  Ans = OpenInformationUI(pInformationContent);
 			                  if (Ans) {
-			                      openOpinionUI("Display");
+			                      //openOpinionUI("Display");
+			                	  openOpinionUI_New("");
 			                  }
 			              }
 			          } else if (pDraftFlag == "SUSIN" || pDraftFlag == "GONGRAM") {
@@ -407,7 +408,8 @@
 					  	  	  Ans = OpenInformationUI(pInformationContent);
 				
 					  	  	  if (Ans) {
-					  	  		  openOpinionUI("Display");
+					  	  		  //openOpinionUI("Display");
+					  	  		  openOpinionUI_New("");
 					  	  	  }
 			              }
 			            } else if (pDraftFlag == "HAPYUI") {
@@ -430,7 +432,8 @@
 					  	  		Ans = OpenInformationUI(pInformationContent);
 				
 					  	  		if (Ans) {
-					  	  		    openOpinionUI("Display");
+					  	  		    //openOpinionUI("Display");
+					  	  			openOpinionUI_New("");
 					  	  		}
 			                }
 			            } else {
@@ -929,7 +932,8 @@
 	        }
 	
 	        function btnOpinion_onclick() {
-	            var ret = openOpinionUI("N");
+	            //var ret = openOpinionUI("N");
+	        	openOpinionUI_New("");
 	        }
 	
 	        function btnSave_onclick() {
