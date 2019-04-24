@@ -71,7 +71,8 @@
 			var orgCompanyID = "<c:out value='${orgCompanyID}'/>";
 			
 			function btnOpinion_onclick() {
-			    openOpinionViewUI();
+			    //openOpinionViewUI();
+				openOpinionUI_New("Show");
 			}
 	
 			window.onresize = function () {

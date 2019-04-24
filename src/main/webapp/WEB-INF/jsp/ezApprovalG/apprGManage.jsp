@@ -993,7 +993,8 @@
 				                OpenReceiveENDDraftUI(pCurSelRow, "REDRAFT");
 				            }
 				            else
-				                OpenOpinionUI(pCurSelRow, "HeSong");
+				                //OpenOpinionUI(pCurSelRow, "HeSong");
+				            	openOpinionUI_New(pCurSelRow, "HeSong");
 					        }
 			        	}
 			    } else {
@@ -1004,7 +1005,8 @@
 							getDocList();
 							return;
 	                	}
-		                OpenOpinionUI(pCurSelRow, "HeSong");
+		                //OpenOpinionUI(pCurSelRow, "HeSong");
+		                openOpinionUI_New(pCurSelRow, "HeSong");
 		            }
 			    }
 		    }
