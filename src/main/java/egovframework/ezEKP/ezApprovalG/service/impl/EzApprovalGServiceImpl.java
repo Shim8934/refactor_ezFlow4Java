@@ -18479,7 +18479,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						map.put("v_FUNCTIONTYPE", staASWheSong);
 						//다른 곳에 있는것 가져다 써서 두개 선언. 추후 변경
 						map.put("v_DOCID", docID);
-						map.put("v_DocID", docID);
+						map.put("v_DocID", docID);						
 						map.put("v_TENANTID", tenantID);
 						
 						ezApprovalGDAO.aprDeleteDocInfo3(map);
@@ -18520,6 +18520,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						ezApprovalGDAO.insertHesongAprLineInfoS(map);
 						ezApprovalGDAO.insertSetHesongExpLineInfoS(map);
+						
+						//번경내역 생성
+						map.put("v_PDOCID", docID);
+						map.put("v_TMPDOCID", orgDocID);
+						map.put("companyID", orgCompanyID);
+						ezApprovalGDAO.aprMakeTmp2Ing12(map);
 					} else {
 						subSQL = doSendHesongDocRedraft(docID, makeListField(signXML.getElementsByTagName("WRITERID").item(0).getTextContent()), makeListField(signXML.getElementsByTagName("WRITERNAME").item(0).getTextContent()),
 								makeListField(signXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent()), makeListField(signXML.getElementsByTagName("WRITERJOBTITLE").item(0).getTextContent()), makeListField(signXML.getElementsByTagName("WRITERJOBTITLE2").item(0).getTextContent()), 
