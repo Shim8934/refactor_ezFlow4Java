@@ -1685,7 +1685,6 @@ public class CommonUtil {
 		return strSize;
 	}
 	
-<<<<<<< HEAD
 	public void setLoginUsers(int tenantID, String userID, String loginTime) throws Exception {
 		ezCommonService.setMultiLoginUser(tenantID, userID, loginTime);
 	}
@@ -1742,7 +1741,8 @@ public class CommonUtil {
 		}
 		
 		return result;
-=======
+	}
+	
 	/** 
 	 * <p>
 	 * 자동 발신 알림 메일 내용 생성<br>
@@ -1766,6 +1766,5 @@ public class CommonUtil {
 		}
 		
 		return String.format("<DIV id=\"msgBody\" style=\"font-size: %s; font-family: %s;\" name=\"urn:schemas:httpmail:textdescription\">%s</DIV>", fontSize, fontFamily, content);
->>>>>>> master
 	}
 }
