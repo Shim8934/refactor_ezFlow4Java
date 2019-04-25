@@ -1184,6 +1184,7 @@
 	        			var currOwner = $("#OwnerList_TR_0").attr("data1");
 	        			var IsInsert = CheckMailReceiver(userId, "3");
 	        			var flag;
+	        			var dept = $(".node_selected").parent()[0].getAttribute("cn");
 	        			/* if (userId == currOwner) {		// 선택한 유저가 이미 부관리자에 추가된 경우
 	        				alert("<spring:message code='ezQuestion.t18'/>");
 		   				} */
@@ -1196,6 +1197,7 @@
 			        		async : false,
 			        		data : {
 			        			userID : userId,
+			        			deptID : dept,
 			        			brdID : RetValue["brdID"][0]
 			        		},
 			        		success : function(result) {

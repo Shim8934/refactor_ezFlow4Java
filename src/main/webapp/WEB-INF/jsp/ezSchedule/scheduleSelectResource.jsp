@@ -13,6 +13,7 @@
 	    <%-- <link rel="stylesheet" href="${util.addVer('ezOrgan.e3', 'msg')}" type="text/css" /> --%>
 	    <style>
 	    	.mainlist tr th {
+	    	
 	    		border-top:0px;
 	    	}
 	    </style>

@@ -426,7 +426,7 @@
 	</head>
 
 	<body onload="javascript:window_onload()" onclick="frameClick();">
-		<div class="attachedfile" id="ifrmPreViewRayer" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;font-family:<spring:message code='main.t246' />">
+		<div class="attachedfile" id="ifrmPreViewRayer" style="<c:if test="${isAttach != 'OK'}">display:none;</c:if>margin-bottom:10px;">
 			<ul class="attachedfile_title">
 				<li class="titleText"><span class="titleT"><spring:message code='ezEmail.t99000003' /><span>${pAttachListHtmlSub}</span></span><span class="attach_btn_up" id="BtnAttachDetail" onclick="AttachDetail_view(this);"></span></li>
 	    		<li class="titleSave"><span onmouseover="this.style.color='#164aad'" onmouseout="this.style.color='#666'" style='cursor:pointer' onclick="AttachAllDownload();"><spring:message code='ezEmail.t99000004' /></span></li>
@@ -450,7 +450,7 @@
 		</div>
 		<iframe name="AttachDownFrame" id="AttachDownFrame" width=0 height=0 frameborder=0 marginheight=0 marginwidth=0 scrolling=no style="display:none"></iframe>
 	  	<c:if test="${previewMailImage == 'Y' && previewImageListHtml != ''}">
-		  	<div class="previewmail_addImage" style="margin-bottom:10px;font-family:<spring:message code='main.t246' />">
+		  	<div class="previewmail_addImage" style="margin-bottom:10px;">
 				<p class="title"><spring:message code='ezEmail.0hun05' /></p>
 				<div class="previewIamgelist" id="PreviewAttachList">${previewImageListHtml}</p>
 			</div>  
