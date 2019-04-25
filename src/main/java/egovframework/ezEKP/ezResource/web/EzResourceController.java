@@ -530,7 +530,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdNm = req.getParameter("brdNm");
 		}
 		
-		String adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId()); 
+		String adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID()); 
 		logger.debug("adminFg="+adminFg);
 		
 		//brdNm = brdNm.replace("chr(38)", "&");
@@ -605,7 +605,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		if (req.getParameter("goToPage") != null) {
 			curPage = req.getParameter("goToPage");
 		}
-		adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId());
+		adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID());
 
 		//brdNm = brdNm.replace(String.valueOf(38), "&");
 		
@@ -771,7 +771,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdID = req.getParameter("brdID");
 		}
 			
-		if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId()).equals("Y")) {
+		if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID()).equals("Y")) {
 			boolean returnValue = ezResourceService.multiDelResData(xmlDom, userInfo.getTenantId());
 			strXML.append("<RTN>"+ String.valueOf(returnValue) + "</RTN>");
 			return strXML.toString();
@@ -811,7 +811,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			resID = req.getParameter("resID");
 		}
 		
-		if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), resID, userInfo.getId(), userInfo.getTenantId()).equals("Y")) {
+		if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), resID, userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID()).equals("Y")) {
 			ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(brdID), userInfo.getCompanyID(), userInfo.getTenantId());
 			
 			// 2018-10-24 김민성 - 자원관리 관리자 조회
@@ -1120,7 +1120,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strApproveFlag = resBrd.getApproveFlag();
 		String strOwnerCall = resBrd.getOwnerCall();
 		String strBrdAccess = resBrd.getBrdAccess();
-		String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId());
+		String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId(), userInfo.getDeptID());
 		
 		String[] OwnerList = strOwnerID.split(",");
 		for(int i=1; i<OwnerList.length; i++) {
@@ -1228,7 +1228,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdName = req.getParameter("brdName");
 		}
 
-		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "", userInfo.getTenantId());
+		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "", userInfo.getTenantId(), userInfo.getDeptID());
 		String brdApproveFlag = ezResourceService.getBrdApproveFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (req.getParameter("cmd") != null) {
@@ -1456,7 +1456,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdName = req.getParameter("brdName");
 		}
 
-		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "", userInfo.getTenantId());
+		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "", userInfo.getTenantId(), userInfo.getDeptID());
 		String brdApproveFlag = ezResourceService.getBrdApproveFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (req.getParameter("cmd") != null) {
@@ -1681,7 +1681,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		
 		String companyID = userInfo.getCompanyID();
-		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId());
+		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId(), userInfo.getDeptID());
 		
 		model.addAttribute("resID", resID);
 		model.addAttribute("userInfo", userInfo);
@@ -1915,7 +1915,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String ret = "";
 		
 		brdID = req.getParameter("brdID");
-		ret = ezResourceService.getACL(userInfo.getCompanyID(), brdID, userInfo.getId(), "everyone", userInfo.getTenantId());
+		ret = ezResourceService.getACL(userInfo.getCompanyID(), brdID, userInfo.getId(), "everyone", userInfo.getTenantId(), userInfo.getDeptID());
 		
 		return "<RESULT>"+ret+"</RESULT>";
 	}
@@ -2489,12 +2489,17 @@ public class EzResourceController extends EgovFileMngUtil {
 			userID = request.getParameter("userID");
 		}
 		
+		String deptID = "";
+		if(request.getParameter("deptID") != null) {
+			deptID = request.getParameter("deptID");
+		}
+
 		String brdID = "";
 		if(request.getParameter("brdID") != null) {
 			brdID = request.getParameter("brdID");
 		}
 
-		String result = ezResourceService.userResPermissionCheck(userID, userInfo.getCompanyID(), userInfo.getTenantId(), brdID);
+		String result = ezResourceService.userResPermissionCheck(userID, userInfo.getCompanyID(), userInfo.getTenantId(), brdID, deptID);
 		
 		logger.debug("result : " + result);
 		logger.debug("userResPermissionCheck end");

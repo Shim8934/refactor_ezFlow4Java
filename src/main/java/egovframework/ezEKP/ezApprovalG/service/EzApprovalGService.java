@@ -594,4 +594,5 @@ public interface EzApprovalGService {
 
 	String getDeptIdOfCabinet(String orgCabinetId, int tenantId, String companyID) throws Exception;
 	
+	public String getStoragePeriodName(String period, String lang, String approvalFlag, String companyID, int tenantID) throws Exception;
 }

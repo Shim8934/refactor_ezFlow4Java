@@ -13,6 +13,24 @@ function openOpinionViewUI() {
 	var ret = window.showModalDialog(url,parameter,feature);
 }
 
+function openOpinionUI_New(pOpinionType) {
+	try {
+		var parameter = new Array();
+		parameter[0] = pDocID;		//DOCID
+		parameter[1] = pOpinionType;//OPINIONTYPE NAME
+		parameter[2] = "";			//DRAFTFLAG
+		parameter[3] = "";			//DOCSTATE
+		parameter[4] = orgCompanyID;//ORGCOMPANYID
+		parameter[99] = "hwp";		//EXT
+		
+		var url = "/ezApprovalG/aprOpinionNew.do";
+		var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no"
+		var ret = window.showModalDialog(url,parameter,feature);
+	} catch (e) {
+		alert("openOpinionUI_New ::: " + e.description);
+	}
+}
+
 function OpenInformationUI(pInformationContent) { 
     var parameter = pInformationContent;
 	var url = "/ezApprovalG/ezAprOpinion.do";
