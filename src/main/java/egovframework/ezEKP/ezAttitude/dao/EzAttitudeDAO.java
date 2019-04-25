@@ -416,4 +416,30 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		insert("ezAttitudeDAO.saveCancelAnnual", map);
 	}
     
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Object>> getJoinDateUserList(Map<String, Object> map) throws Exception {
+    	return (List<Map<String, Object>>)list("ezAttitudeDAO.getJoinDateUserList", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public int getAttendanceDay(Map<String, Object> map) throws Exception {
+    	return (int) select("ezAttitudeDAO.getAttendanceDay", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void updateAnnualHoliday(Map<String, Object> map) throws Exception {
+    	update("ezAttitudeDAO.updateAnnualHoliday", map);
+    }
+
+    @SuppressWarnings("unchecked")
+    public int checkAbsentDay(Map<String, Object> map) throws Exception {
+    	return (int)select("ezAttitudeDAO.checkAbsentDay", map);
+    }
+
+    @SuppressWarnings("unchecked")
+    public int getMonthlyHolidayCnt(Map<String, Object> map) throws Exception {
+    	return (int)select("ezAttitudeDAO.getMonthlyHolidayCnt", map);
+    }
+    
+    
 }

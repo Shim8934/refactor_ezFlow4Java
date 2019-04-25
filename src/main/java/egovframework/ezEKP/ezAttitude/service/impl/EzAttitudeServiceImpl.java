@@ -5,9 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -2848,4 +2850,110 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		return "success";
 	}
+
+	@Override
+	public List<Map<String, Object>> getJoinDateUserList(String yesterday) throws Exception {
+		
+		LOGGER.debug("getJoinDateUserList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("yesterday", yesterday);
+		
+		LOGGER.debug("getJoinDateUserList ended");
+		
+		return ezAttitudeDAO.getJoinDateUserList(map);
+	}
+	
+	@Override
+	public void updateAnnualHoliday(Map<String, Object> map) throws Exception {
+		
+		LOGGER.debug("updateAnnualHoliday started");
+		
+		int workingMonthCnt = Integer.parseInt((String)map.get("workingmonthcnt"));
+		int defaultAnnualHolidayCnt = 15;
+		
+		if (workingMonthCnt < 24) {
+			int workingDayCnt = checkHoliday((String)map.get("joindate"), commonUtil.getTodayUTCTime("yyyy-MM-dd"), "1", "S907001", 1).size();
+			int attendanceDay = ezAttitudeDAO.getAttendanceDay(map);
+			int attendanceRate = attendanceDay / workingDayCnt * 100;
+			
+			if (attendanceRate >= 80) {
+				map.put("holidayCnt", defaultAnnualHolidayCnt);
+				map.put("attendanceRateCondition","1");
+			} else {
+				int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
+				map.put("holidayCnt", monthlyHolidayCnt);
+				map.put("attendanceRateCondition","2");
+			}
+		} else {
+			
+			int annualHolidayCnt = defaultAnnualHolidayCnt + (int) (workingMonthCnt / 12 - 1) / 2;
+
+			// 입사한지 2년이 됐을 때 남아있는 월차는 모두 0으로 초기화 해준다.
+			map.put("holidayCnt", 0);
+			map.put("attendanceRateCondition","2");
+			ezAttitudeDAO.updateAnnualHoliday(map);
+			
+			
+			map.put("holidayCnt", annualHolidayCnt);
+			map.put("attendanceRateCondition","1");
+			
+		}
+		
+		ezAttitudeDAO.updateAnnualHoliday(map);
+
+		LOGGER.debug("updateAnnualHoliday ended");
+	}
+	
+	@Override
+	public void updateMonthlyHoliday(Map<String, Object> map) throws Exception{
+		
+		LOGGER.debug("updateMonthlyHoliday started");
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String today = sdf.format(new Date());
+		Date setDate = sdf.parse(today);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(setDate);
+		cal.add(Calendar.DATE, -1);
+		String oneDayAgo = sdf.format(cal.getTime());
+		cal.add(Calendar.MONTH, -1);
+		String oneMonthAgo = sdf.format(cal.getTime());
+		
+		map.put("oneMonthAgo",oneMonthAgo);
+		map.put("oneDayAgo", oneDayAgo);
+		
+		int userAbsentCnt = ezAttitudeDAO.checkAbsentDay(map);
+		int userAttendanceCnt = checkHoliday(oneMonthAgo, oneDayAgo, "1", "S907001", 1).size();
+		int monthWorkingDayCnt = ezAttitudeDAO.getAttendanceDay(map);
+		
+		if (userAbsentCnt == 0 && (userAttendanceCnt == monthWorkingDayCnt)) {
+			int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
+			map.put("holidayCnt", monthlyHolidayCnt + 1);
+			map.put("attendanceRateCondition","2");
+			ezAttitudeDAO.updateAnnualHoliday(map);
+		}
+		
+	
+		LOGGER.debug("updateMonthlyHoliday ended");
+	
+	}
+	
+	@Override
+	public void extinctionMonthlyHoliday(Map<String, Object> map) throws Exception {
+		LOGGER.debug("extinctionMonthlyHoliday started");
+		
+		int userMonthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
+		int workingMonthCnt = Integer.parseInt((String)map.get("workingmonthcnt"));
+		
+		if (userMonthlyHolidayCnt >= workingMonthCnt - (workingMonthCnt - 12 ) * 2) {
+			int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
+			map.put("holidayCnt", monthlyHolidayCnt - 1);
+			map.put("attendanceRateCondition","2");
+			ezAttitudeDAO.updateAnnualHoliday(map);
+		}
+		
+		LOGGER.debug("extinctionMonthlyHoliday ended");
+	}
+
 }
