@@ -250,7 +250,8 @@
 		    function process_AfterOpen_Complete(Ans) {
 		        DivPopUpHidden();
 		        if (Ans) {
-		            openOpinionUI("Display");
+		            //openOpinionUI("Display");
+		        	openOpinionUI_New("");
 		        }
 		    }
 		    function setAutoProperty() {
@@ -834,7 +835,8 @@
 	    			return;
 		    	}
 		    	
-		        var ret = openOpinionUI("N");
+		        //var ret = openOpinionUI("N");
+		    	openOpinionUI_New("");
 		    }
 		    function btnSave_onclick() {
 		    }
@@ -990,7 +992,11 @@
 		                    pDocSN = tmpDocSN;
 		            }
 		        }
-		        var parameter = new Array();
+		        temppDocSN = pDocSN;
+		        
+		        openOpinionUI_New("HeSong", btnReturn_onclick_Complete);
+		        
+		        /* var parameter = new Array();
 		        parameter[0] = pDocID;
 		        parameter[1] = "HeSong";
 		        parameter[2] = KuyjeType;
@@ -1003,11 +1009,10 @@
 		        //양식 확장자 가져오는 값 전송. 중간에 값 껴들수 있어서 그냥 99로 생성
 		        parameter[99] = ext;
 		        
-		        temppDocSN = pDocSN;
 		        apropinion_cross_dialogArguments[0] = parameter;
 		        apropinion_cross_dialogArguments[1] = btnReturn_onclick_Complete;
 		
-		        DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do");
+		        DivPopUpShow(530, 520, "/ezApprovalG/aprOpinion.do"); */
 		    }
 		    function btnReturn_onclick_Complete(ret) {
 		        DivPopUpHidden();

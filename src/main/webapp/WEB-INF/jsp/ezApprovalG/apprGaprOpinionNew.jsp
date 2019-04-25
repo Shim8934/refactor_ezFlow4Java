@@ -89,7 +89,7 @@
 		
 		//[작성], [수정], [삭제] 버튼 상황별 표출
 		function displayButtons() {
-			if (pMode == "END"){return;}
+			if (pMode == "END" || pDisplay == "Show" || pDocState == "017"){return;}
 			
 			var DisplayMode = pDisplay.toUpperCase();
 			
@@ -189,7 +189,7 @@
 		//[작성] 버튼 클릭
 		var opinionPopup_cross_dialogArguments = new Array();
 		function btn_OpinionAdd_onclick() {
-			if (pMode == "END"){return;}
+			if (pMode == "END" || pDisplay == "Show" || pDocState == "017"){return;}
 			
 			var parameter = new Array();
 	        parameter[0] = "ADD";
@@ -203,7 +203,7 @@
 		
 		//[수정] 버튼 클릭
 		function btn_OpinionMod_onclick() {
-			if (pMode == "END"){return;}
+			if (pMode == "END" || pDisplay == "Show" || pDocState == "017"){return;}
 			
 			var OpinionList = new ListView();
             OpinionList.LoadFromID("OpinionList");
@@ -225,7 +225,7 @@
 		
 		//[삭제] 버튼 클릭
 		function btn_OpinionDel_onclick() {
-			if (pMode == "END"){return;}
+			if (pMode == "END" || pDisplay == "Show" || pDocState == "017"){return;}
 			
 			var OpinionList = new ListView();
             OpinionList.LoadFromID("OpinionList");
@@ -275,29 +275,6 @@
 			}
 		}
 	
-		// 의견창 위치이동 관련
-		var move_on, frameLeft, frameTop, layerStartX, layerStartY;
-	    var iFramePanel = window.parent.document.getElementById("iFramePanel");
-		function layerStart() {
-	    	layerStartX = event.clientX;
-	    	layerStartY = event.clientY;
-	    	move_on = true;
-	    }
-		// 의견창 위치이동 관련
-	    function layerMove() {
-	    	if(move_on == true) {
-	    		if(iFramePanel.offsetLeft > 0 && ((event.clientX - layerStartX + iFramePanel.offsetLeft) > 5) && ((event.clientX - layerStartX + iFramePanel.offsetLeft + iFramePanel.offsetWidth) < 1145)) {
-	    			iFramePanel.style.left = (event.clientX - layerStartX + iFramePanel.offsetLeft) + "px";
-	    		}
-	    		if(iFramePanel.offsetTop > 0 && ((event.clientY - layerStartY + iFramePanel.offsetTop) > 5) && ((event.clientY - layerStartY + iFramePanel.offsetTop + iFramePanel.offsetHeight) < 990)) {
-	    			iFramePanel.style.top = (event.clientY - layerStartY + iFramePanel.offsetTop) + "px";
-	    		}
-	    	}
-	    }
-		// 의견창 위치이동 관련
-	    function layerStop() {
-			move_on = false;
-	    }
 		</script>
 		<style type="text/css">
 			.mainlist tr th {
@@ -318,9 +295,7 @@
 		</style>
 	</head>
 	<body class="popup">
-	    <h1 style="cursor:move;" onmousedown="layerStart()" onmouseup="layerStop()" onmousemove="layerMove()">
-	        <spring:message code='ezApprovalG.t55'/>
-	    </h1>
+	    <h1><spring:message code='ezApprovalG.t55'/></h1>
 	    
 	    <div id="close">
             <ul><li><span onclick="return btn_OpinionCancel_onclick()"></span></li></ul>

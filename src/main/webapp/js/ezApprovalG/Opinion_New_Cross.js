@@ -394,48 +394,51 @@ function getAprOpinionXML(pOpContent) {
 	var ppUserDisplayName2 = pUserDisplayName2;
 	var ppUserCompanyID = pUserCompanyID;
 	
-	try {
-		var xmldom = createXmlDom();
-		var resultXML = "";
-		
-		$.ajax({
-    		type : "POST",
-    		dataType : "text",
-    		async : false,
-    		url : "/ezApprovalG/aprLineRequest.do",
-    		data : {
-    			docID : pDocID,
-    			userID : ppUserID,
-    			formID : "",
-    			isUsed   : "",
-    			mode     : "",
-    			orgCompanyID : pOrgCompanyID
-    		},
-    		success: function(xml){
-    			resultXML = xml;
-    		}        			
-    	});
-		
-		xmldom = loadXMLString(resultXML);
-		objNodes = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
-        count = objNodes.length - 1;
-
-        for (var i = count; i >= 0; i--) {
-            var cell = GetChildNodes(objNodes[i]);
-            var cellzero = GetChildNodes(cell[0]);
-            var KyljeaUserID = getNodeText(cellzero[4]);
-
-            if (KyljeaUserID == pUserID && getNodeText(cell[5]) == strLang18) {
-            	ppUserDeptID = getNodeText(cellzero[6]);
-            	ppUserDeptName = getNodeText(cell[3]);
-            	ppUserDeptName2 = getNodeText(cellzero[16]);
-            	ppUserTitle = getNodeText(cell[2]);
-            	ppUserTitle2 = getNodeText(cellzero[18]);
-                break;
-            }
-        }
-	} catch (e) {
-		alert("getAprOpinionXML_1 :: " + e.description);
+	if (pDraftFlag == "") {
+		try {
+			var xmldom = createXmlDom();
+			var resultXML = "";
+			
+			$.ajax({
+	    		type : "POST",
+	    		dataType : "text",
+	    		async : false,
+	    		url : "/ezApprovalG/aprLineRequest.do",
+	    		data : {
+	    			docID : pDocID,
+	    			userID : ppUserID,
+	    			formID : "",
+	    			isUsed   : "",
+	    			mode     : "",
+	    			orgCompanyID : pOrgCompanyID
+	    		},
+	    		success: function(xml){
+	    			resultXML = xml;
+	    		}        			
+	    	});
+			
+			xmldom = loadXMLString(resultXML);
+			objNodes = SelectNodes(xmldom, "LISTVIEWDATA/ROWS/ROW");
+	        count = objNodes.length - 1;
+	
+	        for (var i = count; i >= 0; i--) {
+	            var cell = GetChildNodes(objNodes[i]);
+	            var cellzero = GetChildNodes(cell[0]);
+	            var KyljeaUserID = getNodeText(cellzero[4]);
+	            var KyljeaAprState = getNodeText(cellzero[12]);
+	            
+	            if (KyljeaUserID == pUserID && (KyljeaAprState == strAprState2 || KyljeaAprState == strAprState5)) {
+	            	ppUserDeptID = getNodeText(cellzero[6]);
+	            	ppUserDeptName = getNodeText(cell[3]);
+	            	ppUserDeptName2 = getNodeText(cellzero[16]);
+	            	ppUserTitle = getNodeText(cell[2]);
+	            	ppUserTitle2 = getNodeText(cellzero[18]);
+	                break;
+	            }
+	        }
+		} catch (e) {
+			alert("getAprOpinionXML_1 :: " + e.description);
+		}
 	}
 	
 	try {
