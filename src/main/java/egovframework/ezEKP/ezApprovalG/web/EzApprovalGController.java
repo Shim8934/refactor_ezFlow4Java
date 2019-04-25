@@ -5487,6 +5487,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					}
 				}
 			}
+		} else {
+			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId(), docState);
+			
+			if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+				return "main/warning";
+			}
 		}
 		
 		model.addAttribute("docID", docID);
@@ -6473,6 +6479,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} else {
 			if (docXML.getElementsByTagName("STORAGEPERIOD").item(0) != null) {
 				storagePeriod = docXML.getElementsByTagName("STORAGEPERIOD").item(0).getTextContent();
+				storagePeriod = ezApprovalGService.getStoragePeriodName(storagePeriod, userInfo.getLang(), approvalFlag, userInfo.getCompanyID(), userInfo.getTenantId());
 			}
 			if (docXML.getElementsByTagName("TASKCODE").item(0) != null) {
 				taskCode = docXML.getElementsByTagName("TASKCODE").item(0).getTextContent();
