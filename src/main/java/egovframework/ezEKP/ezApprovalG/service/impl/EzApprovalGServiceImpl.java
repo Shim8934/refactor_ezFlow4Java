@@ -28105,4 +28105,47 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		logger.debug("getDeptIdOfCabinet ended");
 		return ezApprovalGDAO.getDeptIdOfCabinet(map);
 	}
+	
+	@Override
+	public String getStoragePeriodName(String period, String lang, String approvalFlag, String companyID, int tenantID) throws Exception {
+		logger.debug("getStoragePeriodName started | Period:" + period + " | Lang:" + lang);
+		
+		String rtnVal = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LANGTYPE", lang);
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+		map.put("approvalFlag", approvalFlag);
+		
+		List<ApprGLeftVO> apprGetKeepTypeList = ezApprovalGDAO.getKeepType(map);
+		
+		StringBuffer sb = new StringBuffer();
+		
+        sb.append("<DATA>");
+        for (int i = 0; i < apprGetKeepTypeList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGetKeepTypeList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document dataXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		int dlength = dataXML.getElementsByTagName("ROW").getLength();
+		
+		try {
+			for (int k = 0; k < dlength; k++) {
+				String[] colOption = dataXML.getElementsByTagName("NAME").item(k).getTextContent().split(";");
+				if (colOption[2].equals(period)) {
+					rtnVal = colOption[1];
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtnVal = "ERROR";
+		}
+		
+		logger.debug("getStoragePeriodName ended | result:" + rtnVal);
+		return rtnVal;
+	}
 }

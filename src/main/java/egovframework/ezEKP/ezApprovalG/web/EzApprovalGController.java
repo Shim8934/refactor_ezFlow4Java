@@ -6333,6 +6333,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} else {
 			if (docXML.getElementsByTagName("STORAGEPERIOD").item(0) != null) {
 				storagePeriod = docXML.getElementsByTagName("STORAGEPERIOD").item(0).getTextContent();
+				storagePeriod = ezApprovalGService.getStoragePeriodName(storagePeriod, userInfo.getLang(), approvalFlag, userInfo.getCompanyID(), userInfo.getTenantId());
 			}
 			if (docXML.getElementsByTagName("TASKCODE").item(0) != null) {
 				taskCode = docXML.getElementsByTagName("TASKCODE").item(0).getTextContent();
