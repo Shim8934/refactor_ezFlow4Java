@@ -5341,6 +5341,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					}
 				}
 			}
+		} else {
+			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId(), docState);
+			
+			if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+				return "main/warning";
+			}
 		}
 		
 		model.addAttribute("docID", docID);
