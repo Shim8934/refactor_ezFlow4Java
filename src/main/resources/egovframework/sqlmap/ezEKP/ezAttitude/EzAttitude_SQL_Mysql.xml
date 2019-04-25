@@ -1899,7 +1899,6 @@
 		]]>
 	</insert>
 	
-<<<<<<< HEAD
 	<select id="ezAttitudeDAO.getJoinDateUserList" parameterClass="map" resultClass="java.util.HashMap">
 		SELECT 
 			USER_ID AS userid, 
@@ -1970,7 +1969,6 @@
 			USER_ID = #userid#
 	</select>
 	
-=======
 	<select id="ezAttitudeDAO.checkCanApplStatus" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT
@@ -2024,5 +2022,4 @@
 					          		ATTITUDE_ID = #attModId#)t)
 		]]>
 	</delete>
->>>>>>> 793f928e19ad3556cac1b0746542dc1cefe32562
 </sqlMap>
