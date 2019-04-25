@@ -54,6 +54,7 @@ import egovframework.ezEKP.ezSchedule.service.EzScheduleService;
 import egovframework.ezEKP.ezSchedule.vo.ScheGetHolidayVO;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
@@ -2479,8 +2480,12 @@ public class EzAttitudeGWController {
 			@RequestParam(value="tenantId", required=true) int tenantId,
 			@RequestParam(value="userId", required=true) String userId,
 			@RequestParam(value="offset", required=true) String offset,
+			@RequestParam(value="idList", required=false) String idList,
+			@RequestParam(value="loginCookie", required=false) String loginCookie,
 			@RequestParam(value="content", required=true) String content) {
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/saveCancelAnnual] started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
 		JSONObject result = new JSONObject();
 		String status = "exception";
@@ -2491,6 +2496,8 @@ public class EzAttitudeGWController {
 			status = ezAttitudeService.saveCancelAnnual(attitudeId, companyId, tenantId, userId, info.getUserName(), 
 					info.getUserName2(), info.getTitle(), info.getTitle2(), info.getDeptId(), info.getDeptName(), 
 					info.getDeptName2(), "0", content, offset);
+			AttitudeVO vo = ezAttitudeService.getAttitudeInfo(attitudeId, info.getOffSet(), info.getPrimary(), tenantId);
+			ezAttitudeService.sendMailToReference(vo, attitudeId, idList, request, loginCookie, userInfo, companyId, tenantId);
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -2502,6 +2509,43 @@ public class EzAttitudeGWController {
 			result.put("data", status);
 		}
 		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/saveCancelAnnual] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [DELETE] 연차취소신청 삭제
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/deleteCancelAnnual", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteCancelAnnual(@PathVariable String userId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="attitudeId", required=false) String attitudeId) {
+			
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deleteCancelAnnual] started.");
+		
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		JSONObject attJson = new JSONObject();
+		
+		int status = 0;
+		
+		try{
+			status = ezAttitudeService.deleteCancelAnnual(companyId, tenantId, attitudeId);
+			
+			if (status == 1) {
+				result.put("status", "ok");
+			} else {
+				result.put("status", "error");
+			}
+			result.put("code", 0);
+			result.put("data", status);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", status);
+		}
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deleteCancelAnnual] ended.");
 		return result;
 	}
 }
