@@ -381,7 +381,8 @@
 		    function CheckOpinionYN_Complete(Ans) {
 		        DivPopUpHidden();
 		        if (Ans)
-		            openOpinionUI("", CheckOpinionYN_Complete_Complete);
+		            //openOpinionUI("", CheckOpinionYN_Complete_Complete);
+		        	openOpinionUI_New("", CheckOpinionYN_Complete_Complete);
 		        else {
 		            if (pDraftFlag == "SUSIN")
 		                getSusinSNInfo();
@@ -1006,7 +1007,8 @@
 		        if (CheckUsePassword()) {
 		            chk_Passwd(pingUserID, btnReject_chkpassword_Complete);
 		        } else {
-		            openOpinionUI("BanSong", btnReject_option_Complete);
+		            //openOpinionUI("BanSong", btnReject_option_Complete);
+		        	openOpinionUI_New("BanSong", btnReject_option_Complete);
 		        }
 		    }
 		    function btnReject_chkpassword_Complete(chkpass) {
@@ -1021,7 +1023,8 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
-		        openOpinionUI("BanSong", btnReject_option_Complete);
+		        //openOpinionUI("BanSong", btnReject_option_Complete);
+		        openOpinionUI_New("BanSong", btnReject_option_Complete);
 		    }
 		    /**
 		    * '반송'
@@ -1101,8 +1104,10 @@
 		        if (CheckUsePassword()) {
 		            chk_Passwd(pingUserID, btnStay_chkpassword_Complete);
 		        }
-		        else
-		            openOpinionUI("BoRyu", btnStay_option_Complete);
+		        else {
+		            //openOpinionUI("BoRyu", btnStay_option_Complete);
+			        openOpinionUI_New("BoRyu", btnStay_option_Complete);
+		        }
 		    }
 		
 		    function btnStay_chkpassword_Complete(chkpass) {
@@ -1117,7 +1122,8 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
-		        openOpinionUI("BoRyu", btnStay_option_Complete);
+		        //openOpinionUI("BoRyu", btnStay_option_Complete);
+		        openOpinionUI_New("BoRyu", btnStay_option_Complete);
 		    }
 		
 		    function btnStay_option_Complete(ret) {
@@ -1216,7 +1222,8 @@
 		        }
 		    }
 		    function btnOpinion_onclick() {
-		        openOpinionUI("");
+		        //openOpinionUI("");
+		    	openOpinionUI_New("");
 		    }
 		    function btnMemo_onclick() {
 		        openMemoUI();
@@ -1233,7 +1240,7 @@
 		    }
 		
 		    function btnClose_onclick() {
-		    	if (FirstHtml != "") {
+		    	if (editedFlag) {
 		    		var pInformationContent = "<spring:message code='ezApprovalG.t148'/>" + "<br>" + "<spring:message code='ezApprovalG.t149'/>";
 				    OpenInformationUI(pInformationContent, btnClose_onclick_Complete);
 		    	} else {
@@ -1681,7 +1688,7 @@
 	    			btnClose_onclick();
 		        }
 		    }
-		
+			var editedFlag = false;
 		    function btnEdit_onclick()
 		    {
 		    	if (checkAprState()) {
@@ -1735,6 +1742,7 @@
 		            if (FirstHtml == "")
 		                FirstHtml = beforeHtml;
 			        btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t44'/>";
+			        editedFlag = true;
 		        }
 		        else {
 		            message.Set_EditorInputBodyHTML(modifiOrgBody);
@@ -1813,6 +1821,7 @@
 		    }
 		    
 		    function checkAprState() {
+		    	editedFlag = false;
 		    	var result = "";
 		    	
 		    	if (approvalFlag == "S") {
@@ -1833,7 +1842,6 @@
 			    		}
 			    	});
 		    	}
-		    	
 		    	return result == "FALSE" ? true : false;
 		    }
 		    
