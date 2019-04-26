@@ -14,7 +14,6 @@
 		<script type="text/javascript" language="javascript">
 			var BoardID = "<c:out value='${model.boardID}'/>";
 	        var brd_color = "<c:out value='${model.boardColor}'/>";
-	        var portlet =  $.trim("<c:out value='${model.portlet}'/>");
 	        var background = $.trim("<c:out value='${model.backGround}'/>");
 	        var pAdminType = $.trim("<c:out value='${adminType}'/>");
 	        var FormFlag =  $.trim("<c:out value='${model.formFlag}'/>");
@@ -41,12 +40,7 @@
 	            }
 	    	};
         
-			$(document).ready(function(){
-				$("#trPortlet").css("display","none");
-
-	            if (portlet == "Y") {
-	                $("#chkPortletBoard").prop("checked",true);
-	            }
+			$(document).ready(function() {
 	            if (background == "Y") {
 	                $("#chkbackgroundimage").prop("checked",true);
 	            }
@@ -89,34 +83,45 @@
 	                }
 	            }
 
+	            /* 2019-04-26 홍승비 - 게시판 설정으로 통합된 TR들을 체크박스 disabled 설정으로 변경 */
 	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명, URL, 동영상 게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
 	            //추가항목
 	            if ("${style}" == "") {
 	                if ($("#chkPhotoBoard").is(":checked") || $("#chkThumbBoard").is(":checked") || $("#chkMovieBoard").is(":checked")) {
 	                    document.getElementById("trAttribute").style.display = "none";
-	                    document.getElementById("chkNotifyTr").style.display = "none";
-	                    document.getElementById("tr1").style.display = "none";
-	                    document.getElementById("tr2").style.display = "none";
+	                    $("#chkNotify").prop("disabled", true);
+	                    $("#chkbackgroundimage").prop("disabled", true);
+	                    $("#chkform").prop("disabled", true);
+	                    
+	                    $("#chkNotify").prop("checked", false);
+	                    $("#chkbackgroundimage").prop("checked", false);
+	                    $("#chkform").prop("checked", false);
 	                }
 	                else if ($("#chkAnonyBoard").is(":checked")) {
-	                	document.getElementById("chkNotifyTr").style.display = "none";
-	                }
-	                else if ($("#chkPortletBoard").is(":checked")) {
-	                	document.getElementById("trAttribute").style.display = "none";
+	                	$("#chkNotify").prop("disabled", true);
+	                	$("#chkNotify").prop("checked", false);
 	                }
 	                /* 2018-07-13 홍승비 - URL게시판 구분 추가 */
 	                else if ($("#chkURLBoard").is(":checked")) {
 		            	document.getElementById("txtURL").style.display = "";
 		            	document.getElementById("trAttribute").style.display = "none";
-	                    document.getElementById("chkNotifyTr").style.display = "none";
-	                    document.getElementById("tr1").style.display = "none";
-	                    document.getElementById("tr2").style.display = "none";
-	                    document.getElementById("tr3").style.display = "none";
 	                    document.getElementById("expireTr").style.display = "none";
 	                    document.getElementById("deleteAfterTr").style.display = "none";
 	                    document.getElementById("attachLimitTr").style.display = "none";
-	                    document.getElementById("oneLineTr").style.display = "none";
-	                    document.getElementById("trLike").style.display = "none";
+	                    
+	                    $("#chkNotify").prop("disabled", true);
+	                    $("#chkbackgroundimage").prop("disabled", true);
+	                    $("#chkform").prop("disabled", true);
+	                    $("#chkApprBoard").prop("disabled", true);
+	                    $("#chkOneLine").prop("disabled", true);
+	                    $("#chkBoardLike").prop("disabled", true);
+	                    
+	                    $("#chkNotify").prop("checked", false);
+	                    $("#chkbackgroundimage").prop("checked", false);
+	                    $("#chkform").prop("checked", false);
+	                    $("#chkApprBoard").prop("checked", false);
+	                    $("#chkOneLine").prop("checked", false);
+	                    $("#chkBoardLike").prop("checked", false);
 	                }
 	                
 	                if (!$("#chkURLBoard").is(":checked")) {
@@ -230,12 +235,6 @@
 	            	url = "http://" + url;
 	            }
 	             
-				if ($("#chkPortletBoard").is(":checked") && url == "") {
-					portlet = "Y";
-				} else {
-					portlet = "N";
-				}
-
 	            if (orgAPPRFLAG != APPRFLAG) {
 	                if (orgAPPRFLAG == "N") {
 	                    if (!confirm("<spring:message code='ezBoard.t999013'/>")) {
@@ -271,6 +270,7 @@
 	            	oneLineReply = 1;
 	            }
 	            
+	            /* 2019-04-26 홍승비 - 쓰임이 없는 포틀릿 옵션의 사용 여부를 "N"으로 고정 */
 	            /* 2018-10-18 홍승비 - 게시판'그룹' 이름변경 시 하위게시판처럼 데이터가 업데이트되는 부분 수정 */
 	            $.ajax({
 	            	type : "POST",
@@ -281,7 +281,7 @@
 	            		boardName:$("#txtBoardName").val(), boardName2:$("#txtBoardName2").val(),
 	            		boardID:BoardID, attachSizeLimit:AttachMax, boardDescription:Description,
 	            		itemExpires:Expires, url:url, guBun:gubun, replyNotify:replynotify, deleteAfter:iDeleteAfter,
-	            		boardColor:brd_color, portlet:portlet, backGround:background,
+	            		boardColor:brd_color, portlet:"N", backGround:background,
 	            		formFlag:FormFlag, oneLineReply:oneLineReply, apprFlag:APPRFLAG, orgApprFlag:orgAPPRFLAG,
 	            		apprUserList:ApprUserList, apprMailFlag:APPRMAILFLAG, parentBoardID : parentBoardID,
 	            		likeFlag:useBoardLike
@@ -442,17 +442,18 @@
 	            
 	             if (chkURLBoard.checked == true) {
                     document.getElementById("txtURL").style.display = "";
-                    document.getElementById("tr1").style.display = "none";
-                    document.getElementById("tr2").style.display = "none";
-                    document.getElementById("tr3").style.display = "none";
                     document.getElementById("expireTr").style.display = "none";
                     document.getElementById("deleteAfterTr").style.display = "none";
                     document.getElementById("attachLimitTr").style.display = "none";
-                    document.getElementById("oneLineTr").style.display = "none";
                     document.getElementById("trAttribute").style.display = "none";
-                    document.getElementById("chkNotifyTr").style.display = "none";
-                    document.getElementById("trLike").style.display = "none";
                     
+					$("#chkNotify").prop("disabled", true);
+					$("#chkbackgroundimage").prop("disabled", true);
+					$("#chkform").prop("disabled", true);
+					$("#chkApprBoard").prop("disabled", true);
+					$("#chkOneLine").prop("disabled", true);
+					$("#chkBoardLike").prop("disabled", true);
+					
                     document.getElementById("chkApprBoard").checked = false;
                     checkApprBoard();                   
                     document.getElementById("chkExpires").checked = false;
@@ -465,64 +466,42 @@
                     document.getElementById("chkBoardLike").checked = false;
 	            } else {
 					document.getElementById("txtURL").style.display = "none";
-                    document.getElementById("tr1").style.display = "";
-                    document.getElementById("tr2").style.display = "";
-                    document.getElementById("tr3").style.display = "";
                     document.getElementById("expireTr").style.display = "";
                     document.getElementById("deleteAfterTr").style.display = "";
                     document.getElementById("attachLimitTr").style.display = "";
-                    document.getElementById("oneLineTr").style.display = "";
                     document.getElementById("trAttribute").style.display = "";
-                    document.getElementById("chkNotifyTr").style.display = "";
-                    document.getElementById("trLike").style.display = "";
+                    
+                    $("#chkNotify").prop("disabled", false);
+					$("#chkbackgroundimage").prop("disabled", false);
+					$("#chkform").prop("disabled", false);
+					$("#chkApprBoard").prop("disabled", false);
+					$("#chkOneLine").prop("disabled", false);
+					$("#chkBoardLike").prop("disabled", false);
 	            }
 
 	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명, 동영상게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
 	             if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkAnonyBoard.checked == true || chkMovieBoard.checked == true) {
-	                document.getElementById("chkNotifyTr").style.display = "none";
+	                $("#chkNotify").prop("disabled", true);
 	                document.getElementById("chkNotify").checked = false;
 	            } else if (chkURLBoard.checked == false) {
-	                document.getElementById("chkNotifyTr").style.display = "";
+	                $("#chkNotify").prop("disabled", false);
 	            }
 	            
-	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkPortletBoard.checked == true || chkMovieBoard.checked == true) {
+	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkMovieBoard.checked == true) {
 	                document.getElementById("trAttribute").style.display = "none";
 	            } else if (chkURLBoard.checked == false) {
 	                document.getElementById("trAttribute").style.display = "";
 	            }
 	            
 	            if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkMovieBoard.checked == true) {
-	            	document.getElementById("tr1").style.display = "none";
-	            	document.getElementById("tr2").style.display = "none";
+	            	$("#chkbackgroundimage").prop("disabled", true);
+					$("#chkform").prop("disabled", true);
 	                document.getElementById("chkbackgroundimage").checked = false;
 	                document.getElementById("chkform").checked = false;
 	            } else if (chkURLBoard.checked == false) {
-	            	document.getElementById("tr1").style.display = "";
-	            	document.getElementById("tr2").style.display = "";
+	            	$("#chkbackgroundimage").prop("disabled", false);
+	            	$("#chkform").prop("disabled", false);
 	            }
-	            
-	            /*
-	            // chkNotify, chkform 등의 TR 표출을 상단에서 제어하도록 수정했으므로 주석처리
-	            if (chkNotify.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
-	                alert("<spring:message code='ezBoard.t150'/>");
-	                event.srcElement.checked = false;
-	                return;
-	            }
-	            if (chkbackgroundimage.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
-	                alert("<spring:message code='ezBoard.t6000'/>");
-	                event.srcElement.checked = false;
-	                return;
-	            }
-	            if (chkform.checked && (chkPhotoBoard.checked || chkThumbBoard.checked)) {
-	                alert("<spring:message code='ezBoard.t6001'/>");
-	                event.srcElement.checked = false;
-	                return;
-	            }
-	             if (chkNotify.checked && chkAnonyBoard.checked) {
-	                alert("<spring:message code='ezBoard.t151'/>");
-	                event.srcElement.checked = false;
-	                return;
-	            } */
 			}
 			
 			function checkApprBoard() {
@@ -593,7 +572,7 @@
 			            }
 			        }
 			    }
-			}			
+			}
 			function getApprUserList() {
 				$.ajax({
 					type : "POST",
@@ -677,7 +656,7 @@
 			        document.getElementById("colorID").innerText = color;
 			        brd_color = color;
 			    }
-			}			
+			}
 		    function ExtensionAttribute_onClick() {
 		     /*    if (chkGroupBoard.checked) {
 		            gubun = "1"
@@ -936,6 +915,31 @@
 	                 <input type="text" id="txtURL" style="width: 73%;margin-left: 1.5px;margin-bottom: 1px;" value="<c:out value='${model.url}' />" />                
 	            </td>
 	        </tr>
+	        
+	        <%-- 2019-04-26 홍승비 - 게시판 옵션들을 모아놓은 게시판 설정 TR 추가 --%>
+	        <tr id="boardOptionTR" style="${style}">
+	        	<th><spring:message code="ezNewPortal.t048" /></th>
+	        	<td>
+	        		<span style="display:inline-block;"><input type="checkbox" id="chkApprBoard" onclick="checkApprBoard()"><spring:message code="ezBoard.t999020" />&nbsp;</span>
+	        		<span style="display:inline-block;"><input type="checkbox" id="chkBoardLike"><spring:message code="ezBoard.hsb10" />&nbsp;</span>
+	        		<span style="display:inline-block;"><input type="checkbox" id="chkbackgroundimage" onclick="checkboardtype()" /><spring:message code="ezBoard.t5011" />&nbsp;</span>
+	        		<span style="display:inline-block;"><input type="checkbox" id="chkform" onclick="checkboardtype()" /><spring:message code="ezBoard.t999027" />&nbsp;</span>
+	        		<c:if test="${model.replyNotify == '1'}">	            	
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkNotify" onclick="checkboardtype()" checked /><spring:message code="ezBoard.t168" />&nbsp;</span>
+	                </c:if>
+	                <c:if test="${model.replyNotify != '1'}">	                   
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkNotify" onclick="checkboardtype()" /><spring:message code="ezBoard.t168" />&nbsp;</span>
+	                </c:if>		             
+	        		<c:if test="${model.oneLineReply == '1'}">	                
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkOneLine" onclick="checkboardtype()" checked /><spring:message code="ezBoard.t81" />&nbsp;</span>
+	                </c:if>
+	                <c:if test="${model.oneLineReply != '1'}">	                  
+	                	<span style="display:inline-block;"><input type="checkbox" id="chkOneLine" onclick="checkboardtype()" /><spring:message code="ezBoard.t81" />&nbsp;</span>
+	                </c:if>
+	        	</td>
+	        </tr>
+	        
+	        <%--
 	        <tr id="tr3" style="${style}">
 	            <th><spring:message code="ezBoard.t999020" /></th>
 	            <td>
@@ -948,6 +952,8 @@
 	                <input type="checkbox" id="chkBoardLike"><spring:message code="ezBoard.t162" />
 	            </td>
 	        </tr>
+	        --%>
+	        <%-- 승인여부 체크 시 나타나는 승인메일옵션과 승인자 리스트 --%>
 	        <tr id="chkApprListMail" style="display:none;">
 	            <th><spring:message code="ezBoard.t999019" /></th>
 	            <td>
@@ -963,6 +969,7 @@
 	                <div class="listview" style="height:100px;overflow-y:auto;overflow-x:hidden;" id="AccessList"></div>
 	            </td>
 	        </tr>
+	        <%--
 	        <tr id="trPortlet" style="${style}">
 	            <th><spring:message code="ezBoard.t481" /></th>
 	            <td>
@@ -984,6 +991,8 @@
 	                <spring:message code="ezBoard.t162" />
 	            </td>
 	        </tr>
+	        --%>
+	        <%-- 첨부크기제한 --%>
 	        <tr id="attachLimitTr" style="${style}">
 	            <th><spring:message code="ezBoard.t167" /></th>
 	            <td>
@@ -1001,6 +1010,7 @@
 	        </tr>
 	         --%>
 	        
+	        <%--
 	        <tr id="chkNotifyTr" style="${style}">
 	            <th><spring:message code="ezBoard.t168" /></th>
 	            <td>
@@ -1014,7 +1024,9 @@
 	                </c:if>		                 
 	            </td>
 	        </tr>
+	        --%>
 	        <%--2011-04 : 한줄 답변 옵션화 처리.--%>
+	        <%--
 	        <tr id="oneLineTr" style="${style}">
 	            <th><spring:message code="ezBoard.t81" /></th>
 	            <td>
@@ -1028,12 +1040,16 @@
 	                </c:if>
 	            </td>
 	        </tr>	
+	        --%>
+	        
+	        <%-- 확장칼럼 --%>
 	        <tr id="trAttribute" style="${style}">
 	            <th><spring:message code="ezBoard.t999028" /></th>
 	            <td>
 	            	<a class="imgbtn imgbck"><span onClick="ExtensionAttribute_onClick()"><spring:message code="ezBoard.t999029" /></span></a>
 	            </td>
 	        </tr>	
+	        
 	        <tr style="${style}">
 	            <th><spring:message code="ezBoard.t169" /></th>
 	            <td style="height: 100%">
