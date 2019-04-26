@@ -168,7 +168,7 @@
 	    			$("#urgentApproval_span").text(urgentApproval);
 	    		}
 	    		if (storagePeriod != "") {
-	    			$("#storagePeriod_span").text(storagePeriod + "<spring:message code='ezApprovalG.t456'/>");
+	    			$("#storagePeriod_span").text(storagePeriod);
 	    		}
 	    		if ($("#summary_txta").text().trim() == "") {
  	    			$("#summary_txta").attr("disabled", true);

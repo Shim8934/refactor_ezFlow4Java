@@ -18484,7 +18484,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						map.put("v_FUNCTIONTYPE", staASWheSong);
 						//다른 곳에 있는것 가져다 써서 두개 선언. 추후 변경
 						map.put("v_DOCID", docID);
-						map.put("v_DocID", docID);
+						map.put("v_DocID", docID);						
 						map.put("v_TENANTID", tenantID);
 						
 						ezApprovalGDAO.aprDeleteDocInfo3(map);
@@ -18525,6 +18525,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						ezApprovalGDAO.insertHesongAprLineInfoS(map);
 						ezApprovalGDAO.insertSetHesongExpLineInfoS(map);
+						
+						//번경내역 생성
+						map.put("v_PDOCID", docID);
+						map.put("v_TMPDOCID", orgDocID);
+						map.put("companyID", orgCompanyID);
+						ezApprovalGDAO.aprMakeTmp2Ing12(map);
 					} else {
 						subSQL = doSendHesongDocRedraft(docID, makeListField(signXML.getElementsByTagName("WRITERID").item(0).getTextContent()), makeListField(signXML.getElementsByTagName("WRITERNAME").item(0).getTextContent()),
 								makeListField(signXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent()), makeListField(signXML.getElementsByTagName("WRITERJOBTITLE").item(0).getTextContent()), makeListField(signXML.getElementsByTagName("WRITERJOBTITLE2").item(0).getTextContent()), 
@@ -23798,12 +23804,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_PPARENTCONTID", ParentContID);
 		
 		List<ApprUserContInfoVO> userContlist = ezApprovalGDAO.getUserContTree(map);
-		
-		// tbl_usercont에 다국어가 고려되어 있지 않아서 메시지 프로퍼티로부터 다시 받아 userContName을 set한다. 2019-04-18 임민석
-		for(ApprUserContInfoVO vo : userContlist) {
-			vo.setUserContName(messageSource.getMessage("ezApproval.t848", locale));
-		}
-		
 		StringBuffer sb = new StringBuffer();
         sb.append("<DATA>");
         
@@ -28357,5 +28357,48 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("tenantId", tenantId);
 		logger.debug("getDeptIdOfCabinet ended");
 		return ezApprovalGDAO.getDeptIdOfCabinet(map);
+	}
+	
+	@Override
+	public String getStoragePeriodName(String period, String lang, String approvalFlag, String companyID, int tenantID) throws Exception {
+		logger.debug("getStoragePeriodName started | Period:" + period + " | Lang:" + lang);
+		
+		String rtnVal = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LANGTYPE", lang);
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+		map.put("approvalFlag", approvalFlag);
+		
+		List<ApprGLeftVO> apprGetKeepTypeList = ezApprovalGDAO.getKeepType(map);
+		
+		StringBuffer sb = new StringBuffer();
+		
+        sb.append("<DATA>");
+        for (int i = 0; i < apprGetKeepTypeList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGetKeepTypeList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document dataXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		int dlength = dataXML.getElementsByTagName("ROW").getLength();
+		
+		try {
+			for (int k = 0; k < dlength; k++) {
+				String[] colOption = dataXML.getElementsByTagName("NAME").item(k).getTextContent().split(";");
+				if (colOption[2].equals(period)) {
+					rtnVal = colOption[1];
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtnVal = "ERROR";
+		}
+		
+		logger.debug("getStoragePeriodName ended | result:" + rtnVal);
+		return rtnVal;
 	}
 }
