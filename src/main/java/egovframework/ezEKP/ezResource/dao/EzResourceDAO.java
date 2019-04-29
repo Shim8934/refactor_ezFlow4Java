@@ -93,6 +93,11 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		return (List<String>) list("EzResourceDAO.getDeletedRepScheduleDate", map);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<String> getAttachList(Map<String, Object> map) {
+		return (List<String>) list("EzResourceDAO.getAttachList", map);
+	}
+	
 	public ResGetAdminFlagVO getAdmFlag(Map<String, Object> map) {
 		return (ResGetAdminFlagVO) select("EzResourceDAO.getAdmFlag", map);
 	}
@@ -223,6 +228,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		insert("EzResourceDAO.modifyResSch_I2", map);
 	}
 	
+	public void addAttachFile(Map<String, Object> map) {
+		insert("EzResourceDAO.addAttachFile", map);
+	}
+	
 	public void modifyResData(Map<String, Object> map) {
 		update("EzResourceDAO.modifyResData", map);
 	}
@@ -297,6 +306,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 	
 	public void modifyResSch_D2(Map<String, Object> map) {
 		delete("EzResourceDAO.modifyResSch_D2", map);
+	}
+	
+	public void delAttachFile(Map<String, Object> map) {
+		delete("EzResourceDAO.delAttachFile", map);
 	}
 	
 	public String getResourceOrder(Map<String, Object> map) throws Exception {
