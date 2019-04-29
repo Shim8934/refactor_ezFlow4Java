@@ -8,7 +8,7 @@
 		<link href="${util.addVer('/css/help.css')}" rel="stylesheet" type="text/css">
 		<style type="text/css">
 			.warningbox01 { width:490px; margin-top:200px; margin-left:220px; border:1px solid #cccaca; background:#e8e8e8;font-family:Gulim, Dotum,Verdana, Arial, Helvetica, sans-serif;}
-			.warningbox02 { width:470px; margin:0 auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
+			.warningbox02 { width:auto;  background:#ffffff; margin:10px; padding:15px 25px 20px 25px;}
 			.warnintxt01 { position:relative ;padding-bottom:10px;}
 			.warningimg { position:absolute; top:0px; left:0px;}
 			.warningdl { padding:10px 0px 5px 150px; margin:0px 0px 0px 0px;}
