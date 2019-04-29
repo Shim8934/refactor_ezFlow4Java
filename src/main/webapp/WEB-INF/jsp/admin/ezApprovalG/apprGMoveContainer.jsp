@@ -611,7 +611,8 @@
  		                document.getElementsByName("SDeptName")[0].value = "";
 	            		alert("<spring:message code='ezApprovalG.t1788'/>");
 	            	}
-	            	$('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
+	            	//$('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
+	            	$('#DocCompleteListBody').empty().append("<tr><td colspan='10' style='text-align:center;'>"+text1+"</td></tr>");
 	            	CurPage = "";
 	        		totalPage = "";
 	        		totalCount = "";
@@ -843,7 +844,8 @@
 		        $("select[name=selSContName]").val("");
 		        ScontID = "";
 		        totalCount = "";
-		        $('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
+		        //$('#DocCompleteListBody').empty().append("<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>");
+		        $('#DocCompleteListBody').empty().append("<tr><td colspan='10' style='text-align:center;'>"+text1+"</td></tr>");
 		        makePageSelPage();
 		    }
 	    </script>
@@ -1017,13 +1019,19 @@
 						<th style="width:10%;"><spring:message code="ezApproval.t437"></spring:message></th>
 						<th style="width:10%;"><spring:message code="ezApprovalG.t445"></spring:message></th>
 						<th style="width:5%;"><spring:message code="ezStatistics.t1042"></spring:message></th>
-						<th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th>
+						<%-- <th style="width:5%;"><spring:message code="ezTask.t210"></spring:message></th> --%> <!-- 상태 주석 -->
 						<th style="width:10%;"><spring:message code="ezApproval.t448"></spring:message></th>
 						<th style="width:5%;"><spring:message code="ezApprovalG.t47"></spring:message></th>
 					</tr>
 				</thead>
 				<tbody id="DocCompleteListBody" style="overflow: auto;">
-				<tr><td colspan="11" style="text-align: center; font-size: 12px;"><spring:message code="ezApprovalG.t1126"/></td></tr></tbody> 
+					<tr>
+						<%-- <td colspan="11" style="text-align: center; font-size: 12px;"> --%>
+						<td colspan="10" style="text-align: center; font-size: 12px;">
+							<spring:message code="ezApprovalG.t1126"/>
+						</td>
+					</tr>
+				</tbody>
 			</table>
 		</div>
 		

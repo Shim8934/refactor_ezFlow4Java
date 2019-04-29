@@ -60,7 +60,7 @@ public interface EzResourceService {
 	
 	public boolean saveRepetition(String companyID, String num, String ownerID, String xmlStr, String cmd, int tenantID, String offset) throws Exception;
 	
-	public boolean multiDelResData(String xmlStr, int tenantID) throws Exception;
+	public boolean multiDelResData(String xmlStr, int tenantID, String realPath) throws Exception;
 	
 	public boolean modifyResData(String xmlStr, int tenantID) throws Exception;
 	
@@ -90,4 +90,6 @@ public interface EzResourceService {
 	public String isResourceGroupManager(String selectedResourceGroupId, String userId, int tenantId, String companyID) throws Exception;
 	
 	public String userResPermissionCheck(String userID, String companyID, int tenantID, String brdID, String deptID) throws Exception;
+
+	public List<String> getAttachList(String resID, String companyID, int tenantId) throws Exception;
 }
