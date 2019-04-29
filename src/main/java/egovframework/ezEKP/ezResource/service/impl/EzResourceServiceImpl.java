@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezResource.service.impl;
 
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +17,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.xml.parsers.DocumentBuilderFactory;
 
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -262,7 +264,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	public void modifyResData(String brdID, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
-	String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID) throws Exception {
+	String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID, String realPath, String strAttachList1, String strAttachList2) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_Brd_ID", brdID);
 		map.put("v_P_ODeptID", deptID);
@@ -282,10 +284,112 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_OwnerPos2", ownerPos2);
 		map.put("tenantID", tenantID);
 		ezResourceDAO.modifyResData(map);
+		
+		// 첨부파일 등록 실행
+		//deleteAttachFiles(brdID, realPath, companyID, tenantID);
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+		attachMap.put("companyID", companyID);
+		attachMap.put("tenantID", tenantID);
+		attachMap.put("resID", brdID);
+		
+		String pDirPath = realPath + commonUtil.getUploadPath("upload_resource.ROOT", tenantID);
+		
+		File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile");
+		
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		
+		ezResourceDAO.delAttachFile(attachMap);
+		
+		// 기존 존재하는 파일인 경우
+		if(strAttachList1.indexOf("/") != -1) {
+			String beforeFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachList1;
+			
+			strAttachList1 = strAttachList1.substring(strAttachList1.lastIndexOf("/")+1);
+			
+			String afterFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList1;
+			
+			File beforeFile = new File(beforeFilePath);
+			File afterFile = new File(afterFilePath);
+			
+			FileUtils.moveFile(beforeFile, afterFile);
+		}
+		
+		if(strAttachList2.indexOf("/") != -1) {
+			String beforeFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachList2;
+			
+			strAttachList2 = strAttachList2.substring(strAttachList2.lastIndexOf("/")+1);
+			
+			String afterFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList2;
+			
+			File beforeFile = new File(beforeFilePath);
+			File afterFile = new File(afterFilePath);
+			
+			FileUtils.moveFile(beforeFile, afterFile);
+		}
+		
+		if(file.exists()) {
+			File[] files = file.listFiles();
+			
+			for(File f: files){
+				f.delete();
+			}
+		}
+		
+		if(!strAttachList1.equals("") && strAttachList1 != null) {
+			String uploadFilePath = "";
+			long fileSize = 0;
+
+			uploadFilePath = commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList1;
+			String beforeFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList1;
+			String afterFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList1;
+
+			File beforeFile = new File(beforeFilePath);
+			fileSize = beforeFile.length();
+			
+			File afterFile = new File(afterFilePath);
+			
+			if (!afterFile.exists()) {
+				FileUtils.moveFile(beforeFile, afterFile);
+			}
+			
+			attachMap.put("fileName", strAttachList1);
+			attachMap.put("fileSize", fileSize);
+			attachMap.put("filePath", uploadFilePath);
+			
+			logger.debug("file1 upload End");
+			ezResourceDAO.addAttachFile(attachMap);		// 첨부파일 추가
+		}
+		
+		if(!strAttachList2.equals("") && strAttachList2 != null) {
+			String uploadFilePath = "";
+			long fileSize = 0;
+			
+			uploadFilePath = commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList2;
+			String beforeFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList2;
+			String afterFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList2;
+
+			File beforeFile = new File(beforeFilePath);
+			fileSize = beforeFile.length();
+			
+			File afterFile = new File(afterFilePath);
+			
+			if (!afterFile.exists()) {
+				FileUtils.moveFile(beforeFile, afterFile);
+			}
+			
+			attachMap.put("fileName", strAttachList2);
+			attachMap.put("fileSize", fileSize);
+			attachMap.put("filePath", uploadFilePath);
+			
+			logger.debug("file2 upload End");
+			ezResourceDAO.addAttachFile(attachMap);
+		}
 	}
 	
 	public void addResData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
-	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID) throws Exception {
+	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID, String realPath, String strAttachList1, String strAttachList2) throws Exception {
 		logger.debug("addResData Start");
 		
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -328,6 +432,65 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_Brd_Level", v_Brd_Level);
 		map.put("v_Brd_Step", v_Brd_Step);
 		ezResourceDAO.addResData(map);
+		
+		// 첨부파일 등록 실행
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+		attachMap.put("companyID", companyID);
+		attachMap.put("tenantID", tenantID);
+		attachMap.put("resID", brdID);
+		
+		String pDirPath = realPath + commonUtil.getUploadPath("upload_resource.ROOT", tenantID);
+		
+		File file = new File(pDirPath + "uploadFile" + commonUtil.separator + brdID + "_uploadFile");
+		
+		if (!file.exists()) {
+			file.mkdir();
+		}
+		
+		if(!strAttachList1.equals("") && strAttachList1 != null) {
+			String uploadFilePath = commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList1;
+			String beforeFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList1;
+			String afterFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList1;
+
+			File beforeFile = new File(beforeFilePath);
+			long fileSize = beforeFile.length();
+			
+			File afterFile = new File(afterFilePath);
+			
+			if (!afterFile.exists()) {
+				FileUtils.moveFile(beforeFile, afterFile);
+			}
+			
+			attachMap.put("fileName", strAttachList1);
+			attachMap.put("fileSize", fileSize);
+			attachMap.put("filePath", uploadFilePath);
+			
+			logger.debug("file1 upload End");
+			ezResourceDAO.addAttachFile(attachMap);		// 첨부파일 추가
+		}
+		
+		if(!strAttachList2.equals("") && strAttachList2 != null) {
+			String uploadFilePath = commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList2;
+			String beforeFilePath = pDirPath + commonUtil.separator + "tempUploadFile" + commonUtil.separator + strAttachList2;
+			String afterFilePath = pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + brdID + "_uploadFile" + commonUtil.separator + strAttachList2;
+
+			File beforeFile = new File(beforeFilePath);
+			long fileSize = beforeFile.length();
+			
+			File afterFile = new File(afterFilePath);
+			
+			if (!afterFile.exists()) {
+				FileUtils.moveFile(beforeFile, afterFile);
+			}
+			
+			attachMap.put("fileName", strAttachList2);
+			attachMap.put("fileSize", fileSize);
+			attachMap.put("filePath", uploadFilePath);
+			
+			logger.debug("file2 upload End");
+			ezResourceDAO.addAttachFile(attachMap);
+		}
+		
 		logger.debug("addResData End");
 	}
 	
@@ -2210,7 +2373,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	@Override
-	public boolean multiDelResData(String xmlStr, int tenantID) throws Exception {
+	public boolean multiDelResData(String xmlStr, int tenantID, String realPath) throws Exception {
 		String brdID = "";
 		String companyID = "";
 		
@@ -2220,8 +2383,32 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 
 		for (int i=0; i<brdID.split(",").length; i++) {
 			delResData(brdID.split(",")[i], companyID, tenantID);
+			deleteAttachFiles(brdID, realPath, companyID, tenantID);
 		}
 		return true;
+	}
+	
+	public void deleteAttachFiles(String resID, String realPath, String companyID, int tenantID) {
+		Map<String, Object> attachMap = new HashMap<String, Object>();
+		attachMap.put("companyID", companyID);
+		attachMap.put("tenantID", tenantID);
+		attachMap.put("resID", resID);
+		
+		String pDirPath = realPath + commonUtil.getUploadPath("upload_resource.ROOT", tenantID);
+		
+		File file = new File(pDirPath + commonUtil.separator + "uploadFile" + commonUtil.separator + resID + "_uploadFile");
+		
+		if(file.exists()) {
+			File[] files = file.listFiles();
+			
+			for(File f: files){
+				f.delete();
+			}
+			
+			file.delete();
+		}
+		
+		ezResourceDAO.delAttachFile(attachMap);
 	}
 	
 	@Override
@@ -2242,6 +2429,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	    String strODeptNm2 = "";
 	    String strOwnerNm2 = "";
 	    String strOwnerPos2 = "";
+	    String realPath = "";
+	    String strAttachList1 = "";
+	    String strAttachList2 = "";
 	    
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		strBrdID = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
@@ -2257,11 +2447,15 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strCompanyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
 		strApprove = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
 		strBrdNm2 = xmlRes.getElementsByTagName("DATA").item(12).getTextContent().trim();
-		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
-		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
-		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
+		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
+		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
+		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
 			
-		modifyResData(strBrdID, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, tenantID);
+		realPath = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
+		strAttachList1 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
+		strAttachList2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
+		
+		modifyResData(strBrdID, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, tenantID, realPath, strAttachList1, strAttachList2);
 
 		return true;
 	}
@@ -2285,6 +2479,9 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	    String strOwnerNm2 = "";
 	    String strOwnerPos2 = "";
 	    String strBreAccess = "";
+	    String realPath = "";
+	    String strAttachList1 = "";
+	    String strAttachList2 = "";
 	    
 	   	Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		strClassGB = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
@@ -2300,12 +2497,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strCompanyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
 		strApprove = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
 		strBrdNm2 = xmlRes.getElementsByTagName("DATA").item(12).getTextContent().trim();
-		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
-		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
-		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
+		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
+		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
+		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
+		
+		realPath = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
+		strAttachList1 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
+		strAttachList2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
 		strBreAccess = egovMessageSource.getMessage("ezResource.t58", locale);
 			
-		addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, strBreAccess, tenantID);
+		addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, strBreAccess, tenantID, realPath, strAttachList1, strAttachList2);
 
 		return true;
 	}
@@ -3933,6 +4134,20 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 
 		logger.debug("userResPermissionCheck end");
 		return result;
+	}
+	
+	@Override
+	public List<String> getAttachList(String resID, String companyID, int tenantId) throws Exception {
+		logger.debug("getAttachList start");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("resID", resID);
+		map.put("companyID", companyID);
+		map.put("tenantID", tenantId);
+		
+		logger.debug("getAttachList start");
+		return ezResourceDAO.getAttachList(map);
+		
 	}
 }
 
