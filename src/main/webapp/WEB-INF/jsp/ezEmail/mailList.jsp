@@ -962,6 +962,7 @@
         	                MailListRefresh();
         	            } else if (result.indexOf("NO APPEND failed.") > -1) {
         		        	alert(strLang241);
+        		        	MailListRefresh();
         	            } else {
         	            	alert("<spring:message code='ezEmail.t404' />");
         	            }
