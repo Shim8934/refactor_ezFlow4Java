@@ -3923,6 +3923,14 @@ public class EzPortalController extends EgovFileMngUtil {
 		if (result.getImagePath() != null && !result.getImagePath().equals("")) {
 			model.addAttribute("result", result);
 		}
+		
+		String parameterString = "";
+		String parametersXML = ezPortalService.getPortletParameters(uID, userInfo.getTenantId());
+		
+		if (result.getMaxURL() != null && !result.getMaxURL().equals("") && parametersXML != null && !parametersXML.equals("")) {
+			parameterString = ezPortalService.loadGetParametersXML(result.getMaxURL(), parametersXML, userInfo);
+			result.setMaxURL(result.getMaxURL()+parameterString);
+		}
 
 		logger.debug("imagePortlet ended");
 		return "/ezPortal/portalImagePortlet";
