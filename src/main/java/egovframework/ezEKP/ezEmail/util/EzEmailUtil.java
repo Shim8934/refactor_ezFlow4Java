@@ -899,7 +899,7 @@ public class EzEmailUtil {
 		
 		logger.debug("contentType=" + part.getContentType());
 		logger.debug("disposition=" + part.getDisposition());
-		
+				
 		boolean forPrint = false;
 		boolean mobile = false;
 		String secureKey = null;
@@ -1301,124 +1301,148 @@ public class EzEmailUtil {
 			
 			// 메일 본문의 링크를 누르면 별도의 창으로 표시되도록 하는 처리
 			htmlBody = addTargetBlank(htmlBody);				
-		} else if(part.isMimeType("text/plain")) {
-			String strContent = "";
-			String[] headers = part.getHeader("Content-Type");
+		} else if(part.isMimeType("text/plain")) {			
+			boolean isRealTextPlain = true;
 			
-			// Content-Type 헤더 자체가 없는 경우, part.isMimeType("text/plain")이 true가 될 수 있으나 part.getContent()는
-			// 예외가 발생한다. 이 경우 part.getInputStream()으로부터 직접 디코딩을 수행한다.
-			if (headers == null) {
-				logger.debug("no Content-Type header");
-				
-				InputStream is = getContentInputStream(part); 
-								
-				if (is.available() > 0) {
-					byte[] buf = new byte[is.available()];
-					is.read(buf);
-					
-					strContent = decodeNonAsciiBytes(buf);						
-				}					
+			if (part instanceof BodyPart) {
+		        String[] contentTypeHeaders = part.getHeader("Content-Type");
+		        
+		        if (contentTypeHeaders != null && contentTypeHeaders.length > 0) {
+		        	String contentTypeHeader = contentTypeHeaders[0];
+		        	
+		        	logger.debug("contentTypeHeader=" + contentTypeHeader);
+		        	
+		        	// 다음과 같이 Multipart 내 Part 중에 Content-Type이 잘못 생성된 메일이 있음.(image/gif가 되어야 함.)
+		        	// Content-Type: gif; name="signF_hakungLogo.gif"
+		        	// 이 경우 JavaMail에서는 디폴트인 text/plain 타입으로 취급하여 본문에 잘못된 내용이 들어와
+		        	// 실제 헤더에 text/plain이 있는 지 여부를 확인하도록 함.
+		        	if (!contentTypeHeader.toLowerCase().contains("text/plain")) {
+		        		logger.debug("it isn't real text/plain.");
+		        		
+		        		isRealTextPlain = false;
+		        	}
+		        }
 			}
-			else {
-				String contentType = part.getContentType();
+			
+	        if (isRealTextPlain) {
+				String strContent = "";
+				String[] headers = part.getHeader("Content-Type");
 				
-				try {
-					// cp932는 자바에서 아예 인식되지 않는 코드여서 ms932로의 변경을 먼저 수행한다.	
-					if (contentType.toLowerCase().contains("cp932")) {
-						InputStream is = getContentInputStream(part);
-						
-						if (is.available() > 0) {
-							byte[] buf = new byte[is.available()];
-							is.read(buf);
-							
-							logger.debug("text/plain changed cp932 to ms932.");
-							
-							strContent = new String(buf, "ms932");
-						}											
-					} else {					
-						strContent = part.getContent().toString();
-						
-						if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
-				            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
-				            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.								
-							if (strContent.contains("�")) {
-								InputStream is = getContentInputStream(part);
-								
-								if (is.available() > 0) {
-									byte[] buf = new byte[is.available()];
-									is.read(buf);
-									
-									logger.debug("text/plain changed ks_c_5601-1987 to ms949.");
-									
-									strContent = new String(buf, "ms949");
-								}											
-							}
-						} else if (contentType.toLowerCase().contains("gb2312")) {
-							if (strContent.contains("�")) {
-								InputStream is = getContentInputStream(part);
-								
-								if (is.available() > 0) {
-									byte[] buf = new byte[is.available()];
-									is.read(buf);
-									
-									logger.debug("text/plain changed gb2312 to gbk.");
-									
-									strContent = new String(buf, "gbk");
-								}											
-							}
-						} else if (contentType.toLowerCase().contains("iso-2022-jp")) {
-							if (strContent.contains("�")) {
-								InputStream is = getContentInputStream(part);
-								
-								if (is.available() > 0) {
-									byte[] buf = new byte[is.available()];
-									is.read(buf);
-									
-									logger.debug("text/plain changed iso-2022-jp to cp50220.");
-									
-									strContent = new String(buf, "cp50220");
-								}											
-							}
-						} 
-					}
-				// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
-				// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
-				} catch (Exception e) {
-					e.printStackTrace();
+				// Content-Type 헤더 자체가 없는 경우, part.isMimeType("text/plain")이 true가 될 수 있으나 part.getContent()는
+				// 예외가 발생한다. 이 경우 part.getInputStream()으로부터 직접 디코딩을 수행한다.
+				if (headers == null) {
+					logger.debug("no Content-Type header");
 					
 					InputStream is = getContentInputStream(part); 
-											
+									
 					if (is.available() > 0) {
 						byte[] buf = new byte[is.available()];
 						is.read(buf);
 						
 						strContent = decodeNonAsciiBytes(buf);						
-					}
-				}				
-			}
-			
-			strContent = commonUtil.cleanValue(strContent);
-			
-			strContent = convertSpaceToNBSP(strContent);
-			String tempText = strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
-			StringBuilder tempText2 = new StringBuilder();
-			String[] tempTexts = tempText.split("<br />");
-			
-			String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
-			
-			for (int i=0; i<tempTexts.length; i++) {
-				if (!tempTexts[i].equals("")) {
-					tempText2.append("<p " + defaultFontAndSize + ">" + tempTexts[i] + "</p>");
-				} else {
-					tempText2.append("<p " + defaultFontAndSize + ">&nbsp;</p>");
+					}					
 				}
-			}
-			
-			htmlBody += tempText2.toString();
-			
-			htmlBody = changeURLsToAnchorTags(htmlBody);	
-			htmlBody = stripScriptTags(htmlBody);
-			htmlBody = addTargetBlank(htmlBody);
+				else {
+					String contentType = part.getContentType();
+					
+					try {
+						// cp932는 자바에서 아예 인식되지 않는 코드여서 ms932로의 변경을 먼저 수행한다.	
+						if (contentType.toLowerCase().contains("cp932")) {
+							InputStream is = getContentInputStream(part);
+							
+							if (is.available() > 0) {
+								byte[] buf = new byte[is.available()];
+								is.read(buf);
+								
+								logger.debug("text/plain changed cp932 to ms932.");
+								
+								strContent = new String(buf, "ms932");
+							}											
+						} else {					
+							strContent = part.getContent().toString();
+							
+							if (contentType.toLowerCase().contains("ks_c_5601-1987")) {
+					            // Exchange에서 온 메일 중에 ks_c_5601-1987로 인코딩되어 있다고 기술되어 있지만 확장 완성형인 ms949에만
+					            // 정의되어 있는 글자(샾 같은)가 포함되어 디코딩 시 깨지는 문제가 발생하여 ms949로 디코딩 처리하는 코드를 추가함.								
+								if (strContent.contains("�")) {
+									InputStream is = getContentInputStream(part);
+									
+									if (is.available() > 0) {
+										byte[] buf = new byte[is.available()];
+										is.read(buf);
+										
+										logger.debug("text/plain changed ks_c_5601-1987 to ms949.");
+										
+										strContent = new String(buf, "ms949");
+									}											
+								}
+							} else if (contentType.toLowerCase().contains("gb2312")) {
+								if (strContent.contains("�")) {
+									InputStream is = getContentInputStream(part);
+									
+									if (is.available() > 0) {
+										byte[] buf = new byte[is.available()];
+										is.read(buf);
+										
+										logger.debug("text/plain changed gb2312 to gbk.");
+										
+										strContent = new String(buf, "gbk");
+									}											
+								}
+							} else if (contentType.toLowerCase().contains("iso-2022-jp")) {
+								if (strContent.contains("�")) {
+									InputStream is = getContentInputStream(part);
+									
+									if (is.available() > 0) {
+										byte[] buf = new byte[is.available()];
+										is.read(buf);
+										
+										logger.debug("text/plain changed iso-2022-jp to cp50220.");
+										
+										strContent = new String(buf, "cp50220");
+									}											
+								}
+							} 
+						}
+					// charset 등의 값에 문제가 있을 때 Exception이 발생할 수 있다.
+					// 예) Content-Type: text/html; charset="$BIZENIC.ENGINE.CHARSET$"
+					} catch (Exception e) {
+						e.printStackTrace();
+						
+						InputStream is = getContentInputStream(part); 
+												
+						if (is.available() > 0) {
+							byte[] buf = new byte[is.available()];
+							is.read(buf);
+							
+							strContent = decodeNonAsciiBytes(buf);						
+						}
+					}				
+				}
+				
+				strContent = commonUtil.cleanValue(strContent);
+				
+				strContent = convertSpaceToNBSP(strContent);
+				String tempText = strContent.replaceAll("\r\n", "<br />").replaceAll("\r", "<br />").replaceAll("\n", "<br />");	
+				StringBuilder tempText2 = new StringBuilder();
+				String[] tempTexts = tempText.split("<br />");
+				
+				String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+				
+				for (int i=0; i<tempTexts.length; i++) {
+					if (!tempTexts[i].equals("")) {
+						tempText2.append("<p " + defaultFontAndSize + ">" + tempTexts[i] + "</p>");
+					} else {
+						tempText2.append("<p " + defaultFontAndSize + ">&nbsp;</p>");
+					}
+				}
+				
+				htmlBody += tempText2.toString();
+				
+				htmlBody = changeURLsToAnchorTags(htmlBody);	
+				htmlBody = stripScriptTags(htmlBody);
+				htmlBody = addTargetBlank(htmlBody);
+	        }
 		} else if(part.isMimeType("multipart/alternative")){
 			Multipart mp = (Multipart)part.getContent();
 			int count = mp.getCount();
