@@ -213,6 +213,8 @@
 				</isNotEmpty>
 				AND
 					A.TENANT_ID = #tenantId#
+				AND
+					c.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 				<![CDATA[
 				AND  
 					(
@@ -515,6 +517,8 @@
 						a.COMPANY_ID = #companyId#
 					and 
 						a.TENANT_ID = #tenantId#
+					and
+						a.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 				]]>
 				<isNotEmpty property="userId" prepend="and"> 
 					a.WRITER_ID = #userId#
@@ -695,6 +699,8 @@
 			AND
 				TENANT_ID = #tenantId#
 			AND
+				WRITER_ID NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
+			AND
 				TYPE_ID NOT IN ('A01', 'A03')
 			AND    
 				(
@@ -727,6 +733,8 @@
 				a.COMPANY_ID = #companyId#
 			and 
 				a.TENANT_ID = #tenantId#
+			and
+				a.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 		]]>
 		<isNotEmpty property="userId" prepend="and"> 
 			a.WRITER_ID = #userId#
@@ -1720,7 +1728,7 @@
 		</iterate>
 		<![CDATA[					
 				AND 
-					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)
+					CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)
 				AND 
 					A.TENANT_ID = #v_TENANT_ID#
 
@@ -1773,7 +1781,7 @@
 			</iterate>
 			<![CDATA[
                          AND 
-                             CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                                      
+                             CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                                      
                          AND 
                              A.TENANT_ID = #v_TENANT_ID#
 			       		 
@@ -1821,7 +1829,7 @@
      	    		TBL_USERMASTER A 
                 $strSQL$
                 AND 
-                    CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE)                                                                                                                                                             
+                    CN NOT IN (SELECT CN FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #v_TENANT_ID#)                                                                                                                                                             
                 AND 
                     A.TENANT_ID = #v_TENANT_ID#
      	    		 

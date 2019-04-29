@@ -80,7 +80,8 @@
 		    });
 		    
 		    function btnOpinion_onclick() {
-		        openOpinionViewUI();
+		        //openOpinionViewUI();
+		        openOpinionUI_New("Show");
 		    }
 		    function DocumentComplete() {
 		        if (flag == false) {

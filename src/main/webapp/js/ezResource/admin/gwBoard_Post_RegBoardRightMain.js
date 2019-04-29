@@ -75,7 +75,10 @@ function cmdOk_onclick() {
 
 		var rtnXML = xmlhttp.responseText;
 		
-		if (rtnXML != "true"){
+		if(rtnXML == "NO"){
+			alert(strLangkmsr02);
+		}
+		else if (rtnXML != "true"){
 			alert("2." + strLang32 + "");
 		} else {
 			alert("" + strLang33 + "");
@@ -90,7 +93,7 @@ function cmdAdd_onclick() {
     if (CrossYN()) {
         gwboard_post_regboardright_dialogArguments[1] = cmdAdd_onclick_Complete;
 
-        var OpenWin = window.open("/admin/ezResource/popup/gwBoardPostRegBoardRight.do", "gwBoardPostRegBoardRight", GetOpenWindowfeature(970, 655));
+        var OpenWin = window.open("/admin/ezResource/popup/gwBoardPostRegBoardRight.do", "gwBoardPostRegBoardRight", GetOpenWindowfeature(970, 635));
         try { OpenWin.focus(); } catch (e) { }
     } else {
         var Url = "/admin/ezResource/popup/gwBoardPostRegBoardRight.do";
@@ -128,9 +131,19 @@ function SetAddACLList(objAddList) {
 			}
 		}
 		
+		// 부서인 경우 하위 부서 권한전파 활성화
+		if(pCurrAcl[3] == "D") {
+			dept_copy1.disabled = false;
+			dept_copy2.disabled = false;
+		}
+		else {
+			dept_copy1.disabled = true;
+			dept_copy2.disabled = true;
+		}
+		
 		if (!IsExist) {
 		    if (CrossYN()) {
-		        AddUser.setAttribute("Dept_YN", "Y");
+		        AddUser.setAttribute("Dept_YN", pCurrAcl[3]);
 		        AddUser.setAttribute("SDA_YN", "Y");
 		        AddUser.setAttribute("Member_nam", pCurrAcl[2]);
 		        AddUser.setAttribute("Member_ID", pCurrAcl[1]);
@@ -140,14 +153,14 @@ function SetAddACLList(objAddList) {
 		        	brd_mng2.checked = true;
 		        }
 		    } else {
-		        AddUser.Dept_YN = "Y";
+		        AddUser.Dept_YN = pCurrAcl[3];
 		        AddUser.SDA_YN = "Y";
 		        AddUser.Member_nam = pCurrAcl[2];
 		        AddUser.Member_ID = pCurrAcl[1];
 		        AddUser.Access_lvl = "2";
 		    }
 			AddUser.text = pCurrAcl[2] + " - (" + strLang35 + "";
-
+			
 			objUserList.options[User_Cnt] = AddUser;
 
 		}

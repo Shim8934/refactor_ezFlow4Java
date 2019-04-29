@@ -5341,6 +5341,12 @@ public class EzApprovalGController extends EgovFileMngUtil{
 					}
 				}
 			}
+		} else {
+			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId(), docState);
+			
+			if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+				return "main/warning";
+			}
 		}
 		
 		model.addAttribute("docID", docID);
@@ -6327,6 +6333,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		} else {
 			if (docXML.getElementsByTagName("STORAGEPERIOD").item(0) != null) {
 				storagePeriod = docXML.getElementsByTagName("STORAGEPERIOD").item(0).getTextContent();
+				storagePeriod = ezApprovalGService.getStoragePeriodName(storagePeriod, userInfo.getLang(), approvalFlag, userInfo.getCompanyID(), userInfo.getTenantId());
 			}
 			if (docXML.getElementsByTagName("TASKCODE").item(0) != null) {
 				taskCode = docXML.getElementsByTagName("TASKCODE").item(0).getTextContent();
@@ -9075,5 +9082,33 @@ public class EzApprovalGController extends EgovFileMngUtil{
 			// 부서가 변경되거나 겸직부서가 삭제되었습니다 메세지
 			return "4";
 		}
+	}
+	
+	/**
+	 * 전자결재G 기안 의견버튼 호출 Method_New
+	 */
+	@RequestMapping(value = "/ezApprovalG/aprOpinionNew.do", method = RequestMethod.GET)
+	public String aprOpinionNew(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("aprOpinionNew started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		model.addAttribute("userInfo", userInfo);
+		
+		logger.debug("aprOpinionNew ended.");
+		return "ezApprovalG/apprGaprOpinionNew";
+	}
+	/**
+	 * 전자결재G 기안 의견내용 작성 팝업 호출 Method
+	 */
+	@RequestMapping(value = "/ezApprovalG/aprOpinionPopup.do", method = RequestMethod.GET)
+	public String aprOpinionPopup(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("aprOpinionPopup started.");
+		
+		userInfo = commonUtil.aprUserInfo(loginCookie);
+		
+		logger.debug("aprOpinionPopup ended.");
+		
+		return "ezApprovalG/apprGaprOpinionPopup";
 	}
 }

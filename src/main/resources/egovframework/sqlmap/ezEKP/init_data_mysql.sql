@@ -1369,7 +1369,7 @@ INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, Tabl
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S200', 4, '보존기간', 'Keeping period', '保存期間', '保留时间', 80, NULL, 'ITEMLIMIT', NULL, NULL, NULL, NULL, 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S200', 5, '보안등급', 'Security level', '保安等級', '安全级别', 80, NULL, 'ITEMSECURITY', NULL, NULL, NULL, NULL, 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('S200', 6, '공개여부', 'Public', '公開設定', '是否共享', 60, NULL, 'ITEMPUBLIC', NULL, NULL, NULL, NULL, 'Top', 0);
-INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('SU200', 1, '문서분류', 'Classified document', '文書分類', '文件分类', 105, NULL, 'GROUPNAME', NULL, NULL, NULL, NULL, 'Top', 0);
+INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('SU200', 1, '문서분류', 'Classified document', '文書の分類', '文件分类', 105, NULL, 'GROUPNAME', NULL, NULL, NULL, NULL, 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('SU200', 2, '코 드', 'Code', 'コード', '代码', 50, NULL, 'ITEMCODE', NULL, NULL, NULL, NULL, 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('SU200', 3, '기 능 명 칭', 'Name', '機能名', '功能名称', 180, NULL, 'ITEMNAME', NULL, NULL, NULL, NULL, 'Top', 0);
 INSERT INTO TBL_LISTOPTION (ListType, SN, NAME, Name2, Name3, Name4, Width, TableName, ColName, ColAlias, DType, TypeDesc, FieldDesc, COMPANYID, TENANT_ID) VALUES ('SU200', 4, '보존기간', 'Keeping period', '保存期間', '保留时间', 80, NULL, 'ITEMLIMIT', NULL, NULL, NULL, NULL, 'Top', 0);
@@ -1639,8 +1639,7 @@ Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values (
 Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t09','Top',0);
 Insert into jmocha.tbl_journal_form_type (type_id,company_id,tenant_id) values ('ezJournal.t10','Top',0);
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'일일업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'일일업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -1762,8 +1761,7 @@ values (0,'일일업무일지(기본)',
 </p>'
 ,'ezJournal.t05',UTC_TIMESTAMP(),'기본일일업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'주간업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'주간업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -1885,8 +1883,7 @@ values (0,'주간업무일지(기본)',
 </p>'
 ,'ezJournal.t06',UTC_TIMESTAMP(),'기본주간업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'월간업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'월간업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2008,8 +2005,7 @@ values (0,'월간업무일지(기본)',
 </p>'
 ,'ezJournal.t07',UTC_TIMESTAMP(),'기본월간업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'분기업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'분기업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2131,8 +2127,7 @@ values (0,'분기업무일지(기본)',
 </p>'
 ,'ezJournal.t08',UTC_TIMESTAMP(),'기본분기업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'반기업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'반기업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>
@@ -2254,8 +2249,7 @@ values (0,'반기업무일지(기본)',
 </p>'
 ,'ezJournal.t09',UTC_TIMESTAMP(),'기본반기업무일지','Top','basic');
 
-Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) 
-values (0,'연간업무일지(기본)',
+Insert into tbl_journal_form (tenant_id,form_name,form_content,type_id,form_date,form_info,company_id,form_status) values (0,'연간업무일지(기본)',
 '<div>
    <table width="629" align="center" style="border-collapse:collapse; width: 629px; font-family: 굴림체; font-size: 0pt; table-layout: fixed; -design-time-lock: true; ">
       <tbody>

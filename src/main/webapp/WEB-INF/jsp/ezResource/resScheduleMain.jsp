@@ -516,10 +516,22 @@
 					
 					$("#brdExplain").html(resbrdExc);
 					
+					if(result.attachList1 != null) {
+						document.getElementById("preview1").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + ResID + "&fileName=" + result.attachList1;
+						document.getElementById("preview1").width = 200;
+						document.getElementById("preview1").height = 200;
+					}
+					
+					if(result.attachList2 != null) {
+						document.getElementById("preview2").src = "/ezResource/getResourceThumbnailInfo.do?brdID=" + ResID + "&fileName=" + result.attachList2;
+						document.getElementById("preview2").width = 200;
+						document.getElementById("preview2").height = 200;
+					}
+					
 					/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
 		        	$("<div id='blockLeft' class='blockLeft' style='width:100%;height:100%' onclick='parent.frames[\"right\"].SearchOptionHidden()'></div>").appendTo(parent.frames["left"].document.body);        	
 		        	
-		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 220;
+		        	var popupX = parent.document.body.clientWidth/2 - (500/2) - 270;
 		        	
 		        	$("#ResourceInfo").css("left", popupX);
 		        	/* 2018-02-23 장진혁 레이어팝업 왼쪽메뉴영역까지 덮기 */
@@ -586,18 +598,18 @@
 		</table>	
 		<!-- 2018-06-04 구해안 resinfo display:none 으로 추가 -->
 		<!-- 2018-07-13 김민성 - 자원명 길 경우 ellipsis -->
-		<div id="ResourceInfo" style="display: none">
+		<div id="ResourceInfo" style="display: none; max-width: 700px">
 			<div class="popupJQLayer" style="padding-top:6px">
-				<div class="title" id="brdNm" style="overflow:hidden; text-overflow:ellipsis; width:450px; white-space:nowrap;" title="${brdNm }"></div>
+				<div class="title" id="brdNm" style="overflow:hidden; text-overflow:ellipsis; width:650px; white-space:nowrap; margin-bottom:2px;" title="${brdNm }"></div>
 				<div id="close">
 		            <ul>
 		                <li><a rel="modal:close"><span></span></a></li>
 		            </ul>
 		        </div>
-	        	<table id="resourceDataTable" style="width:478px; margin-top:10px;">
+	        	<table id="resourceDataTable" style="width:680px; /* margin-top:10px; */">
 					<tr>
 						<th width="22%" style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t153'/></th>
-						<td><span id="ownerNm"><span id="ownerInfo" style="cursor:pointer"></span></span></td>
+						<td colspan="2"><span id="ownerNm"><span id="ownerInfo" style="cursor:pointer"></span></span></td>
 					</tr>
 					<%-- <tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.rkms01'/></th>
@@ -605,23 +617,28 @@
 					</tr> --%>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t155'/></th>
-						<td><span id="ownerCall"></span></td>
+						<td colspan="2"><span id="ownerCall"></span></td>
 					</tr>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t148'/></th>
-						<td style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
+						<td colspan="2" style="word-break:break-all;" id="resLocation"><%-- ${resLocation} --%></td>
 					</tr>							
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezResource.t149'/></th>
-						<td id="approveFlag"></td>
+						<td colspan="2" id="approveFlag"></td>
 					</tr>
 					<tr>
 						<th style="height:30px;background-color: #fafafa"><spring:message code='ezBoard.t5007'/></th>
-						<td><span id="resDate"></span></td>
+						<td colspan="2"><span id="resDate"></span></td>
 					</tr>
 					<tr>
-						<th style="height:200px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
-						<td><div style="overflow-y: auto; height: 200px; word-break:break-all; white-space:pre-wrap;" id="brdExplain"></div></td>
+						<th style="height:200px;background-color: #fafafa"><spring:message code="ezPortal.t202"/></th>
+						<td style="width:39%; border-right: 0"><img id="preview1" name="preview" src="/images/default_pic.jpg" width="120" height="120" alt="" border="0" style="margin-left: auto; margin-right: auto; display: block; border-right: 0px;"></td>
+						<td style="border-left: 0"><img id="preview2" name="preview" src="/images/default_pic.jpg" width="120" height="120" alt="" border="0" style="margin-left: auto; margin-right: auto; display: block;"></td>
+					</tr>
+					<tr>
+						<th style="height:100px;background-color: #fafafa"><spring:message code='ezResource.t271'/></th>
+						<td colspan="2"><div style="overflow-y: auto; height: 100px; word-break:break-all; white-space:pre-wrap;" id="brdExplain"></div></td>
 					</tr>
 	         	</table>
 	         </div>	

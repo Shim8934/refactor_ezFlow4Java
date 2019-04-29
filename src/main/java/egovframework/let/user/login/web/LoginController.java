@@ -172,7 +172,7 @@ public class LoginController {
         int serverPort = request.getServerPort();
         int tenantId = loginService.getTenantId(serverName);
         
-        logger.debug("serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
+        logger.debug("_uid=" + _uid + ",serverName=" + serverName + ",serverPort=" + serverPort + ",tenantId=" + tenantId);
 		
 		String rpwd = EgovFileScrty.decryptRsa(pk, loginVO.getEncryptPass());
 		String _pwd = EgovFileScrty.encryptPassword(rpwd, _uid);
@@ -193,6 +193,8 @@ public class LoginController {
 		
 		// 사용자 ID & 사원번호 자체가 발견되지 않는 경우
 		if (resultVO == null || resultVO.getId() == null || resultVO.getId().equals("")) {
+			logger.debug("_uid is not found.");
+					
         	model.addAttribute("message", egovMessageSource.getMessage("fail.common.login", locale));
         	return "forward:/user/login/login.do";
         // 사용자 ID 혹은 사원번호가 발견된 경우
@@ -487,6 +489,8 @@ public class LoginController {
         	
         // 사용자가 입력한 암호가 맞지 않는 경우
         } else {     	
+        	logger.debug("_uid=" + _uid + ",password is wrong.");
+        			
         	//Check login state of the user 
         	int check = checkState(tenantId, _uid, numberOfLoginFailPermit);
         	String errorMsg1 = "";

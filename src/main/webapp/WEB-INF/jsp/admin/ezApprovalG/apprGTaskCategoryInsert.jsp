@@ -294,7 +294,7 @@
 		        		categoryType : document.getElementById("tbCateType").value,
 		        		categoryCode : document.getElementById("tbCateCode").value,
 		        		categoryName : document.getElementById("tbCateName").value,
-		        		categoryName2 : document.getElementById("tbCateName").value,
+		        		categoryName2 : document.getElementById("tbCateName2").value,
 		        		categoryDesc : document.getElementById("tbCateDesc").value,
 		        		pCode : document.getElementById("tbPCateCode").value,
 		        		companyID : companyID
