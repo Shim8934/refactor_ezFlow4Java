@@ -362,20 +362,6 @@
 	                chkQnABoard.checked = false;
 	                chkURLBoard.checked = false;
 	                chkMovieBoard.checked = false;
-
-	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
-	                    if (chkApprBoard.checked) {
-	                        chkApprBoard.checked = false;
-	                        checkApprBoard();
-	                      	chkApprBoard.disabled = true;
-	                    }
-	                }
-	            } else {
-	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
-	                    chkApprBoard.disabled = true;
-	                } else {
-	                    chkApprBoard.disabled = false;
-	                }
 	            }
 	            if (event.srcElement.id == "chkPhotoBoard" && event.srcElement.checked) {
 	                chkGeneralBoard.checked = false;
@@ -413,21 +399,6 @@
 	                chkThumbBoard.checked = false;
 	                chkURLBoard.checked = false;
 	                chkMovieBoard.checked = false;
-
-	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
-	                    if (chkApprBoard.checked) {
-	                        chkApprBoard.checked = false;
-	                        checkApprBoard();
-	                        chkApprBoard.disabled = true;
-	                    }
-	                }
-	            } else { 
-	                if (chkQnABoard.checked || chkAnonyBoard.checked) {
-	                    chkApprBoard.disabled = true;
-	                }
-	                else {
-	                    chkApprBoard.disabled = false;
-	                }
 	            }
 	            /* 2018-07-13 홍승비 - URL게시판 구분 추가 */
                 if (event.srcElement.id == "chkURLBoard" && event.srcElement.checked) {
@@ -474,12 +445,21 @@
                     $("#chkNotify").prop("disabled", false);
 					$("#chkbackgroundimage").prop("disabled", false);
 					$("#chkform").prop("disabled", false);
-					$("#chkApprBoard").prop("disabled", false);
+					
+					/* 2019-04-29 홍승비 - 승인여부를 사용하지 않는 익명, QNA게시판 동작 조정 */
+	            	 if (chkQnABoard.checked == true || chkAnonyBoard.checked == true) {
+						$("#chkApprBoard").prop("checked", false);
+						checkApprBoard();
+						$("#chkApprBoard").prop("disabled", true);
+	                } else {
+	                    $("#chkApprBoard").prop("disabled", false);
+					}
+					
 					$("#chkOneLine").prop("disabled", false);
 					$("#chkBoardLike").prop("disabled", false);
 	            }
 
-	            /* 2018-07-11 홍승비 - 포토, 썸네일, 익명, 동영상게시판 선택 시 답변메일발송 tr 보이지 않도록 수정 */
+	            /* 2019-04-29 홍승비 - 포토, 썸네일, 익명, 동영상게시판 선택 시 답변메일발송 disabled 처리 */
 	             if (chkPhotoBoard.checked == true || chkThumbBoard.checked == true || chkAnonyBoard.checked == true || chkMovieBoard.checked == true) {
 	                $("#chkNotify").prop("disabled", true);
 	                document.getElementById("chkNotify").checked = false;
