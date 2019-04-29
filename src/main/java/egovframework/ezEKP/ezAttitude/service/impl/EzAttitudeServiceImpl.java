@@ -2868,7 +2868,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<Map<String, Object>> getJoinDateUserList(String yesterday) throws Exception {
-		
 		LOGGER.debug("getJoinDateUserList started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2881,13 +2880,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 	@Override
 	public void updateAnnualHoliday(Map<String, Object> map) throws Exception {
-		
 		LOGGER.debug("updateAnnualHoliday started");
 		
-		int workingMonthCnt = Integer.parseInt((String)map.get("workingmonthcnt"));
 		int defaultAnnualHolidayCnt = 15;
 		
-		if (workingMonthCnt < 24) {
 			int workingDayCnt = checkHoliday((String)map.get("joindate"), commonUtil.getTodayUTCTime("yyyy-MM-dd"), "1", "S907001", 1).size();
 			int attendanceDay = ezAttitudeDAO.getAttendanceDay(map);
 			int attendanceRate = attendanceDay / workingDayCnt * 100;
@@ -2900,20 +2896,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				map.put("holidayCnt", monthlyHolidayCnt);
 				map.put("attendanceRateCondition","2");
 			}
-		} else {
-			
-			int annualHolidayCnt = defaultAnnualHolidayCnt + (int) (workingMonthCnt / 12 - 1) / 2;
-
-			// 입사한지 2년이 됐을 때 남아있는 월차는 모두 0으로 초기화 해준다.
-			map.put("holidayCnt", 0);
-			map.put("attendanceRateCondition","2");
-			ezAttitudeDAO.updateAnnualHoliday(map);
-			
-			
-			map.put("holidayCnt", annualHolidayCnt);
-			map.put("attendanceRateCondition","1");
-			
-		}
 		
 		ezAttitudeDAO.updateAnnualHoliday(map);
 
@@ -2921,8 +2903,26 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public void updateMonthlyHoliday(Map<String, Object> map) throws Exception{
+	public void updateExceedAnnualHoliday(java.util.Map<String,Object> map) throws Exception {
 		
+		int workingMonthCnt = Integer.parseInt((String)map.get("workingmonthcnt"));
+		int defaultAnnualHolidayCnt = 15;
+		int annualHolidayCnt = defaultAnnualHolidayCnt + (int) (workingMonthCnt / 12 - 1) / 2;
+
+		// 입사한지 2년이 됐을 때 남아있는 월차는 모두 0으로 초기화 해준다.
+		map.put("holidayCnt", 0);
+		map.put("attendanceRateCondition","2");
+		ezAttitudeDAO.updateAnnualHoliday(map);
+		
+		
+		map.put("holidayCnt", annualHolidayCnt);
+		map.put("attendanceRateCondition","1");
+		
+		ezAttitudeDAO.updateAnnualHoliday(map);
+	}
+	
+	@Override
+	public void updateMonthlyHoliday(Map<String, Object> map) throws Exception{
 		LOGGER.debug("updateMonthlyHoliday started");
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");

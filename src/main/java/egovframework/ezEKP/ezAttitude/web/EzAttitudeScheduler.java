@@ -39,25 +39,26 @@ public class EzAttitudeScheduler {
 	
 	
 //	@Scheduled(cron = "${config.cron.autoSetAnnualHoliday}")
-//	@Scheduled(cron = "10/5 * * * * *")
+	@Scheduled(cron = "10/5 * * * * *")
 	public void autoSetAnnualHoliday() throws Exception{
 		logger.debug("autoSetAnnualHoliday scheduler started.");
 		
 		// 변수 값은 테스트용 테이블 및 쿼리 생성 후 변경 예정
 		char useAnnualAutoGnrt = '0';// 0:사용 1:미사용
-		char annualGnrtStd = '0';// 0:입사일기준 1:회계연도기준
+		char annualGnrtStd = '1';// 0:입사일기준 1:회계연도기준
 		char useAnnualTmnt = '0';//연차소멸 여부 0:사용 1:미사용
 		
 		if (useAnnualAutoGnrt == '0') {
+			
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			String today = sdf.format(new Date());
+			Date setDate = sdf.parse(today);
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(setDate);
+			cal.add(Calendar.DATE, -1);
+			String yesterday = sdf.format(cal.getTime());
+
 			if (annualGnrtStd == '0') {
-				
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				String today = sdf.format(new Date());
-				Date setDate = sdf.parse(today);
-				Calendar cal = Calendar.getInstance();
-				cal.setTime(setDate);
-				cal.add(Calendar.DATE, -1);
-				String yesterday = sdf.format(cal.getTime());
 				
 				List<Map<String, Object>> list = ezAttitudeService.getJoinDateUserList(yesterday.split("-")[2]);
 				
@@ -76,11 +77,10 @@ public class EzAttitudeScheduler {
 							}
 						}
 					} else {
-						ezAttitudeService.updateAnnualHoliday(m);
+						ezAttitudeService.updateExceedAnnualHoliday(m);
 					}
 				}
 			} else {
-
 				
 				
 			}
