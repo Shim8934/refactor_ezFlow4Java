@@ -192,7 +192,7 @@
                     TreeViewRefresh();
                     opener.TreeViewRefresh();
 	                //선택한 노드 값 초기화
-	                nodeIdx = "";
+            		nodeIdx = undefined;
                     return;
                 } else if (rvalue == "HASSUBCONT") {
                 	var pAlertContent = "<spring:message code='ezApprovalG.pjj34'/>";
@@ -254,7 +254,6 @@
             DivPopUpHidden();
             var treeNode = new TreeNode();
             treeNode.LoadFromID(nodeIdx);
-            nodeIdx = undefined;
 
             var ContID = treeNode.GetNodeData("DATA1");
             if (ContName != "cancel") {
@@ -281,6 +280,8 @@
     	                        OpenAlertUI(pAlertContent);
     	                        TreeViewRefresh();
     	                        opener.TreeViewRefresh();
+    	                      	//선택한 노드 값 초기화
+           						nodeIdx = undefined;
     	                        return;
     	                    }
     		            } else {
@@ -311,6 +312,7 @@
     	                        OpenAlertUI(pAlertContent);
     	                        TreeViewRefresh();
     	                        opener.TreeViewRefresh();
+    	                        nodeIdx = undefined;
     	                        return;
     	                    }
     		            } else {
