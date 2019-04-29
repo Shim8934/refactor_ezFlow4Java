@@ -3077,4 +3077,84 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
     	LOGGER.debug("sendMailToReference ended.");
 		return result;
 	}
+	
+	@Override
+	public int getUsersCancelAnnCount(String companyId, int tenantId, String userId, String startDate, String endDate,
+			String apprUserName, String writerName , String writerDeptName, String lang, String offset, String type, String deptId, List<String> deptIdList,String adminFlag, String checkAdmin) throws Exception {
+		LOGGER.debug("getUsersCancelAnnCount started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		LOGGER.debug("checkAdmin : " + checkAdmin);
+		LOGGER.debug("adminFlag : " + adminFlag);
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("searchDeptId", deptId);
+		map.put("deptIdList", deptIdList);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("apprUserName", apprUserName);
+		map.put("writerName", writerName);
+		map.put("writerDeptName", writerDeptName);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
+		map.put("offset", offset);
+		map.put("type", type);
+		
+		if (adminFlag.equals("false")) {
+			map.put("userId", userId);
+		}
+		
+		int attAppListCount = ezAttitudeDAO.getUsersCancelAnnCount(map);
+		
+		LOGGER.debug("getUsersCancelAnnCount ended");
+		
+		return attAppListCount;
+	}
+	
+	@Override
+	public List<AttitudeApplicationVO> getUsersCancelAnn(String companyId, int tenantId,
+			String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName, String lang, 
+			String offset,String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin, String deptId, List<String> deptIdList) throws Exception {
+		LOGGER.debug("getUsersCancelAnn started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("searchDeptId", deptId);
+		map.put("deptIdList", deptIdList);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("apprUserName", apprUserName);
+		map.put("writerName", writerName);
+		map.put("writerDeptName", writerDeptName);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
+		map.put("offset", offset);
+		map.put("startPoint", startPoint);
+		map.put("endPoint", endPoint);
+		map.put("type", type);
+		if (startPoint != null && endPoint != null && !startPoint.equals("") && !endPoint.equals("")) {
+			map.put("startRow", Integer.valueOf(startPoint) + 1);
+			map.put("endRow", Integer.valueOf(startPoint) + Integer.valueOf(endPoint));
+		}
+		
+		if (adminFlag.equals("false")){
+			map.put("userId", userId);
+		}
+		if (order !=null) {
+			map.put("order", order.trim());
+		}
+		
+		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.getUsersCancelAnn(map); 
+		
+		LOGGER.debug("getUsersCancelAnn ended");
+		
+		return attAppList;
+	}
 }

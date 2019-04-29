@@ -169,5 +169,9 @@ public interface EzAttitudeService {
 	public int deleteCancelAnnual(String companyId, int tenantId, String attitudeId) throws Exception;
 
 	public String sendMailToReference(AttitudeVO vo, String attitudeId, String idList, HttpServletRequest request, String loginCookie, LoginVO userInfo, String orgCompanyID, int tenantID) throws Exception;
+
+	public int getUsersCancelAnnCount(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName, String lang, String offset, String type, String deptId, List<String> deptIdList, String adminFlag, String checkAdmin) throws Exception;
+
+	public List<AttitudeApplicationVO> getUsersCancelAnn(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName,	String lang, String offset, String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin, String deptId, List<String> deptIdList) throws Exception;
 	
 }

@@ -411,7 +411,10 @@
 	    		case 5:	// 신청관리현황
 	    			window.open("/ezAttitude/manageAttModAppList.do", "right");
 	    			break;
-	    		case 6:	// 근태정보관리
+	    		case 6:	// 연차취소관리
+	    			window.open("/ezAttitude/manageAnnCanAppList.do", "right");
+	    			break;
+	    		case 7:	// 근태정보관리
 	    			window.open("/ezAttitude/attitudeManage.do", "right");
 	    			break;
 	    	}
@@ -517,11 +520,13 @@
 								<span class="attCount">&nbsp;${totalAtt}</span>
 							</c:if>
                    		</span></li>
+                   		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(6)">연차취소관리
+                   		</span></li>
                     </c:if>
 		        </ul>
 		        <c:if test="${attitudeAdminCheck == true}">
 			        <ul class="lnbUL">
-                  		<li><span class="sub_iconLNB tree_workTimeset"></span><span class="list_text" onclick="functionFlag(6)"><spring:message code='ezAttitude.t73'/></span></li>
+                  		<li><span class="sub_iconLNB tree_workTimeset"></span><span class="list_text" onclick="functionFlag(7)"><spring:message code='ezAttitude.t73'/></span></li>
 					</ul>
 				</c:if>
 			</div>

@@ -117,9 +117,11 @@
 				
 				var idList = "";
 		    	
-		    	for (var i = 0; i < g_attendant.id.length; i++) {
-		    		idList += g_attendant.id[i] + ","
-		    	}
+				if(g_attendant != null) {
+			    	for (var i = 0; i < g_attendant.id.length; i++) {
+			    		idList += g_attendant.id[i] + ","
+			    	}
+				}
 				
 				var obj = new Object();
 				obj.attitudeId = attitudeId;
