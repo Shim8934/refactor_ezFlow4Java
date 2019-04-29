@@ -50,6 +50,7 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeBodyPart;
@@ -763,7 +764,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        			replyMessage = orgMessage.reply(false);
 		        		}
 		        		else {
-		        			replyMessage = orgMessage.reply(true);
+		        			try {
+		        				replyMessage = orgMessage.reply(true);
+		        			// From 주소에 : 과 같은 illegal 문자가 있는 경우 mail.mime.address.strict 속성을 false로 하여도
+		        			// 전체회신을 하면 예외가 발생한다. 이 경우 orgMessage.reply(false)로 대신 호출한다.
+		        			} catch (AddressException e) {
+		        				e.printStackTrace();
+		        				
+		        				logger.debug("orgMessage.reply failed.");
+		        				
+		        				replyMessage = orgMessage.reply(false);
+		        			}
 		        		}
 		        		
 		        		// ANSWERED flag needs to be cleared since the above reply method sets it.
@@ -826,9 +837,32 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        			if (ccHeaders != null) {
 			        			replyMessage.setHeader("Cc", ccHeaders[0].replace("mailto:", ""));
 		        			}
+		        										
+		        			try {
+		        				// retrieve the TO addresses from the reply message.
+		        				addresses = replyMessage.getRecipients(Message.RecipientType.TO);
+		        			} catch (AddressException e) {
+		        				e.printStackTrace();
+		        				
+		        				logger.debug("replyMessage.getRecipients TO failed.");
+		        				
+		        				// : 과 같은 illegal 문자가 있는 경우 replyMessage.getRecipients에서 예외가
+		        				// 발생한다. mail.mime.address.strict 속성을 false로 한 경우 orgMessage.getRecipients에서는
+		        				// 예외가 발생하지 않으나 replyMessage.getRecipients에서는 여전히 예외가 발생한다.
+		        				// 이 경우 From 주소와 orgMessage.getRecipients를 통해 직접 응답 메시지의 To 주소를
+		        				// 구성한다.
+		        				if (_cmd.equals("REPLYALL")) {		        				
+			        				Address fromAddress = null;
+			        				Address[] orgToAddresses = orgMessage.getRecipients(Message.RecipientType.TO);
+			        						        				
+					        		if (orgMessage.getFrom() != null && orgMessage.getFrom()[0] != null) {
+					        			fromAddress = orgMessage.getFrom()[0];
+					        		}
+			        				
+					        		addresses = getCombinedFromAndToAddresses(fromAddress, orgToAddresses);
+		        				}
+		        			}
 		        			
-							// retrieve the TO addresses from the reply message.
-							addresses = replyMessage.getRecipients(Message.RecipientType.TO);
 							String[] rawHeaders = orgMessage.getHeader("From");
 							String fromHeader = rawHeaders != null ? rawHeaders[0] : "";
 							rawHeaders = orgMessage.getHeader("To");
@@ -860,8 +894,26 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								to = ezEmailUtil.getStringListOfAddresses(addresses, isPureAscii);
 							}
 	
-							// retrieve the CC addresses from the reply message.
-							addresses = replyMessage.getRecipients(Message.RecipientType.CC);
+							try {
+								addresses = null;
+								
+								// retrieve the CC addresses from the reply message.
+								addresses = replyMessage.getRecipients(Message.RecipientType.CC);
+		        			} catch (AddressException e) {
+		        				e.printStackTrace();
+		        				
+		        				logger.debug("replyMessage.getRecipients CC failed.");
+		        				
+		        				// : 과 같은 illegal 문자가 있는 경우 replyMessage.getRecipients에서 예외가
+		        				// 발생한다. mail.mime.address.strict 속성을 false로 한 경우 orgMessage.getRecipients에서는
+		        				// 예외가 발생하지 않으나 replyMessage.getRecipients에서는 여전히 예외가 발생한다.
+		        				// 이 경우 orgMessage.getRecipients를 통해 응답 메시지의 CC 주소를 구한다.
+		        				// 사실 CC의 경우엔 replyMessage와 orgMessage가 동일하므로 처음부터 orgMessage를
+		        				// 사용할 수 있으나 기존 코드를 최대한 유지한 상태로 예외 처리만 추가함.
+		        				if (_cmd.equals("REPLYALL")) {
+		        					addresses = orgMessage.getRecipients(Message.RecipientType.CC);
+		        				}
+		        			}							
 							
 							if (addresses != null) {
 								rawHeaders = orgMessage.getHeader("Cc");
@@ -5585,6 +5637,37 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		mat.appendTail(result);
 		
 		return result.toString();	
+	}
+	
+	private Address[] getCombinedFromAndToAddresses(Address fromAddress, Address[] toAddresses) {
+		Address[] combinedAddress = null;
+		int count = 0;
+		int startIndex = 0;
+		
+		if (fromAddress != null) {
+			count++;
+			startIndex++;
+		}
+		
+		if (toAddresses != null) {
+			count += toAddresses.length;
+		}
+		
+		if (count > 0) {
+			combinedAddress = new Address[count];
+			
+			if (fromAddress != null) {
+				combinedAddress[0] = fromAddress;
+			}
+			
+			if (toAddresses != null) {
+				for (int i = 0; i < toAddresses.length; i++) {
+					combinedAddress[startIndex + i] = toAddresses[i];
+				}
+			}			
+		}
+				
+		return combinedAddress;
 	}
 	
 	private void removeUnusedInlineImagePart(Multipart relatedPart) {

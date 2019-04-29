@@ -113,7 +113,7 @@ var buttons = (function() {
 				success : function(data) {
 					var result = data.status;
 					
-					if (result != "ok") {
+					if (result != "ok" && folderType != "U") {
 						alert(messages.strLang30);
 					} else {
 						openLeftPanel();
@@ -161,7 +161,7 @@ var buttons = (function() {
 					success : function(data) {
 						var result = data.status;
 						
-						if (result != "ok") {
+						if (result != "ok" && folderType != "U") {
 							alert(messages.strLang30);
 						} else {
 							openLeftPanel();
@@ -192,7 +192,7 @@ var buttons = (function() {
 					}
 				}
 				
-				if (selectedCreatorId != userId) {
+				if (selectedCreatorId != userId && folderType != "U") {
 					alert(messages.strLang37);
 					return;
 				}

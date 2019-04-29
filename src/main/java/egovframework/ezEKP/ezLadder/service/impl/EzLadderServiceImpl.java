@@ -823,28 +823,25 @@ public class EzLadderServiceImpl implements EzLadderService {
 
 		String subject = egovMessageSource.getMessage("ezLadder.t096", userInfo.getLocale());	// 메일제목
 		StringBuilder bodyContent = new StringBuilder("");	// 메일 링크
-
-		bodyContent.append("<div id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: gulim,arial,verdana\" name=\"urn:schemas:httpmail:textdescription\">");
 		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t003", userInfo.getLocale()) + " : " + "<span style=\"color:blue;cursor:pointer;\"><a id='ladder_a' href='/ezLadder/getLadderGame.do?ladderId=" + lad.getLadderId() + "'>" + commonUtil.cleanValue(lad.getTitle()) + "</a></span></br>");
 		bodyContent.append(" " + egovMessageSource.getMessage("ezLadder.t004", userInfo.getLocale()) + " : " + userInfo.getDisplayName());
-		bodyContent.append("</div>");
 				
-		if(cnt > 0) {
-			// 참여자에게 메일 발송
-			InternetAddress from = new InternetAddress();
-			from.setPersonal(userInfo.getDisplayName(), "UTF-8");
-			from.setAddress(userInfo.getEmail());
-			InternetAddress[] toArr = new InternetAddress[cnt];
-			
-			for (int i=0; i<cnt; i++) {
-				OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(receiverID[i].trim(), userInfo.getPrimary(), userInfo.getTenantId());
-				
-				InternetAddress to = new InternetAddress();
-				to.setPersonal(receiverName[i].trim(), "UTF-8");
-				to.setAddress(AccessUserInfo.getMail());
-				toArr[i] = to;
-			}
-			ezEmailService.sendMail(logCookie, from, toArr, null, null, subject, bodyContent.toString(), false);
+		String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+		
+		// 참여자에게 메일 발송
+		InternetAddress from = new InternetAddress();
+		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+		from.setAddress(userInfo.getEmail());
+		InternetAddress[] toArr = new InternetAddress[cnt];
+		
+		for (int i=0; i<cnt; i++) {
+			OrganUserVO AccessUserInfo = ezOrganAdminService.getUserInfo(receiverID[i].trim(), userInfo.getPrimary(), userInfo.getTenantId());
+						
+			InternetAddress to = new InternetAddress();
+			to.setPersonal(receiverName[i].trim(), "UTF-8");
+			to.setAddress(AccessUserInfo.getMail());
+			toArr[i] = to;
 		}
+		ezEmailService.sendMail(logCookie, from, toArr, null, null, subject, content, false);
 	}
 }

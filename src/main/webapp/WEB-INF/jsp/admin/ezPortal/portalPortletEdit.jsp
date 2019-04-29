@@ -338,7 +338,7 @@
 					
 					// 새창여부
 					var pOpenMode = "0";
-					if (document.getElementsByName("OpenMode").checked == true)
+					if (document.getElementsByName("OpenMode")[0].checked == true)
 						pOpenMode = "1";
 					
 					if (pImageWidth == "") pImageWidth = "0";

@@ -4586,7 +4586,9 @@ public class EzCommunityController extends EgovFileMngUtil{
 		        }
 			}
 			
-			ezEmailService.sendMail(loginCookie, from, to.toArray(new InternetAddress[to.size()]), null, null, subject, memo, false);
+			String content = commonUtil.createNotiMailContent(memo, tenantID, userInfo.getLocale());
+			
+			ezEmailService.sendMail(loginCookie, from, to.toArray(new InternetAddress[to.size()]), null, null, subject, content, false);
 			
 			model.addAttribute("result", "OK");
 		}

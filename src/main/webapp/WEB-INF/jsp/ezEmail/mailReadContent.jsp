@@ -11,7 +11,6 @@
 	        <script language="JavaScript" src="${util.addVer('/js/ezEmail/js_cross/reademail.js')}"></script>
 	        <script src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    	<script language="javascript" type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
-	    	<script src="http://code.jquery.com/jquery-3.2.1.js"></script>
 			<style> 
 				p { margin-bottom: 0; margin-top: 0; } 
 			</style>

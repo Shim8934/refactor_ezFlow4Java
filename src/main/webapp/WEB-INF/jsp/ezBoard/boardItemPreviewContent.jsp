@@ -195,7 +195,7 @@
 	                strAttach += "<span onmouseover=\"this.style.color='#164aad'\" onmouseout=\"this.style.color='#666'\" style='cursor: pointer; color: rgb(102, 102, 102);'>";
          
 	                /* 2018-10-11 홍승비 - 모두저장용 filePath 속성 추가 */
-	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "' filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "'>" + filename + " (" + File_Size(filesize) + ")</a>";	                
+	                strAttach += "<a name='filename' href='/ezBoard/getBoardAttachInfo.do?type=BOARD&itemID=" + encodeURIComponent(getNodeText(SelectSingleNode(xmldomNodes[i], "ItemID"))) + "&attID=" + getNodeText(SelectSingleNode(xmldomNodes[i], "GUID")) + "' filePath='" + filepathHTMLEscape + "' fileNameAttr='" + filenameAttr + "'>" + filename + " (" + filesize + ")</a>";	                
 	              	strAttach += "</span>";
 	                strAttach += "</li>";
 	            }

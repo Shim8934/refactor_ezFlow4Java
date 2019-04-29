@@ -1870,6 +1870,8 @@ public class EzJournalController extends EgovFileMngUtil {
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t154") + journalTitle + "</p>";
 				content += "<p>" + replyContent + "</p>";
 				
+				content = commonUtil.createNotiMailContent(content, userInfo.getTenantId(), userInfo.getLocale());
+				
 				InternetAddress from = new InternetAddress(userInfo.getEmail());
 				from.setPersonal(userInfo.getDisplayName());
 				ezEmailService.sendMail(loginCookie , from, toArr, null, null, subject, content, false);
@@ -1943,6 +1945,8 @@ public class EzJournalController extends EgovFileMngUtil {
 				content += "<a id='journal_a' href='#' target='' onclick='journalMailLink(" + journalId + ");'>" + journalTitle + "</a>";
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t157") + userInfo.getDisplayName() + "</p>";
 				content += "<p>" + egovMessageSource.getMessage("ezJournal.t154") + journalTitle + "</p>";
+				
+				content = commonUtil.createNotiMailContent(content, userInfo.getTenantId(), userInfo.getLocale());
 				
 				InternetAddress from;
 				from = new InternetAddress(userInfo.getEmail());

@@ -119,7 +119,8 @@
 		    		checkBujaeInfo_Complete(true);
 		    		return;
 	            }
-		        var BString = arr_userinfo[7];
+		        var BString = "${buJaeInfo}";
+		        
 		        if (BString != "") {
 		            var BDim = new Array("");
 		            BDim = BString.split(":");
@@ -994,7 +995,8 @@
 				                OpenReceiveENDDraftUI(pCurSelRow, "REDRAFT");
 				            }
 				            else
-				                OpenOpinionUI(pCurSelRow, "HeSong");
+				                //OpenOpinionUI(pCurSelRow, "HeSong");
+				            	openOpinionUI_New(pCurSelRow, "HeSong");
 					        }
 			        	}
 			    } else {
@@ -1005,7 +1007,8 @@
 							getDocList();
 							return;
 	                	}
-		                OpenOpinionUI(pCurSelRow, "HeSong");
+		                //OpenOpinionUI(pCurSelRow, "HeSong");
+		                openOpinionUI_New(pCurSelRow, "HeSong");
 		            }
 			    }
 		    }
