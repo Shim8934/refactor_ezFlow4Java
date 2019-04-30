@@ -19,7 +19,6 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -1199,7 +1198,6 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		String companyId = userInfo.getCompanyID();
 		String userId = userInfo.getId();
 		String offset = userInfo.getOffset();
-		String primary = userInfo.getPrimary();
 		int tenantId = userInfo.getTenantId();
 		String filesForQuery = ("'" + fileListStr + "'").replace(",", "','");
 		
@@ -1235,7 +1233,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		if (isMove && privileges.equals("normal") && checkFilesOwner(userId, filesForQuery, tenantId) != totalFiles) {
 			logger.debug("Privileges!");
 			result.put("status", "error");
-			result.put("code", 4);
+			result.put("code", 5);
 			
 			return new JSONObject(result);
 		}
@@ -1310,6 +1308,19 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 		
 		// 중복되지 않은 정상 파일에 대한  move 또는 copy 작업
 		if (isMove) {
+			UserCapacityVO userCapacity = ezWebFolderAdminService.getCapacity(folderId, userInfo.getPrimary(), userInfo.getTenantId());
+			
+			double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
+			double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;
+			
+			if (normalFileList.stream().mapToLong(FileVO::getFileSize).sum() > (totalCapa - totalUsed)) {
+				logger.debug("Not enough storage to move/copy these files!");
+				result.put("status", "error");
+				result.put("code", 4);
+				
+				return new JSONObject(result);
+			}
+			
 			for (FileVO file : normalFileList) {
 				if (useRename) {
 					// 새 이름으로 이동
@@ -1330,7 +1341,7 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 			//copy files
 			//Check upload conditions
 			double totalUploadSize = getTotalFilesSize(filesForQuery, tenantId);
-			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
+			UserCapacityVO userCapacity = ezWebFolderAdminService.getCapacity(folderId, userInfo.getPrimary(), userInfo.getTenantId());
 			
 			double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
 			double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;

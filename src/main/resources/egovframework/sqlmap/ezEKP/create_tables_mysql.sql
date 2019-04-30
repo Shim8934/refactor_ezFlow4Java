@@ -11271,7 +11271,9 @@ CREATE TABLE `tbl_webfolder_config` (
   `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
   `COMPANY_ID` varchar(100) NOT NULL COMMENT '회사 아이디',
   `UPLOAD_LIMIT` varchar(100) DEFAULT NULL COMMENT '1회 업로드 제한량',
-  `TOTAL_LIMIT` varchar(100) DEFAULT NULL COMMENT '총 업로드 용량',
+  `COMPANY_TOTAL_LIMIT` varchar(100) DEFAULT NULL COMMENT '회사 폴더 업로드 용량',
+  `DEPARTMENT_TOTAL_LIMIT` varchar(100) DEFAULT NULL COMMENT '부서 폴더 업로드 용량',
+  `USER_TOTAL_LIMIT` varchar(100) DEFAULT NULL COMMENT '개인 폴더 업로드 용량',
   PRIMARY KEY (`COMPANY_ID`,`TENANT_ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 기본설정';
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -11524,7 +11526,8 @@ CREATE TABLE `tbl_webfolder_user` (
   `TOTAL_CAPACITY` varchar(250) DEFAULT NULL COMMENT '총용량',
   `COMPANY_ID` varchar(50) NOT NULL COMMENT '회사 아이디',
   `TENANT_ID` mediumint(5) NOT NULL COMMENT '테넌트 아이디',
-  PRIMARY KEY (`CN`,`TENANT_ID`)
+  `TYPE` varchar(50) NOT NULL,
+  PRIMARY KEY (`CN`,`TENANT_ID`, `TYPE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='웹폴더 사용자';
 /*!40101 SET character_set_client = @saved_cs_client */;
 

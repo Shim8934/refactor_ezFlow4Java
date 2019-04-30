@@ -14,6 +14,7 @@
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" />
 		<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css" />
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
+		<link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css" />
 		<!-- datepicker -->
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
@@ -37,6 +38,16 @@
 			var inputNameDlg_cross_dialogArguments = new Array();
 			var parentId = folderId;
 			var userId = "${userId}";
+			var resultErr1 = "<spring:message code='ezWebFolder.t306'/>";
+			var resultErr2 = "<spring:message code='ezWebFolder.t305'/>";
+			var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
+			var resultErr4 = "<spring:message code='ezWebFolder.t249'/>";
+			var resultErr5 = "<spring:message code='ezWebFolder.t250'/>";
+			var progressSubject = {
+				C: "<spring:message code='ezWebFolder.t11'/>",
+				D: "<spring:message code='ezWebFolder.t12'/>",
+				U: "<spring:message code='ezWebFolder.t13'/>"
+			}
 			
 			// fileList 브라우저 화면 크기 변했을때 유동적화면 변화
 			window.onresize = function () {
@@ -212,6 +223,7 @@
 						renderList(data.list);
 						setNamePath(data.folderPath, data.folderPath2);
 						setMailBoxInfo(data.folderCount, data.fileCount);
+						disableCapacity();
 						
 						folderId = "";
 					},
@@ -290,7 +302,7 @@
 						renderList2(result.fileList);
 						setNamePath(result.folderPath, result.originalPath);
 						setMailBoxInfo(result.fldCnt, result.fileCnt);
-						
+						loadCapacity();
 					},
 					error : function(error) {
 						hideProgress();
@@ -996,12 +1008,68 @@
 				refreshView();
 			}
 			
+			function loadCapacity() {
+				$.ajax({
+					type: "POST",
+					async: true,
+					url: "/ezWebFolder/getCapacity.do",
+					data: {
+						folderId: folderId
+					},
+					success: function(data) {
+						var capacity = data.capacity;
+						var usedRate = Math.min(capacity.usedRate, 100);
+						var progressColor = null;
+						var progressElement = document.getElementById("capacity-bar");
+						
+						$("#capacity-folder-type").text(progressSubject[capacity.type]);
+						
+						if (progressElement.style.width === usedRate + "%") {
+							return;
+						}
+						
+						switch (true) {
+						case usedRate >= 80:
+							progressColor = "#ff4040";
+							break;
+						case usedRate >= 70:
+							progressColor = "#ffb600";
+							break;
+						default:
+							progressColor = "#82b9f6";
+						}
+						
+						$("#capacity-wrapper").css("display", "inline");
+						$("#capacity-bar").css("backgroundColor", progressColor);
+						$("#capacity-bar").stop().animate({width: usedRate + "%"},
+							{
+								step: function(x) {
+									$("#capacity-percent").text(Math.round(x) + "%");
+								},
+								duration: 500
+							}
+						);
+					}
+				});
+			}
+			
+			function disableCapacity() {
+				$("#capacity-wrapper").css("display", "none");
+				$("#capacity-folder-type").text("");
+			}
 		</script>
 	</head>
 	<body class="mainbody">
 		<h1>
 			<spring:message code='ezWebFolder.t266'/>
 			<span id="mailBoxInfo"></span>
+			<div id="capacity-wrapper" style="display: none;">
+				<span id="capacity-folder-type" style="display: inline-block; margin-left: 15px;"></span>
+				<div class="progressbar" style="float: inherit; width: 150px; display: inline-block; vertical-align: middle; margin-left: 15px; border-radius: 15px;">
+					<div id="capacity-bar" class="proggress" style="background-color: #82b9f6; height: 15px; border-radius: 15px; width: 0px;"></div>
+				</div>
+				<span id="capacity-percent" style="width: 15px; display: inline-block; text-align: right; border-radius: 15px;"></span>
+			</div>
 		</h1>
 		
 		<div id="pageArea">

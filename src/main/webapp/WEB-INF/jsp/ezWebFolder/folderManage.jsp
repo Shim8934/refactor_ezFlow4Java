@@ -56,13 +56,13 @@
 		function Window_Close() {
 			if (ReturnFunction != null) {
 				if (!isDivPopUp) {
-					window.opener.drawVolume();
+					//window.opener.drawVolume();
 					window.close();
 				} else {
 					CancelFunction();
 				}
 			} else {
-				window.opener.drawVolume();
+				//window.opener.drawVolume();
 			}
 			window.opener.refreshView();
 			window.close();
@@ -360,7 +360,7 @@
 		}
 
 		function returnFunction(type) {
-			window.opener.drawVolume();
+			//window.opener.drawVolume();
 			folderType = type;
 			$('input:radio[name=treeType]:input[value=' + folderType + ']').prop("checked", true);
         	add_onclick_Complete('');
