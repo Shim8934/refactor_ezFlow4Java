@@ -734,9 +734,15 @@
 				}
 				
 				window.open(url, "right");
-			}	
-		    
- 			function event_folderMenu(event){
+			}
+
+			// scroll한 뒤 컨텍스트 메뉴의 위치가 잘못 나오는 현상이 있어 수정  
+			var scrollTop = 0;
+			$(window).scroll(function() {
+				scrollTop = $(this).scrollTop();
+			});
+
+ 			function event_folderMenu(event) {
  				event.preventDefault();
  				
 		    	if (!event) event = window.event;
@@ -745,18 +751,17 @@
 
 		        var listsizeheight = document.documentElement.clientHeight;
 		        var listsizewidth = document.documentElement.clientWidth;
-		        var EventDivSize = EventMouseY + 240;
-		        if (listsizeheight < EventDivSize) {
-		            var Div_ = EventDivSize - listsizeheight;
-		            EventMouseY = EventMouseY - Div_;
-		        }
 
-		        EventDivSize = EventMouseX + 140;
-		        if (listsizewidth < EventDivSize) {
+				var EventDivSize = EventMouseX + 140;
+				if (listsizewidth < EventDivSize) {
 		            var Div_ = EventDivSize - listsizewidth;
 		            EventMouseX = EventMouseX - Div_;
 		        }
-		        
+
+                if (scrollTop > 0) {
+                	EventMouseY += scrollTop;
+                }
+
 		        //document.getElementById("folderPanel").style.display = "";
 		        document.getElementById("folderMenuDiv").style.left = EventMouseX + "px";
 		        document.getElementById("folderMenuDiv").style.top = EventMouseY + "px";

@@ -377,8 +377,8 @@
 
 	            preview1.value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 	            preview1.src = "/ezResource/getResourceThumbnailInfo.do?mode=temp&fileName="
-	            		+getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0])
-	            		+getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
+	            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
+	            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
 
 	            document.getElementById("hdnfileNM1").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]) + getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 			}
@@ -395,8 +395,8 @@
 
 	            preview2.value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 	            preview2.src = "/ezResource/getResourceThumbnailInfo.do?mode=temp&fileName="
-            		+getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0])
-            		+getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
+            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
+            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
 
 	            document.getElementById("hdnfileNM2").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]) + getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
 			}

@@ -434,7 +434,7 @@
 
 	                if (rtnValue == "True") {
 	                    xmlHTTP = createXMLHttpRequest();
-	                    xmlHTTP.open("POST", "/ezResource/sendmailToUser.do", false);
+	                    xmlHTTP.open("POST", "/ezResource/sendMailToUser.do", false);
 	                    xmlHTTP.send(xmlDOM);
 	                    var ResponseXML = xmlHTTP.responseXML;
 	                    xmlHTTP = createXMLHttpRequest();
