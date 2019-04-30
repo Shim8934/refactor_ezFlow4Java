@@ -3033,7 +3033,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         
         String draftFrom = "";
         
-        if (draftFromYear != "") {
+        if (draftFromYear != null && !draftFromYear.equals("")) {
         	draftFrom = draftFromYear + "-" + draftFromMonth + "-" + draftFromDay;
         }
         String draftToYear = request.getParameter("draftToYear");
@@ -3042,7 +3042,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 
         String draftTo = "";
         
-        if (draftToYear != "") {
+        if (draftToYear != null && !draftToYear.equals("")) {
         	draftTo = draftToYear + "-" + draftToMonth + "-" + draftToDay;
         }
         
@@ -3052,7 +3052,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         
         String aprFrom = "";
         
-        if (apprFromYear != "") {
+        if (apprFromYear != null && !apprFromYear.equals("")) {
         	aprFrom = apprFromYear + "-" + apprFromMonth + "-" + apprFromDay;
         }
         
@@ -3061,7 +3061,7 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
         String apprToDay = request.getParameter("apprToDay");
         String aprTo = "";
         
-        if (apprToYear != "") {
+        if (apprToYear != null && !apprToYear.equals("")) {
         	aprTo =apprToYear + "-" + apprToMonth + "-" + apprToDay;
         }
         	
