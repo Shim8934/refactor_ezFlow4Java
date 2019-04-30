@@ -950,6 +950,10 @@ ON
 	A.theme_id = D.used_theme
 AND
 	D.user_id = #userId#
+AND
+	D.company_id = #companyId#
+AND
+	D.tenant_id = #tenantId#
 WHERE
 	B.company_id = #companyId#
 AND

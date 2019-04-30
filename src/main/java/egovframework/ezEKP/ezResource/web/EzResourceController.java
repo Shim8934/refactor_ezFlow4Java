@@ -1,11 +1,13 @@
 package egovframework.ezEKP.ezResource.web;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
@@ -16,8 +18,10 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 
+import org.apache.commons.lang3.StringUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +32,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -530,7 +536,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdNm = req.getParameter("brdNm");
 		}
 		
-		String adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId()); 
+		String adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID()); 
 		logger.debug("adminFg="+adminFg);
 		
 		//brdNm = brdNm.replace("chr(38)", "&");
@@ -608,7 +614,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		if (req.getParameter("goToPage") != null) {
 			curPage = req.getParameter("goToPage");
 		}
-		adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId());
+		adminFg = ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID());
 
 		//brdNm = brdNm.replace(String.valueOf(38), "&");
 		
@@ -768,14 +774,15 @@ public class EzResourceController extends EgovFileMngUtil {
 		String brdID = "";
 		StringBuilder strXML = new StringBuilder();
 		StringBuilder returnXML = new StringBuilder();
+		String realPath = commonUtil.getRealPath(req);
 
 		
 		if (req.getParameter("brdID") != null && !req.getParameter("brdID").equals("")) {
 			brdID = req.getParameter("brdID");
 		}
 			
-		if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId()).equals("Y")) {
-			boolean returnValue = ezResourceService.multiDelResData(xmlDom, userInfo.getTenantId());
+		if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), brdID, userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID()).equals("Y")) {
+			boolean returnValue = ezResourceService.multiDelResData(xmlDom, userInfo.getTenantId(), realPath);
 			strXML.append("<RTN>"+ String.valueOf(returnValue) + "</RTN>");
 			return strXML.toString();
 		} else {
@@ -814,7 +821,13 @@ public class EzResourceController extends EgovFileMngUtil {
 			resID = req.getParameter("resID");
 		}
 		
-		if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), resID, userInfo.getId(), userInfo.getTenantId()).equals("Y")) {
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
+		
+		if (ezResourceService.getAdminFlag(userInfo.getCompanyID(), resID, userInfo.getId(), userInfo.getTenantId(), userInfo.getDeptID()).equals("Y")) {
 			ResBrdVO resBrd = ezResourceService.getBrd(Integer.parseInt(brdID), userInfo.getCompanyID(), userInfo.getTenantId());
 			
 			// 2018-10-24 김민성 - 자원관리 관리자 조회
@@ -859,6 +872,12 @@ public class EzResourceController extends EgovFileMngUtil {
 			
 			strMakeDate = resBrd.getMakeDate();
 			strApproveFlag = resBrd.getApproveFlag();
+			
+			List<String> attachList = ezResourceService.getAttachList(brdID, userInfo.getCompanyID(), userInfo.getTenantId());
+
+			for(int i=0; i<attachList.size(); i++) {
+				model.addAttribute("attachList"+(i+1), attachList.get(i));
+			}
 		}
 		
 		model.addAttribute("companyID", userInfo.getCompanyID());
@@ -882,6 +901,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("langPrimary", ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("langSecondary", ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("strResID", resID); 
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		return "/ezResource/resModClsItem";
 	}
@@ -909,6 +929,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String title = xmlDom2.getElementsByTagName("TITLE1").item(0).getTextContent();
 		String title2 = xmlDom2.getElementsByTagName("TITLE2").item(0).getTextContent();
 		
+		String realPath = commonUtil.getRealPath(req);
+		
 		xmlDom.getElementsByTagName("DATA").item(2).setTextContent(deptName);
 		xmlDom.getElementsByTagName("DATA").item(4).setTextContent(displayName);
 		xmlDom.getElementsByTagName("DATA").item(5).setTextContent(title);
@@ -925,6 +947,12 @@ public class EzResourceController extends EgovFileMngUtil {
 		xmlDom.getElementsByTagName("PARADATA").item(0).appendChild(data1);
 		xmlDom.getElementsByTagName("PARADATA").item(0).appendChild(data2);
 		xmlDom.getElementsByTagName("PARADATA").item(0).appendChild(data3);
+		
+		// 자원 이미지 조회 추가
+		Node data4 = xmlDom.createElement("DATA");
+		data4.setTextContent(realPath);
+		
+		xmlDom.getElementsByTagName("PARADATA").item(0).appendChild(data4);
 		
 		boolean returnValue = ezResourceService.modifyResData(commonUtil.convertDocumentToString(xmlDom), userInfo.getTenantId());
 		
@@ -945,6 +973,12 @@ public class EzResourceController extends EgovFileMngUtil {
 		if (!req.getParameter("brdID").equals("")) {
 			brdID = req.getParameter("brdID");
 		}
+
+		String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", userInfo.getTenantId());
+		
+		if (attachFileNameMaxLength.equals("")) {
+			attachFileNameMaxLength = "100";
+		}
 		
 		model.addAttribute("brdID", brdID);
 		model.addAttribute("deptID", userInfo.getDeptID());
@@ -958,6 +992,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("makeDate", EgovDateUtil.getTodayTime().substring(0, 10));
 		model.addAttribute("langPrimary", ezCommonService.getTenantConfig("LangPrimary" + userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("langSecondary", ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId()));
+		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
 		
 		return "/ezResource/resAddClsItem";
 	}
@@ -967,7 +1002,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	 */
 	@RequestMapping(value = "/ezResource/callAddClsItem.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
 	@ResponseBody
-	public String callAddClsItem(@CookieValue("loginCookie") String loginCookie, Model model, @RequestBody String xmlStr) throws Exception {
+	public String callAddClsItem(@CookieValue("loginCookie") String loginCookie, Model model, @RequestBody String xmlStr, HttpServletRequest request) throws Exception {
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		Locale locale = userInfo.getLocale();
 		Document xmlDom = commonUtil.convertStringToDocument(xmlStr);
@@ -985,6 +1020,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String displayName2 = "";
 		String title = "";
 		String title2 = "";
+		
+		String realPath = commonUtil.getRealPath(request);
 		
 		// 2018-07-09 김민성 자원 등록시 사간 겸직 구분
 		Document xmlDom2 = commonUtil.convertStringToDocument(infoXML);
@@ -1020,6 +1057,12 @@ public class EzResourceController extends EgovFileMngUtil {
 		xmlDom.getElementsByTagName("PARADATA").item(0).appendChild(data1);
 		xmlDom.getElementsByTagName("PARADATA").item(0).appendChild(data2);
 		xmlDom.getElementsByTagName("PARADATA").item(0).appendChild(data3);
+		
+		// 자원 이미지 조회 추가
+		Node data4 = xmlDom.createElement("DATA");
+		data4.setTextContent(realPath);
+		
+		xmlDom.getElementsByTagName("PARADATA").item(0).appendChild(data4);
 		
 		boolean returnValue = ezResourceService.addResData(commonUtil.convertDocumentToString(xmlDom), userInfo.getTenantId(),locale);
 		
@@ -1078,7 +1121,13 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("ownerList", ownerListVO);
 		model.addAttribute("primary", userInfo.getPrimary());
 		model.addAttribute("resBrd", resBrd);
+		
+		// 첨부파일 리스트
+		List<String> attachList = ezResourceService.getAttachList(resID, userInfo.getCompanyID(), userInfo.getTenantId());
 
+		for(int i=0; i<attachList.size(); i++) {
+			model.addAttribute("attachList"+(i+1), attachList.get(i));
+		}
 		return "json";
 	}	
 	
@@ -1125,7 +1174,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strApproveFlag = resBrd.getApproveFlag();
 		String strOwnerCall = resBrd.getOwnerCall();
 		String strBrdAccess = resBrd.getBrdAccess();
-		String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId());
+		String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId(), userInfo.getDeptID());
 		
 		String[] OwnerList = strOwnerID.split(",");
 		for(int i=1; i<OwnerList.length; i++) {
@@ -1234,7 +1283,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdName = req.getParameter("brdName");
 		}
 
-		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "", userInfo.getTenantId());
+		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "", userInfo.getTenantId(), userInfo.getDeptID());
 		String brdApproveFlag = ezResourceService.getBrdApproveFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (req.getParameter("cmd") != null) {
@@ -1462,7 +1511,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			brdName = req.getParameter("brdName");
 		}
 
-		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "", userInfo.getTenantId());
+		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "", userInfo.getTenantId(), userInfo.getDeptID());
 		String brdApproveFlag = ezResourceService.getBrdApproveFlag(Integer.parseInt(resID), userInfo.getCompanyID(), userInfo.getTenantId());
 		
 		if (req.getParameter("cmd") != null) {
@@ -1687,7 +1736,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		}
 		
 		String companyID = userInfo.getCompanyID();
-		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId());
+		String adminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId(), userInfo.getDeptID());
 		
 		model.addAttribute("resID", resID);
 		model.addAttribute("userInfo", userInfo);
@@ -1921,7 +1970,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String ret = "";
 		
 		brdID = req.getParameter("brdID");
-		ret = ezResourceService.getACL(userInfo.getCompanyID(), brdID, userInfo.getId(), "everyone", userInfo.getTenantId());
+		ret = ezResourceService.getACL(userInfo.getCompanyID(), brdID, userInfo.getId(), "everyone", userInfo.getTenantId(), userInfo.getDeptID());
 		
 		return "<RESULT>"+ret+"</RESULT>";
 	}
@@ -2211,8 +2260,6 @@ public class EzResourceController extends EgovFileMngUtil {
         
         StringBuilder bodyContent = new StringBuilder();
 
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
-        
         if (userInfo.getPrimary().equals("1")) {
         	bodyContent.append(userInfo.getDisplayName() +"[" + userInfo.getDeptName() + "] " + egovMessageSource.getMessage("ezResource.t9900002", userInfo.getLocale()));
         } else {
@@ -2221,10 +2268,9 @@ public class EzResourceController extends EgovFileMngUtil {
         
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900003", userInfo.getLocale()) + " : " +resInfo.get(0).getBrdNm()); 
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " +startDateTime + "&nbsp;~&nbsp;" + endDateTime);
-        bodyContent.append("</DIV>");
         
         String subject = "[" + egovMessageSource.getMessage("ezResource.t171", userInfo.getLocale()) + " : " + resInfo.get(0).getBrdNm() + "] " + title;
-        
+        String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
         
     	InternetAddress from = new InternetAddress();
     	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -2238,7 +2284,7 @@ public class EzResourceController extends EgovFileMngUtil {
 	    	to.setPersonal(accessName, "UTF-8");
 	    	to.setAddress(emailAddress);
 	        	
-	        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+	        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
     	}
         logger.debug("sendMail ended");
         
@@ -2265,8 +2311,6 @@ public class EzResourceController extends EgovFileMngUtil {
         ResGetSendMailToUserVO resInfo =  ezResourceService.getSendMailToUser(resID, Integer.parseInt(num), userInfo.getTenantId());
 		
         StringBuilder bodyContent = new StringBuilder();
-
-        bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 10pt; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
         
         if (approve.equals("1")) {
         	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900007", userInfo.getLocale()));
@@ -2279,7 +2323,6 @@ public class EzResourceController extends EgovFileMngUtil {
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " 
         		+ commonUtil.getDateStringInUTC(resInfo.getStartDate(), userInfo.getOffset(), false) + "&nbsp;~&nbsp;" 
         		+ commonUtil.getDateStringInUTC(resInfo.getEndDate(), userInfo.getOffset(), false));
-        bodyContent.append("</DIV>");
         
         String subject = "";
         if (approve.equals("1")) {
@@ -2287,6 +2330,7 @@ public class EzResourceController extends EgovFileMngUtil {
         } else {
         	subject = "["+egovMessageSource.getMessage("ezResource.t9900012", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
         }
+        String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
         
     	InternetAddress from = new InternetAddress();
     	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -2304,7 +2348,7 @@ public class EzResourceController extends EgovFileMngUtil {
     	to.setAddress(emailAddress);
         	
         
-        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+        ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
         
         logger.debug("sendMailToUser ended");
 	}
@@ -2500,12 +2544,17 @@ public class EzResourceController extends EgovFileMngUtil {
 			userID = request.getParameter("userID");
 		}
 		
+		String deptID = "";
+		if(request.getParameter("deptID") != null) {
+			deptID = request.getParameter("deptID");
+		}
+
 		String brdID = "";
 		if(request.getParameter("brdID") != null) {
 			brdID = request.getParameter("brdID");
 		}
 
-		String result = ezResourceService.userResPermissionCheck(userID, userInfo.getCompanyID(), userInfo.getTenantId(), brdID);
+		String result = ezResourceService.userResPermissionCheck(userID, userInfo.getCompanyID(), userInfo.getTenantId(), brdID, deptID);
 		
 		logger.debug("result : " + result);
 		logger.debug("userResPermissionCheck end");
@@ -2516,4 +2565,132 @@ public class EzResourceController extends EgovFileMngUtil {
 			return "N";
 		}
 	}
+	
+	@RequestMapping(value = "/ezResource/uploadItemAttach.do", method = RequestMethod.POST, produces="text/xml; charset=utf-8")
+	@ResponseBody
+	public String uploadItemAttach(MultipartHttpServletRequest request, Model model, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		logger.debug("uploadItemAttach Start");
+		
+		userInfo = commonUtil.userInfo(loginCookie);
+		
+		MultipartFile multiFile = request.getFile("fileToUpload"); 
+		
+		String realPath = request.getServletContext().getRealPath("");
+		String pFileName = "";
+        long fileSize = 0;     
+        String sGUID = "";
+        String pUploadSN = "";
+        
+        sGUID = UUID.randomUUID().toString();
+        pUploadSN = "{" + sGUID + "}";
+        
+        if (StringUtils.isNotEmpty(multiFile.getOriginalFilename()) && StringUtils.isNotBlank(multiFile.getOriginalFilename())) {   
+        	String _pFileName = multiFile.getOriginalFilename();
+            if (_pFileName.indexOf(commonUtil.separator) > 0) {
+                _pFileName = _pFileName.split("/")[_pFileName.split("/").length - 1];
+            }
+            pFileName = _pFileName;
+        }
+        
+        pFileName = pFileName.replace("%2b", "+");
+        pFileName = pFileName.replace("%3b", ";");
+        
+        String pDirPath = commonUtil.getUploadPath("upload_resource.ROOT", userInfo.getTenantId());
+
+        pDirPath = realPath + pDirPath;
+        if (!pDirPath.substring(pDirPath.length() - 1).equals(commonUtil.separator)) {
+        	pDirPath = pDirPath + commonUtil.separator;
+        }
+        File file = new File(pDirPath + "uploadFile");
+        File tempFile = new File(pDirPath + "tempUploadFile");
+        
+        logger.debug("pDirPath : " + pDirPath);
+        
+        if (!file.exists()) {
+        	file.mkdirs();
+        }
+        
+        if (!tempFile.exists()) {
+        	tempFile.mkdir();
+        }
+
+        StringBuffer strXML = new StringBuffer();
+        strXML.append("<ROOT><NODES>");
+        
+    	fileSize = multiFile.getSize();
+        String newFileName = pUploadSN;
+        
+        writeUploadedFile(multiFile, newFileName + pFileName, pDirPath + "tempUploadFile");            		
+        	
+		strXML.append("<DATA><![CDATA[" + newFileName + "]]></DATA>");
+		strXML.append("<DATA2><![CDATA[" + pFileName + "]]></DATA2>");
+		strXML.append("<DATA3><![CDATA[" + fileSize + "]]></DATA3>");
+		strXML.append("<DATA4><![CDATA[" + "]]></DATA4>");
+		strXML.append("<DATA5><![CDATA[OK]]></DATA5>");
+        
+        strXML.append("</NODES></ROOT>");
+        
+		logger.debug("uploadItemAttach End");
+		
+		return strXML.toString();
+	}
+	
+	/**
+	 *  썸네일정보 실행 Method
+	 */
+	@RequestMapping(value = "/ezResource/getResourceThumbnailInfo.do", method = RequestMethod.GET)
+	public void getBoardThumbnailInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		logger.debug("getResourceThumbnailInfo started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String fileName = request.getParameter("fileName");
+		String mode = "";
+		
+		if(request.getParameter("mode") != null) {
+			mode = request.getParameter("mode");
+		}
+		String filePath = "";
+		
+		if(mode.equals("temp")) {
+			String pSignatureDir = commonUtil.getUploadPath("upload_resource.TEMPUPLOAD", userInfo.getTenantId());
+			
+			filePath = pSignatureDir + commonUtil.separator + fileName;
+		}
+		else {
+			String pSignatureDir = commonUtil.getUploadPath("upload_resource.ROOT", userInfo.getTenantId()) + commonUtil.separator + "uploadFile";
+			
+			filePath = pSignatureDir + fileName;
+		}
+		
+		if (filePath != null && !filePath.equals("")) {
+			logger.debug("filePath : " + filePath + "|| fileName : " + fileName);
+			downImage(filePath, request, response);
+		}
+		
+		logger.debug("getResourceThumbnailInfo end");
+	}
+	
+	/**
+	 *  임시첨부파일 삭제
+	 */
+	@RequestMapping(value = "/ezResource/tempUploadFileDelete.do", method = RequestMethod.POST)
+	public String tempUploadFileDelete(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, LoginSimpleVO loginSimpleVO, Model model) throws Exception {
+		
+		logger.debug("tempUploadFileDelete started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		String fileName = request.getParameter("fileName");
+		String pDirPath = commonUtil.getRealPath(request) + commonUtil.getUploadPath("upload_resource.TEMPUPLOAD", userInfo.getTenantId());
+		
+		logger.debug("fileName : " + fileName + ", pDirPath : " + pDirPath);
+		
+		File file = new File(pDirPath + commonUtil.separator + fileName);
+		file.delete();
+
+        logger.debug("tempUploadFileDelete ended");
+        
+        return "json";
+    }
 }

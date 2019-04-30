@@ -1491,7 +1491,11 @@ function setRecevInfo(ret) {
 
     var field = message.GetListItem(fields, "recipients");
     if (field) {
-        setNodeText(field , precipents);
+    	if (SummaryOuterReceiverList != "") {
+            setNodeText(field , SummaryOuterReceiverList);
+        }else{
+        	setNodeText(field , precipents);
+        }
     }
 }
 
@@ -2590,6 +2594,53 @@ function openOpinionUI_Complete(ret) {
     } else if (ret == "Clear") {
     	pHasOpinionYN = "N";
     }
+}
+
+function openOpinionUI_New(pOpinionType, CompleteFunction) {
+	try {
+		var parameter = new Array();
+		parameter[0] = pDocID;		//DOCID
+		parameter[1] = pOpinionType;//OPINIONTYPE NAME
+		parameter[2] = pDraftFlag;	//DRAFTFLAG
+		parameter[3] = "";			//DOCSTATE 기안은 공백 고정
+		parameter[4] = orgCompanyID;//ORGCOMPANYID
+		parameter[99] = ext;		//EXT
+		
+		apropinion_cross_dialogArguments[0] = parameter;
+		if (typeof(CompleteFunction) != "undefined") {
+			apropinion_cross_dialogArguments[1] = CompleteFunction; 
+		} else {
+			apropinion_cross_dialogArguments[1] = openOpinionUI_New_Complete;
+		}
+		
+		DivPopUpShow(530, 520, "/ezApprovalG/aprOpinionNew.do");
+	} catch (e) {
+		alert("openOpinionUI_New ::: " + e.description);
+	}
+}
+function openOpinionUI_New_Complete(ret) {
+	try {
+		DivPopUpHidden();
+		if (ret == "Clear") {
+			pHasOpinionYN = "N";
+		} else if (ret == "cancel") {
+			//do_nothing
+		} else {
+	        var objXML = createXmlDom();
+	        objXML = loadXMLString(ret);
+	        
+	        var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+	        if (NodeList.length != 0) {
+	            pHasOpinionYN = "Y";
+	        } else {
+	            pHasOpinionYN = "N";
+	            ret = "cancel";
+	        }
+	        makeOpinionList(objXML);
+		}
+	} catch (e) {
+		alert("openOpinionUI_New_Complete ::: " + e.description);
+	}
 }
 
 function makeOpinionList(OpinionXML) {

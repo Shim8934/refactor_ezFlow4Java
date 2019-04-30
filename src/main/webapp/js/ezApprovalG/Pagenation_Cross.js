@@ -90,7 +90,7 @@ function pagingCount(p_page, p_nowblock) {
     if (totalPage > 1) {
         if (nowblock > 0) {
             strtext = "<div onclick= 'return Block_Check(" + ((nowblock - 1) * mychoice + 1) + "," + (nowblock - 1) + ")' style='cursor:pointer;margin-top:3px;'>";
-            strtext = strtext + "<img src='/images/page_pprevious.gif' width='15' height='15'  border='0'></div>";
+            strtext = strtext + "<img src='/images/ppage_pprevious.gif' width='15' height='15'  border='0'></div>";
             td_Create(strtext);
         }
         if (curpage != 1 && NodeListLen != 0) {
@@ -146,7 +146,7 @@ function pagingCount(p_page, p_nowblock) {
         }
         if ((total_block > 0) && (nowblock < total_block)) {
             strtext = "<div onclick='return Block_Check(" + ((nowblock + 1) * mychoice + 1) + "," + (nowblock + 1) + ")' style='cursor:pointer;margin-top:3px;'>";
-            strtext = strtext + "<img src='/images/page_nnext.gif' width='15' height='15' border='0'></div>";
+            strtext = strtext + "<img src='/images/ppage_nnext.gif' width='15' height='15' border='0'></div>";
             td_Create(strtext);
         }
     }

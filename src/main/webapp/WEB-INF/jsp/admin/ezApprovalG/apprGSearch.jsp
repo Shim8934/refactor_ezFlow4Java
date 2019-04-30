@@ -230,7 +230,7 @@
 		        } */
 		        
 		        if (draftfrom != "" && draftto == "") {
-		        	OpenAlertUI("<spring:message code='ezApprovalG.kRbm02'/>");
+		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm02'/>");
 		        	return;
 		        } else if (draftfrom == "" && draftto != "" ) {
 		        	OpenAlertUI("<spring:message code='ezApprovalG.kbm01'/>");
