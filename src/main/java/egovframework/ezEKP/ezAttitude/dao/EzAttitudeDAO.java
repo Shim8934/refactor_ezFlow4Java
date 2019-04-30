@@ -453,4 +453,13 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
     public void delCanAppl(Map<String, Object> map) throws Exception {
 		delete("ezAttitudeDAO.delCanAppl", map);
 	}
+    
+    public int getUsersCancelAnnCount(Map<String, Object> map) throws Exception {
+		return (int) select("ezAttitudeDAO.getUsersCancelAnnCount", map);
+	}
+    
+    @SuppressWarnings("unchecked")
+	public List<AttitudeApplicationVO> getUsersCancelAnn(Map<String, Object> map) throws Exception {
+		return (List<AttitudeApplicationVO>) list("ezAttitudeDAO.getUsersCancelAnn", map);
+	}
 }

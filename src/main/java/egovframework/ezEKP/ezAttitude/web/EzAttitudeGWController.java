@@ -2548,4 +2548,179 @@ public class EzAttitudeGWController {
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deleteCancelAnnual] ended.");
 		return result;
 	}
+	
+	/**
+	 * G/W 근태관리 [GET] 수정신청 개수
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/cancelannual/count", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getUsersCancelAnnCount(@PathVariable String userId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="startDate", required=false) String startDate,
+			@RequestParam(value="endDate", required=false) String endDate,
+			@RequestParam(value="apprUserName", required=false) String apprUserName,
+			@RequestParam(value="writerName", required=false) String writerName,
+			@RequestParam(value="writerDeptName", required=false) String writerDeptName,
+			@RequestParam(value="offset", required=false) String offset,
+			@RequestParam(value="type", required=false) String type,
+			@RequestParam(value="adminFlag", required=false) String adminFlag,
+			@RequestParam(value="checkAdmin", required=false) String checkAdmin,
+			@RequestParam(value="deptid", required=false) String deptid) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/cancelannual/count] started.");
+
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		JSONObject attJson = new JSONObject();
+		try {
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			if (adminFlag == null) {
+				adminFlag = "false";
+			}
+			
+			if (checkAdmin == null) {
+				checkAdmin = "false";
+			}
+			
+			if (type != null) {
+				if (type.equals("all")) {
+					type = null;
+				}
+			}
+			
+			List<String> deptIdList = new ArrayList<>();
+			
+//			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
+//				if (info.getRollInfo().indexOf("c=1") == -1 && info.getRollInfo().indexOf("k=1") == -1 && info.getRollInfo().indexOf("a1=1") == -1) {
+//					List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList(info.getTenantId(), companyId, info.getUserId(), "", info.getPrimary());
+//					
+//					for (AttitudeAuthorVO vo : authDeptlist) {
+//						if (vo.getAuthType().equals("M")) {
+//							deptIdList.add(vo.getDeptId());
+//						}
+//					}
+//				}
+//			}
+			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
+	
+				for (AttitudeAuthorVO vo : authDeptlist) {
+					if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
+						deptIdList.add(vo.getDeptId());
+					}
+				}
+			}
+			
+			if (deptid.equals("ALL")) {
+				deptid = "";
+			}
+			
+			int attListCount = ezAttitudeService.getUsersCancelAnnCount(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, info.getPrimary(), offset, type, deptid, deptIdList, adminFlag, checkAdmin);
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", attListCount+"");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/cancelannual/count] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 수정신청 리스트
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/cancelannual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getUsersCancelAnn(@PathVariable String userId, HttpServletRequest request,
+			@RequestParam(value="companyId", required=true) String companyId,
+			@RequestParam(value="tenantId", required=true) int tenantId,
+			@RequestParam(value="startDate", required=false) String startDate,
+			@RequestParam(value="endDate", required=false) String endDate,
+			@RequestParam(value="apprUserName", required=false) String apprUserName,
+			@RequestParam(value="writerName", required=false) String writerName,
+			@RequestParam(value="writerDeptName", required=false) String writerDeptName,
+			@RequestParam(value="offset", required=false) String offset,
+			@RequestParam(value="startPoint", required=false) String startPoint,
+			@RequestParam(value="endPoint", required=false) String endPoint,
+			@RequestParam(value="type", required=false) String type,
+			@RequestParam(value="orderCell", required=false) String orderCell,
+			@RequestParam(value="orderOption", required=false) String orderOption,
+			@RequestParam(value="adminFlag", required=false) String adminFlag,
+			@RequestParam(value="checkAdmin", required=false) String checkAdmin,
+			@RequestParam(value="deptid", required=false) String deptid) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/cancelannual] started.");
+		
+		JSONObject result = new JSONObject();
+		JSONObject data = new JSONObject();
+		JSONObject attJson = new JSONObject();
+
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			String order = orderCell + " " + orderOption;
+			String isAllDept = "";
+
+			if (adminFlag == null) {
+				adminFlag = "false";
+			}
+			
+			if (checkAdmin == null) {
+				checkAdmin = "false";
+			}
+			
+			if (checkAdmin.equals("true")){
+				isAllDept = "Y";
+			}
+			
+			if (orderCell == null || orderOption == null) {
+				order = null;
+			}
+			
+			if (type != null) { 
+				if (type.equals("all")) {
+					type = null;
+				}
+			}
+			if (endPoint != null && startPoint != null) {
+				endPoint = Integer.parseInt(endPoint)- Integer.parseInt(startPoint) + "";
+			}
+			
+			List<String> deptIdList = new ArrayList<>();
+			
+			if (!checkAdmin.equals("true") && deptid.equals("ALL")) {
+				List<AttitudeAuthorVO> authDeptlist = ezAttitudeService.getAttitudeAuthDeptList_hyo(info.getTenantId(), companyId, info.getUserId(), info.getRollInfo(), "", "M", "");
+				
+				for (AttitudeAuthorVO vo : authDeptlist) {
+					if (vo.getAuthType() != null && vo.getAuthType().equals("M")) {
+						deptIdList.add(vo.getDeptId());
+					}
+				}
+			}
+			
+			
+			if (deptid.equals("ALL")) {
+				deptid = "";
+			}
+			
+			List<AttitudeApplicationVO> attList = ezAttitudeService.getUsersCancelAnn(companyId, tenantId, userId, startDate, endDate, apprUserName, writerName, writerDeptName, info.getPrimary(), offset, startPoint, endPoint, type, order, adminFlag, checkAdmin, deptid, deptIdList);
+
+			data.put("list", attList);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", data);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/cancelannual] ended.");
+		return result;
+	}
 }
