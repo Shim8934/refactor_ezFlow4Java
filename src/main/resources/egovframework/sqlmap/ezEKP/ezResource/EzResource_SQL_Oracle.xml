@@ -1396,7 +1396,7 @@
 	<select id="EzResourceDAO.getDeptID" parameterClass="Map" resultClass="String">
 		<![CDATA[
 			SELECT 
-				DEPARTMENT
+				E.DEPARTMENT
 			FROM(
 				SELECT 
 					D.department
@@ -1424,7 +1424,8 @@
 				WHERE 
 					A.TENANT_ID = #tenantID# AND C.EXTENSIONATTRIBUTE2 = #companyID# and C.displayname = #deptNm# AND B.CN = #writerID#
 			) E
-			ROWNUM = 1
+			WHERE
+				ROWNUM = 1
 		]]>
 	</select>
 	
