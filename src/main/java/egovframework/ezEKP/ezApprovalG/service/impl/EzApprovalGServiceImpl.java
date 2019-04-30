@@ -26195,7 +26195,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	public String checkPubDocXML(String mapPath) throws Exception {
 		String result = null;
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+		//문서유통 발송 시 파싱에러를 일으켜서 주석처리함. 2019-04-30 홍대표
+//		factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 		factory.setValidating(false);
 		factory.setNamespaceAware(true);
 
