@@ -24650,25 +24650,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTDEPTNAME", draftDeptName);
 		map.put("v_FORMID", formID);
 		map.put("v_DOCSTATE", docState);
-		if (draftfrom != "") {
+		if (draftfrom != null && !draftfrom.equals("")) {
 			map.put("v_DRAFTFROM", commonUtil.getDateStringInUTC(draftfrom + " 00:00:01" , offSet, true));
 		} else {
 			map.put("v_DRAFTFROM", commonUtil.getDateStringInUTC(draftfrom , offSet, true));
 		}
 		
-		if (draftto != "") {
+		if (draftto != null && !draftto.equals("")) {
 			map.put("v_DRAFTTO", commonUtil.getDateStringInUTC(draftto + " 23:59:59", offSet, true));
 		} else {
 			map.put("v_DRAFTTO", commonUtil.getDateStringInUTC(draftto, offSet, true));
 		}
 		
-		if (apprfrom != "") {
+		if (apprfrom != null && !apprfrom.equals("")) {
 			map.put("v_APPRFROM", commonUtil.getDateStringInUTC(apprfrom + " 00:00:01", offSet, true));
 		} else {
 			map.put("v_APPRFROM", commonUtil.getDateStringInUTC(apprfrom, offSet, true));
 		}
 		
-		if (apprto != "") {
+		if (apprto != null && !apprto.equals("")) {
 			map.put("v_APPRTO", commonUtil.getDateStringInUTC(apprto + " 23:59:59", offSet, true));
 		} else {
 			map.put("v_APPRTO", commonUtil.getDateStringInUTC(apprto , offSet, true));
