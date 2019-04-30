@@ -174,6 +174,9 @@
 		            
 		            xhr.open("POST", "/admin/ezOrgan/signImageUpload.do?mode="+mode+"&userID=" + userid);
 		            xhr.send(frm);
+		            
+		            //2019-04-30 천성준 - 같은 이름의 파일이 첨부가 안되는현상 때문에 첨부완료후 파일첨부란 초기화 
+		            document.form.file1.value = "";
 		    		}
 		        }
 		    }
