@@ -1090,6 +1090,17 @@
 		]]>		
 	</insert>
 	
+	<insert id="EzResourceDAO.addAttachFile" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_RS_ATTACH ( 
+				RESID, FILESIZE, FILENAME, FILEPATH, COMPANYID, TENANT_ID
+			)
+        	VALUES ( 
+        		#resID#, #fileSize#, #fileName#, #filePath#, #companyID#, #tenantID#
+			)
+		]]>		
+	</insert>
+	
 	<update id="EzResourceDAO.updateSchedule" parameterClass="Map">
 		<![CDATA[
 			UPDATE 
@@ -1266,6 +1277,19 @@
    				OWNERID = #v_pOwnerID#
    			AND
    				NUM = #v_pNum#
+   			AND
+   				COMPANYID = #companyID#
+   			AND
+   				TENANT_ID = #tenantID#	
+		]]>
+	</delete>
+	
+	<delete id="EzResourceDAO.delAttachFile" parameterClass="Map">
+		<![CDATA[
+			DELETE FROM
+				TBL_RS_ATTACH 
+   			WHERE
+   				RESID = #resID#
    			AND
    				COMPANYID = #companyID#
    			AND
@@ -2026,6 +2050,23 @@
 				REFLAG = '4'
 			AND
 				TENANT_ID = #tenantID# 
+        ]]>
+    </select>
+    
+    <select id="EzResourceDAO.getAttachList" parameterClass="Map" resultClass="String">
+        <![CDATA[
+        	SELECT
+	        	FILEPATH
+	        FROM 
+	        	TBL_RS_ATTACH 
+			WHERE
+				RESID = #resID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				TENANT_ID = #tenantID# 
+			ORDER BY 
+				ATTACHID ASC
         ]]>
     </select>
     
