@@ -875,7 +875,7 @@ public class EzApprovalGRelayScheduler {
 		String result = "";
 		try {
 	       	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	       	factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+//	       	factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			factory.setValidating(false);
 			factory.setNamespaceAware(true);
 			
@@ -896,7 +896,7 @@ public class EzApprovalGRelayScheduler {
 		boolean result = false;
 		try {
 	       	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-	       	factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+//	       	factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			factory.setValidating(false);
 			factory.setNamespaceAware(true);
 	
@@ -918,7 +918,7 @@ public class EzApprovalGRelayScheduler {
 			boolean result = false;
             try {
             	DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            	factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+//            	factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
         		factory.setValidating(false);
         		factory.setNamespaceAware(true);
         		DocumentBuilder builder = factory.newDocumentBuilder();
