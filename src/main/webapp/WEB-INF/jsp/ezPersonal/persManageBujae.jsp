@@ -221,6 +221,9 @@
 		        } else if (new Date(strCurrDate) > new Date(strEndDate)) {
 		            alert("<spring:message code='ezPersonal.t15'/>");
 		            return true;
+		        } else if (new Date() > new Date(strEndDate + "T" +$("#Etimepicker").val())) {
+		        	alert("<spring:message code='ezPersonal.t26'/>");
+    				return true;
 		        } else if (strStartDate == strEndDate) {
 		        	if (gIsAppoint == '1') {
 		        		if (Number($("#Stimepicker").val().substring(0,2)) > Number($("#Etimepicker").val().substring(0,2))) {

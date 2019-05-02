@@ -139,7 +139,7 @@
 							alert("<spring:message code='ezPersonal.t3006' />");
 						}else{
 							alert("<spring:message code='ezPersonal.t3007' />");
-							ContentDescription.innerHTML = "";
+							ContentDescription.innerHTML = '<div style="padding-top:80px;">' + "<spring:message code='ezPersonal.t3012'/>" + "</div>";
 							GetSignInfo();
 						}
 					},
