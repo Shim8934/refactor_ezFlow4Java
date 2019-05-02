@@ -31,6 +31,7 @@
 			var dateType = "<c:out value='${attitudeInfo.dateType}'/>";
 			var startDate = "<c:out value='${attitudeInfo.startDate}'/>";
 			var endDate = "<c:out value='${attitudeInfo.endDate}'/>";
+			var modAppl = "<c:out value='${attitudeInfo.modAppl}'/>";
 			var font = "<c:out value='${font}'/>"
 			
 			window.onload = function () {
@@ -38,9 +39,27 @@
 			}
 			
 			function setHtml() {
+				var tempHtml = "";
+				
+				
+				tempHtml += "<tr>";
+				tempHtml += "<th>취소신청</th>";
+				if(modAppl == "1") {
+					tempHtml += "<td colspan='2'>신청</td>";
+				} else if(modAppl == "3") {
+					tempHtml += "<td colspan='2'>승인</td>";
+				} else if(modAppl == "4") {
+					tempHtml += "<td colspan='2'>반려</td>";
+				}
+				tempHtml += "</tr>";
+				
 				$("#attiInfoView").append(formHtml);
 				
 				$("#attiInfoView tr td *").remove();
+				
+				if((typeId == 'A11' || typeId == 'A12' || typeId == 'A13') && modAppl != "0") {
+					$("#attiInfoView").append(tempHtml);
+				}
 				
 				//유형명
             	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&#39;", "'"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
@@ -235,14 +254,15 @@
 	            	<c:if test="${userId == attitudeInfo.writerId}">
 	            		<c:choose>
 	            			<c:when test="${attitudeInfo.typeId == 'A11' || attitudeInfo.typeId == 'A12' || attitudeInfo.typeId == 'A13'}">
-	            				<c:choose>
-	            					<c:when test="${attitudeInfo.modAppl == '0'}">
-	            						<a class="imgbtn"><span onclick="attitudeCancelAnnual()">취소신청</span></a>
-                       				</c:when>
-                       				<c:otherwise>
-                       					<a class="imgbtn"><span onclick="deleteCancelAnnual()">삭제</span></a>
-                       				</c:otherwise>
-                        		</c:choose>
+	            				<c:if test="${attitudeInfo.modAppl == '0'}">
+	            					<a class="imgbtn"><span onclick="attitudeCancelAnnual()">취소신청</span></a>
+	            				</c:if>
+	            				<c:if test="${attitudeInfo.modAppl == '1'}">
+                       				<a class="imgbtn"><span onclick="deleteCancelAnnual()">취소신청삭제</span></a>
+                       			</c:if>
+	            				<c:if test="${attitudeInfo.modAppl == '4'}">
+                       				<a class="imgbtn"><span onclick="attitudeCancelAnnual()">재신청</span></a>
+                       			</c:if>
                        		</c:when>
                        		<c:otherwise>
 								<a class="imgbtn"><span onclick="sendMailAttitude()"><spring:message code='ezAttitude.t162'/></span></a>

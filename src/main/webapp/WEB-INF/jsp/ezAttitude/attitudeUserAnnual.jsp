@@ -234,13 +234,13 @@
 			    		html += "<a class='link attitudeView'>";
 		    			if (vo.typeId === "A11") { //연차
 			    			html += vo.startDate.substr(0,10) + " ~ " + vo.endDate.substr(0,10);
-			    			annualCnt ++;
+			    			annualCnt += Number(vo.annualCnt);
 		    			} else if (vo.typeId === "A12") { //오전반차
 			    			html += vo.startDate.substr(0,10);
-			    			morningCnt ++;
+			    			morningCnt += Number(vo.annualCnt);
 		    			} else { //오후반차
 		    				html += vo.startDate.substr(0,10);
-		    				afternoonCnt ++;
+		    				afternoonCnt += Number(vo.annualCnt);
 		    			}
 		    			html += "</a>";
 		    			html += "</td>";
@@ -250,6 +250,8 @@
 		    			html += "<td style='width:12%'>" + "</td>";
 		    			if(vo.modAppl == "0") {
 			    			html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"attitudeCancelAnnual('" + vo.attitudeId + "','" + vo.typeId + "')\"><span>취소신청</span></a>" +"</td>";
+		    			} else if(vo.modAppl == "4") {
+		    				html += "<td style='width:12%'>반려</td>";
 		    			} else {
 		    				html += "<td style='width:12%'>신청</td>";
 		    			}

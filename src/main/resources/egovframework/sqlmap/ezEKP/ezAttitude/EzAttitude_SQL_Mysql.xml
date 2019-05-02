@@ -238,6 +238,8 @@
 				AND
 					c.cn NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 				<![CDATA[
+				AND
+					A.MODAPPL <> '5'
 				AND  
 					(
 						(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 
@@ -305,6 +307,8 @@
 						D.TYPE_ID = #typeId#
 					</isNotEmpty>
 					<![CDATA[
+					AND
+						D.MODAPPL <> '5'
 					AND  
 						(
 							(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 
@@ -759,6 +763,8 @@
 				WRITER_ID NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 			AND
 				TYPE_ID NOT IN ('A01', 'A03')
+			AND
+				MODAPPL <> '5'
 			AND    
 				(
 					(START_DATE >= #startDate# and START_DATE <= #endDate#) 
@@ -1911,6 +1917,8 @@
 				TENANT_ID = #tenantId#
 			AND
 				TYPE_ID IN ('A11', 'A12', 'A13')
+			AND
+				MODAPPL <> '5'
 			AND    
 				(
 					(START_DATE >= #startDate# and START_DATE <= #endDate#) 
@@ -2158,5 +2166,136 @@
 				a.writer_id NOT IN (SELECT cn FROM TBL_USERMASTER_RETIRE WHERE TENANT_ID = #tenantId#)
 		]]>
 		<include refid="ezAttitudeDAO.searchQuery2"/>
+	</select>
+	
+	<select id="ezAttitudeDAO.annCanAppDetail" parameterClass="Map" resultMap="attitudeApplicationDetailVO">
+		<![CDATA[
+			SELECT
+				a.attitude_id AS ATTITUDE_ID,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(b.end_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
+				a.appr_user_name$lang$ AS APPR_USER_NAME,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(b.start_date, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS START_DATE,
+				a.appr_status AS APPR_STATUS,
+				c.type_id AS TYPE_ID,
+				c.type_name$lang$ AS TYPE_NAME,
+				a.content AS CONTENT,
+				a.writer_id AS WRITER_ID,
+				a.writer_dept_id AS WRITER_DEPT_ID,
+				a.writer_name$lang$ AS WRITER_NAME,
+				a.writer_title$lang$ AS WRITER_TITLE,
+				a.writer_dept_name$lang$ AS WRITER_DEPT_NAME
+			FROM 
+				jmocha.tbl_attitude_annual_canappl a
+			inner 
+				join tbl_attitude b 
+			on 
+				a.ATTITUDE_ID = b.ATTITUDE_ID
+			inner 
+				join tbl_attitude_type c 
+			on 
+				b.TYPE_ID = c.TYPE_ID
+			and
+				a.COMPANY_ID = c.COMPANY_ID
+			and
+				a.TENANT_ID = c.TENANT_ID
+			where 
+				a.COMPANY_ID = #companyId#
+			and 
+				a.TENANT_ID = #tenantId#
+			and
+				a.ATTITUDE_ID = #attModId#
+		]]>
+		<!-- 			applCnt가 없으면 제일 큰 거 있으면 applCnt에 해당하는 수정신청을 보여준다. -->
+		<isNotEmpty property="applCnt">
+			and
+				a.APPL_CNT = #applCnt#
+		</isNotEmpty>
+		<isEmpty property="applCnt">
+			order by
+				a.APPL_CNT DESC
+			limit 
+				1
+		</isEmpty>
+	</select>
+	
+	<update id="ezAttitudeDAO.changeUsersCancelAnn" parameterClass="map">
+		<![CDATA[
+			UPDATE 
+				TBL_ATTITUDE_ANNUAL_CANAPPL
+			SET 
+				APPR_STATUS =
+		]]> 
+			<isEqual property="changeStatus" compareValue="appr">
+				1
+			</isEqual>
+			<isEqual property="changeStatus" compareValue="ret">
+				2
+			</isEqual>
+		<![CDATA[
+			,APPR_DATE = DATE_FORMAT(#apprDate#, '%Y-%m-%d %H:%i:%S')
+			,APPR_USER_ID = #userId#
+			,APPR_USER_NAME = #displayName#
+			,APPR_USER_NAME2 = #displayName2#
+	        WHERE
+	        	TENANT_ID = #tenantId#
+			AND	        	
+				ATTITUDE_ID = #ids#
+			AND
+	        	COMPANY_ID = #companyId#
+		]]>
+		<isNotEmpty property="applCnt">
+	        AND
+	        	APPL_CNT = #applCnt#
+	    </isNotEmpty>
+	    <isEmpty property="applCnt">
+	        AND
+	        	APPL_CNT = (SELECT *
+	        				FROM (SELECT 
+		        					MAX(APPL_CNT)
+		        				  FROM 
+		        					TBL_ATTITUDE_ANNUAL_CANAPPL
+		        			      WHERE
+						        	TENANT_ID = #tenantId#
+								  AND	        	
+									ATTITUDE_ID = #ids#
+								  AND
+						        	COMPANY_ID = #companyId#)a)
+	    </isEmpty>
+	</update>
+	
+	<select id="ezAttitudeDAO.getAnnCanHistory" parameterClass="Map" resultMap="attitudeApplicationHistoryVO">
+		<![CDATA[
+			SELECT
+				A.ATTITUDE_ID,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(A.APPR_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS APPR_DATE,
+				A.APPR_USER_NAME$lang$ AS APPR_USER_NAME,
+				A.APPR_STATUS,
+				A.CONTENT,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(C.START_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS ORIGIN_DATE,
+				DATE_FORMAT(DATE_ADD(DATE_FORMAT(C.END_DATE, '%Y-%m-%d %H:%i:%S'), INTERVAL #offset# MINUTE), '%Y-%m-%d %H:%i:%S') AS CHANGE_DATE,
+				B.TITLE$lang$ AS TITLE,
+				B.DESCRIPTION$lang$ AS DESCRIPTION,
+				C.TYPE_ID
+			FROM 
+				TBL_ATTITUDE_ANNUAL_CANAPPL A
+			INNER JOIN
+				TBL_USERMASTER B
+			ON
+				A.APPR_USER_ID = B.CN
+			AND
+				A.TENANT_ID = B.TENANT_ID
+			AND 
+				A.TENANT_ID = #tenantId#
+			AND
+				A.ATTITUDE_ID = #attModId#
+			inner join
+				tbl_attitude C
+			on 
+				a.ATTITUDE_ID = C.ATTITUDE_ID
+			AND
+				A.TENANT_ID = C.TENANT_ID
+			ORDER BY
+				A.APPR_DATE DESC, A.APPL_CNT DESC
+		]]>
 	</select>
 </sqlMap>

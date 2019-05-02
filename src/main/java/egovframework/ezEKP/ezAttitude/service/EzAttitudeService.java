@@ -175,5 +175,11 @@ public interface EzAttitudeService {
 	public int getUsersCancelAnnCount(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName, String lang, String offset, String type, String deptId, List<String> deptIdList, String adminFlag, String checkAdmin) throws Exception;
 
 	public List<AttitudeApplicationVO> getUsersCancelAnn(String companyId, int tenantId, String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName,	String lang, String offset, String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin, String deptId, List<String> deptIdList) throws Exception;
+
+	public AttitudeApplicationVO annCanAppDetail(String attModId, String offset, String applCnt, String lang, String companyId, int tenantId) throws Exception;
+
+	public void changeUsersCancelAnn(String companyId, int tenantId, String ids, String changeStatus, String userId, String userName, String userName2, String offSet) throws Exception;
+
+	public List<AttitudeApplicationVO> getAnnCanHistory(String attModId, String userId, String offset, String lang, String companyId, int tenantId) throws Exception;
 	
 }

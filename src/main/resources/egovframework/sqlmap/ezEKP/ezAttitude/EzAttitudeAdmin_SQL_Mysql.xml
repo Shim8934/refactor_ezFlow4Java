@@ -1460,6 +1460,8 @@
 				AND 
 				 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
 				AND 
+				 C.MODAPPL <> '5'
+				AND 
 				 (
 					   (
 						date_add(C.START_DATE, INTERVAL #offsetMin# minute) >= #searchStartTime#
@@ -1674,6 +1676,8 @@
 				AND 
 				 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
 				AND 
+				 C.MODAPPL <> '5'
+				AND 
 				 (
 					   (
 						date_add(C.START_DATE, INTERVAL #offsetMin# minute) >= #startTime#
@@ -1753,6 +1757,8 @@
 					 A.CN = C.WRITER_ID
 					AND 
 					 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+					AND 
+				 	 C.MODAPPL <> '5'
 					AND 
 					 (
 						   (
