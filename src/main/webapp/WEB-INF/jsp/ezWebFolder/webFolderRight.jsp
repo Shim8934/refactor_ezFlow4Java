@@ -15,6 +15,7 @@
 	<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}">
 	<link rel="stylesheet" href="${util.addVer('/css/ezWebFolder/webfolder.css')}" type="text/css">
 	<link rel="stylesheet" href="${util.addVer('/js/jquery/jquery.modal.css')}" type="text/css" />
+	<link rel="stylesheet" href="${util.addVer('/css/jquery.lineProgressbar.css')}" type="text/css" />
 	<!-- datepicker -->
 	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery-1.9.1.js')}"></script>
 	<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
@@ -249,7 +250,7 @@
 			 + " / " + messages.strLang16 + " <span style='color:#017BEC;'> " 
 				+ fileCnt +" </span>";
 			$("#listcount").val(result.listCount).prop("selected", true);
-			parent.frames["left"].drawVolume();
+			loadCapacity();
 			scroll();
 		} 
 		
@@ -669,11 +670,73 @@
         	}
         }
         
+		function loadCapacity() {
+			$.ajax({
+				type: "POST",
+				async: true,
+				url: "/ezWebFolder/getCapacity.do",
+				data: {
+					folderId: folderId
+				},
+				success: function(data) {
+					var capacity = data.capacity;
+					var usedRate = Math.min(capacity.usedRate, 100);
+					var progressColor = null;
+					var progressElement = document.getElementById("capacity-bar");
+					
+					if (progressElement.style.width === usedRate + "%") {
+						return;
+					}
+					
+					switch (true) {
+					case usedRate >= 80:
+						progressColor = "#ff4040";
+						break;
+					case usedRate >= 70:
+						progressColor = "#ffb600";
+						break;
+					default:
+						progressColor = "#82b9f6";
+					}
+					
+					$("#capacity-wrapper").css("display", "inline");
+					$("#capacity-bar").css("backgroundColor", progressColor);
+					$("#capacity-bar").stop().animate({width: usedRate + "%"},
+						{
+							step: function(x) {
+								$("#capacity-percent").text(Math.round(x) + "%");
+							},
+							duration: 500
+						}
+					);
+				}
+			});
+		}
+        
     </script>
 </head>
 <body class="mainbody" style="padding-bottom:10px;">
-    <h1><spring:message code='ezWebFolder.t10' /><span id="mailBoxInfo"></span></h1>
-    <div id="pageArea">
+	<h1>
+		<c:choose>
+			<c:when test="${folderType eq 'C'}">
+				<spring:message code='ezWebFolder.t11' />
+			</c:when>
+			<c:when test="${folderType eq 'D'}">
+				<spring:message code='ezWebFolder.t12' />
+			</c:when>
+			<c:when test="${folderType eq 'U'}">
+				<spring:message code='ezWebFolder.t13' />
+			</c:when>
+		</c:choose>
+		<span id="mailBoxInfo"></span>
+		<div id="capacity-wrapper" style="display: none;">
+			<div class="progressbar" style="float: inherit; width: 150px; display: inline-block; vertical-align: middle; margin-left: 15px; border-radius: 15px;">
+				<div id="capacity-bar" class="proggress" style="background-color: #82b9f6; height: 15px; border-radius: 15px; width: 0px;"></div>
+			</div>
+			<span id="capacity-percent" style="width: 15px; display: inline-block; text-align: right; border-radius: 15px;"></span>
+		</div>
+	</h1>
+	<div id="pageArea">
 		<div style="height:40px;">
 			<div style="font-size: 24px;font-weight: bold;font-weight: bold; padding: 8px 4px 0px;" id ="originalPath" ></div>
 		</div>

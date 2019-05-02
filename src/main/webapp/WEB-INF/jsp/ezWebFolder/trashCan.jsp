@@ -338,7 +338,6 @@
          
 		function refreshView() {
 			renderFileList();
-			window.parent.frames["left"].drawVolume();
 		}
        
 		function filePermanentDelete() {
@@ -440,8 +439,12 @@
 						}
 						
 						// 중복된 정보가 존재한다면 알림
-						if (data.duplicateInfoArray) {
+						if (data.duplicateInfoArray && data.duplicateInfoArray.length > 0) {
 							alert("<spring:message code = 'webfolder.duplicate.restore.error'/>");
+						}
+						
+						if (data.hasExceededCapacities) {
+							alert("<spring:message code = 'webfolder.trash.restore.error.capacity'/>");
 						}
 					}
 				},

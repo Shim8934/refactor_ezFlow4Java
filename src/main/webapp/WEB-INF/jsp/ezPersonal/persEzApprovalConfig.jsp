@@ -24,7 +24,7 @@
 		    window.onresize = window_resize;
 		    
 		    function window_resize() {
-		        document.getElementById("mainframe").style.height = (document.documentElement.clientHeight - 200) + "PX";
+		        document.getElementById("mainframe").style.height = (document.documentElement.clientHeight - 100) + "PX";
 		    }
 		    
 		    var Tab1_SelectID = "";

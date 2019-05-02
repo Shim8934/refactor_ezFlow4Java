@@ -1561,4 +1561,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addComCloseCompanyId() throws Exception {
 		ezCommonDAO.addComCloseCompanyId();
 	}
+
+	@Override
+	public void addWebfolderTotalLimit() throws Exception {
+		ezCommonDAO.addWebfolderTotalLimit();
+	}
 }

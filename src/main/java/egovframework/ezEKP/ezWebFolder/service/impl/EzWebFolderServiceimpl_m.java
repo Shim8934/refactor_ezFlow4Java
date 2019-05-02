@@ -33,6 +33,7 @@ import egovframework.ezEKP.ezWebFolder.vo.SearchVO;
 import egovframework.ezEKP.ezWebFolder.vo.ShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.SimpleShareVO;
 import egovframework.ezEKP.ezWebFolder.vo.TrashCanVO;
+import egovframework.ezEKP.ezWebFolder.vo.UserCapacityVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -1007,6 +1008,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		boolean isAllRestored = true;
 		boolean hasAllParentFolder = true;
+		boolean hasExceededCapacities = false;
 		
 		for (String file : fileIDList) {
 			if (file == null || file.isEmpty()) {
@@ -1021,13 +1023,23 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			
 			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(fileVO.getFolderId(), offset, tenantId);
 
+			UserCapacityVO capacity = ezWebFolderAdminService.getCapacity(fileVO.getFolderId(), "1", tenantId);
+
+			double totalUsed = Double.parseDouble(capacity.getTotalUsed());
+			double totalCapa = Double.parseDouble(capacity.getTotalCapacity()) * 1073741824;
+			boolean isCapacityOver = fileVO.getFileSize() > totalCapa - totalUsed;
+			hasExceededCapacities |= isCapacityOver;
+
+			if (isCapacityOver) {
+				continue;
+			}
+
 			if ("Y".equals(folderVO.getUseStatus())) {
 				// 중복된 파일이 있으면 스킵 및 list에 추가
 				if (duplicateList.addAll(ezWebFolderService.getAllDuplicateInfo(DuplicateInfoVO.Type.FILE, file, fileVO.getFolderId(), offset, tenantId))) {
 					continue;
 				}
 				
-				// 불대수 곱 연산
 				isAllRestored &= restoreFile(fileVO, tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
 			} else {
 				isAllRestored = false;
@@ -1043,6 +1055,18 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
 			FolderVO upperFolderVO = ezWebFolderService.getFolderByFolderId(folderVO.getFolderUpper(), offset, tenantId);
 			
+			UserCapacityVO capacity = ezWebFolderAdminService.getCapacity(folder, "1", tenantId);
+
+			double totalUsed = Double.parseDouble(capacity.getTotalUsed());
+			double totalCapa = Double.parseDouble(capacity.getTotalCapacity()) * 1073741824;
+			double folderSize = ezWebFolderAdminService.getFolderSize(folderVO.getFolderPath(), tenantId);
+			boolean isCapacityOver = folderSize > (totalCapa - totalUsed);
+			hasExceededCapacities |= isCapacityOver;
+
+			if (isCapacityOver) {
+				continue;
+			}
+
 			if ("Y".equals(upperFolderVO.getUseStatus())) {
 				// 중복된 파일이 있으면 스킵 및 list에 추가
 				if (duplicateList.addAll(ezWebFolderService.getAllDuplicateInfo(DuplicateInfoVO.Type.DIRECTORY, folder, folderVO.getFolderUpper(), offset, tenantId))) {
@@ -1053,7 +1077,6 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				
 				for (String lowerFolder : lowerFolders) {
 					if (restoreFolder(lowerFolder, tenantId, userId, timeUTC)) {
-						// 불대수 곱 연산
 						isAllRestored &= restoreFileInFolder(lowerFolder, tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
 					}
 				}
@@ -1063,11 +1086,12 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			}
 		}
 		
-		if (isAllRestored && duplicateList.isEmpty()) {
+		if (isAllRestored && !hasExceededCapacities && duplicateList.isEmpty()) {
 			// 중복되지 않고 성공했다면 0
 			resultMap.put("code", 0);
 		} else {
 			resultMap.put("duplicateInfoArray", duplicateList);
+			resultMap.put("hasExceededCapacities", hasExceededCapacities);
 			// 부모 폴더가 없어 실패한 게 있으면 4, 아니면 8
 			resultMap.put("code", hasAllParentFolder ? 8 : 4);
 		}
@@ -1245,12 +1269,13 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	}
 	
 	@Override
-	public List<DuplicateInfoVO> moveTrashCan(String[] fileIDList, String[] folderIDList,String folderId, String timeUTC, LoginVO userInfo) throws Exception {
+	public Map<String, Object> moveTrashCan(String[] fileIDList, String[] folderIDList,String folderId, String timeUTC, LoginVO userInfo) throws Exception {
 		return moveTrashCan(fileIDList, folderIDList, null, folderId, timeUTC, userInfo, false);
 	}
 
 	@Override
-	public List<DuplicateInfoVO> moveTrashCan(String[] fileIDList, String[] folderIDList, String[] fileNameList, String folderId, String timeUTC, LoginVO userInfo, boolean overwritable) throws Exception {
+	public Map<String, Object> moveTrashCan(String[] fileIDList, String[] folderIDList, String[] fileNameList, String folderId, String timeUTC, LoginVO userInfo, boolean overwritable) throws Exception {
+		Map<String, Object> result = new HashMap<>();
 		List<DuplicateInfoVO> duplicateList = new ArrayList<>();
 		List<String> overwriteList = new ArrayList<>();
 		
@@ -1263,6 +1288,38 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		boolean useRename = fileNameList != null;
 		
+		// 코드 진짜 더럽다 수정해야된다
+		FolderVO destFolder = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+		UserCapacityVO destCapacity = ezWebFolderAdminService.getCapacity(folderId, "1", tenantId);
+		double destTotalUsed = Double.parseDouble(destCapacity.getTotalUsed());
+		double destTotalCapa = Double.parseDouble(destCapacity.getTotalCapacity()) * 1073741824;
+		double destFreeSize = destTotalCapa - destTotalUsed;
+		long totalFileSize = 0;
+
+		result.put("duplicateList", duplicateList);
+
+		for (String file : fileIDList) {
+			FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
+
+			boolean isCapacityOver = (totalFileSize += fileVO.getFileSize()) > destFreeSize;
+
+			if (isCapacityOver) {
+				result.put("hasExceededCapacities", true);
+				return result;
+			}
+		}
+
+		for (String folder : folderIDList) {
+			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
+
+			boolean isCapacityOver = (totalFileSize += ezWebFolderAdminService.getFolderSize(folderVO.getFolderPath(), tenantId)) > destFreeSize;
+
+			if (isCapacityOver) {
+				result.put("hasExceededCapacities", true);
+				return result;
+			}
+		}
+
 		for (int index = 0; index < fileIDList.length; index++) {
 			String file = fileIDList[index];
 			
@@ -1330,19 +1387,18 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			}
 			
 			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
-			FolderVO destFolderVO = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
 			List<String> lowerFolders = getAllFolderIdNotInFolder(folderVO.getFolderPath(), folderVO.getFolderId(), "");
 
-			if (destFolderVO != null) {
+			if (destFolder != null) {
 				for (String lowerFolder : lowerFolders) {
 					FolderVO lowerFolderVO = ezWebFolderService.getFolderByFolderId(lowerFolder, offset, tenantId);
-					moveFolder(lowerFolderVO, destFolderVO, userId, offset, tenantId, timeUTC);
+					moveFolder(lowerFolderVO, destFolder, userId, offset, tenantId, timeUTC);
 					restoreFileInFolder(lowerFolderVO.getFolderId(), tenantId, userId, timeUTC, companyId, offset, userName1, userName2);
 				}
 			}
 		}
 		
-		return duplicateList;
+		return result;
 	}
 	
 	@Override

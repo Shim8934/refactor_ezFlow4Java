@@ -199,6 +199,10 @@ function search_Set(pPage) {
 					currentPage = (currentPage == 0 && totalPages > 0)  ? 1          : currentPage;
 					makePageSelPage();
 					renderData(result);
+					
+					if (window.loadCapacity) {
+						loadCapacity();
+					}
 					break;
 				case 1:
 					alert(resultErr1);
