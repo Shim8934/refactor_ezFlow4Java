@@ -13,10 +13,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.function.Consumer;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.ClientAnchor;
 import org.apache.poi.ss.usermodel.ClientAnchor.AnchorType;
@@ -28,7 +30,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.util.IOUtils;
 import org.apache.poi.util.Units;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.apache.commons.io.FileUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -80,27 +81,32 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	private static final Logger logger = LoggerFactory.getLogger(EzWebFolderAdminServiceImpl.class);
 	
 	@Override
-	public void saveConfig(String personalLimit, String uploadLimit, String companyId, int tenantId) throws Exception {
+	public void saveConfig(String companyLimit, String departmentLimit, String userLimit, String uploadLimit, String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("personalLimit", personalLimit);
+		map.put("companyLimit", companyLimit);
+		map.put("departmentLimit", departmentLimit);
+		map.put("userLimit", userLimit);
 		map.put("uploadLimit",   uploadLimit);
 		map.put("companyId",     companyId);
 		map.put("tenantId",      tenantId);
+
+		checkExistCompany(map);
 		ezWebFolderAdminDAO.saveConfig(map);
 	}
 
 	@Override
-	public WebfolderConfigVO getWebfolderConfig(String companyId, int tenantId) throws Exception {
+	public WebfolderConfigVO getEveryCompanyConfig(int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("companyId", companyId);
 		map.put("tenantId",  tenantId);
-		WebfolderConfigVO result = ezWebFolderAdminDAO.getWebfolderConfig(map);
+
+		WebfolderConfigVO result = ezWebFolderAdminDAO.getEveryCompanyConfig(map);
 		
 		if (result == null) {
 			result = new WebfolderConfigVO();
-			result.setCompanyId(companyId);
 			result.setTenantId(tenantId);
-			result.setTotalLimit("0");
+			result.setCompanyTotalLimit("0");
+			result.setDepartmentTotalLimit("0");
+			result.setUserTotalLimit("0");
 			result.setUploadLimit("0");
 		}
 		
@@ -108,45 +114,74 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 
 	@Override
-	public List<UserCapacityVO> getListUserCapacity(String realColmn, String order, String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception {
+	public WebfolderConfigVO getWebfolderConfig(String companyId, int tenantId) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("realColmn",  realColmn);
-		map.put("order",      order);
-		map.put("companyId",  companyId);
-		map.put("searchStr",  searchStr);
-		map.put("searchOpt",  searchOpt);
-		map.put("startPoint", startPoint);
-		map.put("pageSize",   pageSize);
-		map.put("tenantId",   tenantId);
-		map.put("primary",    primary);
-		return ezWebFolderAdminDAO.getListUserCapacity(map);
-	}
+		map.put("companyId", companyId);
+		map.put("tenantId",  tenantId);
 
-	@Override
-	public int getTotalListUserCapacity(String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("companyId",  companyId);
-		map.put("searchStr",  searchStr);
-		map.put("searchOpt",  searchOpt);
-		map.put("startPoint", startPoint);
-		map.put("pageSize",   pageSize);
-		map.put("tenantId",   tenantId);
-		map.put("primary",    primary);
-		return ezWebFolderAdminDAO.getTotalListUserCapacity(map);
-	}
-
-	@Override
-	public void updateNewAmount(List<String> userList, String newStorageValue, String companyId, int tenantId) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("totalCapacity", newStorageValue);
-		map.put("companyId",     companyId);
-		map.put("tenantId",      tenantId);
+		checkExistCompany(map);
+		WebfolderConfigVO result = ezWebFolderAdminDAO.getWebfolderConfig(map);
 		
-		for (String userId : userList) {
-			map.put("userId",        userId);
-			ezWebFolderAdminDAO.updateNewAmount(map);
+		if (result == null) {
+			result = new WebfolderConfigVO();
+			result.setCompanyId(companyId);
+			result.setTenantId(tenantId);
+			result.setCompanyTotalLimit("0");
+			result.setDepartmentTotalLimit("0");
+			result.setUserTotalLimit("0");
+			result.setUploadLimit("0");
+		}
+		
+		return result;
+	}
+
+	private void checkExistCompany(Map<String, Object> map) throws Exception {
+		if (ezWebFolderAdminDAO.existCompany(map) == 0) {
+			throw new IllegalArgumentException("non existent company ID: " + map);
 		}
 	}
+
+//	@Override
+//	public List<CapacityVO> getListUserCapacity(String realColmn, String order, String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception {
+//		Map<String,Object> map = new HashMap<String, Object>();
+//		map.put("realColmn",  realColmn);
+//		map.put("order",      order);
+//		map.put("companyId",  companyId);
+//		map.put("searchStr",  searchStr);
+//		map.put("searchOpt",  searchOpt);
+//		map.put("startPoint", startPoint);
+//		map.put("pageSize",   pageSize);
+//		map.put("tenantId",   tenantId);
+//		map.put("primary",    primary);
+//		return ezWebFolderAdminDAO.getListUserCapacity(map);
+//	}
+//
+//	@Override
+//	public int getTotalListUserCapacity(String companyId, String searchStr, String searchOpt, int startPoint, int pageSize, int tenantId, String primary) throws Exception {
+//		Map<String,Object> map = new HashMap<String, Object>();
+//		map.put("companyId",  companyId);
+//		map.put("searchStr",  searchStr);
+//		map.put("searchOpt",  searchOpt);
+//		map.put("startPoint", startPoint);
+//		map.put("pageSize",   pageSize);
+//		map.put("tenantId",   tenantId);
+//		map.put("primary",    primary);
+//		return ezWebFolderAdminDAO.getTotalListUserCapacity(map);
+//	}
+//
+//	@Override
+//	public void updateNewAmount(List<String> targetList, String type, String newStorageValue, String companyId, int tenantId) throws Exception {
+//		Map<String,Object> map = new HashMap<String, Object>();
+//		map.put("type", type);
+//		map.put("totalCapacity", newStorageValue);
+//		map.put("companyId", companyId);
+//		map.put("tenantId", tenantId);
+//		
+//		for (String targetId : targetList) {
+//			map.put("targetId", targetId);
+//			ezWebFolderAdminDAO.updateNewAmount(map);
+//		}
+//	}
 
 	@Override
 	public List<FileLogVO> getListFileLogs(String realColmn, String order, String companyId, String searchChk, String startDate, String endDate, String fileExt, String fileName, String userName, String fileType, String actionType, int startPoint, int pageSize, String primary, String offset, int tenantId) throws Exception {
@@ -757,12 +792,98 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 	}
 
 	@Override
-	public UserCapacityVO getUserCapacity(String userId, String lang, int tenantId) throws Exception {
-		Map<String,Object> map = new HashMap<String, Object>();
-		map.put("userId",   userId);
-		map.put("primary",  lang);
+	public void setDefaultCapacity(String companyValue, String departmentValue, String userValue, String companyId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("companyValue", companyValue);
+		map.put("departmentValue", departmentValue);
+		map.put("userValue", userValue);
+		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
-		return ezWebFolderAdminDAO.getUserCapacity(map);
+
+		ezWebFolderAdminDAO.setDefaultCapacity(map);
+	}
+
+	@Override
+	public void setCapacities(List<String> cnList, String type, String value, String companyId, int tenantId) throws Exception {
+		Consumer<Map<String, Object>> setCapacityFunc = type.equals("C") ? ezWebFolderAdminDAO::setCapacityForCompany : ezWebFolderAdminDAO::setCapacity;
+		Map<String, Object> map = new HashMap<>();
+		map.put("type", type);
+		map.put("value", value);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+
+		for (String cn : cnList) {
+			map.put("cn", cn);
+			setCapacityFunc.accept(map);
+		}
+	}
+
+	@Override
+	public void deleteCapacities(List<String> cnList, String type, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<>();
+		map.put("list", cnList);
+		map.put("type", type);
+		map.put("tenantId", tenantId);
+
+		ezWebFolderAdminDAO.deleteCapacities(map);
+	}
+
+	@Override
+	public List<UserCapacityVO> getCapacityList(String type, String primary, String companyId, int tenantId, String realColumn, String order, String searchKeyword, String searchOption, int startPoint, int pageSize) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("type", type);
+		map.put("realColumn", realColumn);
+		map.put("order", order);
+
+		if (companyId != null) {
+			map.put("companyId", companyId);
+		}
+
+		map.put("searchKeyword", searchKeyword);
+		map.put("searchOption", searchOption);
+		map.put("startPoint", startPoint);
+		map.put("pageSize", pageSize);
+		map.put("tenantId", tenantId);
+		map.put("primary", primary);
+
+		return ezWebFolderAdminDAO.getCapacityList(map);
+	}
+
+	@Override
+	public int getTotalCapacityCount(String type, String companyId, int tenantId, String searchKeyword, String searchOption) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("type", type);
+		map.put("companyId", companyId);
+		map.put("searchKeyword", searchKeyword);
+		map.put("searchOption", searchOption);
+		map.put("tenantId", tenantId);
+		map.put("primary", "1");
+
+		return ezWebFolderAdminDAO.getTotalCapacityCount(map);
+	}
+
+	@Override
+	public UserCapacityVO getCapacity(String cn, String type, String primary, int tenantId) throws Exception {
+		Map<String, Object> param = new HashMap<>();
+		param.put("cn", cn);
+		param.put("type", type);
+		param.put("primary", primary);
+		param.put("tenantId", tenantId);
+
+		return ezWebFolderAdminDAO.getCapacity(param);
+	}
+
+	@Override
+	public UserCapacityVO getCapacity(String folderId, String primary, int tenantId) throws Exception {
+		FolderVO folder = ezWebFolderService.getFolderByFolderId(folderId, "0|000000", tenantId);
+
+		if (folder.getFolderLevel() > 0) {
+			StringBuilder folderPath = new StringBuilder(folder.getFolderPath());
+			String rootFolderId = folderPath.deleteCharAt(0).substring(0, folderPath.indexOf("|"));
+			folder = ezWebFolderService.getFolderByFolderId(rootFolderId, "0|000000", tenantId);
+		}
+
+		return getCapacity(folder.getOwnerId(), folder.getFolderType(), primary, tenantId);
 	}
 
 	@Override

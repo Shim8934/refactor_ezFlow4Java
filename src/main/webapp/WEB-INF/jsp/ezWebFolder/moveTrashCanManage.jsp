@@ -130,6 +130,8 @@
 							infoArray: data.duplicateInfoArray,
 							folderId: folderId
 						}, true);
+					} else if(data.code == 4 && data.status == "error") {
+						alert("<spring:message code='ezWebFolder.t250'/>");
 					}
             	},
             	error : function(error) {

@@ -216,47 +216,6 @@
 		    		}
 		    	}
 		    }
-			function drawVolume() {
-				$.ajax({
-					url: "/ezWebFolder/getUserCapicity.do",
-					type: "POST",
-					dataType: "JSON",
-					async : true,
-					success : function(data) {
-						var code = data.code;
-						switch(code) {
-							case 0: 
-								var result      = data.userCapacity;
-								var totalVolume = result["totalCapacity"] + "GB";
-								var useVolume   = getFileSize(result["totalUsed"]);
-								var percent     = result["usedRate"];
-								var colorClass  = "myBar_green";
-								var barElmt     = document.getElementById("myBar");
-								var volumeInf   = document.getElementsByClassName("volumes")[0];
-
-								$("#myBar").css({
-									"width" : percent + "%"
-								});
-
-		                 	    $("#usePer").text(percent+"%");
-			                 	   
-			                 	   //용량 체크(색깔로)
-		                 	    if (percent >= 80) {
-		                 	   		colorClass = "myBar_red";
-		                 	    } else if (percent >= 70) {
-							   		colorClass = "myBar_yellow";
-		                 	    } else {
-		                 		  	colorClass = "myBar_green";
-		                 	    }                  		   
-			                 	            
-			                 	$("#myBar").addClass(colorClass);
-						}
-					},
-					error : function(error) {
-// 						alert("<spring:message code='ezWebFolder.t134' />" + error + (tttt));
-					}
-				});
-			}
 			
 			function getFileSize(fileSize) {
 				var fileSize_ = "";
@@ -277,7 +236,7 @@
 			var webfolder_folder_Manage = new Array();
 		 	// 폴더관리
 		    function folder_Manage() {
-		    	webfolder_folder_Manage[1] = drawVolume;
+		    	webfolder_folder_Manage[1] = function() {};
 	        	var OpenWin = window.open("/ezWebFolder/folderManage.do?folderType="+folderType, "", GetOpenWindowfeature(600, 500));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
@@ -338,7 +297,7 @@
 			}
 			
 			function leftResize(){
-	        	$(".webfolderListBox").height(window.innerHeight-105);
+	        	$(".webfolderListBox").height(window.innerHeight);
 	        }
 	        
 	        $( window ).resize(function() {
@@ -415,7 +374,7 @@
 	<style>
 		.jstree-span-title {display:inline-block; text-overflow:ellipsis; overflow-x:hidden; margin-left:3px}
 	</style>
-	<body class="newLeft" onload="drawVolume();">
+	<body class="newLeft">
 		<div id="left" class="lnb" style="overflow: auto">
 	    	<!-- <div class="lnb_btn"></div> -->
 	        <!-- <div class="lnb_btn_hidden"></div> lnb 숨기기 버튼-->
@@ -460,9 +419,6 @@
 					</c:if>
 				</ul>
 			</div>	
-			<div class="mail_space">
-	        	<span class="mail_spaceText"><spring:message code="ezWebFolder.t148" />&nbsp;<span class="userPer" id="usePer"></span></span><span  id="myBar" class="mailBar"></span>
-	        </div>
 	    <div style="width:100%;height:100%;position:absolute;top:0;left:0;display:none;z-index:5000;" id="folderPanel" onclick="HiddenFolderMenu();" >&nbsp;</div>
 	    <div id="folderMenuDiv" style="position:absolute;top:180px;z-index:6000;display:none;">
 		    <table cellpadding=2 cellspacing=1 border=0 style="width:130px;" class="popuplist">

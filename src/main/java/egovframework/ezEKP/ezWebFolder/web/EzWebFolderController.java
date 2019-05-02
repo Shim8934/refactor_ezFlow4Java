@@ -1006,20 +1006,22 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		return resultBody.toString();
 	}
 
-	@RequestMapping(value="/ezWebFolder/getUserCapicity.do", method = RequestMethod.POST)
+	@RequestMapping(value="/ezWebFolder/getCapacity.do", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	@ResponseBody
-	public String getUserCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
-		logger.debug("getUserCapacity start");
+	public String getFolderCapacity(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model, HttpServletResponse response) throws Exception {
+		logger.debug("getFolderCapacity start");
 		LoginSimpleVO user = commonUtil.userInfoSimple(loginCookie);
 		String gwServerUrl = config.getProperty("config.webFolderGwServerURL");
-		String url         = gwServerUrl + "/rest/ezwebfolder/capacity/" + user.getId();
+		String folderId = request.getParameter("folderId");
+		String url         = gwServerUrl + "/rest/ezwebfolderadmin/capacity/folder/" + folderId;
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		
-		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url);
+		UriComponentsBuilder builder  = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("primary", user.getLang());
 		
 		RestTemplate rest             = new RestTemplate();
 		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
@@ -1027,7 +1029,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		JSONParser jp                 = new JSONParser();
 		JSONObject resultBody         = (JSONObject) jp.parse(result.getBody());
 		
-		logger.debug("getUserCapacity end");
+		logger.debug("getFolderCapacity end");
 		return resultBody.toString();
 	}
 	

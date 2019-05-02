@@ -147,7 +147,7 @@ body[favoritemode] #layer_Viewpopup {top:90px !important;}
 .wfSearchPanel h1, .wfpersonal h1 {margin-top: 0px !important;}
 .wfcompstdiv {width: 400px; text-align: center;}
 #forScroll			{width: 6px; padding:0px;}
-.wfFilecheck 		{width: 2%; min-width:35px; text-align: center;}
+.wfFilecheck 		{width: 2%; min-width:35px;}
 .wfFileFavorite		{width: 3%; text-align: center; min-width:35px;}
 .wfFileType 		{width: 3%; text-align: center;}
 .wfFileName			{width: 30%;}
