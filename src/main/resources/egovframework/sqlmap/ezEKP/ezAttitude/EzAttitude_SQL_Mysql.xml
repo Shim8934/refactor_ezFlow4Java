@@ -1983,9 +1983,9 @@
 	
 	<select id="ezAttitudeDAO.getJoinDateUserList" parameterClass="map" resultClass="java.util.HashMap">
 		SELECT 
-			USER_ID AS userid, 
-       		CAST(TIMESTAMPDIFF(MONTH, JOIN_DATE, NOW()) AS CHAR(4)) AS workingmonthcnt, 
-		    DATE_FORMAT(JOIN_DATE, '%X-%c-%d')          AS joindate
+			USER_ID AS userId, 
+       		CAST(TIMESTAMPDIFF(MONTH, JOIN_DATE, NOW()) AS CHAR(4)) AS workingMonthCnt, 
+		    DATE_FORMAT(JOIN_DATE, '%X-%c-%d')          AS joinDate
 		FROM   
 			TBL_ATTITUDE_JOINDATE 
 		WHERE  
@@ -2011,6 +2011,17 @@
 		</isNotEmpty>
 	</select>
 	
+	<select id = "ezAttitudeDAO.getAttitudeJoinDateUserList" resultClass="java.util.HashMap">
+	
+		SELECT 
+			USER_ID AS userId, 
+       		CAST(TIMESTAMPDIFF(MONTH, JOIN_DATE, NOW()) AS CHAR(4)) AS workingMonthCnt, 
+		    DATE_FORMAT(JOIN_DATE, '%X-%c-%d')          AS joinDate
+		FROM   
+			TBL_ATTITUDE_JOINDATE 
+	
+	</select>
+	
 	<update id = "ezAttitudeDAO.updateAnnualHoliday" parameterClass="map">
 		UPDATE
 			TBL_ATTITUDE_ANNUAL
@@ -2024,6 +2035,13 @@
 		WHERE
 			USER_ID = #userid#	
 	</update>
+	
+	 <select id="ezAttitude.getTenantID" resultMap="attitude">
+	  	SELECT 
+	  		TENANT_ID AS tenantId
+	  	FROM
+	  		TBL_TENANT
+	  </select>
 	
 	<select id="ezAttitudeDAO.checkAbsentDay" parameterClass="map" resultClass="INTEGER">
 		<![CDATA[

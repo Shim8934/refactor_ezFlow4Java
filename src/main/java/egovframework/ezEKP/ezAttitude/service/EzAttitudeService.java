@@ -166,6 +166,8 @@ public interface EzAttitudeService {
 	
 	public void updateMonthlyHoliday(Map<String, Object> map) throws Exception;
 	
+	public void updateFiscalYearAnnualHoliday(Map<String, Object> map) throws Exception;
+	
 	public void extinctionMonthlyHoliday(Map<String, Object> map) throws Exception;
 
 	public int deleteCancelAnnual(String companyId, int tenantId, String attitudeId) throws Exception;

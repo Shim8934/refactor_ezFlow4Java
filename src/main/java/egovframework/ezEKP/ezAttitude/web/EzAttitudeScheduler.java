@@ -3,6 +3,7 @@ package egovframework.ezEKP.ezAttitude.web;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -23,6 +24,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.vo.AttitudeConfigVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
 
@@ -42,29 +44,35 @@ public class EzAttitudeScheduler {
 	@Scheduled(cron = "10/5 * * * * *")
 	public void autoSetAnnualHoliday() throws Exception{
 		logger.debug("autoSetAnnualHoliday scheduler started.");
-		
+
 		// 변수 값은 테스트용 테이블 및 쿼리 생성 후 변경 예정
 		char useAnnualAutoGnrt = '0';// 0:사용 1:미사용
 		char annualGnrtStd = '1';// 0:입사일기준 1:회계연도기준
 		char useAnnualTmnt = '0';//연차소멸 여부 0:사용 1:미사용
+		String initialDate = "2019-02-05"; // 기산일 
+		char roundOffRule = '0';//0:0.5 1:1.0
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String today = sdf.format(new Date());
+		Date setDate = sdf.parse(today);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(setDate);
+		cal.add(Calendar.DATE, -1);
+
+		String yesterday = sdf.format(cal.getTime());
+//		System.out.println("asdsadasdasd :: "+ new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("yyyy-MM-dd").parse(initialDate)));
+//		System.out.println("asdasdasdasd :: " + yesterday);
 		
 		if (useAnnualAutoGnrt == '0') {
 			
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			String today = sdf.format(new Date());
-			Date setDate = sdf.parse(today);
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(setDate);
-			cal.add(Calendar.DATE, -1);
-			String yesterday = sdf.format(cal.getTime());
+			List<Map<String, Object>> list = ezAttitudeService.getJoinDateUserList(yesterday.split("-")[2]);
 
 			if (annualGnrtStd == '0') {
 				
-				List<Map<String, Object>> list = ezAttitudeService.getJoinDateUserList(yesterday.split("-")[2]);
-				
 				for (Map<String, Object> m : list) {
 					
-					int workingMonthCnt = Integer.parseInt((String)m.get("workingmonthcnt"));
+					int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
 					
 					if (workingMonthCnt < 24) {
 						if (workingMonthCnt == 12) {
@@ -82,7 +90,28 @@ public class EzAttitudeScheduler {
 				}
 			} else {
 				
+				for (Map<String, Object> m : list) {
+					int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
+
+					if (workingMonthCnt < 12) {
+						ezAttitudeService.updateMonthlyHoliday(m);
+					} else if (workingMonthCnt > 12) {
+						if (workingMonthCnt < 24) {
+							if (useAnnualTmnt == '0') {
+								ezAttitudeService.extinctionMonthlyHoliday(m);
+							}
+						}
+					}
+				}
 				
+				if (initialDate == yesterday) {
+					
+					Map<String, Object> m = new HashMap<String, Object>();
+					m.put("roundOffRule", roundOffRule);
+					m.put("initialDate", initialDate);
+					
+					ezAttitudeService.updateFiscalYearAnnualHoliday(m);
+				}				
 			}
 		}
 		

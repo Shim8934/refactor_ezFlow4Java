@@ -58,6 +58,7 @@ import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
 @Service("EzAttitudeService")
 public class EzAttitudeServiceImpl implements EzAttitudeService{
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzAttitudeServiceImpl.class);
+	private static final int defaultAnnualHolidayCnt = 15;
 	
 	@Autowired
 	private CommonUtil commonUtil;
@@ -2884,7 +2885,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		int defaultAnnualHolidayCnt = 15;
 		
-			int workingDayCnt = checkHoliday((String)map.get("joindate"), commonUtil.getTodayUTCTime("yyyy-MM-dd"), "1", "S907001", 1).size();
+			int workingDayCnt = checkHoliday((String)map.get("joinDate"), commonUtil.getTodayUTCTime("yyyy-MM-dd"), "1", "S907001", 1).size();
 			int attendanceDay = ezAttitudeDAO.getAttendanceDay(map);
 			int attendanceRate = attendanceDay / workingDayCnt * 100;
 			
@@ -2903,10 +2904,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public void updateExceedAnnualHoliday(java.util.Map<String,Object> map) throws Exception {
+	public void updateExceedAnnualHoliday(Map<String,Object> map) throws Exception {
 		
 		int workingMonthCnt = Integer.parseInt((String)map.get("workingmonthcnt"));
-		int defaultAnnualHolidayCnt = 15;
 		int annualHolidayCnt = defaultAnnualHolidayCnt + (int) (workingMonthCnt / 12 - 1) / 2;
 
 		// 입사한지 2년이 됐을 때 남아있는 월차는 모두 0으로 초기화 해준다.
@@ -2919,6 +2919,62 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("attendanceRateCondition","1");
 		
 		ezAttitudeDAO.updateAnnualHoliday(map);
+	}
+	
+	@Override
+	public void updateFiscalYearAnnualHoliday(Map<String, Object> map) throws Exception {
+		LOGGER.debug("updateFiscalYearAnnualHoliday started");
+		
+		List<Map<String, Object>> list = ezAttitudeDAO.getAttitudeJoinDateUserList();
+		
+		for (Map<String, Object> m : list) {
+			
+			if ((int)m.get("workingMonthCnt") < 12) {
+			
+				String date1 = (String)m.get("joinDate");
+				String date2 = (String)map.get("initialDate");
+				String roundOffRule = (String)map.get("roundOffRule");
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date joinDate = sdf.parse(date1);
+				Date initialDate = sdf.parse(date2);
+				
+				long calDate = joinDate.getTime() - initialDate.getTime();
+				long calDatetoDays = Math.abs(calDate / (24 * 60 * 60 * 1000)); 
+				
+				double annualHolidayCnt = Math.round((15 * calDatetoDays / 365) * 10) / 10.0;
+				
+				if (roundOffRule.equals("0")) {
+					
+					if (Math.round((annualHolidayCnt % 1) * 10) / 10.0 > 0.5) {
+						annualHolidayCnt = (int)Math.round(annualHolidayCnt);
+					} else {
+						annualHolidayCnt = (int)annualHolidayCnt + 0.5;
+					}
+					
+				} else {
+					annualHolidayCnt = (int)Math.ceil(annualHolidayCnt);
+				}
+				
+				map.put("holidayCnt", annualHolidayCnt);
+				map.put("attendanceRateCondition","1");
+				
+				ezAttitudeDAO.updateAnnualHoliday(map);
+			} else {
+				int annualHolidayCnt = defaultAnnualHolidayCnt + (int)((int)m.get("workingMonthCnt") / 12 - 1) / 2;
+				
+				map.put("holidayCnt", 0);
+				map.put("attendanceRateCondition","2");
+				ezAttitudeDAO.updateAnnualHoliday(map);
+				
+				map.put("holidayCnt", annualHolidayCnt);
+				map.put("attendanceRateCondition","1");
+				
+				ezAttitudeDAO.updateAnnualHoliday(map);
+			}
+		}
+		LOGGER.debug("updateFiscalYearAnnualHoliday ended");
+		
 	}
 	
 	@Override
