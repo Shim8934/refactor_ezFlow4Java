@@ -4168,7 +4168,7 @@
 		]]>
 	</update>
 	
-	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map" resultClass="String">
+	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT 
 				count(*)

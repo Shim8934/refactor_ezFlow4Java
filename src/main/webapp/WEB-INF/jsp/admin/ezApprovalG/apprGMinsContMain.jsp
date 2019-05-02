@@ -22,6 +22,7 @@
 		    var DeptID;
 		    var RetValue;
 		    var ReturnFunction;
+		    var pOrgContType;
 		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -47,6 +48,7 @@
 		        DeptID = RetValue[3];
 		        
 		        if (gState == "U") {
+		            pOrgContType = RetValue[2];
 		            P_companyID = RetValue[4];
 		            DeptID = RetValue[5];
 		        }
@@ -232,6 +234,9 @@
 					if (xmlhttp.statusText == "OK" && xmlhttp.responseText == "TRUE") {
 						return true;
 					} else {
+						if (xmlhttp.responseText == "DUPLICATE") {
+							alert("<spring:message code='ezApprovalG.t1598'/>");
+						}
 			            return false;
 					}
 				}
@@ -245,6 +250,12 @@
 		        createNodeAndInsertText(xmlpara, objNode, "CONTID", document.getElementById("tbContID").value);
 		        createNodeAndInsertText(xmlpara, objNode, "CONTTYPE", document.getElementById("selContName").value);
 		        createNodeAndInsertText(xmlpara, objNode, "CONTOWNDEPID", gDeptID);
+		        
+		        if (typeof(pOrgContType) != "undefined" && pOrgContType != document.getElementById("selContName").value) {
+			        createNodeAndInsertText(xmlpara, objNode, "MODFLAG", "Y");
+		        } else {
+			        createNodeAndInsertText(xmlpara, objNode, "MODFLAG", "N");
+		        }
 
 	            var Count = selUseDept.length;
 	            
@@ -263,6 +274,9 @@
 					if (xmlhttp.statusText == "OK" && xmlhttp.responseText == "TRUE") {
 						return true;
 					} else {
+						if (xmlhttp.responseText == "DUPLICATE") {
+							alert("<spring:message code='ezApprovalG.t1598'/>");
+						}
 			            return false;
 					}
 				}
