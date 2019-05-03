@@ -1,0 +1,149 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>입사일 입력</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
+		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css" >
+		
+		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
+		
+		<!-- date picker-->		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		
+		<style>
+			.ui-datepicker {
+				width: 180px;
+				padding: .2em .2em 0;
+				display: none;
+				margin-top: 20px;
+			}
+		</style>
+		
+	    <script type="text/javascript">
+	    
+	    	var userId = "<c:out value="${userId}" />";
+	    	var companyId = "<c:out value="${companyId}" />";
+	    	var date = "<c:out value="${date}" />";
+	    	var mode = "<c:out value="${mode}" />";
+	    	
+	    	var monthMsg = "<spring:message code='ezAttitude.t139'/>";
+		    var monthStr = monthMsg.split(";");		    
+		    var dayMsg = "<spring:message code='ezAttitude.t140'/>";
+		    var dayStr = dayMsg.split(";");
+	    
+	    	$(document).ready(function(){
+	    		
+	    		setDatePicker();
+	    		
+	    		$.datepicker._showDatepicker(document.getElementById("datepicker"));
+	    		
+	    		$(".ui-datepicker-trigger").css({display: "none"});
+	    		
+   			});
+	    	
+	    	function setDatePicker() {
+				$("#datepicker").datepicker({
+		            changeMonth: true,
+		            changeYear: true,
+		            autoSize: true,
+		        });
+		        
+		        var uploadJoinDate = date;
+		        
+		        modFirstFlag = false;
+		        
+				var year = uploadJoinDate.substring(0, 4);
+				var month = uploadJoinDate.substring(5, 7);
+				var day = uploadJoinDate.substring(8, 10);
+				
+		        var SDate = new Date();
+		        SDate.setFullYear(year, month-1, day);
+		        
+		        $("#datepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+		        $("#datepicker").datepicker('setDate', SDate);
+		        
+		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+			        	closeText: "<spring:message code='main.t3' />",
+			            prevText: "<spring:message code='main.t0604' />",
+			            nextText: "<spring:message code='main.t0605' />",
+						currentText: "<spring:message code='main.t0606' />",
+			            monthNames: monthStr,
+			            monthNamesShort: monthStr,
+			            dayNames: dayStr,
+			            dayNamesShort: dayStr,
+			            dayNamesMin: dayStr,
+			            weekHeader: 'Wk',
+			            dateFormat: 'yy-mm-dd',
+			            firstDay: 0,
+			            isRTL: false,
+			            duration: 200,
+			            showAnim: 'show',
+			            showMonthAfterYear: true
+			        };
+		        $.datepicker.setDefaults($.datepicker.regional["ko"]);
+		        $.datepicker._hideDatepicker = function() {};
+		        
+			}
+	    	
+	    	
+	    	//전체 연차 등록/수정
+	    	function saveJoinDate() {
+	    		date = $("#datepicker").val();
+
+				$.ajax({
+	   				type:"post",
+	   				url:"/admin/ezAttitude/saveJoinDate.do",
+	   				dataType : "text",
+	   				data:{
+	   					userId : userId,
+	   					companyId : companyId,
+	   					mode : mode,
+	   					date : date
+	   				},
+					success : function(resultStatus) {
+	            		if (resultStatus == "success") {
+	   						opener.getAnnualList();
+	   						window.close();
+	            		} else {
+	            			alert("<spring:message code='ezAttitude.t175' />");
+	            		}
+	            	},
+	   				error : function() {
+	   					alert("<spring:message code='ezAttitude.t175' />");
+	   				}
+	   			});
+	   		}
+	    	
+		</script>
+	</head>
+	<body class="popup">
+	    <h1>
+	    	입사일 입력
+	    </h1>
+	    <div id="close">
+            <ul>
+                <li><span onclick="window.close()"></span></li>
+            </ul>
+        </div>
+	    <table class="content">
+	        <tr>
+	            <td>
+	            	<input type="text" id="datepicker" style="width:185px;text-align:center" readonly="readonly">
+	            </td>
+	        </tr>
+	    </table>
+	    <br/>
+        <div class="btnposition btnpositionNew">
+	        <a class="imgbtn"><span onclick="saveJoinDate();" ><spring:message code='ezAttitude.t16' /></span></a>
+	    </div>
+	</body>
+</html>

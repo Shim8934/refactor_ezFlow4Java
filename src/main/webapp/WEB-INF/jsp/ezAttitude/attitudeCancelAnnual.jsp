@@ -114,10 +114,19 @@
 			
 			//삭제
 			function saveCancelAnnual() {
+				
+				var idList = "";
+		    	
+				if(g_attendant != null) {
+			    	for (var i = 0; i < g_attendant.id.length; i++) {
+			    		idList += g_attendant.id[i] + ","
+			    	}
+				}
+				
 				var obj = new Object();
 				obj.attitudeId = attitudeId;
 		    	obj.content = message.GetEditorContent();
-		    	obj.reference = g_attendant;
+		    	obj.idList = idList.slice(0,-1);
 				$.ajax({
 					type : "POST",
 					async : true,
@@ -263,6 +272,35 @@
 			    schedule_select_attendant_dialogArguments[1] = manage_attendant_Complete;
 
 			    GetOpenWindow("/ezAttitude/attitudeSelectReference.do", "schedule_select_attendant", 970, 680);
+			}
+			
+			function manage_attendant_Complete(rtn) {
+			    if (typeof (rtn) != "undefined") {
+			        g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array(), "jikwe": new Array(), "phone": new Array() };
+			        document.getElementById("receiverlist").innerHTML = "";
+			        
+			        for (var i = 0; i < rtn["id"].length; i++) {
+			            if (i == 0) {
+			            	document.getElementById("receiverlist").innerHTML = rtn["name"][i];
+			            	document.getElementById("receiverID").innerHTML = rtn["id"][i];
+			            	document.getElementById("receiverlist2").innerHTML = rtn["name1"][i];
+			            } else {
+			            	document.getElementById("receiverlist").innerHTML += ", " + rtn["name"][i];
+			            	document.getElementById("receiverID").innerHTML += ", " + rtn["id"][i];
+			            	document.getElementById("receiverlist2").innerHTML += ", " + rtn["name1"][i];
+			            }
+
+			            g_attendant["name"][i] = rtn["name"][i];
+			            g_attendant["id"][i] = rtn["id"][i];
+			            g_attendant["deptname"][i] = rtn["deptname"][i];
+			            g_attendant["name1"][i] = rtn["name1"][i];
+			            g_attendant["name2"][i] = rtn["name2"][i];
+			            g_attendant["deptname2"][i] = rtn["deptname2"][i];
+			            g_attendant["jikwe"][i] = rtn["jikwe"][i];
+			            g_attendant["phone"][i] = rtn["phone"][i];
+
+			        }
+			    }
 			}
 			
 		</script>

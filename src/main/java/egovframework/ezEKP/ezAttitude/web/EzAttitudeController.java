@@ -3417,7 +3417,7 @@ public class EzAttitudeController {
 		String userOffset = userInfo.getOffset();
 		String year = request.getParameter("year");
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/monthlyAnnual";
+		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/monthlyannual";
 		
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -3660,7 +3660,7 @@ public class EzAttitudeController {
 	public String saveCancelAnnual(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
 			@RequestParam(required=false)String attitudeId,
 			@RequestParam(required=false)String content,
-			@RequestParam(required=false)String reference) throws Exception {
+			@RequestParam(required=false)String idList) throws Exception {
 		LOGGER.debug("saveCancelAnnual started");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
@@ -3674,7 +3674,7 @@ public class EzAttitudeController {
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId + "/saveCancelAnnual";
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId + "/savecancelannual";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -3687,6 +3687,8 @@ public class EzAttitudeController {
 				.queryParam("tenantId", userInfo.getTenantId())
 				.queryParam("userId", userInfo.getId())
 				.queryParam("content", content)
+				.queryParam("idList", idList)
+				.queryParam("loginCookie", loginCookie)
 				.queryParam("offset", offsetMin);
 		
 		RestTemplate rest = new RestTemplate();
@@ -3738,7 +3740,7 @@ public class EzAttitudeController {
 		}
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/deleteCancelAnnual";
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/deletecancelannual";
 									
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -3766,8 +3768,609 @@ public class EzAttitudeController {
 	}
 	
 	/**
-	 * 개인 연차 총/사용연차 수 (휴가계 기안시 사용)
+	 * 사용자 좌측메뉴
+	 * 수정신청관리 -> 수정신청관리
 	 */
+	@RequestMapping(value="/ezAttitude/manageAnnCanAppList.do")
+	public String adminGetAnnCanAppList(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=false)String pageNum,
+			@RequestParam(required=false)String apprUserName,
+			@RequestParam(required=false)String startDate,
+			@RequestParam(required=false)String endDate,
+			@RequestParam(required=false)String deptid) throws Exception {
+		LOGGER.debug("adminGetAnnCanAppList started");
+		
+		String adminFlag = "true";
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+        
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		
+		if (deptid == null) {
+			deptid = userInfo.getDeptID(); 
+		}
+		
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		String url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth/hyo";
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("listAuthType", "M");
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONArray deptList = new JSONArray();
+		
+		if(status.equals("ok")){
+			deptList = (JSONArray) resultBody.get("data");
+		}
+
+		if (deptList.size() < 1) {
+			return "cmm/error/accessDenied";
+		}
+		
+		model.addAttribute("selectedDeptID", deptid);
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("userTimeSet", offset);
+		model.addAttribute("offsetMin", offsetMin);
+		model.addAttribute("adminFlag", adminFlag);
+		model.addAttribute("deptList", deptList);
+		
+		LOGGER.debug("adminGetAnnCanAppList ended");
+		
+		return "/ezAttitude/manageAnnCanAppList";
+	}
+	
+	@RequestMapping(value="/ezAttitude/getAnnCanAppList.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONObject getAnnCanAppList(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
+			@RequestParam(required=false)String apprUserName,
+			@RequestParam(required=false)String writerName,
+			@RequestParam(required=false)String writerDeptName,
+			@RequestParam(required=false)String startDate,
+			@RequestParam(required=false)String endDate,
+			@RequestParam(required=false)String pageNum,
+			@RequestParam(required=false)String type,
+			@RequestParam(required=false)String excelReq,
+			@RequestParam(required=false)String orderCell,
+			@RequestParam(required=false)String orderOption,
+			@RequestParam(required=false)String adminFlag,
+			@RequestParam(required=false)String checkAdmin,
+			@RequestParam(required=false)String writerDeptId,
+			@RequestParam(required=false)String companyId) throws Exception {
+		
+		LOGGER.debug("getAnnCanAppList started");
+		LOGGER.debug("adminFlag = " + adminFlag + " || checkAdmin = " + checkAdmin);
+		int currentPage = 1;
+		int pageSize = 15;
+		int startPoint = 0;
+		int endPoint = 15;
+		int totalPages = 1;
+		int totalAtt = 0;
+		String isAllDept = "";
+		String authFlag = "";
+		
+		if (pageNum != null) {
+			currentPage = Integer.parseInt(pageNum);
+		}
+		
+		if (excelReq == null) {
+			excelReq = "false";
+		}
+		
+		if (adminFlag == null) {
+			adminFlag = "false";
+		}
+		
+		if (checkAdmin == null || checkAdmin.trim().equals("")) {
+			checkAdmin = "false";
+		}
+		
+		if (checkAdmin.equals("true")) {
+			totalPages = 0;
+			pageSize = 15;
+			startPoint = 0;
+			endPoint = 15;
+		}
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (companyId == null || companyId.equals("")) {
+			companyId = userInfo.getCompanyID();
+		}
+		
+		
+		
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/cancelannual/count";
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("apprUserName", apprUserName)
+				.queryParam("writerName", writerName)
+				.queryParam("writerDeptName", writerDeptName)
+				.queryParam("startDate", startDate)
+				.queryParam("endDate", endDate)
+				.queryParam("offset", offsetMin)
+				.queryParam("pageNum", pageNum)
+				.queryParam("type", type)
+				.queryParam("orderCell", orderCell)
+				.queryParam("orderOption", orderOption)
+				.queryParam("adminFlag", adminFlag)
+				.queryParam("checkAdmin", checkAdmin)
+				.queryParam("deptid", writerDeptId)
+				.queryParam("isAllDept", isAllDept);
+		
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject data = new JSONObject();
+		JSONArray list = new JSONArray();
+		
+		if(status.equals("ok")){
+			totalAtt = Integer.parseInt(resultBody.get("data").toString());
+		}
+		totalPages = (totalAtt + pageSize - 1)/pageSize;
+		
+		gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/cancelannual";
+		
+		headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		entity = new HttpEntity<>(headers);
+		
+		if (totalPages == 0) {
+			totalPages = 1;
+		} else {
+			if (currentPage < totalPages) {
+				startPoint = (currentPage - 1)*pageSize;
+				endPoint = currentPage*pageSize;
+			}
+			else {
+				if (currentPage > totalPages) {
+					currentPage = totalPages;
+				}
+				startPoint = (currentPage - 1) * pageSize;
+				endPoint = totalAtt;
+			}
+		}
+		
+		LOGGER.debug("startPoint : " + startPoint);
+		LOGGER.debug("endPoint : " + endPoint);
+		LOGGER.debug("currentPage : " + currentPage);
+		LOGGER.debug("totalPages : " + totalPages);
+		
+		if (excelReq.equals("true")) {
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId)
+					.queryParam("tenantId", userInfo.getTenantId())
+					.queryParam("apprUserName", apprUserName)
+					.queryParam("writerName", writerName)
+					.queryParam("writerDeptName", writerDeptName)
+					.queryParam("startDate", startDate)
+					.queryParam("endDate", endDate)
+					.queryParam("offset", offsetMin)
+					.queryParam("type", type)
+					.queryParam("orderCell", orderCell)
+					.queryParam("orderOption", orderOption)
+					.queryParam("adminFlag", adminFlag)
+					.queryParam("checkAdmin", checkAdmin)
+					.queryParam("deptid", writerDeptId)
+//					.queryParam("isAllDept", isAllDept);
+					.queryParam("listAuthType", "M");
+		} else {
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId)
+					.queryParam("tenantId", userInfo.getTenantId())
+					.queryParam("apprUserName", apprUserName)
+					.queryParam("writerName", writerName)
+					.queryParam("writerDeptName", writerDeptName)
+					.queryParam("startDate", startDate)
+					.queryParam("endDate", endDate)
+					.queryParam("offset", offsetMin)
+					.queryParam("startPoint", startPoint)
+					.queryParam("endPoint", endPoint)
+					.queryParam("type", type)
+					.queryParam("orderCell", orderCell)
+					.queryParam("orderOption", orderOption)
+					.queryParam("adminFlag", adminFlag)
+					.queryParam("checkAdmin", checkAdmin)
+					.queryParam("deptid", writerDeptId)
+//					.queryParam("isAllDept", isAllDept);
+					.queryParam("listAuthType", "M");
+		}
+
+		rest = new RestTemplate();
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		jp = new JSONParser();
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		data = new JSONObject();
+		JSONObject resultj = new JSONObject();
+		list = new JSONArray();
+		
+		if(status.equals("ok")){
+			data = (JSONObject) resultBody.get("data");
+			list = (JSONArray) data.get("list");
+			resultj.put("list", list);
+		}
+		
+		if (userInfo.getRollInfo().indexOf("c=1") != -1 || userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+			adminFlag = "true";
+			//권한부서 리스트
+			//c , k , wa -> 회사의 모든부서
+			isAllDept = "Y";
+		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+			adminFlag = "true";
+			// g -> 자신의 부서 + auth TB 확인해볼것.
+		}
+		
+		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth/hyo";
+		
+		headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		entity = new HttpEntity<>(headers);
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", userInfo.getCompanyID())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("isAllDept", isAllDept);
+		
+		rest = new RestTemplate();
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		jp = new JSONParser();
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		JSONArray deptList = new JSONArray();
+		
+		if(status.equals("ok")){
+			deptList = (JSONArray) resultBody.get("data");
+		}
+		for (int i = 0; i < deptList.size(); i++ ){
+			JSONObject dept = (JSONObject)deptList.get(i);
+			if (dept.get("deptId").equals(writerDeptId)) {
+				if (!((String) dept.get("authType")).equals("")) {
+					authFlag = (String) dept.get("authType");
+				}
+			}
+		}
+		
+		resultj.put("startDate", startDate);
+		resultj.put("endDate", endDate);
+		resultj.put("totalAtt", totalAtt);
+		resultj.put("totalPages", totalPages);
+		resultj.put("authFlag", authFlag);
+		
+		LOGGER.debug("getAnnCanAppList ended");
+		
+		return resultj;
+	}
+	
+	/**
+	 * 근태 수정 신청 상세
+	 */
+	@RequestMapping(value="/ezAttitude/annCanAppDetail.do")
+	public String annCanAppDetail(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=true)String attModId,
+			@RequestParam(required=false)String companyId,
+			@RequestParam(required=false)String applCnt,
+			@RequestParam(required=false)String adminFlag,
+			@RequestParam(required=false)String pageInfo) throws Exception {
+		LOGGER.debug("annCanAppDetail started");
+		
+		String isAllDept = "";
+		String attModDeptId = "";
+		String authFlag = "";
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		String font = ezCommonService.getTenantConfig("editorFontStyle", userInfo.getTenantId());
+		
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		if (companyId == null || companyId.equals("")) {
+			companyId = userInfo.getCompanyID();
+		}
+		
+		String deptFlag = "";
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/cancelannual/" + attModId;
+									
+		if (adminFlag != null) {
+			deptFlag = adminFlag;
+		}
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("sysLang", sysLang)
+				.queryParam("applCnt", applCnt)
+				.queryParam("offset", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject data = new JSONObject();
+		
+		if(status.equals("ok")){
+			data = (JSONObject) resultBody.get("data");			
+			attModDeptId = (String) data.get("writerDeptId");
+			model.addAttribute("data", data);
+			
+			url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/attitudereg";
+			
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("userId", userInfo.getId());
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			LOGGER.debug("status : " + status);
+			
+			JSONObject attitudeConfigVO = new JSONObject();
+			if (status.equals("ok")) {
+				attitudeConfigVO = (JSONObject) resultBody.get("data");
+				model.addAttribute("attitudeConfigVO", attitudeConfigVO);
+			}
+		}
+		
+		if ( userInfo.getRollInfo().indexOf("c=1") != -1 ||userInfo.getRollInfo().indexOf("k=1") != -1 || userInfo.getRollInfo().indexOf("a1=1") != -1) {
+			adminFlag = "true";
+			isAllDept = "Y";
+		} else if (userInfo.getRollInfo().indexOf("g=1") != -1) {
+			adminFlag = "true";
+		}
+		
+		url = gwServerUrl + "/rest/ezattitude/users/" + userInfo.getId() + "/attitude-auth";
+		
+		headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		entity = new HttpEntity<>(headers);
+		
+		builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("isAllDept", isAllDept)
+				.queryParam("userId", userInfo.getId());
+		
+		rest = new RestTemplate();
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		jp = new JSONParser();
+		
+		resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		status = resultBody.get("status").toString();
+		
+		JSONArray deptList = new JSONArray();
+		
+		if(status.equals("ok")){
+			deptList = (JSONArray) resultBody.get("data");
+		}
+		
+		for (int i = 0; i < deptList.size(); i++ ){
+			JSONObject dept = (JSONObject)deptList.get(i);
+			if (dept.get("deptId").equals(attModDeptId)) {
+				if ((String) dept.get("authType") != null && !((String) dept.get("authType")).equals("")) {
+					authFlag = (String) dept.get("authType");
+				}
+				adminFlag = "true";
+			}
+		}
+		
+		model.addAttribute("userLang", userInfo.getLang());
+		model.addAttribute("userTimeSet", offset);
+		model.addAttribute("offsetMin", offsetMin);
+		model.addAttribute("adminFlag", adminFlag);
+		model.addAttribute("userId", userInfo.getId());
+		model.addAttribute("font", font);
+		model.addAttribute("authFlag", authFlag);
+		model.addAttribute("deptFlag", deptFlag);
+		model.addAttribute("pageInfo", pageInfo);
+		model.addAttribute("companyId", companyId);
+		
+		LOGGER.debug("annCanAppDetail ended");
+		
+		return "/ezAttitude/annCanAppDetail";
+	}
+	
+	@RequestMapping(value="/ezAttitude/changeAnnCanApp.do", method= RequestMethod.POST)
+	@ResponseBody
+	public String changeAnnCanApp(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=true)String idList,
+			@RequestParam(required=true)String changeStatus,
+			@RequestParam(required=false)String companyID
+			) throws Exception {
+		
+		LOGGER.debug("changeAnnCanApp started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		if (companyID == null || companyID.equals("")) {
+			companyID = userInfo.getCompanyID();
+		}
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/cancelannual";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyID)
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("idList", idList)
+				.queryParam("changeStatus", changeStatus);
+		
+		RestTemplate rest = new RestTemplate();
+
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+
+		LOGGER.debug("changeAnnCanApp ended");
+		
+		return status;
+	}
+	
+	@RequestMapping(value="/ezAttitude/annualCanHistory.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
+	public String annualCanHistory(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response,Model model) throws Exception{
+		LOGGER.debug("annualCanHistory started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String attModId = request.getParameter("attModId");
+		String companyId = request.getParameter("companyId");
+		
+		if (companyId == null || companyId.equals("")) {
+			companyId = userInfo.getCompanyID();
+		}
+		
+		model.addAttribute("attModId", attModId);
+		model.addAttribute("companyId", companyId);
+		
+		
+		LOGGER.debug("annualCanHistory ended");
+		
+		return "/ezAttitude/annualCanHistory";
+	}
+	
+	@RequestMapping(value="/ezAttitude/getAnnCanHistory.do",method=RequestMethod.GET, produces="application/json; charset=UTF-8")
+	@ResponseBody
+	public JSONArray getAnnCanHistory(HttpServletRequest request, @CookieValue("loginCookie") String loginCookie, Locale locale, ModelMap modelMap,
+		@RequestParam(required=true)String attModId,
+		@RequestParam(required=false)String companyId) throws Exception {
+		
+		LOGGER.debug("getAnnCanHistory started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String sysLang = ezCommonService.getTenantConfig("PrimaryLang", userInfo.getTenantId());
+		
+		if (userInfo.getLang().equals(sysLang))  {
+			sysLang = "primary";
+		}
+		if (companyId == null || companyId.equals("")) {
+			companyId = userInfo.getCompanyID();
+		}
+		
+		String offset = userInfo.getOffset();
+		String offsetMin = commonUtil.getMinuteUTC(offset);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/cancelannual/" + attModId + "/history";
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("tenantId", userInfo.getTenantId())
+				.queryParam("userId", userInfo.getId())
+				.queryParam("offset", offsetMin);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONArray data = new JSONArray();
+		
+		if(status.equals("ok")){
+			data = (JSONArray) resultBody.get("data");
+		}
+		LOGGER.debug("getAnnCanHistory ended");
+		return data;
+	}
+
+	/** 
+	* 개인 연차 총/사용연차 수 (휴가계 기안시 사용)
+	*/
 	@RequestMapping(value="/ezAttitude/getAnnaulCntInfo.do" , method= RequestMethod.GET)
 	@ResponseBody
 	public JSONObject getAnnaulCntInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
@@ -3819,8 +4422,8 @@ public class EzAttitudeController {
 	}
 	
 	/**
-	 * 전자결재 연동 (휴가계 기안시 해당 휴가 근태 등록)
-	 */
+	* 전자결재 연동 (휴가계 기안시 해당 휴가 근태 등록)
+	*/
 	@RequestMapping(value="/ezAttitude/approvalGConn.do" , method= RequestMethod.POST)
 	@ResponseBody
 	public String approvalGConn(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
@@ -3830,13 +4433,12 @@ public class EzAttitudeController {
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/approvalconn";
-									
+								
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 		headers.set("x-user-host", request.getServerName());
 		
 		HttpEntity<?> entity = new HttpEntity<>(headers);
-		
 		RestTemplate rest = new RestTemplate();
 		ResponseEntity<String> result = null;
 		UriComponentsBuilder builder = null;
@@ -3855,7 +4457,6 @@ public class EzAttitudeController {
 					.queryParam("docId", request.getParameter("docId"));
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 		}		
-
 		
 		JSONParser jp = new JSONParser();
 		
@@ -3864,6 +4465,7 @@ public class EzAttitudeController {
 		String status = resultBody.get("status").toString();
 
 		LOGGER.debug("approvalGConn ended");
-		return status;
+		return status;	
 	}
+
 }

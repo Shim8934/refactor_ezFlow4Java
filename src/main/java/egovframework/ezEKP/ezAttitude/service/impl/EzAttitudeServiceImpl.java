@@ -5,13 +5,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.mail.internet.InternetAddress;
+import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -24,6 +27,7 @@ import com.ibm.icu.text.DecimalFormat;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
+import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.util.ExcelCellRef;
@@ -43,23 +47,36 @@ import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
+import egovframework.ezEKP.ezOrgan.service.EzOrganService;
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
+import egovframework.ezEKP.ezPersonal.service.EzPersonalService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.KoreanLunarCalendar;
 
 @Service("EzAttitudeService")
 public class EzAttitudeServiceImpl implements EzAttitudeService{
 	private static final Logger LOGGER = LoggerFactory.getLogger(EzAttitudeServiceImpl.class);
+	private static final int defaultAnnualHolidayCnt = 15;
 	
 	@Autowired
 	private CommonUtil commonUtil;
 	
 	@Autowired
+	private EzOrganService ezOrganService;
+	
+	@Autowired
 	private EzEmailService ezEmailService;
 	
 	@Autowired
+	private EzPersonalService ezPersonalService;
+	
+	@Autowired
 	private EzAttitudeDAO ezAttitudeDAO;
+	
+	@Autowired
+	private EgovMessageSource messageSource;
 	
 	@Resource(name = "EzOrganDAO")
 	private EzOrganDAO ezOrganDAO;
@@ -2843,12 +2860,182 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		ezAttitudeDAO.saveCancelAnnual(map);
 		/*attitude modappl수정*/
 		ezAttitudeDAO.setAttModApp(map);
-		
+		/*근태정보 가져오기*/
+		//getAttitudeInfo(attitudeId, offset, "", tenantId);
 		LOGGER.debug("saveCancelAnnual ended");
 		
 		return "success";
 	}
+
+	@Override
+	public List<Map<String, Object>> getJoinDateUserList(String yesterday) throws Exception {
+		LOGGER.debug("getJoinDateUserList started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("yesterday", yesterday);
+		
+		LOGGER.debug("getJoinDateUserList ended");
+		
+		return ezAttitudeDAO.getJoinDateUserList(map);
+	}
 	
+	@Override
+	public void updateAnnualHoliday(Map<String, Object> map) throws Exception {
+		LOGGER.debug("updateAnnualHoliday started");
+		
+		int defaultAnnualHolidayCnt = 15;
+		
+			int workingDayCnt = checkHoliday((String)map.get("joinDate"), commonUtil.getTodayUTCTime("yyyy-MM-dd"), "1", "S907001", 1).size();
+			int attendanceDay = ezAttitudeDAO.getAttendanceDay(map);
+			int attendanceRate = attendanceDay / workingDayCnt * 100;
+			
+			if (attendanceRate >= 80) {
+				map.put("holidayCnt", defaultAnnualHolidayCnt);
+				map.put("attendanceRateCondition","1");
+			} else {
+				int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
+				map.put("holidayCnt", monthlyHolidayCnt);
+				map.put("attendanceRateCondition","2");
+			}
+		
+		ezAttitudeDAO.updateAnnualHoliday(map);
+
+		LOGGER.debug("updateAnnualHoliday ended");
+	}
+	
+	@Override
+	public void updateExceedAnnualHoliday(Map<String,Object> map) throws Exception {
+		LOGGER.debug("updateExceedAnnualHoliday started");
+		
+		int workingMonthCnt = Integer.parseInt((String)map.get("workingmonthcnt"));
+		int annualHolidayCnt = defaultAnnualHolidayCnt + (int) (workingMonthCnt / 12 - 1) / 2;
+
+		// 입사한지 2년이 됐을 때 남아있는 월차는 모두 0으로 초기화 해준다.
+		map.put("holidayCnt", 0);
+		map.put("attendanceRateCondition","2");
+		ezAttitudeDAO.updateAnnualHoliday(map);
+		
+		
+		map.put("holidayCnt", annualHolidayCnt);
+		map.put("attendanceRateCondition","1");
+		
+		ezAttitudeDAO.updateAnnualHoliday(map);
+
+		LOGGER.debug("updateExceedAnnualHoliday ended");
+	}
+	
+	@Override
+	public void updateFiscalYearAnnualHoliday(Map<String, Object> map) throws Exception {
+		LOGGER.debug("updateFiscalYearAnnualHoliday started");
+		
+		List<Map<String, Object>> list = ezAttitudeDAO.getAttitudeJoinDateUserList();
+		
+		for (Map<String, Object> m : list) {
+			int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
+			if (workingMonthCnt < 12) {
+			
+				String date1 = (String)m.get("joinDate");
+				String date2 = (String)map.get("initialDate");
+				char roundOffRule = (char)map.get("roundOffRule");
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+				Date joinDate = sdf.parse(date1);
+				Date initialDate = sdf.parse(date2);
+				
+				long calDate = joinDate.getTime() - initialDate.getTime();
+				long calDatetoDays = Math.abs(calDate / (24 * 60 * 60 * 1000)); 
+				double annualHolidayCnt = Math.floor((15.0 * calDatetoDays / 365.0 * 10 )) / 10.0;
+				
+				if (roundOffRule == '0') {
+					double demicalHoliday = Math.round(((annualHolidayCnt % 1) * 10) ) / 10.0;
+					if (demicalHoliday > 0.5) {
+						annualHolidayCnt = (int)Math.round(annualHolidayCnt);
+					} else if (demicalHoliday > 0.0 && demicalHoliday < 0.5) {
+						annualHolidayCnt = (int)annualHolidayCnt + 0.5;
+					}
+					
+				} else {
+					annualHolidayCnt = (int)Math.ceil(annualHolidayCnt);
+				}
+				
+				m.put("holidayCnt", annualHolidayCnt);
+				m.put("attendanceRateCondition","1");
+				
+				ezAttitudeDAO.updateAnnualHoliday(m);
+			} else {
+				int annualHolidayCnt = defaultAnnualHolidayCnt + (int)(workingMonthCnt / 12 - 1) / 2;
+				
+				if (workingMonthCnt > 24) {
+					m.put("holidayCnt", 0);
+					m.put("attendanceRateCondition","2");
+					ezAttitudeDAO.updateAnnualHoliday(m);
+				}
+			
+				m.put("holidayCnt", annualHolidayCnt);
+				m.put("attendanceRateCondition","1");
+				
+				ezAttitudeDAO.updateAnnualHoliday(m);
+			}
+		}
+		LOGGER.debug("updateFiscalYearAnnualHoliday ended");
+		
+	}
+	
+	@Override
+	public void updateMonthlyHoliday(Map<String, Object> map) throws Exception {
+		LOGGER.debug("updateMonthlyHoliday started");
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		String today = sdf.format(new Date());
+		Date setDate = sdf.parse(today);
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(setDate);
+		cal.add(Calendar.DATE, -1);
+		String oneDayAgo = sdf.format(cal.getTime());
+		cal.add(Calendar.MONTH, -1);
+		String oneMonthAgo = sdf.format(cal.getTime());
+		
+		map.put("oneMonthAgo",oneMonthAgo);
+		map.put("oneDayAgo", oneDayAgo);
+		
+		int userAbsentCnt = ezAttitudeDAO.checkAbsentDay(map);
+		/*
+		 * userAttendanceCnt = 전달의 소정근로일수
+		 * monthWorkingDayCnt =  전달의 사용자 실제 출근일 수
+		 * */
+		int userAttendanceCnt = checkHoliday(oneMonthAgo, oneDayAgo, "1", "S907001", 1).size();
+		int monthWorkingDayCnt = ezAttitudeDAO.getAttendanceDay(map);
+		
+		// 결근일과 실제사용자 출근일과 출근해야하는 날을 비교하여 월차 생성
+		// 전달에 결근일이 하루라도 있으면 개근이 아니므로 월차가 생성되지 않는다.
+		if (userAbsentCnt == 0 && (userAttendanceCnt == monthWorkingDayCnt)) {
+			int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
+			map.put("holidayCnt", monthlyHolidayCnt + 1);
+			map.put("attendanceRateCondition","2");
+			ezAttitudeDAO.updateAnnualHoliday(map);
+		}
+	
+		LOGGER.debug("updateMonthlyHoliday ended");
+	
+	}
+	
+	@Override
+	public void extinctionMonthlyHoliday(Map<String, Object> map) throws Exception {
+		LOGGER.debug("extinctionMonthlyHoliday started");
+		
+		int userMonthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
+		int workingMonthCnt = Integer.parseInt((String)map.get("workingMonthCnt"));
+		
+		if (userMonthlyHolidayCnt >= workingMonthCnt - (workingMonthCnt - 12 ) * 2) {
+			int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
+			map.put("holidayCnt", monthlyHolidayCnt - 1);
+			map.put("attendanceRateCondition","2");
+			ezAttitudeDAO.updateAnnualHoliday(map);
+		}
+		
+		LOGGER.debug("extinctionMonthlyHoliday ended");
+	}
+
 	@Override
 	public int deleteCancelAnnual(String companyId, int tenantId, String attitudeId) throws Exception {
 		LOGGER.debug("deleteCancelAnnual started");
@@ -2883,7 +3070,270 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		return data;
 	}
-
+	
+	@Override
+	public String sendMailToReference(AttitudeVO vo, String attitudeId, String idList, HttpServletRequest request, String loginCookie, LoginVO userInfo, String orgCompanyID, int tenantID) throws Exception {
+		
+		LOGGER.debug("sendMailToReference started.");
+		
+		String result = "";
+		
+		InternetAddress from = new InternetAddress();
+		from.setPersonal(userInfo.getDisplayName(), "UTF-8");
+		from.setAddress(userInfo.getEmail());
+		
+		String[] ids = idList.split(",");
+		
+		InternetAddress[] to = new InternetAddress[ids.length];
+		
+		for(int i = 0; i < ids.length; i++) {
+			String targetUserID = ids[i];
+			String targetUserName = "";
+			String targetUserEmail = "";
+			String targetUserDeptID = "";
+			String targetUserCompanyID = "";
+			
+			targetUserEmail = ezOrganService.getPropertyValue(targetUserID, "mail", tenantID);
+			targetUserName = ezOrganService.getPropertyValue(targetUserID, "displayName", tenantID);
+			
+			InternetAddress tempTo = new InternetAddress();
+			tempTo.setPersonal(targetUserName, "UTF-8");
+			tempTo.setAddress(targetUserEmail);
+			
+			LOGGER.debug("target : " + targetUserID + "/" + targetUserName + "/" + targetUserEmail);
+			
+			to[i] = tempTo;
+			
+		}
+		
+		String attitudeDate = "";
+		if(vo.getTypeId().equals("A11")) {
+			attitudeDate = vo.getStartDate().substring(0, 10) + "~" + vo.getEndDate().substring(0, 10);
+		} else  {
+			attitudeDate = vo.getStartDate().substring(0, 10);
+		}
+		
+    	String Subject = "";
+    	StringBuffer bodyContent = new StringBuffer();
+    	
+    	Subject = "[연차취소신청알림]" + " " + attitudeDate; //[연차취소신청알림] + attitudeDate
+    	
+    	bodyContent.append("<DIV id=\"msgBody\" style=\"font-size: 13px; font-family: " + messageSource.getMessage("main.t246", userInfo.getLocale()) + ";\" name=\"urn:schemas:httpmail:textdescription\">");
+    	bodyContent.append("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + "기간" + ": " + attitudeDate + "</span><br>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + "유형" + ": " + vo.getTypeName() + "</span><br>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + "신청자" + ": " + userInfo.getDisplayName() + "</span><br>");
+    	bodyContent.append("<span style='font-size:13pt;'>" + "신청일" + ": " + commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false) + "</span><br>");
+    	bodyContent.append("</td></tr></table></DIV>");
+    	
+		String xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
+    	Document notiDoc = commonUtil.convertStringToDocument(xmlApprovNotiConfig);
+		String saveSendBoxFlag = notiDoc.getElementsByTagName("SAVEMAILFLAG").item(0).getTextContent().trim();
+		
+		boolean flag;
+    	if (saveSendBoxFlag.equals("Y")) {
+    		flag = true;
+    	} else {
+    		flag = false;
+    	}
+    	
+    	ezEmailService.sendMail(loginCookie, from, to, null, null, Subject, bodyContent.toString(), flag);
+		
+    	LOGGER.debug("sendMailToReference ended.");
+		return result;
+	}
+	
+	@Override
+	public int getUsersCancelAnnCount(String companyId, int tenantId, String userId, String startDate, String endDate,
+			String apprUserName, String writerName , String writerDeptName, String lang, String offset, String type, String deptId, List<String> deptIdList,String adminFlag, String checkAdmin) throws Exception {
+		LOGGER.debug("getUsersCancelAnnCount started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		LOGGER.debug("checkAdmin : " + checkAdmin);
+		LOGGER.debug("adminFlag : " + adminFlag);
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("searchDeptId", deptId);
+		map.put("deptIdList", deptIdList);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("apprUserName", apprUserName);
+		map.put("writerName", writerName);
+		map.put("writerDeptName", writerDeptName);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
+		map.put("offset", offset);
+		map.put("type", type);
+		
+		if (adminFlag.equals("false")) {
+			map.put("userId", userId);
+		}
+		
+		int attAppListCount = ezAttitudeDAO.getUsersCancelAnnCount(map);
+		
+		LOGGER.debug("getUsersCancelAnnCount ended");
+		
+		return attAppListCount;
+	}
+	
+	@Override
+	public List<AttitudeApplicationVO> getUsersCancelAnn(String companyId, int tenantId,
+			String userId, String startDate, String endDate, String apprUserName, String writerName, String writerDeptName, String lang, 
+			String offset,String startPoint, String endPoint, String type, String order, String adminFlag, String checkAdmin, String deptId, List<String> deptIdList) throws Exception {
+		LOGGER.debug("getUsersCancelAnn started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("searchDeptId", deptId);
+		map.put("deptIdList", deptIdList);
+		map.put("startDate", startDate);
+		map.put("endDate", endDate);
+		map.put("apprUserName", apprUserName);
+		map.put("writerName", writerName);
+		map.put("writerDeptName", writerDeptName);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
+		map.put("offset", offset);
+		map.put("startPoint", startPoint);
+		map.put("endPoint", endPoint);
+		map.put("type", type);
+		if (startPoint != null && endPoint != null && !startPoint.equals("") && !endPoint.equals("")) {
+			map.put("startRow", Integer.valueOf(startPoint) + 1);
+			map.put("endRow", Integer.valueOf(startPoint) + Integer.valueOf(endPoint));
+		}
+		
+		if (adminFlag.equals("false")){
+			map.put("userId", userId);
+		}
+		if (order !=null) {
+			map.put("order", order.trim());
+		}
+		
+		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.getUsersCancelAnn(map); 
+		
+		LOGGER.debug("getUsersCancelAnn ended");
+		
+		return attAppList;
+	}
+	
+	@Override
+	public AttitudeApplicationVO annCanAppDetail(String attModId, String offset, String applCnt, String lang, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("annCanAppDetail started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("attModId", attModId);
+		map.put("offset", offset);
+		map.put("applCnt", applCnt);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
+		
+		LOGGER.debug("annCanAppDetail ended");
+		
+		return ezAttitudeDAO.annCanAppDetail(map);
+	}
+	
+	@Override
+	public void changeUsersCancelAnn(String companyId, int tenantId, String ids, String changeStatus, String userId, String userName, String userName2, String offSet) throws Exception {
+		LOGGER.debug("changeUsersCancelAnn started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String offsetMin = commonUtil.getMinuteUTC(offSet);
+		
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("ids", ids.split("_")[0]);
+		map.put("attModId", ids.split("_")[0]);
+		map.put("attitudeId", ids.split("_")[0]);
+		
+		if (ids.split("_").length > 1) {
+			map.put("applCnt", ids.split("_")[1]);
+		}
+		map.put("changeStatus", changeStatus);
+		map.put("offsetMin", offsetMin);
+		map.put("offset", offsetMin);
+		map.put("apprDate",commonUtil.getTodayUTCTime(""));
+		map.put("userId",userId);
+		map.put("displayName",userName);
+		map.put("displayName2",userName2);
+		
+		String apprStatus = ezAttitudeDAO.checkCanApplStatus(map);
+		//신청상태가 아니면 return
+		if (apprStatus != null && !apprStatus.equals("0")) {
+			return;
+		}
+		
+		ezAttitudeDAO.changeUsersCancelAnn(map);
+		
+		//승인일 때 사용자의 연차일정 삭제
+		if(changeStatus.equals("appr")){
+			map.put("modappl", 5);
+			ezAttitudeDAO.setAttModApp(map);
+			
+		} else if (changeStatus.equals("ret")) {
+			int modAppl = ezAttitudeDAO.getAttModApp(map);
+			
+			if (modAppl == 1) {
+				map.put("modappl", 4);
+			} else if (modAppl == 2) {
+				map.put("modappl", 3);
+			}
+			ezAttitudeDAO.setAttModApp(map);
+		}
+		LOGGER.debug("changeUsersCancelAnn ended.");
+	}
+	
+	@Override
+	public List<AttitudeApplicationVO> getAnnCanHistory(String attModId, String userId, String offset, String lang, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getAnnCanHistory started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		if (attModId.indexOf("_") > 0) {
+			attModId = attModId.split("_")[0];
+		}
+		map.put("attModId", attModId);
+		map.put("offset", offset);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
+		
+		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.getAnnCanHistory(map); 
+		
+		LOGGER.debug("getAnnCanHistory ended");
+		return attAppList;
+	}
+	
+	@Override
+	public void saveJoinDate(Map<String, Object> map) throws Exception {
+		LOGGER.debug("saveJoinDate started");
+		
+		String mode = (String) map.get("mode");
+		
+		if(mode.equals("new")) {
+			ezAttitudeDAO.saveJoinDate(map);
+		} else {
+			ezAttitudeDAO.modifyJoinDate(map);
+		}
+		
+		LOGGER.debug("saveJoinDate ended");
+	}
+	
 	@Override
 	public int approvalGConn(String userId, String deptId, String content, String attitudeTypeList, String startDateList, String endDateList, String docId, String offset, String companyId, int tenantId) throws Exception {
 		String[] attitudeTypeList2 = attitudeTypeList.split(",");
@@ -2923,7 +3373,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			//연동테이블에 insert
 			insertApprovalGConnInfo(String.valueOf(attitudeId), userId, docId, aprStatus, companyId, tenantId);
 		}
-		
 		return 0;
 	}
 	
