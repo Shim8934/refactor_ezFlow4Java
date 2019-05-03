@@ -191,7 +191,7 @@
 		        fd2.append("thumbnail", thumbnail);
 		        
 		        xhr2 = new XMLHttpRequest();
-	            xhr2.open("POST", "/ezBoard/boardMovieThumb.do?thumbnailID=" + document.getElementsByName('movieView')[0].id + "&fileLimit=" + AttachLimit, false);
+	            xhr2.open("POST", "/ezBoard/boardMovieThumb.do?thumbnailID=" + encodeURIComponent(document.getElementsByName('movieView')[0].id) + "&fileLimit=" + AttachLimit, false);
 	            xhr2.send(fd2);
 	            
 			    newID = "{" + GetGUID() + "}";

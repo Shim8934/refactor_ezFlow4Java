@@ -442,6 +442,9 @@
 							alert("<spring:message code='ezWebFolder.t300' />");
 							break;
 						case 4:
+							alert("<spring:message code='ezWebFolder.t250' />");
+							break;
+						case 5:
 							alert("<spring:message code='ezWebFolder.t243' />");
 							break;
 						case 8:

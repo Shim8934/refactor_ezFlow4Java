@@ -393,8 +393,8 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			}
 			
 			if (resmode.equals("copy")) {
-				double folderSize           = ezWebFolderAdminService.getFolderSize(folder.getFolderPath(), tenantId);
-				UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
+				double folderSize       = ezWebFolderAdminService.getFolderSize(folder.getFolderPath(), tenantId);
+				UserCapacityVO userCapacity = ezWebFolderAdminService.getCapacity(uppId, userInfo.getPrimary(), userInfo.getTenantId());
 				
 				double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
 				double totalCapa = Double.parseDouble(userCapacity.getTotalCapacity()) * 1073741824;
@@ -1059,7 +1059,6 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 			
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
 			int tenantId = userInfo.getTenantId();
-			String primary = userInfo.getPrimary();
 			String realPath  = request.getServletContext().getRealPath("");
 			
 			if (!isWebfolderAdmin(userInfo)){
@@ -1086,7 +1085,7 @@ public class EzWebFolderGWController_y extends EgovFileMngUtil {
 				return result;
 			}
 			
-			UserCapacityVO userCapacity = ezWebFolderAdminService.getUserCapacity(userId, primary, userInfo.getTenantId());
+			UserCapacityVO userCapacity = ezWebFolderAdminService.getCapacity(folderId, userInfo.getPrimary(), userInfo.getTenantId());
 			LOGGER.debug("userCapacity!");
 			
 			double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());

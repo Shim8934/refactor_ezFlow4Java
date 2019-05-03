@@ -484,8 +484,8 @@ public class EzApprovalGAdminDAO extends EgovAbstractDAO{
 		update("EzApprovalGAdminDAO.changeSpecialContSN3", vo);
 	}
 
-	public String checkContainer(Map<String, Object> map) throws Exception {
-		return (String) select("EzApprovalGAdminDAO.checkContainer", map);
+	public int checkContainer(Map<String, Object> map) throws Exception {
+		return (int) select("EzApprovalGAdminDAO.checkContainer", map);
 	}
 
 	@SuppressWarnings("unchecked")

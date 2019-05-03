@@ -513,6 +513,10 @@ public class EzWebFolderController_m {
 			if (resultBody.containsKey("duplicateInfoArray")) {
 				model.addAttribute("duplicateInfoArray", resultBody.get("duplicateInfoArray"));
 			}
+			
+			if (resultBody.containsKey("hasExceededCapacities")) {
+				model.addAttribute("hasExceededCapacities", resultBody.get("hasExceededCapacities"));
+			}
 		}else {
 			model.addAttribute("reason", resultBody.get("reason").toString());
 			model.addAttribute("status","error");

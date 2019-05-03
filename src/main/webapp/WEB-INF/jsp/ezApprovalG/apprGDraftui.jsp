@@ -433,7 +433,8 @@
 		    function process_AfterOpen_Complete(Ans) {
 		        DivPopUpHidden();
 		        if (Ans) {
-		            openOpinionUI("Display");
+		            //openOpinionUI("Display");
+		        	openOpinionUI_New("");
 		        }
 		    }
 		    function setAutoProperty() {
@@ -1034,7 +1035,8 @@
 		        var ret = openAaprDocAttachUI();
 		    }
 		    function btnOpinion_onclick() {
-		        var ret = openOpinionUI("N");
+		        //var ret = openOpinionUI("N");
+		    	openOpinionUI_New("");
 		    }
 		    function btnSave_onclick() {
 		        if (message.Get_EditorBodyHTML() == "") {
@@ -1106,6 +1108,11 @@
 		                window.opener.Refresh_Window();
 		        }
 		        catch (e)
+		        { }
+		        try {
+		        	if (bAttachProcess == false)
+		        		window.opener.parent.frames["right"].openergetDocInfo();
+		        } catch (e) 
 		        { }
 		        try {
 		            bAttachProcess = true;

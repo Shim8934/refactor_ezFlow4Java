@@ -881,4 +881,78 @@
 		ADD 
 			COMPANYID NVARCHAR2(20) DEFAULT NULL
 	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderTotalLimit">
+		<![CDATA[
+			SELECT
+				COMPANY_TOTAL_LIMIT, DEPARTMENT_TOTAL_LIMIT, USER_TOTAL_LIMIT
+			FROM
+				TBL_WEBFOLDER_CONFIG
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.renameWebfolderConfigTotalLimit">
+		ALTER TABLE
+			TBL_WEBFOLDER_CONFIG
+		RENAME
+			COLUMN TOTAL_LIMIT TO USER_TOTAL_LIMIT
+	</statement>
+	
+	<statement id="EzCommonDAO.addWebfolderConfigTotalLimit">
+		ALTER TABLE
+			TBL_WEBFOLDER_CONFIG
+		ADD
+			(COMPANY_TOTAL_LIMIT VARCHAR2(100) DEFAULT NULL,
+			DEPARTMENT_TOTAL_LIMIT VARCHAR2(100) DEFAULT NULL)
+	</statement>
+	
+	<select id="EzCommonDAO.checkWebfolderUserCnType">
+		<![CDATA[
+			SELECT
+				TYPE
+			FROM
+				TBL_WEBFOLDER_USER
+			WHERE
+				ROWNUM <= 1
+		]]>
+	</select>
+	
+	<statement id="EzCommonDAO.addWebfolderUserCnTypeColumn">
+		ALTER TABLE
+			TBL_WEBFOLDER_USER
+		ADD
+			TYPE VARCHAR2(50)
+	</statement>
+	
+	<update id="EzCommonDAO.updateWebfolderUserCnType">
+		UPDATE
+			TBL_WEBFOLDER_USER
+		SET
+			TYPE = 'U'
+	</update>
+	
+	<statement id="EzCommonDAO.modifyWebfolderUserCnTypeColumn">
+		ALTER TABLE
+			TBL_WEBFOLDER_USER
+		MODIFY
+			TYPE VARCHAR2(50) NOT NULL
+	</statement>
+	
+	<statement id="EzCommonDAO.dropWebfolderUserPrimaryKey">
+		ALTER TABLE
+			TBL_WEBFOLDER_USER
+		DROP
+			PRIMARY KEY
+	</statement>
+	
+	<statement id="EzCommonDAO.addWebfolderUserPrimaryKey">
+		ALTER TABLE
+			TBL_WEBFOLDER_USER
+		ADD
+			PRIMARY KEY (CN, TENANT_ID, TYPE)
+		ENABLE
+	</statement>
+	
 </sqlMap>

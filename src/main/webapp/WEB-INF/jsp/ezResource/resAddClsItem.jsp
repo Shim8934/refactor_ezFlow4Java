@@ -22,6 +22,7 @@
 			var displayName = "<c:out value='${displayName}' />";
 			var title = "<c:out value='${title}'/>";
 			var res_owner = { "flag" : new Array(), "ownerId": new Array(), "ownerDept" : new Array(), "ownerName" : new Array(), "ownerName1" : new Array(), "ownerDeptName" : new Array(), "brdID" : new Array() };
+			var attachFileNameMaxLength = Number("${attachFileNameMaxLength}");
 			
 			window.onload = function () {
 				document.getElementById("Brd_NM").focus();
@@ -31,7 +32,15 @@
 				res_owner["ownerName"][0] = displayName;
 				res_owner["ownerName1"][0] = title;
 				res_owner["ownerDeptName"][0] = deptName;
+				
+				$("body").on("dragenter dragover drop", function(e) {
+					e.preventDefault();
+				});
 			}
+			
+			window.onbeforeunload = function () {
+				btnClose_Click();
+	    	} 
 
 			function btnSave_Click() {
 				
@@ -131,6 +140,10 @@
 				
 				
 				createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("Brd_NM2").value);
+				
+				// 이미지 정보 추가
+				createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("hdnfileNM1").value);
+				createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("hdnfileNM2").value);
 
 				//createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("subOwner1").value);
 				xmlHttp.open("Post", "/ezResource/callAddClsItem.do", false);
@@ -159,6 +172,8 @@
 			}
 
 			function btnClose_Click() {
+				btnfiledel(1);
+				btnfiledel(2);
 				window.close();
 			}
 
@@ -251,6 +266,161 @@
 			                }
 			            }).call(this);
 			}
+			
+			function btnfileup() {
+		        document.getElementById("file1").click();
+		    }
+			
+			function btnfileup2() {
+		        document.getElementById("file2").click();
+		    }
+			
+			var xhr = new XMLHttpRequest();
+			function btn_AttachAdd_onclick() {
+				if(document.getElementById("hdnfileNM1").value != "") {
+					btnfiledel(1);
+				}
+				var extension = document.getElementById("file1").value;
+	            extension = extension.substring(extension.lastIndexOf(".") + 1, extension.length);
+				var check = false;
+		        check = compareExtension(check, extension);
+		        
+		        // 첨부파일 확장자 체크(이미지만 가능)
+		        if (!check) {
+		        	document.getElementById("file1").value = "";
+		        	alert("<spring:message code='ezCommunity.lhj03'/>");
+		        	return;
+		        }
+		        
+		        var filelist = document.getElementById("file1").files;
+		        
+		    	// 이미지 크기 2MB 제한 체크
+		        var filesize = parseInt(filelist[0].size);
+	            if (filesize / 1024 / 1024 > 2) {	
+	                alert(strLang167);
+	                return;
+	            } 
+		       
+	            var fd = new FormData();
+	            
+	            // 파일명 100자 이내 체크
+	            var fnl = filelist[0].name.length;
+	            if (fnl > attachFileNameMaxLength) {
+	            	alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+	        		isfileup = false;
+	        		document.getElementById("file1").value = "";
+	        		
+	        		return;
+	            }
+		        
+	            fd.append("fileToUpload", filelist[0]);
+
+	            xhr.addEventListener("load", uploadComplete, false);
+	            xhr.open("POST", "/ezResource/uploadItemAttach.do");
+	            xhr.send(fd); 
+			}
+			
+			var xhr2 = new XMLHttpRequest();
+			function btn_AttachAdd_onclick2() {
+				if(document.getElementById("hdnfileNM2").value != "") {
+					btnfiledel(2);
+				}
+				var extension = document.getElementById("file2").value;
+	            extension = extension.substring(extension.lastIndexOf(".") + 1, extension.length);
+				var check = false;
+		        check = compareExtension(check, extension);
+		        
+		        // 첨부파일 확장자 체크(이미지만 가능)
+		        if (!check) {
+		        	document.getElementById("file2").value = "";
+		        	alert("<spring:message code='ezCommunity.lhj03'/>");
+		        	return;
+		        }
+		        
+		        var filelist = document.getElementById("file2").files;
+		        
+		    	// 이미지 크기 2MB 제한 체크
+		        var filesize = parseInt(filelist[0].size);
+	            if (filesize / 1024 / 1024 > 2) {	
+	                alert(strLang167);
+	                return;
+	            } 
+		       
+	            var fd = new FormData();
+	            
+	            // 파일명 100자 이내 체크
+	            var fnl = filelist[0].name.length;
+	            if (fnl > attachFileNameMaxLength) {
+	            	alert("<spring:message code='main.jjh08' />" + attachFileNameMaxLength + "<spring:message code='main.lhm03' />");
+	        		isfileup = false;
+	        		document.getElementById("file2").value = "";
+	        		
+	        		return;
+	            }
+		        
+	            fd.append("fileToUpload", filelist[0]);
+
+	            xhr2.addEventListener("load", uploadComplete2, false);
+	            xhr2.open("POST", "/ezResource/uploadItemAttach.do");
+	            xhr2.send(fd); 
+			}
+			
+			function uploadComplete() {
+	            if (CrossYN()) {
+	                document.getElementById("file1").value = "";
+	            }
+	            else {
+	                document.getElementById("file1").type = "text";
+	                document.getElementById("file1").type = "file";
+	            }
+	            var xml = loadXMLString(xhr.responseText);
+
+	            preview1.value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
+	            preview1.src = "/ezResource/getResourceThumbnailInfo.do?mode=temp&fileName="
+	            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
+	            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
+
+	            document.getElementById("hdnfileNM1").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]) + getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
+			}
+			
+			function uploadComplete2() {
+	            if (CrossYN()) {
+	                document.getElementById("file2").value = "";
+	            }
+	            else {
+	                document.getElementById("file2").type = "text";
+	                document.getElementById("file2").type = "file";
+	            }
+	            var xml = loadXMLString(xhr2.responseText);
+
+	            preview2.value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
+	            preview2.src = "/ezResource/getResourceThumbnailInfo.do?mode=temp&fileName="
+            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]))
+            		+encodeURI(getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]));
+
+	            document.getElementById("hdnfileNM2").value = getNodeText(SelectNodes(xml, "ROOT/NODES/DATA")[0]) + getNodeText(SelectNodes(xml, "ROOT/NODES/DATA2")[0]);
+			}
+			
+			function btnfiledel(mode) {
+				var file = document.getElementById("hdnfileNM" + mode).value;
+				
+				if(file !=  "") {
+					$.ajax({
+						async : false,
+						url : '/ezResource/tempUploadFileDelete.do',
+		                type : 'POST',
+		                dataType : 'text',
+		                data : {
+							fileName : file
+		                },
+		                success: function() {
+		                	document.getElementById("preview" + mode).src = "/images/default_pic.jpg";
+		                	document.getElementById("hdnfileNM" + mode).value = "";
+		                }
+					});
+				}
+			}
+			
 		</script>
 	</head>
 	<body class="popup" style="height:100%; overflow:hidden;">
@@ -333,7 +503,37 @@
             						<spring:message code="ezResource.t157"/>
             					</td>
         					</tr>
+        					<tr>
+        					<th><spring:message code="ezPortal.t202"/>1</th>
+          					<td colspan="3" >
+          						<img id="preview1" name="preview" src="/images/default_pic.jpg" width="119" height="128" alt="" border="0">
+           						<a class="imgbtn imgbck" style="float:right; margin-top:5px; margin-right:5px">
+           							<span onClick="btnfiledel('1')"><spring:message code="ezPortal.t990008"/></span>
+           						</a>
+           						<a class="imgbtn imgbck" style="float:right; margin-top:5px; margin-right:10px">
+           							<span onClick="btnfileup()"><spring:message code="ezPersonal.t20003"/></span>
+           						</a>
+            				</td>
+            			</tr>
+            			<tr>
+        					<th><spring:message code="ezPortal.t202"/>2</th>
+          					<td colspan="3" >
+          						<img id="preview2"  name="preview" src="/images/default_pic.jpg" width="119" height="128" alt="" border="0">
+           						<a class="imgbtn imgbck" style="float:right; margin-top:5px; margin-right:5px">
+           							<span onClick="btnfiledel('2')"><spring:message code="ezPortal.t990008"/></span>
+           						</a>
+           						<a class="imgbtn imgbck" style="float:right; margin-top:5px; margin-right:10px">
+           							<span onClick="btnfileup2()"><spring:message code="ezPersonal.t20003"/></span>
+           						</a>
+            				</td>
+            			</tr>
 					</table>
+					<form method="post" id="form" name="form" enctype="multipart/form-data" action="/ezResource/uploadItemAttach.do" style="display:none">
+						<input type="file" name="file1" id="file1" onchange="btn_AttachAdd_onclick()" style="display:none" accept="image/*"/>
+      					<input type="file" name="file2" id="file2" onchange="btn_AttachAdd_onclick2()" style="display:none" accept="image/*"/>
+      				</form>
+      				<input type="hidden" id="hdnfileNM1" name="hdnfileNM1" value="">
+					<input type="hidden" id="hdnfileNM2" name="hdnfileNM2" value="">
       				<br>
       				<h2 style="font-size:12px;margin-bottom:8px;"><spring:message code="ezResource.t158"/></h2>
 				</td>
