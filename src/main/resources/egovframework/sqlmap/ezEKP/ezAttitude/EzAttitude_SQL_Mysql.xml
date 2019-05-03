@@ -2122,29 +2122,6 @@
 					          		ATTITUDE_ID = #attModId#)t)
 		]]>
 	</delete>
-<<<<<<< HEAD
-	<insert id="ezAttitudeDAO.insertApprovalGConnInfo" parameterClass="Map">
-	<![CDATA[
-		INSERT INTO tbl_attitude_apr_conn (attitude_id,  user_Id, annual_doc_id, annual_appr_status, company_Id, tenant_Id)
-		VALUES(#attitudeId#, #userId#, #docId#, #aprStatus#, #companyId#, #tenantId#)
-	]]>
-	</insert>
-	
-	<update id="ezAttitudeDAO.updateApprovalGConnInfo" parameterClass="Map">
-	<![CDATA[
-		UPDATE 
-			tbl_attitude_apr_conn
-		SET 
-			annual_appr_status = #aprStatus#
-		WHERE 	          						
-			TENANT_ID = #tenantId#
-	    AND
-       		COMPANY_ID = #companyId#
-       	AND
-       		annual_doc_id = #docId#
-	]]>
-	</update>
-=======
 	
 	<select id="ezAttitudeDAO.getUsersCancelAnnCount" parameterClass="Map" resultClass="Integer">
 		<![CDATA[
@@ -2339,5 +2316,26 @@
 				A.APPR_DATE DESC, A.APPL_CNT DESC
 		]]>
 	</select>
->>>>>>> fc8f895973866472ad1dc073d7ef629728991072
+	
+	<insert id="ezAttitudeDAO.insertApprovalGConnInfo" parameterClass="Map">
+	<![CDATA[
+		INSERT INTO tbl_attitude_apr_conn (attitude_id,  user_Id, annual_doc_id, annual_appr_status, company_Id, tenant_Id)
+		VALUES(#attitudeId#, #userId#, #docId#, #aprStatus#, #companyId#, #tenantId#)
+	]]>
+	</insert>
+	
+	<update id="ezAttitudeDAO.updateApprovalGConnInfo" parameterClass="Map">
+	<![CDATA[
+		UPDATE 
+			tbl_attitude_apr_conn
+		SET 
+			annual_appr_status = #aprStatus#
+		WHERE 	          						
+			TENANT_ID = #tenantId#
+	    AND
+       		COMPANY_ID = #companyId#
+       	AND
+       		annual_doc_id = #docId#
+	]]>
+	</update>
 </sqlMap>
