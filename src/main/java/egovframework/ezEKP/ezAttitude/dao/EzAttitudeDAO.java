@@ -424,4 +424,12 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
     public void delCanAppl(Map<String, Object> map) throws Exception {
 		delete("ezAttitudeDAO.delCanAppl", map);
 	}
+
+	public void insertApprovalGConnInfo(Map<String, Object> map) {
+		insert("ezAttitudeDAO.insertApprovalGConnInfo", map);
+	}
+
+	public void updateApprovalGConnInfo(Map<String, Object> map) {
+		update("ezAttitudeDAO.updateApprovalGConnInfo", map);
+	}
 }

@@ -54,6 +54,7 @@ import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
@@ -3761,6 +3762,108 @@ public class EzAttitudeController {
 		String status = resultBody.get("status").toString();
 
 		LOGGER.debug("deleteCancelAnnual ended");
+		return status;
+	}
+	
+	/**
+	 * 개인 연차 총/사용연차 수 (휴가계 기안시 사용)
+	 */
+	@RequestMapping(value="/ezAttitude/getAnnaulCntInfo.do" , method= RequestMethod.GET)
+	@ResponseBody
+	public JSONObject getAnnaulCntInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model,
+			@RequestParam(required=false)String attitudeId) throws Exception {
+		LOGGER.debug("getAnnaulCntInfo started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		String year = request.getParameter("year");
+		
+		if (year == null || year == "") {
+			year = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split("-")[0];
+		}
+		
+		JSONObject vo = new JSONObject();
+		if (userId != null) {
+			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+			String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/annualcnt";
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId)
+					.queryParam("userId", userId)
+					.queryParam("year", year)
+					.queryParam("offsetMin", offsetMin);
+			
+			RestTemplate rest = new RestTemplate();
+			
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			String status = resultBody.get("status").toString();
+			
+			if (status.equals("ok")) {		
+				vo = (JSONObject) resultBody.get("data");
+			}
+			
+		}	
+		LOGGER.debug("getAnnaulCntInfo ended");
+		return vo;
+	}
+	
+	/**
+	 * 전자결재 연동 (휴가계 기안시 해당 휴가 근태 등록)
+	 */
+	@RequestMapping(value="/ezAttitude/approvalGConn.do" , method= RequestMethod.POST)
+	@ResponseBody
+	public String approvalGConn(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("approvalGConn started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/approvalconn";
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		RestTemplate rest = new RestTemplate();
+		ResponseEntity<String> result = null;
+		UriComponentsBuilder builder = null;
+		
+		if (request.getParameter("status").equals("0")) {
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("content", request.getParameter("content"))
+					.queryParam("attitudeTypeList", request.getParameter("attitudeTypeList"))
+					.queryParam("startDateList", request.getParameter("startDateList"))
+					.queryParam("endDateList", request.getParameter("endDateList"))
+					.queryParam("docId", request.getParameter("docId"));	
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
+		} else {
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("status", request.getParameter("status"))
+					.queryParam("docId", request.getParameter("docId"));
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
+		}		
+
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+
+		LOGGER.debug("approvalGConn ended");
 		return status;
 	}
 }

@@ -442,6 +442,7 @@ public class EzAttitudeAdminController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("userId", userInfo.getId())
+				.queryParam("isuse", request.getParameter("isuse"))
 				.queryParam("isAdmin", "y");
 		
 		RestTemplate rest = new RestTemplate();

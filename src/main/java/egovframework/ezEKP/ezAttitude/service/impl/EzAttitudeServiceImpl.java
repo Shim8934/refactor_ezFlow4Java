@@ -2883,4 +2883,72 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		return data;
 	}
+
+	@Override
+	public int approvalGConn(String userId, String deptId, String content, String attitudeTypeList, String startDateList, String endDateList, String docId, String offset, String companyId, int tenantId) throws Exception {
+		String[] attitudeTypeList2 = attitudeTypeList.split(",");
+		String[] startDateList2 = startDateList.split(",");
+		String[] endDateList2 = endDateList.split(",");
+		content = content.replaceAll("\'", "&#39;").replaceAll("(\r\n|\r|\n|\n\r)", " ");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
+		map.put("region", "");
+		map.put("mobile", "");
+		map.put("bizSub", "");
+		map.put("content", content);
+		map.put("ipAddress", "");
+		map.put("dateType", "4");
+		map.put("modappl", "0");
+		map.put("writerId", userId);
+		map.put("deptId", deptId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		//근태등록
+		for (int i = 0; i < attitudeTypeList2.length; i++) {
+			
+			String startDate = startDateList2[i] + " " + "00:00:00"; 
+			String endDate = endDateList2[i] + " " + "23:59:59";
+			
+			map.put("typeId", attitudeTypeList2[i]);
+			map.put("startDate", startDate);
+			map.put("endDate", endDate);
+			
+			int attitudeId = ezAttitudeDAO.insertAttitude(map);
+			
+			//임시로 지정..
+			String aprStatus = "0";
+			
+			//연동테이블에 insert
+			insertApprovalGConnInfo(String.valueOf(attitudeId), userId, docId, aprStatus, companyId, tenantId);
+		}
+		
+		return 0;
+	}
+	
+	private void insertApprovalGConnInfo(String attitudeId, String userId, String docId, String aprStatus, String companyId, int tenantId) throws Exception  {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("attitudeId", attitudeId);
+		map.put("userId", userId);
+		map.put("docId", docId);
+		map.put("aprStatus", aprStatus);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezAttitudeDAO.insertApprovalGConnInfo(map);
+	}
+
+	@Override
+	public int updateApprovalGConnInfo(String aprStatus, String userId, String docId,	String companyId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("docId", docId);
+		map.put("aprStatus", aprStatus);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		ezAttitudeDAO.updateApprovalGConnInfo(map);
+		return 0;
+	}
 }

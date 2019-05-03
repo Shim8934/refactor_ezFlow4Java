@@ -604,7 +604,7 @@ public class EzAttitudeGWController {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
-			String isuse = request.getParameter("isuse");
+			String isuse = request.getParameter("isuse") == null ? "" : request.getParameter("isuse");
 			String isAdmin = request.getParameter("isAdmin") == null ? "" : request.getParameter("isAdmin");
 			String statistics = request.getParameter("statistics") == null ? "" : request.getParameter("statistics");
 			String typeIdArr = request.getParameter("typeIdArr") == null ? "" : request.getParameter("typeIdArr");
@@ -2539,6 +2539,123 @@ public class EzAttitudeGWController {
 			result.put("data", status);
 		}
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deleteCancelAnnual] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 개인 연차 수 정보(총연차 수 / 사용연차수)
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/annualcnt", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getAnnaulCntInfo(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/annualcnt] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("userId", userId);
+			map.put("companyId", request.getParameter("companyId"));
+			map.put("tenantId", info.getTenantId());
+			map.put("year", request.getParameter("year"));
+			map.put("offsetMin", request.getParameter("offsetMin"));
+			
+			String primary = info.getPrimary();
+			if (primary.equals("1")) {
+				primary = "";
+			}
+			map.put("primary", primary);
+			
+			AttitudeAnnualVO vo = ezAttitudeService.getAnnualCnt(map);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", vo);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/annualcnt] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [POST] 전자결재 연동 (휴가계 기안시 해당 휴가 근태 등록)
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject approvalGConn(@PathVariable String userId, HttpServletRequest request) {
+			
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/"+userId+"/approvalconn] started.");
+		
+		JSONObject result = new JSONObject();
+		int status = 0;
+				
+		try{
+			String content = request.getParameter("content");
+			String attitudeTypeList = request.getParameter("attitudeTypeList");
+			String startDateList = request.getParameter("startDateList");
+			String endDateList = request.getParameter("endDateList");
+			String docId = request.getParameter("docId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			status = ezAttitudeService.approvalGConn(userId, info.getDeptId(), content, attitudeTypeList, startDateList, endDateList, docId, info.getOffSet(), info.getCompanyId(), info.getTenantId());
+			
+			if (status == 1) {
+				result.put("status", "ok");
+			} else {
+				result.put("status", "error");
+			}
+			result.put("code", 0);
+			result.put("data", status);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", status);
+		}
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/"+userId+"/approvalconn] ended.");
+		return result;
+	}
+	/**
+	 * G/W 근태관리 [POST] 전자결재 연동 (휴가계 기안시 해당 휴가 근태 등록)
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject updateApprovalGConnInfo(@PathVariable String userId, HttpServletRequest request) {
+		
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/approvalconn] started.");
+		
+		JSONObject result = new JSONObject();
+		int status = 0;
+		
+		try{
+			String aprStatus = request.getParameter("status");
+			String docId = request.getParameter("docId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			status = ezAttitudeService.updateApprovalGConnInfo(aprStatus, userId, docId, info.getCompanyId(), info.getTenantId());
+			
+			if (status == 1) {
+				result.put("status", "ok");
+			} else {
+				result.put("status", "error");
+			}
+			result.put("code", 0);
+			result.put("data", status);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", status);
+		}
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/approvalconn] ended.");
 		return result;
 	}
 }

@@ -156,4 +156,8 @@ public interface EzAttitudeService {
 			String writerDeptId, String writerDeptName, String writerDeptName2, String delFlag, String content,String offset) throws Exception;
 
 	public int deleteCancelAnnual(String companyId, int tenantId, String attitudeId) throws Exception;
+
+	public int approvalGConn(String userId, String deptId, String content, String attitudeTypeList, String startDateList,	String endDateList, String docId, String offset, String companyId, int tenantId) throws Exception;
+
+	public int updateApprovalGConnInfo(String aprStatus, String userId, String docId,	String companyId, int tenantId) throws Exception;
 }
