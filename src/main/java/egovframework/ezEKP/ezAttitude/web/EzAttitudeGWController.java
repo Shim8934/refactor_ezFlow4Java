@@ -2423,9 +2423,9 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [GET] 개인 월별 근태 통계
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/monthlyAnnual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/monthlyannual", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
 	public JSONObject getMonthlyAnnualList(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/monthlyAnnual] started.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/monthlyannual] started.");
 		
 		JSONObject result = new JSONObject();
 		try{
@@ -2467,14 +2467,14 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", "");
 		}
-		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/monthlyAnnual] ended.");
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/monthlyannual] ended.");
 		return result;
 	}
 	
 	/**
 	 * G/W 근태관리 [POST] 연차취소신청 등록
 	 */
-	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}/saveCancelAnnual", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}/savecancelannual", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject saveCancelAnnual(@PathVariable String attitudeId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,
 			@RequestParam(value="tenantId", required=true) int tenantId,
@@ -2483,7 +2483,7 @@ public class EzAttitudeGWController {
 			@RequestParam(value="idList", required=false) String idList,
 			@RequestParam(value="loginCookie", required=false) String loginCookie,
 			@RequestParam(value="content", required=true) String content) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/saveCancelAnnual] started.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/savecancelannual] started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
@@ -2512,20 +2512,20 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", status);
 		}
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/saveCancelAnnual] ended.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/attitudes/" + attitudeId + "/savecancelannual] ended.");
 		return result;
 	}
 	
 	/**
 	 * G/W 근태관리 [DELETE] 연차취소신청 삭제
 	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/deleteCancelAnnual", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/deletecancelannual", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteCancelAnnual(@PathVariable String userId, HttpServletRequest request,
 			@RequestParam(value="companyId", required=true) String companyId,
 			@RequestParam(value="tenantId", required=true) int tenantId,
 			@RequestParam(value="attitudeId", required=false) String attitudeId) {
 			
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deleteCancelAnnual] started.");
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deletecancelannual] started.");
 		
 		JSONObject result = new JSONObject();
 		JSONObject data = new JSONObject();
@@ -2549,7 +2549,7 @@ public class EzAttitudeGWController {
 			result.put("code", 1);
 			result.put("data", status);
 		}
-		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deleteCancelAnnual] ended.");
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/deletecancelannual] ended.");
 		return result;
 	}
 	
@@ -2830,6 +2830,43 @@ public class EzAttitudeGWController {
 			
 			LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/cancelannual/" + attModId + "/history ended.");
 		}
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [POST] 입사일 등록
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/joindate", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	public JSONObject saveJoinDate(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/saveJoinDate] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("userId", userId);
+			map.put("companyId", request.getParameter("companyId"));
+			map.put("date", request.getParameter("date"));
+			map.put("mode", request.getParameter("mode"));
+			map.put("tenantId", info.getTenantId());
+			
+			ezAttitudeService.saveJoinDate(map);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/saveJoinDate] ended.");
 		return result;
 	}
 }

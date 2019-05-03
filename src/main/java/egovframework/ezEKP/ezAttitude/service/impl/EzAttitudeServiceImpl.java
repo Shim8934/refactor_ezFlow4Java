@@ -3309,4 +3309,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("getAnnCanHistory ended");
 		return attAppList;
 	}
+	
+	@Override
+	public void saveJoinDate(Map<String, Object> map) throws Exception {
+		LOGGER.debug("saveJoinDate started");
+		
+		String mode = (String) map.get("mode");
+		
+		if(mode.equals("new")) {
+			ezAttitudeDAO.saveJoinDate(map);
+		} else {
+			ezAttitudeDAO.modifyJoinDate(map);
+		}
+		
+		LOGGER.debug("saveJoinDate ended");
+	}
 }

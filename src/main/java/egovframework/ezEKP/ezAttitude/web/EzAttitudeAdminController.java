@@ -2810,6 +2810,82 @@ public class EzAttitudeAdminController {
 		return "json";
 	}
 	
+	@RequestMapping(value = "/admin/ezAttitude/setJoinDatePop.do")
+	public String setJoinDatePop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		
+		LOGGER.debug("setJoinDatePop started.");
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String userId = request.getParameter("userId");
+		String companyId = request.getParameter("companyId");
+		String mode = request.getParameter("mode");
+		String date = request.getParameter("date");
+		
+		if(mode != null && mode.equals("new")) {
+			date = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split(" ")[0];
+		}
+				
+		model.addAttribute("userId", userId);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("mode", mode);
+		model.addAttribute("date", date);
+		
+		LOGGER.debug("setJoinDatePop ended.");
+
+		return "/admin/ezAttitude/setJoinDatePop";
+	}
+	
+	/**
+	 * 근태관리 연차현황관리 입사일 입력
+	 */
+	@RequestMapping(value = "/admin/ezAttitude/saveJoinDate.do")
+	@ResponseBody
+	public String saveJoinDate(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("saveJoinDate started.");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String userId = request.getParameter("userId");
+		String companyId = request.getParameter("companyId");
+		String date = request.getParameter("date");
+		String mode = request.getParameter("mode");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = "";
+		url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/joindate";
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("companyId", companyId)
+				.queryParam("mode", mode)
+				.queryParam("date", date);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<?> result;
+		
+		result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, JSONObject.class);
+		JSONObject resultBody = (JSONObject) result.getBody();
+		
+		String status = resultBody.get("status").toString();
+		String resultStatus = "";
+		
+		if (status.equals("ok")) {
+			resultStatus = "success";
+		} else if (status.equals("failed")) {
+			resultStatus = "failed";
+		} else {
+			resultStatus = "error";
+		}
+		
+		LOGGER.debug("saveJoinDate ended.");
+		
+		return resultStatus;
+	}
+	
 	private class MultipartFileResource extends InputStreamResource {
 		private String filename;
 		

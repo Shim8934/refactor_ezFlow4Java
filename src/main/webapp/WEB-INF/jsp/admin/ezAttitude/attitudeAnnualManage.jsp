@@ -113,6 +113,13 @@
 	    			var userName = $(this).closest("tr").children("td:eq(1)").text();
 	    			modifyPrsnAnnualPop(userId , userName , searchYear);
 	    		})
+	    		//입사일 클릭
+	    		$(document).on('click', '.mainlist .joinDate', function(){
+	    			var userId = $(this).closest("tr").attr("userid");
+	    			var mode = "modify";
+	    			var date = $(this).closest("tr").children("td:eq(4)").text();
+	    			setJoinDatePop(userId , mode , date);
+	    		})
 	    	});
 			    
 		    $(window).on("resize", function(){
@@ -217,6 +224,12 @@
 	    			resultHtml += "<td>" + vo.userName + "</td>";
 	    			resultHtml += "<td>" + vo.userTitle + "</td>";
 	    			resultHtml += "<td>" + vo.userDeptName + "</td>";
+	    			
+	    			if(vo.joinDate == "0") {
+		    			resultHtml += "<td><a class='imgbtn'><span onclick=\"setJoinDatePop('" + vo.userId + "', 'new', '0')\">입사일 입력</span></a></td>";
+	    			} else {
+		    			resultHtml += "<td><a class='link joinDate'>" + vo.joinDate + "</td>";
+	    			}
 	    			
 	    			resultHtml += "<td><a class='link useAnnualCnt'>";
 	    			if (Number(vo.useAnnualCnt.split(".")[1]) > 0) {
@@ -336,6 +349,12 @@
 	        	var url = "/admin/ezAttitude/annualHistoryPop.do?year=" + year + "&userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
 				window.open(url, "annualHistoryPop", GetOpenWindowfeature(750, 510));
 	        }
+			
+			//입사일 입력 팝업
+	    	function setJoinDatePop(userId, mode, date) {
+	        	var url = "/admin/ezAttitude/setJoinDatePop.do?userId=" + userId + "&mode=" + mode + "&date=" + date + "&companyId=" + encodeURIComponent($("#ListCompany").val());
+	        	GetOpenWindow2(url, "setJoinDatePop", 210, 370);
+	        }
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -386,6 +405,7 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="joinDate">입사일</th>
 						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="useAnnualCnt"><spring:message code='ezAttitude.t238' /></th>
 						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="totalAnnualCnt"><spring:message code='ezAttitude.t239' /></th>
 						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t241' /></th>

@@ -1437,7 +1437,8 @@
 						   ELSE 0
 						END
 				), 0) AS useAnnualCnt,
-			    ifnull(B.TOTAL_ANNUAL_CNT, 0) AS totalAnnualCnt
+			    ifnull(B.TOTAL_ANNUAL_CNT, 0) AS totalAnnualCnt,
+			    ifnull(DATE_FORMAT(D.JOIN_DATE, '%Y-%m-%d'), 0) AS joinDate
 			FROM 
 				TBL_USERMASTER A
 			LEFT OUTER JOIN 
@@ -1477,6 +1478,14 @@
 						)
 				  )
 				 )
+			LEFT OUTER JOIN 
+				TBL_ATTITUDE_JOINDATE D
+			ON
+				(A.TENANT_ID = D.TENANT_ID 
+					AND
+				 A.PHYSICALDELIVERYOFFICENAME = D.COMPANY_ID 
+					AND
+				 A.CN = D.USER_ID)
 			WHERE
 				A.TENANT_ID = #tenantId#
 			AND 
@@ -1833,5 +1842,25 @@
 			]]>
 		</isNotEmpty>
 	</select>
+	
+	<insert id="ezAttitudeAdminDAO.saveJoinDate" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO tbl_attitude_joindate
+				(USER_ID, JOIN_DATE, COMPANY_ID, TENANT_ID)
+			VALUES
+				(#userId#, #date#, #companyId#, #tenantId#)
+		]]>
+	</insert>
+	
+	<insert id="ezAttitudeAdminDAO.modifyJoinDate" parameterClass="Map">
+			UPDATE tbl_attitude_joindate
+				SET JOIN_DATE = #date#
+			WHERE
+				TENANT_ID = #tenantId#
+			AND
+				COMPANY_ID = #companyId#
+			AND
+				USER_ID = #userId#
+	</insert>
 	
 </sqlMap>

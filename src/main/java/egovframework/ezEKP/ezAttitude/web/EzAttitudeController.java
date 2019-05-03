@@ -3416,7 +3416,7 @@ public class EzAttitudeController {
 		String userOffset = userInfo.getOffset();
 		String year = request.getParameter("year");
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/monthlyAnnual";
+		String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/monthlyannual";
 		
 		
 		HttpHeaders headers = new HttpHeaders();
@@ -3673,7 +3673,7 @@ public class EzAttitudeController {
 		String offsetMin = commonUtil.getMinuteUTC(offset);
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId + "/saveCancelAnnual";
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId + "/savecancelannual";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -3739,7 +3739,7 @@ public class EzAttitudeController {
 		}
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/deleteCancelAnnual";
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/deletecancelannual";
 									
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);

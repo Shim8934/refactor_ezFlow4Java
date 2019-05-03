@@ -183,5 +183,7 @@ public interface EzAttitudeService {
 	public void changeUsersCancelAnn(String companyId, int tenantId, String ids, String changeStatus, String userId, String userName, String userName2, String offSet) throws Exception;
 
 	public List<AttitudeApplicationVO> getAnnCanHistory(String attModId, String userId, String offset, String lang, String companyId, int tenantId) throws Exception;
+
+	public void saveJoinDate(Map<String, Object> map) throws Exception;
 	
 }

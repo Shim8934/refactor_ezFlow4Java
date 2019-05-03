@@ -476,4 +476,14 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public List<AttitudeApplicationVO> getAnnCanHistory(Map<String, Object> map) throws Exception {
 		return (List<AttitudeApplicationVO>) list("ezAttitudeDAO.getAnnCanHistory", map);
 	}
+    
+    @SuppressWarnings("unchecked")
+    public void saveJoinDate(Map<String, Object> map) throws Exception {
+    	insert("ezAttitudeAdminDAO.saveJoinDate", map);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public void modifyJoinDate(Map<String, Object> map) throws Exception {
+    	update("ezAttitudeAdminDAO.modifyJoinDate", map);
+    }
 }
