@@ -164,10 +164,10 @@
 		<table> 
 		  <tr> 
 		    <td><div class="listview" >
-		            <div id="SIGNLIST"  style="BORDER:0;WIDTH:150px;HEIGHT:160px;overflow:auto;margin:1px 1px 1px 1px;"></div>
+		            <div id="SIGNLIST"  style="BORDER:0;WIDTH:150px;HEIGHT:160px;overflow-x:hidden;margin:1px 1px 1px 1px;"></div>
 				</div>
 			  </td> 
-		    <td> <div id="SIGNVIEW" class="IMAGEVIEW" style="background-color:white; margin-left:5px; BORDER:#ddd 1px solid; WIDTH:150px; HEIGHT:160px; overflow:hidden;"></div></td> 
+		    <td> <div id="SIGNVIEW" class="IMAGEVIEW" style="background-color:white; margin-left:10px; BORDER:#ddd 1px solid; WIDTH:160px; HEIGHT:160px; overflow:hidden;"></div></td> 
 		  </tr> 
 		</table> 
 		

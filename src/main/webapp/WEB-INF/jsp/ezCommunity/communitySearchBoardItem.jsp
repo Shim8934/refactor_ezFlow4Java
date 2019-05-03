@@ -609,7 +609,7 @@
 			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 
 				var url = "/ezCommunity/searchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-				url += "&boardID=" + pBoardID;
+				url += "&boardID=" + encodeURIComponent(pBoardID);
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
 				url += "&abstract=" + encodeURIComponent(strAbstract);
@@ -632,7 +632,7 @@
 			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 
 				var url = "/ezCommunity/searchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-				url += "&boardID=" + pBoardID;
+				url += "&boardID=" + encodeURIComponent(pBoardID);
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
 				url += "&abstract=" + encodeURIComponent(strAbstract);
@@ -655,7 +655,7 @@
 			    var searchEnd = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
 
 				var url = "/ezCommunity/searchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-				url += "&boardID=" + pBoardID;
+				url += "&boardID=" + encodeURIComponent(pBoardID);
 				url += "&title=" + encodeURIComponent(title);
 				url += "&writerName=" + encodeURIComponent(writerName);
 				url += "&abstract=" + encodeURIComponent(strAbstract);
@@ -679,7 +679,7 @@
 					var searchEnd = _D2.value;
 
 					var url = "/ezCommunity/searchBoardItem.do?orgBoardParameters=" + encodeURIComponent(pOrgBoardParameters);
-					url += "&boardID=" + pBoardID;
+					url += "&boardID=" + encodeURIComponent(pBoardID);
 					url += "&title=" + encodeURIComponent(title);
 					url += "&writerName=" + encodeURIComponent(writerName);
 					url += "&abstract=" + encodeURIComponent(strAbstract);
@@ -784,7 +784,7 @@
 			}
 
 			function BoardItemList() {
-				$(location).attr('href', '/ezCommunity/boardItemList.do?' + pOrgBoardParameters);
+				$(location).attr('href', '/ezCommunity/boardItemList.do?' + encodeURIComponent(pOrgBoardParameters));
 // 				window.location.href = "/ezCommunity/boardItemList.do?" + pOrgBoardParameters;
 			}
 			

@@ -92,7 +92,7 @@
 		            
 		            xhr = new XMLHttpRequest();
 		            xhr.addEventListener("load", uploadComplete, false);
-		            xhr.open("POST", "/ezBoard/boardMovieUpload.do?mode=MOVIE&boardID=" + pBoardID + "&fileLimit=" + AttachLimit);
+		            xhr.open("POST", "/ezBoard/boardMovieUpload.do?mode=MOVIE&boardID=" + encodeURIComponent(pBoardID) + "&fileLimit=" + AttachLimit);
 		            xhr.send(fd);
 		        }
 	        }
@@ -129,7 +129,7 @@
 		        fd2.append("thumbnail", thumbnail);
 		        
 		        xhr2 = new XMLHttpRequest();
-	            xhr2.open("POST", "/ezBoard/boardMovieThumb.do?thumbnailID=" + movieFileName + "&fileLimit=" + AttachLimit, false);
+	            xhr2.open("POST", "/ezBoard/boardMovieThumb.do?thumbnailID=" + encodeURIComponent(movieFileName) + "&fileLimit=" + AttachLimit, false);
 	            xhr2.send(fd2);
 	            
                 var strXML = "";
