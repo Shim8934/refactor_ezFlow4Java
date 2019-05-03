@@ -3222,4 +3222,100 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		return attAppList;
 	}
+	
+	@Override
+	public AttitudeApplicationVO annCanAppDetail(String attModId, String offset, String applCnt, String lang, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("annCanAppDetail started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("attModId", attModId);
+		map.put("offset", offset);
+		map.put("applCnt", applCnt);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
+		
+		LOGGER.debug("annCanAppDetail ended");
+		
+		return ezAttitudeDAO.annCanAppDetail(map);
+	}
+	
+	@Override
+	public void changeUsersCancelAnn(String companyId, int tenantId,	String ids, String changeStatus, String userId, String userName, String userName2, String offSet) throws Exception {
+		LOGGER.debug("changeUsersCancelAnn started.");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		String offsetMin = commonUtil.getMinuteUTC(offSet);
+		
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("ids", ids.split("_")[0]);
+		map.put("attModId", ids.split("_")[0]);
+		map.put("attitudeId", ids.split("_")[0]);
+		
+		if (ids.split("_").length > 1) {
+			map.put("applCnt", ids.split("_")[1]);
+		}
+		map.put("changeStatus", changeStatus);
+		map.put("offsetMin", offsetMin);
+		map.put("offset", offsetMin);
+		map.put("apprDate",commonUtil.getTodayUTCTime(""));
+		map.put("userId",userId);
+		map.put("displayName",userName);
+		map.put("displayName2",userName2);
+		
+		String apprStatus = ezAttitudeDAO.checkCanApplStatus(map);
+		//신청상태가 아니면 return
+		if (apprStatus != null && !apprStatus.equals("0")) {
+			return;
+		}
+		
+		ezAttitudeDAO.changeUsersCancelAnn(map);
+		
+		//승인일 때 사용자의 연차일정 삭제
+		if(changeStatus.equals("appr")){
+			map.put("modappl", 5);
+			ezAttitudeDAO.setAttModApp(map);
+			
+		} else if (changeStatus.equals("ret")) {
+			int modAppl = ezAttitudeDAO.getAttModApp(map);
+			
+			if (modAppl == 1) {
+				map.put("modappl", 4);
+			} else if (modAppl == 2) {
+				map.put("modappl", 3);
+			}
+			ezAttitudeDAO.setAttModApp(map);
+		}
+		LOGGER.debug("changeUsersCancelAnn ended.");
+	}
+	
+	@Override
+	public List<AttitudeApplicationVO> getAnnCanHistory(String attModId, String userId, String offset, String lang, String companyId, int tenantId) throws Exception {
+		LOGGER.debug("getAnnCanHistory started");
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		map.put("userId", userId);
+		if (attModId.indexOf("_") > 0) {
+			attModId = attModId.split("_")[0];
+		}
+		map.put("attModId", attModId);
+		map.put("offset", offset);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
+		
+		List<AttitudeApplicationVO> attAppList = ezAttitudeDAO.getAnnCanHistory(map); 
+		
+		LOGGER.debug("getAnnCanHistory ended");
+		return attAppList;
+	}
 }

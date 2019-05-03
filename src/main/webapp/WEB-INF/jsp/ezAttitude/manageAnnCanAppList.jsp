@@ -909,7 +909,7 @@
 	 	    	
 			    $.ajax({
 					type : 'post',
-				    url : '/ezAttitude/changeAttModApp.do',
+				    url : '/ezAttitude/changeAnnCanApp.do',
 				    data : obj,
 				    dataType : "text",
 				    error: function(xhr, status, error){
@@ -963,7 +963,7 @@
 		    	
 			    $.ajax({
 					type : 'post',
-				    url : '/ezAttitude/changeAttModApp.do',
+				    url : '/ezAttitude/changeAnnCanApp.do',
 				    data : obj,
 				    dataType : "text",
 				    error: function(xhr, status, error){
@@ -1056,13 +1056,13 @@
 			applCnt = modAttId.split("\_")[1];
 			modAttId = modAttId.split("\_")[0];
 			
-			window.open("/ezAttitude/attModAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag + "&pageInfo=" + pageInfo, "",
+			window.open("/ezAttitude/annCanAppDetail.do?attModId=" + modAttId + "&applCnt=" + applCnt +"&adminFlag=" + adminFlag + "&pageInfo=" + pageInfo, "",
 		 			"height = 593px, width = 672px, status = no, toolbar=no, menubar=no,location=no, resizable=1" + feature);
 	    }
 	    
 	    function getHistory(t) {
 		    attModId = $(t).parent().parent().find('td input').attr("value");
-		    window.open("/ezAttitude/attitudeModHistory.do?attModId=" + attModId, "history", GetOpenWindowfeature(550, 260));
+		    window.open("/ezAttitude/annualCanHistory.do?attModId=" + attModId, "history", GetOpenWindowfeature(550, 260));
 	    }
 	    
 	    function layerHidden() {

@@ -90,13 +90,13 @@
 		    		html += "<td style='width:35%'>";
 	    			if (vo.typeId === "A11") { //연차
 		    			html += vo.startDate.substr(0,10) + " ~ " + vo.endDate.substr(0,10);
-		    			annualCnt ++;
+		    			annualCnt += Number(vo.annualCnt);
 	    			} else if (vo.typeId === "A12") { //오전반차
 		    			html += vo.startDate.substr(0,10);
-		    			morningCnt ++;
+		    			morningCnt += Number(vo.annualCnt);
 	    			} else { //오후반차
 	    				html += vo.startDate.substr(0,10);
-	    				afternoonCnt ++;
+	    				afternoonCnt += Number(vo.annualCnt);
 	    			}
 	    			html += "</td>";
 	    			html += "<td style='width:25%'>" + vo.typeName + "</td>";
