@@ -2025,7 +2025,7 @@
 				MONTHLY_HOLIDAY_CNT = #holidayCnt#
 			</isEqual>
 		WHERE
-			USER_ID = #userid#	
+			USER_ID = #userId#	
 	</update>
 	
 	 <select id="ezAttitude.getTenantID" resultMap="attitude">
@@ -2058,7 +2058,7 @@
 		FROM
 			TBL_ATTITUDE_ANNUAL
 		WHERE
-			USER_ID = #userid#
+			USER_ID = #userId#
 	</select>
 	
 	<select id="ezAttitudeDAO.checkCanApplStatus" parameterClass="Map" resultClass="String">

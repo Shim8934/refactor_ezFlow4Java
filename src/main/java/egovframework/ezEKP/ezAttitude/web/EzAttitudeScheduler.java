@@ -49,8 +49,8 @@ public class EzAttitudeScheduler {
 		char useAnnualAutoGnrt = '0';// 0:사용 1:미사용
 		char annualGnrtStd = '1';// 0:입사일기준 1:회계연도기준
 		char useAnnualTmnt = '0';//연차소멸 여부 0:사용 1:미사용
-		String initialDate = "2019-02-05"; // 기산일 
-		char roundOffRule = '0';//0:0.5 1:1.0
+		String initialDate = "2019-05-02"; // 기산일 
+		char roundOffRule = '1';//0:0.5 1:1.0
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String today = sdf.format(new Date());
@@ -61,8 +61,6 @@ public class EzAttitudeScheduler {
 		cal.add(Calendar.DATE, -1);
 
 		String yesterday = sdf.format(cal.getTime());
-//		System.out.println("asdsadasdasd :: "+ new SimpleDateFormat("yyyy-MM-dd").format(new SimpleDateFormat("yyyy-MM-dd").parse(initialDate)));
-//		System.out.println("asdasdasdasd :: " + yesterday);
 		
 		if (useAnnualAutoGnrt == '0') {
 			
@@ -91,6 +89,7 @@ public class EzAttitudeScheduler {
 			} else {
 				
 				for (Map<String, Object> m : list) {
+					
 					int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
 
 					if (workingMonthCnt < 12) {
@@ -103,8 +102,7 @@ public class EzAttitudeScheduler {
 						}
 					}
 				}
-				
-				if (initialDate == yesterday) {
+				if (initialDate.substring(initialDate.indexOf("-")+1).equals(yesterday.substring(yesterday.indexOf("-")+1))) {
 					
 					Map<String, Object> m = new HashMap<String, Object>();
 					m.put("roundOffRule", roundOffRule);

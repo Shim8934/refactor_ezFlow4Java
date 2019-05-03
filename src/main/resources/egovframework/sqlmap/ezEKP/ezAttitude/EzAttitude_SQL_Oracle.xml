@@ -1969,4 +1969,92 @@
 				)
 		]]>
 	</select>
+	
+	<select id="ezAttitudeDAO.getJoinDateUserList" parameterClass="Map" resultClass="java.util.HashMap">
+		SELECT 
+			USER_ID AS userId, 
+       		TRUNC(MONTHS_BETWEEN(CURRENT_DATE, TO_DATE(JOIN_DATE, 'yyyy-mm-dd'))) AS workingMonthCnt, 
+		    TO_DATE(JOIN_DATE, 'yyyy-mm-dd')          							  AS joinDate
+		FROM   
+			TBL_ATTITUDE_JOINDATE
+		WHERE  
+			JOIN_DATE LIKE '%-%-' || #yesterday# || '%'
+	</select>
+	
+	<select id = "ezAttitudeDAO.getAttendanceDay" parameterClass="Map" resultClass="INTEGER">
+		SELECT
+			COUNT(*)
+		FROM
+			TBL_ATTITUDE
+		WHERE
+			TYPE_ID = 'A01'
+		AND 
+			WRITER_ID = #userId#
+		<isNotEmpty property="oneMonthAgo">
+			<![CDATA[
+				AND
+					START_DATE <= DATE_ADD(#oneDayAgo#, interval - 540 minute)
+				AND 
+					START_DATE > DATE_ADD(#oneMonthAgo#, interval -540 minute)
+			]]>
+		</isNotEmpty>
+	</select>
+	
+	<select id = "ezAttitudeDAO.getAttitudeJoinDateUserList" resultClass="java.util.HashMap">
+	
+		SELECT 
+			USER_ID AS userId, 
+       		TRUNC(MONTHS_BETWEEN(CURRENT_DATE, TO_DATE(JOIN_DATE, 'yyyy-mm-dd'))) AS workingMonthCnt, 
+		    TO_DATE(JOIN_DATE, 'yyyy-mm-dd')          							  AS joinDate
+		FROM   
+			TBL_ATTITUDE_JOINDATE 
+	
+	</select>
+	
+	<update id = "ezAttitudeDAO.updateAnnualHoliday" parameterClass="map">
+		UPDATE
+			TBL_ATTITUDE_ANNUAL
+		SET
+			<isEqual property="attendanceRateCondition" compareValue="1">
+				ANNUAL_HOLIDAY_CNT = #holidayCnt#
+			</isEqual>
+			<isEqual property="attendanceRateCondition" compareValue="2">
+				MONTHLY_HOLIDAY_CNT = #holidayCnt#
+			</isEqual>
+		WHERE
+			USER_ID = #userId#	
+	</update>
+	
+	 <select id="ezAttitude.getTenantID" resultMap="attitude">
+	  	SELECT 
+	  		TENANT_ID AS tenantId
+	  	FROM
+	  		TBL_TENANT
+	  </select>
+	
+	<select id="ezAttitudeDAO.checkAbsentDay" parameterClass="map" resultClass="INTEGER">
+		<![CDATA[
+			SELECT
+				COUNT(*)
+			FROM 
+				TBL_ATTITUDE
+			WHERE
+				TYPE_ID = 'A17'
+			AND
+				WRITER_ID = #userid#
+			AND
+				START_DATE >= #oneMonthAgo#
+			AND
+				START_DATE < #oneDayAgo#
+		]]>
+	</select>
+	
+	<select id = "ezAttitudeDAO.getMonthlyHolidayCnt" parameterClass="map" resultClass="INTEGER">
+		SELECT
+			MONTHLY_HOLIDAY_CNT	
+		FROM
+			TBL_ATTITUDE_ANNUAL
+		WHERE
+			USER_ID = #userId#
+	</select>
 </sqlMap>
