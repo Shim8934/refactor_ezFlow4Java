@@ -136,6 +136,18 @@
                     }
                 }
                 
+                try {
+                	var pSaveInterval = window.parent.parent.frames["left"].pSaveInterval;
+                	var newInterval = parseInt(refreshinterval.value) * 1000;
+                	
+                    if (pSaveInterval != newInterval) {
+                    	window.parent.parent.frames["left"].pSaveInterval = newInterval;
+                    	window.parent.parent.frames["left"].setMailListRefreshTimer();
+                    }
+                } catch (e) {
+                	console.error(e.message);
+                }
+                
 				if (Gubun == "1") {
 				    if (xmlHTTP.status == 200)
 				        alert("<spring:message code='ezEmail.t42' />");
