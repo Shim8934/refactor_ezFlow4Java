@@ -56,7 +56,7 @@
         		var idx = "7";
         		navigation_info = "<a href='/ezResource/resMain.do' target='main' class='n'><spring:message code='ezResource.t334' /></a>"
         		if (pBrdNm != "")
-            		navigation_info += " > " + pBrdNm + "</a>";
+            		navigation_info += " > " + encodeURI(pBrdNm) + "</a>";
     		}
 
     		/* 2018-05-21 홍승비 - 등록된 상위자원 없는 경우 메세지 출력 수정 */
