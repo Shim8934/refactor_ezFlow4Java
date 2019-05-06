@@ -7303,8 +7303,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t254", userInfo.getLocale()) + strURL + commonUtil.cleanValue(boardListVO.getTitle()) + "</a>");
 	        bodyContent.append("<br><br>&nbsp;&nbsp;&nbsp;-&nbsp;" + egovMessageSource.getMessage("ezBoard.t999016", userInfo.getLocale()) + " : " + commonUtil.cleanValue(content) + "</a>");
 	        
+	        /* 2019-05-06 홍승비 - 루프 바깥의 content 변수 반복 사용으로 메세지 깨지는 오류 수정 */
 	        String subject = "[" + egovMessageSource.getMessage("ezBoard.t999017", userInfo.getLocale()) + "]" + boardListVO.getTitle();
-	        content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
+	        String contentTemp = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
 	        
         	InternetAddress from = new InternetAddress();
         	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -7314,7 +7315,7 @@ public class EzBoardController extends EgovFileMngUtil{
         	to.setPersonal(boardListVO.getWriterName(), "UTF-8");
         	to.setAddress(boardListVO.getMail());
         	
-        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
+        	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, contentTemp, false);
 		}
 		
 		logger.debug("sendReturnNoticemail ended");
