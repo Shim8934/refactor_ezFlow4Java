@@ -66,6 +66,7 @@
 	            }
 	            
 	            document.getElementById("mainVideo").setAttribute("movieid", movieID);
+	            document.getElementById("mainVideo").src = moviePath.replace(/{/gi,"%7B").replace(/}/gi,"%7D");
 	        }
 	        
 	        function uploadComplete() {
@@ -177,7 +178,7 @@
 	            var movieFileName = getNodeText(GetChildNodes(nodes[0])[0]); // THUMBNAILNAME (s_{GUID})
 	            var movieUniqueID = getNodeText(GetChildNodes(nodes[0])[6]); // UNIQUEID ({GUID})
 	            
-	            document.getElementById("mainVideo").src = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + encodeURI(pBoardID) + "&fileName=" + encodeURI(movieUniqueID);
+	            document.getElementById("mainVideo").src = "/ezBoard/getBoardThumbnailInfo.do?type=BOARDTHUMTEMP&boardID=" + encodeURIComponent(pBoardID) + "&fileName=" + encodeURIComponent(movieUniqueID);
 	            document.getElementById("mainVideo").name = movieUniqueID;
 	        }
 	       	
@@ -244,7 +245,7 @@
 	                        <tr>
 	                            <td style="text-align:center">
 	                                <span id='imagechange1' class='preView' style='display:none;' value=""></span>
-	                                <video src="${moviePath}" id="mainVideo" style="cursor:pointer;max-width:430px; min-height:241px;" controls />
+	                                <video src="" id="mainVideo" style="cursor:pointer;max-width:430px; min-height:241px;" controls />
 	                            </td>
 	                        </tr>
 	                    </table>
