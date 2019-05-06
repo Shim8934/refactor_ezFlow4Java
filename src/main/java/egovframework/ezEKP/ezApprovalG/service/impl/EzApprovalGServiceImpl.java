@@ -25482,17 +25482,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			for (int k = 0; k < doc.getElementsByTag("table").size(); k++) {
-				String tableStyle = doc.getElementsByTag("table").get(k).attr("style").toString();
-				if (!doc.getElementsByTag("table").get(k).hasAttr("border")) {
-					doc.getElementsByTag("table").get(k).attr("bodrer","1");
+				Element tableElement = doc.getElementsByTag("table").get(k);
+				String tableStyle = tableElement.attr("style");
+				if (!tableElement.hasAttr("border")) {
+					tableElement.attr("bodrer","1");
 				}
 				
-				if (!doc.getElementsByTag("table").get(k).hasAttr("cellspacing")) {
-					doc.getElementsByTag("table").get(k).attr("cellspacing","0");
+				if (!tableElement.hasAttr("cellspacing")) {
+					tableElement.attr("cellspacing","0");
 				}
 				
-				if (!doc.getElementsByTag("table").get(k).hasAttr("cellpadding")) {
-					doc.getElementsByTag("table").get(k).attr("cellpadding","0");
+				if (!tableElement.hasAttr("cellpadding")) {
+					tableElement.attr("cellpadding","0");
 				}
 				
 //				if (tableStyle.indexOf("border-collapse") > 0) {
@@ -25500,133 +25501,134 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //					tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("border-collapse"), tableStyle.indexOf(";", tableStyle.indexOf("border-collapse")) + 1), "");
 //				}
 				
-				if (!doc.getElementsByTag("table").get(k).hasAttr("width")) {
+				if (!tableElement.hasAttr("width")) {
 					if (tableStyle.contains("width")) {
-						doc.getElementsByTag("table").get(k).attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1] );
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1] );
 						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1), "");
-						doc.getElementsByTag("table").get(k).attr("style", tableStyle);
+						tableElement.attr("style", tableStyle);
 					} 
 				} else {
 					if (tableStyle.indexOf("width") > -1) {
-						doc.getElementsByTag("table").get(k).attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1] );
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1] );
 						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1), "");
-						doc.getElementsByTag("table").get(k).attr("style", tableStyle);
+						tableElement.attr("style", tableStyle);
 					} else {
-						doc.getElementsByTag("table").get(k).attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1]);
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1]);
 					}
-					doc.getElementsByTag("table").get(k).attr("width", "0");
+					tableElement.attr("width", "0");
 				}
 				
-				if (!doc.getElementsByTag("table").get(k).hasAttr("height")) {
+				if (!tableElement.hasAttr("height")) {
 					if (tableStyle.indexOf("height") > -1) {
-						doc.getElementsByTag("table").get(k).attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
+						tableElement.attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
 						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1), "");
-						doc.getElementsByTag("table").get(k).attr("style", tableStyle);
+						tableElement.attr("style", tableStyle);
 					} 
 				} else {
 					if (tableStyle.indexOf("height") > -1) {
-						doc.getElementsByTag("table").get(k).attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
+						tableElement.attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
 						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1), "");
-						doc.getElementsByTag("table").get(k).attr("style", tableStyle);
+						tableElement.attr("style", tableStyle);
 					} else {
-						doc.getElementsByTag("table").get(k).attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
+						tableElement.attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
 					}
-					doc.getElementsByTag("table").get(k).attr("height", "0");
+					tableElement.attr("height", "0");
 				}
 				
-//				if (doc.getElementsByTag("table").get(k).hasAttr("style")) {
-//					doc.getElementsByTag("table").get(k).removeAttr("style");
+//				if (tableElement.hasAttr("style")) {
+//					tableElement.removeAttr("style");
 //				}
 				
-				if (doc.getElementsByTag("table").get(k).hasAttr("align")) {
-					switch (doc.getElementsByTag("table").get(k).attr("align").toString()) {
+				if (tableElement.hasAttr("align")) {
+					switch (tableElement.attr("align").toString()) {
 					case "left":
                     case "center":
                     case "right":
                     case "adjust":
                         break;
 					default:
-						doc.getElementsByTag("table").get(k).attr("align", "adjust");
+						tableElement.attr("align", "adjust");
 						break;
 					}
 				}
 			}
 			
 			for (int k = 0; k < doc.getElementsByTag("td").size(); k++) {
-				String tbStyle = doc.getElementsByTag("td").get(k).attr("style").toString();
-				if (doc.getElementsByTag("td").get(k).hasAttr("align")) {
-					switch (doc.getElementsByTag("td").get(k).attr("align").toString().toLowerCase()) {
+				Element tdElement = doc.getElementsByTag("td").get(k);
+				String tdStyle = tdElement.attr("style");
+				if (tdElement.hasAttr("align")) {
+					switch (tdElement.attr("align").toLowerCase()) {
 					case "left":
                     case "center":
                     case "right":
                     case "adjust":
                         break;
 					default:
-						doc.getElementsByTag("td").get(k).attr("align", "adjust");
+						tdElement.attr("align", "adjust");
 						break;
 					}
 				}
 				
-				if (doc.getElementsByTag("td").get(k).hasAttr("text-align")) {
-					switch (doc.getElementsByTag("td").get(k).attr("text-align").toString().toLowerCase()) {
+				if (tdElement.hasAttr("text-align")) {
+					switch (tdElement.attr("text-align").toLowerCase()) {
 					case "left":
                     case "center":
                     case "right":
                     case "justify":
                     case "char":
-                    	doc.getElementsByTag("td").get(k).attr("align", doc.getElementsByTag("td").get(k).attr("text-align").toString());
+                    	tdElement.attr("align", tdElement.attr("text-align"));
                     	break;
 					default:
-						doc.getElementsByTag("td").get(k).attr("align", "justify");
+						tdElement.attr("align", "justify");
 						break;
 					}
 				}
 				
-				if (doc.getElementsByTag("td").get(k).hasAttr("valign")) {
-					switch (doc.getElementsByTag("td").get(k).attr("valign").toString().toLowerCase()) {
+				if (tdElement.hasAttr("valign")) {
+					switch (tdElement.attr("valign").toLowerCase()) {
 					case "top":
                     case "middle":
                     case "bottom":
                     case "baseline":
                         break;
 					default:
-						doc.getElementsByTag("td").get(k).attr("valign", "baseline");
+						tdElement.attr("valign", "baseline");
 						break;
 					}
 				}
 				
-				if (!doc.getElementsByTag("td").get(k).hasAttr("width")) {
-					if (tbStyle.indexOf("width") > 0) {
-						doc.getElementsByTag("td").get(k).attr("width_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width")))));
-						tbStyle.replace(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width"))), "");
-						doc.getElementsByTag("td").get(k).attr("style", tbStyle);
+				if (!tdElement.hasAttr("width")) {
+					if (tdStyle.indexOf("width") > 0) {
+						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width")))));
+						tdStyle.replace(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width"))), "");
+						tdElement.attr("style", tdStyle);
 					} 
 				} else {
-					if (tbStyle.indexOf("width") > 0) {
-						doc.getElementsByTag("td").get(k).attr("width_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width")))));
-						tbStyle.replace(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width"))), "");
-						doc.getElementsByTag("td").get(k).attr("style", tbStyle);
+					if (tdStyle.indexOf("width") > 0) {
+						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width")))));
+						tdStyle.replace(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width"))), "");
+						tdElement.attr("style", tdStyle);
 					} else {
-						doc.getElementsByTag("td").get(k).attr("width_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width")))));
+						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width")))));
 					}
-					doc.getElementsByTag("td").get(k).attr("width", "0");
+					tdElement.attr("width", "0");
 				}
 				
-				if (!doc.getElementsByTag("td").get(k).hasAttr("height")) {
-					if (tbStyle.indexOf("height") > 0) {
-						doc.getElementsByTag("td").get(k).attr("height_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height")))));
-						tbStyle.replace(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height"))), "");
-						doc.getElementsByTag("td").get(k).attr("style", tbStyle);
+				if (!tdElement.hasAttr("height")) {
+					if (tdStyle.indexOf("height") > 0) {
+						tdElement.attr("height_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height")))));
+						tdStyle.replace(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height"))), "");
+						tdElement.attr("style", tdStyle);
 					} 
 				} else {
-					if (tbStyle.indexOf("height") > 0) {
-						doc.getElementsByTag("td").get(k).attr("height_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height")))));
-						tbStyle.replace(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height"))), "");
-						doc.getElementsByTag("td").get(k).attr("style", tbStyle);
+					if (tdStyle.indexOf("height") > 0) {
+						tdElement.attr("height_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height")))));
+						tdStyle.replace(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height"))), "");
+						tdElement.attr("style", tdStyle);
 					} else {
-						doc.getElementsByTag("td").get(k).attr("height_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height")))));
+						tdElement.attr("height_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height")))));
 					}
-					doc.getElementsByTag("td").get(k).attr("height", "0");
+					tdElement.attr("height", "0");
 				}
 				
 			}
