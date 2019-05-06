@@ -172,7 +172,7 @@ function modifyMemo(obj) {
             },  
             cache: false,
             success: function(result) {
-            	saveMemoToast(memoId);
+            	//saveMemoToast(memoId);
             	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
             },
             error : function() {
@@ -182,31 +182,54 @@ function modifyMemo(obj) {
 }
 
 /**
+ * 메모 숨김 처리하는 메서드
+ * @param obj
+ */
+function hideMemo(obj) {
+	var memoId = obj.getAttribute("memoid");
+	
+	$.ajax ({
+		  url : '/ezMemo/memo-display.do',
+		  type : 'POST',
+          dataType : 'json',
+          data : { 
+            memo_ids : memoId,
+            display : 1
+          },  
+          cache: false,
+          success: function(result) {
+        	  $('#memo' + memoId).css('opacity', 0.5);
+        	  parent.parent.getMemoList();
+          },
+	});
+}
+
+/**
  * 메모 삭제 메서드
  * @param memoId
  */
 function modalDelete(memoId) {
 	$.ajax ({  	
-        	url : '/ezMemo/memoDelete.do',
- 			type : 'POST',
-            dataType : 'json',
-            data : { 
-               	memo_ids : memoId
-            },  
-            async:false,
-            cache: false,
-            success: function(result) {
-            	$("#memo"+memoId).remove();
-            	var memoLength = $("#boardMemoList .memoLay").length;
-            	if (memoLength == 0) {
-            		addEmptyMemo();
-            	}
-            	setMemoCount(memoLength);
-            	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
-            },
-            error : function() {
-                	
-            }
+    	url : '/ezMemo/memoDelete.do',
+		type : 'POST',
+        dataType : 'json',
+        data : { 
+           	memo_ids : memoId
+        },  
+        async:false,
+        cache: false,
+        success: function(result) {
+        	$("#memo"+memoId).remove();
+        	var memoLength = $("#boardMemoList .memoLay").length;
+        	if (memoLength == 0) {
+        		addEmptyMemo();
+        	}
+        	setMemoCount(memoLength);
+        	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
+        },
+        error : function() {
+            	
+        }
 	});
 }
 

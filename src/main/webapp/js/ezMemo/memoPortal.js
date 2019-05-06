@@ -345,7 +345,6 @@ function modalDelete(memoId) {
  * @param obj
  */
 function modifyMemo(obj) {
-
 	var memoId = obj.getAttribute("memoid");
 	var afterContents = $(".memoText[memoid=" + memoId + "]").val();
 	
@@ -359,7 +358,7 @@ function modifyMemo(obj) {
         },  
         cache: false,
         success: function(result) {
-        	saveMemoToast(memoId);
+        	// saveMemoToast(memoId);
             if(window.frames["main"].frames["right"] != undefined) {			
                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
                		window.frames["main"].frames["right"].getMemoList();
@@ -368,6 +367,33 @@ function modifyMemo(obj) {
         error : function() {
         }
     }); 
+}
+
+/**
+ * 메모 숨김 처리하는 메서드
+ * @param obj
+ */
+function hideMemo(obj) {
+	var memoId = obj.getAttribute("memoid");
+	
+	$.ajax ({
+		  url : '/ezMemo/memo-display.do',
+		  type : 'POST',
+          dataType : 'json',
+          data : { 
+            memo_ids : memoId,
+            display : 1
+          },  
+          cache: false,
+          success: function(result) {
+        	  $('#memo' + memoId).remove();
+        	  
+        	  if(window.frames["main"].frames["right"] != undefined) {			
+                  if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
+                	  window.frames["main"].frames["right"].getMemoList();
+              }
+          },
+	});
 }
 	
 

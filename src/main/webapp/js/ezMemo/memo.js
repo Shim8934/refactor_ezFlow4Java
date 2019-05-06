@@ -40,13 +40,13 @@ function createMemo(memo, flag) {
 	dd2.setAttribute("class", "memoIcon pallete");
 	
 	var dd3 = document.createElement("dd");
-	dd3.setAttribute("class", "memoIcon saveBtn");
+	dd3.setAttribute("class", "memoIcon pallete");
 	dd3.setAttribute("memoid", memo.memo_id);
+	// dd3.setAttribute("onclick", "addRemoveButton("+memo.memo_id+")");
 	
 	var dd = document.createElement("dd");
 	dd.setAttribute("class", "memoIcon memoX");
 	dd.setAttribute("memoId", memo.memo_id);
-	dd.setAttribute("onclick", "addRemoveButton("+memo.memo_id+")");
 	
 	dl.appendChild(dt);
 	dl.appendChild(dd);
@@ -356,6 +356,7 @@ function addEmptyMemo(flag) {
  * toast 팝업 출력 메서드
  * @param memoId
  */
+/* 더 이상 사용하지 않기로 하여 주석처러 함
 function saveMemoToast(memoId) {
 	var doc = window.document;
 	var alertMessage = strLangMemo8;
@@ -376,9 +377,8 @@ function saveMemoToast(memoId) {
 			parent.removeChild(toastArea);		
 		});
 	}, 1000);	
-
 }
-
+*/
 
 /**
  * 음영 삭제 메서드
@@ -407,4 +407,40 @@ function bodyClearSelection() {
 	//$(".mainbody").on("selectstart", function(event){return false;});
 	mainmenu.addEventListener("click", clearSelection, false);
 	mainmenu.addEventListener("drag", clearSelection, false);
+}
+
+
+//일정 시간마다 자동 저장
+function autoSaveStart(param) {
+	memoInter = setInterval(function() {
+		console.log('저장');
+		var resultObj = compareContents(param);
+		if (resultObj.result === 'ok') {
+			console.log('yes');
+			modifyMemo(param);
+			beforeMemo = resultObj.afterVal;
+		} else {
+			console.log('no');
+		}
+	}, 3000);
+}
+
+//자동 저장 기능 정지
+function autoSaveStop() {
+	console.log('정지');
+	clearInterval(memoInter);
+}
+
+// 저장 이전 내용과 이후 내용 비교
+function compareContents (param) {
+	var resultObj = {};
+	
+	if (beforeMemo != param.value) {
+		resultObj.result = 'ok';
+		resultObj.afterVal = param.value;
+
+	} else {
+		resultObj.result = 'fail';
+	}
+	return resultObj;
 }

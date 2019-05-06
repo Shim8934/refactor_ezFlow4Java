@@ -147,7 +147,7 @@ h1 {  font-size:13px; margin:0px 0px 10px 0px; height:24px; line-height:15px; pa
 .select_wrapper .select_inner li:hover { background: #eee; }
 .select_wrapper .select_inner li:last-child {border: none;border-radius: 0 0 5px 5px;}
 .select_wrapper .select_inner li:first-child { border-radius: 5px 5px 0 0; }
-.select_wrapper span {display: block; width:200px; font-size:13px;}
+.select_wrapper span {display: block; width:165px; font-size:13px;}
 
 
 .individual-memo { width:230px; height:230px; background-color:#0470e4; text-align:left; border:1px solid black; float: left; margin: 10px 25px 10px 25px; overflow:hidden; padding-top:5px; position:relative; }

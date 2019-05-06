@@ -98,10 +98,29 @@
 	    		MailOptionHiddenOutside(e);
 	    	});
 	    	
+	    	// 일정 간격으로 메모 자동 저장 시작
+	     	$(document).on('focus', '.memoText', function(event) {
+	     		var thisEl = event.target;
+	     		beforeMemo = thisEl.value;
+	     		
+	     		autoSaveStart(thisEl);
+	     	});
+	     	// 메모 자동 저장 정지
+	     	$(document).on('blur', '.memoText', function() {
+	     		autoSaveStop();
+	     		modifyMemo($(this)[0]);
+	     	});
+	    	/* 
 	    	$(document).on("click", ".saveBtn", function(){
 			    	  var obj = $(this).parent().next();
 			    	  modifyMemo(obj[0]);
 			});
+	    	 */
+	    	// 메모 숨김 기능
+	    	$(document).on('click', '.memoX', function() {
+	    		var thisEl = $(this)[0];
+	    		hideMemo(thisEl);
+	    	});
 	    	
 	    	$(document).on("click", ".color_list", function(){
 	    		   defaultColor = $(this).index()+1;
