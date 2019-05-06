@@ -369,6 +369,15 @@
 		    function btnOk_onclick() {
 		        var tempCode = trim(document.getElementById("tbTaskCode").value);
 		        
+		        if (checkTaskCodeIsAvailable(tempCode)) {
+		        	if (approvalFlag == 'G') {
+			        	OpenAlertUI("<spring:message code = 'ezApprovalG.t742' />");
+		        	} else {
+			        	OpenAlertUI("<spring:message code = 'ezApprovalG.t722' />");
+		        	}
+		            return;
+		        }
+		        
 		        if (approvalFlag == 'S') {
 		        	if (tempCode == "") {
 			            OpenAlertUI("<spring:message code = 'ezApprovalG.t719' />");
@@ -457,6 +466,11 @@
 			            OpenAlertUI("<spring:message code = 'ezApprovalG.t750' />");		        		
 		        	}
 		        }
+		    }
+		    
+		    function checkTaskCodeIsAvailable(codeValue) {
+		    	var pattern = /[^0-9a-zA-z]/gi;
+		    	return pattern.test(codeValue);
 		    }
 		    
 		    function btncancel_onclick() {
