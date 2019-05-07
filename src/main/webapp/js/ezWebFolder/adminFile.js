@@ -365,14 +365,7 @@ function refreshView() {
 function toggleUploadBttn(levelValue) {
 	var dragDropAreaElmt = document.getElementById("dragDropArea");
 	
-	if (levelValue == '0') {
-		dragDropAreaElmt.ondragenter = null;
-		dragDropAreaElmt.ondragover  = null;
-		dragDropAreaElmt.ondragover  = null;
-	}
-	else {
-		dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
-		dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
-		dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
-	}
+	dragDropAreaElmt.ondragenter = function(e) {onDragEnter(e)};
+	dragDropAreaElmt.ondragover  = function(e) {onDragOver(e)};
+	dragDropAreaElmt.ondrop      = function(e) {onDrop(e)};
 }
