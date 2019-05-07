@@ -27942,7 +27942,7 @@
 						  )
 					ELSE 0
 				END,
-				B.DOCID
+				COUNT(B.DOCID)
 				)
 		FROM
 			(
