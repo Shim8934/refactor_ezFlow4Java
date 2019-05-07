@@ -38,6 +38,7 @@
 	var folderId = "";
 	var inputNameDlg_cross_dialogArguments = new Array();
 	var parentId = "";
+	var strSuccess = "<spring:message code='ezWebFolder.t27' />";
 	var resultErr1 = "<spring:message code='ezWebFolder.t306'/>";
 	var resultErr2 = "<spring:message code='ezWebFolder.t305'/>";
 	var resultErr3 = "<spring:message code='ezWebFolder.t300'/>";
