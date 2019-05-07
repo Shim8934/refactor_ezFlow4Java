@@ -37,7 +37,7 @@ function createMemo(memo, flag) {
 	dt.setAttribute("class", "mtitText");
 	
 	var dd2 = document.createElement("dd");
-	dd2.setAttribute("class", "memoIcon pallete");
+	dd2.setAttribute("class", "memoIcon garbage");
 	
 	var dd3 = document.createElement("dd");
 	dd3.setAttribute("class", "memoIcon pallete");
@@ -45,7 +45,7 @@ function createMemo(memo, flag) {
 	// dd3.setAttribute("onclick", "addRemoveButton("+memo.memo_id+")");
 	
 	var dd = document.createElement("dd");
-	dd.setAttribute("class", "memoIcon memoX");
+	dd.setAttribute("class", "memoIcon hidden");
 	dd.setAttribute("memoId", memo.memo_id);
 	
 	dl.appendChild(dt);

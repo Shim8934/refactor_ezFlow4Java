@@ -170,6 +170,17 @@
 			     </div>
 			</div>
 			
+			
+			<div class="memo01Big">
+		        <div class="bigTop">
+		            <dl class="memoTit">
+		                <dt class="mtitText">2018.08.24 13:05</dt>
+		                <dd class="memoIcon memoX"></dd>
+		            </dl>
+		        </div>
+		        <div class="bigBottom_left"></div>
+		        <div class="bigBottom_right"></div>
+		    </div>
 			<%-- <div id="open-memo" class="memoBtn" style="display: none;"><span><spring:message code='ezMemo.t001'/></span></div> --%>
 		</div>
 	</body>

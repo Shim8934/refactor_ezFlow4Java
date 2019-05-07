@@ -34,23 +34,35 @@ select::-ms-expand {
 .memoTit input{ width: 13px; height: 13px; vertical-align: middle; float:left; margin-top:10px; margin-right:5px; }
 .memoTit .mtitText{ margin:0px; padding:0px; font-family:malgun gothic; color:#696969; font-size:11px; float:left;}
 .mamo01 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-32px 0px; width:16px; height:16px; cursor:pointer;}
-.mamo01 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px 0px; width:16px; height:16px; cursor:pointer;}
+.mamo01.memo01Big .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px 0px; width:16px; height:16px; cursor:pointer;}
 .mamo01 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px 0px; width:16px; height:16px; cursor:pointer;}
+.mamo01 .garbage{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px -128px; width:16px; height:16px; cursor:pointer;}
+.mamo01 .hidden{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px -160px; width:16px; height:16px; cursor:pointer;}
 .mamo02 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-128px 0px; width:16px; height:16px; cursor:pointer;}
-.mamo02 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px 0px; width:16px; height:16px; cursor:pointer;}
+.mamo02.memo02Big .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px 0px; width:16px; height:16px; cursor:pointer;}
 .mamo02 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px 0px; width:16px; height:16px; cursor:pointer;}
+.mamo02 .garbage{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-32px -128px; width:16px; height:16px; cursor:pointer;}
+.mamo02 .hidden{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-32px -160px; width:16px; height:16px; cursor:pointer;}
 .mamo03 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-32px -32px; width:16px; height:16px; cursor:pointer;}
-.mamo03 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px -32px; width:16px; height:16px; cursor:pointer;}
+.mamo03.memo03Big .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px -32px; width:16px; height:16px; cursor:pointer;}
 .mamo03 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px -32px; width:16px; height:16px; cursor:pointer;}
+.mamo03 .garbage{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-64px -128px; width:16px; height:16px; cursor:pointer;}
+.mamo03 .hidden{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-64px -160px; width:16px; height:16px; cursor:pointer;}
 .mamo04 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-128px -32px; width:16px; height:16px; cursor:pointer;}
-.mamo04 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px -32px; width:16px; height:16px; cursor:pointer;}
+.mamo04.memo04Big .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px -32px; width:16px; height:16px; cursor:pointer;}
 .mamo04 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px -32px; width:16px; height:16px; cursor:pointer;}
+.mamo04 .garbage{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px -128px; width:16px; height:16px; cursor:pointer;}
+.mamo04 .hidden{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px -160px; width:16px; height:16px; cursor:pointer;}
 .mamo05 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-32px -64px; width:16px; height:16px; cursor:pointer;}
-.mamo05 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px -64px; width:16px; height:16px; cursor:pointer;}
+.mamo05.memo05Big .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-64px -64px; width:16px; height:16px; cursor:pointer;}
 .mamo05 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:0px -64px; width:16px; height:16px; cursor:pointer;}
+.mamo05 .garbage{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-128px -128px; width:16px; height:16px; cursor:pointer;}
+.mamo05 .hidden{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-128px -160px; width:16px; height:16px; cursor:pointer;}
 .mamo06 .pallete{ margin:9px 10px 0px 0px; padding-bottom:10px; float:right; background-position:-128px -64px; width:16px; height:16px; cursor:pointer;}
-.mamo06 .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px -64px; width:16px; height:16px; cursor:pointer;}
+.mamo06.memo06Big .memoX{ margin:9px 0px 0px 0px; padding:0px; float:right; background-position:-160px -64px; width:16px; height:16px; cursor:pointer;}
 .mamo06 .saveBtn{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-96px -64px; width:16px; height:16px; cursor:pointer;}
+.mamo06 .garbage{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-160px -128px; width:16px; height:16px; cursor:pointer;}
+.mamo06 .hidden{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-160px -160px; width:16px; height:16px; cursor:pointer;}
 .memoTit .memoPlus{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-64px 0px; width:16px; height:16px; cursor:pointer;}
 .memoTit .memoMinus{margin:9px 10px 0px 0px; padding:0px; float:right; background-position:-80px 0px; width:16px; height:16px; cursor:pointer;}
 .memoText{border: none; background: none; margin: 10px 0px 0px 17px; padding: 0px 30px 0px 0px; line-height: 24px; color: #000; font-size: 12px; width: 90%; height: 213px; outline:none; resize:none; -ms-overflow-style: none; }
@@ -60,42 +72,42 @@ select::-ms-expand {
 .memo01Big .bigTop{ background:#fff9c5; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo01Big .bigTop .memoTit{background:#fff6a9; margin:0px;}
 .memo01Big .bigBottom_left{background:#fff9c5; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20);}
-.memo01Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point01.png) no-repeat;}
+.memo01Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point01.png) no-repeat;}
 .memo01Big .bigTop #detailMemoContents{background:#fff9c5; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
 
 .memo02Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo02Big .bigTop{ background:#c5ffdf; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo02Big .bigTop .memoTit{background:#b3fdd5; margin:0px;}
 .memo02Big .bigBottom_left{background:#c5ffdf; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo02Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point02.png) no-repeat;}
+.memo02Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point02.png) no-repeat;}
 .memo02Big .bigTop #detailMemoContents{background:#c5ffdf; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
 
 .memo03Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo03Big .bigTop{ background:#e8ffc5; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo03Big .bigTop .memoTit{background:#d9ffa5; margin:0px;}
 .memo03Big .bigBottom_left{background:#e8ffc5; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo03Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point03.png) no-repeat;}
+.memo03Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point03.png) no-repeat;}
 .memo03Big .bigTop #detailMemoContents{background:#e8ffc5; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
 
 .memo04Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo04Big .bigTop{ background:#c5f3ff; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo04Big .bigTop .memoTit{background:#b0e6ff; margin:0px;}
 .memo04Big .bigBottom_left{background:#c5f3ff; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo04Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point04.png) no-repeat;}
+.memo04Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point04.png) no-repeat;}
 .memo04Big .bigTop #detailMemoContents{background:#c5f3ff; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
 
 .memo05Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo05Big .bigTop{ background:#d7d6ff; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo05Big .bigTop .memoTit{background:#c9c4ff; margin:0px;}
 .memo05Big .bigBottom_left{background:#d7d6ff; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo05Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point05.png) no-repeat;}
+.memo05Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point05.png) no-repeat;}
 .memo05Big .bigTop #detailMemoContents{background:#d7d6ff; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
 
 .memo06Big{box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo06Big .bigTop{ background:#ffd6f2; height:100%; box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20);}
 .memo06Big .bigTop .memoTit{background:#fcc5ec; margin:0px;}
 .memo06Big .bigBottom_left{background:#ffd6f2; height:29px; float:left; width:calc(100% - 29px);box-shadow: 0px 2px 2px 0px rgba(0, 0, 0, 0.20)}
-.memo06Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(/images/ezMemo/big_point06.png) no-repeat;}
+.memo06Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point06.png) no-repeat;}
 .memo06Big .bigTop #detailMemoContents{background:#ffd6f2; padding-left:10px; padding-right:10px; width:100%; height:327px; margin-left:-3px; overflow-y:scroll; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none;}
 
 .color_popup{ margin:0px; padding:6px; list-style:none; width:90px; height:65px; border:1px solid #999; box-sizing:border-box;box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.20); position:absolute; right:32px; top:30px; background:#fff;}
