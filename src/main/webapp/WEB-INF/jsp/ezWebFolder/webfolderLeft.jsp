@@ -52,8 +52,10 @@
 			});
 		    
 		    function refreshView(){
-		    	$.jstree.destroy()
-		    	folderList(folderType);
+		    	if (folderType == 'C' || folderType == 'D' || folderType == 'U' ) {
+			    	$.jstree.destroy()
+			    	folderList(folderType);
+		    	}
 		    }
 		    
 		    function folderList(obj) {
