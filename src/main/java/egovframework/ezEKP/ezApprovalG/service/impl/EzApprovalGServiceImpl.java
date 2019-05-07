@@ -25646,11 +25646,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
           double pSizeNum = Integer.parseInt(matcher.replaceAll(""));
           if (pSize.toUpperCase().indexOf("PX") > -1)
           {
-              strRtnVal = Math.round(pSizeNum * 0.264583/1000.0) + "mm";
+              strRtnVal = Math.round(pSizeNum * 0.264583) + "mm";
           }
           else if (pSize.toUpperCase().indexOf("PT") > -1)
           {
-              strRtnVal = Math.round(pSizeNum * 0.352777/1000.0) + "mm";
+              strRtnVal = Math.round(pSizeNum * 0.352777) + "mm";
           }
           else if (pSize.toUpperCase().indexOf("MM") > -1)
           {
