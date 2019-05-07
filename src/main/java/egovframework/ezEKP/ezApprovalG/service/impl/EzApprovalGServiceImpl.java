@@ -25469,7 +25469,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				Element tableElement = doc.getElementsByTag("table").get(k);
 				String tableStyle = tableElement.attr("style");
 				if (!tableElement.hasAttr("border")) {
-					tableElement.attr("bodrer","1");
+					tableElement.attr("border","1");
 				}
 				
 				if (!tableElement.hasAttr("cellspacing")) {
