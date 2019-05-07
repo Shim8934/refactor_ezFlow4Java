@@ -812,7 +812,7 @@ var strOpinionType5 = "005";
 var strOpinionType6 = "006";
 var strLangOpinionType1 = "一般";
 var strLangOpinionType2 = "差し戻し";
-var strLangOpinionType3 = "保留意見";
+var strLangOpinionType3 = "保留";
 var strLangOpinionType4 = "返送";
 
 // 2011.06.17 추가
