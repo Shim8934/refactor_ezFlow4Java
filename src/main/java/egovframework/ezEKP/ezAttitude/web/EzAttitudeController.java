@@ -4451,12 +4451,16 @@ public class EzAttitudeController {
 					.queryParam("endDateList", request.getParameter("endDateList"))
 					.queryParam("docId", request.getParameter("docId"));	
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
-		} else {
+		} else if (request.getParameter("status").equals("1")) {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("status", request.getParameter("status"))
 					.queryParam("docId", request.getParameter("docId"));
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-		}		
+		} else {
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("docId", request.getParameter("docId"));
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);	
+		}
 		
 		JSONParser jp = new JSONParser();
 		

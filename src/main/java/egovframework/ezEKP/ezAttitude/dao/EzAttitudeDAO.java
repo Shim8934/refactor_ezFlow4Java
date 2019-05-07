@@ -494,4 +494,9 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public void updateApprovalGConnInfo(Map<String, Object> map) {
 		update("ezAttitudeDAO.updateApprovalGConnInfo", map);
 	}
+
+	@SuppressWarnings("unchecked")
+	public List<String> getApprovalGConnAttitudeList(Map<String, Object> map) {
+		return (List<String>) list("ezAttitudeDAO.getApprovalGConnAttitudeList", map);
+	}
 }

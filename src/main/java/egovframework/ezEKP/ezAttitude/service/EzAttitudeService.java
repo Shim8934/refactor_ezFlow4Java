@@ -189,4 +189,6 @@ public interface EzAttitudeService {
 	public int approvalGConn(String userId, String deptId, String content, String attitudeTypeList, String startDateList, String endDateList, String docId, String offset, String companyId, int tenantId) throws Exception;
 	
 	public int updateApprovalGConnInfo(String aprStatus, String userId, String docId,	String companyId, int tenantId) throws Exception;
+
+	public int deleteApprovalGConnInfo(String userId, String docId,	String companyId, int tenantId) throws Exception;
 }
