@@ -692,8 +692,12 @@
 						else {
 						    var Ans = confirm("<spring:message code='ezApprovalG.t1677'/>");
 						    if (Ans) {
-						        ContMove();
-						        getDocListjson(CurPage);
+						    	if (popupselTContName == $("select[name=selSContName]").val()) {
+						    		alert("<spring:message code='ezCircular.t109'/>");
+						    	} else {
+							    	ContMove();
+									getDocListjson(CurPage);
+						    	}
 						    }
 						}
 			        } else {
@@ -740,8 +744,12 @@
 				else {
 				    var Ans = confirm("<spring:message code='ezApprovalG.t1541'/><spring:message code='ezApprovalG.t1677'/>");
 				    if (Ans) {
-				        ContMove();
-				        getDocListjson(1);
+				    	if (popupselTContName == $("select[name=selSContName]").val()) {
+				    		alert("<spring:message code='ezCircular.t109'/>");
+				    	} else {
+					        ContMove();
+					        getDocListjson(1);
+				    	}
 				    }
 				}
 				        
