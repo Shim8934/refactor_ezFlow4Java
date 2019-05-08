@@ -2338,4 +2338,19 @@
        		annual_doc_id = #docId#
 	]]>
 	</update>
+	
+	<select id="ezAttitudeDAO.getApprovalGConnAttitudeList" parameterClass="Map" resultClass="String">
+	<![CDATA[
+		SELECT 
+			attitude_Id
+		FROM 
+			tbl_attitude_apr_conn
+		WHERE
+			TENANT_ID = #tenantId#
+	    AND
+       		COMPANY_ID = #companyId#
+       	AND
+       		annual_doc_id = #docId#			
+	]]>
+	</select>
 </sqlMap>

@@ -3357,12 +3357,17 @@ public class EzAttitudeController {
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		
 		String userId = userInfo.getId();
 		String companyId = userInfo.getCompanyID();
 		
 		String year = request.getParameter("year");
 		String orderCell = request.getParameter("orderCell");
 		String orderOption = request.getParameter("orderOption");
+		
+		if (year == null || year == "") {
+			year = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split("-")[0];
+		}
 		
 		if (userId != null) {
 			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -4451,12 +4456,16 @@ public class EzAttitudeController {
 					.queryParam("endDateList", request.getParameter("endDateList"))
 					.queryParam("docId", request.getParameter("docId"));	
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.POST, entity, String.class);
-		} else {
+		} else if (request.getParameter("status").equals("1")) {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("status", request.getParameter("status"))
 					.queryParam("docId", request.getParameter("docId"));
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
-		}		
+		} else {
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("docId", request.getParameter("docId"));
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);	
+		}
 		
 		JSONParser jp = new JSONParser();
 		
@@ -4466,6 +4475,47 @@ public class EzAttitudeController {
 
 		LOGGER.debug("approvalGConn ended");
 		return status;	
+	}
+	
+	@RequestMapping(value = "/ezAttitude/getAttitudeInfo.do")
+	public String getAttitudeInfo(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("getAttitudeInfo started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String attitudeId = request.getParameter("attitudeId");
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId; // 근태상세정보 GW 호출
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONObject attitudeVO = new JSONObject();
+		if (status.equals("ok")) {		
+			attitudeVO = (JSONObject) resultBody.get("data");
+			
+			model.addAttribute("attitudeInfo", attitudeVO);
+		}
+		
+		LOGGER.debug("getAttitudeInfo ended.");
+		
+		return "json";
 	}
 
 }
