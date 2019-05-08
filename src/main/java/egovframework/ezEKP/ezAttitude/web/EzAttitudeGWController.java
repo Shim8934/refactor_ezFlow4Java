@@ -2952,7 +2952,7 @@ public class EzAttitudeGWController {
 		return result;
 	}
 	/**
-	 * G/W 근태관리 [POST] 전자결재 연동 (휴가계 기안시 해당 휴가 근태 등록)
+	 * G/W 근태관리 [PUT] 전자결재 연동 (휴가계 기안시 해당 휴가 근태 등록)
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateApprovalGConnInfo(@PathVariable String userId, HttpServletRequest request) {
@@ -2984,6 +2984,40 @@ public class EzAttitudeGWController {
 			result.put("data", status);
 		}
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/users/"+userId+"/approvalconn] ended.");
+		return result;
+	}
+	/**
+	 * G/W 근태관리 [DELETE] 전자결재 연동 (휴가계 기안시 해당 휴가 근태 등록)
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
+	public JSONObject deleteApprovalGConnInfo(@PathVariable String userId, HttpServletRequest request) {
+		
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/approvalconn] started.");
+		
+		JSONObject result = new JSONObject();
+		int status = 0;
+		
+		try{
+			String docId = request.getParameter("docId");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			status = ezAttitudeService.deleteApprovalGConnInfo(userId, docId, info.getCompanyId(), info.getTenantId());
+			
+			if (status == 1) {
+				result.put("status", "ok");
+			} else {
+				result.put("status", "error");
+			}
+			result.put("code", 0);
+			result.put("data", status);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", status);
+		}
+		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/approvalconn] ended.");
 		return result;
 	}
 }

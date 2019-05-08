@@ -587,7 +587,7 @@
 		    
 		    function CheckIfHasReplies() {
 		        var xmlhttp = createXMLHttpRequest();
-		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + strListInfo, false);
+		        xmlhttp.open("POST", "/ezBoard/checkIfHasReply.do?itemList=" + encodeURIComponent(strListInfo), false);
 		        xmlhttp.send();
 		        if (xmlhttp.responseText == "FALSE") {
 		            xmlhttp = null;

@@ -90,7 +90,10 @@ public class EzWebFolderAdminServiceImpl extends EgovFileMngUtil implements EzWe
 		map.put("companyId",     companyId);
 		map.put("tenantId",      tenantId);
 
-		checkExistCompany(map);
+		if (!companyId.equals("*")) {
+			checkExistCompany(map);
+		}
+
 		ezWebFolderAdminDAO.saveConfig(map);
 	}
 

@@ -3400,4 +3400,23 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		ezAttitudeDAO.updateApprovalGConnInfo(map);
 		return 0;
 	}
+
+	@Override
+	public int deleteApprovalGConnInfo(String userId, String docId,	String companyId, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("userId", userId);
+		map.put("docId", docId);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		//docId가지고 있는 attitudeId를 받아온다.
+		List<String> attitudeIdList = ezAttitudeDAO.getApprovalGConnAttitudeList(map);
+		if (attitudeIdList != null) {
+			for (int i = 0; i < attitudeIdList.size(); i++) {
+				map.put("attitudeId", attitudeIdList.get(i));
+				ezAttitudeDAO.deleteAttitude(map);		
+			}			
+		}
+		return 0;
+	}
 }
