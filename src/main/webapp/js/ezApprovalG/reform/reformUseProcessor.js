@@ -978,15 +978,25 @@ reformUseProc.onLoadHandler = function() {
 				// a date picker isn't installed when the value of the class is 'hasDatepicker'.
 				controlElement.removeAttribute("class");
 				
-				$(controlElement).datepicker({
-					changeMonth: true,
-					changeYear: true,
-					autoSize: true,
-					dateFormat: "yy-mm-dd"
-				/*
-				 * showOn: "both", buttonImage: "/images/imgicon/calendar-month.gif", buttonImageOnly: true
-				 */
-				});
+				if (parent.document.getElementById('attitude_annual_conn')) {//근태관리 휴가계 연동양식일 경우
+					$(controlElement).datepicker({
+						changeMonth: true,
+						changeYear: true,
+						autoSize: true,
+						dateFormat: "yy-mm-dd",
+						beforeShowDay: disableSomeDay
+					});										
+				} else {
+					$(controlElement).datepicker({
+						changeMonth: true,
+						changeYear: true,
+						autoSize: true,
+						dateFormat: "yy-mm-dd"
+							/*
+							 * showOn: "both", buttonImage: "/images/imgicon/calendar-month.gif", buttonImageOnly: true
+							 */
+					});					
+				}
 				
 				if (stageName == "draft" && (!isRedraft || $(controlElement).val() === "")) {
 					$(controlElement).datepicker('setDate', new Date());
@@ -1295,6 +1305,14 @@ function reform_onClickHandler(event) {
 		}
 	} else if (controlElement.type == "text") {
 		controlElement.focus();
+		
+		var clickHandler = controlElement.getAttribute("data-reform_on_click");
+		if (clickHandler != null && clickHandler != "") {
+			var handler = new Function("controlElement", "return " + clickHandler + "(controlElement);");
+			try {
+				handler(controlElement);
+			} catch (e) {}
+		}
 	}
 	
 	return true;
