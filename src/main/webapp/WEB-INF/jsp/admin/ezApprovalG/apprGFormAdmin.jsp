@@ -235,7 +235,9 @@
 		    }
 
 		    function btnDelFcont_onclick() {
-		        DelFCont();
+		    	if (confirm("<spring:message code = 'ezApprovalG.t999933' />")) {
+			        DelFCont();
+		    	}
 		    }
 	
 		    function DelFCont() {
