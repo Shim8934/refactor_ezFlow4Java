@@ -2931,7 +2931,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		List<Map<String, Object>> list = ezAttitudeDAO.getAttitudeJoinDateUserList();
 		
 		for (Map<String, Object> m : list) {
+			
 			int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
+			
 			if (workingMonthCnt < 12) {
 			
 				String date1 = (String)m.get("joinDate");
@@ -2962,6 +2964,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				m.put("attendanceRateCondition","1");
 				
 				ezAttitudeDAO.updateAnnualHoliday(m);
+				
 			} else {
 				int annualHolidayCnt = defaultAnnualHolidayCnt + (int)(workingMonthCnt / 12 - 1) / 2;
 				
@@ -2977,6 +2980,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				ezAttitudeDAO.updateAnnualHoliday(m);
 			}
 		}
+		
 		LOGGER.debug("updateFiscalYearAnnualHoliday ended");
 		
 	}
@@ -3000,8 +3004,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		int userAbsentCnt = ezAttitudeDAO.checkAbsentDay(map);
 		/*
-		 * userAttendanceCnt = 전달의 소정근로일수
-		 * monthWorkingDayCnt =  전달의 사용자 실제 출근일 수
+		 * userAttendanceCnt = 전 달 소정근로일수
+		 * monthWorkingDayCnt =  전 달 사용자 실제 출근일수
 		 * */
 		int userAttendanceCnt = checkHoliday(oneMonthAgo, oneDayAgo, "1", "S907001", 1).size();
 		int monthWorkingDayCnt = ezAttitudeDAO.getAttendanceDay(map);
@@ -3026,7 +3030,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		int userMonthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
 		int workingMonthCnt = Integer.parseInt((String)map.get("workingMonthCnt"));
 		
-		if (userMonthlyHolidayCnt >= workingMonthCnt - (workingMonthCnt - 12 ) * 2) {
+		if (userMonthlyHolidayCnt >= workingMonthCnt - (workingMonthCnt - 12 ) * 2) { 
 			int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
 			map.put("holidayCnt", monthlyHolidayCnt - 1);
 			map.put("attendanceRateCondition","2");
@@ -3059,6 +3063,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		String apprStatus = ezAttitudeDAO.checkCanApplStatus(map);
 		if (apprStatus != null && !apprStatus.equals("0")) {
 			data = 0;
+			
 		} else {
 			/*근태 수정신청 삭제.*/
 			ezAttitudeDAO.delCanAppl(map);
