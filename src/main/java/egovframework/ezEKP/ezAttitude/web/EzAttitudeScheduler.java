@@ -41,7 +41,7 @@ public class EzAttitudeScheduler {
 	
 	
 //	@Scheduled(cron = "${config.cron.autoSetAnnualHoliday}")
-	@Scheduled(cron = "10/5 * * * * *")
+//	@Scheduled(cron = "10/5 * * * * *")
 	public void autoSetAnnualHoliday() throws Exception{
 		logger.debug("autoSetAnnualHoliday scheduler started.");
 
@@ -102,6 +102,7 @@ public class EzAttitudeScheduler {
 						}
 					}
 				}
+				
 				if (initialDate.substring(initialDate.indexOf("-")+1).equals(yesterday.substring(yesterday.indexOf("-")+1))) {
 					
 					Map<String, Object> m = new HashMap<String, Object>();
