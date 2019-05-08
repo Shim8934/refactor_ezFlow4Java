@@ -145,7 +145,7 @@
 				</c:forEach>
       		</select>
 	    </h1>
-		<table class="content" style="width:500px;margin-top:5px">
+		<table class="content" style="width:500px;margin-top:30px">
 			<tr style="height:30px;">
 	        	<th style="width: 70px; text-align:center">
 	        		연차취소신청방식
