@@ -242,7 +242,7 @@
 		            if (pDraftFlag != "REDRAFT")
 		                setFirstDrafter(isUsed, beforeDocID);
 		            
-		            if (approvalFlag == "S") {
+		            if (approvalFlag == "S" && ListType != "21") {
 			            SetAutoDocnumItem();
 		            }
 		        }
