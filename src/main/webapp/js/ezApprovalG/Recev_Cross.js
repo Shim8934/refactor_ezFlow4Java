@@ -774,8 +774,9 @@ function SGetDraftAprLineInfo(ret) {
                 field = message.GetListItem(fields, fieldname);
                 if (field) {
                 	setNodeText(field , OrderDept[i]);
-                	idx = idx + 1;
                 }
+                
+                idx = idx + 1;
             }
 
 

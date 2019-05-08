@@ -27935,7 +27935,7 @@
 					ELSE 0
 				END,
 				COUNT(B.DOCID)
-				)
+				) AS checkValue
 		FROM
 			(
 			SELECT
