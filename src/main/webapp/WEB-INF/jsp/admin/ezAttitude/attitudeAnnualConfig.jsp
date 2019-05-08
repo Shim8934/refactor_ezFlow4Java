@@ -45,7 +45,7 @@
 		            		attitudeConfigSet(result);
 	            	},
 	            	error : function() {
-	            		alert("<spring:message code='ezAttitude.t175' />");
+	            		alert("해당 회사의 설정 데이터가 없습니다.");
 	            	}
 	            });
 	        }

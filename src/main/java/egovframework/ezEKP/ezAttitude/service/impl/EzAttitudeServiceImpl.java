@@ -3447,7 +3447,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public void updateAnnualConfig(Map<String, Object> map) throws Exception {
 		LOGGER.debug("updateAnnualConfig started");
 		
-		ezAttitudeDAO.updateAnnualConfig(map);
+		if(ezAttitudeDAO.getAttitudeAnnualConfig(map) == null) {
+			ezAttitudeDAO.insertAnnualConfig(map);
+		} else {
+			ezAttitudeDAO.updateAnnualConfig(map);
+		}
 		
 		LOGGER.debug("updateAnnualConfig ended");
 		

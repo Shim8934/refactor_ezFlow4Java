@@ -505,6 +505,10 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 		return (Map<String, Object>) select("ezAttitudeAdminDAO.getAttitudeAnnualConfig", map);
 	}
 	
+	public void insertAnnualConfig(Map<String, Object> map) throws Exception {
+		insert("ezAttitudeAdminDAO.insertAnnualConfig", map);
+	}
+	
 	public void updateAnnualConfig(Map<String, Object> map) throws Exception {
 		update("ezAttitudeAdminDAO.updateAnnualConfig", map);
 	}

@@ -1896,6 +1896,34 @@
 		]]>
 	</select>
 	
+	<insert id="ezAttitudeAdminDAO.insertAnnualConfig" parameterClass="Map">
+		<![CDATA[
+			INSERT INTO TBL_ATTITUDE_ANNUAL_CONF
+				(
+				COMPANY_ID,
+				TENANT_ID,
+				ANNUAL_CANCEL_RULE,
+				USE_ANNUAL_AUTO_GNRT,
+				ANNUAL_GNRT_STD, USE_MINUS_ANNUAL,
+				USE_ANNUAL_TMNT,
+				ROUND_OFF_RULE,
+				CONF_SET_DATE
+				)
+			VALUES
+				(
+				#companyId#,
+				#tenantId#,
+				#annualCancelRule#,
+				#useAnnualAutoGnrt#,
+				#annualGnrtStd#,
+				#useMinusAnnual#,
+				#useAnnualTmnt#,
+				#roundOffRule#,
+				str_to_date(#confSetDate#, '%Y-%m-%d')
+				)
+		]]>
+	</insert>
+	
 	<update id="ezAttitudeAdminDAO.updateAnnualConfig" parameterClass="Map">
 		<![CDATA[
 			UPDATE TBL_ATTITUDE_ANNUAL_CONF
