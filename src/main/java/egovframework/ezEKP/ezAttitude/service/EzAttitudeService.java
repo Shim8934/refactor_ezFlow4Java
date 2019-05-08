@@ -191,4 +191,8 @@ public interface EzAttitudeService {
 	public int updateApprovalGConnInfo(String aprStatus, String userId, String docId,	String companyId, int tenantId) throws Exception;
 
 	public int deleteApprovalGConnInfo(String userId, String docId,	String companyId, int tenantId) throws Exception;
+	
+	public Map<String, Object> getAttitudeAnnualConfig(int tenantId, String companyId) throws Exception;
+
+	public void updateAnnualConfig(Map<String, Object> map) throws Exception;
 }

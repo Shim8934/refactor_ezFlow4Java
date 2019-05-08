@@ -78,6 +78,18 @@
 		<result property="tenantId" 				column="TENANT_ID" 			columnIndex="3"/>
 	</resultMap>
 	
+	<resultMap class="java.util.HashMap" id="annualConfigMap">
+		<result property="companyId" 					column="COMPANY_ID" 				columnIndex="1"/>
+		<result property="tenantId" 				column="TENANT_ID" 			columnIndex="2"/>
+		<result property="annualCancelRule"			column="ANNUAL_CANCEL_RULE"			columnIndex="3"/>
+		<result property="useAnnualAutoGnrt"				column="USE_ANNUAL_AUTO_GNRT"			columnIndex="4"/>
+		<result property="annualGnrtStd"				column="ANNUAL_GNRT_STD"				columnIndex="5"/>
+		<result property="useMinusAnnual"			column="USE_MINUS_ANNUAL"		columnIndex="6"/>
+		<result property="useAnnualTmnt"		column="USE_ANNUAL_TMNT"	columnIndex="7"/>
+		<result property="roundOffRule"		column="ROUND_OFF_RULE"	columnIndex="8"/>
+		<result property="confSetDate"				column="CONF_SET_DATE"			columnIndex="9"/>
+	</resultMap>
+	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
 		<![CDATA[
 			SELECT 
@@ -1862,5 +1874,44 @@
 			AND
 				USER_ID = #userId#
 	</insert>
+	
+	<select id="ezAttitudeAdminDAO.getAttitudeAnnualConfig" parameterClass="Map" resultMap="annualConfigMap">
+		<![CDATA[
+			SELECT
+				company_id,
+				tenant_id,
+				annual_cancel_rule,
+				use_annual_auto_gnrt,
+				annual_gnrt_std,
+				use_minus_annual,
+				use_annual_tmnt,
+				round_off_rule,
+				DATE_FORMAT(conf_set_date, '%Y-%m-%d') AS conf_set_date
+			FROM
+				TBL_ATTITUDE_ANNUAL_CONF
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+		]]>
+	</select>
+	
+	<update id="ezAttitudeAdminDAO.updateAnnualConfig" parameterClass="Map">
+		<![CDATA[
+			UPDATE TBL_ATTITUDE_ANNUAL_CONF
+			SET
+				annual_cancel_rule = #annualCancelRule#,
+				use_annual_auto_gnrt = #useAnnualAutoGnrt#,
+				annual_gnrt_std = #annualGnrtStd#,
+				use_minus_annual = #useMinusAnnual#,
+				use_annual_tmnt = #useAnnualTmnt#,
+				round_off_rule = #roundOffRule#,
+				conf_set_date = str_to_date(#confSetDate#, '%Y-%m-%d') 
+			WHERE
+				tenant_id = #tenantId#
+			AND
+				company_id = #companyId#
+		]]>
+	</update>
 	
 </sqlMap>

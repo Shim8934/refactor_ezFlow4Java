@@ -3419,4 +3419,28 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		}
 		return 0;
 	}
+	
+	@Override
+	public Map<String, Object> getAttitudeAnnualConfig(int tenantId, String companyId) throws Exception {
+		LOGGER.debug("getAttitudeAnnualConfig started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		
+		LOGGER.debug("getAttitudeAnnualConfig ended");
+		
+		return ezAttitudeDAO.getAttitudeAnnualConfig(map);
+	}
+	
+	@Override
+	public void updateAnnualConfig(Map<String, Object> map) throws Exception {
+		LOGGER.debug("updateAnnualConfig started");
+		
+		ezAttitudeDAO.updateAnnualConfig(map);
+		
+		LOGGER.debug("updateAnnualConfig ended");
+		
+	}
+	
 }
