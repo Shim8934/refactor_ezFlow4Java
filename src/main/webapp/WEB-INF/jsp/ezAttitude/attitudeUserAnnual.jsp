@@ -110,6 +110,7 @@
 	    	var orderCell = ""; //정렬 명
 	    	var orderOption = ""; //정렬 형식(ASC, DESC)
    			var src = "";
+	    	var selAttitudeId = "";
 	    
 	    	$(document).ready(function() {
 	    		//헤더 클릭 시 정렬
@@ -249,7 +250,8 @@
 		    			html += "<td style='width:20%'>" + content + "</td>";
 		    			html += "<td style='width:12%'>" + "</td>";
 		    			if(vo.modAppl == "0") {
-			    			html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"attitudeCancelAnnual('" + vo.attitudeId + "','" + vo.typeId + "')\"><span>취소신청</span></a>" +"</td>";
+			    			//html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"attitudeCancelAnnual('" + vo.attitudeId + "','" + vo.typeId + "')\"><span>취소신청</span></a>" +"</td>";
+			    			html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"openDraftUI('DRAFT', '" + vo.attitudeId + "')\"><span>취소신청</span></a>" +"</td>";
 		    			} else if(vo.modAppl == "4") {
 		    				html += "<td style='width:12%'>반려</td>";
 		    			} else {
@@ -404,6 +406,97 @@
 					rtnValue = window.showModalDialog("/ezAttitude/attitudeItemView.do?attitudeId=" + pAttitudeId + "&typeId=" + pTypeId, "", 
 					    "dialogHeight:520px;dialogwidth:800px;status:no;toolbar:no;location:no;scroll:no;edge:sunken" + GetShowModalPosition(672, 640));
 				}
+			}
+			
+			function openDraftUI(pDraftFlag, pSelAttitudeId) {
+				selAttitudeId = pSelAttitudeId;
+				var windowName = "";
+				var formURL = "/fileroot/1/files/upload_approvalG/S907001/form/2019000090.mht";
+				var formDocType = "001";
+
+			    var pArgument = new Array();
+			    pArgument[0] = userId;
+			    pArgument[1] = formURL;
+			    pArgument[2] = pDraftFlag;
+			    pArgument[3] = formDocType;
+			    
+			    var openLocation = "";
+			    pArgument[4] = "0";
+			    pArgument[5] = "";
+			    pArgument[6] = "";
+			    pArgument[7] = "";
+			  
+			    if (formURL.substr(formURL.length - 3, formURL.length).toLowerCase() == "mht") {
+			    	openLocation = "/ezApprovalG/draftui.do?formURL=";
+			        openLocation = openLocation + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+			        openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI("1") + "&aprState=" + encodeURI(pArgument[6]);
+			        openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
+			        
+//			        // FormBuilder
+//			        if (window.reformflag == null) {
+//			        	// reformflag null 값이라면
+//			        	reformflag = GetAttribute(pCurSelRow, "REFORMFLAG");
+//			        }
+//			        
+//			    	if (reformflag.length > 0) {
+//			            openLocation += "&reformflag=" + encodeURI(reformflag);
+//			    	}
+			    } else {
+			    	if (!isIE()) {
+			            alert("한글양식은 IE에서만 기안 할 수 있습니다.");
+			            return;
+			        } else {
+			        	openLocation = "/ezApprovalG/draftuiHWP.do?formURL=" + encodeURI(pArgument[1]) + "&draftFlag=" + encodeURI(pArgument[2]) + "&formDocType=" + encodeURI(pArgument[3]);
+			            openLocation = openLocation + "&susinSN=" + encodeURI(pArgument[4]) + "&docState=" + encodeURI(pArgument[5]) + "&listType=" + encodeURI(pListTypeValue) + "&aprState=" + encodeURI(pArgument[6]);
+			            openLocation = openLocation + "&isTmpDoc=" + encodeURI(pArgument[7]);
+			        }
+			    }
+
+			    openwindow(openLocation, windowName, 890, 560);
+			}
+			
+			function openwindow(wfileLocation, wName, wWeigth, wHeigth) {
+			    try {
+			        var heigth = window.screen.availHeight;
+			        var width = window.screen.availWidth;
+
+			        var left = 0;
+			        var top = 0;
+
+			        if (window.screen.width > 800) {
+			            var pleftpos;
+
+			            pleftpos = parseInt(width) - 1150;
+			            heigth = parseInt(heigth) - 30;
+
+			            if (CrossYN())
+			                heigth = parseInt(heigth) - 25;
+
+			            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+			                heigth = parseInt(heigth) - 40;
+
+			            width = parseInt(width) - pleftpos;
+
+			            left = pleftpos / 2;
+			        }
+			        else {
+
+			            heigth = parseInt(heigth) - 30;
+
+			            if (CrossYN())
+			                heigth = parseInt(heigth) - 25;
+
+			            if (navigator.userAgent.indexOf("Safari") > -1 && navigator.userAgent.indexOf("Chrome") == -1)
+			                heigth = parseInt(heigth) - 40;
+
+			            width = parseInt(width) - 10;
+			        }
+
+			        window.open(wfileLocation, wName, "toolbar=0,location=0,directories=0,status=0,menubar=0,scrollbars=0,resizable=1,height=" + heigth + ",width=" + width + ",top=" + top + ",left = " + left);
+			    }
+			    catch (e) {
+			        alert("openwindow :: " + e.description);
+			    }
 			}
 			
 		</script>
