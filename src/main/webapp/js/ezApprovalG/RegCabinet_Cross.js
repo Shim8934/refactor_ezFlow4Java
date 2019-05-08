@@ -84,7 +84,12 @@ function DisplayCodeString(nodeCodeInfo, htmlObject, szValue) {
 }
 
 function SelectKeepingPeriod(strValue) {
-    document.getElementById("selKeepPeriod").value = strValue;
+	if(strValue === "" || strValue == "null") {
+		document.getElementById("selKeepPeriod").value = "01";
+	} else {
+		document.getElementById("selKeepPeriod").value = strValue;
+	}
+   
     //selKeepPeriod.selectedIndex = selKeepPeriod.options(strValue).index;
 }
 
