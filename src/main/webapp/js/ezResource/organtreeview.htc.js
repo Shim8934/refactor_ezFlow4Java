@@ -1069,6 +1069,11 @@ function organtreeview(thisobjid, elobjid) {
             var childNode = nodeXML.firstElementChild;
             //var childNode = nodeXML.getElementsByTagName('NODE').item(0).firstElementChild;
             var k = 0;
+            // add personal portal treeview width ellipsis option
+            var treeWidth = document.getElementById("TreeView").clientWidth-35;
+            if(treeWidth == undefined || treeWidth == "") {
+            	treeWidth = 210;
+            }
             while (childNode) {
                 g_nodeCount++;
 
@@ -1155,6 +1160,8 @@ function organtreeview(thisobjid, elobjid) {
 				        	nodeHtml += "<span class='sub_iconLNB tree_resource_standard'></span>";
 				}
 
+                var nodeWidth = treeWidth - (mydepth.length * 16);
+                		
                 //if (childNode.selectSingleNode("SELECT") != null) {
                 if (findchildnodevalue(childNode, "SELECT") != null) {
                     //2018-07-12 김보미 - 자원명 길 경우 처리    
@@ -1163,8 +1170,12 @@ function organtreeview(thisobjid, elobjid) {
                     /*nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
                   		g_baseClass["selected"] + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + (168 - (mydepth.length * 18)) + "px;'" +
                   		" title='" + findchildnodevalue(childNode, "VALUE") + "'>");*/
-                	
-                	nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "'>";
+                	if(nodeWidth > 40) {
+                		nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + nodeWidth + "px;'>";
+                	}
+                	else {
+                		nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "'>";
+                	}
                     g_selectedIdx = nodeCount;
                 }
                 else {
@@ -1174,7 +1185,12 @@ function organtreeview(thisobjid, elobjid) {
                     /*nodeHtml += ("<a node-count='" + nodeCount + "'><span id='" + g_nodeid + nodeCount + "' class='" +
                   		g_baseClass["normal"] + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + (168 - (mydepth.length * 18)) + "px;'" +
                   		" title='" + findchildnodevalue(childNode, "VALUE") + "'>");*/
-                	nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "'>";
+                	if(nodeWidth > 40) {
+                		nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "' style='display:inline-block; overflow-x:hidden; text-overflow:ellipsis; width:" + nodeWidth + "px;'>";
+                	}
+                	else {
+                		nodeHtml += "<span class='node_normal' id='" + g_nodeid + nodeCount + "'>";
+                	}
                 }
                 
                 //nodeHtml += (findchildnodevalue(childNode, "VALUE") + "</span></a></span>");
