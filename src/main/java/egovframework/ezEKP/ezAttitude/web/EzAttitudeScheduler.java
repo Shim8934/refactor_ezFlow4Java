@@ -102,6 +102,7 @@ public class EzAttitudeScheduler {
 						}
 					}
 				}
+				
 				if (initialDate.substring(initialDate.indexOf("-")+1).equals(yesterday.substring(yesterday.indexOf("-")+1))) {
 					
 					Map<String, Object> m = new HashMap<String, Object>();

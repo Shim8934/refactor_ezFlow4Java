@@ -2884,11 +2884,13 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("updateAnnualHoliday started");
 		
 		int defaultAnnualHolidayCnt = 15;
+		String companyId = (String)map.get("companyId");
+		int tenantId = (int)map.get("tenantId");
 		
-			int workingDayCnt = checkHoliday((String)map.get("joinDate"), commonUtil.getTodayUTCTime("yyyy-MM-dd"), "1", "S907001", 1).size();
-			int attendanceDay = ezAttitudeDAO.getAttendanceDay(map);
-			int attendanceRate = attendanceDay / workingDayCnt * 100;
-			
+		int workingDayCnt = checkHoliday((String)map.get("joinDate"), commonUtil.getTodayUTCTime("yyyy-MM-dd"), "1", companyId, tenantId).size();
+		int attendanceDay = ezAttitudeDAO.getAttendanceDay(map);
+		int attendanceRate = attendanceDay / workingDayCnt * 100;
+		
 			if (attendanceRate >= 80) {
 				map.put("holidayCnt", defaultAnnualHolidayCnt);
 				map.put("attendanceRateCondition","1");
@@ -2989,6 +2991,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public void updateMonthlyHoliday(Map<String, Object> map) throws Exception {
 		LOGGER.debug("updateMonthlyHoliday started");
 		
+		String companyId = (String)map.get("companyId");
+		int tenantId = (int)map.get("tenantId");
+		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		String today = sdf.format(new Date());
 		Date setDate = sdf.parse(today);
@@ -3007,7 +3012,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		 * userAttendanceCnt = 전 달 소정근로일수
 		 * monthWorkingDayCnt =  전 달 사용자 실제 출근일수
 		 * */
-		int userAttendanceCnt = checkHoliday(oneMonthAgo, oneDayAgo, "1", "S907001", 1).size();
+		int userAttendanceCnt = checkHoliday(oneMonthAgo, oneDayAgo, "1", companyId, tenantId).size();
 		int monthWorkingDayCnt = ezAttitudeDAO.getAttendanceDay(map);
 		
 		// 결근일과 실제사용자 출근일과 출근해야하는 날을 비교하여 월차 생성
