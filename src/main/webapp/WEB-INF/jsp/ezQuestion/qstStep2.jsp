@@ -520,6 +520,7 @@
         		oTable.setAttribute("style", "margin-top:10px");
 		        for (var i = 0; i < QuestionNode.childNodes.length; i++) {
         		    var oTr = document.createElement("tr");
+        		    oTr.setAttribute("style", "border-bottom:2px solid #ececec");
             		var oTh = document.createElement("th");
             		var oTd, oInput, oImg, oFileTable, pFileName;
             		oTh.innerHTML = "<spring:message code = 'ezQuestion.t333' />" + (i + 1) + ":" + getNodeText(QuestionNode.childNodes[i].getElementsByTagName("QUESTIONCONTENT")[0]);
@@ -646,6 +647,7 @@
             		}
             		if (getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWERTYPE")[0]) == "2") {
                 		oTr = document.createElement("tr");
+            		    oTr.setAttribute("style", "border-bottom:2px solid #ececec");
                 		oTd = document.createElement("td");
                 		oTd.setAttribute("style", "word-break:break-all;padding:10px;");
 		                var oTextarea = document.createElement("textarea");
@@ -693,6 +695,7 @@
             		}
             		if (getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWERTYPE")[0]) == "4") {
                 		oTr = document.createElement("tr");
+            		    oTr.setAttribute("style", "border-bottom:2px solid #ececec");
                 		oTd = document.createElement("td");
                 		oTd.setAttribute("style", "word-break:break-all;padding:10px");
                 		oInput = document.createElement("input");
@@ -771,6 +774,7 @@
             		}
             		if (getNodeText(QuestionNode.childNodes[i].getElementsByTagName("ANSWERTYPE")[0]) == "5") {
                 		oTr = document.createElement("tr");
+            		    oTr.setAttribute("style", "border-bottom:2px solid #ececec");
                 		oTd = document.createElement("td");
                 		oTd.setAttribute("style", "overflow: auto;");
                 		var ooTable = document.createElement("table");
