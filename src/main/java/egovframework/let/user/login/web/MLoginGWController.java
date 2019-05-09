@@ -117,7 +117,7 @@ public class MLoginGWController {
     		
     		String serverName = request.getHeader("x-user-host");
     		int tenantId = loginService.getTenantId(serverName);
-			    		
+    		
     		LoginVO loginVO = new LoginVO();
     		
     		loginVO.setId(uid);
@@ -125,6 +125,10 @@ public class MLoginGWController {
     		loginVO.setTenantId(tenantId);
     		
     		LoginVO resultVO = loginService.selectUser(loginVO);
+    		
+    		/* 2019-05-08 홍승비 - LoginCookieSSO를 사용하는지 값을 확인 */
+    		String useSSOCookie = ezCommonService.getTenantConfig("useLoginCookieSSO", tenantId);	    	
+    		result.put("useLoginCookieSSO", useSSOCookie);
     		
     		int numberOfLoginFailPermit = 0;
     		// 로그인 실패 최대 허용 횟수를 구한다.
