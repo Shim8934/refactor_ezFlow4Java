@@ -193,13 +193,14 @@
 	        	*/
 	        	$("[id^='PostTreeView_node']").each(function(index, element){
 	        		
-	        		var imgCnt = $(element).parent().find('img').length - 2;
+	        		var imgCnt = $(element).parent().children('.sub_iconLNB').length - 2;
 	        		var title = $(element)[0].innerHTML;
 	        		
 	        		if (imgCnt > 0) {
-	        			// 최초값 164, 한 블럭의 값 18
-	        			var customWidth = 140 - (18 * imgCnt);
+	        			// 최초값 170, 한 블럭의 값 16 이지만 길이가 맞지 않아 14로 설정
+	        			var customWidth = 170 - (14 * imgCnt);
 	        			$(element).css("width", customWidth+"px");
+	        			$(element).css("text-align", "justify");
 	        			$(element).attr("title", title);	
 	        		}
 							
@@ -218,13 +219,14 @@
 	        	*/
 	        	$($("[id^='AddressTreeView_node']")).each(function(index, element){
 	        		
-	        		var imgCnt = $(element).parent().find('img').length - 2;
+	        		var imgCnt = $(element).parent().children('.sub_iconLNB').length - 2;
 	        		var title = $(element)[0].innerHTML;
 	        		
 	        		if (imgCnt > 0) {
-	        			// 최초값 164, 한 블럭의 값 18
-	        			var customWidth = 140 - (18 * imgCnt);
+	        			// 최초값 170, 한 블럭의 값 16 이지만 길이가 맞지않아 14로 설정
+	        			var customWidth = 170 - (14 * imgCnt);
 	        			$(element).css("width", customWidth+"px");
+	        			$(element).css("text-align", "justify");
 	        			$(element).attr("title", title);	
 	        		}
 							
