@@ -41,7 +41,7 @@ public class EzAttitudeScheduler {
 	
 	
 //	@Scheduled(cron = "${config.cron.autoSetAnnualHoliday}")
-//	@Scheduled(cron = "10/5 * * * * *")
+	@Scheduled(cron = "10/5 * * * * *")
 	public void autoSetAnnualHoliday() throws Exception{
 		logger.debug("autoSetAnnualHoliday scheduler started.");
 
@@ -49,7 +49,7 @@ public class EzAttitudeScheduler {
 		char useAnnualAutoGnrt = '0';// 0:사용 1:미사용
 		char annualGnrtStd = '1';// 0:입사일기준 1:회계연도기준
 		char useAnnualTmnt = '0';//연차소멸 여부 0:사용 1:미사용
-		String initialDate = "2019-05-02"; // 기산일 
+		String initialDate = "2019-05-08"; // 기산일 
 		char roundOffRule = '1';//0:0.5 1:1.0
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -79,6 +79,7 @@ public class EzAttitudeScheduler {
 							ezAttitudeService.updateMonthlyHoliday(m);
 						} else {
 							if (useAnnualTmnt == '0') {
+								m.put("today",today);
 								ezAttitudeService.extinctionMonthlyHoliday(m);
 							}
 						}
@@ -97,6 +98,7 @@ public class EzAttitudeScheduler {
 					} else if (workingMonthCnt > 12) {
 						if (workingMonthCnt < 24) {
 							if (useAnnualTmnt == '0') {
+								m.put("today",today);
 								ezAttitudeService.extinctionMonthlyHoliday(m);
 							}
 						}

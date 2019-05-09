@@ -1989,7 +1989,7 @@
 		    COMPANY_ID 												AS companyId,
 		    TENANT_ID												AS tenantId
 		FROM   
-			TBL_ATTITUDE_JOINDATE 
+			TBL_ATTITUDE_ANNUAL 
 		WHERE  
 			JOIN_DATE LIKE CONCAT('%-%-',#yesterday#,'%')
 	</select>
@@ -2000,7 +2000,7 @@
 		FROM
 			TBL_ATTITUDE
 		WHERE
-			TYPE_ID = 'A01'
+			(TYPE_ID != 'A02' OR TYPE_ID != 'A17')
 		AND 
 			WRITER_ID = #userId#
 		<isNotEmpty property="oneMonthAgo">
@@ -2011,10 +2011,10 @@
 					START_DATE > DATE_ADD(#oneMonthAgo#, interval -540 minute)
 			]]>
 		</isNotEmpty>
-		AND
-			COMPANY_ID = #companyId#
-		AND
-			TENANT_ID = #tenantId#
+<!-- 		AND -->
+<!-- 			COMPANY_ID = #companyId# -->
+<!-- 		AND -->
+<!-- 			TENANT_ID = #tenantId# -->
 	</select>
 	
 	<select id = "ezAttitudeDAO.getAttitudeJoinDateUserList" resultClass="java.util.HashMap">
@@ -2024,11 +2024,11 @@
        		CAST(TIMESTAMPDIFF(MONTH, JOIN_DATE, NOW()) AS CHAR(4)) AS workingMonthCnt, 
 		    DATE_FORMAT(JOIN_DATE, '%X-%c-%d')          AS joinDate
 		FROM   
-			TBL_ATTITUDE_JOINDATE 
-	    AND
-			COMPANY_ID = #companyId#
-		AND
-			TENANT_ID = #tenantId#
+			TBL_ATTITUDE_ANNUAL 
+<!-- 	    WHERE -->
+<!-- 			COMPANY_ID = #companyId# -->
+<!-- 		AND -->
+<!-- 			TENANT_ID = #tenantId# -->
 	</select>
 	
 	<update id = "ezAttitudeDAO.updateAnnualHoliday" parameterClass="map">
@@ -2043,19 +2043,23 @@
 			</isEqual>
 		WHERE
 			USER_ID = #userId#	
-		AND
-			COMPANY_ID = #companyId#
-		AND
-			TENANT_ID = #tenantId#
+<!-- 		AND -->
+<!-- 			COMPANY_ID = #companyId# -->
+<!-- 		AND -->
+<!-- 			TENANT_ID = #tenantId# -->
 	</update>
 	
-	 <select id="ezAttitude.getTenantCompanuId" resultMap="attitude">
-	  	SELECT 
-	  		TENANT_ID AS tenantId,
-	  		PHYSICALDELIVERYOFFICENAME AS CompanyId
-	  	FROM
-	  		TBL_USERMASTER
-	  	LIMIT 1
+	 <select id="ezAttitudeDAO.getTenantCompanuId" parameterClass="map" resultClass="java.util.HashMap">
+		  SELECT
+				A.TENANT_ID AS tenantId,
+				A.PHYSICALDELIVERYOFFICENAME   AS companyId
+     		FROM
+				TBL_USERMASTER A
+			JOIN 
+				TBL_TENANT B 
+			ON
+				A.COMPANY = B.TENANT_NAME
+			LIMIT 1
 	  </select>
 	
 	<select id="ezAttitudeDAO.checkAbsentDay" parameterClass="map" resultClass="INTEGER">
@@ -2072,10 +2076,25 @@
 				START_DATE >= #oneMonthAgo#
 			AND
 				START_DATE < #oneDayAgo#
+		]]>
+	</select>
+
+	<select id="ezAttitudeDAO.getuserAnnualCnt" parameterClass="map" resultClass="java.util.HashMap">
+		<![CDATA[
+			SELECT
+				TYPE_ID AS typeId,
+				COUNT(*) AS cnt
+			FROM
+				TBL_ATTITUDE
+			WHERE 
+				TYPE_ID IN ('A05','A15','A16')
+			AND 
+				WRITER_ID = #userId#
 			AND
-				COMPANY_ID = #companyId#
+				START_DATE >= #joinDate#
 			AND
-				TENANT_ID = #tenantId#
+				START_DATE < #today#
+			GROUP BY TYPE_ID
 		]]>
 	</select>
 	
@@ -2086,10 +2105,10 @@
 			TBL_ATTITUDE_ANNUAL
 		WHERE
 			USER_ID = #userId#
-		AND
-			COMPANY_ID = #companyId#
-		AND
-			TENANT_ID = #tenantId#
+<!-- 		AND -->
+<!-- 			COMPANY_ID = #companyId# -->
+<!-- 		AND -->
+<!-- 			TENANT_ID = #tenantId# -->
 	</select>
 	
 	<select id="ezAttitudeDAO.checkCanApplStatus" parameterClass="Map" resultClass="String">

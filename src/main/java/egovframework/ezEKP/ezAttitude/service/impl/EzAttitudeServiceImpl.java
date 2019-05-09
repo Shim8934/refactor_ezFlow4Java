@@ -2871,6 +2871,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public List<Map<String, Object>> getJoinDateUserList(String yesterday) throws Exception {
 		LOGGER.debug("getJoinDateUserList started");
 		
+		
+//		Map<String, Object> map = ezAttitudeDAO.getTenantCompanuId();
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("yesterday", yesterday);
 		
@@ -2930,61 +2932,68 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public void updateFiscalYearAnnualHoliday(Map<String, Object> map) throws Exception {
 		LOGGER.debug("updateFiscalYearAnnualHoliday started");
 		
-		List<Map<String, Object>> list = ezAttitudeDAO.getAttitudeJoinDateUserList();
+//		Map<String, Object> tcm = ezAttitudeDAO.getTenantCompanuId();
+//		
+//		map.put("companyId", tcm.get("companyId"));
+//		map.put("tenantId", tcm.get("tenantId"));
+		
+		List<Map<String, Object>> list = ezAttitudeDAO.getAttitudeJoinDateUserList(map);
 		
 		for (Map<String, Object> m : list) {
 			
-			int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
-			
-			if (workingMonthCnt < 12) {
-			
-				String date1 = (String)m.get("joinDate");
-				String date2 = (String)map.get("initialDate");
-				char roundOffRule = (char)map.get("roundOffRule");
+			if(m.get("joinDate") != null && m.get("workingMonthCnt") != null) {
 				
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				Date joinDate = sdf.parse(date1);
-				Date initialDate = sdf.parse(date2);
+				int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
 				
-				long calDate = joinDate.getTime() - initialDate.getTime();
-				long calDatetoDays = Math.abs(calDate / (24 * 60 * 60 * 1000)); 
-				double annualHolidayCnt = Math.floor((15.0 * calDatetoDays / 365.0 * 10 )) / 10.0;
+				if (workingMonthCnt < 12) {
 				
-				if (roundOffRule == '0') {
-					double demicalHoliday = Math.round(((annualHolidayCnt % 1) * 10) ) / 10.0;
-					if (demicalHoliday > 0.5) {
-						annualHolidayCnt = (int)Math.round(annualHolidayCnt);
-					} else if (demicalHoliday > 0.0 && demicalHoliday < 0.5) {
-						annualHolidayCnt = (int)annualHolidayCnt + 0.5;
+					String date1 = (String)m.get("joinDate");
+					String date2 = (String)map.get("initialDate");
+					char roundOffRule = (char)map.get("roundOffRule");
+					
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					Date joinDate = sdf.parse(date1);
+					Date initialDate = sdf.parse(date2);
+					
+					long calDate = joinDate.getTime() - initialDate.getTime();
+					long calDatetoDays = Math.abs(calDate / (24 * 60 * 60 * 1000)); 
+					double annualHolidayCnt = Math.floor((15.0 * calDatetoDays / 365.0 * 10 )) / 10.0;
+					
+					if (roundOffRule == '0') {
+						double demicalHoliday = Math.round(((annualHolidayCnt % 1) * 10) ) / 10.0;
+						if (demicalHoliday > 0.5) {
+							annualHolidayCnt = (int)Math.round(annualHolidayCnt);
+						} else if (demicalHoliday > 0.0 && demicalHoliday < 0.5) {
+							annualHolidayCnt = (int)annualHolidayCnt + 0.5;
+						}
+						
+					} else {
+						annualHolidayCnt = (int)Math.ceil(annualHolidayCnt);
 					}
 					
+					m.put("holidayCnt", annualHolidayCnt);
+					m.put("attendanceRateCondition","1");
+					
+					ezAttitudeDAO.updateAnnualHoliday(m);
+					
 				} else {
-					annualHolidayCnt = (int)Math.ceil(annualHolidayCnt);
-				}
+					int annualHolidayCnt = defaultAnnualHolidayCnt + (int)(workingMonthCnt / 12 - 1) / 2;
+					
+					if (workingMonthCnt > 24) {
+						m.put("holidayCnt", 0);
+						m.put("attendanceRateCondition","2");
+						ezAttitudeDAO.updateAnnualHoliday(m);
+					}
 				
-				m.put("holidayCnt", annualHolidayCnt);
-				m.put("attendanceRateCondition","1");
-				
-				ezAttitudeDAO.updateAnnualHoliday(m);
-				
-			} else {
-				int annualHolidayCnt = defaultAnnualHolidayCnt + (int)(workingMonthCnt / 12 - 1) / 2;
-				
-				if (workingMonthCnt > 24) {
-					m.put("holidayCnt", 0);
-					m.put("attendanceRateCondition","2");
+					m.put("holidayCnt", annualHolidayCnt);
+					m.put("attendanceRateCondition","1");
+					
 					ezAttitudeDAO.updateAnnualHoliday(m);
 				}
-			
-				m.put("holidayCnt", annualHolidayCnt);
-				m.put("attendanceRateCondition","1");
-				
-				ezAttitudeDAO.updateAnnualHoliday(m);
 			}
+		
 		}
-		
 		LOGGER.debug("updateFiscalYearAnnualHoliday ended");
-		
 	}
 	
 	@Override
@@ -3032,7 +3041,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public void extinctionMonthlyHoliday(Map<String, Object> map) throws Exception {
 		LOGGER.debug("extinctionMonthlyHoliday started");
 		
-		int userMonthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
+		int totalAnnualCnt = 0;
+		for ( Map<String, Object> m : ezAttitudeDAO.getuserAnnualCnt(map)) {
+			totalAnnualCnt += ((String)m.get("typeId")).equals("A05") ? 1 : 0.5;
+		}
+		
+		int userMonthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map) - totalAnnualCnt;
 		int workingMonthCnt = Integer.parseInt((String)map.get("workingMonthCnt"));
 		
 		if (userMonthlyHolidayCnt >= workingMonthCnt - (workingMonthCnt - 12 ) * 2) { 
