@@ -2563,8 +2563,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public String getAttitudeAnnualListCount(String searchUserName,
-			String searchDeptName, String searchTitle, String searchYear,
-			String offsetMin, String companyId, int tenantId) throws Exception {
+			String searchDeptName, String searchTitle, String offsetMin, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getAttitudeAnnualListCount started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
@@ -2573,7 +2572,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
 		map.put("searchTitle", searchTitle);
-		map.put("searchYear", searchYear);
 		map.put("offsetMin", offsetMin);
 		
 		String totalCount = ezAttitudeDAO.getAttitudeAnnualListCount(map);
@@ -2585,8 +2583,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 	@Override
 	public List<AttitudeAnnualVO> getAttitudeAnnualList(String searchUserName,
-			String searchDeptName, String searchTitle, String searchYear,
-			String orderCell, String orderOption, String offsetMin,
+			String searchDeptName, String searchTitle, String orderCell, String orderOption, String offsetMin,
 			String pageNum, String listSize, String companyId, int tenantId,
 			String primary) throws Exception {
 		LOGGER.debug("getAttitudeAnnualList started");
@@ -2601,17 +2598,11 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map.put("endRow", limit + Integer.valueOf(listSize));
 		}
 		
-		String searchStartTime = searchYear + "-01-01 00:00:00";
-		String searchEndTime = searchYear + "-12-31 23:59:59";
-		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
 		map.put("searchUserName", searchUserName);
 		map.put("searchDeptName", searchDeptName);
 		map.put("searchTitle", searchTitle);
-		map.put("searchYear", searchYear);
-		map.put("searchStartTime", searchStartTime);
-		map.put("searchEndTime", searchEndTime);
 		map.put("listSize", listSize);
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
@@ -2660,10 +2651,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("changeAnnual started");
 		
 		if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
-			ezAttitudeDAO.insertAnnualHistory(map);
+			//ezAttitudeDAO.insertAnnualHistory(map);
 			ezAttitudeDAO.insertAnnual(map);
 		} else {
-			ezAttitudeDAO.changeAnnualHistory(map);
+			//ezAttitudeDAO.changeAnnualHistory(map);
 			ezAttitudeDAO.changeAnnual(map);
 		}
 		
@@ -2674,14 +2665,6 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public AttitudeAnnualVO getAnnualCnt(Map<String, Object> map) throws Exception {
 		LOGGER.debug("getAnnualCnt started");
 
-		String year = (String) map.get("year");
-		
-		String searchStartTime = year + "-01-01 00:00:00";
-		String searchEndTime = year + "-12-31 23:59:59";
-		
-		map.put("searchStartTime", searchStartTime);
-		map.put("searchEndTime", searchEndTime);
-		
 		AttitudeAnnualVO result = ezAttitudeDAO.getAnnualCnt(map);
 		
 		LOGGER.debug("getAnnualCnt ended");
@@ -3333,9 +3316,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public void saveJoinDate(Map<String, Object> map) throws Exception {
 		LOGGER.debug("saveJoinDate started");
 		
-		String mode = (String) map.get("mode");
-		
-		if(mode.equals("new")) {
+		if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
 			ezAttitudeDAO.saveJoinDate(map);
 		} else {
 			ezAttitudeDAO.modifyJoinDate(map);

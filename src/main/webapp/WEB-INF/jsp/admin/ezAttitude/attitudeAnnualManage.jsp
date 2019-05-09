@@ -42,7 +42,7 @@
 	    <script type="text/javascript">
 	    	var pCompanyId = ""; //현재 선택된 회사의 아이디
 	    	//검색조건 저장 변수
-	    	var searchYear = ""; //검색조건 (년도)
+	    	//var searchYear = ""; //검색조건 (년도)
 	    	var searchUserName = ""; //검색조건 (사원명)
 	    	var searchDeptName = ""; //검색조건 (부서명)
 	    	var searchTitle = ""; //검색조건 (직위)
@@ -74,7 +74,7 @@
 			            document.getElementById("ListCompany").selectedIndex = 0;
 		    		}
 		    		
-		    		makeoptionyear();
+		    		//makeoptionyear();
 		    		
 		    		company_change();
 		        }
@@ -103,15 +103,11 @@
 	    			}
 	    		});
 	    		
-	    		//사용 연차 수 링크 클릭
-	    		$(document).on('click', '.mainlist .useAnnualCnt', function(){
-	    			useAnnualHistory(this);
-	    		})
 	    		//총 연차 수 링크 클릭
 	    		$(document).on('click', '.mainlist .totalAnnualCnt', function(){
 	    			var userId = $(this).closest("tr").attr("userid");
 	    			var userName = $(this).closest("tr").children("td:eq(1)").text();
-	    			modifyPrsnAnnualPop(userId , userName , searchYear);
+	    			modifyPrsnAnnualPop(userId , userName);
 	    		})
 	    		//입사일 클릭
 	    		$(document).on('click', '.mainlist .joinDate', function(){
@@ -137,7 +133,7 @@
 	        }
 		    
 		    //년도 생성
-	        function makeoptionyear() {
+	        /* function makeoptionyear() {
 	            var date = new Date()
 	            var year = date.getFullYear();
 		        var tempyear = "";
@@ -175,7 +171,7 @@
 	                }
 	                tempyear = selyear + 4;
 	            }
-	        }
+	        } */
 			
 		    //회사변경시
 	    	function company_change() {
@@ -194,7 +190,7 @@
 	   					userName : searchUserName,
 	   					deptName : searchDeptName,
 	   					title : searchTitle,
-	   					year : searchYear,
+	   					//year : searchYear,
 	   					pageNum : pageNum,
 	   					listSize : listSize,
 	   					orderCell : orderCell,
@@ -231,13 +227,13 @@
 		    			resultHtml += "<td><a class='link joinDate'>" + vo.joinDate + "</td>";
 	    			}
 	    			
-	    			resultHtml += "<td><a class='link useAnnualCnt'>";
+	    			/* resultHtml += "<td><a class='link useAnnualCnt'>";
 	    			if (Number(vo.useAnnualCnt.split(".")[1]) > 0) {
 	    				resultHtml += vo.useAnnualCnt;
 	    			} else {
 		    			resultHtml += vo.useAnnualCnt.split(".")[0];
 	    			}
-	    			resultHtml += "</a></td>";
+	    			resultHtml += "</a></td>"; */
 	    			
 	    			resultHtml += "<td><a class='link totalAnnualCnt'>";
 	    			if (Number(vo.totalAnnualCnt.split(".")[1]) > 0) {
@@ -285,12 +281,12 @@
 	    	//검색시 조건
 			function searchAnnualList(searchType){
 	    		if (searchType == "search") { //검색
-	    			searchYear = document.getElementById("searchYear").value;
+	    			//searchYear = document.getElementById("searchYear").value;
 	    			searchUserName = $("#searchUserName").val();
 	    			searchDeptName = $("#searchDeptName").val();
 	    			searchTitle = $("#searchTitle").val();
 	    		} else { //새로고침
-	    			searchYear = maxyear - 2;
+	    			//searchYear = maxyear - 2;
 	    			$("#searchUserName").val("");
 	    			$("#searchDeptName").val("");
 	    			$("#searchTitle").val("");
@@ -315,15 +311,15 @@
 					return;
 				}
 				
-		    	exportExcelframe.location.href="/admin/ezAttitude/excelAnnualListExport.do?companyId=" + pCompanyId + "&searchYear=" + searchYear + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&orderCell=" + orderCell + "&orderOption=" + orderOption;
+		    	exportExcelframe.location.href="/admin/ezAttitude/excelAnnualListExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&orderCell=" + orderCell + "&orderOption=" + orderOption;
 		    	exportExcelframe.target="_blank";
 			}
 			
-			//엑셀로 등록 팝업
+			/* //엑셀로 등록 팝업
 	    	function annualExcelUploadPop(userId, year) {
 	        	var url = "/admin/ezAttitude/annualExcelUploadPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
 				window.open(url, "annualExcelUploadPop", GetOpenWindowfeature(500, 230));
-	        }
+	        } */
 			
 			//전체 연차 변경 팝업
 	    	function modifyAllAnnualPop() {
@@ -332,16 +328,16 @@
 	        }
 	    	
 			//사용연차 수 팝업
-			function useAnnualHistory (obj) {
+			/* function useAnnualHistory (obj) {
 				var userId = $(obj).closest("tr").attr("userid");
 				var url = "/admin/ezAttitude/useAnnualHistoryPop.do?userId=" + userId + "&year=" + searchYear + "&companyId=" + pCompanyId;
 				window.open(url, "useAnnualHistoryPop", GetOpenWindowfeature(665, 535));
-			}
+			} */
 	    	
 			//로우의 총 연차수 링크 클릭 시
-	    	function modifyPrsnAnnualPop(userId, userName, year) {
-	        	var url = "/admin/ezAttitude/modifyPrsnAnnualPop.do?year=" + year + "&userName=" + userName + "&userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "modifyPrsnAnnualPop", GetOpenWindowfeature(500, 294));
+	    	function modifyPrsnAnnualPop(userId, userName) {
+	        	var url = "/admin/ezAttitude/modifyPrsnAnnualPop.do?userName=" + userName + "&userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
+				window.open(url, "modifyPrsnAnnualPop", GetOpenWindowfeature(500, 274));
 	        }
 	    	
 			//수정내역팝업
@@ -371,18 +367,14 @@
 	  	<table id="searchTable" style="width:100%;">
 			<tbody>
 				<tr>
-					<td style="width: 3%"><span><spring:message code='ezAttitude.t234' /></span></td>
-					<td style="width: 12%;">
-						<select name="searchYear" id="searchYear" onchange="makeoptionyear();" style="padding-right:50px;height:24px" ></select>
-					</td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t10' /></td>
 					<td style="width: 12%;"><input type="text" id="searchUserName" style="width: 90%;" onkeypress="searchPress()"></td>
+					<td style="width: 3%;"><spring:message code='ezAttitude.t9'/></td>
+					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%;"></td>
 					<td style="width: 12%;">
 				</tr>
 				<tr>
-					<td style="width: 3%;"><spring:message code='ezAttitude.t9'/></td>
-					<td style="width: 12%;"><input type="text" id="searchDeptName" style="width: 90%;" onkeypress="searchPress()"></td>
 					<td style="width: 3%;"><spring:message code='ezAttitude.t11' /></td>
 					<td style="width: 12%;"><input type="text" id="searchTitle" style="width: 90%;" maxlength="50" onkeypress="searchPress()"></td>
 					</td>
@@ -390,7 +382,7 @@
 						<a class="imgbtn"><span onclick="searchAnnualList('search');"><spring:message code='ezAttitude.t121' /></span></a>
 						<a class="imgbtn"><span onclick="searchAnnualList('refresh');"><spring:message code='ezAttitude.t122' /></span></a>
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
-						<a class="imgbtn"><span onclick="annualExcelUploadPop();"><spring:message code='ezAttitude.t235' /></span></a>
+						<%-- <a class="imgbtn"><span onclick="annualExcelUploadPop();"><spring:message code='ezAttitude.t235' /></span></a> --%>
 						<a class="imgbtn"><span onclick="modifyAllAnnualPop();"><spring:message code='ezAttitude.t236' /></span></a>
 					</td>
 				</tr>
@@ -406,7 +398,6 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
 						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="joinDate">입사일</th>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="useAnnualCnt"><spring:message code='ezAttitude.t238' /></th>
 						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="totalAnnualCnt"><spring:message code='ezAttitude.t239' /></th>
 						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t241' /></th>
 					</tr>

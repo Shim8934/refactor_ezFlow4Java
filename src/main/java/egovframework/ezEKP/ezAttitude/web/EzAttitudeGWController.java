@@ -2088,7 +2088,6 @@ public class EzAttitudeGWController {
 			String searchDeptName = request.getParameter("searchDeptName");
 			String searchDeptId = request.getParameter("searchDeptId") == null ? "" : request.getParameter("searchDeptId");
 			String searchTitle = request.getParameter("searchTitle");
-			String searchYear = request.getParameter("searchYear");
 			String pageNum = request.getParameter("pageNum");
 			String listSize = request.getParameter("listSize");
 			String orderCell = request.getParameter("orderCell");
@@ -2098,8 +2097,8 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantId = info.getTenantId();
 			
-			String totalCount = ezAttitudeService.getAttitudeAnnualListCount(searchUserName, searchDeptName, searchTitle, searchYear, offsetMin, companyId, tenantId);
-			List<AttitudeAnnualVO> list = ezAttitudeService.getAttitudeAnnualList(searchUserName, searchDeptName, searchTitle, searchYear, orderCell, orderOption, offsetMin, pageNum, listSize, companyId, tenantId, info.getPrimary());
+			String totalCount = ezAttitudeService.getAttitudeAnnualListCount(searchUserName, searchDeptName, searchTitle, offsetMin, companyId, tenantId);
+			List<AttitudeAnnualVO> list = ezAttitudeService.getAttitudeAnnualList(searchUserName, searchDeptName, searchTitle, orderCell, orderOption, offsetMin, pageNum, listSize, companyId, tenantId, info.getPrimary());
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
@@ -2216,7 +2215,6 @@ public class EzAttitudeGWController {
 			map.put("flagCheck", request.getParameter("flagCheck"));
 			map.put("changeReason", request.getParameter("changeReason"));
 			map.put("annualCnt", request.getParameter("annualCnt"));
-			map.put("year", request.getParameter("year"));
 			
 			ezAttitudeService.changeAnnual(map);
 			
@@ -2351,7 +2349,6 @@ public class EzAttitudeGWController {
 			map.put("userId", userId);
 			map.put("companyId", request.getParameter("companyId"));
 			map.put("tenantId", info.getTenantId());
-			map.put("year", request.getParameter("year"));
 			map.put("offsetMin", request.getParameter("offsetMin"));
 			
 			String primary = info.getPrimary();

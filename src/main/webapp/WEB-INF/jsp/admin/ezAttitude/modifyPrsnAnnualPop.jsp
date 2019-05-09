@@ -16,7 +16,6 @@
 	    	var companyId = "<c:out value="${vo.companyId}" />";
 	    	var changeReason = '';
 	    	var totalAnnualCnt = "<c:out value="${vo.totalAnnualCnt}" />";
-	    	var useAnnualCnt = "<c:out value="${vo.useAnnualCnt}" />";
 	    	var annualCnt = "";
 	    	var searchYear = "<c:out value="${vo.year}" />";
 	    	var userId = "<c:out value="${vo.userId}" />";
@@ -26,10 +25,6 @@
 		    	    $(this).val($(this).val().replace(/[^0-9]/g,""));
 		    	});
 		    	
-		    	if(useAnnualCnt == null || useAnnualCnt == "") {
-		    		useAnnualCnt = 0;
-		    	}
-		    	
 		    	if(totalAnnualCnt == null || totalAnnualCnt == "") {
 		    		totalAnnualCnt = 0;
 		    	} else if(totalAnnualCnt % 1 == 0.5) {
@@ -38,10 +33,8 @@
 		    		totalAnnualCnt = totalAnnualCnt - 0.5
 		    	}
 		    	
-		    	useAnnualCnt = Number(useAnnualCnt);
 		    	totalAnnualCnt = Number(totalAnnualCnt);
 		    	
-		    	$("#useAnnualCnt").html(useAnnualCnt);
 		    	$("#totalAnnualCnt").val(totalAnnualCnt);
    			});
 	    	
@@ -84,7 +77,6 @@
 	   				url:"/admin/ezAttitude/changePrsnAnnual.do",
 	   				dataType : "text",
 	   				data:{
-	   					year : searchYear,
 	   					changeReason : changeReason,
 	   					companyId : companyId,
 	   					annualCnt : annualCnt,
@@ -136,12 +128,7 @@
 	            </td>
 	        </tr>
 	        <tr>
-	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t238' /></th>
-	            <td id="useAnnualCnt">
-	            </td>
-	        </tr>
-	        <tr>
-	        	<th style="width:200px; text-align:center"><spring:message code='ezAttitude.t239' /></th>
+	        	<th style="width:200px; text-align:center">추가 연차 수</th>
 	            <td>
 	            	<input id="totalAnnualCnt" name="totalAnnualCnt" type="text" style="width:30px;text-align:right;padding-bottom: 5px;" value="" maxlength="3">
 	            	<label id="banchaTxt"></label><spring:message code='ezAttitude.t68' />
