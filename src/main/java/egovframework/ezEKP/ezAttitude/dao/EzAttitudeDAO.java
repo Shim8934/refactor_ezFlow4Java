@@ -509,4 +509,17 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public List<String> getApprovalGConnAttitudeList(Map<String, Object> map) {
 		return (List<String>) list("ezAttitudeDAO.getApprovalGConnAttitudeList", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getAttitudeAnnualConfig(Map<String, Object> map) throws Exception{
+		return (Map<String, Object>) select("ezAttitudeAdminDAO.getAttitudeAnnualConfig", map);
+	}
+	
+	public void insertAnnualConfig(Map<String, Object> map) throws Exception {
+		insert("ezAttitudeAdminDAO.insertAnnualConfig", map);
+	}
+	
+	public void updateAnnualConfig(Map<String, Object> map) throws Exception {
+		update("ezAttitudeAdminDAO.updateAnnualConfig", map);
+	}
 }

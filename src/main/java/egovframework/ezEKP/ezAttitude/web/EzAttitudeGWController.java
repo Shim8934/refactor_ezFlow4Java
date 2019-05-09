@@ -2088,7 +2088,6 @@ public class EzAttitudeGWController {
 			String searchDeptName = request.getParameter("searchDeptName");
 			String searchDeptId = request.getParameter("searchDeptId") == null ? "" : request.getParameter("searchDeptId");
 			String searchTitle = request.getParameter("searchTitle");
-			String searchYear = request.getParameter("searchYear");
 			String pageNum = request.getParameter("pageNum");
 			String listSize = request.getParameter("listSize");
 			String orderCell = request.getParameter("orderCell");
@@ -2098,8 +2097,8 @@ public class EzAttitudeGWController {
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			int tenantId = info.getTenantId();
 			
-			String totalCount = ezAttitudeService.getAttitudeAnnualListCount(searchUserName, searchDeptName, searchTitle, searchYear, offsetMin, companyId, tenantId);
-			List<AttitudeAnnualVO> list = ezAttitudeService.getAttitudeAnnualList(searchUserName, searchDeptName, searchTitle, searchYear, orderCell, orderOption, offsetMin, pageNum, listSize, companyId, tenantId, info.getPrimary());
+			String totalCount = ezAttitudeService.getAttitudeAnnualListCount(searchUserName, searchDeptName, searchTitle, offsetMin, companyId, tenantId);
+			List<AttitudeAnnualVO> list = ezAttitudeService.getAttitudeAnnualList(searchUserName, searchDeptName, searchTitle, orderCell, orderOption, offsetMin, pageNum, listSize, companyId, tenantId, info.getPrimary());
 			
 			JSONObject data = new JSONObject();
 			data.put("list", list);
@@ -2216,7 +2215,6 @@ public class EzAttitudeGWController {
 			map.put("flagCheck", request.getParameter("flagCheck"));
 			map.put("changeReason", request.getParameter("changeReason"));
 			map.put("annualCnt", request.getParameter("annualCnt"));
-			map.put("year", request.getParameter("year"));
 			
 			ezAttitudeService.changeAnnual(map);
 			
@@ -2351,7 +2349,6 @@ public class EzAttitudeGWController {
 			map.put("userId", userId);
 			map.put("companyId", request.getParameter("companyId"));
 			map.put("tenantId", info.getTenantId());
-			map.put("year", request.getParameter("year"));
 			map.put("offsetMin", request.getParameter("offsetMin"));
 			
 			String primary = info.getPrimary();
@@ -3018,6 +3015,87 @@ public class EzAttitudeGWController {
 			result.put("data", status);
 		}
 		LOGGER.debug("G/W EzAttitude [DELETE /rest/ezattitude/users/"+userId+"/approvalconn] ended.");
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 연차설정정보 조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/annualreg", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject attitudeAnnualConfigInfo(@PathVariable String companyId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/annualreg] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			//근태규율설정정보
+			Map<String, Object> attitudeAnnualConfigInfo = ezAttitudeService.getAttitudeAnnualConfig(info.getTenantId(), companyId);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", attitudeAnnualConfigInfo);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/companies/" + companyId + "/annualreg] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [PUT] 연차설정정보 수정
+	 */
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/annualreg", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
+	public JSONObject updateAnnualConf(@PathVariable String companyId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/annualreg] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			
+			String annualCancelRule = request.getParameter("annualCancelRule");
+			String useAnnualAutoGnrt = request.getParameter("useAnnualAutoGnrt");
+			String annualGnrtStd = request.getParameter("annualGnrtStd");
+			String useMinusAnnual = request.getParameter("useMinusAnnual");
+			String useAnnualTmnt = request.getParameter("useAnnualTmnt");
+			String roundOffRule = request.getParameter("roundOffRule");
+			
+			String confSetDate =  commonUtil.getTodayUTCTime("yyyy-MM-dd");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
+			
+			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("companyId", companyId);
+			map.put("tenantId", info.getTenantId());
+			map.put("annualCancelRule", annualCancelRule);
+			map.put("useAnnualAutoGnrt", useAnnualAutoGnrt);
+			map.put("annualGnrtStd", annualGnrtStd);
+			map.put("useMinusAnnual", useMinusAnnual);
+			map.put("useAnnualTmnt", useAnnualTmnt);
+			map.put("roundOffRule", roundOffRule);
+			map.put("confSetDate", confSetDate);
+			
+			ezAttitudeService.updateAnnualConfig(map);
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		
+		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/annualreg] ended.");
+		
 		return result;
 	}
 }

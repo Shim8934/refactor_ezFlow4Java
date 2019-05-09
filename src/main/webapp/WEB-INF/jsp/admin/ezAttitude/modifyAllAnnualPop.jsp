@@ -16,7 +16,6 @@
 	    	var companyId = "<c:out value="${companyId}" />";
 	    	var changeReason = '';
 	    	var annualCnt = '';
-	    	var searchYear = opener.$("#searchYear").val();
 	    
 	    	$(document).ready(function(){
 		    	$("input:text[name=annualCnt]").on("keyup", function() {
@@ -63,7 +62,6 @@
 	   				url:"/admin/ezAttitude/changeAllAnnual.do",
 	   				dataType : "text",
 	   				data:{
-	   					year : searchYear,
 	   					changeReason : changeReason,
 	   					companyId : companyId,
 	   					flagCheck : flagCheck,
