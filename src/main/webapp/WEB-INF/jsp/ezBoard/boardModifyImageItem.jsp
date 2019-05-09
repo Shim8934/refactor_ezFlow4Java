@@ -475,7 +475,7 @@
 	                    <table style="width:100%">
 	                    	<tr>
 	                        	<td style="width:100%; padding:3px 0px 0px 0px;">
-	                                <input type="text" id='getcontent' style='width:98%; border:1px solid #bbbbbb; background:#fff; height:21px; line-height:21px; padding:0px 0px 0px 4px;' maxlength="50" value="${imageContent}" />
+	                                <input type="text" id='getcontent' style='width:98%; border:1px solid #bbbbbb; background:#fff; height:21px; line-height:21px; padding:0px 0px 0px 4px;' maxlength="50" value="<c:out value='${imageContent}'/>" />
 	                            </td>
 	                        </tr>
 	                    </table>
@@ -484,7 +484,7 @@
 	        </tr>
 	        <tr>
 	            <td style="width:100%; display:none;">
-	                <input type="text" id='getcontent' style='width:100%' maxlength="50" value="${imageContent}"/>
+	                <input type="text" id='getcontent' style='width:100%' maxlength="50" value="<c:out value='${imageContent}'/>"/>
 	            </td>         
 	        </tr>
 	        <tr>
