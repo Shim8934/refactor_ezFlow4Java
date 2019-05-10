@@ -2356,7 +2356,6 @@ public class EzAttitudeAdminController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = request.getParameter("userId");
 		String companyId = request.getParameter("companyId");
-		String year = request.getParameter("year");
 		
 		if (userId != null) {
 			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -2369,8 +2368,7 @@ public class EzAttitudeAdminController {
 			HttpEntity<?> entity = new HttpEntity<>(headers);
 			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", companyId)
-					.queryParam("userId", userId)
-					.queryParam("year", year);
+					.queryParam("userId", userId);
 			
 			RestTemplate rest = new RestTemplate();
 			
@@ -2971,6 +2969,7 @@ public class EzAttitudeAdminController {
 		String annualCancelRule = request.getParameter("annualCancelRule");
 		String useAnnualAutoGnrt = request.getParameter("useAnnualAutoGnrt");
 		String annualGnrtStd = request.getParameter("annualGnrtStd");
+		String initialDate = request.getParameter("initialDate");
 		String useMinusAnnual = request.getParameter("useMinusAnnual");
 		String useAnnualTmnt = request.getParameter("useAnnualTmnt");
 		String roundOffRule = request.getParameter("roundOffRule");
@@ -2989,6 +2988,7 @@ public class EzAttitudeAdminController {
 				.queryParam("annualCancelRule", annualCancelRule)
 				.queryParam("useAnnualAutoGnrt", useAnnualAutoGnrt)
 				.queryParam("annualGnrtStd", annualGnrtStd)
+				.queryParam("initialDate", initialDate)
 				.queryParam("useMinusAnnual", useMinusAnnual)
 				.queryParam("useAnnualTmnt", useAnnualTmnt)
 				.queryParam("roundOffRule", roundOffRule);

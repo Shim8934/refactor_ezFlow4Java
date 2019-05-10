@@ -84,10 +84,11 @@
 		<result property="annualCancelRule"			column="ANNUAL_CANCEL_RULE"			columnIndex="3"/>
 		<result property="useAnnualAutoGnrt"				column="USE_ANNUAL_AUTO_GNRT"			columnIndex="4"/>
 		<result property="annualGnrtStd"				column="ANNUAL_GNRT_STD"				columnIndex="5"/>
-		<result property="useMinusAnnual"			column="USE_MINUS_ANNUAL"		columnIndex="6"/>
-		<result property="useAnnualTmnt"		column="USE_ANNUAL_TMNT"	columnIndex="7"/>
-		<result property="roundOffRule"		column="ROUND_OFF_RULE"	columnIndex="8"/>
-		<result property="confSetDate"				column="CONF_SET_DATE"			columnIndex="9"/>
+		<result property="initialDate"				column="INITIAL_DATE"				columnIndex="6"/>
+		<result property="useMinusAnnual"			column="USE_MINUS_ANNUAL"		columnIndex="7"/>
+		<result property="useAnnualTmnt"		column="USE_ANNUAL_TMNT"	columnIndex="8"/>
+		<result property="roundOffRule"		column="ROUND_OFF_RULE"	columnIndex="9"/>
+		<result property="confSetDate"				column="CONF_SET_DATE"			columnIndex="10"/>
 	</resultMap>
 	
 	<select id="ezAttitudeAdminDAO.getCompanyList" parameterClass="Map" resultClass="AttitudeDeptVO">
@@ -1724,16 +1725,13 @@
 				CHANGE_USER_ID AS CHANGE_USER_ID,
 				(SELECT DISPLAYNAME$primary$ FROM tbl_usermaster WHERE CN = CHANGE_USER_ID AND TENANT_ID = #tenantId#) AS CHANGE_USER_NAME,
 				COMPANY_ID AS COMPANY_ID,
-				TENANT_ID AS TENANT_ID,
-				YEAR AS YEAR
+				TENANT_ID AS TENANT_ID
 			FROM
 				tbl_attitude_annual_history
 			WHERE
 				TENANT_ID = #tenantId#
 			AND
 				USER_ID = #userId#
-			AND
-				YEAR = #year#
 			ORDER BY 
 				CHANGE_DATE DESC
 		]]>
@@ -1787,6 +1785,7 @@
 				annual_cancel_rule,
 				use_annual_auto_gnrt,
 				annual_gnrt_std,
+				DATE_FORMAT(initial_date, '%Y-%m-%d') AS initial_date,
 				use_minus_annual,
 				use_annual_tmnt,
 				round_off_rule,
@@ -1808,7 +1807,9 @@
 				TENANT_ID,
 				ANNUAL_CANCEL_RULE,
 				USE_ANNUAL_AUTO_GNRT,
-				ANNUAL_GNRT_STD, USE_MINUS_ANNUAL,
+				ANNUAL_GNRT_STD,
+				INITIAL_DATE,
+				USE_MINUS_ANNUAL,
 				USE_ANNUAL_TMNT,
 				ROUND_OFF_RULE,
 				CONF_SET_DATE
@@ -1820,6 +1821,7 @@
 				#annualCancelRule#,
 				#useAnnualAutoGnrt#,
 				#annualGnrtStd#,
+				#initialDate#,
 				#useMinusAnnual#,
 				#useAnnualTmnt#,
 				#roundOffRule#,
@@ -1835,6 +1837,7 @@
 				annual_cancel_rule = #annualCancelRule#,
 				use_annual_auto_gnrt = #useAnnualAutoGnrt#,
 				annual_gnrt_std = #annualGnrtStd#,
+				initial_date = #initialDate#,
 				use_minus_annual = #useMinusAnnual#,
 				use_annual_tmnt = #useAnnualTmnt#,
 				round_off_rule = #roundOffRule#,
