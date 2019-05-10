@@ -76,6 +76,7 @@
 		<result property="userId" 					column="USER_ID" 					columnIndex="1"/>
 		<result property="companyId" 					column="COMPANY_ID" 				columnIndex="2"/>
 		<result property="tenantId" 				column="TENANT_ID" 			columnIndex="3"/>
+		<result property="joinDate" 				column="JOIN_DATE" 			columnIndex="4"/>
 	</resultMap>
 	
 	<resultMap class="java.util.HashMap" id="annualConfigMap">
@@ -1610,6 +1611,7 @@
 			    C.ATTITUDE_ID as attitudeId,
 			    C.CONTENT as content,
 			    C.MODAPPL as modAppl,
+			    F.ANNUAL_APPR_STATUS as annualApprStatus,
 			    ifnull( 
 						CASE
 						   WHEN C.TYPE_ID = 'A11' THEN to_days(C.END_DATE) - to_days(C.START_DATE)
@@ -1618,7 +1620,28 @@
 						   ELSE 0
 						END
 				, 0) as annualCnt,
-			    (ifnull(B.MONTHLY_HOLIDAY_CNT, 0) + ifnull(B.ANNUAL_HOLIDAY_CNT, 0) + ifnull(B.ADDITIONAL_HOLIDAY_CNT, 0)) as totalAnnualCnt
+			    ifnull(
+				    (
+						SELECT
+							CHANGE_ANNUAL_CNT
+						FROM
+							TBL_ATTITUDE_ANNUAL_HISTORY E
+						WHERE
+							E.TENANT_ID = #tenantId#
+								AND 
+							E.COMPANY_ID = #companyId#
+								AND 
+							E.USER_ID = #userId#
+								AND
+							(
+							date_add(E.CHANGE_DATE, INTERVAL #offsetMin# minute) >= #startTime#
+							AND date_add(E.CHANGE_DATE, INTERVAL #offsetMin# minute) <= #endTime#
+							)
+						ORDER BY
+							E.CHANGE_DATE
+						LIMIT 1
+					)
+				, 0) as totalAnnualCnt
 			FROM 
 				TBL_USERMASTER A
 			LEFT OUTER JOIN 
@@ -1661,6 +1684,10 @@
 				TBL_ATTITUDE_TYPE D
 			ON 
 				(A.TENANT_ID = D.TENANT_ID AND A.PHYSICALDELIVERYOFFICENAME = D.COMPANY_ID AND C.TYPE_ID = D.TYPE_ID)
+			LEFT OUTER JOIN 
+				TBL_ATTITUDE_APR_CONN F
+			ON 
+				(A.TENANT_ID = F.TENANT_ID AND A.PHYSICALDELIVERYOFFICENAME = F.COMPANY_ID AND C.ATTITUDE_ID = F.ATTITUDE_ID)
 			WHERE 
 				A.TENANT_ID = #tenantId#
 			AND 
@@ -1848,5 +1875,33 @@
 				company_id = #companyId#
 		]]>
 	</update>
+	
+	<select id="ezAttitudeAdminDAO.getJoinDate" parameterClass="Map" resultMap="annualUserMap">
+		<![CDATA[
+			SELECT 
+				A.CN AS USER_ID,
+				A.PHYSICALDELIVERYOFFICENAME AS COMPANY_ID,
+				A.TENANT_ID AS TENANT_ID,
+			    ifnull(DATE_FORMAT(B.JOIN_DATE, '%Y-%m-%d'), 0) AS JOIN_DATE
+			FROM 
+				TBL_USERMASTER A
+			LEFT OUTER JOIN 
+				TBL_ATTITUDE_ANNUAL B
+			ON
+				(A.TENANT_ID = B.TENANT_ID 
+				AND
+				 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
+				AND
+				 A.CN = B.USER_ID)
+			WHERE
+				A.TENANT_ID = #tenantId#
+			AND 
+				A.PHYSICALDELIVERYOFFICENAME = #companyId#			
+			AND 
+				A.CN = #userId#			
+		]]>
+		
+	</select>
+	
 	
 </sqlMap>

@@ -168,6 +168,20 @@
 		<result property="applDate"			column="APPL_DATE"			columnIndex="12"/>
 	</resultMap>
 	
+	<resultMap class="java.util.HashMap" id="attitudeAprlineMap">
+		<result property="docId"		column="DOCID" 		columnIndex="1"/>
+		<result property="aprMemberSn"		column="APRMEMBERSN" 		columnIndex="2"/>
+		<result property="aprType"		column="APRTYPE"		columnIndex="3"/>
+		<result property="aprState"		column="APRSTATE" 		columnIndex="4"/> 		
+		<result property="aprMemberId"		column="APRMEMBERID" 		columnIndex="5"/>
+		<result property="aprMemberIsDeptYn"			column="APRMEMBERISDEPTYN" 			columnIndex="6"/>
+		<result property="aprMemberName"			column="APRMEMBERNAME" 			columnIndex="7"/>
+		<result property="aprMemberJobTitle"		column="APRMEMBERJOBTITLE" 		columnIndex="8"/>
+		<result property="aprMemberDeptId"	column="APRMEMBERDEPTID" 	columnIndex="9"/>
+		<result property="aprMemberDeptName"			column="APRMEMBERDEPTNAME" 			columnIndex="10"/>
+		<result property="aprMemberLdapPath"			column="APRMEMBERLDAPPATH" 			columnIndex="11"/>
+	</resultMap>
+	
 	<select id="ezAttitudeDAO.getAttitudeList" parameterClass="Map" resultMap="attitude" remapResults="true">
 		<![CDATA[
 			SELECT * FROM (
@@ -2395,4 +2409,38 @@
        		annual_doc_id = #docId#			
 	]]>
 	</select>
+	
+	<select id="ezAttitudeDAO.getAttitudeAprInfo" parameterClass="Map" resultMap="attitudeAprlineMap">
+		<![CDATA[
+			SELECT 
+					B.DOCID AS DOCID,
+			    	B.APRMEMBERSN AS APRMEMBERSN,
+			    	B.APRTYPE AS APRTYPE,
+			    	B.APRSTATE AS APRSTATE,
+			    	B.APRMEMBERID AS APRMEMBERID,
+			    	B.APRMEMBERISDEPTYN AS APRMEMBERISDEPTYN,
+			    	B.APRMEMBERNAME$lang$ AS APRMEMBERNAME,
+			    	B.APRMEMBERJOBTITLE$lang$ AS APRMEMBERJOBTITLE,
+			    	B.APRMEMBERDEPTID AS APRMEMBERDEPTID,
+			    	B.APRMEMBERDEPTNAME$lang$ AS APRMEMBERDEPTNAME,
+			    	B.APRMEMBERLDAPPATH AS APRMEMBERLDAPPATH
+				FROM 
+					tbl_attitude_apr_conn A
+				INNER JOIN 
+					tbl_endaprlineinfo B
+				ON
+					(A.TENANT_ID = B.TENANT_ID 
+					AND
+					 A.COMPANY_ID = B.COMPANYID 
+					AND
+					 A.ANNUAL_DOC_ID = B.DOCID)
+				WHERE
+					A.TENANT_ID = #tenantId#
+				AND 
+					A.COMPANY_ID = #companyId#
+				AND			
+					A.ATTITUDE_ID = #attitudeId#
+		]]>
+	</select>
+	
 </sqlMap>

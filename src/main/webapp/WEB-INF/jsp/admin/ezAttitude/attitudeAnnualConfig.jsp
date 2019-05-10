@@ -70,7 +70,9 @@
 		        	$("#ror").css('display', 'none');
 	        	} else if(val == 1) {
 		        	$("#ags").css('display', '');
-		        	$("#sdp").css('display', '');
+		        	if($('input[name=annual_gnrt_std]:checked').val() == 1) {
+			        	$("#sdp").css('display', '');
+		        	}
 		        	$("#uat").css('display', '');
 		        	$("#ror").css('display', '');
 	        	} else if(val == 2) {
@@ -227,7 +229,7 @@
 	    </h1>
 		<table class="content" style="width:600px;margin-top:30px">
 			<tr style="height:30px;">
-	        	<th style="width: 550px; text-align:center">
+	        	<th style="width: 40%; text-align:center">
 	        		연차취소신청방식
 	            </th>
 	            <td style="width: 700px; text-align:left">
@@ -237,7 +239,7 @@
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">
-	        	<th style="width: 550px; text-align:center">
+	        	<th style="width: 40%; text-align:center">
 					연차자동발생
 	            </th>
 	            <td style="width: 700px; text-align:left">
@@ -246,7 +248,7 @@
 	            </td>
 	        </tr>
 	        <tr id="ags" style="height:30px;">
-	        	<th style="width: 550px; text-align:center">
+	        	<th style="width: 40%; text-align:center">
 					연차발생기준
 	            </th>
 	            <td style="width: 700px; text-align:left">
@@ -255,7 +257,7 @@
 	            </td>
 	        </tr>
 	        <tr id="sdp" style="height:30px;">
-	        	<th style="width: 550px; text-align:center">
+	        	<th style="width: 40%; text-align:center">
 					회계년도 기산일
 	            </th>
 	            <td style="width: 700px; text-align:left">
@@ -263,7 +265,7 @@
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">
-	        	<th style="width: 550px; text-align:center">
+	        	<th style="width: 40%; text-align:center">
 					잔여연차 음수허용
 	            </th>
 	            <td style="width: 700px; text-align:left">
@@ -272,7 +274,7 @@
 	            </td>
 	        </tr>
 	        <tr id="uat" style="height:30px;">
-	        	<th style="width: 550px; text-align:center">
+	        	<th style="width: 40%; text-align:center">
 					1개월 만근시 발생연차 1년경과 시 소멸
 	            </th>
 	            <td style="width: 700px; text-align:left">
@@ -281,7 +283,7 @@
 	            </td>
 	        </tr>
 	        <tr id="ror" style="height:30px;">
-	        	<th style="width: 550px; text-align:center">
+	        	<th style="width: 40%; text-align:center">
 					연차 소수점 계산 처리
 	            </th>
 	            <td style="width: 700px; text-align:left">

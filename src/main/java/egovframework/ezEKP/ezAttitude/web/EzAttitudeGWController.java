@@ -2171,13 +2171,14 @@ public class EzAttitudeGWController {
 		try{
 			String serverName = request.getHeader("x-user-host");
 			String companyId = request.getParameter("companyId");
-			String year = request.getParameter("year");
+			String startDate = request.getParameter("startDate");
+			String endDate = request.getParameter("endDate");
 			String orderCell = request.getParameter("orderCell");
 			String orderOption = request.getParameter("orderOption");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("userId"));
 			
-			List<AdminAttitudeVO> list = ezAttitudeService.getUserAnnual(userId, info.getPrimary(), info.getOffSet(), year, orderCell, orderOption, companyId, info.getTenantId());
+			List<AdminAttitudeVO> list = ezAttitudeService.getUserAnnual(userId, info.getPrimary(), info.getOffSet(), startDate, endDate, orderCell, orderOption, companyId, info.getTenantId());
 			
 			result.put("status", "ok");
 			result.put("code", 0);
@@ -3097,6 +3098,74 @@ public class EzAttitudeGWController {
 		
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/annualreg] ended.");
 		
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 연차설정정보 조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/joindate", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getJoinDate(@PathVariable String userId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/joindate] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			String companyId = request.getParameter("companyId");
+			String joinDate = "";
+			
+			//근태규율설정정보
+			Map<String, Object> map = ezAttitudeService.getJoinDate(info.getTenantId(), companyId, userId);
+			if(map == null) {
+				joinDate = "0000-01-01";
+			} else {
+				joinDate = (String) map.get("joinDate");
+			}
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", joinDate);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/" + userId + "/joindate] ended.");
+		
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 근태 상세조회
+	 */
+	@RequestMapping(value = "/rest/ezattitude/attitudes/{attitudeId}/aprinfo", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getAttitudeAprInfo(@PathVariable String attitudeId, HttpServletRequest request) {
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "/aprinfo] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String serverName = request.getHeader("x-user-host");
+			String userId = request.getParameter("userId");
+			
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			List<Map<String, Object>> list = ezAttitudeService.getAttitudeAprInfo(attitudeId, info.getPrimary(), info.getTenantId(), info.getCompanyId());
+			
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/attitudes/" + attitudeId + "/aprinfo] ended.");
 		return result;
 	}
 }

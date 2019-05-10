@@ -2684,18 +2684,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<AdminAttitudeVO> getUserAnnual(String userId, String primary, String offset, String year, String orderCell, String orderOption, String companyId, int tenantId) throws Exception {
+	public List<AdminAttitudeVO> getUserAnnual(String userId, String primary, String offset, String startDate, String endDate, String orderCell, String orderOption, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getUserAnnual started");
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 
 		
-		String startTime = year + "-01-01 00:00:00";
-		String endTime = year + "-12-31 23:59:59";
+		String startTime = startDate + " 00:00:00";
+		String endTime = endDate + " 23:59:59";
 		
 		map.put("tenantId", tenantId);
 		map.put("companyId", companyId);
-		map.put("year", year);
 		map.put("orderCell", orderCell);
 		map.put("orderOption", orderOption);
 		map.put("startTime", startTime);
@@ -3450,6 +3449,39 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		LOGGER.debug("updateAnnualConfig ended");
 		
+	}
+	
+	@Override
+	public Map<String, Object> getJoinDate(int tenantId, String companyId, String userId) throws Exception {
+		LOGGER.debug("getJoinDate started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("tenantId", tenantId);
+		map.put("companyId", companyId);
+		map.put("userId", userId);
+		
+		LOGGER.debug("getJoinDate ended");
+		
+		return ezAttitudeDAO.getJoinDate(map);
+	}
+	
+	@Override
+	public List<Map<String, Object>> getAttitudeAprInfo(String attitudeId, String lang, int tenantId, String companyId) throws Exception {
+		LOGGER.debug("getAttitudeAprInfo started");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		
+		map.put("attitudeId", attitudeId);
+		if (lang.equals("1")) {
+			lang = "";
+		}
+		map.put("lang", lang);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
+		
+		LOGGER.debug("getAttitudeAprInfo ended");
+		
+		return ezAttitudeDAO.getAttitudeAprInfo(map);
 	}
 	
 }
