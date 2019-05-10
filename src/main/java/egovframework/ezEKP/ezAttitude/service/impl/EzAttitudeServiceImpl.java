@@ -3457,4 +3457,355 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 	}
 	
+	/**
+	 * 근태일, 휴무일  dateString List
+	 */
+	@Override
+	public List<String> getDisabledDays(String primary, String offset, String year, String month, String userId, String companyId, int tenantId) throws Exception {		
+		LOGGER.debug("getDisabledDays started");
+		
+		List<String> resultList = new ArrayList();
+		
+		//사용자 근태 리스트(disabled되어야할....datetype이 4인것과 결근인 근태) 가져오기
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		cal.set(Integer.valueOf(year), Integer.valueOf(month) - 1, 1);
+		
+		String startDate = year + "-" + month + "-01";
+		String endDate = year + "-" + month + "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+
+		resultList = checkHoliday2(startDate, endDate, companyId, tenantId);
+		
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("tenantId", tenantId);
+        map.put("companyId", companyId);
+        map.put("offsetMin", commonUtil.getMinuteUTC(offset));
+        map.put("startDate", startDate + " 00:00:00");
+        map.put("endDate", endDate + " 23:59:59");
+        map.put("writerId", userId);
+        
+        //startdate - enddate를 이용해서 해당 일자 안의 기념일, 근태등록날 date를 string타입으로 list에 담아 반환.
+        List<AttitudeVO> attitudeList = ezAttitudeDAO.getDisabledAttitudeList(map);
+        for (AttitudeVO vo : attitudeList) {
+    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    		
+    		Date checkStartDate = sdf.parse(vo.getStartDate());
+    		cal.setTime(checkStartDate);
+    		
+    		String tempDate = "";
+    		while (true) {
+    			tempDate = sdf.format(cal.getTime());//startdate에서 enddate까지 증가되는 변수
+    			
+    			if (!resultList.contains(tempDate)) {//리스트에 이미 존재하지 않으면
+    				resultList.add(tempDate);							
+    			}	
+    			
+    			if (vo.getEndDate() != null && !vo.getEndDate().equals("")) {
+    				if (tempDate.equals(vo.getEndDate().substring(0, 10))) {
+    					break;
+    				}    				
+    			} else {
+    				break;
+    			}
+    			cal.add(Calendar.DAY_OF_MONTH, 1);
+    		}
+        }
+        
+        
+        LOGGER.debug("getDisabledDays ended");
+		return resultList;
+	}
+	
+	/**
+	 * YYYY-MM-dd
+	 * 
+	 * @param checkStartDate 시작일
+	 * @param checkEndDate 종료일
+	 * @param userLang userInfo.lang
+	 * @param companyId
+	 * @param tenantId
+	 * @return 국가,회사,근태 휴무일 날짜 dateString arrary
+	 * @throws Exception
+	 */
+	public List<String> checkHoliday2(String checkStartDate, String checkEndDate,  String companyId, int tenantId) throws Exception {
+		LOGGER.debug("checkHoliday2 started.");
+		LOGGER.debug("startDate = " + checkStartDate + " || endDate = " + checkEndDate);
+		
+		//회사 기념일
+		List<HolidayVO> holidayList = getHolidayList("rest", companyId, tenantId);
+		//임시 저장
+		List<HolidayVO> tempHolidayList = new ArrayList<HolidayVO>();
+		//근태휴무일
+		AttitudeConfigVO attitudeConfig = getAttitudeConfig(tenantId, companyId);
+		String checkDay[] = attitudeConfig.getClosedDay().split(",");
+		//음력을 위한
+		KoreanLunarCalendar koreaCalendar = KoreanLunarCalendar.getInstance();
+		
+		
+		//음력 -> 양력변환
+		DecimalFormat df = new DecimalFormat("00");
+		String startYear = checkStartDate.substring(0, 4);
+		String endYear = checkEndDate.substring(0, 4);
+		
+		for (HolidayVO vo1 : holidayList) {
+			if (vo1.getIsSolar() == 0) {//음력일 경우
+				String lunarDate = vo1.getHolidayDate();
+				
+				koreaCalendar.setLunarDate(Integer.parseInt(lunarDate.substring(0, 4)), Integer.parseInt(lunarDate.substring(5, 7)), Integer.parseInt(lunarDate.substring(8, 10)), true);
+				vo1.setHolidayDate(koreaCalendar.getSolarYear() + "-" + df.format(koreaCalendar.getSolarMonth()) + "-" + df.format(koreaCalendar.getSolarDay()));
+			}
+			
+			if (vo1.getHolidayFlag() != null && vo1.getHolidayFlag().equals("Y")) {
+				String voYear = vo1.getHolidayRepeat().split("\\|")[0];
+				
+				if (vo1.getIsRepeat() == 1) {//반복일 경우
+					if (startYear.equals(endYear)) {
+						if (!startYear.equals(voYear)) {
+							vo1.setHolidayRepeat(vo1.getHolidayRepeat().replace(voYear, startYear));
+						}
+					} else {
+						if (!startYear.equals(voYear)) {
+							vo1.setHolidayRepeat(vo1.getHolidayRepeat().replace(voYear, startYear));
+						}
+						
+						if (!endYear.equals(voYear)) {
+							HolidayVO vo2 = new HolidayVO();
+							vo2.setHolidayRepeat(vo1.getHolidayRepeat().replace(startYear, endYear));
+							
+							SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+							
+							Calendar cal = Calendar.getInstance();
+
+							cal.set(Calendar.YEAR, Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[0]));				
+							
+							cal.set(Calendar.MONTH, (Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[1]) - 1));
+							
+							if (vo1.getHolidayRepeat().split("\\|")[2].equals("5")) {
+								Calendar cal2 = Calendar.getInstance();
+								cal2.set(Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[0]), Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[1]) - 1, cal.getActualMaximum(Calendar.DATE));
+								cal.set(Calendar.WEEK_OF_MONTH, cal2.get(Calendar.WEEK_OF_MONTH));
+							} else {
+								cal.set(Calendar.WEEK_OF_MONTH, Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[2]));
+							}
+							
+							//요일					
+							int temp = Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[3]) - cal.get(Calendar.DAY_OF_WEEK) + 1;
+							cal.set(Calendar.DAY_OF_WEEK, cal.get(Calendar.DAY_OF_WEEK) + temp);
+
+							//첫째 주의 첫 요일이 해당요일보다크면 + 7을 해준다.
+							Calendar cal3 = Calendar.getInstance();
+							cal3.set(Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[0]), Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[1]) - 1, 1);
+							
+							int MonthfirstDay = cal3.get(Calendar.DAY_OF_WEEK);
+							
+							if (!vo1.getHolidayRepeat().split("\\|")[2].equals("5") && MonthfirstDay > Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[3])) {
+								cal.add(Calendar.DATE, 7);
+							}
+							
+							vo2.setHolidayDate(formatter.format(cal.getTime()));
+							
+							tempHolidayList.add(vo2);
+						}
+					}
+				}
+				
+				SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+				
+				Calendar cal = Calendar.getInstance();
+
+				cal.set(Calendar.YEAR, Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[0]));				
+				
+				cal.set(Calendar.MONTH, (Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[1]) - 1));
+				
+				if (vo1.getHolidayRepeat().split("\\|")[2].equals("5")) {
+					Calendar cal2 = Calendar.getInstance();
+					cal2.set(Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[0]), Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[1]) - 1, cal.getActualMaximum(Calendar.DATE));
+					cal.set(Calendar.WEEK_OF_MONTH, cal2.get(Calendar.WEEK_OF_MONTH));
+				} else {
+					cal.set(Calendar.WEEK_OF_MONTH, Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[2]));
+				}
+				
+				//요일					
+				int temp = Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[3]) - cal.get(Calendar.DAY_OF_WEEK) + 1;
+				cal.set(Calendar.DAY_OF_WEEK, cal.get(Calendar.DAY_OF_WEEK) + temp);
+
+				//첫째 주의 첫 요일이 해당요일보다크면 + 7을 해준다.
+				Calendar cal3 = Calendar.getInstance();
+				cal3.set(Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[0]), Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[1]) - 1, 1);
+				
+				int MonthfirstDay = cal3.get(Calendar.DAY_OF_WEEK);
+				
+				if (!vo1.getHolidayRepeat().split("\\|")[2].equals("5") && MonthfirstDay > Integer.parseInt(vo1.getHolidayRepeat().split("\\|")[3])) {
+					cal.add(Calendar.DATE, 7);
+				}
+				
+				vo1.setHolidayDate(formatter.format(cal.getTime()));
+				
+			} else {
+				String voYear = vo1.getHolidayDate().substring(0, 4);
+				
+				if (vo1.getIsRepeat() == 1) {//반복일 경우
+					if (startYear.equals(endYear)) {
+						if (!startYear.equals(voYear)) {
+							vo1.setHolidayDate(vo1.getHolidayDate().replace(voYear, startYear));
+						}
+					} else {
+						if (!startYear.equals(voYear)) {
+							vo1.setHolidayDate(vo1.getHolidayDate().replace(voYear, startYear));
+						}
+						
+						if (!endYear.equals(voYear)) {
+							HolidayVO vo2 = new HolidayVO();
+							vo2.setHolidayDate(vo1.getHolidayDate().replace(startYear, endYear));
+							
+							tempHolidayList.add(vo2);
+						}
+					}
+				}
+			}
+			
+		}
+		
+		if (tempHolidayList != null) {
+			for (HolidayVO vo3 : tempHolidayList) {
+				holidayList.add(vo3);
+			}
+		}
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Calendar cal = Calendar.getInstance();
+		
+		Date startDate = sdf.parse(checkStartDate);
+		cal.setTime(startDate);
+		
+		String tempDate = "";
+		boolean isContained = true;
+		
+		List<String> result = new ArrayList<String>();
+		
+		while (true) {
+			isContained = true;
+			tempDate = sdf.format(cal.getTime());
+			
+			if (!result.contains(tempDate)) {
+				switch (cal.get(Calendar.DAY_OF_WEEK)) {
+				case 1:
+					if (checkDay[0].equals("1")) {
+						result.add(tempDate);
+						break;
+					} else {
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									result.add(tempDate);
+									break;
+								}
+							}
+						}
+						break;
+					}
+				case 2:
+					if (checkDay[1].equals("1")) {
+						result.add(tempDate);
+						break;
+					} else {
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									result.add(tempDate);
+									break;
+								}
+							}
+						}
+						break;
+					}
+				case 3:
+					if (checkDay[2].equals("1")) {
+						result.add(tempDate);
+						break;
+					} else {
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									result.add(tempDate);
+									break;
+								}
+							}
+						}
+						break;
+					}
+				case 4:
+					if (checkDay[3].equals("1")) {
+						result.add(tempDate);
+						break;
+					} else {
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									result.add(tempDate);
+									break;
+								}
+							}
+						}
+						break;
+					}
+				case 5:
+					if (checkDay[4].equals("1")) {
+						result.add(tempDate);
+						break;
+					} else {
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									result.add(tempDate);
+									break;
+								}
+							}
+						}
+						break;
+					}
+				case 6:
+					if (checkDay[5].equals("1")) {
+						result.add(tempDate);
+						break;
+					} else {
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									result.add(tempDate);
+									break;
+								}
+							}
+						}
+						break;
+					}
+				case 7:
+					if (checkDay[6].equals("1")) {
+						result.add(tempDate);
+						break;
+					} else {
+						if (holidayList.size() > 0) {
+							for (HolidayVO vo1 : holidayList) {
+								if (vo1.getHolidayDate().substring(0, 10).equals(tempDate)) {
+									result.add(tempDate);
+									break;
+								}
+							}
+						}
+						break;
+					}
+				}
+			}
+			
+			if (tempDate.equals(checkEndDate)) {
+				break;
+			}
+			cal.add(Calendar.DAY_OF_MONTH, 1);
+		};
+		
+		LOGGER.debug("checkHoliday2 ended.");
+		
+		return result;
+	}
+	
 }

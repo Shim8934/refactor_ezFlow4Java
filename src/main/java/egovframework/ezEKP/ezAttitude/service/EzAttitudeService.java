@@ -195,4 +195,6 @@ public interface EzAttitudeService {
 	public Map<String, Object> getAttitudeAnnualConfig(int tenantId, String companyId) throws Exception;
 
 	public void updateAnnualConfig(Map<String, Object> map) throws Exception;
+
+	public List<String> getDisabledDays(String primary, String offset, String year, String month, String userId, String companyId, int tenantId) throws Exception;
 }

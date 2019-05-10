@@ -512,4 +512,8 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public void updateAnnualConfig(Map<String, Object> map) throws Exception {
 		update("ezAttitudeAdminDAO.updateAnnualConfig", map);
 	}
+
+	public List<AttitudeVO> getDisabledAttitudeList(Map<String, Object> map) {
+		return (List<AttitudeVO>) list("ezAttitudeDAO.getDisabledAttitudeList", map);
+	}
 }

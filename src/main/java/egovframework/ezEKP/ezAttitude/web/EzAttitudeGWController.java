@@ -2888,7 +2888,6 @@ public class EzAttitudeGWController {
 			map.put("userId", userId);
 			map.put("companyId", request.getParameter("companyId"));
 			map.put("tenantId", info.getTenantId());
-			map.put("year", request.getParameter("year"));
 			map.put("offsetMin", request.getParameter("offsetMin"));
 			
 			String primary = info.getPrimary();
@@ -2987,7 +2986,7 @@ public class EzAttitudeGWController {
 		return result;
 	}
 	/**
-	 * G/W 근태관리 [DELETE] 전자결재 연동 (휴가계 기안시 해당 휴가 근태 등록)
+	 * G/W 근태관리 [DELETE] 전자결재 연동 (휴가계 회수/반려시 해당 휴가 근태 삭제)
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn", method = RequestMethod.DELETE, produces = "application/json;charset=utf-8")
 	public JSONObject deleteApprovalGConnInfo(@PathVariable String userId, HttpServletRequest request) {
@@ -3099,6 +3098,37 @@ public class EzAttitudeGWController {
 		
 		LOGGER.debug("G/W EzAttitude [PUT /rest/ezattitude/companies/" + companyId + "/annualreg] ended.");
 		
+		return result;
+	}
+	
+	/**
+	 * G/W 근태관리 [GET] 전자결재 연동 (미니캘린더 해당 달의 휴일 + 근태가 잇는날 가져옴)
+	 */
+	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn/disableddays", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+	public JSONObject getDisabledDays(@PathVariable String userId, HttpServletRequest request) {
+		
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/approvalconn/disableddays] started.");
+		
+		JSONObject result = new JSONObject();
+		
+		try{
+			String year = request.getParameter("year");
+			String month = request.getParameter("month");
+			String serverName = request.getHeader("x-user-host");
+			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
+			
+			List<String> list = ezAttitudeService.getDisabledDays(info.getPrimary(), info.getOffSet(), year, month, userId, info.getCompanyId(), info.getTenantId());
+
+			result.put("status", "ok");
+			result.put("code", 0);
+			result.put("data", list);
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+			result.put("code", 1);
+			result.put("data", "");
+		}
+		LOGGER.debug("G/W EzAttitude [GET /rest/ezattitude/users/"+userId+"/approvalconn/disableddays] ended.");
 		return result;
 	}
 }

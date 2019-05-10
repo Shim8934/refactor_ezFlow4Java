@@ -4386,11 +4386,6 @@ public class EzAttitudeController {
 		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		String userId = userInfo.getId();
 		String companyId = userInfo.getCompanyID();
-		String year = request.getParameter("year");
-		
-		if (year == null || year == "") {
-			year = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false).split("-")[0];
-		}
 		
 		JSONObject vo = new JSONObject();
 		if (userId != null) {
@@ -4405,7 +4400,6 @@ public class EzAttitudeController {
 			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("companyId", companyId)
 					.queryParam("userId", userId)
-					.queryParam("year", year)
 					.queryParam("offsetMin", offsetMin);
 			
 			RestTemplate rest = new RestTemplate();
@@ -4520,48 +4514,43 @@ public class EzAttitudeController {
 	/** 
 	* 휴가일, 근태가 있는 날 리스트
 	*/
-//	@RequestMapping(value="/ezAttitude/getDisabledDays.do" , method= RequestMethod.GET)
-//	@ResponseBody
-//	public JSONArray getDisabledDays(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
-//		LOGGER.debug("getDisabledDays started");
-//		
-//		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-//		
-//		String offset = userInfo.getOffset();
-//		String offsetMin = commonUtil.getMinuteUTC(offset);
-//		
-//		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-//		String url = gwServerUrl + "/rest/ezattitude/cancelannual/" + attModId + "/history";
-//									
-//		HttpHeaders headers = new HttpHeaders();
-//		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-//		headers.set("x-user-host", request.getServerName());
-//		
-//		HttpEntity<?> entity = new HttpEntity<>(headers);
-//		
-//		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-//				.queryParam("companyId", companyId)
-//				.queryParam("tenantId", userInfo.getTenantId())
-//				.queryParam("userId", userInfo.getId())
-//				.queryParam("offset", offsetMin);
-//		
-//		RestTemplate rest = new RestTemplate();
-//		
-//		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-//		
-//		JSONParser jp = new JSONParser();
-//		
-//		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-//		
-//		String status = resultBody.get("status").toString();
-//		
-//		JSONArray data = new JSONArray();
-//		
-//		if(status.equals("ok")){
-//			data = (JSONArray) resultBody.get("data");
-//		}
-//		LOGGER.debug("getDisabledDays ended");
-//		return data;
-//	}
+	@RequestMapping(value="/ezAttitude/getDisabledDays.do" , method= RequestMethod.GET)
+	@ResponseBody
+	public JSONArray getDisabledDays(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception {
+		LOGGER.debug("getDisabledDays started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		String url = gwServerUrl + "/rest/ezattitude/users/"+ userInfo.getId() +"/approvalconn/disableddays";
+									
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("year", request.getParameter("year"))
+				.queryParam("month", request.getParameter("month"));
+		
+		RestTemplate rest = new RestTemplate();
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		
+		JSONArray data = new JSONArray();
+		
+		if(status.equals("ok")){
+			data = (JSONArray) resultBody.get("data");
+		}
+		LOGGER.debug("getDisabledDays ended");
+		return data;
+	}
 
 }

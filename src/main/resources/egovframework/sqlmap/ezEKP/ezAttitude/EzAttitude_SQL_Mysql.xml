@@ -2376,4 +2376,38 @@
        		annual_doc_id = #docId#			
 	]]>
 	</select>
+	
+	<select id="ezAttitudeDAO.getDisabledAttitudeList" parameterClass="Map" resultClass="AttitudeVO">
+			<![CDATA[
+			SELECT 
+					IF(
+						date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate#, 
+						CONCAT(substr(#startDate#,1,11), substr(date_add(START_DATE, INTERVAL #offsetMin# minute),12)), 
+						date_format(date_add(START_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
+					  ) AS startDate,
+					IF(
+						date_add(END_DATE, INTERVAL #offsetMin# minute) > #endDate#, 
+						CONCAT(substr(#endDate#,1,11), substr(date_add(END_DATE, INTERVAL #offsetMin# minute), 12)), 
+						date_format(date_add(END_DATE, INTERVAL #offsetMin# minute), '%Y-%m-%d %H:%i:%S')
+					  ) AS endDate
+				FROM   
+					tbl_attitude
+				WHERE
+					WRITER_ID = #writerId#
+				AND
+					(TYPE_ID = 'A17' OR DATE_TYPE = '4')
+				AND
+					TENANT_ID = #tenantId#
+				AND
+					MODAPPL <> '5'
+				AND  
+					(
+						(date_add(START_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(START_DATE, INTERVAL #offsetMin# minute) <= #endDate#) 
+						or
+						(date_add(END_DATE, INTERVAL #offsetMin# minute) >= #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) < #endDate#) 
+						or
+						(date_add(START_DATE, INTERVAL #offsetMin# minute) < #startDate# and date_add(END_DATE, INTERVAL #offsetMin# minute) >= #endDate#)
+					)
+		]]>
+	</select>
 </sqlMap>
