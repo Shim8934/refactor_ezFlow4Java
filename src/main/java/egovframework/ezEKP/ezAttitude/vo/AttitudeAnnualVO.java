@@ -8,6 +8,7 @@ public class AttitudeAnnualVO {
 	private String year;
 	private String useAnnualCnt;
 	private String totalAnnualCnt;
+	private String annualApprStatus;
 	private String joinDate;
 	private String companyId;
 	private int tenantId;
@@ -71,5 +72,11 @@ public class AttitudeAnnualVO {
 	}
 	public void setJoinDate(String joinDate) {
 		this.joinDate = joinDate;
+	}
+	public String getAnnualApprStatus() {
+		return annualApprStatus;
+	}
+	public void setAnnualApprStatus(String annualApprStatus) {
+		this.annualApprStatus = annualApprStatus;
 	}
 }

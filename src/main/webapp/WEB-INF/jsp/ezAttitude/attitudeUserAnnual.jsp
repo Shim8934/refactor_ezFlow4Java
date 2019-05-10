@@ -101,9 +101,15 @@
 	    <script type="text/javascript">
 	    	var date = new Date()
         	var year = date.getFullYear(); //현재년도
+        	var todayMonth = (date.getMonth() + 1); //현재년도
+        	var todayDate = date.getDate(); //현재년도
         	var selyear = year; //선택한 년도
 	    	var companyId = "<c:out value="${companyId}" />";
 	    	var userId = "<c:out value="${userId}" />";
+	    	var useAnnualAutoGnrt = "<c:out value="${annualconfig.useAnnualAutoGnrt}" />";
+	    	var annualGnrtStd = "<c:out value="${annualconfig.annualGnrtStd}" />";
+	    	var initialDate = "<c:out value="${annualconfig.initialDate}" />";
+	    	var joinDate = "<c:out value="${joinDate}" />";
 	    	var userDeptId;
 	    	var userDeptName;
 	    	var yearLength = 10;
@@ -145,9 +151,32 @@
     			attitudeItemView(attitudeId , typeId);
     		})
 	    	
+    		function caldate(date, day){
+ 
+ 				var caledmonth, caledday, caledYear;
+ 				var loadDt = date;
+ 				var v = new Date(Date.parse(loadDt) - day*1000*60*60*24);
+ 
+ 				caledYear = v.getFullYear();
+ 
+			 	if ( v.getMonth() < 9 ){
+			  		caledmonth = '0'+(v.getMonth()+1);
+			 	} else {
+			  		caledmonth = v.getMonth()+1;
+			 	}
+			 	if ( v.getDate() < 9 ){
+			  		caledday = '0'+v.getDate();
+			 	} else {
+			  		caledday = v.getDate();
+			 	}
+			 	return caledYear+'-'+caledmonth+'-'+caledday;
+			}
+    		
 	    	//년도 selectBox
 	    	function makeoptionyear() {
 	            var tempyear = year;
+	            var startDate = "";
+	            var endDate = "";
 	    		
 	    		if ($("#searchYear").val() != null && $("#searchYear").val() != "") {
 	    			selyear = Number($("#searchYear").val());
@@ -160,8 +189,31 @@
 		    		
 		    		var optionHtml = "";
 	                for (var i = 0; i < yearLength; i++) {
-	                	optionHtml += "<option value='" + tempyear + "'>";
-	                	optionHtml += tempyear + "</option>";
+	                	optionHtml += "<option value='" + tempyear + "' ";
+	                	if (annualGnrtStd == 1) {
+	                		if(initialDate.substring(5, 7) < todayMonth || (initialDate.substring(5, 7) == todayMonth && initialDate.substring(8, 10) < todayDate)) {
+	                			startDate = tempyear + "-" + initialDate.substring(5, 10);
+	                			endDate = caldate(new Date(tempyear + 1, initialDate.substring(5, 7) - 1, initialDate.substring(8, 10)), 1);
+	                		} else {
+	                			startDate = (tempyear - 1) + "-" + initialDate.substring(5, 10);
+	                			endDate = caldate(new Date(tempyear, initialDate.substring(5, 7) - 1, initialDate.substring(8, 10)), 1);
+	                		}
+	                		optionHtml += "startDate='" + startDate + "' endDate='" + endDate + "'>";
+		                	optionHtml += startDate + " ~ " + endDate + "</option>";
+	                	} else {
+	                		if(joinDate == null || joinDate == "" || joinDate == "0") {
+	                			joinDate = "0000-01-01";
+	                		}
+	                		if(joinDate.substring(5, 7) < todayMonth || (joinDate.substring(5, 7) == todayMonth && joinDate.substring(8, 10) < todayDate)) {
+	                			startDate = tempyear + "-" + joinDate.substring(5, 10);
+	                			endDate = caldate(new Date(tempyear + 1, joinDate.substring(5, 7) - 1, joinDate.substring(8, 10)), 1);
+	                		} else {
+	                			startDate = (tempyear - 1) + "-" + joinDate.substring(5, 10);
+	                			endDate = caldate(new Date(tempyear, joinDate.substring(5, 7) - 1, joinDate.substring(8, 10)), 1);
+	                		}
+	                		optionHtml += "startDate='" + startDate + "' endDate='" + endDate + "'>";
+		                	optionHtml += startDate + " ~ " + endDate + "</option>";
+	                	}
 	                	
 	                	tempyear--;
 	                }
@@ -173,7 +225,7 @@
 	    		//리스트
 	    		getUserAnnualList();
 	    		//통계
-	    		getMonthlyAnnualList();
+	    		//getMonthlyAnnualList();
 	    	}
 	    	
 	    	//연차 리스트
@@ -183,7 +235,8 @@
 	    			dataType : "json",
 	    			url : "/ezAttitude/getUserAnnualList.do",
 	    			data : {
-	   					year : selyear,
+	   					startDate : $("#searchYear option:selected").attr("startDate"),
+	   					endDate : $("#searchYear option:selected").attr("endDate"),
 	   					orderCell : orderCell,
 	   					orderOption : orderOption
     				},
@@ -572,10 +625,10 @@
 			            </div>
 			        </div>
 				</td>
-				<td style="vertical-align:top;white-space: normal;">
+				<!-- <td style="vertical-align:top;white-space: normal;">
 					<div style="vertical-align:top;width:0px;height:0px;overflow:hidden;" class="time_stats" id="attiStatis"></div>
 					<div id="slideBtn" style="position:absolute;top:164px;right:2px;"><img id="slideImg" onclick="javascript:slideTd()" src="/images/ImgIcon/slideLeft.png"></div>
-				</td>
+				</td> -->
 			</tr>
 		</table>
 		<iframe name="exportExcelframe" src="about:blank" style="width:0px; height:0px; display:none;"></iframe>

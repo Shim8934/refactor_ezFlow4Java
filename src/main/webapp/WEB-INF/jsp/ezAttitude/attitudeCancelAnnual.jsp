@@ -34,6 +34,7 @@
 			var startDate = "<c:out value='${attitudeInfo.startDate}'/>";
 			var endDate = "<c:out value='${attitudeInfo.endDate}'/>";
 			var font = "<c:out value='${font}'/>"
+			var listSize = "${aprList.size()}";
 			
 			window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -59,6 +60,11 @@
 			
 			function setHtml() {
 				var tempHtml = "";
+				
+				for(var i = 0; i <= listSize; i ++) {
+					
+				}
+				
 				tempHtml += "<tr>";
 				tempHtml += "<th rowspan='2' style='border-bottom:0px'>참조자</th>";
 				tempHtml += "<td colspan='7' id ='itemList' style='padding-left:2px;'>";

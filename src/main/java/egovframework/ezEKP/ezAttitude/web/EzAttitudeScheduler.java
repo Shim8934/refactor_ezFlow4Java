@@ -41,7 +41,7 @@ public class EzAttitudeScheduler {
 	
 	
 //	@Scheduled(cron = "${config.cron.autoSetAnnualHoliday}")
-	@Scheduled(cron = "0 * 18 * * *")
+//	@Scheduled(cron = "0 * 18 * * *")
 	public void autoSetAnnualHoliday() throws Exception{
 		logger.debug("autoSetAnnualHoliday scheduler started.");
 		

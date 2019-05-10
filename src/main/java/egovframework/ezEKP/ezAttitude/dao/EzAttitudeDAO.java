@@ -522,4 +522,17 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	public void updateAnnualConfig(Map<String, Object> map) throws Exception {
 		update("ezAttitudeAdminDAO.updateAnnualConfig", map);
 	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getJoinDate(Map<String, Object> map) throws Exception{
+		return (Map<String, Object>) select("ezAttitudeAdminDAO.getJoinDate", map);
+	}
+	
+	public List<Map<String, Object>> getAttitudeAprInfo(Map<String, Object> map) throws Exception {
+		return (List<Map<String, Object>>) list("ezAttitudeDAO.getAttitudeAprInfo", map);
+	}
+
+	public List<AttitudeVO> getDisabledAttitudeList(Map<String, Object> map) {
+		return (List<AttitudeVO>) list("ezAttitudeDAO.getDisabledAttitudeList", map);
+	}
 }
