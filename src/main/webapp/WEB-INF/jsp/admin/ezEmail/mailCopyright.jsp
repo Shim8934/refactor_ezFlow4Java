@@ -64,17 +64,19 @@
 				<textarea id="copyrightTextArea" maxlength="1000" placeholder="<spring:message code='ezEmail.letter15' />(<spring:message code='ezEmail.ksu09' />)"></textarea>
 			</div>
 			
+			<!-- 저장, 취소 btn -->
+			<div class="btnpositionJsp">
+				<a id="btn1" class="imgbtn" onClick="saveBtn()"><span><spring:message code='main.sp09'/></span></a>	
+				<a id="btn1" class="imgbtn" onClick="resetBtn()"><span><spring:message code='main.t135'/></span></a>	
+			</div>
+			
 			<!-- 수취인안내설정 예시 -->
-			<br></br>
+			
 			<span class="txt">▒ <spring:message code='ezEmail.ksa07'/></span><br><br>
 			<div id = "copyrightExam">
 				<spring:message code='ezEmail.ksa08'/>
 			</div>
 			
-			<div class="btnpositionJsp">
-				<a id="btn1" class="imgbtn" onClick="saveBtn()"><span><spring:message code='main.sp09'/></span></a>	&nbsp;
-				<a id="btn1" class="imgbtn" onClick="resetBtn()"><span><spring:message code='main.t135'/></span></a>	
-			</div>
 		</div>
 		
 	</body>
