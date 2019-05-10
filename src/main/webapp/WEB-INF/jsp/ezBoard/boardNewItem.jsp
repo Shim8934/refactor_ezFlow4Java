@@ -733,8 +733,8 @@
 			                var tempstr = strBody + "<hr><br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
 			                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
 			            } else {
-			            	 var tempstr = strBody + "<br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
-				                strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
+							var tempstr = strBody + "<br/>" + GetBODY(document.getElementById('docContent')).innerHTML;
+							strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + EmbedContentIntoXML(tempstr) + "</BODY>" + "</HTML>", "clean");
 			            }
 			        }
       			} catch (e) {
@@ -811,15 +811,10 @@
 		                    alert("<spring:message code='ezBoard.t400' />" + pStartDate.substr(0, 16) + "<spring:message code='ezBoard.t401' />");
 		                }
 		                
-		                if ("${boardInfo.apprMail_FG}" == "Y") {
+		                /* 2019-05-07 홍승비 - 이미 승인된 게시물을 수정하는 경우, 승인요청 알림메일 발송하지 않도록 수정 */
+		                if (("${boardInfo.apprMail_FG}" == "Y") && (pMode != "modify")) {
 		                    xmlhttp = createXMLHttpRequest();
-		
-		                    if (pMode != "modify") {
-		                        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
-		                    } else {
-		                        xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + strItemID, false);
-		                    }
-		                        
+		                    xmlhttp.open("POST", "/ezBoard/sendApprNoticeMail.do?boardID=" + pBoardID + "&itemID=" + newID, false);
 		                    xmlhttp.send();
 		                    xmlhttp = null;
 		                }
@@ -1443,7 +1438,7 @@
 		                        document.getElementById("txtTitle").focus();
 		                    }
 		                    
-		                    message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
+		                    message.SetEditorContent("");
 		                }
 		            } else {
 		                if (pUrl == "") {
@@ -1679,7 +1674,7 @@
 		                else {
 		                    if (OpenWin == null)
 		                        document.getElementById("txtTitle").focus();
-		                    message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
+		                    message.SetEditorContent("");
 		                }
 		
 		                if (pUseBackGround.toUpperCase() == "TRUE") {
@@ -1740,7 +1735,7 @@
 	                else {
 	                    if (OpenWin == null)
 	                        document.getElementById("txtTitle").focus();
-	                    message.SetEditorContent("<p " + defaultFontAndSize + "></p>");
+	                    message.SetEditorContent("");
 	                }
 	
 	                if (pUseBackGround.toUpperCase() == "TRUE") {

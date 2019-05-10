@@ -230,7 +230,9 @@
 		            		//임시보관함일경우 사인 초기화??
 		            		setFirstDrafter(isUsed, "");
 		            	} else {
-		            		getFormRecv();	
+		            		if(approvalFlag == "G") {
+		            			getFormRecv();	
+		            		}       		
 		            	}
 		            	
 		                //getFormRecv();
@@ -240,7 +242,7 @@
 		            if (pDraftFlag != "REDRAFT")
 		                setFirstDrafter(isUsed, beforeDocID);
 		            
-		            if (approvalFlag == "S") {
+		            if (approvalFlag == "S" && ListType != "21") {
 			            SetAutoDocnumItem();
 		            }
 		        }
@@ -430,7 +432,8 @@
 		    function process_AfterOpen_Complete(Ans) {
 		        DivPopUpHidden();
 		        if (Ans) {
-		            openOpinionUI("Display");
+		            //openOpinionUI("Display");
+		        	openOpinionUI_New("");
 		        }
 		    }
 		    function setAutoProperty() {
@@ -596,7 +599,14 @@
 			            }
 			            
 			            if (btnSendDraftEnable == "false") {
-			                var pAlertContent = "<spring:message code='ezApprovalG.t139'/>" + "<br>" + "<spring:message code='ezApprovalG.t140'/>";
+			            	var pAlertContent = "";
+			            	//재기안의 경우 결재선 확인하라는 메세지 출력
+			            	if (DraftFlag == "REDRAFT") {
+				                pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
+			            	} else {
+				                pAlertContent = "<spring:message code='ezApprovalG.t139'/>" + "<br>" + "<spring:message code='ezApprovalG.t140'/>";
+			            	}
+			            	
 							OpenInformationUI(pAlertContent, check_btnSendDraft2);
 			                return;
 			            }
@@ -1006,7 +1016,8 @@
 		        var ret = openAaprDocAttachUI();
 		    }
 		    function btnOpinion_onclick() {
-		        var ret = openOpinionUI("N");
+		        //var ret = openOpinionUI("N");
+		    	openOpinionUI_New("");
 		    }
 		    function btnSave_onclick() {
 		        if (message.Get_EditorBodyHTML() == "") {

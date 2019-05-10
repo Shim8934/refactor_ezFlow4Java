@@ -1946,7 +1946,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
                 if (docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().equals("ALL") || docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().equals("none")) {
                 	rtnXML.append("<DATA6>ALL</DATA6>");
                 } else {
-                	if (approvalFlag.equals("S")) {
+                	if (approvalFlag.equals("S") || ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent(), "DisplayName", tenantID) == null) {
                 		rtnXML.append("<DATA6> </DATA6>");
                 	} else {
                 		//ezOrganService.getPropertyValue(docXML.getElementsByTagName("FORMCONTOWNDEPID").item(k).getTextContent().toUpperCase() -> toUpperCase() 삭제, 오라클 버전 개발 시 오라클은 mysql과 다르게 대소문자를 구분하기 때문
@@ -2659,6 +2659,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					ezApprovalGDAO.aprMakeTmp2Ing10(map);	//TBL_APRLINEINFO
 					ezApprovalGDAO.aprMakeTmp2Ing11(map);	//TBL_EXPAPRLINE
 				}
+				//첨부파일 변경내역이 있으면 그 변경 내역을 새로 생성된 문서의 변경내역으로 바꿔준다.
+				ezApprovalGDAO.aprMakeTmp2Ing12(map);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -3420,8 +3422,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				map.put("v_RECNM2", deptXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent());
 			}
 			
-			if (!docXML.getElementsByTagName("RECEIPTMEMBERID").item(0).getTextContent().equals("")) {
-				try {
+			try {
+				if (!docXML.getElementsByTagName("RECEIPTMEMBERID").item(k).getTextContent().equals("")) {
 					String userInfo = ezOrganService.getPropertyList(docXML.getElementsByTagName("RECEIPTMEMBERID").item(k).getTextContent(), "displayname;displayname2;title;title2", "1", tenantID);
 					Document userXML = commonUtil.convertStringToDocument(userInfo);
 					
@@ -3429,9 +3431,14 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					recMemNm2 = userXML.getElementsByTagName("DISPLAYNAME2").item(0).getTextContent();
 					recMemJobTitle = userXML.getElementsByTagName("TITLE").item(0).getTextContent();
 					recMemJobTitle2 = userXML.getElementsByTagName("TITLE2").item(0).getTextContent();
-				} catch (Exception e) {
-					e.getMessage();
+				} else {
+					recMemNm = "";
+					recMemNm2 = "";
+					recMemJobTitle = "";
+					recMemJobTitle2 = "";
 				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 			
 			map.put("v_ExtRecYN", extYN);
@@ -18472,7 +18479,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						map.put("v_FUNCTIONTYPE", staASWheSong);
 						//다른 곳에 있는것 가져다 써서 두개 선언. 추후 변경
 						map.put("v_DOCID", docID);
-						map.put("v_DocID", docID);
+						map.put("v_DocID", docID);						
 						map.put("v_TENANTID", tenantID);
 						
 						ezApprovalGDAO.aprDeleteDocInfo3(map);
@@ -18513,6 +18520,12 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						
 						ezApprovalGDAO.insertHesongAprLineInfoS(map);
 						ezApprovalGDAO.insertSetHesongExpLineInfoS(map);
+						
+						//번경내역 생성
+						map.put("v_PDOCID", docID);
+						map.put("v_TMPDOCID", orgDocID);
+						map.put("companyID", orgCompanyID);
+						ezApprovalGDAO.aprMakeTmp2Ing12(map);
 					} else {
 						subSQL = doSendHesongDocRedraft(docID, makeListField(signXML.getElementsByTagName("WRITERID").item(0).getTextContent()), makeListField(signXML.getElementsByTagName("WRITERNAME").item(0).getTextContent()),
 								makeListField(signXML.getElementsByTagName("WRITERNAME2").item(0).getTextContent()), makeListField(signXML.getElementsByTagName("WRITERJOBTITLE").item(0).getTextContent()), makeListField(signXML.getElementsByTagName("WRITERJOBTITLE2").item(0).getTextContent()), 
@@ -19040,6 +19053,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
 					resultXML.append("<DATA10>" + docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent() + "</DATA10>");
 					resultXML.append("<DATA11>" + docXML.getElementsByTagName("EDMSYN").item(k).getTextContent() + "</DATA11>");
+					resultXML.append("<DATA12>" + docXML.getElementsByTagName("WRITERDEPTID").item(k).getTextContent() + "</DATA12>");
 					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
 				}
 				
@@ -24489,25 +24503,25 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("v_DRAFTDEPTNAME", draftDeptName);
 		map.put("v_FORMID", formID);
 		map.put("v_DOCSTATE", docState);
-		if (draftfrom != "") {
+		if (draftfrom != null && !draftfrom.equals("")) {
 			map.put("v_DRAFTFROM", commonUtil.getDateStringInUTC(draftfrom + " 00:00:01" , offSet, true));
 		} else {
 			map.put("v_DRAFTFROM", commonUtil.getDateStringInUTC(draftfrom , offSet, true));
 		}
 		
-		if (draftto != "") {
+		if (draftto != null && !draftto.equals("")) {
 			map.put("v_DRAFTTO", commonUtil.getDateStringInUTC(draftto + " 23:59:59", offSet, true));
 		} else {
 			map.put("v_DRAFTTO", commonUtil.getDateStringInUTC(draftto, offSet, true));
 		}
 		
-		if (apprfrom != "") {
+		if (apprfrom != null && !apprfrom.equals("")) {
 			map.put("v_APPRFROM", commonUtil.getDateStringInUTC(apprfrom + " 00:00:01", offSet, true));
 		} else {
 			map.put("v_APPRFROM", commonUtil.getDateStringInUTC(apprfrom, offSet, true));
 		}
 		
-		if (apprto != "") {
+		if (apprto != null && !apprto.equals("")) {
 			map.put("v_APPRTO", commonUtil.getDateStringInUTC(apprto + " 23:59:59", offSet, true));
 		} else {
 			map.put("v_APPRTO", commonUtil.getDateStringInUTC(apprto , offSet, true));
@@ -25453,17 +25467,18 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			}
 			
 			for (int k = 0; k < doc.getElementsByTag("table").size(); k++) {
-				String tableStyle = doc.getElementsByTag("table").get(k).attr("style").toString();
-				if (!doc.getElementsByTag("table").get(k).hasAttr("border")) {
-					doc.getElementsByTag("table").get(k).attr("bodrer","1");
+				Element tableElement = doc.getElementsByTag("table").get(k);
+				String tableStyle = tableElement.attr("style");
+				if (!tableElement.hasAttr("border")) {
+					tableElement.attr("border","1");
 				}
 				
-				if (!doc.getElementsByTag("table").get(k).hasAttr("cellspacing")) {
-					doc.getElementsByTag("table").get(k).attr("cellspacing","0");
+				if (!tableElement.hasAttr("cellspacing")) {
+					tableElement.attr("cellspacing","0");
 				}
 				
-				if (!doc.getElementsByTag("table").get(k).hasAttr("cellpadding")) {
-					doc.getElementsByTag("table").get(k).attr("cellpadding","0");
+				if (!tableElement.hasAttr("cellpadding")) {
+					tableElement.attr("cellpadding","0");
 				}
 				
 //				if (tableStyle.indexOf("border-collapse") > 0) {
@@ -25471,133 +25486,134 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 //					tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("border-collapse"), tableStyle.indexOf(";", tableStyle.indexOf("border-collapse")) + 1), "");
 //				}
 				
-				if (!doc.getElementsByTag("table").get(k).hasAttr("width")) {
+				if (!tableElement.hasAttr("width")) {
 					if (tableStyle.contains("width")) {
-						doc.getElementsByTag("table").get(k).attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1] );
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1] );
 						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1), "");
-						doc.getElementsByTag("table").get(k).attr("style", tableStyle);
+						tableElement.attr("style", tableStyle);
 					} 
 				} else {
 					if (tableStyle.indexOf("width") > -1) {
-						doc.getElementsByTag("table").get(k).attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1] );
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1] );
 						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1), "");
-						doc.getElementsByTag("table").get(k).attr("style", tableStyle);
+						tableElement.attr("style", tableStyle);
 					} else {
-						doc.getElementsByTag("table").get(k).attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1]);
+						tableElement.attr("width_kaoni", tableStyle.substring(tableStyle.indexOf("width"), tableStyle.indexOf(";", tableStyle.indexOf("width")) + 1).split(":")[1]);
 					}
-					doc.getElementsByTag("table").get(k).attr("width", "0");
+					tableElement.attr("width", "0");
 				}
 				
-				if (!doc.getElementsByTag("table").get(k).hasAttr("height")) {
+				if (!tableElement.hasAttr("height")) {
 					if (tableStyle.indexOf("height") > -1) {
-						doc.getElementsByTag("table").get(k).attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
+						tableElement.attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
 						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1), "");
-						doc.getElementsByTag("table").get(k).attr("style", tableStyle);
+						tableElement.attr("style", tableStyle);
 					} 
 				} else {
 					if (tableStyle.indexOf("height") > -1) {
-						doc.getElementsByTag("table").get(k).attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
+						tableElement.attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
 						tableStyle = tableStyle.replace(tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1), "");
-						doc.getElementsByTag("table").get(k).attr("style", tableStyle);
+						tableElement.attr("style", tableStyle);
 					} else {
-						doc.getElementsByTag("table").get(k).attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
+						tableElement.attr("height_kaoni", tableStyle.substring(tableStyle.indexOf("height"), tableStyle.indexOf(";", tableStyle.indexOf("height")) + 1).split(":")[1]);
 					}
-					doc.getElementsByTag("table").get(k).attr("height", "0");
+					tableElement.attr("height", "0");
 				}
 				
-//				if (doc.getElementsByTag("table").get(k).hasAttr("style")) {
-//					doc.getElementsByTag("table").get(k).removeAttr("style");
+//				if (tableElement.hasAttr("style")) {
+//					tableElement.removeAttr("style");
 //				}
 				
-				if (doc.getElementsByTag("table").get(k).hasAttr("align")) {
-					switch (doc.getElementsByTag("table").get(k).attr("align").toString()) {
+				if (tableElement.hasAttr("align")) {
+					switch (tableElement.attr("align").toString()) {
 					case "left":
                     case "center":
                     case "right":
                     case "adjust":
                         break;
 					default:
-						doc.getElementsByTag("table").get(k).attr("align", "adjust");
+						tableElement.attr("align", "adjust");
 						break;
 					}
 				}
 			}
 			
 			for (int k = 0; k < doc.getElementsByTag("td").size(); k++) {
-				String tbStyle = doc.getElementsByTag("td").get(k).attr("style").toString();
-				if (doc.getElementsByTag("td").get(k).hasAttr("align")) {
-					switch (doc.getElementsByTag("td").get(k).attr("align").toString().toLowerCase()) {
+				Element tdElement = doc.getElementsByTag("td").get(k);
+				String tdStyle = tdElement.attr("style");
+				if (tdElement.hasAttr("align")) {
+					switch (tdElement.attr("align").toLowerCase()) {
 					case "left":
                     case "center":
                     case "right":
                     case "adjust":
                         break;
 					default:
-						doc.getElementsByTag("td").get(k).attr("align", "adjust");
+						tdElement.attr("align", "adjust");
 						break;
 					}
 				}
 				
-				if (doc.getElementsByTag("td").get(k).hasAttr("text-align")) {
-					switch (doc.getElementsByTag("td").get(k).attr("text-align").toString().toLowerCase()) {
+				if (tdElement.hasAttr("text-align")) {
+					switch (tdElement.attr("text-align").toLowerCase()) {
 					case "left":
                     case "center":
                     case "right":
                     case "justify":
                     case "char":
-                    	doc.getElementsByTag("td").get(k).attr("align", doc.getElementsByTag("td").get(k).attr("text-align").toString());
+                    	tdElement.attr("align", tdElement.attr("text-align"));
                     	break;
 					default:
-						doc.getElementsByTag("td").get(k).attr("align", "justify");
+						tdElement.attr("align", "justify");
 						break;
 					}
 				}
 				
-				if (doc.getElementsByTag("td").get(k).hasAttr("valign")) {
-					switch (doc.getElementsByTag("td").get(k).attr("valign").toString().toLowerCase()) {
+				if (tdElement.hasAttr("valign")) {
+					switch (tdElement.attr("valign").toLowerCase()) {
 					case "top":
                     case "middle":
                     case "bottom":
                     case "baseline":
                         break;
 					default:
-						doc.getElementsByTag("td").get(k).attr("valign", "baseline");
+						tdElement.attr("valign", "baseline");
 						break;
 					}
 				}
 				
-				if (!doc.getElementsByTag("td").get(k).hasAttr("width")) {
-					if (tbStyle.indexOf("width") > 0) {
-						doc.getElementsByTag("td").get(k).attr("width_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width")))));
-						tbStyle.replace(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width"))), "");
-						doc.getElementsByTag("td").get(k).attr("style", tbStyle);
+				if (!tdElement.hasAttr("width")) {
+					if (tdStyle.indexOf("width") > 0) {
+						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width")))));
+						tdStyle.replace(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width"))), "");
+						tdElement.attr("style", tdStyle);
 					} 
 				} else {
-					if (tbStyle.indexOf("width") > 0) {
-						doc.getElementsByTag("td").get(k).attr("width_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width")))));
-						tbStyle.replace(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width"))), "");
-						doc.getElementsByTag("td").get(k).attr("style", tbStyle);
+					if (tdStyle.indexOf("width") > 0) {
+						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width")))));
+						tdStyle.replace(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width"))), "");
+						tdElement.attr("style", tdStyle);
 					} else {
-						doc.getElementsByTag("td").get(k).attr("width_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("width"), tbStyle.indexOf(";", tbStyle.indexOf("width")))));
+						tdElement.attr("width_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("width"), tdStyle.indexOf(";", tdStyle.indexOf("width")))));
 					}
-					doc.getElementsByTag("td").get(k).attr("width", "0");
+					tdElement.attr("width", "0");
 				}
 				
-				if (!doc.getElementsByTag("td").get(k).hasAttr("height")) {
-					if (tbStyle.indexOf("height") > 0) {
-						doc.getElementsByTag("td").get(k).attr("height_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height")))));
-						tbStyle.replace(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height"))), "");
-						doc.getElementsByTag("td").get(k).attr("style", tbStyle);
+				if (!tdElement.hasAttr("height")) {
+					if (tdStyle.indexOf("height") > 0) {
+						tdElement.attr("height_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height")))));
+						tdStyle.replace(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height"))), "");
+						tdElement.attr("style", tdStyle);
 					} 
 				} else {
-					if (tbStyle.indexOf("height") > 0) {
-						doc.getElementsByTag("td").get(k).attr("height_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height")))));
-						tbStyle.replace(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height"))), "");
-						doc.getElementsByTag("td").get(k).attr("style", tbStyle);
+					if (tdStyle.indexOf("height") > 0) {
+						tdElement.attr("height_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height")))));
+						tdStyle.replace(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height"))), "");
+						tdElement.attr("style", tdStyle);
 					} else {
-						doc.getElementsByTag("td").get(k).attr("height_kaoni", SizeConvertToMM(tbStyle.substring(tbStyle.indexOf("height"), tbStyle.indexOf(";", tbStyle.indexOf("height")))));
+						tdElement.attr("height_kaoni", SizeConvertToMM(tdStyle.substring(tdStyle.indexOf("height"), tdStyle.indexOf(";", tdStyle.indexOf("height")))));
 					}
-					doc.getElementsByTag("td").get(k).attr("height", "0");
+					tdElement.attr("height", "0");
 				}
 				
 			}
@@ -25631,11 +25647,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
           double pSizeNum = Integer.parseInt(matcher.replaceAll(""));
           if (pSize.toUpperCase().indexOf("PX") > -1)
           {
-              strRtnVal = Math.round(pSizeNum * 0.264583/1000.0) + "mm";
+              strRtnVal = Math.round(pSizeNum * 0.264583) + "mm";
           }
           else if (pSize.toUpperCase().indexOf("PT") > -1)
           {
-              strRtnVal = Math.round(pSizeNum * 0.352777/1000.0) + "mm";
+              strRtnVal = Math.round(pSizeNum * 0.352777) + "mm";
           }
           else if (pSize.toUpperCase().indexOf("MM") > -1)
           {
@@ -25730,6 +25746,8 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		for (int i=0; i < doc.body().getElementsByTag("body").size(); i++) {
 			for (int j=0; j< doc.body().getElementsByTag("body").get(i).childNodeSize(); j++) {
 				org.jsoup.nodes.Node childNode2 = doc.body().getElementsByTag("body").get(i).childNode(j);
+				org.jsoup.nodes.Node parentNode = childNode2.parentNode();
+				String parentNodeStyle = parentNode.attr("style");
 				
 				if (doc.body().getElementsByTag("body").get(i).childNode(j).nodeName().equals("#text")) {
 					String parentText = doc.select(childNode2.parent().nodeName()).text();
@@ -25739,45 +25757,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 						Element el = doc.createElement("p");
 						el.text(tempContext);
 						
-						if (childNode2.parentNode().hasAttr("style")) {
-							if (childNode2.parentNode().attr("style").indexOf("font-family") > -1) {
-								style.append(childNode2.parentNode().attr("style").toString().substring(childNode2.parentNode().attr("style").toString().indexOf("font-family"), childNode2.parentNode().attr("style").toString().indexOf(";", childNode2.parentNode().attr("style").toString().indexOf("font-family"))+1));
+						if (parentNode.hasAttr("style")) {
+							if (parentNodeStyle.indexOf("font-family") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("font-family"), parentNodeStyle.indexOf(";", parentNodeStyle.indexOf("font-family")) + 1));
 							}
-						}
-						
-						if (childNode2.parentNode().hasAttr("style")) {
-							if (childNode2.parentNode().attr("style").toLowerCase().indexOf("font-size") > -1) {
-								style.append(childNode2.parentNode().attr("style").toString().toLowerCase().substring(childNode2.parentNode().attr("style").toString().toLowerCase().indexOf("font-size"), childNode2.parentNode().attr("style").toString().indexOf(";", childNode2.parentNode().attr("style").toString().toLowerCase().indexOf("font-size"))+1));
+							if (parentNodeStyle.toLowerCase().indexOf("font-size") > -1) {
+								style.append(parentNodeStyle.toLowerCase().substring(parentNodeStyle.toLowerCase().indexOf("font-size"), parentNodeStyle.indexOf(";", parentNodeStyle.toLowerCase().indexOf("font-size")) + 1));
 							}
-						}
-						
-						if (childNode2.parentNode().hasAttr("style")) {
-							if (childNode2.parentNode().attr("style").indexOf("font-style") > -1) {
-								style.append(childNode2.parentNode().attr("style").toString().substring(childNode2.parentNode().attr("style").toString().indexOf("font-style"), childNode2.parentNode().attr("style").toString().indexOf(";", childNode2.parentNode().attr("style").toString().indexOf("font-style"))+1));
+							if (parentNodeStyle.indexOf("font-style") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("font-style"), parentNodeStyle.indexOf(";", parentNodeStyle.indexOf("font-style")) + 1));
 							}
-						}
-						
-						if (childNode2.parentNode().hasAttr("style")) {
-							if (childNode2.parentNode().attr("style").indexOf("font-weight") > -1) {
-								style.append(childNode2.parentNode().attr("style").toString().substring(childNode2.parentNode().attr("style").toString().indexOf("font-weight"), childNode2.parentNode().attr("style").toString().indexOf(";", childNode2.parentNode().attr("style").toString().indexOf("font-weight"))+1));
+							if (parentNodeStyle.indexOf("font-weight") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("font-weight"), parentNodeStyle.indexOf(";", parentNodeStyle.indexOf("font-weight")) + 1));
 							}
-						}
-						
-						if (childNode2.parentNode().hasAttr("style")) {
-							if (childNode2.parentNode().attr("style").indexOf("text-align") > -1) {
-								style.append(childNode2.parentNode().attr("style").toString().toLowerCase().substring(childNode2.parentNode().attr("style").toString().indexOf("text-align"), childNode2.parentNode().attr("style").toString().indexOf(";", childNode2.parentNode().attr("style").toString().indexOf("text-align"))+1));
+							if (parentNodeStyle.indexOf("text-align") > -1) {
+								style.append(parentNodeStyle.toLowerCase().substring(parentNodeStyle.indexOf("text-align"), parentNodeStyle.indexOf(";", parentNodeStyle.indexOf("text-align")) + 1));
 							}
-						}
-						
-						if (childNode2.parentNode().hasAttr("style")) {
-							if (childNode2.parentNode().attr("style").indexOf("text-indent") > -1) {
-								style.append(childNode2.parentNode().attr("style").toString().substring(childNode2.parentNode().attr("style").toString().indexOf("text-indent"), childNode2.parentNode().attr("style").toString().indexOf(";", childNode2.parentNode().attr("style").toString().indexOf("text-indent"))+1));
+							if (parentNodeStyle.indexOf("text-indent") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("text-indent"), parentNodeStyle.indexOf(";", parentNodeStyle.indexOf("text-indent")) + 1));
 							}
-						}
-						
-						if (childNode2.parentNode().hasAttr("style")) {
-							if (childNode2.parentNode().attr("style").indexOf("text-decoration") > -1) {
-								style.append(childNode2.parentNode().attr("style").toString().substring(childNode2.parentNode().attr("style").toString().indexOf("text-decoration"), childNode2.parentNode().attr("style").toString().indexOf(";", childNode2.parentNode().attr("style").toString().indexOf("text-decoration"))+1));
+							if (parentNodeStyle.indexOf("text-decoration") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("text-decoration"), parentNodeStyle.indexOf(";", parentNodeStyle.indexOf("text-decoration")) + 1));
 							}
 						}
 						
@@ -25790,49 +25790,50 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		}
 		
 		for (int i=0; i < doc.body().getElementsByTag("div").size(); i++) {
-			for (int j=0; j< doc.body().getElementsByTag("div").get(i).childNodeSize(); j++) {
-				org.jsoup.nodes.Node parentNode = doc.body().getElementsByTag("div").get(i);
-				if (doc.body().getElementsByTag("div").get(i).childNode(j).nodeName().equals("#text")) {
+			org.jsoup.nodes.Node parentNode = doc.body().getElementsByTag("div").get(i);
+			String parentNodeStyle = parentNode.attr("style");
+			String parentText = doc.body().getElementsByTag("div").get(i).text();
+			for (int j=0; j< parentNode.childNodeSize(); j++) {
+				if (parentNode.childNode(j).nodeName().equals("#text")) {
 					int m =0;
 					if (i == 0) {
 						m = i;
 					} else {
 						m = i-1;
 					}
-					String parentText = doc.body().getElementsByTag("div").get(i).text();
-					String tempContext = doc.body().getElementsByTag("div").get(i).childNode(j).toString().replace("\n", "");
+					String tempContext = parentNode.childNode(j).toString().replace("\n", "");
 					
 					if (!tempContext.equals("") && !parentText.equals(tempContext)) {
 						Element el = doc.createElement("p");
 						el.text(tempContext);
 						
 						if (parentNode.hasAttr("style")) {
-							if (parentNode.attr("style").indexOf("font-family") > -1) {
-								style.append(parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-family"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-family"))+1) + " ");
+							if (parentNodeStyle.indexOf("font-family") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("font-family"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-family")) + 1) + " ");
 							}
 							
-							if (parentNode.attr("style").indexOf("font-size") > -1) {
-								style.append(parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-size"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-size"))+1) + " ");
+							if (parentNodeStyle.indexOf("font-size") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("font-size"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-size")) + 1) + " ");
 							}
 							
-							if (parentNode.attr("style").indexOf("font-style") > -1) {
-								style.append(parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-style"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-style"))+1) + " ");
+							if (parentNodeStyle.indexOf("font-style") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("font-style"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-style")) + 1) + " ");
 							}
 							
-							if (parentNode.attr("style").indexOf("font-weight") > -1) {
-								style.append(parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-weight"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-weight"))+1) + " ");
+							if (parentNodeStyle.indexOf("font-weight") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("font-weight"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-weight")) + 1) + " ");
 							}
 							
-							if (parentNode.attr("style").indexOf("text-align") > -1) {
-								style.append(parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("text-align"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("text-align"))+1) + " ");
+							if (parentNodeStyle.indexOf("text-align") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("text-align"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("text-align")) + 1) + " ");
 							}
 							
-							if (parentNode.attr("style").indexOf("text-indent") > -1) {
-								style.append(parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("text-indent"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("text-indent"))+1) + " ");
+							if (parentNodeStyle.indexOf("text-indent") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("text-indent"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("text-indent")) + 1) + " ");
 							}
 							
-							if (parentNode.attr("style").indexOf("text-decoration") > -1) {
-								style.append(parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("text-decoration"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("text-decoration"))+1) + " ");
+							if (parentNodeStyle.indexOf("text-decoration") > -1) {
+								style.append(parentNodeStyle.substring(parentNodeStyle.indexOf("text-decoration"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("text-decoration")) + 1) + " ");
 							}
 						}
 						
@@ -25840,39 +25841,41 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 							el.attr("style",style.toString());
 						}
 						
-						doc.body().getElementsByTag("div").get(i).childNode(j).replaceWith(el);
+						parentNode.childNode(j).replaceWith(el);
 						style.setLength(0);
 					}
 				} else {
-					if (parentNode.childNode(j).childNode(0).toString() != null) {
-						if (doc.body().getElementsByTag("div").get(i).text().replace(" ", "").equals(parentNode.childNode(j).childNode(0).toString().replace(" ", "").replace("\n", ""))) {
-							if (parentNode.childNode(j).hasAttr("style")) {
-								if (parentNode.childNode(j).attr("style").toLowerCase().indexOf("font-family") > -1) {
-									style.append((parentNode.childNode(j).attr("style").toString().substring(parentNode.childNode(j).attr("style").toString().indexOf("font-family"), parentNode.childNode(j).attr("style").toString().indexOf(";",parentNode.childNode(j).attr("style").toString().indexOf("font-family"))+1 )) + " ");
+					org.jsoup.nodes.Node childNode = parentNode.childNode(j);
+					String childNodeStyle = childNode.attr("style");
+					if (childNode.childNode(0).toString() != null) {
+						if (parentText.replace(" ", "").equals(childNode.childNode(0).toString().replace(" ", "").replace("\n", ""))) {
+							if (childNode.hasAttr("style")) {
+								if (childNodeStyle.toLowerCase().indexOf("font-family") > -1) {
+									style.append((childNodeStyle.substring(childNodeStyle.indexOf("font-family"), childNodeStyle.indexOf(";",childNodeStyle.indexOf("font-family")) + 1 )) + " ");
 								} 
 								
-								if (parentNode.childNode(j).attr("style").toLowerCase().indexOf("font-size") > -1) {
-									style.append((parentNode.childNode(j).attr("style").toString().substring(parentNode.childNode(j).attr("style").toString().indexOf("font-size"), parentNode.childNode(j).attr("style").toString().indexOf(";",parentNode.childNode(j).attr("style").toString().indexOf("font-size"))+1)) + " ");
+								if (childNodeStyle.toLowerCase().indexOf("font-size") > -1) {
+									style.append((childNodeStyle.substring(childNodeStyle.indexOf("font-size"), childNodeStyle.indexOf(";",childNodeStyle.indexOf("font-size")) + 1)) + " ");
 								} 
 								
-								if (parentNode.childNode(j).attr("style").toLowerCase().indexOf("font-style") > -1) {
-									style.append((parentNode.childNode(j).attr("style").toString().substring(parentNode.childNode(j).attr("style").toString().indexOf("font-style"), parentNode.childNode(j).attr("style").toString().indexOf(";",parentNode.childNode(j).attr("style").toString().indexOf("font-style"))+1)) + " ");
+								if (childNodeStyle.toLowerCase().indexOf("font-style") > -1) {
+									style.append((childNodeStyle.substring(childNodeStyle.indexOf("font-style"), childNodeStyle.indexOf(";",childNodeStyle.indexOf("font-style")) + 1)) + " ");
 								} 
 								
-								if (parentNode.childNode(j).attr("style").toLowerCase().indexOf("font-weight") > -1) {
-									style.append((parentNode.childNode(j).attr("style").toString().substring(parentNode.childNode(j).attr("style").toString().indexOf("font-weight"), parentNode.childNode(j).attr("style").toString().indexOf(";",parentNode.childNode(j).attr("style").toString().indexOf("font-weight"))+1)) + " ");
+								if (childNodeStyle.toLowerCase().indexOf("font-weight") > -1) {
+									style.append((childNodeStyle.substring(childNodeStyle.indexOf("font-weight"), childNodeStyle.indexOf(";",childNodeStyle.indexOf("font-weight")) + 1)) + " ");
 								} 
 								
-								if (parentNode.childNode(j).attr("style").toLowerCase().indexOf("text-align") > -1) {
-									style.append((parentNode.childNode(j).attr("style").toString().substring(parentNode.childNode(j).attr("style").toString().indexOf("text-align"), parentNode.childNode(j).attr("style").toString().indexOf(";",parentNode.childNode(j).attr("style").toString().indexOf("text-align"))+1)) + " ");
+								if (childNodeStyle.toLowerCase().indexOf("text-align") > -1) {
+									style.append((childNodeStyle.substring(childNodeStyle.indexOf("text-align"), childNodeStyle.indexOf(";",childNodeStyle.indexOf("text-align")) + 1)) + " ");
 								} 
 								
-								if (parentNode.childNode(j).attr("style").toLowerCase().indexOf("text-indent") > -1) {
-									style.append((parentNode.childNode(j).attr("style").toString().substring(parentNode.childNode(j).attr("style").toString().indexOf("text-indent"), parentNode.childNode(j).attr("style").toString().indexOf(";",parentNode.childNode(j).attr("style").toString().indexOf("text-indent"))+1)) + " ");
+								if (childNodeStyle.toLowerCase().indexOf("text-indent") > -1) {
+									style.append((childNodeStyle.substring(childNodeStyle.indexOf("text-indent"), childNodeStyle.indexOf(";",childNodeStyle.indexOf("text-indent")) + 1)) + " ");
 								} 
 								
-								if (parentNode.childNode(j).attr("style").toLowerCase().indexOf("text-decoration") > -1) {
-									style.append((parentNode.childNode(j).attr("style").toString().substring(parentNode.childNode(j).attr("style").toString().indexOf("text-decoration"), parentNode.childNode(j).attr("style").toString().indexOf(";",parentNode.childNode(j).attr("style").toString().indexOf("text-decoration"))+1)) + " ");
+								if (childNodeStyle.toLowerCase().indexOf("text-decoration") > -1) {
+									style.append((childNodeStyle.substring(childNodeStyle.indexOf("text-decoration"), childNodeStyle.indexOf(";",childNodeStyle.indexOf("text-decoration")) + 1)) + " ");
 								} 
 								
 								parentNode.attr("style",style.toString());
@@ -25880,35 +25883,35 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 								
 							} else {
 								if (parentNode.hasAttr("style")) {
-									if (parentNode.attr("style").toString().indexOf("font-family") > -1) {
-										style.append((parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-family"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-family"))+1)) + " ");
+									if (parentNodeStyle.indexOf("font-family") > -1) {
+										style.append((parentNodeStyle.substring(parentNodeStyle.indexOf("font-family"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-family")) + 1)) + " ");
 									}
 									
-									if (parentNode.attr("style").toString().indexOf("font-Size") > -1) {
-										style.append((parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-Size"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-Size"))+1)) + " ");
+									if (parentNodeStyle.indexOf("font-Size") > -1) {
+										style.append((parentNodeStyle.substring(parentNodeStyle.indexOf("font-Size"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-Size")) + 1)) + " ");
 									}
 									
-									if (parentNode.attr("style").toString().indexOf("font-style") > -1) {
-										style.append((parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-style"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-style"))+1)) + " ");
+									if (parentNodeStyle.indexOf("font-style") > -1) {
+										style.append((parentNodeStyle.substring(parentNodeStyle.indexOf("font-style"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-style")) + 1)) + " ");
 									}
 									
-									if (parentNode.attr("style").toString().indexOf("font-weight") > -1) {
-										style.append((parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("font-weight"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("font-weight"))+1)) + " ");
+									if (parentNodeStyle.indexOf("font-weight") > -1) {
+										style.append((parentNodeStyle.substring(parentNodeStyle.indexOf("font-weight"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("font-weight")) + 1)) + " ");
 									}
 									
-									if (parentNode.attr("style").toString().indexOf("text-align") > -1) {
-										style.append((parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("text-align"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("text-align"))+1)) + " ");
+									if (parentNodeStyle.indexOf("text-align") > -1) {
+										style.append((parentNodeStyle.substring(parentNodeStyle.indexOf("text-align"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("text-align")) + 1)) + " ");
 									}
 									
-									if (parentNode.attr("style").toString().indexOf("text-indent") > -1) {
-										style.append((parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("text-indent"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("text-indent"))+1)) + " ");
+									if (parentNodeStyle.indexOf("text-indent") > -1) {
+										style.append((parentNodeStyle.substring(parentNodeStyle.indexOf("text-indent"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("text-indent")) + 1)) + " ");
 									}
 									
-									if (parentNode.attr("style").toString().indexOf("text-decoration") > -1) {
-										style.append((parentNode.attr("style").toString().substring(parentNode.attr("style").toString().indexOf("text-decoration"), parentNode.attr("style").toString().indexOf(";",parentNode.attr("style").toString().indexOf("text-decoration"))+1)) + " ");
+									if (parentNodeStyle.indexOf("text-decoration") > -1) {
+										style.append((parentNodeStyle.substring(parentNodeStyle.indexOf("text-decoration"), parentNodeStyle.indexOf(";",parentNodeStyle.indexOf("text-decoration")) + 1)) + " ");
 									}
 									
-									parentNode.childNode(j).attr("style",style.toString());
+									childNode.attr("style",style.toString());
 									style.setLength(0);
 								}
 							}
@@ -26610,7 +26613,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
              	 org.w3c.dom.Element contentElement = objXML.createElement("content");
                  objXML.getElementsByTagName("contents").item(0).appendChild(contentElement);
                  contentElement.setAttribute("content-role", "return");
-                 contentElement.setAttribute("filename", "return.txt");
+                 contentElement.setAttribute("filename", "");
                  contentElement.setAttribute("content-transfer-encoding", "base64");
                  contentElement.setAttribute("content-type", "text/xml");
                  contentElement.setAttribute("charset", "euc-kr");
@@ -27039,6 +27042,22 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			
 			if (rtnVal) {
 				result = "<RESLUT>TRUE</RESULT>";
+				
+				// 2019-2-7 재발송요청일경우 완료되면 문서정보 지워줌
+				if (type.equals("req-resend")) {
+					map.put("v_DocID", docID);
+					
+					ezApprovalGDAO.aprDeleteDocInfo(map);
+					ezApprovalGDAO.aprDeleteDocInfo2(map);
+					ezApprovalGDAO.aprDeleteDocInfo3(map);
+					ezApprovalGDAO.aprDeleteDocInfo4(map);
+					ezApprovalGDAO.aprDeleteDocInfo5(map);
+					ezApprovalGDAO.aprDeleteDocInfo6(map);
+					ezApprovalGDAO.aprDeleteDocInfo7(map);
+					ezApprovalGDAO.aprDeleteDocInfo8(map);
+					ezApprovalGDAO.aprDeleteDocInfo9(map);
+				}
+				
 			} else {
 				result = "<RESULT>FALSE</RESULT>";
 			}
@@ -28020,7 +28039,6 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     	String Subject = "";
     	StringBuffer bodyContent = new StringBuffer();
     	
-    	bodyContent.append("<DIV id=\"msgBody\" style=\"font-size: 13px; font-family: " + messageSource.getMessage("main.t246", userInfo.getLocale()) + ";\" name=\"urn:schemas:httpmail:textdescription\">");
     	bodyContent.append("<table width='750' cellpadding='0' cellspacing='0' border='0' ><tr align='left'><td>");
     	
     	if (mode.equals("APR")) {
@@ -28045,7 +28063,9 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     		bodyContent.append("<span style='font-size:13pt;'>" + messageSource.getMessage("ezEmail.csj19", userInfo.getLocale()) + ": " + xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent() + "</span><br>");
     	}
     	
-    	bodyContent.append("</td></tr></table></DIV>");
+    	bodyContent.append("</td></tr></table>");
+    	
+    	String content = commonUtil.createNotiMailContent(bodyContent.toString(), tenantID, userInfo.getLocale());
     	
 		String xmlApprovNotiConfig = ezPersonalService.getApprovNotiConfig(userInfo.getId(), userInfo.getId(), userInfo.getTenantId());
     	Document notiDoc = commonUtil.convertStringToDocument(xmlApprovNotiConfig);
@@ -28058,7 +28078,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
     		flag = false;
     	}
     	
-    	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, Subject, bodyContent.toString(), flag);
+    	ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, Subject, content, flag);
 		
 		logger.debug("sendMailToNextAprMember ended.");
 		return result;
@@ -28087,5 +28107,48 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 		map.put("tenantId", tenantId);
 		logger.debug("getDeptIdOfCabinet ended");
 		return ezApprovalGDAO.getDeptIdOfCabinet(map);
+	}
+	
+	@Override
+	public String getStoragePeriodName(String period, String lang, String approvalFlag, String companyID, int tenantID) throws Exception {
+		logger.debug("getStoragePeriodName started | Period:" + period + " | Lang:" + lang);
+		
+		String rtnVal = "";
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_LANGTYPE", lang);
+		map.put("v_TENANTID", tenantID);
+		map.put("companyID", companyID);
+		map.put("approvalFlag", approvalFlag);
+		
+		List<ApprGLeftVO> apprGetKeepTypeList = ezApprovalGDAO.getKeepType(map);
+		
+		StringBuffer sb = new StringBuffer();
+		
+        sb.append("<DATA>");
+        for (int i = 0; i < apprGetKeepTypeList.size(); i++) {
+			sb.append(commonUtil.getQueryResult(apprGetKeepTypeList.get(i)));
+		}
+		sb.append("</DATA>");
+		
+		Document dataXML = commonUtil.convertStringToDocument(sb.toString());
+		
+		int dlength = dataXML.getElementsByTagName("ROW").getLength();
+		
+		try {
+			for (int k = 0; k < dlength; k++) {
+				String[] colOption = dataXML.getElementsByTagName("NAME").item(k).getTextContent().split(";");
+				if (colOption[2].equals(period)) {
+					rtnVal = colOption[1];
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			rtnVal = "ERROR";
+		}
+		
+		logger.debug("getStoragePeriodName ended | result:" + rtnVal);
+		return rtnVal;
 	}
 }

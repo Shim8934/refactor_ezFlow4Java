@@ -151,7 +151,8 @@
 		
 		                        Ans = OpenInformationUI(pInformationContent);
 		                        if (Ans)
-		                            openOpinionUI("Display");
+		                            //openOpinionUI("Display");
+		                        	openOpinionUI_New("");
 		                    }
 		
 		                }
@@ -183,8 +184,10 @@
 		                            pInformationContent = "<spring:message code='ezApprovalG.t126'/><br> <spring:message code='ezApprovalG.t10'/>";
 		                            Ans = OpenInformationUI(pInformationContent);
 		
-		                            if (Ans)
-		                                openOpinionUI("Display");
+		                            if (Ans) {
+		                                //openOpinionUI("Display");
+		                            	openOpinionUI_New("");
+		                            }
 		                        }
 		                    }
 		                }
@@ -208,7 +211,8 @@
 		                        Ans = OpenInformationUI(pInformationContent);
 		
 		                        if (Ans) {
-		                            openOpinionUI("Display");
+		                            //openOpinionUI("Display");
+		                        	openOpinionUI_New("");
 		                        }
 		                    }
 		                }
@@ -296,6 +300,14 @@
 			        if (nonElecRec == "Y") {
 				        getNonElecInfoSusinInit();
 	                	document.getElementById("btnAddSepAttach").style.display = "none";
+			        }
+			        
+			        //2019-02-28 중계문서일경우 재전송요청 뜨게 수정
+			        var isRelay = GetRelayDocInfo();
+			        if (isRelay) {
+			        	document.getElementById("btnReqReSend").style.display = "";
+// 	                    document.getElementById("btnReqReturn").style.display = "";
+// 			        	document.getElementById("btnDel").style.display = "";
 			        }
 			        
 			        if (pSusinDocURL != "") {
@@ -909,7 +921,8 @@
 			  }
 		
 			  function btnOpinion_onclick() {
-			      var ret = openOpinionUI("N");
+			      //var ret = openOpinionUI("N");
+				  openOpinionUI_New("");
 			  }
 			
 			  function btnSave_onclick() {
@@ -1037,8 +1050,8 @@
 			                pDocSN = tmpDocSN;
 			        }
 			    }
-			
-			    var parameter = new Array();
+			    
+			    /* var parameter = new Array();
 			    parameter[0] = pDocID;
 			    parameter[1] = "HeSong";
 			    parameter[2] = KuyjeType;
@@ -1056,9 +1069,10 @@
 			    
 			    var url = "/ezApprovalG/aprOpinion.do";
 			    var feature = "status:no;dialogWidth:530px;dialogHeight:520px;edge:sunken;scroll:no;help:no"
-			    var ret = window.showModalDialog(url, parameter, feature);
+			    var ret = window.showModalDialog(url, parameter, feature); */
+			    
 			    var hesongok = true;
-			
+			    var ret = openOpinionUI_New("HeSong");
 			    if (ret != "cancel" && ret != undefined) {
 			        setButtonReceiveTrue();
 			
@@ -1265,7 +1279,8 @@
 			}
 		
 			function btnReAssign_onclick() {
-			    var ret = openOpinionUI("BanSong");
+			    //var ret = openOpinionUI("BanSong");
+			    var ret = openOpinionUI_New("BanSong");
 			    if (ret != "cancel" && ret != undefined) {
 			        var xmlpara = createXmlDom();
 			        var xmlhttp = createXMLHttpRequest();
@@ -1301,7 +1316,8 @@
 					return;
 				}
 			
-			    var ret = openOpinionUI("BanSong");
+			    //var ret = openOpinionUI("BanSong");
+			    var ret = openOpinionUI_New("BanSong");
 			    if (ret != "cancel" && ret != undefined) {
 			        var xmlpara = createXmlDom();
 			        var xmlhttp = createXMLHttpRequest();

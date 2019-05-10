@@ -1,4 +1,7 @@
-﻿﻿﻿﻿﻿function getOpinionList() {
+﻿/**
+ * 진행문서 의견리스트
+ * */
+function getOpinionList() {
     try {
     	var result = "";
         
@@ -467,8 +470,27 @@ function CheckOpinionType() {
 function InitOpinionInfo() {
     try {
         var objXML = createXmlDom();
-
-        objXML = getOpinionList();
+        
+        if (typeof(pDocState) != "undefined" && (pDocState == "015" || pDocState == "017")) {
+	        $.ajax({
+	 			type : "POST",
+	 			dataType : "text",
+	 			async : false,
+	 			url : "/ezApprovalG/getLineMode.do",
+	 			data : {
+	 					docID : pDocID
+	 					},
+	 			success: function(result) {
+	 					pMode = result;
+	 			}        			
+	        });
+        }
+        
+        if (pMode == "END") {
+        	objXML = getEndOpinionList();
+        } else {
+        	objXML = getOpinionList();
+        }
 
         if (document.getElementById("OPINION").InnerHTML != "")
             document.getElementById("OPINION").InnerHTML;
@@ -502,7 +524,11 @@ function InitOpinionInfo() {
                 document.getElementById("txt_OpinionContent").readOnly = true;
             }
         } else if (pDisplay != "Show") {
-            document.getElementById("txt_OpinionContent").focus();
+        	if (typeof(pDocState) != "undefined" && (pDocState == "015" || pDocState == "017")) {
+        		document.getElementById("txt_OpinionContent").readOnly = true;
+        	} else {
+        		document.getElementById("txt_OpinionContent").focus();
+        	}
         }
     } catch (e) {
         alert("InitOpinionInfo :: " + e.description);
@@ -1113,4 +1139,31 @@ function OpenInformationUI2(pInformationContent, CompleteFunction) {
         var RtnVal = window.showModalDialog(url, parameter, feature);
     }
     return RtnVal;
+}
+
+/**
+ * 완료문서 의견리스트
+ * */
+function getEndOpinionList() {
+	try {
+		var rtnVal = "";
+		
+		$.ajax({
+			type : "POST",
+			dataType : "text",
+			async : false,
+			url : "/ezApprovalG/getEndOpinionInfo.do",
+			data : {
+				docID : pDocID,
+				orgCompanyID : orgCompanyID
+			},
+			success : function(xml) {
+				rtnVal = xml;
+			}
+		});
+		
+		return loadXMLString(rtnVal);
+	} catch (e) {
+		alert("getEndOpinionList :: " + e.description);
+	}
 }

@@ -430,13 +430,11 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("contType", pContType);
 		map.put("deptID", pOwnDeptID);
 		
-		String duplicated = ezApprovalGAdminDAO.checkContainer(map);
-		
-		if (duplicated == null) {
-			duplicated = "";
+		int duplicated = ezApprovalGAdminDAO.checkContainer(map);
+		if (duplicated > 0) {
 			logger.debug("insertContainer duplicated.");
+			return "DUPLICATE";
 			
-			return "FALSE";
 		} else {
 			logger.debug("insertContainer started.");
 			ezApprovalGAdminDAO.insertContainer(map);
@@ -465,6 +463,7 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		String pContID = xmlData.getDocumentElement().getChildNodes().item(0).getTextContent().trim();
 		String pContType = xmlData.getDocumentElement().getChildNodes().item(1).getTextContent().trim();
 		String pOwnDeptID = xmlData.getDocumentElement().getChildNodes().item(2).getTextContent().trim();
+		String pModFlag = xmlData.getDocumentElement().getChildNodes().item(3).getTextContent().trim();
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("contID", pContID);		
@@ -473,25 +472,38 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("companyID", companyID);
 		map.put("tenantID", tenantID);
 		
-		logger.debug("updateContainer started.");
-		ezApprovalGAdminDAO.updateContainer(map);
-		logger.debug("updateContainer ended.");
+		try {
+			if (pModFlag != null && pModFlag.equals("Y")) {
+				int duplicated = ezApprovalGAdminDAO.checkContainer(map);
+				if (duplicated > 0) {
+					logger.debug("updateContainer duplicated.");
+					return "DUPLICATE";
+				}
+			}
 		
-		logger.debug("deleteContainerUseDep started.");
-		ezApprovalGAdminDAO.deleteContainerUseDep(map);
-		logger.debug("deleteContainerUseDep ended.");
-		
-		int cnt = xmlData.getDocumentElement().getChildNodes().getLength();		
-	
-	    for (int i = 3; i < cnt - 1; i++) {
-	    	map.put("deptID", xmlData.getDocumentElement().getChildNodes().item(i).getTextContent().trim());
+			logger.debug("updateContainer started.");
+			ezApprovalGAdminDAO.updateContainer(map);
+			logger.debug("updateContainer ended.");
 			
-			logger.debug("insertContainerUseDep started.");
-	    	ezApprovalGAdminDAO.insertContainerUseDep(map);
-	    	logger.debug("insertContainerUseDep ended.");
-	    }
-	    
-	    return "TRUE";
+			logger.debug("deleteContainerUseDep started.");
+			ezApprovalGAdminDAO.deleteContainerUseDep(map);
+			logger.debug("deleteContainerUseDep ended.");
+			
+			int cnt = xmlData.getDocumentElement().getChildNodes().getLength();		
+			
+			for (int i = 4; i < cnt - 1; i++) {
+				map.put("deptID", xmlData.getDocumentElement().getChildNodes().item(i).getTextContent().trim());
+				
+				logger.debug("insertContainerUseDep started.");
+				ezApprovalGAdminDAO.insertContainerUseDep(map);
+				logger.debug("insertContainerUseDep ended.");
+			}
+			
+			return "TRUE";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "FALSE";
+		}
 	}
 
 	@Override
@@ -3896,10 +3908,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_OFFSET",offset);
 		map.put("v_PSTRLANG", lang);
 		
-		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
-		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
-		map.put("v_N", messageSource.getMessage("ezApprovalG.t1687", locale));
-		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));
+//		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
+//		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
+//		map.put("v_N", messageSource.getMessage("ezApprovalG.t1687", locale));
+//		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));
 		
 		List<ApprGDocListVO> list = ezApprovalGAdminDAO.getContDocListjson(map);
 		
@@ -3965,10 +3977,10 @@ public class EzApprovalGAdminServiceImpl extends EgovFileMngUtil implements EzAp
 		map.put("v_OFFSET",offset);
 		map.put("v_PSTRLANG", lang);
 		
-		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
-		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
-		map.put("v_N", messageSource.getMessage("ezApprovalG.t1687", locale));
-		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));	
+//		map.put("v_H", messageSource.getMessage("ezApprovalG.t1434", locale));
+//		map.put("v_I", messageSource.getMessage("ezApprovalG.t1422", locale));
+//		map.put("v_N", messageSource.getMessage("ezApprovalG.t1687", locale));
+//		map.put("v_Y", messageSource.getMessage("ezApproval.t854", locale));	
 		
 		List<ApprGDocListVO> list = ezApprovalGAdminDAO.getDeleteDocListjson(map);
 		

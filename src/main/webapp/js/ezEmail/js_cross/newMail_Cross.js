@@ -3145,19 +3145,43 @@ function NameChange_onClick_Complete(rgParams) {
     } else if (rgParams["recipientTDData"] == "change") {
         length = rgParams["returnedRecipientName"].length;
         
-        if (length == 0) {return; }
+        if (length == 0) {
+        	return; 
+        }
+        
+        var isOrgElemSelected = false;
         
         for (count1 = 0; count1 < length; count1++) {
-        	if (!increaseReceiverCount(rgParams["returnedRecipientType"][count1], rgParams["returnedRecipientHref"][count1])) {
-        		return;
-        	}
+        	newElem = PrepareMailTag(checkname_cross_dialogArguments[3].getAttribute("iType"), rgParams["returnedRecipientType"][count1], rgParams["returnedRecipientName"][count1],
+                    rgParams["returnedRecipientEmail"][count1], rgParams["returnedRecipientHref"][count1]);
         	
-            newElem = PrepareMailTag(checkname_cross_dialogArguments[3].getAttribute("iType"), rgParams["returnedRecipientType"][count1], rgParams["returnedRecipientName"][count1],
-                rgParams["returnedRecipientEmail"][count1], rgParams["returnedRecipientHref"][count1]);
-            checkname_cross_dialogArguments[3].parentElement.insertAdjacentElement("afterEnd", newElem);
+        	var IsInsert = CheckMailReceiver(newElem);
+        	
+        	if (!IsInsert) {
+        		if (!increaseReceiverCount(rgParams["returnedRecipientType"][count1], rgParams["returnedRecipientHref"][count1])) {
+            		return;
+            	}
+        		
+        		checkname_cross_dialogArguments[3].parentElement.insertAdjacentElement("afterEnd", newElem);
+        	} else {
+        		if (!isOrgElemSelected) {
+        			if ((checkname_cross_dialogArguments[3].getAttribute("type") === "email")
+            				&& (rgParams["returnedRecipientType"][count1] === "email")
+            				&& (rgParams["returnedRecipientEmail"][count1] === checkname_cross_dialogArguments[3].getAttribute("email"))) {
+            			isOrgElemSelected = true;
+            		} else if ((checkname_cross_dialogArguments[3].getAttribute("type") === "mailgroup")
+            				&& (rgParams["returnedRecipientType"][count1] === "mailgroup")
+            				&& (rgParams["returnedRecipientHref"][count1] === checkname_cross_dialogArguments[3].getAttribute("href"))) {
+            			isOrgElemSelected = true;
+            		}
+        		}
+        	}
         }
-
-        changedReceiverList.removeChild(checkname_cross_dialogArguments[3].parentElement);
+        
+        if (!isOrgElemSelected) {
+        	decreaseReceiverCount(checkname_cross_dialogArguments[3].getAttribute("type"), checkname_cross_dialogArguments[3].getAttribute("href"));
+        	changedReceiverList.removeChild(checkname_cross_dialogArguments[3].parentElement);
+        }
     }
 }
 function GetAddrFormat(receiveCol) {

@@ -72,6 +72,8 @@
 		    var maxwidth = 659;
 		    var RootURL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port;  
 		    var arr_userinfo = new Array();
+		    var retValue = "";
+		    
 		    arr_userinfo[0]  = "user";
 		    arr_userinfo[1]  = "${userInfo.id}";
 		    arr_userinfo[2]  = "${userInfo.displayName1}";
@@ -184,6 +186,11 @@
 		    }
 		
 		    function FieldsAvailable() {
+	            var isRelay = GetRelayDocInfo();
+	            if (isRelay) {
+	            	document.getElementById("btnReqReSend").style.display = ""; 
+	            }
+	            
 		        if (ConvertYN == "N") {
 		            pGubun = "11";
 		            setProperty();
@@ -199,6 +206,7 @@
 		            }
 		        }
 		    }
+		    
 		    function DocumentComplete() {
 		        if (flag == false) {
 		            flag = true;
@@ -447,7 +455,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = btnCabinet_onclick_Complete;
 		
-		        DivPopUpShow(880, 465, "/ezApprovalG/selectCabinet.do?initFlag=1");
+		        DivPopUpShow(1000, 620, "/ezApprovalG/selectCabinet.do?initFlag=1");
 		    }
 		
 		    function btnCabinet_onclick_Complete(rtn) {

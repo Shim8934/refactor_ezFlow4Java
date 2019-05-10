@@ -1986,6 +1986,23 @@ function DoDeleteCC(pSelectedRow) {
             var selIdx = listview.GetSelectedRows()[0].getAttribute("id");
             listview.DeleteRow(selIdx);
         }
+        
+        // 2019-04-04 천성준 - 회람자 리스트 row제거 시, row가 0개일때 "데이터가 없습니다" 표출
+        if (listview.GetDataRows().length <= 0) {
+        	var objTr = document.createElement("TR");
+        	objTr.setAttribute("id", "pAPRLINE_TR_noItems");
+        		
+        	var oText = document.createTextNode(strLang944);
+        	var objTd = document.createElement("TD");
+        	objTd.align = "center";
+        	
+        	var colCount = document.getElementById("pAPRLINE").getElementsByTagName("th").length;
+        	objTd.setAttribute("colSpan", colCount);
+        	objTd.appendChild(oText);
+        	objTr.appendChild(objTd);
+        	
+        	document.getElementById("pAPRLINE").appendChild(objTr);
+        }
     } catch (e) {
         alert("DoDelete :: " + e.description);
     }

@@ -145,7 +145,12 @@
 
         function SetEditorContent(Data) {
             try {
+            	if (Data === "") {
+					Data = "<p " + defaultFontAndSize + "><br></p>";
+				}
+            	
                 CrossEditor.SetBodyValue(Data);
+                
                 if (type == "APPROVAL" || type == "APPROVALG") {
             		if ("${isUsed}" != "reuse") {
             			Set_CellLocked();
@@ -285,7 +290,6 @@
  	            
  	    		var line = data.split("\n");
  	            var textData = "";
- 	            var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
  	            
  	            for (var i = 0; i < line.length; i++) {
  	            	if (line[i].trim() === "") {
@@ -314,8 +318,6 @@
         	    resultStr = resultStr.replace(/<br>/gi, "\n");
         	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
         	    resultStr = resultStr.replace(/<hr>/gi, "\n----------------------------------------------------------------------------------------------------");
-        	    resultStr = resultStr.replace(/<.*?".*?".*?>/gi, "");
-        	    resultStr = resultStr.replace(/<.*?'.*?'.*?>/gi, "");
         	    resultStr = resultStr.replace(/<.*?>/gi, "");
         	    resultStr = resultStr.replace(/&nbsp;/gi, " ");
         	    resultStr = resultStr.replace(/&lt;/gi, "<");
@@ -439,6 +441,7 @@
 	        var useHTMLMode = "${useHTMLMode}";
 	        var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
+			var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 			var uploadUrl = "${serverUrl}/ezEditor/namoUpload.do?type=" + type;
 			
 	        if (type == "APPROVAL" || type == "APPROVALG") {

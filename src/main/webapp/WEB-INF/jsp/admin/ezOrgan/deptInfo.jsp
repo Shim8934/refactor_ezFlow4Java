@@ -143,6 +143,11 @@
 					return;
 				}
 				
+				if (DeptName.value.indexOf("\"") > -1 || DeptName.value.indexOf("'") > -1) {
+					OpenAlertUI("<spring:message code='ezOrgan.t214'/> [\"], ['] <spring:message code='ezOrgan.t260' />");
+					return;
+				}
+				
 				if (!SortNum.value.match(/^\d*$/)) {
 					OpenAlertUI("<spring:message code='ezOrgan.t226' />: <spring:message code='ezEmail.t99000066'/>");
 					return;

@@ -302,7 +302,13 @@
 	
 					var strBody = message.GetEditorContent();
 	///////converHTMLtoMHT
-					strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + strBody + "</BODY>" + "</HTML>");
+					/* 2019-04-01 홍대표 - MHT파일 변환 및 저장 시 예외처리 추가 */
+					try {
+						strBody = ConvertHTMLtoMHT("<HTML>" + GetCKEditerHeader() + "<BODY>" + strBody + "</BODY>" + "</HTML>");
+					} catch (e) {
+						alert("<spring:message code='ezCommunity.lhj04'/>");
+						return;
+					}
 					//strXML2 += "<CONTENT>" +pidCryptUtil.encodeBase64(strBody, 64) + "</CONTENT>";
 					//2019-10-09 strBody 수정
 					strXML2 += "<CONTENT>" + strBody + "</CONTENT>";
@@ -332,7 +338,7 @@
 					
 					// 새창여부
 					var pOpenMode = "0";
-					if (document.getElementsByName("OpenMode").checked == true)
+					if (document.getElementsByName("OpenMode")[0].checked == true)
 						pOpenMode = "1";
 					
 					if (pImageWidth == "") pImageWidth = "0";

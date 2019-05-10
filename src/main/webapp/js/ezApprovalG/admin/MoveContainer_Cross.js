@@ -504,7 +504,8 @@ function getDocListjson(pageNum) {
 					
 					var html = "";
 					if (res.totalcnt < 1) {
-						html += "<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>";
+						//html += "<tr><td colspan='11' style='text-align:center;'>"+text1+"</td></tr>";
+						html += "<tr><td colspan='10' style='text-align:center;'>"+text1+"</td></tr>";
 					} else {
 			
 							res.DocDeleteHistList.forEach(function(i, v) {
@@ -524,7 +525,7 @@ function getDocListjson(pageNum) {
 								html += "	<td>"	+ i.writerDeptName					+ "</td>";
 								html += "	<td>"	+ i.writerName						+ "</td>";
 								html += "	<td>"	+ i.docstateName					+ "</td>";
-								html += "	<td>"	+ i.sendFlag						+ "</td>";
+								//html += "	<td>"	+ i.sendFlag						+ "</td>";
 								html += "	<td>"	+ i.endDate					        + "</td>";
 								html += "	<td>"	+ i.isPublic						+ "</td>";
 								html += "</tr>";

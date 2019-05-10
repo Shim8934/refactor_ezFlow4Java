@@ -48,7 +48,19 @@ public class ClientUtil {
 	     if(ip == null || ip.length() == 0) {
 	         ip = request.getRemoteAddr();
 	     }
-
+	     
+	     /** 2019.04.29 유은정 - 로그인시 WAF에서 ip를 ip주소:포트번호 형식으로 보내왔을때
+	      * :포트번호 부분을 지우도록 추가
+	      */
+	     if (ip != null && ip.length() != 0) {
+	    	 String[] ipColonSplit = ip.split(":");
+	    	 int splitLength = ipColonSplit.length - 1; //콜론의 개수
+	    	 
+	    	 if (splitLength == 1) {
+	    		 ip = ip.substring(0, ip.lastIndexOf(":"));
+	    	 }
+	     }
+	     
 	     return ip;
 	}
 	

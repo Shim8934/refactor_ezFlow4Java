@@ -182,3 +182,5 @@ var strLangKHJ7 = "ics파일을 저장하는 중 에러발생";
 var strLangKHJ8 = "권한이 없습니다.";
 //2018-02-22
 var strLangGHA1 = ", ";
+/* 2019-04-03 */
+var strLangHSB1 = "MHT 파일을 저장하는데 실패하였습니다.";

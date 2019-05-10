@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -2389,10 +2390,10 @@ public class EzCircularController extends EgovFileMngUtil {
     	// 2018-10-01 김민성 - 회람판 확인요청 메일 폰트 수정
     	String subject = egovMessageSource.getMessage("ezCircular.t165", userInfo.getLocale());
     	StringBuilder bodyContent = new StringBuilder("");
-    	bodyContent.append("<DIV id=\"msgBody\" style=\"FONT-SIZE: 13px; FONT-FAMILY: " + egovMessageSource.getMessage("main.t246", userInfo.getLocale())+ ";\" name=\"urn:schemas:httpmail:textdescription\">");
     	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t32", userInfo.getLocale()) + " : " + "<span id='circular_a' style=\"color:blue;cursor:pointer;text-decoration:underline;\" onclick=\"javascript:window.open('/ezCircular/circularRead.do?circularID=" + circularVO.getCircularID() + "&type=new', '', 'width=820, height=900')\">" + circularVO.getTitle() + "</span></br>");
     	bodyContent.append(" " + egovMessageSource.getMessage("ezCircular.t122", userInfo.getLocale()) + " : " + circularVO.getMemberName());
-    	bodyContent.append("</div>");
+    	
+    	String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
     	
     	InternetAddress from = new InternetAddress();
     	from.setPersonal(userInfo.getDisplayName(), "UTF-8");
@@ -2404,7 +2405,7 @@ public class EzCircularController extends EgovFileMngUtil {
 				to.setPersonal(vo.getMemberName(), "UTF-8");
 				to.setAddress(vo.getMail());
 				
-				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, bodyContent.toString(), false);
+				ezEmailService.sendMail(loginCookie, from, new InternetAddress[]{to}, null, null, subject, content, false);
 			}
 		}
 		
@@ -2681,7 +2682,7 @@ public class EzCircularController extends EgovFileMngUtil {
 	/**
 	 * 2018-07-12 김보미 - 모두저장(압축파일 내려받기)
 	 */
-	@RequestMapping(value="/ezCommunity/downloadAttachAll.do", produces="text/plain; charset=UTF-8")
+	@RequestMapping(value="/ezCircular/downloadAttachAll.do", produces="text/plain; charset=UTF-8")
 	public void downloadAttachAll(@CookieValue("loginCookie") String loginCookie, Locale locale, 
 			HttpServletRequest request, HttpServletResponse response) throws Exception {
 		logger.debug("downloadAttachAll started.");
@@ -2728,6 +2729,8 @@ public class EzCircularController extends EgovFileMngUtil {
 
 			downFileName = fileNamesArr2.get(0).toString() + " " + egovMessageSource.getMessage("ezCircular.t50", userInfo.getLocale()) + " " + (fileNamesArr2.size() - 1) + egovMessageSource.getMessage("ezCircular.t104", userInfo.getLocale()) +".zip";//zip파일명
 			
+			Map<String, Integer> fileNameMap = new HashMap<String, Integer>();
+			
 			if (fileNamesArr.size() != 0) {// 파일이 있으면
 				for (int i = 0; i < fileNamesArr.size(); i++) { //파일 길이만큼
 					BufferedInputStream bis = null;
@@ -2736,7 +2739,9 @@ public class EzCircularController extends EgovFileMngUtil {
 				       File sourceFile = new File(fullFilePath + fileNamesArr.get(i).toString());
 	                   
 				        bis = new BufferedInputStream(new FileInputStream(sourceFile));
-				        ZipEntry zentry = new ZipEntry(fileNamesArr2.get(i).toString());
+				        String newFileName = commonUtil.getUniqueFileName(fileNamesArr2.get(i).toString(), fileNameMap);
+				        //ZipEntry zentry = new ZipEntry(fileNamesArr2.get(i).toString());
+				        ZipEntry zentry = new ZipEntry(newFileName);
 				        zos.putNextEntry(zentry);
 				        
 				        byte[] buffer = new byte[bufferSize];
