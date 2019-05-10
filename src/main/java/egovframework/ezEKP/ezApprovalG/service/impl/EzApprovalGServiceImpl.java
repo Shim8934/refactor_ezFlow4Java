@@ -27432,6 +27432,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			int tenantId = Integer.parseInt(matcher.group(1));
 			
 			return isReform(formId, companyId, tenantId);
+		} else {
+			matcher = Pattern.compile("/fileroot/(\\d*)/files/upload_approvalG/(.*)/doc/.*/(.*)\\..{0,3}").matcher(formUrl);
+			
+			if (matcher.find() && matcher.groupCount() == 3) {
+				String docId = matcher.group(3);
+				String companyId = matcher.group(2);
+				
+				int tenantId = Integer.parseInt(matcher.group(1));
+				
+				ApprGFormVO formInfo = getReformInfoApprovalDocument(docId, companyId, tenantId);
+				
+				if (formInfo == null) {
+					return false;
+				}
+				
+				return "Y".equalsIgnoreCase(formInfo.getReformFlag());
+			}
 		}
 		
 		return false;

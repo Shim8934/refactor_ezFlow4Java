@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -44,6 +45,9 @@ public class MCommonGWController {
 	
 	@Resource(name = "MOptionService")
 	private MOptionService mOptionService;
+	
+	@Resource(name="EzCommonService")
+	private EzCommonService ezCommonService;
 	
 	@RequestMapping(value = "/mobile/ezcommon/filedown", method=RequestMethod.GET, produces="application/json;charset=utf-8")
 	public JSONObject mFileDown(HttpServletRequest request) throws Exception {
@@ -93,4 +97,38 @@ public class MCommonGWController {
 		
 		return result;
 	}
+	
+	 /**
+	 * 2019-05-09 홍승비 - 모바일 G/W 테넌트 컨피그 받아오기
+	 */
+	@SuppressWarnings("unchecked")
+	@RequestMapping(value="/mobile/ezcommon/tenantconfigs/{tenantconfig}", method= RequestMethod.GET, produces="application/json;charset=utf-8")    
+    public JSONObject getTenantConfigMobileGW(HttpServletRequest request) throws Exception {
+    	LOGGER.debug("MOBILE G/W COMMON [GET /mobile/ezcommon/tenantconfigs/{tenantconfig}] getTenantConfigMobileGW started");
+    	
+    	JSONObject result = new JSONObject();
+    	
+    	try {
+			int tenantID = Integer.parseInt(request.getParameter("tenantID"));
+			String tenantConfig = request.getParameter("tenantConfig");
+			String resultTC = ezCommonService.getTenantConfig(tenantConfig, tenantID);
+			
+			if (resultTC != null) {
+				LOGGER.debug("resultTC : " + resultTC);
+			} else {
+				resultTC = "";
+			}
+			
+			result.put("status", "ok");			
+			result.put("resultTC", resultTC);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			result.put("status", "error");
+		}
+		LOGGER.debug("MOBILE G/W COMMON [GET /mobile/ezcommon/tenantconfigs/{tenantconfig}] getTenantConfigMobileGW ended.");
+    	return result;
+    }
+	
+	
 }
