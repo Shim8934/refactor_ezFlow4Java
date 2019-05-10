@@ -95,9 +95,9 @@
 		    	<c:forEach var="item" items="${scheduleListData}">
 				<tr>
 			         <td style="text-align:center;overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">			         
-			         	<c:if test="${item.importance == '1'}"><img src='/images/i_l.gif' width='8' height='10' /></c:if>
+			         	<c:if test="${item.importance == '1'}"><img src='/images/i_l.gif' width='13' height='13'  style="margin : 2px 0px -1px 2px" /></c:if>
 			         	<c:if test="${item.importance == '2'}">&nbsp;</c:if>
-			         	<c:if test="${item.importance == '3'}"><img src='/images/i_h.gif' width='8' height='10' /></c:if>
+			         	<c:if test="${item.importance == '3'}"><img src='/images/i_h.gif' width='13' height='13' style="margin : 2px 0px -1px 2px" /></c:if>
 			         </td>
 			         <td style="overflow-wrap: break-word; word-wrap: break-word; word-break: normal; line-break: strict; hyphens: none; -webkit-hyphens: none; -moz-hyphens: none;">
 			         	<c:if test="${item.scheduleType == '1'}"><spring:message code='ezSchedule.t281' /></c:if>
