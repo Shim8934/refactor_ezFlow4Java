@@ -177,6 +177,9 @@
 				        	    	</td>
 					            	<td class="borderLeft borderRight" style="width:10%;">
 					            		${list.changeUserName}
+					            		<c:if test= "${changeUserName == null || changeUserName == ''}">
+					            			${list.changeUserId }
+					            		</c:if>
 				        	    	</td>
 				       	 		</tr>
 					    	</c:forEach>

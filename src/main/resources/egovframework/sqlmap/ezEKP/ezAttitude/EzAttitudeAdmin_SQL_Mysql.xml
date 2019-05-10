@@ -69,7 +69,6 @@
 		<result property="changeUserName" 				column="CHANGE_USER_NAME" 			columnIndex="7"/>
 		<result property="companyId" 				column="COMPANY_ID" 			columnIndex="8"/>
 		<result property="tenantId" 				column="TENANT_ID" 			columnIndex="9"/>
-		<result property="year" 				column="YEAR" 			columnIndex="10"/>
 	</resultMap>
 	
 	<resultMap class="java.util.HashMap" id="annualUserMap">
@@ -1533,8 +1532,8 @@
 				(USER_ID, ORIGIN_ANNUAL_CNT, CHANGE_ANNUAL_CNT, CHANGE_REASON, CHANGE_DATE, CHANGE_USER_ID, COMPANY_ID, TENANT_ID)
 			SELECT
 				USER_ID AS USER_ID,
-				MONTHLY_HOLIDAY_CNT + ANNUAL_HOLIDAY_CNT + ADDITIONAL_HOLIDAY_CNT AS ORIGIN_ANNUAL_CNT,
-				'$annualCnt$' AS CHANGE_ANNUAL_CNT,
+				ANNUAL_HOLIDAY_CNT + MONTHLY_HOLIDAY_CNT + ADDITIONAL_HOLIDAY_CNT - '$annualCnt$' AS ORIGIN_ANNUAL_CNT,
+				MONTHLY_HOLIDAY_CNT + ANNUAL_HOLIDAY_CNT + ADDITIONAL_HOLIDAY_CNT AS CHANGE_ANNUAL_CNT,
 				'$changeReason$' AS CHANGE_REASON,
 				NOW() AS CHANGE_DATE,
 				'$changeUserId$' AS CHANGE_USER_ID,
@@ -1718,7 +1717,7 @@
 				CHANGE_USER_ID AS CHANGE_USER_ID,
 				(SELECT DISPLAYNAME$primary$ FROM tbl_usermaster WHERE CN = CHANGE_USER_ID AND TENANT_ID = #tenantId#) AS CHANGE_USER_NAME,
 				COMPANY_ID AS COMPANY_ID,
-				TENANT_ID AS TENANT_ID,
+				TENANT_ID AS TENANT_ID
 			FROM
 				tbl_attitude_annual_history
 			WHERE
@@ -1726,7 +1725,7 @@
 			AND
 				USER_ID = #userId#
 			ORDER BY 
-				CHANGE_DATE DESC
+				CHANGE_DATE DESC, ANNUAL_HISTORY_ID DESC
 		]]>
 	</select>
 	

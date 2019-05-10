@@ -2041,7 +2041,7 @@
 				ANNUAL_HOLIDAY_CNT = #holidayCnt#
 			</isEqual>
 			<isEqual property="attendanceRateCondition" compareValue="2">
-				MONTHLY_HOLIDAY_CNT = #holidayCnt#
+				MONTHLY_HOLIDAY_CNT = MONTHLY_HOLIDAY_CNT + #holidayCnt#
 			</isEqual>
 		WHERE
 			USER_ID = #userId#	
@@ -2053,15 +2053,18 @@
 	
 	 <select id="ezAttitudeDAO.getTenantCompanuId" parameterClass="map" resultClass="java.util.HashMap">
 		  SELECT
-				A.TENANT_ID AS tenantId,
-				A.PHYSICALDELIVERYOFFICENAME   AS companyId
-     		FROM
-				TBL_USERMASTER A
-			JOIN 
-				TBL_TENANT B 
-			ON
-				A.COMPANY = B.TENANT_NAME
-			LIMIT 1
+		  	DISTINCT
+		  	A.TENANT_ID                    AS tenantId,
+			A.PHYSICALDELIVERYOFFICENAME   AS companyId
+		  FROM
+			TBL_USERMASTER A
+		  JOIN
+		  	TBL_ATTITUDE_ANNUAL_CONF B
+		  ON
+		  	A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID
+		  AND 
+		  	A.TENANT_ID = B.TENANT_ID
+				
 	  </select>
 	
 	<select id="ezAttitudeDAO.checkAbsentDay" parameterClass="map" resultClass="INTEGER">
