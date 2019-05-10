@@ -2886,7 +2886,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			}
 		
 		ezAttitudeDAO.updateAnnualHoliday(map);
-
+		
+		map.put("annualCnt", map.get("holidayCnt"));
+		map.put("changeReason","자동연차발생 "+ map.get("holidayCnt") + "일");
+		map.put("changeUserId","system");
+		map.put("companyId",companyId);
+		map.put("tenantId",tenantId);
+		
+		if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
+			ezAttitudeDAO.insertAnnualHistory(map);
+		} else {
+			ezAttitudeDAO.changeAnnualHistory(map);
+		}
+		
 		LOGGER.debug("updateAnnualHoliday ended");
 	}
 	
@@ -2973,6 +2985,19 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					
 					ezAttitudeDAO.updateAnnualHoliday(m);
 				}
+				
+				map.put("annualCnt", m.get("holidayCnt"));
+				map.put("changeReason","자동연차발생 "+ m.get("holidayCnt") + "일");
+				map.put("changeUserId","system");
+				map.put("companyId",m.get("companyId"));
+				map.put("tenantId",m.get("tenantId"));
+				map.put("userId", m.get("userId"));
+				
+				if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
+					ezAttitudeDAO.insertAnnualHistory(map);
+				} else {
+					ezAttitudeDAO.changeAnnualHistory(map);
+				}
 			}
 		
 		}
@@ -3014,6 +3039,20 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 			map.put("holidayCnt", monthlyHolidayCnt + 1);
 			map.put("attendanceRateCondition","2");
 			ezAttitudeDAO.updateAnnualHoliday(map);
+			
+
+			map.put("annualCnt", map.get("holidayCnt"));
+			map.put("changeReason","자동연차발생 "+ map.get("holidayCnt") + "일");
+			map.put("changeUserId","system");
+			map.put("companyId",companyId);
+			map.put("tenantId",tenantId);
+
+			if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
+				ezAttitudeDAO.insertAnnualHistory(map);
+			} else {
+				ezAttitudeDAO.changeAnnualHistory(map);
+			}
+			
 		}
 	
 		LOGGER.debug("updateMonthlyHoliday ended");

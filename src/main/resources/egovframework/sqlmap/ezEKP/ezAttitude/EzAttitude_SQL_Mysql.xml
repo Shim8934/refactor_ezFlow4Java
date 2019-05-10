@@ -2022,7 +2022,9 @@
 		SELECT 
 			USER_ID AS userId, 
        		CAST(TIMESTAMPDIFF(MONTH, JOIN_DATE, NOW()) AS CHAR(4)) AS workingMonthCnt, 
-		    DATE_FORMAT(JOIN_DATE, '%X-%c-%d')          AS joinDate
+		    DATE_FORMAT(JOIN_DATE, '%X-%c-%d')          AS joinDate,
+		    COMPANY_ID                                  AS companyId,
+		    TENANT_ID                                   AS tenantId
 		FROM   
 			TBL_ATTITUDE_ANNUAL 
 <!-- 	    WHERE -->
