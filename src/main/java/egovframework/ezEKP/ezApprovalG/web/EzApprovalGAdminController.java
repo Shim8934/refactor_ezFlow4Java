@@ -3276,8 +3276,9 @@ public class EzApprovalGAdminController extends EgovFileMngUtil {
 		String deptID = request.getParameter("deptID");
 		String containerType = request.getParameter("containerType");
 		String companyID = request.getParameter("companyID");
+		String orgContainerID = request.getParameter("orgContainerID");
 
-		String containerID = ezApprovalGAdminService.setContainerIDForDoc1(deptID, containerType, companyID, userInfo.getTenantId());
+		String containerID = ezApprovalGAdminService.setContainerIDForDoc1(orgContainerID, containerType, companyID, userInfo.getTenantId());
 		
 		if (containerID == null) {
 			containerID = ezApprovalGService.makeContainer(deptID, containerType, companyID, userInfo.getTenantId());

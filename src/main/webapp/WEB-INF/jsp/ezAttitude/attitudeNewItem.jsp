@@ -462,15 +462,15 @@
 						returnFlag = true;
 					} else if (isMemorialDay.length != 0 || isYearMemorialDay.length != 0) {//기념일체크
 						if (isMemorialDay.length != 0 ) {
-							for (var i = 0; i < isMemorialDay.length; i++) {
-								if (isMemorialDay[i].holiday ==  true) {//휴무일인 기념일일때
+							for (var j = 0; j < isMemorialDay.length; j++) {
+								if (isMemorialDay[j].holiday ==  true) {//휴무일인 기념일일때
 									returnFlag = true;
 								}
 							}
 						} 
 						if (isYearMemorialDay.length != 0) {
-							for (var i = 0; i < isYearMemorialDay.length; i++) {
-								if (isYearMemorialDay[i].holiday == true) { //휴무일인 기념일일때
+							for (var j = 0; j < isYearMemorialDay.length; j++) {
+								if (isYearMemorialDay[j].holiday == true) { //휴무일인 기념일일때
 									returnFlag = true;
 								}
 							}
