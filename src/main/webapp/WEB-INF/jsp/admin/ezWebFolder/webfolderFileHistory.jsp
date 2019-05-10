@@ -220,7 +220,7 @@
 								var result  = data.fileLogList;
 								totalRows   = data.totalRows;
 								totalPages  = data.totalPages;
-								currentPage = pPage;
+								currentPage = data.currPage;
 								
 								makePageSelPage();
 								renderData(result);
