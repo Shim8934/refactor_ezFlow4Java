@@ -158,6 +158,8 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String buJaeInfo = request.getParameter("buJae");
 		String buJaeInfo2 = "";
 		String proxyInfo = request.getParameter("proxy");
+		System.out.println(userInfo.getDeptID());
+		String dept = request.getParameter("dept");
 //		String proxyInfo2 = "";
 		//TODO: 원래는 user를 ad에서 정보 가져오는데 임시로 하드코딩함 전자결재외에 다른 부분 발견하면 수정요망(전자결재만 존재하면 그냥 박아도됨)
 		String pClass = "user";
@@ -171,7 +173,12 @@ public class EzPersonalController extends EgovFileMngUtil {
 			}
 		}
 		
-		String result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", buJaeInfo2, pClass, userInfo.getTenantId());
+		String result = "";
+		if (dept == null || dept.equals("") || dept.equals(userInfo.getDeptID())) {
+			result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", buJaeInfo2, pClass, userInfo.getTenantId());
+		} else {
+			result = ezOrganService.updateAddJobProxy(userInfo.getId(), buJaeInfo2, userInfo.getTenantId(), dept);
+		}
 		
 		if (result.equals("OK")) {
 //			if (proxyInfo.split(":").length >= 5) {
@@ -380,6 +387,10 @@ public class EzPersonalController extends EgovFileMngUtil {
 			bReason = messageSource.getMessage("ezPersonal.t35", locale);
 		}
 		
+		//겸직리스트 
+		List<OrganUserVO> addJobList = ezOrganAdminService.getUserAddJobList(userInfo.getId(), userInfo.getPrimary(), userInfo.getTenantId());
+		
+		model.addAttribute("addJobList", addJobList);
 		model.addAttribute("deptID", deptID);
 		model.addAttribute("userID", userID);
 		model.addAttribute("startDate", startDate);
@@ -1902,5 +1913,99 @@ public class EzPersonalController extends EgovFileMngUtil {
 
 		logger.debug("tempPhotoUploadByUser ended");
 		return "/ezPersonal/persPhotoUploadByUser";
+	}
+	
+	/**
+	 * 겸직 부재자설정 셀렉트박스 ajax 호출
+	 */
+	@RequestMapping(value = "/ezPersonal/manageAddJobBujaeG.do", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public JSONObject manageAddJobBujae(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("manageBujae started");
+
+		userInfo = commonUtil.userInfo(loginCookie);
+		String userID = "";
+		String deptID = "";
+		String startDate = "";
+		String endDate = "";
+		String bReason = "";
+		String textName = "";
+		String proxyUserID = "";
+		String proxyDeptID = "";
+		String proxyUserName = "";
+		String textProxyName = "";
+		String initDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
+		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
+		String dept = request.getParameter("dept");
+		String result = "";
+		if (dept.equals(userInfo.getDeptID())) {
+			result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
+		} else {
+			result = ezOrganService.getAddJobProxy(userInfo.getId(), dept, userInfo.getTenantId());
+		}
+		String cDate = "";
+		String cTime = "";
+		if (result != null && !result.equals("")) {
+			String[] info = result.split(":");
+			
+			userID = info[0];
+			textName = ezOrganService.getPropertyValue(info[0], "displayname", userInfo.getTenantId());
+			deptID = info[2];
+			startDate = info[3] + ":" + info[4];
+			endDate = info[5] + ":" + info[6];
+			
+			if (info.length > 7) {
+				bReason = info[7];
+			}
+		} else {
+			cDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime("yyyy-MM-dd HH:mm:ss"), userInfo.getOffset(), false);
+			cTime = cDate.split(" ")[1].substring(0, 2);
+			
+			cDate = cDate.substring(0, 10);
+			startDate = cDate + " " + cTime + ":00:00";
+			
+			cDate = cDate.substring(0, 10);
+			endDate = cDate + " " + Integer.toString((Integer.parseInt(cTime) + 1)) + ":00:00";
+		}
+		
+		if (userInfo.getRollInfo() != null && userInfo.getRollInfo().toLowerCase().indexOf("a=1;") > -1) {
+			result = ezOrganService.getProxyUserInfo(userInfo.getId(), userInfo.getTenantId(), userInfo.getOffset());
+			
+			Document xmlDom = commonUtil.convertStringToDocument(result);
+			
+			if (xmlDom.getElementsByTagName("PROXYUSERID").getLength() > 0) {
+				proxyUserID = xmlDom.getElementsByTagName("PROXYUSERID").item(0).getTextContent();
+				proxyDeptID = xmlDom.getElementsByTagName("PROXYUSERDEPTID").item(0).getTextContent();
+				proxyUserName = xmlDom.getElementsByTagName("PROXYUSERNAME").item(0).getTextContent();
+				/*startDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);
+				endDate = commonUtil.getDateStringInUTC(xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent().substring(0, 16), userInfo.getOffset(), false);*/
+				startDate = xmlDom.getElementsByTagName("STARTDATE").item(0).getTextContent();
+				endDate = xmlDom.getElementsByTagName("ENDDATE").item(0).getTextContent();
+				
+				textProxyName = proxyUserName;
+			}
+		}
+		
+		if (bReason.trim().equals("")) {
+			bReason = messageSource.getMessage("ezPersonal.t35", locale);
+		}
+		
+		JSONObject json = new JSONObject();
+		json.put("deptID", deptID);
+		json.put("userID", userID);
+		json.put("startDate", startDate);
+		json.put("endDate", endDate);
+		json.put("bReason", bReason);
+		json.put("proxyUserID", proxyUserID);
+		json.put("proxyDeptID", proxyDeptID);
+		json.put("proxyUserName", proxyUserName);
+		json.put("initDate", initDate);
+		json.put("textName", textName);
+		json.put("textProxyName", textProxyName);
+		json.put("userInfo", userInfo);
+		json.put("approvalFlag", approvalFlag);
+
+		logger.debug("manageBujae ended");
+		return json;
 	}
 }
