@@ -1048,11 +1048,12 @@ public class EzAddressController{
 		
 		try {
 			Document xmldom = commonUtil.convertStringToDocument(bodyData);
-			String pUserID = xmldom.getElementsByTagName("USERID").item(0).getTextContent();
-			String pListCnt = xmldom.getElementsByTagName("LISTCNT").item(0).getTextContent();
-			String pListType = xmldom.getElementsByTagName("LISTTYPE").item(0).getTextContent();
 			
 			LoginVO userInfo = commonUtil.userInfo(loginCookie);
+			
+			String pUserID = userInfo.getId();
+			String pListCnt = xmldom.getElementsByTagName("LISTCNT").item(0).getTextContent();
+			String pListType = xmldom.getElementsByTagName("LISTTYPE").item(0).getTextContent();
 			
 			ezAddressService.setAddressConfig(userInfo.getTenantId(), pUserID, pListCnt, pListType);
 		

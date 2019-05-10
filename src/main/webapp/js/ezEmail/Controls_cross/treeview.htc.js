@@ -1,4 +1,4 @@
-﻿function TreeView(thisobjid, elobjid) {
+﻿﻿function TreeView(thisobjid, elobjid) {
     window[thisobjid] = this;
     var thisid = thisobjid;
     var element = document.getElementById(elobjid);
@@ -211,10 +211,12 @@
         var childel = document.getElementById(g_childid + nodeIdx);
         if (childxml == "") {
             childel.style.display = "none";
-            if (toggleel.src.indexOf(g_baseImage["minus_normal"]) >= 0)
+            /*if (toggleel.src.indexOf(g_baseImage["minus_normal"]) >= 0)
                 toggleel.src = g_baseImage["dot_normal"];
             else
-                toggleel.src = g_baseImage["dot_end"];
+                toggleel.src = g_baseImage["dot_end"];*/
+            if (GetAttribute(toggleel, 'class').indexOf("tree_minus") >= 0)
+            	toggleel.setAttribute("class", "sub_iconLNB tree_blank");
         }
         else {
             var childXML = loadXMLString("<nodes>" + childxml + "</nodes>");
@@ -228,8 +230,11 @@
 
             if (childLength) {
                 childel.style.display = "inline-block";
-                if (GetAttribute(toggleel, 'src').indexOf(g_baseImage["dot_normal"]) >= 0)
-                    toggleel.setAttribute('src', g_baseImage["minus_normal"]);
+                /*if (GetAttribute(toggleel, 'src').indexOf(g_baseImage["dot_normal"]) >= 0)
+                    toggleel.setAttribute('src', g_baseImage["minus_normal"]);*/
+                if (GetAttribute(toggleel, 'class').indexOf("tree_blank") >= 0){
+                	toggleel.setAttribute("class", "sub_iconLNB tree_minus");
+                }
             }
 
             childXML = null;
@@ -255,7 +260,7 @@
                     var depth = g_nodeArray["depth"][nodeIdx].length;
                     var imgnode = child.children.item(0).children.item(depth - 1);
 
-                    if (imgnode.src.indexOf(g_baseImage["dot_normal"]) >= 0) {
+                    /*if (imgnode.src.indexOf(g_baseImage["dot_normal"]) >= 0) {
                         imgnode.src = g_baseImage["dot_end"];
                     }
                     else {
@@ -265,7 +270,7 @@
                             imgnode.src = g_baseImage["minus_end"];
 
                         changeRecursiveImg(child.children.item(1), true, depth - 1, 0);
-                    }
+                    }*/
 
                     var depthlist = g_nodeArray["depth"][child.children.item(0).children.item(depth + 1).id.split(g_nodeid)[1]];
                     depthlist = depthlist.substr(0, depthlist.length - 1) + "0";
@@ -275,14 +280,15 @@
                     imgnode = null;
                     child = null;
                 }
-                else {
+                else { // 하위편지함이 하나만 있을 경우
                     var depth = g_nodeArray["depth"][nodeIdx].length;
                     imgnode = node.parentElement.parentElement.parentElement.children.item(0).children.item(depth - 2);
-                    if (imgnode.src.indexOf(g_baseImage["plus_normal"]) >= 0 || imgnode.src.indexOf(g_baseImage["minus_normal"]) >= 0)
+                   /* if (imgnode.src.indexOf(g_baseImage["plus_normal"]) >= 0 || imgnode.src.indexOf(g_baseImage["minus_normal"]) >= 0)
                         imgnode.src = g_baseImage["dot_normal"];
                     else
-                        imgnode.src = g_baseImage["dot_end"];
+                        imgnode.src = g_baseImage["dot_end"];*/
 
+                	imgnode.className = "sub_iconLNB tree_blank"; // - 아이콘 없애기
                     node.parentElement.parentElement.style.display = "none";
                     node.parentElement.parentElement.innerHTML = "";
 
@@ -749,6 +755,8 @@
                 
                 var imgSpan = document.createElement("SPAN");
                 imgSpan.setAttribute("class", "sub_iconLNB tree_blank");
+                imgSpan.setAttribute("id", g_toggleid + g_nodeCount);
+                imgSpan.setAttribute("name", g_toggleid + g_nodeCount);
                 SPAN3.appendChild(imgSpan);
             }
 

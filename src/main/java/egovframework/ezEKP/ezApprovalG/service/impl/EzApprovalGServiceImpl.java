@@ -19058,6 +19058,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
 					resultXML.append("<DATA10>" + docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent() + "</DATA10>");
 					resultXML.append("<DATA11>" + docXML.getElementsByTagName("EDMSYN").item(k).getTextContent() + "</DATA11>");
+					resultXML.append("<DATA12>" + docXML.getElementsByTagName("WRITERDEPTID").item(k).getTextContent() + "</DATA12>");
 					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
 				}
 				
@@ -25617,7 +25618,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				Element tableElement = doc.getElementsByTag("table").get(k);
 				String tableStyle = tableElement.attr("style");
 				if (!tableElement.hasAttr("border")) {
-					tableElement.attr("bodrer","1");
+					tableElement.attr("border","1");
 				}
 				
 				if (!tableElement.hasAttr("cellspacing")) {
@@ -27432,6 +27433,23 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 			int tenantId = Integer.parseInt(matcher.group(1));
 			
 			return isReform(formId, companyId, tenantId);
+		} else {
+			matcher = Pattern.compile("/fileroot/(\\d*)/files/upload_approvalG/(.*)/doc/.*/(.*)\\..{0,3}").matcher(formUrl);
+			
+			if (matcher.find() && matcher.groupCount() == 3) {
+				String docId = matcher.group(3);
+				String companyId = matcher.group(2);
+				
+				int tenantId = Integer.parseInt(matcher.group(1));
+				
+				ApprGFormVO formInfo = getReformInfoApprovalDocument(docId, companyId, tenantId);
+				
+				if (formInfo == null) {
+					return false;
+				}
+				
+				return "Y".equalsIgnoreCase(formInfo.getReformFlag());
+			}
 		}
 		
 		return false;
