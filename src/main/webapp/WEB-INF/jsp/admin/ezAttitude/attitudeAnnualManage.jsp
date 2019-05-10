@@ -242,7 +242,7 @@
 		    			resultHtml += vo.totalAnnualCnt.split(".")[0];
 	    			}
 	    			resultHtml += "</a></td>";
-	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"annualHistoryPop('" + vo.userId + "','" + vo.year + "')\"><spring:message code='ezAttitude.t241' /></span></a></td>";
+	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"annualHistoryPop('" + vo.userId + "')\"><spring:message code='ezAttitude.t241' /></span></a></td>";
 	    			
 	    			i++;
 	    		});
@@ -341,8 +341,8 @@
 	        }
 	    	
 			//수정내역팝업
-	    	function annualHistoryPop(userId, year) {
-	        	var url = "/admin/ezAttitude/annualHistoryPop.do?year=" + year + "&userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
+	    	function annualHistoryPop(userId) {
+	        	var url = "/admin/ezAttitude/annualHistoryPop.do?userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
 				window.open(url, "annualHistoryPop", GetOpenWindowfeature(750, 510));
 	        }
 			

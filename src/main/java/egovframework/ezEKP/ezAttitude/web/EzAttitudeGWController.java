@@ -2392,7 +2392,6 @@ public class EzAttitudeGWController {
 			map.put("userId", userId);
 			map.put("companyId", request.getParameter("companyId"));
 			map.put("tenantId", info.getTenantId());
-			map.put("year", request.getParameter("year"));
 			
 			String primary = info.getPrimary();
 			if (primary.equals("1")) {
@@ -3063,6 +3062,7 @@ public class EzAttitudeGWController {
 			String annualCancelRule = request.getParameter("annualCancelRule");
 			String useAnnualAutoGnrt = request.getParameter("useAnnualAutoGnrt");
 			String annualGnrtStd = request.getParameter("annualGnrtStd");
+			String initialDate = request.getParameter("initialDate");
 			String useMinusAnnual = request.getParameter("useMinusAnnual");
 			String useAnnualTmnt = request.getParameter("useAnnualTmnt");
 			String roundOffRule = request.getParameter("roundOffRule");
@@ -3077,6 +3077,7 @@ public class EzAttitudeGWController {
 			map.put("annualCancelRule", annualCancelRule);
 			map.put("useAnnualAutoGnrt", useAnnualAutoGnrt);
 			map.put("annualGnrtStd", annualGnrtStd);
+			map.put("initialDate", initialDate);
 			map.put("useMinusAnnual", useMinusAnnual);
 			map.put("useAnnualTmnt", useAnnualTmnt);
 			map.put("roundOffRule", roundOffRule);
