@@ -1225,12 +1225,8 @@ function addEventInBigMemo() {
 
     /*큰 메모 열기*/
     $('#layer-popup').on('dblclick', '.memoText', function (event, ui) {
-    	console.log($(this).parent().attr('class'));
-    	console.log($(this)[0].className);
-    	
     	var memoId = $(this).attr("memoid");
     	getMemoDetail(memoId);
-    	
     });
 
     /*큰 메모 닫기*/
@@ -1248,7 +1244,6 @@ function addEventInBigMemo() {
 
 /*큰 메모의 제일 처음 위치와 사이즈를 정함*/
 function setBigMemoAtFirst(sizeInfo) {
-	//console.log('처음 받은 사이즈: ', sizeInfo);
 	var bigMemo = $('#detailMemo');
    
 	var defaultHeight = 600;

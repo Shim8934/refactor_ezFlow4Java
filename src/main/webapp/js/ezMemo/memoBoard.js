@@ -173,9 +173,10 @@ function modifyMemo(obj) {
             },  
             cache: false,
             success: function(result) {
+            	console.log('result: ', result);
             	//saveMemoToast(memoId);
             	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
-            	parent.parent.setContents(size, memoId, afterContents);
+            	parent.parent.setContents(size, memoId, afterContents);	//큰 메모의 새로고침
             },
             error : function() {
             	
