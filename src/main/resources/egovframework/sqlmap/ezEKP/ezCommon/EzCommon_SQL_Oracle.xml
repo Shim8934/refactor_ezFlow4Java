@@ -559,7 +559,7 @@
 	<statement id="EzCommonDAO.createJmochaMailCopyright"> 
 		CREATE TABLE jmocha_mail_copyright (
 		  "TENANT_ID" INT NOT NULL,
-		  "COPYRIGHT_TEXT" varchar2(500) DEFAULT NULL,
+		  "COPYRIGHT_TEXT" varchar2(1000) DEFAULT NULL,
 		  PRIMARY KEY ("TENANT_ID")
 		)
 	</statement>
