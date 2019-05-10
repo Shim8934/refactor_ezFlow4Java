@@ -135,13 +135,13 @@ public interface EzAttitudeService {
 
 	public List<AttitudeAuthorVO> getDeptUserList(int tenantId, String key, String value, String companyId, String lang) throws Exception;
 
-	public String getAttitudeAnnualListCount(String searchUserName,	String searchDeptName, String searchTitle, String searchYear, String offsetMin, String companyId, int tenantId) throws Exception;
+	public String getAttitudeAnnualListCount(String searchUserName,	String searchDeptName, String searchTitle, String offsetMin, String companyId, int tenantId) throws Exception;
 
-	public List<AttitudeAnnualVO> getAttitudeAnnualList(String searchUserName,String searchDeptName, String searchTitle, String searchYear,	String orderCell, String orderOption, String offsetMin, String pageNum, String listSize, String companyId, int tenantId, String primary) throws Exception;
+	public List<AttitudeAnnualVO> getAttitudeAnnualList(String searchUserName,String searchDeptName, String searchTitle, String orderCell, String orderOption, String offsetMin, String pageNum, String listSize, String companyId, int tenantId, String primary) throws Exception;
 	
 //	public void changeAllAnnual(Map<String, Object> map, int tenantId, String companyId, String primary) throws Exception;
 
-	public List<AdminAttitudeVO> getUserAnnual(String userId, String primary, String offset, String year, String orderCell, String orderOption, String companyId, int tenantId) throws Exception;
+	public List<AdminAttitudeVO> getUserAnnual(String userId, String primary, String offset, String startDate, String endDate, String orderCell, String orderOption, String companyId, int tenantId) throws Exception;
 
 	public void changeAnnual(Map<String, Object> map) throws Exception;
 	
@@ -195,6 +195,10 @@ public interface EzAttitudeService {
 	public Map<String, Object> getAttitudeAnnualConfig(int tenantId, String companyId) throws Exception;
 
 	public void updateAnnualConfig(Map<String, Object> map) throws Exception;
+
+	public Map<String, Object> getJoinDate(int tenantId, String companyId, String userId) throws Exception;
+
+	public List<Map<String, Object>> getAttitudeAprInfo(String attitudeId, String lang, int tenantId, String companyId) throws Exception;
 
 	public List<String> getDisabledDays(String primary, String offset, String year, String month, String userId, String companyId, int tenantId) throws Exception;
 }

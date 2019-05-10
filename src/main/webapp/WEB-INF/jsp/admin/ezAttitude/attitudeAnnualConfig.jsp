@@ -9,14 +9,26 @@
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" type="text/css" />
+	    <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >
+		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/demos.css')}" type="text/css" >
+		
 	    <script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/Common.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
-	    <!-- time picker-->		
-		<script type="text/javascript" src="${util.addVer('/js/jquery/timeControls/jquery.timepicker.js')}"></script>
+	    
+	    <!-- date picker-->		
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.core.js')}"></script>
+		<script type="text/javascript" src="${util.addVer('/js/jquery/dateControls/jquery.ui.datepicker.js')}"></script>
+		<style>
+			.content th {
+				white-space: normal;
+			}
+	    </style>
+	    
 	    <script type="text/javascript">
 	    	var adminCompany = "${adminCompany}";
+	    	var initialDate = "";
 	    
 	        $(document).ready(function() {
 		        if (document.getElementById("ListCompany").length == 0) {
@@ -50,6 +62,26 @@
 	            });
 	        }
 	        
+	        function type_change(val){
+	        	if(val == 0) {
+		        	$("#ags").css('display', 'none');
+		        	$("#sdp").css('display', 'none');
+		        	$("#uat").css('display', 'none');
+		        	$("#ror").css('display', 'none');
+	        	} else if(val == 1) {
+		        	$("#ags").css('display', '');
+		        	if($('input[name=annual_gnrt_std]:checked').val() == 1) {
+			        	$("#sdp").css('display', '');
+		        	}
+		        	$("#uat").css('display', '');
+		        	$("#ror").css('display', '');
+	        	} else if(val == 2) {
+		        	$("#sdp").css('display', '');
+	        	} else {
+		        	$("#sdp").css('display', 'none');
+	        	}
+		    }
+	        
 	        function attitudeConfigSet(result) {
 	        	$('input:radio').prop('checked', false);
 	        	
@@ -78,6 +110,55 @@
         		} else {
         			$('input[name=annual_gnrt_std]').eq(0).prop('checked', true);
         		}
+        		
+        		//회계년도 기산일
+        		initialDate = result.initialDate;
+        		$(function () {
+    		        $("#Sdatepicker").datepicker({
+    		            changeMonth: true,
+    		            changeYear: true,
+    		            autoSize: true,
+    		            showOn: "both",
+    		            buttonImage: "/images/ImgIcon/calendar-month.png",
+    		            buttonImageOnly: true
+    		        });
+    		        var NowDate;
+    		        if (initialDate != "") {
+    		        	/* 2018-12-28 김민성 - 달력 날짜 가져오는 부분 수정 */
+    		            NowDate = new Date(initialDate.substring(0, 4), initialDate.substring(5, 7)-1, initialDate.substring(8, 10));
+    		        }
+    		        else
+    		            NowDate = new Date();
+    		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+    		        $("#Sdatepicker").datepicker('setDate', NowDate);
+    		    });
+    		    
+    		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
+    		    var monthStr = monthMsg.split(";");		    
+    		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+    		    var dayStr = dayMsg.split(";");
+    		    
+    		    $(function () {
+    		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+    		        	closeText: "<spring:message code='main.t3' />",
+    		            prevText: "<spring:message code='main.t0604' />",
+    		            nextText: "<spring:message code='main.t0605' />",
+    					currentText: "<spring:message code='main.t0606' />",
+    		            monthNames: monthStr,
+    		            monthNamesShort: monthStr,
+    		            dayNames: dayStr,
+    		            dayNamesShort: dayStr,
+    		            dayNamesMin: dayStr,
+    		            weekHeader: 'Wk',
+    		            dateFormat: 'yy-mm-dd',
+    		            firstDay: 0,
+    		            isRTL: false,
+    		            duration: 200,
+    		            showAnim: 'show',
+    		            showMonthAfterYear: true
+    		        };
+    		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+    		    });
         		
         		//잔여연차 음수허용
         		var useMinusAnnual = result.useMinusAnnual;
@@ -114,6 +195,7 @@
 	            			annualCancelRule : $('input[name=annual_cancel_rule]:checked').val(),
 	            			useAnnualAutoGnrt : $('input[name=use_annual_auto_gnrt]:checked').val(),
 	            			annualGnrtStd : $('input[name=annual_gnrt_std]:checked').val(),
+	            			initialDate : $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val(),
 	            			useMinusAnnual : $('input[name=use_minus_annual]:checked').val(),
 	            			useAnnualTmnt : $('input[name=use_annual_tmnt]:checked').val(),
 	            			roundOffRule : $('input[name=round_off_rule]:checked').val()
@@ -145,9 +227,9 @@
 				</c:forEach>
       		</select>
 	    </h1>
-		<table class="content" style="width:500px;margin-top:30px">
+		<table class="content" style="width:600px;margin-top:30px">
 			<tr style="height:30px;">
-	        	<th style="width: 70px; text-align:center">
+	        	<th style="width: 40%; text-align:center">
 	        		연차취소신청방식
 	            </th>
 	            <td style="width: 700px; text-align:left">
@@ -157,25 +239,33 @@
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">
-	        	<th style="width: 70px; text-align:center">
+	        	<th style="width: 40%; text-align:center">
 					연차자동발생
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="use_annual_auto_gnrt" value="1"/>사용
-	            	<input type="radio" name="use_annual_auto_gnrt" value="0"/>사용안함
+	            	<input type="radio" name="use_annual_auto_gnrt" value="1" onchange="type_change('1');"/>사용
+	            	<input type="radio" name="use_annual_auto_gnrt" value="0" onchange="type_change('0');"/>사용안함
 	            </td>
 	        </tr>
-	        <tr style="height:30px;">
-	        	<th style="width: 70px; text-align:center">
+	        <tr id="ags" style="height:30px;">
+	        	<th style="width: 40%; text-align:center">
 					연차발생기준
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="annual_gnrt_std" value="1"/>회계년도
-	            	<input type="radio" name="annual_gnrt_std" value="0"/>입사일
+	            	<input type="radio" name="annual_gnrt_std" value="1" onchange="type_change('2');"/>회계년도
+	            	<input type="radio" name="annual_gnrt_std" value="0" onchange="type_change('3');"/>입사일
+	            </td>
+	        </tr>
+	        <tr id="sdp" style="height:30px;">
+	        	<th style="width: 40%; text-align:center">
+					회계년도 기산일
+	            </th>
+	            <td style="width: 700px; text-align:left">
+	            	<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" />
 	            </td>
 	        </tr>
 	        <tr style="height:30px;">
-	        	<th style="width: 70px; text-align:center">
+	        	<th style="width: 40%; text-align:center">
 					잔여연차 음수허용
 	            </th>
 	            <td style="width: 700px; text-align:left">
@@ -183,8 +273,8 @@
 	            	<input type="radio" name="use_minus_annual" value="0"/>허용안함
 	            </td>
 	        </tr>
-	        <tr style="height:30px;">
-	        	<th style="width: 70px; text-align:center">
+	        <tr id="uat" style="height:30px;">
+	        	<th style="width: 40%; text-align:center">
 					1개월 만근시 발생연차 1년경과 시 소멸
 	            </th>
 	            <td style="width: 700px; text-align:left">
@@ -192,8 +282,8 @@
 	            	<input type="radio" name="use_annual_tmnt" value="0"/>사용안함
 	            </td>
 	        </tr>
-	        <tr style="height:30px;">
-	        	<th style="width: 70px; text-align:center">
+	        <tr id="ror" style="height:30px;">
+	        	<th style="width: 40%; text-align:center">
 					연차 소수점 계산 처리
 	            </th>
 	            <td style="width: 700px; text-align:left">

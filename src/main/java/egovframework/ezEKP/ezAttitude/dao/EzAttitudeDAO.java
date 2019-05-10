@@ -407,8 +407,8 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
     }
 
     @SuppressWarnings("unchecked")
-    public List<Map<String, Object>> getAttitudeJoinDateUserList() throws Exception {
-    	return (List<Map<String, Object>>) list("ezAttitudeDAO.getAttitudeJoinDateUserList");
+    public List<Map<String, Object>> getAttitudeJoinDateUserList(Map<String, Object> map) throws Exception {
+    	return (List<Map<String, Object>>) list("ezAttitudeDAO.getAttitudeJoinDateUserList", map);
     }
     
     @SuppressWarnings("unchecked")
@@ -430,10 +430,20 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
     public int getAttendanceDay(Map<String, Object> map) throws Exception {
     	return (int) select("ezAttitudeDAO.getAttendanceDay", map);
     }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, Object> getTenantCompanuId() throws Exception {
+    	return (Map<String, Object>) select("ezAttitudeDAO.getTenantCompanuId");
+    }
     
     @SuppressWarnings("unchecked")
     public void updateAnnualHoliday(Map<String, Object> map) throws Exception {
     	update("ezAttitudeDAO.updateAnnualHoliday", map);
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Map<String, Object>> getuserAnnualCnt(Map<String, Object> map) throws Exception {
+    	return (List<Map<String, Object>>) list("ezAttitudeDAO.getuserAnnualCnt", map);
     }
 
     @SuppressWarnings("unchecked")
@@ -511,6 +521,15 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
 	
 	public void updateAnnualConfig(Map<String, Object> map) throws Exception {
 		update("ezAttitudeAdminDAO.updateAnnualConfig", map);
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Map<String, Object> getJoinDate(Map<String, Object> map) throws Exception{
+		return (Map<String, Object>) select("ezAttitudeAdminDAO.getJoinDate", map);
+	}
+	
+	public List<Map<String, Object>> getAttitudeAprInfo(Map<String, Object> map) throws Exception {
+		return (List<Map<String, Object>>) list("ezAttitudeDAO.getAttitudeAprInfo", map);
 	}
 
 	public List<AttitudeVO> getDisabledAttitudeList(Map<String, Object> map) {
