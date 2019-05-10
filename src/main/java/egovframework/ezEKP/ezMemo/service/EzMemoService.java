@@ -202,7 +202,6 @@ public interface EzMemoService {
 	 */
 	public void setGadgetConfig(MemoConfigVO memoConfigVO) throws Exception;
 
-	
 	/**
 	 * 메모 레이어 창모드,전체모드 플래그 저장
 	 * @param memoConfigVO
@@ -210,11 +209,31 @@ public interface EzMemoService {
 	 */
 	public void setMemoLayerMode(MemoConfigVO memoConfigVO) throws Exception;
 	
-	
 	/**
 	 * 메모 레이어의 넓이를 저장
 	 * @param memoConfigVO
 	 * @throws Exception
 	 */
 	public void setMemoLayerArea(MemoConfigVO memoConfigVO) throws Exception;
+	
+	/**
+	 * 큰 메모의 넓이 저장
+	 * @param memoConfigVO
+	 * @throws Exception
+	 */
+	public void setDetailMemoArea(MemoConfigVO memoConfig);
+	
+	/**
+	 * 큰 메모의 left와 top 저장
+	 * @param memoConfigVO
+	 * @throws Exception
+	 */
+	public void setDetailMemoPosition(MemoConfigVO memoConfig);
+	
+	/**
+	 * 큰 메모의 오픈 상태 저장
+	 * @param memoConfigVO
+	 * @throws Exception
+	 */
+	public void setDetailMemoStatus(MemoConfigVO memoConfig);
 }

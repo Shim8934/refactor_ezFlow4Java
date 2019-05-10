@@ -161,6 +161,7 @@ function modifyMemoColor(obj, idx) {
 function modifyMemo(obj) {
 	var memoId = obj.getAttribute("memoid");
 	var afterContents = $(".memoText[memoid=" + memoId + "]").val();
+	var size = "small";
 
     	$.ajax ({
     		url : '/ezMemo/memoModify.do',
@@ -174,6 +175,7 @@ function modifyMemo(obj) {
             success: function(result) {
             	//saveMemoToast(memoId);
             	parent.parent.getMemoList();			// 간이 메모의 리스트 새로고침
+            	parent.parent.setContents(size, memoId, afterContents);
             },
             error : function() {
             	

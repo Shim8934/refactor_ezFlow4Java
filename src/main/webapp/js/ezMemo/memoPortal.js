@@ -345,8 +345,21 @@ function modalDelete(memoId) {
  * @param obj
  */
 function modifyMemo(obj) {
-	var memoId = obj.getAttribute("memoid");
-	var afterContents = $(".memoText[memoid=" + memoId + "]").val();
+	//var memoId = obj.getAttribute("memoid");
+	//var afterContents = $(".memoText[memoid=" + memoId + "]").val();
+	var size;
+	var memoId;
+	var afterContents;
+
+	if (obj.getAttribute("memoid")) {
+		memoId = obj.getAttribute("memoid");
+		afterContents = $(".memoText[memoid=" + memoId + "]").val();
+		size = "small";
+	} else {
+		memoId = obj.getAttribute("bigmemoid");
+		afterContents = $("#dMContents").val();
+		size = "big";
+	}
 	
     $.ajax ({
     	url : '/ezMemo/memoModify.do',
@@ -362,8 +375,9 @@ function modifyMemo(obj) {
             if(window.frames["main"].frames["right"] != undefined) {			
                	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
                		window.frames["main"].frames["right"].getMemoList();
-            	}
-            },
+            }
+            setContents(size, memoId, afterContents);
+        },
         error : function() {
         }
     }); 
@@ -444,6 +458,7 @@ function checkMemoConfig() {
  * config값 가져오는 메서드
  */
 function getMemoConfig() {
+	var bigMemoInfo = {}
 	
 	$.ajax({
 		type : "GET",
@@ -451,6 +466,7 @@ function getMemoConfig() {
     	async : false,
     	url : "/ezMemo/getMemoConfig.do",
     	success : function(result) {
+    		console.log('result: ', result);
     		
     		fontSize = result.memoConfigVO.font_size;
 			useDate = result.memoConfigVO.use_date;
@@ -482,6 +498,20 @@ function getMemoConfig() {
 			}
 			emptyMemoResize();
         	layerResize();
+        	
+        	bigMemoInfo.height = result.memoConfigVO.b_memo_height;
+        	bigMemoInfo.width = result.memoConfigVO.b_memo_width;
+        	bigMemoInfo.left = result.memoConfigVO.b_memo_left;
+        	bigMemoInfo.top = result.memoConfigVO.b_memo_top;
+        	
+        	setBigMemoAtFirst(bigMemoInfo);
+        	
+        	var memoId = result.memoConfigVO.memo_id;
+        	var memoStatus = result.memoConfigVO.b_memo_status;
+        	/*메모의 오픈 상태와 아이디 체크 후 큰 메모 오픈*/
+        	if (memoStatus != 0 && memoId != null && memoId != 0) {
+        		getMemoDetail(memoId);
+        	}
     	}
 	});
 }
@@ -1116,5 +1146,181 @@ function browserResize() {
 		
 		// 빈메모 resize 이벤트 추가
 		emptyMemoResize();
+	}
+}
+
+/*큰 메모관련 이벤트*/
+function addEventInBigMemo() {
+	var memoStatus;
+	var beforeContents;
+    var afterContents;
+    var bigHeight;
+    var bigWidth;
+    var bigTop;
+    var bigLeft;
+    
+    /*큰 메모에 리사이즈 이벤트*/
+    $("#detailMemo").resizable({
+    	handles : "n, e, s, w, ne, se, sw, nw",
+		containment:".noteBlock",
+		minWidth: 340,
+		minHeight: 380,
+		start : function () {
+			bigHeight = parseInt($('#detailMemo')[0].clientHeight);
+			bigWidth = parseInt($('#detailMemo')[0].clientWidth);
+		},
+		resize : function (event, ui) {
+			bigHeight = parseInt($('#detailMemo')[0].clientHeight);
+			bigWidth = parseInt($('#detailMemo')[0].clientWidth);
+			
+			setBigMemoBody(bigHeight, bigWidth);
+		},
+		stop : function (event, ui) {
+		    $.ajax({
+		    	type : 'POST',
+		        url : '/ezMemo/setDetailMemoArea.do',
+		        data : {
+		        	'bigHeight' : bigHeight,
+					'bigWidth' : bigWidth
+		        },
+		        dataType : 'JSON',
+		        success : function(result) {
+		        }
+		    });
+		    
+		}
+    }).on('mousedown', function () {
+    	$('#noteBlock').css('visibility', 'visible');
+    }).on('mouseup', function () {
+        $('#noteBlock').css('visibility', 'hidden');
+    });
+
+    /*큰 메모에 드래그 이벤트*/
+    $("#detailMemo").draggable({
+    	containment:".noteBlock",
+        scroll : false,
+        opacity : 0.7,
+        drag : function() {
+        	bigTop = parseInt($('#detailMemo')[0].offsetTop);
+        	bigLeft = parseInt($('#detailMemo')[0].offsetLeft);
+        },
+        stop : function() {
+        	$.ajax({
+        		type : 'POST',
+        		data : {
+        			'bigTop' : bigTop,
+					'bigLeft' : bigLeft
+        		},
+        		url : '/ezMemo/setDetailMemoPosition.do',
+        		dataType : 'JSON',
+        		success : function(result) {
+        		}
+        	});
+        }
+    }).on('mousedown', function () {
+        $('#noteBlock').css('visibility', 'visible');
+    }).on('mouseup', function () {
+        $('#noteBlock').css('visibility', 'hidden');
+    });
+
+    /*큰 메모 열기*/
+    $('#layer-popup').on('dblclick', '.memoText', function (event, ui) {
+    	console.log($(this).parent().attr('class'));
+    	console.log($(this)[0].className);
+    	
+    	var memoId = $(this).attr("memoid");
+    	getMemoDetail(memoId);
+    	
+    });
+
+    /*큰 메모 닫기*/
+    $("#closeMemo").click(function() {
+    	// setDetailStatus();
+        $("#detailMemo").css('visibility', 'hidden');
+    });
+
+    /*큰 메모에서 내용 수정*/
+    $('#dMContents').on('blur', function () {
+    	var thisEl = $(this);
+        modifyMemo(thisEl[0]);
+    });
+}
+
+/*큰 메모의 제일 처음 위치와 사이즈를 정함*/
+function setBigMemoAtFirst(sizeInfo) {
+	//console.log('처음 받은 사이즈: ', sizeInfo);
+	var bigMemo = $('#detailMemo');
+   
+	var defaultHeight = 600;
+	var defaultWidth = 600;
+
+	var bigHeight;
+	var bigWidth;
+	var bigTop;
+	var bigLeft;
+	
+	if (sizeInfo.width != null && sizeInfo.width != 0) {
+		bigWidth = sizeInfo.width;
+		bigHeight = sizeInfo.height;
+		bigTop = sizeInfo.top;
+		bigLeft = sizeInfo.left;
+	} else {
+		var winWidth = window.clientWidth;
+		var winHeight = window.clientHiehgt;
+
+		bigWidth = defaultWidth;
+		bigHeight = defaultHeight;
+		
+		bigLeft = winWidth/2 - defaultWidth/2;
+		bigTop = winHeight/2 - defaultHeight/2;
+	}
+	
+	bigMemo.css({'width' : bigWidth, 'height' : bigHeight, 'top' : bigTop, 'left' :bigLeft});
+	setBigMemoBody(bigHeight, bigWidth);
+}
+/*큰 메모의 textarea 사이즈*/
+function setBigMemoBody(bigHeight, bigWidth) {
+	/*37 - 헤더 높이, 29 - bottom 높이*/ 
+	var contentsHeight = parseInt(bigHeight - 37 - 29);
+	/*11 - 스크롤 넓이*/
+	var contentsWidth = parseInt(bigWidth - 11);
+	
+	$('#dMContents').css({'width': contentsWidth, 'height' : contentsHeight});
+}
+/*큰 메모 불러오기*/
+function getMemoDetail(memoId) {
+	
+    $.ajax({
+    	type : 'GET',
+    	data : { 'memoId' : memoId, },
+    	url : '/ezMemo/memoDetail.do',
+    	dataType : 'JSON',
+    	success : function(result) {
+    		//console.log('detail', result);
+    		$('#detailMemo').removeClass().addClass('ui-resizable ui-draggable ui-draggable-handle memo0' + result.memo.color_id + 'Big');
+    		$('#dMContents')[0].textContent = result.memo.contents;
+    		$('#dMContents').attr('bigMemoId', result.memo.memo_id);
+			$('#dMTime')[0].textContent = result.memo.write_date;
+			$('#dMContents').attr('bigMemoId', result.memo.memo_id).focus();
+			$('#detailMemo').css('visibility', 'visible');
+
+			//setDetailStatus(memoId);
+    	}
+    });
+}
+
+/*큰 메모에서 내용 수정시 작은 메모에도 적용*/
+function setContents(size, memoId, afterContents) {
+	if (memoId != null && memoId != undefined) {
+		if (size === 'big') {
+			$(".memoText[memoid=" + memoId + "]").val(afterContents);
+		} else {
+			var bigMContents = $("#dMContents");
+			var bigMemoId = parseInt(bigMContents.attr('bigmemoid'));
+			
+			if (bigMContents.css('visibility') === 'visible' && bigMemoId === parseInt(memoId)) {
+				bigMContents.val(afterContents);
+			}
+		}
 	}
 }

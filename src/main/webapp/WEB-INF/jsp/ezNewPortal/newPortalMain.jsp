@@ -170,17 +170,19 @@
 			     </div>
 			</div>
 			
-			
-			<div class="memo01Big">
-		        <div class="bigTop">
-		            <dl class="memoTit">
-		                <dt class="mtitText">2018.08.24 13:05</dt>
-		                <dd class="memoIcon memoX"></dd>
+			<!-- 큰 메모 -->
+			<div id="detailMemo">
+		        <div class="bigTop" id='dMWrapper'>
+		            <dl class="memoTit" id='dMHeader'>
+		                <dt class="mtitText" id="dMTime"></dt>
+		                <dd class="memoIcon memoX" id='closeMemo'></dd>
 		            </dl>
+			        <textarea id="dMContents"></textarea>
+			        <div class="bigBottom_left" id='bottomLeft'></div>
+			        <div class="bigBottom_right" id='bottomRight'></div>
 		        </div>
-		        <div class="bigBottom_left"></div>
-		        <div class="bigBottom_right"></div>
 		    </div>
+		    
 			<%-- <div id="open-memo" class="memoBtn" style="display: none;"><span><spring:message code='ezMemo.t001'/></span></div> --%>
 		</div>
 	</body>
@@ -219,7 +221,9 @@
 		    	layerExpand();
 		    	memoAdd();
 		    	noteClearSelection();
-		    
+		    	
+		    	addEventInBigMemo();
+		    	
 		     	// 메모함 비어있을 시, 추가 이미지 클릭으로 새 메모 추가 
 		        $(".memo_main").on("click", "#addFirstMemo", function() {
 		        	newMemo();
@@ -227,11 +231,11 @@
 		     	// 일정 간격으로 메모 자동 저장 시작
 		     	$(document).on('focus', '.memoText', function(event) {
 		     		event.stopPropagation();
-		     		console.log('시작');
+		     		//console.log('시작');
 		     		var thisEl = event.target;
 		     		beforeMemo = thisEl.value;
-		     		
-		     		autoSaveStart(thisEl);
+		     		/* 임시 주석 처리 */
+		     		//autoSaveStart(thisEl);
 		     	});
 		     	
 		     	// 메모 자동 저장 정지
@@ -246,7 +250,7 @@
 				});
 	    		*/
 	    		// 메모 숨김 기능
-	    		$(document).on('click', '.memoX', function() {
+	    		$(document).on('click', '.hidden', function() {
 	    			var thisEl = $(this)[0];
 	    			hideMemo(thisEl);
 	    		});

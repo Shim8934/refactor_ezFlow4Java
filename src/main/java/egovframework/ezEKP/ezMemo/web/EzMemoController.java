@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
@@ -847,4 +848,91 @@ public class EzMemoController {
 		logger.debug("setMemoLayerMode ended");
 		return "json";
 	}
+	
+	/**
+	 * 큰 메모의 넓이 정보 변경 method
+	 * @param loginCookie
+	 * @param request
+	 * @param layerTop
+	 * @param layerLeft
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ezMemo/setDetailMemoArea.do", method = RequestMethod.POST)
+	public String setDetailMemoArea(@CookieValue("loginCookie") String loginCookie,  int bigHeight, int bigWidth, HttpServletRequest request) throws Exception {
+		logger.debug("setDetailMemoArea started");
+
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("b_memo_height", bigHeight);
+		param.put("b_memo_width", bigWidth);
+		logger.debug("bigHeight :" + bigHeight + ", bigWidth: " + bigWidth);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setDetailMemoArea/users/" + userInfo.getId(), param, request, "put", null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("setDetailMemoArea ended");
+		return "json";
+	}
+	
+	/**
+	 * 큰 메모의 위치 정보 변경 method
+	 * @param loginCookie
+	 * @param request
+	 * @param layerTop
+	 * @param layerLeft
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ezMemo/setDetailMemoPosition.do", method = RequestMethod.POST)
+	public String setDetailMemoPosition(@CookieValue("loginCookie") String loginCookie,  int bigTop, int bigLeft, HttpServletRequest request) throws Exception {
+		logger.debug("setDetailMemoPosition started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		param.put("b_memo_top", bigTop);
+		param.put("b_memo_left", bigLeft);
+		logger.debug("bigTop :" + bigTop + ", bigLeft: " + bigLeft);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setDetailMemoPosition/users/" + userInfo.getId(), param, request, "put", null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("setDetailMemoPosition ended");
+		return "json";
+	}
+	
+	/**
+	 * 큰 메모의 열림 상태 정보 변경 method
+	 * @param loginCookie
+	 * @param request
+	 * @param layerTop
+	 * @param layerLeft
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/ezMemo/setDetailMemoStatus.do", method = RequestMethod.POST)
+	public String setDetailMemoStatus(@CookieValue("loginCookie") String loginCookie,  int memoId, int openStatus, HttpServletRequest request) throws Exception {
+		logger.debug("setDetailMemoPosition started");
+		
+		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		
+		HashMap<String, Object> param = new HashMap<String, Object>();
+		
+		if (memoId > 0) {
+			param.put("memo_id", memoId);
+		}
+		param.put("b_memo_status", openStatus);
+		logger.debug("memo_id :" + memoId + ", b_memo_status: " + openStatus);
+		
+		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setDetailMemoStatus/users/" + userInfo.getId(), param, request, "put", null);
+		String status = resultBody.get("status").toString();
+		
+		logger.debug("setDetailMemoStatus ended");
+		return "json";
+	}
+	
 }

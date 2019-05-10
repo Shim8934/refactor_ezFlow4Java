@@ -1,7 +1,7 @@
 function createMemo(memo, flag) {
 	
 	var div = document.createElement("div");
-	div.setAttribute("class", "mamo0"+ memo.color_id +" memoLay");
+	div.setAttribute("class", "memo0"+ memo.color_id +" memoLay");
 	div.id  = "memo" + memo.memo_id;
 	div.setAttribute("orders", memo.orders)
 	if(memo.display_flag == 1) {
@@ -38,11 +38,11 @@ function createMemo(memo, flag) {
 	
 	var dd2 = document.createElement("dd");
 	dd2.setAttribute("class", "memoIcon garbage");
+	dd2.setAttribute("onclick", "addRemoveButton("+memo.memo_id+")");
 	
 	var dd3 = document.createElement("dd");
 	dd3.setAttribute("class", "memoIcon pallete");
 	dd3.setAttribute("memoid", memo.memo_id);
-	// dd3.setAttribute("onclick", "addRemoveButton("+memo.memo_id+")");
 	
 	var dd = document.createElement("dd");
 	dd.setAttribute("class", "memoIcon hidden");

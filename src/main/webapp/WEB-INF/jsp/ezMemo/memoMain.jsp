@@ -117,7 +117,7 @@
 			});
 	    	 */
 	    	// 메모 숨김 기능
-	    	$(document).on('click', '.memoX', function() {
+	    	$(document).on('click', '.hidden', function() {
 	    		var thisEl = $(this)[0];
 	    		hideMemo(thisEl);
 	    	});
