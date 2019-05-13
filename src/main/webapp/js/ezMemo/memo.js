@@ -122,7 +122,7 @@ function loadMemoList(flag) {
 		}
 }
 
-function addDateInfo(date) {
+function addDateInfo(date, detail) {
     	var nowDate 
     	
     	if(date == null) {
@@ -142,8 +142,12 @@ function addDateInfo(date) {
     	if(date < 10) {
     		date = "0"+date;
     	}
+    	if (detail) {
+    		$('#dMTime').html(month+"."+date+" ("+dayArray[day]+")");
+    	} else {
+    		$(".mtitText:first").html(month+"."+date+" ("+dayArray[day]+")");	
+    	}
 
-		$(".mtitText:first").html(month+"."+date+" ("+dayArray[day]+")");	
 }
 
 function addRemoveButton(memoId) {

@@ -5,8 +5,6 @@
 .memoIcon{display:inline-block; background:url(../../images/ezMemo/memo_icon.png); background-repeat: no-repeat; background-color: transparent !important; vertical-align: top !important; overflow: hidden; }
 .memoIcon30{display:inline-block; background:url(../../images/ezMemo/memo_icon_30.png); background-repeat: no-repeat; background-color: transparent !important; vertical-align: top !important; overflow: hidden; }
 
-/* .memo_wrap{ margin:0px; padding:10px 25px 10px 20px; box-sizing:border-box; overflow:hidden; background:rgba(0, 0, 0, 0.30);}
-.memo_header{ overflow:hidden; margin:0px 0px 10px 0px; padding:0px;} */
 .memo_wrap{ margin:0px; box-sizing:border-box; overflow:hidden; background:#000000; border:1px solid #ccc; float:right; position:absolute; z-index: 1001; overflow:hidden; height: 50%;}
 .memo_header{ overflow:hidden; margin:0px 0px 10px 0px padding:0px; }
 .memoHeaderUL{ margin: 10px 4px 9px 9px; padding:0px; list-style:none; overflow:hidden;}
@@ -76,55 +74,55 @@ select::-ms-expand {
 .memoText::-webkit-scrollbar { display: none !important; }
 
 .memo01Big .bigTop{ background:#fff9c5; height:100%; width: 100%; height: 37px;}
-.memo01Big .bigTop .memoTit{background:#fff6a9; margin:0px;}
-.memo01Big .bigBottom_left{background:#fff9c5; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px;}
+.memo01Big .bigTop .memoTit{background:#fff6a9; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo01Big .bigBottom_left{background:#fff9c5; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
 .memo01Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point01.png); margin-top: -4px;}
-.memo01Big .bigTop #dMContents{background:#fff9c5; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px;}
+.memo01Big .bigTop #dMContents{background:#fff9c5; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
 .memo01Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
 .memo01Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
 .memo01Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
 
 .memo02Big .bigTop{ background:#c5ffdf; height:100%; width: 100%; height: 37px;}
-.memo02Big .bigTop .memoTit{background:#b3fdd5; margin:0px;}
-.memo02Big .bigBottom_left{background:#c5ffdf; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px;}
+.memo02Big .bigTop .memoTit{background:#b3fdd5; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo02Big .bigBottom_left{background:#c5ffdf; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
 .memo02Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point02.png) no-repeat; margin-top: -4px;}
-.memo02Big .bigTop #dMContents{background:#c5ffdf; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px;}
+.memo02Big .bigTop #dMContents{background:#c5ffdf; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
 .memo02Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
 .memo02Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
 .memo02Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
 
 .memo03Big .bigTop{ background:#e8ffc5; height:100%; width: 100%; height: 37px;}
-.memo03Big .bigTop .memoTit{background:#d9ffa5; margin:0px;}
-.memo03Big .bigBottom_left{background:#e8ffc5; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px;}
+.memo03Big .bigTop .memoTit{background:#d9ffa5; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo03Big .bigBottom_left{background:#e8ffc5; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
 .memo03Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point03.png) no-repeat; margin-top: -4px;}
-.memo03Big .bigTop #dMContents{background:#e8ffc5; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px;}
+.memo03Big .bigTop #dMContents{background:#e8ffc5; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
 .memo03Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
 .memo03Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
 .memo03Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
 
 .memo04Big .bigTop{ background:#c5f3ff; height:100%; width: 100%; height: 37px;}
-.memo04Big .bigTop .memoTit{background:#b0e6ff; margin:0px;}
-.memo04Big .bigBottom_left{background:#c5f3ff; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px;}
+.memo04Big .bigTop .memoTit{background:#b0e6ff; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo04Big .bigBottom_left{background:#c5f3ff; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
 .memo04Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point04.png) no-repeat;margin-top: -4px;}
-.memo04Big .bigTop #dMContents{background:#c5f3ff; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px;}
+.memo04Big .bigTop #dMContents{background:#c5f3ff; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
 .memo04Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
 .memo04Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
 .memo04Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
 
 .memo05Big .bigTop{ background:#d7d6ff; height:100%; width: 100%; height: 37px;}
-.memo05Big .bigTop .memoTit{background:#c9c4ff; margin:0px;}
-.memo05Big .bigBottom_left{background:#d7d6ff; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px;}
+.memo05Big .bigTop .memoTit{background:#c9c4ff; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo05Big .bigBottom_left{background:#d7d6ff; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
 .memo05Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point05.png) no-repeat; margin-top: -4px;}
-.memo05Big .bigTop #dMContents{background:#d7d6ff; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px;}
+.memo05Big .bigTop #dMContents{background:#d7d6ff; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
 .memo05Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
 .memo05Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
 .memo05Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
 
 .memo06Big .bigTop{ background:#ffd6f2; height:100%; width: 100%; height: 37px;}
-.memo06Big .bigTop .memoTit{background:#fcc5ec; margin:0px;}
-.memo06Big .bigBottom_left{background:#ffd6f2; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px;}
+.memo06Big .bigTop .memoTit{background:#fcc5ec; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo06Big .bigBottom_left{background:#ffd6f2; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
 .memo06Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point06.png) no-repeat; margin-top: -4px;}
-.memo06Big .bigTop #dMContents{background:#ffd6f2; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px;}
+.memo06Big .bigTop #dMContents{background:#ffd6f2; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
 .memo06Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
 .memo06Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
 .memo06Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
@@ -137,7 +135,7 @@ select::-ms-expand {
 .color_popup li.color04{background:#519ef0; border:1px solid #4592e4;}
 .color_popup li.color05{background:#8e74f6; border:1px solid #8167ec;}
 .color_popup li.color06{background:#f261d0; border:1px solid #e752c4;}
-.memobgBar{ float:right; clear:both; /* padding:0px 25px 10px 20px; */ padding:0px 20px 0px 0px; /* margin-top: 8px; */ height: 15px;}
+.memobgBar{ float:right; clear:both; padding:0px 20px 0px 0px; height: 15px;}
 
 /* memoBtn */
 .memoBtn{ position:absolute; bottom:10px; right:10px; text-align:center; width:72px; height:72px; box-sizing:border-box; border:1px solid #327fd3; background:rgba(4, 112, 228, 0.70) url(../../images/ezMemo/memoBtn_icon.png) no-repeat center 17px; cursor:pointer; border-radius:45px; -webkit-border-radius:45px; -moz-border-radius:45px;}
@@ -146,12 +144,11 @@ select::-ms-expand {
 .memo_add span{ font-size:13px; color:#fff; display:inline-block; margin:0px; padding:200px 0px 0px 0px;}
 
 /* 09-05 추가  */
-#detailMemo{/* width:400px; height:400px;  */position:absolute; visibility: hidden; z-index: 1002;}
+#detailMemo{position:absolute; visibility: hidden; z-index: 1002; border-top: 1px solid rgba(0, 0, 0, 0.1); border-left: 1px solid rgba(0, 0, 0, 0.1);}
 #detailMemo .ui-resizable-handle {border: none; background-image: none;}
 
 /* 09-06 추가  */
 #memoFolderList {width:149px; height:27px; border-radius:25px;}
-/* .memo_header_wrapper{ overflow:hidden; padding:0px; opacity:1; background:#000000;} */
 .memo_header_wrapper{ height: 54px;}
 #mCSB_1_scrollbar_vertical {margin-right: 4px;}
 /* 09-07 추가 */

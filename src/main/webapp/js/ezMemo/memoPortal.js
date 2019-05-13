@@ -272,7 +272,6 @@ function layerExpand() {
  * 새 메모 추가 메서드
  */
 function memoAdd() {
- 
     $("#addMemo").click(function() {
     	newMemo();
     });	
@@ -328,13 +327,13 @@ function modalDelete(memoId) {
         		addEmptyMemo(layerflag);
         	}
         	
+        	checkAndActionBigMemo(memoId);
+        	
         	if(window.frames["main"].frames["right"] != undefined) {			
             	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
             		window.frames["main"].frames["right"].getMemoList();
         	}
-        },
-        error : function() {
-            	
+        	
         }
 	});
 }
@@ -377,8 +376,6 @@ function modifyMemo(obj) {
                		window.frames["main"].frames["right"].getMemoList();
             }
             setContents(size, memoId, afterContents);
-        },
-        error : function() {
         }
     }); 
 }
@@ -466,8 +463,6 @@ function getMemoConfig() {
     	async : false,
     	url : "/ezMemo/getMemoConfig.do",
     	success : function(result) {
-    		console.log('result: ', result);
-    		
     		fontSize = result.memoConfigVO.font_size;
 			useDate = result.memoConfigVO.use_date;
 			defaultColor = result.memoConfigVO.default_color;
@@ -573,7 +568,7 @@ function setLayerArea() {
 	
 	var layerClass = $("#layer-popup").attr("class");
 		
-		if (layerClass.indexOf("layerControl") != -1) {
+	if (layerClass.indexOf("layerControl") != -1) {
 
 			var layerWidth = parseInt($(".layerControl").width());
 		var layerHeight = parseInt($(".layerControl").height());
@@ -588,8 +583,7 @@ function setLayerArea() {
 			dataType: "JSON",
 			url :  "/ezMemo/setLayerArea.do", 
 			success : function (result) {
-			},
-			error : function() {
+				
 			}
 		});
 	}
@@ -837,9 +831,6 @@ function newMemo() {
             	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
             		window.frames["main"].frames["right"].getMemoList("new");
         	}
-        },
-        error : function() {
-        	
         }
 	});
 }
@@ -868,9 +859,6 @@ function modifyMemoColor(obj, idx) {
             	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
             		window.frames["main"].frames["right"].getMemoList();
         	}
-        },
-        error : function() {
-        	
         }
 	}); 
 }
@@ -918,7 +906,6 @@ function getMemoList(type) {
 function setMemoListSize() {
 	
 	var offsetHeight = $("#layer-popup")[0].offsetHeight;
-	console.log(offsetHeight);
     var layerHeight = $("#layer-popup").height();
     var layerWidth = $("#layer-popup").width();
     var memoListHeight = layerHeight - 54;		// 54 -> 메모 레이어 헤더의 높이
@@ -1170,7 +1157,7 @@ function browserResize() {
 	}
 }
 
-/*큰 메모관련 이벤트*/
+// 큰 메모관련 이벤트
 function addEventInBigMemo() {
 	var memoStatus;
 	var beforeContents;
@@ -1180,7 +1167,7 @@ function addEventInBigMemo() {
     var bigTop;
     var bigLeft;
     
-    /*큰 메모에 리사이즈 이벤트*/
+    // 큰 메모에 리사이즈 이벤트
     $("#detailMemo").resizable({
     	handles : "n, e, s, w, ne, se, sw, nw",
 		containment:".noteBlock",
@@ -1205,7 +1192,7 @@ function addEventInBigMemo() {
         $('#noteBlock').css('visibility', 'hidden');
     });
 
-    /*큰 메모에 드래그 이벤트*/
+    // 큰 메모에 드래그 이벤트
     $("#detailMemo").draggable({
     	containment:".noteBlock",
         scroll : false,
@@ -1223,19 +1210,19 @@ function addEventInBigMemo() {
         $('#noteBlock').css('visibility', 'hidden');
     });
 
-    /*큰 메모 열기*/
+    // 큰 메모 열기
     $('#layer-popup').on('dblclick', '.memoText', function (event, ui) {
     	var memoId = $(this).attr("memoid");
     	getMemoDetail(memoId);
     });
 
-    /*큰 메모 닫기*/
+    // 큰 메모 닫기
     $("#closeMemo").click(function() {
     	// setDetailStatus();
         $("#detailMemo").css('visibility', 'hidden');
     });
 
-    /*큰 메모에서 내용 수정*/
+    // 큰 메모에서 내용 수정
     $('#dMContents').on('blur', function () {
     	var thisEl = $(this);
         modifyMemo(thisEl[0]);
@@ -1291,20 +1278,25 @@ function getMemoDetail(memoId) {
     	url : '/ezMemo/memoDetail.do',
     	dataType : 'JSON',
     	success : function(result) {
-    		//console.log('detail', result);
-    		$('#detailMemo').removeClass().addClass('ui-resizable ui-draggable ui-draggable-handle memo0' + result.memo.color_id + 'Big');
-    		$('#dMContents')[0].textContent = result.memo.contents;
-    		$('#dMContents').attr('bigMemoId', result.memo.memo_id);
-			$('#dMTime')[0].textContent = result.memo.write_date;
-			$('#dMContents').attr('bigMemoId', result.memo.memo_id).focus();
-			$('#detailMemo').css('visibility', 'visible');
+    		var detail = $('#detailMemo');
+    		var detailContents = $('#dMContents'); 
+    		
+    		detail.removeClass().addClass('ui-resizable ui-draggable ui-draggable-handle memo0' + result.memo.color_id + 'Big');
+    		
+    		if (useDate === 1) {
+    			addDateInfo(result.memo.write_date.substring(0,10), detail);
+    		}
+    		detailContents[0].textContent = result.memo.contents;
+			detailContents.attr('bigMemoId', result.memo.memo_id).focus();
+			
+			detail.css('visibility', 'visible');
 
 			//setDetailStatus(memoId);
     	}
     });
 }
 
-/*큰 메모에서 내용 수정시 작은 메모에도 적용*/
+// 큰 메모에서 내용 수정시 작은 메모에도 적용
 function setContents(size, memoId, afterContents) {
 	if (memoId != null && memoId != undefined) {
 		if (size === 'big') {
@@ -1320,6 +1312,7 @@ function setContents(size, memoId, afterContents) {
 	}
 }
 
+// 큰 메모의 높이와 넓이 저장
 function setBigMemoArea(bigHeight, bigWidth) {
 	$.ajax({
     	type : 'POST',
@@ -1334,6 +1327,7 @@ function setBigMemoArea(bigHeight, bigWidth) {
     });
 }
 
+// 큰 메모의 top, left 저장
 function setBigMemoPositon(bigTop, bigLeft) {
 	$.ajax({
 		type : 'POST',
@@ -1398,4 +1392,19 @@ function bigMemoResize() {
 		setBigMemoPositon(top, left);						// 리사이즈 이후의 top or left가 달라졌다면 달라진 값 저장
 	}
 	
+}
+
+//작은 메모에서 삭제, 색변경, 숨김 했을 때 큰 메모 동기화
+function checkAndActionBigMemo(memoId, color) {
+	var visibility = $('#detailMemo').css('visibility');
+	var bigMemoId = $('#dMContents').attr('bigmemoid');
+	
+	// 큰 메모가 열린 상태이면서 작은 메모와 같은 메모이면 작동
+	if (visibility === 'visible' && parseInt(memoId) === parseInt(bigMemoId)) {
+		if (color) {
+			$('#detailMemo').attr('class', 'ui-resizable ui-draggable ui-draggable-handle memo0' + color + 'Big');
+		} else {
+			$('#closeMemo').click();
+		}
+	}
 }
