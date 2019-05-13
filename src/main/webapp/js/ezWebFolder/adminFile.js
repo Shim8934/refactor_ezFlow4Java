@@ -66,27 +66,28 @@ function setButtons(mode) {
 	var companySelectbox      = document.getElementById("companyList");
 	companySelectbox.onchange = mode == 'dept' ? function() {changeCompanyForDeptFile();} : function() {changeCompanyForCompFile();};
 	
-	var libttns = document.getElementById("mainmenu2").firstElementChild.children;
-	libttns[0].firstElementChild.onclick  = function() {fileDownload();};
+	var libttns = document.getElementById("mainmenu").firstElementChild.children;
+//  아래 내용 inline으로 추가함.
+//	libttns[0].firstElementChild.onclick  = function() {fileDownload();};
 	// root에서 업로드 못하게 하려면 아래 주석을 풀면됨
 //	if (folderLevel != '0') {
-	if (libttns.length === 9) {
-		libttns[1].firstElementChild.onclick  = function() {fileUpload();};
-		libttns[2].firstElementChild.onclick  = function() {fileDelete();};
-		libttns[3].firstElementChild.onclick  = function() {fileRename();};
-		libttns[4].firstElementChild.onclick  = function() {fileMove();};
-		libttns[5].firstElementChild.onclick  = function() {openSearchPanel();};
-		libttns[6].firstElementChild.onclick  = function() {refreshView();};
-		libttns[7].firstElementChild.onchange = function() {search_Set("1");};
-	}
-	else {
-		libttns[1].firstElementChild.onclick  = function() {fileDelete();};
-		libttns[2].firstElementChild.onclick  = function() {fileRename();};
-		libttns[3].firstElementChild.onclick  = function() {fileMove();};
-		libttns[4].firstElementChild.onclick  = function() {openSearchPanel();};
-		libttns[5].firstElementChild.onclick  = function() {refreshView();};
-		libttns[6].firstElementChild.onchange = function() {search_Set("1");};
-	}
+//	if (libttns.length === 9) {
+//		libttns[1].firstElementChild.onclick  = function() {fileUpload();};
+//		libttns[2].firstElementChild.onclick  = function() {fileDelete();};
+//		libttns[3].firstElementChild.onclick  = function() {fileRename();};
+//		libttns[4].firstElementChild.onclick  = function() {fileMove();};
+//		libttns[5].firstElementChild.onclick  = function() {openSearchPanel();};
+//		libttns[6].firstElementChild.onclick  = function() {refreshView();};
+//		libttns[7].firstElementChild.onchange = function() {search_Set("1");};
+//	}
+//	else {
+//		libttns[1].firstElementChild.onclick  = function() {fileDelete();};
+//		libttns[2].firstElementChild.onclick  = function() {fileRename();};
+//		libttns[3].firstElementChild.onclick  = function() {fileMove();};
+//		libttns[4].firstElementChild.onclick  = function() {openSearchPanel();};
+//		libttns[5].firstElementChild.onclick  = function() {refreshView();};
+//		libttns[6].firstElementChild.onchange = function() {search_Set("1");};
+//	}
 	
 	var listCountElmt = document.getElementById("listCount");
 	listCountElmt.onchange = function() {search_Set("1");};
