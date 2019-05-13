@@ -2626,19 +2626,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 		List<Map<String, Object>> userList = ezAttitudeDAO.getUserList(map);
 		
-		String year = (String) map.get("year");
 		String annualCnt = (String) map.get("annualCnt");
 		String changeUserId = (String) map.get("changeUserId");
 		String changeReason = (String) map.get("changeReason");
-		String flagCheck = (String) map.get("flagCheck");
 		
 		if(userList != null) {
 			for(Map<String, Object> userMap : userList) {
-				userMap.put("year", year);
 				userMap.put("annualCnt", annualCnt);
 				userMap.put("changeUserId", changeUserId);
 				userMap.put("changeReason", changeReason);
-				userMap.put("flagCheck", flagCheck);
 				changeAnnual(userMap);
 			}
 		}

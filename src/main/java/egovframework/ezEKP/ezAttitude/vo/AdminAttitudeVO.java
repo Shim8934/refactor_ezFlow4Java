@@ -43,6 +43,8 @@ public class AdminAttitudeVO {
 	private String annualCnt;
 	/** 총 휴가일 수 (관리자 연차현황관리에서 사용) */
 	private String totalAnnualCnt;
+	/** 결재상태 (사용자 연차현황관리에서 사용) */
+	private String annualApprStatus;;
 	/** 근태 내용 (사용자 근태연차현황에서 사용)*/
 	private String content;
 	
@@ -196,5 +198,11 @@ public class AdminAttitudeVO {
 	}
 	public void setContent(String content) {
 		this.content = content;
+	}
+	public String getAnnualApprStatus() {
+		return annualApprStatus;
+	}
+	public void setAnnualApprStatus(String annualApprStatus) {
+		this.annualApprStatus = annualApprStatus;
 	}
 }

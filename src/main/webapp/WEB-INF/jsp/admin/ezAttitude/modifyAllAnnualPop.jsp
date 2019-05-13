@@ -12,7 +12,6 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 	    <script type="text/javascript">	
-	    	var flagCheck = 'change';
 	    	var companyId = "<c:out value="${companyId}" />";
 	    	var changeReason = '';
 	    	var annualCnt = '';
@@ -22,10 +21,6 @@
 		    	    $(this).val($(this).val().replace(/[^0-9]/g,""));
 		    	});
    			});
-	    	
-	    	function setFlagCheck(){
-	    		flagCheck = $("input:radio[name=flagCheck]:checked").val();
-		    }
 	    	
 	    	function setBancha() {
 	    		if($("input:checkbox[id='bancha']").is(":checked")) {
@@ -64,7 +59,6 @@
 	   				data:{
 	   					changeReason : changeReason,
 	   					companyId : companyId,
-	   					flagCheck : flagCheck,
 	   					annualCnt : annualCnt
 	   				},
 					success : function(resultStatus) {
@@ -96,20 +90,9 @@
         </div>
 	    <table class="content">
 	        <tr>
-	            <th style="width:200px; text-align:center" rowspan="2"><spring:message code='ezAttitude.t239' /></th>
-	            <td>
-	            	<input name="flagCheck" id="Radio1" type="radio" value="change" checked style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="setFlagCheck();"/><label for="Radio1">&nbsp;<spring:message code='ezAttitude.t244' /></label>
-	            </td>
-	        </tr>
-	        <tr>
-	            <td>
-					<input name="flagCheck" id="Radio2" type="radio" value="plus" style="margin:0px;padding:0px;width:13px;height:13px;vertical-align:middle;" onchange="setFlagCheck();"/><label for="Radio2">&nbsp;<spring:message code='ezAttitude.t245' /></label>
-	            </td>
-	        </tr>
-	        <tr>
 	        	<th style="width:200px; text-align:center"><spring:message code='ezAttitude.t246' /></th>
 	            <td>
-	            	<input id="annualCnt" name="annualCnt" type="text" style="width:30px;padding-bottom: 5px;" value="" maxlength="3">
+	            	<input id="annualCnt" name="annualCnt" type="text" style="width:30px;padding-bottom: 5px;text-align: right;" value="" maxlength="3">
 	            	<label id="banchaTxt"></label><spring:message code='ezAttitude.t68' />
 	            	<span style="width:100px;padding-right: 30px;"></span>
 	            	<input type="checkbox" id="bancha" name="bancha" onchange="setBancha();">
