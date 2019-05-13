@@ -324,7 +324,7 @@
 			//전체 연차 변경 팝업
 	    	function modifyAllAnnualPop() {
 	        	var url = "/admin/ezAttitude/modifyAllAnnualPop.do?companyId=" + encodeURIComponent($("#ListCompany").val());
-				window.open(url, "modifyAllAnnualPop", GetOpenWindowfeature(500, 234));
+				window.open(url, "modifyAllAnnualPop", GetOpenWindowfeature(500, 175));
 	        }
 	    	
 			//사용연차 수 팝업

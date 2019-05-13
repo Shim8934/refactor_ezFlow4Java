@@ -3684,7 +3684,6 @@ public class EzAttitudeController {
 		
 		JSONObject formVO = new JSONObject();
 		JSONObject attitudeVO = new JSONObject();
-		JSONArray aprList = new JSONArray();
 		
 		if (status.equals("ok")) {
 			formVO = (JSONObject) resultBody.get("data");
@@ -3708,27 +3707,57 @@ public class EzAttitudeController {
 				model.addAttribute("attitudeInfo", attitudeVO);
 			}
 			
-			url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId + "/aprinfo"; // 연차결재정보
-			
-			builder = UriComponentsBuilder.fromHttpUrl(url)
-					.queryParam("userId", userId);
-			
-			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-			resultBody = (JSONObject) jp.parse(result.getBody());
-			
-			status = resultBody.get("status").toString();
-			LOGGER.debug("status : " + status);
-			
-			if (status.equals("ok")) {
-				aprList = (JSONArray) resultBody.get("data");
-				model.addAttribute("aprList", aprList);
-			}
 		} 
 		model.addAttribute("userId", userInfo.getId());
 		model.addAttribute("font", font);
 		
 		LOGGER.debug("/ezAttitude/attitudeCancelAnnual ended");
 		return "/ezAttitude/attitudeCancelAnnual";
+	}
+	
+	/**
+	 * 연차수정신청
+	 */
+	@RequestMapping(value = "/ezAttitude/getAttitudeAprInfo.do")
+	public String getAttitudeAprInfo(@CookieValue("loginCookie") String loginCookie, Model model, HttpServletRequest request) throws Exception {
+		LOGGER.debug("/ezAttitude/getAttitudeAprInfo started");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String attitudeId = request.getParameter("attitudeId");
+		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+		
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+		headers.set("x-user-host", request.getServerName());
+		
+		HttpEntity<?> entity = new HttpEntity<>(headers);
+		
+		RestTemplate rest = new RestTemplate();
+		
+		JSONParser jp = new JSONParser();
+		
+		JSONArray aprList = new JSONArray();
+		
+		String url = gwServerUrl + "/rest/ezattitude/attitudes/" + attitudeId + "/aprinfo"; // 연차결재정보
+		
+		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+				.queryParam("userId", userId);
+		
+		ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+		JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+		
+		String status = resultBody.get("status").toString();
+		LOGGER.debug("status : " + status);
+		
+		if (status.equals("ok")) {
+			aprList = (JSONArray) resultBody.get("data");
+			model.addAttribute("list", aprList);
+		}
+		
+		LOGGER.debug("/ezAttitude/attitudeCancelAnnual ended");
+		return "json";
 	}
 	
 	/**

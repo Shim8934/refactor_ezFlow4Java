@@ -432,8 +432,8 @@ public class EzAttitudeDAO extends EgovAbstractDAO{
     }
 
     @SuppressWarnings("unchecked")
-    public Map<String, Object> getTenantCompanuId() throws Exception {
-    	return (Map<String, Object>) select("ezAttitudeDAO.getTenantCompanuId");
+    public List<Map<String, Object>> getTenantCompanuId() throws Exception {
+    	return (List<Map<String, Object>>) list("ezAttitudeDAO.getTenantCompanuId");
     }
     
     @SuppressWarnings("unchecked")

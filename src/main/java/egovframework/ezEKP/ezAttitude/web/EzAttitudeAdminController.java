@@ -2468,13 +2468,11 @@ public class EzAttitudeAdminController {
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String companyId = request.getParameter("companyId");
 		String changeReason = request.getParameter("changeReason");
-		String flagCheck = request.getParameter("flagCheck");
 		String annualCnt = request.getParameter("annualCnt");
-		String year = request.getParameter("year");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
 		String url = "";
-		url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/changeAllAnnual/";
+		url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/changeallannual/";
 		
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -2485,9 +2483,7 @@ public class EzAttitudeAdminController {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("changeUserId", userInfo.getId())
 				.queryParam("changeReason", changeReason)
-				.queryParam("flagCheck", flagCheck)
-				.queryParam("annualCnt", annualCnt)
-				.queryParam("year", year);
+				.queryParam("annualCnt", annualCnt);
 				
 		
 		RestTemplate rest = new RestTemplate();

@@ -85,7 +85,7 @@
 	        function attitudeConfigSet(result) {
 	        	$('input:radio').prop('checked', false);
 	        	
-        		//연차취소신청방식
+        		/* //연차취소신청방식
         		var annualCancelRule = result.annualCancelRule;
         		if (annualCancelRule == 0) {
         			$('input[name=annual_cancel_rule]').eq(2).prop('checked', true);
@@ -93,7 +93,7 @@
         			$('input[name=annual_cancel_rule]').eq(0).prop('checked', true);
         		} else {
         			$('input[name=annual_cancel_rule]').eq(1).prop('checked', true);
-        		}
+        		} */
         		
         		//연차자동발생
         		var useAnnualAutoGnrt = result.useAnnualAutoGnrt;
@@ -228,7 +228,7 @@
       		</select>
 	    </h1>
 		<table class="content" style="width:600px;margin-top:30px">
-			<tr style="height:30px;">
+			<!-- <tr style="height:30px;">
 	        	<th style="width: 40%; text-align:center">
 	        		연차취소신청방식
 	            </th>
@@ -237,7 +237,7 @@
 	            	<input type="radio" name="annual_cancel_rule" value="2"/>전자결재
 	            	<input type="radio" name="annual_cancel_rule" value="0"/>사용안함
 	            </td>
-	        </tr>
+	        </tr> -->
 	        <tr style="height:30px;">
 	        	<th style="width: 40%; text-align:center">
 					연차자동발생

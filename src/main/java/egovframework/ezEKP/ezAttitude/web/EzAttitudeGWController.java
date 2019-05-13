@@ -2121,9 +2121,9 @@ public class EzAttitudeGWController {
 	/**
 	 * G/W 근태관리 [POST] 연차현황 전체 등록/수정
 	 */
-	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/changeAllAnnual", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+	@RequestMapping(value = "/rest/ezattitude/companies/{companyId}/changeallannual", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
 	public JSONObject changeAllAnnual(@PathVariable String companyId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/changeAllAnnual] started.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/changeallannual] started.");
 		
 		JSONObject result = new JSONObject();
 		
@@ -2135,9 +2135,7 @@ public class EzAttitudeGWController {
 			HashMap<String, Object> map = new HashMap<String, Object>();
 			map.put("changeUserId", request.getParameter("changeUserId"));
 			map.put("changeReason", request.getParameter("changeReason"));
-			map.put("flagCheck", request.getParameter("flagCheck"));
 			map.put("annualCnt", request.getParameter("annualCnt"));
-			map.put("year", request.getParameter("year"));
 			map.put("tenantId", info.getTenantId());
 			map.put("companyId", companyId);
 			
@@ -2158,7 +2156,7 @@ public class EzAttitudeGWController {
 			result.put("data", "");
 		}
 		
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/changeAllAnnual] ended.");
+		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/companies/" + companyId + "/changeallannual] ended.");
 		return result;
 	}
 	

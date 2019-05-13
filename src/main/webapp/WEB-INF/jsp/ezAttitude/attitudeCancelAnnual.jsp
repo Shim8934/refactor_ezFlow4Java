@@ -34,7 +34,6 @@
 			var startDate = "<c:out value='${attitudeInfo.startDate}'/>";
 			var endDate = "<c:out value='${attitudeInfo.endDate}'/>";
 			var font = "<c:out value='${font}'/>"
-			var listSize = "${aprList.size()}";
 			
 			window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -59,11 +58,24 @@
 		    }
 			
 			function setHtml() {
-				var tempHtml = "";
 				
-				for(var i = 0; i <= listSize; i ++) {
-					
-				}
+				var tempHtml = "";
+				var aprList = null;
+				
+				$.ajax({
+	    			data : "GET",
+	    			dataType : "json",
+	    			url : "/ezAttitude/getAttitudeAprInfo.do",
+	    			data : {
+	    				attitudeId : attitudeId
+    				},
+	    			success : function(result) {
+	    				aprList = result.list;
+	    			},
+	    			error : function() {
+	    				alert("<spring:message code='ezAttitude.t59'/>");
+	    			}
+	    		});
 				
 				tempHtml += "<tr>";
 				tempHtml += "<th rowspan='2' style='border-bottom:0px'>참조자</th>";
@@ -87,6 +99,27 @@
 				
 				$("#attiInfoView").append(tempHtml);
 				
+				/* for(var i = 0; i <= listSize; i ++) {
+					if (i == 0) {
+		            	document.getElementById("receiverlist").innerHTML = rtn["name"][i];
+		            	document.getElementById("receiverID").innerHTML = rtn["id"][i];
+		            	document.getElementById("receiverlist2").innerHTML = rtn["name1"][i];
+		            } else {
+		            	document.getElementById("receiverlist").innerHTML += ", " + rtn["name"][i];
+		            	document.getElementById("receiverID").innerHTML += ", " + rtn["id"][i];
+		            	document.getElementById("receiverlist2").innerHTML += ", " + rtn["name1"][i];
+		            }
+
+		            g_attendant["name"][i] = rtn["name"][i];
+		            g_attendant["id"][i] = rtn["id"][i];
+		            g_attendant["deptname"][i] = rtn["deptname"][i];
+		            g_attendant["name1"][i] = rtn["name1"][i];
+		            g_attendant["name2"][i] = rtn["name2"][i];
+		            g_attendant["deptname2"][i] = rtn["deptname2"][i];
+		            g_attendant["jikwe"][i] = rtn["jikwe"][i];
+		            g_attendant["phone"][i] = rtn["phone"][i];
+				} */
+				
 				//유형명
             	typeName = ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(ReplaceText(typeName, "&amp;", "&"), "&#39;", "'"), "&lt;", "<"), "&gt;", ">"), "&quot;", '"'), "&amp;", "&");
 				
@@ -95,6 +128,20 @@
 				$("#region").html(" " + region);
 				$("#mobile").html(" " + mobile);
 				$("#bizsub").html(" " + bizSub);
+				
+				if (aprList != null) {
+					aprList.forEach(function(vo, i) {
+						if (index == 0) {
+			            	document.getElementById("receiverlist").innerHTML = list[i].aprMemberName;
+			            	document.getElementById("receiverID").innerHTML = list[i].aprMemberId;
+			            	document.getElementById("receiverlist2").innerHTML = list[i].aprMemberName;
+			            } else {
+			            	document.getElementById("receiverlist").innerHTML += ", " + list[i].aprMemberName;
+			            	document.getElementById("receiverID").innerHTML += ", " + list[i].aprMemberId;
+			            	document.getElementById("receiverlist2").innerHTML += ", " + list[i].aprMemberName;
+			            }
+					});
+	    		}
 				
 				var showTime = "";
 				switch (dateType) {
@@ -176,6 +223,7 @@
 			var namelength = 0;
 			var checknametype = "";
 			var schedule_select_attendant_dialogArguments = new Array();
+			
 			function check_name(type) {
 			    if (type != undefined)
 			        checknametype = type;

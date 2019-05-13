@@ -100,6 +100,8 @@ public interface EzAttitudeService {
 	
 	public JSONObject getAttitudeAbsentedList(String searchUserName, String searchDeptName, String searchTitle, String searchStartDate, String searchEndDate, String deptId, String pageNum, String listSize, String orderCell, String orderOption, String duplicated, String userLang, String offset, String companyId, int tenantId, List<String> deptIdList, String primary) throws Exception;
 	
+	public List<Map<String, Object>> getTenantCompanyId() throws Exception;
+	
 //	public void absentedListSendMail(List<AdminAttitudeVO> duplicatedList, List<AdminAttitudeVO> distinctedList, String loginCookie, String startDate, String endDate, String fromName, String fromEmail) throws Exception;
 	
 	public String attSaveAppModify(String attitudeId, String companyId, int tenantId, String userId, String writerName, String writerName2, String writerTitle , String writerTitle2, 
@@ -158,7 +160,7 @@ public interface EzAttitudeService {
 	public String saveCancelAnnual(String attitudeId, String companyId, int tenantId, String userId, String writerName, String writerName2, String writerTitle , String writerTitle2, 
 			String writerDeptId, String writerDeptName, String writerDeptName2, String delFlag, String content,String offset) throws Exception;
 	
-	public List<Map<String, Object>> getJoinDateUserList(String yesterday) throws Exception;
+	public List<Map<String, Object>> getJoinDateUserList(String yesterday, String companyId, int tenantId) throws Exception;
 	
 	public void updateAnnualHoliday(Map<String, Object> map) throws Exception;
 	
