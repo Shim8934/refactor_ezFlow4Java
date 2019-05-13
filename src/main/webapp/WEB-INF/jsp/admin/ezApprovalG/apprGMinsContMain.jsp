@@ -222,7 +222,13 @@
 	            for (var i = 0; i < Count; i++) {
 	                ParaName = "Dept" + i;
 	                ParaValue = selUseDept.item(i);
-	                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
+	                
+	                if (ParaValue.value == DeptID) {
+	                	alert("<spring:message code='ezSchedule.t25'/>");
+	                	return false;
+	                } else {
+		                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
+	                }
 	            }
 
 		        createNodeAndInsertText(xmlpara, objNode, "COMID", P_companyID);
@@ -262,7 +268,13 @@
 	            for (var i = 0; i < Count; i++) {
 	                ParaName = "Dept" + i;
 	                ParaValue = selUseDept.item(i);
-	                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
+	                
+	                if (ParaValue.value == DeptID) {
+	                	alert("<spring:message code='ezSchedule.t25'/>");
+	                	return false;
+	                } else {
+		                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
+	                }
 	            }
 
 		        createNodeAndInsertText(xmlpara, objNode, "comID", P_companyID);
