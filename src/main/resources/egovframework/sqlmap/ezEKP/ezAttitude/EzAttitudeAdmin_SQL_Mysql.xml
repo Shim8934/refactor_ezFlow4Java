@@ -1579,12 +1579,7 @@
 	
 	<insert id="ezAttitudeAdminDAO.changeAnnual" parameterClass="Map">
 			UPDATE tbl_attitude_annual
-				<isEqual property="flagCheck" compareValue="change">
 					SET ADDITIONAL_HOLIDAY_CNT = #annualCnt#
-				</isEqual>
-				<isEqual property="flagCheck" compareValue="plus">
-					SET ADDITIONAL_HOLIDAY_CNT = ADDITIONAL_HOLIDAY_CNT + CONVERT(#annualCnt#, DECIMAL(3,1))
-				</isEqual>
 			WHERE
 				TENANT_ID = #tenantId#
 			AND
@@ -1609,7 +1604,7 @@
 			    C.ATTITUDE_ID as attitudeId,
 			    C.CONTENT as content,
 			    C.MODAPPL as modAppl,
-			    F.ANNUAL_APPR_STATUS as annualApprStatus,
+			    ifnull(F.ANNUAL_APPR_STATUS, -1) as annualApprStatus,
 			    ifnull( 
 						CASE
 						   WHEN C.TYPE_ID = 'A11' THEN to_days(C.END_DATE) - to_days(C.START_DATE)
@@ -1767,7 +1762,8 @@
 			SELECT
 				CN AS USER_ID,
 				PHYSICALDELIVERYOFFICENAME AS COMPANY_ID,
-				TENANT_ID AS TENANT_ID
+				TENANT_ID AS TENANT_ID,
+				0 AS JOIN_DATE
 			FROM
 				tbl_usermaster
 			WHERE

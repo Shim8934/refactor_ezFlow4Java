@@ -301,7 +301,13 @@
 		    			html += "<td style='width:15%'>" + vo.typeName + "</td>";
 		    			html += "<td style='width:12%'>" + Number(vo.annualCnt) + "</td>";
 		    			html += "<td style='width:20%'>" + content + "</td>";
-		    			html += "<td style='width:12%'>" + "</td>";
+		    			if(vo.annualApprStatus == -1) {
+			    			html += "<td style='width:12%'>" + "결재정보없음" + "</td>";
+		    			} else if (vo.annualApprStatus == 0) {
+			    			html += "<td style='width:12%'>" + "진행" + "</td>";
+		    			} else if (vo.annualApprStatus == 1) {
+			    			html += "<td style='width:12%'>" + "완료" + "</td>";
+		    			}
 		    			if(vo.modAppl == "0") {
 			    			html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"attitudeCancelAnnual('" + vo.attitudeId + "','" + vo.typeId + "')\"><span>취소신청</span></a>" +"</td>";
 			    			//html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"openDraftUI('DRAFT', '" + vo.attitudeId + "')\"><span>취소신청</span></a>" +"</td>";
