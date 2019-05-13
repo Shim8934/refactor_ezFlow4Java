@@ -688,12 +688,23 @@ public class EzWebFolderGWController {
 			}
 			
 			logger.debug("SearchChk: " + searchChk + " || StartDate in UTC: " + startDate + " || EndDate in UTC: " + endDate);
+			totalRows                    = ezWebFolderAdminService.getTotalFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, primary, tenantId);
+			
+			if (totalRows % pageSize == 0) {
+				totalPages = (totalRows / pageSize);
+			} else {
+				totalPages = (totalRows / pageSize) + 1;
+			}
+			
+			if (currPage > totalPages & totalRows != 0) {
+				currPage = totalPages;
+				startPoint = (currPage -1 )* pageSize;
+			}
 			
 			List<FileLogVO> listFileLogs = ezWebFolderAdminService.getListFileLogs(realColmn, order.toUpperCase(), companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, startPoint, pageSize, primary, offset, tenantId);
-			totalRows                    = ezWebFolderAdminService.getTotalFileLogs(companyId, searchChk, startDate, endDate, fileExt, fileName, userName, fileType, actionType, primary, tenantId);
-			totalPages                   = (totalRows + pageSize - 1)/pageSize;
 			
 			result.put("fileLogList", listFileLogs);
+			result.put("currPage", currPage);
 			result.put("totalPages", totalPages);
 			result.put("totalRows", totalRows);
 			result.put("status", "ok");
