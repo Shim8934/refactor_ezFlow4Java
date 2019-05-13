@@ -230,14 +230,27 @@
 		        $(".memo_main").on("click", "#addFirstMemo", function() {
 		        	newMemo();
 		        });
+		     	/* 
+		     	$('#memoMain').click(function(e) {
+		     		//e.preventDefault();
+		     		//e.stopPropagation();
+		     		//e.stopImmediatePropagation();
+		     		console.log('memoMain 클릭');
+		     		//console.log(e.target);
+		     	});
+		     	 */
 
 		     	// 작은 메모 일정 간격으로 메모 자동 저장 시작, 취소
-		     	$(document).on('focus', '.memoText', function(event) {
-		     		event.stopPropagation();
+		     	$('#memoMain').on('focus', '.memoText', function(event) {
+		     		console.log('memoText 클릭');
+		     		//event.stopPropagation();
 		     		memoFocusEvent(event.target);
 		     		
 		     	}).on('blur', '.memoText', function(evnet) {
-		     		memoBlurEvent($(this)[0]);
+		     		autoSaveStop();
+		     		
+		     		var thisEl = $(this)[0];
+		     		modifyMemo(thisEl);
 		     	});
 		     	
 		     	// 큰 메모  일정 간격으로 메모 자동 저장 시작, 취소
@@ -246,7 +259,10 @@
 		     		memoFocusEvent(event.target);
 		     		
 		     	}).on('blur', function(evnet) {
-		     		memoBlurEvent($(this)[0]);
+		     		autoSaveStop();
+		     		
+		     		var thisEl = $(this)[0];
+		     		modifyMemo(thisEl);
 		     	});
 		     	
 		     	/* 위의 자동저장 기능 추가하면서 주석처리
@@ -256,7 +272,8 @@
 				});
 	    		*/
 	    		// 메모 숨김 기능
-	    		$(document).on('click', '.hidden', function() {
+	    		$(document).on('click', '.hidden', function(e) {
+	    			console.log(e.target);
 	    			var thisEl = $(this)[0];
 	    			hideMemo(thisEl);
 	    			

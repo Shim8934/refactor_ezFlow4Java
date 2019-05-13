@@ -680,8 +680,8 @@ function layerResize() {
     	*/
 	} else if (layerClass.indexOf("layerFullScreen") != -1) {	//레이어가 full-screen 모드이면
 		
-		layer.css("width", windowWidth);
-		layer.css("height", windowHeight-56);
+		$("#layer-popup").css("width", windowWidth);
+		$("#layer-popup").css("height", windowHeight-56);
     	
     	$(".memoListBox").css({"height" : windowHeight-56-54-26, "width" : windowWidth})
 		$(".memo_main").css({"height" : windowHeight-56-54-26, "width" : windowWidth})
@@ -1412,9 +1412,4 @@ function checkAndActionBigMemo(memoId, color) {
 function memoFocusEvent(thisEl) {
 	beforeMemo = thisEl.value;
 	autoSaveStart(thisEl);
-}
-// 메모 blur 이벤트
-function memoBlurEvent(thisEl) {
-	autoSaveStop();
-	modifyMemo(thisEl);
 }
