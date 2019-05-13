@@ -40,8 +40,8 @@ public class EzAttitudeScheduler {
 	private EzAttitudeService ezAttitudeService;
 	
 	
-//	@Scheduled(cron = "${config.cron.autoSetAnnualHoliday}")
-//	@Scheduled(cron = "0 * 18 * * *")
+	@Scheduled(cron = "${config.cron.autoSetAnnualHoliday}")
+//	@Scheduled(cron = "0 * 11 * * *")
 	public void autoSetAnnualHoliday() throws Exception{
 		logger.debug("autoSetAnnualHoliday scheduler started.");
 		
@@ -49,7 +49,10 @@ public class EzAttitudeScheduler {
 		
 		for ( Map<String, Object> tenantCompanyMap : tenantCompanyIdList) {
 			// 변수 값은 테스트용 테이블 및 쿼리 생성 후 변경 예정
-			Map<String, Object> annualConf = ezAttitudeService.getAttitudeAnnualConfig((int)tenantCompanyMap.get("tenantId"), (String)tenantCompanyMap.get("companyId"));
+			
+			int tenantId = (int)tenantCompanyMap.get("tenantId");
+			String companyId = (String)tenantCompanyMap.get("companyId");
+			Map<String, Object> annualConf = ezAttitudeService.getAttitudeAnnualConfig(tenantId, companyId);
 			
 			String useAnnualAutoGnrt = (String)annualConf.get("useAnnualAutoGnrt");// 1:사용 1:미사용
 			String annualGnrtStd = (String)annualConf.get("annualGnrtStd");// 0:입사일기준 1:회계연도기준
@@ -69,12 +72,14 @@ public class EzAttitudeScheduler {
 			
 			if (useAnnualAutoGnrt.equals("1")) {
 				
-				List<Map<String, Object>> list = ezAttitudeService.getJoinDateUserList(yesterday.split("-")[2]);
-	
+				List<Map<String, Object>> list = ezAttitudeService.getJoinDateUserList(yesterday.split("-")[2], companyId, tenantId);
+				
 				if (annualGnrtStd.equals("0")) {
 					
 					for (Map<String, Object> m : list) {
-						
+
+						m.put("companyId", companyId);
+						m.put("tenantId", tenantId);
 						int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
 						
 						if (workingMonthCnt < 24) {
@@ -95,6 +100,8 @@ public class EzAttitudeScheduler {
 				} else {
 					for (Map<String, Object> m : list) {
 						
+						m.put("companyId", companyId);
+						m.put("tenantId", tenantId);
 						int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
 	
 						if (workingMonthCnt < 12) {
@@ -114,6 +121,8 @@ public class EzAttitudeScheduler {
 						Map<String, Object> m = new HashMap<String, Object>();
 						m.put("roundOffRule", roundOffRule);
 						m.put("initialDate", initialDate);
+						m.put("companyId", companyId);
+						m.put("tenantId", tenantId);
 						
 						ezAttitudeService.updateFiscalYearAnnualHoliday(m);
 					}				

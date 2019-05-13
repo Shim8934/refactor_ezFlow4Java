@@ -2006,6 +2006,10 @@
 			TBL_ATTITUDE_ANNUAL 
 		WHERE  
 			JOIN_DATE LIKE CONCAT('%-%-',#yesterday#,'%')
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
 	</select>
 	
 	<select id = "ezAttitudeDAO.getAttendanceDay" parameterClass="map" resultClass="INTEGER">
@@ -2025,10 +2029,10 @@
 					START_DATE > DATE_ADD(#oneMonthAgo#, interval -540 minute)
 			]]>
 		</isNotEmpty>
-<!-- 		AND -->
-<!-- 			COMPANY_ID = #companyId# -->
-<!-- 		AND -->
-<!-- 			TENANT_ID = #tenantId# -->
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
 	</select>
 	
 	<select id = "ezAttitudeDAO.getAttitudeJoinDateUserList" resultClass="java.util.HashMap">
@@ -2041,10 +2045,10 @@
 		    TENANT_ID                                   AS tenantId
 		FROM   
 			TBL_ATTITUDE_ANNUAL 
-<!-- 	    WHERE -->
-<!-- 			COMPANY_ID = #companyId# -->
-<!-- 		AND -->
-<!-- 			TENANT_ID = #tenantId# -->
+	    WHERE
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
 	</select>
 	
 	<update id = "ezAttitudeDAO.updateAnnualHoliday" parameterClass="map">
@@ -2056,13 +2060,16 @@
 			</isEqual>
 			<isEqual property="attendanceRateCondition" compareValue="2">
 				MONTHLY_HOLIDAY_CNT = MONTHLY_HOLIDAY_CNT + #holidayCnt#
+				<isEqual property="holidayCnt" compareValue="0">
+					- MONTHLY_HOLIDAY_CNT
+				</isEqual>
 			</isEqual>
 		WHERE
 			USER_ID = #userId#	
-<!-- 		AND -->
-<!-- 			COMPANY_ID = #companyId# -->
-<!-- 		AND -->
-<!-- 			TENANT_ID = #tenantId# -->
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
 	</update>
 	
 	 <select id="ezAttitudeDAO.getTenantCompanuId" parameterClass="map" resultClass="java.util.HashMap">
@@ -2095,6 +2102,10 @@
 				START_DATE >= #oneMonthAgo#
 			AND
 				START_DATE < #oneDayAgo#
+			AND
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
 		]]>
 	</select>
 
@@ -2113,6 +2124,10 @@
 				START_DATE >= #joinDate#
 			AND
 				START_DATE < #today#
+			AND
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
 			GROUP BY TYPE_ID
 		]]>
 	</select>
@@ -2124,10 +2139,10 @@
 			TBL_ATTITUDE_ANNUAL
 		WHERE
 			USER_ID = #userId#
-<!-- 		AND -->
-<!-- 			COMPANY_ID = #companyId# -->
-<!-- 		AND -->
-<!-- 			TENANT_ID = #tenantId# -->
+		AND
+			COMPANY_ID = #companyId#
+		AND
+			TENANT_ID = #tenantId#
 	</select>
 	
 	<select id="ezAttitudeDAO.checkCanApplStatus" parameterClass="Map" resultClass="String">

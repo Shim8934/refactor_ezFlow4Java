@@ -2855,12 +2855,14 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public List<Map<String, Object>> getJoinDateUserList(String yesterday) throws Exception {
+	public List<Map<String, Object>> getJoinDateUserList(String yesterday, String companyId, int tenantId) throws Exception {
 		LOGGER.debug("getJoinDateUserList started");
 		
 		
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("yesterday", yesterday);
+		map.put("companyId", companyId);
+		map.put("tenantId", tenantId);
 		
 		LOGGER.debug("getJoinDateUserList ended");
 		
@@ -2874,8 +2876,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		int defaultAnnualHolidayCnt = 15;
 		String companyId = (String)map.get("companyId");
 		int tenantId = (int)map.get("tenantId");
+		String joinDate = (String)map.get("joinDate");
 		
-		int workingDayCnt = checkHoliday((String)map.get("joinDate"), commonUtil.getTodayUTCTime("yyyy-MM-dd"), "1", companyId, tenantId).size();
+		int workingDayCnt = checkHoliday(joinDate, commonUtil.getTodayUTCTime("yyyy-MM-dd"), "1", companyId, tenantId).size();
 		int attendanceDay = ezAttitudeDAO.getAttendanceDay(map);
 		int attendanceRate = attendanceDay / workingDayCnt * 100;
 		
@@ -3034,7 +3037,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		// 결근일과 실제사용자 출근일과 출근해야하는 날을 비교하여 월차 생성
 		// 전달에 결근일이 하루라도 있으면 개근이 아니므로 월차가 생성되지 않는다.
-		if (userAbsentCnt == 0 && (userAttendanceCnt == monthWorkingDayCnt)) {
+		if (userAbsentCnt == 0 && (userAttendanceCnt <= monthWorkingDayCnt)) {
 			int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
 			map.put("holidayCnt",  +1);
 			map.put("attendanceRateCondition","2");
