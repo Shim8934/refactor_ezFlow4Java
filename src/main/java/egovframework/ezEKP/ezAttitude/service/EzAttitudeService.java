@@ -200,5 +200,5 @@ public interface EzAttitudeService {
 
 	public List<Map<String, Object>> getAttitudeAprInfo(String attitudeId, String lang, int tenantId, String companyId) throws Exception;
 
-	public List<String> getDisabledDays(String primary, String offset, String year, String month, String userId, String companyId, int tenantId) throws Exception;
+	public List<String> getDisabledDays(String primary, String offset, String year, String month, String startDate, String endDate, String userId, String companyId, int tenantId) throws Exception;
 }

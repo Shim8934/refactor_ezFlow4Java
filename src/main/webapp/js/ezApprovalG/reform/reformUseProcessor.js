@@ -985,7 +985,7 @@ reformUseProc.onLoadHandler = function() {
 						autoSize: true,
 						dateFormat: "yy-mm-dd",
 						beforeShowDay: disableSomeDay
-					});										
+					});									
 				} else {
 					$(controlElement).datepicker({
 						changeMonth: true,

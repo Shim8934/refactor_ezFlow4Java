@@ -3488,7 +3488,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	 * 근태일, 휴무일  dateString List
 	 */
 	@Override
-	public List<String> getDisabledDays(String primary, String offset, String year, String month, String userId, String companyId, int tenantId) throws Exception {		
+	public List<String> getDisabledDays(String primary, String offset, String year, String month, String paramStartDate, String paramEndDate, String userId, String companyId, int tenantId) throws Exception {		
 		LOGGER.debug("getDisabledDays started");
 		
 		List<String> resultList = new ArrayList();
@@ -3498,8 +3498,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		Calendar cal = Calendar.getInstance();
 		cal.set(Integer.valueOf(year), Integer.valueOf(month) - 1, 1);
 		
-		String startDate = year + "-" + month + "-01";
-		String endDate = year + "-" + month + "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		String startDate = "";
+		String endDate = "";
+		if (paramStartDate.equals("")) {
+			startDate = year + "-" + month + "-01";
+			endDate = year + "-" + month + "-" + cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+		} else {
+			startDate = paramStartDate;
+			endDate = paramEndDate;
+		}
 
 		resultList = checkHoliday2(startDate, endDate, companyId, tenantId);
 		
