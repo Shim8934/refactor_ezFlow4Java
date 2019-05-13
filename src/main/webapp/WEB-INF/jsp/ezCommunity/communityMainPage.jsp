@@ -28,6 +28,9 @@
 			.txt {
 				clear : none;
 			}
+			.contents_listCommunity li span.icon_reply {
+				float : left;
+			}
 		</style>
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>
@@ -1861,6 +1864,12 @@
 		            		<c:when test="${fn:length(cNoticeList) ne 0 }">
 		            			<c:forEach items="${cNoticeList }" var="list" begin="0" end="4" >
 		            				<li>
+		            					<c:if test="${list.re_Level > 0}">
+		            						<span class="icon_reply">
+		            							<img src="/images/dum.gif" width="${list.re_Level * 10 }" height="1" border="0">
+		            							<img src="/images/i_rep.gif" alt border="0">
+		            						</span>
+		            					</c:if>
 		            					<c:if test="${list.writeDay >= pastDate}">
 		            						<span class="icon_new"><img src="../images/kr/community/communityPortlet_iconnew.gif"></span>
 		            					</c:if>
