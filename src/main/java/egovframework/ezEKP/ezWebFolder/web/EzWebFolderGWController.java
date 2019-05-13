@@ -1062,10 +1062,14 @@ public class EzWebFolderGWController {
 				}
 			}
 			
-			ezWebFolderService.deleteSelectedFiles(fileIDList, userInfo);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
+			if (ezWebFolderService.canDelete(fileIDList, null, userId, userInfo.getTenantId())) {
+				ezWebFolderService.deleteSelectedFiles(fileIDList, userInfo);
+				result.put("status", "ok");
+				result.put("code", 0);
+			} else {
+				result.put("status", "error");
+				result.put("code", 4);
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -1084,8 +1088,8 @@ public class EzWebFolderGWController {
 		String listFolderId   	= request.getParameter("folderList") != null ? request.getParameter("folderList") : "";
 		String userId       	= request.getParameter("userId")   != null ? request.getParameter("userId")   : "";
 		String serverName   	= request.getHeader("x-user-host")   != null ? request.getHeader("x-user-host")   : "";
-		Date date               = new Date();
-		SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		//Date date               = new Date();
+		//SimpleDateFormat formatter 	= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		JSONObject result   	= new JSONObject();
 		String[] fileIDList 	= listFileId.split(",");
 		String[] folderIDList 	= listFolderId.split(",");
@@ -1119,12 +1123,11 @@ public class EzWebFolderGWController {
 				}
 			}
 			
-			JSONObject checkPermission = new JSONObject();
 			int tenantId 	= userInfo.getTenantId();
 			String comId 	= userInfo.getCompanyID();
-			String offset 	= userInfo.getOffset();
+			//String offset 	= userInfo.getOffset();
 			String deptId 	= userInfo.getDeptID();
-			String timeUTC  = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
+			//String timeUTC  = commonUtil.getDateStringInUTC(formatter.format(date), offset, true);
 			String checkPermission2 = "";
 				
 			if (!listFolderId.equals("")){
@@ -1141,10 +1144,14 @@ public class EzWebFolderGWController {
 				}
 			}
 			
-			ezWebFolderService.deleteSelectedFilesFolders(fileIDList, folderIDList, userInfo);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
+			if (ezWebFolderService.canDelete(fileIDList, folderIDList, userId, tenantId)) {
+				ezWebFolderService.deleteSelectedFilesFolders(fileIDList, folderIDList, userInfo);
+				result.put("status", "ok");
+				result.put("code", 0);
+			} else {
+				result.put("status", "error");
+				result.put("code", 4);
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -2093,12 +2100,18 @@ public class EzWebFolderGWController {
 		
 		try {
 			LoginVO userInfo = commonUtil.getUserForGw(userId, serverName);
-			String offset    = userInfo.getOffset();
-			FolderVO folder  = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
-			ezWebFolderService.updateFolderUseStatus(folder, userInfo);
 			
-			result.put("status", "ok");
-			result.put("code", 0);
+			if (ezWebFolderService.canDelete(null, new String[] { folderId }, userId, userInfo.getTenantId())) {
+				String offset    = userInfo.getOffset();
+				FolderVO folder  = ezWebFolderService.getFolderByFolderId(folderId, offset, userInfo.getTenantId());
+				ezWebFolderService.updateFolderUseStatus(folder, userInfo);
+
+				result.put("status", "ok");
+				result.put("code", 0);
+			} else {
+				result.put("status", "error");
+				result.put("code", 4);
+			}
 		}
 		catch (Exception e) {
 			e.printStackTrace();

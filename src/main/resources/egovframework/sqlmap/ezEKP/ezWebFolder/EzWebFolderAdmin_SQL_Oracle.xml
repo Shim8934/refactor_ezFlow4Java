@@ -66,14 +66,27 @@
 							AND
 								FILES.FOLDER_ID = FOLDER2.FOLDER_ID
 					WHERE
-						FOLDER2.FOLDER_PATH LIKE FOLDER.FOLDER_PATH || '%'
-					AND
 						FILES.TENANT_ID = FOLDER.TENANT_ID
 					AND
-						FILES.USE_STATUS = 'Y'
+					(
+						(
+							FOLDER2.FOLDER_PATH LIKE FOLDER.FOLDER_PATH || '%'
+						AND
+							FILES.USE_STATUS = 'Y'						
+						)
+		]]>
+		<isEqual property="type" compareValue="U">
+		<![CDATA[
+						OR (
+							FILE.DELETER_ID = MAIN.CN
+						AND
+							FILE.USE_STATUS <> 'Y'
+						)
+		]]>
+		</isEqual>
+					)
 				) AS TOTAL_USED
 			FROM
-		]]>
 		<isEqual property="type" compareValue="C">
 				(
 					SELECT

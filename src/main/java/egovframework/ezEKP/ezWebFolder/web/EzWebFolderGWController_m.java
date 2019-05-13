@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 import javax.annotation.Resource;
@@ -1300,7 +1301,7 @@ public class EzWebFolderGWController_m {
 			}
 			
 			duplicateList = (List<DuplicateInfoVO>) resultMap.get("duplicateList");
-			hasExceededCapacities = (boolean) resultMap.get("hasExceededCapacities");
+			hasExceededCapacities = (boolean) Optional.ofNullable(resultMap.get("hasExceededCapacities")).orElse(false);
 			result.put("status", "ok");
 			
 			if (hasExceededCapacities) {
