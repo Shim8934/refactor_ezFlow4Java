@@ -2907,9 +2907,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 
 		// 입사한지 2년이 됐을 때 남아있는 월차는 모두 0으로 초기화 해준다.
 		map.put("holidayCnt", 0);
-		map.put("attendanceRateCondition","2");
+		map.put("attendanceRateCondition","3");
+		setAnnualHistory(map);
 		ezAttitudeDAO.updateAnnualHoliday(map);
-		
+
 		
 		map.put("holidayCnt", annualHolidayCnt);
 		map.put("attendanceRateCondition","1");
@@ -2925,18 +2926,17 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		LOGGER.debug("setAnnualHistory started");
 		
 		map.put("annualCnt", map.get("holidayCnt"));
-		map.put("changeReason","자동연차발생 "+ map.get("holidayCnt") + "일");
+		if (map.get("attendanceRateCondition").equals("3")) {
+			map.put("changeReason","자동연차초기화 ");
+		} else {
+			map.put("changeReason","자동연차발생 "+ map.get("holidayCnt") + "일");
+		}
 		map.put("changeUserId","system");
 		map.put("companyId",map.get("companyId"));
 		map.put("tenantId",map.get("tenantId"));
-//		map.put("changeColumn",map.get("attendanceRateCondition") == "1" ? "ANNUAL_HOLIDAY_CNT" : "MONTHLY_HOLIDAY_CNT");
 		
 		try {
-			if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
-				ezAttitudeDAO.insertAnnualHistory(map);
-			} else {
 				ezAttitudeDAO.changeAnnualHistory(map);
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -2986,13 +2986,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					m.put("attendanceRateCondition","1");
 					
 					ezAttitudeDAO.updateAnnualHoliday(m);
+					setAnnualHistory(map);
 					
 				} else {
 					int annualHolidayCnt = defaultAnnualHolidayCnt + (int)(workingMonthCnt / 12 - 1) / 2;
 					
 					if (workingMonthCnt > 24) {
 						m.put("holidayCnt", 0);
-						m.put("attendanceRateCondition","2");
+						map.put("attendanceRateCondition","3");
+						setAnnualHistory(map);
 						ezAttitudeDAO.updateAnnualHoliday(m);
 					}
 				
@@ -3000,8 +3002,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					m.put("attendanceRateCondition","1");
 					
 					ezAttitudeDAO.updateAnnualHoliday(m);
+					setAnnualHistory(m);
 				}
-				setAnnualHistory(m);
 			}
 		}
 		LOGGER.debug("updateFiscalYearAnnualHoliday ended");

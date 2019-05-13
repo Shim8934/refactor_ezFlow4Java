@@ -41,7 +41,7 @@ public class EzAttitudeScheduler {
 	
 	
 	@Scheduled(cron = "${config.cron.autoSetAnnualHoliday}")
-//	@Scheduled(cron = "0 * 11 * * *")
+//	@Scheduled(cron = "0 * 17 * * *")
 	public void autoSetAnnualHoliday() throws Exception{
 		logger.debug("autoSetAnnualHoliday scheduler started.");
 		
@@ -71,6 +71,7 @@ public class EzAttitudeScheduler {
 			String yesterday = sdf.format(cal.getTime());
 			
 			if (useAnnualAutoGnrt.equals("1")) {
+				
 				
 				List<Map<String, Object>> list = ezAttitudeService.getJoinDateUserList(yesterday.split("-")[2], companyId, tenantId);
 				
