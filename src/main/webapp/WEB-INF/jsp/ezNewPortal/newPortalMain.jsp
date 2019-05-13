@@ -196,10 +196,10 @@
 		
 	 	$(window).resize(function() {
 	 		browserResize();
-	 		// layerResize();
 	 		setMenuPostionResize();
 	 		// 브라우저 리사이즈시 큰 메모 리사이즈
 	 		bigMemoResize();
+	 		
 	 		clearTimeout(window.resizedFinished);
 		    window.resizedFinished = setTimeout(function(){
 		        setContextMenuGadgetPosition();
@@ -230,21 +230,25 @@
 		        $(".memo_main").on("click", "#addFirstMemo", function() {
 		        	newMemo();
 		        });
-		     	// 일정 간격으로 메모 자동 저장 시작
+
+		     	// 작은 메모 일정 간격으로 메모 자동 저장 시작, 취소
 		     	$(document).on('focus', '.memoText', function(event) {
 		     		event.stopPropagation();
-		     		//console.log('시작');
-		     		var thisEl = event.target;
-		     		beforeMemo = thisEl.value;
-		     		/* 임시 주석 처리 */
-		     		//autoSaveStart(thisEl);
+		     		memoFocusEvent(event.target);
+		     		
+		     	}).on('blur', '.memoText', function(evnet) {
+		     		memoBlurEvent($(this)[0]);
 		     	});
 		     	
-		     	// 메모 자동 저장 정지
-		     	$(document).on('blur', '.memoText', function(evnet) {
-		     		autoSaveStop();
-			    	modifyMemo($(this)[0]);
+		     	// 큰 메모  일정 간격으로 메모 자동 저장 시작, 취소
+		     	$('#dMContents').on('focus', function(event) {
+		     		event.stopPropagation();
+		     		memoFocusEvent(event.target);
+		     		
+		     	}).on('blur', function(evnet) {
+		     		memoBlurEvent($(this)[0]);
 		     	});
+		     	
 		     	/* 위의 자동저장 기능 추가하면서 주석처리
 		        $(document).on("click", ".saveBtn", function(){
 			    	  var obj = $(this).parent().next();

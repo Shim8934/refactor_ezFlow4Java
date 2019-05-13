@@ -1408,3 +1408,13 @@ function checkAndActionBigMemo(memoId, color) {
 		}
 	}
 }
+// 메모 focus 이벤트
+function memoFocusEvent(thisEl) {
+	beforeMemo = thisEl.value;
+	autoSaveStart(thisEl);
+}
+// 메모 blur 이벤트
+function memoBlurEvent(thisEl) {
+	autoSaveStop();
+	modifyMemo(thisEl);
+}
