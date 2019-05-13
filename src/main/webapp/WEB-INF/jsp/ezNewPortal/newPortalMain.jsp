@@ -196,8 +196,10 @@
 		
 	 	$(window).resize(function() {
 	 		browserResize();
+	 		// layerResize();
 	 		setMenuPostionResize();
-		    
+	 		// 브라우저 리사이즈시 큰 메모 리사이즈
+	 		bigMemoResize();
 	 		clearTimeout(window.resizedFinished);
 		    window.resizedFinished = setTimeout(function(){
 		        setContextMenuGadgetPosition();

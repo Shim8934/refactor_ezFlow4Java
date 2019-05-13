@@ -599,7 +599,6 @@ function setLayerArea() {
   * 윈도우 리사이즈 시, 레이어 위치 및 사이즈 조절
   */
 function layerResize() {
-	
 	var stringTop = $("#layer-popup").css("top");
 	var stringLeft = $("#layer-popup").css("left");
 	
@@ -669,18 +668,39 @@ function layerResize() {
         		
     		 }
     	}
-    	
-    	setLayerPosition();
-		setLayerArea();
-	
-	} else if (layerClass.indexOf("layerFullScreen") != -1) {
 		
-		$("#layer-popup").css("width", windowWidth);
-    	$("#layer-popup").css("height", windowHeight-56);
+    	/* 
+    	 * 레이어의 사이즈나 위치가 변했을 경우 
+    	 * 적용된 사이즈와 position DB에 저장
+    	 */
+    	setLayerPosition();
+    	setLayerArea();
+    	/*
+    	if (beforeTop != top || beforeLeft != left) {
+	    	setLayerPosition();
+    	}
+    	
+    	if (beforeHeight != height || beforeWidth != width) {
+	    	setLayerArea();
+    	}
+    	*/
+	} else if (layerClass.indexOf("layerFullScreen") != -1) {	//레이어가 full-screen 모드이면
+		
+		layer.css("width", windowWidth);
+		layer.css("height", windowHeight-56);
     	
     	$(".memoListBox").css({"height" : windowHeight-56-54-26, "width" : windowWidth})
 		$(".memo_main").css({"height" : windowHeight-56-54-26, "width" : windowWidth})
 		}
+}
+
+function setMemoListBody (height, width) {
+	
+	$(".memoListBox").css("height", height - 90);
+	$(".memo_main").css("height", height - 90);
+	
+	$(".memoListBox").css("width", width);
+	$(".memo_main").css("width", width);
 }
  
 /**
@@ -897,19 +917,20 @@ function getMemoList(type) {
  */
 function setMemoListSize() {
 	
+	var offsetHeight = $("#layer-popup")[0].offsetHeight;
+	console.log(offsetHeight);
     var layerHeight = $("#layer-popup").height();
     var layerWidth = $("#layer-popup").width();
-    var memoListHeight = layerHeight - 56;
+    var memoListHeight = layerHeight - 54;		// 54 -> 메모 레이어 헤더의 높이
 
-    $(".memoListBox").css({"height" : memoListHeight-25, "width" : layerWidth});
-    $(".memo_main").css({"width" : layerWidth, "height" : memoListHeight-20});
+    $(".memo_main").css({"height" : memoListHeight - 20, "width" : layerWidth});
     
     var layerClass = $("#layer-popup").attr("class");
 	
-	if (layerClass.indexOf("layerFullScreen") != -1) {
-		$(".memoListBox").css({"height" : memoListHeight-27, "width" : layerWidth});	        		
-	} else {
-		$(".memoListBox").css({"height" : memoListHeight-20, "width" : layerWidth});
+	if (layerClass.indexOf("layerFullScreen") != -1) {									// 전체 모드일 때
+		$(".memoListBox").css({"height" : memoListHeight - 27, "width" : layerWidth});	  // 메모 레이어 투명도 버튼 위      		
+	} else {																			// control 모드일 때
+		$(".memoListBox").css({"height" : memoListHeight - 20, "width" : layerWidth});
 	}
 //	emptyMemoResize();
 }
@@ -1176,18 +1197,7 @@ function addEventInBigMemo() {
 			setBigMemoBody(bigHeight, bigWidth);
 		},
 		stop : function (event, ui) {
-		    $.ajax({
-		    	type : 'POST',
-		        url : '/ezMemo/setDetailMemoArea.do',
-		        data : {
-		        	'bigHeight' : bigHeight,
-					'bigWidth' : bigWidth
-		        },
-		        dataType : 'JSON',
-		        success : function(result) {
-		        }
-		    });
-		    
+			setBigMemoArea(bigHeight, bigWidth);
 		}
     }).on('mousedown', function () {
     	$('#noteBlock').css('visibility', 'visible');
@@ -1205,17 +1215,7 @@ function addEventInBigMemo() {
         	bigLeft = parseInt($('#detailMemo')[0].offsetLeft);
         },
         stop : function() {
-        	$.ajax({
-        		type : 'POST',
-        		data : {
-        			'bigTop' : bigTop,
-					'bigLeft' : bigLeft
-        		},
-        		url : '/ezMemo/setDetailMemoPosition.do',
-        		dataType : 'JSON',
-        		success : function(result) {
-        		}
-        	});
+        	setBigMemoPositon(bigTop, bigLeft);
         }
     }).on('mousedown', function () {
         $('#noteBlock').css('visibility', 'visible');
@@ -1318,4 +1318,84 @@ function setContents(size, memoId, afterContents) {
 			}
 		}
 	}
+}
+
+function setBigMemoArea(bigHeight, bigWidth) {
+	$.ajax({
+    	type : 'POST',
+        url : '/ezMemo/setDetailMemoArea.do',
+        data : {
+        	'bigHeight' : bigHeight,
+			'bigWidth' : bigWidth
+        },
+        dataType : 'JSON',
+        success : function(result) {
+        }
+    });
+}
+
+function setBigMemoPositon(bigTop, bigLeft) {
+	$.ajax({
+		type : 'POST',
+		data : {
+			'bigTop' : bigTop,
+			'bigLeft' : bigLeft
+		},
+		url : '/ezMemo/setDetailMemoPosition.do',
+		dataType : 'JSON',
+		success : function(result) {
+		}
+	});
+}
+/*윈도우 리사이즈 시 큰 메모 리사이징*/ 
+function bigMemoResize() {
+	var bigMemo = $("#detailMemo");
+	
+	// 큰 메모의 처음 크기로 쓸 변수, 상황에 따라 변할 변수
+	var beforeWidth, width;
+	var beforeHeight, height;
+	var beforeTop, top;
+	var beforeLeft, left;
+	
+	beforeWidth = width = bigMemo[0].offsetWidth;		// 큰 메모의 넓이
+	beforeHeight = height = bigMemo[0].offsetHeight;	// 큰 메모의 높이
+	beforeTop = top = bigMemo[0].offsetTop;				// 큰 메모의 top
+	beforeLeft = left = bigMemo[0].offsetLeft;			// 큰 메모의 left
+	
+	var windowHeight = parseInt(window.innerHeight);	// window의 높이
+	var windowWidth = parseInt(window.innerWidth);		// window의 넓이
+	// 16 -> 스크롤 바의 넓이, 높이 
+	if (height + top > windowHeight) { 					// 큰 메모의 높이와 top의 합이 window의 높이보다 클 때
+		if (height < windowHeight) {						// 큰 메모의 높이가 브라우저의 높이보다는 작다면
+			top = windowHeight - height - 16 >= 0 ? windowHeight - height - 16 : 0;	//  top만 변경 단, 0보다 작으면 0
+			bigMemo.css('top', top);
+		} else {											// 큰 메모의 높이가 브라우저의 높이보다 크면
+			if (height > 380) {									// 단, 큰 메모의 높이가 380(큰 메모의 최소  높이)보다 크면
+				bigMemo.css('height', windowHeight);			// 높이를 브라우저 사이즈로 변경
+			}
+		}
+	}													// 큰 메모의 높이와 top의 크기의 합이 window의 높이보다 작으면 그대로
+	
+	if (width + left > windowWidth) {					// 큰 메모의 넓이와 left의 합이 window의 넓이보다 클 때
+		if (width < windowWidth) {							// 큰 메모의 넓이가 브라우저의 넓이보다는 작다면
+			left = windowWidth - width - 16 >= 0 ? windowWidth - width - 16 : 0;	// left만 변경 단, 0보다 작으면 0
+			bigMemo.css('left', left);
+		} else {											// 큰 메모의 넓이가 브라우저의 넓이보다 크면
+			if (width > 340) {									// 단, 큰 메모의 넓이가 340(큰 메모의 최소  넓이)보다는 크면
+				bigMemo.css('width', windowWidth);				// 넓이를 브라우저 사이즈로 변경
+			}
+		}
+	}													// 큰 메모의 넓이와 left의 크기의 합이 window의 넓이보다 작으면 그대로
+	
+	//큰 메모의 리사이즈 후 큰 메모의 바디 사이즈 수정
+	setBigMemoBody(height, width);
+	
+	//리사이즈로 큰 메모의 영역이나 위치가 변경되었다면 DB에 저장
+	if (beforeWidth != width || beforeHeight != height) {	// 처음의 width, height와 비교해  
+		setBigMemoArea(height, width);						// 리사이즈 이후의 넓이 or 높이가 달라졌다면 달라진 값 저장
+	}
+	if (beforeTop != top || beforeLeft != left) {			// 처음의 top, left와 비교해 
+		setBigMemoPositon(top, left);						// 리사이즈 이후의 top or left가 달라졌다면 달라진 값 저장
+	}
+	
 }
