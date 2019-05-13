@@ -158,6 +158,11 @@
 					}
 				});
 			}
+			
+	        function leftFolderCPMV(functionType, folderList, toTargetId) {
+				closeAllPopup();
+				window.close();
+	        }
 		</script>
 	</head>
 	<body class="mainbody" onload="init('comp');" onresize="preProcessing();" onkeydown="keyPressPanel(event);">
@@ -180,18 +185,18 @@
 			</select>
 		</div>
 		
-		<div id="mainmenu2" style="position: relative; margin-left: 5px;">
+		<div id="mainmenu" style="position: relative; margin-left: 5px;">
 			<ul>
-				<li id=""><a><span><spring:message code='ezWebFolder.t186'/></span></a></li>
+				<li id="" class="important" onclick="fileDownload();"><a><span><spring:message code='ezWebFolder.t186'/></span></a></li>
 				<!-- root에서 파일업로드 되도록하려면 아래를 주석  -->
 <%-- 				<c:if test="${level != '0'}"> --%>
-					<li id="uploadBttn"><a><span><spring:message code='ezWebFolder.t187'/></span></a></li>
+				<li id="uploadBttn" class="important" onclick="fileUpload();"><a><span><spring:message code='ezWebFolder.t187'/></span></a></li>
 <%-- 				</c:if> --%>
-				<li id=""><a><span><spring:message code='ezWebFolder.t117'/></span></a></li>
-				<li id=""><a><span><spring:message code='ezWebFolder.t118'/></span></a></li>
-				<li id=""><a><span><spring:message code='ezWebFolder.t120'/></span></a></li>
-				<li id=""><a><span><spring:message code='ezWebFolder.t123'/></span></a></li>
-				<li id=""><a><span><spring:message code='ezWebFolder.t139'/></span></a></li>
+				<li id="" onclick="fileRename();"><a><span><spring:message code='ezWebFolder.t508'/></span></a></li>
+				<li id="" onclick="fileMove();"><a><span><spring:message code='ezWebFolder.t120'/></span></a></li>
+				<li id="SearchOption" mode="off" onclick="openSearchPanel();"><span class="icon16 icon16_search"></span></li>
+				<li><span class="icon16 icon16_delete" onclick="fileDelete();"></span></li>
+				<li><span class="icon16 icon16_refresh" onclick="refreshView();"></span></li>
 				<li id="">
 					<select id="fileTypeSelect">
 						<option value="1" selected><spring:message code='ezWebFolder.t191'/></option>
@@ -203,12 +208,16 @@
 						<option value="7"         ><spring:message code='ezWebFolder.t311'/></option>
 					</select>
 				</li>
-				<li style="float:right;"><img src ="/images/kr/cm/btn_arrow_down.gif" alt="" mode="off" id="webfolderlistoptiondiv" /></li>
+				<div class="sub_frameIcon" style="float:right">
+					<div class="sub_frameIconUL02">
+					  	<p class="frameIconLI"><span mode="off" class="icon16 btn_arrow_down" id="webfolderlistoptiondiv"></span></p>  
+					</div>
+				</div>
 			</ul>
 		</div>
 		
 		<script type="text/javascript">
-			selToggleList(document.getElementById("mainmenu2"), "ul", "li", "0");
+			selToggleList(document.getElementById("mainmenu"), "ul", "li", "0");
 			setParameter("<c:out value='${folderId}'/>", "<c:out value='${primary}'/>", "company", "<c:out value='${rootFolder}'/>", "<c:out value='${level}'/>");
 		</script>
 		

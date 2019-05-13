@@ -776,14 +776,15 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO.getSimpleSubFolder" resultMap="folderSimpleVO">
+	<select id="EzWebFolderDAO.getSimpleSubFolder" resultMap="folderSimpleVO2">
 		<![CDATA[
 			SELECT
 				a.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
 				a.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
 				a.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
 				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = a.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
-				a.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
+				a.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL,
+				a.OWNER_ID																																							  AS OWNER_ID
 			FROM
 				TBL_WEBFOLDER_FOLDER a
 			WHERE
@@ -816,14 +817,15 @@
 		]]>
 	</select>
 	
-	<select id="EzWebFolderDAO.getAllSimpleSubFolders" resultMap="folderSimpleVO">
+	<select id="EzWebFolderDAO.getAllSimpleSubFolders" resultMap="folderSimpleVO2">
 		<![CDATA[
 			SELECT
 				a.FOLDER_ID                                                                                                                                                           AS FOLDER_ID,
 				a.FOLDER_NAME1                                                                                                                                                        AS FOLDER_NAME,
 				a.FOLDER_NAME2                                                                                                                                                        AS FOLDER_NAME2,
 				CASE WHEN (SELECT COUNT(*) FROM TBL_WEBFOLDER_FOLDER b WHERE b.FOLDER_UPPER = a.FOLDER_ID AND b.USE_STATUS = 'Y' AND b.TENANT_ID  = #tenantId#) = 0 THEN 0 ELSE 1 END AS HAS_SUB,
-				a.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL
+				a.FOLDER_LEVEL                                                                                                                                                        AS FOLDER_LEVEL,
+				a.OWNER_ID																																							  AS OWNER_ID
 			FROM
 				TBL_WEBFOLDER_FOLDER a
 			WHERE

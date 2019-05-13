@@ -706,7 +706,7 @@
 				    	type : "POST",
 				    	url : "/admin/ezApprovalG/setContainerIDForDoc.do",
 				    	async : false,
-				    	data : {docID : DocID, deptID : GetAttribute(tr, "DATA4"), containerType : '999', companyID : pCompanyID},
+				    	data : {docID : DocID, deptID : GetAttribute(tr, "DATA12"), orgContainerID : GetAttribute(tr, "DATA4"), containerType : '999', companyID : pCompanyID},
 				    	dataType : 'text',
 				    	success : function (result) {
 				    		if (result == 'OK') {

@@ -563,7 +563,7 @@
 						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1517' />";
 						break;
 					case "t1518":
-						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1518' />";
+						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[13] + "'><spring:message code = 'ezCommunity.t1518' />";
 						break;
 					case "t1519":
 						retVal = "<span class='categorySpan' style='background-color:" + categoryColors[0] + "'><spring:message code = 'ezCommunity.t1519' />";
