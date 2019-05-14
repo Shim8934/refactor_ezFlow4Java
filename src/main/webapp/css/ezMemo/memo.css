@@ -80,7 +80,7 @@ select::-ms-expand {
 .memo01Big .bigTop .memoTit{background:#fff6a9; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
 .memo01Big .bigBottom_left{background:#fff9c5; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
 .memo01Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point01.png); margin-top: -4px;}
-.memo01Big .bigTop #dMContents{background:#fff9c5; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo01Big .bigTop #dMContents{background:#fff9c5; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1); line-height: 24px;}
 .memo01Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
 .memo01Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
 .memo01Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
@@ -89,7 +89,7 @@ select::-ms-expand {
 .memo02Big .bigTop .memoTit{background:#b3fdd5; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
 .memo02Big .bigBottom_left{background:#c5ffdf; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
 .memo02Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point02.png) no-repeat; margin-top: -4px;}
-.memo02Big .bigTop #dMContents{background:#c5ffdf; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo02Big .bigTop #dMContents{background:#c5ffdf; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1); line-height: 24px;}
 .memo02Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
 .memo02Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
 .memo02Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
@@ -98,7 +98,7 @@ select::-ms-expand {
 .memo03Big .bigTop .memoTit{background:#d9ffa5; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
 .memo03Big .bigBottom_left{background:#e8ffc5; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
 .memo03Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point03.png) no-repeat; margin-top: -4px;}
-.memo03Big .bigTop #dMContents{background:#e8ffc5; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo03Big .bigTop #dMContents{background:#e8ffc5; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1); line-height: 24px;}
 .memo03Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
 .memo03Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
 .memo03Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
@@ -107,7 +107,7 @@ select::-ms-expand {
 .memo04Big .bigTop .memoTit{background:#b0e6ff; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
 .memo04Big .bigBottom_left{background:#c5f3ff; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
 .memo04Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point04.png) no-repeat;margin-top: -4px;}
-.memo04Big .bigTop #dMContents{background:#c5f3ff; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo04Big .bigTop #dMContents{background:#c5f3ff; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1); line-height: 24px;}
 .memo04Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
 .memo04Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
 .memo04Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
@@ -116,7 +116,7 @@ select::-ms-expand {
 .memo05Big .bigTop .memoTit{background:#c9c4ff; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
 .memo05Big .bigBottom_left{background:#d7d6ff; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
 .memo05Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point05.png) no-repeat; margin-top: -4px;}
-.memo05Big .bigTop #dMContents{background:#d7d6ff; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo05Big .bigTop #dMContents{background:#d7d6ff; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1); line-height: 24px;}
 .memo05Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
 .memo05Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
 .memo05Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }
@@ -125,7 +125,7 @@ select::-ms-expand {
 .memo06Big .bigTop .memoTit{background:#fcc5ec; margin:0px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
 .memo06Big .bigBottom_left{background:#ffd6f2; height:29px; float:left; width:calc(100% - 29px); margin-top: -4px; border-bottom: 1px solid rgba(0, 0, 0, 0.1);}
 .memo06Big .bigBottom_right{ float:right; width:29px; height:29px; background:url(../../images/ezMemo/big_point06.png) no-repeat; margin-top: -4px;}
-.memo06Big .bigTop #dMContents{background:#ffd6f2; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1);}
+.memo06Big .bigTop #dMContents{background:#ffd6f2; width:calc(100% - 12px); overflow-y:auto; font-family:Malgun Gothic, Gulim, Dotum, Arial, Helvetica, sans-serif; border: none; padding-top: 0px; padding-bottom: 0px; resize:none; font-size: 16px; border-right: 1px solid rgba(0, 0, 0, 0.1); line-height: 24px;}
 .memo06Big .bigTop #dMContents::-webkit-scrollbar {width: 12px;}
 .memo06Big .bigTop #dMContents::-webkit-scrollbar-track { -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); border-radius: 10px; }
 .memo06Big .bigTop #dMContents::-webkit-scrollbar-thumb { border-radius: 5px; -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5); }

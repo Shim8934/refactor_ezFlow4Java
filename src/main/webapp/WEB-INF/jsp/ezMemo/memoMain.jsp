@@ -53,6 +53,12 @@
 		var checkOpt="off";
 		var configView = "<c:out value='${configView}' />";
 		
+		var beforeMemo;
+    	var memoInter;
+		var memoClickTimer = 0;
+     	var memoDelay = 200;
+     	var memoPrevent = false;
+     	
 		window.onunload = Window_onunload;
 		
 	 	window.onresize = function () {
@@ -98,30 +104,42 @@
 	    		MailOptionHiddenOutside(e);
 	    	});
 	    	
-	    	// 일정 간격으로 메모 자동 저장 시작
-	     	$(document).on('focus', '.memoText', function(event) {
-	     		var thisEl = event.target;
-	     		beforeMemo = thisEl.value;
+	    	// 클리과 더블클릭 이벤트 구분
+	     	
+	     	$(document).on('focus', '.memoText', function(event) {		// 원클릭 -> 메모 자동 저장 시작
+   				var thisEl = event.target;
+	     	
+   				parent.parent.draggableFalse();		// draggable 때문에 레이어 안에서의 blur 이벤트 안 먹혀서 잠시 죽임
+	     											// (memoPortal.js에 있는 함수)
+	     		memoClickTimer = setTimeout(function() {
+	     			
+	     			if (!memoPrevent) {
+	     				memoFocusEvent(thisEl);
+	    	     		// autoSaveStart(thisEl);
+	     			}
+	     		}, memoDelay);
+	     	}).on('dblclick', '.memoText', function (event, ui) {	// 더블 클릭 -> 큰 메모 열기
+	     		var memoId = $(this).attr("memoid");
 	     		
-	     		autoSaveStart(thisEl);
+	     		clearTimeout(memoClickTimer);
+	     		
+	     		getMemoDetail(memoId);
 	     	});
+	     	
 	     	// 메모 자동 저장 정지
 	     	$(document).on('blur', '.memoText', function() {
-	     		autoSaveStop();
-	     		modifyMemo($(this)[0]);
+	     		autoSaveStop();					// 자동 저장 멈춤
+	     		parent.parent.draggableTrue();	// 메모 레이어 드래그 살림 (memoPortal.js에 있는 함수)
+	     		modifyMemo($(this)[0]);			// 메모 내용 수정
 	     	});
 	     	
-	     	$(document).on('dblclick', '.memoText', function (event, ui) {
-	        	var memoId = $(this).attr("memoid");
-	        	getMemoDetail(memoId);
-	        });
-	     	
-	    	/* 
+	    	/* 위의 자동 저장 기능 추가하면서 주석처리
 	    	$(document).on("click", ".saveBtn", function(){
 			    	  var obj = $(this).parent().next();
 			    	  modifyMemo(obj[0]);
 			});
-	    	 */
+	    	*/
+	    	
 	    	// 메모 숨김 기능
 	    	$(document).on('click', '.hidden', function() {
 	    		var thisEl = $(this)[0];

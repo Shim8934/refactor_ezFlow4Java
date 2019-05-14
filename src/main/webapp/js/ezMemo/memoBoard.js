@@ -489,10 +489,11 @@ function getMemoDetail(memoId) {
     		detailContents[0].textContent = '';
     		detailContents[0].textContent = result.memo.contents;
     		
-    		detailContents.focus();
-    		detail.css('visibility', 'visible');
-    		
     		parent.parent.setDetailStatus(memoId);
+    		
+    		detail.css('visibility', 'visible');
+    		detailContents.focus();
+    		
     	}
     });
 }
@@ -514,26 +515,31 @@ function checkAndActionBigMemo(memoId, color) {
 	}
 }
 
-// interval 변수
-var memoInter;
+//메모 focus 이벤트
+function memoFocusEvent(thisEl) {
+	beforeMemo = thisEl.value;
+	autoSaveStart(thisEl);
+}
 
 //일정 시간마다 자동 저장
 function autoSaveStart(param) {
+	autoSaveStop();
+	
 	memoInter = setInterval(function() {
-		console.log('저장');
+		//console.log('저장?');
 		var resultObj = compareContents(param);
 		if (resultObj.result === 'ok') {
-			console.log('yes');
+			//console.log('yes');
 			modifyMemo(param);
 			beforeMemo = resultObj.afterVal;
 		} else {
-			console.log('no');
+			//console.log('no');
 		}
 	}, 3000);
 }
 
 //자동 저장 기능 정지
 function autoSaveStop() {
-	console.log('정지');
+	//console.log('정지');
 	clearInterval(memoInter);
 }

@@ -1207,13 +1207,13 @@ function addEventInBigMemo() {
     }).on('mouseup', function () {
         $('#noteBlock').css('visibility', 'hidden');
     });
-
+/*
     // 큰 메모 열기
     $('#layer-popup').on('dblclick', '.memoText', function (event, ui) {
     	var memoId = $(this).attr("memoid");
     	getMemoDetail(memoId);
     });
-
+*/
     // 큰 메모 닫기
     $("#closeMemo").click(function() {
     	setDetailStatus();
@@ -1287,11 +1287,12 @@ function getMemoDetail(memoId) {
     		}
     		detailContents[0].textContent = '';
     		detailContents[0].textContent = result.memo.contents;
-			
+    		
+    		setDetailStatus(memoId);
+    		
 			detail.css('visibility', 'visible');
 			detailContents.focus();
 			
-			setDetailStatus(memoId);
     	}
     });
 }
@@ -1409,14 +1410,6 @@ function checkAndActionBigMemo(memoId, color) {
 	}
 }
 
-/*
- * interval 변수 
- * newPortal.JSP에 생성했었으나
- * 멈춤 동작이 잘 되지 않아 
- * 자동 저장 및 멈춤 함수가 있는 곳에 생성
- * */
-var memoInter;
-
 // 메모 focus 이벤트
 function memoFocusEvent(thisEl) {
 	beforeMemo = thisEl.value;
@@ -1425,22 +1418,24 @@ function memoFocusEvent(thisEl) {
 
 //일정 시간마다 자동 저장
 function autoSaveStart(param) {
+	autoSaveStop();
+	
 	memoInter = setInterval(function() {
-		console.log('저장');
+		//console.log('저장?');
 		var resultObj = compareContents(param);
 		if (resultObj.result === 'ok') {
-			console.log('yes');
+			//console.log('yes');
 			modifyMemo(param);
 			beforeMemo = resultObj.afterVal;
 		} else {
-			console.log('no');
+			//console.log('no');
 		}
 	}, 3000);
 }
 
 //자동 저장 기능 정지
 function autoSaveStop() {
-	console.log('정지');
+	//console.log('정지');
 	clearInterval(memoInter);
 }
 
@@ -1462,4 +1457,13 @@ function setDetailStatus(memoId) {
 		success : function(result) {
 		}
 	});
+}
+
+// memoBoard에서 실행할  함수
+function draggableFalse() {
+	$('#layer-popup').draggable('disable');
+}
+// memoBoard에서 실행할  함수
+function draggableTrue() {
+	$('#layer-popup').draggable('enable');
 }

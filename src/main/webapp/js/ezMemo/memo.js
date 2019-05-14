@@ -413,7 +413,7 @@ function bodyClearSelection() {
 }
 
 // 저장 이전 내용과 이후 내용 비교
-function compareContents (param) {
+function compareContents(param) {
 	var resultObj = {};
 	
 	if (beforeMemo != param.value) {
