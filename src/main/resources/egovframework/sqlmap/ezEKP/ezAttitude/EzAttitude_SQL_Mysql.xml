@@ -2018,7 +2018,7 @@
 		FROM
 			TBL_ATTITUDE
 		WHERE
-			(TYPE_ID != 'A02' OR TYPE_ID != 'A17')
+			(TYPE_ID != 'A02' AND TYPE_ID != 'A17')
 		AND 
 			WRITER_ID = #userId#
 		<isNotEmpty property="oneMonthAgo">
@@ -2102,9 +2102,9 @@
 			AND
 				WRITER_ID = #userid#
 			AND
-				START_DATE >= #oneMonthAgo#
+				START_DATE >= DATE_ADD(#oneMonthAgo#, interval - 540 minute)
 			AND
-				START_DATE < #oneDayAgo#
+				START_DATE < DATE_ADD(#oneDayAgo#, interval - 540 minute)
 			AND
 				COMPANY_ID = #companyId#
 			AND
@@ -2120,7 +2120,7 @@
 			FROM
 				TBL_ATTITUDE
 			WHERE 
-				TYPE_ID IN ('A05','A15','A16')
+				TYPE_ID IN ('A05','A12','A13')
 			AND 
 				WRITER_ID = #userId#
 			AND
@@ -2131,7 +2131,8 @@
 				COMPANY_ID = #companyId#
 			AND
 				TENANT_ID = #tenantId#
-			GROUP BY TYPE_ID
+			GROUP BY 
+				TYPE_ID
 		]]>
 	</select>
 	
