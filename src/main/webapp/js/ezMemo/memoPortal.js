@@ -1279,16 +1279,18 @@ function getMemoDetail(memoId) {
     		var detail = $('#detailMemo');
     		var detailContents = $('#dMContents'); 
     		
+    		detailContents.attr('bigMemoId', result.memo.memo_id);
     		detail.removeClass().addClass('ui-resizable ui-draggable ui-draggable-handle memo0' + result.memo.color_id + 'Big');
     		
     		if (useDate === 1) {
     			addDateInfo(result.memo.write_date.substring(0,10), detail);
     		}
+    		detailContents[0].textContent = '';
     		detailContents[0].textContent = result.memo.contents;
-			detailContents.attr('bigMemoId', result.memo.memo_id).focus();
 			
 			detail.css('visibility', 'visible');
-
+			detailContents.focus();
+			
 			setDetailStatus(memoId);
     	}
     });
@@ -1406,11 +1408,42 @@ function checkAndActionBigMemo(memoId, color) {
 		}
 	}
 }
+
+/*
+ * interval 변수 
+ * newPortal.JSP에 생성했었으나
+ * 멈춤 동작이 잘 되지 않아 
+ * 자동 저장 및 멈춤 함수가 있는 곳에 생성
+ * */
+var memoInter;
+
 // 메모 focus 이벤트
 function memoFocusEvent(thisEl) {
 	beforeMemo = thisEl.value;
 	autoSaveStart(thisEl);
 }
+
+//일정 시간마다 자동 저장
+function autoSaveStart(param) {
+	memoInter = setInterval(function() {
+		console.log('저장');
+		var resultObj = compareContents(param);
+		if (resultObj.result === 'ok') {
+			console.log('yes');
+			modifyMemo(param);
+			beforeMemo = resultObj.afterVal;
+		} else {
+			console.log('no');
+		}
+	}, 3000);
+}
+
+//자동 저장 기능 정지
+function autoSaveStop() {
+	console.log('정지');
+	clearInterval(memoInter);
+}
+
 // 메모 오픈 상태 저장
 function setDetailStatus(memoId) {
 	var status;

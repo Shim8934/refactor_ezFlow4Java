@@ -61,7 +61,7 @@
 	    	var memoFlag = "<c:out value='${useMemo}' />";
 	    	var useMemoContextMenu = false;
 	    	var beforeMemo;
-	    	var memoInter;
+//	    	var memoInter;
 	    	
 			topHeight = "56";
 

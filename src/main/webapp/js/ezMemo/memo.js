@@ -398,7 +398,6 @@ function clearSelection() {
 	}
 }
 
-
 /**
  * mainBody 내 더블클릭시, 음영 삭제 메서드
  */
@@ -411,28 +410,6 @@ function bodyClearSelection() {
 	//$(".mainbody").on("selectstart", function(event){return false;});
 	mainmenu.addEventListener("click", clearSelection, false);
 	mainmenu.addEventListener("drag", clearSelection, false);
-}
-
-
-//일정 시간마다 자동 저장
-function autoSaveStart(param) {
-	memoInter = setInterval(function() {
-		console.log('저장');
-		var resultObj = compareContents(param);
-		if (resultObj.result === 'ok') {
-			console.log('yes');
-			modifyMemo(param);
-			beforeMemo = resultObj.afterVal;
-		} else {
-			console.log('no');
-		}
-	}, 3000);
-}
-
-//자동 저장 기능 정지
-function autoSaveStop() {
-	console.log('정지');
-	clearInterval(memoInter);
 }
 
 // 저장 이전 내용과 이후 내용 비교
