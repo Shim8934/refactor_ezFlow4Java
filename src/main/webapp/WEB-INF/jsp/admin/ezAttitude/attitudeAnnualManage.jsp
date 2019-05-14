@@ -104,13 +104,13 @@
 	    		});
 	    		
 	    		//총 연차 수 링크 클릭
-	    		$(document).on('click', '.mainlist .totalAnnualCnt', function(){
+	    		$(document).on('click', '.mainlist .additionalAnnualCnt', function(){
 	    			var userId = $(this).closest("tr").attr("userid");
 	    			var userName = $(this).closest("tr").children("td:eq(1)").text();
 	    			var userTitle = $(this).closest("tr").children("td:eq(2)").text();
 	    			var userDeptName = $(this).closest("tr").children("td:eq(3)").text();
-	    			var totalAnnualCnt = $(this).closest("tr").children("td:eq(5)").text();
-	    			modifyPrsnAnnualPop(userId , userName, userTitle, userDeptName, totalAnnualCnt);
+	    			var additionalAnnualCnt = $(this).closest("tr").children("td:eq(6)").text();
+	    			modifyPrsnAnnualPop(userId , userName, userTitle, userDeptName, additionalAnnualCnt);
 	    		})
 	    		//입사일 클릭
 	    		$(document).on('click', '.mainlist .joinDate', function(){
@@ -193,7 +193,6 @@
 	   					userName : searchUserName,
 	   					deptName : searchDeptName,
 	   					title : searchTitle,
-	   					//year : searchYear,
 	   					pageNum : pageNum,
 	   					listSize : listSize,
 	   					orderCell : orderCell,
@@ -238,11 +237,18 @@
 	    			}
 	    			resultHtml += "</a></td>"; */
 	    			
-	    			resultHtml += "<td><a class='link totalAnnualCnt'>";
-	    			if (Number(vo.totalAnnualCnt.split(".")[1]) > 0) {
-		    			resultHtml += vo.totalAnnualCnt;
+	    			resultHtml += "<td>";
+	    			if (Number(vo.basicAnnualCnt.split(".")[1]) > 0) {
+		    			resultHtml += vo.basicAnnualCnt;
 	    			} else {
-		    			resultHtml += vo.totalAnnualCnt.split(".")[0];
+		    			resultHtml += vo.basicAnnualCnt.split(".")[0];
+	    			}
+	    			resultHtml += "</td>";
+	    			resultHtml += "<td><a class='link additionalAnnualCnt'>";
+	    			if (Number(vo.additionalAnnualCnt.split(".")[1]) > 0) {
+		    			resultHtml += vo.additionalAnnualCnt;
+	    			} else {
+		    			resultHtml += vo.additionalAnnualCnt.split(".")[0];
 	    			}
 	    			resultHtml += "</a></td>";
 	    			resultHtml += "<td><a class='imgbtn'><span onclick=\"annualHistoryPop('" + vo.userId + "')\"><spring:message code='ezAttitude.t241' /></span></a></td>";
@@ -338,8 +344,8 @@
 			} */
 	    	
 			//로우의 총 연차수 링크 클릭 시
-	    	function modifyPrsnAnnualPop(userId , userName, userTitle, userDeptName, totalAnnualCnt) {
-	        	var url = "/admin/ezAttitude/modifyPrsnAnnualPop.do?userName=" + userName + "&userId=" + userId + "&userTitle=" + userTitle +  "&userDeptName=" + userDeptName +  "&totalAnnualCnt=" + totalAnnualCnt + "&companyId=" + encodeURIComponent($("#ListCompany").val());
+	    	function modifyPrsnAnnualPop(userId , userName, userTitle, userDeptName, additionalAnnualCnt) {
+	        	var url = "/admin/ezAttitude/modifyPrsnAnnualPop.do?userName=" + userName + "&userId=" + userId + "&userTitle=" + userTitle +  "&userDeptName=" + userDeptName +  "&additionalAnnualCnt=" + additionalAnnualCnt + "&companyId=" + encodeURIComponent($("#ListCompany").val());
 				window.open(url, "modifyPrsnAnnualPop", GetOpenWindowfeature(500, 274));
 	        }
 	    	
@@ -401,7 +407,8 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
 						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="joinDate">입사일</th>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="totalAnnualCnt"><spring:message code='ezAttitude.t239' /></th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="basicAnnualCnt">기본 연차 수</th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="additionalAnnualCnt">추가 연차 수</th>
 						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t241' /></th>
 					</tr>
 				</thead>

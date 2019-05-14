@@ -2226,14 +2226,14 @@ public class EzAttitudeAdminController {
 		String userName = request.getParameter("userName");
 		String userTitle = request.getParameter("userTitle");
 		String userDeptName = request.getParameter("userDeptName");
-		String totalAnnualCnt = request.getParameter("totalAnnualCnt");
+		String additionalAnnualCnt = request.getParameter("additionalAnnualCnt");
 				
 		model.addAttribute("userId", userId);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("userName", userName);
 		model.addAttribute("userTitle", userTitle);
 		model.addAttribute("userDeptName", userDeptName);
-		model.addAttribute("totalAnnualCnt", totalAnnualCnt);
+		model.addAttribute("additionalAnnualCnt", additionalAnnualCnt);
 		
 		LOGGER.debug("modifyPrsnAnnualPop ended.");
 		
