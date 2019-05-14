@@ -2226,14 +2226,14 @@ public class EzAttitudeAdminController {
 		String userName = request.getParameter("userName");
 		String userTitle = request.getParameter("userTitle");
 		String userDeptName = request.getParameter("userDeptName");
-		String totalAnnualCnt = request.getParameter("totalAnnualCnt");
+		String additionalAnnualCnt = request.getParameter("additionalAnnualCnt");
 				
 		model.addAttribute("userId", userId);
 		model.addAttribute("companyId", companyId);
 		model.addAttribute("userName", userName);
 		model.addAttribute("userTitle", userTitle);
 		model.addAttribute("userDeptName", userDeptName);
-		model.addAttribute("totalAnnualCnt", totalAnnualCnt);
+		model.addAttribute("additionalAnnualCnt", additionalAnnualCnt);
 		
 		LOGGER.debug("modifyPrsnAnnualPop ended.");
 		
@@ -2644,13 +2644,17 @@ public class EzAttitudeAdminController {
 		row.createCell(2).setCellValue(egovMessageSource.getMessage("ezAttitude.t10", locale));
 		row.createCell(3).setCellValue(egovMessageSource.getMessage("ezAttitude.t11", locale));
 		row.createCell(4).setCellValue(egovMessageSource.getMessage("ezAttitude.t9", locale));
-		row.createCell(5).setCellValue("총 연차 수");
+		row.createCell(5).setCellValue("입사일");
+		row.createCell(6).setCellValue("기본 연차 수");
+		row.createCell(7).setCellValue("추가 연차 수");
 		row.getCell(0).setCellStyle(headerStyle);
 		row.getCell(1).setCellStyle(headerStyle);
 		row.getCell(2).setCellStyle(headerStyle);
 		row.getCell(3).setCellStyle(headerStyle);
 		row.getCell(4).setCellStyle(headerStyle);
 		row.getCell(5).setCellStyle(headerStyle);
+		row.getCell(6).setCellStyle(headerStyle);
+		row.getCell(7).setCellStyle(headerStyle);
 		
 		//body
 		for (int i = 0 ; i < annualList.size(); i++) { 
@@ -2662,7 +2666,9 @@ public class EzAttitudeAdminController {
 			row.createCell(2).setCellValue(vo.getUserName());
 			row.createCell(3).setCellValue(vo.getUserTitle());
 			row.createCell(4).setCellValue(vo.getUserDeptName());
-			row.createCell(5).setCellValue(vo.getTotalAnnualCnt());
+			row.createCell(5).setCellValue(vo.getJoinDate());
+			row.createCell(6).setCellValue(vo.getBasicAnnualCnt());
+			row.createCell(7).setCellValue(vo.getAdditionalAnnualCnt());
 			
 			row.getCell(0).setCellStyle(bodyStyle);
 			row.getCell(1).setCellStyle(bodyStyle);
@@ -2670,6 +2676,8 @@ public class EzAttitudeAdminController {
 			row.getCell(3).setCellStyle(bodyStyle);
 			row.getCell(4).setCellStyle(bodyStyle);
 			row.getCell(5).setCellStyle(bodyStyle);
+			row.getCell(6).setCellStyle(bodyStyle);
+			row.getCell(7).setCellStyle(bodyStyle);
 		}
 		//width 조정
 		sheet.autoSizeColumn(0);
@@ -2678,12 +2686,16 @@ public class EzAttitudeAdminController {
 		sheet.autoSizeColumn(3);
 		sheet.autoSizeColumn(4);
 		sheet.autoSizeColumn(5);
+		sheet.autoSizeColumn(6);
+		sheet.autoSizeColumn(7);
 		sheet.setColumnWidth(0, (sheet.getColumnWidth(0)) + 512);
 		sheet.setColumnWidth(1, (sheet.getColumnWidth(1)) + 512);
 		sheet.setColumnWidth(2, (sheet.getColumnWidth(2)) + 512);
 		sheet.setColumnWidth(3, (sheet.getColumnWidth(3)) + 512);
 		sheet.setColumnWidth(4, (sheet.getColumnWidth(4)) + 512);
 		sheet.setColumnWidth(5, (sheet.getColumnWidth(5)) + 512);
+		sheet.setColumnWidth(6, (sheet.getColumnWidth(5)) + 512);
+		sheet.setColumnWidth(7, (sheet.getColumnWidth(5)) + 512);
 			
 		
 		response.setHeader("Content-Disposition", "attachment; fileName=\"" + pFileName + ".xls\"");

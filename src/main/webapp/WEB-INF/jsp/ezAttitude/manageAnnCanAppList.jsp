@@ -491,7 +491,7 @@
 	    	
 	    	if (excel != true) {
 		    	if (attList.length == 0) {
-		    		$('#AttList tbody').append("<tr><td colspan='11' align='center'  bgcolor='#FFFFFF'><spring:message code='ezAttitude.t96'/></td></tr>");	
+		    		$('#AttList tbody').append("<tr><td colspan='10' align='center'  bgcolor='#FFFFFF'><spring:message code='ezAttitude.t96'/></td></tr>");	
 		    	}
 	    	}
 	    	

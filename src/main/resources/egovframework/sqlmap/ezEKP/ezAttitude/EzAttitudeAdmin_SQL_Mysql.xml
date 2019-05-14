@@ -1439,6 +1439,8 @@
 			    A.DISPLAYNAME$primary$ AS userName,
 			    A.TITLE$primary$ AS userTitle,
 			    A.DESCRIPTION$primary$ AS userDeptName,
+			    ifnull(B.MONTHLY_HOLIDAY_CNT, 0) + ifnull(B.ANNUAL_HOLIDAY_CNT, 0) AS basicAnnualCnt,
+			    ifnull(B.ADDITIONAL_HOLIDAY_CNT, 0) AS additionalAnnualCnt,
 			    (ifnull(B.MONTHLY_HOLIDAY_CNT, 0) + ifnull(B.ANNUAL_HOLIDAY_CNT, 0) + ifnull(B.ADDITIONAL_HOLIDAY_CNT, 0)) AS totalAnnualCnt,
 			    ifnull(DATE_FORMAT(B.JOIN_DATE, '%Y-%m-%d'), 0) AS joinDate
 			FROM 
