@@ -2839,7 +2839,7 @@ public class EzAttitudeGWController {
 			map.put("userId", userId);
 			map.put("companyId", request.getParameter("companyId"));
 			map.put("tenantId", info.getTenantId());
-			map.put("offsetMin", request.getParameter("offsetMin"));
+			map.put("offsetMin", commonUtil.getMinuteUTC(info.getOffSet()));
 			
 			String primary = info.getPrimary();
 			if (primary.equals("1")) {
