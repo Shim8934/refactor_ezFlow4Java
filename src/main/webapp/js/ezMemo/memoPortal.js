@@ -344,18 +344,16 @@ function modalDelete(memoId) {
  * @param obj
  */
 function modifyMemo(obj) {
-	//var memoId = obj.getAttribute("memoid");
-	//var afterContents = $(".memoText[memoid=" + memoId + "]").val();
 	var size;
 	var memoId;
 	var afterContents;
 
-	if (obj.getAttribute("memoid")) {
+	if (obj.getAttribute("memoid")) {				// 작은 메모 수정
 		memoId = obj.getAttribute("memoid");
 		afterContents = $(".memoText[memoid=" + memoId + "]").val();
 		size = "small";
 	} else {
-		memoId = obj.getAttribute("bigmemoid");
+		memoId = obj.getAttribute("bigmemoid");		// 큰 메모 수정
 		afterContents = $("#dMContents").val();
 		size = "big";
 	}
@@ -1218,7 +1216,7 @@ function addEventInBigMemo() {
 
     // 큰 메모 닫기
     $("#closeMemo").click(function() {
-    	// setDetailStatus();
+    	setDetailStatus();
         $("#detailMemo").css('visibility', 'hidden');
     });
 
@@ -1291,7 +1289,7 @@ function getMemoDetail(memoId) {
 			
 			detail.css('visibility', 'visible');
 
-			//setDetailStatus(memoId);
+			setDetailStatus(memoId);
     	}
     });
 }
@@ -1412,4 +1410,23 @@ function checkAndActionBigMemo(memoId, color) {
 function memoFocusEvent(thisEl) {
 	beforeMemo = thisEl.value;
 	autoSaveStart(thisEl);
+}
+// 메모 오픈 상태 저장
+function setDetailStatus(memoId) {
+	var status;
+	var datas = {'memoId' : 0, 'openStatus' : 0};
+	
+	if (memoId != undefined) {
+		datas['memoId'] = memoId;
+		datas['openStatus'] = 1;
+	}
+	
+	$.ajax({
+		type : 'POST',
+		url : '/ezMemo/setDetailMemoStatus.do',
+		data : datas,
+		dataType : 'JSON',
+		success : function(result) {
+		}
+	});
 }

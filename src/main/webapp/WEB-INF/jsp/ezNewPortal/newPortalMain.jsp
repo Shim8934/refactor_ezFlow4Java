@@ -265,7 +265,7 @@
 		     		modifyMemo(thisEl);
 		     	});
 		     	
-		     	/* 위의 자동저장 기능 추가하면서 주석처리
+		     	/* 위의 자동 저장 기능 추가하면서 주석처리
 		        $(document).on("click", ".saveBtn", function(){
 			    	  var obj = $(this).parent().next();
 			    	  modifyMemo(obj[0]);
