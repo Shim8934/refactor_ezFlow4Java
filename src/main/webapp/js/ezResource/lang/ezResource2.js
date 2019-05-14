@@ -214,3 +214,6 @@ var strLangkmsr01 = "User is already added.";
 
 //2019-04-08 김민성
 var strLangkmsr02 = "자원관리자는 사용자 또는 관리자 권한이 있어야 합니다.";
+
+//2019-05-14
+var strLangkmsr03 = "Would you like to refuse approval?"
