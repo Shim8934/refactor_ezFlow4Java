@@ -268,11 +268,12 @@
 		     		var targetEl = event.target;
 		     		
 		     		draggableFalse();		// 큰 메모 열었을 때도 메모 레이어 클릭하면 blur 이벤트 실행시키기 위해 임시로 죽임
+		     		
 		     		memoFocusEvent(event.target);				// 클릭했을 때의 함수 실행 -> 자동 저장
 		     		
 		     	}).on('blur', function(evnet) {
 		     		autoSaveStop();				// 자동 저장 멈춤
-		     		draggableTrue				// 메모 레이어 드래그 살림
+		     		draggableTrue();			// 메모 레이어 드래그 살림
 		     		modifyMemo($(this)[0]);		// 메모 내용 수정
 		     	});
 		     	
