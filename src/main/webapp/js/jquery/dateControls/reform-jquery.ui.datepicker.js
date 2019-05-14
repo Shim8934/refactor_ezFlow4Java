@@ -681,6 +681,15 @@ $.extend(Datepicker.prototype, {
 	 *					event - if triggered by focus
 	 */
 	_showDatepicker: function(input) {
+		if (parent.document.getElementById('attitude_annual_conn')) { //근태관리 연동양식일 경우
+			var todayDateStr = getToday();
+			if (todayDateStr.length == 7) {
+				getDisabledDays(todayDateStr.substr(0,4), todayDateStr.substr(4,1));
+			} else {
+				getDisabledDays(todayDateStr.substr(0,4), todayDateStr.substr(4,2));						
+			}
+		}
+		
 		input = input.target || input;
 		if (input.nodeName.toLowerCase() !== "input") { // find from button/image trigger
 			input = $("input", input.parentNode)[0];
@@ -1549,7 +1558,6 @@ $.extend(Datepicker.prototype, {
 	 * they work with static code transformers like Caja.
 	 */
 	_attachHandlers: function(inst) {
-		attimonth = inst.currentMonth;
 		var stepMonths = this._get(inst, "stepMonths"),
 			id = "#" + inst.id.replace( /\\\\/g, "\\" );
 		inst.dpDiv.find("[data-handler]").map(function () {

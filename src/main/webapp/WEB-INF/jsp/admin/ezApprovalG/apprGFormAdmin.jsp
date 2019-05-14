@@ -235,7 +235,9 @@
 		    }
 
 		    function btnDelFcont_onclick() {
-		        DelFCont();
+		    	if (confirm("<spring:message code = 'ezApprovalG.t999933' />")) {
+			        DelFCont();
+		    	}
 		    }
 	
 		    function DelFCont() {
@@ -432,7 +434,22 @@
 		                		OpenAlertUI("<spring:message code = 'ezApprovalG.t173' />");
 		                	}
 		                });
-		                		                
+		                
+		                if (listview.GetRowCount() <= 0) {
+		                	var objTr = document.createElement("TR");
+		                	var objTd = document.createElement("TD");
+		                	var oText = document.createTextNode(strLang944);
+							var colCount = document.getElementById("lvtForm").getElementsByTagName("th").length;
+
+		                	objTd.align = "center";
+							objTd.setAttribute("colSpan", colCount);
+		                	objTd.appendChild(oText);
+		                	
+		                	objTr.setAttribute("id", "lvtForm_TR_noItems");
+		                	objTr.appendChild(objTd);
+		                	
+		                	document.getElementById("lvtForm").getElementsByTagName("tbody")[0].appendChild(objTr);
+		                }
 		            } else {
 		                return;
 		            }
@@ -588,7 +605,7 @@
 		            para[0] = nodeIdx.GetNodeData("DATA1");
 		        }
 		        var selRow = listview.GetSelectedRows();
-		        if (selRow) {
+		        if (selRow != "") {
 		            para[1] = GetAttribute(selRow[0], "DATA1");
 		            para[2] = companyID;
 		            var url = "/admin/ezApprovalG/formSelect.do";
@@ -607,6 +624,8 @@
 			                InitFormCont();
 			            }
 					}
+		        } else {
+		        	OpenAlertUI("<spring:message code = 'ezApprovalG.t1532' />");
 		        }
 		    }
 		    

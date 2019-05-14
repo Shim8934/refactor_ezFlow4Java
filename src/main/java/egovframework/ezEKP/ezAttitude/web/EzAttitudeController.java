@@ -4635,7 +4635,9 @@ public class EzAttitudeController {
 		
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("year", request.getParameter("year"))
-				.queryParam("month", request.getParameter("month"));
+				.queryParam("month", request.getParameter("month"))
+				.queryParam("startDate", request.getParameter("startDate"))
+				.queryParam("endDate", request.getParameter("endDate"));
 		
 		RestTemplate rest = new RestTemplate();
 		

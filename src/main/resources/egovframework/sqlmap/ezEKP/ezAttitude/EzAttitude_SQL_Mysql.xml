@@ -2064,6 +2064,9 @@
 					- MONTHLY_HOLIDAY_CNT
 				</isEqual>
 			</isEqual>
+			<isEqual property="attendanceRateCondition" compareValue="3">
+				ANNUAL_HOLIDAY_CNT = #holidayCnt#, MONTHLY_HOLIDAY_CNT = #holidayCnt# 
+			</isEqual>
 		WHERE
 			USER_ID = #userId#	
 		AND
