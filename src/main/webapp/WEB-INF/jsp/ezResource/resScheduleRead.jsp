@@ -388,8 +388,10 @@
 	            var msg = ""
 	            if (pFlag == "1") {
 	                msg = "" + strLang176 + "";
-	            } else {
+	            } else if(pFlag == "0"){
 	                msg = "" + strLang177 + "";
+	            } else {
+	            	msg = "" + strLangkmsr03 + "";
 	            }
 
 	            var result = confirm(msg);
@@ -497,8 +499,12 @@
 										<c:when test="${saveApproveFlag eq '1'}">
                                   			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 0)"> <spring:message code='ezResource.t190' /></span></li>
 										</c:when>
+										<c:when test="${saveApproveFlag eq '2'}">
+                                  			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 1)"> <spring:message code='ezResource.t191' /></span></li>
+										</c:when>
 										<c:otherwise>
                                   			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 1)"> <spring:message code='ezResource.t191' /></span></li>
+                                  			<li><span  onClick="SetApproval_onClick2('${cmdStr}', 2)">승인거부</span></li>
 										</c:otherwise>
 									</c:choose>
 								</c:if>

@@ -491,11 +491,11 @@
 							</td>
 						</tr>
 						<tr>
-        					<th>반납절차</th>
+        					<th><spring:message code="ezResource.kmsr11"/></th>
         					<td colspan="3" style="width:100%"><input type="radio" name="return" id="return1" value="0" <c:if test="${returnFlag eq 0}"> checked </c:if>>
-          					자동반납&nbsp;
+          					<spring:message code="ezResource.kmsr12"/>&nbsp;
           					<input type="radio" name="return" id="return2" value="1" <c:if test="${returnFlag eq 1}"> checked </c:if>>
-          					담당확인
+          					<spring:message code="ezResource.kmsr13"/>
           					</td>
       					</tr>
 						<tr>

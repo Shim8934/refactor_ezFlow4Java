@@ -2318,9 +2318,12 @@ public class EzResourceController extends EgovFileMngUtil {
         if (approve.equals("1")) {
         	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900007", userInfo.getLocale()));
         	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900008", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm());
-        } else {
+        } else if (approve.equals("0")){
         	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900009", userInfo.getLocale()));
         	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900010", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm());
+        } else {
+        	bodyContent.append(resInfo.getOwnerNm() + egovMessageSource.getMessage("ezResource.t9900015", userInfo.getLocale()));
+        	bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900016", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm());
         }
         
         bodyContent.append("<br>&nbsp;&nbsp;&nbsp;-&nbsp;"+egovMessageSource.getMessage("ezResource.t9900004", userInfo.getLocale()) + " : " 
@@ -2330,9 +2333,11 @@ public class EzResourceController extends EgovFileMngUtil {
         String subject = "";
         if (approve.equals("1")) {
         	subject = "["+egovMessageSource.getMessage("ezResource.t9900011", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
-        } else {
+        } else if (approve.equals("0")){
         	subject = "["+egovMessageSource.getMessage("ezResource.t9900012", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
-        }
+        } else {
+        	subject = "["+egovMessageSource.getMessage("ezResource.t9900017", userInfo.getLocale()) + " : " + resInfo.getBrd_Nm() + "] " + resInfo.getTitle();
+        } 
         String content = commonUtil.createNotiMailContent(bodyContent.toString(), userInfo.getTenantId(), userInfo.getLocale());
         
     	InternetAddress from = new InternetAddress();
