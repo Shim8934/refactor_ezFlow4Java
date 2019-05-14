@@ -978,7 +978,7 @@ reformUseProc.onLoadHandler = function() {
 				// a date picker isn't installed when the value of the class is 'hasDatepicker'.
 				controlElement.removeAttribute("class");
 				
-				if (parent.document.getElementById('attitude_annual_conn')) {//근태관리 휴가계 연동양식일 경우
+				if (document.getElementById('attitude_annual_conn') || parent.document.getElementById('attitude_annual_conn')) {//근태관리 휴가계 연동양식일 경우
 					$(controlElement).datepicker({
 						changeMonth: true,
 						changeYear: true,
@@ -1125,6 +1125,15 @@ reformUseProc.defaultChangeHandler = function(controls) {
 	}
 	
 	if (controlType == "select-one") {
+		//근태관리 추가
+		var changeHandler = controlElement.getAttribute("data-reform_on_change");
+		if (changeHandler != null && changeHandler != "") {
+			var handler = new Function("controlElement", "return " + changeHandler + "(controlElement);");
+			try {
+				handler(controlElement);
+			} catch (e) {}
+		}
+		
 		for (var i = 0; i < controlElement.options.length; i++) {
 			controlElement.options[i].removeAttribute("selected");
 		}
