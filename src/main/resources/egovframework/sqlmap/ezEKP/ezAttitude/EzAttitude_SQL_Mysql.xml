@@ -142,10 +142,11 @@
 		<result  property="ip" 					column="IP"						columnIndex="13"/>
 		<result  property="dateType" 			column="DATE_TYPE"				columnIndex="14"/>
 		<result  property="typeId" 				column="TYPE_ID"				columnIndex="15"/>
-		<result	 property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
+		<result  property="typeName"			column="TYPE_NAME"				columnIndex="16"/>
 		<result  property="imgPath"				column="IMG_PATH"				columnIndex="17"/>
 		<result  property="writerName"			column="DISPLAYNAME"			columnIndex="18"/>
 		<result  property="writerDeptName"		column="DESCRIPTION"			columnIndex="19"/>
+		<result  property="annualApprStatus"		column="ANNUAL_APPR_STATUS"			columnIndex="20"/>
 	</resultMap>
 	
 	<resultMap class="java.util.HashMap" id="monthlyAnnualMap">
@@ -1189,7 +1190,8 @@
 			B.TYPE_NAME$lang$ AS TYPE_NAME,
 			B.IMG_PATH,
 		    C.DISPLAYNAME$lang$ AS DISPLAYNAME,
-		    C.DESCRIPTION$lang$ AS DESCRIPTION
+		    C.DESCRIPTION$lang$ AS DESCRIPTION,
+		    ifnull(D.ANNUAL_APPR_STATUS, -1) as ANNUAL_APPR_STATUS
 		FROM   
 			tbl_attitude A 
 		INNER JOIN
@@ -1206,6 +1208,10 @@
 			A.TENANT_ID = C.TENANT_ID
 		AND 
 			A.WRITER_ID = C.CN
+		LEFT OUTER JOIN 
+			TBL_ATTITUDE_APR_CONN D
+		ON 
+			(A.TENANT_ID = D.TENANT_ID AND A.COMPANY_ID = D.COMPANY_ID AND A.ATTITUDE_ID = D.ATTITUDE_ID)
 		WHERE  
 			A.ATTITUDE_ID = #attitudeId# 
 		AND    

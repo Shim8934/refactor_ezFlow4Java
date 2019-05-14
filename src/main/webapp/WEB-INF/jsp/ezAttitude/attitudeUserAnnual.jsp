@@ -610,7 +610,7 @@
 				    	<select id="searchYear" onchange="makeoptionyear();" style="padding-right:50px;height:24px">
 				    	</select>			    	
 			    	</li>
-			    	<li id="reply"><span onclick="exportExcel()"><spring:message code='ezAttitude.t145' /></span></li>
+			    	<%-- <li id="reply"><span onclick="exportExcel()"><spring:message code='ezAttitude.t145' /></span></li> --%>
 		    </div>
 	    <!-- 리스트 -->
 	    <table>

@@ -45,6 +45,8 @@ public class AttitudeVO {
 	private String writerName;
 	/** 작성자부서명*/
 	private String writerDeptName;
+	/** 결재상태*/
+	private String annualApprStatus;
 	
 	public String getWriterName() {
 		return writerName;
@@ -179,5 +181,11 @@ public class AttitudeVO {
 	}
 	public void setWriterDeptName(String writerDeptName) {
 		this.writerDeptName = writerDeptName;
+	}
+	public String getAnnualApprStatus() {
+		return annualApprStatus;
+	}
+	public void setAnnualApprStatus(String annualApprStatus) {
+		this.annualApprStatus = annualApprStatus;
 	}
 }
