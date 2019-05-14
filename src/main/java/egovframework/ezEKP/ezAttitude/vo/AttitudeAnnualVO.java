@@ -7,6 +7,8 @@ public class AttitudeAnnualVO {
 	private String userDeptName;
 	private String year;
 	private String useAnnualCnt;
+	private String basicAnnualCnt;
+	private String additionalAnnualCnt;
 	private String totalAnnualCnt;
 	private String annualApprStatus;
 	private String joinDate;
@@ -78,5 +80,17 @@ public class AttitudeAnnualVO {
 	}
 	public void setAnnualApprStatus(String annualApprStatus) {
 		this.annualApprStatus = annualApprStatus;
+	}
+	public String getBasicAnnualCnt() {
+		return basicAnnualCnt;
+	}
+	public void setBasicAnnualCnt(String basicAnnualCnt) {
+		this.basicAnnualCnt = basicAnnualCnt;
+	}
+	public String getAdditionalAnnualCnt() {
+		return additionalAnnualCnt;
+	}
+	public void setAdditionalAnnualCnt(String additionalAnnualCnt) {
+		this.additionalAnnualCnt = additionalAnnualCnt;
 	}
 }

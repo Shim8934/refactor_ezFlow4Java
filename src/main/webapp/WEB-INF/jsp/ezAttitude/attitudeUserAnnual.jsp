@@ -610,7 +610,7 @@
 				    	<select id="searchYear" onchange="makeoptionyear();" style="padding-right:50px;height:24px">
 				    	</select>			    	
 			    	</li>
-			    	<li id="reply"><span onclick="exportExcel()"><spring:message code='ezAttitude.t145' /></span></li>
+			    	<%-- <li id="reply"><span onclick="exportExcel()"><spring:message code='ezAttitude.t145' /></span></li> --%>
 		    </div>
 	    <!-- 리스트 -->
 	    <table>
@@ -620,12 +620,12 @@
 			            <table class="mainlist" style="width: 100%;">
 			                <tr>
 			                    <th style="width: 60px;"><span>NO.</span></th>
-			                    <th style="width: 25%; padding-left:15px; cursor: pointer;" colname="START_DATE"><span><spring:message code='ezAttitude.t107' /></span></th>
-			                    <th style="width: 15%; cursor: pointer;" colname="TYPE_NAME"><span><spring:message code='ezAttitude.t35' /></span></th>
+			                    <th style="width: 25%; padding-left:15px; cursor: pointer;" colname="startDate"><span><spring:message code='ezAttitude.t107' /></span></th>
+			                    <th style="width: 15%; cursor: pointer;" colname="typeName"><span><spring:message code='ezAttitude.t35' /></span></th>
 			                    <th style="width: 12%; cursor: pointer;" colname="annualCnt"><span><spring:message code='ezAttitude.t252' /></span></th>
 			                    <th style="width: 20%;"><span><spring:message code='ezAttitude.t264' /></span></th>
-			                    <th style="width: 12%;"><span>결재상태</span></th>
-			                    <th style="width: 12%;"><span>취소신청</span></th>
+			                    <th style="width: 12%; cursor: pointer;" colname="annualApprStatus"><span>결재상태</span></th>
+			                    <th style="width: 12%; cursor: pointer;" colname="modAppl"><span>취소신청</span></th>
 			                </tr>
 			            </table>
 			            <div id="contentlist" name="contentlist" style="height: 520px; overflow-y: auto;">

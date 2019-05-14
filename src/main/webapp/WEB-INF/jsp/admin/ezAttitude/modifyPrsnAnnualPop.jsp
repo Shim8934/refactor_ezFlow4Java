@@ -12,35 +12,29 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 	    <script type="text/javascript">	
-	    	var flagCheck = 'change';
-	    	var companyId = "<c:out value="${vo.companyId}" />";
+	    	var companyId = "<c:out value="${companyId}" />";
 	    	var changeReason = '';
-	    	var totalAnnualCnt = "<c:out value="${vo.totalAnnualCnt}" />";
+	    	var additionalAnnualCnt = "<c:out value="${additionalAnnualCnt}" />";
 	    	var annualCnt = "";
-	    	var searchYear = "<c:out value="${vo.year}" />";
-	    	var userId = "<c:out value="${vo.userId}" />";
+	    	var userId = "<c:out value="${userId}" />";
 	    
 	    	$(document).ready(function(){
-		    	$("input:text[name=totalAnnualCnt]").on("keyup", function() {
+		    	$("input:text[name=additionalAnnualCnt]").on("keyup", function() {
 		    	    $(this).val($(this).val().replace(/[^0-9]/g,""));
 		    	});
 		    	
-		    	if(totalAnnualCnt == null || totalAnnualCnt == "") {
-		    		totalAnnualCnt = 0;
-		    	} else if(totalAnnualCnt % 1 == 0.5) {
+		    	if(additionalAnnualCnt == null || additionalAnnualCnt == "") {
+		    		additionalAnnualCnt = 0;
+		    	} else if(additionalAnnualCnt % 1 == 0.5) {
 		    		$("input:checkbox[id='bancha']").prop('checked', true);
 		    		setBancha();
-		    		totalAnnualCnt = totalAnnualCnt - 0.5
+		    		additionalAnnualCnt = additionalAnnualCnt - 0.5
 		    	}
 		    	
-		    	totalAnnualCnt = Number(totalAnnualCnt);
+		    	additionalAnnualCnt = Number(additionalAnnualCnt);
 		    	
-		    	$("#totalAnnualCnt").val(totalAnnualCnt);
+		    	$("#additionalAnnualCnt").val(additionalAnnualCnt);
    			});
-	    	
-	    	function setFlagCheck(){
-	    		flagCheck = $("input:radio[name=flagCheck]:checked").val();
-		    }
 	    	
 	    	function setBancha() {
 	    		if($("input:checkbox[id='bancha']").is(":checked")) {
@@ -53,7 +47,7 @@
 	    	//전체 연차 등록/수정
 	    	function modifyPrsnAnnualCnt() {
 	    		changeReason = $("#changeReason").val();
-	    		annualCnt = $("#totalAnnualCnt").val();
+	    		annualCnt = $("#additionalAnnualCnt").val();
 	    		if (annualCnt == "" || annualCnt == null) {
 	    			alert("<spring:message code='ezAttitude.t242' />");
 	    			return;
@@ -80,8 +74,7 @@
 	   					changeReason : changeReason,
 	   					companyId : companyId,
 	   					annualCnt : annualCnt,
-	   					userId : userId,
-	   					flagCheck : flagCheck
+	   					userId : userId
 	   				},
 					success : function(resultStatus) {
 	            		if (resultStatus == "success") {
@@ -112,25 +105,25 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t10' /></th>
 	            <td>
-	            	${vo.userName}
+	            	${userName}
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t11' /></th>
 	            <td>
-	            	${vo.userTitle}
+	            	${userTitle}
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t9' /></th>
 	            <td>
-	            	${vo.userDeptName}
+	            	${userDeptName}
 	            </td>
 	        </tr>
 	        <tr>
 	        	<th style="width:200px; text-align:center">추가 연차 수</th>
 	            <td>
-	            	<input id="totalAnnualCnt" name="totalAnnualCnt" type="text" style="width:30px;text-align:right;padding-bottom: 5px;" value="" maxlength="3">
+	            	<input id="additionalAnnualCnt" name="additionalAnnualCnt" type="text" style="width:30px;text-align:right;padding-bottom: 5px;" value="" maxlength="3">
 	            	<label id="banchaTxt"></label><spring:message code='ezAttitude.t68' />
 	            	<span style="width:100px;padding-right: 30px;"></span>
 	            	<input type="checkbox" id="bancha" name="bancha" onchange="setBancha();">

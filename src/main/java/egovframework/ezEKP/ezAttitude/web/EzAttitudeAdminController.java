@@ -2221,42 +2221,19 @@ public class EzAttitudeAdminController {
 	public String modifyPrsnAnnualPop(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
 		LOGGER.debug("modifyPrsnAnnualPop started.");
 		
-		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		String userId = request.getParameter("userId");
 		String companyId = request.getParameter("companyId");
-		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
-		
-		if (userId != null) {
-			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
-			String url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/modifyPrsnAnnualPop/";
-			
-			HttpHeaders headers = new HttpHeaders();
-			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-			headers.set("x-user-host", request.getServerName());
-			
-			HttpEntity<?> entity = new HttpEntity<>(headers);
-			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-					.queryParam("companyId", companyId)
-					.queryParam("userId", userId)
-					.queryParam("offsetMin", offsetMin);
-			
-			RestTemplate rest = new RestTemplate();
-			
-			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
-			
-			JSONParser jp = new JSONParser();
-			JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
-			
-			String status = resultBody.get("status").toString();
-			
-			JSONObject vo = new JSONObject();
-			if (status.equals("ok")) {		
-				vo = (JSONObject) resultBody.get("data");
+		String userName = request.getParameter("userName");
+		String userTitle = request.getParameter("userTitle");
+		String userDeptName = request.getParameter("userDeptName");
+		String additionalAnnualCnt = request.getParameter("additionalAnnualCnt");
 				
-				model.addAttribute("vo", vo);
-			}
-			
-		}
+		model.addAttribute("userId", userId);
+		model.addAttribute("companyId", companyId);
+		model.addAttribute("userName", userName);
+		model.addAttribute("userTitle", userTitle);
+		model.addAttribute("userDeptName", userDeptName);
+		model.addAttribute("additionalAnnualCnt", additionalAnnualCnt);
 		
 		LOGGER.debug("modifyPrsnAnnualPop ended.");
 		
@@ -2524,7 +2501,6 @@ public class EzAttitudeAdminController {
 		String companyId = request.getParameter("companyId");
 		String userId = request.getParameter("userId");
 		String changeReason = request.getParameter("changeReason");
-		String flagCheck = request.getParameter("flagCheck");
 		String annualCnt = request.getParameter("annualCnt");
 		
 		String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
@@ -2541,8 +2517,7 @@ public class EzAttitudeAdminController {
 				.queryParam("changeUserId", userInfo.getId())
 				.queryParam("changeReason", changeReason)
 				.queryParam("companyId", companyId)
-				.queryParam("annualCnt", annualCnt)
-				.queryParam("flagCheck", flagCheck);
+				.queryParam("annualCnt", annualCnt);
 		
 		
 		RestTemplate rest = new RestTemplate();

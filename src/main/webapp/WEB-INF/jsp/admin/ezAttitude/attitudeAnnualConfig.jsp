@@ -99,16 +99,20 @@
         		var useAnnualAutoGnrt = result.useAnnualAutoGnrt;
         		if (useAnnualAutoGnrt == 0) {
         			$('input[name=use_annual_auto_gnrt]').eq(1).prop('checked', true);
+	        		type_change(0);
         		} else {
         			$('input[name=use_annual_auto_gnrt]').eq(0).prop('checked', true);
+	        		type_change(1);
         		}
         		
         		//연차발생기준
         		var annualGnrtStd = result.annualGnrtStd;
         		if (annualGnrtStd == 0) {
         			$('input[name=annual_gnrt_std]').eq(1).prop('checked', true);
+	        		type_change(3);
         		} else {
         			$('input[name=annual_gnrt_std]').eq(0).prop('checked', true);
+	        		type_change(2);
         		}
         		
         		//회계년도 기산일
