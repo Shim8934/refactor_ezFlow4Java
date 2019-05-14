@@ -2869,25 +2869,25 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public void updateAnnualHoliday(Map<String, Object> map) throws Exception {
 		LOGGER.debug("updateAnnualHoliday started");
 		
-		int defaultAnnualHolidayCnt = 15;
 		String companyId = (String)map.get("companyId");
 		int tenantId = (int)map.get("tenantId");
 		String joinDate = (String)map.get("joinDate");
+		String today = commonUtil.getTodayUTCTime("yyyy-MM-dd");
+
+		int workingDayCnt = checkHoliday(joinDate, today, "1", companyId, tenantId).size();
+		float attendanceDay = (float) ezAttitudeDAO.getAttendanceDay(map);
+		float attendanceRate = (float) ((attendanceDay / workingDayCnt) * 100.0);
 		
-		int workingDayCnt = checkHoliday(joinDate, commonUtil.getTodayUTCTime("yyyy-MM-dd"), "1", companyId, tenantId).size();
-		int attendanceDay = ezAttitudeDAO.getAttendanceDay(map);
-		int attendanceRate = attendanceDay / workingDayCnt * 100;
-		
-			if (attendanceRate >= 80) {
-				map.put("holidayCnt", defaultAnnualHolidayCnt);
-			} else {
-				int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
-				map.put("holidayCnt", monthlyHolidayCnt);
-			}
-			map.put("attendanceRateCondition","1");
+		if (attendanceRate >= 80.0) {
+			map.put("holidayCnt", defaultAnnualHolidayCnt);
+		} else {
+			int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
+			map.put("holidayCnt", monthlyHolidayCnt);
+		}
+
+		map.put("attendanceRateCondition","1");
 		
 		ezAttitudeDAO.updateAnnualHoliday(map);
-		
 
 		setAnnualHistory(map);
 		
@@ -2962,8 +2962,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					Date joinDate = sdf.parse(date1);
 					Date initialDate = sdf.parse(date2);
 					
-					long calDate = joinDate.getTime() - initialDate.getTime();
-					long calDatetoDays = Math.abs(calDate / (24 * 60 * 60 * 1000)); 
+					double calDate = joinDate.getTime() - initialDate.getTime();
+					double calDatetoDays = Math.abs(calDate / (24 * 60 * 60 * 1000)); 
 					double annualHolidayCnt = Math.floor((15.0 * calDatetoDays / 365.0 * 10 )) / 10.0;
 					
 					if (roundOffRule.equals("1")) {

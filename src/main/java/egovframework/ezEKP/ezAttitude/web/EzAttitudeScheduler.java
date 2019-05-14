@@ -40,15 +40,14 @@ public class EzAttitudeScheduler {
 	private EzAttitudeService ezAttitudeService;
 	
 	
-	@Scheduled(cron = "${config.cron.autoSetAnnualHoliday}")
-//	@Scheduled(cron = "0 * 17 * * *")
+//	@Scheduled(cron = "${config.cron.autoSetAnnualHoliday}")
+	@Scheduled(cron = "0 * 10 * * *")
 	public void autoSetAnnualHoliday() throws Exception{
 		logger.debug("autoSetAnnualHoliday scheduler started.");
 		
 		List<Map<String, Object>> tenantCompanyIdList = ezAttitudeService.getTenantCompanyId();
 		
 		for ( Map<String, Object> tenantCompanyMap : tenantCompanyIdList) {
-			// 변수 값은 테스트용 테이블 및 쿼리 생성 후 변경 예정
 			
 			int tenantId = (int)tenantCompanyMap.get("tenantId");
 			String companyId = (String)tenantCompanyMap.get("companyId");
@@ -71,18 +70,12 @@ public class EzAttitudeScheduler {
 			String yesterday = sdf.format(cal.getTime());
 			
 			if (useAnnualAutoGnrt.equals("1")) {
-				
-				
+
 				List<Map<String, Object>> list = ezAttitudeService.getJoinDateUserList(yesterday.split("-")[2], companyId, tenantId);
 				
 				if (annualGnrtStd.equals("0")) {
-					
 					for (Map<String, Object> m : list) {
-
-						m.put("companyId", companyId);
-						m.put("tenantId", tenantId);
 						int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
-						
 						if (workingMonthCnt < 24) {
 							if (workingMonthCnt == 12) {
 								ezAttitudeService.updateAnnualHoliday(m);
@@ -100,11 +93,7 @@ public class EzAttitudeScheduler {
 					}
 				} else {
 					for (Map<String, Object> m : list) {
-						
-						m.put("companyId", companyId);
-						m.put("tenantId", tenantId);
 						int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
-	
 						if (workingMonthCnt < 12) {
 							ezAttitudeService.updateMonthlyHoliday(m);
 						} else if (workingMonthCnt > 12) {
@@ -117,16 +106,9 @@ public class EzAttitudeScheduler {
 						}
 					}
 					
-					if (initialDate.substring(initialDate.indexOf("-")+1).equals(yesterday.substring(yesterday.indexOf("-")+1))) {
-						
-						Map<String, Object> m = new HashMap<String, Object>();
-						m.put("roundOffRule", roundOffRule);
-						m.put("initialDate", initialDate);
-						m.put("companyId", companyId);
-						m.put("tenantId", tenantId);
-						
-						ezAttitudeService.updateFiscalYearAnnualHoliday(m);
-					}				
+					if (initialDate.substring(initialDate.indexOf("-") + 1).equals(yesterday.substring(yesterday.indexOf("-") + 1))) {
+						ezAttitudeService.updateFiscalYearAnnualHoliday(annualConf);
+					}	
 				}
 			}
 			
