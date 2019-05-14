@@ -309,7 +309,11 @@
 			    			html += "<td style='width:12%'>" + "완료" + "</td>";
 		    			}
 		    			if(vo.modAppl == "0") {
-			    			html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"attitudeCancelAnnual('" + vo.attitudeId + "','" + vo.typeId + "')\"><span>취소신청</span></a>" +"</td>";
+		    				if(vo.annualApprStatus == 1) {
+			    				html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"attitudeCancelAnnual('" + vo.attitudeId + "','" + vo.typeId + "')\"><span>취소신청</span></a>" +"</td>";
+		    				} else {
+			    				html += "<td style='width:12%'>결재 미완료</td>";
+		    				}
 			    			//html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"openDraftUI('DRAFT', '" + vo.attitudeId + "')\"><span>취소신청</span></a>" +"</td>";
 		    			} else if(vo.modAppl == "4") {
 		    				html += "<td style='width:12%'>반려</td>";

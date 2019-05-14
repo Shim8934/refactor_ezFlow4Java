@@ -2646,8 +2646,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public void changeAnnual(Map<String, Object> map) throws Exception {
 		LOGGER.debug("changeAnnual started");
 		
+		ezAttitudeDAO.insertAnnualHistory(map);
 		if(ezAttitudeDAO.getSimpleAnnualCnt(map) == 0) {
-			//ezAttitudeDAO.insertAnnualHistory(map);
 			ezAttitudeDAO.insertAnnual(map);
 		} else {
 			//ezAttitudeDAO.changeAnnualHistory(map);
