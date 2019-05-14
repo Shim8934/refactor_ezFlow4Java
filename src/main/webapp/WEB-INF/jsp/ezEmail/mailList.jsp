@@ -398,14 +398,15 @@
 	            var xmlhttp = createXMLHttpRequest();
 	            createNodeAndInsertText(xmlpara, objNode, "USERID", g_loginID);
 	            createNodeAndInsertText(xmlpara, objNode, "LISTCOUNT", document.getElementById("MailList").getAttribute("listpageCount"));
-	            createNodeAndInsertText(xmlpara, objNode, "REFRESHINTERVAL", " ${mailGeneral.refreshInterval}");
-	            createNodeAndInsertText(xmlpara, objNode, "KEEPDELETELENGTH", " ${mailGeneral.keepDeleteLength} ");
+	            createNodeAndInsertText(xmlpara, objNode, "REFRESHINTERVAL", "${mailGeneral.refreshInterval}");
+	            createNodeAndInsertText(xmlpara, objNode, "KEEPDELETELENGTH", "${mailGeneral.keepDeleteLength}");
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWMODE", _pPreview);
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWWLIST", parseInt(pMailListDiv));
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWWCONTENT", parseInt(pMailPreVDiv));
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHLIST", parseInt(pMailListDiv_H));
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWHCONTENT", parseInt(pMailPreVDiv_H));
 	            createNodeAndInsertText(xmlpara, objNode, "PREVIEWSUBTREE", previewSubTree);
+	            createNodeAndInsertText(xmlpara, objNode, "TEXTOPTION", "${mailGeneral.textOption}");
 	            
 	            xmlhttp.open("POST", "/ezEmail/mailGeneralSave.do", false);
 	            xmlhttp.send(xmlpara);		  
