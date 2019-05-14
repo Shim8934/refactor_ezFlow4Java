@@ -1074,6 +1074,60 @@ public class EzWebFolderServiceImpl extends EgovFileMngUtil implements EzWebFold
 	}
 	
 	@Override
+	public boolean canDelete(String[] fileIdList, String[] folderIdList, String userId, int tenantId) throws Exception {
+		FolderVO userRootFolder = getRootFolderId(userId, "U", "000|+00:00", tenantId);
+		String userRootPath = userRootFolder.getFolderPath();
+
+		UserCapacityVO userCapacity = ezWebFolderAdminService.getCapacity(userId, "U", "1", tenantId);
+		double totalUsed = Double.parseDouble(userCapacity.getTotalUsed());
+		double totalCapacity = Double.parseDouble(userCapacity.getTotalCapacity()) * 1_073_741_824;
+		double allowedSize = totalCapacity - totalUsed;
+		double deleteTotalSize = 0;
+
+		if (fileIdList != null) {
+			for (String fileId : fileIdList) {
+				if (fileId == null || fileId.isEmpty() || fileId.equals("-1")) {
+					continue;
+				}
+
+				FileVO file = getFileByFileId(fileId, "000|+00:00", tenantId);
+				FolderVO folder = getFolderByFolderId(file.getFolderId(), "000|+00:00", tenantId);
+
+				if (folder.getFolderPath().startsWith(userRootPath)) {
+					continue;
+				}
+
+				if (allowedSize < (deleteTotalSize += file.getFileSize())) {
+					return false;
+				}
+			}
+		}
+
+		if (folderIdList == null || (folderIdList.length == 1 && folderIdList[0].equals("-1"))) {
+			return true;
+		}
+
+		for (String folderId : folderIdList) {
+			if (folderId == null || folderId.isEmpty() || folderId.equals("-1")) {
+				continue;
+			}
+
+			FolderVO folder = getFolderByFolderId(folderId, "000|+00:00", tenantId);
+			String folderPath = folder.getFolderPath();
+
+			if (folderPath.startsWith(userRootPath)) {
+				continue;
+			}
+
+			if (allowedSize < (deleteTotalSize += ezWebFolderAdminService.getFolderSize(folderPath, tenantId))) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
+	@Override
 	public void deleteSelectedFiles(String[] fileIDList, LoginVO userInfo) throws Exception {
 		String userName1 = userInfo.getDisplayName1();
 		String userName2 = userInfo.getDisplayName2();

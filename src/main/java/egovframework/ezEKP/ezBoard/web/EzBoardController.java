@@ -3366,9 +3366,20 @@ public class EzBoardController extends EgovFileMngUtil{
 			
 			String deptPathOrgan = "";
 			
+			/* 2019-05-13 홍승비 - 원회사의 사내겸직이 존재하면 사내겸직부서ID를 관리자 권한체크에 포함하도록 추가수정 */
+			List<String> addJobList = ezBoardService.getPDOAddJobDeptID(userInfo.getId(), userInfo.getCompanyID(), userInfo.getTenantId());
+			String addJobStr = "";
+			if (addJobList != null && addJobList.size() > 0) {
+				for (int i = 0; i < addJobList.size(); i++) {
+					addJobStr += addJobList.get(i) + ",";
+				}
+			}
+			
 			for (int ch = 0; ch < deptPath.split(",").length; ch++) {
 				if (ch == 0) {
 					deptPathOrgan += deptPath.split(",")[ch].trim();
+				} else if (ch == (deptPath.split(",").length - 3) && !addJobStr.equals("")) { // 원부서ID 뒤에 원회사 사내겸직부서ID 추가
+					deptPathOrgan += "," + addJobStr + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
 				} else {
 					deptPathOrgan += "," + deptPath.split(",")[deptPath.split(",").length - (ch)].trim();
 				}
