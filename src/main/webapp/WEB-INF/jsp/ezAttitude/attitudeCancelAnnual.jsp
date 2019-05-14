@@ -22,6 +22,7 @@
 	    <script type="text/javascript" src="${util.addVer('/js/ezSchedule/lang/ezSchedule.js')}"></script>
 		
 		<script type="text/javascript">
+			var userId = "<c:out value='${userId}'/>";
 			var formHtml = '${formInfo.formHtml}';
 			var typeId = "<c:out value='${attitudeInfo.typeId}'/>";
 			var typeName = "<c:out value='${attitudeInfo.typeName}'/>";
@@ -34,6 +35,11 @@
 			var startDate = "<c:out value='${attitudeInfo.startDate}'/>";
 			var endDate = "<c:out value='${attitudeInfo.endDate}'/>";
 			var font = "<c:out value='${font}'/>"
+			var g_attendant = null;
+			var namelength = 0;
+			var checknametype = "";
+			var schedule_select_attendant_dialogArguments = new Array();
+			
 			
 			window.onload = function () {
 		        if (navigator.userAgent.indexOf('Firefox') != -1) {
@@ -60,22 +66,6 @@
 			function setHtml() {
 				
 				var tempHtml = "";
-				var aprList = null;
-				
-				$.ajax({
-	    			data : "GET",
-	    			dataType : "json",
-	    			url : "/ezAttitude/getAttitudeAprInfo.do",
-	    			data : {
-	    				attitudeId : attitudeId
-    				},
-	    			success : function(result) {
-	    				aprList = result.list;
-	    			},
-	    			error : function() {
-	    				alert("<spring:message code='ezAttitude.t59'/>");
-	    			}
-	    		});
 				
 				tempHtml += "<tr>";
 				tempHtml += "<th rowspan='2' style='border-bottom:0px'>참조자</th>";
@@ -110,14 +100,6 @@
 		            	document.getElementById("receiverlist2").innerHTML += ", " + rtn["name1"][i];
 		            }
 
-		            g_attendant["name"][i] = rtn["name"][i];
-		            g_attendant["id"][i] = rtn["id"][i];
-		            g_attendant["deptname"][i] = rtn["deptname"][i];
-		            g_attendant["name1"][i] = rtn["name1"][i];
-		            g_attendant["name2"][i] = rtn["name2"][i];
-		            g_attendant["deptname2"][i] = rtn["deptname2"][i];
-		            g_attendant["jikwe"][i] = rtn["jikwe"][i];
-		            g_attendant["phone"][i] = rtn["phone"][i];
 				} */
 				
 				//유형명
@@ -129,19 +111,40 @@
 				$("#mobile").html(" " + mobile);
 				$("#bizsub").html(" " + bizSub);
 				
-				if (aprList != null) {
-					aprList.forEach(function(vo, i) {
-						if (index == 0) {
-			            	document.getElementById("receiverlist").innerHTML = list[i].aprMemberName;
-			            	document.getElementById("receiverID").innerHTML = list[i].aprMemberId;
-			            	document.getElementById("receiverlist2").innerHTML = list[i].aprMemberName;
-			            } else {
-			            	document.getElementById("receiverlist").innerHTML += ", " + list[i].aprMemberName;
-			            	document.getElementById("receiverID").innerHTML += ", " + list[i].aprMemberId;
-			            	document.getElementById("receiverlist2").innerHTML += ", " + list[i].aprMemberName;
-			            }
-					});
-	    		}
+				$.ajax({
+	    			data : "GET",
+	    			dataType : "json",
+	    			url : "/ezAttitude/getAttitudeAprInfo.do",
+	    			data : {
+	    				attitudeId : attitudeId
+    				},
+	    			success : function(result) {
+						if (result.list.length > 0) {
+							if (g_attendant == null) {
+ 			                	g_attendant = { "id": new Array(), "name": new Array(), "deptname": new Array(), "name1": new Array(), "name2": new Array(), "deptname2": new Array() };
+							}
+							result.list.forEach(function(vo, i) {
+								if(i > 0) {
+									if (i == 1) {
+						            	document.getElementById("receiverlist").innerHTML = vo.aprMemberName;
+						            	document.getElementById("receiverID").innerHTML = vo.aprMemberId;
+						            	document.getElementById("receiverlist2").innerHTML = vo.aprMemberName;
+						            } else {
+						            	document.getElementById("receiverlist").innerHTML += ", " + vo.aprMemberName;
+						            	document.getElementById("receiverID").innerHTML += ", " + vo.aprMemberId;
+						            	document.getElementById("receiverlist2").innerHTML += ", " + vo.aprMemberName;
+						            }
+						            g_attendant["name"][i - 1] = vo.aprMemberName;
+			    			        g_attendant["id"][i - 1] = vo.aprMemberId;
+								}
+							});
+			    		}
+	    			},
+	    			error : function() {
+	    				alert("<spring:message code='ezAttitude.t59'/>");
+	    			}
+	    		});
+				
 				
 				var showTime = "";
 				switch (dateType) {
@@ -218,11 +221,6 @@
 			function _manage_attendant() {
 			    check_name("attendant");
 			}
-			
-			var g_attendant = null;
-			var namelength = 0;
-			var checknametype = "";
-			var schedule_select_attendant_dialogArguments = new Array();
 			
 			function check_name(type) {
 			    if (type != undefined)
