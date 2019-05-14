@@ -279,7 +279,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			
-			List<Map<String, String>> sharedMailBoxList = ezEmailService.getUserSharedMailboxList(userId, info.getTenantId());
+			List<Map<String, String>> sharedMailBoxList = ezEmailService.getUserSharedMailboxList(userId, true, info.getTenantId());
 			
 			for (int i = 0; i < sharedMailBoxList.size(); i++) {
 				JSONObject shareMailInfo = new JSONObject();
