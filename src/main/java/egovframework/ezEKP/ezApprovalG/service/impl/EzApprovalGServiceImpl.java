@@ -19053,6 +19053,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 					resultXML.append("<DATA9>" + docXML.getElementsByTagName("DOCTYPE").item(k).getTextContent() + "</DATA9>");
 					resultXML.append("<DATA10>" + docXML.getElementsByTagName("SECURITYAPPROVAL").item(k).getTextContent() + "</DATA10>");
 					resultXML.append("<DATA11>" + docXML.getElementsByTagName("EDMSYN").item(k).getTextContent() + "</DATA11>");
+					resultXML.append("<DATA12>" + docXML.getElementsByTagName("WRITERDEPTID").item(k).getTextContent() + "</DATA12>");
 					resultXML.append("<ORGCOMPANYID><![CDATA[" + docXML.getElementsByTagName("COMPANYID").item(k).getTextContent() + "]]></ORGCOMPANYID>");
 				}
 				
@@ -25469,7 +25470,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				Element tableElement = doc.getElementsByTag("table").get(k);
 				String tableStyle = tableElement.attr("style");
 				if (!tableElement.hasAttr("border")) {
-					tableElement.attr("bodrer","1");
+					tableElement.attr("border","1");
 				}
 				
 				if (!tableElement.hasAttr("cellspacing")) {
@@ -25646,11 +25647,11 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
           double pSizeNum = Integer.parseInt(matcher.replaceAll(""));
           if (pSize.toUpperCase().indexOf("PX") > -1)
           {
-              strRtnVal = Math.round(pSizeNum * 0.264583/1000.0) + "mm";
+              strRtnVal = Math.round(pSizeNum * 0.264583) + "mm";
           }
           else if (pSize.toUpperCase().indexOf("PT") > -1)
           {
-              strRtnVal = Math.round(pSizeNum * 0.352777/1000.0) + "mm";
+              strRtnVal = Math.round(pSizeNum * 0.352777) + "mm";
           }
           else if (pSize.toUpperCase().indexOf("MM") > -1)
           {
