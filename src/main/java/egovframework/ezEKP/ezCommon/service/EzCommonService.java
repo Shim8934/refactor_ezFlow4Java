@@ -130,5 +130,7 @@ public interface EzCommonService {
 
 	public void addWebfolderTotalLimit() throws Exception;
 
+	public void addMemoExtensionColumns() throws Exception;
+
 }
 

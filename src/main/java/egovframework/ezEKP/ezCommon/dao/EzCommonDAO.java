@@ -631,4 +631,15 @@ public class EzCommonDAO extends EgovAbstractDAO {
 			}
 		}
 	}
+
+	public void addMemoExtensionColumns() {
+		try {
+			select("EzCommonDAO.checkExtensionColumns");
+		} catch (Exception e) {
+			logger.debug("tbl_memo_config addMemoextensionColumns doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addMemoExtensionColumns");
+		}
+		
+	}
 }

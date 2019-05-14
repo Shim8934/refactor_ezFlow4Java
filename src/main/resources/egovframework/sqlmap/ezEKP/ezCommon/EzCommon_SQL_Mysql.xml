@@ -887,4 +887,25 @@
 		SET
 			TYPE = 'U'
 	</update>
+	
+	<select id="EzCommonDAO.checkExtensionColumns">
+		SELECT
+			B_MEMO_WIDTH
+		FROM
+			TBL_MEMO_CONFIG
+		LIMIT 1
+	</select>
+	
+	<statement id="EzCommonDAO.addMemoExtensionColumns">
+		ALTER TABLE
+			TBL_MEMO_CONFIG
+		ADD (
+			b_memo_left SMALLINT(6) DEFAULT '0',
+			b_memo_top SMALLINT(6) DEFAULT '0',
+			b_memo_width SMALLINT(6) DEFAULT '0',
+			b_memo_height SMALLINT(6) DEFAULT '0',
+			b_memo_status TINYINT(4) DEFAULT '0',
+			memo_id BIGINT(10) DEFAULT '0'
+			)
+	</statement>
 </sqlMap>
