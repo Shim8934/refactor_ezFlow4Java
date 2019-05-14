@@ -533,24 +533,23 @@
                     success : function(result) {
                     	try {
 	                    	if (result.resultCode === "OK") {
-	                    		var unreadCountList = result.unreadCountList;
-	                    		var href, caption;
-	                    		var selectedIndex = window[treeviewStr].selectedIndex();
+	                    		var unreadCountMap = result.unreadCountMap;
+	                    		var href, caption, unreadCount;
 	                    		
-	                    		for (var i = 0; i < unreadCountList.length; i++) {
-	                    			href = window[treeviewStr].getvalue(i + 1, "href");
-	                    			
-	                    			if (href === unreadCountList[i].href) {
+	                    		if (shareId === result.shareId) {
+	                    			for (var i = 0; i < nodeCount; i++) {
+		                    			href = window[treeviewStr].getvalue(i + 1, "href");
 	                    				caption = window[treeviewStr].getvalue(i + 1, "foldername");
+		                    			unreadCount = unreadCountMap[href];
 	                    				
-	                    				if (unreadCountList[i].unreadCount === 0) {
+	                    				if (typeof(unreadCount) === 'undefined' || unreadCount === 0) {
 		        	                    	window[treeviewStr].putcaption(i + 1, caption);
 		        	                    	window[treeviewStr].putstyle(i + 1, "font-weight : ''");
 		        	                    } else {
-		        	                    	window[treeviewStr].putcaption(i + 1, caption + "(" + unreadCountList[i].unreadCount + ")");
+		        	                    	window[treeviewStr].putcaption(i + 1, caption + "(" + unreadCount + ")");
 		        	                    	window[treeviewStr].putstyle(i + 1, "font-weight : bold");
 		        	                    }
-	                    			}
+		                    		}
 	                    		}
 	                    		
                    				try {

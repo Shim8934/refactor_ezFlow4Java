@@ -146,6 +146,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailGeneral.setPreviewHContent((String)obj.get("previewHContent"));
         		mailGeneral.setMailSenderNm((String)obj.get("mailSenderName"));
         		mailGeneral.setPreviewSubTree((String)obj.get("previewSubTree"));
+        		mailGeneral.setTextOption((String)obj.get("textOption"));
         		
         		mailGeneralList.add(mailGeneral);
         	}
@@ -164,6 +165,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setPreviewHContent("50");
 			mailGeneral.setMailSenderNm("");
 			mailGeneral.setPreviewSubTree("N");
+			mailGeneral.setTextOption("HTML");
 			
 			mailGeneralList.add(mailGeneral);
 		}
@@ -192,6 +194,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String mailSenderNameParam = "mailSenderName=" + URLEncoder.encode(mailGeneral.getMailSenderNm(), "UTF-8");
 		String previewSubTreeParam = "previewSubTree=" + URLEncoder.encode(mailGeneral.getPreviewSubTree(), "UTF-8");
 		String usePreviewSubTreeParam = "usePreviewSubTree=" + usePreviewSubTree;
+		String textOptionParam = "textOption=" + URLEncoder.encode(mailGeneral.getTextOption(), "UTF-8");
 		
 		String modeParam = "mode=";
 		if (mode != null && mode.equals("ALL")) {
@@ -200,7 +203,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String inputParams = userIdParam + "&" + listCountParam + "&" + refreshIntervalParam + "&" + keepDeleteLengthParam + "&" + previewModeParam
 				+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
-				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam;
+				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + textOptionParam;
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailGeneral", inputParams);
