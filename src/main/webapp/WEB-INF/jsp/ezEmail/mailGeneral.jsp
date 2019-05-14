@@ -457,7 +457,7 @@
 		  <tr>
 		  	<th><spring:message code="ezEmail.ksa05"/> </th>
 		  	<td>
-		  		<select id="previewMailImage">
+		  		<select id="previewMailImage" style="width:100px;">
 		  			<option value="Y" <c:if test="${previewMailImage == 'Y'}">selected</c:if>><spring:message code="ezEmail.t808"/> </option>
 		  			<option value="N" <c:if test="${previewMailImage == 'N'}">selected</c:if>><spring:message code='ezEmail.t99000009' /></option>
 		  		</select>
