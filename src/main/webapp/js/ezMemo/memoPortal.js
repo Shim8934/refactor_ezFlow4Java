@@ -1293,6 +1293,7 @@ function getMemoDetail(memoId) {
 			detail.css('visibility', 'visible');
 			detailContents.focus();
 			
+			beforeMemo = result.memo.contents;
     	}
     });
 }
@@ -1466,4 +1467,11 @@ function draggableFalse() {
 // memoBoard에서 실행할  함수
 function draggableTrue() {
 	$('#layer-popup').draggable('enable');
+}
+/*
+memoBoard에서 실행할 함수 
+portal 페이지의 beforeMemo 변수에 파라미터로 넘어온 값 세팅
+*/
+function setBeforeMemo(paramBefore) {
+	beforeMemo = paramBefore;
 }

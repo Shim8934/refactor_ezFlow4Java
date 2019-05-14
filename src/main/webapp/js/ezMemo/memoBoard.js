@@ -494,6 +494,8 @@ function getMemoDetail(memoId) {
     		detail.css('visibility', 'visible');
     		detailContents.focus();
     		
+    		beforeMemo = result.memo.contents;
+    		parent.parent.setBeforeMemo(beforeMemo);	// 포탈jsp에 있는 beforeMemo 변수 값 수정, 포탈에서 큰 메모 열었을 때 값 비교 때문
     	}
     });
 }
