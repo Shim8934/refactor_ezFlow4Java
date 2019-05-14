@@ -128,9 +128,13 @@
 
 				if (document.getElementById("approve1").checked == true) {
 					createNodeAndInsertText(xmlpara, objNode, "DATA", "1");
-				} else {
+				} else if (document.getElementById("approve0").checked == true) {
 					createNodeAndInsertText(xmlpara, objNode, "DATA", "0");
+				} else {
+					createNodeAndInsertText(xmlpara, objNode, "DATA", "2");
 				}
+				
+				// 반납절차 flag 넘기기
 
 				var checkSpace2 = document.getElementById("Brd_NM2").value.trim();
 				
@@ -145,6 +149,13 @@
 				createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("hdnfileNM1").value);
 				createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("hdnfileNM2").value);
 
+				// 반납절차 flag 넘기기
+				if (document.getElementById("return1").checked == true) {
+					createNodeAndInsertText(xmlpara, objNode, "DATA", "0");
+				} else {
+					createNodeAndInsertText(xmlpara, objNode, "DATA", "1");
+				}
+				
 				//createNodeAndInsertText(xmlpara, objNode, "DATA", document.getElementById("subOwner1").value);
 				xmlHttp.open("Post", "/ezResource/callAddClsItem.do", false);
 				xmlHttp.send(xmlpara);
@@ -505,6 +516,16 @@
             						<spring:message code="ezResource.t156"/>
             						<input type="radio" name="approve" id="approve0" value="0">
             						<spring:message code="ezResource.t157"/>
+            						<input type="radio" name="approve" id="approve2" value="2">
+            						<spring:message code="ezSchedule.t404"/>
+            					</td>
+        					</tr>
+        					<tr>
+          						<th>반납절차</th>
+          						<td colspan="3" style="width:100%"><input type="radio" name="return" id="return1" value="0" checked>
+            						자동반납&nbsp;
+            						<input type="radio" name="return" id="return2" value="1">
+            						담당확인
             					</td>
         					</tr>
         					<tr>
@@ -518,6 +539,7 @@
            							<span onClick="btnfileup()"><spring:message code="ezPersonal.t20003"/></span>
            						</a>
             				</td>
+            				
             			</tr>
             			<tr>
         					<th><spring:message code="ezPortal.t202"/>2</th>

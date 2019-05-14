@@ -135,9 +135,12 @@
 
 				if (document.getElementById("approve1").checked == true) {
 					createNodeAndInsertText(xmlPara, objNode, "DATA", "1");
-				} else {
+				} else if (document.getElementById("approve0").checked == true) {
 					createNodeAndInsertText(xmlPara, objNode, "DATA", "0");
+				} else {
+					createNodeAndInsertText(xmlPara, objNode, "DATA", "2");
 				}
+				
 
 				if (document.getElementById("Brd_NM2").value.trim() == "") {
 					document.getElementById("Brd_NM2").value = document.getElementById("Brd_NM").value;
@@ -148,6 +151,13 @@
 				// 이미지 정보 추가
 				createNodeAndInsertText(xmlPara, objNode, "DATA", document.getElementById("hdnfileNM1").value);
 				createNodeAndInsertText(xmlPara, objNode, "DATA", document.getElementById("hdnfileNM2").value);
+				
+				// 반납절차 flag 넘기기
+				if (document.getElementById("return1").checked == true) {
+					createNodeAndInsertText(xmlPara, objNode, "DATA", "0");
+				} else {
+					createNodeAndInsertText(xmlPara, objNode, "DATA", "1");
+				}
 				
 				xmlHttp.open("Post", "/ezResource/callModClsItem.do", false);
 				xmlHttp.send(xmlPara)
@@ -472,20 +482,22 @@
         				<tr>
 							<th> <spring:message code="ezResource.t149"/></th>
 							<td colspan="3">
-								<c:if test="${approveFlag eq 1}">
-									<input type="radio" name="approve" id="approve1" value="1"  checked/>
+									<input type="radio" name="approve" id="approve1" value="1"  <c:if test="${approveFlag eq 1}"> checked </c:if> />
 									<spring:message code="ezResource.t156"/>
-									<input type="radio" name="approve" id="approve0" value="0" />
+									<input type="radio" name="approve" id="approve0" value="0" <c:if test="${approveFlag eq 0}"> checked </c:if> />
 									<spring:message code="ezResource.t157"/>
-								</c:if>
-								<c:if test="${approveFlag eq 0}">
-									<input type="radio" name="approve" id="approve1" value="1"/>
-									<spring:message code="ezResource.t156"/>
-									<input type="radio" name="approve" id="approve0" value="0"  checked/>
-									<spring:message code="ezResource.t157"/>
-								</c:if>
+									<input type="radio" name="approve" id="approve2" value="2" <c:if test="${approveFlag eq 2}"> checked </c:if>>
+            						<spring:message code="ezSchedule.t404"/>
 							</td>
 						</tr>
+						<tr>
+        					<th>반납절차</th>
+        					<td colspan="3" style="width:100%"><input type="radio" name="return" id="return1" value="0" <c:if test="${returnFlag eq 0}"> checked </c:if>>
+          					자동반납&nbsp;
+          					<input type="radio" name="return" id="return2" value="1" <c:if test="${returnFlag eq 1}"> checked </c:if>>
+          					담당확인
+          					</td>
+      					</tr>
 						<tr>
         					<th><spring:message code="ezPortal.t202"/>1</th>
           					<td colspan="3" >

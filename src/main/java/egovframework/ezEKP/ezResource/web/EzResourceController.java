@@ -812,6 +812,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strOwnerID = "";
 		String strMakeDate = "";
 		String strApproveFlag = "";
+		String strReturnFlag = "";
 		List<OrganUserVO> ownerListVO;
 		
 		if (req.getParameter("brdID") != null) {
@@ -872,6 +873,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			
 			strMakeDate = resBrd.getMakeDate();
 			strApproveFlag = resBrd.getApproveFlag();
+			strReturnFlag = resBrd.getReturnFlag();
 			
 			List<String> attachList = ezResourceService.getAttachList(brdID, userInfo.getCompanyID(), userInfo.getTenantId());
 
@@ -902,6 +904,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("langSecondary", ezCommonService.getTenantConfig("LangSecondary" + userInfo.getLang(), userInfo.getTenantId()));
 		model.addAttribute("strResID", resID); 
 		model.addAttribute("attachFileNameMaxLength", attachFileNameMaxLength);
+		model.addAttribute("returnFlag", strReturnFlag);
 		
 		return "/ezResource/resModClsItem";
 	}

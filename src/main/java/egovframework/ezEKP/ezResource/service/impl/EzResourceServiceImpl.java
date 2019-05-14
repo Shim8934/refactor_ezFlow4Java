@@ -389,7 +389,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	public void addResData(String classGB, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
-	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID, String realPath, String strAttachList1, String strAttachList2) throws Exception {
+	String brdExplain, String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2,String strBreAccess, int tenantID, String realPath, String strAttachList1, String strAttachList2, String strReturn) throws Exception {
 		logger.debug("addResData Start");
 		
 		Map<String,Object> map = new HashMap<String, Object>();
@@ -416,6 +416,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_Brd_GB", "2");
 		map.put("v_Brd_ID", brdID);
 		map.put("v_Brd_Access", strBreAccess);
+		map.put("v_P_Return", strReturn);
 		
 		Map<String,Object> map2 = new HashMap<String, Object>();
 		logger.debug("classGB="+classGB);
@@ -2204,6 +2205,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         String strAccessFlag = xmlRes.getElementsByTagName("ACCESS_FLAG").item(0).getTextContent().trim();
         String strFirstNode = xmlRes.getElementsByTagName("FIRST_NODE").item(0).getTextContent().trim();
         String strTreeType = xmlRes.getElementsByTagName("TREE_TYPE").item(0).getTextContent().trim();
+        strDeptPath = xmlRes.getElementsByTagName("DEPT_PATH").item(0).getTextContent().trim();
 
         if(xmlRes.getElementsByTagName("BRDLIST").getLength() > 5) {
         	strUserID = xmlRes.getElementById("BRDLIST").getChildNodes().item(5).getTextContent().trim();
@@ -2271,6 +2273,8 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         	returnXML = strTreeStyle.toString();
         }
         
+         String userAdminFlag = getAdminFlag(pComID, strParentID, pUserID, tenantID, pDeptID);
+        
         if(strFirstNode.equals("Y")) {
         	for(int i=0; i<resGetAdmSubClsTree.size(); i++) {
         		if(i == 0) {
@@ -2282,7 +2286,14 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
         	returnXML += "</TREEVIEWDATA>";
         } else {
         	for(int i=0; i<resGetAdmSubClsTree.size(); i++) {
-        		returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
+        		// approveflag = 2이면서 관리자 아니면 값 빼기
+        		if(resGetAdmSubClsTree.get(i).getApproveFlag().equals("2")) {
+        			if(userAdminFlag.equals("Y")) {
+        				returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
+        			}
+        		} else {
+        			returnXML += makeNodesFromADOFlds(commonUtil.getQueryResult(resGetAdmSubClsTree.get(i)), false, langStr);
+        		}
 
         	}
 
@@ -2486,6 +2497,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	    String realPath = "";
 	    String strAttachList1 = "";
 	    String strAttachList2 = "";
+	    String strReturn = "";
 	    
 	   	Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		strClassGB = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
@@ -2501,16 +2513,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strCompanyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
 		strApprove = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
 		strBrdNm2 = xmlRes.getElementsByTagName("DATA").item(12).getTextContent().trim();
-		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
-		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
-		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
+		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
+		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
+		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
 		
-		realPath = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
+		realPath = xmlRes.getElementsByTagName("DATA").item(19).getTextContent().trim();
 		strAttachList1 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
 		strAttachList2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
+		strReturn = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
 		strBreAccess = egovMessageSource.getMessage("ezResource.t58", locale);
 			
-		addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, strBreAccess, tenantID, realPath, strAttachList1, strAttachList2);
+		addResData(strClassGB, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, strBreAccess, tenantID, realPath, strAttachList1, strAttachList2, strReturn);
 
 		return true;
 	}
