@@ -2982,15 +2982,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 					m.put("attendanceRateCondition","1");
 					
 					ezAttitudeDAO.updateAnnualHoliday(m);
-					setAnnualHistory(map);
+					setAnnualHistory(m);
 					
 				} else {
 					int annualHolidayCnt = defaultAnnualHolidayCnt + (int)(workingMonthCnt / 12 - 1) / 2;
 					
 					if (workingMonthCnt > 24) {
 						m.put("holidayCnt", 0);
-						map.put("attendanceRateCondition","3");
-						setAnnualHistory(map);
+						m.put("attendanceRateCondition","3");
+						setAnnualHistory(m);
 						ezAttitudeDAO.updateAnnualHoliday(m);
 					}
 				
