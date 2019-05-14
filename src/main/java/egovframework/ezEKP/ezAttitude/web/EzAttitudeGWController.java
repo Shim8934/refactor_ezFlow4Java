@@ -2329,50 +2329,6 @@ public class EzAttitudeGWController {
 		return result;
 	}
 	
-	
-	/**
-	 * G/W 근태관리 [GET] 연차현황 개별 등록/수정
-	 */
-	@RequestMapping(value = "/rest/ezattitude/users/{userId}/modifyPrsnAnnualPop", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-	public JSONObject modifyPrsnAnnualPop(@PathVariable String userId, HttpServletRequest request) {
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/modifyPrsnAnnualPop] started.");
-		
-		JSONObject result = new JSONObject();
-		
-		try{
-			String serverName = request.getHeader("x-user-host");
-			
-			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
-			
-			HashMap<String, Object> map = new HashMap<String, Object>();
-			map.put("userId", userId);
-			map.put("companyId", request.getParameter("companyId"));
-			map.put("tenantId", info.getTenantId());
-			map.put("offsetMin", request.getParameter("offsetMin"));
-			
-			String primary = info.getPrimary();
-			if (primary.equals("1")) {
-				primary = "";
-			}
-			map.put("primary", primary);
-			
-			AttitudeAnnualVO vo = ezAttitudeService.getAnnualCnt(map);
-			
-			result.put("status", "ok");
-			result.put("code", 0);
-			result.put("data", vo);
-		} catch (Exception e) {
-			e.printStackTrace();
-			result.put("status", "error");
-			result.put("code", 1);
-			result.put("data", "");
-		}
-		
-		LOGGER.debug("G/W EzAttitude [POST /rest/ezattitude/users/" + userId + "/modifyPrsnAnnualPop] ended.");
-		return result;
-	}
-	
-	
 	/**
 	 * G/W 근태관리 [GET] 연차현황 수정내역확인
 	 */
@@ -2890,6 +2846,12 @@ public class EzAttitudeGWController {
 				primary = "";
 			}
 			map.put("primary", primary);
+			
+			String searchStartTime = request.getParameter("startDate") + " 00:00:00";
+			String searchEndTime = request.getParameter("endDate") + " 23:59:59";
+			
+			map.put("searchStartTime", searchStartTime);
+			map.put("searchEndTime", searchEndTime);
 			
 			AttitudeAnnualVO vo = ezAttitudeService.getAnnualCnt(map);
 			

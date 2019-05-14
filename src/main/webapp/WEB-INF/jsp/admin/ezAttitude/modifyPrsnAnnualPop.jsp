@@ -12,13 +12,11 @@
 		<script type="text/javascript" src="${util.addVer('/js/XmlHttpRequest.js')}"></script>		
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>		
 	    <script type="text/javascript">	
-	    	var flagCheck = 'change';
-	    	var companyId = "<c:out value="${vo.companyId}" />";
+	    	var companyId = "<c:out value="${companyId}" />";
 	    	var changeReason = '';
-	    	var totalAnnualCnt = "<c:out value="${vo.totalAnnualCnt}" />";
+	    	var totalAnnualCnt = "<c:out value="${totalAnnualCnt}" />";
 	    	var annualCnt = "";
-	    	var searchYear = "<c:out value="${vo.year}" />";
-	    	var userId = "<c:out value="${vo.userId}" />";
+	    	var userId = "<c:out value="${userId}" />";
 	    
 	    	$(document).ready(function(){
 		    	$("input:text[name=totalAnnualCnt]").on("keyup", function() {
@@ -37,10 +35,6 @@
 		    	
 		    	$("#totalAnnualCnt").val(totalAnnualCnt);
    			});
-	    	
-	    	function setFlagCheck(){
-	    		flagCheck = $("input:radio[name=flagCheck]:checked").val();
-		    }
 	    	
 	    	function setBancha() {
 	    		if($("input:checkbox[id='bancha']").is(":checked")) {
@@ -80,8 +74,7 @@
 	   					changeReason : changeReason,
 	   					companyId : companyId,
 	   					annualCnt : annualCnt,
-	   					userId : userId,
-	   					flagCheck : flagCheck
+	   					userId : userId
 	   				},
 					success : function(resultStatus) {
 	            		if (resultStatus == "success") {
@@ -112,19 +105,19 @@
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t10' /></th>
 	            <td>
-	            	${vo.userName}
+	            	${userName}
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t11' /></th>
 	            <td>
-	            	${vo.userTitle}
+	            	${userTitle}
 	            </td>
 	        </tr>
 	        <tr>
 	            <th style="width:200px; text-align:center"><spring:message code='ezAttitude.t9' /></th>
 	            <td>
-	            	${vo.userDeptName}
+	            	${userDeptName}
 	            </td>
 	        </tr>
 	        <tr>

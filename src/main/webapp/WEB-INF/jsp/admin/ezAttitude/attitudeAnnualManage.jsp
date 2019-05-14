@@ -107,7 +107,10 @@
 	    		$(document).on('click', '.mainlist .totalAnnualCnt', function(){
 	    			var userId = $(this).closest("tr").attr("userid");
 	    			var userName = $(this).closest("tr").children("td:eq(1)").text();
-	    			modifyPrsnAnnualPop(userId , userName);
+	    			var userTitle = $(this).closest("tr").children("td:eq(2)").text();
+	    			var userDeptName = $(this).closest("tr").children("td:eq(3)").text();
+	    			var totalAnnualCnt = $(this).closest("tr").children("td:eq(5)").text();
+	    			modifyPrsnAnnualPop(userId , userName, userTitle, userDeptName, totalAnnualCnt);
 	    		})
 	    		//입사일 클릭
 	    		$(document).on('click', '.mainlist .joinDate', function(){
@@ -335,8 +338,8 @@
 			} */
 	    	
 			//로우의 총 연차수 링크 클릭 시
-	    	function modifyPrsnAnnualPop(userId, userName) {
-	        	var url = "/admin/ezAttitude/modifyPrsnAnnualPop.do?userName=" + userName + "&userId=" + userId + "&companyId=" + encodeURIComponent($("#ListCompany").val());
+	    	function modifyPrsnAnnualPop(userId , userName, userTitle, userDeptName, totalAnnualCnt) {
+	        	var url = "/admin/ezAttitude/modifyPrsnAnnualPop.do?userName=" + userName + "&userId=" + userId + "&userTitle=" + userTitle +  "&userDeptName=" + userDeptName +  "&totalAnnualCnt=" + totalAnnualCnt + "&companyId=" + encodeURIComponent($("#ListCompany").val());
 				window.open(url, "modifyPrsnAnnualPop", GetOpenWindowfeature(500, 274));
 	        }
 	    	
