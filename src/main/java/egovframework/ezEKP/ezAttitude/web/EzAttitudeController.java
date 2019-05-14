@@ -4486,7 +4486,6 @@ public class EzAttitudeController {
 		LOGGER.debug("getAnnaulCntInfo started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
-		String offsetMin = commonUtil.getMinuteUTC(userInfo.getOffset());
 		String userId = userInfo.getId();
 		String companyId = userInfo.getCompanyID();
 		
@@ -4501,9 +4500,9 @@ public class EzAttitudeController {
 			
 			HttpEntity<?> entity = new HttpEntity<>(headers);
 			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
-					.queryParam("companyId", companyId)
-					.queryParam("userId", userId)
-					.queryParam("offsetMin", offsetMin);
+					.queryParam("startDate", request.getParameter("startDate"))
+					.queryParam("endDate", request.getParameter("endDate"))
+					.queryParam("companyId", companyId);
 			
 			RestTemplate rest = new RestTemplate();
 			
@@ -4656,6 +4655,77 @@ public class EzAttitudeController {
 		}
 		LOGGER.debug("getDisabledDays ended");
 		return data;
+	}
+	
+	@RequestMapping(value = "/ezAttitude/getAnnualreg.do")
+	@ResponseBody
+	public JSONObject getAnnualreg(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("attitudeUserAnnual started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		
+		String userId = userInfo.getId();
+		String companyId = userInfo.getCompanyID();
+		
+		JSONObject resultObject = new JSONObject();
+		if (userId != null) {
+			
+			String gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+			String url = gwServerUrl + "/rest/ezattitude/companies/" + companyId + "/annualreg";
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			HttpEntity<?> entity = new HttpEntity<>(headers);
+			UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("userId", userId);
+			
+			RestTemplate rest = new RestTemplate();
+			
+			ResponseEntity<String> result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			JSONParser jp = new JSONParser();
+			JSONObject resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			String status = resultBody.get("status").toString();
+			
+			JSONObject dataObject = new JSONObject();
+			
+			if (status.equals("ok")) {
+				dataObject = (JSONObject) resultBody.get("data");
+				resultObject.put("annualconfig", dataObject);
+			}
+			
+			gwServerUrl = config.getProperty("config.attitudeGwServerURL");
+			url = gwServerUrl + "/rest/ezattitude/users/" + userId + "/joindate";
+			
+			headers = new HttpHeaders();
+			headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+			headers.set("x-user-host", request.getServerName());
+			
+			entity = new HttpEntity<>(headers);
+			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("companyId", companyId);
+			
+			rest = new RestTemplate();
+			
+			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.GET, entity, String.class);
+			
+			jp = new JSONParser();
+			resultBody = (JSONObject) jp.parse(result.getBody());
+			
+			status = resultBody.get("status").toString();
+			
+			if (status.equals("ok")) {
+				String joinDate = resultBody.get("data").toString();
+				resultObject.put("joinDate", joinDate);
+			}
+		}
+		
+		LOGGER.debug("getAnnualreg ended.");
+
+		return resultObject;
 	}
 
 }

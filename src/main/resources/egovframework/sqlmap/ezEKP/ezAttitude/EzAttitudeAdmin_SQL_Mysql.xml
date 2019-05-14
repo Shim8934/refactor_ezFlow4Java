@@ -1739,34 +1739,34 @@
 					 A.PHYSICALDELIVERYOFFICENAME = B.COMPANY_ID 
 					AND
 					 A.CN = B.USER_ID)
--				LEFT OUTER JOIN 
--					TBL_ATTITUDE C
--				ON
--					(A.TENANT_ID = C.TENANT_ID 
--					AND 
--					 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
--					AND
--					 A.CN = C.WRITER_ID
--					AND 
--					 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
--					AND 
--				 	 C.MODAPPL <> '5'
--					AND 
--					 (
--						   (
--							date_add(C.START_DATE, INTERVAL #offsetMin# minute) >= #searchStartTime#
--							AND date_add(C.START_DATE, INTERVAL #offsetMin# minute) <= #searchEndTime#
--							)
--						OR (
--							date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #searchStartTime#
--							AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) < #searchEndTime#
--							)
--						OR (
--							date_add(C.START_DATE, INTERVAL #offsetMin# minute) < #searchStartTime#
--							AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #searchEndTime#
--							)
--					  )
--					 )
+ 				LEFT OUTER JOIN 
+ 					TBL_ATTITUDE C
+ 				ON
+ 					(A.TENANT_ID = C.TENANT_ID 
+ 					AND 
+ 					 A.PHYSICALDELIVERYOFFICENAME = C.COMPANY_ID
+ 					AND
+ 					 A.CN = C.WRITER_ID
+ 					AND 
+ 					 (C.TYPE_ID = 'A11' OR C.TYPE_ID = 'A12' OR C.TYPE_ID = 'A13')
+ 					AND 
+ 				 	 C.MODAPPL <> '5'
+ 					AND 
+ 					 (
+ 						   (
+ 							date_add(C.START_DATE, INTERVAL #offsetMin# minute) >= #searchStartTime#
+ 							AND date_add(C.START_DATE, INTERVAL #offsetMin# minute) <= #searchEndTime#
+ 							)
+ 						OR (
+ 							date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #searchStartTime#
+ 							AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) < #searchEndTime#
+ 							)
+ 						OR (
+ 							date_add(C.START_DATE, INTERVAL #offsetMin# minute) < #searchStartTime#
+ 							AND date_add(C.END_DATE, INTERVAL #offsetMin# minute) >= #searchEndTime#
+ 							)
+ 					  )
+ 					 )
 				WHERE
 					A.TENANT_ID = #tenantId#
 				AND 
