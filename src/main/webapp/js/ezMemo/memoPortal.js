@@ -1460,14 +1460,16 @@ function setDetailStatus(memoId) {
 	});
 }
 
-// memoBoard에서 실행할  함수
+// 메모 레이어의 드래그 기능 제거, memoBoard에서도 사용
 function draggableFalse() {
 	$('#layer-popup').draggable('disable');
 }
-// memoBoard에서 실행할  함수
+
+// 메모 레이어의 드래그 기능 살림, memoBoard에서도 사용
 function draggableTrue() {
 	$('#layer-popup').draggable('enable');
 }
+
 /*
 memoBoard에서 실행할 함수 
 portal 페이지의 beforeMemo 변수에 파라미터로 넘어온 값 세팅
