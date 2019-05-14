@@ -603,7 +603,7 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			JSONParser jsonParser = new JSONParser();
 			JSONObject requestObject = (JSONObject) jsonParser.parse(bodyData);
 			JSONArray requestMailboxList = (JSONArray) requestObject.get("mailboxList");
-			JSONArray unreadCountList = new JSONArray();
+			JSONObject unreadCountMap = new JSONObject();
 			
 			List<String> userIdAndPassword = commonUtil.getUserIdAndPassword(loginCookie);
 			String password  = userIdAndPassword.get(1);
@@ -613,9 +613,10 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			String userAccount = userInfo.getId() + "@" + domainName;
 			
 			String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
-
+			String shareId = null;
+			
 			if (useSharedMailbox.equals("YES")) {
-				String shareId = (String) requestObject.get("shareId");
+				shareId = (String) requestObject.get("shareId");
 				
 				if (shareId != null) {
 					logger.debug("shareId=" + shareId);
@@ -636,19 +637,13 @@ public class EzEmailMenuController extends EgovFileMngUtil {
 			ia = IMAPAccess.getInstance(config.getProperty("config.MailServerAddress"), config.getProperty("config.IMAPPort"),
 					userAccount, password, egovMessageSource, locale, ezEmailUtil);
 			
-			JSONObject mailboxObject = null;
-			
 			for (int i = 0; i < requestMailboxList.size(); i++) {
 				String mailboxName = (String) requestMailboxList.get(i);
-				mailboxObject = new JSONObject();
-				
-				mailboxObject.put("href", mailboxName);
-				mailboxObject.put("unreadCount", ia.getUnreadCount(mailboxName));
-				
-				unreadCountList.add(mailboxObject);
+				unreadCountMap.put(mailboxName, ia.getUnreadCount(mailboxName));
 			}
 			
-			resultObject.put("unreadCountList", unreadCountList);
+			resultObject.put("shareId", shareId == null ? "" : shareId);
+			resultObject.put("unreadCountMap", unreadCountMap);
 		} catch (Exception e) {
 			resultCode = e.getMessage();
 			e.printStackTrace();

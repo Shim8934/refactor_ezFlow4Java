@@ -43,7 +43,6 @@
 	                	$('#previewSubTreeSlb').val("N").attr("selected", "selected");
 	                }
                 }
-
 		    }
 
 		    function detailbox_after()
@@ -111,6 +110,7 @@
 				var xmlHTTP = createXMLHttpRequest();
 				var url = "/ezEmail/mailGeneralSave.do?MODE=ALL" ;
 			    var previewSubTreeSlb = $("#previewSubTreeSlb option:selected").val();
+			    var textOptionVal = $("#textOptionSlb option:selected").val();
 				var sendStr = "<DATA><LISTCOUNT>" + listcount.value + "</LISTCOUNT><REFRESHINTERVAL>" + refreshinterval.value + "</REFRESHINTERVAL>"+
 				                "<KEEPDELETELENGTH>" + document.getElementById("AutoSaveTime").value + "</KEEPDELETELENGTH>"+
 				                "<PREVIEWMODE>" + document.getElementById("PreviewMode").value + "</PREVIEWMODE>"+
@@ -118,7 +118,8 @@
 				                "<PREVIEWWCONTENT>" + document.getElementById("WPreUser").value + "</PREVIEWWCONTENT>" +
 				                "<PREVIEWHLIST>" + document.getElementById("HListUser").value + "</PREVIEWHLIST>" +
 				                "<PREVIEWHCONTENT>" + document.getElementById("HPreUser").value + "</PREVIEWHCONTENT>" +
-				                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>";
+				                "<MAILSENDERNM>" + MakeXMLString(ExtName) + "</MAILSENDERNM>" +
+				                "<TEXTOPTION>" + textOptionVal + "</TEXTOPTION>";
 				
                 if (usePreviewSubTree == "YES") {
                 	sendStr +=  "<PREVIEWSUBTREE>" + previewSubTreeSlb + "</PREVIEWSUBTREE>";
@@ -445,13 +446,22 @@
 			  <tr>
 			  	<th><spring:message code="ezEmail.kyj18"/> </th>
 			  	<td>
-			  		<select id="previewSubTreeSlb">
+			  		<select id="previewSubTreeSlb" style="width:100px;">
 			  			<option value="Y"><spring:message code="ezEmail.t808"/> </option>
 			  			<option value="N"><spring:message code='ezEmail.t99000009' /></option>
 			  		</select>
 			  	</td>
 			  </tr>
 		  </c:if>
+		  <tr>
+		      <th><spring:message code="ezEmail.lhm80"/></th>
+		      <td>
+		          <select id="textOptionSlb" style="width:100px;">
+		              <option value="HTML">HTML</option>
+		              <option value="PLAIN" <c:if test="${textOption eq 'PLAIN'}">selected</c:if>>Plain Text</option>
+		          </select>
+		      </td>
+		  </tr>
 		</table>
 		<div align="center" style="width:680px;">
 			<div class="btnpositionJsp">

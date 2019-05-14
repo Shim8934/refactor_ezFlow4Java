@@ -1780,14 +1780,32 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR&orgCompanyID="+orgCompanyID);
+		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=" + getDocMode() + "&orgCompanyID=" + orgCompanyID);
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
 		    }
-		    
-		    function TotalSave_onclick_Complete() {
-		        DivPopUpHidden();
+		    function getDocMode() {
+		    	var rtnVal = "APR";
+		    	try {
+		    		$.ajax({
+		     			type : "POST",
+		     			dataType : "text",
+		     			async : false,
+		     			url : "/ezApprovalG/getLineMode.do",
+		     			data : {
+		     					docID : pDocID,
+		     					orgCompanyID : orgCompanyID
+		     					},
+		     			success: function(result) {
+		     				rtnVal = result;
+		     			}
+		            });
+		    	} catch (e) {
+		    		alert("getDocMode() :: " + e.description);
+		    	}
+		    	
+		    	return rtnVal;
 		    }
 		    
 		    function getCurDocNumber() {
