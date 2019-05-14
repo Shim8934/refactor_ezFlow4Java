@@ -37,7 +37,16 @@
 	</head>
 	<body class="mainbody">
 		<h1><spring:message code='ezEmail.ksa05' /></h1>
-		
+		<div>
+			<span><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
+			    <select id="ListCompany" style="height:29px" onChange="companyChange(this);">
+		        	<c:forEach var="item" items="${list}">
+		        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+			    </select>
+		    </span>
+		</div>
+		<br/>
 		<div style="width:680px">
 			<span class="txt">▒ <spring:message code='ezEmail.ksa06'/></span><br><br>
 			<table class="content" style="width:100%;">
@@ -81,7 +90,16 @@
 		
 	</body>
 	<script>
+		var companyID = "${companyId}";
+			
 		window.onload = function() {
+			getData();
+		}
+		
+		// 회사 변경
+		function companyChange() {
+			companyID = document.getElementById("ListCompany").value;
+			
 			getData();
 		}
 		
@@ -91,6 +109,7 @@
 				type : "post",
 				url : "/admin/ezEmail/mailCopyrightData.do",
 				dataType : "json",
+				data : {"companyId" : companyID},
 				success : function(data) {
 					var copyrightText = data.copyrightText;
 					var useCopyright = data.useCopyright;
@@ -119,7 +138,8 @@
 				url :" /admin/ezEmail/mailCopyrightSave.do",
 				data : {
 					"copyrightText" : copyrightText, 
-					"useCopyright" : useCopyright
+					"useCopyright" : useCopyright, 
+					"companyId" : companyID
 				},
 				success : function(data) {
 					if (data === "OK") {

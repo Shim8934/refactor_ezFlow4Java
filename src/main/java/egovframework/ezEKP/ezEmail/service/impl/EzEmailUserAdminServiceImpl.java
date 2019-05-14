@@ -588,10 +588,10 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 	}
 	
 	@Override
-	public String getCopyrightText(int tenantId) throws Exception {
+	public String getCopyrightText(int tenantId, String companyId) throws Exception {
 		logger.debug("getCopyrightText started. tenantId=" + tenantId);
 
-		String inputParams = "tenantId=" + tenantId;
+		String inputParams = "tenantId=" + tenantId + "&companyId=" + companyId;
 		logger.debug("inputParams=" + inputParams);
 
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/getCopyright";
@@ -626,11 +626,11 @@ public class EzEmailUserAdminServiceImpl implements EzEmailUserAdminService {
 	}
 	
 	@Override
-	public int saveMailCopyright(String copyrightText, String useCopyright, int tenantId) throws Exception {
-		logger.debug("saveMailCopyright started. useCopyright=" + useCopyright + ",tenantId=" + tenantId);
+	public int saveMailCopyright(String copyrightText, String useCopyright, int tenantId, String companyId) throws Exception {
+		logger.debug("saveMailCopyright started. useCopyright=" + useCopyright + ",tenantId=" + tenantId + ", companyId=" + companyId);
 
 		String inputParams = "tenantId=" + tenantId + "&copyrightText=" + URLEncoder.encode(copyrightText, "UTF-8") 
-				+ "&useCopyright=" + useCopyright;
+				+ "&useCopyright=" + useCopyright + "&companyId=" + companyId;
 		logger.debug("inputParams=" + inputParams);
 
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaAccess/updateCopyright";

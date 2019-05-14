@@ -139,8 +139,8 @@ public interface EzEmailUserAdminService {
 	
 	public List<String> getUserDistributionList (String userEmailAddress) throws Exception;
 	
-	public int saveMailCopyright(String copyrightText, String useCopyright, int tenantId) throws Exception;
+	public int saveMailCopyright(String copyrightText, String useCopyright, int tenantId, String companyId) throws Exception;
 	
-	public String getCopyrightText(int tenantId) throws Exception;
+	public String getCopyrightText(int tenantId, String companyId) throws Exception;
 
 }

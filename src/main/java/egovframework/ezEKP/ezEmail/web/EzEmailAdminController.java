@@ -2326,6 +2326,23 @@ public class EzEmailAdminController {
 			return "cmm/error/adminDenied";
 		}
 		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+
+		List<OrganDeptVO> list = ezOrganAdminService.getCompanyList(userInfo.getPrimary(), userInfo.getTenantId());
+		List<OrganDeptVO> resultList = new ArrayList<OrganDeptVO>();
+
+		for (int i = 0; i < list.size(); i++) {
+			OrganDeptVO vo = list.get(i);
+
+			if (userInfo.getRollInfo().contains("c=1") || userInfo.getRollInfo().contains("k=1") && vo.getCn().equals(userInfo.getCompanyID())) {
+				resultList.add(vo);
+			}
+		}
+		
+		model.addAttribute("companyId", userInfo.getCompanyID());
+		model.addAttribute("userInfo", userInfo);
+		model.addAttribute("list", resultList);
+		
 		logger.debug("mailCopyright ended.");
 		return "admin/ezEmail/mailCopyright";
 	}
@@ -2339,7 +2356,11 @@ public class EzEmailAdminController {
 		logger.debug("mailCopyrightData started.");
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
-		String useCopyright =  ezCommonService.getTenantConfig("useCopyright", userInfo.getTenantId()); // 수취인안내설정 사용여부
+		
+		String companyId = request.getParameter("companyId");
+		logger.debug("companyId=" + companyId);
+		
+		String useCopyright =  ezCommonService.getCompanyConfig(userInfo.getTenantId(), companyId, "useCopyright"); // 수취인안내설정 사용여부
 		
 		if (useCopyright.equals("")) {
 			useCopyright = "NO";
@@ -2347,7 +2368,7 @@ public class EzEmailAdminController {
 		
 		logger.debug("useCopyright=" + useCopyright);
 		
-		String copyrightText = ezEmailUserAdminService.getCopyrightText(userInfo.getTenantId());
+		String copyrightText = ezEmailUserAdminService.getCopyrightText(userInfo.getTenantId(), companyId);
 		
 		if (copyrightText == null) {
 			copyrightText = "";
@@ -2374,9 +2395,10 @@ public class EzEmailAdminController {
 		
 		String copyrightText = request.getParameter("copyrightText");
 		String useCopyright = request.getParameter("useCopyright");
+		String companyId = request.getParameter("companyId");
 		String returnValue = "ERROR";
 		
-		int rc = ezEmailUserAdminService.saveMailCopyright(copyrightText, useCopyright, userInfo.getTenantId());
+		int rc = ezEmailUserAdminService.saveMailCopyright(copyrightText, useCopyright, userInfo.getTenantId(), companyId);
 		
 		if (rc == 0) {
 			returnValue = "OK";
