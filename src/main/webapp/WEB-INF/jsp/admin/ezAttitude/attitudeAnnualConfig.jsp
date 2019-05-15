@@ -29,6 +29,10 @@
 	    <script type="text/javascript">
 	    	var adminCompany = "${adminCompany}";
 	    	var initialDate = "";
+		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
+		    var monthStr = monthMsg.split(";");		    
+		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
+		    var dayStr = dayMsg.split(";");
 	    
 	        $(document).ready(function() {
 		        if (document.getElementById("ListCompany").length == 0) {
@@ -45,6 +49,47 @@
 		            company_change();
 		        }
 		        
+	    		$(function () {
+			        $("#Sdatepicker").datepicker({
+			            changeMonth: true,
+			            changeYear: true,
+			            autoSize: true,
+			            showOn: "both",
+			            buttonImage: "/images/ImgIcon/calendar-month.png",
+			            buttonImageOnly: true
+			        });
+			        var NowDate;
+			        if (initialDate != "") {
+			        	/* 2018-12-28 김민성 - 달력 날짜 가져오는 부분 수정 */
+			            NowDate = new Date(initialDate.substring(0, 4), initialDate.substring(5, 7)-1, initialDate.substring(8, 10));
+			        }
+			        else
+			            NowDate = new Date();
+			        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
+			        $("#Sdatepicker").datepicker('setDate', NowDate);
+			    });
+			    
+			    $(function () {
+			        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
+			        	closeText: "<spring:message code='main.t3' />",
+			            prevText: "<spring:message code='main.t0604' />",
+			            nextText: "<spring:message code='main.t0605' />",
+						currentText: "<spring:message code='main.t0606' />",
+			            monthNames: monthStr,
+			            monthNamesShort: monthStr,
+			            dayNames: dayStr,
+			            dayNamesShort: dayStr,
+			            dayNamesMin: dayStr,
+			            weekHeader: 'Wk',
+			            dateFormat: 'yy-mm-dd',
+			            firstDay: 0,
+			            isRTL: false,
+			            duration: 200,
+			            showAnim: 'show',
+			            showMonthAfterYear: true
+			        };
+			        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
+			    });
 	        });
 	        
 	        function company_change() {
@@ -54,10 +99,14 @@
 	            	dataType : "json",
 	            	data : {companyId : encodeURIComponent($("#ListCompany").val())},
 	            	success : function(result) {
-		            		attitudeConfigSet(result);
+		            	attitudeConfigSet(result);
 	            	},
 	            	error : function() {
 	            		alert("해당 회사의 설정 데이터가 없습니다.");
+	            		$("#Sdatepicker").datepicker('setDate', new Date());
+	            		$('input[name=use_annual_auto_gnrt]').eq(1).prop('checked', true);
+	            		$('input[name=use_minus_annual]').eq(1).prop('checked', true);
+	            		type_change('0');
 	            	}
 	            });
 	        }
@@ -76,7 +125,9 @@
 		        	$("#uat").css('display', '');
 		        	$("#ror").css('display', '');
 	        	} else if(val == 2) {
-		        	$("#sdp").css('display', '');
+	        		if($('input[name=use_annual_auto_gnrt]').eq(0).prop('checked') == true) {
+			        	$("#sdp").css('display', '');
+	        		}
 	        	} else {
 		        	$("#sdp").css('display', 'none');
 	        	}
@@ -117,52 +168,7 @@
         		
         		//회계년도 기산일
         		initialDate = result.initialDate;
-        		$(function () {
-    		        $("#Sdatepicker").datepicker({
-    		            changeMonth: true,
-    		            changeYear: true,
-    		            autoSize: true,
-    		            showOn: "both",
-    		            buttonImage: "/images/ImgIcon/calendar-month.png",
-    		            buttonImageOnly: true
-    		        });
-    		        var NowDate;
-    		        if (initialDate != "") {
-    		        	/* 2018-12-28 김민성 - 달력 날짜 가져오는 부분 수정 */
-    		            NowDate = new Date(initialDate.substring(0, 4), initialDate.substring(5, 7)-1, initialDate.substring(8, 10));
-    		        }
-    		        else
-    		            NowDate = new Date();
-    		        $("#Sdatepicker").datepicker("option", "dateFormat", "yy-mm-dd");
-    		        $("#Sdatepicker").datepicker('setDate', NowDate);
-    		    });
-    		    
-    		    var monthMsg = "<spring:message code='ezSchedule.t110' />";
-    		    var monthStr = monthMsg.split(";");		    
-    		    var dayMsg = "<spring:message code='ezSchedule.t108' />";
-    		    var dayStr = dayMsg.split(";");
-    		    
-    		    $(function () {
-    		        $.datepicker.regional["<spring:message code='main.t0619' />"] = {
-    		        	closeText: "<spring:message code='main.t3' />",
-    		            prevText: "<spring:message code='main.t0604' />",
-    		            nextText: "<spring:message code='main.t0605' />",
-    					currentText: "<spring:message code='main.t0606' />",
-    		            monthNames: monthStr,
-    		            monthNamesShort: monthStr,
-    		            dayNames: dayStr,
-    		            dayNamesShort: dayStr,
-    		            dayNamesMin: dayStr,
-    		            weekHeader: 'Wk',
-    		            dateFormat: 'yy-mm-dd',
-    		            firstDay: 0,
-    		            isRTL: false,
-    		            duration: 200,
-    		            showAnim: 'show',
-    		            showMonthAfterYear: true
-    		        };
-    		        $.datepicker.setDefaults($.datepicker.regional["<spring:message code='main.t0619' />"]);
-    		    });
+        		$("#Sdatepicker").datepicker('setDate', initialDate);
         		
         		//잔여연차 음수허용
         		var useMinusAnnual = result.useMinusAnnual;
