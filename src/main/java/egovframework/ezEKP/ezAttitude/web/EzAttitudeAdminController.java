@@ -85,6 +85,9 @@ public class EzAttitudeAdminController {
 
 	@Autowired
 	private Properties config;
+	
+	@Autowired
+	private EzAttitudeScheduler ezAttitudeScheduler;
 
 	@Resource(name = "crypto")
 	private EgovFileScrty egovFileScrty;
@@ -2158,6 +2161,18 @@ public class EzAttitudeAdminController {
 		LOGGER.debug("attitudeAnnualManage ended.");
 		
 		return "/admin/ezAttitude/attitudeAnnualManage";
+	}
+		
+	@RequestMapping(value = "/admin/ezAttitude/directScheduler.do", produces = "application/json;charset=utf-8")
+	@ResponseBody
+	public String directScheduler(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, Model model) throws Exception{
+		LOGGER.debug("directScheduler started.");
+		
+		ezAttitudeScheduler.autoSetAnnualHoliday();
+		
+		LOGGER.debug("directScheduler ended.");
+
+		return "success";
 	}
 	
 	/**

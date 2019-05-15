@@ -360,6 +360,23 @@
 	        	var url = "/admin/ezAttitude/setJoinDatePop.do?userId=" + userId + "&mode=" + mode + "&date=" + date + "&companyId=" + encodeURIComponent($("#ListCompany").val());
 	        	GetOpenWindow2(url, "setJoinDatePop", 210, 370);
 	        }
+			
+			//QC 끝나고 삭제 EzAttitideScheduler 수동 동작
+			function directScheduler(){
+				$.ajax({
+	    			data : "GET",
+	    			dataType : "json",
+	    			url : "/admin/ezAttitude/directScheduler.do",
+	    			data : {},
+	    			success : function(result){
+						location.reload();
+	    			},
+	    			error : function() {
+	    				alert("<spring:message code='ezAttitude.t59'/>");
+	    			}
+	    		});
+			}
+			
 	    </script>
 	</head>
 	<body class="mainbody">
@@ -393,6 +410,7 @@
 						<a class="imgbtn"><span onclick="exportExcel();"><spring:message code='ezAttitude.t145' /></span></a>
 						<%-- <a class="imgbtn"><span onclick="annualExcelUploadPop();"><spring:message code='ezAttitude.t235' /></span></a> --%>
 						<a class="imgbtn"><span onclick="modifyAllAnnualPop();"><spring:message code='ezAttitude.t236' /></span></a>
+						<a class="imgbtn"><span onclick="directScheduler();">스케줄러 동작</span></a>
 					</td>
 				</tr>
 			</tbody>
