@@ -33,6 +33,11 @@
 	      	var useMailBoxBackUp = "${useMailBoxBackUp}";
 	      	var useMailReceiveScreen = "${useMailReceiveScreen}";
 	      	var operatorMailAddress = "${operatorMailAddress}";
+	      	var pRefreshinterval = "${refreshInterval}";
+	      	var pSaveInterval = 0;
+		    var nextMailListRefreshTime = 0;
+		    var refreshIntervalTimerId = 0;
+		    var refreshTimeoutTimerId = 0;
 	      	var shareId = "";
 	      	var deletePermission = "";
 	      	var sendPermission = "";
@@ -75,7 +80,100 @@
 	            Function_Flag(funcCode);
 	            LoadAddressTree(true);
 	            previewSubTreeCall();
+	            
+	            if (pRefreshinterval != "") {
+		            console.log('Setting Mail List Refresh Timer...');
+		            
+	                pSaveInterval = parseInt(pRefreshinterval) * 1000;		            
+		            setMailListRefreshTimer();
+		            
+	                // 브라우저가 Page Visibility API를 지원할 때의 처리
+	                if ('hidden' in document) {
+	                    console.log('adding visibilitychange event handler');
+
+	                    document.addEventListener('visibilitychange', onVisibilityChange);
+	                    recordNextMailListRefreshTime();
+	                }		            
+		        }
 	        }
+	        
+	        function getCurrentTime() {
+		        return new Date().getTime();		        
+		    }
+		    
+		    function setMailListRefreshTimer() {
+	            if (refreshIntervalTimerId != 0) {
+	                clearInterval(refreshIntervalTimerId);
+	                refreshIntervalTimerId = 0;
+	            }
+	            
+		        if (pSaveInterval != 0) {
+		        	refreshIntervalTimerId = setInterval(function() {
+
+		        		getUnreadCountAll();
+		                recordNextMailListRefreshTime();
+
+		            }, pSaveInterval);
+		        }
+		    }
+		    
+		    function recordNextMailListRefreshTime() {
+		        nextMailListRefreshTime = getCurrentTime() + pSaveInterval;
+		        
+		        console.log('currentTime=' + new Date() + ',Interval=' + pSaveInterval);
+		    }
+		    
+		    function onVisibilityChange() {
+                var remainingTime = nextMailListRefreshTime - getCurrentTime();
+              
+                console.log(remainingTime/1000);
+		        // 메일 목록 페이지 상태가 보임으로 변경될 때의 처리
+ 		        if (!document.hidden) { 		            
+ 		           console.log('remainingTime=' + remainingTime + ',showing...');
+ 		           
+ 		            // 다음 번 갱신 시간이 이미 지났으면 즉시 목록 갱신을 수행하고 갱신 타이머를 설정한다.
+ 		            if (remainingTime <= 0) {
+ 		                console.log('refresh time already passed. Refresing...');
+ 		                
+	                	getUnreadCountAll();
+ 		                
+                        // 다음 자동 갱신 시간을 기록한다.
+                        recordNextMailListRefreshTime();
+ 		                
+ 		                setMailListRefreshTimer();
+ 		            // 다음 번 갱신 시간이 아직 남아 있으면 해당 시간에 갱신이 되도록 타이머를 등록한다.
+ 		            } else {
+
+ 		            	console.log('refresh time not yet passed. Registering Timer...');
+ 		            	
+ 		            	refreshTimeoutTimerId = setTimeout(function() {
+ 		            		
+ 		            		getUnreadCountAll();
+ 		            		
+ 		            		// 다음 자동 갱신 시간을 기록한다.
+ 		            		recordNextMailListRefreshTime();
+ 		            		
+ 		            		// 다시 주기적으로 갱신 타이머가 동작하도록 등록한다.
+ 		            		setMailListRefreshTimer();
+ 		            	}, remainingTime);
+
+ 		            }
+ 	            // 메일 목록 페이지 상태가 숨김으로 변경될 때의 처리     
+		        } else {
+		        	console.log('remainingTime=' + remainingTime + ',hiding...');
+		            
+		            // 목록 갱신 타이머를 제거한다.
+		            if (refreshIntervalTimerId != 0) {
+		                clearInterval(refreshIntervalTimerId);
+		                refreshIntervalTimerId = 0;
+		            }
+		            
+		            if (refreshTimeoutTimerId != 0) {
+		                clearTimeout(refreshTimeoutTimerId);
+		                refreshTimeoutTimerId = 0;
+		            }
+		        }
+		    }
 	        
 	        /**
 	        	메일함 ellipsis 추가.
@@ -297,7 +395,7 @@
 	        function selectnode(event) {
 	        	if (!event) event = window.event;
 				/* 2018-08-06 장진혁 스크립트 오류로 undefined 걸름 */
-	        	if (event != undefined) {
+	        	if (typeof(event) !== "undefined") {
 		        	if (event.which != 3) {
 					    var nodeIdx = window[treeviewStr].selectedIndex();
 					    var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(nodeIdx, "href"));
@@ -384,7 +482,8 @@
 	            if (xmlHTTP_Unread == null || xmlHTTP_Unread.readyState != 4)
 	                return;
 	            if (xmlHTTP_Unread.status >= 200 && xmlHTTP_Unread.status < 300) {
-            		var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "DATA")[0]);
+            		var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "FOLDERUNREADCOUNT")[0]);
+            		var totalUnreadCount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "TOTALUNREADCOUNT")[0]);
 	                var caption = window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "foldername");
 	
 	                if (get_unreadend_2010.href == window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "href")) {
@@ -401,14 +500,111 @@
 	                    if (pageSrc.indexOf("mailList.do") != -1) {
                         	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) { }
 	                    }
-	                    
-	                    xmlDom = null;
 	                }
+	                
+	                var totalUnreadCountId = "totalUnreadCount";
+	                
+	                if (shareId != "") {
+	                	totalUnreadCountId += "_" + shareId;
+	                }
+	                
+                	if (totalUnreadCount == "0") {
+                		document.getElementById(totalUnreadCountId).innerHTML = "";
+                	} else {
+                		document.getElementById(totalUnreadCountId).innerHTML = "(" + totalUnreadCount + ")";
+                	}
 	            }
 	            
 	            xmlHTTP_Unread = null;
 	            applyEllipsisMailTree();
 	        }
+	        
+	        function getUnreadCountAll() {
+	        	var mailboxList = [];
+	        	var nodeCount = window[treeviewStr].nodecount();
+	        	
+	        	for (var i = 0; i < nodeCount; i++) {
+	        		mailboxList.push(window[treeviewStr].getvalue(i + 1, "href"));
+	        	}
+	        	
+	        	var requestData = {
+        			"mailboxList" : mailboxList
+	        	}
+	        	
+	        	if (shareId != "") {
+	        		requestData.shareId = shareId;
+                }
+	        	
+	        	$.ajax({
+                    url: "/ezEmail/getUnreadCountAll.do",
+                    type: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data : JSON.stringify(requestData),
+                    success : function(result) {
+                    	try {
+	                    	if (result.resultCode === "OK") {
+	                    		var unreadCountMap = result.unreadCountMap;
+	                    		var href, caption, unreadCount;
+	                    		var totalUnreadCount = result.totalUnreadCount;
+	                    		var shareInfoList = result.shareInfoList;
+	                    		
+	                    		if (shareId === result.shareId) {
+	                    			for (var i = 0; i < nodeCount; i++) {
+		                    			href = window[treeviewStr].getvalue(i + 1, "href");
+	                    				caption = window[treeviewStr].getvalue(i + 1, "foldername");
+		                    			unreadCount = unreadCountMap[href];
+	                    				
+	                    				if (typeof(unreadCount) === 'undefined' || unreadCount === 0) {
+		        	                    	window[treeviewStr].putcaption(i + 1, caption);
+		        	                    	window[treeviewStr].putstyle(i + 1, "font-weight : ''");
+		        	                    } else {
+		        	                    	window[treeviewStr].putcaption(i + 1, caption + "(" + unreadCount + ")");
+		        	                    	window[treeviewStr].putstyle(i + 1, "font-weight : bold");
+		        	                    }
+		                    		}
+	                    		}
+	                    		
+	                    		if (totalUnreadCount == 0) {
+                    				document.getElementById("totalUnreadCount").innerHTML = "";
+                    			} else {
+                    				document.getElementById("totalUnreadCount").innerHTML = "(" + totalUnreadCount + ")";
+                    			}
+	                    		
+	                    		if ("${useSharedMailbox}" == "YES") {
+	                    			for (var i = 0; i < shareInfoList.length; i++) {
+		                    			shareInfo = shareInfoList[i];
+		                    			
+		                    			if (shareInfo.totalUnreadCount == "0") {
+		                    				document.getElementById("totalUnreadCount_" + shareInfo.shareId).innerHTML = "";
+		                    			} else {
+		                    				document.getElementById("totalUnreadCount_" + shareInfo.shareId).innerHTML = "(" + shareInfo.totalUnreadCount + ")";
+		                    			}
+		                    		}
+	                    		}
+	                    		
+                   				try {
+                    				var pageSrc = parent.frames["right"].document.location.toString();
+            	                    
+                    				if (pageSrc.indexOf("mailList.do") > -1) {
+                                    	parent.frames["right"].MailListRefresh();
+            	                    }
+                   				} catch (e) { }
+	                    		
+	                    		applyEllipsisMailTree();
+	                    	} else {
+	                    		console.error(result.resultCode);
+	                    	}
+                    	} catch (e) {
+                    		console.error(e);
+                    	}
+                    },
+                    error : function(error) {
+                        console.error(error);
+                    }
+                });
+	        }
+	        
 	        function get_unreadcount() {
 	            return get_unreadcount_2010();
 	        }
@@ -710,28 +906,34 @@
 				}
 				
 				window.open(url, "right");
-			}	
-		    
- 			function event_folderMenu(event){
-		    	
+			}
+
+			// scroll한 뒤 컨텍스트 메뉴의 위치가 잘못 나오는 현상이 있어 수정  
+			var scrollTop = 0;
+			$(window).scroll(function() {
+				scrollTop = $(this).scrollTop();
+			});
+
+ 			function event_folderMenu(event) {
+ 				event.preventDefault();
+ 				
 		    	if (!event) event = window.event;
 		        var EventMouseX = event.clientX;
 		        var EventMouseY = event.clientY;
 
 		        var listsizeheight = document.documentElement.clientHeight;
 		        var listsizewidth = document.documentElement.clientWidth;
-		        var EventDivSize = EventMouseY + 240;
-		        if (listsizeheight < EventDivSize) {
-		            var Div_ = EventDivSize - listsizeheight;
-		            EventMouseY = EventMouseY - Div_;
-		        }
 
-		        EventDivSize = EventMouseX + 140;
-		        if (listsizewidth < EventDivSize) {
+				var EventDivSize = EventMouseX + 140;
+				if (listsizewidth < EventDivSize) {
 		            var Div_ = EventDivSize - listsizewidth;
 		            EventMouseX = EventMouseX - Div_;
 		        }
-		        
+
+                if (scrollTop > 0) {
+                	EventMouseY += scrollTop;
+                }
+
 		        //document.getElementById("folderPanel").style.display = "";
 		        document.getElementById("folderMenuDiv").style.left = EventMouseX + "px";
 		        document.getElementById("folderMenuDiv").style.top = EventMouseY + "px";
@@ -1173,7 +1375,7 @@
 	<body class="leftbody" style="overflow: auto; height: 100%;">
 	    <div id="left">
 	        <div class="left_mail" title="<spring:message code="ezEmail.t99000012" />"><span><spring:message code="ezEmail.t99000012" /></span></div>
-	        <h2><span onclick="Email_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000012" /></span></h2>
+	        <h2><span onclick="Email_Menu_Click();" style="max-width: 75%; display: inline-block;"><spring:message code="ezEmail.t99000012" /></span>&nbsp;<span id="totalUnreadCount" style="color:#0470e4; position:absolute;"></span></h2>
 	        <ul>
 	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 	            <li><span onclick="write_Letter()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000013" /></span></li>
@@ -1194,8 +1396,11 @@
 	        
 	        <c:if test="${useSharedMailbox == 'YES'}">
 		        <c:forEach items="${shareInfoList}" var="shareInfo">
-		        	<h2><span onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');" 
-		        			style="width:85%; display:inline-block; overflow:hidden; text-overflow:ellipsis; display:inline-block; white-space:nowrap;" title="${shareInfo.shareName}"><c:out value="${shareInfo.shareName}" /></span></h2>
+		        	<h2 class="share_menu_h2" data-shareId="${shareInfo.shareId}" data-deletePermission="${shareInfo.deletePermission}" data-sendPermission="${shareInfo.sendPermission}">
+		        		<span onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');" 
+		        			style="max-width:70%; display:inline-block; overflow:hidden; text-overflow:ellipsis; display:inline-block; white-space:nowrap;" title="${shareInfo.shareName}"><c:out value="${shareInfo.shareName}" />
+		        		</span>&nbsp;<span id="totalUnreadCount_${shareInfo.shareId}" style="color:#0470e4; position:absolute;"><c:if test="${shareInfo.totalUnreadCount != '0'}">(${shareInfo.totalUnreadCount})</c:if></span>
+		        	</h2>
 		        	<ul>
 		            	<div id="shareTreeView_${shareInfo.shareId}" class="tree" value="${shareInfo.shareId}" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 		        	</ul>
@@ -1220,7 +1425,7 @@
 		        <p class="volume_graph" id='myProgress'><span id='myBar'></span></p>
 		        <dl class="volumeDL" >
 		        	<dt id="useVol"></dt>
-		            <dd id="usePer"></dd>
+		            <dd id="usePer" style="margin-right:5px;"></dd>
 		        </dl>
 		    </div>
 		    <c:if test="${operatorMailAddress ne null && operatorMailAddress != ''}">
@@ -1271,6 +1476,14 @@
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
+	        
+	        var shareMenuH2 = document.getElementsByClassName("share_menu_h2");
+	        for (var i = 0; i < shareMenuH2.length; i++) {
+	        	shareMenuH2[i].addEventListener('click', function() {
+	        		Share_Menu_Click(this.getAttribute("data-shareId"), this.getAttribute("data-deletePermission"), this.getAttribute("data-sendPermission"));
+	        	});
+	        }
+	        
 	    </script>
 	    <xml id="RootFolderXML" style="display: none;">
 	    ${rootFolderXML}

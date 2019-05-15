@@ -180,7 +180,7 @@ var strLang221 = "동일한 값이 있습니다.";
 var strLang222 = "입력된 값이 메일 주소 형식이 아닙니다.\n예) hongkildong@kaoni.com와 같은 형식으로 입력해주세요.";
 var strLang223 = "값을 입력하세요.";
 var strLang224 = "이미 해당 조건을 선택하였습니다. 수정 변경을 하십시오.";
-var strLang225 = "설정된 값이 있습니다.계속 진행시 기존 설정 값은 삭제 됩니다.\n계속 진행하시겠습니까?";
+var strLang225 = "설정된 값이 있습니다. 계속 진행시 기존 설정 값은 삭제 됩니다.\n계속 진행하시겠습니까?";
 var strLang226 = "발신인을 등록하세요. 예) \"hong@kaoni.com\"";
 var strLang227 = "수신인을 등록하세요. 예) \"hong@kaoni.com\"";
 var strLang228 = "제목의 포함 단어를 등록하세요.예) \"광고\"";
@@ -311,6 +311,8 @@ var strLangSharedMailbox01 = "공유사서함";
 var strLangSharedMailbox02 = "암호를 변경하시겠습니까?";
 var strLangSharedMailbox03 = "암호를 변경하였습니다.";
 
+var strLangReceiverCount01 = "수신인은 최대 ";
+var strLangReceiverCount02 = "명까지 가능합니다.";
 
 function GetLocalTime(Offset , pDateTime)
 {

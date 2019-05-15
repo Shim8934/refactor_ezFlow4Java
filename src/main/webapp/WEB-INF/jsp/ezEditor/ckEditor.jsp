@@ -48,12 +48,8 @@
 			
 			function SetEditorContent(Data) {
 				try {
-					if (Data === '' || Data === undefined) {
-						var pTag = document.createElement('p');
-						pTag.style.fontSize = defaultFontSize;
-						pTag.style.fontFamily = defaultFontFamily;
-						
-						console.log('pTag', pTag.outerHTML);
+					if (Data === "") {
+						Data = "<p " + defaultFontAndSize + "><br></p><p " + defaultFontAndSize + "></p>";
 					}
 					
 					if (CKEDITOR.instances.editor1.mode === "source") {
@@ -61,6 +57,7 @@
 					} else {
 						CKEDITOR.instances.editor1.editable().setHtml(Data);
 					}
+					
 	                if (type == "APPROVAL" || type == "APPROVALG") {
 	                	if ("${isUsed}" != "reuse") {
 	                    	Set_CellLocked();
@@ -87,7 +84,6 @@
 	 	            
 	 	    		var line = data.split("\n");
 	 	            var textData = "";
-	 	            var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 	 	            
 	 	            for (var i = 0; i < line.length; i++) {
 	 	            	if (line[i].trim() === "") {
@@ -102,32 +98,25 @@
 	        }
 			
 			function GetEditorTextContent() {
-	            try {
-            	    var resultStr = CKEDITOR.instances.editor1.getData();
-            	    
-            	    resultStr = resultStr.replace(/\r\n/gi, "");
-            	    resultStr = resultStr.replace(/\n/gi, "");
-            	    resultStr = resultStr.replace(/\s+/gi, " ");
-            	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
-            	    resultStr = resultStr.replace(/<p>/gi, "\n");
-            	    resultStr = resultStr.replace(/<br .*?>/gi, "\n");
-            	    resultStr = resultStr.replace(/<br>/gi, "\n");
-            	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
-            	    resultStr = resultStr.replace(/<hr>/gi, "\n----------------------------------------------------------------------------------------------------");
-            	    resultStr = resultStr.replace(/<.*?".*?".*?>/gi, "");
-            	    resultStr = resultStr.replace(/<.*?'.*?'.*?>/gi, "");
-            	    resultStr = resultStr.replace(/<.*?>/gi, "");
-            	    resultStr = resultStr.replace(/ +/gi, " ");
-            	    resultStr = resultStr.replace(/&nbsp;/gi, " ");
-            	    resultStr = resultStr.replace(/&lt;/gi, "<");
-            	    resultStr = resultStr.replace(/&gt;/gi, ">");
-            	    resultStr = resultStr.replace(/&quot;/gi, "\"");
-            	    resultStr = resultStr.replace(/&#39;/gi, "'");
-            	    resultStr = resultStr.replace(/&amp;/gi, "&");
-            	    resultStr = resultStr.replace(/P {MARGIN-TOP: 0mm; MARGIN-BOTTOM: 0mm}/gi, "");
-					
-            	    return  resultStr;
-	            } catch (e) { return ""; }
+           	    var resultStr = CKEDITOR.instances.editor1.getData();
+           	    
+           	    resultStr = resultStr.replace(/\r\n/gi, "\n");
+        	    resultStr = resultStr.replace(/\n/gi, "");
+        	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
+        	    resultStr = resultStr.replace(/<br .*?>/gi, "<br>");
+        	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
+        	    resultStr = resultStr.replace(/<p>/gi, "\r\n");
+        	    resultStr = resultStr.replace(/<br>/gi, "\r\n");
+        	    resultStr = resultStr.replace(/<hr>/gi, "\r\n----------------------------------------------------------------------");
+        	    resultStr = resultStr.replace(/<style>.*?<\/style>/gi, "");
+        	    resultStr = resultStr.replace(/<script>.*?<\/script>/gi, "");
+        	    resultStr = resultStr.replace(/<.*?>/gi, "");
+        	    
+        	    var tempTextarea = document.createElement("textarea");
+        	    tempTextarea.innerHTML = resultStr;
+        	    resultStr = tempTextarea.value;
+        	    
+        	    return  resultStr;
 	        }
 			
 			function GetBodyValue() {
@@ -291,6 +280,7 @@
 			var useHTMLMode = "${useHTMLMode}";
 			var defaultFontFamily = "${defaultFontFamily}";
 			var defaultFontSize = "${defaultFontSize}";
+			var defaultFontAndSize = "style='font-size:" + defaultFontSize + ";font-family:" + defaultFontFamily + "'";
 			var uploadUrl = "/ezEditor/ckSimpleUpload.do?type=" + type;
 			
 			if (type == "APPROVAL" || type == "APPROVALG") {

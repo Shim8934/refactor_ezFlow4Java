@@ -89,7 +89,7 @@
 			function event_newmailcount() {
 			    if (xmlHttp_getnewmailcount_total != null && xmlHttp_getnewmailcount_total.readyState == 4) {
 			        if (xmlHttp_getnewmailcount_total.status > 199 && xmlHttp_getnewmailcount_total.status < 300) {
-			        	var unreadcount = getNodeText(SelectNodes(xmlHttp_getnewmailcount_total.responseXML, "DATA")[0]);
+			        	var unreadcount = getNodeText(SelectNodes(xmlHttp_getnewmailcount_total.responseXML, "FOLDERUNREADCOUNT")[0]);
 			        	
 		                if(CrossYN()) {
 		                    document.getElementById("mailnum").textContent = unreadcount;

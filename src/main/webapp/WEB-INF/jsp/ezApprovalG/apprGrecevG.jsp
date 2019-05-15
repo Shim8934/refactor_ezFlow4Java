@@ -72,6 +72,8 @@
 		    var maxwidth = 659;
 		    var RootURL = document.location.protocol + "//" + document.location.hostname + ":" + document.location.port;  
 		    var arr_userinfo = new Array();
+		    var retValue = "";
+		    
 		    arr_userinfo[0]  = "user";
 		    arr_userinfo[1]  = "${userInfo.id}";
 		    arr_userinfo[2]  = "${userInfo.displayName1}";
@@ -184,6 +186,11 @@
 		    }
 		
 		    function FieldsAvailable() {
+	            var isRelay = GetRelayDocInfo();
+	            if (isRelay) {
+	            	document.getElementById("btnReqReSend").style.display = ""; 
+	            }
+	            
 		        if (ConvertYN == "N") {
 		            pGubun = "11";
 		            setProperty();
@@ -199,6 +206,7 @@
 		            }
 		        }
 		    }
+		    
 		    function DocumentComplete() {
 		        if (flag == false) {
 		            flag = true;
@@ -360,6 +368,16 @@
 		    }
 		    var ezreceivedistributeui_cross_dialogArguments = new Array();
 		    function btnDistribute_onclick() {
+		    	var deptCheckFlag = checkDeptAndCabinetId();
+		    	
+		    	if (deptCheckFlag == "3") {
+		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		return;
+		    	} else if (deptCheckFlag == "4") {
+		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		return;
+		    	}
+		    	
 		        var parameter = new Array();
 		        parameter[0] = pDocID;
 		        parameter[1] = pSusinSN;
@@ -384,6 +402,16 @@
 		    }
 		    var ezreceiveassignui_cross_dialogArguments = new Array();
 		    function btnAssign_onclick() {
+		    	var deptCheckFlag = checkDeptAndCabinetId();
+		    	
+		    	if (deptCheckFlag == "3") {
+		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		return;
+		    	} else if (deptCheckFlag == "4") {
+		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		return;
+		    	}
+		    	
 		        var parameter = new Array();
 		        parameter[0] = pDocID;
 		        parameter[1] = pSusinSN;
@@ -410,6 +438,16 @@
 		    
 		    var selectcabinet_cross_dialogArguments = new Array();
 		    function btnCabinet_onclick() {
+		    	var deptCheckFlag = checkDeptAndCabinetId();
+		    	
+		    	if (deptCheckFlag == "3") {
+		    		alert(strLanggarm06 + " '" + arr_userinfo[5] + "'" +strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm07 );
+		    		return;
+		    	} else if (deptCheckFlag == "4") {
+		    		alert(strLanggarm06 + " '" + "'" + strLanggarm08);
+		    		return;
+		    	}
+		    	
 		        var para = new Array();
 		        para[0] = cabinetID;
 		        var url = "/ezApprovalG/selectCabinet.do?initFlag=1";
@@ -417,7 +455,7 @@
 		        selectcabinet_cross_dialogArguments[0] = para;
 		        selectcabinet_cross_dialogArguments[1] = btnCabinet_onclick_Complete;
 		
-		        DivPopUpShow(880, 465, "/ezApprovalG/selectCabinet.do?initFlag=1");
+		        DivPopUpShow(1000, 620, "/ezApprovalG/selectCabinet.do?initFlag=1");
 		    }
 		
 		    function btnCabinet_onclick_Complete(rtn) {
@@ -1221,6 +1259,24 @@
 					return false;
 				}
 			}
+		    
+	    	function checkDeptAndCabinetId() {
+	    		var result;
+            	$.ajax({
+            		type : "POST",
+            		dataType : "text",
+            		async : false,
+            		url : "/ezApprovalG/checkDeptAndCabinetId.do",
+            		data : {
+            				orgDeptId : arr_userinfo[4],
+            				orgCabinetId : cabinetID
+            				},
+            		success : function(text){
+            			result = text;
+            		}
+            	});
+            	return result;
+	    	}
 		</script>
 	</head>
 	<body class="popup" style="height:100%">

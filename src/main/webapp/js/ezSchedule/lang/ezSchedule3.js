@@ -182,3 +182,5 @@ var strLangKHJ7 = "ics파일을 저장하는 중 에러발생";
 var strLangKHJ8 = "権限がありません。";
 //2018-02-22
 var strLangGHA1 = "、";
+/* 2019-04-03 */
+var strLangHSB1 = "MHT ファイルの保存に失敗しました。";

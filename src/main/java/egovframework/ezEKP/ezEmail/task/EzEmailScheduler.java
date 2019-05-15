@@ -55,6 +55,7 @@ import com.sun.mail.imap.IMAPFolder;
 import egovframework.com.cmm.EgovMessageSource;
 import egovframework.com.cmm.service.EgovFileMngUtil;
 import egovframework.ezEKP.ezCommon.service.EzCommonService;
+import egovframework.ezEKP.ezEmail.dao.EzEmailDAO;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.logic.SMTPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
@@ -91,6 +92,9 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 
 	@Autowired
 	private EzEmailService ezEmailService;
+	
+	@Autowired
+	private EzEmailDAO ezEmailDAO;
 	
 	@Autowired
 	private EzCommonService ezCommonService;
@@ -253,16 +257,27 @@ public class EzEmailScheduler extends EgovFileMngUtil {
 		
 		String schedulerId = config.getProperty("config.SchedulerServer");
 		
+		int count = 0;
+		
 		// 1번 서버가 james_mail 테이블과 james_mail_blob 테이블을 조인하여 james_mail에 없는 blob 레코드를 삭제하는 작업을 수행한다.
 		if (schedulerId != null && schedulerId.equals("1")) {
 			List<MailBlobVO> orphanedMailBlobList = ezEmailService.getOrphanedMailBlobList();
 			
 			logger.debug("orphanedMailBlobList count=" + orphanedMailBlobList.size());
-			
-			ezEmailService.deleteOrphanedMailBlobListWithSleep(orphanedMailBlobList);
+									
+			for (MailBlobVO mailBlobVO : orphanedMailBlobList) {
+				if (++count % 120 == 1) {
+					logger.debug("Deleting mailBlobId=" + mailBlobVO.getMailBlobId() + ",count=" + count);
+				}
+				
+				// 레코드가 하나씩 삭제될 때마다 즉시 반영되도록 하기 위해 Service Layer를 거치지 않고 직접 DAO에 접근하도록 함.
+				ezEmailDAO.deleteOrphanedMailBlob(mailBlobVO);
+				
+				Thread.sleep(500);
+			}
 		}
 		
-		logger.debug("deleteMailBlob ended.");
+		logger.debug("deleteMailBlob ended. count=" + count);
 	}
 	
 	/**

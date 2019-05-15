@@ -634,6 +634,10 @@ function CheckAprlineCC() {
 	}
     var totCnt = objRows.length;
     var newCnt = 0;
+    
+    if (objRows.length > 0 && objRows[0].id == "pAPRLINE_TR_noItems") {
+    	totCnt = 0;
+    }
 
     for (var i = 0 ; i < totCnt ; i++) {
         if (GetAttribute(objRows[i], "DATA12") == "001") {

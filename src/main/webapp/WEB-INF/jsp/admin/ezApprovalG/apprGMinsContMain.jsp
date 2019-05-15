@@ -22,6 +22,7 @@
 		    var DeptID;
 		    var RetValue;
 		    var ReturnFunction;
+		    var pOrgContType;
 		    
 		    if (new RegExp(/Chrome/).test(navigator.userAgent) || new RegExp(/Safari/).test(navigator.userAgent)) {
 		        window.onblur = function () {
@@ -47,6 +48,7 @@
 		        DeptID = RetValue[3];
 		        
 		        if (gState == "U") {
+		            pOrgContType = RetValue[2];
 		            P_companyID = RetValue[4];
 		            DeptID = RetValue[5];
 		        }
@@ -220,7 +222,13 @@
 	            for (var i = 0; i < Count; i++) {
 	                ParaName = "Dept" + i;
 	                ParaValue = selUseDept.item(i);
-	                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
+	                
+	                if (ParaValue.value == DeptID) {
+	                	alert("<spring:message code='ezSchedule.t25'/>");
+	                	return false;
+	                } else {
+		                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
+	                }
 	            }
 
 		        createNodeAndInsertText(xmlpara, objNode, "COMID", P_companyID);
@@ -232,6 +240,9 @@
 					if (xmlhttp.statusText == "OK" && xmlhttp.responseText == "TRUE") {
 						return true;
 					} else {
+						if (xmlhttp.responseText == "DUPLICATE") {
+							alert("<spring:message code='ezApprovalG.t1598'/>");
+						}
 			            return false;
 					}
 				}
@@ -245,13 +256,25 @@
 		        createNodeAndInsertText(xmlpara, objNode, "CONTID", document.getElementById("tbContID").value);
 		        createNodeAndInsertText(xmlpara, objNode, "CONTTYPE", document.getElementById("selContName").value);
 		        createNodeAndInsertText(xmlpara, objNode, "CONTOWNDEPID", gDeptID);
+		        
+		        if (typeof(pOrgContType) != "undefined" && pOrgContType != document.getElementById("selContName").value) {
+			        createNodeAndInsertText(xmlpara, objNode, "MODFLAG", "Y");
+		        } else {
+			        createNodeAndInsertText(xmlpara, objNode, "MODFLAG", "N");
+		        }
 
 	            var Count = selUseDept.length;
 	            
 	            for (var i = 0; i < Count; i++) {
 	                ParaName = "Dept" + i;
 	                ParaValue = selUseDept.item(i);
-	                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
+	                
+	                if (ParaValue.value == DeptID) {
+	                	alert("<spring:message code='ezSchedule.t25'/>");
+	                	return false;
+	                } else {
+		                createNodeAndInsertText(xmlpara, objNode, ParaName, ParaValue.value);
+	                }
 	            }
 
 		        createNodeAndInsertText(xmlpara, objNode, "comID", P_companyID);
@@ -263,6 +286,9 @@
 					if (xmlhttp.statusText == "OK" && xmlhttp.responseText == "TRUE") {
 						return true;
 					} else {
+						if (xmlhttp.responseText == "DUPLICATE") {
+							alert("<spring:message code='ezApprovalG.t1598'/>");
+						}
 			            return false;
 					}
 				}

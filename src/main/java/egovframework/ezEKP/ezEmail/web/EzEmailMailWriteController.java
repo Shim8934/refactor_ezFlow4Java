@@ -50,6 +50,7 @@ import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.Part;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.InternetHeaders;
 import javax.mail.internet.MimeBodyPart;
@@ -408,7 +409,14 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
  	 			mailSendObject += "<option value='" + pSenderNM + "'>" + pSenderNM + "</option>";
  	 		}
  		}
-        logger.debug("pAutoSaveTime=" + pAutoSaveTime + ",pMailSenderNM=" + pMailSenderNM);
+ 		
+ 		String textOption = mailGeneralVO.getTextOption();
+ 		
+ 		if (textOption != null && textOption.equals("PLAIN")) {
+ 			bodyType = "1";
+ 		}
+ 		
+        logger.debug("pAutoSaveTime=" + pAutoSaveTime + ",textOption=" + textOption + ",pMailSenderNM=" + pMailSenderNM);
  		
         //set mail sign
         MailSignatureVO mailSignatureVO = ezEmailService.getMailSignature(loginInfo.getTenantId(), loginInfo.getId());
@@ -756,7 +764,17 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		        			replyMessage = orgMessage.reply(false);
 		        		}
 		        		else {
-		        			replyMessage = orgMessage.reply(true);
+		        			try {
+		        				replyMessage = orgMessage.reply(true);
+		        			// From 주소에 : 과 같은 illegal 문자가 있는 경우 mail.mime.address.strict 속성을 false로 하여도
+		        			// 전체회신을 하면 예외가 발생한다. 이 경우 orgMessage.reply(false)로 대신 호출한다.
+		        			} catch (AddressException e) {
+		        				e.printStackTrace();
+		        				
+		        				logger.debug("orgMessage.reply failed.");
+		        				
+		        				replyMessage = orgMessage.reply(false);
+		        			}
 		        		}
 		        		
 		        		// ANSWERED flag needs to be cleared since the above reply method sets it.
@@ -804,8 +822,47 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	
 		        		Address[] addresses = null;
 		        		if (_cmd.equals("REPLY") || _cmd.equals("REPLYALL")) {
-							// retrieve the TO addresses from the reply message.
-							addresses = replyMessage.getRecipients(Message.RecipientType.TO);
+		        			// 료비에서 다음과 같은 메일이 와서 메일주소 파싱 시 에러 발생함.
+		        			// 그래서 To, Cc 헤더에서 mailto: 제거하도록 함.
+		        			// To: =?ISO-2022-JP?B?GyRCTj5IdxsoQkhEGyRCNzJHTztZRTkbKEI=?= <mailto:gunma@ryobi-holdings.jp>, 
+		        			// =?ISO-2022-JP?B?GyRCTj5IdyVIJWklcyU5JV0hPCVINzJHTztZRTkbKEI=?= <gunma@ryobi-holdings.jp>
+		        			String[] toHeaders = replyMessage.getHeader("To");
+		        			
+		        			if (toHeaders != null) {
+			        			replyMessage.setHeader("To", toHeaders[0].replace("mailto:", ""));
+		        			}
+		        			
+		        			String[] ccHeaders = replyMessage.getHeader("Cc");
+		        			
+		        			if (ccHeaders != null) {
+			        			replyMessage.setHeader("Cc", ccHeaders[0].replace("mailto:", ""));
+		        			}
+		        										
+		        			try {
+		        				// retrieve the TO addresses from the reply message.
+		        				addresses = replyMessage.getRecipients(Message.RecipientType.TO);
+		        			} catch (AddressException e) {
+		        				e.printStackTrace();
+		        				
+		        				logger.debug("replyMessage.getRecipients TO failed.");
+		        				
+		        				// : 과 같은 illegal 문자가 있는 경우 replyMessage.getRecipients에서 예외가
+		        				// 발생한다. mail.mime.address.strict 속성을 false로 한 경우 orgMessage.getRecipients에서는
+		        				// 예외가 발생하지 않으나 replyMessage.getRecipients에서는 여전히 예외가 발생한다.
+		        				// 이 경우 From 주소와 orgMessage.getRecipients를 통해 직접 응답 메시지의 To 주소를
+		        				// 구성한다.
+		        				if (_cmd.equals("REPLYALL")) {		        				
+			        				Address fromAddress = null;
+			        				Address[] orgToAddresses = orgMessage.getRecipients(Message.RecipientType.TO);
+			        						        				
+					        		if (orgMessage.getFrom() != null && orgMessage.getFrom()[0] != null) {
+					        			fromAddress = orgMessage.getFrom()[0];
+					        		}
+			        				
+					        		addresses = getCombinedFromAndToAddresses(fromAddress, orgToAddresses);
+		        				}
+		        			}
+		        			
 							String[] rawHeaders = orgMessage.getHeader("From");
 							String fromHeader = rawHeaders != null ? rawHeaders[0] : "";
 							rawHeaders = orgMessage.getHeader("To");
@@ -837,8 +894,26 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 								to = ezEmailUtil.getStringListOfAddresses(addresses, isPureAscii);
 							}
 	
-							// retrieve the CC addresses from the reply message.
-							addresses = replyMessage.getRecipients(Message.RecipientType.CC);
+							try {
+								addresses = null;
+								
+								// retrieve the CC addresses from the reply message.
+								addresses = replyMessage.getRecipients(Message.RecipientType.CC);
+		        			} catch (AddressException e) {
+		        				e.printStackTrace();
+		        				
+		        				logger.debug("replyMessage.getRecipients CC failed.");
+		        				
+		        				// : 과 같은 illegal 문자가 있는 경우 replyMessage.getRecipients에서 예외가
+		        				// 발생한다. mail.mime.address.strict 속성을 false로 한 경우 orgMessage.getRecipients에서는
+		        				// 예외가 발생하지 않으나 replyMessage.getRecipients에서는 여전히 예외가 발생한다.
+		        				// 이 경우 orgMessage.getRecipients를 통해 응답 메시지의 CC 주소를 구한다.
+		        				// 사실 CC의 경우엔 replyMessage와 orgMessage가 동일하므로 처음부터 orgMessage를
+		        				// 사용할 수 있으나 기존 코드를 최대한 유지한 상태로 예외 처리만 추가함.
+		        				if (_cmd.equals("REPLYALL")) {
+		        					addresses = orgMessage.getRecipients(Message.RecipientType.CC);
+		        				}
+		        			}							
 							
 							if (addresses != null) {
 								rawHeaders = orgMessage.getHeader("Cc");
@@ -915,7 +990,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            StringBuilder sb = new StringBuilder();
 			            sb.append("<hr tabindex=\"-1\">");
 			            sb.append("<p " + defaultFontAndSize + ">");
-			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage).replaceAll("<a@a.com>", ""))));
+			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
 			            sb.append("</p>");
 			            
 			            //set received date
@@ -932,11 +1007,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			            sb.append("</p>");
 			            //to-do
 			            sb.append("<p " + defaultFontAndSize + ">");
-			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo.replaceAll("<a@a.com>", ""))));
+			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
 			            sb.append("</p>");
 			            
 			            sb.append("<p " + defaultFontAndSize + ">");
-			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc.replaceAll("<a@a.com>", ""))));
+			            sb.append(String.format("<b>%s : </b> %s", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
 			            sb.append("</p>");
 			            
 			            String orgMessageSubject = ezEmailUtil.getSubject(orgMessage);	
@@ -1183,6 +1258,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		boolean isCrossBrowser = browser.equals("IE9") ? false : true;
 		
 		String useOnlyInnerMail = ezCommonService.getTenantConfig("UseOnlyInnerMail", loginInfo.getTenantId());
+		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", loginInfo.getTenantId());
+		
+		if (mailMaxReceiverCount.equals("")) {
+			mailMaxReceiverCount = "200";
+		}
 		
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("tenantId", loginInfo.getTenantId());
@@ -1260,6 +1340,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		model.addAttribute("useMailWriteSenderClick", useMailWriteSenderClick); // 수아 추가
 		model.addAttribute("drafts", ezEmailUtil.getDraftsFolderId(locale)); // 임시보관함 스트링 추가 (윤진) 
 		model.addAttribute("useMailAddrAutoComplete", useMailAddrAutoComplete); // 20180531 조진호 추가
+		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
 		
 		//업무일지 아이디
 		model.addAttribute("journalId", journalId);
@@ -2622,7 +2703,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		
-		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail);
+		logger.debug("userId=" + loginInfo.getId() + ",userEmail=" + userEmail + ",uid=" + uid + ",hasAttachFile=" + hasAttachFile);
 		
 		MimeMessage newMessage = null;
 		IMAPAccess ia = null;
@@ -2800,7 +2881,9 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					newMessage.setContent(multipart);
 					newMessage.setFlag(Flags.Flag.SEEN, true);
 					AppendUID[] uids = ((IMAPFolder)folder).appendUIDMessages(new Message[]{newMessage});
-					xmldom.getElementsByTagName("URL").item(0).setTextContent(String.valueOf(uids[0].uid));
+					
+					uid = uids[0].uid;
+					xmldom.getElementsByTagName("URL").item(0).setTextContent(String.valueOf(uid));
 				} else {
 					
 					if (uid == 0) {
@@ -2841,7 +2924,7 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 			}
 		}
 		
-		logger.debug("mailInterAttach ended.");
+		logger.debug("mailInterAttach ended. uid=" + uid);
 		
 		return returnValue;
 	}
@@ -2866,7 +2949,12 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String userAccount = userId + "@" + domainName;
 		String mailId = userId;
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
-
+		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", userInfo.getTenantId());
+		
+		if (mailMaxReceiverCount.equals("")) {
+			mailMaxReceiverCount = "200";
+		}
+		
 		if (useSharedMailbox.equals("YES")) {
 			String shareId = request.getParameter("shareId");
 			logger.debug("shareId=" + shareId);
@@ -3607,7 +3695,11 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    											if (contentId != null && !contentIdSet.contains(contentId)) {
 	    											    logger.debug("Adding ContentId=" + contentId);
 	    											    
-	    												relatedPart.addBodyPart(existingRelatedSubPart);						
+	    												relatedPart.addBodyPart(existingRelatedSubPart);	
+	    											// related 파트 안에 첨부 파일이 있는 경우가 있어 추가함.
+	    											} else if ((existingRelatedSubPart.getDisposition() != null && existingRelatedSubPart.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
+	    	    											|| existingRelatedSubPart.isMimeType("application/*")) {
+	    												mixedPart.addBodyPart(existingRelatedSubPart);
 	    											}
 	    										}				
 	    									}
@@ -3859,6 +3951,13 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		            
 		        } else if (cmd.equalsIgnoreCase("SEND")) {
 		        	logger.debug("Sending the message");
+		    		
+		    		int receiverCount = message.getAllRecipients().length;
+		    		
+		    		if (Integer.parseInt(mailMaxReceiverCount) < receiverCount) {
+		    			logger.debug("Receiver count is over. max=" + mailMaxReceiverCount + ",receiverCount=" + receiverCount);
+		    			throw new Exception("RECEIVERCOUNTOVER");
+		    		}
 		        	
 //					String strCheckReadUrl = ""; //외부메일수신확인 관련 URL. GetSystemConfigValue("APPREADCHECK_URL").ToString();
 			        Boolean isEachMailB = Boolean.parseBoolean(isEachMail.trim());
@@ -4291,6 +4390,8 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 					}
 					
 					pResult = pResult.substring(0, pResult.length() - 1);
+				} else if (e.getMessage().indexOf("RECEIVERCOUNTOVER") > -1) {
+					pResult = egovMessageSource.getMessage("ezEmail.receiverCount01", locale) + mailMaxReceiverCount + egovMessageSource.getMessage("ezEmail.receiverCount02", locale);
 				} else { // retry
 					e.printStackTrace();
 					
@@ -4999,13 +5100,19 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		String ruleKind = request.getParameter("ruleKind") == null ? "" : request.getParameter("ruleKind").trim();
 		String useOcs = config.getProperty("config.USE_OCS") == null ? "" : config.getProperty("config.USE_OCS");
 		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
-
+		String mailMaxReceiverCount = ezCommonService.getTenantConfig("mailMaxReceiverCount", userInfo.getTenantId());
+		
+		if (mailMaxReceiverCount.equals("")) {
+			mailMaxReceiverCount = "200";
+		}
+		
 		model.addAttribute("defaultWin", defaultWin);
 		model.addAttribute("type", type);
 		model.addAttribute("ruleKind", ruleKind);
 		model.addAttribute("useOcs", useOcs);
 		model.addAttribute("userInfo", userInfo);
 		model.addAttribute("useSharedMailbox", useSharedMailbox);
+		model.addAttribute("mailMaxReceiverCount", mailMaxReceiverCount);
 		
 		logger.debug("mailNewReceiverChoose ended.");
 		return "ezEmail/mailNewReceiverChoose";
@@ -5508,6 +5615,37 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 		mat.appendTail(result);
 		
 		return result.toString();	
+	}
+	
+	private Address[] getCombinedFromAndToAddresses(Address fromAddress, Address[] toAddresses) {
+		Address[] combinedAddress = null;
+		int count = 0;
+		int startIndex = 0;
+		
+		if (fromAddress != null) {
+			count++;
+			startIndex++;
+		}
+		
+		if (toAddresses != null) {
+			count += toAddresses.length;
+		}
+		
+		if (count > 0) {
+			combinedAddress = new Address[count];
+			
+			if (fromAddress != null) {
+				combinedAddress[0] = fromAddress;
+			}
+			
+			if (toAddresses != null) {
+				for (int i = 0; i < toAddresses.length; i++) {
+					combinedAddress[startIndex + i] = toAddresses[i];
+				}
+			}			
+		}
+				
+		return combinedAddress;
 	}
 	
 	private void removeUnusedInlineImagePart(Multipart relatedPart) {

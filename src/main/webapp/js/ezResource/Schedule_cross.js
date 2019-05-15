@@ -1000,10 +1000,10 @@ function SaveSchedule_onClick( cmd , resItem) {
 		    SaveRepetition( p_num, resItem );
 		}
 		
-		if (!setApprovFlag) {
+		/*if (!setApprovFlag) {
 		    window_onUnload();
 		    window.close();
-		}
+		}*/
 	}else{
 		alert("" + strLang145 + "");
 	}

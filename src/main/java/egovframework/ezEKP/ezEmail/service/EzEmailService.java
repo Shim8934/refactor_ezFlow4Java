@@ -39,7 +39,6 @@ public interface EzEmailService {
 	public void setMailDelete(int tenantId, String pUserID, String pPath, int pExpireTime, int pDeleteUnread, String pFolderName) throws Exception;
 	public void deleteMailDelete(int tenantId, String pUserID, String pFolderPath) throws Exception;
 	public List<MailBlobVO> getOrphanedMailBlobList() throws Exception;
-	public void deleteOrphanedMailBlobListWithSleep(List<MailBlobVO> orphanedMailBlobList) throws Exception;
 	public List<MailDeleteVO> getMailDeleteList() throws Exception;
 	public List<MailReservationVO> getMailReserved(int tenantId, String pUserId) throws Exception;
 	public List<MailReservationVO> getMailReserved2() throws Exception;
@@ -86,7 +85,7 @@ public interface EzEmailService {
 	public String checkDistributionIsIncluded (String standardCn, String searchCn, int tenantId) throws Exception;
 	List<MailDistributionVO> getDistributioUpperList(String userName, int tenantId) throws Exception;
 	public List<String> aliasMailCheck(String address) throws Exception;
-	public List<Map<String, String>> getUserSharedMailboxList(String userId, int tenantId) throws Exception;
+	public List<Map<String, String>> getUserSharedMailboxList(String userId, boolean useUnreadCount, int tenantId) throws Exception;
 	public boolean checkUserShareId(String userId, String shareId, int tenantId) throws Exception;
 	/**
 	 * <pre>
@@ -116,4 +115,5 @@ public interface EzEmailService {
 	MailDistributionVO getDistributionSub(String userName, String subMail, String companyId, int tenantId) throws Exception;
 	public int addDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
 	public int updateDistributionList(String id, String name, List<String> memberList, List<Map<String, String>> subList, String compId, int tenantId) throws Exception;
+	public int getTotalUnreadCount(String userId, int tenantId) throws Exception;
 }

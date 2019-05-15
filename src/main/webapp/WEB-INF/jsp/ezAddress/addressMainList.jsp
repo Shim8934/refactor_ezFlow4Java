@@ -479,7 +479,7 @@
 	        function quick_add() {
 	        	var pQname = document.getElementById("qname").value.trim();
 	            var pQemail = document.getElementById("qemail").value.trim();
-	        	var regex = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{2,100})\.([0-9a-zA-Z]{2,100}(?:\.[0-9a-zA-Z]{2})?)$/;
+	            var regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 	            
                 if (pQname == "") {
                 	document.getElementById("qname").focus();
@@ -676,7 +676,7 @@
 	        var xmlHTTP = createXMLHttpRequest();
 	        
 	        function clickImport() {
-	        	if (!useAnyoneEdit == "YES") {
+	        	if (useAnyoneEdit != "YES") {
 	        		if (deptAdmin != "Y" && pFolderType == "D") {
 		        		alert("<spring:message code='ezAddress.t1' />");
 		                return;

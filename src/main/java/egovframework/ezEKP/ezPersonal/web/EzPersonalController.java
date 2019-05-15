@@ -148,7 +148,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 	/**
 	 * 전자결재 부재자설정 끄기 Method
 	 */	
-	@RequestMapping(value = "/ezPersonal/saveBujae.do", produces = "text/xml;charset=utf-8")
+	@RequestMapping(value = "/ezPersonal/saveBujae.do", produces = "text/plain;charset=utf-8")
 	@ResponseBody
 	public String saveBujae(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, HttpServletRequest request) throws Exception{
 		logger.debug("saveBujae started");
@@ -339,7 +339,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 			String[] info = result.split(":");
 			
 			userID = info[0];
-			textName = info[1];
+			textName = ezOrganService.getPropertyValue(info[0], "displayname", userInfo.getTenantId());
 			deptID = info[2];
 			startDate = info[3] + ":" + info[4];
 			endDate = info[5] + ":" + info[6];

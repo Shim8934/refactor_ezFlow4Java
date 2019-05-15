@@ -4427,7 +4427,9 @@
 		    TBL_CABINET.TRANSDELAYFLAG,
 		    TBL_CABINET.TITLE,
 		    TBL_CABINET.TITLE2,
-		    VTASKCLASS.KEEPINGPERIOD,
+		   	<!--  단위업무가 아닌 기록물철 자체의 보존연한을 가져오게 수정 2019-03-22 임민석 -->
+		    TBL_CABINET.KEEPINGPERIOD,
+		    <!-- VTASKCLASS.KEEPINGPERIOD, -->
 		    VTASKCLASS.DISPLAYRECFLAG,
 		    VTASKCLASS.DISPLAYRECTRASTIME,
 		    VTASKCLASS.SC1,
@@ -4498,7 +4500,8 @@
 			    TBL_CABINETCLASS.TITLE,
 			    TBL_CABINETCLASS.TITLE2,
 			    TBL_CABINETCLASS.COMPANYID,
-			    TBL_CABINETCLASS.TENANT_ID
+			    TBL_CABINETCLASS.TENANT_ID,
+			    TBL_CABINETCLASS.KEEPINGPERIOD
 		      FROM
 		      	TBL_CABINETCLASS 
 			  INNER JOIN
@@ -5369,12 +5372,12 @@
 						TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y-%m-%d %H:%i:%s')
 					]]>
 				</isNotEmpty>
-				<![CDATA[
-					 AND   
-					 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL)
-				     OR      
-				     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#))
-			     ]]>
+<!-- 				<![CDATA[ -->
+<!-- 					 AND    -->
+<!-- 					 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL) -->
+<!-- 				     OR       -->
+<!-- 				     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#)) -->
+<!-- 			     ]]> -->
 				<isNotEmpty property="sc" prepend="AND">
 						TBL_RECORD.RecordID IN (SELECT 
 													RecordID 
@@ -8651,7 +8654,9 @@
 				   							  TBL_EXPENDAPRDOCINFO.EDMSYN, 
 				   							  (CASE WHEN TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL IS NULL THEN ''
 				   							  	   ELSE TBL_EXPENDAPRDOCINFO.SECURITYAPPROVAL
-				   							  END)  AS SECURITYAPPROVAL
+				   							  END)  AS SECURITYAPPROVAL,
+				   							  (SELECT DISPLAYNAME FROM TBL_DEPTMASTER WHERE CN = TBL_ENDAPRDOCINFO.COMPANYID AND TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID) AS COMPANYNAME,
+				   							  (SELECT DISPLAYNAME2 FROM TBL_DEPTMASTER WHERE CN = TBL_ENDAPRDOCINFO.COMPANYID AND TENANT_ID = TBL_ENDAPRDOCINFO.TENANT_ID) AS COMPANYNAME2
 				   						FROM 
 				   							  TBL_ENDAPRDOCINFO 
 				   						LEFT OUTER JOIN 
@@ -12308,12 +12313,12 @@
 			TBL_RECORD.RegisterDate <= STR_TO_DATE(#regEndDate#, '%Y-%m-%d %H:%i:%s')
 		]]>
 	</isNotEmpty>
-	<![CDATA[
-		 AND   
-		 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL)
-	     OR      
-	     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#))
-     ]]>
+<!-- 	<![CDATA[ -->
+<!-- 		 AND    -->
+<!-- 		 		((TBL_EXPENDAPRDOCINFO.PUBLICITYYN <> 'N' OR TBL_EXPENDAPRDOCINFO.PUBLICITYYN IS NULL) -->
+<!-- 	     OR       -->
+<!-- 	     		(TBL_EXPENDAPRDOCINFO.PUBLICITYYN = 'N' AND TBL_ENDAPRLINEINFO.APRMEMBERID = #userID#)) -->
+<!--      ]]> -->
 	<isNotEmpty property="sc" prepend="AND">
 			TBL_RECORD.RecordID IN (SELECT 
 										RecordID 
@@ -15454,6 +15459,22 @@
 						ORGDOCID = #v_TMPDOCID#
 				)
 		)
+	</insert>
+	
+	<insert id="EzApprovalG.aprMakeTmp2Ing12" parameterClass="Map">
+		INSERT
+			TBL_HISTORYATTACHINFO
+			(DOCID, ATTACHFILESN, ATTACHFILENAME, ATTACHFILEDISPLAYNAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERJOBTITLE, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, MODIFYDATE, MODIFYSN, MODIFYFLAG, PAGENUM, CHKFLAG, ATTACHUSERNAME2, ATTACHUSERJOBTITLE2, ATTACHUSERDEPTNAME2, TENANT_ID, COMPANYID)
+		SELECT
+			#v_PDOCID#, ATTACHFILESN, ATTACHFILENAME, ATTACHFILEDISPLAYNAME, ATTACHFILEHREF, ATTACHFILESIZE, ATTACHUSERID, ATTACHUSERNAME, ATTACHUSERJOBTITLE, ATTACHUSERDEPTID, ATTACHUSERDEPTNAME, MODIFYDATE, MODIFYSN, MODIFYFLAG, PAGENUM, CHKFLAG, ATTACHUSERNAME2, ATTACHUSERJOBTITLE2, ATTACHUSERDEPTNAME2, TENANT_ID, COMPANYID
+		FROM 
+			TBL_HISTORYATTACHINFO
+		WHERE
+				TENANT_ID = #v_TENANTID#
+			AND
+				COMPANYID = #companyID#
+			AND
+				DOCID = #v_TMPDOCID#
 	</insert>
 	
 	<select id="EzApprovalG.checkTmpDocHasGongRam" parameterClass="Map" resultClass="int" remapResults="true">
@@ -27921,8 +27942,8 @@
 						  )
 					ELSE 0
 				END,
-				B.DOCID
-				)
+				COUNT(B.DOCID)
+				) AS checkValue
 		FROM
 			(
 			SELECT
@@ -28124,5 +28145,23 @@
 			HREF = #href#
 		AND   tenant_id = #v_TENANTID#
         AND   companyid = #companyID#
+    </select>
+    <select id="EzApprovalG.getDeptIdOfCabinet" parameterClass="Map" resultClass="String">
+		SELECT
+		    ownerdeptid
+		FROM
+		    tbl_cabinetclass
+		WHERE
+		    cabinetclassno = (
+		        SELECT
+		            cabinetclassno
+		        FROM
+		            tbl_cabinet
+		        WHERE
+           			cabinetid = #cabinetId#
+					AND   tenant_id = #tenantId#
+			        AND   companyid = #companyID#
+		    )
+
     </select>
 </sqlMap>

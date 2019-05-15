@@ -98,7 +98,12 @@
 					OpenAlertUI("<spring:message code='ezOrgan.t116'/>");
 					return;
 				}
-
+				
+				if (CompanyName.value.indexOf("\"") > -1 || CompanyName.value.indexOf("'") > -1) {
+					OpenAlertUI("<spring:message code='ezOrgan.t215'/> [\"], ['] <spring:message code='ezOrgan.t260' />");
+					return;
+				}
+				
 				if (operatorID.value != "" && operatorID.value.indexOf("@") > -1) {
 					OpenAlertUI("<spring:message code='ezOrgan.t267'/>");
 					return;

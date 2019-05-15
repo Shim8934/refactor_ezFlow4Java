@@ -4120,7 +4120,7 @@
 		]]>
 	</update>
 	
-	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map" resultClass="String">
+	<select id="EzApprovalGAdminDAO.checkContainer" parameterClass="Map" resultClass="int">
 		<![CDATA[
 			SELECT 
 				count(*)
@@ -4211,8 +4211,7 @@
                                 B.ISPUBLIC,  
                                 B.EDMSYN,  
                                 B.SECURITYAPPROVAL,
-                                B.DOCSTATENAME,
-                                B.SENDFLAG
+                                B.DOCSTATENAME
 						FROM (
 								SELECT 
 									 DISTINCT TBL_ENDAPRDOCINFO.DOCID, 
@@ -4251,14 +4250,7 @@
 				                                  WHEN $v_PSTRLANG$ = '2' THEN C.name2 
 				                                  WHEN $v_PSTRLANG$ = '3' THEN C.name3 
 				                                  WHEN $v_PSTRLANG$ = '4' THEN C.name4 
-			                                  end AS DOCSTATENAME, 
-			                                  CASE 
-				                                  WHEN E.processyn = 'H' THEN #v_H# 
-				                                  WHEN E.processyn = 'I' THEN #v_I# 
-				                                  WHEN E.processyn = 'N' THEN #v_N# 
-				                                  WHEN E.processyn = 'Y' THEN #v_Y# 
-				                                  ELSE #v_Y# 
-			                                  end AS SENDFLAG
+			                                  end AS DOCSTATENAME
 				   						FROM 
 				   							  TBL_ENDAPRDOCINFO 
 				   						LEFT OUTER JOIN 
@@ -4368,11 +4360,11 @@
 				     A.HASATTACHYN, 
 				     A.ISPUBLIC, 
 				     A.FORMNAME, 
-				     A.DOCSTATENAME,  
-				     A.SENDFLAG 
+				     A.DOCSTATENAME
 				 FROM
 				 (
 				SELECT 
+				DISTINCT
 				TBL_DOCDELETEHISTORY.DOCID, 
 				TBL_DOCDELETEHISTORY.DOCNO, 
 				TBL_DOCDELETEHISTORY.DOCTITLE, 
@@ -4389,14 +4381,7 @@
 	                WHEN $v_PSTRLANG$ = '2' THEN C.name2 
 	                WHEN $v_PSTRLANG$ = '3' THEN C.name3 
 	                WHEN $v_PSTRLANG$ = '4' THEN C.name4 
-	                END AS DOCSTATENAME, 
-	            CASE 
-		            WHEN E.processyn = 'H' THEN #v_H# 
-		            WHEN E.processyn = 'I' THEN #v_I# 
-		            WHEN E.processyn = 'N' THEN #v_N# 
-		            WHEN E.processyn = 'Y' THEN #v_Y# 
-		            ELSE #v_Y# 
-		            END AS SENDFLAG
+	                END AS DOCSTATENAME
 				FROM 
 					TBL_DOCDELETEHISTORY 
 				INNER JOIN 

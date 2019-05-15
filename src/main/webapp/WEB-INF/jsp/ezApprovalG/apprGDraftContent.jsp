@@ -217,7 +217,7 @@
 	                        //Div_.style.textAlign = "left";
 	                        if (navigator.userAgent.indexOf('Firefox') != -1)
 	                            Div_.onkeypress = function (event) { var ret = onKeyDownEvent_Element(event, this); if (!ret) return false; };
-	                        Div_.innerHTML = TDRows.item(i).innerHTML;
+	                        Div_.innerHTML = TDRows.item(i).innerHTML.replace(/(<div>|<\/div>)/gi, ""); //2019-04-05 천성준 - 재기안 시, td속 div가 계속 쌓이는 문제때문에 문서 오픈 시, div제거 추가함
 	                        TDRows.item(i).innerHTML = "";
 	                        TDRows.item(i).appendChild(Div_);
 	                    }
@@ -323,7 +323,8 @@
 	                                CheckRows.item(i).onchange = function () { CheckBoxOnclick(this); };
 	                        }
 	                        if (document.getElementById("body") != null) {
-	                            if (document.getElementById("body").getAttribute("class") == "FIELD") {
+	                        	// class가 FIELD를 포함한 두 개 이상일 때도 조건문에 포함되어야 함 2019-05-14 임민석
+	                        	if (document.getElementById("body").getAttribute("class").indexOf("FIELD") != -1) {
 	                                document.getElementById("body").innerHTML = Body_innerHTML;
 	                                BODYTag = document.getElementById("body");
 	                            }
@@ -587,10 +588,17 @@
 	            for (var i = 0; i < SelectRows.length; i++) {
 	                for (var j = 0; j < SelectRows.item(i).childNodes.length; j++) {
 	                    if (SelectRows.item(i).childNodes.item(j).nodeType == "1") {
-	                        if (SelectRows.item(i).childNodes.item(j).getAttribute("check") == "2")
+	                        /* if (SelectRows.item(i).childNodes.item(j).getAttribute("check") == "2")
 	                            SelectRows.item(i).childNodes.item(j).outerHTML = SelectRows.item(i).childNodes.item(j).outerHTML.replace("option ", "option selected ");
 	                        else {
 	                            SelectRows.item(i).childNodes.item(j).outerHTML = SelectRows.item(i).childNodes.item(j).outerHTML.replace("selected=\"\"", "");
+	                        } */
+	                        //2019-04-08 - 일괄결재로 완료된문서 재사용>임시저장 시, select박스의 option selected속성이 해제되는 현상 수정 #15360
+	                        if (SelectRows.item(i).childNodes.item(j).outerHTML.indexOf("option selected") > -1) {
+	                        	SelectRows.item(i).childNodes.item(j).removeAttribute("selected");
+	                        	SelectRows.item(i).childNodes.item(j).setAttribute("selected", "selected");
+	                        } else {
+	                        	SelectRows.item(i).childNodes.item(j).removeAttribute("selected");
 	                        }
 	                    }
 	                }

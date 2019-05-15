@@ -328,7 +328,9 @@
 		            if (pDocHref != "")
 		            {
 		                message.Set_EditorContentURL(pDocHref);
-		                setDocNumFormat("");
+		                if (pDraftFlag != "SUSIN") {
+			                setDocNumFormat(""); // 결재할문서 오픈 시, docnumber 필드 다시 그리는 로직.. 수정 필요
+		                }
 		            }
 		        }
 		    }
@@ -378,7 +380,8 @@
 		    function CheckOpinionYN_Complete(Ans) {
 		        DivPopUpHidden();
 		        if (Ans)
-		            openOpinionUI("Display", CheckOpinionYN_Complete_Complete);
+		            //openOpinionUI("", CheckOpinionYN_Complete_Complete);
+		        	openOpinionUI_New("", CheckOpinionYN_Complete_Complete);
 		        else {
 		            if (pDraftFlag == "SUSIN")
 		                getSusinSNInfo();
@@ -998,7 +1001,8 @@
 		        if (CheckUsePassword()) {
 		            chk_Passwd(pingUserID, btnReject_chkpassword_Complete);
 		        } else {
-		            openOpinionUI("BanSong", btnReject_option_Complete);
+		            //openOpinionUI("BanSong", btnReject_option_Complete);
+		        	openOpinionUI_New("BanSong", btnReject_option_Complete);
 		        }
 		    }
 		    function btnReject_chkpassword_Complete(chkpass) {
@@ -1013,7 +1017,8 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
-		        openOpinionUI("BanSong", btnReject_option_Complete);
+		        //openOpinionUI("BanSong", btnReject_option_Complete);
+		        openOpinionUI_New("BanSong", btnReject_option_Complete);
 		    }
 		    /**
 		    * '반송'
@@ -1093,8 +1098,10 @@
 		        if (CheckUsePassword()) {
 		            chk_Passwd(pingUserID, btnStay_chkpassword_Complete);
 		        }
-		        else
-		            openOpinionUI("BoRyu", btnStay_option_Complete);
+		        else {
+		            //openOpinionUI("BoRyu", btnStay_option_Complete);
+			        openOpinionUI_New("BoRyu", btnStay_option_Complete);
+		        }
 		    }
 		
 		    function btnStay_chkpassword_Complete(chkpass) {
@@ -1109,7 +1116,8 @@
 		            OpenAlertUI(pAlertContent);
 		            return;
 		        }
-		        openOpinionUI("BoRyu", btnStay_option_Complete);
+		        //openOpinionUI("BoRyu", btnStay_option_Complete);
+		        openOpinionUI_New("BoRyu", btnStay_option_Complete);
 		    }
 		
 		    function btnStay_option_Complete(ret) {
@@ -1208,7 +1216,8 @@
 		        }
 		    }
 		    function btnOpinion_onclick() {
-		        openOpinionUI("");
+		        //openOpinionUI("");
+		    	openOpinionUI_New("");
 		    }
 		    function btnMemo_onclick() {
 		        openMemoUI();
@@ -1225,8 +1234,20 @@
 		    }
 		
 		    function btnClose_onclick() {
-		        window.close();
+		    	if (editedFlag) {
+		    		var pInformationContent = "<spring:message code='ezApprovalG.t148'/>" + "<br>" + "<spring:message code='ezApprovalG.t149'/>";
+				    OpenInformationUI(pInformationContent, btnClose_onclick_Complete);
+		    	} else {
+			        window.close();
+		    	}
 		    }
+		    
+		    function btnClose_onclick_Complete(rtn) {
+		    	DivPopUpHidden();
+		        if (rtn)
+		            window.close();	    	
+		    }
+		    
 		    window.onbeforeunload = function () {
 		        try {
 		            if (pAprLineType == "<spring:message code='ezApprovalG.t19'/>")
@@ -1658,7 +1679,7 @@
 	    			btnClose_onclick();
 		        }
 		    }
-		
+			var editedFlag = false;
 		    function btnEdit_onclick()
 		    {
 		    	if (checkAprState()) {
@@ -1712,6 +1733,7 @@
 		            if (FirstHtml == "")
 		                FirstHtml = beforeHtml;
 			        btnEdit.childNodes[0].textContent = "<spring:message code='ezApprovalG.t44'/>";
+			        editedFlag = true;
 		        }
 		        else {
 		            message.Set_EditorInputBodyHTML(modifiOrgBody);
@@ -1758,14 +1780,32 @@
 		        totalsavefileinfo_dialogArguments[0] = "";
 		        totalsavefileinfo_dialogArguments[1] = TotalSave_onclick_Complete;
 		
-		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=APR&orgCompanyID="+orgCompanyID);
+		        DivPopUpShow(580, 480, "/ezApprovalG/totalSaveFileInfo.do?docID=" + pDocID + "&type=" + getDocMode() + "&orgCompanyID=" + orgCompanyID);
 		    }
 		    function TotalSave_onclick_Complete() {
 		        DivPopUpHidden();
 		    }
-		    
-		    function TotalSave_onclick_Complete() {
-		        DivPopUpHidden();
+		    function getDocMode() {
+		    	var rtnVal = "APR";
+		    	try {
+		    		$.ajax({
+		     			type : "POST",
+		     			dataType : "text",
+		     			async : false,
+		     			url : "/ezApprovalG/getLineMode.do",
+		     			data : {
+		     					docID : pDocID,
+		     					orgCompanyID : orgCompanyID
+		     					},
+		     			success: function(result) {
+		     				rtnVal = result;
+		     			}
+		            });
+		    	} catch (e) {
+		    		alert("getDocMode() :: " + e.description);
+		    	}
+		    	
+		    	return rtnVal;
 		    }
 		    
 		    function getCurDocNumber() {
@@ -1791,6 +1831,7 @@
 		    }
 		    
 		    function checkAprState() {
+		    	editedFlag = false;
 		    	var result = "";
 		    	
 		    	if (approvalFlag == "S") {
@@ -1811,7 +1852,6 @@
 			    		}
 			    	});
 		    	}
-		    	
 		    	return result == "FALSE" ? true : false;
 		    }
 		    

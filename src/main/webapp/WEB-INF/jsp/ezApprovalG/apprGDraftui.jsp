@@ -119,6 +119,7 @@
 		    var pLimitRange = "", pPageNum = "1";
 		    var cabinetID = "";
 		    var TaskCode = "";
+		    var keepperiod = ""; // 보존년한 2019-03-22 임민석
 		    var DocNumCode = "";
 		    var SummaryFlag = false;
 		    var btnReceivLineEnable = false;
@@ -229,7 +230,9 @@
 		            		//임시보관함일경우 사인 초기화??
 		            		setFirstDrafter(isUsed, "");
 		            	} else {
-		            		getFormRecv();	
+		            		if(approvalFlag == "G") {
+		            			getFormRecv();	
+		            		}       		
 		            	}
 		            	
 		                //getFormRecv();
@@ -239,7 +242,7 @@
 		            if (pDraftFlag != "REDRAFT")
 		                setFirstDrafter(isUsed, beforeDocID);
 		            
-		            if (approvalFlag == "S") {
+		            if (approvalFlag == "S" && ListType != "21") {
 			            SetAutoDocnumItem();
 		            }
 		        }
@@ -429,7 +432,8 @@
 		    function process_AfterOpen_Complete(Ans) {
 		        DivPopUpHidden();
 		        if (Ans) {
-		            openOpinionUI("Display");
+		            //openOpinionUI("Display");
+		        	openOpinionUI_New("");
 		        }
 		    }
 		    function setAutoProperty() {
@@ -493,8 +497,20 @@
 		        }
 		    }
 		    function btnSendDraft_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					return;
+				} else if (deptCheckFlag == "2") {
+					alert("타부서의 철정보로 설정되어있습니다. \n'" + arr_userinfo[5] + "'부서의 철로 변경해주시기바랍니다.");
+					return;
+				}
+		    	
 		        try {
-		        	
 		        	if (isEditorComplete == true) {
 		        		if (pDraftFlag == "REDRAFT" && checkAprState() && ListType != "21") {
 		        			alert("<spring:message code='ezApprovalG.bhs23'/>");
@@ -583,7 +599,14 @@
 			            }
 			            
 			            if (btnSendDraftEnable == "false") {
-			                var pAlertContent = "<spring:message code='ezApprovalG.t139'/>" + "<br>" + "<spring:message code='ezApprovalG.t140'/>";
+			            	var pAlertContent = "";
+			            	//재기안의 경우 결재선 확인하라는 메세지 출력
+			            	if (DraftFlag == "REDRAFT") {
+				                pAlertContent = "<spring:message code='ezApprovalG.t1408'/>";
+			            	} else {
+				                pAlertContent = "<spring:message code='ezApprovalG.t139'/>" + "<br>" + "<spring:message code='ezApprovalG.t140'/>";
+			            	}
+			            	
 							OpenInformationUI(pAlertContent, check_btnSendDraft2);
 			                return;
 			            }
@@ -980,10 +1003,21 @@
 		        }
 		    }
 		    function btnAprDocAttach_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					return;
+				}
+				
 		        var ret = openAaprDocAttachUI();
 		    }
 		    function btnOpinion_onclick() {
-		        var ret = openOpinionUI("N");
+		        //var ret = openOpinionUI("N");
+		    	openOpinionUI_New("");
 		    }
 		    function btnSave_onclick() {
 		        if (message.Get_EditorBodyHTML() == "") {
@@ -1143,6 +1177,42 @@
 		        field.innerHTML = PublicText;
 		    }
 			
+			// 보존연한 적용 2019-03-22 임민석(전자결재G)
+			function setKeepPeriod() {
+				var fields = message.GetFieldsList();
+		        var field = message.GetListItem(fields, "keepperiod");
+		        
+		        if (!field) return;
+		        
+		        var keepperiodText = "";
+		        
+		        switch (keepperiod) {
+					case '01':
+						keepperiodText = "1년";
+						break;
+					case '03':
+						keepperiodText = "3년";
+						break;
+					case '05':
+						keepperiodText = "5년";
+						break;
+					case '10':
+						keepperiodText = "10년";
+						break;
+					case '20':
+						keepperiodText = "30년";
+						break;
+					case '30':
+						keepperiodText = "준영구";
+						break;
+					case '40':
+						keepperiodText = "영구";
+						break;
+				}
+		        
+		        field.innerHTML = keepperiodText;
+			}
+			
 		    /*기존의 공개여부 함수 2018-04-04 김은석 수정*/
 		    function setPublicFlag2() {
 		        var fields = message.GetFieldsList();
@@ -1230,6 +1300,16 @@
 		    }
 		    var inssepattach_cross_dialogArguments = new Array();
 		    function btnAddSepAttach_onclick() {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					return;
+				}
+				
 		        if (cabinetID.trim() == "") {
 		            var pAlertContent = "<spring:message code='ezApprovalG.t48'/>";
 		            OpenAlertUI(pAlertContent);
@@ -1336,6 +1416,16 @@
 		
 		    var ezapprovalinfo_dialogArguments = new Array();
 		    function btnApprovalInfo(pGubun) {
+	        	var deptCheckFlag = checkDeptAndCabinetId();
+	        	
+				if (deptCheckFlag == "3") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + "' " + strLanggarm03 + " '" + arr_userinfo[5] + "'" + strLanggarm04 );
+					return;
+				} else if (deptCheckFlag == "4") {
+					alert(strLanggarm02 + " '" + arr_userinfo[5] + strLanggarm05);
+					return;
+				}
+				
 		    	if (pDraftFlag == "REDRAFT" && checkAprState() && ListType != "21") {
 		    		alert("<spring:message code='ezApprovalG.bhs23'/>");
 	    			window.returnValue = "CLOSE";
@@ -1466,6 +1556,7 @@
 			                xmlCab = loadXMLString(g_SelCabXml);
 			                cabinetID = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/CABINETID");
 			                TaskCode = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/TASKCODE");
+			                keepperiod = SelectSingleNodeValueNew(xmlCab, "CABINETINFO/CABINET/KEEPPERIOD");
 		                }
 		
 		                tempSecurity = ret[7];
@@ -1487,6 +1578,7 @@
 			                	tempPublic = "N";
 			                }
  			                setPublicFlag();
+ 			                setKeepPeriod();
 			                // setPublicFlag2();
 			                
 			                if (nonElecRec == "Y") {
@@ -1665,6 +1757,24 @@
 		    	
 		    	return result == "FALSE" ? true : false;
 		    }
+	        
+	    	function checkDeptAndCabinetId() {
+	    		var result;
+            	$.ajax({
+            		type : "POST",
+            		dataType : "text",
+            		async : false,
+            		url : "/ezApprovalG/checkDeptAndCabinetId.do",
+            		data : {
+            				orgDeptId : arr_userinfo[4],
+            				orgCabinetId : cabinetID
+            				},
+            		success : function(text){
+            			result = text;
+            		}
+            	});
+            	return result;
+	    	}
 		</script>
 	</head>
 	<body class="popup" onbeforeunload="return window_onbeforeunload()" style="height:100%;">

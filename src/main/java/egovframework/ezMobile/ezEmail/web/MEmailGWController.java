@@ -107,6 +107,7 @@ import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezMobile.ezEmail.service.MEmailService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.ezMobile.ezOption.vo.MCommonVO;
+import egovframework.ezMobile.ezOption.vo.MOptionVO;
 import egovframework.let.user.login.service.LoginService;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovStringUtil;
@@ -278,7 +279,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			
-			List<Map<String, String>> sharedMailBoxList = ezEmailService.getUserSharedMailboxList(userId, info.getTenantId());
+			List<Map<String, String>> sharedMailBoxList = ezEmailService.getUserSharedMailboxList(userId, true, info.getTenantId());
 			
 			for (int i = 0; i < sharedMailBoxList.size(); i++) {
 				JSONObject shareMailInfo = new JSONObject();
@@ -328,6 +329,16 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					mailFolderList.add(folder);
 				}
 
+				
+				MOptionVO opt = mOptionService.optionInfo(shareId, info.getTenantId());
+				if(opt == null) {
+					LOGGER.debug("shareID insertOption start");
+					mOptionService.insertOption(shareId, info.getOffSet(), info.getLang(), "D", "10", "N", info.getTenantId());
+					opt = mOptionService.optionInfo(shareId, info.getTenantId());
+
+					LOGGER.debug("opt: " + opt.toString());
+				}
+				
 				shareMailInfo.put("mailFolderList", mailFolderList);
 				shareMailInfo.put("shareId", shareId);
 				shareMailInfo.put("deletePermission", deletePermission);
@@ -784,6 +795,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String cmd = "";
 			String folderId = "";
 			String messageId = "";
+			String textOption = "";
+			String defaultFontAndSize = "";
 			
 			if (jsonObject.get("cmd") != null) {
 				cmd = (String) jsonObject.get("cmd");
@@ -797,12 +810,19 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				messageId = (String) jsonObject.get("messageId");
 			}
 			
+			if (jsonObject.get("textOption") != null) {
+				textOption = (String) jsonObject.get("textOption");
+			}
+			
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			String mailAttachLimit = ezCommonService.getTenantConfig("MailAttachLimit", info.getTenantId());
 			String mUseMailAddrAutoComplete = ezCommonService.getTenantConfig("mobileUseMailAddrAutoComplete", info.getTenantId());
 			String attachFileNameMaxLength = ezCommonService.getTenantConfig("attachFileNameMaxLength", info.getTenantId());
+			if (attachFileNameMaxLength.equals("")) {
+				attachFileNameMaxLength = "100"; // default
+			}
 			OrganUserVO userVO = ezOrganAdminService.getUserInfo(userId, info.getPrimary(), info.getTenantId());
 			
 			String userEmail = info.getUserId() + "@" + domainName;
@@ -1035,7 +1055,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			        		}	        		
 		        		}
 	
-		        		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+		        		defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
 		        		
 		        		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
 		        		if (info.getLang().equals("1")) {
@@ -1122,8 +1142,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						String orgCc = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(rawHeader));
 						
 			            StringBuilder sb = new StringBuilder();
-			            sb.append("<hr tabindex=\"-1\">");
-			            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
 			            
 			            //set received date
 			            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ( z )");
@@ -1136,10 +1154,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			    			sdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
 			    		}
 			            
-			            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
-			            
-			            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
-			            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
 			            
 			            String orgMessageSubject = ezEmailUtil.getSubject(orgMessage);	
 			            
@@ -1154,9 +1168,25 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 								
 								orgMessageSubject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
 							}
-						}			            
-						
-						sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p><br/><br/>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
+						}	
+						if (textOption.equalsIgnoreCase("HTML")) {
+							sb.append("<hr tabindex=\"-1\">");
+				            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
+							sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
+				            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
+				            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
+							sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p><br/><br/>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
+							
+						} else if (textOption.equalsIgnoreCase("PLAIN")) {
+							defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+							sb.append("<p " + defaultFontAndSize + ">&nbsp;</p>");
+				            sb.append(String.format("<p " + defaultFontAndSize + ">%s :  %s</p>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
+							sb.append(String.format("<p " + defaultFontAndSize + ">%s :  %s</p>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
+				            sb.append(String.format("<p " + defaultFontAndSize + ">%s :  %s</p>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
+				            sb.append(String.format("<p " + defaultFontAndSize + ">%s :  %s</p>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
+							sb.append(String.format("<p " + defaultFontAndSize + ">%s :  %s</p><br/><br/>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
+							
+						}
 						
 						Map<String, Object> extraMap = new HashMap<String, Object>();
 						extraMap.put("shareId", userId);
@@ -1166,7 +1196,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);					
 						String tmphtmlbody = bodyInfoList.get(0);
 			            
-			            bodyValue = sb.toString() + tmphtmlbody;
+						bodyValue = sb.toString() + tmphtmlbody;
 			            
 			            // 원본 메일 내용에 메일 서명 존재 시 변환 처리
 		                if (bodyValue.contains("id=\"MailSignSent\"") || bodyValue.contains("id=MailSignSent")) {
@@ -1184,7 +1214,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		                if (cmd.equals("REPLY") || cmd.equals("REPLYALL") || cmd.equals("FORWARD")) {
 		                	bodyValue = bodyValue.replaceAll("class=&quot;FIELD&quot;", "");
 		                	bodyValue = bodyValue.replaceAll("class=FIELD", "");
-		                	bodyValue = "<body free>" + bodyValue + "</body>";
+		                	if (textOption.equalsIgnoreCase("HTML")) {
+		                		bodyValue = "<body free>" + bodyValue + "</body>";
+							}
 		                }
 		                
 		                //임시보관함에 저장
@@ -1373,6 +1405,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			data.put("mailAttachLimit", mailAttachLimit);
 			data.put("mUseMailAddrAutoComplete", mUseMailAddrAutoComplete); //20180712 조진호 - 모바일에서 수신자 자동완성기능 사용여부
 			data.put("attachFileNameMaxLength", attachFileNameMaxLength); //20190114 조진호 - 첨부파일명 길이제한
+			data.put("defaultFontAndSize", defaultFontAndSize); //20190510 조진호 - 기본 글씨 속성
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -2101,6 +2134,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String cmd = "";
 			String mailcmd = "";
 			String replyReadTime = "1";
+			String textOption = "";
 			List<Map<String, Object>> addressCheck = null;
 			
 			if (jsonObject.get("subject") != null) {
@@ -2169,6 +2203,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						
 			if (jsonObject.get("replyReadTime") != null) {
 				replyReadTime = (String) jsonObject.get("replyReadTime");
+			}
+			
+			if (jsonObject.get("textOption") != null) {
+				textOption = (String) jsonObject.get("textOption");
 			}
 			
 			String realPath = commonUtil.getRealPath(request);
@@ -2384,28 +2422,34 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					
 					LOGGER.debug("defaultFontAndSize=" + defaultFontAndSize);
 					
-					// p태그에 기본 폰트를 적용한다.
-					textBody = textBody.replace("<p>", "<p " + defaultFontAndSize + ">");
+					if (textOption.equalsIgnoreCase("HTML")) {
+						// p태그에 기본 폰트를 적용한다.
+						textBody = textBody.replace("<p>", "<p " + defaultFontAndSize + ">");
+						
+			            content.setContent(textBody, "text/plain; charset=utf-8");
+			
+			            // multipart/alternative로 구성한다.
+		                alternativePart = new MimeMultipart("alternative");
+			            
+		                // text/plain 파트를 구성한다.
+			            MimeBodyPart textPlainPart = new MimeBodyPart();
+			            
+			            // HTML 태그들을 제거한 Plain Text로 변환한다. 
+			            Source htmlSource = new Source(textBody);
+			            Renderer htmlRend = new Renderer(htmlSource);
+			            textPlainPart.setText(htmlRend.toString(), "utf-8");	
+			            
+			            // text/plain 파트를 추가한다.
+			            alternativePart.addBodyPart(textPlainPart);
+			            // text/html 파트를 추가한다. content가 text/html 파트를 갖고 있다.
+			            alternativePart.addBodyPart(content);
+//			            
+			            message.setContent(alternativePart);
+					} else if (textOption.equalsIgnoreCase("PLAIN")) {
+						message.setContent(textBody, "text/plain; charset=utf-8");
+	                	content.setContent(textBody, "text/plain; charset=utf-8");
+					}
 					
-		            content.setContent(textBody, "text/html; charset=utf-8");
-		
-		            // multipart/alternative로 구성한다.
-	                alternativePart = new MimeMultipart("alternative");
-		            
-	                // text/plain 파트를 구성한다.
-		            MimeBodyPart textPlainPart = new MimeBodyPart();
-		            
-		            // HTML 태그들을 제거한 Plain Text로 변환한다. 
-		            Source htmlSource = new Source(textBody);
-		            Renderer htmlRend = new Renderer(htmlSource);
-		            textPlainPart.setText(htmlRend.toString(), "utf-8");	
-		            
-		            // text/plain 파트를 추가한다.
-		            alternativePart.addBodyPart(textPlainPart);
-		            // text/html 파트를 추가한다. content가 text/html 파트를 갖고 있다.
-		            alternativePart.addBodyPart(content);
-//		            
-		            message.setContent(alternativePart);
 				
 					// 메일 중요도
 					switch (importance) { // 2: High, 1: Normal, 0: Low
@@ -3011,7 +3055,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			} else {
 				f.open(Folder.READ_WRITE);
 				
-				LOGGER.error("folderId = " + folderId + ", uid = " + uid);
+				LOGGER.debug("folderId = " + folderId + ", uid = " + uid);
 				
 				Message message = null;
 				
@@ -4566,6 +4610,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			LOGGER.debug("mailGeneral=" + mailGeneral);
 			
 			data.put("listCount", mailGeneral.getListCount());
+			data.put("textOption", mailGeneral.getTextOption());
 											
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -4763,50 +4808,78 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					int start, int count, int[] searchCount, String folderID) {
 		LOGGER.debug("getAddressSearch started");
 		LOGGER.debug("getAddressSearch searchTarget=" + searchTarget + ",filterName=" + filterName
-				+ ",filterValue=" + filterValue + ",start=" + start + ",count=" + count);
+				+ ",filterValue=" + filterValue + ",start=" + start + ",count=" + count + ",folderID=" + folderID);
 		
         String returnValue = "";
-       
+        String pFilter = "";
+        List<AddressVO> addressInfoList = null;
+        
         try {
-        	
-        	String[] ownerIds = null;
-        	List<String> ownerIdList = new ArrayList<>();
-        	
-        	if (searchTarget.equalsIgnoreCase("all")) {
-                ownerIds = new String[]{userInfo.getCompanyId(), userInfo.getDeptId(), userInfo.getUserId()};        		
-        	} else {
-	        	if (searchTarget.contains("company")) {
-	        		ownerIdList.add(userInfo.getCompanyId());
-	        	}
-	        	
-	        	if (searchTarget.contains("department")) {
-	        		ownerIdList.add(userInfo.getDeptId());
-	        	}
-	        	
-	        	if (searchTarget.contains("personal")) {
-	        		ownerIdList.add(userInfo.getUserId());
-	        	}
-	        	
-	        	ownerIds = ownerIdList.toArray(new String[0]);
+        	// 메일쓰기 > 받는사람 > 주소록 검색 시 사용
+        	if (searchTarget.equals("all")) {
+            	String[] ownerIds = null;
+            	List<String> ownerIdList = new ArrayList<>();
+            	
+            	if (searchTarget.equalsIgnoreCase("all")) {
+                    ownerIds = new String[]{userInfo.getCompanyId(), userInfo.getDeptId(), userInfo.getUserId()};        		
+            	} else {
+    	        	if (searchTarget.contains("company")) {
+    	        		ownerIdList.add(userInfo.getCompanyId());
+    	        	}
+    	        	
+    	        	if (searchTarget.contains("department")) {
+    	        		ownerIdList.add(userInfo.getDeptId());
+    	        	}
+    	        	
+    	        	if (searchTarget.contains("personal")) {
+    	        		ownerIdList.add(userInfo.getUserId());
+    	        	}
+    	        	
+    	        	ownerIds = ownerIdList.toArray(new String[0]);
+            	}
+                
+            	for (String ownerId : ownerIds) {
+            		LOGGER.debug("getAddressSearch ownerId=" + ownerId);
+            	}
+            	
+            	pFilter = filterName + "," + filterValue;
+            	
+            	searchCount[0] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, filterName + ",");
+                searchCount[1] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, pFilter);   
+            	
+            	// start와 end(getAddressSearch를 호출 하는 곳에서 +1을 해주어 count값은 1로 넘어온다)값이 각각 0으로 넘어오는 경우 전체리스트를 출력하기 위해 count에 searchCount 대입 
+                if(start == 0 && count == 1){
+                	count = searchCount[1];
+                }
+                // 끝
+                
+                addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, count, start);
+        	} else { // 폴더 id가 필요한 주소록에서 사용
+            	String ownerId = "";
+            	
+            	if (searchTarget.contains("company")) {
+            		ownerId = userInfo.getCompanyId();
+            	} else if (searchTarget.contains("department")) {
+            		ownerId = userInfo.getDeptId();
+            	} else if (searchTarget.contains("personal")) {
+            		ownerId = userInfo.getUserId();
+            	}
+            	
+            	pFilter = filterName + "," + filterValue;
+            	
+            	searchCount[0] = ezAddressService.getAddressCount(userInfo.getTenantId(), folderID, ownerId, pFilter);
+                searchCount[1] = ezAddressService.getAddressCount(userInfo.getTenantId(), folderID, ownerId, pFilter);
+        		
+                
+                // start와 end(getAddressSearch를 호출 하는 곳에서 +1을 해주어 count값은 1로 넘어온다)값이 각각 0으로 넘어오는 경우 전체리스트를 출력하기 위해 count에 searchCount 대입 
+                if(start == 0 && count == 1){
+                	count = searchCount[1];
+                }
+                // 끝
+                
+                addressInfoList = ezAddressService.getAddressList(userInfo.getTenantId(), folderID, ownerId, "", pFilter, count, start);
         	}
-            
-        	for (String ownerId : ownerIds) {
-        		LOGGER.debug("getAddressSearch ownerId=" + ownerId);
-        	}
-        	
-            String pFilter = filterName + "," + filterValue;
-                        
-            searchCount[0] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, filterName + ",");
-            searchCount[1] = ezAddressService.getSearchCount(userInfo.getTenantId(), ownerIds, pFilter);            
-            
-            // start와 end(getAddressSearch를 호출 하는 곳에서 +1을 해주어 count값은 1로 넘어온다)값이 각각 0으로 넘어오는 경우 전체리스트를 출력하기 위해 count에 searchCount 대입 
-            if(start == 0 && count == 1){
-            	count = searchCount[1];
-            }
-            // 끝
-            
-            List<AddressVO> addressInfoList = ezAddressService.getSearchList(userInfo.getTenantId(), ownerIds, "", pFilter, count, start);
-            
+
             StringBuilder sb = new StringBuilder();
             sb.append("<LISTVIEWDATA><ROWS>");
             for (AddressVO addressInfo : addressInfoList) {
