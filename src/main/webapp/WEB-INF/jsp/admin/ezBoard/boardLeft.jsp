@@ -16,6 +16,12 @@
 				width:158px;
 				overflow:hidden;
 				text-overflow:ellipsis;
+				display:inline-block;
+			}
+			.arrowSpan {
+				width:42px;
+				height:33px;
+				display:inline-block;
 			}
 	    </style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
@@ -334,7 +340,13 @@
 	            }else{
 	                return document.getElementById(parentNodeid).childNodes.length;
 	            }
-	        }	        
+	        }
+	        
+	        /* 2019-02-14 홍승비 - 좌측 게시판리스트의 펼치기 화살표 클릭 시 하위게시판 불러오도록 수정*/
+		    function spanClick(divID) {
+		    	document.getElementById(divID).click();
+		    }
+	        
 	    </script>
 	</head>
 	<body class="leftbody">
@@ -365,7 +377,8 @@
 						$.each(item, function(idx, i){
 							strHTML += "<h2><div AccessLevel='1' class='groupBoard' id='TreeCtr" + idx + "' value='" + i.boardId;
 	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
-	                        strHTML += i.boardName + "</div></h2>";
+	                        strHTML += i.boardName + "</div>";
+	                        strHTML += "<span class='arrowSpan' onclick='spanClick(\"TreeCtr" + idx + "\")'></span></h2>";
 	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow-x: hidden; overflow-y: auto; padding-left: 10px; padding-bottom: 20px;'>";
 	                        strHTML += "</div></ul>";
 						});
