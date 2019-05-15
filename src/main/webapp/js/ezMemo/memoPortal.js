@@ -72,27 +72,51 @@ function setPanelPointer() {
  */
 function layerPopupOpacity() {
 
-	var defaultValue = 2;
-	$("#layer-popup").css("background-color", "rgba(0,0,0,0.3)");
+	var defaultValue = 5;
+	$("#layer-popup").css("background-color", "rgba(0,0,0,0.5)");
 
 	$("#slider-range").slider({
 		step : 1,
 		range : "max",
-		min : 1,
-		max : 3,
+		min : 0,
+		max : 10,
 		value : defaultValue,
 		slide : function(event, ui) {
 			opacityValue = ui.value;
 
 			switch (opacityValue) {
+				case 0:
+					opacityValue = 0.0;
+					break;
 				case 1:
-					opacityValue = 0.2;
+					opacityValue = 0.1;
 					break;
 				case 2:
-					opacityValue = 0.3;
+					opacityValue = 0.2;
 					break;
 				case 3:
+					opacityValue = 0.3;
+					break;
+				case 4:
 					opacityValue = 0.4;
+					break;
+				case 5:
+					opacityValue = 0.5;
+					break;
+				case 6:
+					opacityValue = 0.6;
+					break;
+				case 7:
+					opacityValue = 0.7;
+					break;
+				case 8:
+					opacityValue = 0.8;
+					break;
+				case 9:
+					opacityValue = 0.9;
+					break;
+				case 10:
+					opacityValue = 1;
 					break;
 			}
 			$("#layer-popup").css("background-color",
