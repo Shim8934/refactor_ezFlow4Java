@@ -265,12 +265,14 @@ var setImageElement = function (parent, imgsrc, type) {
 		imageElement.id = 'open-memo';
 		buttonDiv.addEventListener('click', function(event) {
 			event.preventDefault();
-			if(document.getElementById('layer-popup').style.display === 'none') {
+			//if(document.getElementById('layer-popup').style.display === 'none') {
+			if(document.getElementById('layer-popup').style.visibility === 'hidden') {
 				document.getElementById('noteBlock').style.visibility = 'visible';
-				document.getElementById('layer-popup').style.display = '';
+				document.getElementById('layer-popup').style.visibility = 'visible';
 				document.getElementById('contextMenuBlock').style.display = 'none';
 			} else {
-				document.getElementById('layer-popup').style.display = 'none';
+				//document.getElementById('layer-popup').style.display = 'none';
+				document.getElementById('layer-popup').style.visibility = 'hidden';
 				document.getElementById('contextMenuBlock').style.display = '';	
 			}
 			layerExpand();
