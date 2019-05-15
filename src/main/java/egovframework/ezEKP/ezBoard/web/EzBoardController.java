@@ -11,6 +11,7 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.security.PrivateKey;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -85,6 +86,7 @@ import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.ClientUtil;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.let.utl.sim.service.EgovFileScrty;
 
 /** 
@@ -137,6 +139,9 @@ public class EzBoardController extends EgovFileMngUtil{
 	@Resource(name = "EzMemoService")
 	private EzMemoService ezMemoService;
 	
+	@Autowired
+	private KlibUtil klibUtil;
+
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardController.class);
 	
 	/**
@@ -8214,17 +8219,17 @@ public class EzBoardController extends EgovFileMngUtil{
 					
 					try {
 						File sourceFile = new File(fullFilePath + fileNamesUIDArr[i]);
-				        bis = new BufferedInputStream(new FileInputStream(sourceFile));
-				        fileNamesArr[i] = commonUtil.getUniqueFileName(fileNamesArr[i], fileNameMap);
-				        ZipEntry zentry = new ZipEntry(fileNamesArr[i]);
-				        zos.putNextEntry(zentry);
-				        
-				        byte[] buffer = new byte[bufferSize];
-				        int cnt = 0;
-				        while ((cnt = bis.read(buffer, 0, bufferSize)) != -1) {
-				            zos.write(buffer, 0, cnt);
-			        }
-			        zos.closeEntry();
+						byte[] fileBytes = Files.readAllBytes(sourceFile.toPath());
+						
+						if (fileNamesUIDArr[i].endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+							fileBytes = klibUtil.decrypt(fileBytes);
+						}
+						
+						fileNamesArr[i] = commonUtil.getUniqueFileName(fileNamesArr[i], fileNameMap);
+						ZipEntry zentry = new ZipEntry(fileNamesArr[i]);
+						zos.putNextEntry(zentry);
+						zos.write(fileBytes);
+						zos.closeEntry();
 					} catch (IOException e) {
 						e.printStackTrace();
 					} finally {

@@ -61,6 +61,7 @@ import egovframework.let.user.login.vo.LoginSimpleVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 import egovframework.let.utl.fcc.service.EgovDateUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 
 @Service("EzBoardService")
@@ -90,6 +91,9 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 	@Resource(name="egovMessageSource")
 	private EgovMessageSource egovMessageSource;
 	
+	@Autowired
+	private KlibUtil klibUtil;
+
 	private static final Logger logger = LoggerFactory.getLogger(EzBoardServiceImpl.class);
 
 	@Override
@@ -3161,41 +3165,64 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 			}
 			
 			for (int i = 0; i < strAttachments.split("\\|").length; i++) {
+				String tempAttachmentPath = strAttachments.split("\\|")[i];
+				boolean isKlibEncrypted = tempAttachmentPath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT);
+				String uploadAttachmentPath;
+				
+				if (isKlibEncrypted) {
+					uploadAttachmentPath = tempAttachmentPath.substring(0, tempAttachmentPath.lastIndexOf('.'));
+				} else {
+					uploadAttachmentPath = tempAttachmentPath;
+				}
+				
 				if (strType.equals("BOARD")) {
-					if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
-						filePath = strAttachments.split("\\|")[i];
+					if (tempAttachmentPath.indexOf("upload_board") > -1) {
+						filePath = tempAttachmentPath;
 					} else {
-						filePath = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
+						filePath = strFilePath + commonUtil.separator + tempAttachmentPath;
 					}
 					
 					File file = new File(realPath + filePath);
 					fileSize = file.length();
 					
-					if (strAttachments.split("\\|")[i].indexOf("tempUploadFile") > -1) {
-						filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + strAttachments.split("\\|")[i].replace("tempUploadFile", "");
+					if (tempAttachmentPath.indexOf("tempUploadFile") > -1) {
+						filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + uploadAttachmentPath.replace("tempUploadFile", "");
 						
 						File fileinfo = new File(realPath + filePath2);
 						
 						if (!fileinfo.exists()) {
-							FileUtils.moveFile(file, fileinfo);
+							if (isKlibEncrypted) {
+								byte[] fileBytes = FileUtils.readFileToByteArray(file);
+								fileBytes = klibUtil.decrypt(fileBytes);
+								FileUtils.writeByteArrayToFile(fileinfo, fileBytes);
+							} else {
+								FileUtils.moveFile(file, fileinfo);
+							}
 						}
-					} else if (strAttachments.split("\\|")[i].indexOf("upload_board") > -1) {
-						filePath2 = strAttachments.split("\\|")[i];
+					} else if (tempAttachmentPath.indexOf("upload_board") > -1) {
+						filePath2 = tempAttachmentPath;
 					} else {
-						filePath2 = strFilePath + commonUtil.separator + strAttachments.split("\\|")[i];
+						filePath2 = strFilePath + commonUtil.separator + tempAttachmentPath;
 					}
 					
 					file = null;
 				} else {
-					File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2]);
+					File file = new File(realPath + commonUtil.getUploadPath("upload_board.TEMPUPLOADFILE", tenantID)  + commonUtil.separator + tempAttachmentPath.split("/")[2]);
 					fileSize = file.length();
 					
-					filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + strAttachments.split("\\|")[i].split("/")[2];
+					filePath2 = strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile" + commonUtil.separator + uploadAttachmentPath.split("/")[2];
 					
 					File fileinfo = new File(realPath + filePath2);
 					
 					if (!fileinfo.exists()) {
-						FileUtils.moveFile(file, fileinfo);
+						if (isKlibEncrypted) {
+							byte[] fileBytes = FileUtils.readFileToByteArray(file);
+							fileBytes = klibUtil.decrypt(fileBytes);
+							FileUtils.writeByteArrayToFile(fileinfo, fileBytes);
+						} else {
+							FileUtils.moveFile(file, fileinfo);
+						}
+						
 						file.delete();
 					}
 					
@@ -3204,10 +3231,10 @@ public class EzBoardServiceImpl extends EgovAbstractServiceImpl implements EzBoa
 				
 				fileName = filePath2.replace(strFilePath + commonUtil.separator + strBoardID + commonUtil.separator + "uploadFile", "").substring(40);
 				
-				// 2018.07.05 - KLIB - ezd 확장자 없애기
-				if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
-					fileName = fileName.substring(0, fileName.lastIndexOf("."));
-				}
+//				// 2018.07.05 - KLIB - ezd 확장자 없애기
+//				if (fileName.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+//					fileName = fileName.substring(0, fileName.lastIndexOf("."));
+//				}
 				
 				saveAttachInfo(strItemID, i, filePath2, fileSize, fileName, tenantID);
 			}
