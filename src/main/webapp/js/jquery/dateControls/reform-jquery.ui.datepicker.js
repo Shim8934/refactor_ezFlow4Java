@@ -681,7 +681,7 @@ $.extend(Datepicker.prototype, {
 	 *					event - if triggered by focus
 	 */
 	_showDatepicker: function(input) {
-		if (parent.document.getElementById('attitude_annual_conn')) { //근태관리 연동양식일 경우
+		if (document.getElementById('attitude_annual_conn') || parent.document.getElementById('attitude_annual_conn')) { //근태관리 연동양식일 경우
 			var todayDateStr = getToday();
 			if (todayDateStr.length == 7) {
 				getDisabledDays(todayDateStr.substr(0,4), todayDateStr.substr(4,1));

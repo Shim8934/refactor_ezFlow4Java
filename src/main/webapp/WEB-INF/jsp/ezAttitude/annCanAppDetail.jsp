@@ -6,7 +6,7 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>연차취소현황</title>
+		<title>취소신청 상세보기</title>
 		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
         <link rel="stylesheet" href="${util.addVer('/css/ezSchedule/Tab.css')}" type="text/css" />
         <link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >
@@ -162,7 +162,7 @@
 	                    <td style="height: 20px">
 	                        <div id="menu">
 	                        	<ul id="menuTable">	
-	                                <li class="sel"><h1 style="padding:0px; margin-top:-5px;">연차취소현황</h1></li>
+	                                <li class="sel"><h1 style="padding:0px; margin-top:-5px;">취소신청 상세보기</h1></li>
 	                            </ul>
 	                        </div>
 	                        <div id="close">
