@@ -434,18 +434,21 @@ function hideMemo(obj) {
  * 레이어 사이즈 변경 메서드
  */
 function setLayerSize() {
-	var layerClass = $("#layer-popup").attr("class");
+	var memoLayer = $("#layer-popup");
+	var layerClass = memoLayer.attr("class");
+	
 	var winWidth = window.innerWidth;
 	var winHeight = window.innerHeight;
 	
-	if (layerClass.indexOf("layerFullScreen") != -1) {
-		$(".layerFullScreen").css({"width" : winWidth, "height" : winHeight, "top" : 55, "left" : 0});
-		$(".memoListBox").css({"width" : winWidth, "height" : winHeight-130});
-		$(".memo_main").css({"width" : winWidth, "height" : winHeight-150});
-		$("#layer-popup").css({"height" : winHeight-45});
-	} else if (layerClass.indexOf("layerControl") != -1) {
-		getMemoConfig();
+	if (layerClass.indexOf("layerFullScreen") != -1) {			// full-screen일 때
+		memoLayer.css({"width" : winWidth, "height" : winHeight, "top" : 56, "left" : 0});
+		//$(".memoListBox").css({"width" : winWidth, "height" : winHeight-130});
+		//$(".memo_main").css({"width" : winWidth, "height" : winHeight-150});
+		//$("#layer-popup").css({"height" : winHeight-45});
 		setMemoListSize();
+		
+	} else if (layerClass.indexOf("layerControl") != -1) {		// control모드일 때
+		getMemoConfig();
 	}
 }
 
@@ -514,7 +517,7 @@ function getMemoConfig() {
         		setLayerSize();
 			}
 			emptyMemoResize();
-        	layerResize();
+			memoLayerResize();
         	
         	bigMemoInfo.height = result.memoConfigVO.b_memo_height;
         	bigMemoInfo.width = result.memoConfigVO.b_memo_width;
@@ -548,24 +551,14 @@ function insertMemoConfig() {
 	});
 }
 
-
-/**
- * 레이어 위치값 변경 메서드
- */
+// 레이어 위치값 변경 메서드
 function setLayerPosition() {
-	
-	var layerClass = $("#layer-popup").attr("class");
+	var memoLayer = $("#layer-popup");
+	var layerClass = memoLayer.attr("class");
 	
 	if (layerClass.indexOf("layerControl") != -1) {
-
-    	var topString = $("#layer-popup").css("top");
-		var leftString = $("#layer-popup").css("left");
-		
-		var topPIndex = topString.indexOf("p");
-		var leftPIndex = leftString.indexOf("p");
-		
-		var layerTop = parseInt(topString.substr(0, topPIndex));
-		var layerLeft = parseInt(leftString.substr(0, leftPIndex));
+		var layerTop = parseInt(memoLayer[0].offsetTop);
+		var layerLeft = parseInt(memoLayer[0].offsetLeft);
 		
     	$.ajax({
     		type : "POST",
@@ -582,18 +575,15 @@ function setLayerPosition() {
 	}
 }
 
-
-/**
- * 레이어 넓이값 변경 메서드
- */
+// 레이어 넓이값 변경 메서드
 function setLayerArea() {
-	
-	var layerClass = $("#layer-popup").attr("class");
+	var memoLayer = $("#layer-popup");
+	var layerClass = memoLayer.attr("class");
 		
 	if (layerClass.indexOf("layerControl") != -1) {
 
-			var layerWidth = parseInt($(".layerControl").width());
-		var layerHeight = parseInt($(".layerControl").height());
+		var layerWidth = parseInt(memoLayer[0].offsetWidth);
+		var layerHeight = parseInt(memoLayer[0].offsetHeight);
 		
 		$.ajax({
 			type:"POST",
@@ -614,102 +604,72 @@ function setLayerArea() {
  /**
   * 윈도우 리사이즈 시, 레이어 위치 및 사이즈 조절
   */
-function layerResize() {
-	var stringTop = $("#layer-popup").css("top");
-	var stringLeft = $("#layer-popup").css("left");
+function memoLayerResize() {
+	var memoLayer = $('#layer-popup');
+	
+	var beforeWidth, width;
+	var beforeHeight, height;
+	var beforeTop, top;
+	var beforeLeft, left;
+	
+	beforeWidth = width = memoLayer[0].offsetWidth;			// 레이어의 넓이
+	beforeHeight = height = memoLayer[0].offsetHeight;		// 레이어의 높이
+	beforeTop = top = memoLayer[0].offsetTop;				// 레이어의 top
+	beforeLeft = left = memoLayer[0].offsetLeft;			// 레이어의 left
 	
 	var windowHeight = parseInt(window.innerHeight);
 	var windowWidth = parseInt(window.innerWidth);
 	
-	var pIndex = stringTop.indexOf("p");
-	var pIndex = stringLeft.indexOf("p");
-	
-	var width = parseInt($("#layer-popup").width());
-	var height = parseInt($("#layer-popup").height());
-	
-	var left = parseInt(stringLeft.substr(0, pIndex));
-	var top = parseInt(stringTop.substr(0, pIndex));
-	
-	var layerClass = $("#layer-popup").attr("class");
+	var layerClass = memoLayer.attr("class");
 	
 	if (layerClass.indexOf("layerControl") != -1) {
-    	
-    	if (height > windowHeight) {
-    		if (height > 380) {
-    			
-        		height = windowHeight - 30;
-        		$("#layer-popup").css("height", height);
-        		$(".memoListBox").css("height", height - 90);
-        		$(".memo_main").css("height", height - 90);
-    		}
-    	}
-    	
-    	if (width > windowWidth) {
-    		if (width > 340) {
-    			
-        		width = windowWidth - 30;
-        		$("#layer-popup").css("width", width);
-        		$(".memoListBox").css("width", width);
-        		$(".memo_main").css("width", width);
-    		}
-    	}
-    	
-		var leftPosition;
 		
-    	if (windowWidth > width) {
-    		leftPosition = windowWidth - width - 10;
-    	}
-    	
-    	var bottomPosition;
-    	
-    	if (windowHeight > height) {
-    		bottomPosition = windowHeight - height - 10;
-    	}
-    	
-		if (top > windowHeight) {
-			$("#layer-popup").css("top", bottomPosition);
-			
-		} else if (top < windowHeight) {
-			if (top + height > windowHeight) {
-				$("#layer-popup").css("top", bottomPosition);
+		// 16 -> 스크롤 바의 넓이, 높이 
+		if (height + top > windowHeight) { 					// 레이어의 높이와 top의 합이 window의 높이보다 클 때
+			if (height < windowHeight) {						// 레이어의 높이가 브라우저의 높이보다는 작다면
+				top = windowHeight - height - 16 >= 0 ? windowHeight - height - 16 : 0;	//  top만 변경 단, 0보다 작으면 0
+				memoLayer.css('top', top);
+				
+			} else {											// 레이어의 높이가 브라우저의 높이보다 크면
+				if (height > 380) {									// 단, 레이어의 높이가 380(레이어의 최소 높이)보다 크면
+					memoLayer.css('height', windowHeight);			// 높이를 브라우저 사이즈로 변경
+				}
 			}
-		}
+		}													// 레이어의 높이와 top의 크기의 합이 window의 높이보다 작으면 그대로
 		
-    	if (left > windowWidth) {
-    		$("#layer-popup").css("left", leftPosition);
-    		
-    	} else if (left < windowWidth) {
-    		if (left + width > windowWidth) {
-        		$("#layer-popup").css("left", leftPosition);
-        		
-    		 }
-    	}
+		if (width + left > windowWidth) {					// 레이어의 넓이와 left의 합이 window의 넓이보다 클 때
+			if (width < windowWidth) {							// 레이어의 넓이가 브라우저의 넓이보다는 작다면
+				left = windowWidth - width - 16 >= 0 ? windowWidth - width - 16 : 0;	// left만 변경 단, 0보다 작으면 0
+				memoLayer.css('left', left);
+				
+			} else {											// 레이어의 넓이가 브라우저의 넓이보다 크면
+				if (width > 340) {									// 단, 레이어의 넓이가 340(레이어의 최소 넓이)보다는 크면
+					memoLayer.css('width', windowWidth);				// 넓이를 브라우저 사이즈로 변경
+				}
+			}
+		}	
+		setMemoListSize();
 		
     	/* 
     	 * 레이어의 사이즈나 위치가 변했을 경우 
     	 * 적용된 사이즈와 position DB에 저장
     	 */
-    	setLayerPosition();
-    	setLayerArea();
-    	/*
     	if (beforeTop != top || beforeLeft != left) {
 	    	setLayerPosition();
     	}
-    	
     	if (beforeHeight != height || beforeWidth != width) {
 	    	setLayerArea();
     	}
-    	*/
-	} else if (layerClass.indexOf("layerFullScreen") != -1) {	//레이어가 full-screen 모드이면
-		
-		$("#layer-popup").css("width", windowWidth);
-		$("#layer-popup").css("height", windowHeight-56);
     	
-    	$(".memoListBox").css({"height" : windowHeight-56-54-26, "width" : windowWidth})
-		$(".memo_main").css({"height" : windowHeight-56-54-26, "width" : windowWidth})
-		}
+	} else if (layerClass.indexOf("layerFullScreen") != -1) {	// 레이어가 full-screen 모드이면
+		memoLayer.css("width", windowWidth);					// 레이어의 넓이 = 윈도우의 넓이
+		memoLayer.css("height", windowHeight - 56);				// 레이어의 높이 = 윈도우의 높이 - 포탈 페이지의 메뉴 높이
+    	
+		setMemoListSize();
+	}
 }
 
+/*
 function setMemoListBody (height, width) {
 	
 	$(".memoListBox").css("height", height - 90);
@@ -718,7 +678,7 @@ function setMemoListBody (height, width) {
 	$(".memoListBox").css("width", width);
 	$(".memo_main").css("width", width);
 }
- 
+*/
 /**
  * 퀵메모 위치값 저장 메서드
  * (display !== 'none')일때만
@@ -926,21 +886,21 @@ function getMemoList(type) {
  * 메모 리스트 사이즈 변경 메서드
  */
 function setMemoListSize() {
+	var layerClass = $("#layer-popup").attr("class");
 	
-	var offsetHeight = $("#layer-popup")[0].offsetHeight;
-    var layerHeight = $("#layer-popup").height();
-    var layerWidth = $("#layer-popup").width();
-    var memoListHeight = layerHeight - 54;		// 54 -> 메모 레이어 헤더의 높이
-
-    $(".memo_main").css({"height" : memoListHeight - 20, "width" : layerWidth});
+	var layerWidth = $("#layer-popup")[0].offsetWidth;
+	var layerHeight = $("#layer-popup")[0].offsetHeight;
+    var memoListHeight = layerHeight - 54;					// 54 -> 메모 레이어 헤더의 높이
     
-    var layerClass = $("#layer-popup").attr("class");
-	
+    $(".memo_main").css({"height" : memoListHeight - 30, "width" : layerWidth});		// 30 -> 임의의 숫자 - 투명도 조절 버튼이 잘 보이는 높이
+    $(".memoListBox").css({"height" : memoListHeight - 30, "width" : layerWidth});
+    /*
 	if (layerClass.indexOf("layerFullScreen") != -1) {									// 전체 모드일 때
-		$(".memoListBox").css({"height" : memoListHeight - 27, "width" : layerWidth});	  // 메모 레이어 투명도 버튼 위      		
+		$(".memoListBox").css({"height" : memoListHeight - 30, "width" : layerWidth});
 	} else {																			// control 모드일 때
-		$(".memoListBox").css({"height" : memoListHeight - 20, "width" : layerWidth});
+		$(".memoListBox").css({"height" : memoListHeight - 30, "width" : layerWidth});
 	}
+	*/
 //	emptyMemoResize();
 }
 
@@ -1231,13 +1191,7 @@ function addEventInBigMemo() {
     }).on('mouseup', function () {
         $('#noteBlock').css('visibility', 'hidden');
     });
-/*
-    // 큰 메모 열기
-    $('#layer-popup').on('dblclick', '.memoText', function (event, ui) {
-    	var memoId = $(this).attr("memoid");
-    	getMemoDetail(memoId);
-    });
-*/
+    
     // 큰 메모 닫기
     $("#closeMemo").click(function() {
     	setDetailStatus();
