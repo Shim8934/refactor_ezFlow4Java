@@ -504,7 +504,8 @@
 	            if (xmlHTTP_Unread == null || xmlHTTP_Unread.readyState != 4)
 	                return;
 	            if (xmlHTTP_Unread.status >= 200 && xmlHTTP_Unread.status < 300) {
-            		var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "DATA")[0]);
+            		var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "FOLDERUNREADCOUNT")[0]);
+            		var totalUnreadCount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "TOTALUNREADCOUNT")[0]);
 	                var caption = window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "foldername");
 	
 	                if (get_unreadend_2010.href == window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "href")) {
@@ -520,9 +521,21 @@
 	                    if (pageSrc.indexOf("mailList.do") != -1) {
                         	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) { }
 	                    }
-	                    
-	                    xmlDom = null;
 	                }
+	                
+	                /* TODO: 공유사서함 적용 후 주석 제거 후 수정
+	                var totalUnreadCountId = "totalUnreadCount";
+	                
+	                if (shareId != "") {
+	                	totalUnreadCountId += "_" + shareId;
+	                }
+	                
+                	if (totalUnreadCount == "0") {
+                		document.getElementById(totalUnreadCountId).innerHTML = "";
+                	} else {
+                		document.getElementById(totalUnreadCountId).innerHTML = "(" + totalUnreadCount + ")";
+                	}
+                	*/
 	            }
 	            
 	            xmlHTTP_Unread = null;
@@ -546,7 +559,7 @@
                 }
 	        	
 	        	$.ajax({
-                    url: "/ezEmail/getAllFolderUnreadCount.do",
+                    url: "/ezEmail/getUnreadCountAll.do",
                     type: "POST",
                     contentType: "application/json",
                     dataType: "json",
@@ -554,23 +567,44 @@
                     success : function(result) {
                     	try {
 	                    	if (result.resultCode === "OK") {
-	                    		var unreadCountList = result.unreadCountList;
-	                    		var href, caption;
-	                    		var selectedIndex = window[treeviewStr].selectedIndex();
+	                    		var unreadCountMap = result.unreadCountMap;
+	                    		var href, caption, unreadCount;
+	                    		var totalUnreadCount = result.totalUnreadCount;
+	                    		var shareInfoList = result.shareInfoList;
 	                    		
-	                    		for (var i = 0; i < unreadCountList.length; i++) {
-	                    			href = window[treeviewStr].getvalue(i + 1, "href");
-	                    			
-	                    			if (href === unreadCountList[i].href) {
+	                    		if (shareId === result.shareId) {
+	                    			for (var i = 0; i < nodeCount; i++) {
+		                    			href = window[treeviewStr].getvalue(i + 1, "href");
 	                    				caption = window[treeviewStr].getvalue(i + 1, "foldername");
+		                    			unreadCount = unreadCountMap[href];
 	                    				
-	                    				if (unreadCountList[i].unreadCount === 0) {
+	                    				if (typeof(unreadCount) === 'undefined' || unreadCount === 0) {
 		        	                    	window[treeviewStr].putcaption(i + 1, caption);
 		        	                    } else {
-		        	                    	window[treeviewStr].putcaption(i + 1, caption + "&nbsp;&nbsp;" + unreadCountList[i].unreadCount);
+		        	                    	window[treeviewStr].putcaption(i + 1, caption + "&nbsp;&nbsp;" + unreadCount);
 		        	                    }
-	                    			}
+		                    		}
 	                    		}
+	                    		
+	                    		/* TODO: 공유사서함 적용 후 주석 제거 후 수정
+	                    		if (totalUnreadCount == 0) {
+                    				document.getElementById("totalUnreadCount").innerHTML = "";
+                    			} else {
+                    				document.getElementById("totalUnreadCount").innerHTML = "(" + totalUnreadCount + ")";
+                    			}
+	                    		
+	                    		if ("${useSharedMailbox}" == "YES") {
+	                    			for (var i = 0; i < shareInfoList.length; i++) {
+		                    			shareInfo = shareInfoList[i];
+		                    			
+		                    			if (shareInfo.totalUnreadCount == "0") {
+		                    				document.getElementById("totalUnreadCount_" + shareInfo.shareId).innerHTML = "";
+		                    			} else {
+		                    				document.getElementById("totalUnreadCount_" + shareInfo.shareId).innerHTML = "(" + shareInfo.totalUnreadCount + ")";
+		                    			}
+		                    		}
+	                    		}
+	                    		*/
 	                    		
                    				try {
                     				var pageSrc = parent.frames["right"].document.location.toString();

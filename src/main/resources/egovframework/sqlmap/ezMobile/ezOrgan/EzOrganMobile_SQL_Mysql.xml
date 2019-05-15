@@ -198,7 +198,7 @@
 					FROM
 						TBL_DEPTMASTER
 					WHERE
-						DISPLAYNAME$lang$ LIKE CONCAT('%', #deptID#, '%')
+						DISPLAYNAME$lang$ LIKE CONCAT('%', #deptIDEscape#, '%')
 					AND
 						TENANT_ID = #tenantID#
 					AND       
@@ -226,9 +226,9 @@
 				FROM
 					TBL_USERMASTER
 				WHERE
-					(DISPLAYNAME$lang$ LIKE CONCAT('%', #deptID#, '%')
+					(DISPLAYNAME$lang$ LIKE CONCAT('%', #deptIDEscape#, '%')
 				OR
-					DESCRIPTION$lang$ LIKE CONCAT('%', #deptID#, '%'))
+					DESCRIPTION$lang$ LIKE CONCAT('%', #deptIDEscape#, '%'))
 				AND
 					CN <> 'masteradmin'
 				AND
