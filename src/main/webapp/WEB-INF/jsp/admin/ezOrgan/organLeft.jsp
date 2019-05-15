@@ -191,7 +191,7 @@
 			</c:if>
   			<c:if test="${useCopyrightMenu == 'YES'}">
   			<h2>
-				<span onClick="goPage(34)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.ksa05'/></span>
+				<span onClick="goPage(34)" style="display:inline-block;width:100%;"><spring:message code='ezEmail.ksa06'/></span>
 			    <ul></ul>
 			</h2>
 			</c:if>

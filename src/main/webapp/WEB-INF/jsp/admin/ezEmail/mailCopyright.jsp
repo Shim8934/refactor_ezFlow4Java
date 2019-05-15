@@ -36,7 +36,7 @@
 		</style>
 	</head>
 	<body class="mainbody">
-		<h1><spring:message code='ezEmail.ksa05' /></h1>
+		<h1><spring:message code='ezEmail.ksa06' /></h1>
 		<div>
 			<span><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
 			    <select id="ListCompany" style="height:29px" onChange="companyChange(this);">
@@ -70,7 +70,7 @@
 			</table>
 			
 			<div>
-				<textarea id="copyrightTextArea" maxlength="1000" placeholder="<spring:message code='ezEmail.letter15' />(<spring:message code='ezEmail.ksu09' />)"></textarea>
+				<textarea id="copyrightTextArea" maxlength="1000" placeholder="<spring:message code='ezEmail.letter15' />(<spring:message code='ezEmail.ksa10' />)"></textarea>
 			</div>
 			
 			<!-- 저장, 취소 btn -->
@@ -83,7 +83,7 @@
 			
 			<span class="txt">▒ <spring:message code='ezEmail.ksa07'/></span><br><br>
 			<div id = "copyrightExam">
-				<spring:message code='ezEmail.ksa08'/>
+				<spring:message code='ezEmail.ksa09'/>
 			</div>
 			
 		</div>
