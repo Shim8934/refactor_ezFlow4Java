@@ -372,7 +372,8 @@
 						location.reload();
 	    			},
 	    			error : function() {
-	    				alert("<spring:message code='ezAttitude.t59'/>");
+	    				
+						location.reload();
 	    			}
 	    		});
 			}
