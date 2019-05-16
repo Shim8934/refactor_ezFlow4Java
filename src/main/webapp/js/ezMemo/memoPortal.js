@@ -441,10 +441,7 @@ function setLayerSize() {
 	var winHeight = window.innerHeight;
 	
 	if (layerClass.indexOf("layerFullScreen") != -1) {			// full-screen일 때
-		memoLayer.css({"width" : winWidth, "height" : winHeight, "top" : 56, "left" : 0});
-		//$(".memoListBox").css({"width" : winWidth, "height" : winHeight-130});
-		//$(".memo_main").css({"width" : winWidth, "height" : winHeight-150});
-		//$("#layer-popup").css({"height" : winHeight-45});
+		memoLayer.css({"width" : winWidth, "height" : winHeight - 56, "top" : 56, "left" : 0});
 		setMemoListSize();
 		
 	} else if (layerClass.indexOf("layerControl") != -1) {		// control모드일 때
