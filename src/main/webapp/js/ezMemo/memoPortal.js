@@ -485,13 +485,17 @@ function getMemoConfig() {
     	async : false,
     	url : "/ezMemo/getMemoConfig.do",
     	success : function(result) {
+    		// 폰트 사이즈 세팅
     		fontSize = result.memoConfigVO.font_size;
+    		// 메모에 날짜 표시 여부 세팅
 			useDate = result.memoConfigVO.use_date;
+			//  메모 추가할 때 나타낼 메모지 색깔 세팅
 			defaultColor = result.memoConfigVO.default_color;
+			// 메모 레이어 사이즈, 위치 세팅
 			$("#layer-popup").css({"top": result.memoConfigVO.layer_top, "left": result.memoConfigVO.layer_left, "width": result.memoConfigVO.layer_width, "height": result.memoConfigVO.layer_height});
 			
 			if(result.memoConfigVO.full_mode == 1) {
-				// 처음 사용자 계정을 만들시, 풀 스크린 모드로 출력.  
+				// 처음 사용자 계정을 만들시, 풀 스크린 모드로 출력 
 				if(firstDBLayerSize=="yes") {
 					$("#fullScreen").css("display", "none");
 					$("#controllable").css("display", "");
@@ -513,8 +517,11 @@ function getMemoConfig() {
         		firstDBLayerSize="no";
         		setLayerSize();
 			}
-			emptyMemoResize();
+			// 화면에 맞춰 메모 레이어 리사이즈
 			memoLayerResize();
+			
+			// 메모가 없을 경우 보여줄 이미지 리사이즈
+			emptyMemoResize();
         	
         	bigMemoInfo.height = result.memoConfigVO.b_memo_height;
         	bigMemoInfo.width = result.memoConfigVO.b_memo_width;
