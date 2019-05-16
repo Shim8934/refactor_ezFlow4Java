@@ -1,6 +1,11 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
+<%
+	response.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, post-check=0, pre-check=0");
+	response.setHeader("Pragma","no-cache");
+	response.setDateHeader("Expires",0);
+%> 
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -226,7 +231,7 @@
 							console.error(xhr.responseText);	
 						}
 					}
-					xhr.open('GET', '/ezNewPortal/getUserFrameList.do');
+					xhr.open('GET', '/ezNewPortal/getUserFrameList.do?' + (new Date()).getTime());
 					xhr.send();
 				}
 			
@@ -336,7 +341,7 @@
 						}
 					}
 					
-					xhr.open('GET', '/ezNewPortal/getUserPortletList.do');
+					xhr.open('GET', '/ezNewPortal/getUserPortletList.do?' + (new Date()).getTime());
 					xhr.send();
 					
 				}
