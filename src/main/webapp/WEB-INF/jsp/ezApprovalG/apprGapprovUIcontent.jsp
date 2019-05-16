@@ -92,6 +92,14 @@
 		        	$('#div_Content #doctitle').css('word-wrap', 'break-word');
 		        } catch (e)
 		        { }
+		        
+	            try {
+			        if (document.getElementById('attitude_annual_conn')) { //근태관리 연동양식일 경우
+						parent.document.getElementById('btnEdit').style.display = "none";
+			        }
+	            } catch (e)
+	            { }
+		        
 	        };
 	        
 	        function onKeyDownEvent(e, obj, Maxlength) {
