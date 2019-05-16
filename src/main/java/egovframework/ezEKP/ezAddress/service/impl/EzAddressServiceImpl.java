@@ -501,7 +501,8 @@ public class EzAddressServiceImpl implements EzAddressService {
 			vo.setCreateDate((String) resultObject.get("createDate"));
 			vo.setModifierId(((String) resultObject.get("modifierId")).split("@")[0]);
 			vo.setModifyDate((String) resultObject.get("modifyDate"));
-			vo.setsName((String) resultObject.get("sName"));
+			String name = (String) commonUtil.cleanValue(resultObject.get("sName").toString());
+			vo.setsName(name);
 			vo.setsEmail((String) resultObject.get("sEmail"));
 			vo.setsCompany((String) resultObject.get("sCompany"));
 			vo.setsDept((String) resultObject.get("sDept"));

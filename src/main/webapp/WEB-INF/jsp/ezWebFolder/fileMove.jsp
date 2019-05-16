@@ -16,6 +16,7 @@
 		var primary        = "<c:out value='${primary}'/>";
 		var fileList       = "<c:out value='${fileIdList}'/>";
 		var folderList     = "<c:out value='${folderIdList}'/>";
+		var folderTypeCheck     = "<c:out value='${folderTypeCheck}'/>";
 		var selectedFolder = null;
 		var selectedLevel  = null;
 		var currentFolders = [];
@@ -264,7 +265,9 @@
 		
 		function afterSuccessForDup(dupFolder) {
 			if (dupFolder != "" || dupFolder != null) {
-				parent.leftFolderCPMV(functionType, dupFolder, targetId);
+				if (folderTypeCheck != "Y") {
+					parent.leftFolderCPMV(functionType, dupFolder, targetId);
+				} 
 			}
 			parent.refreshView();
 			wClose();

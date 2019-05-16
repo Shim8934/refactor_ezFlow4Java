@@ -176,7 +176,8 @@
 		// 분기 설정에 따라 mask 생성/제거
 		function toggleQuestionList(checkList) {
 			var listQstDiv = document.getElementsByClassName("prevQsWrapper");
-			for (var i = 0, len = listQstDiv.length; i < len; i++) {
+			var startPoint = checkList[0] - 1 > 0 ? checkList[0] - 1 : 0;
+			for (var i = startPoint, len = listQstDiv.length; i < len; i++) {
 				var qstLevel = parseInt(listQstDiv[i].id.replace("prevQstn", ""));
 				
 				if (checkList.indexOf(qstLevel) == -1) {

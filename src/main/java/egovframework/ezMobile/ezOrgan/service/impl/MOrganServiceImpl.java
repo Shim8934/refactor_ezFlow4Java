@@ -179,7 +179,8 @@ public class MOrganServiceImpl implements MOrganService {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("type", selectType);
 		map.put("searchFlag", searchFlag);
-		map.put("deptID", deptID.replace("%", "\\%").replace("_", "\\_"));
+		map.put("deptIDEscape", deptID.replace("%", "\\%").replace("_", "\\_"));
+		map.put("deptID", deptID);
 		map.put("lang", commonUtil.getMultiData(lang, tenantId));
 		map.put("tenantID", tenantId);
 		map.put("companyId", companyId);

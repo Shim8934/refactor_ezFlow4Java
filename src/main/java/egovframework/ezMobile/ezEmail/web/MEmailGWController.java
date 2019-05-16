@@ -279,7 +279,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			MCommonVO info = mOptionService.commonInfo(serverName, userId);
 			String domainName = ezCommonService.getTenantConfig("DomainName", info.getTenantId());
 			
-			List<Map<String, String>> sharedMailBoxList = ezEmailService.getUserSharedMailboxList(userId, info.getTenantId());
+			List<Map<String, String>> sharedMailBoxList = ezEmailService.getUserSharedMailboxList(userId, true, info.getTenantId());
 			
 			for (int i = 0; i < sharedMailBoxList.size(); i++) {
 				JSONObject shareMailInfo = new JSONObject();
@@ -795,6 +795,8 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String cmd = "";
 			String folderId = "";
 			String messageId = "";
+			String textOption = "";
+			String defaultFontAndSize = "";
 			
 			if (jsonObject.get("cmd") != null) {
 				cmd = (String) jsonObject.get("cmd");
@@ -806,6 +808,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			
 			if (jsonObject.get("messageId") != null) {
 				messageId = (String) jsonObject.get("messageId");
+			}
+			
+			if (jsonObject.get("textOption") != null) {
+				textOption = (String) jsonObject.get("textOption");
 			}
 			
 			String serverName = request.getHeader("x-user-host");
@@ -1049,7 +1055,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			        		}	        		
 		        		}
 	
-		        		String defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+		        		defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
 		        		
 		        		//사용자 언어가 한국어이고 editorFontStyle값이 있을 경우 editorFontStyle값 적용
 		        		if (info.getLang().equals("1")) {
@@ -1136,8 +1142,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						String orgCc = ezEmailUtil.getStringListOfAddresses(addresses, ezEmailUtil.isPureAscii(rawHeader));
 						
 			            StringBuilder sb = new StringBuilder();
-			            sb.append("<hr tabindex=\"-1\">");
-			            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
 			            
 			            //set received date
 			            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss ( z )");
@@ -1150,10 +1154,6 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			    			sdf.setTimeZone(TimeZone.getTimeZone("GMT" + offsetArr[1]));
 			    		}
 			            
-			            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
-			            
-			            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
-			            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
 			            
 			            String orgMessageSubject = ezEmailUtil.getSubject(orgMessage);	
 			            
@@ -1168,9 +1168,25 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 								
 								orgMessageSubject = ezEmailUtil.decodeNonAsciiBytes(rawBytes);
 							}
-						}			            
-						
-						sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p><br/><br/>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
+						}	
+						if (textOption.equalsIgnoreCase("HTML")) {
+							sb.append("<hr tabindex=\"-1\">");
+				            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
+							sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
+				            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
+				            sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
+							sb.append(String.format("<p " + defaultFontAndSize + "><b>%s : </b> %s</p><br/><br/>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
+							
+						} else if (textOption.equalsIgnoreCase("PLAIN")) {
+							defaultFontAndSize = "style='font-size:13px;font-family:" + egovMessageSource.getMessage("main.t246", locale) + "'";
+							sb.append("<p " + defaultFontAndSize + ">&nbsp;</p>");
+				            sb.append(String.format("<p " + defaultFontAndSize + ">%s :  %s</p>", egovMessageSource.getMessage("ezEmail.t703", locale), EgovStringUtil.getSpclStrCnvr(ezEmailUtil.getFullFromAddressOfMessage(orgMessage))));
+							sb.append(String.format("<p " + defaultFontAndSize + ">%s :  %s</p>", egovMessageSource.getMessage("ezEmail.t704", locale), sdf.format(orgMessage.getReceivedDate()).replace("GMT", "")));
+				            sb.append(String.format("<p " + defaultFontAndSize + ">%s :  %s</p>", egovMessageSource.getMessage("ezEmail.t705", locale), EgovStringUtil.getSpclStrCnvr(orgTo)));
+				            sb.append(String.format("<p " + defaultFontAndSize + ">%s :  %s</p>", egovMessageSource.getMessage("ezEmail.t706", locale), EgovStringUtil.getSpclStrCnvr(orgCc)));
+							sb.append(String.format("<p " + defaultFontAndSize + ">%s :  %s</p><br/><br/>", egovMessageSource.getMessage("ezEmail.t707", locale), EgovStringUtil.getSpclStrCnvr(orgMessageSubject)));
+							
+						}
 						
 						Map<String, Object> extraMap = new HashMap<String, Object>();
 						extraMap.put("shareId", userId);
@@ -1180,7 +1196,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						List<String> bodyInfoList = ezEmailUtil.getBodyInfo(orgMessage, folderPath, uid, -1, attachedFileList, locale, extraMap);					
 						String tmphtmlbody = bodyInfoList.get(0);
 			            
-			            bodyValue = sb.toString() + tmphtmlbody;
+						bodyValue = sb.toString() + tmphtmlbody;
 			            
 			            // 원본 메일 내용에 메일 서명 존재 시 변환 처리
 		                if (bodyValue.contains("id=\"MailSignSent\"") || bodyValue.contains("id=MailSignSent")) {
@@ -1198,7 +1214,9 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 		                if (cmd.equals("REPLY") || cmd.equals("REPLYALL") || cmd.equals("FORWARD")) {
 		                	bodyValue = bodyValue.replaceAll("class=&quot;FIELD&quot;", "");
 		                	bodyValue = bodyValue.replaceAll("class=FIELD", "");
-		                	bodyValue = "<body free>" + bodyValue + "</body>";
+		                	if (textOption.equalsIgnoreCase("HTML")) {
+		                		bodyValue = "<body free>" + bodyValue + "</body>";
+							}
 		                }
 		                
 		                //임시보관함에 저장
@@ -1387,6 +1405,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			data.put("mailAttachLimit", mailAttachLimit);
 			data.put("mUseMailAddrAutoComplete", mUseMailAddrAutoComplete); //20180712 조진호 - 모바일에서 수신자 자동완성기능 사용여부
 			data.put("attachFileNameMaxLength", attachFileNameMaxLength); //20190114 조진호 - 첨부파일명 길이제한
+			data.put("defaultFontAndSize", defaultFontAndSize); //20190510 조진호 - 기본 글씨 속성
 			
 	        result.put("status", "ok");
 			result.put("code", 0);			
@@ -2115,6 +2134,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			String cmd = "";
 			String mailcmd = "";
 			String replyReadTime = "1";
+			String textOption = "";
 			List<Map<String, Object>> addressCheck = null;
 			
 			if (jsonObject.get("subject") != null) {
@@ -2183,6 +2203,10 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 						
 			if (jsonObject.get("replyReadTime") != null) {
 				replyReadTime = (String) jsonObject.get("replyReadTime");
+			}
+			
+			if (jsonObject.get("textOption") != null) {
+				textOption = (String) jsonObject.get("textOption");
 			}
 			
 			String realPath = commonUtil.getRealPath(request);
@@ -2398,28 +2422,34 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 					
 					LOGGER.debug("defaultFontAndSize=" + defaultFontAndSize);
 					
-					// p태그에 기본 폰트를 적용한다.
-					textBody = textBody.replace("<p>", "<p " + defaultFontAndSize + ">");
+					if (textOption.equalsIgnoreCase("HTML")) {
+						// p태그에 기본 폰트를 적용한다.
+						textBody = textBody.replace("<p>", "<p " + defaultFontAndSize + ">");
+						
+			            content.setContent(textBody, "text/plain; charset=utf-8");
+			
+			            // multipart/alternative로 구성한다.
+		                alternativePart = new MimeMultipart("alternative");
+			            
+		                // text/plain 파트를 구성한다.
+			            MimeBodyPart textPlainPart = new MimeBodyPart();
+			            
+			            // HTML 태그들을 제거한 Plain Text로 변환한다. 
+			            Source htmlSource = new Source(textBody);
+			            Renderer htmlRend = new Renderer(htmlSource);
+			            textPlainPart.setText(htmlRend.toString(), "utf-8");	
+			            
+			            // text/plain 파트를 추가한다.
+			            alternativePart.addBodyPart(textPlainPart);
+			            // text/html 파트를 추가한다. content가 text/html 파트를 갖고 있다.
+			            alternativePart.addBodyPart(content);
+//			            
+			            message.setContent(alternativePart);
+					} else if (textOption.equalsIgnoreCase("PLAIN")) {
+						message.setContent(textBody, "text/plain; charset=utf-8");
+	                	content.setContent(textBody, "text/plain; charset=utf-8");
+					}
 					
-		            content.setContent(textBody, "text/html; charset=utf-8");
-		
-		            // multipart/alternative로 구성한다.
-	                alternativePart = new MimeMultipart("alternative");
-		            
-	                // text/plain 파트를 구성한다.
-		            MimeBodyPart textPlainPart = new MimeBodyPart();
-		            
-		            // HTML 태그들을 제거한 Plain Text로 변환한다. 
-		            Source htmlSource = new Source(textBody);
-		            Renderer htmlRend = new Renderer(htmlSource);
-		            textPlainPart.setText(htmlRend.toString(), "utf-8");	
-		            
-		            // text/plain 파트를 추가한다.
-		            alternativePart.addBodyPart(textPlainPart);
-		            // text/html 파트를 추가한다. content가 text/html 파트를 갖고 있다.
-		            alternativePart.addBodyPart(content);
-//		            
-		            message.setContent(alternativePart);
 				
 					// 메일 중요도
 					switch (importance) { // 2: High, 1: Normal, 0: Low
@@ -4580,6 +4610,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 			LOGGER.debug("mailGeneral=" + mailGeneral);
 			
 			data.put("listCount", mailGeneral.getListCount());
+			data.put("textOption", mailGeneral.getTextOption());
 											
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -4674,6 +4705,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				+ ",filterValue=" + filterValue + ",start=" + start + ",count=" + count);
 		
         String returnValue = "";
+        String name = "";
         
         try {
         	String[] ownerIds = null;
@@ -4714,7 +4746,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
             	sb.append("<ROW>");
             	sb.append("<STYPE>" + (addressInfo.getsType() == null ? "" : addressInfo.getsType()) + "</STYPE>");
             	sb.append("<ADDRESSID>" + (addressInfo.getAddressId() == null ? "" : addressInfo.getAddressId()) + "</ADDRESSID>");
-            	sb.append("<SNAME>" + (addressInfo.getsName() == null ? "" : commonUtil.cleanValue(addressInfo.getsName())) + "</SNAME>");
+            	if (addressInfo.getsName() != null) {
+            		name = commonUtil.cleanValue(addressInfo.getsName().toString());
+            	} else {
+            		name = "";
+            	}
+            	sb.append("<SNAME>" + name + "</SNAME>");
             	sb.append("<FOLDERTYPE>DB</FOLDERTYPE>");
             	sb.append("<SEMAIL>" + (addressInfo.getsEmail() == null ? "" : commonUtil.cleanValue(addressInfo.getsEmail())) + "</SEMAIL>");
             	sb.append("<SCOMPANY>" + (addressInfo.getsCompany() == null ? "" : commonUtil.cleanValue(addressInfo.getsCompany())) + "</SCOMPANY>");

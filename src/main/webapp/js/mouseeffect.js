@@ -124,7 +124,7 @@ function initToggleList(ulEl, level1, level2, level3)
     	elementItem = level1El.item(i);
     	
     	elementItem.listNum = i;
-    	elementItem.onclick = toggleList;
+    	elementItem.addEventListener("click", toggleList);
     	
     	elementItem = level2El.item(i);
 			
