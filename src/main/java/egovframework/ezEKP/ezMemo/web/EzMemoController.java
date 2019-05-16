@@ -542,7 +542,7 @@ public class EzMemoController {
 		param.put("gadget_right", 15);
 		param.put("gadget_bottom", 15);
 		param.put("layer_left", 0);
-		param.put("layer_top", 55);
+		param.put("layer_top", 56);
 		param.put("layer_width", 340);
 		param.put("layer_height", 380);
 		param.put("fold_status", 1);

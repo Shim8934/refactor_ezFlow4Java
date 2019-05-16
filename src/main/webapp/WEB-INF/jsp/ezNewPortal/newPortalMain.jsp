@@ -208,7 +208,6 @@
 	 		clearTimeout(window.resizedFinished);
 		    window.resizedFinished = setTimeout(function(){
 		        setContextMenuGadgetPosition();
-		        memoLayerResize();
 		    }, 750);	 		
 		    
 	 	});
@@ -226,7 +225,7 @@
 		    	scrollUI();
 		    	layerClose();
 		    	memoSortable();
-		    	layerExpand();
+		    	// layerExpand(); -> portalContextMenu.js에서 한 번 더 호출해서 주석처리
 		    	memoAdd();
 		    	noteClearSelection();
 		    	

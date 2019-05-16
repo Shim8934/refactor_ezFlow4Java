@@ -36,13 +36,13 @@ function setPanelPointer() {
 	});*/
 	$("#open-memo").on("click", function(event) {
 		event.preventDefault();
-		if ("none" == ($("#layer-popup").css("display"))) {
+		if ("hidden" == ($("#layer-popup").css("visibility"))) {
 			//$("#open-memo").css("display", "none");
 			$(".noteBlock").css("visibility", "visible");
-			$("#layer-popup").css("display", "");
+			$("#layer-popup").css("visibility", "visible");
 			$("#contextMenuBlock").css("display", "none");
 		} else {
-			$("#layer-popup").css("display", "none");
+			$("#layer-popup").css("visibility", "hidden");
 			$("#contextMenuBlock").css("display", "");
 		}
 	});	
@@ -141,7 +141,7 @@ function scrollUI(){
  */
 function layerClose() {
     $(".memoClose").click(function() {
-    	$("#layer-popup").css("display", "none")
+    	$("#layer-popup").css("visibility", "hidden");
 		$(".select_inner").css("display", "none");
     	$("#contextMenuBlock").css("display", "");
 
@@ -249,49 +249,51 @@ function layerPopupResize(){
 /**
  * 레이어 창크기, 이전모드 버튼 클릭 메서드
  */
+
 function layerExpand() {
 	// 메모 레이어 최대화 시
     $("#fullScreen").click(function() {
-    	var layerClass = $("#layer-popup").attr("class");
-    	
-    	if (layerClass.indexOf("layerControl") != -1) {
-    		$("#fullScreen").css("display", "none");
-    		$("#controllable").css("display", "");
-    		
-    		$("#layer-popup").removeClass("layerControl").addClass("layerFullScreen");
-    		$("#layer-popup .ui-resizable-handle").css("display", "none");
-    		
-    		$("#layer-popup").draggable({
-    			disabled: true
-    		});
-    		setMemoLayerMode(1);
-    	}
-    	setLayerSize();
-    	emptyMemoResize();
+    	layerToggle();
     });
  	
     // 메모 레이어 이전크기 시
     $("#controllable").click(function() {
-    	var layerClass = $("#layer-popup").attr("class");
-    	
-    	if (layerClass.indexOf("layerFullScreen") != -1) {
-    		$("#controllable").css("display", "none");
-    		$("#fullScreen").css("display", "");
-    		
-    		$("#layer-popup").removeClass("layerFullScreen").addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");
-    		$("#layer-popup .ui-resizable-handle").css("display", "");
-    		
-    		$("#layer-popup").draggable({
-    			disabled: false
-    		});
-    		setMemoLayerMode(0);
-    	}
-    	setLayerSize();
-    	emptyMemoResize();
+    	layerToggle();
     });	
 }
 
+// 클릭한 버튼에 따라 메모 레이어 변경
+function layerToggle() {
+	var memoLayer = $("#layer-popup");
+	var layerClass = memoLayer.attr("class");
+	
+	if (layerClass.indexOf("layerControl") != -1) {				// // layer resizable mode
+		$("#fullScreen").css("display", "none");
+		$("#controllable").css("display", "");
+		
+		memoLayer.removeClass("layerControl").addClass("layerFullScreen");
+		
+		$("#layer-popup .ui-resizable-handle").css("display", "none");
+		
+		draggableFalse();
+		setMemoLayerMode(1);
+		
+	} else if(layerClass.indexOf("layerFullScreen") != -1) {	// layer full-screen mode
+		$("#controllable").css("display", "none");
+		$("#fullScreen").css("display", "");
+		
+		memoLayer.removeClass("layerFullScreen").addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");
+		$("#layer-popup .ui-resizable-handle").css("display", "");
 
+		draggableTrue();
+		setMemoLayerMode(0);
+	}
+	layerClass = memoLayer.attr("class");
+	
+	getMemoLayerSize(layerClass);
+	
+	emptyMemoResize();
+}
 /**
  * 새 메모 추가 메서드
  */
@@ -428,27 +430,6 @@ function hideMemo(obj) {
           },
 	});
 }
-	
-
-/**
- * 레이어 사이즈 변경 메서드
- */
-function setLayerSize() {
-	var memoLayer = $("#layer-popup");
-	var layerClass = memoLayer.attr("class");
-	
-	var winWidth = window.innerWidth;
-	var winHeight = window.innerHeight;
-	
-	if (layerClass.indexOf("layerFullScreen") != -1) {			// full-screen일 때
-		memoLayer.css({"width" : winWidth, "height" : winHeight - 56, "top" : 56, "left" : 0});
-		setMemoListSize();
-		
-	} else if (layerClass.indexOf("layerControl") != -1) {		// control모드일 때
-		getMemoConfig();
-	}
-}
-
 
 /**
  * 메모 컨피그값 확인, 컨피그값 없으면 insert 메서드
@@ -477,7 +458,11 @@ function checkMemoConfig() {
  * config값 가져오는 메서드
  */
 function getMemoConfig() {
-	var bigMemoInfo = {}
+	var bigMemoInfo = {};
+	var layerParam = {};
+	
+	var memoLayer = $('#layer-popup');
+	var memoLayerClass = memoLayer.attr('class');
 	
 	$.ajax({
 		type : "GET",
@@ -489,34 +474,39 @@ function getMemoConfig() {
     		fontSize = result.memoConfigVO.font_size;
     		// 메모에 날짜 표시 여부 세팅
 			useDate = result.memoConfigVO.use_date;
-			//  메모 추가할 때 나타낼 메모지 색깔 세팅
+			// 메모 추가할 때 나타낼 메모지 색깔 세팅
 			defaultColor = result.memoConfigVO.default_color;
-			// 메모 레이어 사이즈, 위치 세팅
-			$("#layer-popup").css({"top": result.memoConfigVO.layer_top, "left": result.memoConfigVO.layer_left, "width": result.memoConfigVO.layer_width, "height": result.memoConfigVO.layer_height});
 			
-			if(result.memoConfigVO.full_mode == 1) {
+			// layer css 값
+			layerParam['top'] = result.memoConfigVO.layer_top;
+			layerParam['left'] = result.memoConfigVO.layer_left;
+			layerParam['width'] = result.memoConfigVO.layer_width;
+			layerParam['height'] = result.memoConfigVO.layer_height;
+			layerParam['mode'] = result.memoConfigVO.full_mode;
+			
+			if(result.memoConfigVO.full_mode == 1) {			//	1 -> layer full-screen mode
 				// 처음 사용자 계정을 만들시, 풀 스크린 모드로 출력 
 				if(firstDBLayerSize=="yes") {
-					$("#fullScreen").css("display", "none");
-					$("#controllable").css("display", "");
-					
-					$("#layer-popup").removeClass("layerControl").addClass("layerFullScreen");
+					$("#fullScreen").css("display", "none");	// full-screen 버튼 숨김
+					$("#controllable").css("display", "");		// control 버튼 나타냄
+					memoLayer.removeClass("layerControl").addClass("layerFullScreen");		// class를 full-screen으로 변경
+					memoLayerClass = memoLayer.attr('class');
 	        		$(".noteBlock .ui-resizable-handle").css("display", "none");
 	        		
-	        		$("#layer-popup").draggable({
-	        			disabled: true
-	        		});
-				} else {
-					$("#layer-popup").removeClass("layerFullScreen").addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");
+	        		memoLayer.draggable({ disabled: true });			// 드래그 방지
+	        		
+				} else {										//	0 -> layer resizable mode
+					memoLayer.removeClass("layerFullScreen").addClass("layerControl ui-draggable ui-draggable-handle ui-resizable");	// class를 full-screen으로 변경
+					memoLayerClass = memoLayer.attr('class');
 	        		$("#layer-popup .ui-resizable-handle").css("display", "");
-	        		$("#layer-popup").draggable({
-	        			disabled: false
-	        		});
+	        		memoLayer.draggable({ disabled: false });			// 드래그 살림
 					return;
 				}
         		firstDBLayerSize="no";
-        		setLayerSize();
 			}
+			// 레이어 사이즈 세팅
+			getMemoLayerSize(memoLayerClass, layerParam);
+			
 			// 화면에 맞춰 메모 레이어 리사이즈
 			memoLayerResize();
 			
@@ -530,16 +520,78 @@ function getMemoConfig() {
         	
         	setBigMemoAtFirst(bigMemoInfo);
         	
+        	// 최근에 큰 메모로 열었던 메모 아이디
         	var memoId = result.memoConfigVO.memo_id;
+        	// 큰 메모 오픈 상태
         	var memoStatus = result.memoConfigVO.b_memo_status;
-        	/*메모의 오픈 상태와 아이디 체크 후 큰 메모 오픈*/
-        	if (memoStatus != 0 && memoId != null && memoId != 0) {
+        	
+        	// 메모의 오픈 상태와 아이디 체크 후 큰 메모 오픈
+        	if (memoStatus != 0 && memoId != 0) {
         		getMemoDetail(memoId);
         	}
     	}
 	});
 }
 
+// 메모 레이어 사이즈 세팅
+function getMemoLayerSize(classNm, layerParam) {
+	var winWidth = window.innerWidth;
+	var winHeight = window.innerHeight;
+	
+	var top, left, width, height;
+	
+	// layer의 사이즈를 파라미터로 넘겨받는 경우
+	if (layerParam && layerParam.mode === 0) {
+		top = layerParam.top;
+		left = layerParam.left;
+		width = layerParam.width;
+		height = layerParam.height;
+	// 	layer의 사이즈를 파라미터로 넘겨받지 않는 경우
+	} else {
+		// layer resizable mode
+		if (classNm.indexOf("layerControl") != -1) {
+			$.ajax({
+				type : "GET",
+				dataType : "JSON",
+				async : false,
+				url : "/ezMemo/getMemoConfig.do",
+				success : function(result) {
+					if (result.memoConfigVO.full_mode == 0) {
+						top = result.memoConfigVO.layer_top;
+						left = result.memoConfigVO.layer_left;
+						width = result.memoConfigVO.layer_width;
+						height = result.memoConfigVO.layer_height;
+					}
+				}
+			});
+		// layer full-screen mode
+		} else if (classNm.indexOf("layerFullScreen") != -1) {
+			top = 56;
+			left = 0;
+			width = winWidth;
+			height = winHeight - 56;
+		}
+	}
+	$("#layer-popup").css({"top": top, "left": left, "width": width, "height": height});
+	
+	setMemoListSize();
+	
+	memoLayerResize();
+}
+
+/**
+ * 메모 리스트 사이즈 변경 메서드
+ */
+function setMemoListSize() {
+	var layerWidth = $("#layer-popup")[0].offsetWidth;
+	var layerHeight = $("#layer-popup")[0].offsetHeight;
+    var memoListHeight = layerHeight - 54;					// 54 -> 메모 레이어 헤더의 높이
+    
+    $(".memo_main").css({"height" : memoListHeight - 30, "width" : layerWidth});	// 30 -> 임의의 숫자 - 투명도 조절 버튼이 잘 보이는 높이
+    $(".memoListBox").css({"height" : memoListHeight - 30, "width" : layerWidth});
+    
+//	emptyMemoResize();
+}
 
 /**
  * 초기 config값 insert 메서드
@@ -626,7 +678,7 @@ function memoLayerResize() {
 	
 	var layerClass = memoLayer.attr("class");
 	
-	if (layerClass.indexOf("layerControl") != -1) {
+	if (layerClass.indexOf("layerControl") != -1) {			// 레이어가 resizable 모드이면
 		
 		// 16 -> 스크롤 바의 넓이, 높이 
 		if (height + top > windowHeight) { 					// 레이어의 높이와 top의 합이 window의 높이보다 클 때
@@ -666,23 +718,15 @@ function memoLayerResize() {
     	}
     	
 	} else if (layerClass.indexOf("layerFullScreen") != -1) {	// 레이어가 full-screen 모드이면
-		memoLayer.css("width", windowWidth);					// 레이어의 넓이 = 윈도우의 넓이
-		memoLayer.css("height", windowHeight - 56);				// 레이어의 높이 = 윈도우의 높이 - 포탈 페이지의 메뉴 높이
+		memoLayer.css({"top": 56, "left": 0, "width": windowWidth, "height": windowHeight - 56})
+		
+		//memoLayer.css("width", windowWidth);						// 레이어의 넓이 = 윈도우의 넓이
+		//memoLayer.css("height", windowHeight - 56);				// 레이어의 높이 = 윈도우의 높이 - 포탈 페이지의 메뉴 높이(56)
     	
 		setMemoListSize();
 	}
 }
 
-/*
-function setMemoListBody (height, width) {
-	
-	$(".memoListBox").css("height", height - 90);
-	$(".memo_main").css("height", height - 90);
-	
-	$(".memoListBox").css("width", width);
-	$(".memo_main").css("width", width);
-}
-*/
 /**
  * 퀵메모 위치값 저장 메서드
  * (display !== 'none')일때만
@@ -886,27 +930,6 @@ function getMemoList(type) {
 }
 
 
-/**
- * 메모 리스트 사이즈 변경 메서드
- */
-function setMemoListSize() {
-	var layerClass = $("#layer-popup").attr("class");
-	
-	var layerWidth = $("#layer-popup")[0].offsetWidth;
-	var layerHeight = $("#layer-popup")[0].offsetHeight;
-    var memoListHeight = layerHeight - 54;					// 54 -> 메모 레이어 헤더의 높이
-    
-    $(".memo_main").css({"height" : memoListHeight - 30, "width" : layerWidth});		// 30 -> 임의의 숫자 - 투명도 조절 버튼이 잘 보이는 높이
-    $(".memoListBox").css({"height" : memoListHeight - 30, "width" : layerWidth});
-    /*
-	if (layerClass.indexOf("layerFullScreen") != -1) {									// 전체 모드일 때
-		$(".memoListBox").css({"height" : memoListHeight - 30, "width" : layerWidth});
-	} else {																			// control 모드일 때
-		$(".memoListBox").css({"height" : memoListHeight - 30, "width" : layerWidth});
-	}
-	*/
-//	emptyMemoResize();
-}
 
 /**
  * 메모함 리스트 출력 메서드
@@ -1209,7 +1232,7 @@ function addEventInBigMemo() {
     });
 }
 
-/*큰 메모의 제일 처음 위치와 사이즈를 정함*/
+// 큰 메모의 제일 처음 위치와 사이즈를 정함
 function setBigMemoAtFirst(sizeInfo) {
 	var bigMemo = $('#detailMemo');
    
@@ -1240,16 +1263,18 @@ function setBigMemoAtFirst(sizeInfo) {
 	bigMemo.css({'width' : bigWidth, 'height' : bigHeight, 'top' : bigTop, 'left' :bigLeft});
 	setBigMemoBody(bigHeight, bigWidth);
 }
-/*큰 메모의 textarea 사이즈*/
+
+// 큰 메모의 textarea 사이즈
 function setBigMemoBody(bigHeight, bigWidth) {
-	/*37 - 헤더 높이, 29 - bottom 높이*/ 
+	// 37 - 큰 메모 헤더 높이, 29 - 큰 메모 bottom 높이
 	var contentsHeight = parseInt(bigHeight - 37 - 29);
-	/*11 - 스크롤 넓이*/
+	// 11 - 스크롤바 넓이
 	var contentsWidth = parseInt(bigWidth - 11);
 	
 	$('#dMContents').css({'width': contentsWidth, 'height' : contentsHeight});
 }
-/*큰 메모 불러오기*/
+
+// 큰 메모 불러오기
 function getMemoDetail(memoId) {
 	
     $.ajax({
@@ -1276,6 +1301,8 @@ function getMemoDetail(memoId) {
 			detailContents.focus();
 			
 			beforeMemo = result.memo.contents;
+			
+			bigMemoResize();
     	}
     });
 }
