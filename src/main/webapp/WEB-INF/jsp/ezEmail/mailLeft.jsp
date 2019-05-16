@@ -482,7 +482,8 @@
 	            if (xmlHTTP_Unread == null || xmlHTTP_Unread.readyState != 4)
 	                return;
 	            if (xmlHTTP_Unread.status >= 200 && xmlHTTP_Unread.status < 300) {
-            		var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "DATA")[0]);
+            		var unreadcount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "FOLDERUNREADCOUNT")[0]);
+            		var totalUnreadCount = getNodeText(SelectNodes(xmlHTTP_Unread.responseXML, "TOTALUNREADCOUNT")[0]);
 	                var caption = window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "foldername");
 	
 	                if (get_unreadend_2010.href == window[treeviewStr].getvalue(window[treeviewStr].selectedIndex(), "href")) {
@@ -499,9 +500,19 @@
 	                    if (pageSrc.indexOf("mailList.do") != -1) {
                         	try { parent.frames["right"].folderUnreadCount.innerText = " " + unreadcount + " "; } catch (e) { }
 	                    }
-	                    
-	                    xmlDom = null;
 	                }
+	                
+	                var totalUnreadCountId = "totalUnreadCount";
+	                
+	                if (shareId != "") {
+	                	totalUnreadCountId += "_" + shareId;
+	                }
+	                
+                	if (totalUnreadCount == "0") {
+                		document.getElementById(totalUnreadCountId).innerHTML = "";
+                	} else {
+                		document.getElementById(totalUnreadCountId).innerHTML = "(" + totalUnreadCount + ")";
+                	}
 	            }
 	            
 	            xmlHTTP_Unread = null;
@@ -525,7 +536,7 @@
                 }
 	        	
 	        	$.ajax({
-                    url: "/ezEmail/getAllFolderUnreadCount.do",
+                    url: "/ezEmail/getUnreadCountAll.do",
                     type: "POST",
                     contentType: "application/json",
                     dataType: "json",
@@ -535,6 +546,8 @@
 	                    	if (result.resultCode === "OK") {
 	                    		var unreadCountMap = result.unreadCountMap;
 	                    		var href, caption, unreadCount;
+	                    		var totalUnreadCount = result.totalUnreadCount;
+	                    		var shareInfoList = result.shareInfoList;
 	                    		
 	                    		if (shareId === result.shareId) {
 	                    			for (var i = 0; i < nodeCount; i++) {
@@ -549,6 +562,24 @@
 		        	                    	window[treeviewStr].putcaption(i + 1, caption + "(" + unreadCount + ")");
 		        	                    	window[treeviewStr].putstyle(i + 1, "font-weight : bold");
 		        	                    }
+		                    		}
+	                    		}
+	                    		
+	                    		if (totalUnreadCount == 0) {
+                    				document.getElementById("totalUnreadCount").innerHTML = "";
+                    			} else {
+                    				document.getElementById("totalUnreadCount").innerHTML = "(" + totalUnreadCount + ")";
+                    			}
+	                    		
+	                    		if ("${useSharedMailbox}" == "YES") {
+	                    			for (var i = 0; i < shareInfoList.length; i++) {
+		                    			shareInfo = shareInfoList[i];
+		                    			
+		                    			if (shareInfo.totalUnreadCount == "0") {
+		                    				document.getElementById("totalUnreadCount_" + shareInfo.shareId).innerHTML = "";
+		                    			} else {
+		                    				document.getElementById("totalUnreadCount_" + shareInfo.shareId).innerHTML = "(" + shareInfo.totalUnreadCount + ")";
+		                    			}
 		                    		}
 	                    		}
 	                    		
@@ -1344,7 +1375,7 @@
 	<body class="leftbody" style="overflow: auto; height: 100%;">
 	    <div id="left">
 	        <div class="left_mail" title="<spring:message code="ezEmail.t99000012" />"><span><spring:message code="ezEmail.t99000012" /></span></div>
-	        <h2><span onclick="Email_Menu_Click();" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000012" /></span></h2>
+	        <h2><span onclick="Email_Menu_Click();" style="max-width: 75%; display: inline-block;"><spring:message code="ezEmail.t99000012" /></span>&nbsp;<span id="totalUnreadCount" style="color:#0470e4; position:absolute;"></span></h2>
 	        <ul>
 	            <div class="tree" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" id="PostTreeView" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
 	            <li><span onclick="write_Letter()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000013" /></span></li>
@@ -1365,10 +1396,10 @@
 	        
 	        <c:if test="${useSharedMailbox == 'YES'}">
 		        <c:forEach items="${shareInfoList}" var="shareInfo">
-		        	<h2>
+		        	<h2 class="share_menu_h2" data-shareId="${shareInfo.shareId}" data-deletePermission="${shareInfo.deletePermission}" data-sendPermission="${shareInfo.sendPermission}">
 		        		<span onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');" 
-		        			style="width:85%; display:inline-block; overflow:hidden; text-overflow:ellipsis; display:inline-block; white-space:nowrap;" title="${shareInfo.shareName}"><c:out value="${shareInfo.shareName}" /></span>
-		        		<span class="arrowSpan" style="width:27px;height:33px;display:inline-block;" onclick="Share_Menu_Click('${shareInfo.shareId}', '${shareInfo.deletePermission}', '${shareInfo.sendPermission}');"></span>
+		        			style="max-width:70%; display:inline-block; overflow:hidden; text-overflow:ellipsis; display:inline-block; white-space:nowrap;" title="${shareInfo.shareName}"><c:out value="${shareInfo.shareName}" />
+		        		</span>&nbsp;<span id="totalUnreadCount_${shareInfo.shareId}" style="color:#0470e4; position:absolute;"><c:if test="${shareInfo.totalUnreadCount != '0'}">(${shareInfo.totalUnreadCount})</c:if></span>
 		        	</h2>
 		        	<ul>
 		            	<div id="shareTreeView_${shareInfo.shareId}" class="tree" value="${shareInfo.shareId}" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
@@ -1445,6 +1476,14 @@
 	    </div>
 	    <script type="text/javascript">
 	        initToggleList(document.getElementById("left"), "h2", "ul", "li");
+	        
+	        var shareMenuH2 = document.getElementsByClassName("share_menu_h2");
+	        for (var i = 0; i < shareMenuH2.length; i++) {
+	        	shareMenuH2[i].addEventListener('click', function() {
+	        		Share_Menu_Click(this.getAttribute("data-shareId"), this.getAttribute("data-deletePermission"), this.getAttribute("data-sendPermission"));
+	        	});
+	        }
+	        
 	    </script>
 	    <xml id="RootFolderXML" style="display: none;">
 	    ${rootFolderXML}

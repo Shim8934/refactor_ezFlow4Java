@@ -2294,15 +2294,19 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public List<Map<String, String>> getUserSharedMailboxList(String userId, int tenantId) throws Exception {
+	public List<Map<String, String>> getUserSharedMailboxList(String userId, boolean useUnreadCount, int tenantId) throws Exception {
 		logger.debug("getUserSharedMailboxList started.");
-		logger.debug("userId=" + userId + ",tenantId=" + tenantId);
+		logger.debug("userId=" + userId + ",useUnreadCount=" + useUnreadCount + ",tenantId=" + tenantId);
 		
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
 		String tenantIdParam = "tenantId=" + tenantId;
+		String domainParam = "domain=" + URLEncoder.encode(domain, "UTF-8");
 		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
-		String inputParams = tenantIdParam + "&" + userIdParam;
+		String useUnreadCountParam = "useUnreadCount=" + useUnreadCount;
+		String inputParams = tenantIdParam + "&" + domainParam + "&" + userIdParam + "&" + useUnreadCountParam;
 		logger.debug("inputParams=" + inputParams);
 		
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getUserSharedMailboxList";
@@ -2329,6 +2333,10 @@ public class EzEmailServiceImpl implements EzEmailService {
     				map.put("shareName", (String)obj.get("shareName"));
         			map.put("mail", (String)obj.get("mail"));
         			map.put("compId", (String)obj.get("compId"));
+        			
+        			if (useUnreadCount) {
+        				map.put("totalUnreadCount", (String)obj.get("totalUnreadCount"));
+        			}
         			
         			list.add(map);
         		}
@@ -2957,5 +2965,39 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 		logger.debug("updateDistributionList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		return reasonCode;
+	}
+	
+	/**
+	 * 전체 안읽은 메일 개수 가져오기
+	 */
+	@Override
+	public int getTotalUnreadCount(String userId, int tenantId) throws Exception {
+		logger.debug("getTotalUnreadCount started. userId=" + userId + ",tenantId=" + tenantId);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8")
+			+ "&domain=" + URLEncoder.encode(domain, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getTotalUnreadCount";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100;
+		int totalUnreadCount = 0;
+		
+		JSONParser jsonParser = new JSONParser();
+		JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+		
+		resultCode = (String)responseObj.get("resultCode");
+		reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+		
+		if (resultCode.equals("OK") && reasonCode == 0) {
+			totalUnreadCount = ((Long)responseObj.get("result")).intValue();
+		}
+		
+		logger.debug("getTotalUnreadCount ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		return totalUnreadCount;
 	}
 }
