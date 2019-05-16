@@ -20,14 +20,10 @@
 				text-overflow:ellipsis;
 				display:inline-block;
 			}
-			.arrowSpan {
-				width:42px;
-				height:33px;
-				display:inline-block;
-			}
+
 			#mCSB_1_container {
 				margin-right: 0px;
-			} 
+			}
 	    </style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
