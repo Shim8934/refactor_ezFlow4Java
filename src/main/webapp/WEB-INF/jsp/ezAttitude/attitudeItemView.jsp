@@ -47,9 +47,9 @@
 				if(annualApprStatus == "-1") {
 					tempHtml += "<td colspan='2'>결재정보없음</td>";
 				} else if(annualApprStatus == "0") {
-					tempHtml += "<td colspan='2'>승인</td>";
+					tempHtml += "<td colspan='2'>진행</td>";
 				} else if(annualApprStatus == "1") {
-					tempHtml += "<td colspan='2'>반려</td>";
+					tempHtml += "<td colspan='2'>완료</td>";
 				}
 				tempHtml += "</tr>";
 				
