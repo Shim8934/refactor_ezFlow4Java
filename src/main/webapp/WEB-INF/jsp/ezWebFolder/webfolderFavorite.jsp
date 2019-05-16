@@ -36,6 +36,7 @@
 	var folderType = "";
 	var userId = "${userId}";
 	var folderId = "";
+	var folderTypeCheck = "Y";
 	var inputNameDlg_cross_dialogArguments = new Array();
 	var parentId = "";
 	var strSuccess = "<spring:message code='ezWebFolder.t27' />";
@@ -467,10 +468,9 @@
 			divName.setAttribute("style", "font-size:15px; padding-right:3px; ");
 			detailName.appendChild(divName);
 			nameTag.appendChild(detailName);
-			
+			/* root폴더에도 해당 폴더의 파일만 나오도록 수정 되었음 모든파일 필요 없음 
 			if(length == 1) {
 				// detailName = document.createElement("span");
-				/* 2018-05-07 장진혁 - 상단 폰트사이즈 15px로 조정 및 꺽새 추가 */
 				// detailName.textContent =  " > " + messages.strLang17 + " "; // 모든파일
 				// detailName.setAttribute("style", "font-size:15px;");
 				// nameTag.appendChild(detailName);
@@ -478,7 +478,7 @@
 				divSeparator.setAttribute("class", "separator");
 				divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
 				nameTag.appendChild(divSeparator);
-			}
+			}*/
 			
 			/* 2018-05-07 장진혁 - 이미지 태그 안씀 */
 			/* var imgElmt = document.createElement("img");
