@@ -524,17 +524,7 @@
 	                }
 	                
 	                /* TODO: 공유사서함 적용 후 주석 제거 후 수정
-	                var totalUnreadCountId = "totalUnreadCount";
-	                
-	                if (shareId != "") {
-	                	totalUnreadCountId += "_" + shareId;
-	                }
-	                
-                	if (totalUnreadCount == "0") {
-                		document.getElementById(totalUnreadCountId).innerHTML = "";
-                	} else {
-                		document.getElementById(totalUnreadCountId).innerHTML = "(" + totalUnreadCount + ")";
-                	}
+	                setTotalUnreadCount(shareId, parseInt(totalUnreadCount));
                 	*/
 	            }
 	            
@@ -587,21 +577,12 @@
 	                    		}
 	                    		
 	                    		/* TODO: 공유사서함 적용 후 주석 제거 후 수정
-	                    		if (totalUnreadCount == 0) {
-                    				document.getElementById("totalUnreadCount").innerHTML = "";
-                    			} else {
-                    				document.getElementById("totalUnreadCount").innerHTML = "(" + totalUnreadCount + ")";
-                    			}
+	                    		setTotalUnreadCount("", totalUnreadCount);
 	                    		
 	                    		if ("${useSharedMailbox}" == "YES") {
 	                    			for (var i = 0; i < shareInfoList.length; i++) {
 		                    			shareInfo = shareInfoList[i];
-		                    			
-		                    			if (shareInfo.totalUnreadCount == "0") {
-		                    				document.getElementById("totalUnreadCount_" + shareInfo.shareId).innerHTML = "";
-		                    			} else {
-		                    				document.getElementById("totalUnreadCount_" + shareInfo.shareId).innerHTML = "(" + shareInfo.totalUnreadCount + ")";
-		                    			}
+		                    			setTotalUnreadCount(shareInfo.shareId, parseInt(shareInfo.totalUnreadCount));
 		                    		}
 	                    		}
 	                    		*/
@@ -1378,6 +1359,26 @@
 			    var rtn = GetAttribute(document.getElementById(str), "index");
 			    
 			    return rtn;
+			}
+			
+			function setTotalUnreadCount(shareId, totalUnreadCount) {
+				var totalUnreadCountId = "totalUnreadCount";
+				
+				if (shareId != "") {
+					totalUnreadCountId += "_" + shareId;
+				}
+				
+				var totalUnreadCountElem = document.getElementById(totalUnreadCountId);
+				
+				if (totalUnreadCountElem != null) {
+					if (totalUnreadCount == 0) {
+						totalUnreadCountElem.innerHTML = "";
+	        			totalUnreadCountElem.previousSibling.style.maxWidth = "80%";
+					} else {
+						totalUnreadCountElem.innerHTML = " " + totalUnreadCount;
+	        			totalUnreadCountElem.previousSibling.style.maxWidth = (155 - totalUnreadCountElem.offsetWidth) + "px";
+					}
+				}
 			}
 	    </script>
 		<style type="text/css">
