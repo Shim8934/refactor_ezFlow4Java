@@ -635,6 +635,17 @@
 			            	return;
 			            }
 			            
+				        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가 - 마이너스 연차 사용이 허용 안함일 경우
+				        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {	
+				        	if (document.message.document.iframe_content.useMinusAnnual == "0") {
+				        		if(document.message.document.iframe_content.document.getElementById("remain_annual_cnt").innerHTML.indexOf("-") != -1) {
+				        			OpenAlertUI("<spring:message code='ezAttitude.t266'/>");
+				        			return;
+				        		}
+				        		
+				        	}
+				        }
+			            
 			            if (addLastKyulJeYN != "0") {
 				        	var hDocID ;
 							if (pDraftFlag == "HABYUI") {
@@ -882,7 +893,7 @@
 		        if (parent.opener != null && parent.opener.getApprovalList != undefined) { 
 		        	parent.opener.getApprovalList("reject");
 		        }
-		        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가--아직 개발중
+		        //2019-05-02 김보미 : 근태관리 연동양식일 경우 추가
 		        if (document.getElementById('message').contentWindow.document.getElementById('attitude_annual_conn')) {
 		        	document.getElementById('message').contentWindow.document.getElementById('iframe_content').contentWindow.attitude_annual_conn("annual", "0");
 		        }	        
