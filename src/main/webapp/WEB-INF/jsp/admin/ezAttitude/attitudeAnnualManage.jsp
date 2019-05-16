@@ -320,7 +320,7 @@
 					return;
 				}
 				
-		    	exportExcelframe.location.href="/admin/ezAttitude/excelAnnualListExport.do?companyId=" + pCompanyId + "&userName=" + searchUserName + "&deptName=" + searchDeptName + "&title=" + searchTitle + "&orderCell=" + orderCell + "&orderOption=" + orderOption;
+		    	exportExcelframe.location.href="/admin/ezAttitude/excelAnnualListExport.do?companyId=" + encodeURIComponent(pCompanyId) + "&userName=" + encodeURIComponent(searchUserName) + "&deptName=" + encodeURIComponent(searchDeptName) + "&title=" + encodeURIComponent(searchTitle) + "&orderCell=" + encodeURIComponent(orderCell) + "&orderOption=" + encodeURIComponent(orderOption);
 		    	exportExcelframe.target="_blank";
 			}
 			
@@ -345,7 +345,7 @@
 	    	
 			//로우의 총 연차수 링크 클릭 시
 	    	function modifyPrsnAnnualPop(userId , userName, userTitle, userDeptName, additionalAnnualCnt) {
-	        	var url = "/admin/ezAttitude/modifyPrsnAnnualPop.do?userName=" + userName + "&userId=" + userId + "&userTitle=" + userTitle +  "&userDeptName=" + userDeptName +  "&additionalAnnualCnt=" + additionalAnnualCnt + "&companyId=" + encodeURIComponent($("#ListCompany").val());
+	        	var url = "/admin/ezAttitude/modifyPrsnAnnualPop.do?userName=" + encodeURIComponent(userName) + "&userId=" + encodeURIComponent(userId) + "&userTitle=" + encodeURIComponent(userTitle) +  "&userDeptName=" + encodeURIComponent(userDeptName) +  "&additionalAnnualCnt=" + encodeURIComponent(additionalAnnualCnt) + "&companyId=" + encodeURIComponent($("#ListCompany").val());
 				window.open(url, "modifyPrsnAnnualPop", GetOpenWindowfeature(500, 274));
 	        }
 	    	
