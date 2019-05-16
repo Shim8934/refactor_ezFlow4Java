@@ -4705,6 +4705,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				+ ",filterValue=" + filterValue + ",start=" + start + ",count=" + count);
 		
         String returnValue = "";
+        String name = "";
         
         try {
         	String[] ownerIds = null;
@@ -4745,7 +4746,12 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
             	sb.append("<ROW>");
             	sb.append("<STYPE>" + (addressInfo.getsType() == null ? "" : addressInfo.getsType()) + "</STYPE>");
             	sb.append("<ADDRESSID>" + (addressInfo.getAddressId() == null ? "" : addressInfo.getAddressId()) + "</ADDRESSID>");
-            	sb.append("<SNAME>" + (addressInfo.getsName() == null ? "" : commonUtil.cleanValue(addressInfo.getsName())) + "</SNAME>");
+            	if (addressInfo.getsName() != null) {
+            		name = commonUtil.cleanValue(addressInfo.getsName().toString());
+            	} else {
+            		name = "";
+            	}
+            	sb.append("<SNAME>" + name + "</SNAME>");
             	sb.append("<FOLDERTYPE>DB</FOLDERTYPE>");
             	sb.append("<SEMAIL>" + (addressInfo.getsEmail() == null ? "" : commonUtil.cleanValue(addressInfo.getsEmail())) + "</SEMAIL>");
             	sb.append("<SCOMPANY>" + (addressInfo.getsCompany() == null ? "" : commonUtil.cleanValue(addressInfo.getsCompany())) + "</SCOMPANY>");
