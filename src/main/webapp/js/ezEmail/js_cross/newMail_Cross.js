@@ -1071,6 +1071,10 @@ function event_SaveonClick() {
                 		setTimeout(Send_onClick(), 100);
                 	}
                 }
+                // 잘못된 메일주소가 있을 경우 (ex> mailto:test@test.com)
+                else if (pRtnMessage.indexOf("Local address contains illegal character") > -1) {
+                	alert(strLangLHM22);
+                }
                 // 그 외
                 else {
             		alert(pRtnMessage);
