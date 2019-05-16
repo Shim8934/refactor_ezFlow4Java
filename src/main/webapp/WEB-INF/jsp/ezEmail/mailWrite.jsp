@@ -278,11 +278,13 @@
 			    document.getElementById("MsgTo").focus();
 			}
 			
-			if (m_rgParams4PostOption["bodyType"] == "1") {
-				document.getElementById("tbContentElement").style.display = "none";
+			if (g_bodyType == "1") {
 				document.getElementById("plainTextArea").style.display = "";
 				document.getElementById("bodyType").options[1].selected = true;
 	        	document.getElementById("SelMailSign").disabled = true;
+	        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
+			} else {
+				document.getElementById("tbContentElement").style.display = "";
 			}
 			
 			<c:if test="${overQuota == true}">
@@ -515,34 +517,45 @@
 	        return "<span><P>&nbsp;</P><P>&nbsp;</P>" + BodyHtml + "</span>"
 	    }
 	    function Rebody() {
+	    	var editorContentHTML = "";
+	    	
 	    	if (gg_cmd == "RESEND" && document.getElementById("bodyValue").innerHTML != "") { //재전송 시
 	    		document.getElementById("bodyValue").innerHTML = document.getElementById("bodyValue").innerHTML.replace("id=\"MailSignSent\"", "id=\"MailSign\"");
 	    		var indexSignValue = document.getElementById("bodyValue").innerHTML.indexOf("id=\"MailSign\"");
+	    		
 	            if (indexSignValue == -1) {
 		    		switch (mailsel) {
-		                case "0": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>");
+		                case "0": 
+		                	editorContentHTML = document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>";
 		                    break;
-		                case "1": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>");
+		                case "1": 
+		                	editorContentHTML = document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>";
+		                	tempvalue = "1";
+		                    break;
+		                case "2": 
+		                	editorContentHTML = document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>";
 		                    tempvalue = "1";
 		                    break;
-		                case "2": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>");
-		                    tempvalue = "1";
-		                    break;
-		                case "3": message.SetEditorContent(document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>");
+		                case "3": 
+		                	editorContentHTML = document.getElementById("bodyValue").innerHTML + "<P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>";
 		                    tempvalue = "1";
 		                    break;
 		            }
 	            } else {
 	            	switch (mailsel) {
-		                case "0": message.SetEditorContent(document.getElementById("bodyValue").innerHTML);
+		                case "0": 
+		                	editorContentHTML = document.getElementById("bodyValue").innerHTML;
 		                    break;
-		                case "1": message.SetEditorContent(document.getElementById("bodyValue").innerHTML);
+		                case "1": 
+		                	editorContentHTML = document.getElementById("bodyValue").innerHTML;
 		                    tempvalue = "1";
 		                    break;
-		                case "2": message.SetEditorContent(document.getElementById("bodyValue").innerHTML);
+		                case "2": 
+		                	editorContentHTML = document.getElementById("bodyValue").innerHTML;
 		                    tempvalue = "1";
 		                    break;
-		                case "3": message.SetEditorContent(document.getElementById("bodyValue").innerHTML);
+		                case "3": 
+		                	editorContentHTML = document.getElementById("bodyValue").innerHTML;
 		                    tempvalue = "1";
 		                    break;
 	            	}
@@ -554,15 +567,19 @@
 	    	    var bodyInnerHTML = document.getElementById("bodyValue").innerHTML.replace(/�/gi, "");
 	    	
 	            switch (mailsel) {
-	                case "0": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>" + bodyInnerHTML);
+	                case "0": 
+	                	editorContentHTML = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>" + bodyInnerHTML;
 	                    break;
-	                case "1": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + bodyInnerHTML);
+	                case "1": 
+	                	editorContentHTML = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + bodyInnerHTML;
 	                    tempvalue = "1";
 	                    break;
-	                case "2": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + bodyInnerHTML);
+	                case "2": 
+	                	editorContentHTML = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + bodyInnerHTML;
 	                    tempvalue = "1";
 	                    break;
-	                case "3": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + bodyInnerHTML);
+	                case "3": 
+	                	editorContentHTML = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + bodyInnerHTML;
 	                    tempvalue = "1";
 	                    break;
 	            }
@@ -571,29 +588,37 @@
 				var indexSignValue = document.getElementById("tempbody").innerHTML.indexOf("id=\"MailSign\"");
 	            if (indexSignValue == -1) {
 	            	switch (mailsel) {
-			            case "0": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>");
+			            case "0": 
+			            	editorContentHTML = document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>";
 			                break;
-			            case "1": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>");
+			            case "1": 
+			            	editorContentHTML = document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>";
 			                tempvalue = "1";
 			                break;
-			            case "2": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>");
+			            case "2": 
+			            	editorContentHTML = document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>";
 			                tempvalue = "1";
 			                break;
-			            case "3": message.SetEditorContent(document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>");
+			            case "3": 
+			            	editorContentHTML = document.getElementById("tempbody").innerHTML + "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>";
 			                tempvalue = "1";
 			                break;
 		            }
 	            } else {
 	            	switch (mailsel) {
-			            case "0": message.SetEditorContent(document.getElementById("tempbody").innerHTML);
+			            case "0": 
+			            	editorContentHTML = document.getElementById("tempbody").innerHTML;
 			                break;
-			            case "1": message.SetEditorContent(document.getElementById("tempbody").innerHTML);
+			            case "1": 
+			            	editorContentHTML = document.getElementById("tempbody").innerHTML;
 			                tempvalue = "1";
 			                break;
-			            case "2": message.SetEditorContent(document.getElementById("tempbody").innerHTML);
+			            case "2": 
+			            	editorContentHTML = document.getElementById("tempbody").innerHTML;
 			                tempvalue = "1";
 			                break;
-			            case "3": message.SetEditorContent(document.getElementById("tempbody").innerHTML);
+			            case "3": 
+			            	editorContentHTML = document.getElementById("tempbody").innerHTML;
 			                tempvalue = "1";
 			                break;
 		            }
@@ -602,20 +627,27 @@
 	        }
 	        else { //새메일쓰기
 	            switch (mailsel) {
-	                case "0": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>");
+	                case "0": 
+	                	editorContentHTML = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'></DIV>";
 	                    break;
-	                case "1": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
+	                case "1": 
+	                	editorContentHTML = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign1").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML;
 	                	tempvalue = "1";
 		                break;
-		            case "2": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
+		            case "2": 
+		            	editorContentHTML = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign2").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML;
 		                tempvalue = "1";
 		                break;
-		            case "3": message.SetEditorContent("<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML);
+		            case "3": 
+		            	editorContentHTML = "<P " + defaultFontAndSize + "><BR></P><P " + defaultFontAndSize + "><BR></P><DIV id='MailSign'>" + document.getElementById("xmpMailSign3").innerHTML + "</DIV>" + document.getElementById("bodyValue").innerHTML;
 		                tempvalue = "1";
 		                break;
 	            }
 	
 	        }
+	    	
+	    	message.SetEditorContent(editorContentHTML);
+	    	document.getElementById("plainTextArea").innerHTML = removeHTMLTag(editorContentHTML);
 	    }
 	
 	    function MailSignSel() {
@@ -955,9 +987,6 @@
 	            else if (Org_cmd == "Community") {
 	                GetBoardItemInfo_New3("${boardID}", "${itemID}", g_font);
 	            }
-	            else if (Org_cmd == "report") {
-	                GetUpmooItemInfo_New("${itemID}", "${docHref}")
-	            }
 	            else if (Org_cmd == "docsend" || Org_cmd == "docsenddoc") {
 	                GetDocumentInfo(pDocID, docHref, "${docImagCnt}", "${docTarget}");
 	            }
@@ -987,14 +1016,31 @@
 	            initFlag = true;
 	            pOrgAttachListXml = pAttachListXml;
 	        }
-	        Rebody();
 	        
-	        document.getElementById("plainTextArea").value = message.GetEditorTextContent();
+	        Rebody();
 	        
 	        g_originalHTML = message.GetEditorContent();
 	        g_originalPlainText = document.getElementById("plainTextArea").value;
 	    }
-
+		
+	    function removeHTMLTag(html) {
+	    	var resultStr = html;
+    	    
+    	    resultStr = resultStr.replace(/\r\n/gi, "\n");
+    	    resultStr = resultStr.replace(/\n/gi, "");
+    	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
+    	    resultStr = resultStr.replace(/<br .*?>/gi, "<br>");
+    	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
+    	    resultStr = resultStr.replace(/<p>/gi, "\r\n");
+    	    resultStr = resultStr.replace(/<br>/gi, "\r\n");
+    	    resultStr = resultStr.replace(/<hr>/gi, "\r\n----------------------------------------------------------------------");
+    	    resultStr = resultStr.replace(/<style>.*?<\/style>/gi, "");
+    	    resultStr = resultStr.replace(/<script>.*?<\/script>/gi, "");
+    	    resultStr = resultStr.replace(/<.*?>/gi, "");
+			
+    	    return  resultStr;
+        }
+	    
 	    function getJournalToMail(){
 	    	var journal;
 	    	$.ajax ({
@@ -1109,7 +1155,7 @@
 					document.getElementById("plainTextArea").style.display = "";
 	        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
 		        	document.getElementById("SelMailSign").disabled = true;
-
+		        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
 	        	} else {
 	        		document.getElementById("bodyType").options[0].selected = true;
 	        	}
@@ -1120,6 +1166,7 @@
 				document.getElementById("plainTextArea").style.display = "none";
 	    		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
         		document.getElementById("SelMailSign").disabled = false;
+        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "";
 	    	}
 	    }
 	    
@@ -2012,8 +2059,8 @@
 	                        </li> 
 	                        <li class="sel" style="background:none; border:none; padding:0px;">
 	                            <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
-	                            	<option value="0">HTML</option>
-	                            	<option value="1">PlainText</option>
+	                                <option value="0" <c:if test="${bodyType == '0'}">selected</c:if>>HTML</option>
+                        		    <option value="1" <c:if test="${bodyType == '1'}">selected</c:if>>PlainText</option>
 	                            </select>
 	                        </li>
 	                        <c:if test="${useOnlyInnerMail != 'YES' && shareId == null}">
@@ -2157,8 +2204,7 @@
 	                        </td>
 	                    </tr>
 	                </table>
-	                <div id="messageBody" mbody="${body}" style="display: none">
-	                </div>
+	                
 	                <xmp id="xmpTo" style="display: none">${to}</xmp>
 	                <xmp id="xmpCc" style="display: none">${cc}</xmp>
 	                <xmp id="xmpBcc" style="display: none">${bcc}</xmp>
@@ -2176,8 +2222,8 @@
 	                <table style="width:100%;height:100%;">
 	                    <tr>
 	                        <td style="height:100%;">
-	                            <iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;margin-bottom:1px"></iframe>
-	                        	<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; display:none;resize:none;"></textarea>
+	                            <iframe id="tbContentElement" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="display:none; padding:0; height:100%; width:100%; overflow:auto; margin-bottom:1px;"></iframe>
+	                        	<textarea id="plainTextArea" style="display:none; height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; resize:none;"></textarea>
 	                        </td>
 	                    </tr>
                 		<!-- 2017-01-24 이효민 : 쓰이는 곳 없어서 우선 주석처리

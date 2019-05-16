@@ -613,13 +613,15 @@ public class EzWebFolderController extends EgovFileMngUtil {
 	@RequestMapping(value="/ezWebFolder/fileMoveConfirm.do")
 	public String fileMoveConfirm(@CookieValue("loginCookie") String loginCookie, HttpServletRequest request, HttpServletResponse response, Model model) throws Exception {
 		logger.debug("fileMoveConfirm start");
-		LoginSimpleVO user  = commonUtil.userInfoSimple(loginCookie);
-		String fileIdList   = request.getParameter("fileList")   != null ? request.getParameter("fileList")   : "";
-		String folderIdList = request.getParameter("folderList") != null ? request.getParameter("folderList") : "";
-		String mode         = request.getParameter("mode")       != null ? request.getParameter("mode")       : "normal";
-		String type         = request.getParameter("type")       != null ? request.getParameter("type")       : "";
+		LoginSimpleVO user  	= commonUtil.userInfoSimple(loginCookie);
+		String fileIdList   	= request.getParameter("fileList")   		!= null ? request.getParameter("fileList")   : "";
+		String folderIdList 	= request.getParameter("folderList") 		!= null ? request.getParameter("folderList") : "";
+		String mode         	= request.getParameter("mode")       		!= null ? request.getParameter("mode")       : "normal";
+		String type         	= request.getParameter("type")       		!= null ? request.getParameter("type")       : "";
+		String folderTypeCheck  = request.getParameter("folderTypeCheck") 	!= null ? request.getParameter("folderTypeCheck") : "";
 		
-		logger.debug("FileId list: " + fileIdList + " || FolderId List: " + folderIdList + " || mode: " + mode + " || type: " + type);
+		logger.debug("FileId list: " + fileIdList + " || FolderId List: " + folderIdList + " || mode: " + mode + " || type: " + type + 
+				"|| folderTypeCheck : " + folderTypeCheck);
 		
 		if (fileIdList.isEmpty() && folderIdList.isEmpty()) {
 			logger.debug("File Move Confirm illegal arguments!");
@@ -654,6 +656,7 @@ public class EzWebFolderController extends EgovFileMngUtil {
 		model.addAttribute("primary", user.getLang());
 		model.addAttribute("mode", mode);
 		model.addAttribute("type", type);
+		model.addAttribute("folderTypeCheck", folderTypeCheck);
 		logger.debug("fileMoveConfirm end");
 		
 		return "/ezWebFolder/fileMove";
