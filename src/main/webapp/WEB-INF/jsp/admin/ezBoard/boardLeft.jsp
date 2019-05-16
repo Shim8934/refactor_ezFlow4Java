@@ -18,11 +18,6 @@
 				text-overflow:ellipsis;
 				display:inline-block;
 			}
-			.arrowSpan {
-				width:42px;
-				height:33px;
-				display:inline-block;
-			}
 	    </style>
 		<script type="text/javascript" src="${util.addVer('/js/jquery/jquery-1.11.3.min.js')}"></script>
 	    <script type="text/javascript" src="${util.addVer('/js/TreeView.js')}"></script>
@@ -375,10 +370,9 @@
 				success: function(result){
 					$.each(result, function(idx, item){	        					
 						$.each(item, function(idx, i){
-							strHTML += "<h2><div AccessLevel='1' class='groupBoard' id='TreeCtr" + idx + "' value='" + i.boardId;
+							strHTML += "<h2 onclick='spanClick(\"TreeCtr" + idx + "\")'><div AccessLevel='1' class='groupBoard' id='TreeCtr" + idx + "' value='" + i.boardId;
 	                        strHTML += "' onclick=\"TopBoard_onclick('TreeCtrl" + idx + "','" + i.boardId + "')\">";
-	                        strHTML += i.boardName + "</div>";
-	                        strHTML += "<span class='arrowSpan' onclick='spanClick(\"TreeCtr" + idx + "\")'></span></h2>";
+	                        strHTML += i.boardName + "</div></h2>";
 	                        strHTML += "<ul><div class='tree' name='BoardTree' id='TreeCtrl" + idx + "obj' style='width: auto; overflow-x: hidden; overflow-y: auto; padding-left: 10px; padding-bottom: 20px;'>";
 	                        strHTML += "</div></ul>";
 						});
