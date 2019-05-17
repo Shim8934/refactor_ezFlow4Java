@@ -535,7 +535,7 @@ public class EzEmailAdminController {
 						sb.append("<CLASS>" + "distribution" + "</CLASS>");
 						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
 						sb.append("<DISPLAYNAME>"
-								+ displayName
+								+ commonUtil.cleanValue(displayName)
 								+ "</DISPLAYNAME>");
 						sb.append("<MAIL>"
 								+ commonUtil.cleanValue(cn)

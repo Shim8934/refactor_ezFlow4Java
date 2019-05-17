@@ -30,6 +30,7 @@
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/selectUsers.js')}"></script>
 		<script type="text/javascript" src="${util.addVer('/js/ezWebFolder/popup.js')}"></script>
 		<script type="text/javascript">
+			var folderTypeCheck = "Y";
 			var folderId = "";
 			var isShareMode = true;
 			var isSubSearching = "N";
@@ -407,13 +408,14 @@
 					divName.setAttribute("style", "font-size:15px;");
 					detailName.appendChild(divName);
 					nameTag.appendChild(detailName);
-					
+					/*
 					if (length == 1) {
 						var divSeparator = document.createElement("div");
 						divSeparator.setAttribute("class", "separator");
 						divSeparator.textContent =  " > " + messages.strLang17 + " "; // 모든파일
 						nameTag.appendChild(divSeparator);
 					}
+					*/
 					
 					/* 2018-05-07 장진혁 - 이미지 태그 안씀 */
 					/* var imgElmt = document.createElement("img");
