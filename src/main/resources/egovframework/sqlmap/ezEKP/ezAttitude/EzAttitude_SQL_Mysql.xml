@@ -2005,17 +2005,23 @@
 		SELECT 
 			USER_ID AS userId, 
        		CAST(TIMESTAMPDIFF(MONTH, JOIN_DATE, NOW()) AS CHAR(4)) AS workingMonthCnt, 
-		    DATE_FORMAT(JOIN_DATE, '%X-%c-%d')          				AS joinDate,
+		    DATE_FORMAT(JOIN_DATE, '%X-%c-%d')          		 	AS joinDate,
 		    COMPANY_ID 												AS companyId,
 		    TENANT_ID												AS tenantId
 		FROM   
 			TBL_ATTITUDE_ANNUAL 
-		WHERE  
-			JOIN_DATE LIKE CONCAT('%-%-',#yesterday#,'%')
+		WHERE 
+			1 = 1
+		<isNotEmpty property="yseterday" > 
+			AND
+				JOIN_DATE LIKE CONCAT('%-%-',#yesterday#,'%')
+		</isNotEmpty>
 		AND
 			COMPANY_ID = #companyId#
 		AND
 			TENANT_ID = #tenantId#
+		AND 
+			JOIN_DATE IS NOT NULL
 	</select>
 	
 	<select id = "ezAttitudeDAO.getAttendanceDay" parameterClass="map" resultClass="INTEGER">
@@ -2027,6 +2033,8 @@
 			(TYPE_ID != 'A02' AND TYPE_ID != 'A17')
 		AND 
 			WRITER_ID = #userId#
+		AND
+			START_DATE >= #joinDate#
 		<isNotEmpty property="oneMonthAgo">
 			<![CDATA[
 				AND
@@ -2039,22 +2047,7 @@
 			COMPANY_ID = #companyId#
 		AND
 			TENANT_ID = #tenantId#
-	</select>
-	
-	<select id = "ezAttitudeDAO.getAttitudeJoinDateUserList" resultClass="java.util.HashMap">
-	
-		SELECT 
-			USER_ID AS userId, 
-       		CAST(TIMESTAMPDIFF(MONTH, JOIN_DATE, NOW()) AS CHAR(4)) AS workingMonthCnt, 
-		    DATE_FORMAT(JOIN_DATE, '%X-%c-%d')          AS joinDate,
-		    COMPANY_ID                                  AS companyId,
-		    TENANT_ID                                   AS tenantId
-		FROM   
-			TBL_ATTITUDE_ANNUAL 
-	    WHERE
-			COMPANY_ID = #companyId#
-		AND
-			TENANT_ID = #tenantId#
+			
 	</select>
 	
 	<update id = "ezAttitudeDAO.updateAnnualHoliday" parameterClass="map">
