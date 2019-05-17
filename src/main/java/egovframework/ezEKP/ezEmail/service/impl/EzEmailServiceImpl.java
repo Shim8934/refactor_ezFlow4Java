@@ -146,6 +146,7 @@ public class EzEmailServiceImpl implements EzEmailService {
         		mailGeneral.setPreviewHContent((String)obj.get("previewHContent"));
         		mailGeneral.setMailSenderNm((String)obj.get("mailSenderName"));
         		mailGeneral.setPreviewSubTree((String)obj.get("previewSubTree"));
+        		mailGeneral.setTextOption((String)obj.get("textOption"));
         		
         		mailGeneralList.add(mailGeneral);
         	}
@@ -164,6 +165,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 			mailGeneral.setPreviewHContent("50");
 			mailGeneral.setMailSenderNm("");
 			mailGeneral.setPreviewSubTree("N");
+			mailGeneral.setTextOption("HTML");
 			
 			mailGeneralList.add(mailGeneral);
 		}
@@ -192,6 +194,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		String mailSenderNameParam = "mailSenderName=" + URLEncoder.encode(mailGeneral.getMailSenderNm(), "UTF-8");
 		String previewSubTreeParam = "previewSubTree=" + URLEncoder.encode(mailGeneral.getPreviewSubTree(), "UTF-8");
 		String usePreviewSubTreeParam = "usePreviewSubTree=" + usePreviewSubTree;
+		String textOptionParam = "textOption=" + URLEncoder.encode(mailGeneral.getTextOption(), "UTF-8");
 		
 		String modeParam = "mode=";
 		if (mode != null && mode.equals("ALL")) {
@@ -200,7 +203,7 @@ public class EzEmailServiceImpl implements EzEmailService {
 		
 		String inputParams = userIdParam + "&" + listCountParam + "&" + refreshIntervalParam + "&" + keepDeleteLengthParam + "&" + previewModeParam
 				+ "&" + previewWListParam + "&" + previewWContentParam + "&" + previewHListParam + "&" + previewHContentParam + "&" + mailSenderNameParam
-				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam;
+				+ "&" + modeParam +"&" + previewSubTreeParam + "&" + usePreviewSubTreeParam + "&" + textOptionParam;
 		logger.debug("inputParams=" + inputParams);
 		
 		String strJson = ezEmailUtil.getWebServiceResult(config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/setMailGeneral", inputParams);
@@ -2291,15 +2294,19 @@ public class EzEmailServiceImpl implements EzEmailService {
 	}
 	
 	@Override
-	public List<Map<String, String>> getUserSharedMailboxList(String userId, int tenantId) throws Exception {
+	public List<Map<String, String>> getUserSharedMailboxList(String userId, boolean useUnreadCount, int tenantId) throws Exception {
 		logger.debug("getUserSharedMailboxList started.");
-		logger.debug("userId=" + userId + ",tenantId=" + tenantId);
+		logger.debug("userId=" + userId + ",useUnreadCount=" + useUnreadCount + ",tenantId=" + tenantId);
 		
 		List<Map<String, String>> list = new ArrayList<Map<String, String>>();
 		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		
 		String tenantIdParam = "tenantId=" + tenantId;
+		String domainParam = "domain=" + URLEncoder.encode(domain, "UTF-8");
 		String userIdParam = "userId=" + URLEncoder.encode(userId, "UTF-8");
-		String inputParams = tenantIdParam + "&" + userIdParam;
+		String useUnreadCountParam = "useUnreadCount=" + useUnreadCount;
+		String inputParams = tenantIdParam + "&" + domainParam + "&" + userIdParam + "&" + useUnreadCountParam;
 		logger.debug("inputParams=" + inputParams);
 		
 		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getUserSharedMailboxList";
@@ -2326,6 +2333,10 @@ public class EzEmailServiceImpl implements EzEmailService {
     				map.put("shareName", (String)obj.get("shareName"));
         			map.put("mail", (String)obj.get("mail"));
         			map.put("compId", (String)obj.get("compId"));
+        			
+        			if (useUnreadCount) {
+        				map.put("totalUnreadCount", (String)obj.get("totalUnreadCount"));
+        			}
         			
         			list.add(map);
         		}
@@ -2954,5 +2965,39 @@ public class EzEmailServiceImpl implements EzEmailService {
 
 		logger.debug("updateDistributionList ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
 		return reasonCode;
+	}
+	
+	/**
+	 * 전체 안읽은 메일 개수 가져오기
+	 */
+	@Override
+	public int getTotalUnreadCount(String userId, int tenantId) throws Exception {
+		logger.debug("getTotalUnreadCount started. userId=" + userId + ",tenantId=" + tenantId);
+		
+		String domain = ezCommonService.getTenantConfig("DomainName", tenantId);
+		String inputParams = "userId=" + URLEncoder.encode(userId, "UTF-8")
+			+ "&domain=" + URLEncoder.encode(domain, "UTF-8");
+		logger.debug("inputParams=" + inputParams);
+
+		String requestURL = config.getProperty("config.JGwServerURL") + "/jMochaEzEmail/getTotalUnreadCount";
+		String response = ezEmailUtil.getWebServiceResult(requestURL, inputParams);
+		logger.debug("response=" + response);
+
+		String resultCode = "Error";
+		int reasonCode = -100;
+		int totalUnreadCount = 0;
+		
+		JSONParser jsonParser = new JSONParser();
+		JSONObject responseObj = (JSONObject)jsonParser.parse(response);
+		
+		resultCode = (String)responseObj.get("resultCode");
+		reasonCode = ((Long)responseObj.get("reasonCode")).intValue();
+		
+		if (resultCode.equals("OK") && reasonCode == 0) {
+			totalUnreadCount = ((Long)responseObj.get("result")).intValue();
+		}
+		
+		logger.debug("getTotalUnreadCount ended. resultCode=" + resultCode + ",reasonCode=" + reasonCode);
+		return totalUnreadCount;
 	}
 }

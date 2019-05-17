@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGKlibService;
 import egovframework.ezMobile.ezOption.service.MOptionService;
 import egovframework.let.utl.fcc.service.CommonUtil;
+import egovframework.let.utl.fcc.service.KlibUtil;
 
 /** 
  * @Description [Controller] 모바일GW - 공통
@@ -42,6 +44,9 @@ public class MCommonGWController {
 	@Autowired
 	private Properties config;
 	
+	@Autowired
+	private KlibUtil klibUtil;
+
 	@Resource(name = "MOptionService")
 	private MOptionService mOptionService;
 	
@@ -73,6 +78,10 @@ public class MCommonGWController {
 			if (fSize > 0) {
 				byte[] bytes = Files.readAllBytes(Paths.get(filePath));
 				
+				if (filePath.endsWith("." + EzApprovalGKlibService.ENCRYPTED_FILE_EXT)) {
+					bytes = klibUtil.decrypt(bytes);
+				}
+
 				JSONObject data = new JSONObject();
 				
 				data.put("bytes", bytes);
