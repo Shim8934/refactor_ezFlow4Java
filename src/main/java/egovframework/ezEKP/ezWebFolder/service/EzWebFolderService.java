@@ -1,7 +1,6 @@
 package egovframework.ezEKP.ezWebFolder.service;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -76,6 +75,8 @@ public interface EzWebFolderService {
 	String getFolderPath(String[] split, String primary, int tenantId) throws Exception;
 	List<FileVO> saveUploadedFiles(List<MultipartFile> multiFileLists, JSONArray nameArray, FolderVO folder, String realPath, LoginVO userInfo) throws Exception;
 	void getDownloadedFiles(String[] folderIdList, String[] fileIDList, String realPath, LoginVO userInfo, String userAgent, HttpServletRequest request, HttpServletResponse response) throws Exception;
+	// 휴지통 용량 초과 하는지 체크
+	boolean canDelete(String[] fileIdList, String[] folderIdList, String userId, int tenantId) throws Exception;
 	void deleteSelectedFiles(String[] fileIDList, LoginVO userInfo) throws Exception;
 	// 예연추가 delete시 선택된 파일, 폴더 함께 삭제 
 	void deleteSelectedFilesFolders (String[] fileIDList, String[] folderIDList ,LoginVO userInfo) throws Exception ;

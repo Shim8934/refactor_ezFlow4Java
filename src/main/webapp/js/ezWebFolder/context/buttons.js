@@ -262,6 +262,11 @@ var buttons = (function() {
 				params.push("folderList=" + encodeURIComponent(selected.folders.toString()));
 			}
 			
+			if (folderTypeCheck === undefined || !folderTypeCheck ) {
+				folderTypeCheck = "N";
+			} 
+			params.push("folderTypeCheck=" + folderTypeCheck);
+			
 			openLeftPanel();
 			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?" + params.join("&"));
 		},
@@ -278,8 +283,12 @@ var buttons = (function() {
 				return;
 			}
 			
+			if (folderTypeCheck === undefined || !folderTypeCheck ) {
+				folderTypeCheck = "N";
+			}
+			
 			openLeftPanel();
-			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString() + "&type=copy");
+			DivPopUpShow(450, 480, "/ezWebFolder/fileMoveConfirm.do?fileList=" + selected.files.toString() + "&type=copy&folderTypeCheck=" + folderTypeCheck );
 		},
 		
 		newFolder: function() {

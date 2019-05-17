@@ -1005,33 +1005,38 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 	public Map<String, Object> restoreTrashCan(String[] fileIDList, String[] folderIDList, int tenantId, String userId, String offset, String companyId, String timeUTC, String userName1, String userName2) throws Exception {
 		Map<String, Object> resultMap = new HashMap<>();
 		List<DuplicateInfoVO> duplicateList = new ArrayList<>();
-		
+		FolderVO userFolderVO = ezWebFolderService.getRootFolderId(userId, "U", offset, tenantId);
+		String userFolderPath = userFolderVO.getFolderPath();
+
 		boolean isAllRestored = true;
 		boolean hasAllParentFolder = true;
 		boolean hasExceededCapacities = false;
-		
+
 		for (String file : fileIDList) {
 			if (file == null || file.isEmpty()) {
 				continue;
 			}
-			
+
 			FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
 
 			if (fileVO == null) {
 				continue;
 			}
-			
+
 			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(fileVO.getFolderId(), offset, tenantId);
 
-			UserCapacityVO capacity = ezWebFolderAdminService.getCapacity(fileVO.getFolderId(), "1", tenantId);
+			// 유저 폴더에 있던건 용량체크 안함
+			if (!folderVO.getFolderPath().startsWith(userFolderPath)) {
+				UserCapacityVO capacity = ezWebFolderAdminService.getCapacity(fileVO.getFolderId(), "1", tenantId);
 
-			double totalUsed = Double.parseDouble(capacity.getTotalUsed());
-			double totalCapa = Double.parseDouble(capacity.getTotalCapacity()) * 1073741824;
-			boolean isCapacityOver = fileVO.getFileSize() > totalCapa - totalUsed;
-			hasExceededCapacities |= isCapacityOver;
+				double totalUsed = Double.parseDouble(capacity.getTotalUsed());
+				double totalCapa = Double.parseDouble(capacity.getTotalCapacity()) * 1073741824;
+				boolean isCapacityOver = fileVO.getFileSize() > totalCapa - totalUsed;
 
-			if (isCapacityOver) {
-				continue;
+				if (isCapacityOver) {
+					hasExceededCapacities = true;
+					continue;
+				}
 			}
 
 			if ("Y".equals(folderVO.getUseStatus())) {
@@ -1054,17 +1059,20 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 
 			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
 			FolderVO upperFolderVO = ezWebFolderService.getFolderByFolderId(folderVO.getFolderUpper(), offset, tenantId);
-			
-			UserCapacityVO capacity = ezWebFolderAdminService.getCapacity(folder, "1", tenantId);
 
-			double totalUsed = Double.parseDouble(capacity.getTotalUsed());
-			double totalCapa = Double.parseDouble(capacity.getTotalCapacity()) * 1073741824;
-			double folderSize = ezWebFolderAdminService.getFolderSize(folderVO.getFolderPath(), tenantId);
-			boolean isCapacityOver = folderSize > (totalCapa - totalUsed);
-			hasExceededCapacities |= isCapacityOver;
+			// 유저 폴더에 있던건 용량체크 안함
+			if (!folderVO.getFolderPath().startsWith(userFolderPath)) {
+				UserCapacityVO capacity = ezWebFolderAdminService.getCapacity(folder, "1", tenantId);
 
-			if (isCapacityOver) {
-				continue;
+				double totalUsed = Double.parseDouble(capacity.getTotalUsed());
+				double totalCapa = Double.parseDouble(capacity.getTotalCapacity()) * 1073741824;
+				double folderSize = ezWebFolderAdminService.getFolderSize(folderVO.getFolderPath(), tenantId);
+				boolean isCapacityOver = folderSize > (totalCapa - totalUsed);
+
+				if (isCapacityOver) {
+					hasExceededCapacities = true;
+					continue;
+				}
 			}
 
 			if ("Y".equals(upperFolderVO.getUseStatus())) {
@@ -1085,7 +1093,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 				hasAllParentFolder = false;
 			}
 		}
-		
+
 		if (isAllRestored && !hasExceededCapacities && duplicateList.isEmpty()) {
 			// 중복되지 않고 성공했다면 0
 			resultMap.put("code", 0);
@@ -1095,7 +1103,7 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 			// 부모 폴더가 없어 실패한 게 있으면 4, 아니면 8
 			resultMap.put("code", hasAllParentFolder ? 8 : 4);
 		}
-		
+
 		return resultMap;
 	}
 	
@@ -1288,29 +1296,50 @@ public class EzWebFolderServiceimpl_m implements EzWebFolderService_m {
 		
 		boolean useRename = fileNameList != null;
 		
+		FolderVO userRootFolder = ezWebFolderService.getRootFolderId(userId, "U", offset, tenantId);
+		String userRootPath = userRootFolder.getFolderPath();
+
 		// 코드 진짜 더럽다 수정해야된다
 		FolderVO destFolder = ezWebFolderService.getFolderByFolderId(folderId, offset, tenantId);
+		String destFolderPath = destFolder.getFolderPath();
+		boolean isMoveToUserFolder = destFolderPath.startsWith(userRootPath);
+
 		UserCapacityVO destCapacity = ezWebFolderAdminService.getCapacity(folderId, "1", tenantId);
 		double destTotalUsed = Double.parseDouble(destCapacity.getTotalUsed());
-		double destTotalCapa = Double.parseDouble(destCapacity.getTotalCapacity()) * 1073741824;
+		double destTotalCapa = Double.parseDouble(destCapacity.getTotalCapacity()) * 1_073_741_824;
 		double destFreeSize = destTotalCapa - destTotalUsed;
 		long totalFileSize = 0;
 
 		result.put("duplicateList", duplicateList);
 
 		for (String file : fileIDList) {
+			if (file == null || file.isEmpty()) {
+				continue;
+			}
+
 			FileVO fileVO = ezWebFolderService.getFileByFileId(file, offset, tenantId);
+			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(fileVO.getFolderId(), offset, tenantId);
 
-			boolean isCapacityOver = (totalFileSize += fileVO.getFileSize()) > destFreeSize;
+			if (isMoveToUserFolder || folderVO.getFolderPath().startsWith(userRootPath)) {
+				continue;
+			}
 
-			if (isCapacityOver) {
+			if ((totalFileSize += fileVO.getFileSize()) > destFreeSize) {
 				result.put("hasExceededCapacities", true);
 				return result;
 			}
 		}
 
 		for (String folder : folderIDList) {
+			if (folder == null || folder.isEmpty() || userRootPath.contains("|" + folder + "|")) {
+				continue;
+			}
+
 			FolderVO folderVO = ezWebFolderService.getFolderByFolderId(folder, offset, tenantId);
+
+			if (isMoveToUserFolder || folderVO.getFolderPath().startsWith(userRootPath)) {
+				continue;
+			}
 
 			boolean isCapacityOver = (totalFileSize += ezWebFolderAdminService.getFolderSize(folderVO.getFolderPath(), tenantId)) > destFreeSize;
 
