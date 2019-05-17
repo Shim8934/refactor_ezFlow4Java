@@ -528,7 +528,7 @@
 					if (returnFlag == "0") {
 						$("#returnFlag").html("<spring:message code='ezResource.kmsr12'/>");
 					} else {
-						$("#returnFlag").html("<spring:message code='ezResource.kmsr11'/>");
+						$("#returnFlag").html("<spring:message code='ezResource.kmsr13'/>");
 					}
 					
 					$("#resDate").html(result.resBrd.makeDate);
