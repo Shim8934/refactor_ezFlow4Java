@@ -72,6 +72,8 @@
 				
 				if(typeId == 'A11' || typeId == 'A12' || typeId == 'A13') {
 					$("#attiInfoView").append(tempHtml);
+					$("#attiInfoView tr").eq(3).css("display", "none");
+					$("#attiInfoView tr").eq(4).css("display", "none");
 				}
 				
 				//유형명
@@ -80,8 +82,6 @@
 				$("#typeName").text(" " + typeName);
 				$("#writerName").text(" " + writerName);
 				$("#region").html(" " + region);
-				$("#mobile").html(" " + mobile);
-				$("#bizsub").html(" " + bizSub);
 				
 				var doc = document.getElementById('message').contentWindow.document;
 				doc.open();
