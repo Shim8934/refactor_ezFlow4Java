@@ -2033,6 +2033,8 @@
 			(TYPE_ID != 'A02' AND TYPE_ID != 'A17')
 		AND 
 			WRITER_ID = #userId#
+		AND
+			START_DATE >= #joinDate#
 		<isNotEmpty property="oneMonthAgo">
 			<![CDATA[
 				AND
@@ -2045,6 +2047,7 @@
 			COMPANY_ID = #companyId#
 		AND
 			TENANT_ID = #tenantId#
+			
 	</select>
 	
 	<update id = "ezAttitudeDAO.updateAnnualHoliday" parameterClass="map">
