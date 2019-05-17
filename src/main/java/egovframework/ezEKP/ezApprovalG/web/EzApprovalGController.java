@@ -5428,6 +5428,7 @@ public class EzApprovalGController extends EgovFileMngUtil{
 		String ext = request.getParameter("ext");
 		
 		String orgCompanyID = request.getParameter("orgCompanyID");
+		String pageType = request.getParameter("pageType");
 		
 		if (orgCompanyID != null && !orgCompanyID.equals("") && !orgCompanyID.equals(userInfo.getCompanyID())) {
 			userInfo.setCompanyID(orgCompanyID);
@@ -5520,10 +5521,15 @@ public class EzApprovalGController extends EgovFileMngUtil{
 				}
 			}
 		} else {
-			Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId(), docState);
-			
-			if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
-				return "main/warning";
+			if (pageType != null && pageType.equals("admin")) {
+				//do nothing..
+			} else {
+				Document doc = ezApprovalGService.checkPermission(docID.trim(), userInfo.getId(), userInfo.getDeptID(), mode, userInfo.getCompanyID(), userInfo.getTenantId(), docState);
+				
+				if (doc.getElementsByTagName("DOCID").getLength() <= 0) {
+					model.addAttribute("chk", "no");
+					return "main/warning";
+				}
 			}
 		}
 		
