@@ -339,7 +339,8 @@
 	                                CheckRows.item(i).onchange = function () { CheckBoxOnclick(this); };
 	                        }
 	                        if (document.getElementById("body") != null) {
-	                            if (document.getElementById("body").getAttribute("class") == "FIELD") {
+	                        	// class가 FIELD를 포함한 두 개 이상일 때도 조건문에 포함되어야 함 2019-05-14 임민석
+	                        	if (document.getElementById("body").getAttribute("class").indexOf("FIELD") != -1) {
 	                                document.getElementById("body").innerHTML = Body_innerHTML;
 	                                BODYTag = document.getElementById("body");
 	                            }

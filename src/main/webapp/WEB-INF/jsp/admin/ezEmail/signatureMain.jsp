@@ -24,6 +24,11 @@
 	        	signatureTemplateView();
 	        };
 	        
+	        function companyChange() {
+	        	companyID = document.getElementById("ListCompany") != null ? document.getElementById("ListCompany").value : companyID;
+	        	signatureTemplateView();
+	        }
+	        
 	        // 초기화면
 	        function signatureTemplateView() {
 	        	
@@ -45,7 +50,8 @@
 	        // 목록 보여주기
 	        function makeSignatureList(json) { 
 	        	var _TBODY = document.getElementById("signList");
-				
+	        	_TBODY.innerHTML = "";
+	        	
 				if (json.length == 0) {
 					var _TR = document.createElement("TR");
 					_TR.setAttribute("id", "signatureTemplateNoData");
@@ -175,7 +181,7 @@
 	        	}
 	        	
 				var popUpType = "";
-				var url = "/admin/ezEmail/signEditPopUp.do?type=" + type + "&paramSignNo=" + signno;
+				var url = "/admin/ezEmail/signEditPopUp.do?type=" + type + "&paramSignNo=" + signno +"&companyId=" + companyID;
 				var signPopUp = window.open(url, "signPopUp", GetOpenWindowfeature(1000, 686));
 			}
 	        
@@ -314,14 +320,16 @@
 	</head>
 	<body class="mainbody" style="height: 95%;">
 	    <h1><spring:message code = 'ezEmail.jje05'/><span></span></h1>
-	    <span style="display:none;"><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
-		    <select id="ListCompany" style="height:29px">
-	        	<c:forEach var="item" items="${list}">
-	        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
-            	</c:forEach>
-		    </select>
-	    </span>
-	    
+	    <div>
+		    <span><b><spring:message code = 'ezApprovalG.t1566' /> : </b>
+			    <select id="ListCompany" style="height:29px" onChange="companyChange();">
+		        	<c:forEach var="item" items="${list}">
+		        		<option value="<c:out value='${item.cn}'/>" ${item.cn == userInfo.companyID ? 'selected' : ''}><c:out value='${item.displayName}'/></option>
+	            	</c:forEach>
+			    </select>
+		    </span>
+	    </div>
+		<br>
 	    <div style="float: left; margin-right: 10px; position:relative;">
 	    <!-- 서명 템플릿 목록 -->
 			<table>

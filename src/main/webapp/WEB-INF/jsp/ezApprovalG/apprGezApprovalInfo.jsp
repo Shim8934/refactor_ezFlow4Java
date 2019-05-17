@@ -2629,7 +2629,7 @@
 	                                        <input id="textUserCC" style="width: 150px;height:22px" name="textUserCC" onkeypress="return textUserCC_onkeypress(event)"  maxlength="50">
 	                                        <a class="imgbtn imgbck"><span name="btn_searchUserCC" id="btn_searchUserCC" onkeypress="return btn_searchUserCC_onclick()" onclick="return btn_searchUserCC_onclick()" ><spring:message code='ezApprovalG.t234'/></span></a>
 											<!-- 부서추가 -->
-											<a class="imgbtn imgbck"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.t1101'/></span></a>
+											<a class="imgbtn imgbck"><span id="btn_addDept" onclick="return btn_addDepartment()"><spring:message code='ezApproval.psb02'/></span></a>
 	                                    </td>
 	                                </tr>
 			                    </table>

@@ -1314,19 +1314,24 @@
 		                }
 		                attachxml = strRet;
 		            } else {
-		            	    var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
-			                    var temppath = pUrl;
-			                    temppath = temppath.substring(34, temppath.length);
-			                    var orgfile = temppath.split("/");
-			                    orgfile = orgfile[orgfile.length - 1];
-			                    xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
-			                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
-			                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
-			                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
-			                        xmlstring += "<TYPE>APPROVAL</TYPE>";
-			                    else
-			                        xmlstring += "<TYPE>APPROVALG</TYPE>";
-			                    xmlstring += "<FILESIZE>0</FILESIZE></ROW>";
+		            	var xmlstring = "<DATA><BOARDID>" + pBoardID + "</BOARDID><ROWS>";
+	                    var temppath = pUrl;
+	                    temppath = temppath.substring(34, temppath.length);
+	                    var orgfile = temppath.split("/");
+	                    orgfile = orgfile[orgfile.length - 1];
+	                    
+	                    var orgFileList = orgfile.split(".");
+	                    var orgFileType = orgFileList[orgFileList.length - 1];
+		                    
+		               if (orgFileType == "hwp"){
+		            	   	xmlstring += "<ROW><FILENAME><![CDATA[" + "<spring:message code='ezBoard.t419' />".split(".")[0] + "]]></FILENAME>";
+		                    xmlstring += "<FILEPATH><![CDATA[" + temppath + "]]></FILEPATH>";
+		                    xmlstring += "<ORGFILEPATH><![CDATA[" + orgfile + "]]></ORGFILEPATH>";
+		                    if (pUrl.toLowerCase().indexOf("/upload_approval/") > -1)
+		                        xmlstring += "<TYPE>APPROVAL</TYPE>";
+		                    else
+		                        xmlstring += "<TYPE>APPROVALG</TYPE>";
+		                    xmlstring += "<FILESIZE>0</FILESIZE></ROW>";
 			               
 			                xmlstring += "</ROWS></DATA>";
 			                xmldom2 = loadXMLString(xmlstring);
@@ -1340,13 +1345,16 @@
 			                for (i = 0; i < nodes.length; i++) {
 			                    var filepath = getNodeText(GetChildNodes(nodes[i])[0]).replace(/\\/gi, "").replace(/\//gi, "").replace(/:/gi, "").replace(/\?/gi, "").replace(/\"/gi, "").replace(/\*/gi, "").replace(/</gi, "").replace(/>/gi, "").replace(/|/gi, "");
 			                    // 2018.07.05 (KLIB) - ezd 확장자 붙이기
-			                    if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
-			                    	filepath = filepath + ".ezd";
-			                    }
+			                    //if (getNodeText(GetChildNodes(nodes[i])[4]).indexOf(".ezd") > -1) {
+			                    //	filepath = filepath + ".ezd";
+			                    //}
 			                    
 			                    strRet += "tempUploadFile/" + filepath + "|";
+				                attachxml = strRet;
 			                }
-			                attachxml = strRet;
+		               } else {
+			                xmlstring += "</ROWS></DATA>";
+		               }
 		            }
 		        }
 		    }

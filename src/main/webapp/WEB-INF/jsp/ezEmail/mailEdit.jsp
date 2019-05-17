@@ -202,11 +202,13 @@
 		        MailSignLoad();
 		        Simple_Choice();
 		        
-		        if (m_rgParams4PostOption["bodyType"] == "1") {
-					document.getElementById("message").style.display = "none";
+		        if (g_bodyType == "1") {
 					document.getElementById("plainTextArea").style.display = "";
 					document.getElementById("bodyType").options[1].selected = true;
 		        	document.getElementById("SelMailSign").disabled = true;
+		        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
+				} else {
+					document.getElementById("message").style.display = "";
 				}
 		        
 		        <c:if test="${useFromAddress == 'YES'}">
@@ -612,15 +614,33 @@
 		    function Editor_Complete(){
 		        DocumentComplete();
 		        
-		        var g_originalHTML = message.GetEditorContent();
-			    document.getElementById("plainTextArea").value = message.GetEditorTextContent();
+			    g_originalHTML = message.GetEditorContent();
+		        g_originalPlainText = document.getElementById("plainTextArea").value;
 		    }
+		    
+		    function removeHTMLTag(html) {
+		    	var resultStr = html;
+	    	    
+	    	    resultStr = resultStr.replace(/\r\n/gi, "\n");
+	    	    resultStr = resultStr.replace(/\n/gi, "");
+	    	    resultStr = resultStr.replace(/<p .*?>/gi, "<p>");
+	    	    resultStr = resultStr.replace(/<br .*?>/gi, "<br>");
+	    	    resultStr = resultStr.replace(/<hr .*?>/gi, "<hr>");
+	    	    resultStr = resultStr.replace(/<p>/gi, "\r\n");
+	    	    resultStr = resultStr.replace(/<br>/gi, "\r\n");
+	    	    resultStr = resultStr.replace(/<hr>/gi, "\r\n----------------------------------------------------------------------");
+	    	    resultStr = resultStr.replace(/<style>.*?<\/style>/gi, "");
+	    	    resultStr = resultStr.replace(/<script>.*?<\/script>/gi, "");
+	    	    resultStr = resultStr.replace(/<.*?>/gi, "");
+				
+	    	    return  resultStr;
+	        }
+		    
 		    function DocumentComplete() {
-		        if(initFlag == false)
-		        {
-		            pzFormProc_DocumentComplete();
-		            initFlag = true;
-		        }
+		    	var htmlContent = document.getElementById("messageBody").innerHTML;
+		    	
+		        message.SetEditorContent(htmlContent);
+		        document.getElementById("plainTextArea").innerHTML = removeHTMLTag(htmlContent);
 		    }
 		    function returnvalue(strXML) {
 		        pAttachXml = loadXMLString(strXML);
@@ -759,25 +779,17 @@
 						document.getElementById("plainTextArea").style.display = "";
 		        		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
 			        	document.getElementById("SelMailSign").disabled = true;
-		        		
+			        	dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
 		        	} else {
 		        		document.getElementById("bodyType").options[0].selected = true;
 		        	}
 		    	} else {
-		    		var texts = document.getElementById("plainTextArea").value.split("\n");
-		            textData = "";
-		            for (var i=0; i<texts.length; i++) {
-		            	if (texts[i] != "") {
-		            		textData += "<p " + defaultFontAndSize + ">" + texts[i] + "</p>";
-		            	}
-		            }
-		            
-		    		message.SetEditorContent(textData);
-		    		
+		    		message.SetEditorTextContent(document.getElementById("plainTextArea").value);		    		
 		    		document.getElementById("message").style.display = "";
 					document.getElementById("plainTextArea").style.display = "none";
 		    		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
 	        		document.getElementById("SelMailSign").disabled = false;
+	        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "";
 		    	}
 		    }
 		    
@@ -1113,8 +1125,8 @@
                         <img src="/images/pbar.gif"></li> 
                     <li class="sel" style="background:none; border:none; padding:0px;">
                         <select id="bodyType" style="vertical-align:top;" onchange="changeTextOption(this.value);">
-                        	<option value="0">HTML</option>
-                        	<option value="1">PlainText</option>
+                        	<option value="0" <c:if test="${bodyType == '0'}">selected</c:if>>HTML</option>
+                        	<option value="1" <c:if test="${bodyType == '1'}">selected</c:if>>PlainText</option>
                         </select>
                     </li>
 		            <li style="display:none;">
@@ -1202,7 +1214,7 @@
 		            <td colspan="3"><input id="eSubject" name="eSubject" onKeyUp="Subject_ReApply()" type="text" value="${encodedSubject}" TABINDEX="4" style="WIDTH:99%"></td>
 		          </tr>
 		        </table>
-		        <div id="messageBody" mbody="${body}" style="DISPLAY:none"></div>
+		        <xmp id="messageBody" style="DISPLAY:none">${body}</xmp>
 		        <xmp id="xmpTo" style="DISPLAY:none">${to}</xmp>
 		        <xmp id="xmpCc" style="DISPLAY:none">${cc}</xmp>
 		        <xmp id="xmpBcc" style="DISPLAY:none">${bcc}</xmp>
@@ -1217,8 +1229,8 @@
 				  <table width="100%" height="100%"> 
 			          <tr> 
 			            <td style="height:100%;">
-							<iframe id="message" frameborder="0" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="padding:0; height:100%; width:100%; overflow:auto;"></iframe>
-			            	<textarea id="plainTextArea" style="height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box; border-top-width:0; display:none;"></textarea>
+							<iframe id="message" frameborder="0" class="viewbox" src="/ezEditor/selectEditor.do" name="message" style="display:none; padding:0; height:100%; width:100%; overflow:auto;"></iframe>
+			            	<textarea id="plainTextArea" style="display:none; height:100%; width:100%; overflow-y:scroll; font-size:13px; box-sizing:border-box;"></textarea>
 	                  	</td> 
 			          </tr> 
 			          <!-- <asp:PlaceHolder ID="HolderDocSend" Runat="server" Visible="false"> 

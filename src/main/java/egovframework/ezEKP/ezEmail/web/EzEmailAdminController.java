@@ -542,7 +542,7 @@ public class EzEmailAdminController {
 						sb.append("<CLASS>" + "distribution" + "</CLASS>");
 						sb.append("<CN>" + commonUtil.cleanValue(pCn) + "</CN>");
 						sb.append("<DISPLAYNAME>"
-								+ displayName
+								+ commonUtil.cleanValue(displayName)
 								+ "</DISPLAYNAME>");
 						sb.append("<MAIL>"
 								+ commonUtil.cleanValue(cn)
@@ -2196,7 +2196,7 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezEmail/signEditPopUp.do", method = RequestMethod.GET)
 	public String signEditPopUp(
-			@CookieValue("loginCookie") String loginCookie, Locale locale, String paramSignNo, String type, Model model) throws Exception {
+			@CookieValue("loginCookie") String loginCookie, Locale locale, String paramSignNo, String type, String companyId, Model model) throws Exception {
 		logger.debug("signEditPopUp started.");
 		logger.debug("signNo=" + paramSignNo + ", type=" + type);
 		
@@ -2239,6 +2239,7 @@ public class EzEmailAdminController {
 		model.addAttribute("displayname", displayname);
 		model.addAttribute("displayname2", displayname2);
 		model.addAttribute("type", type);
+		model.addAttribute("companyId", companyId);
 
 		logger.debug("signNo=" + signNo + ", content=" + content + ", displayname=" + displayname + ", displayname2=" + displayname2);
 		logger.debug("signEditPopUp ended.");
@@ -2252,16 +2253,20 @@ public class EzEmailAdminController {
 	 */
 	@RequestMapping(value = "/admin/ezEmail/setSignatureTemplate.do", method = RequestMethod.POST)
 	@ResponseBody
-	public void setSignatureTemplate(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailSignatureTemplateVO signTemplate, String type) throws Exception {
+	public void setSignatureTemplate(@CookieValue("loginCookie") String loginCookie, @ModelAttribute MailSignatureTemplateVO signTemplate, String type, String companyId) throws Exception {
 		logger.debug("setSignatureTemplate started.");
 		logger.debug("signTemplate=" + signTemplate);
-		logger.debug("type=" + type);
+		logger.debug("type=" + type + ", companyId=" + companyId);
 		
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		
+		if (companyId == null || companyId.equals("")) {
+			companyId = userInfo.getCompanyID();
+		}
+		
 		try {
 			if (type.equals("add")) {
-				signTemplate.setCompanyId(userInfo.getCompanyID());
+				signTemplate.setCompanyId(companyId);
 				signTemplate.setTenantId(Integer.toString(userInfo.getTenantId()));
 				ezEmailService.addSignatureTemplate(signTemplate);
 			} else {
