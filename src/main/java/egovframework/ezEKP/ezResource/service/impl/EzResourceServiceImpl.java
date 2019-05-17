@@ -264,7 +264,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	}
 	
 	public void modifyResData(String brdID, String deptID, String deptNm, String ownerID, String ownerNm, String ownerPos, String ownerCall, String brdNm, String resLocation,
-	String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID, String realPath, String strAttachList1, String strAttachList2) throws Exception {
+	String brdExplain,String companyID, String approve, String brdNm2, String deptNm2, String ownerNm2, String ownerPos2, int tenantID, String realPath, String strAttachList1, String strAttachList2, String strReturn) throws Exception {
 		Map<String,Object> map = new HashMap<String, Object>();
 		map.put("v_P_Brd_ID", brdID);
 		map.put("v_P_ODeptID", deptID);
@@ -278,6 +278,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		map.put("v_P_Brd_Explain", brdExplain);
 		map.put("v_P_CompanyID", companyID);
 		map.put("v_P_Approve", approve);
+		map.put("v_P_Return", strReturn);
 		map.put("v_P_Brd_NM2", brdNm2);
 		map.put("v_P_ODeptNm2", deptNm2);
 		map.put("v_P_OwnerNm2", ownerNm2);
@@ -2447,6 +2448,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 	    String realPath = "";
 	    String strAttachList1 = "";
 	    String strAttachList2 = "";
+	    String strReturn = "";
 	    
 		Document xmlRes = commonUtil.convertStringToDocument(xmlStr);
 		strBrdID = xmlRes.getElementsByTagName("DATA").item(0).getTextContent().trim();
@@ -2462,15 +2464,16 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		strCompanyID = xmlRes.getElementsByTagName("DATA").item(10).getTextContent().trim();
 		strApprove = xmlRes.getElementsByTagName("DATA").item(11).getTextContent().trim();
 		strBrdNm2 = xmlRes.getElementsByTagName("DATA").item(12).getTextContent().trim();
-		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
-		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
-		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
+		strODeptNm2 = xmlRes.getElementsByTagName("DATA").item(16).getTextContent().trim();
+		strOwnerNm2 = xmlRes.getElementsByTagName("DATA").item(17).getTextContent().trim();
+		strOwnerPos2 = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
 			
-		realPath = xmlRes.getElementsByTagName("DATA").item(18).getTextContent().trim();
+		realPath = xmlRes.getElementsByTagName("DATA").item(19).getTextContent().trim();
 		strAttachList1 = xmlRes.getElementsByTagName("DATA").item(13).getTextContent().trim();
 		strAttachList2 = xmlRes.getElementsByTagName("DATA").item(14).getTextContent().trim();
+		strReturn = xmlRes.getElementsByTagName("DATA").item(15).getTextContent().trim();
 		
-		modifyResData(strBrdID, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, tenantID, realPath, strAttachList1, strAttachList2);
+		modifyResData(strBrdID, strODeptID, strODeptNm, strOwnerID, strOwnerNm, strOwnerPos, strOwnerCall, strBrdNm, strResLocation, strBrdExplain, strCompanyID, strApprove, strBrdNm2, strODeptNm2, strOwnerNm2, strOwnerPos2, tenantID, realPath, strAttachList1, strAttachList2, strReturn);
 
 		return true;
 	}

@@ -1025,6 +1025,7 @@
           		RESLOCATION = #v_P_ResLocation#,
           		BRD_EXPLAIN = #v_P_Brd_Explain#,
           		APPROVEFLAG = #v_P_Approve#,
+          		RETURNFLAG = #v_P_Return#,
           		BRD_NM2 = #v_P_Brd_NM2#,
           		OWNDEPTNM2 = #v_P_ODeptNm2#,
           		OWNERNM2 = #v_P_OwnerNm2#,
