@@ -48,7 +48,7 @@
 		</div>
 		<br/>
 		<div style="width:680px">
-			<span class="txt">▒ <spring:message code='ezEmail.ksa06'/></span><br><br>
+			<span class="txt">▒ <spring:message code='ezEmail.ksa07'/></span><br><br>
 			<table class="content" style="width:100%;">
 				<tr>
 					<th rowspan="2" style="width: 60px;"><spring:message code='ezOrgan.kyj01'/></th>
@@ -81,7 +81,7 @@
 			
 			<!-- 수취인안내설정 예시 -->
 			
-			<span class="txt">▒ <spring:message code='ezEmail.ksa07'/></span><br><br>
+			<span class="txt">▒ <spring:message code='ezEmail.ksa08'/></span><br><br>
 			<div id = "copyrightExam">
 				<spring:message code='ezEmail.ksa09'/>
 			</div>
