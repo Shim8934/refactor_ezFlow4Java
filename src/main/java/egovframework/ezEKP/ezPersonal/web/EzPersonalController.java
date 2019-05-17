@@ -160,6 +160,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String proxyInfo = request.getParameter("proxy");
 		System.out.println(userInfo.getDeptID());
 		String dept = request.getParameter("dept");
+		String buJaeId = request.getParameter("buJaeId");
 //		String proxyInfo2 = "";
 		//TODO: 원래는 user를 ad에서 정보 가져오는데 임시로 하드코딩함 전자결재외에 다른 부분 발견하면 수정요망(전자결재만 존재하면 그냥 박아도됨)
 		String pClass = "user";
@@ -174,11 +175,25 @@ public class EzPersonalController extends EgovFileMngUtil {
 		}
 		
 		String result = "";
-		if (dept == null || dept.equals("") || dept.equals(userInfo.getDeptID())) {
-			result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", buJaeInfo2, pClass, userInfo.getTenantId());
+		String userRealDeptId = "";
+		
+		if (buJaeId == null || buJaeId.equals("")) {
+			userRealDeptId = ezOrganService.getUserOrgDeptId(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+			if (dept == null || dept.equals("") || dept.equals(userRealDeptId)) {
+				result = ezOrganService.updateProperty(userInfo.getId(), "extensionAttribute5", buJaeInfo2, pClass, userInfo.getTenantId());
+			} else {
+				result = ezOrganService.updateAddJobProxy(userInfo.getId(), buJaeInfo2, userInfo.getTenantId(), dept);
+			}
 		} else {
-			result = ezOrganService.updateAddJobProxy(userInfo.getId(), buJaeInfo2, userInfo.getTenantId(), dept);
+			userRealDeptId = ezOrganService.getUserOrgDeptId(buJaeId, userInfo.getTenantId(), userInfo.getCompanyID());
+			if (dept == null || dept.equals("") || dept.equals(userRealDeptId)) {
+				result = ezOrganService.updateProperty(buJaeId, "extensionAttribute5", buJaeInfo2, pClass, userInfo.getTenantId());
+			} else {
+				result = ezOrganService.updateAddJobProxy(buJaeId, buJaeInfo2, userInfo.getTenantId(), dept);
+			}
 		}
+		
+		
 		
 		if (result.equals("OK")) {
 //			if (proxyInfo.split(":").length >= 5) {
@@ -190,10 +205,18 @@ public class EzPersonalController extends EgovFileMngUtil {
 			} else {
 				result = ezOrganService.setProxyUserInfo(userInfo.getId(), p roxyInfo.split(":")[0], proxyInfo.split(":")[1], proxyInfo.split(":")[2], proxyInfo.split(":")[3]+":"+proxyInfo.split(":")[4].replace("/", ":"), proxyInfo.split(":")[5]+":"+proxyInfo.split(":")[6].replace("/", ":"), userInfo.getTenantId(), userInfo.getOffset());
 			}*/
-			if (proxyInfo.split("\\|")[0].trim().equals("")) {
-				result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
+			if (buJaeId == null || buJaeId.equals("")) {
+				if (proxyInfo.split("\\|")[0].trim().equals("")) {
+					result = ezOrganService.delProxyUserInfo(userInfo.getId(), userInfo.getTenantId());
+				} else {
+					result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split("\\|")[0], proxyInfo.split("\\|")[1], proxyInfo.split("\\|")[2], proxyInfo.split("\\|")[3], proxyInfo.split("\\|")[4], userInfo.getTenantId(), userInfo.getOffset());
+				}
 			} else {
-				result = ezOrganService.setProxyUserInfo(userInfo.getId(), proxyInfo.split("\\|")[0], proxyInfo.split("\\|")[1], proxyInfo.split("\\|")[2], proxyInfo.split("\\|")[3], proxyInfo.split("\\|")[4], userInfo.getTenantId(), userInfo.getOffset());
+				if (proxyInfo.split("\\|")[0].trim().equals("")) {
+					result = ezOrganService.delProxyUserInfo(buJaeId, userInfo.getTenantId());
+				} else {
+					result = ezOrganService.setProxyUserInfo(buJaeId, proxyInfo.split("\\|")[0], proxyInfo.split("\\|")[1], proxyInfo.split("\\|")[2], proxyInfo.split("\\|")[3], proxyInfo.split("\\|")[4], userInfo.getTenantId(), userInfo.getOffset());
+				}
 			}
 			
 		}
@@ -1918,6 +1941,7 @@ public class EzPersonalController extends EgovFileMngUtil {
 	/**
 	 * 겸직 부재자설정 셀렉트박스 ajax 호출
 	 */
+	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/ezPersonal/manageAddJobBujaeG.do", produces = "application/json;charset=utf-8")
 	@ResponseBody
 	public JSONObject manageAddJobBujae(@CookieValue("loginCookie") String loginCookie, LoginVO userInfo, Locale locale, Model model, HttpServletRequest request) throws Exception{
@@ -1937,12 +1961,28 @@ public class EzPersonalController extends EgovFileMngUtil {
 		String initDate = commonUtil.getDateStringInUTC(commonUtil.getTodayUTCTime(""), userInfo.getOffset(), false);
 		String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", userInfo.getTenantId());
 		String dept = request.getParameter("dept");
+		String bujaeId = request.getParameter("bujaeId");
 		String result = "";
-		if (dept.equals(userInfo.getDeptID())) {
-			result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
+		
+		String userRealDeptId = "";
+		
+		if (bujaeId == null || bujaeId.equals("")) {
+			userRealDeptId = ezOrganService.getUserOrgDeptId(userInfo.getId(), userInfo.getTenantId(), userInfo.getCompanyID());
+			if (dept.equals(userRealDeptId)) {
+				result = ezOrganService.getPropertyValue(userInfo.getId(), "extensionAttribute5", userInfo.getTenantId());
+			} else {
+				result = ezOrganService.getAddJobProxy(userInfo.getId(), dept, userInfo.getTenantId());
+			}
 		} else {
-			result = ezOrganService.getAddJobProxy(userInfo.getId(), dept, userInfo.getTenantId());
+			userRealDeptId = ezOrganService.getUserOrgDeptId(bujaeId, userInfo.getTenantId(), userInfo.getCompanyID());
+			if (dept.equals(userRealDeptId)) {
+				result = ezOrganService.getPropertyValue(bujaeId, "extensionAttribute5", userInfo.getTenantId());
+			} else {
+				result = ezOrganService.getAddJobProxy(bujaeId, dept, userInfo.getTenantId());
+			}
 		}
+		
+		
 		String cDate = "";
 		String cTime = "";
 		if (result != null && !result.equals("")) {

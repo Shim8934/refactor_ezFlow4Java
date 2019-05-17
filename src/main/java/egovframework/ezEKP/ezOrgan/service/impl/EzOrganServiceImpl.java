@@ -2199,6 +2199,15 @@ public class EzOrganServiceImpl implements EzOrganService {
 		
 		return ezOrganDAO.getAddJobProxy(map);
 	}
+
+	@Override
+	public OrganUserVO getUserInfo(String id, String lang, int tenantId) throws Exception {
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("v_CN", id);
+		map.put("v_LANGDATA", lang);
+		map.put("v_TENANT_ID",  tenantId);
+		return ezOrganDAO.getUserInfo(map);
+	}
 }
 
 
