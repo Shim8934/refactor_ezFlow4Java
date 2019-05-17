@@ -1269,7 +1269,7 @@ function setBigMemoBody(bigHeight, bigWidth) {
 	// 37 - 큰 메모 헤더 높이, 29 - 큰 메모 bottom 높이
 	var contentsHeight = parseInt(bigHeight - 37 - 29);
 	// 11 - 스크롤바 넓이
-	var contentsWidth = parseInt(bigWidth - 11);
+	var contentsWidth = parseInt(bigWidth - 12);
 	
 	$('#dMContents').css({'width': contentsWidth, 'height' : contentsHeight});
 }
