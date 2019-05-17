@@ -1244,7 +1244,7 @@
 	                            <img src="/images/ImgIcon/next.gif" height="16" alt="<spring:message code='ezApprovalG.pjj29'/>" style="vertical-align: middle" /></span></a>
 	                	</div>
 	                </h2>
-	                <div class="listview" style="margin-top: 7px; margin-left: 1px">
+	                <div class="listview" style="margin-top: 11px; margin-left: 1px">
 	                <c:if test="${approvalFlag == 'S'}">
 	                    <div id="APRLINE" style="overflow: auto; border: 0px solid #ddd; width: 730px; height: 550px; background-color: #ffffff;"></div>
 	                </c:if>
