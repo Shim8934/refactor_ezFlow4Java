@@ -906,6 +906,19 @@ public class EzEmailUtil {
 		boolean includeInlineAsAttachment = false;
 		String shareId = null;
 		
+		// 료비에서 수신한 메일 중에 text/plain 파트만 있으면서
+		// ContentID 없이 Content-Dispostion이 inline으로 첨부된
+		// 이미지가 있어 이 경우 첨부파일로서 처리하기 위해 추가함.(iPhone Mail에서 작성한 메일임.)
+		boolean isInlinePartWithoutContentID = false;
+		
+		if (part instanceof MimePart) {
+			if (part.getDisposition() != null 
+					&& part.getDisposition().equalsIgnoreCase(Part.INLINE)
+					&& ((MimePart)part).getContentID() == null) {
+				isInlinePartWithoutContentID = true;
+			}
+		}
+		
 		if (extraMap != null) {
 			if (extraMap.get("forPrint") != null) forPrint = (boolean)extraMap.get("forPrint");
 			if (extraMap.get("mobile") != null) mobile = (boolean)extraMap.get("mobile");
@@ -951,7 +964,8 @@ public class EzEmailUtil {
 						|| (part.getContentType() != null && part.getContentType().contains("x-apple-part-url")
 						|| includeInlineAsAttachment))
 		        && !(part.isMimeType("message/rfc822") && part.getFileName() == null))
-				|| part.isMimeType("application/*")) {
+				|| part.isMimeType("application/*")
+				|| isInlinePartWithoutContentID) {
             double size = part.getSize();
             String[] encodingHeaders = part.getHeader("Content-Transfer-Encoding");
             
