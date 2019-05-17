@@ -1236,8 +1236,8 @@ function addEventInBigMemo() {
 function setBigMemoAtFirst(sizeInfo) {
 	var bigMemo = $('#detailMemo');
    
-	var defaultHeight = 600;
-	var defaultWidth = 600;
+	var defaultHeight = 400;
+	var defaultWidth = 400;
 
 	var bigHeight;
 	var bigWidth;
@@ -1250,8 +1250,8 @@ function setBigMemoAtFirst(sizeInfo) {
 		bigTop = sizeInfo.top;
 		bigLeft = sizeInfo.left;
 	} else {
-		var winWidth = window.clientWidth;
-		var winHeight = window.clientHiehgt;
+		var winWidth = window.innerWidth;
+		var winHeight = window.innerHeight;
 
 		bigWidth = defaultWidth;
 		bigHeight = defaultHeight;
