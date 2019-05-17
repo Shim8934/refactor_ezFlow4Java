@@ -85,6 +85,7 @@
 	    var lunarUseFlag = "${lunarUseFlag}";
 	    var LunarUse = false;
 	    var dayView = 0;
+	    var returnFlag = "${returnFlag}";
 	    
 	    document.onselectstart = function () { return false; };
 	    

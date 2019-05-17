@@ -134,8 +134,6 @@
 					createNodeAndInsertText(xmlpara, objNode, "DATA", "2");
 				}
 				
-				// 반납절차 flag 넘기기
-
 				var checkSpace2 = document.getElementById("Brd_NM2").value.trim();
 				
 				if (checkSpace2 == 0) {

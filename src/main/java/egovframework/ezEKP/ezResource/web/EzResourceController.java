@@ -1177,6 +1177,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		String strApproveFlag = resBrd.getApproveFlag();
 		String strOwnerCall = resBrd.getOwnerCall();
 		String strBrdAccess = resBrd.getBrdAccess();
+		String strReturnFlag = resBrd.getReturnFlag();
 		String pAdminFg = ezResourceService.getACL(userInfo.getCompanyID(), resID, userInfo.getId(), "everyone", userInfo.getTenantId(), userInfo.getDeptID());
 		
 		String[] OwnerList = strOwnerID.split(",");
@@ -1220,6 +1221,7 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("ownerDeptNm", strOwnDeptNm);
 		model.addAttribute("useEditor", useEditor);
 		model.addAttribute("approveFlag", strApproveFlag);
+		model.addAttribute("returnFlag", strReturnFlag);
 		model.addAttribute("brdNm", strBrdNm);
 		model.addAttribute("brdAccess", strBrdAccess);
 		model.addAttribute("displaySTime", displaySTime);
