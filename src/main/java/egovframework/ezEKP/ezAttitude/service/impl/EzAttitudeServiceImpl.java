@@ -2943,8 +2943,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	@Override
 	public void updateFiscalYearAnnualHoliday(Map<String, Object> map) throws Exception {
 		LOGGER.debug("updateFiscalYearAnnualHoliday started");
-
-		List<Map<String, Object>> list = ezAttitudeDAO.getAttitudeJoinDateUserList(map);
+		
+		List<Map<String, Object>> list = ezAttitudeDAO.getJoinDateUserList(map);
 		
 		for (Map<String, Object> m : list) {
 			
