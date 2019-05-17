@@ -275,7 +275,7 @@ var setImageElement = function (parent, imgsrc, type) {
 				document.getElementById('layer-popup').style.visibility = 'hidden';
 				document.getElementById('contextMenuBlock').style.display = '';	
 			}
-			layerExpand();
+			// layerExpand();	// 컨텍스트 버튼 접었다가 열 때마다 이벤트 쌓여서 주석처리. 대신 jsp에서 이벤트 호출
 		});
 	}
 	

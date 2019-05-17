@@ -225,7 +225,7 @@
 		    	scrollUI();
 		    	layerClose();
 		    	memoSortable();
-		    	// layerExpand(); -> portalContextMenu.js에서 한 번 더 호출해서 주석처리
+		    	layerExpand();
 		    	memoAdd();
 		    	noteClearSelection();
 		    	
