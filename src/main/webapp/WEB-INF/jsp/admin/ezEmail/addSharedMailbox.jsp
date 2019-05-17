@@ -1109,7 +1109,6 @@
                         	chk.setAttribute("type", "checkbox");
                         	chk.setAttribute("id", "manage_" + objTr.getAttribute("DATA1"));
                         	chk.setAttribute("name", "manage_" + objTr.getAttribute("DATA1"));
-                        	chk.setAttribute("checked", true);
                         	
                         	lbl = document.createElement("label");
                         	lbl.setAttribute("for", "manage_" + objTr.getAttribute("DATA1"));
