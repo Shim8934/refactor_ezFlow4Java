@@ -4376,7 +4376,8 @@
                 END
                 	COMPANYNAME  ,
              	A.TITLE T1  ,
-             	A.TITLE2 T2  
+             	A.TITLE2 T2  ,
+             	A.JOBID
         	FROM
         		TBL_ADDJOBMASTER A
             JOIN
