@@ -409,6 +409,12 @@ public class EzEmailUtil {
 			e.printStackTrace();
 		} 
 		
+		if (addressStr != null) {
+			// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+			// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+			addressStr = addressStr.replace("\\\"", "");
+		}
+		
 		return addressStr;
 	}
 	
@@ -535,7 +541,13 @@ public class EzEmailUtil {
 					} catch (UnsupportedEncodingException e) {
 					}
 					
-					addressBuilder.append(name + " <" + addressStr + ">");					
+					if (name != null) {
+						// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+						// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+						name = name.replace("\\\"", "");
+					}					
+					
+					addressBuilder.append(name + " <" + addressStr + ">");							
 				}
 				else {
 					addressBuilder.append(addressStr + " <" + addressStr + ">");
@@ -591,6 +603,12 @@ public class EzEmailUtil {
 							name = MimeUtility.decodeText(name);
 						}
 					} catch (UnsupportedEncodingException e) {
+					}
+					
+					if (name != null) {
+						// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+						// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+						name = name.replace("\\\"", "");
 					}
 					
 					addressBuilder.append(name + " <" + addressStr + ">");					
