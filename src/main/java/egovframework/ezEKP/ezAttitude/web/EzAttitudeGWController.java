@@ -2882,6 +2882,7 @@ public class EzAttitudeGWController {
 				
 		try{
 			String content = request.getParameter("content");
+			String mobile = request.getParameter("mobile");
 			String attitudeTypeList = request.getParameter("attitudeTypeList");
 			String startDateList = request.getParameter("startDateList");
 			String endDateList = request.getParameter("endDateList");
@@ -2889,7 +2890,7 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			status = ezAttitudeService.approvalGConn(userId, info.getDeptId(), content, attitudeTypeList, startDateList, endDateList, docId, info.getOffSet(), info.getCompanyId(), info.getTenantId());
+			status = ezAttitudeService.approvalGConn(userId, info.getDeptId(), content, mobile, attitudeTypeList, startDateList, endDateList, docId, info.getOffSet(), info.getCompanyId(), info.getTenantId());
 			
 			if (status == 1) {
 				result.put("status", "ok");

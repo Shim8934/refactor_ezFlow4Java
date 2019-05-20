@@ -2148,7 +2148,7 @@
 	                        </td>
 	                        <td style="vertical-align: top;">
 	                            <h2 id="ToTitle" class="receiver_tltype01" style="margin-top:4px;position: absolute;top: 56px;width: 237px;">
-	                                <span style="min-width: 45px;" id="ToTitleStr">참조자</span>
+	                                <span style="min-width: 45px;" id="ToTitleStr"><spring:message code='ezAttitude.t282' /></span>
 	                            </h2>
 	                            <div class="receiver_borderbox" style="border-top: 1px solid #ddd;">
 	                                <div id="ListViewMsgTo" ondragover ="onDragEnter(event)" ondrop ="onDrop(event, this)" style="width: 250px; Height: 539px; overflow-x: auto; overflow-y: auto;"  ondblclick="DeleteReceiver(ListViewMsgTo)"></div>

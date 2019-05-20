@@ -628,7 +628,7 @@
 			                    <th style="width: 60px;"><span>NO.</span></th>
 			                    <th style="width: 25%; padding-left:15px; cursor: pointer;" colname="startDate"><span><spring:message code='ezAttitude.t107' /></span></th>
 			                    <th style="width: 15%; cursor: pointer;" colname="typeName"><span><spring:message code='ezAttitude.t35' /></span></th>
-			                    <th style="width: 12%; cursor: pointer;" colname="annualCnt"><span><spring:message code='ezAttitude.t252' /></span></th>
+			                    <th style="width: 12%; cursor: pointer;" colname="annualCnt"><span><spring:message code='ezAttitude.t238' /></span></th>
 			                    <th style="width: 20%;"><span><spring:message code='ezAttitude.t264' /></span></th>
 			                    <th style="width: 12%; cursor: pointer;" colname="annualApprStatus"><span><spring:message code='ezAttitude.t274' /></span></th>
 			                    <th style="width: 12%; cursor: pointer;" colname="modAppl"><span><spring:message code='ezAttitude.t272' /></span></th>

@@ -246,7 +246,7 @@ public class EzTalkGateController {
 			} else if (ezTalkSsoType.equals("portal")) { 
 				return "redirect:/ezPortal/portalMain.do";
 			} else if (ezTalkSsoType.equals("noticeBoard")) { 
-				return "redirect:/ezTalkGate/noticeBoard.do?ezTalkId=" + orgId + "&ezTalkPw=" + ezTalkPw;
+				return "redirect:/ezTalkGate/noticeBoard.do?ezTalkId=" + URLEncoder.encode(orgId, "UTF-8") + "&ezTalkPw=" + URLEncoder.encode(ezTalkPw, "UTF-8");
 			} else if (ezTalkSsoType.equals("noticeBoard2")) { 
 				return "redirect:/ezTalkGate/noticeBoard2.do";
 			} else if (ezTalkSsoType.equals("mailWrite")) { 
@@ -345,6 +345,8 @@ public class EzTalkGateController {
 		
 		String ezTalkId = request.getParameter("ezTalkId") != null ? request.getParameter("ezTalkId") : "";
 		String ezTalkPw = request.getParameter("ezTalkPw") != null ? request.getParameter("ezTalkPw") : "";
+		logger.debug("ezTalkId = " + ezTalkId);
+		logger.debug("ezTalkPw = " + ezTalkPw);
 		
 		String ezTalkGateNoticeBoardId = ezBoardService.getEzTalkGateNoticeBoardId(userInfo.getCompanyID(), userInfo.getTenantId());
 		logger.debug("ezTalkGateNoticeBoardId=" + ezTalkGateNoticeBoardId);
