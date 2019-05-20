@@ -1114,7 +1114,7 @@ public class EzMemoGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezMemo/setDetailMemoPosition/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject gwSetDetailMemoPosition(@PathVariable String userId, MemoConfigVO memoConfig, HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setDetailMemoSize/users/" +userId + "] started.");
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setDetailMemoPosition/users/" +userId + "] started.");
 
 		JSONObject result = new JSONObject();
 		
@@ -1155,7 +1155,7 @@ public class EzMemoGWController {
 	@SuppressWarnings("unchecked")
 	@RequestMapping(value = "/rest/ezMemo/setDetailMemoStatus/users/{userId:.+}", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject setDetailMemoStatus(@PathVariable String userId, MemoConfigVO memoConfig, HttpServletRequest request) throws Exception {
-		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setDetailMemoSize/users/" +userId + "] started.");
+		LOGGER.debug("G/W MEMO [PUT /rest/ezMemo/setDetailMemoStatus/users/" +userId + "] started.");
 		
 		JSONObject result = new JSONObject();
 		

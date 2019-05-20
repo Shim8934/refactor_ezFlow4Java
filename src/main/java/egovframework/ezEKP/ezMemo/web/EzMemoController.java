@@ -885,7 +885,6 @@ public class EzMemoController {
 		
 		param.put("b_memo_height", bigHeight);
 		param.put("b_memo_width", bigWidth);
-		logger.debug("bigHeight :" + bigHeight + ", bigWidth: " + bigWidth);
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setDetailMemoArea/users/" + userInfo.getId(), param, request, "put", null);
 		String status = resultBody.get("status").toString();
@@ -916,7 +915,6 @@ public class EzMemoController {
 		
 		param.put("b_memo_top", bigTop);
 		param.put("b_memo_left", bigLeft);
-		logger.debug("bigTop :" + bigTop + ", bigLeft: " + bigLeft);
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setDetailMemoPosition/users/" + userInfo.getId(), param, request, "put", null);
 		String status = resultBody.get("status").toString();
@@ -939,7 +937,7 @@ public class EzMemoController {
 	 */
 	@RequestMapping(value = "/ezMemo/setDetailMemoStatus.do", method = RequestMethod.POST)
 	public String setDetailMemoStatus(@CookieValue("loginCookie") String loginCookie,  int memoId, int openStatus, HttpServletRequest request, Model model) throws Exception {
-		logger.debug("setDetailMemoPosition started");
+		logger.debug("setDetailMemoStatus started");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
 		
@@ -949,7 +947,6 @@ public class EzMemoController {
 			param.put("memo_id", memoId);
 		}
 		param.put("b_memo_status", openStatus);
-		logger.debug("memo_id :" + memoId + ", b_memo_status: " + openStatus);
 		
 		JSONObject resultBody = commonUtil.getJsonFromMemoRestApi("/rest/ezMemo/setDetailMemoStatus/users/" + userInfo.getId(), param, request, "put", null);
 		String status = resultBody.get("status").toString();
