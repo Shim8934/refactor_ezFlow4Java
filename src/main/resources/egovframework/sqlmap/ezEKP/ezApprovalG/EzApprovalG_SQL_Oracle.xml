@@ -28496,7 +28496,7 @@
 		</isEqual>
 		
 		<isEqual property="v_COUNTTYPE" compareValue="OTHER">
-			ADD_MONTHS(TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') , 1) > A.STARTDATE
+			ADD_MONTHS(TO_DATE(#v_NOWTIME#,'YYYY-MM-DDHH24:MI:SS') , -1) > A.STARTDATE
 		</isEqual>
 	</select>
 	
