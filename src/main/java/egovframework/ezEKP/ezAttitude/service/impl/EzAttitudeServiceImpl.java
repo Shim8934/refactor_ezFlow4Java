@@ -2921,12 +2921,12 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 	public void setAnnualHistory(Map<String, Object> map){
 		LOGGER.debug("setAnnualHistory started");
-		
+
 		map.put("annualCnt", map.get("holidayCnt"));
 		if (map.get("attendanceRateCondition").equals("3")) {
-			map.put("changeReason","자동연차초기화 ");
+			map.put("changeReason",messageSource.getMessage("ezAttitude.t281"));
 		} else {
-			map.put("changeReason","자동연차발생 "+ map.get("holidayCnt") + "일");
+			map.put("changeReason",messageSource.getMessage("ezAttitude.t280") + map.get("holidayCnt") + "일");
 		}
 		map.put("changeUserId","system");
 		map.put("companyId",map.get("companyId"));

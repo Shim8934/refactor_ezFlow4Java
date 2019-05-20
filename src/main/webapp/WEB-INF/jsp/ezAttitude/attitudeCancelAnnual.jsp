@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title><spring:message code='ezAttitude.t281' /></title>
+		<title><spring:message code='ezAttitude.t287' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
@@ -367,7 +367,7 @@
 	                    <td style="height: 20px">
 	                        <div id="menu">
 	                        	<ul id="menuTable">	
-	                                <li class="sel"><h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t281' /></h1></li>
+	                                <li class="sel"><h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t287' /></h1></li>
 	                            </ul>
 	                        </div>
 	                        <div id="close">
