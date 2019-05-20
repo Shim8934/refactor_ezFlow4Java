@@ -10088,7 +10088,7 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 	}
 
 	@Override
-	public String getHistoryForAttach(String docID, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset, String approvalFlag) throws Exception {
+	public String getHistoryForAttach(String docID, String sortHeader, String sortOption, String companyID, String lang, int tenantID, String offset, String approvalFlag, Locale locale) throws Exception {
 		logger.debug("getHistoryForAttach started");
 
 		StringBuffer resultXML = new StringBuffer();
@@ -10162,7 +10162,27 @@ public class EzApprovalGServiceImpl extends EgovFileMngUtil implements EzApprova
 				if (fieldName.equals("ATTACHUSERNAME")) {
 					fieldName = fieldName + langData;
 				}
-				fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				if (fieldName.equals("MODIFYFLAG")) {
+					switch (docXML.getElementsByTagName(fieldName).item(k).getTextContent()) {
+						case "001":
+							fieldValue = messageSource.getMessage("ezApprovalG.t268", locale);
+							break;
+						case "002":
+							fieldValue = messageSource.getMessage("ezApprovalG.t266", locale);
+							break;
+						case "003":
+							fieldValue = messageSource.getMessage("ezApprovalG.t269", locale);
+							break;
+						case "004":
+							fieldValue = messageSource.getMessage("ezApprovalG.t267", locale);
+							break;
+						default:
+							fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+							break;
+					}
+				} else {
+					fieldValue = docXML.getElementsByTagName(fieldName).item(k).getTextContent();
+				}
 				
 				resultXML.append("<VALUE>" + commonUtil.cleanValue(getListField(fieldName, fieldValue, companyID, lang, tenantID, offset)) + "</VALUE>");
 				
