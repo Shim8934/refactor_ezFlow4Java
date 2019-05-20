@@ -212,13 +212,16 @@ function memoSortable() {
        			 dataType : "JSON",
        			 url : "/ezMemo/reOrder.do",
        			 success : function(result) {
-       				if (result.status == 1) {
+       				if (result.status == 'ok') {
        					if(window.frames["main"].frames["right"] != undefined) {			
 			               	if(window.frames["main"].frames["right"].folderId != null) {
 			               		window.frames["main"].frames["right"].getMemoList();	// 메모 게시판 새로고침
 			               	}		           		
 		                }
        				}
+       			 },
+       			 error : function() {
+       				 alert(strLangMemo21);
        			 }
        		 });
        	 }
@@ -360,6 +363,9 @@ function modalDelete(memoId) {
             		window.frames["main"].frames["right"].getMemoList();
         	}
         	
+        },
+        error : function() {
+        	alert(strLangMemo21);
         }
 	});
 }
@@ -400,6 +406,9 @@ function modifyMemo(obj) {
                		window.frames["main"].frames["right"].getMemoList();
             }
             setContents(size, memoId, afterContents);
+        },
+        error : function() {
+        	alert(strLangMemo21);
         }
     }); 
 }
@@ -427,7 +436,11 @@ function hideMemo(obj) {
                   if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
                 	  window.frames["main"].frames["right"].getMemoList();
               }
+        	  checkAndActionBigMemo(memoId);
           },
+          error : function() {
+        	  alert(strLangMemo21);
+          }
 	});
 }
 
@@ -449,6 +462,9 @@ function checkMemoConfig() {
     		} else {
     			insertMemoConfig();
     		}
+    	},
+    	error : function() {
+    		alert(strLangMemo21);
     	}
     });
 }
@@ -529,6 +545,9 @@ function getMemoConfig() {
         	if (memoStatus != 0 && memoId != 0) {
         		getMemoDetail(memoId);
         	}
+    	},
+    	error : function() {
+    		alert(strLangMemo21);
     	}
 	});
 }
@@ -562,7 +581,10 @@ function getMemoLayerSize(classNm, layerParam) {
 						width = result.memoConfigVO.layer_width;
 						height = result.memoConfigVO.layer_height;
 					}
-				}
+				},
+				error : function() {
+					alert(strLangMemo21);
+		    	}
 			});
 		// layer full-screen mode
 		} else if (classNm.indexOf("layerFullScreen") != -1) {
@@ -603,7 +625,10 @@ function insertMemoConfig() {
 		url : "/ezMemo/insertMemoConfig.do",
 		success : function(result) {
 			checkMemoConfig();
-		}
+		},
+		error : function() {
+			alert(strLangMemo21);
+    	}
 	});
 }
 
@@ -626,7 +651,10 @@ function setLayerPosition() {
     		url : "/ezMemo/setLayerPosition.do",
     		success : function(result) {
     			
-    		}
+    		},
+    		error : function() {
+    			alert(strLangMemo21);
+        	}
     	});
 	}
 }
@@ -652,7 +680,10 @@ function setLayerArea() {
 			url :  "/ezMemo/setLayerArea.do", 
 			success : function (result) {
 				
-			}
+			},
+			error : function() {
+				alert(strLangMemo21);
+	    	}
 		});
 	}
 }
@@ -861,7 +892,10 @@ function newMemo() {
             	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
             		window.frames["main"].frames["right"].getMemoList("new");
         	}
-        }
+        },
+        error : function() {
+        	alert(strLangMemo21);
+    	}
 	});
 }
 
@@ -872,7 +906,6 @@ function newMemo() {
  * @param idx
  */
 function modifyMemoColor(obj, idx) {
-		
 	var memoId = obj.attr("id").replace("memo", "");
 	
 	$.ajax ({
@@ -885,11 +918,18 @@ function modifyMemoColor(obj, idx) {
         },  
         cache: false,
         success: function(result) {
+        	obj[0].setAttribute("class", "memo0" + defaultColor + " memoLay");
+        	obj.context.parentElement.style.visibility = "hidden";
+        	
         	if(window.frames["main"].frames["right"] != undefined) {			
             	if(window.frames["main"].frames["right"].folderId != null)		// 메모 게시판 새로고침
             		window.frames["main"].frames["right"].getMemoList();
         	}
-        }
+        	checkAndActionBigMemo(memoId, idx);
+        },
+        error : function() {
+        	alert(strLangMemo21);
+    	}
 	}); 
 }
 	
@@ -925,7 +965,10 @@ function getMemoList(type) {
 
         		addEmptyMemo(layerFlag);
         	}
-	     }
+	     },
+	     error : function() {
+	    	 alert(strLangMemo21);
+	    }
 	});
 }
 
@@ -989,7 +1032,10 @@ function memoFoldersInfo(type) {
 			getMemoList();
 			closeSelectInner();
 			changeFolder();
-		}     			
+		},
+		error : function() {
+			alert(strLangMemo21);
+    	}
 	});
 }
 
@@ -1026,6 +1072,9 @@ function quickMemoDisplay() {
     			document.getElementById("layer-popup").style.display = "none";
     			setMemoFlag('NO');
     		}
+    	},
+    	error : function() {
+    		alert(strLangMemo21);
     	}
 	});
 }
@@ -1064,6 +1113,9 @@ function setMemoLayerMode(mode) {
     	},
     	success : function(result) {
     		
+    	},
+    	error : function() {
+    		alert(strLangMemo21);
     	}
 	});
 }
@@ -1303,6 +1355,9 @@ function getMemoDetail(memoId) {
 			beforeMemo = result.memo.contents;
 			
 			bigMemoResize();
+    	},
+    	error : function() {
+    		alert(strLangMemo21);
     	}
     });
 }
@@ -1334,7 +1389,10 @@ function setBigMemoArea(bigHeight, bigWidth) {
         },
         dataType : 'JSON',
         success : function(result) {
-        }
+        },
+        error : function() {
+        	alert(strLangMemo21);
+    	}
     });
 }
 
@@ -1349,7 +1407,10 @@ function setBigMemoPositon(bigTop, bigLeft) {
 		url : '/ezMemo/setDetailMemoPosition.do',
 		dataType : 'JSON',
 		success : function(result) {
-		}
+		},
+		error : function() {
+			alert(strLangMemo21);
+    	}
 	});
 }
 /*윈도우 리사이즈 시 큰 메모 리사이징*/ 
@@ -1465,7 +1526,10 @@ function setDetailStatus(memoId) {
 		data : datas,
 		dataType : 'JSON',
 		success : function(result) {
-		}
+		},
+		error : function() {
+			alert(strLangMemo21);
+    	}
 	});
 }
 
@@ -1486,3 +1550,4 @@ portal 페이지의 beforeMemo 변수에 파라미터로 넘어온 값 세팅
 function setBeforeMemo(paramBefore) {
 	beforeMemo = paramBefore;
 }
+

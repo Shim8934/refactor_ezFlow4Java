@@ -287,25 +287,16 @@
 	    		
 	    		// 메모 숨김 기능
 	    		$(document).on('click', '.hidden', function(e) {
-	    			console.log(e.target);
 	    			var thisEl = $(this)[0];
 	    			hideMemo(thisEl);
-	    			
-	    			checkAndActionBigMemo(thisEl.getAttribute("memoid"));
 	    		});
 	    		
 		    	$(document).on("click", ".color_list", function(){
 		    		var thisEl = $(this);
 		    		defaultColor = thisEl.index()+1;
-		    	   	var obj = thisEl.parent().parent();
 		    		
+		    	   	var obj = thisEl.parent().parent();
 		    	   	modifyMemoColor(obj, defaultColor);
-		    	   	
-		    	   	obj[0].setAttribute("class", "memo0" + defaultColor + " memoLay");
-		    	   	thisEl.parent().css("visibility", "hidden");
-		    	   	
-		    	   	var memoId = obj.attr('id').replace('memo', '');
-		    	   	checkAndActionBigMemo(memoId, defaultColor);
 		    	});
 		        
 		    	$(document).on("mouseleave", ".color_popup", function(){
