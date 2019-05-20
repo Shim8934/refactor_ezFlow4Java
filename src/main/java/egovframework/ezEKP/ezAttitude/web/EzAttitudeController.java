@@ -4547,6 +4547,7 @@ public class EzAttitudeController {
 		if (request.getParameter("status").equals("0")) {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
 					.queryParam("content", request.getParameter("content"))
+					.queryParam("mobile", request.getParameter("mobile"))
 					.queryParam("attitudeTypeList", request.getParameter("attitudeTypeList"))
 					.queryParam("startDateList", request.getParameter("startDateList"))
 					.queryParam("endDateList", request.getParameter("endDateList"))

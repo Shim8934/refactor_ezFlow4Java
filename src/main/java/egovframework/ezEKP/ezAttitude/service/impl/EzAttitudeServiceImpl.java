@@ -3372,7 +3372,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 	
 	@Override
-	public int approvalGConn(String userId, String deptId, String content, String attitudeTypeList, String startDateList, String endDateList, String docId, String offset, String companyId, int tenantId) throws Exception {
+	public int approvalGConn(String userId, String deptId, String content, String mobile, String attitudeTypeList, String startDateList, String endDateList, String docId, String offset, String companyId, int tenantId) throws Exception {
 		String[] attitudeTypeList2 = attitudeTypeList.split(",");
 		String[] startDateList2 = startDateList.split(",");
 		String[] endDateList2 = endDateList.split(",");
@@ -3381,7 +3381,7 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("offsetMin", commonUtil.getMinuteUTC(offset));
 		map.put("region", "");
-		map.put("mobile", "");
+		map.put("mobile", mobile);
 		map.put("bizSub", "");
 		map.put("content", content);
 		map.put("ipAddress", "");
