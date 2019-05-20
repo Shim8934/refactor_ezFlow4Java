@@ -83,26 +83,30 @@
         var listview = new ListView();
         listview.LoadFromID("attachList");
         var i, j;
+        
         if (pFlag == 0) {
-            var FirstData = SelectNodes(FirstAttach, "LISTVIEWDATA/ROWS/ROW")
+            var FirstData = SelectNodes(FirstAttach, "LISTVIEWDATA/ROWS/ROW");
+            
             for (i = 0; i < FirstData.length; i++) {
                 var tempSN = SelectSingleNodeValue(FirstData[i], "CELL/DATA2");
                 var tempFileName = SelectSingleNodeValue(FirstData[i], "CELL/DATA10");
-                var DelFlag = true;
                 var attachRow = listview.GetDataRows();
                 var attachLen = listview.length;
+                var DelFlag = true;
+                
                 for (j = 0; j < attachLen; j++) {
                     if (attachRow[j].getAttribute("DATA2") == tempSN && attachRow[j].getAttribute("DATA10") == tempFileName) {
                         DelFlag = false;
                     }
                 }
-                if (DelFlag)
-					UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t266'/>");
+                if (DelFlag) {
+					UpdateAttachHistory(tempSN, strModifyFlag2);
+                }
             }
-        }
-        else {
-            var FirstData = listview.GetDataRows();
-            var FileData = SelectNodes(FirstAttach, "LISTVIEWDATA/ROWS/ROW");
+        } else {
+			var FirstData = listview.GetDataRows();
+			var FileData = SelectNodes(FirstAttach, "LISTVIEWDATA/ROWS/ROW");
+			
             for (i = 0; i < FirstData.length; i++) {
                 var tempSN = FirstData[i].getAttribute("DATA2");
                 var tempFileName = FirstData[i].getAttribute("DATA10");
@@ -114,14 +118,15 @@
                     }
                 }
                 if (AddFlag) {
-                    if (FirstData[i].getAttribute("DATA11") == "Y")
-						UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t267'/>");
-                    else
-						UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t268'/>");
-                }
-                else {
-                    if (FirstData[i].getAttribute("DATA12") == "EDITED")
-						UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t269'/>");
+                    if (FirstData[i].getAttribute("DATA11") == "Y") {
+						UpdateAttachHistory(tempSN, strModifyFlag4);
+                    } else {
+						UpdateAttachHistory(tempSN, strModifyFlag1);
+                    }
+                } else {
+                    if (FirstData[i].getAttribute("DATA12") == "EDITED") {
+						UpdateAttachHistory(tempSN, strModifyFlag3);
+                    }
                 }
             }
         }
