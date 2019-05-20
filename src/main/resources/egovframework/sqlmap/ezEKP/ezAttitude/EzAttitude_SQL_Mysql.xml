@@ -2026,7 +2026,7 @@
 	
 	<select id = "ezAttitudeDAO.getAttendanceDay" parameterClass="map" resultClass="INTEGER">
 		SELECT
-			COUNT(*)
+			IFNULL(SUM(IFNULL(TIMESTAMPDIFF(DAY,START_DATE,END_DATE) + 1, 1)), 0) 
 		FROM
 			TBL_ATTITUDE
 		WHERE
