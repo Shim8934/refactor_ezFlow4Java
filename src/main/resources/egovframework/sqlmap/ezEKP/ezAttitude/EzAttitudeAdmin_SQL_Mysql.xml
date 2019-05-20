@@ -1641,7 +1641,7 @@
 							AND date_add(E.CHANGE_DATE, INTERVAL #offsetMin# minute) <= #endTime#
 							)
 						ORDER BY
-							E.CHANGE_DATE desc
+							E.CHANGE_DATE DESC, E.ANNUAL_HISTORY_ID DESC
 						LIMIT 1
 					)
 				, 0) as totalAnnualCnt,

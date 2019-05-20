@@ -88,6 +88,8 @@
 				$("#attiInfoView tr td *").remove();
 				
 				$("#attiInfoView").append(tempHtml);
+				$("#attiInfoView tr").eq(3).css("display", "none");
+				$("#attiInfoView tr").eq(4).css("display", "none");
 				
 				/* for(var i = 0; i <= listSize; i ++) {
 					if (i == 0) {
