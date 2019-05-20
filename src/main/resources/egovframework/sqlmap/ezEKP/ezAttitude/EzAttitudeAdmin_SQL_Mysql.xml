@@ -1641,10 +1641,22 @@
 							AND date_add(E.CHANGE_DATE, INTERVAL #offsetMin# minute) <= #endTime#
 							)
 						ORDER BY
-							E.CHANGE_DATE
+							E.CHANGE_DATE desc
 						LIMIT 1
 					)
-				, 0) as totalAnnualCnt
+				, 0) as totalAnnualCnt,
+				ifnull(
+				    (
+						SELECT
+							FUNCTIONTYPE
+						FROM
+							TBL_APRDOCINFO G
+						WHERE
+							F.ANNUAL_DOC_ID = G.DOCID
+						OR
+							F.ANNUAL_DOC_ID = G.ORGDOCID
+					)
+				, 0) as docApprStatus
 			FROM 
 				TBL_USERMASTER A
 			LEFT OUTER JOIN 

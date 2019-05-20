@@ -99,8 +99,8 @@
 		function displaySubFolder(divTree, divElmt, list, level) {
 			var nodelevel = list["folderLevel"];
 
-			if (nodelevel > 0) {
-				for (var j = 0; j < nodelevel; j++) {
+			if (level > 0) {
+				for (var j = 0; j < level; j++) {
 					var imgTag = document.createElement("img");
 					imgTag.setAttribute("class", "webfolderImg");
 					imgTag.src="/images/OrganTree_cross/dot_continue.gif";
@@ -157,7 +157,7 @@
 				
 				for (var i = 0; i < len; i++) {
 					var subDivElmt = document.createElement("div");
-					displaySubFolder(newDivElmt, subDivElmt, list["listSubFolders"][i], level + 1);
+					displaySubFolder(newDivElmt, subDivElmt, list["listSubFolders"][i], parseInt(level));
 				}
 			}
 		}
@@ -216,7 +216,7 @@
 						switch(code) {
 							case 0: 
 								var result = data.subTree;
-								displaySubTree(result, obj.parentElement);
+								displaySubTree(result, obj.parentElement, level);
 								arrSubFolder.push(uniqueId);
 								break;
 							case 1:
@@ -249,7 +249,7 @@
 			
 			for (var i = 0; i < len; i++) {
 				var subDiv = document.createElement("div");
-				displaySubFolder(newDivElmt, subDiv, result["listSubFolders"][i], level);
+				displaySubFolder(newDivElmt, subDiv, result["listSubFolders"][i], parseInt(level)+1);
 			}
 		}
 		

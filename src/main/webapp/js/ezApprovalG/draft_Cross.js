@@ -78,7 +78,7 @@ function GetDraftAprLineInfo(ret) {
 	            field.innerHTML = "<br type='_moz'>";
             }  
 	  		
-	  		fieldname = "habyuisign" + i;
+            name = "habyuisign" + i;
 	  		field = message.GetListItem(fields, name);
 	  		
             if(field) {
@@ -87,7 +87,7 @@ function GetDraftAprLineInfo(ret) {
 	            field.innerHTML = "<br type='_moz'>";
             }
 	  		
-	  		fieldname = "habyuipositon" + i;
+            name = "habyuipositon" + i;
 	  		field = message.GetListItem(fields, name);
 	  		
             if(field) {
@@ -96,7 +96,7 @@ function GetDraftAprLineInfo(ret) {
 	            field.innerHTML = "<br type='_moz'>";
             }
 	  		
-	  		fieldname = "habyuidate" + i;
+            name = "habyuidate" + i;
 	  		field = message.GetListItem(fields, name);
 	  		
             if(field) {
