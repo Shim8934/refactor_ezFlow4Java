@@ -304,7 +304,13 @@
 		    			if(vo.annualApprStatus == -1) {
 			    			html += "<td style='width:12%'>" + "결재정보없음" + "</td>";
 		    			} else if (vo.annualApprStatus == 0) {
-			    			html += "<td style='width:12%'>" + "진행" + "</td>";
+		    				if(vo.docApprStatus == '005') {
+				    			html += "<td style='width:12%'>" + "보류" + "</td>";
+		    				} else if(vo.docApprStatus == '011') {
+				    			html += "<td style='width:12%'>" + "수신부서 대기" + "</td>";
+		    				} else {
+				    			html += "<td style='width:12%'>" + "진행" + "</td>";
+		    				}
 		    			} else if (vo.annualApprStatus == 1) {
 			    			html += "<td style='width:12%'>" + "완료" + "</td>";
 		    			}
