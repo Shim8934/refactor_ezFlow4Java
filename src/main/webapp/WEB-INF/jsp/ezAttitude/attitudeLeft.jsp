@@ -520,7 +520,7 @@
 								<span class="attCount">&nbsp;${totalAtt}</span>
 							</c:if>
                    		</span></li>
-                   		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(6)">연차취소관리
+                   		<li><span class="sub_iconLNB tree_workTime_change"></span><span class="list_text" onclick="functionFlag(6)"><spring:message code='ezAttitude.t275'/>
                    		</span></li>
                     </c:if>
 		        </ul>

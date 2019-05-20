@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>취소내역확인</title>
+		<title><spring:message code='ezAttitude.t284' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
 		<script type="text/javascript" src="${util.addVer('/js/mouseeffect.js')}"></script>
@@ -111,7 +111,7 @@
 	</head>
 	<body class="popup"">
 		<h1>
-			취소내역확인
+			<spring:message code='ezAttitude.t284' />
 	    </h1>
 	    <div id="close">
             <ul>
@@ -122,7 +122,7 @@
 		<div style="width: 100%; height: 100%;">
             <table class="mainlist" style="width: 100%;">
                 <tr>
-					<th style="width:46%;text-align:center">휴가일자</th>
+					<th style="width:46%;text-align:center"><spring:message code='ezAttitude.t276' /></th>
 					<th style="width:12%;text-align:center"><spring:message code='ezAttitude.t104'/></th>
 					<th style="width:27%;text-align:center"><spring:message code='ezAttitude.t116'/></th>
 					<th style="width:15%;text-align:center"><spring:message code='ezAttitude.t208'/></th>

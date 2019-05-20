@@ -4,7 +4,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>연차취소신청</title>
+		<title><spring:message code='ezAttitude.t287' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezSchedule.e3', 'msg')}" type="text/css" />
 		<script type="text/javascript" src="${util.addVer('ezSchedule.e1', 'msg')}"></script>
@@ -68,9 +68,9 @@
 				var tempHtml = "";
 				
 				tempHtml += "<tr>";
-				tempHtml += "<th rowspan='2' style='border-bottom:0px'>참조자</th>";
+				tempHtml += "<th rowspan='2' style='border-bottom:0px'><spring:message code='ezAttitude.t282' /></th>";
 				tempHtml += "<td colspan='7' id ='itemList' style='padding-left:2px;'>";
-				tempHtml += "<a class='imgbtn imgbck'><span id='clickbtn' onclick='_manage_attendant()'>선택</span></a>";
+				tempHtml += "<a class='imgbtn imgbck'><span id='clickbtn' onclick='_manage_attendant()'><spring:message code='ezAttitude.t283' /></span></a>";
 				tempHtml += "</td>";
 				tempHtml += "</tr>";
 				tempHtml += "<tr>";
@@ -88,6 +88,8 @@
 				$("#attiInfoView tr td *").remove();
 				
 				$("#attiInfoView").append(tempHtml);
+				$("#attiInfoView tr").eq(3).css("display", "none");
+				$("#attiInfoView tr").eq(4).css("display", "none");
 				
 				/* for(var i = 0; i <= listSize; i ++) {
 					if (i == 0) {
@@ -365,7 +367,7 @@
 	                    <td style="height: 20px">
 	                        <div id="menu">
 	                        	<ul id="menuTable">	
-	                                <li class="sel"><h1 style="padding:0px; margin-top:-5px;">연차취소신청</h1></li>
+	                                <li class="sel"><h1 style="padding:0px; margin-top:-5px;"><spring:message code='ezAttitude.t287' /></h1></li>
 	                            </ul>
 	                        </div>
 	                        <div id="close">
@@ -394,7 +396,7 @@
 	            </table>
 	            <div class="btnpositionNew" id="menuTable">
 	            	<c:if test="${userId == attitudeInfo.writerId}">
-						<a class="imgbtn"><span onclick="saveCancelAnnual();">저장</span></a>
+						<a class="imgbtn"><span onclick="saveCancelAnnual();"><spring:message code='ezAttitude.t16' /></span></a>
 					</c:if>
 	            </div>
 	        </div>
