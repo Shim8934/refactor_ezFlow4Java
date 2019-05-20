@@ -1,6 +1,7 @@
 package egovframework.ezEKP.ezApprovalG.dao;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +30,7 @@ import egovframework.ezEKP.ezApprovalG.vo.ApprGLineTempletVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListHeaderVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGListInfoVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGOpinionVO;
+import egovframework.ezEKP.ezApprovalG.vo.ApprGProxyVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiptVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGReceiveDocVO;
 import egovframework.ezEKP.ezApprovalG.vo.ApprGRecordListVO;
@@ -85,7 +87,7 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public List<ApprGDocListVO> getAprDocList(Map<String, Object> map) throws Exception{
+	public List<ApprGDocListVO> getAprDocList(Map<Object, Object> map) throws Exception{
 		return (List<ApprGDocListVO>) list("EzApprovalG.getAprDocList", map);
 	}
 	
@@ -3196,5 +3198,15 @@ public class EzApprovalGDAO extends EgovAbstractDAO {
 
 	public String getDeptIdOfCabinet(Map<String, Object> map) throws Exception {
 		return (String) select("EzApprovalG.getDeptIdOfCabinet", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGProxyVO> getProxyInfo_U(Map<String, Object> map) throws Exception {
+		return (List<ApprGProxyVO>) list("EzApprovalG.getProxyInfo_U", map);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<ApprGProxyVO> getProxyInfo_A(Map<String, Object> map) throws Exception {
+		return (List<ApprGProxyVO>) list("EzApprovalG.getProxyInfo_A", map);
 	}
 }

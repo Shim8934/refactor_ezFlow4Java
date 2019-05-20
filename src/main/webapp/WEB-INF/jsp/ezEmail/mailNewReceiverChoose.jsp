@@ -280,7 +280,7 @@
                       $(".receiver_borderbox tr").removeClass("multiple-sortable-selected");
                       $(".receiver_borderbox tr").removeClass("ui-sortable-helper");
                   },
-                  click : function() {
+                  click : function(event) {
                 	  
                 	  var selectList = $("#" + event.currentTarget.id + " tr[selected=true]");
                       

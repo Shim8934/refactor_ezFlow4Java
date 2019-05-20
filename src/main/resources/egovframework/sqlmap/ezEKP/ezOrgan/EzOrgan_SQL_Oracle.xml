@@ -1922,5 +1922,31 @@
 		AND
 			PHYSICALDELIVERYOFFICENAME = #companyID#		
 	</select>
+	<update id="EzOrganDAO.updateAddJobProxy" parameterClass="Map">
+		<![CDATA[
+			UPDATE
+				TBL_ADDJOBMASTER
+			SET
+				PROXY = #proxyInfo#
+			WHERE
+				CN = #userID#
+			AND
+				TENANT_ID = #tenantID#	
+			AND
+				DEPTID = #dept#
+		]]>
+	</update>
 	
+	<select id="EzOrganDAO.getAddJobProxy" parameterClass="Map" resultClass="String">
+		SELECT
+			PROXY
+		FROM 
+			TBL_ADDJOBMASTER
+		WHERE
+			CN = #userID#
+		AND
+			TENANT_ID = #tenantID#		
+		AND
+			DEPTID = #dept#		
+	</select>
 </sqlMap>
