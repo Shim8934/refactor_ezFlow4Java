@@ -75,12 +75,31 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 	 */
 	@RequestMapping(value="/ezEmail/mailFolderManage.do")
 	public String mailFolderManage(@CookieValue("loginCookie") String loginCookie, Locale locale, Model model, HttpServletRequest request) throws Exception{
+		logger.debug("mailFolderManage started.");
+		
+		LoginVO userInfo = commonUtil.userInfo(loginCookie);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+				} else {
+					model.addAttribute("shareId", shareId);
+				}
+			}
+		}
+		
 		String pDeleteBoxID = ezEmailUtil.getTrashFolderId(locale);
 		String pDeleteBoxName = ezEmailUtil.getTrashFolderId(locale);
 		
 		model.addAttribute("pDeleteBoxID", pDeleteBoxID);
 		model.addAttribute("pDeleteBoxName", pDeleteBoxName);
 		
+		logger.debug("mailFolderManage ended.");
 		return "ezEmail/mailFolderManage";
 	}
 	
@@ -166,7 +185,13 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 			logger.debug("shareId=" + shareId);
 			
 			if (shareId != null) {
-				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 1, userInfo.getTenantId())) {
+				int permissionType = 4;
+				
+				if (cmd.equals("MAILREALDEL") || cmd.equals("MAILDEL")) {
+					permissionType = 1;
+				}
+				
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, permissionType, userInfo.getTenantId())) {
 					logger.debug("the user cannot access the shareId.");
 					logger.debug("mailMakeFolder ended.");
 					
@@ -392,7 +417,25 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 		LoginVO userInfo = commonUtil.userInfo(loginCookie);
 		String domainName = ezCommonService.getTenantConfig("DomainName", userInfo.getTenantId());
 		String userAccount = userInfo.getId() + "@" + domainName;
-		logger.debug("userEmail=" + userAccount);
+		String useSharedMailbox = ezCommonService.getTenantConfig("useSharedMailbox", userInfo.getTenantId());
+		
+		if (useSharedMailbox.equals("YES")) {
+			String shareId = request.getParameter("shareId");
+			logger.debug("shareId=" + shareId);
+			
+			if (shareId != null) {
+				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
+					logger.debug("the user cannot access the shareId.");
+					logger.debug("setSubscribe ended.");
+					
+					return "";
+				}
+				
+				userAccount = shareId + "@" + domainName;
+			}
+		}
+		
+		logger.debug("userId=" + userInfo.getId() + ",userAccount=" + userAccount);
 		
 		IMAPAccess ia = null;
 		

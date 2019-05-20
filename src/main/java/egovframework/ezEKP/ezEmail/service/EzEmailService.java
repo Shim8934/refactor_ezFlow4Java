@@ -93,9 +93,13 @@ public interface EzEmailService {
 	 * 
 	 * permissionType
 	 *   0: 공유자인지 체크
-	 *   1: 삭제(이동/복사 포함) 권한이 있는지 체크
-	 *   2: 메일 전송 권한이 있는지 체크
-	 *   3: 삭제(이동/복사 포함), 메일 전송 권한이 있는지 체크
+	 *   1(001): 삭제(이동/복사 포함) 권한이 있는지 체크
+	 *   2(010): 메일 보내기 권한이 있는지 체크
+	 *   3(011): 메일 보내기, 삭제 권한이 있는지 체크
+	 *   4(100): 관리(편지함 관리/메일 환경설정) 권한이 있는지 체크
+	 *   5(101): 관리, 삭제 권한이 있는지 체크
+	 *   6(110): 관리, 메일 보내기 권한이 있는지 체크
+	 *   7(111): 관리, 메일 보내기, 삭제 권한이 있는지 체크
 	 * </pre>
 	 */
 	public boolean checkUserShareId(String userId, String shareId, int permissionType, int tenantId) throws Exception;

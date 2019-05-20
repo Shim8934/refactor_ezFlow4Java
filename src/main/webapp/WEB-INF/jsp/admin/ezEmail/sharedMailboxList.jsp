@@ -268,10 +268,10 @@
 		        
 		        if (CrossYN()) {
 		        	sharedMailboxDialogArguments[0] = addSharedMailboxComplete;
-		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + shareId + "&compId=" + companyId, "", GetOpenWindowfeature(1060, 670));
+		            var OpenWin = window.open("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), "", GetOpenWindowfeature(1060, 670));
 		            try { OpenWin.focus(); } catch (e) { }
 		        } else {
-		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + shareId + "&compId=" + companyId, feature);
+		            var rtnValue = window.showModalDialog("/admin/ezEmail/showAddSharedMailbox.do?shareId=" + encodeURIComponent(shareId) + "&compId=" + encodeURIComponent(companyId), feature);
 		            
 		            if (typeof (rtnValue) != "undefined") {
 		                companyChange();

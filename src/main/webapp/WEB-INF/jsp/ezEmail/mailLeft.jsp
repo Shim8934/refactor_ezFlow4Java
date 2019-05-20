@@ -79,7 +79,6 @@
 	            } */
 	            Function_Flag(funcCode);
 	            LoadAddressTree(true);
-	            previewSubTreeCall();
 	            
 	            if (pRefreshinterval != "") {
 		            console.log('Setting Mail List Refresh Timer...');
@@ -185,7 +184,7 @@
 	        		2. 그 안에서 들여쓰기가 된 img 갯수를 가져온다.
 	        		3. 이미지 갯수를 통해 list가 표현될 width를 재설정한다.
 	        	*/
-	        	$("[id^='PostTreeView_node']").each(function(index, element){
+	        	$("[id^='" + treeviewStr + "_node']").each(function(index, element){
 	        		
 	        		var imgCnt = $(element).parent().find('img').length - 2;
 	        		var title = $(element)[0].innerHTML;
@@ -297,13 +296,13 @@
 
     		          	for (var i = 0; i < treeArrNum; i++) {
     		        	    var getSubtree = $('.plusTreeImg').eq(i).attr('name');
-    		        	    var idx = getSubtree.split('PostTreeView_img_');
+    		        	    var idx = getSubtree.split(treeviewStr + '_img_');
     		        	    
     		        	    if (typeof idx[1] != "undefined") {
-    		        	    	var attr = $('#PostTreeView_img_' + idx[1]).attr("src").split('/');
+    		        	    	var attr = $('#' + treeviewStr + '_img_' + idx[1]).attr("src").split('/');
     		        	    	
     		        	    	if (attr[3] != "plus.gif") {
-    			        	    	PostTreeView.toggle(idx[1]);
+    		        	    		window[treeviewStr].toggle(idx[1]);
     		        	    	}
     		        	    }
     		        	    
@@ -317,12 +316,12 @@
 
 		          	for (var i = 0; i < treeArrNum; i++) {
 		        	    var getSubtree = $('.plusTreeImg').eq(i).attr('name');
-		        	    var idx = getSubtree.split('PostTreeView_img_');
+		        	    var idx = getSubtree.split(treeviewStr + '_img_');
 		        	    
 		        	    if (typeof idx[1] != "undefined") {
-		        	    	var childxml = get_childXML(PostTreeView.getvalue(idx[1], "href"), false, true, false);
-		        	    	PostTreeView.putchildxml(idx[1], childxml);
-		        	    	$('#PostTreeView_img_' + idx[1]).attr("src", "/images/OrganTree_cross/minus.gif");
+		        	    	var childxml = get_childXML(window[treeviewStr].getvalue(idx[1], "href"), false, true, false);
+		        	    	window[treeviewStr].putchildxml(idx[1], childxml);
+		        	    	$('#' + treeviewStr + '_img_' + idx[1]).attr("src", "/images/OrganTree_cross/minus.gif");
 		        	    }
 		        	    
 	        	    	treeArrNum = $('.plusTreeImg').length;
@@ -375,7 +374,8 @@
 	                PostTreeView.select(1);
 	            }
 	            
-                selectnode();	            
+                selectnode();
+                previewSubTreeCall();
 	        }
 	        function requestdata(event) {
 	            if (!event) event = window.event;
@@ -596,24 +596,33 @@
 	        var mail_foldermanage_Cross_dialogArguments = new Array();
 	        function folder_manage() {
 	            mail_foldermanage_Cross_dialogArguments[1] = folder_manager_after;
-	            var OpenWin = window.open("/ezEmail/mailFolderManage.do", "mail_foldermanage_Cross", GetOpenWindowfeature(555, 500));
+	            
+	            var requestUrl = "/ezEmail/mailFolderManage.do";
+	            
+	            if (shareId != "") {
+	            	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	            }
+	            
+	            var OpenWin = window.open(requestUrl, "mail_foldermanage_Cross", GetOpenWindowfeature(555, 500));
 	            try { OpenWin.focus(); } catch (e) { }
 	        }
 	        function folder_manager_after(RtnVal) {
-	            if (RtnVal && shareId == "") {
-	                var href = PostTreeView.getvalue(1, "href");
-	                PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
-	                PostTreeView.update();
+	            if (RtnVal) {
+	            	var href = window[treeviewStr].getvalue(1, "href");
+	            	
+	            	window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+	            	window[treeviewStr].update();
 	                
-	                if (PostTreeView.selectedIndex() == -1) {
-	                    PostTreeView.select(1);
+	                if (window[treeviewStr].selectedIndex() == -1) {
+	                	window[treeviewStr].select(1);
 	                }
 	                
-	                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(PostTreeView.getvalue(1, "foldername")) + "&url=" + encodeURIComponent(PostTreeView.getvalue(1, "href"));
+	                var url = "/ezEmail/mailList.do?dispname=" + encodeURIComponent(window[treeviewStr].getvalue(1, "foldername")) + "&url=" + encodeURIComponent(window[treeviewStr].getvalue(1, "href"));
 	                window.open(url, "right");
 	                
 	                previewSubTreeCall();
-	            	detailView();
+	                applyEllipsisMailTree();
+	            	detailView(shareId);
 	            }
 	        }
 	        
@@ -622,10 +631,11 @@
 	        */
 	        function mailbox_treeview_reload() {
 	        	setTimeout(function() {
-	        		PostTreeView.source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
-	                PostTreeView.update();
+	        		window[treeviewStr].source("<tree><nodes>" + get_childXML("", true, true, false) + "</nodes></tree>");
+	        		window[treeviewStr].update();
 	                
 	                previewSubTreeCall();
+	                applyEllipsisMailTree();
 	        	}, 100);
 	        }
 	        
@@ -716,11 +726,14 @@
 	            frmSpam.submit();
 	        }
 	        function mail_Config() {
-	        	if (shareId == "") {
-	        		detailView();
+	        	var requestUrl = "/ezEmail/mailConfig.do";
+	        	
+	        	if (shareId != "") {
+	        		requestUrl += "?shareId=" + encodeURIComponent(shareId);
 	        	}
 	        	
-	            parent.frames["right"].location.href = "/ezEmail/mailConfig.do";
+	            parent.frames["right"].location.href = requestUrl;
+	            detailView(shareId);
 	        }
 	        function Address_Menu_Click() {
 	        	HiddenFolderMenu();
@@ -1293,6 +1306,7 @@
 			    shareTreeView.select(1);
 			    
 			    selectnode();
+			    previewSubTreeCall();
 			}
 
 			function SharefindID() {
@@ -1402,6 +1416,10 @@
 		        	</h2>
 		        	<ul>
 		            	<div id="shareTreeView_${shareInfo.shareId}" class="tree" value="${shareInfo.shareId}" style="height: 100%; background-color: #ffffff; border-bottom: 1px solid #eaeaea; overflow: auto; padding-left: 20px;" oncontextmenu="event_folderMenu(event); return false;" onclick="HiddenFolderMenu();"></div>
+		            	<c:if test="${shareInfo.managePermission eq 'Y'}">
+		            		<li><span onclick="folder_manage()" style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t481" /></span></li>
+		            		<h3 onclick="mail_Config()" style="border-top:0px"><span style="width: 100%; display: inline-block;"><spring:message code="ezEmail.t99000044" /></span></h3>
+		            	</c:if>
 		        	</ul>
 		        	<script>
 		        		setTotalUnreadCount("${shareInfo.shareId}", parseInt("${shareInfo.totalUnreadCount}"));

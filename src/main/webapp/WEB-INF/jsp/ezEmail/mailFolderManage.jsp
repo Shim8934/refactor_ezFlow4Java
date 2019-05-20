@@ -24,6 +24,8 @@
 			var EventCheck = false;
 			var CurrentHeight = 0;
 			var CurrenWidth = 0;
+			var shareId = "${shareId}";
+			
 		    document.onselectstart = function () {
 		        if (event.srcElement.tagName != "INPUT" && event.srcElement.tagName != "TEXTAREA")
 		            return false;
@@ -312,7 +314,13 @@
 		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", destURL);
 		        createNodeAndInsertText(xmlDOM, objNode, "NAME", szName);
 		        
-		        xmlHTTP.open("POST", "/ezEmail/mailMakeFolder.do", false);
+				var requestUrl = "/ezEmail/mailMakeFolder.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	            }
+		        
+		        xmlHTTP.open("POST", requestUrl, false);
 		        xmlHTTP.send(xmlDOM);
 		        
 		        if (xmlHTTP.status >= 200 && xmlHTTP.status < 300) {
@@ -340,7 +348,13 @@
 		        createNodeAndInsertText(xmlDOM, objNode, "DESTINATION", destURL);
 		        createNodeAndInsertText(xmlDOM, objNode, "CMD", deltype);
 		        
-		        xmlHTTP2.open("POST", "/ezEmail/mailMakeFolder.do", true);
+				var requestUrl = "/ezEmail/mailMakeFolder.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+	            }
+		        
+		        xmlHTTP2.open("POST", requestUrl, true);
 		        xmlHTTP2.onreadystatechange = delete_mail_complete;
 		        xmlHTTP2.send(xmlDOM);
 		        
@@ -431,11 +445,17 @@
 		        	subscribe = "1";
 		        }
 		        
+		        var requestUrl = "/ezEmail/setSubscribe.do";
+		        
+		        if (shareId != "") {
+		        	requestUrl += "?shareId=" + encodeURIComponent(shareId);
+		        }
+		        
 		        $.ajax({
 					type : "POST",
 					dataType : "text",
 					async : false,
-					url : "/ezEmail/setSubscribe.do",
+					url : requestUrl,
 					data : { 
 						folderId : folderId,
 						subscribe : subscribe
