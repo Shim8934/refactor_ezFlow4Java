@@ -8,7 +8,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <head>
-		<title>연차취소관리</title>
+		<title><spring:message code='ezAttitude.t275' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
 		<link rel="stylesheet" type="text/css" href="${util.addVer('/css/previewmail.css')}">
@@ -1073,7 +1073,7 @@
 		</script>
 </head>
 	<body id="theBody" class="mainbody" onkeydown="event_listOnkeyDown(event);" onkeyup="event_listOnkeyUp(event);">
-		<h1>연차취소관리<span id="mailBoxInfo"></span></h1>
+		<h1><spring:message code='ezAttitude.t275' /><span id="mailBoxInfo"></span></h1>
         <div id="mainmenu">
         <ul id="tb_Parent">
 			<li id="appr"><span onClick="modApprove()"><spring:message code='ezAttitude.t210'/></span></li>
@@ -1149,10 +1149,10 @@
 					<input type="checkbox" id="HeaderAllCheckBox" style="margin: 0px; padding: 0px; width: 13px; height: 13px;" onchange="javascript:event_HeaderCheckBoxClick(this)"/>
 				</th>
 				<th width="60px" colname="NO">NO.</th>
-				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 16%;" colname="START_DATE">휴가일자</th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 16%;" colname="START_DATE"><spring:message code='ezAttitude.t276' /></th>
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 16%;" colname="WRITER_NAME"><spring:message code='ezAttitude.t147'/></th>
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer;width: 16%;" colname="WRITER_DEPT_NAME"><spring:message code='ezAttitude.t148'/></th>
-				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:14%;" colname="TYPE_NAME">휴가유형</th>
+				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:14%;" colname="TYPE_NAME"><spring:message code='ezAttitude.t277' /></th>
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:5%;" colname="APPR_STATUS" ><spring:message code='ezAttitude.t208'/></th>
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:7%;" colname="APPR_USER_NAME"><spring:message code='ezAttitude.t104'/></th>
 				<th style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;cursor:pointer; width:9%;" colname="APPL_DATE"><spring:message code='ezAttitude.t108'/></th>
@@ -1177,10 +1177,10 @@
         <table class="mainlist" style="width:100%;display:none;" id="ExcelAttList">
 	       	<tr>
 				<th>NO.</th>
-				<th>휴가일자</th>
+				<th><spring:message code='ezAttitude.t276' /></th>
 				<th><spring:message code='ezAttitude.t147'/></th>
 				<th><spring:message code='ezAttitude.t148'/></th>
-				<th>휴가유형</th>
+				<th><spring:message code='ezAttitude.t277' /></th>
 				<th><spring:message code='ezAttitude.t208'/></th>
 				<th><spring:message code='ezAttitude.t104'/></th>
 				<th><spring:message code='ezAttitude.t108'/></th>

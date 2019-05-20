@@ -43,25 +43,25 @@
 				var tempHtml = "";
 				
 				tempHtml += "<tr>";
-				tempHtml += "<th>결재상태</th>";
+				tempHtml += "<th><spring:message code='ezAttitude.t274' /></th>";
 				if(annualApprStatus == "-1") {
-					tempHtml += "<td colspan='2'>결재정보없음</td>";
+					tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t267' /></td>";
 				} else if(annualApprStatus == "0") {
-					tempHtml += "<td colspan='2'>진행</td>";
+					tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t270' /></td>";
 				} else if(annualApprStatus == "1") {
-					tempHtml += "<td colspan='2'>완료</td>";
+					tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t271' /></td>";
 				}
 				tempHtml += "</tr>";
 				
 				if (modAppl != "0") {
 					tempHtml += "<tr>";
-					tempHtml += "<th>취소신청</th>";
+					tempHtml += "<th><spring:message code='ezAttitude.t272' /></th>";
 					if(modAppl == "1") {
-						tempHtml += "<td colspan='2'>신청</td>";
+						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t209' /></td>";
 					} else if(modAppl == "3") {
-						tempHtml += "<td colspan='2'>승인</td>";
+						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t210' /></td>";
 					} else if(modAppl == "4") {
-						tempHtml += "<td colspan='2'>반려</td>";
+						tempHtml += "<td colspan='2'><spring:message code='ezAttitude.t211' /></td>";
 					}
 					tempHtml += "</tr>";
 				}
@@ -269,13 +269,13 @@
 	            			<c:when test="${attitudeInfo.typeId == 'A11' || attitudeInfo.typeId == 'A12' || attitudeInfo.typeId == 'A13'}">
 	            				<c:if test="${attitudeInfo.annualApprStatus == '1'}">
 		            				<c:if test="${attitudeInfo.modAppl == '0'}">
-		            					<a class="imgbtn"><span onclick="attitudeCancelAnnual()">취소신청</span></a>
+		            					<a class="imgbtn"><span onclick="attitudeCancelAnnual()"><spring:message code='ezAttitude.t272' /></span></a>
 		            				</c:if>
 		            				<c:if test="${attitudeInfo.modAppl == '1'}">
-	                       				<a class="imgbtn"><span onclick="deleteCancelAnnual()">취소신청삭제</span></a>
+	                       				<a class="imgbtn"><span onclick="deleteCancelAnnual()"><spring:message code='ezAttitude.t279' /></span></a>
 	                       			</c:if>
 		            				<c:if test="${attitudeInfo.modAppl == '4'}">
-	                       				<a class="imgbtn"><span onclick="attitudeCancelAnnual()">재신청</span></a>
+	                       				<a class="imgbtn"><span onclick="attitudeCancelAnnual()"><spring:message code='ezAttitude.t280' /></span></a>
 	                       			</c:if>
                        			</c:if>
                        		</c:when>

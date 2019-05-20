@@ -302,29 +302,29 @@
 		    			html += "<td style='width:12%'>" + Number(vo.annualCnt) + "</td>";
 		    			html += "<td style='width:20%'>" + content + "</td>";
 		    			if(vo.annualApprStatus == -1) {
-			    			html += "<td style='width:12%'>" + "결재정보없음" + "</td>";
+			    			html += "<td style='width:12%'>" + "<spring:message code='ezAttitude.t267' />" + "</td>";
 		    			} else if (vo.annualApprStatus == 0) {
 		    				if(vo.docApprStatus == '005') {
-				    			html += "<td style='width:12%'>" + "보류" + "</td>";
+				    			html += "<td style='width:12%'>" + "<spring:message code='ezAttitude.t268' />" + "</td>";
 		    				} else if(vo.docApprStatus == '011') {
-				    			html += "<td style='width:12%'>" + "수신부서 대기" + "</td>";
+				    			html += "<td style='width:12%'>" + "<spring:message code='ezAttitude.t269' />" + "</td>";
 		    				} else {
-				    			html += "<td style='width:12%'>" + "진행" + "</td>";
+				    			html += "<td style='width:12%'>" + "<spring:message code='ezAttitude.t270' />" + "</td>";
 		    				}
 		    			} else if (vo.annualApprStatus == 1) {
-			    			html += "<td style='width:12%'>" + "완료" + "</td>";
+			    			html += "<td style='width:12%'>" + "<spring:message code='ezAttitude.t271' />" + "</td>";
 		    			}
 		    			if(vo.modAppl == "0") {
 		    				if(vo.annualApprStatus == 1) {
-			    				html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"attitudeCancelAnnual('" + vo.attitudeId + "','" + vo.typeId + "')\"><span>취소신청</span></a>" +"</td>";
+			    				html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"attitudeCancelAnnual('" + vo.attitudeId + "','" + vo.typeId + "')\"><span><spring:message code='ezAttitude.t272' /></span></a>" +"</td>";
 		    				} else {
-			    				html += "<td style='width:12%'>결재 미완료</td>";
+			    				html += "<td style='width:12%'><spring:message code='ezAttitude.t273' /></td>";
 		    				}
 			    			//html += "<td style='width:12%'><a class='imgbtn' id='mailInBtn' onclick=\"openDraftUI('DRAFT', '" + vo.attitudeId + "')\"><span>취소신청</span></a>" +"</td>";
 		    			} else if(vo.modAppl == "4") {
-		    				html += "<td style='width:12%'>반려</td>";
+		    				html += "<td style='width:12%'><spring:message code='ezAttitude.t211' /></td>";
 		    			} else {
-		    				html += "<td style='width:12%'>신청</td>";
+		    				html += "<td style='width:12%'><spring:message code='ezAttitude.t209' /></td>";
 		    			}
 		    			html += "</tr>";
 			    		$("#contentlist .mainlist tbody").after(html);
@@ -630,8 +630,8 @@
 			                    <th style="width: 15%; cursor: pointer;" colname="typeName"><span><spring:message code='ezAttitude.t35' /></span></th>
 			                    <th style="width: 12%; cursor: pointer;" colname="annualCnt"><span><spring:message code='ezAttitude.t252' /></span></th>
 			                    <th style="width: 20%;"><span><spring:message code='ezAttitude.t264' /></span></th>
-			                    <th style="width: 12%; cursor: pointer;" colname="annualApprStatus"><span>결재상태</span></th>
-			                    <th style="width: 12%; cursor: pointer;" colname="modAppl"><span>취소신청</span></th>
+			                    <th style="width: 12%; cursor: pointer;" colname="annualApprStatus"><span><spring:message code='ezAttitude.t274' /></span></th>
+			                    <th style="width: 12%; cursor: pointer;" colname="modAppl"><span><spring:message code='ezAttitude.t272' /></span></th>
 			                </tr>
 			            </table>
 			            <div id="contentlist" name="contentlist" style="height: 520px; overflow-y: auto;">

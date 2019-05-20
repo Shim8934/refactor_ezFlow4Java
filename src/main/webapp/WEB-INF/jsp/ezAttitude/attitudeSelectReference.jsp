@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>참조자 선택</title>
+		<title><spring:message code='ezAttitude.t285' /></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 	    <link rel="stylesheet" href="${util.addVer('ezCircular.c1', 'msg')}" type="text/css" />
 	    <link rel="stylesheet" href="${util.addVer('/css/Tab.css')}" type="text/css">
@@ -119,9 +119,9 @@
 	            if (pGubun == "") {
 // 	                document.getElementById("btnAddUser").style.display = "";
 	                if (CrossYN())
-	                    document.getElementById("ToTitleStr").textContent = "참조자";
+	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezAttitude.t282' />";
 	                else
-	                    document.getElementById("ToTitleStr").innerText = "참조자";
+	                    document.getElementById("ToTitleStr").innerText = "<spring:message code='ezAttitude.t282' />";
 	            }
 
 	            $("#1tab1").click();
@@ -154,7 +154,7 @@
 	            	treeView.DataBind("TreeView");
 	            	
 	                if (type == "group") {
-	                    document.getElementById("ToTitleStr").textContent = "참조자";	
+	                    document.getElementById("ToTitleStr").textContent = "<spring:message code='ezAttitude.t282' />";	
 	                }
 	            }
 	            catch (ErrMsg) {
@@ -2004,7 +2004,7 @@
 		</script>
 	</head>
 	<body class="popup" style="overflow:hidden">
-		<h1 id="h1Title" style="height: 20px;">참조자 선택</h1>
+		<h1 id="h1Title" style="height: 20px;"><spring:message code='ezAttitude.t285' /></h1>
 		<div id="close">
             <ul>
                 <li><span onclick="window.close()"></span></li>
