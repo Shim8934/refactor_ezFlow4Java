@@ -503,15 +503,25 @@
 	    	function window_onUnload() {
 	        	if (m_Arguments == undefined) {
 		            if (window.opener != null && g_fromStr == "schedule" && trim(s_userID) != "") {
-		                window.opener.btnRefresh_onclick();
+		            	try {
+			                window.opener.btnRefresh_onclick();
+		            	} catch (e) {}
 	    	        } else if (window.opener != null && g_fromStr == "schedule2" && trim(s_userID) != "") {
-	                	window.opener.parent.main.document.location.reload();
+		            	try {
+		                	window.opener.parent.main.document.location.reload();
+		            	} catch (e) {}
 	            	} else if (window.opener != null && g_fromStr == "frame" && trim(s_userID) != "") {
-	                	window.opener.document.all.iframeWin2.document.location.reload();
+		            	try {
+		                	window.opener.document.all.iframeWin2.document.location.reload();
+		            	} catch (e) {}
 	            	} else if (window.opener != null && g_fromStr == "frame2" && trim(s_userID) != "") {
-	                	window.opener.document.all.iframeWin.document.location.reload();
+		            	try {
+		                	window.opener.document.all.iframeWin.document.location.reload();
+		            	} catch (e) {}
 	            	} else if (window.opener != null && g_fromStr == "todaySchedule" && trim(s_userID) != "") {
-	                	window.opener.location.reload();
+		            	try {
+		                	window.opener.location.reload();
+		            	} catch (e) {}
 	            	}
 	        	}
 	    	}
