@@ -2900,7 +2900,8 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		
 		int workingMonthCnt = Integer.parseInt((String)map.get("workingMonthCnt"));
 		int annualHolidayCnt = defaultAnnualHolidayCnt + (int) (workingMonthCnt / 12 - 1) / 2;
-
+		annualHolidayCnt = annualHolidayCnt > 25 ? 25 : annualHolidayCnt;
+		
 		// 입사한지 2년이 됐을 때 남아있는 월차는 모두 0으로 초기화 해준다.
 		map.put("holidayCnt", 0);
 		map.put("attendanceRateCondition","3");
