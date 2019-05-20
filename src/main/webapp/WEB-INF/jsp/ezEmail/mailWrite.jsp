@@ -1056,7 +1056,9 @@
     	    resultStr = resultStr.replace(/<p>/gi, "\r\n");
     	    resultStr = resultStr.replace(/<br>/gi, "\r\n");
     	    resultStr = resultStr.replace(/<hr>/gi, "\r\n----------------------------------------------------------------------");
+    	    resultStr = resultStr.replace(/<style .*?>/gi, "<style>");
     	    resultStr = resultStr.replace(/<style>.*?<\/style>/gi, "");
+    	    resultStr = resultStr.replace(/<script .*?>/gi, "<script>");
     	    resultStr = resultStr.replace(/<script>.*?<\/script>/gi, "");
     	    resultStr = resultStr.replace(/<.*?>/gi, "");
 			
@@ -1271,7 +1273,11 @@
 				document.getElementById("plainTextArea").style.display = "none";
 	    		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
         		document.getElementById("SelMailSign").disabled = false;
-        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "";
+        		if(totBigSizeAttachMBSize == 0){
+	        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
+        		} else {
+	        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "";
+        		}
 	    	}
 	    }
 	    
