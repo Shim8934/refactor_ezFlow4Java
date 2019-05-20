@@ -346,6 +346,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								name = commonUtil.trimDoubleQuotes(name);
 							}
 							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
+							}
+							
 							logger.debug("TO=" + name + ((InternetAddress)arrRecipientsTo[i]).getAddress());
 							
 							/* 유저 본인의 이름을 맨앞으로 toStr에 넣는 로직 -> 미리보기랑 맞추기 위해 주석처리
@@ -443,6 +449,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								name = commonUtil.trimDoubleQuotes(name);
 							}
 							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
+							}
+							
 							logger.debug("CC=" + name + ((InternetAddress)arrRecipientsCC[i]).getAddress());
 							
 							/* 유저 본인의 이름을 맨앞으로 ccStr에 넣는 로직 -> 미리보기랑 맞추기 위해 주석처리
@@ -490,6 +502,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							} else {
 								name = MimeUtility.decodeText(name);
 								name = commonUtil.trimDoubleQuotes(name);
+							}
+							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
 							}
 							
 							logger.debug("BCC=" + name + ((InternetAddress)arrRecipientsBCC[i]).getAddress());
@@ -1701,6 +1719,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								toStr += ";";
 	                        }					
 							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
+							}
+							
 							toStr += "\""+ name +"\" <" + iAddress.getAddress() + ">";
 						}
 					}
@@ -1766,6 +1790,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 								ccStr += ";";
 	                        }
 							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
+							}
+							
 							ccStr += "\"" + name + "\" <" + iAddress.getAddress() + ">";
 						}
 					}
@@ -1791,6 +1821,12 @@ public class EzEmailMailReadController extends EgovFileMngUtil {
 							if (i != 0) {
 								bccStr += ";";
 	                        }
+							
+							if (name != null) {
+								// 료비에서 수신한 메일 중 \(backslash)" 가 문자열 내부에 포함되는 경우가 있어 추가함.
+								// 예) =?iso-2022-jp?B?Im1hLXgtOTMyQGRvY29tby5uZS5qcCI=?=<ma-x-932@docomo.ne.jp>
+								name = name.replace("\\\"", "");
+							}
 							
 							bccStr += "\"" + name + "\" <" + iAddress.getAddress() + ">";
 						}
