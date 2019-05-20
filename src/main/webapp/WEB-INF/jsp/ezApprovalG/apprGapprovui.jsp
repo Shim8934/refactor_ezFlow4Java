@@ -402,8 +402,24 @@
 		        }
 		    }
 		
-		    function CheckOpinionYN_Complete_Complete() {
+		    function CheckOpinionYN_Complete_Complete(ret) {
 		        DivPopUpHidden();
+		        if (ret == "Clear") {
+					pHasOpinionYN = "N";
+				} else if (ret == "cancel") {
+					//do_nothing
+				} else {
+			        var objXML = createXmlDom();
+			        objXML = loadXMLString(ret);
+			        
+			        var NodeList = SelectNodes(objXML, "LISTVIEWDATA/ROWS/ROW");
+			        if (NodeList.length != 0) {
+			            pHasOpinionYN = "Y";
+			        } else {
+			            pHasOpinionYN = "N";
+			        }
+				}
+		        
 		        if (pDraftFlag == "SUSIN")
 		            getSusinSNInfo();
 		        else
@@ -1124,6 +1140,7 @@
 		    function btnStay_option_Complete(ret) {
 		        DivPopUpHidden();
 		        if (ret != "cancel") {
+	                pHasOpinionYN = "Y";
 		        	if (checkAprState()) {
 		        		alert("<spring:message code='ezApprovalG.bhs23'/>");
 		    			if (allFlag == "1") {
