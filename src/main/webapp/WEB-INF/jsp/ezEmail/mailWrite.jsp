@@ -1165,7 +1165,11 @@
 				document.getElementById("plainTextArea").style.display = "none";
 	    		m_rgParams4PostOption["bodyType"] = document.getElementById("bodyType").value;
         		document.getElementById("SelMailSign").disabled = false;
-        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "";
+        		if(totBigSizeAttachMBSize == 0){
+	        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "none";
+        		} else {
+	        		dadiframe.document.getElementById("btnBigFileUpload").style.display = "";
+        		}
 	    	}
 	    }
 	    
