@@ -17,6 +17,10 @@
 		cursor : pointer;
 	} 
 	
+	.notEmptySlider.noSliderUrl {
+		cursor : default;
+	}
+	
 	#myImg {
 		width : 36px;
 		height : 36px;
@@ -63,6 +67,9 @@
 	            	<c:when test="${not empty sliderList}">
 	            		<c:forEach items="${sliderList}" var="slider">
 		            		<c:choose>
+		            			<c:when test="${slider.url eq '' }">
+									<img src="${slider.imagePath}" class="notEmptySlider noSliderUrl" onclick="windowOpen('${slider.url}')" />
+		            			</c:when>
 		            			<c:when test="${fn:substring(slider.url, 0, 4) eq 'http' }">
 		            				<img src="${slider.imagePath}" class="notEmptySlider" onclick="windowOpen('${slider.url}')" />
 		            			</c:when>
@@ -498,7 +505,7 @@
 					$.ajax({
 						type : "GET",
 						dataType : "html",
-						data : {"portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
+						data : {"uniq_param" : (new Date()).getTime(), "portletId" : portletId, "portletName" : portletName, "usedTheme" : usedTheme},
 						url : portletUrl,
 						tryCount : 0,
 						retryLimit : 3,
