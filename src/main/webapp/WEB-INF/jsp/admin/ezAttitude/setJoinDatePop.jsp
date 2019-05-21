@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>입사일 입력</title>
+		<title><spring:message code='ezAttitude.t288'/></title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">		
 		<link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css"/>
 		<link rel="stylesheet" href="${util.addVer('/js/jquery/dateControls/jquery.ui.all.css')}" type="text/css" >
@@ -127,7 +127,7 @@
 	</head>
 	<body class="popup">
 	    <h1>
-	    	입사일 입력
+	    	<spring:message code='ezAttitude.t288'/>
 	    </h1>
 	    <div id="close">
             <ul>

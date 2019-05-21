@@ -2131,13 +2131,22 @@ public class EzAttitudeGWController {
 			String serverName = request.getHeader("x-user-host");
 			
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, request.getParameter("changeUserId"));
+			String primary = info.getPrimary();
 			
 			HashMap<String, Object> map = new HashMap<String, Object>();
+			map.put("searchUserName", request.getParameter("searchUserName"));
+			map.put("searchDeptName", request.getParameter("searchDeptName"));
+			map.put("searchTitle", request.getParameter("searchTitle"));
 			map.put("changeUserId", request.getParameter("changeUserId"));
 			map.put("changeReason", request.getParameter("changeReason"));
 			map.put("annualCnt", request.getParameter("annualCnt"));
 			map.put("tenantId", info.getTenantId());
 			map.put("companyId", companyId);
+			
+			if (primary.equals("1")) {
+				primary = "";
+			}
+			map.put("primary", primary);
 			
 			ezAttitudeService.changeAllAnnual(map);
 			

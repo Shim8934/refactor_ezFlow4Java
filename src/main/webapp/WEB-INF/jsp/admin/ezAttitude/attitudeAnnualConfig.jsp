@@ -5,7 +5,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-	    <title><spring:message code = 'ezAttitude.t2' /></title>
+	    <title><spring:message code = 'ezAttitude.t292' /></title>
 	    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	    <link rel="stylesheet" href="${util.addVer('ezAttitude.i1', 'msg')}" type="text/css">
 	    <link rel="stylesheet" href="${util.addVer('/js/jquery/timeControls/jquery.timepicker.css')}" type="text/css" />
@@ -229,7 +229,7 @@
 	</head>
 	<body class="mainbody">
 	    <h1>
-	    	연차설정관리
+	    	<spring:message code = 'ezAttitude.t292' />
 		    <span class="title_bar"><img src="/images/name_bar.gif"></span>
 	    	<select class="companySelect" name="ListCompany" id="ListCompany" onchange="company_change()" style="margin-bottom:10px">
 				<c:forEach var="item" items="${list}">
@@ -250,25 +250,25 @@
 	        </tr> -->
 	        <tr style="height:30px;">
 	        	<th style="width: 40%; text-align:center">
-					연차자동발생
+					<spring:message code = 'ezAttitude.t293' />
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="use_annual_auto_gnrt" value="1" onchange="type_change('1');"/>사용
-	            	<input type="radio" name="use_annual_auto_gnrt" value="0" onchange="type_change('0');"/>사용안함
+	            	<input type="radio" name="use_annual_auto_gnrt" value="1" onchange="type_change('1');"/><spring:message code = 'ezAttitude.t294' />
+	            	<input type="radio" name="use_annual_auto_gnrt" value="0" onchange="type_change('0');"/><spring:message code = 'ezAttitude.t295' />
 	            </td>
 	        </tr>
 	        <tr id="ags" style="height:30px;">
 	        	<th style="width: 40%; text-align:center">
-					연차발생기준
+					<spring:message code = 'ezAttitude.t296' />
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="annual_gnrt_std" value="1" onchange="type_change('2');"/>회계년도
-	            	<input type="radio" name="annual_gnrt_std" value="0" onchange="type_change('3');"/>입사일
+	            	<input type="radio" name="annual_gnrt_std" value="1" onchange="type_change('2');"/><spring:message code = 'ezAttitude.t297' />
+	            	<input type="radio" name="annual_gnrt_std" value="0" onchange="type_change('3');"/><spring:message code = 'ezAttitude.t289' />
 	            </td>
 	        </tr>
 	        <tr id="sdp" style="height:30px;">
 	        	<th style="width: 40%; text-align:center">
-					회계년도 기산일
+					<spring:message code = 'ezAttitude.t298' />
 	            </th>
 	            <td style="width: 700px; text-align:left">
 	            	<input type="text" id="Sdatepicker" style="width: 80px; text-align: center" />
@@ -276,29 +276,29 @@
 	        </tr>
 	        <tr style="height:30px;">
 	        	<th style="width: 40%; text-align:center">
-					잔여연차 음수허용
+					<spring:message code = 'ezAttitude.t299' />
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="use_minus_annual" value="1"/>허용
-	            	<input type="radio" name="use_minus_annual" value="0"/>허용안함
+	            	<input type="radio" name="use_minus_annual" value="1"/><spring:message code = 'ezAttitude.t300' />
+	            	<input type="radio" name="use_minus_annual" value="0"/><spring:message code = 'ezAttitude.t301' />
 	            </td>
 	        </tr>
 	        <tr id="uat" style="height:30px;">
 	        	<th style="width: 40%; text-align:center">
-					1개월 만근시 발생연차 1년경과 시 소멸
+					<spring:message code = 'ezAttitude.t302' />
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="use_annual_tmnt" value="1"/>사용
-	            	<input type="radio" name="use_annual_tmnt" value="0"/>사용안함
+	            	<input type="radio" name="use_annual_tmnt" value="1"/><spring:message code = 'ezAttitude.t294' />
+	            	<input type="radio" name="use_annual_tmnt" value="0"/><spring:message code = 'ezAttitude.t295' />
 	            </td>
 	        </tr>
 	        <tr id="ror" style="height:30px;">
 	        	<th style="width: 40%; text-align:center">
-					연차 소수점 계산 처리
+					<spring:message code = 'ezAttitude.t303' />
 	            </th>
 	            <td style="width: 700px; text-align:left">
-	            	<input type="radio" name="round_off_rule" value="1"/>0.5일
-	            	<input type="radio" name="round_off_rule" value="0"/>1일
+	            	<input type="radio" name="round_off_rule" value="1"/><spring:message code = 'ezAttitude.t304' />
+	            	<input type="radio" name="round_off_rule" value="0"/><spring:message code = 'ezAttitude.t305' />
 	            </td>
 	        </tr>
 		</table>

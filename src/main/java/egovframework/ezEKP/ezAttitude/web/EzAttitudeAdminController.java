@@ -2458,6 +2458,9 @@ public class EzAttitudeAdminController {
 		LOGGER.debug("changeAllAnnual started.");
 		
 		LoginSimpleVO userInfo = commonUtil.userInfoSimple(loginCookie);
+		String searchUserName = request.getParameter("userName");
+		String searchDeptName = request.getParameter("deptName");
+		String searchTitle = request.getParameter("title");
 		String companyId = request.getParameter("companyId");
 		String changeReason = request.getParameter("changeReason");
 		String annualCnt = request.getParameter("annualCnt");
@@ -2475,6 +2478,9 @@ public class EzAttitudeAdminController {
 		UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(url)
 				.queryParam("changeUserId", userInfo.getId())
 				.queryParam("changeReason", changeReason)
+				.queryParam("searchUserName", searchUserName)
+				.queryParam("searchDeptName", searchDeptName)
+				.queryParam("searchTitle", searchTitle)
 				.queryParam("annualCnt", annualCnt);
 				
 		

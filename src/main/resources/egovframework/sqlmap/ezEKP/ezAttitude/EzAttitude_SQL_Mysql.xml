@@ -2002,6 +2002,7 @@
 	</insert>
 	
 	<select id="ezAttitudeDAO.getJoinDateUserList" parameterClass="map" resultClass="java.util.HashMap">
+	
 		SELECT 
 			USER_ID AS userId, 
        		CAST(TIMESTAMPDIFF(MONTH, JOIN_DATE, NOW()) AS CHAR(4)) AS workingMonthCnt, 
@@ -2016,12 +2017,16 @@
 			AND
 				JOIN_DATE LIKE CONCAT('%-%-',#yesterday#,'%')
 		</isNotEmpty>
-		AND
-			COMPANY_ID = #companyId#
-		AND
-			TENANT_ID = #tenantId#
-		AND 
-			JOIN_DATE IS NOT NULL
+		<![CDATA[
+			AND
+				COMPANY_ID = #companyId#
+			AND
+				TENANT_ID = #tenantId#
+			AND 
+				JOIN_DATE IS NOT NULL
+			AND 
+				JOIN_DATE <= NOW()
+		]]>
 	</select>
 	
 	<select id = "ezAttitudeDAO.getAttendanceDay" parameterClass="map" resultClass="INTEGER">
@@ -2093,7 +2098,7 @@
 	<select id="ezAttitudeDAO.checkAbsentDay" parameterClass="map" resultClass="INTEGER">
 		<![CDATA[
 			SELECT
-				COUNT(*)
+				IFNULL(SUM(IFNULL(TIMESTAMPDIFF(DAY,START_DATE,END_DATE) + 1, 1)), 0)
 			FROM 
 				TBL_ATTITUDE
 			WHERE
@@ -2115,7 +2120,7 @@
 		<![CDATA[
 			SELECT
 				TYPE_ID AS typeId,
-				COUNT(*) AS cnt
+				IFNULL(SUM(IFNULL(TIMESTAMPDIFF(DAY,START_DATE,END_DATE) + 1, 1)), 0) AS cnt
 			FROM
 				TBL_ATTITUDE
 			WHERE 

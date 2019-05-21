@@ -3064,15 +3064,15 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	public void extinctionMonthlyHoliday(Map<String, Object> map) throws Exception {
 		LOGGER.debug("extinctionMonthlyHoliday started");
 		
-		int totalAnnualCnt = 0;
+		double totalAnnualCnt = 0.0;
 		for ( Map<String, Object> m : ezAttitudeDAO.getuserAnnualCnt(map)) {
-			totalAnnualCnt += ((String)m.get("typeId")).equals("A05") ? 1 : 0.5;
+			totalAnnualCnt += ((String)m.get("typeId")).equals("A05") ? Double.parseDouble((String.valueOf(m.get("cnt")))) * 1.0 : Double.parseDouble((String.valueOf(m.get("cnt")))) * 0.5;
 		}
 		
-		int userMonthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map) - totalAnnualCnt;
+		double userMonthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map) - totalAnnualCnt;
 		int workingMonthCnt = Integer.parseInt((String)map.get("workingMonthCnt"));
 		
-		if (userMonthlyHolidayCnt >= workingMonthCnt - (workingMonthCnt - 12 ) * 2) { 
+		if (userMonthlyHolidayCnt >= (double)(workingMonthCnt - (workingMonthCnt - 12.0 ) * 2.0)) { 
 			int monthlyHolidayCnt = ezAttitudeDAO.getMonthlyHolidayCnt(map);
 			map.put("holidayCnt", -1);
 			map.put("attendanceRateCondition","2");
