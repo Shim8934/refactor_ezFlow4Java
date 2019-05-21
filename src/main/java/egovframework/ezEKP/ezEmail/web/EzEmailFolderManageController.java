@@ -32,6 +32,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -88,7 +89,10 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
 					logger.debug("the user cannot access the shareId.");
 				} else {
+					MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
+					
 					model.addAttribute("shareId", shareId);
+					model.addAttribute("shareName", shareInfo.getShareName());
 				}
 			}
 		}

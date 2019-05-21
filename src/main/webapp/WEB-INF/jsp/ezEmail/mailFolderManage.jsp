@@ -532,7 +532,7 @@
         </script>
 	</head>
 	<body style="overflow:hidden;" class="popup">
-		<h1 style="margin-bottom:0px;"><spring:message code='ezEmail.t481' /></h1>
+		<h1 style="margin-bottom:0px;"><spring:message code='ezEmail.t481' /><c:if test="${shareName != null}"> - <c:out value="${shareName}" /></c:if></h1>
 		<div id="close">
 			<ul>
 		    	<li><span onClick="manageClose()"></span></li>
