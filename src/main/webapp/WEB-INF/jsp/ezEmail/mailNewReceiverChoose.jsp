@@ -3331,29 +3331,36 @@
                     inputAddress();
             }
             function inputAddress() {
-                if (document.getElementById("emailname").value == "") {
+            	var strName = document.getElementById("emailname").value;
+                var strEmail = document.getElementById("emailaddr").value.trim();
+            	
+                if (strName == "") {
                     document.getElementById("emailname").focus();
                     alert(strLang196);
                     return;
-                }
-                else if (document.getElementById("emailaddr").value == "") {
+                } else if (strEmail == "") {
                     document.getElementById("emailaddr").focus();
                     alert(strLang197);
                     return;
                 }
-                var emailMatch = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-                if (!emailMatch.test(document.getElementById("emailaddr").value) && document.getElementById("emailaddr").value != "") {
+                
+                if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
+		        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1) {
+               		alert("<spring:message code='ezEmail.t31' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ]");
+               		document.getElementById("emailname").focus();
+		            return;
+		        }
+                
+                var emailMatch = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9_.-]+$/;
+                if (!emailMatch.test(strEmail)) {
                     alert(strLang198);
+                    document.getElementById("emailaddr").focus();
                     return;
                 }
 
                 var pparsingXML = "";
                 var pparsingXML2 = "";
-                var strName = "";
-                var strEmail = "";
                 var listid = "MsgToList";
-                strName = document.getElementById("emailname").value;
-                strEmail = document.getElementById("emailaddr").value;
                 pparsingXML2 = "<LISTVIEWDATA2><ROWS>";
                 pparsingXML = pparsingXML + "<ROW><CELL><DATA1>" + MakeXMLString(strName) + "</DATA1>";
                 pparsingXML = pparsingXML + "<DATA2>" + strEmail + "</DATA2>";
@@ -3393,6 +3400,9 @@
                     document.getElementById(listid).getElementsByTagName("TD")[y].style.textOverflow = "";
                     document.getElementById(listid).getElementsByTagName("TD")[y].style.overflow = "";
                 }
+                
+                document.getElementById("emailname").value = "";
+                document.getElementById("emailaddr").value = "";
             }
             var dropelement = "";
             function onDragEnter(evt, obj) {
