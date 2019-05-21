@@ -224,7 +224,7 @@
 	    			resultHtml += "<td>" + vo.userDeptName + "</td>";
 	    			
 	    			if(vo.joinDate == "0") {
-		    			resultHtml += "<td><a class='imgbtn'><span onclick=\"setJoinDatePop('" + vo.userId + "', 'new', '0')\">입사일 입력</span></a></td>";
+		    			resultHtml += "<td><a class='imgbtn'><span onclick=\"setJoinDatePop('" + vo.userId + "', 'new', '0')\"><spring:message code='ezAttitude.t288'/></span></a></td>";
 	    			} else {
 		    			resultHtml += "<td><a class='link joinDate'>" + vo.joinDate + "</td>";
 	    			}
@@ -425,9 +425,9 @@
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="displayname"><spring:message code='ezAttitude.t10' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="title"><spring:message code='ezAttitude.t11' /></th>
 						<th style="overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="description"><spring:message code='ezAttitude.t9' /></th>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="joinDate">입사일</th>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="basicAnnualCnt">기본 연차 수</th>
-						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="additionalAnnualCnt">추가 연차 수</th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="joinDate"><spring:message code='ezAttitude.t289' /></th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="basicAnnualCnt"><spring:message code='ezAttitude.t290' /></th>
+						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; cursor: pointer;" colname="additionalAnnualCnt"><spring:message code='ezAttitude.t291' /></th>
 						<th style="width:10%;overflow: hidden; white-space: nowrap; text-overflow: ellipsis; padding-left: 8px;" colname=""><spring:message code='ezAttitude.t241' /></th>
 					</tr>
 				</thead>
