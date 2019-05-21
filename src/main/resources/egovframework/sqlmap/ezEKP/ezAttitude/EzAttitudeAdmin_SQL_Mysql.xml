@@ -1834,6 +1834,15 @@
 				CN = #userId#
 			]]>
 		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchDeptName">
+				description$primary$ LIKE CONCAT('%', #searchDeptName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchUserName">
+				displayname$primary$ LIKE CONCAT('%', #searchUserName#, '%')
+		</isNotEmpty>
+		<isNotEmpty prepend="AND" property="searchTitle">
+				title$primary$ LIKE CONCAT('%', #searchTitle#, '%')
+		</isNotEmpty>
 	</select>
 	
 	<insert id="ezAttitudeAdminDAO.saveJoinDate" parameterClass="Map">
