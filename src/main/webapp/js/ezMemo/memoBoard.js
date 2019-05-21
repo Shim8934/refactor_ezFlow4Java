@@ -521,19 +521,20 @@ function getMemoDetail(memoId) {
     		var detail = portalDoc.find('#detailMemo');
     		var detailContents = portalDoc.find('#dMContents');
 
-    		detailContents.attr('bigMemoId', result.memo.memo_id);
-    		detail.removeClass().addClass('ui-resizable ui-draggable ui-draggable-handle memo0' + result.memo.color_id + 'Big');
+    		detailContents.attr('bigMemoId', result.memo.memo_id);			// 새로 불러올 메모 id 세팅
+    		detail.removeClass().addClass('ui-resizable ui-draggable ui-draggable-handle memo0' + result.memo.color_id + 'Big');	// 새로 불러올 메모 색상 세팅
 
-    		if (useDate === 1) {
-    			parent.parent.addDateInfo(result.memo.write_date.substring(0,10), detail);
+    		if (useDate === 1) {					// 날짜 표시하는 경우
+    			parent.parent.addDateInfo(result.memo.write_date.substring(0,10), detail);	// 날짜 표시
     		}
-    		detailContents[0].textContent = '';
-    		detailContents[0].textContent = result.memo.contents;
+    		detailContents.val('').val(result.memo.contents);				// 큰 메모의 내용을 지운 후 다시 세팅
     		
-    		parent.parent.setDetailStatus(memoId);
+    		parent.parent.setDetailStatus(memoId);							// 더블 클릭한 메모의 id와 함께 큰 메모 열림 상태 저장
     		
-    		detail.css('visibility', 'visible');
-    		detailContents.focus();
+    		parent.parent.bigMemoResize();									// 큰 메모 생성 후 리사이즈
+    		
+    		detail.css('visibility', 'visible');							// 큰 메모 관련 모든 것이 세팅 되면 큰 메모를 띄움
+    		detailContents.focus();											// 큰 메모에 포커스 생성
     		
     		beforeMemo = result.memo.contents;
     		parent.parent.setBeforeMemo(beforeMemo);	// 포탈jsp에 있는 beforeMemo 변수 값 수정, 포탈에서 큰 메모 열었을 때 값 비교 때문
