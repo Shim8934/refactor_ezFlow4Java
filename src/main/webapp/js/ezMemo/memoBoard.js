@@ -520,6 +520,8 @@ function getMemoDetail(memoId) {
     		var portalDoc = $(top.top.document);
     		var detail = portalDoc.find('#detailMemo');
     		var detailContents = portalDoc.find('#dMContents');
+    		
+    		detail.css('visibility', 'hidden');								// 큰 메모 잠시 숨김
 
     		detailContents.attr('bigMemoId', result.memo.memo_id);			// 새로 불러올 메모 id 세팅
     		detail.removeClass().addClass('ui-resizable ui-draggable ui-draggable-handle memo0' + result.memo.color_id + 'Big');	// 새로 불러올 메모 색상 세팅
