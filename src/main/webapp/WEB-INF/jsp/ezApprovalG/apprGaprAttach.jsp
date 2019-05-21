@@ -81,64 +81,53 @@
 			/**
 			* 첨부파일의 History 관리
 			*/
-			function CheckHistory(pFlag)
-			{
+			function CheckHistory(pFlag) {
 				var i, j;
 				var listview = new ListView();
 			    listview.LoadFromID("attachList");
 			        
-				if (pFlag == 0)
-				{
+				if (pFlag == 0) {
 					var FirstData = SelectNodes(FirstAttach, "LISTVIEWDATA/ROWS/ROW");
-					var pAttachCurSel =listview.GetDataRows();
+					var pAttachCurSel = listview.GetDataRows();
 					
-					for (i=0; i<FirstData.length; i++)
-					{
+					for (i = 0; i < FirstData.length; i++) {
 						var tempSN = SelectSingleNodeValue(GetChildNodes(FirstData[i])[0], "DATA2");
 						var tempFileName = SelectSingleNodeValue(GetChildNodes(FirstData[i])[0], "DATA10");
 						var DelFlag = true;
 						
-						for (j=0; j<pAttachCurSel.length; j++)
-						{
-						    if (GetAttribute(pAttachCurSel[j], "DATA2") == tempSN && GetAttribute(pAttachCurSel[j], "DATA10") == tempFileName)
-							{
+						for (j = 0; j < pAttachCurSel.length; j++) {
+						    if (GetAttribute(pAttachCurSel[j], "DATA2") == tempSN && GetAttribute(pAttachCurSel[j], "DATA10") == tempFileName) {
 								DelFlag = false;
 							}
 						}
-						if (DelFlag)
-							UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t266'/>");
+						if (DelFlag) {
+							UpdateAttachHistory(tempSN, strModifyFlag2);
+						}
 					}
-				}
-				else
-				{
+				} else {
 					var FirstData = listview.GetDataRows();
 					var FileData = SelectNodes(FirstAttach,"LISTVIEWDATA/ROWS/ROW");
-					for (i=0; i<FirstData.length; i++)
-					{
-						
+					
+					for (i = 0; i < FirstData.length; i++) {
 						var tempSN = GetAttribute(FirstData[i], "DATA2");
 						var tempFileName = GetAttribute(FirstData[i], "DATA10");
 						var AddFlag = true;
 						
-						for (j=0; j<FileData.length; j++)
-						{
-			                if (getNodeText(FileData[j].getElementsByTagName("DATA2")[0]) == tempSN && getNodeText(FileData[j].getElementsByTagName("DATA10")[0]) == tempFileName)
-							{
+						for (j = 0; j < FileData.length; j++) {
+			                if (getNodeText(FileData[j].getElementsByTagName("DATA2")[0]) == tempSN && getNodeText(FileData[j].getElementsByTagName("DATA10")[0]) == tempFileName) {
 								AddFlag = false;
 							}
 						}
 						
-						if (AddFlag)
-						{
-							if (GetAttribute(FirstData[i], "DATA11")== "Y")
-								UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t267'/>");
-							else
-								UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t268'/>");
-						}
-						else
-						{
-							if (GetAttribute(FirstData[i], "DATA12")== "EDITED")
-								UpdateAttachHistory(tempSN, "<spring:message code='ezApprovalG.t269'/>");
+						if (AddFlag) {
+							if (GetAttribute(FirstData[i], "DATA11") == "Y") {
+								UpdateAttachHistory(tempSN, strModifyFlag4);
+							} else {
+								UpdateAttachHistory(tempSN, strModifyFlag1);
+							}
+						} else {
+							if (GetAttribute(FirstData[i], "DATA12") == "EDITED")
+								UpdateAttachHistory(tempSN, strModifyFlag3);
 						}
 					}
 				}
