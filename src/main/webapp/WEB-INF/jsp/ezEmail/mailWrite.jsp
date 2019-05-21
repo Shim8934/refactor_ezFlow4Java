@@ -2008,7 +2008,7 @@
 		function bodydragover(evt) {
 				evt.dataTransfer.dropEffect = "none";
 				evt.stopPropagation();
-				evt.preventDefault();"
+				evt.preventDefault();
 		}
 	    </script>
         <c:if test="${isCrossBrowser != true}">

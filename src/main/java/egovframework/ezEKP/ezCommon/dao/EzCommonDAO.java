@@ -259,6 +259,16 @@ public class EzCommonDAO extends EgovAbstractDAO{
 		}
 	}
 	
+	public void addAddJobMasterProxy() throws Exception {
+		try {
+			select("EzCommonDAO.addAddJobMasterProxy");
+		} catch (Exception e) {
+			logger.debug("tbl_addjobmaster proxy column doesn't exist. creating the column...");
+			
+			update("EzCommonDAO.addAddJobMasterProxy");
+		}
+	}
+	
 	public void createTblIPAccessID() throws Exception {
 		try {
 			select("EzCommonDAO.checkTblIPAccessID");
