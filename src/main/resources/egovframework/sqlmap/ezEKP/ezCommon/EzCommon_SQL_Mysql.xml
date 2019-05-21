@@ -336,6 +336,13 @@
 			ORDERBY VARCHAR(200) DEFAULT NULL
 	</statement>
 	
+	<statement id="EzCommonDAO.addAddJobMasterProxy"> 
+		ALTER TABLE 
+			TBL_ADDJOBMASTER
+		ADD 
+			PROXY VARCHAR(200) DEFAULT NULL
+	</statement>
+	
 	<select id="EzCommonDAO.checkTblIPAccessIP" resultClass="String">
 	<![CDATA[
 		SELECT 

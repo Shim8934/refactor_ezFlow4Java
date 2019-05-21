@@ -1,9 +1,11 @@
 package egovframework.ezEKP.ezOrgan.service;
 
 import java.util.List;
+import java.util.Map;
 
 import egovframework.ezEKP.ezOrgan.vo.OrganDeptVO;
 import egovframework.ezEKP.ezOrgan.vo.OrganProxyVO;
+import egovframework.ezEKP.ezOrgan.vo.OrganUserVO;
 import egovframework.ezEKP.ezPortal.vo.PortalTopOtherCompanyAddJobVO;
 import egovframework.let.user.login.vo.LoginVO;
 
@@ -96,4 +98,10 @@ public interface EzOrganService {
 	public String getPhysicalDeliveryOfficeName(String userID,  String property, int tenantID) throws Exception;
 
 	String getUserOrgDeptId(String userID, int tenantID, String companyID) throws Exception;
+
+	public String updateAddJobProxy(String id, String proxyInfo, int tenantId, String dept) throws Exception;
+
+	public String getAddJobProxy(String id, String dept, int tenantId) throws Exception;
+
+	public OrganUserVO getUserInfo(String id, String lang, int tenantId) throws Exception;
 }

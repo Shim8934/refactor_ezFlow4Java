@@ -93,7 +93,11 @@
  	            		textData += "<p " + defaultFontAndSize + ">" + line[i] + " " + "</p>";
 	 	            }
 	            	
-	            	CKEDITOR.instances.editor1.setData(textData);
+					if (CKEDITOR.instances.editor1.mode === "source") {
+						CKEDITOR.instances.editor1.setData(textData);
+					} else {
+						CKEDITOR.instances.editor1.editable().setHtml(textData);
+					}
 	            } catch (e) { }
 	        }
 			

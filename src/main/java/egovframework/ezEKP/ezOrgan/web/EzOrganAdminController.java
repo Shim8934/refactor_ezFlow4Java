@@ -153,6 +153,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addQuickLinkLinkOrder();
     	ezCommonService.addComCloseCompanyId();
     	ezCommonService.addWebfolderTotalLimit();
+    	ezCommonService.addAddJobMasterProxy();
     	
     	logger.debug("init ended.");
     }

@@ -821,9 +821,11 @@ var strLangOpinionType4 = "退回";
 var strModifyFlag1 = "001";
 var strModifyFlag2 = "002";
 var strModifyFlag3 = "003";
-var strLangModifyFlag1 = "삭제";
-var strLangModifyFlag2 = "추가";
+var strModifyFlag4 = "004";
+var strLangModifyFlag1 = "추가";
+var strLangModifyFlag2 = "삭제";
 var strLangModifyFlag3 = "수정";
+var strLangModifyFlag4 = "본문추가";
 
 // Etc
 var strLangEtcAprType4 = "전결"; // 문서 싸인칸에 표시하는 전결문자

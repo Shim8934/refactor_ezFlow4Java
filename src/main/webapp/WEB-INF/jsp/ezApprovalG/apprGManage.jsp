@@ -115,10 +115,10 @@
 		            return true;
 		    };
 		    function checkBujaeInfo() {
-		    	if (pListTypeValue == "10") {
-		    		checkBujaeInfo_Complete(true);
-		    		return;
-	            }
+//		    	if (pListTypeValue == "10") {
+//		    		checkBujaeInfo_Complete(true);
+//		    		return;
+//	            }
 		        var BString = "${buJaeInfo}";
 		        
 		        if (BString != "") {
@@ -224,21 +224,21 @@
 		        }
 		        else if (pListTypeValue == "10") {
 		            getDocList();
-		            var result = "";
+// 		            var result = "";
 			    	
-			        $.ajax({
-			    		type : "POST",
-			    		dataType : "text",
-			    		async : false,
-			    		url : "/ezPersonal/saveBujae.do",
-			    		data : {
-			    				buJae  : bujaeVal,
-			    				proxy  : ""
-			    				},
-			    		success: function(xml){
-			    			result = xml;
-			    		}        			
-			    	});
+// 			        $.ajax({
+// 			    		type : "POST",
+// 			    		dataType : "text",
+// 			    		async : false,
+// 			    		url : "/ezPersonal/saveBujae.do",
+// 			    		data : {
+// 			    				buJae  : bujaeVal,
+// 			    				proxy  : ""
+// 			    				},
+// 			    		success: function(xml){
+// 			    			result = xml;
+// 			    		}        			
+// 			    	});
 		        }
 		        else if (pListTypeValue == "21") {
 		            getDocList();
@@ -261,9 +261,9 @@
 		    function setBujaeOff() {
 		    	var result = "";
 		    	
-		    	if(pListTypeValue != "10") {
-		    		bujaeVal = "";
-		    	}
+// 		    	if(pListTypeValue != "10") {
+// 		    		bujaeVal = "";
+// 		    	}
 		        $.ajax({
 		    		type : "POST",
 		    		dataType : "text",
@@ -271,7 +271,8 @@
 		    		url : "/ezPersonal/saveBujae.do",
 		    		data : {
 		    				buJae  : bujaeVal,
-		    				proxy  : ""
+		    				proxy  : "",
+		    				dept : arr_userinfo[4]
 		    				},
 		    		success: function(xml){
 		    			result = xml;
@@ -280,6 +281,7 @@
 		        
 		        bujaeVal = arr_userinfo[7];
 		        arr_userinfo[7] = "";
+		        window.location.reload();
 		    }
 		
 		    $(function () {
