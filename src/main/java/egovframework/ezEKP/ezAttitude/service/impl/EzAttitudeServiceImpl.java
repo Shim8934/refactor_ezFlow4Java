@@ -3555,7 +3555,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 		//사용자 근태 리스트(disabled되어야할....datetype이 4인것과 결근인 근태) 가져오기
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Calendar cal = Calendar.getInstance();
-		cal.set(Integer.valueOf(year), Integer.valueOf(month) - 1, 1);
+		if (year != null && !year.equals("")) {
+			cal.set(Integer.valueOf(year), Integer.valueOf(month) - 1, 1);
+		}
 		
 		String startDate = "";
 		String endDate = "";
