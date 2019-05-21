@@ -240,6 +240,10 @@ public class EzResourceDAO extends EgovAbstractDAO {
 		update("EzResourceDAO.updateSchedule", map);
 	}
 	
+	public void updateSchedule2(Map<String, Object> map) {
+		update("EzResourceDAO.updateSchedule2", map);
+	}
+	
 	public void updateScheduleDateTime(Map<String, Object> map) {
 		update("EzResourceDAO.updateScheduleDateTime", map);
 	}

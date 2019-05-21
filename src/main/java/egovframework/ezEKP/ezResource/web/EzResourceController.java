@@ -395,6 +395,7 @@ public class EzResourceController extends EgovFileMngUtil {
 							resultXML += "<gubunFlag>"+orderXML.getElementsByTagName("gubunFlag").item(i).getTextContent()+"</gubunFlag>";
 							resultXML += "<importance>"+orderXML.getElementsByTagName("importance").item(i).getTextContent()+"</importance>";
 							resultXML += "<approveFlag>"+orderXML.getElementsByTagName("approveFlag").item(i).getTextContent()+"</approveFlag>";
+							resultXML += "<returnFlag>"+orderXML.getElementsByTagName("returnFlag").item(i).getTextContent()+"</returnFlag>";
 							resultXML += "<owner_nm>"+orderXML.getElementsByTagName("owner_nm").item(i).getTextContent()+"</owner_nm>";
 							resultXML += "<dept_name>"+"<![CDATA["+ orderXML.getElementsByTagName("dept_name").item(i).getTextContent()+"]]></dept_name>";
 							resultXML += "<writeDay>"+orderXML.getElementsByTagName("writeDay").item(i).getTextContent()+"</writeDay>";
@@ -479,6 +480,7 @@ public class EzResourceController extends EgovFileMngUtil {
 						resultXML1 += "<gubunFlag>"+tempXML.getElementsByTagName("gubunFlag").item(i).getTextContent()+"</gubunFlag>";
 						resultXML1 += "<importance>"+tempXML.getElementsByTagName("importance").item(i).getTextContent()+"</importance>";
 						resultXML1 += "<approveFlag>"+tempXML.getElementsByTagName("approveFlag").item(i).getTextContent()+"</approveFlag>";
+						resultXML1 += "<returnFlag>"+tempXML.getElementsByTagName("returnFlag").item(i).getTextContent()+"</returnFlag>";
 						resultXML1 += "<owner_nm>"+tempXML.getElementsByTagName("owner_nm").item(i).getTextContent()+"</owner_nm>";
 						resultXML1 += "<dept_name>"+"<![CDATA[" +tempXML.getElementsByTagName("dept_name").item(i).getTextContent()+"]]></dept_name>";
 						resultXML1 += "<writeDay>"+tempXML.getElementsByTagName("writeDay").item(i).getTextContent()+"</writeDay>";
@@ -1280,6 +1282,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		String startDateTimeRepeat = "";
 		String endDateTimeRepeat = "";
 		String deptID = "";
+		String brdReturnFlag = "";
+		String returnFlag = "";
 		
 		if (req.getParameter("ownerID") != null) {
 			resID = req.getParameter("ownerID");
@@ -1364,6 +1368,7 @@ public class EzResourceController extends EgovFileMngUtil {
 			entryList = getSchedule.getEntryList();
 			allDay = getSchedule.getAllDay();
 			saveApproveFlag = getSchedule.getApproveFlag();
+			returnFlag = getSchedule.getReturnFlag();
 			
 			ResGetScheduleRepetitionVO repDateTimes = ezResourceService.getRepDateTimes(orgOwnerID, userInfo.getCompanyID(), Integer.parseInt(orgNum), userInfo.getTenantId());
 			if (repDateTimes != null) {
@@ -1401,6 +1406,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		} else { 
 			brdName = resBrdVO.getBrdNm2();
 		}
+		
+		brdReturnFlag = resBrdVO.getReturnFlag();
 		
 		// 2019-01-15 김민성 - 자원관리 - 자원관리 예약 시간 조회 12시간->24시간제로 변경
 		//startDateTime = EgovDateUtil.convertDate(startDateTime, "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd hh:mm:ss", "");
@@ -1441,6 +1448,8 @@ public class EzResourceController extends EgovFileMngUtil {
 		model.addAttribute("endDateVal", endDateVal);
 		model.addAttribute("typeVal", typeVal);
 		model.addAttribute("saveApproveFlag", saveApproveFlag);
+		model.addAttribute("resReturnFlag", brdReturnFlag);
+		model.addAttribute("returnFlag", returnFlag);
 		model.addAttribute("entryList", entryList);
 		model.addAttribute("checkSDT", checkSDT);
 		model.addAttribute("checkEDT", checkEDT);
@@ -2122,6 +2131,29 @@ public class EzResourceController extends EgovFileMngUtil {
 			String approve = dom.getElementsByTagName("APPROVE").item(0).getTextContent();
 			
 			ezResourceService.updateSchedule(Integer.parseInt(num), resID, companyID, approve, userInfo.getTenantId());
+			
+			return "True";
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "False";
+		}
+	}
+	
+	/**
+	 * 자원관리 자원사용 반납Flag 저장 실행 함수
+	 */
+	@RequestMapping(value = "/ezResource/updateReturnFlag.do", produces="text/xml;charset=utf-8")
+	@ResponseBody
+	public String updateReturnFlag(@RequestBody String xmlStr, LoginVO userInfo, @CookieValue("loginCookie") String loginCookie) throws Exception {
+		userInfo = commonUtil.userInfo(loginCookie);
+		Document dom = commonUtil.convertStringToDocument(xmlStr);
+		try {
+			String companyID = dom.getElementsByTagName("COMPANYID").item(0).getTextContent();
+			String resID = dom.getElementsByTagName("RESID").item(0).getTextContent();
+			String num = dom.getElementsByTagName("NUM").item(0).getTextContent();
+			String returnFlag = dom.getElementsByTagName("RETURN").item(0).getTextContent();
+			
+			ezResourceService.updateSchedule2(Integer.parseInt(num), resID, companyID, returnFlag, userInfo.getTenantId());
 			
 			return "True";
 		} catch (Exception e) {

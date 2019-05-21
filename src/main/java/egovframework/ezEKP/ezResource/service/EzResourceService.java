@@ -77,6 +77,8 @@ public interface EzResourceService {
 	
 	public void updateSchedule(int num, String ownerID, String companyID, String approve, int tenantID) throws Exception;
 	
+	public void updateSchedule2(int num, String ownerID, String companyID, String returnFlag, int tenantID) throws Exception;
+	
 	public void delFormID(String delCode, int tenantID) throws Exception;
 	
 	public String getDeptID(String writerID, String deptNm, int tenantID, String companyID) throws Exception;

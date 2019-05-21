@@ -60,8 +60,9 @@
 		<result property="attachFlag"			column="ATTACHFLAG"			    columnIndex="17"/>
 		<result property="characterID"			column="CHARACTERID"			columnIndex="18"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
-		<result property="ownerNm"				column="OWNERNM"				columnIndex="20"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="21"/>
+		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="20"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO"            id="resGetScheduleListMainVO">
@@ -84,9 +85,10 @@
 		<result property="attachFlag"			column="ATTACHFLAG"			    columnIndex="17"/>
 		<result property="characterID"			column="CHARACTERID"			columnIndex="18"		nullValue="0"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="19"/>
-		<result property="ownerNm"				column="OWNERNM"				columnIndex="20"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="21"/>
-		<result property="companyID"			column="COMPANYID"			    columnIndex="22"/>
+		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="20"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
+		<result property="companyID"			column="COMPANYID"			    columnIndex="23"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleRepetitionVO" 	id="resGetRepDateTimesVO">
@@ -179,7 +181,8 @@
 		<result property="attachFlag"			column="ATTACHFLAG"			    columnIndex="22"/>
 		<result property="publicFlag"			column="PUBLICFLAG"				columnIndex="23"		nullValue=""/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="24"/>
-		<result property="scheduleID"			column="SCHEDULEID"			    columnIndex="25"		nullValue=""/>
+		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="25"/>
+		<result property="scheduleID"			column="SCHEDULEID"			    columnIndex="26"		nullValue=""/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleRepetitionVO" 	 id="resGetScheduleRepetitionVO">
@@ -225,8 +228,9 @@
 		<result property="attachFlag"			column="ATTACHFLAG"			    columnIndex="18"/>
 		<result property="characterID"			column="CHARACTERID"			columnIndex="19"/>
 		<result property="approveFlag"			column="APPROVEFLAG"			columnIndex="20"/>
-		<result property="ownerNm"				column="OWNERNM"				columnIndex="21"/>
-		<result property="deptNm"				column="DEPTNM"					columnIndex="22"/>
+		<result property="returnFlag"			column="RETURNFLAG"			columnIndex="21"/>
+		<result property="ownerNm"				column="OWNERNM"				columnIndex="22"/>
+		<result property="deptNm"				column="DEPTNM"					columnIndex="23"/>
 	</resultMap>
 	
 	<resultMap class="ResGetScheduleVO" 		    id="resGetRepResourceVO">
@@ -615,6 +619,7 @@
                 ATTACHFLAG ,
                 CHARACTERID ,
                 APPROVEFLAG ,
+                RETURNFLAG,
                 OWNERNM  ,
                 DEPTNM  
            	FROM 
@@ -694,6 +699,7 @@
             	ATTACHFLAG ,
             	CHARACTERID ,
             	SCH.APPROVEFLAG ,
+            	SCH.RETURNFLAG,
             	SCH.OWNERNM ,
             	DEPTNM ,
             	SCH.COMPANYID 
@@ -806,6 +812,7 @@
              	ATTACHFLAG ,
              	CHARACTERID ,
              	SCH.ApproveFlag ,
+             	SCH.returnFlag ,
              	SCH.ownerNM ,
              	DEPTNM ,
              	SCH.companyID 
@@ -1122,6 +1129,23 @@
      			TENANT_ID = #tenantID#	
 		]]>
 	</update>
+	
+	<update id="EzResourceDAO.updateSchedule2" parameterClass="Map">
+		<![CDATA[
+			UPDATE 
+				TBL_RS_SCHEDULE
+      		SET
+      			RETURNFLAG = #v_PRETURN#
+    		WHERE  
+    			COMPANYID = #v_PCOMPANYID#
+     		AND 
+     			OWNERID = #v_POWNERID#
+     		AND 
+     			NUM = #v_PNUM#
+     		AND
+     			TENANT_ID = #tenantID#	
+		]]>
+	</update>
 
 	<update id="EzResourceDAO.updateScheduleDateTime" parameterClass="Map">
 		<![CDATA[
@@ -1194,6 +1218,7 @@
 				A.ATTACHFLAG, 
 				A.PUBLICFLAG, 
 				A.APPROVEFLAG, 
+				A.RETURNFLAG,
 				A.SCHEDULEID, 
 				A.TENANT_ID
       		FROM
@@ -1257,6 +1282,7 @@
 				ATTACHFLAG, 
 				PUBLICFLAG, 
 				APPROVEFLAG, 
+				RETURNFLAG,
 				SCHEDULEID, 
 				TENANT_ID 
         	FROM

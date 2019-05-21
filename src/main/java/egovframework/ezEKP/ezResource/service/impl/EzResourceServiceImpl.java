@@ -808,6 +808,17 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 		ezResourceDAO.updateSchedule(map);
 	}
 	
+	@Override
+	public void updateSchedule2(int num, String ownerID, String companyID, String returnFlag, int tenantID) throws Exception {
+		Map<String,Object> map = new HashMap<String, Object>();
+		map.put("v_PNUM", num);
+		map.put("v_POWNERID", ownerID);
+		map.put("v_PCOMPANYID", companyID);
+		map.put("v_PRETURN", returnFlag);
+		map.put("tenantID", tenantID);
+		ezResourceDAO.updateSchedule2(map);
+	}
+	
 	public void modifyResSch(String ownerID, String num, String pNum, String companyID, String writerID, String title, String location, String timeDisplay, String startDate, String endDate,
 			String allDay, String alertTime, String content, String importance, String reFlag, String gresFlag, String entryList, String characterID, String attachFlag, String typeVal,
 			String approve, int tenantID, String offset) throws Exception {
@@ -1120,6 +1131,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<gubunFlag>"+ gubun +"</gubunFlag>");
 				returnStr.append("<importance>"+ scheRSDom.getElementsByTagName("importance").item(i).getTextContent() +"</importance>");
 				returnStr.append("<approveFlag>"+ scheRSDom.getElementsByTagName("approveFlag").item(i).getTextContent() +"</approveFlag>");
+				returnStr.append("<returnFlag>"+ scheRSDom.getElementsByTagName("returnFlag").item(i).getTextContent() +"</returnFlag>");
 				returnStr.append("<owner_nm><![CDATA[" + scheRSDom.getElementsByTagName("owner_nm").item(i).getTextContent() + "]]></owner_nm>");
 				returnStr.append("<dept_name><![CDATA[" + scheRSDom.getElementsByTagName("dept_name").item(i).getTextContent() + "]]></dept_name>");
 				returnStr.append("<writeDay>"+ writeDay +"</writeDay>");
@@ -1390,6 +1402,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 						temp.setAttachFlag(getScheduleListRept.get(i).getAttachFlag());
 						temp.setCharacterID(getScheduleListRept.get(i).getCharacterID());
 						temp.setApproveFlag(getScheduleListRept.get(i).getApproveFlag());
+						temp.setReturnFlag(getScheduleListRept.get(i).getReturnFlag());
 						temp.setOwnerNm(getScheduleListRept.get(i).getOwnerNm());
 						temp.setDeptNm(getScheduleListRept.get(i).getDeptNm());
 						/*temp.setOwnerNm2(getScheduleListRept.get(i).getOwnerNm2());
@@ -1467,6 +1480,7 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				returnStr.append("<attachFlag>" + returnDom1.getElementsByTagName("ATTACHFLAG").item(m).getTextContent() + "</attachFlag>");
 				returnStr.append("<characterID>" + returnDom1.getElementsByTagName("CHARACTERID").item(m).getTextContent() + "</characterID>");
 				returnStr.append("<approveFlag>" + returnDom1.getElementsByTagName("APPROVEFLAG").item(m).getTextContent() + "</approveFlag>");
+				returnStr.append("<returnFlag>" + returnDom1.getElementsByTagName("RETURNFLAG").item(m).getTextContent() + "</returnFlag>");
 				returnStr.append("<owner_nm><![CDATA[" + returnDom1.getElementsByTagName("OWNERNM").item(m).getTextContent() + "]]></owner_nm>");
 				returnStr.append("<dept_name><![CDATA[" + returnDom1.getElementsByTagName("DEPTNM").item(m).getTextContent() + "]]></dept_name>");
 				
@@ -4125,27 +4139,31 @@ public class EzResourceServiceImpl extends EgovAbstractServiceImpl implements Ez
 				List<String> addJobDeptIds = new ArrayList<String>();
 				Collections.addAll(addJobDeptIds, addJobDeptPath.split(","));
 				addJobDeptIds.remove(0);				// companyID 삭제
-				Collections.reverse(addJobDeptIds);
 				
-				map.put("deptID", addJobDeptIds.get(0));
-				
-				String result2 = ezResourceDAO.userResPermissionCheck(map);	
-				
-				if(result2.equals("1")) {
-					return result2;
-				}
-				
-				addJobDeptIds.remove(0);			// deptID 삭제
-
-				String newDeptPath2 = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+				if(addJobDeptIds.size() > 0) {
+					Collections.reverse(addJobDeptIds);
+					map.put("deptID", addJobDeptIds.get(0));
 					
-				map.put("v_PUSERID", newDeptPath2);
-				List<ResGetClsAclListVO> deptAclList2 = ezResourceDAO.getDeptAcl(map);
-				
-				if(deptAclList2.size() > 0) {
-					for(int j=0; j<deptAclList.size(); j++) {
-						if(deptAclList2.get(j).getSdaYn().equals("Y")) {
-							return "1";
+					String result2 = ezResourceDAO.userResPermissionCheck(map);	
+					
+					if(result2.equals("1")) {
+						return result2;
+					}
+					
+					addJobDeptIds.remove(0);			// deptID 삭제
+	
+					if(addJobDeptIds.size() > 0) {
+						String newDeptPath2 = "'" + String.join(",", addJobDeptIds).trim().replace(",", "', '") + "'";
+							
+						map.put("v_PUSERID", newDeptPath2);
+						List<ResGetClsAclListVO> deptAclList2 = ezResourceDAO.getDeptAcl(map);
+						
+						if(deptAclList2.size() > 0) {
+							for(int j=0; j<deptAclList.size(); j++) {
+								if(deptAclList2.get(j).getSdaYn().equals("Y")) {
+									return "1";
+								}
+							}
 						}
 					}
 				}
