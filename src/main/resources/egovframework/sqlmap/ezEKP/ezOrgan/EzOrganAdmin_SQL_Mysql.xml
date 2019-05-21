@@ -21,6 +21,7 @@
 		<result property="title1" 								column="T1" 							columnIndex="8"/>		
 		<result property="title2" 								column="T2" 							columnIndex="9"/>		
 		<result property="jobID" 								column="JOBID" 							columnIndex="10"/>
+		<result property="physicalDeliveryOfficeName" 			column="physicaldeliveryofficename" 	columnIndex="11"/>
 	</resultMap>
 	
 	<resultMap id="permissionList" class="OrganUserVO">
@@ -2926,6 +2927,7 @@
 				A.CN ,
              	A.DEPTID ,
              	A.POSITIONCD ,
+             	C.physicalDeliveryOfficeName,
              	CASE
              		#v_LANGDATA#
                 WHEN
