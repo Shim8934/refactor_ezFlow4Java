@@ -114,25 +114,11 @@
 		            return true;
 		    };
 		    function checkBujaeInfo() {
-// 		    	if (pListTypeValue == "10") {
-// 		    		checkBujaeInfo_Complete(true);
-// 		    		return;
-// 	            }
-		         var BString = "${buJaeInfo}";
-		        $.ajax({
-		    		type : "POST",
-		    		dataType : "text",
-		    		async : false,
-		    		url : "/ezPersonal/saveBujae.do",
-		    		data : {
-		    				buJae  : bujaeVal,
-		    				proxy  : ""
-		    				},
-		    		success: function(xml){
-		    			result = xml;
-		    		}        			
-		    	});
-		        
+//		    	if (pListTypeValue == "10") {
+//		    		checkBujaeInfo_Complete(true);
+//		    		return;
+//	            }
+		        var BString = "${buJaeInfo}";
 		        
 		        if (BString != "") {
 		            var BDim = new Array("");
