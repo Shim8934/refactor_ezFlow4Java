@@ -1482,14 +1482,16 @@ function checkAndActionBigMemo(memoId, color) {
 
 // 메모 focus 이벤트
 function memoFocusEvent(thisEl) {
+	autoSaveStop();				// 자동 저장 기능 중지
+	// 변수에 메모 id와 내용 저장
+	beforeMemoId = thisEl.getAttribute('memoid') ? thisEl.getAttribute('memoid') : thisEl.getAttribute('bigmemoid');
 	beforeMemo = thisEl.value;
-	autoSaveStart(thisEl);
+	
+	autoSaveStart(thisEl);		// 자동 저장 시작
 }
 
 //일정 시간마다 자동 저장
 function autoSaveStart(param) {
-	autoSaveStop();
-	
 	memoInter = setInterval(function() {
 		//console.log('저장?');
 		var resultObj = compareContents(param);
@@ -1544,9 +1546,10 @@ function draggableTrue() {
 
 /*
 memoBoard에서 실행할 함수 
-portal 페이지의 beforeMemo 변수에 파라미터로 넘어온 값 세팅
+portal 페이지의 beforeMemo, beforeMemoId 변수에 파라미터로 넘어온 값 세팅
 */
-function setBeforeMemo(paramBefore) {
-	beforeMemo = paramBefore;
+function setBeforeMemo(beforeContent, beforeId) {
+	beforeMemoId = beforeId;
+	beforeMemo = beforeContent;
 }
 

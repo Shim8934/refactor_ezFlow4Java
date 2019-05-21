@@ -53,6 +53,7 @@
 		var checkOpt="off";
 		var configView = "<c:out value='${configView}' />";
 		
+		var beforeMemoId;
 		var beforeMemo;
     	var memoInter;
 		var memoClickTimer = 0;

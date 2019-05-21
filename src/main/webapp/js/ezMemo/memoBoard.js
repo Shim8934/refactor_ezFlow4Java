@@ -566,14 +566,16 @@ function checkAndActionBigMemo(memoId, color) {
 
 //메모 focus 이벤트
 function memoFocusEvent(thisEl) {
+	autoSaveStop();				// 자동 저장 기능 중지
+	
+	beforeMemoId = thisEl.getAttribute('memoid');
 	beforeMemo = thisEl.value;
-	autoSaveStart(thisEl);
+	
+	autoSaveStart(thisEl);		// 자동 저장 시작
 }
 
 //일정 시간마다 자동 저장
 function autoSaveStart(param) {
-	autoSaveStop();
-	
 	memoInter = setInterval(function() {
 		//console.log('저장?');
 		var resultObj = compareContents(param);

@@ -61,6 +61,7 @@
 	    	var memoFlag = "<c:out value='${useMemo}' />";
 	    	var useMemoContextMenu = false;
 	    	
+	    	var beforeMemoId;
 	    	var beforeMemo;
 	    	var memoInter;
 	    	var memoClickTimer = 0;
