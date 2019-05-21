@@ -2954,9 +2954,10 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 				int workingMonthCnt = Integer.parseInt((String)m.get("workingMonthCnt"));
 				
 				if (workingMonthCnt < 12) {
-				
+					SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
+					String year = sdf2.format(new Date());
 					String date1 = (String)m.get("joinDate");
-					String date2 = (String)map.get("initialDate");
+					String date2 = year + "-" + ((String)map.get("initialDate")).substring(((String)map.get("initialDate")).indexOf("-") + 1);
 					String roundOffRule = (String)map.get("roundOffRule");
 					
 					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
