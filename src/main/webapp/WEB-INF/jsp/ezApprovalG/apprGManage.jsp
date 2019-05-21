@@ -271,7 +271,8 @@
 		    		url : "/ezPersonal/saveBujae.do",
 		    		data : {
 		    				buJae  : bujaeVal,
-		    				proxy  : ""
+		    				proxy  : "",
+		    				dept : arr_userinfo[4]
 		    				},
 		    		success: function(xml){
 		    			result = xml;
@@ -280,6 +281,7 @@
 		        
 		        bujaeVal = arr_userinfo[7];
 		        arr_userinfo[7] = "";
+		        window.location.reload();
 		    }
 		
 		    $(function () {

@@ -236,9 +236,13 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				
 				mailFolderList.add(folder);
 			}
+			
+			int totalUnreadCount = ezEmailService.getTotalUnreadCount(userId, info.getTenantId());
+			
 			JSONObject data = new JSONObject();
 			data.put("mailFolderList", mailFolderList);
 			data.put("useSharedMailbox", useSharedMailbox);
+			data.put("totalUnreadCount", totalUnreadCount);
 			
 			result.put("status", "ok");
 			result.put("code", 0);			
@@ -290,6 +294,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				String shareName = sharedMailBoxList.get(i).get("shareName");
 				String mail = sharedMailBoxList.get(i).get("mail");
 				String compId = sharedMailBoxList.get(i).get("compId");
+				String totalUnreadCount = sharedMailBoxList.get(i).get("totalUnreadCount");
 				String userEmail = shareId + "@" + domainName;
 				String password = jspw;
 
@@ -346,6 +351,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(MEmailGWController.
 				shareMailInfo.put("shareName", shareName);
 				shareMailInfo.put("mail", mail);
 				shareMailInfo.put("compId", compId);
+				shareMailInfo.put("totalUnreadCount", totalUnreadCount);
 				shareMailInfoList.add(shareMailInfo);
 			}
 			data.put("shareMailInfoList", shareMailInfoList);
