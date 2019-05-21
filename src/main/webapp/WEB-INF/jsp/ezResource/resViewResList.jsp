@@ -547,12 +547,23 @@
 	  					<tr>
 	    					<td style="padding:0;"><input type="checkbox" name="chk" id="chk" value="${list.brdID}" ownerid="${list.ownerID}"></td>
 							<td ondblclick="Item_View('${list.brdID}');"	style="cursor: pointer; word-wrap:break-word;" align="left">
-								<c:if test="${list.approveFlag eq 0}">
+								<c:choose>
+									<c:when test="${list.approveFlag eq 0}">
+										<span class="sub_iconLNB tree_resource_standard" style="margin-top: 0px;"></span>
+									</c:when>
+									<c:when test="${list.approveFlag eq 1}">
+										<span class="sub_iconLNB tree_resource_ok" style="margin-top: 0px;"></span>
+									</c:when>
+									<c:otherwise>
+										<span class="sub_iconLNB tree_resource_unused" style="margin-top: 0px;"></span>
+									</c:otherwise>
+								</c:choose>
+								<%-- <c:if test="${list.approveFlag eq 0}">
 									<span class="sub_iconLNB tree_resource_standard" style="margin-top: 0px;"></span>
 								</c:if>
 								<c:if test="${list.approveFlag eq 1}">
 									<span class="sub_iconLNB tree_resource_ok" style="margin-top: 0px;"></span>
-								</c:if>
+								</c:if> --%>
 								<c:out value='${list.brdNm}' />
 							</td>
 							<%-- <td id="OwnDeptID" value="${list.ownDeptNm}" style="word-wrap:break-word;"><nobr>${list.ownDeptNm}</nobr> </td> --%>
