@@ -418,10 +418,8 @@ function compareContents(param) {
 	var resultObj = {};
 	// 포커스 들어간 메모가 작은 메모인가 큰 메모인가 확인 후 메모 id 획득
 	var thisMemoId = param.getAttribute('memoid') ? param.getAttribute('memoid') : param.getAttribute('bigmemoid');
-	
-	console.log('비교할 id', beforeMemoId, ', ', thisMemoId);
-	console.log('비교할 내용', beforeMemo, ', ', param.value);
-	
+	//console.log('비교할 id', beforeMemoId, ', ', thisMemoId);
+	//console.log('비교할 내용', beforeMemo, ', ', param.value);
 	// 메모의 id는 같고 내용이 다를 때 내용 수정 허용
 	if (beforeMemoId === thisMemoId && beforeMemo != param.value) {
 		resultObj.result = 'ok';
