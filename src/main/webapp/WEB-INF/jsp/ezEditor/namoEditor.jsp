@@ -457,10 +457,16 @@
 	        	uploadUrl += "&letterBoxNo=" + letterBoxNo + "&letterId=" + letterId;
 	        }
 	       	
+	        var fontList = "<spring:message code='main.t0620' />".split(";");
+	        var fontListObject = {};
+	        for (var i = 0; i < fontList.length; i++) {
+	        	fontListObject[fontList[i]] = fontList[i];
+	        }
+	        
 	        CrossEditor.params.UploadFileExecutePath = uploadUrl;
 			CrossEditor.params.FullScreen = true;
 	        CrossEditor.params.PutStyleInBody = true;
-	        CrossEditor.params.Font = "<spring:message code='main.t0620' />".split(";");
+	        CrossEditor.params.Font = fontListObject;
 	        CrossEditor.params.ParagraphTagStyle = {"font-size":defaultFontSize, "font-family":defaultFontFamily};
 	        
 	        if (useHTMLMode == "NO") {
