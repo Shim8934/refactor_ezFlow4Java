@@ -249,7 +249,7 @@
 		     			}
 		     			// memoPrevent = false;
 		     		}, memoDelay);
-		     	}).on('dblclick', '.memoText', function (event, ui) {	// 더블 클릭 -> 큰 메모 열기
+		     	}).on('dblclick', '.memoText', function (event, ui) {		// 더블 클릭 -> 큰 메모 열기
 		     		var memoId = $(this).attr("memoid");
 		     		
 		     		clearTimeout(memoClickTimer);
