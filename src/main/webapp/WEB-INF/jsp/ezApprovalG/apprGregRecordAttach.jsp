@@ -100,7 +100,7 @@
                     }
                 }
                 if (DelFlag) {
-					UpdateAttachHistory(tempSN, "002");
+					UpdateAttachHistory(tempSN, strModifyFlag2);
                 }
             }
         } else {
@@ -119,13 +119,13 @@
                 }
                 if (AddFlag) {
                     if (FirstData[i].getAttribute("DATA11") == "Y") {
-						UpdateAttachHistory(tempSN, "004");
+						UpdateAttachHistory(tempSN, strModifyFlag4);
                     } else {
-						UpdateAttachHistory(tempSN, "001");
+						UpdateAttachHistory(tempSN, strModifyFlag1);
                     }
                 } else {
                     if (FirstData[i].getAttribute("DATA12") == "EDITED") {
-						UpdateAttachHistory(tempSN, "003");
+						UpdateAttachHistory(tempSN, strModifyFlag3);
                     }
                 }
             }
