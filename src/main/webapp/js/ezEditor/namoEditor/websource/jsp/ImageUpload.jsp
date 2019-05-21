@@ -71,6 +71,29 @@ private String getFileSuffix(final String path) {
 		}
 	}
 	*/
+
+	boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+	DiskFileItemFactory factory = null;
+	ServletFileUpload upload = null;
+	List items = null;
+	try {
+		
+		if (isMultipart) {
+			factory = new DiskFileItemFactory();                             
+			factory.setSizeThreshold(2 * 1024 * 1024); 
+			upload = new ServletFileUpload(factory);  
+			upload.setSizeMax(-1); 
+			upload.setHeaderEncoding("utf-8");
+			items = upload.parseRequest(request);       
+		}else{
+			response.getWriter().println("not encoding type multipart/form-data");
+		}
+
+    } catch (RuntimeException e) {
+		response.getWriter().println("not encoding type multipart/form-data");
+		return;
+	}
+
 	String messageText = "";
 	int maxSize = 5242880;
 	if(request.getParameter("imageSizeLimit") != null){
@@ -250,8 +273,9 @@ private String getFileSuffix(final String path) {
 	}
 	imagePhysicalPathsubFolder += "upload" + File.separator;
 	File DeleteTempFolder = null;
+
+	try{
 	
-	try {
 		String tempFileFolder = "";
 
 		if (uploadFileSubDir.equalsIgnoreCase("false") && !imageUPath.equalsIgnoreCase(""))
@@ -259,16 +283,16 @@ private String getFileSuffix(final String path) {
 		else
 			tempFileFolder = imagePhysicalPath;
 					
-		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+		//boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 		if (isMultipart) {
 			String realDir = imagePhysicalPathsubFolder;
-			DiskFileItemFactory factory = new DiskFileItemFactory();                                   
-			factory.setSizeThreshold(2 * 1024 * 1024);   
-			ServletFileUpload upload = new ServletFileUpload(factory);                               
-			upload.setSizeMax(-1); 
-			upload.setHeaderEncoding("utf-8");
-			List items = upload.parseRequest(request);       
-			//Iterator iter=items.iterator();                                                                            
+			//DiskFileItemFactory factory = new DiskFileItemFactory();                                   
+			//factory.setSizeThreshold(2 * 1024 * 1024);   
+			//ServletFileUpload upload = new ServletFileUpload(factory);                               
+			//upload.setSizeMax(-1); 
+			//upload.setHeaderEncoding("utf-8");
+			//List items = upload.parseRequest(request);       
+			Iterator iter=items.iterator();                                                                            
 
 			
 			String imageMaxCount = "";

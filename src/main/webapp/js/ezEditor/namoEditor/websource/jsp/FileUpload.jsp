@@ -22,6 +22,29 @@
 		}
 	}
 	*/
+
+	boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+	DiskFileItemFactory factory = null;
+	ServletFileUpload upload = null;
+	List items = null;
+	try {
+		
+		if (isMultipart) {
+			factory = new DiskFileItemFactory();                             
+			factory.setSizeThreshold(2 * 1024 * 1024); 
+			upload = new ServletFileUpload(factory);  
+			upload.setSizeMax(-1); 
+			upload.setHeaderEncoding("utf-8");
+			items = upload.parseRequest(request);       
+		}else{
+			response.getWriter().println("not encoding type multipart/form-data");
+		}
+
+    } catch (RuntimeException e) {
+		response.getWriter().println("not encoding type multipart/form-data");
+		return;
+	}
+
 	String messageText = "";
 	int maxSize = Integer.parseInt(detectXSSEx(request.getParameter("fileSizeLimit")));
 	String defaultUPath = detectXSSEx(request.getParameter("defaultUPath"));
@@ -188,15 +211,15 @@
 		else
 			tempFileFolder = imagePhysicalPath;
 					
-		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+		//boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 		if (isMultipart) {
 			String realDir = filePhysicalPathsubFolder;
-			DiskFileItemFactory factory = new DiskFileItemFactory();                                   
-			factory.setSizeThreshold(2 * 1024 * 1024); 
-			ServletFileUpload upload = new ServletFileUpload(factory);                               
-			upload.setSizeMax(-1); 
-			upload.setHeaderEncoding("utf-8");
-			List items = upload.parseRequest(request);       
+			//DiskFileItemFactory factory = new DiskFileItemFactory();                                   
+			//factory.setSizeThreshold(2 * 1024 * 1024); 
+			//ServletFileUpload upload = new ServletFileUpload(factory);                               
+			//upload.setSizeMax(-1); 
+			//upload.setHeaderEncoding("utf-8");
+			//List items = upload.parseRequest(request);       
 			Iterator iter=items.iterator();                                                                            
 
 			
