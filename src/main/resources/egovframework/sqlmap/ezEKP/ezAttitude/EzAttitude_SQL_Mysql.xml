@@ -2124,7 +2124,7 @@
 			FROM
 				TBL_ATTITUDE
 			WHERE 
-				TYPE_ID IN ('A05','A12','A13')
+				TYPE_ID IN ('A11','A12','A13')
 			AND 
 				WRITER_ID = #userId#
 			AND
