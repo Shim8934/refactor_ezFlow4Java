@@ -28,6 +28,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
 import egovframework.com.cmm.EgovMessageSource;
+import egovframework.ezEKP.ezApprovalG.service.EzApprovalGService;
 import egovframework.ezEKP.ezAttitude.dao.EzAttitudeDAO;
 import egovframework.ezEKP.ezAttitude.service.EzAttitudeService;
 import egovframework.ezEKP.ezAttitude.util.ExcelCellRef;
@@ -45,6 +46,7 @@ import egovframework.ezEKP.ezAttitude.vo.AttitudeVO;
 import egovframework.ezEKP.ezAttitude.vo.DeptViewVO;
 import egovframework.ezEKP.ezAttitude.vo.HolidayVO;
 import egovframework.ezEKP.ezAttitude.vo.ModApplHistoryVO;
+import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezOrgan.dao.EzOrganDAO;
 import egovframework.ezEKP.ezOrgan.service.EzOrganService;
@@ -64,6 +66,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	private CommonUtil commonUtil;
 	
 	@Autowired
+	private EzCommonService ezCommonService;
+	
+	@Autowired
 	private EzOrganService ezOrganService;
 	
 	@Autowired
@@ -71,6 +76,9 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	
 	@Autowired
 	private EzPersonalService ezPersonalService;
+	
+	@Autowired
+	private EzApprovalGService ezApprovalGService;
 	
 	@Autowired
 	private EzAttitudeDAO ezAttitudeDAO;
@@ -3441,20 +3449,36 @@ public class EzAttitudeServiceImpl implements EzAttitudeService{
 	}
 
 	@Override
-	public int deleteApprovalGConnInfo(String userId, String docId,	String companyId, int tenantId) throws Exception {
+	public int deleteApprovalGConnInfo(String userId, String type, String docId, String companyId, int tenantId) throws Exception {
 		Map<String, Object> map = new HashMap<String, Object>();
 		map.put("userId", userId);
 		map.put("docId", docId);
 		map.put("companyId", companyId);
 		map.put("tenantId", tenantId);
 		
-		//docId가지고 있는 attitudeId를 받아온다.
-		List<String> attitudeIdList = ezAttitudeDAO.getApprovalGConnAttitudeList(map);
-		if (attitudeIdList != null) {
-			for (int i = 0; i < attitudeIdList.size(); i++) {
-				map.put("attitudeId", attitudeIdList.get(i));
-				ezAttitudeDAO.deleteAttitude(map);		
-			}			
+		boolean isContinue = true;
+		if (type.equals("hesong")) {
+			isContinue = false;
+			String hesongType = "";
+			String approvalFlag = ezCommonService.getTenantConfig("ApprovalFlag", tenantId);
+			
+			if (!approvalFlag.equals("G")) {
+				hesongType = ezApprovalGService.getCode2Name("SA25", "001", companyId, "1", tenantId);				
+				if (hesongType.equals("2")) {//기안자한테 돌아가는 경우
+					isContinue = true;
+				}
+			}
+		}
+		
+		if (isContinue) {			
+			//docId가지고 있는 attitudeId를 받아온다.
+			List<String> attitudeIdList = ezAttitudeDAO.getApprovalGConnAttitudeList(map);
+			if (attitudeIdList != null) {
+				for (int i = 0; i < attitudeIdList.size(); i++) {
+					map.put("attitudeId", attitudeIdList.get(i));
+					ezAttitudeDAO.deleteAttitude(map);		
+				}			
+			}
 		}
 		return 0;
 	}

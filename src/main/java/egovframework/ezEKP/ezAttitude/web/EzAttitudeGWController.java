@@ -2918,7 +2918,7 @@ public class EzAttitudeGWController {
 		return result;
 	}
 	/**
-	 * G/W 근태관리 [PUT] 전자결재 연동 (휴가계 기안시 해당 휴가 근태 등록)
+	 * G/W 근태관리 [PUT] 전자결재 연동 (수신부서 완료시 결재상태 1로 변경)
 	 */
 	@RequestMapping(value = "/rest/ezattitude/users/{userId}/approvalconn", method = RequestMethod.PUT, produces = "application/json;charset=utf-8")
 	public JSONObject updateApprovalGConnInfo(@PathVariable String userId, HttpServletRequest request) {
@@ -2964,11 +2964,12 @@ public class EzAttitudeGWController {
 		int status = 0;
 		
 		try{
+			String type = request.getParameter("type");
 			String docId = request.getParameter("docId");
 			String serverName = request.getHeader("x-user-host");
 			MCommonVO info = mOptionService.commonInfoWeb(serverName, userId);
 			
-			status = ezAttitudeService.deleteApprovalGConnInfo(userId, docId, info.getCompanyId(), info.getTenantId());
+			status = ezAttitudeService.deleteApprovalGConnInfo(userId, type, docId, info.getCompanyId(), info.getTenantId());
 			
 			if (status == 1) {
 				result.put("status", "ok");

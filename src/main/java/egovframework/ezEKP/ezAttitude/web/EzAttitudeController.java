@@ -4560,6 +4560,7 @@ public class EzAttitudeController {
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.PUT, entity, String.class);
 		} else {
 			builder = UriComponentsBuilder.fromHttpUrl(url)
+					.queryParam("type", (request.getParameter("type") == null ? "" : request.getParameter("type")))
 					.queryParam("docId", request.getParameter("docId"));
 			result = rest.exchange(builder.build().encode().toUri(), HttpMethod.DELETE, entity, String.class);	
 		}
