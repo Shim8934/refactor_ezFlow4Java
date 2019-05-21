@@ -132,5 +132,6 @@ public interface EzCommonService {
 
 	public void addMemoExtensionColumns() throws Exception;
 
+	public void addAddJobMasterProxy() throws Exception;
 }
 

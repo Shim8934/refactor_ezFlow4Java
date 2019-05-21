@@ -1571,4 +1571,9 @@ public class EzCommonServiceImpl extends EgovFileMngUtil implements EzCommonServ
 	public void addMemoExtensionColumns() throws Exception {
 		ezCommonDAO.addMemoExtensionColumns();
 	}
+	
+	@Override
+	public void addAddJobMasterProxy() throws Exception {
+		ezCommonDAO.addAddJobMasterOrderBy();
+	}
 }

@@ -158,6 +158,7 @@ public class EzOrganAdminController extends EgovFileMngUtil {
     	ezCommonService.addComCloseCompanyId();
     	ezCommonService.addWebfolderTotalLimit();
     	ezCommonService.addMemoExtensionColumns(); // 2019-05-14 이석화 - 큰 메모 기능 추가로 컬럼 추가
+    	ezCommonService.addAddJobMasterProxy();
     	
     	logger.debug("init ended.");
     }

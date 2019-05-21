@@ -264,7 +264,16 @@
 		    				buJaeId  : rtnValue.split(":")[0]
 		    				},
 		    		success: function(result){
-			            
+		    			$("select#deptList option").remove();
+		    			$("#AddJobDept").hide();
+		    			
+			            if (result.AddJobList.length > 1) {
+							$("#AddJobDept").show();
+							for (var i = 0; i < result.AddJobList.length; i++) {
+								$("#deptList").append("<option value='" + result.AddJobList[i].department + "'>" +
+										result.AddJobList[i].description);
+							}
+			            }
 		    			
 				        document.getElementById("TextName").value = result.textName;
 				        var startdate = result.startDate;
@@ -375,7 +384,7 @@
 		
 		        if (gIsAppoint != '2') {
 		        	/* document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>"*/
-		            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "") {
+		            if (document.getElementById("TextName").value != "" && document.getElementById("absentreason").value != "<spring:message code='ezPersonal.t35'/>") {
 		                alert("<spring:message code='ezPersonal.t36'/>");
 		                return;
 		            }
@@ -418,6 +427,10 @@
 		                pProxy = "";
 		        }
 		        
+		        var dept = "";
+		        try {
+			        dept = document.getElementById("deptList").value;
+		        } catch(e) {}   
 		        
 		        $.ajax({
 		    		type : "POST",
@@ -428,20 +441,21 @@
 		    				buJaeId : buJaeId,
 		    				proxyuserid : proxyuserid,
 		    				buJae  : pBujae,
-		    				proxy  : pProxy
+		    				proxy  : pProxy,
+		    				dept : dept
 		    				},
 		    		success: function(text){
 			            if (gIsAppoint == "1") {
 			                alert("<spring:message code='ezPersonal.t00002'/>"); // 대리 결재자 지정
-			                window.location.reload(true);
+// 			                window.location.reload(true);
 			            }
 			            else if (gIsAppoint == "2") {
 			                alert("<spring:message code='ezPersonal.t40'/>"); // 부재사유 설정
-			                window.location.reload(true);
+// 			                window.location.reload(true);
 			            }
 			            else if (gIsAppoint == "3") {
 			                alert("<spring:message code='ezPersonal.t41'/>"); // 설정 해제 
-			                window.location.reload(true);
+// 			                window.location.reload(true);
 			            }
 			            else if (gIsAppoint == "4") {
 			            	alert("<spring:message code='ezPersonal.t65'/>");// 아무것도 지정 않았을 때
@@ -474,6 +488,64 @@
 		            document.getElementById("TextName").value = "";
 		        }
 		    }
+		    
+		    function Sel_AddJobChange() {
+		        var dept = "";
+		        try {
+			        dept = document.getElementById("deptList").value;
+		        } catch(e) {}   
+		        
+		        $.ajax({
+		    		type : "POST",
+		    		dataType : "JSON",
+		    		async : false,
+		    		url : "/ezPersonal/manageAddJobBujaeG.do",
+		    		data : {
+		    					dept   : dept,
+		    					bujaeId : buJaeId
+		    				},
+		    		success: function(text){
+		  			  deptid = text.deptID;
+					  userid = text.userID;
+					  startdate = text.startDate;
+					  enddate = text.endDate;
+					  BReason = text.bReason;
+					  gIsAppoint = "1";
+					  gIsProxyUser = false;
+					  proxydeptid = text.proxyDeptID;
+					  proxyuserid = text.proxyUserID;
+					  proxystartdate = "";
+				      proxyenddate = "";
+				      Roll = text.userInfo.rollInfo;
+				      
+				      if (startdate == "" && enddate == "") {
+				            var nowDate = new Date();
+				
+				            $("#Sdatepicker").datepicker('setDate', nowDate);
+				            $("#Edatepicker").datepicker('setDate', nowDate);
+				
+				            idDatepicker_Temp = $("#Sdatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+				            D2_Temp = $("#Edatepicker").datepicker({ dateFormat: 'yy-mm-dd' }).val();
+				        }
+				        if (startdate != "") {
+				        	var nowDate = new Date(startdate.substring(0, 4), startdate.substring(5, 7)-1, startdate.substring(8, 10), startdate.substring(11, 13), startdate.substring(14, 15));
+				            var nowDate2 = new Date(enddate.substring(0, 4), enddate.substring(5, 7)-1, enddate.substring(8, 10), enddate.substring(11, 13), enddate.substring(14, 15));
+				            nowDate.setMonth(nowDate.getMonth());
+				            nowDate2.setMonth(nowDate2.getMonth());
+				            $("#Sdatepicker").datepicker('setDate', nowDate);
+				            $("#Edatepicker").datepicker('setDate', nowDate2);
+				            document.getElementById("absentreason").value = BReason;            
+				            $("#TextName").val(text.textName);     
+				            gIsAppoint = "1";
+				            Sel_Change();
+				        }
+				        
+				        if (proxystartdate != "") {
+				            gIsProxyUser = true;
+				        }
+		    		}
+		        });
+		    }
 		</script>
 	</head>
 	<body class="mainbody" marginwidth="0" marginheight="0">
@@ -499,7 +571,13 @@
 						&nbsp;<a class="imgbtn imgbck" style="vertical-align:middle"><span onclick="gIsAppoint = '1';select_person1('')"><spring:message code='ezPersonal.t32'/></span></a> 
 					</td>
 				</tr>
-				
+				<tr id="AddJobDept" style="display:none;">
+						<th><spring:message code='ezPersonal.t305'/></th>
+						<td>
+							<select id="deptList" onchange="return Sel_AddJobChange();">
+							</select>
+						</td>
+					</tr>
 				<tr> 
 					<th><spring:message code='ezPersonal.t22'/></th>
 					<td>

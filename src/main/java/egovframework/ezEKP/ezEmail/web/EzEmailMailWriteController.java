@@ -3780,9 +3780,21 @@ public class EzEmailMailWriteController extends EgovFileMngUtil {
 	    								else if (p.getDisposition() != null || p.isMimeType("application/*")) { 
 	    									MimeBodyPart newBodyPart = (MimeBodyPart)p;
 	    									
+	    									// 료비에서 수신한 메일 중에 text/plain 파트만 있으면서
+	    									// ContentID 없이 Content-Dispostion이 inline으로 첨부된
+	    									// 이미지가 있어 이 경우 첨부파일로서 처리하기 위해 추가함.(iPhone Mail에서 작성한 메일임.)
+	    									boolean isInlinePartWithoutContentID = false;
+
+    										if (newBodyPart.getDisposition() != null 
+    												&& newBodyPart.getDisposition().equalsIgnoreCase(Part.INLINE)
+    												&& newBodyPart.getContentID() == null) {
+    											isInlinePartWithoutContentID = true;
+    										}
+	    									
 	    									// 첨부파일 파트인 경우
 	    									if ((p.getDisposition() != null && p.getDisposition().equalsIgnoreCase(Part.ATTACHMENT))
-	    											|| p.isMimeType("application/*")) {
+	    											|| p.isMimeType("application/*")
+	    											|| isInlinePartWithoutContentID) {
 	    										hasAttach = true;
 	    											    										
 	    										InternetHeaders newHeaders = new InternetHeaders();
