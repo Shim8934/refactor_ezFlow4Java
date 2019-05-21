@@ -32,7 +32,7 @@ import egovframework.ezEKP.ezCommon.service.EzCommonService;
 import egovframework.ezEKP.ezEmail.logic.IMAPAccess;
 import egovframework.ezEKP.ezEmail.service.EzEmailService;
 import egovframework.ezEKP.ezEmail.util.EzEmailUtil;
-import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxVO;
+import egovframework.ezEKP.ezEmail.vo.MailSharedMailboxUserVO;
 import egovframework.let.user.login.vo.LoginVO;
 import egovframework.let.utl.fcc.service.CommonUtil;
 
@@ -89,10 +89,11 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 				if (!ezEmailService.checkUserShareId(userInfo.getId(), shareId, 4, userInfo.getTenantId())) {
 					logger.debug("the user cannot access the shareId.");
 				} else {
-					MailSharedMailboxVO shareInfo = ezEmailService.getSharedMailboxInfo(shareId, userInfo.getTenantId());
+					MailSharedMailboxUserVO shareInfo = ezEmailService.getSharedMailboxPermissionInfo(shareId, userInfo.getTenantId(), userInfo.getId());
 					
 					model.addAttribute("shareId", shareId);
 					model.addAttribute("shareName", shareInfo.getShareName());
+					model.addAttribute("deletePermission", shareInfo.getDeletePermission());
 				}
 			}
 		}
@@ -191,7 +192,12 @@ public class EzEmailFolderManageController extends EgovFileMngUtil{
 			if (shareId != null) {
 				int permissionType = 4;
 				
-				if (cmd.equals("MAILREALDEL") || cmd.equals("MAILDEL")) {
+				// 편지함 영구삭제 시 삭제 권한 및 관리 권한(5) 확인
+				// 모든 메일 삭제(지운편지함으로 이동), 모든 메일 영구 삭제 시 삭제 권한(1) 확인
+				// 그 외에는 관리 권한(4) 확인
+				if (cmd.equals("DEL")) {
+					permissionType = 5;
+				} else if (cmd.equals("MAILREALDEL") || cmd.equals("MAILDEL")) {
 					permissionType = 1;
 				}
 				

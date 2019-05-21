@@ -549,9 +549,13 @@
 		<div class="btnpositionNew">
 		    <a class="imgbtn"><span onClick="add_onclick()" style="text-align:center;"><spring:message code='ezEmail.t308' /></span></a>
 		    <a class="imgbtn"><span onClick="modify_onclick()" style="text-align:center;"><spring:message code='ezEmail.t149' /></span></a>
+		    <c:if test="${shareId == null || deletePermission == 'Y'}">
 		    <a class="imgbtn"><span onClick="delete_onclick()" style="text-align:center;"><spring:message code='ezEmail.t95' /></span></a>
+		    </c:if>
 		    <a class="imgbtn"><span onClick="move_onclick()" style="text-align:center;"><spring:message code='ezEmail.t482' /></span></a>
+		    <c:if test="${shareId == null || deletePermission == 'Y'}">
 		    <a class="imgbtn"><span onClick="delete_mail_onclick()" style="text-align:center;"><spring:message code='ezEmail.t483' /></span></a>
+		    </c:if>
 		    <a class="imgbtn"><span onClick="subscribe_onclick()" style="text-align:center;"><spring:message code='ezEmail.lhm71' /></span></a>
 		</div>
 		<div style="width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1000; background: none rgba(0,0,0,0.5); display: none;" id="mailPanel">&nbsp;</div>	
