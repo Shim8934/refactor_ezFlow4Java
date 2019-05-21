@@ -237,7 +237,7 @@
 		        });
 		     	
 		     	// 클릭과 더블클릭 이벤트 구분
-		     	$('#layer-popup').on('focus', '.memoText', function(event) {	// 원클릭 -> 메모 자동 저장 시작
+		     	$('#layer-popup').on('focus', '.memoText', function(event) {	// 클릭 -> 메모 자동 저장 시작
 		     		var targetEl = event.target;
 		     		
 		     		draggableFalse();		// draggable 때문에 레이어 안에서의 blur 이벤트 안 먹혀서 잠시 죽임
