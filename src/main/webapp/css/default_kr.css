@@ -1180,6 +1180,7 @@ form{display:inline;margin:0}
 
 .icon_01{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -286px -52px;}
 .icon_02{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -260px -52px;}
+.icon_03{background:url(../images/kr/left/sub_iconLNB.png) no-repeat; padding-left:17px; padding-right:5px; height:16px; background-position: -312px -52px;}
 
 
 
@@ -2629,6 +2630,7 @@ div#txtContent {margin-left:5px;margin-right:5px;word-wrap:break-word;font-size:
 .mainmenuTab .mainmenuTabUL li span { display: inline-block; height:31px; line-height:29px; padding: 0px 21px; margin: 0px 1px 0px 1px; text-align: center; font-size: 14px; font-weight: bold; color: #777; cursor: pointer; background: #e4e7ea; border:1px solid #e4e7ea; box-sizing:border-box; }
 .mainmenuTab .mainmenuTabUL li:hover span { position: relative; background: #3d8fea; color: #fff; border:1px solid #3d8fea; box-sizing:border-box; }
 .mainmenuTab .mainmenuTabUL li.on span { position: relative; background: #3d8fea; color: #fff; border:1px solid #3d8fea; box-sizing:border-box;}
+.calendar_layout {position: absolute;left: 90%;top:15px;width: 269px;margin-left: -134px;}
 
 /* admin */
 
@@ -3505,3 +3507,19 @@ input[type=range]::-ms-tooltip {display: none;}
 .lnb h2.on + .leftList { visibility: visible; height: auto !important;}
 .lnb .leftList { visibility: hidden; height: 0px !important; list-style-type: none; padding: 0;  margin: 0; width: 100%; overflow: hidden;}
 .lnb .leftList li { padding: 4px 20px; cursor: pointer;}
+
+/* 2019-05-17 김민성 - 자원관리 개선*/
+.mainmenuTabUL_left {  position: absolute;top: 7px;left: -10px; list-style:none; margin:0px; padding:0px; }
+.mainmenuTabUL_left li { float:left; margin:0px 7px 0px 0px;}
+.mainmenuTabUL_left li  .tree_resource_no, .mainmenuTabUL_left li  .tree_resource_ok, .mainmenuTabUL_left li  .tree_resource_refuse {margin:0px; cursor:default;}
+.mainmenuTabUL_left li .icon { vertical-align:middle;}
+
+.tree_resource_refuse{background-position:-312px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 승인거절 아이콘 */
+.tree_resource_unused{background-position:-338px -52px;width:16px;height:16px;display:inline-block;margin: 8px 0px 0px 0px;cursor:pointer;} /* tree 자원관리 미사용 아이콘 */
+
+.calendar_layer .text .td_list td.individual .resource_rental {background-image: url('/images/ezResource/state_rental.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_return {background-image: url('/images/ezResource/state_return.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_ok {background-image: url('/images/ezResource/state_approval.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_no {background-image: url('/images/ezResource/state_approvalPending.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_refuse {background-image: url('/images/ezResource/state_approvalrefuse.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}
+.calendar_layer .text .td_list td.individual .resource_noreturn {background-image: url('/images/ezResource/state_noreturn.gif'); background-position: center; margin: 2px 5px 0px 0px; padding: 0px 5px 0px 5px;}

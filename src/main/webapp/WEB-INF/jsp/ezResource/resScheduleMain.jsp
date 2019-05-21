@@ -611,6 +611,21 @@
 	        </ul>
 	    </div>
 	    <div class="mainmenuTab">
+	    	<ul class="mainmenuTabUL_left"> 
+	    		<li><img src="../images/ezResource/state_approval.gif" class="icon"><spring:message code='ezResource.t191'/></li>
+	    		<c:if test="${approveFlag eq 1 }">
+		    		<li><img src="../images/ezResource/state_approvalPending.gif" class="icon"><spring:message code='ezResource.kmsr21'/></li>
+		    		<li><img src="../images/ezResource/state_approvalrefuse.gif" class="icon"><spring:message code='ezResource.kmsr22'/></li>
+		    	</c:if>
+	    		<li><img src="../images/ezResource/state_rental.gif" class="icon"><spring:message code='ezResource.kmsr23'/></li>
+	    		<c:if test="${returnFlag eq 0 }">
+	    			<li><img src="../images/ezResource/state_return.gif" class="icon"><spring:message code='ezBoard.t345'/></li>
+	    		</c:if>
+	    		<c:if test="${returnFlag eq 1 }">
+		    		<li><img src="../images/ezResource/state_return.gif" class="icon"><spring:message code='ezResource.kmsr24'/></li>
+		    		<li><img src="../images/ezResource/state_noreturn.gif" class="icon"><spring:message code='ezResource.kmsr25'/></li>
+		    	</c:if>
+	    	</ul>
 	        <ul class="mainmenuTabUL">
 	            <li id="dayView" class="off"><span onclick='onViewDate("DAY");'><spring:message code='ezSchedule.t140'/></span></li><li id="weekView" class="off"><span onclick='onViewDate("WEEK");'><spring:message code='ezSchedule.t141'/></span></li><li id="monView" class="on"><span onclick='onViewDate("MONTH");'><spring:message code='ezSchedule.t142'/></span></li>
 	        </ul>
