@@ -1059,44 +1059,38 @@
 	    }
 	
 	    function inputAddress() {
-
-	    	var emailname = document.getElementById("emailname").value;
-	        var pTextEmail = TrimText(document.getElementById("emailaddr").value);
-	        var regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
+	    	var strName = document.getElementById("emailname").value;
+            var strEmail = document.getElementById("emailaddr").value.trim();
 	    	
-	        if (emailname == "") {
+	        if (strName == "") {
 	            alert("<spring:message code='ezAddress.t349' />");
 	        	document.getElementById("emailname").focus();
 	            return;
-	        } else if (document.getElementById("emailaddr").value == "") {
+	        } else if (strEmail == "") {
                 alert("<spring:message code='ezAddress.t350' />");
 	        	document.getElementById("emailaddr").focus();
                 return;
 	        } 
 	        
-	        if (emailname.indexOf('<') != -1 || emailname.indexOf('>') != -1 || emailname.indexOf(';') != -1) {
-	        	alert("<spring:message code='ezEmail.kyj17' /> [ < > ; ]");
-	        	document.getElementById("emailname").focus();
-	        	return;
+	        if (strName.indexOf("&") > -1 || strName.indexOf("<") > -1 || strName.indexOf(">") > -1 
+	        		 || strName.indexOf("\"") > -1 || strName.indexOf("'") > -1 || strName.indexOf(";") > -1) {
+           		alert("<spring:message code='ezAddress.t124' />: <spring:message code='ezEmail.kyj17' /> [ & < > \" ' ; ]");
+           		document.getElementById("emailname").focus();
+	            return;
 	        }
 	        
-	        if (pTextEmail != "" && regex.test(pTextEmail) === false) {
+	        var regex = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9_-]+\.[a-zA-Z0-9_.-]+$/;
+	        if (!regex.test(strEmail)) {
 	            alert("<spring:message code='ezAddress.t1100' />");
 	            document.getElementById("emailaddr").focus();
-	            document.getElementById("emailaddr").value = pTextEmail;
 	            return;
 	        }
 	        
             var pparsingXML = "";
             var pparsingXML2 = "";
-            var strName = "";
-            var strEmail = "";
             var listid = "MsgToList";
-
             var listview = new ListView();
             listview.LoadFromID(listid);
-            strName = document.getElementById("emailname").value;
-            strEmail = document.getElementById("emailaddr").value;
 
             var bFlag = listview.ExistRow("DATA2", strEmail);
             if (bFlag) {
