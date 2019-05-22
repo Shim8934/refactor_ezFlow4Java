@@ -277,6 +277,16 @@
 			ORDERBY VARCHAR(200) DEFAULT NULL
 	</statement>
 	
+	<select id="EzCommonDAO.checkAddAddJobMasterProxy" resultClass="String">
+		<![CDATA[
+			SELECT 
+				PROXY
+			FROM 
+				TBL_ADDJOBMASTER
+			LIMIT 1
+		]]>
+	</select>
+	
 	<statement id="EzCommonDAO.addAddJobMasterProxy"> 
 		ALTER TABLE 
 			TBL_ADDJOBMASTER
@@ -574,4 +584,57 @@
 		AND 
 			COLNAME = 'FunctionTypeName'
 	</update>
+
+	<select id="EzCommonDAO.checkFormVersionColumnOfForminfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_FORMINFO 
+		LIMIT 1
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfExpendaprdocinfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_EXPENDAPRDOCINFO
+		LIMIT 1
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfExpaprdocinfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_EXPAPRDOCINFO
+		LIMIT 1
+	</select>
+	<select id="EzCommonDAO.checkFormVersionColumnOfTmpexpaprdocinfo">
+		SELECT 
+			FORMVERSION 
+		FROM 
+			TBL_TMPEXPAPRDOCINFO
+		LIMIT 1
+	</select>
+	<statement id="EzCommonDAO.addFormVersionColumnOfForminfo">
+		ALTER TABLE 
+			TBL_FORMINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfExpendaprdocinfo">
+		ALTER TABLE 
+			TBL_EXPENDAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfExpaprdocinfo">
+		ALTER TABLE 
+			TBL_EXPAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
+	<statement id="EzCommonDAO.addFormVersionColumnOfTmpexpaprdocinfo">
+		ALTER TABLE 
+			TBL_TMPEXPAPRDOCINFO
+		ADD COLUMN 
+			FORMVERSION INT NULL DEFAULT 0 
+	</statement>
 </sqlMap>
